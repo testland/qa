@@ -7,6 +7,7 @@ Contract testing for microservices: Pact (consumer + provider + broker + can-i-d
 | Type | Name | Archetype | Description |
 |---|---|---|---|
 | skill | [pact-contract-testing](skills/pact-contract-testing/SKILL.md) | S1 | Author Pact consumer tests, publish pact files to the Broker, verify on the provider, gate deploys with `can-i-deploy`. |
+| skill | [openapi-contract-diff](skills/openapi-contract-diff/SKILL.md) | S1 | Diff two OpenAPI specs with `oasdiff breaking`; classify findings ERR/WARN/INFO; gate CI with `--fail-on`. |
 
 ## Install
 
