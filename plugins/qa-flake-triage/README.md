@@ -6,7 +6,7 @@ Flake triage workflow: bisector, parallel-isolation checker, regression bisector
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [flaky-test-quarantine](skills/flaky-test-quarantine/SKILL.md) | S3 | Quarantine workflow: mark, annotate (rate + bisect link + expiry), auto-expiry report, two-renewal cap. |
 
 ## Install
 
