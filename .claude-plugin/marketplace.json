@@ -39,6 +39,12 @@
       "source": "./plugins/qa-bug-repro",
       "description": "Bug reproduction workflow: 1 skill (bug-report-template) and 4 agents (bug-repro-builder, crash-stack-trace-analyzer, defect-clusterer, escape-defect-analyzer).",
       "strict": true
+    },
+    {
+      "name": "qa-shift-left",
+      "source": "./plugins/qa-shift-left",
+      "description": "Shift-left QA: testability review, acceptance-criteria + NFR extraction from product docs, Definition-of-Done checking, STRIDE threat modeling, data-contract extraction, and spec-to-suite orchestration.",
+      "strict": true
     }
   ]
 }
