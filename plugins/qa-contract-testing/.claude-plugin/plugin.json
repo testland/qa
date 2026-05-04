@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-contract-testing",
-  "version": "0.1.0",
-  "description": "Contract testing for microservices: Pact (consumer + provider + broker + can-i-deploy in one), OpenAPI / GraphQL / Protobuf compat checking, and a contract drift investigator.",
+  "version": "1.0.0",
+  "description": "Contract testing for microservices: 5 skills (pact-contract-testing, openapi-contract-diff, graphql-schema-regression, protobuf-compat-checking, contract-compatibility-gate) and 1 agent (contract-drift-investigator).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
