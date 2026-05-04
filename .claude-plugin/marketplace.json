@@ -67,7 +67,7 @@
     {
       "name": "qa-accessibility-specifics",
       "source": "./plugins/qa-accessibility-specifics",
-      "description": "Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, contrast, ARIA), screen-reader narrative authoring, a11y violation gate, adversarial code critic, checklist builder, and 5 tool wrappers (axe / pa11y / Lighthouse a11y / WAVE / IBM Equal Access).",
+      "description": "Atomic accessibility coverage: 12 skills (wcag-keyboard-navigation, wcag-focus-trap, wcag-color-contrast, aria-authoring-patterns, screen-reader-test-author, a11y-violation-gate, wcag-checklist-builder, axe-a11y, pa11y-a11y, lighthouse-a11y, wave-a11y, ibm-equal-access-a11y) and 1 agent (accessibility-code-critic).",
       "strict": true
     }
   ]
