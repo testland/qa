@@ -8,6 +8,7 @@ Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybo
 |---|---|---|---|
 | skill | [percy-visual-regression-testing](skills/percy-visual-regression-testing/SKILL.md) | S1 | Author Percy snapshots via @percy/playwright/cypress/selenium/storybook; run with `percy exec`; review diffs in the Percy UI. |
 | skill | [chromatic-visual-regression-testing](skills/chromatic-visual-regression-testing/SKILL.md) | S1 | Run Chromatic on Storybook / Playwright / Cypress; configure baselines, TurboSnap, exit codes for CI gating. |
+| skill | [playwright-snapshots](skills/playwright-snapshots/SKILL.md) | S1 | Author `expect(page).toHaveScreenshot()` assertions; configure mask/clip/threshold/maxDiffPixels; manage per-OS / per-browser snapshot dirs and `--update-snapshots`. |
 
 ## Install
 
