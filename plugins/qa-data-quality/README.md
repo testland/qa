@@ -11,6 +11,7 @@ Data quality testing for analytical pipelines: dbt-tests, Great Expectations, So
 | skill | [soda-checks](skills/soda-checks/SKILL.md) | S1 | Author SodaCL checks against SQL warehouses; configure scan profiles; gate CI on `soda scan` exit code. |
 | skill | [data-quality-gate](skills/data-quality-gate/SKILL.md) | S3 | Aggregate dbt / GX / Soda check results into a single severity-aware go/no-go gate with markdown + JSON artifact for CI. |
 | agent | [schema-diff-reviewer](agents/schema-diff-reviewer.md) | A1 | Review a DB schema diff for breaking-vs-additive changes, missing data tests, and downstream consumer impact; returns a Critical/Warning/Info findings table. |
+| agent | [data-anomaly-triager](agents/data-anomaly-triager.md) | A1 | Classify a data-quality failure (dbt/GX/Soda) into drift / outlier / missing / referential / freshness with owner routing and remediation. |
 
 ## Install
 
