@@ -6,7 +6,7 @@ Bug reproduction workflow: extracts minimal failing tests from issue reports, cl
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [bug-report-template](skills/bug-report-template/SKILL.md) | S3 | Build a triageable bug report from raw notes; flag gaps in environment / steps / expected / actual / severity / priority / reproducibility. |
 
 ## Install
 
