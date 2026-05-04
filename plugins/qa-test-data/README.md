@@ -6,7 +6,7 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [faker-data](skills/faker-data/SKILL.md) | S1 | Faker (Python `faker` / JS `@faker-js/faker` / Ruby `faker-ruby`) — fields, locales, deterministic seeding. |
 
 ## Install
 
