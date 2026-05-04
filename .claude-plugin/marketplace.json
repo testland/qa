@@ -31,7 +31,7 @@
     {
       "name": "qa-flake-triage",
       "source": "./plugins/qa-flake-triage",
-      "description": "Flake triage workflow: bisector, parallel-isolation checker, regression bisector, AI-pattern flake detector, trend reporter, and quarantine workflow.",
+      "description": "Flake triage: 2 skills (flaky-test-quarantine, flake-pattern-reference) and 5 agents (e2e-flake-bisector, parallel-isolation-checker, regression-bisector, ai-flake-detector, e2e-test-trend-reporter).",
       "strict": true
     }
   ]
