@@ -57,6 +57,12 @@
       "source": "./plugins/qa-load-testing",
       "description": "Load and performance testing: 9 skills (k6-load-testing, jmeter-load-testing, gatling-load-testing, locust-load-testing, lighthouse-perf, perf-budget-gate, lighthouse-budget-author, flame-graph-analyzer, db-slow-query-detector) and 1 agent (perf-regression-bisector).",
       "strict": true
+    },
+    {
+      "name": "qa-test-data",
+      "source": "./plugins/qa-test-data",
+      "description": "Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock / MSW / Mountebank mock servers; synthetic-data-toolkit dispatcher; golden-file conventions + manager; seed-data curator; parameterized / boundary / negative test case generators; synthetic PII; malicious payload bank.",
+      "strict": true
     }
   ]
 }
