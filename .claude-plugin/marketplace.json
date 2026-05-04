@@ -45,6 +45,12 @@
       "source": "./plugins/qa-shift-left",
       "description": "Shift-left QA: 3 skills (acceptance-criteria-extractor, nfr-extractor, data-contract-extractor) and 4 agents (testability-reviewer, definition-of-done-checker, threat-model-from-spec, spec-to-suite-orchestrator).",
       "strict": true
+    },
+    {
+      "name": "qa-api-testing",
+      "source": "./plugins/qa-api-testing",
+      "description": "API testing across Postman/Newman, RestAssured, Karate, Tavern; Schemathesis + RESTler fuzzing; and an API chaos runner that injects latency / error rates during test runs.",
+      "strict": true
     }
   ]
 }
