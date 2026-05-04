@@ -6,7 +6,10 @@ Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, con
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [wcag-keyboard-navigation](skills/wcag-keyboard-navigation/SKILL.md) | S2 | WCAG 2.2 keyboard SCs (2.1.1, 2.1.2, 2.1.4, 2.4.3, 2.4.7, 2.4.11) with per-criterion test scripts. |
+| skill | [wcag-focus-trap](skills/wcag-focus-trap/SKILL.md) | S2 | Modal/drawer focus management — 6-step canonical pattern; native `<dialog>` integration. |
+| skill | [wcag-color-contrast](skills/wcag-color-contrast/SKILL.md) | S2 | WCAG 2.2 SCs 1.4.3/1.4.6/1.4.11/1.4.13; canonical ratios; design-token bulk checking. |
+| skill | [aria-authoring-patterns](skills/aria-authoring-patterns/SKILL.md) | S2 | W3C ARIA Authoring Practices Guide reference for the 31 widget patterns. |
 
 ## Install
 
