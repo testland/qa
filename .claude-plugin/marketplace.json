@@ -55,7 +55,7 @@
     {
       "name": "qa-load-testing",
       "source": "./plugins/qa-load-testing",
-      "description": "Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI for Web Vitals; perf budget gate; flame-graph analyzer; DB slow-query detector; perf regression bisector.",
+      "description": "Load and performance testing: 9 skills (k6-load-testing, jmeter-load-testing, gatling-load-testing, locust-load-testing, lighthouse-perf, perf-budget-gate, lighthouse-budget-author, flame-graph-analyzer, db-slow-query-detector) and 1 agent (perf-regression-bisector).",
       "strict": true
     }
   ]

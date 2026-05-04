@@ -39,6 +39,7 @@ For example:
 | [qa-bug-repro](plugins/qa-bug-repro/) | 5 (1 skill + 4 agents) | 1.0.0 |
 | [qa-shift-left](plugins/qa-shift-left/) | 7 (3 skills + 4 agents) | 1.0.0 |
 | [qa-api-testing](plugins/qa-api-testing/) | 7 (7 skills + 0 agents) | 1.0.0 |
+| [qa-load-testing](plugins/qa-load-testing/) | 10 (9 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 
