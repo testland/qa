@@ -13,6 +13,7 @@ Data quality testing for analytical pipelines: dbt-tests, Great Expectations, So
 | agent | [schema-diff-reviewer](agents/schema-diff-reviewer.md) | A1 | Review a DB schema diff for breaking-vs-additive changes, missing data tests, and downstream consumer impact; returns a Critical/Warning/Info findings table. |
 | agent | [data-anomaly-triager](agents/data-anomaly-triager.md) | A1 | Classify a data-quality failure (dbt/GX/Soda) into drift / outlier / missing / referential / freshness with owner routing and remediation. |
 | agent | [data-quality-engineer](agents/data-quality-engineer.md) | A2 | Build an initial coverage suite for a data product: read schema + sample, generate dbt/GX/Soda artifacts, run once. |
+| skill | [data-quality-conventions](skills/data-quality-conventions/SKILL.md) | S2 | Reference catalog: engine selection, column/table coverage, severity tiering, freshness/SLA conventions, anti-patterns. |
 
 ## Install
 
