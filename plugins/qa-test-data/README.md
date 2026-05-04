@@ -10,6 +10,9 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 | skill | [factory-bot-data](skills/factory-bot-data/SKILL.md) | S1 | Ruby FactoryBot factories with traits, associations, sequences; build / create / build_stubbed strategies; pairs with Faker. |
 | skill | [mimesis-data](skills/mimesis-data/SKILL.md) | S1 | Python mimesis (fastest pure-Python generator); 46 locales; Schema/Field typed-dict pattern. |
 | skill | [bogus-data](skills/bogus-data/SKILL.md) | S1 | .NET Bogus typed `Faker<T>` builders with `.RuleFor` / `.StrictMode` / `.UseSeed`; `Generate*` for single / lazy / batch. |
+| skill | [wiremock-stubs](skills/wiremock-stubs/SKILL.md) | S1 | JVM HTTP mock server: `stubFor` matchers + `willReturn` + `verify()` + dynamic ports + scenarios. |
+| skill | [msw-handlers](skills/msw-handlers/SKILL.md) | S1 | JS / TS HTTP mocking via Mock Service Worker: `http.get` / `HttpResponse.json` handlers; browser + Node setup. |
+| skill | [mountebank-imposters](skills/mountebank-imposters/SKILL.md) | S1 | Multi-protocol mocking (HTTP, TCP, SMTP, gRPC, more) via `POST /imposters`; predicates + responses; record-playback. |
 
 ## Install
 
