@@ -27,6 +27,12 @@
       "source": "./plugins/qa-contract-testing",
       "description": "Contract testing for microservices: 5 skills (pact-contract-testing, openapi-contract-diff, graphql-schema-regression, protobuf-compat-checking, contract-compatibility-gate) and 1 agent (contract-drift-investigator).",
       "strict": true
+    },
+    {
+      "name": "qa-flake-triage",
+      "source": "./plugins/qa-flake-triage",
+      "description": "Flake triage workflow: bisector, parallel-isolation checker, regression bisector, AI-pattern flake detector, trend reporter, and quarantine workflow.",
+      "strict": true
     }
   ]
 }
