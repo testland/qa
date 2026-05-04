@@ -1,0 +1,53 @@
+---
+name: AGENT_NAME_KEBAB
+description: ONE_SENTENCE_THIRD_PERSON_TASK. Use proactively when SPECIFIC_TRIGGER. Returns OUTPUT_SHAPE.
+tools: Read, Grep, Glob
+model: sonnet
+skills:
+  - PRELOADED_SKILL_1
+  - PRELOADED_SKILL_2
+rating: 21
+d6: 1
+archetype: A1
+---
+
+SHORT_PERSONA_ONE_SENTENCE_FRAMING.
+
+## When invoked
+
+1. STEP_1
+2. STEP_2
+3. STEP_3
+
+## Output format
+
+OUTPUT_SHAPE_DEFINITION.
+
+## Examples
+
+### Example 1: TYPICAL_CASE
+
+Input: ...
+Output: ...
+
+### Example 2: EDGE_CASE
+
+Input: ...
+Output: ...
+
+<!--
+Authoring notes (delete before commit):
+
+- Body stays 30-60 lines per `general-use-case-framework-2026-04-30.md` §4.
+  Reference material lives in preloaded skills; the agent body is task-focused.
+- `archetype` is one of A1 (read-only specialist), A2 (action-taking task),
+  A3 (adversarial critic), A4 (builder/scaffolder).
+- `description` is third-person, action-oriented. Avoid "You are..." / "I help...".
+  Include WHAT it does, WHEN to invoke (proactive trigger), and WHAT it returns.
+- `tools:` should be the minimum needed; never include tools the body never uses.
+  Bash patterns must be specific (`Bash(git diff *)`, not bare `Bash`).
+- `skills:` declares preloaded skills; verify they exist in this plugin or a
+  documented dependency plugin before merge (cross-cutting Task X.1).
+- Self-rate D1-D6 against `qa-rating-framework-2026-04-30.md`; total >=21,
+  d6 >= 1 (citation theater is a hard reject regardless of total).
+-->
