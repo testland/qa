@@ -51,6 +51,12 @@
       "source": "./plugins/qa-api-testing",
       "description": "API testing: 7 skills (postman-collections, restassured-testing, karate-testing, tavern-testing, schemathesis-fuzzing, restler-fuzzing, api-chaos-runner).",
       "strict": true
+    },
+    {
+      "name": "qa-load-testing",
+      "source": "./plugins/qa-load-testing",
+      "description": "Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI for Web Vitals; perf budget gate; flame-graph analyzer; DB slow-query detector; perf regression bisector.",
+      "strict": true
     }
   ]
 }
