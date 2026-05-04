@@ -33,6 +33,12 @@
       "source": "./plugins/qa-flake-triage",
       "description": "Flake triage: 2 skills (flaky-test-quarantine, flake-pattern-reference) and 5 agents (e2e-flake-bisector, parallel-isolation-checker, regression-bisector, ai-flake-detector, e2e-test-trend-reporter).",
       "strict": true
+    },
+    {
+      "name": "qa-bug-repro",
+      "source": "./plugins/qa-bug-repro",
+      "description": "Bug reproduction workflow: extracts minimal failing tests from issue reports, classifies crash stacks, clusters defects, and analyzes escape defects.",
+      "strict": true
     }
   ]
 }
