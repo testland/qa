@@ -1,15 +1,58 @@
 # Plugin Authoring Guide
 
 Step-by-step walkthrough for authoring a new plugin in `testland-qa`.
-Pairs with `CONTRIBUTING.md` (gate definition) and `REVIEWER_CHECKLIST.md`
-(reviewer rubric).
+Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
+[`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md) (reviewer rubric).
 
 ## Prerequisites
 
-- Read `decisions.md` (research repo) for locked-in conventions.
-- Read `general-use-case-framework-2026-04-30.md` §4 for archetype definitions.
-- Read `qa-rating-framework-2026-04-30.md` for the 6-dimension rubric.
-- Identify the target plugin in the active phase plan (Phase 1 / 2 / 3).
+- Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the rating gate, lint rules,
+  and NOT-GAPS list.
+- Read the archetype definitions in the next section before drafting any
+  component scope.
+- Confirm the target slot is not in the NOT-GAPS list in
+  [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## Archetypes
+
+Every component maps cleanly to one archetype. If a draft fits no archetype,
+the scope is wrong — reshape before authoring.
+
+### Skills (S1-S4)
+
+- **S1 — file-format / domain skill.** Wraps a single tool, file format, or
+  bounded domain. Body has Authoring + Running + Parsing-results +
+  CI-integration sections. Example shape: a Playwright-snapshots skill that
+  covers authoring, running, updating, and CI gating in one skill.
+- **S2 — pure reference.** A stable reference catalog that the agent reads;
+  no execution steps. Body is well-structured prose plus tables. Example
+  shape: a flake-pattern catalog enumerating timing, ordering, shared-state,
+  and locator-drift patterns with detection heuristics.
+- **S3 — build-an-X workflow.** Produces an artifact through a workflow with
+  decision points. Body walks the workflow end-to-end. Example shape: a
+  data-quality-gate skill that gathers expectation results, computes
+  pass/fail vs thresholds, and emits a go/no-go.
+- **S4 — toolkit / dispatcher.** Lists sub-tools and routes between them.
+  Body is a decision tree. Example shape: a responsive-breakpoint-runner
+  that dispatches to Percy / Chromatic / Playwright snapshots based on the
+  active toolchain.
+
+### Agents (A1-A4)
+
+- **A1 — read-only specialist.** Inspects state, emits findings; tools are
+  read-only (`Read`, `Grep`, `Glob`, narrowly-scoped `Bash(git diff *)`).
+  Body has When-invoked, Output-format, Examples.
+- **A2 — action-taking task.** Produces files / changes; tools include
+  `Write`, `Edit`, broader `Bash`. Composes preloaded skills via the
+  `skills:` frontmatter field.
+- **A3 — adversarial critic.** Classifies / rejects; framed adversarially.
+  Body emits a verdict + rationale + recommended action.
+- **A4 — builder / scaffolder.** Generates new artifacts or repository
+  structure (templates, baseline configs, scaffolds). Body produces
+  working artifacts the user can immediately commit.
+
+Agent bodies stay 30-60 lines; reference material lives in preloaded skills,
+not in the agent body.
 
 ## Step 1 — Scaffold the plugin
 
@@ -54,32 +97,48 @@ If any check fails, redraft.
 
 ## Step 4 — Fetch canonical sources
 
-Per `qa-reliable-sources-2026-05-03.md` §21:
-
 1. **WebFetch each canonical URL** for the tool/concept. Do not rely on
    training data — versions drift, commands change.
 2. **Read end-to-end** before drafting any body content.
-3. **Cross-reference the ISTQB glossary first** for terminology; use
-   vendor docs only for tool-specific behavior (commands, flags, config).
-4. **Fallbacks** for non-WebFetchable sources:
-   - JS-rendered SPAs (ISTQB glossary, agentskills.io): use Playwright via
-     `mcp__playwright__browser_navigate` + `browser_evaluate`.
-   - Cloudflare Turnstile (ISO standards pages, GraphQL spec, Dan North's
-     blog): cite by stable ID and document the limitation.
-   - 404'd / hijacked sources (e.g., Mountebank's `mbtest.org` redirect):
-     fall back to the project's GitHub README; flag the upstream URL change
-     in `qa-reliable-sources-2026-05-03.md` in the same PR.
+3. **Cross-reference the [ISTQB glossary](https://glossary.istqb.org/)
+   first** for terminology; use vendor docs only for tool-specific behavior
+   (commands, flags, config).
+4. **Standard anchors:**
+   - **Terminology:** ISTQB glossary V4.7.1 at
+     https://glossary.istqb.org/en_US/term/<slug>.
+   - **Standards:** ISO/IEC 25010, ISO/IEC/IEEE 29119, IEEE 829.
+   - **Accessibility:** W3C WCAG 2.x.
+   - **Security:** OWASP Top 10 / ASVS / Cheat Sheet Series.
+   - **Vendor docs:** the official documentation site for each wrapped
+     tool (Playwright, Cypress, k6, dbt, Pact, Great Expectations, Soda,
+     etc.).
+5. **Fallbacks** for non-WebFetchable sources:
+   - **JS-rendered SPAs** (ISTQB glossary is the primary example): WebFetch
+     returns only the SPA shell. Use Playwright via
+     `mcp__playwright__browser_navigate` + `browser_evaluate` to extract
+     content.
+   - **Cloudflare Turnstile** (ISO standards pages, GraphQL spec, some
+     blogs): the challenge does not clear in headless Playwright. Cite by
+     stable ID (e.g., "ISO/IEC 25010:2023", "GraphQL October 2021 spec")
+     and let readers navigate manually. Document the limitation in the
+     body.
+   - **404'd / hijacked sources:** if a primary source has been hijacked or
+     removed, fall back to the project's GitHub README and flag the change
+     in your PR description so the canonical-source list stays accurate.
 
 ## Step 5 — Draft body content from fetched sources
 
-- **Body structure** mirrors the patterns from
-  `qa-component-ratings-master-2026-04-30.md` §3 exemplars
-  (silent-failure-hunter, differential-review, webapp-testing, TDD trio).
+- **Body structure** uses progressive disclosure: a short main body that
+  links to deeper material under `references/`. The main body covers the
+  archetype's required sections (Authoring/Running/Parsing/CI for S1; etc.)
+  with concrete steps and at least one worked example.
 - **Body content** — every concrete claim about how a tool works, every
   command syntax, every config field, every threshold value, every
   assertion API — comes from the fetched canonical source.
 - **Inline cite the source URL** at the point each claim is made. A reader
-  should be able to verify any claim by clicking through.
+  should be able to verify any claim by clicking through. Sprinkled
+  `References:` lists at the bottom without inline citations are an
+  anti-pattern (reviewer rejects).
 - If a claim cannot be supported by a fetched source, either (i) fetch
   additional sources, (ii) remove the claim, or (iii) explicitly mark it
   `[author opinion]` (rare; methodology framing only).
@@ -88,8 +147,9 @@ Per `qa-reliable-sources-2026-05-03.md` §21:
 
 Score each of D1-D6 (0-5):
 
-- **D1 Spec compliance** — does the frontmatter follow
-  `official-requirements-2026-04-29.md`? Are tools/skills declarations valid?
+- **D1 Spec compliance** — does the frontmatter follow Anthropic's official
+  Claude Code plugin spec? Are `tools`, `allowed-tools`, `model`, `skills:`,
+  `disable-model-invocation`, and `argument-hint` declarations valid?
 - **D2 Archetype fit** — does the body match the declared archetype's shape?
 - **D3 Description quality** — single-description test passes cleanly?
 - **D4 Use-case fit** — is the trigger clear and non-overlapping with
@@ -169,5 +229,6 @@ plugins/<plugin-name>/
   hooks/hooks.json                     # optional
 ```
 
-Skills MUST live at `skills/<name>/SKILL.md` per
-`official-requirements-2026-04-29.md` §1.1 critical layout warning.
+Skills MUST live at `skills/<name>/SKILL.md`. Anthropic's plugin spec
+treats `.claude-plugin/` as the manifest directory only; placing a SKILL.md
+inside `.claude-plugin/` will not be discovered as a skill.

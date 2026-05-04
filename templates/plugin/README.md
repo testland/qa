@@ -17,6 +17,7 @@ ONE_LINE_DESCRIPTION_HERE
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework (6 dimensions).
-See `qa-rating-framework-2026-04-30.md` in the research repo (`elv1s42k-qa-research`) for
-the framework definition.
+All components in this plugin score >=21 on the v2.0 rating framework
+(6 dimensions, including D6 terminology compliance). See
+[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at the
+repository root for the rubric.

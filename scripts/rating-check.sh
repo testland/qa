@@ -4,11 +4,11 @@
 # Reads YAML frontmatter from each component (skill or agent) and enforces:
 #   - rating: present, integer, >= 21 (importable bar on the v2.0 30-point scale)
 #   - d6:     when present, integer 0-5; d6 == 0 is a hard reject
-#             (citation theater — see qa-rating-framework-2026-04-30.md v2.0 step 7)
+#             (citation theater — see docs/REVIEWER_CHECKLIST.md "D6")
 #
-# v2.0 (2026-05-04): rating range is 0-30 (was 0-25 in v1.0). The bar moved from
-# >=17 to >=21 when D6 Terminology Compliance was added. This script reads both
-# fields, fails on missing rating, and fails on d6=0 regardless of total.
+# v2.0: rating range is 0-30 with the importable bar at 21 after D6
+# Terminology Compliance was added. This script reads both fields, fails on
+# missing rating, and fails on d6=0 regardless of total.
 #
 # Usage: bash scripts/rating-check.sh [ROOT]
 #   ROOT defaults to the current directory.
@@ -73,7 +73,7 @@ while IFS= read -r -d '' file; do
       echo "FAIL ($file): d6 '$d6' is not a non-negative integer"
       EXIT=1
     elif [[ "$d6" -eq 0 ]]; then
-      echo "FAIL ($file): d6 = 0 (terminology miscitation / citation theater — hard reject per qa-rating-framework v2.0)"
+      echo "FAIL ($file): d6 = 0 (terminology miscitation / citation theater — hard reject per docs/REVIEWER_CHECKLIST.md D6)"
       EXIT=1
     elif [[ "$d6" -gt 5 ]]; then
       echo "FAIL ($file): d6 $d6 > 5 (D6 sub-score range is 0-5)"

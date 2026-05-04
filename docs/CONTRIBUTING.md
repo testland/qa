@@ -6,14 +6,17 @@ the gate so contributions land cleanly.
 
 ## Before you start
 
-1. **Read the research.** Design history, frameworks, and gap analyses live
-   in <https://github.com/elv1s42k/qa-research>. Start with `decisions.md`.
-2. **Check `qa-coverage-matrix-2026-04-29.md` §6** to see if a plugin already
-   exists in scope. Avoid duplicating an in-flight plugin.
-3. **Check the master plan's §13 NOT-GAPS list** in
-   `qa-implementation-plan-2026-05-02.md`. Several saturated cells (generic
-   `code-reviewer`, `qa-expert`, `security-auditor`, `debugger`, etc.) are
-   intentional skips and PRs that try to add them are rejected.
+1. **Check the existing plugin set** under `plugins/` to avoid duplicating
+   an in-flight plugin or proposing a component that already exists.
+2. **Check the NOT-GAPS list below.** Several saturated cells (generic
+   `code-reviewer`, `qa-expert`, `security-auditor`, `debugger`, persona
+   role agents, per-language testing bundles, etc.) are intentional skips.
+   PRs that try to add them are rejected unless they ship measured evidence
+   that the saturation no longer holds.
+3. **Read [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)** for the full
+   step-by-step authoring guide.
+4. **Read [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md)** for the rubric
+   your PR will be scored against.
 
 ## Quality gate (CI-enforced)
 
@@ -42,16 +45,24 @@ CI runs three checks on every PR:
 
 Score each 0-5; total >=21 to merge.
 
-- **D1 — Spec compliance:** does it follow `official-requirements-2026-04-29.md`?
-- **D2 — Archetype fit:** does it cleanly match S1-S4 / A1-A4?
-- **D3 — Description quality:** passes the single-description test?
-- **D4 — Use-case fit:** is the trigger clear and non-overlapping with neighbors?
-- **D5 — Body quality:** progressive disclosure, concrete steps, examples?
-- **D6 — Terminology compliance (NEW in v2.0):** ISTQB-canonical terms cited
-  to canonical sources; tool-specific claims grounded in fetched docs.
+- **D1 — Spec compliance:** does the frontmatter follow Anthropic's official
+  Claude Code plugin spec (name, description, tools, allowed-tools,
+  disable-model-invocation, skills preload, etc.)?
+- **D2 — Archetype fit:** does it cleanly match S1-S4 (skills) or A1-A4
+  (agents)? See [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md) for archetype
+  definitions.
+- **D3 — Description quality:** passes the single-description test (below)?
+- **D4 — Use-case fit:** is the trigger clear and non-overlapping with
+  neighbors?
+- **D5 — Body quality:** progressive disclosure, concrete steps, examples,
+  output format?
+- **D6 — Terminology compliance:** ISTQB-canonical terms cited to canonical
+  sources; tool-specific claims grounded in fetched vendor docs;
+  practitioner-emergent terms (flaky test, contract test, golden file)
+  attributed to industry-engineering sources, not ISTQB.
 
-See `qa-rating-framework-2026-04-30.md` in the research repo for the full
-rubric and worked examples.
+The full per-dimension rubric and review questions live in
+[`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md).
 
 ## The single-description test
 
@@ -77,10 +88,13 @@ If any check fails, reshape the scope before authoring.
    `plugins/<name>/agents/<name>.md`. Copy from `templates/skill/SKILL.md.tmpl`
    or `templates/agent/agent.md.tmpl`.
 
-3. **Fetch canonical sources** for every concrete claim. The
-   `qa-reliable-sources-2026-05-03.md` catalog (research repo) lists the
-   ISTQB glossary, ISO standards, vendor docs, etc. Cite URLs inline at the
-   point of each claim — not as an appended References list.
+3. **Fetch canonical sources** for every concrete claim. The standard
+   anchors are: the [ISTQB glossary](https://glossary.istqb.org/) for
+   terminology; ISO 25010 / 29119 / IEEE 829 for standards-level concepts;
+   the W3C WCAG 2.x specs for accessibility; OWASP for security; and the
+   official vendor docs for any tool wrapped in a skill (Playwright,
+   Cypress, k6, dbt, Pact, etc.). Cite URLs inline at the point of each
+   claim — not as an appended References list.
 
 4. **Self-rate** D1-D6 against the framework. Add `rating:` and `d6:` to
    frontmatter.
@@ -109,10 +123,39 @@ If any check fails, reshape the scope before authoring.
   drifted vs. current docs.
 - `References:` lists at the bottom without inline citations at the point
   of use.
-- Generic role-agent names (`qa-expert`, `quality-engineer`, etc.) — see
-  `decisions.md` anti-pattern guard.
+- Generic role-agent names (`qa-expert`, `quality-engineer`,
+  `qa-engineer`, `test-automator`, `qa-lead`, `qa-specialist`,
+  `qa-pro`, `qa-master`) — `validate.sh` rejects these by name.
+
+## NOT-GAPS — saturated cells we will not fill
+
+These slots already have sufficient ecosystem coverage and adding another
+near-clone is not valuable. PRs that try to fill them are rejected unless
+they ship measured evidence that the saturation no longer holds.
+
+| Slot | Why we skip |
+|---|---|
+| Generic `code-reviewer` agent | 12+ near-clones in the existing ecosystem |
+| Generic `qa-expert` / `qa-engineer` / `quality-engineer` | Persona-as-scope; vague descriptions; rejected by `validate.sh` by name |
+| Generic `security-auditor` / OWASP Top-10 wrapper | Saturated cell |
+| Generic `debugger` agent | Saturated cell |
+| Generic `test-automator` agent | Saturated cell |
+| Generic TDD red/green/refactor coaches | Multiple existing well-rated implementations |
+| Per-language unit testing pattern bundles (`python-testing-patterns`, etc.) | Saturated by existing language bundles |
+| Per-framework one-shot E2E *agents* (Playwright-expert, Cypress-expert, Selenium-expert) | Already covered as agents in the ecosystem; the *skill* form is welcome under a web-E2E plugin |
+| Generic AI code review | Saturated cell |
+| Generic threat-modeling tool | Already well covered |
+| Desktop apps (Electron, Qt, Windows native) | Niche audience |
+| Embedded / IoT testing | Niche audience |
+| Game / VR testing | Niche audience |
+| Generic security tool wrappers (zap, burp, snyk, trivy, semgrep, gitleaks) | Saturated; differentiated security niches welcome under a dedicated plugin |
+| Generic WCAG audit umbrella skill | Saturated at the umbrella level; atomic accessibility skills (keyboard, focus-trap, color-contrast, ARIA) are welcome |
+
+If you believe a slot above should be re-opened, open an issue first with
+the measured evidence (e.g., a refreshed ecosystem rating pass showing the
+existing components have decayed below the importable bar).
 
 ## Reviewer rubric
 
-See `docs/REVIEWER_CHECKLIST.md` for the two-evaluator rule (<=2-pt
-divergence) and per-dimension review questions.
+See [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md) for the two-evaluator
+rule (<=2-pt divergence) and per-dimension review questions.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # scripts/validate.sh
 #
-# Lint rules per decisions.md 2026-04-30 ("Anti-pattern guard"):
+# Lint rules (anti-pattern guard):
 #   - Names: kebab-case, 1-64 chars, no anthropic/claude reserved words
 #   - Descriptions: present, third-person, no "You are..." / "I help..."
 #   - Description != slug
@@ -98,7 +98,7 @@ check_yaml_frontmatter() {
       ;;
   esac
 
-  # Rule 5: generic role-agent names (decisions.md anti-pattern guard)
+  # Rule 5: generic role-agent names (anti-pattern guard)
   case "$name" in
     qa-expert|qa-engineer|quality-engineer|test-automator|qa-lead|qa-specialist|qa-pro|qa-master)
       echo "FAIL ($file): generic role-agent name '$name' (use a sharp task scope instead)"

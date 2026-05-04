@@ -2,8 +2,8 @@
 
 Two-evaluator rubric for component PRs. Two independent reviewers should
 land within 2 points of each other on the rating total — if divergence
-exceeds 2 points on any single dimension, calibrate by walking through the
-relevant exemplars in `qa-component-ratings-master-2026-04-30.md` §3.
+exceeds 2 points on any single dimension, calibrate by walking through
+the calibration anchors at the bottom of this file.
 
 ## Pre-review smoke checks
 
@@ -20,7 +20,7 @@ If any pre-check fails, request fixes before scoring.
 
 ## D1 — Spec compliance (0-5)
 
-Ground: `official-requirements-2026-04-29.md`.
+Ground: Anthropic's official Claude Code plugin spec.
 
 - [ ] YAML frontmatter parses cleanly
 - [ ] `name` is kebab-case, 1-64 chars, no `claude`/`anthropic`
@@ -35,7 +35,7 @@ Score: __/5
 
 ## D2 — Archetype fit (0-5)
 
-Ground: `general-use-case-framework-2026-04-30.md` §4.
+Ground: archetype definitions in [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md).
 
 For skills (S1-S4):
 
@@ -99,11 +99,12 @@ Score: __/5
 
 ## D6 — Terminology compliance (0-5) — HARD REJECT IF 0
 
-- [ ] ISTQB-canonical terms (verification, validation, defect, bug, fault, error,
-      regression, smoke, sanity, acceptance, etc.) used per
-      `qa-reliable-sources-2026-05-03.md` §1.2.1
-- [ ] Practitioner-emergent terms (flaky test, contract test, golden file, etc.)
-      attributed to industry-engineering sources, not ISTQB
+- [ ] ISTQB-canonical terms (verification, validation, defect, bug, fault,
+      error, regression, smoke, sanity, acceptance, etc.) cited to
+      [glossary.istqb.org](https://glossary.istqb.org/)
+- [ ] Practitioner-emergent terms (flaky test, contract test, golden file,
+      etc.) attributed to industry-engineering sources (Google Testing
+      Blog, Pact docs, etc.) — never to ISTQB
 - [ ] Tool-specific claims (commands, flags, config fields) grounded in
       fetched canonical source
 - [ ] Source URL cited inline at point of claim, not as a "References:" appendix
@@ -133,18 +134,25 @@ If you see any of these, request changes (don't merge):
 - Agent body > 80 lines (move details to a preloaded skill)
 - Skill body without progressive disclosure (everything inline)
 - Description that is a marketing tagline rather than a behavioral spec
-- Generic role-agent name (`qa-expert`, etc.) — see `decisions.md`
-- Component in a §13 NOT-GAPS slot without justification
+- Generic role-agent name (`qa-expert`, etc.) — `validate.sh` rejects
+  these by name
+- Component in a NOT-GAPS slot (see [`CONTRIBUTING.md`](CONTRIBUTING.md))
+  without measured-evidence justification
 
 ## Calibration
 
 When in doubt, walk through these calibration anchors:
 
-- **A-grade exemplar (28-30/30):** Anthropic's `webapp-testing` skill —
-  progressive disclosure, fetched canonical source, inline cites, exemplary D6.
-- **C-grade exemplar (16-20/30):** davepoon's `setup-visual-testing` —
-  scaffold-only body, no execution detail, weak D5.
-- **F-grade exemplar (<16/30):** any "qa-expert" persona agent — vague
-  description, no archetype fit, generic role framing.
-
-These anchors live in `qa-component-ratings-master-2026-04-30.md` §3.
+- **A-grade exemplar (28-30/30):** a skill that uses progressive
+  disclosure (short main body + linked references), draws every concrete
+  claim from a fetched canonical source, cites URLs inline at point of
+  claim, names ISTQB-canonical terminology accurately, and ships at least
+  one worked example. Anthropic's official `webapp-testing` skill is the
+  reference shape.
+- **C-grade exemplar (16-20/30):** a skill that scaffolds tooling but
+  doesn't actually walk the user through running, parsing, or gating —
+  weak D5. The body reads like a setup README rather than a workflow.
+- **F-grade exemplar (<16/30):** a "qa-expert" persona agent — vague
+  description, no archetype fit, generic role framing, no concrete output
+  shape. Reject and ask the contributor to reshape into a sharp,
+  task-scoped agent.

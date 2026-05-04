@@ -13,7 +13,7 @@ agents, skills, optional commands, and optional hooks.
 ## Status
 
 Phase 0 (foundation) shipped — empty marketplace with green CI pipeline.
-Plugin authoring follows the per-phase plans in the research repo.
+Plugin authoring is in progress; the index below tracks released plugins.
 
 ## Install (once plugins ship)
 
@@ -45,9 +45,10 @@ fields in its YAML frontmatter. CI enforces:
 - `d6 >= 1` (a `d6 = 0` is a hard reject for citation theater — body claims
   not grounded in a fetched canonical source)
 
-Plus naming and description lint rules from `decisions.md` (kebab-case,
-no `claude`/`anthropic` reserved words, no `You are.../I help...` openers,
-no generic role-agent names, no literal placeholder strings).
+Plus naming and description lint rules (kebab-case, no `claude`/`anthropic`
+reserved words, no `You are.../I help...` openers, no generic role-agent
+names, no literal placeholder strings). See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md)
+for the full rule set.
 
 Run locally:
 
@@ -68,12 +69,6 @@ testland-qa/
   .github/workflows/ci.yml           # validate + rating-check + JSON syntax
   docs/                              # CONTRIBUTING, PLUGIN_AUTHORING, REVIEWER_CHECKLIST
 ```
-
-## Research
-
-Design history, decision log, coverage matrix, gap analysis, ratings master,
-reliable-sources catalog, and per-phase build plans live in the companion
-research repo: <https://github.com/elv1s42k/qa-research>.
 
 ## License
 

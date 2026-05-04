@@ -20,8 +20,8 @@ Authoring notes (delete before commit):
   Claude won't auto-load it. Use this default unless the command is intended
   to be model-invokable (rare).
 - `allowed-tools` must be specific Bash patterns (`Bash(git diff *)`,
-  `Bash(npm test --watch=false)`), never bare `Bash`. Per
-  `official-requirements-2026-04-29.md` §1.2, this restricts what the model can
-  execute when running the command.
+  `Bash(npm test --watch=false)`), never bare `Bash`. This restricts what
+  the model can execute when running the command per Anthropic's command
+  spec.
 - Body MUST be non-empty; validate.sh rejects empty command files.
 -->

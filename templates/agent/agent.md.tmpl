@@ -38,16 +38,19 @@ Output: ...
 <!--
 Authoring notes (delete before commit):
 
-- Body stays 30-60 lines per `general-use-case-framework-2026-04-30.md` §4.
-  Reference material lives in preloaded skills; the agent body is task-focused.
+- Body stays 30-60 lines. Reference material lives in preloaded skills;
+  the agent body is task-focused.
 - `archetype` is one of A1 (read-only specialist), A2 (action-taking task),
-  A3 (adversarial critic), A4 (builder/scaffolder).
-- `description` is third-person, action-oriented. Avoid "You are..." / "I help...".
-  Include WHAT it does, WHEN to invoke (proactive trigger), and WHAT it returns.
-- `tools:` should be the minimum needed; never include tools the body never uses.
-  Bash patterns must be specific (`Bash(git diff *)`, not bare `Bash`).
-- `skills:` declares preloaded skills; verify they exist in this plugin or a
-  documented dependency plugin before merge (cross-cutting Task X.1).
-- Self-rate D1-D6 against `qa-rating-framework-2026-04-30.md`; total >=21,
-  d6 >= 1 (citation theater is a hard reject regardless of total).
+  A3 (adversarial critic), A4 (builder/scaffolder). See
+  docs/PLUGIN_AUTHORING.md "Archetypes" for definitions.
+- `description` is third-person, action-oriented. Avoid "You are..." /
+  "I help...". Include WHAT it does, WHEN to invoke (proactive trigger),
+  and WHAT it returns.
+- `tools:` should be the minimum needed; never include tools the body
+  never uses. Bash patterns must be specific (`Bash(git diff *)`, not
+  bare `Bash`).
+- `skills:` declares preloaded skills; verify they exist in this plugin
+  or a documented dependency plugin before merge.
+- Self-rate D1-D6 per docs/REVIEWER_CHECKLIST.md; total >=21, d6 >= 1
+  (citation theater is a hard reject regardless of total).
 -->
