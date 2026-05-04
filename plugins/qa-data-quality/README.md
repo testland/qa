@@ -8,6 +8,7 @@ Data quality testing for analytical pipelines: dbt-tests, Great Expectations, So
 |---|---|---|---|
 | skill | [dbt-testing](skills/dbt-testing/SKILL.md) | S1 | Author and run dbt data tests (generic, singular, custom-macro), parse run_results.json, gate `dbt build` on test results. |
 | skill | [great-expectations](skills/great-expectations/SKILL.md) | S1 | Author GX Core ExpectationSuites + Checkpoints; run validations on Pandas/SQL/Spark batches; parse JSON results for CI gating. |
+| skill | [soda-checks](skills/soda-checks/SKILL.md) | S1 | Author SodaCL checks against SQL warehouses; configure scan profiles; gate CI on `soda scan` exit code. |
 
 ## Install
 
