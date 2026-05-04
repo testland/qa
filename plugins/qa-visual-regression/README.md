@@ -6,7 +6,7 @@ Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybo
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [percy-visual-regression-testing](skills/percy-visual-regression-testing/SKILL.md) | S1 | Author Percy snapshots via @percy/playwright/cypress/selenium/storybook; run with `percy exec`; review diffs in the Percy UI. |
 
 ## Install
 
