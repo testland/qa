@@ -37,7 +37,7 @@
     {
       "name": "qa-bug-repro",
       "source": "./plugins/qa-bug-repro",
-      "description": "Bug reproduction workflow: extracts minimal failing tests from issue reports, classifies crash stacks, clusters defects, and analyzes escape defects.",
+      "description": "Bug reproduction workflow: 1 skill (bug-report-template) and 4 agents (bug-repro-builder, crash-stack-trace-analyzer, defect-clusterer, escape-defect-analyzer).",
       "strict": true
     }
   ]
