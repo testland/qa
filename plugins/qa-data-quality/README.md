@@ -6,7 +6,7 @@ Data quality testing for analytical pipelines: dbt-tests, Great Expectations, So
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [dbt-testing](skills/dbt-testing/SKILL.md) | S1 | Author and run dbt data tests (generic, singular, custom-macro), parse run_results.json, gate `dbt build` on test results. |
 
 ## Install
 
