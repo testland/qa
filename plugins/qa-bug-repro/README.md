@@ -10,6 +10,7 @@ Bug reproduction workflow: extracts minimal failing tests from issue reports, cl
 | agent | [bug-repro-builder](agents/bug-repro-builder.md) | A2 | Action-taking: turn a bug report into a minimal failing test (unit / integration / component / e2e) or a minimal-repro repository. |
 | agent | [crash-stack-trace-analyzer](agents/crash-stack-trace-analyzer.md) | A1 | Parse V8 / Python / JVM / Go / native / minified traces; locate top app frame; `git blame` to attribute; emit hypothesis. |
 | agent | [defect-clusterer](agents/defect-clusterer.md) | A1 | Group a backlog of bug reports by fingerprint (top-frame, error+route, error alone) into root-cause clusters; flag weak-signal clusters for human review. |
+| agent | [escape-defect-analyzer](agents/escape-defect-analyzer.md) | A4 | Builder: classify a production-found bug as test-gap / process-gap / tooling-gap; generate a prevention-asset report with concrete test or monitoring change. |
 
 ## Install
 
