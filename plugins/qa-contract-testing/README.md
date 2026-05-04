@@ -11,6 +11,7 @@ Contract testing for microservices: Pact (consumer + provider + broker + can-i-d
 | skill | [graphql-schema-regression](skills/graphql-schema-regression/SKILL.md) | S1 | Diff GraphQL schemas with `graphql-inspector`; classify BREAKING/DANGEROUS/NON_BREAKING; apply deprecation-aware rules. |
 | skill | [protobuf-compat-checking](skills/protobuf-compat-checking/SKILL.md) | S1 | Wrap `buf breaking` with category selection (FILE/PACKAGE/WIRE_JSON/WIRE), ignore patterns, and CI gating. |
 | skill | [contract-compatibility-gate](skills/contract-compatibility-gate/SKILL.md) | S3 | Aggregate Pact / oasdiff / graphql-inspector / buf-breaking verdicts into a single severity-aware go/no-go gate with markdown + JSON artifact for CI. |
+| agent | [contract-drift-investigator](agents/contract-drift-investigator.md) | A1 | Diff current contracts vs last-known-green; categorize drift (provider-implementation / schema-rename / removal / narrowing / consumer-expectation / data-fixture / version-skew); route to owner. |
 
 ## Install
 
