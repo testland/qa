@@ -8,6 +8,7 @@ API testing across Postman/Newman, RestAssured, Karate, Tavern; Schemathesis + R
 |---|---|---|---|
 | skill | [postman-collections](skills/postman-collections/SKILL.md) | S1 | Author Postman collections; run via Newman CLI; configure JUnit / JSON reporters for CI gating. |
 | skill | [restassured-testing](skills/restassured-testing/SKILL.md) | S1 | Author REST Assured (Java) given/when/then tests; status + JSON/XML path + OAuth2/Basic/API-key auth; run via JUnit 5 + Maven Failsafe. |
+| skill | [karate-testing](skills/karate-testing/SKILL.md) | S1 | Author Karate `.feature` files; use the `match` keyword with fuzzy validators; run via JUnit 5 + Maven Surefire. |
 
 ## Install
 
