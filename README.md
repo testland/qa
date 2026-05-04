@@ -37,6 +37,7 @@ For example:
 | [qa-contract-testing](plugins/qa-contract-testing/) | 6 (5 skills + 1 agent) | 1.0.0 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 7 (2 skills + 5 agents) | 1.0.0 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 5 (1 skill + 4 agents) | 1.0.0 |
+| [qa-shift-left](plugins/qa-shift-left/) | 7 (3 skills + 4 agents) | 1.0.0 |
 
 ## Authoring gate
 

@@ -43,7 +43,7 @@
     {
       "name": "qa-shift-left",
       "source": "./plugins/qa-shift-left",
-      "description": "Shift-left QA: testability review, acceptance-criteria + NFR extraction from product docs, Definition-of-Done checking, STRIDE threat modeling, data-contract extraction, and spec-to-suite orchestration.",
+      "description": "Shift-left QA: 3 skills (acceptance-criteria-extractor, nfr-extractor, data-contract-extractor) and 4 agents (testability-reviewer, definition-of-done-checker, threat-model-from-spec, spec-to-suite-orchestrator).",
       "strict": true
     }
   ]
