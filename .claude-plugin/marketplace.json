@@ -49,7 +49,7 @@
     {
       "name": "qa-api-testing",
       "source": "./plugins/qa-api-testing",
-      "description": "API testing across Postman/Newman, RestAssured, Karate, Tavern; Schemathesis + RESTler fuzzing; and an API chaos runner that injects latency / error rates during test runs.",
+      "description": "API testing: 7 skills (postman-collections, restassured-testing, karate-testing, tavern-testing, schemathesis-fuzzing, restler-fuzzing, api-chaos-runner).",
       "strict": true
     }
   ]
