@@ -8,6 +8,7 @@ Bug reproduction workflow: extracts minimal failing tests from issue reports, cl
 |---|---|---|---|
 | skill | [bug-report-template](skills/bug-report-template/SKILL.md) | S3 | Build a triageable bug report from raw notes; flag gaps in environment / steps / expected / actual / severity / priority / reproducibility. |
 | agent | [bug-repro-builder](agents/bug-repro-builder.md) | A2 | Action-taking: turn a bug report into a minimal failing test (unit / integration / component / e2e) or a minimal-repro repository. |
+| agent | [crash-stack-trace-analyzer](agents/crash-stack-trace-analyzer.md) | A1 | Parse V8 / Python / JVM / Go / native / minified traces; locate top app frame; `git blame` to attribute; emit hypothesis. |
 
 ## Install
 
