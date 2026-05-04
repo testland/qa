@@ -10,6 +10,7 @@ Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI
 | skill | [jmeter-load-testing](skills/jmeter-load-testing/SKILL.md) | S1 | Run `.jmx` test plans via `jmeter -n -t` CLI; HTML dashboard via `-e -o`; JTL parsing for CI gates. |
 | skill | [gatling-load-testing](skills/gatling-load-testing/SKILL.md) | S1 | Author Gatling Simulation classes (Java/Kotlin/Scala/JS); `injectOpen` vs `injectClosed`; setUp().assertions() as the CI gate. |
 | skill | [locust-load-testing](skills/locust-load-testing/SKILL.md) | S1 | Author Python locustfile.py with HttpUser + @task; run headless with `--users` / `--spawn-rate`; CSV / HTML reports for CI gates. |
+| skill | [lighthouse-perf](skills/lighthouse-perf/SKILL.md) | S1 | Lighthouse CI for Web Vitals (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1) at 75th percentile; per-PR assertions + reports. |
 
 ## Install
 
