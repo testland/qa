@@ -1,0 +1,10 @@
+# Shell scripts must use LF line endings so they run correctly on Linux CI
+# runners regardless of the contributor's local autocrlf setting.
+*.sh        text eol=lf
+*.bash      text eol=lf
+
+# JSON, YAML, and Markdown can stay platform-default text but normalize on commit.
+*.json      text
+*.yml       text
+*.yaml      text
+*.md        text
