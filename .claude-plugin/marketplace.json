@@ -63,6 +63,12 @@
       "source": "./plugins/qa-test-data",
       "description": "Test data engineering: 16 skills (faker-data, factory-bot-data, mimesis-data, bogus-data, wiremock-stubs, msw-handlers, mountebank-imposters, synthetic-data-toolkit, golden-file-conventions, seed-data-curator, parameterized-test-generator, boundary-value-generator, e2e-test-narrative-builder, synthetic-pii-generator, malicious-payload-bank, negative-test-generator) and 1 agent (golden-file-manager).",
       "strict": true
+    },
+    {
+      "name": "qa-accessibility-specifics",
+      "source": "./plugins/qa-accessibility-specifics",
+      "description": "Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, contrast, ARIA), screen-reader narrative authoring, a11y violation gate, adversarial code critic, checklist builder, and 5 tool wrappers (axe / pa11y / Lighthouse a11y / WAVE / IBM Equal Access).",
+      "strict": true
     }
   ]
 }
