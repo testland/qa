@@ -10,6 +10,7 @@ Flake triage workflow: bisector, parallel-isolation checker, regression bisector
 | skill | [flake-pattern-reference](skills/flake-pattern-reference/SKILL.md) | S2 | Reference catalog of 8 flake patterns (timing, ordering, shared state, leaks, network, locator, environment, randomness) with detection signals + remediation. |
 | agent | [e2e-flake-bisector](agents/e2e-flake-bisector.md) | A1 | Vary one axis at a time (worker count, random order, network throttle, viewport, animations, OS, sequential reps) over N runs to localize the flake source. |
 | agent | [parallel-isolation-checker](agents/parallel-isolation-checker.md) | A1 | Find shared state two workers collide on: DB row, schema, file path, port, env-var, module singleton, browser context — with file:line evidence. |
+| agent | [regression-bisector](agents/regression-bisector.md) | A1 | `git bisect run` orchestrator: build the test script, mark good/bad, handle exit-125 skips, report the introducing commit. |
 
 ## Install
 
