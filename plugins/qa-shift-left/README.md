@@ -6,7 +6,7 @@ Shift-left QA: testability review, acceptance-criteria + NFR extraction from pro
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| agent | [testability-reviewer](agents/testability-reviewer.md) | A1 | Pre-implementation review: flag claims failing Observable / Decidable / Bounded heuristics; suggest rewrite per claim. |
 
 ## Install
 
