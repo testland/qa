@@ -13,7 +13,7 @@
     {
       "name": "qa-data-quality",
       "source": "./plugins/qa-data-quality",
-      "description": "Data quality testing for analytical pipelines: dbt-tests, Great Expectations, Soda, schema drift detection, and a data-quality engineer agent.",
+      "description": "Data quality testing for analytical pipelines: 5 skills (dbt-testing, great-expectations, soda-checks, data-quality-gate, data-quality-conventions) and 3 agents (schema-diff-reviewer, data-anomaly-triager, data-quality-engineer).",
       "strict": true
     }
   ]
