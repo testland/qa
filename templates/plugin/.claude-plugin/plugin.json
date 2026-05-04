@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "PLUGIN_NAME_KEBAB",
+  "version": "0.1.0",
+  "description": "ONE_LINE_DESCRIPTION_HERE",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/PLUGIN_NAME_KEBAB",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "PRIMARY_KEYWORD"]
+}
