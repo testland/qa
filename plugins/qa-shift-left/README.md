@@ -7,6 +7,7 @@ Shift-left QA: testability review, acceptance-criteria + NFR extraction from pro
 | Type | Name | Archetype | Description |
 |---|---|---|---|
 | agent | [testability-reviewer](agents/testability-reviewer.md) | A1 | Pre-implementation review: flag claims failing Observable / Decidable / Bounded heuristics; suggest rewrite per claim. |
+| skill | [acceptance-criteria-extractor](skills/acceptance-criteria-extractor/SKILL.md) | S3 | Convert story / PRD into Gherkin (Feature / Scenario / Outline) or plain-list AC; flag implicit preconditions. |
 
 ## Install
 
