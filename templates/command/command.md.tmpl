@@ -1,0 +1,27 @@
+---
+name: COMMAND_NAME_KEBAB
+description: ONE_SENTENCE_THIRD_PERSON_ACTION.
+disable-model-invocation: true
+allowed-tools: Bash(SPECIFIC_PATTERN_1) Bash(SPECIFIC_PATTERN_2)
+argument-hint: [ARG_NAME]
+---
+
+ONE_PARAGRAPH_BODY_DESCRIBING_THE_COMMAND.
+
+## Steps
+
+1. STEP_1
+2. STEP_2
+
+<!--
+Authoring notes (delete before commit):
+
+- `disable-model-invocation: true` makes this command user-only (`/<name>`).
+  Claude won't auto-load it. Use this default unless the command is intended
+  to be model-invokable (rare).
+- `allowed-tools` must be specific Bash patterns (`Bash(git diff *)`,
+  `Bash(npm test --watch=false)`), never bare `Bash`. Per
+  `official-requirements-2026-04-29.md` §1.2, this restricts what the model can
+  execute when running the command.
+- Body MUST be non-empty; validate.sh rejects empty command files.
+-->
