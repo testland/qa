@@ -15,6 +15,12 @@
       "source": "./plugins/qa-data-quality",
       "description": "Data quality testing for analytical pipelines: 5 skills (dbt-testing, great-expectations, soda-checks, data-quality-gate, data-quality-conventions) and 3 agents (schema-diff-reviewer, data-anomaly-triager, data-quality-engineer).",
       "strict": true
+    },
+    {
+      "name": "qa-visual-regression",
+      "source": "./plugins/qa-visual-regression",
+      "description": "Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybook visual tests, plus diff classification and baseline curation agents.",
+      "strict": true
     }
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-visual-regression",
+  "version": "0.1.0",
+  "description": "Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybook visual tests, plus diff classification and baseline curation agents.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-visual-regression",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "visual-regression"]
+}
