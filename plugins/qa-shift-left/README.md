@@ -10,6 +10,7 @@ Shift-left QA: testability review, acceptance-criteria + NFR extraction from pro
 | skill | [acceptance-criteria-extractor](skills/acceptance-criteria-extractor/SKILL.md) | S3 | Convert story / PRD into Gherkin (Feature / Scenario / Outline) or plain-list AC; flag implicit preconditions. |
 | skill | [nfr-extractor](skills/nfr-extractor/SKILL.md) | S3 | Pull threshold-bound NFRs (perf / a11y / security / compatibility / reliability / i18n / observability) from PRDs; flag missing thresholds. |
 | agent | [definition-of-done-checker](agents/definition-of-done-checker.md) | A3 | Adversarial: validate story / PR against the team's DoD checklist; reject on any unmet item with rationale. |
+| agent | [threat-model-from-spec](agents/threat-model-from-spec.md) | A4 | Builder: produce a STRIDE threat model from a feature spec; one row per (asset × category); likelihood × impact scoring; OWASP ASVS-anchored mitigations. |
 
 ## Install
 
