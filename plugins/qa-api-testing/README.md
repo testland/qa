@@ -6,7 +6,7 @@ API testing across Postman/Newman, RestAssured, Karate, Tavern; Schemathesis + R
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [postman-collections](skills/postman-collections/SKILL.md) | S1 | Author Postman collections; run via Newman CLI; configure JUnit / JSON reporters for CI gating. |
 
 ## Install
 
