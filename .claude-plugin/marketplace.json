@@ -21,6 +21,12 @@
       "source": "./plugins/qa-visual-regression",
       "description": "Visual regression testing: 7 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots, storybook-visual-regression-testing, responsive-breakpoint-runner, visual-baseline-conventions, visual-baseline-gate) and 2 agents (visual-diff-classifier, visual-baseline-curator).",
       "strict": true
+    },
+    {
+      "name": "qa-contract-testing",
+      "source": "./plugins/qa-contract-testing",
+      "description": "Contract testing for microservices: Pact (consumer + provider + broker + can-i-deploy in one), OpenAPI / GraphQL / Protobuf compat checking, and a contract drift investigator.",
+      "strict": true
     }
   ]
 }
