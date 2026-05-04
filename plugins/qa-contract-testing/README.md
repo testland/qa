@@ -6,7 +6,7 @@ Contract testing for microservices: Pact (consumer + provider + broker + can-i-d
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [pact-contract-testing](skills/pact-contract-testing/SKILL.md) | S1 | Author Pact consumer tests, publish pact files to the Broker, verify on the provider, gate deploys with `can-i-deploy`. |
 
 ## Install
 
