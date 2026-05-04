@@ -11,6 +11,7 @@ API testing across Postman/Newman, RestAssured, Karate, Tavern; Schemathesis + R
 | skill | [karate-testing](skills/karate-testing/SKILL.md) | S1 | Author Karate `.feature` files; use the `match` keyword with fuzzy validators; run via JUnit 5 + Maven Surefire. |
 | skill | [tavern-testing](skills/tavern-testing/SKILL.md) | S1 | YAML-based API tests (`test_*.tavern.yaml`) auto-discovered by pytest; built-in matchers + variable saving across stages. |
 | skill | [schemathesis-fuzzing](skills/schemathesis-fuzzing/SKILL.md) | S1 | Property-based API fuzzing from OpenAPI / GraphQL schema; canonical checks (status / schema / content-type / headers / 5xx); CLI + pytest integration. |
+| skill | [restler-fuzzing](skills/restler-fuzzing/SKILL.md) | S1 | Stateful API fuzzing with Microsoft RESTler: 4-stage workflow (compile → test → fuzz-lean → fuzz); bug buckets + replay logs. |
 
 ## Install
 
