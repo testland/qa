@@ -6,7 +6,7 @@ Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [k6-load-testing](skills/k6-load-testing/SKILL.md) | S1 | Author k6 JavaScript load tests with stages + thresholds; CI gate via `k6 run` exit code. |
 
 ## Install
 
