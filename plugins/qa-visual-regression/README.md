@@ -11,6 +11,7 @@ Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybo
 | skill | [playwright-snapshots](skills/playwright-snapshots/SKILL.md) | S1 | Author `expect(page).toHaveScreenshot()` assertions; configure mask/clip/threshold/maxDiffPixels; manage per-OS / per-browser snapshot dirs and `--update-snapshots`. |
 | skill | [storybook-visual-regression-testing](skills/storybook-visual-regression-testing/SKILL.md) | S1 | Wire visual regression into Storybook via @chromatic-com/storybook (hosted) or @storybook/test-runner postVisit + Playwright (self-hosted). |
 | skill | [responsive-breakpoint-runner](skills/responsive-breakpoint-runner/SKILL.md) | S4 | Dispatcher across viewport matrices for whichever engine the project uses; produces a single cross-breakpoint matrix report. |
+| skill | [visual-baseline-conventions](skills/visual-baseline-conventions/SKILL.md) | S2 | Reference catalog: engine selection, story/page/breakpoint coverage, mask/threshold/wait decision matrix, severity tiering, anti-patterns. |
 
 ## Install
 
