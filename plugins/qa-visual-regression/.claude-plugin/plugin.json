@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-visual-regression",
-  "version": "0.1.0",
-  "description": "Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybook visual tests, plus diff classification and baseline curation agents.",
+  "version": "1.0.0",
+  "description": "Visual regression testing: 7 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots, storybook-visual-regression-testing, responsive-breakpoint-runner, visual-baseline-conventions, visual-baseline-gate) and 2 agents (visual-diff-classifier, visual-baseline-curator).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

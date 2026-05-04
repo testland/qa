@@ -19,7 +19,7 @@
     {
       "name": "qa-visual-regression",
       "source": "./plugins/qa-visual-regression",
-      "description": "Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybook visual tests, plus diff classification and baseline curation agents.",
+      "description": "Visual regression testing: 7 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots, storybook-visual-regression-testing, responsive-breakpoint-runner, visual-baseline-conventions, visual-baseline-gate) and 2 agents (visual-diff-classifier, visual-baseline-curator).",
       "strict": true
     }
   ]
