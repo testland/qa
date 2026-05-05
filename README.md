@@ -42,6 +42,7 @@ For example:
 | [qa-load-testing](plugins/qa-load-testing/) | 10 (9 skills + 1 agent) | 1.0.0 |
 | [qa-test-data](plugins/qa-test-data/) | 17 (16 skills + 1 agent) | 1.0.0 |
 | [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) | 13 (12 skills + 1 agent) | 1.0.0 |
+| [qa-test-environment](plugins/qa-test-environment/) | 5 (4 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 

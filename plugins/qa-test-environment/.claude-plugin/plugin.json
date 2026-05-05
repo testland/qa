@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-environment",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-test-environment plugin (Phase 2 / Tier 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Test environment management: 4 skills (testcontainers, docker-compose-test, feature-flag-test-harness, playwright-fixture-builder) and 1 agent (db-snapshot-restore). Composes with parallel-isolation-checker in qa-flake-triage for shared-state diagnosis.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
