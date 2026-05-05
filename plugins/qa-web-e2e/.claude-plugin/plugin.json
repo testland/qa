@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-web-e2e",
+  "version": "0.1.0",
+  "description": "Scaffold for qa-web-e2e plugin (Phase 3). Components forthcoming.",
+  "author": { "name": "testland", "url": "https://testland.io/" },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-web-e2e",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "e2e", "playwright", "cypress", "selenium"]
+}
