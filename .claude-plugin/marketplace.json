@@ -123,6 +123,12 @@
       "source": "./plugins/qa-mobile-native",
       "description": "Mobile + mobile-web E2E testing: 10 skills covering xcuitest-suite, espresso-suite, appium-testing, detox-testing, maestro-flows, flutter-testing, mobile-device-matrix-toolkit, mobile-web-emulation-runner, touch-gesture-tester, mobile-perf-budget.",
       "strict": true
+    },
+    {
+      "name": "qa-mutation-testing",
+      "source": "./plugins/qa-mutation-testing",
+      "description": "Mutation testing across languages: 5 skills (stryker-mutation, stryker-net-mutation, pitest-mutation, mutmut-mutation, mull-mutation) and 1 agent (mutation-survivor-explainer).",
+      "strict": true
     }
   ]
 }

@@ -51,6 +51,7 @@ For example:
 | [qa-property-based](plugins/qa-property-based/) | 5 (5 skills + 0 agents) | 1.0.0 |
 | [qa-shift-right](plugins/qa-shift-right/) | 5 (3 skills + 2 agents) | 1.0.0 |
 | [qa-mobile-native](plugins/qa-mobile-native/) | 10 (10 skills + 0 agents) | 1.0.0 |
+| [qa-mutation-testing](plugins/qa-mutation-testing/) | 6 (5 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 
