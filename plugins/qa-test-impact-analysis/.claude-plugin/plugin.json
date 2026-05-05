@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-impact-analysis",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-test-impact-analysis plugin (Phase 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Test impact analysis (TIA) and regression-suite hygiene: 2 skills (regression-suite-selector, coverage-debt-tracker) and 2 agents (test-suite-pruner, regression-suite-curator). Selector cuts per-PR run time; tracker + pruner + curator manage long-term suite signal/noise.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

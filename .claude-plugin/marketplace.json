@@ -81,6 +81,12 @@
       "source": "./plugins/qa-test-reporting",
       "description": "Test reporting + coverage analytics: 16 skills — parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
       "strict": true
+    },
+    {
+      "name": "qa-test-impact-analysis",
+      "source": "./plugins/qa-test-impact-analysis",
+      "description": "Test impact analysis + regression-suite hygiene: 2 skills (regression-suite-selector, coverage-debt-tracker) and 2 agents (test-suite-pruner, regression-suite-curator).",
+      "strict": true
     }
   ]
 }
