@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-shift-right",
+  "version": "0.1.0",
+  "description": "Scaffold for qa-shift-right plugin (Phase 3 / Tier 2 — production observability testing 0 hits in corpus). Components forthcoming.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-shift-right",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "shift-right", "synthetic-monitoring", "observability"]
+}
