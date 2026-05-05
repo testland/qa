@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-property-based",
+  "version": "0.1.0",
+  "description": "Scaffold for qa-property-based plugin (Phase 3 / Tier 2 — 0 in corpus). Components forthcoming.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-property-based",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "property-based-testing", "fuzzing"]
+}
