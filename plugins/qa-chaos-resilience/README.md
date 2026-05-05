@@ -1,12 +1,17 @@
 # qa-chaos-resilience
 
-Chaos engineering and fault injection. Litmus / Chaos Mesh (Kubernetes-native), Gremlin (commercial multi-platform), Toxiproxy (TCP-level), structured chaos experiment authoring per the Principles of Chaos Engineering, and failure-injection-driven test authoring.
+Chaos engineering + fault injection per the Principles of Chaos Engineering. Litmus / Chaos Mesh (Kubernetes-native), Gremlin (commercial multi-platform), Toxiproxy (TCP-level), structured chaos experiment authoring, and combined HTTP+TCP fault injection scenarios.
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Archetype |
+|---|---|---|
+| skill | [chaos-experiment-author](skills/chaos-experiment-author/SKILL.md) | S3 |
+| skill | [litmus-chaos](skills/litmus-chaos/SKILL.md) | S1 |
+| skill | [chaos-mesh](skills/chaos-mesh/SKILL.md) | S1 |
+| skill | [gremlin-chaos](skills/gremlin-chaos/SKILL.md) | S1 |
+| skill | [toxiproxy-chaos](skills/toxiproxy-chaos/SKILL.md) | S1 |
+| skill | [failure-injection-test-author](skills/failure-injection-test-author/SKILL.md) | S3 |
 
 ## Install
 

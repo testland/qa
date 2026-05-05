@@ -135,6 +135,12 @@
       "source": "./plugins/qa-process",
       "description": "Test process + methodology: 9 skills + 4 agents covering risk-based testing, DoD, test strategy, blameless post-mortems, release readiness, smoke gating, pyramid analysis, TDD coaching, E2E budgets, test-quality coaching.",
       "strict": true
+    },
+    {
+      "name": "qa-chaos-resilience",
+      "source": "./plugins/qa-chaos-resilience",
+      "description": "Chaos engineering + fault injection: 6 skills (chaos-experiment-author, litmus-chaos, chaos-mesh, gremlin-chaos, toxiproxy-chaos, failure-injection-test-author).",
+      "strict": true
     }
   ]
 }

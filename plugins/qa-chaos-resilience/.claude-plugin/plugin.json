@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-chaos-resilience",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-chaos-resilience plugin (Phase 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Chaos engineering + fault injection: 6 skills (chaos-experiment-author, litmus-chaos, chaos-mesh, gremlin-chaos, toxiproxy-chaos, failure-injection-test-author).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-chaos-resilience",
   "repository": "https://github.com/testland/qa",
