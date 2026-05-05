@@ -6,7 +6,9 @@ Browser and OS compatibility testing — runs the smoke suite across configured 
 
 | Type | Name | Archetype |
 |---|---|---|
-| (filled in as components are added) | | | |
+| Skill | [browser-matrix-runner](skills/browser-matrix-runner/SKILL.md) | S1 |
+| Skill | [os-matrix-runner](skills/os-matrix-runner/SKILL.md) | S1 |
+| Skill | [compatibility-budget](skills/compatibility-budget/SKILL.md) | S2 |
 
 ## Install
 
