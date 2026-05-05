@@ -147,6 +147,12 @@
       "source": "./plugins/qa-bdd",
       "description": "BDD pipelines: 7 skills (cucumber-testing, behave-testing, reqnroll-testing, specflow-testing legacy, bdd-step-library-curator, gherkin-from-stories, acceptance-test-from-criteria) and 1 agent (gherkin-style-reviewer).",
       "strict": true
+    },
+    {
+      "name": "qa-localization",
+      "source": "./plugins/qa-localization",
+      "description": "Localization (l10n) + i18n testing: 4 skills (i18n-string-coverage, pseudo-localization-runner, rtl-rendering-tester, locale-format-validator).",
+      "strict": true
     }
   ]
 }

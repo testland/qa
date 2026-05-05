@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-localization",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-localization plugin (Phase 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Localization (l10n) + internationalization (i18n) testing: 4 skills (i18n-string-coverage, pseudo-localization-runner, rtl-rendering-tester, locale-format-validator).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-localization",
   "repository": "https://github.com/testland/qa",
