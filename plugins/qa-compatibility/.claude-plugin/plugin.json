@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-compatibility",
+  "version": "0.1.0",
+  "description": "Scaffold for qa-compatibility plugin (Phase 3). Components forthcoming.",
+  "author": { "name": "testland", "url": "https://testland.io/" },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-compatibility",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "compatibility", "browser-matrix", "os-matrix"]
+}
