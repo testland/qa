@@ -171,6 +171,12 @@
       "source": "./plugins/qa-web-e2e",
       "description": "Web E2E framework wrappers: 6 skills (playwright-testing, cypress-testing, selenium-testing, webdriverio-testing, puppeteer-testing, testcafe-testing) and 2 agents (playwright-codegen-reviewer, selenium-grid-orchestrator).",
       "strict": true
+    },
+    {
+      "name": "qa-ci-integration",
+      "source": "./plugins/qa-ci-integration",
+      "description": "CI/CD test workflow patterns: 5 skills (github-actions-test-jobs, gitlab-ci-test-jobs, jenkinsfile-test-stages, circleci-test-configs, ci-test-job-conventions).",
+      "strict": true
     }
   ]
 }
