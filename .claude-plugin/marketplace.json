@@ -189,6 +189,12 @@
       "source": "./plugins/qa-cli-tools",
       "description": "CLI + TUI testing tools: 3 skills (bats-testing, tui-snapshot-tester, cli-output-conventions).",
       "strict": true
+    },
+    {
+      "name": "qa-llm-evaluation",
+      "source": "./plugins/qa-llm-evaluation",
+      "description": "LLM and prompt evaluation: Promptfoo, OpenAI Evals, DeepEval, Ragas, Giskard-LLM, Langfuse tracing, plus a prompt-eval-reviewer agent.",
+      "strict": true
     }
   ]
 }
