@@ -79,7 +79,7 @@
     {
       "name": "qa-test-reporting",
       "source": "./plugins/qa-test-reporting",
-      "description": "Test reporting + coverage analytics: 16 skills — parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
+      "description": "Test reporting + coverage analytics: 16 skills \u2014 parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
       "strict": true
     },
     {
@@ -91,31 +91,31 @@
     {
       "name": "qa-roles",
       "source": "./plugins/qa-roles",
-      "description": "Sharply-scoped QA role agents (3): test-architect (A2 — pyramid + framework recommendation per repo), quality-coach (A3 — DoD adherence enforcer), release-engineer (A4 — runbook + canary release conductor). No generic persona-as-scope agents.",
+      "description": "Sharply-scoped QA role agents (3): test-architect (A2 \u2014 pyramid + framework recommendation per repo), quality-coach (A3 \u2014 DoD adherence enforcer), release-engineer (A4 \u2014 runbook + canary release conductor). No generic persona-as-scope agents.",
       "strict": true
     },
     {
       "name": "qa-test-review",
       "source": "./plugins/qa-test-review",
-      "description": "Test code reviewers for test files only — closes the production-reviewer-saturated / test-reviewer-absent gap. 1 skill (test-code-conventions S2) and 4 adversarial agents A3: test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic.",
+      "description": "Test code reviewers for test files only \u2014 closes the production-reviewer-saturated / test-reviewer-absent gap. 1 skill (test-code-conventions S2) and 4 adversarial agents A3: test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic.",
       "strict": true
     },
     {
       "name": "qa-manual-testing",
       "source": "./plugins/qa-manual-testing",
-      "description": "Manual scripted + exploratory testing (Tier 1 — entirely unrepresented in ecosystem): 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief) and 1 agent (exploratory-charter-author).",
+      "description": "Manual scripted + exploratory testing (Tier 1 \u2014 entirely unrepresented in ecosystem): 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief) and 1 agent (exploratory-charter-author).",
       "strict": true
     },
     {
       "name": "qa-property-based",
       "source": "./plugins/qa-property-based",
-      "description": "Property-based testing libraries (Tier 2 — 0 in corpus): 5 skills covering Hypothesis (Python), fast-check (JS/TS), proptest (Rust), jqwik (JVM), QuickCheck (Haskell) + ScalaCheck.",
+      "description": "Property-based testing libraries (Tier 2 \u2014 0 in corpus): 5 skills covering Hypothesis (Python), fast-check (JS/TS), proptest (Rust), jqwik (JVM), QuickCheck (Haskell) + ScalaCheck.",
       "strict": true
     },
     {
       "name": "qa-shift-right",
       "source": "./plugins/qa-shift-right",
-      "description": "Production-side QA per ISTQB-canonical shift right (Tier 2 — 0 hits in corpus). 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
+      "description": "Production-side QA per ISTQB-canonical shift right (Tier 2 \u2014 0 hits in corpus). 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
       "strict": true
     },
     {
@@ -182,6 +182,12 @@
       "name": "qa-iac",
       "source": "./plugins/qa-iac",
       "description": "Infrastructure-as-code testing + security policy: 5 skills (helm-chart-tester, policy-as-code-runner, checkov-policy, tfsec-policy, kics-policy) and 2 agents (terraform-plan-reviewer, iac-policy-checker).",
+      "strict": true
+    },
+    {
+      "name": "qa-cli-tools",
+      "source": "./plugins/qa-cli-tools",
+      "description": "Scaffold for qa-cli-tools plugin (Phase 3). Components forthcoming.",
       "strict": true
     }
   ]
