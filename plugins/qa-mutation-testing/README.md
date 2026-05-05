@@ -1,12 +1,17 @@
 # qa-mutation-testing
 
-Mutation testing per language — closes the "is your test suite actually catching bugs?" gap. Mutation testing introduces small changes (mutants) into the production code; if tests still pass, the test suite is too weak. Coverage at 100% with weak assertions = high mutation-survival rate; this plugin makes that visible.
+Mutation testing across the major language ecosystems. Mutation testing inserts small bugs (mutants) into production code; if tests pass, they don't actually catch the regressions. Surviving mutants reveal weak assertions and missing edge-case tests that coverage hides.
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Archetype |
+|---|---|---|
+| skill | [stryker-mutation](skills/stryker-mutation/SKILL.md) | S1 |
+| skill | [stryker-net-mutation](skills/stryker-net-mutation/SKILL.md) | S1 |
+| skill | [pitest-mutation](skills/pitest-mutation/SKILL.md) | S1 |
+| skill | [mutmut-mutation](skills/mutmut-mutation/SKILL.md) | S1 |
+| skill | [mull-mutation](skills/mull-mutation/SKILL.md) | S1 |
+| agent | [mutation-survivor-explainer](agents/mutation-survivor-explainer.md) | A1 |
 
 ## Install
 
