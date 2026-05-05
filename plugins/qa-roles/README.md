@@ -1,6 +1,6 @@
 # qa-roles
 
-Sharply-scoped QA role agents. **No `qa-expert` / `quality-engineer` / `qa-master`** — those are persona-as-scope and saturated in the ecosystem (and rejected by the marketplace's lint rules). Each agent here ships with **one specific task** the role would do, not a job-title.
+Sharply-scoped QA role agents — each one ships a **specific task** for the role, not a job-title persona. The marketplace's lint rules reject `qa-expert` / `quality-engineer` / `qa-master` style names; this plugin demonstrates the correct pattern.
 
 `data-quality-engineer` lives in `qa-data-quality`. `production-tester` lives in `qa-shift-right`. `exploratory-charter-author` lives in `qa-manual-testing`.
 
@@ -8,7 +8,9 @@ Sharply-scoped QA role agents. **No `qa-expert` / `quality-engineer` / `qa-maste
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| agent | [test-architect](agents/test-architect.md) | A2 | Per-repo pyramid + framework recommendation; reads change-set shape, computes current ratios, outputs evidence-backed target ratios + framework trade-off matrix. |
+| agent | [quality-coach](agents/quality-coach.md) | A3 | Adversarial DoD-adherence reviewer; reads team's `definition-of-done.md`, walks each line, marks met/not-met/unverifiable with evidence. Refuses to mark "done" if any line unmet. |
+| agent | [release-engineer](agents/release-engineer.md) | A4 | Runbook + canary-release conductor; pre-flight + smoke gate + canary deploy + observation + human gate + full rollout + post-release. Never auto-rollouts. |
 
 ## Install
 

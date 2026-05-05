@@ -45,6 +45,7 @@ For example:
 | [qa-test-environment](plugins/qa-test-environment/) | 5 (4 skills + 1 agent) | 1.0.0 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 16 (16 skills + 0 agents) | 1.0.0 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 4 (2 skills + 2 agents) | 1.0.0 |
+| [qa-roles](plugins/qa-roles/) | 3 (0 skills + 3 agents) | 1.0.0 |
 
 ## Authoring gate
 

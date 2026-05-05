@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-roles",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-roles plugin (Phase 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Sharply-scoped QA role agents (3): test-architect (pyramid + framework recommendation per repo), quality-coach (DoD adherence enforcer), release-engineer (runbook + canary release conductor). No generic 'qa-expert' style persona-as-scope agents.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

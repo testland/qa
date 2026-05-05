@@ -87,6 +87,12 @@
       "source": "./plugins/qa-test-impact-analysis",
       "description": "Test impact analysis + regression-suite hygiene: 2 skills (regression-suite-selector, coverage-debt-tracker) and 2 agents (test-suite-pruner, regression-suite-curator).",
       "strict": true
+    },
+    {
+      "name": "qa-roles",
+      "source": "./plugins/qa-roles",
+      "description": "Sharply-scoped QA role agents (3): test-architect (A2 — pyramid + framework recommendation per repo), quality-coach (A3 — DoD adherence enforcer), release-engineer (A4 — runbook + canary release conductor). No generic persona-as-scope agents.",
+      "strict": true
     }
   ]
 }
