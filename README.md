@@ -47,6 +47,7 @@ For example:
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 4 (2 skills + 2 agents) | 1.0.0 |
 | [qa-roles](plugins/qa-roles/) | 3 (0 skills + 3 agents) | 1.0.0 |
 | [qa-test-review](plugins/qa-test-review/) | 5 (1 skill + 4 agents) | 1.0.0 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 7 (6 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 

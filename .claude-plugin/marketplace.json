@@ -99,6 +99,12 @@
       "source": "./plugins/qa-test-review",
       "description": "Test code reviewers for test files only — closes the production-reviewer-saturated / test-reviewer-absent gap. 1 skill (test-code-conventions S2) and 4 adversarial agents A3: test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic.",
       "strict": true
+    },
+    {
+      "name": "qa-manual-testing",
+      "source": "./plugins/qa-manual-testing",
+      "description": "Manual scripted + exploratory testing (Tier 1 — entirely unrepresented in ecosystem): 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief) and 1 agent (exploratory-charter-author).",
+      "strict": true
     }
   ]
 }

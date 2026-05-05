@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-manual-testing",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-manual-testing plugin (Phase 3 / Tier 1 — entirely unrepresented in ecosystem). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Manual scripted + exploratory testing — entirely unrepresented in the existing ecosystem (Tier 1 gap). 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief) and 1 agent (exploratory-charter-author).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
