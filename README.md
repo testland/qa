@@ -57,6 +57,7 @@ For example:
 | [qa-bdd](plugins/qa-bdd/) | 8 (7 skills + 1 agent) | 1.0.0 |
 | [qa-localization](plugins/qa-localization/) | 4 (4 skills + 0 agents) | 1.0.0 |
 | [qa-ai-assisted](plugins/qa-ai-assisted/) | 4 (3 skills + 1 agent) | 1.0.0 |
+| [qa-compatibility](plugins/qa-compatibility/) | 3 (3 skills + 0 agents) | 1.0.0 |
 
 ## Authoring gate
 

@@ -159,6 +159,12 @@
       "source": "./plugins/qa-ai-assisted",
       "description": "AI-assisted test generation + curation: 3 skills (ai-test-generator, ai-spec-coverage-mapper, model-based-test-graph-author) and 1 agent (ai-test-curator).",
       "strict": true
+    },
+    {
+      "name": "qa-compatibility",
+      "source": "./plugins/qa-compatibility",
+      "description": "Browser + OS compatibility testing: 3 skills (browser-matrix-runner, os-matrix-runner, compatibility-budget).",
+      "strict": true
     }
   ]
 }
