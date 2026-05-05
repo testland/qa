@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-cli-tools",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-cli-tools plugin (Phase 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "CLI + TUI testing tools: 3 skills (bats-testing, tui-snapshot-tester, cli-output-conventions).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-cli-tools",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "cli-tools"]
+  "keywords": ["qa", "testing", "cli", "bats", "tui", "snapshot", "shell-script"]
 }
