@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-ai-assisted",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-ai-assisted plugin (Phase 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "AI-assisted test generation + curation: 3 skills (ai-test-generator, ai-spec-coverage-mapper, model-based-test-graph-author) and 1 agent (ai-test-curator).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-ai-assisted",
   "repository": "https://github.com/testland/qa",

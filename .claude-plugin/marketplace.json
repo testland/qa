@@ -153,6 +153,12 @@
       "source": "./plugins/qa-localization",
       "description": "Localization (l10n) + i18n testing: 4 skills (i18n-string-coverage, pseudo-localization-runner, rtl-rendering-tester, locale-format-validator).",
       "strict": true
+    },
+    {
+      "name": "qa-ai-assisted",
+      "source": "./plugins/qa-ai-assisted",
+      "description": "AI-assisted test generation + curation: 3 skills (ai-test-generator, ai-spec-coverage-mapper, model-based-test-graph-author) and 1 agent (ai-test-curator).",
+      "strict": true
     }
   ]
 }

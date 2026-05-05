@@ -56,6 +56,7 @@ For example:
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 6 (6 skills + 0 agents) | 1.0.0 |
 | [qa-bdd](plugins/qa-bdd/) | 8 (7 skills + 1 agent) | 1.0.0 |
 | [qa-localization](plugins/qa-localization/) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-ai-assisted](plugins/qa-ai-assisted/) | 4 (3 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 
