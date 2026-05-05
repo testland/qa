@@ -1,12 +1,16 @@
 # qa-ci-integration
 
-CI/CD test workflow patterns per platform: GitHub Actions, GitLab CI/CD, Jenkins, CircleCI. Each platform's matrix builds, artifact handling, retry policies, sharding, JUnit reporting. Plus cross-CI conventions (when to shard, retry policy, flake quarantine integration, artifact lifecycle).
+CI/CD test workflow patterns per platform: GitHub Actions, GitLab CI/CD, Jenkins, CircleCI. Each platform's matrix builds, artifact handling, retry policies, sharding, JUnit reporting. Plus cross-CI conventions reference (when to shard, retry policy, flake quarantine integration, artifact lifecycle).
 
 ## Components
 
 | Type | Name | Archetype |
 |---|---|---|
-| (filled in as components are added) | | | |
+| skill | [github-actions-test-jobs](skills/github-actions-test-jobs/SKILL.md) | S1 |
+| skill | [gitlab-ci-test-jobs](skills/gitlab-ci-test-jobs/SKILL.md) | S1 |
+| skill | [jenkinsfile-test-stages](skills/jenkinsfile-test-stages/SKILL.md) | S1 |
+| skill | [circleci-test-configs](skills/circleci-test-configs/SKILL.md) | S1 |
+| skill | [ci-test-job-conventions](skills/ci-test-job-conventions/SKILL.md) | S2 |
 
 ## Install
 
