@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-process",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-process plugin (Phase 3). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Test process + methodology: 9 skills (risk-matrix, definition-of-done, test-strategy-author, post-mortem-author, smoke-suite-gate, test-pyramid-balancer, tdd-stuck-pattern-resolver, risk-storming-facilitator, e2e-suite-budget) and 4 agents (release-readiness-checker, risk-based-test-selector, risk-based-test-planner, test-quality-coach).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-process",
   "repository": "https://github.com/testland/qa",
