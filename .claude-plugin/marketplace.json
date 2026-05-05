@@ -117,6 +117,12 @@
       "source": "./plugins/qa-shift-right",
       "description": "Production-side QA per ISTQB-canonical shift right (Tier 2 — 0 hits in corpus). 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
       "strict": true
+    },
+    {
+      "name": "qa-mobile-native",
+      "source": "./plugins/qa-mobile-native",
+      "description": "Mobile + mobile-web E2E testing: 10 skills covering xcuitest-suite, espresso-suite, appium-testing, detox-testing, maestro-flows, flutter-testing, mobile-device-matrix-toolkit, mobile-web-emulation-runner, touch-gesture-tester, mobile-perf-budget.",
+      "strict": true
     }
   ]
 }

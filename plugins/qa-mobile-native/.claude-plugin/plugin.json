@@ -1,12 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-mobile-native",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-mobile-native plugin (Phase 3). Components forthcoming.",
-  "author": {
-    "name": "testland",
-    "url": "https://testland.io/"
-  },
+  "version": "1.0.0",
+  "description": "Mobile + mobile-web E2E testing: 10 skills covering native (xcuitest-suite, espresso-suite), cross-platform drivers (appium-testing, detox-testing, maestro-flows), Flutter (flutter-testing), device-matrix dispatcher (mobile-device-matrix-toolkit), mobile-web emulation (mobile-web-emulation-runner), touch gesture verification (touch-gesture-tester), mobile Web Vitals budget (mobile-perf-budget).",
+  "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-mobile-native",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
