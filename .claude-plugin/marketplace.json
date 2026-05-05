@@ -141,6 +141,12 @@
       "source": "./plugins/qa-chaos-resilience",
       "description": "Chaos engineering + fault injection: 6 skills (chaos-experiment-author, litmus-chaos, chaos-mesh, gremlin-chaos, toxiproxy-chaos, failure-injection-test-author).",
       "strict": true
+    },
+    {
+      "name": "qa-bdd",
+      "source": "./plugins/qa-bdd",
+      "description": "BDD pipelines: 7 skills (cucumber-testing, behave-testing, reqnroll-testing, specflow-testing legacy, bdd-step-library-curator, gherkin-from-stories, acceptance-test-from-criteria) and 1 agent (gherkin-style-reviewer).",
+      "strict": true
     }
   ]
 }

@@ -54,6 +54,7 @@ For example:
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 6 (5 skills + 1 agent) | 1.0.0 |
 | [qa-process](plugins/qa-process/) | 13 (9 skills + 4 agents) | 1.0.0 |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 6 (6 skills + 0 agents) | 1.0.0 |
+| [qa-bdd](plugins/qa-bdd/) | 8 (7 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 
