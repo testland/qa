@@ -165,6 +165,12 @@
       "source": "./plugins/qa-compatibility",
       "description": "Browser + OS compatibility testing: 3 skills (browser-matrix-runner, os-matrix-runner, compatibility-budget).",
       "strict": true
+    },
+    {
+      "name": "qa-web-e2e",
+      "source": "./plugins/qa-web-e2e",
+      "description": "Web E2E framework wrappers: 6 skills (playwright-testing, cypress-testing, selenium-testing, webdriverio-testing, puppeteer-testing, testcafe-testing) and 2 agents (playwright-codegen-reviewer, selenium-grid-orchestrator).",
+      "strict": true
     }
   ]
 }
