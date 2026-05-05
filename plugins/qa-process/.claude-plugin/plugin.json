@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-process",
+  "version": "0.1.0",
+  "description": "Scaffold for qa-process plugin (Phase 3). Components forthcoming.",
+  "author": { "name": "testland", "url": "https://testland.io/" },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-process",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "process", "risk-based-testing", "definition-of-done", "test-strategy"]
+}
