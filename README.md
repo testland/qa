@@ -12,10 +12,11 @@ agents, skills, optional commands, and optional hooks.
 
 ## Status
 
-Phase 0 (foundation) shipped — empty marketplace with green CI pipeline.
-Plugin authoring is in progress; the index below tracks released plugins.
+**Phase 3 complete (2026-05-05)** — all 30 plugins shipped at 1.0.0,
+covering ~217 components across the QA gap matrix. Marketplace version
+**3.0.0**. The index below tracks per-plugin status.
 
-## Install (once plugins ship)
+## Install
 
 ```
 /plugin marketplace add testland/qa
