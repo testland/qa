@@ -177,6 +177,12 @@
       "source": "./plugins/qa-ci-integration",
       "description": "CI/CD test workflow patterns: 5 skills (github-actions-test-jobs, gitlab-ci-test-jobs, jenkinsfile-test-stages, circleci-test-configs, ci-test-job-conventions).",
       "strict": true
+    },
+    {
+      "name": "qa-iac",
+      "source": "./plugins/qa-iac",
+      "description": "Infrastructure-as-code testing + security policy: 5 skills (helm-chart-tester, policy-as-code-runner, checkov-policy, tfsec-policy, kics-policy) and 2 agents (terraform-plan-reviewer, iac-policy-checker).",
+      "strict": true
     }
   ]
 }

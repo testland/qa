@@ -6,7 +6,13 @@ Infrastructure-as-code testing + security policy. Terraform plan review, Helm ch
 
 | Type | Name | Archetype |
 |---|---|---|
-| (filled in as components are added) | | | |
+| Agent | [terraform-plan-reviewer](agents/terraform-plan-reviewer.md) | A1 |
+| Agent | [iac-policy-checker](agents/iac-policy-checker.md) | A3 |
+| Skill | [helm-chart-tester](skills/helm-chart-tester/SKILL.md) | S1 |
+| Skill | [policy-as-code-runner](skills/policy-as-code-runner/SKILL.md) | S1 |
+| Skill | [checkov-policy](skills/checkov-policy/SKILL.md) | S1 |
+| Skill | [tfsec-policy](skills/tfsec-policy/SKILL.md) | S1 |
+| Skill | [kics-policy](skills/kics-policy/SKILL.md) | S1 |
 
 ## Install
 

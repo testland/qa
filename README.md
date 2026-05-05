@@ -60,6 +60,7 @@ For example:
 | [qa-compatibility](plugins/qa-compatibility/) | 3 (3 skills + 0 agents) | 1.0.0 |
 | [qa-web-e2e](plugins/qa-web-e2e/) | 8 (6 skills + 2 agents) | 1.0.0 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-iac](plugins/qa-iac/) | 7 (5 skills + 2 agents) | 1.0.0 |
 
 ## Authoring gate
 
