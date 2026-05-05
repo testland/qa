@@ -1,12 +1,16 @@
 # qa-test-review
 
-Test code quality reviewers — agents specialized for **test files only**, not production code. Production-code reviewers are saturated in the ecosystem (12+ near-clones); test-code reviewers are not (none specialize in test code per the rating analysis). This plugin closes that gap.
+Test code quality reviewers — agents specialized for **test files only**, not production code. Closes the gap surfaced in `qa-component-ratings-master-2026-04-30.md` §8: none of the 247 importable components in the surveyed corpus specialize in test-code hygiene; production-code reviewers are over-supplied (12+ near-clones).
 
 ## Components
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [test-code-conventions](skills/test-code-conventions/SKILL.md) | S2 | Pure-reference catalog (§1-§10): AAA structure, single-responsibility, naming, assertion specificity, mocking, fixture coupling, magic numbers, E2E selectors, web-first assertions, slow setup. The agents in this plugin cite back to it. |
+| agent | [test-code-critic](agents/test-code-critic.md) | A3 | Walks structure / naming / single-responsibility / magic-number / slow-setup violations (§1-§3, §6, §7, §10). Refuses to review production code. |
+| agent | [assertion-quality-reviewer](agents/assertion-quality-reviewer.md) | A3 | Rates each assertion as specific / narrow-vague / wide-vague / match-vague (§4). Recommends specific replacements. |
+| agent | [mocking-anti-pattern-detector](agents/mocking-anti-pattern-detector.md) | A3 | Flags over-mocking, behavior-verification leakage, mock chains, mocking-what-you-don't-own, and fake-candidate situations (§5). |
+| agent | [e2e-selector-quality-critic](agents/e2e-selector-quality-critic.md) | A3 | Flags brittle CSS class / nth-child / XPath selectors and non-web-first assertions; recommends `getByRole` / accessibility-first equivalents (§8, §9). |
 
 ## Install
 

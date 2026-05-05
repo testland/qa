@@ -93,6 +93,12 @@
       "source": "./plugins/qa-roles",
       "description": "Sharply-scoped QA role agents (3): test-architect (A2 — pyramid + framework recommendation per repo), quality-coach (A3 — DoD adherence enforcer), release-engineer (A4 — runbook + canary release conductor). No generic persona-as-scope agents.",
       "strict": true
+    },
+    {
+      "name": "qa-test-review",
+      "source": "./plugins/qa-test-review",
+      "description": "Test code reviewers for test files only — closes the production-reviewer-saturated / test-reviewer-absent gap. 1 skill (test-code-conventions S2) and 4 adversarial agents A3: test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic.",
+      "strict": true
     }
   ]
 }

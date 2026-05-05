@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-review",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-test-review plugin (Phase 3 — gap from rating analysis). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Test code quality reviewers for test files only — closes the gap surfaced in component-rating analysis (production-code reviewers saturated; test-code reviewers absent). 1 skill (test-code-conventions S2 reference) and 4 adversarial agents A3: test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
