@@ -1,12 +1,16 @@
 # qa-property-based
 
-Property-based testing libraries (PBT) — entirely absent from the existing ecosystem (Tier 2 gap). Per ISTQB: "A test approach in which test results are verified using specified relations between inputs and expected results of a test case." This plugin ships per-language wrappers for the QuickCheck-derived PBT family: Hypothesis (Python), fast-check (JS/TS), proptest (Rust), jqwik (JVM), QuickCheck (Haskell) / ScalaCheck.
+Property-based testing for the QuickCheck-derived family — entirely absent from the existing ecosystem (Tier 2 gap, 0 in corpus). Per ISTQB: PBT is "a test approach in which test results are verified using specified relations between inputs and expected results of a test case." Each skill ships authoring + run + shrinking + CI integration for its language's canonical PBT library.
 
 ## Components
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [hypothesis-testing](skills/hypothesis-testing/SKILL.md) | S1 | Python Hypothesis: `@given` + strategies + composite + `assume()` + settings + pytest integration. |
+| skill | [fast-check-testing](skills/fast-check-testing/SKILL.md) | S1 | JS/TS fast-check: `fc.assert(fc.property(...))` + arbitraries + combinators + race-condition detection + model-based testing. |
+| skill | [proptest-testing](skills/proptest-testing/SKILL.md) | S1 | Rust proptest: `proptest!` macro + regex-string strategies + `prop_compose!` + failure persistence. |
+| skill | [jqwik-testing](skills/jqwik-testing/SKILL.md) | S1 | JVM jqwik: `@Property` + `@ForAll` + Arbitraries API + `@Provide` + JUnit 5 integration. |
+| skill | [quickcheck-testing](skills/quickcheck-testing/SKILL.md) | S1 | Haskell QuickCheck (the original) + ScalaCheck: `quickCheck` / `forAll` + `Arbitrary` typeclass + `shrink`. |
 
 ## Install
 

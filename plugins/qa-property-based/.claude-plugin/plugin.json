@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-property-based",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-property-based plugin (Phase 3 / Tier 2 — 0 in corpus). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Property-based testing libraries for the QuickCheck-derived family — closes Tier 2 gap (0 in corpus). 5 skills: hypothesis-testing (Python), fast-check-testing (JS/TS), proptest-testing (Rust), jqwik-testing (JVM), quickcheck-testing (Haskell + ScalaCheck).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

@@ -105,6 +105,12 @@
       "source": "./plugins/qa-manual-testing",
       "description": "Manual scripted + exploratory testing (Tier 1 — entirely unrepresented in ecosystem): 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief) and 1 agent (exploratory-charter-author).",
       "strict": true
+    },
+    {
+      "name": "qa-property-based",
+      "source": "./plugins/qa-property-based",
+      "description": "Property-based testing libraries (Tier 2 — 0 in corpus): 5 skills covering Hypothesis (Python), fast-check (JS/TS), proptest (Rust), jqwik (JVM), QuickCheck (Haskell) + ScalaCheck.",
+      "strict": true
     }
   ]
 }
