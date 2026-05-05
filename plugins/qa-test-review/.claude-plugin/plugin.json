@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-test-review",
+  "version": "0.1.0",
+  "description": "Scaffold for qa-test-review plugin (Phase 3 — gap from rating analysis). Components forthcoming.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-test-review",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "test-review", "code-quality"]
+}
