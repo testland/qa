@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-manual-testing",
+  "version": "0.1.0",
+  "description": "Scaffold for qa-manual-testing plugin (Phase 3 / Tier 1 — entirely unrepresented in ecosystem). Components forthcoming.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-manual-testing",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "manual-testing", "exploratory-testing", "uat"]
+}
