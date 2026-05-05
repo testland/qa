@@ -22,3 +22,6 @@ jobs:
 
       - name: Validate marketplace.json syntax
         run: python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"
+
+      - name: Validate composition graph (agent -> skill preloads)
+        run: python3 scripts/composition-graph.py
