@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-shift-right",
-  "version": "0.1.0",
-  "description": "Scaffold for qa-shift-right plugin (Phase 3 / Tier 2 — production observability testing 0 hits in corpus). Components forthcoming.",
+  "version": "1.0.0",
+  "description": "Production-side QA per ISTQB-canonical shift-right ('a test approach to test a system continuously in production'): 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

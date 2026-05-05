@@ -111,6 +111,12 @@
       "source": "./plugins/qa-property-based",
       "description": "Property-based testing libraries (Tier 2 — 0 in corpus): 5 skills covering Hypothesis (Python), fast-check (JS/TS), proptest (Rust), jqwik (JVM), QuickCheck (Haskell) + ScalaCheck.",
       "strict": true
+    },
+    {
+      "name": "qa-shift-right",
+      "source": "./plugins/qa-shift-right",
+      "description": "Production-side QA per ISTQB-canonical shift right (Tier 2 — 0 hits in corpus). 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
+      "strict": true
     }
   ]
 }
