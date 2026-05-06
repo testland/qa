@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-auth-flows",
+  "version": "0.1.0",
+  "description": "Auth flow testing: Keycloak, Auth0, Okta scenario testing plus oauth-flow-test-author and session-management-test-author skills.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-auth-flows",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "auth-flows"]
+}

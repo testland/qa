@@ -207,6 +207,12 @@
       "source": "./plugins/qa-async-jobs",
       "description": "Background job and queue testing: 7 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, cron-job-test-author, idempotency-test-author). Phase 4 plugin per v2 master plan; D6=4 inline-citation floor applied throughout.",
       "strict": true
+    },
+    {
+      "name": "qa-auth-flows",
+      "source": "./plugins/qa-auth-flows",
+      "description": "Auth flow testing: Keycloak, Auth0, Okta scenario testing plus oauth-flow-test-author and session-management-test-author skills.",
+      "strict": true
     }
   ]
 }
