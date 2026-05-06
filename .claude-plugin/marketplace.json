@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.1.5"
+    "version": "3.2.0"
   },
   "plugins": [
     {
@@ -253,7 +253,7 @@
     {
       "name": "qa-compliance",
       "source": "./plugins/qa-compliance",
-      "description": "Compliance test patterns: GDPR, CCPA, SOC 2, HIPAA, PCI-DSS, audit-trail-test-author, plus a compliance-readiness-reviewer agent.",
+      "description": "Compliance test patterns + readiness review: 6 skills (gdpr-test-patterns, ccpa-test-patterns, soc2-evidence-collector, hipaa-test-patterns, pci-dss-scope-checker, audit-trail-test-author) and 1 agent (compliance-readiness-reviewer). Final Phase 5 plugin per v2 master plan.",
       "strict": true
     }
   ]

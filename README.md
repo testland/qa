@@ -13,12 +13,10 @@ agents, skills, optional commands, and optional hooks.
 ## Status
 
 **Phase 3 complete (2026-05-05); Phase 4 complete (2026-05-06);
-Phase 5 in progress (2026-05-06)** — 30 v1 plugins (~217 components)
-+ 5 Phase 4 plugins (~30 components: qa-llm-evaluation,
-qa-db-migrations, qa-async-jobs, qa-auth-flows, qa-notifications)
-shipped 1.0.0. Phase 5 (Security & Compliance per v2 master plan)
-underway: 5 of 6 plugins shipped (qa-sast, qa-dast, qa-sca, qa-secrets, qa-sbom).
-Marketplace version **3.1.5**. The index below tracks per-plugin status.
+Phase 5 complete (2026-05-06)** — 30 v1 plugins (~217 components)
++ 5 Phase 4 plugins (~30 components) + 6 Phase 5 plugins
+(~33 components: qa-sast, qa-dast, qa-sca, qa-secrets, qa-sbom,
+qa-compliance) shipped 1.0.0. Marketplace version **3.2.0**. The index below tracks per-plugin status.
 
 ## Install
 
@@ -77,6 +75,7 @@ For example:
 | [qa-sca](plugins/qa-sca/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
 | [qa-secrets](plugins/qa-secrets/) (Phase 5) | 4 (4 skills + 0 agents) | 1.0.0 |
 | [qa-sbom](plugins/qa-sbom/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
+| [qa-compliance](plugins/qa-compliance/) (Phase 5) | 7 (6 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 
