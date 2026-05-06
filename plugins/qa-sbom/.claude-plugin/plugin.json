@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-sbom",
+  "version": "0.1.0",
+  "description": "SBOM generation + container image scanning: Syft, Grype, CycloneDX, SPDX, Trivy-image, plus a vuln-prioritizer agent.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-sbom",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "sbom"]
+}

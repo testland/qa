@@ -243,6 +243,12 @@
       "source": "./plugins/qa-secrets",
       "description": "Secrets scanning + rotation: 4 skills (gitleaks-scanning, trufflehog-scanning, kingfisher-scanning, secrets-rotation-runner). Phase 5 plugin per v2 master plan; covers detection AND rotation workflow.",
       "strict": true
+    },
+    {
+      "name": "qa-sbom",
+      "source": "./plugins/qa-sbom",
+      "description": "SBOM generation + container image scanning: Syft, Grype, CycloneDX, SPDX, Trivy-image, plus a vuln-prioritizer agent.",
+      "strict": true
     }
   ]
 }
