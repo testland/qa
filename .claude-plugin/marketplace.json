@@ -223,7 +223,13 @@
     {
       "name": "qa-sast",
       "source": "./plugins/qa-sast",
-      "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). First Phase 5 plugin per v2 master plan; revisits v1 §13 NOT-GAPS via qa-iac differentiation model. Every scanner skill includes mandatory False-positive triage section.",
+      "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). First Phase 5 plugin per v2 master plan; revisits v1 \u00a713 NOT-GAPS via qa-iac differentiation model. Every scanner skill includes mandatory False-positive triage section.",
+      "strict": true
+    },
+    {
+      "name": "qa-dast",
+      "source": "./plugins/qa-dast",
+      "description": "DAST scanners with full lifecycle + false-positive triage: ZAP, Burp Suite headless, NightVision, plus a dast-baseline-runner skill and dast-finding-triager unifier agent.",
       "strict": true
     }
   ]
