@@ -219,6 +219,12 @@
       "source": "./plugins/qa-notifications",
       "description": "Notifications + messaging testing across email/SMS/push/webhooks: 6 skills (mailpit-testing, mailhog-testing, email-flow-test-author, sms-test-author, push-notification-test-author, webhook-delivery-tester). Final Phase 4 plugin per v2 master plan; D6=4 inline-citation floor.",
       "strict": true
+    },
+    {
+      "name": "qa-sast",
+      "source": "./plugins/qa-sast",
+      "description": "SAST scanners with full lifecycle + false-positive triage: Semgrep, SonarQube, CodeQL, Bandit (Python), gosec (Go), plus a sast-finding-triager unifier agent.",
+      "strict": true
     }
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-sast",
+  "version": "0.1.0",
+  "description": "SAST scanners with full lifecycle + false-positive triage: Semgrep, SonarQube, CodeQL, Bandit (Python), gosec (Go), plus a sast-finding-triager unifier agent.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-sast",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "sast"]
+}
