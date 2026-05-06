@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-sbom",
-  "version": "0.1.0",
-  "description": "SBOM generation + container image scanning: Syft, Grype, CycloneDX, SPDX, Trivy-image, plus a vuln-prioritizer agent.",
+  "version": "1.0.0",
+  "description": "SBOM generation + container image scanning + vuln prioritization: 5 skills (syft-generation, grype-scanning, cyclonedx-format, spdx-format, trivy-image) and 1 agent (vuln-prioritizer with CVSS + EPSS + CISA KEV + VEX prioritization). Phase 5 plugin per v2 master plan.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-sbom",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "sbom"]
+  "keywords": ["qa", "testing", "security", "sbom", "syft", "grype", "trivy", "cyclonedx", "spdx", "openvex", "kev", "epss"]
 }
