@@ -6,12 +6,12 @@ Mutation testing across the major language ecosystems. Mutation testing inserts 
 
 | Type | Name | Archetype |
 |---|---|---|
-| skill | [stryker-mutation](skills/stryker-mutation/SKILL.md) | S1 |
-| skill | [stryker-net-mutation](skills/stryker-net-mutation/SKILL.md) | S1 |
-| skill | [pitest-mutation](skills/pitest-mutation/SKILL.md) | S1 |
-| skill | [mutmut-mutation](skills/mutmut-mutation/SKILL.md) | S1 |
-| skill | [mull-mutation](skills/mull-mutation/SKILL.md) | S1 |
-| agent | [mutation-survivor-explainer](agents/mutation-survivor-explainer.md) | A1 |
+| Skill | [stryker-mutation](skills/stryker-mutation/SKILL.md) | S1 |
+| Skill | [stryker-net-mutation](skills/stryker-net-mutation/SKILL.md) | S1 |
+| Skill | [pitest-mutation](skills/pitest-mutation/SKILL.md) | S1 |
+| Skill | [mutmut-mutation](skills/mutmut-mutation/SKILL.md) | S1 |
+| Skill | [mull-mutation](skills/mull-mutation/SKILL.md) | S1 |
+| Agent | [mutation-survivor-explainer](agents/mutation-survivor-explainer.md) | A1 |
 
 ## Install
 

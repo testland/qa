@@ -6,11 +6,11 @@ CI/CD test workflow patterns per platform: GitHub Actions, GitLab CI/CD, Jenkins
 
 | Type | Name | Archetype |
 |---|---|---|
-| skill | [github-actions-test-jobs](skills/github-actions-test-jobs/SKILL.md) | S1 |
-| skill | [gitlab-ci-test-jobs](skills/gitlab-ci-test-jobs/SKILL.md) | S1 |
-| skill | [jenkinsfile-test-stages](skills/jenkinsfile-test-stages/SKILL.md) | S1 |
-| skill | [circleci-test-configs](skills/circleci-test-configs/SKILL.md) | S1 |
-| skill | [ci-test-job-conventions](skills/ci-test-job-conventions/SKILL.md) | S2 |
+| Skill | [github-actions-test-jobs](skills/github-actions-test-jobs/SKILL.md) | S1 |
+| Skill | [gitlab-ci-test-jobs](skills/gitlab-ci-test-jobs/SKILL.md) | S1 |
+| Skill | [jenkinsfile-test-stages](skills/jenkinsfile-test-stages/SKILL.md) | S1 |
+| Skill | [circleci-test-configs](skills/circleci-test-configs/SKILL.md) | S1 |
+| Skill | [ci-test-job-conventions](skills/ci-test-job-conventions/SKILL.md) | S2 |
 
 ## Install
 

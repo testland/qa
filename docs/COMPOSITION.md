@@ -231,7 +231,6 @@ After any agent's `skills:` field changes:
 
 ## References
 
-- Master plan: cross-cutting Task X.1 (Composition validation).
 - `docs/PLUGIN_AUTHORING.md` — agent body authoring guide
   (preload semantics).
 - `docs/REVIEWER_CHECKLIST.md` — reviewer rubric (preload

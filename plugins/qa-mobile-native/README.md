@@ -6,16 +6,16 @@ Mobile + mobile-web E2E testing — closes the platform gap. Native frameworks (
 
 | Type | Name | Archetype |
 |---|---|---|
-| skill | [xcuitest-suite](skills/xcuitest-suite/SKILL.md) | S1 |
-| skill | [espresso-suite](skills/espresso-suite/SKILL.md) | S1 |
-| skill | [appium-testing](skills/appium-testing/SKILL.md) | S1 |
-| skill | [detox-testing](skills/detox-testing/SKILL.md) | S1 |
-| skill | [maestro-flows](skills/maestro-flows/SKILL.md) | S1 |
-| skill | [flutter-testing](skills/flutter-testing/SKILL.md) | S1 |
-| skill | [mobile-device-matrix-toolkit](skills/mobile-device-matrix-toolkit/SKILL.md) | S4 |
-| skill | [mobile-web-emulation-runner](skills/mobile-web-emulation-runner/SKILL.md) | S3 |
-| skill | [touch-gesture-tester](skills/touch-gesture-tester/SKILL.md) | S3 |
-| skill | [mobile-perf-budget](skills/mobile-perf-budget/SKILL.md) | S2 |
+| Skill | [xcuitest-suite](skills/xcuitest-suite/SKILL.md) | S1 |
+| Skill | [espresso-suite](skills/espresso-suite/SKILL.md) | S1 |
+| Skill | [appium-testing](skills/appium-testing/SKILL.md) | S1 |
+| Skill | [detox-testing](skills/detox-testing/SKILL.md) | S1 |
+| Skill | [maestro-flows](skills/maestro-flows/SKILL.md) | S1 |
+| Skill | [flutter-testing](skills/flutter-testing/SKILL.md) | S1 |
+| Skill | [mobile-device-matrix-toolkit](skills/mobile-device-matrix-toolkit/SKILL.md) | S4 |
+| Skill | [mobile-web-emulation-runner](skills/mobile-web-emulation-runner/SKILL.md) | S3 |
+| Skill | [touch-gesture-tester](skills/touch-gesture-tester/SKILL.md) | S3 |
+| Skill | [mobile-perf-budget](skills/mobile-perf-budget/SKILL.md) | S2 |
 
 ## Install
 

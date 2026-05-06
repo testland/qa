@@ -8,9 +8,9 @@ Sharply-scoped QA role agents — each one ships a **specific task** for the rol
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| agent | [test-architect](agents/test-architect.md) | A2 | Per-repo pyramid + framework recommendation; reads change-set shape, computes current ratios, outputs evidence-backed target ratios + framework trade-off matrix. |
-| agent | [quality-coach](agents/quality-coach.md) | A3 | Adversarial DoD-adherence reviewer; reads team's `definition-of-done.md`, walks each line, marks met/not-met/unverifiable with evidence. Refuses to mark "done" if any line unmet. |
-| agent | [release-engineer](agents/release-engineer.md) | A4 | Runbook + canary-release conductor; pre-flight + smoke gate + canary deploy + observation + human gate + full rollout + post-release. Never auto-rollouts. |
+| Agent | [test-architect](agents/test-architect.md) | A2 | Per-repo pyramid + framework recommendation; reads change-set shape, computes current ratios, outputs evidence-backed target ratios + framework trade-off matrix. |
+| Agent | [quality-coach](agents/quality-coach.md) | A3 | Adversarial DoD-adherence reviewer; reads team's `definition-of-done.md`, walks each line, marks met/not-met/unverifiable with evidence. Refuses to mark "done" if any line unmet. |
+| Agent | [release-engineer](agents/release-engineer.md) | A4 | Runbook + canary-release conductor; pre-flight + smoke gate + canary deploy + observation + human gate + full rollout + post-release. Never auto-rollouts. |
 
 ## Install
 

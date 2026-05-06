@@ -22,8 +22,8 @@ sequence**. Manually invoking five agents per story creates friction
 that ends with the team skipping steps. This orchestrator runs the
 chain end-to-end, with each step's output feeding the next.
 
-The workflow corresponds to **W3** in the master plan's workflow
-catalog: `spec → acceptance criteria → test cases → automation suite`.
+The workflow is `spec → acceptance criteria → test cases →
+automation suite` — a five-stage shift-left chain, executed end-to-end.
 
 ## When invoked
 

@@ -111,7 +111,7 @@ Now: CCN 24 (this PR adds 2 elif branches)
 
 This is a "ratcheting up" of existing debt. Block merge unless:
 - (a) Refactored to CCN ≤ 18 in this PR, OR
-- (b) Ticket created with `Reason:` + `Approved-by:` + `Re-review-date:` + `expires:` per the qa-research waiver template.
+- (b) Ticket created with `Reason:` + `Approved-by:` + `Re-review-date:` + `expires:` per the standard waiver template.
 ```
 
 ## Step 6 — Emit verdict block

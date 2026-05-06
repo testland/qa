@@ -6,10 +6,10 @@ AI-assisted test generation + curation. AI-generated tests from natural-language
 
 | Type | Name | Archetype |
 |---|---|---|
-| skill | [ai-test-generator](skills/ai-test-generator/SKILL.md) | S3 |
-| skill | [ai-spec-coverage-mapper](skills/ai-spec-coverage-mapper/SKILL.md) | S3 |
-| skill | [model-based-test-graph-author](skills/model-based-test-graph-author/SKILL.md) | S3 |
-| agent | [ai-test-curator](agents/ai-test-curator.md) | A3 |
+| Skill | [ai-test-generator](skills/ai-test-generator/SKILL.md) | S3 |
+| Skill | [ai-spec-coverage-mapper](skills/ai-spec-coverage-mapper/SKILL.md) | S3 |
+| Skill | [model-based-test-graph-author](skills/model-based-test-graph-author/SKILL.md) | S3 |
+| Agent | [ai-test-curator](agents/ai-test-curator.md) | A3 |
 
 ## Install
 

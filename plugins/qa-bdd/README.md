@@ -6,14 +6,14 @@ Behavior-driven development pipelines: per-language Cucumber-family runners (Cuc
 
 | Type | Name | Archetype |
 |---|---|---|
-| skill | [cucumber-testing](skills/cucumber-testing/SKILL.md) | S1 |
-| skill | [behave-testing](skills/behave-testing/SKILL.md) | S1 |
-| skill | [reqnroll-testing](skills/reqnroll-testing/SKILL.md) | S1 |
-| skill | [specflow-testing](skills/specflow-testing/SKILL.md) | S1 (legacy) |
-| skill | [bdd-step-library-curator](skills/bdd-step-library-curator/SKILL.md) | S3 |
-| skill | [gherkin-from-stories](skills/gherkin-from-stories/SKILL.md) | S3 |
-| skill | [acceptance-test-from-criteria](skills/acceptance-test-from-criteria/SKILL.md) | S3 |
-| agent | [gherkin-style-reviewer](agents/gherkin-style-reviewer.md) | A3 |
+| Skill | [cucumber-testing](skills/cucumber-testing/SKILL.md) | S1 |
+| Skill | [behave-testing](skills/behave-testing/SKILL.md) | S1 |
+| Skill | [reqnroll-testing](skills/reqnroll-testing/SKILL.md) | S1 |
+| Skill | [specflow-testing](skills/specflow-testing/SKILL.md) | S1 (legacy) |
+| Skill | [bdd-step-library-curator](skills/bdd-step-library-curator/SKILL.md) | S3 |
+| Skill | [gherkin-from-stories](skills/gherkin-from-stories/SKILL.md) | S3 |
+| Skill | [acceptance-test-from-criteria](skills/acceptance-test-from-criteria/SKILL.md) | S3 |
+| Agent | [gherkin-style-reviewer](agents/gherkin-style-reviewer.md) | A3 |
 
 ## Install
 

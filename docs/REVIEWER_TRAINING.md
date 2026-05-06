@@ -176,7 +176,7 @@ Just ask me anything QA-related.
 |---|:---:|---|
 | D1 Spec compliance | 0 | `validate.sh` rejects the name `qa-expert` (generic role-agent denylist). Description starts with "You are…" + "I help…" — both linted. **Multiple lint failures = unmergeable regardless of score.** |
 | D2 Archetype fit | 0 | Declares A2 (action-taking task) but body has no when-invoked steps, no output format, no concrete task. It's a persona, not a task scope. |
-| D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined. Saturated by 3+ near-clones in the existing ecosystem (per `qa-component-ratings-master-2026-04-30.md` §6). Negative-predictive — body could be literally anything. |
+| D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined. Saturated by 3+ near-clones in the broader ecosystem. Negative-predictive — body could be literally anything. |
 | D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. Documented NOT-GAP (see [`CONTRIBUTING.md`](CONTRIBUTING.md) — the marketplace excludes generic role-agent names). |
 | D5 Body quality | 1 | Body has structure (sections), but no steps, no output format, no examples. **1 point for not being empty.** |
 | D6 Terminology | 0 | Zero citations; zero source-grounded claims. **`d6: 0` is a hard reject** per the v2.0 framework. |
@@ -247,5 +247,5 @@ calibration notes above.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — lint rules, NOT-GAPS list.
 - [`COMPOSITION.md`](COMPOSITION.md) — agent → skill preload graph
   (D1 cross-plugin dep check).
-- Master plan §13 NOT-GAPS — intentional skips, evidence required to
-  override.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) NOT-GAPS list — intentional
+  skips; evidence required to override.

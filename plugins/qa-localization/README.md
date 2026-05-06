@@ -6,10 +6,10 @@ Localization (l10n) and internationalization (i18n) testing — closes the entir
 
 | Type | Name | Archetype |
 |---|---|---|
-| skill | [i18n-string-coverage](skills/i18n-string-coverage/SKILL.md) | S3 |
-| skill | [pseudo-localization-runner](skills/pseudo-localization-runner/SKILL.md) | S1 |
-| skill | [rtl-rendering-tester](skills/rtl-rendering-tester/SKILL.md) | S3 |
-| skill | [locale-format-validator](skills/locale-format-validator/SKILL.md) | S3 |
+| Skill | [i18n-string-coverage](skills/i18n-string-coverage/SKILL.md) | S3 |
+| Skill | [pseudo-localization-runner](skills/pseudo-localization-runner/SKILL.md) | S1 |
+| Skill | [rtl-rendering-tester](skills/rtl-rendering-tester/SKILL.md) | S3 |
+| Skill | [locale-format-validator](skills/locale-format-validator/SKILL.md) | S3 |
 
 ## Install
 

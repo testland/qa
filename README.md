@@ -123,9 +123,13 @@ testland-qa/
   .claude-plugin/marketplace.json    # required; lists all plugins
   plugins/                           # one folder per plugin
   templates/                         # plugin / skill / agent / command scaffolds
-  scripts/                           # validate.sh, rating-check.sh, new-plugin.sh
+  scripts/                           # validate, rating-check, scaffolding,
+                                     # composition graph, inventory
   .github/workflows/ci.yml           # validate + rating-check + JSON syntax
-  docs/                              # CONTRIBUTING, PLUGIN_AUTHORING, REVIEWER_CHECKLIST
+  docs/                              # CONTRIBUTING, PLUGIN_AUTHORING,
+                                     # REVIEWER_CHECKLIST, REVIEWER_TRAINING,
+                                     # COMPOSITION
+  LICENSE                            # MIT
 ```
 
 ## License
