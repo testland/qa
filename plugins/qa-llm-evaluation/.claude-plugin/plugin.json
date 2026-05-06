@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-llm-evaluation",
-  "version": "0.1.0",
-  "description": "LLM and prompt evaluation: Promptfoo, OpenAI Evals, DeepEval, Ragas, Giskard-LLM, Langfuse tracing, plus a prompt-eval-reviewer agent.",
+  "version": "1.0.0",
+  "description": "LLM and prompt evaluation: 6 skills (promptfoo-evaluation, openai-evals, deepeval-evaluation, ragas-evaluation, giskard-llm, langfuse-tracing) and 1 agent (prompt-eval-reviewer).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-llm-evaluation",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "llm-evaluation"]
+  "keywords": ["qa", "testing", "llm", "prompt", "evaluation", "rag", "ai-testing", "promptfoo", "deepeval", "ragas", "giskard", "langfuse"]
 }

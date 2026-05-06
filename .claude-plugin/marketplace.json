@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "plugins": [
     {
@@ -193,7 +193,7 @@
     {
       "name": "qa-llm-evaluation",
       "source": "./plugins/qa-llm-evaluation",
-      "description": "LLM and prompt evaluation: Promptfoo, OpenAI Evals, DeepEval, Ragas, Giskard-LLM, Langfuse tracing, plus a prompt-eval-reviewer agent.",
+      "description": "LLM and prompt evaluation: 6 skills (promptfoo-evaluation, openai-evals, deepeval-evaluation, ragas-evaluation, giskard-llm, langfuse-tracing) and 1 agent (prompt-eval-reviewer). First Phase 4 plugin per v2 master plan; D6=4 inline-citation floor applied throughout.",
       "strict": true
     }
   ]
