@@ -12,11 +12,11 @@ agents, skills, optional commands, and optional hooks.
 
 ## Status
 
-**Phase 3 complete (2026-05-05); Phase 4 complete (2026-05-06);
-Phase 5 complete (2026-05-06); Phase 6 complete (2026-05-06)** —
-30 v1 plugins + 5 Phase 4 + 6 Phase 5 + 9 Phase 6 shipped (50 plugins
-total / ~322 components). Marketplace version **3.3.0**. The index
-below tracks per-plugin status.
+**v2 master plan complete (2026-05-06).** All 8 phases shipped:
+30 v1 plugins (Phases 0–3) + 5 Phase 4 + 6 Phase 5 + 9 Phase 6
++ 8 Phase 7 = **58 plugins / ~357 components**. Marketplace
+version **4.0.0** marks the v2 milestone. The index below tracks
+per-plugin status.
 
 ## Install
 
@@ -85,6 +85,14 @@ For example:
 | [qa-ml-models](plugins/qa-ml-models/) (Phase 6) | 6 (5 skills + 1 agent) | 1.0.0 |
 | [qa-modern-web](plugins/qa-modern-web/) (Phase 6) | 5 (5 skills + 0 agents) | 1.0.0 |
 | [qa-data-notebooks](plugins/qa-data-notebooks/) (Phase 6) | 3 (3 skills + 0 agents) | 1.0.0 |
+| [qa-distributed-tracing](plugins/qa-distributed-tracing/) (Phase 7) | 5 (4 skills + 1 agent) | 1.0.0 |
+| [qa-realtime-protocols](plugins/qa-realtime-protocols/) (Phase 7) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-pdf-print-render](plugins/qa-pdf-print-render/) (Phase 7) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-search-relevance](plugins/qa-search-relevance/) (Phase 7) | 4 (3 skills + 1 agent) | 1.0.0 |
+| [qa-concurrency](plugins/qa-concurrency/) (Phase 7) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-saga-cqrs](plugins/qa-saga-cqrs/) (Phase 7) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-charts-dataviz](plugins/qa-charts-dataviz/) (Phase 7) | 3 (3 skills + 0 agents) | 1.0.0 |
+| [qa-resilience-drills](plugins/qa-resilience-drills/) (Phase 7) | 5 (5 skills + 0 agents) | 1.0.0 |
 
 ## Authoring gate
 

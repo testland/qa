@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.3.0"
+    "version": "4.0.0"
   },
   "plugins": [
     {
@@ -308,6 +308,54 @@
       "name": "qa-data-notebooks",
       "source": "./plugins/qa-data-notebooks",
       "description": "Jupyter notebook testing: 3 skills (nbval-tests, testbook-tests, papermill-tests). Phase 6 plugin per v2 master plan; covers full-notebook regression (nbval), function-level unit tests (testbook), parameterized execution (papermill).",
+      "strict": true
+    },
+    {
+      "name": "qa-distributed-tracing",
+      "source": "./plugins/qa-distributed-tracing",
+      "description": "Distributed tracing assertion testing: 4 skills (opentelemetry-trace-assertions, jaeger-trace-tests, zipkin-trace-tests, trace-spec-author) and 1 agent (trace-coverage-reviewer). Phase 7 plugin per v2 master plan §8; sets the observability assertion testing pattern.",
+      "strict": true
+    },
+    {
+      "name": "qa-realtime-protocols",
+      "source": "./plugins/qa-realtime-protocols",
+      "description": "Real-time protocol testing: 5 skills (websocket-tests, server-sent-events-tests, grpc-streaming-tests, mqtt-tests, webhook-replay-tests). Phase 7 plugin per v2 master plan §8; covers RFC 6455 + WHATWG SSE + gRPC streaming + MQTT v5 + Standard Webhooks signature scheme.",
+      "strict": true
+    },
+    {
+      "name": "qa-pdf-print-render",
+      "source": "./plugins/qa-pdf-print-render",
+      "description": "PDF + print rendering tests: 4 skills (pdf-snapshot-tester, print-stylesheet-tests, html-to-pdf-regression, pdf-accessibility-checker). Phase 7 plugin per v2 master plan §8; covers print/PDF output where qa-visual-regression covers screen output.",
+      "strict": true
+    },
+    {
+      "name": "qa-search-relevance",
+      "source": "./plugins/qa-search-relevance",
+      "description": "Search relevance testing: 3 skills (elasticsearch-relevance-tests, opensearch-relevance-tests, vector-search-precision-tests) and 1 agent (relevance-regression-reviewer). Phase 7 plugin per v2 master plan §8; IR-metrics-driven NDCG / MRR / Recall@k regression detection.",
+      "strict": true
+    },
+    {
+      "name": "qa-concurrency",
+      "source": "./plugins/qa-concurrency",
+      "description": "Concurrency + race-condition testing: 5 skills (jepsen-patterns, race-condition-test-author, deadlock-detection-harness, async-ordering-tests, mvcc-isolation-tests). Phase 7 plugin per v2 master plan §8; code-level data races (distinct from chaos = infra fault).",
+      "strict": true
+    },
+    {
+      "name": "qa-saga-cqrs",
+      "source": "./plugins/qa-saga-cqrs",
+      "description": "Saga + CQRS + event sourcing test patterns: 4 skills (saga-transaction-tests, event-sourcing-tests, cqrs-projection-tests, eventual-consistency-tests). Phase 7 plugin per v2 master plan §8; ACD-without-isolation saga tests + replay determinism + projection consistency window.",
+      "strict": true
+    },
+    {
+      "name": "qa-charts-dataviz",
+      "source": "./plugins/qa-charts-dataviz",
+      "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator). Phase 7 plugin per v2 master plan §8; covers Canvas + SVG + declarative-spec viz, complementing qa-visual-regression which targets general UI screens.",
+      "strict": true
+    },
+    {
+      "name": "qa-resilience-drills",
+      "source": "./plugins/qa-resilience-drills",
+      "description": "Resilience drills: 5 skills (dr-drill-runner, backup-verification-author, restore-time-tests, error-budget-tests, mttr-mtbf-tracker). Final Phase 7 plugin per v2 master plan §8; production-grade DR drills + backup verification + RTO + error-budget gating + incident metrics.",
       "strict": true
     }
   ]
