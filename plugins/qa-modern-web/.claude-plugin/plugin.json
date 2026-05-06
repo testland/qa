@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-modern-web",
+  "version": "0.1.0",
+  "description": "Modern web testing: service workers, PWA install flow, INP-deep, browser extensions, plus an sw-cache-strategy-author skill.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-modern-web",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "modern-web"]
+}

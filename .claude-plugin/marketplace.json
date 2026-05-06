@@ -285,6 +285,30 @@
       "source": "./plugins/qa-unit-tests-go-rust",
       "description": "Go + Rust unit testing per-framework wrappers: 4 skills (go-test, ginkgo-tests, cargo-test, rstest-tests). Phase 6.",
       "strict": true
+    },
+    {
+      "name": "qa-code-quality",
+      "source": "./plugins/qa-code-quality",
+      "description": "Production code quality: SonarQube smells/complexity perspective (cross-ref qa-sast), CodeClimate, Lizard cyclomatic, Madge dep graph, Knip dead code, plus a code-quality-critic agent.",
+      "strict": true
+    },
+    {
+      "name": "qa-ml-models",
+      "source": "./plugins/qa-ml-models",
+      "description": "ML model testing: Giskard tests, Deepchecks, Evidently monitoring, Fairlearn fairness, Alibi explainability, plus a model-fairness-reviewer agent.",
+      "strict": true
+    },
+    {
+      "name": "qa-modern-web",
+      "source": "./plugins/qa-modern-web",
+      "description": "Modern web testing: service workers, PWA install flow, INP-deep, browser extensions, plus an sw-cache-strategy-author skill.",
+      "strict": true
+    },
+    {
+      "name": "qa-data-notebooks",
+      "source": "./plugins/qa-data-notebooks",
+      "description": "Notebook testing: nbval, testbook, papermill.",
+      "strict": true
     }
   ]
 }

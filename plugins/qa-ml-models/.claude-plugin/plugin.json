@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-ml-models",
+  "version": "0.1.0",
+  "description": "ML model testing: Giskard tests, Deepchecks, Evidently monitoring, Fairlearn fairness, Alibi explainability, plus a model-fairness-reviewer agent.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-ml-models",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "ml-models"]
+}

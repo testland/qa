@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-data-notebooks",
+  "version": "0.1.0",
+  "description": "Notebook testing: nbval, testbook, papermill.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-data-notebooks",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "data-notebooks"]
+}
