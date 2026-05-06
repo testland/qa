@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.1.3"
+    "version": "3.1.4"
   },
   "plugins": [
     {
@@ -241,7 +241,7 @@
     {
       "name": "qa-secrets",
       "source": "./plugins/qa-secrets",
-      "description": "Secrets scanning with full lifecycle + false-positive triage: gitleaks, trufflehog, kingfisher, plus a secrets-rotation-runner skill.",
+      "description": "Secrets scanning + rotation: 4 skills (gitleaks-scanning, trufflehog-scanning, kingfisher-scanning, secrets-rotation-runner). Phase 5 plugin per v2 master plan; covers detection AND rotation workflow.",
       "strict": true
     }
   ]
