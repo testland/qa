@@ -1,14 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-go-rust",
-  "version": "0.1.0",
-  "description": "Go + Rust unit testing wrappers: go test stdlib, Ginkgo (Go BDD), cargo test stdlib, rstest (Rust parametrized).",
-  "author": {
-    "name": "testland",
-    "url": "https://testland.io/"
-  },
+  "version": "1.0.0",
+  "description": "Go + Rust unit testing per-framework wrappers: 4 skills (go-test, ginkgo-tests, cargo-test, rstest-tests). Phase 6 plugin per v2 master plan; per-framework lifecycle.",
+  "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-go-rust",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "unit-tests-go-rust"]
+  "keywords": ["qa", "testing", "unit-tests", "go", "rust", "ginkgo", "rstest", "cargo"]
 }

@@ -1,14 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-jvm",
-  "version": "0.1.0",
-  "description": "JVM unit testing per-framework wrappers: JUnit 5, Kotest, Spock (Groovy), TestNG, ScalaTest.",
-  "author": {
-    "name": "testland",
-    "url": "https://testland.io/"
-  },
+  "version": "1.0.0",
+  "description": "JVM unit testing per-framework wrappers: 5 skills (junit5-tests, kotest-tests, spock-tests, testng-tests, scalatest). Phase 6 plugin per v2 master plan; per-framework lifecycle.",
+  "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-jvm",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "unit-tests-jvm"]
+  "keywords": ["qa", "testing", "unit-tests", "jvm", "java", "kotlin", "scala", "groovy", "junit", "kotest", "spock", "testng", "scalatest"]
 }
