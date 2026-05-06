@@ -1,14 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-code-quality",
-  "version": "0.1.0",
-  "description": "Production code quality: SonarQube smells/complexity perspective (cross-ref qa-sast), CodeClimate, Lizard cyclomatic, Madge dep graph, Knip dead code, plus a code-quality-critic agent.",
-  "author": {
-    "name": "testland",
-    "url": "https://testland.io/"
-  },
+  "version": "1.0.0",
+  "description": "Production code quality: 5 skills (sonarqube-quality-perspective, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) + 1 agent (code-quality-critic). Phase 6 plugin per v2 master plan; production-only scope (test code is owned by qa-test-review).",
+  "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-code-quality",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "code-quality"]
+  "keywords": ["qa", "testing", "code-quality", "sonarqube", "qlty", "lizard", "madge", "knip", "complexity", "dead-code"]
 }
