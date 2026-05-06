@@ -28,7 +28,7 @@ release.
 - A new release process needs the "first-line defense" check.
 
 For broader coverage, see the team's full E2E suite (per
-[`qa-web-e2e`](../../qa-web-e2e/) plugin Phase 3) — smoke is the
+[`qa-web-e2e`](../../qa-web-e2e/) plugin) — smoke is the
 narrow, fast subset.
 
 ## Step 1 — Identify the critical paths

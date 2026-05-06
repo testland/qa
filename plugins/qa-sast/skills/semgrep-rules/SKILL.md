@@ -112,7 +112,7 @@ Per [sg-cli][sg-cli]:
 Diff-aware mode is critical for legacy adoption — only NEW findings
 on the PR fail; pre-existing findings are tracked but don't block.
 
-## Step 5 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 5 — False-positive triage (MANDATORY)
 
 Suppression mechanisms in priority order:
 

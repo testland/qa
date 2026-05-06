@@ -120,7 +120,7 @@ Per-vuln ignore can be scoped to specific paths (`* > lodash`,
 `my-package > lodash`) and **must include an `expires:` field**
 — Snyk policy validates this at scan time.
 
-## Step 5 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 5 — False-positive triage (MANDATORY)
 
 Three suppression layers:
 

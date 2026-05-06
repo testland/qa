@@ -8,9 +8,9 @@ adversarial prioritizer agent that combines CVSS + EPSS + CISA KEV
 + reachability heuristic into a Fix-Now / Fix-This-Sprint /
 Fix-Backlog / Accept-Risk bucket.
 
-**Third Phase 5 plugin per the v2 master plan.** Sister to
-[`qa-sast`](../qa-sast/) (code security) and [`qa-dast`](../qa-dast/)
-(runtime security) — qa-sca covers third-party dependency security.
+Sister to [`qa-sast`](../qa-sast/) (code security) and
+[`qa-dast`](../qa-dast/) (runtime security) — qa-sca covers
+third-party dependency security.
 
 ## Components
 
@@ -32,11 +32,6 @@ Fix-Backlog / Accept-Risk bucket.
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components** + the **Phase 5
-amendment requiring the False-positive triage section in every
-scanner skill** (or its config-side analogue for the orchestration-tool
-reference skills). See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

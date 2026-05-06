@@ -114,7 +114,7 @@ Bandit rules are organized by category prefix:
 
 Full catalog: bandit.readthedocs.io/en/latest/plugins/.
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Per the canonical Bandit workflow, three suppression layers:
 

@@ -169,7 +169,7 @@ discover usability issues, edge cases, and integration risks.
   [`k6-load-testing`](../../qa-load-testing/skills/k6-load-testing/SKILL.md)).
 - A11y violations (covered separately by `qa-accessibility-specifics`).
 - Cross-browser behavior (covered separately by
-  `qa-compatibility` planned in Phase 3).
+  `qa-compatibility`).
 
 ## Session log
 

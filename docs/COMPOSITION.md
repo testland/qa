@@ -1,8 +1,7 @@
 # Composition graph — agent → skill preloads
 
-Per the master plan's cross-cutting Task X.1, this document maps every
-agent's `skills:` preload list. It is regenerated from the source
-files via `scripts/composition-graph.py`.
+This document maps every agent's `skills:` preload list. It is
+regenerated from the source files via `scripts/composition-graph.py`.
 
 ## Scope
 

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-sast",
   "version": "1.0.0",
-  "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). Every scanner skill includes a False-positive triage section per Phase 5 amendment.",
+  "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). Every scanner skill includes a mandatory False-positive triage section.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

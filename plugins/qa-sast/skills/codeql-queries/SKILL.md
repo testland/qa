@@ -142,7 +142,7 @@ overkill for simple "find this token" rules.
 Custom queries register in a query suite (`.qls`) for selective
 execution.
 
-## Step 5 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 5 — False-positive triage (MANDATORY)
 
 Three layers:
 

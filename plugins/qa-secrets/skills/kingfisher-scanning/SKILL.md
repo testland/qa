@@ -133,7 +133,7 @@ much sharper severity signal.
 This requires Kingfisher to have read-only API access to the cloud
 account; configure via standard cloud-SDK credential mechanisms.
 
-## Step 5 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 5 — False-positive triage (MANDATORY)
 
 Per [kf-gh][kf-gh] suppression options:
 

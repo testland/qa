@@ -122,7 +122,7 @@ integration, use `--json --results=verified`:
 trufflehog git . --json --results=verified > verified-secrets.json
 ```
 
-## Step 5 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 5 — False-positive triage (MANDATORY)
 
 TruffleHog has fewer false positives than entropy-only scanners
 (thanks to verification), but unverified findings still need

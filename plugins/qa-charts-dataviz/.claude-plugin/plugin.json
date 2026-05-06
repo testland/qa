@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-charts-dataviz",
   "version": "1.0.0",
-  "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator). Phase 7 plugin per v2 master plan §8; covers Canvas + SVG + declarative-spec viz, complementing qa-visual-regression which targets general UI screens.",
+  "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator). Covers Canvas + SVG + declarative-spec visualizations, complementing qa-visual-regression which targets general UI screens.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-charts-dataviz",
   "repository": "https://github.com/testland/qa",

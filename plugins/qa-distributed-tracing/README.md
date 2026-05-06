@@ -7,10 +7,9 @@ query skills (in-process, Jaeger, Zipkin), one spec-authoring skill,
 and an A3 reviewer agent that audits coverage + cardinality + spec
 drift.
 
-**First Phase 7 plugin per v2 master plan §8.** Pairs naturally with
-the `qa-shift-right` (synthetic monitoring), `qa-saga-cqrs` (saga
-trace shape), and `qa-resilience-drills` (DR / runbook tracing)
-plugins.
+Pairs naturally with `qa-shift-right` (synthetic monitoring),
+`qa-saga-cqrs` (saga trace shape), and `qa-resilience-drills`
+(DR / runbook tracing).
 
 ## Components
 
@@ -31,8 +30,6 @@ plugins.
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components**. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

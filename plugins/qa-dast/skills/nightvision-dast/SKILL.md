@@ -115,7 +115,7 @@ Per [nv-docs][nv-docs] "Scope Control" defines:
 Tightening scope is essential — un-scoped scans hit unintended
 endpoints + waste scan budget.
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Per [nv-docs][nv-docs] "Alert Rules" govern per-finding suppression:
 

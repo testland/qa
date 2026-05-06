@@ -122,7 +122,7 @@ expire.
 For CI/headless use, embed the configured session handling rules in
 the project file — Burp re-loads them on `--project-file=...`.
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Burp's three suppression mechanisms:
 

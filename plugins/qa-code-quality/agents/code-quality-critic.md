@@ -36,7 +36,7 @@ Output: deduped finding list + verdict (✅ ready / 🟡 needs-work /
 
 ## Step 1 — Verify scope is production-only
 
-Per Phase 6 amendment, qa-code-quality scopes production code only.
+qa-code-quality scopes production code only.
 Test files are owned by `qa-test-review`. Refuse to run if any
 input report includes test files:
 

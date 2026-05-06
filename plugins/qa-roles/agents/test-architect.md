@@ -231,7 +231,7 @@ final verdict.
 - **Service-layer test stack** → see
   [`testcontainers`](../../qa-test-environment/skills/testcontainers/SKILL.md)
   for the backing-services pattern.
-- **E2E framework wrappers** → planned in `qa-web-e2e` (Phase 3).
+- **E2E framework wrappers** → see `qa-web-e2e`.
 
 ## References
 

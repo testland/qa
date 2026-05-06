@@ -193,169 +193,169 @@
     {
       "name": "qa-llm-evaluation",
       "source": "./plugins/qa-llm-evaluation",
-      "description": "LLM and prompt evaluation: 6 skills (promptfoo-evaluation, openai-evals, deepeval-evaluation, ragas-evaluation, giskard-llm, langfuse-tracing) and 1 agent (prompt-eval-reviewer). First Phase 4 plugin per v2 master plan; D6=4 inline-citation floor applied throughout.",
+      "description": "LLM and prompt evaluation: 6 skills (promptfoo-evaluation, openai-evals, deepeval-evaluation, ragas-evaluation, giskard-llm, langfuse-tracing) and 1 agent (prompt-eval-reviewer). Covers the mainstream OSS LLM-eval ecosystem: Promptfoo + OpenAI Evals + DeepEval + Ragas for functional eval, Giskard for adversarial scan, Langfuse for production observability.",
       "strict": true
     },
     {
       "name": "qa-db-migrations",
       "source": "./plugins/qa-db-migrations",
-      "description": "Database migration testing: 4 skills (flyway-migrations, liquibase-migrations, atlas-migrations, sqlmesh-migrations) and 1 agent (migration-blast-radius-reviewer). Phase 4 plugin per v2 master plan; D6=4 inline-citation floor applied throughout.",
+      "description": "Database migration testing: 4 skills (flyway-migrations, liquibase-migrations, atlas-migrations, sqlmesh-migrations) and 1 agent (migration-blast-radius-reviewer). Covers schema-change safety, blast-radius review, and rollback verification across the major migration tools.",
       "strict": true
     },
     {
       "name": "qa-async-jobs",
       "source": "./plugins/qa-async-jobs",
-      "description": "Background job and queue testing: 7 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, cron-job-test-author, idempotency-test-author). Phase 4 plugin per v2 master plan; D6=4 inline-citation floor applied throughout.",
+      "description": "Background job and queue testing: 7 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, cron-job-test-author, idempotency-test-author). Covers async job runners, queue patterns, scheduled jobs, and idempotency guarantees.",
       "strict": true
     },
     {
       "name": "qa-auth-flows",
       "source": "./plugins/qa-auth-flows",
-      "description": "Auth flow testing: 5 skills (keycloak-tests, auth0-tests, okta-tests, oauth-flow-test-author, session-management-test-author). Phase 4 plugin per v2 master plan; D6=4 inline-citation floor; OAuth 2.0 / RFC 7636 PKCE / RFC 9700 / OWASP ASVS V3 anchored.",
+      "description": "Auth flow testing: 5 skills (keycloak-tests, auth0-tests, okta-tests, oauth-flow-test-author, session-management-test-author). Anchored on OAuth 2.0 / RFC 7636 PKCE / RFC 9700 / OWASP ASVS V3.",
       "strict": true
     },
     {
       "name": "qa-notifications",
       "source": "./plugins/qa-notifications",
-      "description": "Notifications + messaging testing across email/SMS/push/webhooks: 6 skills (mailpit-testing, mailhog-testing, email-flow-test-author, sms-test-author, push-notification-test-author, webhook-delivery-tester). Final Phase 4 plugin per v2 master plan; D6=4 inline-citation floor.",
+      "description": "Notifications + messaging testing across email/SMS/push/webhooks: 6 skills (mailpit-testing, mailhog-testing, email-flow-test-author, sms-test-author, push-notification-test-author, webhook-delivery-tester).",
       "strict": true
     },
     {
       "name": "qa-sast",
       "source": "./plugins/qa-sast",
-      "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). First Phase 5 plugin per v2 master plan; revisits v1 \u00a713 NOT-GAPS via qa-iac differentiation model. Every scanner skill includes mandatory False-positive triage section.",
+      "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). Every scanner skill includes a mandatory False-positive triage section.",
       "strict": true
     },
     {
       "name": "qa-dast",
       "source": "./plugins/qa-dast",
-      "description": "DAST (dynamic application security testing): 4 skills (zap-baseline, burp-headless, nightvision-dast, dast-baseline-runner) and 1 agent (dast-finding-triager). Phase 5 plugin per v2 master plan; sister to qa-sast for runtime vulnerabilities. Every scanner skill includes mandatory False-positive triage section.",
+      "description": "DAST (dynamic application security testing): 4 skills (zap-baseline, burp-headless, nightvision-dast, dast-baseline-runner) and 1 agent (dast-finding-triager). Sister to qa-sast for runtime vulnerabilities. Every scanner skill includes a mandatory False-positive triage section.",
       "strict": true
     },
     {
       "name": "qa-sca",
       "source": "./plugins/qa-sca",
-      "description": "SCA (software composition analysis): 5 skills (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit) and 1 agent (sca-prioritizer with CVSS + EPSS + CISA KEV + reachability prioritization). Phase 5 plugin per v2 master plan.",
+      "description": "SCA (software composition analysis): 5 skills (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit) and 1 agent (sca-prioritizer with CVSS + EPSS + CISA KEV + reachability prioritization).",
       "strict": true
     },
     {
       "name": "qa-secrets",
       "source": "./plugins/qa-secrets",
-      "description": "Secrets scanning + rotation: 4 skills (gitleaks-scanning, trufflehog-scanning, kingfisher-scanning, secrets-rotation-runner). Phase 5 plugin per v2 master plan; covers detection AND rotation workflow.",
+      "description": "Secrets scanning + rotation: 4 skills (gitleaks-scanning, trufflehog-scanning, kingfisher-scanning, secrets-rotation-runner). Covers detection AND rotation workflow (git-history scrub doesn't fix the leak).",
       "strict": true
     },
     {
       "name": "qa-sbom",
       "source": "./plugins/qa-sbom",
-      "description": "SBOM generation + container image scanning + vuln prioritization: 5 skills (syft-generation, grype-scanning, cyclonedx-format, spdx-format, trivy-image) and 1 agent (vuln-prioritizer). Phase 5 plugin per v2 master plan; required for US EO 14028 + EU CRA + FDA medical-device guidance.",
+      "description": "SBOM generation + container image scanning + vuln prioritization: 5 skills (syft-generation, grype-scanning, cyclonedx-format, spdx-format, trivy-image) and 1 agent (vuln-prioritizer). Required for US EO 14028 + EU CRA + FDA medical-device guidance.",
       "strict": true
     },
     {
       "name": "qa-compliance",
       "source": "./plugins/qa-compliance",
-      "description": "Compliance test patterns + readiness review: 6 skills (gdpr-test-patterns, ccpa-test-patterns, soc2-evidence-collector, hipaa-test-patterns, pci-dss-scope-checker, audit-trail-test-author) and 1 agent (compliance-readiness-reviewer). Final Phase 5 plugin per v2 master plan.",
+      "description": "Compliance test patterns + readiness review: 6 skills (gdpr-test-patterns, ccpa-test-patterns, soc2-evidence-collector, hipaa-test-patterns, pci-dss-scope-checker, audit-trail-test-author) and 1 agent (compliance-readiness-reviewer). Covers regulated-industry test pattern catalogs.",
       "strict": true
     },
     {
       "name": "qa-unit-tests-js",
       "source": "./plugins/qa-unit-tests-js",
-      "description": "JS/TS unit testing per-framework wrappers: 5 skills (jest-tests, vitest-tests, mocha-tests, ava-tests, jasmine-tests). Phase 6 plugin per v2 master plan; per-framework lifecycle, does NOT duplicate qa-test-review test code hygiene scope.",
+      "description": "JS/TS unit testing per-framework wrappers: 5 skills (jest-tests, vitest-tests, mocha-tests, ava-tests, jasmine-tests). Per-framework lifecycle (configure / run / mock / coverage / CI). Does not duplicate qa-test-review test code hygiene.",
       "strict": true
     },
     {
       "name": "qa-unit-tests-python",
       "source": "./plugins/qa-unit-tests-python",
-      "description": "Python unit testing per-framework wrappers: 4 skills (pytest-tests, unittest-tests, doctest-tests, nose2-tests). Phase 6.",
+      "description": "Python unit testing per-framework wrappers: 4 skills (pytest-tests, unittest-tests, doctest-tests, nose2-tests).",
       "strict": true
     },
     {
       "name": "qa-unit-tests-jvm",
       "source": "./plugins/qa-unit-tests-jvm",
-      "description": "JVM unit testing per-framework wrappers: 5 skills (junit5-tests, kotest-tests, spock-tests, testng-tests, scalatest). Phase 6.",
+      "description": "JVM unit testing per-framework wrappers: 5 skills (junit5-tests, kotest-tests, spock-tests, testng-tests, scalatest).",
       "strict": true
     },
     {
       "name": "qa-unit-tests-net",
       "source": "./plugins/qa-unit-tests-net",
-      "description": ".NET unit testing per-framework wrappers: 4 skills (xunit-tests, nunit-tests, mstest-tests, fluentassertions). Phase 6.",
+      "description": ".NET unit testing per-framework wrappers: 4 skills (xunit-tests, nunit-tests, mstest-tests, fluentassertions).",
       "strict": true
     },
     {
       "name": "qa-unit-tests-go-rust",
       "source": "./plugins/qa-unit-tests-go-rust",
-      "description": "Go + Rust unit testing per-framework wrappers: 4 skills (go-test, ginkgo-tests, cargo-test, rstest-tests). Phase 6.",
+      "description": "Go + Rust unit testing per-framework wrappers: 4 skills (go-test, ginkgo-tests, cargo-test, rstest-tests).",
       "strict": true
     },
     {
       "name": "qa-code-quality",
       "source": "./plugins/qa-code-quality",
-      "description": "Production code quality: 5 skills (sonarqube-quality-perspective, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) and 1 agent (code-quality-critic). Phase 6 plugin per v2 master plan; production-only scope (test code is owned by qa-test-review).",
+      "description": "Production code quality: 5 skills (sonarqube-quality-perspective, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) and 1 agent (code-quality-critic). Production-only scope; test-code hygiene is owned by qa-test-review.",
       "strict": true
     },
     {
       "name": "qa-ml-models",
       "source": "./plugins/qa-ml-models",
-      "description": "ML model testing: 5 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, alibi-explainability) and 1 agent (model-fairness-reviewer). Phase 6 plugin per v2 master plan; covers vulnerability scanning, drift monitoring, group fairness, per-prediction explainability.",
+      "description": "ML model testing: 5 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, alibi-explainability) and 1 agent (model-fairness-reviewer). Covers vulnerability scanning, drift monitoring, group fairness, and per-prediction explainability.",
       "strict": true
     },
     {
       "name": "qa-modern-web",
       "source": "./plugins/qa-modern-web",
-      "description": "Modern web testing: 5 skills (service-worker-tests, pwa-install-flow-tests, web-vitals-inp-deep, browser-extension-tests, sw-cache-strategy-author). Phase 6 plugin per v2 master plan; covers PWA + Chromium MV3 extension + INP responsiveness reality.",
+      "description": "Modern web testing: 5 skills (service-worker-tests, pwa-install-flow-tests, web-vitals-inp-deep, browser-extension-tests, sw-cache-strategy-author). Covers PWA + Chromium MV3 extensions + INP responsiveness.",
       "strict": true
     },
     {
       "name": "qa-data-notebooks",
       "source": "./plugins/qa-data-notebooks",
-      "description": "Jupyter notebook testing: 3 skills (nbval-tests, testbook-tests, papermill-tests). Phase 6 plugin per v2 master plan; covers full-notebook regression (nbval), function-level unit tests (testbook), parameterized execution (papermill).",
+      "description": "Jupyter notebook testing: 3 skills (nbval-tests, testbook-tests, papermill-tests). Covers full-notebook regression (nbval), function-level unit tests (testbook), and parameterized execution (papermill).",
       "strict": true
     },
     {
       "name": "qa-distributed-tracing",
       "source": "./plugins/qa-distributed-tracing",
-      "description": "Distributed tracing assertion testing: 4 skills (opentelemetry-trace-assertions, jaeger-trace-tests, zipkin-trace-tests, trace-spec-author) and 1 agent (trace-coverage-reviewer). Phase 7 plugin per v2 master plan §8; sets the observability assertion testing pattern.",
+      "description": "Distributed tracing assertion testing: 4 skills (opentelemetry-trace-assertions, jaeger-trace-tests, zipkin-trace-tests, trace-spec-author) and 1 agent (trace-coverage-reviewer). Asserts on production trace shape (spans, attributes, parent links, status), not just on aggregate metrics.",
       "strict": true
     },
     {
       "name": "qa-realtime-protocols",
       "source": "./plugins/qa-realtime-protocols",
-      "description": "Real-time protocol testing: 5 skills (websocket-tests, server-sent-events-tests, grpc-streaming-tests, mqtt-tests, webhook-replay-tests). Phase 7 plugin per v2 master plan §8; covers RFC 6455 + WHATWG SSE + gRPC streaming + MQTT v5 + Standard Webhooks signature scheme.",
+      "description": "Real-time protocol testing: 5 skills (websocket-tests, server-sent-events-tests, grpc-streaming-tests, mqtt-tests, webhook-replay-tests). Anchored on RFC 6455, WHATWG SSE, gRPC streaming, MQTT v5, and the Standard Webhooks signature scheme.",
       "strict": true
     },
     {
       "name": "qa-pdf-print-render",
       "source": "./plugins/qa-pdf-print-render",
-      "description": "PDF + print rendering tests: 4 skills (pdf-snapshot-tester, print-stylesheet-tests, html-to-pdf-regression, pdf-accessibility-checker). Phase 7 plugin per v2 master plan §8; covers print/PDF output where qa-visual-regression covers screen output.",
+      "description": "PDF + print rendering tests: 4 skills (pdf-snapshot-tester, print-stylesheet-tests, html-to-pdf-regression, pdf-accessibility-checker). Covers print/PDF output where qa-visual-regression covers screen output.",
       "strict": true
     },
     {
       "name": "qa-search-relevance",
       "source": "./plugins/qa-search-relevance",
-      "description": "Search relevance testing: 3 skills (elasticsearch-relevance-tests, opensearch-relevance-tests, vector-search-precision-tests) and 1 agent (relevance-regression-reviewer). Phase 7 plugin per v2 master plan §8; IR-metrics-driven NDCG / MRR / Recall@k regression detection.",
+      "description": "Search relevance testing: 3 skills (elasticsearch-relevance-tests, opensearch-relevance-tests, vector-search-precision-tests) and 1 agent (relevance-regression-reviewer). IR-metrics-driven NDCG / MRR / Recall@k regression detection.",
       "strict": true
     },
     {
       "name": "qa-concurrency",
       "source": "./plugins/qa-concurrency",
-      "description": "Concurrency + race-condition testing: 5 skills (jepsen-patterns, race-condition-test-author, deadlock-detection-harness, async-ordering-tests, mvcc-isolation-tests). Phase 7 plugin per v2 master plan §8; code-level data races (distinct from chaos = infra fault).",
+      "description": "Concurrency + race-condition testing: 5 skills (jepsen-patterns, race-condition-test-author, deadlock-detection-harness, async-ordering-tests, mvcc-isolation-tests). Code-level data races, distinct from qa-chaos-resilience (infrastructure fault injection).",
       "strict": true
     },
     {
       "name": "qa-saga-cqrs",
       "source": "./plugins/qa-saga-cqrs",
-      "description": "Saga + CQRS + event sourcing test patterns: 4 skills (saga-transaction-tests, event-sourcing-tests, cqrs-projection-tests, eventual-consistency-tests). Phase 7 plugin per v2 master plan §8; ACD-without-isolation saga tests + replay determinism + projection consistency window.",
+      "description": "Saga + CQRS + event sourcing test patterns: 4 skills (saga-transaction-tests, event-sourcing-tests, cqrs-projection-tests, eventual-consistency-tests). Covers ACD-without-isolation saga tests, replay determinism, and projection consistency windows.",
       "strict": true
     },
     {
       "name": "qa-charts-dataviz",
       "source": "./plugins/qa-charts-dataviz",
-      "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator). Phase 7 plugin per v2 master plan §8; covers Canvas + SVG + declarative-spec viz, complementing qa-visual-regression which targets general UI screens.",
+      "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator). Covers Canvas + SVG + declarative-spec visualizations, complementing qa-visual-regression which targets general UI screens.",
       "strict": true
     },
     {
       "name": "qa-resilience-drills",
       "source": "./plugins/qa-resilience-drills",
-      "description": "Resilience drills: 5 skills (dr-drill-runner, backup-verification-author, restore-time-tests, error-budget-tests, mttr-mtbf-tracker). Final Phase 7 plugin per v2 master plan §8; production-grade DR drills + backup verification + RTO + error-budget gating + incident metrics.",
+      "description": "Resilience drills: 5 skills (dr-drill-runner, backup-verification-author, restore-time-tests, error-budget-tests, mttr-mtbf-tracker). Production-grade DR drills + backup verification + RTO + error-budget gating + incident metrics.",
       "strict": true
     }
   ]

@@ -116,7 +116,7 @@ docker run -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable \
 SSRF). **NEVER point at production** — risk of data corruption +
 generates audit-log noise.
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Per [zap-base][zap-base], rule customization via `-c config_file`
 where each line is `<rule_id>\t<INFO|WARN|IGNORE|FAIL>\t<URL_pattern>`:

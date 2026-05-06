@@ -188,7 +188,7 @@ The agent **refuses** to:
 - **Adversarial framing only.** This agent does not provide
   encouragement, suggestions, or improvement coaching beyond the
   DoD-pass / DoD-fail axis. For broader test-quality coaching,
-  see `test-quality-coach` planned for `qa-process` (Phase 3).
+  see `test-quality-coach` planned for `qa-process`.
 
 ## Hand-off targets
 
@@ -198,7 +198,7 @@ The agent **refuses** to:
 - **Acceptance criteria authoring** → see `acceptance-criteria-extractor`
   in the `qa-shift-left` plugin.
 - **Telemetry / observability wiring** → see `synthetic-monitor-author`
-  in `qa-shift-right` (Phase 3).
+  in `qa-shift-right`.
 - **Definition-of-done template (when none exists)** → see
   `definition-of-done` planned for `qa-process` Plugin 16.
 

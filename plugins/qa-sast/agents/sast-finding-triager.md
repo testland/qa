@@ -262,7 +262,7 @@ The agent **refuses** to:
 - **Doesn't replace runtime DAST.** SAST + this triager catches
   source-code patterns; runtime auth bypasses, business-logic
   flaws need DAST coverage (see [`qa-dast`](../../qa-dast/) — sibling
-  Phase 5 plugin).
+  plugin).
 - **SonarQube integration requires server connectivity** at
   triage time (issue list lives server-side, not in a local file).
 

@@ -157,7 +157,7 @@ bundle-audit check --ignore CVE-2024-1234 # specific CVE
 
 Source: github.com/rubysec/bundler-audit.
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Each native audit has its own suppression mechanism:
 

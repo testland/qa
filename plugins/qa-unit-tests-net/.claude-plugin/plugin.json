@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-net",
   "version": "1.0.0",
-  "description": ".NET unit testing per-framework wrappers: 4 skills (xunit-tests, nunit-tests, mstest-tests, fluentassertions). Phase 6 plugin per v2 master plan; per-framework lifecycle + assertion catalog.",
+  "description": ".NET unit testing per-framework wrappers: 4 skills (xunit-tests, nunit-tests, mstest-tests, fluentassertions). Per-framework lifecycle + assertion catalog.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-net",
   "repository": "https://github.com/testland/qa",

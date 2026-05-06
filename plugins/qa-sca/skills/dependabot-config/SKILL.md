@@ -196,7 +196,7 @@ security updates). Security PRs:
   the package generally, but Dependabot will still PR a security
   fix unless you explicitly ignore the CVE)
 
-## Step 6 — False-positive triage analogue (per Phase 5 amendment)
+## Step 6 — False-positive triage analogue
 
 Dependabot doesn't produce findings to triage — it produces upgrade
 PRs. The "FP triage" analogue is **suppressing unwanted update PRs**:

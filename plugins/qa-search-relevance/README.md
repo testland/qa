@@ -23,8 +23,6 @@ analysis across term-based and vector search.
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components**. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

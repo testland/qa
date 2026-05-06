@@ -5,8 +5,8 @@ stdlib + community Python test frameworks: pytest (modern de facto),
 unittest (stdlib JUnit-port), doctest (docstring-embedded tests),
 nose2 (legacy alternative).
 
-**Phase 6 plugin per v2 master plan.** Per-framework lifecycle scope
-— does NOT duplicate `qa-test-review` test code hygiene.
+Per-framework lifecycle scope. Does **not** duplicate
+`qa-test-review` (test code hygiene).
 
 ## Components
 
@@ -26,4 +26,6 @@ nose2 (legacy alternative).
 
 ## Rating
 
-All components score >=21 on the v2.0 framework with D6=4 floor. See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md).
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+the repository root for the rubric.

@@ -114,7 +114,7 @@ gosec -fmt yaml -out results.yaml ./...
 
 For `sast-finding-triager` integration, use JSON.
 
-## Step 5 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 5 — False-positive triage (MANDATORY)
 
 Per [gs-gh][gs-gh] the canonical inline suppression syntax:
 

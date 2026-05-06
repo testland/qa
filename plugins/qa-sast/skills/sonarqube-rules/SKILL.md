@@ -132,7 +132,7 @@ sonar-scanner \
 PR results post as comments to GitHub / GitLab / Bitbucket per
 the integration setup in SonarQube admin.
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Three suppression layers in priority order:
 

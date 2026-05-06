@@ -6,8 +6,8 @@ SOC 2 Type II, HIPAA, PCI DSS v4.0) plus an audit-trail-test-author
 build-an-X for the universal logging requirement plus an adversarial
 agent that scores test coverage against any framework's criteria.
 
-**Final Phase 5 plugin per the v2 master plan.** Closes the regulated-industry
-gap (healthcare, finance, EU operations, federal contractors).
+Covers the regulated-industry gap (healthcare, finance, EU
+operations, federal contractors).
 
 ## Components
 
@@ -30,11 +30,6 @@ gap (healthcare, finance, EU operations, federal contractors).
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components** + the **Phase 5
-amendment requiring False-positive triage analogue (here: "scope-exclusion
-patterns" — clarifying which controls don't apply to a given system) in
-every framework skill**.
+All components in this plugin score >=21 on the v2.0 rating framework.
 See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

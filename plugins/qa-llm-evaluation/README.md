@@ -7,10 +7,6 @@ Langfuse for production observability + offline-eval feedback loop)
 plus an adversarial reviewer agent that flags 8 anti-patterns
 across any of these frameworks.
 
-First Phase 4 plugin per the v2 master plan ("complete QA toolkit
-for any team"). Closes the fastest-growing QA discipline gap of
-2024–2026.
-
 ## Components
 
 | Type | Name | Archetype | Description |
@@ -32,10 +28,6 @@ for any team"). Closes the fastest-growing QA discipline gap of
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components** — every concrete
-claim is cited inline at the point of use, not in an end-of-body
-References-only section. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at the
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at the
 repository root for the rubric.

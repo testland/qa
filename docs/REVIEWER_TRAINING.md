@@ -1,10 +1,9 @@
 # Reviewer Training Pack
 
-Calibration material for the v2.0 6-dimension rating framework. Per the
-master plan's cross-cutting Task X.2: two reviewers should land within
-2 points of each other on the same component. This document walks
-three exemplars (A / C / F) with per-dimension scoring rationale so
-reviewers can self-calibrate.
+Calibration material for the v2.0 6-dimension rating framework. Two
+reviewers should land within 2 points of each other on the same
+component. This document walks three exemplars (A / C / F) with
+per-dimension scoring rationale so reviewers can self-calibrate.
 
 ## How to use this document
 
@@ -178,7 +177,7 @@ Just ask me anything QA-related.
 | D1 Spec compliance | 0 | `validate.sh` rejects the name `qa-expert` (generic role-agent denylist). Description starts with "You are…" + "I help…" — both linted. **Multiple lint failures = unmergeable regardless of score.** |
 | D2 Archetype fit | 0 | Declares A2 (action-taking task) but body has no when-invoked steps, no output format, no concrete task. It's a persona, not a task scope. |
 | D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined. Saturated by 3+ near-clones in the existing ecosystem (per `qa-component-ratings-master-2026-04-30.md` §6). Negative-predictive — body could be literally anything. |
-| D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. Documented NOT-GAP per master plan §13. |
+| D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. Documented NOT-GAP (see [`CONTRIBUTING.md`](CONTRIBUTING.md) — the marketplace excludes generic role-agent names). |
 | D5 Body quality | 1 | Body has structure (sections), but no steps, no output format, no examples. **1 point for not being empty.** |
 | D6 Terminology | 0 | Zero citations; zero source-grounded claims. **`d6: 0` is a hard reject** per the v2.0 framework. |
 | **Total** | **1/30 + d6: 0** | Hard reject. Documented NOT-GAP. Don't merge. |
@@ -189,25 +188,26 @@ Just ask me anything QA-related.
   the framework's "one agent, one specific task" rule.
 - Generic name (`qa-expert`) — rejected by `validate.sh` denylist.
 - `d6: 0` — hard reject regardless of any other dimension.
-- Documented NOT-GAP per master plan §13 — contributor must show
-  measured evidence that saturation no longer holds before this
-  category is even considered.
+- Documented NOT-GAP — generic role-agent names are linted out by
+  `validate.sh`; contributor must show measured evidence that the
+  ecosystem saturation no longer holds before this category is even
+  considered.
 
 ### How to coach the contributor
 
-> "This is a documented NOT-GAP. The master plan §13 lists generic
->  `qa-expert` / `quality-engineer` / `qa-engineer` as intentionally
->  skipped — the existing ecosystem has 3+ near-clones and they all
->  rate poorly.
+> "This is a documented NOT-GAP. Generic names like `qa-expert` /
+>  `quality-engineer` / `qa-engineer` are intentionally skipped — the
+>  existing ecosystem has 3+ near-clones and they all rate poorly,
+>  and `validate.sh` rejects them via the role-agent denylist.
 >
 > If you have a specific QA task in mind, reshape into a sharply
 > scoped agent: pick ONE behavior (e.g., 'reviews a test plan against
 > the DoD' → that's `quality-coach` in qa-roles, already shipped) and
 > name it after the behavior, not after the role.
 >
-> Required reading before resubmitting: master plan §13, the
-> single-description test in `decisions.md`, and the A1-A4 archetype
-> guidance in `PLUGIN_AUTHORING.md`."
+> Required reading before resubmitting: the single-description test
+> in [`CONTRIBUTING.md`](CONTRIBUTING.md), and the A1–A4 archetype
+> guidance in [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)."
 
 ## Calibration check after the three exemplars
 
@@ -232,8 +232,9 @@ After working through this pack:
 - You should be able to explain why D6 = 0 is a hard reject (citation
   theater is the dominant failure mode in the ecosystem; the gate
   forces source discipline).
-- You should be able to spot a NOT-GAP component without consulting
-  the master plan §13.
+- You should be able to spot a NOT-GAP component (generic role
+  agents, persona-as-scope, descriptions that match 3+ existing
+  ecosystem entries) without consulting the linter.
 
 If you missed by >2 points on any exemplar, re-read the relevant
 [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md) section and the

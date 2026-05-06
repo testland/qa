@@ -5,9 +5,8 @@ covering the mainstream OSS + AWS queue ecosystem (Sidekiq, Celery,
 BullMQ, SQS, RabbitMQ) plus two build-an-X workflow skills for
 cross-tool patterns (cron-job-test-author, idempotency-test-author).
 
-Third Phase 4 plugin per the v2 master plan. Closes the
-production-defect cluster around at-least-once delivery, retry
-storms, dead-letter handling, missed cron executions, and
+Covers the production-defect cluster around at-least-once delivery,
+retry storms, dead-letter handling, missed cron executions, and
 idempotency.
 
 ## Components
@@ -31,10 +30,6 @@ idempotency.
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components** — every concrete
-claim is cited inline at the point of use, not in an end-of-body
-References-only section. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

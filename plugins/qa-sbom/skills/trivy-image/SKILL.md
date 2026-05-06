@@ -166,7 +166,7 @@ use [`checkov-policy`](../../qa-iac/skills/checkov-policy/SKILL.md)
 + [`tfsec-policy`](../../qa-iac/skills/tfsec-policy/SKILL.md)
 from the qa-iac plugin.
 
-## Step 8 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 8 — False-positive triage (MANDATORY)
 
 Per [tv-img][tv-img]: "Use a `.trivyignore` file to suppress
 specific findings. Place this file in your project directory with

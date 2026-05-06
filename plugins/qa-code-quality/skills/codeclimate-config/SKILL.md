@@ -90,7 +90,7 @@ exclude_patterns:
   - "**/*.d.ts"
 ```
 
-Per Phase 6 amendment, **excluding `**/test/**` is required** —
+**Excluding `**/test/**` is required** —
 qa-test-review owns test-code hygiene; qa-code-quality scopes
 production only.
 

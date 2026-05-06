@@ -136,7 +136,7 @@ paths = ['''vendor/.*''', '''third_party/.*''']
 The `[extend] useDefault = true` keeps built-in rules; without it,
 your custom rules replace the defaults entirely.
 
-## Step 5 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 5 — False-positive triage (MANDATORY)
 
 Suppression mechanisms in priority order:
 

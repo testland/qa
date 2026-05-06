@@ -2,7 +2,8 @@
 
 Go + Rust unit testing per-framework wrappers. Combined plugin since each language has a small test surface (stdlib + 1 community library).
 
-**Phase 6 plugin per v2 master plan.** Per-framework lifecycle scope — does NOT duplicate `qa-test-review` test code hygiene.
+Per-framework lifecycle scope. Does **not** duplicate
+`qa-test-review` (test code hygiene).
 
 ## Components
 
@@ -22,4 +23,6 @@ Go + Rust unit testing per-framework wrappers. Combined plugin since each langua
 
 ## Rating
 
-All components score >=21 on the v2.0 framework with D6=4 floor. See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md).
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+the repository root for the rubric.

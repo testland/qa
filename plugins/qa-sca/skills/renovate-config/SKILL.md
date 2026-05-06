@@ -178,7 +178,7 @@ syntax + natural language:
 
 Most teams use `["before 4am on Monday"]` for weekly batches.
 
-## Step 7 — False-positive triage analogue (per Phase 5 amendment)
+## Step 7 — False-positive triage analogue
 
 Renovate doesn't produce findings to triage — it produces upgrade
 PRs. Suppression mechanisms:

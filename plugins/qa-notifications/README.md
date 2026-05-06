@@ -8,10 +8,6 @@ notification flows: email (multipart + tracking + bounce), SMS
 (Web Push / APNs / FCM with expired-subscription cleanup), and
 webhook delivery (Standard Webhooks signing + replay defense).
 
-**Final Phase 4 plugin per the v2 master plan.** Closes the
-notifications gap surfaced in `qa-post-impl-validation-2026-05-05.md`
-§6.1 — universal SaaS surface; v1 had zero coverage.
-
 ## Components
 
 | Type | Name | Archetype | Description |
@@ -32,9 +28,6 @@ notifications gap surfaced in `qa-post-impl-validation-2026-05-05.md`
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components** — every concrete
-claim is cited inline at the point of use. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

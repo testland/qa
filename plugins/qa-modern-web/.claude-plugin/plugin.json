@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-modern-web",
   "version": "1.0.0",
-  "description": "Modern web testing: 5 skills (service-worker-tests, pwa-install-flow-tests, web-vitals-INP-deep, browser-extension-tests, sw-cache-strategy-author). Phase 6 plugin per v2 master plan; covers PWA + Chromium MV3 extension + INP responsiveness reality.",
+  "description": "Modern web testing: 5 skills (service-worker-tests, pwa-install-flow-tests, web-vitals-inp-deep, browser-extension-tests, sw-cache-strategy-author). Covers PWA + Chromium MV3 extensions + INP responsiveness.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-modern-web",
   "repository": "https://github.com/testland/qa",

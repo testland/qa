@@ -6,11 +6,9 @@ session-management-test-author) that codify the IdP-independent
 patterns from RFC 6749 / RFC 7636 PKCE / RFC 9700 Security BCP /
 OWASP ASVS V3.
 
-Fourth Phase 4 plugin per the v2 master plan. Closes the auth-flow
-testing gap surfaced in `qa-post-impl-validation-2026-05-05.md`
-§6.1 — universal in B2B/B2C; high-defect surface; v1's
-`threat-model-from-spec` covered planning, this plugin covers
-runtime validation.
+Universal in B2B/B2C; high-defect surface. Pairs with
+`qa-shift-left/threat-model-from-spec` (planning) — this plugin
+covers the runtime validation.
 
 ## Components
 
@@ -31,9 +29,6 @@ runtime validation.
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components** — every concrete
-claim is cited inline at the point of use. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

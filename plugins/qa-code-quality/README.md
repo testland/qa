@@ -8,11 +8,11 @@ graph + circular deps), and Knip (dead code) — plus an A3 critic
 agent (`code-quality-critic`) that dedupes and prioritizes findings
 across all five tools.
 
-**Phase 6 amendment:** scoped to production code only. Test-code
-hygiene (AAA structure, assertion quality, mocking anti-patterns)
-is owned by `qa-test-review`. Each skill includes the production-only
-scoping config (e.g., `sonar.exclusions`, `lizard -x"./tests/*"`,
-Madge `excludeRegExp`).
+Scoped to production code only. Test-code hygiene (AAA structure,
+assertion quality, mocking anti-patterns) is owned by
+`qa-test-review`. Each skill includes the production-only scoping
+config (e.g., `sonar.exclusions`, `lizard -x"./tests/*"`, Madge
+`excludeRegExp`).
 
 ## Components
 
@@ -34,8 +34,6 @@ Madge `excludeRegExp`).
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components**. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

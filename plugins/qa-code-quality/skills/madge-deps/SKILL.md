@@ -1,6 +1,6 @@
 ---
 name: madge-deps
-description: Run Madge against a JS/TS production source tree to detect circular dependencies, find orphan modules, and visualize the module graph. Per Phase 6 amendment, scoped to production code via `excludeRegExp` for test files.
+description: Run Madge against a JS/TS production source tree to detect circular dependencies, find orphan modules, and visualize the module graph. Scoped to production code via `excludeRegExp` for test files.
 type: skill
 archetype: S1
 rating: 22
@@ -105,7 +105,7 @@ madge --dot src/ > graph.gv
 }
 ```
 
-Per Phase 6 amendment: test files excluded so tests can intentionally
+Test files are excluded so tests can intentionally
 import production modules without flagging the production tree.
 
 ## Step 6 — CI gate

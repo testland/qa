@@ -228,7 +228,7 @@ For each at-least-once handler:
   delivery-receipt protocol.
 - Distributed-transaction idempotency is out of scope; see
   [`saga-transaction-tests`](../../qa-saga-cqrs/skills/saga-transaction-tests/SKILL.md)
-  in qa-saga-cqrs (Phase 7).
+  in qa-saga-cqrs.
 
 ## References
 
@@ -243,4 +243,4 @@ For each at-least-once handler:
 - [`cron-job-test-author`](../cron-job-test-author/SKILL.md) — cron
   jobs need idempotency for safe overlap recovery
 - [`webhook-delivery-tester`](../../qa-notifications/skills/webhook-delivery-tester/SKILL.md)
-  — cross-plugin (Phase 4): webhook receivers need idempotency
+  — cross-plugin: webhook receivers need idempotency

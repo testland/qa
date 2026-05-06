@@ -1,22 +1,19 @@
 # testland-qa
 
-A Claude Code plugin marketplace covering QA gap cells in the existing
-ecosystem: data quality, visual regression, contract testing, flake triage,
-bug reproduction, manual testing, BDD, property-based, chaos, shift-left,
-shift-right, and more. Every component scores **>=21 on the v2.0 rating
-framework** (6 dimensions, including D6 terminology compliance).
+A Claude Code plugin marketplace covering quality engineering for
+modern software teams: data quality, visual regression, contract
+testing, flake triage, bug reproduction, manual testing, BDD,
+property-based, chaos, shift-left, shift-right, security testing
+(SAST/DAST/SCA/SBOM/secrets/compliance), LLM evaluation, ML model
+testing, distributed tracing, real-time protocols, PDF/print,
+search relevance, concurrency, saga/CQRS, charts, resilience drills,
+and more.
 
-The marketplace is a multi-plugin (Pattern B2) layout: each plugin is an
-independent installable unit under `plugins/`, with its own `plugin.json`,
-agents, skills, optional commands, and optional hooks.
+Every component scores **>=21 on the v2.0 rating framework**.
 
-## Status
-
-**v2 master plan complete (2026-05-06).** All 8 phases shipped:
-30 v1 plugins (Phases 0–3) + 5 Phase 4 + 6 Phase 5 + 9 Phase 6
-+ 8 Phase 7 = **58 plugins / ~357 components**. Marketplace
-version **4.0.0** marks the v2 milestone. The index below tracks
-per-plugin status.
+The marketplace is a multi-plugin (Pattern B2) layout: each plugin
+is an independent installable unit under `plugins/`, with its own
+`plugin.json`, agents, skills, optional commands, and optional hooks.
 
 ## Install
 
@@ -32,6 +29,8 @@ For example:
 ```
 
 ## Plugin index
+
+**58 plugins, ~357 components total.**
 
 | Plugin | Components | Status |
 |---|---:|---|
@@ -65,48 +64,49 @@ For example:
 | [qa-ci-integration](plugins/qa-ci-integration/) | 5 (5 skills + 0 agents) | 1.0.0 |
 | [qa-iac](plugins/qa-iac/) | 7 (5 skills + 2 agents) | 1.0.0 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 3 (3 skills + 0 agents) | 1.0.0 |
-| [qa-llm-evaluation](plugins/qa-llm-evaluation/) (Phase 4) | 7 (6 skills + 1 agent) | 1.0.0 |
-| [qa-db-migrations](plugins/qa-db-migrations/) (Phase 4) | 5 (4 skills + 1 agent) | 1.0.0 |
-| [qa-async-jobs](plugins/qa-async-jobs/) (Phase 4) | 7 (7 skills + 0 agents) | 1.0.0 |
-| [qa-auth-flows](plugins/qa-auth-flows/) (Phase 4) | 5 (5 skills + 0 agents) | 1.0.0 |
-| [qa-notifications](plugins/qa-notifications/) (Phase 4) | 6 (6 skills + 0 agents) | 1.0.0 |
-| [qa-sast](plugins/qa-sast/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
-| [qa-dast](plugins/qa-dast/) (Phase 5) | 5 (4 skills + 1 agent) | 1.0.0 |
-| [qa-sca](plugins/qa-sca/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
-| [qa-secrets](plugins/qa-secrets/) (Phase 5) | 4 (4 skills + 0 agents) | 1.0.0 |
-| [qa-sbom](plugins/qa-sbom/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
-| [qa-compliance](plugins/qa-compliance/) (Phase 5) | 7 (6 skills + 1 agent) | 1.0.0 |
-| [qa-unit-tests-js](plugins/qa-unit-tests-js/) (Phase 6) | 5 (5 skills + 0 agents) | 1.0.0 |
-| [qa-unit-tests-python](plugins/qa-unit-tests-python/) (Phase 6) | 4 (4 skills + 0 agents) | 1.0.0 |
-| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) (Phase 6) | 5 (5 skills + 0 agents) | 1.0.0 |
-| [qa-unit-tests-net](plugins/qa-unit-tests-net/) (Phase 6) | 4 (4 skills + 0 agents) | 1.0.0 |
-| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) (Phase 6) | 4 (4 skills + 0 agents) | 1.0.0 |
-| [qa-code-quality](plugins/qa-code-quality/) (Phase 6) | 6 (5 skills + 1 agent) | 1.0.0 |
-| [qa-ml-models](plugins/qa-ml-models/) (Phase 6) | 6 (5 skills + 1 agent) | 1.0.0 |
-| [qa-modern-web](plugins/qa-modern-web/) (Phase 6) | 5 (5 skills + 0 agents) | 1.0.0 |
-| [qa-data-notebooks](plugins/qa-data-notebooks/) (Phase 6) | 3 (3 skills + 0 agents) | 1.0.0 |
-| [qa-distributed-tracing](plugins/qa-distributed-tracing/) (Phase 7) | 5 (4 skills + 1 agent) | 1.0.0 |
-| [qa-realtime-protocols](plugins/qa-realtime-protocols/) (Phase 7) | 5 (5 skills + 0 agents) | 1.0.0 |
-| [qa-pdf-print-render](plugins/qa-pdf-print-render/) (Phase 7) | 4 (4 skills + 0 agents) | 1.0.0 |
-| [qa-search-relevance](plugins/qa-search-relevance/) (Phase 7) | 4 (3 skills + 1 agent) | 1.0.0 |
-| [qa-concurrency](plugins/qa-concurrency/) (Phase 7) | 5 (5 skills + 0 agents) | 1.0.0 |
-| [qa-saga-cqrs](plugins/qa-saga-cqrs/) (Phase 7) | 4 (4 skills + 0 agents) | 1.0.0 |
-| [qa-charts-dataviz](plugins/qa-charts-dataviz/) (Phase 7) | 3 (3 skills + 0 agents) | 1.0.0 |
-| [qa-resilience-drills](plugins/qa-resilience-drills/) (Phase 7) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 7 (6 skills + 1 agent) | 1.0.0 |
+| [qa-db-migrations](plugins/qa-db-migrations/) | 5 (4 skills + 1 agent) | 1.0.0 |
+| [qa-async-jobs](plugins/qa-async-jobs/) | 7 (7 skills + 0 agents) | 1.0.0 |
+| [qa-auth-flows](plugins/qa-auth-flows/) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-notifications](plugins/qa-notifications/) | 6 (6 skills + 0 agents) | 1.0.0 |
+| [qa-sast](plugins/qa-sast/) | 6 (5 skills + 1 agent) | 1.0.0 |
+| [qa-dast](plugins/qa-dast/) | 5 (4 skills + 1 agent) | 1.0.0 |
+| [qa-sca](plugins/qa-sca/) | 6 (5 skills + 1 agent) | 1.0.0 |
+| [qa-secrets](plugins/qa-secrets/) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-sbom](plugins/qa-sbom/) | 6 (5 skills + 1 agent) | 1.0.0 |
+| [qa-compliance](plugins/qa-compliance/) | 7 (6 skills + 1 agent) | 1.0.0 |
+| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-code-quality](plugins/qa-code-quality/) | 6 (5 skills + 1 agent) | 1.0.0 |
+| [qa-ml-models](plugins/qa-ml-models/) | 6 (5 skills + 1 agent) | 1.0.0 |
+| [qa-modern-web](plugins/qa-modern-web/) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-data-notebooks](plugins/qa-data-notebooks/) | 3 (3 skills + 0 agents) | 1.0.0 |
+| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 5 (4 skills + 1 agent) | 1.0.0 |
+| [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-search-relevance](plugins/qa-search-relevance/) | 4 (3 skills + 1 agent) | 1.0.0 |
+| [qa-concurrency](plugins/qa-concurrency/) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-charts-dataviz](plugins/qa-charts-dataviz/) | 3 (3 skills + 0 agents) | 1.0.0 |
+| [qa-resilience-drills](plugins/qa-resilience-drills/) | 5 (5 skills + 0 agents) | 1.0.0 |
 
 ## Authoring gate
 
-Every component (skill or agent) ships with `rating:` (0-30) and `d6:` (0-5)
-fields in its YAML frontmatter. CI enforces:
+Every component (skill or agent) ships with `rating:` (0–30) and
+`d6:` (0–5) fields in its YAML frontmatter. CI enforces:
 
-- `rating >= 21` (importable bar on the v2.0 30-point scale)
-- `d6 >= 1` (a `d6 = 0` is a hard reject for citation theater — body claims
-  not grounded in a fetched canonical source)
+- `rating >= 21` (importable bar on the 30-point scale)
+- `d6 >= 1` (a `d6 = 0` is a hard reject for citation theater —
+  body claims not grounded in a fetched canonical source)
 
-Plus naming and description lint rules (kebab-case, no `claude`/`anthropic`
-reserved words, no `You are.../I help...` openers, no generic role-agent
-names, no literal placeholder strings). See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md)
-for the full rule set.
+Plus naming and description lint rules (kebab-case, no
+`claude`/`anthropic` reserved words, no `You are.../I help...`
+openers, no generic role-agent names, no literal placeholder
+strings). See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for
+the full rule set.
 
 Run locally:
 

@@ -132,7 +132,7 @@ ignore = true   # Suppress all vulns in this exact pinned version
 reason = "Test fixture; not in production dependency graph"
 ```
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Three suppression layers:
 

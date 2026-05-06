@@ -281,7 +281,7 @@ The agent **refuses** to:
 - **Smoke test authoring** → see `smoke-suite-gate` planned in
   `qa-process` Plugin 16.
 - **Canary metric definitions** → see `synthetic-monitor-author` in
-  `qa-shift-right` (Phase 3).
+  `qa-shift-right`.
 - **Runbook template** → see planned `release-readiness-checker`
   in `qa-process` Plugin 16.
 - **Post-release incident response** → escalate to the team's

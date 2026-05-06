@@ -149,7 +149,7 @@ ignore:
     expires: 2026-12-15
 ```
 
-## Step 6 — False-positive triage (MANDATORY per Phase 5 amendment)
+## Step 6 — False-positive triage (MANDATORY)
 
 Suppression mechanisms (per [gr-gh][gr-gh] + standard practice):
 

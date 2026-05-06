@@ -1,6 +1,6 @@
 ---
 name: lizard-complexity
-description: Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds — language-agnostic (30+ languages). Per Phase 6 amendment, scoped to production code via `-x"./tests/*"`; test complexity is owned by qa-test-review.
+description: Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds — language-agnostic (30+ languages). Scoped to production code via `-x"./tests/*"`; test complexity is owned by qa-test-review.
 type: skill
 archetype: S1
 rating: 23
@@ -65,7 +65,7 @@ lizard src/ \
 
 | Flag | Meaning |
 |---|---|
-| `-x PATTERN` | Exclude (Phase 6 amendment: must include `tests/**`) |
+| `-x PATTERN` | Exclude (must include `tests/**` for production-only scope) |
 | `-C N` | CCN warning threshold (default 15; tighten to 10 for new codebases) |
 | `-L N` | Max function NLOC (default 1000; tighten to 80–100) |
 | `-a N` | Max parameter count (5 = "if you need more, pass an object") |

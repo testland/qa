@@ -7,8 +7,7 @@ plus a build-an-X workflow skill for the **rotation step that
 follows detection** (because git-history scrub does NOT fix a leak —
 the secret IS exposed).
 
-**Fourth Phase 5 plugin per the v2 master plan.** Closes the
-universal pre-commit + repo-history hygiene gap.
+Covers the universal pre-commit + repo-history hygiene gap.
 
 ## Components
 
@@ -28,9 +27,6 @@ universal pre-commit + repo-history hygiene gap.
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components** + the **Phase 5
-amendment requiring False-positive triage in every scanner skill**.
-See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md)
-at the repository root for the rubric.
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+the repository root for the rubric.

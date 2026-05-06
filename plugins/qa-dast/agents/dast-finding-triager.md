@@ -263,7 +263,7 @@ The agent **refuses** to:
   templates URLs differently.
 - **Doesn't replace SAST.** DAST catches runtime patterns; pair
   with [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md)
-  for code-side coverage (sister Phase 5 plugin).
+  for code-side coverage.
 - **Burp Enterprise integration requires API access** at triage
   time; per-CI auth setup needed.
 

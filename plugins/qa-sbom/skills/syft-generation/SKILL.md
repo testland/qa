@@ -131,10 +131,10 @@ cosign verify-attestation --type cyclonedx my-image:1.0
 The attestation lives alongside the image in the registry; downstream
 consumers can verify provenance + retrieve the SBOM.
 
-## Step 6 — False-positive triage analogue (Phase 5 amendment context)
+## Step 6 — False-positive triage analogue
 
 Syft generates inventories, not findings — there's no FP triage
-per se. The Phase 5 analogue is **inventory accuracy**: ensuring
+per se. The analogue here is **inventory accuracy**: ensuring
 Syft correctly identifies all components.
 
 | Mechanism | Use |

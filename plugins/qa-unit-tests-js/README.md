@@ -6,13 +6,10 @@ batteries-included), Vitest (Vite-native, modern default), Mocha
 (pluggable, mature), AVA (concurrent-by-default isolation), Jasmine
 (legacy AngularJS heritage).
 
-**First Phase 6 plugin per the v2 master plan.** Revisits v1 §13
-NOT-GAPS exclusion of per-language unit-testing-pattern bundles —
-those were saturated by wshobson at the patterns level; per-framework
-lifecycle wrappers (configure / run / mock / coverage / CI) are a
-different scope. **Does NOT duplicate `qa-test-review`** (test code
-hygiene); for AAA structure, assertion quality, mocking anti-patterns,
-see that plugin instead.
+Per-framework lifecycle scope (configure / run / mock / coverage /
+CI). Does **not** duplicate `qa-test-review` (test code hygiene); for
+AAA structure, assertion quality, and mocking anti-patterns, see
+that plugin instead.
 
 ## Components
 
@@ -33,8 +30,6 @@ see that plugin instead.
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance) **with the v2
-amendment D6=4 floor for Phase 4+ components**. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin score >=21 on the v2.0 rating framework.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.
