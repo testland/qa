@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   "plugins": [
     {
@@ -223,7 +223,7 @@
     {
       "name": "qa-sast",
       "source": "./plugins/qa-sast",
-      "description": "SAST scanners with full lifecycle + false-positive triage: Semgrep, SonarQube, CodeQL, Bandit (Python), gosec (Go), plus a sast-finding-triager unifier agent.",
+      "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). First Phase 5 plugin per v2 master plan; revisits v1 §13 NOT-GAPS via qa-iac differentiation model. Every scanner skill includes mandatory False-positive triage section.",
       "strict": true
     }
   ]
