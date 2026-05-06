@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.0.2"
+    "version": "3.0.3"
   },
   "plugins": [
     {
@@ -205,7 +205,7 @@
     {
       "name": "qa-async-jobs",
       "source": "./plugins/qa-async-jobs",
-      "description": "Background job and queue testing: Sidekiq, Celery, BullMQ, SQS, RabbitMQ, plus cron-job-test-author and idempotency-test-author skills.",
+      "description": "Background job and queue testing: 7 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, cron-job-test-author, idempotency-test-author). Phase 4 plugin per v2 master plan; D6=4 inline-citation floor applied throughout.",
       "strict": true
     }
   ]
