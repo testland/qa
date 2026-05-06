@@ -15,8 +15,8 @@ agents, skills, optional commands, and optional hooks.
 **Phase 3 complete (2026-05-05); Phase 4 complete (2026-05-06);
 Phase 5 complete (2026-05-06); Phase 6 in progress (2026-05-06)** —
 30 v1 plugins + 5 Phase 4 + 6 Phase 5 shipped. Phase 6 (Maintainability
-+ AI/web) underway: 1 of 9 plugins shipped (qa-unit-tests-js).
-Marketplace version **3.2.1**. The index below tracks per-plugin status.
++ AI/web) underway: 5 of 9 plugins shipped (qa-unit-tests-{js,python,jvm,net,go-rust}).
+Marketplace version **3.2.2**. The index below tracks per-plugin status.
 
 ## Install
 
@@ -77,6 +77,10 @@ For example:
 | [qa-sbom](plugins/qa-sbom/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
 | [qa-compliance](plugins/qa-compliance/) (Phase 5) | 7 (6 skills + 1 agent) | 1.0.0 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) (Phase 6) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-python](plugins/qa-unit-tests-python/) (Phase 6) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) (Phase 6) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-net](plugins/qa-unit-tests-net/) (Phase 6) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) (Phase 6) | 4 (4 skills + 0 agents) | 1.0.0 |
 
 ## Authoring gate
 

@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.2.1"
+    "version": "3.2.2"
   },
   "plugins": [
     {
@@ -265,25 +265,25 @@
     {
       "name": "qa-unit-tests-python",
       "source": "./plugins/qa-unit-tests-python",
-      "description": "Python unit testing per-framework wrappers: pytest, unittest, doctest, nose2.",
+      "description": "Python unit testing per-framework wrappers: 4 skills (pytest-tests, unittest-tests, doctest-tests, nose2-tests). Phase 6.",
       "strict": true
     },
     {
       "name": "qa-unit-tests-jvm",
       "source": "./plugins/qa-unit-tests-jvm",
-      "description": "JVM unit testing per-framework wrappers: JUnit 5, Kotest, Spock (Groovy), TestNG, ScalaTest.",
+      "description": "JVM unit testing per-framework wrappers: 5 skills (junit5-tests, kotest-tests, spock-tests, testng-tests, scalatest). Phase 6.",
       "strict": true
     },
     {
       "name": "qa-unit-tests-net",
       "source": "./plugins/qa-unit-tests-net",
-      "description": ".NET unit testing per-framework wrappers: xUnit, NUnit, MSTest, plus FluentAssertions catalog.",
+      "description": ".NET unit testing per-framework wrappers: 4 skills (xunit-tests, nunit-tests, mstest-tests, fluentassertions). Phase 6.",
       "strict": true
     },
     {
       "name": "qa-unit-tests-go-rust",
       "source": "./plugins/qa-unit-tests-go-rust",
-      "description": "Go + Rust unit testing wrappers: go test stdlib, Ginkgo (Go BDD), cargo test stdlib, rstest (Rust parametrized).",
+      "description": "Go + Rust unit testing per-framework wrappers: 4 skills (go-test, ginkgo-tests, cargo-test, rstest-tests). Phase 6.",
       "strict": true
     }
   ]
