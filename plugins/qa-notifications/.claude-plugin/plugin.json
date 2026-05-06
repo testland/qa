@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-notifications",
+  "version": "0.1.0",
+  "description": "Notifications + messaging testing: Mailpit, MailHog, plus email-flow / SMS / push / webhook delivery test authors.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-notifications",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "notifications"]
+}

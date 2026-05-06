@@ -213,6 +213,12 @@
       "source": "./plugins/qa-auth-flows",
       "description": "Auth flow testing: 5 skills (keycloak-tests, auth0-tests, okta-tests, oauth-flow-test-author, session-management-test-author). Phase 4 plugin per v2 master plan; D6=4 inline-citation floor; OAuth 2.0 / RFC 7636 PKCE / RFC 9700 / OWASP ASVS V3 anchored.",
       "strict": true
+    },
+    {
+      "name": "qa-notifications",
+      "source": "./plugins/qa-notifications",
+      "description": "Notifications + messaging testing: Mailpit, MailHog, plus email-flow / SMS / push / webhook delivery test authors.",
+      "strict": true
     }
   ]
 }
