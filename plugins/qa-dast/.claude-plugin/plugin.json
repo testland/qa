@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-dast",
-  "version": "0.1.0",
-  "description": "DAST scanners with full lifecycle + false-positive triage: ZAP, Burp Suite headless, NightVision, plus a dast-baseline-runner skill and dast-finding-triager unifier agent.",
+  "version": "1.0.0",
+  "description": "DAST (dynamic application security testing): 4 skills (zap-baseline, burp-headless, nightvision-dast, dast-baseline-runner) and 1 agent (dast-finding-triager). Phase 5 plugin per v2 master plan; every scanner skill includes mandatory False-positive triage section.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-dast",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "dast"]
+  "keywords": ["qa", "testing", "security", "dast", "zap", "burp", "nightvision", "owasp"]
 }
