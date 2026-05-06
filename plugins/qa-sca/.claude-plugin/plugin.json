@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-sca",
-  "version": "0.1.0",
-  "description": "SCA / dependency scanning with full lifecycle + false-positive triage: Snyk, OSV-Scanner, Dependabot config, Renovate config, npm/pip/maven audit, plus an sca-prioritizer agent.",
+  "version": "1.0.0",
+  "description": "SCA (software composition analysis) / dependency scanning: 5 skills (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit) and 1 agent (sca-prioritizer). Phase 5 plugin per v2 master plan; CVSS + EPSS + CISA KEV + reachability prioritization in the agent.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-sca",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "sca"]
+  "keywords": ["qa", "testing", "security", "sca", "dependency-scanning", "snyk", "osv-scanner", "dependabot", "renovate", "epss", "kev"]
 }
