@@ -201,6 +201,12 @@
       "source": "./plugins/qa-db-migrations",
       "description": "Database migration testing: 4 skills (flyway-migrations, liquibase-migrations, atlas-migrations, sqlmesh-migrations) and 1 agent (migration-blast-radius-reviewer). Phase 4 plugin per v2 master plan; D6=4 inline-citation floor applied throughout.",
       "strict": true
+    },
+    {
+      "name": "qa-async-jobs",
+      "source": "./plugins/qa-async-jobs",
+      "description": "Background job and queue testing: Sidekiq, Celery, BullMQ, SQS, RabbitMQ, plus cron-job-test-author and idempotency-test-author skills.",
+      "strict": true
     }
   ]
 }
