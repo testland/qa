@@ -261,6 +261,30 @@
       "source": "./plugins/qa-unit-tests-js",
       "description": "JS/TS unit testing per-framework wrappers: 5 skills (jest-tests, vitest-tests, mocha-tests, ava-tests, jasmine-tests). Phase 6 plugin per v2 master plan; per-framework lifecycle, does NOT duplicate qa-test-review test code hygiene scope.",
       "strict": true
+    },
+    {
+      "name": "qa-unit-tests-python",
+      "source": "./plugins/qa-unit-tests-python",
+      "description": "Python unit testing per-framework wrappers: pytest, unittest, doctest, nose2.",
+      "strict": true
+    },
+    {
+      "name": "qa-unit-tests-jvm",
+      "source": "./plugins/qa-unit-tests-jvm",
+      "description": "JVM unit testing per-framework wrappers: JUnit 5, Kotest, Spock (Groovy), TestNG, ScalaTest.",
+      "strict": true
+    },
+    {
+      "name": "qa-unit-tests-net",
+      "source": "./plugins/qa-unit-tests-net",
+      "description": ".NET unit testing per-framework wrappers: xUnit, NUnit, MSTest, plus FluentAssertions catalog.",
+      "strict": true
+    },
+    {
+      "name": "qa-unit-tests-go-rust",
+      "source": "./plugins/qa-unit-tests-go-rust",
+      "description": "Go + Rust unit testing wrappers: go test stdlib, Ginkgo (Go BDD), cargo test stdlib, rstest (Rust parametrized).",
+      "strict": true
     }
   ]
 }
