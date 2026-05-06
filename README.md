@@ -17,8 +17,8 @@ Phase 5 in progress (2026-05-06)** — 30 v1 plugins (~217 components)
 + 5 Phase 4 plugins (~30 components: qa-llm-evaluation,
 qa-db-migrations, qa-async-jobs, qa-auth-flows, qa-notifications)
 shipped 1.0.0. Phase 5 (Security & Compliance per v2 master plan)
-underway: 4 of 6 plugins shipped (qa-sast, qa-dast, qa-sca, qa-secrets).
-Marketplace version **3.1.4**. The index below tracks per-plugin status.
+underway: 5 of 6 plugins shipped (qa-sast, qa-dast, qa-sca, qa-secrets, qa-sbom).
+Marketplace version **3.1.5**. The index below tracks per-plugin status.
 
 ## Install
 
@@ -76,6 +76,7 @@ For example:
 | [qa-dast](plugins/qa-dast/) (Phase 5) | 5 (4 skills + 1 agent) | 1.0.0 |
 | [qa-sca](plugins/qa-sca/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
 | [qa-secrets](plugins/qa-secrets/) (Phase 5) | 4 (4 skills + 0 agents) | 1.0.0 |
+| [qa-sbom](plugins/qa-sbom/) (Phase 5) | 6 (5 skills + 1 agent) | 1.0.0 |
 
 ## Authoring gate
 
