@@ -231,6 +231,12 @@
       "source": "./plugins/qa-dast",
       "description": "DAST (dynamic application security testing): 4 skills (zap-baseline, burp-headless, nightvision-dast, dast-baseline-runner) and 1 agent (dast-finding-triager). Phase 5 plugin per v2 master plan; sister to qa-sast for runtime vulnerabilities. Every scanner skill includes mandatory False-positive triage section.",
       "strict": true
+    },
+    {
+      "name": "qa-sca",
+      "source": "./plugins/qa-sca",
+      "description": "SCA / dependency scanning with full lifecycle + false-positive triage: Snyk, OSV-Scanner, Dependabot config, Renovate config, npm/pip/maven audit, plus an sca-prioritizer agent.",
+      "strict": true
     }
   ]
 }

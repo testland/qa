@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-sca",
+  "version": "0.1.0",
+  "description": "SCA / dependency scanning with full lifecycle + false-positive triage: Snyk, OSV-Scanner, Dependabot config, Renovate config, npm/pip/maven audit, plus an sca-prioritizer agent.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-sca",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "sca"]
+}
