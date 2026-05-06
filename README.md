@@ -12,12 +12,13 @@ agents, skills, optional commands, and optional hooks.
 
 ## Status
 
-**Phase 3 complete (2026-05-05); Phase 4 in progress (2026-05-06)** —
+**Phase 3 complete (2026-05-05); Phase 4 complete (2026-05-06)** —
 30 v1 plugins shipped at 1.0.0 (~217 components covering the gap-cell
-matrix); Phase 4 (Tier-A universal gaps per the v2 master plan) is
-underway: 4 of 5 plugins shipped (qa-llm-evaluation + qa-db-migrations
-+ qa-async-jobs + qa-auth-flows). Marketplace version **3.0.4**. The
-index below tracks per-plugin status.
+matrix). **All 5 Phase 4 plugins (Tier-A universal gaps per the v2
+master plan) shipped 2026-05-06**: qa-llm-evaluation,
+qa-db-migrations, qa-async-jobs, qa-auth-flows, qa-notifications
+(~30 components). Marketplace version **3.1.0**. The index below
+tracks per-plugin status.
 
 ## Install
 
@@ -70,6 +71,7 @@ For example:
 | [qa-db-migrations](plugins/qa-db-migrations/) (Phase 4) | 5 (4 skills + 1 agent) | 1.0.0 |
 | [qa-async-jobs](plugins/qa-async-jobs/) (Phase 4) | 7 (7 skills + 0 agents) | 1.0.0 |
 | [qa-auth-flows](plugins/qa-auth-flows/) (Phase 4) | 5 (5 skills + 0 agents) | 1.0.0 |
+| [qa-notifications](plugins/qa-notifications/) (Phase 4) | 6 (6 skills + 0 agents) | 1.0.0 |
 
 ## Authoring gate
 

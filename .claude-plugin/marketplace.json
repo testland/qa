@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.0.4"
+    "version": "3.1.0"
   },
   "plugins": [
     {
@@ -217,7 +217,7 @@
     {
       "name": "qa-notifications",
       "source": "./plugins/qa-notifications",
-      "description": "Notifications + messaging testing: Mailpit, MailHog, plus email-flow / SMS / push / webhook delivery test authors.",
+      "description": "Notifications + messaging testing across email/SMS/push/webhooks: 6 skills (mailpit-testing, mailhog-testing, email-flow-test-author, sms-test-author, push-notification-test-author, webhook-delivery-tester). Final Phase 4 plugin per v2 master plan; D6=4 inline-citation floor.",
       "strict": true
     }
   ]
