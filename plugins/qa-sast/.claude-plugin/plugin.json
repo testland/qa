@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-sast",
-  "version": "0.1.0",
-  "description": "SAST scanners with full lifecycle + false-positive triage: Semgrep, SonarQube, CodeQL, Bandit (Python), gosec (Go), plus a sast-finding-triager unifier agent.",
+  "version": "1.0.0",
+  "description": "SAST (static application security testing): 5 skills (semgrep-rules, sonarqube-rules, codeql-queries, bandit-python, gosec-go) and 1 agent (sast-finding-triager). Every scanner skill includes a False-positive triage section per Phase 5 amendment.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-sast",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "sast"]
+  "keywords": ["qa", "testing", "security", "sast", "semgrep", "sonarqube", "codeql", "bandit", "gosec", "owasp"]
 }
