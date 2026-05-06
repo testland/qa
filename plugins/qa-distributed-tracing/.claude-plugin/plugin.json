@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-distributed-tracing",
+  "version": "1.0.0",
+  "description": "Distributed tracing assertion testing: 4 skills (opentelemetry-trace-assertions, jaeger-trace-tests, zipkin-trace-tests, trace-spec-author) and 1 agent (trace-coverage-reviewer). Phase 7 plugin per v2 master plan §8; sets the observability assertion testing pattern (assertions on trace shape, not just metrics).",
+  "author": { "name": "testland", "url": "https://testland.io/" },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-distributed-tracing",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "distributed-tracing", "opentelemetry", "jaeger", "zipkin", "observability", "instrumentation"]
+}
