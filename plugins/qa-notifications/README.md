@@ -1,12 +1,27 @@
 # qa-notifications
 
-Notifications + messaging testing: Mailpit, MailHog, plus email-flow / SMS / push / webhook delivery test authors.
+Notifications + messaging testing across email, SMS, push, and
+webhooks. Two SMTP-capture wrappers (Mailpit current; MailHog
+legacy) plus four build-an-X workflow skills covering full
+notification flows: email (multipart + tracking + bounce), SMS
+(Twilio Magic Numbers + segment counting + STOP keywords), push
+(Web Push / APNs / FCM with expired-subscription cleanup), and
+webhook delivery (Standard Webhooks signing + replay defense).
+
+**Final Phase 4 plugin per the v2 master plan.** Closes the
+notifications gap surfaced in `qa-post-impl-validation-2026-05-05.md`
+§6.1 — universal SaaS surface; v1 had zero coverage.
 
 ## Components
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| Skill | [mailpit-testing](skills/mailpit-testing/SKILL.md) | S1 | Modern dev mailbox; SMTP 1025 + Web UI 8025; REST API for assertions; Chaos mode; tagging via plus-addressing |
+| Skill | [mailhog-testing](skills/mailhog-testing/SKILL.md) | S1 | Legacy dev mailbox (predecessor to Mailpit); APIv2; Jim chaos monkey; migration-to-Mailpit guide |
+| Skill | [email-flow-test-author](skills/email-flow-test-author/SKILL.md) | S3 | Build-an-X for end-to-end email: capture → headers (incl. List-Unsubscribe) → multipart body → link-rewrite resolution → unsubscribe one-click → bounce/complaint webhooks |
+| Skill | [sms-test-author](skills/sms-test-author/SKILL.md) | S3 | Build-an-X for SMS via Twilio Test Credentials + Magic Numbers; segment counting (GSM-7 vs UCS-2); rate limit; STOP/HELP keyword handling; sender-type per geography |
+| Skill | [push-notification-test-author](skills/push-notification-test-author/SKILL.md) | S3 | Build-an-X across Web Push (RFC 8030+VAPID) + APNs + FCM; subscription handshake; payload + click-action; 410-cleanup; silent vs alert |
+| Skill | [webhook-delivery-tester](skills/webhook-delivery-tester/SKILL.md) | S3 | Build-an-X per Standard Webhooks: HMAC-SHA256 signing, retry+backoff, replay window, idempotent processing, vendor sample payloads (Stripe/Twilio/SendGrid/GitHub/GitLab) |
 
 ## Install
 
@@ -18,6 +33,8 @@ Notifications + messaging testing: Mailpit, MailHog, plus email-flow / SMS / pus
 ## Rating
 
 All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance). See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at the
-repository root for the rubric.
+(6 dimensions, including D6 terminology compliance) **with the v2
+amendment D6=4 floor for Phase 4+ components** — every concrete
+claim is cited inline at the point of use. See
+[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+the repository root for the rubric.
