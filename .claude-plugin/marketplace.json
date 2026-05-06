@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.1.2"
+    "version": "3.1.3"
   },
   "plugins": [
     {
@@ -235,7 +235,7 @@
     {
       "name": "qa-sca",
       "source": "./plugins/qa-sca",
-      "description": "SCA / dependency scanning with full lifecycle + false-positive triage: Snyk, OSV-Scanner, Dependabot config, Renovate config, npm/pip/maven audit, plus an sca-prioritizer agent.",
+      "description": "SCA (software composition analysis): 5 skills (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit) and 1 agent (sca-prioritizer with CVSS + EPSS + CISA KEV + reachability prioritization). Phase 5 plugin per v2 master plan.",
       "strict": true
     }
   ]
