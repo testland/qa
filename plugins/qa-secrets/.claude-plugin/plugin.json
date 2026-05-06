@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-secrets",
-  "version": "0.1.0",
-  "description": "Secrets scanning with full lifecycle + false-positive triage: gitleaks, trufflehog, kingfisher, plus a secrets-rotation-runner skill.",
+  "version": "1.0.0",
+  "description": "Secrets scanning + rotation: 4 skills (gitleaks-scanning, trufflehog-scanning, kingfisher-scanning, secrets-rotation-runner). Phase 5 plugin per v2 master plan; covers detection AND rotation workflow (git-history scrub doesn't fix the leak).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-secrets",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "secrets"]
+  "keywords": ["qa", "testing", "security", "secrets", "gitleaks", "trufflehog", "kingfisher", "rotation"]
 }

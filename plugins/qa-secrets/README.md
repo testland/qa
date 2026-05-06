@@ -1,12 +1,23 @@
 # qa-secrets
 
-Secrets scanning with full lifecycle + false-positive triage: gitleaks, trufflehog, kingfisher, plus a secrets-rotation-runner skill.
+Secrets scanning + rotation. Three per-tool scanner skills
+(gitleaks, TruffleHog, Kingfisher — covering the OSS leader, the
+high-precision validator, and the modern Rust + 950-rule alternative)
+plus a build-an-X workflow skill for the **rotation step that
+follows detection** (because git-history scrub does NOT fix a leak —
+the secret IS exposed).
+
+**Fourth Phase 5 plugin per the v2 master plan.** Closes the
+universal pre-commit + repo-history hygiene gap.
 
 ## Components
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| Skill | [gitleaks-scanning](skills/gitleaks-scanning/SKILL.md) | S1 | Go-based scanner; `gitleaks git/dir/stdin` (v8.19+); `.gitleaks.toml` rules + allowlists; pre-commit + GHA + baseline |
+| Skill | [trufflehog-scanning](skills/trufflehog-scanning/SKILL.md) | S1 | Rust-based with **live verification** via provider API calls; multi-source (git/github/gitlab/filesystem/s3/docker/gcs/postman); `--results=verified` filter |
+| Skill | [kingfisher-scanning](skills/kingfisher-scanning/SKILL.md) | S1 | MongoDB-built Rust scanner with Intel Hyperscan + 950 rules + live validation + checksum verification + cloud access mapping |
+| Skill | [secrets-rotation-runner](skills/secrets-rotation-runner/SKILL.md) | S3 | Build-an-X for rotation workflow after detection: identify provider → two-secret rotation → audit → invalidate → post-mortem → add detection rule |
 
 ## Install
 
@@ -18,6 +29,8 @@ Secrets scanning with full lifecycle + false-positive triage: gitleaks, truffleh
 ## Rating
 
 All components in this plugin score >=21 on the v2.0 rating framework
-(6 dimensions, including D6 terminology compliance). See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at the
-repository root for the rubric.
+(6 dimensions, including D6 terminology compliance) **with the v2
+amendment D6=4 floor for Phase 4+ components** + the **Phase 5
+amendment requiring False-positive triage in every scanner skill**.
+See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md)
+at the repository root for the rubric.
