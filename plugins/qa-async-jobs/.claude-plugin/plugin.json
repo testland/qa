@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-async-jobs",
-  "version": "0.1.0",
-  "description": "Background job and queue testing: Sidekiq, Celery, BullMQ, SQS, RabbitMQ, plus cron-job-test-author and idempotency-test-author skills.",
+  "version": "1.0.0",
+  "description": "Background job and queue testing: 7 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, cron-job-test-author, idempotency-test-author).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-async-jobs",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "async-jobs"]
+  "keywords": ["qa", "testing", "async", "queue", "sidekiq", "celery", "bullmq", "sqs", "rabbitmq", "cron", "idempotency"]
 }
