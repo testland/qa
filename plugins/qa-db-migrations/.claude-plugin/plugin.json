@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-db-migrations",
+  "version": "0.1.0",
+  "description": "Database migration testing: Flyway, Liquibase, Atlas, sqlmesh, plus a migration-blast-radius-reviewer agent.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-db-migrations",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "db-migrations"]
+}
