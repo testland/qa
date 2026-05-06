@@ -237,6 +237,12 @@
       "source": "./plugins/qa-sca",
       "description": "SCA (software composition analysis): 5 skills (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit) and 1 agent (sca-prioritizer with CVSS + EPSS + CISA KEV + reachability prioritization). Phase 5 plugin per v2 master plan.",
       "strict": true
+    },
+    {
+      "name": "qa-secrets",
+      "source": "./plugins/qa-secrets",
+      "description": "Secrets scanning with full lifecycle + false-positive triage: gitleaks, trufflehog, kingfisher, plus a secrets-rotation-runner skill.",
+      "strict": true
     }
   ]
 }
