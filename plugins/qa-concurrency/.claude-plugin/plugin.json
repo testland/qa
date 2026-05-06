@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-concurrency",
+  "version": "1.0.0",
+  "description": "Concurrency + race-condition testing: 5 skills (jepsen-patterns, race-condition-test-author, deadlock-detection-harness, async-ordering-tests, mvcc-isolation-tests). Phase 7 plugin per v2 master plan §8; covers code-level data races (distinct from chaos = infra fault).",
+  "author": { "name": "testland", "url": "https://testland.io/" },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-concurrency",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "concurrency", "race-condition", "deadlock", "thread-sanitizer", "jepsen", "mvcc", "isolation"]
+}
