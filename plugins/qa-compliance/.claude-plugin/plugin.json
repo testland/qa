@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-compliance",
+  "version": "0.1.0",
+  "description": "Compliance test patterns: GDPR, CCPA, SOC 2, HIPAA, PCI-DSS, audit-trail-test-author, plus a compliance-readiness-reviewer agent.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-compliance",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "compliance"]
+}

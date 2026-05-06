@@ -249,6 +249,12 @@
       "source": "./plugins/qa-sbom",
       "description": "SBOM generation + container image scanning + vuln prioritization: 5 skills (syft-generation, grype-scanning, cyclonedx-format, spdx-format, trivy-image) and 1 agent (vuln-prioritizer). Phase 5 plugin per v2 master plan; required for US EO 14028 + EU CRA + FDA medical-device guidance.",
       "strict": true
+    },
+    {
+      "name": "qa-compliance",
+      "source": "./plugins/qa-compliance",
+      "description": "Compliance test patterns: GDPR, CCPA, SOC 2, HIPAA, PCI-DSS, audit-trail-test-author, plus a compliance-readiness-reviewer agent.",
+      "strict": true
     }
   ]
 }
