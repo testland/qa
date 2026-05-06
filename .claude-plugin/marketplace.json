@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "QA-focused Claude Code plugin marketplace covering gap cells in the existing 24-repo ecosystem: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, and more. Every component scores >=21 on the v2.0 rating framework (6 dimensions including D6 terminology compliance).",
-    "version": "3.2.2"
+    "version": "3.3.0"
   },
   "plugins": [
     {
@@ -289,25 +289,25 @@
     {
       "name": "qa-code-quality",
       "source": "./plugins/qa-code-quality",
-      "description": "Production code quality: SonarQube smells/complexity perspective (cross-ref qa-sast), CodeClimate, Lizard cyclomatic, Madge dep graph, Knip dead code, plus a code-quality-critic agent.",
+      "description": "Production code quality: 5 skills (sonarqube-quality-perspective, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) and 1 agent (code-quality-critic). Phase 6 plugin per v2 master plan; production-only scope (test code is owned by qa-test-review).",
       "strict": true
     },
     {
       "name": "qa-ml-models",
       "source": "./plugins/qa-ml-models",
-      "description": "ML model testing: Giskard tests, Deepchecks, Evidently monitoring, Fairlearn fairness, Alibi explainability, plus a model-fairness-reviewer agent.",
+      "description": "ML model testing: 5 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, alibi-explainability) and 1 agent (model-fairness-reviewer). Phase 6 plugin per v2 master plan; covers vulnerability scanning, drift monitoring, group fairness, per-prediction explainability.",
       "strict": true
     },
     {
       "name": "qa-modern-web",
       "source": "./plugins/qa-modern-web",
-      "description": "Modern web testing: service workers, PWA install flow, INP-deep, browser extensions, plus an sw-cache-strategy-author skill.",
+      "description": "Modern web testing: 5 skills (service-worker-tests, pwa-install-flow-tests, web-vitals-inp-deep, browser-extension-tests, sw-cache-strategy-author). Phase 6 plugin per v2 master plan; covers PWA + Chromium MV3 extension + INP responsiveness reality.",
       "strict": true
     },
     {
       "name": "qa-data-notebooks",
       "source": "./plugins/qa-data-notebooks",
-      "description": "Notebook testing: nbval, testbook, papermill.",
+      "description": "Jupyter notebook testing: 3 skills (nbval-tests, testbook-tests, papermill-tests). Phase 6 plugin per v2 master plan; covers full-notebook regression (nbval), function-level unit tests (testbook), parameterized execution (papermill).",
       "strict": true
     }
   ]
