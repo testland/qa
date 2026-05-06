@@ -255,6 +255,12 @@
       "source": "./plugins/qa-compliance",
       "description": "Compliance test patterns + readiness review: 6 skills (gdpr-test-patterns, ccpa-test-patterns, soc2-evidence-collector, hipaa-test-patterns, pci-dss-scope-checker, audit-trail-test-author) and 1 agent (compliance-readiness-reviewer). Final Phase 5 plugin per v2 master plan.",
       "strict": true
+    },
+    {
+      "name": "qa-unit-tests-js",
+      "source": "./plugins/qa-unit-tests-js",
+      "description": "JS/TS unit testing per-framework wrappers: jest, vitest, mocha, ava, jasmine. Full lifecycle: configure, run, fixtures, mocking, coverage, CI.",
+      "strict": true
     }
   ]
 }

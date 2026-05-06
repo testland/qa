@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-unit-tests-js",
+  "version": "0.1.0",
+  "description": "JS/TS unit testing per-framework wrappers: jest, vitest, mocha, ava, jasmine. Full lifecycle: configure, run, fixtures, mocking, coverage, CI.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-js",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "unit-tests-js"]
+}
