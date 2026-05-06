@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-realtime-protocols",
+  "version": "1.0.0",
+  "description": "Real-time protocol testing: 5 skills (websocket-tests, server-sent-events-tests, grpc-streaming-tests, mqtt-tests, webhook-replay-tests). Phase 7 plugin per v2 master plan §8; covers RFC 6455 + WHATWG SSE + gRPC streaming + MQTT v5 + Standard Webhooks signature scheme.",
+  "author": { "name": "testland", "url": "https://testland.io/" },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-realtime-protocols",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "realtime-protocols", "websocket", "sse", "grpc", "mqtt", "webhooks", "iot"]
+}
