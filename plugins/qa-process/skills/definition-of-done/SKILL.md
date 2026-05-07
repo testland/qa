@@ -1,6 +1,6 @@
 ---
 name: definition-of-done
-description: Pure-reference + checklist-generator for the team's Definition of Done (DoD) — explains the Scrum Guide's DoD definition ("a formal description of the state of the Increment when it meets the quality measures required for the product"), proposes a starter DoD with the 7-10 lines most teams need (code reviewed, unit tests, docs, AC met, deployed to staging, smoke passed, no a11y regressions, telemetry wired, observability in place), and emits a per-PR checklist `quality-coach` enforces. Use when the team doesn't have a DoD or wants to revise theirs.
+description: "Pure-reference + checklist-generator for the team's Definition of Done (DoD) — explains the Scrum Guide's DoD definition (\"a formal description of the state of the Increment when it meets the quality measures required for the product\"), proposes a starter DoD with the 7-10 lines most teams need (code reviewed, unit tests, docs, AC met, deployed to staging, smoke passed, no a11y regressions, telemetry wired, observability in place), and emits a per-PR checklist `quality-coach` enforces. Use when the team doesn't have a DoD or wants to revise theirs."
 rating: 22
 d6: 4
 archetype: S2

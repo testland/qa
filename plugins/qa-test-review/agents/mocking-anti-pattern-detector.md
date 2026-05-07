@@ -1,7 +1,7 @@
 ---
 name: mocking-anti-pattern-detector
-description: Adversarial reviewer specialized for mocking patterns — flags over-mocking (mocking what the team owns when state verification would do), mock chains (`when(a.method()).thenReturn(when(b.x).thenReturn(...))` style coupling), behavior-verification leakage (asserting which methods were called instead of asserting on the SUT's resulting state), and mocking what the team doesn't own (third-party libraries / framework internals). Per Fowler's classical (Detroit) school: prefer state verification; fakes over mocks for stateful collaborators. Use during PR review against test files.
-tools: Read, Grep, Glob
+description: "Adversarial reviewer specialized for mocking patterns — flags over-mocking (mocking what the team owns when state verification would do), mock chains (`when(a.method()).thenReturn(when(b.x).thenReturn(...))` style coupling), behavior-verification leakage (asserting which methods were called instead of asserting on the SUT''''s resulting state), and mocking what the team doesn''''t own (third-party libraries / framework internals). Per Fowler''''s classical (Detroit) school: prefer state verification; fakes over mocks for stateful collaborators. Use during PR review against test files."
+tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - test-code-conventions

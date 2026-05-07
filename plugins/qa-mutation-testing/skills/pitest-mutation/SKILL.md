@@ -1,6 +1,6 @@
 ---
 name: pitest-mutation
-description: Configures PIT (PITest) for mutation testing of JVM projects (Java, Kotlin via the Kotlin plugin) — wires the `pitest-maven` or `pitest-gradle-plugin` with `mutationThreshold`, `coverageThreshold`, target classes/tests filtering, runs `mvn pitest:mutationCoverage`, parses the HTML + XML reports. Use when the JVM suite needs mutation-quality verification — the canonical Java mutation testing tool, fast (PIT analyzes "in minutes rather than days").
+description: "Configures PIT (PITest) for mutation testing of JVM projects (Java, Kotlin via the Kotlin plugin) — wires the `pitest-maven` or `pitest-gradle-plugin` with `mutationThreshold`, `coverageThreshold`, target classes/tests filtering, runs `mvn pitest:mutationCoverage`, parses the HTML + XML reports. Use when the JVM suite needs mutation-quality verification — the canonical Java mutation testing tool, fast (PIT analyzes \"in minutes rather than days\")."
 rating: 23
 d6: 4
 archetype: S1

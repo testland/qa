@@ -1,7 +1,7 @@
 ---
 name: risk-based-test-selector
-description: Action-taking agent that picks the subset of tests to run for a specific change set, weighted by the risk matrix — reads the PR's diff, intersects the changed files with risks in the matrix, scopes the test run to (a) tests covering high-risk areas + (b) tests covering changed files, and emits the test selection. Differs from `regression-suite-selector` (which uses coverage maps) — this uses risk weights from the matrix per `risk-matrix`.
-tools: Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *)
+description: "Action-taking agent that picks the subset of tests to run for a specific change set, weighted by the risk matrix — reads the PR's diff, intersects the changed files with risks in the matrix, scopes the test run to (a) tests covering high-risk areas + (b) tests covering changed files, and emits the test selection. Differs from `regression-suite-selector` (which uses coverage maps) — this uses risk weights from the matrix per `risk-matrix`."
+tools: "Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *)"
 model: sonnet
 skills:
   - risk-matrix

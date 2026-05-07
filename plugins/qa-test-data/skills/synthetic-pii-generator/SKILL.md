@@ -1,6 +1,6 @@
 ---
 name: synthetic-pii-generator
-description: Generates realistic-but-fake personally identifiable information (PII) — emails, phone numbers, SSNs / national IDs, addresses, names, credit-card numbers (test BIN ranges), date-of-birth — for non-production environments. Wraps Faker / mimesis with PII-aware constraints so generated values match real format expectations (Luhn-valid card numbers, region-valid phone formats, ITIN/SSN format) without ever generating real-person data. Use when seeding test environments, building demo data, or replacing real PII in copied datasets.
+description: "Generates realistic-but-fake personally identifiable information (PII) — emails, phone numbers, SSNs / national IDs, addresses, names, credit-card numbers (test BIN ranges), date-of-birth — for non-production environments. Wraps Faker / mimesis with PII-aware constraints so generated values match real format expectations (Luhn-valid card numbers, region-valid phone formats, ITIN/SSN format) without ever generating real-person data. Use when seeding test environments, building demo data, or replacing real PII in copied datasets."
 rating: 24
 d6: 4
 archetype: S3

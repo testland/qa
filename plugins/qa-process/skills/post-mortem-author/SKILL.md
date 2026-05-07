@@ -1,6 +1,6 @@
 ---
 name: post-mortem-author
-description: Build-an-X workflow that produces a blameless post-mortem from an incident — captures the timeline (chronological event sequence with sources), root cause analysis (what + why, not who), impact (users / revenue / SLO debt), action items (with owners + due dates + measurable success criteria), and "what went well" (intentional). Per Google SRE: "Blameless postmortems are a tenet of SRE culture." Use after every user-visible incident, not just severe ones.
+description: "Build-an-X workflow that produces a blameless post-mortem from an incident — captures the timeline (chronological event sequence with sources), root cause analysis (what + why, not who), impact (users / revenue / SLO debt), action items (with owners + due dates + measurable success criteria), and \"what went well\" (intentional). Per Google SRE: \"Blameless postmortems are a tenet of SRE culture.\" Use after every user-visible incident, not just severe ones."
 rating: 23
 d6: 4
 archetype: S3

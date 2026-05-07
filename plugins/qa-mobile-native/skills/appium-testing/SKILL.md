@@ -1,6 +1,6 @@
 ---
 name: appium-testing
-description: Wires Appium for cross-platform mobile UI automation — uses the WebDriver protocol, picks a driver per platform (XCUITest for iOS, UiAutomator2 / Espresso for Android, Mac2 for macOS, Windows for desktop), authors tests in JS / Python / Java / Ruby / .NET, configures `desiredCapabilities`, runs against simulators / emulators / device farms. Use when a single test suite must cover both iOS and Android, or when the team's stack is multi-platform (iOS + Android + Mac + Windows).
+description: "Wires Appium for cross-platform mobile UI automation — uses the WebDriver protocol, picks a driver per platform (XCUITest for iOS, UiAutomator2 / Espresso for Android, Mac2 for macOS, Windows for desktop), authors tests in JS / Python / Java / Ruby / .NET, configures `desiredCapabilities`, runs against simulators / emulators / device farms. Use when a single test suite must cover both iOS and Android, or when the team's stack is multi-platform (iOS + Android + Mac + Windows)."
 rating: 23
 d6: 4
 archetype: S1

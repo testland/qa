@@ -1,6 +1,6 @@
 ---
 name: webhook-replay-tests
-description: Build a webhook replay-test framework — capture incoming webhook payloads + headers, replay against the receiver under test, validate Standard Webhooks signature scheme (svix-id + svix-timestamp + svix-signature, HMAC-SHA256 over `{id}.{timestamp}.{payload}`), idempotency-key dedup, and 5-minute timestamp window enforcement. Cross-ref qa-notifications/webhook-delivery-tester.
+description: "Build a webhook replay-test framework — capture incoming webhook payloads + headers, replay against the receiver under test, validate Standard Webhooks signature scheme (svix-id + svix-timestamp + svix-signature, HMAC-SHA256 over `{id}.{timestamp}.{payload}`), idempotency-key dedup, and 5-minute timestamp window enforcement. Cross-ref qa-notifications/webhook-delivery-tester."
 type: skill
 archetype: S3
 rating: 22

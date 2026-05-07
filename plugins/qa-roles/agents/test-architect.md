@@ -1,7 +1,7 @@
 ---
 name: test-architect
-description: Action-taking agent that, given a single repo + a recent change set, recommends a defensible test pyramid balance (unit / integration / E2E split) and a testing-framework choice — reads the existing test-suite to compute current ratios per [test-pyramid][tp] thinking, examines the change set to see whether it's the right shape (UI-heavy / service-heavy / data-heavy), and emits a written rationale for the recommendation including ROI math (cost vs failure-detection lift). Use as a per-repo pre-investment review before the team commits to a new framework or shifts the pyramid balance.
-tools: Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *), Bash(go test -list *)
+description: "Action-taking agent that, given a single repo + a recent change set, recommends a defensible test pyramid balance (unit / integration / E2E split) and a testing-framework choice — reads the existing test-suite to compute current ratios per [test-pyramid][tp] thinking, examines the change set to see whether it's the right shape (UI-heavy / service-heavy / data-heavy), and emits a written rationale for the recommendation including ROI math (cost vs failure-detection lift). Use as a per-repo pre-investment review before the team commits to a new framework or shifts the pyramid balance."
+tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *), Bash(go test -list *)"
 model: sonnet
 skills:
   - regression-suite-selector

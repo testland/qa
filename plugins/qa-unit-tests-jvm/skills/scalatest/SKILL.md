@@ -1,6 +1,6 @@
 ---
 name: scalatest
-description: Configures and runs ScalaTest — Scala-native test framework with multiple specification styles (FlatSpec, FunSuite, WordSpec, FreeSpec, AsyncFlatSpec for async); Matchers DSL (`should equal`, `should contain`, `shouldBe a [Class]`); integrates with ScalaCheck for property-based testing; sbt + Maven + Gradle support; tagged-test selective execution. Use when working with Scala codebases.
+description: "Configures and runs ScalaTest — Scala-native test framework with multiple specification styles (FlatSpec, FunSuite, WordSpec, FreeSpec, AsyncFlatSpec for async); Matchers DSL (`should equal`, `should contain`, `shouldBe a [Class]`); integrates with ScalaCheck for property-based testing; sbt + Maven + Gradle support; tagged-test selective execution. Use when working with Scala codebases."
 rating: 22
 d6: 4
 archetype: S1

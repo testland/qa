@@ -1,7 +1,7 @@
 ---
 name: e2e-selector-quality-critic
-description: Adversarial reviewer specialized for E2E test selectors — flags brittle CSS class selectors / nth-child / XPath / position-based selectors and recommends `getByRole` / `getByLabelText` / accessibility-first equivalents per Testing Library's priority order. Also flags non-web-first assertions (`.isVisible()` checked synchronously vs `await expect(...).toBeVisible()`). Per Playwright best practices: "automated tests should verify that the application code works for the end users, and avoid relying on implementation details." Use against any E2E test files (Playwright / Cypress / Selenium / WebdriverIO).
-tools: Read, Grep, Glob
+description: "Adversarial reviewer specialized for E2E test selectors — flags brittle CSS class selectors / nth-child / XPath / position-based selectors and recommends `getByRole` / `getByLabelText` / accessibility-first equivalents per Testing Library''''s priority order. Also flags non-web-first assertions (`.isVisible()` checked synchronously vs `await expect(...).toBeVisible()`). Per Playwright best practices: \"automated tests should verify that the application code works for the end users, and avoid relying on implementation details.\" Use against any E2E test files (Playwright / Cypress / Selenium / WebdriverIO)."
+tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - test-code-conventions

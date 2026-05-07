@@ -1,7 +1,7 @@
 ---
 name: escape-defect-analyzer
-description: Builder agent that takes a production-found defect (an "escape") and produces a structured escape-defect report classifying the root cause as a test gap (no test for this case), a process gap (test exists but wasn't run / wasn't gating), or a tooling gap (test couldn't have caught this — needs a different test type or runtime check). The report includes a concrete prevention proposal — typically a new test file or CI gate — that the team can land alongside the fix. Use during bug post-mortems, blameless retros, or quarterly quality reviews.
-tools: Read, Write, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(git show *), Bash(npm test *), Bash(pytest *)
+description: "Builder agent that takes a production-found defect (an \"escape\") and produces a structured escape-defect report classifying the root cause as a test gap (no test for this case), a process gap (test exists but wasn't run / wasn't gating), or a tooling gap (test couldn't have caught this — needs a different test type or runtime check). The report includes a concrete prevention proposal — typically a new test file or CI gate — that the team can land alongside the fix. Use during bug post-mortems, blameless retros, or quarterly quality reviews."
+tools: "Read, Write, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(git show *), Bash(npm test *), Bash(pytest *)"
 model: sonnet
 skills:
   - bug-report-template

@@ -1,6 +1,6 @@
 ---
 name: go-test
-description: Configures and runs Go's stdlib `testing` package — `func TestXxx(t *testing.T)` convention; table-driven tests via slice + range; `t.Run` for subtests with hierarchical names; `t.Parallel()` for parallel execution; benchmarks (`func BenchmarkXxx(b *testing.B)`); examples (`func ExampleXxx()`); fuzzing (`func FuzzXxx(f *testing.F)`); coverage via `go test -cover`/`-coverprofile`; build tags for selective compilation. Use for any Go project — testing is a stdlib feature, no install needed.
+description: "Configures and runs Go's stdlib `testing` package — `func TestXxx(t *testing.T)` convention; table-driven tests via slice + range; `t.Run` for subtests with hierarchical names; `t.Parallel()` for parallel execution; benchmarks (`func BenchmarkXxx(b *testing.B)`); examples (`func ExampleXxx()`); fuzzing (`func FuzzXxx(f *testing.F)`); coverage via `go test -cover`/`-coverprofile`; build tags for selective compilation. Use for any Go project — testing is a stdlib feature, no install needed."
 rating: 24
 d6: 4
 archetype: S1

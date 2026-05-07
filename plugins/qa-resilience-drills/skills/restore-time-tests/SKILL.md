@@ -1,6 +1,6 @@
 ---
 name: restore-time-tests
-description: Build restore-time SLA tests — per-database + per-object-store baseline measurement, RTO objective verification, parallel-restore optimization tests, point-in-time-recovery (PITR) latency. Bound `time-to-functional` (TTF) ≤ documented RTO; flag silent regressions when restore time grows over months.
+description: "Build restore-time SLA tests — per-database + per-object-store baseline measurement, RTO objective verification, parallel-restore optimization tests, point-in-time-recovery (PITR) latency. Bound `time-to-functional` (TTF) ≤ documented RTO; flag silent regressions when restore time grows over months."
 type: skill
 archetype: S3
 rating: 22

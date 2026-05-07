@@ -1,6 +1,6 @@
 ---
 name: coverage-diff-reporter
-description: Builds a per-PR coverage delta report from any pair of LCOV / Cobertura / JSON coverage outputs (current run + baseline from the merge target) — emits a per-file table with line% / branch% deltas, called-out new files, hidden drops (overall +0.1pp but one file -8pp), and a single-line PR-comment summary. Use when the team has coverage in CI but needs human-readable PR feedback that points at the specific file the reviewer should focus on, not just an aggregate number.
+description: "Builds a per-PR coverage delta report from any pair of LCOV / Cobertura / JSON coverage outputs (current run + baseline from the merge target) — emits a per-file table with line% / branch% deltas, called-out new files, hidden drops (overall +0.1pp but one file -8pp), and a single-line PR-comment summary. Use when the team has coverage in CI but needs human-readable PR feedback that points at the specific file the reviewer should focus on, not just an aggregate number."
 rating: 24
 d6: 4
 archetype: S3

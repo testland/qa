@@ -1,6 +1,6 @@
 ---
 name: wcag-focus-trap
-description: Reference for **intentional** focus management in modal / dialog / drawer / popover components — the canonical pattern that satisfies WCAG SC 2.4.3 (Focus Order) without violating SC 2.1.2 (No Keyboard Trap). Covers focus-on-open, focus-cycle-within-container, Escape-closes-and-restores, return-to-trigger, and inert-the-rest-of-the-page. Use when authoring or reviewing any component that displays content over the page (modals, drawers, popovers, command palettes).
+description: "Reference for **intentional** focus management in modal / dialog / drawer / popover components — the canonical pattern that satisfies WCAG SC 2.4.3 (Focus Order) without violating SC 2.1.2 (No Keyboard Trap). Covers focus-on-open, focus-cycle-within-container, Escape-closes-and-restores, return-to-trigger, and inert-the-rest-of-the-page. Use when authoring or reviewing any component that displays content over the page (modals, drawers, popovers, command palettes)."
 rating: 25
 d6: 5
 archetype: S2

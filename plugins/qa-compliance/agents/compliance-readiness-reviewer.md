@@ -1,7 +1,7 @@
 ---
 name: compliance-readiness-reviewer
-description: Adversarial reviewer of compliance test coverage against a target framework (GDPR / CCPA / SOC 2 / HIPAA / PCI-DSS / ISO 27001). Per-criterion: covered / partial / missing / not-applicable. Emits go/no-go verdict with gap list + recommendations. Refuses to mark a framework "ready" if any required criterion is missing without a documented scope-exclusion. Refuses to accept "not-applicable" without justification + approver. Use proactively before a compliance audit (Type II observation period start, QSA dry-run, DPA assessment).
-tools: Read, Grep, Glob, Bash(jq *)
+description: "Adversarial reviewer of compliance test coverage against a target framework (GDPR / CCPA / SOC 2 / HIPAA / PCI-DSS / ISO 27001). Per-criterion: covered / partial / missing / not-applicable. Emits go/no-go verdict with gap list + recommendations. Refuses to mark a framework \"ready\" if any required criterion is missing without a documented scope-exclusion. Refuses to accept \"not-applicable\" without justification + approver. Use proactively before a compliance audit (Type II observation period start, QSA dry-run, DPA assessment)."
+tools: "Read, Grep, Glob, Bash(jq *)"
 model: sonnet
 skills:
   - gdpr-test-patterns

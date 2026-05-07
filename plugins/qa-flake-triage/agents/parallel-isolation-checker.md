@@ -1,7 +1,7 @@
 ---
 name: parallel-isolation-checker
-description: Inspects a test suite that flakes under parallel execution and identifies the specific shared state — DB rows, env vars, files, ports, lockfiles, or global module state — that workers are colliding on. Runs targeted instrumentation around suspect resources, correlates each test's writes with another worker's reads, and reports the colliding resource with file:line evidence. Use after `e2e-flake-bisector` has implicated parallel execution.
-tools: Read, Grep, Glob, Bash(npx playwright test *), Bash(jest *), Bash(lsof *), Bash(ps *), Bash(jq *)
+description: "Inspects a test suite that flakes under parallel execution and identifies the specific shared state — DB rows, env vars, files, ports, lockfiles, or global module state — that workers are colliding on. Runs targeted instrumentation around suspect resources, correlates each test's writes with another worker's reads, and reports the colliding resource with file:line evidence. Use after `e2e-flake-bisector` has implicated parallel execution."
+tools: "Read, Grep, Glob, Bash(npx playwright test *), Bash(jest *), Bash(lsof *), Bash(ps *), Bash(jq *)"
 model: sonnet
 skills:
   - flake-pattern-reference

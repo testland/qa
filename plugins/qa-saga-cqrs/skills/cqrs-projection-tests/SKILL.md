@@ -1,6 +1,6 @@
 ---
 name: cqrs-projection-tests
-description: Build CQRS read-model projection tests — write-model + read-model consistency tests, projection-replay determinism, projection-versioning + zero-downtime swap, eventual-consistency-window assertions. Per martinfowler.com CQRS reference.
+description: "Build CQRS read-model projection tests — write-model + read-model consistency tests, projection-replay determinism, projection-versioning + zero-downtime swap, eventual-consistency-window assertions. Per martinfowler.com CQRS reference."
 type: skill
 archetype: S3
 rating: 22

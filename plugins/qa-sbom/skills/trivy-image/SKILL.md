@@ -1,6 +1,6 @@
 ---
 name: trivy-image
-description: Configures and runs Trivy for container image scanning — Aqua Security's all-in-one scanner combining vuln + secret + misconfiguration + license detection in one pass; `trivy image <image>` with --severity HIGH,CRITICAL filter; --format json/sarif/cyclonedx output; .trivyignore CVE suppression file; --ignore-unfixed for actionable filter; --scanners vuln/misconfig/license/secret toggle. Use when the team wants a single tool covering container image security across multiple dimensions.
+description: "Configures and runs Trivy for container image scanning — Aqua Security's all-in-one scanner combining vuln + secret + misconfiguration + license detection in one pass; `trivy image <image>` with --severity HIGH,CRITICAL filter; --format json/sarif/cyclonedx output; .trivyignore CVE suppression file; --ignore-unfixed for actionable filter; --scanners vuln/misconfig/license/secret toggle. Use when the team wants a single tool covering container image security across multiple dimensions."
 rating: 23
 d6: 4
 archetype: S1

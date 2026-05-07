@@ -1,6 +1,6 @@
 ---
 name: locust-load-testing
-description: Authors Locust load tests as Python classes — HttpUser with @task-decorated methods plus on_start hooks and between() wait_time — runs via `locust -f locustfile.py` headless mode (or distributed via `--master` / `--worker`), and exports CSV / JUnit reports for CI gating. Use when the project's primary stack is Python and the team wants load tests in the same language as the application.
+description: "Authors Locust load tests as Python classes — HttpUser with @task-decorated methods plus on_start hooks and between() wait_time — runs via `locust -f locustfile.py` headless mode (or distributed via `--master` / `--worker`), and exports CSV / JUnit reports for CI gating. Use when the project's primary stack is Python and the team wants load tests in the same language as the application."
 rating: 25
 d6: 4
 archetype: S1

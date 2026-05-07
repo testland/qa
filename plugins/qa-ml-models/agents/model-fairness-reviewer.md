@@ -1,7 +1,7 @@
 ---
 name: model-fairness-reviewer
-description: Adversarial reviewer of ML model fairness + explainability evidence before promotion. Validates that fairness metrics (Fairlearn MetricFrame), drift detectors (Evidently/Deepchecks), vulnerability scans (Giskard), and per-prediction explanations (Alibi) collectively cover the model's risk class. Refuses to ✅ when sensitive features are missing, when intersectional analysis is absent, or when a high-risk model lacks per-prediction explanation logging.
-tools: Read, Grep, Glob, Bash(jq *), Bash(python *)
+description: "Adversarial reviewer of ML model fairness + explainability evidence before promotion. Validates that fairness metrics (Fairlearn MetricFrame), drift detectors (Evidently/Deepchecks), vulnerability scans (Giskard), and per-prediction explanations (Alibi) collectively cover the model's risk class. Refuses to ✅ when sensitive features are missing, when intersectional analysis is absent, or when a high-risk model lacks per-prediction explanation logging."
+tools: "Read, Grep, Glob, Bash(jq *), Bash(python *)"
 model: sonnet
 skills:
   - giskard-tests

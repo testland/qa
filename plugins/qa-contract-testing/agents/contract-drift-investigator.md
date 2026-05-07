@@ -1,7 +1,7 @@
 ---
 name: contract-drift-investigator
-description: Read-only investigator that diffs current contracts against the last-known-green baseline (Pact pact files, OpenAPI spec, GraphQL SDL, Protobuf .proto), categorizes drift sources (provider-side change vs schema-only change vs consumer-expectation change vs data-fixture change), and reports findings with file:line references. Use proactively when a contract test fails or `can-i-deploy` returns no, before opening a fix.
-tools: Read, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(git show *), Bash(jq *), Bash(buf *), Bash(oasdiff *)
+description: "Read-only investigator that diffs current contracts against the last-known-green baseline (Pact pact files, OpenAPI spec, GraphQL SDL, Protobuf .proto), categorizes drift sources (provider-side change vs schema-only change vs consumer-expectation change vs data-fixture change), and reports findings with file:line references. Use proactively when a contract test fails or `can-i-deploy` returns no, before opening a fix."
+tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(git show *), Bash(jq *), Bash(buf *), Bash(oasdiff *)"
 model: sonnet
 skills:
   - pact-contract-testing

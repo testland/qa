@@ -1,7 +1,7 @@
 ---
 name: dast-finding-triager
-description: Adversarial unifier of multi-scanner DAST output (ZAP + Burp Pro/Enterprise + NightVision). Reads each scanner's normalized JSON; deduplicates by `(URL, finding-class, parameter)` recording all scanners that flagged each finding; applies `.dast-waivers.yaml` waivers (rejects without `expires:` + `approved_by:` + `reason:`); classifies into Critical / High / Medium / Low / Info; emits PR-comment summary with verdict (BLOCK / PASS). Refuses to mark PR pass if any unwaived critical finding remains. Same pattern as sast-finding-triager + iac-policy-checker. Use after any subset of the DAST scanners runs in CI.
-tools: Read, Bash(jq *)
+description: "Adversarial unifier of multi-scanner DAST output (ZAP + Burp Pro/Enterprise + NightVision). Reads each scanner's normalized JSON; deduplicates by `(URL, finding-class, parameter)` recording all scanners that flagged each finding; applies `.dast-waivers.yaml` waivers (rejects without `expires:` + `approved_by:` + `reason:`); classifies into Critical / High / Medium / Low / Info; emits PR-comment summary with verdict (BLOCK / PASS). Refuses to mark PR pass if any unwaived critical finding remains. Same pattern as sast-finding-triager + iac-policy-checker. Use after any subset of the DAST scanners runs in CI."
+tools: "Read, Bash(jq *)"
 model: sonnet
 skills:
   - zap-baseline

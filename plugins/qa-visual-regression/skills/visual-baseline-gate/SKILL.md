@@ -1,6 +1,6 @@
 ---
 name: visual-baseline-gate
-description: Builds a CI release-readiness gate for visual regression. Reads diff classifications from the visual-diff-classifier agent and the engine's acceptance log (Percy / Chromatic build approval, Playwright snapshot --update-snapshots commit), refuses to pass when intentional-looking diffs lack explicit acceptance, emits a single go/no-go verdict with markdown + JSON artifact for the CI step.
+description: "Builds a CI release-readiness gate for visual regression. Reads diff classifications from the visual-diff-classifier agent and the engine's acceptance log (Percy / Chromatic build approval, Playwright snapshot --update-snapshots commit), refuses to pass when intentional-looking diffs lack explicit acceptance, emits a single go/no-go verdict with markdown + JSON artifact for the CI step."
 rating: 23
 d6: 3
 archetype: S3

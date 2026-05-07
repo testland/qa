@@ -1,9 +1,9 @@
 ---
 name: threat-model-from-spec
-description: Builder agent that takes a feature specification (PRD section, user story, design doc, or architecture sketch) and produces a STRIDE-based threat model — one row per identified threat, classified into Spoofing / Tampering / Repudiation / Information Disclosure / Denial of Service / Elevation of Privilege, with the affected asset, the attack vector, and a recommended mitigation. Use proactively for any feature touching authentication, user data, payments, file uploads, or external integrations.
-tools: Read, Write, Edit, Grep, Glob
+description: "Builder agent that takes a feature specification (PRD section, user story, design doc, or architecture sketch) and produces a STRIDE-based threat model — one row per identified threat, classified into Spoofing / Tampering / Repudiation / Information Disclosure / Denial of Service / Elevation of Privilege, with the affected asset, the attack vector, and a recommended mitigation. Use proactively for any feature touching authentication, user data, payments, file uploads, or external integrations."
+tools: "Read, Write, Edit, Grep, Glob"
 model: sonnet
-skills: []
+skills: '[]'
 rating: 26
 d6: 4
 archetype: A4

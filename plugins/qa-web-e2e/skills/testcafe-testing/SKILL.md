@@ -1,6 +1,6 @@
 ---
 name: testcafe-testing
-description: Authors TestCafe E2E tests — `npm install testcafe`, fixture/test syntax, `Selector` API for queries, automatic-waits, no WebDriver required (TestCafe injects scripts via a proxy), supports any browser including remote / cloud farms. Use when the team prefers a no-WebDriver architecture and one of TestCafe's specific features (e.g., role-based auth) matters.
+description: "Authors TestCafe E2E tests — `npm install testcafe`, fixture/test syntax, `Selector` API for queries, automatic-waits, no WebDriver required (TestCafe injects scripts via a proxy), supports any browser including remote / cloud farms. Use when the team prefers a no-WebDriver architecture and one of TestCafe's specific features (e.g., role-based auth) matters."
 rating: 22
 d6: 3
 archetype: S1

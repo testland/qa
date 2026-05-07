@@ -1,6 +1,6 @@
 ---
 name: seed-data-curator
-description: Builds a reproducible E2E seed dataset for the project's test environments — picks a representative user / org / data-product cross-section, generates the rows via the project's chosen factory library (FactoryBot / mimesis / Bogus / Faker + factory_boy), persists the dataset as a checked-in fixture (SQL dump / JSON / per-engine seed file), and wires it into the test bootstrap. Use when starting E2E coverage on a project that has no seed strategy, or when an existing seed has drifted.
+description: "Builds a reproducible E2E seed dataset for the project's test environments — picks a representative user / org / data-product cross-section, generates the rows via the project's chosen factory library (FactoryBot / mimesis / Bogus / Faker + factory_boy), persists the dataset as a checked-in fixture (SQL dump / JSON / per-engine seed file), and wires it into the test bootstrap. Use when starting E2E coverage on a project that has no seed strategy, or when an existing seed has drifted."
 rating: 23
 d6: 3
 archetype: S3

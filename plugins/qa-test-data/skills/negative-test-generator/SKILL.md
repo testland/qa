@@ -1,6 +1,6 @@
 ---
 name: negative-test-generator
-description: Generates negative / error-path test cases that mirror happy-path tests — for each happy-path test, produces companions exercising input validation rejection, missing required fields, type mismatches, authorization failures, rate-limit errors, and adversarial payloads from the malicious-payload-bank. Emits cases as parameterized tests in the project's runner format. Use when a feature has happy-path coverage but the rejection / error / unauthorized paths are untested.
+description: "Generates negative / error-path test cases that mirror happy-path tests — for each happy-path test, produces companions exercising input validation rejection, missing required fields, type mismatches, authorization failures, rate-limit errors, and adversarial payloads from the malicious-payload-bank. Emits cases as parameterized tests in the project's runner format. Use when a feature has happy-path coverage but the rejection / error / unauthorized paths are untested."
 rating: 23
 d6: 3
 archetype: S3

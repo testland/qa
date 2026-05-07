@@ -1,7 +1,7 @@
 ---
 name: test-code-critic
-description: Adversarial reviewer specialized for **test files only** — flags violations of the conventions in `test-code-conventions` (AAA structure, single-responsibility per test, descriptive naming, magic numbers, slow setup) with file:line evidence and the convention-section reference. Refuses to review non-test files (production code is the job of saturated production-reviewer agents elsewhere). Use as a PR-time check that runs only against `*.spec.*` / `*.test.*` / `tests/**` paths.
-tools: Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *)
+description: "Adversarial reviewer specialized for **test files only** — flags violations of the conventions in `test-code-conventions` (AAA structure, single-responsibility per test, descriptive naming, magic numbers, slow setup) with file:line evidence and the convention-section reference. Refuses to review non-test files (production code is the job of saturated production-reviewer agents elsewhere). Use as a PR-time check that runs only against `*.spec.*` / `*.test.*` / `tests/**` paths."
+tools: "Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *)"
 model: sonnet
 skills:
   - test-code-conventions

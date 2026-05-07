@@ -1,6 +1,6 @@
 ---
 name: unittest-tests
-description: Configures and runs Python's stdlib unittest — TestCase + setUp/tearDown lifecycle hooks, assertion catalog (assertEqual / assertRaises / assertIn / assertAlmostEqual), unittest.mock module (Mock / MagicMock / patch / patch.object / patch.dict), test discovery via `python -m unittest discover`, subTest for parametrized cases, expectedFailure decorator. Use when constrained to stdlib-only (no pip install) or migrating legacy unittest codebases.
+description: "Configures and runs Python's stdlib unittest — TestCase + setUp/tearDown lifecycle hooks, assertion catalog (assertEqual / assertRaises / assertIn / assertAlmostEqual), unittest.mock module (Mock / MagicMock / patch / patch.object / patch.dict), test discovery via `python -m unittest discover`, subTest for parametrized cases, expectedFailure decorator. Use when constrained to stdlib-only (no pip install) or migrating legacy unittest codebases."
 rating: 22
 d6: 4
 archetype: S1

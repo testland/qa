@@ -1,6 +1,6 @@
 ---
 name: quickcheck-testing
-description: Authors property-based tests for Haskell using QuickCheck (the original PBT library) and for Scala via ScalaCheck (the JVM port) — wires `quickCheck` (Haskell) / `forAll` (ScalaCheck) drivers, defines `Arbitrary` instances or generators, uses `shrink` to find minimal counterexamples, and integrates with HSpec / Tasty (Haskell) or specs2 / ScalaTest. Use when the codebase is Haskell or Scala and the team wants the canonical PBT library that the entire family (Hypothesis / fast-check / proptest / jqwik) was inspired by.
+description: "Authors property-based tests for Haskell using QuickCheck (the original PBT library) and for Scala via ScalaCheck (the JVM port) — wires `quickCheck` (Haskell) / `forAll` (ScalaCheck) drivers, defines `Arbitrary` instances or generators, uses `shrink` to find minimal counterexamples, and integrates with HSpec / Tasty (Haskell) or specs2 / ScalaTest. Use when the codebase is Haskell or Scala and the team wants the canonical PBT library that the entire family (Hypothesis / fast-check / proptest / jqwik) was inspired by."
 rating: 22
 d6: 3
 archetype: S1

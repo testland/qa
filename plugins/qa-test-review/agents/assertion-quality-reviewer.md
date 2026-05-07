@@ -1,7 +1,7 @@
 ---
 name: assertion-quality-reviewer
-description: Adversarial reviewer specialized for assertion quality — flags weak / vague matchers (`expect(x).toBeTruthy()` / `.toBeDefined()` / `.toContain('error')` style) and recommends specific replacements (`.toEqual({...})` / `.toBe(expected)` / `.toMatch(regex)`). Walks per-§4 of `test-code-conventions`. Use during PR review against test files; complements `test-code-critic` (which handles structure / naming) and `mocking-anti-pattern-detector` (which handles mocking specificity).
-tools: Read, Grep, Glob
+description: "Adversarial reviewer specialized for assertion quality — flags weak / vague matchers (`expect(x).toBeTruthy()` / `.toBeDefined()` / `.toContain('error')` style) and recommends specific replacements (`.toEqual({...})` / `.toBe(expected)` / `.toMatch(regex)`). Walks per-§4 of `test-code-conventions`. Use during PR review against test files; complements `test-code-critic` (which handles structure / naming) and `mocking-anti-pattern-detector` (which handles mocking specificity)."
+tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - test-code-conventions

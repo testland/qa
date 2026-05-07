@@ -1,7 +1,7 @@
 ---
 name: trace-coverage-reviewer
-description: Adversarial reviewer of OpenTelemetry instrumentation coverage. Identifies untraced critical code paths (DB queries, external HTTP calls, queue publishes/consumes, cron jobs); flags spans missing required semantic-convention attributes; flags hand-rolled span code that should use auto-instrumentation; detects cardinality risks. Use proactively after instrumentation PRs and before promoting a feature to production.
-tools: Read, Grep, Glob, Bash(jq *)
+description: "Adversarial reviewer of OpenTelemetry instrumentation coverage. Identifies untraced critical code paths (DB queries, external HTTP calls, queue publishes/consumes, cron jobs); flags spans missing required semantic-convention attributes; flags hand-rolled span code that should use auto-instrumentation; detects cardinality risks. Use proactively after instrumentation PRs and before promoting a feature to production."
+tools: "Read, Grep, Glob, Bash(jq *)"
 model: sonnet
 skills:
   - opentelemetry-trace-assertions

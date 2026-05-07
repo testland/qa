@@ -1,6 +1,6 @@
 ---
 name: protobuf-compat-checking
-description: Wraps `buf breaking` to compare a Protobuf schema against a past version, classifies breaking changes by category (FILE / PACKAGE / WIRE_JSON / WIRE), configures buf.yaml rule selection plus per-path exemptions, and gates CI on the exit code. Use when reviewing `.proto` changes in a PR for gRPC services, BSR modules, or schema-versioned message bus payloads.
+description: "Wraps `buf breaking` to compare a Protobuf schema against a past version, classifies breaking changes by category (FILE / PACKAGE / WIRE_JSON / WIRE), configures buf.yaml rule selection plus per-path exemptions, and gates CI on the exit code. Use when reviewing `.proto` changes in a PR for gRPC services, BSR modules, or schema-versioned message bus payloads."
 rating: 25
 d6: 4
 archetype: S1

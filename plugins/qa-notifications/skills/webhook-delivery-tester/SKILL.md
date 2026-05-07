@@ -1,6 +1,6 @@
 ---
 name: webhook-delivery-tester
-description: Build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) — HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks).
+description: "Build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) — HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks)."
 rating: 23
 d6: 4
 archetype: S3

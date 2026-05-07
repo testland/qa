@@ -1,6 +1,6 @@
 ---
 name: madge-deps
-description: Run Madge against a JS/TS production source tree to detect circular dependencies, find orphan modules, and visualize the module graph. Scoped to production code via `excludeRegExp` for test files.
+description: "Run Madge against a JS/TS production source tree to detect circular dependencies, find orphan modules, and visualize the module graph. Scoped to production code via `excludeRegExp` for test files."
 type: skill
 archetype: S1
 rating: 22

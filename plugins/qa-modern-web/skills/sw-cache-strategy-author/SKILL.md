@@ -1,6 +1,6 @@
 ---
 name: sw-cache-strategy-author
-description: Author service worker cache strategies (cache-first, network-first, stale-while-revalidate, cache-only, network-only) per Workbox conventions, plus generate the matching Playwright assertions to lock the strategy in. Avoids the common "cached forever" pitfall by enforcing TTL + version-bump invalidation.
+description: "Author service worker cache strategies (cache-first, network-first, stale-while-revalidate, cache-only, network-only) per Workbox conventions, plus generate the matching Playwright assertions to lock the strategy in. Avoids the common \"cached forever\" pitfall by enforcing TTL + version-bump invalidation."
 type: skill
 archetype: S3
 rating: 22

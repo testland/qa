@@ -1,6 +1,6 @@
 ---
 name: papermill-tests
-description: Use Papermill to parameterize and execute notebooks in CI as regression tests — `papermill input.ipynb output.ipynb -p alpha 0.6` (CLI) or `pm.execute_notebook(...)` (Python API). Pairs with nbval (output assertion) and testbook (function unit tests) for full-coverage notebook QA.
+description: "Use Papermill to parameterize and execute notebooks in CI as regression tests — `papermill input.ipynb output.ipynb -p alpha 0.6` (CLI) or `pm.execute_notebook(...)` (Python API). Pairs with nbval (output assertion) and testbook (function unit tests) for full-coverage notebook QA."
 type: skill
 archetype: S1
 rating: 22

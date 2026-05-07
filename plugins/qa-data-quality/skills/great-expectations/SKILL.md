@@ -1,6 +1,6 @@
 ---
 name: great-expectations
-description: Authors Great Expectations (GX Core) ExpectationSuites, builds ValidationDefinitions and Checkpoints, runs validation against tabular batches, and parses the JSON result for CI gating. Use when the user works with Great Expectations on Pandas, SQL, or Spark data.
+description: "Authors Great Expectations (GX Core) ExpectationSuites, builds ValidationDefinitions and Checkpoints, runs validation against tabular batches, and parses the JSON result for CI gating. Use when the user works with Great Expectations on Pandas, SQL, or Spark data."
 rating: 25
 d6: 4
 archetype: S1

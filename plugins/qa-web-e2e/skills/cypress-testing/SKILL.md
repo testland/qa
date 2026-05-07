@@ -1,6 +1,6 @@
 ---
 name: cypress-testing
-description: Authors Cypress E2E tests — `npm install cypress`, `cypress.config.ts` setup, `cy.*` command chains, automatic-waiting commands, time-travel debugger via Cypress GUI, custom commands for reusable patterns, Cypress Cloud for parallel/recording. Per Cypress's positioning: "fast, consistent and reliable tests that are flake-free" via in-browser execution architecture.
+description: "Authors Cypress E2E tests — `npm install cypress`, `cypress.config.ts` setup, `cy.*` command chains, automatic-waiting commands, time-travel debugger via Cypress GUI, custom commands for reusable patterns, Cypress Cloud for parallel/recording. Per Cypress''''s positioning: \"fast, consistent and reliable tests that are flake-free\" via in-browser execution architecture."
 rating: 23
 d6: 4
 archetype: S1

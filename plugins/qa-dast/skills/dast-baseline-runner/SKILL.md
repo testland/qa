@@ -1,6 +1,6 @@
 ---
 name: dast-baseline-runner
-description: Build-an-X for a layered DAST baseline workflow — ZAP baseline (passive, PR-blocking) → ZAP full-scan (active, nightly on staging) → optional Burp Pro deep scan (per-release, paid-tool deep coverage); manages baseline-finding ratchet, alert deduplication across runs, and CI cadence (PR-blocking baseline + nightly deep scan + per-release deep). Use when the team adopts DAST and needs an end-to-end coverage strategy beyond running a single tool.
+description: "Build-an-X for a layered DAST baseline workflow — ZAP baseline (passive, PR-blocking) → ZAP full-scan (active, nightly on staging) → optional Burp Pro deep scan (per-release, paid-tool deep coverage); manages baseline-finding ratchet, alert deduplication across runs, and CI cadence (PR-blocking baseline + nightly deep scan + per-release deep). Use when the team adopts DAST and needs an end-to-end coverage strategy beyond running a single tool."
 rating: 23
 d6: 4
 archetype: S3

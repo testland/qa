@@ -1,9 +1,9 @@
 ---
 name: crash-stack-trace-analyzer
-description: Read-only agent that parses a crash dump or stack trace, identifies the crashing frame and the source line, attributes the failure to a suspected commit range using `git blame` on the relevant file, and emits a root-cause hypothesis. Handles JS/TS V8 traces, Python tracebacks, Java/JVM stack traces, Go panics, native (gdb/addr2line) traces, and minified production stacks (with sourcemap support). Use when the only input is an error log or crash report and you need a starting point for repro.
-tools: Read, Grep, Glob, Bash(git blame *), Bash(git log *), Bash(git show *), Bash(node *)
+description: "Read-only agent that parses a crash dump or stack trace, identifies the crashing frame and the source line, attributes the failure to a suspected commit range using `git blame` on the relevant file, and emits a root-cause hypothesis. Handles JS/TS V8 traces, Python tracebacks, Java/JVM stack traces, Go panics, native (gdb/addr2line) traces, and minified production stacks (with sourcemap support). Use when the only input is an error log or crash report and you need a starting point for repro."
+tools: "Read, Grep, Glob, Bash(git blame *), Bash(git log *), Bash(git show *), Bash(node *)"
 model: sonnet
-skills: []
+skills: '[]'
 rating: 24
 d6: 4
 archetype: A1

@@ -1,6 +1,6 @@
 ---
 name: cyclonedx-format
-description: Reference for the CycloneDX v1.6 SBOM specification — OWASP-curated, BOM-format-rich format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language tooling (cyclonedx-bom-tool family) for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via gen + sign + attest workflow. Use when the team adopts CycloneDX as primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus).
+description: "Reference for the CycloneDX v1.6 SBOM specification — OWASP-curated, BOM-format-rich format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language tooling (cyclonedx-bom-tool family) for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via gen + sign + attest workflow. Use when the team adopts CycloneDX as primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus)."
 rating: 22
 d6: 4
 archetype: S2

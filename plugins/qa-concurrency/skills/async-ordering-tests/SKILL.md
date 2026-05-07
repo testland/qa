@@ -1,6 +1,6 @@
 ---
 name: async-ordering-tests
-description: Test async ordering — event-loop / queue / channel ordering assertions, JS Promise microtask vs macrotask ordering, Python `asyncio.gather` vs `asyncio.wait_for` semantics, Go goroutine + channel happens-before relationships, async/await re-entrancy. Use deterministic schedulers (sinon fake timers, asyncio test mode) to remove run-to-run variance.
+description: "Test async ordering — event-loop / queue / channel ordering assertions, JS Promise microtask vs macrotask ordering, Python `asyncio.gather` vs `asyncio.wait_for` semantics, Go goroutine + channel happens-before relationships, async/await re-entrancy. Use deterministic schedulers (sinon fake timers, asyncio test mode) to remove run-to-run variance."
 type: skill
 archetype: S3
 rating: 22

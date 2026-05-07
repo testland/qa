@@ -1,6 +1,6 @@
 ---
 name: i18n-string-coverage
-description: Build-an-X workflow that scans source code for untranslated strings — finds hardcoded user-facing text not wrapped in the i18n function (`t()`, `i18n.t`, `gettext`, `__()`, etc.), maps gaps to the team's translation file, reports per-language coverage (en: 100%; fr: 87%; es: 60%), gates per-PR for new untranslated strings. Use when the product ships in multiple locales and the team needs continuous coverage tracking.
+description: "Build-an-X workflow that scans source code for untranslated strings — finds hardcoded user-facing text not wrapped in the i18n function (`t()`, `i18n.t`, `gettext`, `__()`, etc.), maps gaps to the team''''s translation file, reports per-language coverage (en: 100%; fr: 87%; es: 60%), gates per-PR for new untranslated strings. Use when the product ships in multiple locales and the team needs continuous coverage tracking."
 rating: 22
 d6: 3
 archetype: S3

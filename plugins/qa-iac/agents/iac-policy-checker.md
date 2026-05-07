@@ -1,7 +1,7 @@
 ---
 name: iac-policy-checker
-description: Adversarial agent that combines Checkov + tfsec + KICS scan results into a unified IaC policy verdict — deduplicates findings (same issue caught by multiple scanners), groups by severity, classifies into critical / high / medium / low, applies team-defined waivers, and emits a single PR-comment summary. Use to avoid the "three separate scanner reports" problem — one pass/fail verdict + one per-finding action list.
-tools: Read, Bash(jq *)
+description: "Adversarial agent that combines Checkov + tfsec + KICS scan results into a unified IaC policy verdict — deduplicates findings (same issue caught by multiple scanners), groups by severity, classifies into critical / high / medium / low, applies team-defined waivers, and emits a single PR-comment summary. Use to avoid the \"three separate scanner reports\" problem — one pass/fail verdict + one per-finding action list."
+tools: "Read, Bash(jq *)"
 model: sonnet
 skills:
   - checkov-policy

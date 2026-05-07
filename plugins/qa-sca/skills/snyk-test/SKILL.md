@@ -1,6 +1,6 @@
 ---
 name: snyk-test
-description: Configures and runs Snyk — multi-mode SCA + SAST + Container + IaC scanner with `snyk test` (one-shot scan), `snyk monitor` (continuous tracking with vuln alerts), `snyk code test` (SAST mode), `snyk container test ubuntu:18.04` (container mode); supports policy file `.snyk` for ignore + patch with expiration; integrates with 50+ package managers via auto-detect. Use when the team has a Snyk license + needs the broadest single-vendor SCA + companion product coverage (SAST / Container / IaC).
+description: "Configures and runs Snyk — multi-mode SCA + SAST + Container + IaC scanner with `snyk test` (one-shot scan), `snyk monitor` (continuous tracking with vuln alerts), `snyk code test` (SAST mode), `snyk container test ubuntu:18.04` (container mode); supports policy file `.snyk` for ignore + patch with expiration; integrates with 50+ package managers via auto-detect. Use when the team has a Snyk license + needs the broadest single-vendor SCA + companion product coverage (SAST / Container / IaC)."
 rating: 22
 d6: 4
 archetype: S1

@@ -1,6 +1,6 @@
 ---
 name: flake-pattern-reference
-description: Reference catalog of flake patterns — async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness — with detection heuristics and remediation per pattern. Use when triaging an unknown flake to identify the category before bisecting.
+description: "Reference catalog of flake patterns — async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness — with detection heuristics and remediation per pattern. Use when triaging an unknown flake to identify the category before bisecting."
 rating: 24
 d6: 3
 archetype: S2

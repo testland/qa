@@ -1,6 +1,6 @@
 ---
 name: zap-baseline
-description: Configures and runs OWASP ZAP baseline scanning — `zap-baseline.py` Docker-packaged spider + passive scan suitable for CI gating; supports `-t target_url` + `-r html_report` + `-c config_file` rule customization (INFO/IGNORE/FAIL warnings); pairs with `zap-full-scan.py` for active scanning; supports authenticated scans via `-n context_file` and Ajax spider via `-j` for JS-heavy SPAs. Use when the user runs OWASP ZAP for pre-prod web app DAST.
+description: "Configures and runs OWASP ZAP baseline scanning — `zap-baseline.py` Docker-packaged spider + passive scan suitable for CI gating; supports `-t target_url` + `-r html_report` + `-c config_file` rule customization (INFO/IGNORE/FAIL warnings); pairs with `zap-full-scan.py` for active scanning; supports authenticated scans via `-n context_file` and Ajax spider via `-j` for JS-heavy SPAs. Use when the user runs OWASP ZAP for pre-prod web app DAST."
 rating: 23
 d6: 4
 archetype: S1

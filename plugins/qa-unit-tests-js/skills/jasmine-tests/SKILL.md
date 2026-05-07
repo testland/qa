@@ -1,6 +1,6 @@
 ---
 name: jasmine-tests
-description: Configures and runs Jasmine — the original BDD-style JS test framework (predecessor to Jest) with built-in matchers + spies, no external assertion library; ships `jasmine-core` + `jasmine` runner; `spec_dir` + `helpers` convention; `jasmine.json` config; spy patterns (`spyOn`, `createSpy`); pairs with Karma for in-browser testing. Use when the user maintains legacy AngularJS / Karma+Jasmine codebases, or wants minimal BDD-style tests with no third-party assertion library.
+description: "Configures and runs Jasmine — the original BDD-style JS test framework (predecessor to Jest) with built-in matchers + spies, no external assertion library; ships `jasmine-core` + `jasmine` runner; `spec_dir` + `helpers` convention; `jasmine.json` config; spy patterns (`spyOn`, `createSpy`); pairs with Karma for in-browser testing. Use when the user maintains legacy AngularJS / Karma+Jasmine codebases, or wants minimal BDD-style tests with no third-party assertion library."
 rating: 22
 d6: 4
 archetype: S1

@@ -1,6 +1,6 @@
 ---
 name: mvcc-isolation-tests
-description: Build per-database MVCC isolation-level tests — Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB.
+description: "Build per-database MVCC isolation-level tests — Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB."
 type: skill
 archetype: S3
 rating: 22

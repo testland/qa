@@ -1,7 +1,7 @@
 ---
 name: e2e-test-trend-reporter
-description: Generates a periodic (weekly / monthly) test-suite health report from CI history — total runs, suite duration, flakiness rate, top failing tests, time-to-green per PR, week-over-week deltas. Emits a markdown summary suitable for a team Slack channel or wiki page. Use as a scheduled CI job to keep test health visible.
-tools: Read, Grep, Glob, Bash(jq *), Bash(xmllint *), Bash(date *)
+description: "Generates a periodic (weekly / monthly) test-suite health report from CI history — total runs, suite duration, flakiness rate, top failing tests, time-to-green per PR, week-over-week deltas. Emits a markdown summary suitable for a team Slack channel or wiki page. Use as a scheduled CI job to keep test health visible."
+tools: "Read, Grep, Glob, Bash(jq *), Bash(xmllint *), Bash(date *)"
 model: sonnet
 skills:
   - flake-pattern-reference

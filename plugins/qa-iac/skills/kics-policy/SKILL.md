@@ -1,6 +1,6 @@
 ---
 name: kics-policy
-description: Configures KICS (Keeping Infrastructure as Code Secure) for IaC scanning — Checkmarx open-source tool covering Terraform, Kubernetes, Helm, Dockerfile, Docker Compose, OpenAPI, Ansible, ARM, CloudFormation, Pulumi, Crossplane, Knative. CLI / Docker / GitHub Action / pre-commit integrations. Output to JSON / SARIF / HTML / JUnit. Use as a complement to Checkov + tfsec — KICS catches different rule classes (broader IaC + OpenAPI / Pulumi / Crossplane support).
+description: "Configures KICS (Keeping Infrastructure as Code Secure) for IaC scanning — Checkmarx open-source tool covering Terraform, Kubernetes, Helm, Dockerfile, Docker Compose, OpenAPI, Ansible, ARM, CloudFormation, Pulumi, Crossplane, Knative. CLI / Docker / GitHub Action / pre-commit integrations. Output to JSON / SARIF / HTML / JUnit. Use as a complement to Checkov + tfsec — KICS catches different rule classes (broader IaC + OpenAPI / Pulumi / Crossplane support)."
 rating: 22
 d6: 3
 archetype: S1

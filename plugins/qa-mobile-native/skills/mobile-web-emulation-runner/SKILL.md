@@ -1,6 +1,6 @@
 ---
 name: mobile-web-emulation-runner
-description: Builds a workflow to run web E2E tests under mobile viewports + DPRs (device pixel ratios) — uses Playwright's `devices` catalog (iPhone 15, Pixel 7, etc.), runs the existing test suite per-device as separate matrix shards, captures per-device screenshots for visual review, and asserts mobile-specific behaviors (touch interactions, viewport-conditional layout). Use when the web app supports mobile and the team wants regression coverage without spinning up real Android/iOS test rigs.
+description: "Builds a workflow to run web E2E tests under mobile viewports + DPRs (device pixel ratios) — uses Playwright's `devices` catalog (iPhone 15, Pixel 7, etc.), runs the existing test suite per-device as separate matrix shards, captures per-device screenshots for visual review, and asserts mobile-specific behaviors (touch interactions, viewport-conditional layout). Use when the web app supports mobile and the team wants regression coverage without spinning up real Android/iOS test rigs."
 rating: 22
 d6: 3
 archetype: S3

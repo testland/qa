@@ -1,7 +1,7 @@
 ---
 name: accessibility-code-critic
-description: Adversarial reviewer of one component's source code for WCAG 2.2 violations — reads the JSX / template / CSS, hunts for `<div onclick>`, missing focus management, color-only state cues, mishandled ARIA, missing label associations, and other anti-patterns from the four WCAG / ARIA reference skills, and produces a per-finding report with WCAG SC citation plus concrete remediation. Use proactively in PR review of any UI component, especially custom interactive widgets.
-tools: Read, Grep, Glob, Bash(git diff *)
+description: "Adversarial reviewer of one component's source code for WCAG 2.2 violations — reads the JSX / template / CSS, hunts for `<div onclick>`, missing focus management, color-only state cues, mishandled ARIA, missing label associations, and other anti-patterns from the four WCAG / ARIA reference skills, and produces a per-finding report with WCAG SC citation plus concrete remediation. Use proactively in PR review of any UI component, especially custom interactive widgets."
+tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - wcag-keyboard-navigation

@@ -1,6 +1,6 @@
 ---
 name: chartjs-snapshot-tests
-description: Snapshot-test Chart.js charts — render via headless Chromium / jsdom + canvas mock, capture canvas pixels via `canvas.toDataURL()` + image-diff, disable animations (`options.animation = false`) for stable snapshots, test tooltip + legend interactions. Pairs with qa-visual-regression for general UI snapshot patterns.
+description: "Snapshot-test Chart.js charts — render via headless Chromium / jsdom + canvas mock, capture canvas pixels via `canvas.toDataURL()` + image-diff, disable animations (`options.animation = false`) for stable snapshots, test tooltip + legend interactions. Pairs with qa-visual-regression for general UI snapshot patterns."
 type: skill
 archetype: S1
 rating: 22

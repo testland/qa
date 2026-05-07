@@ -1,6 +1,6 @@
 ---
 name: kingfisher-scanning
-description: Configures and runs Kingfisher — MongoDB-built Rust-based secret scanner combining Intel Hyperscan regex engine with language-aware parsing; ships 950 built-in detection rules with **live secret validation** and offline checksum verification; multi-target (local files / Git history / GitHub / GitLab / AWS S3 / Docker images); browser-based report viewer; suppression via `--skip-regex` / `--skip-word` / `--baseline-file` / inline `kingfisher:ignore`. Use when the team needs the broadest rule coverage + Hyperscan performance, or wants the modern alternative to gitleaks/trufflehog.
+description: "Configures and runs Kingfisher — MongoDB-built Rust-based secret scanner combining Intel Hyperscan regex engine with language-aware parsing; ships 950 built-in detection rules with **live secret validation** and offline checksum verification; multi-target (local files / Git history / GitHub / GitLab / AWS S3 / Docker images); browser-based report viewer; suppression via `--skip-regex` / `--skip-word` / `--baseline-file` / inline `kingfisher:ignore`. Use when the team needs the broadest rule coverage + Hyperscan performance, or wants the modern alternative to gitleaks/trufflehog."
 rating: 23
 d6: 4
 archetype: S1

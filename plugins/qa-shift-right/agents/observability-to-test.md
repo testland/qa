@@ -1,7 +1,7 @@
 ---
 name: observability-to-test
-description: Closes the loop between production observability signals and the test suite — reads a synthetic-monitor failure / Sentry error / Datadog incident / log alert, isolates the failing condition (input + state + system version), proposes the regression test that would have caught it (unit + integration + E2E layers per the test pyramid), and emits a PR adding the test plus the bug-repro package. Use after every production-side incident — converts "we caught it in prod" into "we'll catch it earlier next time."
-tools: Read, Write, Edit, Grep, Glob, Bash(gh issue view *), Bash(curl *), Bash(jq *)
+description: "Closes the loop between production observability signals and the test suite — reads a synthetic-monitor failure / Sentry error / Datadog incident / log alert, isolates the failing condition (input + state + system version), proposes the regression test that would have caught it (unit + integration + E2E layers per the test pyramid), and emits a PR adding the test plus the bug-repro package. Use after every production-side incident — converts \"we caught it in prod\" into \"we'll catch it earlier next time."
+tools: "Read, Write, Edit, Grep, Glob, Bash(gh issue view *), Bash(curl *), Bash(jq *)"
 model: sonnet
 skills:
   - synthetic-monitor-author

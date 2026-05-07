@@ -1,7 +1,7 @@
 ---
 name: risk-based-test-planner
-description: Action-taking strategic planner — given a feature scope or change initiative + the risk matrix, applies risk-based prioritization to choose what to test deeply, what to skip, and where to allocate manual / automated / chaos / load test investment. Distinct from `risk-based-test-selector` (per-PR tactical) — this is per-feature / per-quarter strategic. Emits a test plan with test types per risk class, owner assignments, and effort estimates.
-tools: Read, Write, Edit, Grep, Glob
+description: "Action-taking strategic planner — given a feature scope or change initiative + the risk matrix, applies risk-based prioritization to choose what to test deeply, what to skip, and where to allocate manual / automated / chaos / load test investment. Distinct from `risk-based-test-selector` (per-PR tactical) — this is per-feature / per-quarter strategic. Emits a test plan with test types per risk class, owner assignments, and effort estimates."
+tools: "Read, Write, Edit, Grep, Glob"
 model: sonnet
 skills:
   - risk-matrix

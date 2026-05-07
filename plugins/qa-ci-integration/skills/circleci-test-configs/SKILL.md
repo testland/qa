@@ -1,6 +1,6 @@
 ---
 name: circleci-test-configs
-description: Configures CircleCI test workflows — `.circleci/config.yml` with workflows, jobs, executors, parallelism (test splitting), orbs (reusable shared config), insights for analytics, contexts for per-team secrets. Use for CircleCI-hosted CI when the team values its parallelism + insights features.
+description: "Configures CircleCI test workflows — `.circleci/config.yml` with workflows, jobs, executors, parallelism (test splitting), orbs (reusable shared config), insights for analytics, contexts for per-team secrets. Use for CircleCI-hosted CI when the team values its parallelism + insights features."
 rating: 22
 d6: 3
 archetype: S1

@@ -1,6 +1,6 @@
 ---
 name: db-slow-query-detector
-description: Reads `EXPLAIN` / `EXPLAIN ANALYZE` output from PostgreSQL, MySQL, or SQLite — identifies the dominant cost (sequential scan, nested loop, sort spill, missing index, type-cast preventing index use), proposes the specific index or query rewrite to fix it, and emits the candidate `CREATE INDEX` statement. Use when load testing or production telemetry shows the database as the bottleneck and the team needs targeted query-level remediation.
+description: "Reads `EXPLAIN` / `EXPLAIN ANALYZE` output from PostgreSQL, MySQL, or SQLite — identifies the dominant cost (sequential scan, nested loop, sort spill, missing index, type-cast preventing index use), proposes the specific index or query rewrite to fix it, and emits the candidate `CREATE INDEX` statement. Use when load testing or production telemetry shows the database as the bottleneck and the team needs targeted query-level remediation."
 rating: 24
 d6: 4
 archetype: S3

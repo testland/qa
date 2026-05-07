@@ -1,7 +1,7 @@
 ---
 name: test-suite-pruner
-description: Action-taking agent that finds low-signal tests in a suite and recommends removal — flags duplicates (two tests asserting the same thing on the same input), tautologies (assertions that mirror the implementation), trivial tests (a single `expect(true).toBe(true)` shape), and tests that haven't surfaced a real bug in the team's history (zero failures across N main runs while the file they cover has churned). Refuses to delete on its own; always opens a PR or proposes a list. Use as a periodic test-debt sprint tool when the suite has grown faster than its signal value.
-tools: Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(npx jest --listTests), Bash(pytest --collect-only *), Bash(go test -list *)
+description: "Action-taking agent that finds low-signal tests in a suite and recommends removal — flags duplicates (two tests asserting the same thing on the same input), tautologies (assertions that mirror the implementation), trivial tests (a single `expect(true).toBe(true)` shape), and tests that haven't surfaced a real bug in the team's history (zero failures across N main runs while the file they cover has churned). Refuses to delete on its own; always opens a PR or proposes a list. Use as a periodic test-debt sprint tool when the suite has grown faster than its signal value."
+tools: "Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(npx jest --listTests), Bash(pytest --collect-only *), Bash(go test -list *)"
 model: sonnet
 skills:
   - regression-suite-selector

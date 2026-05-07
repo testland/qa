@@ -1,6 +1,6 @@
 ---
 name: lcov-analysis
-description: Parses LCOV `.info` text files (the de-facto coverage interchange format produced by gcov, llvm-cov, Coverage.py via `py2lcov`, JaCoCo via `xml2lcov`, Devel::Cover, Jest via `lcov` reporter, NYC, and most others). Extracts per-file line / function / branch metrics from the canonical record keywords (TN/SF/FN/FNDA/FNF/FNH/BRDA/BRF/BRH/DA/LH/LF), computes the diff vs a baseline, and emits per-file gating verdicts. Use for PR coverage gates that don't depend on a specific language runtime.
+description: "Parses LCOV `.info` text files (the de-facto coverage interchange format produced by gcov, llvm-cov, Coverage.py via `py2lcov`, JaCoCo via `xml2lcov`, Devel::Cover, Jest via `lcov` reporter, NYC, and most others). Extracts per-file line / function / branch metrics from the canonical record keywords (TN/SF/FN/FNDA/FNF/FNH/BRDA/BRF/BRH/DA/LH/LF), computes the diff vs a baseline, and emits per-file gating verdicts. Use for PR coverage gates that don't depend on a specific language runtime."
 rating: 24
 d6: 4
 archetype: S1

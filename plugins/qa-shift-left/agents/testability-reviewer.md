@@ -1,9 +1,9 @@
 ---
 name: testability-reviewer
-description: Reviews a feature spec, PR description, or user story for testability — flags missing acceptance criteria, ambiguous edge cases, untestable assertions, and undefined preconditions BEFORE the team starts implementing. Returns a prioritized findings table with the specific text that needs clarification and a suggested rewrite. Use proactively during sprint planning or PR review, before code is written.
-tools: Read, Grep, Glob, Bash(git diff *), Bash(git log *)
+description: "Reviews a feature spec, PR description, or user story for testability — flags missing acceptance criteria, ambiguous edge cases, untestable assertions, and undefined preconditions BEFORE the team starts implementing. Returns a prioritized findings table with the specific text that needs clarification and a suggested rewrite. Use proactively during sprint planning or PR review, before code is written."
+tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
-skills: []
+skills: '[]'
 rating: 26
 d6: 5
 archetype: A1

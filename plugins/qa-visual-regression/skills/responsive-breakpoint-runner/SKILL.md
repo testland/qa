@@ -1,6 +1,6 @@
 ---
 name: responsive-breakpoint-runner
-description: Dispatches a single conceptual visual run across a viewport matrix using whichever engine the project has configured (Percy, Chromatic, Playwright snapshots, Storybook test-runner). Routes per-engine viewport syntax, runs each, aggregates the results into one cross-breakpoint report. Use when a project ships responsive UI and the breakpoint matrix is large enough to need a unifying entry point.
+description: "Dispatches a single conceptual visual run across a viewport matrix using whichever engine the project has configured (Percy, Chromatic, Playwright snapshots, Storybook test-runner). Routes per-engine viewport syntax, runs each, aggregates the results into one cross-breakpoint report. Use when a project ships responsive UI and the breakpoint matrix is large enough to need a unifying entry point."
 rating: 23
 d6: 3
 archetype: S4

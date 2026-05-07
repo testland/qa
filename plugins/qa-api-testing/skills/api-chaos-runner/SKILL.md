@@ -1,6 +1,6 @@
 ---
 name: api-chaos-runner
-description: Builds a workflow that runs the project's existing API tests under injected network chaos — latency, timeouts, dropped connections, bandwidth caps, packet loss — using Toxiproxy as the proxy layer (with notes on alternatives Pumba / Gremlin / LitmusChaos). Defines a chaos matrix per test scenario, runs each, and reports which assertions break under which conditions. Use when the API surface needs to verify resilience patterns (retry, circuit-breaker, timeout, fallback) actually work.
+description: "Builds a workflow that runs the project's existing API tests under injected network chaos — latency, timeouts, dropped connections, bandwidth caps, packet loss — using Toxiproxy as the proxy layer (with notes on alternatives Pumba / Gremlin / LitmusChaos). Defines a chaos matrix per test scenario, runs each, and reports which assertions break under which conditions. Use when the API surface needs to verify resilience patterns (retry, circuit-breaker, timeout, fallback) actually work."
 rating: 23
 d6: 3
 archetype: S3

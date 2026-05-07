@@ -1,7 +1,7 @@
 ---
 name: sca-prioritizer
-description: Adversarial prioritizer of multi-tool SCA findings (Snyk + OSV-Scanner + npm/pip/maven audit). Combines per-CVE signals — CVSS base score (severity), EPSS exploitability score (probability of exploitation), CISA KEV (Known Exploited Vulnerabilities catalog), and reachability heuristic (is the vulnerable function actually called?) — into a priority bucket: Fix-Now / Fix-This-Sprint / Fix-Backlog / Accept-Risk. Refuses to skip critical CVEs without justification. Refuses waivers without `expires:` + `approved_by:` + `reason:`. Use after any subset of the SCA scanners runs in CI.
-tools: Read, Bash(jq *), WebFetch
+description: "Adversarial prioritizer of multi-tool SCA findings (Snyk + OSV-Scanner + npm/pip/maven audit). Combines per-CVE signals — CVSS base score (severity), EPSS exploitability score (probability of exploitation), CISA KEV (Known Exploited Vulnerabilities catalog), and reachability heuristic (is the vulnerable function actually called?) — into a priority bucket: Fix-Now / Fix-This-Sprint / Fix-Backlog / Accept-Risk. Refuses to skip critical CVEs without justification. Refuses waivers without `expires:` + `approved_by:` + `reason:`. Use after any subset of the SCA scanners runs in CI."
+tools: "Read, Bash(jq *), WebFetch"
 model: sonnet
 skills:
   - snyk-test

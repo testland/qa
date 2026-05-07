@@ -1,6 +1,6 @@
 ---
 name: opentelemetry-trace-assertions
-description: Author trace-shape assertions in tests using OpenTelemetry SDK in-memory exporter — capture spans during test execution, assert on span name + attributes + status + parent-child structure + duration. Cross-language patterns (Python `InMemorySpanExporter` + `SimpleSpanProcessor`, JS `getRecordedSpans()`, Java `OpenTelemetryExtension`); CI integration.
+description: "Author trace-shape assertions in tests using OpenTelemetry SDK in-memory exporter — capture spans during test execution, assert on span name + attributes + status + parent-child structure + duration. Cross-language patterns (Python `InMemorySpanExporter` + `SimpleSpanProcessor`, JS `getRecordedSpans()`, Java `OpenTelemetryExtension`); CI integration."
 type: skill
 archetype: S1
 rating: 24

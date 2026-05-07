@@ -1,7 +1,7 @@
 ---
 name: perf-regression-bisector
-description: Read-only agent that bisects a performance regression across commits using `git bisect` plus a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-slow-query-detector for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear.
-tools: Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(k6 run *), Bash(npx lhci *), Bash(jq *)
+description: "Read-only agent that bisects a performance regression across commits using `git bisect` plus a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-slow-query-detector for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear."
+tools: "Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(k6 run *), Bash(npx lhci *), Bash(jq *)"
 model: sonnet
 skills:
   - k6-load-testing

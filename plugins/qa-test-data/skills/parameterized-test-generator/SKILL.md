@@ -1,6 +1,6 @@
 ---
 name: parameterized-test-generator
-description: Generates parameterized test inputs combining boundary-value, equivalence-class, and pairwise-combinatorial cases from a typed multi-input specification — produces the cross-product of cases up to a configurable strength (1-wise / 2-wise / N-wise) using all-pairs reduction so the test surface stays tractable. Emits cases in the project's test-runner-native parametrize format. Use when a function or endpoint takes 3+ inputs whose interactions matter and full Cartesian product would explode.
+description: "Generates parameterized test inputs combining boundary-value, equivalence-class, and pairwise-combinatorial cases from a typed multi-input specification — produces the cross-product of cases up to a configurable strength (1-wise / 2-wise / N-wise) using all-pairs reduction so the test surface stays tractable. Emits cases in the project's test-runner-native parametrize format. Use when a function or endpoint takes 3+ inputs whose interactions matter and full Cartesian product would explode."
 rating: 24
 d6: 4
 archetype: S3

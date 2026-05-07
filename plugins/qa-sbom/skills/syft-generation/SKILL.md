@@ -1,6 +1,6 @@
 ---
 name: syft-generation
-description: Generates Software Bill of Materials (SBOMs) using Anchore Syft — supports container images / directories / archives across OCI / Docker / Singularity formats; output formats CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON; pairs with `grype-scanning` for SBOM-driven vuln scanning. Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance) or as input to vuln scanners.
+description: "Generates Software Bill of Materials (SBOMs) using Anchore Syft — supports container images / directories / archives across OCI / Docker / Singularity formats; output formats CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON; pairs with `grype-scanning` for SBOM-driven vuln scanning. Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance) or as input to vuln scanners."
 rating: 23
 d6: 4
 archetype: S1

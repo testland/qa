@@ -1,6 +1,6 @@
 ---
 name: extentreports
-description: Configures ExtentReports v5 for Java / .NET test runs — wires `ExtentSparkReporter` (HTML), `attachReporter`, `createTest`, the log-level chain (`info`/`pass`/`warning`/`skip`/`fail`), screenshots via `MediaEntityBuilder`, hierarchical `createNode` parent/child tests, and category / author / device labels. Outputs a static HTML report alongside JUnit XML for CI artifact upload. Use when a JVM project (or .NET via `extentreports-dotnet`) wants a richer per-test report than JUnit XML and the team is on the Aventstack ExtentReports stack.
+description: "Configures ExtentReports v5 for Java / .NET test runs — wires `ExtentSparkReporter` (HTML), `attachReporter`, `createTest`, the log-level chain (`info`/`pass`/`warning`/`skip`/`fail`), screenshots via `MediaEntityBuilder`, hierarchical `createNode` parent/child tests, and category / author / device labels. Outputs a static HTML report alongside JUnit XML for CI artifact upload. Use when a JVM project (or .NET via `extentreports-dotnet`) wants a richer per-test report than JUnit XML and the team is on the Aventstack ExtentReports stack."
 rating: 23
 d6: 4
 archetype: S1

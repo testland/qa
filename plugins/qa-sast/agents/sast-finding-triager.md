@@ -1,7 +1,7 @@
 ---
 name: sast-finding-triager
-description: Adversarial unifier of multi-scanner SAST output (Semgrep + SonarQube + CodeQL + Bandit + gosec). Reads each scanner's normalized JSON / SARIF; deduplicates by `(file, line, normalized_cwe)` recording all scanners that flagged each finding (consensus signal); applies `.sast-waivers.yaml` waivers (rejects waivers without `expires:` + `approved_by:` + `reason:`); classifies into Critical / High / Medium / Low / Info; emits PR-comment summary with verdict (BLOCK / PASS). Refuses to mark PR pass if any unwaived critical finding remains. Mirror of qa-iac/iac-policy-checker pattern. Use after any subset of the SAST scanners runs in CI.
-tools: Read, Bash(jq *)
+description: "Adversarial unifier of multi-scanner SAST output (Semgrep + SonarQube + CodeQL + Bandit + gosec). Reads each scanner's normalized JSON / SARIF; deduplicates by `(file, line, normalized_cwe)` recording all scanners that flagged each finding (consensus signal); applies `.sast-waivers.yaml` waivers (rejects waivers without `expires:` + `approved_by:` + `reason:`); classifies into Critical / High / Medium / Low / Info; emits PR-comment summary with verdict (BLOCK / PASS). Refuses to mark PR pass if any unwaived critical finding remains. Mirror of qa-iac/iac-policy-checker pattern. Use after any subset of the SAST scanners runs in CI."
+tools: "Read, Bash(jq *)"
 model: sonnet
 skills:
   - semgrep-rules

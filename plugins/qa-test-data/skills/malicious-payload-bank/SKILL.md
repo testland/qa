@@ -1,6 +1,6 @@
 ---
 name: malicious-payload-bank
-description: Reference catalog of curated adversarial input payloads keyed by attack class — SQL injection, XSS, SSRF, path traversal, command injection, XXE, prototype pollution, regex DoS, Unicode confusables, header injection — plus per-context guidance for which payloads apply (URL parameter / form input / JSON body / file upload). Use when authoring negative-test cases for input validation, fuzz targets, or a security-focused test suite that needs to exercise the OWASP Top 10 attack surface.
+description: "Reference catalog of curated adversarial input payloads keyed by attack class — SQL injection, XSS, SSRF, path traversal, command injection, XXE, prototype pollution, regex DoS, Unicode confusables, header injection — plus per-context guidance for which payloads apply (URL parameter / form input / JSON body / file upload). Use when authoring negative-test cases for input validation, fuzz targets, or a security-focused test suite that needs to exercise the OWASP Top 10 attack surface."
 rating: 24
 d6: 4
 archetype: S2

@@ -1,6 +1,6 @@
 ---
 name: test-code-conventions
-description: Pure-reference catalog of test code conventions — AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. The agents in this plugin (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic) load this as their shared rule book. Use as a team's onboarding reference for "what makes a test code-reviewable" and as the source-of-truth the critics' verdicts cite back to.
+description: "Pure-reference catalog of test code conventions — AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. The agents in this plugin (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic) load this as their shared rule book. Use as a team's onboarding reference for \"what makes a test code-reviewable\" and as the source-of-truth the critics' verdicts cite back to."
 rating: 22
 d6: 3
 archetype: S2

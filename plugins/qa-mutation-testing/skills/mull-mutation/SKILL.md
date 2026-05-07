@@ -1,6 +1,6 @@
 ---
 name: mull-mutation
-description: Configures Mull for mutation testing of C / C++ (and via LLVM IR, Swift / Rust to a lesser extent) — LLVM-based, requires building the project with Mull-compatible LLVM toolchain, runs via `mull-runner` against the test binary. Use when a C/C++ project needs mutation-quality verification — the canonical native-language LLVM-IR-level mutation tool.
+description: "Configures Mull for mutation testing of C / C++ (and via LLVM IR, Swift / Rust to a lesser extent) — LLVM-based, requires building the project with Mull-compatible LLVM toolchain, runs via `mull-runner` against the test binary. Use when a C/C++ project needs mutation-quality verification — the canonical native-language LLVM-IR-level mutation tool."
 rating: 22
 d6: 3
 archetype: S1

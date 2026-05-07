@@ -1,6 +1,6 @@
 ---
 name: knip-dead-code
-description: Run Knip against a JS/TS project to detect unused files, unused dependencies, unused exports, and unused class/enum members. Scoped to production code; tests are entry-point-aware via Knip's framework plugins.
+description: "Run Knip against a JS/TS project to detect unused files, unused dependencies, unused exports, and unused class/enum members. Scoped to production code; tests are entry-point-aware via Knip's framework plugins."
 type: skill
 archetype: S1
 rating: 23

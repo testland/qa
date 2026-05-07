@@ -1,6 +1,6 @@
 ---
 name: lighthouse-budget-author
-description: Drafts a `lighthouserc.js` (or `budget.json`) at design time — picks Web Vitals thresholds (LCP / INP / CLS) per route based on traffic class (cached / dynamic / API-heavy / form-heavy) and the team's NFRs, plus resource-size budgets (JS / CSS / images / total bytes). Emits the config file ready for the lighthouse-perf runner. Use when starting Lighthouse coverage on a project that has no budgets yet, or when the existing budgets need a redesign.
+description: "Drafts a `lighthouserc.js` (or `budget.json`) at design time — picks Web Vitals thresholds (LCP / INP / CLS) per route based on traffic class (cached / dynamic / API-heavy / form-heavy) and the team's NFRs, plus resource-size budgets (JS / CSS / images / total bytes). Emits the config file ready for the lighthouse-perf runner. Use when starting Lighthouse coverage on a project that has no budgets yet, or when the existing budgets need a redesign."
 rating: 24
 d6: 4
 archetype: S3

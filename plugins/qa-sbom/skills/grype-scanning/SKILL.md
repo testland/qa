@@ -1,6 +1,6 @@
 ---
 name: grype-scanning
-description: Scans for vulnerabilities using Anchore Grype — SBOM-aware scanner with `grype <image>`, `grype dir:./`, `grype sbom:./sbom.json` invocations; covers OS-package + language-package ecosystems (Alpine / Debian / Ubuntu / RHEL / Amazon Linux / Ruby / Java / JavaScript / Python / .NET / Go / PHP / Rust); includes EPSS + KEV + risk-score prioritization; OpenVEX support for filtering; `.grype.yaml` ignore rules with expiration. Use when the team wants Grype-native vuln scanning (or pairs with Syft for SBOM-driven workflow).
+description: "Scans for vulnerabilities using Anchore Grype — SBOM-aware scanner with `grype <image>`, `grype dir:./`, `grype sbom:./sbom.json` invocations; covers OS-package + language-package ecosystems (Alpine / Debian / Ubuntu / RHEL / Amazon Linux / Ruby / Java / JavaScript / Python / .NET / Go / PHP / Rust); includes EPSS + KEV + risk-score prioritization; OpenVEX support for filtering; `.grype.yaml` ignore rules with expiration. Use when the team wants Grype-native vuln scanning (or pairs with Syft for SBOM-driven workflow)."
 rating: 23
 d6: 4
 archetype: S1

@@ -1,6 +1,6 @@
 ---
 name: burp-headless
-description: Configures and runs Burp Suite Professional / Enterprise headless — Burp Scanner is "a web vulnerability scanning tool built into Burp Suite Professional"; Pro edition runs scans via REST API or scheduled-tasks; Enterprise edition is purpose-built for CI-driven scanning at scale; supports BApp Store extensions (BCheck, custom scanners); auth via session-handling rules. Use when the team has a Burp Suite license and needs paid-tier DAST coverage layered on top of OWASP ZAP.
+description: "Configures and runs Burp Suite Professional / Enterprise headless — Burp Scanner is \"a web vulnerability scanning tool built into Burp Suite Professional\"; Pro edition runs scans via REST API or scheduled-tasks; Enterprise edition is purpose-built for CI-driven scanning at scale; supports BApp Store extensions (BCheck, custom scanners); auth via session-handling rules. Use when the team has a Burp Suite license and needs paid-tier DAST coverage layered on top of OWASP ZAP."
 rating: 21
 d6: 4
 archetype: S1

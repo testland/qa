@@ -1,6 +1,6 @@
 ---
 name: webdriverio-testing
-description: Authors WebdriverIO E2E tests — `npm init wdio@latest` scaffolding, services architecture (sauce, browserstack, appium, devtools), reporters (spec, allure, junit), built-in Mocha/Jasmine/Cucumber framework integrations. WebdriverIO sits between Selenium (W3C protocol) and Playwright (modern API) — Selenium-protocol-compatible with rich plugin ecosystem. Use when the team needs WebDriver protocol + service-based device-farm integration.
+description: "Authors WebdriverIO E2E tests — `npm init wdio@latest` scaffolding, services architecture (sauce, browserstack, appium, devtools), reporters (spec, allure, junit), built-in Mocha/Jasmine/Cucumber framework integrations. WebdriverIO sits between Selenium (W3C protocol) and Playwright (modern API) — Selenium-protocol-compatible with rich plugin ecosystem. Use when the team needs WebDriver protocol + service-based device-farm integration."
 rating: 22
 d6: 3
 archetype: S1

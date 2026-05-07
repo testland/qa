@@ -1,7 +1,7 @@
 ---
 name: regression-suite-curator
-description: Action-taking agent that periodically reviews the regression suite's per-test signal/noise history and recommends keep/fold/delete decisions — keeps tests that have caught real regressions, recommends folding two tests into one when they share most setup and assertions, recommends deletion only when a test has been zero-signal AND is duplicated by a higher-coverage test elsewhere AND the coverage map confirms its source paths are exercised by other tests. Outputs a curated diff alongside the rationale per decision. Use as a quarterly suite-health pass — coarser-grained than test-suite-pruner; longer time horizon; signal-history-driven.
-tools: Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *)
+description: "Action-taking agent that periodically reviews the regression suite's per-test signal/noise history and recommends keep/fold/delete decisions — keeps tests that have caught real regressions, recommends folding two tests into one when they share most setup and assertions, recommends deletion only when a test has been zero-signal AND is duplicated by a higher-coverage test elsewhere AND the coverage map confirms its source paths are exercised by other tests. Outputs a curated diff alongside the rationale per decision. Use as a quarterly suite-health pass — coarser-grained than test-suite-pruner; longer time horizon; signal-history-driven."
+tools: "Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *)"
 model: sonnet
 skills:
   - regression-suite-selector

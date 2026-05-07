@@ -1,6 +1,6 @@
 ---
 name: fluentassertions
-description: Reference for FluentAssertions — the canonical .NET fluent-assertion library pairable with xUnit / NUnit / MSTest; provides `.Should()` extension API (`.Should().Be()`, `.Should().BeOfType<T>()`, `.Should().Throw<T>()`, `.Should().BeEquivalentTo()` for deep equality, `.Should().Satisfy()` for predicates, `.Should().BeApproximately()` for floats); rich failure messages with object structure visualization. Body MUST include the 2024 license change note: v8+ commercial license required for new use; v7 is the last fully OSS version.
+description: "Reference for FluentAssertions — the canonical .NET fluent-assertion library pairable with xUnit / NUnit / MSTest; provides `.Should()` extension API (`.Should().Be()`, `.Should().BeOfType<T>()`, `.Should().Throw<T>()`, `.Should().BeEquivalentTo()` for deep equality, `.Should().Satisfy()` for predicates, `.Should().BeApproximately()` for floats); rich failure messages with object structure visualization. Body MUST include the 2024 license change note: v8+ commercial license required for new use; v7 is the last fully OSS version."
 rating: 22
 d6: 4
 archetype: S2

@@ -1,6 +1,6 @@
 ---
 name: secrets-rotation-runner
-description: Build-an-X for the secret-rotation workflow after detection — detect via gitleaks/trufflehog/kingfisher → identify provider via verifier → rotate via provider API (AWS IAM / GitHub PAT / Stripe / GCP / Azure / Twilio / Slack / etc.) → invalidate old secret → audit log via observability stack → post-mortem cross-ref. Use when a secret is detected in code (or proactively for periodic rotation) — assume git-history scrub does NOT prevent compromise.
+description: "Build-an-X for the secret-rotation workflow after detection — detect via gitleaks/trufflehog/kingfisher → identify provider via verifier → rotate via provider API (AWS IAM / GitHub PAT / Stripe / GCP / Azure / Twilio / Slack / etc.) → invalidate old secret → audit log via observability stack → post-mortem cross-ref. Use when a secret is detected in code (or proactively for periodic rotation) — assume git-history scrub does NOT prevent compromise."
 rating: 24
 d6: 4
 archetype: S3

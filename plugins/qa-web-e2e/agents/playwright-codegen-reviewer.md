@@ -1,7 +1,7 @@
 ---
 name: playwright-codegen-reviewer
-description: Adversarial reviewer that takes Playwright codegen output (raw recorded test code) and refactors it to idiomatic Page Object Model code — extracts repeated selectors into constants, identifies common interactions worth Page Object methods, replaces brittle CSS selectors with `getByRole` accessibility-first equivalents per the convention, restructures the recorded sequence into AAA-pattern tests. Use after recording a flow with `npx playwright codegen`; the agent produces team-ready code from the raw recording.
-tools: Read, Write, Edit, Grep, Glob
+description: "Adversarial reviewer that takes Playwright codegen output (raw recorded test code) and refactors it to idiomatic Page Object Model code — extracts repeated selectors into constants, identifies common interactions worth Page Object methods, replaces brittle CSS selectors with `getByRole` accessibility-first equivalents per the convention, restructures the recorded sequence into AAA-pattern tests. Use after recording a flow with `npx playwright codegen`; the agent produces team-ready code from the raw recording."
+tools: "Read, Write, Edit, Grep, Glob"
 model: sonnet
 skills:
   - test-code-conventions

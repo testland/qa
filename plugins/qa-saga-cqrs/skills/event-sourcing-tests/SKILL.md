@@ -1,6 +1,6 @@
 ---
 name: event-sourcing-tests
-description: Build event-sourcing tests — aggregate root replay determinism (same events ⇒ same state), event-versioning + upcasting, snapshot equivalence (replay-to-N vs snapshot-at-N must agree), projection rebuild from event log, retroactive event correction. Per martinfowler.com EventSourcing reference.
+description: "Build event-sourcing tests — aggregate root replay determinism (same events ⇒ same state), event-versioning + upcasting, snapshot equivalence (replay-to-N vs snapshot-at-N must agree), projection rebuild from event log, retroactive event correction. Per martinfowler.com EventSourcing reference."
 type: skill
 archetype: S3
 rating: 22

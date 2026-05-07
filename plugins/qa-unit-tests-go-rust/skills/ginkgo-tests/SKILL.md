@@ -1,6 +1,6 @@
 ---
 name: ginkgo-tests
-description: Configures and runs Ginkgo — Go BDD test framework with `Describe` / `Context` / `It` nesting; `BeforeEach` / `AfterEach` / `JustBeforeEach` / `JustAfterEach` lifecycle; Gomega matchers DSL (`Expect(actual).To(Equal(expected))`); parallel execution via `-p`; focus (`F` prefix) + skip (`P` prefix); `DescribeTable` + `Entry` for parametrized tests; `ginkgo` CLI tool. Use when working with Go on a BDD-style test suite (Kubernetes-ecosystem standard).
+description: "Configures and runs Ginkgo — Go BDD test framework with `Describe` / `Context` / `It` nesting; `BeforeEach` / `AfterEach` / `JustBeforeEach` / `JustAfterEach` lifecycle; Gomega matchers DSL (`Expect(actual).To(Equal(expected))`); parallel execution via `-p`; focus (`F` prefix) + skip (`P` prefix); `DescribeTable` + `Entry` for parametrized tests; `ginkgo` CLI tool. Use when working with Go on a BDD-style test suite (Kubernetes-ecosystem standard)."
 rating: 22
 d6: 4
 archetype: S1

@@ -1,6 +1,6 @@
 ---
 name: acceptance-test-from-criteria
-description: Build-an-X workflow for ATDD (Acceptance Test-Driven Development) — converts acceptance criteria into executable acceptance tests in the team's BDD framework (Cucumber / Behave / Reqnroll), pairs with the relevant runner, scaffolds step definitions for new patterns, marks generated tests as "AC-N" so failures map back to the story's acceptance criterion. Use when the team practices ATDD and wants automation generated from ACs as a first-class step before development.
+description: "Build-an-X workflow for ATDD (Acceptance Test-Driven Development) — converts acceptance criteria into executable acceptance tests in the team's BDD framework (Cucumber / Behave / Reqnroll), pairs with the relevant runner, scaffolds step definitions for new patterns, marks generated tests as \"AC-N\" so failures map back to the story's acceptance criterion. Use when the team practices ATDD and wants automation generated from ACs as a first-class step before development."
 rating: 22
 d6: 4
 archetype: S3

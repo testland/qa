@@ -1,6 +1,6 @@
 ---
 name: allure-reports
-description: Configures Allure Report for the project (test-runner adapter installation, `allure-results` directory wiring, `categories.json` for failure classification, `history-trend.json` retention via the copy-history-between-runs pattern), runs the Allure CLI to convert `allure-results` to a static HTML site, and uploads the report as a CI artifact. Use when the team needs richer test reporting than JUnit XML — step-level attachments, per-test history, retry tracking, and severity / epic / feature labeling — across the framework-agnostic adapter ecosystem (pytest, Jest, JUnit, TestNG, NUnit, Mocha, etc.).
+description: "Configures Allure Report for the project (test-runner adapter installation, `allure-results` directory wiring, `categories.json` for failure classification, `history-trend.json` retention via the copy-history-between-runs pattern), runs the Allure CLI to convert `allure-results` to a static HTML site, and uploads the report as a CI artifact. Use when the team needs richer test reporting than JUnit XML — step-level attachments, per-test history, retry tracking, and severity / epic / feature labeling — across the framework-agnostic adapter ecosystem (pytest, Jest, JUnit, TestNG, NUnit, Mocha, etc.)."
 rating: 23
 d6: 3
 archetype: S1

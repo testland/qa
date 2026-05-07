@@ -1,6 +1,6 @@
 ---
 name: deepeval-evaluation
-description: Authors and runs DeepEval — pytest-native LLM eval framework with `LLMTestCase` (input + actual_output + expected_output + retrieval_context) and ~11 built-in metrics (G-Eval, Answer-Relevancy, Faithfulness, Contextual-Recall / Precision / Relevancy, Hallucination, Bias, Toxicity, Summarization, JSON-Correctness); runs via `deepeval test run <file.py>` with `assert_test()` per test or `evaluate()` for batch; integrates Confident-AI dashboard. Use when the user prefers pytest workflow, works with RAG and needs faithfulness/contextual metrics out-of-the-box, or wants a managed dashboard.
+description: "Authors and runs DeepEval — pytest-native LLM eval framework with `LLMTestCase` (input + actual_output + expected_output + retrieval_context) and ~11 built-in metrics (G-Eval, Answer-Relevancy, Faithfulness, Contextual-Recall / Precision / Relevancy, Hallucination, Bias, Toxicity, Summarization, JSON-Correctness); runs via `deepeval test run <file.py>` with `assert_test()` per test or `evaluate()` for batch; integrates Confident-AI dashboard. Use when the user prefers pytest workflow, works with RAG and needs faithfulness/contextual metrics out-of-the-box, or wants a managed dashboard."
 rating: 23
 d6: 4
 archetype: S1

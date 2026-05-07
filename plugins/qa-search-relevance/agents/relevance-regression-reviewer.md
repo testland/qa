@@ -1,7 +1,7 @@
 ---
 name: relevance-regression-reviewer
-description: Adversarial reviewer of search relevance changes (algorithm tuning, schema changes, embedding model upgrade). Runs the team's judgment list against before+after; computes per-metric delta (NDCG / MRR / Recall@k); flags regressions per-query; suggests new judgments needed when too many docs go unrated. Refuses to ✅ when net relevance drops or when judgment coverage falls below threshold.
-tools: Read, Grep, Glob, Bash(jq *), Bash(curl *)
+description: "Adversarial reviewer of search relevance changes (algorithm tuning, schema changes, embedding model upgrade). Runs the team's judgment list against before+after; computes per-metric delta (NDCG / MRR / Recall@k); flags regressions per-query; suggests new judgments needed when too many docs go unrated. Refuses to ✅ when net relevance drops or when judgment coverage falls below threshold."
+tools: "Read, Grep, Glob, Bash(jq *), Bash(curl *)"
 model: sonnet
 skills:
   - elasticsearch-relevance-tests

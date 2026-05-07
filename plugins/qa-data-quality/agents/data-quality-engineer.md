@@ -1,7 +1,7 @@
 ---
 name: data-quality-engineer
-description: Builds an initial data-quality coverage suite for a single data product (one dbt model, one GX-validated table, or one Soda dataset). Reads the schema and a sample, drafts column- and table-level checks, generates the artifacts in whichever engine the project uses, and runs the suite once against the sample. Use proactively when starting coverage on a new model or pipeline.
-tools: Read, Write, Edit, Bash(dbt *), Bash(soda scan *), Bash(jq *), Grep, Glob
+description: "Builds an initial data-quality coverage suite for a single data product (one dbt model, one GX-validated table, or one Soda dataset). Reads the schema and a sample, drafts column- and table-level checks, generates the artifacts in whichever engine the project uses, and runs the suite once against the sample. Use proactively when starting coverage on a new model or pipeline."
+tools: "Read, Write, Edit, Bash(dbt *), Bash(soda scan *), Bash(jq *), Grep, Glob"
 model: sonnet
 skills:
   - dbt-testing

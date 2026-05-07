@@ -1,6 +1,6 @@
 ---
 name: playwright-fixture-builder
-description: Builds reusable Playwright fixtures via `test.extend` — picks the right scope (test vs worker), wires the `use(value)` setup/teardown split, composes auth (storageState per worker), database (per-test snapshot/restore), and feature-flag fixtures into one custom `test` object the whole suite imports. Outputs the `fixtures.ts` file plus per-fixture review notes (scope rationale, teardown ordering, `workerInfo.workerIndex` for parallel isolation). Use when the suite has copy-pasted `beforeEach` boilerplate that should be a fixture, or when adding auth / db / flag setup that crosses many specs.
+description: "Builds reusable Playwright fixtures via `test.extend` — picks the right scope (test vs worker), wires the `use(value)` setup/teardown split, composes auth (storageState per worker), database (per-test snapshot/restore), and feature-flag fixtures into one custom `test` object the whole suite imports. Outputs the `fixtures.ts` file plus per-fixture review notes (scope rationale, teardown ordering, `workerInfo.workerIndex` for parallel isolation). Use when the suite has copy-pasted `beforeEach` boilerplate that should be a fixture, or when adding auth / db / flag setup that crosses many specs."
 rating: 23
 d6: 4
 archetype: S3

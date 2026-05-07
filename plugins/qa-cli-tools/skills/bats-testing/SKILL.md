@@ -1,6 +1,6 @@
 ---
 name: bats-testing
-description: Configures Bats-core (Bash Automated Testing System) for testing CLI tools, shell scripts, and Unix programs — `.bats` test files with `@test` blocks, `run` to capture command exit + output, `[ "$status" -eq 0 ]` and `[ "$output" = ... ]` assertions, `setup`/`teardown` hooks, `load` for shared helpers, parallel execution via `--jobs N`, TAP-compliant output for CI integration. Use whenever the unit-under-test is a shell script, CLI binary, or anything invokable from Bash.
+description: "Configures Bats-core (Bash Automated Testing System) for testing CLI tools, shell scripts, and Unix programs — `.bats` test files with `@test` blocks, `run` to capture command exit + output, `[ \"$status\" -eq 0 ]` and `[ \"$output\" = ... ]` assertions, `setup`/`teardown` hooks, `load` for shared helpers, parallel execution via `--jobs N`, TAP-compliant output for CI integration. Use whenever the unit-under-test is a shell script, CLI binary, or anything invokable from Bash."
 rating: 22
 d6: 4
 archetype: S1

@@ -1,6 +1,6 @@
 ---
 name: sonarqube-quality-perspective
-description: Run SonarQube/SonarCloud against production code to surface Code Smells, Bugs, and Maintainability ratings — the quality lens (cross-ref qa-sast for the Vulnerability/Hotspot lens). Production-only scope via sonar.exclusions; test code is owned by qa-test-review.
+description: "Run SonarQube/SonarCloud against production code to surface Code Smells, Bugs, and Maintainability ratings — the quality lens (cross-ref qa-sast for the Vulnerability/Hotspot lens). Production-only scope via sonar.exclusions; test code is owned by qa-test-review."
 type: skill
 archetype: S1
 rating: 23

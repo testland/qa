@@ -1,9 +1,9 @@
 ---
 name: definition-of-done-checker
-description: Adversarial reviewer that validates a user story or PR against a configurable Definition of Done checklist before it's marked ready for development (or ready for release). Reads the team's `docs/definition-of-done.md` (or an inline DoD), checks every item against the story / PR artifacts, and rejects with a per-item rationale on any miss. Use proactively at sprint planning (story → ready) and at sprint review (PR → done).
-tools: Read, Grep, Glob, Bash(git diff *), Bash(git log *)
+description: "Adversarial reviewer that validates a user story or PR against a configurable Definition of Done checklist before it's marked ready for development (or ready for release). Reads the team's `docs/definition-of-done.md` (or an inline DoD), checks every item against the story / PR artifacts, and rejects with a per-item rationale on any miss. Use proactively at sprint planning (story → ready) and at sprint review (PR → done)."
+tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
-skills: []
+skills: '[]'
 rating: 25
 d6: 4
 archetype: A3

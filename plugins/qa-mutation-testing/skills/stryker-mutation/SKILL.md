@@ -1,6 +1,6 @@
 ---
 name: stryker-mutation
-description: Configures StrykerJS for mutation testing of JavaScript / TypeScript / React / Vue / Svelte / Node — picks the test-runner plugin (`@stryker-mutator/jest-runner`, `mocha-runner`, `vitest-runner`, `karma-runner`), authors `stryker.conf.json` with mutate globs + thresholds, runs incremental mode for PRs (only mutate changed files), and reports the mutation score. Use when a JS/TS test suite has ≥80% line coverage and the team wants to verify the tests actually catch bugs (not just touch lines).
+description: "Configures StrykerJS for mutation testing of JavaScript / TypeScript / React / Vue / Svelte / Node — picks the test-runner plugin (`@stryker-mutator/jest-runner`, `mocha-runner`, `vitest-runner`, `karma-runner`), authors `stryker.conf.json` with mutate globs + thresholds, runs incremental mode for PRs (only mutate changed files), and reports the mutation score. Use when a JS/TS test suite has ≥80% line coverage and the team wants to verify the tests actually catch bugs (not just touch lines)."
 rating: 23
 d6: 4
 archetype: S1

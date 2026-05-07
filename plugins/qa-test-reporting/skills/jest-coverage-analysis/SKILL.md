@@ -1,6 +1,6 @@
 ---
 name: jest-coverage-analysis
-description: Configures Jest's built-in coverage (Istanbul-instrumented `babel` provider or V8-native `v8` provider), wires the right `coverageReporters` for downstream consumption (`lcov` for SaaS / cross-tool, `cobertura` for Jenkins, `text-summary` for terminal, `html` for human review), authors per-file `coverageThreshold` rules that focus the gate on critical paths (vs the global-only foot-gun), and parses the per-file JSON output for PR-time deltas. Use when the project tests with Jest (or Vitest, which uses the same Istanbul/V8 provider) and the team needs PR-time coverage signal that's both local-runnable and CI-gateable.
+description: "Configures Jest's built-in coverage (Istanbul-instrumented `babel` provider or V8-native `v8` provider), wires the right `coverageReporters` for downstream consumption (`lcov` for SaaS / cross-tool, `cobertura` for Jenkins, `text-summary` for terminal, `html` for human review), authors per-file `coverageThreshold` rules that focus the gate on critical paths (vs the global-only foot-gun), and parses the per-file JSON output for PR-time deltas. Use when the project tests with Jest (or Vitest, which uses the same Istanbul/V8 provider) and the team needs PR-time coverage signal that's both local-runnable and CI-gateable."
 rating: 24
 d6: 4
 archetype: S1

@@ -1,7 +1,7 @@
 ---
 name: db-snapshot-restore
-description: Action-taking agent that gives integration tests a clean database between cases — captures a baseline `snapshot` once (template DB for Postgres, mysqldump for MySQL, JSON dump for Mongo), then `restore`s the test DB from that baseline before each test (or each suite), tearing down all open sessions first so the rebuild succeeds. Also wires the per-test `BEGIN ... ROLLBACK` shortcut when the ORM cooperates and the schema doesn't change. Use when integration tests share a database and the team needs per-test isolation faster than `db drop && db migrate`.
-tools: Read, Write, Edit, Grep, Glob, Bash(psql *), Bash(createdb *), Bash(dropdb *), Bash(pg_dump *), Bash(pg_restore *), Bash(mysql *), Bash(mysqldump *), Bash(mongoimport *), Bash(mongodump *), Bash(docker compose *), Bash(docker exec *)
+description: "Action-taking agent that gives integration tests a clean database between cases — captures a baseline `snapshot` once (template DB for Postgres, mysqldump for MySQL, JSON dump for Mongo), then `restore`s the test DB from that baseline before each test (or each suite), tearing down all open sessions first so the rebuild succeeds. Also wires the per-test `BEGIN ... ROLLBACK` shortcut when the ORM cooperates and the schema doesn't change. Use when integration tests share a database and the team needs per-test isolation faster than `db drop && db migrate`."
+tools: "Read, Write, Edit, Grep, Glob, Bash(psql *), Bash(createdb *), Bash(dropdb *), Bash(pg_dump *), Bash(pg_restore *), Bash(mysql *), Bash(mysqldump *), Bash(mongoimport *), Bash(mongodump *), Bash(docker compose *), Bash(docker exec *)"
 model: sonnet
 skills:
   - testcontainers

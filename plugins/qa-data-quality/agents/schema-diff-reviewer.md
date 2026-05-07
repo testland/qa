@@ -1,7 +1,7 @@
 ---
 name: schema-diff-reviewer
-description: Reviews a database-schema diff (PR migration files or `dbt run-operation` output) for breaking changes vs additive changes, missing data tests on new/changed columns, and downstream consumer impact. Use proactively before merging schema migrations. Returns a Critical / Warning / Info findings table with file:line references.
-tools: Read, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(git show *)
+description: "Reviews a database-schema diff (PR migration files or `dbt run-operation` output) for breaking changes vs additive changes, missing data tests on new/changed columns, and downstream consumer impact. Use proactively before merging schema migrations. Returns a Critical / Warning / Info findings table with file:line references."
+tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(git show *)"
 model: sonnet
 skills:
   - dbt-testing

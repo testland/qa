@@ -1,6 +1,6 @@
 ---
 name: docker-compose-test
-description: Authors a `compose.test.yaml` for tests — declares the SUT plus its real backing services as one declarative topology, wires healthcheck-driven `depends_on: condition: service_healthy` start ordering, isolates parallel CI jobs via per-job `--project-name`, gates the test step on `--wait` / `--wait-timeout` / `--exit-code-from`, and tears the stack down deterministically with `down --volumes --remove-orphans`. Use when the test environment is multi-service (app + db + cache + queue) and the topology is best expressed in YAML rather than imperative test code.
+description: "Authors a `compose.test.yaml` for tests — declares the SUT plus its real backing services as one declarative topology, wires healthcheck-driven `depends_on: condition: service_healthy` start ordering, isolates parallel CI jobs via per-job `--project-name`, gates the test step on `--wait` / `--wait-timeout` / `--exit-code-from`, and tears the stack down deterministically with `down --volumes --remove-orphans`. Use when the test environment is multi-service (app + db + cache + queue) and the topology is best expressed in YAML rather than imperative test code."
 rating: 24
 d6: 4
 archetype: S1

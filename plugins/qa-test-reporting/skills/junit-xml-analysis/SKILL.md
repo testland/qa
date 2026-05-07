@@ -1,6 +1,6 @@
 ---
 name: junit-xml-analysis
-description: Parses JUnit-format XML reports (the de-facto interchange format every CI ingests — Jenkins, GitHub Actions, GitLab, Buildkite, CircleCI), extracts per-suite + per-case metrics (passed / failed / errored / skipped, time, classname, message, stack), groups failures by classname for trend analysis, and distinguishes "new failures vs flakes" by cross-referencing rerun elements (`<flakyFailure>`, `<rerunFailure>`). Use when the team needs PR-time test analytics from any framework that emits JUnit XML — almost all of them.
+description: "Parses JUnit-format XML reports (the de-facto interchange format every CI ingests — Jenkins, GitHub Actions, GitLab, Buildkite, CircleCI), extracts per-suite + per-case metrics (passed / failed / errored / skipped, time, classname, message, stack), groups failures by classname for trend analysis, and distinguishes \"new failures vs flakes\" by cross-referencing rerun elements (`<flakyFailure>`, `<rerunFailure>`). Use when the team needs PR-time test analytics from any framework that emits JUnit XML — almost all of them."
 rating: 25
 d6: 4
 archetype: S1

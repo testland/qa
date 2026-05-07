@@ -1,7 +1,7 @@
 ---
 name: release-readiness-checker
-description: Builder/scaffolder agent that runs a configurable gate suite before a release — reads `release-readiness.yml` (which defines the gates: smoke passed, coverage met, no open critical bugs, threat-model approved, RBAC change reviewed, etc.), executes each gate, aggregates the verdicts, and emits a go / no-go decision with per-gate evidence. Use as the precursor to `release-engineer`'s runbook execution — release-readiness verifies "should we even start the runbook?" while release-engineer is "now we're starting; conduct the canary + rollout."
-tools: Read, Bash(gh issue *), Bash(gh pr *), Bash(jq *), Bash(curl *)
+description: "Builder/scaffolder agent that runs a configurable gate suite before a release — reads `release-readiness.yml` (which defines the gates: smoke passed, coverage met, no open critical bugs, threat-model approved, RBAC change reviewed, etc.), executes each gate, aggregates the verdicts, and emits a go / no-go decision with per-gate evidence. Use as the precursor to `release-engineer`''''s runbook execution — release-readiness verifies \"should we even start the runbook?\" while release-engineer is \"now we''''re starting; conduct the canary + rollout."
+tools: "Read, Bash(gh issue *), Bash(gh pr *), Bash(jq *), Bash(curl *)"
 model: sonnet
 skills:
   - definition-of-done

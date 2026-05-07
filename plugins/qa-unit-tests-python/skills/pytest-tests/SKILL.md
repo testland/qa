@@ -1,6 +1,6 @@
 ---
 name: pytest-tests
-description: Configures and runs pytest — the de facto Python test framework with fixture-based dependency injection (`@pytest.fixture` with scopes module/session/function), parametrize for table-driven tests (`@pytest.mark.parametrize`), markers (`@pytest.mark.skip` / `xfail` / `slow`), `conftest.py` for shared fixtures, plugin ecosystem (pytest-cov, pytest-asyncio, pytest-mock, pytest-xdist), `--lf`/`--ff` for fail-loop, coverage gating. Use when working with Python and needing the modern test framework.
+description: "Configures and runs pytest — the de facto Python test framework with fixture-based dependency injection (`@pytest.fixture` with scopes module/session/function), parametrize for table-driven tests (`@pytest.mark.parametrize`), markers (`@pytest.mark.skip` / `xfail` / `slow`), `conftest.py` for shared fixtures, plugin ecosystem (pytest-cov, pytest-asyncio, pytest-mock, pytest-xdist), `--lf`/`--ff` for fail-loop, coverage gating. Use when working with Python and needing the modern test framework."
 rating: 24
 d6: 4
 archetype: S1

@@ -1,9 +1,9 @@
 ---
 name: defect-clusterer
-description: Read-only agent that groups a backlog of bug reports into root-cause clusters using stack-trace overlap, summary text similarity, and shared error fingerprints. Returns a cluster table with each cluster's representative bug, member count, and shared signal. Use when triaging a long bug backlog (50+ open issues) to find duplicates and identify the few root causes producing the bulk of the noise.
-tools: Read, Grep, Glob, Bash(jq *), Bash(grep *)
+description: "Read-only agent that groups a backlog of bug reports into root-cause clusters using stack-trace overlap, summary text similarity, and shared error fingerprints. Returns a cluster table with each cluster's representative bug, member count, and shared signal. Use when triaging a long bug backlog (50+ open issues) to find duplicates and identify the few root causes producing the bulk of the noise."
+tools: "Read, Grep, Glob, Bash(jq *), Bash(grep *)"
 model: sonnet
-skills: []
+skills: '[]'
 rating: 22
 d6: 3
 archetype: A1

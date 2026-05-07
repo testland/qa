@@ -1,6 +1,6 @@
 ---
 name: html-to-pdf-regression
-description: Cross-engine HTML→PDF regression — generate the same source HTML through Chromium `page.pdf()`, WeasyPrint (Python, BSD), and wkhtmltopdf, then compare per-engine outputs page-by-page. Catches engine-specific font embedding bugs, page-break drift, @page rule support gaps. Pair with pdf-snapshot-tester for the per-engine pixel diff.
+description: "Cross-engine HTML→PDF regression — generate the same source HTML through Chromium `page.pdf()`, WeasyPrint (Python, BSD), and wkhtmltopdf, then compare per-engine outputs page-by-page. Catches engine-specific font embedding bugs, page-break drift, @page rule support gaps. Pair with pdf-snapshot-tester for the per-engine pixel diff."
 type: skill
 archetype: S1
 rating: 22

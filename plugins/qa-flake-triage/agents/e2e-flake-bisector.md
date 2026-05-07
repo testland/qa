@@ -1,7 +1,7 @@
 ---
 name: e2e-flake-bisector
-description: Runs a target end-to-end test N times under varied conditions (worker isolation, test order, viewport, network throttling, parallelism) to identify the axis along which the flake reproduces. Returns a probable root cause classified against the 8 flake patterns plus a numeric reproduction rate per axis. Use when a test has been flagged flaky and the team needs to know which condition triggers the failure.
-tools: Read, Grep, Glob, Bash(npx playwright test *), Bash(jest *), Bash(npx cypress *), Bash(jq *)
+description: "Runs a target end-to-end test N times under varied conditions (worker isolation, test order, viewport, network throttling, parallelism) to identify the axis along which the flake reproduces. Returns a probable root cause classified against the 8 flake patterns plus a numeric reproduction rate per axis. Use when a test has been flagged flaky and the team needs to know which condition triggers the failure."
+tools: "Read, Grep, Glob, Bash(npx playwright test *), Bash(jest *), Bash(npx cypress *), Bash(jq *)"
 model: sonnet
 skills:
   - flake-pattern-reference

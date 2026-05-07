@@ -1,6 +1,6 @@
 ---
 name: data-contract-extractor
-description: Reads a data-product spec (data PRD, dataset README, lineage doc) and emits a structured data contract — schema (columns + types + nullability + PII flags), freshness SLA, volume bounds, distribution invariants, and ownership. The contract is consumable by the qa-data-quality plugin's dbt-testing / great-expectations / soda-checks skills as their assertion baseline. Use when scoping a new data product or formalizing assertions on an existing one.
+description: "Reads a data-product spec (data PRD, dataset README, lineage doc) and emits a structured data contract — schema (columns + types + nullability + PII flags), freshness SLA, volume bounds, distribution invariants, and ownership. The contract is consumable by the qa-data-quality plugin's dbt-testing / great-expectations / soda-checks skills as their assertion baseline. Use when scoping a new data product or formalizing assertions on an existing one."
 rating: 24
 d6: 4
 archetype: S3

@@ -1,6 +1,6 @@
 ---
 name: jqwik-testing
-description: Authors property-based tests for the JVM (Java + Kotlin) using jqwik — wires `@Property` test methods, `@ForAll` parameter annotations, `Arbitraries.integers/strings/etc` generators, custom `@Provide` arbitraries, and the JUnit 5 platform integration. Use when a JVM project needs PBT — alternative to JUnit-QuickCheck and Vavr's property-checking; tightly integrates with JUnit 5 so property tests run alongside conventional unit tests in the same Maven / Gradle pipeline.
+description: "Authors property-based tests for the JVM (Java + Kotlin) using jqwik — wires `@Property` test methods, `@ForAll` parameter annotations, `Arbitraries.integers/strings/etc` generators, custom `@Provide` arbitraries, and the JUnit 5 platform integration. Use when a JVM project needs PBT — alternative to JUnit-QuickCheck and Vavr's property-checking; tightly integrates with JUnit 5 so property tests run alongside conventional unit tests in the same Maven / Gradle pipeline."
 rating: 23
 d6: 4
 archetype: S1

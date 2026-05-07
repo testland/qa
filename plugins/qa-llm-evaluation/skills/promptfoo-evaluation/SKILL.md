@@ -1,6 +1,6 @@
 ---
 name: promptfoo-evaluation
-description: Authors and runs Promptfoo evals for LLM prompts and RAG pipelines — wires `promptfooconfig.yaml` providers + prompts + tests + assertions (deterministic `equals` / `contains` / `is-json` / `regex`, semantic `similar`, model-graded `llm-rubric` / `factuality` / `g-eval`, performance `latency` / `cost`, custom `javascript` / `python`), runs `npx promptfoo eval`, views HTML report via `promptfoo view`, and integrates CI for regression gating. Use when the user runs Promptfoo, asks about prompt regression suites, or needs an eval-driven workflow for LLM-backed features.
+description: "Authors and runs Promptfoo evals for LLM prompts and RAG pipelines — wires `promptfooconfig.yaml` providers + prompts + tests + assertions (deterministic `equals` / `contains` / `is-json` / `regex`, semantic `similar`, model-graded `llm-rubric` / `factuality` / `g-eval`, performance `latency` / `cost`, custom `javascript` / `python`), runs `npx promptfoo eval`, views HTML report via `promptfoo view`, and integrates CI for regression gating. Use when the user runs Promptfoo, asks about prompt regression suites, or needs an eval-driven workflow for LLM-backed features."
 rating: 24
 d6: 4
 archetype: S1

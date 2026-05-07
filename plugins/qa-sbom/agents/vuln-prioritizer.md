@@ -1,7 +1,7 @@
 ---
 name: vuln-prioritizer
-description: Adversarial prioritizer of multi-tool container + SBOM vulnerability scan output (Grype + Trivy + Snyk container + OSV-Scanner SBOM mode). Combines CVSS + EPSS + CISA KEV + VEX status assertions + reachability heuristic into a priority bucket: Fix-Now / Fix-This-Sprint / Fix-Backlog / Accept-Risk. Refuses to skip CVEs in CISA KEV. Refuses waivers without `expires:` + `approved_by:` + `reason:`. Sister to qa-sca/sca-prioritizer (that one targets dependency-package CVEs from source; this one targets container-image CVEs from SBOMs).
-tools: Read, Bash(jq *), WebFetch
+description: "Adversarial prioritizer of multi-tool container + SBOM vulnerability scan output (Grype + Trivy + Snyk container + OSV-Scanner SBOM mode). Combines CVSS + EPSS + CISA KEV + VEX status assertions + reachability heuristic into a priority bucket: Fix-Now / Fix-This-Sprint / Fix-Backlog / Accept-Risk. Refuses to skip CVEs in CISA KEV. Refuses waivers without `expires:` + `approved_by:` + `reason:`. Sister to qa-sca/sca-prioritizer (that one targets dependency-package CVEs from source; this one targets container-image CVEs from SBOMs)."
+tools: "Read, Bash(jq *), WebFetch"
 model: sonnet
 skills:
   - syft-generation

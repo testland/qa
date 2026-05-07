@@ -1,6 +1,6 @@
 ---
 name: schemathesis-fuzzing
-description: Generates property-based API tests automatically from an OpenAPI 2/3.x or GraphQL schema using Schemathesis, runs them via the `schemathesis run` CLI or as a pytest decorator, configures the canonical checks (status_code_conformance, response_schema_conformance, content_type_conformance, response_headers_conformance, not_a_server_error), and gates CI on schema-conformance failures plus 5xx detection. Use when the project ships an OpenAPI or GraphQL schema and the team wants schema-driven coverage that scales as the API evolves.
+description: "Generates property-based API tests automatically from an OpenAPI 2/3.x or GraphQL schema using Schemathesis, runs them via the `schemathesis run` CLI or as a pytest decorator, configures the canonical checks (status_code_conformance, response_schema_conformance, content_type_conformance, response_headers_conformance, not_a_server_error), and gates CI on schema-conformance failures plus 5xx detection. Use when the project ships an OpenAPI or GraphQL schema and the team wants schema-driven coverage that scales as the API evolves."
 rating: 25
 d6: 4
 archetype: S1

@@ -1,6 +1,6 @@
 ---
 name: graphql-schema-regression
-description: Diffs two GraphQL schemas with `graphql-inspector diff`, classifies each change as BREAKING / DANGEROUS / NON_BREAKING, and applies opt-in rules (suppress-removal-of-deprecated-field, consider-usage, ignore-description-changes) to gate CI on schema regressions. Use when reviewing GraphQL schema changes in a PR or evaluating Federation supergraph drift.
+description: "Diffs two GraphQL schemas with `graphql-inspector diff`, classifies each change as BREAKING / DANGEROUS / NON_BREAKING, and applies opt-in rules (suppress-removal-of-deprecated-field, consider-usage, ignore-description-changes) to gate CI on schema regressions. Use when reviewing GraphQL schema changes in a PR or evaluating Federation supergraph drift."
 rating: 24
 d6: 4
 archetype: S1

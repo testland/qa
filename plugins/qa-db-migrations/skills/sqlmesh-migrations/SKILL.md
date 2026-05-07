@@ -1,6 +1,6 @@
 ---
 name: sqlmesh-migrations
-description: Authors and runs SQLMesh — data-transformation framework with version control, virtual data environments, automatic breaking-vs-non-breaking change classification, and downstream impact analysis; supports `sqlmesh init` / `plan` / `apply` / `run` / `audit` / `test` lifecycle; covers DuckDB, Postgres, Snowflake, BigQuery, Redshift, Databricks. Use when the user works with SQL data pipelines (warehouse + dbt-adjacent ELT), needs safer model evolution than dbt's deploy-and-pray, or wants the strongest impact-analysis story in the OSS data tooling space.
+description: "Authors and runs SQLMesh — data-transformation framework with version control, virtual data environments, automatic breaking-vs-non-breaking change classification, and downstream impact analysis; supports `sqlmesh init` / `plan` / `apply` / `run` / `audit` / `test` lifecycle; covers DuckDB, Postgres, Snowflake, BigQuery, Redshift, Databricks. Use when the user works with SQL data pipelines (warehouse + dbt-adjacent ELT), needs safer model evolution than dbt's deploy-and-pray, or wants the strongest impact-analysis story in the OSS data tooling space."
 rating: 23
 d6: 4
 archetype: S1

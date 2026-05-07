@@ -1,6 +1,6 @@
 ---
 name: vitest-tests
-description: Configures and runs Vitest — Vite-native unit framework with Jest-compatible API (`expect`, `vi.fn`, `vi.mock`, `vi.spyOn`); reads `vite.config.*` so existing Vite plugins work; supports in-source testing via `if (import.meta.vitest)`, browser-mode UI for headed tests, type-checking via `vitest --typecheck`, native ESM, and coverage via v8 (default) or istanbul providers. Use when the user works with Vite-based projects (Vue, Svelte, Solid, modern React with Vite) or wants Jest-compatible API with faster Vite-native runs.
+description: "Configures and runs Vitest — Vite-native unit framework with Jest-compatible API (`expect`, `vi.fn`, `vi.mock`, `vi.spyOn`); reads `vite.config.*` so existing Vite plugins work; supports in-source testing via `if (import.meta.vitest)`, browser-mode UI for headed tests, type-checking via `vitest --typecheck`, native ESM, and coverage via v8 (default) or istanbul providers. Use when the user works with Vite-based projects (Vue, Svelte, Solid, modern React with Vite) or wants Jest-compatible API with faster Vite-native runs."
 rating: 24
 d6: 4
 archetype: S1

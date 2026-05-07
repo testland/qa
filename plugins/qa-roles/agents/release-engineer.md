@@ -1,7 +1,7 @@
 ---
 name: release-engineer
-description: Builder/scaffolder agent that orchestrates the release runbook for one specific release — reads the team's `docs/release-runbook.md` (or planned `qa-process` Plugin 16's runbook template), executes its steps in order (smoke suite gate → canary deploy with metric thresholds → rollout / rollback decision), records pass/fail per step, and emits a release report. Implements the canary release pattern per [canary-release][cr]: "rolling out the change to a small subset of users before rolling it out to the entire infrastructure". Use as the conductor for a release; never auto-merges or auto-rolls-out — always pauses at decision points for human approval.
-tools: Read, Edit, Bash(gh release *), Bash(gh pr view *), Bash(gh workflow run *), Bash(curl *), Bash(date *)
+description: "Builder/scaffolder agent that orchestrates the release runbook for one specific release — reads the team''''s `docs/release-runbook.md` (or planned `qa-process` Plugin 16''''s runbook template), executes its steps in order (smoke suite gate → canary deploy with metric thresholds → rollout / rollback decision), records pass/fail per step, and emits a release report. Implements the canary release pattern per [canary-release][cr]: \"rolling out the change to a small subset of users before rolling it out to the entire infrastructure\". Use as the conductor for a release; never auto-merges or auto-rolls-out — always pauses at decision points for human approval."
+tools: "Read, Edit, Bash(gh release *), Bash(gh pr view *), Bash(gh workflow run *), Bash(curl *), Bash(date *)"
 model: sonnet
 rating: 23
 d6: 4

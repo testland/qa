@@ -1,6 +1,6 @@
 ---
 name: gherkin-from-stories
-description: Build-an-X workflow that converts user stories into Gherkin scenarios — extracts the actor / capability / value triple from "As a … I want … so that …", maps acceptance criteria to Scenario blocks, identifies parameterizable axes for Scenario Outlines, and emits a Feature file ready for `bdd-step-library-curator`-curated step definitions. Sister to `acceptance-criteria-extractor` (qa-shift-left) — that one handles the AC layer; this skill operates at the user-story layer and produces Gherkin directly.
+description: "Build-an-X workflow that converts user stories into Gherkin scenarios — extracts the actor / capability / value triple from \"As a … I want … so that …\", maps acceptance criteria to Scenario blocks, identifies parameterizable axes for Scenario Outlines, and emits a Feature file ready for `bdd-step-library-curator`-curated step definitions. Sister to `acceptance-criteria-extractor` (qa-shift-left) — that one handles the AC layer; this skill operates at the user-story layer and produces Gherkin directly."
 rating: 22
 d6: 3
 archetype: S3

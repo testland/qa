@@ -1,6 +1,6 @@
 ---
 name: feature-flag-test-harness
-description: Builds a test harness that runs the same suite under every relevant flag combination — picks the minimum cover (single flags + pairwise interactions where the team marks them, not the full 2^N cartesian product), wires an OpenFeature in-memory provider so the suite never hits the production flag service, runs each combination as its own labeled CI matrix shard, and emits a per-combination result matrix. Use when a feature behind a flag must be verified on AND off (release toggles + experiment toggles per Hodgson) and the team wants those runs deterministic and parallel.
+description: "Builds a test harness that runs the same suite under every relevant flag combination — picks the minimum cover (single flags + pairwise interactions where the team marks them, not the full 2^N cartesian product), wires an OpenFeature in-memory provider so the suite never hits the production flag service, runs each combination as its own labeled CI matrix shard, and emits a per-combination result matrix. Use when a feature behind a flag must be verified on AND off (release toggles + experiment toggles per Hodgson) and the team wants those runs deterministic and parallel."
 rating: 23
 d6: 4
 archetype: S3

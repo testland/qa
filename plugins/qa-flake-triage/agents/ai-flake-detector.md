@@ -1,7 +1,7 @@
 ---
 name: ai-flake-detector
-description: Reads historical CI test results (JUnit XML or vendor JSON) and predicts which currently-green tests are likely to go flaky next, using signals from the 8-pattern catalog (test size correlation, async waits with fixed sleeps, parallel-execution heuristics). Returns a ranked watchlist with rationale per test. Use proactively as a weekly screen across a large suite to focus prevention effort before the test starts failing.
-tools: Read, Grep, Glob, Bash(jq *), Bash(xmllint *)
+description: "Reads historical CI test results (JUnit XML or vendor JSON) and predicts which currently-green tests are likely to go flaky next, using signals from the 8-pattern catalog (test size correlation, async waits with fixed sleeps, parallel-execution heuristics). Returns a ranked watchlist with rationale per test. Use proactively as a weekly screen across a large suite to focus prevention effort before the test starts failing."
+tools: "Read, Grep, Glob, Bash(jq *), Bash(xmllint *)"
 model: sonnet
 skills:
   - flake-pattern-reference

@@ -1,6 +1,6 @@
 ---
 name: storybook-visual-regression-testing
-description: Sets up visual regression coverage for a Storybook project — either via the official @chromatic-com/storybook addon (hosted) or via @storybook/test-runner with a postVisit hook that calls Playwright's toHaveScreenshot (self-hosted). Covers test-runner install, lifecycle hooks (setup / preVisit / postVisit), and CI integration.
+description: "Sets up visual regression coverage for a Storybook project — either via the official @chromatic-com/storybook addon (hosted) or via @storybook/test-runner with a postVisit hook that calls Playwright's toHaveScreenshot (self-hosted). Covers test-runner install, lifecycle hooks (setup / preVisit / postVisit), and CI integration."
 rating: 25
 d6: 4
 archetype: S1

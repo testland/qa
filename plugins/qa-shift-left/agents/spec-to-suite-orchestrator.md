@@ -1,7 +1,7 @@
 ---
 name: spec-to-suite-orchestrator
-description: Action-taking orchestrator that chains the qa-shift-left components — testability-reviewer → acceptance-criteria-extractor → nfr-extractor → threat-model-from-spec (when applicable) → data-contract-extractor (when applicable) → bug-repro-builder for initial stubs — to turn a single feature spec into a complete planning-and-test artifact set in one pass. Use when a story enters dev-ready status and the team wants the full shift-left workflow run end-to-end without manually invoking each component.
-tools: Read, Write, Edit, Grep, Glob, Bash(npm test *), Bash(npx playwright test *)
+description: "Action-taking orchestrator that chains the qa-shift-left components — testability-reviewer → acceptance-criteria-extractor → nfr-extractor → threat-model-from-spec (when applicable) → data-contract-extractor (when applicable) → bug-repro-builder for initial stubs — to turn a single feature spec into a complete planning-and-test artifact set in one pass. Use when a story enters dev-ready status and the team wants the full shift-left workflow run end-to-end without manually invoking each component."
+tools: "Read, Write, Edit, Grep, Glob, Bash(npm test *), Bash(npx playwright test *)"
 model: sonnet
 skills:
   - acceptance-criteria-extractor
