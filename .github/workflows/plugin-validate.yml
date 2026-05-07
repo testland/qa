@@ -19,7 +19,7 @@ jobs:
         run: curl -fsSL https://json.schemastore.org/claude-code-marketplace.json -o /tmp/marketplace-schema.json
 
       - name: Validate marketplace.json
-        run: ajv validate -s /tmp/marketplace-schema.json -d .claude-plugin/marketplace.json --spec=draft7 --all-errors
+        run: ajv validate -c ajv-formats -s /tmp/marketplace-schema.json -d .claude-plugin/marketplace.json --spec=draft7 --all-errors
 
       - name: Fetch plugin manifest schema
         run: curl -fsSL https://json.schemastore.org/claude-code-plugin-manifest.json -o /tmp/plugin-schema.json
@@ -29,7 +29,7 @@ jobs:
           set -e
           fail=0
           for f in plugins/*/.claude-plugin/plugin.json; do
-            if ! ajv validate -s /tmp/plugin-schema.json -d "$f" --spec=draft7 --all-errors; then
+            if ! ajv validate -c ajv-formats -s /tmp/plugin-schema.json -d "$f" --spec=draft7 --all-errors; then
               echo "::error file=$f::schema validation failed"
               fail=1
             fi
