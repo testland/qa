@@ -1,0 +1,45 @@
+name: enforce-version-bump
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    name: Require plugin.json version bump for touched plugins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Compare plugin.json versions
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -e
+          touched=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -oE '^plugins/[^/]+' | sort -u || true)
+          if [ -z "$touched" ]; then
+            echo "No plugin files touched in this PR; nothing to enforce."
+            exit 0
+          fi
+          fail=0
+          for plugin in $touched; do
+            manifest="$plugin/.claude-plugin/plugin.json"
+            if [ ! -f "$manifest" ]; then
+              continue
+            fi
+            before=$(git show "$BASE_SHA:$manifest" 2>/dev/null | jq -r .version 2>/dev/null || echo "MISSING")
+            after=$(jq -r .version "$manifest")
+            if [ "$before" = "MISSING" ]; then
+              echo "::notice file=$manifest::new plugin (no base version); skipping bump check"
+              continue
+            fi
+            if [ "$before" = "$after" ]; then
+              echo "::error file=$manifest::version not bumped (still $before). Please bump $manifest version when changing files inside $plugin."
+              fail=1
+            else
+              echo "OK: $plugin $before -> $after"
+            fi
+          done
+          exit $fail

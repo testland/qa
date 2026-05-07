@@ -1,0 +1,66 @@
+name: plugin-validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  schema-check:
+    name: Validate marketplace.json + plugin.json against schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli ajv-formats
+
+      - name: Fetch marketplace schema
+        run: curl -fsSL https://json.schemastore.org/claude-code-marketplace.json -o /tmp/marketplace-schema.json
+
+      - name: Validate marketplace.json
+        run: ajv validate -s /tmp/marketplace-schema.json -d .claude-plugin/marketplace.json --spec=draft2020 --all-errors
+
+      - name: Fetch plugin manifest schema
+        run: curl -fsSL https://json.schemastore.org/claude-code-plugin-manifest.json -o /tmp/plugin-schema.json
+
+      - name: Validate every plugin.json
+        run: |
+          set -e
+          fail=0
+          for f in plugins/*/.claude-plugin/plugin.json; do
+            if ! ajv validate -s /tmp/plugin-schema.json -d "$f" --spec=draft2020 --all-errors; then
+              echo "::error file=$f::schema validation failed"
+              fail=1
+            fi
+          done
+          exit $fail
+
+  claude-plugin-validate:
+    name: Run claude plugin validate (best-effort)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run claude plugin validate per plugin
+        run: |
+          set +e
+          # Confirm the subcommand exists; exit cleanly if not (CLI surface evolves).
+          if ! claude plugin --help >/dev/null 2>&1; then
+            echo "::warning::claude plugin subcommand not available in installed CLI; skipping."
+            exit 0
+          fi
+          fail=0
+          for plugin in plugins/*/; do
+            echo "Validating $plugin"
+            claude plugin validate "$plugin" || fail=1
+          done
+          exit $fail

@@ -25,3 +25,8 @@ jobs:
 
       - name: Validate composition graph (agent -> skill preloads)
         run: python3 scripts/composition-graph.py
+
+      - name: Regenerate CATALOG.md and check for drift
+        run: |
+          python3 scripts/generate-catalog.py
+          git diff --exit-code CATALOG.md
