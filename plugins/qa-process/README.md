@@ -1,6 +1,6 @@
 # qa-process
 
-Test process + methodology — risk-based testing matrix + storming, Definition of Done, test strategy authoring, blameless post-mortems, release readiness gates, smoke-suite gating, test-pyramid analysis, TDD coaching for stuck patterns, E2E suite budgets, test-quality coaching.
+Test process + methodology — risk-based testing matrix + storming, Definition of Done, test strategy authoring, blameless post-mortems, release readiness gates, smoke-suite gating, test-pyramid analysis, TDD coaching for stuck patterns, E2E suite budgets, test-quality coaching, and test-case ideation from user stories.
 
 ## Components
 
@@ -15,6 +15,7 @@ Test process + methodology — risk-based testing matrix + storming, Definition 
 | Skill | [tdd-stuck-pattern-resolver](skills/tdd-stuck-pattern-resolver/SKILL.md) | S3 |
 | Skill | [risk-storming-facilitator](skills/risk-storming-facilitator/SKILL.md) | S3 |
 | Skill | [e2e-suite-budget](skills/e2e-suite-budget/SKILL.md) | S3 |
+| Skill | [test-case-ideation-from-story](skills/test-case-ideation-from-story/SKILL.md) | S3 |
 | Agent | [release-readiness-checker](agents/release-readiness-checker.md) | A4 |
 | Agent | [risk-based-test-selector](agents/risk-based-test-selector.md) | A2 |
 | Agent | [risk-based-test-planner](agents/risk-based-test-planner.md) | A2 |
