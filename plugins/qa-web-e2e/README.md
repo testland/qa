@@ -14,6 +14,7 @@ Web E2E framework wrappers (per-framework S1 skills). Full lifecycle per framewo
 | Skill | [testcafe-testing](skills/testcafe-testing/SKILL.md) | S1 |
 | Agent | [playwright-codegen-reviewer](agents/playwright-codegen-reviewer.md) | A3 |
 | Agent | [selenium-grid-orchestrator](agents/selenium-grid-orchestrator.md) | A2 |
+| Agent | [spec-to-e2e-test-scaffolder](agents/spec-to-e2e-test-scaffolder.md) | A4 |
 
 ## Install
 
