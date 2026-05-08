@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**58 plugins · 361 components**
+**58 plugins · 364 components**
 
 ## Foundations
 
@@ -27,7 +27,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 |---|---|---:|---|
 | [qa-api-testing](plugins/qa-api-testing/) | 1.0.0 | 7 skills + 0 agents | S1×6 · S3×1 |
 | [qa-bdd](plugins/qa-bdd/) | 1.1.0 | 8 skills + 1 agents | S1×4 · S3×4 · A3×1 |
-| [qa-contract-testing](plugins/qa-contract-testing/) | 1.0.0 | 5 skills + 1 agents | S1×4 · S3×1 · A1×1 |
+| [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents | S1×4 · S3×1 · A1×1 · A4×1 |
 | [qa-mobile-native](plugins/qa-mobile-native/) | 1.0.0 | 10 skills + 0 agents | S1×6 · S2×1 · S3×2 · S4×1 |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.0.0 | 5 skills + 1 agents | S1×5 · A1×1 |
 | [qa-property-based](plugins/qa-property-based/) | 1.0.0 | 5 skills + 0 agents | S1×5 |
@@ -36,7 +36,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.0.0 | 5 skills + 0 agents | S1×5 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.0.0 | 4 skills + 0 agents | S1×3 · S2×1 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.0.0 | 4 skills + 0 agents | S1×4 |
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.0.0 | 6 skills + 2 agents | S1×6 · A2×1 · A3×1 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.1.0 | 6 skills + 3 agents | S1×6 · A2×1 · A3×1 · A4×1 |
 
 ## Quality engineering
 
@@ -71,7 +71,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.1.0 | 1 skills + 5 agents | S3×1 · A1×2 · A2×2 · A4×1 |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.2.0 | 1 skills + 6 agents | S3×1 · A1×3 · A2×2 · A4×1 |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.0.0 | 6 skills + 0 agents | S1×4 · S3×2 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents | S2×1 · S3×1 · A1×5 |
 | [qa-load-testing](plugins/qa-load-testing/) | 1.0.0 | 9 skills + 1 agents | S1×5 · S3×4 · A1×1 |
