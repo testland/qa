@@ -13,6 +13,7 @@ Behavior-driven development pipelines: per-language Cucumber-family runners (Cuc
 | Skill | [bdd-step-library-curator](skills/bdd-step-library-curator/SKILL.md) | S3 |
 | Skill | [gherkin-from-stories](skills/gherkin-from-stories/SKILL.md) | S3 |
 | Skill | [acceptance-test-from-criteria](skills/acceptance-test-from-criteria/SKILL.md) | S3 |
+| Skill | [manual-step-to-gherkin](skills/manual-step-to-gherkin/SKILL.md) | S3 |
 | Agent | [gherkin-style-reviewer](agents/gherkin-style-reviewer.md) | A3 |
 
 ## Install
