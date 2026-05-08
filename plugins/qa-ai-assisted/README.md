@@ -1,6 +1,6 @@
 # qa-ai-assisted
 
-AI-assisted test generation + curation. AI-generated tests from natural-language specs, coverage gap mapping, an adversarial reviewer for AI-generated tests (catches hallucinations, weak assertions, redundancy), plus a model-based-test graph authoring skill that produces structured input AI test generators benefit from.
+AI-assisted test generation + curation. AI-generated tests from natural-language specs, coverage gap mapping, two adversarial reviewers for AI-generated tests (one catches hallucinations / weak assertions / redundancy, the other catches shallow happy-path-only input-domain coverage), plus a model-based-test graph authoring skill that produces structured input AI test generators benefit from.
 
 ## Components
 
@@ -10,6 +10,7 @@ AI-assisted test generation + curation. AI-generated tests from natural-language
 | Skill | [ai-spec-coverage-mapper](skills/ai-spec-coverage-mapper/SKILL.md) | S3 |
 | Skill | [model-based-test-graph-author](skills/model-based-test-graph-author/SKILL.md) | S3 |
 | Agent | [ai-test-curator](agents/ai-test-curator.md) | A3 |
+| Agent | [ai-test-shallow-coverage-critic](agents/ai-test-shallow-coverage-critic.md) | A3 |
 
 ## Install
 

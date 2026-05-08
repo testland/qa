@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**58 plugins · 357 components**
+**58 plugins · 358 components**
 
 ## Foundations
 
@@ -85,7 +85,7 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
-| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.0.0 | 3 skills + 1 agents | S3×3 · A3×1 |
+| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.1.0 | 3 skills + 2 agents | S3×3 · A3×2 |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.0.0 | 7 skills + 0 agents | S1×5 · S3×2 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.0.0 | 5 skills + 0 agents | S1×3 · S3×2 |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.0.0 | 5 skills + 0 agents | S2×1 · S3×4 |
