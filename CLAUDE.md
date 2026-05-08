@@ -91,7 +91,11 @@ bash scripts/rating-check.sh .         # rating ≥ 21 + d6 ≥ 1
 python3 scripts/composition-graph.py   # agent → skill preload references valid
 ```
 
-After P1 ships, the same is also available as `make all`.
+Or run all checks plus catalog regeneration in one go:
+
+```bash
+make all
+```
 
 ## Where to look for examples
 
