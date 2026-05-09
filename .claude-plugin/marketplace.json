@@ -90,7 +90,7 @@
     {
       "name": "qa-test-reporting",
       "source": "./plugins/qa-test-reporting",
-      "description": "Test reporting + coverage analytics: 16 skills — parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
+      "description": "Test reporting + coverage analytics: 16 skills \u2014 parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
       "strict": true,
       "category": "foundations"
     },
@@ -104,14 +104,14 @@
     {
       "name": "qa-roles",
       "source": "./plugins/qa-roles",
-      "description": "Sharply-scoped QA role agents (3): test-architect (A2 — pyramid + framework recommendation per repo), quality-coach (A3 — DoD adherence enforcer), release-engineer (A4 — runbook + canary release conductor). No generic persona-as-scope agents.",
+      "description": "Sharply-scoped QA role agents (3): test-architect (A2 \u2014 pyramid + framework recommendation per repo), quality-coach (A3 \u2014 DoD adherence enforcer), release-engineer (A4 \u2014 runbook + canary release conductor). No generic persona-as-scope agents.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-review",
       "source": "./plugins/qa-test-review",
-      "description": "Test code reviewers for test files only — production code is out of scope. 1 skill (test-code-conventions) and 4 adversarial agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic).",
+      "description": "Test code reviewers for test files only \u2014 production code is out of scope. 1 skill (test-code-conventions) and 4 adversarial agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic).",
       "strict": true,
       "category": "foundations"
     },
@@ -415,6 +415,13 @@
       "description": "Resilience drills: 5 skills (dr-drill-runner, backup-verification-author, restore-time-tests, error-budget-tests, mttr-mtbf-tracker). Production-grade DR drills + backup verification + RTO + error-budget gating + incident metrics.",
       "strict": true,
       "category": "operations-resilience"
+    },
+    {
+      "name": "qa-hiring",
+      "source": "./plugins/qa-hiring",
+      "description": "QA hiring toolkit: 3 skills (interview-question-author, hiring-rubric-author, calibration-guide-author) producing ISTQB-aligned interview question banks, role-specific scoring rubrics, and interviewer-calibration guides for QA / SDET / test-lead / quality-manager roles. Composes into a complete structured-interview triple per Levashina 2014 et al.",
+      "strict": true,
+      "category": "foundations"
     }
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-hiring",
+  "version": "1.0.0",
+  "description": "QA hiring toolkit: 3 skills (interview-question-author, hiring-rubric-author, calibration-guide-author) producing ISTQB-aligned interview question banks, role-specific scoring rubrics, and interviewer-calibration guides for QA / SDET / test-lead / quality-manager roles. Composes into a complete structured-interview triple per Levashina 2014 et al.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-hiring",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "qa-hiring", "interview", "rubric", "calibration", "structured-interview"]
+}
