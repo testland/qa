@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**58 plugins · 368 components**
+**59 plugins · 371 components**
 
 ## Foundations
 
@@ -11,6 +11,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
+| [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents | S3×3 |
 | [qa-process](plugins/qa-process/) | 1.2.0 | 10 skills + 5 agents | S2×1 · S3×9 · A1×1 · A2×2 · A3×1 · A4×1 |
 | [qa-roles](plugins/qa-roles/) | 1.0.0 | 0 skills + 3 agents | A2×1 · A3×1 · A4×1 |
 | [qa-test-data](plugins/qa-test-data/) | 1.0.0 | 16 skills + 1 agents | S1×7 · S2×2 · S3×6 · S4×1 · A2×1 |
@@ -136,6 +137,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-db-migrations](plugins/qa-db-migrations/)
 - [qa-distributed-tracing](plugins/qa-distributed-tracing/)
 - [qa-flake-triage](plugins/qa-flake-triage/)
+- [qa-hiring](plugins/qa-hiring/)
 - [qa-iac](plugins/qa-iac/)
 - [qa-llm-evaluation](plugins/qa-llm-evaluation/)
 - [qa-load-testing](plugins/qa-load-testing/)
