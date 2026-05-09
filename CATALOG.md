@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**58 plugins · 364 components**
+**58 plugins · 368 components**
 
 ## Foundations
 
@@ -11,12 +11,12 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
-| [qa-process](plugins/qa-process/) | 1.1.0 | 10 skills + 4 agents | S2×1 · S3×9 · A2×2 · A3×1 · A4×1 |
+| [qa-process](plugins/qa-process/) | 1.2.0 | 10 skills + 5 agents | S2×1 · S3×9 · A1×1 · A2×2 · A3×1 · A4×1 |
 | [qa-roles](plugins/qa-roles/) | 1.0.0 | 0 skills + 3 agents | A2×1 · A3×1 · A4×1 |
 | [qa-test-data](plugins/qa-test-data/) | 1.0.0 | 16 skills + 1 agents | S1×7 · S2×2 · S3×6 · S4×1 · A2×1 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents | S1×2 · S3×2 · A2×1 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents | S3×2 · A2×2 |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.0.0 | 16 skills + 0 agents | S1×12 · S3×4 |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.1.0 | 17 skills + 1 agents | S1×12 · S3×5 · A2×1 |
 | [qa-test-review](plugins/qa-test-review/) | 1.0.0 | 1 skills + 4 agents | S2×1 · A3×4 |
 
 ## Functional testing
@@ -71,7 +71,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.2.0 | 1 skills + 6 agents | S3×1 · A1×3 · A2×2 · A4×1 |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.3.0 | 1 skills + 7 agents | S3×1 · A1×4 · A2×2 · A4×1 |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.0.0 | 6 skills + 0 agents | S1×4 · S3×2 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents | S2×1 · S3×1 · A1×5 |
 | [qa-load-testing](plugins/qa-load-testing/) | 1.0.0 | 9 skills + 1 agents | S1×5 · S3×4 · A1×1 |

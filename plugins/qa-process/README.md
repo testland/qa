@@ -19,6 +19,7 @@ Test process + methodology — risk-based testing matrix + storming, Definition 
 | Agent | [release-readiness-checker](agents/release-readiness-checker.md) | A4 |
 | Agent | [risk-based-test-selector](agents/risk-based-test-selector.md) | A2 |
 | Agent | [risk-based-test-planner](agents/risk-based-test-planner.md) | A2 |
+| Agent | [risk-matrix-recommender](agents/risk-matrix-recommender.md) | A1 |
 | Agent | [test-quality-coach](agents/test-quality-coach.md) | A3 |
 
 ## Install
