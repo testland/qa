@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-reporting",
-  "version": "1.0.0",
-  "description": "Test reporting + coverage analytics: 16 skills covering JUnit XML / LCOV / Cobertura parsers, Allure / ExtentReports, build-an-X reporters (coverage-diff, wcag-compliance, visual-diff), commercial integrations (Currents / TestRail / Xray / Zephyr), per-language coverage analyzers (Jest, JaCoCo, coverage.py), and a risk-weighted unit-test coverage targeter.",
+  "version": "1.1.0",
+  "description": "Test reporting + coverage analytics: 17 skills covering JUnit XML / LCOV / Cobertura parsers, Allure / ExtentReports, build-an-X reporters (coverage-diff, wcag-compliance, visual-diff, test-run-summary-author), commercial integrations (Currents / TestRail / Xray / Zephyr), per-language coverage analyzers (Jest, JaCoCo, coverage.py), a risk-weighted unit-test coverage targeter, and 1 agent (daily-test-suite-aggregator) for cross-suite cross-environment roll-ups.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
