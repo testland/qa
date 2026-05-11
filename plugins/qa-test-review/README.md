@@ -11,6 +11,7 @@ Test code quality reviewers — agents specialized for **test files only**, not 
 | Agent | [assertion-quality-reviewer](agents/assertion-quality-reviewer.md) | A3 | Rates each assertion as specific / narrow-vague / wide-vague / match-vague (§4). Recommends specific replacements. |
 | Agent | [mocking-anti-pattern-detector](agents/mocking-anti-pattern-detector.md) | A3 | Flags over-mocking, behavior-verification leakage, mock chains, mocking-what-you-don't-own, and fake-candidate situations (§5). |
 | Agent | [e2e-selector-quality-critic](agents/e2e-selector-quality-critic.md) | A3 | Flags brittle CSS class / nth-child / XPath selectors and non-web-first assertions; recommends `getByRole` / accessibility-first equivalents (§8, §9). |
+| Agent | [framework-architecture-auditor](agents/framework-architecture-auditor.md) | A3 | Cross-file framework audit: POM consistency, base-class hierarchy depth, fixture coupling, helper sprawl, naming-convention drift, retry / wait consistency, documented-vs-actual convention drift, CI integration health. Sister-tier above the per-file critics. |
 
 ## Install
 
