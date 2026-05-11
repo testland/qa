@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**59 plugins · 376 components**
+**59 plugins · 379 components**
 
 ## Foundations
 
@@ -12,7 +12,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
 | [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents | S3×3 |
-| [qa-process](plugins/qa-process/) | 1.3.0 | 13 skills + 6 agents | S2×3 · S3×10 · A1×1 · A2×2 · A3×2 · A4×1 |
+| [qa-process](plugins/qa-process/) | 1.4.0 | 15 skills + 6 agents | S2×3 · S3×12 · A1×1 · A2×2 · A3×2 · A4×1 |
 | [qa-roles](plugins/qa-roles/) | 1.0.0 | 0 skills + 3 agents | A2×1 · A3×1 · A4×1 |
 | [qa-test-data](plugins/qa-test-data/) | 1.0.0 | 16 skills + 1 agents | S1×7 · S2×2 · S3×6 · S4×1 · A2×1 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents | S1×2 · S3×2 · A2×1 |
@@ -76,7 +76,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.0.0 | 6 skills + 0 agents | S1×4 · S3×2 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents | S2×1 · S3×1 · A1×5 |
 | [qa-load-testing](plugins/qa-load-testing/) | 1.0.0 | 9 skills + 1 agents | S1×5 · S3×4 · A1×1 |
-| [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.0.0 | 5 skills + 0 agents | S2×1 · S3×4 |
+| [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.1.0 | 6 skills + 0 agents | S2×1 · S3×5 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.0.0 | 3 skills + 4 agents | S3×3 · A1×1 · A2×1 · A3×1 · A4×1 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.0.0 | 3 skills + 2 agents | S3×3 · A2×2 |
 
