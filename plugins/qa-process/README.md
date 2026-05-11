@@ -19,6 +19,8 @@ Test process + methodology — risk-based testing matrix + storming, Definition 
 | Skill | [heuristic-test-design-coach](skills/heuristic-test-design-coach/SKILL.md) | S2 |
 | Skill | [test-case-from-live-feature](skills/test-case-from-live-feature/SKILL.md) | S3 |
 | Skill | [framework-choice-advisor](skills/framework-choice-advisor/SKILL.md) | S2 |
+| Skill | [qa-okr-author](skills/qa-okr-author/SKILL.md) | S3 |
+| Skill | [qa-vendor-evaluator](skills/qa-vendor-evaluator/SKILL.md) | S3 |
 | Agent | [release-readiness-checker](agents/release-readiness-checker.md) | A4 |
 | Agent | [risk-based-test-selector](agents/risk-based-test-selector.md) | A2 |
 | Agent | [risk-based-test-planner](agents/risk-based-test-planner.md) | A2 |
