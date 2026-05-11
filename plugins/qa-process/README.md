@@ -16,10 +16,14 @@ Test process + methodology — risk-based testing matrix + storming, Definition 
 | Skill | [risk-storming-facilitator](skills/risk-storming-facilitator/SKILL.md) | S3 |
 | Skill | [e2e-suite-budget](skills/e2e-suite-budget/SKILL.md) | S3 |
 | Skill | [test-case-ideation-from-story](skills/test-case-ideation-from-story/SKILL.md) | S3 |
+| Skill | [heuristic-test-design-coach](skills/heuristic-test-design-coach/SKILL.md) | S2 |
+| Skill | [test-case-from-live-feature](skills/test-case-from-live-feature/SKILL.md) | S3 |
+| Skill | [framework-choice-advisor](skills/framework-choice-advisor/SKILL.md) | S2 |
 | Agent | [release-readiness-checker](agents/release-readiness-checker.md) | A4 |
 | Agent | [risk-based-test-selector](agents/risk-based-test-selector.md) | A2 |
 | Agent | [risk-based-test-planner](agents/risk-based-test-planner.md) | A2 |
 | Agent | [risk-matrix-recommender](agents/risk-matrix-recommender.md) | A1 |
+| Agent | [test-case-quality-auditor](agents/test-case-quality-auditor.md) | A3 |
 | Agent | [test-quality-coach](agents/test-quality-coach.md) | A3 |
 
 ## Install
