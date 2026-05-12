@@ -5,6 +5,10 @@ tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(jq *)"
 model: sonnet
 skills:
   - test-code-conventions
+  - object-model-patterns
+  - test-isolation-patterns
+  - test-step-design-patterns
+  - test-data-patterns
 rating: 25
 d6: 5
 archetype: A3
