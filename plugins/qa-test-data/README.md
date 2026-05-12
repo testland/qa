@@ -21,6 +21,7 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 | Skill | [e2e-test-narrative-builder](skills/e2e-test-narrative-builder/SKILL.md) | S3 | Assemble multi-step E2E tests from intent lists; per-framework code emission. |
 | Skill | [synthetic-pii-generator](skills/synthetic-pii-generator/SKILL.md) | S3 | Realistic-but-fake PII using safe-by-construction values (RFC 2606 domains, IRS test SSN range, Stripe test cards). |
 | Skill | [malicious-payload-bank](skills/malicious-payload-bank/SKILL.md) | S2 | Reference catalog of adversarial payloads (SQLi / XSS / SSRF / path traversal / XXE / prototype pollution / ReDoS / Unicode / CRLF). |
+| Skill | [test-data-patterns](skills/test-data-patterns/SKILL.md) | S2 | Architecture-tier reference: Test Data Builder (Pryce), Factory (with traits), Object Mother (Fowler), Fixture composition (Meszaros four-phase + Fresh-vs-Shared), Snapshot (defers to `golden-file-conventions`), Production-Data Anonymisation. |
 | Skill | [negative-test-generator](skills/negative-test-generator/SKILL.md) | S3 | Generate rejection-path tests mirroring happy-path: schema / auth / authz / rate / conflict / adversarial / server-error categories. |
 | Agent | [golden-file-manager](agents/golden-file-manager.md) | A2 | Active maintenance: add / update / prune snapshot baselines; refuse updates whose diff doesn't match PR intent. |
 
