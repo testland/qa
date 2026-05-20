@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Read CONTRIBUTING first
     url: https://github.com/testland/qa/blob/main/docs/CONTRIBUTING.md
-    about: Contribution guide, lint rules, NOT-GAPS list, single-description test.
+    about: Contribution guide, lint rules, differentiation requirement, single-description test.
   - name: Quality bar / rating framework
     url: https://github.com/testland/qa/blob/main/docs/REVIEWER_CHECKLIST.md
     about: How components are scored before merge (D1–D6 rubric).

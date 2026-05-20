@@ -26,13 +26,14 @@ See [`docs/PLUGIN_AUTHORING.md`](../docs/PLUGIN_AUTHORING.md) for archetype defi
 
 <!-- Cite the closest existing components and explain the differentiation. If there is no near-clone, say so. -->
 
-## NOT-GAPS check
+## Differentiation check
 
-- [ ] This is not a generic role agent (`qa-expert`, `quality-engineer`, etc.)
+- [ ] I named the 2–3 closest existing components (in this marketplace or the broader ecosystem) above
+- [ ] I stated the axis on which this new component differs (tool, lifecycle stage, output shape, scope of inputs, archetype)
+- [ ] The description includes an explicit "Use when…" trigger condition
 - [ ] This is not a multi-tool mega-bundle ("does everything for X")
-- [ ] This is not a near-clone of an existing component without a documented differentiation axis
 
-See [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) for the full NOT-GAPS list.
+See [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) "Differentiation requirement" for the full rubric.
 
 ## Canonical sources
 

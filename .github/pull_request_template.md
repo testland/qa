@@ -15,7 +15,7 @@ For each new or modified component (skill / agent):
 - [ ] `rating` ≥ 21
 - [ ] `d6` ≥ 1 — every concrete claim cited inline at point of use (no end-of-body References-only blocks)
 - [ ] Body structure matches declared archetype (S1–S4 / A1–A4)
-- [ ] Not a documented NOT-GAP (see [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md))
+- [ ] Differentiation axis documented vs. 2–3 nearest neighbors (see [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) "Differentiation requirement")
 
 ## Plugin manifest
 
