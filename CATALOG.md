@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**63 plugins · 418 components**
+**63 plugins · 433 components**
 
 ## Foundations
 
@@ -12,7 +12,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
 | [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents | S3×3 |
-| [qa-process](plugins/qa-process/) | 1.4.0 | 15 skills + 6 agents | S2×3 · S3×12 · A1×1 · A2×2 · A3×2 · A4×1 |
+| [qa-process](plugins/qa-process/) | 1.5.0 | 19 skills + 7 agents | S2×3 · S3×16 · A1×1 · A2×2 · A3×3 · A4×1 |
 | [qa-roles](plugins/qa-roles/) | 1.0.0 | 0 skills + 3 agents | A2×1 · A3×1 · A4×1 |
 | [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents | S1×7 · S2×3 · S3×6 · S4×1 · A2×1 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents | S1×2 · S3×2 · A2×1 |
@@ -38,7 +38,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.0.0 | 5 skills + 0 agents | S1×5 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.0.0 | 4 skills + 0 agents | S1×3 · S2×1 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.0.0 | 4 skills + 0 agents | S1×4 |
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.1.0 | 6 skills + 3 agents | S1×6 · A2×1 · A3×1 · A4×1 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.2.0 | 9 skills + 3 agents | S1×9 · A2×1 · A3×1 · A4×1 |
 
 ## Quality engineering
 
@@ -113,9 +113,9 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.0.0 | 5 skills + 0 agents | S1×4 · S2×1 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.0.0 | 3 skills + 0 agents | S1×1 · S2×1 · S3×1 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents | S1×4 · S2×1 · A3×1 |
-| [qa-compatibility](plugins/qa-compatibility/) | 1.0.0 | 3 skills + 0 agents | S1×2 · S2×1 |
+| [qa-compatibility](plugins/qa-compatibility/) | 1.1.0 | 5 skills + 0 agents | S1×3 · S2×2 |
 | [qa-iac](plugins/qa-iac/) | 1.0.0 | 5 skills + 2 agents | S1×5 · A1×1 · A3×1 |
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.0.0 | 6 skills + 1 agents | S2×1 · S3×5 · A4×1 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.1.0 | 11 skills + 1 agents | S2×6 · S3×5 · A4×1 |
 
 ## Alphabetical index
 
