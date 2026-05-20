@@ -478,6 +478,13 @@
       "description": "Cache testing across layers: Redis cache patterns, CDN cache-purge testing (Cloudflare, Fastly, CloudFront), Varnish VTC syntax, browser Cache-Control tests, cache-coherence + stampede + stale-while-revalidate references, and a cache-key collision detector. Covers RFC 9111 HTTP caching and the canonical multi-tier cache discipline (browser to CDN to app to data store).",
       "strict": true,
       "category": "ai-specialized"
+    },
+    {
+      "name": "qa-experimentation",
+      "source": "./plugins/qa-experimentation",
+      "description": "Experimentation harness testing: SDK-specific testing for Statsig, Optimizely, VWO, Amplitude Experiment; sample-ratio-mismatch (SRM) detection; AB-test validity checklist; guardrail-metrics + peeking-problem references. Distinct from qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin tests the experimentation harness itself (SDK behaviour, assignment integrity, statistical-validity gates).",
+      "strict": true,
+      "category": "ai-specialized"
     }
   ]
 }
