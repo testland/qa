@@ -422,6 +422,13 @@
       "description": "QA hiring toolkit: 3 skills (interview-question-author, hiring-rubric-author, calibration-guide-author) producing ISTQB-aligned interview question banks, role-specific scoring rubrics, and interviewer-calibration guides for QA / SDET / test-lead / quality-manager roles. Composes into a complete structured-interview triple per Levashina 2014 et al.",
       "strict": true,
       "category": "foundations"
+    },
+    {
+      "name": "qa-test-data-privacy",
+      "source": "./plugins/qa-test-data-privacy",
+      "description": "PII detection, masking, and synthetic data generation for test environments: 5 skills (pii-categories-reference, data-masking-techniques-reference, presidio-pii-detection, faker-synthetic-data, synthea-healthcare-data) + 1 build skill (pii-masking-pipeline-builder) and 1 agent (pii-leak-critic).",
+      "strict": true,
+      "category": "security-compliance"
     }
   ]
 }
