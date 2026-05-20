@@ -8,8 +8,12 @@
 #   - No literal placeholder strings (DESCRIPTION_PLACEHOLDER, CONTENT_PLACEHOLDER, TODO, FIXME)
 #   - No vague auto-gen pattern "Use when working with X tasks or workflows"
 #   - Command files must have a non-empty body
-#   - Generic role-agent names rejected (qa-expert, qa-engineer, quality-engineer, ...)
 #   - All plugin.json + marketplace.json files parse as valid JSON
+#
+# Note: persona-shaped scopes (qa-expert-style names without a trigger
+# condition) are NOT rejected here — the lint is structural only. Reviewer
+# judgment on D3 (description quality) and D4 (use-case fit) catches them.
+# See docs/CONTRIBUTING.md "Differentiation requirement".
 #
 # Usage: bash scripts/validate.sh [ROOT]
 #   ROOT defaults to the current directory.
@@ -98,22 +102,14 @@ check_yaml_frontmatter() {
       ;;
   esac
 
-  # Rule 5: generic role-agent names (anti-pattern guard)
-  case "$name" in
-    qa-expert|qa-engineer|quality-engineer|test-automator|qa-lead|qa-specialist|qa-pro|qa-master)
-      echo "FAIL ($file): generic role-agent name '$name' (use a sharp task scope instead)"
-      EXIT=1
-      ;;
-  esac
-
-  # Rule 6: description present
+  # Rule 5: description present
   if [[ -z "$desc" ]]; then
     echo "FAIL ($file): empty description"
     EXIT=1
     return
   fi
 
-  # Rule 7: not "You are..." / "I help..."
+  # Rule 6: not "You are..." / "I help..."
   local desc_lower
   desc_lower=$(echo "$desc" | tr '[:upper:]' '[:lower:]')
   if [[ "$desc_lower" == "you are"* ]] || [[ "$desc_lower" == "i help"* ]]; then
@@ -121,13 +117,13 @@ check_yaml_frontmatter() {
     EXIT=1
   fi
 
-  # Rule 8: description != slug
+  # Rule 7: description != slug
   if [[ "$desc" == "$name" ]]; then
     echo "FAIL ($file): description equals slug"
     EXIT=1
   fi
 
-  # Rule 9: no auto-gen pattern
+  # Rule 8: no auto-gen pattern
   case "$desc" in
     *"Use when working with"*"tasks or workflows"*)
       echo "FAIL ($file): vague auto-gen description pattern"

@@ -50,17 +50,8 @@ description: Should fail because the name contains the reserved word claude.
 ---
 EOF
 
-# ----- Fixture: generic role-agent name -----
-mkdir -p "$FIXTURES/plugins/test-plugin/agents"
-cat > "$FIXTURES/plugins/test-plugin/agents/qa-expert.md" <<'EOF'
----
-name: qa-expert
-description: Generic role agent that should be rejected by the lint rules.
----
-Body.
-EOF
-
 # ----- Fixture: "You are..." description -----
+mkdir -p "$FIXTURES/plugins/test-plugin/agents"
 cat > "$FIXTURES/plugins/test-plugin/agents/persona-agent.md" <<'EOF'
 ---
 name: persona-agent
@@ -105,7 +96,6 @@ expect_in_output() {
 
 expect_in_output "Invalid_Name"
 expect_in_output "claude-helper"
-expect_in_output "qa-expert"
 expect_in_output "persona-agent"
 expect_in_output "empty-cmd"
 expect_in_output "has-placeholder"
