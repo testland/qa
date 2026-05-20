@@ -90,7 +90,7 @@
     {
       "name": "qa-test-reporting",
       "source": "./plugins/qa-test-reporting",
-      "description": "Test reporting + coverage analytics: 16 skills — parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
+      "description": "Test reporting + coverage analytics: 16 skills \u2014 parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
       "strict": true,
       "category": "foundations"
     },
@@ -104,14 +104,14 @@
     {
       "name": "qa-roles",
       "source": "./plugins/qa-roles",
-      "description": "Sharply-scoped QA role agents (3): test-architect (A2 — pyramid + framework recommendation per repo), quality-coach (A3 — DoD adherence enforcer), release-engineer (A4 — runbook + canary release conductor). No generic persona-as-scope agents.",
+      "description": "Sharply-scoped QA role agents (3): test-architect (A2 \u2014 pyramid + framework recommendation per repo), quality-coach (A3 \u2014 DoD adherence enforcer), release-engineer (A4 \u2014 runbook + canary release conductor). No generic persona-as-scope agents.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-review",
       "source": "./plugins/qa-test-review",
-      "description": "Test code reviewers for test files only — production code is out of scope. 1 skill (test-code-conventions) and 4 adversarial agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic).",
+      "description": "Test code reviewers for test files only \u2014 production code is out of scope. 1 skill (test-code-conventions) and 4 adversarial agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic).",
       "strict": true,
       "category": "foundations"
     },
@@ -457,6 +457,13 @@
       "description": "Tenant-isolation testing for B2B SaaS: row-level security, cross-tenant leak detection, tenant-id propagation tracing, isolation-model references (silo / pool / bridge), and adversarial review of tenant-leak risk.",
       "strict": true,
       "category": "security-compliance"
+    },
+    {
+      "name": "qa-grpc",
+      "source": "./plugins/qa-grpc",
+      "description": "gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl CLI, grpc-mock servers, protobuf versioning strategy reference, gRPC streaming test patterns, and status-code mapping reference. Distinct from qa-realtime-protocols/grpc-streaming-tests (wire-level streaming semantics) and qa-contract-testing/protobuf-compat-checking (schema-level breaking detection); this plugin scopes to tooling, load, linting, and framework-level testing.",
+      "strict": true,
+      "category": "ai-specialized"
     }
   ]
 }

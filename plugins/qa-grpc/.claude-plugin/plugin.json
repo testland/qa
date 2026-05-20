@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-grpc",
+  "version": "0.1.0",
+  "description": "gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl CLI, grpc-mock servers, protobuf versioning strategy reference, gRPC streaming test patterns, and status-code mapping reference. Distinct from qa-realtime-protocols/grpc-streaming-tests (wire-level streaming semantics) and qa-contract-testing/protobuf-compat-checking (schema-level breaking detection); this plugin scopes to tooling, load, linting, and framework-level testing.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-grpc",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "grpc"]
+}
