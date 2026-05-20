@@ -6,7 +6,33 @@ Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-r
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | [corpus-management-reference](skills/corpus-management-reference/SKILL.md) | S2 | Seed / evolved corpus + crash-artefact naming + dictionary discipline |
+| skill | [sanitiser-integration-reference](skills/sanitiser-integration-reference/SKILL.md) | S2 | ASan / UBSan / MSan / TSan / LSan composition + compatibility matrix |
+| skill | [libfuzzer-cpp](skills/libfuzzer-cpp/SKILL.md) | S1 | LLVM libFuzzer for C/C++ (in-process) |
+| skill | [afl-plus-plus](skills/afl-plus-plus/SKILL.md) | S1 | AFL++ out-of-process fuzzer (file-driven, QEMU mode) |
+| skill | [go-native-fuzzing](skills/go-native-fuzzing/SKILL.md) | S1 | Go 1.18+ native `go test -fuzz` |
+| skill | [cargo-fuzz-rust](skills/cargo-fuzz-rust/SKILL.md) | S1 | Rust cargo-fuzz (libFuzzer + Arbitrary trait) |
+| skill | [atheris-python-fuzzing](skills/atheris-python-fuzzing/SKILL.md) | S1 | Google Atheris (libFuzzer for Python + CPython extensions) |
+| skill | [jazzer-jvm-fuzzing](skills/jazzer-jvm-fuzzing/SKILL.md) | S1 | Code Intelligence Jazzer (JVM + JUnit 5 + JVM sanitisers) |
+| skill | [ossfuzz-integration](skills/ossfuzz-integration/SKILL.md) | S1 | Onboard to Google OSS-Fuzz continuous fuzzing service |
+| skill | [fuzz-toolkit-dispatcher](skills/fuzz-toolkit-dispatcher/SKILL.md) | S4 | Decision tree routing fuzz-target authoring per language |
+| agent | [fuzz-target-author](agents/fuzz-target-author.md) | A4 | Scaffold a fuzz target from a function signature (routed via dispatcher) |
+
+## Differentiation
+
+This plugin scopes **structure-aware coverage-guided fuzzing** at
+the binary / system level. Sibling neighbours:
+
+- [`qa-property-based`](../qa-property-based/) — hypothesis-driven
+  property-based testing with shrinking (Hypothesis, fast-check,
+  proptest, jqwik, quickcheck). Different methodology: PBT
+  generates from specifications; fuzzing follows coverage
+  feedback.
+- [`qa-api-testing`](../qa-api-testing/) — has `schemathesis-fuzzing`
+  (schema-driven API fuzzing) and `restler-fuzzing` (stateful API
+  sequences). API-layer; this plugin is binary/system-level.
+- [`qa-sast`](../qa-sast/) / [`qa-dast`](../qa-dast/) — static /
+  dynamic security analysis without coverage-guided mutation.
 
 ## Install
 
