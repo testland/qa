@@ -485,6 +485,13 @@
       "description": "Experimentation harness testing: SDK-specific testing for Statsig, Optimizely, VWO, Amplitude Experiment; sample-ratio-mismatch (SRM) detection; AB-test validity checklist; guardrail-metrics + peeking-problem references. Distinct from qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin tests the experimentation harness itself (SDK behaviour, assignment integrity, statistical-validity gates).",
       "strict": true,
       "category": "ai-specialized"
+    },
+    {
+      "name": "qa-feature-flags",
+      "source": "./plugins/qa-feature-flags",
+      "description": "Feature-flag platform testing: SDK-specific tests for LaunchDarkly, Unleash, Flagsmith, GrowthBook; feature-flag test matrix reference; flag-state coverage builder; flag-removal runbook author; stale-flag detector. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin scopes to platform-SDK testing + flag-lifecycle hygiene.",
+      "strict": true,
+      "category": "ai-specialized"
     }
   ]
 }
