@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**60 plugins · 390 components**
+**62 plugins · 399 components**
 
 ## Foundations
 
@@ -17,6 +17,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents | S1×7 · S2×3 · S3×6 · S4×1 · A2×1 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents | S1×2 · S3×2 · A2×1 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents | S3×2 · A2×2 |
+| [qa-test-management](plugins/qa-test-management/) | 0.1.0 | 0 skills + 0 agents | — |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.1.0 | 17 skills + 1 agents | S1×12 · S3×5 · A2×1 |
 | [qa-test-review](plugins/qa-test-review/) | 1.2.0 | 4 skills + 5 agents | S2×4 · A3×5 |
 
@@ -75,6 +76,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 |---|---|---:|---|
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.3.0 | 1 skills + 7 agents | S3×1 · A1×4 · A2×2 · A4×1 |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.0.0 | 6 skills + 0 agents | S1×4 · S3×2 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.0.0 | 7 skills + 2 agents | S1×3 · S2×3 · S3×1 · A1×1 · A3×1 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents | S2×1 · S3×1 · A1×5 |
 | [qa-load-testing](plugins/qa-load-testing/) | 1.0.0 | 9 skills + 1 agents | S1×5 · S3×4 · A1×1 |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.1.0 | 6 skills + 0 agents | S2×1 · S3×5 |
@@ -136,6 +138,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-data-notebooks](plugins/qa-data-notebooks/)
 - [qa-data-quality](plugins/qa-data-quality/)
 - [qa-db-migrations](plugins/qa-db-migrations/)
+- [qa-defect-management](plugins/qa-defect-management/)
 - [qa-distributed-tracing](plugins/qa-distributed-tracing/)
 - [qa-flake-triage](plugins/qa-flake-triage/)
 - [qa-hiring](plugins/qa-hiring/)
@@ -167,6 +170,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-test-data-privacy](plugins/qa-test-data-privacy/)
 - [qa-test-environment](plugins/qa-test-environment/)
 - [qa-test-impact-analysis](plugins/qa-test-impact-analysis/)
+- [qa-test-management](plugins/qa-test-management/)
 - [qa-test-reporting](plugins/qa-test-reporting/)
 - [qa-test-review](plugins/qa-test-review/)
 - [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/)

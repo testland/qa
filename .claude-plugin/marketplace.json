@@ -436,6 +436,13 @@
       "description": "Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skills (bug-lifecycle-reference, severity-vs-priority-reference, defect-taxonomy-istqb) + 3 platform-workflow skills (jira-bug-workflow-runner, linear-bug-workflow-runner, github-issues-bug-workflow) + 1 build skill (bug-report-from-failure) + 2 agents (duplicate-defect-finder, bug-report-critic). Distinct from qa-bug-repro which covers reproduction + clustering + trend narration; this covers triage workflow + taxonomy + severity classification.",
       "strict": true,
       "category": "operations-resilience"
+    },
+    {
+      "name": "qa-test-management",
+      "source": "./plugins/qa-test-management",
+      "description": "Test case management discipline (pre-execution authoring + lifecycle + traceability): 1 reference skill (test-case-anatomy-reference) + 5 platform case-management skills (testrail-case-management, xray-case-management, zephyr-scale-case-management, allure-testops-case-management, qase-io-case-management) + 1 build skill (traceability-matrix-builder) + 1 agent (test-case-quality-critic). Distinct from qa-test-reporting's *-integration skills (post-execution result sync); this is pre-execution case authoring + repository management.",
+      "strict": true,
+      "category": "foundations"
     }
   ]
 }
