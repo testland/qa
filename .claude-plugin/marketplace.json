@@ -429,6 +429,13 @@
       "description": "PII detection, masking, and synthetic data generation for test environments: 5 skills (pii-categories-reference, data-masking-techniques-reference, presidio-pii-detection, faker-synthetic-data, synthea-healthcare-data) + 1 build skill (pii-masking-pipeline-builder) and 1 agent (pii-leak-critic).",
       "strict": true,
       "category": "security-compliance"
+    },
+    {
+      "name": "qa-defect-management",
+      "source": "./plugins/qa-defect-management",
+      "description": "Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skills (bug-lifecycle-reference, severity-vs-priority-reference, defect-taxonomy-istqb) + 3 platform-workflow skills (jira-bug-workflow-runner, linear-bug-workflow-runner, github-issues-bug-workflow) + 1 build skill (bug-report-from-failure) + 2 agents (duplicate-defect-finder, bug-report-critic). Distinct from qa-bug-repro which covers reproduction + clustering + trend narration; this covers triage workflow + taxonomy + severity classification.",
+      "strict": true,
+      "category": "operations-resilience"
     }
   ]
 }
