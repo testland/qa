@@ -464,6 +464,13 @@
       "description": "gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl CLI, grpc-mock servers, protobuf versioning strategy reference, gRPC streaming test patterns, and status-code mapping reference. Distinct from qa-realtime-protocols/grpc-streaming-tests (wire-level streaming semantics) and qa-contract-testing/protobuf-compat-checking (schema-level breaking detection); this plugin scopes to tooling, load, linting, and framework-level testing.",
       "strict": true,
       "category": "ai-specialized"
+    },
+    {
+      "name": "qa-graphql",
+      "source": "./plugins/qa-graphql",
+      "description": "GraphQL server testing: introspection attack-surface reference, persisted-query strategy, per-framework testing (Apollo Server, GraphQL Yoga, Hasura, Mercurius, Pothos), and an N+1 query detector. Distinct from qa-contract-testing/graphql-schema-regression (contract drift detection); this plugin covers server/runtime + framework-specific patterns.",
+      "strict": true,
+      "category": "ai-specialized"
     }
   ]
 }
