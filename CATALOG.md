@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**62 plugins · 399 components**
+**62 plugins · 407 components**
 
 ## Foundations
 
@@ -17,7 +17,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents | S1×7 · S2×3 · S3×6 · S4×1 · A2×1 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents | S1×2 · S3×2 · A2×1 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents | S3×2 · A2×2 |
-| [qa-test-management](plugins/qa-test-management/) | 0.1.0 | 0 skills + 0 agents | — |
+| [qa-test-management](plugins/qa-test-management/) | 1.0.0 | 7 skills + 1 agents | S1×5 · S2×1 · S3×1 · A3×1 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.1.0 | 17 skills + 1 agents | S1×12 · S3×5 · A2×1 |
 | [qa-test-review](plugins/qa-test-review/) | 1.2.0 | 4 skills + 5 agents | S2×4 · A3×5 |
 
