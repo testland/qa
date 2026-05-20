@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**62 plugins · 407 components**
+**63 plugins · 418 components**
 
 ## Foundations
 
@@ -62,6 +62,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 |---|---|---:|---|
 | [qa-compliance](plugins/qa-compliance/) | 1.0.0 | 6 skills + 1 agents | S2×3 · S3×3 · A3×1 |
 | [qa-dast](plugins/qa-dast/) | 1.0.0 | 4 skills + 1 agents | S1×3 · S3×1 · A3×1 |
+| [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.0.0 | 10 skills + 1 agents | S1×7 · S2×2 · S4×1 · A4×1 |
 | [qa-sast](plugins/qa-sast/) | 1.0.0 | 5 skills + 1 agents | S1×5 · A3×1 |
 | [qa-sbom](plugins/qa-sbom/) | 1.0.0 | 5 skills + 1 agents | S1×3 · S2×2 · A3×1 |
 | [qa-sca](plugins/qa-sca/) | 1.0.0 | 5 skills + 1 agents | S1×3 · S2×2 · A3×1 |
@@ -141,6 +142,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-defect-management](plugins/qa-defect-management/)
 - [qa-distributed-tracing](plugins/qa-distributed-tracing/)
 - [qa-flake-triage](plugins/qa-flake-triage/)
+- [qa-fuzz-testing](plugins/qa-fuzz-testing/)
 - [qa-hiring](plugins/qa-hiring/)
 - [qa-iac](plugins/qa-iac/)
 - [qa-llm-evaluation](plugins/qa-llm-evaluation/)
