@@ -506,6 +506,13 @@
       "description": "Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest-fake-timers, freezegun, timecop, mockclock), DST + leap-second references, ISO-8601 vs RFC 3339 reference, and a timezone test matrix builder. Covers time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock skew) which are high-incident-rate but specific tooling is scattered.",
       "strict": true,
       "category": "ai-specialized"
+    },
+    {
+      "name": "qa-payment",
+      "source": "./plugins/qa-payment",
+      "description": "Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-scope-checker (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.",
+      "strict": true,
+      "category": "ai-specialized"
     }
   ]
 }
