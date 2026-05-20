@@ -29,6 +29,39 @@ those releases.
 - `category` field on every plugin entry in `marketplace.json`
 - README restructure — badges, "why" framing, multi-path install,
   category-grouped catalog, quality-bar table, star-history chart
+- `docs/ROADMAP.md` — tiered gap analysis listing high-frequency QA
+  disciplines, common gaps, and previously-excluded categories now open
+  for contribution
+
+### Changed
+- Replaced the NOT-GAPS doctrine with a plain "Differentiation requirement"
+  in `docs/CONTRIBUTING.md`. Component categories formerly listed as
+  "saturated" (generic code-reviewer, security-auditor, debugger,
+  test-automator, per-language testing bundles, desktop / embedded /
+  game / VR testing, generic security tool wrappers, generic WCAG
+  umbrella skills) are no longer blocked by category. Admission is based
+  on description quality, trigger condition, documented differentiation
+  axis, and the rating bar (≥21/30, d6 ≥1). The change aligns with
+  Anthropic's official subagent and skill guidance (description-driven
+  routing, not name-based denylists).
+- Sharpened D3 (description quality) and D4 (use-case fit) in
+  `docs/REVIEWER_CHECKLIST.md` to absorb the persona-as-scope check
+  that previously lived in `validate.sh`.
+- Re-coached F-grade exemplar in `docs/REVIEWER_TRAINING.md` so the
+  rejection rationale lands on rubric dimensions rather than a name
+  denylist.
+
+### Removed
+- `validate.sh` no longer rejects component names by the generic-role
+  denylist (`qa-expert`, `qa-engineer`, `quality-engineer`,
+  `test-automator`, `qa-lead`, `qa-specialist`, `qa-pro`, `qa-master`).
+  Structural lint (kebab-case, reserved-word guard, third-person
+  description, placeholder check) is unchanged.
+- `scripts/test-validate.sh` — the `qa-expert` fixture is gone; the
+  `persona-agent.md` fixture stays and still verifies the description-
+  opener lint.
+- The "NOT-GAPS — saturated cells we will not fill" table and the
+  NOT-GAPS issue-template checkbox.
 
 ## [4.0.0] — 2026-05-06
 

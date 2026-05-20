@@ -6,16 +6,13 @@ the gate so contributions land cleanly.
 
 ## Before you start
 
-1. **Check the existing plugin set** under `plugins/` to avoid duplicating
-   an in-flight plugin or proposing a component that already exists.
-2. **Check the NOT-GAPS list below.** Several saturated cells (generic
-   `code-reviewer`, `qa-expert`, `security-auditor`, `debugger`, persona
-   role agents, per-language testing bundles, etc.) are intentional skips.
-   PRs that try to add them are rejected unless they ship measured evidence
-   that the saturation no longer holds.
-3. **Read [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)** for the full
+1. **Check the existing plugin set** under `plugins/` to find the 2–3
+   nearest neighbors to what you want to add. Every PR has to state how
+   the new component differs from them — see "Differentiation requirement"
+   below.
+2. **Read [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)** for the full
    step-by-step authoring guide.
-4. **Read [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md)** for the rubric
+3. **Read [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md)** for the rubric
    your PR will be scored against.
 
 ## Quality gate (CI-enforced)
@@ -35,9 +32,10 @@ archetype: S1                   # S1-S4 (skills) or A1-A4 (agents)
 CI runs three checks on every PR:
 
 1. **`scripts/test-validate.sh`** — self-test of validate.sh against fixtures.
-2. **`scripts/validate.sh`** — lint rules: kebab-case, no reserved words, no
-   "You are.../I help..." openers, no generic role-agent names, no
-   placeholder strings, no empty command bodies, JSON syntax.
+2. **`scripts/validate.sh`** — lint rules: kebab-case naming, no reserved
+   words (`claude`/`anthropic`), no "You are.../I help..." openers (must be
+   third-person, action-oriented), no placeholder strings, no empty command
+   bodies, JSON syntax.
 3. **`scripts/rating-check.sh`** — `rating >= 21` and `d6 >= 1` (where d6 is
    present); `d6 = 0` blocks merge regardless of total.
 
@@ -123,37 +121,48 @@ If any check fails, reshape the scope before authoring.
   drifted vs. current docs.
 - `References:` lists at the bottom without inline citations at the point
   of use.
-- Generic role-agent names (`qa-expert`, `quality-engineer`,
-  `qa-engineer`, `test-automator`, `qa-lead`, `qa-specialist`,
-  `qa-pro`, `qa-master`) — `validate.sh` rejects these by name.
+- Persona-shaped scopes that can't name a trigger condition (descriptions
+  like "expert in X" with no "Use when…" or no concrete output). The lint
+  catches "You are…" / "I help…" openers, but reviewers also reject scopes
+  whose body could be literally anything — see D4 in the rubric.
 
-## NOT-GAPS — saturated cells we will not fill
+## Differentiation requirement
 
-These slots already have sufficient ecosystem coverage and adding another
-near-clone is not valuable. PRs that try to fill them are rejected unless
-they ship measured evidence that the saturation no longer holds.
+Every new component must articulate how it differs from its 2–3 nearest
+neighbors (in this marketplace or the broader Claude Code ecosystem). The
+PR description and the component's `description` field both have to make
+that differentiation legible.
 
-| Slot | Why we skip |
-|---|---|
-| Generic `code-reviewer` agent | 12+ near-clones in the existing ecosystem |
-| Generic `qa-expert` / `qa-engineer` / `quality-engineer` | Persona-as-scope; vague descriptions; rejected by `validate.sh` by name |
-| Generic `security-auditor` / OWASP Top-10 wrapper | Saturated cell |
-| Generic `debugger` agent | Saturated cell |
-| Generic `test-automator` agent | Saturated cell |
-| Generic TDD red/green/refactor coaches | Multiple existing well-rated implementations |
-| Per-language unit testing pattern bundles (`python-testing-patterns`, etc.) | Saturated by existing language bundles |
-| Per-framework one-shot E2E *agents* (Playwright-expert, Cypress-expert, Selenium-expert) | Already covered as agents in the ecosystem; the *skill* form is welcome under a web-E2E plugin |
-| Generic AI code review | Saturated cell |
-| Generic threat-modeling tool | Already well covered |
-| Desktop apps (Electron, Qt, Windows native) | Niche audience |
-| Embedded / IoT testing | Niche audience |
-| Game / VR testing | Niche audience |
-| Generic security tool wrappers (zap, burp, snyk, trivy, semgrep, gitleaks) | Saturated; differentiated security niches welcome under a dedicated plugin |
-| Generic WCAG audit umbrella skill | Saturated at the umbrella level; atomic accessibility skills (keyboard, focus-trap, color-contrast, ARIA) are welcome |
+This requirement replaces the older "saturated cells" exclusion list. We
+no longer block component categories by name. Instead, components are
+admitted on the strength of three things:
 
-If you believe a slot above should be re-opened, open an issue first with
-the measured evidence (e.g., a refreshed ecosystem rating pass showing the
-existing components have decayed below the importable bar).
+1. **An explicit trigger condition** — the description includes a
+   "Use when…" / "Use proactively after…" clause (per Anthropic's
+   subagent and skill guidance: the description is what Claude uses to
+   route, so it must predict the body).
+2. **A documented differentiation axis** — the PR identifies the closest
+   existing components and explains the axis on which the new one is
+   distinguishable (tool, lifecycle stage, output shape, scope of inputs,
+   archetype). "It's the same idea, but mine" is not an axis.
+3. **The rating bar** — total ≥ 21/30, d6 ≥ 1, per the framework in
+   [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md).
+
+What this changes vs. earlier policy:
+
+- Component categories formerly listed as "saturated" (generic
+  `code-reviewer`, `security-auditor`, `debugger`, `test-automator`,
+  per-language testing bundles, generic threat-modeling tools, desktop /
+  embedded / game / VR testing, generic security tool wrappers, generic
+  WCAG umbrella skills) are **no longer blocked by category**. A
+  differentiated contribution in any of these areas is admissible.
+- Names like `qa-expert` / `quality-engineer` / `qa-engineer` are also
+  no longer banned by `validate.sh`. They remain *bad names* because they
+  rarely come with a trigger condition — but the reviewer judgment is in
+  D3 / D4, not in a lint denylist.
+- Sharply-scoped role names that ship with a specific trigger are fine
+  and always have been (see existing `quality-coach`, `release-engineer`,
+  `data-quality-engineer`, `iac-policy-checker`).
 
 ## Reviewer rubric
 

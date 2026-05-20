@@ -174,40 +174,46 @@ Just ask me anything QA-related.
 
 | Dim | Score | Rationale |
 |---|:---:|---|
-| D1 Spec compliance | 0 | `validate.sh` rejects the name `qa-expert` (generic role-agent denylist). Description starts with "You are…" + "I help…" — both linted. **Multiple lint failures = unmergeable regardless of score.** |
+| D1 Spec compliance | 1 | Description starts with "You are…" + "I help…" — both rejected by `validate.sh`. Name `qa-expert` is kebab-case and 64-char-compliant (the lint no longer bans the literal name; the issue is in D3/D4). **Lint failures on description alone make this unmergeable.** |
 | D2 Archetype fit | 0 | Declares A2 (action-taking task) but body has no when-invoked steps, no output format, no concrete task. It's a persona, not a task scope. |
-| D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined. Saturated by 3+ near-clones in the broader ecosystem. Negative-predictive — body could be literally anything. |
-| D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. Documented NOT-GAP (see [`CONTRIBUTING.md`](CONTRIBUTING.md) — the marketplace excludes generic role-agent names). |
+| D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined with "and". Predicts nothing — the body could be literally anything. PR doesn't name nearest neighbors or articulate a differentiation axis. |
+| D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. The differentiation requirement in [`CONTRIBUTING.md`](CONTRIBUTING.md) is not met — contributor cannot say "use this when X but not when Y." |
 | D5 Body quality | 1 | Body has structure (sections), but no steps, no output format, no examples. **1 point for not being empty.** |
 | D6 Terminology | 0 | Zero citations; zero source-grounded claims. **`d6: 0` is a hard reject** per the v2.0 framework. |
-| **Total** | **1/30 + d6: 0** | Hard reject. Documented NOT-GAP. Don't merge. |
+| **Total** | **2/30 + d6: 0** | Hard reject. No differentiation axis, no trigger, no source grounding. Don't merge. |
 
 ### What makes this an F-grade
 
-- Persona-as-scope (`You are an expert…`) — rejected by linter and by
-  the framework's "one agent, one specific task" rule.
-- Generic name (`qa-expert`) — rejected by `validate.sh` denylist.
+- Persona-as-scope (`You are an expert…`) — rejected by the linter on
+  description openers, and by the framework's "one agent, one specific
+  task" rule (D2/D4).
+- No documented differentiation axis — the PR can't say which existing
+  components this replaces or extends, and the description doesn't
+  predict the body.
 - `d6: 0` — hard reject regardless of any other dimension.
-- Documented NOT-GAP — generic role-agent names are linted out by
-  `validate.sh`; contributor must show measured evidence that the
-  ecosystem saturation no longer holds before this category is even
-  considered.
 
 ### How to coach the contributor
 
-> "This is a documented NOT-GAP. Generic names like `qa-expert` /
->  `quality-engineer` / `qa-engineer` are intentionally skipped — the
->  existing ecosystem has 3+ near-clones and they all rate poorly,
->  and `validate.sh` rejects them via the role-agent denylist.
+> "The lint fails on the description ("You are…" / "I help…" openers
+> are rejected — descriptions must be third-person, action-oriented),
+> and the rating bar fails on multiple dimensions: there's no archetype
+> match, no trigger condition, no differentiation axis vs the existing
+> ecosystem, and zero citations.
 >
-> If you have a specific QA task in mind, reshape into a sharply
-> scoped agent: pick ONE behavior (e.g., 'reviews a test plan against
-> the DoD' → that's `quality-coach` in qa-roles, already shipped) and
-> name it after the behavior, not after the role.
+> Generic names like `qa-expert` aren't banned by name anymore, but
+> they almost always come with persona-shaped scopes that fail D3/D4.
+> If you have a specific QA task in mind, reshape into a sharply scoped
+> component: pick ONE behavior (e.g., 'reviews a test plan against the
+> DoD' → that's `quality-coach` in qa-roles, already shipped) and name
+> it after the behavior, not the role.
 >
-> Required reading before resubmitting: the single-description test
-> in [`CONTRIBUTING.md`](CONTRIBUTING.md), and the A1–A4 archetype
-> guidance in [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)."
+> Before resubmitting:
+> 1. Identify your 2–3 nearest neighbors and write down the
+>    differentiation axis (per [`CONTRIBUTING.md`](CONTRIBUTING.md)).
+> 2. Re-run the single-description test (predictive, third-person,
+>    single-clause, includes 'Use when…').
+> 3. Pick a matching archetype and rebuild the body to its shape
+>    (per [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md))."
 
 ## Calibration check after the three exemplars
 
@@ -219,7 +225,9 @@ If you and another reviewer disagree on a new component by more than
 | D1 | "lint passes but description starts with 'Helps with'" | Lint is the floor, not the ceiling. Spec compliance is binary on the lint, but the *quality* judgment is in D3. Don't double-deduct in D1 for description issues. |
 | D2 | "S1 vs S3 for a tool wrapper that includes some build-an-X" | If 70%+ of the body is "how to run / configure / parse", it's S1. If 70%+ is "produces a custom artifact via a process", it's S3. Above all, ask: does the body match the declared archetype? |
 | D3 | "description is 1024 chars, is that too long?" | 1024 is the spec ceiling. Quality is about predictiveness, not length. A 900-char description that uniquely identifies the component is better than a 200-char description that doesn't. |
+| D3 | "PR doesn't name nearest neighbors" | The differentiation requirement is a hard expectation, not a nice-to-have. If the PR body and component description don't identify the 2–3 closest existing components and state the axis on which the new one differs, deduct in D3 and request an update. |
 | D4 | "trigger condition is implicit in the title" | Implicit triggers cause auto-invocation collisions. The trigger should be explicit in the description ("Use when…" / "Use proactively after…"). Deduct if implicit. |
+| D4 | "persona-shaped scope, but lint passes" | Persona scopes (`qa-expert`, `quality-engineer`) are no longer banned by `validate.sh`. The check now lives here: if the trigger condition doesn't pick this component over its nearest neighbors, D4 fails regardless of name. |
 | D5 | "body is 350 lines, push for `references/` split?" | <300 OK for S1 / S3 (full lifecycle). 300-400 OK if the extra is examples / case studies. >400 push for split unless the contributor argues progressive disclosure would harm comprehension. |
 | D6 | "claim is correct but uncited; do I deduct?" | Yes. The framework rates *citation discipline*, not just *claim accuracy*. An uncited correct claim is still uncited. The user can't verify it without re-doing the research. |
 
@@ -232,9 +240,9 @@ After working through this pack:
 - You should be able to explain why D6 = 0 is a hard reject (citation
   theater is the dominant failure mode in the ecosystem; the gate
   forces source discipline).
-- You should be able to spot a NOT-GAP component (generic role
-  agents, persona-as-scope, descriptions that match 3+ existing
-  ecosystem entries) without consulting the linter.
+- You should be able to spot a persona-as-scope component (vague
+  description, no trigger, no nearest-neighbor differentiation) and
+  explain why it fails D3/D4 — without relying on a name denylist.
 
 If you missed by >2 points on any exemplar, re-read the relevant
 [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md) section and the
@@ -244,8 +252,7 @@ calibration notes above.
 
 - [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md) — the rubric.
 - [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md) — archetype definitions.
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — lint rules, NOT-GAPS list.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — lint rules, differentiation
+  requirement.
 - [`COMPOSITION.md`](COMPOSITION.md) — agent → skill preload graph
   (D1 cross-plugin dep check).
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) NOT-GAPS list — intentional
-  skips; evidence required to override.

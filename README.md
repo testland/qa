@@ -16,8 +16,9 @@
   uncited claims (citation theater)
 - **CI-validated composition** — every agent's preloaded skills are
   reference-checked, no dangling deps
-- **No persona agents, no role-soup** — explicit NOT-GAPS doctrine prevents
-  scope creep and generic clones
+- **Differentiation required** — every component must articulate how it
+  differs from its nearest neighbors. Generic, persona-shaped scopes that
+  can't name a trigger condition get sent back for reshaping
 - **Reviewer-calibrated** — two-evaluator rubric, A/C/F-grade exemplars in
   [`docs/REVIEWER_TRAINING.md`](docs/REVIEWER_TRAINING.md)
 

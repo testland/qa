@@ -60,8 +60,10 @@ Score: __/5
 
 Single-description test:
 
-- [ ] Distinguishable from 2-3 nearest neighbors
-- [ ] Predictive of body content
+- [ ] Distinguishable from 2-3 nearest neighbors (PR description must
+      identify those neighbors and state the differentiation axis)
+- [ ] Predictive of body content (a stranger reading only the description
+      should correctly anticipate what the body does)
 - [ ] Third-person, action-oriented (no "You are.../I help...")
 - [ ] No `and` joining unrelated clauses
 - [ ] Concrete verbs (no "helps with", "manages", "handles")
@@ -71,11 +73,16 @@ Score: __/5
 
 ## D4 — Use-case fit (0-5)
 
-- [ ] Trigger condition is clear and non-overlapping with sibling components
+- [ ] Explicit trigger condition in the description (matches Anthropic's
+      official guidance: descriptions should "describe what the skill
+      does and when to use it")
+- [ ] Trigger non-overlapping with sibling components
 - [ ] User can predict when to invoke (or when Claude will auto-invoke an agent)
-- [ ] Doesn't duplicate functionality available in another plugin
+- [ ] Doesn't duplicate functionality available in another plugin without
+      a documented differentiation axis
 - [ ] Sized correctly: not so narrow it's only useful once; not so broad
-      that it's a "general-purpose" catch-all
+      that it's a "general-purpose" catch-all (persona-shaped scopes that
+      can't name a trigger fall here, not in D1)
 
 Score: __/5
 
@@ -134,10 +141,9 @@ If you see any of these, request changes (don't merge):
 - Agent body > 80 lines (move details to a preloaded skill)
 - Skill body without progressive disclosure (everything inline)
 - Description that is a marketing tagline rather than a behavioral spec
-- Generic role-agent name (`qa-expert`, etc.) — `validate.sh` rejects
-  these by name
-- Component in a NOT-GAPS slot (see [`CONTRIBUTING.md`](CONTRIBUTING.md))
-  without measured-evidence justification
+- Persona-shaped scope with no trigger condition (D4 ≤ 1). The PR doesn't
+  name nearest neighbors or articulate a differentiation axis — see the
+  Differentiation requirement in [`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 ## Calibration
 
@@ -152,7 +158,8 @@ When in doubt, walk through these calibration anchors:
 - **C-grade exemplar (16-20/30):** a skill that scaffolds tooling but
   doesn't actually walk the user through running, parsing, or gating —
   weak D5. The body reads like a setup README rather than a workflow.
-- **F-grade exemplar (<16/30):** a "qa-expert" persona agent — vague
-  description, no archetype fit, generic role framing, no concrete output
-  shape. Reject and ask the contributor to reshape into a sharp,
-  task-scoped agent.
+- **F-grade exemplar (<16/30):** a persona-shaped agent — vague
+  description ("expert in all aspects of X"), no archetype fit, no
+  trigger condition, no concrete output shape. Reject and ask the
+  contributor to reshape into a sharp, task-scoped component with a
+  documented differentiation axis vs. its nearest existing neighbors.

@@ -7,11 +7,13 @@ Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
 ## Prerequisites
 
 - Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the rating gate, lint rules,
-  and NOT-GAPS list.
+  and the differentiation requirement.
 - Read the archetype definitions in the next section before drafting any
   component scope.
-- Confirm the target slot is not in the NOT-GAPS list in
-  [`CONTRIBUTING.md`](CONTRIBUTING.md).
+- Identify the 2–3 nearest existing components (in this marketplace or
+  the broader ecosystem) and write down the differentiation axis on which
+  the new component is distinguishable. Reviewers will check this against
+  the description.
 
 ## Archetypes
 

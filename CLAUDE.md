@@ -64,22 +64,35 @@ See [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md) for the rubric
 and [`docs/REVIEWER_TRAINING.md`](docs/REVIEWER_TRAINING.md) for A/C/F-grade
 exemplars.
 
-## NOT-GAPS
+## Differentiation requirement
 
-Some component categories are **explicitly out of scope** because the
-ecosystem is saturated and the rating gate would reject them. Do not
-propose:
+Components are admitted on three things: a sharp trigger condition, a
+documented differentiation axis vs. the 2–3 nearest neighbors, and the
+rating bar (≥21/30, d6 ≥1). No category is banned by name. The lint
+rejects persona-style openers ("You are…" / "I help…"), but persona-shaped
+*scopes* are caught by reviewer judgment in D3/D4 — not by a denylist.
 
-- Generic role-agent names: `qa-expert`, `quality-engineer`, `qa-engineer`,
-  `debugger`, `architect`, `tester`. Persona-as-scope agents lose D2 (no
-  task), D3 (description matches 3+ near-clones), D4 (no trigger condition).
-- Multi-skill mega-bundles ("does everything for X language"). One skill
-  per tool is the convention.
-- Documentation-only "guide" components without concrete steps + commands.
-- Components that overlap an existing one without a documented differentiation
-  axis (cross-ref `qa-iac` for the per-tool S1 + A3 unifier model).
+What still fails the bar today:
 
-See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the full NOT-GAPS list.
+- **Persona-as-scope with no trigger.** "qa-expert" / "quality-engineer"
+  agents are no longer rejected by name, but they consistently fail D3
+  (description predicts nothing) and D4 (no trigger condition, overlaps
+  everything). Reshape into a sharp behavior-named component.
+- **Multi-skill mega-bundles.** One skill per tool / one agent per task
+  remains the convention. A "does everything for X language" skill
+  collapses D3.
+- **Documentation-only "guide" components** without concrete steps +
+  commands. These fail D5 body quality.
+- **Components that overlap an existing one without a documented
+  differentiation axis.** The PR description must name the closest
+  existing component(s) and state the axis on which the new one differs
+  (tool, lifecycle stage, output shape, scope of inputs, archetype).
+  Cross-ref `qa-iac` for the per-tool S1 + A3 unifier model.
+
+See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the differentiation
+requirement in full, and [`docs/ROADMAP.md`](docs/ROADMAP.md) for the
+current gap list and which categories the marketplace actively wants
+contributions in.
 
 ## Local validation flow
 
