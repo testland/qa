@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**63 plugins · 433 components**
+**72 plugins · 507 components**
 
 ## Foundations
 
@@ -63,6 +63,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 | [qa-compliance](plugins/qa-compliance/) | 1.0.0 | 6 skills + 1 agents | S2×3 · S3×3 · A3×1 |
 | [qa-dast](plugins/qa-dast/) | 1.0.0 | 4 skills + 1 agents | S1×3 · S3×1 · A3×1 |
 | [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.0.0 | 10 skills + 1 agents | S1×7 · S2×2 · S4×1 · A4×1 |
+| [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.0.0 | 4 skills + 2 agents | S2×2 · S3×2 · A1×1 · A3×1 |
 | [qa-sast](plugins/qa-sast/) | 1.0.0 | 5 skills + 1 agents | S1×5 · A3×1 |
 | [qa-sbom](plugins/qa-sbom/) | 1.0.0 | 5 skills + 1 agents | S1×3 · S2×2 · A3×1 |
 | [qa-sca](plugins/qa-sca/) | 1.0.0 | 5 skills + 1 agents | S1×3 · S2×2 · A3×1 |
@@ -93,16 +94,24 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 | [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.1.0 | 3 skills + 2 agents | S3×3 · A3×2 |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.0.0 | 7 skills + 0 agents | S1×5 · S3×2 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.0.0 | 5 skills + 0 agents | S1×3 · S3×2 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×3 · A1×1 |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.0.0 | 5 skills + 0 agents | S2×1 · S3×4 |
 | [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.0.0 | 3 skills + 0 agents | S1×3 |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.0.0 | 4 skills + 1 agents | S1×4 · A3×1 |
 | [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.0.0 | 4 skills + 1 agents | S1×3 · S3×1 · A3×1 |
+| [qa-experimentation](plugins/qa-experimentation/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×2 · S3×1 · A1×1 |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×1 · S3×2 · A1×1 |
+| [qa-graphql](plugins/qa-graphql/) | 1.0.0 | 7 skills + 1 agents | S1×5 · S2×2 · A1×1 |
+| [qa-grpc](plugins/qa-grpc/) | 1.0.0 | 7 skills + 0 agents | S1×4 · S2×2 · S3×1 |
 | [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.0.0 | 6 skills + 1 agents | S1×6 · A3×1 |
 | [qa-ml-models](plugins/qa-ml-models/) | 1.0.0 | 5 skills + 1 agents | S1×5 · A3×1 |
 | [qa-notifications](plugins/qa-notifications/) | 1.0.0 | 6 skills + 0 agents | S1×2 · S3×4 |
+| [qa-payment](plugins/qa-payment/) | 1.0.0 | 10 skills + 0 agents | S1×4 · S2×3 · S3×3 |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.0.0 | 5 skills + 0 agents | S1×4 · S3×1 |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.0.0 | 4 skills + 0 agents | S3×4 |
 | [qa-search-relevance](plugins/qa-search-relevance/) | 1.0.0 | 3 skills + 1 agents | S1×3 · A3×1 |
+| [qa-serverless](plugins/qa-serverless/) | 1.0.0 | 9 skills + 0 agents | S1×6 · S2×2 · S3×1 |
+| [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.0.0 | 10 skills + 0 agents | S1×6 · S2×3 · S3×1 |
 
 ## Tooling
 
@@ -126,6 +135,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-auth-flows](plugins/qa-auth-flows/)
 - [qa-bdd](plugins/qa-bdd/)
 - [qa-bug-repro](plugins/qa-bug-repro/)
+- [qa-cache-testing](plugins/qa-cache-testing/)
 - [qa-chaos-resilience](plugins/qa-chaos-resilience/)
 - [qa-charts-dataviz](plugins/qa-charts-dataviz/)
 - [qa-ci-integration](plugins/qa-ci-integration/)
@@ -141,8 +151,12 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-db-migrations](plugins/qa-db-migrations/)
 - [qa-defect-management](plugins/qa-defect-management/)
 - [qa-distributed-tracing](plugins/qa-distributed-tracing/)
+- [qa-experimentation](plugins/qa-experimentation/)
+- [qa-feature-flags](plugins/qa-feature-flags/)
 - [qa-flake-triage](plugins/qa-flake-triage/)
 - [qa-fuzz-testing](plugins/qa-fuzz-testing/)
+- [qa-graphql](plugins/qa-graphql/)
+- [qa-grpc](plugins/qa-grpc/)
 - [qa-hiring](plugins/qa-hiring/)
 - [qa-iac](plugins/qa-iac/)
 - [qa-llm-evaluation](plugins/qa-llm-evaluation/)
@@ -152,8 +166,10 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-ml-models](plugins/qa-ml-models/)
 - [qa-mobile-native](plugins/qa-mobile-native/)
 - [qa-modern-web](plugins/qa-modern-web/)
+- [qa-multi-tenancy](plugins/qa-multi-tenancy/)
 - [qa-mutation-testing](plugins/qa-mutation-testing/)
 - [qa-notifications](plugins/qa-notifications/)
+- [qa-payment](plugins/qa-payment/)
 - [qa-pdf-print-render](plugins/qa-pdf-print-render/)
 - [qa-process](plugins/qa-process/)
 - [qa-property-based](plugins/qa-property-based/)
@@ -166,6 +182,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-sca](plugins/qa-sca/)
 - [qa-search-relevance](plugins/qa-search-relevance/)
 - [qa-secrets](plugins/qa-secrets/)
+- [qa-serverless](plugins/qa-serverless/)
 - [qa-shift-left](plugins/qa-shift-left/)
 - [qa-shift-right](plugins/qa-shift-right/)
 - [qa-test-data](plugins/qa-test-data/)
@@ -175,6 +192,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-test-management](plugins/qa-test-management/)
 - [qa-test-reporting](plugins/qa-test-reporting/)
 - [qa-test-review](plugins/qa-test-review/)
+- [qa-time-and-timezones](plugins/qa-time-and-timezones/)
 - [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/)
 - [qa-unit-tests-js](plugins/qa-unit-tests-js/)
 - [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/)
