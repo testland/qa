@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**59 plugins · 383 components**
+**60 plugins · 390 components**
 
 ## Foundations
 
@@ -65,6 +65,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 | [qa-sbom](plugins/qa-sbom/) | 1.0.0 | 5 skills + 1 agents | S1×3 · S2×2 · A3×1 |
 | [qa-sca](plugins/qa-sca/) | 1.0.0 | 5 skills + 1 agents | S1×3 · S2×2 · A3×1 |
 | [qa-secrets](plugins/qa-secrets/) | 1.0.0 | 4 skills + 0 agents | S1×3 · S3×1 |
+| [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.0.0 | 6 skills + 1 agents | S1×3 · S2×2 · S3×1 · A3×1 |
 
 ## Operations & resilience
 
@@ -163,6 +164,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-shift-left](plugins/qa-shift-left/)
 - [qa-shift-right](plugins/qa-shift-right/)
 - [qa-test-data](plugins/qa-test-data/)
+- [qa-test-data-privacy](plugins/qa-test-data-privacy/)
 - [qa-test-environment](plugins/qa-test-environment/)
 - [qa-test-impact-analysis](plugins/qa-test-impact-analysis/)
 - [qa-test-reporting](plugins/qa-test-reporting/)
