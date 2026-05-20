@@ -471,6 +471,13 @@
       "description": "GraphQL server testing: introspection attack-surface reference, persisted-query strategy, per-framework testing (Apollo Server, GraphQL Yoga, Hasura, Mercurius, Pothos), and an N+1 query detector. Distinct from qa-contract-testing/graphql-schema-regression (contract drift detection); this plugin covers server/runtime + framework-specific patterns.",
       "strict": true,
       "category": "ai-specialized"
+    },
+    {
+      "name": "qa-cache-testing",
+      "source": "./plugins/qa-cache-testing",
+      "description": "Cache testing across layers: Redis cache patterns, CDN cache-purge testing (Cloudflare, Fastly, CloudFront), Varnish VTC syntax, browser Cache-Control tests, cache-coherence + stampede + stale-while-revalidate references, and a cache-key collision detector. Covers RFC 9111 HTTP caching and the canonical multi-tier cache discipline (browser to CDN to app to data store).",
+      "strict": true,
+      "category": "ai-specialized"
     }
   ]
 }
