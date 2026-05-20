@@ -90,7 +90,7 @@
     {
       "name": "qa-test-reporting",
       "source": "./plugins/qa-test-reporting",
-      "description": "Test reporting + coverage analytics: 16 skills \u2014 parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
+      "description": "Test reporting + coverage analytics: 16 skills — parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter.",
       "strict": true,
       "category": "foundations"
     },
@@ -104,14 +104,14 @@
     {
       "name": "qa-roles",
       "source": "./plugins/qa-roles",
-      "description": "Sharply-scoped QA role agents (3): test-architect (A2 \u2014 pyramid + framework recommendation per repo), quality-coach (A3 \u2014 DoD adherence enforcer), release-engineer (A4 \u2014 runbook + canary release conductor). No generic persona-as-scope agents.",
+      "description": "Sharply-scoped QA role agents (3): test-architect (A2 — pyramid + framework recommendation per repo), quality-coach (A3 — DoD adherence enforcer), release-engineer (A4 — runbook + canary release conductor). No generic persona-as-scope agents.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-review",
       "source": "./plugins/qa-test-review",
-      "description": "Test code reviewers for test files only \u2014 production code is out of scope. 1 skill (test-code-conventions) and 4 adversarial agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic).",
+      "description": "Test code reviewers for test files only — production code is out of scope. 1 skill (test-code-conventions) and 4 adversarial agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic).",
       "strict": true,
       "category": "foundations"
     },
@@ -448,6 +448,13 @@
       "name": "qa-fuzz-testing",
       "source": "./plugins/qa-fuzz-testing",
       "description": "Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-reference, sanitiser-integration-reference) + 7 per-language fuzzer skills (libfuzzer-cpp, afl-plus-plus, go-native-fuzzing, cargo-fuzz-rust, atheris-python-fuzzing, jazzer-jvm-fuzzing, ossfuzz-integration) + 1 dispatcher skill (fuzz-toolkit-dispatcher) + 1 agent (fuzz-target-author). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.",
+      "strict": true,
+      "category": "security-compliance"
+    },
+    {
+      "name": "qa-multi-tenancy",
+      "source": "./plugins/qa-multi-tenancy",
+      "description": "Tenant-isolation testing for B2B SaaS: row-level security, cross-tenant leak detection, tenant-id propagation tracing, isolation-model references (silo / pool / bridge), and adversarial review of tenant-leak risk.",
       "strict": true,
       "category": "security-compliance"
     }

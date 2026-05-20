@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-multi-tenancy",
+  "version": "0.1.0",
+  "description": "Tenant-isolation testing for B2B SaaS: row-level security, cross-tenant leak detection, tenant-id propagation tracing, isolation-model references (silo / pool / bridge), and adversarial review of tenant-leak risk.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-multi-tenancy",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "multi-tenancy"]
+}
