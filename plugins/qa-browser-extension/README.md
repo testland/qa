@@ -8,6 +8,7 @@ Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prom
 |---|---|---|---|
 | skill | manifest-v3-test-surface-reference | S2 | MV2/MV3 manifest field map + Firefox/Chrome key matrix + SW runtime restrictions |
 | skill | web-ext-cli-mozilla | S1 | Mozilla `web-ext` v8 CLI: lint + run + build + sign for Firefox and Chromium |
+| skill | chrome-extension-test-loader | S1 | Unpacked-extension dev load + chrome.runtime/tabs/connect messaging API surface |
 
 ## Install
 
