@@ -513,6 +513,13 @@
       "description": "Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-scope-checker (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.",
       "strict": true,
       "category": "ai-specialized"
+    },
+    {
+      "name": "qa-browser-extension",
+      "source": "./plugins/qa-browser-extension",
+      "description": "Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prompts, and storage.sync vs storage.local test patterns",
+      "strict": true,
+      "category": "quality-engineering"
     }
   ]
 }
