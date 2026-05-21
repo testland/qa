@@ -11,6 +11,7 @@ Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prom
 | skill | chrome-extension-test-loader | S1 | Unpacked-extension dev load + chrome.runtime/tabs/connect messaging API surface |
 | skill | playwright-extension-fixtures | S1 | Playwright `launchPersistentContext` + load-extension args + service-worker race fixture |
 | skill | mv2-to-mv3-migration-test-checklist | S3 | Build a per-extension MV2 to MV3 migration checklist artifact with section-by-section verification tests |
+| skill | extension-storage-test-author | S3 | Build a chrome.storage area-selection + quota-exceeded + onChanged + managed-readonly test suite |
 
 ## Install
 
