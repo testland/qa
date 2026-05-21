@@ -6,7 +6,7 @@ Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prom
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | manifest-v3-test-surface-reference | S2 | MV2/MV3 manifest field map + Firefox/Chrome key matrix + SW runtime restrictions |
 
 ## Install
 
