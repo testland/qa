@@ -6,7 +6,7 @@ Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation,
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | pwa-install-flow-reference | S2 | Reference for the PWA install flow as a test surface — installability gate, `beforeinstallprompt` handshake, per-platform paths, post-install `display-mode` signal |
 
 ## Install
 
