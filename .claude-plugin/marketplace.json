@@ -520,6 +520,12 @@
       "description": "Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prompts, and storage.sync vs storage.local test patterns",
       "strict": true,
       "category": "quality-engineering"
+    },
+    {
+      "name": "qa-embedded",
+      "source": "./plugins/qa-embedded",
+      "description": "Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, gcov coverage, QEMU system emulation",
+      "strict": true
     }
   ]
 }
