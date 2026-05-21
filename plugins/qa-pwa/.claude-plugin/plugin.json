@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-pwa",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle testing — distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
   "author": {
     "name": "testland",
