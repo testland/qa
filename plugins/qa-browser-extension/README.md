@@ -10,6 +10,7 @@ Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prom
 | skill | web-ext-cli-mozilla | S1 | Mozilla `web-ext` v8 CLI: lint + run + build + sign for Firefox and Chromium |
 | skill | chrome-extension-test-loader | S1 | Unpacked-extension dev load + chrome.runtime/tabs/connect messaging API surface |
 | skill | playwright-extension-fixtures | S1 | Playwright `launchPersistentContext` + load-extension args + service-worker race fixture |
+| skill | mv2-to-mv3-migration-test-checklist | S3 | Build a per-extension MV2 to MV3 migration checklist artifact with section-by-section verification tests |
 
 ## Install
 
