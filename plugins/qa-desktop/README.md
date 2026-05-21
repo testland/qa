@@ -6,7 +6,7 @@ Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | desktop-test-strategy-reference | S2 | Pure-reference catalog of desktop GUI test strategies across Windows (UIA), macOS (XCTest + Accessibility), Linux (AT-SPI), Electron, and Qt |
 
 ## Install
 
