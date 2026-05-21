@@ -526,6 +526,12 @@
       "source": "./plugins/qa-embedded",
       "description": "Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, gcov coverage, QEMU system emulation",
       "strict": true
+    },
+    {
+      "name": "qa-game",
+      "source": "./plugins/qa-game",
+      "description": "Game engine testing (Unity, Unreal, Godot), platform certification overview (Sony TRC, Nintendo Lotcheck, MS XR, Steam Direct), multiplayer state machine coverage, and gameplay recording/replay",
+      "strict": true
     }
   ]
 }
