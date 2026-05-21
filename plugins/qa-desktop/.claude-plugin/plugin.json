@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-desktop",
+  "version": "0.1.0",
+  "description": "Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework)",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-desktop",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "desktop"]
+}

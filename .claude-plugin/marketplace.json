@@ -538,6 +538,12 @@
       "source": "./plugins/qa-pwa",
       "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle testing \u2014 distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
       "strict": true
+    },
+    {
+      "name": "qa-desktop",
+      "source": "./plugins/qa-desktop",
+      "description": "Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework)",
+      "strict": true
     }
   ]
 }
