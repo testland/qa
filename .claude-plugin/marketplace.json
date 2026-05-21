@@ -532,6 +532,12 @@
       "source": "./plugins/qa-game",
       "description": "Game engine testing (Unity, Unreal, Godot), platform certification overview (Sony TRC, Nintendo Lotcheck, MS XR, Steam Direct), multiplayer state machine coverage, and gameplay recording/replay",
       "strict": true
+    },
+    {
+      "name": "qa-pwa",
+      "source": "./plugins/qa-pwa",
+      "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle testing \u2014 distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
+      "strict": true
     }
   ]
 }
