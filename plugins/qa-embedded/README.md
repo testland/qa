@@ -7,6 +7,7 @@ Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
 | skill | embedded-coverage-strategy-reference | S2 | Coverage criteria, gcov + llvm-cov toolchains, MISRA / DO-178C / ISO 26262 expectations |
+| skill | hardware-in-loop-reference | S2 | HIL pattern, MIL/SIL/PIL/HIL V-cycle, vendor stack (NI / dSPACE / Vector / Speedgoat), bus emulation, fault injection, DO-178C / ISO 26262 alignment |
 
 ## Install
 
