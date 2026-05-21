@@ -6,7 +6,7 @@ Game engine testing (Unity, Unreal, Godot), platform certification overview (Son
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| (filled in as components are added) | | | |
+| skill | game-test-categories-reference | S2 | Six canonical game-test categories (functional / compliance / compatibility / performance / localization / accessibility) plus multiplayer + content-rating cross-axes, cross-referenced to Xbox XR / Sony TRC / Nintendo Lotcheck / Steam Direct vocabulary |
 
 ## Install
 
