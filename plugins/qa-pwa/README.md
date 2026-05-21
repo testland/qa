@@ -12,6 +12,7 @@ Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation,
 | skill | web-push-test | S1 | Test browser web-push subscription lifecycle — `pushManager.subscribe`, VAPID JWT (ES256, aud/exp/sub per RFC 8292), `pushsubscriptionchange`, RFC 8030 410/413/429 handling, `unsubscribe()` |
 | skill | service-worker-lifecycle-test | S3 | Emit per-SW state-machine spec — `parsed → installing → installed → activating → activated → redundant`, `waitUntil`, `skipWaiting` + `Clients.claim` upgrade path |
 | skill | offline-fallback-test | S3 | Emit per-route offline test suite — walks Jake Archibald's eight cookbook recipes, layers Workbox `offlineFallback()`, pins Cache Storage / IndexedDB / Storage Manager choice |
+| skill | add-to-homescreen-flow-test | S3 | Emit per-PWA Add-to-Home-Screen suite — walks the four-stage timeline (gate → `beforeinstallprompt` → per-platform path → `display-mode` MQ), per-cell tests + iOS metadata + post-install MQ |
 
 ## Install
 
