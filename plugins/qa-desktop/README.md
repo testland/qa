@@ -9,6 +9,7 @@ Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS
 | skill | desktop-test-strategy-reference | S2 | Pure-reference catalog of desktop GUI test strategies across Windows (UIA), macOS (XCTest + Accessibility), Linux (AT-SPI), Electron, and Qt |
 | skill | electron-spectron | S2 | Legacy reference for the deprecated Spectron framework; documents migration path to Playwright `_electron` |
 | skill | electron-playwright | S1 | Authors Playwright `_electron` tests for packaged Electron apps; drives main process + renderer windows from one suite |
+| skill | winappdriver | S1 | Authors and runs UI tests against Microsoft WinAppDriver (W3C WebDriver for UWP, WPF, WinForms, and Win32 apps on Windows 10) |
 
 ## Install
 
