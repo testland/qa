@@ -525,25 +525,29 @@
       "name": "qa-embedded",
       "source": "./plugins/qa-embedded",
       "description": "Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, gcov coverage, QEMU system emulation",
-      "strict": true
+      "strict": true,
+      "category": "functional-testing"
     },
     {
       "name": "qa-game",
       "source": "./plugins/qa-game",
       "description": "Game engine testing (Unity, Unreal, Godot), platform certification overview (Sony TRC, Nintendo Lotcheck, MS XR, Steam Direct), multiplayer state machine coverage, and gameplay recording/replay",
-      "strict": true
+      "strict": true,
+      "category": "functional-testing"
     },
     {
       "name": "qa-pwa",
       "source": "./plugins/qa-pwa",
       "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle testing \u2014 distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
-      "strict": true
+      "strict": true,
+      "category": "quality-engineering"
     },
     {
       "name": "qa-desktop",
       "source": "./plugins/qa-desktop",
       "description": "Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework)",
-      "strict": true
+      "strict": true,
+      "category": "functional-testing"
     }
   ]
 }
