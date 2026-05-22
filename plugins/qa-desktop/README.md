@@ -12,6 +12,7 @@ Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS
 | skill | winappdriver | S1 | Authors and runs UI tests against Microsoft WinAppDriver (W3C WebDriver for UWP, WPF, WinForms, and Win32 apps on Windows 10) |
 | skill | appium-windows-driver | S1 | Authors Appium 2.x tests against the Windows driver — the Node.js proxy in front of WinAppDriver with `windows:` gestures and PowerShell hooks |
 | skill | qt-test-framework | S1 | Authors and runs Qt Test — the first-party C++ in-process unit + GUI test framework for Qt 6 with QTEST_MAIN, QSignalSpy, and QBENCHMARK |
+| skill | xctest-mac-desktop | S1 | Authors XCTest UI + unit tests for macOS apps with XCUIApplication / XCUIElement queries and `xcodebuild test` CI integration |
 
 ## Install
 
