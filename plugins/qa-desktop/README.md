@@ -10,6 +10,7 @@ Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS
 | skill | electron-spectron | S2 | Legacy reference for the deprecated Spectron framework; documents migration path to Playwright `_electron` |
 | skill | electron-playwright | S1 | Authors Playwright `_electron` tests for packaged Electron apps; drives main process + renderer windows from one suite |
 | skill | winappdriver | S1 | Authors and runs UI tests against Microsoft WinAppDriver (W3C WebDriver for UWP, WPF, WinForms, and Win32 apps on Windows 10) |
+| skill | appium-windows-driver | S1 | Authors Appium 2.x tests against the Windows driver — the Node.js proxy in front of WinAppDriver with `windows:` gestures and PowerShell hooks |
 
 ## Install
 
