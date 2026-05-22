@@ -13,6 +13,7 @@ Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS
 | skill | appium-windows-driver | S1 | Authors Appium 2.x tests against the Windows driver — the Node.js proxy in front of WinAppDriver with `windows:` gestures and PowerShell hooks |
 | skill | qt-test-framework | S1 | Authors and runs Qt Test — the first-party C++ in-process unit + GUI test framework for Qt 6 with QTEST_MAIN, QSignalSpy, and QBENCHMARK |
 | skill | xctest-mac-desktop | S1 | Authors XCTest UI + unit tests for macOS apps with XCUIApplication / XCUIElement queries and `xcodebuild test` CI integration |
+| skill | at-spi-linux | S1 | Authors Linux desktop tests via AT-SPI accessibility — dogtail for GTK + Qt apps, Accerciser for tree inspection, Xvfb + dbus-launch CI |
 
 ## Install
 
