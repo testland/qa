@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**72 plugins · 507 components**
+**77 plugins · 542 components**
 
 ## Foundations
 
@@ -30,6 +30,9 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-api-testing](plugins/qa-api-testing/) | 1.0.0 | 7 skills + 0 agents | S1×6 · S3×1 |
 | [qa-bdd](plugins/qa-bdd/) | 1.1.0 | 8 skills + 1 agents | S1×4 · S3×4 · A3×1 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents | S1×4 · S3×1 · A1×1 · A4×1 |
+| [qa-desktop](plugins/qa-desktop/) | 1.0.0 | 8 skills + 0 agents | S1×6 · S2×2 |
+| [qa-embedded](plugins/qa-embedded/) | 1.0.0 | 7 skills + 0 agents | S1×4 · S2×3 |
+| [qa-game](plugins/qa-game/) | 1.0.0 | 7 skills + 0 agents | S1×3 · S2×2 · S3×2 |
 | [qa-mobile-native](plugins/qa-mobile-native/) | 1.0.0 | 10 skills + 0 agents | S1×6 · S2×1 · S3×2 · S4×1 |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.0.0 | 5 skills + 1 agents | S1×5 · A1×1 |
 | [qa-property-based](plugins/qa-property-based/) | 1.0.0 | 5 skills + 0 agents | S1×5 |
@@ -47,11 +50,13 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
 | [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) | 1.0.0 | 12 skills + 1 agents | S1×5 · S2×4 · S3×3 · A3×1 |
+| [qa-browser-extension](plugins/qa-browser-extension/) | 1.0.0 | 6 skills + 0 agents | S1×3 · S2×1 · S3×2 |
 | [qa-charts-dataviz](plugins/qa-charts-dataviz/) | 1.0.0 | 3 skills + 0 agents | S1×3 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.0 | 5 skills + 3 agents | S1×3 · S2×1 · S3×1 · A1×2 · A2×1 |
 | [qa-localization](plugins/qa-localization/) | 1.0.0 | 4 skills + 0 agents | S1×1 · S3×3 |
 | [qa-modern-web](plugins/qa-modern-web/) | 1.0.0 | 5 skills + 0 agents | S1×4 · S3×1 |
 | [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 1.0.0 | 4 skills + 0 agents | S1×4 |
+| [qa-pwa](plugins/qa-pwa/) | 1.0.0 | 7 skills + 0 agents | S1×3 · S2×1 · S3×3 |
 | [qa-visual-regression](plugins/qa-visual-regression/) | 1.0.0 | 7 skills + 2 agents | S1×4 · S2×1 · S3×1 · S4×1 · A3×1 · A4×1 |
 
 ## Security & compliance
@@ -134,6 +139,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-async-jobs](plugins/qa-async-jobs/)
 - [qa-auth-flows](plugins/qa-auth-flows/)
 - [qa-bdd](plugins/qa-bdd/)
+- [qa-browser-extension](plugins/qa-browser-extension/)
 - [qa-bug-repro](plugins/qa-bug-repro/)
 - [qa-cache-testing](plugins/qa-cache-testing/)
 - [qa-chaos-resilience](plugins/qa-chaos-resilience/)
@@ -150,11 +156,14 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-data-quality](plugins/qa-data-quality/)
 - [qa-db-migrations](plugins/qa-db-migrations/)
 - [qa-defect-management](plugins/qa-defect-management/)
+- [qa-desktop](plugins/qa-desktop/)
 - [qa-distributed-tracing](plugins/qa-distributed-tracing/)
+- [qa-embedded](plugins/qa-embedded/)
 - [qa-experimentation](plugins/qa-experimentation/)
 - [qa-feature-flags](plugins/qa-feature-flags/)
 - [qa-flake-triage](plugins/qa-flake-triage/)
 - [qa-fuzz-testing](plugins/qa-fuzz-testing/)
+- [qa-game](plugins/qa-game/)
 - [qa-graphql](plugins/qa-graphql/)
 - [qa-grpc](plugins/qa-grpc/)
 - [qa-hiring](plugins/qa-hiring/)
@@ -173,6 +182,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-pdf-print-render](plugins/qa-pdf-print-render/)
 - [qa-process](plugins/qa-process/)
 - [qa-property-based](plugins/qa-property-based/)
+- [qa-pwa](plugins/qa-pwa/)
 - [qa-realtime-protocols](plugins/qa-realtime-protocols/)
 - [qa-resilience-drills](plugins/qa-resilience-drills/)
 - [qa-roles](plugins/qa-roles/)
