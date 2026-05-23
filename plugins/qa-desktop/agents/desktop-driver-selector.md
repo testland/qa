@@ -11,7 +11,7 @@ skills:
   - qt-test-framework
   - desktop-test-strategy-reference
 archetype: A2
-rating: 27
+rating: 26
 d6: 4
 d7: 4
 ---

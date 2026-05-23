@@ -17,7 +17,7 @@ skills:
   - nunit-tests
   - mstest-tests
 archetype: A2
-rating: 27
+rating: 26
 d6: 4
 d7: 4
 ---
@@ -74,67 +74,37 @@ Refuse to emit `Assert.True(true)` smoke asserts — they pass even when the flo
 
 ### Step 4 — Emit ONE test file
 
-Output structure per driver-framework combo (FlaUI / xUnit example):
+FlaUI / xUnit example:
 
 ```csharp
-using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Definitions;
-using Xunit;
-using <App>.UiTests.Fixtures;
-using <App>.UiTests.Screens;
-
-namespace <App>.UiTests.Tests;
-
-public class LoginTests : IClassFixture<AppFixture>
-{
+public class LoginTests : IClassFixture<AppFixture> {
     private readonly AppFixture _fx;
     public LoginTests(AppFixture fx) => _fx = fx;
-
     [StaFact]
-    public void Logs_in_with_valid_credentials()
-    {
-        // Arrange
+    public void Logs_in_with_valid_credentials() {
         var window = _fx.App.GetMainWindow(_fx.Automation);
         var login = new LoginScreen(window);
-
-        // Act — Step 1: enter username
         login.UsernameField.Enter("alice@example.com");
-        // Act — Step 2: enter password
         login.PasswordField.Enter("correct-horse-battery-staple");
-        // Act — Step 3: click Login
         login.LoginButton.Invoke();
-
-        // Assert — main app window title becomes "Invoices"
         var main = _fx.App.GetMainWindow(_fx.Automation);
         Assert.Equal("Invoices", main.Title);
     }
 }
 ```
 
-The agent adds new screen-object members to existing screen-object classes (`LoginScreen.UsernameField` / `.PasswordField` / `.LoginButton`) only if they are not already present. It does **not** modify other test files, other test methods, or unrelated screen-object members.
+The agent adds new screen-object members to existing screen-object classes only if they are not already present. It does **not** modify other test files, other test methods, or unrelated screen-object members.
 
 ### Step 5 — Emit the change summary
 
 ```markdown
 ## desktop-test-author — change summary
-
-**Spec:** <one-line summary of the flow>
-**Driver:** <flaui | winappdriver | electron-playwright | ...>
-**Test framework:** <xunit | nunit | mstest | playwright>
-
+**Spec:** <one-line summary> **Driver:** <flaui | ...> **Framework:** <xunit | ...>
 ### Files
 - **New:** tests/<App>.UiTests/Tests/LoginTests.cs (1 test method)
-- **Modified:** tests/<App>.UiTests/Screens/LoginScreen.cs (+3 properties: UsernameField, PasswordField, LoginButton)
-
-### CONFIRM markers added
-- LoginScreen.UsernameField — AutomationId "Username" provisional
-- LoginScreen.PasswordField — AutomationId "Password" provisional
-- LoginScreen.LoginButton — AutomationId "LoginButton" provisional
-
-### Next steps
-1. Open FlaUInspect against the running app; confirm or correct the three AutomationIds.
-2. Run `dotnet test --filter "LoginTests.Logs_in_with_valid_credentials"` once.
-3. If the test passes, remove the CONFIRM markers; if it fails, update the AutomationId and re-run.
+- **Modified:** tests/<App>.UiTests/Screens/LoginScreen.cs (+N properties)
+### CONFIRM markers added (provisional AutomationIds — verify via FlaUInspect)
+### Next steps: confirm AutomationIds; run `dotnet test --filter "LoginTests.Logs_in_with_valid_credentials"`; remove CONFIRM markers if green.
 ```
 
 ## Output format
