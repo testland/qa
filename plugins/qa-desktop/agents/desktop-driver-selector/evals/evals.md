@@ -1,10 +1,7 @@
 ---
-name: desktop-driver-selector-evals
-description: "Evaluation cases for the `desktop-driver-selector` agent — three reproducible scenarios (happy path, branch, adversarial) that exercise the agent's decision tree against concrete csproj / package.json / empty-repo inputs and assert one driver recommendation per scenario. Use as the D7 evidence pack for the v3.0 rating gate."
+component: desktop-driver-selector
+type: agent
 archetype: A2
-rating: 24
-d6: 4
-d7: 4
 ---
 
 # desktop-driver-selector — evals

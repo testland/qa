@@ -162,12 +162,16 @@ check_empty_command_body() {
 }
 
 # ----- Walk skills, agents, commands -----
+# Excludes `*/agents/<name>/evals/*` — eval files live in per-agent subdirectories
+# and carry only `component`/`type`/`archetype` frontmatter (see qa-rating-framework
+# §"Eval file shape"). They are not first-class agents.
 while IFS= read -r -d '' file; do
   check_yaml_frontmatter "$file"
   check_no_placeholders "$file"
 done < <(
   find "$ROOT/plugins" -type f \
     \( -name "SKILL.md" -o -path "*/agents/*.md" -o -path "*/commands/*.md" \) \
+    ! -path "*/agents/*/evals/*" \
     -print0 2>/dev/null
 )
 

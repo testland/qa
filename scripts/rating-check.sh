@@ -83,6 +83,7 @@ while IFS= read -r -d '' file; do
 done < <(
   find "$ROOT/plugins" -type f \
     \( -name "SKILL.md" -o -path "*/agents/*.md" \) \
+    ! -path "*/agents/*/evals/*" \
     -print0 2>/dev/null
 )
 

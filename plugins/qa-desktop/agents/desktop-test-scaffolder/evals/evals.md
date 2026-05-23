@@ -1,10 +1,7 @@
 ---
-name: desktop-test-scaffolder-evals
-description: "Evaluation cases for the `desktop-test-scaffolder` agent — three reproducible scenarios (FlaUI happy path, Electron branch, adversarial missing-driver) that exercise the agent's scaffold-emission logic against concrete app paths + driver choices and assert the emitted project shape. Use as the D7 evidence pack for the v3.0 rating gate."
+component: desktop-test-scaffolder
+type: agent
 archetype: A4
-rating: 24
-d6: 4
-d7: 4
 ---
 
 # desktop-test-scaffolder — evals

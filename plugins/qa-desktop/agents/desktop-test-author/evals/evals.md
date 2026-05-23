@@ -1,10 +1,7 @@
 ---
-name: desktop-test-author-evals
-description: "Evaluation cases for the `desktop-test-author` agent — three reproducible scenarios (FlaUI happy path, Electron branch, adversarial ambiguous-spec) that exercise the agent's per-flow test authoring against concrete spec snippets and assert the emitted test file shape. Use as the D7 evidence pack for the v3.0 rating gate."
+component: desktop-test-author
+type: agent
 archetype: A2
-rating: 24
-d6: 4
-d7: 4
 ---
 
 # desktop-test-author — evals
