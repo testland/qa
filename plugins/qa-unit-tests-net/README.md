@@ -1,6 +1,6 @@
 # qa-unit-tests-net
 
-.NET unit testing per-framework wrappers. Three S1 framework skills + 1 S2 assertion-library reference.
+.NET unit testing per-framework wrappers + orchestrator agents. Three S1 framework skills + 1 S2 assertion-library reference + 2 A2 agents.
 
 Per-framework lifecycle scope. Does **not** duplicate
 `qa-test-review` (test code hygiene).
@@ -13,6 +13,8 @@ Per-framework lifecycle scope. Does **not** duplicate
 | Skill | [nunit-tests](skills/nunit-tests/SKILL.md) | S1 | JVM-style attributes; [Test]/[TestCase]; constraint-model assertions; multiple parametrize attrs |
 | Skill | [mstest-tests](skills/mstest-tests/SKILL.md) | S1 | Microsoft first-party; [TestClass]/[TestMethod]; tight Visual Studio integration |
 | Skill | [fluentassertions](skills/fluentassertions/SKILL.md) | S2 | Fluent assertion library (.Should() API); pairable with any test framework; v8+ commercial license |
+| Agent | [dotnet-test-framework-selector](agents/dotnet-test-framework-selector.md) | A2 | Reads target csproj/sln + sibling test projects; detects existing convention; recommends one of xUnit / NUnit / MSTest with rationale |
+| Agent | [dotnet-test-author](agents/dotnet-test-author.md) | A2 | Authors one .NET unit test given a target method + behavior spec; detects framework + FluentAssertions from csproj; emits idiomatic xUnit/NUnit/MSTest test file |
 
 ## Install
 
