@@ -1,6 +1,6 @@
 # qa-desktop
 
-Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework)
+Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework). Includes desktop-driver-selector, desktop-test-scaffolder, and desktop-test-author agents for cross-driver orchestration.
 
 ## Components
 

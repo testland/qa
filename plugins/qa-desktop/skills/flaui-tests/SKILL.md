@@ -214,6 +214,41 @@ Each returns a `RetryResult` carrying iteration count, duration, and
 the last value — the test can assert on those metrics when
 diagnosing slow-loading screens.
 
+### Waits with Application.WaitWhileBusy
+
+Per the [FlaUI `Application` source][flauiappsrc]:
+
+[flauiappsrc]: https://github.com/FlaUI/FlaUI/blob/master/src/FlaUI.Core/Application.cs
+
+> "Waits as long as the application is busy. An optional timeout. If
+> null is passed, the timeout is infinite. Returns true if the
+> application is idle, false otherwise."
+
+```csharp
+public bool WaitWhileBusy(TimeSpan? waitTimeout = null)
+```
+
+Use it after a launch or a window-level action (menu open, modal
+dismiss, dialog confirm) before driving the next element — it blocks
+on the Win32 message-pump-idle signal of the target process. Pair
+with `WaitWhileMainHandleIsMissing` right after `Launch` so the test
+doesn't race the splash screen:
+
+```csharp
+var app = Application.Launch(@"C:\Path\To\InvoiceApp.exe");
+app.WaitWhileMainHandleIsMissing(TimeSpan.FromSeconds(10));
+app.WaitWhileBusy(TimeSpan.FromSeconds(10));
+
+var window = app.GetMainWindow(automation);
+window.FindFirstDescendant(cf => cf.ByAutomationId("Save")).AsButton().Invoke();
+app.WaitWhileBusy(TimeSpan.FromSeconds(5)); // wait for save handler
+```
+
+`Retry.*` waits on *element-level* conditions (descendant appears /
+disappears / matches a predicate); `WaitWhileBusy` waits on the
+*process-level* idle signal. Both belong in the same test — pick by
+what you can actually observe.
+
 ## Running
 
 ### Test framework integration
