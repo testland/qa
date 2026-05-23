@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-desktop",
-  "version": "1.0.0",
-  "description": "Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework)",
+  "version": "1.1.0",
+  "description": "Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework), plus orchestrator agents (desktop-driver-selector, desktop-test-scaffolder, desktop-test-author) that compose the per-driver skills",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-desktop",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "desktop"]
+  "keywords": ["qa", "testing", "desktop", "flaui", "automation-driver-selection"]
 }
