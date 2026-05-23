@@ -218,17 +218,57 @@ When all components in the plugin land:
 3. Run all three CI scripts.
 4. Tag: `git tag <plugin-name>-1.0.0 && git push --tags`.
 
+## Authoring evaluations for an agent (D7)
+
+The v3.0 rating framework introduces **D7 Evaluation Coverage** as a
+merge-blocking dimension for new agents (skills are deferred per the
+shadow-launch priority order). Every new agent ships with ≥3 evals
+including ≥1 adversarial / refuse-to-proceed case.
+
+**Eval file location** — use the per-agent subdirectory layout:
+
+```
+plugins/<plugin>/agents/<agent>.md                 # the agent
+plugins/<plugin>/agents/<agent>/evals/evals.md     # the eval cases
+```
+
+This sits **outside** the lint globs (`validate.sh` and
+`rating-check.sh` exclude `*/agents/*/evals/*`), so eval files do not
+need to carry rating frontmatter. The older sibling-file layout
+(`agents/<agent>.evals.md`) is also permitted by the rating framework
+but is **not recommended** in testland-qa because the lint scripts
+catch it and force placeholder frontmatter.
+
+**Eval file frontmatter** — three fields only:
+
+```yaml
+---
+component: <agent-name>
+type: agent
+archetype: <A1 / A2 / A3 / A4>
+---
+```
+
+**Eval body** — each eval has `Input:`, `Target models:` (sonnet /
+haiku / opus with run-date if executed; authoring-date if only
+designed), `Expected:`, and `Pass condition:` (a concrete string-match
+or behavioural check, not "looks reasonable"). At least one adversarial
+case per agent. See
+[`elv1s42k-qa-research/qa-rating-framework-2026-05-22.md`](https://github.com/elv1s42/qa-research)
+§"Eval file shape" for the canonical template.
+
 ## Reference: directory layout per plugin
 
 ```
 plugins/<plugin-name>/
-  .claude-plugin/plugin.json          # required
-  README.md                            # required (component table)
-  agents/<agent>.md                    # optional
-  skills/<skill>/SKILL.md              # required path; SKILL.md NOT inside .claude-plugin/
-  skills/<skill>/references/*.md       # optional progressive disclosure
-  commands/<cmd>.md                    # optional
-  hooks/hooks.json                     # optional
+  .claude-plugin/plugin.json                  # required
+  README.md                                    # required (component table)
+  agents/<agent>.md                            # optional
+  agents/<agent>/evals/evals.md                # optional; recommended for new A1-A4 agents
+  skills/<skill>/SKILL.md                      # required path; SKILL.md NOT inside .claude-plugin/
+  skills/<skill>/references/*.md               # optional progressive disclosure
+  commands/<cmd>.md                            # optional
+  hooks/hooks.json                             # optional
 ```
 
 Skills MUST live at `skills/<name>/SKILL.md`. Anthropic's plugin spec

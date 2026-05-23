@@ -86,6 +86,10 @@ done < <(
     ! -path "*/agents/*/evals/*" \
     -print0 2>/dev/null
 )
+# Note: the `! -path "*/agents/*/evals/*"` exclusion above skips eval files that
+# live in per-agent subdirectories. They carry only `component`/`type`/`archetype`
+# frontmatter (see qa-rating-framework §"Eval file shape") — they are not
+# first-class agents and have no rating to check.
 
 if [[ $EXIT -eq 0 ]]; then
   echo "rating-check.sh: all components score >=21 with d6 >= 1"

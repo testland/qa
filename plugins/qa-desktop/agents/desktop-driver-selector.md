@@ -9,6 +9,8 @@ skills:
   - appium-windows-driver
   - electron-playwright
   - qt-test-framework
+  - xctest-mac-desktop
+  - at-spi-linux
   - desktop-test-strategy-reference
 archetype: A2
 rating: 26
