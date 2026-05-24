@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-js",
-  "version": "1.0.0",
-  "description": "JS/TS unit testing per-framework wrappers: 5 skills (jest-tests, vitest-tests, mocha-tests, ava-tests, jasmine-tests). Per-framework lifecycle (configure / run / mock / coverage / CI). Does not duplicate qa-test-review test code hygiene.",
+  "version": "1.1.0",
+  "description": "JS/TS unit testing per-framework wrappers + orchestrator agent: 5 skills (jest-tests, vitest-tests, mocha-tests, ava-tests, jasmine-tests) plus 1 agent (js-test-author). Per-framework lifecycle (configure / run / mock / coverage / CI) with per-spec test authoring that auto-detects the framework from package.json. Does not duplicate qa-test-review test code hygiene.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
