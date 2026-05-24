@@ -13,6 +13,7 @@ Per-framework lifecycle scope. Does **not** duplicate
 | Skill | [ginkgo-tests](skills/ginkgo-tests/SKILL.md) | S1 | Go BDD framework (Kubernetes-ecosystem standard); Describe/Context/It; Gomega matchers |
 | Skill | [cargo-test](skills/cargo-test/SKILL.md) | S1 | Rust `cargo test`; unit + integration + doc tests; Result<>-return for ?; Criterion for benchmarks |
 | Skill | [rstest-tests](skills/rstest-tests/SKILL.md) | S1 | Rust parametrize + fixtures; #[case]/#[fixture]; matrix tests; async fixture support |
+| Agent | [go-rust-test-author](agents/go-rust-test-author.md) | A2 | Detects language (go.mod vs Cargo.toml) + framework (Go: testing or Ginkgo; Rust: #[test] or rstest), emits one unit test file per spec |
 
 ## Install
 
