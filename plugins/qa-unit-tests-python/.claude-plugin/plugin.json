@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-python",
-  "version": "1.0.0",
-  "description": "Python unit testing per-framework wrappers: 4 skills (pytest-tests, unittest-tests, doctest-tests, nose2-tests). Per-framework lifecycle (configure / run / mock / coverage / CI).",
+  "version": "1.1.0",
+  "description": "Python unit testing per-framework wrappers: 4 skills (pytest-tests, unittest-tests, doctest-tests, nose2-tests) plus 1 A2 agent (python-test-author) that authors one unit test per spec by detecting pytest / unittest / doctest / nose2 from pyproject.toml / setup.cfg / tox.ini / existing test files. Per-framework lifecycle (configure / run / mock / coverage / CI).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-python",
   "repository": "https://github.com/testland/qa",

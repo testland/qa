@@ -3,7 +3,9 @@
 Python unit testing per-framework wrappers. Four S1 skills covering
 stdlib + community Python test frameworks: pytest (modern de facto),
 unittest (stdlib JUnit-port), doctest (docstring-embedded tests),
-nose2 (legacy alternative).
+nose2 (legacy alternative), plus one A2 orchestrator that authors a
+single test per spec by detecting the framework convention from the
+project's config or existing tests.
 
 Per-framework lifecycle scope. Does **not** duplicate
 `qa-test-review` (test code hygiene).
@@ -16,6 +18,7 @@ Per-framework lifecycle scope. Does **not** duplicate
 | Skill | [unittest-tests](skills/unittest-tests/SKILL.md) | S1 | Stdlib JUnit-port; TestCase + setUp/tearDown; unittest.mock bundled |
 | Skill | [doctest-tests](skills/doctest-tests/SKILL.md) | S1 | Docstring-embedded executable examples; Sphinx integration |
 | Skill | [nose2-tests](skills/nose2-tests/SKILL.md) | S1 | Successor to nose1 (EOL); plugin/layer model; migration path |
+| Agent | [python-test-author](agents/python-test-author.md) | A2 | Authors one Python unit test per spec; detects pytest / unittest / doctest / nose2 from pyproject.toml / setup.cfg / tox.ini / existing test files; pairs with mimesis when present |
 
 ## Install
 
