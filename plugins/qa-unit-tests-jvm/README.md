@@ -1,6 +1,6 @@
 # qa-unit-tests-jvm
 
-JVM unit testing per-framework wrappers. Five S1 skills covering Java + Kotlin + Scala + Groovy test frameworks.
+JVM unit testing per-framework wrappers. Five S1 skills covering Java + Kotlin + Scala + Groovy test frameworks, plus one A2 orchestrator that authors a single test per spec by detecting the framework convention from the project's build file.
 
 Per-framework lifecycle scope. Does **not** duplicate
 `qa-test-review` (test code hygiene).
@@ -14,6 +14,7 @@ Per-framework lifecycle scope. Does **not** duplicate
 | Skill | [spock-tests](skills/spock-tests/SKILL.md) | S1 | Groovy BDD; given/when/then blocks; data tables; built-in mocking |
 | Skill | [testng-tests](skills/testng-tests/SKILL.md) | S1 | Test method dependencies; groups; suite XML; legacy + Selenium-tradition |
 | Skill | [scalatest](skills/scalatest/SKILL.md) | S1 | Scala-native; multi-style (FlatSpec/FunSuite/WordSpec); ScalaCheck pairing |
+| Agent | [jvm-test-author](agents/jvm-test-author.md) | A2 | Authors one JVM unit test per spec; detects JUnit 5 / TestNG / Kotest / Spock / ScalaTest from pom.xml / build.gradle[.kts] / build.sbt; pairs with AssertJ when present |
 
 ## Install
 
