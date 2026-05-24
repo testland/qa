@@ -15,6 +15,7 @@ Test code quality reviewers — agents specialized for **test files only**, not 
 | Agent | [mocking-anti-pattern-detector](agents/mocking-anti-pattern-detector.md) | A3 | Flags over-mocking, behavior-verification leakage, mock chains, mocking-what-you-don't-own, and fake-candidate situations (§5). |
 | Agent | [e2e-selector-quality-critic](agents/e2e-selector-quality-critic.md) | A3 | Flags brittle CSS class / nth-child / XPath selectors and non-web-first assertions; recommends `getByRole` / accessibility-first equivalents (§8, §9). |
 | Agent | [framework-architecture-auditor](agents/framework-architecture-auditor.md) | A3 | Cross-file framework audit: POM consistency, base-class hierarchy depth, fixture coupling, helper sprawl, naming-convention drift, retry / wait consistency, documented-vs-actual convention drift, CI integration health. Sister-tier above the per-file critics. |
+| Agent | [test-suite-health-auditor](agents/test-suite-health-auditor.md) | A3 | Whole-suite cross-tool audit: file inventory, tier classification (unit / integration / E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, assertion quality. Emits categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with top-3 prune/expand/refactor recommendations. Distinct from framework-architecture-auditor (single-framework, narrow) and qa-roles/test-architect (A2, prescribes strategy). |
 
 ## Install
 
