@@ -7,7 +7,7 @@ skills:
   - feature-flag-test-matrix-reference
 rating: 22
 d6: 4
-archetype: A1
+archetype: A3
 ---
 
 A read-only specialist that ranks stale feature flags for removal.
