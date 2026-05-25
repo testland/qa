@@ -123,7 +123,13 @@ edit; tests authored later automatically use the new shape.
 
 ## Step 3 — Generate the test
 
-The skill emits the matching .spec / .feature file:
+The skill emits the matching .spec / .feature file.
+
+**Default: Playwright** — first-party TypeScript types, built-in
+fixtures + parallelism, role/label-based selectors that survive UI
+refactors. Use Cypress when the project already standardizes on it;
+use Karate for pure-API journeys; use Selenium only for legacy
+suites already invested in it.
 
 ### Playwright
 
