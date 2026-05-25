@@ -15,6 +15,7 @@ Web E2E framework wrappers (per-framework S1 skills). Full lifecycle per framewo
 | Agent | [playwright-codegen-reviewer](agents/playwright-codegen-reviewer.md) | A3 |
 | Agent | [selenium-grid-orchestrator](agents/selenium-grid-orchestrator.md) | A2 |
 | Agent | [spec-to-e2e-test-scaffolder](agents/spec-to-e2e-test-scaffolder.md) | A4 |
+| Agent | [web-e2e-framework-selector](agents/web-e2e-framework-selector.md) | A2 |
 
 ## Install
 
