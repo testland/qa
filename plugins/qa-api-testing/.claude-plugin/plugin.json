@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-api-testing",
-  "version": "1.0.0",
-  "description": "API testing: 7 skills (postman-collections, restassured-testing, karate-testing, tavern-testing, schemathesis-fuzzing, restler-fuzzing, api-chaos-runner).",
+  "version": "1.1.0",
+  "description": "API testing: 7 skills (postman-collections, restassured-testing, karate-testing, tavern-testing, schemathesis-fuzzing, restler-fuzzing, api-chaos-runner) plus 2 A2 agents — api-test-tool-selector (picks tool from project markers + goal) and api-test-author (composes the chosen tool to emit one functional test per endpoint + scenario).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
