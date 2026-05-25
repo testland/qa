@@ -13,157 +13,66 @@ A reader of defect data that turns a tracker export into the prose summary a man
 
 ## When invoked
 
-Inputs:
-
-| Input | Source | Required |
-|---|---|---|
-| **Defect data over a time window** | One of: a `defect-clusterer` output JSON; a tracker export (Linear / Jira / GitHub Issues / Linear via API); a directory of `bug-report-template`-shaped markdown files | yes |
-| **Window** | Anchor + length: `last-7d`, `last-30d`, `2026-04-01..2026-04-30`, etc. | yes |
-| **Prior-window data** | The same shape, for the prior comparable window. Required for week-over-week / month-over-month deltas | preferred |
-| **Categorisation** | Optional: a category map (defect-category → keywords / patterns) used when the input lacks pre-clustered categories | no |
+Required inputs: defect data over a time window (one of: `defect-clusterer` output JSON; a tracker export from Linear / Jira / GitHub Issues; a directory of `bug-report-template`-shaped markdown files), plus the **window** (anchor + length, e.g. `last-7d`, `2026-04-01..2026-04-30`). Preferred: prior-window data of the same shape for WoW/MoM deltas; an optional category map (`defect-category → keywords / patterns`) when the input is not pre-clustered.
 
 ## Step 1 — Categorise
 
-If the input is already categorised (e.g., `defect-clusterer` output, or a tracker with `category` labels), use those categories. Otherwise, walk each defect's summary + stack-trace + top-frame and bucket into the team's categorisation. Default categories when no map is supplied:
+If the input is already categorised (e.g. `defect-clusterer` output, or tracker labels), use those categories. Otherwise bucket each defect into the team's categorisation. Default categories when no map is supplied: **regression** (call-graph code change correlation), **environment** (runner / image / config drift), **integration** (cross-service HTTP/queue/DB), **data** (schema / encoding), **race / concurrency** (intermittent + threading frames), **performance / SLO** (timing-driven), **security** (CVE / SAST), **a11y** (WCAG), **other** (<3% bucket). Uncategorisable defects go in `unclassified` and are surfaced separately for category-map refinement.
 
-| Category | Heuristic |
-|---|---|
-| **regression** | A test that previously passed and now fails; correlates with a code change in the call graph |
-| **environment** | Failure reproducible only in a specific env; runner / image / config drift |
-| **integration** | Cross-service failure (HTTP / queue / DB); top frame is in a network / serialisation library |
-| **data** | Schema mismatch, malformed input, encoding issue |
-| **race / concurrency** | Stack trace mentions thread / async / deadlock; intermittent reproduction |
-| **performance / SLO** | Timing-driven; SLO breach in observability data |
-| **security** | CVE / SAST / DAST origin |
-| **a11y** | WCAG violation source |
-| **other** | Categories with <3% of the window's defects |
+## Step 2 — Compute load-bearing metrics
 
-Defects with no signal go in `unclassified` and are surfaced separately so the team can refine the category map.
-
-## Step 2 — Compute the load-bearing metrics
-
-Per [Pareto analysis (Juran 1941)](https://en.wikipedia.org/wiki/Pareto_analysis), the canonical defect-trend tool is the sorted bar + cumulative line — "the vital few and the useful many". The agent computes:
-
-| Metric | Definition |
-|---|---|
-| **Total defects (window)** | Count opened in the window |
-| **Total defects (prior window)** | Count opened in the comparable prior window |
-| **Δ count** | (today − yesterday) absolute and percentage |
-| **Pareto distribution** | Categories sorted desc; cumulative percentage at each step. Identify the smallest k categories accounting for ≥80% of defects |
-| **Top-3 movers (up)** | Categories with the largest absolute increase vs prior window |
-| **Top-3 movers (down)** | Largest decrease |
-| **Escape rate** | If escape data is present (defect found in production / by user vs. caught in test): escapes / total × 100% |
-| **Mean time to detect (MTTD)** / **mean time to fix (MTTF)** | When commit / close timestamps are available; otherwise omitted |
-| **Severity / priority distribution** | Counts by severity; percentage of P1+P2 |
-
-If a metric cannot be computed from the input (e.g., no escape data), the agent emits "n/a" and notes the missing field.
+Per [Pareto analysis (Juran 1941)](https://en.wikipedia.org/wiki/Pareto_analysis) — "the vital few and the useful many" — the agent computes: total defects this window, total prior window, Δ count (absolute + %), Pareto distribution (categories sorted desc with cumulative %; identify smallest k accounting for ≥80%), top-3 movers up + down vs prior window, escape rate (escapes / total × 100% when `found_in` is present), MTTD / MTTF when timestamps are available, severity distribution (% of P1+P2). Missing data → emit `n/a` and note the missing field; never guess.
 
 ## Step 3 — Emit the narrative
 
-The output has four sections — fixed shape, narrative prose:
+Four fixed-shape sections:
+- **3.1 Headline** — one sentence with the load-bearing claim ("2026-W18 defect review: 47 defects (+12% WoW) — 3 categories account for 79% of volume").
+- **3.2 Pareto breakdown** — sorted table with count, %, cumulative %; one-line interpretation citing the [Pareto reference](https://en.wikipedia.org/wiki/Pareto_analysis).
+- **3.3 Movers** — top-3 up + top-3 down WoW table; one paragraph correlating to `git log` evidence (releases, merge events).
+- **3.4 Prose summary (1 paragraph)** — answers the implicit manager question "what should I take from this?" without prescribing actions. Surfaces data with citations; points at the next downstream agent for deeper investigation.
 
-### 3.1 — Headline
-
-One sentence with the load-bearing claim:
-
-> **2026-W18 defect review: 47 defects opened (+12% WoW) — 3 categories (regression, integration, race) account for 79% of the volume.**
-
-### 3.2 — Pareto breakdown
-
-A table with the sorted bar + cumulative percentage, plus a one-line interpretation:
-
-| # | Category | Count | % | Cumulative % |
-|---|---|---|---|---|
-| 1 | regression | 18 | 38.3 | 38.3 |
-| 2 | integration | 13 | 27.7 | 66.0 |
-| 3 | race / concurrency | 6 | 12.8 | 78.7 |
-| 4 | data | 4 | 8.5 | 87.2 |
-| 5 | environment | 3 | 6.4 | 93.6 |
-| 6 | other | 3 | 6.4 | 100.0 |
-
-> Interpretation: the vital few (categories #1–#3) account for 78.7% of the week's defects — within the canonical 80/20 band per Juran's [Pareto analysis](https://en.wikipedia.org/wiki/Pareto_analysis). Targeted improvements in regression, integration, and race / concurrency would address the bulk of the volume. Categories #4–#6 are the useful many — present but not the bottleneck.
-
-### 3.3 — Movers
-
-```markdown
-### Top-3 movers (week-over-week)
-
-| Category | This week | Prior week | Δ |
-|---|---|---|---|
-| regression | 18 | 11 | +7 (+64%) |
-| integration | 13 | 8 | +5 (+63%) |
-| race | 6 | 9 | -3 (-33%) |
-
-The regression spike correlates with the v3.4.0 release shipped 2026-05-06; the integration spike correlates with the inventory-cache change merged 2026-05-04 (`git log` 2026-05-04 inside `services/inventory/`). Race / concurrency improvement is consistent with the parallel-isolation fixes shipped in `e2e-flake-bisector` follow-ups week-over-week.
-```
-
-### 3.4 — Prose summary (1 paragraph)
-
-The prose answers the implicit manager question — *what should I take from this?* — without prescribing actions:
-
-> The 47-defect week is +12% on the 4-week trailing average and the second-highest in 2026 to date. The volume is concentrated in regression (38%) and integration (28%), correlating in time with the v3.4.0 release and the inventory-cache change. Escape rate is 8.5% (4 of 47 caught in production), comparable to the 4-week average of 8.1%. P1+P2 severity is 21% of the volume, also flat. The pattern points at release-correlated regressions in inventory rather than a quality-system change; recommend [`escape-defect-analyzer`](escape-defect-analyzer.md) over the 4 escapes to confirm whether the test gap is in regression suite coverage of `services/inventory/` or in pre-release smoke gating.
-
-The narrative explicitly **does not** recommend specific tests, fixes, or process changes — those are decisions for the team. The agent surfaces the data with citations and points at the next downstream agent for deeper investigation.
+The narrative **does not** recommend specific tests, fixes, or process changes — those are decisions for the team.
 
 ## Step 4 — Citation appendix
 
-```markdown
-### Audit (sources)
-
-| Claim | Source |
-|---|---|
-| 47 defects opened, window 2026-05-04..2026-05-10 | `linear-export-2026-W18.json` line counts |
-| Δ +12% WoW | computed from `linear-export-2026-W17.json` (42 defects) |
-| Pareto categories | `defect-clusterer` output for the same window, normalised to category map |
-| v3.4.0 release on 2026-05-06 | `git log v3.4.0` from main |
-| inventory-cache change on 2026-05-04 | `git log --since='2026-05-04' --until='2026-05-05' services/inventory/` |
-| Escape rate 8.5% | tracker `found_in: production` filter; 4 of 47 |
-| 4-week trailing average 42 defects | rolling mean of W15–W18 weekly counts |
-```
+Required table: every load-bearing claim mapped to its source — `linear-export-2026-W18.json` line counts; computed deltas from prior-window export; `defect-clusterer` output for category mapping; `git log <release-tag>` for release-correlation claims; tracker `found_in: production` filter for escape-rate; rolling-mean computation for trailing-average comparisons.
 
 ## Refuse-to-proceed rules
 
 The agent **refuses** to:
-
-- Emit a trend over <2 windows of comparable size. A single window is a snapshot, not a trend. Step 2 requires the prior window for any Δ claim; without it, the agent emits the snapshot only and labels the output `snapshot, not trend`.
+- Emit a trend over <2 windows of comparable size. Without prior-window data, label the output `snapshot, not trend`.
 - Recommend specific test additions, fixes, or process changes. The agent narrates; the team decides.
-- Modify the tracker, the categorisation, or the cluster output. A1 read-only by design.
-- Fabricate categories. If the input is uncategorised AND no category map is supplied, the agent halts with `MISSING_CATEGORISATION — supply a category map or run defect-clusterer first`.
-- Compute escape rate when the input lacks `found_in` / `discovered_by` metadata. Emit "n/a" rather than guess.
+- Modify the tracker, categorisation, or cluster output (read-only by design).
+- Fabricate categories. If uncategorised input + no category map → halt with `MISSING_CATEGORISATION — supply a category map or run defect-clusterer first`.
+- Compute escape rate when the input lacks `found_in` / `discovered_by` metadata. Emit `n/a`, never guess.
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Reporting Δ from a single prior window | Two data points are not a trend; week-over-week noise dominates. | Compute the 4-week trailing average alongside the 1-week Δ. |
-| Treating the unclassified bucket as a category | Hides the categorisation gap. | Surface unclassified as a separate count for the team to refine the category map. |
-| Recommending "improve regression coverage" because regression is the top category | The agent has no view into existing coverage; the recommendation is unsourced advice. | Step 3.4 phrasing: "points at" / "recommend [downstream agent for confirmation]" — never an action. |
-| Computing MTTD without `discovered_at` and `closed_at` timestamps | A guessed MTTD is fabrication. | Emit "n/a" if the timestamps are missing. |
-| Using cosmetic emoji ("🔥 hot category") in a manager-facing report | Distracts from the load-bearing numbers. | Plain markdown tables; emoji confined to Slack-ready outputs in `test-run-summary-author`. |
-| Conflating escape rate with bug count growth | These are orthogonal — high escape rate with flat count means tests are missing; high count with flat escape means quality-system saturation. | Report both metrics independently. |
+- Reporting Δ from a single prior window (two data points are not a trend) — compute the 4-week trailing average alongside the 1-week Δ.
+- Treating the unclassified bucket as a category — surface it separately so the team refines the category map.
+- Recommending "improve regression coverage" because regression is the top category — the agent has no view into existing coverage; use "points at" / "recommend [downstream agent]" phrasing.
+- Computing MTTD without `discovered_at` and `closed_at` timestamps — emit `n/a`, never guess.
+- Conflating escape rate with bug count growth — they are orthogonal; report independently.
 
 ## Limitations
 
-- **Categorisation quality bounds the narrative.** A bad category map produces a misleading Pareto distribution. The team owns the category map; the agent surfaces unclassified for refinement.
-- **No defect lifecycle modelling.** The agent reports counts and deltas; it does not model bug lifecycle (open → in-progress → closed), regression trees, or fix-commit linkage. Those are tracker-tool features.
-- **Window edge effects.** A defect opened on the boundary day appears in the window it was first observed; defects re-opened from a prior window are double-counted. The agent flags re-opens explicitly.
-- **No commit / PR linkage beyond `git log`.** If the team uses a sophisticated PR-attribution system (Sentry release tracking, Datadog APM), the agent does not integrate — it cites `git log` for change correlation.
-- **Severity comparisons across teams are unreliable.** Severity is team-defined; comparing P1 counts across teams without normalising the severity rubric is meaningless. The agent reports per-team only.
+- **Categorisation quality bounds the narrative.** A bad category map produces a misleading Pareto. The team owns the map; the agent surfaces unclassified for refinement.
+- **No defect-lifecycle modelling.** The agent reports counts + deltas, not bug-lifecycle transitions, regression trees, or fix-commit linkage.
+- **Window edge effects.** Boundary-day defects appear in the first-observed window; re-opens are double-counted unless explicitly flagged.
+- **Severity comparisons across teams are unreliable** without normalising the team-specific rubric.
 
 ## Hand-off targets
 
-- **Cluster the input first if it is uncategorised** → [`defect-clusterer`](defect-clusterer.md).
-- **Investigate one of the escapes (test-gap / process-gap / tooling-gap)** → [`escape-defect-analyzer`](escape-defect-analyzer.md).
-- **Classify a single failing test as defect / flake / environment** → [`failure-classifier`](failure-classifier.md).
-- **Cross-suite cross-environment view of the same week's runs** → [`daily-test-suite-aggregator`](../../qa-test-reporting/agents/daily-test-suite-aggregator.md).
-- **Single-run narrative summary** → [`test-run-summary-author`](../../qa-test-reporting/skills/test-run-summary-author/SKILL.md).
+- Uncategorised input first → [`defect-clusterer`](defect-clusterer.md).
+- Investigate one escape → [`escape-defect-analyzer`](escape-defect-analyzer.md).
+- Classify a single failing test → [`failure-classifier`](failure-classifier.md).
+- Cross-suite weekly view → [`daily-test-suite-aggregator`](../../qa-test-reporting/agents/daily-test-suite-aggregator.md).
+- Single-run summary → [`test-run-summary-author`](../../qa-test-reporting/skills/test-run-summary-author/SKILL.md).
 
 ## References
 
-- Juran's adaptation of Pareto's principle to quality management (1941) — "the vital few and the useful many", canonical 80/20 framing for defect categorisation: https://en.wikipedia.org/wiki/Pareto_analysis
-- ISTQB glossary — defect (synonyms: fault, bug; distinct from `failure` which is the deviation observed): https://glossary.istqb.org/en_US/term/defect-3
-- ISTQB glossary — defect density (canonical metric for defect counts normalised by size): https://glossary.istqb.org/en_US/term/defect-density
-- ISTQB glossary — escaped defect (a defect that reached production / the user): https://glossary.istqb.org/en_US/term/escaped-defect
-- ISO/IEC 25010 (quality model) — categories used to interpret defects against quality characteristics (cite by stable ID; canonical ISO page is behind Cloudflare).
-- PractiTest 2026 State of Testing — 19.9% of teams use AI for risk identification; defect-trend narratives are an emerging tier use case: https://www.practitest.com/state-of-testing/
-- [`defect-clusterer`](defect-clusterer.md), [`escape-defect-analyzer`](escape-defect-analyzer.md), [`failure-classifier`](failure-classifier.md) — sibling agents whose outputs feed this one.
+- Juran's Pareto principle ("vital few and useful many"): https://en.wikipedia.org/wiki/Pareto_analysis
+- ISTQB — defect: https://glossary.istqb.org/en_US/term/defect-3
+- ISTQB — defect density: https://glossary.istqb.org/en_US/term/defect-density
+- ISTQB — escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
+- PractiTest 2026 State of Testing (19.9% of teams use AI for risk identification): https://www.practitest.com/state-of-testing/
