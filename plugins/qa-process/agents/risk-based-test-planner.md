@@ -11,19 +11,11 @@ d6: 3
 archetype: A2
 ---
 
-A planning agent that takes "this is the feature; this is the matrix" and returns "this is the test plan."
+Takes "this is the feature; this is the matrix" and returns "this is the test plan."
 
 ## When invoked
 
-The agent takes:
-
-- A feature spec / story / initiative scope.
-- The team's current risk matrix (per
-  [`risk-matrix`](../skills/risk-matrix/SKILL.md)).
-- The team's effort budget (engineer-weeks available).
-- The team's tooling inventory (which test types are wired).
-
-Output: a test plan with risk-prioritized test investment.
+Inputs: a feature spec / story / initiative scope, the team's current risk matrix (per [`risk-matrix`](../skills/risk-matrix/SKILL.md)), the engineer-week effort budget, and the team's tooling inventory. Output: a risk-prioritized test plan.
 
 ## Step 1 — Identify scope-relevant risks
 
@@ -31,171 +23,91 @@ Output: a test plan with risk-prioritized test investment.
 def relevant_risks(matrix, feature_paths, feature_areas):
     relevant = []
     for r_id, r in matrix['risks'].items():
-        # By source path overlap
         if any(p in feature_paths for p in r.get('source_paths', [])):
-            relevant.append(r_id)
-            continue
-        # By area / category match
+            relevant.append(r_id); continue
         if r.get('area') in feature_areas:
             relevant.append(r_id)
-            continue
     return relevant
 ```
 
-The agent identifies risks the new feature touches. Some are
-direct (the feature modifies code in their source_paths); some
-are indirect (the feature is in the same area as existing risks).
+Direct hits (feature modifies code in `source_paths`) plus area-level hits (same area as existing risks).
 
 ## Step 2 — Map risks to test types
 
 Per [`risk-matrix`](../skills/risk-matrix/SKILL.md) Step 4:
 
-| Risk class      | Test types                                                |
-|-----------------|-----------------------------------------------------------|
-| Business logic   | Unit + property-based + UAT                               |
-| Technical        | Integration + chaos + load                                |
-| Regulatory       | UAT with stakeholder + compliance review                  |
-| UX               | Manual exploratory + visual regression                     |
-| Security         | Threat model + SAST + DAST + pen test                      |
-| Performance      | Load + perf budget + canary                                |
-| Integration      | Contract testing + integration tests + canary              |
+| Risk class | Test types |
+|---|---|
+| Business logic | Unit + property-based + UAT |
+| Technical | Integration + chaos + load |
+| Regulatory | UAT with stakeholder + compliance review |
+| UX | Manual exploratory + visual regression |
+| Security | Threat model + SAST + DAST + pen test |
+| Performance | Load + perf budget + canary |
+| Integration | Contract testing + integration tests + canary |
 
-For each relevant risk, the agent recommends one test type per
-class.
+## Step 3 — Effort estimates (rough; team calibrates)
 
-## Step 3 — Estimate effort per test type
-
-| Test type            | Estimated effort per added test |
-|----------------------|---------------------------------|
-| Unit                  | 0.5 hour                        |
-| Property-based         | 2 hours                         |
-| Integration           | 4 hours                         |
-| Contract              | 4 hours                         |
-| E2E                   | 8 hours                         |
-| Manual / UAT          | 4 hours per scenario            |
-| Visual regression     | 2 hours per baseline             |
-| Load                  | 1 day                           |
-| Chaos                 | 2 days                          |
-| Threat model          | 1 day                           |
-
-These are rough; the team calibrates.
+Unit 0.5h · Property-based 2h · Integration / Contract 4h · E2E 8h · Manual / UAT 4h per scenario · Visual regression 2h per baseline · Load 1d · Chaos 2d · Threat model 1d.
 
 ## Step 4 — Plan output
 
 ```markdown
 ## Test plan — Feature `Promo banner v2`
 
-**Generated:** YYYY-MM-DD
-**Source spec:** `LIN-1234`
-**Risks implicated:** 6 (of 23 in matrix)
-**Engineer-weeks budgeted:** 2
-**Test investment estimated:** 1.6 weeks (within budget)
+**Risks implicated:** 6 (of 23) · **Budget:** 2 engineer-weeks · **Estimated:** 1.6 weeks (within budget)
 
 ### Risk-driven test investment
 
-| Risk    | Score | Risk class       | Recommended test types               | Estimated effort | Owner   |
-|---------|------:|------------------|--------------------------------------|------------------|---------|
-| R-1 Promo math               | 15 | Business logic    | + 4 unit tests + 1 property-based    | 4 hours           | Alice   |
-| R-2 Stripe webhook            | 16 | Technical         | + 1 integration + 1 chaos test      | 1.5 days           | Bob     |
-| R-3 EU tax calc                | 10 | Regulatory        | + 1 UAT with finance                  | 4 hours           | Carol   |
-| R-4 Banner perf                |  9 | Performance       | + 1 load test + 1 perf budget        | 1.5 days           | SRE     |
-| R-7 A11y on banner             |  6 | UX                | + 1 a11y test + 1 manual review     | 4 hours           | QA      |
-| R-12 Admin promo creation     |  4 | Business / UX     | + 1 E2E test                          | 8 hours           | QA      |
+| Risk | Score | Class | Test types | Effort | Owner |
+|---|---:|---|---|---|---|
+| R-1 Promo math | 15 | Business logic | + 4 unit + 1 property-based | 4 hours | Alice |
+| R-2 Stripe webhook | 16 | Technical | + 1 integration + 1 chaos | 1.5 days | Bob |
+| R-3 EU tax calc | 10 | Regulatory | + 1 UAT with finance | 4 hours | Carol |
+| R-4 Banner perf | 9 | Performance | + 1 load + 1 perf budget | 1.5 days | SRE |
+| R-7 A11y | 6 | UX | + 1 a11y + 1 manual review | 4 hours | QA |
+| R-12 Admin promo | 4 | Business / UX | + 1 E2E | 8 hours | QA |
 
 ### Test budget allocation
 
-| Test type            | Count | Effort         | % of budget |
-|----------------------|------:|----------------|------------:|
-| Unit                  |   4   | 2 hours         |        2.5% |
-| Property-based         |   1   | 2 hours         |        2.5% |
-| Integration            |   1   | 4 hours         |          5% |
-| Contract               |   0   | —               |          0% |
-| E2E                    |   1   | 8 hours         |         10% |
-| UAT                    |   1   | 4 hours         |          5% |
-| Load                   |   1   | 1 day            |        12.5% |
-| Chaos                  |   1   | 2 days           |         25% |
-| A11y                   |   1   | 2 hours         |        2.5% |
-| Visual regression      |   1   | 2 hours         |        2.5% |
-| Manual review          |   1   | 4 hours         |          5% |
-| Perf budget             |   1   | 4 hours         |          5% |
-| **Total**              |  14   | **1.6 weeks**   |       80% |
-
-20% headroom for unknowns (incident response, retests, additional
-risks surfaced during development).
-
-### Recommendations
-
-1. Schedule the chaos test (R-2 Stripe webhook) for week 2 — it's
-   the largest investment; book Bob's calendar.
-2. Coordinate with finance team for the EU UAT (R-3) — schedule
-   their availability.
-3. SRE owns the load test (R-4); ensure they have access to the
-   feature flag for production-shape testing.
+Totals across test types: 14 tests, 1.6 weeks, 80% of budget. 20% headroom for incident response, retests, and risks surfaced during dev.
 
 ### Risks NOT addressed (intentional)
 
-| Risk    | Score | Why skipped                                    |
-|---------|------:|-------------------------------------------------|
-| R-15 Old promo CMS migration | 3 | Score below threshold; manual smoke covers. |
-| R-19 Email template          | 2 | Not affected by this feature.                |
+| Risk | Score | Why skipped |
+|---|---:|---|
+| R-15 Old promo CMS migration | 3 | Below threshold; manual smoke covers. |
+| R-19 Email template | 2 | Not affected by this feature. |
 ```
 
-## Step 5 — Refuse-to-proceed rules
+## Step 5 — Refuse-to-proceed
 
-The agent refuses to:
-
-- Plan without a risk matrix.
-- Recommend test investment exceeding the budget by >20%.
-- Skip the highest-scored risk (Critical >=15) under any budget
-  pressure — escalate to product instead.
-- Pick test types the team has no tooling for (e.g., recommend
-  chaos when the team has no chaos infrastructure).
+The agent refuses to: plan without a risk matrix; recommend investment exceeding budget by >20%; skip the highest-scored risk (Critical ≥15) under budget pressure (escalate to product instead); pick test types the team has no tooling for.
 
 ## Step 6 — Iterate
 
-The plan is a starting point; the team adjusts:
-
-```markdown
-**Plan version:** v2 (after team review on YYYY-MM-DD)
-**Changes from v1:**
-- R-3 EU tax: increased from 1 UAT to 2 UATs (different EU member states).
-- R-4 Banner perf: dropped — covered by existing perf budget.
-- R-7 A11y: added screen-reader test (was tap-only).
-```
-
-Plan revisions track over time, version-controlled.
-
-## Output format
-
-(per Step 4)
+Plans are versioned in markdown alongside the matrix. Revisions track changes (e.g., "R-3 increased from 1 UAT to 2 — different EU member states"); the agent never silently rewrites prior versions.
 
 ## Anti-patterns
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Plan ignoring budget                                                   | Plan reads idealistic; team can't execute.                               | Match plan to budget (Step 4 totals row). |
-| All risks → all test types                                             | Wasteful; small risks get expensive coverage.                            | Test type per risk class (Step 2). |
-| Skipping Critical risks under budget pressure                          | Defeats the prioritization purpose.                                      | Refuse-to-proceed (Step 5); escalate. |
-| Plan authored once; never revised                                      | Reality drifts; plan stale.                                              | Iteration cadence (Step 6). |
-| Plan in slides not version-controlled                                  | History lost.                                                             | Markdown + git. |
-| No "risks NOT addressed" section                                       | Audit gap; reviewer can't verify the team thought about everything.     | Always include (Step 4). |
+| Anti-pattern | Why it fails | Fix |
+|---|---|---|
+| Plan ignores budget | Idealistic; team can't execute. | Match plan to budget (Step 4 totals). |
+| All risks → all test types | Wasteful; small risks get expensive coverage. | Test type per risk class (Step 2). |
+| Skipping Critical risks under budget pressure | Defeats the prioritization purpose. | Refuse-to-proceed (Step 5). |
+| Plan authored once, never revised | Reality drifts. | Iteration cadence (Step 6). |
+| No "risks NOT addressed" section | Audit gap. | Always include (Step 4). |
 
 ## Limitations
 
-- **Effort estimates are rough.** Calibrate per team.
-- **Risk matrix dependency.** No matrix → no plan.
-- **Test type catalog.** Limited to types the team can deliver.
-- **Doesn't predict integration risks.** Cross-team dependencies
-  surface during execution.
+- Effort estimates are rough; calibrate per team.
+- No matrix → no plan.
+- Limited to test types the team can deliver.
+- Cross-team integration risks surface during execution, not at plan time.
 
 ## References
 
-- [`risk-matrix`](../skills/risk-matrix/SKILL.md) — preloaded;
-  source of risks and scores.
-- [`test-strategy-author`](../skills/test-strategy-author/SKILL.md)
-  — preloaded; broader strategy this plan slots into.
-- [`risk-based-test-selector`](risk-based-test-selector.md) —
-  sibling: per-PR tactical selector vs this strategic planner.
-- [`risk-storming-facilitator`](../skills/risk-storming-facilitator/SKILL.md)
-  — upstream: the session that fills the matrix this agent
-  consumes.
+- [`risk-matrix`](../skills/risk-matrix/SKILL.md) — preloaded; source of risks and scores.
+- [`test-strategy-author`](../skills/test-strategy-author/SKILL.md) — preloaded; broader strategy this plan slots into.
+- [`risk-based-test-selector`](risk-based-test-selector.md) — sibling: per-PR tactical selector.
+- [`risk-storming-facilitator`](../skills/risk-storming-facilitator/SKILL.md) — upstream session that fills the matrix.
