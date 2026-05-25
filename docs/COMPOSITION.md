@@ -5,12 +5,13 @@ regenerated from the source files via `scripts/composition-graph.py`.
 
 ## Scope
 
-- **170 skills** across 30 plugins.
-- **46 agents** across 30 plugins.
-- **33 agents** preload one or more skills (~72%).
-- **13 agents** carry their own context inline (no preloads).
-- **4 cross-plugin preload edges** — the rest stay within their own
-  plugin.
+**Last refreshed: 2026-05-25 (Tier 4 close).** The header counts below are kept current; the per-plugin subsections later in this document are a snapshot from an earlier tier and have NOT been backfilled for every Tier 3/4 plugin addition. For the live, authoritative graph run `python3 scripts/composition-graph.py`.
+
+- **464 skills** across 77 plugins.
+- **104 agents** across 77 plugins.
+- **90 agents** preload one or more skills (~87%).
+- **14 agents** carry their own context inline (no preloads).
+- **20 cross-plugin preload edges** (see §"Cross-plugin preload edges" below).
 
 ## How preloading works
 
@@ -187,15 +188,26 @@ material that lives in skills.
 
 ## Cross-plugin preload edges
 
-Most agents preload skills from their own plugin. The 4 documented
-cross-plugin edges:
+Most agents preload skills from their own plugin. The 20 documented cross-plugin edges as of Tier 4 close (2026-05-25):
 
 | Consumer | Producer | Skill | Why |
 |---|---|---|---|
 | `qa-ai-assisted/ai-test-curator` | `qa-test-review` | `test-code-conventions` | AI-generated tests are reviewed against the same hygiene catalog as human-authored ones. |
+| `qa-ai-assisted/ai-test-shallow-coverage-critic` | `qa-test-review` | `test-code-conventions` | Shallow-coverage critic uses the same hygiene catalog as test-code-critic. |
 | `qa-process/test-quality-coach` | `qa-test-review` | `test-code-conventions` | The coach uses the same conventions reference (continuous-improvement framing vs `test-code-critic`'s sharp-critic framing). |
 | `qa-roles/test-architect` | `qa-test-impact-analysis` | `regression-suite-selector` | Architect reads change-set shape; needs the selector's heuristics for pyramid recommendations. |
+| `qa-test-review/framework-architecture-auditor` | `qa-test-data` | `test-data-patterns` | Cross-framework audit covers fixture / data-factory patterns documented in qa-test-data. |
 | `qa-web-e2e/playwright-codegen-reviewer` | `qa-test-review` | `test-code-conventions` | Codegen output is reviewed against the same selector / assertion hygiene rules. |
+| `qa-desktop/desktop-test-author` (Tier 4 / Wave 1) | `qa-unit-tests-net` | `xunit-tests`, `nunit-tests`, `mstest-tests` | Desktop tests for .NET stacks compose into one of the three NET framework idioms. |
+| `qa-unit-tests-net/dotnet-test-author` (Tier 4 / Wave 1) | `qa-test-data` | `bogus-data` | .NET Bogus library is the canonical typed test-data factory for .NET. |
+| `qa-unit-tests-js/js-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `faker-data`, `msw-handlers` | Faker.js for fake data; MSW for HTTP mocking — both load-bearing for JS unit tests. |
+| `qa-unit-tests-jvm/jvm-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `parameterized-test-generator` | JUnit5 `@ParameterizedTest`, TestNG `@DataProvider`, Spock `where:` — language-agnostic generator. |
+| `qa-unit-tests-python/python-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `mimesis-data`, `parameterized-test-generator` | Mimesis is the Python-native data factory; `@pytest.mark.parametrize` is first-class. |
+| `qa-unit-tests-go-rust/go-rust-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `parameterized-test-generator` | Go `t.Run` table tests + Rust `#[rstest]` `#[case]` both use the generator's matrix output. |
+| `qa-test-review/test-suite-health-auditor` (Tier 4 / Wave 3) | `qa-flake-triage` | `flake-pattern-reference` | Per-layer flake-rate axis of the audit references the canonical flake-pattern catalog. |
+| `qa-test-review/test-suite-health-auditor` (Tier 4 / Wave 3) | `qa-process` | `framework-choice-advisor` | Framework-misuse pattern detection consults the framework reference catalog. |
+| `qa-mobile-native/mobile-test-author` (Tier 4 / Wave 5) | `qa-test-data` | `parameterized-test-generator` | Mobile parameterized-input scenarios use the language-agnostic generator. |
+| `qa-api-testing/api-test-author` (Tier 4 / Wave 5) | `qa-test-data` | `parameterized-test-generator` | Multi-input endpoint cases use the parameterized generator. |
 
 When a user installs a consumer plugin (e.g., `qa-process`), they
 should also install the producer plugin (`qa-test-review`) for the
