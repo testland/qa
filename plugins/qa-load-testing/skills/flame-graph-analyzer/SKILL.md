@@ -10,11 +10,7 @@ archetype: S3
 
 ## Overview
 
-A flame graph is a stack-trace visualization invented by Brendan Gregg
-that shows where execution time is spent: the x-axis is sample
-count (proportional to time), the y-axis is stack depth. The widest
-boxes are the **hot paths** — code where the program spent the most
-time ([brendan-gregg-flame][bg]).
+Canonical flame-graph reference: [brendan-gregg-flame][bg]. Widest leaf = hot path.
 
 [bg]: https://www.brendangregg.com/flamegraphs.html
 
