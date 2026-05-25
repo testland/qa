@@ -5,7 +5,7 @@ tools: "Read, Edit, Bash(gh release *), Bash(gh pr view *), Bash(gh workflow run
 model: sonnet
 rating: 23
 d6: 4
-archetype: A4
+archetype: A3
 ---
 
 A release-conductor agent that walks the team's runbook step-by-step, recording outcomes, and pausing at every human-decision point.
