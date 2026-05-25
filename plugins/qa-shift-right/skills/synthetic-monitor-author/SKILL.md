@@ -188,19 +188,24 @@ shape, and response time.
 
 ## Step 5 — Cadence
 
+**Default: 5 min** — matches most user journeys and fits within a
+99.9% uptime SLO budget (5-min monitor with 2-failure alert rule
+gives ~10 min to detection, well within ~9 hours/year of allowed
+downtime). Use 1 min for the highest-criticality flows (auth,
+payment, primary read) or when the SLO is 99.99%+. Use 15 min for
+expensive E2E browser checks. Use 1 hour for transactions that have
+side effects. Use daily for compliance / audit verification flows.
+
 | Cadence    | Use                                                            |
 |------------|----------------------------------------------------------------|
 | 1 min      | Highest-criticality flows (auth, payment, primary read).        |
-| 5 min      | Most user journeys.                                              |
+| 5 min      | Most user journeys (default).                                    |
 | 15 min     | Lower-priority or expensive (full E2E browser checks).           |
 | 1 hour     | Synthetic transactions that have side effects (only as a sanity check). |
 | Daily       | Compliance / audit verification flows.                           |
 
 Per [synthetic-mon-wiki][sm]: "These scripts run continuously at
-set intervals." Match the cadence to the SLO — a 99.9% uptime SLO
-allows ~9 hours/year of downtime; a 5-minute monitor with 2-failure
-alert rule means ~10 min to detection, well within budget. A
-99.99% SLO needs 1-min cadence.
+set intervals." Match the cadence to the SLO.
 
 ## Step 6 — Alert thresholds
 
