@@ -30,73 +30,40 @@ A wrong-but-consistent snapshot is worse than no snapshot.
 
 ## Mode 1 — Add
 
-Find tests that produce snapshots but lack a baseline:
+Find tests using `toMatchSnapshot()` / `toMatchInlineSnapshot()` and
+cross-reference against `__snapshots__/` for gaps. For each:
 
-```bash
-# Find tests using toMatchSnapshot() / toMatchInlineSnapshot()
-grep -rn 'toMatchSnapshot\|toMatchInlineSnapshot' src/ tests/
-
-# Cross-reference with the __snapshots__ directories — tests whose snapshots are missing
-```
-
-For each gap:
-
-1. Run the test (`npm test -- <file>` or matching). The first run
-   captures the snapshot.
-2. Inspect the captured snapshot for sanitization hygiene per
+1. Run the test once (`npm test -- <file>`) to capture the snapshot.
+2. Inspect for sanitization hygiene per
    [`golden-file-conventions`](../skills/golden-file-conventions/SKILL.md):
-   - No timestamps / UUIDs / volatile values inline.
-   - No PII (emails, real names) — all should be synthetic.
-   - No file paths absolute to the runner.
-3. If sanitization issues detected: fix the test (add custom
-   serializer / `expect.any(...)` matchers) and re-run.
+   no timestamps / UUIDs / volatile values, no real PII, no
+   runner-absolute paths.
+3. If sanitization issues: amend the test (custom serializer or
+   `expect.any(...)`) and re-run.
 4. Commit the snapshot with a descriptive message.
 
 ## Mode 2 — Update
 
-The intentional-update path. The agent reads the PR's title /
-description and verifies that the snapshot diff matches:
+Read the PR title/body to extract **stated intent**. Classify each
+`.snap` diff:
 
-1. Read the PR title and body. Extract the **stated intent**
-   (e.g. "Refactor Button to use new design tokens").
-2. Read each `.snap` diff in the PR.
-3. **Classify each diff against the intent**:
-   - **Aligned:** diff matches the stated change (e.g. button
-     classes changed).
-   - **Adjacent:** diff is in a sibling component the PR touches
-     transitively.
-   - **Unrelated:** diff is in a component the PR doesn't claim to
-     touch.
-4. For Aligned: include in the update.
-5. For Adjacent: flag for human confirmation; suggested-update
-   only.
-6. For Unrelated: **REFUSE** to update; flag as a likely
-   regression. Recommend escalation to
-   [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md).
+- **Aligned** — diff matches the stated change → include in update.
+- **Adjacent** — sibling component the PR touches transitively →
+  flag for human confirmation; suggested-update only.
+- **Unrelated** — component the PR doesn't claim to touch →
+  **REFUSE** to update; flag as likely regression; escalate to
+  [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md).
 
-If all diffs pass: run `npm test -- --update-snapshots` (or
-matching), then commit with a message referencing the PR's intent.
+If all diffs pass: run `npm test -- --update-snapshots` and commit
+with a message referencing the PR's intent.
 
 ## Mode 3 — Prune
 
-Orphaned snapshots remain after the test that produced them is
-deleted. The agent finds them and removes.
-
-```bash
-# Compare existing .snap entries against current test names
-# An entry like `exports[\`Foo > does X\`]` requires `describe('Foo', ...)` with `it('does X', ...)` somewhere
-
-# Use the test runner's tooling — Jest:
-npx jest --ci --listTests
-# OR scan source for matching describe/it pairs and cross-reference
-```
-
-For each orphan:
-
-1. Confirm the test really doesn't exist (not just renamed).
-2. Remove the snapshot entry; if the resulting `.snap` file is
-   empty, delete the file.
-3. Commit per orphan or batched per PR.
+Orphaned snapshots remain after the producing test is deleted.
+Compare existing `.snap` entries against current test names (Jest:
+`npx jest --ci --listTests` plus a describe/it cross-reference). For
+each orphan: confirm it's not a rename (`git log`); remove the
+entry; delete the file if empty; commit per orphan or batched.
 
 ## Output format
 
@@ -137,60 +104,34 @@ flake on the next run; the test should be amended:
 
 ## Examples
 
-### Example 1: clean update for a focused refactor
-
-PR: "Refactor Button component to use new color tokens."
-Diffs: 12 snapshot files, all under `src/components/Button.*`.
-
-Result: all diffs Aligned; agent runs `--update-snapshots`,
-commits 12 updated `.snap` files in one commit referencing the
-PR.
-
-### Example 2: refused update for unrelated cascade
-
-PR: "Add tooltip to icon buttons."
-Diffs: 3 snapshot files — 2 in `IconButton`, 1 in `Footer`.
-
-Result: 2 Aligned (IconButton); 1 Refused (Footer — not mentioned).
-Agent commits the 2 IconButton updates; flags the Footer for human
-review with a comment explaining the suspected cascade. Suggests
-running [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)
-to find what propagated to Footer.
-
-### Example 3: prune sweep after a feature deprecation
-
-A feature was removed in a prior PR; tests were deleted but
-snapshots persisted.
-
-Result: agent finds 8 orphaned snapshots; removes each;
-deletes 2 empty `.snap` files. Commits as one prune commit.
+- **Clean update**: PR "Refactor Button to new color tokens" with 12
+  `Button.*` snapshot diffs — all Aligned; run `--update-snapshots`;
+  one commit referencing the PR.
+- **Refused cascade**: PR "Add tooltip to icon buttons" with 3 diffs
+  (2 IconButton, 1 Footer) — 2 Aligned; 1 Refused (Footer
+  unmentioned). Commit the IconButton updates; flag Footer for
+  review; suggest [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md).
+- **Prune sweep**: feature removed in a prior PR left 8 orphaned
+  snapshots; agent removes each, deletes 2 empty `.snap` files,
+  commits one prune commit.
 
 ## Anti-patterns
 
-| Anti-pattern                                                | Why it fails                                                       | Fix |
-|-------------------------------------------------------------|---------------------------------------------------------------------|-----|
-| Auto-update mode that accepts any diff                       | A regression silently becomes the new baseline.                    | Always classify against PR intent; refuse Unrelated diffs. |
-| Updating snapshots in a "snapshot refresh" PR                | Reviewers can't see the code change that justifies the diff.       | Update in the same PR as the source change; this agent runs in PR-scope. |
-| Leaving sanitization issues in newly-added snapshots          | Snapshot flakes on next run; team disables snapshot testing.       | Run the test multiple times during add mode; reject if values vary. |
-| Pruning on first run without confirmation                    | A renamed test looks like a deletion + addition; the snapshot is wrong. | Cross-reference with `git log` for renames before pruning. |
+| Anti-pattern | Fix |
+|---|---|
+| Auto-update mode accepting any diff | Classify against PR intent; refuse Unrelated diffs. |
+| "Snapshot refresh" PR detached from source change | Update in the same PR as the code change. |
+| Sanitization issues in newly-added snapshots | Re-run the test; reject if values vary; use `expect.any(...)` matchers. |
+| Pruning without checking for renames | Cross-reference `git log` for renames before pruning. |
 
 ## Hand-off targets
 
-- **Refused unrelated updates** → [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)
-  for cascade investigation.
-- **Volatile-value sanitization issues** → recommend the test be
-  amended with `expect.any(...)` matchers per
-  [`golden-file-conventions`](../skills/golden-file-conventions/SKILL.md).
-- **Visual snapshots** (PNG, not text) → defer to
-  [`visual-diff-classifier`](../../qa-visual-regression/agents/visual-diff-classifier.md)
+- **Refused unrelated updates** → [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md).
+- **Visual (PNG) snapshots** → [`visual-diff-classifier`](../../qa-visual-regression/agents/visual-diff-classifier.md)
   + [`visual-baseline-curator`](../../qa-visual-regression/agents/visual-baseline-curator.md).
 
 ## References
 
-- [`golden-file-conventions`](../skills/golden-file-conventions/SKILL.md)
-  — the rules this agent enforces.
-- [`visual-diff-classifier`](../../qa-visual-regression/agents/visual-diff-classifier.md)
-  — visual-snapshot equivalent (different file format, same
-  intent-vs-diff logic).
-- [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)
-  — handoff for unrelated diffs.
+- [`golden-file-conventions`](../skills/golden-file-conventions/SKILL.md) — the rules this agent enforces.
+- [`visual-diff-classifier`](../../qa-visual-regression/agents/visual-diff-classifier.md) — PNG-snapshot equivalent (same intent-vs-diff logic).
+- [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md) — cascade investigator.
