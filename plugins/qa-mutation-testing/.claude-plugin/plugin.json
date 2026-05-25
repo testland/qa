@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-mutation-testing",
-  "version": "1.0.0",
-  "description": "Mutation testing across languages: 5 skills (stryker-mutation, stryker-net-mutation, pitest-mutation, mutmut-mutation, mull-mutation) and 1 agent (mutation-survivor-explainer).",
+  "version": "1.1.0",
+  "description": "Mutation testing across languages: 5 skills (stryker-mutation, stryker-net-mutation, pitest-mutation, mutmut-mutation, mull-mutation) and 2 agents — mutation-survivor-explainer (A1 interprets existing results) and mutation-tool-selector (A2 reads project language to recommend one tool).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-mutation-testing",
   "repository": "https://github.com/testland/qa",

@@ -12,6 +12,7 @@ Mutation testing across the major language ecosystems. Mutation testing inserts 
 | Skill | [mutmut-mutation](skills/mutmut-mutation/SKILL.md) | S1 |
 | Skill | [mull-mutation](skills/mull-mutation/SKILL.md) | S1 |
 | Agent | [mutation-survivor-explainer](agents/mutation-survivor-explainer.md) | A1 |
+| Agent | [mutation-tool-selector](agents/mutation-tool-selector.md) | A2 |
 
 ## Install
 
