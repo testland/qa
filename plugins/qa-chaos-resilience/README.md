@@ -12,6 +12,7 @@ Chaos engineering + fault injection per the Principles of Chaos Engineering. Lit
 | Skill | [gremlin-chaos](skills/gremlin-chaos/SKILL.md) | S1 |
 | Skill | [toxiproxy-chaos](skills/toxiproxy-chaos/SKILL.md) | S1 |
 | Skill | [failure-injection-test-author](skills/failure-injection-test-author/SKILL.md) | S3 |
+| Agent | [chaos-drill-orchestrator](agents/chaos-drill-orchestrator.md) | A2 |
 
 ## Install
 
