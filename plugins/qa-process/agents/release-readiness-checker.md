@@ -8,7 +8,7 @@ skills:
   - smoke-suite-gate
 rating: 22
 d6: 3
-archetype: A4
+archetype: A3
 ---
 
 A pre-release gate orchestrator that turns "are we ready?" into a yes/no verdict with per-gate evidence.
