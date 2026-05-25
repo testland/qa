@@ -114,106 +114,29 @@ The agent will EXCLUDE:
 
 ## Examples
 
-### Example 1: fresh Chromatic on a Storybook project
+### Example 1 — fresh Chromatic on Storybook (47 stories)
 
-Input: project has Storybook 8.x with 47 stories, no visual testing.
-`devDependencies` includes `chromatic@latest`.
+Generates `chromatic.config.json` (with `onlyChanged: true`,
+`exitZeroOnChanges: false`, `externals: ["public/**","tokens/**"]`),
+adds `parameters.chromatic.viewports: [375,768,1280,1920]` to each
+template story, and writes `.github/workflows/chromatic.yml`. Output:
+108 baselines (27 × 4 breakpoints, TurboSnap-eligible).
 
-Generated files:
+### Example 2 — page-driven app, Playwright snapshots
 
-`chromatic.config.json`:
+For a Next.js app with 4 top-level routes, generates a
+`playwright.config.ts` with one project per breakpoint (375 / 768 /
+1280 / 1920) and `tests/visual/routes.spec.ts` that iterates routes
+calling `page.goto(route)` + `expect(page).toHaveScreenshot({
+animations: 'disabled', fullPage: true })`. Output: 16 baselines
+(4 routes × 4 breakpoints).
 
-```json
-{
-  "$schema": "https://www.chromatic.com/config-file.schema.json",
-  "onlyChanged": true,
-  "exitZeroOnChanges": false,
-  "externals": ["public/**", "tokens/**"]
-}
-```
+### Example 3 — audit existing coverage
 
-Per-template-story breakpoints in
-`Dashboard.Empty.stories.tsx`:
-
-```typescript
-export default {
-  title: 'Templates/Dashboard',
-  parameters: {
-    chromatic: { viewports: [375, 768, 1280, 1920] },
-  },
-};
-```
-
-Output:
-
-```markdown
-## Visual Baseline Coverage Plan
-
-**Engine:** chromatic
-**Total baselines proposed:** 108 (27 stories × 4 breakpoints, with TurboSnap)
-**Files added/modified:**
-  - chromatic.config.json (new)
-  - Dashboard.Empty.stories.tsx (added parameters.chromatic.viewports)
-  - Dashboard.Loaded.stories.tsx (added parameters.chromatic.viewports)
-  - Dashboard.Error.stories.tsx (added parameters.chromatic.viewports)
-  - .github/workflows/chromatic.yml (new)
-```
-
-### Example 2: page-driven app, Playwright snapshots
-
-Input: Next.js app with 4 top-level routes, no visual testing.
-`devDependencies` includes `@playwright/test`.
-
-Generated `playwright.config.ts` (visual-relevant excerpt):
-
-```typescript
-projects: [
-  { name: 'mobile-375',   use: { ...devices['Desktop Chrome'], viewport: { width: 375,  height: 667  } } },
-  { name: 'tablet-768',   use: { ...devices['Desktop Chrome'], viewport: { width: 768,  height: 1024 } } },
-  { name: 'desktop-1280', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800  } } },
-  { name: 'wide-1920',    use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 } } },
-],
-```
-
-Generated `tests/visual/routes.spec.ts`:
-
-```typescript
-import { test, expect } from '@playwright/test';
-
-const routes = ['/', '/pricing', '/docs', '/dashboard'];
-
-for (const route of routes) {
-  test(`visual ${route}`, async ({ page }) => {
-    await page.goto(route);
-    await expect(page).toHaveScreenshot({ animations: 'disabled', fullPage: true });
-  });
-}
-```
-
-Output: 16 baselines proposed (4 routes × 4 breakpoints).
-
-### Example 3: audit existing coverage
-
-Input: project already has 312 Chromatic baselines. Audit against the
-conventions.
-
-The agent enumerates the existing snapshots from a recent Chromatic
-build's diagnostics, applies the conventions checklist, and surfaces
-deviations:
-
-```markdown
-## Visual Baseline Audit
-
-**Total existing baselines:** 312
-**Following conventions:** 218
-**Deviations:** 94
-
-| Issue | Count | Examples | Recommendation |
-|---|---:|---|---|
-| Auto-generated control combos | 47 | `Atoms/Button/*-Disabled-Loading-Outline` etc. | Keep one variant per business state; remove the combinatorial sweep. |
-| `[INTERNAL]` stories with snapshots | 12 | `[INTERNAL] Admin/Sidebar/*` | Remove from coverage (set `parameters.chromatic.disableSnapshot = true`). |
-| Stories missing 1920 wide-desktop | 35 | various | Either add 1920 to the project default OR confirm this product is desktop-secondary. |
-```
-
-The agent does NOT delete baselines on audit — it produces the
-recommendation list for human review.
+For a project with 312 existing baselines, the agent enumerates them
+from a recent Chromatic build's diagnostics, applies the conventions
+checklist, and surfaces deviations: auto-generated control combos
+(e.g. `Atoms/Button/*-Disabled-Loading-Outline`), `[INTERNAL]` stories
+that should opt out, and stories missing the 1920 wide-desktop
+breakpoint. The agent does NOT delete baselines on audit — it
+produces a recommendation list for human review.
