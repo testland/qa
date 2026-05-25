@@ -156,7 +156,4 @@ Slower than template clone but portable.
 
 ## References
 
-- [pg-templates][pg-tpl], [pg-begin][pg-begin], [pg-dump][pg-dump]
-  (Postgres template DBs; `BEGIN` / `ROLLBACK`; `pg_dump -Fc/-Fd`).
-- [`docker-compose-test`](../skills/docker-compose-test/SKILL.md) —
-  the migrate-service pattern that produces the template state.
+- [pg-templates][pg-tpl], [pg-begin][pg-begin], [pg-dump][pg-dump] (Postgres template DBs; `BEGIN` / `ROLLBACK`; `pg_dump -Fc/-Fd`); [`docker-compose-test`](../skills/docker-compose-test/SKILL.md) (migrate-service pattern producing the template state).
