@@ -1,6 +1,6 @@
 ---
 name: perf-regression-bisector
-description: "Read-only agent that bisects a performance regression across commits using `git bisect` plus a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-slow-query-detector for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear."
+description: "Action-taking agent that bisects a performance regression across commits — drives `git bisect run` with a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-slow-query-detector for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear."
 tools: "Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(k6 run *), Bash(npx lhci *), Bash(jq *)"
 model: sonnet
 skills:
@@ -10,7 +10,7 @@ skills:
   - db-slow-query-detector
 rating: 24
 d6: 4
-archetype: A1
+archetype: A2
 ---
 
 A bisector that turns "p95 latency went up 3x sometime in the last 50 commits" into "this commit is the culprit, here's the suspected hot path."
