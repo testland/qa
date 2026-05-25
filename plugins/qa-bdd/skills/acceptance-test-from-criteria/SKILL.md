@@ -204,7 +204,7 @@ A 1:1 mapping of AC → test → status answers it definitively.
 
 ## Step 7 — Run via the team's framework
 
-Per language:
+**Default: match the team's existing BDD runner** — ATDD lives or dies by adoption, and forcing a runner switch alongside test-first authoring stalls both. Use the team's incumbent runner (Cucumber-JVM, Behave, or Reqnroll). Pick a new runner only when no incumbent exists; in that case default to the runner matching the production stack's primary language (JVM → Cucumber-JVM, Python → Behave, .NET → Reqnroll).
 
 ```bash
 # Cucumber-JVM
