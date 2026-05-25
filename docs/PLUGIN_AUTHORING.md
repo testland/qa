@@ -97,7 +97,45 @@ For each draft description, check:
 
 If any check fails, redraft.
 
-## Step 4 — Fetch canonical sources
+## Step 4 — Build evaluations FIRST (v4.0 — Anthropic-required)
+
+**This step is NEW in v4.0 and reorders the rest of the workflow.**
+
+Per Anthropic's `agent-skills/best-practices` §"Build evaluations first":
+*"Create evaluations BEFORE writing extensive documentation. This ensures
+your Skill solves real problems rather than documenting imagined ones."*
+
+The v4.0 rating framework formalizes this. Before drafting any body content
+(Step 6), build ≥3 evals that exercise the gap this component is meant to
+fill:
+
+1. **Identify the gap.** Run Claude on representative tasks WITHOUT the new
+   component. Document specific failures or missing context.
+2. **Create 3 evals.** Each encodes one of those failures with an explicit
+   pass condition (concrete string-match or behavioral check, not "looks
+   reasonable").
+3. **Include at least one adversarial / refuse-to-proceed eval** — a case
+   where the component SHOULD refuse (out-of-scope input, missing
+   prerequisite, ambiguous spec).
+4. **Establish baseline.** Measure Claude's performance against the evals
+   WITHOUT the body content. The evals are the spec the body is written
+   against — if Claude can already pass them without help, the component
+   isn't earning its keep.
+5. **Then proceed to Step 5** (fetch canonical sources) and Step 6 (draft
+   body content) with the evals as the target.
+
+Eval file location and shape are documented under §"Authoring evaluations
+for an agent (D7)" further down — that section describes WHERE evals live
+and HOW they're structured; this Step 4 describes WHEN to write them
+(first, not last).
+
+**Why this order matters.** Components authored "body first, evals last"
+tend to document imagined problems rather than real ones. Tier 4 surfaced
+this pattern: several agents shipped bodies that listed 4-5 framework
+options with no clear default — a D8 sub-check 3 failure that better evals
+would have caught at authoring time.
+
+## Step 5 — Fetch canonical sources
 
 1. **WebFetch each canonical URL** for the tool/concept. Do not rely on
    training data — versions drift, commands change.
@@ -128,7 +166,7 @@ If any check fails, redraft.
      removed, fall back to the project's GitHub README and flag the change
      in your PR description so the canonical-source list stays accurate.
 
-## Step 5 — Draft body content from fetched sources
+## Step 6 — Draft body content from fetched sources
 
 - **Body structure** uses progressive disclosure: a short main body that
   links to deeper material under `references/`. The main body covers the
@@ -145,37 +183,76 @@ If any check fails, redraft.
   additional sources, (ii) remove the claim, or (iii) explicitly mark it
   `[author opinion]` (rare; methodology framing only).
 
-## Step 6 — Self-rate
+## Step 7 — Self-rate (v4.0 — 8 dimensions, 0-40 scale)
 
-Score each of D1-D6 (0-5):
+Score each of D1–D8 (0–5 per dimension):
 
-- **D1 Spec compliance** — does the frontmatter follow Anthropic's official
-  Claude Code plugin spec? Are `tools`, `allowed-tools`, `model`, `skills:`,
-  `disable-model-invocation`, and `argument-hint` declarations valid?
-- **D2 Archetype fit** — does the body match the declared archetype's shape?
-- **D3 Description quality** — single-description test passes cleanly?
-- **D4 Use-case fit** — is the trigger clear and non-overlapping with
-  neighbors? Would a user know when to invoke it?
-- **D5 Body quality** — progressive disclosure, concrete steps, examples,
-  output format. Skill body has Authoring/Running/Parsing/CI sections;
-  agent body has When invoked / Output format / Examples sections.
+- **D1 Spec compliance** — frontmatter follows Anthropic's plugin spec.
+  Name format, name matches parent dir, description ≤1024 chars, no XML tags,
+  folder + body placement correct.
+- **D2 Scope quality** — archetype fit (S1–S4 / A1–A4); body length within
+  the v3.0 / v4.0 archetype band; progressive disclosure when approaching
+  the band cap (not splitting the skill).
+- **D3 Description quality** — single-description test passes; for agents,
+  description includes a "Use when…" / "Use proactively" / "Use immediately
+  after…" trigger clause; skill names prefer gerund form.
+- **D4 Use-case fit** — real triggers; differentiated from neighbors
+  (Anthropic-bundled patterns set the bar, not aggregator-clone saturation).
+- **D5 Body quality** — actionable instructions (credit checklist patterns
+  + feedback loops); examples or expected output; progressive-disclosure
+  layout; body length within archetype band; body hygiene (no broken refs,
+  contradictions, marketing filler, time-sensitive language, Windows-style
+  paths in cited examples). For A1/A3 agents ≥120 lines: explicit
+  `## Output format` section.
 - **D6 Terminology compliance** — ISTQB-canonical terms cited to canonical
   source; tool-specific claims grounded in fetched docs. **D6 = 0 is a
   hard reject.**
+- **D7 Evaluation coverage** — ≥3 evals (built FIRST per Step 4),
+  multi-model targets, ≥1 adversarial, concrete pass conditions.
+  **D7 = 0 is a hard reject.**
+- **D8 Best-practices adherence** (NEW in v4.0) — five sub-checks against
+  Anthropic's `agent-skills/best-practices` doc:
+  1. **Concision** — no over-explanation of concepts Claude already knows
+  2. **Degrees-of-freedom calibration** — specificity matches task fragility
+     (low freedom for fragile operations, high freedom for heuristic work)
+  3. **Single-default discipline** — one primary recommendation;
+     alternatives are escape hatches, not ties
+  4. **Workflow + feedback-loop literacy** — explicit checklists for
+     multi-step content; validator → fix → repeat patterns
+  5. **Path + script + MCP hygiene** — forward slashes only in cited
+     paths; scripts solve rather than punt to Claude; MCP refs use
+     fully-qualified `ServerName:tool_name`. N/A defaults to PASS if the
+     component bundles no scripts, references no MCP tools, and cites no
+     paths.
 
-Total >=21 to merge.
+  **D8 ≥ 1 becomes a hard reject after 2026-07-01.** During the shadow
+  window (now through 2026-07-01), D8 is advisory.
 
-## Step 7 — Stamp frontmatter
+**v4.0 importable bar: total ≥28 of 40.** Grade bands: A 34–40,
+B 28–33, C 20–27.
+
+**Shadow-window note:** the lint script `rating-check.sh` currently
+enforces v2.0 thresholds (`rating ≥21 of 30 + d6 ≥1`). Score honestly
+against v4.0 anyway — the v4.0 score informs the marketplace-wide
+backfill priority list (per the framework's §10).
+
+## Step 8 — Stamp frontmatter
 
 Add to component frontmatter:
 
 ```yaml
-rating: 24      # your D1+D2+D3+D4+D5+D6 total
-d6: 4           # the D6 sub-score (extracted so reviewer can cross-check)
+rating: 24      # D1+D2+D3+D4+D5+D6 sum (script enforces 21..30)
+d6: 4           # D6 sub-score (hard floor ≥1)
+d7: 4           # D7 sub-score (v3.0+; hard floor ≥1 after 2026-06-01)
+d8: 4           # D8 sub-score (v4.0+; advisory, hard floor ≥1 after 2026-07-01)
 archetype: S1   # the matching archetype
 ```
 
-## Step 8 — Update plugin README
+The v4.0 total is computed as `rating + d7 + d8` and reported in commit
+messages, but only `rating` (in [21, 30]) and `d6` (≥1) are gated by the
+lint script during the shadow window.
+
+## Step 9 — Update plugin README
 
 Add a row to the plugin's component table:
 
@@ -183,7 +260,7 @@ Add a row to the plugin's component table:
 | skill | dbt-testing | S1 | Author and run dbt tests with CI gates |
 ```
 
-## Step 9 — Run CI locally
+## Step 10 — Run CI locally
 
 ```bash
 bash scripts/test-validate.sh
@@ -193,21 +270,29 @@ bash scripts/rating-check.sh
 
 All three must pass.
 
-## Step 10 — Commit
+## Step 11 — Commit
 
-Commit message format includes source-fetch date:
+Commit message format includes source-fetch date and v4.0 total:
 
 ```
-Add <component-name> <type> (<archetype>, rated <total>/30 [d6=<n>]; sources fetched <YYYY-MM-DD> from <domain>)
+Add <component-name> <type> (<archetype>, rated <total_v4>/40 [d6=<n>, d7=<n>, d8=<n>]; sources fetched <YYYY-MM-DD> from <domain>)
 ```
+
+Where `<total_v4>` = `rating + d7 + d8`.
 
 Example:
 
 ```
-Add k6-load-testing skill (S1, rated 27/30 [d6=5]; sources fetched 2026-05-15 from grafana.com/docs/k6)
+Add k6-load-testing skill (S1, rated 35/40 [d6=5, d7=4, d8=4]; sources fetched 2026-05-25 from grafana.com/docs/k6)
 ```
 
-## Step 11 — Release the plugin
+For components scored under v3.0 (no D8 yet), use the v3.0 format:
+
+```
+Add foo-bar agent (A2, rated 30/35 [d6=4, d7=4]; sources fetched 2026-05-22 from ...)
+```
+
+## Step 12 — Release the plugin
 
 When all components in the plugin land:
 
@@ -220,10 +305,17 @@ When all components in the plugin land:
 
 ## Authoring evaluations for an agent (D7)
 
-The v3.0 rating framework introduces **D7 Evaluation Coverage** as a
+> **When to write evals: see [Step 4](#step-4--build-evaluations-first-v40--anthropic-required) — evals are authored FIRST,
+> before body content (Step 6). This section covers WHERE evals live and HOW
+> they're structured; Step 4 covers WHEN to write them per Anthropic's
+> evaluation-driven development workflow.**
+
+The v3.0 rating framework introduced **D7 Evaluation Coverage** as a
 merge-blocking dimension for new agents (skills are deferred per the
-shadow-launch priority order). Every new agent ships with ≥3 evals
-including ≥1 adversarial / refuse-to-proceed case.
+shadow-launch priority order). v4.0 keeps D7 unchanged and adds D8
+(Best-Practices Adherence) — see [Step 7](#step-7--self-rate-v40--8-dimensions-040-scale).
+Every new agent ships with ≥3 evals including ≥1 adversarial /
+refuse-to-proceed case.
 
 **Eval file location** — use the per-agent subdirectory layout:
 
@@ -254,8 +346,8 @@ haiku / opus with run-date if executed; authoring-date if only
 designed), `Expected:`, and `Pass condition:` (a concrete string-match
 or behavioural check, not "looks reasonable"). At least one adversarial
 case per agent. See
-[`elv1s42k-qa-research/qa-rating-framework-2026-05-22.md`](https://github.com/elv1s42/qa-research)
-§"Eval file shape" for the canonical template.
+[`elv1s42k-qa-research/qa-rating-framework-2026-05-25.md`](https://github.com/elv1s42/qa-research)
+§"Dimension 7 — Evaluation Coverage" for the canonical template.
 
 ## Reference: directory layout per plugin
 
