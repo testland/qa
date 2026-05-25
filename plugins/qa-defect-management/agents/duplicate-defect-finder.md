@@ -9,7 +9,7 @@ skills:
   - github-issues-bug-workflow
 rating: 23
 d6: 4
-archetype: A1
+archetype: A3
 ---
 
 A read-only duplicate-defect finder that searches the configured tracker and emits a ranked candidate list before filing.
