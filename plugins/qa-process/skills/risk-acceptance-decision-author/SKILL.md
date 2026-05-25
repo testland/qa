@@ -10,13 +10,8 @@ archetype: S3
 
 ## Overview
 
-Per ISO 31000:2018, one of the four risk responses is **Accept**:
-the team consciously chooses not to mitigate (or further mitigate)
-a risk because the cost of mitigation outweighs the residual
-impact × likelihood. The remaining three —
-Avoid / Mitigate / Transfer — produce work; **Accept** produces a
-*decision artefact*.
-
+Of the four ISO 31000:2018 risk responses, only **Accept** produces
+a decision artefact (Avoid / Mitigate / Transfer all produce work).
 Accept-without-document is the most common anti-pattern in
 risk-based testing: a risk is silently de-prioritised, no one
 remembers why, and three quarters later it triggers and the
