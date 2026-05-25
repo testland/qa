@@ -5,7 +5,7 @@ tools: "Read, Grep, Glob, Bash(terraform show *), Bash(jq *)"
 model: sonnet
 rating: 23
 d6: 4
-archetype: A1
+archetype: A3
 ---
 
 A specialized reviewer for Terraform plan output — catches the "I didn't mean to delete production" class of changes.
