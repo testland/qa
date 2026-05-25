@@ -210,16 +210,20 @@ def test_pan_access_creates_audit_record():
 
 ## Step 7 — Scope reduction strategies
 
-PCI DSS scope reduction is the highest-leverage cost-saving:
+PCI DSS scope reduction is the highest-leverage cost-saving.
 
-| Strategy | Effect |
+**Default: tokenization** — replace PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only. This shrinks the CDE the most for the least integration churn in a typical SaaS architecture. Use the alternatives when tokenization doesn't fit:
+
+| Strategy | Use when |
 |---|---|
-| Tokenization | Replace PAN with non-sensitive token; non-CDE systems handle tokens only |
-| Hosted payment page (iframe) | Card data never touches your servers; CDE shrinks dramatically |
-| P2PE (point-to-point encryption) | Encrypted at swipe; only decryption point is CDE |
-| Network segmentation | Firewall rules + VLAN separation isolate CDE from non-CDE |
+| Tokenization (default) | SaaS architecture; need to retain PAN reference for refunds / chargebacks |
+| Hosted payment page (iframe) | Pre-tokenization not feasible; card data must never touch your servers |
+| P2PE (point-to-point encryption) | Physical POS / card-present flows; encrypted at swipe with only decryption point in CDE |
+| Network segmentation | Layered defense on top of one of the above; never the sole scope-reduction strategy |
 
 Tests verify scope-reduction is actually reducing scope (Step 1).
+
+**PAN-storage format default (Req 3.4):** prefer **tokenization** at the storage boundary; the four `is_*` checks in Step 3's `test_pan_stored_encrypted` are an OR because pre-existing systems may already use any of them, but for new storage paths pick tokenization and treat encryption / truncation / hashing as escape hatches when tokenization isn't feasible.
 
 ## Anti-patterns
 
