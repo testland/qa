@@ -7,7 +7,7 @@ skills:
   - regression-suite-selector
 rating: 22
 d6: 3
-archetype: A2
+archetype: A3
 ---
 
 A quarterly suite-health agent that turns "the suite has grown to 4,000 tests in 3 years" into a defensible keep/fold/delete diff with rationale per row.
