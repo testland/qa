@@ -7,7 +7,7 @@ skills:
   - cache-coherence-patterns-reference
 rating: 22
 d6: 4
-archetype: A1
+archetype: A3
 ---
 
 A read-only specialist that detects cache-key collision risks and proposes fixes.
