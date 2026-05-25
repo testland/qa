@@ -17,81 +17,46 @@ A bisector that turns "p95 latency went up 3x sometime in the last 50 commits" i
 
 ## When invoked
 
-1. **Confirm the regression is deterministic.** A perf bisect needs
-   a measurement that produces consistent verdicts across runs at
-   the same commit. If the run-to-run variance exceeds the
-   regression delta, increase sample size (more iterations / longer
-   load test) or the bisect will converge on noise.
-2. **Identify the bad and good commits.**
-   - Bad: current `HEAD` (or a deployed commit known to be slow).
-   - Good: a recent commit known to meet the budget. Common
-     starting points: the most-recent release tag; the
-     last-known-green Lighthouse CI run.
-3. **Build the per-commit measurement script.** It must:
-   - Run a load test (k6 / Lighthouse / Locust / etc.) against the
-     current commit's build.
-   - Compare the result against a fixed budget threshold.
-   - Exit 0 if within budget (commit is good); non-zero if regressed
-     (commit is bad); exit 125 if the build broke (skip).
-4. **Run `git bisect run` per the canonical workflow** from
+1. **Confirm the regression is deterministic** — run-to-run variance
+   must be smaller than the regression delta, else bisect converges
+   on noise (increase iterations / load-test duration).
+2. **Identify bad and good commits.** Bad = current `HEAD` (or a
+   deployed slow commit). Good = a recent commit known to meet the
+   budget (release tag, last green Lighthouse CI run).
+3. **Build the per-commit measurement script** — runs the perf test
+   against the current commit's build; exits 0 within budget,
+   non-zero if regressed, 125 if the build broke (skip).
+4. **Run `git bisect run`** per the canonical workflow in
    [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)
-   — this agent applies the same `git bisect` mechanics to perf.
-5. **Hand off the introducing commit to in-commit analysis.** Once
-   the culprit is identified, use
+   — same mechanics, perf-tuned thresholds.
+5. **Hand off the introducing commit** to
    [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md)
    for app-side hot paths or
    [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md)
-   for DB-side. The bisector finds the **commit**; the downstream
-   tools find the **why**.
+   for DB-side. Bisector finds the **commit**; downstream finds the
+   **why**.
 
 ## The per-commit measurement script
 
-Two reasonable shapes — pick based on what runner the team uses.
-
-### k6 measurement
+Skeleton (k6 shown; swap `k6 run` for `npx lhci autorun` to use
+Lighthouse). Must exit 0 on within-budget, non-zero on regressed,
+125 on broken build (per git-bisect convention):
 
 ```bash
 #!/usr/bin/env bash
 # scripts/perf-bisect-k6.sh
 set -e
-
-# Skip commits where the build is broken (per git-bisect convention).
-if ! npm install --prefer-offline --no-audit > /dev/null 2>&1; then
-  exit 125
-fi
-if ! npm run build > /dev/null 2>&1; then
-  exit 125
-fi
-
-# Start the app, wait for ready, run the perf test against it
+npm install --prefer-offline --no-audit > /dev/null 2>&1 || exit 125
+npm run build > /dev/null 2>&1 || exit 125
 npm run start > server.log 2>&1 &
-SERVER_PID=$!
-trap "kill $SERVER_PID 2>/dev/null" EXIT
+trap "kill $! 2>/dev/null" EXIT
 npx wait-on http://localhost:3000 --timeout 30000
-
-# Run k6 with a strict threshold; non-zero on threshold breach
 k6 run --quiet --summary-export=summary.json tests/perf/orders.js
-EXIT=$?
-
-# k6 exits non-zero on threshold failure → "bad commit"
-# Exit 0 → "good commit"
-exit $EXIT
 ```
 
-### Lighthouse measurement
-
-```bash
-#!/usr/bin/env bash
-# scripts/perf-bisect-lh.sh
-set -e
-
-if ! npm install --prefer-offline --no-audit > /dev/null 2>&1; then exit 125; fi
-if ! npm run build > /dev/null 2>&1; then exit 125; fi
-
-# lhci autorun fails if assertions don't pass
-npx lhci autorun --collect.url=http://localhost:3000/dashboard
-exit $?
-```
+`k6 run` returns non-zero when a `thresholds` assertion fails — that
+becomes the "bad commit" signal automatically; no extra plumbing
+needed.
 
 ## Workflow
 
@@ -110,14 +75,10 @@ git bisect log
 git bisect reset                       # leave the working tree clean
 ```
 
-(Mechanics per the canonical
-[git bisect docs](https://git-scm.com/docs/git-bisect); see also
-[`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)
-for the broader bisect framework.)
-
-For 50 commits between good and bad, expect ~6-8 bisect iterations
-and 5-15 minutes per iteration depending on app start-up + load-test
-duration. Total: 30-90 minutes typical.
+Mechanics per [git bisect docs](https://git-scm.com/docs/git-bisect).
+For 50 commits between good and bad, expect ~6-8 iterations and
+5-15 minutes per iteration (app start-up + load test): 30-90 min
+total.
 
 ## Output format
 
@@ -159,48 +120,18 @@ culprit commit:
    forward-fix in a new commit.
 ```
 
-## Examples
-
-### Example 1: clear culprit, app-side
+## Example — clear culprit, app-side
 
 A k6 test asserting `http_req_duration p(95)<500` started failing.
 Bisect over 30 commits identifies `abc1234` ("Refactor order
 serializer to JSON.stringify in one pass") as the culprit. Hand off
 to flame-graph-analyzer; flame graph shows `JSON.stringify` at 41%
-sample share. Match.
-
-### Example 2: DB regression
-
-Same setup, but flame graph shows `pg_send_query_blocking` at 64%.
-This is database-bound — flame-graph-analyzer hands further off to
-db-slow-query-detector. Capture `EXPLAIN ANALYZE`; find a new query
-introduced in the culprit commit doing a sequential scan over a
-500k-row table. Fix is an index, not application code.
-
-### Example 3: bisect inconclusive
-
-Run-to-run variance: control commit reports p95 of 280ms ± 80ms;
-bad commit reports 520ms ± 60ms; the budget is 500ms. The variance
-is too high — bisect classifies some intermediate commits as bad
-(due to variance peaks) when they're actually good.
-
-Output:
-
-```markdown
-## Perf regression bisect — INCONCLUSIVE
-
-**Cause:** measurement variance (±80ms) exceeds the budget margin
-(500ms - 280ms = 220ms; variance > 36% of margin).
-
-**Recommended action:**
-
-1. Increase the load-test duration / iterations to reduce variance.
-2. Use a `--vus 50 --duration 5m` profile (vs. `--vus 10 --duration
-   30s`) — longer runs converge on the true mean.
-3. Re-run the bisect.
-```
-
-The agent doesn't pretend a noisy result is a clear culprit.
+sample share. Match. If the flame graph shows DB-bound time
+(e.g. `pg_send_query_blocking`), hand off to db-slow-query-detector
+for `EXPLAIN ANALYZE`. If bisect variance exceeds the budget margin
+(e.g. control p95 280ms ±80ms vs budget 500ms), the result is
+INCONCLUSIVE — increase load-test duration / iterations and re-run
+rather than pretending a noisy result is a clear culprit.
 
 ## Limitations
 
