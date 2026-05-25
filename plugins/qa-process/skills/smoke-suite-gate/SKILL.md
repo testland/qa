@@ -10,13 +10,9 @@ archetype: S3
 
 ## Overview
 
-A smoke suite is the **minimum** test set every deploy must pass.
-Different from regression (broader, slower), exploratory (manual),
-and unit (per-function): smoke verifies the **critical journeys**
-work end-to-end.
-
-The gate fires per-deploy: pre-merge, post-merge to main, post-deploy
-to staging, post-deploy to canary. A smoke failure halts the
+A smoke suite is the **minimum** end-to-end test set every deploy
+must pass, gating pre-merge, post-merge to main, post-deploy to
+staging, and post-deploy to canary. A smoke failure halts the
 release.
 
 ## When to use
