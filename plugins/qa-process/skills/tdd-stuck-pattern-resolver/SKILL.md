@@ -226,12 +226,17 @@ without reflection (a code smell).
 
 **Refactor options:**
 
-1. **Test through the public interface** (preferred). If
-   `calculateTotal` matters, it affects `process(...)`'s output;
-   test that.
+**Default: Test through the public interface.** If `calculateTotal`
+matters, it affects `process(...)`'s output; test that. Keeps tests
+decoupled from implementation. Use the alternatives below only when
+this default doesn't fit the situation described.
 
-2. **Extract to a separate class** with public methods (when the
-   private logic is genuinely independent):
+1. **Test through the public interface** (the default — use unless
+   the conditions below apply).
+
+2. **Extract to a separate class** with public methods — use when
+   the private logic is genuinely independent and reused, or complex
+   enough that public-interface tests can't pin its behaviour:
 
 ```kotlin
 class TotalCalculator {
@@ -249,8 +254,9 @@ class OrderProcessor(private val totalCalculator: TotalCalculator) {
 Then `TotalCalculator` is tested directly; `OrderProcessor` tested
 with a fake.
 
-3. **Make it `internal`** (Kotlin / Scala) — accessible from tests
-   in the same module without making it `public`.
+3. **Make it `internal`** (Kotlin / Scala) — escape hatch when
+   extraction is overkill but reflection is worse; only when the
+   language supports module-private visibility.
 
 ## Pattern 7 — Async / Promise-heavy code
 
