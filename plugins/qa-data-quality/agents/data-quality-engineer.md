@@ -87,18 +87,14 @@ A data-quality engineer that produces an initial assertion suite for a single da
    `warn` to `error` (or removing `severity: warn` overrides).
 ```
 
-## Examples
-
-### Example 1: dbt model with no existing schema.yml block
+## Example — dbt model with no existing schema.yml block
 
 Input: `models/orders.sql` exists; `models/orders.yml` is empty;
 sample of 500 rows provided.
 
-Sample summary:
-- `order_id`: 500 distinct, 0 nulls
-- `status`: 4 distinct values {placed, shipped, completed, returned}
-- `discount_pct`: range 0–95, 12 nulls
-- `updated_at`: most-recent < 1h ago
+Sample summary: `order_id` 500 distinct, 0 nulls; `status` 4 distinct
+values {placed, shipped, completed, returned}; `discount_pct` range
+0–95, 12 nulls; `updated_at` most-recent < 1h ago.
 
 Generated `models/orders.yml` (excerpt):
 
@@ -122,53 +118,10 @@ models:
         data_tests: [not_null]
 ```
 
-Output:
+Reported coverage: 5 expectations across 4 columns. Sample run
+fails on `discount_pct.not_null` (12 nulls) — flagged as
+"confirm nullability" in next steps, not auto-added.
 
-```markdown
-## Data Quality Suite for orders
-
-**Engine:** dbt
-**Coverage:** 5 expectations across 4 columns
-**Files added:**
-  - models/orders.yml (new)
-
-### Coverage breakdown
-
-| Column        | Check                          | Rationale                 |
-|---------------|--------------------------------|---------------------------|
-| order_id      | unique, not_null               | 500/500 distinct in sample |
-| status        | accepted_values (4 values)     | Low-cardinality enum from sample |
-| discount_pct  | column_value_in_range 0–100    | Sample range plus business rule |
-| updated_at    | not_null                       | Required pipeline timestamp |
-
-### Sample run
-
-- **Result:** FAIL (`12 failures` on `discount_pct.not_null` — note `not_null` not added because sample shows expected nullability)
-
-### Next steps
-
-1. Confirm `discount_pct` is intentionally nullable; otherwise add `not_null`.
-2. Wire `dbt build --select orders` into CI per
-   `dbt-testing/SKILL.md` "CI integration".
-```
-
-### Example 2: Soda project, fresh dataset
-
-Input: `configuration.yml` exists with a Snowflake `data_source warehouse:`;
-no `checks.yml` for the new `events` dataset.
-
-Generated `checks/events.yml`:
-
-```yaml
-checks for events:
-  - row_count > 0
-  - missing_count(event_id) = 0
-  - duplicate_count(event_id) = 0
-  - missing_count(occurred_at) = 0
-  - freshness(occurred_at) < 1h
-  - invalid_count(user_id) = 0:
-      valid format: uuid
-```
-
-Output: same shape as Example 1 with the SodaCL block listed under
-"Files added" and `soda scan` exit code reported under "Sample run".
+For GX / Soda projects the agent emits the equivalent suite shape
+in the engine's native syntax (`gxe` Python suite or
+`checks for <dataset>:` SodaCL block) per the matching skill.
