@@ -73,6 +73,11 @@ functions:
 
 ## Step 2 — Pick the emulator per function
 
+**Default: pick one emulator per platform detected in Step 1's inventory** —
+the per-platform skill below is the canonical driver for that runtime. Use
+multiple emulators only when the project mixes platforms (e.g., Vercel app
++ AWS Lambdas).
+
 | Platform | Test path | Skill |
 |---|---|---|
 | AWS Lambda (Node/Python/etc.) | `sam local invoke` or direct handler | [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md) |
@@ -81,9 +86,6 @@ functions:
 | Vercel Edge | @edge-runtime/jest-environment | [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md) |
 | Netlify Functions | netlify dev + direct handler | [`netlify-functions-test`](../netlify-functions-test/SKILL.md) |
 | Serverless Framework | serverless-offline / direct | [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md) |
-
-For mixed-platform projects (e.g., Vercel app + AWS Lambdas for
-backend), use both.
 
 ## Step 3 — Generate test events per event source
 
