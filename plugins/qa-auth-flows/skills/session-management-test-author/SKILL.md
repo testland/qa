@@ -73,8 +73,7 @@ def test_session_cookie_has_all_required_attributes(client, base_url):
         assert not domain.startswith(".")   # no leading-dot (parent domain)
 ```
 
-For SameSite, prefer `Strict` for state-changing endpoints; `Lax` is
-acceptable for OAuth callback compatibility.
+**Default: `SameSite=Strict`** — provides the strongest CSRF defense by blocking the cookie on all cross-site requests. Use `SameSite=Lax` only when the session must survive OAuth callback redirects or other top-level cross-site navigations.
 
 ## Step 2 — Session-fixation defense
 
@@ -241,14 +240,9 @@ def test_csrf_token_per_session(client, base_url):
 
 ## Step 7 — Session binding (defense-in-depth)
 
-For high-security apps, bind sessions to additional context:
+For high-security apps, bind sessions to additional context.
 
-- **TLS binding** (token-binding RFC 8473) — the session is tied to
-  the TLS channel; replay on a different connection fails.
-- **IP binding** — session expires on IP change. Brittle on mobile
-  networks; use only if the threat model demands it.
-- **User-Agent + device-fingerprint binding** — moderate-strength
-  defense against cookie theft.
+**Default: User-Agent + device-fingerprint binding** — strikes the best balance of attack surface reduction vs. false positives on legitimate user activity. Use TLS binding (RFC 8473) when the deployment controls both client and server and requires maximum strength; use IP binding only when the threat model accepts mobile-network churn (frequent re-auth on roaming).
 
 These are policy decisions; test pattern verifies the chosen
 binding holds:
