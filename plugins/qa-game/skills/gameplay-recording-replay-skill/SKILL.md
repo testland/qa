@@ -1,6 +1,6 @@
 ---
 name: gameplay-recording-replay-skill
-description: "Build a deterministic gameplay record/replay test artefact for Unity, Unreal, or Godot — record a player session, save it to disk, replay it bit-for-bit, and assert that the resulting game state matches the original. Covers Unity Input System's InputEventTrace API (Enable / Disable / WriteTo / ReadFrom / Replay) for input-level capture, Unreal's Replay System (DemoRec / DemoPlay / DemoStop console commands plus DemoNetDriver + NetworkReplayStreamer, default storage at %LOCALAPPDATA%\\<Project>\\Saved\\Demos) for replication-stream capture, and Godot's community-pattern deterministic-RNG + input-script replay since Godot ships no first-party replay system. Use when authoring a regression-test artefact for player-recorded sessions, building a netcode replay for spectator / esports, or producing reproducible bug repros for cert teams."
+description: "Build a deterministic gameplay record/replay test artefact for Unity, Unreal, or Godot — record a player session, save it to disk, replay it bit-for-bit, and assert that the resulting game state matches the original. Covers Unity Input System's InputEventTrace API (Enable / Disable / WriteTo / ReadFrom / Replay) for input-level capture, Unreal's Replay System (DemoRec / DemoPlay / DemoStop console commands plus DemoNetDriver + NetworkReplayStreamer, default storage at %LOCALAPPDATA%/<Project>/Saved/Demos) for replication-stream capture, and Godot's community-pattern deterministic-RNG + input-script replay since Godot ships no first-party replay system. Use when authoring a regression-test artefact for player-recorded sessions, building a netcode replay for spectator / esports, or producing reproducible bug repros for cert teams."
 rating: 23
 d6: 4
 archetype: S3
@@ -69,7 +69,7 @@ Gather before walking the workflow:
 | Engine + version | Project | Determines which API surface applies |
 | Determinism baseline | Game design — is fixed-tick physics on? RNG seeded? AI deterministic? | Replays only work when the game's per-frame outputs are functions of (state + input) |
 | Recording scope | Input-only? Full replication stream? | Trades off file size against determinism guarantees |
-| Target storage location | `Application.persistentDataPath`, `%LOCALAPPDATA%\<Project>\Saved\Demos`, etc. | Where replay files land |
+| Target storage location | `Application.persistentDataPath`, `%LOCALAPPDATA%/<Project>/Saved/Demos`, etc. | Where replay files land |
 | Replay length budget | Seconds / minutes | InputEventTrace buffer sizing |
 | Assertion model | Final-state hash? Per-frame? Checkpoint-only? | Drives the test harness shape |
 
@@ -168,7 +168,7 @@ Unreal's replay system captures the **replicated state stream**
 via the `DemoNetDriver` and persists via `NetworkReplayStreamer`.
 Default storage per the
 [Recording Replays page](https://dev.epicgames.com/documentation/en-us/unreal-engine/recording-replays-in-unreal-engine):
-`%LOCALAPPDATA%\<Project>\Saved\Demos`.
+`%LOCALAPPDATA%/<Project>/Saved/Demos`.
 
 **Console commands** (per the same page):
 
@@ -411,7 +411,7 @@ stale" message when format < 2 rather than silently passing.
   single-player but doesn't generalise to multiplayer.
 - **Unreal replays bloat with high-bandwidth replication.** The
   `.replay` file under
-  [`%LOCALAPPDATA%\<Project>\Saved\Demos`](https://dev.epicgames.com/documentation/en-us/unreal-engine/recording-replays-in-unreal-engine)
+  [`%LOCALAPPDATA%/<Project>/Saved/Demos`](https://dev.epicgames.com/documentation/en-us/unreal-engine/recording-replays-in-unreal-engine)
   grows with replicated-property volume — large open-world games
   produce GB-scale replays. Use checkpoint-only replays for
   long sessions.
