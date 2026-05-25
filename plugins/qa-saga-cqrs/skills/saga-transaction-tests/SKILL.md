@@ -40,8 +40,10 @@ Per [microservices.io/saga]:
 | **Orchestration** | Central orchestrator commands each step; explicit state machine |
 | **Choreography** | Services publish domain events; subsequent services react autonomously |
 
-Orchestration → easier to test (state machine has clear edges).
-Choreography → harder to test (event flows are emergent).
+**Default: orchestration** — the state machine has clear edges, so
+the test matrix (steps × failures) is enumerable. Use choreography
+when services must remain autonomous (no central coordinator owned
+by one team) or fan-out is wide; Step 7 covers that path.
 
 ## Step 2 — Identify steps + compensations
 
