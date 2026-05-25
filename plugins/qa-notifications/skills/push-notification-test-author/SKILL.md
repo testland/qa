@@ -39,8 +39,7 @@ common workflow + per-platform specifics.
 | Sandbox / emulator | APNs sandbox, FCM emulator (limited), web-push test browser | Realistic; slower |
 | End-to-end with test devices | Real device farm | Highest fidelity; expensive + flaky |
 
-For unit tests of payload-construction logic, mock. For E2E send
-verification, use sandbox.
+**Default: mock the SDK** — fast, deterministic, covers payload-shape + error-path logic which is most of what regressions hit. Use sandbox/emulator when verifying provider-side behavior (encryption, rate-limit, real 410 handling); use real device farms only for grouped-notification / channel UX work.
 
 ## Step 2 — Web Push tests
 
