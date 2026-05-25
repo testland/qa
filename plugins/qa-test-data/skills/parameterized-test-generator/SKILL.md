@@ -42,7 +42,7 @@ If only one input has multiple values, use
 instead — boundary analysis is the right tool for single-input
 testing.
 
-## Coverage strength
+## Step 1 — Pick the coverage strength
 
 | Strength | Coverage                                                           |
 |----------|--------------------------------------------------------------------|
@@ -61,7 +61,7 @@ testing.
 **Default:** 2-wise. Promote to 3-wise only when an incident
 postmortem shows a triplet bug slipped through 2-wise.
 
-## Tools that compute the reduced set
+## Step 2 — Pick the tool that computes the reduced set
 
 | Tool        | Language   | Notes                                                        |
 |-------------|------------|--------------------------------------------------------------|
@@ -69,11 +69,12 @@ postmortem shows a triplet bug slipped through 2-wise.
 | **AllPairs** | Python    | Library; integrates with pytest.                              |
 | **CATS**    | Multi-lang | Open-source Combinatorial Test Generator.                     |
 
-For programmatic generation, the team picks one based on language
-preference. PICT is the most language-agnostic — outputs CSV that
-the test scaffolding can parametrize.
+**Default: PICT** — language-agnostic CLI, deterministic CSV output
+that any test runner can parametrize. Use AllPairs when the spec
+needs to live in Python alongside pytest fixtures; use CATS when the
+team needs an in-process Java/multi-language library API.
 
-## Input specification
+## Step 3 — Author the input specification
 
 A YAML format the skill consumes:
 
@@ -98,7 +99,7 @@ constraints:
 `constraints` exclude combinations that don't make sense in the
 domain — including them would generate tests for impossible states.
 
-## Output formats
+## Step 4 — Emit in the test-runner-native format
 
 ### Pairwise CSV (PICT-style)
 
@@ -169,7 +170,7 @@ public void UserCapability(string role, string tier, string feature, string loca
 }
 ```
 
-## Verifying coverage
+## Step 5 — Verify coverage
 
 After generation, the skill emits a coverage report:
 
