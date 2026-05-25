@@ -137,16 +137,11 @@ Per [ab-test-wiki][ab]'s "challenges" framing: testing many metrics
 inflates the false-positive rate. With α=0.05 and 10 independent
 metrics, P(at least one false positive) ≈ 1 - 0.95^10 = 40%.
 
-Two corrections:
-
-### Bonferroni (conservative)
-
-```python
-adjusted_alpha = alpha / n_metrics    # e.g. 0.05 / 10 = 0.005
-# Each metric must have p < 0.005 to be significant.
-```
-
-Easy but over-conservative — increases false negatives.
+**Default: Benjamini-Hochberg FDR control** — balances false-positive
+vs false-negative rates; controls the proportion of "wins" that are
+actually noise. Use Bonferroni when the cost of any false positive is
+catastrophic (regulatory / safety contexts) and over-conservatism is
+acceptable.
 
 ### Benjamini-Hochberg (FDR control)
 
@@ -157,8 +152,14 @@ reject, p_adj, _, _ = multipletests(p_values, alpha=0.05, method='fdr_bh')
 # `reject[i]` is True when metric i is significant after FDR control.
 ```
 
-Better balance; controls the *false discovery rate* (% of "wins"
-that are actually noise) at α.
+### Bonferroni (escape hatch — conservative)
+
+```python
+adjusted_alpha = alpha / n_metrics    # e.g. 0.05 / 10 = 0.005
+# Each metric must have p < 0.005 to be significant.
+```
+
+Over-conservative — increases false negatives.
 
 For pre-registered single-primary-metric experiments, no correction
 needed for the primary; correction applies to secondary metrics.
