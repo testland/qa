@@ -137,20 +137,17 @@ def test_cc6_3_offboarded_user_has_no_active_sessions():
 These tests run in CI; their pass/fail history is itself evidence
 for the auditor.
 
-## Step 4 — Vanta/Drata/Secureframe alignment
+## Step 4 — GRC platform alignment
 
-If using a GRC platform, evidence ingest format is platform-specific
-but typically:
+**Default: Vanta** — the broadest native-integration coverage (AWS / Okta / GitHub / GSuite / etc.) means the auto-collected evidence (Step 2) only needs to fill gaps the integrations don't cover. Use the alternatives when Vanta doesn't fit:
 
-- **Vanta** — read-only API integrations to AWS / Okta / GitHub /
-  etc. + manual evidence upload UI
-- **Drata** — similar integration model; controls templates per
-  framework
-- **Secureframe** — same pattern; less mature than Vanta but
-  cheaper
+| Platform | Use when |
+|---|---|
+| Vanta (default) | Standard SaaS stack with mainstream identity / cloud / source-control providers |
+| Drata | Multi-framework engagement (SOC 2 + ISO 27001 + HIPAA) where Drata's templates lead |
+| Secureframe | Budget-constrained engagement where Vanta's pricing is prohibitive |
 
-The auto-collected evidence (Step 2) feeds the platform's manual-upload
-UI when no native integration exists for your tooling.
+Across all three, evidence ingest format is platform-specific but the auto-collected JSON (Step 2) feeds the platform's manual-upload UI when no native integration exists for your tooling.
 
 ## Step 5 — Observation period sampling
 
