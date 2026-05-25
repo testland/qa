@@ -44,12 +44,7 @@ The 5-field standard:
 Six-field variants (Quartz, BullMQ pattern mode) prepend a seconds
 field.
 
-**Validation tools (cite per language):**
-
-- crontab.guru (web validator + plain-English description)
-- `cron-validator` npm package
-- `croniter` Python package
-- Quartz's `CronExpression.isValidExpression()` (Java)
+**Default: `croniter` (Python)** — it both validates expressions and computes next-run times, which Steps 2 + 6 below depend on. Use a language-native validator when the test suite isn't Python: `cron-validator` (Node), `CronExpression.isValidExpression()` (Java/Quartz), or crontab.guru for ad-hoc human checks.
 
 **Test pattern:**
 
