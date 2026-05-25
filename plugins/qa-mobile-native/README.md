@@ -16,6 +16,8 @@ Mobile + mobile-web E2E testing — closes the platform gap. Native frameworks (
 | Skill | [mobile-web-emulation-runner](skills/mobile-web-emulation-runner/SKILL.md) | S3 |
 | Skill | [touch-gesture-tester](skills/touch-gesture-tester/SKILL.md) | S3 |
 | Skill | [mobile-perf-budget](skills/mobile-perf-budget/SKILL.md) | S2 |
+| Agent | [mobile-driver-selector](agents/mobile-driver-selector.md) | A2 |
+| Agent | [mobile-test-author](agents/mobile-test-author.md) | A2 |
 
 ## Install
 
