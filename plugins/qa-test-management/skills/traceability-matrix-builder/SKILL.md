@@ -10,15 +10,12 @@ archetype: S3
 
 ## Overview
 
-A traceability matrix is the canonical artefact that proves
-"every requirement has at least one test, every test verifies at
-least one requirement." It's mandatory in regulated industries
-(medical devices per IEC 62304, aerospace per DO-178C, automotive
-per ISO 26262, FDA-cleared software). It's also useful in
-non-regulated teams as a coverage-gap detector.
-
 This workflow ingests requirements + cases from any combination of
-the catalog's sources and emits a deployable matrix.
+the catalog's sources and emits a deployable matrix proving "every
+requirement has at least one test, every test verifies at least
+one requirement." Mandatory in regulated industries (IEC 62304,
+DO-178C, ISO 26262, FDA-cleared software); useful elsewhere as a
+coverage-gap detector.
 
 Per ISO/IEC/IEEE 29119-3:2021 §6.3 "Traceability" and ISTQB
 CTAL-TM syllabus on test conditions and coverage items (cite by
