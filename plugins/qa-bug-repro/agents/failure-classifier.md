@@ -7,7 +7,7 @@ skills:
   - bug-report-template
 rating: 24
 d6: 4
-archetype: A1
+archetype: A3
 ---
 
 A read-only on-call triager that turns "one test just failed" into "this is a defect / a flake / an environment drift; the next step is X." Does not propose fixes; does not modify state.
@@ -116,7 +116,7 @@ Output is a fixed-shape markdown block:
 - `timeout` / `flaky-pre-incident` — failure mode is assertion-fail, not timing-edge or intermittent.
 
 **What this agent did NOT do:**
-- Open the issue (out of scope; A1 is read-only).
+- Open the issue (out of scope; read-only by design).
 - Run a re-run / git bisect / quarantine action.
 - Suggest the fix (`bug-repro-builder` is the next agent for that path).
 ```
@@ -147,7 +147,7 @@ Or, for a flaky verdict:
 
 The agent **refuses** to:
 
-- Modify any state. A1 is strictly read-only — no quarantine actions, no issue creation, no re-runs triggered.
+- Modify any state. Read-only by design — no quarantine actions, no issue creation, no re-runs triggered.
 - Issue a `defect` verdict without all four R2 signals aligned. Lower confidence → fall through to `flaky-pre-incident` or `flake-of-unknown-cause`.
 - Issue a verdict without 7-day history. The history is the load-bearing input; without it, the agent emits `INSUFFICIENT_HISTORY — supply at least 7 days of test results before classification`.
 - Classify a single failure as `flaky-known` without confirming the project's quarantine convention. If no quarantine list is detectable, R1 cannot fire.
@@ -160,7 +160,7 @@ The agent **refuses** to:
 | Classifying every async-wait timeout as `flaky-pre-incident` | Some are real defects (the SUT is slow because the new code path made it slow). | R2 takes precedence over R5 when there is code-change proximity. |
 | Classifying any test that ever flaked as `flaky-known` | Conflates known-quarantined flakes with intermittently-failing tests. R1 requires the test to be on the formal quarantine list. | R1 only on quarantine-list match. |
 | Issuing a verdict on a single new failure with no history | Can't tell flake from defect with one data point. | Refuse-to-proceed: `INSUFFICIENT_HISTORY`. |
-| Auto-triggering a re-run as part of classification | A1 is read-only. Re-runs are an A2 action and must be the human's choice. | Recommend the re-run; do not invoke it. |
+| Auto-triggering a re-run as part of classification | This agent is read-only. Re-runs are an A2 action and must be the human's choice. | Recommend the re-run; do not invoke it. |
 | Classifying `environment-drift` as `defect` because the test is failing | Misroutes to the wrong team; defect tracker fills with false positives. | R3 fires before R2 when the runner / image changed. |
 | Inferring `flaky-known` from comments like "this test sometimes fails" | Comments are noise; the formal quarantine list is the source of truth. | Only structured quarantine artifacts (annotations, lists, decorators) count for R1. |
 
