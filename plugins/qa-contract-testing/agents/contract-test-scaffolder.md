@@ -41,7 +41,7 @@ Default for OpenAPI consumers is Pact; schemathesis is generated as **complement
 
 ## Step 3 — Scaffold per strategy
 
-**Pact consumer (OpenAPI / GraphQL → Pact-JS).** Per Pact's "contract by example" principle (https://docs.pact.io/), each interaction "describes a single concrete request/response pair" — the scaffold emits **one interaction per documented response** plus a `TODO` for the example payload (the agent never invents example values absent from the spec).
+**Pact consumer (OpenAPI / GraphQL → Pact-JS).** Per Pact's "contract by example" principle (https://docs.pact.io/), each interaction "describes a single concrete request/response pair" — the scaffold emits **one interaction per documented response** plus a `INPUT-NEEDED` for the example payload (the agent never invents example values absent from the spec).
 
 ```typescript
 // tests/contracts/cart-service.consumer.spec.ts
@@ -57,15 +57,15 @@ describe('CartService consumer contract', () => {
 
   test('POST /api/cart/items — adds an item (201)', async () => {
     await provider.addInteraction({
-      state: 'cart is empty',                  // TODO: align with provider state file
+      state: 'cart is empty',                  // INPUT-NEEDED: align with provider state file
       uponReceiving: 'a request to add SKU-001',
       withRequest: {
         method: 'POST', path: '/api/cart/items',
-        body: { sku: 'SKU-001', qty: 1 },      // TODO: replace per AddItemRequest schema
+        body: { sku: 'SKU-001', qty: 1 },      // INPUT-NEEDED: replace per AddItemRequest schema
       },
       willRespondWith: {
         status: 201,
-        body: { sku: 'SKU-001', qty: 1, addedAt: '2026-05-08T10:00:00Z' },  // TODO: per CartLineItem schema
+        body: { sku: 'SKU-001', qty: 1, addedAt: '2026-05-08T10:00:00Z' },  // INPUT-NEEDED: per CartLineItem schema
       },
     });
     const response = await new CartClient(provider.mockService.baseUrl).addItem('SKU-001', 1);
@@ -75,7 +75,7 @@ describe('CartService consumer contract', () => {
 });
 ```
 
-If OpenAPI `examples:` is absent, payloads are emitted as `TODO` with the JSON Schema fragment quoted as a comment.
+If OpenAPI `examples:` is absent, payloads are emitted as `INPUT-NEEDED` with the JSON Schema fragment quoted as a comment.
 
 **schemathesis runner (OpenAPI / GraphQL fuzzing).** Per https://schemathesis.readthedocs.io/en/stable/, schemathesis "generates property-based tests from your OpenAPI or GraphQL schema and exercises the edge cases that break your API" via Hypothesis:
 
@@ -101,24 +101,24 @@ import { Verifier } from '@pact-foundation/pact';
 test('verifies all consumer pacts', () => new Verifier({
   providerBaseUrl: process.env.PROVIDER_URL || 'http://localhost:8080',
   pactUrls: ['./pacts/web-app-cart-service.json'],
-  stateHandlers: { 'cart is empty': async () => { /* TODO: reset fixture */ } },
+  stateHandlers: { 'cart is empty': async () => { /* INPUT-NEEDED: reset fixture */ } },
 }).verifyProvider());
 ```
 
 ## Step 4 — Hand-off block
 
-Every scaffolded file ends with a `HAND-OFF` comment block instructing the engineer to (1) replace every `TODO` with a spec-derived value (no inventing), (2) run the test locally to confirm the mock is reachable, (3) hand failing CI gate output to `contract-drift-investigator`, and (4) publish the pact via the team's distribution convention (Pact Broker or `pacts/`).
+Every scaffolded file ends with a `HAND-OFF` comment block instructing the engineer to (1) replace every `INPUT-NEEDED` with a spec-derived value (no inventing), (2) run the test locally to confirm the mock is reachable, (3) hand failing CI gate output to `contract-drift-investigator`, and (4) publish the pact via the team's distribution convention (Pact Broker or `pacts/`).
 
 ## Refuse-to-proceed rules
 
-Refuses to: invent example payloads (emits `TODO` with schema fragment); generate Pact tests for a service the team neither calls nor owns; auto-publish to a Pact Broker (CI / release concern); generate schemathesis runs against production base URLs (hard-codes `localhost`); mix consumer + provider scaffolds in one file.
+Refuses to: invent example payloads (emits `INPUT-NEEDED` with schema fragment); generate Pact tests for a service the team neither calls nor owns; auto-publish to a Pact Broker (CI / release concern); generate schemathesis runs against production base URLs (hard-codes `localhost`); mix consumer + provider scaffolds in one file.
 
 ## Anti-patterns
 
 | Anti-pattern | Fix |
 |---|---|
 | One Pact interaction per *operation* (happy-path only) | One interaction per documented response code |
-| Inventing example values for missing OpenAPI `examples:` | `TODO` with JSON Schema fragment in comment |
+| Inventing example values for missing OpenAPI `examples:` | `INPUT-NEEDED` with JSON Schema fragment in comment |
 | schemathesis as a *replacement* for Pact | Generate both — different failure modes |
 | Skipping `state` / `stateHandlers` on Pact interactions | Emit placeholder, require human input |
 | Defaulting to `protoc-gen-validate` when repo has `buf` | Use what's already there |
@@ -128,7 +128,7 @@ Refuses to: invent example payloads (emits `TODO` with schema fragment); generat
 
 - **Per-language scaffolds limited to documented Pact bindings.** JS, JVM, Python, Go, Ruby are primary; Rust / PHP fall back to a generic scaffold.
 - **Stateful APIs require human input.** `state` cannot be inferred from OpenAPI alone.
-- **GraphQL subscriptions are aspirational.** Pact-graphql supports queries / mutations cleanly; subscriptions emit a TODO comment.
+- **GraphQL subscriptions are aspirational.** Pact-graphql supports queries / mutations cleanly; subscriptions emit a INPUT-NEEDED comment.
 - **No pact-file merging.** New operations emit a separate file; merging is a Pact Broker / `pact-merge` concern.
 - **Protobuf scaffolding skips the gRPC test client itself** — that's the per-language stub generator's job.
 
