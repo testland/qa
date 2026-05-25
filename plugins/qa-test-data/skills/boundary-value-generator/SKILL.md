@@ -10,23 +10,10 @@ archetype: S3
 
 ## Overview
 
-ISTQB defines **boundary value analysis** as a black-box test
-technique that exercises inputs at the edges of equivalence classes
-(see [ISTQB Glossary V4.7.1](https://glossary.istqb.org/en_US/term/boundary-value-analysis)).
-The classical pattern: for any constraint with a lower bound `min`
-and upper bound `max`, six points matter:
-
-| Point          | Why                                                    |
-|----------------|--------------------------------------------------------|
-| `min - 1`      | Just outside the valid range (rejection path).        |
-| `min`          | The boundary itself; off-by-one bugs hide here.       |
-| `min + 1`      | Just inside the lower bound; sanity check.            |
-| `max - 1`      | Just inside the upper bound; sanity check.            |
-| `max`          | The other boundary; off-by-one bugs hide here too.    |
-| `max + 1`      | Just outside the upper bound (rejection path).        |
-
-This skill takes a typed input spec and emits these cases —
-plus equivalence-class representatives — as parameterized test
+For each bounded input, emit the canonical six-point boundary set
+(`min-1`, `min`, `min+1`, `max-1`, `max`, `max+1`) per ISTQB
+[boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis),
+plus equivalence-class representatives, as parameterized test
 inputs ready to paste into the project's test runner.
 
 ## When to use
@@ -43,7 +30,7 @@ inputs ready to paste into the project's test runner.
   produced AC with numeric thresholds; this skill turns each
   threshold into matching test cases.
 
-## Input specification
+## Step 1 — Capture the input specification
 
 The skill consumes a structured input spec — for each field:
 
@@ -83,7 +70,7 @@ fields:
     nullable: true
 ```
 
-## Generation rules per type
+## Step 2 — Apply the generation rules per type
 
 ### Numeric (`int`, `float`)
 
@@ -159,7 +146,7 @@ tier name.
 If `nullable: true`, also test `null` / missing. If `nullable: false`,
 also test that null IS rejected — the rejection-path case.
 
-## Output formats
+## Step 3 — Emit in the test-runner-native format
 
 The skill emits cases in the project's test-runner-native format.
 
