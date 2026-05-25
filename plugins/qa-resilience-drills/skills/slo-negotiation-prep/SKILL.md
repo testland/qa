@@ -14,8 +14,6 @@ The QA manager is heading into a meeting with SRE and Product. The product team 
 
 This skill produces that prep pack. Per the [Google SRE Workbook](https://sre.google/workbook/implementing-slos/), the error-budget policy needs the agreement of three stakeholders — product manager, product developers, and the production-environment team — and "if all three parties do not agree to enforce the error budget policy, you need to iterate on the SLIs and SLOs until all stakeholders are happy." The conversation is bidirectional: either side can argue for relaxing the SLO if reality has moved.
 
-The skill's load-bearing principle: **decision-support with traceability, not advocacy disguised as analysis**. Every claim cites the source artifact. Every option is scored on reversibility, stakeholder cost, and impact — not on "which option I prefer." The recommended posture (Step 5) always comes with at least one fallback alternative so the team has a real choice.
-
 ## When to use
 
 - Error-budget burn-rate alerts have fired; the conversation about freeze vs deprioritise vs renegotiate-SLO is imminent.
