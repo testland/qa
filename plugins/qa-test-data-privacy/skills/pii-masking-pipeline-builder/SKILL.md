@@ -10,14 +10,10 @@ archetype: S3
 
 ## Overview
 
-A masking pipeline turns a real-data source into a non-production
-output where PII has been removed, transformed, or substituted.
-Authoring one correctly requires three classifications per field
-(regulatory regime, operator, reversibility) and one global
-decision (pipeline ordering + audit hooks).
-
-This workflow produces a **deployable YAML spec** that downstream
-tools execute:
+Authoring a masking pipeline requires three classifications per
+field (regulatory regime, operator, reversibility) and one global
+decision (pipeline ordering + audit hooks). This workflow produces
+a **deployable YAML spec** that downstream tools execute:
 
 - [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)
   runs the detector.
