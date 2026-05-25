@@ -1,6 +1,6 @@
 ---
 name: ai-test-generator
-description: "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) — outputs tests with confidence scoring per case (LLM''''s own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team''''s existing test framework. Critical: AI-generated tests are unreliable without curation; pairs with `ai-test-curator` (the adversarial reviewer). Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement."
+description: "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) — outputs tests with confidence scoring per case (LLM's own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team's existing test framework. Critical: AI-generated tests are unreliable without curation; pairs with `ai-test-curator` (the adversarial reviewer). Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement."
 rating: 22
 d6: 3
 archetype: S3
