@@ -22,6 +22,13 @@ This skill wraps the synthetic-data libraries
 [`bogus-data`](../bogus-data/SKILL.md)) with PII-specific
 constraints to produce format-valid but identity-safe values.
 
+**Default: Faker (Python)** — broadest locale coverage and the most
+PII-aware defaults (RFC 2606 emails out of the box, deterministic
+seeding via `Faker.seed()`). Use mimesis when the project needs
+provider-level locale control (e.g. Japanese addresses with
+prefecture accuracy); use Bogus for .NET projects that already
+ship it.
+
 > **Terminology note:** "PII" is regulatory shorthand
 > (NIST SP 800-122, GDPR Article 4(1)). Different jurisdictions
 > classify different fields as PII; this skill assumes the broad
