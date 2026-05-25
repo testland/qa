@@ -55,11 +55,12 @@ Per the AAA convention preserved across all three frameworks ([Microsoft Learn][
 | Framework | Test attr | Parametrized | Built-in assertion | Citation |
 |---|---|---|---|---|
 | **xUnit** | `[Fact]`; `[Theory] + [InlineData]` | `[InlineData(-1)]` | `Assert.Equal(expected, actual)` / `Assert.Null(result)` | [Microsoft Learn][ms-xunit] |
-| **NUnit** | `[Test]` in `[TestFixture]`; `[TestCase]` | `[TestCase(-1)]` | `Assert.That(actual, Is.EqualTo(expected))` / `Is.Null` (constraint model) | [NUnit docs][nu-test] |
+| **NUnit** | `[Test]` in `[TestFixture]`; `[TestCase]` | `[TestCase(-1)]` | `Assert.That(actual, Is.EqualTo(expected))` / `Is.Null` ([constraint model][nu-constraint]) | [NUnit docs][nu-test] |
 | **MSTest** | `[TestMethod]` in `[TestClass]`; `[DataRow]` | `[DataRow(-1)]` | `Assert.AreEqual(expected, actual)` / `Assert.IsNull(result)` | [Microsoft Learn][ms-mstest] |
 
 [ms-xunit]: https://learn.microsoft.com/dotnet/core/testing/unit-testing-csharp-with-xunit
 [nu-test]: https://docs.nunit.org/articles/nunit/writing-tests/attributes/test.html
+[nu-constraint]: https://docs.nunit.org/articles/nunit/writing-tests/assertions/assertion-models/constraint.html
 [ms-mstest]: https://learn.microsoft.com/dotnet/core/testing/unit-testing-with-mstest
 
 When **FluentAssertions** is present, emit `result.Should().Be(expected)` / `result.Should().BeNull()` instead of the built-in API — FluentAssertions auto-detects xUnit, NUnit, and MSTest and throws framework-specific exceptions ([fluentassertions.com][fa-intro]).
@@ -83,7 +84,7 @@ public class UserServiceTests
 }
 ```
 
-NUnit constraint-model equivalent (no FluentAssertions) — `Assert.That(result, Is.Null)` per [NUnit docs][nu-test].
+NUnit constraint-model equivalent (no FluentAssertions) — `Assert.That(result, Is.Null)` per [NUnit constraint-model docs][nu-constraint].
 
 The agent emits one test file at `<TestProjectName>/Tests/<ClassNameUnderTest>Tests.cs`; does not modify any existing test files.
 
