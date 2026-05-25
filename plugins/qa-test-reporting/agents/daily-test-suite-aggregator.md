@@ -46,15 +46,7 @@ slos:
 
 ## Step 1 — Discover the day's runs
 
-For each suite in the inventory, walk the configured glob and ingest every artifact whose timestamp falls inside the window. Collisions (same run reported twice) are deduped by run id.
-
-For each artifact, normalise to the per-tool parser's output shape:
-- JUnit XML → use `junit-xml-analysis` parsing (preloaded skill).
-- Allure → use `allure-reports` parsing (preloaded skill).
-- k6 summary JSON → fields per [Grafana k6 end-of-test summary](https://grafana.com/docs/k6/latest/results-output/end-of-test/): `metrics` (`http_req_duration` p(95) / p(99), `iterations`, `vus`, `checks`), `root_group`, threshold-breach booleans.
-- axe-core JSON → use the [violation list](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object): each entry has `impact` (`minor` / `moderate` / `serious` / `critical`), `id`, `tags`, `nodes[]`.
-
-Suites with **no run in the window** are not silently dropped — they appear in the output as `not-run`. A missing daily run is a signal in itself.
+Walk each suite's configured glob and ingest artifacts inside the window; dedupe collisions by run id. Normalise per parser: JUnit XML / Allure (preloaded skills); k6 summary JSON per the [end-of-test summary fields](https://grafana.com/docs/k6/latest/results-output/end-of-test/) (`metrics.http_req_duration` p(95)/p(99), `iterations`, `vus`, `checks`, `root_group`, threshold-breach booleans); axe-core JSON per the [violation list](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) (`impact` taxonomy `minor`/`moderate`/`serious`/`critical`, `id`, `tags`, `nodes[]`). Suites with no run in the window are not dropped — they appear as `not-run` (a missing daily run is itself signal).
 
 ## Step 2 — Aggregate per (suite × environment)
 
@@ -96,27 +88,10 @@ Cells marked `not-run` did not produce an artifact in the window. Investigate wh
 
 ## Cells of concern
 
-### `e2e-playwright × prod-canary` — FAIL
-
-11 of 412 tests failed (97.3% pass; SLO 98.0%). New failures since yesterday: 4. Top-3:
-
-1. `cart.checkout.spec → submits coupon` — assertion fail; new since 2026-05-08 13:00 UTC. Build: <url>.
-2. `auth.sso.spec → samlv2 round-trip` — timeout 30s; passed yesterday on the same env. Build: <url>.
-3. `payments.refund.spec → partial refund` — assertion fail on amount precision; passed for 12 prior runs. Build: <url>.
-
-Hand off to [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md) for per-failure verdicts.
-
-### `e2e-playwright × staging` — WARN
-
-1 new flake. Hand off to [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md).
-
-### `contract × prod-canary` — WARN
-
-2 schema-drift failures. Hand off to [`contract-drift-investigator`](../../qa-contract-testing/agents/contract-drift-investigator.md).
-
-### `perf-k6 × dev` — WARN
-
-p95 latency 312 ms exceeds the 300 ms SLO. No SLO breach in `staging`. Investigate dev-environment perf delta.
+- **`e2e-playwright × prod-canary` — FAIL** — 11/412 failed (97.3%; SLO 98.0%); 4 new since yesterday. Top-3: `cart.checkout.spec → submits coupon` (assertion); `auth.sso.spec → samlv2 round-trip` (30s timeout); `payments.refund.spec → partial refund` (precision). Hand off to [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md).
+- **`e2e-playwright × staging` — WARN** — 1 new flake. Hand off to [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md).
+- **`contract × prod-canary` — WARN** — 2 schema-drift fails. Hand off to [`contract-drift-investigator`](../../qa-contract-testing/agents/contract-drift-investigator.md).
+- **`perf-k6 × dev` — WARN** — p95 312ms > 300ms SLO; staging clean. Investigate dev-environment perf delta.
 
 ## Comparison to yesterday
 
@@ -147,22 +122,22 @@ The agent **refuses** to:
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Treating "cell missing artifact" as equivalent to "cell passed" | Missing run is invisible in the report; a broken schedule goes undetected. | Always emit `not-run` for missing cells. |
-| Aggregating perf p95 across environments | Different environments have different baselines; cross-env perf is meaningless. | Per-environment perf only. |
-| Reporting flakes by re-counting failures | A flake fails then passes; counting re-runs as separate failures double-counts. | Dedupe by run id; count flakes as `passed_after_retry` vs. `failed`. |
-| Reporting new failures using filename-only matching | A renamed test reads as new-failed + missing-pass, not as the same test. | Use test fully-qualified id (file + describe + it) when available. |
-| Producing a roll-up that doesn't fit on one screen | Stand-up reads it in 30 seconds; pages of detail miss the point. | Cell matrix on top, cells-of-concern below; full detail behind links. |
-| Computing pass-rate on a suite with zero runs | Divide-by-zero or 100% — both wrong. | Emit `not-run`. |
+| Anti-pattern | Fix |
+|---|---|
+| Treating "cell missing artifact" as "cell passed" | Always emit `not-run`. |
+| Aggregating perf p95 across environments | Per-environment perf only. |
+| Reporting flakes by re-counting failures | Dedupe by run id; report `passed_after_retry` vs `failed`. |
+| Filename-only test matching for new-failures | Use fully-qualified id (file + describe + it). |
+| Roll-up that doesn't fit on one screen | Cell matrix top; concerns below; detail behind links. |
+| Pass-rate on zero runs | Emit `not-run`. |
 
 ## Limitations
 
-- **Per-tool parsers are the bottleneck.** The agent inherits the bounds of the preloaded skills — JUnit XML, Allure, k6 summary JSON, axe-core JSON. Other tool outputs require a parser before they can be aggregated.
-- **No cost / cloud-spend tracking.** A daily roll-up could include CI minutes consumed; this agent does not. That is FinOps territory, out of scope.
-- **Time-zone is UTC.** Teams operating across time zones can configure the window's anchor offset, but the report header is always UTC for unambiguous archival.
-- **No PR / commit attribution.** The report does not attribute failures to the PR that introduced them — that is [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)'s job. The report links the build URL so an investigator can drill into the PR / commit.
-- **No predictive forecasting.** The Δ-vs-yesterday section is descriptive, not predictive. Predictive trend forecasting is out of scope for the same reason the plan deprioritised predictive release gating — practitioner trust deficit.
+- **Per-tool parsers are the bottleneck** — inherits preloaded skills (JUnit XML, Allure, k6, axe-core); other outputs need a parser.
+- **No CI cost tracking** — out of scope (FinOps territory).
+- **UTC time-zone** — report header is always UTC for unambiguous archival.
+- **No PR / commit attribution** — defer to [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md); the build URL is linked.
+- **No predictive forecasting** — Δ-vs-yesterday is descriptive only.
 
 ## Hand-off targets
 
@@ -175,12 +150,11 @@ The agent **refuses** to:
 
 ## References
 
-- Allure Report documentation — status taxonomy (passed / failed / broken / skipped / unknown), categories, severity: https://allurereport.org/docs/
-- JUnit XML schema (community-canonical reference): https://github.com/testmoapp/junitxml
-- ISO/IEC/IEEE 29119-3:2021 — test reporting (cite by stable ID; canonical ISO page is behind Cloudflare).
-- ISTQB glossary — test report: https://glossary.istqb.org/en_US/term/test-report
-- ISTQB glossary — test environment: https://glossary.istqb.org/en_US/term/test-environment-1
-- Grafana k6 end-of-test summary documentation — `metrics` shape, threshold-breach signal: https://grafana.com/docs/k6/latest/results-output/end-of-test/
-- axe-core API reference — violation list shape and impact taxonomy (`minor` / `moderate` / `serious` / `critical`): https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object
-- PractiTest 2026 State of Testing Report — 19.9% of teams use AI for risk identification, vs 70% for test-case creation; manager-layer adoption is shallowest at the decision-support tier: https://www.practitest.com/state-of-testing/
-- [`junit-xml-analysis`](../skills/junit-xml-analysis/SKILL.md), [`allure-reports`](../skills/allure-reports/SKILL.md), [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md), [`currents-integration`](../skills/currents-integration/SKILL.md), [`testrail-integration`](../skills/testrail-integration/SKILL.md) — preloaded skills.
+- [Allure Report docs](https://allurereport.org/docs/) — status taxonomy (passed/failed/broken/skipped/unknown), severity.
+- [JUnit XML community reference](https://github.com/testmoapp/junitxml).
+- ISO/IEC/IEEE 29119-3:2021 — test reporting (canonical ISO page behind Cloudflare; cite by stable ID).
+- ISTQB glossary — [test-report](https://glossary.istqb.org/en_US/term/test-report), [test-environment](https://glossary.istqb.org/en_US/term/test-environment-1).
+- [Grafana k6 end-of-test summary](https://grafana.com/docs/k6/latest/results-output/end-of-test/) — `metrics` shape, threshold-breach signal.
+- [axe-core API](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) — violation list, impact taxonomy (`minor`/`moderate`/`serious`/`critical`).
+- [PractiTest 2026 State of Testing](https://www.practitest.com/state-of-testing/) — 19.9% of teams use AI for risk identification.
+- Preloaded skills: [`junit-xml-analysis`](../skills/junit-xml-analysis/SKILL.md), [`allure-reports`](../skills/allure-reports/SKILL.md), [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md), [`currents-integration`](../skills/currents-integration/SKILL.md), [`testrail-integration`](../skills/testrail-integration/SKILL.md).
