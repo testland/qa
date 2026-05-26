@@ -15,9 +15,11 @@ keywords:
 
 # server-sent-events-tests
 
-Per the [WHATWG SSE spec], `EventSource` enables servers to push
-data to web pages over HTTP. Simpler than WebSocket: one-way
-(server→client) only, but with native browser reconnect + replay.
+This skill covers SSE surfaces tests must exercise per the
+[WHATWG SSE spec]: event stream format (`data:` / `event:` / `id:`
+/ `retry:`), `readyState` lifecycle, reconnect-with-replay via
+`Last-Event-ID`, `204 No Content` to disable reconnection, and the
+HTTP/1.1 connection-pool ceiling.
 
 ## When to use
 
