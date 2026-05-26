@@ -10,13 +10,8 @@ archetype: S1
 
 ## Overview
 
-Go 1.18 added native fuzz testing to the standard `testing`
-package (per [go.dev/doc/security/fuzz](https://go.dev/doc/security/fuzz)).
-Fuzz targets are regular Go functions named `FuzzXxx` that live
-in `_test.go` files alongside unit tests; `go test -fuzz=Xxx`
-runs them.
-
-Unlike libFuzzer / AFL++, Go's fuzzer is:
+Per [go.dev/doc/security/fuzz](https://go.dev/doc/security/fuzz),
+unlike libFuzzer / AFL++, Go's native fuzzer is:
 
 - Native: no separate toolchain
 - Typed: `f.Fuzz(func(t *testing.T, s string, n int) { ... })`
