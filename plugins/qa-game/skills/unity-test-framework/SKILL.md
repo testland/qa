@@ -30,11 +30,8 @@ in this same marketplace.
 
 Per the
 [package overview](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html),
-Unity Test Framework (UTF) "is a standard test framework for users
-of Unity and developers at Unity" and is "built on NUnit 3.5, an
-open-source unit testing library for .Net languages". UTF supports
-testing in both **Edit Mode** and **Play Mode** across Standalone,
-Android, and iOS target platforms.
+UTF is built on **NUnit 3.5** and supports both **Edit Mode** and
+**Play Mode** across Standalone, Android, and iOS target platforms.
 
 Composes with:
 
