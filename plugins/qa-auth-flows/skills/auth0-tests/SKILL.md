@@ -10,8 +10,7 @@ archetype: S1
 
 ## Overview
 
-Auth0 is a managed Identity-as-a-Service (IDaaS) provider. Tests
-fall into three layers:
+Tests against an Auth0 tenant fall into three layers:
 
 1. **Tenant-level config** — connections, clients, APIs, tenants
    themselves; tested via Auth0 Deploy CLI for env parity.
