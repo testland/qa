@@ -10,15 +10,14 @@ archetype: S1
 
 ## Overview
 
-GrowthBook is the open-source feature-flag + experimentation
-platform. Per
+Per
 [docs.growthbook.io/lib/node](https://docs.growthbook.io/lib/node),
-the Node SDK's `GrowthBookClient` supports an `initSync({
-payload })` pattern that fully bypasses the network — pass the
-feature definitions directly.
+the GrowthBook Node SDK's `GrowthBookClient` supports an
+`initSync({ payload })` pattern that fully bypasses the network
+— pass the feature definitions directly.
 
-The notable bonus: `createScopedInstance` lets each test (or
-request) bind its own user context cleanly.
+`createScopedInstance` lets each test (or request) bind its own
+user context cleanly.
 
 ## When to use
 
