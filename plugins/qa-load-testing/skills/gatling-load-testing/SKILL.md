@@ -8,17 +8,15 @@ archetype: S1
 
 # gatling-load-testing
 
-## Overview
-
-Gatling is "an open-source load testing platform designed for modern
-performance engineering" with an asynchronous non-blocking
-architecture, supporting HTTP, WebSocket, Server-Sent Events, JMS,
-gRPC, and MQTT ([gatling-readme][readme]). Tests are **Simulation
-classes** authored in Java / Kotlin / Scala / JS / TS
-([gatling-tutorial][tutorial]).
-
 [readme]: https://github.com/gatling/gatling
 [tutorial]: https://docs.gatling.io/tutorials/scripting-intro/
+
+Gatling tests are **Simulation classes** in Java / Kotlin / Scala /
+JS / TS that compose `http()` / `scenario()` / `exec()` DSL builders
+and run via the Gatling Maven / Gradle / sbt plugin (per
+[gatling-tutorial][tutorial]). Supported protocols span HTTP,
+WebSocket, Server-Sent Events, JMS, gRPC, and MQTT
+([gatling-readme][readme]).
 
 ## When to use
 
