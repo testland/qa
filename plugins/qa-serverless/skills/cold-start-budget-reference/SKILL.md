@@ -10,12 +10,6 @@ archetype: S2
 
 ## Overview
 
-A **cold start** is the latency added when a serverless platform
-spins up a new execution environment vs reusing a warm one.
-Cold starts are the single biggest latency surprise in
-serverless deployments — and the most-misattributed cause when
-not understood.
-
 Per [aws.amazon.com/blogs/compute on cold starts](https://aws.amazon.com/blogs/compute/),
 Lambda's cold start has three phases:
 
