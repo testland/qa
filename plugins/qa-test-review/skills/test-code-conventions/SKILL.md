@@ -10,13 +10,8 @@ archetype: S2
 
 ## Overview
 
-Production code has well-established review heuristics — naming,
-single-responsibility, dependency injection, etc. **Test code does
-too**, but they're different. Applying production-code review
-patterns to tests produces over-mocked, brittle, hard-to-read tests.
-
 This skill is a **pure reference** — no actions, no workflows. It
-catalogs the conventions that the rest of `qa-test-review`'s
+catalogs the test-code conventions that the rest of `qa-test-review`'s
 critics enforce. When a critic flags an issue, it cites this
 reference for the reviewer to learn the underlying rule.
 
