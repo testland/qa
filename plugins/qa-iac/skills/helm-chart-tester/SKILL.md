@@ -10,13 +10,9 @@ archetype: S1
 
 ## Overview
 
-Helm charts are templates that render to Kubernetes manifests.
-**helm-unittest** (Helm plugin) lets you unit-test the rendered
+**helm-unittest** (Helm plugin) unit-tests the rendered chart
 output — assert specific fields, conditional behaviors, value
-substitutions.
-
-This is unit testing for Helm: catch template bugs before
-deploying.
+substitutions — to catch template bugs before deploying.
 
 ## When to use
 
