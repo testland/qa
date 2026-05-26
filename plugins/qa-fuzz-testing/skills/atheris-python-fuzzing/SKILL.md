@@ -10,11 +10,10 @@ archetype: S1
 
 ## Overview
 
-Atheris is Google's Python fuzzing engine (per
-[github.com/google/atheris](https://github.com/google/atheris)).
-It's a coverage-guided fuzzer built on libFuzzer, exposing a
-Python API for fuzz-target authoring. Supports both pure-Python
-and native-extension targets (CPython C extensions).
+Atheris (per
+[github.com/google/atheris](https://github.com/google/atheris))
+supports both pure-Python and native-extension targets (CPython
+C extensions).
 
 For sanitiser pairing on native extensions, see
 [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md);
