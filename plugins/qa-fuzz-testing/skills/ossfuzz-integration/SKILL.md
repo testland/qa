@@ -10,12 +10,12 @@ archetype: S1
 
 ## Overview
 
-OSS-Fuzz is Google's continuous-fuzzing service for open-source
-projects (per [google.github.io/oss-fuzz](https://google.github.io/oss-fuzz/)).
-It runs libFuzzer / AFL++ / Honggfuzz campaigns 24x7 on Google
-Cloud infrastructure across multiple sanitiser configurations
-(ASan, UBSan, MSan), automatically files bug reports with crash
-reproducers, and tracks fix status with a 90-day disclosure SLA.
+OSS-Fuzz (per
+[google.github.io/oss-fuzz](https://google.github.io/oss-fuzz/))
+runs libFuzzer / AFL++ / Honggfuzz campaigns 24x7 on Google
+Cloud across multiple sanitiser configurations (ASan, UBSan,
+MSan), auto-files bug reports with crash reproducers, and tracks
+fix status with a 90-day disclosure SLA.
 
 For corpus discipline see
 [`corpus-management-reference`](../corpus-management-reference/SKILL.md);
