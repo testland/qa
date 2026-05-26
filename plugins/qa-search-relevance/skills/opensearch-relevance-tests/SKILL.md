@@ -15,11 +15,10 @@ keywords:
 
 # opensearch-relevance-tests
 
-OpenSearch is a fork of Elasticsearch 7.10 maintained by AWS +
-community since 2021. The relevance APIs are largely compatible:
-`_rank_eval` works identically. The differentiators worth testing
-specifically: neural search, hybrid query, and the Search Relevance
-Workbench UI.
+Per the [OpenSearch search-relevance docs], `_rank_eval` is
+Elasticsearch-fork-compatible. The OpenSearch-specific surfaces
+worth testing: neural search, hybrid query, and the Search
+Relevance Workbench UI.
 
 ## When to use
 
