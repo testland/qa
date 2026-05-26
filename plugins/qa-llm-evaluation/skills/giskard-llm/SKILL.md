@@ -10,18 +10,13 @@ archetype: S1
 
 ## Overview
 
-Per [github.com/Giskard-AI/giskard][gk-gh]:
-
 [gk-gh]: https://github.com/Giskard-AI/giskard
 
-> "**Giskard Open Source** is a Python library for LLM testing and
-> evaluation"
-
 Distinct from functional eval frameworks (Promptfoo, DeepEval,
-Ragas), Giskard's value is **adversarial test generation** —
-auto-generates inputs designed to break LLMs along documented
-vulnerability dimensions, then reports findings in a triageable
-HTML report.
+Ragas), Giskard's value (per [gk-gh][gk-gh]) is **adversarial
+test generation** — auto-generates inputs designed to break LLMs
+along documented vulnerability dimensions, then reports findings
+in a triageable HTML report.
 
 **Important version note (2026-05-06):** per [gk-gh][gk-gh], "Giskard
 v2 is no longer actively maintained. The current v3 focus is on
