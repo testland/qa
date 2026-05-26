@@ -10,12 +10,6 @@ archetype: S2
 
 ## Overview
 
-PII is not one thing. Each major regulator defines it differently,
-and the differences matter — a field that's "personal data" under
-GDPR may not be "personal information" under CCPA, and vice versa.
-A masking pipeline that only catches one regulator's list will leak
-data that another regulator protects.
-
 This skill is the **canonical category catalog** that downstream
 masking workflows
 ([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
