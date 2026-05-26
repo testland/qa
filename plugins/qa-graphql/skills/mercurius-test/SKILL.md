@@ -10,15 +10,11 @@ archetype: S1
 
 ## Overview
 
-Mercurius is a GraphQL plugin for Fastify. Its testing path uses
-`app.inject()` — Fastify's built-in HTTP-layer simulator that
-runs requests through the full middleware stack without binding
-a port.
-
 Per [github.com/mercurius-js/mercurius](https://github.com/mercurius-js/mercurius/blob/master/README.md),
 the plugin is registered as `await app.register(mercurius, {
-schema, resolvers })`. Tests then submit POSTs via
-`app.inject()`.
+schema, resolvers })`. Tests then submit POSTs via Fastify's
+`app.inject()` — the HTTP-layer simulator that runs requests
+through the full middleware stack without binding a port.
 
 ## When to use
 
