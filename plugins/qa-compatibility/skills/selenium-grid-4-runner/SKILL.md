@@ -15,11 +15,6 @@ infrastructure — the open-source alternative to cloud-grid SaaS
 providers. Per
 [selenium.dev/documentation/grid](https://www.selenium.dev/documentation/grid/).
 
-Grid 4 is a complete rewrite of Grid 3 with a microservices
-architecture: Router, Distributor, Session Map, Event Bus,
-New Session Queue, and Node. Each component can run independently
-on different machines for scale.
-
 Composes with
 [`browser-matrix-strategy-reference`](../browser-matrix-strategy-reference/SKILL.md)
 for matrix planning. Routed by
