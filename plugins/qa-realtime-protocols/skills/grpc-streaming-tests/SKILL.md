@@ -15,11 +15,11 @@ keywords:
 
 # grpc-streaming-tests
 
-Per the [gRPC core concepts docs], gRPC supports four RPC patterns:
-Unary, Server-streaming, Client-streaming, Bidirectional-streaming.
 Streaming RPCs need test coverage for deadline behavior,
 cancellation propagation, flow control under backpressure, and
-status-code semantics that differ from unary calls.
+status-code semantics that differ from unary calls — covering all
+four patterns (Unary, Server-streaming, Client-streaming,
+Bidirectional-streaming) per the [gRPC core concepts docs].
 
 ## When to use
 
