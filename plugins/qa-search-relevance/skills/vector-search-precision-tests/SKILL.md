@@ -15,10 +15,9 @@ keywords:
 
 # vector-search-precision-tests
 
-Vector search trades exact correctness for speed: ANN (Approximate
-Nearest Neighbor) algorithms hit good recall in O(log N) instead of
-brute-force O(N). Tests must measure recall@k against known ground
-truth — not assume the index is "right."
+Per the [ANN-Benchmarks docs] and [Qdrant search docs], tests must
+measure recall@k against known ground truth — engine self-eval
+doesn't catch index corruption or parameter drift.
 
 ## When to use
 
