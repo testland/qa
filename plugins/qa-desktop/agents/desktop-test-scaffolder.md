@@ -138,7 +138,7 @@ The agent refuses to:
 
 ## Worked example
 
-**Input:** `app_path=C:\repos\InvoiceApp\bin\Release\net8.0-windows\InvoiceApp.exe`, `driver=flaui`, `framework=xunit`.
+**Input:** `app_path=C:/repos/InvoiceApp/bin/Release/net8.0-windows/InvoiceApp.exe`, `driver=flaui`, `framework=xunit`.
 
 Emits: `InvoiceApp.UiTests.csproj` (FlaUI + xUnit + Xunit.StaFact refs), `Fixtures/AppFixture.cs` (with `<APP_EXECUTABLE_PATH>` placeholder), `Screens/MainScreen.cs` (one stub with `INPUT NEEDED` AutomationId), `Tests/SmokeTests.cs` (one `[StaFact]` placeholder asserting on the screen-object stub), `.github/workflows/desktop-tests.yml` (`windows-latest` runner), `README.md` (hand-off block).
 
