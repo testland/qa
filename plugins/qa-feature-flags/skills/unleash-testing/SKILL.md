@@ -8,15 +8,6 @@ archetype: S1
 
 # unleash-testing
 
-## Overview
-
-Unleash is the open-source feature-flag platform from Bricks
-Software (Norway). Per
-[docs.getunleash.io](https://docs.getunleash.io/), the SDK
-supports a **bootstrap-from-toggles** mode that fully bypasses
-the network — the SDK reads its initial state from an in-memory
-array.
-
 ## When to use
 
 - Tests for code that calls `unleash.isEnabled(flagName, context)`.
