@@ -10,10 +10,9 @@ archetype: S1
 
 ## Overview
 
-Braintree is the PayPal-owned developer-friendly payment gateway.
 Per [developer.paypal.com/braintree/docs/reference/general/testing](https://developer.paypal.com/braintree/docs/reference/general/testing),
-the sandbox accepts the same API as production with deterministic
-test-card responses.
+the Braintree sandbox accepts the same API as production with
+deterministic test-card responses.
 
 The notable distinction: Braintree's Transaction state machine
 includes an explicit `submitted_for_settlement` → `settled`
