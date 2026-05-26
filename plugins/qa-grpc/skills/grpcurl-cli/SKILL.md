@@ -10,14 +10,13 @@ archetype: S1
 
 ## Overview
 
-grpcurl is the canonical curl-equivalent for gRPC. Per
+Per
 [github.com/fullstorydev/grpcurl](https://github.com/fullstorydev/grpcurl/blob/master/README.md),
-it can invoke any gRPC method using one of three descriptor
+grpcurl can invoke any gRPC method using one of three descriptor
 sources (server reflection, `.proto` source files, or compiled
-`.protoset` files) and emits JSON responses.
-
-This skill wraps grpcurl for: ad-hoc debugging, scriptable
-smoke tests, and CI-based contract verification.
+`.protoset` files) and emits JSON responses. This skill wraps
+grpcurl for: ad-hoc debugging, scriptable smoke tests, and
+CI-based contract verification.
 
 ## When to use
 
