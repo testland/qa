@@ -10,9 +10,7 @@ archetype: S2
 
 ## Overview
 
-A tester is handed an undocumented feature: a Slack message says "we're shipping the new checkout next week, can you test it?" There's no story, no AC, no design doc. The wrong response is to halt and demand a spec — most QA work in 2026 starts here. The right response is to apply **heuristic test-design models** — structured prompts that turn "I have nothing" into "I have a defensible coverage plan."
-
-The exploratory-testing literature converged on four canonical models, each cited inline at point of use below. This skill is a **pure reference** (S2) — no execution steps; it is the catalog `test-case-from-live-feature` (S3) and `exploratory-charter-author` (A4) consume to generate coverage when no documented input exists.
+The exploratory-testing literature converged on four canonical heuristic test-design models, each cited inline at point of use below. This skill is a **pure reference** (S2) — no execution steps; it is the catalog `test-case-from-live-feature` (S3) and `exploratory-charter-author` (A4) consume to generate coverage when no documented input exists.
 
 ## When to use
 
