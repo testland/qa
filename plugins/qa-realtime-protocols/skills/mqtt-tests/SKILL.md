@@ -16,10 +16,10 @@ keywords:
 
 # mqtt-tests
 
-Per the [MQTT v5.0 spec], MQTT is a "small transport overhead and
-protocol exchanges minimized to reduce network traffic" — designed
-for constrained IoT/M2M environments. Tests must cover the QoS
-matrix, retained-message replay, LWT, and shared subscriptions.
+This skill covers the v5.0 surfaces tests must exercise: QoS 0 / 1
+/ 2 delivery semantics, retained messages, Last Will and Testament
+(LWT), shared subscriptions, and `$SYS` topic introspection — all
+per the [MQTT v5.0 spec].
 
 ## When to use
 
