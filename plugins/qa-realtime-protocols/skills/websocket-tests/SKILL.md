@@ -15,10 +15,9 @@ keywords:
 
 # websocket-tests
 
-Per [RFC 6455], WebSocket bootstraps via HTTP Upgrade and exchanges
-typed frames over a persistent connection. Tests must cover the
-**handshake**, **control frames**, **close codes**, and
-**subprotocol negotiation** — not just message round-trips.
+Per [RFC 6455], tests must cover the **handshake**, **control
+frames**, **close codes**, and **subprotocol negotiation** — not
+just message round-trips.
 
 ## When to use
 
