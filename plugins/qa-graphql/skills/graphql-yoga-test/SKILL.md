@@ -10,17 +10,16 @@ archetype: S1
 
 ## Overview
 
-GraphQL Yoga is the-guild.dev's GraphQL server runtime. Its
-testing model uses `yoga.fetch()` — per
+Per
 [the-guild.dev/graphql/yoga-server/docs/features/testing](https://the-guild.dev/graphql/yoga-server/docs/features/testing):
 "Calling the `yoga.fetch` method does not send an actual HTTP
 request. It simulates the HTTP request which 100% conforms with
 how Request/Response work."
 
-This is structurally different from Apollo's `executeOperation` —
-Yoga's testing path goes through the HTTP transport layer
-including middleware, headers, and response codes. There is no
-separate "in-process" vs "HTTP-layer" choice.
+Structurally different from Apollo's `executeOperation` — Yoga's
+testing path goes through the HTTP transport layer including
+middleware, headers, and response codes. There is no separate
+"in-process" vs "HTTP-layer" choice.
 
 ## When to use
 
