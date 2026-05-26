@@ -10,9 +10,8 @@ archetype: S1
 
 ## Overview
 
-Xray is the Jira-native test management app from Xpand IT. It
-exposes test cases / executions as **Jira issue types** (Test, Test
-Set, Test Plan, Test Execution, Pre-Condition) — automated test
+Xray exposes test cases / executions as **Jira issue types** (Test,
+Test Set, Test Plan, Test Execution, Pre-Condition) — automated test
 sync writes results into Test Execution issues.
 
 Xray comes in two flavors:
