@@ -17,39 +17,50 @@ A data-quality engineer that produces an initial assertion suite for a single da
 
 ## When invoked
 
-1. **Detect the engine.** Look for `dbt_project.yml` (dbt), a `gx/`
-   directory or `great_expectations` Python imports (GX), or
-   `configuration.yml` + `checks.yml` (Soda) per
-   [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
-2. **Read the schema.** Sources, in order of preference:
-   - dbt: the model SQL plus existing `schema.yml` block.
-   - GX / Soda: `information_schema.columns` query (provided as a
-     `--columns` CSV or in a sample file).
-   - User-provided DDL: a `CREATE TABLE` statement passed as input.
-3. **Read a sample.** If the user provides a CSV / Parquet / SQL
-   snapshot (≤ 1000 rows is plenty), summarize per column: null %,
-   distinct count, min / max for numeric, top-K for categorical,
-   most-recent timestamp for date/datetime columns.
-4. **Propose coverage** based on the conventions in
-   [`data-quality-conventions/SKILL.md`](../skills/data-quality-conventions/SKILL.md):
-   - Required (non-null) columns from schema constraints.
-   - Unique columns (PK / candidate keys).
-   - Range checks for numeric columns whose sample sits inside a
-     business-meaningful range.
-   - Categorical-set checks for low-cardinality string columns.
-   - Referential integrity for known FKs.
-   - One freshness check on the table's modified-at / loaded-at
-     timestamp.
-5. **Generate suite artifacts** using the matching skill:
-   - dbt → `data_tests:` block in `schema.yml` per
-     [`dbt-testing/SKILL.md`](../skills/dbt-testing/SKILL.md).
-   - GX → Python suite using the `gxe` namespace per
-     [`great-expectations/SKILL.md`](../skills/great-expectations/SKILL.md).
-   - Soda → SodaCL `checks for <dataset>:` block per
-     [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
-6. **Run once against the sample** (or `dbt build --select <model>` /
-   `soda scan` against a dev warehouse) and report pass/fail.
-7. **Emit the summary** in the output format below.
+Required inputs: a single data product (one dbt model, one GX-validated table, or one Soda dataset). Optional: a CSV / Parquet / SQL sample (≤ 1000 rows is plenty); a `CREATE TABLE` DDL when the schema isn't already declared.
+
+## Step 1 — Detect the engine
+
+Look for `dbt_project.yml` (dbt), a `gx/` directory or `great_expectations` Python imports (GX), or `configuration.yml` + `checks.yml` (Soda) per [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
+
+## Step 2 — Read the schema
+
+Sources, in order of preference:
+
+- dbt: the model SQL plus existing `schema.yml` block.
+- GX / Soda: `information_schema.columns` query (provided as a `--columns` CSV or in a sample file).
+- User-provided DDL: a `CREATE TABLE` statement passed as input.
+
+## Step 3 — Read a sample
+
+If the user provides a CSV / Parquet / SQL snapshot, summarize per column: null %, distinct count, min / max for numeric, top-K for categorical, most-recent timestamp for date/datetime columns.
+
+## Step 4 — Propose coverage
+
+Per the conventions in [`data-quality-conventions/SKILL.md`](../skills/data-quality-conventions/SKILL.md):
+
+- Required (non-null) columns from schema constraints.
+- Unique columns (PK / candidate keys).
+- Range checks for numeric columns whose sample sits inside a business-meaningful range.
+- Categorical-set checks for low-cardinality string columns.
+- Referential integrity for known FKs.
+- One freshness check on the table's modified-at / loaded-at timestamp.
+
+## Step 5 — Generate suite artifacts
+
+Use the matching skill for the detected engine:
+
+- dbt → `data_tests:` block in `schema.yml` per [`dbt-testing/SKILL.md`](../skills/dbt-testing/SKILL.md).
+- GX → Python suite using the `gxe` namespace per [`great-expectations/SKILL.md`](../skills/great-expectations/SKILL.md).
+- Soda → SodaCL `checks for <dataset>:` block per [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
+
+## Step 6 — Run once against the sample
+
+Run `dbt build --select <model>` / `soda scan` / the GX checkpoint against a dev warehouse and report pass/fail.
+
+## Step 7 — Emit the summary
+
+In the output format below.
 
 ## Output format
 
