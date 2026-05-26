@@ -10,11 +10,10 @@ archetype: S1
 
 ## Overview
 
-Okta is a managed IDaaS provider with a strong enterprise + B2B
-focus. The current platform (Okta Identity Engine, OIE) replaces
+The current Okta platform (Okta Identity Engine, OIE) replaces
 the older Okta Classic engine; tests target OIE for new orgs.
 
-Tests fall into four layers:
+Tests against an Okta org fall into four layers:
 
 1. **Org-level config** — apps, users, groups, sign-in policies;
    tested via Okta API or Terraform Okta provider for env parity.
