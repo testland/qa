@@ -8,20 +8,12 @@ archetype: S1
 
 # detox-testing
 
-## Overview
-
-Per [detox-docs][det]:
-
 [det]: https://wix.github.io/Detox/
 
-> "Detox is a **gray box end-to-end testing and automation
-> framework for React Native apps** that enables developers to
-> write cross-platform tests in JavaScript for both iOS and
-> Android."
-
-The "gray-box" distinction matters: unlike Appium (black-box,
-external server) Detox runs **in the app's process**. This gives
-Detox direct access to the JS bridge for **automatic synchronization**:
+The "gray-box" distinction is load-bearing: unlike Appium (black-box,
+external server), Detox runs **in the app's process** (per
+[detox-docs][det]). This gives Detox direct access to the JS bridge
+for **automatic synchronization**:
 
 > "The framework automatically monitors asynchronous operations to
 > eliminate test flakiness at its core." ([detox-docs][det])
