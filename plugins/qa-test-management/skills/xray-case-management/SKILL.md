@@ -10,11 +10,10 @@ archetype: S1
 
 ## Overview
 
-Xray is the most widely-deployed Atlassian Marketplace test
-management add-on. Tests are first-class Jira issues with
-`issuetype: Test`. Xray augments them with test-specific data
-(steps, type, preconditions) accessible via either the REST v2 API
-or a GraphQL endpoint.
+In Xray, tests are first-class Jira issues with `issuetype: Test`.
+Xray augments them with test-specific data (steps, type,
+preconditions) accessible via either the REST v2 API or a GraphQL
+endpoint.
 
 Per docs.getxray.app/display/XRAYCLOUD/REST+API (Cloudflare-
 protected; cite by stable URL).
