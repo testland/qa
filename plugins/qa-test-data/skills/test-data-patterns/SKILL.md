@@ -10,8 +10,6 @@ archetype: S2
 
 ## Overview
 
-Tests need data. The data has structure: a user has an org, the org has a plan, the plan has limits, the limits affect the cart, the cart has items, the items have inventory. Inline literals (`{ name: "Alice", org_id: 42 }`) work for one test; they break at scale. The cross-language patterns catalog for managing test data has settled around six approaches, each with a canonical citation and a clear "when to use" axis.
-
 This skill is a **pure reference** (S2) — no execution steps. It is the catalog the [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) cites when it audits a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
 
 ## When to use
