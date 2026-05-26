@@ -8,24 +8,13 @@ archetype: S1
 
 # promptfoo-evaluation
 
-## Overview
-
-Per [promptfoo.dev/docs/intro][pf-intro]:
-
 [pf-intro]: https://promptfoo.dev/docs/intro/
-
-> "promptfoo is an open-source CLI and library for evaluating and
-> red-teaming LLM apps."
-
-The configuration model: a YAML file declares **providers** (one or
-more LLMs to test against), **prompts** (templates with `{{var}}`
-placeholders), **tests** (input variables + assertions), and the CLI
-runs the cross-product. Per [promptfoo.dev/docs/configuration/guide][pf-config]:
-
 [pf-config]: https://promptfoo.dev/docs/configuration/guide/
 
-> "The YAML configuration format runs each prompt through a series
-> of example inputs (aka 'test case')."
+A `promptfooconfig.yaml` declares **providers** (LLMs under test),
+**prompts** (templates with `{{var}}` placeholders), **tests**
+(input variables + assertions); `promptfoo eval` runs the
+cross-product (per [pf-config][pf-config]).
 
 ## When to use
 
