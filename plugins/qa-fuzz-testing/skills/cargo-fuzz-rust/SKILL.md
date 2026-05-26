@@ -10,14 +10,10 @@ archetype: S1
 
 ## Overview
 
-cargo-fuzz is the canonical Rust fuzzing tool (per
-[github.com/rust-fuzz/cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz)).
-It wraps libFuzzer with Rust-friendly ergonomics: cargo subcommand,
-`fuzz_target!` macro for declaring entry points, and the `Arbitrary`
-trait for structured-input mutation.
-
-cargo-fuzz requires **Rust nightly** because libFuzzer integration
-depends on unstable compiler features.
+cargo-fuzz (per
+[github.com/rust-fuzz/cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz))
+requires **Rust nightly** because libFuzzer integration depends on
+unstable compiler features.
 
 For sanitiser pairing: cargo-fuzz auto-enables ASan by default
 (per the cargo-fuzz README). See
