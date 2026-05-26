@@ -12,11 +12,11 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
 | [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents | S3×3 |
-| [qa-process](plugins/qa-process/) | 1.5.0 | 19 skills + 7 agents | S2×3 · S3×16 · A1×1 · A2×2 · A3×3 · A4×1 |
-| [qa-roles](plugins/qa-roles/) | 1.0.0 | 0 skills + 3 agents | A2×1 · A3×1 · A4×1 |
+| [qa-process](plugins/qa-process/) | 1.5.0 | 19 skills + 7 agents | S2×3 · S3×16 · A2×2 · A3×5 |
+| [qa-roles](plugins/qa-roles/) | 1.0.0 | 0 skills + 3 agents | A3×3 |
 | [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents | S1×7 · S2×3 · S3×6 · S4×1 · A2×1 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents | S1×2 · S3×2 · A2×1 |
-| [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents | S3×2 · A2×2 |
+| [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents | S3×2 · A3×2 |
 | [qa-test-management](plugins/qa-test-management/) | 1.0.0 | 7 skills + 1 agents | S1×5 · S2×1 · S3×1 · A3×1 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.1.0 | 17 skills + 1 agents | S1×12 · S3×5 · A2×1 |
 | [qa-test-review](plugins/qa-test-review/) | 1.3.0 | 4 skills + 6 agents | S2×4 · A3×6 |
@@ -29,12 +29,12 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 |---|---|---:|---|
 | [qa-api-testing](plugins/qa-api-testing/) | 1.1.0 | 7 skills + 2 agents | S1×6 · S3×1 · A2×2 |
 | [qa-bdd](plugins/qa-bdd/) | 1.1.0 | 8 skills + 1 agents | S1×4 · S3×4 · A3×1 |
-| [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents | S1×4 · S3×1 · A1×1 · A4×1 |
+| [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents | S1×4 · S3×1 · A3×1 · A4×1 |
 | [qa-desktop](plugins/qa-desktop/) | 1.1.0 | 9 skills + 3 agents | S1×7 · S2×2 · A2×2 · A4×1 |
 | [qa-embedded](plugins/qa-embedded/) | 1.1.0 | 7 skills + 1 agents | S1×4 · S2×3 · A2×1 |
 | [qa-game](plugins/qa-game/) | 1.1.0 | 7 skills + 1 agents | S1×3 · S2×2 · S3×2 · A2×1 |
 | [qa-mobile-native](plugins/qa-mobile-native/) | 1.1.0 | 10 skills + 2 agents | S1×6 · S2×1 · S3×2 · S4×1 · A2×2 |
-| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.1.0 | 5 skills + 2 agents | S1×5 · A1×1 · A2×1 |
+| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.1.0 | 5 skills + 2 agents | S1×5 · A2×1 · A3×1 |
 | [qa-property-based](plugins/qa-property-based/) | 1.1.0 | 5 skills + 2 agents | S1×5 · A2×2 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.1.0 | 4 skills + 1 agents | S1×4 · A2×1 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.1.0 | 5 skills + 1 agents | S1×5 · A2×1 |
@@ -52,7 +52,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 | [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) | 1.0.0 | 12 skills + 1 agents | S1×5 · S2×4 · S3×3 · A3×1 |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.1.0 | 6 skills + 1 agents | S1×3 · S2×1 · S3×2 · A2×1 |
 | [qa-charts-dataviz](plugins/qa-charts-dataviz/) | 1.0.0 | 3 skills + 0 agents | S1×3 |
-| [qa-data-quality](plugins/qa-data-quality/) | 1.0.0 | 5 skills + 3 agents | S1×3 · S2×1 · S3×1 · A1×2 · A2×1 |
+| [qa-data-quality](plugins/qa-data-quality/) | 1.0.0 | 5 skills + 3 agents | S1×3 · S2×1 · S3×1 · A2×1 · A3×2 |
 | [qa-localization](plugins/qa-localization/) | 1.0.0 | 4 skills + 0 agents | S1×1 · S3×3 |
 | [qa-modern-web](plugins/qa-modern-web/) | 1.0.0 | 5 skills + 0 agents | S1×4 · S3×1 |
 | [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 1.0.0 | 4 skills + 0 agents | S1×4 |
@@ -81,13 +81,13 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Archetypes |
 |---|---|---:|---|
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.4.0 | 1 skills + 8 agents | S3×1 · A1×5 · A2×2 · A4×1 |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.4.0 | 1 skills + 8 agents | S3×1 · A1×4 · A2×2 · A3×1 · A4×1 |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.1.0 | 6 skills + 1 agents | S1×4 · S3×2 · A2×1 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.0.0 | 7 skills + 2 agents | S1×3 · S2×3 · S3×1 · A1×1 · A3×1 |
-| [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents | S2×1 · S3×1 · A1×5 |
-| [qa-load-testing](plugins/qa-load-testing/) | 1.1.0 | 9 skills + 2 agents | S1×5 · S3×4 · A1×1 · A2×1 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.0.0 | 7 skills + 2 agents | S1×3 · S2×3 · S3×1 · A3×2 |
+| [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents | S2×1 · S3×1 · A1×2 · A2×3 |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.1.0 | 9 skills + 2 agents | S1×5 · S3×4 · A2×2 |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.1.0 | 6 skills + 0 agents | S2×1 · S3×5 |
-| [qa-shift-left](plugins/qa-shift-left/) | 1.0.0 | 3 skills + 4 agents | S3×3 · A1×1 · A2×1 · A3×1 · A4×1 |
+| [qa-shift-left](plugins/qa-shift-left/) | 1.0.0 | 3 skills + 4 agents | S3×3 · A2×1 · A3×2 · A4×1 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.0.0 | 3 skills + 2 agents | S3×3 · A2×2 |
 
 ## AI & specialized
@@ -99,14 +99,14 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 | [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.1.0 | 3 skills + 2 agents | S3×3 · A3×2 |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.0.0 | 7 skills + 0 agents | S1×5 · S3×2 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.0.0 | 5 skills + 0 agents | S1×3 · S3×2 |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×3 · A1×1 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×3 · A3×1 |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.0.0 | 5 skills + 0 agents | S2×1 · S3×4 |
 | [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.0.0 | 3 skills + 0 agents | S1×3 |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.0.0 | 4 skills + 1 agents | S1×4 · A3×1 |
 | [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.0.0 | 4 skills + 1 agents | S1×3 · S3×1 · A3×1 |
-| [qa-experimentation](plugins/qa-experimentation/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×2 · S3×1 · A1×1 |
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×1 · S3×2 · A1×1 |
-| [qa-graphql](plugins/qa-graphql/) | 1.0.0 | 7 skills + 1 agents | S1×5 · S2×2 · A1×1 |
+| [qa-experimentation](plugins/qa-experimentation/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×2 · S3×1 · A3×1 |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.0.0 | 7 skills + 1 agents | S1×4 · S2×1 · S3×2 · A3×1 |
+| [qa-graphql](plugins/qa-graphql/) | 1.0.0 | 7 skills + 1 agents | S1×5 · S2×2 · A3×1 |
 | [qa-grpc](plugins/qa-grpc/) | 1.0.0 | 7 skills + 0 agents | S1×4 · S2×2 · S3×1 |
 | [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.0.0 | 6 skills + 1 agents | S1×6 · A3×1 |
 | [qa-ml-models](plugins/qa-ml-models/) | 1.0.0 | 5 skills + 1 agents | S1×5 · A3×1 |
@@ -128,7 +128,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.0.0 | 3 skills + 0 agents | S1×1 · S2×1 · S3×1 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents | S1×4 · S2×1 · A3×1 |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.1.0 | 5 skills + 0 agents | S1×3 · S2×2 |
-| [qa-iac](plugins/qa-iac/) | 1.0.0 | 5 skills + 2 agents | S1×5 · A1×1 · A3×1 |
+| [qa-iac](plugins/qa-iac/) | 1.0.0 | 5 skills + 2 agents | S1×5 · A3×2 |
 | [qa-manual-testing](plugins/qa-manual-testing/) | 1.1.0 | 11 skills + 1 agents | S2×6 · S3×5 · A4×1 |
 
 ## Alphabetical index
