@@ -10,9 +10,7 @@ archetype: S1
 
 ## Overview
 
-Faker is a multi-language library family for generating
-realistic-but-fake values. It's the building block beneath both
-fresh-fixture generation
+Faker is the building block beneath both fresh-fixture generation
 ([`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md))
 and PII masking pipelines
 ([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
