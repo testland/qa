@@ -10,8 +10,7 @@ archetype: S1
 
 ## Overview
 
-CircleCI is a managed CI/CD platform. Configuration lives at
-`.circleci/config.yml` and uses three primary primitives:
+Configuration lives at `.circleci/config.yml`:
 
 - **Executors** — where jobs run (Docker, machine, macOS).
 - **Jobs** — individual units of work.
