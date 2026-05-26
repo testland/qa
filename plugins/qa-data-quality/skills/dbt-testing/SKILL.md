@@ -10,10 +10,6 @@ archetype: S1
 
 ## Overview
 
-Authors and runs **data tests** in a dbt project; parses failure output from
-the run-results artifact; and provides CI-gating patterns for `dbt test` and
-`dbt build`.
-
 dbt distinguishes **data tests** (assertions on rows, e.g. unique / not_null)
 from **unit tests** (logic tests on transformations); this skill targets
 data tests. The YAML key was renamed from `tests:` to `data_tests:` to
