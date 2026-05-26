@@ -10,9 +10,7 @@ archetype: S2
 
 ## Overview
 
-A test is a sequence of steps. Each step does something or asserts something. The dominant test-code smell at scale is not bad assertions or bad locators (other skills cover those) — it is **steps at the wrong granularity, at the wrong abstraction layer, in the wrong place**. A test that reads as a 30-line wall of clicks-and-types is brittle; a test that reads as three high-level business actions is maintainable. The difference is step design.
-
-This skill is a **pure reference** (S2) — no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`test-code-critic`](../../agents/test-code-critic.md), and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite when auditing step granularity. It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure) by going deeper — within an "Act" phase, *what is one step?*
+This skill is a **pure reference** (S2) — no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`test-code-critic`](../../agents/test-code-critic.md), and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite when auditing step granularity at the architecture tier — within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
 
 ## When to use
 
