@@ -16,14 +16,13 @@ keywords:
 
 ## Overview
 
-The W3C Push API per [w3c-push] defines the browser surface: a page
-calls `registration.pushManager.subscribe()` and receives a
-`PushSubscription` with an `endpoint` URL, an `expirationTime`
-(often `null`), and the encryption `keys` (`p256dh` + `auth`). The
-push service then receives push messages via the protocol in
-RFC 8030 per [rfc8030], authenticated with VAPID per RFC 8292
-per [rfc8292]. This skill tests the browser side of that surface —
-not the application server's APNs / FCM integrations, which are
+Per [mdn-push], the Push API is *"Baseline Widely available"*
+across browsers since March 2023. Firefox imposes per-app push
+quotas; Chrome does not. This skill tests the browser side
+(`pushManager.subscribe` per [w3c-push], `push` event,
+`pushsubscriptionchange`, `unsubscribe`) plus the server-side push
+protocol per [rfc8030] and VAPID auth per [rfc8292]. Cross-channel
+push including native APNs / FCM is
 [`qa-notifications/push-notification-test-author`](../../../qa-notifications/skills/push-notification-test-author/SKILL.md)
 territory.
 
@@ -32,10 +31,6 @@ territory.
 [rfc8030]: https://datatracker.ietf.org/doc/html/rfc8030
 [rfc8292]: https://datatracker.ietf.org/doc/html/rfc8292
 [web-dev-notifications]: https://web.dev/notifications
-
-Per [mdn-push], the Push API is *"Baseline Widely available"*
-across browsers since March 2023. Firefox imposes per-app push
-quotas; Chrome does not.
 
 ## When to use
 
