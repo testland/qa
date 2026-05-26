@@ -10,15 +10,9 @@ archetype: S1
 
 ## Overview
 
-libFuzzer is an in-process coverage-guided fuzzing engine
-distributed with LLVM (per
-[llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html)).
-It links with the target library and tracks code coverage to
-guide mutation-based input generation. Each iteration calls a
-user-defined function with mutated input bytes; coverage feedback
-steers the next mutations toward novel paths.
-
-This skill wraps libFuzzer for C/C++ targets. Composes with:
+This skill wraps LLVM's libFuzzer (per
+[llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html))
+for C/C++ targets. Composes with:
 
 - [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)
   for ASan + UBSan integration
