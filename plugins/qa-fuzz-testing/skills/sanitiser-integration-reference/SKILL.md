@@ -10,17 +10,12 @@ archetype: S2
 
 ## Overview
 
-Coverage-guided fuzzers feed inputs to a target compiled with
-**sanitisers** — instrumentation that detects memory-safety
-violations, undefined behaviour, uninitialised reads, and data
-races at runtime. Without sanitisers, a fuzzer only catches
-explicit crashes (segfaults, asserts); with sanitisers, it
-catches the much larger class of latent bugs that don't crash
-immediately.
-
-This skill is a **pure reference** consumed by the per-language
-fuzzer skills + fuzz-target authoring agent. For corpus discipline
-see [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+Pure-reference catalog of the five clang sanitisers (ASan, UBSan,
+MSan, TSan, LSan) used with coverage-guided fuzz targets — what
+each detects, build flags, runtime options, compatibility matrix,
+performance overhead. Consumed by the per-language fuzzer skills
+and the fuzz-target authoring agent. For corpus discipline see
+[`corpus-management-reference`](../corpus-management-reference/SKILL.md).
 
 ## When to use
 
