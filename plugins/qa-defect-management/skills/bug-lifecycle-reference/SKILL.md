@@ -8,22 +8,13 @@ archetype: S2
 
 # bug-lifecycle-reference
 
-## Overview
-
-A defect (or "bug" in practitioner vocabulary) doesn't appear from
-nowhere and doesn't disappear when fixed. It moves through a
-sequence of states from discovery to closure, with transitions
-that are tool-driven (a developer marks "fixed") or process-driven
-(a tester verifies, a release manager defers to next sprint).
-
-This skill catalogues the **ISTQB-canonical lifecycle** and maps
-it to the three platform workflows the catalog covers (Jira,
-Linear, GitHub Issues). It is a **pure reference** — no execution
-steps. The platform-workflow skills
+Catalogs the ISTQB-canonical defect lifecycle and maps it to Jira,
+Linear, and GitHub Issues workflows. Consumed by the
+platform-workflow skills
 ([`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
 [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
 [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md))
-consume this reference for their state-transition logic.
+for state-transition logic.
 
 ## When to use
 
