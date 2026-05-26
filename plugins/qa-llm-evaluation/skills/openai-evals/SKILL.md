@@ -10,21 +10,14 @@ archetype: S1
 
 ## Overview
 
-Per [github.com/openai/evals][oa-gh]:
-
 [oa-gh]: https://github.com/openai/evals
 
-> "Evals provide a framework for evaluating large language models
-> (LLMs) or systems built using LLMs."
-
-> "an existing registry of evals to test different dimensions of
-> OpenAI models and the ability to write your own custom evals."
-
-The model: a registry of YAML eval-specs lives under
+Per [oa-gh][oa-gh], a registry of YAML eval-specs lives under
 `evals/registry/evals/`, each pointing to a JSONL data file under
-`evals/registry/data/` (Git-LFS managed per [oa-gh][oa-gh]). The
-`oaieval` CLI runs an eval against any completion-function-protocol
-model.
+`evals/registry/data/` (Git-LFS managed). The `oaieval` CLI runs
+an eval against any completion-function-protocol model — either
+one of OpenAI's curated evals or a custom one registered by the
+team.
 
 ## When to use
 
