@@ -10,21 +10,16 @@ archetype: S2
 
 ## Overview
 
-GraphQL introspection is the schema-discovery feature defined by
-the GraphQL spec — `__schema` and `__type` queries enumerate every
-type, field, directive, deprecation, and description. It powers
-developer tools (Apollo Sandbox, GraphQL Playground, codegen) but
-hands attackers a free reconnaissance map of the API.
-
-The trade-off, per Apollo Server docs
+Pure-reference catalog of GraphQL introspection as a production
+attack surface and the controls available to mitigate it. Per
+Apollo Server docs
 ([apollographql.com/docs/apollo-server/api/apollo-server](https://www.apollographql.com/docs/apollo-server/api/apollo-server)):
 "Introspection enables important development tools... However,
 this capability also allows attackers to explore your API
 structure."
 
-This skill is a **pure reference** consumed by every per-
-framework testing skill in this plugin. It does not execute
-anything.
+Consumed by every per-framework testing skill in this plugin.
+This skill does not execute anything.
 
 ## When to use
 
