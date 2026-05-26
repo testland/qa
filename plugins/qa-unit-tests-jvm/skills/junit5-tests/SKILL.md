@@ -14,8 +14,7 @@ Per [junit.org/junit5/docs/current/user-guide][j5-ug]:
 
 [j5-ug]: https://junit.org/junit5/docs/current/user-guide/
 
-JUnit 5 is the modern JVM testing standard (released 2017,
-replacing JUnit 4). Three components:
+Three components (released 2017, replacing JUnit 4):
 
 - **JUnit Jupiter** — the new programming + extension model
 - **JUnit Vintage** — backward-compat for JUnit 3/4 tests
