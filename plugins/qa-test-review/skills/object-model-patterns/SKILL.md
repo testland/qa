@@ -10,8 +10,6 @@ archetype: S2
 
 ## Overview
 
-Test automation frameworks layer their interaction with the System Under Test (SUT) through **object-model patterns**. Picking the wrong pattern for a project produces brittle tests, fixture sprawl, and base-class hierarchies that nobody dares refactor. Picking the right pattern is a one-time decision with multi-year consequences.
-
 This skill is a **pure reference** (S2) — no execution steps; it is the canonical catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
 
 ## When to use
