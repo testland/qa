@@ -10,13 +10,12 @@ archetype: S1
 
 ## Overview
 
-TestRail is a long-standing commercial test-management product
-(originally Gurock; now Idera). Teams use it as the source of truth
-for test cases and runs; the gap is **automation result sync** —
-without it, automated runs don't update TestRail, and the
-test-management view drifts from reality.
+Teams that use TestRail as the source of truth for test cases and
+runs need **automation result sync** — without it, automated runs
+don't update TestRail and the test-management view drifts from
+reality. This skill wires that sync.
 
-This skill wires that sync. The official documentation is at
+The official documentation is at
 **`support.testrail.com/hc/en-us/articles/...`** (the canonical
 support knowledge base) and **`testrail.com/docs/api/`** (the API
 reference). At the time of this skill's authoring (2026-05-05), both
