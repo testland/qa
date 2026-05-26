@@ -8,25 +8,13 @@ archetype: S1
 
 # appium-testing
 
-## Overview
-
-Per [appium-docs][app]:
-
 [app]: https://appium.io/docs/en/latest/
 
-> "Appium is an open-source project and ecosystem of related
-> software, designed to facilitate UI automation of many app
-> platforms, including mobile (iOS, Android, Tizen), browser
-> (Chrome, Firefox, Safari), desktop (macOS, Windows), TV (Roku,
-> tvOS, Android TV, Samsung), and more!"
-
-Appium uses the **WebDriver protocol** ([appium-docs][app]) — the
-same shape as Selenium — which means client libraries exist for
-JavaScript, Python, Java, Ruby, and .NET ([appium-docs][app]).
-
-The driver model is the load-bearing concept: Appium itself is
-protocol; per-platform automation is a **driver** (XCUITest driver
-talks to iOS, UiAutomator2 driver talks to Android, etc.).
+The driver model is the load-bearing concept: Appium itself is the
+WebDriver protocol; per-platform automation is a **driver** (XCUITest
+driver talks to iOS, UiAutomator2 / Espresso to Android, Mac2 to
+macOS, Windows to Windows desktop). Client libraries exist for
+JavaScript, Python, Java, Ruby, and .NET (per [appium-docs][app]).
 
 ## When to use
 
