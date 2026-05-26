@@ -10,15 +10,7 @@ archetype: S1
 
 ## Overview
 
-Per [tfsec-home][tfs]:
-
 [tfs]: https://aquasecurity.github.io/tfsec/v1.28.13/
-
-> "**tfsec** is a static analysis security scanner for Terraform
-> code designed to run locally and in CI pipelines."
-
-> "tfsec is a static analysis security scanner for your Terraform
-> code." ([tfsec-home][tfs])
 
 **Important migration note** per [tfsec-home][tfs]:
 
