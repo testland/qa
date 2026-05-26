@@ -10,20 +10,14 @@ archetype: S1
 
 ## Overview
 
-Per [opa-docs][opa]:
-
 [opa]: https://www.openpolicyagent.org/docs/
 
-> "Open Policy Agent is described as 'an open source,
-> general-purpose policy engine that unifies policy enforcement
-> across the stack.'"
-
-OPA's Rego language ([opa-docs][opa]) is "purpose-built for
-expressing policies over complex hierarchical data structures."
-
-**Conftest** is a CLI tool that uses OPA to test structured
-configuration files (Kubernetes manifests, Terraform plans,
-Dockerfiles, etc.) against Rego policies.
+**Conftest** is a CLI that uses OPA ([opa-docs][opa]) to test
+structured configuration files (Kubernetes manifests, Terraform
+plans, Dockerfiles, etc.) against Rego policies. This skill
+covers Conftest invocation + Rego policy authoring as the custom
+policy layer alongside Checkov / tfsec / KICS (which carry
+built-in checks).
 
 ## When to use
 
