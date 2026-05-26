@@ -11,13 +11,6 @@ keywords: ["coverage", "gcov", "llvm-cov", "mcdc", "misra", "do-178c", "embedded
 
 ## Overview
 
-Embedded C/C++ projects sit on a coverage spectrum from "best
-effort line coverage on the host" to "MC/DC measured on-target
-for every flight-critical condition". The right point on that
-spectrum is driven by the safety / regulatory regime, the
-toolchain (gcc vs clang vs vendor compiler), and whether
-instrumented binaries can run on the production target at all.
-
 This skill is a **pure reference** consumed by the per-tool S1
 skills ([`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
 [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
