@@ -8,20 +8,13 @@ archetype: S1
 
 # k6-load-testing
 
-## Overview
-
-Grafana k6 is "an open-source, developer-friendly, and extensible
-performance testing tool that helps you catch performance issues
-early and proactively improve reliability" ([k6-overview][overview]).
-The integration shape is JavaScript — tests are `.js` files with a
-default-exported function that runs once per virtual user (VU) per
-iteration ([k6-running][running]).
-
 [overview]: https://grafana.com/docs/k6/latest/
 [running]: https://grafana.com/docs/k6/latest/get-started/running-k6/
 [thresholds]: https://grafana.com/docs/k6/latest/using-k6/thresholds/
 
-This skill covers the load-testing workflow. k6's browser, synthetic
+k6 tests are `.js` files with a default-exported function that runs
+once per virtual user (VU) per iteration (per [k6-running][running]).
+This skill covers the load-testing workflow; k6's browser, synthetic
 monitoring, and chaos modes share the same script structure but are
 out of scope here.
 
