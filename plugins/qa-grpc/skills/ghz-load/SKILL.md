@@ -10,11 +10,10 @@ archetype: S1
 
 ## Overview
 
-ghz is the canonical gRPC load testing tool. Per
-[ghz.sh/docs/usage](https://ghz.sh/docs/usage), it accepts a
+Per
+[ghz.sh/docs/usage](https://ghz.sh/docs/usage), ghz accepts a
 `.proto` (or compiled `protoset`), a method, a host:port, and
 load parameters, and emits per-request metrics + a summary.
-
 This skill wraps ghz for two use cases: ad-hoc throughput
 measurement and CI regression gating.
 
