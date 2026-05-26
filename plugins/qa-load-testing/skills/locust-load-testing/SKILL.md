@@ -8,17 +8,13 @@ archetype: S1
 
 # locust-load-testing
 
-## Overview
-
-Locust is a Python-native load testing tool. Tests are
-**Python classes** that inherit from `HttpUser`; each `@task`-
-decorated method is an action a virtual user can take
-([locust-quickstart][quickstart]).
-
 [quickstart]: https://docs.locust.io/en/stable/quickstart.html
 
-The integration shape: write `locustfile.py`, run `locust`, observe
-the live dashboard or run headless for CI.
+Locust tests are Python classes inheriting from `HttpUser`; each
+`@task`-decorated method is an action a virtual user can take
+([locust-quickstart][quickstart]). Workflow: write
+`locustfile.py`, run `locust`, observe the live dashboard or run
+headless for CI.
 
 ## When to use
 
