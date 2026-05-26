@@ -15,16 +15,6 @@ invocation. Per
 [docs.aws.amazon.com/lambda](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-common.html):
 "The maximum value for timeout is 900 seconds."
 
-Lambda timeouts are unforgiving — execution halts at the
-configured timeout regardless of what the function is doing. The
-function gets no SIGTERM grace period.
-
-Two interlocking concerns:
-
-1. **Per-Lambda timeout** — the configured value (1-900s).
-2. **Integration cascade** — API Gateway has a separate 29s
-   limit; SQS visibility-timeout interacts with Lambda timeout.
-
 ## When to use
 
 - Designing the timeout for a new Lambda.
