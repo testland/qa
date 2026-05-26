@@ -100,13 +100,13 @@ re-run the agent when those conditions appear.
 
 ## Worked example
 
-**Input:** `csproj` file path `C:\repos\InvoiceApp\src\InvoiceApp.csproj`.
+**Input:** `csproj` file path `C:/repos/InvoiceApp/src/InvoiceApp.csproj`.
 
 The agent runs:
 
 ```bash
 grep -E "(UseWPF|UseWindowsForms|TargetPlatformIdentifier)" \
-  C:\repos\InvoiceApp\src\InvoiceApp.csproj
+  C:/repos/InvoiceApp/src/InvoiceApp.csproj
 ```
 
 Output:
