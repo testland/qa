@@ -10,11 +10,9 @@ archetype: S1
 
 ## Overview
 
-Hasura GraphQL Engine generates a GraphQL API from Postgres /
-MySQL / SQL Server schemas plus declarative permission rules.
 Per
 [hasura.io/docs/2.0/auth/authorization/quickstart/](https://hasura.io/docs/2.0/auth/authorization/quickstart/),
-permissions are configured per **table**, **role**, and
+Hasura permissions are configured per **table**, **role**, and
 **operation** (select / insert / update / delete), with row-
 filter expressions and column-level scopes.
 
