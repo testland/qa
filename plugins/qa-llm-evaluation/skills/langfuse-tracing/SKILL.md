@@ -10,19 +10,13 @@ archetype: S1
 
 ## Overview
 
+[lf-gh]: https://github.com/langfuse/langfuse-python
+
 Langfuse complements pre-deploy LLM eval (Promptfoo / DeepEval /
 Ragas / Giskard) with production-side observability — captures every
 LLM call as a `trace` containing nested `observation`s (generations,
 spans, events), with token / cost / latency metadata, scores, and
-linked datasets for offline eval.
-
-Per [github.com/langfuse/langfuse-python][lf-gh]:
-
-[lf-gh]: https://github.com/langfuse/langfuse-python
-
-The Python SDK supports "instrumenting LLM applications with
-decorators or low-level SDK to achieve detailed
-tracing/observability. Works with any LLM or framework."
+linked datasets for offline eval (per [lf-gh][lf-gh]).
 
 **Important version note (2026-05-06):** per [lf-gh][lf-gh], "The
 SDK was rewritten in v4 and released in March 2026" — this skill
