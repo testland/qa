@@ -8,19 +8,12 @@ archetype: S1
 
 # ragas-evaluation
 
-## Overview
-
-Ragas (per [github.com/explodinggradients/ragas][rg-gh]) is an
-"Evaluation framework for your AI Application" with the deepest
-metric catalog of any open-source LLM eval library — particularly
-strong on RAG pipelines.
-
 [rg-gh]: https://github.com/explodinggradients/ragas
 
 The model: assemble a dataset (question + answer + retrieval
 contexts + ground truth), import the metrics relevant to the
 evaluation goal, run `evaluate()`, and inspect per-metric per-row
-scores.
+scores (per [rg-gh][rg-gh]).
 
 ## When to use
 
