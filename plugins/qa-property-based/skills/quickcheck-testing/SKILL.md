@@ -10,11 +10,6 @@ archetype: S1
 
 ## Overview
 
-QuickCheck is **the** original property-based testing library —
-Claessen & Hughes, Haskell, 1999. Every modern PBT library
-(Hypothesis, fast-check, proptest, jqwik) cites it as the
-inspiration.
-
 Per [qc-hackage][qch]:
 
 [qch]: https://hackage.haskell.org/package/QuickCheck
