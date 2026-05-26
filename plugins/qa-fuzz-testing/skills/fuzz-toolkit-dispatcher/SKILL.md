@@ -10,14 +10,10 @@ archetype: S4
 
 ## Overview
 
-Coverage-guided fuzzing has language-specific toolchains. Picking
-the right one depends on the target's language, source-availability,
-and whether it's part of an open-source project that qualifies for
-OSS-Fuzz.
-
-This skill is a **toolkit / dispatcher (S4)** — a decision tree
-routing to the right per-language fuzzer skill. It composes the
-seven per-language S1 skills + the two S2 references in the plugin.
+Decision tree routing a fuzz-target authoring task to the right
+per-language fuzzer skill. Composes the seven per-language S1
+skills + the two S2 references in the plugin. Picks based on
+target language, source-availability, and OSS-Fuzz eligibility.
 
 ## When to use
 
