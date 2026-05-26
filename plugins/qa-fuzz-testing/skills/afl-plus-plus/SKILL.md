@@ -10,17 +10,11 @@ archetype: S1
 
 ## Overview
 
-AFL++ is the active community fork of Google's American Fuzzy Lop
-(per [github.com/AFLplusplus/AFLplusplus](https://github.com/AFLplusplus/AFLplusplus)).
-It's an **out-of-process** coverage-guided fuzzer: the fuzzer
-launches the target binary repeatedly, feeding mutated inputs via
-stdin or file argument, and collects coverage via custom
-instrumentation.
-
-Distinct from libFuzzer (in-process) — AFL++ fits binaries you
-can't compile-in (closed-source, multi-language) and tools that
-process inputs end-to-end (parsers reading files, decoders
-reading stdin).
+Distinct from libFuzzer (in-process) — AFL++ (per
+[github.com/AFLplusplus/AFLplusplus](https://github.com/AFLplusplus/AFLplusplus))
+fits binaries you can't compile-in (closed-source, multi-language)
+and tools that process inputs end-to-end (parsers reading files,
+decoders reading stdin).
 
 For sanitiser pairing see
 [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md);
