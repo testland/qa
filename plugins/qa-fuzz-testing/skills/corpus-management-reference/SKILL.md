@@ -10,14 +10,10 @@ archetype: S2
 
 ## Overview
 
-Coverage-guided fuzzers (libFuzzer, AFL++, native Go fuzz,
-cargo-fuzz, Atheris, Jazzer) maintain a **corpus** — a directory
-of inputs that the fuzzer has discovered cover distinct code
-paths. The corpus is the fuzzer's evolving knowledge of what
-inputs the target consumes. Managing it well is half the battle.
-
-This skill is a **pure reference** consumed by the per-language
-fuzzer skills + the fuzz-target authoring agent.
+Pure-reference catalog of corpus-management practices across
+libFuzzer, AFL++, native Go fuzz, cargo-fuzz, Atheris, Jazzer,
+and OSS-Fuzz. Consumed by the per-language fuzzer skills and
+the fuzz-target authoring agent.
 
 ## When to use
 
