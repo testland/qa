@@ -11,17 +11,13 @@ keywords: ["unreal", "ue4", "ue5", "automation", "automation-spec", "automation-
 
 ## Overview
 
-The **Unreal Automation System** is Epic's built-in C++ test
-framework for Unreal Engine 4.x and 5.x. Per Epic's
+This skill wraps the **C++ Automation Test Framework** (UE 4.x /
+5.x) plus the two most commonly composed sub-systems. Per Epic's
 [Automation Test Framework documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine),
-it spans five test categories — Unit, Feature, Smoke, Content
-Stress, and Screenshot Comparison — and supports multiple
-authoring styles (traditional automation tests, BDD-style
-Automation Spec, Automation Driver for UI input, Functional Tests
-in the level, Python and Blueprint editor tests).
-
-This skill wraps the **C++ Automation Test Framework** plus the
-two most commonly composed sub-systems:
+the framework spans five test categories (Unit, Feature, Smoke,
+Content Stress, Screenshot Comparison) and supports multiple
+authoring styles (traditional, BDD Spec, UI Driver, Functional,
+Python / Blueprint).
 
 - **Automation Spec** — BDD-style `Describe` / `It` /
   `BeforeEach` per
