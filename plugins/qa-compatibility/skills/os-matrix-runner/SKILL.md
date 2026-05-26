@@ -8,22 +8,6 @@ archetype: S1
 
 # os-matrix-runner
 
-## Overview
-
-OS / runtime matrices catch a class of bugs that single-OS testing
-misses:
-
-- **Path separators:** `\` vs `/`.
-- **Line endings:** CRLF vs LF.
-- **File permissions:** POSIX modes vs Windows ACLs.
-- **Case sensitivity:** Linux ext4 case-sensitive; macOS HFS+
-  case-insensitive by default; Windows NTFS case-insensitive.
-- **Runtime version differences:** Node 18 vs 22 has new APIs;
-  Python 3.12 deprecates patterns from 3.10.
-- **Shell behavior:** bash vs zsh vs PowerShell.
-
-The matrix is the systematic counter to "works on my machine."
-
 ## When to use
 
 - The product runs on multiple OSes (CLI tools, libraries,
