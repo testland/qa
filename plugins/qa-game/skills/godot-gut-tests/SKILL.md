@@ -11,13 +11,11 @@ keywords: ["godot", "gut", "gdscript", "unit-test", "game-engine", "junit-xml", 
 
 ## Overview
 
-[GUT (Godot Unit Test)](https://github.com/bitwes/Gut) is, per the
-project README, "a unit testing framework for the Godot Engine.
-It allows you to write tests for your gdscript in gdscript". It
-is the community-canonical test framework for Godot — Godot does
-not ship an official equivalent of Unity's Test Framework or
-Unreal's Automation System for GDScript user code, so this skill
-wraps GUT.
+This skill wraps [GUT (Godot Unit
+Test)](https://github.com/bitwes/Gut) — the community-canonical
+GDScript test framework. Godot does not ship a first-party
+equivalent of Unity's Test Framework or Unreal's Automation
+System for GDScript user code.
 
 Per the [GUT README](https://github.com/bitwes/Gut):
 
