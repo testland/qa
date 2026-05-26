@@ -10,15 +10,12 @@ archetype: S1
 
 ## Overview
 
-Apollo Server v4+ has first-class testing via `executeOperation`
-— in-process execution against the schema with no HTTP server.
-For HTTP-layer tests (CORS, middleware, response headers),
-`supertest` against an ephemeral-port server is the pattern.
-
 Per
-[apollographql.com/docs/apollo-server/testing/testing](https://www.apollographql.com/docs/apollo-server/testing/testing):
+[apollographql.com/docs/apollo-server/testing/testing](https://www.apollographql.com/docs/apollo-server/testing/testing),
 `executeOperation` "initializes automatically" — no startup
-needed for unit-style tests.
+needed for unit-style tests against the schema in-process. For
+HTTP-layer tests (CORS, middleware, response headers), use
+`supertest` against an ephemeral-port server.
 
 ## When to use
 
