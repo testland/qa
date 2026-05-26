@@ -10,13 +10,10 @@ archetype: S1
 
 ## Overview
 
-Statsig is a unified feature-flag + experimentation platform.
-Per [docs.statsig.com](https://docs.statsig.com/), the SDK is
-available for Node.js, Java, Python, Go, Ruby, .NET, PHP, Rust,
-and C++ — all with the same conceptual surface: gates,
+Per [docs.statsig.com](https://docs.statsig.com/), the Statsig
+SDK is available for Node.js, Java, Python, Go, Ruby, .NET, PHP,
+Rust, and C++ — all with the same conceptual surface: gates,
 experiments, dynamic configs.
-
-This skill wraps testing patterns for code that uses Statsig.
 
 ## When to use
 
