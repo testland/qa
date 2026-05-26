@@ -14,10 +14,6 @@ Per [learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest][ms-
 
 [ms-doc]: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest
 
-MSTest is Microsoft's first-party .NET test framework. Historically
-the default for Visual Studio projects; newer .NET project templates
-default to xUnit, but MSTest persists in Microsoft-stack codebases.
-
 For new code, [`xunit-tests`](../xunit-tests/SKILL.md) or
 [`nunit-tests`](../nunit-tests/SKILL.md) are more mainstream.
 MSTest is the right pick for Microsoft-mandated environments + legacy.
