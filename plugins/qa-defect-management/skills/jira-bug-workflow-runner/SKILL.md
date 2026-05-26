@@ -10,8 +10,7 @@ archetype: S1
 
 ## Overview
 
-Jira is the most widely deployed tracker for defect management.
-Its workflow engine maps cleanly to the canonical defect lifecycle
+Jira's workflow engine maps cleanly to the canonical defect lifecycle
 ([`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md))
 but every project's actual workflow is configurable, so the
 runner has to look up transition IDs at runtime rather than
