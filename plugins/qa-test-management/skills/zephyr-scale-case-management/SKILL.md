@@ -10,10 +10,8 @@ archetype: S1
 
 ## Overview
 
-Zephyr Scale (formerly Adaptavist TM4J, now SmartBear) is one of
-the three major Atlassian Marketplace test-management add-ons
-alongside Xray and Zephyr Squad. The Cloud version exposes a REST
-API v2 with Bearer-token authentication.
+Zephyr Scale Cloud (formerly Adaptavist TM4J, now SmartBear) exposes
+a REST API v2 with Bearer-token authentication.
 
 Per smartbear.com/test-management/zephyr-scale (Cloudflare-
 protected; cite by stable URL).
