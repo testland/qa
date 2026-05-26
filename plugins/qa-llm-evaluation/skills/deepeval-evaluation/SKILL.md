@@ -10,25 +10,15 @@ archetype: S1
 
 ## Overview
 
-Per [github.com/confident-ai/deepeval][de-gh]:
-
 [de-gh]: https://github.com/confident-ai/deepeval
-
-DeepEval is a pytest-native LLM eval framework — write tests in
-Python with familiar pytest patterns, swap in DeepEval's metric
-classes for LLM-specific assertions.
-
-Per [deepeval.com/docs/getting-started][de-start]:
-
 [de-start]: https://deepeval.com/docs/getting-started
 
-> "an open-source LLM eval package" enabling "evaluation of LLM
-> applications locally through test cases and metrics."
-
-The model: each test constructs an `LLMTestCase`, applies one or
-more `Metric` instances, and either asserts (`assert_test`) or
-batch-evaluates (`evaluate`). Pytest discovery + reporting works
-unchanged.
+Per [de-start][de-start], DeepEval is "an open-source LLM eval
+package" enabling "evaluation of LLM applications locally through
+test cases and metrics." The model: each test constructs an
+`LLMTestCase`, applies one or more `Metric` instances, and either
+asserts (`assert_test`) or batch-evaluates (`evaluate`). Pytest
+discovery + reporting works unchanged.
 
 ## When to use
 
