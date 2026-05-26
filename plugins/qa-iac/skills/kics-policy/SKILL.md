@@ -10,11 +10,10 @@ archetype: S1
 
 ## Overview
 
-KICS (Keeping Infrastructure as Code Secure) is Checkmarx's
-open-source IaC scanner. Like Checkov, it covers a broad range of
-IaC: Terraform, Kubernetes, Helm, Dockerfile, Docker Compose,
-OpenAPI, Ansible, ARM, CloudFormation, Pulumi, Crossplane,
-Knative.
+KICS (Keeping Infrastructure as Code Secure) covers Terraform,
+Kubernetes, Helm, Dockerfile, Docker Compose, OpenAPI, Ansible,
+ARM, CloudFormation, Pulumi, Crossplane, Knative — comparable
+breadth to Checkov.
 
 KICS's specific strengths:
 - OpenAPI scanning (uncommon in other IaC scanners).
