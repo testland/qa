@@ -17,8 +17,7 @@ keywords:
 
 Per the [Chart.js docs], Chart.js renders to `<canvas>`. Canvas
 output is a pixel buffer — testable via `canvas.toDataURL()` snapshot
-diff. Crucial for data-product UIs where chart correctness drives
-business decisions.
+diff.
 
 ## When to use
 
