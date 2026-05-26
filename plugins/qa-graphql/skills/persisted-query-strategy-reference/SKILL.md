@@ -10,9 +10,8 @@ archetype: S2
 
 ## Overview
 
-A persisted query is a GraphQL operation cached server-side and
-addressed by a SHA-256 hash. Clients send the hash instead of the
-full query string. Per Apollo Server docs
+Pure-reference catalog of GraphQL persisted-query strategies. Per
+Apollo Server docs
 ([apollographql.com/docs/apollo-server/performance/apq](https://www.apollographql.com/docs/apollo-server/performance/apq)):
 "A persisted query is a query string that's cached on the server
 side, along with its unique identifier (always its SHA-256
@@ -26,9 +25,7 @@ Two motivations, often conflated:
    [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md)).
 
 The configuration mode determines which motivation dominates.
-
-This skill is a **pure reference** consumed by per-framework
-test authors.
+Consumed by per-framework test authors.
 
 ## When to use
 
