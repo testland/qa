@@ -10,14 +10,12 @@ archetype: S1
 
 ## Overview
 
-buf is the canonical CLI for protobuf workflows. Per
+Per
 [buf.build/docs/cli/quickstart/](https://buf.build/docs/cli/quickstart/),
 "the Buf CLI requires version 1.32.0 or higher" and provides
 five primary commands: `build`, `lint`, `breaking`, `generate`,
-`format`.
-
-This skill wraps three of them — `build`, `lint`, `breaking` —
-as the proto-PR gate. Pairs with
+`format`. This skill wraps three of them — `build`, `lint`,
+`breaking` — as the proto-PR gate. Pairs with
 [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md)
 for the catalog of what counts as breaking and why.
 
