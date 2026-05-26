@@ -10,10 +10,9 @@ archetype: S1
 
 ## Overview
 
-VWO (Visual Website Optimizer) is an experimentation + feature-
-management platform. The server-side SDK uses a **settings file**
-(equivalent to Optimizely's datafile) for offline-capable
-testing. Per
+The VWO (Visual Website Optimizer) server-side SDK uses a
+**settings file** (equivalent to Optimizely's datafile) for
+offline-capable testing. Per
 [developers.vwo.com](https://developers.vwo.com/), the SDK
 supports multiple languages with a common API: `activate`,
 `get_feature_variable_value`, `is_feature_enabled`, `track`,
