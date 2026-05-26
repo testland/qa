@@ -10,12 +10,9 @@ archetype: S1
 
 ## Overview
 
-GitLab CI/CD is configured via `.gitlab-ci.yml` at the repo root.
-The structure is **stages** (sequential phases) → **jobs**
-(parallel within a stage) → **steps** (a job's `script:` array).
-
-GitLab CI is widely used for self-hosted CI; the SaaS GitLab.com
-version has free runners with quotas.
+Configured via `.gitlab-ci.yml` at the repo root. Structure:
+**stages** (sequential phases) → **jobs** (parallel within a
+stage) → **steps** (a job's `script:` array).
 
 ## When to use
 
