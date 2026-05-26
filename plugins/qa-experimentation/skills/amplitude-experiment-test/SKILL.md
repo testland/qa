@@ -10,17 +10,15 @@ archetype: S1
 
 ## Overview
 
-Amplitude Experiment is Amplitude's A/B testing + feature
-management product. Per
+Per
 [amplitude.com/docs/experiment](https://amplitude.com/docs/experiment),
-the SDKs (server-side and client-side) expose `fetch` + `variant`
-APIs: fetch the user's assigned variants, then read each variant
-on demand.
+the Amplitude Experiment SDKs (server-side and client-side)
+expose `fetch` + `variant` APIs: fetch the user's assigned
+variants, then read each variant on demand.
 
-The notable property: Amplitude correlates exposure + outcome
-events via the same user ID space as Amplitude Analytics, so
-exposure-event suppression in tests is important to avoid
-polluting analytics.
+Amplitude correlates exposure + outcome events via the same
+user ID space as Amplitude Analytics, so exposure-event
+suppression in tests is important to avoid polluting analytics.
 
 ## When to use
 
