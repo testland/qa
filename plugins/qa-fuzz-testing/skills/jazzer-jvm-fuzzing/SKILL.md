@@ -10,13 +10,9 @@ archetype: S1
 
 ## Overview
 
-Jazzer is Code Intelligence's coverage-guided in-process fuzzer
-for the JVM (per
-[github.com/CodeIntelligenceTesting/jazzer](https://github.com/CodeIntelligenceTesting/jazzer)).
-It adapts libFuzzer's instrumentation-powered mutation engine to
-JVM platforms — Linux, macOS, and Windows on x86_64 + ARM.
-
-Distinct from C/C++ fuzzers: Jazzer ships **JVM-level sanitisers**
+Distinct from C/C++ fuzzers: Jazzer (per
+[github.com/CodeIntelligenceTesting/jazzer](https://github.com/CodeIntelligenceTesting/jazzer))
+ships **JVM-level sanitisers**
 that detect security-sensitive misuse of standard APIs
 (deserialization gadgets, SSRF, ReDoS) — not memory-safety bugs
 (the JVM handles those).
