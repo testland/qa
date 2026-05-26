@@ -8,16 +8,7 @@ archetype: S2
 
 # defect-taxonomy-istqb
 
-## Overview
-
-Counting defects without classifying them produces useless
-metrics. Are you finding many defects because your testing is
-effective, or because your requirements process is broken? A
-defect taxonomy answers that — it routes each defect to a category
-that informs **process improvement**, not just **bug-list
-inventory**.
-
-This skill catalogues the three load-bearing taxonomies:
+Catalogs the three load-bearing defect taxonomies:
 
 1. **IEEE 1044-2009** — the formal anomaly-classification
    standard (canonical for regulated / safety-critical
@@ -27,12 +18,11 @@ This skill catalogues the three load-bearing taxonomies:
 3. **Orthogonal Defect Classification (ODC)** — IBM Research's
    eight-attribute framework for in-process defect classification.
 
-It's a **pure reference**. Consumers:
+Consumers:
 [`bug-report-critic`](../../agents/bug-report-critic.md)
-(rejects unclassified defects),
+(rejects unclassified defects) and
 [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)
-(populates classification fields), and process-improvement
-analyses outside this plugin.
+(populates classification fields).
 
 ## When to use
 
