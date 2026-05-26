@@ -10,22 +10,14 @@ archetype: S1
 
 ## Overview
 
-Per [checkov-home][ch]:
-
 [ch]: https://www.checkov.io/
 
-> "**Checkov** is a policy-as-code platform that 'scans cloud
-> infrastructure configurations to find misconfigurations before
-> they're deployed.'"
-
-Per [checkov-home][ch], supported frameworks:
-
-> Terraform and Terraform plan, CloudFormation, Kubernetes, Helm,
-> ARM Templates, Serverless framework, AWS CDK.
-
-Checkov is the broadest IaC security scanner — covers more
-frameworks than tfsec (Terraform-only) or KICS (similar coverage
-but Checkov has more built-in checks per release).
+Per [checkov-home][ch], supported frameworks: Terraform and
+Terraform plan, CloudFormation, Kubernetes, Helm, ARM Templates,
+Serverless framework, AWS CDK. Checkov is the broadest IaC
+security scanner — covers more frameworks than tfsec
+(Terraform-only) or KICS (similar coverage but Checkov has more
+built-in checks per release).
 
 ## When to use
 
