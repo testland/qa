@@ -16,20 +16,15 @@ keywords:
 
 ## Overview
 
-Workbox is "Production-ready service worker libraries and tooling"
-per [developer.chrome.com/docs/workbox][wb-overview]. It distributes
-as a set of focused packages: `workbox-precaching` for build-time
-manifest injection, `workbox-routing` + `workbox-strategies` for
-runtime caching, `workbox-recipes` for the canonical five-line
-patterns, and `workbox-window` for the page-side registration helper
-per [developer.chrome.com/docs/workbox/modules][wb-modules]. This
-skill tests Workbox-built service workers — distinct from the
+This skill tests Workbox-built service workers — distinct from
 [`sw-cache-strategy-author`](../../../qa-modern-web/skills/sw-cache-strategy-author/SKILL.md)
-skill which *authors* the strategies. Here we assert that an
-already-shipped Workbox SW behaves the way its recipes claim.
-
-The current Workbox release line at time of authoring is **v7.4.1**
-per [github.com/GoogleChrome/workbox][wb-gh] (released May 2026).
+which *authors* the strategies. Here we assert that an
+already-shipped Workbox SW behaves the way its recipes claim, using
+the `workbox-precaching` / `workbox-routing` / `workbox-strategies`
+/ `workbox-recipes` / `workbox-window` packages per
+[developer.chrome.com/docs/workbox/modules][wb-modules]. Pinned
+release line at time of authoring: **v7.4.1** per
+[github.com/GoogleChrome/workbox][wb-gh] (released May 2026).
 
 [wb-overview]: https://developer.chrome.com/docs/workbox
 [wb-modules]: https://developer.chrome.com/docs/workbox/modules
