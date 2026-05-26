@@ -8,17 +8,9 @@ archetype: S1
 
 # gitleaks-scanning
 
-## Overview
-
-Per [github.com/gitleaks/gitleaks][gl-gh]:
-
 [gl-gh]: https://github.com/gitleaks/gitleaks
 
-gitleaks is the de facto OSS secret scanner. Scans git history,
-filesystems, and streams for credentials matching configurable
-regex + entropy patterns.
-
-**Important command-API note (v8.19.0+):** Per [gl-gh][gl-gh],
+**Command-API note (v8.19.0+):** Per [gl-gh][gl-gh],
 "v8.19.0 deprecated `detect` and `protect` commands, though they
 remain available." Current scanning modes:
 
