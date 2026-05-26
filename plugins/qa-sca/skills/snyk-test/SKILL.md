@@ -8,18 +8,9 @@ archetype: S1
 
 # snyk-test
 
-## Overview
-
-Per [github.com/snyk/snyk][sn-gh]:
-
 [sn-gh]: https://github.com/snyk/snyk
 
-Snyk is a commercial multi-mode security scanner. The `snyk test`
-subcommand specifically targets SCA (Software Composition Analysis)
-— scanning declared dependencies in package manifests against the
-Snyk vulnerability database.
-
-Companion subcommands cover adjacent surfaces:
+Per [github.com/snyk/snyk][sn-gh], companion subcommands cover adjacent surfaces:
 
 | Subcommand | Surface |
 |---|---|
