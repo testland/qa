@@ -8,28 +8,12 @@ archetype: S2
 
 # hipaa-test-patterns
 
-## Overview
-
-Per [hhs.gov/hipaa][hipaa-hhs] and NIST SP 800-66 (HIPAA
-implementation guidance):
-
 [hipaa-hhs]: https://www.hhs.gov/hipaa/
 
-HIPAA (Health Insurance Portability and Accountability Act of 1996)
-applies to:
-
-- **Covered Entities**: providers, plans, clearinghouses
-- **Business Associates**: vendors processing PHI on behalf of CEs
-
-The Security Rule (45 CFR Parts 160 + 164 Subparts A + C) requires
-administrative + physical + technical safeguards for ePHI
-(electronic Protected Health Information). Failure carries civil
-penalties ($100–$50,000 per violation, up to $1.5M per year per
-violation type) + criminal penalties for willful neglect.
-
-This is a **reference skill** (S2) — defines the test-pattern
-catalog by Security Rule section. Pair with [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md)
-for §164.312(b) audit log requirements.
+Reference catalog of test patterns by HIPAA Security Rule section
+(45 CFR §164). Pair with [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md)
+for §164.312(b) audit-log requirements. Anchors:
+[hhs.gov/hipaa][hipaa-hhs] and NIST SP 800-66.
 
 ## When to use
 
