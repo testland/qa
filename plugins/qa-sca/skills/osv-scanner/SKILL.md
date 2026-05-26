@@ -8,21 +8,7 @@ archetype: S1
 
 # osv-scanner
 
-## Overview
-
-Per [google.github.io/osv-scanner/usage/][osv-usage]:
-
 [osv-usage]: https://google.github.io/osv-scanner/usage/
-
-OSV-Scanner is Google's OSS scanner for the OSV.dev (Open Source
-Vulnerabilities) database. The scanner detects dependencies via
-lockfile parsers + container manifest detection, then queries
-OSV.dev for matching advisories.
-
-The OSV.dev DB aggregates from multiple sources (GitHub Security
-Advisories, PyPI advisories, RustSec, npm advisories, etc.) into a
-unified schema, giving broader coverage than any single
-ecosystem-specific feed.
 
 ## When to use
 
