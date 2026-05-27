@@ -17,6 +17,10 @@ Tenant-isolation testing for B2B SaaS: row-level security, cross-tenant leak det
 
 ## Rating
 
-All components in this plugin score >=21 on the v2.0 rating framework.
-See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
+All components in this plugin pass the v4.0 quality gate
+(8 dimensions, 0-40 scale, importable bar 28/40). CI enforces total
+>=21/30 with d6 >=1 (v2.0 floor); D7 (eval coverage) and D8 (best-practices
+adherence) are advisory through the shadow window. See
+[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) for the
+rubric.See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
 the repository root for the rubric.

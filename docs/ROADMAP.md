@@ -26,19 +26,22 @@ roadmap of what we want to land next.
 
 ## Current coverage snapshot
 
-As of marketplace v4.0.0 the catalog ships 59 plugins / ~383 components
-across seven groupings: **foundations** (process / environment / data /
-reporting / impact / roles / review), **functional testing** (API / BDD
-/ E2E / mobile / contract / mutation / property-based / 5 per-language
-unit-test plugins), **quality engineering** (data quality / visual
-regression / accessibility / localization / charts / PDF / modern web),
-**security & compliance** (SAST / DAST / SCA / secrets / SBOM /
-compliance), **operations & resilience** (flake triage / bug repro /
-chaos / resilience drills / shift-left/right / load), **AI & specialised**
-(LLM eval / ML models / AI-assisted / notebooks / distributed tracing /
-realtime protocols / search / saga-CQRS / concurrency / DB migrations /
-async jobs / auth flows / notifications), and **tooling** (IaC / CI
-integration / CLI tools / code quality / compatibility / manual testing).
+The catalog ships **77 plugins / 568 components** across seven groupings:
+**foundations** (process / environment / data / reporting / impact /
+roles / review / management / hiring), **functional testing** (API / BDD
+/ E2E / mobile / desktop / embedded / game / contract / mutation /
+property-based / 5 per-language unit-test plugins), **quality engineering**
+(data quality / visual regression / accessibility / localization / charts /
+PDF / modern web / browser extension / PWA), **security & compliance**
+(SAST / DAST / SCA / secrets / SBOM / fuzz / compliance / multi-tenancy /
+test-data privacy), **operations & resilience** (flake triage / bug repro /
+defect management / chaos / resilience drills / shift-left/right / load),
+**AI & specialised** (LLM eval / ML models / AI-assisted / notebooks /
+distributed tracing / realtime protocols / search / saga-CQRS / concurrency
+/ DB migrations / async jobs / auth flows / notifications / cache /
+experimentation / feature flags / GraphQL / gRPC / payment / serverless /
+time-and-timezones), and **tooling** (IaC / CI integration / CLI tools /
+code quality / compatibility / manual testing).
 
 See [`CATALOG.md`](../CATALOG.md) for the authoritative list.
 

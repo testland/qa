@@ -1,7 +1,7 @@
 # Claude Code instructions — testland-qa
 
 This is **testland-qa**, a Pattern B2 multi-plugin Claude Code marketplace.
-58 plugins / ~357 components. Every component is rating-gated before merge.
+77 plugins / 568 components. Every component is rating-gated before merge.
 
 If you're using Claude Code to contribute to this repo, this file tells you
 what conventions to follow.
