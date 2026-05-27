@@ -30,3 +30,6 @@ jobs:
         run: |
           python3 scripts/generate-catalog.py
           git diff --exit-code CATALOG.md
+
+      - name: D8 audit (shadow window — strict after 2026-06-01 / 2026-07-01)
+        run: python3 scripts/d8-audit.py --strict

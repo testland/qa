@@ -79,6 +79,41 @@ description: A skill that still contains DESCRIPTION_PLACEHOLDER inside its body
 DESCRIPTION_PLACEHOLDER
 EOF
 
+# ----- Fixture: description equals slug (Rule 7) -----
+mkdir -p "$FIXTURES/plugins/test-plugin/skills/slug-equals-desc"
+cat > "$FIXTURES/plugins/test-plugin/skills/slug-equals-desc/SKILL.md" <<'EOF'
+---
+name: slug-equals-desc
+description: slug-equals-desc
+---
+Body.
+EOF
+
+# ----- Fixture: vague auto-gen description (Rule 8) -----
+mkdir -p "$FIXTURES/plugins/test-plugin/skills/vague-auto-gen"
+cat > "$FIXTURES/plugins/test-plugin/skills/vague-auto-gen/SKILL.md" <<'EOF'
+---
+name: vague-auto-gen
+description: Use when working with X tasks or workflows.
+---
+Body.
+EOF
+
+# ----- Fixture: invalid JSON in plugin.json (JSON syntax check) -----
+mkdir -p "$FIXTURES/plugins/bad-json-plugin/.claude-plugin"
+cat > "$FIXTURES/plugins/bad-json-plugin/.claude-plugin/plugin.json" <<'EOF'
+{ "name": "bad-json-plugin", "version": "0.1.0",
+EOF
+# Also need a SKILL so the plugin isn't empty (validate iterates components)
+mkdir -p "$FIXTURES/plugins/bad-json-plugin/skills/dummy-skill"
+cat > "$FIXTURES/plugins/bad-json-plugin/skills/dummy-skill/SKILL.md" <<'EOF'
+---
+name: dummy-skill
+description: Filler skill so the bad-json-plugin is non-empty during iteration; the plugin.json file itself is malformed.
+---
+Body.
+EOF
+
 # Run validate.sh against the fixtures and capture output.
 set +e
 OUTPUT=$(bash "$VALIDATE" "$FIXTURES" 2>&1)
@@ -99,6 +134,9 @@ expect_in_output "claude-helper"
 expect_in_output "persona-agent"
 expect_in_output "empty-cmd"
 expect_in_output "has-placeholder"
+expect_in_output "slug-equals-desc"
+expect_in_output "vague-auto-gen"
+expect_in_output "bad-json-plugin"
 
 if [[ "$STATUS" -eq 0 ]]; then
   echo "FAIL: validate.sh exited 0 but fixtures contain known violations"

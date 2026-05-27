@@ -110,6 +110,12 @@ check_yaml_frontmatter() {
   fi
 
   # Rule 6: not "You are..." / "I help..."
+  # Scoped to the frontmatter `description:` field only — the body is allowed
+  # to address the agent in second person (e.g., "You are a senior code
+  # reviewer..."), which is the Anthropic-canonical pattern for A3 adversarial
+  # reviewers. Extending this check to the body would false-positive 11 valid
+  # A3 components in the current corpus. See d8-audit.py's D3_first_person_opener
+  # finding (ADVISORY) for body-level signals that need human triage instead.
   local desc_lower
   desc_lower=$(echo "$desc" | tr '[:upper:]' '[:lower:]')
   if [[ "$desc_lower" == "you are"* ]] || [[ "$desc_lower" == "i help"* ]]; then

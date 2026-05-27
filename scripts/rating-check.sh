@@ -2,13 +2,28 @@
 # scripts/rating-check.sh
 #
 # Reads YAML frontmatter from each component (skill or agent) and enforces:
-#   - rating: present, integer, >= 21 (importable bar on the v2.0 30-point scale)
+#   - rating: present, integer, >= 21 and <= 30
+#             (the v2.0 30-point sub-total of D1+D2+D3+D4+D5+D6, with importable
+#             bar at 21 — i.e., ~70% of v2.0 scale)
 #   - d6:     when present, integer 0-5; d6 == 0 is a hard reject
 #             (citation theater — see docs/REVIEWER_CHECKLIST.md "D6")
 #
-# v2.0: rating range is 0-30 with the importable bar at 21 after D6
-# Terminology Compliance was added. This script reads both fields, fails on
-# missing rating, and fails on d6=0 regardless of total.
+# Framework version note (v2.0 vs v4.0):
+#   The active framework is v4.0 (8 dimensions, 0-40 scale, importable bar
+#   28/40) — see docs/REVIEWER_CHECKLIST.md and the v4.0 framework spec at
+#   elv1s42k-qa-research/qa-rating-framework-2026-05-25.md.
+#
+#   The `rating:` field in component frontmatter intentionally stays on the
+#   v2.0 0-30 sub-total during the v4.0 shadow window. D7 (eval coverage)
+#   and D8 (best-practices adherence) are scored separately:
+#     - D7 evals: presence of plugins/<p>/agents/<a>/evals/evals.md
+#                 (audited by d8-audit.py; hard-gates merges after 2026-06-01)
+#     - D8 hygiene: audited by d8-audit.py; hard-gates merges after 2026-07-01
+#
+#   So rating <= 30 is the correct upper bound here — the v4.0 D7/D8 points
+#   are NOT folded into this field. When the framework decides to merge the
+#   sub-totals into a single 0-40 rating value, this upper bound widens to 40
+#   and the importable bar moves to 28.
 #
 # Usage: bash scripts/rating-check.sh [ROOT]
 #   ROOT defaults to the current directory.
