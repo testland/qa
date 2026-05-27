@@ -10,6 +10,24 @@ import re, os, glob, json
 from collections import defaultdict
 
 ROOT = "."
+
+# Allowlist for D8_windows_paths — components where citing a literal Windows
+# path is the documented canonical install/usage location for a Windows-only
+# tool, NOT a path-hygiene oversight. Each entry must be justified inline.
+# Reviewed: 2026-05-27 against today's audit findings; the 3 paths below are
+# all vendor-canonical Windows install paths in plugins that document
+# Windows-only software. Forward-slash equivalents work on modern Windows but
+# would silently make the documentation diverge from the vendor's own quick
+# starts. Keep the list small and review on each addition.
+D8_WINDOWS_PATHS_ALLOWLIST = {
+    # Appium Windows Driver — Microsoft-documented install location. Per WinAppDriver README.
+    "plugins/qa-desktop/skills/appium-windows-driver/SKILL.md",
+    # WinAppDriver — same vendor canonical install path.
+    "plugins/qa-desktop/skills/winappdriver/SKILL.md",
+    # Unity Hub — Unity's documented Editor install layout on Windows.
+    "plugins/qa-game/skills/unity-test-framework/SKILL.md",
+}
+
 ARCH_HARD_CAP = {
     "S1": 500, "S2": 500, "S3": 600, "S4": 300,
     "A1": 100, "A2": 150, "A3": 350, "A4": 150,
@@ -133,7 +151,10 @@ def audit():
         link_drive = re.compile(r"\]\([^)]*[A-Z]:\\[A-Za-z]")
         link_multi = re.compile(r"\]\([^)]*\\[A-Z][A-Za-z0-9_. -]*\\[A-Z]")
         if win_drive.search(body) or win_multi.search(body) or link_drive.search(body) or link_multi.search(body):
-            findings["D8_windows_paths"].append({"path": p})
+            if p not in D8_WINDOWS_PATHS_ALLOWLIST:
+                findings["D8_windows_paths"].append({"path": p})
+            else:
+                findings["D8_windows_paths_allowlisted"].append({"path": p})
 
         # ADVISORY: first-person body opener (heuristic; known to false-positive
         # on A3 archetypes). The frontmatter `description:` field is the actual
@@ -191,6 +212,7 @@ if __name__ == "__main__":
         ("D2_body_over_hardcap", "CRITICAL"),
         ("D7_missing_evals", d7_sev),
         ("D8_windows_paths", d8_sev),
+        ("D8_windows_paths_allowlisted", "INFO (vendor-canonical Windows install paths — see allowlist in d8-audit.py)"),
         ("D2_body_over_recommended", "IMPORTANT"),
         ("D3_first_person_opener", "ADVISORY (false-positive on Anthropic-canonical A3 reviewers)"),
         ("D8_multi_option_no_default", "ADVISORY"),
