@@ -26,6 +26,12 @@ D8_WINDOWS_PATHS_ALLOWLIST = {
     "plugins/qa-desktop/skills/winappdriver/SKILL.md",
     # Unity Hub — Unity's documented Editor install layout on Windows.
     "plugins/qa-game/skills/unity-test-framework/SKILL.md",
+    # Microsoft-canonical foreground-lock registry path
+    # (HKEY_CURRENT_USER\Control Panel\Desktop\ForegroundLockTimeout) cited
+    # from learn.microsoft.com SetForegroundWindow docs. The registry hive
+    # syntax is the documented form; a forward-slash variant would diverge
+    # from Microsoft's own docs.
+    "plugins/qa-desktop/skills/desktop-test-strategy-reference/SKILL.md",
 }
 
 ARCH_HARD_CAP = {

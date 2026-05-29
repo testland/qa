@@ -71,37 +71,15 @@ fallback driver may be listed only when two drivers are co-equal
 defensible (UWP, Win32, Qt) — never as a tie-breaker the user must
 resolve.
 
-### Step 2b — Elevation constraint (Windows only)
+### Step 2b — Elevation constraint (Windows)
 
-If the SUT requires running elevated (administrator privileges), the
-recommendation must additionally specify that **the driver session
-itself must run elevated**. UAC's secure desktop renders outside the
-standard accessibility tree, so a non-elevated WinAppDriver / FlaUI /
-Appium-Windows session cannot see the elevated UI tree at all — not
-just the consent prompt; the entire elevated window is invisible
-([WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306),
-[issue #2033](https://github.com/microsoft/WinAppDriver/issues/2033)).
+If the SUT requires admin privileges, **the driver session itself must run elevated**. UAC's secure desktop is outside the accessibility tree — non-elevated WinAppDriver / FlaUI / Appium-Windows sees the entire elevated UI as empty, not just the consent prompt ([WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306), [#2033](https://github.com/microsoft/WinAppDriver/issues/2033)).
 
-| Signal | Implication |
-|---|---|
-| `requireAdministrator` in the `.exe.manifest` (resource embedded by `mt.exe`) | The SUT auto-elevates → driver must run elevated, OR the CI VM must disable UAC (`EnableLUA=0`) |
-| `app.manifest` with `<requestedExecutionLevel level="requireAdministrator" />` | Same as above |
-| README or install docs mention "Run as administrator" | Same as above; flag in the recommendation rationale |
+Signals: `<requestedExecutionLevel level="requireAdministrator" />` in `app.manifest`; manifest-embedded `requireAdministrator`; README "Run as administrator." Each adds an elevation flag to the recommendation's "Conditions under which this flips" block.
 
-If the spec or project file signals elevation but no elevated test
-session is declared, the agent emits a warning paragraph in the
-"Conditions under which this flips" block and recommends the user
-either run the test runner elevated or disable UAC in the CI VM.
+### Step 2c — Cross-OS Electron
 
-### Step 2c — Cross-OS Electron variant note
-
-When the recommendation is `electron-playwright` and the project
-targets multiple OSes (the default Electron build is multi-OS), the
-agent notes that **the driver is the same on all three OSes**
-(`_electron.launch()` plus `electronApp.evaluate()` for main-process
-IPC per the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication)),
-but the CI bootstrap differs per OS — see the per-OS blocks in
-[`desktop-test-scaffolder` Step 1b](desktop-test-scaffolder.md).
+`electron-playwright` is the same driver across Windows / macOS / Linux (`_electron.launch()` + `electronApp.evaluate()` per the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication)); the CI bootstrap differs per OS — see [`desktop-test-scaffolder` Step 1b](desktop-test-scaffolder.md).
 
 ## Step 3 — Emit the recommendation
 
@@ -132,54 +110,25 @@ re-run the agent when those conditions appear.
 
 ## Worked example
 
-**Input:** `csproj` file path `C:/repos/InvoiceApp/src/InvoiceApp.csproj`.
-
-The agent runs:
-
-```bash
-grep -E "(UseWPF|UseWindowsForms|TargetPlatformIdentifier)" \
-  C:/repos/InvoiceApp/src/InvoiceApp.csproj
-```
-
-Output:
-
-```
-<UseWPF>true</UseWPF>
-<TargetFramework>net8.0-windows</TargetFramework>
-```
-
-The agent emits:
+**Input:** `C:/repos/InvoiceApp/src/InvoiceApp.csproj`. Agent greps for `UseWPF` / `UseWindowsForms` / `TargetPlatformIdentifier`, finds `<UseWPF>true</UseWPF>` + `net8.0-windows` → emits:
 
 ```markdown
-## Desktop driver recommendation — InvoiceApp
-
-**App type detected:** wpf
-**Signal:** src/InvoiceApp.csproj contains `<UseWPF>true</UseWPF>` + `net8.0-windows` target framework
-
-**Recommended driver:** FlaUI (UIA3)
-
-### Rationale
-- WPF + .NET 8 test stack → FlaUI gives idiomatic C# API and in-process UIA3 calls.
-- Not WinAppDriver: would add an HTTP/JSON layer the team doesn't need for a single-language .NET project.
-
-### Read next
-- [`flaui-tests`](../skills/flaui-tests/SKILL.md) for NuGet packages, ConditionFactory patterns, and CI setup.
-
-### Conditions under which this flips
-- Team adds a non-.NET test client (Java / Python) → switch to `winappdriver`.
-- App ships as both WPF (Windows) AND a macOS variant via .NET MAUI → re-run the agent for the macOS target.
+**App type detected:** wpf · **Recommended driver:** FlaUI (UIA3)
+**Rationale:** WPF + .NET 8 → idiomatic C# API, in-process UIA3; not WinAppDriver because that adds an HTTP/JSON layer a single-language .NET project doesn't need.
+**Read next:** [`flaui-tests`](../skills/flaui-tests/SKILL.md).
+**Conditions under which this flips:** non-.NET test client added → switch to `winappdriver`; macOS variant via MAUI → re-run the agent for macOS.
 ```
 
 ## Refuse-to-proceed rules
 
 The agent **refuses** to:
 
-- Recommend a driver when no project file is provided AND no app type is declared. The signal is too weak — the README + folder names are not enough.
-- Recommend a Windows driver for a project whose `csproj` targets only `net8.0` (no `-windows` suffix) without confirmation that the team is building a Windows variant. Cross-platform .NET targets (Avalonia / MAUI) need the cross-platform row.
-- Recommend more than one primary driver. Two recommendations is no recommendation. Co-equal alternatives go in the "secondary fallback" line, not the primary slot.
-- Recommend selecting both UIA2 and UIA3 in the same FlaUI test process — that is unsupported per the FlaUI README.
-- Reverse engineer the app type from binary artefacts (`.exe` / `.app` bundles). The agent reads source-of-truth project files only.
-- **Recommend a Windows driver for an SUT whose manifest declares `requireAdministrator` without flagging the elevation constraint.** The recommendation must state that the test session itself must run elevated (per [WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306)) or that UAC must be disabled in the CI VM. Silent omission ships a non-runnable recommendation.
+- Recommend a driver when no project file AND no app type are declared. README / folder names are not enough.
+- Recommend a Windows driver for a project whose `csproj` targets only `net8.0` (no `-windows` suffix) without confirmation of a Windows variant. Cross-platform .NET (Avalonia / MAUI) goes through the cross-platform row.
+- Recommend more than one primary driver. Co-equals go in "secondary fallback," not the primary slot.
+- Recommend both UIA2 and UIA3 in the same FlaUI test process — unsupported per the FlaUI README.
+- Reverse-engineer the app type from binary artefacts. Read source-of-truth project files only.
+- Recommend a Windows driver for an SUT with `requireAdministrator` without flagging that the test session itself must run elevated (per [WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306)) or that UAC must be disabled in the CI VM.
 
 ## Anti-patterns
 

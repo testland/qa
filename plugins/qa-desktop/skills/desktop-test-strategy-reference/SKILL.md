@@ -244,107 +244,64 @@ Cross-references for the upstream + downstream slots:
 
 Every reliable desktop test routes UI polls through the driver's
 retry primitive, never raw `Thread.Sleep` / `Task.Delay`. The three
-backends ship distinct mechanisms with different ergonomics —
-matching the right one to the assertion is the difference between
-a stable test and a flaky one.
+backends ship distinct mechanisms.
 
-### macOS — three-tier XCTest waiting hierarchy
-
-Apple ships three asynchronous-wait mechanisms with explicit
-ergonomic differences ([XCUIElement.waitForExistence][appwait1],
+**macOS — three-tier XCTest hierarchy** ([XCUIElement.waitForExistence][appwait1],
 [Asynchronous Tests and Expectations][appwait2]):
 
 [appwait1]: https://developer.apple.com/documentation/xctest/xcuielement/2879412-waitforexistence
 [appwait2]: https://developer.apple.com/documentation/xctest/asynchronous-tests-and-expectations
 
-| Mechanism | Shape | Use when |
-|---|---|---|
-| `waitForExistence(timeout:)` | Boolean, blocking, fastest | Single existence check ("the modal appeared") |
-| `XCTestExpectation` + `waitForExpectations(timeout:)` | Predicate-driven, single condition | Custom predicate ("text equals expected", "count >= 3") |
-| `XCTWaiter` | Multi-expectation, returns a result enum, cancelable | Composing several conditions ("either A appears OR B is gone") |
+| Mechanism | Use when |
+|---|---|
+| `waitForExistence(timeout:)` — boolean, fastest | Single existence check |
+| `XCTestExpectation` + `waitForExpectations(timeout:)` | Custom predicate |
+| `XCTWaiter` — multi-expectation, returns enum | Composing several conditions |
 
-Predicate-based waits do not expose a polling-interval setting —
-implication: prefer `waitForExistence` for simple existence checks,
-fall back to `XCTestExpectation` only when the wait is on a custom
-predicate.
+Predicate-based waits expose no polling-interval setting — prefer
+`waitForExistence` for simple existence checks, escalate only when
+the wait is on a custom predicate.
 
-### Windows — FlaUI `Retry` primitives
-
-FlaUI's [`Retry` API on the wiki][flauiretry] parameterises any UI
+**Windows — FlaUI `Retry` primitives** ([FlaUI Retry wiki][flauiretry]) parameterise any UI
 poll with explicit `timeout` and `interval` `TimeSpan` values.
-**Defaults pulled from `FlaUI.Core.Retry` static config are not
-recommended** — the wiki explicitly leaves the choice to the
-developer.
+Defaults are not documented — pass them explicitly. Typical
+interval: 100 to 200ms (10ms hammers UIA; 1s hides 100ms races).
 
 [flauiretry]: https://github.com/FlaUI/FlaUI/wiki/Retry
 
 | Primitive | Use when |
 |---|---|
-| `Retry.WhileNull(func, timeout, interval)` | Element fetch — keep retrying until non-null |
-| `Retry.WhileFalse(func, timeout, interval)` | Boolean state — keep retrying until true |
-| `Retry.WhileException(func, timeout, interval)` | UI calls that throw transiently during element creation |
+| `Retry.WhileNull(func, timeout, interval)` | Element fetch |
+| `Retry.WhileFalse(func, timeout, interval)` | Boolean state |
+| `Retry.WhileException(func, timeout, interval)` | Transient throws during element creation |
 
-Typical interval: 100 to 200ms. A 10ms interval hammers UIA and
-slows the rest of the test session; a 1s interval hides race
-conditions that occur within 100ms.
-
-### Linux — AT-SPI manual polling
-
-AT-SPI does not ship a built-in retry primitive. The community
-pattern via dogtail / pyatspi is an explicit polling loop with a
-`timeout` and `interval`, mirroring FlaUI's shape:
-
-```python
-def wait_for(predicate, timeout=5.0, interval=0.2):
-    end = time.time() + timeout
-    while time.time() < end:
-        if predicate(): return True
-        time.sleep(interval)
-    return False
-```
-
-The interval rationale is the same as FlaUI: 100 to 250ms balances
-responsiveness against D-Bus traffic on `at-spi2-registryd`.
+**Linux — AT-SPI manual polling.** No built-in retry primitive; the
+dogtail / pyatspi community pattern is an explicit `time.time()`
+polling loop with `timeout` + `interval` (100 to 250ms balances
+responsiveness against `at-spi2-registryd` D-Bus traffic).
 
 ## Concurrency: per-OS parallel-test policy
 
-Parallel desktop UI tests are the dominant request from teams
-scaling beyond a few hundred tests. The constraints vary by OS.
-
-### macOS — Apple-documented opt-in parallelisation
-
-Per [Apple — Running tests serially or in parallel][appleparallel]:
+**macOS** — per [Apple — Running tests serially or in parallel][appleparallel],
+parallelisation is opt-in. The cited page is under Apple's modern
+`documentation/testing/` (Swift Testing) namespace; the same opt-in
+design applies to XCTest test plans, which are configured in Xcode
+(Edit Scheme → Test → Options → Execute in parallel on Simulator).
+Tests sharing mutable state must opt out; performance bundles must
+disable parallelisation (parallel introduces timing noise). On
+macOS the Simulator clones spin per worker — real disk + RAM cost.
 
 [appleparallel]: https://developer.apple.com/documentation/testing/parallelization
 
-The cited page sits under Apple's modern `documentation/testing/`
-namespace — the Swift Testing framework — and documents the
-opt-in trait-based parallelisation pattern. The same opt-in design
-applies to **XCTest test plans**: parallelisation is configured per
-test plan in Xcode (Edit Scheme → Test → Options → Execute in
-parallel on Simulator), not via a per-test attribute. Both APIs
-share the design: parallelisation is opt-in, tests that share
-mutable state must opt out, and performance tests should be
-isolated into their own bundle with parallelisation disabled
-(parallel execution introduces noise into timing-sensitive
-measurements). On macOS the Simulator clones spin per worker, so
-the cost is real disk + RAM per parallel worker.
+**Windows** — UIA is per-session: one AutomationElement tree per
+interactive Windows session. Two workers in the same session race
+for foreground (see below). Scaling: one runner per VM, or one
+RDP / per-user session per worker.
 
-### Windows — one UIA session per Windows user session
-
-UIA is a per-session service — one AutomationElement tree per
-interactive Windows session. Two test workers driving UIA in the
-same session race for foreground (see foreground-lock section
-below). The supported scaling patterns: one runner per VM, or one
-RDP / per-user session per worker on a single Windows host.
-
-### Linux — one AT-SPI registry per session bus
-
-`at-spi2-registryd` is bound to one D-Bus session. Multiple
-processes can connect as clients, but two test workers writing
-events into the same session race for focus. The scaling pattern
-mirrors Windows: one Xvfb + dbus-launch per worker, or one container
-per worker with its own session bus.
+**Linux** — `at-spi2-registryd` is bound to one D-Bus session.
+Workers writing events into the same session race for focus.
+Scaling: one Xvfb + dbus-launch per worker, or one container per
+worker with its own session bus.
 
 ## Platform foreground + elevation hazards
 

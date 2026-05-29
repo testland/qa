@@ -53,10 +53,7 @@ The scaffolder emits four artefacts: project file, fixture, one screen-object st
 ```xml
 <!-- tests/<app>.UiTests/<app>.UiTests.csproj -->
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+  <PropertyGroup><TargetFramework>net8.0-windows</TargetFramework></PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FlaUI.Core" Version="5.0.0" />
     <PackageReference Include="FlaUI.UIA3" Version="5.0.0" />
@@ -69,27 +66,21 @@ The scaffolder emits four artefacts: project file, fixture, one screen-object st
 ```
 
 ```csharp
-// tests/<app>.UiTests/Fixtures/AppFixture.cs
-using FlaUI.Core; using FlaUI.UIA3;
+// Fixtures/AppFixture.cs + Screens/MainScreen.cs (placeholder)
 public class AppFixture : IDisposable {
     public Application App { get; } = Application.Launch(@"<APP_EXECUTABLE_PATH>"); // INPUT NEEDED
     public UIA3Automation Automation { get; } = new UIA3Automation();
     public void Dispose() { Automation.Dispose(); App.Close(); App.Dispose(); }
 }
-```
-
-```csharp
-// tests/<app>.UiTests/Screens/MainScreen.cs (one placeholder screen object)
-public class MainScreen {
+public class MainScreen {                                 // Screen Object pattern, see object-model-patterns §7
+    public MainScreen(Window w) { _window = w; }
     private readonly Window _window;
-    public MainScreen(Window w) => _window = w;
-    // INPUT NEEDED: replace placeholder AutomationIds with real ones from FlaUInspect.
-    public Button SubmitButton => _window.FindFirstDescendant(cf => cf.ByAutomationId("Submit")).AsButton();
+    public Button SubmitButton => _window.FindFirstDescendant(cf => cf.ByAutomationId("Submit")).AsButton(); // INPUT NEEDED
 }
 ```
 
 ```yaml
-# tests/.github/workflows/desktop-tests.yml
+# .github/workflows/desktop-tests.yml — Step 1b bootstrap inserts BEFORE the test run
 jobs:
   ui:
     runs-on: windows-latest
@@ -97,124 +88,78 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: '8.0.x' }
-      # The Windows runner bootstrap (foreground-lock guard + elevation check)
-      # is emitted as separate steps from Step 1b — see the Windows runner block
-      # below. They are inserted here, before the `dotnet test` invocation.
+      # [Step 1b Windows block goes here]
       - run: dotnet test tests/<App>.UiTests --logger "trx;LogFileName=ui.trx"
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: trx-results, path: '**/ui.trx' }
 ```
 
-Per [`flaui-tests`](../skills/flaui-tests/SKILL.md), AutomationId is the locator of first resort. Per [`electron-playwright`](../skills/electron-playwright/SKILL.md), the Electron variant uses `_electron.launch` + `firstWindow()` plus a `@playwright/test` `package.json` instead of a `.csproj`; main-process IPC drivers go through `electronApp.evaluate()` (per the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication)). For native menus, file dialogs, and system tray, scaffold the [`electron-playwright-helpers`](https://www.npmjs.com/package/electron-playwright-helpers) dependency (Playwright's first-party Electron API does not address those surfaces). Per [`xctest-mac-desktop`](../skills/xctest-mac-desktop/SKILL.md) and [`at-spi-linux`](../skills/at-spi-linux/SKILL.md), the macOS / Linux variants swap runner OS and harness accordingly — and emit per-OS bootstrap blocks (see Step 1b below). The Spectron scaffold is no longer the default; emit it only when the user passes `--legacy` (the Electron docs no longer reference Spectron per the [official Automated Testing page](https://www.electronjs.org/docs/latest/tutorial/automated-testing)).
+Per-driver overrides: `electron-playwright` swaps the `.csproj` for `package.json` with `@playwright/test`, drives main-process IPC through `electronApp.evaluate()` per [Playwright's Electron API](https://playwright.dev/docs/api/class-electronapplication), and scaffolds [`electron-playwright-helpers`](https://www.npmjs.com/package/electron-playwright-helpers) for native menus/dialogs. Spectron is **not** the default — emit only behind `--legacy` per the [Electron docs](https://www.electronjs.org/docs/latest/tutorial/automated-testing). `xcuitest` and `at-spi` swap runner OS + harness per [`xctest-mac-desktop`](../skills/xctest-mac-desktop/SKILL.md) and [`at-spi-linux`](../skills/at-spi-linux/SKILL.md).
 
 ## Step 1b — Emit per-OS CI bootstrap
 
-The bare `runs-on:` line above is not enough on any of the three desktop OSes. The scaffolder MUST include the per-OS bootstrap block matching the driver's runner.
+The bare `runs-on:` line is not enough; MUST insert the per-OS bootstrap. Citations + rationale in [`desktop-test-strategy-reference` — Platform foreground + elevation hazards](../skills/desktop-test-strategy-reference/SKILL.md).
 
-### Windows runner (FlaUI, WinAppDriver, Appium-Windows)
+**Windows runner:**
 
 ```yaml
-- name: Disable foreground-lock for the test session
-  shell: pwsh
-  run: |
-    reg add "HKCU\Control Panel\Desktop" /v ForegroundLockTimeout /t REG_DWORD /d 0 /f
-- name: Confirm test session is elevated (UAC secure-desktop reaches no UIA tree)
-  shell: pwsh
-  run: |
-    $isAdmin = ([Security.Principal.WindowsPrincipal] `
-      [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
-      [Security.Principal.WindowsBuiltInRole]::Administrator)
-    if (-not $isAdmin) { Write-Error "Test session not elevated; UAC prompts will hang." }
+- shell: pwsh
+  run: reg add "HKCU\Control Panel\Desktop" /v ForegroundLockTimeout /t REG_DWORD /d 0 /f
+- shell: pwsh
+  run: |  # fail fast if not elevated; UAC secure desktop is unreachable
+    if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { throw "Session not elevated" }
 ```
 
-Source: [Microsoft SetForegroundWindow](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow), [WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306).
-
-### macOS runner (XCUITest, Electron on macOS)
+**macOS runner:**
 
 ```yaml
-- name: Reset TCC-gated permissions to a known state
-  run: |
-    # TCC consent prompts cannot be reliably driven by XCUITest.
-    # Reset to a known state at the start of each CI run.
-    BUNDLE_ID="com.example.MyApp"
-    tccutil reset Automation     "$BUNDLE_ID" || true
-    tccutil reset Accessibility  "$BUNDLE_ID" || true
-    tccutil reset ScreenCapture  "$BUNDLE_ID" || true
-- name: Confirm parallelization opt-out for shared-state suites
-  run: |
-    # Per Apple, parallel UI tests require shared-state elimination.
-    # Performance bundles MUST disable parallelization.
-    # https://developer.apple.com/documentation/testing/parallelization
-    echo "Ensure the test plan disables parallelization unless the bundle is verified shared-state-free."
+- run: |
+    for s in Automation Accessibility ScreenCapture; do tccutil reset "$s" "$BUNDLE_ID" || true; done
 ```
 
-Source: [Jamf — Resetting TCC Prompts](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html), [Apple — Parallelization](https://developer.apple.com/documentation/testing/parallelization).
-
-### Linux runner (AT-SPI, Electron on Linux)
+**Linux runner:**
 
 ```yaml
-- name: Enable AT-SPI session-wide BEFORE launching the AUT
-  run: |
-    # AT-SPI is off by default on modern GNOME.
-    # gsettings change only takes effect for NEWLY-spawned processes —
-    # the AUT must be launched AFTER this step.
-    sudo apt-get update
+- run: |
     sudo apt-get install -y at-spi2-core dbus-x11 xvfb python3-pyatspi
-    # Start a session bus + a virtual display
     export DISPLAY=:99
     Xvfb :99 -screen 0 1920x1080x24 &
     eval $(dbus-launch --sh-syntax)
-    gsettings set org.gnome.desktop.interface toolkit-accessibility true
-- name: (Debug runs only) install Accerciser for tree inspection
-  if: ${{ runner.debug == '1' }}
-  run: sudo apt-get install -y accerciser
+    gsettings set org.gnome.desktop.interface toolkit-accessibility true   # MUST run before AUT
 ```
-
-Source: [dogtail on GitLab](https://gitlab.com/dogtail/dogtail), [Ubuntu DogtailTutorial](https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial).
 
 ## Step 3 — Emit the hand-off README
 
-```markdown
-# <App>.UiTests — Scaffold (generated by desktop-test-scaffolder, driver=<driver>)
-## Required next steps
-1. Replace every `INPUT NEEDED:` marker with the real path / AutomationId / title.
-2. Run the scaffold once; the placeholder smoke test will fail until selectors are confirmed.
-3. Pair with [`desktop-test-author`](../../../plugins/qa-desktop/agents/desktop-test-author.md) for per-flow tests.
-4. Wire the CI workflow into `.github/workflows/`.
-```
+Hand-off README lists the required next steps: replace `INPUT NEEDED:` markers, run the scaffold (placeholder smoke fails until selectors are confirmed), pair with [`desktop-test-author`](desktop-test-author.md) for per-flow tests, wire the workflow into `.github/workflows/`.
 
 ## Refuse-to-proceed rules
 
 The agent refuses to:
 
 - Scaffold without a `Chosen driver`. Halt; suggest [`desktop-driver-selector`](desktop-driver-selector.md).
-- Invent AutomationIds / element names. Every placeholder carries `INPUT NEEDED:`; never guess from the app name.
-- Emit a Linux CI runner for a FlaUI / WinAppDriver scaffold. UIA is Windows-only per [`desktop-test-strategy-reference`](../skills/desktop-test-strategy-reference/SKILL.md).
-- Generate a "smoke passes" assertion. Every emitted test has `INPUT NEEDED` markers that fail until resolved — refuse to ship a false-passing scaffold.
-- Overwrite an existing test project. If `tests/<app>.UiTests/` exists, halt and ask whether to append or refuse.
-- **Emit a Windows scaffold without the elevation + foreground-lock bootstrap block from Step 1b.** UAC's secure desktop is unreachable from non-elevated UIA per [WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306).
-- **Emit a macOS scaffold without the `tccutil reset` setUp recipe in the per-test bootstrap.** TCC prompts cannot be reliably driven by XCUITest per [Jamf — Resetting TCC Prompts](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html).
-- **Emit a Linux scaffold without the `gsettings toolkit-accessibility` and `dbus-launch` bootstrap block.** AT-SPI is off by default on modern GNOME; the gsetting only affects newly-spawned processes per the [Ubuntu DogtailTutorial](https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial).
-- **Emit a Spectron-based Electron scaffold as the default.** The [Electron Automated Testing page](https://www.electronjs.org/docs/latest/tutorial/automated-testing) no longer references Spectron. Emit Spectron only when the user passes an explicit `--legacy` flag.
+- Invent AutomationIds. Every placeholder carries `INPUT NEEDED:`.
+- Emit a Linux runner for FlaUI / WinAppDriver. UIA is Windows-only.
+- Generate a "smoke passes" assertion. Placeholders must fail until selectors are confirmed.
+- Overwrite an existing test project. Halt and ask whether to append.
+- Emit a Windows scaffold without the Step 1b foreground-lock + elevation block — UAC secure desktop unreachable per [WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306).
+- Emit a macOS scaffold without the Step 1b `tccutil reset` recipe — TCC prompts unreachable from XCUITest per [Jamf TCC](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html).
+- Emit a Linux scaffold without the Step 1b gsettings + dbus-launch bootstrap — AT-SPI is off by default per [Ubuntu DogtailTutorial](https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial).
+- Emit a Spectron Electron scaffold as the default — the [Electron docs](https://www.electronjs.org/docs/latest/tutorial/automated-testing) no longer reference it. Only behind an explicit `--legacy` flag.
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Hard-coding the executable path from a guess | Path differs per developer + CI runner | Emit `<APP_EXECUTABLE_PATH>` placeholder with `INPUT NEEDED` marker |
-| Skipping the screen-object class | Tests degenerate to inline locator chains | Always emit one placeholder screen object as the pattern seed |
-| Emitting `Assert.True(true)` smoke pass | False-passing scaffold misleads reviewers | Placeholder asserts use real shapes (`HaveTitle`, `Invoke`) with `INPUT NEEDED` markers |
-| `runs-on: ubuntu-latest` for a Windows-only driver | CI fails on first push | Per-driver CI-runner table (Step 1) |
-| Bundling every driver's deps into one scaffold | NuGet / npm bloat | One scaffold per driver; emit only the matching project file |
+| Anti-pattern | Why it fails / fix |
+|---|---|
+| Hard-coding the executable path | Path differs per developer + CI; emit `<APP_EXECUTABLE_PATH>` with `INPUT NEEDED` |
+| Skipping the screen-object class | Tests degenerate to inline locator chains; always emit one placeholder Screen Object |
+| `Assert.True(true)` smoke pass | False-passing scaffold misleads reviewers; placeholder asserts must fail until selectors are confirmed |
+| Wrong OS in `runs-on:` | CI fails on first push; use the per-driver row in Step 1 |
+| Bundling every driver's deps into one scaffold | NuGet / npm bloat; emit only the matching project file |
 
 ## Worked example
 
-**Input:** `app_path=C:/repos/InvoiceApp/bin/Release/net8.0-windows/InvoiceApp.exe`, `driver=flaui`, `framework=xunit`.
-
-Emits: `InvoiceApp.UiTests.csproj` (FlaUI + xUnit + Xunit.StaFact refs), `Fixtures/AppFixture.cs` (with `<APP_EXECUTABLE_PATH>` placeholder), `Screens/MainScreen.cs` (one stub with `INPUT NEEDED` AutomationId), `Tests/SmokeTests.cs` (one `[StaFact]` placeholder asserting on the screen-object stub), `.github/workflows/desktop-tests.yml` (`windows-latest` runner), `README.md` (hand-off block).
-
-The scaffold compiles. The smoke test fails — intentionally — until the user replaces the three `INPUT NEEDED` markers. Hand off to [`desktop-test-author`](desktop-test-author.md) for the first real per-flow test.
+`app_path=C:/repos/InvoiceApp/bin/Release/net8.0-windows/InvoiceApp.exe`, `driver=flaui`, `framework=xunit` → emits `InvoiceApp.UiTests.csproj` + `Fixtures/AppFixture.cs` + `Screens/MainScreen.cs` + `Tests/SmokeTests.cs` (one `[StaFact]` placeholder) + `desktop-tests.yml` (windows-latest + Step 1b bootstrap) + `README.md`. Smoke test fails until the three `INPUT NEEDED` markers are resolved. Hand off to [`desktop-test-author`](desktop-test-author.md).
 
 ## Hand-off targets
 

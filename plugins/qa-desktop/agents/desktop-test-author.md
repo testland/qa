@@ -22,11 +22,9 @@ d6: 4
 d7: 4
 ---
 
-A per-flow test-authoring agent that emits one new desktop test file plus any necessary screen-object additions — never modifies existing tests, never invents AutomationIds the spec did not name.
-
 ## When invoked
 
-Inputs (the agent refuses on missing input):
+Inputs (refuses on missing input; ambiguous spec or missing driver → see Refuse-to-proceed):
 
 | Input | Source | Required |
 |---|---|---|
@@ -34,10 +32,6 @@ Inputs (the agent refuses on missing input):
 | **Target app** | Path to the app + the app type (WPF / WinForms / UWP / Win32 / Electron / Qt / macOS / Linux) | yes |
 | **Chosen driver** | One of `flaui` / `winappdriver` / `appium-windows` / `electron-playwright` / `qt-test` / `xcuitest` / `at-spi` | yes (or run [`desktop-driver-selector`](desktop-driver-selector.md) first) |
 | **Chosen test framework** (.NET drivers only) | `xunit` / `nunit` / `mstest` | yes for .NET; agent reads the existing test project's `.csproj` if not specified |
-
-If the spec is ambiguous about the app type or the driver is not specified, the agent refuses to author — see Refuse-to-proceed.
-
-## Procedure
 
 ### Step 1 — Identify the user flow and verify driver alignment
 
@@ -51,47 +45,31 @@ If the spec implies a UI surface the chosen driver can't reach (e.g., spec menti
 
 ### Step 2 — Map the flow to driver API + locator strategy
 
-Per the locator-precedence table from [`desktop-test-strategy-reference`](../skills/desktop-test-strategy-reference/SKILL.md):
+Per [`desktop-test-strategy-reference` locator-strategy section](../skills/desktop-test-strategy-reference/SKILL.md):
 
-| Locator (most stable first) | When to use | Driver API (FlaUI example) |
-|---|---|---|
-| **AutomationId** | Always preferred — set by the developer, **locale-independent** | `cf.ByAutomationId("LoginButton")` |
-| **ControlType + property combo** | When no AutomationId is published | `cf.ByControlType(ControlType.Button).And(cf.ByName("Login"))` |
-| **Name** | Last resort. **Name IS the localised label** — every Name-based locator is a latent failure the first time the app builds against a non-English locale | `cf.ByName("Login")` |
-| **Visible text / image content** | Only for canvas-rendered surfaces (DirectComposition, Qt Quick) | image-matching fallback |
+| Locator (most stable first) | When to use |
+|---|---|
+| **AutomationId** (Win) / **accessibilityIdentifier** (mac) / object **`name`** (Linux) | Always preferred — locale-independent |
+| ControlType + property combo | When no AutomationId is published |
+| **`Name`** — **the localised label** | Last resort; every Name-based locator is a latent failure on the first non-English build |
+| Visible text / image content | Canvas-rendered surfaces only (DirectComposition, Qt Quick) |
 
-Per-OS equivalents of AutomationId:
-
-| OS / driver | Locator field | Source on the AUT |
-|---|---|---|
-| Windows (UIA / FlaUI / WinAppDriver / Appium-Windows) | `AutomationId` | Developer attribute on XAML / WinForms / WPF widget |
-| macOS (XCUITest) | `accessibilityIdentifier` | Developer string on `NSView` / SwiftUI `.accessibilityIdentifier(...)` |
-| Linux (AT-SPI / dogtail / pyatspi) | Object `name` field | GTK `widget.set_property('name', ...)`, Qt `QObject::setObjectName(...)` |
-
-The agent NEVER fabricates an AutomationId the spec did not name. If the spec says "Click the Login button" without naming the AutomationId, the agent emits `cf.ByAutomationId("LoginButton") /* CONFIRM: AutomationId not stated in spec; verify with FlaUInspect */` so the user knows the choice is provisional. The verification tool per OS: **FlaUInspect** on Windows, **Xcode → Open Developer Tool → Accessibility Inspector** on macOS, **Accerciser** on Linux.
+The agent NEVER fabricates an AutomationId the spec did not name. If the spec says "Click the Login button" without naming the AutomationId, emit `cf.ByAutomationId("LoginButton") /* CONFIRM: not in spec; verify with FlaUInspect / Accessibility Inspector / Accerciser */`. The verification tool per OS: **FlaUInspect** (Win), **Xcode → Open Developer Tool → Accessibility Inspector** (mac), **Accerciser** (Linux).
 
 ### Step 2b — Pick the wait primitive per OS
 
-Per [`desktop-test-strategy-reference` — Asynchronous waits per OS](../skills/desktop-test-strategy-reference/SKILL.md):
+Routes through the per-OS section in [`desktop-test-strategy-reference` — Asynchronous waits per OS](../skills/desktop-test-strategy-reference/SKILL.md). Summary:
 
-| OS / driver | Default wait | When to escalate |
-|---|---|---|
-| Windows (FlaUI) | `Retry.WhileNull(() => find(...), TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(150))` — **always pass explicit `timeout` + `interval`** (defaults are unset) | When the wait is on a boolean property: use `Retry.WhileFalse` with same explicit interval |
-| macOS (XCUITest) | `element.waitForExistence(timeout: 5)` — simple existence | When the wait is on a custom predicate: escalate to `XCTestExpectation` + `waitForExpectations`. When composing several conditions: escalate to `XCTWaiter` |
-| Linux (AT-SPI) | `wait_for(predicate, timeout=5.0, interval=0.2)` helper (no built-in retry primitive in AT-SPI itself) | When AT-SPI calls throw transiently during element creation: wrap in try/except inside the predicate |
-| Electron renderer (Playwright `_electron`) | `await expect(locator).toBeVisible()` (Playwright auto-waits) | When the wait is on the main process: `electronApp.evaluate(...)` polled via `Retry`-equivalent |
+- **FlaUI:** `Retry.WhileNull(fn, TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(150))` — always pass `timeout` AND `interval` explicitly; defaults are unset.
+- **XCTest:** `element.waitForExistence(timeout: 5)` for simple existence; escalate to `XCTestExpectation` for custom predicate, `XCTWaiter` for composed conditions.
+- **AT-SPI:** explicit `wait_for(predicate, timeout=5.0, interval=0.2)` helper (no built-in retry primitive).
+- **Playwright `_electron`:** `await expect(locator).toBeVisible()` auto-waits; `electronApp.evaluate(...)` for main-process polls.
 
-Never emit `Thread.Sleep` / `Task.Delay` / `time.sleep` / `sleep N` between actions. Every wait routes through the driver's retry primitive with **explicit timeout AND interval**.
+Never emit `Thread.Sleep` / `Task.Delay` / `time.sleep` between actions.
 
 ### Step 3 — Identify the assertion target
 
-Per [`xunit-tests`](../../../qa-unit-tests-net/skills/xunit-tests/SKILL.md) / [`nunit-tests`](../../../qa-unit-tests-net/skills/nunit-tests/SKILL.md) / [`mstest-tests`](../../../qa-unit-tests-net/skills/mstest-tests/SKILL.md): assert on observable state, not on internal flags. Acceptable shapes:
-
-- Window title change after a navigation: `Assert.Equal("Invoices", window.Title)`.
-- Element presence: `Assert.NotNull(window.FindFirstDescendant(cf => cf.ByAutomationId("WelcomeBanner")))`.
-- Element text: `Assert.Equal("3 items", listBox.Items[0].Name)`.
-
-Refuse to emit `Assert.True(true)` smoke asserts — they pass even when the flow is broken.
+Per [`xunit-tests`](../../../qa-unit-tests-net/skills/xunit-tests/SKILL.md) / [`nunit-tests`](../../../qa-unit-tests-net/skills/nunit-tests/SKILL.md) / [`mstest-tests`](../../../qa-unit-tests-net/skills/mstest-tests/SKILL.md): assert on observable state, not on internal flags. Acceptable shapes: window title change (`Assert.Equal("Invoices", window.Title)`), element presence (`Assert.NotNull(window.FindFirstDescendant(...))`), element text. Refuse `Assert.True(true)` smoke asserts.
 
 ### Step 4 — Emit ONE test file
 
@@ -118,61 +96,16 @@ The agent adds new screen-object members to existing screen-object classes only 
 
 ### Step 4a — Emit OS-specific bootstrap (setUp / teardown)
 
-The author emits the test body PLUS the per-OS bootstrap needed for the test to run reliably in CI. Skip this block only if the test project already has the bootstrap wired (verify by reading the existing fixture / setup file).
+The author emits the test body PLUS the per-OS bootstrap needed for reliable CI. Skip this block only if the existing fixture / setup file already wires it. The canonical commands and their citations live in [`desktop-test-strategy-reference` — Platform foreground + elevation hazards](../skills/desktop-test-strategy-reference/SKILL.md).
 
-**Windows (FlaUI, WinAppDriver, Appium-Windows):**
+| OS | Per-test setUp emits | Reason |
+|---|---|---|
+| Windows | `app.Focus()` before any Act; declare elevation if SUT needs admin | Foreground-lock + UAC secure desktop |
+| macOS | `tccutil reset Automation \| Accessibility \| ScreenCapture <bundle.id>` in `setUpWithError` then `XCUIApplication().launch()` | TCC consent dialog is unreachable |
+| Linux | `gsettings set org.gnome.desktop.interface toolkit-accessibility true` in a session-scope fixture **before** the AUT launches | AT-SPI is off by default; gsetting only affects newly-spawned processes |
+| Electron | `_electron.launch({ args: ['dist/main.js'] })` + `electronApp.evaluate(...)` for main-process IPC | Playwright Electron API |
 
-```csharp
-// In AppFixture or per-test setUp:
-_fx.App.GetMainWindow(_fx.Automation).Focus();   // explicit activate before any Act
-// If SUT requires elevation: ensure the entire test session is elevated
-// (WinAppDriver as admin); UAC consent prompt is unreachable per
-// `desktop-test-strategy-reference` foreground/elevation section.
-```
-
-**macOS (XCUITest):**
-
-```swift
-override func setUpWithError() throws {
-    // Reset TCC-gated permissions to a known state before each test.
-    // The TCC consent dialog cannot be reliably driven by XCUITest.
-    let bundleId = "com.example.MyApp"
-    _ = Process.run("/usr/bin/tccutil", arguments: ["reset", "Automation", bundleId])
-    _ = Process.run("/usr/bin/tccutil", arguments: ["reset", "Accessibility", bundleId])
-    let app = XCUIApplication()
-    app.launch()
-}
-```
-
-**Linux (dogtail / pyatspi):**
-
-```python
-@pytest.fixture(scope="session", autouse=True)
-def at_spi_enabled():
-    # AT-SPI is off by default on modern GNOME; enable session-wide
-    # BEFORE the AUT is launched.
-    subprocess.run([
-        "gsettings", "set", "org.gnome.desktop.interface",
-        "toolkit-accessibility", "true"
-    ], check=True)
-    # AUT must be launched AFTER this call; existing processes do not
-    # pick up the gsetting change.
-```
-
-**Electron (Playwright `_electron`):**
-
-```ts
-import { _electron as electron } from 'playwright';
-let app: ElectronApplication;
-test.beforeEach(async () => {
-  app = await electron.launch({ args: ['dist/main.js'] });
-  // Main-process IPC drivers go through electronApp.evaluate():
-  // await app.evaluate(({ ipcMain }) => { /* runs in main */ });
-});
-test.afterEach(async () => { await app.close(); });
-```
-
-Recommend the `electron-playwright-helpers` package when the test needs to interact with native menus, file dialogs, or system tray — Playwright's first-party Electron API does not address those.
+For native menus, file dialogs, and system tray, recommend the [`electron-playwright-helpers`](https://www.npmjs.com/package/electron-playwright-helpers) package (Playwright's first-party Electron API does not address those surfaces).
 
 ### Step 5 — Emit the change summary
 
@@ -200,24 +133,22 @@ The agent **refuses** to:
 - Invent assertion targets the spec did not state. If the spec says "user logs in" with no observable post-condition, halt and ask for the expected state.
 - Emit `Assert.True(true)` / `expect(true).toBe(true)` smoke asserts.
 - Author more than one test method per invocation. One spec → one test. Multiple specs → multiple invocations.
-- **Author a test whose Act requires interacting with a UAC consent prompt (Windows) or a TCC privacy prompt (macOS) without an elevated session / pre-granted PPPC profile declared up front.** UAC's secure desktop is outside UIA (per [WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306)); TCC prompts cannot be reliably driven by XCUITest (per [Jamf — Resetting TCC Prompts](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html)). Halt and ask for the elevation strategy.
-- **Emit a wait that does not pass explicit `timeout` AND `interval`** (FlaUI `Retry.WhileNull` / `Retry.WhileFalse`) or that uses `Thread.Sleep` / `Task.Delay` / `time.sleep` between actions. Defaults are not documented and waits without explicit interval are a smell per [FlaUI Retry wiki](https://github.com/FlaUI/FlaUI/wiki/Retry).
+- Author a test whose Act requires UAC (Win) / TCC (mac) consent interaction without an elevated session / PPPC profile declared. UAC secure desktop is unreachable ([WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306)); TCC prompts are out-of-process ([Jamf TCC](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html)). Halt and ask for the elevation strategy.
+- Emit a wait without explicit `timeout` AND `interval` (`Retry.WhileNull` / `WhileFalse` defaults are unset per [FlaUI Retry wiki](https://github.com/FlaUI/FlaUI/wiki/Retry)) or any `Thread.Sleep` / `time.sleep` between actions.
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Inline locator chains inside the test body | Locator drift forces multi-file edits; screen objects scale | Always add locators to a screen-object class (Screen Object pattern, [`object-model-patterns` §7](../../../qa-test-review/skills/object-model-patterns/SKILL.md)) |
-| Fabricating an AutomationId from a button's visible text | First localisation rebuild silently breaks the test — `Name` IS the localised label | Mark provisional AutomationIds with `CONFIRM:` and tell the user to verify via FlaUInspect (Win) / Accessibility Inspector (mac) / Accerciser (Linux) |
-| Asserting on internal flags (`Assert.True(viewmodel.IsLoggedIn)`) | Tests pass when the UI is broken — assertion is on private state | Assert on observable UI state (window title, element presence, label text) |
-| Using `Thread.Sleep` / `Task.Delay` / `time.sleep` between actions | Flaky on slow CI; balloons test runtime; hides race conditions | Use the per-OS retry primitive from Step 2b with explicit `timeout` AND `interval` |
-| Calling `Retry.WhileNull` / `Retry.WhileFalse` without an explicit `interval` argument | Defaults are unset per [FlaUI Retry wiki](https://github.com/FlaUI/FlaUI/wiki/Retry); intervals vary by FlaUI version | Always pass `TimeSpan.FromMilliseconds(100-200)` as the interval |
-| Adding multiple test methods in one invocation | Conflates failure modes; harder to bisect | One spec, one test method; re-invoke per spec |
-| Reusing one mega-test across multiple flows | Same conflation; CI tells you the file failed, not which flow | One `[Fact]` per flow |
-| Skipping `app.Activate()` / `app.activate()` before an Act that depends on focus (Windows / macOS) | Foreground-lock per [Microsoft SetForegroundWindow](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow) refuses the focus transfer; the click hits the previous window | Explicit activate in the Arrange phase; on CI Windows runners also set `ForegroundLockTimeout = 0` in the registry |
-| Scripting the UAC consent prompt with `SendKeys` Alt+Y / Alt+N | UAC renders on the secure desktop — outside the accessibility tree per [WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306) | Run the test session elevated; never script the consent button |
-| Scripting the TCC privacy prompt on macOS via XCUITest | TCC prompts render out of the AUT process and cannot be reliably driven | `tccutil reset <service> <bundle.id>` in setUp; or pre-grant via PPPC profile |
-| Asserting on a locator with `Name` only in a single-locale CI | The first non-English build silently breaks every test | Use `accessibilityIdentifier` / `AutomationId` / object `name`; if the AUT has none, file a developer issue before authoring the test |
+| Anti-pattern | Why it fails / fix |
+|---|---|
+| Inline locator chains in the test body | Use a Screen Object class ([`object-model-patterns` §7](../../../qa-test-review/skills/object-model-patterns/SKILL.md)) |
+| Fabricating an AutomationId from visible text | `Name` IS the localised label — first non-English build breaks. Mark provisional IDs with `CONFIRM:` and verify via FlaUInspect / Accessibility Inspector / Accerciser |
+| Asserting on internal flags (`Assert.True(viewmodel.IsLoggedIn)`) | Assert on observable UI state (window title, element presence, label text) |
+| `Thread.Sleep` / `Task.Delay` / `time.sleep` between actions | Use the per-OS retry primitive from Step 2b with explicit `timeout` AND `interval` |
+| `Retry.WhileNull` / `WhileFalse` without explicit `interval` | Defaults are unset per [FlaUI Retry wiki](https://github.com/FlaUI/FlaUI/wiki/Retry); pass `TimeSpan.FromMilliseconds(100-200)` |
+| Multiple test methods per invocation; mega-tests | One spec → one `[Fact]`; re-invoke per spec |
+| Skipping `app.Activate()` before focus-dependent Act | Foreground-lock per [SetForegroundWindow](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow) refuses the focus; explicit activate + set `ForegroundLockTimeout=0` in CI |
+| Scripting UAC (Alt+Y) or TCC consent prompts | Secure desktop / out-of-process — unreachable per [WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306). Run elevated / `tccutil reset` in setUp instead |
+| Single-locale `Name`-only locators | Use `accessibilityIdentifier` / `AutomationId` / object `name`; if AUT has none, file a developer issue before authoring |
 
 ## Examples
 
