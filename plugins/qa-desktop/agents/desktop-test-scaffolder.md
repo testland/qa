@@ -97,13 +97,81 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: '8.0.x' }
+      # The Windows runner bootstrap (foreground-lock guard + elevation check)
+      # is emitted as separate steps from Step 1b — see the Windows runner block
+      # below. They are inserted here, before the `dotnet test` invocation.
       - run: dotnet test tests/<App>.UiTests --logger "trx;LogFileName=ui.trx"
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: trx-results, path: '**/ui.trx' }
 ```
 
-Per [`flaui-tests`](../skills/flaui-tests/SKILL.md), AutomationId is the locator of first resort. Per [`electron-playwright`](../skills/electron-playwright/SKILL.md), the Electron variant uses `_electron.launch` + `firstWindow()` plus a `@playwright/test` `package.json` instead of a `.csproj`. Per [`xctest-mac-desktop`](../skills/xctest-mac-desktop/SKILL.md) and [`at-spi-linux`](../skills/at-spi-linux/SKILL.md), the macOS / Linux variants swap runner OS and harness accordingly.
+Per [`flaui-tests`](../skills/flaui-tests/SKILL.md), AutomationId is the locator of first resort. Per [`electron-playwright`](../skills/electron-playwright/SKILL.md), the Electron variant uses `_electron.launch` + `firstWindow()` plus a `@playwright/test` `package.json` instead of a `.csproj`; main-process IPC drivers go through `electronApp.evaluate()` (per the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication)). For native menus, file dialogs, and system tray, scaffold the [`electron-playwright-helpers`](https://www.npmjs.com/package/electron-playwright-helpers) dependency (Playwright's first-party Electron API does not address those surfaces). Per [`xctest-mac-desktop`](../skills/xctest-mac-desktop/SKILL.md) and [`at-spi-linux`](../skills/at-spi-linux/SKILL.md), the macOS / Linux variants swap runner OS and harness accordingly — and emit per-OS bootstrap blocks (see Step 1b below). The Spectron scaffold is no longer the default; emit it only when the user passes `--legacy` (the Electron docs no longer reference Spectron per the [official Automated Testing page](https://www.electronjs.org/docs/latest/tutorial/automated-testing)).
+
+## Step 1b — Emit per-OS CI bootstrap
+
+The bare `runs-on:` line above is not enough on any of the three desktop OSes. The scaffolder MUST include the per-OS bootstrap block matching the driver's runner.
+
+### Windows runner (FlaUI, WinAppDriver, Appium-Windows)
+
+```yaml
+- name: Disable foreground-lock for the test session
+  shell: pwsh
+  run: |
+    reg add "HKCU\Control Panel\Desktop" /v ForegroundLockTimeout /t REG_DWORD /d 0 /f
+- name: Confirm test session is elevated (UAC secure-desktop reaches no UIA tree)
+  shell: pwsh
+  run: |
+    $isAdmin = ([Security.Principal.WindowsPrincipal] `
+      [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
+      [Security.Principal.WindowsBuiltInRole]::Administrator)
+    if (-not $isAdmin) { Write-Error "Test session not elevated; UAC prompts will hang." }
+```
+
+Source: [Microsoft SetForegroundWindow](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow), [WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306).
+
+### macOS runner (XCUITest, Electron on macOS)
+
+```yaml
+- name: Reset TCC-gated permissions to a known state
+  run: |
+    # TCC consent prompts cannot be reliably driven by XCUITest.
+    # Reset to a known state at the start of each CI run.
+    BUNDLE_ID="com.example.MyApp"
+    tccutil reset Automation     "$BUNDLE_ID" || true
+    tccutil reset Accessibility  "$BUNDLE_ID" || true
+    tccutil reset ScreenCapture  "$BUNDLE_ID" || true
+- name: Confirm parallelization opt-out for shared-state suites
+  run: |
+    # Per Apple, parallel UI tests require shared-state elimination.
+    # Performance bundles MUST disable parallelization.
+    # https://developer.apple.com/documentation/testing/parallelization
+    echo "Ensure the test plan disables parallelization unless the bundle is verified shared-state-free."
+```
+
+Source: [Jamf — Resetting TCC Prompts](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html), [Apple — Parallelization](https://developer.apple.com/documentation/testing/parallelization).
+
+### Linux runner (AT-SPI, Electron on Linux)
+
+```yaml
+- name: Enable AT-SPI session-wide BEFORE launching the AUT
+  run: |
+    # AT-SPI is off by default on modern GNOME.
+    # gsettings change only takes effect for NEWLY-spawned processes —
+    # the AUT must be launched AFTER this step.
+    sudo apt-get update
+    sudo apt-get install -y at-spi2-core dbus-x11 xvfb python3-pyatspi
+    # Start a session bus + a virtual display
+    export DISPLAY=:99
+    Xvfb :99 -screen 0 1920x1080x24 &
+    eval $(dbus-launch --sh-syntax)
+    gsettings set org.gnome.desktop.interface toolkit-accessibility true
+- name: (Debug runs only) install Accerciser for tree inspection
+  if: ${{ runner.debug == '1' }}
+  run: sudo apt-get install -y accerciser
+```
+
+Source: [dogtail on GitLab](https://gitlab.com/dogtail/dogtail), [Ubuntu DogtailTutorial](https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial).
 
 ## Step 3 — Emit the hand-off README
 
@@ -125,6 +193,10 @@ The agent refuses to:
 - Emit a Linux CI runner for a FlaUI / WinAppDriver scaffold. UIA is Windows-only per [`desktop-test-strategy-reference`](../skills/desktop-test-strategy-reference/SKILL.md).
 - Generate a "smoke passes" assertion. Every emitted test has `INPUT NEEDED` markers that fail until resolved — refuse to ship a false-passing scaffold.
 - Overwrite an existing test project. If `tests/<app>.UiTests/` exists, halt and ask whether to append or refuse.
+- **Emit a Windows scaffold without the elevation + foreground-lock bootstrap block from Step 1b.** UAC's secure desktop is unreachable from non-elevated UIA per [WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306).
+- **Emit a macOS scaffold without the `tccutil reset` setUp recipe in the per-test bootstrap.** TCC prompts cannot be reliably driven by XCUITest per [Jamf — Resetting TCC Prompts](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html).
+- **Emit a Linux scaffold without the `gsettings toolkit-accessibility` and `dbus-launch` bootstrap block.** AT-SPI is off by default on modern GNOME; the gsetting only affects newly-spawned processes per the [Ubuntu DogtailTutorial](https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial).
+- **Emit a Spectron-based Electron scaffold as the default.** The [Electron Automated Testing page](https://www.electronjs.org/docs/latest/tutorial/automated-testing) no longer references Spectron. Emit Spectron only when the user passes an explicit `--legacy` flag.
 
 ## Anti-patterns
 

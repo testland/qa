@@ -1,6 +1,6 @@
 ---
 name: object-model-patterns
-description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks — Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, and Repository — each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework S1 skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` (A3) and `playwright-codegen-reviewer` (A3) as the architecture-tier reference for what each pattern actually is."
+description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks — Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) — each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework S1 skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` (A3) and `playwright-codegen-reviewer` (A3) as the architecture-tier reference for what each pattern actually is."
 rating: 25
 d6: 5
 archetype: S2
@@ -172,6 +172,63 @@ Do **not** use this skill to:
 | Repository methods that return mutable objects shared across tests | Test cross-coupling; one test mutates and breaks another |
 | Repository that creates "magic" data the test doesn't see | Tests pass for inscrutable reasons; debugging is impossible |
 
+## Pattern 7 — Screen Object (desktop / mobile sibling of Page Object)
+
+**Canonical source:** Martin Fowler's PageObject article — the [current bliki entry](https://martinfowler.com/bliki/PageObject.html) opens with the note that "An object that wraps an HTML page, or fragment, with an application-specific API." The earlier name **WindowDriver** (Fowler, 2004) covered desktop GUI windows under the same encapsulation principle before the term migrated to web. The desktop / mobile community reuses the structurally-identical pattern under the name **Screen Object** (one class per logical screen, locators + actions encapsulated, no assertions inside). No single owner formally documents the rename — `screen object` is community-canonical across FlaUI, XCUITest, Appium / Espresso practitioner literature.
+
+The mobile sibling is documented inside Google's Android testing guidance as **Screen Robot** ([Jake Wharton — *Instrumentation Testing Robots* (2016)](https://jakewharton.com/testing-robots/)) and inside Square's mobile literature as well; both reproduce the same encapsulation contract.
+
+**The three load-bearing rules transfer unchanged from POM:**
+
+1. **No assertions in the Screen Object body.** Same rationale Fowler gives for POM ("page objects … should not make assertions themselves"). The desktop test asserts on `window.Title`, `element.IsEnabled`, control-pattern state; the Screen Object exposes those via getters but does not verify them.
+2. **Navigation methods return the next Screen Object.** `login.SubmitsCredentials()` returns `MainScreen`. Compile-time detection of broken workflows survives the migration from web POM to desktop Screen Object.
+3. **Screen Object exposes the screen's services, not its widgets.** `login.SubmitsCredentials(creds)` not `login.LoginButton.Click()`. Methods are named after the user-meaningful action — same vocabulary rule as POM.
+
+### When to use Screen Object
+
+- Desktop / mobile SUT routed through any accessibility-tree backend per [`desktop-test-strategy-reference`](../../../qa-desktop/skills/desktop-test-strategy-reference/SKILL.md): Windows UIA (FlaUI, WinAppDriver, Appium-Windows), macOS XCTest (XCUIApplication / XCUIElementQuery per [Apple's *Testing with Xcode* UI Testing chapter](https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html)), Linux AT-SPI (dogtail / pyatspi).
+- Mobile-native SUT (Appium, Espresso, XCUITest on iOS) — same encapsulation, sometimes branded "Screen Robot" per the Wharton citation above.
+- Cross-platform desktop frameworks (Avalonia, .NET MAUI) where the same screen exists across OSes but the accessibility backend differs per host.
+
+### Anti-patterns (Screen Object-specific in addition to the POM list)
+
+| Anti-pattern | Why it fails |
+|---|---|
+| Screen Object that hard-codes `AutomationId` strings inline in every method (e.g. `cf.ByAutomationId("LoginButton")` repeated) | Refactor cost when the developer renames the AutomationId; centralise the constant at the top of the Screen class |
+| Screen Object that wraps a single accessibility-tree call without adding a domain method | Same anti-pattern as the POM `clickAddToCartButton()` smell — Screen exposes mechanic, not service |
+| Screen Object that asserts on accessibility properties (role, label) it controls | Asserting on internal state defeats the no-assertions rule; assertions belong in the test |
+| Screen Object that calls `Thread.Sleep` / `Task.Delay` between actions | Hides flakiness; route through the driver's retry primitive (FlaUI `Retry.WhileNull`, XCTest `waitForExistence`) |
+| Screen Object that depends on absolute window coordinates | Defeats the accessibility-tree abstraction; multi-monitor / DPI / locale breaks the test |
+| One Screen Object class per dialog AND per main view in the same screen | Modal sub-screens are nested Screen Objects; do not flatten |
+
+### Worked desktop example (FlaUI / xUnit)
+
+**Bad** (mechanical leakage into the test body — same shape as the web POM anti-pattern):
+
+```csharp
+[StaFact]
+public void Logs_in_with_valid_credentials() {
+    var window = _fx.App.GetMainWindow(_fx.Automation);
+    window.FindFirstDescendant(cf => cf.ByAutomationId("Username")).AsTextBox().Enter("alice@example.com");
+    window.FindFirstDescendant(cf => cf.ByAutomationId("Password")).AsTextBox().Enter("hunter2");
+    window.FindFirstDescendant(cf => cf.ByAutomationId("LoginButton")).AsButton().Invoke();
+    Assert.Equal("Invoices", _fx.App.GetMainWindow(_fx.Automation).Title);
+}
+```
+
+**Good** (Screen Object at the business layer):
+
+```csharp
+[StaFact]
+public void Logs_in_with_valid_credentials() {
+    var login = new LoginScreen(_fx.App.GetMainWindow(_fx.Automation));
+    var main  = login.SubmitsCredentials("alice@example.com", "hunter2");
+    Assert.Equal("Invoices", main.Title);
+}
+```
+
+The mechanics live inside `LoginScreen` (constants for AutomationIds, retry-wrapped element fetches, `SubmitsCredentials` returns the next Screen Object). The test reads as a specification.
+
 ## Pattern selection matrix
 
 The patterns are not equally good for every project. The matrix:
@@ -184,6 +241,7 @@ The patterns are not equally good for every project. The matrix:
 | App Actions | Cypress + Redux/store-architected SUT, setup-heavy tests | Critical-path / smoke tests (must exercise UI); SUT without programmatic state API |
 | Service Object | API / integration / contract tests with 5+ services | UI-only tests (no service calls); contract tests via schemathesis (the tool generates its own client) |
 | Repository | Multi-data-source projects, DB + fixture + factory in one suite | Single-source projects (overhead exceeds benefit) |
+| **Screen Object** | **Desktop / mobile SUT through any accessibility-tree backend (UIA, XCTest, AT-SPI, Appium / Espresso)** | **Pure web SUT (use POM); pure API tests (use Service Object)** |
 
 ## Cross-cutting anti-patterns (apply to any pattern)
 
@@ -209,7 +267,10 @@ The patterns are not equally good for every project. The matrix:
 
 ## References
 
-- Martin Fowler — *PageObject* (canonical cross-language definition, the load-bearing reference for all POM rules): https://martinfowler.com/bliki/PageObject.html
+- Martin Fowler — *PageObject* (canonical cross-language definition, the load-bearing reference for all POM rules; the earlier *WindowDriver* name covered desktop GUI before the term migrated to web): https://martinfowler.com/bliki/PageObject.html
+- Jake Wharton — *Instrumentation Testing Robots* (2016) — the canonical "Screen Robot" reference for the mobile sibling of the Screen Object pattern, also applicable to desktop: https://jakewharton.com/testing-robots/
+- Apple — *Testing with Xcode* — UI Testing chapter, the XCUIApplication / XCUIElementQuery / XCUIElement reference for macOS Screen Objects: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
+- [`desktop-test-strategy-reference`](../../../qa-desktop/skills/desktop-test-strategy-reference/SKILL.md) — the OS-backend reference for Screen Object's accessibility-tree substrate (UIA / XCTest / AT-SPI).
 - Selenium HQ — *Page Object Models* (official Selenium documentation; quotes the no-assertions and navigation-return-shape rules verbatim): https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
 - Antony Marcano, Andy Palmer, Jan Molak — *Screenplay Fundamentals* (Serenity BDD documentation; the canonical Actor/Ability/Task/Interaction/Question vocabulary): https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals
 - Marcano & Hill (2007) — *Page Objects Refactored: SOLID Steps to the Screenplay Pattern* (the origin paper for the Screenplay name and SOLID rationale; cited via Serenity BDD): https://serenity-bdd.github.io/docs/screenplay/

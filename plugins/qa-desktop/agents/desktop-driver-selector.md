@@ -71,6 +71,38 @@ fallback driver may be listed only when two drivers are co-equal
 defensible (UWP, Win32, Qt) — never as a tie-breaker the user must
 resolve.
 
+### Step 2b — Elevation constraint (Windows only)
+
+If the SUT requires running elevated (administrator privileges), the
+recommendation must additionally specify that **the driver session
+itself must run elevated**. UAC's secure desktop renders outside the
+standard accessibility tree, so a non-elevated WinAppDriver / FlaUI /
+Appium-Windows session cannot see the elevated UI tree at all — not
+just the consent prompt; the entire elevated window is invisible
+([WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306),
+[issue #2033](https://github.com/microsoft/WinAppDriver/issues/2033)).
+
+| Signal | Implication |
+|---|---|
+| `requireAdministrator` in the `.exe.manifest` (resource embedded by `mt.exe`) | The SUT auto-elevates → driver must run elevated, OR the CI VM must disable UAC (`EnableLUA=0`) |
+| `app.manifest` with `<requestedExecutionLevel level="requireAdministrator" />` | Same as above |
+| README or install docs mention "Run as administrator" | Same as above; flag in the recommendation rationale |
+
+If the spec or project file signals elevation but no elevated test
+session is declared, the agent emits a warning paragraph in the
+"Conditions under which this flips" block and recommends the user
+either run the test runner elevated or disable UAC in the CI VM.
+
+### Step 2c — Cross-OS Electron variant note
+
+When the recommendation is `electron-playwright` and the project
+targets multiple OSes (the default Electron build is multi-OS), the
+agent notes that **the driver is the same on all three OSes**
+(`_electron.launch()` plus `electronApp.evaluate()` for main-process
+IPC per the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication)),
+but the CI bootstrap differs per OS — see the per-OS blocks in
+[`desktop-test-scaffolder` Step 1b](desktop-test-scaffolder.md).
+
 ## Step 3 — Emit the recommendation
 
 Output template (Markdown, copyable to a decision record):
@@ -147,6 +179,7 @@ The agent **refuses** to:
 - Recommend more than one primary driver. Two recommendations is no recommendation. Co-equal alternatives go in the "secondary fallback" line, not the primary slot.
 - Recommend selecting both UIA2 and UIA3 in the same FlaUI test process — that is unsupported per the FlaUI README.
 - Reverse engineer the app type from binary artefacts (`.exe` / `.app` bundles). The agent reads source-of-truth project files only.
+- **Recommend a Windows driver for an SUT whose manifest declares `requireAdministrator` without flagging the elevation constraint.** The recommendation must state that the test session itself must run elevated (per [WinAppDriver issue #306](https://github.com/microsoft/WinAppDriver/issues/306)) or that UAC must be disabled in the CI VM. Silent omission ships a non-runnable recommendation.
 
 ## Anti-patterns
 
