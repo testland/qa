@@ -12,15 +12,15 @@
 
 ## Why testland-qa
 
-- **8-dimension quality gate** before merge — including a hard-reject for
+- **8-dimension quality gate** before merge: includes a hard-reject for
   uncited claims (citation theater), plus eval coverage and Anthropic
   best-practices adherence (v4.0 framework)
-- **CI-validated composition** — every agent's preloaded skills are
+- **CI-validated composition**: every agent's preloaded skills are
   reference-checked, no dangling deps
-- **Differentiation required** — every component must articulate how it
+- **Differentiation required**: every component must articulate how it
   differs from its nearest neighbors. Generic, persona-shaped scopes that
   can't name a trigger condition get sent back for reshaping
-- **Reviewer-calibrated** — two-evaluator rubric, A/C/F-grade exemplars in
+- **Reviewer-calibrated**: two-evaluator rubric, A/C/F-grade exemplars in
   [`docs/REVIEWER_TRAINING.md`](docs/REVIEWER_TRAINING.md)
 
 See [Quality bar](#quality-bar) and [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md).
@@ -57,43 +57,43 @@ git clone https://github.com/testland/qa ~/.claude/marketplaces/testland-qa
 77 plugins across 7 categories. See [`CATALOG.md`](CATALOG.md) for the full
 table with versions, component counts, and archetype breakdowns.
 
-**Foundations** (9) — test process, environment, data, reporting, impact, roles, review, management, hiring
+**Foundations** (9): test process, environment, data, reporting, impact, roles, review, management, hiring
 
 [qa-hiring](plugins/qa-hiring/) · [qa-process](plugins/qa-process/) · [qa-roles](plugins/qa-roles/) · [qa-test-data](plugins/qa-test-data/) · [qa-test-environment](plugins/qa-test-environment/) · [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) · [qa-test-management](plugins/qa-test-management/) · [qa-test-reporting](plugins/qa-test-reporting/) · [qa-test-review](plugins/qa-test-review/)
 
-**Functional testing** (15) — API, BDD, E2E, mobile, desktop, embedded, game, contract, mutation, property-based, per-language unit-tests
+**Functional testing** (15): API, BDD, E2E, mobile, desktop, embedded, game, contract, mutation, property-based, per-language unit-tests
 
 [qa-api-testing](plugins/qa-api-testing/) · [qa-bdd](plugins/qa-bdd/) · [qa-contract-testing](plugins/qa-contract-testing/) · [qa-desktop](plugins/qa-desktop/) · [qa-embedded](plugins/qa-embedded/) · [qa-game](plugins/qa-game/) · [qa-mobile-native](plugins/qa-mobile-native/) · [qa-mutation-testing](plugins/qa-mutation-testing/) · [qa-property-based](plugins/qa-property-based/) · [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) · [qa-unit-tests-js](plugins/qa-unit-tests-js/) · [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) · [qa-unit-tests-net](plugins/qa-unit-tests-net/) · [qa-unit-tests-python](plugins/qa-unit-tests-python/) · [qa-web-e2e](plugins/qa-web-e2e/)
 
-**Quality engineering** (9) — data quality, visual regression, accessibility, localization, charts, PDF/print, modern web, browser extension, PWA
+**Quality engineering** (9): data quality, visual regression, accessibility, localization, charts, PDF/print, modern web, browser extension, PWA
 
 [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) · [qa-browser-extension](plugins/qa-browser-extension/) · [qa-charts-dataviz](plugins/qa-charts-dataviz/) · [qa-data-quality](plugins/qa-data-quality/) · [qa-localization](plugins/qa-localization/) · [qa-modern-web](plugins/qa-modern-web/) · [qa-pdf-print-render](plugins/qa-pdf-print-render/) · [qa-pwa](plugins/qa-pwa/) · [qa-visual-regression](plugins/qa-visual-regression/)
 
-**Security & compliance** (9) — SAST, DAST, SCA, secrets, SBOM, fuzz, compliance, multi-tenancy isolation, test-data privacy
+**Security & compliance** (9): SAST, DAST, SCA, secrets, SBOM, fuzz, compliance, multi-tenancy isolation, test-data privacy
 
 [qa-compliance](plugins/qa-compliance/) · [qa-dast](plugins/qa-dast/) · [qa-fuzz-testing](plugins/qa-fuzz-testing/) · [qa-multi-tenancy](plugins/qa-multi-tenancy/) · [qa-sast](plugins/qa-sast/) · [qa-sbom](plugins/qa-sbom/) · [qa-sca](plugins/qa-sca/) · [qa-secrets](plugins/qa-secrets/) · [qa-test-data-privacy](plugins/qa-test-data-privacy/)
 
-**Operations & resilience** (8) — flake triage, bug repro, defect management, chaos, resilience drills, shift-right/left, load
+**Operations & resilience** (8): flake triage, bug repro, defect management, chaos, resilience drills, shift-right/left, load
 
 [qa-bug-repro](plugins/qa-bug-repro/) · [qa-chaos-resilience](plugins/qa-chaos-resilience/) · [qa-defect-management](plugins/qa-defect-management/) · [qa-flake-triage](plugins/qa-flake-triage/) · [qa-load-testing](plugins/qa-load-testing/) · [qa-resilience-drills](plugins/qa-resilience-drills/) · [qa-shift-left](plugins/qa-shift-left/) · [qa-shift-right](plugins/qa-shift-right/)
 
-**AI & specialized** (21) — LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time protocols, search, saga/CQRS, concurrency, db migrations, async jobs, auth flows, notifications, cache, experimentation, feature flags, GraphQL, gRPC, payment, serverless, time/timezones
+**AI & specialized** (21): LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time protocols, search, saga/CQRS, concurrency, db migrations, async jobs, auth flows, notifications, cache, experimentation, feature flags, GraphQL, gRPC, payment, serverless, time/timezones
 
 [qa-ai-assisted](plugins/qa-ai-assisted/) · [qa-async-jobs](plugins/qa-async-jobs/) · [qa-auth-flows](plugins/qa-auth-flows/) · [qa-cache-testing](plugins/qa-cache-testing/) · [qa-concurrency](plugins/qa-concurrency/) · [qa-data-notebooks](plugins/qa-data-notebooks/) · [qa-db-migrations](plugins/qa-db-migrations/) · [qa-distributed-tracing](plugins/qa-distributed-tracing/) · [qa-experimentation](plugins/qa-experimentation/) · [qa-feature-flags](plugins/qa-feature-flags/) · [qa-graphql](plugins/qa-graphql/) · [qa-grpc](plugins/qa-grpc/) · [qa-llm-evaluation](plugins/qa-llm-evaluation/) · [qa-ml-models](plugins/qa-ml-models/) · [qa-notifications](plugins/qa-notifications/) · [qa-payment](plugins/qa-payment/) · [qa-realtime-protocols](plugins/qa-realtime-protocols/) · [qa-saga-cqrs](plugins/qa-saga-cqrs/) · [qa-search-relevance](plugins/qa-search-relevance/) · [qa-serverless](plugins/qa-serverless/) · [qa-time-and-timezones](plugins/qa-time-and-timezones/)
 
-**Tooling** (6) — IaC, CI integration, CLI tools, code quality, compatibility, manual testing
+**Tooling** (6): IaC, CI integration, CLI tools, code quality, compatibility, manual testing
 
 [qa-ci-integration](plugins/qa-ci-integration/) · [qa-cli-tools](plugins/qa-cli-tools/) · [qa-code-quality](plugins/qa-code-quality/) · [qa-compatibility](plugins/qa-compatibility/) · [qa-iac](plugins/qa-iac/) · [qa-manual-testing](plugins/qa-manual-testing/)
 
 ## Quality bar
 
 Every component is scored on eight dimensions before merge (v4.0 framework,
-0–40 scale, importable bar 28/40):
+0 to 40 scale, importable bar 28/40):
 
 | Dim | Name | Anchor |
 |---|---|---|
 | **D1** | Spec compliance | Lint passes; required frontmatter fields present |
-| **D2** | Archetype fit | Body structure matches declared archetype (S1–S4 / A1–A4) |
+| **D2** | Archetype fit | Body structure matches declared archetype (S1 to S4 / A1 to A4) |
 | **D3** | Description quality | Distinguishes vs neighbors; predicts the body |
 | **D4** | Use-case fit | Explicit trigger ("Use when…"), not a persona |
 | **D5** | Body quality | Concrete steps + worked examples |
@@ -101,10 +101,10 @@ Every component is scored on eight dimensions before merge (v4.0 framework,
 | **D7** | Evaluation coverage | ≥3 evals authored (happy + branch + adversarial) |
 | **D8** | Best-practices adherence | Concision, single-default, workflow literacy, path/MCP hygiene (per Anthropic `agent-skills/best-practices`) |
 
-CI enforces **rating ≥ 21/30 and d6 ≥ 1** (v2.0 floor — the dominant
-"citation theater" failure mode). `d6 = 0` is a hard reject. D7 hard-gates
-agents after 2026-06-01; D8 hard-gates after 2026-07-01 — both are advisory
-during the v4.0 shadow window.
+CI enforces **rating ≥ 21/30 and d6 ≥ 1** (v2.0 floor, addressing the
+dominant "citation theater" failure mode). `d6 = 0` is a hard reject.
+D7 hard-gates agents after 2026-06-01; D8 hard-gates after 2026-07-01.
+Both are advisory during the v4.0 shadow window.
 
 See [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md) for the rubric
 and [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the framework details.
@@ -155,4 +155,4 @@ python3 scripts/composition-graph.py
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT. See [`LICENSE`](LICENSE).
