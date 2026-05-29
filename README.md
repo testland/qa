@@ -156,7 +156,3 @@ python3 scripts/composition-graph.py
 ## License
 
 MIT — see [`LICENSE`](LICENSE).
-
-## Star history
-
-[![Star History Chart](https://api.star-history.com/svg?repos=testland/qa&type=Date)](https://star-history.com/#testland/qa&Date)
