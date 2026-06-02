@@ -16,14 +16,14 @@ config (e.g., `sonar.exclusions`, `lizard -x"./tests/*"`, Madge
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [sonarqube-quality-perspective](skills/sonarqube-quality-perspective/SKILL.md) | S1 | SonarQube/SonarCloud Reliability + Maintainability lens; Sonar Way Quality Gate enforcement; PR decoration |
-| Skill | [codeclimate-config](skills/codeclimate-config/SKILL.md) | S2 | Both legacy `.codeclimate.yml` (Code Climate Velocity / GitHub App) and new `.qlty/qlty.toml` (Qlty CLI) |
-| Skill | [lizard-complexity](skills/lizard-complexity/SKILL.md) | S1 | Per-function CCN + NLOC + parameter-count thresholds; 30+ languages; CSV/XML/HTML output |
-| Skill | [madge-deps](skills/madge-deps/SKILL.md) | S1 | JS/TS module-graph analysis; circular-dep detection; orphan/leaf finding; SVG visualization |
-| Skill | [knip-dead-code](skills/knip-dead-code/SKILL.md) | S1 | Unused files / dependencies / exports / types / enum members; framework plugins (Next.js, Remix, Astro, etc.) |
-| Agent | [code-quality-critic](agents/code-quality-critic.md) | A3 | Adversarial reviewer that dedupes overlapping findings across all 5 tools; net-new-vs-inherited classification; refuses to ✅ on net debt increase |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [sonarqube-quality-perspective](skills/sonarqube-quality-perspective/SKILL.md) | SonarQube/SonarCloud Reliability + Maintainability lens; Sonar Way Quality Gate enforcement; PR decoration |
+| Skill | [codeclimate-config](skills/codeclimate-config/SKILL.md) | Both legacy `.codeclimate.yml` (Code Climate Velocity / GitHub App) and new `.qlty/qlty.toml` (Qlty CLI) |
+| Skill | [lizard-complexity](skills/lizard-complexity/SKILL.md) | Per-function CCN + NLOC + parameter-count thresholds; 30+ languages; CSV/XML/HTML output |
+| Skill | [madge-deps](skills/madge-deps/SKILL.md) | JS/TS module-graph analysis; circular-dep detection; orphan/leaf finding; SVG visualization |
+| Skill | [knip-dead-code](skills/knip-dead-code/SKILL.md) | Unused files / dependencies / exports / types / enum members; framework plugins (Next.js, Remix, Astro, etc.) |
+| Agent | [code-quality-critic](agents/code-quality-critic.md) | Adversarial reviewer that dedupes overlapping findings across all 5 tools; net-new-vs-inherited classification; refuses to ✅ on net debt increase |
 
 ## Install
 

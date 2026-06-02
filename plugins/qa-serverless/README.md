@@ -4,9 +4,9 @@ Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare W
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

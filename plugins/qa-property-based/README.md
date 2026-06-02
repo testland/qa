@@ -4,15 +4,15 @@ Property-based testing for the QuickCheck-derived family. Per ISTQB: PBT is "a t
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [hypothesis-testing](skills/hypothesis-testing/SKILL.md) | S1 | Python Hypothesis: `@given` + strategies + composite + `assume()` + settings + pytest integration. |
-| Skill | [fast-check-testing](skills/fast-check-testing/SKILL.md) | S1 | JS/TS fast-check: `fc.assert(fc.property(...))` + arbitraries + combinators + race-condition detection + model-based testing. |
-| Skill | [proptest-testing](skills/proptest-testing/SKILL.md) | S1 | Rust proptest: `proptest!` macro + regex-string strategies + `prop_compose!` + failure persistence. |
-| Skill | [jqwik-testing](skills/jqwik-testing/SKILL.md) | S1 | JVM jqwik: `@Property` + `@ForAll` + Arbitraries API + `@Provide` + JUnit 5 integration. |
-| Skill | [quickcheck-testing](skills/quickcheck-testing/SKILL.md) | S1 | Haskell QuickCheck (the original) + ScalaCheck: `quickCheck` / `forAll` + `Arbitrary` typeclass + `shrink`. |
-| Agent | [property-based-tool-selector](agents/property-based-tool-selector.md) | A2 | Reads project markers (package.json / pyproject.toml / pom.xml / Cargo.toml / *.cabal / mix.exs) and recommends one library per language: fast-check (JS/TS), Hypothesis (Python), jqwik (JVM), proptest (Rust), QuickCheck (Haskell / Erlang / Elixir). |
-| Agent | [property-based-test-author](agents/property-based-test-author.md) | A2 | Authors one property-based test per stated invariant (roundtrip / idempotence / conservation / monotonicity / commutativity / inverse / reference). Picks tool via property-based-tool-selector or accepts an override. Refuses to encode "test with random inputs" as a property - that's fuzzing or parameterized unit testing, not property-based. |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [hypothesis-testing](skills/hypothesis-testing/SKILL.md) | Python Hypothesis: `@given` + strategies + composite + `assume()` + settings + pytest integration. |
+| Skill | [fast-check-testing](skills/fast-check-testing/SKILL.md) | JS/TS fast-check: `fc.assert(fc.property(...))` + arbitraries + combinators + race-condition detection + model-based testing. |
+| Skill | [proptest-testing](skills/proptest-testing/SKILL.md) | Rust proptest: `proptest!` macro + regex-string strategies + `prop_compose!` + failure persistence. |
+| Skill | [jqwik-testing](skills/jqwik-testing/SKILL.md) | JVM jqwik: `@Property` + `@ForAll` + Arbitraries API + `@Provide` + JUnit 5 integration. |
+| Skill | [quickcheck-testing](skills/quickcheck-testing/SKILL.md) | Haskell QuickCheck (the original) + ScalaCheck: `quickCheck` / `forAll` + `Arbitrary` typeclass + `shrink`. |
+| Agent | [property-based-tool-selector](agents/property-based-tool-selector.md) | Reads project markers (package.json / pyproject.toml / pom.xml / Cargo.toml / *.cabal / mix.exs) and recommends one library per language: fast-check (JS/TS), Hypothesis (Python), jqwik (JVM), proptest (Rust), QuickCheck (Haskell / Erlang / Elixir). |
+| Agent | [property-based-test-author](agents/property-based-test-author.md) | Authors one property-based test per stated invariant (roundtrip / idempotence / conservation / monotonicity / commutativity / inverse / reference). Picks tool via property-based-tool-selector or accepts an override. Refuses to encode "test with random inputs" as a property - that's fuzzing or parameterized unit testing, not property-based. |
 
 ## Install
 

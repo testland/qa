@@ -11,12 +11,12 @@ Covers the universal pre-commit + repo-history hygiene gap.
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [gitleaks-scanning](skills/gitleaks-scanning/SKILL.md) | S1 | Go-based scanner; `gitleaks git/dir/stdin` (v8.19+); `.gitleaks.toml` rules + allowlists; pre-commit + GHA + baseline |
-| Skill | [trufflehog-scanning](skills/trufflehog-scanning/SKILL.md) | S1 | Rust-based with **live verification** via provider API calls; multi-source (git/github/gitlab/filesystem/s3/docker/gcs/postman); `--results=verified` filter |
-| Skill | [kingfisher-scanning](skills/kingfisher-scanning/SKILL.md) | S1 | MongoDB-built Rust scanner with Intel Hyperscan + 950 rules + live validation + checksum verification + cloud access mapping |
-| Skill | [secrets-rotation-runner](skills/secrets-rotation-runner/SKILL.md) | S3 | Build-an-X for rotation workflow after detection: identify provider → two-secret rotation → audit → invalidate → post-mortem → add detection rule |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [gitleaks-scanning](skills/gitleaks-scanning/SKILL.md) | Go-based scanner; `gitleaks git/dir/stdin` (v8.19+); `.gitleaks.toml` rules + allowlists; pre-commit + GHA + baseline |
+| Skill | [trufflehog-scanning](skills/trufflehog-scanning/SKILL.md) | Rust-based with **live verification** via provider API calls; multi-source (git/github/gitlab/filesystem/s3/docker/gcs/postman); `--results=verified` filter |
+| Skill | [kingfisher-scanning](skills/kingfisher-scanning/SKILL.md) | MongoDB-built Rust scanner with Intel Hyperscan + 950 rules + live validation + checksum verification + cloud access mapping |
+| Skill | [secrets-rotation-runner](skills/secrets-rotation-runner/SKILL.md) | Build-an-X for rotation workflow after detection: identify provider → two-secret rotation → audit → invalidate → post-mortem → add detection rule |
 
 ## Install
 

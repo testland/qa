@@ -4,17 +4,17 @@ Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skill
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| skill | [bug-lifecycle-reference](skills/bug-lifecycle-reference/SKILL.md) | S2 | ISTQB-canonical defect lifecycle states + tracker-vocabulary map for Jira/Linear/GitHub |
-| skill | [severity-vs-priority-reference](skills/severity-vs-priority-reference/SKILL.md) | S2 | Two-axis defect classification; 5×5 matrix with worked examples |
-| skill | [defect-taxonomy-istqb](skills/defect-taxonomy-istqb/SKILL.md) | S2 | IEEE 1044-2009 + CTAL-TA + Chillarege ODC taxonomies |
-| skill | [jira-bug-workflow-runner](skills/jira-bug-workflow-runner/SKILL.md) | S1 | Jira Cloud REST API v3 create/transition/JQL search |
-| skill | [linear-bug-workflow-runner](skills/linear-bug-workflow-runner/SKILL.md) | S1 | Linear GraphQL issueCreate / issueUpdate / workflowStates |
-| skill | [github-issues-bug-workflow](skills/github-issues-bug-workflow/SKILL.md) | S1 | GitHub Issues REST API v2022-11-28 + Projects v2 |
-| skill | [bug-report-from-failure](skills/bug-report-from-failure/SKILL.md) | S3 | Turn JUnit/Allure/pytest failure records into tracker-agnostic bug specs |
-| agent | [duplicate-defect-finder](agents/duplicate-defect-finder.md) | A1 | Search the tracker for likely duplicates; rank candidates by similarity |
-| agent | [bug-report-critic](agents/bug-report-critic.md) | A3 | Audit a bug report against required fields, severity-priority independence, reproduction quality |
+| Type | Name | Description |
+| --- | --- | --- |
+| skill | [bug-lifecycle-reference](skills/bug-lifecycle-reference/SKILL.md) | ISTQB-canonical defect lifecycle states + tracker-vocabulary map for Jira/Linear/GitHub |
+| skill | [severity-vs-priority-reference](skills/severity-vs-priority-reference/SKILL.md) | Two-axis defect classification; 5×5 matrix with worked examples |
+| skill | [defect-taxonomy-istqb](skills/defect-taxonomy-istqb/SKILL.md) | IEEE 1044-2009 + CTAL-TA + Chillarege ODC taxonomies |
+| skill | [jira-bug-workflow-runner](skills/jira-bug-workflow-runner/SKILL.md) | Jira Cloud REST API v3 create/transition/JQL search |
+| skill | [linear-bug-workflow-runner](skills/linear-bug-workflow-runner/SKILL.md) | Linear GraphQL issueCreate / issueUpdate / workflowStates |
+| skill | [github-issues-bug-workflow](skills/github-issues-bug-workflow/SKILL.md) | GitHub Issues REST API v2022-11-28 + Projects v2 |
+| skill | [bug-report-from-failure](skills/bug-report-from-failure/SKILL.md) | Turn JUnit/Allure/pytest failure records into tracker-agnostic bug specs |
+| agent | [duplicate-defect-finder](agents/duplicate-defect-finder.md) | Search the tracker for likely duplicates; rank candidates by similarity |
+| agent | [bug-report-critic](agents/bug-report-critic.md) | Audit a bug report against required fields, severity-priority independence, reproduction quality |
 
 ## Differentiation
 

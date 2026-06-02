@@ -4,9 +4,9 @@ gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

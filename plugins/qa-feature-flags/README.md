@@ -4,9 +4,9 @@ Feature-flag platform testing: SDK-specific tests for LaunchDarkly, Unleash, Fla
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

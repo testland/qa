@@ -7,12 +7,12 @@ that holds them together.
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [saga-transaction-tests](skills/saga-transaction-tests/SKILL.md) | S3 | Orchestration vs choreography; per-step compensating-action verification; partial-failure matrix; outbox pattern atomicity; saga timeout |
-| Skill | [event-sourcing-tests](skills/event-sourcing-tests/SKILL.md) | S3 | Aggregate-replay determinism; snapshot equivalence; event-versioning + upcasting; projection rebuild from event log; replay-mode external-call suppression |
-| Skill | [cqrs-projection-tests](skills/cqrs-projection-tests/SKILL.md) | S3 | Per-event projection update; eventual-consistency window assertion; multiple projections per stream; zero-downtime swap; idempotency + out-of-order delivery |
-| Skill | [eventual-consistency-tests](skills/eventual-consistency-tests/SKILL.md) | S3 | Convergence-window assertions; monotonic-read tests; anti-entropy / read-repair; CRDT merge tests (G-Counter, LWW, OR-Set); vector-clock causality |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [saga-transaction-tests](skills/saga-transaction-tests/SKILL.md) | Orchestration vs choreography; per-step compensating-action verification; partial-failure matrix; outbox pattern atomicity; saga timeout |
+| Skill | [event-sourcing-tests](skills/event-sourcing-tests/SKILL.md) | Aggregate-replay determinism; snapshot equivalence; event-versioning + upcasting; projection rebuild from event log; replay-mode external-call suppression |
+| Skill | [cqrs-projection-tests](skills/cqrs-projection-tests/SKILL.md) | Per-event projection update; eventual-consistency window assertion; multiple projections per stream; zero-downtime swap; idempotency + out-of-order delivery |
+| Skill | [eventual-consistency-tests](skills/eventual-consistency-tests/SKILL.md) | Convergence-window assertions; monotonic-read tests; anti-entropy / read-repair; CRDT merge tests (G-Counter, LWW, OR-Set); vector-clock causality |
 
 ## Install
 

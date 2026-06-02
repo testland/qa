@@ -4,16 +4,16 @@ Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, 
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| skill | embedded-coverage-strategy-reference | S2 | Coverage criteria, gcov + llvm-cov toolchains, MISRA / DO-178C / ISO 26262 expectations |
-| skill | hardware-in-loop-reference | S2 | HIL pattern, MIL/SIL/PIL/HIL V-cycle, vendor stack (NI / dSPACE / Vector / Speedgoat), bus emulation, fault injection, DO-178C / ISO 26262 alignment |
-| skill | ceedling-mocks-reference | S2 | CMock generated API surface (Expect / Ignore / ReturnThruPtr / Stub / Callback), cmock.yml :plugins, Unity teardown verification, strict vs ignore matching |
-| skill | googletest-embedded-arm | S1 | GoogleTest 1.17+ for embedded C++ on ARM: TEST/TEST_F/TEST_P/TYPED_TEST, EXPECT vs ASSERT, cross-compile with arm-none-eabi-g++, QEMU run, XML/JSON output |
-| skill | unity-test-framework-c | S1 | ThrowTheSwitch Unity for pure-C unit tests (8-bit through 64-bit). Distinct from the Unity game-engine Test Framework at docs.unity3d.com |
-| skill | ceedling-build-runner | S1 | Ceedling build orchestration: project.yml schema, ceedling new / test:all / gcov:all / release tasks, JUnit XML + gcov plugins, CI wiring |
-| skill | qemu-system-test-runner | S1 | QEMU system emulation for embedded tests: mps2-* / virt / lm3s6965evb boards, -kernel ELF, ARM semihosting, GDB stub, QMP, CI integration |
-| agent | embedded-test-author | A2 | Authors one embedded C/C++ unit test per spec - detects Ceedling / CMake+GoogleTest / bare Makefile from the project root, picks Unity / GoogleTest / Ceedling-Unity, pairs with QEMU for cross-compiled runs |
+| Type | Name | Description |
+| --- | --- | --- |
+| skill | embedded-coverage-strategy-reference | Coverage criteria, gcov + llvm-cov toolchains, MISRA / DO-178C / ISO 26262 expectations |
+| skill | hardware-in-loop-reference | HIL pattern, MIL/SIL/PIL/HIL V-cycle, vendor stack (NI / dSPACE / Vector / Speedgoat), bus emulation, fault injection, DO-178C / ISO 26262 alignment |
+| skill | ceedling-mocks-reference | CMock generated API surface (Expect / Ignore / ReturnThruPtr / Stub / Callback), cmock.yml :plugins, Unity teardown verification, strict vs ignore matching |
+| skill | googletest-embedded-arm | GoogleTest 1.17+ for embedded C++ on ARM: TEST/TEST_F/TEST_P/TYPED_TEST, EXPECT vs ASSERT, cross-compile with arm-none-eabi-g++, QEMU run, XML/JSON output |
+| skill | unity-test-framework-c | ThrowTheSwitch Unity for pure-C unit tests (8-bit through 64-bit). Distinct from the Unity game-engine Test Framework at docs.unity3d.com |
+| skill | ceedling-build-runner | Ceedling build orchestration: project.yml schema, ceedling new / test:all / gcov:all / release tasks, JUnit XML + gcov plugins, CI wiring |
+| skill | qemu-system-test-runner | QEMU system emulation for embedded tests: mps2-* / virt / lm3s6965evb boards, -kernel ELF, ARM semihosting, GDB stub, QMP, CI integration |
+| agent | embedded-test-author | Authors one embedded C/C++ unit test per spec - detects Ceedling / CMake+GoogleTest / bare Makefile from the project root, picks Unity / GoogleTest / Ceedling-Unity, pairs with QEMU for cross-compiled runs |
 
 ## Install
 

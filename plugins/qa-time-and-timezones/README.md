@@ -4,9 +4,9 @@ Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

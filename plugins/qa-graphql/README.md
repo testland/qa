@@ -4,9 +4,9 @@ GraphQL server testing: introspection attack-surface reference, persisted-query 
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

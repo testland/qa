@@ -4,26 +4,26 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [faker-data](skills/faker-data/SKILL.md) | S1 | Faker (Python `faker` / JS `@faker-js/faker` / Ruby `faker-ruby`) - fields, locales, deterministic seeding. |
-| Skill | [factory-bot-data](skills/factory-bot-data/SKILL.md) | S1 | Ruby FactoryBot factories with traits, associations, sequences; build / create / build_stubbed strategies; pairs with Faker. |
-| Skill | [mimesis-data](skills/mimesis-data/SKILL.md) | S1 | Python mimesis (fastest pure-Python generator); 46 locales; Schema/Field typed-dict pattern. |
-| Skill | [bogus-data](skills/bogus-data/SKILL.md) | S1 | .NET Bogus typed `Faker<T>` builders with `.RuleFor` / `.StrictMode` / `.UseSeed`; `Generate*` for single / lazy / batch. |
-| Skill | [wiremock-stubs](skills/wiremock-stubs/SKILL.md) | S1 | JVM HTTP mock server: `stubFor` matchers + `willReturn` + `verify()` + dynamic ports + scenarios. |
-| Skill | [msw-handlers](skills/msw-handlers/SKILL.md) | S1 | JS / TS HTTP mocking via Mock Service Worker: `http.get` / `HttpResponse.json` handlers; browser + Node setup. |
-| Skill | [mountebank-imposters](skills/mountebank-imposters/SKILL.md) | S1 | Multi-protocol mocking (HTTP, TCP, SMTP, gRPC, more) via `POST /imposters`; predicates + responses; record-playback. |
-| Skill | [synthetic-data-toolkit](skills/synthetic-data-toolkit/SKILL.md) | S4 | Dispatcher across Faker / FactoryBot / mimesis / Bogus by language and use case; side-by-side patterns. |
-| Skill | [golden-file-conventions](skills/golden-file-conventions/SKILL.md) | S2 | Reference: snapshot/golden file naming, layout, sanitization, severity tiering, update-vs-fix decision tree. |
-| Skill | [seed-data-curator](skills/seed-data-curator/SKILL.md) | S3 | Build a reproducible E2E seed dataset; coverage matrix; persistence formats; intentional refresh cadence. |
-| Skill | [parameterized-test-generator](skills/parameterized-test-generator/SKILL.md) | S3 | All-pairs / pairwise combinatorial generation from a multi-input spec; constraints; coverage report. |
-| Skill | [boundary-value-generator](skills/boundary-value-generator/SKILL.md) | S3 | Six-point boundary cases per typed input field (numeric / string-length / collection-count / enum / nullable). |
-| Skill | [e2e-test-narrative-builder](skills/e2e-test-narrative-builder/SKILL.md) | S3 | Assemble multi-step E2E tests from intent lists; per-framework code emission. |
-| Skill | [synthetic-pii-generator](skills/synthetic-pii-generator/SKILL.md) | S3 | Realistic-but-fake PII using safe-by-construction values (RFC 2606 domains, IRS test SSN range, Stripe test cards). |
-| Skill | [malicious-payload-bank](skills/malicious-payload-bank/SKILL.md) | S2 | Reference catalog of adversarial payloads (SQLi / XSS / SSRF / path traversal / XXE / prototype pollution / ReDoS / Unicode / CRLF). |
-| Skill | [test-data-patterns](skills/test-data-patterns/SKILL.md) | S2 | Architecture-tier reference: Test Data Builder (Pryce), Factory (with traits), Object Mother (Fowler), Fixture composition (Meszaros four-phase + Fresh-vs-Shared), Snapshot (defers to `golden-file-conventions`), Production-Data Anonymisation. |
-| Skill | [negative-test-generator](skills/negative-test-generator/SKILL.md) | S3 | Generate rejection-path tests mirroring happy-path: schema / auth / authz / rate / conflict / adversarial / server-error categories. |
-| Agent | [golden-file-manager](agents/golden-file-manager.md) | A2 | Active maintenance: add / update / prune snapshot baselines; refuse updates whose diff doesn't match PR intent. |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [faker-data](skills/faker-data/SKILL.md) | Faker (Python `faker` / JS `@faker-js/faker` / Ruby `faker-ruby`) - fields, locales, deterministic seeding. |
+| Skill | [factory-bot-data](skills/factory-bot-data/SKILL.md) | Ruby FactoryBot factories with traits, associations, sequences; build / create / build_stubbed strategies; pairs with Faker. |
+| Skill | [mimesis-data](skills/mimesis-data/SKILL.md) | Python mimesis (fastest pure-Python generator); 46 locales; Schema/Field typed-dict pattern. |
+| Skill | [bogus-data](skills/bogus-data/SKILL.md) | .NET Bogus typed `Faker<T>` builders with `.RuleFor` / `.StrictMode` / `.UseSeed`; `Generate*` for single / lazy / batch. |
+| Skill | [wiremock-stubs](skills/wiremock-stubs/SKILL.md) | JVM HTTP mock server: `stubFor` matchers + `willReturn` + `verify()` + dynamic ports + scenarios. |
+| Skill | [msw-handlers](skills/msw-handlers/SKILL.md) | JS / TS HTTP mocking via Mock Service Worker: `http.get` / `HttpResponse.json` handlers; browser + Node setup. |
+| Skill | [mountebank-imposters](skills/mountebank-imposters/SKILL.md) | Multi-protocol mocking (HTTP, TCP, SMTP, gRPC, more) via `POST /imposters`; predicates + responses; record-playback. |
+| Skill | [synthetic-data-toolkit](skills/synthetic-data-toolkit/SKILL.md) | Dispatcher across Faker / FactoryBot / mimesis / Bogus by language and use case; side-by-side patterns. |
+| Skill | [golden-file-conventions](skills/golden-file-conventions/SKILL.md) | Reference: snapshot/golden file naming, layout, sanitization, severity tiering, update-vs-fix decision tree. |
+| Skill | [seed-data-curator](skills/seed-data-curator/SKILL.md) | Build a reproducible E2E seed dataset; coverage matrix; persistence formats; intentional refresh cadence. |
+| Skill | [parameterized-test-generator](skills/parameterized-test-generator/SKILL.md) | All-pairs / pairwise combinatorial generation from a multi-input spec; constraints; coverage report. |
+| Skill | [boundary-value-generator](skills/boundary-value-generator/SKILL.md) | Six-point boundary cases per typed input field (numeric / string-length / collection-count / enum / nullable). |
+| Skill | [e2e-test-narrative-builder](skills/e2e-test-narrative-builder/SKILL.md) | Assemble multi-step E2E tests from intent lists; per-framework code emission. |
+| Skill | [synthetic-pii-generator](skills/synthetic-pii-generator/SKILL.md) | Realistic-but-fake PII using safe-by-construction values (RFC 2606 domains, IRS test SSN range, Stripe test cards). |
+| Skill | [malicious-payload-bank](skills/malicious-payload-bank/SKILL.md) | Reference catalog of adversarial payloads (SQLi / XSS / SSRF / path traversal / XXE / prototype pollution / ReDoS / Unicode / CRLF). |
+| Skill | [test-data-patterns](skills/test-data-patterns/SKILL.md) | Architecture-tier reference: Test Data Builder (Pryce), Factory (with traits), Object Mother (Fowler), Fixture composition (Meszaros four-phase + Fresh-vs-Shared), Snapshot (defers to `golden-file-conventions`), Production-Data Anonymisation. |
+| Skill | [negative-test-generator](skills/negative-test-generator/SKILL.md) | Generate rejection-path tests mirroring happy-path: schema / auth / authz / rate / conflict / adversarial / server-error categories. |
+| Agent | [golden-file-manager](agents/golden-file-manager.md) | Active maintenance: add / update / prune snapshot baselines; refuse updates whose diff doesn't match PR intent. |
 
 ## Install
 

@@ -11,13 +11,13 @@ need: every team that ships schema changes.
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [flyway-migrations](skills/flyway-migrations/SKILL.md) | S1 | V/U/R prefix versioned SQL migrations + flyway_schema_history; production guards (`cleanDisabled`, `validateOnMigrate`) |
-| Skill | [liquibase-migrations](skills/liquibase-migrations/SKILL.md) | S1 | XML/YAML/JSON/SQL changelog with preconditions + contexts/labels + per-changeset rollback |
-| Skill | [atlas-migrations](skills/atlas-migrations/SKILL.md) | S1 | Terraform-style declarative HCL or SQL schema; `atlas migrate diff/apply/lint` with destructive-pattern detection |
-| Skill | [sqlmesh-migrations](skills/sqlmesh-migrations/SKILL.md) | S1 | Data-pipeline + virtual environments; auto-classification of breaking-vs-non-breaking + downstream impact analysis |
-| Agent | [migration-blast-radius-reviewer](agents/migration-blast-radius-reviewer.md) | A3 | Adversarial reviewer for any migration tool: 8-category operation taxonomy; refuses to approve unsafe NOT NULL or DROP COLUMN without consumer coordination |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [flyway-migrations](skills/flyway-migrations/SKILL.md) | V/U/R prefix versioned SQL migrations + flyway_schema_history; production guards (`cleanDisabled`, `validateOnMigrate`) |
+| Skill | [liquibase-migrations](skills/liquibase-migrations/SKILL.md) | XML/YAML/JSON/SQL changelog with preconditions + contexts/labels + per-changeset rollback |
+| Skill | [atlas-migrations](skills/atlas-migrations/SKILL.md) | Terraform-style declarative HCL or SQL schema; `atlas migrate diff/apply/lint` with destructive-pattern detection |
+| Skill | [sqlmesh-migrations](skills/sqlmesh-migrations/SKILL.md) | Data-pipeline + virtual environments; auto-classification of breaking-vs-non-breaking + downstream impact analysis |
+| Agent | [migration-blast-radius-reviewer](agents/migration-blast-radius-reviewer.md) | Adversarial reviewer for any migration tool: 8-category operation taxonomy; refuses to approve unsafe NOT NULL or DROP COLUMN without consumer coordination |
 
 ## Install
 

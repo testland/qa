@@ -7,14 +7,14 @@ Per-framework lifecycle scope. Does **not** duplicate
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [junit5-tests](skills/junit5-tests/SKILL.md) | S1 | JUnit 5 (Jupiter); modern JVM standard; @Test/@ParameterizedTest/@RepeatedTest; extension model |
-| Skill | [kotest-tests](skills/kotest-tests/SKILL.md) | S1 | Kotlin-native; multi-style (StringSpec/FunSpec/BehaviorSpec); built-in property-based |
-| Skill | [spock-tests](skills/spock-tests/SKILL.md) | S1 | Groovy BDD; given/when/then blocks; data tables; built-in mocking |
-| Skill | [testng-tests](skills/testng-tests/SKILL.md) | S1 | Test method dependencies; groups; suite XML; legacy + Selenium-tradition |
-| Skill | [scalatest](skills/scalatest/SKILL.md) | S1 | Scala-native; multi-style (FlatSpec/FunSuite/WordSpec); ScalaCheck pairing |
-| Agent | [jvm-test-author](agents/jvm-test-author.md) | A2 | Authors one JVM unit test per spec; detects JUnit 5 / TestNG / Kotest / Spock / ScalaTest from pom.xml / build.gradle[.kts] / build.sbt; pairs with AssertJ when present |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [junit5-tests](skills/junit5-tests/SKILL.md) | JUnit 5 (Jupiter); modern JVM standard; @Test/@ParameterizedTest/@RepeatedTest; extension model |
+| Skill | [kotest-tests](skills/kotest-tests/SKILL.md) | Kotlin-native; multi-style (StringSpec/FunSpec/BehaviorSpec); built-in property-based |
+| Skill | [spock-tests](skills/spock-tests/SKILL.md) | Groovy BDD; given/when/then blocks; data tables; built-in mocking |
+| Skill | [testng-tests](skills/testng-tests/SKILL.md) | Test method dependencies; groups; suite XML; legacy + Selenium-tradition |
+| Skill | [scalatest](skills/scalatest/SKILL.md) | Scala-native; multi-style (FlatSpec/FunSuite/WordSpec); ScalaCheck pairing |
+| Agent | [jvm-test-author](agents/jvm-test-author.md) | Authors one JVM unit test per spec; detects JUnit 5 / TestNG / Kotest / Spock / ScalaTest from pom.xml / build.gradle[.kts] / build.sbt; pairs with AssertJ when present |
 
 ## Install
 

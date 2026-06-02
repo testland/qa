@@ -4,9 +4,9 @@ Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode,
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

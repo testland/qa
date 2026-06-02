@@ -4,16 +4,16 @@ Test case management discipline (pre-execution authoring + lifecycle + traceabil
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| skill | [test-case-anatomy-reference](skills/test-case-anatomy-reference/SKILL.md) | S2 | ISO 29119-3 + ISTQB CTAL-TM canonical case fields + tracker-schema map |
-| skill | [testrail-case-management](skills/testrail-case-management/SKILL.md) | S1 | TestRail API v2: cases + suites + sections + templates |
-| skill | [xray-case-management](skills/xray-case-management/SKILL.md) | S1 | Xray Cloud GraphQL + REST: Manual / Cucumber / Generic tests |
-| skill | [zephyr-scale-case-management](skills/zephyr-scale-case-management/SKILL.md) | S1 | Zephyr Scale Cloud REST v2: testcases + testScript + folders |
-| skill | [allure-testops-case-management](skills/allure-testops-case-management/SKILL.md) | S1 | Allure TestOps REST: cases + nested scenarios + automation linking |
-| skill | [qase-io-case-management](skills/qase-io-case-management/SKILL.md) | S1 | Qase Public API v1: cases + suites + shared steps |
-| skill | [traceability-matrix-builder](skills/traceability-matrix-builder/SKILL.md) | S3 | Build requirements-to-tests matrix from any TCM + requirements source |
-| agent | [test-case-quality-critic](agents/test-case-quality-critic.md) | A3 | Audit a TCM case repository for anatomy + traceability + step quality |
+| Type | Name | Description |
+| --- | --- | --- |
+| skill | [test-case-anatomy-reference](skills/test-case-anatomy-reference/SKILL.md) | ISO 29119-3 + ISTQB CTAL-TM canonical case fields + tracker-schema map |
+| skill | [testrail-case-management](skills/testrail-case-management/SKILL.md) | TestRail API v2: cases + suites + sections + templates |
+| skill | [xray-case-management](skills/xray-case-management/SKILL.md) | Xray Cloud GraphQL + REST: Manual / Cucumber / Generic tests |
+| skill | [zephyr-scale-case-management](skills/zephyr-scale-case-management/SKILL.md) | Zephyr Scale Cloud REST v2: testcases + testScript + folders |
+| skill | [allure-testops-case-management](skills/allure-testops-case-management/SKILL.md) | Allure TestOps REST: cases + nested scenarios + automation linking |
+| skill | [qase-io-case-management](skills/qase-io-case-management/SKILL.md) | Qase Public API v1: cases + suites + shared steps |
+| skill | [traceability-matrix-builder](skills/traceability-matrix-builder/SKILL.md) | Build requirements-to-tests matrix from any TCM + requirements source |
+| agent | [test-case-quality-critic](agents/test-case-quality-critic.md) | Audit a TCM case repository for anatomy + traceability + step quality |
 
 ## Differentiation
 

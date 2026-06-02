@@ -12,13 +12,13 @@ reading source code. Every scanner skill includes a
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [zap-baseline](skills/zap-baseline/SKILL.md) | S1 | OWASP ZAP baseline (passive, PR-blocking-safe) + zap-full-scan companion (active, staging-only); auth via context file; rule customization TSV |
-| Skill | [burp-headless](skills/burp-headless/SKILL.md) | S1 | Burp Suite Pro REST API + Enterprise CI integration; BApp Store extensions; session-handling rules for auth |
-| Skill | [nightvision-dast](skills/nightvision-dast/SKILL.md) | S1 | White-box-assisted DAST tracing findings to source; OpenAPI / Postman / GraphQL targets; Interactive Logins / Header / Cookie / TOTP auth |
-| Skill | [dast-baseline-runner](skills/dast-baseline-runner/SKILL.md) | S3 | Build-an-X for layered DAST cadence: ZAP baseline (PR) → ZAP full + NightVision (nightly) → Burp deep (per-release); baseline-finding ratchet; coverage measurement |
-| Agent | [dast-finding-triager](agents/dast-finding-triager.md) | A3 | Adversarial unifier across all 3 sister scanners; deduplicates by `(URL, method, parameter, finding-class)`; waiver enforcement; refuses pass with unwaived critical findings |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [zap-baseline](skills/zap-baseline/SKILL.md) | OWASP ZAP baseline (passive, PR-blocking-safe) + zap-full-scan companion (active, staging-only); auth via context file; rule customization TSV |
+| Skill | [burp-headless](skills/burp-headless/SKILL.md) | Burp Suite Pro REST API + Enterprise CI integration; BApp Store extensions; session-handling rules for auth |
+| Skill | [nightvision-dast](skills/nightvision-dast/SKILL.md) | White-box-assisted DAST tracing findings to source; OpenAPI / Postman / GraphQL targets; Interactive Logins / Header / Cookie / TOTP auth |
+| Skill | [dast-baseline-runner](skills/dast-baseline-runner/SKILL.md) | Build-an-X for layered DAST cadence: ZAP baseline (PR) → ZAP full + NightVision (nightly) → Burp deep (per-release); baseline-finding ratchet; coverage measurement |
+| Agent | [dast-finding-triager](agents/dast-finding-triager.md) | Adversarial unifier across all 3 sister scanners; deduplicates by `(URL, method, parameter, finding-class)`; waiver enforcement; refuses pass with unwaived critical findings |
 
 ## Install
 

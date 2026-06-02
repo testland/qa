@@ -12,13 +12,13 @@ covers the runtime validation.
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [keycloak-tests](skills/keycloak-tests/SKILL.md) | S1 | Testcontainers Keycloak; OIDC token endpoint; introspection; Admin REST API; UMA permission tickets |
-| Skill | [auth0-tests](skills/auth0-tests/SKILL.md) | S1 | Tenant strategy; Auth0 Deploy CLI for env parity; Action / Rules unit tests; mock OIDC server alternative |
-| Skill | [okta-tests](skills/okta-tests/SKILL.md) | S1 | Org strategy; Terraform Okta provider for config parity; OIE workflows; SCIM provisioning; scoped API tokens |
-| Skill | [oauth-flow-test-author](skills/oauth-flow-test-author/SKILL.md) | S3 | Build-an-X for OAuth/OIDC: auth-code + PKCE (S256), state CSRF defense, refresh-token rotation + reuse detection, OIDC nonce, scope-grant verification, redirect-URI strict matching |
-| Skill | [session-management-test-author](skills/session-management-test-author/SKILL.md) | S3 | Build-an-X for sessions per OWASP ASVS V3: cookie attrs, session-fixation defense, absolute + idle timeout, concurrent-session limits, server-side logout invalidation, CSRF, session binding |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [keycloak-tests](skills/keycloak-tests/SKILL.md) | Testcontainers Keycloak; OIDC token endpoint; introspection; Admin REST API; UMA permission tickets |
+| Skill | [auth0-tests](skills/auth0-tests/SKILL.md) | Tenant strategy; Auth0 Deploy CLI for env parity; Action / Rules unit tests; mock OIDC server alternative |
+| Skill | [okta-tests](skills/okta-tests/SKILL.md) | Org strategy; Terraform Okta provider for config parity; OIE workflows; SCIM provisioning; scoped API tokens |
+| Skill | [oauth-flow-test-author](skills/oauth-flow-test-author/SKILL.md) | Build-an-X for OAuth/OIDC: auth-code + PKCE (S256), state CSRF defense, refresh-token rotation + reuse detection, OIDC nonce, scope-grant verification, redirect-URI strict matching |
+| Skill | [session-management-test-author](skills/session-management-test-author/SKILL.md) | Build-an-X for sessions per OWASP ASVS V3: cookie attrs, session-fixation defense, absolute + idle timeout, concurrent-session limits, server-side logout invalidation, CSRF, session binding |
 
 ## Install
 

@@ -7,13 +7,13 @@ surfaces that the bulk of e2e/UI test plugins under-cover.
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| Skill | [service-worker-tests](skills/service-worker-tests/SKILL.md) | S1 | Playwright `context.serviceWorkers()` patterns; cache-strategy assertions; version-bump invalidation; SW unit tests via `service-worker-mock` |
-| Skill | [pwa-install-flow-tests](skills/pwa-install-flow-tests/SKILL.md) | S1 | Web App Manifest validation; `beforeinstallprompt` capture; `appinstalled` event; iOS Add-to-Home-Screen path |
-| Skill | [web-vitals-inp-deep](skills/web-vitals-inp-deep/SKILL.md) | S1 | INP decomposition (input delay / processing duration / presentation delay); long-task detection; CrUX field correlation |
-| Skill | [browser-extension-tests](skills/browser-extension-tests/SKILL.md) | S1 | Playwright fixtures for Chromium MV3 extensions; popup + content-script + background-SW + chrome.storage tests |
-| Skill | [sw-cache-strategy-author](skills/sw-cache-strategy-author/SKILL.md) | S3 | Authors Workbox-style strategies (CacheFirst / NetworkFirst / StaleWhileRevalidate / NetworkOnly) AND the matching Playwright assertions |
+| Type | Name | Description |
+| --- | --- | --- |
+| Skill | [service-worker-tests](skills/service-worker-tests/SKILL.md) | Playwright `context.serviceWorkers()` patterns; cache-strategy assertions; version-bump invalidation; SW unit tests via `service-worker-mock` |
+| Skill | [pwa-install-flow-tests](skills/pwa-install-flow-tests/SKILL.md) | Web App Manifest validation; `beforeinstallprompt` capture; `appinstalled` event; iOS Add-to-Home-Screen path |
+| Skill | [web-vitals-inp-deep](skills/web-vitals-inp-deep/SKILL.md) | INP decomposition (input delay / processing duration / presentation delay); long-task detection; CrUX field correlation |
+| Skill | [browser-extension-tests](skills/browser-extension-tests/SKILL.md) | Playwright fixtures for Chromium MV3 extensions; popup + content-script + background-SW + chrome.storage tests |
+| Skill | [sw-cache-strategy-author](skills/sw-cache-strategy-author/SKILL.md) | Authors Workbox-style strategies (CacheFirst / NetworkFirst / StaleWhileRevalidate / NetworkOnly) AND the matching Playwright assertions |
 
 ## Install
 

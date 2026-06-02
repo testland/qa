@@ -4,9 +4,9 @@ Cache testing across layers: Redis cache patterns, CDN cache-purge testing (Clou
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

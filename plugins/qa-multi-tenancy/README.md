@@ -4,9 +4,9 @@ Tenant-isolation testing for B2B SaaS: row-level security, cross-tenant leak det
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

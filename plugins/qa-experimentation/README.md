@@ -4,9 +4,9 @@ Experimentation harness testing: SDK-specific testing for Statsig, Optimizely, V
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| (filled in as components are added) | | | |
+| Type | Name | Description |
+| --- | --- | --- |
+| (filled in as components are added) |  |  |
 
 ## Install
 

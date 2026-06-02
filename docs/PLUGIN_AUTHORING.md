@@ -307,7 +307,7 @@ lint script during the shadow window.
 Add a row to the plugin's component table:
 
 ```markdown
-| skill | dbt-testing | S1 | Author and run dbt tests with CI gates |
+| skill | dbt-testing | Author and run dbt tests with CI gates |
 ```
 
 ## Step 10 — Run CI locally

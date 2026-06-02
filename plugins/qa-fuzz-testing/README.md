@@ -4,19 +4,19 @@ Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-r
 
 ## Components
 
-| Type | Name | Archetype | Description |
-|---|---|---|---|
-| skill | [corpus-management-reference](skills/corpus-management-reference/SKILL.md) | S2 | Seed / evolved corpus + crash-artefact naming + dictionary discipline |
-| skill | [sanitiser-integration-reference](skills/sanitiser-integration-reference/SKILL.md) | S2 | ASan / UBSan / MSan / TSan / LSan composition + compatibility matrix |
-| skill | [libfuzzer-cpp](skills/libfuzzer-cpp/SKILL.md) | S1 | LLVM libFuzzer for C/C++ (in-process) |
-| skill | [afl-plus-plus](skills/afl-plus-plus/SKILL.md) | S1 | AFL++ out-of-process fuzzer (file-driven, QEMU mode) |
-| skill | [go-native-fuzzing](skills/go-native-fuzzing/SKILL.md) | S1 | Go 1.18+ native `go test -fuzz` |
-| skill | [cargo-fuzz-rust](skills/cargo-fuzz-rust/SKILL.md) | S1 | Rust cargo-fuzz (libFuzzer + Arbitrary trait) |
-| skill | [atheris-python-fuzzing](skills/atheris-python-fuzzing/SKILL.md) | S1 | Google Atheris (libFuzzer for Python + CPython extensions) |
-| skill | [jazzer-jvm-fuzzing](skills/jazzer-jvm-fuzzing/SKILL.md) | S1 | Code Intelligence Jazzer (JVM + JUnit 5 + JVM sanitisers) |
-| skill | [ossfuzz-integration](skills/ossfuzz-integration/SKILL.md) | S1 | Onboard to Google OSS-Fuzz continuous fuzzing service |
-| skill | [fuzz-toolkit-dispatcher](skills/fuzz-toolkit-dispatcher/SKILL.md) | S4 | Decision tree routing fuzz-target authoring per language |
-| agent | [fuzz-target-author](agents/fuzz-target-author.md) | A4 | Scaffold a fuzz target from a function signature (routed via dispatcher) |
+| Type | Name | Description |
+| --- | --- | --- |
+| skill | [corpus-management-reference](skills/corpus-management-reference/SKILL.md) | Seed / evolved corpus + crash-artefact naming + dictionary discipline |
+| skill | [sanitiser-integration-reference](skills/sanitiser-integration-reference/SKILL.md) | ASan / UBSan / MSan / TSan / LSan composition + compatibility matrix |
+| skill | [libfuzzer-cpp](skills/libfuzzer-cpp/SKILL.md) | LLVM libFuzzer for C/C++ (in-process) |
+| skill | [afl-plus-plus](skills/afl-plus-plus/SKILL.md) | AFL++ out-of-process fuzzer (file-driven, QEMU mode) |
+| skill | [go-native-fuzzing](skills/go-native-fuzzing/SKILL.md) | Go 1.18+ native `go test -fuzz` |
+| skill | [cargo-fuzz-rust](skills/cargo-fuzz-rust/SKILL.md) | Rust cargo-fuzz (libFuzzer + Arbitrary trait) |
+| skill | [atheris-python-fuzzing](skills/atheris-python-fuzzing/SKILL.md) | Google Atheris (libFuzzer for Python + CPython extensions) |
+| skill | [jazzer-jvm-fuzzing](skills/jazzer-jvm-fuzzing/SKILL.md) | Code Intelligence Jazzer (JVM + JUnit 5 + JVM sanitisers) |
+| skill | [ossfuzz-integration](skills/ossfuzz-integration/SKILL.md) | Onboard to Google OSS-Fuzz continuous fuzzing service |
+| skill | [fuzz-toolkit-dispatcher](skills/fuzz-toolkit-dispatcher/SKILL.md) | Decision tree routing fuzz-target authoring per language |
+| agent | [fuzz-target-author](agents/fuzz-target-author.md) | Scaffold a fuzz target from a function signature (routed via dispatcher) |
 
 ## Differentiation
 
