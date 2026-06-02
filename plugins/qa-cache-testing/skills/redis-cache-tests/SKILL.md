@@ -12,12 +12,12 @@ archetype: S1
 
 Redis is the dominant application-tier cache. Per
 [redis.io/docs/latest/commands/expire/](https://redis.io/docs/latest/commands/expire/),
-keys get TTLs via `EXPIRE`, `PEXPIRE`, or `EXPIREAT` — with
+keys get TTLs via `EXPIRE`, `PEXPIRE`, or `EXPIREAT` - with
 Redis 7+ flags `NX` / `XX` / `GT` / `LT` controlling conditional
 expiry.
 
 This skill wraps test patterns against a real Redis instance
-(via testcontainers or a dedicated test cluster) — **not** a
+(via testcontainers or a dedicated test cluster) - **not** a
 mock. Mocks lose the eviction-policy + TTL-tick + pub-sub
 behaviours that real bugs hide in.
 

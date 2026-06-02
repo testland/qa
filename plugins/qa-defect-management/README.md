@@ -21,12 +21,12 @@ Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skill
 This plugin scopes **defect lifecycle + taxonomy + tracker workflow**.
 Sibling neighbours:
 
-- [`qa-bug-repro`](../qa-bug-repro/) — bug *reproduction* + crash
+- [`qa-bug-repro`](../qa-bug-repro/) - bug *reproduction* + crash
   triage + defect *clustering* (after filing). This plugin
   covers everything *upstream* of filing (classification,
   duplicate detection) and the filing itself (platform-specific
   workflows).
-- [`qa-test-reporting`](../qa-test-reporting/) — has TestRail /
+- [`qa-test-reporting`](../qa-test-reporting/) - has TestRail /
   Xray / Zephyr *result-sync* integrations (post-execution
   reporting). Distinct from this plugin's bug-tracker workflow
   runners (defect filing + lifecycle management).

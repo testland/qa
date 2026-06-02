@@ -18,7 +18,7 @@ Specification v2.x); 3DS 1.0 is deprecated.
 
 3DS adds a verification step between the merchant + the issuing
 bank. The customer may be challenged with a one-time code,
-biometric prompt, or other factor — or pass through frictionless
+biometric prompt, or other factor - or pass through frictionless
 based on risk signals.
 
 ## When to use
@@ -115,7 +115,7 @@ Test surface per step:
 | 6 | Confirm call is idempotent (per [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md)) |
 | 7 | Final state matches expected per test card |
 
-## Frictionless vs challenge — testable assertions
+## Frictionless vs challenge - testable assertions
 
 ```typescript
 test('frictionless authentication', async () => {

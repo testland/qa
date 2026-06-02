@@ -1,6 +1,6 @@
 ---
 name: aria-authoring-patterns
-description: "Reference for the W3C ARIA Authoring Practices Guide (APG) — covers the 31 canonical interactive-widget patterns (Combobox, Dialog, Menu, Tabs, Tree, etc.), their required ARIA roles and states, the keyboard-interaction model per pattern, and the canonical-violations to watch for. Use when authoring a custom interactive widget that doesn't have a native HTML equivalent, or when reviewing one for ARIA correctness."
+description: "Reference for the W3C ARIA Authoring Practices Guide (APG) - covers the 31 canonical interactive-widget patterns (Combobox, Dialog, Menu, Tabs, Tree, etc.), their required ARIA roles and states, the keyboard-interaction model per pattern, and the canonical-violations to watch for. Use when authoring a custom interactive widget that doesn't have a native HTML equivalent, or when reviewing one for ARIA correctness."
 rating: 25
 d6: 5
 archetype: S2
@@ -11,7 +11,7 @@ archetype: S2
 ## Overview
 
 The W3C ARIA Authoring Practices Guide (APG) is the canonical
-reference for **how** to build accessible custom widgets — patterns
+reference for **how** to build accessible custom widgets - patterns
 where native HTML doesn't have a single matching element
 ([apg-patterns][apg]).
 
@@ -50,7 +50,7 @@ In practice:
 
 | Native element                                | Don't replace with                                  |
 |-----------------------------------------------|-----------------------------------------------------|
-| `<button>`                                    | `<div role="button">` — same semantics, more code, easier to break. |
+| `<button>`                                    | `<div role="button">` - same semantics, more code, easier to break. |
 | `<input type="checkbox">`                     | Custom checkbox unless visual constraints demand it. |
 | `<a href>`                                    | `<div onclick="navigate(...)">`.                    |
 | `<select>`                                    | Custom listbox UNLESS multi-select with rich content per option. |
@@ -67,7 +67,7 @@ The 31 patterns documented per [apg-patterns][apg]:
 
 | Pattern          | When to use                                         | Native fallback                             |
 |------------------|-----------------------------------------------------|---------------------------------------------|
-| Button            | Trigger an action.                                   | `<button>` — almost always.                  |
+| Button            | Trigger an action.                                   | `<button>` - almost always.                  |
 | Checkbox          | Two-state binary; or three-state (mixed).           | `<input type="checkbox">`.                  |
 | Combobox          | Searchable / filterable select with autocomplete.    | `<select>` for plain selection only.        |
 | Disclosure         | Show/hide content; one-way reveal.                   | `<details>` / `<summary>`.                   |
@@ -170,7 +170,7 @@ this skill highlights the **load-bearing essentials**.
 ```
 
 The simplest pattern; canonical native equivalent is `<details>` /
-`<summary>` — use that unless the visual design demands the button
+`<summary>` - use that unless the visual design demands the button
 form.
 
 ### Tooltip (per SC 1.4.13)
@@ -184,7 +184,7 @@ form.
 |------------------------------------------------------------|
 | Show on hover OR focus.                                    |
 | Dismissable via Esc (per SC 1.4.13).                       |
-| Hoverable — user can move pointer to tooltip text.         |
+| Hoverable - user can move pointer to tooltip text.         |
 | Persistent until pointer / focus leaves OR Esc dismisses.  |
 
 (See [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md) SC
@@ -216,7 +216,7 @@ The most-used `aria-*` states across patterns:
 |----------------------------------------------------------|---------------------------------------------------------------------|-----|
 | `<div role="button">` without keyboard handlers           | Custom button needs `tabindex="0"` AND Enter/Space handlers.       | Use `<button>` OR add both. |
 | `aria-label` on a `<div>` that has visible text label     | Redundant; `aria-label` overrides the visible text for screen readers (becomes confusing). | Use `aria-labelledby` referencing the visible text element. |
-| `aria-hidden="true"` on a focusable element               | Element is hidden from screen readers but still in tab order — broken state. | If you want to hide, also remove from tab order. |
+| `aria-hidden="true"` on a focusable element               | Element is hidden from screen readers but still in tab order - broken state. | If you want to hide, also remove from tab order. |
 | Forgetting `role="tab"` / `role="tabpanel"` pairs          | Screen reader doesn't announce the relationship.                   | Pair every tab with a panel via `aria-controls` / `aria-labelledby`. |
 | Hand-rolled combobox without `aria-activedescendant`       | Arrow keys don't announce options.                                 | Implement `aria-activedescendant` or move actual DOM focus. |
 | `role="presentation"` on a meaningful container            | Removes semantics; sometimes used to "fix" a layout issue but breaks structure. | Don't override structure to fix layout; fix layout. |
@@ -226,19 +226,18 @@ The most-used `aria-*` states across patterns:
 | Anti-pattern                                                  | Why it fails                                                       | Fix |
 |---------------------------------------------------------------|---------------------------------------------------------------------|-----|
 | Inventing a custom pattern not in the APG                      | No screen-reader convention; users can't form expectations.       | Match an APG pattern exactly OR fall back to native HTML. |
-| Mixing native and ARIA semantics (`<button role="link">`)       | Confusing — element behaves like a button but says it's a link.   | One or the other; native is preferred. |
+| Mixing native and ARIA semantics (`<button role="link">`)       | Confusing - element behaves like a button but says it's a link.   | One or the other; native is preferred. |
 | `tabindex="3"` to control sequence                              | Positive tabindex creates fragile order.                           | DOM order + `tabindex="0"` for custom focusables. |
 | Adding `aria-label` to every element "for accessibility"        | If the element has a visible label, `aria-label` overrides it. Many elements don't need a label at all. | Only add `aria-label` when there's no visible text label AND the element is interactive. |
 
 ## References
 
-- [apg-patterns][apg] — W3C ARIA Authoring Practices Guide
+- [apg-patterns][apg] - W3C ARIA Authoring Practices Guide
   (canonical patterns).
-- WAI-ARIA 1.2 Spec — https://www.w3.org/TR/wai-aria-1.2/
-- [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) — Dialog
+- WAI-ARIA 1.2 Spec - https://www.w3.org/TR/wai-aria-1.2/
+- [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) - Dialog
   pattern's focus-management deep dive.
-- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md)
-  — Keyboard-interaction conformance underlying every APG pattern.
+- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md) - Keyboard-interaction conformance underlying every APG pattern.
 - [`axe-a11y`](../axe-a11y/SKILL.md),
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md) — runners that detect
+  [`pa11y-a11y`](../pa11y-a11y/SKILL.md) - runners that detect
   ARIA misuse programmatically.

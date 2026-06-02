@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# code-quality-critic — evals
+# code-quality-critic - evals
 
 Companion eval cases for [`code-quality-critic`](../../code-quality-critic.md).
 Three cases cover happy path / branch / adversarial: a feature PR with one
@@ -14,10 +14,10 @@ early return). Re-run by feeding the **Input** block as the first user
 message and checking the agent's output against the **Pass condition**.
 
 Target models for re-runs: `sonnet`, `haiku`, `opus`. Dates recorded
-below are the eval-authoring date — each case is designed to be
+below are the eval-authoring date - each case is designed to be
 reproducible against any tier.
 
-## Eval 1 — happy path — feature PR with net-new Critical (BLOCK)
+## Eval 1 - happy path - feature PR with net-new Critical (BLOCK)
 
 **Input:**
 
@@ -65,7 +65,7 @@ literal string `validateSession` AND at least one of `Lizard` /
 `SonarQube` AND the literal string `Critical`. Output does NOT contain
 a `READY` verdict line.
 
-## Eval 2 — branch — refactor PR that reduces debt (READY)
+## Eval 2 - branch - refactor PR that reduces debt (READY)
 
 **Input:**
 
@@ -105,7 +105,7 @@ No new functionality."
 violations). Step 3 buckets: 0 Net new, 2 Modified-line improvements
 (CCN reductions), 0 inherited new. Step 4: no new Major/Critical;
 existing finding count reduced. Step 6 emits verdict `READY` because
-count(Net new) = 0 < count(Removed). Matches the "Example 1 — Refactor
+count(Net new) = 0 < count(Removed). Matches the "Example 1 - Refactor
 PR (good case)" pattern in the agent body.
 
 **Pass condition:** Output contains the literal string `READY` AND
@@ -113,7 +113,7 @@ references CCN reduction (one of `22 → 14`, `19 → 11`, `reduced`,
 `net debt reduced`). Output does NOT contain a `BLOCK` verdict line
 AND does NOT contain a Net-new Critical row.
 
-## Eval 3 — adversarial — scanner scope includes test files (refuse)
+## Eval 3 - adversarial - scanner scope includes test files (refuse)
 
 **Input:**
 
@@ -161,12 +161,12 @@ test-file findings.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo or run scanners.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow
-  `Bash(jq *)`, `Bash(git *)`) is read-only — eval re-runs cannot
+  `Bash(jq *)`, `Bash(git *)`) is read-only - eval re-runs cannot
   modify source code or scanner reports.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

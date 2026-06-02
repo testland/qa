@@ -11,7 +11,7 @@ archetype: S2
 ## Overview
 
 A cache stampede (also "dog-piling," "thundering herd at cache
-miss") occurs when a cached value expires under high load —
+miss") occurs when a cached value expires under high load - 
 many requesters simultaneously detect the miss, all recompute,
 all write back. Per
 [en.wikipedia.org/wiki/Cache_stampede](https://en.wikipedia.org/wiki/Cache_stampede):
@@ -40,7 +40,7 @@ skills.
 | DB or upstream service latency spikes at cache-key TTL boundaries | Stampede on key expiry |
 | Cache hit rate drops near zero, recovers slowly | Stampede causing congestion collapse |
 | Periodic load spikes synchronised with cron / scheduled jobs | Multiple processes invalidating + recomputing |
-| Recompute-cost-vs-traffic ratio > 0.1 | Hot key — stampede risk |
+| Recompute-cost-vs-traffic ratio > 0.1 | Hot key - stampede risk |
 
 ## The three mitigation families
 
@@ -100,8 +100,8 @@ keys; needs separate infrastructure.
 
 ### 3. Probabilistic early expiration (XFetch)
 
-Each requester independently decides — with rising probability
-as the value ages — to refresh before formal expiry. Per
+Each requester independently decides - with rising probability
+as the value ages - to refresh before formal expiry. Per
 Wikipedia, the canonical formula:
 
 ```

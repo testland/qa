@@ -1,6 +1,6 @@
 ---
 name: litmus-chaos
-description: "Configures LitmusChaos for Kubernetes-native chaos engineering — installs via Helm, picks ChaosExperiments from the ChaosHub (`pod-delete`, `network-latency`, `node-cpu-hog`, etc.), authors a ChaosEngine CR scoping the experiment + steady-state probes, runs as part of the cluster, exports Prometheus metrics for the verdict. Use when the platform is Kubernetes (CNCF-hosted; cloud-native)."
+description: "Configures LitmusChaos for Kubernetes-native chaos engineering - installs via Helm, picks ChaosExperiments from the ChaosHub (`pod-delete`, `network-latency`, `node-cpu-hog`, etc.), authors a ChaosEngine CR scoping the experiment + steady-state probes, runs as part of the cluster, exports Prometheus metrics for the verdict. Use when the platform is Kubernetes (CNCF-hosted; cloud-native)."
 rating: 23
 d6: 4
 archetype: S1
@@ -32,7 +32,7 @@ are CRDs; results export to Prometheus.
 - A chaos experiment's outcome should integrate with existing K8s
   observability (Prometheus, Grafana).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [litmus-home][lh]:
 
@@ -43,7 +43,7 @@ helm install litmuschaos litmuschaos/litmus -n litmus --create-namespace
 
 The Litmus operator + ChaosCenter (web UI) deploy.
 
-## Step 2 — Pick a ChaosExperiment from the Hub
+## Step 2 - Pick a ChaosExperiment from the Hub
 
 Per [litmus-home][lh], the **ChaosHub** is "a repository hosting
 most of the chaos experiments that are needed for a quick start in
@@ -67,7 +67,7 @@ Install per-experiment:
 kubectl apply -f https://hub.litmuschaos.io/api/chaos/2.14.0?file=charts/generic/pod-delete/experiment.yaml
 ```
 
-## Step 3 — Author a ChaosEngine
+## Step 3 - Author a ChaosEngine
 
 The ChaosEngine CR runs an experiment against a target:
 
@@ -116,7 +116,7 @@ Per [litmus-home][lh], probes "create complete chaos scenarios
 close to the real application experience upon failure." The probe
 is the steady-state check per the chaos principles.
 
-## Step 4 — Run
+## Step 4 - Run
 
 ```bash
 kubectl apply -f checkout-pod-delete.yaml
@@ -126,14 +126,14 @@ Litmus runs the experiment for `TOTAL_CHAOS_DURATION` seconds,
 checking the probe continuously. The verdict (Pass / Fail) lands
 in `chaosengine.status.experimentStatus.verdict`.
 
-## Step 5 — Read the verdict
+## Step 5 - Read the verdict
 
 ```bash
 kubectl get chaosengine checkout-pod-delete -o jsonpath='{.status.experimentStatus.verdict}'
 # Output: Pass | Fail
 ```
 
-## Step 6 — Probe types
+## Step 6 - Probe types
 
 | Probe type   | Use                                            |
 |--------------|------------------------------------------------|
@@ -146,7 +146,7 @@ Probes can run in different modes: `SOT` (start of test), `EOT`
 (end of test), `Edge` (both), `Continuous` (every N seconds during
 the experiment).
 
-## Step 7 — Observability
+## Step 7 - Observability
 
 Per [litmus-home][lh]: "chaos observability by exporting Prometheus
 metrics that highlight and quantify the impact of chaos on the
@@ -160,7 +160,7 @@ Key metrics:
 
 Wire to Grafana for dashboards.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - name: Run chaos experiment
@@ -195,11 +195,10 @@ Wire to Grafana for dashboards.
 
 ## References
 
-- [lh][lh] — LitmusChaos overview, CNCF-hosted, ChaosExperiments
+- [lh][lh] - LitmusChaos overview, CNCF-hosted, ChaosExperiments
   + ChaosEngine + ChaosHub + probes, Prometheus metrics export.
-- [`chaos-mesh`](../chaos-mesh/SKILL.md) — sibling K8s-native
+- [`chaos-mesh`](../chaos-mesh/SKILL.md) - sibling K8s-native
   alternative.
-- [`gremlin-chaos`](../gremlin-chaos/SKILL.md) — commercial
+- [`gremlin-chaos`](../gremlin-chaos/SKILL.md) - commercial
   multi-platform alternative.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
-  — methodology this tool implements.
+- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology this tool implements.

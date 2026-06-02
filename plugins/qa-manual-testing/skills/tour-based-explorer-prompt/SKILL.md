@@ -1,6 +1,6 @@
 ---
 name: tour-based-explorer-prompt
-description: "Pure-reference catalog of exploratory testing tours — heuristics that frame an exploratory session around a theme. The seven canonical tours from Whittaker''''s *Exploratory Software Testing* (2009): Feature tour, Money tour, Landmark tour, Intellectual tour, Bad-data tour, Configuration tour, Garbage collector''''s tour. Each tour has a mission, a typical signal it surfaces, and an example application. Use as the heuristics menu the charter author and tester pick from when designing a session."
+description: "Pure-reference catalog of exploratory testing tours - heuristics that frame an exploratory session around a theme. The seven canonical tours from Whittaker''''s *Exploratory Software Testing* (2009): Feature tour, Money tour, Landmark tour, Intellectual tour, Bad-data tour, Configuration tour, Garbage collector''''s tour. Each tour has a mission, a typical signal it surfaces, and an example application. Use as the heuristics menu the charter author and tester pick from when designing a session."
 rating: 22
 d6: 3
 archetype: S2
@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-A naïve exploratory session can drift — the tester clicks around
+A naïve exploratory session can drift - the tester clicks around
 without a focusing lens. **Tours** solve this: each tour frames the
 exploration around a theme that catches a specific class of bugs.
 
@@ -19,7 +19,7 @@ Software Testing* (2009, Addison-Wesley). They've been widely cited
 in the testing community as the practitioner-emergent vocabulary for
 exploration.
 
-This skill is a **pure reference** — the charter author
+This skill is a **pure reference** - the charter author
 ([`exploratory-charter-author`](../../agents/exploratory-charter-author.md))
 and the tester pick which tours to apply per session.
 
@@ -32,7 +32,7 @@ and the tester pick which tours to apply per session.
 - Onboarding new exploratory testers who need vocabulary for
   "what kind of testing am I doing right now?"
 
-## Tour 1 — Feature tour
+## Tour 1 - Feature tour
 
 **Mission:** Visit every feature in scope at depth = 1.
 
@@ -56,7 +56,7 @@ gap survey.
 **When NOT to use:** Deep-dive sessions where the depth-1 sweep
 provides no signal.
 
-## Tour 2 — Money tour
+## Tour 2 - Money tour
 
 **Mission:** Find every place money / pricing / currency / discount
 appears; verify each.
@@ -80,9 +80,9 @@ formatting (€1.234,56 vs $1,234.56).
 **When to use:** Any feature touching money, pricing, billing.
 **Critical for:** Checkout, billing, subscription management.
 
-## Tour 3 — Landmark tour
+## Tour 3 - Landmark tour
 
-**Mission:** Visit each "landmark" feature — the canonical user
+**Mission:** Visit each "landmark" feature - the canonical user
 journeys / hero flows.
 
 **Signal:** Whether the marquee features still work after a
@@ -105,7 +105,7 @@ quarterly health check.
 hero flows (those should run first; tour confirms behavior the
 automation doesn't catch).
 
-## Tour 4 — Intellectual tour
+## Tour 4 - Intellectual tour
 
 **Mission:** Explore the hardest-to-understand parts of the
 product. The features that the team has trouble explaining.
@@ -129,9 +129,9 @@ cases lurk.
 permissioning, scheduling).
 
 **Effort:** High. This tour requires the tester to understand the
-domain — pair with a domain-expert "guide."
+domain - pair with a domain-expert "guide."
 
-## Tour 5 — Bad-data tour
+## Tour 5 - Bad-data tour
 
 **Mission:** Feed pathological inputs and observe behavior.
 
@@ -160,7 +160,7 @@ for the canonical payloads (OWASP Top 10 + CWE Top 25).
 **When to use:** Any input field (search, forms, URL params, file
 upload).
 
-## Tour 6 — Configuration tour
+## Tour 6 - Configuration tour
 
 **Mission:** Vary the user's / system's configuration; observe
 behavior changes.
@@ -186,7 +186,7 @@ toggling a major feature flag.
 Pair with [`feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md)
 for the matrix-shard approach to flag-combination testing.
 
-## Tour 7 — Garbage collector's tour
+## Tour 7 - Garbage collector's tour
 
 **Mission:** Visit every page / endpoint once. Don't deeply test;
 just confirm presence.
@@ -208,7 +208,7 @@ breadcrumbs.
 **When to use:** Before a release; after a major refactor; periodic
 health check.
 
-**When NOT to use:** Replacing automated link-checking — the
+**When NOT to use:** Replacing automated link-checking - the
 garbage collector's tour is for **rendering** issues an automated
 checker can't catch.
 
@@ -261,7 +261,7 @@ Step 5, each tour produces:
   The vocabulary helps both, but mileage differs.
 - **Tour vocabulary is community-conventional.** Whittaker's seven
   are the most widely cited, but some teams use additional tours
-  (Performance tour, Security tour, Accessibility tour) — note that
+  (Performance tour, Security tour, Accessibility tour) - note that
   those overlap with dedicated specialty plugins.
 - **No automated tour.** Tours are by definition human-driven. For
   automated equivalents, see the named-tool skills in other
@@ -270,13 +270,10 @@ Step 5, each tour produces:
 ## References
 
 - Whittaker, J., *Exploratory Software Testing* (Addison-Wesley,
-  2009) — the canonical taxonomy of the seven tours. Per the
+  2009) - the canonical taxonomy of the seven tours. Per the
   source-fetch convention, the book is the primary reference;
   community summaries (developsense.com tour-and-testing post) are
   secondary.
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
-  — consumer of this reference.
-- [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md)
-  — canonical payloads for the Bad-data tour.
-- [`feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md)
-  — automated complement for the Configuration tour.
+- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - consumer of this reference.
+- [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md) - canonical payloads for the Bad-data tour.
+- [`feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md) - automated complement for the Configuration tour.

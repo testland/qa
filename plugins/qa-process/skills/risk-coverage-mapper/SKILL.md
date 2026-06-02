@@ -1,6 +1,6 @@
 ---
 name: risk-coverage-mapper
-description: "Build-an-X workflow that produces a risk-to-test-coverage matrix — maps each risk in the product/release register to the tests / cases / monitoring that mitigate it. Walks the author through ingesting risks (from risk-matrix / product-risk-register-builder), inventorying test coverage (test cases via traceability-matrix-builder, automated tests via repo scan, production monitoring via observability dashboards), and computing per-risk coverage depth + identifying orphan risks (no coverage) + orphan tests (not linked to risks). Output is a Markdown matrix + executive summary."
+description: "Build-an-X workflow that produces a risk-to-test-coverage matrix - maps each risk in the product/release register to the tests / cases / monitoring that mitigate it. Walks the author through ingesting risks (from risk-matrix / product-risk-register-builder), inventorying test coverage (test cases via traceability-matrix-builder, automated tests via repo scan, production monitoring via observability dashboards), and computing per-risk coverage depth + identifying orphan risks (no coverage) + orphan tests (not linked to risks). Output is a Markdown matrix + executive summary."
 rating: 23
 d6: 4
 archetype: S3
@@ -14,7 +14,7 @@ A risk-coverage matrix proves "every meaningful risk has at least
 one mitigation, and every mitigation traces to a test or monitor
 that exercises it." It's the natural complement to the
 requirements-to-tests traceability matrix
-([`traceability-matrix-builder`](../../../qa-test-management/skills/traceability-matrix-builder/SKILL.md)) —
+([`traceability-matrix-builder`](../../../qa-test-management/skills/traceability-matrix-builder/SKILL.md)) - 
 which proves "every requirement has a test." Where requirements
 say *what to build*, risks say *what could go wrong*, and each
 needs its own coverage view.
@@ -24,18 +24,18 @@ by stable ID).
 
 ## When to use
 
-- Pre-release risk review — confirm critical risks are covered.
-- Audit / compliance — defensible "we tested for risk X" trail.
-- Sprint retrospective — find risks accumulating coverage debt.
-- Onboarding — see at a glance which risks the test suite addresses.
+- Pre-release risk review - confirm critical risks are covered.
+- Audit / compliance - defensible "we tested for risk X" trail.
+- Sprint retrospective - find risks accumulating coverage debt.
+- Onboarding - see at a glance which risks the test suite addresses.
 
-## Step 1 — Ingest the risk register
+## Step 1 - Ingest the risk register
 
 From the relevant register(s):
 
 - [`risk-matrix`](../risk-matrix/SKILL.md) (per-release)
 - [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md) (long-lived product)
-- [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md) (project execution — typically excluded from this matrix; only product / release risks map to *test* coverage)
+- [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md) (project execution - typically excluded from this matrix; only product / release risks map to *test* coverage)
 
 ```python
 def load_risks():
@@ -45,7 +45,7 @@ def load_risks():
     return [r for r in risks if r["score"] >= 5]   # Medium+
 ```
 
-## Step 2 — Inventory coverage
+## Step 2 - Inventory coverage
 
 Three coverage sources:
 
@@ -91,7 +91,7 @@ PR-003:
     - pingdom-check://stripe-webhook-endpoint
 ```
 
-## Step 3 — Build the matrix
+## Step 3 - Build the matrix
 
 ```python
 def build_coverage_matrix(risks, tests, cases, monitors):
@@ -116,12 +116,12 @@ def build_coverage_matrix(risks, tests, cases, monitors):
 
 | Depth | Verdict |
 |---|---|
-| 0 | **Orphan risk** — no coverage. Critical if risk score ≥ 10. |
+| 0 | **Orphan risk** - no coverage. Critical if risk score ≥ 10. |
 | 1 | Minimal. Acceptable for low-score risks; insufficient for critical. |
 | 2-4 | Reasonable. Multiple angles (unit + integration + monitor). |
 | 5+ | Possibly over-tested. Audit for redundancy. |
 
-## Step 4 — Emit the matrix
+## Step 4 - Emit the matrix
 
 ```markdown
 # Risk coverage matrix — <release / quarter> — YYYY-MM-DD
@@ -156,7 +156,7 @@ def build_coverage_matrix(risks, tests, cases, monitors):
 | PR-001 (already shown above; depth 4 is fine but worth audit) | ... | 4 |
 ```
 
-## Step 5 — Identify orphan tests
+## Step 5 - Identify orphan tests
 
 Tests with `risk:<ID>` tags pointing to retired / non-existent
 risks:
@@ -169,7 +169,7 @@ def find_orphan_tests(tests, risk_set):
 These are tests written for risks that no longer exist (the risk
 was retired, the feature deprecated). Audit for deletion.
 
-## Step 6 — Executive summary
+## Step 6 - Executive summary
 
 ```markdown
 ## Risk-coverage executive summary — Q2 2026
@@ -205,7 +205,7 @@ require action before release.
 Trend: improving slowly. Continue current cadence.
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 Re-build the matrix on every PR; fail if a critical-score risk
 becomes uncovered:
@@ -249,10 +249,10 @@ becomes uncovered:
 
 - ISTQB Advanced Test Manager (CTAL-TM) syllabus, ch. 5 on
   risk-based testing + risk-coverage measurement.
-- ISTQB Glossary —
-  [glossary.istqb.org](https://glossary.istqb.org/) — "coverage
+- ISTQB Glossary - 
+  [glossary.istqb.org](https://glossary.istqb.org/) - "coverage
   item", "test condition".
-- ISO/IEC/IEEE 29119-3:2021 §6.3 — traceability.
+- ISO/IEC/IEEE 29119-3:2021 §6.3 - traceability.
 - Composes:
   [`risk-matrix`](../risk-matrix/SKILL.md),
   [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),

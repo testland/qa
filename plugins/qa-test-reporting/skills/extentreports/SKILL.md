@@ -1,6 +1,6 @@
 ---
 name: extentreports
-description: "Configures ExtentReports v5 for Java / .NET test runs — wires `ExtentSparkReporter` (HTML), `attachReporter`, `createTest`, the log-level chain (`info`/`pass`/`warning`/`skip`/`fail`), screenshots via `MediaEntityBuilder`, hierarchical `createNode` parent/child tests, and category / author / device labels. Outputs a static HTML report alongside JUnit XML for CI artifact upload. Use when a JVM project (or .NET via `extentreports-dotnet`) wants a richer per-test report than JUnit XML and the team is on the Aventstack ExtentReports stack."
+description: "Configures ExtentReports v5 for Java / .NET test runs - wires `ExtentSparkReporter` (HTML), `attachReporter`, `createTest`, the log-level chain (`info`/`pass`/`warning`/`skip`/`fail`), screenshots via `MediaEntityBuilder`, hierarchical `createNode` parent/child tests, and category / author / device labels. Outputs a static HTML report alongside JUnit XML for CI artifact upload. Use when a JVM project (or .NET via `extentreports-dotnet`) wants a richer per-test report than JUnit XML and the team is on the Aventstack ExtentReports stack."
 rating: 23
 d6: 4
 archetype: S1
@@ -10,7 +10,7 @@ archetype: S1
 
 ## Overview
 
-ExtentReports is a Java / .NET test reporting library — `ExtentReports`
+ExtentReports is a Java / .NET test reporting library - `ExtentReports`
 holds the run; pluggable **reporters** (`ExtentSparkReporter` for
 HTML, `ExtentKlovReporter` for the Klov server) consume the events
 and produce the artifact ([extent-wiki][wiki]).
@@ -29,7 +29,7 @@ This skill covers the v5 API as documented in the official wiki.
 ## When to use
 
 - A JVM (Java / Kotlin / Scala) test suite needs richer reporting
-  than JUnit XML — screenshots inline, log levels, hierarchical
+  than JUnit XML - screenshots inline, log levels, hierarchical
   parent/child tests.
 - A .NET suite uses the sister `extentreports-dotnet` project (same
   API shape).
@@ -42,7 +42,7 @@ For framework-agnostic richer reporting,
 [`allure-reports`](../allure-reports/SKILL.md) covers similar ground
 with broader language support.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Maven:
 
@@ -58,7 +58,7 @@ Per [extent-readme][readme], v5.1.2 is the latest release as of
 2024-06-26. Pin a version explicitly; the project is in maintenance
 mode pending ChainTest.
 
-## Step 2 — The canonical init pattern
+## Step 2 - The canonical init pattern
 
 Per the [extent-wiki][wiki] complete example:
 
@@ -82,17 +82,17 @@ public class Main {
 
 Three load-bearing pieces:
 
-1. **`new ExtentReports()`** — the run aggregator. Holds tests +
+1. **`new ExtentReports()`** - the run aggregator. Holds tests +
    metadata; emits to all attached reporters on `flush()`.
-2. **`new ExtentSparkReporter("<path>")`** — the HTML reporter.
+2. **`new ExtentSparkReporter("<path>")`** - the HTML reporter.
    Path is the output file.
-3. **`extent.attachReporter(spark)`** — wires reporter to the run.
+3. **`extent.attachReporter(spark)`** - wires reporter to the run.
 
 `extent.flush()` at the end of the run writes the report to disk.
-**Without `flush()`, no file is written** — the most common new-user
+**Without `flush()`, no file is written** - the most common new-user
 mistake.
 
-## Step 3 — Create tests + log levels
+## Step 3 - Create tests + log levels
 
 Per [extent-wiki][wiki]:
 
@@ -113,7 +113,7 @@ Each `createTest` returns an `ExtentTest`; calls on it accumulate
 log entries. Multiple `createTest` calls on the same `extent`
 produce multiple test entries in the report.
 
-## Step 4 — Hierarchical tests (parent / child)
+## Step 4 - Hierarchical tests (parent / child)
 
 Per [extent-wiki][wiki]:
 
@@ -127,7 +127,7 @@ The parent appears as a collapsible toggle in the report; children
 nest underneath. Useful for grouping per-suite tests under a
 suite-level node, or per-step interactions under a per-test node.
 
-## Step 5 — Screenshots + media
+## Step 5 - Screenshots + media
 
 Per [extent-wiki][wiki]:
 
@@ -139,10 +139,10 @@ extent.createTest("ScreenCapture")
 
 Two patterns:
 
-- **`.addScreenCaptureFromPath("...")`** — attaches the screenshot
+- **`.addScreenCaptureFromPath("...")`** - attaches the screenshot
   to the test as a top-level media entity.
 - **`MediaEntityBuilder.createScreenCaptureFromPath("...").build()`
-  passed to a status method** — attaches the screenshot to the
+  passed to a status method** - attaches the screenshot to the
   specific log entry (the `.pass(...)` call here).
 
 The latter pattern is preferred for failure screenshots: capture the
@@ -150,7 +150,7 @@ screenshot inside the test framework's `@AfterEach` failure hook
 and pass it to `.fail(...)` so the failure log includes the visual
 evidence inline.
 
-## Step 6 — Categories / authors / devices
+## Step 6 - Categories / authors / devices
 
 Per [extent-wiki][wiki]:
 
@@ -165,8 +165,8 @@ extent.createTest("Devices").assignDevice("TheDevice")
         .pass("This test 'Devices' was assigned by a special kind of devices tag.");
 ```
 
-These metadata fields drive the report's filter sidebar — by tag,
-author, device — making the report navigable when there are
+These metadata fields drive the report's filter sidebar - by tag,
+author, device - making the report navigable when there are
 hundreds of tests. Use:
 
 - **Category** for feature / module / epic.
@@ -174,7 +174,7 @@ hundreds of tests. Use:
   reads `git blame`).
 - **Device** for environment / browser / OS combinations.
 
-## Step 7 — Exception capture
+## Step 7 - Exception capture
 
 Per [extent-wiki][wiki]:
 
@@ -187,7 +187,7 @@ Passing an exception to `.fail(...)` captures the message + full
 stack trace in the report. Wire this into the test framework's
 failure hook so every failed test gets the trace inline.
 
-## Step 8 — Code blocks
+## Step 8 - Code blocks
 
 Per [extent-wiki][wiki]:
 
@@ -198,10 +198,10 @@ extent.createTest("CodeBlock").generateLog(
 ```
 
 `MarkupHelper.createCodeBlock(...)` produces syntax-highlighted
-JSON / SQL / code blocks in the report — useful for capturing the
+JSON / SQL / code blocks in the report - useful for capturing the
 request body that triggered a failure.
 
-## Step 9 — Wire into a JUnit 5 / TestNG run
+## Step 9 - Wire into a JUnit 5 / TestNG run
 
 JUnit 5 with a per-test extension:
 
@@ -235,7 +235,7 @@ public class ExtentTestWatcher implements TestWatcher, BeforeAllCallback, AfterA
 Register via `@ExtendWith(ExtentTestWatcher.class)` on the test
 class.
 
-## Step 10 — CI artifact upload
+## Step 10 - CI artifact upload
 
 ```yaml
 - run: ./mvnw -B verify
@@ -249,7 +249,7 @@ class.
     retention-days: 30
 ```
 
-`if: always()` is critical — Extent matters most on failure runs.
+`if: always()` is critical - Extent matters most on failure runs.
 
 ## Anti-patterns
 
@@ -279,12 +279,12 @@ class.
 
 ## References
 
-- [extent-readme][readme] — repo overview, latest version (5.1.2),
+- [extent-readme][readme] - repo overview, latest version (5.1.2),
   sunset notice (replacing with ChainTest).
-- [extent-wiki][wiki] — wiki home with the "complete example" code
+- [extent-wiki][wiki] - wiki home with the "complete example" code
   cited throughout this skill.
-- [`allure-reports`](../allure-reports/SKILL.md) — framework-agnostic
+- [`allure-reports`](../allure-reports/SKILL.md) - framework-agnostic
   alternative with broader language support (and not sunset).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) — pair with
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - pair with
   ExtentReports for CI gating; the JUnit XML is the gate, the
   Spark HTML is the human-readable artifact.

@@ -27,7 +27,7 @@ The agent takes:
 Output: ranked candidate list (top N=5) with similarity scores and
 recommended action.
 
-## Step 1 — Exact-title substring search
+## Step 1 - Exact-title substring search
 
 Use the preloaded platform skill's search:
 
@@ -45,7 +45,7 @@ candidates = github_search(f'is:open label:bug "{title}" in:title,body')
 
 Score: 1.0 if title matches; 0.6 if title partially overlaps.
 
-## Step 2 — Test-name search
+## Step 2 - Test-name search
 
 Bugs filed from CI typically embed the test path in the body.
 Search by test name:
@@ -58,7 +58,7 @@ test_name_candidates = search_platform(
 
 Score: 0.9 if test name appears in body of a candidate.
 
-## Step 3 — Stack-fingerprint fuzzy match
+## Step 3 - Stack-fingerprint fuzzy match
 
 Normalise the top frame of the stack (drop line numbers, drop
 local paths) and search:
@@ -74,12 +74,12 @@ def fingerprint(stack):
 Compare fingerprints across recent bugs' bodies. Score: 0.7 if top
 frame matches; 0.4 if error class matches but frame differs.
 
-## Step 4 — Allure-tag overlap
+## Step 4 - Allure-tag overlap
 
 If the candidate has Allure labels (suite, feature, severity),
 score candidates by tag-set Jaccard similarity.
 
-## Step 5 — Rank + emit
+## Step 5 - Rank + emit
 
 Combine scores; emit ranked top-5:
 
@@ -107,12 +107,12 @@ Combine scores; emit ranked top-5:
 The agent **refuses** to:
 
 - Suggest a CLOSED issue as a duplicate without comment "consider
-  reopening if recurrence" — closed isn't always the right
+  reopening if recurrence" - closed isn't always the right
   attachment target.
-- File the new bug itself — it's read-only and recommends actions
+- File the new bug itself - it's read-only and recommends actions
   only.
-- Use unbounded lookback — always cap to N days (default 90).
-- Skip the search when the test has known flakiness — flakes still
+- Use unbounded lookback - always cap to N days (default 90).
+- Skip the search when the test has known flakiness - flakes still
   need filing if a real bug masquerades as one.
 
 ## Anti-patterns
@@ -121,7 +121,7 @@ The agent **refuses** to:
 |---|---|---|
 | Exact-string-only matching | Same defect, different wording = miss | Always run all 4 strategies |
 | Auto-attaching to candidate #1 without confirmation | Wrong attachment buries new info under old bug | Recommend; triager decides |
-| Including PRs in dedupe search | GitHub Search API returns both — false positives | Filter `type:issue` |
+| Including PRs in dedupe search | GitHub Search API returns both - false positives | Filter `type:issue` |
 | Score weighting hard-coded per tracker | Different orgs have different naming hygiene | Score weights configurable |
 | Skipping closed issues | Recurrence signal lost | Include closed issues with "reopen?" suggestion |
 
@@ -147,6 +147,5 @@ The agent **refuses** to:
   [`bug-report-from-failure`](../skills/bug-report-from-failure/SKILL.md)
   (calls this agent at Step 4).
 - Sibling-plugin overlap:
-  [`defect-clusterer`](../../qa-bug-repro/agents/defect-clusterer.md)
-  — clusters *already-filed* defects by fingerprint; this finds
+  [`defect-clusterer`](../../qa-bug-repro/agents/defect-clusterer.md) - clusters *already-filed* defects by fingerprint; this finds
   duplicates *before* filing.

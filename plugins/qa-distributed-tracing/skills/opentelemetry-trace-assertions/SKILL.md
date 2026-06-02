@@ -1,6 +1,6 @@
 ---
 name: opentelemetry-trace-assertions
-description: "Author trace-shape assertions in tests using OpenTelemetry SDK in-memory exporter — capture spans during test execution, assert on span name + attributes + status + parent-child structure + duration. Cross-language patterns (Python `InMemorySpanExporter` + `SimpleSpanProcessor`, JS `getRecordedSpans()`, Java `OpenTelemetryExtension`); CI integration."
+description: "Author trace-shape assertions in tests using OpenTelemetry SDK in-memory exporter - capture spans during test execution, assert on span name + attributes + status + parent-child structure + duration. Cross-language patterns (Python `InMemorySpanExporter` + `SimpleSpanProcessor`, JS `getRecordedSpans()`, Java `OpenTelemetryExtension`); CI integration."
 type: skill
 archetype: S1
 rating: 24
@@ -24,12 +24,12 @@ relationships, all sharing the same `trace_id`.
 
 - Service is instrumented with OpenTelemetry SDK and the team's
   observability stack (alerts, SLOs) depends on specific span
-  attributes — silent removal of an attribute breaks downstream
+  attributes - silent removal of an attribute breaks downstream
   alerting.
 - Trace-shape changes have caused production incidents.
 - Onboarding new instrumentation needs a regression baseline.
 
-## Step 1 — Install (per language)
+## Step 1 - Install (per language)
 
 | Language | Install |
 |---|---|
@@ -38,11 +38,11 @@ relationships, all sharing the same `trace_id`.
 | Java (Maven) | `<dependency><groupId>io.opentelemetry</groupId><artifactId>opentelemetry-sdk-testing</artifactId></dependency>` |
 | .NET | `dotnet add package OpenTelemetry --prerelease` + `OpenTelemetry.Exporter.InMemory` |
 
-## Step 2 — In-memory exporter setup (Python)
+## Step 2 - In-memory exporter setup (Python)
 
 Per the [Python SDK trace docs], use `SimpleSpanProcessor` for tests
 because it *"passes ended spans directly to the configured SpanExporter"*
-synchronously — no batching, no flush wait:
+synchronously - no batching, no flush wait:
 
 ```python
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
@@ -64,7 +64,7 @@ memory_exporter.clear()
 
 The `clear()` call between tests prevents cross-test span leakage.
 
-## Step 3 — Span shape assertions
+## Step 3 - Span shape assertions
 
 Per the [OpenTelemetry traces concept docs], spans expose `name`,
 `attributes`, `status`, and `kind`:
@@ -89,11 +89,11 @@ Per the [OpenTelemetry traces concept docs]: span kind values are
 (incoming remote), `PRODUCER` (queue publish), `CONSUMER` (queue
 process).
 
-## Step 4 — Parent-child structure
+## Step 4 - Parent-child structure
 
 Per the [OpenTelemetry traces concept docs], spans share a `trace_id`
 and reference their parent via `parent_id`. Assert structure (not
-values — IDs are random per run):
+values - IDs are random per run):
 
 ```python
 db_span = span_by_name["db.query"]
@@ -106,7 +106,7 @@ assert db_span.context.trace_id == order_span.context.trace_id
 assert db_span.parent.span_id == order_span.context.span_id
 ```
 
-## Step 5 — Semantic conventions verification
+## Step 5 - Semantic conventions verification
 
 Per the [HTTP semantic conventions docs], required HTTP client span
 attributes include `http.request.method`, `url.full`, `server.address`,
@@ -125,7 +125,7 @@ controls dual-emit during migration. Tests should assert the new
 keys; failures during SDK upgrade are the signal that instrumentation
 needs migrating, not that the test is wrong.
 
-## Step 6 — JS / TS pattern
+## Step 6 - JS / TS pattern
 
 ```ts
 import { InMemorySpanExporter, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
@@ -143,7 +143,7 @@ expect(spans).toHaveLength(3);
 memoryExporter.reset();
 ```
 
-## Step 7 — Java JUnit 5 pattern
+## Step 7 - Java JUnit 5 pattern
 
 ```java
 @RegisterExtension
@@ -161,7 +161,7 @@ void orderCreateEmitsTrace() {
 `OpenTelemetryExtension` (from `opentelemetry-sdk-testing`) auto-resets
 between tests; no manual `clear()` needed.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 Pin the SDK version in test deps. SDK upgrades change attribute keys
 (see Step 5 deprecation note); pinning prevents trace assertions from
@@ -187,7 +187,7 @@ silently changing meaning between releases.
 ## Limitations
 
 - In-memory exporter doesn't catch async-boundary issues across
-  process boundaries — pair with `jaeger-trace-tests` /
+  process boundaries - pair with `jaeger-trace-tests` /
   `zipkin-trace-tests` for end-to-end trace verification.
 - SDK-version drift can change span attribute names; pin SDK version
   in CI (Step 8).
@@ -196,15 +196,15 @@ silently changing meaning between releases.
 
 ## References
 
-- [OpenTelemetry traces concept docs] — trace + span definitions,
+- [OpenTelemetry traces concept docs] - trace + span definitions,
   DAG structure, span kind, status, attributes, links
-- [Python SDK trace docs] — SimpleSpanProcessor vs BatchSpanProcessor
-- [HTTP semantic conventions docs] — required attributes, span name
+- [Python SDK trace docs] - SimpleSpanProcessor vs BatchSpanProcessor
+- [HTTP semantic conventions docs] - required attributes, span name
   format, deprecation history
 - [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md),
-  [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) — sister
+  [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister
   query-based skills for end-to-end verification
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) —
+- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) - 
   adversarial reviewer
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/

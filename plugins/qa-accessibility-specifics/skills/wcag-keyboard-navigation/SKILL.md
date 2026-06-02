@@ -1,6 +1,6 @@
 ---
 name: wcag-keyboard-navigation
-description: "Reference catalog for WCAG 2.2 keyboard-navigation conformance — covers SC 2.1.1 (Keyboard), 2.1.2 (No Keyboard Trap), 2.1.4 (Character Key Shortcuts), 2.4.3 (Focus Order), 2.4.7 (Focus Visible), 2.4.11/2.4.12 (Focus Not Obscured) — with conformance levels (A/AA), test scripts, and per-criterion failure patterns. Use when authoring or reviewing keyboard-only interaction support."
+description: "Reference catalog for WCAG 2.2 keyboard-navigation conformance - covers SC 2.1.1 (Keyboard), 2.1.2 (No Keyboard Trap), 2.1.4 (Character Key Shortcuts), 2.4.3 (Focus Order), 2.4.7 (Focus Visible), 2.4.11/2.4.12 (Focus Not Obscured) - with conformance levels (A/AA), test scripts, and per-criterion failure patterns. Use when authoring or reviewing keyboard-only interaction support."
 rating: 26
 d6: 5
 archetype: S2
@@ -18,9 +18,9 @@ archetype: S2
 
 ## Overview
 
-WCAG 2.2 organizes accessibility into four principles —
-**Perceivable / Operable / Understandable / Robust** — at three
-conformance levels — **A / AA / AAA** ([wcag22][wcag22]).
+WCAG 2.2 organizes accessibility into four principles - 
+**Perceivable / Operable / Understandable / Robust** - at three
+conformance levels - **A / AA / AAA** ([wcag22][wcag22]).
 
 [wcag22]: https://www.w3.org/TR/WCAG22/
 
@@ -41,7 +41,7 @@ focus management, and focus visibility.
 
 ## Success Criteria
 
-### SC 2.1.1 — Keyboard (Level A)
+### SC 2.1.1 - Keyboard (Level A)
 
 Per [wcag22][wcag22]: "All functionality of the content is operable
 through a keyboard interface" without requiring specific timings.
@@ -49,7 +49,7 @@ Path-dependent input (handwriting) is exempt.
 
 | Pattern                                               | What to test                                          |
 |-------------------------------------------------------|-------------------------------------------------------|
-| `<button>`, `<a href>`, `<input>`                     | Native — already keyboard-accessible.                 |
+| `<button>`, `<a href>`, `<input>`                     | Native - already keyboard-accessible.                 |
 | `<div onclick="...">`                                 | **Anti-pattern.** Non-focusable; not keyboard-operable. Convert to `<button>`. |
 | Custom widget (`role="button"`, `tabindex="0"`)        | Verify Enter / Space activates the same handler.       |
 | Drag-and-drop                                         | Provide a keyboard alternative (arrow keys + Enter, or button-based reorder). |
@@ -70,7 +70,7 @@ test('SC 2.1.1 — interactive elements are keyboard-operable', async ({ page })
 });
 ```
 
-### SC 2.1.2 — No Keyboard Trap (Level A)
+### SC 2.1.2 - No Keyboard Trap (Level A)
 
 Per [wcag22][wcag22]: "Focus must be movable away using standard
 methods; users should be informed of exit procedures if non-
@@ -86,22 +86,22 @@ See [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) for the
 **intentional**-trap convention (modal focus management) which is
 distinct from a violation.
 
-### SC 2.1.4 — Character Key Shortcuts (Level A, added in 2.1)
+### SC 2.1.4 - Character Key Shortcuts (Level A, added in 2.1)
 
 Single-character shortcuts (`/` to focus search, `j`/`k` to
 navigate items) must offer **at least one** of:
 
-- **Off mechanism** — user can disable the shortcut globally.
-- **Remap mechanism** — user can rebind to non-character or
+- **Off mechanism** - user can disable the shortcut globally.
+- **Remap mechanism** - user can rebind to non-character or
   modifier-prefixed combinations.
-- **Active only on focus** — shortcut active only when the
+- **Active only on focus** - shortcut active only when the
   associated component has focus.
 
 This SC exists because users with speech-input software produce
 spurious key presses; unguarded single-character shortcuts trigger
 unintended actions.
 
-### SC 2.4.3 — Focus Order (Level A)
+### SC 2.4.3 - Focus Order (Level A)
 
 Per [wcag22][wcag22]: components must "receive focus in an order
 that preserves meaning and operability."
@@ -113,7 +113,7 @@ that preserves meaning and operability."
 | Modal that doesn't trap focus                  | Tab moves focus to the page behind; user loses context. |
 | Skip links                                     | Always at the start of the document; `tabindex="0"` not needed (anchor links are focusable). |
 
-### SC 2.4.7 — Focus Visible (Level AA)
+### SC 2.4.7 - Focus Visible (Level AA)
 
 Per [wcag22][wcag22]: "Any keyboard operable user interface has a
 mode of operation where the keyboard focus indicator is visible."
@@ -124,7 +124,7 @@ mode of operation where the keyboard focus indicator is visible."
 | Subtle 1px gray ring on a gray background            | 3:1 contrast ratio against background per WCAG SC 1.4.11; high-contrast theme should bump to 4.5:1. |
 | Disabled focus indicator on hover                    | Hover and focus styles are independent; never tie them. |
 
-### SC 2.4.11 / 2.4.12 — Focus Not Obscured (Level AA / AAA, NEW in 2.2)
+### SC 2.4.11 / 2.4.12 - Focus Not Obscured (Level AA / AAA, NEW in 2.2)
 
 Per [wcag22][wcag22]: components receiving focus cannot be
 "entirely hidden due to author-created content."
@@ -152,13 +152,13 @@ obscured. Stricter; relevant for high-stakes forms.
    `aria-labelledby`.
 4. Activate submit via Enter from any field.
 5. After submit error: verify focus moves to the first invalid
-   field (per SC 3.3.1 — Error Identification).
+   field (per SC 3.3.1 - Error Identification).
 
 ### Modal / dialog
 
 1. On open: focus moves to the first interactive element
    (or to the dialog's close button if no other focusable element).
-2. Tab cycles through dialog content only — does NOT escape to
+2. Tab cycles through dialog content only - does NOT escape to
    page behind.
 3. Shift+Tab from first → last interactive element (cycle).
 4. Escape closes the dialog and returns focus to the trigger.
@@ -207,14 +207,13 @@ gates the build on new violations of these SCs.
 
 ## References
 
-- [wcag22][wcag22] — WCAG 2.2 specification.
-- [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) — focus
+- [wcag22][wcag22] - WCAG 2.2 specification.
+- [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) - focus
   management for modals (the intentional-trap pattern).
-- [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md) —
+- [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md) - 
   for SC 1.4.11 focus-indicator contrast.
-- [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md)
-  — for canonical interactive-widget patterns.
+- [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md) - for canonical interactive-widget patterns.
 - [`axe-a11y`](../axe-a11y/SKILL.md),
   [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md) — runners that
+  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md) - runners that
   detect SC violations programmatically.

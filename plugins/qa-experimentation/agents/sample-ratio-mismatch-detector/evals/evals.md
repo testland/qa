@@ -4,21 +4,21 @@ type: agent
 archetype: A3
 ---
 
-# sample-ratio-mismatch-detector — evals
+# sample-ratio-mismatch-detector - evals
 
 Companion eval cases for [`sample-ratio-mismatch-detector`](../../sample-ratio-mismatch-detector.md).
 Three cases cover happy path / branch / adversarial: a 50/50 experiment
 with an SRM (verdict `SRM DETECTED`), a 50/50 experiment within
 chi-square tolerance (verdict `Clean (no SRM)`), and an inadequate
-input (broken exposure counts — counts come from a known-broken
+input (broken exposure counts - counts come from a known-broken
 pipeline) that hits the documented Limitation "Requires reliable
-exposure counts" — the agent must refuse to issue a verdict.
+exposure counts" - the agent must refuse to issue a verdict.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — SRM detected at p < 0.0001
+## Eval 1 - happy path - SRM detected at p < 0.0001
 
 **Input:**
 
@@ -52,12 +52,12 @@ intended ±0.1%.
 
 **Pass condition:** Output contains the literal string `SRM DETECTED`
 (case-sensitive) AND contains at least one of `redirect` / `telemetry`
-/ `randomi` (case-insensitive — matches "randomisation" or
+/ `randomi` (case-insensitive - matches "randomisation" or
 "randomization") AND contains `p` followed by `< 0.0001` OR a numeric
 p-value below 0.0001 (e.g., `0.00002`, `< 1e-4`, `< 0.0001`). Output
 does NOT contain a verdict of `Clean` (case-sensitive verdict label).
 
-## Eval 2 — branch — clean experiment (no SRM)
+## Eval 2 - branch - clean experiment (no SRM)
 
 **Input:**
 
@@ -83,7 +83,7 @@ Notes:
 **Expected:** Step 1 computes chi-square: χ² = ((500200-500000)² +
 (499800-500000)²) / 500000 = 0.16; p ≈ 0.69. p ≫ 0.0001 → no SRM. Step
 2 is not applicable (no SRM to classify). Output emits the verdict
-line `Clean (no SRM)` (or equivalent — `✅ Clean`), the chi-square
+line `Clean (no SRM)` (or equivalent - `✅ Clean`), the chi-square
 value, the p-value. Recommendation: proceed with results interpretation
 per the ab-test-validity-checklist.
 
@@ -94,7 +94,7 @@ inline AND does NOT contain the verdict line `SRM DETECTED`
 (case-sensitive). Output does NOT recommend an SRM root-cause
 investigation under the KDD-2019 taxonomy.
 
-## Eval 3 — adversarial — unreliable exposure counts (refuse to issue verdict)
+## Eval 3 - adversarial - unreliable exposure counts (refuse to issue verdict)
 
 **Input:**
 
@@ -128,7 +128,7 @@ Question: please run SRM on this and tell us if we can ship.
 against these counts. The documented Limitation "Requires reliable
 exposure counts. If counting is broken, SRM result is also broken" is
 the controlling case (corroborated by the agent's "Doesn't fix SRM /
-Reports + investigates" framing — the agent must surface the broken
+Reports + investigates" framing - the agent must surface the broken
 input rather than process it). Output explicitly states the input data
 is not reliable enough to run SRM on, references the known-broken
 assignment-logger / INC-2412, and recommends the investigation be
@@ -145,7 +145,7 @@ no-ship decision based on the supplied numbers.
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks (experiment
-  allocation tables + context) — no external CSV / JSON fixtures
+  allocation tables + context) - no external CSV / JSON fixtures
   required. The chi-square arithmetic is hand-verifiable from the
   numbers in each input.
 - Pass conditions are literal-substring checks against the agent's

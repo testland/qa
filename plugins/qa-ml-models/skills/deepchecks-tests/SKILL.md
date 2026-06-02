@@ -27,7 +27,7 @@ development from research through production**.
 - Production monitoring: same suite re-run on production samples
   to detect drift.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install deepchecks
@@ -35,7 +35,7 @@ pip install deepchecks
 
 Per the [Deepchecks welcome] page.
 
-## Step 2 — Wrap data
+## Step 2 - Wrap data
 
 For tabular models:
 
@@ -55,10 +55,10 @@ test_ds = Dataset(
 ```
 
 `cat_features` matters for distribution checks. The Vision and NLP
-APIs differ — see the [Deepchecks welcome] section linking
+APIs differ - see the [Deepchecks welcome] section linking
 quickstarts for each data type.
 
-## Step 3 — Run the data integrity suite
+## Step 3 - Run the data integrity suite
 
 ```python
 from deepchecks.tabular.suites import data_integrity
@@ -71,7 +71,7 @@ result.save_as_html("data_integrity.html")
 Catches: duplicate rows, missing values, mixed types, conflicting
 labels, single-value features, string mismatches.
 
-## Step 4 — Run the train-test validation suite
+## Step 4 - Run the train-test validation suite
 
 ```python
 from deepchecks.tabular.suites import train_test_validation
@@ -84,7 +84,7 @@ result.save_as_html("train_test_validation.html")
 Catches: target drift, feature drift, train-test data leakage, label
 imbalance, dataset size mismatch.
 
-## Step 5 — Run the model evaluation suite
+## Step 5 - Run the model evaluation suite
 
 ```python
 from deepchecks.tabular.suites import model_evaluation
@@ -100,7 +100,7 @@ if not result.passed_conditions():
 Catches: performance regression vs baseline, weak segments, calibration
 issues, prediction drift between train and test.
 
-## Step 6 — Per-check thresholds
+## Step 6 - Per-check thresholds
 
 ```python
 from deepchecks.tabular.checks import FeatureDrift
@@ -119,7 +119,7 @@ if not result.passed_conditions():
 Each check has `add_condition_*` methods; chain them for per-check
 gating.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - name: Deepchecks suite
@@ -152,7 +152,7 @@ gating.
 
 ## References
 
-- [Deepchecks welcome] — overview, install, suite/check architecture,
+- [Deepchecks welcome] - overview, install, suite/check architecture,
   per-data-type quickstart links
 
 [Deepchecks welcome]: https://docs.deepchecks.com/stable/getting-started/welcome.html

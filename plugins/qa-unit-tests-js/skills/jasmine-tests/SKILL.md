@@ -1,6 +1,6 @@
 ---
 name: jasmine-tests
-description: "Configures and runs Jasmine — the original BDD-style JS test framework (predecessor to Jest) with built-in matchers + spies, no external assertion library; ships `jasmine-core` + `jasmine` runner; `spec_dir` + `helpers` convention; `jasmine.json` config; spy patterns (`spyOn`, `createSpy`); pairs with Karma for in-browser testing. Use when the user maintains legacy AngularJS / Karma+Jasmine codebases, or wants minimal BDD-style tests with no third-party assertion library."
+description: "Configures and runs Jasmine - the original BDD-style JS test framework (predecessor to Jest) with built-in matchers + spies, no external assertion library; ships `jasmine-core` + `jasmine` runner; `spec_dir` + `helpers` convention; `jasmine.json` config; spy patterns (`spyOn`, `createSpy`); pairs with Karma for in-browser testing. Use when the user maintains legacy AngularJS / Karma+Jasmine codebases, or wants minimal BDD-style tests with no third-party assertion library."
 rating: 22
 d6: 4
 archetype: S1
@@ -15,8 +15,8 @@ Per [jasmine.github.io/pages/getting_started.html][jas-start]:
 [jas-start]: https://jasmine.github.io/pages/getting_started.html
 
 Jasmine (~2010) is the original BDD-style JS test framework. Most
-of Jest's API descends from Jasmine — `describe`, `it`,
-`beforeEach`, `expect(...).toBe(...)`, spies — were all Jasmine
+of Jest's API descends from Jasmine - `describe`, `it`,
+`beforeEach`, `expect(...).toBe(...)`, spies - were all Jasmine
 patterns first.
 
 Modern usage:
@@ -35,7 +35,7 @@ maintenance use case + the migration path.
   Angular CLI default until very recent versions).
 - Minimal-dependency requirement (no separate Chai / Sinon).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 npm install --save-dev jasmine
@@ -58,7 +58,7 @@ npx jasmine init
 }
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 ```javascript
 // spec/sumSpec.js
@@ -81,7 +81,7 @@ Wire `package.json`:
 }
 ```
 
-## Step 3 — Built-in matchers
+## Step 3 - Built-in matchers
 
 Per jasmine.github.io/api/edge/matchers.html:
 
@@ -98,10 +98,10 @@ Per jasmine.github.io/api/edge/matchers.html:
 | `toBeInstanceOf(Class)` | Type check |
 | `toBeDefined()` / `toBeUndefined()` / `toBeNull()` | Existence |
 
-No need for Chai's `expect(x).to.equal(y)` style — Jasmine's
+No need for Chai's `expect(x).to.equal(y)` style - Jasmine's
 matchers are first-class.
 
-## Step 4 — Spies (built-in mocking)
+## Step 4 - Spies (built-in mocking)
 
 ```javascript
 describe('user service', () => {
@@ -131,7 +131,7 @@ Spy methods:
 | `jasmine.createSpy(name)` | Standalone spy |
 | `jasmine.createSpyObj(name, ['m1', 'm2'])` | Object with multiple spies |
 
-## Step 5 — Async patterns
+## Step 5 - Async patterns
 
 ```javascript
 // async/await (Jasmine 3.x+)
@@ -156,7 +156,7 @@ it('callback test', (done) => {
 });
 ```
 
-## Step 6 — Hooks
+## Step 6 - Hooks
 
 ```javascript
 describe('User service', () => {
@@ -169,7 +169,7 @@ describe('User service', () => {
 
 Same pattern as Jest / Vitest.
 
-## Step 7 — Karma integration (browser tests)
+## Step 7 - Karma integration (browser tests)
 
 For browser-environment tests (legacy Angular CLI default):
 
@@ -200,9 +200,9 @@ of 2023; AngularJS reached end-of-life Jan 2022; new Angular
 projects use Jest or Vitest. Karma + Jasmine setups are explicitly
 legacy.
 
-## Step 8 — Migration to Jest path
+## Step 8 - Migration to Jest path
 
-Jest's API is mostly compatible with Jasmine — typical migration
+Jest's API is mostly compatible with Jasmine - typical migration
 steps:
 
 1. Replace `spyOn().and.returnValue()` with `jest.spyOn().mockReturnValue()`
@@ -216,7 +216,7 @@ steps:
 For automated migration: `jest-codemods` package handles ~80% of
 the syntax transformations.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: npm ci
@@ -232,7 +232,7 @@ the syntax transformations.
 | Start new project with Jasmine + Karma in 2026 | Legacy stack; Karma in maintenance | Use Vitest / Jest for new (Step 7) |
 | `spyOn` without `.and` configurator | Spy returns undefined; tests pass-by-accident | Always configure (Step 4) |
 | Use `fdescribe` / `fit` (focus) accidentally | Suite runs only focused specs | Lint rule equivalent of `mocha/no-exclusive-tests` |
-| Mix Jasmine assertions with Chai | Two assertion APIs in one suite; reader confusion | Pick one (Step 3 — Jasmine's are sufficient) |
+| Mix Jasmine assertions with Chai | Two assertion APIs in one suite; reader confusion | Pick one (Step 3 - Jasmine's are sufficient) |
 | Skip migration codemods when moving to Jest | Manual rewrites slow + error-prone | `jest-codemods` (Step 8) |
 
 ## Limitations
@@ -246,14 +246,13 @@ the syntax transformations.
 
 ## References
 
-- [jas-start][jas-start] — getting started
-- jasmine.github.io/api/edge — API reference
-- jasmine.github.io/api/edge/matchers.html — matcher list
-- karma-runner.github.io — Karma (legacy)
-- github.com/skovhus/jest-codemods — Jasmine→Jest migration codemods
+- [jas-start][jas-start] - getting started
+- jasmine.github.io/api/edge - API reference
+- jasmine.github.io/api/edge/matchers.html - matcher list
+- karma-runner.github.io - Karma (legacy)
+- github.com/skovhus/jest-codemods - Jasmine→Jest migration codemods
 - [`jest-tests`](../jest-tests/SKILL.md),
   [`vitest-tests`](../vitest-tests/SKILL.md),
   [`mocha-tests`](../mocha-tests/SKILL.md),
-  [`ava-tests`](../ava-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — cross-plugin: test code hygiene
+  [`ava-tests`](../ava-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene

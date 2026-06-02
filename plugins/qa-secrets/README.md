@@ -1,10 +1,10 @@
 # qa-secrets
 
 Secrets scanning + rotation. Three per-tool scanner skills
-(gitleaks, TruffleHog, Kingfisher — covering the OSS leader, the
+(gitleaks, TruffleHog, Kingfisher - covering the OSS leader, the
 high-precision validator, and the modern Rust + 950-rule alternative)
 plus a build-an-X workflow skill for the **rotation step that
-follows detection** (because git-history scrub does NOT fix a leak —
+follows detection** (because git-history scrub does NOT fix a leak - 
 the secret IS exposed).
 
 Covers the universal pre-commit + repo-history hygiene gap.

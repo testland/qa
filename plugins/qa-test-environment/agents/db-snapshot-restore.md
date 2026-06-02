@@ -1,6 +1,6 @@
 ---
 name: db-snapshot-restore
-description: "Action-taking agent that gives integration tests a clean database between cases — captures a baseline `snapshot` once (template DB for Postgres, mysqldump for MySQL, JSON dump for Mongo), then `restore`s the test DB from that baseline before each test (or each suite), tearing down all open sessions first so the rebuild succeeds. Also wires the per-test `BEGIN ... ROLLBACK` shortcut when the ORM cooperates and the schema doesn't change. Use when integration tests share a database and the team needs per-test isolation faster than `db drop && db migrate`."
+description: "Action-taking agent that gives integration tests a clean database between cases - captures a baseline `snapshot` once (template DB for Postgres, mysqldump for MySQL, JSON dump for Mongo), then `restore`s the test DB from that baseline before each test (or each suite), tearing down all open sessions first so the rebuild succeeds. Also wires the per-test `BEGIN ... ROLLBACK` shortcut when the ORM cooperates and the schema doesn't change. Use when integration tests share a database and the team needs per-test isolation faster than `db drop && db migrate`."
 tools: "Read, Write, Edit, Grep, Glob, Bash(psql *), Bash(createdb *), Bash(dropdb *), Bash(pg_dump *), Bash(pg_restore *), Bash(mysql *), Bash(mysqldump *), Bash(mongoimport *), Bash(mongodump *), Bash(docker compose *), Bash(docker exec *)"
 model: sonnet
 skills:
@@ -21,11 +21,11 @@ A maintenance agent that turns "the previous test left junk in the DB" into a de
 | Mode | Trigger | Action |
 |---|---|---|
 | `snapshot` | First-time setup OR schema/seed-data changed | Capture baseline (template DB / `mysqldump` / `mongodump`). |
-| `restore` | Before each test/suite — DB is dirty | Drop + recreate the test DB from the baseline. |
+| `restore` | Before each test/suite - DB is dirty | Drop + recreate the test DB from the baseline. |
 | `wrap` | Per-test isolation needed; schema stable; ORM honors transactions | Open `BEGIN`; run test; `ROLLBACK`. |
 | `list` | "What baselines do I have?" | Read-only enumeration. |
 
-## Mode 1 — Postgres template DB (snapshot + restore)
+## Mode 1 - Postgres template DB (snapshot + restore)
 
 `CREATE DATABASE ... TEMPLATE` is the engine's native fast clone
 ([pg-tpl][pg-tpl]); requires no other sessions on the source.
@@ -50,7 +50,7 @@ guards the baseline ([pg-tpl][pg-tpl]). Per-suite restore is file-
 system fast; per-test restore is OK under a few hundred tests, beyond
 that switch to `wrap`.
 
-## Mode 2 — `wrap` (BEGIN/ROLLBACK per test)
+## Mode 2 - `wrap` (BEGIN/ROLLBACK per test)
 
 For schema-stable tests with an ORM exposing a transaction hook
 (Rails, Django, SQLAlchemy):
@@ -64,14 +64,14 @@ def db_session(connection):
 ```
 
 Per [pg-begin][pg-begin], `BEGIN` opens a transaction and `ROLLBACK`
-"discard[s] changes" — no disk touch, **~100× faster than restore**
+"discard[s] changes" - no disk touch, **~100× faster than restore**
 for short tests. Nest with `SAVEPOINT ... ROLLBACK TO SAVEPOINT`.
 
 `wrap` mode **does NOT work** when test code commits internally, runs
-non-transactional DDL, or spans multiple connections — fall back to
+non-transactional DDL, or spans multiple connections - fall back to
 `restore`.
 
-## Mode 3 — MySQL / MongoDB
+## Mode 3 - MySQL / MongoDB
 
 ```bash
 # MySQL
@@ -89,7 +89,7 @@ mongorestore --db=${APP}_test snapshots/${APP}_template/
 Prefer `wrap` mode when transactions support it (MySQL InnoDB does;
 MongoDB does for replica sets).
 
-## Mode 4 — `pg_dump` fallback (portable snapshots)
+## Mode 4 - `pg_dump` fallback (portable snapshots)
 
 When the template-DB path is unavailable (baseline must be
 version-controlled, or user lacks CREATEDB), use `pg_dump -Fc`
@@ -150,7 +150,7 @@ Slower than template clone but portable.
 
 ## Hand-off targets
 
-- **Container-managed DBs** → [`testcontainers`](../skills/testcontainers/SKILL.md) (containers ~5–30s vs template restore ~50–500ms).
+- **Container-managed DBs** → [`testcontainers`](../skills/testcontainers/SKILL.md) (containers ~5 - 30s vs template restore ~50 - 500ms).
 - **Compose stacks** → [`docker-compose-test`](../skills/docker-compose-test/SKILL.md) (its `migrate` service produces the template state).
 - **Parallel-isolation symptoms** under `-j N` → `parallel-isolation-checker` in `qa-flake-triage`.
 

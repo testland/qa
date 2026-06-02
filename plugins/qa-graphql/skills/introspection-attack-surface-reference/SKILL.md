@@ -25,7 +25,7 @@ This skill does not execute anything.
 
 - Designing the production-deployment posture for a GraphQL
   server.
-- Auditing an existing deployment — is introspection disabled,
+- Auditing an existing deployment - is introspection disabled,
   and is the test suite proving it?
 - Writing tests that gate the production introspection setting.
 - PR review where someone proposes enabling introspection in
@@ -40,7 +40,7 @@ Per the GraphQL spec, the `__schema` and `__type` queries return:
 | `__schema.types` | Every type defined (including internal) |
 | `__schema.queryType` / `mutationType` / `subscriptionType` | Operation roots |
 | `__schema.directives` | Custom directives + arguments |
-| `__type(name: "X").fields` | Every field on type X — names, types, deprecation |
+| `__type(name: "X").fields` | Every field on type X - names, types, deprecation |
 | `__type.fields.args` | Argument names, types, default values |
 | `__type.description` | Schema docstrings (often have internal context) |
 
@@ -149,7 +149,7 @@ Each control creates a test:
 | Query-cost limit | Construct high-cost query → error "exceeds maximum operation cost" |
 | Persisted-query allowlist | Submit non-allowlisted hash → `PERSISTED_QUERY_NOT_FOUND` (per [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md)) |
 
-These tests **must** run against the production configuration —
+These tests **must** run against the production configuration - 
 running them against `NODE_ENV=test` may give false positives if
 test config differs from prod.
 
@@ -176,10 +176,10 @@ test config differs from prod.
 - **Codegen / Schema-first dev workflows.** Need a way to fetch
   the schema in CI without exposing it publicly: schema-push to
   an internal artifact registry (Apollo Studio, Hive).
-- **GraphiQL on staging.** A common leak — staging schema often
+- **GraphiQL on staging.** A common leak - staging schema often
   mirrors prod; staging URL discovered → schema disclosed.
 - **`__typename` always works.** Even with introspection off, the
-  meta-field `__typename` returns the type name in responses —
+  meta-field `__typename` returns the type name in responses - 
   some inference still possible.
 
 ## References

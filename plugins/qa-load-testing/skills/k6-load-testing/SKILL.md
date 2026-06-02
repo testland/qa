@@ -24,13 +24,13 @@ out of scope here.
   performance testing.
 - The team prefers JavaScript authoring (vs. JMeter's XML, Gatling's
   Scala/Java, or Locust's Python).
-- A CI gate is needed on **p(95) latency** + **error rate** — k6's
+- A CI gate is needed on **p(95) latency** + **error rate** - k6's
   thresholds are designed for this.
 - The team is on Grafana Cloud (k6 integrates natively) or wants a
   self-hosted CLI-only flow.
 
 If the team is already deep in JMeter, the migration cost is non-
-trivial — evaluate [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md)
+trivial - evaluate [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md)
 in place. For Python / Locust shops, see
 [`locust-load-testing`](../locust-load-testing/SKILL.md). For JVM /
 Gatling, see [`gatling-load-testing`](../gatling-load-testing/SKILL.md).
@@ -38,7 +38,7 @@ Gatling, see [`gatling-load-testing`](../gatling-load-testing/SKILL.md).
 ## Install
 
 The canonical install methods are documented at
-[k6 installation](https://grafana.com/docs/k6/latest/set-up/install-k6/) —
+[k6 installation](https://grafana.com/docs/k6/latest/set-up/install-k6/) - 
 brew (macOS), apt / yum (Linux), choco (Windows), Docker. Pin to a
 specific k6 version in CI for determinism rather than "latest".
 
@@ -63,7 +63,7 @@ The default-exported function runs once per virtual-user iteration.
 `check()` is a non-failing assertion that contributes to the
 `checks` metric; `sleep()` simulates think-time between requests.
 
-### Options block — stages
+### Options block - stages
 
 Per [k6-running][running], the `options` export controls the run:
 
@@ -81,16 +81,16 @@ Three canonical shape patterns:
 
 | Pattern             | Stages                                                                |
 |---------------------|-----------------------------------------------------------------------|
-| Smoke test          | One stage, `{ duration: '1m', target: 1 }` — sanity check.            |
+| Smoke test          | One stage, `{ duration: '1m', target: 1 }` - sanity check.            |
 | Average load test   | Ramp up → plateau → ramp down (the example above).                    |
 | Stress test         | Ramp past expected peak; observe where the system breaks.             |
 | Spike test          | Sudden ramp to high VU; back to normal; verify recovery.              |
 | Soak test           | Long plateau (hours); verify no resource leaks over time.             |
 
-### Options block — thresholds
+### Options block - thresholds
 
 Per [k6-thresholds][thresholds], thresholds are "the pass/fail
-criteria that you define for your test metrics" — the canonical CI
+criteria that you define for your test metrics" - the canonical CI
 gate:
 
 ```javascript
@@ -115,7 +115,7 @@ The threshold expression syntax is `<aggregation_method> <operator>
 | Rate        | `rate`                                           |
 | Gauge       | `value`                                          |
 
-A test that fails any threshold exits non-zero — the canonical CI
+A test that fails any threshold exits non-zero - the canonical CI
 gate signal.
 
 ### `abortOnFail`
@@ -255,7 +255,7 @@ job; the summary artifact is uploaded regardless via `if: always()`.
 |-----------------------------------------------------------------|------------------------------------------------------------------|-----|
 | Hard-coded URLs / tokens in script                                | Scripts bind to one environment; secrets leak.                   | Read from `__ENV.API_BASE_URL`, `__ENV.API_TOKEN`. |
 | `--vus 1000 --duration 1h` from a developer laptop                | Laptop resource contention; client-side bottlenecks corrupt metrics. | Run from a CI runner / dedicated load generator; never from a dev box for serious numbers. |
-| Threshold `p(95)<10000`                                           | Practically meaningless — passes any sane API. Hides regressions. | Set thresholds at meaningful budgets (500ms, 1s) tied to NFRs from the [`nfr-extractor`](../../qa-shift-left/skills/nfr-extractor/SKILL.md). |
+| Threshold `p(95)<10000`                                           | Practically meaningless - passes any sane API. Hides regressions. | Set thresholds at meaningful budgets (500ms, 1s) tied to NFRs from the [`nfr-extractor`](../../qa-shift-left/skills/nfr-extractor/SKILL.md). |
 | Soak tests in PR CI                                                | Multi-hour PR CI; team disables.                                | Soak tests are scheduled-only; PRs run smoke / average load. |
 | Missing `sleep()` between requests                                | Hammering at full VU rate generates synthetic numbers; doesn't model real users. | Include `sleep(1)` or randomized think-time after each iteration. |
 | Asserting only `http_req_failed` rate                              | A 30-second response that succeeds passes the rate gate but breaks UX. | Always pair with `http_req_duration` percentile thresholds. |
@@ -263,7 +263,7 @@ job; the summary artifact is uploaded regardless via `if: always()`.
 ## Limitations
 
 - **Single-machine VU limits.** A single k6 instance saturates one
-  machine's outbound CPU / network — typically 20-50k concurrent VUs
+  machine's outbound CPU / network - typically 20-50k concurrent VUs
   for HTTP. For higher loads, distribute via Grafana Cloud or k6
   Operator on Kubernetes.
 - **No native browser execution.** The `k6/browser` module covers it
@@ -275,14 +275,14 @@ job; the summary artifact is uploaded regardless via `if: always()`.
 
 ## References
 
-- [k6-overview][overview] — main docs landing page.
-- [k6-running][running] — basic script + options + stages + ad-hoc
+- [k6-overview][overview] - main docs landing page.
+- [k6-running][running] - basic script + options + stages + ad-hoc
   flags.
-- [k6-thresholds][thresholds] — threshold syntax, aggregation methods,
+- [k6-thresholds][thresholds] - threshold syntax, aggregation methods,
   abortOnFail / delayAbortEval.
 - [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md),
   [`gatling-load-testing`](../gatling-load-testing/SKILL.md),
-  [`locust-load-testing`](../locust-load-testing/SKILL.md) —
+  [`locust-load-testing`](../locust-load-testing/SKILL.md) - 
   alternatives by language stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) — downstream
+- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
   gate that aggregates k6 / lighthouse / load-runner verdicts.

@@ -1,6 +1,6 @@
 ---
 name: regression-suite-curator
-description: "Action-taking agent that periodically reviews the regression suite's per-test signal/noise history and recommends keep/fold/delete decisions — keeps tests that have caught real regressions, recommends folding two tests into one when they share most setup and assertions, recommends deletion only when a test has been zero-signal AND is duplicated by a higher-coverage test elsewhere AND the coverage map confirms its source paths are exercised by other tests. Outputs a curated diff alongside the rationale per decision. Use as a quarterly suite-health pass — coarser-grained than test-suite-pruner; longer time horizon; signal-history-driven."
+description: "Action-taking agent that periodically reviews the regression suite's per-test signal/noise history and recommends keep/fold/delete decisions - keeps tests that have caught real regressions, recommends folding two tests into one when they share most setup and assertions, recommends deletion only when a test has been zero-signal AND is duplicated by a higher-coverage test elsewhere AND the coverage map confirms its source paths are exercised by other tests. Outputs a curated diff alongside the rationale per decision. Use as a quarterly suite-health pass - coarser-grained than test-suite-pruner; longer time horizon; signal-history-driven."
 tools: "Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *)"
 model: sonnet
 skills:
@@ -25,7 +25,7 @@ The agent makes one of three decisions per test:
 The agent emits a PR with the proposed diff and a per-test
 rationale. **Never auto-merges.**
 
-## Mode 1 — Build the signal history
+## Mode 1 - Build the signal history
 
 Walk the team's CI history. For each test:
 
@@ -54,7 +54,7 @@ A test that was PASS, then FAIL, then PASS-again-after-fix is a
 test that caught a regression. The transitions list is the signal
 ledger.
 
-## Mode 2 — Identify keep candidates
+## Mode 2 - Identify keep candidates
 
 ```python
 def keep_candidates(tests, history_index):
@@ -74,7 +74,7 @@ def keep_candidates(tests, history_index):
 A test in the keep list is **off limits** for fold or delete in
 this pass.
 
-## Mode 3 — Identify fold candidates
+## Mode 3 - Identify fold candidates
 
 Two tests are foldable when:
 
@@ -126,14 +126,14 @@ distinguish per-row via the test name template.
 Folding doesn't reduce coverage; it reduces test-code maintenance
 surface.
 
-## Mode 4 — Identify delete candidates
+## Mode 4 - Identify delete candidates
 
 The hardest decision. The agent's rule: **all four conditions
 must hold**:
 
 1. Test has never caught a regression in the window (Mode 1).
 2. Every source-path the test covers is also covered by ≥1 other
-   test (the per-test coverage map confirms — see
+   test (the per-test coverage map confirms - see
    [`regression-suite-selector`](../skills/regression-suite-selector/SKILL.md)).
 3. Not labeled `@critical` / `@regression-guard` / similar.
 4. Not a test the test-code-critic / assertion-quality-reviewer
@@ -214,7 +214,7 @@ The agent **refuses** to:
   per-test map).
 - Delete a test labeled `@critical` / `@regression-guard` / any
   team-configured "do not delete" pattern.
-- Delete a test that's failed in the window — failure history is the
+- Delete a test that's failed in the window - failure history is the
   exact signal that says "this is a real test."
 - Auto-merge the curation PR. Always opens for human review.
 - Operate when the signal-history window is shorter than 90 days
@@ -263,12 +263,10 @@ The agent **refuses** to:
 
 ## References
 
-- [`regression-suite-selector`](../skills/regression-suite-selector/SKILL.md)
-  — provides the per-test → source-path map this agent uses for
+- [`regression-suite-selector`](../skills/regression-suite-selector/SKILL.md) - provides the per-test → source-path map this agent uses for
   redundancy verification (Mode 4 condition 2).
-- [`coverage-debt-tracker`](../skills/coverage-debt-tracker/SKILL.md)
-  — sibling: looks for files needing more tests; this agent looks
+- [`coverage-debt-tracker`](../skills/coverage-debt-tracker/SKILL.md) - sibling: looks for files needing more tests; this agent looks
   for tests needing removal.
-- [`test-suite-pruner`](test-suite-pruner.md) — short-horizon
+- [`test-suite-pruner`](test-suite-pruner.md) - short-horizon
   pruner; this agent is the longer-horizon, signal-history-driven
   curator.

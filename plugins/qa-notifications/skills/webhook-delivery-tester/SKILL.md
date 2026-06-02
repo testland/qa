@@ -1,6 +1,6 @@
 ---
 name: webhook-delivery-tester
-description: "Build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) — HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks)."
+description: "Build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) - HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks)."
 rating: 23
 d6: 4
 archetype: S3
@@ -19,9 +19,9 @@ formalizes the patterns most production systems converged on.
 
 This skill covers tests for both sides:
 
-- **Sender** — your service emits webhooks to customers (Stripe-style
+- **Sender** - your service emits webhooks to customers (Stripe-style
   outbound webhook).
-- **Receiver** — your service receives webhooks from a vendor
+- **Receiver** - your service receives webhooks from a vendor
   (handler for Stripe / Twilio / SendGrid / GitHub events).
 
 ## When to use
@@ -33,18 +33,18 @@ This skill covers tests for both sides:
   signature verification.
 - The team adopts Standard Webhooks per [stdwh][stdwh].
 
-## Step 1 — Sender vs receiver test patterns
+## Step 1 - Sender vs receiver test patterns
 
 | Test side | Layer | Tools |
 |---|---|---|
-| Sender — payload shape | Unit | Mock HTTP client; assert POST body |
-| Sender — signing | Unit | Verify HMAC matches expected per Standard Webhooks |
-| Sender — retries | Integration | Mock server returning 5xx, assert retry+backoff |
-| Receiver — signature verify | Unit | Construct signed payload; assert handler accepts/rejects |
-| Receiver — replay defense | Unit | Construct payload with stale timestamp; assert rejected |
-| Receiver — handler logic | Unit | Per-event-type handler tests with vendor sample payloads |
+| Sender - payload shape | Unit | Mock HTTP client; assert POST body |
+| Sender - signing | Unit | Verify HMAC matches expected per Standard Webhooks |
+| Sender - retries | Integration | Mock server returning 5xx, assert retry+backoff |
+| Receiver - signature verify | Unit | Construct signed payload; assert handler accepts/rejects |
+| Receiver - replay defense | Unit | Construct payload with stale timestamp; assert rejected |
+| Receiver - handler logic | Unit | Per-event-type handler tests with vendor sample payloads |
 
-## Step 2 — Sender: signature signing
+## Step 2 - Sender: signature signing
 
 Per Standard Webhooks ([stdwh][stdwh]) the canonical signature
 scheme:
@@ -88,7 +88,7 @@ def test_outbound_webhook_signed_correctly():
     assert sent_request["headers"]["webhook-signature"] == expected_sig
 ```
 
-## Step 3 — Sender: retry semantics
+## Step 3 - Sender: retry semantics
 
 Per [stdwh][stdwh] the canonical retry pattern: exponential backoff
 with jitter, capped at N attempts, then dead-letter.
@@ -126,7 +126,7 @@ def test_webhook_retries_on_5xx(mock_receiver):
 For dead-letter: assert that after max attempts, the webhook is
 recorded in a dead-letter store + not retried.
 
-## Step 4 — Receiver: signature verification
+## Step 4 - Receiver: signature verification
 
 The receiver's first line of defense. Standard Webhooks signature
 verification per [stdwh][stdwh]:
@@ -168,7 +168,7 @@ def test_receiver_accepts_valid_signature(client):
     assert response.status_code == 200
 ```
 
-## Step 5 — Receiver: replay-window defense
+## Step 5 - Receiver: replay-window defense
 
 A captured signed payload should NOT be re-replayable indefinitely.
 Per [stdwh][stdwh] the receiver should reject payloads with
@@ -195,7 +195,7 @@ def test_receiver_rejects_stale_timestamp(client):
 If receiver doesn't enforce this, mark **critical**: replay
 vulnerable.
 
-## Step 6 — Receiver: idempotent processing
+## Step 6 - Receiver: idempotent processing
 
 Webhooks are sent at-least-once (vendor retries on 5xx); receiver
 must be idempotent. Cross-ref [`idempotency-test-author`](../../qa-async-jobs/skills/idempotency-test-author/SKILL.md):
@@ -215,7 +215,7 @@ def test_receiver_idempotent_via_webhook_id(client):
     assert Order.objects.filter(external_id=123).count() == 1
 ```
 
-## Step 7 — Per-vendor sample payloads
+## Step 7 - Per-vendor sample payloads
 
 For receiver tests of specific vendors, use the vendor's official
 sample payloads (NOT hand-rolled). Vendor docs:
@@ -230,7 +230,7 @@ Test fixtures should be copy-pasted from the vendor docs (or
 captured from their webhook tester); making up payloads risks
 field-name drift.
 
-## Step 8 — Ordering guarantees
+## Step 8 - Ordering guarantees
 
 Webhooks are typically NOT ordered (concurrent retries → out-of-order
 delivery). If your handler relies on order (e.g., processing
@@ -247,10 +247,10 @@ def test_handler_handles_out_of_order_events(client):
     assert order.status == "shipped"   # latest wins
 ```
 
-If your handler can't survive out-of-order, mark **critical** —
+If your handler can't survive out-of-order, mark **critical** - 
 production will encounter this.
 
-## Step 9 — End-to-end test recipe
+## Step 9 - End-to-end test recipe
 
 For sender:
 1. ✅ Payload shape matches spec (Step 1)
@@ -280,7 +280,7 @@ For receiver:
 
 - This is a build-an-X workflow. Tests use the application's HTTP
   server + an HMAC library.
-- Standard Webhooks adoption varies — many vendors use legacy
+- Standard Webhooks adoption varies - many vendors use legacy
   signature schemes (`X-Hub-Signature` from GitHub, `Stripe-Signature`
   from Stripe). Adapt the verification logic per vendor; the
   workflow is the same.
@@ -291,13 +291,12 @@ For receiver:
 
 ## References
 
-- [stdwh][stdwh] — Standard Webhooks specification
-- IETF RFC 2104 — HMAC: Keyed-Hashing for Message Authentication
-- stripe.com/docs/webhooks — Stripe webhooks reference (de-facto standard for many patterns)
-- docs.github.com/en/webhooks — GitHub webhooks reference
-- [`idempotency-test-author`](../../qa-async-jobs/skills/idempotency-test-author/SKILL.md)
-  — companion: receivers must be idempotent (cross-plugin)
+- [stdwh][stdwh] - Standard Webhooks specification
+- IETF RFC 2104 - HMAC: Keyed-Hashing for Message Authentication
+- stripe.com/docs/webhooks - Stripe webhooks reference (de-facto standard for many patterns)
+- docs.github.com/en/webhooks - GitHub webhooks reference
+- [`idempotency-test-author`](../../qa-async-jobs/skills/idempotency-test-author/SKILL.md) - companion: receivers must be idempotent (cross-plugin)
 - [`email-flow-test-author`](../email-flow-test-author/SKILL.md),
-  [`sms-test-author`](../sms-test-author/SKILL.md) — sister channels
+  [`sms-test-author`](../sms-test-author/SKILL.md) - sister channels
   (bounce/complaint webhooks + STOP-keyword webhooks reuse these
   patterns)

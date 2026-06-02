@@ -12,7 +12,7 @@ archetype: S2
 
 Protobuf3 schema evolution is a wire-format problem first and a
 codegen problem second. The field number is the only durable
-identifier — every breaking-change rule derives from preserving
+identifier - every breaking-change rule derives from preserving
 field-number → type binding.
 
 Per [protobuf.dev/programming-guides/proto3/](https://protobuf.dev/programming-guides/proto3/):
@@ -26,10 +26,10 @@ the detection workflow see
 
 ## When to use
 
-- Designing a proto change — is this safe?
+- Designing a proto change - is this safe?
 - Auditing an existing schema for risky patterns (un-reserved
   deleted fields, oneof-conversion footguns).
-- Configuring buf breaking — which category fits the deployment
+- Configuring buf breaking - which category fits the deployment
   model?
 - PR review of `.proto` changes.
 
@@ -64,7 +64,7 @@ old type.
 
 ## Binary wire-safe changes
 
-Per the protobuf3 docs, these are fully safe — old code parses
+Per the protobuf3 docs, these are fully safe - old code parses
 new messages and vice versa with no loss:
 
 | Change | Why safe |
@@ -110,7 +110,7 @@ Per [protobuf.dev](https://protobuf.dev/programming-guides/proto3/):
 - Oneof fields cannot be `repeated` or `map`.
 - "If _multiple values are set, the last set value as determined
   by the order in the proto will overwrite all previous ones._"
-- Adding a field to an existing oneof is **always breaking** —
+- Adding a field to an existing oneof is **always breaking** - 
   old code can't represent the new variant; new data crashes old
   parsers.
 - Removing a field from a oneof is breaking for the same reason.
@@ -300,7 +300,7 @@ later in a separate proto file/package.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Delete field without reserve | Future developer reuses number; semantic corruption | Always `reserved <n>;` and `reserved "name";` |
-| Change field number to be more compact | Wire incompatibility — equivalent to delete+re-add | Never; keep numbers stable |
+| Change field number to be more compact | Wire incompatibility - equivalent to delete+re-add | Never; keep numbers stable |
 | Add field to existing oneof | Old parsers crash on unknown variant | Add outside the oneof; integrate later via wrapper |
 | Rename without deprecating | Codegen consumers break at compile time | Add new field, reserve old name |
 | Use enum value 0 for `UNKNOWN` and re-purpose | Hidden meaning change | Reserve enum value 0 explicitly for `UNSPECIFIED` |

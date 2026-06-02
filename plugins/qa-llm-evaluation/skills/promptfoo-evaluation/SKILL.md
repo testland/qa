@@ -1,6 +1,6 @@
 ---
 name: promptfoo-evaluation
-description: "Authors and runs Promptfoo evals for LLM prompts and RAG pipelines — wires `promptfooconfig.yaml` providers + prompts + tests + assertions (deterministic `equals` / `contains` / `is-json` / `regex`, semantic `similar`, model-graded `llm-rubric` / `factuality` / `g-eval`, performance `latency` / `cost`, custom `javascript` / `python`), runs `npx promptfoo eval`, views HTML report via `promptfoo view`, and integrates CI for regression gating. Use when the user runs Promptfoo, asks about prompt regression suites, or needs an eval-driven workflow for LLM-backed features."
+description: "Authors and runs Promptfoo evals for LLM prompts and RAG pipelines - wires `promptfooconfig.yaml` providers + prompts + tests + assertions (deterministic `equals` / `contains` / `is-json` / `regex`, semantic `similar`, model-graded `llm-rubric` / `factuality` / `g-eval`, performance `latency` / `cost`, custom `javascript` / `python`), runs `npx promptfoo eval`, views HTML report via `promptfoo view`, and integrates CI for regression gating. Use when the user runs Promptfoo, asks about prompt regression suites, or needs an eval-driven workflow for LLM-backed features."
 rating: 24
 d6: 4
 archetype: S1
@@ -20,13 +20,13 @@ cross-product (per [pf-config][pf-config]).
 
 - The repo has a `promptfooconfig.yaml` or the user wants to
   author one.
-- The user needs prompt regression suites — same inputs, multiple
+- The user needs prompt regression suites - same inputs, multiple
   providers, fail-on-diff.
 - A CI workflow needs an eval gate on prompt or model changes.
 - The team prefers vendor-neutral eval (vs OpenAI Evals' OpenAI-first
   posture).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [github.com/promptfoo/promptfoo][pf-gh]:
 
@@ -43,7 +43,7 @@ npx promptfoo@latest
 Per [pf-gh][pf-gh]: "Node.js 20.20+ or 22.22+ is required for npm
 and npx usage."
 
-## Step 2 — First eval
+## Step 2 - First eval
 
 Initialize from a built-in example, then run:
 
@@ -78,7 +78,7 @@ Provider syntax `<vendor>:<model>` works for OpenAI, Anthropic,
 Vertex (`vertex:gemini-2.0-flash-exp`), Ollama (`ollama:llama2`), and
 30+ others (per [pf-config][pf-config]).
 
-## Step 3 — Variable interpolation
+## Step 3 - Variable interpolation
 
 Vars interpolate into prompts using `{{variable}}`. Arrays create
 combinations (per [pf-config][pf-config]):
@@ -100,7 +100,7 @@ tests:
       context: file://fetch_from_vector_database.py
 ```
 
-## Step 4 — Assertion catalog
+## Step 4 - Assertion catalog
 
 Per [promptfoo.dev/docs/configuration/expected-outputs/][pf-asserts]:
 
@@ -170,7 +170,7 @@ Per [promptfoo.dev/docs/configuration/expected-outputs/][pf-asserts]:
 **Negation:** all deterministic assertions support a `not-` prefix
 (`not-equals`, `not-contains`, `not-regex`, etc.) per [pf-asserts][pf-asserts].
 
-## Step 5 — defaultTest pattern
+## Step 5 - defaultTest pattern
 
 Shared assertions/vars across all tests:
 
@@ -191,7 +191,7 @@ tests:
 
 (Per [pf-config][pf-config].)
 
-## Step 6 — Output transforms
+## Step 6 - Output transforms
 
 Modify LLM output before assertions execute (per [pf-config][pf-config]):
 
@@ -210,7 +210,7 @@ options:
   transform: file://transform.js:customTransform
 ```
 
-## Step 7 — assert-set grouping
+## Step 7 - assert-set grouping
 
 Group assertions and require a threshold percentage to pass (per
 [pf-asserts][pf-asserts]):
@@ -226,7 +226,7 @@ assert:
         threshold: 200
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 Provider API keys via env vars (per [pf-gh][pf-gh]: `export
 OPENAI_API_KEY=sk-abc123`).
@@ -274,11 +274,11 @@ branch. Caching reuses LLM responses for unchanged tests (per
 
 ## References
 
-- [pf-intro][pf-intro] — overview
-- [pf-config][pf-config] — full configuration guide
-- [pf-asserts][pf-asserts] — assertion catalog
-- [pf-gha][pf-gha] — GitHub Action
-- [pf-cache][pf-cache] — caching mechanics
-- [pf-gh][pf-gh] — install commands
-- [`openai-evals`](../openai-evals/SKILL.md), [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md), [`ragas-evaluation`](../ragas-evaluation/SKILL.md) — sister tools (different framework styles)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) — adversarial reviewer for any of the above
+- [pf-intro][pf-intro] - overview
+- [pf-config][pf-config] - full configuration guide
+- [pf-asserts][pf-asserts] - assertion catalog
+- [pf-gha][pf-gha] - GitHub Action
+- [pf-cache][pf-cache] - caching mechanics
+- [pf-gh][pf-gh] - install commands
+- [`openai-evals`](../openai-evals/SKILL.md), [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md), [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - sister tools (different framework styles)
+- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - adversarial reviewer for any of the above

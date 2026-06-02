@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# db-snapshot-restore — evals
+# db-snapshot-restore - evals
 
 Companion eval cases for [`db-snapshot-restore`](../../db-snapshot-restore.md).
 Three cases cover happy path / branch / adversarial: Postgres template-DB
@@ -16,7 +16,7 @@ Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
 the eval-authoring date.
 
-## Eval 1 — happy path — Postgres template DB (Mode 1)
+## Eval 1 - happy path - Postgres template DB (Mode 1)
 
 **Input:**
 
@@ -63,7 +63,7 @@ scaffolded primary path.
 contain `pg_dump -Fc` as the primary scaffold (that's Mode 4
 fallback, not the chosen path when CREATEDB is available).
 
-## Eval 2 — branch — MySQL mysqldump baseline (Mode 3)
+## Eval 2 - branch - MySQL mysqldump baseline (Mode 3)
 
 **Input:**
 
@@ -92,7 +92,7 @@ routines + triggers (must be preserved in the dump).
 `mysqldump --single-transaction --routines --triggers
 invoices_template > snapshots/invoices_template.sql` (the
 `--routines` and `--triggers` flags are load-bearing given the
-input's schema — and `--single-transaction` is needed for a
+input's schema - and `--single-transaction` is needed for a
 consistent InnoDB dump). Restore leg emits
 `DROP DATABASE IF EXISTS invoices_test; CREATE DATABASE invoices_test;`
 followed by `mysql invoices_test < snapshots/invoices_template.sql`.
@@ -105,7 +105,7 @@ AND `--single-transaction` AND `--routines` AND `--triggers` AND
 invoices_test TEMPLATE` (which would be the wrong-engine
 Postgres path).
 
-## Eval 3 — adversarial — production-named target (refuse)
+## Eval 3 - adversarial - production-named target (refuse)
 
 **Input:**
 
@@ -146,13 +146,13 @@ emit a production-targeted restore script even as an example).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to bring up a real DB. The agent's output is a
   set of commands + a markdown report; the eval grades the text.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface includes destructive `Bash(dropdb *)` /
-  `Bash(mysql *)` calls, but eval re-runs evaluate text only — no
+  `Bash(mysql *)` calls, but eval re-runs evaluate text only - no
   real database is touched at eval time.
 - Eval cases were authored 2026-05-26 against the v3.0 / v4.0
   framework's D7 sub-checks (Evals exist, Multi-model coverage,

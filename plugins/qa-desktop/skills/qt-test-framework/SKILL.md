@@ -1,6 +1,6 @@
 ---
 name: qt-test-framework
-description: "Authors and runs Qt Test — the first-party C++ unit + GUI test framework that ships with Qt 6 (`#include <QtTest>`). Covers the `QTEST_MAIN` / `QTEST_APPLESS_MAIN` / `QTEST_GUILESS_MAIN` entry-point macros, the `QObject` private-slot test pattern, `QVERIFY` / `QCOMPARE` / `QFETCH` assertions, GUI event simulation (`QTest::mouseClick`, `QTest::keyClick`, `QTest::touchEvent`), `QSignalSpy` for signal introspection, `QBENCHMARK` for performance regression, and the `-o file,junitxml` CI output. Use for in-process testing of Qt widgets, QObject signal/slot chains, and Qt Quick / QML application logic; for out-of-process Qt-app driving see the OS drivers in this plugin."
+description: "Authors and runs Qt Test - the first-party C++ unit + GUI test framework that ships with Qt 6 (`#include <QtTest>`). Covers the `QTEST_MAIN` / `QTEST_APPLESS_MAIN` / `QTEST_GUILESS_MAIN` entry-point macros, the `QObject` private-slot test pattern, `QVERIFY` / `QCOMPARE` / `QFETCH` assertions, GUI event simulation (`QTest::mouseClick`, `QTest::keyClick`, `QTest::touchEvent`), `QSignalSpy` for signal introspection, `QBENCHMARK` for performance regression, and the `-o file,junitxml` CI output. Use for in-process testing of Qt widgets, QObject signal/slot chains, and Qt Quick / QML application logic; for out-of-process Qt-app driving see the OS drivers in this plugin."
 archetype: S1
 rating: 24
 d6: 4
@@ -37,7 +37,7 @@ Per the [QTest namespace reference][qtns]:
 > entry points: QTEST_MAIN, QTEST_GUILESS_MAIN,
 > QTEST_APPLESS_MAIN."
 
-Qt Test is **in-process** — the test executable links the Qt
+Qt Test is **in-process** - the test executable links the Qt
 application code and emits events directly into the `QObject` event
 queue. It does **not** go through the OS accessibility tree (per
 [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)),
@@ -50,7 +50,7 @@ out-of-process Qt driving see
 
 ## When to use
 
-- Pure-logic unit testing of `QObject`-based classes — view models,
+- Pure-logic unit testing of `QObject`-based classes - view models,
   data models, signal/slot graphs.
 - GUI tests of `QWidget` or Qt Quick views where the test
   executable can link the app code (in-process), avoiding the
@@ -62,7 +62,7 @@ out-of-process Qt driving see
 
 [qtidx]: https://doc.qt.io/qt-6/qttest-index.html
 
-## Step 1 — Add Qt Test to the build
+## Step 1 - Add Qt Test to the build
 
 CMake (Qt 6, the canonical Qt build system per Qt 6 docs):
 
@@ -75,12 +75,12 @@ add_test(NAME test_calculator COMMAND test_calculator)
 ```
 
 `qt_add_executable` is the Qt-6 wrapper that handles meta-object
-compilation (moc) automatically — Qt Test slot discovery depends on
+compilation (moc) automatically - Qt Test slot discovery depends on
 moc.
 
-## Step 2 — Author a test class
+## Step 2 - Author a test class
 
-The canonical shape per [qtover][qtover] — a `QObject` subclass with
+The canonical shape per [qtover][qtover] - a `QObject` subclass with
 **private slots** as test functions:
 
 ```cpp
@@ -121,7 +121,7 @@ The four lifecycle slots are recognised by name ([qtover][qtover]):
 `initTestCase` (once before any test), `cleanupTestCase` (once
 after), `init` (per test), `cleanup` (per test).
 
-## Step 3 — Pick the right entry-point macro
+## Step 3 - Pick the right entry-point macro
 
 Per [qtns][qtns], three entry-point macros choose what application
 class the harness instantiates:
@@ -134,11 +134,11 @@ class the harness instantiates:
 
 Per [qtover][qtover], if the test class defines a static public
 `void initMain()` method, "it is called by the QTEST_MAIN macros
-before the QApplication object is instantiated" — that's the hook
+before the QApplication object is instantiated" - that's the hook
 for setting platform-specific environment variables before Qt's
 event loop starts.
 
-## Step 4 — Data-driven tests
+## Step 4 - Data-driven tests
 
 Per [qtns][qtns], `QFETCH` retrieves test data values; data is
 declared in a sibling `_data()` slot:
@@ -171,7 +171,7 @@ void TestCalculator::addsTwoIntegers() {
 Per [qtover][qtover]: "A test can be executed multiple times with
 different test data." Each `newRow` runs the test function once.
 
-## Step 5 — GUI event simulation
+## Step 5 - GUI event simulation
 
 Per [qtns][qtns], the QTest namespace provides:
 
@@ -198,10 +198,10 @@ void TestLoginWidget::successfulLogin() {
 ```
 
 `QTRY_VERIFY` / `QTRY_COMPARE` ([qtns][qtns]) poll the predicate
-with a default 5-second timeout — the right primitive for waiting on
+with a default 5-second timeout - the right primitive for waiting on
 async signal/slot completion without ad-hoc `QTest::qWait` sleeps.
 
-## Step 6 — Signal introspection with QSignalSpy
+## Step 6 - Signal introspection with QSignalSpy
 
 Per [qtidx][qtidx], QSignalSpy enables "easy introspection for Qt's
 signals and slots":
@@ -220,10 +220,10 @@ void TestCalculator::emitsResultChangedSignal() {
 ```
 
 This is the canonical pattern for asserting on signal emission
-order, count, and argument values — far more robust than connecting
+order, count, and argument values - far more robust than connecting
 test-internal slots and counting invocations by hand.
 
-## Step 7 — Benchmarks
+## Step 7 - Benchmarks
 
 Per [qtns][qtns], `QBENCHMARK` "executes code repeatedly to measure
 performance":
@@ -243,7 +243,7 @@ Qt Test reports CPU time, walltime, or instructions-retired
 depending on the active back-end ([qtover][qtover]). For a single-
 run measurement use `QBENCHMARK_ONCE` ([qtns][qtns]).
 
-## Step 8 — Run
+## Step 8 - Run
 
 Per [qtover][qtover], a Qt Test executable accepts the following
 command-line options:
@@ -271,7 +271,7 @@ The `-o filename,format` flag per [qtover][qtover] supports formats:
 For multi-binary suites, `ctest` (driven by `add_test` from Step 1)
 runs the per-test executables and aggregates outcomes.
 
-## Step 9 — Parsing results
+## Step 9 - Parsing results
 
 ```bash
 ./test_calculator -o results-junit.xml,junitxml
@@ -282,7 +282,7 @@ The JUnit XML output feeds
 for cross-platform aggregation alongside other JUnit-emitting test
 runners.
 
-## Step 10 — CI integration
+## Step 10 - CI integration
 
 ```yaml
 # .github/workflows/qttest.yml
@@ -316,7 +316,7 @@ jobs:
           path: build/junit.xml
 ```
 
-`QT_QPA_PLATFORM=offscreen` is the headless Qt platform plugin —
+`QT_QPA_PLATFORM=offscreen` is the headless Qt platform plugin - 
 required for GUI-touching Qt Test executables on hosted Linux
 runners that don't have an X / Wayland session.
 
@@ -325,7 +325,7 @@ runners that don't have an X / Wayland session.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Public slots as test functions | moc treats them as Qt signals/slots; harness ignores them | Private slots ([qtover][qtover]) |
-| Forgetting `#include "tst_xxx.moc"` for single-file tests | Linker error — moc output not bundled | Include the generated moc file at the bottom of the .cpp (Step 2) |
+| Forgetting `#include "tst_xxx.moc"` for single-file tests | Linker error - moc output not bundled | Include the generated moc file at the bottom of the .cpp (Step 2) |
 | `QTest::qWait(2000)` between actions | Flaky; slow on fast machines, racy on slow | `QTRY_VERIFY` / `QTRY_COMPARE` with predicate polling ([qtns][qtns]) |
 | One mega-test slot exercising many flows | First failure stops the chain; coverage attribution lost | One slot per behaviour; share setup via `init()` ([qtover][qtover]) |
 | Test depends on `QTimer::singleShot(0, …)` cascade | Event-loop ordering varies | Drive the event loop with `QCoreApplication::processEvents()` or `QTRY_*` predicates |
@@ -336,29 +336,29 @@ runners that don't have an X / Wayland session.
 ## Limitations
 
 - **In-process only.** Qt Test links the application code into the
-  test binary; it cannot drive a separately-packaged Qt app — for
+  test binary; it cannot drive a separately-packaged Qt app - for
   that, see the OS-native drivers in this plugin.
 - **No binary compatibility guarantee.** Per [qtidx][qtidx], "no
   binary compatibility guarantee" is offered for Qt Test;
   recompile when the Qt version changes.
 - **`QApplication` singleton constraint.** Multiple `QTEST_MAIN`
-  test binaries cannot share a process — each test binary runs as
+  test binaries cannot share a process - each test binary runs as
   its own executable (which is why `ctest` exists).
 - **GUI tests need a display platform.** Headless Linux runners
   require `QT_QPA_PLATFORM=offscreen` or `xvfb-run` for widget-
   level tests.
 - **No async-await ergonomics.** Qt Test predates coroutines; async
   flows use `QSignalSpy` + `QTRY_VERIFY` or explicit event-loop
-  driving — clunkier than Playwright's `await`-everywhere model.
-- **Localised string assertions in QCOMPARE** are brittle —
+  driving - clunkier than Playwright's `await`-everywhere model.
+- **Localised string assertions in QCOMPARE** are brittle - 
   prefer asserting on QString identifiers (object names) or
   enum values rather than displayed text.
 
 ## References
 
-- Qt Test overview — [qtover][qtover].
-- QTest namespace reference — [qtns][qtns].
-- Qt Test module index — [qtidx][qtidx].
+- Qt Test overview - [qtover][qtover].
+- QTest namespace reference - [qtns][qtns].
+- Qt Test module index - [qtidx][qtidx].
 - Sibling out-of-process Qt drivers in this plugin:
   [`winappdriver`](../winappdriver/SKILL.md),
   [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md),

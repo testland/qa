@@ -1,6 +1,6 @@
 ---
 name: flyway-migrations
-description: "Authors and runs Flyway database migrations — versioned (`V1__add_users.sql`), repeatable (`R__refresh_views.sql`), and undo (`U1__remove_users.sql`) migration files in `db/migration/`; runs `flyway migrate` / `info` / `validate` / `clean` / `baseline` / `repair`; tracks state in the `flyway_schema_history` table; supports 50+ databases including Oracle / SQL Server / MySQL / PostgreSQL / MariaDB / Snowflake / BigQuery; integrates with Maven, Gradle, CLI, and Docker. Use when the user works with Flyway-managed schemas, asks about migration ordering, or needs CI gates on schema changes."
+description: "Authors and runs Flyway database migrations - versioned (`V1__add_users.sql`), repeatable (`R__refresh_views.sql`), and undo (`U1__remove_users.sql`) migration files in `db/migration/`; runs `flyway migrate` / `info` / `validate` / `clean` / `baseline` / `repair`; tracks state in the `flyway_schema_history` table; supports 50+ databases including Oracle / SQL Server / MySQL / PostgreSQL / MariaDB / Snowflake / BigQuery; integrates with Maven, Gradle, CLI, and Docker. Use when the user works with Flyway-managed schemas, asks about migration ordering, or needs CI gates on schema changes."
 rating: 23
 d6: 4
 archetype: S1
@@ -42,7 +42,7 @@ Flyway tracks applied migrations in a per-database
 - The team migrates from manual SQL scripts to versioned migration
   control.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [fw-home][fw-home]: "Flyway Command Line runs on Windows,
 macOS, Linux, and is available on docker." Plus Maven plugin and
@@ -62,7 +62,7 @@ brew install flyway
 # add to pom.xml under <build><plugins>
 ```
 
-## Step 2 — First migration
+## Step 2 - First migration
 
 Per [fw-how][fw-how], migrations may be "written in either SQL,
 Java, or other scripting languages." File-naming convention places
@@ -87,7 +87,7 @@ The prefix scheme:
 `__` (double underscore) separates version + description; `.sql` (or
 configured suffix) marks the file as a migration.
 
-## Step 3 — Core commands
+## Step 3 - Core commands
 
 Per [fw-home][fw-home]: "Flyway has the following commands at its
 disposal: Migrate, Clean, Info, Validate, Undo, Baseline, Repair,
@@ -103,7 +103,7 @@ Check and Snapshot."
 | `flyway undo` | Roll back the last versioned migration (Teams) |
 | `flyway clean` | **Drop all objects** in the schema (production-disabled by default) |
 
-## Step 4 — Pending-migration semantics
+## Step 4 - Pending-migration semantics
 
 Per [fw-how][fw-how]:
 
@@ -115,7 +115,7 @@ This is the safety property: a developer who pulls main with new
 migrations and runs `flyway migrate` applies only the new ones; old
 ones already in `flyway_schema_history` are not re-run.
 
-## Step 5 — Configuration
+## Step 5 - Configuration
 
 Configuration via `flyway.conf` file, env vars (`FLYWAY_*`), or CLI
 flags. Key settings:
@@ -131,11 +131,11 @@ flyway.outOfOrder=false              # reject migrations with versions lower tha
 flyway.validateOnMigrate=true        # checksum-validate before applying
 ```
 
-`cleanDisabled=true` is a **mandatory production guard** —
+`cleanDisabled=true` is a **mandatory production guard** - 
 `flyway clean` drops every object in the schema. Always set this in
 production config; only enable for ephemeral test databases.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 Pattern: ephemeral DB (Docker / Testcontainers) per PR + apply
 migrations + run tests against the migrated schema.
@@ -158,10 +158,10 @@ For full integration with [`testcontainers`](../../qa-test-environment/skills/te
 spin up the DB via Testcontainers, then call `Flyway.configure()`
 in JUnit `@BeforeAll`.
 
-## Step 7 — Composition with sister tools
+## Step 7 - Composition with sister tools
 
 Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-for adversarial review of new migrations before merge — classifies
+for adversarial review of new migrations before merge - classifies
 each migration as additive / breaking / data-loss / locking.
 
 For schema-diff review (compare two migration sets), see
@@ -180,26 +180,25 @@ in qa-data-quality.
 
 ## Limitations
 
-- Undo migrations are a Teams (paid) feature — OSS users implement
+- Undo migrations are a Teams (paid) feature - OSS users implement
   rollback manually via inverse versioned migrations.
 - `flyway clean` is irreversible; the `cleanDisabled=true` guard is
   the only protection.
-- 50+ supported DBMS but rule depth varies — consult per-database
+- 50+ supported DBMS but rule depth varies - consult per-database
   pages on [fw-home][fw-home] for vendor-specific syntax.
 - Requires JVM (CLI bundles its own JRE; Docker / Maven plugin
   inherit it).
 
 ## References
 
-- [fw-home][fw-home] — main documentation, command list, supported
+- [fw-home][fw-home] - main documentation, command list, supported
   databases
-- [fw-how][fw-how] — conceptual model: schema_history table,
+- [fw-how][fw-how] - conceptual model: schema_history table,
   pending-migration semantics, ordering
-- github.com/flyway/flyway — repository
+- github.com/flyway/flyway - repository
 - [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
   [`atlas-migrations`](../atlas-migrations/SKILL.md),
-  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) — sister
+  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
   tools (Liquibase = changelog-driven; Atlas = declarative HCL;
   SQLMesh = data-pipeline + schema)
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-  — adversarial reviewer
+- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer

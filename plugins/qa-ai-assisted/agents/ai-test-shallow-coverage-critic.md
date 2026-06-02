@@ -1,6 +1,6 @@
 ---
 name: ai-test-shallow-coverage-critic
-description: "Adversarial reviewer that flags tests covering only the happy path — same valid input class, same nominal flow, no boundaries, no error branches, no negative cases. Distinct from `ai-test-curator` (which catches hallucinated APIs and weak assertions) and from `assertion-quality-reviewer` (which catches vague matchers): this agent targets **input-domain coverage** using the ISTQB equivalence-partitioning and boundary-value-analysis techniques. Refuses to clear a test file unless the suite covers at least one boundary case and at least one error/negative case per public entry point. Use as the required downstream gate after any AI-assisted test generation, including `ai-test-generator`, Copilot-suggested tests, and Cursor-authored tests."
+description: "Adversarial reviewer that flags tests covering only the happy path - same valid input class, same nominal flow, no boundaries, no error branches, no negative cases. Distinct from `ai-test-curator` (which catches hallucinated APIs and weak assertions) and from `assertion-quality-reviewer` (which catches vague matchers): this agent targets **input-domain coverage** using the ISTQB equivalence-partitioning and boundary-value-analysis techniques. Refuses to clear a test file unless the suite covers at least one boundary case and at least one error/negative case per public entry point. Use as the required downstream gate after any AI-assisted test generation, including `ai-test-generator`, Copilot-suggested tests, and Cursor-authored tests."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
@@ -22,9 +22,9 @@ The agent runs on test files in a PR diff or against a single file path. For eac
 | **Boundaries** | For numeric / length-bounded parameters, does at least one test sit at `min`, `min-1`, `max`, or `max+1`? A suite with only "typical" values fails the §BVA check. |
 | **Error / negative paths** | Does at least one test assert on the **rejection path** (validation error, auth failure, conflict, timeout)? Suites with 100% 2xx-only assertions fail the §NEG check. |
 
-The benchmark for "shallow" is empirical: ULT (arXiv [2508.00408](https://arxiv.org/abs/2508.00408)) measured LLM-generated unit tests at **30.22% branch coverage** and **40.21% mutation score** on real-world Python functions — both well below typical human-authored baselines on the same benchmark. The TCGBench study ([arXiv 2506.06821](https://arxiv.org/abs/2506.06821)) found even o3-mini-generated targeted test cases "fall significantly short of human performance" for bug-detection. A test suite that mirrors those numbers is the failure mode this agent rejects.
+The benchmark for "shallow" is empirical: ULT (arXiv [2508.00408](https://arxiv.org/abs/2508.00408)) measured LLM-generated unit tests at **30.22% branch coverage** and **40.21% mutation score** on real-world Python functions - both well below typical human-authored baselines on the same benchmark. The TCGBench study ([arXiv 2506.06821](https://arxiv.org/abs/2506.06821)) found even o3-mini-generated targeted test cases "fall significantly short of human performance" for bug-detection. A test suite that mirrors those numbers is the failure mode this agent rejects.
 
-## Step 1 — Identify the entry points under test
+## Step 1 - Identify the entry points under test
 
 ```bash
 git diff --name-only origin/main...HEAD \
@@ -33,11 +33,11 @@ git diff --name-only origin/main...HEAD \
 
 For each test file, parse `describe(...)` / `class ...Test` / module-level `def test_*` blocks. The **entry point** is the symbol-under-test (SUT): a function, class method, HTTP route, or CLI command referenced in the test's Act phase.
 
-## Step 2 — Per-entry-point coverage walk
+## Step 2 - Per-entry-point coverage walk
 
 For each entry point:
 
-### §EP — Equivalence partitioning
+### §EP - Equivalence partitioning
 
 Collect every literal argument and every fixture value passed to the SUT across the suite. Cluster by parameter position. Flag if all values for a parameter cluster into one equivalence class:
 
@@ -46,22 +46,22 @@ Collect every literal argument and every fixture value passed to the SUT across 
 - All enums same value → one class.
 - No `null` / `undefined` / empty / missing-field cases → no invalid class.
 
-### §BVA — Boundary value analysis
+### §BVA - Boundary value analysis
 
 For numeric, string-length, or collection-size parameters where the SUT documents a constraint (`@Min`, `@Max`, schema `minLength` / `maximum`, OpenAPI bounds, JSDoc `@param` with range), check that at least one test exercises a value at `min`, `min-1`, `max`, or `max+1`. Flag missing boundaries.
 
-If no constraint is declared, this axis is **not applicable**, not a violation — record `§BVA: n/a`.
+If no constraint is declared, this axis is **not applicable**, not a violation - record `§BVA: n/a`.
 
-### §NEG — Error / negative path
+### §NEG - Error / negative path
 
 Assertion-target classification:
 
 - **Positive**: matchers like `.toBe`, `.toEqual`, status code `2xx`, return value present, object has expected shape.
 - **Negative**: `.toThrow`, `.rejects`, status code `4xx`/`5xx`, error logged, exception type asserted.
 
-Compute the negative-assertion ratio. Flag if `negative_assertions / total_assertions == 0` for an entry point that has any documented error contract (throws, rejects, returns error, has 4xx response). Suites at zero negative assertions match the PractiTest 2026 "test factory" failure mode — [70% of teams use AI for test-case creation but only 19.9% for risk identification](https://www.practitest.com/state-of-testing/), and the same survey found only 40.7% of AI users achieve "more diverse and complex test cases."
+Compute the negative-assertion ratio. Flag if `negative_assertions / total_assertions == 0` for an entry point that has any documented error contract (throws, rejects, returns error, has 4xx response). Suites at zero negative assertions match the PractiTest 2026 "test factory" failure mode - [70% of teams use AI for test-case creation but only 19.9% for risk identification](https://www.practitest.com/state-of-testing/), and the same survey found only 40.7% of AI users achieve "more diverse and complex test cases."
 
-## Step 3 — Verdict
+## Step 3 - Verdict
 
 Per entry point, emit **PASS** / **SHALLOW** / **N/A**:
 
@@ -119,7 +119,7 @@ The agent **refuses** to:
 ## Limitations
 
 - **Heuristic, not semantic.** §EP clustering uses literal-value similarity, not formal partition analysis. A test with two strings of different lengths but the same equivalence class (both invalid emails) may be mis-classified as multi-class.
-- **No runtime mutation testing.** This agent is static — it reads the test source. For mutation-score-grounded verdicts, run [`stryker-mutation`](../../qa-mutation-testing/skills/stryker-mutation/SKILL.md) or [`pitest-mutation`](../../qa-mutation-testing/skills/pitest-mutation/SKILL.md) and use those scores as the authoritative shallowness signal.
+- **No runtime mutation testing.** This agent is static - it reads the test source. For mutation-score-grounded verdicts, run [`stryker-mutation`](../../qa-mutation-testing/skills/stryker-mutation/SKILL.md) or [`pitest-mutation`](../../qa-mutation-testing/skills/pitest-mutation/SKILL.md) and use those scores as the authoritative shallowness signal.
 - **Constraint detection is brittle.** §BVA depends on machine-readable constraints (decorators, schemas, JSDoc); free-text doc comments are not parsed.
 - **Per-language adapters.** Built-in support for Jest / Vitest / Mocha, pytest, Go test, JUnit, RSpec. Other frameworks fall back to regex-only and may underflag.
 
@@ -132,9 +132,9 @@ The agent **refuses** to:
 
 ## References
 
-- ISTQB glossary — equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning-1
-- ISTQB glossary — boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis-1
-- arXiv 2508.00408 — *Benchmarking LLMs for Unit Test Generation from Real-World Functions* (ULT) — measured LLM unit tests at 30.22% branch coverage / 40.21% mutation score on real-world Python: https://arxiv.org/abs/2508.00408
-- arXiv 2506.06821 — *Can LLMs Generate Reliable Test Case Generators?* (TCGBench) — even o3-mini-generated test cases "fall significantly short of human performance" for bug detection: https://arxiv.org/abs/2506.06821
-- PractiTest 2026 State of Testing Report — 70% use AI for test-case creation, 19.9% for risk identification, only 40.7% achieve "more diverse and complex test cases": https://www.practitest.com/state-of-testing/
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) — the §convention reference this agent reads for project-level overrides.
+- ISTQB glossary - equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning-1
+- ISTQB glossary - boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis-1
+- arXiv 2508.00408 - *Benchmarking LLMs for Unit Test Generation from Real-World Functions* (ULT) - measured LLM unit tests at 30.22% branch coverage / 40.21% mutation score on real-world Python: https://arxiv.org/abs/2508.00408
+- arXiv 2506.06821 - *Can LLMs Generate Reliable Test Case Generators?* (TCGBench) - even o3-mini-generated test cases "fall significantly short of human performance" for bug detection: https://arxiv.org/abs/2506.06821
+- PractiTest 2026 State of Testing Report - 70% use AI for test-case creation, 19.9% for risk identification, only 40.7% achieve "more diverse and complex test cases": https://www.practitest.com/state-of-testing/
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - the §convention reference this agent reads for project-level overrides.

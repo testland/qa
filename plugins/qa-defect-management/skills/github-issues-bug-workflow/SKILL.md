@@ -1,6 +1,6 @@
 ---
 name: github-issues-bug-workflow
-description: "Author and run GitHub Issues bug workflows via REST API v2022-11-28 — issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, comment attachment, and Projects v2 status-column updates via GraphQL. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), label conventions for the impoverished GitHub state model, and the gh CLI for scripted workflows. Use when programmatically managing GitHub Issues bug lifecycle — GitHub's binary open/closed model requires label + Projects discipline."
+description: "Author and run GitHub Issues bug workflows via REST API v2022-11-28 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, comment attachment, and Projects v2 status-column updates via GraphQL. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), label conventions for the impoverished GitHub state model, and the gh CLI for scripted workflows. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline."
 rating: 23
 d6: 4
 archetype: S1
@@ -101,7 +101,7 @@ adopt label prefixes:
 | Defect type | `type:regression`, `type:performance`, `type:security` |
 | Component | `component:auth`, `component:payments`, `component:ui` |
 
-Adopt them consistently — the
+Adopt them consistently - the
 [`bug-report-critic`](../../agents/bug-report-critic.md) checks
 that severity + priority labels are both present.
 
@@ -201,7 +201,7 @@ def create_or_attach(title, body):
 ### Projects v2 status updates
 
 For richer state (e.g., a Kanban with custom columns), Projects
-v2 requires GraphQL — the REST API doesn't reach Projects v2:
+v2 requires GraphQL - the REST API doesn't reach Projects v2:
 
 ```python
 PROJECTS_MUTATION = """
@@ -267,20 +267,20 @@ cross-repo, use a fine-grained PAT.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Closing without `state_reason` | Defaults to `completed` — wrong for not-a-bug / duplicate | Always set `state_reason` explicitly |
-| Severity / priority in title prefix | "[CRITICAL]" prefixes — not searchable; not filterable | Use labels |
+| Closing without `state_reason` | Defaults to `completed` - wrong for not-a-bug / duplicate | Always set `state_reason` explicitly |
+| Severity / priority in title prefix | "[CRITICAL]" prefixes - not searchable; not filterable | Use labels |
 | Free-form status labels per team | Cross-team queries break | Adopt the canonical label vocabulary above |
 | Search-rate-limit ignored | Bulk dedupe scripts get 403s | Throttle to 30 req/min unauth, 5000 authenticated |
 | No `X-GitHub-Api-Version` header | Future API changes silently break code | Always set the version header |
 | Plain-text body (no Markdown) | Loses code-block formatting | Use Markdown in `body` |
-| Closing with `state: closed` without `state_reason` for "wontfix" | Ambiguous closure — looks the same as a fix | Use `state_reason: not_planned` |
+| Closing with `state: closed` without `state_reason` for "wontfix" | Ambiguous closure - looks the same as a fix | Use `state_reason: not_planned` |
 
 ## Limitations
 
 - **Open / closed only.** Rich lifecycle expressed via labels +
   Projects requires team discipline; the API doesn't enforce it.
 - **No native severity / priority fields.** Conventions vary
-  across orgs — the runner is portable only if the team adopts
+  across orgs - the runner is portable only if the team adopts
   the label vocabulary above.
 - **Projects v2 is GraphQL.** REST + GraphQL hybrid; engineers
   need both.
@@ -291,13 +291,13 @@ cross-repo, use a fine-grained PAT.
 
 ## References
 
-- GitHub Issues REST API —
+- GitHub Issues REST API - 
   [docs.github.com/en/rest/issues/issues](https://docs.github.com/en/rest/issues/issues).
-- GitHub Search API —
+- GitHub Search API - 
   docs.github.com/en/rest/search/search#search-issues-and-pull-requests.
-- Projects v2 GraphQL —
+- Projects v2 GraphQL - 
   docs.github.com/en/issues/planning-and-tracking-with-projects.
-- `gh` CLI manual —
+- `gh` CLI manual - 
   cli.github.com/manual/gh_issue.
 - Sibling references:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),

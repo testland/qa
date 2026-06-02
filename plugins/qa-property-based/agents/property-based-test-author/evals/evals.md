@@ -4,16 +4,16 @@ type: agent
 archetype: A2
 ---
 
-# property-based-test-author — evals
+# property-based-test-author - evals
 
 Companion eval cases for [`property-based-test-author`](../../property-based-test-author.md).
 
-## Eval 1: happy path — Hypothesis roundtrip property in Python
+## Eval 1: happy path - Hypothesis roundtrip property in Python
 
 **Input:**
 - Tool override: `Hypothesis`.
 - Target function: `serialize(data: dict) -> str` and `deserialize(s: str) -> dict` in `src/codec.py`.
-- Stated invariant: "Roundtrip — `deserialize(serialize(d)) == d` for all valid dict `d`."
+- Stated invariant: "Roundtrip - `deserialize(serialize(d)) == d` for all valid dict `d`."
 - Project has `pyproject.toml` with `[tool.pytest.ini_options]`.
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25), opus (2026-05-25).
@@ -27,12 +27,12 @@ Companion eval cases for [`property-based-test-author`](../../property-based-tes
 
 **Pass condition:** Output contains the literal substrings `from hypothesis import` AND `@given` AND `deserialize(serialize` AND `== d` and does NOT contain `max_examples=5` OR `max_examples=10`.
 
-## Eval 2: branch — fast-check idempotence property in TypeScript
+## Eval 2: branch - fast-check idempotence property in TypeScript
 
 **Input:**
 - Tool override: `fast-check`.
 - Target function: `normalize(s: string): string` in `src/text.ts`.
-- Stated invariant: "Idempotence — `normalize(normalize(s)) === normalize(s)` for all string `s`."
+- Stated invariant: "Idempotence - `normalize(normalize(s)) === normalize(s)` for all string `s`."
 - Project has `package.json` with `"fast-check"` in devDependencies.
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25).
@@ -44,7 +44,7 @@ Companion eval cases for [`property-based-test-author`](../../property-based-tes
 
 **Pass condition:** Output contains the literal substrings `import fc from 'fast-check'` AND `fc.property(fc.string()` AND `normalize(normalize(s))` AND `=== normalize(s)`.
 
-## Eval 3: adversarial — "test with random inputs" without an invariant
+## Eval 3: adversarial - "test with random inputs" without an invariant
 
 **Input:**
 - Target function: `processOrder(o: Order)` in `src/orders.ts`.
@@ -52,7 +52,7 @@ Companion eval cases for [`property-based-test-author`](../../property-based-tes
 
 **Target models:** sonnet (2026-05-25).
 
-**Expected:** Refuses to author a property test. Explains that "doesn't throw" is satisfied by random/fuzz testing, not property-based testing — property-based testing earns its keep when there's a meaningful invariant (roundtrip / idempotence / conservation / monotonicity / commutativity / inverse / reference). Recommends:
+**Expected:** Refuses to author a property test. Explains that "doesn't throw" is satisfied by random/fuzz testing, not property-based testing - property-based testing earns its keep when there's a meaningful invariant (roundtrip / idempotence / conservation / monotonicity / commutativity / inverse / reference). Recommends:
 - `qa-unit-tests-js/js-test-author` if there's a specific expected behavior per input,
 - `qa-fuzz-testing` if the goal is "crash on adversarial inputs."
 
@@ -62,6 +62,6 @@ Does NOT emit a property test.
 
 ## Notes
 
-- Eval file lives outside the lint glob — no rating frontmatter needed.
+- Eval file lives outside the lint glob - no rating frontmatter needed.
 - Pass conditions are literal-string checks.
 - Target-model dates are eval-authoring dates (2026-05-25).

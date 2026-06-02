@@ -1,6 +1,6 @@
 ---
 name: synthetic-pii-generator
-description: "Generates realistic-but-fake personally identifiable information (PII) — emails, phone numbers, SSNs / national IDs, addresses, names, credit-card numbers (test BIN ranges), date-of-birth — for non-production environments. Wraps Faker / mimesis with PII-aware constraints so generated values match real format expectations (Luhn-valid card numbers, region-valid phone formats, ITIN/SSN format) without ever generating real-person data. Use when seeding test environments, building demo data, or replacing real PII in copied datasets."
+description: "Generates realistic-but-fake personally identifiable information (PII) - emails, phone numbers, SSNs / national IDs, addresses, names, credit-card numbers (test BIN ranges), date-of-birth - for non-production environments. Wraps Faker / mimesis with PII-aware constraints so generated values match real format expectations (Luhn-valid card numbers, region-valid phone formats, ITIN/SSN format) without ever generating real-person data. Use when seeding test environments, building demo data, or replacing real PII in copied datasets."
 rating: 24
 d6: 4
 archetype: S3
@@ -11,7 +11,7 @@ archetype: S3
 ## Overview
 
 Real production data in non-prod environments is a compliance
-nightmare — GDPR, CCPA, HIPAA all govern what can be copied where.
+nightmare - GDPR, CCPA, HIPAA all govern what can be copied where.
 The fix is **synthetic PII**: data that **looks like** the real
 thing (passes the same format validators) but **never matches** a
 real person.
@@ -22,7 +22,7 @@ This skill wraps the synthetic-data libraries
 [`bogus-data`](../bogus-data/SKILL.md)) with PII-specific
 constraints to produce format-valid but identity-safe values.
 
-**Default: Faker (Python)** — broadest locale coverage and the most
+**Default: Faker (Python)** - broadest locale coverage and the most
 PII-aware defaults (RFC 2606 emails out of the box, deterministic
 seeding via `Faker.seed()`). Use mimesis when the project needs
 provider-level locale control (e.g. Japanese addresses with
@@ -45,7 +45,7 @@ ship it.
 - Generating fixture rows for the
   [`seed-data-curator`](../seed-data-curator/SKILL.md) workflow.
 
-## Step 1 — Identify the PII fields
+## Step 1 - Identify the PII fields
 
 For each field in the target schema, classify:
 
@@ -62,12 +62,12 @@ For each field in the target schema, classify:
 | Health record fields  | Special-category (GDPR Art. 9).                |
 | User-generated content | Could embed PII; case-by-case.                |
 
-This skill generates synthetic values for each — the matching
+This skill generates synthetic values for each - the matching
 real-data pattern (format) without matching a real person.
 
-## Step 2 — Use safe-by-construction values
+## Step 2 - Use safe-by-construction values
 
-### Email — RFC 2606 reserved domains
+### Email - RFC 2606 reserved domains
 
 Per RFC 2606, these domains are **reserved for examples** and
 guaranteed never to deliver to real mailboxes:
@@ -79,7 +79,7 @@ guaranteed never to deliver to real mailboxes:
 - `*.test` / `*.invalid` / `*.localhost` (TLDs reserved for testing)
 
 Faker / mimesis / Bogus all default to RFC 2606 domains. **Never
-override to a real domain in synthetic-PII mode** — even if your
+override to a real domain in synthetic-PII mode** - even if your
 test fixture has good intentions, an integration that actually
 sends email will spam real recipients.
 
@@ -90,11 +90,11 @@ fake.email()                       # 'roccelline1878@example.com' — safe
 fake.email(domain='gmail.com')     # NEVER — could spam real users
 ```
 
-### Phone numbers — region-specific test ranges
+### Phone numbers - region-specific test ranges
 
 | Region | Test range                                |
 |--------|-------------------------------------------|
-| US     | `(555) 0100` – `(555) 0199` (per Numbering Plan documentation, reserved for fictional use). |
+| US     | `(555) 0100` - `(555) 0199` (per Numbering Plan documentation, reserved for fictional use). |
 | UK     | `0790 7900 000-999` (Ofcom reserved for drama/fiction). |
 | Germany | `+49 (123) 4567-...` patterns reserved for examples. |
 
@@ -102,7 +102,7 @@ Faker's `phone_number` defaults to format-valid but doesn't
 guarantee non-real numbers. For absolute safety, post-process
 generated phone numbers to substitute the regional test range.
 
-### Government IDs — never generate real-format
+### Government IDs - never generate real-format
 
 | ID                   | Synthetic strategy                                          |
 |----------------------|-------------------------------------------------------------|
@@ -112,10 +112,10 @@ generated phone numbers to substitute the regional test range.
 | Generic              | If your test environment doesn't enforce format validation, use obvious-fake values like `000-00-0000`. |
 
 **Never generate values from a real-issuance range.** A correctly-
-formatted but real-issuance SSN may collide with a real person —
+formatted but real-issuance SSN may collide with a real person - 
 exactly the privacy violation this skill avoids.
 
-### Credit card numbers — test BIN ranges
+### Credit card numbers - test BIN ranges
 
 Major card networks publish **test BIN ranges** that pass Luhn
 checksum but never authorize. Use these in test fixtures:
@@ -130,12 +130,12 @@ checksum but never authorize. Use these in test fixtures:
 (Standard Stripe / Adyen test cards; documented in their respective
 testing guides.)
 
-The synthetic-PII generator emits these constants — Faker's
+The synthetic-PII generator emits these constants - Faker's
 `credit_card_number()` produces format-valid but **may collide with
 a real card if the issuer's BIN happens to match**. The Stripe/Adyen
 test cards are guaranteed safe.
 
-### Addresses — synthetic but plausibly local
+### Addresses - synthetic but plausibly local
 
 ```python
 from mimesis import Address, Locale
@@ -147,7 +147,7 @@ Mimesis / Faker generate format-valid addresses but not real
 addresses. For absolute safety, prefix the address with `[TEST]`
 or use the example-street convention (`100 Test St`).
 
-### Date of birth — restrict the range
+### Date of birth - restrict the range
 
 ```python
 from faker import Faker
@@ -159,7 +159,7 @@ Restrict DOB to plausible ranges; combined with synthetic name +
 address, the result is structurally complete without identifying
 a real person.
 
-## Step 3 — Persist synthetic markers
+## Step 3 - Persist synthetic markers
 
 Mark every generated PII field as synthetic so a downstream review
 can confirm the dataset's safety:
@@ -176,7 +176,7 @@ users:
     _synthetic: true                          # Marker for audit
 ```
 
-The `_synthetic: true` marker is a contract — every consumer
+The `_synthetic: true` marker is a contract - every consumer
 respects it (e.g. a "clear synthetic data" maintenance script can
 delete all rows where `_synthetic = true` without affecting any
 real production data).
@@ -216,7 +216,7 @@ jq -r '.users[].ssn' fixtures/users-test.yaml | grep -v '^9[0-9]{2}-' && echo 'W
 
 | Anti-pattern                                                | Why it fails                                                       | Fix |
 |-------------------------------------------------------------|---------------------------------------------------------------------|-----|
-| Faker email with `domain='gmail.com'`                        | Generates `<random>@gmail.com` — could match a real Gmail user.    | Always RFC 2606 domains. |
+| Faker email with `domain='gmail.com'`                        | Generates `<random>@gmail.com` - could match a real Gmail user.    | Always RFC 2606 domains. |
 | Real-format SSN without test-range constraint                | Random 9-digit numbers occasionally hit a real-issuance range.    | Always use the IRS test range. |
 | Real card number ranges                                      | Even "fake" 16-digit Luhn-valid numbers can match a real BIN.     | Use issuer-published test BINs only. |
 | Copying production database to staging "for realism"          | Compliance violation; PII bleeds; legal exposure.                  | Always synthetic; never copy production rows. |
@@ -239,15 +239,14 @@ jq -r '.users[].ssn' fixtures/users-test.yaml | grep -v '^9[0-9]{2}-' && echo 'W
 
 ## References
 
-- RFC 2606 — reserved top-level DNS names (`example.com` etc.).
-- IRS reserved test SSN ranges — IRS Publication 17 reference.
-- Stripe testing — https://stripe.com/docs/testing — canonical test
+- RFC 2606 - reserved top-level DNS names (`example.com` etc.).
+- IRS reserved test SSN ranges - IRS Publication 17 reference.
+- Stripe testing - https://stripe.com/docs/testing - canonical test
   cards.
-- Adyen testing — https://docs.adyen.com/development-resources/testing
-  — alternative test card set.
-- NIST SP 800-122 — Guide to Protecting the Confidentiality of PII.
+- Adyen testing - https://docs.adyen.com/development-resources/testing - alternative test card set.
+- NIST SP 800-122 - Guide to Protecting the Confidentiality of PII.
 - [`faker-data`](../faker-data/SKILL.md),
   [`mimesis-data`](../mimesis-data/SKILL.md),
-  [`bogus-data`](../bogus-data/SKILL.md) — value-engine skills.
-- [`seed-data-curator`](../seed-data-curator/SKILL.md) — downstream
+  [`bogus-data`](../bogus-data/SKILL.md) - value-engine skills.
+- [`seed-data-curator`](../seed-data-curator/SKILL.md) - downstream
   skill that uses this for E2E seed PII fields.

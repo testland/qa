@@ -1,6 +1,6 @@
 ---
 name: coverage-debt-tracker
-description: "Builds a per-file coverage-debt ledger by walking N runs of historical coverage data — flags files whose line% / branch% has slid more than M pp over the period (`falling`), files whose coverage hasn't moved while their churn has (`stale`), and files that lost their last covering test (`orphan`). Emits a sorted backlog the team can ratchet down: each PR fixes one or two debt items, the rest stays visible. Use when whole-repo coverage is \"fine\" but specific modules are eroding silently and the team needs a stack-ranked list to fix."
+description: "Builds a per-file coverage-debt ledger by walking N runs of historical coverage data - flags files whose line% / branch% has slid more than M pp over the period (`falling`), files whose coverage hasn't moved while their churn has (`stale`), and files that lost their last covering test (`orphan`). Emits a sorted backlog the team can ratchet down: each PR fixes one or two debt items, the rest stays visible. Use when whole-repo coverage is \"fine\" but specific modules are eroding silently and the team needs a stack-ranked list to fix."
 rating: 23
 d6: 3
 archetype: S3
@@ -12,7 +12,7 @@ archetype: S3
 
 Aggregate coverage hides per-file decay. A repo can sit at 82%
 overall while the payment module silently drops from 95% to 60%
-across 30 PRs — none of which individually crossed a gate threshold.
+across 30 PRs - none of which individually crossed a gate threshold.
 
 This skill builds a **debt ledger** from a rolling window of
 historical coverage data, scoring each file on three axes:
@@ -23,7 +23,7 @@ historical coverage data, scoring each file on three axes:
 | **Stale**      | Coverage flat while churn (commits / week) is high.    |
 | **Orphan**     | Lost its last covering test (every covering test was deleted). |
 
-Output is a stack-ranked backlog: 5–20 items that, when fixed, would
+Output is a stack-ranked backlog: 5 - 20 items that, when fixed, would
 restore the coverage health of the highest-risk modules.
 
 ## When to use
@@ -34,11 +34,11 @@ restore the coverage health of the highest-risk modules.
 - A new owner joins a module and wants to understand the coverage
   history.
 
-This skill is **read-only and informational** — it doesn't gate.
+This skill is **read-only and informational** - it doesn't gate.
 Pair with [`unit-test-coverage-targeter`](../../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
 to convert backlog items into specific test-target recommendations.
 
-## Step 1 — Persist coverage history
+## Step 1 - Persist coverage history
 
 Each main-branch CI run uploads its parsed coverage as
 `coverage-history/<sha>-<timestamp>.json`. The schema:
@@ -57,7 +57,7 @@ Each main-branch CI run uploads its parsed coverage as
 Retention: ~90 days is enough to catch quarterly drift. The data
 volume is tiny (~50 KB per main run for a 500-file repo).
 
-## Step 2 — Detect `falling` files
+## Step 2 - Detect `falling` files
 
 ```python
 # scripts/coverage_debt.py
@@ -95,7 +95,7 @@ The peak-vs-now comparison catches gradual erosion better than
 last-vs-now; a sequence of small drops (-1pp, -1pp, -1pp...) doesn't
 cross any individual gate but adds up.
 
-## Step 3 — Detect `stale` files (high churn, flat coverage)
+## Step 3 - Detect `stale` files (high churn, flat coverage)
 
 ```python
 import subprocess
@@ -136,7 +136,7 @@ often." Either:
 
 Either way, it's a flag for human review.
 
-## Step 4 — Detect `orphan` files (lost last covering test)
+## Step 4 - Detect `orphan` files (lost last covering test)
 
 Requires the per-test → source map (see
 [`regression-suite-selector`](../regression-suite-selector/SKILL.md)
@@ -158,10 +158,10 @@ def detect_orphans(test_map_now, test_map_then):
     return orphans
 ```
 
-Orphans are urgent — the file currently has 0% coverage but the
+Orphans are urgent - the file currently has 0% coverage but the
 aggregate may still look fine because the file is small.
 
-## Step 5 — Render the ledger
+## Step 5 - Render the ledger
 
 ```markdown
 ## Coverage debt ledger — `<branch>`, last 30 main runs (~30 days)
@@ -209,7 +209,7 @@ actually being tested? Often the test suite covers happy paths but
 not the edge cases the recent commits added.
 ```
 
-## Step 6 — CI shape
+## Step 6 - CI shape
 
 The debt tracker runs on a schedule, not per-PR (it's
 informational, not gating):
@@ -280,15 +280,11 @@ of debt visible across weeks.
 
 ## References
 
-- [`regression-suite-selector`](../regression-suite-selector/SKILL.md)
-  — sibling: builds the per-test → source map this skill consumes
+- [`regression-suite-selector`](../regression-suite-selector/SKILL.md) - sibling: builds the per-test → source map this skill consumes
   for orphan detection.
-- [`unit-test-coverage-targeter`](../../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
-  — downstream: converts a debt-ledger entry into specific
+- [`unit-test-coverage-targeter`](../../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - downstream: converts a debt-ledger entry into specific
   test-target recommendations.
-- [`coverage-diff-reporter`](../../../qa-test-reporting/skills/coverage-diff-reporter/SKILL.md)
-  — sibling: per-PR coverage comment (different cadence; same data).
+- [`coverage-diff-reporter`](../../../qa-test-reporting/skills/coverage-diff-reporter/SKILL.md) - sibling: per-PR coverage comment (different cadence; same data).
 - [`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md),
-  [`cobertura-analysis`](../../../qa-test-reporting/skills/cobertura-analysis/SKILL.md)
-  — upstream parsers that produce the historical data this skill
+  [`cobertura-analysis`](../../../qa-test-reporting/skills/cobertura-analysis/SKILL.md) - upstream parsers that produce the historical data this skill
   walks.

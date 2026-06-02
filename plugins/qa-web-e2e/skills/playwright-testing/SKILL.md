@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: "Authors Playwright E2E tests across Chromium, Firefox, WebKit — `npm init playwright@latest` scaffolding, `playwright.config.ts` projects per browser/device, accessibility-first locators (`getByRole`/`getByLabelText` per the e2e-selector convention), Page Object pattern, trace viewer for debugging, parallel + sharded execution, HTML reporter for CI. Per Playwright''''s docs: \"an end-to-end test framework for modern web apps. It bundles test runner, assertions, isolation, parallelization and rich tooling."
+description: "Authors Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` projects per browser/device, accessibility-first locators (`getByRole`/`getByLabelText` per the e2e-selector convention), Page Object pattern, trace viewer for debugging, parallel + sharded execution, HTML reporter for CI. Per Playwright''''s docs: \"an end-to-end test framework for modern web apps. It bundles test runner, assertions, isolation, parallelization and rich tooling."
 rating: 24
 d6: 4
 archetype: S1
@@ -25,12 +25,11 @@ Per [pw-intro][pwi]:
 
 - New web E2E project; pick Playwright as the modern default.
 - Cross-browser coverage matters (per
-  [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md))
-  — Playwright's three-engine support is the differentiator.
+  [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md)) - Playwright's three-engine support is the differentiator.
 - Migration from Selenium / WebDriver-based stacks (see
   [`selenium-testing`](../selenium-testing/SKILL.md)).
 
-## Step 1 — Scaffold
+## Step 1 - Scaffold
 
 Per [pw-intro][pwi]:
 
@@ -44,7 +43,7 @@ GitHub Actions CI, and browser binaries.
 What lands: `playwright.config.ts` + `tests/example.spec.ts` +
 `package.json` updates.
 
-## Step 2 — Author tests with accessibility-first locators
+## Step 2 - Author tests with accessibility-first locators
 
 ```typescript
 import { test, expect } from '@playwright/test';
@@ -71,7 +70,7 @@ prefer `getByRole` / `getByLabelText` / `getByText` over CSS class
 / XPath. Web-first assertions (`await expect(...)`) auto-wait
 within the test timeout.
 
-## Step 3 — Page Object pattern
+## Step 3 - Page Object pattern
 
 ```typescript
 // tests/page-objects/CheckoutPage.ts
@@ -108,7 +107,7 @@ test('checkout', async ({ page }) => {
 });
 ```
 
-## Step 4 — Configuration
+## Step 4 - Configuration
 
 ```typescript
 // playwright.config.ts
@@ -138,10 +137,10 @@ export default defineConfig({
 ```
 
 `trace: 'on-first-retry'` captures rich debug info (DOM snapshots,
-network, console) only when needed — avoids storage cost on
+network, console) only when needed - avoids storage cost on
 passing runs.
 
-## Step 5 — Run
+## Step 5 - Run
 
 Per [pw-intro][pwi]:
 
@@ -165,7 +164,7 @@ npx playwright test tests/checkout.spec.ts
 npx playwright test -g "checkout flow"
 ```
 
-## Step 6 — Trace viewer
+## Step 6 - Trace viewer
 
 When a test fails, the trace contains everything needed to
 debug:
@@ -182,7 +181,7 @@ The viewer shows:
 - Screenshots.
 - Source code with highlighted line.
 
-## Step 7 — Sharded execution
+## Step 7 - Sharded execution
 
 For large suites:
 
@@ -203,7 +202,7 @@ steps:
   - run: npx playwright test --shard=${{ matrix.shard }}
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 # .github/workflows/playwright.yml
@@ -225,7 +224,7 @@ jobs:
           path: playwright-report/
 ```
 
-## Step 9 — Reporting
+## Step 9 - Reporting
 
 Per [pw-intro][pwi]: "The HTML Reporter provides a filterable
 dashboard showing results by browser, status (passed/failed/skipped),
@@ -259,14 +258,10 @@ feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/S
 
 ## References
 
-- [pwi][pwi] — Playwright overview, install via `npm init
+- [pwi][pwi] - Playwright overview, install via `npm init
   playwright@latest`, three-engine support, CLI flags, HTML
   Reporter.
-- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)
-  — selector convention.
-- [`playwright-codegen-reviewer`](../../agents/playwright-codegen-reviewer.md)
-  — sibling agent for codegen output review.
-- [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md)
-  — cross-browser matrix.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — downstream JUnit XML parsing.
+- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.
+- [`playwright-codegen-reviewer`](../../agents/playwright-codegen-reviewer.md) - sibling agent for codegen output review.
+- [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md) - cross-browser matrix.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream JUnit XML parsing.

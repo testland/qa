@@ -4,7 +4,7 @@ type: agent
 archetype: A1
 ---
 
-# ai-flake-detector — evals
+# ai-flake-detector - evals
 
 Companion eval cases for [`ai-flake-detector`](../../ai-flake-detector.md).
 Three cases cover happy path / branch / adversarial: a high-risk
@@ -16,10 +16,10 @@ output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates below are the
-eval-authoring date — each case is designed to be reproducible against
+eval-authoring date - each case is designed to be reproducible against
 any tier.
 
-## Eval 1 — happy path — passing→flaky transition (priority watchlist)
+## Eval 1 - happy path - passing→flaky transition (priority watchlist)
 
 **Input:**
 
@@ -63,7 +63,7 @@ aggregate trends. `tests/profile.spec.ts:10` is not on the watchlist
 AND lists at least one entry with a score ≥40. Output does NOT include
 `tests/profile.spec.ts:10` as a watchlist row.
 
-## Eval 2 — branch — duration variance / test size (no transition)
+## Eval 2 - branch - duration variance / test size (no transition)
 
 **Input:**
 
@@ -89,11 +89,11 @@ No tests in the suite have a passing→flaky transition in the last 7 days.
 
 **Expected:** `tests/dashboard-load.spec.ts:5` lands on the watchlist
 from duration-variance (+20: p99/mean = 4.3 > 3), test-size (+15: mean
-42s > 30s), and real-network endpoint (+10) — total ≥45 with no
+42s > 30s), and real-network endpoint (+10) - total ≥45 with no
 transition signal. The recommendation calls for mocking the live
 endpoint (MSW or Playwright `route()`). `tests/login.spec.ts:1` is not
 on the watchlist. The output explicitly notes no passing→flaky
-transition was observed this window — different finding category from
+transition was observed this window - different finding category from
 Eval 1.
 
 **Pass condition:** Output contains the literal string
@@ -103,7 +103,7 @@ variance` (case-insensitive). Output does NOT list
 `tests/login.spec.ts:1` as a watchlist row AND does NOT claim a
 passing→flaky transition was the controlling signal.
 
-## Eval 3 — adversarial — malformed history, refuse to fabricate
+## Eval 3 - adversarial - malformed history, refuse to fabricate
 
 **Input:**
 
@@ -143,11 +143,11 @@ transition` finding for any of the three tests (no fabricated history).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo or run a CI export.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring (`tests/checkout.spec.ts:42`,
   `waitForTimeout`, `missing`, etc.).
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow
-  `Bash(jq *)` / `Bash(xmllint *)`) is read-only — eval re-runs cannot
+  `Bash(jq *)` / `Bash(xmllint *)`) is read-only - eval re-runs cannot
   modify the test repository or CI history.

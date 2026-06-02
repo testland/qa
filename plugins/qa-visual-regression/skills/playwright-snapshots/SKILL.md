@@ -20,7 +20,7 @@ threshold ([playwright-snapshots][snap]).
 [snap]: https://playwright.dev/docs/test-snapshots
 [assertion]: https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-1
 
-This is the **self-hosted** option — no external service, no per-snapshot
+This is the **self-hosted** option - no external service, no per-snapshot
 billing, but also no hosted UI for review (diffs are reviewed locally
 or via CI artifact uploads).
 
@@ -63,7 +63,7 @@ test('header visual', async ({ page }) => {
 ```
 
 A locator-level snapshot is preferred when the surrounding page has
-unrelated dynamic content (e.g. a ticker, a chat widget) — it scopes
+unrelated dynamic content (e.g. a ticker, a chat widget) - it scopes
 the comparison and avoids false positives.
 
 ### `toHaveScreenshot()` options
@@ -79,11 +79,11 @@ Per the [PageAssertions API][assertion]:
 | `mask`              | Array of locators whose elements are overlaid with a solid color (content hidden). |
 | `maskColor`         | CSS color for the mask overlay; defaults to pink (`#FF00FF`).                       |
 | `maxDiffPixels`     | Maximum absolute number of differing pixels allowed.                                |
-| `maxDiffPixelRatio` | Maximum proportion (0–1) of differing pixels relative to total.                     |
+| `maxDiffPixelRatio` | Maximum proportion (0 - 1) of differing pixels relative to total.                     |
 | `omitBackground`    | Hide the white background for transparent capture (PNG only).                       |
 | `scale`             | `"css"` (default; one image px per CSS px) or `"device"` for HiDPI capture.        |
 | `stylePath`         | Path to a CSS file applied during capture to hide dynamic elements.                 |
-| `threshold`         | Acceptable per-pixel color difference in YIQ space (0–1); default `0.2`.            |
+| `threshold`         | Acceptable per-pixel color difference in YIQ space (0 - 1); default `0.2`.            |
 | `timeout`           | Milliseconds to retry the assertion before failing.                                 |
 
 Common patterns:
@@ -175,7 +175,7 @@ npx playwright test tests/homepage.spec.ts --update-snapshots
 (Per [playwright-snapshots][snap].)
 
 The `--update-snapshots` flag rewrites every PNG that the matched tests
-would produce. Always **review the diff** of the baselines in your PR —
+would produce. Always **review the diff** of the baselines in your PR - 
 an over-broad update can hide a real regression.
 
 ### CI matching
@@ -231,13 +231,13 @@ jobs:
           retention-days: 14
 ```
 
-`if: always()` is critical — when a snapshot diff fails the test, the
+`if: always()` is critical - when a snapshot diff fails the test, the
 HTML report is the only place to view the actual / expected / diff
 images.
 
 ## References
 
-- [playwright-snapshots][snap] — visual comparison tutorial, snapshot
+- [playwright-snapshots][snap] - visual comparison tutorial, snapshot
   layout, update flow.
-- [PageAssertions API][assertion] — full `toHaveScreenshot` option
+- [PageAssertions API][assertion] - full `toHaveScreenshot` option
   reference.

@@ -1,6 +1,6 @@
 ---
 name: giskard-llm
-description: "Authors and runs Giskard LLM scans — adversarial test-case generation for LLM applications via `giskard.scan(model)` covering 7 vulnerability categories (hallucination, harmful_content, prompt_injection, sensitive_information_disclosure, stereotypes, robustness, basic_sycophancy); wraps any callable model behind `giskard.Model(model_predict, model_type=\"text_generation\", ...)`; emits HTML report. Use when the user needs adversarial / red-team coverage on top of functional eval suites."
+description: "Authors and runs Giskard LLM scans - adversarial test-case generation for LLM applications via `giskard.scan(model)` covering 7 vulnerability categories (hallucination, harmful_content, prompt_injection, sensitive_information_disclosure, stereotypes, robustness, basic_sycophancy); wraps any callable model behind `giskard.Model(model_predict, model_type=\"text_generation\", ...)`; emits HTML report. Use when the user needs adversarial / red-team coverage on top of functional eval suites."
 rating: 23
 d6: 4
 archetype: S1
@@ -14,7 +14,7 @@ archetype: S1
 
 Distinct from functional eval frameworks (Promptfoo, DeepEval,
 Ragas), Giskard's value (per [gk-gh][gk-gh]) is **adversarial
-test generation** — auto-generates inputs designed to break LLMs
+test generation** - auto-generates inputs designed to break LLMs
 along documented vulnerability dimensions, then reports findings
 in a triageable HTML report.
 
@@ -35,7 +35,7 @@ scanning; pin `>2,<3` per the install command.
 - Product owners need an HTML report (not raw test output) to
   triage and sign off.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [gk-gh][gk-gh] (v2-pinned):
 
@@ -45,7 +45,7 @@ pip install "giskard[llm]>2,<3"
 
 The `[llm]` extra pulls in the LLM scan dependencies.
 
-## Step 2 — Wrap your model
+## Step 2 - Wrap your model
 
 Per [gk-gh][gk-gh] (verbatim quickstart):
 
@@ -66,12 +66,12 @@ giskard_model = giskard.Model(
 )
 ```
 
-The `description` field steers Giskard's adversarial generator —
+The `description` field steers Giskard's adversarial generator - 
 make it specific (e.g., "A question answering assistant for medical
 guidance" vs the generic "A QA assistant"). Better description ⇒
 better-targeted adversarial inputs.
 
-## Step 3 — Run the scan
+## Step 3 - Run the scan
 
 ```python
 scan_results = giskard.scan(giskard_model)
@@ -86,7 +86,7 @@ In a Jupyter notebook this renders the report inline. To export:
 scan_results.to_html("giskard-report.html")
 ```
 
-## Step 4 — Vulnerability detector catalog
+## Step 4 - Vulnerability detector catalog
 
 Per [gk-gh][gk-gh] the v2 LLM scan covers these detector
 categories:
@@ -115,7 +115,7 @@ exact parameter list per Giskard release.)
 
 [gk-docs]: https://docs.giskard.ai/
 
-## Step 5 — Convert findings to test suites
+## Step 5 - Convert findings to test suites
 
 After a scan surfaces issues, Giskard can synthesize tests for
 regression coverage:
@@ -126,10 +126,10 @@ test_suite.run()
 ```
 
 This produces deterministic regression tests from the failing
-adversarial prompts found by the scan — re-run on every PR to
+adversarial prompts found by the scan - re-run on every PR to
 prevent regression on previously surfaced vulnerabilities.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 Giskard does not ship a first-party CI action; pattern:
 
@@ -159,7 +159,7 @@ if critical:
 |---|---|---|
 | Generic `description=` field | Adversarial generator produces off-target inputs; many false positives | Specific description (Step 2) |
 | Run scan once, never regenerate test suite | Vulnerabilities resurface in new code | Regenerate test suite per release (Step 5) |
-| Skip Step 5 — only rely on scans | No regression protection between scans | Always synthesize the test suite |
+| Skip Step 5 - only rely on scans | No regression protection between scans | Always synthesize the test suite |
 | Pin Giskard but not the judge-LLM provider | Judge-model drift causes flake | Pin both in CI env |
 
 ## Limitations
@@ -167,7 +167,7 @@ if critical:
 - v2 LLM scanning is in maintenance-only mode (per [gk-gh][gk-gh]);
   v3 is forming around `giskard-checks`. Track upstream before
   greenlighting new investment.
-- Adversarial generation is non-deterministic — use random seeds
+- Adversarial generation is non-deterministic - use random seeds
   when available + pin Giskard version.
 - LLM-as-judge cost: scans invoke a judge model many times;
   budget for cost spikes when scanning new models.
@@ -177,12 +177,12 @@ if critical:
 
 ## References
 
-- [gk-gh][gk-gh] — repository, install, quickstart, detector list
-- [gk-docs][gk-docs] — full documentation
+- [gk-gh][gk-gh] - repository, install, quickstart, detector list
+- [gk-docs][gk-docs] - full documentation
 - [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
   [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
-  [`ragas-evaluation`](../ragas-evaluation/SKILL.md) — functional
+  [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - functional
   eval sister tools (use Giskard for adversarial coverage on top)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) —
+- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
   adversarial reviewer that flags eval suites without adversarial
   coverage

@@ -1,6 +1,6 @@
 ---
 name: bug-bash-facilitator
-description: "Builds a structured bug-bash session — pre-bash kit (charter, test-data prep, environment setup, sign-up sheet), in-bash structure (role rotation across cohorts, shared backlog board, real-time triage), scoring rubric (severity weighting, novelty bonus), and post-bash debrief (cluster the bugs by area + severity, decide which surface as bugs vs spikes vs quirks). Use when a team needs a coordinated multi-tester sweep before a release or after a major change — converts an ad-hoc \"everyone test for an hour\" into a recorded, comparable session with deliverables."
+description: "Builds a structured bug-bash session - pre-bash kit (charter, test-data prep, environment setup, sign-up sheet), in-bash structure (role rotation across cohorts, shared backlog board, real-time triage), scoring rubric (severity weighting, novelty bonus), and post-bash debrief (cluster the bugs by area + severity, decide which surface as bugs vs spikes vs quirks). Use when a team needs a coordinated multi-tester sweep before a release or after a major change - converts an ad-hoc \"everyone test for an hour\" into a recorded, comparable session with deliverables."
 rating: 22
 d6: 3
 archetype: S3
@@ -15,7 +15,7 @@ and we hope something turns up." The result: lots of duplicates,
 no triage, debrief skipped, no record.
 
 A facilitated bug bash is **a structured exploratory session at
-team scale** — multiple testers in coordinated cohorts, shared
+team scale** - multiple testers in coordinated cohorts, shared
 backlog visible to all, triage in real-time, debrief that produces
 follow-ups.
 
@@ -34,7 +34,7 @@ If the goal is a single tester running a charter, use
 [`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
 directly. Bug bashes are the multi-tester / scaled version.
 
-## Step 1 — Pre-bash kit (1 week before)
+## Step 1 - Pre-bash kit (1 week before)
 
 ```markdown
 # Bug bash — `<release / feature / area>`
@@ -89,7 +89,7 @@ The kit is sent **1 week before** so testers can prepare and
 team members can RSVP. Testers who can't attend live get an
 async-charter version.
 
-## Step 2 — In-bash structure
+## Step 2 - In-bash structure
 
 ```
 14:00-14:05  Kickoff (facilitator presents the mission, charters, scoring rubric)
@@ -99,11 +99,11 @@ async-charter version.
 15:25-15:30  Wrap (everyone logs final bugs; facilitator closes the board)
 ```
 
-The cohort swap at the midpoint is critical — it's the same
+The cohort swap at the midpoint is critical - it's the same
 testers looking at the area through a fresh lens, and it surfaces
 bugs that the first cohort's tour missed.
 
-## Step 3 — Shared backlog board
+## Step 3 - Shared backlog board
 
 A shared spreadsheet / Notion table / GitHub issues view that
 everyone can see live during the bash:
@@ -128,7 +128,7 @@ facilitator who decides:
 Real-time triage prevents the debrief from being a giant
 classification exercise.
 
-## Step 4 — Scoring rubric
+## Step 4 - Scoring rubric
 
 Optional but motivating: a points system.
 
@@ -143,10 +143,10 @@ Optional but motivating: a points system.
 | **Duplicate** (already on board) | 0 |
 
 Tally per cohort + per individual at the wrap. The points are
-explicitly **fun**, not performance review — but they motivate
+explicitly **fun**, not performance review - but they motivate
 testers to go beyond the obvious.
 
-## Step 5 — Post-bash debrief
+## Step 5 - Post-bash debrief
 
 Within 24 hours, the facilitator + note-taker produce:
 
@@ -197,7 +197,7 @@ What to change for next bash: ...
 - [ ] Facilitator: schedule next bash for `v1.5.0` release.
 ```
 
-## Step 6 — Async participants
+## Step 6 - Async participants
 
 Team members who can't attend live get a **mini-charter** to run
 solo within the same week:
@@ -244,13 +244,9 @@ triage) but it broadens coverage.
 
 ## References
 
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
-  — provides the per-cohort charters this bash composes.
-- [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md)
-  — the heuristics menu the cohorts pick from.
-- [`manual-test-debrief`](../manual-test-debrief/SKILL.md) — the
+- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - provides the per-cohort charters this bash composes.
+- [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md) - the heuristics menu the cohorts pick from.
+- [`manual-test-debrief`](../manual-test-debrief/SKILL.md) - the
   PROOF debrief format the bug-bash debrief inherits from.
-- [`synthetic-data-toolkit`](../../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md)
-  — used in the test-data-prep step.
-- [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md)
-  — downstream: turn each bash-found bug into a structured repro.
+- [`synthetic-data-toolkit`](../../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md) - used in the test-data-prep step.
+- [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md) - downstream: turn each bash-found bug into a structured repro.

@@ -1,13 +1,13 @@
 # qa-test-review
 
-Test code quality reviewers — agents specialized for **test files only**, not production code. Production-code reviewers are well-served by the broader ecosystem; test-code hygiene (AAA structure, assertion specificity, mocking anti-patterns, E2E selector quality) is its own discipline and gets its own reviewers here.
+Test code quality reviewers - agents specialized for **test files only**, not production code. Production-code reviewers are well-served by the broader ecosystem; test-code hygiene (AAA structure, assertion specificity, mocking anti-patterns, E2E selector quality) is its own discipline and gets its own reviewers here.
 
 ## Components
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
 | Skill | [test-code-conventions](skills/test-code-conventions/SKILL.md) | S2 | Pure-reference catalog (§1-§10): AAA structure, single-responsibility, naming, assertion specificity, mocking, fixture coupling, magic numbers, E2E selectors, web-first assertions, slow setup. The agents in this plugin cite back to it. |
-| Skill | [object-model-patterns](skills/object-model-patterns/SKILL.md) | S2 | Architecture-tier catalog: Page Object Model (Fowler), Screenplay (Marcano/Palmer), Component Object, App Actions (Cypress), Service Object, Repository — canonical citations, when-to-use, anti-patterns per pattern. |
+| Skill | [object-model-patterns](skills/object-model-patterns/SKILL.md) | S2 | Architecture-tier catalog: Page Object Model (Fowler), Screenplay (Marcano/Palmer), Component Object, App Actions (Cypress), Service Object, Repository - canonical citations, when-to-use, anti-patterns per pattern. |
 | Skill | [test-isolation-patterns](skills/test-isolation-patterns/SKILL.md) | S2 | Architecture-tier catalog: fixture scope, Meszaros four-phase pattern, Fresh-vs-Shared-Fixture (Fowler), DB isolation strategies (transaction-rollback / DB-per-worker / template-db / Testcontainers), parallel safety, cleanup discipline. |
 | Skill | [test-step-design-patterns](skills/test-step-design-patterns/SKILL.md) | S2 | Architecture-tier catalog: FIRST principles (Martin), step granularity, abstraction layers (mechanical → page → business), step-extraction rule of three (Fowler), AAA / Given-When-Then mapping, declarative-vs-imperative phrasing. |
 | Agent | [test-code-critic](agents/test-code-critic.md) | A3 | Walks structure / naming / single-responsibility / magic-number / slow-setup violations (§1-§3, §6, §7, §10). Refuses to review production code. |

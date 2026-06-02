@@ -1,6 +1,6 @@
 ---
 name: gosec-go
-description: "Configures and runs gosec — Go-specific SAST covering 40+ rule IDs (G101 hardcoded creds, G104 unhandled errors, G304 file path traversal, G401 weak crypto algorithms, G601 implicit memory aliasing, etc.); supports `gosec ./...` recursive scan via Go AST + SSA analysis with taint tracking; per-line `#nosec G404 -- justification` suppression; output formats `--fmt sarif|json|junit-xml|html|text`; integrates with golangci-lint as a linter. Use when the user works with Go and needs a focused SAST integrated with golangci-lint."
+description: "Configures and runs gosec - Go-specific SAST covering 40+ rule IDs (G101 hardcoded creds, G104 unhandled errors, G304 file path traversal, G401 weak crypto algorithms, G601 implicit memory aliasing, etc.); supports `gosec ./...` recursive scan via Go AST + SSA analysis with taint tracking; per-line `#nosec G404 -- justification` suppression; output formats `--fmt sarif|json|junit-xml|html|text`; integrates with golangci-lint as a linter. Use when the user works with Go and needs a focused SAST integrated with golangci-lint."
 rating: 23
 d6: 4
 archetype: S1
@@ -19,7 +19,7 @@ by scanning the Go AST and SSA code representation" and supports
 "taint analysis tracking data flow from user inputs to dangerous
 functions" per [gs-gh][gs-gh].
 
-The taint analysis distinguishes gosec from regex-based linters —
+The taint analysis distinguishes gosec from regex-based linters - 
 it tracks input flow through method chains, which catches injection
 patterns linters miss.
 
@@ -31,7 +31,7 @@ patterns linters miss.
 - Layered with [`semgrep-rules`](../semgrep-rules/SKILL.md) for
   cross-language coverage.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [gs-gh][gs-gh]:
 
@@ -52,7 +52,7 @@ docker pull securego/gosec
 docker run --rm -v "$PWD:/code" securego/gosec ./code/...
 ```
 
-## Step 2 — Basic recursive scan
+## Step 2 - Basic recursive scan
 
 Per [gs-gh][gs-gh]:
 
@@ -69,7 +69,7 @@ gosec -exclude=G104 ./...            # skip "unhandled errors" rule
 gosec -include=G101,G102 ./...       # only run specific rules
 ```
 
-## Step 3 — Rule ID catalog
+## Step 3 - Rule ID catalog
 
 Per [gs-gh][gs-gh] the common rule IDs:
 
@@ -99,7 +99,7 @@ Per [gs-gh][gs-gh] the common rule IDs:
 
 Full list: gosec subcommand `gosec -list-rules`.
 
-## Step 4 — Output formats
+## Step 4 - Output formats
 
 Per [gs-gh][gs-gh]:
 
@@ -114,7 +114,7 @@ gosec -fmt yaml -out results.yaml ./...
 
 For `sast-finding-triager` integration, use JSON.
 
-## Step 5 — False-positive triage (MANDATORY)
+## Step 5 - False-positive triage (MANDATORY)
 
 Per [gs-gh][gs-gh] the canonical inline suppression syntax:
 
@@ -145,7 +145,7 @@ hash := md5.Sum(data)
 Bandit-style cadence: every quarter, grep for `#nosec` patterns
 lacking `-- Reason:` and flag for review.
 
-## Step 6 — golangci-lint integration
+## Step 6 - golangci-lint integration
 
 Most Go teams run gosec via golangci-lint (the universal linter
 runner) rather than directly:
@@ -170,10 +170,10 @@ linters-settings:
 golangci-lint run ./...
 ```
 
-This is the recommended pattern — `golangci-lint` handles parallelism,
+This is the recommended pattern - `golangci-lint` handles parallelism,
 caching, and unified output across multiple linters.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 Standalone:
 
@@ -208,9 +208,9 @@ jobs:
           version: latest
 ```
 
-## Step 8 — Custom rules via Go templates
+## Step 8 - Custom rules via Go templates
 
-Unlike Semgrep / CodeQL, gosec doesn't have a custom-rule DSL —
+Unlike Semgrep / CodeQL, gosec doesn't have a custom-rule DSL - 
 adding new rules requires writing Go code in `gosec/rules/` and
 contributing upstream OR forking. For most teams, leverage the
 40+ built-in rules + suppressions.
@@ -232,18 +232,18 @@ contributing upstream OR forking. For most teams, leverage the
   YAML rule authoring in Semgrep).
 - Some patterns (cross-package taint flow) miss what
   [`codeql-queries`](../codeql-queries/SKILL.md) catches.
-- Rule depth varies — newer Go patterns (generics, structured
+- Rule depth varies - newer Go patterns (generics, structured
   concurrency) coverage thinner.
 
 ## References
 
-- [gs-gh][gs-gh] — repository, install, rule list, suppression syntax
-- gosec subcommand `gosec -list-rules` — current rule catalog
-- golangci-lint.run — golangci-lint integration
-- securego/gosec GitHub Action — github.com/securego/gosec
+- [gs-gh][gs-gh] - repository, install, rule list, suppression syntax
+- gosec subcommand `gosec -list-rules` - current rule catalog
+- golangci-lint.run - golangci-lint integration
+- securego/gosec GitHub Action - github.com/securego/gosec
 - [`semgrep-rules`](../semgrep-rules/SKILL.md),
   [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
   [`codeql-queries`](../codeql-queries/SKILL.md),
-  [`bandit-python`](../bandit-python/SKILL.md) — sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) —
+  [`bandit-python`](../bandit-python/SKILL.md) - sister scanners
+- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
   unifier agent

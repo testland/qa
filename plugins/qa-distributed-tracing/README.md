@@ -1,7 +1,6 @@
 # qa-distributed-tracing
 
-Sets the observability assertion testing pattern for the marketplace
-— assertions on production trace **shape** (spans, attributes, parent
+Sets the observability assertion testing pattern for the marketplace - assertions on production trace **shape** (spans, attributes, parent
 links, status semantics), not just on aggregate metrics. Three SDK +
 query skills (in-process, Jaeger, Zipkin), one spec-authoring skill,
 and an A3 reviewer agent that audits coverage + cardinality + spec

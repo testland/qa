@@ -34,7 +34,7 @@ build orchestration) and
 
 - Reading a Ceedling test suite and decoding which CMock plugin
   produced which API.
-- Authoring a new mock for a C module — choosing between strict
+- Authoring a new mock for a C module - choosing between strict
   expectations, ignored arguments, return-thru-pointer.
 - Configuring `project.yml` / `cmock.yml` plugins for the level
   of strictness the team wants.
@@ -46,10 +46,10 @@ build orchestration) and
 
 | Term | Behaviour | CMock realisation |
 |---|---|---|
-| **Stub** | Returns canned values; doesn't fail the test | `func_IgnoreAndReturn(value)` — no expectation, just a default return |
+| **Stub** | Returns canned values; doesn't fail the test | `func_IgnoreAndReturn(value)` - no expectation, just a default return |
 | **Mock (strict)** | Verifies exact call + args; fails test if unmatched | `func_Expect(args)` / `func_ExpectAndReturn(args, ret)` |
-| **Spy** | Records calls for later inspection | `func_AddCallback(cb)` — callback that records into test-scope state |
-| **Fake** | Lightweight reimplementation | `func_Stub(impl)` — replace the function with a custom C implementation |
+| **Spy** | Records calls for later inspection | `func_AddCallback(cb)` - callback that records into test-scope state |
+| **Fake** | Lightweight reimplementation | `func_Stub(impl)` - replace the function with a custom C implementation |
 
 The English vocabulary is from Meszaros's xUnit Test Patterns;
 CMock encodes all four shapes through one generated family.
@@ -110,7 +110,7 @@ doc above. The generated function names follow the rigid pattern
 
 Each generated API family is gated on a plugin in cmock.yml
 (typically inlined into Ceedling's `project.yml` under
-`:cmock: :plugins:` — per the same CMock summary doc):
+`:cmock: :plugins:` - per the same CMock summary doc):
 
 | Plugin | Enables | When to enable |
 |---|---|---|
@@ -168,12 +168,12 @@ CMock hooks into Unity's per-test lifecycle:
 
 | Hook | What CMock does |
 |---|---|
-| `setUp()` | (Optional) `Mockparser_Init()` clears prior expectations — Ceedling generates this automatically when test_runner is generated |
+| `setUp()` | (Optional) `Mockparser_Init()` clears prior expectations - Ceedling generates this automatically when test_runner is generated |
 | `tearDown()` | `Mockparser_Verify()` asserts every queued expectation was matched; fails the test via Unity assertion if not |
-| `resetTest()` (mid-test) | Per the CMock summary doc, "Call it during a test to have CMock validate everything to this point and start over clean" — useful for staged interaction tests |
+| `resetTest()` (mid-test) | Per the CMock summary doc, "Call it during a test to have CMock validate everything to this point and start over clean" - useful for staged interaction tests |
 
 Forgetting to register a mock causes link errors, not test
-failures — the mock is the only definition of the symbol.
+failures - the mock is the only definition of the symbol.
 
 ## Argument-matching modes
 
@@ -188,7 +188,7 @@ must `memcmp`-equal the expected. The user softens with:
 | Custom matcher via `_AddCallback` | Inspect args programmatically and return a comparison |
 
 For pointer arguments to structs, the default is **deep-equal by
-size** — CMock memcompares the pointed-to memory. For string
+size** - CMock memcompares the pointed-to memory. For string
 pointers, treat as `strcmp` only if the deep-equal of the buffer
 matches the string length CMock chose at generation; in practice,
 use `_IgnoreArg_<param>` + a `_AddCallback` for string-matching.
@@ -250,7 +250,7 @@ matters, args don't.
 ## Limitations
 
 - **CMock parses C headers, not preprocessed source.** Macros
-  that hide function declarations are invisible — generators
+  that hide function declarations are invisible - generators
   miss them.
 - **Function pointers in structs need explicit handling.** CMock
   generates a per-symbol mock; a function-pointer field in a
@@ -264,21 +264,21 @@ matters, args don't.
   Split the header.
 - **Argument-deep-compare can be misleading on structs with
   pointer members.** The pointed-to memory is *not* recursively
-  compared — only the pointer value. Use `_AddCallback` for
+  compared - only the pointer value. Use `_AddCallback` for
   structures-with-pointers.
 - **Not thread-safe.** CMock's expectation queue is per-process
   global state; concurrent tests in the same process collide.
-  Ceedling runs tests serially by default — keep it that way.
+  Ceedling runs tests serially by default - keep it that way.
 
 ## References
 
 Cited inline. Foundational documents:
 
-- CMock Summary (full API surface) —
+- CMock Summary (full API surface) - 
   [github.com/ThrowTheSwitch/CMock/blob/master/docs/CMock_Summary.md](https://github.com/ThrowTheSwitch/CMock/blob/master/docs/CMock_Summary.md).
-- CMock README —
+- CMock README - 
   [github.com/ThrowTheSwitch/CMock](https://github.com/ThrowTheSwitch/CMock).
-- Ceedling overview — [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
+- Ceedling overview - [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
 - Sibling skills:
   [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md).

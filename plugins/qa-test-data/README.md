@@ -6,7 +6,7 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| Skill | [faker-data](skills/faker-data/SKILL.md) | S1 | Faker (Python `faker` / JS `@faker-js/faker` / Ruby `faker-ruby`) — fields, locales, deterministic seeding. |
+| Skill | [faker-data](skills/faker-data/SKILL.md) | S1 | Faker (Python `faker` / JS `@faker-js/faker` / Ruby `faker-ruby`) - fields, locales, deterministic seeding. |
 | Skill | [factory-bot-data](skills/factory-bot-data/SKILL.md) | S1 | Ruby FactoryBot factories with traits, associations, sequences; build / create / build_stubbed strategies; pairs with Faker. |
 | Skill | [mimesis-data](skills/mimesis-data/SKILL.md) | S1 | Python mimesis (fastest pure-Python generator); 46 locales; Schema/Field typed-dict pattern. |
 | Skill | [bogus-data](skills/bogus-data/SKILL.md) | S1 | .NET Bogus typed `Faker<T>` builders with `.RuleFor` / `.StrictMode` / `.UseSeed`; `Generate*` for single / lazy / batch. |

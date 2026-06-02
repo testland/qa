@@ -1,6 +1,6 @@
 ---
 name: game-test-categories-reference
-description: "Pure-reference catalog of the testing categories that apply to a video-game build before it ships. Defines the six canonical buckets the industry tests against — functional / compliance / compatibility / performance / localization / accessibility — plus the multiplayer and content-rating sub-axes. Cross-references each bucket to the platform-holder vocabulary that drives it (Microsoft Xbox Requirements / XR test cases, Sony TRC, Nintendo Lotcheck, Steam Direct review). Use as the taxonomy lookup when planning a game test pass, scoping QA effort, or mapping platform-cert findings back to internal test categories. Pairs with platform-cert-overview-reference for the platform-by-platform submission process."
+description: "Pure-reference catalog of the testing categories that apply to a video-game build before it ships. Defines the six canonical buckets the industry tests against - functional / compliance / compatibility / performance / localization / accessibility - plus the multiplayer and content-rating sub-axes. Cross-references each bucket to the platform-holder vocabulary that drives it (Microsoft Xbox Requirements / XR test cases, Sony TRC, Nintendo Lotcheck, Steam Direct review). Use as the taxonomy lookup when planning a game test pass, scoping QA effort, or mapping platform-cert findings back to internal test categories. Pairs with platform-cert-overview-reference for the platform-by-platform submission process."
 rating: 24
 d6: 4
 archetype: S2
@@ -13,13 +13,12 @@ keywords: ["game-testing", "functional-test", "compliance-test", "compatibility-
 
 A video-game build is tested against a stable set of categories
 that the industry has converged on over three console generations.
-Public sources — Microsoft's
+Public sources - Microsoft's
 [Certification step-by-step guide](https://learn.microsoft.com/en-us/gaming/game-publishing/concepts/certification/certification-guide),
 Microsoft's
 [Xbox Accessibility Guidelines (XAG) v3.2](https://learn.microsoft.com/en-us/gaming/accessibility/guidelines),
 and Steam's
-[App Review Process](https://partner.steamgames.com/doc/store/review_process)
-— and longstanding QA practice in the field (Schultz & Bryant,
+[App Review Process](https://partner.steamgames.com/doc/store/review_process) - and longstanding QA practice in the field (Schultz & Bryant,
 *Game Testing All-In-One*, 3rd ed., ISBN 9781305077133, cited by
 stable ID per `PLUGIN_AUTHORING.md` Step 4 fallback; GDC Vault
 talks on test taxonomy, gated, cited by stable ID) name the same
@@ -40,13 +39,13 @@ This skill is the **pure-reference taxonomy** consumed by:
 
 ## When to use
 
-- Scoping QA effort for a new title — what categories must be
+- Scoping QA effort for a new title - what categories must be
   covered before submission?
 - Mapping a failed platform-cert finding back to an internal test
   category (e.g., "XR-130 fail" → `compatibility-test`).
 - Planning a test-pass cadence (functional every PR, compliance +
   performance pre-submission, accessibility per milestone).
-- Triaging a bug — which category does it belong to, who owns the
+- Triaging a bug - which category does it belong to, who owns the
   fix?
 
 ## The six canonical categories
@@ -74,15 +73,15 @@ specification.
 
 **Sub-axes:**
 
-- **Mechanics correctness** — physics, hit detection, damage
+- **Mechanics correctness** - physics, hit detection, damage
   formulas, win/lose conditions.
-- **AI behaviour** — pathfinding, decision trees / utility AI,
+- **AI behaviour** - pathfinding, decision trees / utility AI,
   difficulty curves.
-- **UI flow** — every menu transition, every controller-disconnect
+- **UI flow** - every menu transition, every controller-disconnect
   recovery prompt, every "Press Any Button" front-end.
-- **Save / load** — round-trip integrity, cross-platform saves,
+- **Save / load** - round-trip integrity, cross-platform saves,
   cloud sync conflicts, corrupted-save recovery.
-- **Economy / progression** — XP curves, currency sinks, unlock
+- **Economy / progression** - XP curves, currency sinks, unlock
   triggers, anti-grief.
 
 **Typical tooling.** Engine-native test framework
@@ -115,7 +114,7 @@ platform holder maintains its own:
 | Steam | App Review Process | [partner.steamgames.com/doc/store/review_process](https://partner.steamgames.com/doc/store/review_process) |
 
 Each requirement maps to one or more **test cases** with explicit
-Test Steps, Expected Behavior, and Pass / Fail examples — see
+Test Steps, Expected Behavior, and Pass / Fail examples - see
 Microsoft's
 [Certification Tested Xbox Requirements for Xbox Console Games](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/console-certification-requirements-and-tests).
 
@@ -127,10 +126,10 @@ Microsoft cert guide above, findings are classified as:
 | **CFR** | Condition for Resubmission | Title fails cert; must be fixed before resubmit |
 | **SRI** | Standard Reporting Issue | Related to an XR but not severe enough to fail; fix recommended |
 | **ION** | Issue of Note | Not tied to an XR; informational |
-| **Non-Tested** | — | XR could not be tested in this pass |
+| **Non-Tested** | - | XR could not be tested in this pass |
 
 Sony TRC and Nintendo Lotcheck use comparable severity tiers
-internally (NDA — cite by stable ID).
+internally (NDA - cite by stable ID).
 
 **See also.**
 [`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
@@ -142,9 +141,8 @@ for the submission workflow per platform.
 supported hardware generations, console SKUs, display modes, audio
 configurations, storage devices, controller types, and accounts.
 
-**The Xbox bench layout** — per the
-[Certification step-by-step guide](https://learn.microsoft.com/en-us/gaming/game-publishing/concepts/certification/certification-guide)
-— exemplifies the matrix:
+**The Xbox bench layout** - per the
+[Certification step-by-step guide](https://learn.microsoft.com/en-us/gaming/game-publishing/concepts/certification/certification-guide) - exemplifies the matrix:
 
 | Console | SKU | Resolution | Storage | Audio |
 |---|---|---|---|---|
@@ -172,22 +170,22 @@ SKU in the compatibility matrix.
 
 **Sub-axes:**
 
-- **Frame-time** — target 16.67 ms (60 Hz) or 33.33 ms (30 Hz),
+- **Frame-time** - target 16.67 ms (60 Hz) or 33.33 ms (30 Hz),
   measured under representative load (combat encounter, open-world
   traversal, cinematic).
-- **Load time** — boot, level transition, fast travel.
-- **Memory** — peak working-set, fragmentation under long sessions
+- **Load time** - boot, level transition, fast travel.
+- **Memory** - peak working-set, fragmentation under long sessions
   (a "soak" test in compliance vocabulary).
-- **Thermal** — sustained-performance scaling on closed-chassis
+- **Thermal** - sustained-performance scaling on closed-chassis
   devices (Switch, Steam Deck, Series S in Energy Saving mode).
-- **Battery** — handheld + portable (Switch, Steam Deck, mobile).
+- **Battery** - handheld + portable (Switch, Steam Deck, mobile).
 
 **Where it shows up in cert.** Microsoft requires a minimum
 sustained framerate per
 [Xbox Requirements (XR) testing](https://learn.microsoft.com/en-us/gaming/game-publishing/concepts/certification/certification-guide).
-Sony TRC includes performance gates (NDA — cite by stable ID).
+Sony TRC includes performance gates (NDA - cite by stable ID).
 Nintendo Lotcheck includes thermal + battery rules for Switch
-(NDA — cite by stable ID).
+(NDA - cite by stable ID).
 
 ### 5. Localization
 
@@ -197,18 +195,18 @@ correctly per locale.
 
 **Sub-axes:**
 
-- **String fitting** — does the German translation overflow the UI
+- **String fitting** - does the German translation overflow the UI
   control? (German averages ~30 % longer than English.)
-- **Script support** — CJK rendering (subpixel hinting, vertical
+- **Script support** - CJK rendering (subpixel hinting, vertical
   text where used), Arabic / Hebrew bidirectional layout.
-- **Voice-over coverage** — does every English VO line have a
+- **Voice-over coverage** - does every English VO line have a
   matching localized take? Lip-sync drift.
-- **Culture-sensitive content** — flags, gestures, gambling
+- **Culture-sensitive content** - flags, gestures, gambling
   references, religious symbols. (Each platform holder maintains
-  per-region content rules under its compliance category — see
+  per-region content rules under its compliance category - see
   Microsoft's
   [Xbox Network Policies](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/pc/live-policies-pc).)
-- **Date / time / currency formatting** — locale-aware
+- **Date / time / currency formatting** - locale-aware
   presentation.
 
 **Where it shows up in cert.** Microsoft's bench layout (table
@@ -226,26 +224,26 @@ and the regulatory framework that applies in the target market
 **XAG-style category structure.** Each Xbox Accessibility
 Guideline, per the page above, has:
 
-- **Goal** — desired player impact.
-- **Scoping questions** — does this XAG apply to your title?
-- **Key areas to target** — game elements the XAG covers.
-- **Implementation guidelines** — prescriptive minimum bar.
-- **Example content** — images / video of good implementation.
-- **Potential player impact** — disability types affected.
+- **Goal** - desired player impact.
+- **Scoping questions** - does this XAG apply to your title?
+- **Key areas to target** - game elements the XAG covers.
+- **Implementation guidelines** - prescriptive minimum bar.
+- **Example content** - images / video of good implementation.
+- **Potential player impact** - disability types affected.
 - **Resources and tools.**
 
 **Common accessibility test sub-axes** (cross-referenced to XAG
 identifiers where they exist; see
 [learn.microsoft.com/.../accessibility/guidelines](https://learn.microsoft.com/en-us/gaming/accessibility/guidelines)):
 
-- **Input** — remappable controls, hold-to-press toggle, single-stick
+- **Input** - remappable controls, hold-to-press toggle, single-stick
   control schemes, Xbox Adaptive Controller support.
-- **Visual** — high-contrast modes, text size, color-blind modes,
+- **Visual** - high-contrast modes, text size, color-blind modes,
   screen reader / narrator output for menus (XAG 101 text size,
   cited in the guidelines overview above).
-- **Audio** — subtitles (font size, background opacity, speaker
+- **Audio** - subtitles (font size, background opacity, speaker
   attribution), visual cues for audio events.
-- **Cognitive** — difficulty options, save-anywhere, pause-anywhere,
+- **Cognitive** - difficulty options, save-anywhere, pause-anywhere,
   reduced motion / camera-shake toggles.
 
 **Service.** Microsoft offers an explicit
@@ -254,14 +252,14 @@ that tests against the XAG.
 
 ## Cross-axis: multiplayer / online
 
-Multiplayer is **not a seventh category** — it cuts across
+Multiplayer is **not a seventh category** - it cuts across
 functional + compliance + compatibility + performance. The
 multiplayer-specific test surface is:
 
 - **State-machine correctness** under packet loss / latency /
-  disconnect — see
+  disconnect - see
   [`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md).
-- **Matchmaking + session lifecycle** — joins, drop-ins, host
+- **Matchmaking + session lifecycle** - joins, drop-ins, host
   migration.
 - **Anti-cheat compatibility** with platform integrity systems
   (Xbox LIVE; Sony's authentication; Nintendo Network).
@@ -273,7 +271,7 @@ multiplayer-specific test surface is:
 ## Cross-axis: content rating
 
 Content rating (ESRB / PEGI / CERO / USK / IARC) is **not a
-testing category** — it is a regulatory classification authored
+testing category** - it is a regulatory classification authored
 from a content questionnaire, then validated by the rating board.
 However:
 
@@ -282,7 +280,7 @@ However:
   before review.
 - Platform holders gate distribution on the local rating board's
   certificate (cite by stable ID for the NDA-only details).
-- Localization (category 5) may interact with content rating —
+- Localization (category 5) may interact with content rating - 
   removing or recoloring blood for the German release, removing
   gambling minigames for the Belgian release.
 
@@ -293,11 +291,11 @@ urgency:
 
 | Symptom | Category | Severity hint |
 |---|---|---|
-| Crash on save load | Functional | High — cert-blocker |
-| XR-024 fail (unhandled controller disconnect) | Compliance | CFR — cert-blocker |
-| Black screen on PS4 base, fine on PS5 | Compatibility | High — gens-affecting |
+| Crash on save load | Functional | High - cert-blocker |
+| XR-024 fail (unhandled controller disconnect) | Compliance | CFR - cert-blocker |
+| Black screen on PS4 base, fine on PS5 | Compatibility | High - gens-affecting |
 | 22 fps in raid encounter (target 30) | Performance | Triage vs. budget |
-| German "Zurück" overflows button | Localization | Sev 3 — UI |
+| German "Zurück" overflows button | Localization | Sev 3 - UI |
 | Subtitles missing in cutscene 7 | Accessibility | XAG fail |
 | Host migration drops players | Multiplayer (functional + compliance) | High |
 
@@ -321,18 +319,18 @@ urgency:
   with NDA access should consult their developer portal for the
   authoritative current revision.
 - **Microsoft XR numbering drifts.** XR identifiers (XR-024,
-  XR-130, etc.) are revised across GDK releases — verify against
+  XR-130, etc.) are revised across GDK releases - verify against
   the
   [current Xbox Requirements list](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements)
   before quoting.
 - **Steam Direct is lighter than console cert.** Per
   [partner.steamgames.com/doc/store/review_process](https://partner.steamgames.com/doc/store/review_process),
-  Steam's review is store-page + build-startup focused (3–5
+  Steam's review is store-page + build-startup focused (3 - 5
   business days), not a console-style XR pass.
-- **Content rating boards are out of scope** of this skill — they
+- **Content rating boards are out of scope** of this skill - they
   are regulatory classification, not QA categories. Consult ESRB /
   PEGI / CERO / USK / IARC documentation directly.
 - **No regional rating list here.** Per-region content rules
   (German violence colouring, Belgian / NL loot-box rules, China /
-  Korea content rules) are platform + region specific — consult
+  Korea content rules) are platform + region specific - consult
   the platform holder's regional supplement.

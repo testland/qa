@@ -1,6 +1,6 @@
 ---
 name: bats-testing
-description: "Configures Bats-core (Bash Automated Testing System) for testing CLI tools, shell scripts, and Unix programs — `.bats` test files with `@test` blocks, `run` to capture command exit + output, `[ \"$status\" -eq 0 ]` and `[ \"$output\" = ... ]` assertions, `setup`/`teardown` hooks, `load` for shared helpers, parallel execution via `--jobs N`, TAP-compliant output for CI integration. Use whenever the unit-under-test is a shell script, CLI binary, or anything invokable from Bash."
+description: "Configures Bats-core (Bash Automated Testing System) for testing CLI tools, shell scripts, and Unix programs - `.bats` test files with `@test` blocks, `run` to capture command exit + output, `[ \"$status\" -eq 0 ]` and `[ \"$output\" = ... ]` assertions, `setup`/`teardown` hooks, `load` for shared helpers, parallel execution via `--jobs N`, TAP-compliant output for CI integration. Use whenever the unit-under-test is a shell script, CLI binary, or anything invokable from Bash."
 rating: 22
 d6: 4
 archetype: S1
@@ -25,7 +25,7 @@ Per [bats-github][bgh]:
 > It provides a simple way to verify that the UNIX programs you
 > write behave as expected."
 
-Bats works "with any Unix program," not just Bash — it captures
+Bats works "with any Unix program," not just Bash - it captures
 stdout / stderr / exit code of any executable.
 
 ## When to use
@@ -38,7 +38,7 @@ stdout / stderr / exit code of any executable.
   aliases) behave as expected.
 - Cross-platform smoke tests for a CLI's install scripts.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [bgh][bgh]:
 
@@ -55,10 +55,10 @@ git submodule add https://github.com/bats-core/bats-support.git test/test_helper
 git submodule add https://github.com/bats-core/bats-assert.git test/test_helper/bats-assert
 ```
 
-The git-submodule approach pins the Bats version per repo —
+The git-submodule approach pins the Bats version per repo - 
 recommended for CI determinism.
 
-## Step 2 — First test file
+## Step 2 - First test file
 
 Per [bgh][bgh] (verbatim example):
 
@@ -78,7 +78,7 @@ Per [bgh][bgh] (verbatim example):
 
 Save as `test/math.bats`; run `bats test/math.bats`.
 
-## Step 3 — `run` for exit-code + output capture
+## Step 3 - `run` for exit-code + output capture
 
 The `run` helper invokes a command and captures `$status`,
 `$output`, and `$lines[]`:
@@ -107,7 +107,7 @@ The `run` helper invokes a command and captures `$status`,
 Without `run`, a non-zero exit code aborts the test before
 assertions execute.
 
-## Step 4 — `setup` / `teardown`
+## Step 4 - `setup` / `teardown`
 
 Per [bats][bats]: "setup and teardown: Pre- and post-test hooks."
 
@@ -131,7 +131,7 @@ teardown() {
 test). Use for expensive setup (Docker container start,
 database init).
 
-## Step 5 — `load` shared helpers
+## Step 5 - `load` shared helpers
 
 Per [bats][bats]: "load: Share common code."
 
@@ -159,7 +159,7 @@ load test_helper
 }
 ```
 
-## Step 6 — bats-assert / bats-support
+## Step 6 - bats-assert / bats-support
 
 Better assertions than raw `[ ]`:
 
@@ -185,7 +185,7 @@ load test_helper/bats-assert/load
 `assert_line` give clear diff-style failure messages (vs `[ ]`'s
 silent fail).
 
-## Step 7 — `skip`
+## Step 7 - `skip`
 
 Per [bats][bats]: "skip: Easily skip tests."
 
@@ -213,7 +213,7 @@ Per [bats][bats]: "skip: Easily skip tests."
 `skip` reports the reason in test output (vs commenting out, which
 hides the fact that coverage dropped).
 
-## Step 8 — Parallel execution
+## Step 8 - Parallel execution
 
 Per [bats][bats]: "Parallel Execution."
 
@@ -222,10 +222,10 @@ Per [bats][bats]: "Parallel Execution."
 bats --jobs 4 test/
 ```
 
-Tests must be independent — share no global filesystem state, no
+Tests must be independent - share no global filesystem state, no
 shared ports. Use `setup`/`teardown` with `mktemp -d` to isolate.
 
-## Step 9 — Output formats
+## Step 9 - Output formats
 
 ```bash
 # Default (pretty)
@@ -241,7 +241,7 @@ bats --formatter junit test/ > junit.xml
 bats --verbose-run test/
 ```
 
-## Step 10 — CI integration
+## Step 10 - CI integration
 
 ```yaml
 jobs:
@@ -273,14 +273,14 @@ using the official `bats/bats:latest` image:
 | Tests sharing `/tmp` / fixed ports                                    | Parallel execution breaks intermittently.                                | Per-test `mktemp -d` in `setup` (Step 4). |
 | Using `[ ]` for everything                                            | Silent failures; no diff message.                                       | bats-assert (Step 6). |
 | Commenting out skipped tests                                          | Hides coverage loss; no signal.                                         | `skip` with reason (Step 7). |
-| Asserting full multiline output                                       | Brittle — any whitespace change breaks tests.                          | Use `assert_output --partial` or `assert_line --index N`. |
+| Asserting full multiline output                                       | Brittle - any whitespace change breaks tests.                          | Use `assert_output --partial` or `assert_line --index N`. |
 | One mega `.bats` file                                                 | Slow; hard to grep failures.                                          | Per-feature files in `test/`. |
 
 ## Limitations
 
 - **Bash-only.** Tests are written in Bash; PowerShell scripts
   need Pester instead.
-- **Slow vs in-language tests.** Each `run` forks a process —
+- **Slow vs in-language tests.** Each `run` forks a process - 
   expensive vs library-level tests in the language.
 - **Output capture quirks.** `run` strips trailing newlines; some
   binary output is not faithfully captured.
@@ -289,12 +289,11 @@ using the official `bats/bats:latest` image:
 
 ## References
 
-- [bats][bats] — overview, install methods, test structure,
+- [bats][bats] - overview, install methods, test structure,
   `@test` / `run` / `setup` / `teardown` / `load` / `skip`,
   parallel execution, Docker.
-- [bgh][bgh] — example test file, install one-liners.
-- [`tui-snapshot-tester`](../tui-snapshot-tester/SKILL.md) —
+- [bgh][bgh] - example test file, install one-liners.
+- [`tui-snapshot-tester`](../tui-snapshot-tester/SKILL.md) - 
   TUI snapshot tests (visual layer; bats covers exit code +
   text output).
-- [`cli-output-conventions`](../cli-output-conventions/SKILL.md)
-  — what to assert on (stable formats, exit codes, stderr).
+- [`cli-output-conventions`](../cli-output-conventions/SKILL.md) - what to assert on (stable formats, exit codes, stderr).

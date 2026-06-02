@@ -1,6 +1,6 @@
 ---
 name: cqrs-projection-tests
-description: "Build CQRS read-model projection tests — write-model + read-model consistency tests, projection-replay determinism, projection-versioning + zero-downtime swap, eventual-consistency-window assertions. Per martinfowler.com CQRS reference."
+description: "Build CQRS read-model projection tests - write-model + read-model consistency tests, projection-replay determinism, projection-versioning + zero-downtime swap, eventual-consistency-window assertions. Per martinfowler.com CQRS reference."
 type: skill
 archetype: S3
 rating: 22
@@ -15,7 +15,7 @@ keywords:
 
 # cqrs-projection-tests
 
-Per [Fowler — CQRS], CQRS "splits commands and queries into distinct
+Per [Fowler - CQRS], CQRS "splits commands and queries into distinct
 models." Read-model (projection) is rebuilt from the write-model's
 events. Tests verify the projection is correct + reproducible +
 consistent within the documented eventual-consistency window.
@@ -27,9 +27,9 @@ consistent within the documented eventual-consistency window.
 - Adding a new projection from an existing event stream.
 - Migrating an existing projection schema (zero-downtime swap).
 
-## Step 1 — Projection-from-events determinism
+## Step 1 - Projection-from-events determinism
 
-Per [Fowler — CQRS], the read model is "optimized for reading and
+Per [Fowler - CQRS], the read model is "optimized for reading and
 displaying information." Test that rebuilding from the same events
 yields the same projection state:
 
@@ -44,9 +44,9 @@ def test_projection_deterministic():
 ```
 
 If `apply_all` references current time / random IDs, projection
-isn't deterministic — fix.
+isn't deterministic - fix.
 
-## Step 2 — Per-event projection update test
+## Step 2 - Per-event projection update test
 
 Each event should produce one well-defined change in the read model:
 
@@ -66,9 +66,9 @@ def test_event_updates_projection(event, expected_delta):
         assert materialized[sku][field] == value
 ```
 
-## Step 3 — Eventual-consistency window assertion
+## Step 3 - Eventual-consistency window assertion
 
-Per [Fowler — CQRS], CQRS pairs naturally with "event-based systems
+Per [Fowler - CQRS], CQRS pairs naturally with "event-based systems
 and eventual consistency." Document the window + test:
 
 ```python
@@ -87,9 +87,9 @@ def test_projection_catches_up_within_5_seconds():
 
 When the projection is async (via message bus), this is the canonical
 SLA test. If sync (in same DB transaction), no consistency window
-exists — different test pattern.
+exists - different test pattern.
 
-## Step 4 — Multiple projections from same event stream
+## Step 4 - Multiple projections from same event stream
 
 CQRS often has many projections (search index, materialized SQL
 view, OLAP cube) per event stream. Test each independently:
@@ -106,9 +106,9 @@ def test_inventory_summary_projection():
     assert summary.total_skus == 1234
 ```
 
-A flawed projection doesn't affect the others — test in isolation.
+A flawed projection doesn't affect the others - test in isolation.
 
-## Step 5 — Projection rebuild + zero-downtime swap
+## Step 5 - Projection rebuild + zero-downtime swap
 
 Schema migration of a projection ≈ rebuild from event log + swap.
 Test the rebuild produces correct state for a known event range:
@@ -139,7 +139,7 @@ def test_zero_downtime_swap():
     swap_query_target(old_proj, new_proj)
 ```
 
-## Step 6 — Idempotency: apply same event twice
+## Step 6 - Idempotency: apply same event twice
 
 Distributed projections may receive duplicates. Apply must be
 idempotent (same final state when applied twice):
@@ -156,7 +156,7 @@ def test_event_idempotent_on_projection():
 
 Track event IDs already applied per projection.
 
-## Step 7 — Out-of-order delivery test
+## Step 7 - Out-of-order delivery test
 
 Async event delivery may reorder events. Test that the projection
 either handles reordering or correctly waits/buffers:
@@ -176,7 +176,7 @@ def test_projection_handles_out_of_order():
 If your projection assumes in-order (e.g., Kafka per-partition),
 test the assumption holds end-to-end.
 
-## Step 8 — Read-your-writes guard
+## Step 8 - Read-your-writes guard
 
 CQRS often breaks "read your own write" expectations. Tests verify
 the UI either:
@@ -212,7 +212,7 @@ def test_post_command_returns_pending_until_projection_catches_up():
 
 ## Limitations
 
-- CQRS adds complexity; per [Fowler — CQRS], "you should be very
+- CQRS adds complexity; per [Fowler - CQRS], "you should be very
   cautious about using CQRS." Tests don't reduce that complexity.
 - Eventual-consistency window varies under load; test under
   realistic concurrency, not a quiet test bench.
@@ -221,13 +221,13 @@ def test_post_command_returns_pending_until_projection_catches_up():
 
 ## References
 
-- [Fowler — CQRS] — pattern overview, command vs query model,
+- [Fowler - CQRS] - pattern overview, command vs query model,
   cautions
-- [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md) — pairs
+- [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md) - pairs
   with CQRS for event-sourced write models
-- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md) —
+- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md) - 
   cross-aggregate writes feeding the same projection
-- [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) —
+- [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) - 
   window assertions across aggregates
 
-[Fowler — CQRS]: https://martinfowler.com/bliki/CQRS.html
+[Fowler - CQRS]: https://martinfowler.com/bliki/CQRS.html

@@ -154,7 +154,7 @@ jobs:
       - run: npm ci && npm test
 ```
 
-Fully offline — no Unleash server URL needed since polling is
+Fully offline - no Unleash server URL needed since polling is
 disabled.
 
 ## Anti-patterns

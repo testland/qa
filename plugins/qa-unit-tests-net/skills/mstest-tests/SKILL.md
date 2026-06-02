@@ -1,6 +1,6 @@
 ---
 name: mstest-tests
-description: "Configures and runs MSTest (now MSTest.TestFramework v3) — Microsoft's first-party .NET test framework with `[TestClass]` / `[TestMethod]` / `[DataRow]` / `[DynamicData]` attributes; `[ClassInitialize]` / `[ClassCleanup]` / `[TestInitialize]` / `[TestCleanup]` lifecycle; `TestContext` injection; tight Visual Studio + dotnet test integration. Use when working with .NET on a MSTest codebase, or in environments standardized on Microsoft toolchain."
+description: "Configures and runs MSTest (now MSTest.TestFramework v3) - Microsoft's first-party .NET test framework with `[TestClass]` / `[TestMethod]` / `[DataRow]` / `[DynamicData]` attributes; `[ClassInitialize]` / `[ClassCleanup]` / `[TestInitialize]` / `[TestCleanup]` lifecycle; `TestContext` injection; tight Visual Studio + dotnet test integration. Use when working with .NET on a MSTest codebase, or in environments standardized on Microsoft toolchain."
 rating: 21
 d6: 4
 archetype: S1
@@ -24,7 +24,7 @@ MSTest is the right pick for Microsoft-mandated environments + legacy.
 - Microsoft-toolchain shop standardized on first-party tooling.
 - Team preference for tight Visual Studio integration.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 dotnet new mstest -n MyTests
@@ -34,7 +34,7 @@ dotnet add package MSTest.TestAdapter
 dotnet add package Microsoft.NET.Test.Sdk
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 Per [ms-doc][ms-doc]:
 
@@ -57,7 +57,7 @@ NUnit, **NOT** xUnit's `(expected, actual)` order.
 
 Run: `dotnet test`.
 
-## Step 3 — Lifecycle
+## Step 3 - Lifecycle
 
 Per [ms-doc][ms-doc]:
 
@@ -84,7 +84,7 @@ public class TestsWithLifecycle
 
 For assembly-level: `[AssemblyInitialize]` + `[AssemblyCleanup]`.
 
-## Step 4 — Parametrize
+## Step 4 - Parametrize
 
 ```csharp
 [TestMethod]
@@ -108,7 +108,7 @@ public static IEnumerable<object[]> AddCases()
 }
 ```
 
-## Step 5 — Categories + filter
+## Step 5 - Categories + filter
 
 ```csharp
 [TestMethod]
@@ -118,7 +118,7 @@ public void IntegrationTest() { }
 // Filter:  dotnet test --filter "TestCategory=Integration"
 ```
 
-## Step 6 — TestContext
+## Step 6 - TestContext
 
 `TestContext` is auto-injected per test instance:
 
@@ -140,7 +140,7 @@ public class TestsWithContext
 properties from .runsettings) + a `WriteLine` for output (similar to
 xUnit's `ITestOutputHelper`).
 
-## Step 7 — Skip patterns
+## Step 7 - Skip patterns
 
 ```csharp
 [TestMethod]
@@ -159,7 +159,7 @@ public void ConditionalTest()
 `Assert.Inconclusive` marks the test as neither pass nor fail
 (distinct from skip).
 
-## Step 8 — Parallelism
+## Step 8 - Parallelism
 
 `.runsettings`:
 
@@ -180,7 +180,7 @@ public void ConditionalTest()
 `Scope`: `MethodLevel` (parallel within class) or `ClassLevel`
 (parallel across classes only).
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: dotnet test --logger "trx;LogFileName=test-results.trx" \
@@ -208,10 +208,10 @@ public void ConditionalTest()
 
 ## References
 
-- [ms-doc][ms-doc] — Microsoft MSTest tutorial
-- learn.microsoft.com/en-us/visualstudio/test — Visual Studio test docs
-- github.com/microsoft/testfx — MSTest source
+- [ms-doc][ms-doc] - Microsoft MSTest tutorial
+- learn.microsoft.com/en-us/visualstudio/test - Visual Studio test docs
+- github.com/microsoft/testfx - MSTest source
 - [`xunit-tests`](../xunit-tests/SKILL.md),
   [`nunit-tests`](../nunit-tests/SKILL.md),
-  [`fluentassertions`](../fluentassertions/SKILL.md) — sister tools
+  [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

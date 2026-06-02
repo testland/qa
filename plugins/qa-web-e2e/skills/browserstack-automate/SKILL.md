@@ -1,6 +1,6 @@
 ---
 name: browserstack-automate
-description: "Author and run E2E tests on BrowserStack Automate — cloud grid covering 3000+ real device + browser combinations. Covers BROWSERSTACK_USERNAME + ACCESS_KEY auth, hub URL https://hub-cloud.browserstack.com/wd/hub, W3C capabilities + bstack:options (projectName, buildName, sessionName), BrowserStackLocal for testing against localhost / internal environments, parallel session limits, and CI integration. Use for cross-browser regression on real devices + browsers — distinct from qa-web-e2e/playwright-testing (single-runner) and qa-compatibility/browser-matrix-runner (bundled engines only)."
+description: "Author and run E2E tests on BrowserStack Automate - cloud grid covering 3000+ real device + browser combinations. Covers BROWSERSTACK_USERNAME + ACCESS_KEY auth, hub URL https://hub-cloud.browserstack.com/wd/hub, W3C capabilities + bstack:options (projectName, buildName, sessionName), BrowserStackLocal for testing against localhost / internal environments, parallel session limits, and CI integration. Use for cross-browser regression on real devices + browsers - distinct from qa-web-e2e/playwright-testing (single-runner) and qa-compatibility/browser-matrix-runner (bundled engines only)."
 rating: 23
 d6: 4
 archetype: S1
@@ -96,7 +96,7 @@ Standard W3C fields: `browserName`, `browserVersion`, `platformName`
 | `debug` | Enable visual debugging (screenshots + DOM) |
 | `networkLogs` | Capture HAR file |
 | `consoleLogs` | "errors" / "warnings" / "info" / "verbose" |
-| `video` | Default "true" — session video recording |
+| `video` | Default "true" - session video recording |
 | `seleniumVersion` | Pin a Selenium version (e.g., "4.21.0") |
 
 ### Python example (Selenium)
@@ -246,7 +246,7 @@ jobs:
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Credentials in code | Token leak | Env vars / secret store |
-| All tests on every browser combo | Slow + expensive (plan-limited) | Tier the matrix — see [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md) |
+| All tests on every browser combo | Slow + expensive (plan-limited) | Tier the matrix - see [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md) |
 | Missing buildName | Sessions un-grouped in dashboard | Always set `buildName` to CI run / PR identifier |
 | No session-status update | Dashboard pass/fail rate inaccurate | Always set session status before quit |
 | BrowserStackLocal not stopped | Stale tunnels accumulate | Always `daemon stop` after test |
@@ -256,7 +256,7 @@ jobs:
 ## Limitations
 
 - **Cost.** Plan tiers limit parallel sessions; full-matrix runs
-  on every PR can be expensive — tier the matrix.
+  on every PR can be expensive - tier the matrix.
 - **Setup latency.** Real-device sessions have 5-30s startup;
   not optimal for short feedback loops.
 - **Network shape.** Cloud-grid latency is higher than local;
@@ -268,14 +268,14 @@ jobs:
 
 ## References
 
-- BrowserStack Automate Selenium docs —
+- BrowserStack Automate Selenium docs - 
   [browserstack.com/docs/automate/selenium](https://www.browserstack.com/docs/automate/selenium).
-- BrowserStack capabilities reference —
+- BrowserStack capabilities reference - 
   browserstack.com/automate/capabilities (Cloudflare-protected;
   cite by stable URL).
-- BrowserStackLocal —
+- BrowserStackLocal - 
   browserstack.com/local-testing/automate.
-- W3C WebDriver specification —
+- W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Composes:
   [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).
@@ -284,6 +284,5 @@ jobs:
   [`lambdatest-automate`](lambdatest-automate/SKILL.md),
   [`selenium-grid-4-runner`](../../../qa-compatibility/skills/selenium-grid-4-runner/SKILL.md).
 - Existing orchestrator:
-  [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md)
-  — routes between local Selenium Grid + BrowserStack + Sauce
+  [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md) - routes between local Selenium Grid + BrowserStack + Sauce
   Labs + LambdaTest.

@@ -1,6 +1,6 @@
 ---
 name: cypress-testing
-description: "Authors Cypress E2E tests — `npm install cypress`, `cypress.config.ts` setup, `cy.*` command chains, automatic-waiting commands, time-travel debugger via Cypress GUI, custom commands for reusable patterns, Cypress Cloud for parallel/recording. Per Cypress''''s positioning: \"fast, consistent and reliable tests that are flake-free\" via in-browser execution architecture."
+description: "Authors Cypress E2E tests - `npm install cypress`, `cypress.config.ts` setup, `cy.*` command chains, automatic-waiting commands, time-travel debugger via Cypress GUI, custom commands for reusable patterns, Cypress Cloud for parallel/recording. Per Cypress''''s positioning: \"fast, consistent and reliable tests that are flake-free\" via in-browser execution architecture."
 rating: 23
 d6: 4
 archetype: S1
@@ -42,7 +42,7 @@ Differentiators ([cy-overview][cy]):
 For cross-browser including WebKit, see
 [`playwright-testing`](../playwright-testing/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 npm install --save-dev cypress
@@ -52,7 +52,7 @@ npx cypress open   # first run scaffolds the project
 The interactive setup creates `cypress.config.ts` + `cypress/`
 directory.
 
-## Step 2 — Configure
+## Step 2 - Configure
 
 ```typescript
 // cypress.config.ts
@@ -75,7 +75,7 @@ export default defineConfig({
 });
 ```
 
-## Step 3 — Author E2E tests
+## Step 3 - Author E2E tests
 
 ```typescript
 // cypress/e2e/checkout.cy.ts
@@ -101,10 +101,10 @@ describe('Checkout flow', () => {
 });
 ```
 
-Per [cy-overview][cy], assertions auto-wait — no `cy.wait(2000)`
+Per [cy-overview][cy], assertions auto-wait - no `cy.wait(2000)`
 needed.
 
-## Step 4 — Use cypress-testing-library
+## Step 4 - Use cypress-testing-library
 
 For accessibility-first selectors (per the team's
 [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)
@@ -124,10 +124,10 @@ cy.findByLabelText('Email').type('user@example.com');
 ```
 
 `findByRole` (from cypress-testing-library) is the Cypress
-equivalent of Playwright's `getByRole` — preferred for
+equivalent of Playwright's `getByRole` - preferred for
 accessibility-aware testing.
 
-## Step 5 — Custom commands
+## Step 5 - Custom commands
 
 ```typescript
 // cypress/support/commands.ts
@@ -155,10 +155,10 @@ beforeEach(() => {
 });
 ```
 
-`cy.session(...)` caches the auth state across tests — reuse the
+`cy.session(...)` caches the auth state across tests - reuse the
 login result, avoid re-running the login flow.
 
-## Step 6 — Run
+## Step 6 - Run
 
 ```bash
 # Open the GUI (interactive; great for development)
@@ -175,7 +175,7 @@ npx cypress run --browser firefox
 npx cypress run --browser chrome
 ```
 
-## Step 7 — Time-travel debugger
+## Step 7 - Time-travel debugger
 
 Per [cy-overview][cy]: "Hover over commands in the Command Log to
 see exactly what happened at each step."
@@ -187,10 +187,10 @@ In `cypress open` mode:
    pane.
 4. Click a command → freeze the state for inspection.
 
-This is Cypress's killer feature — debugging by visually replaying
+This is Cypress's killer feature - debugging by visually replaying
 the test.
 
-## Step 8 — Cypress Cloud (paid; optional)
+## Step 8 - Cypress Cloud (paid; optional)
 
 ```bash
 # Record run to Cypress Cloud
@@ -209,7 +209,7 @@ Cloud provides:
 OSS alternative: [`currents-integration`](../../qa-test-reporting/skills/currents-integration/SKILL.md)
 covers similar analytics for both Cypress + Playwright.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 jobs:
@@ -245,7 +245,7 @@ jobs:
 ## Limitations
 
 - **Single-browser-process architecture.** Per [cy-overview][cy]:
-  "avoids Selenium/WebDriver architecture" — but this also means
+  "avoids Selenium/WebDriver architecture" - but this also means
   no native multi-domain testing (workarounds exist).
 - **Same-tab restriction.** Originally Cypress only tested
   same-tab; multi-tab support added later but with caveats.
@@ -256,14 +256,12 @@ jobs:
 
 ## References
 
-- [cy][cy] — Cypress overview, key features (time-travel,
+- [cy][cy] - Cypress overview, key features (time-travel,
   automatic waiting, native browser access), three test types
   (E2E, component, accessibility).
 - [`playwright-testing`](../playwright-testing/SKILL.md),
   [`selenium-testing`](../selenium-testing/SKILL.md),
-  [`webdriverio-testing`](../webdriverio-testing/SKILL.md) —
+  [`webdriverio-testing`](../webdriverio-testing/SKILL.md) - 
   alternative E2E frameworks.
-- [`currents-integration`](../../qa-test-reporting/skills/currents-integration/SKILL.md)
-  — OSS analytics alternative to Cypress Cloud.
-- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)
-  — selector convention.
+- [`currents-integration`](../../qa-test-reporting/skills/currents-integration/SKILL.md) - OSS analytics alternative to Cypress Cloud.
+- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.

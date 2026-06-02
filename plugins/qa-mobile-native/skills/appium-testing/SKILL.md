@@ -1,6 +1,6 @@
 ---
 name: appium-testing
-description: "Wires Appium for cross-platform mobile UI automation — uses the WebDriver protocol, picks a driver per platform (XCUITest for iOS, UiAutomator2 / Espresso for Android, Mac2 for macOS, Windows for desktop), authors tests in JS / Python / Java / Ruby / .NET, configures `desiredCapabilities`, runs against simulators / emulators / device farms. Use when a single test suite must cover both iOS and Android, or when the team's stack is multi-platform (iOS + Android + Mac + Windows)."
+description: "Wires Appium for cross-platform mobile UI automation - uses the WebDriver protocol, picks a driver per platform (XCUITest for iOS, UiAutomator2 / Espresso for Android, Mac2 for macOS, Windows for desktop), authors tests in JS / Python / Java / Ruby / .NET, configures `desiredCapabilities`, runs against simulators / emulators / device farms. Use when a single test suite must cover both iOS and Android, or when the team's stack is multi-platform (iOS + Android + Mac + Windows)."
 rating: 23
 d6: 4
 archetype: S1
@@ -30,7 +30,7 @@ If the app is iOS-only, [`xcuitest-suite`](../xcuitest-suite/SKILL.md)
 is lighter (no external server). For React Native specifically,
 [`detox-testing`](../detox-testing/SKILL.md) is faster.
 
-## Step 1 — Install Appium server + driver
+## Step 1 - Install Appium server + driver
 
 ```bash
 npm install -g appium
@@ -46,7 +46,7 @@ appium driver install windows          # Windows desktop
 appium driver list
 ```
 
-## Step 2 — Start the server
+## Step 2 - Start the server
 
 ```bash
 appium server -p 4723
@@ -55,7 +55,7 @@ appium server -p 4723
 The default port is 4723; client tests connect to
 `http://localhost:4723` (no `/wd/hub` suffix in Appium 2.x).
 
-## Step 3 — Author a test (JavaScript example)
+## Step 3 - Author a test (JavaScript example)
 
 ```javascript
 import { remote } from 'webdriverio';
@@ -97,7 +97,7 @@ The `automationName` capability picks the driver:
 `UiAutomator2` (Android), `XCUITest` (iOS), `Espresso` (Android
 gray-box), `Mac2`, `Windows`.
 
-## Step 4 — Capabilities catalog
+## Step 4 - Capabilities catalog
 
 | Capability              | Use                                                  |
 |-------------------------|------------------------------------------------------|
@@ -113,7 +113,7 @@ gray-box), `Mac2`, `Windows`.
 For device-farm runs, capabilities also include the farm's
 authentication tokens / device-pool selection.
 
-## Step 5 — Selector strategies (cross-platform)
+## Step 5 - Selector strategies (cross-platform)
 
 ```javascript
 // By accessibility ID — the most cross-platform
@@ -135,7 +135,7 @@ accessibility ID on both iOS (`accessibilityIdentifier`) and
 Android (`contentDescription` or `resource-id`). Tests use one
 selector for both.
 
-## Step 6 — Run
+## Step 6 - Run
 
 ```bash
 # Local with one platform
@@ -154,9 +154,9 @@ exports.config = {
 ```
 
 The `services: ['appium']` line auto-starts the Appium server
-inside the test runner — no separate server step.
+inside the test runner - no separate server step.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 # Multi-platform matrix
@@ -195,7 +195,7 @@ jobs:
 ## Limitations
 
 - **External server.** Appium's HTTP-protocol design adds latency
-  vs in-process frameworks (Espresso, XCUITest) — typical 100-300ms
+  vs in-process frameworks (Espresso, XCUITest) - typical 100-300ms
   per command.
 - **Per-driver feature gaps.** Some features are XCUITest-driver
   only or UiAutomator2-driver only; cross-platform tests must
@@ -208,16 +208,15 @@ jobs:
 
 ## References
 
-- [app][app] — Appium overview: WebDriver protocol, driver
+- [app][app] - Appium overview: WebDriver protocol, driver
   architecture, supported platforms (iOS, Android, Tizen, browser,
   desktop, TV), client libraries (JS / Python / Java / Ruby /
   .NET).
 - [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md) — per-platform
+  [`espresso-suite`](../espresso-suite/SKILL.md) - per-platform
   native alternatives.
 - [`detox-testing`](../detox-testing/SKILL.md),
-  [`maestro-flows`](../maestro-flows/SKILL.md) — cross-platform
+  [`maestro-flows`](../maestro-flows/SKILL.md) - cross-platform
   alternatives with different trade-offs.
-- [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md)
-  — orchestrates Appium-driven matrix runs across simulators /
+- [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md) - orchestrates Appium-driven matrix runs across simulators /
   emulators / farms.

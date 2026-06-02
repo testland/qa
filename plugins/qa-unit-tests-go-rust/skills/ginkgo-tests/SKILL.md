@@ -1,6 +1,6 @@
 ---
 name: ginkgo-tests
-description: "Configures and runs Ginkgo — Go BDD test framework with `Describe` / `Context` / `It` nesting; `BeforeEach` / `AfterEach` / `JustBeforeEach` / `JustAfterEach` lifecycle; Gomega matchers DSL (`Expect(actual).To(Equal(expected))`); parallel execution via `-p`; focus (`F` prefix) + skip (`P` prefix); `DescribeTable` + `Entry` for parametrized tests; `ginkgo` CLI tool. Use when working with Go on a BDD-style test suite (Kubernetes-ecosystem standard)."
+description: "Configures and runs Ginkgo - Go BDD test framework with `Describe` / `Context` / `It` nesting; `BeforeEach` / `AfterEach` / `JustBeforeEach` / `JustAfterEach` lifecycle; Gomega matchers DSL (`Expect(actual).To(Equal(expected))`); parallel execution via `-p`; focus (`F` prefix) + skip (`P` prefix); `DescribeTable` + `Entry` for parametrized tests; `ginkgo` CLI tool. Use when working with Go on a BDD-style test suite (Kubernetes-ecosystem standard)."
 rating: 22
 d6: 4
 archetype: S1
@@ -26,7 +26,7 @@ is the idiomatic choice. Ginkgo fits when:
 - Hierarchical test organization with `Describe`/`Context`/`It`
   reads better than flat `func TestXxx`.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 go install github.com/onsi/ginkgo/v2/ginkgo@latest
@@ -34,7 +34,7 @@ go get github.com/onsi/ginkgo/v2
 go get github.com/onsi/gomega/...
 ```
 
-## Step 2 — Bootstrap
+## Step 2 - Bootstrap
 
 In the package to test:
 
@@ -64,7 +64,7 @@ func TestCalc(t *testing.T) {
 The `func TestCalc(t *testing.T)` bridges Ginkgo into the standard
 `go test` runner.
 
-## Step 3 — Spec structure
+## Step 3 - Spec structure
 
 ```go
 package calc_test
@@ -102,7 +102,7 @@ var _ = Describe("Calculator", func() {
 The `var _ = Describe(...)` pattern registers the spec at package
 init time. Ginkgo discovers + runs registered specs.
 
-## Step 4 — Lifecycle hooks
+## Step 4 - Lifecycle hooks
 
 Per [gn-docs][gn-docs]:
 
@@ -115,10 +115,10 @@ JustBeforeEach(func() { /* after BeforeEach but before It */ })
 JustAfterEach(func() { /* after It but before AfterEach */ })
 ```
 
-Hooks nest with `Describe`/`Context` — `BeforeEach` in nested
+Hooks nest with `Describe`/`Context` - `BeforeEach` in nested
 `Context` runs in addition to outer `BeforeEach`.
 
-## Step 5 — Gomega matchers
+## Step 5 - Gomega matchers
 
 Per [onsi.github.io/gomega][go-gomega]:
 
@@ -146,7 +146,7 @@ Consistently(func() bool { return stable() }).Should(BeTrue())
 `Eventually` polls until the condition holds; `Consistently` polls
 to verify it stays true. Useful for async + concurrent code.
 
-## Step 6 — DescribeTable + Entry
+## Step 6 - DescribeTable + Entry
 
 ```go
 DescribeTable("Add",
@@ -163,7 +163,7 @@ DescribeTable("Add",
 `DescribeTable` is Ginkgo's parametrize equivalent of pytest's
 `@pytest.mark.parametrize` or JUnit's `@ParameterizedTest`.
 
-## Step 7 — Focus + skip
+## Step 7 - Focus + skip
 
 ```go
 FDescribe("focused", func() { ... })   // F prefix: only this runs
@@ -175,7 +175,7 @@ Same for `FContext`/`PContext`, `FIt`/`PIt`, `FDescribeTable`/`PDescribeTable`.
 CI gating: lint forbid `F` prefixes via `ginkgo --no-focus` (errors
 if any focused specs in suite).
 
-## Step 8 — Parallel execution
+## Step 8 - Parallel execution
 
 ```bash
 ginkgo -p ./...                 # parallel; uses CPU count
@@ -183,9 +183,9 @@ ginkgo -procs=4 ./...           # explicit process count
 ```
 
 Each parallel process runs a subset of specs. Tests must be
-independent — shared state breaks parallel runs.
+independent - shared state breaks parallel runs.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: go install github.com/onsi/ginkgo/v2/ginkgo@latest
@@ -215,21 +215,21 @@ ginkgo --junit-report=junit.xml -r
 
 ## Limitations
 
-- BDD verbosity vs stdlib `testing` — pays off only when tests benefit
+- BDD verbosity vs stdlib `testing` - pays off only when tests benefit
   from hierarchical grouping.
 - Adds two dependencies (Ginkgo + Gomega) to a Go project.
 - Kubernetes-ecosystem heavy convention; less common outside that
   community.
-- Parallel execution is per-process, not per-spec — startup cost
+- Parallel execution is per-process, not per-spec - startup cost
   amplifies for small suites.
 
 ## References
 
-- [gn-docs][gn-docs] — Ginkgo documentation
-- [go-gomega][go-gomega] — Gomega matchers reference
-- onsi.github.io — landing
-- github.com/onsi/ginkgo — repository
+- [gn-docs][gn-docs] - Ginkgo documentation
+- [go-gomega][go-gomega] - Gomega matchers reference
+- onsi.github.io - landing
+- github.com/onsi/ginkgo - repository
 - [`go-test`](../go-test/SKILL.md),
   [`cargo-test`](../cargo-test/SKILL.md),
-  [`rstest-tests`](../rstest-tests/SKILL.md) — sister tools
+  [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

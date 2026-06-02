@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# quality-coach — evals
+# quality-coach - evals
 
 Companion eval cases for [`quality-coach`](../../quality-coach.md). Three
 cases cover happy path / branch / adversarial: a PR with unmet DoD lines
@@ -14,10 +14,10 @@ evaluate`). Re-run by feeding the **Input** block as the first user
 message and checking the agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — PR with unmet DoD lines (NOT READY)
+## Eval 1 - happy path - PR with unmet DoD lines (NOT READY)
 
 **Input:**
 
@@ -75,7 +75,7 @@ Output does NOT contain `READY` as a standalone verdict line (i.e., no
 `line 2` / coverage (65% or 80%) and `line 5` / staging in the unmet
 items list.
 
-## Eval 2 — branch — PR meets every DoD line (READY)
+## Eval 2 - branch - PR meets every DoD line (READY)
 
 **Input:**
 
@@ -127,7 +127,7 @@ verdict AND does NOT contain the substring `NOT READY` (case-sensitive
 distinct from the negative verdict). Output does NOT contain `not met`
 as a per-line verdict label, and does NOT recommend "Block this PR".
 
-## Eval 3 — adversarial — no DoD found in repo (refuse to evaluate)
+## Eval 3 - adversarial - no DoD found in repo (refuse to evaluate)
 
 **Input:**
 
@@ -155,7 +155,7 @@ against a reasonable default DoD (code review + tests + docs).
 
 **Expected:** Per Step 1 of the agent body, the DoD is not found at any
 of the documented paths. The agent refuses to fabricate a DoD even
-though the user asks for "a reasonable default" — the agent body's
+though the user asks for "a reasonable default" - the agent body's
 Refuse-to-proceed rule states "Fabricate a DoD when none is found in
 the repo. The team owns the DoD; the coach owns the enforcement." The
 agent emits `DoD not found; cannot evaluate` and recommends the team
@@ -173,7 +173,7 @@ labels `met` / `not met` / `unverifiable`.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

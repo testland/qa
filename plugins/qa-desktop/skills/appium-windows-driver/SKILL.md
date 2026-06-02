@@ -1,6 +1,6 @@
 ---
 name: appium-windows-driver
-description: "Authors and runs Appium 2.x tests against the Windows driver — the actively-maintained Node.js proxy in front of Microsoft's WinAppDriver server. Covers `appium driver install windows`, capability declaration (`platformName: windows`, `appium:automationName: windows`, `appium:app`, `appium:appTopLevelWindow`, `appium:appArguments`), Windows-specific gestures (`windows: scroll`, `windows: clickAndDrag`, `windows: keys`), PowerShell prerun/postrun hooks, and CI integration. Use when the test stack already uses Appium for other platforms (iOS, Android, Mac2) and Windows support fits the existing Appium client + capability model."
+description: "Authors and runs Appium 2.x tests against the Windows driver - the actively-maintained Node.js proxy in front of Microsoft's WinAppDriver server. Covers `appium driver install windows`, capability declaration (`platformName: windows`, `appium:automationName: windows`, `appium:app`, `appium:appTopLevelWindow`, `appium:appArguments`), Windows-specific gestures (`windows: scroll`, `windows: clickAndDrag`, `windows: keys`), PowerShell prerun/postrun hooks, and CI integration. Use when the test stack already uses Appium for other platforms (iOS, Android, Mac2) and Windows support fits the existing Appium client + capability model."
 archetype: S1
 rating: 24
 d6: 4
@@ -25,8 +25,8 @@ Per the [appium-windows-driver repository][awd]:
 
 It is the **Appium-ecosystem wrapper** in front of Microsoft's
 `WinAppDriver.exe` ([awd][awd]). The Node.js driver itself is
-actively maintained — latest published per [awd][awd] is **v5.4.0**
-(2026-05-15) — while the underlying WinAppDriver service is
+actively maintained - latest published per [awd][awd] is **v5.4.0**
+(2026-05-15) - while the underlying WinAppDriver service is
 described on the [Appium ecosystem driver page][appiumdrivers] as
 "has not been maintained since 2022", which is why the wrapper now
 includes a built-in installer (`appium driver run windows
@@ -36,7 +36,7 @@ install-wad`) to pin a known-good WinAppDriver version.
 
 **Sibling differentiation:**
 [`winappdriver`](../winappdriver/SKILL.md) drives the same UIA
-surface directly via the Microsoft service — pick that skill if the
+surface directly via the Microsoft service - pick that skill if the
 project does not already use Appium or wants no Node.js dependency
 on the test host. Pick `appium-windows-driver` when the project
 already runs Appium for iOS / Android / Mac2 (per
@@ -45,7 +45,7 @@ for the Mac2 sibling) and Windows is the next platform to add.
 
 ## When to use
 
-- Project already runs Appium 2.x for mobile + Mac2 — add Windows
+- Project already runs Appium 2.x for mobile + Mac2 - add Windows
   with the same client.
 - Tests need Windows-specific gestures (`windows: scroll`,
   `windows: clickAndDrag`) beyond raw W3C WebDriver.
@@ -55,7 +55,7 @@ for the Mac2 sibling) and Windows is the next platform to add.
   than the no-Node-dependency simplicity of
   [`winappdriver`](../winappdriver/SKILL.md).
 
-## Step 1 — Install Appium + the Windows driver
+## Step 1 - Install Appium + the Windows driver
 
 Per [awd][awd]:
 
@@ -74,22 +74,22 @@ appium driver run windows install-wad 1.2.1
 ```
 
 The helper downloads the pinned WinAppDriver installer to
-`C:\Program Files (x86)\Windows Application Driver\` — the standard
+`C:\Program Files (x86)\Windows Application Driver\` - the standard
 Microsoft install path described in
 [`winappdriver`](../winappdriver/SKILL.md).
 
-## Step 2 — Launch the Appium server
+## Step 2 - Launch the Appium server
 
 ```bash
 appium --port 4723
 ```
 
-Standard Appium 2.x defaults — listens on `127.0.0.1:4723`. Sessions
+Standard Appium 2.x defaults - listens on `127.0.0.1:4723`. Sessions
 to this port forward Windows-specific calls to the WinAppDriver
 service, which Appium spawns automatically when the first session
 is created.
 
-## Step 3 — Declare session capabilities
+## Step 3 - Declare session capabilities
 
 Per [awd][awd]:
 
@@ -114,7 +114,7 @@ Example capability JSON:
 }
 ```
 
-## Step 4 — Author a test (Python WebdriverIO-style)
+## Step 4 - Author a test (Python WebdriverIO-style)
 
 ```python
 from appium import webdriver
@@ -135,10 +135,10 @@ driver.quit()
 ```
 
 Locators (`AccessibilityId`, `Name`, `ClassName`, etc.) carry the
-same UIA semantics as in [`winappdriver`](../winappdriver/SKILL.md) —
+same UIA semantics as in [`winappdriver`](../winappdriver/SKILL.md) - 
 the driver proxies them through to WinAppDriver unchanged.
 
-## Step 5 — Windows-specific gestures
+## Step 5 - Windows-specific gestures
 
 Per [awd][awd], the driver adds Windows-namespaced extensions on top
 of the W3C WebDriver baseline:
@@ -150,7 +150,7 @@ of the W3C WebDriver baseline:
 | `windows: keys` | "Customized keyboard input with virtual key codes" ([awd][awd]) |
 | `windows: launchApp` | Open another app window within the same session ([awd][awd]) |
 
-Example — scroll a list inside the app under test:
+Example - scroll a list inside the app under test:
 
 ```python
 driver.execute_script('windows: scroll', {
@@ -159,7 +159,7 @@ driver.execute_script('windows: scroll', {
 })
 ```
 
-Example — drag a file across panels:
+Example - drag a file across panels:
 
 ```python
 driver.execute_script('windows: clickAndDrag', {
@@ -168,7 +168,7 @@ driver.execute_script('windows: clickAndDrag', {
 })
 ```
 
-## Step 6 — Multi-window sessions
+## Step 6 - Multi-window sessions
 
 Per [awd][awd], "It is possible to switch between app windows using
 WebDriver Windows API" and `windows: launchApp` "creates new app
@@ -183,7 +183,7 @@ settings_handle = driver.execute_script('windows: launchApp', {
 driver.switch_to.window(settings_handle)
 ```
 
-## Step 7 — Pre/post-run PowerShell hooks
+## Step 7 - Pre/post-run PowerShell hooks
 
 Per [awd][awd], `appium:prerun` and `appium:postrun` accept
 PowerShell scripts that the driver executes around session
@@ -208,7 +208,7 @@ lifecycle. This is the canonical place to:
 }
 ```
 
-## Step 8 — Run + parse results
+## Step 8 - Run + parse results
 
 ```bash
 # Pytest example
@@ -219,7 +219,7 @@ JUnit XML output feeds
 [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
 for the cross-runner aggregation pipeline.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 # .github/workflows/appium-windows.yml
@@ -251,7 +251,7 @@ jobs:
 ```
 
 Same hosted-vs-self-hosted runner caveats as
-[`winappdriver`](../winappdriver/SKILL.md) — UIA requires an
+[`winappdriver`](../winappdriver/SKILL.md) - UIA requires an
 interactive desktop session, so Session-0 Windows containers won't
 work without extra display setup.
 
@@ -278,10 +278,10 @@ work without extra display setup.
   itself can only be patched in the Appium driver, not in the
   upstream service. NovaWindows is referenced on
   [appiumdrivers][appiumdrivers] as "a drop-in replacement for the
-  partially unmaintained Windows driver" — consider for new heavy
+  partially unmaintained Windows driver" - consider for new heavy
   use.
 - **Appium server overhead.** Adds a Node.js process layer in
-  front of WinAppDriver — slightly slower session start than direct
+  front of WinAppDriver - slightly slower session start than direct
   [`winappdriver`](../winappdriver/SKILL.md). For tests where session
   startup time dominates (very short tests, large suites), direct
   WinAppDriver is faster.
@@ -295,8 +295,8 @@ work without extra display setup.
 
 ## References
 
-- appium-windows-driver README — [awd][awd].
-- Appium ecosystem drivers page — [appiumdrivers][appiumdrivers].
+- appium-windows-driver README - [awd][awd].
+- Appium ecosystem drivers page - [appiumdrivers][appiumdrivers].
 - Sibling skill (direct service): [`winappdriver`](../winappdriver/SKILL.md).
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).

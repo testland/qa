@@ -1,6 +1,6 @@
 ---
 name: atlas-migrations
-description: "Authors and runs Atlas database schema migrations — declarative HCL or SQL schema definition with `atlas schema apply` for desired-state apply OR `atlas migrate diff` to generate versioned migrations against a dev DB; `atlas migrate apply` to deploy; `atlas migrate lint` to flag destructive / locking / data-loss patterns; `atlas migrate hash` to detect tampering. Supports PostgreSQL, MySQL, SQL Server, ClickHouse, SQLite, MariaDB, Snowflake, Oracle, Redshift, Spanner, CockroachDB, Databricks. Use when the user wants Terraform-style declarative DB schema management or modern SQL-first migration linting beyond Flyway / Liquibase."
+description: "Authors and runs Atlas database schema migrations - declarative HCL or SQL schema definition with `atlas schema apply` for desired-state apply OR `atlas migrate diff` to generate versioned migrations against a dev DB; `atlas migrate apply` to deploy; `atlas migrate lint` to flag destructive / locking / data-loss patterns; `atlas migrate hash` to detect tampering. Supports PostgreSQL, MySQL, SQL Server, ClickHouse, SQLite, MariaDB, Snowflake, Oracle, Redshift, Spanner, CockroachDB, Databricks. Use when the user wants Terraform-style declarative DB schema management or modern SQL-first migration linting beyond Flyway / Liquibase."
 rating: 24
 d6: 4
 archetype: S1
@@ -21,9 +21,9 @@ Per [atlasgo.io/getting-started][at-start]:
 
 Two operating modes:
 
-1. **Declarative** — define desired state in HCL or SQL; Atlas
+1. **Declarative** - define desired state in HCL or SQL; Atlas
    computes diff and applies (`atlas schema apply`).
-2. **Versioned** — Atlas generates timestamped migration files from
+2. **Versioned** - Atlas generates timestamped migration files from
    schema diffs (`atlas migrate diff`); migrations apply forward
    (`atlas migrate apply`).
 
@@ -34,7 +34,7 @@ loops often use declarative mode for fast iteration.
 
 - The user wants Terraform-style "desired state" workflow for the
   database.
-- The team needs the strongest migration linter in the OSS space —
+- The team needs the strongest migration linter in the OSS space - 
   Atlas detects destructive operations, lock-escalating patterns,
   and reversibility issues automatically.
 - A multi-database stack benefits from a single tool covering 13+
@@ -43,7 +43,7 @@ loops often use declarative mode for fast iteration.
   generation from declarative schema (vs hand-authoring every
   ALTER).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [at-start][at-start]:
 
@@ -60,7 +60,7 @@ brew install ariga/tap/atlas
 #                                  windows-amd64}-latest
 ```
 
-## Step 2 — Define schema
+## Step 2 - Define schema
 
 Per [at-start][at-start], schema can be SQL (most common) or HCL.
 
@@ -98,7 +98,7 @@ The dev DB referenced via `--dev-url` is a **temporary scratch
 database** Atlas uses to compute the diff (Atlas applies the desired
 state to the scratch DB, then computes the migration vs production).
 
-## Step 3 — Apply schema (declarative mode)
+## Step 3 - Apply schema (declarative mode)
 
 Per [at-start][at-start]:
 
@@ -111,7 +111,7 @@ atlas schema apply --url "$DATABASE_URL" --to file://schema.sql \
 = scratch DB for diff computation. Atlas prints the planned changes
 and prompts for confirmation by default.
 
-## Step 4 — Generate versioned migrations
+## Step 4 - Generate versioned migrations
 
 Per [at-start][at-start]:
 
@@ -124,17 +124,17 @@ This generates a timestamped migration file in `migrations/` (e.g.,
 `20260506120000_initial.sql`). Subsequent calls with a new schema
 generate new migrations against the previous state.
 
-## Step 5 — Apply versioned migrations
+## Step 5 - Apply versioned migrations
 
 ```bash
 atlas migrate apply --url "$DATABASE_URL"
 ```
 
-Atlas tracks state in `atlas_schema_revisions` table — each applied
+Atlas tracks state in `atlas_schema_revisions` table - each applied
 migration is recorded with its hash, so tampering is detected on
 subsequent applies.
 
-## Step 6 — Lint migrations
+## Step 6 - Lint migrations
 
 Per [at-start][at-start]:
 
@@ -147,17 +147,17 @@ operations (e.g., `varchar(50)` → `varchar(20)`), missing default
 on a `NOT NULL` add, lock-escalating ops on large tables, schema
 backwards-incompatibility.
 
-The lint output is the value-add over Flyway / Liquibase — those
+The lint output is the value-add over Flyway / Liquibase - those
 tools are syntax-only; Atlas knows about destructive patterns.
 
-## Step 7 — Hash + integrity
+## Step 7 - Hash + integrity
 
 Atlas computes hashes for each migration file. If a developer edits
 an already-applied migration, `atlas migrate apply` fails until
 `atlas migrate hash` re-syncs (intentional act). This protects
 against silent migration tampering.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - uses: ariga/setup-atlas@v0
@@ -173,7 +173,7 @@ GitHub Action `ariga/setup-atlas@v0` provides Atlas in the runner;
 the `atlas-action` orchestrator provides PR-comment integration with
 diff visualization.
 
-## Step 9 — Composition with sister tools
+## Step 9 - Composition with sister tools
 
 Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
 for adversarial review beyond `atlas migrate lint` (e.g., reviewer
@@ -193,27 +193,26 @@ doesn't capture).
 ## Limitations
 
 - Some DBMS-specific features (e.g., Oracle PL/SQL packages,
-  PostgreSQL extension management) have limited HCL support — fall
+  PostgreSQL extension management) have limited HCL support - fall
   back to SQL schema for those.
 - Lint rules are general-purpose; team-specific policies (e.g., "no
   `DROP TABLE` without DBA approval") need [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
   on top.
-- `--dev-url` requires a real DBMS instance (or Docker) — Atlas
+- `--dev-url` requires a real DBMS instance (or Docker) - Atlas
   cannot diff schemas without one.
 - Atlas Cloud (managed plan visualization) is paid; OSS covers
   the CLI workflow.
 
 ## References
 
-- [at-start][at-start] — getting-started, install commands,
+- [at-start][at-start] - getting-started, install commands,
   example schema, all `atlas` commands, supported databases
-- atlasgo.io/docs — full documentation
-- github.com/ariga/atlas — repository
+- atlasgo.io/docs - full documentation
+- github.com/ariga/atlas - repository
 - [`flyway-migrations`](../flyway-migrations/SKILL.md),
   [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
-  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) — sister
+  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
   tools (Flyway / Liquibase = imperative versioned; SQLMesh =
   data-pipeline + schema)
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-  — adversarial reviewer (extends `atlas migrate lint` with
+- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer (extends `atlas migrate lint` with
   team-specific policies)

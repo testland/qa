@@ -1,6 +1,6 @@
 ---
 name: faker-synthetic-data
-description: "Author and run Faker libraries (Python `Faker`, JavaScript `@faker-js/faker`, Java `JavaFaker`, .NET `Bogus`) for generating synthetic substitute data when masking pipelines remove real PII. Covers locale-aware generators, deterministic seeding for test reproducibility, the common provider methods (name / email / address / phone / SSN / credit card / IBAN / date / UUID / text), pytest fixture integration, and the trade-off between random vs deterministic substitution for referential integrity. Use after a PII detector flags fields that need synthetic replacement (distinct from synthetic-pii-generator which assembles fixtures from scratch — this is the underlying library skill those build skills compose)."
+description: "Author and run Faker libraries (Python `Faker`, JavaScript `@faker-js/faker`, Java `JavaFaker`, .NET `Bogus`) for generating synthetic substitute data when masking pipelines remove real PII. Covers locale-aware generators, deterministic seeding for test reproducibility, the common provider methods (name / email / address / phone / SSN / credit card / IBAN / date / UUID / text), pytest fixture integration, and the trade-off between random vs deterministic substitution for referential integrity. Use after a PII detector flags fields that need synthetic replacement (distinct from synthetic-pii-generator which assembles fixtures from scratch - this is the underlying library skill those build skills compose)."
 rating: 23
 d6: 4
 archetype: S1
@@ -18,12 +18,12 @@ that need to replace detected PII with a plausible substitute.
 
 Same library family across languages:
 
-- **Python** — `Faker` ([faker.readthedocs.io](https://faker.readthedocs.io/en/master/))
-- **JavaScript / TypeScript** — `@faker-js/faker` ([fakerjs.dev](https://fakerjs.dev/guide/))
-- **Java** — JavaFaker (`com.github.javafaker:javafaker`)
-- **.NET** — Bogus (`Bogus` NuGet package)
-- **Ruby** — `faker` gem
-- **PHP** — `fakerphp/faker`
+- **Python** - `Faker` ([faker.readthedocs.io](https://faker.readthedocs.io/en/master/))
+- **JavaScript / TypeScript** - `@faker-js/faker` ([fakerjs.dev](https://fakerjs.dev/guide/))
+- **Java** - JavaFaker (`com.github.javafaker:javafaker`)
+- **.NET** - Bogus (`Bogus` NuGet package)
+- **Ruby** - `faker` gem
+- **PHP** - `fakerphp/faker`
 
 Methodology and provider names are similar across languages; this
 skill covers Python + JavaScript primarily (most widely used).
@@ -42,13 +42,12 @@ skill covers Python + JavaScript primarily (most widely used).
 
 For complete *fresh-fixture* generation with PCI-DSS / Luhn /
 region-format constraints baked in, use
-[`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md)
-— it's the higher-level skill that composes Faker calls into
+[`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - it's the higher-level skill that composes Faker calls into
 fixture-bundle workflows.
 
 ## Authoring
 
-### Python — Faker
+### Python - Faker
 
 Per [faker.readthedocs.io](https://faker.readthedocs.io/en/master/):
 
@@ -108,7 +107,7 @@ print(fake.name())  # always the same with the same seed + Faker version
 
 Per Faker docs: "A Seed produces the same result when the same
 methods with the same version of faker are called." **Pin the
-Faker version in `requirements.txt`** — across versions the seeded
+Faker version in `requirements.txt`** - across versions the seeded
 output drifts.
 
 ### pytest plugin
@@ -124,7 +123,7 @@ def test_user_creation(faker):
 The `faker` fixture is auto-seeded per test (configurable via
 `faker_seed` marker).
 
-### JavaScript / TypeScript — @faker-js/faker
+### JavaScript / TypeScript - @faker-js/faker
 
 Per [fakerjs.dev/guide](https://fakerjs.dev/guide/):
 
@@ -256,7 +255,7 @@ change when explicitly requested:
 
 Faker's CLI (`python -m faker`) supports CSV / JSON / YAML output.
 
-## Example — synthesising a user table
+## Example - synthesising a user table
 
 ```python
 import csv
@@ -302,7 +301,7 @@ with open("users.csv", "w") as f:
   (which simulates patient lifecycles) or a domain-specific
   generator.
 - **No deep semantic constraints.** Faker generates a credit card
-  and an unrelated billing address — joining them won't match a
+  and an unrelated billing address - joining them won't match a
   real cardholder validation.
 - **Locale coverage varies.** Some locales (en_US, en_GB, ja_JP,
   es_ES, de_DE, fr_FR) are well-supported; others have partial
@@ -315,12 +314,12 @@ with open("users.csv", "w") as f:
 
 ## References
 
-- Python Faker —
+- Python Faker - 
   [faker.readthedocs.io](https://faker.readthedocs.io/en/master/).
-- @faker-js/faker (JavaScript) —
+- @faker-js/faker (JavaScript) - 
   [fakerjs.dev/guide](https://fakerjs.dev/guide/).
-- JavaFaker — `com.github.javafaker:javafaker` on Maven Central.
-- Bogus (.NET) — `Bogus` NuGet package.
+- JavaFaker - `com.github.javafaker:javafaker` on Maven Central.
+- Bogus (.NET) - `Bogus` NuGet package.
 - Sibling generator (higher-level, regime-aware):
   [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md).
 - Composes with:

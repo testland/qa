@@ -30,7 +30,7 @@ transition with **simulated settlement** in sandbox.
 ### Setup
 
 Get sandbox credentials at
-[braintreepayments.com/sandbox](https://braintreepayments.com/sandbox) —
+[braintreepayments.com/sandbox](https://braintreepayments.com/sandbox) - 
 merchant ID + public + private keys.
 
 ### Install

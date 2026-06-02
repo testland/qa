@@ -1,6 +1,6 @@
 ---
 name: nightvision-dast
-description: "Configures and runs NightVision — \"white-box-assisted Dynamic Application Security Testing (DAST) tool\" that \"analyzes code before simulating attacks and traces findings back to their origin\"; supports OpenAPI / Postman / GraphQL / web app + REST API targets; auth via Interactive Logins / Header & Cookie / TOTP; per-finding suppression via Alert Rules; CLI integration via `nightvision` command. Use when the team needs DAST that traces findings back to source code (white-box-assisted) on top of OWASP ZAP's pure black-box approach."
+description: "Configures and runs NightVision - \"white-box-assisted Dynamic Application Security Testing (DAST) tool\" that \"analyzes code before simulating attacks and traces findings back to their origin\"; supports OpenAPI / Postman / GraphQL / web app + REST API targets; auth via Interactive Logins / Header & Cookie / TOTP; per-finding suppression via Alert Rules; CLI integration via `nightvision` command. Use when the team needs DAST that traces findings back to source code (white-box-assisted) on top of OWASP ZAP's pure black-box approach."
 rating: 22
 d6: 4
 archetype: S1
@@ -34,7 +34,7 @@ over pure-black-box DAST tools (ZAP / Burp).
 - Layered with [`zap-baseline`](../zap-baseline/SKILL.md) for
   combined coverage.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [nv-docs][nv-docs] the CLI is documented in "Installing the
 CLI"; consult the live docs for current install commands per
@@ -51,7 +51,7 @@ nightvision --version
 nightvision login
 ```
 
-## Step 2 — Target type support
+## Step 2 - Target type support
 
 Per [nv-docs][nv-docs] the platform supports:
 
@@ -69,7 +69,7 @@ Spec-driven targets give the scanner full request-shape knowledge
 (query params, body schemas, content types); crawl-based targets
 only see what the spider discovers.
 
-## Step 3 — Basic scan
+## Step 3 - Basic scan
 
 ```bash
 # Scan an OpenAPI-described API
@@ -87,7 +87,7 @@ nightvision scan results <scan-id> --output json > findings.json
 
 (Exact CLI verb names per [nv-docs][nv-docs] current release.)
 
-## Step 4 — Authentication
+## Step 4 - Authentication
 
 Per [nv-docs][nv-docs] the platform supports:
 
@@ -102,7 +102,7 @@ For interactive logins, the auth recorder captures the login flow
 in the dashboard UI; the recording is saved + referenced by name
 in subsequent scans.
 
-## Step 5 — Scope control
+## Step 5 - Scope control
 
 Per [nv-docs][nv-docs] "Scope Control" defines:
 
@@ -112,10 +112,10 @@ Per [nv-docs][nv-docs] "Scope Control" defines:
 - Per-method exclude (e.g., skip DELETE on `/users/*`)
 - Per-finding-type include/exclude
 
-Tightening scope is essential — un-scoped scans hit unintended
+Tightening scope is essential - un-scoped scans hit unintended
 endpoints + waste scan budget.
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Per [nv-docs][nv-docs] "Alert Rules" govern per-finding suppression:
 
@@ -139,16 +139,16 @@ Re-review-date: 2026-12-15
 Cadence: every quarter, audit Alert Rules in the dashboard;
 expired rules removed; persistent ones reviewed.
 
-## Step 7 — Output formats + integration
+## Step 7 - Output formats + integration
 
 `nightvision scan results <id> --output FORMAT`:
 
-- `json` — for [`dast-finding-triager`](../../agents/dast-finding-triager.md)
-- `sarif` — for GitHub Code Scanning
-- `csv` — for spreadsheet review
-- `pdf` — for compliance reports
+- `json` - for [`dast-finding-triager`](../../agents/dast-finding-triager.md)
+- `sarif` - for GitHub Code Scanning
+- `csv` - for spreadsheet review
+- `pdf` - for compliance reports
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -185,9 +185,9 @@ jobs:
 
 ## Limitations
 
-- Commercial product — pricing model varies; check
+- Commercial product - pricing model varies; check
   nightvision.net for current.
-- White-box-assistance requires source-code awareness — most useful
+- White-box-assistance requires source-code awareness - most useful
   for codebases NightVision can analyze (consult docs for
   language coverage).
 - For pure black-box DAST without commercial cost, use
@@ -200,11 +200,11 @@ jobs:
 
 ## References
 
-- [nv-docs][nv-docs] — official documentation
-- nightvision.net — product page
+- [nv-docs][nv-docs] - official documentation
+- nightvision.net - product page
 - [`zap-baseline`](../zap-baseline/SKILL.md),
-  [`burp-headless`](../burp-headless/SKILL.md) — sister DAST tools
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) —
+  [`burp-headless`](../burp-headless/SKILL.md) - sister DAST tools
+- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
   build-an-X for layered DAST
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) —
+- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - 
   unifier agent

@@ -1,6 +1,6 @@
 ---
 name: pytest-tests
-description: "Configures and runs pytest — the de facto Python test framework with fixture-based dependency injection (`@pytest.fixture` with scopes module/session/function), parametrize for table-driven tests (`@pytest.mark.parametrize`), markers (`@pytest.mark.skip` / `xfail` / `slow`), `conftest.py` for shared fixtures, plugin ecosystem (pytest-cov, pytest-asyncio, pytest-mock, pytest-xdist), `--lf`/`--ff` for fail-loop, coverage gating. Use when working with Python and needing the modern test framework."
+description: "Configures and runs pytest - the de facto Python test framework with fixture-based dependency injection (`@pytest.fixture` with scopes module/session/function), parametrize for table-driven tests (`@pytest.mark.parametrize`), markers (`@pytest.mark.skip` / `xfail` / `slow`), `conftest.py` for shared fixtures, plugin ecosystem (pytest-cov, pytest-asyncio, pytest-mock, pytest-xdist), `--lf`/`--ff` for fail-loop, coverage gating. Use when working with Python and needing the modern test framework."
 rating: 24
 d6: 4
 archetype: S1
@@ -30,7 +30,7 @@ mocking anti-patterns) is in [`test-code-conventions`](../../qa-test-review/skil
 - Migrating from unittest (mostly mechanical via interop).
 - Need fixture-based dependency injection + parametrize.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install pytest
@@ -38,7 +38,7 @@ pip install pytest
 pip install pytest-cov pytest-asyncio pytest-mock pytest-xdist
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 Per [pt-docs][pt-docs] convention:
 
@@ -58,7 +58,7 @@ pytest
 pytest auto-discovers via `test_*.py` / `*_test.py` filenames and
 `test_*` / `Test*` function/class names.
 
-## Step 3 — Configuration
+## Step 3 - Configuration
 
 `pytest.ini` (or `pyproject.toml` `[tool.pytest.ini_options]` /
 `setup.cfg` `[tool:pytest]`):
@@ -77,10 +77,10 @@ markers = [
 ]
 ```
 
-`--strict-markers` rejects undeclared marker names — catches typos
+`--strict-markers` rejects undeclared marker names - catches typos
 like `@pytest.mark.skipp` (silently skipped before).
 
-## Step 4 — Fixtures
+## Step 4 - Fixtures
 
 ```python
 import pytest
@@ -111,7 +111,7 @@ Fixture scopes: `function` (default), `class`, `module`, `package`,
 `conftest.py` shares fixtures across multiple test files in the
 same directory (and subdirectories).
 
-## Step 5 — Parametrize
+## Step 5 - Parametrize
 
 ```python
 @pytest.mark.parametrize("a,b,expected", [
@@ -134,7 +134,7 @@ def test_combinations(x, y):
     pass
 ```
 
-## Step 6 — Markers + skip/xfail
+## Step 6 - Markers + skip/xfail
 
 ```python
 @pytest.mark.skip(reason="Requires staging DB")
@@ -156,7 +156,7 @@ def test_long_running():
 
 Filter: `pytest -m "not slow"` skips slow-marked tests.
 
-## Step 7 — Mocking with pytest-mock
+## Step 7 - Mocking with pytest-mock
 
 ```python
 def test_with_mock(mocker):
@@ -171,7 +171,7 @@ def test_with_mock(mocker):
 `mocker` fixture from `pytest-mock` wraps `unittest.mock.patch` with
 auto-cleanup at test end.
 
-## Step 8 — Async (pytest-asyncio)
+## Step 8 - Async (pytest-asyncio)
 
 ```python
 import pytest
@@ -185,7 +185,7 @@ async def test_async_function():
 # Or set asyncio_mode = "auto" in pyproject.toml to skip the marker
 ```
 
-## Step 9 — Coverage with pytest-cov
+## Step 9 - Coverage with pytest-cov
 
 ```bash
 pytest --cov=src --cov-report=term-missing --cov-report=html --cov-report=xml \
@@ -211,7 +211,7 @@ exclude_lines = [
 fail_under = 80
 ```
 
-## Step 10 — Fast-feedback flags
+## Step 10 - Fast-feedback flags
 
 ```bash
 pytest --lf            # only re-run last-failed tests
@@ -223,7 +223,7 @@ pytest -s              # don't capture stdout (see print() output)
 pytest -p no:cacheprovider   # disable test-cache (CI cache-clean runs)
 ```
 
-## Step 11 — CI integration
+## Step 11 - CI integration
 
 ```yaml
 - run: pip install -e .[dev]
@@ -258,13 +258,12 @@ pytest -n auto   # uses CPU count
 
 ## References
 
-- [pt-docs][pt-docs] — official documentation
-- pytest.org — landing
-- pypi.org/project/pytest-mock — pytest-mock plugin
-- pypi.org/project/pytest-asyncio — async support
-- pypi.org/project/pytest-xdist — parallel execution
+- [pt-docs][pt-docs] - official documentation
+- pytest.org - landing
+- pypi.org/project/pytest-mock - pytest-mock plugin
+- pypi.org/project/pytest-asyncio - async support
+- pypi.org/project/pytest-xdist - parallel execution
 - [`unittest-tests`](../unittest-tests/SKILL.md),
   [`doctest-tests`](../doctest-tests/SKILL.md),
-  [`nose2-tests`](../nose2-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — test code hygiene
+  [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene

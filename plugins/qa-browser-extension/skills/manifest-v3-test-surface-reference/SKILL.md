@@ -19,7 +19,7 @@ keywords:
 Manifest V3 (MV3) is the current packaging contract for Chromium-
 family browser extensions; Firefox supports it as a peer with a
 documented divergence list. The manifest is the *only* declarative
-input both browsers see — every test surface (background lifecycle,
+input both browsers see - every test surface (background lifecycle,
 permission prompt, content-script injection, web-accessible-resource
 fetch) hangs off a manifest field. Knowing which field maps to which
 runtime behaviour is what lets a test author decide whether a
@@ -39,13 +39,13 @@ field-keyed, and covers the Firefox column explicitly.
 
 ## When to use
 
-- Authoring a new MV3 extension test — which manifest fields exist,
+- Authoring a new MV3 extension test - which manifest fields exist,
   which produce permission prompts, which are Firefox-only.
-- Migrating an existing MV2 test suite — the field-for-field rename
+- Migrating an existing MV2 test suite - the field-for-field rename
   table.
-- Triaging a behaviour gap between Chrome and Firefox — the
+- Triaging a behaviour gap between Chrome and Firefox - the
   divergence matrix.
-- Reviewing a PR that adds a new manifest field — does it need a
+- Reviewing a PR that adds a new manifest field - does it need a
   Firefox counterpart, a host-permission consequence, or a CSP
   adjustment.
 
@@ -63,12 +63,12 @@ Per [Update the manifest][cr-mig-manifest] and
 | `background` | `{ "scripts": [...], "persistent": false }` | `{ "service_worker": "sw.js", "type": "module"? }` | Lifecycle test moves from "always running" to "wake on event, terminate idle" |
 | `action` / `browser_action` / `page_action` | `browser_action` or `page_action` | `action` (unified) | Popup-rendering tests target the unified `action` slot |
 | `permissions` | API + host strings mixed | API strings only | API-permission tests stay; host-permission tests move (see next row) |
-| `host_permissions` | (did not exist) | match patterns moved here from `permissions` | Each host pattern is a runtime permission prompt — testable as a user gesture flow |
+| `host_permissions` | (did not exist) | match patterns moved here from `permissions` | Each host pattern is a runtime permission prompt - testable as a user gesture flow |
 | `optional_host_permissions` | (did not exist) | runtime-requestable hosts | Tests must drive `permissions.request` from a user gesture |
 | `web_accessible_resources` | flat string array | array of `{ resources: [...], matches: [...] }` objects | Cross-origin `fetch` of an extension resource is only allowed from a matching `matches` pattern |
-| `content_security_policy` | string | object with `extension_pages` / `sandbox` keys | No inline `<script>`, no remotely hosted code, no `eval` — testable via load-time CSP violations |
+| `content_security_policy` | string | object with `extension_pages` / `sandbox` keys | No inline `<script>`, no remotely hosted code, no `eval` - testable via load-time CSP violations |
 
-### `background` field — exact shape
+### `background` field - exact shape
 
 MV2 (per [Update the manifest][cr-mig-manifest] and
 [Migrate to a service worker][cr-mig-sw]):
@@ -158,16 +158,16 @@ isn't covered by a `matches` pattern.
 ## Service-worker runtime restrictions (MV3-only test surface)
 
 Per [Migrate to a service worker][cr-mig-sw], the background context
-in MV3 is a service worker — not a persistent page — and inherits
+in MV3 is a service worker - not a persistent page - and inherits
 the standard service-worker constraints plus a few extension-specific
 ones:
 
 | Constraint | MV2 | MV3 | Test implication |
 |---|---|---|---|
 | DOM / `window` | available | unavailable | Anything touching DOM moves to an offscreen document (`chrome.offscreen.createDocument`) |
-| `XMLHttpRequest` | available | unavailable — use `fetch()` | XHR-using test fixtures must be rewritten |
-| `localStorage` | available | unavailable — use `chrome.storage.local` | Tests asserting persisted state must use `chrome.storage.*` (see `extension-storage-test-author`) |
-| `setTimeout` / `setInterval` | reliable | cancelled when worker terminates — use `chrome.alarms` | Tests timing background work must use alarms, not timers |
+| `XMLHttpRequest` | available | unavailable - use `fetch()` | XHR-using test fixtures must be rewritten |
+| `localStorage` | available | unavailable - use `chrome.storage.local` | Tests asserting persisted state must use `chrome.storage.*` (see `extension-storage-test-author`) |
+| `setTimeout` / `setInterval` | reliable | cancelled when worker terminates - use `chrome.alarms` | Tests timing background work must use alarms, not timers |
 | Listener registration | top-level or async | **must be synchronous at top level** | Async-registered listeners are "not guaranteed to work in Manifest V3" |
 | Lifecycle | persistent | ephemeral (start → run → terminate, repeated) | Globals reset; storage is source of truth |
 
@@ -201,7 +201,7 @@ chrome.offscreen.createDocument({
 ```
 
 Offscreen documents communicate with the service worker via
-`runtime.sendMessage` / `runtime.onMessage` only — they don't share
+`runtime.sendMessage` / `runtime.onMessage` only - they don't share
 other extension APIs.
 
 ## Firefox vs Chrome manifest key matrix
@@ -227,14 +227,14 @@ when the key appears as "not supported" in one column.
 | `content_scripts` | yes | yes | yes | yes | Same shape |
 | `content_security_policy` | yes | yes | yes | yes | Shape changes (object in MV3) |
 | `declarative_net_request` | yes | yes | yes | yes | Replaces `webRequest`-blocking surface |
-| `externally_connectable` | yes | yes | **no** | yes | Cross-origin runtime messaging — Chrome only |
+| `externally_connectable` | yes | yes | **no** | yes | Cross-origin runtime messaging - Chrome only |
 | `host_permissions` | no | yes | yes | yes | New in MV3; permission-prompt test surface |
 | `offline_enabled` | yes | yes | **no** | yes | Chrome-only manifest key |
 | `optional_host_permissions` | no | yes | yes | yes | Runtime host grants |
 | `optional_permissions` | yes | yes | yes | yes | Runtime API grants |
 | `permissions` | yes | yes | yes | yes | API permissions only in MV3 |
 | `protocol_handlers` | yes | yes | **yes (Firefox only)** | no | Firefox-only register-protocol surface |
-| `sidebar_action` | yes | yes | yes (Firefox/Opera) | no | Sidebar UI — not in Chrome |
+| `sidebar_action` | yes | yes | yes (Firefox/Opera) | no | Sidebar UI - not in Chrome |
 | `storage` (as manifest key) | yes | yes | **no** | yes | Note: the `storage` *API* works in both |
 | `theme_experiment` | yes | yes | **yes (Firefox only)** | no | Experimental theming |
 | `user_scripts` (manifest key) | yes | no | yes (MV2 only) | yes (MV2 only) | MV3 replaces with `userScripts` API |
@@ -258,7 +258,7 @@ specific metadata (extension ID, min Firefox version) lives under
 ```
 
 Test note: AMO ([addons.mozilla.org]) submission validation requires
-a stable `gecko.id` for signing — a test asserting that the built
+a stable `gecko.id` for signing - a test asserting that the built
 zip carries a deterministic ID prevents accidental ID drift across
 builds.
 
@@ -270,7 +270,7 @@ replacement APIs landing after 88. `minimum_chrome_version` in the
 manifest pins a floor for users on stable channels.
 
 The MV2 deprecation timeline itself lives on a separate Chrome
-"Manifest V2 support timeline" page — cite by stable URL
+"Manifest V2 support timeline" page - cite by stable URL
 (`developer.chrome.com/docs/extensions/develop/migrate/mv2-deprecation-timeline`)
 and read live, as dates have shifted multiple times.
 
@@ -293,7 +293,7 @@ and read live, as dates have shifted multiple times.
   Firefox after Chrome; check [MDN's per-API browser-compat
   tables][mdn-manifest] before asserting cross-browser behaviour.
 - **`declarativeNetRequest` rule shape detail** lives on a separate
-  Chrome migration page (not extracted here) — fetch
+  Chrome migration page (not extracted here) - fetch
   `developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest`
   before authoring rule-equivalence tests.
 - **No coverage of `content_security_policy.extension_pages`
@@ -307,15 +307,15 @@ and read live, as dates have shifted multiple times.
 
 ## References
 
-- Chrome MV3 migration overview —
+- Chrome MV3 migration overview - 
   [developer.chrome.com/docs/extensions/develop/migrate][cr-mig-overview].
-- Chrome — Update the manifest (MV2 → MV3 manifest field rename
-  list) — [developer.chrome.com/docs/extensions/develop/migrate/manifest][cr-mig-manifest].
-- Chrome — Migrate to a service worker (background field, SW
-  lifecycle, offscreen docs, keepalive) —
+- Chrome - Update the manifest (MV2 → MV3 manifest field rename
+  list) - [developer.chrome.com/docs/extensions/develop/migrate/manifest][cr-mig-manifest].
+- Chrome - Migrate to a service worker (background field, SW
+  lifecycle, offscreen docs, keepalive) - 
   [developer.chrome.com/docs/extensions/develop/migrate/to-service-workers][cr-mig-sw].
 - MDN WebExtensions manifest.json keys reference (Firefox key
-  matrix, `browser_specific_settings`) — [mdn-manifest].
+  matrix, `browser_specific_settings`) - [mdn-manifest].
 - Consumed by:
   [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md),
   [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md),

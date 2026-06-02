@@ -1,6 +1,6 @@
 ---
 name: burp-headless
-description: "Configures and runs Burp Suite Professional / Enterprise headless — Burp Scanner is \"a web vulnerability scanning tool built into Burp Suite Professional\"; Pro edition runs scans via REST API or scheduled-tasks; Enterprise edition is purpose-built for CI-driven scanning at scale; supports BApp Store extensions (BCheck, custom scanners); auth via session-handling rules. Use when the team has a Burp Suite license and needs paid-tier DAST coverage layered on top of OWASP ZAP."
+description: "Configures and runs Burp Suite Professional / Enterprise headless - Burp Scanner is \"a web vulnerability scanning tool built into Burp Suite Professional\"; Pro edition runs scans via REST API or scheduled-tasks; Enterprise edition is purpose-built for CI-driven scanning at scale; supports BApp Store extensions (BCheck, custom scanners); auth via session-handling rules. Use when the team has a Burp Suite license and needs paid-tier DAST coverage layered on top of OWASP ZAP."
 rating: 21
 d6: 4
 archetype: S1
@@ -20,7 +20,7 @@ Per [portswigger.net/burp/documentation/desktop/automated-scanning][burp-as]:
 > applications and APIs."
 
 **Important licensing context:** Burp Suite Professional is per-user
-desktop tooling — headless / unattended use is licensed
+desktop tooling - headless / unattended use is licensed
 differently. Per [burp-as][burp-as]: there is "Pro" + "Enterprise"
 edition; Enterprise is "enterprise-enabled" and purpose-built for
 CI-driven scanning. Pro headless is constrained; Enterprise is the
@@ -40,7 +40,7 @@ For most teams, [`zap-baseline`](../zap-baseline/SKILL.md) +
 [`nightvision-dast`](../nightvision-dast/SKILL.md) cover the same
 surface without Burp's licensing friction.
 
-## Step 1 — License + install
+## Step 1 - License + install
 
 Burp Pro: download Burp Suite Pro from portswigger.net/burp/pro;
 each user activates via license file. Headless invocation requires
@@ -51,7 +51,7 @@ Burp Enterprise: server-side install per
 portswigger.net/burp/documentation/enterprise. Requires dedicated
 infrastructure + DB (MySQL/PostgreSQL).
 
-## Step 2 — Pro: REST API for scan control
+## Step 2 - Pro: REST API for scan control
 
 Burp Pro exposes a REST API (when enabled in User Settings → REST
 API). Pattern:
@@ -76,7 +76,7 @@ curl http://127.0.0.1:1337/v0.1/scan/<task_id>
 The REST API surface is documented in Burp's User Settings → REST
 API → API Documentation tab.
 
-## Step 3 — Enterprise: CI integration
+## Step 3 - Enterprise: CI integration
 
 Burp Enterprise (CI-friendly) workflow:
 
@@ -90,23 +90,23 @@ The full CI-driven scanning model is documented per [burp-as][burp-as]
 for current API endpoints (the surface is stable but per-version
 specifics evolve).
 
-## Step 4 — BApp Store extensions
+## Step 4 - BApp Store extensions
 
-Per [burp-as][burp-as] the "BApp Store" model — extensions distributed
+Per [burp-as][burp-as] the "BApp Store" model - extensions distributed
 via the in-Burp store. Common useful extensions:
 
-- **BCheck** — custom-rule DSL for Burp; community + paid rules
-- **Active Scan++** — additional active scan checks
-- **HTTP Request Smuggler** — specialized smuggling tests
-- **JWT Editor** — JWT manipulation for auth testing
-- **Param Miner** — parameter discovery
+- **BCheck** - custom-rule DSL for Burp; community + paid rules
+- **Active Scan++** - additional active scan checks
+- **HTTP Request Smuggler** - specialized smuggling tests
+- **JWT Editor** - JWT manipulation for auth testing
+- **Param Miner** - parameter discovery
 
 For headless / CI use, extensions can be loaded via Burp's
 extension config (Burp → Extender → Extensions → Add → load .jar /
 .py / BApp). Enterprise edition manages extension allowlists
 centrally.
 
-## Step 5 — Authentication via session-handling rules
+## Step 5 - Authentication via session-handling rules
 
 Burp's session handling is rule-based (User Options → Sessions →
 Session Handling Rules). Each rule defines:
@@ -120,9 +120,9 @@ Macros record a multi-step login flow (visit → fill form → submit
 expire.
 
 For CI/headless use, embed the configured session handling rules in
-the project file — Burp re-loads them on `--project-file=...`.
+the project file - Burp re-loads them on `--project-file=...`.
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Burp's three suppression mechanisms:
 
@@ -150,7 +150,7 @@ then
 Cadence: Enterprise dashboard's "Resolved as False Positive" filter
 periodically; review for staleness. Pro requires manual notes audit.
 
-## Step 7 — Output formats
+## Step 7 - Output formats
 
 Burp Pro export: Issue → Right-click → Report selected issues →
 HTML / XML / CSV / Burp's own JSON.
@@ -162,7 +162,7 @@ for combined Burp + ZAP + NightVision verdict.
 For SARIF (GitHub Code Scanning): use the `BurpToSarif` community
 converter (BApp Store).
 
-## Step 8 — CI integration (Enterprise model)
+## Step 8 - CI integration (Enterprise model)
 
 ```yaml
 jobs:
@@ -202,7 +202,7 @@ jobs:
 
 ## Limitations
 
-- Burp Pro is per-user desktop tooling — headless / CI use has
+- Burp Pro is per-user desktop tooling - headless / CI use has
   licensing constraints; Enterprise is the CI fit.
 - Burp Enterprise requires dedicated server infrastructure +
   database; non-trivial ops cost.
@@ -210,19 +210,19 @@ jobs:
 - REST API surface is stable but version-specific; consult
   in-tool API docs.
 - Per [burp-as][burp-as], the comparison page differentiates Pro
-  vs Enterprise — verify which edition fits your team's needs
+  vs Enterprise - verify which edition fits your team's needs
   before procurement.
 
 ## References
 
-- [burp-as][burp-as] — automated scanning overview
-- portswigger.net/burp/documentation — Pro + Enterprise docs
-- portswigger.net/burp/documentation/enterprise — Enterprise CI
-- portswigger.net/bappstore — BApp Store
+- [burp-as][burp-as] - automated scanning overview
+- portswigger.net/burp/documentation - Pro + Enterprise docs
+- portswigger.net/burp/documentation/enterprise - Enterprise CI
+- portswigger.net/bappstore - BApp Store
 - [`zap-baseline`](../zap-baseline/SKILL.md),
-  [`nightvision-dast`](../nightvision-dast/SKILL.md) — sister DAST tools
+  [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister DAST tools
   (use ZAP first; Burp adds layered paid coverage)
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) —
+- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
   build-an-X for layered DAST
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) —
+- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - 
   unifier agent

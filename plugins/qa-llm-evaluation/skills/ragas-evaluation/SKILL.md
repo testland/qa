@@ -1,6 +1,6 @@
 ---
 name: ragas-evaluation
-description: "Authors and runs Ragas — RAG-pipeline evaluation framework with metrics organized into RAG (Faithfulness, Response Relevancy, Context Precision/Recall, Context Entities Recall, Noise Sensitivity), Natural Language Comparison (Factual Correctness, Semantic Similarity, BLEU/ROUGE/CHRF/Exact Match), Agents/Tool-Use (Topic Adherence, Tool Call Accuracy/F1, Agent Goal Accuracy), General Purpose (Aspect Critic, Rubrics-based Scoring), Nvidia (Answer Accuracy, Context Relevance, Response Groundedness), and Summarization. Use when the user evaluates a RAG pipeline (retriever + generator) and needs the deepest metric variety in the OSS LLM-eval space."
+description: "Authors and runs Ragas - RAG-pipeline evaluation framework with metrics organized into RAG (Faithfulness, Response Relevancy, Context Precision/Recall, Context Entities Recall, Noise Sensitivity), Natural Language Comparison (Factual Correctness, Semantic Similarity, BLEU/ROUGE/CHRF/Exact Match), Agents/Tool-Use (Topic Adherence, Tool Call Accuracy/F1, Agent Goal Accuracy), General Purpose (Aspect Critic, Rubrics-based Scoring), Nvidia (Answer Accuracy, Context Relevance, Response Groundedness), and Summarization. Use when the user evaluates a RAG pipeline (retriever + generator) and needs the deepest metric variety in the OSS LLM-eval space."
 rating: 22
 d6: 4
 archetype: S1
@@ -31,7 +31,7 @@ For non-RAG prompt evals, prefer [`promptfoo-evaluation`](../promptfoo-evaluatio
 For pytest-native LLM evals with a managed dashboard, prefer
 [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [rg-gh][rg-gh]:
 
@@ -45,7 +45,7 @@ Or from source:
 pip install git+https://github.com/explodinggradients/ragas
 ```
 
-## Step 2 — Custom metric quickstart
+## Step 2 - Custom metric quickstart
 
 Per [rg-gh][rg-gh] (verbatim):
 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 the built-in metrics in Step 3 follow a similar shape but are
 preconfigured.
 
-## Step 3 — Built-in metric catalog
+## Step 3 - Built-in metric catalog
 
 Per [docs.ragas.io/en/stable/concepts/metrics/available_metrics/][rg-metrics]:
 
@@ -155,7 +155,7 @@ Per [docs.ragas.io/en/stable/concepts/metrics/available_metrics/][rg-metrics]:
 |---|---|
 | Summarization | Summary quality scoring |
 
-## Step 4 — Dataset shape
+## Step 4 - Dataset shape
 
 Ragas accepts a Hugging Face `Dataset` or `pandas.DataFrame` with
 columns matching the metrics being run:
@@ -173,16 +173,16 @@ required-column lists.
 
 [rg-docs]: https://docs.ragas.io/
 
-## Step 5 — Integration with retrieval frameworks
+## Step 5 - Integration with retrieval frameworks
 
-Ragas integrates with LangChain + LlamaIndex retrieval pipelines —
+Ragas integrates with LangChain + LlamaIndex retrieval pipelines - 
 the integration code captures `contexts` from the retriever and
 `answer` from the generator into the evaluation dataset
 automatically. Consult the per-framework integration docs on
 [docs.ragas.io][rg-docs] when wiring; APIs evolve faster than this
 skill body and the canonical doc is the source of truth.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 Ragas does not ship a first-party CI action. Pattern: run
 `evaluate()` in a pytest fixture or a CLI script, compare per-metric
@@ -201,7 +201,7 @@ assert result["answer_relevancy"] >= 0.80
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Run all 30+ metrics on every PR | Cost + latency explode | Pick 3–5 metrics per pipeline (Step 3) |
+| Run all 30+ metrics on every PR | Cost + latency explode | Pick 3 - 5 metrics per pipeline (Step 3) |
 | Faithfulness without `contexts` column | Metric returns NaN / errors | Pass `contexts` per dataset spec (Step 4) |
 | Pin nothing | Ragas + judge-model versions both drift | Pin both in requirements + CI env |
 | Skip Aspect Critic for product-specific concerns | Built-in metrics miss the requirement | Custom Aspect Critic + rubric (Step 3) |
@@ -213,18 +213,18 @@ assert result["answer_relevancy"] >= 0.80
 - Multimodal metrics need the multimodal extras (`pip install
   ragas[multimodal]`); check the per-metric doc on
   [docs.ragas.io][rg-docs].
-- API surface evolves — pin versions in requirements; the canonical
+- API surface evolves - pin versions in requirements; the canonical
   doc is the source of truth (this skill body curates the mainstream
   patterns but does not re-litigate per-method signatures).
 
 ## References
 
-- [rg-gh][rg-gh] — repository + install
-- [rg-metrics][rg-metrics] — full metric catalog
-- [rg-docs][rg-docs] — full documentation including per-metric pages,
+- [rg-gh][rg-gh] - repository + install
+- [rg-metrics][rg-metrics] - full metric catalog
+- [rg-docs][rg-docs] - full documentation including per-metric pages,
   integration guides
 - [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
-  [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md) —
+  [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md) - 
   sister tools (different framework styles)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) —
+- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
   adversarial reviewer

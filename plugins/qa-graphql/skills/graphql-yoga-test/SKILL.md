@@ -1,6 +1,6 @@
 ---
 name: graphql-yoga-test
-description: "Wraps GraphQL Yoga testing patterns: `yoga.fetch()` for in-process HTTP-conformant request simulation (no network), `@graphql-tools/executor-http` for subscription + incremental-delivery testing, and the request-builder pattern for queries/mutations/subscriptions. Includes Yoga-specific config gates — `@graphql-yoga/plugin-disable-introspection`, `@graphql-yoga/plugin-persisted-operations` — testable through this skill. Use when writing tests for a GraphQL Yoga server (the-guild.dev's runtime, common in non-Apollo deployments). Composes introspection-attack-surface-reference + persisted-query-strategy-reference."
+description: "Wraps GraphQL Yoga testing patterns: `yoga.fetch()` for in-process HTTP-conformant request simulation (no network), `@graphql-tools/executor-http` for subscription + incremental-delivery testing, and the request-builder pattern for queries/mutations/subscriptions. Includes Yoga-specific config gates - `@graphql-yoga/plugin-disable-introspection`, `@graphql-yoga/plugin-persisted-operations` - testable through this skill. Use when writing tests for a GraphQL Yoga server (the-guild.dev's runtime, common in non-Apollo deployments). Composes introspection-attack-surface-reference + persisted-query-strategy-reference."
 rating: 22
 d6: 4
 archetype: S1
@@ -16,7 +16,7 @@ Per
 request. It simulates the HTTP request which 100% conforms with
 how Request/Response work."
 
-Structurally different from Apollo's `executeOperation` — Yoga's
+Structurally different from Apollo's `executeOperation` - Yoga's
 testing path goes through the HTTP transport layer including
 middleware, headers, and response codes. There is no separate
 "in-process" vs "HTTP-layer" choice.
@@ -62,7 +62,7 @@ test('greetings', async () => {
 });
 ```
 
-The URL `http://yoga/graphql` is a placeholder — `yoga.fetch`
+The URL `http://yoga/graphql` is a placeholder - `yoga.fetch`
 doesn't make a network call, but the URL must parse.
 
 ### HTTP executor for subscriptions
@@ -194,7 +194,7 @@ The response shape:
 }
 ```
 
-Yoga uses `useMaskedErrors` by default (per Yoga docs) — error
+Yoga uses `useMaskedErrors` by default (per Yoga docs) - error
 messages are masked to "Unexpected error" in production unless
 the error has been marked `safe`. Test against this:
 

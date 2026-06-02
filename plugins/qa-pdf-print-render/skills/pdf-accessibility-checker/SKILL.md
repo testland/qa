@@ -1,6 +1,6 @@
 ---
 name: pdf-accessibility-checker
-description: "Test PDF accessibility (PDF/UA conformance) — tagged-PDF structure (StructTreeRoot), alternative text on images (Alt), reading-order, language metadata (Lang), document title, heading hierarchy. Use veraPDF / PAC (PDF Accessibility Checker) / pdfix / Adobe Acrobat Pro headless; map each finding back to WCAG 2.1 PDF Techniques (PDF1–PDF23)."
+description: "Test PDF accessibility (PDF/UA conformance) - tagged-PDF structure (StructTreeRoot), alternative text on images (Alt), reading-order, language metadata (Lang), document title, heading hierarchy. Use veraPDF / PAC (PDF Accessibility Checker) / pdfix / Adobe Acrobat Pro headless; map each finding back to WCAG 2.1 PDF Techniques (PDF1 - PDF23)."
 type: skill
 archetype: S1
 rating: 23
@@ -30,7 +30,7 @@ Lang metadata.
 - Pre-deployment gate: every customer-facing PDF passes the
   accessibility check before release.
 
-## Step 1 — Pick a checker
+## Step 1 - Pick a checker
 
 | Tool | Strength |
 |---|---|
@@ -41,7 +41,7 @@ Lang metadata.
 
 For CI, **veraPDF** is the default open-source choice.
 
-## Step 2 — Install veraPDF
+## Step 2 - Install veraPDF
 
 ```bash
 # Download installer
@@ -52,7 +52,7 @@ verapdf-greenfield/verapdf --version
 
 (Verify current release at https://verapdf.org for the URL above.)
 
-## Step 3 — Run conformance check
+## Step 3 - Run conformance check
 
 ```bash
 verapdf --flavour ua1 --format json out.pdf > vera-report.json
@@ -60,7 +60,7 @@ verapdf --flavour ua1 --format json out.pdf > vera-report.json
 
 Exit codes: 0 = conformant, 1 = non-conformant, 2 = parse error.
 
-## Step 4 — Parse and assert
+## Step 4 - Parse and assert
 
 ```python
 import json, subprocess
@@ -79,7 +79,7 @@ def test_pdf_passes_pdf_ua_1():
     assert failed == 0, f"PDF/UA validation failed: {job['validationResult']['details']}"
 ```
 
-## Step 5 — Verify tagged PDF (StructTreeRoot)
+## Step 5 - Verify tagged PDF (StructTreeRoot)
 
 A PDF is "tagged" if its catalog has a `StructTreeRoot` and
 `MarkInfo /Marked true`. Without these, screen readers cannot read
@@ -96,7 +96,7 @@ def test_pdf_is_tagged():
     assert mark_info.get("/Marked") is True, "PDF MarkInfo /Marked is false"
 ```
 
-## Step 6 — Verify document title + language metadata
+## Step 6 - Verify document title + language metadata
 
 Per the [WCAG 2.1 spec], language identification + descriptive title
 are required.
@@ -113,7 +113,7 @@ def test_pdf_has_title_and_lang():
     assert lang and str(lang) in ("en", "en-US", "en-GB", "de", "fr"), f"PDF /Lang invalid: {lang}"
 ```
 
-## Step 7 — Verify image Alt text presence
+## Step 7 - Verify image Alt text presence
 
 ```python
 def test_all_images_have_alt():
@@ -132,9 +132,9 @@ def test_all_images_have_alt():
 ```
 
 For real walks, use a library like `pdfix` or write a recursive
-visitor — the structure tree is nested.
+visitor - the structure tree is nested.
 
-## Step 8 — Reading order verification
+## Step 8 - Reading order verification
 
 Reading order determined by structure-tree DFS. Verify the
 generated structure puts content in the order a human reader would
@@ -152,9 +152,9 @@ def test_reading_order_matches_visual_order():
 ```
 
 This is best done via PAC or visual inspection for high-stakes
-documents — automating reading-order verification is hard.
+documents - automating reading-order verification is hard.
 
-## Step 9 — Map findings to WCAG 2.1 Techniques
+## Step 9 - Map findings to WCAG 2.1 Techniques
 
 Per the [WCAG 2.1 spec], PDF Techniques document specific patterns:
 
@@ -176,7 +176,7 @@ When a check fails, cite the technique in the failure message:
 assert title, "PDF18: Document title required (WCAG 2.1)"
 ```
 
-## Step 10 — CI gate
+## Step 10 - CI gate
 
 ```yaml
 - name: PDF/UA conformance
@@ -209,12 +209,12 @@ assert title, "PDF18: Document title required (WCAG 2.1)"
 
 ## References
 
-- [WCAG 2.1 spec] — accessibility principles applicable to PDFs
-- veraPDF (PDF/UA-1 + PDF/A validator) — verapdf.org
-- PAC by axes4 — pac.pdf-accessibility.org (Matterhorn Protocol)
-- ISO 14289-1 (PDF/UA-1) — cite by stable ID; consult ISO for spec text
-- pikepdf Python library — pikepdf.readthedocs.io
-- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) — sister
+- [WCAG 2.1 spec] - accessibility principles applicable to PDFs
+- veraPDF (PDF/UA-1 + PDF/A validator) - verapdf.org
+- PAC by axes4 - pac.pdf-accessibility.org (Matterhorn Protocol)
+- ISO 14289-1 (PDF/UA-1) - cite by stable ID; consult ISO for spec text
+- pikepdf Python library - pikepdf.readthedocs.io
+- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) - sister
   skill for visual-regression on the same PDFs
 
 [WCAG 2.1 spec]: https://www.w3.org/TR/WCAG21/

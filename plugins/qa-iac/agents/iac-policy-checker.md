@@ -1,6 +1,6 @@
 ---
 name: iac-policy-checker
-description: "Adversarial agent that combines Checkov + tfsec + KICS scan results into a unified IaC policy verdict — deduplicates findings (same issue caught by multiple scanners), groups by severity, classifies into critical / high / medium / low, applies team-defined waivers, and emits a single PR-comment summary. Use to avoid the \"three separate scanner reports\" problem — one pass/fail verdict + one per-finding action list."
+description: "Adversarial agent that combines Checkov + tfsec + KICS scan results into a unified IaC policy verdict - deduplicates findings (same issue caught by multiple scanners), groups by severity, classifies into critical / high / medium / low, applies team-defined waivers, and emits a single PR-comment summary. Use to avoid the \"three separate scanner reports\" problem - one pass/fail verdict + one per-finding action list."
 tools: "Read, Bash(jq *)"
 model: sonnet
 skills:
@@ -26,7 +26,7 @@ The agent takes:
 
 Output: combined report + verdict.
 
-## Step 1 — Run all three scanners
+## Step 1 - Run all three scanners
 
 ```bash
 checkov -d . -o json > checkov.json
@@ -34,7 +34,7 @@ tfsec . -f json -O tfsec.json
 kics scan -p . --report-formats json --output-path kics/
 ```
 
-## Step 2 — Normalize per-scanner output
+## Step 2 - Normalize per-scanner output
 
 Each scanner emits a different schema. Normalize:
 
@@ -102,7 +102,7 @@ def normalize_kics(data):
     return findings
 ```
 
-## Step 3 — Deduplicate
+## Step 3 - Deduplicate
 
 Multiple scanners may catch the same underlying issue. Dedupe by
 `(file, line, normalized_issue_class)`:
@@ -121,7 +121,7 @@ def dedupe(findings):
 The deduped finding records all scanners that caught it (signal:
 multi-scanner consensus = high confidence).
 
-## Step 4 — Apply waivers
+## Step 4 - Apply waivers
 
 ```yaml
 # .iac-waivers.yaml
@@ -150,11 +150,11 @@ def apply_waivers(findings, waivers):
     return out
 ```
 
-Waivers expire — force review. Per
+Waivers expire - force review. Per
 [`definition-of-done`](../../qa-process/skills/definition-of-done/SKILL.md):
 each waiver is a tracked exception.
 
-## Step 5 — Verdict
+## Step 5 - Verdict
 
 ```python
 def verdict(findings, fail_on='high'):
@@ -166,7 +166,7 @@ def verdict(findings, fail_on='high'):
 
 Return `block` if any finding meets the severity threshold.
 
-## Step 6 — Report
+## Step 6 - Report
 
 ```markdown
 ## IaC policy review — `<sha>`
@@ -213,7 +213,7 @@ Return `block` if any finding meets the severity threshold.
 After fixes, re-run the agent.
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -239,7 +239,7 @@ The agent **refuses** to:
 - Mark a PR "pass" if any critical-severity finding remains
   unwaived.
 - Apply waivers without expiration date.
-- Skip a scanner — all three must run.
+- Skip a scanner - all three must run.
 - Auto-fix findings; reports + recommends only.
 
 ## Anti-patterns
@@ -266,10 +266,9 @@ The agent **refuses** to:
 
 - [`checkov-policy`](../skills/checkov-policy/SKILL.md),
   [`tfsec-policy`](../skills/tfsec-policy/SKILL.md),
-  [`kics-policy`](../skills/kics-policy/SKILL.md) — preloaded;
+  [`kics-policy`](../skills/kics-policy/SKILL.md) - preloaded;
   source scanners.
-- [`terraform-plan-reviewer`](terraform-plan-reviewer.md) —
+- [`terraform-plan-reviewer`](terraform-plan-reviewer.md) - 
   sibling: plan-time review (vs static-config review of this
   agent).
-- [`policy-as-code-runner`](../skills/policy-as-code-runner/SKILL.md)
-  — custom OPA policies (extends the built-in scanners).
+- [`policy-as-code-runner`](../skills/policy-as-code-runner/SKILL.md) - custom OPA policies (extends the built-in scanners).

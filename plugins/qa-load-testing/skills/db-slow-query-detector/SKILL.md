@@ -1,6 +1,6 @@
 ---
 name: db-slow-query-detector
-description: "Reads `EXPLAIN` / `EXPLAIN ANALYZE` output from PostgreSQL, MySQL, or SQLite — identifies the dominant cost (sequential scan, nested loop, sort spill, missing index, type-cast preventing index use), proposes the specific index or query rewrite to fix it, and emits the candidate `CREATE INDEX` statement. Use when load testing or production telemetry shows the database as the bottleneck and the team needs targeted query-level remediation."
+description: "Reads `EXPLAIN` / `EXPLAIN ANALYZE` output from PostgreSQL, MySQL, or SQLite - identifies the dominant cost (sequential scan, nested loop, sort spill, missing index, type-cast preventing index use), proposes the specific index or query rewrite to fix it, and emits the candidate `CREATE INDEX` statement. Use when load testing or production telemetry shows the database as the bottleneck and the team needs targeted query-level remediation."
 rating: 24
 d6: 4
 archetype: S3
@@ -27,7 +27,7 @@ skill reads that output and proposes the fix.
 
 > **Terminology note:** "slow query" is practitioner-emergent; ISTQB
 > has no canonical entry. The query-plan vocabulary (Sequential Scan,
-> Index Scan, Nested Loop, etc.) is from the database vendor docs —
+> Index Scan, Nested Loop, etc.) is from the database vendor docs - 
 > PostgreSQL's [Using EXPLAIN][pg-explain] is the canonical reference
 > in the postgres-flavored ecosystem.
 
@@ -42,9 +42,9 @@ skill reads that output and proposes the fix.
   cost is dominant.
 
 If the bottleneck is connection-pool exhaustion or replication lag,
-this skill doesn't apply — those are infrastructure concerns.
+this skill doesn't apply - those are infrastructure concerns.
 
-## Step 1 — Get a real EXPLAIN ANALYZE
+## Step 1 - Get a real EXPLAIN ANALYZE
 
 `EXPLAIN` shows the **planner's estimated** cost; `EXPLAIN ANALYZE`
 **actually runs the query** and reports the actual rows + actual
@@ -81,10 +81,10 @@ Output is a tree representation similar to PostgreSQL.
 EXPLAIN QUERY PLAN SELECT ...;
 ```
 
-SQLite's output is simpler — no costs, just the access strategy
+SQLite's output is simpler - no costs, just the access strategy
 (Index / Sequential / Search).
 
-## Step 2 — Identify the dominant cost
+## Step 2 - Identify the dominant cost
 
 Read the plan from the **innermost nodes outward** (the deepest
 nesting is what runs first). The dominant cost is the node with the
@@ -95,29 +95,29 @@ Common cost signatures:
 
 | Signature                                                    | Meaning                                                    |
 |--------------------------------------------------------------|------------------------------------------------------------|
-| `Seq Scan on <table>` with high actual time                   | Sequential scan over a large table — likely missing index. |
-| `Index Scan` with `Filter:` and many `Rows Removed by Filter` | Index used but most rows filtered out — index isn't selective. |
-| `Nested Loop` with high inner-side row count                  | Should likely be a Hash Join — stats may be stale.        |
-| `Sort` with `external merge Disk:`                            | Sort spilled — `work_mem` too low or sort is unnecessary.  |
+| `Seq Scan on <table>` with high actual time                   | Sequential scan over a large table - likely missing index. |
+| `Index Scan` with `Filter:` and many `Rows Removed by Filter` | Index used but most rows filtered out - index isn't selective. |
+| `Nested Loop` with high inner-side row count                  | Should likely be a Hash Join - stats may be stale.        |
+| `Sort` with `external merge Disk:`                            | Sort spilled - `work_mem` too low or sort is unnecessary.  |
 | `Bitmap Heap Scan` followed by `Recheck Cond`                 | Multi-index lookup; usually fine but verify the recheck cost. |
-| `Hash` with `Batches: <N>`, N > 1                              | Hash join spilled — `work_mem` too low.                   |
+| `Hash` with `Batches: <N>`, N > 1                              | Hash join spilled - `work_mem` too low.                   |
 
 PostgreSQL's `Buffers: shared hit=N read=M` line tells you cache
-hits vs. disk reads — a high `read` count is the I/O smoking gun.
+hits vs. disk reads - a high `read` count is the I/O smoking gun.
 
-## Step 3 — Match cost to fix
+## Step 3 - Match cost to fix
 
 | Diagnosis                                  | Typical fix |
 |--------------------------------------------|-------------|
 | Seq Scan on a large table, predicate column not indexed | `CREATE INDEX ON <table>(<column>)`. Use a B-tree by default. |
 | Seq Scan because predicate uses a function on the column (`WHERE LOWER(email) = '...'`) | Functional index: `CREATE INDEX ON users (LOWER(email))`. |
 | Index Scan but many rows filtered post-index | The leading column of the composite index isn't selective enough; reorder the columns or add a column to the predicate that's more selective. |
-| Type cast in `WHERE` (e.g. `id::text = '123'` when `id` is bigint) | Fix the application code to compare with matching types — the cast disables the index. |
+| Type cast in `WHERE` (e.g. `id::text = '123'` when `id` is bigint) | Fix the application code to compare with matching types - the cast disables the index. |
 | Sort spill                                  | Add an index that returns pre-sorted data, or raise `work_mem` for the session. |
 | Nested Loop where Hash Join would win       | Run `ANALYZE <table>` to refresh stats; verify the planner switches; if not, file a planner-level investigation. |
 | N+1 (separate queries from app code)        | Eager-load via JOIN at the ORM layer; not a DB fix at all. |
 
-## Step 4 — Emit the candidate index / rewrite
+## Step 4 - Emit the candidate index / rewrite
 
 Per [pg-explain][pg-explain] index-creation conventions:
 
@@ -145,8 +145,8 @@ Index choice principles:
 | Leading column = most selective predicate | Composite index columns are used left-to-right; the first column should reduce the result set the most. |
 | `WHERE` columns first, then `ORDER BY`    | The index can satisfy filtering AND ordering if the columns align. |
 | Use partial indexes for skewed columns   | `WHERE status = 'active'` indexed only for active rows is dramatically smaller than a full index. |
-| Functional indexes for non-direct predicates | `LOWER(email)` etc. — the planner can only use the index if the function matches exactly. |
-| Avoid indexing low-cardinality columns alone | A boolean column index isn't helpful — partial index or composite is. |
+| Functional indexes for non-direct predicates | `LOWER(email)` etc. - the planner can only use the index if the function matches exactly. |
+| Avoid indexing low-cardinality columns alone | A boolean column index isn't helpful - partial index or composite is. |
 
 ## Output format
 
@@ -221,7 +221,7 @@ actual time is below the budget.
   detailed; MySQL 8.0+ caught up; SQLite is sparse. The skill is
   most useful for postgres-flavored databases.
 - **Distributed databases.** Spanner, CockroachDB, Citus produce
-  different plans — the skill's heuristics translate but the
+  different plans - the skill's heuristics translate but the
   specific node names differ.
 - **Doesn't replace a DBA.** For complex multi-CTE queries with
   recursive sub-plans, a human DBA is faster than this skill's
@@ -229,14 +229,14 @@ actual time is below the budget.
 
 ## References
 
-- [pg-explain][pg-explain] — PostgreSQL's canonical `EXPLAIN` /
+- [pg-explain][pg-explain] - PostgreSQL's canonical `EXPLAIN` /
   `EXPLAIN ANALYZE` reference.
-- MySQL EXPLAIN — https://dev.mysql.com/doc/refman/8.0/en/explain.html
-- SQLite Query Plan — https://www.sqlite.org/eqp.html
-- "Use the Index, Luke" — https://use-the-index-luke.com/ — a
+- MySQL EXPLAIN - https://dev.mysql.com/doc/refman/8.0/en/explain.html
+- SQLite Query Plan - https://www.sqlite.org/eqp.html
+- "Use the Index, Luke" - https://use-the-index-luke.com/ - a
   practitioner reference for index design.
-- [`flame-graph-analyzer`](../flame-graph-analyzer/SKILL.md) —
+- [`flame-graph-analyzer`](../flame-graph-analyzer/SKILL.md) - 
   sibling skill for the application-side bottleneck (vs. this
   skill's database-side focus).
-- [`k6-load-testing`](../k6-load-testing/SKILL.md) and siblings —
+- [`k6-load-testing`](../k6-load-testing/SKILL.md) and siblings - 
   load runners that surface DB-bound regressions.

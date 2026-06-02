@@ -16,7 +16,7 @@ time). Per IERS Bulletin C
 ([iers.org](https://www.iers.org/IERS/EN/Publications/Bulletins/bulletins.html)),
 leap seconds are announced ~6 months in advance.
 
-**Important — 2035 abolition:** Per the 27th CGPM resolution
+**Important - 2035 abolition:** Per the 27th CGPM resolution
 (2022), leap seconds will be **abolished** by 2035, with the
 gap between UTC and UT1 allowed to grow. Existing leap seconds
 (27 inserted between 1972 and 2024) remain in the historical
@@ -45,7 +45,7 @@ record.
 Per Google's "Time, technology and leaping seconds":
 [cloud.google.com/blog/products/gcp/leap-second](https://cloud.google.com/blog/products/gcp/leap-second-2016-smear),
 Google "smears" the leap second across the 24 hours
-surrounding it — adding a small fraction to each second so the
+surrounding it - adding a small fraction to each second so the
 total adds up to 1 second of slowdown, with no actual 23:59:60.
 
 ```
@@ -74,7 +74,7 @@ None expected before 2035 abolition.
 ### `time_t` non-monotonicity
 
 POSIX `time_t` is defined as seconds since epoch with **86400
-seconds per day** — no leap seconds. On a leap-second insertion,
+seconds per day** - no leap seconds. On a leap-second insertion,
 the system clock either:
 
 1. **Steps**: time_t goes 1483228799 → 1483228799 (stalls) →
@@ -102,7 +102,7 @@ leap-second insertions.
 ### NTP cascading
 
 NTP messages carry a leap-second indicator. Different OS
-versions handle the indicator differently — Linux historically
+versions handle the indicator differently - Linux historically
 had bugs where the leap insertion caused kernel hangs (2012
 incident).
 
@@ -138,7 +138,7 @@ def test_leap_handling():
 ```
 
 Note: most test libraries don't simulate **actual** leap-second
-mechanics — they're a real OS-level event. Production tests
+mechanics - they're a real OS-level event. Production tests
 require an OS test that replays NTP leap-second indication.
 
 ## Anti-patterns

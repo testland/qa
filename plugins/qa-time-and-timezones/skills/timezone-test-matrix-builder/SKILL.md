@@ -10,7 +10,7 @@ archetype: S3
 
 ## Overview
 
-Time-related bugs are scattered across the codebase — storage,
+Time-related bugs are scattered across the codebase - storage,
 display, business logic, scheduled jobs. The test matrix needs
 to systematically exercise the canonical edge cases at each
 touchpoint.
@@ -22,7 +22,7 @@ touchpoint.
 - Migrating from one timezone library to another.
 - Periodic audit of time-handling.
 
-## Step 1 — Inventory time touchpoints
+## Step 1 - Inventory time touchpoints
 
 ```bash
 # Generic
@@ -47,7 +47,7 @@ Categorise each match:
 | **Audit / logging** | Timestamp emission | Monotonic; leap-second tolerance |
 | **External API** | Third-party datetime strings | Tolerant parsing |
 
-## Step 2 — Per-category test catalog
+## Step 2 - Per-category test catalog
 
 ### Storage tests
 
@@ -97,7 +97,7 @@ Categorise each match:
 | 24h vs 12h convention | Per user locale |
 | Relative time ("2 hours ago") | Per system locale |
 
-## Step 3 — Per-language test harness
+## Step 3 - Per-language test harness
 
 | Language | Fake-clock skill |
 |---|---|
@@ -108,7 +108,7 @@ Categorise each match:
 | JVM (Java / Kotlin) | [`mockclock-jvm`](../mockclock-jvm/SKILL.md) |
 | C / native binary | [`libfaketime-c`](../libfaketime-c/SKILL.md) |
 
-## Step 4 — Build the matrix
+## Step 4 - Build the matrix
 
 For each (category, touchpoint, language) cell, generate test
 stubs:
@@ -138,7 +138,7 @@ matrix:
   # ...
 ```
 
-## Step 5 — Emit per-cell test files
+## Step 5 - Emit per-cell test files
 
 ```python
 # tests/time/test_billing_service.py
@@ -164,7 +164,7 @@ def test_billing_period_spans_dst_fall_back():
     assert period.duration.total_seconds() == 30 * 24 * 3600 + 3600  # 1 extra hour
 ```
 
-## Step 6 — Coverage doc
+## Step 6 - Coverage doc
 
 ```markdown
 # Time Test Matrix Coverage

@@ -1,6 +1,6 @@
 ---
 name: definition-of-done
-description: "Pure-reference + checklist-generator for the team's Definition of Done (DoD) — explains the Scrum Guide's DoD definition (\"a formal description of the state of the Increment when it meets the quality measures required for the product\"), proposes a starter DoD with the 7-10 lines most teams need (code reviewed, unit tests, docs, AC met, deployed to staging, smoke passed, no a11y regressions, telemetry wired, observability in place), and emits a per-PR checklist `quality-coach` enforces. Use when the team doesn't have a DoD or wants to revise theirs."
+description: "Pure-reference + checklist-generator for the team's Definition of Done (DoD) - explains the Scrum Guide's DoD definition (\"a formal description of the state of the Increment when it meets the quality measures required for the product\"), proposes a starter DoD with the 7-10 lines most teams need (code reviewed, unit tests, docs, AC met, deployed to staging, smoke passed, no a11y regressions, telemetry wired, observability in place), and emits a per-PR checklist `quality-coach` enforces. Use when the team doesn't have a DoD or wants to revise theirs."
 rating: 22
 d6: 4
 archetype: S2
@@ -68,7 +68,7 @@ A story / PR is "Done" only when ALL of the following are true:
 10. **Build green** on the target branch (CI check required).
 ```
 
-Customize per team — not all 10 apply to every project.
+Customize per team - not all 10 apply to every project.
 
 ## Per-organization vs per-team
 
@@ -167,18 +167,17 @@ better tooling, not a lower bar.
 - **Coverage thresholds are arbitrary.** "≥80%" is convention; the
   right number depends on the codebase.
 - **Some lines are unverifiable automatically** ("docs updated" needs
-  human review). The DoD acknowledges these — `quality-coach`
+  human review). The DoD acknowledges these - `quality-coach`
   marks them "unverifiable" rather than auto-passing.
 
 ## References
 
-- [sg][sg] — Scrum Guide DoD: "a formal description of the state
+- [sg][sg] - Scrum Guide DoD: "a formal description of the state
   of the Increment when it meets the quality measures required for
   the product"; team owns it (or follows org-mandated minimum);
   items not Done return to the Product Backlog.
-- [`quality-coach`](../../qa-roles/agents/quality-coach.md) — agent
+- [`quality-coach`](../../qa-roles/agents/quality-coach.md) - agent
   that enforces the DoD per-PR.
-- [`definition-of-done-checker`](../../qa-shift-left/agents/definition-of-done-checker.md)
-  — sibling adversarial agent for the same purpose.
-- [`smoke-suite-gate`](../smoke-suite-gate/SKILL.md) — CI gate
+- [`definition-of-done-checker`](../../qa-shift-left/agents/definition-of-done-checker.md) - sibling adversarial agent for the same purpose.
+- [`smoke-suite-gate`](../smoke-suite-gate/SKILL.md) - CI gate
   that satisfies the "staging deploy + smoke passed" line.

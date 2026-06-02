@@ -1,6 +1,6 @@
 ---
 name: test-code-critic
-description: "Adversarial reviewer specialized for **test files only** — flags violations of the conventions in `test-code-conventions` (AAA structure, single-responsibility per test, descriptive naming, magic numbers, slow setup) with file:line evidence and the convention-section reference. Refuses to review non-test files (production code is the job of saturated production-reviewer agents elsewhere). Use as a PR-time check that runs only against `*.spec.*` / `*.test.*` / `tests/**` paths."
+description: "Adversarial reviewer specialized for **test files only** - flags violations of the conventions in `test-code-conventions` (AAA structure, single-responsibility per test, descriptive naming, magic numbers, slow setup) with file:line evidence and the convention-section reference. Refuses to review non-test files (production code is the job of saturated production-reviewer agents elsewhere). Use as a PR-time check that runs only against `*.spec.*` / `*.test.*` / `tests/**` paths."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *)"
 model: sonnet
 skills:
@@ -33,7 +33,7 @@ seven §conventions:
 §8/§9 (E2E selectors / web-first assertions) is the job of
 `e2e-selector-quality-critic`.
 
-## Step 1 — Filter to test files
+## Step 1 - Filter to test files
 
 ```bash
 # Find test files in the PR diff
@@ -52,11 +52,11 @@ code review of `<file>`, the file must match a test path
 convention.
 ```
 
-## Step 2 — Per-file walk
+## Step 2 - Per-file walk
 
 For each test file:
 
-### §1 — AAA structure
+### §1 - AAA structure
 
 Heuristic: the test body should have a visually-clear Arrange / Act
 / Assert split. Detection:
@@ -66,7 +66,7 @@ Heuristic: the test body should have a visually-clear Arrange / Act
 - Tests where the act and assert are interleaved (e.g. `expect()`
   calls before any "act" call): flag.
 
-### §2 — Single-responsibility
+### §2 - Single-responsibility
 
 Detection:
 
@@ -86,7 +86,7 @@ expect(cart.items).toHaveLength(1);
 expect(cart.items[0].sku).toBe('BOOK-001');
 ```
 
-### §3 — Naming
+### §3 - Naming
 
 Regex flags:
 
@@ -94,20 +94,20 @@ Regex flags:
 - `\b(it|test)\(['"]?\s*\d+\s*['"]\)`
 - `\b(it|test)\(['"]?[a-z][a-zA-Z]{0,3}\b` (likely abbreviation)
 
-### §6 — Fixture coupling
+### §6 - Fixture coupling
 
 Flags `import { ... } from '../**/globalFixtures'` /
 `import * from '../**/test-helpers/global'` patterns. Reads the
 imported file; if it exports >5 fixtures, flag as a global-fixture
 hub.
 
-### §7 — Magic numbers
+### §7 - Magic numbers
 
 For each numeric / string literal in assertions, count occurrences
 across the file. If a value appears ≥3 times, flag as a candidate
 for a named constant.
 
-### §10 — Slow setup
+### §10 - Slow setup
 
 Run the file in instrumented mode (where supported); measure
 `beforeAll` / `beforeEach` duration. Flag any setup over the
@@ -203,5 +203,4 @@ The agent **refuses** to:
 
 ## References
 
-- [`test-code-conventions`](../skills/test-code-conventions/SKILL.md)
-  — the §1-§10 reference this agent enforces.
+- [`test-code-conventions`](../skills/test-code-conventions/SKILL.md) - the §1-§10 reference this agent enforces.

@@ -1,6 +1,6 @@
 ---
 name: vitest-tests
-description: "Configures and runs Vitest — Vite-native unit framework with Jest-compatible API (`expect`, `vi.fn`, `vi.mock`, `vi.spyOn`); reads `vite.config.*` so existing Vite plugins work; supports in-source testing via `if (import.meta.vitest)`, browser-mode UI for headed tests, type-checking via `vitest --typecheck`, native ESM, and coverage via v8 (default) or istanbul providers. Use when the user works with Vite-based projects (Vue, Svelte, Solid, modern React with Vite) or wants Jest-compatible API with faster Vite-native runs."
+description: "Configures and runs Vitest - Vite-native unit framework with Jest-compatible API (`expect`, `vi.fn`, `vi.mock`, `vi.spyOn`); reads `vite.config.*` so existing Vite plugins work; supports in-source testing via `if (import.meta.vitest)`, browser-mode UI for headed tests, type-checking via `vitest --typecheck`, native ESM, and coverage via v8 (default) or istanbul providers. Use when the user works with Vite-based projects (Vue, Svelte, Solid, modern React with Vite) or wants Jest-compatible API with faster Vite-native runs."
 rating: 24
 d6: 4
 archetype: S1
@@ -19,12 +19,12 @@ Vitest is the Vite-native test framework. The model:
 > "Vitest reads your `vite.config.*` by default, so your existing
 > Vite plugins and configuration work out-of-the-box."
 
-This is the differentiator vs Jest — Jest needs separate
+This is the differentiator vs Jest - Jest needs separate
 `babel-jest`/`ts-jest` transform setup; Vitest reuses Vite's
 already-configured pipeline. Same code transforms in dev + test.
 
 API is intentionally Jest-compatible (`expect`, `describe`, `it` /
-`test`, `vi.fn`, `vi.mock`) — migration from Jest is mostly mechanical.
+`test`, `vi.fn`, `vi.mock`) - migration from Jest is mostly mechanical.
 
 ## When to use
 
@@ -35,7 +35,7 @@ API is intentionally Jest-compatible (`expect`, `describe`, `it` /
 - In-source testing pattern (tests colocated with implementation
   via `if (import.meta.vitest)`) is desired.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [vt-guide][vt-guide]:
 
@@ -46,7 +46,7 @@ npm install -D vitest
 If the project already has Vite + a `vite.config.*` file, no
 additional config needed.
 
-## Step 2 — First test
+## Step 2 - First test
 
 Per [vt-guide][vt-guide]:
 
@@ -80,7 +80,7 @@ Wire `package.json`:
 `vitest` (no subcommand) defaults to watch mode; `vitest run` is the
 single-pass run.
 
-## Step 3 — Configuration
+## Step 3 - Configuration
 
 Vitest reads `vite.config.ts` by default. For Vitest-specific options:
 
@@ -114,7 +114,7 @@ export default defineConfig({
 `provider: 'v8'` is Vitest's default; `istanbul` is more accurate
 for branch coverage but slower.
 
-## Step 4 — Mocking (Jest-compatible API)
+## Step 4 - Mocking (Jest-compatible API)
 
 ```javascript
 import { vi, expect, test } from 'vitest';
@@ -144,9 +144,9 @@ vi.useRealTimers();
 
 Migration from Jest: replace `jest.` with `vi.` (mostly mechanical).
 
-## Step 5 — In-source testing
+## Step 5 - In-source testing
 
-Vitest's distinguishing feature — tests live in the implementation
+Vitest's distinguishing feature - tests live in the implementation
 file:
 
 ```typescript
@@ -173,10 +173,10 @@ test: {
 
 In production builds, the `if (import.meta.vitest)` block is
 tree-shaken away. Useful for tiny utility files where separate test
-files feel like overkill — but mainstream test suites should use
+files feel like overkill - but mainstream test suites should use
 separate files for greppability.
 
-## Step 6 — Browser mode
+## Step 6 - Browser mode
 
 For tests that need real browser APIs (vs jsdom approximations):
 
@@ -200,7 +200,7 @@ Tests run in a real browser instance; tradeoff is speed vs fidelity.
 For DOM-only assertions, jsdom is faster; for CSS layout / Web API
 correctness, browser mode catches more.
 
-## Step 7 — Type-checking integration
+## Step 7 - Type-checking integration
 
 ```bash
 vitest run --typecheck
@@ -210,7 +210,7 @@ Runs `tsc --noEmit` against test files alongside the test run.
 Without `--typecheck`, TypeScript type errors in tests don't fail
 the run.
 
-## Step 8 — Coverage
+## Step 8 - Coverage
 
 ```bash
 vitest run --coverage
@@ -218,7 +218,7 @@ vitest run --coverage
 
 Output formats configured in `coverage.reporter` (Step 3).
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: npm ci
@@ -227,7 +227,7 @@ Output formats configured in `coverage.reporter` (Step 3).
   with: { files: ./coverage/lcov.info }
 ```
 
-`vitest run` (not `vitest`) is required in CI — without `run`,
+`vitest run` (not `vitest`) is required in CI - without `run`,
 Vitest enters watch mode and hangs the runner.
 
 ## Anti-patterns
@@ -252,14 +252,13 @@ Vitest enters watch mode and hangs the runner.
 
 ## References
 
-- [vt-guide][vt-guide] — getting started
-- vitest.dev/config — full config reference
-- vitest.dev/api/vi — vi.* API reference
-- vitest.dev/guide/in-source — in-source testing
-- vitest.dev/guide/browser — browser mode
+- [vt-guide][vt-guide] - getting started
+- vitest.dev/config - full config reference
+- vitest.dev/api/vi - vi.* API reference
+- vitest.dev/guide/in-source - in-source testing
+- vitest.dev/guide/browser - browser mode
 - [`jest-tests`](../jest-tests/SKILL.md),
   [`mocha-tests`](../mocha-tests/SKILL.md),
   [`ava-tests`](../ava-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — cross-plugin: test code hygiene
+  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene

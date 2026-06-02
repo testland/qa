@@ -1,6 +1,6 @@
 ---
 name: post-mortem-author
-description: "Build-an-X workflow that produces a blameless post-mortem from an incident — captures the timeline (chronological event sequence with sources), root cause analysis (what + why, not who), impact (users / revenue / SLO debt), action items (with owners + due dates + measurable success criteria), and \"what went well\" (intentional). Per Google SRE: \"Blameless postmortems are a tenet of SRE culture.\" Use after every user-visible incident, not just severe ones."
+description: "Build-an-X workflow that produces a blameless post-mortem from an incident - captures the timeline (chronological event sequence with sources), root cause analysis (what + why, not who), impact (users / revenue / SLO debt), action items (with owners + due dates + measurable success criteria), and \"what went well\" (intentional). Per Google SRE: \"Blameless postmortems are a tenet of SRE culture.\" Use after every user-visible incident, not just severe ones."
 rating: 23
 d6: 4
 archetype: S3
@@ -22,14 +22,14 @@ Per [google-sre-postmortem][gsp]:
 > "Blameless postmortems are a tenet of SRE culture."
 > ([google-sre-postmortem][gsp])
 
-> "Writing a postmortem is not punishment—it is a learning
+> "Writing a postmortem is not punishment - it is a learning
 > opportunity for the entire company." ([google-sre-postmortem][gsp])
 
 The blameless framing is load-bearing. Per
 [google-sre-postmortem][gsp], the document must "focus on
 identifying the contributing causes of the incident without
 indicting any individual or team for bad or inappropriate
-behavior" — assuming "everyone involved in an incident had good
+behavior" - assuming "everyone involved in an incident had good
 intentions and did the right thing with the information they
 had."
 
@@ -40,11 +40,11 @@ Per [google-sre-postmortem][gsp], common triggers include:
 > "user-visible downtime, data loss, on-call interventions,
 > extended resolution times, and monitoring failures."
 
-Author a post-mortem after every such incident — not just sev-1.
+Author a post-mortem after every such incident - not just sev-1.
 Lower-severity incidents accumulate context that prevents the
 sev-1.
 
-## Step 1 — Document structure
+## Step 1 - Document structure
 
 ```markdown
 # Post-mortem — `INC-1234` — Stripe webhook delivery failure
@@ -160,7 +160,7 @@ this incident qualified because:
 - SLO impact: ✅ (>10% monthly budget)
 ```
 
-## Step 2 — Blameless review
+## Step 2 - Blameless review
 
 Per [google-sre-postmortem][gsp]: "Postmortems are not punishment."
 
@@ -174,7 +174,7 @@ Reviewers should:
 - **Surface contributing factors openly.** Multiple factors usually
   contribute; document all.
 
-## Step 3 — Action item discipline
+## Step 3 - Action item discipline
 
 Action items must have:
 
@@ -186,7 +186,7 @@ Action items must have:
 The action items are the post-mortem's value. Without them, the
 document is paperwork.
 
-## Step 4 — Approval + closure
+## Step 4 - Approval + closure
 
 The post-mortem isn't "done" until:
 
@@ -196,10 +196,10 @@ The post-mortem isn't "done" until:
 3. P1/P2 action items have a target completion before the next
    release.
 
-The post-mortem is "closed" when all action items ship — typically
+The post-mortem is "closed" when all action items ship - typically
 2-4 weeks. A 6-month-old open post-mortem is a process failure.
 
-## Step 5 — Storage
+## Step 5 - Storage
 
 ```
 docs/postmortems/
@@ -254,13 +254,10 @@ Markdown + git. Quarterly rollup identifies patterns:
 
 ## References
 
-- [gsp][gsp] — Google SRE blameless post-mortem definition,
+- [gsp][gsp] - Google SRE blameless post-mortem definition,
   triggers, blamelessness principle, learning-opportunity framing.
-- [`release-readiness-checker`](../../agents/release-readiness-checker.md)
-  — sibling: pre-release gate; post-mortems feed back to update
+- [`release-readiness-checker`](../../agents/release-readiness-checker.md) - sibling: pre-release gate; post-mortems feed back to update
   the gate criteria.
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md)
-  — sibling: canary verdict; post-mortems often surface threshold
+- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - sibling: canary verdict; post-mortems often surface threshold
   tuning needs.
-- [`observability-to-test`](../../qa-shift-right/agents/observability-to-test.md)
-  — agent that turns post-mortem action items into regression tests.
+- [`observability-to-test`](../../qa-shift-right/agents/observability-to-test.md) - agent that turns post-mortem action items into regression tests.

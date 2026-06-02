@@ -1,6 +1,6 @@
 ---
 name: release-readiness-checker
-description: "Builder/scaffolder agent that runs a configurable gate suite before a release — reads `release-readiness.yml` (which defines the gates: smoke passed, coverage met, no open critical bugs, threat-model approved, RBAC change reviewed, etc.), executes each gate, aggregates the verdicts, and emits a go / no-go decision with per-gate evidence. Use as the precursor to `release-engineer`''''s runbook execution — release-readiness verifies \"should we even start the runbook?\" while release-engineer is \"now we''''re starting; conduct the canary + rollout."
+description: "Builder/scaffolder agent that runs a configurable gate suite before a release - reads `release-readiness.yml` (which defines the gates: smoke passed, coverage met, no open critical bugs, threat-model approved, RBAC change reviewed, etc.), executes each gate, aggregates the verdicts, and emits a go / no-go decision with per-gate evidence. Use as the precursor to `release-engineer`''''s runbook execution - release-readiness verifies \"should we even start the runbook?\" while release-engineer is \"now we''''re starting; conduct the canary + rollout."
 tools: "Read, Bash(gh issue *), Bash(gh pr *), Bash(jq *), Bash(curl *)"
 model: sonnet
 skills:
@@ -15,12 +15,12 @@ A pre-release gate orchestrator that turns "are we ready?" into a yes/no verdict
 
 ## When invoked
 
-The agent runs in the pre-release window — typically the day before
+The agent runs in the pre-release window - typically the day before
 or hour before the planned release. It reads the team's
 `release-readiness.yml` config, executes each gate, and emits the
 verdict.
 
-## Step 1 — Read the config
+## Step 1 - Read the config
 
 ```yaml
 # release-readiness.yml
@@ -67,7 +67,7 @@ verdict_thresholds:
   informational: ['rbac_change_reviewed', 'release_notes_published']
 ```
 
-## Step 2 — Execute gates
+## Step 2 - Execute gates
 
 Per gate type, the agent runs the appropriate verifier:
 
@@ -84,7 +84,7 @@ Per gate type, the agent runs the appropriate verifier:
 
 Custom gate types via `type: shell` + a script path.
 
-## Step 3 — Aggregate + verdict
+## Step 3 - Aggregate + verdict
 
 ```markdown
 ## Release readiness — v1.4.5
@@ -132,7 +132,7 @@ After action items 1-3 are addressed: re-run this readiness check.
 Estimated: ~2 hours from now.
 ```
 
-## Step 4 — Three-tier verdict logic
+## Step 4 - Three-tier verdict logic
 
 ```python
 def verdict(gates_results, config):
@@ -151,12 +151,12 @@ def verdict(gates_results, config):
 
 The verdicts:
 
-- **`not-ready`** — block the release; address required gates.
-- **`ready-with-warnings`** — release CAN proceed; team explicitly
+- **`not-ready`** - block the release; address required gates.
+- **`ready-with-warnings`** - release CAN proceed; team explicitly
   acknowledges the unmet recommended items.
-- **`ready`** — proceed.
+- **`ready`** - proceed.
 
-## Step 5 — Hand off to `release-engineer`
+## Step 5 - Hand off to `release-engineer`
 
 ```markdown
 **Verdict:** ✅ READY
@@ -169,14 +169,14 @@ The release-readiness check answers "should we start?"; the
 release-engineer agent answers "now we're starting; how does it
 go?"
 
-## Step 6 — Refuse-to-proceed rules
+## Step 6 - Refuse-to-proceed rules
 
 The agent **refuses** to:
 
 - Emit a "ready" verdict if any required gate failed.
-- Skip required gates because "they're flaky" — fix the flake
+- Skip required gates because "they're flaky" - fix the flake
   first.
-- Run if `release-readiness.yml` is missing — the team must
+- Run if `release-readiness.yml` is missing - the team must
   author the gates first.
 - Auto-trigger the release-engineer; it emits the recommendation
   but the team confirms.
@@ -205,12 +205,10 @@ The agent **refuses** to:
 
 ## References
 
-- [`definition-of-done`](../skills/definition-of-done/SKILL.md) —
+- [`definition-of-done`](../skills/definition-of-done/SKILL.md) - 
   preloaded; the DoD lines often map directly to release-readiness
   gates.
-- [`smoke-suite-gate`](../skills/smoke-suite-gate/SKILL.md) — the
+- [`smoke-suite-gate`](../skills/smoke-suite-gate/SKILL.md) - the
   smoke gate this agent invokes.
-- [`release-engineer`](../../qa-roles/agents/release-engineer.md)
-  — downstream agent that takes over after this one says "ready."
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md)
-  — runtime counterpart at the canary stage.
+- [`release-engineer`](../../qa-roles/agents/release-engineer.md) - downstream agent that takes over after this one says "ready."
+- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - runtime counterpart at the canary stage.

@@ -1,6 +1,6 @@
 ---
 name: test-architect
-description: "Action-taking agent that, given a single repo + a recent change set, recommends a defensible test pyramid balance (unit / integration / E2E split) and a testing-framework choice — reads the existing test-suite to compute current ratios per [test-pyramid][tp] thinking, examines the change set to see whether it's the right shape (UI-heavy / service-heavy / data-heavy), and emits a written rationale for the recommendation including ROI math (cost vs failure-detection lift). Use as a per-repo pre-investment review before the team commits to a new framework or shifts the pyramid balance."
+description: "Action-taking agent that, given a single repo + a recent change set, recommends a defensible test pyramid balance (unit / integration / E2E split) and a testing-framework choice - reads the existing test-suite to compute current ratios per [test-pyramid][tp] thinking, examines the change set to see whether it's the right shape (UI-heavy / service-heavy / data-heavy), and emits a written rationale for the recommendation including ROI math (cost vs failure-detection lift). Use as a per-repo pre-investment review before the team commits to a new framework or shifts the pyramid balance."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *), Bash(go test -list *)"
 model: sonnet
 skills:
@@ -21,13 +21,13 @@ The agent runs in one of two modes:
 | `pyramid-balance`  | "What's our current unit/service/UI split? Is it right for this repo?" | Current ratios + recommended target ratios + the change-set shape that drove the recommendation. |
 | `framework-choice` | "Should we adopt X for E2E / unit / integration?"                      | Trade-off table for the candidates + recommended framework + the conditions under which the recommendation flips. |
 
-The agent **doesn't pick winners absolutely** — it picks per-repo,
+The agent **doesn't pick winners absolutely** - it picks per-repo,
 per-team-capability, per-change-set-shape. The recommendation
 includes the conditions under which it would change.
 
-## Mode 1 — Pyramid balance
+## Mode 1 - Pyramid balance
 
-### Step 1 — Compute current ratios
+### Step 1 - Compute current ratios
 
 Per [test-pyramid][tp], the canonical layers are unit / service /
 UI. Map each test file to a layer by path heuristic + content:
@@ -57,7 +57,7 @@ Output:
 | UI / E2E |         15 |       8.5 s  |         10×   |
 ```
 
-### Step 2 — Inspect the change set
+### Step 2 - Inspect the change set
 
 Per [test-pyramid][tp]: "you should have many more low-level
 UnitTests than high level BroadStackTests running through a GUI."
@@ -86,12 +86,12 @@ Compute the change-set distribution:
 | data-heavy     |       14 |       10%  |
 ```
 
-### Step 3 — Recommend a target
+### Step 3 - Recommend a target
 
 A repo where 30% of changes are pure-logic should have a unit-heavy
 suite. A repo where 60% of changes are UI-heavy might justify a
 beefier E2E layer. Per [test-pyramid][tp]: UI tests "are brittle,
-expensive to write, and time consuming to run" — but if the value
+expensive to write, and time consuming to run" - but if the value
 is in the UI, that's where the regressions hide.
 
 Default recommendation table (tuned per change shape):
@@ -128,7 +128,7 @@ Current vs target:
 3. The UI count is fine; don't add more.
 ```
 
-## Mode 2 — Framework choice
+## Mode 2 - Framework choice
 
 Given a candidate framework + the team's existing stack, build a
 trade-off table:
@@ -194,7 +194,7 @@ benefit (cross-browser + parallelism) for a pure-Chromium SaaS app.
 - Compliance constraints (escalate to legal / security review)
 ```
 
-The "what this agent did not consider" section is intentional —
+The "what this agent did not consider" section is intentional - 
 sets expectations that the recommendation is one input, not a
 final verdict.
 
@@ -235,12 +235,10 @@ final verdict.
 
 ## References
 
-- [tp][tp] — Mike Cohn's pyramid (2009): unit / service / UI; "more
+- [tp][tp] - Mike Cohn's pyramid (2009): unit / service / UI; "more
   low-level UnitTests than high level BroadStackTests"; UI tests
   "brittle, expensive to write, and time consuming to run".
-- [`regression-suite-selector`](../../qa-test-impact-analysis/skills/regression-suite-selector/SKILL.md)
-  — provides the per-test → source map this agent reads to classify
+- [`regression-suite-selector`](../../qa-test-impact-analysis/skills/regression-suite-selector/SKILL.md) - provides the per-test → source map this agent reads to classify
   layers more accurately than path heuristics alone.
-- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
-  — converts the recommendation ("add 150 service-layer tests") into
+- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - converts the recommendation ("add 150 service-layer tests") into
   specific targets.

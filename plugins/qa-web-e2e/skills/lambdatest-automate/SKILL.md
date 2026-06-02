@@ -1,6 +1,6 @@
 ---
 name: lambdatest-automate
-description: "Author and run E2E tests on LambdaTest — cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers LT_USERNAME + LT_ACCESS_KEY auth, hub URL hub.lambdatest.com/wd/hub, W3C capabilities + LT:Options dict (build, name, project, smartUI, network, console, video, tunnel), LambdaTest Tunnel for internal apps. Use for cross-browser regression with LambdaTest as the cloud grid; complements BrowserStack + Sauce Labs."
+description: "Author and run E2E tests on LambdaTest - cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers LT_USERNAME + LT_ACCESS_KEY auth, hub URL hub.lambdatest.com/wd/hub, W3C capabilities + LT:Options dict (build, name, project, smartUI, network, console, video, tunnel), LambdaTest Tunnel for internal apps. Use for cross-browser regression with LambdaTest as the cloud grid; complements BrowserStack + Sauce Labs."
 rating: 22
 d6: 4
 archetype: S1
@@ -230,13 +230,13 @@ jobs:
 
 ## References
 
-- LambdaTest automated web testing —
+- LambdaTest automated web testing - 
   [lambdatest.com/support/docs/automated-web-testing](https://www.lambdatest.com/support/docs/automated-web-testing/).
-- LambdaTest capabilities generator —
+- LambdaTest capabilities generator - 
   lambdatest.com/capabilities-generator.
-- LambdaTest Tunnel docs —
+- LambdaTest Tunnel docs - 
   lambdatest.com/support/docs/lambda-tunnel.
-- W3C WebDriver specification —
+- W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Composes:
   [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).

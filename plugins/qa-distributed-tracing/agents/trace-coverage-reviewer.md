@@ -30,7 +30,7 @@ The agent takes:
 Output: per-finding report (untraced critical / missing-attr /
 hand-rolled / cardinality / spec-drift) with severity + fix.
 
-## Step 1 — Identify critical untraced paths
+## Step 1 - Identify critical untraced paths
 
 Per the [OpenTelemetry traces concept docs], spans should cover
 operations that span process or trust boundaries:
@@ -45,7 +45,7 @@ operations that span process or trust boundaries:
 
 For each found surface without instrumentation: emit finding.
 
-## Step 2 — Verify SemConv attributes per span
+## Step 2 - Verify SemConv attributes per span
 
 Per the [HTTP semantic conventions], HTTP spans require:
 `http.request.method`, `url.full`, `server.address`, `server.port`,
@@ -58,7 +58,7 @@ For DB spans (per the [DB semantic conventions]):
 Refuse to mark a span "covered" if the required SemConv attrs are
 missing.
 
-## Step 3 — Detect deprecated attribute keys
+## Step 3 - Detect deprecated attribute keys
 
 | Deprecated | Current | Source |
 |---|---|---|
@@ -70,7 +70,7 @@ missing.
 Flag any span emitting deprecated keys without dual-emit (per
 `OTEL_SEMCONV_STABILITY_OPT_IN`).
 
-## Step 4 — Hand-rolled span code
+## Step 4 - Hand-rolled span code
 
 ```python
 # ANTI-PATTERN: manual span around a request library
@@ -84,7 +84,7 @@ Recommend: install `opentelemetry-instrumentation-requests`. Manual
 spans here add cost (deprecated keys, missed SemConv coverage,
 double instrumentation).
 
-## Step 5 — Cardinality risk audit
+## Step 5 - Cardinality risk audit
 
 Scan span attribute assignments for:
 
@@ -93,13 +93,13 @@ Scan span attribute assignments for:
 | Per-user identifier | `span.set_attribute("user.id", request.user.id)` | Hash to bucket / span event |
 | Raw URL with query params | `url.full=request.url` (with secrets) | Strip + use `http.route` template |
 | Free-text error | `error.message=str(exc)` | Use `error.type` enum |
-| Per-request UUID | `span.set_attribute("trace.uuid", uuid4())` | Don't — that's what trace_id is for |
+| Per-request UUID | `span.set_attribute("trace.uuid", uuid4())` | Don't - that's what trace_id is for |
 | Timestamps as attributes | `span.set_attribute("event.ts", time.time())` | Use span events |
 
 Severity: **Critical** if attached to high-traffic span; observability
 backend cost surges.
 
-## Step 6 — Spec drift check (when trace spec present)
+## Step 6 - Spec drift check (when trace spec present)
 
 For each span in the spec:
 
@@ -120,7 +120,7 @@ likely passing because attribute existence asserts on null).
 `extra_in_code` = code emits spans not in spec (specs need updating
 or spans are debug noise).
 
-## Step 7 — Emit verdict
+## Step 7 - Emit verdict
 
 ```markdown
 ## Trace coverage review — `<service>` @ `<sha>`
@@ -157,7 +157,7 @@ or spans are debug noise).
 ❌ **BLOCK** — 2 Critical findings. Address before merge.
 ```
 
-## Step 8 — Refuse-to-proceed rules
+## Step 8 - Refuse-to-proceed rules
 
 Refuse ✅ when:
 
@@ -182,10 +182,10 @@ Refuse ✅ when:
 - [`opentelemetry-trace-assertions`](../skills/opentelemetry-trace-assertions/SKILL.md),
   [`jaeger-trace-tests`](../skills/jaeger-trace-tests/SKILL.md),
   [`zipkin-trace-tests`](../skills/zipkin-trace-tests/SKILL.md),
-  [`trace-spec-author`](../skills/trace-spec-author/SKILL.md) — preloaded sister skills
-- [OpenTelemetry traces concept docs] — span model
-- [HTTP semantic conventions] — required HTTP attrs + deprecation
-- [DB semantic conventions] — required DB attrs
+  [`trace-spec-author`](../skills/trace-spec-author/SKILL.md) - preloaded sister skills
+- [OpenTelemetry traces concept docs] - span model
+- [HTTP semantic conventions] - required HTTP attrs + deprecation
+- [DB semantic conventions] - required DB attrs
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/
 [HTTP semantic conventions]: https://opentelemetry.io/docs/specs/semconv/http/http-spans/

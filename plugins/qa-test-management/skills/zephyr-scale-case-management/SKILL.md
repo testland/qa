@@ -1,6 +1,6 @@
 ---
 name: zephyr-scale-case-management
-description: "Author and manage Zephyr Scale Cloud test cases via the REST API v2 — create tests, attach steps, link to Jira issues, organise into folders, manage test cycles. Covers Bearer-token auth, the /testcases endpoints, the testScript / steps shape, and folder hierarchy. Use for pre-execution case authoring in Jira-anchored teams using Zephyr Scale (formerly TM4J). Distinct from Zephyr's test-cycle / execution endpoints which post results."
+description: "Author and manage Zephyr Scale Cloud test cases via the REST API v2 - create tests, attach steps, link to Jira issues, organise into folders, manage test cycles. Covers Bearer-token auth, the /testcases endpoints, the testScript / steps shape, and folder hierarchy. Use for pre-execution case authoring in Jira-anchored teams using Zephyr Scale (formerly TM4J). Distinct from Zephyr's test-cycle / execution endpoints which post results."
 rating: 23
 d6: 4
 archetype: S1
@@ -252,16 +252,16 @@ Sync per-spec front-matter to Zephyr Scale:
   `Deprecated` are defaults; custom statuses possible.
 - **Linked-issues API surface is asymmetric.** Linking a test to an
   issue is via Zephyr; viewing linked tests from a Jira issue is
-  via Zephyr's panel — script visibility may differ.
+  via Zephyr's panel - script visibility may differ.
 - **Rate limits.** ~60 req / min per tenant; bulk import needs
   throttling.
 
 ## References
 
-- Zephyr Scale Cloud REST API v2 —
+- Zephyr Scale Cloud REST API v2 - 
   smartbear.com/test-management/zephyr-scale (Cloudflare-
   protected; cite by stable URL).
-- Atlassian Marketplace — Zephyr Scale (formerly TM4J) listing.
+- Atlassian Marketplace - Zephyr Scale (formerly TM4J) listing.
 - Sibling references:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
 - Sibling skills:
@@ -270,5 +270,4 @@ Sync per-spec front-matter to Zephyr Scale:
   [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`zephyr-integration`](../../../qa-test-reporting/skills/zephyr-integration/SKILL.md)
-  — different scope (result sync via test cycles).
+  [`zephyr-integration`](../../../qa-test-reporting/skills/zephyr-integration/SKILL.md) - different scope (result sync via test cycles).

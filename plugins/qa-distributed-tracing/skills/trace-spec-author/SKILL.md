@@ -1,6 +1,6 @@
 ---
 name: trace-spec-author
-description: "Build a trace specification document per feature — defines the trace shape (root span + child spans + key attributes per OpenTelemetry semantic conventions) that production code MUST emit. The spec drives both implementation reviews AND trace-assertion tests, so a single declarative document is the source of truth for what observability \"looks like\" for a feature."
+description: "Build a trace specification document per feature - defines the trace shape (root span + child spans + key attributes per OpenTelemetry semantic conventions) that production code MUST emit. The spec drives both implementation reviews AND trace-assertion tests, so a single declarative document is the source of truth for what observability \"looks like\" for a feature."
 type: skill
 archetype: S3
 rating: 23
@@ -27,7 +27,7 @@ and `jaeger-trace-tests`, (c) onboarding for new team members.
 - Pre-incident-review prep (spec gaps explain why a debugging
   session was painful).
 
-## Step 1 — Spec template
+## Step 1 - Spec template
 
 Save under `docs/observability/<feature>.md`:
 
@@ -110,12 +110,12 @@ Attributes:
 | 2026-04-15 | Added `customer.id` low-cardinality req | @reviewer |
 ```
 
-## Step 2 — Map to OpenTelemetry semantic conventions
+## Step 2 - Map to OpenTelemetry semantic conventions
 
 For each span, decide:
 
 1. Is there a SemConv-defined span type (HTTP, DB, messaging,
-   FaaS, RPC)? Use SemConv attribute names — never invent
+   FaaS, RPC)? Use SemConv attribute names - never invent
    parallels.
 2. Is the span domain-specific (e.g., `order.create`)? Use a
    namespaced name + custom attributes (e.g., `order.id`,
@@ -126,7 +126,7 @@ attributes for HTTP client spans: `http.request.method`,
 `url.full`, `server.address`, `server.port`,
 `http.response.status_code`, `error.type` (conditionally).
 
-## Step 3 — Status semantics
+## Step 3 - Status semantics
 
 Decide per outcome (referenced in your test spec):
 
@@ -142,7 +142,7 @@ occurred. For 4xx codes, status stays unset on servers but should
 be set to Error on clients. All 5xx responses should be marked as
 Error."*
 
-## Step 4 — Anti-cardinality rules (mandatory)
+## Step 4 - Anti-cardinality rules (mandatory)
 
 The spec MUST flag attributes that risk cardinality explosion in
 your observability backend:
@@ -155,7 +155,7 @@ your observability backend:
 
 Add to spec: `**High-cardinality attributes:** none / [list]`.
 
-## Step 5 — Drive tests from spec
+## Step 5 - Drive tests from spec
 
 Each "Required test assertion" in Step 1 maps to one test in
 `opentelemetry-trace-assertions` (in-process) or `jaeger-trace-tests`
@@ -180,7 +180,7 @@ def test_order_create_required_attrs():
 The spec ↔ test ↔ implementation triangle is the value: any drift
 between any two surfaces.
 
-## Step 6 — Change-management process
+## Step 6 - Change-management process
 
 Lock in a process:
 
@@ -191,7 +191,7 @@ Lock in a process:
 - Each spec has a `Last reviewed` date; quarterly review enforced
   via CODEOWNERS or a calendar nudge.
 
-## Step 7 — Spec catalog
+## Step 7 - Spec catalog
 
 Maintain `docs/observability/INDEX.md`:
 
@@ -222,13 +222,13 @@ Maintain `docs/observability/INDEX.md`:
 
 ## References
 
-- [OpenTelemetry traces concept docs] — span model, kind, status
-- [OpenTelemetry HTTP semantic conventions] — required HTTP attrs
-- [OpenTelemetry DB semantic conventions] — required DB attrs (consult docs site for current page)
+- [OpenTelemetry traces concept docs] - span model, kind, status
+- [OpenTelemetry HTTP semantic conventions] - required HTTP attrs
+- [OpenTelemetry DB semantic conventions] - required DB attrs (consult docs site for current page)
 - [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md),
-  [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) — sister skills
+  [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skills
   that enforce spec conformance
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) — agent that
+- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) - agent that
   audits spec ↔ implementation drift
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/

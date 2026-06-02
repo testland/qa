@@ -1,6 +1,6 @@
 ---
 name: screen-reader-test-author
-description: "Builds a screen-reader test narrative — a step-by-step manual test script for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) — that exercises a specific user flow through a component or page and captures the expected announcement at each step. Use when authoring an accessibility-acceptance test the team will run before sign-off, OR when scripting a manual a11y audit."
+description: "Builds a screen-reader test narrative - a step-by-step manual test script for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) - that exercises a specific user flow through a component or page and captures the expected announcement at each step. Use when authoring an accessibility-acceptance test the team will run before sign-off, OR when scripting a manual a11y audit."
 rating: 24
 d6: 4
 archetype: S3
@@ -11,7 +11,7 @@ archetype: S3
 ## Overview
 
 Automated tools (axe-core, pa11y, Lighthouse) catch ~30-40% of
-accessibility issues — the structural ones. The remaining 60-70%
+accessibility issues - the structural ones. The remaining 60-70%
 require **manual screen-reader testing** by an actual human using
 NVDA / JAWS / VoiceOver / TalkBack. The team needs a repeatable
 script that any tester (not just the original author) can follow.
@@ -29,11 +29,11 @@ keystroke + expected announcement.
 - A high-stakes feature ships and needs accessibility sign-off.
 - Automated a11y tools are green but the team wants confidence
   the actual screen-reader experience is good.
-- Onboarding a new accessibility tester — they need a script to
+- Onboarding a new accessibility tester - they need a script to
   follow until they internalize the conventions.
 - Documenting an "a11y regression repro" when a bug ships.
 
-## Step 1 — Pick the screen reader
+## Step 1 - Pick the screen reader
 
 Most a11y audit conventions cover at least:
 
@@ -45,14 +45,14 @@ Most a11y audit conventions cover at least:
 | TalkBack        | Android            | Chrome                     | Android: dominant                |
 
 For the most-coverage-per-effort, test **NVDA + Firefox** and
-**VoiceOver + Safari** — these are also the WAI-recommended pairs.
+**VoiceOver + Safari** - these are also the WAI-recommended pairs.
 
 Start each script by naming the SR + browser + OS combination.
 
-## Step 2 — Define the flow
+## Step 2 - Define the flow
 
 A flow is a sequence of user goals. Don't write step-by-step
-keystrokes upfront — that's Step 3. The flow is at user-intent
+keystrokes upfront - that's Step 3. The flow is at user-intent
 level:
 
 ```yaml
@@ -70,13 +70,13 @@ steps:
   - intent: "Hear the success confirmation announcement"
 ```
 
-## Step 3 — Per intent, capture keystrokes + expected announcement
+## Step 3 - Per intent, capture keystrokes + expected announcement
 
 For each intent, the script lists:
 
-- **Keystroke** — the actual key combo the tester presses.
-- **Expected announcement** — what the screen reader should say.
-- **Why** — the WCAG SC or APG pattern the announcement satisfies.
+- **Keystroke** - the actual key combo the tester presses.
+- **Expected announcement** - what the screen reader should say.
+- **Why** - the WCAG SC or APG pattern the announcement satisfies.
 
 ### NVDA on Firefox (Windows)
 
@@ -156,18 +156,18 @@ VoiceOver's announcements are sometimes more verbose than NVDA's
 (reads role words like "edit text" where NVDA says "edit"). This is
 a vendor convention; don't try to suppress it.
 
-## Step 4 — Define what counts as PASS
+## Step 4 - Define what counts as PASS
 
 For each step, the announcement should:
 
-1. **Identify the element type** — "button", "edit", "link",
+1. **Identify the element type** - "button", "edit", "link",
    "heading level 2", etc.
-2. **Read the visible label** verbatim — if the visible label is
+2. **Read the visible label** verbatim - if the visible label is
    "Save changes", the SR should say "Save changes" (not "Submit"
    or the `id` attribute).
-3. **Convey state** — for a checkbox, "checked" / "not checked";
+3. **Convey state** - for a checkbox, "checked" / "not checked";
    for a button, "expanded" / "collapsed" / "pressed".
-4. **Convey position in a set** — for a tab, "1 of 4"; for a list
+4. **Convey position in a set** - for a tab, "1 of 4"; for a list
    item, "1 of 10".
 
 Failures to flag:
@@ -180,7 +180,7 @@ Failures to flag:
 | Position-in-set is missing                                     | `aria-setsize` / `aria-posinset` not set on list items. |
 | Live region announcement doesn't fire                          | Region added with content already present, OR `aria-live="off"`. |
 
-## Step 5 — Wire to the test plan
+## Step 5 - Wire to the test plan
 
 The script becomes a **manual test** in the project's test plan.
 Common formats:
@@ -207,7 +207,7 @@ Sign-off: ___________________ Date: __________
 
 ### Test-management tool integration
 
-For teams using TestRail / Xray / Zephyr — encode the flow as a
+For teams using TestRail / Xray / Zephyr - encode the flow as a
 manual test case with one step per row, expected result per row.
 The skill emits the matching format; per
 [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md)
@@ -235,13 +235,11 @@ The skill emits the matching format; per
 
 ## References
 
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
-- WebAIM Screen Reader Survey — https://webaim.org/projects/screenreadersurvey/
-- NVDA documentation — https://www.nvaccess.org/files/nvda/documentation/userGuide.html
-- VoiceOver Getting Started — https://www.apple.com/accessibility/mac/vision/ + Apple developer docs
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
+- WebAIM Screen Reader Survey - https://webaim.org/projects/screenreadersurvey/
+- NVDA documentation - https://www.nvaccess.org/files/nvda/documentation/userGuide.html
+- VoiceOver Getting Started - https://www.apple.com/accessibility/mac/vision/ + Apple developer docs
 - [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md),
-  [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md)
-  — patterns this skill references for the "Why" column.
-- [`accessibility-code-critic`](../../agents/accessibility-code-critic.md)
-  — adversarial agent that finds the issues this script later
+  [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md) - patterns this skill references for the "Why" column.
+- [`accessibility-code-critic`](../../agents/accessibility-code-critic.md) - adversarial agent that finds the issues this script later
   verifies were fixed.

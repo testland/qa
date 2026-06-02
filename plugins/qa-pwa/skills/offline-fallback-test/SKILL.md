@@ -17,7 +17,7 @@ keywords:
 ## Overview
 
 Offline behavior fragments into eight named recipes per Jake
-Archibald's offline cookbook [off-cookbook] — and most PWAs use
+Archibald's offline cookbook [off-cookbook] - and most PWAs use
 three or four of them across different routes. A test suite that
 asserts "the site works offline" misses the per-route recipe
 contract: a route on `Cache only` must serve from cache even when
@@ -38,33 +38,31 @@ verification.
 
 Composes with:
 
-- [`workbox-tests`](../workbox-tests/SKILL.md) — when the SW uses
+- [`workbox-tests`](../workbox-tests/SKILL.md) - when the SW uses
   Workbox's `offlineFallback()` recipe, the workbox-tests spec
   covers the recipe's runtime; this builder covers the per-route
   decision and the page-side assertion.
-- [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md)
-  — every recipe assumes an active SW; the lifecycle spec is the
+- [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md) - every recipe assumes an active SW; the lifecycle spec is the
   prerequisite for this one.
-- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
-  — Stage 1's service-worker prerequisite cell is the same SW
+- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md) - Stage 1's service-worker prerequisite cell is the same SW
   this builder tests offline behavior of.
 
 ## When to use
 
-- New PWA — author the offline-fallback test plan before any route
+- New PWA - author the offline-fallback test plan before any route
   ships SW caching.
-- "Site doesn't work offline" bug report — the recipe matrix
+- "Site doesn't work offline" bug report - the recipe matrix
   localizes whether the recipe is wrong or just missing for that
   route.
 - Migrating from hand-rolled `caches.match` / `event.respondWith`
-  to Workbox `offlineFallback()` — assert that the recipe-named
+  to Workbox `offlineFallback()` - assert that the recipe-named
   behavior matches the hand-rolled one.
 - Adding a new offline-capable feature (e.g. saved articles, draft
-  form data) — pick a recipe per the matrix and emit the test.
+  form data) - pick a recipe per the matrix and emit the test.
 
 ## Workflow
 
-### Step 1 — Inventory routes and pick a recipe per route
+### Step 1 - Inventory routes and pick a recipe per route
 
 For each URL pattern the SW intercepts, decide which of the eight
 named recipes per [off-cookbook] applies. The cookbook recipes
@@ -83,7 +81,7 @@ verbatim:
 
 Workbox layers a named composite recipe on top per [wb-recipes]:
 
-- `offlineFallback()` — "serve a web page, image, or font if
+- `offlineFallback()` - "serve a web page, image, or font if
   there's a routing error" when users are offline, defaulting to
   `offline.html`.
 
@@ -112,10 +110,10 @@ routes:
     reason: Catch-all 404; offline.html
 ```
 
-### Step 2 — Emit the per-recipe Playwright test
+### Step 2 - Emit the per-recipe Playwright test
 
 For each recipe row in Step 1's matrix, emit the matching test
-pattern. The pattern depends on the recipe — the assertion shape
+pattern. The pattern depends on the recipe - the assertion shape
 must distinguish "served from cache" vs "served from network."
 
 #### Cache only
@@ -263,14 +261,14 @@ test('SW-side templating: /reports/123 renders cached shell + JSON data', async 
 });
 ```
 
-### Step 3 — Test the underlying storage choice
+### Step 3 - Test the underlying storage choice
 
 Per [off-data], offline data needs the right storage:
 
 | Storage | Per [off-data] | Test posture |
 |---|---|---|
 | **Cache Storage API** | "Designed for network resources accessed via URL (HTML, CSS, JavaScript, images, videos, audio)" | Assert `caches.has(name)` + `caches.open(name).keys()` returns expected URLs |
-| **IndexedDB** | "Use IndexedDB to store structured data" — "data that needs to be searchable or combinable in a NoSQL-like manner" | Assert IDB schema + key existence via `indexedDB.open()` |
+| **IndexedDB** | "Use IndexedDB to store structured data" - "data that needs to be searchable or combinable in a NoSQL-like manner" | Assert IDB schema + key existence via `indexedDB.open()` |
 | **Storage Manager** | `navigator.storage.estimate()` returns `{ quota, usage }`; `navigator.storage.persist()` requests durable storage | Assert `persisted()` returns true post-request |
 
 Test the Storage Manager `persist()` request:
@@ -300,7 +298,7 @@ test('cache usage stays under 50MB', async ({ page }) => {
 });
 ```
 
-### Step 4 — Test the offline-fallback page itself
+### Step 4 - Test the offline-fallback page itself
 
 Per [wb-recipes], `offlineFallback()` defaults to `offline.html`.
 Assert the file is precached + the response shape:
@@ -329,7 +327,7 @@ test('offline.html is precached and well-formed', async ({ page, context }) => {
 If the project overrides the default `pageFallback` option, swap
 the assertion target.
 
-### Step 5 — Test the offline → online recovery
+### Step 5 - Test the offline → online recovery
 
 A subtle class of bugs: a route correctly serves from cache offline,
 but doesn't refresh when network returns. Test the transition:
@@ -351,7 +349,7 @@ test('cache then network: recovers fresh data when online returns', async ({ pag
 });
 ```
 
-### Step 6 — Emit the coverage matrix and CI gate
+### Step 6 - Emit the coverage matrix and CI gate
 
 Write `tests/offline-coverage.yaml` mapping each route from
 Step 1 to its test name and the source cookbook recipe:
@@ -427,13 +425,13 @@ catches the four most common offline regressions:
 ## Limitations
 
 - **The "Cache and network race" recipe** is timing-sensitive;
-  Step 2's < 100ms threshold is a heuristic for "cache won" — slow
+  Step 2's < 100ms threshold is a heuristic for "cache won" - slow
   test machines or instrumented Playwright may report higher
   values. Tighten / loosen per the project's CI host.
 - **`SW-side templating`** is rare in modern PWAs; the Step 2 test
   for it assumes the project actually uses the pattern. Skip if
   not.
-- **Quota-pressure tests are fragile** — a 50 MB ceiling per the
+- **Quota-pressure tests are fragile** - a 50 MB ceiling per the
   Step 3 test is project-specific; per [off-data] the browser
   permits "up to 60% of total disk space" which varies by device.
 - **`navigator.storage.persist()`** may prompt the user on some
@@ -452,13 +450,12 @@ catches the four most common offline regressions:
 
 ## References
 
-- web.dev — Offline cookbook (the eight named recipes; verbatim
-  use-case statements per recipe) — [off-cookbook].
-- web.dev — Learn PWA: Offline data (Cache Storage vs IndexedDB
-  vs Storage Manager; quota note "up to 60% of total disk space")
-  — [off-data].
-- Chrome — Workbox recipes (`offlineFallback()` recipe defaults to
-  `offline.html`) — [wb-recipes].
+- web.dev - Offline cookbook (the eight named recipes; verbatim
+  use-case statements per recipe) - [off-cookbook].
+- web.dev - Learn PWA: Offline data (Cache Storage vs IndexedDB
+  vs Storage Manager; quota note "up to 60% of total disk space") - [off-data].
+- Chrome - Workbox recipes (`offlineFallback()` recipe defaults to
+  `offline.html`) - [wb-recipes].
 - Composes:
   [`workbox-tests`](../workbox-tests/SKILL.md),
   [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md),

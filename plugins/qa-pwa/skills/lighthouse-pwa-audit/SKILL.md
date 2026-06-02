@@ -1,6 +1,6 @@
 ---
 name: lighthouse-pwa-audit
-description: "Run and interpret Lighthouse PWA audits — even after the PWA *category* was deprecated per [developer.chrome.com/docs/lighthouse/pwa][lh-pwa], the individual audits (`installable-manifest`, `service-worker`, `splash-screen`, `themed-omnibox`, `viewport`, `content-width`, `apple-touch-icon`, `maskable-icon`) still run and report under a custom Lighthouse config or via direct audit invocation. Covers CLI flags (`--only-categories`, `--output`, `--form-factor`, `--throttling-method`), programmatic Node.js invocation, Lighthouse CI assertions (`categories:<id>`, `audit-id` thresholds), and LHR JSON parsing."
+description: "Run and interpret Lighthouse PWA audits - even after the PWA *category* was deprecated per [developer.chrome.com/docs/lighthouse/pwa][lh-pwa], the individual audits (`installable-manifest`, `service-worker`, `splash-screen`, `themed-omnibox`, `viewport`, `content-width`, `apple-touch-icon`, `maskable-icon`) still run and report under a custom Lighthouse config or via direct audit invocation. Covers CLI flags (`--only-categories`, `--output`, `--form-factor`, `--throttling-method`), programmatic Node.js invocation, Lighthouse CI assertions (`categories:<id>`, `audit-id` thresholds), and LHR JSON parsing."
 rating: 23
 d6: 4
 archetype: S1
@@ -18,10 +18,10 @@ keywords:
 
 Lighthouse is the canonical PWA audit tool. The current release line
 is **v13.3.0** per [github.com/GoogleChrome/lighthouse][lh-gh]
-(released May 2026). The PWA *category* itself was deprecated — per
+(released May 2026). The PWA *category* itself was deprecated - per
 [developer.chrome.com/docs/lighthouse/pwa][lh-pwa]: *"PWA testing in
 Lighthouse is deprecated. For more information on its deprecation
-see Chrome's updated Installability Criteria."* — but the individual
+see Chrome's updated Installability Criteria."* - but the individual
 audits remain available and run on demand under a custom Lighthouse
 config. This skill covers both running them and reading the LHR
 (Lighthouse Result) JSON the audits emit.
@@ -44,12 +44,12 @@ scores per a `.lighthouserc.json` config.
   need a precise installable-manifest verdict.
 - CI needs to fail PRs that drop below a fixed PWA-audit threshold
   even though the category badge is deprecated.
-- A site-reliability dashboard wants per-audit time-series — the
+- A site-reliability dashboard wants per-audit time-series - the
   LHR JSON is the canonical input.
 
 ## Authoring
 
-### Step 1 — Install Lighthouse + Lighthouse CI
+### Step 1 - Install Lighthouse + Lighthouse CI
 
 ```bash
 npm install --save-dev lighthouse @lhci/cli
@@ -57,7 +57,7 @@ npm install --save-dev lighthouse @lhci/cli
 npm install -g lighthouse @lhci/cli
 ```
 
-### Step 2 — Inventory the PWA audits
+### Step 2 - Inventory the PWA audits
 
 Per [lh-pwa], the audits previously grouped under the PWA category:
 
@@ -78,7 +78,7 @@ Per [lh-pwa], the audits previously grouped under the PWA category:
 | PWA optimized | `maskable-icon` | "Maskable icon in manifest" per [lh-pwa] |
 | Manual | (manual) | "Cross-browser compatibility, network-independent page transitions, URL structure" per [lh-pwa] |
 
-### Step 3 — Run audits from the CLI
+### Step 3 - Run audits from the CLI
 
 The basic invocation per [lh-gh]:
 
@@ -113,7 +113,7 @@ lighthouse https://localhost:3000 \
   --output-path=./lhr.json
 ```
 
-### Step 4 — Author a Lighthouse CI config
+### Step 4 - Author a Lighthouse CI config
 
 Create `.lighthouserc.json` per [lhci-config]:
 
@@ -163,11 +163,11 @@ with `severity` one of `off`, `warn`, `error`. The "error" path
 fails the build; "warn" surfaces a warning without failing.
 
 The `aggregationMethod` per [lhci-config] supports `median`,
-`optimistic`, `pessimistic`, `median-run` — `median-run` "represents
+`optimistic`, `pessimistic`, `median-run` - `median-run` "represents
 the most typical run" and is the right choice for noisy mobile
 PWA audits.
 
-### Step 5 — Programmatic invocation from Node.js
+### Step 5 - Programmatic invocation from Node.js
 
 For per-test invocation outside Lighthouse CI:
 
@@ -236,7 +236,7 @@ lhci autorun
 ```
 
 `lhci autorun` per [lhci-gh] is the umbrella command that
-"orchestrates the workflow" — it sequences `lhci collect` →
+"orchestrates the workflow" - it sequences `lhci collect` →
 `lhci assert` → `lhci upload`.
 
 ### CI (GitHub Actions)
@@ -315,7 +315,7 @@ jobs:
           path: .lighthouseci/
 ```
 
-The upload-artifact-on-failure step is essential — `lhci`'s default
+The upload-artifact-on-failure step is essential - `lhci`'s default
 output is a temporary-public-storage URL that disappears after the
 job retention window. Persisting the `.lighthouseci/` directory
 gives engineers the LHR JSON to triage offline.
@@ -329,7 +329,7 @@ gives engineers the LHR JSON to triage offline.
 | Single Lighthouse run per CI job | Per-run variance is ±5 points; one bad run fails CI | `numberOfRuns: 3` + `aggregationMethod: median-run` per [lhci-config] (Step 4) |
 | Mix Lighthouse versions across CI runs | Audit weights / IDs shift across majors; time-series breaks | Pin `@lhci/cli@<major>.<minor>` (Step 4) |
 | Treat `score: null` as failing | `null` means "not applicable" per the LHR schema | Filter `score === null` before threshold check |
-| Skip `--throttling-method=devtools` and use `provided` | `provided` makes Lighthouse trust whatever throttling the harness sets — usually nothing, inflating scores | `simulate` for repeatable CI; `devtools` for actual-CPU runs (Step 3) |
+| Skip `--throttling-method=devtools` and use `provided` | `provided` makes Lighthouse trust whatever throttling the harness sets - usually nothing, inflating scores | `simulate` for repeatable CI; `devtools` for actual-CPU runs (Step 3) |
 | Run Lighthouse against `https://localhost:3000` with self-signed cert | Lighthouse rejects; LHR contains `runtimeError` | Pass `--chrome-flags="--ignore-certificate-errors"` or run on plain HTTP locally |
 
 ## Limitations
@@ -351,19 +351,19 @@ gives engineers the LHR JSON to triage offline.
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
   Stage 3 for the iOS-specific path.
 - **Authenticated routes** require the auth recipe from [lh-gh]
-  docs — programmatic invocation with a logged-in Chrome user
+  docs - programmatic invocation with a logged-in Chrome user
   data dir, not covered by the default `lighthouse <url>` form.
 
 ## References
 
 - Lighthouse PWA audits (deprecation notice, audit list,
-  per-audit purpose statements) — [lh-pwa].
+  per-audit purpose statements) - [lh-pwa].
 - Lighthouse repo (v13.3.0, CLI flags, `--only-categories`,
-  `--throttling-method`, programmatic API) — [lh-gh].
-- Lighthouse CI repo (`lhci autorun`, GitHub Actions workflow) —
+  `--throttling-method`, programmatic API) - [lh-gh].
+- Lighthouse CI repo (`lhci autorun`, GitHub Actions workflow) - 
   [lhci-gh].
 - Lighthouse CI config (`.lighthouserc.json` shape, preset values,
-  category vs audit assertions, aggregation methods) — [lhci-config].
+  category vs audit assertions, aggregation methods) - [lhci-config].
 - Differentiation: this skill is the *audit reader*. The
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
   is the *contract* the `installable-manifest` audit checks

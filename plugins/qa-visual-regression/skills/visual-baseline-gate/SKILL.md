@@ -14,7 +14,7 @@ A typical visual-regression CI run produces an engine-specific verdict
 (Chromatic exit code, Percy build status, Playwright snapshot pass/fail).
 That's not enough for a strict gate, because:
 
-1. Each engine treats "visual changes" differently — Chromatic exits `1`
+1. Each engine treats "visual changes" differently - Chromatic exits `1`
    on changes (review needed), Percy returns success but flags the build
    pending, Playwright fails the test outright.
 2. **"The author updated baselines and committed them" is not the same
@@ -33,21 +33,21 @@ go/no-go verdict.
   [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md)
   for data quality).
 - The team wants to enforce a "reviewer approval" rule on baseline
-  updates — i.e. a `--update-snapshots` commit by the PR author cannot
+  updates - i.e. a `--update-snapshots` commit by the PR author cannot
   self-approve a baseline change to a critical component.
 - The team wants the [`visual-diff-classifier`](../../agents/visual-diff-classifier.md)
   output to become CI-blocking rather than advisory.
 
 If the project uses one engine only and trusts engine-native review
 (e.g. all changes go through Chromatic UI approval), prefer the
-engine's native CI integration — see the matching engine's
+engine's native CI integration - see the matching engine's
 "CI integration" section in its SKILL.md.
 
-## Step 1 — Define the input shape
+## Step 1 - Define the input shape
 
 The gate consumes two inputs:
 
-1. **Classification artifact** — JSON output from the
+1. **Classification artifact** - JSON output from the
    [`visual-diff-classifier`](../../agents/visual-diff-classifier.md)
    agent, one record per snapshot:
 
@@ -62,7 +62,7 @@ The gate consumes two inputs:
    }
    ```
 
-2. **Acceptance log** — a YAML file at `.visual-acceptance.yml`
+2. **Acceptance log** - a YAML file at `.visual-acceptance.yml`
    committed by reviewers (NOT the PR author) that explicitly accepts
    each intentional baseline change for the current PR:
 
@@ -81,7 +81,7 @@ The gate consumes two inputs:
 The acceptance file lives in the PR branch; merging the PR records
 the acceptance in git history.
 
-## Step 2 — Define the gate decision rule
+## Step 2 - Define the gate decision rule
 
 ```python
 def visual_gate(classifications, acceptance_log, *,
@@ -114,10 +114,10 @@ Default behavior:
 - **incidental** → surface as a warning, do not block.
 
 For low-risk projects, set `require_reviewer_acceptance=False` so
-intentional changes pass without explicit acceptance — this collapses
+intentional changes pass without explicit acceptance - this collapses
 the gate to "block on regressions only."
 
-## Step 3 — Enforce author-cannot-self-approve
+## Step 3 - Enforce author-cannot-self-approve
 
 For a stricter gate, validate that the commit adding `.visual-acceptance.yml`
 was authored by **someone other than the PR author**:
@@ -135,7 +135,7 @@ fi
 This is the visual-regression analog of GitHub's "require approval
 from someone other than the last committer" branch protection.
 
-## Step 4 — Emit the artifact
+## Step 4 - Emit the artifact
 
 Markdown summary (matches the
 [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md)
@@ -234,13 +234,10 @@ the visual-diff-classifier has produced `visual-classifications.json`):
 
 ## References
 
-- [`visual-diff-classifier`](../../agents/visual-diff-classifier.md)
-  — produces the classification input.
+- [`visual-diff-classifier`](../../agents/visual-diff-classifier.md) - produces the classification input.
 - [`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md)
 - [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
 - [`playwright-snapshots`](../playwright-snapshots/SKILL.md)
 - [`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)
-- [`visual-baseline-conventions`](../visual-baseline-conventions/SKILL.md)
-  — the conventions this gate enforces.
-- [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md)
-  — sibling gate skill for data-quality results, same artifact shape.
+- [`visual-baseline-conventions`](../visual-baseline-conventions/SKILL.md) - the conventions this gate enforces.
+- [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md) - sibling gate skill for data-quality results, same artifact shape.

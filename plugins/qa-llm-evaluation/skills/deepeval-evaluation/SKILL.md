@@ -1,6 +1,6 @@
 ---
 name: deepeval-evaluation
-description: "Authors and runs DeepEval — pytest-native LLM eval framework with `LLMTestCase` (input + actual_output + expected_output + retrieval_context) and ~11 built-in metrics (G-Eval, Answer-Relevancy, Faithfulness, Contextual-Recall / Precision / Relevancy, Hallucination, Bias, Toxicity, Summarization, JSON-Correctness); runs via `deepeval test run <file.py>` with `assert_test()` per test or `evaluate()` for batch; integrates Confident-AI dashboard. Use when the user prefers pytest workflow, works with RAG and needs faithfulness/contextual metrics out-of-the-box, or wants a managed dashboard."
+description: "Authors and runs DeepEval - pytest-native LLM eval framework with `LLMTestCase` (input + actual_output + expected_output + retrieval_context) and ~11 built-in metrics (G-Eval, Answer-Relevancy, Faithfulness, Contextual-Recall / Precision / Relevancy, Hallucination, Bias, Toxicity, Summarization, JSON-Correctness); runs via `deepeval test run <file.py>` with `assert_test()` per test or `evaluate()` for batch; integrates Confident-AI dashboard. Use when the user prefers pytest workflow, works with RAG and needs faithfulness/contextual metrics out-of-the-box, or wants a managed dashboard."
 rating: 23
 d6: 4
 archetype: S1
@@ -31,7 +31,7 @@ discovery + reporting works unchanged.
 - Programmatic test-case authoring (data-driven from a CSV/JSONL)
   is needed and pytest fixtures fit better than YAML config.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [de-gh][de-gh] and [de-start][de-start]:
 
@@ -49,7 +49,7 @@ Per [de-start][de-start]: after login "Confident AI will generate
 testing reports and automate regression testing whenever you run a
 test run."
 
-## Step 2 — First test
+## Step 2 - First test
 
 Per [de-gh][de-gh] (verbatim quickstart):
 
@@ -83,7 +83,7 @@ deepeval test run test_chatbot.py
 
 (Per [de-gh][de-gh].)
 
-## Step 3 — LLMTestCase fields
+## Step 3 - LLMTestCase fields
 
 Per [de-start][de-start], `LLMTestCase` fields:
 
@@ -95,7 +95,7 @@ Per [de-start][de-start], `LLMTestCase` fields:
 | `retrieval_context` | optional | List of retrieved chunks for RAG metrics |
 | `context` | optional | Ground-truth context for hallucination metric |
 
-## Step 4 — Metric catalog
+## Step 4 - Metric catalog
 
 Per [de-gh][de-gh] the available metrics include:
 
@@ -116,7 +116,7 @@ Per [de-gh][de-gh] the available metrics include:
 Each metric takes a `threshold` parameter; the test passes if score
 ≥ threshold.
 
-## Step 5 — Custom GEval pattern
+## Step 5 - Custom GEval pattern
 
 `GEval` is the universal escape hatch when no built-in metric fits:
 
@@ -133,9 +133,9 @@ professionalism = GEval(
 ```
 
 The `criteria` string is the rubric; the judge model evaluates and
-returns a 0–1 score with reasoning attached.
+returns a 0 - 1 score with reasoning attached.
 
-## Step 6 — Batch evaluation (no pytest)
+## Step 6 - Batch evaluation (no pytest)
 
 For dataset-driven runs without pytest:
 
@@ -148,7 +148,7 @@ evaluate(test_cases=[case1, case2, case3], metrics=[g_eval, faithfulness])
 Returns scores per metric per case; useful for regression sweeps
 across a CSV/JSONL of historical inputs.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```bash
 deepeval test run tests/llm/ --run-async --workers 4
@@ -162,7 +162,7 @@ Confident-AI is the company behind DeepEval (per [de-gh][de-gh]).
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| `threshold=0.0` on every metric | Tests never fail; eval theater | Pick real thresholds (0.5–0.8 typical) |
+| `threshold=0.0` on every metric | Tests never fail; eval theater | Pick real thresholds (0.5 - 0.8 typical) |
 | Hallucination metric without `context` | Metric has nothing to compare against | Always pass `context` (Step 3) |
 | Faithfulness metric without `retrieval_context` | Same problem | Pass retrieval chunks (Step 3) |
 | Custom GEval criteria too vague | Judge produces inconsistent scores | Concrete criteria with examples (Step 5) |
@@ -174,7 +174,7 @@ Confident-AI is the company behind DeepEval (per [de-gh][de-gh]).
   judge model version in CI.
 - Confident-AI is the managed dashboard; without it, regression
   tracking is manual (parse pytest output).
-- Test cases live in Python files — not as discoverable as YAML
+- Test cases live in Python files - not as discoverable as YAML
   configs for non-Python teammates (vs Promptfoo).
 - Faithfulness / Contextual-* metrics need RAG-shaped data; for
   pure prompt evals, [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md)
@@ -182,10 +182,10 @@ Confident-AI is the company behind DeepEval (per [de-gh][de-gh]).
 
 ## References
 
-- [de-gh][de-gh] — repository, install, quickstart, metric list
-- [de-start][de-start] — getting-started overview
+- [de-gh][de-gh] - repository, install, quickstart, metric list
+- [de-start][de-start] - getting-started overview
 - [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
-  [`ragas-evaluation`](../ragas-evaluation/SKILL.md) — sister tools
+  [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - sister tools
   (Promptfoo for YAML-config; Ragas for deeper RAG metric variety)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) —
+- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
   adversarial reviewer

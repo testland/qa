@@ -1,6 +1,6 @@
 ---
 name: negative-test-generator
-description: "Generates negative / error-path test cases that mirror happy-path tests — for each happy-path test, produces companions exercising input validation rejection, missing required fields, type mismatches, authorization failures, rate-limit errors, and adversarial payloads from the malicious-payload-bank. Emits cases as parameterized tests in the project's runner format. Use when a feature has happy-path coverage but the rejection / error / unauthorized paths are untested."
+description: "Generates negative / error-path test cases that mirror happy-path tests - for each happy-path test, produces companions exercising input validation rejection, missing required fields, type mismatches, authorization failures, rate-limit errors, and adversarial payloads from the malicious-payload-bank. Emits cases as parameterized tests in the project's runner format. Use when a feature has happy-path coverage but the rejection / error / unauthorized paths are untested."
 rating: 23
 d6: 3
 archetype: S3
@@ -12,12 +12,12 @@ archetype: S3
 
 A typical test suite has a happy-path test for every endpoint:
 "valid input → 200 / created object / etc." What's missing is the
-**rejection path** — what happens with malformed input, missing
+**rejection path** - what happens with malformed input, missing
 fields, wrong type, unauthorized user, rate-limited request,
 adversarial payload?
 
 This skill takes a happy-path test and emits its negative
-companions — one per failure mode. The result is a paired set
+companions - one per failure mode. The result is a paired set
 where every "should accept X" has a sibling "should reject Y"
 catalog.
 
@@ -228,11 +228,7 @@ def test_create_order_handles_adversarial_sku(payload):
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-  — upstream skill producing the happy-path AC.
-- [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md)
-  — adversarial payload catalog (category 6).
-- [`boundary-value-generator`](../boundary-value-generator/SKILL.md)
-  — sibling skill for boundary cases.
-- [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md)
-  — for any test data that includes PII.
+- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream skill producing the happy-path AC.
+- [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md) - adversarial payload catalog (category 6).
+- [`boundary-value-generator`](../boundary-value-generator/SKILL.md) - sibling skill for boundary cases.
+- [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) - for any test data that includes PII.

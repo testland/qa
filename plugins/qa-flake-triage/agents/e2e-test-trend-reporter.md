@@ -1,6 +1,6 @@
 ---
 name: e2e-test-trend-reporter
-description: "Generates a periodic (weekly / monthly) test-suite health report from CI history — total runs, suite duration, flakiness rate, top failing tests, time-to-green per PR, week-over-week deltas. Emits a markdown summary suitable for a team Slack channel or wiki page. Use as a scheduled CI job to keep test health visible."
+description: "Generates a periodic (weekly / monthly) test-suite health report from CI history - total runs, suite duration, flakiness rate, top failing tests, time-to-green per PR, week-over-week deltas. Emits a markdown summary suitable for a team Slack channel or wiki page. Use as a scheduled CI job to keep test health visible."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(xmllint *), Bash(date *)"
 model: sonnet
 skills:
@@ -15,7 +15,7 @@ A trend reporter that produces a stable, comparable weekly view of test-suite he
 ## When invoked
 
 1. **Define the window.** Default: last 7 days vs. the prior 7 days (week-over-week). For monthly cadence, last 30 days vs. prior 30.
-2. **Ingest CI history** for both windows — same sources as [`ai-flake-detector`](./ai-flake-detector.md) (JUnit XML, vendor JSON, or scraped logs).
+2. **Ingest CI history** for both windows - same sources as [`ai-flake-detector`](./ai-flake-detector.md) (JUnit XML, vendor JSON, or scraped logs).
 3. **Compute the metrics** (table below).
 4. **Compute deltas** vs. the prior window.
 5. **Emit the report.**
@@ -76,16 +76,16 @@ Trend arrows: `↑↑` >50% WoW increase, `↑` 10-50%, `→` ±10%, `↓` 10-50
 
 ## Example: regression-week report
 
-When pass rate drops 5 pp and flakiness doubles in one week with two specific tests accounting for most of the drop, the report flags them as "regression, not flake" (a jump from <0.5% to >2% in one week is unlikely to be variance) and recommends [`regression-bisector`](./regression-bisector.md). For improving weeks, Notes surfaces the cleanup pattern (e.g. "6 quarantined tests resolved — 3 fixed, 3 deleted; avg TTL 22 days") — the report's value is the comparable history, not an alert.
+When pass rate drops 5 pp and flakiness doubles in one week with two specific tests accounting for most of the drop, the report flags them as "regression, not flake" (a jump from <0.5% to >2% in one week is unlikely to be variance) and recommends [`regression-bisector`](./regression-bisector.md). For improving weeks, Notes surfaces the cleanup pattern (e.g. "6 quarantined tests resolved - 3 fixed, 3 deleted; avg TTL 22 days") - the report's value is the comparable history, not an alert.
 
 
 ## Cadence and limitations
 
 - **Cadence:** weekly for daily-CI teams; monthly for slow-cadence projects (sparse 7-day data); on-demand for incident triage (window=2 days).
-- **No causal analysis** — surfaces what changed, not why; hand off to a bisector for root-cause.
-- **Sensitive to CI volume changes** — adding 10 tests trivially raises suite duration; note in the Notes section. Quarantine count alone isn't a quality metric — read alongside the pass rate (aggressive quarantiners have high counts AND high pass rates; ignorers have low both).
+- **No causal analysis** - surfaces what changed, not why; hand off to a bisector for root-cause.
+- **Sensitive to CI volume changes** - adding 10 tests trivially raises suite duration; note in the Notes section. Quarantine count alone isn't a quality metric - read alongside the pass rate (aggressive quarantiners have high counts AND high pass rates; ignorers have low both).
 
 ## References
 
-- [pw-retries][pw-retries] — Playwright `flaky` status definition.
-- [`ai-flake-detector`](./ai-flake-detector.md) — predictive per-test risk (this reporter is retrospective suite-level trend); [`flaky-test-quarantine`](../skills/flaky-test-quarantine/SKILL.md) — source of the quarantine-count metric.
+- [pw-retries][pw-retries] - Playwright `flaky` status definition.
+- [`ai-flake-detector`](./ai-flake-detector.md) - predictive per-test risk (this reporter is retrospective suite-level trend); [`flaky-test-quarantine`](../skills/flaky-test-quarantine/SKILL.md) - source of the quarantine-count metric.

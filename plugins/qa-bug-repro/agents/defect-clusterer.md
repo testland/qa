@@ -70,13 +70,13 @@ representative #1234). Team fixes once at the representative; closes
 11 dupes.
 
 For weak-signal inputs (e.g., 5 bugs all reporting "request timed out"
-on different routes), the agent does NOT auto-cluster — it emits
+on different routes), the agent does NOT auto-cluster - it emits
 separate clusters per route and flags isolated reports as possible
 "could not reproduce" candidates.
 
 ## Limitations
 
-- **No semantic NLP** — the clusterer matches extracted strings, not
+- **No semantic NLP** - the clusterer matches extracted strings, not
   natural-language similarity. The same bug reported in different prose
   without a stack trace may stay un-clustered.
 - **Stack-trace-less bugs are hard to cluster reliably.** UI bugs
@@ -87,6 +87,6 @@ separate clusters per route and flags isolated reports as possible
 
 ## References
 
-- [`bug-report-template`](../skills/bug-report-template/SKILL.md) — upstream skill producing well-formed reports easier to cluster.
-- [`crash-stack-trace-analyzer`](./crash-stack-trace-analyzer.md) — upstream agent that adds stack-trace fingerprints to reports filed without them.
-- [`escape-defect-analyzer`](./escape-defect-analyzer.md) — downstream agent that takes a representative cluster and asks "why didn't our tests catch this?"
+- [`bug-report-template`](../skills/bug-report-template/SKILL.md) - upstream skill producing well-formed reports easier to cluster.
+- [`crash-stack-trace-analyzer`](./crash-stack-trace-analyzer.md) - upstream agent that adds stack-trace fingerprints to reports filed without them.
+- [`escape-defect-analyzer`](./escape-defect-analyzer.md) - downstream agent that takes a representative cluster and asks "why didn't our tests catch this?"

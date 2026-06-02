@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# pii-leak-critic — evals
+# pii-leak-critic - evals
 
 Companion eval cases for [`pii-leak-critic`](../../pii-leak-critic.md).
 Three cases cover happy path / branch / adversarial: an SPI leak in
@@ -15,7 +15,7 @@ trail"). Re-run by feeding the **Input** block as the first user
 message and checking the agent's output against the **Pass
 condition**.
 
-## Eval 1 — happy path — CPRA SPI in passthrough column (BLOCK)
+## Eval 1 - happy path - CPRA SPI in passthrough column (BLOCK)
 
 **Input:**
 
@@ -55,7 +55,7 @@ Detected hits in this sample:
 
 **Expected:** Per Step 3 the agent cross-references each hit:
 `notes` and `support_message` are in the spec but declared
-`passthrough` — no detector was applied during masking. Per Step 4
+`passthrough` - no detector was applied during masking. Per Step 4
 regime classification: US_SSN is a CPRA SPI / GDPR Art. 9 sensitive
 identifier / HIPAA Safe Harbor #7; CREDIT_CARD is CPRA SPI / HIPAA
 Safe Harbor #10; EMAIL_ADDRESS is GDPR / CPRA / HIPAA Safe Harbor
@@ -64,7 +64,7 @@ output is declared `anonymised` and contains direct identifiers in
 passthrough columns, AND because at least one hit is a CPRA SPI /
 HIPAA Safe Harbor identifier. Per Refuse-to-proceed: "Mark a run
 'pass' if any CPRA SPI / GDPR Art. 9 / HIPAA Safe Harbor identifier
-appears unmasked" — refuses to pass. Recommended fix: add `notes`
+appears unmasked" - refuses to pass. Recommended fix: add `notes`
 and `support_message` to `free_text_columns:` in the pipeline spec
 and re-run.
 
@@ -74,7 +74,7 @@ mentions at least two of `SSN`, `CREDIT_CARD`, `CPRA`, `HIPAA`, or
 fix). Output does NOT contain a final `PASS` verdict line that
 omits the `WITH-CAVEATS` qualifier.
 
-## Eval 2 — branch — clean masked sample (PASS)
+## Eval 2 - branch - clean masked sample (PASS)
 
 **Input:**
 
@@ -117,7 +117,7 @@ two PHONE_NUMBER hits are on tokenized UUID strings and the analyst
 has flagged them as false positives. Per Step 5 verdict rules:
 "PASS if Zero hits, OR Only false-positive hits that the analyst
 flags as Presidio-noise (e.g., a fake-shaped string that's actually
-a UUID)" — the agent emits `PASS`. No CPRA SPI / GDPR Art. 9 /
+a UUID)" - the agent emits `PASS`. No CPRA SPI / GDPR Art. 9 /
 HIPAA Safe Harbor identifiers detected; no direct identifiers in
 mismatched columns; no hits in undeclared columns.
 
@@ -127,7 +127,7 @@ line) AND mentions at least one of `false positive`, `UUID`, or
 `Presidio-noise` (the false-positive justification path). Output
 does NOT contain a `BLOCK` verdict line.
 
-## Eval 3 — adversarial — missing pipeline manifest (refuse to proceed)
+## Eval 3 - adversarial - missing pipeline manifest (refuse to proceed)
 
 **Input:**
 
@@ -157,9 +157,9 @@ fix any leaks in the next pipeline run."
 
 **Expected:** Per Refuse-to-proceed rule "Mark a run 'pass' if the
 pipeline spec is missing a manifest (no provenance = no audit
-trail)" — the agent cannot pass the run. Per Refuse-to-proceed rule
-"Accept 'we'll fix it next time' as a verdict — leaks block the
-promotion" — the agent rejects the caller's framing. Per Step 3, the
+trail)" - the agent cannot pass the run. Per Refuse-to-proceed rule
+"Accept 'we'll fix it next time' as a verdict - leaks block the
+promotion" - the agent rejects the caller's framing. Per Step 3, the
 agent cannot cross-reference detector hits against operator
 declarations because the spec is missing, so it cannot classify
 which columns are passthrough vs declared. The agent refuses to
@@ -177,7 +177,7 @@ clean `PASS` based solely on the sample.
 ## Reproducibility notes
 
 - All three inputs are concrete pasted YAML pipeline-spec snippets
-  plus pre-tabulated Presidio hits — no external Presidio API call
+  plus pre-tabulated Presidio hits - no external Presidio API call
   needed at eval time.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

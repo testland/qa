@@ -1,6 +1,6 @@
 ---
 name: grpc-streaming-tests
-description: "Test gRPC streaming RPCs — Server-streaming (server returns sequence), Client-streaming (client sends sequence), Bidirectional (both sides stream independently). Cover deadline + cancellation + flow control + status codes (CANCELLED, DEADLINE_EXCEEDED) + metadata. Use ghz for load, grpcurl for ad-hoc, language-native test stubs for unit/integration."
+description: "Test gRPC streaming RPCs - Server-streaming (server returns sequence), Client-streaming (client sends sequence), Bidirectional (both sides stream independently). Cover deadline + cancellation + flow control + status codes (CANCELLED, DEADLINE_EXCEEDED) + metadata. Use ghz for load, grpcurl for ad-hoc, language-native test stubs for unit/integration."
 type: skill
 archetype: S1
 rating: 23
@@ -17,7 +17,7 @@ keywords:
 
 Streaming RPCs need test coverage for deadline behavior,
 cancellation propagation, flow control under backpressure, and
-status-code semantics that differ from unary calls — covering all
+status-code semantics that differ from unary calls - covering all
 four patterns (Unary, Server-streaming, Client-streaming,
 Bidirectional-streaming) per the [gRPC core concepts docs].
 
@@ -30,7 +30,7 @@ Bidirectional-streaming) per the [gRPC core concepts docs].
 - Load test gate: streams handle backpressure without OOM or
   silent drops.
 
-## Step 1 — Pick the test tool
+## Step 1 - Pick the test tool
 
 | Tool | Strength |
 |---|---|
@@ -39,7 +39,7 @@ Bidirectional-streaming) per the [gRPC core concepts docs].
 | `ghz` | Load testing + benchmarks (concurrency, RPS) |
 | `mockgrpc` / `mockery` (Go), `grpc-mock` (Node) | Mock server stubs in unit tests |
 
-## Step 2 — Unary RPC sanity (baseline)
+## Step 2 - Unary RPC sanity (baseline)
 
 Per the [gRPC core concepts docs], Unary = "single request, single
 response." Use this to verify the RPC plumbing before testing
@@ -57,7 +57,7 @@ def test_unary_create_order():
         assert resp.order_id != ""
 ```
 
-## Step 3 — Server-streaming test
+## Step 3 - Server-streaming test
 
 Per the [gRPC core concepts docs], server-streaming = "client sends
 a request and gets a stream to read a sequence of messages back."
@@ -78,7 +78,7 @@ def test_server_streaming_price_ticker():
         assert all(t.symbol == "AAPL" for t in ticks)
 ```
 
-## Step 4 — Client-streaming test
+## Step 4 - Client-streaming test
 
 Per the [gRPC core concepts docs], client-streaming = "client writes
 a sequence of messages and sends them to the server."
@@ -97,10 +97,10 @@ def test_client_streaming_upload():
         assert resp.total_bytes == 10 * 1024
 ```
 
-## Step 5 — Bidirectional streaming + ordering
+## Step 5 - Bidirectional streaming + ordering
 
 Per the [gRPC core concepts docs], bidirectional streams "operate
-independently" — server may emit messages before reading any client
+independently" - server may emit messages before reading any client
 message, after, or interleaved.
 
 ```python
@@ -121,7 +121,7 @@ async def test_bidi_chat():
         assert len(responses) >= 3
 ```
 
-## Step 6 — Deadline propagation
+## Step 6 - Deadline propagation
 
 Per the [gRPC core concepts docs], "Clients specify maximum wait
 time; RPCs terminate with `DEADLINE_EXCEEDED` if exceeded."
@@ -151,7 +151,7 @@ def test_server_observes_deadline_propagation():
     assert downstream_state.cancelled_count >= 1
 ```
 
-## Step 7 — Cancellation behavior
+## Step 7 - Cancellation behavior
 
 Per the [gRPC core concepts docs], "Either party can terminate an
 RPC immediately. Changes made before a cancellation are not rolled
@@ -171,7 +171,7 @@ def test_cancellation_is_observed_server_side():
         assert state.cancelled_count >= 1
 ```
 
-## Step 8 — Status codes
+## Step 8 - Status codes
 
 | Code | When |
 |---|---|
@@ -196,7 +196,7 @@ def test_invalid_argument_returns_correct_code():
         assert exc.value.code() == grpc.StatusCode.INVALID_ARGUMENT
 ```
 
-## Step 9 — Metadata
+## Step 9 - Metadata
 
 Per the [gRPC core concepts docs], metadata is "key-value pairs"
 case-insensitive ASCII keys; binary values use `-bin` suffix.
@@ -213,7 +213,7 @@ def test_request_metadata_round_trip():
         assert ("x-trace-id-echo", "abc123") in trailing
 ```
 
-## Step 10 — Load test with `ghz`
+## Step 10 - Load test with `ghz`
 
 ```bash
 ghz \
@@ -251,11 +251,11 @@ Reports RPS, p50/p95/p99 latency. For streaming RPCs use
 
 ## References
 
-- [gRPC core concepts docs] — RPC patterns, deadlines, cancellation,
+- [gRPC core concepts docs] - RPC patterns, deadlines, cancellation,
   status codes, metadata
-- [`websocket-tests`](../websocket-tests/SKILL.md) — WebSocket
+- [`websocket-tests`](../websocket-tests/SKILL.md) - WebSocket
   alternative for non-gRPC stacks
-- [`server-sent-events-tests`](../server-sent-events-tests/SKILL.md) —
+- [`server-sent-events-tests`](../server-sent-events-tests/SKILL.md) - 
   one-way HTTP streaming alternative
 
 [gRPC core concepts docs]: https://grpc.io/docs/what-is-grpc/core-concepts/

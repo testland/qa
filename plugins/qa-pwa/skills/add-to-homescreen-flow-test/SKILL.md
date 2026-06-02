@@ -20,9 +20,9 @@ The PWA install flow is a four-stage test surface per
 [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md):
 installability gate → `beforeinstallprompt` handshake → per-platform
 install path → post-install `display-mode` signal. Every team's
-install regression looks slightly different — a missing `start_url`,
+install regression looks slightly different - a missing `start_url`,
 an icon resolution drift, a `prompt()` called without a user
-gesture — but the test surface is the same.
+gesture - but the test surface is the same.
 
 This builder produces the per-PWA install suite. Output is a
 Playwright spec file plus a coverage YAML matrix mapping each
@@ -38,36 +38,34 @@ Distinct from
 [`qa-modern-web/pwa-install-flow-tests`](../../../qa-modern-web/skills/pwa-install-flow-tests/SKILL.md):
 that skill authors install-flow tests as a generic S1 wrapper.
 This builder generates the *per-PWA* suite from the project's
-actual manifest + SW + page handler — the artifact you check into
+actual manifest + SW + page handler - the artifact you check into
 the repo, not the pattern reference.
 
 Composes with:
 
-- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
-  — the four-stage timeline this builder follows step-by-step.
-- [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md) — the
+- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md) - the four-stage timeline this builder follows step-by-step.
+- [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md) - the
   `installable-manifest` and `apple-touch-icon` audits are the
   Lighthouse counterpart of the Step 2 + Step 5 cells here.
-- [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md)
-  — Stage 1 of the install gate requires an active SW; pair this
+- [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md) - Stage 1 of the install gate requires an active SW; pair this
   builder's output with the lifecycle spec for full coverage.
 
 ## When to use
 
-- New PWA, pre-launch — generate the install suite alongside the
+- New PWA, pre-launch - generate the install suite alongside the
   manifest.
 - Manifest changed (renamed `name`, new icon, dropped `display`
-  field) — re-run the builder to catch criteria regressions.
-- Install conversion is dropping in analytics — author the
+  field) - re-run the builder to catch criteria regressions.
+- Install conversion is dropping in analytics - author the
   per-stage cells to localize where users fall out (gate fails →
   prompt never fires; prompt fires → user dismisses; install
   succeeds but `display-mode` flips wrong).
-- Adding iOS support to a Chromium-first PWA — author the manual-
+- Adding iOS support to a Chromium-first PWA - author the manual-
   metadata branch.
 
 ## Workflow
 
-### Step 1 — Read the manifest + page handler
+### Step 1 - Read the manifest + page handler
 
 ```bash
 # Inventory
@@ -85,7 +83,7 @@ Capture for the test:
 | Whether `appinstalled` is bound (analytics) | Step 4 |
 | Whether `apple-touch-icon` + `apple-mobile-web-app-capable` meta are present | Step 5 |
 
-### Step 2 — Emit the gate-cell tests
+### Step 2 - Emit the gate-cell tests
 
 Per [install-criteria], every gate cell is independently
 assertable. Emit one test per cell:
@@ -155,7 +153,7 @@ test.describe('PWA install gate (per web.dev/articles/install-criteria)', () => 
 });
 ```
 
-### Step 3 — Emit the `beforeinstallprompt` handshake test
+### Step 3 - Emit the `beforeinstallprompt` handshake test
 
 Per [customize-install], the canonical lifecycle is
 `preventDefault` → stash → `prompt()` on user gesture →
@@ -196,7 +194,7 @@ init script that hooks the event). The 31-second engagement wait
 is the engagement-gate cell from [install-criteria].
 
 Per [customize-install]: *"You can only call `prompt()` on the
-deferred event once."* — emit a second-call assertion:
+deferred event once."* - emit a second-call assertion:
 
 ```ts
 test('beforeinstallprompt: second prompt() call rejects', async ({ page }) => {
@@ -215,7 +213,7 @@ test('beforeinstallprompt: second prompt() call rejects', async ({ page }) => {
 });
 ```
 
-### Step 4 — Emit the `appinstalled` analytics test
+### Step 4 - Emit the `appinstalled` analytics test
 
 Per [customize-install]: `appinstalled` "fires whenever
 installation succeeds, regardless of the trigger mechanism." Test
@@ -240,7 +238,7 @@ WebAPK minting headlessly), so the fixture either (a) mocks the
 prompt resolver, or (b) dispatches a synthetic `appinstalled`
 event in test mode.
 
-### Step 5 — Emit the iOS-metadata branch
+### Step 5 - Emit the iOS-metadata branch
 
 Per [learn-pwa], iOS Safari does not implement
 `beforeinstallprompt`. The test surface is metadata + manual
@@ -269,11 +267,11 @@ test('iOS install metadata: apple-touch-icon resolves', async ({ page, request }
 });
 ```
 
-Per [learn-pwa]: iOS install "requires `apple-touch-icon` tag" —
+Per [learn-pwa]: iOS install "requires `apple-touch-icon` tag" - 
 omitting this means installed PWAs get a generic icon, a regression
 invisible until users file a bug.
 
-### Step 6 — Emit the post-install `display-mode` test
+### Step 6 - Emit the post-install `display-mode` test
 
 Post-install, the PWA detects its installed state via the
 `display-mode` MQ. Playwright doesn't auto-simulate installation;
@@ -311,7 +309,7 @@ test('display-mode: hides Install button when standalone', async () => {
 });
 ```
 
-### Step 7 — Emit the coverage matrix
+### Step 7 - Emit the coverage matrix
 
 Write `tests/install-coverage.yaml`:
 
@@ -416,7 +414,7 @@ the four classes of install regression most teams hit:
 - **The 31-second engagement wait is real.** Per [install-criteria]
   "Users must click/tap the page at least once and spend minimum 30
   seconds viewing it." The test cell from Step 3 sleeps the wait
-  literally — slow tests by ~30s. Run only on release branches if
+  literally - slow tests by ~30s. Run only on release branches if
   PR-CI time pressure is high.
 - **Headless WebAPK minting can't be asserted.** Step 4's
   `appinstalled` test verifies the event fires; the actual Android
@@ -440,14 +438,14 @@ the four classes of install regression most teams hit:
 
 ## References
 
-- web.dev — Install criteria (every gate cell, including HTTPS, SW,
-  manifest fields, and the 30s engagement requirement) —
+- web.dev - Install criteria (every gate cell, including HTTPS, SW,
+  manifest fields, and the 30s engagement requirement) - 
   [install-criteria].
-- web.dev — Learn PWA: Installation (per-platform flow, iOS Share
-  menu path, `apple-touch-icon` requirement) — [learn-pwa].
-- web.dev — Customize the install experience (`beforeinstallprompt`
+- web.dev - Learn PWA: Installation (per-platform flow, iOS Share
+  menu path, `apple-touch-icon` requirement) - [learn-pwa].
+- web.dev - Customize the install experience (`beforeinstallprompt`
   handshake, `prompt()` once-only, `appinstalled` firing
-  conditions) — [customize-install].
+  conditions) - [customize-install].
 - Composes:
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
   [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md),
@@ -456,7 +454,7 @@ the four classes of install regression most teams hit:
   [`qa-modern-web/pwa-install-flow-tests`](../../../qa-modern-web/skills/pwa-install-flow-tests/SKILL.md)
   is the generic S1 pattern wrapper. This S3 builder emits the
   *per-PWA* suite tied to the project's actual manifest /
-  handlers — the checked-in artifact, not the pattern reference.
+  handlers - the checked-in artifact, not the pattern reference.
 - Sibling builders:
   [`offline-fallback-test`](../offline-fallback-test/SKILL.md),
   [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md).

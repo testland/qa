@@ -4,7 +4,7 @@ type: agent
 archetype: A4
 ---
 
-# fuzz-target-author — evals
+# fuzz-target-author - evals
 
 Companion eval cases for [`fuzz-target-author`](../../fuzz-target-author.md).
 Three cases cover happy path / branch / adversarial: a C/C++ libFuzzer
@@ -14,10 +14,10 @@ feeding the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — C/C++ libFuzzer harness from a parse_json signature
+## Eval 1 - happy path - C/C++ libFuzzer harness from a parse_json signature
 
 **Input:**
 
@@ -60,7 +60,7 @@ of generated files. Output mentions the harness path
 `fuzz/fuzz_parse_json` (the agent derives the target name from the
 function name when no override is given).
 
-## Eval 2 — branch — Rust cargo-fuzz target from a Cargo project
+## Eval 2 - branch - Rust cargo-fuzz target from a Cargo project
 
 **Input:**
 
@@ -94,11 +94,11 @@ appear in the output (that would be a wrong-branch failure).
 
 **Pass condition:** Output contains the literal string `cargo` AND
 `fuzz_target!` AND `#![no_main]`. Output does NOT contain
-`LLVMFuzzerTestOneInput` (the C/C++ entry point — would indicate the
+`LLVMFuzzerTestOneInput` (the C/C++ entry point - would indicate the
 agent took the wrong language branch). Output does NOT contain
 `atheris` / `Jazzer` / `FuzzXxx(f *testing.F)` (other-language branches).
 
-## Eval 3 — adversarial — missing function signature (refuse to scaffold)
+## Eval 3 - adversarial - missing function signature (refuse to scaffold)
 
 **Input:**
 
@@ -115,7 +115,7 @@ preference.)
 
 **Expected:** Refuses to scaffold. The agent's `When invoked` block
 declares the required input as "a target function signature (or file
-containing one)" — none is supplied. The detection heuristic
+containing one)" - none is supplied. The detection heuristic
 deliberately fails-closed on ambiguous multi-language layouts (Step 1:
 "Ask the user if ambiguous"). The agent does NOT invent a function
 signature, does NOT pick a language at random, and does NOT generate a
@@ -133,13 +133,13 @@ scaffolder's primary side-effect is suppressed).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, `Write`, `Edit`,
   narrow `Bash(git *|clang *|go *|cargo *)`) writes harness files but
-  the refuse rules prevent file-writes on missing-signature input —
+  the refuse rules prevent file-writes on missing-signature input - 
   eval 3 is observable as the absence of writes plus the request for
   the missing field.
 - Eval cases were authored 2026-05-26 against the v4.0 framework's D7

@@ -4,17 +4,17 @@ type: agent
 archetype: A3
 ---
 
-# definition-of-done-checker — evals
+# definition-of-done-checker - evals
 
 Companion eval cases for [`definition-of-done-checker`](../../definition-of-done-checker.md).
 Three cases cover happy path / branch / adversarial: a PR that fails
 multiple DoD items (verdict `REJECT`), a story that passes
 ready-for-dev (verdict `ACCEPT`), and an audit with no DoD source
-found (verdict `INCONCLUSIVE` — refuse to opine). Re-run by feeding
+found (verdict `INCONCLUSIVE` - refuse to opine). Re-run by feeding
 the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — PR fails on test-coverage and a11y items (REJECT)
+## Eval 1 - happy path - PR fails on test-coverage and a11y items (REJECT)
 
 **Input:**
 
@@ -55,10 +55,9 @@ PR #4567 artifacts:
 **Expected:** Per the "When invoked" Step 4 ("Reject if any item is
 unmet. Default disposition is REJECT; the agent only ACCEPTS when
 every item has positive evidence"), the agent emits verdict
-`REJECT`. Failing items: (a) "All AC scenarios have tests" —
+`REJECT`. Failing items: (a) "All AC scenarios have tests" - 
 AC-1 and AC-3 lack tests; (b) "Accessibility scan passes for UI
-changes" — no axe-core artifact in CI; (c) "Documentation updated"
-— no CHANGELOG.md diff for a user-visible feature. Passing items
+changes" - no axe-core artifact in CI; (c) "Documentation updated" - no CHANGELOG.md diff for a user-visible feature. Passing items
 include the linter/type-check, security scan, and reviewer-approval
 DoD items. Output follows the format in the "Output format" section
 with `**Stage:** ready-for-merge`.
@@ -68,7 +67,7 @@ AND mentions at least two of `AC-1`, `AC-3`, `axe`, or `CHANGELOG`
 (the specific missing-evidence rationale). Output does NOT contain
 a final `ACCEPT` verdict line.
 
-## Eval 2 — branch — story passes ready-for-dev (ACCEPT)
+## Eval 2 - branch - story passes ready-for-dev (ACCEPT)
 
 **Input:**
 
@@ -124,7 +123,7 @@ AND at least one of `ready-for-dev` or `Items unmet:** 0`. Output
 does NOT contain a `REJECT` verdict line, AND does NOT contain an
 `INCONCLUSIVE` verdict line.
 
-## Eval 3 — adversarial — no DoD source found (INCONCLUSIVE)
+## Eval 3 - adversarial - no DoD source found (INCONCLUSIVE)
 
 **Input:**
 
@@ -168,7 +167,7 @@ final `REJECT` verdict line.
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks describing a
-  DoD source plus an artifact under review — no external Linear /
+  DoD source plus an artifact under review - no external Linear /
   GitHub API access needed.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

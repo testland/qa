@@ -1,6 +1,6 @@
 ---
 name: slo-negotiation-prep
-description: "Build-an-X workflow that produces the manager's prep pack for the QA–SRE–Product SLO conversation — current error-budget consumption + MTTR/MTBF trend + a single framed decision question + an explicit 3-5 option matrix with reversibility / stakeholder cost / impact scoring + recommended posture with cited alternatives. Distinct from `error-budget-tests` (which computes the SLI / SLO / budget math; this skill consumes it) and from `mttr-mtbf-tracker` (pure-reference incident schema; this skill consumes per-incident metrics). Use when budget is burning or a proposed change will stress the SLO — the output is the evidence pack the manager carries into the meeting, not a recommendation about which option to pick."
+description: "Build-an-X workflow that produces the manager's prep pack for the QA - SRE - Product SLO conversation - current error-budget consumption + MTTR/MTBF trend + a single framed decision question + an explicit 3-5 option matrix with reversibility / stakeholder cost / impact scoring + recommended posture with cited alternatives. Distinct from `error-budget-tests` (which computes the SLI / SLO / budget math; this skill consumes it) and from `mttr-mtbf-tracker` (pure-reference incident schema; this skill consumes per-incident metrics). Use when budget is burning or a proposed change will stress the SLO - the output is the evidence pack the manager carries into the meeting, not a recommendation about which option to pick."
 rating: 24
 d6: 4
 archetype: S3
@@ -10,9 +10,9 @@ archetype: S3
 
 ## Overview
 
-The QA manager is heading into a meeting with SRE and Product. The product team wants to ship Feature X in two weeks. The SRE team's burn-rate alerts have fired three times this quarter. The QA manager's job in that meeting is **not to win** — it is to walk in with structured evidence and explicit options so the team makes a defensible decision the group can stand behind in retro.
+The QA manager is heading into a meeting with SRE and Product. The product team wants to ship Feature X in two weeks. The SRE team's burn-rate alerts have fired three times this quarter. The QA manager's job in that meeting is **not to win** - it is to walk in with structured evidence and explicit options so the team makes a defensible decision the group can stand behind in retro.
 
-This skill produces that prep pack. Per the [Google SRE Workbook](https://sre.google/workbook/implementing-slos/), the error-budget policy needs the agreement of three stakeholders — product manager, product developers, and the production-environment team — and "if all three parties do not agree to enforce the error budget policy, you need to iterate on the SLIs and SLOs until all stakeholders are happy." The conversation is bidirectional: either side can argue for relaxing the SLO if reality has moved.
+This skill produces that prep pack. Per the [Google SRE Workbook](https://sre.google/workbook/implementing-slos/), the error-budget policy needs the agreement of three stakeholders - product manager, product developers, and the production-environment team - and "if all three parties do not agree to enforce the error budget policy, you need to iterate on the SLIs and SLOs until all stakeholders are happy." The conversation is bidirectional: either side can argue for relaxing the SLO if reality has moved.
 
 ## When to use
 
@@ -24,11 +24,11 @@ This skill produces that prep pack. Per the [Google SRE Workbook](https://sre.go
 
 Do **not** use this skill when:
 
-- No SLO is in place — the team needs to *define* SLOs first; use [`error-budget-tests`](../error-budget-tests/SKILL.md) to author the SLI / SLO / budget structure.
-- No decision question is framed — without a specific question ("ship Feature X in 2 weeks?" / "extend budget?" / "lower SLO?"), the prep pack has no shape. The skill halts.
-- The team's culture rejects structured negotiation — some shops prefer "the loudest voice wins"; this skill's value is structured evidence; if the meeting doesn't reward that, the skill is wasted effort.
+- No SLO is in place - the team needs to *define* SLOs first; use [`error-budget-tests`](../error-budget-tests/SKILL.md) to author the SLI / SLO / budget structure.
+- No decision question is framed - without a specific question ("ship Feature X in 2 weeks?" / "extend budget?" / "lower SLO?"), the prep pack has no shape. The skill halts.
+- The team's culture rejects structured negotiation - some shops prefer "the loudest voice wins"; this skill's value is structured evidence; if the meeting doesn't reward that, the skill is wasted effort.
 
-## Step 1 — Capture the inputs
+## Step 1 - Capture the inputs
 
 Required:
 
@@ -43,7 +43,7 @@ Required:
 
 The skill halts with `NO_DECISION_FRAMED` if no specific question is offered, or with `MISSING_SLO` if no current SLO is configured.
 
-## Step 2 — Build the current-state evidence pack
+## Step 2 - Build the current-state evidence pack
 
 The manager walks into the meeting with the data already structured. The pack:
 
@@ -74,9 +74,9 @@ The manager walks into the meeting with the data already structured. The pack:
 - Alert history: PagerDuty export 2026-07-01..2026-07-15
 ```
 
-The evidence pack is **read aloud at the start of the meeting** — not as a pitch, but to ensure all stakeholders see the same numbers before anyone proposes an option.
+The evidence pack is **read aloud at the start of the meeting** - not as a pitch, but to ensure all stakeholders see the same numbers before anyone proposes an option.
 
-## Step 3 — Frame the decision and enumerate the option matrix
+## Step 3 - Frame the decision and enumerate the option matrix
 
 Per the [Google SRE Workbook](https://sre.google/workbook/implementing-slos/), when budget is exhausted (or close to exhausted) the documented standard responses are:
 
@@ -86,10 +86,10 @@ Per the [Google SRE Workbook](https://sre.google/workbook/implementing-slos/), w
 
 The skill extends this canonical 3-option set with two negotiation-specific options:
 
-4. **Extend the budget** (raise the SLO ceiling temporarily) — sometimes called "burn-down deferral."
-5. **Lower the SLO** (renegotiate the underlying objective) — appropriate when the original SLO no longer matches user expectations.
+4. **Extend the budget** (raise the SLO ceiling temporarily) - sometimes called "burn-down deferral."
+5. **Lower the SLO** (renegotiate the underlying objective) - appropriate when the original SLO no longer matches user expectations.
 
-The skill emits the option matrix with **explicit scoring** on three axes — impact, reversibility, stakeholder cost:
+The skill emits the option matrix with **explicit scoring** on three axes - impact, reversibility, stakeholder cost:
 
 ```markdown
 ## The decision
@@ -116,7 +116,7 @@ The skill emits the option matrix with **explicit scoring** on three axes — im
 The matrix is the decision input; the team picks. No option is auto-recommended in the matrix itself.
 ```
 
-## Step 4 — Author the recommended posture (with alternatives)
+## Step 4 - Author the recommended posture (with alternatives)
 
 The skill *does* recommend a posture, but always with at least one fallback alternative. The recommendation is anchored on the inputs and cited:
 
@@ -149,9 +149,9 @@ The skill *does* recommend a posture, but always with at least one fallback alte
 **What the manager advocates for**: O3 as primary, O2 as the negotiated fallback if Product cannot accept the freeze.
 ```
 
-The "stakeholder positions to anticipate" section is the **meeting prep** in its purest form — the manager walks in already knowing which positions will be defended and what the rebuttal is.
+The "stakeholder positions to anticipate" section is the **meeting prep** in its purest form - the manager walks in already knowing which positions will be defended and what the rebuttal is.
 
-## Step 5 — Audit appendix
+## Step 5 - Audit appendix
 
 Every numeric and every citation in Steps 2-4 traces to a source artifact:
 
@@ -169,7 +169,7 @@ Every numeric and every citation in Steps 2-4 traces to a source artifact:
 | Recommended posture (Step 4) | Cited inline; manager confirms before walking into the meeting |
 ```
 
-The audit appendix is what the manager shows in retro: "here's why we recommended O3, here's what we said about O4, here's the data we cited." If the team chose O2 instead and the quarter ended badly, the audit traces the decision back to the evidence — not to the manager's gut.
+The audit appendix is what the manager shows in retro: "here's why we recommended O3, here's what we said about O4, here's the data we cited." If the team chose O2 instead and the quarter ended badly, the audit traces the decision back to the evidence - not to the manager's gut.
 
 ## Worked example summary (compact)
 
@@ -183,19 +183,19 @@ The manager walks in with structured evidence. The meeting decides. The retro ca
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Recommending an option without naming the fallback | The team feels boxed in; the manager loses negotiation room | Step 4 requires ≥1 fallback alternative |
-| Single-option pack ("we should do X") | Frames the meeting as a yes/no on the manager's preference rather than a structured choice | Step 3 requires 3–5 options |
+| Single-option pack ("we should do X") | Frames the meeting as a yes/no on the manager's preference rather than a structured choice | Step 3 requires 3 - 5 options |
 | Citing only your team's incidents (no SRE / Product perspective) | The evidence pack reads as advocacy; SRE / Product will reject the framing | Step 2 evidence is jointly sourceable; cite SRE's incident log directly |
 | Treating "extend the budget" as cost-free | Per the Workbook's bidirectional framing, budget extensions erode SLO discipline if used reactively | Step 3 scores O4 reversibility as "low" with the cited rationale |
 | Lowering the SLO under 2 weeks of pressure | SLO changes are sticky; making them under acute pressure means making them wrong | Step 4 explicitly rejects O5 absent multi-quarter evidence |
 | Skipping the "stakeholder positions to anticipate" section | The manager walks in unprepared for the actual debate | Step 4 stakeholder section is required |
 | Producing the pack without an audit appendix | The retro cannot trace the decision; future decisions get harder to defend | Step 5 audit is required |
 | Auto-advocating for the freeze ("standard response per SRE Workbook") | Standard responses exist for a reason but aren't universal; the team's context drives the actual choice | Recommendations cite the standard but flex to context |
-| Treating this skill as a meeting-script | The manager's job is to listen, not to read; the pack is the structured input, not the dialogue | Step 4 ends at "what the manager advocates for" — the meeting is human |
+| Treating this skill as a meeting-script | The manager's job is to listen, not to read; the pack is the structured input, not the dialogue | Step 4 ends at "what the manager advocates for" - the meeting is human |
 
 ## Limitations
 
 - **Bound by the input quality.** A pack built on stale `mttr-mtbf-tracker` data is misleading; the manager confirms incident-log freshness before the meeting.
-- **Heuristic scoring.** The reversibility / stakeholder-cost scores in Step 3 are heuristic — team-specific dynamics (a Product PM with strong leverage, an SRE on PIP) shift the actual cost. Score is the starting point, not the ending point.
+- **Heuristic scoring.** The reversibility / stakeholder-cost scores in Step 3 are heuristic - team-specific dynamics (a Product PM with strong leverage, an SRE on PIP) shift the actual cost. Score is the starting point, not the ending point.
 - **No real-time data integration.** The skill produces a snapshot prep pack. If the conversation slides (decision deferred, new burn alert fires mid-meeting), the pack ages.
 - **Not a substitute for the meeting itself.** Per the SRE Workbook, agreement among the three stakeholders is what creates the policy. The pack structures the input; the agreement happens in the room.
 - **No legal / contract escalation path.** Some SLOs are bound by external customer contracts; this skill flags the contract but does not negotiate it.
@@ -214,12 +214,12 @@ The manager walks in with structured evidence. The meeting decides. The retro ca
 
 ## References
 
-- Google SRE Book — *Embracing Risk* chapter (error budget definition, freeze-on-exhaustion policy): https://sre.google/sre-book/embracing-risk/
-- Google SRE Workbook — *Implementing SLOs* (SLI / SLO definitions, error-budget policy structure, the bidirectional stakeholder agreement, the canonical three standard responses): https://sre.google/workbook/implementing-slos/
-- CTO Craft — *Data-Driven Negotiation with SLIs, SLOs, and Error Budgets* (Part One framing the negotiation; Part Two on the conversation structure this skill mirrors): https://ctocraft.com/blog/data-driven-negotiation-with-slis-slos-and-error-budgets-part-one/
-- MIT Sloan Executive Education — *AI Meets Negotiation: Seven Lessons from MIT* (chain-of-thought prompting for option-matrix construction, the methodology underlying Step 3): https://executive.mit.edu/blog/ai-meets-negotiation.html
-- ISTQB glossary — service level agreement (the contract layer SLOs operationalise): https://glossary.istqb.org/en_US/term/service-level-agreement
-- ISTQB glossary — non-functional testing (the layer SLOs anchor on): https://glossary.istqb.org/en_US/term/non-functional-testing
-- ISO/IEC 25010 — reliability and performance-efficiency characteristics (the underlying quality dimensions): https://en.wikipedia.org/wiki/ISO/IEC_25010
-- [`error-budget-tests`](../error-budget-tests/SKILL.md), [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) — sibling skills that produce the input data this skill consumes.
-- [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md), [`release-readiness-checker`](../../../qa-process/agents/release-readiness-checker.md), [`post-mortem-author`](../../../qa-process/skills/post-mortem-author/SKILL.md), [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md) — downstream skills that consume the conversation outcome.
+- Google SRE Book - *Embracing Risk* chapter (error budget definition, freeze-on-exhaustion policy): https://sre.google/sre-book/embracing-risk/
+- Google SRE Workbook - *Implementing SLOs* (SLI / SLO definitions, error-budget policy structure, the bidirectional stakeholder agreement, the canonical three standard responses): https://sre.google/workbook/implementing-slos/
+- CTO Craft - *Data-Driven Negotiation with SLIs, SLOs, and Error Budgets* (Part One framing the negotiation; Part Two on the conversation structure this skill mirrors): https://ctocraft.com/blog/data-driven-negotiation-with-slis-slos-and-error-budgets-part-one/
+- MIT Sloan Executive Education - *AI Meets Negotiation: Seven Lessons from MIT* (chain-of-thought prompting for option-matrix construction, the methodology underlying Step 3): https://executive.mit.edu/blog/ai-meets-negotiation.html
+- ISTQB glossary - service level agreement (the contract layer SLOs operationalise): https://glossary.istqb.org/en_US/term/service-level-agreement
+- ISTQB glossary - non-functional testing (the layer SLOs anchor on): https://glossary.istqb.org/en_US/term/non-functional-testing
+- ISO/IEC 25010 - reliability and performance-efficiency characteristics (the underlying quality dimensions): https://en.wikipedia.org/wiki/ISO/IEC_25010
+- [`error-budget-tests`](../error-budget-tests/SKILL.md), [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - sibling skills that produce the input data this skill consumes.
+- [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md), [`release-readiness-checker`](../../../qa-process/agents/release-readiness-checker.md), [`post-mortem-author`](../../../qa-process/skills/post-mortem-author/SKILL.md), [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md) - downstream skills that consume the conversation outcome.

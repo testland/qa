@@ -1,6 +1,6 @@
 ---
 name: object-model-patterns
-description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks — Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) — each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework S1 skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` (A3) and `playwright-codegen-reviewer` (A3) as the architecture-tier reference for what each pattern actually is."
+description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework S1 skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` (A3) and `playwright-codegen-reviewer` (A3) as the architecture-tier reference for what each pattern actually is."
 rating: 25
 d6: 5
 archetype: S2
@@ -10,22 +10,22 @@ archetype: S2
 
 ## Overview
 
-This skill is a **pure reference** (S2) — no execution steps; it is the canonical catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
+This skill is a **pure reference** (S2) - no execution steps; it is the canonical catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
 
 ## When to use
 
-- Designing a new test automation framework — pick one canonical pattern; do not mix.
-- Reviewing an existing framework's architecture — audit which pattern is in use and whether it is applied consistently.
+- Designing a new test automation framework - pick one canonical pattern; do not mix.
+- Reviewing an existing framework's architecture - audit which pattern is in use and whether it is applied consistently.
 - Migrating from one pattern to another (the most common migration: classic POM → Screenplay or POM → App Actions).
-- Onboarding new engineers — point them at the canonical citation for the pattern the team uses.
+- Onboarding new engineers - point them at the canonical citation for the pattern the team uses.
 
 Do **not** use this skill to:
 
-- Author per-framework tool configuration — that's the per-framework S1 skill (`playwright-testing`, `cypress-testing`, etc.).
-- Pick the framework itself — that's [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md).
-- Audit a running codebase against the chosen pattern — that's [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), which preloads this skill.
+- Author per-framework tool configuration - that's the per-framework S1 skill (`playwright-testing`, `cypress-testing`, etc.).
+- Pick the framework itself - that's [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md).
+- Audit a running codebase against the chosen pattern - that's [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), which preloads this skill.
 
-## Pattern 1 — Page Object Model (POM)
+## Pattern 1 - Page Object Model (POM)
 
 **Canonical source:** [Martin Fowler's PageObject definition](https://martinfowler.com/bliki/PageObject.html) (the bliki article is the cross-language canonical reference) + [Selenium HQ documentation on Page Object Models](https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/).
 
@@ -51,13 +51,13 @@ Do **not** use this skill to:
 |---|---|
 | Assertions inside the POM | Couples the page model to test outcomes; reuse across tests becomes brittle |
 | `void`-returning navigation methods | Loses the compile-time check Fowler explicitly identifies as the pattern's benefit |
-| `clickAddToCartButton()` instead of `addToCart()` | Couples the test vocabulary to UI mechanics — when the UI changes, every test changes |
+| `clickAddToCartButton()` instead of `addToCart()` | Couples the test vocabulary to UI mechanics - when the UI changes, every test changes |
 | Exposing the underlying WebDriver / Page instance through public POM methods | Leaks framework details into tests; defeats the encapsulation |
 | One God-POM serving five pages | Violates single-responsibility; bigger refactor cost than the POM was supposed to prevent |
 
-## Pattern 2 — Screenplay
+## Pattern 2 - Screenplay
 
-**Canonical source:** [Antony Marcano, Andy Palmer, and Jan Molak — Serenity BDD documentation on Screenplay](https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals); origin paper Marcano & Hill 2007 "Page Objects Refactored: SOLID Steps to the Screenplay Pattern."
+**Canonical source:** [Antony Marcano, Andy Palmer, and Jan Molak - Serenity BDD documentation on Screenplay](https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals); origin paper Marcano & Hill 2007 "Page Objects Refactored: SOLID Steps to the Screenplay Pattern."
 
 **The Screenplay vocabulary** ([Serenity BDD docs](https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals)):
 
@@ -87,7 +87,7 @@ Do **not** use this skill to:
 | Question classes that mutate state | Violates the Question's "pure observation" contract; assertions on observations fail unpredictably |
 | Abilities used as a junk-drawer for utilities | The Ability should grant a real capability; using it as a service-locator defeats the dependency-injection benefit |
 
-## Pattern 3 — Component Object
+## Pattern 3 - Component Object
 
 **Canonical source:** Selenium HQ docs (Page Components are part of the official POM extension) + practitioner consensus (testing-library, Storybook, Playwright Component Testing). Treated as a refinement of POM, not a competing pattern.
 
@@ -107,13 +107,13 @@ Do **not** use this skill to:
 | Component Objects that hold cross-component state | Violates the encapsulation; the component should not know which page contains it |
 | Page Objects that bypass the Component Object and target its internals | The Component Object's locators get duplicated; refactor leakage |
 
-## Pattern 4 — App Actions (Cypress idiom)
+## Pattern 4 - App Actions (Cypress idiom)
 
-**Canonical source:** [Kent C. Dodds and the Cypress team — "Stop using Page Objects and Start using App Actions" (Cypress blog)](https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/).
+**Canonical source:** [Kent C. Dodds and the Cypress team - "Stop using Page Objects and Start using App Actions" (Cypress blog)](https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/).
 
 **Definition:** App Actions bypass the UI for setup steps by exposing application functions (Redux dispatches, store mutations, API calls) directly via `cy.window().its('app')` or equivalent. The test still asserts via the UI; only the Arrange phase is short-circuited.
 
-**Why App Actions vs POM:** "Logging in" is not what the test is about — it's overhead. App Actions skip the login UI flow and inject a session directly, making the test 10× faster and removing flake from the login form.
+**Why App Actions vs POM:** "Logging in" is not what the test is about - it's overhead. App Actions skip the login UI flow and inject a session directly, making the test 10× faster and removing flake from the login form.
 
 ### When to use App Actions
 
@@ -131,11 +131,11 @@ Do **not** use this skill to:
 | Mixing App Actions and POM without convention | Engineers can't tell which to use; the suite forks |
 | App Actions for end-to-end smoke / critical-path tests | Critical paths must exercise the full UI; App Actions skip the very thing the smoke proves |
 
-## Pattern 5 — Service Object
+## Pattern 5 - Service Object
 
 **Canonical source:** Ruby on Rails / Java enterprise testing patterns + practitioner blog consensus. Refinement of POM for non-UI test layers.
 
-**Definition:** A Service Object is the API-test equivalent of a Page Object — it wraps a remote service (REST endpoint, GraphQL query, gRPC method, message-queue producer) with a domain API the test consumes. Methods like `cartService.addItem(sku, qty)` rather than `httpClient.post('/api/cart/items', { sku, qty })`.
+**Definition:** A Service Object is the API-test equivalent of a Page Object - it wraps a remote service (REST endpoint, GraphQL query, gRPC method, message-queue producer) with a domain API the test consumes. Methods like `cartService.addItem(sku, qty)` rather than `httpClient.post('/api/cart/items', { sku, qty })`.
 
 ### When to use Service Object
 
@@ -148,11 +148,11 @@ Do **not** use this skill to:
 | Anti-pattern | Why it fails |
 |---|---|
 | Service Object that re-implements the production service (mocks-in-disguise) | Tests against a fake instead of the real service; misses contract drift |
-| Service Object with assertions inside | Same anti-pattern as POM assertions — couples model to test outcomes |
+| Service Object with assertions inside | Same anti-pattern as POM assertions - couples model to test outcomes |
 | Single Service Object for 10 different services | Violates single-responsibility; the object becomes a god-client |
 | Service Object that handles retries / circuit breakers identical to production | Tests pass because the Service Object hides the failures the test should catch |
 
-## Pattern 6 — Repository (test-data access)
+## Pattern 6 - Repository (test-data access)
 
 **Canonical source:** Martin Fowler's [Repository pattern](https://martinfowler.com/eaaCatalog/repository.html) (originally for domain-driven design) adapted for test-data setup. Practitioner adoption in 2020+ test frameworks (factory libraries layer on top).
 
@@ -172,22 +172,22 @@ Do **not** use this skill to:
 | Repository methods that return mutable objects shared across tests | Test cross-coupling; one test mutates and breaks another |
 | Repository that creates "magic" data the test doesn't see | Tests pass for inscrutable reasons; debugging is impossible |
 
-## Pattern 7 — Screen Object (desktop / mobile sibling of Page Object)
+## Pattern 7 - Screen Object (desktop / mobile sibling of Page Object)
 
-**Canonical source:** Martin Fowler's PageObject article — the [current bliki entry](https://martinfowler.com/bliki/PageObject.html) opens with the note that "An object that wraps an HTML page, or fragment, with an application-specific API." The earlier name **WindowDriver** (Fowler, 2004) covered desktop GUI windows under the same encapsulation principle before the term migrated to web. The desktop / mobile community reuses the structurally-identical pattern under the name **Screen Object** (one class per logical screen, locators + actions encapsulated, no assertions inside). No single owner formally documents the rename — `screen object` is community-canonical across FlaUI, XCUITest, Appium / Espresso practitioner literature.
+**Canonical source:** Martin Fowler's PageObject article - the [current bliki entry](https://martinfowler.com/bliki/PageObject.html) opens with the note that "An object that wraps an HTML page, or fragment, with an application-specific API." The earlier name **WindowDriver** (Fowler, 2004) covered desktop GUI windows under the same encapsulation principle before the term migrated to web. The desktop / mobile community reuses the structurally-identical pattern under the name **Screen Object** (one class per logical screen, locators + actions encapsulated, no assertions inside). No single owner formally documents the rename - `screen object` is community-canonical across FlaUI, XCUITest, Appium / Espresso practitioner literature.
 
-The mobile sibling is documented inside Google's Android testing guidance as **Screen Robot** ([Jake Wharton — *Instrumentation Testing Robots* (2016)](https://jakewharton.com/testing-robots/)) and inside Square's mobile literature as well; both reproduce the same encapsulation contract.
+The mobile sibling is documented inside Google's Android testing guidance as **Screen Robot** ([Jake Wharton - *Instrumentation Testing Robots* (2016)](https://jakewharton.com/testing-robots/)) and inside Square's mobile literature as well; both reproduce the same encapsulation contract.
 
 **The three load-bearing rules transfer unchanged from POM:**
 
 1. **No assertions in the Screen Object body.** Same rationale Fowler gives for POM ("page objects … should not make assertions themselves"). The desktop test asserts on `window.Title`, `element.IsEnabled`, control-pattern state; the Screen Object exposes those via getters but does not verify them.
 2. **Navigation methods return the next Screen Object.** `login.SubmitsCredentials()` returns `MainScreen`. Compile-time detection of broken workflows survives the migration from web POM to desktop Screen Object.
-3. **Screen Object exposes the screen's services, not its widgets.** `login.SubmitsCredentials(creds)` not `login.LoginButton.Click()`. Methods are named after the user-meaningful action — same vocabulary rule as POM.
+3. **Screen Object exposes the screen's services, not its widgets.** `login.SubmitsCredentials(creds)` not `login.LoginButton.Click()`. Methods are named after the user-meaningful action - same vocabulary rule as POM.
 
 ### When to use Screen Object
 
 - Desktop / mobile SUT routed through any accessibility-tree backend per [`desktop-test-strategy-reference`](../../../qa-desktop/skills/desktop-test-strategy-reference/SKILL.md): Windows UIA (FlaUI, WinAppDriver, Appium-Windows), macOS XCTest (XCUIApplication / XCUIElementQuery per [Apple's *Testing with Xcode* UI Testing chapter](https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html)), Linux AT-SPI (dogtail / pyatspi).
-- Mobile-native SUT (Appium, Espresso, XCUITest on iOS) — same encapsulation, sometimes branded "Screen Robot" per the Wharton citation above.
+- Mobile-native SUT (Appium, Espresso, XCUITest on iOS) - same encapsulation, sometimes branded "Screen Robot" per the Wharton citation above.
 - Cross-platform desktop frameworks (Avalonia, .NET MAUI) where the same screen exists across OSes but the accessibility backend differs per host.
 
 ### Anti-patterns (Screen Object-specific in addition to the POM list)
@@ -195,7 +195,7 @@ The mobile sibling is documented inside Google's Android testing guidance as **S
 | Anti-pattern | Why it fails |
 |---|---|
 | Screen Object that hard-codes `AutomationId` strings inline in every method (e.g. `cf.ByAutomationId("LoginButton")` repeated) | Refactor cost when the developer renames the AutomationId; centralise the constant at the top of the Screen class |
-| Screen Object that wraps a single accessibility-tree call without adding a domain method | Same anti-pattern as the POM `clickAddToCartButton()` smell — Screen exposes mechanic, not service |
+| Screen Object that wraps a single accessibility-tree call without adding a domain method | Same anti-pattern as the POM `clickAddToCartButton()` smell - Screen exposes mechanic, not service |
 | Screen Object that asserts on accessibility properties (role, label) it controls | Asserting on internal state defeats the no-assertions rule; assertions belong in the test |
 | Screen Object that calls `Thread.Sleep` / `Task.Delay` between actions | Hides flakiness; route through the driver's retry primitive (FlaUI `Retry.WhileNull`, XCTest `waitForExistence`) |
 | Screen Object that depends on absolute window coordinates | Defeats the accessibility-tree abstraction; multi-monitor / DPI / locale breaks the test |
@@ -203,7 +203,7 @@ The mobile sibling is documented inside Google's Android testing guidance as **S
 
 ### Worked desktop example (FlaUI / xUnit)
 
-**Bad** (mechanical leakage into the test body — same shape as the web POM anti-pattern):
+**Bad** (mechanical leakage into the test body - same shape as the web POM anti-pattern):
 
 ```csharp
 [StaFact]
@@ -267,17 +267,17 @@ The patterns are not equally good for every project. The matrix:
 
 ## References
 
-- Martin Fowler — *PageObject* (canonical cross-language definition, the load-bearing reference for all POM rules; the earlier *WindowDriver* name covered desktop GUI before the term migrated to web): https://martinfowler.com/bliki/PageObject.html
-- Jake Wharton — *Instrumentation Testing Robots* (2016) — the canonical "Screen Robot" reference for the mobile sibling of the Screen Object pattern, also applicable to desktop: https://jakewharton.com/testing-robots/
-- Apple — *Testing with Xcode* — UI Testing chapter, the XCUIApplication / XCUIElementQuery / XCUIElement reference for macOS Screen Objects: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
-- [`desktop-test-strategy-reference`](../../../qa-desktop/skills/desktop-test-strategy-reference/SKILL.md) — the OS-backend reference for Screen Object's accessibility-tree substrate (UIA / XCTest / AT-SPI).
-- Selenium HQ — *Page Object Models* (official Selenium documentation; quotes the no-assertions and navigation-return-shape rules verbatim): https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
-- Antony Marcano, Andy Palmer, Jan Molak — *Screenplay Fundamentals* (Serenity BDD documentation; the canonical Actor/Ability/Task/Interaction/Question vocabulary): https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals
-- Marcano & Hill (2007) — *Page Objects Refactored: SOLID Steps to the Screenplay Pattern* (the origin paper for the Screenplay name and SOLID rationale; cited via Serenity BDD): https://serenity-bdd.github.io/docs/screenplay/
-- Kent C. Dodds + Cypress team — *Stop using Page Objects and Start using App Actions* (Cypress blog, the canonical App Actions reference): https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/
-- Martin Fowler — *Repository pattern* (originally domain-driven design; cited for test-data Repository adaptation): https://martinfowler.com/eaaCatalog/repository.html
-- ISTQB glossary — Page Object (the canonical ISTQB entry confirming the pattern is industry-standard): https://glossary.istqb.org/en_US/term/page-object
-- ISTQB glossary — Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization
-- [`test-code-conventions`](../test-code-conventions/SKILL.md) — file-level companion (§1-§10).
-- [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) — the A3 that audits codebases against these patterns; preloads this skill.
-- [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md), [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md) — agents that apply these patterns.
+- Martin Fowler - *PageObject* (canonical cross-language definition, the load-bearing reference for all POM rules; the earlier *WindowDriver* name covered desktop GUI before the term migrated to web): https://martinfowler.com/bliki/PageObject.html
+- Jake Wharton - *Instrumentation Testing Robots* (2016) - the canonical "Screen Robot" reference for the mobile sibling of the Screen Object pattern, also applicable to desktop: https://jakewharton.com/testing-robots/
+- Apple - *Testing with Xcode* - UI Testing chapter, the XCUIApplication / XCUIElementQuery / XCUIElement reference for macOS Screen Objects: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
+- [`desktop-test-strategy-reference`](../../../qa-desktop/skills/desktop-test-strategy-reference/SKILL.md) - the OS-backend reference for Screen Object's accessibility-tree substrate (UIA / XCTest / AT-SPI).
+- Selenium HQ - *Page Object Models* (official Selenium documentation; quotes the no-assertions and navigation-return-shape rules verbatim): https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
+- Antony Marcano, Andy Palmer, Jan Molak - *Screenplay Fundamentals* (Serenity BDD documentation; the canonical Actor/Ability/Task/Interaction/Question vocabulary): https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals
+- Marcano & Hill (2007) - *Page Objects Refactored: SOLID Steps to the Screenplay Pattern* (the origin paper for the Screenplay name and SOLID rationale; cited via Serenity BDD): https://serenity-bdd.github.io/docs/screenplay/
+- Kent C. Dodds + Cypress team - *Stop using Page Objects and Start using App Actions* (Cypress blog, the canonical App Actions reference): https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/
+- Martin Fowler - *Repository pattern* (originally domain-driven design; cited for test-data Repository adaptation): https://martinfowler.com/eaaCatalog/repository.html
+- ISTQB glossary - Page Object (the canonical ISTQB entry confirming the pattern is industry-standard): https://glossary.istqb.org/en_US/term/page-object
+- ISTQB glossary - Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization
+- [`test-code-conventions`](../test-code-conventions/SKILL.md) - file-level companion (§1-§10).
+- [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) - the A3 that audits codebases against these patterns; preloads this skill.
+- [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md), [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md) - agents that apply these patterns.

@@ -20,7 +20,7 @@ characteristics define the canonical NFR categories
 
 | ISO/IEC 25010 characteristic       | Common shorthand   | This skill covers |
 |------------------------------------|--------------------|-------------------|
-| Functional Suitability             | functional         | (out — handled by acceptance-criteria-extractor) |
+| Functional Suitability             | functional         | (out - handled by acceptance-criteria-extractor) |
 | Performance Efficiency             | performance / perf | yes               |
 | Compatibility                      | compatibility       | yes               |
 | Usability                          | a11y / UX           | yes (a11y subset) |
@@ -38,20 +38,20 @@ treated as first-class:
 | Observability         | DORA / SRE practitioner literature      |
 
 Acceptance-criteria-extractor handles **functional** requirements
-(Given/When/Then). This skill handles **everything else** — the
+(Given/When/Then). This skill handles **everything else** - the
 threshold-and-measurement requirements that don't fit Gherkin's shape.
 
 ## When to use
 
 - A PRD mentions "performance," "fast," "accessible," "secure," or
-  similar — words the
+  similar - words the
   [`testability-reviewer`](../../agents/testability-reviewer.md) would
   flag for failing the Observable heuristic.
 - A team is shifting from informal to formal NFRs in tickets.
 - A non-functional regression is being added to a release plan and
   needs a measurable baseline.
 
-## Step 1 — Scan the doc for each NFR family
+## Step 1 - Scan the doc for each NFR family
 
 Per family, look for the canonical signal phrases:
 
@@ -65,10 +65,10 @@ Per family, look for the canonical signal phrases:
 | Internationalization | "locale", "RTL", "translation", "Unicode", "timezone" |
 | Observability     | "metric", "log", "trace", "alert", "dashboard" |
 
-Each signal becomes a candidate NFR — but NOT every signal is testable
+Each signal becomes a candidate NFR - but NOT every signal is testable
 as authored. Run each through Step 2.
 
-## Step 2 — Make every NFR threshold-bound
+## Step 2 - Make every NFR threshold-bound
 
 Per ISTQB testability ([istqb-testability]) and the
 [`testability-reviewer`](../../agents/testability-reviewer.md)
@@ -93,7 +93,7 @@ without a number, the agent emits an explicit question ("What's the
 target p95? Common defaults: 2.5s for landing, 1.5s for cached,
 200ms for API."), it does not invent 2.5s.
 
-## Step 3 — Map to canonical measurement sources
+## Step 3 - Map to canonical measurement sources
 
 Each NFR must name **how** it's measured. Canonical sources by family:
 
@@ -101,8 +101,8 @@ Each NFR must name **how** it's measured. Canonical sources by family:
 
 | Metric                 | Source                                                              |
 |------------------------|---------------------------------------------------------------------|
-| LCP (Largest Contentful Paint) | Web Vitals (Google) — page-load perception              |
-| INP (Interaction to Next Paint) | Web Vitals — replaces FID since March 2024              |
+| LCP (Largest Contentful Paint) | Web Vitals (Google) - page-load perception              |
+| INP (Interaction to Next Paint) | Web Vitals - replaces FID since March 2024              |
 | CLS (Cumulative Layout Shift)  | Web Vitals                                                  |
 | p95 / p99 latency       | k6 / JMeter / Gatling / load-test runner                          |
 | Throughput              | Same load-test runners                                              |
@@ -261,15 +261,14 @@ Output:
 
 ## References
 
-- [istqb-nft][istqb-nft] — ISTQB Glossary: non-functional testing.
-- [istqb-testability][istqb-testability] — testability heuristic
+- [istqb-nft][istqb-nft] - ISTQB Glossary: non-functional testing.
+- [istqb-testability][istqb-testability] - testability heuristic
   underlying the threshold-bound rule.
-- ISO/IEC 25010:2011 — eight product-quality characteristics. Cite by
+- ISO/IEC 25010:2011 - eight product-quality characteristics. Cite by
   stable standard ID; spec is paywalled.
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
-- OWASP ASVS — https://owasp.org/www-project-application-security-verification-standard/
-- Web Vitals — https://web.dev/articles/vitals (LCP / INP / CLS).
-- [`testability-reviewer`](../../agents/testability-reviewer.md) — the
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
+- OWASP ASVS - https://owasp.org/www-project-application-security-verification-standard/
+- Web Vitals - https://web.dev/articles/vitals (LCP / INP / CLS).
+- [`testability-reviewer`](../../agents/testability-reviewer.md) - the
   upstream agent that flags vague phrases for this skill to formalize.
-- [`acceptance-criteria-extractor`](../acceptance-criteria-extractor/SKILL.md)
-  — sibling skill for **functional** requirements.
+- [`acceptance-criteria-extractor`](../acceptance-criteria-extractor/SKILL.md) - sibling skill for **functional** requirements.

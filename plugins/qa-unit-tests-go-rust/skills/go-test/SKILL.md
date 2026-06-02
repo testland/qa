@@ -1,6 +1,6 @@
 ---
 name: go-test
-description: "Configures and runs Go's stdlib `testing` package — `func TestXxx(t *testing.T)` convention; table-driven tests via slice + range; `t.Run` for subtests with hierarchical names; `t.Parallel()` for parallel execution; benchmarks (`func BenchmarkXxx(b *testing.B)`); examples (`func ExampleXxx()`); fuzzing (`func FuzzXxx(f *testing.F)`); coverage via `go test -cover`/`-coverprofile`; build tags for selective compilation. Use for any Go project — testing is a stdlib feature, no install needed."
+description: "Configures and runs Go's stdlib `testing` package - `func TestXxx(t *testing.T)` convention; table-driven tests via slice + range; `t.Run` for subtests with hierarchical names; `t.Parallel()` for parallel execution; benchmarks (`func BenchmarkXxx(b *testing.B)`); examples (`func ExampleXxx()`); fuzzing (`func FuzzXxx(f *testing.F)`); coverage via `go test -cover`/`-coverprofile`; build tags for selective compilation. Use for any Go project - testing is a stdlib feature, no install needed."
 rating: 24
 d6: 4
 archetype: S1
@@ -14,7 +14,7 @@ Per [pkg.go.dev/testing][go-test-pkg]:
 
 [go-test-pkg]: https://pkg.go.dev/testing
 
-Go's `testing` package is stdlib — no separate install, no
+Go's `testing` package is stdlib - no separate install, no
 configuration file. The single binary `go test` discovers, builds,
 and runs tests via convention.
 
@@ -26,7 +26,7 @@ Distinguishing properties:
 - **Table-driven idiom**: built into the language style.
 - **Built-in benchmarks + fuzzing** (Go 1.18+ for fuzz).
 
-## Step 1 — First test
+## Step 1 - First test
 
 ```go
 // math.go
@@ -59,7 +59,7 @@ go test -v              # verbose
 go test -run TestAdd    # specific test by name pattern
 ```
 
-## Step 2 — Table-driven tests (Go idiom)
+## Step 2 - Table-driven tests (Go idiom)
 
 Per [pkg.go.dev/testing#hdr-Subtests_and_Sub_benchmarks][go-subtests]:
 
@@ -91,7 +91,7 @@ func TestAdd(t *testing.T) {
 `TestAdd/zero`, etc.). Subtests are filterable + reportable
 individually.
 
-## Step 3 — t.Parallel()
+## Step 3 - t.Parallel()
 
 ```go
 func TestSomethingSlow(t *testing.T) {
@@ -115,7 +115,7 @@ for _, tt := range tests {
 }
 ```
 
-## Step 4 — Benchmarks
+## Step 4 - Benchmarks
 
 ```go
 func BenchmarkAdd(b *testing.B) {
@@ -145,7 +145,7 @@ go test -bench=. -count=10 > new.txt
 benchstat old.txt new.txt
 ```
 
-## Step 5 — Examples (executable docs)
+## Step 5 - Examples (executable docs)
 
 ```go
 func ExampleAdd() {
@@ -157,7 +157,7 @@ func ExampleAdd() {
 The `// Output:` comment is the assertion. `go test` runs the
 example + verifies output matches. Examples appear in `go doc`.
 
-## Step 6 — Fuzzing (Go 1.18+)
+## Step 6 - Fuzzing (Go 1.18+)
 
 ```go
 func FuzzAdd(f *testing.F) {
@@ -184,7 +184,7 @@ go test -fuzz=FuzzAdd -fuzztime=30s       # bounded fuzz time
 Failures cached at `testdata/fuzz/FuzzAdd/`; subsequent `go test`
 runs replay those cases as regression tests.
 
-## Step 7 — Coverage
+## Step 7 - Coverage
 
 ```bash
 go test -cover                                # summary
@@ -207,7 +207,7 @@ if (( $(echo "$COVERAGE < 80" | bc -l) )); then
 fi
 ```
 
-## Step 8 — Build tags for selective compilation
+## Step 8 - Build tags for selective compilation
 
 ```go
 //go:build integration
@@ -230,7 +230,7 @@ go test -tags=integration ./...
 Build tags allow per-environment test suites (unit / integration /
 e2e) without separate folder structure.
 
-## Step 9 — Test helpers
+## Step 9 - Test helpers
 
 ```go
 func setupTest(t *testing.T) *Database {
@@ -252,7 +252,7 @@ func TestUserCreation(t *testing.T) {
 helper. `t.Cleanup` runs after the test (replaces defer for
 test-scoped resources).
 
-## Step 10 — CI integration
+## Step 10 - CI integration
 
 ```yaml
 - run: go test -race -coverprofile=coverage.out -v ./...
@@ -282,21 +282,21 @@ go test -v ./... | go-junit-report > junit.xml
 
 ## Limitations
 
-- No assertion library in stdlib — community uses `testify`/`stretchr/testify`
+- No assertion library in stdlib - community uses `testify`/`stretchr/testify`
   for richer matchers (and that's idiomatic in Go ecosystems).
-- No fixture concept — use `t.Cleanup` + helper functions.
+- No fixture concept - use `t.Cleanup` + helper functions.
 - No parametrize beyond table-driven loops.
-- No mocking library in stdlib — use interfaces + hand-written
+- No mocking library in stdlib - use interfaces + hand-written
   fakes (Go style) or `gomock` for codegen.
 
 ## References
 
-- [go-test-pkg][go-test-pkg] — `testing` package documentation
-- [go-subtests][go-subtests] — subtests + sub-benchmarks
-- pkg.go.dev/cmd/go#hdr-Testing_flags — `go test` flags
-- pkg.go.dev/testing#hdr-Fuzzing — fuzz testing
-- github.com/jstemmer/go-junit-report — JUnit XML reporter
+- [go-test-pkg][go-test-pkg] - `testing` package documentation
+- [go-subtests][go-subtests] - subtests + sub-benchmarks
+- pkg.go.dev/cmd/go#hdr-Testing_flags - `go test` flags
+- pkg.go.dev/testing#hdr-Fuzzing - fuzz testing
+- github.com/jstemmer/go-junit-report - JUnit XML reporter
 - [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
   [`cargo-test`](../cargo-test/SKILL.md),
-  [`rstest-tests`](../rstest-tests/SKILL.md) — sister tools
+  [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

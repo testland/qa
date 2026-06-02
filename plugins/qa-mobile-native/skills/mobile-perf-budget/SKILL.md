@@ -1,6 +1,6 @@
 ---
 name: mobile-perf-budget
-description: "Pure-reference skill for mobile-web performance budgets — Core Web Vitals at the 75th percentile mobile (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1; FID retired March 2024 in favor of INP), Lighthouse mobile profile config, per-route resource budgets (JS bundle, image weight, font load). Use as the team's reference for \"what should the mobile perf gate enforce\" — paired with `lighthouse-perf` (the runner) and `lighthouse-budget-author` (the per-route author)."
+description: "Pure-reference skill for mobile-web performance budgets - Core Web Vitals at the 75th percentile mobile (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1; FID retired March 2024 in favor of INP), Lighthouse mobile profile config, per-route resource budgets (JS bundle, image weight, font load). Use as the team's reference for \"what should the mobile perf gate enforce\" - paired with `lighthouse-perf` (the runner) and `lighthouse-budget-author` (the per-route author)."
 rating: 22
 d6: 4
 archetype: S2
@@ -31,7 +31,7 @@ This skill catalogs the canonical thresholds and budget patterns.
 For the runner, see [`lighthouse-perf`](../../qa-load-testing/skills/lighthouse-perf/SKILL.md).
 For per-route authoring, see [`lighthouse-budget-author`](../../qa-load-testing/skills/lighthouse-budget-author/SKILL.md).
 
-## §1 — Core Web Vitals (current)
+## §1 - Core Web Vitals (current)
 
 Per [web-vitals][wv], the **three Core Web Vitals**:
 
@@ -46,14 +46,14 @@ Per [web-vitals][wv], the **three Core Web Vitals**:
 > recommendations when all three metrics hit targets for at least
 > 75% of visits." ([web-vitals][wv])
 
-The 75th-percentile rule is essential — average / median misses the
+The 75th-percentile rule is essential - average / median misses the
 slow-tail experience.
 
-## §2 — INP replaced FID (March 2024)
+## §2 - INP replaced FID (March 2024)
 
 Per [web-vitals][wv]:
 
-> "INP — Replaced First Input Delay (FID) in March 2024."
+> "INP - Replaced First Input Delay (FID) in March 2024."
 
 If the team has older perf docs / dashboards referencing FID, they
 need updating:
@@ -67,7 +67,7 @@ need updating:
 INP is a stricter metric in practice. Old thresholds calibrated for
 FID don't transfer.
 
-## §3 — Per-route resource budgets
+## §3 - Per-route resource budgets
 
 Beyond Web Vitals, per-route resource budgets catch the upstream
 causes:
@@ -99,7 +99,7 @@ causes:
 Sizes are KB after compression. Per-route overrides allow
 heavier-route exceptions without bloating the global budget.
 
-## §4 — Lighthouse mobile profile
+## §4 - Lighthouse mobile profile
 
 Lighthouse's default mobile profile simulates a mid-tier device:
 
@@ -139,7 +139,7 @@ Or via Lighthouse CI for budget enforcement:
 }
 ```
 
-## §5 — Real-user monitoring (RUM) vs lab
+## §5 - Real-user monitoring (RUM) vs lab
 
 Per [web-vitals][wv]:
 
@@ -154,10 +154,10 @@ Two complementary measurement modes:
 
 | Mode | Source | Use |
 |------|--------|-----|
-| **Field (RUM)** | Real users via the `web-vitals` JS library, Chrome User Experience Report (CrUX), Search Console | Source of truth — what users actually experience. |
+| **Field (RUM)** | Real users via the `web-vitals` JS library, Chrome User Experience Report (CrUX), Search Console | Source of truth - what users actually experience. |
 | **Lab** | Lighthouse, Chrome DevTools | Pre-deploy verification; CI gate. |
 
-A passing lab gate doesn't prove field health — RUM is the
+A passing lab gate doesn't prove field health - RUM is the
 ground truth. A failing lab gate strongly suggests field will also
 suffer.
 
@@ -165,7 +165,7 @@ suffer.
 > measurement capabilities for production implementations."
 > ([web-vitals][wv])
 
-## §6 — Threshold-by-tier (recommended starting points)
+## §6 - Threshold-by-tier (recommended starting points)
 
 Different product types tolerate different thresholds:
 
@@ -175,12 +175,12 @@ Different product types tolerate different thresholds:
 | E-commerce checkout       |   2.5s    |   200ms   |    0.1     | CWV "good" thresholds. |
 | SaaS dashboard            |   3.0s    |   300ms   |    0.1     | Bigger lift on logged-in pages; users tolerate. |
 | Documentation             |   2.0s    |   200ms   |    0.05    | Should be very fast. |
-| Marketing landing         |   2.5s    |   200ms   |    0.1     | CWV "good" — affects SEO. |
+| Marketing landing         |   2.5s    |   200ms   |    0.1     | CWV "good" - affects SEO. |
 
 Start at the CWV "good" thresholds (Step 1); tighten where the
 team has competitive / SEO motivation.
 
-## §7 — Mobile-specific anti-patterns
+## §7 - Mobile-specific anti-patterns
 
 | Anti-pattern                                                         | Why it hurts mobile                                                       | Fix |
 |----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
@@ -192,7 +192,7 @@ team has competitive / SEO motivation.
 | Third-party tags blocking main thread                                  | Analytics / chat / consent banners delay LCP and INP.                    | Async / defer; load after first paint. |
 | Mobile-only quick-fixes that miss desktop                              | Optimizing only one viewport; the other regresses.                       | Per-viewport budgets (Step 3). |
 
-## §8 — Monitoring cadence
+## §8 - Monitoring cadence
 
 | Cadence              | Use                                                                       |
 |----------------------|---------------------------------------------------------------------------|
@@ -203,15 +203,11 @@ team has competitive / SEO motivation.
 
 ## References
 
-- [wv][wv] — Core Web Vitals: LCP / INP / CLS thresholds, 75th
+- [wv][wv] - Core Web Vitals: LCP / INP / CLS thresholds, 75th
   percentile + segmented mobile/desktop, INP replaced FID March 2024,
   field vs lab measurement, web-vitals JS library, Lighthouse TBT
   as INP proxy.
-- [`lighthouse-perf`](../../qa-load-testing/skills/lighthouse-perf/SKILL.md)
-  — the runner this skill's budgets feed.
-- [`lighthouse-budget-author`](../../qa-load-testing/skills/lighthouse-budget-author/SKILL.md)
-  — sibling: per-route budget authoring.
-- [`mobile-web-emulation-runner`](../mobile-web-emulation-runner/SKILL.md)
-  — exercises the mobile profile in E2E tests.
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md)
-  — uses Web Vitals metrics in canary verdicts.
+- [`lighthouse-perf`](../../qa-load-testing/skills/lighthouse-perf/SKILL.md) - the runner this skill's budgets feed.
+- [`lighthouse-budget-author`](../../qa-load-testing/skills/lighthouse-budget-author/SKILL.md) - sibling: per-route budget authoring.
+- [`mobile-web-emulation-runner`](../mobile-web-emulation-runner/SKILL.md) - exercises the mobile profile in E2E tests.
+- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - uses Web Vitals metrics in canary verdicts.

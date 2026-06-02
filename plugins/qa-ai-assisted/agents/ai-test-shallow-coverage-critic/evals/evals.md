@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# ai-test-shallow-coverage-critic — evals
+# ai-test-shallow-coverage-critic - evals
 
 Companion eval cases for [`ai-test-shallow-coverage-critic`](../../ai-test-shallow-coverage-critic.md).
 Three cases cover happy path / branch / adversarial: a happy-path-only
@@ -14,7 +14,7 @@ triggers the documented refuse-to-operate-on-E2E rule. Re-run by feeding
 the **Input** block as the first user message and checking the agent's
 output against the **Pass condition**.
 
-## Eval 1 — happy path — single equivalence class only (SHALLOW)
+## Eval 1 - happy path - single equivalence class only (SHALLOW)
 
 **Input:**
 
@@ -61,11 +61,11 @@ The repository does NOT declare a happy-path-only exception for
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25), opus (2026-05-25)
 
 **Expected:** Step 1 identifies the SUT as `addItem(productId, qty)` (a
-unit-test file, not E2E — the refuse rule does not fire). Step 2 §EP:
+unit-test file, not E2E - the refuse rule does not fire). Step 2 §EP:
 all three tests cluster into one equivalence class (24-char hex
 productId, small positive int qty); no invalid `productId`, no `qty=0`,
 no `null` → SHALLOW. Step 2 §BVA: schema declares `qty: { min: 1, max:
-99 }`, no test sits at `qty=1` boundary (the values are 1, 2, 3 — only
+99 }`, no test sits at `qty=1` boundary (the values are 1, 2, 3 - only
 the minimum boundary is hit, and even that is incidental; the agent
 should still flag missing `qty=0`, `qty=99`, `qty=100`) → SHALLOW. Step
 2 §NEG: 3 of 3 assertions are positive (`.toEqual`); `addItem`
@@ -82,7 +82,7 @@ references `negative-test-generator` or `boundary-value-generator` (the
 named remediation skills). Output does NOT contain a `PASS` verdict line
 for the `addItem` entry point.
 
-## Eval 2 — branch — balanced coverage (PASS)
+## Eval 2 - branch - balanced coverage (PASS)
 
 **Input:**
 
@@ -140,7 +140,7 @@ SUT signature (from src/cart/addItem.ts):
 **Expected:** Step 2 §EP: tests cover valid product + invalid product
 classes (24-hex vs `'not-a-product'` vs `null`) → multi-class → PASS.
 Step 2 §BVA: tests at `qty=1` (min), `qty=0` (min-1), `qty=99` (max),
-`qty=100` (max+1) — all four boundary points present → PASS. Step 2
+`qty=100` (max+1) - all four boundary points present → PASS. Step 2
 §NEG: 3 of 6 assertions are negative (`.toThrow(InvalidQtyError)` and
 `.toThrow(ProductNotFoundError)`) → PASS. Verdict per entry point:
 `PASS` on all three applicable axes. No Refuse-to-proceed trigger.
@@ -150,7 +150,7 @@ Step 2 §BVA: tests at `qty=1` (min), `qty=0` (min-1), `qty=99` (max),
 that same entry point. Output references at least one of the three
 axes by name (`§EP` / `§BVA` / `§NEG`).
 
-## Eval 3 — adversarial — E2E suite (refuse to proceed)
+## Eval 3 - adversarial - E2E suite (refuse to proceed)
 
 **Input:**
 
@@ -187,7 +187,7 @@ integration. Step 1 will find a `*.spec.ts` file under `e2e/`.
 **Expected:** Per the Refuse-to-proceed rule "Operate on integration /
 E2E suites where coverage is measured at the system level, not the unit
 level. If Step 1 finds only Playwright / Cypress / Selenium files, the
-agent emits `not applicable — use e2e-selector-quality-critic for E2E
+agent emits `not applicable - use e2e-selector-quality-critic for E2E
 coverage review` and exits", the agent refuses. Output names
 `e2e-selector-quality-critic` (or the documented hand-off) as the right
 gate for this input. The agent does NOT emit `§EP` / `§BVA` / `§NEG`
@@ -201,7 +201,7 @@ a `PASS` verdict line for any entry point.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the agent's
+- All three inputs are concrete pasted-content blocks - the agent's
   `Read` / `Grep` / `Glob` / `Bash(git diff *)` tool surface is not
   exercised since the diff and the SUT signature are supplied inline.
 - Pass conditions are literal-substring checks; a reviewer can grep the

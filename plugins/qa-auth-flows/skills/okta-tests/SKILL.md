@@ -1,6 +1,6 @@
 ---
 name: okta-tests
-description: "Authors tests against Okta — uses org-isolation strategy (per-PR org via Okta Developer Edition vs shared org with namespaced data); tests sign-in policy + MFA enforcement; exercises Okta Identity Engine (OIE) workflows including factor enrollment, recovery flows, and SCIM provisioning; tests scoped API tokens for least-privilege automation. Use when the user works with Okta as IdP and needs unit / integration tests for org config, sign-in policies, or OIE workflows."
+description: "Authors tests against Okta - uses org-isolation strategy (per-PR org via Okta Developer Edition vs shared org with namespaced data); tests sign-in policy + MFA enforcement; exercises Okta Identity Engine (OIE) workflows including factor enrollment, recovery flows, and SCIM provisioning; tests scoped API tokens for least-privilege automation. Use when the user works with Okta as IdP and needs unit / integration tests for org config, sign-in policies, or OIE workflows."
 rating: 22
 d6: 4
 archetype: S1
@@ -15,12 +15,12 @@ the older Okta Classic engine; tests target OIE for new orgs.
 
 Tests against an Okta org fall into four layers:
 
-1. **Org-level config** — apps, users, groups, sign-in policies;
+1. **Org-level config** - apps, users, groups, sign-in policies;
    tested via Okta API or Terraform Okta provider for env parity.
-2. **Auth flow** — exercise OIDC endpoints from the application.
-3. **Sign-in policy + MFA** — verify enforcement of factor
+2. **Auth flow** - exercise OIDC endpoints from the application.
+3. **Sign-in policy + MFA** - verify enforcement of factor
    requirements per app + per user-group.
-4. **OIE workflows** — factor enrollment, recovery flows, SCIM
+4. **OIE workflows** - factor enrollment, recovery flows, SCIM
    provisioning.
 
 ## When to use
@@ -32,7 +32,7 @@ Tests against an Okta org fall into four layers:
   need integration coverage.
 - SCIM provisioning hooks need verification.
 
-## Step 1 — Org strategy
+## Step 1 - Org strategy
 
 | Pattern | Pros | Cons |
 |---|---|---|
@@ -43,7 +43,7 @@ Tests against an Okta org fall into four layers:
 For new flows, prefer **per-PR org**; for app-side flow tests on
 a stable Okta config, **mocked OIDC** is fine (cross-ref Auth0 Step 7).
 
-## Step 2 — Org config parity
+## Step 2 - Org config parity
 
 Manage org config as code:
 
@@ -63,7 +63,7 @@ terraform plan -detailed-exitcode  # exit 2 if drift; 0 if no drift
 Source: registry.terraform.io/providers/okta/okta and
 developer.okta.com/docs.
 
-## Step 3 — Test the OIDC token endpoint
+## Step 3 - Test the OIDC token endpoint
 
 Okta's token endpoint:
 
@@ -91,7 +91,7 @@ def test_client_credentials_grant(okta_domain, auth_server_id, client_id, client
 
 Source: developer.okta.com/docs/reference/api/oidc/.
 
-## Step 4 — Test sign-in policies
+## Step 4 - Test sign-in policies
 
 Sign-in policies in Okta enforce per-app MFA, IP restrictions, and
 device trust. The policy itself is org-config (Step 2); tests
@@ -118,7 +118,7 @@ def test_signin_policy_requires_mfa_for_admin_app(okta_session_for_admin_user):
 (Exact verification depends on the policy + factor setup; consult
 developer.okta.com/docs.)
 
-## Step 5 — Test OIE factor enrollment
+## Step 5 - Test OIE factor enrollment
 
 Okta Identity Engine has a well-defined factor enrollment flow.
 Test pattern: drive the flow via Playwright (Universal-Login style)
@@ -128,7 +128,7 @@ unit-test against the SDK's mock mode.
 
 Source: developer.okta.com/docs/guides/authentication-flows/.
 
-## Step 6 — Test SCIM provisioning
+## Step 6 - Test SCIM provisioning
 
 For B2B SaaS that integrates with customer Okta orgs via SCIM:
 
@@ -154,7 +154,7 @@ def test_scim_user_provisioning_creates_user_in_app(scim_test_client):
 For SCIM compliance verification, Okta provides a SCIM tester at
 developer.okta.com/standards/SCIM/.
 
-## Step 7 — Scoped API tokens
+## Step 7 - Scoped API tokens
 
 For tests that call Okta admin APIs, use **scoped tokens** (limited
 to specific scopes via OAuth 2.0 client credentials), not
@@ -170,7 +170,7 @@ def test_with_scoped_token():
 
 Source: developer.okta.com/docs/guides/implement-oauth-for-okta/.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - run: terraform init
@@ -193,7 +193,7 @@ access; most teams use shared dev orgs (Step 1).
 
 ## Limitations
 
-- Okta Developer Edition (free tier) has rate limits — large test
+- Okta Developer Edition (free tier) has rate limits - large test
   suites may hit them.
 - Shared dev orgs have inherent test interference; cleanup hooks
   are mandatory.
@@ -206,14 +206,13 @@ access; most teams use shared dev orgs (Step 1).
 
 ## References
 
-- developer.okta.com/docs — Okta Developer documentation
-- developer.okta.com/docs/reference/api/oidc/ — OIDC API reference
-- developer.okta.com/docs/guides/authentication-flows/ — flow guides
-- developer.okta.com/standards/SCIM/ — SCIM 2.0 reference + tester
-- registry.terraform.io/providers/okta/okta — Terraform Okta provider
-- IETF RFC 6749 / 7636 / 9700 — OAuth 2.0 + PKCE + Security BCP
+- developer.okta.com/docs - Okta Developer documentation
+- developer.okta.com/docs/reference/api/oidc/ - OIDC API reference
+- developer.okta.com/docs/guides/authentication-flows/ - flow guides
+- developer.okta.com/standards/SCIM/ - SCIM 2.0 reference + tester
+- registry.terraform.io/providers/okta/okta - Terraform Okta provider
+- IETF RFC 6749 / 7636 / 9700 - OAuth 2.0 + PKCE + Security BCP
 - [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`auth0-tests`](../auth0-tests/SKILL.md) — sister IdP tools
+  [`auth0-tests`](../auth0-tests/SKILL.md) - sister IdP tools
 - [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md),
-  [`session-management-test-author`](../session-management-test-author/SKILL.md)
-  — build-an-X authors
+  [`session-management-test-author`](../session-management-test-author/SKILL.md) - build-an-X authors

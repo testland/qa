@@ -10,12 +10,12 @@ archetype: S2
 
 Catalogs the three load-bearing defect taxonomies:
 
-1. **IEEE 1044-2009** — the formal anomaly-classification
+1. **IEEE 1044-2009** - the formal anomaly-classification
    standard (canonical for regulated / safety-critical
    industries).
-2. **ISTQB CTAL-TA root-cause** — the test analyst taxonomy used
+2. **ISTQB CTAL-TA root-cause** - the test analyst taxonomy used
    for retrospective root-cause analysis.
-3. **Orthogonal Defect Classification (ODC)** — IBM Research's
+3. **Orthogonal Defect Classification (ODC)** - IBM Research's
    eight-attribute framework for in-process defect classification.
 
 Consumers:
@@ -122,14 +122,14 @@ distribution is informative.
 
 ODC's strength: the **distribution** of values per attribute
 indicates **where in the process the defect process leaks**. A
-high "Function / Algorithm — Missing — Requirements activity"
+high "Function / Algorithm - Missing - Requirements activity"
 cluster says the requirements review process is broken.
 
 Per IBM Research's published ODC materials and Chillarege's
-canonical paper "Orthogonal Defect Classification — A Concept for
+canonical paper "Orthogonal Defect Classification - A Concept for
 In-Process Measurements" (IEEE Trans. Software Engineering 1992).
 
-## Same defect under three taxonomies — worked example
+## Same defect under three taxonomies - worked example
 
 **Defect:** Checkout silently drops the discount when the user
 applies two stackable promo codes in reverse order. Reproducible.
@@ -137,7 +137,7 @@ applies two stackable promo codes in reverse order. Reproducible.
 | Taxonomy | Classification |
 |---|---|
 | **IEEE 1044-2009** | Class: Defect. Type: Code (implementation). Severity: High (S2). Cause: Control flow (incorrect ordering in promo-stacking loop). |
-| **ISTQB CTAL-TA** | Implementation (correct design — stackable promos are supported — but the loop control-flow has the order-sensitivity bug). |
+| **ISTQB CTAL-TA** | Implementation (correct design - stackable promos are supported - but the loop control-flow has the order-sensitivity bug). |
 | **ODC** | Activity: Function Test. Trigger: Test Sequencing. Impact: Capability (feature doesn't work). Target: Code. Defect Type: Function / Algorithm. Qualifier: Incorrect. Source: In-house. Age: New. |
 
 The three give different lenses: IEEE points at "control flow";
@@ -163,7 +163,7 @@ Once defects are classified, useful metrics emerge:
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Free-text "root cause" field | No aggregation possible | Use a controlled vocabulary — pick one of the three taxonomies + populate enums |
+| Free-text "root cause" field | No aggregation possible | Use a controlled vocabulary - pick one of the three taxonomies + populate enums |
 | Single-axis classification ("severity only") | Loses root-cause signal entirely | Add at least an IEEE 1044 Type field |
 | Classifying after closure only | Detection-time data lost (ODC Opener attributes) | Classify at triage; refine at closure |
 | ODC without training | Inter-analyst disagreement explodes; metrics noisy | Calibrate via training set (10 defects classified by 2 analysts; reconcile) |
@@ -180,7 +180,7 @@ Once defects are classified, useful metrics emerge:
   1044 dates from 2009 (updated periodically); ODC from 1992;
   ISTQB syllabus evolves. The categories are conventional, not
   universal.
-- **Costs vs benefits.** Full ODC adds ~5–10 minutes per defect
+- **Costs vs benefits.** Full ODC adds ~5 - 10 minutes per defect
   at closure. Adopt the minimum (IEEE Type + ISTQB root cause)
   unless safety-critical / regulated need full ODC.
 - **Doesn't replace 5-whys.** Taxonomies categorise; root-cause
@@ -188,16 +188,15 @@ Once defects are classified, useful metrics emerge:
 
 ## References
 
-- IEEE 1044-2009 "Standard Classification for Software Anomalies"
-  — cite by stable ID. Primary taxonomy.
-- ISTQB Advanced Test Analyst (CTAL-TA) syllabus §6 — root-cause
+- IEEE 1044-2009 "Standard Classification for Software Anomalies" - cite by stable ID. Primary taxonomy.
+- ISTQB Advanced Test Analyst (CTAL-TA) syllabus §6 - root-cause
   taxonomy. Glossary entries at
   [glossary.istqb.org](https://glossary.istqb.org/).
-- Orthogonal Defect Classification — Chillarege et al. (1992)
-  "Orthogonal Defect Classification — A Concept for In-Process
+- Orthogonal Defect Classification - Chillarege et al. (1992)
+  "Orthogonal Defect Classification - A Concept for In-Process
   Measurements," IEEE Transactions on Software Engineering 18(11).
   Cite by stable DOI when available.
-- IBM Research ODC FAQ — chillarege.com/odc resources.
+- IBM Research ODC FAQ - chillarege.com/odc resources.
 - Sibling references:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).

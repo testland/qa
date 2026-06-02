@@ -1,6 +1,6 @@
 ---
 name: risk-storming-facilitator
-description: "Build-an-X workflow for a risk-storming session — collaborative risk identification meeting where engineers brainstorm \"what could go wrong\" via structured prompts (per category from `risk-matrix`), score impact × likelihood, propose mitigations, and assign owners. Output is a populated risk matrix per `risk-matrix` skill. Distinct from `risk-matrix` (the artifact) — this is the facilitation pattern that produces it. Use to fill the matrix at feature-kickoff time."
+description: "Build-an-X workflow for a risk-storming session - collaborative risk identification meeting where engineers brainstorm \"what could go wrong\" via structured prompts (per category from `risk-matrix`), score impact × likelihood, propose mitigations, and assign owners. Output is a populated risk matrix per `risk-matrix` skill. Distinct from `risk-matrix` (the artifact) - this is the facilitation pattern that produces it. Use to fill the matrix at feature-kickoff time."
 rating: 22
 d6: 3
 archetype: S3
@@ -29,7 +29,7 @@ QA technique.
 - Post-incident: a root cause investigation surfaces new risk
   categories worth brainstorming.
 
-## Step 1 — Pre-session setup
+## Step 1 - Pre-session setup
 
 Schedule 60-90 min. Invite:
 
@@ -45,7 +45,7 @@ Pre-distribute:
 - The current risk matrix (for the area, if exists)
 - Recent incident postmortems for similar features
 
-## Step 2 — Session structure
+## Step 2 - Session structure
 
 ```
 00:00-00:05  Kickoff: facilitator presents the feature scope; reads ACs aloud
@@ -56,10 +56,10 @@ Pre-distribute:
 01:15-01:30  Review + close: confirm action items
 ```
 
-The silent-brainstorm phase is critical — without it, the loudest
+The silent-brainstorm phase is critical - without it, the loudest
 voice dominates and group-think hides real risks.
 
-## Step 3 — Prompts per category
+## Step 3 - Prompts per category
 
 The facilitator brings prompts to drive the brainstorm:
 
@@ -103,7 +103,7 @@ The facilitator brings prompts to drive the brainstorm:
 
 The prompts are starters; the participants extend per the feature.
 
-## Step 4 — Affinity grouping
+## Step 4 - Affinity grouping
 
 After the silent brainstorm, cluster:
 
@@ -132,7 +132,7 @@ Clusters reveal that some risks are different facets of one
 underlying issue (e.g., "payment failures" is one architectural
 concern; mitigations may apply across the cluster).
 
-## Step 5 — Score
+## Step 5 - Score
 
 Per cluster (or per-row if the cluster has heterogeneous risks):
 
@@ -146,7 +146,7 @@ The team agrees on each score via brief discussion (5 min cap per
 risk). When discussion exceeds the cap, the facilitator notes the
 disagreement and moves on; revisit after the session.
 
-## Step 6 — Mitigations + owners
+## Step 6 - Mitigations + owners
 
 For each Critical (>=15) and High (9-14) risk:
 
@@ -159,14 +159,14 @@ For each Critical (>=15) and High (9-14) risk:
 Lower-priority risks (Medium / Low) get logged but may not get
 immediate mitigations.
 
-## Step 7 — Output to the risk matrix
+## Step 7 - Output to the risk matrix
 
 The session output flows directly into the matrix per
 [`risk-matrix`](../risk-matrix/SKILL.md). The matrix file becomes
 the canonical record; the session notes (silent brainstorm
 results, discussion points) get attached as appendix.
 
-## Step 8 — Post-session
+## Step 8 - Post-session
 
 Within 1 day:
 
@@ -204,12 +204,11 @@ A risk-storming session without follow-up is wasted.
 
 ## References
 
-- Adzic, G. on risk-driven testing — community references at
+- Adzic, G. on risk-driven testing - community references at
   `gojko.net`.
-- Shostack, A., *Threat Modeling: Designing for Security* (2014) —
+- Shostack, A., *Threat Modeling: Designing for Security* (2014) - 
   foundational for the structured prompt approach.
-- [`risk-matrix`](../risk-matrix/SKILL.md) — the artifact this
+- [`risk-matrix`](../risk-matrix/SKILL.md) - the artifact this
   session produces.
 - [`risk-based-test-selector`](../../agents/risk-based-test-selector.md),
-  [`risk-based-test-planner`](../../agents/risk-based-test-planner.md)
-  — agents that consume the matrix to drive test scope decisions.
+  [`risk-based-test-planner`](../../agents/risk-based-test-planner.md) - agents that consume the matrix to drive test scope decisions.

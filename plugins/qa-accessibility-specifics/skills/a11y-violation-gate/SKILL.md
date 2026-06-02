@@ -1,6 +1,6 @@
 ---
 name: a11y-violation-gate
-description: "Builds a CI gate that fails the build on **new** WCAG / a11y violations introduced by a PR while grandfathering pre-existing violations on a per-rule / per-page baseline. Aggregates verdicts from axe-core / pa11y / Lighthouse a11y / WAVE / IBM Equal Access scans. Use when a project has accumulated a11y debt and a strict \"zero violations\" gate would block every PR — the ratchet pattern lets the team ship while preventing regressions."
+description: "Builds a CI gate that fails the build on **new** WCAG / a11y violations introduced by a PR while grandfathering pre-existing violations on a per-rule / per-page baseline. Aggregates verdicts from axe-core / pa11y / Lighthouse a11y / WAVE / IBM Equal Access scans. Use when a project has accumulated a11y debt and a strict \"zero violations\" gate would block every PR - the ratchet pattern lets the team ship while preventing regressions."
 rating: 24
 d6: 4
 archetype: S3
@@ -10,7 +10,7 @@ archetype: S3
 
 ## Overview
 
-Most established projects don't pass strict a11y scans on day one —
+Most established projects don't pass strict a11y scans on day one - 
 they have accumulated debt from years of pre-WCAG-conformance code.
 A binary "all or nothing" gate creates a cliff: either disable the
 gate (defeating the purpose) or block every PR until the entire
@@ -46,9 +46,9 @@ Sibling gates with the same architecture:
 
 If the project is a11y-clean already, prefer a strict scanner-
 native gate (e.g. `axe-core` configured to fail on any violation)
-without ratchet — simpler.
+without ratchet - simpler.
 
-## Step 1 — Run the scanners and unify their outputs
+## Step 1 - Run the scanners and unify their outputs
 
 Each scanner produces its own report shape:
 
@@ -74,10 +74,10 @@ Normalize to a unified record:
 }
 ```
 
-The **fingerprint** is the load-bearing field — same fingerprint
+The **fingerprint** is the load-bearing field - same fingerprint
 across runs = same violation; new fingerprint = new violation.
 
-## Step 2 — Maintain a baseline
+## Step 2 - Maintain a baseline
 
 The baseline is a checked-in JSON file listing every grandfathered
 fingerprint:
@@ -98,7 +98,7 @@ Check it into the repo at `a11y-baseline.json`. Update it
 **deliberately** (as part of cleanup PRs); never auto-update from
 CI.
 
-## Step 3 — Apply the gate decision
+## Step 3 - Apply the gate decision
 
 Pseudocode:
 
@@ -135,11 +135,11 @@ Three severity tiers map to behavior:
 | Warn (moderate)        | Surface in PR comment; no build failure.                   |
 | Info (minor)           | Log; no PR comment unless count > N.                      |
 
-Plus the **shrinking baseline** counter — when fingerprints in the
+Plus the **shrinking baseline** counter - when fingerprints in the
 baseline disappear from the latest scan, the team has fixed them.
 Surface this as a positive metric: "5 fixed / 47 remaining."
 
-## Step 4 — Emit the artifact
+## Step 4 - Emit the artifact
 
 Markdown summary suitable for `$GITHUB_STEP_SUMMARY` or PR comment:
 
@@ -172,9 +172,9 @@ two blockers:
 
 A no-go verdict exits non-zero so CI halts.
 
-## Step 5 — Baseline maintenance workflow
+## Step 5 - Baseline maintenance workflow
 
-The baseline is shared state — careful coordination prevents bit
+The baseline is shared state - careful coordination prevents bit
 rot:
 
 1. **Initial creation:** run all scanners; emit every current
@@ -185,7 +185,7 @@ rot:
 3. **PR fixes existing violation:** the violation's fingerprint
    disappears from the next scan; the gate's "fixed since baseline"
    counter increments. **Manually remove** the fingerprint from
-   `a11y-baseline.json` in the same PR — otherwise the baseline
+   `a11y-baseline.json` in the same PR - otherwise the baseline
    accumulates stale entries.
 4. **Quarterly review:** the team reviews the baseline; any entry
    older than N quarters becomes a follow-up ticket.
@@ -254,7 +254,7 @@ sys.exit(0 if verdict == 'go' else 1)
   [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md),
   [`wave-a11y`](../wave-a11y/SKILL.md),
   [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md).
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - Sibling gate skills (same architecture):
   [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md),
   [`visual-baseline-gate`](../../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md),

@@ -1,6 +1,6 @@
 ---
 name: nunit-tests
-description: "Configures and runs NUnit — JVM-style attribute-driven .NET test framework with `[Test]` / `[TestCase]` / `[TestCaseSource]` / `[Values]` / `[Random]` parametrize attributes; `[SetUp]` / `[TearDown]` / `[OneTimeSetUp]` / `[OneTimeTearDown]` lifecycle; categories for selective runs; constraint-model assertion API (`Assert.That(actual, Is.EqualTo(expected))`); parameterized fixtures via `[TestFixture]` typed args. Use when working with .NET on a NUnit codebase or preferring constraint-model assertions over xUnit's classic style."
+description: "Configures and runs NUnit - JVM-style attribute-driven .NET test framework with `[Test]` / `[TestCase]` / `[TestCaseSource]` / `[Values]` / `[Random]` parametrize attributes; `[SetUp]` / `[TearDown]` / `[OneTimeSetUp]` / `[OneTimeTearDown]` lifecycle; categories for selective runs; constraint-model assertion API (`Assert.That(actual, Is.EqualTo(expected))`); parameterized fixtures via `[TestFixture]` typed args. Use when working with .NET on a NUnit codebase or preferring constraint-model assertions over xUnit's classic style."
 rating: 22
 d6: 4
 archetype: S1
@@ -35,7 +35,7 @@ Distinguishing properties vs xUnit:
 For new code, [`xunit-tests`](../xunit-tests/SKILL.md) is more
 mainstream in 2026.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 dotnet new nunit -n MyTests
@@ -45,7 +45,7 @@ dotnet add package NUnit3TestAdapter
 dotnet add package Microsoft.NET.Test.Sdk
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 ```csharp
 using NUnit.Framework;
@@ -62,12 +62,12 @@ public class CalculatorTests
 ```
 
 The `[TestFixture]` annotation is **optional** in NUnit 3+; classes
-with `[Test]` methods are auto-discovered. Convention varies — some
+with `[Test]` methods are auto-discovered. Convention varies - some
 teams require `[TestFixture]` for explicitness.
 
 Run: `dotnet test`.
 
-## Step 3 — Parametrize
+## Step 3 - Parametrize
 
 Per [nu-docs][nu-docs]:
 
@@ -118,7 +118,7 @@ public static IEnumerable<TestCaseData> AddCases()
 }
 ```
 
-## Step 4 — Constraint-model assertions
+## Step 4 - Constraint-model assertions
 
 Per [nu-docs][nu-docs]:
 
@@ -146,7 +146,7 @@ produces detailed failure messages.
 Classic-model assertions (`Assert.AreEqual`, `Assert.IsTrue`) still
 work but are discouraged in NUnit 3+.
 
-## Step 5 — Lifecycle
+## Step 5 - Lifecycle
 
 ```csharp
 [TestFixture]
@@ -169,7 +169,7 @@ public class TestsWithLifecycle
 }
 ```
 
-## Step 6 — Categories + selective runs
+## Step 6 - Categories + selective runs
 
 ```csharp
 [Test]
@@ -184,7 +184,7 @@ public void IntegrationTest() { }
 //   dotnet test --filter Category=Integration
 ```
 
-## Step 7 — Parameterized fixtures
+## Step 7 - Parameterized fixtures
 
 ```csharp
 [TestFixture("postgres")]
@@ -202,7 +202,7 @@ public class DatabaseTests
 }
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 Same pattern as xUnit:
 
@@ -229,9 +229,9 @@ Same pattern as xUnit:
 
 ## References
 
-- [nu-docs][nu-docs] — NUnit documentation
-- nunit.org — landing
+- [nu-docs][nu-docs] - NUnit documentation
+- nunit.org - landing
 - [`xunit-tests`](../xunit-tests/SKILL.md),
   [`mstest-tests`](../mstest-tests/SKILL.md),
-  [`fluentassertions`](../fluentassertions/SKILL.md) — sister tools
+  [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

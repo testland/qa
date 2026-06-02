@@ -1,6 +1,6 @@
 ---
 name: flaky-test-quarantine
-description: "Builds a quarantine workflow for flaky tests — marks the test with the framework's skip/fixme/retry annotation, records the failure-rate observation and a bisect link in the annotation body, sets an auto-expiry date, and produces a CI report listing every quarantined test that has expired and needs re-evaluation. Use when a flaky test is blocking the trunk and must be removed from the gating path without losing track of it."
+description: "Builds a quarantine workflow for flaky tests - marks the test with the framework's skip/fixme/retry annotation, records the failure-rate observation and a bisect link in the annotation body, sets an auto-expiry date, and produces a CI report listing every quarantined test that has expired and needs re-evaluation. Use when a flaky test is blocking the trunk and must be removed from the gating path without losing track of it."
 rating: 23
 d6: 3
 archetype: S3
@@ -28,9 +28,9 @@ This skill defines a quarantine workflow with five required parts:
 
 1. **Mark** the test with the framework's annotation.
 2. **Annotate** with the failure rate, bisect link, and quarantine date.
-3. **Auto-expiry** — every quarantine has a TTL.
-4. **Re-evaluation report** — a CI step that lists expired quarantines.
-5. **Pruning** — close the loop by either fixing or deleting.
+3. **Auto-expiry** - every quarantine has a TTL.
+4. **Re-evaluation report** - a CI step that lists expired quarantines.
+5. **Pruning** - close the loop by either fixing or deleting.
 
 ## When to use
 
@@ -43,11 +43,11 @@ This skill defines a quarantine workflow with five required parts:
   that's unrelated to the change.
 
 If the test fails 100% of the time after a code change, it's a
-regression — use
+regression - use
 [`regression-bisector`](../../agents/regression-bisector.md) and fix,
 do not quarantine.
 
-## Step 1 — Mark the test
+## Step 1 - Mark the test
 
 ### Playwright
 
@@ -83,7 +83,7 @@ export default defineConfig({
 ```
 
 A test that passes on retry is reported with the **`flaky`** status
-(distinct from `passed` and `failed`); track these separately —
+(distinct from `passed` and `failed`); track these separately - 
 flaky-but-passing tests are quarantine candidates, not yet
 quarantined ([pw-retries][pw-retries]).
 
@@ -108,7 +108,7 @@ TestNG: `@Test(enabled = false, description = "...")`.
 For per-method retries before quarantine, JUnit 5's `@RetryingTest(N)`
 extension and TestNG's `@Test(retryAnalyzer = ...)`.
 
-## Step 2 — Annotate with failure rate + bisect link + expiry
+## Step 2 - Annotate with failure rate + bisect link + expiry
 
 The annotation body is the load-bearing part of the workflow. Every
 quarantine record carries:
@@ -116,10 +116,10 @@ quarantine record carries:
 | Field             | Required | Format                                                |
 |-------------------|----------|-------------------------------------------------------|
 | Date              | yes      | `YYYY-MM-DD` of the quarantine.                       |
-| Issue link        | yes      | `#1234` or full URL — links a tracked ticket.         |
-| Failure rate      | yes      | `~12% of runs` — measured, not guessed.               |
+| Issue link        | yes      | `#1234` or full URL - links a tracked ticket.         |
+| Failure rate      | yes      | `~12% of runs` - measured, not guessed.               |
 | Bisect status     | yes      | `bisect inconclusive` / `bisected to commit abc1234` / `not yet bisected`. |
-| Re-evaluate by    | yes      | `YYYY-MM-DD` — the auto-expiry date.                  |
+| Re-evaluate by    | yes      | `YYYY-MM-DD` - the auto-expiry date.                  |
 | Owner             | optional | `@team-handle` for routing.                           |
 
 The format is parseable by the re-evaluation report (Step 4):
@@ -129,7 +129,7 @@ Quarantined 2026-05-04 (#1234) — fails ~12% of runs on tablet-768;
 bisect inconclusive. Re-evaluate by 2026-06-04. Owner: @web-platform.
 ```
 
-## Step 3 — Auto-expiry
+## Step 3 - Auto-expiry
 
 Default TTL: **30 days**. Picked because:
 
@@ -144,7 +144,7 @@ Adjust per project:
 - 14 days for high-traffic CI where flakiness is an actively-monitored
   metric.
 
-## Step 4 — Re-evaluation report
+## Step 4 - Re-evaluation report
 
 A nightly (or weekly) CI job greps all quarantine annotations,
 extracts the `Re-evaluate by` date, and lists expired entries. A
@@ -169,20 +169,20 @@ grep -rn -B1 -A5 "test\.fixme(" tests/ \
 Run it as a scheduled GitHub Action and post the output to a Slack
 channel or open a tracking issue per expired entry.
 
-## Step 5 — Pruning rules
+## Step 5 - Pruning rules
 
 When a re-evaluation expires, the team has three options:
 
 | Outcome                               | Action                                                       |
 |---------------------------------------|--------------------------------------------------------------|
 | Underlying issue fixed                | Remove `test.fixme()` and re-run; close the issue.           |
-| Underlying issue still present        | Renew the quarantine for one more TTL with updated annotation; **never** more than two consecutive renewals — at that point, delete the test or rewrite it. |
+| Underlying issue still present        | Renew the quarantine for one more TTL with updated annotation; **never** more than two consecutive renewals - at that point, delete the test or rewrite it. |
 | The test is no longer relevant        | Delete the test outright; close the issue.                   |
 
 The two-renewal cap is the lever that prevents quarantine from
 becoming a permanent dead-letter. Past two renewals, the team has
 either lost interest in the assertion or the test is fundamentally
-unfixable — both signal "delete."
+unfixable - both signal "delete."
 
 ## CI integration
 
@@ -216,13 +216,13 @@ jobs:
 
 ## References
 
-- [google-flaky][gtb] — Google Testing Blog on flaky tests at scale;
+- [google-flaky][gtb] - Google Testing Blog on flaky tests at scale;
   practitioner-emergent canonical reference for the term.
-- [pw-test][pw-test] — Playwright `test.fixme()` / `test.skip()` /
+- [pw-test][pw-test] - Playwright `test.fixme()` / `test.skip()` /
   `test.fail()` API.
-- [pw-retries][pw-retries] — Playwright retries config + `flaky`
+- [pw-retries][pw-retries] - Playwright retries config + `flaky`
   status reporting.
-- [`flake-pattern-reference`](../flake-pattern-reference/SKILL.md) —
+- [`flake-pattern-reference`](../flake-pattern-reference/SKILL.md) - 
   catalog of flake patterns to consult during bisect.
-- [`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md) — agent
+- [`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md) - agent
   that produces the bisect output referenced in the annotation.

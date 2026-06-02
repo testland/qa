@@ -1,6 +1,6 @@
 ---
 name: sonarqube-quality-perspective
-description: "Run SonarQube/SonarCloud against production code to surface Code Smells, Bugs, and Maintainability ratings — the quality lens (cross-ref qa-sast for the Vulnerability/Hotspot lens). Production-only scope via sonar.exclusions; test code is owned by qa-test-review."
+description: "Run SonarQube/SonarCloud against production code to surface Code Smells, Bugs, and Maintainability ratings - the quality lens (cross-ref qa-sast for the Vulnerability/Hotspot lens). Production-only scope via sonar.exclusions; test code is owned by qa-test-review."
 type: skill
 archetype: S1
 rating: 23
@@ -15,8 +15,8 @@ keywords:
 
 # sonarqube-quality-perspective
 
-SonarQube classifies issues across three software qualities — **Reliability,
-Maintainability, Security** — and four Clean Code attributes
+SonarQube classifies issues across three software qualities - **Reliability,
+Maintainability, Security** - and four Clean Code attributes
 (*Consistent, Intentional, Adaptable, Responsible*) per the SonarSource
 docs (see [Issues introduction]). qa-sast's `sonarqube-rules` skill
 covers the Security lens; this skill covers the **Reliability +
@@ -27,12 +27,11 @@ Maintainability** lens for production code.
 - A pull request touches production code and you want
   Bug/Code-Smell metrics scoped to the diff (not test files).
 - Pre-merge Quality Gate enforcement on the Sonar Way default
-  (no new issues; new-code coverage ≥80%; new-code duplication ≤3%
-  — per [Sonar Way QG]).
-- Legacy codebase entering Sonar adoption — focus on **new code only**
+  (no new issues; new-code coverage ≥80%; new-code duplication ≤3% - per [Sonar Way QG]).
+- Legacy codebase entering Sonar adoption - focus on **new code only**
   to avoid baseline-debt theater.
 
-## Step 1 — Install scanner
+## Step 1 - Install scanner
 
 | Stack | Scanner |
 |---|---|
@@ -43,7 +42,7 @@ Maintainability** lens for production code.
 
 See the [SonarQube docs sitemap] for per-build-tool installation.
 
-## Step 2 — Scope to production code
+## Step 2 - Scope to production code
 
 Add to `sonar-project.properties`:
 
@@ -62,7 +61,7 @@ Arrange-Act-Assert patterns). Lumping them into one scope produces
 noise. Test code is reviewed by `qa-test-review` skills/agents
 instead.
 
-## Step 3 — Run scan
+## Step 3 - Run scan
 
 ```bash
 # Local development scan against a SonarQube server
@@ -80,7 +79,7 @@ sonar-scanner \
 The scanner uploads to the configured server; results stream to the
 project dashboard.
 
-## Step 4 — Read the dashboard
+## Step 4 - Read the dashboard
 
 | Metric | What it means | Sonar Way default |
 |---|---|---|
@@ -88,12 +87,12 @@ project dashboard.
 | New Code Smells | Maintainability issues introduced in PR | 0 |
 | New Coverage | % new lines covered by tests | ≥ 80% |
 | New Duplication | % new lines duplicated | ≤ 3% |
-| Maintainability Rating (new code) | A–E based on debt ratio | A |
-| Reliability Rating (new code) | A–E based on bug density | A |
+| Maintainability Rating (new code) | A - E based on debt ratio | A |
+| Reliability Rating (new code) | A - E based on bug density | A |
 
 Per [Sonar Way QG]: any condition fail blocks merge.
 
-## Step 5 — Quality Gate as CI gate
+## Step 5 - Quality Gate as CI gate
 
 ```yaml
 # GitHub Actions
@@ -132,9 +131,9 @@ and fails the build if it's RED.
 
 ## References
 
-- [Issues introduction] — Clean Code attributes, software qualities,
+- [Issues introduction] - Clean Code attributes, software qualities,
   Sonar Way Quality Gate defaults
-- [SonarQube docs sitemap] — per-build-tool scanner setup, current
+- [SonarQube docs sitemap] - per-build-tool scanner setup, current
   config options
 
 [Issues introduction]: https://docs.sonarsource.com/sonarqube-server/user-guide/issues/introduction.md

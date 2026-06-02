@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# test-architect — evals
+# test-architect - evals
 
 Companion eval cases for [`test-architect`](../../test-architect.md).
 Three cases cover happy path / branch / adversarial: a unit-skewed repo
@@ -17,10 +17,10 @@ the first user message and checking the agent's output against the
 **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — pyramid balance, unit-heavy with service-layer change shape
+## Eval 1 - happy path - pyramid balance, unit-heavy with service-layer change shape
 
 **Input:**
 
@@ -60,7 +60,7 @@ dominates). Step 3 applies the agent body's default recommendation
 table: predominant shape `service-layer` → target ratio 70:25:5; with
 the second-place 30% `pure-logic` nudge, the agent's worked example in
 the body lands at `75 : 20 : 5`. The action items call out: add ~150
-service-layer tests (using testcontainers), migrate 100–150
+service-layer tests (using testcontainers), migrate 100 - 150
 mis-classified unit tests into the service layer, leave UI count alone.
 Confidence: medium-to-high.
 
@@ -71,7 +71,7 @@ recommendation) AND lists "add" or "+" plus a number for service-layer
 tests (e.g., `+152`, `~150`, or `add 150`). Output does NOT recommend
 adding UI / E2E tests as the top action item.
 
-## Eval 2 — branch — framework choice, recommend stay on Cypress
+## Eval 2 - branch - framework choice, recommend stay on Cypress
 
 **Input:**
 
@@ -119,7 +119,7 @@ documented flip conditions (`Firefox`, `WebKit`, `$30k`, or
 `major-version migration`). Output does NOT recommend an immediate
 migration to Playwright as the headline.
 
-## Eval 3 — adversarial — recommend without reading the test suite (refuse)
+## Eval 3 - adversarial - recommend without reading the test suite (refuse)
 
 **Input:**
 
@@ -163,7 +163,7 @@ recommendation in the form `X : Y : Z` or `X:Y:Z` (no
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring (the ratio check uses a

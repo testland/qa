@@ -1,6 +1,6 @@
 ---
 name: flutter-testing
-description: "Authors Flutter tests across the three-layer pyramid — unit (`flutter test` for pure-Dart functions), widget (`testWidgets` + `WidgetTester` for component-level UI), integration (`flutter drive` against simulator/emulator/device for end-to-end). Picks the right layer per change shape, mocks dependencies via `mockito`, runs in CI with the Flutter Action. Use when the app is Flutter and the team wants the framework's first-party testing stack."
+description: "Authors Flutter tests across the three-layer pyramid - unit (`flutter test` for pure-Dart functions), widget (`testWidgets` + `WidgetTester` for component-level UI), integration (`flutter drive` against simulator/emulator/device for end-to-end). Picks the right layer per change shape, mocks dependencies via `mockito`, runs in CI with the Flutter Action. Use when the app is Flutter and the team wants the framework's first-party testing stack."
 rating: 23
 d6: 4
 archetype: S1
@@ -17,11 +17,11 @@ Per [flutter-testing-doc][ft]:
 > "Flutter uses a **testing pyramid** approach with three main
 > categories":
 >
-> 1. **Unit Tests** — single function / method / class; mocked
+> 1. **Unit Tests** - single function / method / class; mocked
 >    dependencies; quick.
-> 2. **Widget Tests** — single widget; UI + lifecycle + interactions;
+> 2. **Widget Tests** - single widget; UI + lifecycle + interactions;
 >    quick.
-> 3. **Integration Tests** — full app or large sections; on real
+> 3. **Integration Tests** - full app or large sections; on real
 >    devices/emulators; highest confidence; slowest.
 
 The framework ships first-party tooling for all three layers.
@@ -32,7 +32,7 @@ The framework ships first-party tooling for all three layers.
 - The team uses Dart and wants test-stack consistency with
   production code.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Flutter ships with `flutter_test` (in the SDK). For mocks:
 
@@ -47,7 +47,7 @@ dev_dependencies:
   build_runner: ^2.4.13
 ```
 
-## Step 2 — Unit tests
+## Step 2 - Unit tests
 
 Pure-Dart functions with mocked dependencies:
 
@@ -85,7 +85,7 @@ flutter test --coverage            # produces coverage/lcov.info
 
 The LCOV output feeds [`lcov-analysis`](../../qa-test-reporting/skills/lcov-analysis/SKILL.md).
 
-## Step 3 — Widget tests
+## Step 3 - Widget tests
 
 Per [flutter-testing-doc][ft], widget tests "verify the UI looks
 and interacts as expected":
@@ -129,7 +129,7 @@ Finders:
 | `find.byIcon(Icons.x)` | By Material icon.                                 |
 | `find.descendant(of:, matching:)` | Nested matching.                       |
 
-## Step 4 — Integration tests
+## Step 4 - Integration tests
 
 Per [flutter-testing-doc][ft], integration tests "test complete app
 or large app sections" on real devices.
@@ -163,7 +163,7 @@ Run:
 flutter test integration_test/checkout_flow_test.dart
 ```
 
-## Step 5 — Mockito + build_runner
+## Step 5 - Mockito + build_runner
 
 For mocks:
 
@@ -194,7 +194,7 @@ Generate the `*.mocks.dart` files:
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-## Step 6 — Coverage + reporting
+## Step 6 - Coverage + reporting
 
 ```bash
 flutter test --coverage           # writes coverage/lcov.info
@@ -205,7 +205,7 @@ The LCOV file feeds the same parser other plugins use
 ([`lcov-analysis`](../../qa-test-reporting/skills/lcov-analysis/SKILL.md))
 for cross-language coverage aggregation.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -264,12 +264,11 @@ Patrol (for native platform interactions)."
 
 ## References
 
-- [ft][ft] — Flutter testing pyramid: unit / widget / integration;
+- [ft][ft] - Flutter testing pyramid: unit / widget / integration;
   trade-off matrix (confidence, maintenance, deps, speed); CI
   integration list; `flutter test` / `flutter drive` commands.
 - [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
   [`espresso-suite`](../espresso-suite/SKILL.md),
-  [`detox-testing`](../detox-testing/SKILL.md) — alternative
+  [`detox-testing`](../detox-testing/SKILL.md) - alternative
   framework wrappers when the app isn't Flutter.
-- [`lcov-analysis`](../../qa-test-reporting/skills/lcov-analysis/SKILL.md)
-  — downstream consumer of `flutter test --coverage`.
+- [`lcov-analysis`](../../qa-test-reporting/skills/lcov-analysis/SKILL.md) - downstream consumer of `flutter test --coverage`.

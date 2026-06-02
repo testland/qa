@@ -1,6 +1,6 @@
 ---
 name: eventual-consistency-tests
-description: "Build eventual-consistency tests — convergence-window assertions (\"within 5s\"), monotonic-read tests, anti-entropy tests, conflict-resolution rules tests (CRDT-merge / LWW / vector clocks). Distinguishes \"eventually\" from \"never\" by asserting bounded convergence; pair with qa-saga-cqrs for saga + CQRS workloads."
+description: "Build eventual-consistency tests - convergence-window assertions (\"within 5s\"), monotonic-read tests, anti-entropy tests, conflict-resolution rules tests (CRDT-merge / LWW / vector clocks). Distinguishes \"eventually\" from \"never\" by asserting bounded convergence; pair with qa-saga-cqrs for saga + CQRS workloads."
 type: skill
 archetype: S3
 rating: 22
@@ -23,12 +23,12 @@ convergence, and verify conflict-resolution rules.
 
 - Distributed cache (Redis cluster), multi-region database, CRDT
   store, async-projection CQRS read model.
-- SLA promises "data converges within X seconds" — test the
+- SLA promises "data converges within X seconds" - test the
   bound.
-- Replicated counters, sets, registers (CRDTs) — verify merge
+- Replicated counters, sets, registers (CRDTs) - verify merge
   semantics.
 
-## Step 1 — Define the convergence window per workflow
+## Step 1 - Define the convergence window per workflow
 
 Document target windows:
 
@@ -41,7 +41,7 @@ Document target windows:
 
 Tests assert each.
 
-## Step 2 — Convergence-window assertion test
+## Step 2 - Convergence-window assertion test
 
 ```python
 def test_cart_update_converges_within_2s_across_regions():
@@ -60,7 +60,7 @@ def test_cart_update_converges_within_2s_across_regions():
 The exact window is per-system; the *test pattern* is
 deadline + poll + assert.
 
-## Step 3 — Monotonic-read test
+## Step 3 - Monotonic-read test
 
 Monotonic reads = "Once a read sees value v, no later read sees an
 older value." Critical for clients that read-after-write.
@@ -81,7 +81,7 @@ Without monotonic-read guarantee, two sequential reads can return
 non-monotonic values (read from a stale replica after first
 read hit a fresher one).
 
-## Step 4 — Anti-entropy / repair test
+## Step 4 - Anti-entropy / repair test
 
 Anti-entropy: a background process that detects and repairs
 divergence between replicas. Test that divergence eventually
@@ -105,7 +105,7 @@ def test_anti_entropy_repairs_drift():
     pytest.fail("Anti-entropy did not repair within 60s")
 ```
 
-## Step 5 — CRDT merge tests
+## Step 5 - CRDT merge tests
 
 For CRDT-based stores (Riak, Redis-CRDT, AntidoteDB, Yjs, Automerge),
 test the merge semantics directly:
@@ -145,7 +145,7 @@ def test_or_set_handles_concurrent_add_remove():
 Per CRDT theory: merge must be commutative, associative, idempotent
 (CmRDT) or use a join-semilattice (CvRDT).
 
-## Step 6 — Vector-clock causality test
+## Step 6 - Vector-clock causality test
 
 ```python
 def test_vector_clock_orders_causal_events():
@@ -174,7 +174,7 @@ def test_vector_clock_orders_causal_events():
 Conflict-resolution rules use causality: dominates → prefer the
 descendant; concurrent → tiebreak per business rule (LWW, merge).
 
-## Step 7 — Read-repair on inconsistent quorum
+## Step 7 - Read-repair on inconsistent quorum
 
 ```python
 def test_read_repair_propagates_freshest_value():
@@ -196,7 +196,7 @@ def test_read_repair_propagates_freshest_value():
     assert node_3.local_read("k1") == "v2"
 ```
 
-## Step 8 — Bounded staleness assertion
+## Step 8 - Bounded staleness assertion
 
 Distinct from window: "all reads no more than X seconds stale":
 
@@ -226,23 +226,23 @@ def test_bounded_staleness_under_2_seconds():
 - Real-world convergence depends on load + network + clock
   drift; quiet-test-bench results don't predict prod.
 - Some "eventually consistent" stores (DynamoDB strong reads) have
-  modes that bypass eventual semantics — verify which mode tests
+  modes that bypass eventual semantics - verify which mode tests
   exercise.
 - CRDT property tests benefit from property-based testing
-  (`qa-property-based`) — combine.
+  (`qa-property-based`) - combine.
 
 ## References
 
-- [Fowler — Event Sourcing] — replay determinism foundation
-- [Fowler — CQRS] — read-model eventual-consistency framing
+- [Fowler - Event Sourcing] - replay determinism foundation
+- [Fowler - CQRS] - read-model eventual-consistency framing
 - [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md),
   [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md),
-  [`cqrs-projection-tests`](../cqrs-projection-tests/SKILL.md) —
+  [`cqrs-projection-tests`](../cqrs-projection-tests/SKILL.md) - 
   sister skills
-- CRDT theory — Shapiro et al., "A comprehensive study of
+- CRDT theory - Shapiro et al., "A comprehensive study of
   Convergent and Commutative Replicated Data Types" (INRIA report)
-- [`mvcc-isolation-tests`](../../qa-concurrency/skills/mvcc-isolation-tests/SKILL.md) —
+- [`mvcc-isolation-tests`](../../qa-concurrency/skills/mvcc-isolation-tests/SKILL.md) - 
   per-DB transaction isolation (different consistency dimension)
 
-[Fowler — Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
-[Fowler — CQRS]: https://martinfowler.com/bliki/CQRS.html
+[Fowler - Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
+[Fowler - CQRS]: https://martinfowler.com/bliki/CQRS.html

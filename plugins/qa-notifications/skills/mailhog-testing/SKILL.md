@@ -1,6 +1,6 @@
 ---
 name: mailhog-testing
-description: "Configures and runs MailHog — legacy dev mailbox preceding Mailpit; SMTP `1025` + HTTP UI `8025`; Go-based single binary or Docker; APIv2 (`/api/v2/messages`, `/api/v2/search`); Jim chaos-monkey toggle for failure injection. Use when the user maintains an existing MailHog setup; for new projects prefer [`mailpit-testing`](../mailpit-testing/SKILL.md) (richer API, active maintenance). Migration path documented in body."
+description: "Configures and runs MailHog - legacy dev mailbox preceding Mailpit; SMTP `1025` + HTTP UI `8025`; Go-based single binary or Docker; APIv2 (`/api/v2/messages`, `/api/v2/search`); Jim chaos-monkey toggle for failure injection. Use when the user maintains an existing MailHog setup; for new projects prefer [`mailpit-testing`](../mailpit-testing/SKILL.md) (richer API, active maintenance). Migration path documented in body."
 rating: 21
 d6: 4
 archetype: S1
@@ -19,7 +19,7 @@ Per [github.com/mailhog/MailHog][mh-gh]:
 > and "View messages in the web UI, or retrieve them with the JSON
 > API."
 
-MailHog is **legacy** as of the mid-2020s — Mailpit (per
+MailHog is **legacy** as of the mid-2020s - Mailpit (per
 [`mailpit-testing`](../mailpit-testing/SKILL.md)) succeeded it with
 richer API + active maintenance. This skill covers MailHog for
 existing deployments + provides migration guidance to Mailpit.
@@ -35,7 +35,7 @@ existing deployments + provides migration guidance to Mailpit.
 
 For new projects, use [`mailpit-testing`](../mailpit-testing/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [mh-gh][mh-gh]:
 
@@ -54,7 +54,7 @@ docker run -d \
   mailhog/mailhog
 ```
 
-## Step 2 — Default ports
+## Step 2 - Default ports
 
 Per [mh-gh][mh-gh]:
 
@@ -63,7 +63,7 @@ Per [mh-gh][mh-gh]:
 | 1025 | SMTP server |
 | 8025 | HTTP server (UI + APIv1 + APIv2) |
 
-## Step 3 — Configure your app's SMTP
+## Step 3 - Configure your app's SMTP
 
 Same pattern as Mailpit (since both expose unauthenticated SMTP on
 1025 by default):
@@ -75,7 +75,7 @@ smtp:
   auth: none
 ```
 
-## Step 4 — Assert via APIv2
+## Step 4 - Assert via APIv2
 
 Per [mh-gh][mh-gh] MailHog has both APIv1 + APIv2; APIv2 is the
 modern one. Endpoints:
@@ -106,7 +106,7 @@ def test_password_reset_via_mailhog():
 The MailHog message structure is more nested than Mailpit's
 (`Content.Headers.Subject` array vs Mailpit's flat `Subject` field).
 
-## Step 5 — Jim chaos monkey
+## Step 5 - Jim chaos monkey
 
 Per [mh-gh][mh-gh]: "Chaos Monkey for failure testing" via the Jim
 component. Jim is configurable via CLI flags or environment:
@@ -121,10 +121,10 @@ Configuration flags are documented in `mailhog -h`; the README
 references "Introduction to Jim" for details.
 
 For new test work needing chaos, prefer Mailpit's Chaos mode
-(per [`mailpit-testing`](../mailpit-testing/SKILL.md) Step 5) — it
+(per [`mailpit-testing`](../mailpit-testing/SKILL.md) Step 5) - it
 has richer per-recipient configuration.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 services:
@@ -136,7 +136,7 @@ steps:
   - run: pytest tests/integration/email/ -v
 ```
 
-## Step 7 — Migration to Mailpit
+## Step 7 - Migration to Mailpit
 
 Side-by-side feature mapping:
 
@@ -178,10 +178,10 @@ Migration steps:
 
 ## References
 
-- [mh-gh][mh-gh] — repository
-- mailhog/MailHog APIv2 docs — github.com/mailhog/MailHog/blob/master/docs/APIv2.md
-- [`mailpit-testing`](../mailpit-testing/SKILL.md) — successor;
+- [mh-gh][mh-gh] - repository
+- mailhog/MailHog APIv2 docs - github.com/mailhog/MailHog/blob/master/docs/APIv2.md
+- [`mailpit-testing`](../mailpit-testing/SKILL.md) - successor;
   preferred for new projects
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) —
+- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) - 
   build-an-X for the full email-sending workflow (works with either
   Mailpit or MailHog)

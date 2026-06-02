@@ -1,6 +1,6 @@
 ---
 name: testcafe-testing
-description: "Authors TestCafe E2E tests — `npm install testcafe`, fixture/test syntax, `Selector` API for queries, automatic-waits, no WebDriver required (TestCafe injects scripts via a proxy), supports any browser including remote / cloud farms. Use when the team prefers a no-WebDriver architecture and one of TestCafe's specific features (e.g., role-based auth) matters."
+description: "Authors TestCafe E2E tests - `npm install testcafe`, fixture/test syntax, `Selector` API for queries, automatic-waits, no WebDriver required (TestCafe injects scripts via a proxy), supports any browser including remote / cloud farms. Use when the team prefers a no-WebDriver architecture and one of TestCafe's specific features (e.g., role-based auth) matters."
 rating: 22
 d6: 3
 archetype: S1
@@ -35,7 +35,7 @@ mainstream than Playwright / Cypress / Selenium.
 For new projects in 2026+: Playwright is the broader-supported
 choice.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 npm install --save-dev testcafe
@@ -44,7 +44,7 @@ npm install --save-dev testcafe
 No browser-driver setup; TestCafe uses installed browsers
 directly.
 
-## Step 2 — Author a test
+## Step 2 - Author a test
 
 ```javascript
 // tests/checkout.test.js
@@ -70,7 +70,7 @@ test('completes checkout', async (t) => {
 
 The fluent API (`t.X.Y.Z`) auto-waits.
 
-## Step 3 — Selector API
+## Step 3 - Selector API
 
 ```javascript
 // Basic
@@ -92,9 +92,9 @@ const linkInsideHeader = Selector('header').find('a').withText('Sign in');
 const visibleError = Selector('.error').filterVisible();
 ```
 
-## Step 4 — Roles (multi-user auth)
+## Step 4 - Roles (multi-user auth)
 
-TestCafe's distinguishing feature: **Roles** — encapsulated auth
+TestCafe's distinguishing feature: **Roles** - encapsulated auth
 state for switching between users in tests.
 
 ```javascript
@@ -123,10 +123,10 @@ test('regular user does not see admin panel', async t => {
 });
 ```
 
-Roles cache the auth state — subsequent `useRole` calls don't
+Roles cache the auth state - subsequent `useRole` calls don't
 re-run the login.
 
-## Step 5 — Run
+## Step 5 - Run
 
 ```bash
 # All tests, default browser (Chrome)
@@ -142,7 +142,7 @@ npx testcafe chrome:headless tests/
 npx testcafe chrome tests/checkout.test.js
 ```
 
-## Step 6 — Reporters
+## Step 6 - Reporters
 
 ```bash
 # JUnit XML (CI-friendly)
@@ -152,7 +152,7 @@ npx testcafe chrome:headless tests/ --reporter junit:reports/junit.xml
 npx testcafe chrome:headless tests/ --reporter spec,junit:reports/junit.xml
 ```
 
-## Step 7 — Network mocking
+## Step 7 - Network mocking
 
 ```javascript
 import { Selector, RequestMock } from 'testcafe';
@@ -170,7 +170,7 @@ test('shows shipped status', async (t) => {
 });
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -215,4 +215,4 @@ The JUnit XML feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-
 - TestCafe at `testcafe.io`.
 - [`playwright-testing`](../playwright-testing/SKILL.md),
   [`cypress-testing`](../cypress-testing/SKILL.md),
-  [`selenium-testing`](../selenium-testing/SKILL.md) — alternatives.
+  [`selenium-testing`](../selenium-testing/SKILL.md) - alternatives.

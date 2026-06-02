@@ -1,6 +1,6 @@
 ---
 name: chaos-mesh
-description: "Configures Chaos Mesh for Kubernetes-native chaos engineering — picks fault types (PodChaos, NetworkChaos, StressChaos, IOChaos, TimeChaos, DNSChaos, KernelChaos, HTTPChaos), targets via label selectors, controls blast radius via namespace whitelists + selector filters, schedules via CronJobs, observes via dashboard. Distinct from Litmus by architecture (Chaos Mesh has its own dashboard + workflow orchestration; Litmus uses ChaosCenter UI)."
+description: "Configures Chaos Mesh for Kubernetes-native chaos engineering - picks fault types (PodChaos, NetworkChaos, StressChaos, IOChaos, TimeChaos, DNSChaos, KernelChaos, HTTPChaos), targets via label selectors, controls blast radius via namespace whitelists + selector filters, schedules via CronJobs, observes via dashboard. Distinct from Litmus by architecture (Chaos Mesh has its own dashboard + workflow orchestration; Litmus uses ChaosCenter UI)."
 rating: 23
 d6: 4
 archetype: S1
@@ -31,10 +31,10 @@ the Kubernetes ecosystem."
 - Physical machine support needed (Chaosd extension).
 
 If LitmusChaos is already deployed, evaluate stack-fit before
-adding Chaos Mesh — both serve similar use cases with different
+adding Chaos Mesh - both serve similar use cases with different
 ergonomics.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 curl -sSL https://mirrors.chaos-mesh.org/v2.6.3/install.sh | bash
@@ -43,11 +43,11 @@ helm repo add chaos-mesh https://charts.chaos-mesh.org
 helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-mesh --create-namespace
 ```
 
-Per [chaos-mesh-home][cm], "no special dependencies required —
+Per [chaos-mesh-home][cm], "no special dependencies required - 
 Chaos Mesh deploys directly on Kubernetes clusters, including
 minikube and kind."
 
-## Step 2 — Fault types
+## Step 2 - Fault types
 
 Per [chaos-mesh-home][cm]:
 
@@ -65,7 +65,7 @@ Per [chaos-mesh-home][cm]:
 
 Plus `Schedule` for cron-style + `Workflow` for orchestration.
 
-## Step 3 — Author a NetworkChaos
+## Step 3 - Author a NetworkChaos
 
 ```yaml
 apiVersion: chaos-mesh.org/v1alpha1
@@ -92,7 +92,7 @@ Per [chaos-mesh-home][cm], Chaos Mesh provides "selector-based
 filtering using labels, annotations, and namespace whitelists to
 control 'blast radius' and target specific resources."
 
-## Step 4 — Author a PodChaos
+## Step 4 - Author a PodChaos
 
 ```yaml
 apiVersion: chaos-mesh.org/v1alpha1
@@ -114,7 +114,7 @@ spec:
 
 `mode: fixed-percent` + `value: '50'` kills 50% of matching pods.
 
-## Step 5 — Workflow orchestration
+## Step 5 - Workflow orchestration
 
 Per [chaos-mesh-home][cm]: "Workflow Orchestration: Users can
 combine serial and parallel experiments to simulate complex,
@@ -160,7 +160,7 @@ spec:
         duration: 3m
 ```
 
-## Step 6 — Dashboard
+## Step 6 - Dashboard
 
 Per [chaos-mesh-home][cm], Chaos Mesh ships a dashboard with RBAC.
 
@@ -172,7 +172,7 @@ kubectl port-forward -n chaos-mesh svc/chaos-dashboard 2333:2333
 The dashboard provides authoring (visual experiment construction),
 running, observability, and replay.
 
-## Step 7 — Run + verdict
+## Step 7 - Run + verdict
 
 ```bash
 kubectl apply -f checkout-network-latency.yaml
@@ -188,7 +188,7 @@ The chaos resource lifecycle is `Created → Running → Stopped`.
 Pair with external monitoring (Datadog / Prometheus / Grafana) to
 verify the steady-state hypothesis held.
 
-## Step 8 — Physical machine support
+## Step 8 - Physical machine support
 
 Per [chaos-mesh-home][cm]: "Physical Machine Support: Chaosd
 (experimental) extends chaos testing to non-Kubernetes
@@ -214,7 +214,7 @@ spec:
 The Chaosd agent runs on the target VM; the K8s CRD remotely
 triggers it.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - name: Trigger chaos experiment
@@ -233,7 +233,7 @@ triggers it.
 | `mode: all` without scope                                              | All matching pods affected; blast radius too wide.                       | Start with `mode: one` or `fixed-percent: 25`. |
 | No `duration`                                                           | Chaos persists until manual cleanup; risky.                              | Always set `duration` (Step 3 example). |
 | Targeting `chaos-mesh` namespace                                        | Crashes the chaos infrastructure itself.                                 | Whitelist `app` namespace; deny-list `chaos-mesh`. |
-| Disable RBAC on dashboard                                               | Anyone with cluster access can trigger chaos.                           | Per [chaos-mesh-home][cm]: RBAC is on by default — keep it on. |
+| Disable RBAC on dashboard                                               | Anyone with cluster access can trigger chaos.                           | Per [chaos-mesh-home][cm]: RBAC is on by default - keep it on. |
 | Skipping observability integration                                      | Chaos runs but verdict invisible.                                        | Wire dashboard + external monitoring. |
 
 ## Limitations
@@ -249,12 +249,11 @@ triggers it.
 
 ## References
 
-- [cm][cm] — Chaos Mesh overview: K8s-native, fault types,
+- [cm][cm] - Chaos Mesh overview: K8s-native, fault types,
   selector-based blast-radius control, workflow orchestration,
   dashboard with RBAC, Chaosd for physical machines.
-- [`litmus-chaos`](../litmus-chaos/SKILL.md) — sibling K8s
+- [`litmus-chaos`](../litmus-chaos/SKILL.md) - sibling K8s
   alternative.
-- [`gremlin-chaos`](../gremlin-chaos/SKILL.md) — multi-platform
+- [`gremlin-chaos`](../gremlin-chaos/SKILL.md) - multi-platform
   commercial alternative.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
-  — methodology this tool implements.
+- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology this tool implements.

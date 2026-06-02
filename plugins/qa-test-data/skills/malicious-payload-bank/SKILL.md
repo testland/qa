@@ -1,6 +1,6 @@
 ---
 name: malicious-payload-bank
-description: "Reference catalog of curated adversarial input payloads keyed by attack class — SQL injection, XSS, SSRF, path traversal, command injection, XXE, prototype pollution, regex DoS, Unicode confusables, header injection — plus per-context guidance for which payloads apply (URL parameter / form input / JSON body / file upload). Use when authoring negative-test cases for input validation, fuzz targets, or a security-focused test suite that needs to exercise the OWASP Top 10 attack surface."
+description: "Reference catalog of curated adversarial input payloads keyed by attack class - SQL injection, XSS, SSRF, path traversal, command injection, XXE, prototype pollution, regex DoS, Unicode confusables, header injection - plus per-context guidance for which payloads apply (URL parameter / form input / JSON body / file upload). Use when authoring negative-test cases for input validation, fuzz targets, or a security-focused test suite that needs to exercise the OWASP Top 10 attack surface."
 rating: 24
 d6: 4
 archetype: S2
@@ -11,7 +11,7 @@ archetype: S2
 > **Terminology note:** The payload classes here are
 > practitioner-emergent and align with the OWASP Top 10
 > ([owasp-top-10][owasp]) and CWE Top 25
-> ([cwe-top-25][cwe]) — both authoritative industry sources.
+> ([cwe-top-25][cwe]) - both authoritative industry sources.
 > ISTQB has no canonical entry for "malicious payload"; the
 > closest formal term is "security testing."
 
@@ -20,7 +20,7 @@ archetype: S2
 
 A reference catalog of adversarial inputs to use when authoring
 negative tests, security tests, or fuzz targets. **This is a
-defensive skill** — for testing your **own** application's input
+defensive skill** - for testing your **own** application's input
 validation, not for unauthorized testing of others' systems.
 
 ## When to use
@@ -137,7 +137,7 @@ Apply to: any JS / Node.js input that flows into object merge
 {"constructor": {"prototype": {"polluted": "yes"}}}
 ```
 
-### ReDoS — Regex Denial of Service (CWE-1333)
+### ReDoS - Regex Denial of Service (CWE-1333)
 
 Apply to: any regex with backtracking applied to user input.
 
@@ -250,13 +250,11 @@ For each class, the canonical mitigation:
 
 ## References
 
-- [owasp-top-10][owasp] — canonical attack-class reference.
-- [cwe-top-25][cwe] — CWE Top 25 most-dangerous weaknesses.
-- OWASP Cheat Sheet Series — https://cheatsheetseries.owasp.org/
-- Unicode confusables — https://www.unicode.org/Public/security/latest/confusables.txt
-- [`negative-test-generator`](../negative-test-generator/SKILL.md)
-  — sibling skill that generates rejection-path tests; consumes
+- [owasp-top-10][owasp] - canonical attack-class reference.
+- [cwe-top-25][cwe] - CWE Top 25 most-dangerous weaknesses.
+- OWASP Cheat Sheet Series - https://cheatsheetseries.owasp.org/
+- Unicode confusables - https://www.unicode.org/Public/security/latest/confusables.txt
+- [`negative-test-generator`](../negative-test-generator/SKILL.md) - sibling skill that generates rejection-path tests; consumes
   this catalog as input.
-- [`threat-model-from-spec`](../../../qa-shift-left/agents/threat-model-from-spec.md)
-  — upstream agent that identifies which payload classes apply to
+- [`threat-model-from-spec`](../../../qa-shift-left/agents/threat-model-from-spec.md) - upstream agent that identifies which payload classes apply to
   a given feature.

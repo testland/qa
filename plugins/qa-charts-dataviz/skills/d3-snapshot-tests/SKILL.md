@@ -1,6 +1,6 @@
 ---
 name: d3-snapshot-tests
-description: "Snapshot-test D3.js charts — D3 generates SVG (not Canvas, per d3js.org getting-started); use `outerHTML` snapshot for static structure, `toHaveScreenshot` for rendered SVG; jsdom for headless render in unit tests; disable transitions for stable snapshots; per-element data-binding correctness tests."
+description: "Snapshot-test D3.js charts - D3 generates SVG (not Canvas, per d3js.org getting-started); use `outerHTML` snapshot for static structure, `toHaveScreenshot` for rendered SVG; jsdom for headless render in unit tests; disable transitions for stable snapshots; per-element data-binding correctness tests."
 type: skill
 archetype: S1
 rating: 22
@@ -19,7 +19,7 @@ Per the [D3 getting-started docs], D3 "generates SVG output (not
 Canvas). Code examples show creation of SVG elements with
 `d3.create('svg')` and DOM manipulation via selections." SVG is
 text-DOM, so snapshots can be the rendered SVG markup OR a rendered
-image — different test patterns for each.
+image - different test patterns for each.
 
 ## When to use
 
@@ -29,7 +29,7 @@ image — different test patterns for each.
 - Pre-deploy gate before D3 major upgrade (D3 v6 → v7 changed
   module imports).
 
-## Step 1 — outerHTML structural snapshot
+## Step 1 - outerHTML structural snapshot
 
 For tests where SVG structure should match exactly:
 
@@ -59,7 +59,7 @@ function normalizeSvg(svg: string): string {
 }
 ```
 
-## Step 2 — Rendered-image snapshot (Playwright)
+## Step 2 - Rendered-image snapshot (Playwright)
 
 For visual-regression-style:
 
@@ -74,10 +74,10 @@ test('scatter plot renders correctly', async ({ page }) => {
 });
 ```
 
-Per [Chart.js docs] equivalent works for D3 too — snapshot the
+Per [Chart.js docs] equivalent works for D3 too - snapshot the
 locator, not the page.
 
-## Step 3 — Disable transitions
+## Step 3 - Disable transitions
 
 D3 `transition()` calls animate. Disable for tests:
 
@@ -94,7 +94,7 @@ transition(d3.select('.bars').selectAll('rect'))
 
 Or use `d3.transition().duration(0)` if API can't be conditional.
 
-## Step 4 — Per-element data-binding test
+## Step 4 - Per-element data-binding test
 
 D3's strength is data-driven DOM. Test the binding holds:
 
@@ -115,7 +115,7 @@ test('one rect per data point', async ({ page }) => {
 });
 ```
 
-## Step 5 — jsdom unit test (fast)
+## Step 5 - jsdom unit test (fast)
 
 ```js
 import { JSDOM } from 'jsdom';
@@ -138,10 +138,10 @@ test('bar generator emits N rects for N data points', () => {
 });
 ```
 
-Per the [D3 getting-started docs], D3 imports cleanly under ESM —
+Per the [D3 getting-started docs], D3 imports cleanly under ESM - 
 jsdom + native ESM works.
 
-## Step 6 — Update join correctness
+## Step 6 - Update join correctness
 
 D3's update join (`enter` / `update` / `exit`) is the hardest D3
 concept to test. Test the three states:
@@ -168,7 +168,7 @@ test('update join handles insert + remove + reorder', async ({ page }) => {
 
 Use a stable `key` function: `data-bind by .data(arr, d => d.id)`.
 
-## Step 7 — Accessibility metadata
+## Step 7 - Accessibility metadata
 
 D3 generates SVG; SVG has accessibility primitives. Tests verify:
 
@@ -207,18 +207,18 @@ patterns.
   require measured positions need a real browser.
 - D3's modular structure means `d3` (full bundle) ≠ individual
   modules (`d3-selection`, `d3-array`); pin import strategy.
-- D3 generates `<title>` tooltip natively; some libs override —
+- D3 generates `<title>` tooltip natively; some libs override - 
   test the actual rendering.
 
 ## References
 
-- [D3 getting-started docs] — install, ESM imports, SVG output,
+- [D3 getting-started docs] - install, ESM imports, SVG output,
   framework integration
-- [`chartjs-snapshot-tests`](../chartjs-snapshot-tests/SKILL.md) —
+- [`chartjs-snapshot-tests`](../chartjs-snapshot-tests/SKILL.md) - 
   Canvas-based alternative
-- [`vega-spec-validator`](../vega-spec-validator/SKILL.md) —
+- [`vega-spec-validator`](../vega-spec-validator/SKILL.md) - 
   declarative-spec testing alternative
-- [`qa-accessibility-specifics`](../../qa-accessibility-specifics/) —
+- [`qa-accessibility-specifics`](../../qa-accessibility-specifics/) - 
   cross-cutting a11y plugin
 
 [D3 getting-started docs]: https://d3js.org/getting-started

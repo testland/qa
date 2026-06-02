@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# assertion-quality-reviewer — evals
+# assertion-quality-reviewer - evals
 
 Companion eval cases for [`assertion-quality-reviewer`](../../assertion-quality-reviewer.md).
 Three cases cover happy path / branch / adversarial: a wide-vague matcher
@@ -13,7 +13,7 @@ high-priority findings, and a production-code path that triggers the
 refuse-to-proceed rule. Re-run by pasting the **Input** block as the first
 user message and matching the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — wide-vague matcher (`wide-vague` finding)
+## Eval 1 - happy path - wide-vague matcher (`wide-vague` finding)
 
 **Input:**
 
@@ -69,7 +69,7 @@ at least one of `.toBe(true)` / `.toEqual` / `.toBe(201)` (a specific
 recommended replacement). Output does NOT claim every assertion is
 `specific`.
 
-## Eval 2 — branch — fully specific suite (no high-priority findings)
+## Eval 2 - branch - fully specific suite (no high-priority findings)
 
 **Input:**
 
@@ -105,7 +105,7 @@ describe('computeTotal', () => {
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25)
 
 **Expected:** Step 1 finds 3 assertions. Step 2 classifies all 3 as
-`specific` — `.toBe(12.50)`, `.toEqual(90)`, and `.toThrowError(/^...$/)`
+`specific` - `.toBe(12.50)`, `.toEqual(90)`, and `.toThrowError(/^...$/)`
 (anchored regex). Step 3 emits a findings table dominated by the
 `specific` row; the High-priority (wide-vague), Medium-priority
 (narrow-vague), and Low-priority (match-vague) sections each report
@@ -116,7 +116,7 @@ does NOT contain `wide-vague` listed as a finding count >0 (the
 findings table row for `wide-vague` reads 0). Output does NOT recommend
 replacing `.toBe(12.50)` / `.toEqual(90)` / `.toThrowError(/^...$/)`.
 
-## Eval 3 — adversarial — refuse on production code
+## Eval 3 - adversarial - refuse on production code
 
 **Input:**
 
@@ -143,7 +143,7 @@ export class Cart {
 **Expected:** Per the Refuse-to-proceed rule "Review production code.
 Same rule as `test-code-critic`," the agent refuses to issue an
 assertion-quality verdict on this file. The input has no `expect(...)` /
-`assert(...)` / matcher calls — it is production code, not a test file.
+`assert(...)` / matcher calls - it is production code, not a test file.
 The agent emits the production-code refusal message naming
 `test-code-critic`'s convention, and does NOT emit a findings table
 classifying any assertion as `specific` / `wide-vague` / `narrow-vague` /
@@ -154,14 +154,14 @@ classifying any assertion as `specific` / `wide-vague` / `narrow-vague` /
 `production code` / `test files only` / `not a test file` (case-insensitive).
 Output does NOT contain a findings table row labelled `wide-vague`,
 `narrow-vague`, `match-vague`, or `specific` (the agent must not claim
-to have rated assertions in production code — that is the entire
+to have rated assertions in production code - that is the entire
 adversarial point of the eval).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo. The agent's tool surface
-  (`Read`, `Grep`, `Glob`) is read-only — eval re-runs cannot modify
+  (`Read`, `Grep`, `Glob`) is read-only - eval re-runs cannot modify
   the test repo.
 - Pass conditions are literal-substring checks; a reviewer can grep the
   agent's transcript for each substring.

@@ -17,7 +17,7 @@ d6: 4
 d7: 4
 ---
 
-A per-callable embedded C/C++ test-authoring agent — emits one new test file in the
+A per-callable embedded C/C++ test-authoring agent - emits one new test file in the
 project's existing framework (Unity, GoogleTest, or Ceedling-Unity). Never modifies
 existing tests, never patches production source, never installs toolchains.
 
@@ -30,7 +30,7 @@ Optional: MCU/board (`stm32f4`, `mps2-an385`, `esp32`), framework override (`uni
 
 ## Procedure
 
-### Step 1 — Detect build system from the project root
+### Step 1 - Detect build system from the project root
 
 Search in this order: top-level Ceedling `project.yml` (Ceedling "stores human-editable
 configuration" in this YAML file per [throwtheswitch.org/ceedling][ceedling]) →
@@ -44,31 +44,31 @@ dominates → default **GoogleTest**. Both `project.yml` AND `CMakeLists.txt` wi
 [ceedling]: https://www.throwtheswitch.org/ceedling
 [unity]: https://www.throwtheswitch.org/unity
 
-### Step 2 — Detect target toolchain + host-vs-target run mode
+### Step 2 - Detect target toolchain + host-vs-target run mode
 
 Inspect the build's compiler: Ceedling under `:tools: :test_compiler: :executable:` in
 `project.yml`; CMake via `set(CMAKE_C_COMPILER ...)` / `set(CMAKE_CXX_COMPILER ...)`;
 Makefiles via `CC=` / `CXX=`. Common values: `arm-none-eabi-gcc` (Cortex-M cross),
 `xtensa-esp32-elf-gcc` (ESP32), or `gcc` / `g++` (host-side, faster feedback). If the
 build invokes `qemu-system-*` (e.g., `qemu-system-arm -M mps2-an385 -kernel firmware.elf`)
-in `make test` or `ceedling test:all`, treat as **cross-compiled + QEMU emulated** —
+in `make test` or `ceedling test:all`, treat as **cross-compiled + QEMU emulated** - 
 QEMU "is the overall guide for users using QEMU for full system emulation" per
 [qemu.org/docs/master/system][qemu]; see [`qemu-system-test-runner`](../skills/qemu-system-test-runner/SKILL.md).
 Otherwise treat as **host-side** unit test.
 
 [qemu]: https://www.qemu.org/docs/master/system/index.html
 
-### Step 3 — Map the behavior spec to the framework's idiomatic shape
+### Step 3 - Map the behavior spec to the framework's idiomatic shape
 
 | Framework | Test surface | Assertion API | File path |
 |---|---|---|---|
-| **Unity (C)** | `void test_<name>(void)` — Unity tests are "just a C function that takes no arguments and returns nothing" per [throwtheswitch.org/unity][unity]; `void setUp(void)` / `void tearDown(void)` run around each test | `TEST_ASSERT_EQUAL_INT` / `_STRING` / `_NULL` / `_TRUE` / `_EQUAL_HEX8` ([unity][unity]) | `test/test_<module>.c` per the `TestModule.c` pairing rule ([unity][unity]) |
-| **GoogleTest (C++)** | `TEST(SuiteName, TestName) { ... }` — both args must be "valid C++ identifiers without underscores" per [google.github.io/googletest/primer][gt]; `TEST_F(Fixture, Name)` for `testing::Test` fixtures | `EXPECT_EQ` / `_TRUE` / `_NE` / `_STREQ`; GoogleTest "recommends preferring `EXPECT_*` ... reserving `ASSERT_*` for cases where continuing after failure creates logical problems" per [primer][gt] | `tests/<module>_test.cpp` |
+| **Unity (C)** | `void test_<name>(void)` - Unity tests are "just a C function that takes no arguments and returns nothing" per [throwtheswitch.org/unity][unity]; `void setUp(void)` / `void tearDown(void)` run around each test | `TEST_ASSERT_EQUAL_INT` / `_STRING` / `_NULL` / `_TRUE` / `_EQUAL_HEX8` ([unity][unity]) | `test/test_<module>.c` per the `TestModule.c` pairing rule ([unity][unity]) |
+| **GoogleTest (C++)** | `TEST(SuiteName, TestName) { ... }` - both args must be "valid C++ identifiers without underscores" per [google.github.io/googletest/primer][gt]; `TEST_F(Fixture, Name)` for `testing::Test` fixtures | `EXPECT_EQ` / `_TRUE` / `_NE` / `_STREQ`; GoogleTest "recommends preferring `EXPECT_*` ... reserving `ASSERT_*` for cases where continuing after failure creates logical problems" per [primer][gt] | `tests/<module>_test.cpp` |
 | **Ceedling-Unity** | identical Unity surface, plus CMock mocks via `#include "mock_<header>.h"` per [ceedling][ceedling]; see [`ceedling-mocks-reference`](../skills/ceedling-mocks-reference/SKILL.md) | same Unity macros | `test/test_<module>.c` (Ceedling auto-discovers `test_*.c` per [ceedling][ceedling]) |
 
 [gt]: https://google.github.io/googletest/primer.html
 
-### Step 4 — Emit ONE test file + change summary
+### Step 4 - Emit ONE test file + change summary
 
 Write one new file at the path from the table; never modify existing tests, never patch
 the production module. Worked example (Ceedling-Unity, `sensor_read(uint8_t channel)`,
@@ -100,22 +100,22 @@ mode, new file path, verify command (`ceedling test:all` / `make test` /
 - Spec asks for hardware-in-loop verification (real sensor / radio / motor) → refuse;
   recommend [`hardware-in-loop-reference`](../skills/hardware-in-loop-reference/SKILL.md).
   This agent authors unit tests only, not HIL.
-- Modify existing test files — one spec → one new test only.
+- Modify existing test files - one spec → one new test only.
 - Fabricate peripheral / HAL functions the target module does not expose; install
   toolchains; write outside the project tree.
 
 ## Anti-patterns
 
-- `printf` debugging left in production C source after a test session — production
+- `printf` debugging left in production C source after a test session - production
   source must not change.
 - Testing through globals (`extern int g_state;`) instead of injecting state via
-  function parameters — couples tests to internal storage and blocks mocking.
-- Hand-rolled mock structs shadowing real peripheral headers — Ceedling generates
+  function parameters - couples tests to internal storage and blocks mocking.
+- Hand-rolled mock structs shadowing real peripheral headers - Ceedling generates
   these via the `mock_<header>.h` convention per [ceedling][ceedling]; see
   [`ceedling-mocks-reference`](../skills/ceedling-mocks-reference/SKILL.md).
-- Running tests on physical hardware when a host-side compile suffices — slow
+- Running tests on physical hardware when a host-side compile suffices - slow
   feedback loop; reserve hardware for HIL.
-- `ASSERT_EQ` in GoogleTest when `EXPECT_EQ` would do — `ASSERT_*` aborts on
+- `ASSERT_EQ` in GoogleTest when `EXPECT_EQ` would do - `ASSERT_*` aborts on
   failure, masking subsequent failures per [primer][gt].
 
 ## Hand-off targets

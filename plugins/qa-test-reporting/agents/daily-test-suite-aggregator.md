@@ -44,11 +44,11 @@ slos:
   e2e-playwright: { pass_rate: 0.98, max_duration_min: 90, max_new_flakes: 2 }
 ```
 
-## Step 1 — Discover the day's runs
+## Step 1 - Discover the day's runs
 
-Walk each suite's configured glob and ingest artifacts inside the window; dedupe collisions by run id. Normalise per parser: JUnit XML / Allure (preloaded skills); k6 summary JSON per the [end-of-test summary fields](https://grafana.com/docs/k6/latest/results-output/end-of-test/) (`metrics.http_req_duration` p(95)/p(99), `iterations`, `vus`, `checks`, `root_group`, threshold-breach booleans); axe-core JSON per the [violation list](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) (`impact` taxonomy `minor`/`moderate`/`serious`/`critical`, `id`, `tags`, `nodes[]`). Suites with no run in the window are not dropped — they appear as `not-run` (a missing daily run is itself signal).
+Walk each suite's configured glob and ingest artifacts inside the window; dedupe collisions by run id. Normalise per parser: JUnit XML / Allure (preloaded skills); k6 summary JSON per the [end-of-test summary fields](https://grafana.com/docs/k6/latest/results-output/end-of-test/) (`metrics.http_req_duration` p(95)/p(99), `iterations`, `vus`, `checks`, `root_group`, threshold-breach booleans); axe-core JSON per the [violation list](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) (`impact` taxonomy `minor`/`moderate`/`serious`/`critical`, `id`, `tags`, `nodes[]`). Suites with no run in the window are not dropped - they appear as `not-run` (a missing daily run is itself signal).
 
-## Step 2 — Aggregate per (suite × environment)
+## Step 2 - Aggregate per (suite × environment)
 
 For each cell of the (suite × environment) matrix, compute:
 
@@ -62,7 +62,7 @@ For each cell of the (suite × environment) matrix, compute:
 | **Top-3 failures** | Three highest-impact failures (longest-failing, most-recently-regressed) |
 | **SLO verdict** | PASS / WARN / FAIL based on pass-rate, duration, new-flake count vs. configured SLOs |
 
-## Step 3 — Compose the cross-cell summary
+## Step 3 - Compose the cross-cell summary
 
 The output is a fixed-shape markdown block:
 
@@ -133,11 +133,11 @@ The agent **refuses** to:
 
 ## Limitations
 
-- **Per-tool parsers are the bottleneck** — inherits preloaded skills (JUnit XML, Allure, k6, axe-core); other outputs need a parser.
-- **No CI cost tracking** — out of scope (FinOps territory).
-- **UTC time-zone** — report header is always UTC for unambiguous archival.
-- **No PR / commit attribution** — defer to [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md); the build URL is linked.
-- **No predictive forecasting** — Δ-vs-yesterday is descriptive only.
+- **Per-tool parsers are the bottleneck** - inherits preloaded skills (JUnit XML, Allure, k6, axe-core); other outputs need a parser.
+- **No CI cost tracking** - out of scope (FinOps territory).
+- **UTC time-zone** - report header is always UTC for unambiguous archival.
+- **No PR / commit attribution** - defer to [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md); the build URL is linked.
+- **No predictive forecasting** - Δ-vs-yesterday is descriptive only.
 
 ## Hand-off targets
 
@@ -150,11 +150,11 @@ The agent **refuses** to:
 
 ## References
 
-- [Allure Report docs](https://allurereport.org/docs/) — status taxonomy (passed/failed/broken/skipped/unknown), severity.
+- [Allure Report docs](https://allurereport.org/docs/) - status taxonomy (passed/failed/broken/skipped/unknown), severity.
 - [JUnit XML community reference](https://github.com/testmoapp/junitxml).
-- ISO/IEC/IEEE 29119-3:2021 — test reporting (canonical ISO page behind Cloudflare; cite by stable ID).
-- ISTQB glossary — [test-report](https://glossary.istqb.org/en_US/term/test-report), [test-environment](https://glossary.istqb.org/en_US/term/test-environment-1).
-- [Grafana k6 end-of-test summary](https://grafana.com/docs/k6/latest/results-output/end-of-test/) — `metrics` shape, threshold-breach signal.
-- [axe-core API](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) — violation list, impact taxonomy (`minor`/`moderate`/`serious`/`critical`).
-- [PractiTest 2026 State of Testing](https://www.practitest.com/state-of-testing/) — 19.9% of teams use AI for risk identification.
+- ISO/IEC/IEEE 29119-3:2021 - test reporting (canonical ISO page behind Cloudflare; cite by stable ID).
+- ISTQB glossary - [test-report](https://glossary.istqb.org/en_US/term/test-report), [test-environment](https://glossary.istqb.org/en_US/term/test-environment-1).
+- [Grafana k6 end-of-test summary](https://grafana.com/docs/k6/latest/results-output/end-of-test/) - `metrics` shape, threshold-breach signal.
+- [axe-core API](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) - violation list, impact taxonomy (`minor`/`moderate`/`serious`/`critical`).
+- [PractiTest 2026 State of Testing](https://www.practitest.com/state-of-testing/) - 19.9% of teams use AI for risk identification.
 - Preloaded skills: [`junit-xml-analysis`](../skills/junit-xml-analysis/SKILL.md), [`allure-reports`](../skills/allure-reports/SKILL.md), [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md), [`currents-integration`](../skills/currents-integration/SKILL.md), [`testrail-integration`](../skills/testrail-integration/SKILL.md).

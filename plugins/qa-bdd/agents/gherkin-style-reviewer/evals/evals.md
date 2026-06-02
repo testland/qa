@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# gherkin-style-reviewer — evals
+# gherkin-style-reviewer - evals
 
 Companion eval cases for [`gherkin-style-reviewer`](../../gherkin-style-reviewer.md).
 Three cases cover happy path / branch / adversarial: an imperative
@@ -16,7 +16,7 @@ refuse-to-operate-on-non-`.feature`-files rule. Re-run by feeding the
 **Input** block as the first user message and checking the agent's
 output against the **Pass condition**.
 
-## Eval 1 — happy path — imperative + leakage + vague Then (violations flagged)
+## Eval 1 - happy path - imperative + leakage + vague Then (violations flagged)
 
 **Input:**
 
@@ -54,16 +54,16 @@ should apply its defaults).
 **Expected:** Step 2 detects imperative steps (`click the button with id
 "#promo-input"`, `type "WELCOME10" into element ".promo-input"`) via
 the regex patterns + the `#id` and `.class` selector indicators. Step 3
-detects technical leakage (`POST /api/v1/orders` — HTTP verb + endpoint
+detects technical leakage (`POST /api/v1/orders` - HTTP verb + endpoint
 + JSON body). Step 4 detects And-chain (3+ consecutive Givens repeated
 across the two scenarios). Step 5 detects missing Background extraction
-(same opening Givens — `I am a logged-in customer` / `the cart contains
-1 of "BOOK-001"` / `I am on the checkout page` — repeated). Step 6
+(same opening Givens - `I am a logged-in customer` / `the cart contains
+1 of "BOOK-001"` / `I am on the checkout page` - repeated). Step 6
 detects vague Then (`the order is correct`, `the data is right`, `an
-error happens` — no observable target). Step 7 emits per-file table
+error happens` - no observable target). Step 7 emits per-file table
 with rows for each category. Per the Refuse-to-proceed rule "Mark a
 Feature 'good' if any high-confidence violation remains", the Feature
-is NOT marked good — multiple high-confidence violations remain.
+is NOT marked good - multiple high-confidence violations remain.
 
 **Pass condition:** Output contains at least three of the literal
 strings: `imperative`, `technical leakage`, `Background`, `vague`,
@@ -72,7 +72,7 @@ least one of `#promo-input`, `.promo-input`, `/api/v1/orders`, or `POST`
 as evidence of the leakage / imperative findings. Output does NOT
 contain a `Feature is good` or equivalent approval line.
 
-## Eval 2 — branch — declarative Feature with Background (no violations)
+## Eval 2 - branch - declarative Feature with Background (no violations)
 
 **Input:**
 
@@ -109,7 +109,7 @@ selector / endpoint patterns). Step 3: no technical leakage (no HTTP
 verb, no endpoint, no selector, no SQL, no internal class name). Step
 4: no And-chains hiding multi-step setup (the longest And run is 2
 declarative business statements). Step 5: Background is already
-extracted — the two scenarios share the same opening state via
+extracted - the two scenarios share the same opening state via
 `Background:`. Step 6: every Then has an observable target ("confirmed
 with total $11.25", "confirmation email is queued", "the message 'This
 promo code has expired'", "the cart total remains $12.50"). Per-file
@@ -121,7 +121,7 @@ OR `0 issues` OR `no issues` OR `no violations` (case-insensitive) for
 the checkout.feature file. Output does NOT contain a row in the
 findings table for `imperative`, `technical leakage`, or `vague-Then`.
 
-## Eval 3 — adversarial — non-`.feature` file (refuse to operate)
+## Eval 3 - adversarial - non-`.feature` file (refuse to operate)
 
 **Input:**
 
@@ -155,7 +155,7 @@ files", the agent refuses. Step 1 filter (`grep '\.feature$'`) excludes
 `tests/checkout.test.ts`. Output explains the file is not a Gherkin
 Feature and that the appropriate gate for Playwright tests is a
 test-code reviewer (the agent is allowed to mention sibling agents but
-must not invent one — phrases like "not a `.feature` file" or "out of
+must not invent one - phrases like "not a `.feature` file" or "out of
 scope for Gherkin style review" are sufficient). The agent does NOT
 emit `imperative` / `technical leakage` / `vague-Then` findings
 against the TypeScript file. The agent does NOT issue a "good" or
@@ -169,7 +169,7 @@ against the `tests/checkout.test.ts` file.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the agent's
+- All three inputs are concrete pasted-content blocks - the agent's
   `Read` / `Grep` / `Glob` tool surface is not exercised since file
   contents are supplied inline.
 - Pass conditions are literal-substring checks; a reviewer can grep the

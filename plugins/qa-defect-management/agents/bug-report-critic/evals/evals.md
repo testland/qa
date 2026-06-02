@@ -4,20 +4,20 @@ type: agent
 archetype: A3
 ---
 
-# bug-report-critic — evals
+# bug-report-critic - evals
 
 Companion eval cases for [`bug-report-critic`](../../bug-report-critic.md).
 Three cases cover happy path / branch / adversarial: a report missing
 reproduction commit + auto-equated severity/priority (verdict `BLOCK`), a
 well-formed report passing all five steps (verdict `pass`), and a request
 to auto-fill missing fields (refuse-to-proceed rule "Auto-fill missing
-fields — only reviews and recommends").
+fields - only reviews and recommends").
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — report missing required fields (BLOCK)
+## Eval 1 - happy path - report missing required fields (BLOCK)
 
 **Input:**
 
@@ -61,14 +61,14 @@ pinning a commit SHA, justifying P1 independently, and tightening the
 title.
 
 **Pass condition:** Output contains the literal string `BLOCK`
-(case-sensitive — the agent's verdict label) AND contains at least one
+(case-sensitive - the agent's verdict label) AND contains at least one
 of `commit SHA` / `commit sha` / `Pin reproduction` (case-insensitive)
 AND contains the literal substring `severity` (case-insensitive) within
 2 lines of `priority`. Output does NOT contain a verdict of `pass`
-(case-sensitive, as a verdict line — not the noun "pass" in flowing
+(case-sensitive, as a verdict line - not the noun "pass" in flowing
 prose).
 
-## Eval 2 — branch — well-formed report (pass)
+## Eval 2 - branch - well-formed report (pass)
 
 **Input:**
 
@@ -108,20 +108,20 @@ Platform: Linear — team ENG
 concrete value (no TBD, no blanks). Step 2 confirms the title is
 behavioural, single-clause, and concrete. Step 3 confirms severity
 (Major) and priority (P2) are populated independently and each has
-its own justification — no auto-equation flag. Step 4 confirms the
+its own justification - no auto-equation flag. Step 4 confirms the
 reproduction block has commit SHA, command, observation, and
 expected vs actual. Step 5 confirms defect type (Code) matches the
 component (web/...). Verdict: `pass` with no critical findings.
 
 **Pass condition:** Output contains the verdict line `pass` (the
-agent's verdict label — case-sensitive) AND does NOT contain the
+agent's verdict label - case-sensitive) AND does NOT contain the
 verdict line `BLOCK` AND does NOT contain `block` as a verdict label.
 Output does NOT include an action-items section calling for the
 reporter to add a commit SHA, justify severity vs priority, or
 tighten the title (those are the Eval 1 fixes; none should apply
 here).
 
-## Eval 3 — adversarial — request to auto-fill missing fields (refuse)
+## Eval 3 - adversarial - request to auto-fill missing fields (refuse)
 
 **Input:**
 
@@ -147,7 +147,7 @@ Platform: GitHub Issues — repo example/app
 **Target models:** sonnet (2026-05-25)
 
 **Expected:** Refuses to auto-fill. The Refuse-to-proceed rules
-"Auto-fill missing fields — only reviews and recommends" and "Mark a
+"Auto-fill missing fields - only reviews and recommends" and "Mark a
 report 'pass' if any required field is missing" are both controlling.
 The agent emits a `BLOCK` verdict (every required field except Title
 is blank, and the title itself fails the single-description test).
@@ -166,7 +166,7 @@ not propose `Severity: Major` as if it were filling the field).
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks (full bug-report
-  drafts with structured fields and reproduction text) — no external
+  drafts with structured fields and reproduction text) - no external
   fixtures required.
 - Pass conditions are literal-substring checks against the agent's
   transcript; reviewers can grep for each expected token.

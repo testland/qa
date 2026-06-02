@@ -1,6 +1,6 @@
 ---
 name: reqnroll-testing
-description: "Configures Reqnroll (the canonical .NET BDD framework) — install via `dotnet add package Reqnroll`, author `.feature` files in Gherkin, write step bindings as `[Given/When/Then]`-decorated methods in any C# class, runs via `dotnet test`. Reqnroll is the SpecFlow successor (originated as a community port off the SpecFlow codebase); new .NET BDD work targets Reqnroll. Use for .NET projects starting BDD or migrating from SpecFlow."
+description: "Configures Reqnroll (the canonical .NET BDD framework) - install via `dotnet add package Reqnroll`, author `.feature` files in Gherkin, write step bindings as `[Given/When/Then]`-decorated methods in any C# class, runs via `dotnet test`. Reqnroll is the SpecFlow successor (originated as a community port off the SpecFlow codebase); new .NET BDD work targets Reqnroll. Use for .NET projects starting BDD or migrating from SpecFlow."
 rating: 22
 d6: 4
 archetype: S1
@@ -27,7 +27,7 @@ active development.
 
 ## When to use
 
-- A new .NET project starts BDD — pick Reqnroll over SpecFlow.
+- A new .NET project starts BDD - pick Reqnroll over SpecFlow.
 - An existing SpecFlow project plans to migrate (per
   [reqnroll-home][rh]: "compatible with SpecFlow, allowing quick
   migration").
@@ -38,7 +38,7 @@ active development.
 For SpecFlow-locked legacy projects mid-migration, see
 [`specflow-testing`](../specflow-testing/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 # In the test project directory
@@ -49,7 +49,7 @@ dotnet add package Reqnroll.Tools.MsBuild.Generation  # generates code from .fea
 Per [reqnroll-home][rh]: "Works across common operating systems
 and .NET versions (including .NET 8.0)."
 
-## Step 2 — Author a Feature
+## Step 2 - Author a Feature
 
 ```gherkin
 # Features/Cart.feature
@@ -80,7 +80,7 @@ Feature: Apply promo code at checkout
 `Rule:` blocks (Gherkin 6+) group related scenarios; per
 [reqnroll-home][rh] this is supported.
 
-## Step 3 — Step bindings
+## Step 3 - Step bindings
 
 ```csharp
 // Steps/CartSteps.cs
@@ -139,7 +139,7 @@ public void GivenCartContains(int qty, string sku, double price) { ... }
 
 Cucumber expressions are more readable; regex is more flexible.
 
-## Step 4 — Async support
+## Step 4 - Async support
 
 Per [reqnroll-home][rh]: "Async step definitions and hooks."
 
@@ -153,7 +153,7 @@ public async Task ThenOrderArrives(int minutes)
 
 `async Task` step methods work transparently; no special config.
 
-## Step 5 — Hooks
+## Step 5 - Hooks
 
 ```csharp
 using Reqnroll;
@@ -194,7 +194,7 @@ public class TestHooks
 }
 ```
 
-## Step 6 — Tags
+## Step 6 - Tags
 
 ```gherkin
 @critical @regression
@@ -211,7 +211,7 @@ dotnet test --filter "Category=critical"
 dotnet test --filter "Category!=wip"
 ```
 
-## Step 7 — Run
+## Step 7 - Run
 
 ```bash
 # All tests
@@ -224,7 +224,7 @@ dotnet test --filter "FullyQualifiedName~Cart"
 dotnet test --logger "junit;LogFilePath=reports/test-results.xml"
 ```
 
-## Step 8 — IDE support
+## Step 8 - IDE support
 
 Per [reqnroll-home][rh]: "IDE support for Visual Studio 2022, VS
 Code, and Rider."
@@ -235,7 +235,7 @@ The Reqnroll plugin enables:
 - Scaffolding (auto-generate step from undefined Gherkin line).
 - Run/debug per-scenario.
 
-## Step 9 — Migrate from SpecFlow
+## Step 9 - Migrate from SpecFlow
 
 Per [reqnroll-home][rh]: "Compatible with SpecFlow, allowing quick
 migration of existing projects."
@@ -271,13 +271,12 @@ Most SpecFlow projects migrate in <1 day for typical scope.
 
 ## References
 
-- [rh][rh] — Reqnroll overview: SpecFlow reboot, Gherkin Rule
+- [rh][rh] - Reqnroll overview: SpecFlow reboot, Gherkin Rule
   blocks, SpecFlow-compatible migration, async hooks, IDE support
   (VS / VS Code / Rider).
-- [`specflow-testing`](../specflow-testing/SKILL.md) — legacy
+- [`specflow-testing`](../specflow-testing/SKILL.md) - legacy
   SpecFlow support skill.
 - [`cucumber-testing`](../cucumber-testing/SKILL.md),
-  [`behave-testing`](../behave-testing/SKILL.md) — sibling language
+  [`behave-testing`](../behave-testing/SKILL.md) - sibling language
   wrappers.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)
-  — addresses step proliferation.
+- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - addresses step proliferation.

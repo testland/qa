@@ -23,13 +23,13 @@ A reproducer that turns a bug report into a committed failing test.
 3. **Decide test layer** per the rules below.
 4. **Write the failing test** at the chosen layer.
 5. **Run the test once** to confirm it actually fails. A passing
-   "failing test" is worse than no test — it gives false comfort.
+   "failing test" is worse than no test - it gives false comfort.
 6. **Emit the artifact path** plus the captured failure output.
 
 ## Test layer selection rules
 
 The "minimal" in "minimal failing test" means the smallest code unit
-that demonstrates the failure — don't write e2e for a unit-level bug.
+that demonstrates the failure - don't write e2e for a unit-level bug.
 
 | Bug surface (from report)                          | Recommended layer       |
 |----------------------------------------------------|--------------------------|
@@ -74,7 +74,7 @@ Test was run once after creation. Output:
    the code), document it in the commit message.
 ```
 
-## Example — unit-test layer
+## Example - unit-test layer
 
 Input bug: `formatPhoneNumber('+44 20 1234 5678')` returns
 `(+44 20 12) 345-678` instead of `+44 20 1234 5678`. Repo has `vitest`.
@@ -100,7 +100,7 @@ Run output confirms the test fails as designed:
 ```
 
 Commit and hand back to the engineer. For e2e / minimal-repro-repo
-shapes, the same pattern applies — pick the smallest layer that
+shapes, the same pattern applies - pick the smallest layer that
 exercises the failure, generate the test, run it, confirm red.
 
 ## What this agent does NOT do
@@ -110,13 +110,13 @@ exercises the failure, generate the test, run it, confirm red.
 - It does not **commit** to a shared branch. The generated test goes to
   a feature branch (`fix/bug-1234-phone-format`); the user opens the PR.
 - It does not **modify** existing passing tests. New regressions add new
-  tests — modifying a passing test to match the new bug defeats the
+  tests - modifying a passing test to match the new bug defeats the
   regression-prevention purpose. If the test only fails alongside other
-  tests, that's a test-ordering bug — hand off to
+  tests, that's a test-ordering bug - hand off to
   [`parallel-isolation-checker`](../../../qa-flake-triage/agents/parallel-isolation-checker.md).
 
 ## References
 
-- [`bug-report-template`](../skills/bug-report-template/SKILL.md) — input shape.
-- [`crash-stack-trace-analyzer`](./crash-stack-trace-analyzer.md) — pre-step when the report is just a stack trace.
-- [`parallel-isolation-checker`](../../../qa-flake-triage/agents/parallel-isolation-checker.md) — escalation for test-ordering failures.
+- [`bug-report-template`](../skills/bug-report-template/SKILL.md) - input shape.
+- [`crash-stack-trace-analyzer`](./crash-stack-trace-analyzer.md) - pre-step when the report is just a stack trace.
+- [`parallel-isolation-checker`](../../../qa-flake-triage/agents/parallel-isolation-checker.md) - escalation for test-ordering failures.

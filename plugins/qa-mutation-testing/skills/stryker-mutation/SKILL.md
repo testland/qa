@@ -1,6 +1,6 @@
 ---
 name: stryker-mutation
-description: "Configures StrykerJS for mutation testing of JavaScript / TypeScript / React / Vue / Svelte / Node — picks the test-runner plugin (`@stryker-mutator/jest-runner`, `mocha-runner`, `vitest-runner`, `karma-runner`), authors `stryker.conf.json` with mutate globs + thresholds, runs incremental mode for PRs (only mutate changed files), and reports the mutation score. Use when a JS/TS test suite has ≥80% line coverage and the team wants to verify the tests actually catch bugs (not just touch lines)."
+description: "Configures StrykerJS for mutation testing of JavaScript / TypeScript / React / Vue / Svelte / Node - picks the test-runner plugin (`@stryker-mutator/jest-runner`, `mocha-runner`, `vitest-runner`, `karma-runner`), authors `stryker.conf.json` with mutate globs + thresholds, runs incremental mode for PRs (only mutate changed files), and reports the mutation score. Use when a JS/TS test suite has ≥80% line coverage and the team wants to verify the tests actually catch bugs (not just touch lines)."
 rating: 23
 d6: 4
 archetype: S1
@@ -31,7 +31,7 @@ suite with high mutation-survival rate** is the bug coverage hides.
 - A critical module needs a higher quality bar than coverage alone
   proves.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 npm install --save-dev \
@@ -42,7 +42,7 @@ npm install --save-dev \
 Per [stryker-intro][si], supported runners include Jest, Mocha,
 Karma, Vitest, Jasmine, Cucumber, Tap.
 
-## Step 2 — Initialize
+## Step 2 - Initialize
 
 ```bash
 npx stryker init
@@ -68,12 +68,12 @@ Key fields:
 |----------------------|-----------------------------------------------------------------------------|
 | `mutate`             | Glob patterns: which files to mutate; exclude tests + types.               |
 | `testRunner`         | `jest` / `mocha` / `vitest` / `karma` / etc.                                 |
-| `coverageAnalysis`   | `perTest` (fastest — only re-run tests that touched the mutated line).      |
+| `coverageAnalysis`   | `perTest` (fastest - only re-run tests that touched the mutated line).      |
 | `thresholds.break`   | Mutation score below this → `npx stryker run` exits non-zero (CI gate).    |
 | `incremental`        | `true` to only mutate files changed since last run.                         |
 | `concurrency`        | Worker count (default = CPU count).                                         |
 
-## Step 3 — Run
+## Step 3 - Run
 
 ```bash
 npx stryker run
@@ -93,7 +93,7 @@ Tests run: 12 (all passed — mutant survived).
 the tests don't actually catch this regression. Add a test for
 qty = 0.
 
-## Step 4 — Report + threshold
+## Step 4 - Report + threshold
 
 ```
 Ran 142 tests.
@@ -112,10 +112,10 @@ gate the build:
 - `>= low` (60) → yellow.
 - `< break` (50) → red, exit code != 0.
 
-The HTML report shows per-file mutation breakdown — drill in to
+The HTML report shows per-file mutation breakdown - drill in to
 see which mutants survived and where to add tests.
 
-## Step 5 — Incremental mode for PR runs
+## Step 5 - Incremental mode for PR runs
 
 Full mutation runs are slow (5-30 min on medium codebases). For
 PRs, incremental mode only mutates changed files:
@@ -127,7 +127,7 @@ npx stryker run --incremental
 This stores state in `.stryker-tmp/` (commit to git so subsequent
 runs benefit). Per-PR runs typically complete in <2 min.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 - name: Mutation testing (changed files only)
@@ -163,7 +163,7 @@ main (catches drift in unchanged code).
 
 - **Slow for large codebases.** Even with incremental + perTest,
   mutation testing scales worse than test execution.
-- **Surviving mutants don't always indicate weak tests** — some
+- **Surviving mutants don't always indicate weak tests** - some
   are equivalent mutants (semantically identical to the original);
   flag and exclude these.
 - **TypeScript checking adds time.** Disable type-check (`tsconfig.tsbuildinfo`)
@@ -173,12 +173,11 @@ main (catches drift in unchanged code).
 
 ## References
 
-- [si][si] — StrykerJS overview, supported test runners, supported
+- [si][si] - StrykerJS overview, supported test runners, supported
   frameworks (TS / React / Angular / Vue / Svelte / Node).
-- [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md) —
+- [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md) - 
   .NET sibling.
-- [`pitest-mutation`](../pitest-mutation/SKILL.md) — Java sibling.
-- [`mutmut-mutation`](../mutmut-mutation/SKILL.md) — Python sibling.
-- [`mull-mutation`](../mull-mutation/SKILL.md) — C/C++ sibling.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md)
-  — agent that suggests the missing test for a survivor.
+- [`pitest-mutation`](../pitest-mutation/SKILL.md) - Java sibling.
+- [`mutmut-mutation`](../mutmut-mutation/SKILL.md) - Python sibling.
+- [`mull-mutation`](../mull-mutation/SKILL.md) - C/C++ sibling.
+- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent that suggests the missing test for a survivor.

@@ -1,6 +1,6 @@
 ---
 name: jira-bug-workflow-runner
-description: "Author and run Jira Cloud bug workflows via REST API v3 — issue creation, state transitions, JQL search for triage queues, severity/priority field updates. Covers issue creation with ADF description, transition lookup + apply, JQL search for duplicate detection, label-based classification (severity/priority/regression), and CI-driven bug filing from test failures. Use when programmatically managing Jira bug lifecycle states (creates, triages, transitions, closes) — distinct from qa-test-reporting/jira-issue-importer which posts test-result-link issues."
+description: "Author and run Jira Cloud bug workflows via REST API v3 - issue creation, state transitions, JQL search for triage queues, severity/priority field updates. Covers issue creation with ADF description, transition lookup + apply, JQL search for duplicate detection, label-based classification (severity/priority/regression), and CI-driven bug filing from test failures. Use when programmatically managing Jira bug lifecycle states (creates, triages, transitions, closes) - distinct from qa-test-reporting/jira-issue-importer which posts test-result-link issues."
 rating: 24
 d6: 4
 archetype: S1
@@ -90,7 +90,7 @@ def create_bug(project_key, summary, description_text, severity, priority, label
     return r.json()["key"]
 ```
 
-Note: `severity` is typically a custom field — most tenants
+Note: `severity` is typically a custom field - most tenants
 either define a custom Severity field (`customfield_XXXXX`) or
 use labels (`severity-critical`). The example above uses labels
 for portability; see "Severity custom field" below.
@@ -259,7 +259,7 @@ above.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Hard-coding transition IDs | Workflow updates break the runner silently | Look up transitions per call via `GET /transitions` |
-| Plain-text `description` | API returns 400 — Jira v3 requires ADF | Wrap as `{"type": "doc", "version": 1, "content": [...]}` |
+| Plain-text `description` | API returns 400 - Jira v3 requires ADF | Wrap as `{"type": "doc", "version": 1, "content": [...]}` |
 | No deduplication before create | Each retry of a flaky test creates a new bug | Search by summary first; comment on existing |
 | Severity as built-in `priority` | Conflates two axes ([`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md)) | Use custom Severity field or `severity-*` labels |
 | Storing the API token in code | Token leak | Use environment variables / secret stores |
@@ -269,25 +269,24 @@ above.
 ## Limitations
 
 - **Workflow is per-project.** A transition name in one project
-  may not exist in another — the runner must handle "transition
+  may not exist in another - the runner must handle "transition
   not found" gracefully.
 - **Custom fields are tenant-specific.** Field IDs (`customfield_10039`)
   vary; discover at deploy time.
 - **ADF complexity.** Rich descriptions (code blocks, tables) need
-  full ADF construction — see Atlassian's ADF reference.
+  full ADF construction - see Atlassian's ADF reference.
 - **Rate limits.** Jira Cloud rate limits per minute; bulk
   operations need throttling.
-- **JQL injection.** `text ~ "user input"` accepts JQL operators
-  — always escape quotes and reserved characters.
+- **JQL injection.** `text ~ "user input"` accepts JQL operators - always escape quotes and reserved characters.
 
 ## References
 
-- Jira Cloud REST API v3 issues —
+- Jira Cloud REST API v3 issues - 
   [developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/).
-- Jira Cloud authentication —
+- Jira Cloud authentication - 
   developer.atlassian.com/cloud/jira/platform/basic-auth-for-rest-apis.
-- ADF spec — developer.atlassian.com/cloud/jira/platform/apis/document/structure.
-- JQL syntax — confluence.atlassian.com/jiracoreserver/advanced-searching.
+- ADF spec - developer.atlassian.com/cloud/jira/platform/apis/document/structure.
+- JQL syntax - confluence.atlassian.com/jiracoreserver/advanced-searching.
 - Sibling references:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
@@ -298,5 +297,4 @@ above.
   [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md),
   [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md).
 - Sibling-plugin neighbour:
-  [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md)
-  — different scope (test-result posting; not bug workflow).
+  [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md) - different scope (test-result posting; not bug workflow).

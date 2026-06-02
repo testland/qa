@@ -1,6 +1,6 @@
 ---
 name: fuzz-target-author
-description: "Builder agent that scaffolds a coverage-guided fuzz target from a target function signature. Routes via fuzz-toolkit-dispatcher to the right per-language fuzzer (libFuzzer / AFL++ / cargo-fuzz / Go native / Atheris / Jazzer), generates a harness file with proper input handling (FuzzedDataProvider where applicable), creates seed corpus + dictionary scaffolds, and produces a build command + CI integration snippet. Use when adding fuzz coverage to a project that has none — produces a working harness + first run in under 5 minutes."
+description: "Builder agent that scaffolds a coverage-guided fuzz target from a target function signature. Routes via fuzz-toolkit-dispatcher to the right per-language fuzzer (libFuzzer / AFL++ / cargo-fuzz / Go native / Atheris / Jazzer), generates a harness file with proper input handling (FuzzedDataProvider where applicable), creates seed corpus + dictionary scaffolds, and produces a build command + CI integration snippet. Use when adding fuzz coverage to a project that has none - produces a working harness + first run in under 5 minutes."
 tools: "Read, Grep, Glob, Write, Edit, Bash(git *), Bash(clang *), Bash(go *), Bash(cargo *)"
 model: sonnet
 skills:
@@ -18,11 +18,11 @@ A builder agent that scaffolds a coverage-guided fuzz target from a function sig
 
 Inputs: a target function signature (or file containing one), optional language hint (otherwise auto-detected), optional fuzz-target name (defaults to function name). Output: complete harness file + build command + seed-corpus directory + CI snippet.
 
-## Step 1 — Detect language
+## Step 1 - Detect language
 
 Inspect the project layout: `Cargo.toml` → Rust, `go.mod` → Go, `pyproject.toml` / `setup.py` / `requirements.txt` → Python, `pom.xml` / `build.gradle` → JVM, `CMakeLists.txt` / `Makefile` + `.c`/`.cc`/`.cpp` → C/C++, `Package.swift` → Swift. Ask the user if ambiguous.
 
-## Step 2 — Route via dispatcher
+## Step 2 - Route via dispatcher
 
 Apply [`fuzz-toolkit-dispatcher`](../skills/fuzz-toolkit-dispatcher/SKILL.md):
 
@@ -34,7 +34,7 @@ JVM    → @FuzzTest JUnit method
 C/C++  → libFuzzer harness (LLVMFuzzerTestOneInput); AFL++ standalone if file-driven
 ```
 
-## Step 3 — Generate the harness
+## Step 3 - Generate the harness
 
 Per-language entry points (all use `FuzzedDataProvider` / Go fuzz typed parameters / Arbitrary for multi-arg targets):
 
@@ -85,11 +85,11 @@ class Fuzz<FunctionName>Test {
 }
 ```
 
-## Step 4 — Seed corpus + dictionary
+## Step 4 - Seed corpus + dictionary
 
-Create `fuzz/seeds/` (3-10 representative inputs — empty for user to fill) and `fuzz/fuzz.dict` (dictionary keywords for structured formats: JSON / XML / protobuf / SQL grammar tokens).
+Create `fuzz/seeds/` (3-10 representative inputs - empty for user to fill) and `fuzz/fuzz.dict` (dictionary keywords for structured formats: JSON / XML / protobuf / SQL grammar tokens).
 
-## Step 5 — Build + run commands
+## Step 5 - Build + run commands
 
 ```bash
 # C/C++ libFuzzer
@@ -105,7 +105,7 @@ cargo +nightly fuzz run <f> -- -max_total_time=300
 # JVM     : JAZZER_FUZZ=300 mvn test -Dtest=Fuzz<F>Test  (regression: no env var)
 ```
 
-## Step 6 — CI snippet
+## Step 6 - CI snippet
 
 ```yaml
 - name: Smoke fuzz (5 min)
@@ -118,7 +118,7 @@ cargo +nightly fuzz run <f> -- -max_total_time=300
   with: { name: fuzz-artifacts, path: "crash-* leak-* timeout-*" }
 ```
 
-## Step 7 — Output summary
+## Step 7 - Output summary
 
 Agent emits a markdown summary listing files generated (`fuzz/fuzz_<f>.cc`, `fuzz/seeds/.gitkeep`, `fuzz/fuzz.dict`, `.github/workflows/fuzz.yml`), the exact first-run command, and next steps: add 3-10 seeds, run locally ≥5 min, commit + PR, onboard mature projects to OSS-Fuzz via [`ossfuzz-integration`](../skills/ossfuzz-integration/SKILL.md).
 

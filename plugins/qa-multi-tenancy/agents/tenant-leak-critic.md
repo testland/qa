@@ -28,7 +28,7 @@ Inputs:
 
 Output: pass/block verdict + per-finding action list.
 
-## Step 1 — Enumerate changed surfaces
+## Step 1 - Enumerate changed surfaces
 
 Use `git diff --name-only` to list changed files. Classify:
 
@@ -45,7 +45,7 @@ Use `git diff --name-only` to list changed files. Classify:
 
 A PR adding **any** of these without isolation tests is a red flag.
 
-## Step 2 — Run the hazard checklist
+## Step 2 - Run the hazard checklist
 
 Per
 [`tenant-leak-test-author`](../skills/tenant-leak-test-author/SKILL.md)
@@ -124,7 +124,7 @@ patterns:
 - Test suite uses superuser/BYPASSRLS Postgres role → critical
   block.
 
-## Step 3 — Verdict logic
+## Step 3 - Verdict logic
 
 ```python
 def verdict(findings):
@@ -202,7 +202,7 @@ The agent **refuses** to:
 - Treat a `tenant_id` derived from request body / query / header
   as trusted.
 - Treat absence of `tenant_id` in async-message-consumer code as
-  "the framework handles it" — it doesn't.
+  "the framework handles it" - it doesn't.
 - Sign off without verifying the test suite connection role is
   not a superuser / table owner / BYPASSRLS.
 
@@ -210,7 +210,7 @@ The agent **refuses** to:
 
 ### Example 1: PR adds a new model + endpoint
 
-Input — diff includes:
+Input - diff includes:
 
 - `migrations/0042_add_exports.py`:
   ```python

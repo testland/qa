@@ -1,6 +1,6 @@
 ---
 name: testrail-integration
-description: "Syncs test runs / results / cases between an automated test suite and TestRail (Gurock / Idera) — opens a Test Run for the build (`add_run`), batches per-case results back via `add_results_for_cases` (preferred over per-test `add_result_for_case` — N+1 API calls vs 1), maps the test framework's pass/fail/skip to TestRail status IDs, and attaches build URL + version + elapsed time. Use when the team uses TestRail for test management and wants automated suites to update TestRail without a human-driven copy-paste step."
+description: "Syncs test runs / results / cases between an automated test suite and TestRail (Gurock / Idera) - opens a Test Run for the build (`add_run`), batches per-case results back via `add_results_for_cases` (preferred over per-test `add_result_for_case` - N+1 API calls vs 1), maps the test framework's pass/fail/skip to TestRail status IDs, and attaches build URL + version + elapsed time. Use when the team uses TestRail for test management and wants automated suites to update TestRail without a human-driven copy-paste step."
 rating: 22
 d6: 3
 archetype: S1
@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 Teams that use TestRail as the source of truth for test cases and
-runs need **automation result sync** — without it, automated runs
+runs need **automation result sync** - without it, automated runs
 don't update TestRail and the test-management view drifts from
 reality. This skill wires that sync.
 
@@ -39,10 +39,10 @@ JavaScript `testrail-api`).
   back to the automated test (via custom case ID labels in test
   names / annotations).
 
-## Step 1 — Authentication
+## Step 1 - Authentication
 
 TestRail uses HTTP Basic auth with **email + API key** (preferred
-over password — the API key is per-user, revocable):
+over password - the API key is per-user, revocable):
 
 ```bash
 # Generated in TestRail: My Settings → API Keys
@@ -61,11 +61,11 @@ Content-Type: application/json
 The base API URL is `${TESTRAIL_HOST}/index.php?/api/v2`. Every
 endpoint is appended after `?/api/v2`.
 
-## Step 2 — Map test names to TestRail case IDs
+## Step 2 - Map test names to TestRail case IDs
 
 Two common patterns:
 
-### Pattern A — Embed case ID in test name
+### Pattern A - Embed case ID in test name
 
 ```python
 def test_C1234_can_add_to_cart():
@@ -74,7 +74,7 @@ def test_C1234_can_add_to_cart():
 
 A regex extracts `C1234` (the TestRail case ID) at sync time.
 
-### Pattern B — Annotation / metadata
+### Pattern B - Annotation / metadata
 
 ```java
 @Test
@@ -94,7 +94,7 @@ Pattern A is the lowest-friction; Pattern B is cleaner when the
 test framework supports custom annotations. Either way, the sync
 script needs a way to find the case ID from the test result.
 
-## Step 3 — Open a Test Run for the build
+## Step 3 - Open a Test Run for the build
 
 ```python
 # scripts/testrail_sync.py
@@ -125,7 +125,7 @@ exact cases the automated suite covers. Without this, a 5,000-case
 project produces a 5,000-row Test Run with thousands of empty
 cells.
 
-## Step 4 — Batch results back
+## Step 4 - Batch results back
 
 The well-known **status ID convention** for stock TestRail
 installations:
@@ -139,7 +139,7 @@ installations:
 | Failed   |  5  |
 
 Custom status IDs (added by the project admin) follow 6+. Read the
-`get_statuses` endpoint at sync-script init to confirm — don't
+`get_statuses` endpoint at sync-script init to confirm - don't
 hard-code.
 
 ```python
@@ -171,7 +171,7 @@ Common per-result fields:
 | `defects`    | Comma-separated Jira / GitHub issue keys.               |
 | `assignedto_id` | Auto-assign failures to a specific user.            |
 
-## Step 5 — Close the run
+## Step 5 - Close the run
 
 After all results are in:
 
@@ -180,10 +180,10 @@ def close_run(run_id):
     requests.post(f'{API}/close_run/{run_id}', headers=HEADERS)
 ```
 
-Closed runs are read-only — no further results can be added. Useful
+Closed runs are read-only - no further results can be added. Useful
 for release-stamp runs; skip for runs that get re-run.
 
-## Step 6 — Wire into a CI pipeline
+## Step 6 - Wire into a CI pipeline
 
 ```yaml
 - name: Run tests
@@ -209,9 +209,9 @@ The sync script:
 2. Extracts case IDs from test names (Step 2).
 3. Opens a run named `<branch> · <sha-short>` (Step 3).
 4. Batches results (Step 4).
-5. Optionally closes the run (Step 5) — typically only on `main`.
+5. Optionally closes the run (Step 5) - typically only on `main`.
 
-## Step 7 — Handling untested case IDs
+## Step 7 - Handling untested case IDs
 
 Tests that have no TestRail case ID (case removed; new test;
 intentional sync-skip) need explicit handling:
@@ -224,7 +224,7 @@ if unmapped:
         print(f"  - {t['name']}")
 ```
 
-Don't silently drop unmapped tests — they're candidates for either
+Don't silently drop unmapped tests - they're candidates for either
 new TestRail cases or naming-pattern fixes.
 
 ## Anti-patterns
@@ -268,10 +268,10 @@ new TestRail cases or naming-pattern fixes.
   stable shapes documented across multiple TestRail versions and
   the per-language client libraries (`testrail` Python,
   `testrail-api` JS).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) —
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - 
   upstream parser for the input the sync script consumes.
 - [`xray-integration`](../xray-integration/SKILL.md),
-  [`zephyr-integration`](../zephyr-integration/SKILL.md) — sibling
+  [`zephyr-integration`](../zephyr-integration/SKILL.md) - sibling
   Jira-native alternatives.
-- [`currents-integration`](../currents-integration/SKILL.md) —
+- [`currents-integration`](../currents-integration/SKILL.md) - 
   different role: test analytics over time, not test management.

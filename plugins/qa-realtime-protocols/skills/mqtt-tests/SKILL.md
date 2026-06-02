@@ -1,6 +1,6 @@
 ---
 name: mqtt-tests
-description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients — QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter."
+description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients - QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter."
 type: skill
 archetype: S1
 rating: 22
@@ -18,7 +18,7 @@ keywords:
 
 This skill covers the v5.0 surfaces tests must exercise: QoS 0 / 1
 / 2 delivery semantics, retained messages, Last Will and Testament
-(LWT), shared subscriptions, and `$SYS` topic introspection — all
+(LWT), shared subscriptions, and `$SYS` topic introspection - all
 per the [MQTT v5.0 spec].
 
 ## When to use
@@ -28,7 +28,7 @@ per the [MQTT v5.0 spec].
   retained-message + LWT setup right.
 - Smoke test new broker config (auth, ACL, persistence).
 
-## Step 1 — Run Mosquitto broker in CI
+## Step 1 - Run Mosquitto broker in CI
 
 ```yaml
 # GitHub Actions service
@@ -51,7 +51,7 @@ persistence_location /mosquitto/data/
 log_dest stdout
 ```
 
-## Step 2 — paho-mqtt client setup (Python)
+## Step 2 - paho-mqtt client setup (Python)
 
 ```bash
 pip install paho-mqtt
@@ -73,7 +73,7 @@ def test_connect_v5():
     client.loop_stop()
 ```
 
-## Step 3 — QoS matrix tests
+## Step 3 - QoS matrix tests
 
 Per the [MQTT v5.0 spec]:
 
@@ -117,7 +117,7 @@ def test_qos1_redelivers_after_disconnect():
 `clean_start=False` is required for the broker to retain offline
 session state; without it, QoS 1 messages are lost.
 
-## Step 4 — Retained message test
+## Step 4 - Retained message test
 
 Per the [MQTT v5.0 spec], "servers store and distribute the most
 recent message on a topic to new subscribers, enabling state sharing
@@ -150,7 +150,7 @@ def test_retained_message_delivered_to_late_subscriber():
 
 To clear: publish empty payload with `retain=True`.
 
-## Step 5 — Last Will and Testament (LWT)
+## Step 5 - Last Will and Testament (LWT)
 
 Per the [MQTT v5.0 spec], "When clients disconnect abnormally,
 servers automatically publish predetermined messages to notify other
@@ -183,7 +183,7 @@ def test_lwt_published_on_abnormal_disconnect():
     assert b"offline" in received
 ```
 
-## Step 6 — Shared subscriptions ($share/...)
+## Step 6 - Shared subscriptions ($share/...)
 
 Per the [MQTT v5.0 spec], shared subscriptions distribute messages
 among group members rather than broadcasting:
@@ -224,7 +224,7 @@ def test_shared_subscription_round_robin():
     assert len(received_a) + len(received_b) == 10
 ```
 
-## Step 7 — $SYS topic introspection
+## Step 7 - $SYS topic introspection
 
 Per the [MQTT v5.0 spec], `$SYS/...` reserved topics provide broker
 diagnostics. Useful for monitoring tests:
@@ -245,7 +245,7 @@ def test_broker_reports_connected_clients():
     assert any(b for _, b in received if int(b) >= 1)
 ```
 
-`$SYS/...` topic set varies per broker — Mosquitto + EMQX + HiveMQ
+`$SYS/...` topic set varies per broker - Mosquitto + EMQX + HiveMQ
 each publish slightly different metrics.
 
 ## Anti-patterns
@@ -270,10 +270,10 @@ each publish slightly different metrics.
 
 ## References
 
-- [MQTT v5.0 spec] — QoS, retained, LWT, shared subscriptions, $SYS
-- [`websocket-tests`](../websocket-tests/SKILL.md) — alternative
+- [MQTT v5.0 spec] - QoS, retained, LWT, shared subscriptions, $SYS
+- [`websocket-tests`](../websocket-tests/SKILL.md) - alternative
   for browser-side bidirectional
-- [`webhook-replay-tests`](../webhook-replay-tests/SKILL.md) — HTTP
+- [`webhook-replay-tests`](../webhook-replay-tests/SKILL.md) - HTTP
   alternative for at-least-once delivery
 
 [MQTT v5.0 spec]: https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html

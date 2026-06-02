@@ -1,6 +1,6 @@
 ---
 name: mobile-web-emulation-runner
-description: "Builds a workflow to run web E2E tests under mobile viewports + DPRs (device pixel ratios) — uses Playwright's `devices` catalog (iPhone 15, Pixel 7, etc.), runs the existing test suite per-device as separate matrix shards, captures per-device screenshots for visual review, and asserts mobile-specific behaviors (touch interactions, viewport-conditional layout). Use when the web app supports mobile and the team wants regression coverage without spinning up real Android/iOS test rigs."
+description: "Builds a workflow to run web E2E tests under mobile viewports + DPRs (device pixel ratios) - uses Playwright's `devices` catalog (iPhone 15, Pixel 7, etc.), runs the existing test suite per-device as separate matrix shards, captures per-device screenshots for visual review, and asserts mobile-specific behaviors (touch interactions, viewport-conditional layout). Use when the web app supports mobile and the team wants regression coverage without spinning up real Android/iOS test rigs."
 rating: 22
 d6: 3
 archetype: S3
@@ -10,7 +10,7 @@ archetype: S3
 
 ## Overview
 
-Many web apps support mobile via responsive design — but the
+Many web apps support mobile via responsive design - but the
 desktop test suite never exercises mobile breakpoints. Real-device
 testing ([`appium-testing`](../appium-testing/SKILL.md),
 [`xcuitest-suite`](../xcuitest-suite/SKILL.md)) is heavy; viewport
@@ -32,9 +32,9 @@ This skill builds the workflow.
   size" gate without setting up a mobile test farm.
 
 If the app is a **native** mobile app (RN, Flutter, native iOS/Android),
-this isn't the right skill — see the per-platform alternatives.
+this isn't the right skill - see the per-platform alternatives.
 
-## Step 1 — Pick the device profiles
+## Step 1 - Pick the device profiles
 
 Playwright ships a `devices` catalog with realistic viewport / DPR
 / user-agent combinations:
@@ -68,7 +68,7 @@ Each entry includes:
 `isMobile: true` triggers Playwright's mobile-mode quirks (meta
 viewport handling); `hasTouch: true` enables touch-event synthesis.
 
-## Step 2 — Per-device project config
+## Step 2 - Per-device project config
 
 ```typescript
 // playwright.config.ts
@@ -108,7 +108,7 @@ Run only mobile:
 npx playwright test --project=mobile-iphone-15 --project=mobile-pixel-7
 ```
 
-## Step 3 — Mobile-specific assertions
+## Step 3 - Mobile-specific assertions
 
 Tests should distinguish desktop-only from mobile-aware behavior:
 
@@ -137,7 +137,7 @@ test.describe('Cart page — mobile layout', () => {
 `.click()` synthesizes mouse events. Prefer `.tap()` on mobile
 profiles.
 
-## Step 4 — Visual regression per device
+## Step 4 - Visual regression per device
 
 ```typescript
 test('home page mobile layout snapshot', async ({ page }) => {
@@ -150,7 +150,7 @@ Per-device screenshots produce per-device baselines; layout
 regressions on iPhone size catch issues that desktop-only tests
 miss. Pair with [`playwright-snapshots`](../../qa-visual-regression/skills/playwright-snapshots/SKILL.md).
 
-## Step 5 — Cypress equivalent
+## Step 5 - Cypress equivalent
 
 ```javascript
 // cypress.config.ts
@@ -178,7 +178,7 @@ Cypress doesn't ship a `devices` catalog as rich as Playwright's;
 viewport sizing is the primary control. For touch-event synthesis,
 use `cy.realTouch()` (via `cypress-real-events` plugin).
 
-## Step 6 — CI matrix
+## Step 6 - CI matrix
 
 ```yaml
 jobs:
@@ -203,7 +203,7 @@ jobs:
 Each project runs as a separate matrix job; `fail-fast: false`
 ensures a failure on iPhone doesn't cancel Pixel.
 
-## Step 7 — Aggregating per-device results
+## Step 7 - Aggregating per-device results
 
 Use the [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md)
 aggregator (Step 4) to produce a per-device summary:
@@ -246,11 +246,9 @@ aggregator (Step 4) to produce a per-device summary:
 
 - Playwright devices catalog (in the `@playwright/test` package);
   per-device viewport / DPR / UA / touch synthesis.
-- [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md)
-  — sibling: orchestrates per-target dispatch and aggregation.
-- [`mobile-perf-budget`](../mobile-perf-budget/SKILL.md) —
+- [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md) - sibling: orchestrates per-target dispatch and aggregation.
+- [`mobile-perf-budget`](../mobile-perf-budget/SKILL.md) - 
   performance testing under mobile profile.
-- [`touch-gesture-tester`](../touch-gesture-tester/SKILL.md) —
+- [`touch-gesture-tester`](../touch-gesture-tester/SKILL.md) - 
   detailed touch-gesture verification.
-- [`playwright-snapshots`](../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)
-  — per-device visual regression.
+- [`playwright-snapshots`](../../qa-visual-regression/skills/playwright-snapshots/SKILL.md) - per-device visual regression.

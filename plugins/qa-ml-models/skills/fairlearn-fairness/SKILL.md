@@ -15,9 +15,9 @@ keywords:
 
 # fairlearn-fairness
 
-Fairlearn provides *"Metrics — Tools to assess which groups are
+Fairlearn provides *"Metrics - Tools to assess which groups are
 negatively impacted and compare models across fairness and accuracy
-dimensions"* and *"Algorithms — Techniques to mitigate unfairness"*
+dimensions"* and *"Algorithms - Techniques to mitigate unfairness"*
 per the [Fairlearn quickstart]. Two primitives: `MetricFrame` (group
 disaggregation) + Reductions (`ExponentiatedGradient`,
 `ThresholdOptimizer`).
@@ -31,7 +31,7 @@ disaggregation) + Reductions (`ExponentiatedGradient`,
 - Compliance evidence (ECOA, GDPR Art. 22, EU AI Act high-risk
   systems): group-disaggregated metrics + mitigation provenance.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install fairlearn
@@ -41,7 +41,7 @@ conda install -c conda-forge fairlearn
 
 Per the [Fairlearn quickstart].
 
-## Step 2 — Compute disaggregated accuracy
+## Step 2 - Compute disaggregated accuracy
 
 ```python
 from fairlearn.metrics import MetricFrame
@@ -65,7 +65,7 @@ print(f"Disparity (max-min): {mf.difference()}")
 Per the [Fairlearn quickstart]. `sensitive_features` can be a Series
 or a 2-D array for intersectional analysis (sex × race).
 
-## Step 3 — Compute selection-rate disparity
+## Step 3 - Compute selection-rate disparity
 
 ```python
 from fairlearn.metrics import selection_rate
@@ -86,7 +86,7 @@ guidance often cites the **80% rule** (selection rate ratio ≥ 0.8
 between groups) as a soft threshold; consult legal counsel for
 binding thresholds in your jurisdiction.
 
-## Step 4 — Equalized odds (TPR + FPR per group)
+## Step 4 - Equalized odds (TPR + FPR per group)
 
 ```python
 from fairlearn.metrics import (
@@ -108,10 +108,9 @@ mf = MetricFrame(
 print(mf.by_group)
 ```
 
-Equalized Odds requires *both* TPR and FPR to be equal across groups
-— stricter than Demographic Parity.
+Equalized Odds requires *both* TPR and FPR to be equal across groups - stricter than Demographic Parity.
 
-## Step 5 — Mitigation via Reductions
+## Step 5 - Mitigation via Reductions
 
 ```python
 from fairlearn.reductions import DemographicParity, ExponentiatedGradient
@@ -127,7 +126,7 @@ selection-rate differences while maintaining accuracy. Other
 constraints: `EqualizedOdds`, `TruePositiveRateParity`,
 `FalsePositiveRateParity`.
 
-## Step 6 — Threshold post-processing
+## Step 6 - Threshold post-processing
 
 ```python
 from fairlearn.postprocessing import ThresholdOptimizer
@@ -144,7 +143,7 @@ y_pred_pp = postprocess.predict(X, sensitive_features=sex)
 Cheaper than retraining; trades model output for per-group threshold
 adjustment.
 
-## Step 7 — CI assertion
+## Step 7 - CI assertion
 
 ```python
 def assert_fairness(y_true, y_pred, sensitive, max_dpd=0.10):
@@ -183,7 +182,7 @@ assert_fairness(y_true, y_pred, sex, max_dpd=0.10)
 
 ## References
 
-- [Fairlearn quickstart] — MetricFrame, selection_rate,
+- [Fairlearn quickstart] - MetricFrame, selection_rate,
   ExponentiatedGradient, ThresholdOptimizer
 
 [Fairlearn quickstart]: https://fairlearn.org/main/user_guide/quickstart.html

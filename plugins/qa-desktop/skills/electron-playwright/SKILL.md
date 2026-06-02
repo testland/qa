@@ -1,6 +1,6 @@
 ---
 name: electron-playwright
-description: "Authors Playwright `_electron` tests for packaged Electron desktop apps — launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from `qa-web-e2e/playwright-testing` (page automation against running browsers); this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite."
+description: "Authors Playwright `_electron` tests for packaged Electron desktop apps - launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from `qa-web-e2e/playwright-testing` (page automation against running browsers); this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite."
 archetype: S1
 rating: 25
 d6: 5
@@ -37,7 +37,7 @@ projects.
 [`qa-web-e2e/playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md),
 which drives a running Chromium / Firefox / WebKit browser via the
 `browser`, `context`, and `page` namespaces. `electron-playwright`
-wraps the separate `_electron` namespace ([pwelectron][pwelectron]) —
+wraps the separate `_electron` namespace ([pwelectron][pwelectron]) - 
 it launches a packaged Electron binary by path, returns an
 `ElectronApplication` handle, and exposes the main process via
 `electronApp.evaluate()` ([pwelectronapp][pwelectronapp]). Page
@@ -54,9 +54,9 @@ reference) and the strategic frame in
 
 ## When to use
 
-- New Electron desktop app — pick Playwright `_electron` as the
+- New Electron desktop app - pick Playwright `_electron` as the
   modern default per [electrontest][electrontest].
-- Existing Electron suite still on Spectron — see migration shopping
+- Existing Electron suite still on Spectron - see migration shopping
   list in [`electron-spectron`](../electron-spectron/SKILL.md).
 - Tests need to assert **main-process** state (e.g.,
   `app.isPackaged`, `BrowserWindow` count, IPC channel payloads) in
@@ -65,7 +65,7 @@ reference) and the strategic frame in
   associations, single-instance lock, custom protocol handlers) that
   is unreachable from browser-only Playwright.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [electrontest][electrontest]:
 
@@ -74,11 +74,11 @@ npm install --save-dev @playwright/test
 ```
 
 Playwright's `_electron` module is bundled inside `playwright` /
-`@playwright/test` — no extra package is needed
+`@playwright/test` - no extra package is needed
 ([pwelectron][pwelectron]). Supported Electron versions per
 [pwelectron][pwelectron]: "Electron v12.2.0+, v13.4.0+, and v14+".
 
-## Step 2 — Author the first test
+## Step 2 - Author the first test
 
 The canonical example from [electrontest][electrontest]:
 
@@ -107,7 +107,7 @@ What's going on:
 - `electron.launch({ args: ['.'] })` launches Electron with the
   current directory as the main-script argument
   ([pwelectron][pwelectron]). For a packaged app, pass
-  `executablePath` to the packaged binary instead — its default per
+  `executablePath` to the packaged binary instead - its default per
   [pwelectron][pwelectron] is `node_modules/.bin/electron`.
 - `electronApp.evaluate(pageFunction)` runs `pageFunction` **inside
   the main process**; the first argument is "always the result of
@@ -115,11 +115,11 @@ What's going on:
   ([pwelectronapp][pwelectronapp]).
 - `electronApp.firstWindow()` "waits for the first application
   window to be opened" ([pwelectronapp][pwelectronapp]) and returns
-  a Playwright `Page` — every standard
+  a Playwright `Page` - every standard
   [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)
   locator (`getByRole`, `getByLabel`) works on it.
 
-## Step 3 — Launching a packaged binary
+## Step 3 - Launching a packaged binary
 
 For tests of the **packaged** app (the artifact users install):
 
@@ -145,9 +145,9 @@ The `executablePath`, `env`, `cwd`, `recordVideo`, `recordHar`, and
 `timeout` options are documented on the `_electron` launch reference
 ([pwelectron][pwelectron]).
 
-## Step 4 — Probing main + renderer in one test
+## Step 4 - Probing main + renderer in one test
 
-Multi-surface assertion — main process owns app lifecycle, renderer
+Multi-surface assertion - main process owns app lifecycle, renderer
 owns DOM:
 
 ```typescript
@@ -177,10 +177,10 @@ Per [pwelectronapp][pwelectronapp], `electronApp.evaluate(pageFunction)`
 returns the value of `pageFunction`, and "if the function passed to
 the electronApplication.evaluate() returns a Promise, then
 electronApplication.evaluate() would wait for the promise to resolve
-and return its value" — so async main-process queries work
+and return its value" - so async main-process queries work
 naturally.
 
-## Step 5 — Mapping renderer windows to main-process BrowserWindow
+## Step 5 - Mapping renderer windows to main-process BrowserWindow
 
 When a test needs the underlying `BrowserWindow` object for a window
 (to assert size, fullscreen state, devtools open, etc.):
@@ -198,7 +198,7 @@ that corresponds to the given Playwright page"
 iterate `electronApp.windows()`, which is described as a "convenience
 method that returns all the opened windows" ([pwelectronapp][pwelectronapp]).
 
-## Step 6 — Waiting for new windows + console output
+## Step 6 - Waiting for new windows + console output
 
 Async events fire when modal dialogs, secondary windows, or main-
 process console writes happen. Per [pwelectronapp][pwelectronapp]:
@@ -219,7 +219,7 @@ const [secondary] = await Promise.all([
 await expect(secondary.getByRole('heading', { name: /preferences/i })).toBeVisible();
 ```
 
-## Step 7 — Configuration
+## Step 7 - Configuration
 
 ```typescript
 // playwright.config.ts
@@ -249,7 +249,7 @@ GPU-shared-memory regions. (Web-only Playwright defaults to parallel
 per
 [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md).)
 
-## Step 8 — Running
+## Step 8 - Running
 
 ```bash
 # All Electron tests
@@ -266,19 +266,19 @@ npx playwright show-trace test-results/<…>/trace.zip
 ```
 
 The trace viewer shows DOM snapshots of the renderer windows and the
-`evaluate` calls into the main process side-by-side — debug parity
+`evaluate` calls into the main process side-by-side - debug parity
 with normal Playwright traces (the trace viewer surface is part of
 the shared Playwright toolchain per
 [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)).
 
-## Step 9 — Parsing results
+## Step 9 - Parsing results
 
 JUnit XML output (`reports/electron-junit.xml` from Step 7) feeds
 [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
 for aggregation. The HTML reporter is identical to web-Playwright
 ([pwelectron][pwelectron]).
 
-## Step 10 — CI integration
+## Step 10 - CI integration
 
 ```yaml
 # .github/workflows/electron-e2e.yml
@@ -336,11 +336,11 @@ out of the box.
   process module shapes (`app.getRecentDocuments()` deprecations,
   etc.); pin Electron in `package.json` and update intentionally.
 - **GPU-rendered content** (WebGL, `<canvas>`, accelerated video) is
-  opaque to renderer-side accessibility queries — same caveat as in
+  opaque to renderer-side accessibility queries - same caveat as in
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - **Multi-instance apps** with single-instance-lock need a custom
   `userData` per-test (via `app.setPath('userData', …)` in test
-  fixture) — otherwise a second launch races the first.
+  fixture) - otherwise a second launch races the first.
 - **Native OS dialogs** (Win32 file picker, macOS `NSSavePanel`) are
   outside the Electron renderer; tests should stub `dialog.showOpenDialog`
   via `electronApp.evaluate()` rather than try to click through them.
@@ -349,13 +349,12 @@ out of the box.
 
 ## References
 
-- Playwright `_electron` API — [pwelectron][pwelectron].
-- Playwright `ElectronApplication` API — [pwelectronapp][pwelectronapp].
-- Electron Automated Testing tutorial — [electrontest][electrontest].
-- Sibling skill: [`electron-spectron`](../electron-spectron/SKILL.md) —
+- Playwright `_electron` API - [pwelectron][pwelectron].
+- Playwright `ElectronApplication` API - [pwelectronapp][pwelectronapp].
+- Electron Automated Testing tutorial - [electrontest][electrontest].
+- Sibling skill: [`electron-spectron`](../electron-spectron/SKILL.md) - 
   legacy migration reference.
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - Web-side neighbour:
-  [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)
-  — page-automation patterns that carry over to the renderer surface.
+  [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md) - page-automation patterns that carry over to the renderer surface.

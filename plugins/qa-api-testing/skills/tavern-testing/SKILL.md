@@ -19,7 +19,7 @@ discovery mechanism.
 [docs]: https://tavern.readthedocs.io/en/latest/
 
 The integration shape: write YAML, run `pytest`, read JUnit XML.
-Tavern adds zero Python code to the test surface — the YAML IS the
+Tavern adds zero Python code to the test surface - the YAML IS the
 test. This is the closest thing to "code-less" API testing in the
 Python ecosystem.
 
@@ -27,9 +27,9 @@ Python ecosystem.
 
 - The project's primary test runner is **pytest** (Python) and the
   team wants API tests in the same harness as unit tests.
-- The team prefers YAML over a fluent DSL — tests are reviewed by
+- The team prefers YAML over a fluent DSL - tests are reviewed by
   non-engineers (PMs, support engineers).
-- The API surface includes **non-HTTP** protocols (MQTT, gRPC) — Tavern
+- The API surface includes **non-HTTP** protocols (MQTT, gRPC) - Tavern
   has first-party support for both.
 - A pytest project already has fixtures (database setup, auth tokens)
   that the API tests should reuse.
@@ -284,7 +284,7 @@ jobs:
 | Embedding tokens / secrets in the YAML                        | Leaks into git; rotation pain.                                        | Use `!env VAR` for everything secret. |
 | Hard-coded base URLs in every test                            | Tests bind to one environment.                                        | Use `tavern-global-config.yaml` `variables.base_url`. |
 | One mega-stage list (15+ stages per test)                      | Failure mid-list halts everything; no per-stage isolation.           | Split into multiple `test_name` blocks; each test owns its own auth → action → assert chain. |
-| Using `!anything` everywhere instead of typed matchers        | `!anything` accepts `null` / wrong type — defeats the assertion.     | Use `!anystr`, `!anyint`, `!re_match` to constrain. |
+| Using `!anything` everywhere instead of typed matchers        | `!anything` accepts `null` / wrong type - defeats the assertion.     | Use `!anystr`, `!anyint`, `!re_match` to constrain. |
 | Skipping `--tavern-global-cfg` in CI                          | Variable interpolation fails silently; tests hit the wrong env.       | Always pass `--tavern-global-cfg=<file>` so the project's defaults apply. |
 | Mixing Tavern YAML with Python pytest cases without separation | Failure attribution is confusing; output volume mixes formats.        | Keep Tavern YAML under `tests/api/` and pure Python tests under `tests/unit/`. |
 
@@ -300,18 +300,18 @@ jobs:
   enforcement, install a separate matcher; built-in matchers cover
   shape but not full schema constraints.
 - **Variable interpolation can mask null bugs.** A typo in
-  `'{accest_token}'` (missing `s`) won't error — the literal string
+  `'{accest_token}'` (missing `s`) won't error - the literal string
   goes through. Watch for these in code review.
 
 ## References
 
-- [tavern-docs][docs] — canonical reference: install, file shape,
+- [tavern-docs][docs] - canonical reference: install, file shape,
   request / response / save / matchers, pytest integration, global
   config.
-- [`postman-collections`](../postman-collections/SKILL.md) —
+- [`postman-collections`](../postman-collections/SKILL.md) - 
   Node-stack alternative.
-- [`restassured-testing`](../restassured-testing/SKILL.md) — Java
+- [`restassured-testing`](../restassured-testing/SKILL.md) - Java
   fluent-DSL alternative.
-- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) —
+- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
   Python-stack property-based fuzzing complement to Tavern's
   example-based tests.

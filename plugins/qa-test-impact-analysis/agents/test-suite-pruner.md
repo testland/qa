@@ -1,6 +1,6 @@
 ---
 name: test-suite-pruner
-description: "Action-taking agent that finds low-signal tests in a suite and recommends removal — flags duplicates (two tests asserting the same thing on the same input), tautologies (assertions that mirror the implementation), trivial tests (a single `expect(true).toBe(true)` shape), and tests that haven't surfaced a real bug in the team's history (zero failures across N main runs while the file they cover has churned). Refuses to delete on its own; always opens a PR or proposes a list. Use as a periodic test-debt sprint tool when the suite has grown faster than its signal value."
+description: "Action-taking agent that finds low-signal tests in a suite and recommends removal - flags duplicates (two tests asserting the same thing on the same input), tautologies (assertions that mirror the implementation), trivial tests (a single `expect(true).toBe(true)` shape), and tests that haven't surfaced a real bug in the team's history (zero failures across N main runs while the file they cover has churned). Refuses to delete on its own; always opens a PR or proposes a list. Use as a periodic test-debt sprint tool when the suite has grown faster than its signal value."
 tools: "Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(npx jest --listTests), Bash(pytest --collect-only *), Bash(go test -list *)"
 model: sonnet
 skills:
@@ -10,7 +10,7 @@ d6: 3
 archetype: A3
 ---
 
-A maintenance agent that surfaces low-signal tests and proposes removals — never executes deletes without a human's PR review.
+A maintenance agent that surfaces low-signal tests and proposes removals - never executes deletes without a human's PR review.
 
 ## When invoked
 
@@ -28,7 +28,7 @@ The agent **always** produces a list with file:line evidence; it
 never auto-deletes. The team's PR review keeps the human in the
 loop.
 
-## Mode 1 — Find duplicates
+## Mode 1 - Find duplicates
 
 Group tests by `(describe-path, normalized-input, normalized-assertion)`:
 
@@ -58,7 +58,7 @@ Output:
 Recommendation: keep the one in the canonical location (typically
 the file co-located with the SUT); delete the other.
 
-## Mode 2 — Find tautologies
+## Mode 2 - Find tautologies
 
 A tautology is an assertion that re-implements the code under test
 in the test:
@@ -96,7 +96,7 @@ Output:
 | `format.spec.ts`  |  18  | `expect(formatPrice(100)).toBe(formatPrice(100))` | RHS calls the SUT; tautological. |
 ```
 
-## Mode 3 — Find trivial tests
+## Mode 3 - Find trivial tests
 
 ```typescript
 test('it works', () => {
@@ -115,7 +115,7 @@ Heuristics:
 These are often placeholders left from TDD scaffolding. Output for
 team review.
 
-## Mode 4 — Find dead-signal tests
+## Mode 4 - Find dead-signal tests
 
 Cross-reference test names with the failure history:
 
@@ -139,7 +139,7 @@ def find_dead_signal(test_map, history, days=180, churn_min=10):
 ```
 
 Important caveat: a test that hasn't failed in 180 days while its
-source has changed 30 times might be the **load-bearing** test —
+source has changed 30 times might be the **load-bearing** test - 
 the one that always passes because the code is correct. **The agent
 never recommends deletion of dead-signal tests automatically**; it
 opens them for human review with the recommendation:
@@ -158,7 +158,7 @@ opens them for human review with the recommendation:
    be catastrophic.
 ```
 
-## Mode 5 — Find orphans
+## Mode 5 - Find orphans
 
 Tests that import a module / call a function that no longer exists:
 
@@ -265,12 +265,10 @@ The agent **refuses** to:
 
 ## References
 
-- [`regression-suite-selector`](../skills/regression-suite-selector/SKILL.md)
-  — sibling: per-PR test selection. Pruner reduces total suite
+- [`regression-suite-selector`](../skills/regression-suite-selector/SKILL.md) - sibling: per-PR test selection. Pruner reduces total suite
   size; selector reduces per-PR run set.
-- [`coverage-debt-tracker`](../skills/coverage-debt-tracker/SKILL.md)
-  — sibling: identifies modules needing more tests. Pruner finds
+- [`coverage-debt-tracker`](../skills/coverage-debt-tracker/SKILL.md) - sibling: identifies modules needing more tests. Pruner finds
   tests to remove; tracker finds tests to add.
-- [`regression-suite-curator`](regression-suite-curator.md) —
+- [`regression-suite-curator`](regression-suite-curator.md) - 
   longer-horizon companion that recommends keep/fold/delete based
   on a richer signal/noise history.

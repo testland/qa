@@ -1,6 +1,6 @@
 ---
 name: mull-mutation
-description: "Configures Mull for mutation testing of C / C++ (and via LLVM IR, Swift / Rust to a lesser extent) — LLVM-based, requires building the project with Mull-compatible LLVM toolchain, runs via `mull-runner` against the test binary. Use when a C/C++ project needs mutation-quality verification — the canonical native-language LLVM-IR-level mutation tool."
+description: "Configures Mull for mutation testing of C / C++ (and via LLVM IR, Swift / Rust to a lesser extent) - LLVM-based, requires building the project with Mull-compatible LLVM toolchain, runs via `mull-runner` against the test binary. Use when a C/C++ project needs mutation-quality verification - the canonical native-language LLVM-IR-level mutation tool."
 rating: 22
 d6: 3
 archetype: S1
@@ -21,7 +21,7 @@ Per [mull-readme][mr], Mull is "LLVM-based" and "Built on LLVM IR
 (Intermediate Representation) and utilizes LLVM JIT compilation."
 
 The LLVM-IR foundation means Mull operates at a layer below the
-source language — any LLVM-emitting frontend (Clang, Rust's
+source language - any LLVM-emitting frontend (Clang, Rust's
 rustc, Swift's swiftc) can in principle work, though C / C++ are
 the primary targets.
 
@@ -37,7 +37,7 @@ Mutation Testing Based on LLVM" (2018), Denisov & Pankevich.
 - Language ecosystems without a native mutation tool need an
   LLVM-IR-level fallback.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 # Linux / macOS — install via package or build from source per the README
@@ -49,7 +49,7 @@ brew install mull-project/mull/mull   # macOS
 The CI route is typically `apt install mull` (Debian repos) or
 the released `.deb` / `.rpm` packages.
 
-## Step 2 — Build the project for mutation
+## Step 2 - Build the project for mutation
 
 Mull needs the test binary built with `-O0 -g` (no optimization,
 debug symbols) and Mull's LLVM pass:
@@ -67,7 +67,7 @@ The Mull pass instruments the compiled IR with conditional mutation
 points; at runtime, the runner enables / disables each mutation
 to test which the test suite catches.
 
-## Step 3 — Run
+## Step 3 - Run
 
 ```bash
 mull-runner build/tests/MyTests --reporters json
@@ -85,7 +85,7 @@ Mutants survived: 30
 Mutation score: 74.4%
 ```
 
-## Step 4 — Mutators
+## Step 4 - Mutators
 
 Mull's mutator catalog (representative; per the paper + code):
 
@@ -99,9 +99,9 @@ Mull's mutator catalog (representative; per the paper + code):
 | Constant Mutation                  | `42` → `0`, `1` → `0`                                |
 
 LLVM-IR-level mutation means some source-level patterns produce
-equivalent IR (no mutation possible) — Mull skips those silently.
+equivalent IR (no mutation possible) - Mull skips those silently.
 
-## Step 5 — Filtering
+## Step 5 - Filtering
 
 Mull accepts include / exclude path filters:
 
@@ -112,10 +112,10 @@ mull-runner build/tests/MyTests \
   --exclude-path "tests/*"
 ```
 
-Always exclude tests + third-party — mutating those is
+Always exclude tests + third-party - mutating those is
 meaningless.
 
-## Step 6 — Reports
+## Step 6 - Reports
 
 ```bash
 mull-runner build/tests/MyTests --reporters json,html
@@ -128,7 +128,7 @@ mull-runner build/tests/MyTests --reporters json,html
 The HTML report shows per-file mutation breakdown with line-level
 diffs; the JSON is machine-parseable for dashboards.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - run: |
@@ -176,13 +176,12 @@ mull-runner build/tests/MyTests --include-path "$(echo $CHANGED | tr ' ' ',')"
 
 ## References
 
-- [mr][mr] — Mull README: LLVM-based, C/C++ primary, version
+- [mr][mr] - Mull README: LLVM-based, C/C++ primary, version
   0.33.0, foundational 2018 paper "Mull It Over: Mutation Testing
   Based on LLVM" (Denisov & Pankevich).
 - [`stryker-mutation`](../stryker-mutation/SKILL.md),
   [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md),
   [`pitest-mutation`](../pitest-mutation/SKILL.md),
-  [`mutmut-mutation`](../mutmut-mutation/SKILL.md) —
+  [`mutmut-mutation`](../mutmut-mutation/SKILL.md) - 
   per-language siblings.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md)
-  — agent for surviving-mutant analysis.
+- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent for surviving-mutant analysis.

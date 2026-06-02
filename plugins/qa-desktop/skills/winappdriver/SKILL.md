@@ -1,6 +1,6 @@
 ---
 name: winappdriver
-description: "Authors and runs Windows UI tests against WinAppDriver — Microsoft's W3C-WebDriver service for UWP, WPF, WinForms, and Win32 applications. Covers installing + launching `WinAppDriver.exe` on the default `127.0.0.1:4723` endpoint, declaring `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities, finding elements by `AccessibilityId` / `Name` / `ClassName`, and CI integration on Windows runners. Use when driving a native Windows desktop app from a Selenium-style client (C#, Java, Python, Ruby, JavaScript)."
+description: "Authors and runs Windows UI tests against WinAppDriver - Microsoft's W3C-WebDriver service for UWP, WPF, WinForms, and Win32 applications. Covers installing + launching `WinAppDriver.exe` on the default `127.0.0.1:4723` endpoint, declaring `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities, finding elements by `AccessibilityId` / `Name` / `ClassName`, and CI integration on Windows runners. Use when driving a native Windows desktop app from a Selenium-style client (C#, Java, Python, Ruby, JavaScript)."
 archetype: S1
 rating: 24
 d6: 4
@@ -24,17 +24,16 @@ Per the [WinAppDriver repository][wad]:
 > "Windows Application Driver (WinAppDriver) is a service to support
 > Selenium-like UI Test Automation on Windows Applications."
 
-WinAppDriver exposes Microsoft UI Automation (UIA) — the Windows
+WinAppDriver exposes Microsoft UI Automation (UIA) - the Windows
 accessibility tree described in
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
-— behind a W3C-WebDriver-compatible HTTP endpoint. Per
+[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md) - behind a W3C-WebDriver-compatible HTTP endpoint. Per
 [wad][wad], it supports four application classes on Windows 10:
 "Universal Windows Platform (UWP)", "Windows Forms (WinForms)",
 "Windows Presentation Foundation (WPF)", and "Classic Windows (Win32)
 apps".
 
 The driver is a **Microsoft-maintained service**, distinct from the
-Appium ecosystem's wrapper around it — see
+Appium ecosystem's wrapper around it - see
 [`appium-windows-driver`](../appium-windows-driver/SKILL.md) for the
 Appium proxy that sits in front of `WinAppDriver.exe` and adds
 gestures, multi-window helpers, and PowerShell hooks. Pick this skill
@@ -44,12 +43,12 @@ surface.
 
 ## When to use
 
-- Native Windows desktop app under test — UWP, WPF, WinForms, or
+- Native Windows desktop app under test - UWP, WPF, WinForms, or
   Win32 ([wad][wad]).
 - Selenium-style client already in the project (C# `WindowsDriver<T>`,
   Java `WindowsDriver`, Python `webdriver-windows`).
 - Tests must drive system-installed apps (Notepad, Calculator,
-  Settings) — `app` capability accepts an executable path or UWP
+  Settings) - `app` capability accepts an executable path or UWP
   application family name ([wadauth][wadauth]).
 - Direct-to-`WinAppDriver.exe` is required (no Appium installation
   permitted on the test host).
@@ -59,12 +58,12 @@ driver per
 [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md);
 the Qt application must publish a usable `QAccessible` tree.
 
-## Step 1 — Install + enable
+## Step 1 - Install + enable
 
 Per [wad][wad]:
 
 1. **Windows 10 machine** with the application under test installed.
-2. **Enable Developer Mode** — Settings → Update & Security → For
+2. **Enable Developer Mode** - Settings → Update & Security → For
    developers → Developer mode ([wad][wad]).
 3. **Administrator privileges** are required to run on a custom
    IP / port ([wad][wad]); default `127.0.0.1:4723` runs as a normal
@@ -76,7 +75,7 @@ Download the latest WinAppDriver installer from the
 `WinAppDriver.exe` under `C:\Program Files (x86)\Windows Application
 Driver\`.
 
-## Step 2 — Launch the service
+## Step 2 - Launch the service
 
 Per [wad][wad]:
 
@@ -97,7 +96,7 @@ WinAppDriver.exe 10.0.0.10 4723/wd/hub
 The service prints `Press ENTER to exit.` and listens for incoming
 W3C-WebDriver session requests.
 
-## Step 3 — Declare session capabilities
+## Step 3 - Declare session capabilities
 
 Per the [WinAppDriver authoring guide][wadauth]:
 
@@ -109,7 +108,7 @@ Per the [WinAppDriver authoring guide][wadauth]:
 | `appArguments` | Launch arguments string ([wadauth][wadauth]) |
 | `appWorkingDir` | Working directory for classic Win32 apps ([wadauth][wadauth]) |
 | `appTopLevelWindow` | Hexadecimal handle of an existing window to attach to ([wadauth][wadauth]) |
-| `platformName` | Target platform — set to `Windows` |
+| `platformName` | Target platform - set to `Windows` |
 | `platformVersion` | Platform version string |
 
 Per [wadauth][wadauth], the UWP Application Id appears in the
@@ -117,7 +116,7 @@ generated `AppX\vs.appxrecipe` file under the `RegisteredUserModeAppID`
 node (example shape:
 `c24c8163-548e-4b84-a466-530178fc0580_scyf5npe3hv32!App`).
 
-## Step 4 — Author a test (C#)
+## Step 4 - Author a test (C#)
 
 The canonical example from [wadauth][wadauth]:
 
@@ -143,12 +142,12 @@ editor.SendKeys("Hello from WinAppDriver");
 session.Quit();
 ```
 
-The `AccessibilityId` locator maps to the UIA `AutomationId` property —
+The `AccessibilityId` locator maps to the UIA `AutomationId` property - 
 the stable locator per the
 [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
 locator table.
 
-## Step 5 — Element-locator strategies
+## Step 5 - Element-locator strategies
 
 Per [wadauth][wadauth]:
 
@@ -162,10 +161,10 @@ Per [wadauth][wadauth]:
 | `FindElementByXPath` | any attribute (XPath over the UIA tree) |
 
 To discover the right id during authoring, use **Inspect.exe** (ships
-with the Windows SDK) or **Accessibility Insights for Windows** —
+with the Windows SDK) or **Accessibility Insights for Windows** - 
 both walk the same UIA tree the driver sees.
 
-## Step 6 — Attaching to an already-running window
+## Step 6 - Attaching to an already-running window
 
 For tests where the app is launched externally:
 
@@ -184,7 +183,7 @@ hex window handle. This is the path for testing apps that don't
 support fresh-launch (apps with single-instance locks, or apps
 requiring authenticated login flows that run outside the test).
 
-## Step 7 — Run
+## Step 7 - Run
 
 ```cmd
 :: Build + test (NUnit example)
@@ -198,16 +197,16 @@ Tests assume `WinAppDriver.exe` is running on `127.0.0.1:4723`. A
 `Setup` fixture per test class should start the driver if it isn't
 already, then dispose at `TearDown`.
 
-## Step 8 — Parsing results
+## Step 8 - Parsing results
 
 The C# Selenium client emits standard NUnit / MSTest / xUnit results
 (TRX, XML, or JUnit depending on logger choice). Pair with
 [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
 for the cross-runner aggregation pipeline.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
-Windows-only runner required — WinAppDriver does not run on Linux or
+Windows-only runner required - WinAppDriver does not run on Linux or
 macOS:
 
 ```yaml
@@ -240,7 +239,7 @@ jobs:
           path: '**/results.trx'
 ```
 
-WinAppDriver runs **interactive** — GitHub-hosted `windows-latest`
+WinAppDriver runs **interactive** - GitHub-hosted `windows-latest`
 runners have an interactive session by default, but headless self-
 hosted Windows containers need additional setup (the service refuses
 to start under Session 0).
@@ -249,7 +248,7 @@ to start under Session 0).
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Locating by `FindElementByName` for localised apps | Element name changes per language | Use `AccessibilityId` (UIA `AutomationId`) — stable across locales ([wadauth][wadauth]) |
+| Locating by `FindElementByName` for localised apps | Element name changes per language | Use `AccessibilityId` (UIA `AutomationId`) - stable across locales ([wadauth][wadauth]) |
 | Hard-coded screen coordinates via `MouseAction` | DPI / window-state / multi-monitor break | Resolve element via accessibility tree; the driver computes hit-test centre |
 | Running tests with Developer Mode disabled | Session creation fails with cryptic error | Enable Developer Mode (Step 1) ([wad][wad]) |
 | Custom IP / port without admin privileges | Service refuses to bind to non-default address | Run admin shell or stay on default `127.0.0.1:4723` ([wad][wad]) |
@@ -279,8 +278,7 @@ to start under Session 0).
   CI on `windows-latest` works because GitHub-hosted runners are
   interactive, but Windows containers under Session 0 do not.
 - **GPU / DirectComposition surfaces** (some WPF + WinUI 3 surfaces
-  using DirectX-rendered controls) may not expose themselves to UIA
-  — visible as opaque rectangles in Inspect.exe.
+  using DirectX-rendered controls) may not expose themselves to UIA - visible as opaque rectangles in Inspect.exe.
 - **App must publish UIA.** Custom-painted Win32 windows that don't
   implement `IRawElementProviderSimple` are uncovered by
   WinAppDriver. Add UIA support or fall back to image matching for
@@ -288,12 +286,12 @@ to start under Session 0).
 
 ## References
 
-- WinAppDriver repository (README) — [wad][wad].
-- WinAppDriver authoring guide — [wadauth][wadauth].
-- Appium ecosystem drivers page (maintenance status note) —
+- WinAppDriver repository (README) - [wad][wad].
+- WinAppDriver authoring guide - [wadauth][wadauth].
+- Appium ecosystem drivers page (maintenance status note) - 
   [appiumdrivers][appiumdrivers].
 - Sibling skill:
-  [`appium-windows-driver`](../appium-windows-driver/SKILL.md) — the
+  [`appium-windows-driver`](../appium-windows-driver/SKILL.md) - the
   Appium proxy in front of WinAppDriver.
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).

@@ -1,6 +1,6 @@
 ---
 name: at-spi-linux
-description: "Authors Linux desktop UI tests via AT-SPI — the DBus-based Assistive Technology Service Provider Interface implemented by `at-spi2-core` (registry daemon + `libatspi` C library + ATK GTK bridge). Covers enabling toolkit accessibility (`gsettings set org.gnome.desktop.interface toolkit-accessibility true`), driving GTK + Qt apps through Python `dogtail` (object-oriented + procedural APIs), inspecting the tree with Accerciser, scripting via `pyatspi`, and CI integration on headless Linux runners with `Xvfb` + `dbus-launch`. Use for Linux-side desktop tests of GTK applications, Qt apps with QAccessible enabled, and Electron apps on Linux."
+description: "Authors Linux desktop UI tests via AT-SPI - the DBus-based Assistive Technology Service Provider Interface implemented by `at-spi2-core` (registry daemon + `libatspi` C library + ATK GTK bridge). Covers enabling toolkit accessibility (`gsettings set org.gnome.desktop.interface toolkit-accessibility true`), driving GTK + Qt apps through Python `dogtail` (object-oriented + procedural APIs), inspecting the tree with Accerciser, scripting via `pyatspi`, and CI integration on headless Linux runners with `Xvfb` + `dbus-launch`. Use for Linux-side desktop tests of GTK applications, Qt apps with QAccessible enabled, and Electron apps on Linux."
 archetype: S1
 rating: 23
 d6: 4
@@ -18,7 +18,7 @@ keywords:
 ## Overview
 
 AT-SPI (Assistive Technology Service Provider Interface) is the
-Linux desktop accessibility stack — a DBus-based protocol that
+Linux desktop accessibility stack - a DBus-based protocol that
 exposes an application's UI tree to assistive technologies (screen
 readers, magnifiers) **and** to test clients. Per the
 [at-spi2-core README][atspi2coreraw]:
@@ -64,7 +64,7 @@ native accessibility-tree backends.
 
 [dogtailraw]: https://gitlab.com/dogtail/dogtail/-/raw/master/README.md
 
-## Step 1 — Enable toolkit accessibility
+## Step 1 - Enable toolkit accessibility
 
 Per the [dogtail README][dogtailraw]:
 
@@ -76,7 +76,7 @@ Without this setting, GTK applications publish nothing to the AT-SPI
 bus and tree-walking clients see an empty desktop.
 
 For Qt apps, the equivalent is exporting `QT_ACCESSIBILITY=1` in the
-environment that launches the Qt binary — without it Qt's
+environment that launches the Qt binary - without it Qt's
 `QAccessible` infrastructure stays inactive and the AT-SPI tree
 contains no Qt children.
 
@@ -84,7 +84,7 @@ For Electron / Chromium, set `--force-renderer-accessibility` on the
 binary launch (or `--enable-blink-features=AccessibilityAriaVirtualContent`
 for newer Chromium accessibility surfaces).
 
-## Step 2 — Install dogtail
+## Step 2 - Install dogtail
 
 Per [dogtailraw][dogtailraw]:
 
@@ -109,7 +109,7 @@ dnf install -y gnome-ponytail-daemon python3-gnome-ponytail-daemon
 This bridges synthetic input events on Wayland sessions where direct
 X-style event injection isn't available.
 
-## Step 3 — Inspect the tree (Accerciser)
+## Step 3 - Inspect the tree (Accerciser)
 
 Before writing tests, walk the live tree with **Accerciser** (the
 GNOME accessibility inspector). It's the AT-SPI analogue of
@@ -125,10 +125,10 @@ accerciser
 
 Accerciser walks the same `registryd`-published tree the test
 client sees, and lets the author copy out the exact role + name +
-description triple for each widget — which is what `dogtail`
+description triple for each widget - which is what `dogtail`
 queries against.
 
-## Step 4 — Author a dogtail test (procedural API)
+## Step 4 - Author a dogtail test (procedural API)
 
 Per [dogtailraw][dogtailraw], dogtail "uses Accessibility (AT-SPI)
 technologies to interact with desktop applications". The procedural
@@ -160,9 +160,9 @@ screenshot('calc-success.png')
 
 The role-based primitives (`focus.application`, `focus.frame`,
 `focus.text`, `click`, `type`) map onto AT-SPI roles published by
-the application — same primitives Orca screen reader uses.
+the application - same primitives Orca screen reader uses.
 
-## Step 5 — Author a dogtail test (object-oriented API)
+## Step 5 - Author a dogtail test (object-oriented API)
 
 For larger suites where a Page-Object-style structure is
 appropriate, the object-oriented `tree` API exposes the registry as
@@ -183,7 +183,7 @@ result = frame.child(roleName='editbox')
 assert result.text == '10'
 ```
 
-`root` is the AT-SPI desktop entry point — dogtail's wrapper over
+`root` is the AT-SPI desktop entry point - dogtail's wrapper over
 the `libatspi` `get_desktop()` function described in the
 [libatspi reference][atspi2docs]:
 
@@ -195,7 +195,7 @@ the `libatspi` `get_desktop()` function described in the
 > "get_desktop() and get_desktop_list() to access the accessibility
 > tree once connected."
 
-## Step 6 — Direct pyatspi for fine-grained control
+## Step 6 - Direct pyatspi for fine-grained control
 
 For tests that need to listen for events on the AT-SPI bus rather
 than poll the tree, drop down to `pyatspi`:
@@ -221,7 +221,7 @@ This uses the AT-SPI event-listener pattern documented in
 > library defines a generic interface implemented by objects for
 > the receipt of event notifications."
 
-## Step 7 — Run
+## Step 7 - Run
 
 ```bash
 # Standalone — assumes accessibility is enabled + an X / Wayland session
@@ -231,17 +231,17 @@ python3 tests/test_calculator.py
 pytest tests/ --junitxml=reports/atspi-junit.xml
 ```
 
-## Step 8 — Parsing results
+## Step 8 - Parsing results
 
 JUnit XML from pytest feeds
 [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
 for the cross-runner aggregation pipeline.
 
 For dogtail-specific diagnostics, every failing run captures a
-screenshot (see Step 4 — `screenshot()` call) plus a `dogtail`
+screenshot (see Step 4 - `screenshot()` call) plus a `dogtail`
 session log under `~/.dogtail/logs/`.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 The Linux runner needs a display server + session DBus bus before
 AT-SPI clients can connect:
@@ -280,7 +280,7 @@ jobs:
 
 `xvfb-run` provides the X display, `dbus-launch --exit-with-session`
 spawns the session DBus bus (`at-spi2-registryd` requires the session
-bus per [atspi2coreraw][atspi2coreraw] — without it the registry
+bus per [atspi2coreraw][atspi2coreraw] - without it the registry
 daemon refuses to start). This matches the CI guidance in the
 [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
 anti-patterns table.
@@ -319,18 +319,18 @@ anti-patterns table.
   documented workaround on GNOME Wayland sessions.
 - **Apps must publish accessibility.** Custom-drawn widgets that
   bypass GTK/Qt/Chromium accessibility (e.g., raw OpenGL canvases,
-  custom-painted Cairo surfaces) are opaque to AT-SPI — same
+  custom-painted Cairo surfaces) are opaque to AT-SPI - same
   caveat as
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - **dogtail API docs incomplete.** Per [dogtailraw][dogtailraw],
-  "API docs (incomplete for both versions, in progress for 2.x)" —
+  "API docs (incomplete for both versions, in progress for 2.x)" - 
   some method signatures need source-spelunking.
 
 ## References
 
-- at-spi2-core README — [atspi2coreraw][atspi2coreraw].
-- libatspi (AT-SPI 2.0) reference — [atspi2docs][atspi2docs].
-- dogtail README — [dogtailraw][dogtailraw].
+- at-spi2-core README - [atspi2coreraw][atspi2coreraw].
+- libatspi (AT-SPI 2.0) reference - [atspi2docs][atspi2docs].
+- dogtail README - [dogtailraw][dogtailraw].
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - Sibling skills in this plugin:

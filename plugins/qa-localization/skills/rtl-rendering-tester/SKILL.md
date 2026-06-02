@@ -1,6 +1,6 @@
 ---
 name: rtl-rendering-tester
-description: "Build-an-X workflow for verifying RTL (right-to-left) layouts — runs the test suite under Arabic / Hebrew / Persian / Urdu locales, asserts the `dir=\"rtl\"` attribute is set, verifies layout mirrors correctly (text alignment, icon positions, scrollbar location), uses logical CSS properties (`start`/`end` over `left`/`right`) per W3C guidance, captures per-locale screenshots for visual review. Use when the app supports RTL languages."
+description: "Build-an-X workflow for verifying RTL (right-to-left) layouts - runs the test suite under Arabic / Hebrew / Persian / Urdu locales, asserts the `dir=\"rtl\"` attribute is set, verifies layout mirrors correctly (text alignment, icon positions, scrollbar location), uses logical CSS properties (`start`/`end` over `left`/`right`) per W3C guidance, captures per-locale screenshots for visual review. Use when the app supports RTL languages."
 rating: 22
 d6: 4
 archetype: S3
@@ -36,7 +36,7 @@ This skill verifies the app handles RTL correctly.
 - A new feature ships; RTL regression check before release.
 - A bug report says "looks wrong in Arabic / Hebrew."
 
-## Step 1 — Verify `dir` attribute presence
+## Step 1 - Verify `dir` attribute presence
 
 ```typescript
 import { test, expect } from '@playwright/test';
@@ -62,7 +62,7 @@ signal; CSS-only direction setting is incorrect:
 > Direction is semantic content and should reside in markup, not
 > styling."
 
-## Step 2 — Verify text alignment
+## Step 2 - Verify text alignment
 
 ```typescript
 test('text aligns right in RTL', async ({ page }) => {
@@ -76,7 +76,7 @@ test('text aligns right in RTL', async ({ page }) => {
 Per [w3-rtl][w3rtl]: prefer logical properties (`start`, `end`)
 over directional (`left`, `right`) so the layout flips automatically.
 
-## Step 3 — Verify icon positions
+## Step 3 - Verify icon positions
 
 Common RTL gotchas:
 
@@ -98,7 +98,7 @@ test('back arrow mirrors in RTL', async ({ page }) => {
 });
 ```
 
-## Step 4 — Bidi text in mixed contexts
+## Step 4 - Bidi text in mixed contexts
 
 Mixed LTR + RTL content is a common bidi issue:
 
@@ -121,10 +121,10 @@ test('order number preserves LTR direction inside RTL paragraph', async ({ page 
 ```
 
 The `<bdi>` element or `dir="ltr"` on a span isolates LTR text
-within an RTL block — without it, browser bidi heuristics may
+within an RTL block - without it, browser bidi heuristics may
 flip.
 
-## Step 5 — Form input behavior
+## Step 5 - Form input behavior
 
 Per [w3-rtl][w3rtl]: in RTL, "Form inputs start at the right by
 default."
@@ -140,7 +140,7 @@ test('form inputs start at right in RTL', async ({ page }) => {
 });
 ```
 
-## Step 6 — Per-locale visual regression
+## Step 6 - Per-locale visual regression
 
 ```typescript
 test('home page Arabic snapshot', async ({ page }) => {
@@ -161,7 +161,7 @@ RTL screenshots catch regressions like:
 - Sidebar on the wrong side.
 - Form fields in the wrong order.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - name: RTL rendering tests
@@ -173,10 +173,10 @@ RTL screenshots catch regressions like:
     path: test-results/
 ```
 
-Run on both desktop and mobile profiles — RTL handling can differ
+Run on both desktop and mobile profiles - RTL handling can differ
 per breakpoint.
 
-## Step 8 — `dirname` for form submission
+## Step 8 - `dirname` for form submission
 
 Per [w3-rtl][w3rtl]: "Use `dir='auto'` to automatically detect
 text direction from the first strongly-typed character. Pair with
@@ -222,12 +222,10 @@ test('comment form sends direction with submission', async ({ page }) => {
 
 ## References
 
-- [w3rtl][w3rtl] — W3C on `dir` attribute, RTL effects, semantic
+- [w3rtl][w3rtl] - W3C on `dir` attribute, RTL effects, semantic
   vs CSS direction, `dirname` attribute.
-- [`pseudo-localization-runner`](../pseudo-localization-runner/SKILL.md)
-  — sibling: layout-level i18n testing including RTL pseudo-loc
+- [`pseudo-localization-runner`](../pseudo-localization-runner/SKILL.md) - sibling: layout-level i18n testing including RTL pseudo-loc
   variant.
-- [`i18n-string-coverage`](../i18n-string-coverage/SKILL.md) —
+- [`i18n-string-coverage`](../i18n-string-coverage/SKILL.md) - 
   source-scan complement.
-- [`playwright-snapshots`](../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)
-  — visual regression for catching RTL layout issues.
+- [`playwright-snapshots`](../../qa-visual-regression/skills/playwright-snapshots/SKILL.md) - visual regression for catching RTL layout issues.

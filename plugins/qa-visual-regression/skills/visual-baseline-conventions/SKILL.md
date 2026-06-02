@@ -1,6 +1,6 @@
 ---
 name: visual-baseline-conventions
-description: "Reference catalog for visual regression coverage decisions — which Storybook stories or pages get baselines, how to choose breakpoints, when to mask vs adjust threshold, when to add or remove a baseline, and a decision matrix for picking among Percy / Chromatic / Playwright / Storybook test-runner. Use when designing visual coverage for a new project or auditing an existing baseline set."
+description: "Reference catalog for visual regression coverage decisions - which Storybook stories or pages get baselines, how to choose breakpoints, when to mask vs adjust threshold, when to add or remove a baseline, and a decision matrix for picking among Percy / Chromatic / Playwright / Storybook test-runner. Use when designing visual coverage for a new project or auditing an existing baseline set."
 rating: 24
 d6: 3
 archetype: S2
@@ -13,14 +13,13 @@ engine-specific skills in this plugin
 ([`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md),
 [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md),
 [`playwright-snapshots`](../playwright-snapshots/SKILL.md),
-[`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md))
-— those tell you the **how** of running baselines; this tells you
+[`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)) - those tell you the **how** of running baselines; this tells you
 **which** baselines and **where**.
 
 ## Engine selection
 
 Pick before authoring any baseline. Mixing engines is fine in a large
-project — see
+project - see
 [`responsive-breakpoint-runner`](../responsive-breakpoint-runner/SKILL.md)
 and [`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) for the
 mechanics of running and gating multiple engines together.
@@ -34,11 +33,11 @@ mechanics of running and gating multiple engines together.
 | Storybook + free / self-hosted                               | **@storybook/test-runner postVisit + Playwright snapshots** | Per-story coverage with the Playwright snapshot mechanics. |
 
 **Anti-pattern:** running both Percy and Chromatic on the same project
-"to compare" — duplicate snapshot quota cost without a useful signal.
+"to compare" - duplicate snapshot quota cost without a useful signal.
 Pick one hosted engine; if you need self-hosted depth, add Playwright
 snapshots alongside.
 
-## Story / page selection — what gets a baseline?
+## Story / page selection - what gets a baseline?
 
 Author baselines for **states the user actually sees** and skip
 internal-only states.
@@ -57,10 +56,10 @@ Skip:
   business concern.
 - Internal admin tooling not seen by external users.
 - Stories that exist only to satisfy `@storybook/addon-controls`
-  combinatorics — the per-prop combination matrix is exponential and
+  combinatorics - the per-prop combination matrix is exponential and
   catches very few real bugs.
 
-## Breakpoint selection — what widths?
+## Breakpoint selection - what widths?
 
 The starter set most teams converge on:
 
@@ -88,7 +87,7 @@ A snapshot can become noisy in three ways. The fix differs:
 | Animated GIF / SVG / video                     | `freezeAnimatedImage` (Percy) or Playwright `animations: 'disabled'`. |
 | Caret blink, focus rings, hover states         | `caret: 'hide'` (Playwright); avoid `:hover` in story render. |
 | Live data (timestamps, counters, A/B variants)  | **Mask** the element (`mask` / `ignoreRegionSelectors`). |
-| Anti-aliasing, sub-pixel font rendering        | **Threshold** — bump `maxDiffPixels` (50–200) or `threshold` (0.2 default → 0.3 max). |
+| Anti-aliasing, sub-pixel font rendering        | **Threshold** - bump `maxDiffPixels` (50 - 200) or `threshold` (0.2 default → 0.3 max). |
 | Async content that hasn't loaded               | **Wait** before snapshot (`page.waitForSelector`, `await expect(loc).toBeVisible()`). |
 
 Order of preference: **wait → mask → threshold**. Reaching for
@@ -112,8 +111,7 @@ team eventually disables visual testing.
 - The story / page was deleted and the baseline is now orphaned.
 - The component is purely behavioral (e.g. a hidden context provider)
   and the baseline never had visual content.
-- The baseline catches the same regression as another sibling baseline
-  — keep the smaller-blast-radius one.
+- The baseline catches the same regression as another sibling baseline - keep the smaller-blast-radius one.
 
 ## When to update a baseline
 
@@ -121,7 +119,7 @@ team eventually disables visual testing.
   the change. The PR review surface should include both the code diff
   and the snapshot diff; reviewers approve them together.
 - **Never** as a separate "snapshot refresh" PR detached from the code
-  change — the diff is uninterpretable without the corresponding code.
+  change - the diff is uninterpretable without the corresponding code.
 
 ## Severity tiering
 
@@ -170,5 +168,5 @@ A few projects do not benefit from visual regression testing:
   accessibility tests as the visual proxy.
 
 If you find yourself retiring more than ~20 % of your baselines as
-"chronically flaky" — the project is in this category. Switch
+"chronically flaky" - the project is in this category. Switch
 strategies rather than fight the tool.

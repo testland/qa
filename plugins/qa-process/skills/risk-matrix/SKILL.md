@@ -1,6 +1,6 @@
 ---
 name: risk-matrix
-description: "Build-an-X workflow that produces a per-feature / per-release risk matrix — captures risks via a structured intake (feature → category → impact 1-5 × likelihood 1-5 → score), tracks mitigations + owners + due dates, supports both lightweight (impact × likelihood) and heavyweight (FMEA / Cost of Exposure) methods per RBT canon. Output is a Markdown / spreadsheet artifact the team reviews per sprint and that drives test prioritization. Use as the artifact `risk-based-test-selector` and `risk-based-test-planner` consume."
+description: "Build-an-X workflow that produces a per-feature / per-release risk matrix - captures risks via a structured intake (feature → category → impact 1-5 × likelihood 1-5 → score), tracks mitigations + owners + due dates, supports both lightweight (impact × likelihood) and heavyweight (FMEA / Cost of Exposure) methods per RBT canon. Output is a Markdown / spreadsheet artifact the team reviews per sprint and that drives test prioritization. Use as the artifact `risk-based-test-selector` and `risk-based-test-planner` consume."
 rating: 23
 d6: 4
 archetype: S3
@@ -33,7 +33,7 @@ defensible record of "why we tested this and not that."
 - Audit / compliance: the team must show a documented risk
   assessment.
 
-## Step 1 — Pick the methodology
+## Step 1 - Pick the methodology
 
 Per [rbt-wiki][rbt], two approaches:
 
@@ -42,10 +42,10 @@ Per [rbt-wiki][rbt], two approaches:
 | **Lightweight** | Impact × Likelihood, simple high/medium/low | Default; most teams. |
 | **Heavyweight** | FMEA / Cost of Exposure / QFD / FTA      | Regulated industries; safety-critical; insurance. |
 
-Most teams should start lightweight — heavyweight methods need
+Most teams should start lightweight - heavyweight methods need
 specialized expertise.
 
-## Step 2 — Lightweight matrix structure
+## Step 2 - Lightweight matrix structure
 
 ```markdown
 # Risk matrix — `<feature/release>`
@@ -82,7 +82,7 @@ specialized expertise.
 The 5×5 matrix yields scores 1-25; the team picks the threshold
 for "block release" (typically 15+).
 
-## Step 3 — Risk categories
+## Step 3 - Risk categories
 
 Per [rbt-wiki][rbt], risks span:
 
@@ -91,11 +91,11 @@ Per [rbt-wiki][rbt], risks span:
 > - **External**: Regulatory requirements and stakeholder preferences
 > - **E-business specific**: Security vulnerabilities, performance failures, and integration defects
 
-Tag every risk with one category. Patterns emerge over time —
+Tag every risk with one category. Patterns emerge over time - 
 "all our top risks are integration" suggests an architectural
 review, not just more testing.
 
-## Step 4 — Map risks to test types
+## Step 4 - Map risks to test types
 
 A populated matrix drives the test plan:
 
@@ -112,7 +112,7 @@ A populated matrix drives the test plan:
 The test plan reads off the matrix: top-N risks → test types per
 risk → estimated effort.
 
-## Step 5 — Heavyweight: FMEA + Cost of Exposure
+## Step 5 - Heavyweight: FMEA + Cost of Exposure
 
 For regulated industries, lightweight scoring may not suffice.
 
@@ -129,7 +129,7 @@ S × O × D, range 1-1000)**.
 | F-2 | Stripe webhook missed          | Order not fulfilled                | 9  | 4 | 6 | 216 | retry + DLQ + monitor |
 ```
 
-Detectability is the inverse of "tests would catch it" —
+Detectability is the inverse of "tests would catch it" - 
 high D = hard to catch = high RPN.
 
 ### Cost of Exposure
@@ -144,10 +144,10 @@ Risk: Stripe webhook delivery failure
 ```
 
 Per [rbt-wiki][rbt], these heavyweight methods quantify
-"financial impact analysis" — useful for justifying test budget
+"financial impact analysis" - useful for justifying test budget
 to non-technical stakeholders.
 
-## Step 6 — Cadence
+## Step 6 - Cadence
 
 | Cadence    | Trigger                                        |
 |------------|------------------------------------------------|
@@ -156,10 +156,10 @@ to non-technical stakeholders.
 | Quarterly   | Strategic risk review                           |
 | Post-incident | Update the matrix with the surfaced risk      |
 
-The matrix is a **living document** — risks change as features
+The matrix is a **living document** - risks change as features
 ship, mitigations land, and incidents reveal new failure modes.
 
-## Step 7 — Format + storage
+## Step 7 - Format + storage
 
 ```
 docs/risk-matrices/
@@ -195,14 +195,11 @@ tracked over time.
 
 ## References
 
-- [rbt][rbt] — Risk-based testing definition, lightweight vs
+- [rbt][rbt] - Risk-based testing definition, lightweight vs
   heavyweight methods (FMEA, Cost of Exposure, QFD, FTA), risk
   categories (business / technical / external / e-business).
-- [`risk-storming-facilitator`](../risk-storming-facilitator/SKILL.md)
-  — sibling: facilitates the session that fills the matrix.
-- [`risk-based-test-selector`](../../agents/risk-based-test-selector.md)
-  — agent that consumes the matrix to pick test scope per change.
-- [`risk-based-test-planner`](../../agents/risk-based-test-planner.md)
-  — strategic planner using the matrix.
-- [`test-strategy-author`](../test-strategy-author/SKILL.md) —
+- [`risk-storming-facilitator`](../risk-storming-facilitator/SKILL.md) - sibling: facilitates the session that fills the matrix.
+- [`risk-based-test-selector`](../../agents/risk-based-test-selector.md) - agent that consumes the matrix to pick test scope per change.
+- [`risk-based-test-planner`](../../agents/risk-based-test-planner.md) - strategic planner using the matrix.
+- [`test-strategy-author`](../test-strategy-author/SKILL.md) - 
   test strategy doc that references the matrix.

@@ -4,21 +4,21 @@ type: agent
 archetype: A2
 ---
 
-# spec-to-suite-orchestrator — evals
+# spec-to-suite-orchestrator - evals
 
 Companion eval cases for [`spec-to-suite-orchestrator`](../../spec-to-suite-orchestrator.md).
 Three cases cover happy path (full 5-stage chain runs for a payment-with-auth
 spec, exercising both optional Stage 3 sub-extractors), branch (data-product
 spec triggers only the data-contract sub-extractor; threat-model is skipped),
-and adversarial (testability-reviewer returns BLOCK — refuse to proceed past
+and adversarial (testability-reviewer returns BLOCK - refuse to proceed past
 Stage 1). Re-run by feeding the **Input** block as the first user message
 and checking the agent's transcript against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates below are the eval-authoring date — each case
+`claude-opus-4-7`. Dates below are the eval-authoring date - each case
 is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — payment + auth spec (both sub-extractors run)
+## Eval 1 - happy path - payment + auth spec (both sub-extractors run)
 
 **Input:**
 
@@ -79,7 +79,7 @@ NFR with `lighthouse-perf` (substring match) AND the a11y NFR with
 `axe-a11y` (substring match). Output mentions writing to
 `docs/specs/CHK-412/`.
 
-## Eval 2 — branch — data-product spec (data-contract runs, threat-model skipped)
+## Eval 2 - branch - data-product spec (data-contract runs, threat-model skipped)
 
 **Input:**
 
@@ -126,7 +126,7 @@ trigger phrases `dataset`, `dbt model`, `data product` → runs
 `session` / `payment` / `file upload` / `PII` / `third-party
 integration` → `threat-model-from-spec` is NOT triggered. Stage 4 stubs
 pair the freshness NFR with `data-quality-gate` (NOT
-`lighthouse-perf` — wrong NFR family). Stage 5 writes the bundle to
+`lighthouse-perf` - wrong NFR family). Stage 5 writes the bundle to
 `docs/specs/DATA-87/`.
 
 **Pass condition:** Output mentions `data-contract-extractor` as
@@ -138,7 +138,7 @@ does NOT pair this story's NFRs with `axe-a11y` or
 `visual-baseline-gate` (wrong NFR families). Output mentions writing
 to `docs/specs/DATA-87/`.
 
-## Eval 3 — adversarial — Stage 1 BLOCK (refuse to proceed)
+## Eval 3 - adversarial - Stage 1 BLOCK (refuse to proceed)
 
 **Input:**
 
@@ -174,9 +174,9 @@ orchestrator must honour it.)
 
 **Target models:** sonnet (2026-05-25)
 
-**Expected:** Per Stage 1's rule ("BLOCK — STOP. Emit findings; refuse
+**Expected:** Per Stage 1's rule ("BLOCK - STOP. Emit findings; refuse
 to proceed. Untestable claims poison every downstream artifact") and
-the Refuse-to-proceed section ("Skipping Stage 1 — every chain run
+the Refuse-to-proceed section ("Skipping Stage 1 - every chain run
 starts with the testability gate; no override flag"), the orchestrator
 refuses to run Stages 2-5. Output does NOT invoke
 `acceptance-criteria-extractor`, `nfr-extractor`,
@@ -198,7 +198,7 @@ author / re-running after fixes (substring `author` OR `re-run` OR
 
 - All three inputs are concrete pasted-content blocks (spec text +
   testability-reviewer pre-run verdict). No external Slack / Notion
-  / Figma fetch needed — Limitations explicitly call out that the
+  / Figma fetch needed - Limitations explicitly call out that the
   agent needs a fetched copy, so inlining matches that contract.
 - Pass conditions are literal-string checks against the orchestrator's
   output table + prose; a reviewer can grep the transcript for each

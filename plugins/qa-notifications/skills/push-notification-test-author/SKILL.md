@@ -1,6 +1,6 @@
 ---
 name: push-notification-test-author
-description: "Build-an-X for push-notification tests across Web Push (RFC 8030 / VAPID), Apple Push Notification Service (APNs), and Firebase Cloud Messaging (FCM) — covers subscription handshake, payload encryption, badge / sound / click-action assertions, expired-subscription handling, silent-vs-alert push, topic-vs-targeted routing. Use when authoring tests for any push-notification flow."
+description: "Build-an-X for push-notification tests across Web Push (RFC 8030 / VAPID), Apple Push Notification Service (APNs), and Firebase Cloud Messaging (FCM) - covers subscription handshake, payload encryption, badge / sound / click-action assertions, expired-subscription handling, silent-vs-alert push, topic-vs-targeted routing. Use when authoring tests for any push-notification flow."
 rating: 22
 d6: 4
 archetype: S3
@@ -31,7 +31,7 @@ common workflow + per-platform specifics.
 - The team integrates with FCM / APNs / Web Push directly (not
   via OneSignal-style abstractions).
 
-## Step 1 — Choose the test isolation level
+## Step 1 - Choose the test isolation level
 
 | Level | Example | Tradeoffs |
 |---|---|---|
@@ -39,9 +39,9 @@ common workflow + per-platform specifics.
 | Sandbox / emulator | APNs sandbox, FCM emulator (limited), web-push test browser | Realistic; slower |
 | End-to-end with test devices | Real device farm | Highest fidelity; expensive + flaky |
 
-**Default: mock the SDK** — fast, deterministic, covers payload-shape + error-path logic which is most of what regressions hit. Use sandbox/emulator when verifying provider-side behavior (encryption, rate-limit, real 410 handling); use real device farms only for grouped-notification / channel UX work.
+**Default: mock the SDK** - fast, deterministic, covers payload-shape + error-path logic which is most of what regressions hit. Use sandbox/emulator when verifying provider-side behavior (encryption, rate-limit, real 410 handling); use real device farms only for grouped-notification / channel UX work.
 
-## Step 2 — Web Push tests
+## Step 2 - Web Push tests
 
 Per IETF RFC 8030 (Web Push Protocol), the flow:
 
@@ -117,7 +117,7 @@ self.dispatchEvent(new PushEvent('push', event));
 expect(self.registration.showNotification).toHaveBeenCalled();
 ```
 
-## Step 3 — APNs tests
+## Step 3 - APNs tests
 
 Apple Push Notification Service has two environments per
 [developer.apple.com/documentation/usernotifications][apns-docs]:
@@ -164,7 +164,7 @@ def test_apns_410_removes_token():
         assert token is None
 ```
 
-## Step 4 — FCM tests
+## Step 4 - FCM tests
 
 Firebase Cloud Messaging supports HTTP v1 API + legacy HTTP API.
 Use HTTP v1 for new code (legacy deprecated).
@@ -195,7 +195,7 @@ it('sends FCM message with correct shape', async () => {
 Invalid-token responses from FCM include `messaging/registration-token-not-registered`;
 test the cleanup path same as APNs Step 3.
 
-## Step 5 — Silent vs alert push
+## Step 5 - Silent vs alert push
 
 - **Alert push**: shows a notification UI; user sees + taps.
   Standard pattern.
@@ -213,7 +213,7 @@ it('uses content-available for background sync', () => {
 });
 ```
 
-## Step 6 — Click-action / deep-link tests
+## Step 6 - Click-action / deep-link tests
 
 The push payload includes a click-action / URL that opens a
 specific app screen. Test that the right deep-link is in the
@@ -228,7 +228,7 @@ def test_order_push_deep_links_to_order_screen():
 End-to-end click-action tests require device automation (Espresso /
 XCUITest); cross-ref [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md).
 
-## Step 7 — Topic vs targeted routing
+## Step 7 - Topic vs targeted routing
 
 FCM supports topic subscriptions (broadcast to all subscribers of a
 topic) vs targeted (single device token). Tests for topic routing:
@@ -244,12 +244,12 @@ it('subscribes user to order-updates topic', async () => {
 });
 ```
 
-## Step 8 — End-to-end test recipe
+## Step 8 - End-to-end test recipe
 
 For each push channel:
 
-1. ✅ Happy-path send with correct payload shape (Steps 2–4)
-2. ✅ Invalid-token cleanup on 410 / unregistered response (Steps 2–4)
+1. ✅ Happy-path send with correct payload shape (Steps 2 - 4)
+2. ✅ Invalid-token cleanup on 410 / unregistered response (Steps 2 - 4)
 3. ✅ Silent vs alert distinction (Step 5)
 4. ✅ Click-action / deep-link assertion (Step 6)
 5. ✅ Topic subscription handling (FCM, Step 7)
@@ -281,17 +281,16 @@ For each push channel:
 
 ## References
 
-- IETF RFC 8030 — Web Push Protocol
-- IETF RFC 8291 — Message Encryption for Web Push
-- IETF RFC 8292 — VAPID for Web Push
-- [apns-docs][apns-docs] — Apple Push Notification Service
-- firebase.google.com/docs/cloud-messaging — Firebase Cloud Messaging
-- web.dev/explore/notifications — Push API + Notifications API
-- npmjs.com/package/web-push — Node.js web-push library
-- pypi.org/project/apns2 — Python APNs HTTP/2 library
+- IETF RFC 8030 - Web Push Protocol
+- IETF RFC 8291 - Message Encryption for Web Push
+- IETF RFC 8292 - VAPID for Web Push
+- [apns-docs][apns-docs] - Apple Push Notification Service
+- firebase.google.com/docs/cloud-messaging - Firebase Cloud Messaging
+- web.dev/explore/notifications - Push API + Notifications API
+- npmjs.com/package/web-push - Node.js web-push library
+- pypi.org/project/apns2 - Python APNs HTTP/2 library
 - [`email-flow-test-author`](../email-flow-test-author/SKILL.md),
-  [`sms-test-author`](../sms-test-author/SKILL.md) — sister channels
+  [`sms-test-author`](../sms-test-author/SKILL.md) - sister channels
 - [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md),
   [`xcuitest-suite`](../../qa-mobile-native/skills/xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../../qa-mobile-native/skills/espresso-suite/SKILL.md)
-  — device-side click-action verification
+  [`espresso-suite`](../../qa-mobile-native/skills/espresso-suite/SKILL.md) - device-side click-action verification

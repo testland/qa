@@ -4,7 +4,7 @@ type: agent
 archetype: A4
 ---
 
-# escape-defect-analyzer — evals
+# escape-defect-analyzer - evals
 
 Companion eval cases for [`escape-defect-analyzer`](../../escape-defect-analyzer.md).
 Three cases cover happy path / branch / adversarial: scaffolding a
@@ -15,7 +15,7 @@ when the fix commit / production-state evidence is missing. Re-run by
 feeding the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — test-gap escape report with concrete unit-test prevention asset
+## Eval 1 - happy path - test-gap escape report with concrete unit-test prevention asset
 
 **Input:**
 
@@ -57,10 +57,10 @@ CI evidence:
 production-state evidence. Step 4 classifies the escape category as
 **test-gap** with sub-pattern `edge case not exercised` (the test
 existed in `total.test.ts`, gated CI ran, but no empty-cart case was
-written — that is "the right framework / CI / process, but no test
+written - that is "the right framework / CI / process, but no test
 existed for this specific case"). Step 5 proposes a concrete prevention
-asset — a Vitest `it('returns 0 for an empty cart (regression for
-#1234)', ...)` extending `src/checkout/total.test.ts` — matching the
+asset - a Vitest `it('returns 0 for an empty cart (regression for
+#1234)', ...)` extending `src/checkout/total.test.ts` - matching the
 canonical example block. Step 6 generates the report at
 `docs/escape-defects/2026-05-04-checkout-empty-cart-crash.md` (or a
 similar dated slug). The header block includes Days in production
@@ -70,7 +70,7 @@ not exercised`. The "What it verifies" paragraph names that the new
 test would have failed against the introducing commit (whichever shipped
 v4.7.0). The agent uses systems-not-people language throughout (no
 "engineer X should have"). It does NOT propose "add more tests"
-generically — the asset is a concrete vitest case.
+generically - the asset is a concrete vitest case.
 
 **Pass condition:** Output contains the literal string `test-gap` (the
 escape category) AND mentions `vitest` or a vitest-style `it(`
@@ -79,7 +79,7 @@ commit `f17e9b0`. Output writes to a path under `docs/escape-defects/`.
 Output does NOT contain blame-language about a specific engineer (no
 "engineer X should have").
 
-## Eval 2 — branch — tooling-gap with observability metric (different target shape)
+## Eval 2 - branch - tooling-gap with observability metric (different target shape)
 
 **Input:**
 
@@ -120,11 +120,11 @@ Date of analysis: 2026-05-04.
 
 **Expected:** Step 4 classifies the escape as **tooling-gap** with
 sub-pattern `Memory / fd leak over hours` per the tooling-gap table.
-The test could not have been written with current tools — a 14-hour
+The test could not have been written with current tools - a 14-hour
 soak test is incompatible with a 12-minute CI budget, and the team has
 no soak-testing tool installed. Per the "Tooling gap" sub-pattern row,
 the typical fix is **Runtime monitoring (not a test)**. Step 5
-proposes a concrete observability metric as the prevention asset —
+proposes a concrete observability metric as the prevention asset - 
 e.g., the existing Datadog alert on
 `process.memoryUsage().heapUsed` extended with a 1-hour rolling-window
 threshold to catch slow growth earlier (matching the agent's example
@@ -132,7 +132,7 @@ text), and a `## Open questions` section capturing the tradeoff "should
 we also add a soak test in CI even though it would exceed our 12-minute
 budget?" The report is generated at
 `docs/escape-defects/2026-05-04-worker-pool-memory-leak.md` (or
-similar). The agent does NOT propose "add more unit tests" — that would
+similar). The agent does NOT propose "add more unit tests" - that would
 conflate test-gap with tooling-gap per the rejected anti-pattern.
 
 **Pass condition:** Output contains the literal string `tooling-gap`
@@ -141,7 +141,7 @@ conflate test-gap with tooling-gap per the rejected anti-pattern.
 `## Open questions` section. Output does NOT classify the escape as
 `test-gap` (the team has no soak-testing tooling).
 
-## Eval 3 — adversarial — missing fix commit + production-state evidence (refuse to scaffold)
+## Eval 3 - adversarial - missing fix commit + production-state evidence (refuse to scaffold)
 
 **Input:**
 
@@ -168,12 +168,12 @@ Date of analysis: 2026-05-04.
 
 **Target models:** sonnet (2026-05-25)
 
-**Expected:** Step 2 cannot read a fix commit — there is no
-identified fix. Step 3 cannot establish production-state evidence —
+**Expected:** Step 2 cannot read a fix commit - there is no
+identified fix. Step 3 cannot establish production-state evidence - 
 First production observation, Days in production, and Customers
 affected are all unknown / one anecdote. Per the agent's anti-pattern
 "Skipping production-state evidence. 'Days in production' + 'customers
-affected' are required — they bound the priority of the prevention
+affected' are required - they bound the priority of the prevention
 asset", the agent must refuse to scaffold a report. It also cannot
 classify the escape category (test-gap vs process-gap vs tooling-gap is
 indeterminate without knowing what was fixed and how). The agent

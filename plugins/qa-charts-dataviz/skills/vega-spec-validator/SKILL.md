@@ -25,12 +25,12 @@ expected rendered output.
 
 - BI tool / data product builds Vega-Lite specs from user input;
   verify generated specs are valid before render.
-- Library upgrade (Vega 5 → Vega 6) — verify existing specs still
+- Library upgrade (Vega 5 → Vega 6) - verify existing specs still
   compile + render.
-- Custom encoding rules in spec generation — assert the produced
+- Custom encoding rules in spec generation - assert the produced
   spec matches the expected mark+encoding shape.
 
-## Step 1 — JSON Schema validation
+## Step 1 - JSON Schema validation
 
 Per the [Vega-Lite docs], the spec is JSON; it has a published
 JSON Schema. Validate:
@@ -55,7 +55,7 @@ test('generated bar spec is valid Vega-Lite', () => {
 Schema URL pattern: `https://vega.github.io/schema/vega-lite/v5.json`
 (track current version per the [Vega-Lite docs]).
 
-## Step 2 — Spec structural assertions
+## Step 2 - Spec structural assertions
 
 Beyond schema validity, assert business-relevant structure:
 
@@ -71,7 +71,7 @@ test('spec uses correct mark + encoding for bar chart', () => {
 });
 ```
 
-## Step 3 — Compilation test (Vega-Lite → Vega)
+## Step 3 - Compilation test (Vega-Lite → Vega)
 
 Per the [Vega-Lite docs]: "Vega-Lite compiles a Vega-Lite
 specification into a lower-level, more detailed Vega specifications
@@ -94,7 +94,7 @@ Failed compilation indicates the Vega-Lite spec is well-formed
 schema-wise but semantically broken (e.g., references a non-existent
 field).
 
-## Step 4 — Render-to-SVG test
+## Step 4 - Render-to-SVG test
 
 ```js
 import { Vega } from 'react-vega';
@@ -116,7 +116,7 @@ test('renders SVG with expected mark count', async () => {
 });
 ```
 
-## Step 5 — Multi-view composition test
+## Step 5 - Multi-view composition test
 
 Per the [Vega-Lite docs], Vega-Lite supports faceting, layering,
 concatenation, repeating. Test each composition:
@@ -146,7 +146,7 @@ test('faceted spec creates one view per category', async () => {
 });
 ```
 
-## Step 6 — Data transform test
+## Step 6 - Data transform test
 
 Per the [Vega-Lite docs], transforms include "Aggregate, filter,
 bin, calculate, fold, pivot." Test transform output:
@@ -175,7 +175,7 @@ test('aggregate transform produces correct sum', () => {
 });
 ```
 
-## Step 7 — Interaction (parameters / selections)
+## Step 7 - Interaction (parameters / selections)
 
 Per the [Vega-Lite docs], "Interactive parameters - Selections and
 value bindings" enable interaction. Test parameters resolve:
@@ -195,7 +195,7 @@ test('selection parameter filters data', async () => {
 });
 ```
 
-## Step 8 — Spec-snapshot regression
+## Step 8 - Spec-snapshot regression
 
 For complex spec-generation logic, snapshot the spec output:
 
@@ -228,17 +228,17 @@ When intentionally changing spec generation, regenerate snapshots:
 
 - Vega specs are large; full schema validation is slow on big
   spec corpora. Cache compiled validators.
-- Vega-Lite is *opinionated* — some custom visuals require
+- Vega-Lite is *opinionated* - some custom visuals require
   dropping to plain Vega.
 - Per-engine renderers (browser SVG vs canvas vs Vega-Embed +
   worker) differ subtly; pin engine in tests.
 
 ## References
 
-- [Vega-Lite docs] — grammar, mark + encoding + data, compilation
+- [Vega-Lite docs] - grammar, mark + encoding + data, compilation
   to Vega, multi-view composition, transforms, interactions
 - [`chartjs-snapshot-tests`](../chartjs-snapshot-tests/SKILL.md),
-  [`d3-snapshot-tests`](../d3-snapshot-tests/SKILL.md) — sister
+  [`d3-snapshot-tests`](../d3-snapshot-tests/SKILL.md) - sister
   skills for rendered-output testing
 
 [Vega-Lite docs]: https://vega.github.io/vega-lite/docs/

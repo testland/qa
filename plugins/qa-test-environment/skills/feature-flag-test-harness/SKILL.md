@@ -1,6 +1,6 @@
 ---
 name: feature-flag-test-harness
-description: "Builds a test harness that runs the same suite under every relevant flag combination — picks the minimum cover (single flags + pairwise interactions where the team marks them, not the full 2^N cartesian product), wires an OpenFeature in-memory provider so the suite never hits the production flag service, runs each combination as its own labeled CI matrix shard, and emits a per-combination result matrix. Use when a feature behind a flag must be verified on AND off (release toggles + experiment toggles per Hodgson) and the team wants those runs deterministic and parallel."
+description: "Builds a test harness that runs the same suite under every relevant flag combination - picks the minimum cover (single flags + pairwise interactions where the team marks them, not the full 2^N cartesian product), wires an OpenFeature in-memory provider so the suite never hits the production flag service, runs each combination as its own labeled CI matrix shard, and emits a per-combination result matrix. Use when a feature behind a flag must be verified on AND off (release toggles + experiment toggles per Hodgson) and the team wants those runs deterministic and parallel."
 rating: 23
 d6: 4
 archetype: S3
@@ -11,7 +11,7 @@ archetype: S3
 ## Overview
 
 A test that hits the production flag service is non-deterministic by
-definition — the answer depends on whoever toggled the flag last.
+definition - the answer depends on whoever toggled the flag last.
 And a test that asks "did we test the feature with the flag off?"
 needs both runs side by side.
 
@@ -20,13 +20,13 @@ This skill builds a harness that:
 1. Replaces the production OpenFeature provider with an **in-memory
    provider** the test owns ([openfeature-providers][of-prov]).
 2. Enumerates the relevant flag combinations (not the full 2^N
-   cartesian product — the long tail isn't worth running).
+   cartesian product - the long tail isn't worth running).
 3. Runs the suite once per combination, as a separate CI shard.
 4. Aggregates results into a matrix the reviewer can read.
 
 The skill's reference architecture targets **OpenFeature** because
 it standardizes the SDK across LaunchDarkly, Flagsmith, ConfigCat,
-self-hosted, etc. — the harness works identically against any
+self-hosted, etc. - the harness works identically against any
 provider ([openfeature-overview][of-int]).
 
 [of-int]: https://openfeature.dev/docs/reference/intro
@@ -50,10 +50,10 @@ provider ([openfeature-overview][of-int]).
   test provider.
 
 If the team has only one or two flags **and** a flat "always on for
-test" config works, this skill is overkill — set the test
+test" config works, this skill is overkill - set the test
 environment's flag values once in `setup` and stop there.
 
-## Step 1 — Classify each flag (Hodgson taxonomy)
+## Step 1 - Classify each flag (Hodgson taxonomy)
 
 Per [feature-toggles][toggles], flags fall into four categories with
 different test needs:
@@ -62,8 +62,8 @@ different test needs:
 
 | Category               | Lifespan       | Dynamism            | Test combinations needed                    |
 |------------------------|----------------|---------------------|---------------------------------------------|
-| **Release toggle**     | Days–weeks     | Static at deploy    | OFF (current) **and** ON (new behavior). 2 runs. |
-| **Experiment toggle**  | Days–weeks     | Per-request dynamic | One run per variant (A / B / control).       |
+| **Release toggle**     | Days - weeks     | Static at deploy    | OFF (current) **and** ON (new behavior). 2 runs. |
+| **Experiment toggle**  | Days - weeks     | Per-request dynamic | One run per variant (A / B / control).       |
 | **Ops toggle**         | Long-lived     | Per-request dynamic | ON (normal) and OFF (degraded / kill).      |
 | **Permissioning toggle** | Years        | Per-request dynamic | One run per relevant user cohort.           |
 
@@ -95,10 +95,10 @@ listed interaction tuples. Single flags = 2 + 2 + 3 + 2 = 9 runs.
 Plus the one declared interaction (new_checkout × promo_codes) = +4 runs.
 Total: 13 runs, not 24 (2 × 2 × 3 × 2).
 
-## Step 2 — Wire the OpenFeature in-memory provider
+## Step 2 - Wire the OpenFeature in-memory provider
 
 Per [openfeature-providers][of-prov], "Providers are responsible for
-performing flag evaluations" — the in-memory test provider returns
+performing flag evaluations" - the in-memory test provider returns
 the flag values the test wants.
 
 ### Node / TypeScript
@@ -176,7 +176,7 @@ default values!" The harness picks the value the in-memory provider
 returns; the application's hard-coded default is what runs in
 prod-flag-failure scenarios.
 
-## Step 3 — Generate the combination matrix
+## Step 3 - Generate the combination matrix
 
 A small generator script enumerates the combinations from
 `flag-matrix.yaml`:
@@ -219,7 +219,7 @@ def defaultFor(spec):
 
 Output: a JSON array of `{name, flags}` objects, one per CI shard.
 
-## Step 4 — Wire the CI matrix
+## Step 4 - Wire the CI matrix
 
 ```yaml
 # .github/workflows/flag-harness.yml
@@ -261,11 +261,11 @@ jobs:
           FLAGS_JSON: ${{ toJSON(matrix.combo.flags) }}
 ```
 
-`fail-fast: false` is load-bearing — when one combination fails,
+`fail-fast: false` is load-bearing - when one combination fails,
 the matrix continues so the team sees every failing combination at
 once, not just the first.
 
-## Step 5 — Aggregate the result matrix
+## Step 5 - Aggregate the result matrix
 
 After the matrix runs, build a single artifact that shows pass/fail
 per combination:
@@ -289,7 +289,7 @@ The aggregator reads each shard's JUnit XML, groups by combo name,
 emits the table. Failures column links to the failing test files for
 quick triage.
 
-## Step 6 — Pre-merge / nightly cadence
+## Step 6 - Pre-merge / nightly cadence
 
 - **Pre-merge (PR):** Run only the combinations whose flags appear in
   changed files. The flag-matrix YAML lists owner files per flag:
@@ -338,14 +338,14 @@ coverage every 24h.
 
 ## References
 
-- [openfeature-overview][of-int] — OpenFeature SDK + provider model.
-- [openfeature-providers][of-prov] — Provider interface, in-memory
+- [openfeature-overview][of-int] - OpenFeature SDK + provider model.
+- [openfeature-providers][of-prov] - Provider interface, in-memory
   test provider.
-- [openfeature-eval][of-eval] — `getBooleanValue` / `getStringValue`
+- [openfeature-eval][of-eval] - `getBooleanValue` / `getStringValue`
   / `getNumberValue` / `getObjectValue` signatures + default-value
   behavior.
-- [feature-toggles][toggles] — Hodgson's taxonomy: release /
+- [feature-toggles][toggles] - Hodgson's taxonomy: release /
   experiment / ops / permissioning; longevity vs dynamism.
 - [`testcontainers`](../testcontainers/SKILL.md),
-  [`docker-compose-test`](../docker-compose-test/SKILL.md) — the
+  [`docker-compose-test`](../docker-compose-test/SKILL.md) - the
   surrounding stack the harness drives per combination.

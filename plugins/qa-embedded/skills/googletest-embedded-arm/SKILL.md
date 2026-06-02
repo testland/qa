@@ -1,6 +1,6 @@
 ---
 name: googletest-embedded-arm
-description: "Author and run GoogleTest 1.17+ for embedded C++ on ARM targets — TEST() / TEST_F() / TEST_P() / TYPED_TEST(), EXPECT_* vs ASSERT_* assertions, fixtures with SetUp() / TearDown(), value-parameterised tests, GoogleMock when paired, cross-compile with arm-none-eabi-g++, run on host or under QEMU via the qemu-system-test-runner skill, --gtest_filter / --gtest_output=xml:results.xml / --gtest_shuffle / --gtest_repeat command-line flags, and XML / JSON output parsing for CI. Use when the unit-under-test is C++ (modern C++17+) and the team wants the de-facto C++ test framework instead of the C-only Unity. For C use unity-test-framework-c; for pure mocks use ceedling-mocks-reference."
+description: "Author and run GoogleTest 1.17+ for embedded C++ on ARM targets - TEST() / TEST_F() / TEST_P() / TYPED_TEST(), EXPECT_* vs ASSERT_* assertions, fixtures with SetUp() / TearDown(), value-parameterised tests, GoogleMock when paired, cross-compile with arm-none-eabi-g++, run on host or under QEMU via the qemu-system-test-runner skill, --gtest_filter / --gtest_output=xml:results.xml / --gtest_shuffle / --gtest_repeat command-line flags, and XML / JSON output parsing for CI. Use when the unit-under-test is C++ (modern C++17+) and the team wants the de-facto C++ test framework instead of the C-only Unity. For C use unity-test-framework-c; for pure mocks use ceedling-mocks-reference."
 rating: 24
 d6: 4
 archetype: S1
@@ -13,10 +13,10 @@ keywords: ["googletest", "gtest", "gmock", "embedded", "arm", "c++", "cortex-m",
 
 GoogleTest is, per the README at
 [github.com/google/googletest](https://github.com/google/googletest),
-"Google's C++ test framework" — an xUnit-style framework merged
+"Google's C++ test framework" - an xUnit-style framework merged
 with GoogleMock so the two ship together. The 1.17.x branch
 "requires at least C++17". For embedded ARM use, the framework
-runs anywhere a hosted C++ standard library is available — on
+runs anywhere a hosted C++ standard library is available - on
 the host, under QEMU, and on Cortex-A Linux targets; for
 Cortex-M without an OS, a minimal `_write` / `_exit` semihosting
 stub is the bridge.
@@ -37,8 +37,7 @@ with:
 
 - Unit-under-test is **C++** (not C). For C, use
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md).
-- Target is **Cortex-A running Linux** or **Cortex-M with semihosting**
-  — anything with enough RAM for the gtest binary (~300 KB stripped).
+- Target is **Cortex-A running Linux** or **Cortex-M with semihosting** - anything with enough RAM for the gtest binary (~300 KB stripped).
 - Team wants the **de-facto C++ framework** with rich matchers
   (GoogleMock, value-parameterised tests, typed tests).
 - The build pipeline can run a host build for speed and a
@@ -93,7 +92,7 @@ TEST_F(RingbufferTest, PopReturnsPushedValue) {
 ```
 
 Per the Primer: "GoogleTest does not reuse the same test fixture
-for multiple tests" — each `TEST_F` gets a fresh instance.
+for multiple tests" - each `TEST_F` gets a fresh instance.
 
 ### Value-parameterised tests (TEST_P)
 
@@ -179,13 +178,13 @@ add_test(NAME ringbuffer_test COMMAND ringbuffer_test)
 ```
 
 `gtest_main` provides a `main()` that calls
-`testing::InitGoogleTest(&argc, argv)` then `RUN_ALL_TESTS()` —
+`testing::InitGoogleTest(&argc, argv)` then `RUN_ALL_TESTS()` - 
 which "returns 0 on success, 1 on failure" and per the Primer
 "You must not ignore the return value of RUN_ALL_TESTS()".
 
 ### Cortex-M cross-compile (under QEMU)
 
-The standard recipe — uses `arm-none-eabi-g++` for the toolchain,
+The standard recipe - uses `arm-none-eabi-g++` for the toolchain,
 `--specs=rdimon.specs` to pull in the
 [`librdimon`](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)
 semihosting library so stdout reaches QEMU:
@@ -200,7 +199,7 @@ arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard \
     -o ringbuffer_test.elf -lrdimon
 ```
 
-`-DGTEST_HAS_PTHREAD=0` is critical — bare-metal targets have
+`-DGTEST_HAS_PTHREAD=0` is critical - bare-metal targets have
 no pthreads; the build fails without it. (The flag is documented
 in GoogleTest's `port.h`.)
 
@@ -246,12 +245,12 @@ Per the Advanced Guide:
 
 | Flag | Effect |
 |---|---|
-| `--gtest_filter=Pattern` | "a `:`-separated list of wildcard patterns" — supports `*`, `?`, and negative `-` patterns |
-| `--gtest_repeat=N` | Repeats all tests N times (use `-1` for infinite — useful for flake hunting) |
-| `--gtest_shuffle` | Random order each run — "reveal bad dependencies between tests" |
+| `--gtest_filter=Pattern` | "a `:`-separated list of wildcard patterns" - supports `*`, `?`, and negative `-` patterns |
+| `--gtest_repeat=N` | Repeats all tests N times (use `-1` for infinite - useful for flake hunting) |
+| `--gtest_shuffle` | Random order each run - "reveal bad dependencies between tests" |
 | `--gtest_output=xml:results.xml` / `json:results.json` | Machine-readable report (the value is `"xml:path"` or `"json:path"`) |
 | `--gtest_break_on_failure` | Drops into debugger on first failure |
-| `--gtest_catch_exceptions=0` | Disables exception handling — lets debugger catch the throw |
+| `--gtest_catch_exceptions=0` | Disables exception handling - lets debugger catch the throw |
 | `--gtest_color=yes\|no\|auto` | Coloured terminal output |
 | `--gtest_brief=1` | Only failures shown |
 | `--gtest_list_tests` | List without running |
@@ -279,7 +278,7 @@ with `<testsuites>` / `<testsuite>` / `<testcase>` elements, with
 </testsuites>
 ```
 
-JUnit-compatible — feeds straight into GitHub Actions
+JUnit-compatible - feeds straight into GitHub Actions
 `actions/upload-artifact` + `mikepenz/action-junit-report`.
 
 ### JSON output schema
@@ -346,27 +345,27 @@ the gtest return value through QEMU).
 | Test order dependence | `--gtest_shuffle` reveals; CI breaks intermittently | Each `TEST_F` must work in any order; reset state in `SetUp` |
 | Optimised coverage build | `-O2` collapses branches gcov can't see | `-O0 -g` for the coverage build per coverage-reference skill |
 | `TEST_P` without `INSTANTIATE_TEST_SUITE_P` | Compiles but never runs | Always pair |
-| Mocking everything | Tests measure mocks not behaviour | Mock at the I/O boundary only — see `ceedling-mocks-reference` |
+| Mocking everything | Tests measure mocks not behaviour | Mock at the I/O boundary only - see `ceedling-mocks-reference` |
 
 ## Limitations
 
 - **C++ only.** For pure C suites use
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md).
 - **Heap required.** GoogleTest allocates internally; ultra-low-
-  RAM Cortex-M0 (8–16 KB) may not have headroom. Use Unity for
+  RAM Cortex-M0 (8 - 16 KB) may not have headroom. Use Unity for
   those targets.
 - **No native parameterised test = different test names.** Each
-  `TEST_P` instance is `Boundaries/WrapTest.WrapAtCapacity/4` —
+  `TEST_P` instance is `Boundaries/WrapTest.WrapAtCapacity/4` - 
   the `/4` is the param index, not the value. Use
   `INSTANTIATE_TEST_SUITE_P(..., ::testing::PrintToStringParamName())`
   to encode the value into the name.
-- **Death tests require `fork()`** — not available on bare-metal
+- **Death tests require `fork()`** - not available on bare-metal
   or under most RTOSes. Per the Advanced Guide they run "in
   separate child processes".
-- **No determinism guarantee with `--gtest_shuffle`** — the seed
+- **No determinism guarantee with `--gtest_shuffle`** - the seed
   is logged but rerunning with the same seed and a code change
   produces a different schedule.
-- **GoogleMock pulls in `std::function`-based call recording** —
+- **GoogleMock pulls in `std::function`-based call recording** - 
   on cross-compiles with `-fno-exceptions` you may need
   `-DGTEST_HAS_EXCEPTIONS=0` to compile cleanly.
 
@@ -374,10 +373,10 @@ the gtest return value through QEMU).
 
 Cited inline. Foundational documents:
 
-- GoogleTest README — [github.com/google/googletest](https://github.com/google/googletest).
-- GoogleTest Primer — [google.github.io/googletest/primer.html](https://google.github.io/googletest/primer.html).
-- GoogleTest Advanced Guide — [google.github.io/googletest/advanced.html](https://google.github.io/googletest/advanced.html).
-- ARM GNU Toolchain — [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
+- GoogleTest README - [github.com/google/googletest](https://github.com/google/googletest).
+- GoogleTest Primer - [google.github.io/googletest/primer.html](https://google.github.io/googletest/primer.html).
+- GoogleTest Advanced Guide - [google.github.io/googletest/advanced.html](https://google.github.io/googletest/advanced.html).
+- ARM GNU Toolchain - [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 - Sibling skills:
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
   [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),

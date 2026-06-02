@@ -1,6 +1,6 @@
 ---
 name: cargo-fuzz-rust
-description: "Author and run cargo-fuzz — Rust fuzzing via libFuzzer with cargo integration. Covers `cargo install cargo-fuzz`, `cargo fuzz init` + `cargo fuzz add <target>` for harness scaffolding, the `fuzz_target!` macro for entry-point declaration, the `Arbitrary` trait for structured input mutation, and `cargo fuzz run` invocation. Requires Rust nightly. Use for fuzz testing Rust libraries — cargo-fuzz wraps libFuzzer with native Rust ergonomics. Composes with sanitiser-integration-reference + corpus-management-reference."
+description: "Author and run cargo-fuzz - Rust fuzzing via libFuzzer with cargo integration. Covers `cargo install cargo-fuzz`, `cargo fuzz init` + `cargo fuzz add <target>` for harness scaffolding, the `fuzz_target!` macro for entry-point declaration, the `Arbitrary` trait for structured input mutation, and `cargo fuzz run` invocation. Requires Rust nightly. Use for fuzz testing Rust libraries - cargo-fuzz wraps libFuzzer with native Rust ergonomics. Composes with sanitiser-integration-reference + corpus-management-reference."
 rating: 23
 d6: 4
 archetype: S1
@@ -180,12 +180,12 @@ fuzz/
 
 ## Parsing results
 
-Sanitiser report format is identical to libFuzzer / ASan — see
+Sanitiser report format is identical to libFuzzer / ASan - see
 [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)
 "Reading a sanitiser report."
 
 `cargo fuzz fmt` decodes binary inputs into a Rust-readable form
-(useful when using `Arbitrary` — recovers the struct).
+(useful when using `Arbitrary` - recovers the struct).
 
 ## CI integration
 
@@ -238,20 +238,20 @@ jobs:
   sanitiser instrumentation).
 - **`Arbitrary` derive is shallow.** Custom types need manual
   `impl Arbitrary` for non-trivial mutation strategies.
-- **Cross-target corpus is per-target.** `fuzz/corpus/<target>/` —
+- **Cross-target corpus is per-target.** `fuzz/corpus/<target>/` - 
   no sharing across targets.
 - **macOS / Windows partial support.** Linux is the primary
   platform; some features (MSan) Linux-only.
 
 ## References
 
-- cargo-fuzz —
+- cargo-fuzz - 
   [github.com/rust-fuzz/cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz).
-- cargo-fuzz book —
+- cargo-fuzz book - 
   [rust-fuzz.github.io/book](https://rust-fuzz.github.io/book/).
-- `arbitrary` crate —
+- `arbitrary` crate - 
   [docs.rs/arbitrary](https://docs.rs/arbitrary/).
-- `libfuzzer-sys` crate —
+- `libfuzzer-sys` crate - 
   [docs.rs/libfuzzer-sys](https://docs.rs/libfuzzer-sys/).
 - Composes:
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),

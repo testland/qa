@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# model-fairness-reviewer — evals
+# model-fairness-reviewer - evals
 
 Companion eval cases for [`model-fairness-reviewer`](../../model-fairness-reviewer.md).
 Three cases cover happy path / branch / adversarial: a high-risk credit
@@ -13,10 +13,10 @@ sufficient evidence (promote), and a refuse-to-proceed when a
 medium-risk model card declares `sensitive_features: ["none"]`.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — high-risk model, intersectional disparity (BLOCK)
+## Eval 1 - happy path - high-risk model, intersectional disparity (BLOCK)
 
 **Input:**
 
@@ -79,7 +79,7 @@ deepchecks_suite.json:
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25), opus (2026-05-25)
 
 **Expected:** Step 1 classifies the model as `High` risk. Step 2
-confirms sensitive_features declared (sex, race, age_band) — passes.
+confirms sensitive_features declared (sex, race, age_band) - passes.
 Step 3 computes per-group fairness on sex: DPD = 0.08 → 🟡
 `needs justification + monitoring plan`. Step 4 computes intersectional
 on sex × race: max_pairwise_difference selection_rate = 0.24 → DPD
@@ -97,7 +97,7 @@ the literal string `intersectional` AND at least one of
 `Reductions` (named mitigation methods). Output does NOT contain a
 `promote` / ✅ verdict.
 
-## Eval 2 — branch — low-risk recommender (promote)
+## Eval 2 - branch - low-risk recommender (promote)
 
 **Input:**
 
@@ -134,9 +134,9 @@ that Low risk only requires Performance metrics + Vulnerability scan;
 group fairness, intersectional, drift plan, and per-prediction
 explanations are not required. Step 2 sensitive_features `["none"]`
 is acceptable for the lowest-risk class per the agent's own rule.
-Step 5 Giskard scan reports only minor stochasticity (NO block —
+Step 5 Giskard scan reports only minor stochasticity (NO block - 
 the per-category table says "NO if reproducible runs configured").
-Step 8 verdict: ✅ promote — risk class doesn't require fairness /
+Step 8 verdict: ✅ promote - risk class doesn't require fairness /
 explanation evidence.
 
 **Pass condition:** Output contains the literal string `promote` (or
@@ -146,7 +146,7 @@ doesn't require` / `not required for low risk`). Output does NOT
 contain a `BLOCK` verdict, and does NOT flag the missing fairness
 evidence as a gap.
 
-## Eval 3 — adversarial — medium-risk with sensitive_features = ["none"] (refuse)
+## Eval 3 - adversarial - medium-risk with sensitive_features = ["none"] (refuse)
 
 **Input:**
 
@@ -204,8 +204,7 @@ medium-risk class.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted JSON evidence-bundle blocks
-  — no external Fairlearn / Giskard / Evidently runs required to
+- All three inputs are concrete pasted JSON evidence-bundle blocks - no external Fairlearn / Giskard / Evidently runs required to
   reproduce.
 - Pass conditions are literal-substring checks; a reviewer can grep
   the agent's transcript for the verdict label (BLOCK / promote) and

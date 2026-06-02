@@ -1,6 +1,6 @@
 ---
 name: faker-data
-description: "Authors test-data factories using Faker — covering the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem — to generate names, emails, addresses, phone numbers, dates, and locale-aware variants. Configures seed-based determinism for reproducible runs and selects providers (person / internet / location / date / finance / lorem) per language. Use when authoring fixtures or factories that need realistic-looking field values."
+description: "Authors test-data factories using Faker - covering the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem - to generate names, emails, addresses, phone numbers, dates, and locale-aware variants. Configures seed-based determinism for reproducible runs and selects providers (person / internet / location / date / finance / lorem) per language. Use when authoring fixtures or factories that need realistic-looking field values."
 rating: 25
 d6: 4
 archetype: S1
@@ -11,8 +11,8 @@ archetype: S1
 ## Overview
 
 Faker is a family of libraries (Python / JS / Ruby / Java / .NET / PHP)
-that generate realistic synthetic field values — names, emails,
-addresses, dates, etc. — for test fixtures. The three most common
+that generate realistic synthetic field values - names, emails,
+addresses, dates, etc. - for test fixtures. The three most common
 ports in this skill's scope:
 
 | Language | Library                                  | Reference        |
@@ -34,12 +34,12 @@ Python-specifically with stronger locale coverage, also see
 - A test fixture needs realistic but synthetic field values (the
   default `'foo'` / `'bar'` pattern produces tests that miss real
   bugs around long names, Unicode, edge-case formats).
-- The team wants **reproducible** randomness — same seed produces
+- The team wants **reproducible** randomness - same seed produces
   same data, useful for regression repro.
 - Locale coverage matters (i18n testing across `de_DE`, `ja_JP`,
   `ar_SA`, etc.).
 - A factory library (FactoryBot, factory_boy, Bogus) needs the
-  underlying generator — Faker is typically the random-data
+  underlying generator - Faker is typically the random-data
   engine plugged into those.
 
 ## Install
@@ -247,14 +247,14 @@ factory library handles that.
 
 ## References
 
-- [faker-py][py] — Python Faker docs (install, seed, locale,
+- [faker-py][py] - Python Faker docs (install, seed, locale,
   providers).
-- [faker-js][js] — `@faker-js/faker` (modules, seed, 70+ locales).
-- [faker-rb][rb] — `faker-ruby/faker` (modules, seed, locale).
-- [`mimesis-data`](../mimesis-data/SKILL.md) — Python alternative
+- [faker-js][js] - `@faker-js/faker` (modules, seed, 70+ locales).
+- [faker-rb][rb] - `faker-ruby/faker` (modules, seed, locale).
+- [`mimesis-data`](../mimesis-data/SKILL.md) - Python alternative
   with stronger locale coverage.
-- [`factory-bot-data`](../factory-bot-data/SKILL.md) — Ruby factory
+- [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby factory
   library that uses Faker as engine.
-- [`bogus-data`](../bogus-data/SKILL.md) — .NET counterpart.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) —
+- [`bogus-data`](../bogus-data/SKILL.md) - .NET counterpart.
+- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
   dispatcher that picks the right Faker port per language.

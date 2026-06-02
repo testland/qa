@@ -1,6 +1,6 @@
 ---
 name: sms-test-author
-description: "Build-an-X for SMS-flow tests — uses Twilio Magic Numbers (`+15005550006` valid recipient, `+15005550001` invalid number, `+15005550002` cannot route, `+15005550003` international restriction, etc.) and Test Credentials for safe assertion-only Twilio interactions; covers segment-counting (GSM-7 vs UCS-2 encoding); rate-limit + opt-out keyword (STOP / HELP / UNSUBSCRIBE) handling; alphanumeric sender vs short-code vs 10DLC differences. Use when authoring tests for any Twilio-backed SMS flow."
+description: "Build-an-X for SMS-flow tests - uses Twilio Magic Numbers (`+15005550006` valid recipient, `+15005550001` invalid number, `+15005550002` cannot route, `+15005550003` international restriction, etc.) and Test Credentials for safe assertion-only Twilio interactions; covers segment-counting (GSM-7 vs UCS-2 encoding); rate-limit + opt-out keyword (STOP / HELP / UNSUBSCRIBE) handling; alphanumeric sender vs short-code vs 10DLC differences. Use when authoring tests for any Twilio-backed SMS flow."
 rating: 23
 d6: 4
 archetype: S3
@@ -18,11 +18,11 @@ sandbox patterns.
 The core challenge: SMS sends cost money + actually deliver to real
 phones. Test patterns avoid both via:
 
-1. **Test Credentials** — separate `accountSid` + `authToken` for
+1. **Test Credentials** - separate `accountSid` + `authToken` for
    testing; calls succeed/fail per the test pattern but never
    actually deliver
-2. **Magic Numbers** — special phone numbers in the
-   `+15005550000`–`+15005550009` range with documented behavior
+2. **Magic Numbers** - special phone numbers in the
+   `+15005550000` - `+15005550009` range with documented behavior
 
 ## When to use
 
@@ -34,7 +34,7 @@ phones. Test patterns avoid both via:
   messages → multiple SMS).
 - Compliance review requires evidence of opt-out (STOP) handling.
 
-## Step 1 — Twilio Test Credentials setup
+## Step 1 - Twilio Test Credentials setup
 
 Per twilio.com/docs/iam/test-credentials, every Twilio account has
 two credential pairs:
@@ -55,7 +55,7 @@ client = Client(
 )
 ```
 
-## Step 2 — Magic Numbers reference
+## Step 2 - Magic Numbers reference
 
 Per twilio.com/docs/iam/test-credentials#magic-phone-numbers, the
 canonical test numbers (current, verify against live docs):
@@ -72,7 +72,7 @@ canonical test numbers (current, verify against live docs):
 For sender numbers, similar magic numbers exist (e.g.,
 `+15005550000` is "not owned by your account").
 
-## Step 3 — Test the happy path
+## Step 3 - Test the happy path
 
 ```python
 def test_send_2fa_code_to_valid_number():
@@ -87,9 +87,9 @@ def test_send_2fa_code_to_valid_number():
 ```
 
 Note: Test Credentials don't support `messaging_service_sid`
-sends — use direct `from_` numbers only in test mode.
+sends - use direct `from_` numbers only in test mode.
 
-## Step 4 — Test invalid recipients
+## Step 4 - Test invalid recipients
 
 ```python
 def test_invalid_number_raises():
@@ -103,7 +103,7 @@ def test_invalid_number_raises():
     assert exc.value.status == 400
 ```
 
-## Step 5 — Segment-counting tests
+## Step 5 - Segment-counting tests
 
 SMS messages over 160 characters split into multiple segments.
 Encoding affects the per-segment limit:
@@ -136,7 +136,7 @@ For `calculate_segments`, libraries exist per language (e.g.,
 Twilio's actual segment count via the API after a send (Twilio
 returns `num_segments` on the message resource).
 
-## Step 6 — Rate-limit testing
+## Step 6 - Rate-limit testing
 
 Twilio enforces per-account + per-sender rate limits. Tests
 shouldn't hit them in normal use, but for resilience:
@@ -153,7 +153,7 @@ def test_rate_limit_handling(client):
 Mock the Twilio response (HTTP 429) at the SDK boundary to test
 without hitting actual rate limits.
 
-## Step 7 — Opt-out keyword handling
+## Step 7 - Opt-out keyword handling
 
 US carriers (and CTIA guidelines) require handling of these inbound
 keywords:
@@ -187,13 +187,13 @@ def test_stop_keyword_unsubscribes_user(client):
     assert user.sms_subscribed is False
 ```
 
-## Step 8 — Test alphanumeric vs 10DLC vs short-code sender
+## Step 8 - Test alphanumeric vs 10DLC vs short-code sender
 
 Different sender types have different requirements:
 
 | Type | Use | Cost | Throughput |
 |---|---|---|---|
-| 10DLC (10-digit long code) | US transactional + marketing | low | 1–100 MPS depending on tier |
+| 10DLC (10-digit long code) | US transactional + marketing | low | 1 - 100 MPS depending on tier |
 | Short code (5-6 digit) | high-volume marketing | high | 100+ MPS |
 | Alphanumeric sender | International only (no US) | low | varies by country |
 | Toll-free | US transactional | low | 3 MPS |
@@ -210,7 +210,7 @@ def test_international_uses_alphanumeric():
     assert sent_message.from_ == "MyBrand"   # alphanumeric ID
 ```
 
-## Step 9 — End-to-end test recipe
+## Step 9 - End-to-end test recipe
 
 For each SMS flow:
 
@@ -225,7 +225,7 @@ For each SMS flow:
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Send to real numbers in CI | Cost + delivery to actual phones | Twilio Test Credentials + Magic Numbers (Steps 1–2) |
+| Send to real numbers in CI | Cost + delivery to actual phones | Twilio Test Credentials + Magic Numbers (Steps 1 - 2) |
 | Skip emoji / Unicode tests | Segment count quadruples; budget surprise + truncation | UCS-2 segment tests (Step 5) |
 | Skip STOP-keyword test | Compliance failure (CTIA, A2P 10DLC) + carrier delisting | Inbound webhook test (Step 7) |
 | Hardcode `from_` | Sender-type mismatch per geography | Per-recipient sender selection (Step 8) |
@@ -247,13 +247,11 @@ For each SMS flow:
 
 ## References
 
-- twilio.com/docs/iam/test-credentials — Test Credentials + Magic Numbers
-- twilio.com/docs/messaging — Messaging API reference
-- ctia.org/the-wireless-industry/industry-commitments/messaging-interoperability
-  — CTIA SMS-keyword guidelines
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) —
+- twilio.com/docs/iam/test-credentials - Test Credentials + Magic Numbers
+- twilio.com/docs/messaging - Messaging API reference
+- ctia.org/the-wireless-industry/industry-commitments/messaging-interoperability - CTIA SMS-keyword guidelines
+- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) - 
   sister channel: opt-out + bounce patterns rhyme
-- [`webhook-delivery-tester`](../webhook-delivery-tester/SKILL.md) —
+- [`webhook-delivery-tester`](../webhook-delivery-tester/SKILL.md) - 
   companion: STOP-keyword webhook is a webhook that needs verification
-- [`push-notification-test-author`](../push-notification-test-author/SKILL.md)
-  — sister channel
+- [`push-notification-test-author`](../push-notification-test-author/SKILL.md) - sister channel

@@ -1,6 +1,6 @@
 ---
 name: mailpit-testing
-description: "Configures and runs Mailpit — modern dev-mailbox server for SMTP testing with built-in REST API for assertions; default SMTP `1025` + Web UI `8025`; ships single static binary or multi-architecture Docker images; features Chaos mode (configurable SMTP errors for resilience testing), message tagging (manual + auto via filters and plus-addressing), search filters. Use when the user develops email-sending code locally / in CI and needs SMTP capture with programmatic test assertions, or when migrating from MailHog (which Mailpit succeeds)."
+description: "Configures and runs Mailpit - modern dev-mailbox server for SMTP testing with built-in REST API for assertions; default SMTP `1025` + Web UI `8025`; ships single static binary or multi-architecture Docker images; features Chaos mode (configurable SMTP errors for resilience testing), message tagging (manual + auto via filters and plus-addressing), search filters. Use when the user develops email-sending code locally / in CI and needs SMTP capture with programmatic test assertions, or when migrating from MailHog (which Mailpit succeeds)."
 rating: 23
 d6: 4
 archetype: S1
@@ -40,7 +40,7 @@ mid-2020s; new projects start with Mailpit by default.
 - Migrating from MailHog (Mailpit is API-compatible at the SMTP
   layer + has a richer REST API).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [github.com/axllent/mailpit][mp-gh]:
 
@@ -60,7 +60,7 @@ sudo INSTALL_PATH=/usr/bin sh < <(curl -sL https://raw.githubusercontent.com/axl
 Docker is the recommended path for CI; consult [mp-gh][mp-gh] for
 current Docker pull commands.
 
-## Step 2 — Start
+## Step 2 - Start
 
 Per [mp-gh][mp-gh]:
 
@@ -87,7 +87,7 @@ Discover all options:
 mailpit -h
 ```
 
-## Step 3 — Configure your app's SMTP
+## Step 3 - Configure your app's SMTP
 
 Point the application's SMTP config at Mailpit:
 
@@ -104,7 +104,7 @@ Equivalent envs work for Django (`EMAIL_HOST=localhost`,
 `EMAIL_PORT=1025`), Spring (`spring.mail.host=localhost`,
 `spring.mail.port=1025`), Node nodemailer, etc.
 
-## Step 4 — Assert via REST API
+## Step 4 - Assert via REST API
 
 Per [mp-docs][mp-docs] Mailpit ships a "REST API for integration
 testing." The canonical endpoints (consult [mp-docs][mp-docs] for
@@ -144,11 +144,11 @@ def poll_for_message(base, to, timeout):
     raise AssertionError(f"No email to {to} within {timeout}s")
 ```
 
-The exact endpoint paths may evolve — always check the live API
+The exact endpoint paths may evolve - always check the live API
 schema at `http://localhost:8025/api/v1/` (Mailpit ships an
 OpenAPI schema for self-introspection).
 
-## Step 5 — Chaos mode
+## Step 5 - Chaos mode
 
 Per [mp-docs][mp-docs]: "Chaos feature to enable configurable SMTP
 errors for testing application resilience."
@@ -162,7 +162,7 @@ Use cases for app-level resilience testing:
 Per [mp-docs][mp-docs], Chaos is configurable per-recipient or
 globally; consult the live docs for current Chaos API shape.
 
-## Step 6 — Tagging + plus-addressing
+## Step 6 - Tagging + plus-addressing
 
 Per [mp-docs][mp-docs]: "automated tagging using filtering and
 'plus addressing'."
@@ -183,7 +183,7 @@ msg = requests.get(
 ).json()["messages"][0]
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 services:
@@ -210,7 +210,7 @@ steps:
 
 ## Limitations
 
-- Mailpit does NOT actually deliver email — it only captures. For
+- Mailpit does NOT actually deliver email - it only captures. For
   end-to-end deliverability tests, use a real-mail-with-test-domain
   service (Mailtrap, Mailosaur).
 - Some advanced SMTP features (DKIM signing assertion, SPF lookup)
@@ -220,10 +220,10 @@ steps:
 
 ## References
 
-- [mp-docs][mp-docs] — official documentation
-- [mp-gh][mp-gh] — repository, install commands, ports
-- mailpit.axllent.org/docs/api-v1/ — REST API reference
-- [`mailhog-testing`](../mailhog-testing/SKILL.md) — predecessor; use
+- [mp-docs][mp-docs] - official documentation
+- [mp-gh][mp-gh] - repository, install commands, ports
+- mailpit.axllent.org/docs/api-v1/ - REST API reference
+- [`mailhog-testing`](../mailhog-testing/SKILL.md) - predecessor; use
   Mailpit for new work
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) —
+- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) - 
   build-an-X for the full email-sending workflow

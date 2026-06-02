@@ -1,6 +1,6 @@
 ---
 name: qase-io-case-management
-description: "Author and manage Qase.io test cases via the Public API v1 — create cases, organise into suites, attach structured steps, link to Jira/Linear/GitHub, manage shared steps, and bulk-import via JSON. Covers Token header auth, /case/{project_code} CRUD endpoints, the steps array with action / expected_result / data shape, and shared-step reuse. Use for pre-execution case authoring in teams using Qase as a modern lightweight TCM."
+description: "Author and manage Qase.io test cases via the Public API v1 - create cases, organise into suites, attach structured steps, link to Jira/Linear/GitHub, manage shared steps, and bulk-import via JSON. Covers Token header auth, /case/{project_code} CRUD endpoints, the steps array with action / expected_result / data shape, and shared-step reuse. Use for pre-execution case authoring in teams using Qase as a modern lightweight TCM."
 rating: 22
 d6: 4
 archetype: S1
@@ -288,10 +288,10 @@ management API).
 
 ## References
 
-- Qase Public API v1 docs — developers.qase.io (Cloudflare-
+- Qase Public API v1 docs - developers.qase.io (Cloudflare-
   protected; cite by stable URL).
-- Qase API reference (Swagger / OpenAPI) — developers.qase.io.
-- qase-python SDK — github.com/qase-tms/qase-python.
+- Qase API reference (Swagger / OpenAPI) - developers.qase.io.
+- qase-python SDK - github.com/qase-tms/qase-python.
 - Sibling references:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md),
   [`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md).

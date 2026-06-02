@@ -1,6 +1,6 @@
 ---
 name: mobile-driver-selector
-description: "Action-taking agent that reads a target mobile project (`ios/`, `android/`, `lib/`, `package.json`, `pubspec.yaml`, `*.xcodeproj`, `app/build.gradle`) and emits one concrete mobile test driver recommendation — XCUITest, Espresso, Detox, Flutter, Appium, or Maestro — plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-mobile-native/mobile-device-matrix-toolkit` (S4 — picks DEVICE matrix to run against, not the test framework). Use when starting a new mobile test project and the team has not yet committed to a driver."
+description: "Action-taking agent that reads a target mobile project (`ios/`, `android/`, `lib/`, `package.json`, `pubspec.yaml`, `*.xcodeproj`, `app/build.gradle`) and emits one concrete mobile test driver recommendation - XCUITest, Espresso, Detox, Flutter, Appium, or Maestro - plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-mobile-native/mobile-device-matrix-toolkit` (S4 - picks DEVICE matrix to run against, not the test framework). Use when starting a new mobile test project and the team has not yet committed to a driver."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(cat package.json), Bash(cat pubspec.yaml)"
 model: inherit
 skills:
@@ -18,7 +18,7 @@ d7: 4
 
 A driver-selection agent that turns "which mobile test driver should we use?" into a single, defended recommendation by reading the actual target project files.
 
-Distinct from [`mobile-device-matrix-toolkit`](../skills/mobile-device-matrix-toolkit/SKILL.md) (S4 — picks DEVICE matrix to run against). These two are orthogonal: this agent picks the test framework; the toolkit picks the hardware. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
+Distinct from [`mobile-device-matrix-toolkit`](../skills/mobile-device-matrix-toolkit/SKILL.md) (S4 - picks DEVICE matrix to run against). These two are orthogonal: this agent picks the test framework; the toolkit picks the hardware. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
 
 ## When invoked
 
@@ -31,21 +31,21 @@ Inputs (refuses if both are missing):
 
 If neither is supplied, the agent halts with a refuse-to-proceed message. The agent does **not** guess from a bare README or folder name alone.
 
-## Step 1 — Detect platform from project markers
+## Step 1 - Detect platform from project markers
 
 The agent reads the project root and matches against this table:
 
 | Signal in project root | Inferred platform |
 |---|---|
 | `package.json` with `"react-native"` in dependencies AND `detox` in devDependencies | `react-native` (Detox-first) |
-| `package.json` with `"react-native"` but no Detox | `react-native` (Appium or Detox — Step 2 picks) |
+| `package.json` with `"react-native"` but no Detox | `react-native` (Appium or Detox - Step 2 picks) |
 | `pubspec.yaml` with `flutter:` block + `lib/main.dart` | `flutter` |
 | `*.xcodeproj` / `Package.swift` targeting iOS, no `package.json` | `ios-native` |
 | `app/build.gradle` or `build.gradle.kts` with `com.android.application` | `android-native` |
 | Both `ios/` AND `android/` directories, no `package.json` and no `pubspec.yaml` | `cross-platform` (no obvious unifier) |
 | `.maestro/` directory with `*.yaml` flowfiles | maestro flows already adopted; recommend `maestro-flows` regardless of native stack |
 
-## Step 2 — Apply the decision tree
+## Step 2 - Apply the decision tree
 
 | Platform | Recommended driver | Why | Read next |
 |---|---|---|---|
@@ -57,9 +57,9 @@ The agent reads the project root and matches against this table:
 | `cross-platform` (separate iOS + Android sources, no RN/Flutter) | **Appium** (one suite, both OSes) OR **XCUITest + Espresso** (one suite per OS) | Appium when test-team capacity is small; native + native when each OS has a dedicated team | [`appium-testing`](../skills/appium-testing/SKILL.md) (or both per-native skills) |
 | Any platform + `.maestro/` already present | **Maestro** for black-box flows alongside the native driver | Maestro flowfiles are declarative and survive UI churn better than imperative drivers | [`maestro-flows`](../skills/maestro-flows/SKILL.md) |
 
-The agent emits **exactly one** primary recommendation. A secondary fallback may be listed only when two drivers are co-equal defensible (RN without Detox; cross-platform with no obvious unifier) — never as a tie-breaker the user must resolve.
+The agent emits **exactly one** primary recommendation. A secondary fallback may be listed only when two drivers are co-equal defensible (RN without Detox; cross-platform with no obvious unifier) - never as a tie-breaker the user must resolve.
 
-## Step 3 — Emit the recommendation
+## Step 3 - Emit the recommendation
 
 Output template (Markdown, copyable to a decision record):
 

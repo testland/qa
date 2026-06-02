@@ -1,6 +1,6 @@
 ---
 name: mobile-device-matrix-toolkit
-description: "Dispatcher skill for orchestrating mobile UI test runs across simulators, emulators, and device farms — picks the right matrix per CI cost / coverage trade-off (3-tier model: smoke set, regression set, full release matrix), wires per-target capabilities (Appium / Detox / XCUITest), aggregates per-target JUnit XML, and emits a coverage matrix verdict. Use when a mobile suite needs to run across many target devices/OSes — directly executing 50 device configs is a CI-cost disaster; this dispatcher right-sizes per cadence."
+description: "Dispatcher skill for orchestrating mobile UI test runs across simulators, emulators, and device farms - picks the right matrix per CI cost / coverage trade-off (3-tier model: smoke set, regression set, full release matrix), wires per-target capabilities (Appium / Detox / XCUITest), aggregates per-target JUnit XML, and emits a coverage matrix verdict. Use when a mobile suite needs to run across many target devices/OSes - directly executing 50 device configs is a CI-cost disaster; this dispatcher right-sizes per cadence."
 rating: 22
 d6: 3
 archetype: S4
@@ -36,7 +36,7 @@ matrix execution.
   Device Farm, Sauce Labs) is paid for and the team needs a
   workflow to use it efficiently.
 
-## Step 1 — Define the three-tier matrix
+## Step 1 - Define the three-tier matrix
 
 ```yaml
 # .matrix/devices.yaml
@@ -86,7 +86,7 @@ Per-tier guidance:
 | Regression  | Merge to main                  | 3 / 3               | ~20 min   | local sim  |
 | Release     | Pre-release tag                | 7 / 7               | ~60 min   | farm       |
 
-## Step 2 — Generate per-target capabilities
+## Step 2 - Generate per-target capabilities
 
 ```python
 # scripts/gen-matrix.py
@@ -147,7 +147,7 @@ jobs:
       - run: ./scripts/run-tests.sh ${{ matrix.target.name }} '${{ toJSON(matrix.target.capabilities) }}'
 ```
 
-## Step 3 — Per-tier dispatch
+## Step 3 - Per-tier dispatch
 
 ```yaml
 # .github/workflows/mobile-tests.yml
@@ -179,7 +179,7 @@ jobs:
       tier: release
 ```
 
-## Step 4 — Aggregate per-target results
+## Step 4 - Aggregate per-target results
 
 Each matrix shard uploads its JUnit XML; an aggregator job combines:
 
@@ -219,7 +219,7 @@ Output:
 | android-Galaxy-Tab-S8-api34      |   42  |   40 |    2 | 290.0s |   ← tablet layout issues
 ```
 
-## Step 5 — Device-farm vs local emulator decision
+## Step 5 - Device-farm vs local emulator decision
 
 | Use device farm when                                | Use local emulator/simulator when                  |
 |-----------------------------------------------------|----------------------------------------------------|
@@ -276,10 +276,9 @@ Per-farm wiring:
   [`espresso-suite`](../espresso-suite/SKILL.md),
   [`appium-testing`](../appium-testing/SKILL.md),
   [`detox-testing`](../detox-testing/SKILL.md),
-  [`maestro-flows`](../maestro-flows/SKILL.md) — per-platform
+  [`maestro-flows`](../maestro-flows/SKILL.md) - per-platform
   runners this dispatcher orchestrates.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — parser for the per-target JUnit XML aggregation.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - parser for the per-target JUnit XML aggregation.
 - Per Mike Cohn's test pyramid (cited in
   [`test-pyramid-balancer`](../../qa-process/skills/test-pyramid-balancer/SKILL.md)),
   mobile UI tests are the most expensive layer; matrix dispatch

@@ -1,6 +1,6 @@
 ---
 name: jqwik-testing
-description: "Authors property-based tests for the JVM (Java + Kotlin) using jqwik — wires `@Property` test methods, `@ForAll` parameter annotations, `Arbitraries.integers/strings/etc` generators, custom `@Provide` arbitraries, and the JUnit 5 platform integration. Use when a JVM project needs PBT — alternative to JUnit-QuickCheck and Vavr's property-checking; tightly integrates with JUnit 5 so property tests run alongside conventional unit tests in the same Maven / Gradle pipeline."
+description: "Authors property-based tests for the JVM (Java + Kotlin) using jqwik - wires `@Property` test methods, `@ForAll` parameter annotations, `Arbitraries.integers/strings/etc` generators, custom `@Provide` arbitraries, and the JUnit 5 platform integration. Use when a JVM project needs PBT - alternative to JUnit-QuickCheck and Vavr's property-checking; tightly integrates with JUnit 5 so property tests run alongside conventional unit tests in the same Maven / Gradle pipeline."
 rating: 23
 d6: 4
 archetype: S1
@@ -31,7 +31,7 @@ alongside conventional unit tests" ([jqwik-home][jh]).
   JUnit 5 integration is more idiomatic.
 - Properties hold for parsers / encoders / round-trip transforms.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Maven:
 
@@ -58,7 +58,7 @@ test {
 }
 ```
 
-## Step 2 — Basic property
+## Step 2 - Basic property
 
 Per [jqwik-home][jh]:
 
@@ -84,7 +84,7 @@ assertions).
 By default jqwik runs each property with **1000 generated cases**
 (more than Hypothesis's 100 or proptest's 256).
 
-## Step 3 — Constrained generators
+## Step 3 - Constrained generators
 
 ```java
 @Property
@@ -112,7 +112,7 @@ Constraint annotations (in `net.jqwik.api.constraints.*`):
 | `@UniqueElements`         | Unique-element collections                            |
 | `@Positive` / `@Negative` | Positive / negative number                          |
 
-## Step 4 — Custom arbitraries via `@Provide`
+## Step 4 - Custom arbitraries via `@Provide`
 
 ```java
 class UserProperties {
@@ -143,7 +143,7 @@ the method name when omitted) is referenced from `@ForAll("...")`.
 multi-field arbitrary; `.as(...)` constructs the target object
 from the parts.
 
-## Step 5 — Arbitraries catalog
+## Step 5 - Arbitraries catalog
 
 Per [jqwik-home][jh], the `Arbitraries` API provides "Built-in
 generators like `Arbitraries.integers()` for creating constrained
@@ -177,7 +177,7 @@ Arbitraries.maps(
 );
 ```
 
-## Step 6 — Statistics + classification
+## Step 6 - Statistics + classification
 
 ```java
 @Property
@@ -188,10 +188,10 @@ boolean evenAndOddDistribution(@ForAll int n) {
 }
 ```
 
-Statistics output reports the distribution of generated cases —
+Statistics output reports the distribution of generated cases - 
 useful for verifying the strategy generates the intended mix.
 
-## Step 7 — Configuration
+## Step 7 - Configuration
 
 ```java
 @Property(tries = 5000, shrinking = ShrinkingMode.FULL, edgeCases = EdgeCasesMode.MIXIN)
@@ -222,7 +222,7 @@ defaultSeed = 42
 defaultTries = 1000
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```bash
 mvn test                  # runs JUnit 5 tests including @Property
@@ -257,10 +257,10 @@ No additional config beyond JUnit 5 platform.
 
 ## References
 
-- [jh][jh] — jqwik overview: `@Property`, `@ForAll`, `@Provide`,
+- [jh][jh] - jqwik overview: `@Property`, `@ForAll`, `@Provide`,
   Arbitraries API, JUnit 5 integration, version 1.9.3.
 - [`hypothesis-testing`](../hypothesis-testing/SKILL.md),
   [`fast-check-testing`](../fast-check-testing/SKILL.md),
   [`proptest-testing`](../proptest-testing/SKILL.md),
-  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) —
+  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) - 
   per-language siblings.

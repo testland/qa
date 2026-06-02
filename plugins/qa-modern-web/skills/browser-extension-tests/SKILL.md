@@ -18,7 +18,7 @@ keywords:
 Per the [Playwright Chrome extensions docs]: load extensions via
 `launchPersistentContext` with `--disable-extensions-except` +
 `--load-extension` args. *"Google Chrome and Microsoft Edge removed
-the command-line flags needed to side-load extensions"* — use the
+the command-line flags needed to side-load extensions"* - use the
 bundled Chromium browser, not Chrome channel.
 
 ## When to use
@@ -29,7 +29,7 @@ bundled Chromium browser, not Chrome channel.
   routing).
 - Verifying `chrome.storage` reads/writes survive reload.
 
-## Step 1 — Test fixture for extension loading
+## Step 1 - Test fixture for extension loading
 
 `tests/fixtures.ts`:
 
@@ -68,10 +68,10 @@ export const expect = test.expect;
 ```
 
 Per [Playwright Chrome extensions docs]. The `extensionId` fixture
-extracts the ID from the service worker URL — needed to navigate to
+extracts the ID from the service worker URL - needed to navigate to
 `chrome-extension://${extensionId}/popup.html`.
 
-## Step 2 — Test the popup page
+## Step 2 - Test the popup page
 
 ```ts
 import { test, expect } from './fixtures';
@@ -83,7 +83,7 @@ test('popup renders and increments counter', async ({ page, extensionId }) => {
 });
 ```
 
-## Step 3 — Test content script injection
+## Step 3 - Test content script injection
 
 ```ts
 test('content script highlights matched terms', async ({ page }) => {
@@ -96,7 +96,7 @@ test('content script highlights matched terms', async ({ page }) => {
 });
 ```
 
-## Step 4 — Test message passing (popup ↔ background)
+## Step 4 - Test message passing (popup ↔ background)
 
 ```ts
 test('popup sends message; background responds', async ({ context, extensionId }) => {
@@ -125,7 +125,7 @@ test('popup sends message; background responds', async ({ context, extensionId }
 });
 ```
 
-## Step 5 — Test `chrome.storage` persistence
+## Step 5 - Test `chrome.storage` persistence
 
 ```ts
 test('storage value persists across popup reload', async ({ context, extensionId }) => {
@@ -145,11 +145,11 @@ test('storage value persists across popup reload', async ({ context, extensionId
 });
 ```
 
-## Step 6 — Survive MV3 service-worker auto-suspend
+## Step 6 - Survive MV3 service-worker auto-suspend
 
 Per [Playwright Chrome extensions docs]: Chrome auto-suspends MV3
 service workers after ~30s of inactivity. Playwright keeps the same
-Worker object alive — `evaluate()` calls continue transparently
+Worker object alive - `evaluate()` calls continue transparently
 without requiring new event handlers.
 
 ```ts
@@ -168,7 +168,7 @@ test('alarm survives service worker restart', async ({ context }) => {
 });
 ```
 
-## Step 7 — Headless mode
+## Step 7 - Headless mode
 
 For CI (no display server), use the `chromium` channel + headless
 new mode. Per [Playwright Chrome extensions docs], headless support
@@ -198,12 +198,12 @@ const context = await chromium.launchPersistentContext('', {
   use a different test approach (see Mozilla's `web-ext` tooling).
 - Some extension APIs (`chrome.declarativeNetRequest`) cannot be
   fully unit-tested without a browser; integration tests are required.
-- Auto-suspend timing varies by Chromium version — verify against
+- Auto-suspend timing varies by Chromium version - verify against
   the [Playwright Chrome extensions docs].
 
 ## References
 
-- [Playwright Chrome extensions docs] — fixture pattern, service
+- [Playwright Chrome extensions docs] - fixture pattern, service
   worker access, MV3 auto-suspend behavior
 
 [Playwright Chrome extensions docs]: https://playwright.dev/docs/chrome-extensions

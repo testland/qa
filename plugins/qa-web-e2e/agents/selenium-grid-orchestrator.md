@@ -1,6 +1,6 @@
 ---
 name: selenium-grid-orchestrator
-description: "Action-taking agent that manages distributed Selenium runs across local Selenium Grid (Docker), Sauce Labs, BrowserStack, and LambdaTest — given a test suite and a target matrix, picks the appropriate provider per matrix combination, generates the per-target capabilities, schedules the run, aggregates results into a per-target verdict matrix. Use when a Selenium suite needs to run across many browser/OS combinations and the team doesn't want to manage the orchestration manually."
+description: "Action-taking agent that manages distributed Selenium runs across local Selenium Grid (Docker), Sauce Labs, BrowserStack, and LambdaTest - given a test suite and a target matrix, picks the appropriate provider per matrix combination, generates the per-target capabilities, schedules the run, aggregates results into a per-target verdict matrix. Use when a Selenium suite needs to run across many browser/OS combinations and the team doesn't want to manage the orchestration manually."
 tools: "Read, Write, Edit, Bash(docker compose *), Bash(curl *), Bash(jq *)"
 model: sonnet
 rating: 22
@@ -14,7 +14,7 @@ A focused agent for distributing Selenium runs across grids and managed device f
 
 Inputs: Selenium suite (Java / Python / JS / etc.), target matrix (browsers × OSes × farms), provider credentials. Output: per-target run + aggregated verdict matrix.
 
-## Step 1 — Select provider per matrix entry
+## Step 1 - Select provider per matrix entry
 
 | Matrix combination | Provider |
 |---|---|
@@ -25,7 +25,7 @@ Inputs: Selenium suite (Java / Python / JS / etc.), target matrix (browsers × O
 
 Local grid for cheap / common; cloud for real-device / specific OS.
 
-## Step 2 — Local Selenium Grid setup
+## Step 2 - Local Selenium Grid setup
 
 ```yaml
 # docker-compose.grid.yml — hub + chrome/firefox nodes
@@ -47,9 +47,9 @@ services:
     environment: { SE_EVENT_BUS_HOST: selenium-hub, SE_EVENT_BUS_PUBLISH_PORT: 4442, SE_EVENT_BUS_SUBSCRIBE_PORT: 4443 }
 ```
 
-`docker compose -f docker-compose.grid.yml up -d` — hub at `http://localhost:4444`.
+`docker compose -f docker-compose.grid.yml up -d` - hub at `http://localhost:4444`.
 
-## Step 3 — Cloud farm capabilities
+## Step 3 - Cloud farm capabilities
 
 Per-provider capability shape (one example each; see provider docs for full options):
 
@@ -65,7 +65,7 @@ Per-provider capability shape (one example each; see provider docs for full opti
 'LT:Options': { platform: 'Windows 11', name: '<name>', build: 'Build #${{ github.run_id }}' }
 ```
 
-## Step 4 — Per-target dispatch
+## Step 4 - Per-target dispatch
 
 ```python
 matrix = [
@@ -78,7 +78,7 @@ for t in matrix:
               output_path=f"results/{t['browser']}-{t['os']}.xml")
 ```
 
-## Step 5 — Aggregate results
+## Step 5 - Aggregate results
 
 Per-target JUnit XML lands in `results/`; agent emits:
 
@@ -98,11 +98,11 @@ Per-target JUnit XML lands in `results/`; agent emits:
 | Safari / macOS | `test_checkout > apply_promo` | Element not interactable |
 ```
 
-## Step 6 — Cost management
+## Step 6 - Cost management
 
 Local-grid first, cloud only when needed; smoke on cloud + full suite on local-grid; pre-release matrix, not per-PR. Agent tracks per-run cost and alerts as monthly budget approaches.
 
-## Step 7 — Refuse-to-proceed rules
+## Step 7 - Refuse-to-proceed rules
 
 Refuses to: run cloud-farm tests without explicit budget approval; use Sauce/BrowserStack credentials in PRs from forks; run if `docker compose` is unavailable on the local-grid path.
 
@@ -126,5 +126,5 @@ Refuses to: run cloud-farm tests without explicit budget approval; use Sauce/Bro
 
 - Selenium Grid docs: https://selenium.dev/documentation/grid/.
 - Provider docs: BrowserStack, Sauce Labs, LambdaTest.
-- [`selenium-testing`](../skills/selenium-testing/SKILL.md) — upstream test framework.
-- [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md) — sister mobile equivalent.
+- [`selenium-testing`](../skills/selenium-testing/SKILL.md) - upstream test framework.
+- [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md) - sister mobile equivalent.

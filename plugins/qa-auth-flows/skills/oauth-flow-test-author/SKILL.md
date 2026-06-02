@@ -1,6 +1,6 @@
 ---
 name: oauth-flow-test-author
-description: "Build-an-X for OAuth 2.0 / OIDC flow tests — authorization-code with PKCE per RFC 7636 (canonical for browser/native/mobile clients), client-credentials per RFC 6749 §1.3.4 (M2M), refresh-token rotation per RFC 9700 (token-binding + reuse-detection), state parameter for CSRF defense per RFC 6749 §10.12, nonce parameter for OIDC ID-token replay defense, scope-grant verification, redirect-URI strict matching. Use when authoring tests for any OAuth/OIDC client or resource server, regardless of the underlying IdP (Keycloak / Auth0 / Okta / mock)."
+description: "Build-an-X for OAuth 2.0 / OIDC flow tests - authorization-code with PKCE per RFC 7636 (canonical for browser/native/mobile clients), client-credentials per RFC 6749 §1.3.4 (M2M), refresh-token rotation per RFC 9700 (token-binding + reuse-detection), state parameter for CSRF defense per RFC 6749 §10.12, nonce parameter for OIDC ID-token replay defense, scope-grant verification, redirect-URI strict matching. Use when authoring tests for any OAuth/OIDC client or resource server, regardless of the underlying IdP (Keycloak / Auth0 / Okta / mock)."
 rating: 24
 d6: 5
 archetype: S3
@@ -47,7 +47,7 @@ This skill is the per-flow test recipe.
 - The team needs flow-coverage independent of the IdP choice
   (Keycloak / Auth0 / Okta / mock).
 
-## Step 1 — Authorization-code flow with PKCE (canonical)
+## Step 1 - Authorization-code flow with PKCE (canonical)
 
 Per RFC 6749 §4.1 (per [rfc6749][rfc6749]) the flow:
 
@@ -127,7 +127,7 @@ def test_authz_code_pkce_flow(idp_url, client_id, redirect_uri, browser):
     assert body["token_type"] == "Bearer"
 ```
 
-## Step 2 — State parameter CSRF defense
+## Step 2 - State parameter CSRF defense
 
 Per RFC 6749 §4.1.1 ([rfc6749][rfc6749]):
 
@@ -149,7 +149,7 @@ def test_state_mismatch_rejected(client):
 If the client accepts the redirect without state validation, mark
 **critical** finding (CSRF vulnerable).
 
-## Step 3 — Client-credentials grant (M2M)
+## Step 3 - Client-credentials grant (M2M)
 
 Per RFC 6749 §4.4. Test pattern:
 
@@ -172,10 +172,10 @@ def test_client_credentials_grant(idp_url, client_id, client_secret, audience):
     assert "refresh_token" not in body
 ```
 
-## Step 4 — Refresh-token rotation
+## Step 4 - Refresh-token rotation
 
 Per RFC 9700: refresh tokens for public clients (browser/native)
-should rotate on use — each refresh issues a new refresh token,
+should rotate on use - each refresh issues a new refresh token,
 invalidating the old.
 
 **Test pattern:**
@@ -218,10 +218,10 @@ def test_refresh_token_rotates(idp_url, client_id, refresh_token):
     assert r3.status_code == 400
 ```
 
-If reuse-detection isn't enabled, mark **critical** — old tokens
+If reuse-detection isn't enabled, mark **critical** - old tokens
 remaining valid after rotation defeats the purpose.
 
-## Step 5 — OIDC nonce + ID-token validation
+## Step 5 - OIDC nonce + ID-token validation
 
 For OIDC (Authorization Code + ID Token), validate the nonce in the
 ID token matches what was sent in the authorize request. Defends
@@ -236,7 +236,7 @@ def test_id_token_nonce_matches(client, idp_url):
     assert decoded["nonce"] == nonce
 ```
 
-## Step 6 — Scope-grant verification
+## Step 6 - Scope-grant verification
 
 If client requests `openid profile email` but user only consents to
 `openid profile`, the issued token must reflect the actual grant:
@@ -254,7 +254,7 @@ def test_scope_downgrade(client):
     assert api_response.status_code == 403
 ```
 
-## Step 7 — Redirect-URI strict matching
+## Step 7 - Redirect-URI strict matching
 
 Per RFC 9700: redirect URIs MUST match exactly, not by substring or
 regex. Tests:
@@ -274,7 +274,7 @@ def test_redirect_uri_mismatch_rejected(idp_url, client_id):
     assert response.status_code in [400, 403]
 ```
 
-## Step 8 — End-to-end test recipe
+## Step 8 - End-to-end test recipe
 
 For each OAuth/OIDC client in scope:
 
@@ -295,7 +295,7 @@ For each OAuth/OIDC client in scope:
 | Use PKCE `plain` method | Defeats PKCE; RFC 7636 §4.2 specifies S256 as recommended | Always S256 (Step 1) |
 | Skip state validation in the callback handler | CSRF vulnerable | Step 2 negative test |
 | Hardcode redirect_uri prefix matching | Substring match accepts evil URIs | Strict equality (Step 7) |
-| Test only the happy path | Negative cases (mismatched state, invalid PKCE, expired token) untested | Steps 2–7 negative tests |
+| Test only the happy path | Negative cases (mismatched state, invalid PKCE, expired token) untested | Steps 2 - 7 negative tests |
 | Use Implicit or RO-Password grants in new code | Deprecated per RFC 9700 | Auth Code + PKCE |
 
 ## Limitations
@@ -304,7 +304,7 @@ For each OAuth/OIDC client in scope:
   client + browser automation library; this skill is the per-flow
   checklist.
 - IdP-specific quirks (audience, custom auth servers, sign-in
-  policies) layer on top — see [`keycloak-tests`](../keycloak-tests/SKILL.md),
+  policies) layer on top - see [`keycloak-tests`](../keycloak-tests/SKILL.md),
   [`auth0-tests`](../auth0-tests/SKILL.md),
   [`okta-tests`](../okta-tests/SKILL.md) for IdP-specific patterns.
 - RFC 9700 supersedes earlier security BCPs; pin to the latest
@@ -314,13 +314,12 @@ For each OAuth/OIDC client in scope:
 
 ## References
 
-- [rfc6749][rfc6749] — RFC 6749 OAuth 2.0 Authorization Framework
-- [rfc7636][rfc7636] — RFC 7636 PKCE
-- IETF RFC 9700 — OAuth 2.0 Security Best Current Practice (March 2025)
-- IETF RFC 7009 — OAuth 2.0 Token Revocation
-- openid.net/specs/openid-connect-core-1_0.html — OIDC Core spec
+- [rfc6749][rfc6749] - RFC 6749 OAuth 2.0 Authorization Framework
+- [rfc7636][rfc7636] - RFC 7636 PKCE
+- IETF RFC 9700 - OAuth 2.0 Security Best Current Practice (March 2025)
+- IETF RFC 7009 - OAuth 2.0 Token Revocation
+- openid.net/specs/openid-connect-core-1_0.html - OIDC Core spec
 - [`keycloak-tests`](../keycloak-tests/SKILL.md),
   [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) — IdP-specific patterns
-- [`session-management-test-author`](../session-management-test-author/SKILL.md)
-  — companion: post-auth session lifecycle
+  [`okta-tests`](../okta-tests/SKILL.md) - IdP-specific patterns
+- [`session-management-test-author`](../session-management-test-author/SKILL.md) - companion: post-auth session lifecycle

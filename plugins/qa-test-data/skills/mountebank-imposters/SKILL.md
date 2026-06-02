@@ -1,6 +1,6 @@
 ---
 name: mountebank-imposters
-description: "Authors Mountebank imposters (multi-protocol mock servers — HTTP, HTTPS, TCP, SMTP, LDAP, gRPC, WebSockets, GraphQL, and more) by POSTing JSON definitions to the Mountebank control API on port 2525, configures stubs with predicates and responses, and uses record-playback proxy mode to capture upstream traffic. Use when the project needs a multi-protocol mock server beyond HTTP-only tools like WireMock or MSW."
+description: "Authors Mountebank imposters (multi-protocol mock servers - HTTP, HTTPS, TCP, SMTP, LDAP, gRPC, WebSockets, GraphQL, and more) by POSTing JSON definitions to the Mountebank control API on port 2525, configures stubs with predicates and responses, and uses record-playback proxy mode to capture upstream traffic. Use when the project needs a multi-protocol mock server beyond HTTP-only tools like WireMock or MSW."
 rating: 23
 d6: 3
 archetype: S1
@@ -10,7 +10,7 @@ archetype: S1
 
 ## Overview
 
-Mountebank is a multi-protocol service-virtualization tool —
+Mountebank is a multi-protocol service-virtualization tool - 
 "the only open source service virtualization tool that competes
 with the commercial offerings in terms of protocol diversity,
 capability, and performance" ([mountebank-readme][readme]).
@@ -43,7 +43,7 @@ Per [mountebank-readme][readme], supported protocols include:
 
 - The project mocks **non-HTTP** protocols (TCP, SMTP, LDAP, gRPC).
   WireMock and MSW are HTTP-only; Mountebank covers the long tail.
-- The team wants **record-playback proxying** — Mountebank can
+- The team wants **record-playback proxying** - Mountebank can
   proxy to a real upstream during recording, then replay the
   captured responses in subsequent test runs.
 - The team needs **JavaScript injection** for dynamic response
@@ -79,7 +79,7 @@ Mountebank's data model uses these layers:
 | Layer       | Purpose                                                                            |
 |-------------|------------------------------------------------------------------------------------|
 | **Imposter** | One mock server bound to a port and protocol.                                     |
-| **Stub**     | A request matcher attached to an imposter — the response triggered when matched.  |
+| **Stub**     | A request matcher attached to an imposter - the response triggered when matched.  |
 | **Predicate**| A condition on the incoming request (path, method, header, body, JSON path).      |
 | **Response** | The reply Mountebank sends when a stub's predicates match.                        |
 
@@ -178,7 +178,7 @@ Set up an imposter as a **proxy** to a real upstream:
 | `proxyAlways`    | Every request hits upstream; every response is stored.                |
 | `proxyTransparent` | Pass-through; nothing recorded.                                     |
 
-`proxyOnce` is the canonical record-playback workflow — run tests
+`proxyOnce` is the canonical record-playback workflow - run tests
 once against a real upstream to populate the imposter, then run
 forever offline.
 
@@ -226,7 +226,7 @@ await mbServer.close();
 ```
 
 For a more robust pattern, run Mountebank in Docker as a sidecar
-service rather than a background process — kills + cleanup are
+service rather than a background process - kills + cleanup are
 cleaner.
 
 ## Anti-patterns
@@ -252,11 +252,11 @@ cleaner.
 
 ## References
 
-- [mountebank-readme][readme] — main repo: install, supported
+- [mountebank-readme][readme] - main repo: install, supported
   protocols, key features.
-- mbtest.dev — alternate documentation domain (verify before
+- mbtest.dev - alternate documentation domain (verify before
   linking; project's stewardship situation evolved during 2025-2026).
-- [`wiremock-stubs`](../wiremock-stubs/SKILL.md) — HTTP-only
+- [`wiremock-stubs`](../wiremock-stubs/SKILL.md) - HTTP-only
   alternative on the JVM.
-- [`msw-handlers`](../msw-handlers/SKILL.md) — HTTP-only
+- [`msw-handlers`](../msw-handlers/SKILL.md) - HTTP-only
   alternative for browser + Node.

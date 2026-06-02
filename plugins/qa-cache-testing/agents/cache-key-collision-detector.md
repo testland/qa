@@ -1,6 +1,6 @@
 ---
 name: cache-key-collision-detector
-description: "Read-only specialist that scans application code for cache-key collision risks — keys that should be unique per (tenant, user, locale, region) but aren't. Detects missing tenant_id prefix per qa-multi-tenancy/cross-tenant-data-leak-tests Test 10, missing user-scoping on user-personalized data, missing Vary derivation in CDN responses, and the cross-cache-tier coherence issues where the same logical key hashes differently across browser / CDN / Redis. Use proactively when reviewing a PR that touches cache.set / cache.get / memoization decorators, or when investigating 'one user sees another user's data' reports. Preloads cache-coherence-patterns-reference."
+description: "Read-only specialist that scans application code for cache-key collision risks - keys that should be unique per (tenant, user, locale, region) but aren't. Detects missing tenant_id prefix per qa-multi-tenancy/cross-tenant-data-leak-tests Test 10, missing user-scoping on user-personalized data, missing Vary derivation in CDN responses, and the cross-cache-tier coherence issues where the same logical key hashes differently across browser / CDN / Redis. Use proactively when reviewing a PR that touches cache.set / cache.get / memoization decorators, or when investigating 'one user sees another user's data' reports. Preloads cache-coherence-patterns-reference."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:
@@ -44,7 +44,7 @@ Per
 "Missing `Vary: Authorization` is the canonical cross-tenant
 cache leak."
 
-## Step 1 — Enumerate cache touchpoints
+## Step 1 - Enumerate cache touchpoints
 
 Use Grep:
 
@@ -61,21 +61,21 @@ For each match, identify:
    locale / region)?
 3. What is the **expected discriminator set**?
 
-## Step 2 — Classify the risk
+## Step 2 - Classify the risk
 
 For each (key-building, value-dependence) pair:
 
 | Pattern | Risk |
 |---|---|
-| Key built from path/args only; value contains user-specific fields | **Critical** — user sees other user's data |
-| Key built from path; value scoped to a tenant | **Critical** — cross-tenant leak |
-| Key includes user_id but not tenant_id | **High** — user reuses across tenants (rare but possible) |
-| Key includes user_id; value is locale-dependent; locale not in key | **Medium** — wrong-language content |
-| Key includes everything; Vary header missing on the response | **High** if CDN-cached — shared-cache leak |
-| Memoized function arg includes mutable object | **Medium** — stale-after-mutation |
-| `lru_cache` on an instance method (Python) | **High** — instance not in cache key → cross-instance share |
+| Key built from path/args only; value contains user-specific fields | **Critical** - user sees other user's data |
+| Key built from path; value scoped to a tenant | **Critical** - cross-tenant leak |
+| Key includes user_id but not tenant_id | **High** - user reuses across tenants (rare but possible) |
+| Key includes user_id; value is locale-dependent; locale not in key | **Medium** - wrong-language content |
+| Key includes everything; Vary header missing on the response | **High** if CDN-cached - shared-cache leak |
+| Memoized function arg includes mutable object | **Medium** - stale-after-mutation |
+| `lru_cache` on an instance method (Python) | **High** - instance not in cache key → cross-instance share |
 
-## Step 3 — Propose the fix
+## Step 3 - Propose the fix
 
 ```
 key = f"{cache_namespace}:tenant:{tenant_id}:user:{user_id}:{locale}:{resource}:{resource_id}"
@@ -178,7 +178,7 @@ response['Vary'] = 'Authorization'
 
 ### Example 1: Memoised resolver in GraphQL
 
-Input — Apollo resolver:
+Input - Apollo resolver:
 
 ```typescript
 const userLoader = new DataLoader(async (ids) => {

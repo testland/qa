@@ -1,6 +1,6 @@
 ---
 name: flake-pattern-reference
-description: "Reference catalog of flake patterns — async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness — with detection heuristics and remediation per pattern. Use when triaging an unknown flake to identify the category before bisecting."
+description: "Reference catalog of flake patterns - async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness - with detection heuristics and remediation per pattern. Use when triaging an unknown flake to identify the category before bisecting."
 rating: 24
 d6: 3
 archetype: S2
@@ -17,7 +17,7 @@ archetype: S2
 [gtb-flaky]: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 [gtb-causes]: https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html
 
-A flake is rarely random — it almost always falls into one of eight
+A flake is rarely random - it almost always falls into one of eight
 recurring patterns. Identifying the pattern early shrinks the bisect
 search space dramatically. This catalog is a reference, not a
 workflow; the matching workflow is in
@@ -27,7 +27,7 @@ agent that drives a structured bisect is
 
 The Google Testing Blog observed a near-linear correlation between
 test size and flakiness rate across ~4.2M tests
-([google-causes][gtb-causes]) — larger tests touch more of the eight
+([google-causes][gtb-causes]) - larger tests touch more of the eight
 patterns at once.
 
 ## Pattern 1: async / timing
@@ -36,13 +36,13 @@ The most common flake category in UI and integration tests.
 
 | Signal                                                         | What's happening                                              |
 |----------------------------------------------------------------|---------------------------------------------------------------|
-| Fails ~5–20% of runs; passes when the machine is faster        | Test waits for an arbitrary `setTimeout(N)` instead of a deterministic event. |
+| Fails ~5 - 20% of runs; passes when the machine is faster        | Test waits for an arbitrary `setTimeout(N)` instead of a deterministic event. |
 | Fails on CI but never locally                                  | CI runners have different cold-start timings than dev laptops. |
 | Fails after a dependency upgrade with no test code change       | Library's internal timing changed (e.g. Playwright auto-wait window). |
 
 **Remediation:**
 
-- Replace fixed sleeps with **deterministic waits** — `await
+- Replace fixed sleeps with **deterministic waits** - `await
   expect(loc).toBeVisible()`, `page.waitForLoadState('networkidle')`,
   `page.waitForFunction(...)`, etc.
 - For animations, **disable** them in test setup
@@ -123,7 +123,7 @@ Tests pass when the upstream is healthy, fail otherwise.
 
 **Remediation:**
 
-- **Mock at the boundary** — never let test code reach a real network
+- **Mock at the boundary** - never let test code reach a real network
   endpoint. Use Mock Service Worker (MSW), nock, WireMock, or
   Playwright's `page.route()`.
 - For tests that *must* hit a real service (smoke / contract tests),
@@ -176,14 +176,14 @@ Tests use random data without a controlled seed.
 | Signal                                                         | What's happening                                            |
 |----------------------------------------------------------------|-------------------------------------------------------------|
 | Failures don't reproduce on retry                               | Test data was randomized; the failing combination is gone.  |
-| Test asserts a property that holds "almost always"              | Property-based test exposing a real edge case (this is good — fix the production bug). |
+| Test asserts a property that holds "almost always"              | Property-based test exposing a real edge case (this is good - fix the production bug). |
 | Faker-generated data triggers a layout overflow                 | Random string longer than the assertion expected.           |
 
 **Remediation:**
 
 - Seed every random source: `Math.random` via `seedrandom`, faker via
   `faker.seed(N)`, property-based testing via `fc.assert(prop, { seed })`.
-- For property-based failures, **don't** mark them as flake — copy the
+- For property-based failures, **don't** mark them as flake - copy the
   failing seed into a regression test ([`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md)).
 - Persist the seed used in each CI run as a build artifact so a flake
   can be replayed.
@@ -212,12 +212,12 @@ which varies one axis at a time per the patterns above.
 
 ## References
 
-- [google-flaky][gtb-flaky] — Google Testing Blog overview.
-- [google-causes][gtb-causes] — Google's correlation analysis on
+- [google-flaky][gtb-flaky] - Google Testing Blog overview.
+- [google-causes][gtb-causes] - Google's correlation analysis on
   ~4.2M tests; "test size correlates with flakiness rate."
-- [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) —
+- [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) - 
   workflow that uses this catalog during triage.
 - [`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md),
   [`parallel-isolation-checker`](../../agents/parallel-isolation-checker.md),
-  [`regression-bisector`](../../agents/regression-bisector.md) —
+  [`regression-bisector`](../../agents/regression-bisector.md) - 
   agents that implement the per-pattern detection.

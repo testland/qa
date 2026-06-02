@@ -36,37 +36,34 @@ ships in its test suite.
 
 Composes with:
 
-- [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
-  — for the SW-runtime restriction that bans `localStorage` and
+- [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md) - for the SW-runtime restriction that bans `localStorage` and
   forces all persistent state into `chrome.storage.*`.
-- [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md)
-  — the fixture that loads the extension so the spec can call into
+- [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md) - the fixture that loads the extension so the spec can call into
   `chrome.storage.*` from a service-worker context.
-- [`mv2-to-mv3-migration-test-checklist`](../mv2-to-mv3-migration-test-checklist/SKILL.md)
-  — Section 2 of that checklist forces every `localStorage` call
+- [`mv2-to-mv3-migration-test-checklist`](../mv2-to-mv3-migration-test-checklist/SKILL.md) - Section 2 of that checklist forces every `localStorage` call
   through this skill's output.
 
 For Playwright-driven MV3 popup / content-script fixtures see
 [`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
 That skill covers the `chrome.storage` *usage* assertions; this
-builder covers the *suite* design — area selection, quota gates,
+builder covers the *suite* design - area selection, quota gates,
 event-payload conformance, multi-area isolation.
 
 ## When to use
 
-- A new extension is deciding `local` vs `sync` vs `session` —
+- A new extension is deciding `local` vs `sync` vs `session` - 
   generate the decision-matrix test that proves the choice.
 - Migrating from `localStorage` to `chrome.storage.local` per the
-  MV3 service-worker rules — emit the equivalence test.
+  MV3 service-worker rules - emit the equivalence test.
 - A user-facing bug ("my settings disappeared") that may be a
-  quota-exceeded silent drop on `storage.sync` — author the
+  quota-exceeded silent drop on `storage.sync` - author the
   quota-boundary test that catches it.
-- Adding an enterprise-policy `storage.managed` read path —
+- Adding an enterprise-policy `storage.managed` read path - 
   emit the read-only-error test plus the policy-fixture loader.
 
 ## Workflow
 
-### Step 1 — Inventory the access pattern
+### Step 1 - Inventory the access pattern
 
 For each storage call in the extension, capture three facts:
 
@@ -83,7 +80,7 @@ grep -rn 'chrome\.storage\.\|browser\.storage\.' \
   > storage-access-inventory.txt
 ```
 
-### Step 2 — Pick the area per the decision matrix
+### Step 2 - Pick the area per the decision matrix
 
 The decision is driven by the four facts in Step 1 and the
 constants in [cr-storage]:
@@ -93,7 +90,7 @@ constants in [cr-storage]:
 | `storage.local` | 10,485,760 (10 MB; 5 MB in Chrome 113 and earlier per [cr-storage]) | none documented | until extension removal | no | extension |
 | `storage.sync` | 102,400 (~100 KB) | 8,192 (8 KB) | persistent, synced | yes (when user signed in) | extension |
 | `storage.session` | 10,485,760 (10 MB; 1 MB in Chrome 111 and earlier per [cr-storage]) | none documented | cleared on disable, reload, update, or browser restart per [cr-storage]; MV3-only | no | extension |
-| `storage.managed` | — | — | as long as policy is in effect | varies | **admin only** — read-only for the extension per [cr-storage] |
+| `storage.managed` | - | - | as long as policy is in effect | varies | **admin only** - read-only for the extension per [cr-storage] |
 
 `storage.sync` also has the write-throughput caps per [cr-storage]:
 `MAX_ITEMS = 512`, `MAX_WRITE_OPERATIONS_PER_MINUTE = 120`,
@@ -101,7 +98,7 @@ constants in [cr-storage]:
 
 Per [cr-storage]: *"`MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE` for
 storage.sync is deprecated: 'The storage.sync API no longer has a
-sustained write operation quota.'"* — assertions referencing this
+sustained write operation quota.'"* - assertions referencing this
 constant should be removed.
 
 Emit a decision-matrix test:
@@ -127,13 +124,13 @@ describe('storage area selection', () => {
 });
 ```
 
-### Step 3 — Quota-exceeded behavior tests
+### Step 3 - Quota-exceeded behavior tests
 
 Per [cr-storage], quota-exceeded writes *"fail immediately and set"*
 `runtime.lastError` (callback form) or *"reject the Promise"*
 (async form). The test must drive both paths.
 
-Worked test — `storage.sync` per-item quota (8,192 bytes):
+Worked test - `storage.sync` per-item quota (8,192 bytes):
 
 ```ts
 test('storage.sync rejects on per-item quota exceeded', async ({ context }) => {
@@ -156,7 +153,7 @@ test('storage.sync rejects on per-item quota exceeded', async ({ context }) => {
 });
 ```
 
-Worked test — `storage.sync` total-quota (102,400 bytes):
+Worked test - `storage.sync` total-quota (102,400 bytes):
 
 ```ts
 test('storage.sync rejects past total-quota (~100 KB)', async ({ context }) => {
@@ -180,7 +177,7 @@ test('storage.sync rejects past total-quota (~100 KB)', async ({ context }) => {
 });
 ```
 
-Worked test — callback-path equivalence (per [cr-storage], both
+Worked test - callback-path equivalence (per [cr-storage], both
 forms must observe quota):
 
 ```ts
@@ -200,7 +197,7 @@ test('storage.sync callback path also sets runtime.lastError on quota', async ({
 });
 ```
 
-### Step 4 — `MAX_ITEMS` and write-throughput tests
+### Step 4 - `MAX_ITEMS` and write-throughput tests
 
 Per [cr-storage], `storage.sync.MAX_ITEMS = 512`. Write 513 unique
 keys, assert the 513th fails:
@@ -231,7 +228,7 @@ to test deterministically; the conservative path is to assert the
 extension's own write-batching logic stays well below the cap rather
 than to drive the cap itself.
 
-### Step 5 — `storage.onChanged` event-payload shape
+### Step 5 - `storage.onChanged` event-payload shape
 
 Per [cr-storage], the signature is:
 
@@ -264,7 +261,7 @@ test('storage.onChanged fires with correct shape on local set', async ({ context
 Per [mdn-storage], the listener receives the same shape on
 Firefox; the test runs cross-browser without modification.
 
-### Step 6 — Multi-area isolation test
+### Step 6 - Multi-area isolation test
 
 A write to one area must not appear in another:
 
@@ -283,7 +280,7 @@ test('storage.local writes are invisible to storage.sync', async ({ context }) =
 });
 ```
 
-### Step 7 — `storage.managed` read-only enforcement
+### Step 7 - `storage.managed` read-only enforcement
 
 Per [cr-storage] and [mdn-storage], `storage.managed` is read-only;
 any write attempt rejects. Test:
@@ -312,7 +309,7 @@ error."*
 Reading from `storage.managed` requires a deployed enterprise
 policy; in CI, mock the read by injecting an
 `extensions.managedStorage` policy via the OS-level mechanism
-(Windows registry / macOS plist / Linux JSON) — out of scope for
+(Windows registry / macOS plist / Linux JSON) - out of scope for
 this skill, but the assertion shape is:
 
 ```ts
@@ -320,7 +317,7 @@ const policy = await chrome.storage.managed.get('apiBaseUrl');
 expect(policy.apiBaseUrl).toBe('https://policy-injected-url/');
 ```
 
-### Step 8 — Firefox-Chrome divergences
+### Step 8 - Firefox-Chrome divergences
 
 Per [mdn-storage] and [cr-storage], the three observable
 divergences for tests:
@@ -333,13 +330,13 @@ divergences for tests:
 | Sync sign-in | Chrome account required | Firefox account required | Skip sync round-trip tests on machines without sign-in; assert local-fallback behavior instead |
 
 Per [mdn-storage], Firefox's `storage.local` *"persists even when
-users clear browsing history/data (unlike `localStorage`)"* —
+users clear browsing history/data (unlike `localStorage`)"* - 
 useful when authoring a clear-history regression test.
 
-### Step 9 — Emit the suite
+### Step 9 - Emit the suite
 
 Write `tests/storage.spec.ts` covering all eight cells from Steps
-2–8. Pair with a YAML manifest mapping each spec to the matrix
+2 - 8. Pair with a YAML manifest mapping each spec to the matrix
 cell it covers:
 
 ```yaml
@@ -383,11 +380,11 @@ For an extension that stores `{ theme: 'dark', apiKey: '...', tabsOpenCount: N }
 | Key | Area chosen | Reason | Quota test |
 |---|---|---|---|
 | `theme` | `storage.sync` | User preference; cross-device | 8 KB per-item cap test |
-| `apiKey` | `storage.local` | Sensitive — should not leave device per [mdn-storage] *"Storage area is not encrypted — do not use for storing confidential user information"*, but if used, gate on first-party-only | total-quota test |
+| `apiKey` | `storage.local` | Sensitive - should not leave device per [mdn-storage] *"Storage area is not encrypted - do not use for storing confidential user information"*, but if used, gate on first-party-only | total-quota test |
 | `tabsOpenCount` | `storage.session` | Resets each session | session-clears-on-restart test |
 | (admin policy URL) | `storage.managed` | Enterprise-only | managed-write-rejects test |
 
-Each row produces one spec from the templates in Steps 2–7.
+Each row produces one spec from the templates in Steps 2 - 7.
 
 Note from [mdn-storage]: *"Storage area is not encrypted, and
 shouldn't store confidential information."* If the extension
@@ -403,15 +400,15 @@ encryption-at-rest test (out of scope for this storage-API skill).
 | Use `storage.sync` for binary / image data | 100 KB total + 8 KB per-item caps; not designed for blobs | Move to `storage.local` per Step 2 |
 | Use `storage.session` for cross-restart data | Cleared on restart per [cr-storage]; tests pass in single session, prod fails on cold start | Step 2 decision matrix |
 | Skip `storage.managed` read-only test | Extension's own write code may silently throw in enterprise deployments | Test per Step 7 |
-| Assume `MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE` still applies | Deprecated per [cr-storage] — *"no longer has a sustained write operation quota"* | Drop the constant from tests |
-| Write a 1 MB value to `storage.local` and assume MV2 limit | Chrome 113- was 5 MB; current is 10 MB per [cr-storage] — pin the test to the live constant, not a hard-coded number |
+| Assume `MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE` still applies | Deprecated per [cr-storage] - *"no longer has a sustained write operation quota"* | Drop the constant from tests |
+| Write a 1 MB value to `storage.local` and assume MV2 limit | Chrome 113- was 5 MB; current is 10 MB per [cr-storage] - pin the test to the live constant, not a hard-coded number |
 | Listen for `onChanged` once and expect no further fires | Per [cr-storage] every write fires; listener must filter or accumulate | Always filter on `areaName` + key |
 
 ## Limitations
 
 - **Sync round-trip requires sign-in.** Tests asserting that a
   `storage.sync.set` propagates to a second device need both
-  profiles signed in to the same Chrome / Firefox account — not
+  profiles signed in to the same Chrome / Firefox account - not
   testable in headless CI without account credentials.
 - **`storage.session` is MV3-only** per [cr-storage]; tests in MV2
   contexts must skip or fall back to `storage.local` with a
@@ -424,19 +421,19 @@ encryption-at-rest test (out of scope for this storage-API skill).
   area encrypts by default; auditing what the extension stores
   requires a separate threat-model test.
 - **`storage.managed` policy injection** differs per OS (Windows
-  registry, macOS plist, Linux JSON) — CI mocking is platform-
+  registry, macOS plist, Linux JSON) - CI mocking is platform-
   specific and not covered by this skill's templates.
 - **Firefox `storage.sync` quotas** are not enumerated as constants
   on the top-level [mdn-storage] page; Step 8's assertions assume
-  Chrome-quota parity per the linked StorageArea sub-page —
+  Chrome-quota parity per the linked StorageArea sub-page - 
   re-verify on Firefox stable before pinning.
 
 ## References
 
-- Chrome — `chrome.storage` API reference (quotas, deprecation
-  notices, quota-exceeded behavior) — [cr-storage].
-- MDN — WebExtensions storage API (Firefox semantics, managed-area
-  read-only quote, encryption caveat) — [mdn-storage].
+- Chrome - `chrome.storage` API reference (quotas, deprecation
+  notices, quota-exceeded behavior) - [cr-storage].
+- MDN - WebExtensions storage API (Firefox semantics, managed-area
+  read-only quote, encryption caveat) - [mdn-storage].
 - Composes:
   [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md),
   [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md),

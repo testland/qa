@@ -1,6 +1,6 @@
 ---
 name: print-stylesheet-tests
-description: "Test CSS print-media output via Playwright `page.emulateMedia({ media: ''''print'''' })` + `page.pdf()` — `@page` rule (size, margin, orphans, widows), `@page :first / :left / :right` pseudo-classes, `break-before/after/inside`, `@media print` selector activation, page-break suppression on headings."
+description: "Test CSS print-media output via Playwright `page.emulateMedia({ media: ''''print'''' })` + `page.pdf()` - `@page` rule (size, margin, orphans, widows), `@page :first / :left / :right` pseudo-classes, `break-before/after/inside`, `@media print` selector activation, page-break suppression on headings."
 type: skill
 archetype: S1
 rating: 23
@@ -18,18 +18,18 @@ keywords:
 Per [MDN Paged Media], CSS Paged Media defines `@page` rules and
 break-control properties for print output. Per the [Playwright
 page.pdf docs], `page.pdf()` "generates PDFs using `print` CSS media
-by default" — call `emulateMedia` first if you want screen styles
+by default" - call `emulateMedia` first if you want screen styles
 applied to PDF instead.
 
 ## When to use
 
 - App has a Print button or generates PDFs from Chromium.
-- Print stylesheet exists but isn't tested — silent regressions
+- Print stylesheet exists but isn't tested - silent regressions
   cause customer complaints "the printed copy looks broken".
 - Pre-deploy gate: page breaks fall in the right places, headers
   don't get orphaned at page bottom.
 
-## Step 1 — Test `@media print` selectors activate
+## Step 1 - Test `@media print` selectors activate
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -48,7 +48,7 @@ test('navigation hidden when printing', async ({ page }) => {
 
 `emulateMedia` activates `@media print` rules per [MDN Paged Media].
 
-## Step 2 — Test print-only content appears
+## Step 2 - Test print-only content appears
 
 ```ts
 test('print-only legal footer appears under print media', async ({ page }) => {
@@ -60,7 +60,7 @@ test('print-only legal footer appears under print media', async ({ page }) => {
 });
 ```
 
-## Step 3 — Generate PDF + verify @page size honored
+## Step 3 - Generate PDF + verify @page size honored
 
 ```ts
 test('PDF respects @page size: A4', async ({ page }) => {
@@ -80,7 +80,7 @@ Per the [Playwright page.pdf docs]: `preferCSSPageSize: true` lets
 CSS `@page { size: A4 }` win over the API `format` option. Without
 it, API wins.
 
-## Step 4 — Test page count
+## Step 4 - Test page count
 
 ```ts
 test('invoice fits on 1 page when standard line count', async ({ page }) => {
@@ -101,7 +101,7 @@ test('invoice spills to 2 pages when many line items', async ({ page }) => {
 Page count regressions ("invoice now needs 3 pages instead of 1") are
 the canonical print bug.
 
-## Step 5 — Test break-before / break-after / break-inside
+## Step 5 - Test break-before / break-after / break-inside
 
 CSS:
 
@@ -127,7 +127,7 @@ test('each chapter starts on new page', async ({ page }) => {
 });
 ```
 
-## Step 6 — `@page :first` / `:left` / `:right` testing
+## Step 6 - `@page :first` / `:left` / `:right` testing
 
 Per [MDN Paged Media], pseudo-class selectors target specific
 pages:
@@ -154,7 +154,7 @@ test('first page has letterhead margin', async ({ page }) => {
 
 Pair with `pdf-snapshot-tester` for the rendered-page assertion.
 
-## Step 7 — Margin verification
+## Step 7 - Margin verification
 
 ```ts
 test('PDF generated with 2cm margins', async ({ page }) => {
@@ -173,9 +173,9 @@ test('PDF generated with 2cm margins', async ({ page }) => {
 Note: the Playwright `margin` API option overrides CSS `@page
 margin` unless `preferCSSPageSize: true`.
 
-## Step 8 — printBackground for branded headers
+## Step 8 - printBackground for branded headers
 
-By default `printBackground: false` — backgrounds (gradients,
+By default `printBackground: false` - backgrounds (gradients,
 images) don't render. Customer-facing PDFs usually need
 `printBackground: true`:
 
@@ -217,12 +217,12 @@ false.
 
 ## References
 
-- [MDN Paged Media] — `@page`, page pseudo-classes, break properties
-- [Playwright page.pdf docs] — options, default print media,
+- [MDN Paged Media] - `@page`, page pseudo-classes, break properties
+- [Playwright page.pdf docs] - options, default print media,
   preferCSSPageSize, printBackground
-- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) — sister
+- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) - sister
   skill for pixel-diff assertions on rendered PDF pages
-- [`html-to-pdf-regression`](../html-to-pdf-regression/SKILL.md) —
+- [`html-to-pdf-regression`](../html-to-pdf-regression/SKILL.md) - 
   cross-engine HTML→PDF comparison
 
 [MDN Paged Media]: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Paged_media

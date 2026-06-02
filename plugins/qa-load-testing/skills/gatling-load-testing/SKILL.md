@@ -23,8 +23,8 @@ WebSocket, Server-Sent Events, JMS, gRPC, and MQTT
 - The team is on the JVM and wants type-safe code-first load tests
   (vs. JMeter's XML or k6's JS).
 - The project needs **non-HTTP** protocols (WebSocket, JMS, gRPC,
-  MQTT) — Gatling's first-party support is broader than k6's.
-- A team value is **scenario expressiveness** — Gatling's DSL
+  MQTT) - Gatling's first-party support is broader than k6's.
+- A team value is **scenario expressiveness** - Gatling's DSL
   composes naturally for multi-step user journeys with shared state.
 - The project already uses Maven / Gradle / sbt; the Gatling plugin
   integrates cleanly.
@@ -36,7 +36,7 @@ For pure HTTP load testing on a non-JVM stack, prefer
 ## Install
 
 The current version + matching plugin is documented at
-[`docs.gatling.io`](https://docs.gatling.io/) — pin to a specific
+[`docs.gatling.io`](https://docs.gatling.io/) - pin to a specific
 release rather than `LATEST`. The minimum dependencies for a Maven
 project are the Gatling Maven plugin (build) plus
 `gatling-charts-highcharts` (test scope, for HTML report generation).
@@ -109,14 +109,14 @@ public class OrdersSimulation extends Simulation {
 
 (Adapted from [gatling-tutorial][tutorial] DSL primitives.)
 
-The `{ ... }` initializer block is Java's instance initializer — used
+The `{ ... }` initializer block is Java's instance initializer - used
 because `Simulation`'s setup happens at construction time.
 
 ## Injection profiles
 
 Per [gatling-tutorial][tutorial]:
 
-### Open workload — `injectOpen`
+### Open workload - `injectOpen`
 
 New users **arrive continuously** during the test window. Use when
 modeling realistic traffic that doesn't depend on user response time.
@@ -129,7 +129,7 @@ ordersScenario.injectOpen(
 )
 ```
 
-### Closed workload — `injectClosed`
+### Closed workload - `injectClosed`
 
 A **fixed pool** of users repeats actions. Use when modeling
 sessions / connection-pool behavior where total concurrency matters
@@ -158,7 +158,7 @@ the CI gate criteria. Every assertion is a chain of selectors:
 | `details("Create order").requestsPerSec().gte(20)`           | Specific request name throughput.        |
 | `forAll().responseTime().mean().lt(300)`                     | Mean across every named request < 300ms. |
 
-Failed assertions cause Gatling to exit non-zero — the canonical CI
+Failed assertions cause Gatling to exit non-zero - the canonical CI
 gate.
 
 ## Running
@@ -195,7 +195,7 @@ Per [gatling-readme][readme], each run produces an HTML report under
 - Active-users-over-time chart.
 - Pass/fail status per assertion.
 
-For machine-readable output, parse `<output>/.../js/stats.json` —
+For machine-readable output, parse `<output>/.../js/stats.json` - 
 contains the same data the HTML report renders.
 
 ## CI integration
@@ -263,15 +263,15 @@ uploaded regardless via `if: always()`.
 
 ## References
 
-- [gatling-readme][readme] — main repo: positioning, language
+- [gatling-readme][readme] - main repo: positioning, language
   support, supported protocols.
-- [gatling-tutorial][tutorial] — DSL primitives: Simulation class,
+- [gatling-tutorial][tutorial] - DSL primitives: Simulation class,
   http() / scenario() / exec(), injectOpen vs injectClosed,
   setUp().assertions().
 - [`k6-load-testing`](../k6-load-testing/SKILL.md),
   [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md),
-  [`locust-load-testing`](../locust-load-testing/SKILL.md) —
+  [`locust-load-testing`](../locust-load-testing/SKILL.md) - 
   alternatives by stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) — downstream
+- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
   gate that aggregates load-runner verdicts with frontend perf
   metrics.

@@ -1,6 +1,6 @@
 ---
 name: fcc-cuts-vids-heuristic
-description: "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic — a 10-letter mnemonic for the dimensions a tester catalogs when *modelling* a system. FCC: Format, Constraints, Connections. CUTS: Coverage, Users, Tasks, Sequences. VIDS: Variables, Inputs, Data, Storage. Use as the system-modelling checklist that complements SFDPOT (what to vary) and HICCUPPS-F (what to compare against)."
+description: "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic - a 10-letter mnemonic for the dimensions a tester catalogs when *modelling* a system. FCC: Format, Constraints, Connections. CUTS: Coverage, Users, Tasks, Sequences. VIDS: Variables, Inputs, Data, Storage. Use as the system-modelling checklist that complements SFDPOT (what to vary) and HICCUPPS-F (what to compare against)."
 rating: 23
 d6: 4
 archetype: S2
@@ -30,7 +30,7 @@ and senior testers building system models.
 - Pre-session: build a model of the system the charter will
   explore. Walk FCC CUTS VIDS to enumerate what the tester needs
   to know.
-- Mid-session: tester finds a gap in their understanding — pick
+- Mid-session: tester finds a gap in their understanding - pick
   the relevant letter and investigate.
 - Post-session: catalogue what the session *taught* about each
   dimension so the next session builds on the model.
@@ -41,7 +41,7 @@ and senior testers building system models.
 
 ### FCC (the system shape)
 
-#### F — Format
+#### F - Format
 
 > What is the **shape / format** of inputs + outputs?
 
@@ -52,11 +52,11 @@ Specific data formats the system reads + writes:
 - Data layouts (column vs row store; documents vs relations)
 - Encodings (UTF-8, base64, hex)
 
-Modelling Format means listing every format the system touches —
+Modelling Format means listing every format the system touches - 
 including where format boundaries are (parser, serialiser,
 transport layer).
 
-#### C — Constraints
+#### C - Constraints
 
 > What are the **rules** the system enforces?
 
@@ -69,7 +69,7 @@ transport layer).
 Constraints define what *should* happen; exploration tests whether
 the system holds them under stress.
 
-#### C — Connections
+#### C - Connections
 
 > What does the system **integrate with**?
 
@@ -81,21 +81,21 @@ the system holds them under stress.
 - Filesystems / blob storage
 - Browsers / clients
 
-Each connection is a potential boundary where things can fail —
+Each connection is a potential boundary where things can fail - 
 prime exploration territory.
 
 ### CUTS (the user shape)
 
-#### C — Coverage
+#### C - Coverage
 
 > What **categories** of behaviour does the system cover?
 
 Where in the feature space does the system claim to operate? Not
 *what tests cover the code* (that's
-[`qa-test-impact-analysis`](../../../qa-test-impact-analysis/)) —
+[`qa-test-impact-analysis`](../../../qa-test-impact-analysis/)) - 
 this is *what the product claims to do*.
 
-#### U — Users
+#### U - Users
 
 > Who **uses** the system, and how?
 
@@ -107,11 +107,11 @@ this is *what the product claims to do*.
 
 Modelling Users surfaces "who's a tester *for* this system?"
 
-#### T — Tasks
+#### T - Tasks
 
 > What **goals** do users have when using the system?
 
-Not features (that's part of F — Function in SFDPOT). Tasks:
+Not features (that's part of F - Function in SFDPOT). Tasks:
 
 - "Get my package delivered by Friday"
 - "Cancel my subscription before next billing cycle"
@@ -120,7 +120,7 @@ Not features (that's part of F — Function in SFDPOT). Tasks:
 Tasks span features. A bug that breaks a task (even if every
 feature works individually) is high-impact.
 
-#### S — Sequences
+#### S - Sequences
 
 > What **orderings** of user actions are expected?
 
@@ -129,17 +129,17 @@ feature works individually) is high-impact.
 - Recovery sequences (after error → retry → success)
 - Edge sequences (cancel mid-flow, navigate away)
 
-Sequences differ from Operations (SFDPOT) — Sequences is the
+Sequences differ from Operations (SFDPOT) - Sequences is the
 *shape* of expected user paths; Operations is the *variation* of
 how users navigate them.
 
 ### VIDS (the data shape)
 
-#### V — Variables
+#### V - Variables
 
 > What **runtime values** vary, and within what bounds?
 
-System-level variables — settings, configs, feature flags. These
+System-level variables - settings, configs, feature flags. These
 aren't user inputs; they're values the system holds + uses to
 behave differently:
 
@@ -148,23 +148,23 @@ behave differently:
 - Environment-specific settings
 - Cached values (TTLs, refresh policies)
 
-#### I — Inputs
+#### I - Inputs
 
 > What does the system **receive** from outside?
 
-User-supplied data — distinct from system variables. Bach's
+User-supplied data - distinct from system variables. Bach's
 distinction: Variables are *internal state*; Inputs are *external
 data crossing into the system*.
 
-#### D — Data
+#### D - Data
 
 > What does the system **store / process / produce**?
 
 The system's data lifecycle. What gets written + read + how it
-flows through the system. Different from Input — Data is what
+flows through the system. Different from Input - Data is what
 the system *owns + transforms*, not what arrives.
 
-#### S — Storage
+#### S - Storage
 
 > Where and how does data **persist**?
 
@@ -178,7 +178,7 @@ the system *owns + transforms*, not what arrives.
 Storage matters because durability + consistency expectations
 differ across these layers.
 
-## Worked example — building a checkout-system model
+## Worked example - building a checkout-system model
 
 ```markdown
 **System:** Checkout flow (cart → payment → confirmation)
@@ -220,7 +220,7 @@ cart in Redis (TTL 24h); receipts in S3 (immutable).
 ```
 
 Now the charter has a tangible model to reference: "Explore the
-checkout flow's data lifecycle (D + S in FCC CUTS VIDS) — focusing
+checkout flow's data lifecycle (D + S in FCC CUTS VIDS) - focusing
 on edge cases where Postgres + Stripe + Redis disagree about state."
 
 ## Anti-patterns
@@ -246,11 +246,11 @@ on edge cases where Postgres + Stripe + Redis disagree about state."
 
 ## References
 
-- Bach J. + Bolton M. *Rapid Software Testing* curriculum —
+- Bach J. + Bolton M. *Rapid Software Testing* curriculum - 
   [satisfice.com/rapid-software-testing](https://www.satisfice.com/rapid-software-testing).
-- Bach J. *Heuristics of Software Testability* —
+- Bach J. *Heuristics of Software Testability* - 
   [satisfice.com/heuristics-of-software-testability](https://www.satisfice.com/heuristics-of-software-testability).
-- Bolton M. — [developsense.com](https://developsense.com/) on
+- Bolton M. - [developsense.com](https://developsense.com/) on
   testing heuristics.
 - Sibling references:
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),

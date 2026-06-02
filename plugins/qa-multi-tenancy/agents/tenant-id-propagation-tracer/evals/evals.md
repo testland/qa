@@ -4,13 +4,13 @@ type: agent
 archetype: A1
 ---
 
-# tenant-id-propagation-tracer — evals
+# tenant-id-propagation-tracer - evals
 
 Companion eval cases for [`tenant-id-propagation-tracer`](../../tenant-id-propagation-tracer.md).
 Three cases cover happy path / branch / adversarial: a Django HTTP
 handler with body-spoofing critical hazard (identifies the
 untrusted-source pattern), an async-job listener with a different
-finding category (`Lost in async hop` + DB-query-missing-filter — not
+finding category (`Lost in async hop` + DB-query-missing-filter - not
 body-spoofing), and a refusal when the input scope is ambiguous (no
 entry point, no file:line range, no PR diff). Re-run by feeding the
 **Input** block as the first user message and checking the agent's
@@ -18,10 +18,10 @@ output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates below are the
-eval-authoring date — each case is designed to be reproducible against
+eval-authoring date - each case is designed to be reproducible against
 any tier.
 
-## Eval 1 — happy path — Django handler, body-spoofing hazard (critical)
+## Eval 1 - happy path - Django handler, body-spoofing hazard (critical)
 
 **Input:**
 
@@ -59,7 +59,7 @@ severity-ordered form.
 
 **Target models:** sonnet (2026-05-26), haiku (2026-05-26), opus (2026-05-26)
 
-**Expected:** Identifies the untrusted-source hazard as `[critical]` —
+**Expected:** Identifies the untrusted-source hazard as `[critical]` - 
 `request.data.get("tenant_id")` wins over `request.user.tenant_id`
 because Python's `or` returns the first truthy operand, so tenant A
 can create rows owned by tenant B by passing
@@ -78,7 +78,7 @@ mentions `request.user.tenant_id` (the named fix) AND contains one of
 untrusted source). Output does NOT label the handler as "safe" or
 emit a hazards list with severity `none`.
 
-## Eval 2 — branch — async job listener, different finding category
+## Eval 2 - branch - async job listener, different finding category
 
 **Input:**
 
@@ -112,7 +112,7 @@ tenant_id pair.
 
 **Target models:** sonnet (2026-05-26), haiku (2026-05-26)
 
-**Expected:** Different finding category from Eval 1 — the hazard
+**Expected:** Different finding category from Eval 1 - the hazard
 here is `Lost in async hop` upgraded to a downstream `Untrusted
 source` because `message["tenant_id"]` is taken at face value and the
 enqueuer doesn't verify it against the requester. The correct fix per
@@ -120,8 +120,7 @@ the agent's documented async-job rule: load the resource by id first,
 then derive `tenant_id = resource.tenant_id`; verify against the
 enqueuing request's tenant. Additionally flags `[high]` (or `[medium]`
 if RLS were configured, but it explicitly isn't) DB-query-missing-
-filter on `Report.objects.get(id=...)` and `Row.objects.filter(report_id=...)`
-— no `tenant_id` filter, RLS not configured. The hazards table does
+filter on `Report.objects.get(id=...)` and `Row.objects.filter(report_id=...)` - no `tenant_id` filter, RLS not configured. The hazards table does
 NOT focus on HTTP body-spoofing terminology (different category).
 
 **Pass condition:** Output contains one of `async` / `message` /
@@ -131,7 +130,7 @@ mentions `Report` or `Row` (the DB queries flagged). Output does NOT
 characterize the controlling hazard as `request.body` /
 `request.data` / `HTTP body` (wrong entry-type category).
 
-## Eval 3 — adversarial — ambiguous scope, refuse to trace
+## Eval 3 - adversarial - ambiguous scope, refuse to trace
 
 **Input:**
 
@@ -152,7 +151,7 @@ do a general trace and tell us what's wrong.
 name, a file + line range, or a PR diff scoping the trace." None of
 those are supplied. The agent's documented limitation "Single path at
 a time. This agent traces one entry point; it does not enumerate all
-entry points." is the controlling rule — for full-PR review the
+entry points." is the controlling rule - for full-PR review the
 hand-off is `tenant-leak-critic`. Output should ask for / list the
 specific missing inputs (entry-point identifier OR file:line range OR
 PR diff) and recommend `tenant-leak-critic` for the broad
@@ -168,7 +167,7 @@ specific function.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the eval
+- All three inputs are concrete pasted-content blocks - the eval
   embeds the relevant source snippets so reviewers do not need to
   clone a Django + Celery sandbox to reproduce; the
   classification / hazard-severity / fix-mapping logic is what is
@@ -177,6 +176,6 @@ specific function.
   agent's transcript for each substring (`request.user.tenant_id`,
   `resource.tenant_id`, `tenant-leak-critic`, `critical`, etc.).
 - The agent's tool surface (`Read`, `Grep`, `Glob`,
-  `Bash(git diff *)`, `Bash(git log *)`) is read-only — eval re-runs
+  `Bash(git diff *)`, `Bash(git log *)`) is read-only - eval re-runs
   cannot modify the codebase or alter the production code paths
   under inspection.

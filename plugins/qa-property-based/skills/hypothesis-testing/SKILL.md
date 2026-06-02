@@ -1,6 +1,6 @@
 ---
 name: hypothesis-testing
-description: "Authors property-based tests in Python using Hypothesis — wires `@given` with `strategies` (`st.integers`, `st.text`, `st.lists`, `st.from_regex`, `st.composite`), uses `assume()` / `.filter()` for preconditions, configures via `@settings(max_examples=..., deadline=...)`, and exploits Hypothesis's automatic shrinking to find the falsifying example. Integrates with pytest fixtures + parametrize. Use when a Python project needs PBT to catch edge cases the example-based tests miss — bug clusters around input ranges / boundary values / interaction between fields."
+description: "Authors property-based tests in Python using Hypothesis - wires `@given` with `strategies` (`st.integers`, `st.text`, `st.lists`, `st.from_regex`, `st.composite`), uses `assume()` / `.filter()` for preconditions, configures via `@settings(max_examples=..., deadline=...)`, and exploits Hypothesis's automatic shrinking to find the falsifying example. Integrates with pytest fixtures + parametrize. Use when a Python project needs PBT to catch edge cases the example-based tests miss - bug clusters around input ranges / boundary values / interaction between fields."
 rating: 24
 d6: 4
 archetype: S1
@@ -38,9 +38,9 @@ inputs and shrinks failures to the simplest reproducer.
   properties hold (`decode(encode(x)) == x`).
 
 If only one or two specific examples need verification, parametrize
-or fixtures suffice — Hypothesis is overkill.
+or fixtures suffice - Hypothesis is overkill.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install hypothesis
@@ -50,7 +50,7 @@ Pin a version in `requirements-dev.txt` / `pyproject.toml`.
 Hypothesis is well-maintained but adds 1-2 seconds to test runtime
 per generated case; default 100 examples per `@given`.
 
-## Step 2 — Basic property test
+## Step 2 - Basic property test
 
 Per [hyp-quickstart][hq]:
 
@@ -64,9 +64,9 @@ def test_example(n):
 
 The decorator runs the test 100 times with random `n` in `[0, 100]`.
 On failure, Hypothesis reports the **falsifying example** (the
-smallest `n` that violates the assertion) — typically `50` here.
+smallest `n` that violates the assertion) - typically `50` here.
 
-## Step 3 — Strategies catalog
+## Step 3 - Strategies catalog
 
 Per [hyp-quickstart][hq], built-in generators:
 
@@ -84,7 +84,7 @@ Per [hyp-quickstart][hq], built-in generators:
 | `st.builds(callable, **kwargs)` | Construct objects from strategies     | Domain objects.                            |
 | `st.composite` (decorator) | Custom strategy combining draws                | Dependent fields.                           |
 
-## Step 4 — Composite strategies (dependent fields)
+## Step 4 - Composite strategies (dependent fields)
 
 Per [hyp-quickstart][hq], `@st.composite` lets later values depend
 on earlier ones via `draw()`:
@@ -114,7 +114,7 @@ def test_date_round_trip(d):
 The `draw()` call requests a value from a strategy; the composite
 returns the constructed value.
 
-## Step 5 — Filtering and assumptions
+## Step 5 - Filtering and assumptions
 
 Two ways to constrain inputs:
 
@@ -138,10 +138,10 @@ Per [hyp-quickstart][hq], use `.filter()` at the strategy level
 when possible (Hypothesis can sample efficiently). Use `assume()`
 inside the test when the precondition involves multiple inputs.
 
-**Heavy filtering is a smell** — if 90% of generated cases are
+**Heavy filtering is a smell** - if 90% of generated cases are
 discarded, redesign the strategy.
 
-## Step 6 — Settings and reproducibility
+## Step 6 - Settings and reproducibility
 
 ```python
 from hypothesis import given, settings, strategies as st
@@ -166,7 +166,7 @@ For CI, set `derandomize=True` to make failures reproducible across
 runs (vs random seed = same property test passes locally, fails on
 CI mysteriously).
 
-## Step 7 — Round-trip and metamorphic properties
+## Step 7 - Round-trip and metamorphic properties
 
 Two of the most useful property patterns:
 
@@ -201,7 +201,7 @@ Metamorphic tests are powerful when the function's "correct
 output" is hard to specify but its relationship to other inputs is
 easy.
 
-## Step 8 — pytest integration
+## Step 8 - pytest integration
 
 Per [hyp-quickstart][hq]: "Hypothesis works seamlessly with pytest
 fixtures and parametrize decorators."
@@ -221,9 +221,9 @@ def test_with_fixture(db_conn, n):
 
 Hypothesis re-runs the test body with new `n` each time; the
 fixture is set up once per test (per pytest's normal scope rules,
-unless it's `function`-scoped — then once per generated case).
+unless it's `function`-scoped - then once per generated case).
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: pytest --hypothesis-seed=42  # deterministic seed for reproducibility
@@ -232,7 +232,7 @@ unless it's `function`-scoped — then once per generated case).
 ```
 
 When a property test fails, the failure includes the falsifying
-example — copy that into a regression test:
+example - copy that into a regression test:
 
 ```python
 @given(...)
@@ -276,13 +276,12 @@ permanently.
 
 ## References
 
-- [hyp-quickstart][hq] — Hypothesis quickstart: `@given`,
+- [hyp-quickstart][hq] - Hypothesis quickstart: `@given`,
   strategies, shrinking, composite, `assume()`, settings.
 - [`fast-check-testing`](../fast-check-testing/SKILL.md),
   [`proptest-testing`](../proptest-testing/SKILL.md),
   [`jqwik-testing`](../jqwik-testing/SKILL.md),
-  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) —
+  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) - 
   per-language siblings with similar shape.
-- [`schemathesis-fuzzing`](../../qa-api-testing/skills/schemathesis-fuzzing/SKILL.md)
-  — applies PBT to API schemas (different layer; same conceptual
+- [`schemathesis-fuzzing`](../../qa-api-testing/skills/schemathesis-fuzzing/SKILL.md) - applies PBT to API schemas (different layer; same conceptual
   framework).

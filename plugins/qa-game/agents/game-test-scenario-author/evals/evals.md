@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# game-test-scenario-author — evals
+# game-test-scenario-author - evals
 
 Companion eval cases for [`game-test-scenario-author`](../../game-test-scenario-author.md).
 Three cases covering happy path + branch + adversarial. Re-run by feeding the
@@ -13,10 +13,10 @@ scenario file (or the agent's refuse-to-proceed message) against the
 **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date — each
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - each
 eval is designed to be re-run against each tier.
 
-## Eval 1 — happy path — Unity PlayMode → Assets/Tests/PlayMode/PlayerControllerTests.cs + [UnityTest] IEnumerator
+## Eval 1 - happy path - Unity PlayMode → Assets/Tests/PlayMode/PlayerControllerTests.cs + [UnityTest] IEnumerator
 
 **Input:**
 
@@ -58,7 +58,7 @@ Does NOT modify `PlayerController.cs`.
 `Thread.Sleep`, `WaitForSeconds`, `IMPLEMENT_SIMPLE_AUTOMATION_TEST`, OR
 `extends GutTest`.
 
-## Eval 2 — branch — Godot GUT → test/test_health_component.gd + extends GutTest + assert_eq
+## Eval 2 - branch - Godot GUT → test/test_health_component.gd + extends GutTest + assert_eq
 
 **Input:**
 
@@ -96,7 +96,7 @@ and asserts `assert_eq(component.hp, 50, "...")`. Does NOT introduce Unity
 AND `take_damage(`. Output does NOT contain `[UnityTest]`,
 `IMPLEMENT_SIMPLE_AUTOMATION_TEST`, OR `using NUnit.Framework`.
 
-## Eval 3 — adversarial — multi-engine project (Unity + Unreal markers both present) → refuse, ask which engine
+## Eval 3 - adversarial - multi-engine project (Unity + Unreal markers both present) → refuse, ask which engine
 
 **Input:**
 

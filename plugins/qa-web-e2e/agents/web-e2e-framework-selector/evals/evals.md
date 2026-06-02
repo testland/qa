@@ -4,14 +4,14 @@ type: agent
 archetype: A2
 ---
 
-# web-e2e-framework-selector — evals
+# web-e2e-framework-selector - evals
 
 Companion eval cases for [`web-e2e-framework-selector`](../../web-e2e-framework-selector.md).
 Three cases covering happy path (continue with detected Playwright) + branch
 (greenfield project recommend Playwright) + adversarial (two competing frameworks
 in deps).
 
-## Eval 1: happy path — project already uses Playwright
+## Eval 1: happy path - project already uses Playwright
 
 **Input:**
 - `package.json` devDependencies contains `"@playwright/test": "^1.49.0"`.
@@ -26,7 +26,7 @@ in deps).
 
 **Pass condition:** Output contains the literal substrings `Playwright` AND (`continue` OR `existing convention`) and does NOT recommend swapping to Cypress / Selenium / Puppeteer / TestCafe / WebdriverIO.
 
-## Eval 2: branch — greenfield project, no existing framework
+## Eval 2: branch - greenfield project, no existing framework
 
 **Input:**
 - `package.json` contains `"react": "^18"` and `"vite": "^5"` but no E2E framework.
@@ -40,7 +40,7 @@ in deps).
 
 **Pass condition:** Output contains the literal substring `Playwright` AND (`Chromium` AND `Firefox` AND `WebKit`) AND `playwright-testing` and does NOT recommend Cypress as the primary (Cypress lost WebKit-via-Playwright dependency in 2023 + has weaker Firefox).
 
-## Eval 3: adversarial — two competing frameworks present
+## Eval 3: adversarial - two competing frameworks present
 
 **Input:**
 - `package.json` devDependencies contains BOTH `"@playwright/test": "^1.49.0"` AND `"cypress": "^13.0.0"`.
@@ -55,6 +55,6 @@ in deps).
 
 ## Notes
 
-- Eval file lives outside the lint glob — no rating frontmatter needed.
+- Eval file lives outside the lint glob - no rating frontmatter needed.
 - Pass conditions are literal-string checks; a reviewer can grep transcripts.
 - Target-model dates are eval-authoring dates (2026-05-25), not execution dates.

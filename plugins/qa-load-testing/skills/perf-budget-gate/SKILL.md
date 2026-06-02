@@ -15,7 +15,7 @@ Modern teams measure perf at multiple layers:
 | Layer        | Runner                                                                                |
 |--------------|---------------------------------------------------------------------------------------|
 | Backend load | [`k6-load-testing`](../k6-load-testing/SKILL.md), [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md), [`gatling-load-testing`](../gatling-load-testing/SKILL.md), [`locust-load-testing`](../locust-load-testing/SKILL.md) |
-| Frontend     | [`lighthouse-perf`](../lighthouse-perf/SKILL.md) — Web Vitals via Lighthouse CI       |
+| Frontend     | [`lighthouse-perf`](../lighthouse-perf/SKILL.md) - Web Vitals via Lighthouse CI       |
 
 Each runner has its own pass/fail criterion. This gate **unifies**
 them into a single go / no-go verdict with per-metric deltas vs.
@@ -26,24 +26,23 @@ This is the perf counterpart to
 [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md),
 [`visual-baseline-gate`](../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md),
 and
-[`contract-compatibility-gate`](../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md)
-— same artifact shape, different domain.
+[`contract-compatibility-gate`](../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md) - same artifact shape, different domain.
 
 ## When to use
 
 - The team uses two or more perf runners and wants one CI gate.
 - Per-PR perf delta vs. main is the team's regression-detection
   signal.
-- Some metrics should be advisory rather than blocking — e.g.
+- Some metrics should be advisory rather than blocking - e.g.
   block on p95 latency regression but warn on Lighthouse score
   drift.
 - Per-metric ratchet behavior is needed (existing budget breaches
   grandfathered, new breaches block).
 
-If the project has only one runner, defer this gate — use the
+If the project has only one runner, defer this gate - use the
 runner's native CI integration directly.
 
-## Step 1 — Identify your sources
+## Step 1 - Identify your sources
 
 | Source           | Artifact                                    | Schema |
 |------------------|---------------------------------------------|--------|
@@ -56,7 +55,7 @@ runner's native CI integration directly.
 Persist each runner's artifact as a CI build artifact (with
 `if: always()`) so the gate input is reproducible and triageable.
 
-## Step 2 — Define the unified metric record
+## Step 2 - Define the unified metric record
 
 Flatten every runner's output into one shape:
 
@@ -77,7 +76,7 @@ Flatten every runner's output into one shape:
 | Field      | Source |
 |------------|--------|
 | `runner`   | `k6` / `jmeter` / `gatling` / `locust` / `lighthouse`. |
-| `subject`  | URL path / sampler name / story ID — what was measured. |
+| `subject`  | URL path / sampler name / story ID - what was measured. |
 | `metric`   | `p95_latency_ms` / `error_rate` / `lcp_ms` / `inp_ms` / `cls`. |
 | `value`    | Current run's value. |
 | `baseline` | Last green main-branch run's value (fetched from artifact storage / Grafana / Lighthouse CI server). |
@@ -86,7 +85,7 @@ Flatten every runner's output into one shape:
 | `status`   | `pass` / `fail` based on `value` vs `budget`. |
 | `severity` | `blocker` / `warn`. |
 
-## Step 3 — Define the gate decision rule
+## Step 3 - Define the gate decision rule
 
 Pseudocode:
 
@@ -115,13 +114,13 @@ def gate_decision(records, *,
 
 Two regression triggers:
 
-- **Budget breach** — `value > budget` (absolute threshold).
-- **Regression** — `delta_pct > N%` vs. baseline (relative).
+- **Budget breach** - `value > budget` (absolute threshold).
+- **Regression** - `delta_pct > N%` vs. baseline (relative).
 
 Both matter: a metric within budget but trending up still warrants a
 warning.
 
-## Step 4 — Emit the artifact
+## Step 4 - Emit the artifact
 
 Markdown summary:
 
@@ -156,7 +155,7 @@ Plus JSON sibling for downstream tooling:
 }
 ```
 
-A no-go verdict exits non-zero — CI halts.
+A no-go verdict exits non-zero - CI halts.
 
 ## Worked example: minimal Python implementation
 
@@ -227,8 +226,6 @@ sys.exit(0 if verdict == "go" else 1)
 - All sibling perf runners listed in Step 1.
 - [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md),
   [`visual-baseline-gate`](../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md),
-  [`contract-compatibility-gate`](../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md)
-  — sibling gates with the same artifact shape.
-- [`nfr-extractor`](../../qa-shift-left/skills/nfr-extractor/SKILL.md)
-  — upstream skill that produces the threshold-bound budgets this
+  [`contract-compatibility-gate`](../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md) - sibling gates with the same artifact shape.
+- [`nfr-extractor`](../../qa-shift-left/skills/nfr-extractor/SKILL.md) - upstream skill that produces the threshold-bound budgets this
   gate enforces.

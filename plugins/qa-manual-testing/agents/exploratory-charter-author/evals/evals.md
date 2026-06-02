@@ -4,7 +4,7 @@ type: agent
 archetype: A4
 ---
 
-# exploratory-charter-author — evals
+# exploratory-charter-author - evals
 
 Companion eval cases for [`exploratory-charter-author`](../../exploratory-charter-author.md).
 Three cases cover happy path / branch / adversarial: a new-feature
@@ -14,10 +14,10 @@ incident), and a missing-mission refusal. Re-run by feeding the
 output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — charter for a new feature (promo-code apply flow)
+## Eval 1 - happy path - charter for a new feature (promo-code apply flow)
 
 **Input:**
 
@@ -37,9 +37,9 @@ Time-box preference: 90 min (default).
 
 **Target models:** sonnet (2026-05-26), haiku (2026-05-26), opus (2026-05-26)
 
-**Expected:** Step 1 frames a mission of pattern "New feature" — one
+**Expected:** Step 1 frames a mission of pattern "New feature" - one
 sentence telling the tester what to **learn** (not "test the feature"
-and not "verify promo codes apply"). Step 2 emits 3-7 areas — promo
+and not "verify promo codes apply"). Step 2 emits 3-7 areas - promo
 input field, discount math, multi-promo interaction, expiration timing
 are the natural areas from the spec. Time-box stays at 90 min. Step 3
 declares the PROOF debrief as a required deliverable, pointing at
@@ -54,9 +54,9 @@ investigation).
 contains the heading `## Areas` with 3-7 list items beneath it.
 Output mentions `manual-test-debrief` (the named PROOF deliverable).
 Output does NOT contain `expect(`, `it('`, or any scripted-test
-syntax — the agent must not collapse a charter into a script.
+syntax - the agent must not collapse a charter into a script.
 
-## Eval 2 — branch — bug-cluster charter (Stripe webhook incident)
+## Eval 2 - branch - bug-cluster charter (Stripe webhook incident)
 
 **Input:**
 
@@ -81,7 +81,7 @@ has a different mission, so duplicate-area refusal does NOT apply.)
 **Target models:** sonnet (2026-05-26), haiku (2026-05-26)
 
 **Expected:** Step 1 frames a mission of pattern "Bug cluster / risk
-area" — the mission references the postmortem and focuses on retry /
+area" - the mission references the postmortem and focuses on retry /
 out-of-order delivery. Step 2 emits 3-7 areas centered on the webhook
 handler surface (signature validation, idempotency keys, retry
 semantics, ordering across event types). Time-box defaults to 90 min
@@ -100,7 +100,7 @@ mentions `webhook` AND mentions `retry` or `out-of-order` or
 indicate the agent copy-pasted the worked example instead of
 authoring fresh).
 
-## Eval 3 — adversarial — no mission, just "test the feature" (refuse)
+## Eval 3 - adversarial - no mission, just "test the feature" (refuse)
 
 **Input:**
 
@@ -116,10 +116,10 @@ No mission stated — "test it generally" is the entire framing.)
 **Target models:** sonnet (2026-05-26)
 
 **Expected:** Refuses to author the charter. Two refuse rules fire
-together: (a) "Author a charter without a mission — 'Explore X' is not
-a mission; it's a target. Mission must say what to **learn**" — "test
+together: (a) "Author a charter without a mission - 'Explore X' is not
+a mission; it's a target. Mission must say what to **learn**" - "test
 it generally" is a target, not a mission; and (b) "Set a time-box >120
-minutes" — 4 hours = 240 min, well past the 120 min cap. The agent
+minutes" - 4 hours = 240 min, well past the 120 min cap. The agent
 requests the missing mission framing and proposes splitting into
 multiple charters under 120 min each. Does NOT emit a full charter
 card with the requested fields filled in. Does NOT silently shorten
@@ -136,14 +136,14 @@ time-box.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo. The cross-reference to
   the prior session in eval 2 is given inline as a note, so the agent
   does not need to fetch a real postmortem file.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Write`, `Grep`, `Glob`) writes
-  the charter card as markdown — eval 3 is observable as the absence
+  the charter card as markdown - eval 3 is observable as the absence
   of a populated `# Charter` heading plus the explicit clarifying
   request.
 - Eval cases were authored 2026-05-26 against the v4.0 framework's D7

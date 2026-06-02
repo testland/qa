@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# python-test-author — evals
+# python-test-author - evals
 
 Companion eval cases for [`python-test-author`](../../python-test-author.md).
 Three cases covering happy path + branch + adversarial. Re-run by feeding
@@ -12,10 +12,10 @@ the **Input** block as the first user message to the agent and comparing
 the emitted test file against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - 
 each eval is designed to be re-run against each tier.
 
-## Eval 1 — happy path — pyproject.toml + pytest → def test_… + plain assert is None
+## Eval 1 - happy path - pyproject.toml + pytest → def test_… + plain assert is None
 
 **Input:**
 
@@ -54,7 +54,7 @@ locally.
 `is None` / `== None` / `result is None`. Output does NOT contain
 `import unittest`, `unittest.TestCase`, `import doctest`, OR `import nose2`.
 
-## Eval 2 — branch — no pyproject.toml + existing unittest tests → unittest.TestCase + assertIsNone
+## Eval 2 - branch - no pyproject.toml + existing unittest tests → unittest.TestCase + assertIsNone
 
 **Input:**
 
@@ -97,7 +97,7 @@ one of `self.assertIsNone(result)` / `self.assertEqual(result, None)`.
 Output does NOT contain `@pytest.fixture` OR `@pytest.mark.parametrize`
 OR `import doctest` OR `import nose2`.
 
-## Eval 3 — adversarial — spec asks for a universally-quantified property → refuse, defer to property-based
+## Eval 3 - adversarial - spec asks for a universally-quantified property → refuse, defer to property-based
 
 **Input:**
 
@@ -121,7 +121,7 @@ phrasing ("ANY ... ANY ... full input space ... property must hold")
 which is property-based-test scope, not example-based unit-test scope.
 Recommends the user invoke the `qa-property-based` plugin's authoring
 agent instead (when it lands). Does NOT silently downgrade the property
-into a single example test (that would lose the original spec's intent —
+into a single example test (that would lose the original spec's intent - 
 a single example cannot prove a universal property).
 
 **Pass condition:** Output does NOT contain a generated test method body

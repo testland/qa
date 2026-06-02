@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# visual-diff-classifier — evals
+# visual-diff-classifier - evals
 
 Companion eval cases for [`visual-diff-classifier`](../../visual-diff-classifier.md).
 Three cases cover happy path / branch / adversarial: a text-truncation
@@ -12,11 +12,11 @@ regression in a non-touched component (verdict `BLOCK`), an intentional
 button-styling change in a touched component (verdict `OK`), and a
 "looks intentional" 47-story uniform color shift where the token name
 and the hex value both changed (the documented adversarial pattern that
-human reviewers rubber-stamp — verdict `REVIEW`, must NOT be `OK`). Re-run
+human reviewers rubber-stamp - verdict `REVIEW`, must NOT be `OK`). Re-run
 by pasting the **Input** block as the first user message and checking
 the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — text truncation in non-touched component (BLOCK / regression)
+## Eval 1 - happy path - text truncation in non-touched component (BLOCK / regression)
 
 **Input:**
 
@@ -53,7 +53,7 @@ Build URL: https://chromatic.example.com/build/12345
 **Expected:** Per the regression-pattern checklist (text truncation in
 a component the PR does NOT modify), the agent classifies
 `dashboard-mobile-375` as `regression` with pattern `text truncation`.
-Per the verdict rule "BLOCK — any `regression` row," the top-line
+Per the verdict rule "BLOCK - any `regression` row," the top-line
 verdict is `BLOCK`. The Recommended action surfaces the cascade
 hypothesis (UserMenu width change shifted the surrounding flex /
 grid context which affected sidebar widths). The output uses the
@@ -64,7 +64,7 @@ Category / Pattern / Paired code change? / Recommended action columns.
 `regression` AND one of `truncation` / `truncated` (case-insensitive).
 Output does NOT contain a top-line verdict of `OK` for this build.
 
-## Eval 2 — branch — intentional touched-component change (OK / intentional)
+## Eval 2 - branch - intentional touched-component change (OK / intentional)
 
 **Input:**
 
@@ -98,7 +98,7 @@ Build URL: https://chromatic.example.com/build/12346
 `Onboarding/WelcomeStep.tsx` lines 22-45, AND the visual change (heading
 text + downstream CTA shift) matches the code change in scope and
 direction. The agent classifies the snapshot as `intentional`,
-Recommended action: `Accept the baseline`. Per the verdict rule "OK —
+Recommended action: `Accept the baseline`. Per the verdict rule "OK - 
 all rows `intentional`," the top-line verdict is `OK`.
 
 **Pass condition:** Output contains the literal string `intentional` AND
@@ -106,7 +106,7 @@ all rows `intentional`," the top-line verdict is `OK`.
 (case-insensitive). Output does NOT contain `regression` or `BLOCK` as
 a verdict for this build.
 
-## Eval 3 — adversarial — "looks intentional" token-rename hides hex-value change (REVIEW, NOT OK)
+## Eval 3 - adversarial - "looks intentional" token-rename hides hex-value change (REVIEW, NOT OK)
 
 **Input:**
 
@@ -145,7 +145,7 @@ PR description: "Pure rename. No visual impact intended."
 **Target models:** sonnet (2026-05-25), opus (2026-05-25)
 
 **Expected:** This is the documented adversarial pattern (Example 2 in
-the agent body — "the core 'adversarial' pattern — a 47-story diff is
+the agent body - "the core 'adversarial' pattern - a 47-story diff is
 fast for a human to rubber-stamp because the change is uniform"). The
 PR title says "rename for consistency" but the hex value also changed
 (`#0066cc → #0052aa` is a 20-point shift across all three channels,
@@ -154,15 +154,15 @@ toward `regression`" and the worked-example output, the agent must
 NOT classify as `intentional` (which would issue verdict `OK`); it
 must force the question by classifying as `intentional?` with
 recommended action requiring author confirmation, OR by classifying
-as `regression` outright. Verdict is `REVIEW` or `BLOCK` — not `OK`.
+as `regression` outright. Verdict is `REVIEW` or `BLOCK` - not `OK`.
 
 **Pass condition:** Output does NOT contain a top-line verdict of `OK`.
-Output names the value change explicitly — contains both `#0066cc`
+Output names the value change explicitly - contains both `#0066cc`
 and `#0052aa` (the actual hex pair) OR explicitly flags that the rename
 and the value change are separate concerns (one of `value change` /
 `value also changed` / `not just a rename` / `hex changed` /
 `numeric value`). The agent must not rubber-stamp the build as an
-intentional rename — that is the entire adversarial point of the eval.
+intentional rename - that is the entire adversarial point of the eval.
 
 ## Reproducibility notes
 
@@ -176,5 +176,5 @@ intentional rename — that is the entire adversarial point of the eval.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,
   Adversarial coverage, Reproducibility). Eval 3 reproduces the
-  agent body's own Example 2 worked case verbatim in input shape —
+  agent body's own Example 2 worked case verbatim in input shape - 
   the agent's correct behavior is documented in that example.

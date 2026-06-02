@@ -1,6 +1,6 @@
 ---
 name: restore-time-tests
-description: "Build restore-time SLA tests — per-database + per-object-store baseline measurement, RTO objective verification, parallel-restore optimization tests, point-in-time-recovery (PITR) latency. Bound `time-to-functional` (TTF) ≤ documented RTO; flag silent regressions when restore time grows over months."
+description: "Build restore-time SLA tests - per-database + per-object-store baseline measurement, RTO objective verification, parallel-restore optimization tests, point-in-time-recovery (PITR) latency. Bound `time-to-functional` (TTF) ≤ documented RTO; flag silent regressions when restore time grows over months."
 type: skill
 archetype: S3
 rating: 22
@@ -29,7 +29,7 @@ each backup type and gate it on the RTO budget.
 - After backup-tool change: did the new tool restore at the same
   speed?
 
-## Step 1 — Define TTF segments
+## Step 1 - Define TTF segments
 
 Time-to-functional = sum of:
 
@@ -46,7 +46,7 @@ Each segment has its own SLA. The aggregate is the RTO.
 
 This skill focuses on **Restore + Verification** segments.
 
-## Step 2 — Baseline: timed restore
+## Step 2 - Baseline: timed restore
 
 ```python
 import subprocess, time
@@ -75,7 +75,7 @@ def test_postgres_restore_time_under_rto():
 
 Run weekly in CI; track trend.
 
-## Step 3 — Parallel-restore optimization
+## Step 3 - Parallel-restore optimization
 
 Many backup tools support parallelization. Test:
 
@@ -99,7 +99,7 @@ def test_parallel_restore_faster_than_serial():
 Find the sweet spot (often 4-8 jobs); past that, contention
 diminishes returns.
 
-## Step 4 — Point-in-time-recovery (PITR) latency
+## Step 4 - Point-in-time-recovery (PITR) latency
 
 PITR = restore the database to an arbitrary point in the past
 (within retention). Restore time + WAL replay time:
@@ -126,7 +126,7 @@ def test_pitr_to_5min_ago_under_30min():
 
 PITR latency = base restore + WAL replay. Tests both segments.
 
-## Step 5 — Object-store partial restore
+## Step 5 - Object-store partial restore
 
 For S3 / GCS / Azure Blob restores, time the partial restore
 (not whole-bucket):
@@ -149,7 +149,7 @@ def test_partial_object_restore_under_5_min():
 
 500 objects = realistic single-customer-account restore size.
 
-## Step 6 — Track restore-time trend
+## Step 6 - Track restore-time trend
 
 Backup grows over time → restore time grows. Track:
 
@@ -164,7 +164,7 @@ def emit_restore_time_metric(elapsed_seconds, backup_size_bytes):
 Alert if restore time grows > 20% in 90 days. Indicates need for
 backup compaction, parallelism increase, or RTO renegotiation.
 
-## Step 7 — Verification time
+## Step 7 - Verification time
 
 Restore success ≠ functional. Verification adds time:
 
@@ -182,7 +182,7 @@ def test_post_restore_smoke_under_5_min():
 Smoke suite scope: critical paths only. Full regression is too
 slow for the RTO window.
 
-## Step 8 — Cold-start vs warm-cache
+## Step 8 - Cold-start vs warm-cache
 
 After restore, applications hit cold caches → first requests slow.
 Test that the cold-start latency is within service SLA:
@@ -218,18 +218,18 @@ queries before declaring "functional").
 - Real RTO depends on the worst path through the dependency
   graph; this skill measures one segment at a time.
 - Some cloud-managed restores (RDS snapshot, Aurora restore) have
-  fixed per-cloud SLA — verify documentation, not just test.
+  fixed per-cloud SLA - verify documentation, not just test.
 - Compression-heavy backups optimize for storage, not restore
   speed; tradeoffs are real.
 
 ## References
 
-- [Google Cloud DR planning guide] — RTO context
-- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) — drill-level
+- [Google Cloud DR planning guide] - RTO context
+- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drill-level
   end-to-end timing
-- [`backup-verification-author`](../backup-verification-author/SKILL.md) —
+- [`backup-verification-author`](../backup-verification-author/SKILL.md) - 
   verifies backup integrity before restore
-- [`error-budget-tests`](../error-budget-tests/SKILL.md) — restore
+- [`error-budget-tests`](../error-budget-tests/SKILL.md) - restore
   failures consume error budget
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide

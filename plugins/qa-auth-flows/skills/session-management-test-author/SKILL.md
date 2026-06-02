@@ -1,6 +1,6 @@
 ---
 name: session-management-test-author
-description: "Build-an-X for session management tests per OWASP ASVS V3 — cookie attribute coverage (Secure / HttpOnly / SameSite=Strict|Lax), session-fixation defense (regenerate session ID on login), absolute + idle timeout, concurrent-session limits, logout invalidation across devices, CSRF token handling, session-binding to TLS / IP / device fingerprint. Use when authoring tests for any web app's session layer, regardless of framework (Express session, Django sessions, Spring Security, ASP.NET, Rails, etc.)."
+description: "Build-an-X for session management tests per OWASP ASVS V3 - cookie attribute coverage (Secure / HttpOnly / SameSite=Strict|Lax), session-fixation defense (regenerate session ID on login), absolute + idle timeout, concurrent-session limits, logout invalidation across devices, CSRF token handling, session-binding to TLS / IP / device fingerprint. Use when authoring tests for any web app's session layer, regardless of framework (Express session, Django sessions, Spring Security, ASP.NET, Rails, etc.)."
 rating: 24
 d6: 4
 archetype: S3
@@ -29,7 +29,7 @@ Plus the versioned form `v<version>-<chapter>.<section>.<requirement>`
 (e.g., `v5.0.0-1.2.5`) for stability across releases.
 
 This skill is a build-an-X workflow targeting **ASVS V3 (Session
-Management)** — the chapter that defines session-layer security
+Management)** - the chapter that defines session-layer security
 requirements. Tests verify cookie attributes, timeout behavior,
 session-ID regeneration, and logout semantics.
 
@@ -42,7 +42,7 @@ session-ID regeneration, and logout semantics.
 - Compliance program (SOC 2, ISO 27001) requires evidence of
   session-management testing.
 
-## Step 1 — Cookie attribute baseline
+## Step 1 - Cookie attribute baseline
 
 Every session cookie MUST set:
 
@@ -73,9 +73,9 @@ def test_session_cookie_has_all_required_attributes(client, base_url):
         assert not domain.startswith(".")   # no leading-dot (parent domain)
 ```
 
-**Default: `SameSite=Strict`** — provides the strongest CSRF defense by blocking the cookie on all cross-site requests. Use `SameSite=Lax` only when the session must survive OAuth callback redirects or other top-level cross-site navigations.
+**Default: `SameSite=Strict`** - provides the strongest CSRF defense by blocking the cookie on all cross-site requests. Use `SameSite=Lax` only when the session must survive OAuth callback redirects or other top-level cross-site navigations.
 
-## Step 2 — Session-fixation defense
+## Step 2 - Session-fixation defense
 
 When a user logs in, the session ID MUST change. Otherwise an
 attacker who set a known session ID on the victim's browser can
@@ -104,7 +104,7 @@ def test_session_id_regenerates_on_login(client, base_url):
 If the test fails (session ID unchanged), mark **critical**:
 session-fixation vulnerability.
 
-## Step 3 — Absolute + idle timeout
+## Step 3 - Absolute + idle timeout
 
 Two timeout dimensions:
 
@@ -113,7 +113,7 @@ Two timeout dimensions:
 - **Idle timeout**: session expires after N minutes of inactivity
   (e.g., 30 minutes).
 
-Either alone is insufficient — both should be enforced.
+Either alone is insufficient - both should be enforced.
 
 **Test pattern:**
 
@@ -145,7 +145,7 @@ def test_absolute_timeout(client, base_url, freezer):
     assert client.get(f"{base_url}/dashboard").status_code == 401
 ```
 
-## Step 4 — Concurrent-session limits
+## Step 4 - Concurrent-session limits
 
 Some apps limit users to N concurrent sessions (e.g., banking apps
 limit to 1). Tests:
@@ -168,7 +168,7 @@ def test_concurrent_session_limit(client_a, client_b, base_url):
         ...
 ```
 
-## Step 5 — Logout invalidation across devices
+## Step 5 - Logout invalidation across devices
 
 When a user logs out from one device, all their sessions on that
 device must be invalidated. Bonus: server-side invalidation (vs
@@ -191,7 +191,7 @@ def test_logout_server_side_invalidation(client, base_url):
 ```
 
 If the replay succeeds, the server is only clearing the client
-cookie — **critical** finding for high-security apps.
+cookie - **critical** finding for high-security apps.
 
 For multi-device logout:
 
@@ -209,7 +209,7 @@ def test_logout_all_devices_invalidates_other_sessions(client_a, client_b, base_
     assert client_b.get(f"{base_url}/dashboard").status_code == 401
 ```
 
-## Step 6 — CSRF token handling
+## Step 6 - CSRF token handling
 
 For cookie-based sessions, every state-changing endpoint should
 require a CSRF token (or use SameSite=Strict cookies, which
@@ -238,11 +238,11 @@ def test_csrf_token_per_session(client, base_url):
     assert response.status_code == 200
 ```
 
-## Step 7 — Session binding (defense-in-depth)
+## Step 7 - Session binding (defense-in-depth)
 
 For high-security apps, bind sessions to additional context.
 
-**Default: User-Agent + device-fingerprint binding** — strikes the best balance of attack surface reduction vs. false positives on legitimate user activity. Use TLS binding (RFC 8473) when the deployment controls both client and server and requires maximum strength; use IP binding only when the threat model accepts mobile-network churn (frequent re-auth on roaming).
+**Default: User-Agent + device-fingerprint binding** - strikes the best balance of attack surface reduction vs. false positives on legitimate user activity. Use TLS binding (RFC 8473) when the deployment controls both client and server and requires maximum strength; use IP binding only when the threat model accepts mobile-network churn (frequent re-auth on roaming).
 
 These are policy decisions; test pattern verifies the chosen
 binding holds:
@@ -260,7 +260,7 @@ def test_session_bound_to_user_agent(client, base_url):
     assert response.status_code == 401   # if UA-binding is enforced
 ```
 
-## Step 8 — End-to-end test recipe
+## Step 8 - End-to-end test recipe
 
 For each app's session layer:
 
@@ -288,27 +288,26 @@ For each app's session layer:
 
 - This is a build-an-X workflow targeting cookie-based sessions
   primarily. JWT-based stateless sessions have a different
-  attack-surface model — see [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md).
+  attack-surface model - see [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md).
 - ASVS V3 evolves per major version (current: v5.0.0); cite the
   pinned version in your test assertions.
 - Some defenses (TLS binding, device fingerprinting) require server
   + client coordination; tests verify the server side; client
   conformance is separate.
 - Federated SSO sessions (Keycloak / Auth0 / Okta) layer their own
-  session-management on top — see those skills for IdP-specific
+  session-management on top - see those skills for IdP-specific
   patterns.
 
 ## References
 
-- [asvs][asvs] — OWASP ASVS landing
-- owasp.org/www-project-cheat-sheets/cheatsheets/Session_Management_Cheat_Sheet
-  — OWASP Session Management Cheat Sheet (companion to ASVS V3)
-- IETF RFC 6265 — HTTP State Management Mechanism (cookies)
-- IETF RFC 8473 — Token Binding over HTTP
-- developer.mozilla.org/en-US/docs/Web/HTTP/Cookies — MDN cookie reference
-- [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md) —
+- [asvs][asvs] - OWASP ASVS landing
+- owasp.org/www-project-cheat-sheets/cheatsheets/Session_Management_Cheat_Sheet - OWASP Session Management Cheat Sheet (companion to ASVS V3)
+- IETF RFC 6265 - HTTP State Management Mechanism (cookies)
+- IETF RFC 8473 - Token Binding over HTTP
+- developer.mozilla.org/en-US/docs/Web/HTTP/Cookies - MDN cookie reference
+- [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md) - 
   companion: pre-session auth flow
 - [`keycloak-tests`](../keycloak-tests/SKILL.md),
   [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) — IdP-specific session
+  [`okta-tests`](../okta-tests/SKILL.md) - IdP-specific session
   patterns (federated SSO)

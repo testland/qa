@@ -26,7 +26,7 @@ AmEx each maintain their own reason-code catalogs.
 - Auditing existing dispute-evidence-submission code.
 - Building dispute analytics dashboards.
 
-## Step 1 — Reason code catalog
+## Step 1 - Reason code catalog
 
 Per Visa Chargeback Reason Codes (cite by stable ID: Visa
 Chargeback Management Guidelines):
@@ -59,7 +59,7 @@ Mastercard Chargeback Guide):
 For tests: pick the 3-5 most-common reason codes for your
 business and verify the evidence-collection flow for each.
 
-## Step 2 — Per-gateway dispute API
+## Step 2 - Per-gateway dispute API
 
 ### Stripe
 
@@ -109,7 +109,7 @@ const dispute = await disputesClient.get(disputeId);
 expect(dispute.status).toBe('OPEN');
 ```
 
-## Step 3 — Submit evidence
+## Step 3 - Submit evidence
 
 Per [stripe.com/docs/disputes/responding](https://docs.stripe.com/disputes/responding):
 
@@ -133,7 +133,7 @@ test('submit dispute evidence', async () => {
 The evidence must be submitted **before the due date**
 (`evidence_details.due_by`).
 
-## Step 4 — Test the disposition flow
+## Step 4 - Test the disposition flow
 
 ```typescript
 test('won disputes update internal state', async () => {
@@ -160,10 +160,10 @@ test('lost disputes update internal state', async () => {
 });
 ```
 
-## Step 5 — Auto-evidence collection
+## Step 5 - Auto-evidence collection
 
-Many merchants auto-collect evidence on every charge — purchase
-description, shipping info, customer IP — to streamline disputes.
+Many merchants auto-collect evidence on every charge - purchase
+description, shipping info, customer IP - to streamline disputes.
 Tests should verify:
 
 ```typescript
@@ -178,7 +178,7 @@ test('every charge has auto-evidence', async () => {
 });
 ```
 
-## Step 6 — Test matrix
+## Step 6 - Test matrix
 
 ```yaml
 # tests/payment/chargeback-matrix.yaml
@@ -199,7 +199,7 @@ matrix:
 
 Per (gateway, reason, outcome) cell, generate a test.
 
-## Step 7 — Reconciliation
+## Step 7 - Reconciliation
 
 Chargebacks affect accounting:
 

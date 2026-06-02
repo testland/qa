@@ -1,6 +1,6 @@
 ---
 name: atheris-python-fuzzing
-description: "Author and run Atheris — Google's Python coverage-guided fuzzer built on libFuzzer. Covers pip installation, atheris.Setup + atheris.Fuzz invocation, TestOneInput(data: bytes) target signature, FuzzedDataProvider for structured input, instrument_imports() / instrument_func decorators for coverage instrumentation, and libFuzzer-passthrough flags (-atheris_runs, -max_total_time, -dict). Use for fuzzing Python libraries — also supports CPython native-extension fuzzing."
+description: "Author and run Atheris - Google's Python coverage-guided fuzzer built on libFuzzer. Covers pip installation, atheris.Setup + atheris.Fuzz invocation, TestOneInput(data: bytes) target signature, FuzzedDataProvider for structured input, instrument_imports() / instrument_func decorators for coverage instrumentation, and libFuzzer-passthrough flags (-atheris_runs, -max_total_time, -dict). Use for fuzzing Python libraries - also supports CPython native-extension fuzzing."
 rating: 22
 d6: 4
 archetype: S1
@@ -59,7 +59,7 @@ atheris.Fuzz()
 
 Per Atheris README:
 
-- `TestOneInput(data: bytes)` is the fuzz callback — invoked
+- `TestOneInput(data: bytes)` is the fuzz callback - invoked
   with mutated input bytes each iteration.
 - `atheris.Setup(sys.argv, TestOneInput)` initialises the fuzzer
   with libFuzzer flags from `sys.argv`.
@@ -78,7 +78,7 @@ with atheris.instrument_imports():
 The `instrument_imports()` context manager monkey-patches the
 import system so subsequent imports are coverage-instrumented.
 Module-level imports above this context manager are NOT
-instrumented — the fuzzer is blind to their code.
+instrumented - the fuzzer is blind to their code.
 
 Alternative: per-function instrumentation:
 
@@ -207,7 +207,7 @@ Map the traceback to a bug spec via
   multi-process fuzzing without `-jobs` (and libFuzzer's job
   flag works imperfectly with Python).
 - **Slower than libFuzzer / cargo-fuzz.** Pure-Python iteration
-  is ~1000-10000 execs/sec — orders of magnitude slower than C.
+  is ~1000-10000 execs/sec - orders of magnitude slower than C.
 - **Coverage instrumentation overhead.** ~5x slowdown for
   instrumented modules.
 - **Native-extension fuzzing requires C/C++ toolchain.** Build
@@ -221,9 +221,9 @@ Map the traceback to a bug spec via
 
 ## References
 
-- Atheris —
+- Atheris - 
   [github.com/google/atheris](https://github.com/google/atheris).
-- LLVM libFuzzer (underlying) —
+- LLVM libFuzzer (underlying) - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
 - Composes:
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),
@@ -236,7 +236,6 @@ Map the traceback to a bug spec via
   [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
   [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
 - Sibling-plugin overlap:
-  [`hypothesis-testing`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md)
-  — different methodology (hypothesis-driven vs coverage-guided).
+  [`hypothesis-testing`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md) - different methodology (hypothesis-driven vs coverage-guided).
 - Dispatcher:
   [`fuzz-toolkit-dispatcher`](../fuzz-toolkit-dispatcher/SKILL.md).

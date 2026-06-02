@@ -17,9 +17,9 @@ target language, source-availability, and OSS-Fuzz eligibility.
 
 ## When to use
 
-- Authoring a fuzz target — pick the right fuzzer before writing
+- Authoring a fuzz target - pick the right fuzzer before writing
   the harness.
-- Reviewing an existing fuzz target — verify the right fuzzer was
+- Reviewing an existing fuzz target - verify the right fuzzer was
   selected.
 - Backing the
   [`fuzz-target-author`](../../agents/fuzz-target-author.md)
@@ -81,7 +81,7 @@ Switch to **AFL++** when:
 - The target reads input via stdin or file argument (file-format
   tools, command-line utilities)
 - You need QEMU mode for closed-source binaries
-- You want a different mutation engine — AFL++ and libFuzzer find
+- You want a different mutation engine - AFL++ and libFuzzer find
   different bugs
 
 Many mature projects run **both** libFuzzer and AFL++ targets in
@@ -89,15 +89,15 @@ parallel.
 
 ### Rust
 
-Prefer **cargo-fuzz** — integrates with cargo, supports
+Prefer **cargo-fuzz** - integrates with cargo, supports
 `Arbitrary` for structured input. Requires nightly toolchain.
 
 For Rust binaries (not callable library APIs), AFL++ works
-similarly to C/C++ — wrap the binary with AFL++.
+similarly to C/C++ - wrap the binary with AFL++.
 
 ### Go
 
-Use **Go native fuzzing** — built into the standard `testing`
+Use **Go native fuzzing** - built into the standard `testing`
 package as of Go 1.18. Failing inputs auto-save as regression
 fixtures.
 
@@ -106,17 +106,17 @@ For binary-level Go fuzzing or fuzzing CGo dependencies, AFL++ in
 
 ### Python
 
-Use **Atheris** — Google's libFuzzer-backed Python fuzzer.
+Use **Atheris** - Google's libFuzzer-backed Python fuzzer.
 Supports both pure-Python and CPython native extensions.
 
 For pure property-based testing in Python (without coverage
 guidance), consider Hypothesis in
-[`qa-property-based`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md) —
+[`qa-property-based`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md) - 
 complementary, not competing.
 
 ### JVM
 
-Use **Jazzer** — Code Intelligence's libFuzzer-backed JVM
+Use **Jazzer** - Code Intelligence's libFuzzer-backed JVM
 fuzzer. JUnit 5 integration via `@FuzzTest`. Ships JVM-level
 sanitisers (deserialization, SSRF, ReDoS, OS command injection).
 

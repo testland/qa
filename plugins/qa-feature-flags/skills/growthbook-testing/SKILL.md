@@ -13,8 +13,7 @@ archetype: S1
 Per
 [docs.growthbook.io/lib/node](https://docs.growthbook.io/lib/node),
 the GrowthBook Node SDK's `GrowthBookClient` supports an
-`initSync({ payload })` pattern that fully bypasses the network
-— pass the feature definitions directly.
+`initSync({ payload })` pattern that fully bypasses the network - pass the feature definitions directly.
 
 `createScopedInstance` lets each test (or request) bind its own
 user context cleanly.
@@ -53,7 +52,7 @@ const gbClient = new GrowthBookClient().initSync({
 });
 ```
 
-`initSync` is purpose-built for tests — no async wait.
+`initSync` is purpose-built for tests - no async wait.
 
 ### isOn / getFeatureValue
 

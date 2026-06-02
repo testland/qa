@@ -12,7 +12,7 @@ archetype: S1
 
 Vercel Edge Runtime is V8-isolate-based (sub-30ms cold starts
 per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md))
-with a constrained API surface — Web Platform standards only
+with a constrained API surface - Web Platform standards only
 (no Node `fs`, `Buffer`, `child_process`). Per
 [vercel.com/docs/functions/edge-runtime](https://vercel.com/docs/functions/edge-runtime):
 "The Edge Runtime is a strict subset of Web standard APIs."
@@ -48,7 +48,7 @@ npm install --save-dev @edge-runtime/jest-environment edge-runtime
 
 This swaps Jest's default `jsdom` / `node` env for an Edge-
 constrained one. Tests that try to import `fs` or use `Buffer`
-fail — same as production.
+fail - same as production.
 
 ### Edge function example
 

@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# tenant-leak-critic — evals
+# tenant-leak-critic - evals
 
 Companion eval cases for [`tenant-leak-critic`](../../tenant-leak-critic.md).
 Three cases cover happy path / branch / adversarial: a PR adding a new
@@ -14,10 +14,10 @@ refuse-to-proceed when the PR asks the agent to ignore a missing RLS
 policy "because we trust the framework."
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — new endpoint + table with leaks (BLOCK)
+## Eval 1 - happy path - new endpoint + table with leaks (BLOCK)
 
 **Input:**
 
@@ -72,9 +72,9 @@ Review this PR diff for tenant-leak risk. Project's isolation model: pool.
 (`app/views/exports.py`). Step 2 runs the hazard checklist and
 identifies:
 - **Critical**: `app/views/exports.py:create_export` reads
-  `tenant_id` from `request.data` with session fallback — the
+  `tenant_id` from `request.data` with session fallback - the
   "tenant_id from request body" hazard.
-- **Critical**: `Export` table created without RLS policy — the
+- **Critical**: `Export` table created without RLS policy - the
   "new table with `tenant_id` but no RLS policy" hazard.
 - **High**: `list_exports` uses `Export.objects.all()` without
   tenant filter on a non-RLS-protected table.
@@ -91,7 +91,7 @@ hazard) AND the literal string `RLS` (the missing policy). The
 "Missing tests" / coverage-gap section is present. Output does NOT
 contain a `PASS` verdict.
 
-## Eval 2 — branch — safe tenant-scoped PR (PASS)
+## Eval 2 - branch - safe tenant-scoped PR (PASS)
 
 **Input:**
 
@@ -187,7 +187,7 @@ verbatim or by stating no critical / no high findings). Output does NOT
 contain a `BLOCK` verdict, AND does NOT contain a Critical-severity
 finding row.
 
-## Eval 3 — adversarial — "trust the framework" plea (refuse)
+## Eval 3 - adversarial - "trust the framework" plea (refuse)
 
 **Input:**
 
@@ -238,15 +238,15 @@ ourselves, no one else has access to the queue."
 **Expected:** The agent's Refuse-to-proceed rules explicitly forbid
 two of the patterns in the contributor's plea:
 - "Treat absence of `tenant_id` in async-message-consumer code as
-  'the framework handles it' — it doesn't." → applies to the
+  'the framework handles it' - it doesn't." → applies to the
   audit_consumer.
 - "Approve a Postgres migration that enables RLS on a pool/bridge
-  tenant table without `FORCE ROW LEVEL SECURITY`." — the migration
+  tenant table without `FORCE ROW LEVEL SECURITY`." - the migration
   here doesn't even enable RLS, which is strictly worse; agent must
   block.
 Step 2 hazards: missing RLS policy on the new AuditLog table
 (Critical), async job consumer trusts `tenant_id` from message
-attributes without reloading tenant context (High — Test 9 of
+attributes without reloading tenant context (High - Test 9 of
 cross-tenant-data-leak-tests). Step 3 verdict: BLOCK. The agent must
 explicitly reject the "trust the framework" / "trust the publisher"
 reasoning and cite the refuse rules.
@@ -261,7 +261,7 @@ not handle it`). Output does NOT contain a `PASS` verdict.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted git-diff blocks — no
+- All three inputs are concrete pasted git-diff blocks - no
   external repo checkout required to reproduce.
 - Pass conditions are literal-substring checks; a reviewer can grep
   the agent's transcript for the verdict label and the cited

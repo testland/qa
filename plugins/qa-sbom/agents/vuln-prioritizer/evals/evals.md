@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# vuln-prioritizer — evals
+# vuln-prioritizer - evals
 
 Companion eval cases for [`vuln-prioritizer`](../../vuln-prioritizer.md).
 Three cases cover happy path / branch / adversarial: a CISA KEV CVE in
@@ -15,10 +15,10 @@ Re-run by feeding the **Input** block as the first user message and
 checking the agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — KEV CVE present, Fix-Now / BLOCK
+## Eval 1 - happy path - KEV CVE present, Fix-Now / BLOCK
 
 **Input:**
 
@@ -76,7 +76,7 @@ Step 2 normalizes both findings: severity `critical`, in_kev `true`,
 epss 0.97. Step 4 dedupe collapses both into one finding at
 `log4j-core@2.14.1` with `caught_by: [grype, trivy]`. Step 5 priority
 assignment: `in_kev: true` → bucket `Fix-Now` (the very first rule in
-the priority function). Step 7 report: Verdict `BLOCK` — 1 Fix-Now
+the priority function). Step 7 report: Verdict `BLOCK` - 1 Fix-Now
 finding; the Fix-Now table includes CVE-2021-44228 with the 🔥 KEV
 marker, fix `upgrade to 2.17.1+`, and `caught_by: grype, trivy`. The
 action items name Log4Shell and instruct to upgrade to 2.17.1+.
@@ -86,7 +86,7 @@ contains `CVE-2021-44228` AND contains at least one of `KEV` /
 `Log4Shell` AND contains the verdict `BLOCK`. Output does NOT contain
 `PASS` as the verdict.
 
-## Eval 2 — branch — clean image, only VEX-filtered + low/unfixed, PASS
+## Eval 2 - branch - clean image, only VEX-filtered + low/unfixed, PASS
 
 **Input:**
 
@@ -146,7 +146,7 @@ Detection signals: `.grype.yaml` present; `trivy` invoked in CI.
 **Expected:** Step 1 detects Grype + Trivy configured. Step 2
 normalizes the two Grype findings (Trivy contributes 0). Step 3
 applies the VEX assertion: CVE-2024-9999 has `vex_status:
-not_affected` with a populated justification — so it goes to bucket
+not_affected` with a populated justification - so it goes to bucket
 `Filtered-VEX` (surface in report, don't block). Step 5 priority for
 CVE-2024-2222: severity `low`, `is_unfixed=true` → bucket
 `Accept-Risk` (the rule `if f.is_unfixed and f.severity in ['medium',
@@ -160,7 +160,7 @@ verdict AND contains both `VEX` (or `not_affected`) and
 `Accept-Risk`. Output does NOT contain `BLOCK` as the verdict; does
 NOT contain `Fix-Now` in a non-empty findings table.
 
-## Eval 3 — adversarial — waiver for a CISA KEV CVE, refuse
+## Eval 3 - adversarial - waiver for a CISA KEV CVE, refuse
 
 **Input:**
 
@@ -210,7 +210,7 @@ section "Apply waivers for CVEs in CISA KEV (active exploitation
 threshold)", the agent refuses to apply the waiver even though all
 three required fields (`reason:`, `expires:`, `approved_by:`) are
 present and the expiry is in the future. The waiver is rejected and
-the finding remains in the `Fix-Now` bucket. Verdict: `BLOCK` — 1
+the finding remains in the `Fix-Now` bucket. Verdict: `BLOCK` - 1
 Fix-Now finding. The output explicitly states the waiver was rejected
 because the CVE is in CISA KEV; the network-ACL mitigation argument is
 explicitly not accepted.
@@ -224,7 +224,7 @@ list CVE-2021-44228 under a "Waived" section / table heading.
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content scanner-output excerpts
-  + cached-feed assertions — no external feeds or live scanner runs
+  + cached-feed assertions - no external feeds or live scanner runs
   required at eval time.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

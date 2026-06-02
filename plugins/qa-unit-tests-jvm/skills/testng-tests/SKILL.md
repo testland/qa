@@ -1,6 +1,6 @@
 ---
 name: testng-tests
-description: "Configures and runs TestNG — JVM testing framework with `@Test` priorities + groups + `dependsOnMethods`; `@DataProvider` for parametrized tests with method-level data sources; `testng.xml` suite definitions for grouping + parallelism config; listeners (`ITestListener`, `ISuiteListener`) for hooks; `ITestContext` for cross-test state; integrates with Maven Surefire / Gradle. Use when working with legacy TestNG codebases or needing TestNG-specific features (test method dependencies, suite-level XML config)."
+description: "Configures and runs TestNG - JVM testing framework with `@Test` priorities + groups + `dependsOnMethods`; `@DataProvider` for parametrized tests with method-level data sources; `testng.xml` suite definitions for grouping + parallelism config; listeners (`ITestListener`, `ISuiteListener`) for hooks; `ITestContext` for cross-test state; integrates with Maven Surefire / Gradle. Use when working with legacy TestNG codebases or needing TestNG-specific features (test method dependencies, suite-level XML config)."
 rating: 22
 d6: 4
 archetype: S1
@@ -37,7 +37,7 @@ preferring its specific patterns.
 
 For new code, prefer [`junit5-tests`](../junit5-tests/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 `build.gradle.kts`:
 
@@ -62,7 +62,7 @@ Maven:
 </dependency>
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 ```java
 import org.testng.annotations.Test;
@@ -79,7 +79,7 @@ public class CalculatorTest {
 Note: TestNG's assertEquals signature is `(actual, expected)`,
 **reversed** from JUnit. Easy source of bugs when migrating.
 
-## Step 3 — Annotations + lifecycle
+## Step 3 - Annotations + lifecycle
 
 Per [tn-docs][tn-docs]:
 
@@ -99,7 +99,7 @@ public class TestLifecycle {
 }
 ```
 
-## Step 4 — Priorities + dependencies
+## Step 4 - Priorities + dependencies
 
 ```java
 public class OrderedTests {
@@ -131,7 +131,7 @@ public class DependentTests {
 be independent). Legitimate for stage-gated integration suites
 (e.g., "create resource → modify → delete"). Use sparingly.
 
-## Step 5 — Groups + selective runs
+## Step 5 - Groups + selective runs
 
 ```java
 @Test(groups = "fast")
@@ -151,7 +151,7 @@ mvn test -Dgroups=fast
 # Or via testng.xml suite
 ```
 
-## Step 6 — DataProvider
+## Step 6 - DataProvider
 
 ```java
 @DataProvider(name = "addCases")
@@ -176,7 +176,7 @@ DataProvider methods can also be in a separate class:
 public void testAdd(int a, int b, int expected) { ... }
 ```
 
-## Step 7 — testng.xml suite definitions
+## Step 7 - testng.xml suite definitions
 
 ```xml
 <!-- testng.xml -->
@@ -206,7 +206,7 @@ public void testAdd(int a, int b, int expected) { ... }
 
 Run via `mvn test -Dsurefire.suiteXmlFiles=testng.xml`.
 
-## Step 8 — Listeners (cross-test hooks)
+## Step 8 - Listeners (cross-test hooks)
 
 ```java
 public class CustomListener implements ITestListener {
@@ -227,7 +227,7 @@ Apply per-class:
 public class MyTest { ... }
 ```
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: ./gradlew test
@@ -249,7 +249,7 @@ JaCoCo coverage works identically to JUnit setups.
 
 ## Limitations
 
-- TestNG vs JUnit ecosystem split — fewer integrations, less
+- TestNG vs JUnit ecosystem split - fewer integrations, less
   StackOverflow coverage.
 - assertEquals argument order is opposite of JUnit (migration
   source of bugs).
@@ -259,10 +259,10 @@ JaCoCo coverage works identically to JUnit setups.
 
 ## References
 
-- [tn-docs][tn-docs] — TestNG documentation
-- testng.org — landing
+- [tn-docs][tn-docs] - TestNG documentation
+- testng.org - landing
 - [`junit5-tests`](../junit5-tests/SKILL.md),
   [`kotest-tests`](../kotest-tests/SKILL.md),
   [`spock-tests`](../spock-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) — sister tools
+  [`scalatest`](../scalatest/SKILL.md) - sister tools
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

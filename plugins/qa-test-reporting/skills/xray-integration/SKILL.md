@@ -1,6 +1,6 @@
 ---
 name: xray-integration
-description: "Syncs automated test results into Xray for Jira (Cloud or Server) using the official REST import endpoints — picks the right endpoint per format (`/api/v2/import/execution/junit` for JUnit XML, `/cucumber` for Cucumber JSON, `/nunit` / `/testng` / `/robot` for the others), authenticates via the `client_id` + `client_secret` → JWT exchange (Cloud) or PAT / Basic (Server), maps automated test results to existing Test issues via the `xray-junit-extensions` `@XrayTest(key=\"...\")` annotation, and creates or updates a Test Execution issue per CI run. Use when the team manages test cases in Jira via Xray and the CI must keep Test Execution issues in sync with automated results."
+description: "Syncs automated test results into Xray for Jira (Cloud or Server) using the official REST import endpoints - picks the right endpoint per format (`/api/v2/import/execution/junit` for JUnit XML, `/cucumber` for Cucumber JSON, `/nunit` / `/testng` / `/robot` for the others), authenticates via the `client_id` + `client_secret` → JWT exchange (Cloud) or PAT / Basic (Server), maps automated test results to existing Test issues via the `xray-junit-extensions` `@XrayTest(key=\"...\")` annotation, and creates or updates a Test Execution issue per CI run. Use when the team manages test cases in Jira via Xray and the CI must keep Test Execution issues in sync with automated results."
 rating: 23
 d6: 4
 archetype: S1
@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 Xray exposes test cases / executions as **Jira issue types** (Test,
-Test Set, Test Plan, Test Execution, Pre-Condition) — automated test
+Test Set, Test Plan, Test Execution, Pre-Condition) - automated test
 sync writes results into Test Execution issues.
 
 Xray comes in two flavors:
@@ -43,7 +43,7 @@ public collections, both first-party Xray-App tools.
 - Jira-side issue links (Test → Story / Bug coverage) need automation
   results to flow.
 
-## Step 1 — Authenticate (Cloud)
+## Step 1 - Authenticate (Cloud)
 
 Per the [xray-junit-ext][xje] reference, Cloud auth is a two-step
 flow:
@@ -68,7 +68,7 @@ clients); refresh per CI run.
 For **Xray Server / DC**, use a Jira PAT or Basic auth instead;
 the JWT step is skipped.
 
-## Step 2 — Pick the import endpoint per format
+## Step 2 - Pick the import endpoint per format
 
 | Test runner output       | Cloud endpoint                                             |
 |--------------------------|------------------------------------------------------------|
@@ -108,7 +108,7 @@ For the **generic JSON** endpoint, payload shape:
 }
 ```
 
-## Step 3 — Map test methods to Xray Test issues
+## Step 3 - Map test methods to Xray Test issues
 
 Per [xray-junit-ext][xje], the JUnit 5/6 extension provides two
 annotations:
@@ -142,7 +142,7 @@ public void canAddNumbers() { /* ... */ }
 This populates the Jira-side coverage link from the test back to
 the requirement issue.
 
-## Step 4 — `XrayTestReporter` for evidence
+## Step 4 - `XrayTestReporter` for evidence
 
 Per [xray-junit-ext][xje], the `XrayTestReporterParameterResolver`
 extension injects an `XrayTestReporter` into test methods:
@@ -162,9 +162,9 @@ public void canAddNumbers(XrayTestReporter reporter) {
 ```
 
 Evidence files are attached to the Test Run inside the Test Execution
-issue — useful for failure debugging from Jira.
+issue - useful for failure debugging from Jira.
 
-## Step 5 — Configure the extension
+## Step 5 - Configure the extension
 
 Per [xray-junit-ext][xje], the extension reads `xray-junit-extensions.properties`
 for output config:
@@ -179,7 +179,7 @@ add_timestamp_to_report_filename=false
 The output is JUnit XML augmented with Xray-specific metadata; pass
 this enriched XML to the import endpoint (Step 2).
 
-## Step 6 — End-to-end CI shape
+## Step 6 - End-to-end CI shape
 
 ```yaml
 # .github/workflows/xray-sync.yml
@@ -210,9 +210,9 @@ this enriched XML to the import endpoint (Step 2).
 ```
 
 `projectKey=CALC` (the Jira project key) is the critical query
-param — without it, the import fails or lands in the wrong project.
+param - without it, the import fails or lands in the wrong project.
 
-## Step 7 — Test Execution issue lifecycle
+## Step 7 - Test Execution issue lifecycle
 
 By default, each import creates a **new** Test Execution issue.
 For "update an existing execution per build" (e.g. one execution per
@@ -229,7 +229,7 @@ Pattern:
 - **Release runs**: one Test Execution per release branch; updated on
   every push (uses `testExecKey`).
 
-## Step 8 — `tutorial-js-playwright` for non-JVM teams
+## Step 8 - `tutorial-js-playwright` for non-JVM teams
 
 Per the Xray-App GitHub org, the [`playwright-junit-reporter`][pwj]
 project ships a Playwright reporter that emits Xray-compatible JUnit
@@ -281,20 +281,20 @@ Then the same Step 6 import endpoint consumes the output.
 
 ## References
 
-- [xray-junit-ext][xje] — official `xray-junit-extensions` repo:
+- [xray-junit-ext][xje] - official `xray-junit-extensions` repo:
   `@XrayTest(key=...)`, `@Requirement(...)`, `XrayTestReporter`
   injection, `xray-junit-extensions.properties` config.
-- `https://github.com/Xray-App/xray-postman-collections` — official
+- `https://github.com/Xray-App/xray-postman-collections` - official
   Postman collections for every Xray Cloud public API endpoint
   (including `/api/v2/authenticate` and `/api/v2/import/execution/*`).
-- `https://github.com/Xray-App/xray-maven-plugin` — Maven-side
+- `https://github.com/Xray-App/xray-maven-plugin` - Maven-side
   integration with the same import + auth shape.
-- `https://github.com/Xray-App/playwright-junit-reporter` — official
+- `https://github.com/Xray-App/playwright-junit-reporter` - official
   Playwright reporter for Xray-compatible JUnit XML.
-- `https://docs.getxray.app/` — canonical doc portal (auth/region-gated;
+- `https://docs.getxray.app/` - canonical doc portal (auth/region-gated;
   consult in a real browser).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) — same
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - same
   upstream as the JUnit-flavored Xray import.
 - [`testrail-integration`](../testrail-integration/SKILL.md),
-  [`zephyr-integration`](../zephyr-integration/SKILL.md) — sibling
+  [`zephyr-integration`](../zephyr-integration/SKILL.md) - sibling
   test-management integrations.

@@ -1,6 +1,6 @@
 ---
 name: codeclimate-config
-description: "Configure Code Climate Quality (now Qlty) for repository-wide quality gates — duplication, complexity, similar-code, exclude_patterns. Covers both legacy `.codeclimate.yml` (Code Climate Velocity / GitHub integration) and the new `.qlty/qlty.toml` per the Qlty platform migration."
+description: "Configure Code Climate Quality (now Qlty) for repository-wide quality gates - duplication, complexity, similar-code, exclude_patterns. Covers both legacy `.codeclimate.yml` (Code Climate Velocity / GitHub integration) and the new `.qlty/qlty.toml` per the Qlty platform migration."
 type: skill
 archetype: S2
 rating: 22
@@ -19,10 +19,10 @@ Code Climate Quality has rebranded as **Qlty** (the docs.codeclimate.com
 URL now 301-redirects to docs.qlty.sh per the [Qlty docs]). This skill
 configures both:
 
-1. **Legacy `.codeclimate.yml`** — still consumed by Code Climate
+1. **Legacy `.codeclimate.yml`** - still consumed by Code Climate
    Velocity SaaS + GitHub Code Climate App for teams that haven't
    migrated.
-2. **New `.qlty/qlty.toml`** — Qlty platform format with `[[plugin]]` /
+2. **New `.qlty/qlty.toml`** - Qlty platform format with `[[plugin]]` /
    `[[source]]` sections.
 
 ## When to use
@@ -33,7 +33,7 @@ configures both:
 - Migrating off legacy Code Climate Quality to Qlty without losing
   config.
 
-## Step 1 — Install (Qlty CLI path)
+## Step 1 - Install (Qlty CLI path)
 
 ```bash
 # macOS / Linux
@@ -46,7 +46,7 @@ powershell -c "iwr https://qlty.sh | iex"
 Per the [Qlty quickstart], CLI verifies via `gh attestation verify` if
 downloaded from GitHub releases.
 
-## Step 2 — Initialize config
+## Step 2 - Initialize config
 
 ```bash
 qlty init
@@ -54,7 +54,7 @@ qlty init
 
 Generates `.qlty/qlty.toml` baseline scoped to detected file types.
 
-## Step 3 — Legacy `.codeclimate.yml`
+## Step 3 - Legacy `.codeclimate.yml`
 
 For teams still on the GitHub Code Climate App:
 
@@ -90,11 +90,11 @@ exclude_patterns:
   - "**/*.d.ts"
 ```
 
-**Excluding `**/test/**` is required** —
+**Excluding `**/test/**` is required** - 
 qa-test-review owns test-code hygiene; qa-code-quality scopes
 production only.
 
-## Step 4 — Qlty `.qlty/qlty.toml`
+## Step 4 - Qlty `.qlty/qlty.toml`
 
 Per the [Qlty quickstart] structure:
 
@@ -133,7 +133,7 @@ qlty plugins list
 qlty plugins enable eslint
 ```
 
-## Step 5 — Run analysis
+## Step 5 - Run analysis
 
 ```bash
 # Lint changed files (default)
@@ -152,7 +152,7 @@ qlty smells --all
 qlty metrics --all --max-depth=2 --sort complexity --limit 10
 ```
 
-## Step 6 — CI gate
+## Step 6 - CI gate
 
 ```yaml
 # GitHub Actions
@@ -165,7 +165,7 @@ qlty metrics --all --max-depth=2 --sort complexity --limit 10
     QLTY_TOKEN: ${{ secrets.QLTY_TOKEN }}
 ```
 
-`--upstream main` scopes results to **only the diff** vs main —
+`--upstream main` scopes results to **only the diff** vs main - 
 matches the "new issues only" workflow Qlty's PR feedback uses
 (per [Qlty docs] section "Preventing new issues from merging").
 
@@ -173,7 +173,7 @@ matches the "new issues only" workflow Qlty's PR feedback uses
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Scan tests + production with same thresholds | Tests fail duplication checks (deliberate AAA repetition); team disables tool | Exclude `**/tests/**`, `**/spec/**` (Steps 3–4) |
+| Scan tests + production with same thresholds | Tests fail duplication checks (deliberate AAA repetition); team disables tool | Exclude `**/tests/**`, `**/spec/**` (Steps 3 - 4) |
 | Set duplication `mass_threshold` to default in brownfield | Hundreds of pre-existing duplications block all PRs | Use `--upstream` diff scope OR raise threshold initially + ratchet down |
 | Mix legacy `.codeclimate.yml` + new `.qlty/qlty.toml` | Both tools find different issues; PR comments contradict | Pick one platform; legacy `.codeclimate.yml` is consumed by Code Climate Velocity / GitHub App, `.qlty/qlty.toml` by Qlty CLI |
 | Enable every plugin upfront | Noisy first PR scares team | Start with 2-3 plugins; add quarterly |
@@ -189,9 +189,9 @@ matches the "new issues only" workflow Qlty's PR feedback uses
 
 ## References
 
-- [Qlty docs] — platform overview, plugin catalog, exclusion patterns
-- [Qlty quickstart] — install, init, check, smells commands
-- Legacy Code Climate v2 schema — at
+- [Qlty docs] - platform overview, plugin catalog, exclusion patterns
+- [Qlty quickstart] - install, init, check, smells commands
+- Legacy Code Climate v2 schema - at
   `https://docs.qlty.sh/migrate-from-code-climate` (consult Qlty
   docs for current migration mapping)
 

@@ -4,14 +4,14 @@ type: agent
 archetype: A2
 ---
 
-# extension-test-author — evals
+# extension-test-author - evals
 
 Companion eval cases for [`extension-test-author`](../../extension-test-author.md).
 Three cases covering happy path (MV3 background SW storage) + branch
 (content-script injection) + adversarial (MV1 manifest refusal). Pass conditions
 are concrete string-match checks a reviewer can grep from a transcript.
 
-## Eval 1: happy path — MV3 background service worker storage
+## Eval 1: happy path - MV3 background service worker storage
 
 **Input:**
 - `manifest.json` contains `"manifest_version": 3` and no `applications.gecko` block.
@@ -28,7 +28,7 @@ are concrete string-match checks a reviewer can grep from a transcript.
 
 **Pass condition:** Output contains the literal substrings `context.serviceWorkers()` AND `chrome.storage.local` AND `tests/extension-` and does NOT contain `backgroundPages()`.
 
-## Eval 2: branch — content-script injection on a target page
+## Eval 2: branch - content-script injection on a target page
 
 **Input:**
 - `manifest.json` contains MV3 + a `content_scripts` block matching `https://github.com/*`.
@@ -41,11 +41,11 @@ are concrete string-match checks a reviewer can grep from a transcript.
 - launches a persistent context with the extension loaded
 - navigates `page.goto('https://github.com')` (or a fixture page if offline-required)
 - asserts visibility via `await expect(page.locator('[data-extension-banner]')).toBeVisible()`
-- does NOT mock the content script — drives it through real navigation
+- does NOT mock the content script - drives it through real navigation
 
 **Pass condition:** Output contains the literal substrings `page.goto` AND `github.com` AND `[data-extension-banner]` AND `toBeVisible()`.
 
-## Eval 3: adversarial — refuse on MV1 manifest
+## Eval 3: adversarial - refuse on MV1 manifest
 
 **Input:**
 - `manifest.json` contains `"manifest_version": 1` (legacy).
@@ -62,4 +62,4 @@ are concrete string-match checks a reviewer can grep from a transcript.
 
 - Eval file lives outside the lint glob (`*/agents/*/evals/*` is excluded by `validate.sh` and `rating-check.sh`), so this file does not need rating frontmatter.
 - Pass conditions are literal-string checks; a reviewer can grep the agent's transcript output for each substring without re-running the agent.
-- Target-model dates are eval-authoring dates (2026-05-25), not execution dates — the cases are designed to be re-run by a reviewer against each tier.
+- Target-model dates are eval-authoring dates (2026-05-25), not execution dates - the cases are designed to be re-run by a reviewer against each tier.

@@ -4,22 +4,22 @@ type: agent
 archetype: A3
 ---
 
-# data-anomaly-triager — evals
+# data-anomaly-triager - evals
 
 Companion eval cases for [`data-anomaly-triager`](../../data-anomaly-triager.md).
 Three cases cover happy path / branch / adversarial: a dbt `not_null`
 failure on 47 rows (verdict `missing`), a GX range check failing on
 12.2% of rows (verdict `drift`), and a non-data-quality input (a CI
-pipeline error log) that has no failure record to classify — the agent
+pipeline error log) that has no failure record to classify - the agent
 must refuse to assign one of the five categories. Re-run by feeding the
 **Input** block as the first user message and checking the agent's
 output against the **Pass condition**.
 
 Target models for re-runs: `sonnet`, `haiku`, `opus`. Dates recorded
-below are the eval-authoring date — each case is designed to be
+below are the eval-authoring date - each case is designed to be
 reproducible against any tier.
 
-## Eval 1 — happy path — dbt not_null fails (missing)
+## Eval 1 - happy path - dbt not_null fails (missing)
 
 **Input:**
 
@@ -71,7 +71,7 @@ mentions one of `upstream extractor` / `ingestion` / `source` /
 `extractor` as the recommended next step. Output does NOT classify the
 finding as `drift` or `outlier` or `referential` or `freshness`.
 
-## Eval 2 — branch — GX range check fails on 12.2% of rows (drift)
+## Eval 2 - branch - GX range check fails on 12.2% of rows (drift)
 
 **Input:**
 
@@ -128,7 +128,7 @@ as `missing` AND does NOT classify it as `outlier` (which is the
 small-count counterpart explicitly distinguished by scale in the agent
 body).
 
-## Eval 3 — adversarial — input is a CI pipeline error, not a data-quality failure (refuse)
+## Eval 3 - adversarial - input is a CI pipeline error, not a data-quality failure (refuse)
 
 **Input:**
 
@@ -165,7 +165,7 @@ materialization (`dbt run`), not a `dbt test` failure with
 `status == "fail"` on a not_null / relationships / range / freshness
 check. None of the five categories
 (`missing` / `referential` / `freshness` / `outlier` / `drift`)
-applies — this is an infrastructure issue. The agent refuses to assign
+applies - this is an infrastructure issue. The agent refuses to assign
 a category, explains the input shape it expected (a `dbt test` failure
 with `status: fail` per the run-results JSON, a GX validation result
 with `success: false`, or a Soda `FAIL` scan line), and routes the
@@ -181,13 +181,13 @@ a `verdict: outlier` line, a `verdict: referential` line, or a
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to run dbt / GX / Soda.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring (verdict category names are
   defined verbatim in the agent's classification table).
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow
-  `Bash(jq *)`, `Bash(git log|blame *)`) is read-only — eval re-runs
+  `Bash(jq *)`, `Bash(git log|blame *)`) is read-only - eval re-runs
   cannot modify the warehouse, the dbt project, or git history.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# test-case-quality-critic — evals
+# test-case-quality-critic - evals
 
 Companion eval cases for [`test-case-quality-critic`](../../test-case-quality-critic.md).
 Three cases cover happy path / branch / adversarial: a TCM repository
@@ -14,7 +14,7 @@ must NOT auto-pass per its Refuse-to-proceed rules. Re-run by
 feeding the **Input** block as the first user message and checking
 the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — repository with critical findings (BLOCK)
+## Eval 1 - happy path - repository with critical findings (BLOCK)
 
 **Input:**
 
@@ -70,12 +70,12 @@ Uncovered requirements: 5.
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25), opus (2026-05-25)
 
-**Expected:** Per Step 1 field-presence: C1001 fails — Steps array
+**Expected:** Per Step 1 field-presence: C1001 fails - Steps array
 empty AND case declared as "Steps template" (Refuse-to-proceed
 rule "Mark a 'Steps' template case 'pass' if the steps array is
-empty" fires). Per Step 2 step-granularity: C1023 fails — step 1
+empty" fires). Per Step 2 step-granularity: C1023 fails - step 1
 action contains " and " joining "log in" and "add item to cart"
-(combined action; split). Per Step 3 title quality: C1056 fails —
+(combined action; split). Per Step 3 title quality: C1056 fails - 
 title "Test the button" starts with vague "Test" verb, not
 behavioural; C1001 title "Test checkout" same flaw. Per Step 4
 traceability: C1099's `REQ-AUTH-099` is stale (requirement deleted
@@ -92,7 +92,7 @@ AND mentions at least two of `C1001`, `C1023`, `C1056`, `C1099`,
 critical-finding rationale). Output does NOT contain a final
 `PASS` verdict line that omits a qualifier.
 
-## Eval 2 — branch — clean repository (PASS)
+## Eval 2 - branch - clean repository (PASS)
 
 **Input:**
 
@@ -159,7 +159,7 @@ AND mentions at least one of `100%`, `Coverage: 100`, or
 populated Critical-findings table row with a specific case ID
 from the sample.
 
-## Eval 3 — adversarial — empty-steps Draft case (refuse to auto-pass)
+## Eval 3 - adversarial - empty-steps Draft case (refuse to auto-pass)
 
 **Input:**
 
@@ -188,11 +188,11 @@ fill in the steps later this sprint."
 (BLOCK), `steps` is empty (BLOCK), `expected_results` is empty
 (BLOCK). Per Refuse-to-proceed rules, TWO independent refusals
 fire: (a) "Mark a repository 'pass' if any case is missing
-required fields" — preconditions, steps, expected_results all
+required fields" - preconditions, steps, expected_results all
 missing; (b) "Mark a 'Steps' template case 'pass' if the steps
-array is empty" — C9001 is exactly that case. Per the
-Anti-patterns table, "Auto-pass cases marked 'Draft' — Drafts
-become permanent without audit; Audit drafts the same way" — the
+array is empty" - C9001 is exactly that case. Per the
+Anti-patterns table, "Auto-pass cases marked 'Draft' - Drafts
+become permanent without audit; Audit drafts the same way" - the
 agent rejects the caller's framing. The agent emits a `BLOCK`
 verdict (or an explicit refusal to issue a `PASS` /
 `PASS-WITH-CAVEATS`) and rejects the caller's "fill in later"
@@ -209,7 +209,7 @@ case ID `C9001` or the specific missing fields (`steps`,
 
 - All three inputs are concrete pasted case-record snippets
   (TestRail-flavor field names) plus a requirements-source
-  reachability flag — no external TestRail / Linear API call
+  reachability flag - no external TestRail / Linear API call
   needed at eval time.
 - Pass conditions are literal-string checks; a reviewer can grep
   the agent's transcript for each substring.

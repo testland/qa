@@ -4,21 +4,21 @@ type: agent
 archetype: A2
 ---
 
-# risk-based-test-selector — evals
+# risk-based-test-selector - evals
 
 Companion eval cases for [`risk-based-test-selector`](../../risk-based-test-selector.md).
 Three cases cover happy path (PR touches matrix-mapped paths → stack-ranked
 selection emitted), branch (PR touches a different risk cluster → different
 test files selected), and adversarial (non-trivial change but zero risks
-implicated — refuse to recommend, defer to coverage-based). Re-run by
+implicated - refuse to recommend, defer to coverage-based). Re-run by
 feeding the **Input** block as the first user message and checking the
 agent's transcript against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates below are the eval-authoring date — each case
+`claude-opus-4-7`. Dates below are the eval-authoring date - each case
 is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — Stripe + promo change
+## Eval 1 - happy path - Stripe + promo change
 
 **Input:**
 
@@ -56,7 +56,7 @@ Risk-test mapping (`.matrix/risk-test-mapping.yaml`):
 `src/checkout/promo/calculator.ts` hits R-1; `src/payments/stripe-webhook.ts`
 hits R-2. R-3 / R-7 / R-15 are NOT implicated (no file in their
 `source_paths` was touched). Output stack-ranks R-2 (score 16) above
-R-1 (score 15) — descending by score per the agent body. Selection
+R-1 (score 15) - descending by score per the agent body. Selection
 includes both `tests/integration/stripe-webhook*.spec.ts` AND
 `tests/chaos/stripe-resilience.spec.ts` (R-2's mapped tests), plus
 `tests/checkout/promo*.spec.ts` AND `tests/checkout/discount-math.spec.ts`
@@ -73,7 +73,7 @@ include `tests/eu-tax/`, `tests/a11y/promo-banner.spec.ts`, OR
 Output does NOT contain the literal `npx jest --run` or any phrasing
 indicating the agent itself executed the suite.
 
-## Eval 2 — branch — different risk cluster (EU tax + a11y)
+## Eval 2 - branch - different risk cluster (EU tax + a11y)
 
 **Input:**
 
@@ -120,7 +120,7 @@ implicated risk (R-2 may appear in "not implicated" framing only).
 Output does NOT include `tests/integration/stripe-webhook` in the
 selected set. Stack ranking has R-1 above R-3 above R-7.
 
-## Eval 3 — adversarial — non-trivial change, 0 risks implicated (refuse)
+## Eval 3 - adversarial - non-trivial change, 0 risks implicated (refuse)
 
 **Input:**
 
@@ -156,10 +156,10 @@ Risk matrix (`docs/risk-matrix.yaml`):
 **Target models:** sonnet (2026-05-25)
 
 **Expected:** Step 2 intersects the 14 changed files with each risk's
-`source_paths` — every intersection is empty (no risk lists
+`source_paths` - every intersection is empty (no risk lists
 `src/marketing/*`). Per Step 5, the agent refuses to recommend a
 selection because "0 risks are implicated AND the change is non-trivial
-(>10 files)" — both conditions hold (14 files, 0 risks). Output defers
+(>10 files)" - both conditions hold (14 files, 0 risks). Output defers
 to coverage-based selection per the same Step 5 rule. Output does NOT
 emit a "Critical-risk tests" / "High-risk tests" table claiming risk
 coverage.
@@ -174,7 +174,7 @@ selection command treating the 14 marketing files as risk-covered.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no live git
+- All three inputs are concrete pasted-content blocks - no live git
   repo or risk-matrix file required. The diff list + matrix excerpt +
   mapping are inlined.
 - Pass conditions are literal-string checks against the transcript;
@@ -182,7 +182,7 @@ selection command treating the 14 marketing files as risk-covered.
   `tests/eu-tax/`, `not implicated`).
 - The agent's tool surface (`Read`, `Grep`, `Glob`,
   `Bash(git diff *)`, `Bash(npx jest --listTests)`,
-  `Bash(pytest --collect-only *)`) is bounded — eval re-runs cannot
+  `Bash(pytest --collect-only *)`) is bounded - eval re-runs cannot
   modify the test suite or execute it.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

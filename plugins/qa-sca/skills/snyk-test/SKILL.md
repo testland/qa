@@ -1,6 +1,6 @@
 ---
 name: snyk-test
-description: "Configures and runs Snyk — multi-mode SCA + SAST + Container + IaC scanner with `snyk test` (one-shot scan), `snyk monitor` (continuous tracking with vuln alerts), `snyk code test` (SAST mode), `snyk container test ubuntu:18.04` (container mode); supports policy file `.snyk` for ignore + patch with expiration; integrates with 50+ package managers via auto-detect. Use when the team has a Snyk license + needs the broadest single-vendor SCA + companion product coverage (SAST / Container / IaC)."
+description: "Configures and runs Snyk - multi-mode SCA + SAST + Container + IaC scanner with `snyk test` (one-shot scan), `snyk monitor` (continuous tracking with vuln alerts), `snyk code test` (SAST mode), `snyk container test ubuntu:18.04` (container mode); supports policy file `.snyk` for ignore + patch with expiration; integrates with 50+ package managers via auto-detect. Use when the team has a Snyk license + needs the broadest single-vendor SCA + companion product coverage (SAST / Container / IaC)."
 rating: 22
 d6: 4
 archetype: S1
@@ -27,7 +27,7 @@ for container scanning, see [`trivy-image`](../../qa-sbom/skills/trivy-image/SKI
 ## When to use
 
 - The team has a Snyk license and uses Snyk as primary SCA.
-- Multi-language project with mixed package managers — Snyk's
+- Multi-language project with mixed package managers - Snyk's
   auto-detect simplifies setup vs running per-ecosystem audit
   commands.
 - Continuous-monitoring requirement (vuln alerts on
@@ -35,7 +35,7 @@ for container scanning, see [`trivy-image`](../../qa-sbom/skills/trivy-image/SKI
 - Layered with [`osv-scanner`](../osv-scanner/SKILL.md) for
   cross-DB consensus signal.
 
-## Step 1 — Install + authenticate
+## Step 1 - Install + authenticate
 
 Per [sn-gh][sn-gh]:
 
@@ -53,7 +53,7 @@ export SNYK_TOKEN=$(cat /path/to/snyk-token)
 snyk test
 ```
 
-## Step 2 — Basic SCA scan
+## Step 2 - Basic SCA scan
 
 Per [sn-gh][sn-gh]: "Run `snyk test` in a directory containing a
 supported package manifest (like `package.json` or `pom.xml`)."
@@ -77,7 +77,7 @@ snyk test --sarif-file-output=snyk.sarif           # SARIF for GHA
 The JSON / SARIF output feeds [`sca-prioritizer`](../../agents/sca-prioritizer.md)
 for cross-tool deduplication + prioritization.
 
-## Step 3 — `snyk monitor` for continuous tracking
+## Step 3 - `snyk monitor` for continuous tracking
 
 ```bash
 snyk monitor --org=my-org --project-name=my-app
@@ -90,7 +90,7 @@ The snapshot lives on snyk.io/app/your-org; new CVEs disclosed
 against your pinned versions trigger email + Slack alerts (configured
 in Snyk dashboard).
 
-## Step 4 — `.snyk` policy file
+## Step 4 - `.snyk` policy file
 
 Per Snyk's policy-file model (consult docs.snyk.io for current
 schema), `.snyk` lives at the project root and supports:
@@ -108,10 +108,9 @@ patch: {}
 ```
 
 Per-vuln ignore can be scoped to specific paths (`* > lodash`,
-`my-package > lodash`) and **must include an `expires:` field**
-— Snyk policy validates this at scan time.
+`my-package > lodash`) and **must include an `expires:` field** - Snyk policy validates this at scan time.
 
-## Step 5 — False-positive triage (MANDATORY)
+## Step 5 - False-positive triage (MANDATORY)
 
 Three suppression layers:
 
@@ -141,7 +140,7 @@ ignore:
 Cadence: every quarter, list `.snyk` policies grouped by
 `re-review-date` and process expired entries.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 jobs:
@@ -162,7 +161,7 @@ jobs:
         with: { name: snyk-report, path: snyk.json }
 ```
 
-## Step 7 — Multi-language support
+## Step 7 - Multi-language support
 
 Per [sn-gh][sn-gh]: Snyk scans "Open Source (via package managers)",
 "Application code vulnerabilities", "Container images and Kubernetes
@@ -189,7 +188,7 @@ verify against current docs).
 
 ## Limitations
 
-- Commercial license required — pricing scales with project count
+- Commercial license required - pricing scales with project count
   + scanned manifests.
 - Snyk's vuln database has its own coverage profile; pair with
   [`osv-scanner`](../osv-scanner/SKILL.md) for OSV.dev consensus.
@@ -201,13 +200,13 @@ verify against current docs).
 
 ## References
 
-- [sn-gh][sn-gh] — repository, install, basic commands
-- docs.snyk.io — full documentation
-- docs.snyk.io/snyk-cli/commands/test — `snyk test` reference (when not 404'd)
-- snyk.io/security-rules — vuln database
+- [sn-gh][sn-gh] - repository, install, basic commands
+- docs.snyk.io - full documentation
+- docs.snyk.io/snyk-cli/commands/test - `snyk test` reference (when not 404'd)
+- snyk.io/security-rules - vuln database
 - [`osv-scanner`](../osv-scanner/SKILL.md),
   [`dependabot-config`](../dependabot-config/SKILL.md),
   [`renovate-config`](../renovate-config/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) —
+  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
   sister tools
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) — unifier agent
+- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

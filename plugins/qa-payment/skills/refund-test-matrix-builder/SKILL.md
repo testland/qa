@@ -14,7 +14,7 @@ Refund logic is the second-most-misimplemented part of payment
 flows (after 3DS). Common bugs: double-refund, refund-before-
 capture, partial-refund-not-summing, refund-of-already-refunded.
 
-This skill walks through producing the refund test matrix —
+This skill walks through producing the refund test matrix - 
 not exhaustive (every gateway × every variant × every
 timing = thousands), but covering the canonical cells.
 
@@ -24,7 +24,7 @@ timing = thousands), but covering the canonical cells.
 - Refund-related incident; need to backfill tests.
 - Gateway migration; need to re-validate refund logic.
 
-## Step 1 — Inventory refund touchpoints
+## Step 1 - Inventory refund touchpoints
 
 Grep for refund-issuing code:
 
@@ -41,7 +41,7 @@ Categorise per gateway + per code path:
 | Subscription downgrade | Stripe | Pro-rated refund for unused time |
 | Cross-tenant chargeback handler | Stripe / Adyen | Automatic on dispute lost |
 
-## Step 2 — The 7 canonical refund test cases
+## Step 2 - The 7 canonical refund test cases
 
 For each (gateway, touchpoint):
 
@@ -55,7 +55,7 @@ For each (gateway, touchpoint):
 | 6 | Refund of failed charge | Rejected; no refund created |
 | 7 | Refund of disputed charge | Per gateway: blocks or allows but doesn't reverse dispute |
 
-## Step 3 — Per-gateway refund patterns
+## Step 3 - Per-gateway refund patterns
 
 ### Stripe
 
@@ -121,7 +121,7 @@ expect(result.transaction.type).toBe('credit');
 Braintree requires settlement first per
 [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
 
-## Step 4 — Timing variants
+## Step 4 - Timing variants
 
 | Variant | Test |
 |---|---|
@@ -131,7 +131,7 @@ Braintree requires settlement first per
 | Next-day | Issue after settlement; assert refund-credit semantics |
 | Declined by bank | Per gateway: simulated via specific failure-mode test card |
 
-## Step 5 — Emit the test matrix
+## Step 5 - Emit the test matrix
 
 ```yaml
 # tests/payment/refund-matrix.yaml
@@ -167,7 +167,7 @@ describe.each(CASES.stripe)('Stripe refund: $variant', ({ variant, expected }) =
 });
 ```
 
-## Step 6 — Idempotency
+## Step 6 - Idempotency
 
 Refunds are mutating operations; idempotency keys are critical:
 
@@ -185,7 +185,7 @@ test('idempotent refund', async () => {
 
 Without idempotency, network retries double-refund the customer.
 
-## Step 7 — Reporting + reconciliation
+## Step 7 - Reporting + reconciliation
 
 Refund-test coverage matrix should be reported per release:
 

@@ -22,7 +22,7 @@ hooks (faster, but with subtler edge cases around source maps).
 
 Coverage output goes to `coverageDirectory` (default `coverage/`)
 in the formats listed in `coverageReporters`. The defaults are
-`["clover", "json", "lcov", "text"]` ([jest-config][jest]) — `lcov`
+`["clover", "json", "lcov", "text"]` ([jest-config][jest]) - `lcov`
 is the most useful for cross-tool consumption (see
 [`lcov-analysis`](../lcov-analysis/SKILL.md)).
 
@@ -41,7 +41,7 @@ If the project is multi-language (Jest + Java + Python), see
 the cross-tool aggregation pattern; this skill is the Jest-specific
 piece.
 
-## Step 1 — Pick the provider
+## Step 1 - Pick the provider
 
 Per [jest-config][jest]:
 
@@ -66,7 +66,7 @@ Each provider has a different ignore-comment syntax
 Don't mix; switching providers requires updating ignore comments
 across the codebase.
 
-## Step 2 — Choose `coverageReporters`
+## Step 2 - Choose `coverageReporters`
 
 Per [jest-config][jest], "Any [istanbul reporter] can be used."
 The useful ones:
@@ -91,7 +91,7 @@ coverageReporters: ['lcov', 'json', 'text-summary', 'html']
 `lcov` for the dashboard, `json` for programmatic post-processing,
 `text-summary` for the CI log, `html` for the human.
 
-## Step 3 — Per-file thresholds (the gate-correctness pattern)
+## Step 3 - Per-file thresholds (the gate-correctness pattern)
 
 Per [jest-config][jest], `coverageThreshold` accepts global, glob,
 or path-specific rules:
@@ -132,7 +132,7 @@ The negative-number form is useful for legacy modules: `statements: -10`
 allows up to 10 uncovered statements before failing. Lets the team
 ratchet down over time without setting an aspirational percentage.
 
-## Step 4 — Scope `collectCoverageFrom`
+## Step 4 - Scope `collectCoverageFrom`
 
 Per [jest-config][jest]:
 
@@ -149,11 +149,11 @@ collectCoverageFrom: [
 ```
 
 Without this, coverage only counts files that a test imported. Files
-with **no test at all** disappear from the report — coverage looks
+with **no test at all** disappear from the report - coverage looks
 artificially high. Always set `collectCoverageFrom` for an honest
 denominator.
 
-## Step 5 — Parse the JSON output
+## Step 5 - Parse the JSON output
 
 The `json` reporter writes `coverage/coverage-final.json` with a
 per-file structure:
@@ -202,7 +202,7 @@ The `coverage-summary.json` file (from the `json-summary` reporter)
 is the pre-aggregated version when per-statement detail isn't
 needed.
 
-## Step 6 — Vitest equivalent
+## Step 6 - Vitest equivalent
 
 Vitest uses the same Istanbul / V8 stack with `vitest --coverage`:
 
@@ -231,10 +231,10 @@ Key naming differences vs Jest:
 - `coverageReporters` → `coverage.reporter`
 - `coverageThreshold` → `coverage.thresholds`
 
-The output formats and PR-gating logic are identical — the
+The output formats and PR-gating logic are identical - the
 downstream parser works against either.
 
-## Step 7 — CI shape
+## Step 7 - CI shape
 
 ```yaml
 - name: Run tests with coverage
@@ -285,16 +285,15 @@ overrides config-side reporter selection.
 
 ## References
 
-- [jest-config][jest] — `collectCoverage`, `coverageProvider`
+- [jest-config][jest] - `collectCoverage`, `coverageProvider`
   (`babel` vs `v8`), `coverageReporters` (defaults
   `["clover","json","lcov","text"]`), `coverageThreshold` (global +
   glob + path), `collectCoverageFrom`, `coveragePathIgnorePatterns`.
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) — the LCOV file Jest
+- [`lcov-analysis`](../lcov-analysis/SKILL.md) - the LCOV file Jest
   emits feeds this parser for cross-tool diffing.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) — Jest
+- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - Jest
   also emits Cobertura XML when configured; this parser consumes it.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) —
+- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   PR-comment formatter built on top of the parsed Jest output.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md)
-  — picks which uncovered branches to target, given the Jest
+- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - picks which uncovered branches to target, given the Jest
   output.

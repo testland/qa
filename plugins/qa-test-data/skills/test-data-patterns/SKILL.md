@@ -1,6 +1,6 @@
 ---
 name: test-data-patterns
-description: "Pure reference catalog of the cross-language object-construction patterns for test data — Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers in this plugin (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Preloaded by `framework-architecture-auditor` as the data-construction-tier reference."
+description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers in this plugin (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Preloaded by `framework-architecture-auditor` as the data-construction-tier reference."
 rating: 24
 d6: 5
 archetype: S2
@@ -10,24 +10,24 @@ archetype: S2
 
 ## Overview
 
-This skill is a **pure reference** (S2) — no execution steps. It is the catalog the [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) cites when it audits a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
+This skill is a **pure reference** (S2) - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) cites when it audits a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
 
 ## When to use
 
-- Designing test-data construction strategy for a new framework — pick the right pattern before reaching for the tool.
+- Designing test-data construction strategy for a new framework - pick the right pattern before reaching for the tool.
 - Auditing an existing framework where test data is the bottleneck (every test re-creates the world; tests run for minutes; data drifts between tests).
-- Migrating between tools (Ruby's FactoryBot → Python's factory_boy, JS's Fishery → Python's Polyfactory) — the pattern stays; the tool changes.
-- Onboarding engineers — point them at the canonical pattern citation.
+- Migrating between tools (Ruby's FactoryBot → Python's factory_boy, JS's Fishery → Python's Polyfactory) - the pattern stays; the tool changes.
+- Onboarding engineers - point them at the canonical pattern citation.
 
 Do **not** use this skill to:
 
-- Configure a specific tool — that's the per-language S1 skill in this plugin.
-- Generate negative / boundary / parameterized test data — that's [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md).
-- Author an E2E seed fixture for the whole suite — that's [`seed-data-curator`](../seed-data-curator/SKILL.md).
+- Configure a specific tool - that's the per-language S1 skill in this plugin.
+- Generate negative / boundary / parameterized test data - that's [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md).
+- Author an E2E seed fixture for the whole suite - that's [`seed-data-curator`](../seed-data-curator/SKILL.md).
 
-## Pattern 1 — Test Data Builder
+## Pattern 1 - Test Data Builder
 
-**Canonical source:** Nat Pryce and Steve Freeman, *Growing Object-Oriented Software, Guided by Tests* (2009) — the Test Data Builder pattern is named in chapter 22. Discussed in Pryce's blog post [Test Data Builders](http://www.natpryce.com/articles/000714.html) (the cross-language origin reference).
+**Canonical source:** Nat Pryce and Steve Freeman, *Growing Object-Oriented Software, Guided by Tests* (2009) - the Test Data Builder pattern is named in chapter 22. Discussed in Pryce's blog post [Test Data Builders](http://www.natpryce.com/articles/000714.html) (the cross-language origin reference).
 
 **Definition:** A Test Data Builder is a class with chainable methods (`.withName("Alice").withOrgId(42).build()`) that constructs domain objects step-by-step. Every field has a sensible default; the test overrides only the fields it cares about.
 
@@ -56,9 +56,9 @@ const user = aUser()
 | Builders that perform side effects (`build()` writes to DB) | Mixes two concerns; the test cannot tell whether it's constructing or persisting |
 | Builders for objects with 2 fields | Overhead exceeds benefit; use a struct literal |
 
-## Pattern 2 — Factory (with traits and associations)
+## Pattern 2 - Factory (with traits and associations)
 
-**Canonical source:** Thoughtbot's `factory_bot` (Ruby) is the cross-language reference implementation. The pattern itself predates the library — Joshua Kerievsky's *Refactoring to Patterns* (2004) traces it to the Gang of Four's Factory Method but adapted for test data.
+**Canonical source:** Thoughtbot's `factory_bot` (Ruby) is the cross-language reference implementation. The pattern itself predates the library - Joshua Kerievsky's *Refactoring to Patterns* (2004) traces it to the Gang of Four's Factory Method but adapted for test data.
 
 **Definition:** A Factory is a registered, named template for creating an object. Traits are named modifiers (`:admin`, `:disabled`, `:premium`) that compose with the base template. Associations express relationships (`user.org`, `org.plan`).
 
@@ -83,17 +83,17 @@ admin_user = create(:user, :admin, :with_org)
 ```
 
 **Cross-language equivalents** (cite the canonical per-language tool):
-- Ruby: `factory_bot` ([thoughtbot/factory_bot](https://github.com/thoughtbot/factory_bot)) — the origin.
-- Python: `factory_boy` ([factoryboy/factory_boy](https://github.com/FactoryBoy/factory_boy)) — direct port.
+- Ruby: `factory_bot` ([thoughtbot/factory_bot](https://github.com/thoughtbot/factory_bot)) - the origin.
+- Python: `factory_boy` ([factoryboy/factory_boy](https://github.com/FactoryBoy/factory_boy)) - direct port.
 - JS/TS: `fishery` ([thoughtbot/fishery](https://github.com/thoughtbot/fishery)), `@faker-js/faker` (lower-level).
-- .NET: `Bogus` ([bchavez/Bogus](https://github.com/bchavez/Bogus)) — Faker-style with factory affordances.
+- .NET: `Bogus` ([bchavez/Bogus](https://github.com/bchavez/Bogus)) - Faker-style with factory affordances.
 - Java: `data-faker` + handwritten factory or test-data-builder-style libraries.
 
 ### When to use Factory
 
 - The project uses a database (factories handle FK relationships via associations).
 - The team is on Ruby / Python / JS-TS where mature factory libraries exist.
-- Domain objects have many variants (admin / disabled / premium / legacy) — traits express each.
+- Domain objects have many variants (admin / disabled / premium / legacy) - traits express each.
 
 ### Anti-patterns
 
@@ -104,9 +104,9 @@ admin_user = create(:user, :admin, :with_org)
 | Factories that persist by default (`create` is the only mode) | Slow tests, unnecessary DB writes. Builders should expose `build` / `attributes` / `create` strategies (see [`factory-bot-data`](../factory-bot-data/SKILL.md)) |
 | One mega-factory for the entire domain | Becomes a god-object; every test pulls a fully-populated graph |
 
-## Pattern 3 — Object Mother
+## Pattern 3 - Object Mother
 
-**Canonical source:** [Martin Fowler — Object Mother](https://martinfowler.com/bliki/ObjectMother.html). Predates Test Data Builder; superseded by it for most use cases but still useful for stable canonical objects.
+**Canonical source:** [Martin Fowler - Object Mother](https://martinfowler.com/bliki/ObjectMother.html). Predates Test Data Builder; superseded by it for most use cases but still useful for stable canonical objects.
 
 **Definition:** A central class (the "Mother") exposes named methods that return fully-constructed canonical test objects: `ObjectMother.standardUser()`, `ObjectMother.adminUser()`, `ObjectMother.userInOrgWithFiveMembers()`.
 
@@ -127,9 +127,9 @@ admin_user = create(:user, :admin, :with_org)
 | Mixing Mother with Builder (some objects via Mother, some via Builder) | Inconsistent test idiom; vocabulary drift |
 | Mother methods with implicit dependencies (`adminUser()` requires `seedOrgs()` to have run) | Implicit ordering creates flakiness |
 
-## Pattern 4 — Fixture composition
+## Pattern 4 - Fixture composition
 
-**Canonical source:** Gerard Meszaros, *xUnit Test Patterns: Refactoring Test Code* (2007) — the seminal reference for **Fresh Fixture**, **Shared Fixture**, **Implicit Setup**, **Delegated Setup**, and **Setup Decorator** patterns. The [Wikipedia entry on test fixture](https://en.wikipedia.org/wiki/Test_fixture) describes the four-phase test pattern (setup / exercise / verify / teardown) attributed to Meszaros.
+**Canonical source:** Gerard Meszaros, *xUnit Test Patterns: Refactoring Test Code* (2007) - the seminal reference for **Fresh Fixture**, **Shared Fixture**, **Implicit Setup**, **Delegated Setup**, and **Setup Decorator** patterns. The [Wikipedia entry on test fixture](https://en.wikipedia.org/wiki/Test_fixture) describes the four-phase test pattern (setup / exercise / verify / teardown) attributed to Meszaros.
 
 **Definition:** Fixture composition is the pattern of building per-test state from reusable fragments. The three flavours:
 
@@ -139,7 +139,7 @@ admin_user = create(:user, :admin, :with_org)
 | **Shared Fixture** | Multiple tests share one initialised state. Fastest; brittle to test ordering. |
 | **Persistent Fresh Fixture** | Fresh state per test, but persisted in a transaction that rolls back at teardown. The pragmatic middle ground. |
 
-**Fowler on the trade-off** ([Eradicating Non-Determinism in Tests](https://martinfowler.com/articles/nonDeterminism.html)): "I prefer the former [Fresh Fixture], as it's often easier — and in particular easier to find the source of a problem." But: "rebuilding the database each time can add a lot of time to test runs, so that argues for switching to a clean-up strategy."
+**Fowler on the trade-off** ([Eradicating Non-Determinism in Tests](https://martinfowler.com/articles/nonDeterminism.html)): "I prefer the former [Fresh Fixture], as it's often easier - and in particular easier to find the source of a problem." But: "rebuilding the database each time can add a lot of time to test runs, so that argues for switching to a clean-up strategy."
 
 ### When to use Fresh Fixture (default)
 
@@ -162,7 +162,7 @@ admin_user = create(:user, :admin, :with_org)
 | Multiple fixture flavours in the same suite without explicit convention | Engineers can't tell what to write; bugs creep in |
 | Fixture inheritance hierarchies >2 levels deep | Per [`framework-architecture-auditor §A2`](../../../qa-test-review/agents/framework-architecture-auditor.md), depth-3+ chains break unpredictably |
 
-## Pattern 5 — Snapshot / golden-file
+## Pattern 5 - Snapshot / golden-file
 
 **Canonical source:** [Jest snapshot testing](https://jestjs.io/docs/snapshot-testing) is the cross-language reference for the test-code-side; [Michael Feathers' *Working Effectively with Legacy Code*](https://www.oreilly.com/library/view/working-effectively-with/0131177052/) coined "characterisation tests" which is the legacy-code-tier version of snapshot testing.
 
@@ -178,17 +178,17 @@ admin_user = create(:user, :admin, :with_org)
 
 ### When NOT to use Snapshot
 
-- Output is non-deterministic (timestamps, UUIDs, locale, PII) — sanitise first or skip the snapshot.
-- Output changes frequently — the team will rubber-stamp the snapshot update and lose the test's value.
-- The behaviour you care about is one field — write an explicit assertion.
+- Output is non-deterministic (timestamps, UUIDs, locale, PII) - sanitise first or skip the snapshot.
+- Output changes frequently - the team will rubber-stamp the snapshot update and lose the test's value.
+- The behaviour you care about is one field - write an explicit assertion.
 
-## Pattern 6 — Production-Data Anonymisation
+## Pattern 6 - Production-Data Anonymisation
 
 **Canonical source:** Per ISO/IEC 25024 (data quality) and GDPR/CCPA legal requirements; practitioner adoption documented across [Tonic.ai](https://www.tonic.ai/), [Gretel.ai](https://gretel.ai/), [K2view](https://www.k2view.com/), and [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (the marketplace's existing skill for synthesizing PII).
 
 **Definition:** Anonymisation is the technique of using production data (or production-shaped data) for testing **after** removing or masking personally-identifiable information (PII), commercially-sensitive data, and any field that would breach privacy / compliance if leaked to a test environment.
 
-**Why this is a pattern, not just a tool concern:** The pattern dictates that **no production data enters a test environment without anonymisation** — even if the test environment is "internal only." Cross-environment data leakage is the dominant security failure mode in test-data management ([2025 Verizon DBIR](https://www.verizon.com/business/resources/reports/dbir/) cited cross-environment data leakage as a top-10 breach pattern).
+**Why this is a pattern, not just a tool concern:** The pattern dictates that **no production data enters a test environment without anonymisation** - even if the test environment is "internal only." Cross-environment data leakage is the dominant security failure mode in test-data management ([2025 Verizon DBIR](https://www.verizon.com/business/resources/reports/dbir/) cited cross-environment data leakage as a top-10 breach pattern).
 
 ### The three anonymisation flavours
 
@@ -243,20 +243,20 @@ admin_user = create(:user, :admin, :with_org)
 
 ## References
 
-- Nat Pryce — *Test Data Builders* (the canonical reference for the Builder pattern as applied to test data): http://www.natpryce.com/articles/000714.html
-- Nat Pryce and Steve Freeman — *Growing Object-Oriented Software, Guided by Tests* (2009), chapter 22: https://www.growing-object-oriented-software.com/
-- Martin Fowler — *Object Mother* (canonical reference for the Object Mother pattern): https://martinfowler.com/bliki/ObjectMother.html
-- Martin Fowler — *Eradicating Non-Determinism in Tests* (Fresh Fixture vs Shared Fixture trade-off, the load-bearing quote on test isolation): https://martinfowler.com/articles/nonDeterminism.html
-- Gerard Meszaros — *xUnit Test Patterns: Refactoring Test Code* (2007) (the seminal reference for fixture patterns; cite by book ISBN 978-0131495050).
-- thoughtbot — `factory_bot` (Ruby; the canonical Factory implementation): https://github.com/thoughtbot/factory_bot
-- FactoryBoy team — `factory_boy` (Python equivalent): https://github.com/FactoryBoy/factory_boy
-- thoughtbot — `fishery` (TypeScript Factory): https://github.com/thoughtbot/fishery
-- Jest — Snapshot Testing (the cross-language reference for the snapshot pattern): https://jestjs.io/docs/snapshot-testing
-- Michael Feathers — *Working Effectively with Legacy Code* (the characterisation-tests progenitor of golden-file testing): ISBN 978-0131177055.
-- Wikipedia — *Test fixture* (Meszaros's four-phase test pattern): https://en.wikipedia.org/wiki/Test_fixture
-- 2025 Verizon DBIR — cited for the cross-environment data leakage risk in production-data testing: https://www.verizon.com/business/resources/reports/dbir/
-- ISTQB glossary — test data: https://glossary.istqb.org/en_US/term/test-data
-- ISTQB glossary — fixture: https://glossary.istqb.org/en_US/term/test-fixture
-- ISO/IEC 25024 — data quality model (cited for anonymisation requirements).
-- [`factory-bot-data`](../factory-bot-data/SKILL.md), [`faker-data`](../faker-data/SKILL.md), [`mimesis-data`](../mimesis-data/SKILL.md), [`bogus-data`](../bogus-data/SKILL.md), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md), [`golden-file-conventions`](../golden-file-conventions/SKILL.md), [`seed-data-curator`](../seed-data-curator/SKILL.md) — the per-tool and operational siblings in this plugin.
-- [`object-model-patterns`](../../../qa-test-review/skills/object-model-patterns/SKILL.md), [`test-isolation-patterns`](../../../qa-test-review/skills/test-isolation-patterns/SKILL.md), [`test-step-design-patterns`](../../../qa-test-review/skills/test-step-design-patterns/SKILL.md) — sister architecture-tier pattern catalogs.
+- Nat Pryce - *Test Data Builders* (the canonical reference for the Builder pattern as applied to test data): http://www.natpryce.com/articles/000714.html
+- Nat Pryce and Steve Freeman - *Growing Object-Oriented Software, Guided by Tests* (2009), chapter 22: https://www.growing-object-oriented-software.com/
+- Martin Fowler - *Object Mother* (canonical reference for the Object Mother pattern): https://martinfowler.com/bliki/ObjectMother.html
+- Martin Fowler - *Eradicating Non-Determinism in Tests* (Fresh Fixture vs Shared Fixture trade-off, the load-bearing quote on test isolation): https://martinfowler.com/articles/nonDeterminism.html
+- Gerard Meszaros - *xUnit Test Patterns: Refactoring Test Code* (2007) (the seminal reference for fixture patterns; cite by book ISBN 978-0131495050).
+- thoughtbot - `factory_bot` (Ruby; the canonical Factory implementation): https://github.com/thoughtbot/factory_bot
+- FactoryBoy team - `factory_boy` (Python equivalent): https://github.com/FactoryBoy/factory_boy
+- thoughtbot - `fishery` (TypeScript Factory): https://github.com/thoughtbot/fishery
+- Jest - Snapshot Testing (the cross-language reference for the snapshot pattern): https://jestjs.io/docs/snapshot-testing
+- Michael Feathers - *Working Effectively with Legacy Code* (the characterisation-tests progenitor of golden-file testing): ISBN 978-0131177055.
+- Wikipedia - *Test fixture* (Meszaros's four-phase test pattern): https://en.wikipedia.org/wiki/Test_fixture
+- 2025 Verizon DBIR - cited for the cross-environment data leakage risk in production-data testing: https://www.verizon.com/business/resources/reports/dbir/
+- ISTQB glossary - test data: https://glossary.istqb.org/en_US/term/test-data
+- ISTQB glossary - fixture: https://glossary.istqb.org/en_US/term/test-fixture
+- ISO/IEC 25024 - data quality model (cited for anonymisation requirements).
+- [`factory-bot-data`](../factory-bot-data/SKILL.md), [`faker-data`](../faker-data/SKILL.md), [`mimesis-data`](../mimesis-data/SKILL.md), [`bogus-data`](../bogus-data/SKILL.md), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md), [`golden-file-conventions`](../golden-file-conventions/SKILL.md), [`seed-data-curator`](../seed-data-curator/SKILL.md) - the per-tool and operational siblings in this plugin.
+- [`object-model-patterns`](../../../qa-test-review/skills/object-model-patterns/SKILL.md), [`test-isolation-patterns`](../../../qa-test-review/skills/test-isolation-patterns/SKILL.md), [`test-step-design-patterns`](../../../qa-test-review/skills/test-step-design-patterns/SKILL.md) - sister architecture-tier pattern catalogs.

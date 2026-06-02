@@ -1,6 +1,6 @@
 # qa-search-relevance
 
-IR-metrics-driven search relevance testing — judgment lists, NDCG /
+IR-metrics-driven search relevance testing - judgment lists, NDCG /
 MRR / Recall@k, vector recall@k vs latency Pareto curve. Three S1
 skills + one A3 reviewer agent that synthesizes per-query regression
 analysis across term-based and vector search.

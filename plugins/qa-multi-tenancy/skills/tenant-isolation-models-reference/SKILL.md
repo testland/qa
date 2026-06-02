@@ -17,7 +17,7 @@ and notes that crossing a tenant boundary represents a
 business" (per
 [docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation.html](https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation.html)).
 
-Isolation is not a binary property — Microsoft's Azure
+Isolation is not a binary property - Microsoft's Azure
 Architecture Center frames it as a **continuum** from fully
 isolated (shared-nothing) to fully shared (everything shared),
 with architectures often picking different points per tier (UI
@@ -33,7 +33,7 @@ authors + the tenant-leak critic. It does not execute anything.
 
 - Designing the tenant-isolation model for a new B2B SaaS product
   or feature.
-- Auditing an existing model — does the testing surface match the
+- Auditing an existing model - does the testing surface match the
   declared isolation level?
 - Choosing what to test: each model creates a distinct set of
   failure modes the test suite must cover.
@@ -42,7 +42,7 @@ authors + the tenant-leak critic. It does not execute anything.
 
 ## Tenant vs deployment
 
-A **tenant** is a logical customer boundary — typically a B2B
+A **tenant** is a logical customer boundary - typically a B2B
 customer organisation, sometimes a consumer family / group. A
 **deployment** is a physical set of infrastructure. The two are
 not the same: a deployment can host many tenants (shared model),
@@ -175,20 +175,20 @@ full cross-tenant data-leak test battery against the database.
 
 Tenant isolation is implemented by combining:
 
-- **Identity context** — tenant_id in JWT claims (`auth.jwt()` in
+- **Identity context** - tenant_id in JWT claims (`auth.jwt()` in
   Supabase per
   [supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security))
   or AWS Cognito ID token; the source of truth for "who is this
   request for".
-- **Authorisation policy** — Postgres Row-Level Security per
+- **Authorisation policy** - Postgres Row-Level Security per
   [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md),
   AWS IAM dynamic policies generated per tenant, application-
   level authorisation middleware.
-- **Resource ABAC tags** — tag each tenant resource with
+- **Resource ABAC tags** - tag each tenant resource with
   `tenant-id=<x>`, then enforce via IAM condition keys.
-- **Network segmentation** — per-tenant VPCs / subnets / security
+- **Network segmentation** - per-tenant VPCs / subnets / security
   groups (silo only).
-- **Encryption keys** — per-tenant KMS keys (silo / bridge); useful
+- **Encryption keys** - per-tenant KMS keys (silo / bridge); useful
   for crypto-shredding on tenant offboarding.
 
 ## Anti-patterns
@@ -237,9 +237,9 @@ billing, identity providers) where pool-like leaks are possible.
 
 ## References
 
-- AWS Well-Architected SaaS Lens — Tenant Isolation:
+- AWS Well-Architected SaaS Lens - Tenant Isolation:
   [docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation.html](https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation.html).
-- Microsoft Azure Architecture Center — Tenancy Models:
+- Microsoft Azure Architecture Center - Tenancy Models:
   [learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models).
 - Microsoft Deployment Stamps pattern (related):
   [learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp](https://learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp).

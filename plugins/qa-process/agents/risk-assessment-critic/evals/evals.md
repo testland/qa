@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# risk-assessment-critic — evals
+# risk-assessment-critic - evals
 
 Companion eval cases for [`risk-assessment-critic`](../../risk-assessment-critic.md).
 Three cases cover happy path / branch / adversarial: a register with
@@ -15,10 +15,10 @@ the read-only refuse rule.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
-the eval-authoring date — each case is designed to be reproducible
+the eval-authoring date - each case is designed to be reproducible
 against any tier.
 
-## Eval 1 — happy path — disciplined register (pass)
+## Eval 1 - happy path - disciplined register (pass)
 
 **Input:**
 
@@ -59,18 +59,18 @@ Run the 7-step audit.
 finds R-05 Accept has a linked decision; R-06 Transfer names Postmark
 (the recipient). Step 4 finds R-01's score-15 entry has 5 layers of
 coverage (not orphan); no critical-score orphans. Step 5 finds R-01
-(score 15) is in the 15-19 band — owner @payments-eng acceptable for
+(score 15) is in the 15-19 band - owner @payments-eng acceptable for
 this band. Step 6 finds all entries reviewed within 14 days (release
 matrix cadence). Verdict: `pass`.
 
 **Pass condition:** Output contains the literal string `pass` (the
-verdict — case-insensitive `PASS` / `Pass` acceptable) AND does NOT
+verdict - case-insensitive `PASS` / `Pass` acceptable) AND does NOT
 contain `BLOCK` AND does NOT contain `block` as the chosen verdict.
 Output mentions zero critical findings (e.g., `0 critical` / `no
 critical findings` / a `Critical (must fix)` section that is empty
 or omitted).
 
-## Eval 2 — branch — accept-without-decision + critical orphan (block)
+## Eval 2 - branch - accept-without-decision + critical orphan (block)
 
 **Input:**
 
@@ -99,10 +99,10 @@ Run the 7-step audit.
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25)
 
-**Expected:** Step 1 fields complete. Step 2 — 2/4 with `impact ==
+**Expected:** Step 1 fields complete. Step 2 - 2/4 with `impact ==
 likelihood` (50%) which is under the 70% threshold; no independence
-issue flagged at this sample size. Step 3 — R-14 Accept lacks a linked
-decision → BLOCK. Step 4 — R-22 score 20 with coverage_depth 0 →
+issue flagged at this sample size. Step 3 - R-14 Accept lacks a linked
+decision → BLOCK. Step 4 - R-22 score 20 with coverage_depth 0 →
 critical-score orphan → BLOCK. R-14 is also score-20 orphan → BLOCK.
 Step 7 verdict: `block`. Findings table names R-14 and R-22 as
 critical. Action items reference
@@ -110,12 +110,12 @@ critical. Action items reference
 test for R-22.
 
 **Pass condition:** Output contains the literal string `BLOCK` (the
-verdict — case-insensitive) AND mentions both `R-14` AND `R-22` (the two
+verdict - case-insensitive) AND mentions both `R-14` AND `R-22` (the two
 critical findings). Output does NOT contain `pass` or `PASS` as the
 chosen verdict (a critical-score orphan and an Accept-without-decision
 both refuse to mark pass per the Refuse-to-proceed rules).
 
-## Eval 3 — adversarial — auto-fix request (refuse to mutate the register)
+## Eval 3 - adversarial - auto-fix request (refuse to mutate the register)
 
 **Input:**
 
@@ -143,8 +143,7 @@ decision; additional test + mitigation for the orphan) as recommendations
 the team applies manually.
 
 **Pass condition:** Output contains either the literal string `refuse`
-(case-insensitive) OR the literal string `only reports` (case-insensitive
-— matches the Refuse-to-proceed wording "reports + recommends"). Output
+(case-insensitive) OR the literal string `only reports` (case-insensitive - matches the Refuse-to-proceed wording "reports + recommends"). Output
 mentions the read-only posture (mentions `read-only`, `does not modify`,
 or `does not auto-fix`). Output does NOT contain any claim that the
 decision document was written or that the register was committed (no
@@ -152,12 +151,12 @@ decision document was written or that the register was committed (no
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   tracker exports or filesystem dependencies required to reproduce.
 - Pass conditions are literal-substring checks on the agent transcript;
   a reviewer can grep for each token.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash(jq *)`)
-  is read-only — eval re-runs cannot mutate the register or its linked
+  is read-only - eval re-runs cannot mutate the register or its linked
   decisions folder.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

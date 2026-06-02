@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# release-readiness-checker — evals
+# release-readiness-checker - evals
 
 Companion eval cases for [`release-readiness-checker`](../../release-readiness-checker.md).
 Three cases cover happy path / branch / adversarial: an all-gates-pass
@@ -15,10 +15,10 @@ missing-config invocation that triggers the refuse rule (no
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
-the eval-authoring date — each case is designed to be reproducible
+the eval-authoring date - each case is designed to be reproducible
 against any tier.
 
-## Eval 1 — happy path — all required gates pass (ready)
+## Eval 1 - happy path - all required gates pass (ready)
 
 **Input:**
 
@@ -68,7 +68,7 @@ Verifier results (already executed by CI; pass these through):
 finds zero failed-required and zero failed-recommended → verdict `ready`.
 The Step 5 hand-off block surfaces and recommends triggering
 `release-engineer` with `release_id=v1.4.5`. The action-items lists are
-either empty or note "no action items — proceed to runbook." Required +
+either empty or note "no action items - proceed to runbook." Required +
 recommended + informational evidence tables are all populated.
 
 **Pass condition:** Output contains the literal string `READY` (the
@@ -76,7 +76,7 @@ verdict label) AND mentions `release-engineer` (the named downstream
 hand-off). Output does NOT contain `NOT READY` and does NOT contain
 `BLOCK`.
 
-## Eval 2 — branch — critical bug open (not-ready)
+## Eval 2 - branch - critical bug open (not-ready)
 
 **Input:**
 
@@ -120,7 +120,7 @@ Verifier results:
 (`no_open_critical_bugs`) → verdict `not-ready`. Step 3 report names
 the two open bugs (BUG-1234 and BUG-1235) as the evidence row. The
 action-items (must address) section lists "Resolve BUG-1234 and
-BUG-1235." The Refuse-to-proceed posture is preserved — the agent does
+BUG-1235." The Refuse-to-proceed posture is preserved - the agent does
 NOT emit a `ready` verdict despite the other gates passing. Per Step 6,
 the agent also does not auto-trigger `release-engineer`.
 
@@ -130,7 +130,7 @@ named bugs from the input). Output does NOT contain a `READY` verdict
 on its own line (the agent must not promote the release with a failed
 required gate).
 
-## Eval 3 — adversarial — missing release-readiness.yml (refuse to run)
+## Eval 3 - adversarial - missing release-readiness.yml (refuse to run)
 
 **Input:**
 
@@ -152,7 +152,7 @@ Verifier results would be available if you defined the gates.
 **Target models:** sonnet (2026-05-25)
 
 **Expected:** The agent refuses to run per Refuse-to-proceed Step 6:
-"Run if `release-readiness.yml` is missing — the team must author the
+"Run if `release-readiness.yml` is missing - the team must author the
 gates first." It explains that the team must author `release-readiness.yml`
 before the agent can execute, and references the gate-type table from
 Step 2 as a starting template. It does NOT invent default gates or
@@ -161,20 +161,20 @@ the same Step 6, it also does not hand off to `release-engineer`.
 
 **Pass condition:** Output contains the literal string
 `release-readiness.yml` AND either the literal string `refuse`
-(case-insensitive — `Refuse`, `refuses`) OR the literal string
+(case-insensitive - `Refuse`, `refuses`) OR the literal string
 `missing config` (case-insensitive). Output does NOT contain the
 verdict labels `READY` or `NOT READY` (the agent must not opine on
 readiness without the config).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures or live CI runs required. Verifier results are passed
   through as text in the prompt.
 - Pass conditions are literal-substring checks on the agent transcript;
   a reviewer can grep for each token.
 - The agent's tool surface (`Read`, narrow `Bash(gh issue *), Bash(gh
-  pr *), Bash(jq *), Bash(curl *)`) is read/network-only — eval re-runs
+  pr *), Bash(jq *), Bash(curl *)`) is read/network-only - eval re-runs
   cannot mutate the release pipeline.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

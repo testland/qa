@@ -4,17 +4,17 @@ type: agent
 archetype: A3
 ---
 
-# relevance-regression-reviewer — evals
+# relevance-regression-reviewer - evals
 
 Companion eval cases for [`relevance-regression-reviewer`](../../relevance-regression-reviewer.md).
 Three cases cover happy path / branch / adversarial: head-query regression
 (verdict `🟡 NEEDS-WORK` / refuse-to-approve), a clean aggregate gain
 (verdict `✅ improvement`), and a stale-judgment refusal (judgments
-out of date with the index — refuse to evaluate). Re-run by feeding the
+out of date with the index - refuse to evaluate). Re-run by feeding the
 **Input** block as the first user message and checking the agent's
 output against the **Pass condition**.
 
-## Eval 1 — happy path — head query regression (refuse to approve)
+## Eval 1 - happy path - head query regression (refuse to approve)
 
 **Input:**
 
@@ -60,9 +60,9 @@ by traffic).
 **Expected:** Step 2 aggregate delta is -0.005 (within the
 `-0.01 to +0.02` "essentially flat" band, but Step 3 must override).
 Step 3 per-query analysis shows `running_socks` (-0.13) and
-`cross_country_running` (-0.11) — two head queries dropped > 0.05 AND
+`cross_country_running` (-0.11) - two head queries dropped > 0.05 AND
 > 0.10. Per Step 9 refuse rules ("Any head query dropped > 0.05"), the
-agent refuses to ✅. Verdict line is `🟡 NEEDS-WORK` (or `❌ block` —
+agent refuses to ✅. Verdict line is `🟡 NEEDS-WORK` (or `❌ block` - 
 both are refuse-to-approve outcomes per Step 2 and Step 9). Output
 explains asymmetric synonym mapping ("marathon → running" one-way)
 as the recommended fix.
@@ -73,7 +73,7 @@ one of `running_socks`, `cross_country_running`, or `head query` (the
 per-query regression signal). Output does NOT contain a `✅ improvement`
 or standalone `✅ approve` verdict.
 
-## Eval 2 — branch — clean aggregate gain (approve)
+## Eval 2 - branch - clean aggregate gain (approve)
 
 **Input:**
 
@@ -127,7 +127,7 @@ OR a standalone `✅` line indicating approval AND does NOT contain
 `NEEDS-WORK` or `block`. The aggregate delta `+0.031` (or `0.031`,
 rounded) appears in the report.
 
-## Eval 3 — adversarial — stale judgments (refuse to evaluate)
+## Eval 3 - adversarial - stale judgments (refuse to evaluate)
 
 **Input:**
 
@@ -170,15 +170,15 @@ k = 10 in our _rank_eval config.
 
 **Target models:** sonnet (2026-05-25)
 
-**Expected:** Step 4 unrated check fails — every query in the after
-set has ≥ 6 of 10 top-k results unrated (60–80%). That is well above
+**Expected:** Step 4 unrated check fails - every query in the after
+set has ≥ 6 of 10 top-k results unrated (60 - 80%). That is well above
 the 50% per-query threshold AND well above the 30% across-queries
 threshold (here 100% of queries exceed the per-query 50% threshold).
 Per Step 9 Refuse-to-proceed rule "> 30% of queries have > 50%
 unrated docs", the agent refuses to evaluate. The judgment list is
 20 months stale; the agent recommends refreshing judgments (per Step
 4) before re-running the review. The agent does NOT emit a final
-`✅ improvement` / `🟡 NEEDS-WORK` / `❌ block` verdict — it refuses
+`✅ improvement` / `🟡 NEEDS-WORK` / `❌ block` verdict - it refuses
 because the metric is meaningless against stale judgments.
 
 **Pass condition:** Output contains the literal string `unrated`
@@ -190,7 +190,7 @@ is about judgment-coverage, not relevance regression).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted JSON snippets — no external
+- All three inputs are concrete pasted JSON snippets - no external
   rank_eval API calls, no need to clone a sample index.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

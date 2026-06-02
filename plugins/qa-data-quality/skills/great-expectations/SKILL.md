@@ -34,13 +34,13 @@ CI on it.
 
 The four key objects to compose ([gx-overview][1]):
 
-1. **DataSource** — represents a connection to a data store (Pandas /
+1. **DataSource** - represents a connection to a data store (Pandas /
    SQL / Spark / files).
-2. **DataAsset** — a collection of records inside a DataSource (e.g. a
+2. **DataAsset** - a collection of records inside a DataSource (e.g. a
    table, a directory of partitioned files).
-3. **BatchDefinition** — slices a DataAsset into validatable batches
+3. **BatchDefinition** - slices a DataAsset into validatable batches
    (whole table, partition, dataframe).
-4. **ExpectationSuite** — a named collection of `Expectation` objects
+4. **ExpectationSuite** - a named collection of `Expectation` objects
    that describe what the data should look like.
 
 Expectations themselves come from the `gxe` namespace ([create-an-expectation][2]):
@@ -80,7 +80,7 @@ expectations) is browsable at
 
 ## Running
 
-### Option A — ValidationDefinition (single-suite, single-batch)
+### Option A - ValidationDefinition (single-suite, single-batch)
 
 A `ValidationDefinition` binds one `BatchDefinition` to one
 `ExpectationSuite`. Calling `.run()` validates and returns a JSON-shaped
@@ -101,13 +101,13 @@ print(result.success)       # bool — True only if every expectation passed
 `{"dataframe": df}` for a Pandas runtime asset, `{"year": "...", "month":
 "..."}` for partitioned data, etc. ([run-validation-definition][3]).
 
-### Option B — Checkpoint (multi-suite + actions)
+### Option B - Checkpoint (multi-suite + actions)
 
 A `Checkpoint` runs one or more `ValidationDefinition`s and triggers
 **Actions** on the result. Actions live in
 `great_expectations.checkpoint`; built-ins include
 `UpdateDataDocsAction` (regenerates the Data Docs static site) and
-`SlackNotificationAction` (alerts on failure) — all action class names
+`SlackNotificationAction` (alerts on failure) - all action class names
 end with `*Action` ([checkpoint-actions][4]):
 
 [4]: https://docs.greatexpectations.io/docs/core/trigger_actions_based_on_results/create_a_checkpoint_with_actions
@@ -145,7 +145,7 @@ checkpoint.run()
 ```
 
 `result_format` controls how much detail the Validation Result carries.
-Documented values include **SUMMARY** (default) and **COMPLETE** — use
+Documented values include **SUMMARY** (default) and **COMPLETE** - use
 `COMPLETE` when downstream tooling needs the failing rows /
 unexpected-values list ([checkpoint-actions][4]).
 
@@ -157,7 +157,7 @@ Checkpoint result) returns a JSON-shaped object with at least
 
 | Field      | Meaning                                                        |
 |------------|----------------------------------------------------------------|
-| `success`  | Boolean — `True` only if every expectation in the suite passed. |
+| `success`  | Boolean - `True` only if every expectation in the suite passed. |
 | `results`  | List of per-expectation outcomes (each has `success`, the expectation type, and a summary block describing the failure). |
 
 Triage script:
@@ -210,13 +210,13 @@ if not result.success:
 ```
 
 `if: always()` is required so the Data Docs upload survives a failing
-checkpoint — that's exactly when you need them for triage.
+checkpoint - that's exactly when you need them for triage.
 
 ## References
 
-- [gx-overview][1] — GX Core concept model and 4-step workflow.
-- [create-an-expectation][2] — `gxe` namespace and expectation
+- [gx-overview][1] - GX Core concept model and 4-step workflow.
+- [create-an-expectation][2] - `gxe` namespace and expectation
   instantiation patterns.
-- [run-validation-definition][3] — `.run(batch_parameters=...)` and the
+- [run-validation-definition][3] - `.run(batch_parameters=...)` and the
   result object shape.
-- [checkpoint-actions][4] — Checkpoint composition and built-in Actions.
+- [checkpoint-actions][4] - Checkpoint composition and built-in Actions.

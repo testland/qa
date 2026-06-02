@@ -4,13 +4,13 @@ type: agent
 archetype: A2
 ---
 
-# mobile-driver-selector — evals
+# mobile-driver-selector - evals
 
 Companion eval cases for [`mobile-driver-selector`](../../mobile-driver-selector.md).
 Three cases covering happy path (Android native) + branch (Flutter) +
 adversarial (cross-platform no unifier).
 
-## Eval 1: happy path — pure native Android
+## Eval 1: happy path - pure native Android
 
 **Input:**
 - Project root contains `app/build.gradle.kts` with `id("com.android.application")` plus a Kotlin source tree under `app/src/main/java/`.
@@ -23,7 +23,7 @@ adversarial (cross-platform no unifier).
 
 **Pass condition:** Output contains the literal substrings `Espresso` AND `espresso-suite` AND (`Android` OR `app/build.gradle`) and does NOT recommend a second co-equal primary driver.
 
-## Eval 2: branch — Flutter project
+## Eval 2: branch - Flutter project
 
 **Input:**
 - Project root contains `pubspec.yaml` with a `flutter:` block, plus `lib/main.dart`.
@@ -35,7 +35,7 @@ adversarial (cross-platform no unifier).
 
 **Pass condition:** Output contains the literal substrings (`flutter_test` OR `flutter-testing`) AND `pubspec.yaml` and does NOT contain `Appium` recommendation OR `Detox` recommendation as the primary.
 
-## Eval 3: adversarial — cross-platform with no obvious unifier
+## Eval 3: adversarial - cross-platform with no obvious unifier
 
 **Input:**
 - Project root contains both `ios/MyApp.xcodeproj/` and `android/app/build.gradle.kts`.

@@ -28,7 +28,7 @@ desktop ([web-vitals][webvitals]).
 
 [lhci]: https://github.com/GoogleChrome/lighthouse-ci
 
-This skill covers **Lighthouse CI** (`@lhci/cli`) — the official
+This skill covers **Lighthouse CI** (`@lhci/cli`) - the official
 Google Chrome team tool for running Lighthouse on every PR and
 asserting against budgets ([lhci][lhci]).
 
@@ -45,7 +45,7 @@ asserting against budgets ([lhci][lhci]).
   audits beyond perf.
 
 If the project is a backend API or a CLI tool, this skill doesn't
-apply — use [`k6-load-testing`](../k6-load-testing/SKILL.md) or a
+apply - use [`k6-load-testing`](../k6-load-testing/SKILL.md) or a
 sibling load runner for backend perf.
 
 ## Install
@@ -105,9 +105,9 @@ module.exports = {
 
 Assertion levels per [lhci][lhci]:
 
-- `'error'` — fails the CI run (exits non-zero).
-- `'warn'` — surfaces in the report but doesn't fail.
-- `'off'` — disabled (useful for opt-out per-page).
+- `'error'` - fails the CI run (exits non-zero).
+- `'warn'` - surfaces in the report but doesn't fail.
+- `'off'` - disabled (useful for opt-out per-page).
 
 ## Running
 
@@ -119,11 +119,11 @@ lhci autorun
 
 `autorun` runs three phases in sequence:
 
-1. **collect** — start the server (if `startServerCommand` set), run
+1. **collect** - start the server (if `startServerCommand` set), run
    Lighthouse N times per URL.
-2. **assert** — compare results against the assertion config; exit
+2. **assert** - compare results against the assertion config; exit
    non-zero on `error`-level failures.
-3. **upload** — upload reports to the configured target for trend
+3. **upload** - upload reports to the configured target for trend
    tracking.
 
 For finer control, the phases can run independently: `lhci collect`,
@@ -188,7 +188,7 @@ main branch's last green run.
 ## Mobile vs desktop budgets
 
 LCP / INP thresholds are the same across mobile and desktop, but
-**mobile is consistently slower** in practice — the same JS bundle
+**mobile is consistently slower** in practice - the same JS bundle
 runs on a less-powerful CPU over a less-stable network.
 
 Common pattern: separate `.lighthouserc.mobile.js` and
@@ -231,15 +231,14 @@ one for the other.
 
 ## References
 
-- [web-vitals][webvitals] — canonical Core Web Vitals definitions and
+- [web-vitals][webvitals] - canonical Core Web Vitals definitions and
   thresholds (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1; 75th-percentile
   measurement; INP-replaces-FID in 2024).
-- [lhci][lhci] — Lighthouse CI canonical install, `lhci autorun`,
+- [lhci][lhci] - Lighthouse CI canonical install, `lhci autorun`,
   configuration shape, assertion levels.
-- [`lighthouse-budget-author`](../lighthouse-budget-author/SKILL.md) —
+- [`lighthouse-budget-author`](../lighthouse-budget-author/SKILL.md) - 
   sibling skill for **drafting** budgets at design time (this skill
   is the **runner**).
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) — downstream
+- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
   unified gate aggregating Lighthouse + load-runner verdicts.
-- [`nfr-extractor`](../../qa-shift-left/skills/nfr-extractor/SKILL.md)
-  — upstream skill that surfaces Web Vitals NFRs from PRDs.
+- [`nfr-extractor`](../../qa-shift-left/skills/nfr-extractor/SKILL.md) - upstream skill that surfaces Web Vitals NFRs from PRDs.

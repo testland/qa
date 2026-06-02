@@ -1,6 +1,6 @@
 ---
 name: quickcheck-testing
-description: "Authors property-based tests for Haskell using QuickCheck (the original PBT library) and for Scala via ScalaCheck (the JVM port) — wires `quickCheck` (Haskell) / `forAll` (ScalaCheck) drivers, defines `Arbitrary` instances or generators, uses `shrink` to find minimal counterexamples, and integrates with HSpec / Tasty (Haskell) or specs2 / ScalaTest. Use when the codebase is Haskell or Scala and the team wants the canonical PBT library that the entire family (Hypothesis / fast-check / proptest / jqwik) was inspired by."
+description: "Authors property-based tests for Haskell using QuickCheck (the original PBT library) and for Scala via ScalaCheck (the JVM port) - wires `quickCheck` (Haskell) / `forAll` (ScalaCheck) drivers, defines `Arbitrary` instances or generators, uses `shrink` to find minimal counterexamples, and integrates with HSpec / Tasty (Haskell) or specs2 / ScalaTest. Use when the codebase is Haskell or Scala and the team wants the canonical PBT library that the entire family (Hypothesis / fast-check / proptest / jqwik) was inspired by."
 rating: 22
 d6: 3
 archetype: S1
@@ -22,19 +22,19 @@ Per [qc-hackage][qch]:
 
 This skill covers both:
 
-- **QuickCheck** (Haskell) — the original.
-- **ScalaCheck** (Scala / JVM) — the canonical port; same API
+- **QuickCheck** (Haskell) - the original.
+- **ScalaCheck** (Scala / JVM) - the canonical port; same API
   shape, JVM ecosystem.
 
 ## When to use
 
-- The codebase is Haskell — QuickCheck is the canonical choice.
-- The codebase is Scala — ScalaCheck is well-integrated with
+- The codebase is Haskell - QuickCheck is the canonical choice.
+- The codebase is Scala - ScalaCheck is well-integrated with
   ScalaTest, specs2, and pure Scala test runners.
 - A multi-language project wants PBT consistency; the QuickCheck
   vocabulary (arbitrary, shrink, property) is the lingua franca.
 
-## Step 1 — Install (Haskell)
+## Step 1 - Install (Haskell)
 
 ```haskell
 -- In .cabal:
@@ -45,7 +45,7 @@ build-depends: QuickCheck >= 2.18
 
 Per [qc-hackage][qch], version 2.18.0.0 is the latest stable.
 
-## Step 2 — Install (Scala)
+## Step 2 - Install (Scala)
 
 ```scala
 // build.sbt
@@ -55,7 +55,7 @@ libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.18.0" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-propspec" % "3.2.18" % Test
 ```
 
-## Step 3 — Basic Haskell property
+## Step 3 - Basic Haskell property
 
 ```haskell
 import Test.QuickCheck
@@ -78,7 +78,7 @@ ghci> quickCheck prop_reverseInvolutive
 +++ OK, passed 100 tests.
 ```
 
-## Step 4 — Custom generators
+## Step 4 - Custom generators
 
 Per [qc-hackage][qch], QuickCheck provides:
 
@@ -112,7 +112,7 @@ instance Arbitrary User where
 candidate simpler `User`s. QuickCheck tries each until it finds the
 smallest still-failing case.
 
-## Step 5 — Combinators
+## Step 5 - Combinators
 
 ```haskell
 -- Conditional property: discard cases where xs is empty
@@ -135,7 +135,7 @@ prop_lengthClassified xs = classify (null xs) "empty" $
 precondition fails. `forAll` quantifies inline. `classify` /
 `label` track distribution.
 
-## Step 6 — ScalaCheck equivalent
+## Step 6 - ScalaCheck equivalent
 
 ```scala
 import org.scalacheck._
@@ -183,7 +183,7 @@ class UserPropSpec extends AnyPropSpec with Matchers with ScalaCheckPropertyChec
 }
 ```
 
-## Step 7 — Configuration
+## Step 7 - Configuration
 
 Haskell:
 
@@ -206,7 +206,7 @@ val params = Test.Parameters.default
   .withMaxDiscardRatio(10.0f)
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 Haskell with cabal:
 
@@ -236,7 +236,7 @@ val params = Test.Parameters.default.withInitialSeed(rng.Seed(42L))
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | Skipping `shrink` in custom `Arbitrary`                               | Failures aren't shrunk; counterexample messages are huge.                 | Always implement `shrink` (Step 4). |
 | Heavy `==>` (Haskell) / `suchThat` (Scala) preconditions               | Cases discarded; "Gave up after N tests" warning.                         | Restructure the generator to produce only valid inputs (Step 4-5). |
-| `arbitrary` without `Arbitrary` typeclass instance for custom types    | Compile error / runtime "no instance" — must define instance per type.   | Define `Arbitrary T` instance (Step 4). |
+| `arbitrary` without `Arbitrary` typeclass instance for custom types    | Compile error / runtime "no instance" - must define instance per type.   | Define `Arbitrary T` instance (Step 4). |
 | Random seed in CI                                                       | Failures hard to reproduce.                                              | Fixed seed (Step 8). |
 | `quickCheck` from `Main`                                                | Mixes test code with executable.                                          | Use HSpec / Tasty (Haskell) or ScalaTest (Scala) for organization. |
 | Properties that always pass trivially                                   | No actual verification; false confidence.                                | `verboseCheck` to see distribution; reformulate. |
@@ -259,13 +259,13 @@ val params = Test.Parameters.default.withInitialSeed(rng.Seed(42L))
 
 ## References
 
-- [qch][qch] — QuickCheck Haskell on Hackage: `quickCheck`,
+- [qch][qch] - QuickCheck Haskell on Hackage: `quickCheck`,
   `Property` type, `Arbitrary` typeclass, `shrink`, `Test.QuickCheck.*`
   modules, current version 2.18.0.0.
-- ScalaCheck official site (`scalacheck.org`) — Scala port; same
+- ScalaCheck official site (`scalacheck.org`) - Scala port; same
   conceptual model, JVM ecosystem.
 - [`hypothesis-testing`](../hypothesis-testing/SKILL.md),
   [`fast-check-testing`](../fast-check-testing/SKILL.md),
   [`proptest-testing`](../proptest-testing/SKILL.md),
-  [`jqwik-testing`](../jqwik-testing/SKILL.md) — all inspired by
+  [`jqwik-testing`](../jqwik-testing/SKILL.md) - all inspired by
   QuickCheck; per-language siblings.

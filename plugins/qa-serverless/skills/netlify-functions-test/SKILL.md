@@ -12,10 +12,10 @@ archetype: S1
 
 Netlify Functions come in three flavors:
 
-1. **Standard Functions** — Node/Go, Lambda under the hood,
+1. **Standard Functions** - Node/Go, Lambda under the hood,
    10s default timeout (background functions get 15min)
-2. **Background Functions** — async Lambda, 15min max
-3. **Edge Functions** — Deno runtime, 30s timeout
+2. **Background Functions** - async Lambda, 15min max
+3. **Edge Functions** - Deno runtime, 30s timeout
 
 Per [docs.netlify.com/functions](https://docs.netlify.com/functions/overview/),
 the local emulator (`netlify dev`) runs all three.

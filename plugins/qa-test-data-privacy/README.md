@@ -19,15 +19,15 @@ PII detection, masking, and synthetic data generation for test environments: 5 s
 This plugin scopes **detection + masking + synthetic-substitution of
 existing data**. Sibling neighbours:
 
-- [`qa-test-data`](../qa-test-data/) — fixture *construction* (Test
+- [`qa-test-data`](../qa-test-data/) - fixture *construction* (Test
   Data Builder, Factory, Object Mother, etc.). Its
   [`synthetic-pii-generator`](../qa-test-data/skills/synthetic-pii-generator/SKILL.md)
   *generates* fresh fake PII; this plugin *detects + masks*
   existing PII.
-- [`qa-compliance`](../qa-compliance/) — regulatory feature testing
+- [`qa-compliance`](../qa-compliance/) - regulatory feature testing
   (does GDPR Art. 17 erasure work? does CCPA delete-on-request
   work?). This plugin engineers the data those tests run against.
-- [`qa-secrets`](../qa-secrets/) — credentials / API keys
+- [`qa-secrets`](../qa-secrets/) - credentials / API keys
   (different scope from personal data).
 
 ## Install

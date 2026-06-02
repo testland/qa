@@ -24,10 +24,10 @@ skill (install-time prerequisites).
 
 - Designing offline behavior for a new PWA route.
 - Migrating from a hand-rolled SW to Workbox-style strategies.
-- Auditing an existing SW that "caches everything forever" — pick
+- Auditing an existing SW that "caches everything forever" - pick
   strategies per route type with TTL + invalidation.
 
-## Step 1 — Pick strategy per route type
+## Step 1 - Pick strategy per route type
 
 | Route type | Strategy | Why |
 |---|---|---|
@@ -39,7 +39,7 @@ skill (install-time prerequisites).
 | Images (`/img/*`) | **CacheFirst** with TTL | Bandwidth win; expire weekly |
 | 3rd-party fonts | **CacheFirst** with long TTL | License-permitting |
 
-## Step 2 — Author Workbox-style strategy
+## Step 2 - Author Workbox-style strategy
 
 ```js
 // sw.js
@@ -113,7 +113,7 @@ self.addEventListener('activate', (event) => {
 });
 ```
 
-## Step 3 — Generate matching Playwright tests
+## Step 3 - Generate matching Playwright tests
 
 For each registered route, emit one test asserting the strategy
 behavior. Pattern:
@@ -173,7 +173,7 @@ test.describe('SW cache strategies', () => {
 });
 ```
 
-## Step 4 — Audit existing SW
+## Step 4 - Audit existing SW
 
 For each `caches.match` / `event.respondWith` block in an existing
 SW, classify:
@@ -185,13 +185,13 @@ SW, classify:
 | `caches.match(req)` only | CacheOnly (dangerous for HTML) | Verify intentional |
 | Hand-rolled SWR (parallel fetch + cache.put) | StaleWhileRevalidate | Replace with Workbox class |
 
-## Step 5 — Lock invalidation strategy
+## Step 5 - Lock invalidation strategy
 
 Bumping `SW_VERSION` is the most reliable invalidation, but breaks
 revalidation for users with stale tabs. Pair with:
 
 - Trigger `skipWaiting()` only after user opt-in (banner: "New
-  version available — refresh").
+  version available - refresh").
 - For HTML shell, prefer NetworkFirst with `networkTimeoutSeconds: 3`
   over CacheFirst (so users see updated UI as soon as network allows).
 
@@ -215,8 +215,8 @@ revalidation for users with stale tabs. Pair with:
 
 ## References
 
-- [Workbox docs](https://developer.chrome.com/docs/workbox) —
+- [Workbox docs](https://developer.chrome.com/docs/workbox) - 
   authoritative API + plugin reference (consult for current
   ExpirationPlugin / CacheableResponsePlugin signatures)
-- [`service-worker-tests`](../../qa-modern-web/skills/service-worker-tests/SKILL.md) —
+- [`service-worker-tests`](../../qa-modern-web/skills/service-worker-tests/SKILL.md) - 
   sister skill providing Playwright SW lifecycle test patterns

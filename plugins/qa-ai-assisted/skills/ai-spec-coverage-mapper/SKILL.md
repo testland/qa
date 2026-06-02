@@ -1,6 +1,6 @@
 ---
 name: ai-spec-coverage-mapper
-description: "Build-an-X workflow that uses an LLM to map existing tests to spec sections — given a spec doc + the test suite, the LLM identifies which tests cover which sections, surfaces uncovered sections (gap), and recommends specific tests to add. Output is a coverage matrix per spec ID. Use as a follow-up to `ai-test-generator` (which generates tests for new ACs) — this maps the existing landscape and finds what's missing."
+description: "Build-an-X workflow that uses an LLM to map existing tests to spec sections - given a spec doc + the test suite, the LLM identifies which tests cover which sections, surfaces uncovered sections (gap), and recommends specific tests to add. Output is a coverage matrix per spec ID. Use as a follow-up to `ai-test-generator` (which generates tests for new ACs) - this maps the existing landscape and finds what's missing."
 rating: 22
 d6: 3
 archetype: S3
@@ -19,7 +19,7 @@ applied'" might be:
 
 - Covered by a test (good).
 - Partially covered (the AC says "Already applied"; the test
-  asserts "Already used" — semantic drift).
+  asserts "Already used" - semantic drift).
 - Not covered.
 
 This skill uses an LLM to map tests ↔ spec sections semantically.
@@ -29,10 +29,10 @@ This skill uses an LLM to map tests ↔ spec sections semantically.
 - The team has a spec doc + a test suite and wants spec-coverage
   visibility.
 - An audit / compliance review needs spec-test traceability.
-- After AC drift — tests written months ago for ACs that have
+- After AC drift - tests written months ago for ACs that have
   since changed.
 
-## Step 1 — Inputs
+## Step 1 - Inputs
 
 ```yaml
 spec_path: "docs/specs/checkout.md"
@@ -45,7 +45,7 @@ ac_extraction:
 
 The LLM reads both the spec and the tests; outputs the mapping.
 
-## Step 2 — Run the mapper
+## Step 2 - Run the mapper
 
 ```python
 # scripts/ai-coverage.py
@@ -74,7 +74,7 @@ response = openai.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-## Step 3 — Output
+## Step 3 - Output
 
 ```markdown
 ## Spec → test coverage map
@@ -112,7 +112,7 @@ print(response.choices[0].message.content)
 - 2 new ACs added in this PR; both uncovered.
 ```
 
-## Step 4 — Continuous use
+## Step 4 - Continuous use
 
 Schedule weekly:
 
@@ -133,13 +133,13 @@ jobs:
           content-filepath: spec-coverage-report.md
 ```
 
-## Step 5 — Confidence + LLM hallucination
+## Step 5 - Confidence + LLM hallucination
 
 LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 - Spot-check the highest-priority ACs manually.
 - Cross-reference with [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md)
-  if the team uses `@AC-X.Y` tags — those are the ground truth.
+  if the team uses `@AC-X.Y` tags - those are the ground truth.
 - Compare LLM's claim vs. test code via human review.
 
 ## Anti-patterns
@@ -165,9 +165,7 @@ LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 ## References
 
-- [`ai-test-generator`](../ai-test-generator/SKILL.md) — sister
+- [`ai-test-generator`](../ai-test-generator/SKILL.md) - sister
   skill: generates tests for the gaps this skill identifies.
-- [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md)
-  — for tag-based AC traceability without LLM.
-- [`coverage-debt-tracker`](../../qa-test-impact-analysis/skills/coverage-debt-tracker/SKILL.md)
-  — line-coverage debt; complementary to spec coverage.
+- [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - for tag-based AC traceability without LLM.
+- [`coverage-debt-tracker`](../../qa-test-impact-analysis/skills/coverage-debt-tracker/SKILL.md) - line-coverage debt; complementary to spec coverage.

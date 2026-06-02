@@ -1,6 +1,6 @@
 ---
 name: cargo-test
-description: "Configures and runs Rust's built-in `cargo test` — `#[test]` + `#[should_panic]` + `Result<(), E>` returns; integration tests in `tests/`; doc-tests embedded in `///` comments; `--lib` / `--bins` / `--all-targets` / `--workspace` selection; `cargo bench` (nightly) + Criterion (stable); `cargo test -- --test-threads=1` for serial; `cargo test -- --nocapture` to see println output. Use for any Rust project — testing is built into Cargo, no install needed."
+description: "Configures and runs Rust's built-in `cargo test` - `#[test]` + `#[should_panic]` + `Result<(), E>` returns; integration tests in `tests/`; doc-tests embedded in `///` comments; `--lib` / `--bins` / `--all-targets` / `--workspace` selection; `cargo bench` (nightly) + Criterion (stable); `cargo test -- --test-threads=1` for serial; `cargo test -- --nocapture` to see println output. Use for any Rust project - testing is built into Cargo, no install needed."
 rating: 24
 d6: 4
 archetype: S1
@@ -25,7 +25,7 @@ Three test categories per the [`Rust Book`][rust-test]:
 | Integration tests | `tests/` directory at crate root | Test public API as external user |
 | Doc tests | Inside `///` doc comments | Verify documentation examples |
 
-## Step 1 — Unit tests
+## Step 1 - Unit tests
 
 ```rust
 // src/math.rs
@@ -60,7 +60,7 @@ cargo test --all-targets   # everything
 cargo test --workspace     # multi-crate workspace
 ```
 
-## Step 2 — Assertion macros
+## Step 2 - Assertion macros
 
 ```rust
 assert!(condition);
@@ -82,7 +82,7 @@ assert_eq!(actual_complex_struct, expected_complex_struct);
 // shows colorized diff on failure
 ```
 
-## Step 3 — `#[should_panic]`
+## Step 3 - `#[should_panic]`
 
 ```rust
 #[test]
@@ -99,7 +99,7 @@ fn specific_panic_message() {
 }
 ```
 
-## Step 4 — `Result` return for ?-style propagation
+## Step 4 - `Result` return for ?-style propagation
 
 ```rust
 #[test]
@@ -113,7 +113,7 @@ fn parses_config() -> Result<(), Box<dyn Error>> {
 Test passes if `Ok(())`; fails if `Err(...)`. Avoids `unwrap()`
 boilerplate; allows `?` operator in test bodies.
 
-## Step 5 — Integration tests
+## Step 5 - Integration tests
 
 ```
 my-crate/
@@ -138,10 +138,10 @@ fn end_to_end() {
 mod common;   // shared test helpers from tests/common/mod.rs
 ```
 
-Each file in `tests/` compiles to its own binary — slower but
+Each file in `tests/` compiles to its own binary - slower but
 better-isolated than unit tests.
 
-## Step 6 — Doc tests
+## Step 6 - Doc tests
 
 ```rust
 /// Adds two numbers.
@@ -158,13 +158,13 @@ pub fn add(a: i32, b: i32) -> i32 {
 ```
 
 `cargo test --doc` runs only doc tests; `cargo test` runs everything
-including docs. The example IS the test — drift between docs +
+including docs. The example IS the test - drift between docs +
 implementation is caught.
 
 `# Examples` heading is convention; required for `cargo doc` HTML
 rendering to show the example.
 
-## Step 7 — Common test runner flags
+## Step 7 - Common test runner flags
 
 ```bash
 cargo test -- --test-threads=1           # serial (single-threaded)
@@ -176,7 +176,7 @@ cargo test -- --list                      # list tests without running
 cargo test some_pattern -- --exact        # exact match (no substring)
 ```
 
-## Step 8 — `#[ignore]` for slow tests
+## Step 8 - `#[ignore]` for slow tests
 
 ```rust
 #[test]
@@ -188,7 +188,7 @@ fn integration_with_external_api() {
 
 Run via `cargo test -- --include-ignored`.
 
-## Step 9 — Coverage
+## Step 9 - Coverage
 
 Stable Rust support via `cargo-tarpaulin` (Linux) or `cargo-llvm-cov`
 (cross-platform):
@@ -205,7 +205,7 @@ cargo install cargo-tarpaulin
 cargo tarpaulin --out html --output-dir coverage/
 ```
 
-## Step 10 — Benchmarks
+## Step 10 - Benchmarks
 
 Stable: use Criterion (mature, ergonomic):
 
@@ -245,7 +245,7 @@ cargo criterion
 Nightly Rust has built-in `#[bench]` (`cargo +nightly bench`); not
 recommended for CI (requires nightly toolchain).
 
-## Step 11 — CI integration
+## Step 11 - CI integration
 
 ```yaml
 - run: cargo test --all-targets --workspace
@@ -270,19 +270,19 @@ recommended for CI (requires nightly toolchain).
 
 - No fixture concept beyond `mod tests` shared state.
 - Doc tests slow to compile (each runs as separate doctest binary).
-- No mocking library in stdlib — `mockall` is the community standard
+- No mocking library in stdlib - `mockall` is the community standard
   for trait mocking.
 - No parametrize beyond hand-rolled loops or `rstest` (see
   [`rstest-tests`](../rstest-tests/SKILL.md)).
 
 ## References
 
-- [rust-test][rust-test] — Rust Book Chapter 11 (testing)
-- doc.rust-lang.org/cargo/commands/cargo-test.html — `cargo test` reference
-- bheisler.github.io/criterion.rs — Criterion docs
-- crates.io/crates/cargo-llvm-cov — coverage tool
+- [rust-test][rust-test] - Rust Book Chapter 11 (testing)
+- doc.rust-lang.org/cargo/commands/cargo-test.html - `cargo test` reference
+- bheisler.github.io/criterion.rs - Criterion docs
+- crates.io/crates/cargo-llvm-cov - coverage tool
 - [`go-test`](../go-test/SKILL.md),
   [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
-  [`rstest-tests`](../rstest-tests/SKILL.md) — sister tools
-- [`proptest-testing`](../../qa-property-based/skills/proptest-testing/SKILL.md) — Rust property-based
+  [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
+- [`proptest-testing`](../../qa-property-based/skills/proptest-testing/SKILL.md) - Rust property-based
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

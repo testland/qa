@@ -19,10 +19,10 @@ Glossary; ISTQB Glossary V4.7.1) ([istqb-ac][istqb-ac]).
 This skill takes natural-language story text and emits acceptance
 criteria in two interchangeable shapes:
 
-- **Gherkin** (Feature / Scenario / Given / When / Then) — for projects
+- **Gherkin** (Feature / Scenario / Given / When / Then) - for projects
   that automate via Cucumber, Behat, SpecFlow, pytest-bdd, or any
   Gherkin-aware runner.
-- **Plain numbered list** — for projects that prefer human review over
+- **Plain numbered list** - for projects that prefer human review over
   runner integration; consumable by
   [`spec-to-suite-orchestrator`](../../agents/spec-to-suite-orchestrator.md).
 
@@ -40,19 +40,19 @@ criteria in two interchangeable shapes:
 
 If the input is a **non-functional** requirement (perf / a11y /
 security / i18n), use [`nfr-extractor`](../nfr-extractor/SKILL.md)
-instead — those have a different shape (thresholds, not Given/When/Then).
+instead - those have a different shape (thresholds, not Given/When/Then).
 
-## Step 1 — Identify the actor and the trigger
+## Step 1 - Identify the actor and the trigger
 
 A scenario has three structural pieces per Gherkin
 ([gherkin-ref][gherkin]):
 
 [gherkin]: https://cucumber.io/docs/gherkin/reference
 
-- **Given** — system context / actor state ("a logged-in user with
+- **Given** - system context / actor state ("a logged-in user with
   email confirmed").
-- **When** — the triggering event ("they click `Save profile`").
-- **Then** — the observable outcome ("the email field updates to the
+- **When** - the triggering event ("they click `Save profile`").
+- **Then** - the observable outcome ("the email field updates to the
   new value AND a `data-testid="profile-saved-toast"` appears").
 
 Read the input and tag each sentence as a Given / When / Then
@@ -60,7 +60,7 @@ candidate. Sentences that describe steady state are Givens; sentences
 with verbs of action ("clicks", "submits", "navigates") are Whens;
 sentences asserting outcomes are Thens.
 
-## Step 2 — Choose Scenario vs. Scenario Outline
+## Step 2 - Choose Scenario vs. Scenario Outline
 
 Per [gherkin-ref][gherkin], a **Scenario Outline** is the template
 form for running the same scenario with multiple data sets, expanded
@@ -80,10 +80,10 @@ Examples:
 ```
 
 Use Scenario Outline whenever the underlying logic is identical and
-only the data varies — typically for boundary checks, role variants,
+only the data varies - typically for boundary checks, role variants,
 or status-code matrices.
 
-## Step 3 — Factor out Background
+## Step 3 - Factor out Background
 
 If multiple scenarios share preconditions, extract them to a
 **Background** block. Per [gherkin-ref][gherkin], "only one Background
@@ -103,10 +103,10 @@ Feature: Profile settings
     And a [data-testid="profile-saved-toast"] is visible
 ```
 
-Don't over-extract — Background is for **truly shared** state (auth,
+Don't over-extract - Background is for **truly shared** state (auth,
 seed data, navigation). Scenario-specific setup stays in the Given.
 
-## Step 4 — Validate observability of every Then
+## Step 4 - Validate observability of every Then
 
 Per [`testability-reviewer`](../../agents/testability-reviewer.md), every
 Then must be observable from outside the system. Reject Thens like:
@@ -121,7 +121,7 @@ Replace with:
 - "Then the response status is 200 AND the `Content-Security-Policy`
   header is present."
 
-## Step 5 — Emit the artifact
+## Step 5 - Emit the artifact
 
 ### Gherkin output (default)
 
@@ -164,10 +164,10 @@ When the project prefers prose:
 ```
 
 Plain-list AC numbers (`AC-1`, `AC-2`) become commit-message
-references in the implementation PR (`feat: AC-3 — show toast on
+references in the implementation PR (`feat: AC-3 - show toast on
 save`).
 
-## Step 6 — Flag implicit Givens
+## Step 6 - Flag implicit Givens
 
 The agent never extracts what isn't there. If the story implies a
 precondition the author left unstated, **emit a flag** rather than
@@ -279,7 +279,7 @@ Output:
 Without these answers, the test suite cannot be written.
 ```
 
-The agent refuses to fabricate the missing pieces — instead returns a
+The agent refuses to fabricate the missing pieces - instead returns a
 question list to the PRD author.
 
 ### Example 3: Scenario Outline opportunity
@@ -313,20 +313,19 @@ Feature: Login authorization
 | Anti-pattern                                              | Why it fails                                            | Fix |
 |-----------------------------------------------------------|---------------------------------------------------------|-----|
 | Generating multiple scenarios with copy-pasted Given      | Background extraction missed; suite becomes brittle.    | Extract shared Givens to one Background block. |
-| Then with a verb but no observable target ("Then save")   | Not testable — can't assert "save" without observing the side effect. | Emit `data-testid` / response status / DOM state. |
+| Then with a verb but no observable target ("Then save")   | Not testable - can't assert "save" without observing the side effect. | Emit `data-testid` / response status / DOM state. |
 | One Scenario per data variant when a Scenario Outline fits | Test code duplication; Examples table is missed.        | Scenario Outline + Examples. |
 | Fabricating preconditions the story didn't state           | Tests pass for the wrong reason; author never confirmed the assumption. | Flag-and-ask. |
 
 ## References
 
-- [istqb-ac][istqb-ac] — ISTQB Glossary V4.7.1 canonical definition
+- [istqb-ac][istqb-ac] - ISTQB Glossary V4.7.1 canonical definition
   of acceptance criteria.
-- [gherkin-ref][gherkin] — Cucumber Gherkin reference: keywords,
+- [gherkin-ref][gherkin] - Cucumber Gherkin reference: keywords,
   Feature structure, Scenario Outline + Examples, Background rules.
-- [`testability-reviewer`](../../agents/testability-reviewer.md) — the
+- [`testability-reviewer`](../../agents/testability-reviewer.md) - the
   upstream review that should pass before this skill is invoked.
-- [`nfr-extractor`](../nfr-extractor/SKILL.md) — sibling for
+- [`nfr-extractor`](../nfr-extractor/SKILL.md) - sibling for
   non-functional requirements (different shape).
-- [`spec-to-suite-orchestrator`](../../agents/spec-to-suite-orchestrator.md)
-  — downstream agent that takes plain-list AC and chains to
+- [`spec-to-suite-orchestrator`](../../agents/spec-to-suite-orchestrator.md) - downstream agent that takes plain-list AC and chains to
   test-case generation.

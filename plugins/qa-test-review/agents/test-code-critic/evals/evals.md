@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# test-code-critic — evals
+# test-code-critic - evals
 
 Companion eval cases for [`test-code-critic`](../../test-code-critic.md).
 Three cases cover happy path / branch / adversarial: AAA / naming /
@@ -15,7 +15,7 @@ review non-test files). Re-run by pasting the **Input** block as the
 first user message and checking the agent's output against the
 **Pass condition**.
 
-## Eval 1 — happy path — multi-§ violations (§1 / §2 / §3 / §7)
+## Eval 1 - happy path - multi-§ violations (§1 / §2 / §3 / §7)
 
 **Input:**
 
@@ -49,13 +49,13 @@ describe('Cart', () => {
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25), opus (2026-05-25)
 
 **Expected:** Step 1 confirms `tests/cart.spec.ts` matches a test-file
-path. Step 2 walks the body and flags: §3 naming — `it('works')` matches
+path. Step 2 walks the body and flags: §3 naming - `it('works')` matches
 the `\b(it|test)\(['"]?(works?|should|...)` regex; §2 single-
-responsibility — multiple distinct observable properties asserted
+responsibility - multiple distinct observable properties asserted
 (`itemCount`, `totalPrice`, `status`, `promoCode`, `refundAmount`) in
-the same test; §1 AAA structure — the body interleaves Act
+the same test; §1 AAA structure - the body interleaves Act
 (`cart.checkout()`, `cart.refund(42)`) with Assert without visible
-separation; §7 magic numbers — `42` appears 3 times. Output cites the
+separation; §7 magic numbers - `42` appears 3 times. Output cites the
 § numbers and references `test-code-conventions`.
 
 **Pass condition:** Output contains the literal string `§3` (or
@@ -64,7 +64,7 @@ separation; §7 magic numbers — `42` appears 3 times. Output cites the
 `describe('Cart')`. Output does NOT claim the test passes the
 single-responsibility convention.
 
-## Eval 2 — branch — clean test file (no findings)
+## Eval 2 - branch - clean test file (no findings)
 
 **Input:**
 
@@ -111,7 +111,7 @@ findings table for `tests/cart-promo.spec.ts` is empty or absent.
 Output does NOT contain `§3` / `§2` / `§7` listed as a flagged finding
 on this file.
 
-## Eval 3 — adversarial — refuse on production code
+## Eval 3 - adversarial - refuse on production code
 
 **Input:**
 
@@ -147,7 +147,7 @@ export class Cart {
 
 **Expected:** Per Step 1's filter (test-file path regex) and the
 Refuse-to-proceed rule "Review production code (Step 1)," this file is
-`src/cart.ts` — production code, not a test file. The path matches
+`src/cart.ts` - production code, not a test file. The path matches
 none of `\.spec\.[jt]sx?$` / `\.test\.[jt]sx?$` / `test_*.py` /
 `*_test.go` / `*Test.java` / `*.spec.rb`. The body contains no `test(` /
 `it(` / `describe(` / `def test_` / `func Test`. The agent emits the
@@ -162,12 +162,12 @@ or §convention flags for this file.
 (case-insensitive). Output does NOT contain any of `§1` / `§2` / `§3` /
 `§6` / `§7` / `§10` as a flagged finding row, and does NOT emit a per-
 file issues table claiming to have audited `src/cart.ts`. The agent
-must not claim to have reviewed production code — that is the entire
+must not claim to have reviewed production code - that is the entire
 adversarial point of the eval.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo. Tool surface (`Read`,
   `Grep`, `Glob`, narrow `Bash(git diff *)`) is read-only.
 - Pass conditions are literal-substring checks; a reviewer can grep

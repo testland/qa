@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# accessibility-code-critic — evals
+# accessibility-code-critic - evals
 
 Companion eval cases for [`accessibility-code-critic`](../../accessibility-code-critic.md).
 Three cases cover happy path / branch / adversarial: a `<div onclick>` plus
@@ -14,7 +14,7 @@ out-of-scope per its "Anti-patterns the agent rejects" section. Re-run by
 feeding the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — div-onclick + missing label (BLOCK)
+## Eval 1 - happy path - div-onclick + missing label (BLOCK)
 
 **Input:**
 
@@ -62,7 +62,7 @@ literal string `2.1.1` (the div-onclick WCAG SC) AND at least one of
 `1.3.1` / `3.3.2` (the missing-label SCs). Output does NOT contain a
 top-level `Verdict: OK` line.
 
-## Eval 2 — branch — clean single-trigger component (OK)
+## Eval 2 - branch - clean single-trigger component (OK)
 
 **Input:**
 
@@ -114,7 +114,7 @@ indicator (no bare `outline: none`), target size meets SC 2.5.5
 (44×44px). Per-archetype "Single trigger" table: no toggle (no
 `aria-pressed` expected), no missing-href anchor. Verdict line emits
 `OK`. Output explicitly notes the hand-off to a manual NVDA test and a
-runtime axe scan — i.e., does not claim static review is the end of the
+runtime axe scan - i.e., does not claim static review is the end of the
 chain.
 
 **Pass condition:** Output contains the literal string `Verdict:` followed
@@ -122,7 +122,7 @@ by `OK` (e.g. `**Verdict:** OK`) AND does NOT contain the verdict labels
 `BLOCK` or `REVIEW`. Output mentions at least one of `axe`, `pa11y`, or
 `NVDA` (the named hand-off).
 
-## Eval 3 — adversarial — stylistic nitpick (refuse as out-of-scope)
+## Eval 3 - adversarial - stylistic nitpick (refuse as out-of-scope)
 
 **Input:**
 
@@ -157,7 +157,7 @@ all four user-supplied "concerns" are out of scope: (a) name casing and
 class casing are stylistic nitpicks, not a11y issues; (b) the 60px height
 request is subjective UX (the WCAG 2.5.5 floor is 44×44 at AA, which the
 component already meets implicitly via native `<button>` + browser
-defaults — and the agent must not invent a stricter threshold); (c)
+defaults - and the agent must not invent a stricter threshold); (c)
 adding `role="button"` to a native `<button>` is the canonical
 "suggested-but-not-required ARIA" anti-pattern that the agent explicitly
 rejects ("no ARIA is better than bad ARIA"). The agent refuses to issue
@@ -173,7 +173,7 @@ is rejected). Output does NOT contain a `Verdict:` line followed by
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the agent's
+- All three inputs are concrete pasted-content blocks - the agent's
   `Read` / `Grep` / `Glob` tool surface is not exercised (the source is
   inline), so no fixture repo is required.
 - Pass conditions are literal-substring checks; a reviewer can grep the

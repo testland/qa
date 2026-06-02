@@ -33,9 +33,9 @@ For canonical case fields see
   [`test-case-quality-critic`](../../agents/test-case-quality-critic.md)
   when it audits requirement-coverage gaps.
 
-## Step 1 — Extract requirements
+## Step 1 - Extract requirements
 
-Inventory the source — Jira project, Linear team, GitHub
+Inventory the source - Jira project, Linear team, GitHub
 Issues label. Each requirement must have:
 
 - **Stable ID** (e.g., `REQ-AUTH-001`, `ENG-1234`, `#42`)
@@ -59,7 +59,7 @@ For Linear / GitHub Issues use the corresponding bug-workflow skill
 [`github-issues-bug-workflow`](../../../qa-defect-management/skills/github-issues-bug-workflow/SKILL.md))
 adapted for requirement-type issues rather than bugs.
 
-## Step 2 — Extract cases + refs
+## Step 2 - Extract cases + refs
 
 For each case in the TCM, harvest its identifier + the requirement
 references stored in the `refs` / link / tags field:
@@ -89,7 +89,7 @@ def get_cases_xray(project_key):
     return cases
 ```
 
-## Step 3 — Compute coverage
+## Step 3 - Compute coverage
 
 Three derived metrics:
 
@@ -124,11 +124,11 @@ def coverage(requirements, cases):
 | Metric | Definition | Healthy value |
 |---|---|---|
 | Requirement coverage % | Requirements with ≥1 case / total requirements | 95-100% (regulated); 80%+ (non-regulated) |
-| Orphan cases | Cases with zero requirement refs | <5% (some cases are exploratory / regression-only — legitimate) |
-| Over-tested requirements | Requirements with >5 cases each | Audit — possible test bloat |
-| Coverage depth | Average cases per requirement | 1.5–3 typical; <1 = gaps; >5 = bloat |
+| Orphan cases | Cases with zero requirement refs | <5% (some cases are exploratory / regression-only - legitimate) |
+| Over-tested requirements | Requirements with >5 cases each | Audit - possible test bloat |
+| Coverage depth | Average cases per requirement | 1.5 - 3 typical; <1 = gaps; >5 = bloat |
 
-## Step 4 — Emit the matrix
+## Step 4 - Emit the matrix
 
 ### CSV format
 
@@ -178,10 +178,10 @@ def write_matrix_csv(reqs_to_cases, requirements, path):
 ### HTML format (interactive)
 
 For audit handoff, an interactive HTML version with filtering is
-useful. Use a template (a generic Jinja approach) — out of scope
+useful. Use a template (a generic Jinja approach) - out of scope
 for this skill but composable with downstream rendering.
 
-## Step 5 — Produce executive summary
+## Step 5 - Produce executive summary
 
 ```markdown
 ## Traceability summary — <project> — <YYYY-MM-DD>
@@ -221,7 +221,7 @@ before the v1.4 release.
 3. Link the 6 mis-categorised orphans (½ person-day).
 ```
 
-## Step 6 — Schedule + automation
+## Step 6 - Schedule + automation
 
 Run the matrix-builder on a schedule:
 
@@ -301,12 +301,12 @@ Orphans: 14
 
 ## References
 
-- ISO/IEC/IEEE 29119-3:2021 §6.3 "Traceability" — cite by stable
+- ISO/IEC/IEEE 29119-3:2021 §6.3 "Traceability" - cite by stable
   ID.
-- ISTQB CTAL-TM syllabus — coverage items, test conditions.
-- IEC 62304 §5.5 (medical-device software traceability) — cite by
+- ISTQB CTAL-TM syllabus - coverage items, test conditions.
+- IEC 62304 §5.5 (medical-device software traceability) - cite by
   stable ID.
-- DO-178C §6.5 (avionics traceability) — cite by stable ID.
+- DO-178C §6.5 (avionics traceability) - cite by stable ID.
 - Composes:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md),
   case-management skills for each platform.

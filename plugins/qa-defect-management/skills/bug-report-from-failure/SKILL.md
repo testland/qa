@@ -11,8 +11,8 @@ archetype: S3
 ## Overview
 
 A test failure produces structured data (XML, JSON, HTML) that
-contains everything a triager needs — assertion, stack, test name,
-environment — yet most teams write bug reports by hand, dropping
+contains everything a triager needs - assertion, stack, test name,
+environment - yet most teams write bug reports by hand, dropping
 context. This workflow ingests the failure record and emits a
 ready-to-file bug spec.
 
@@ -37,12 +37,12 @@ that's A4 (screen-recording-driven); this is S3 (failure-record-driven).
 ## When to use
 
 - CI test failure auto-files a triaged bug.
-- Manual investigation produces structured failure data — script
+- Manual investigation produces structured failure data - script
   this rather than write the report by hand.
 - Bulk-filing bugs from a regression-suite run after a change
   flagged many failures.
 
-## Step 1 — Ingest the failure record
+## Step 1 - Ingest the failure record
 
 The skill accepts these inputs (auto-detected by extension):
 
@@ -113,7 +113,7 @@ Per [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/).
 Allure's labels are first-class; the skill harvests `severity`,
 `feature`, `suite`.
 
-## Step 2 — Extract classification fields
+## Step 2 - Extract classification fields
 
 For each failure, propose values for the bug report:
 
@@ -145,9 +145,9 @@ def infer_severity(failure_type, message):
     return "medium"
 ```
 
-## Step 3 — Render the Markdown body
+## Step 3 - Render the Markdown body
 
-Standard template — consumed verbatim by every platform runner:
+Standard template - consumed verbatim by every platform runner:
 
 ```markdown
 ## Test failure
@@ -199,7 +199,7 @@ Standard template — consumed verbatim by every platform runner:
 <dupe-search result: any prior occurrences of this test failing in last N days>
 ```
 
-## Step 4 — Search for duplicates
+## Step 4 - Search for duplicates
 
 Before filing, search the platform tracker for open bugs with
 matching title / test name. Use the per-platform skill:
@@ -224,7 +224,7 @@ creating a new bug. See
 [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md)
 for the dedicated agent that handles complex dedup logic.
 
-## Step 5 — File the bug
+## Step 5 - File the bug
 
 Emit a tracker-agnostic spec:
 
@@ -279,7 +279,7 @@ def file_bug(spec, platform):
         )
 ```
 
-## Step 6 — Confirm and audit
+## Step 6 - Confirm and audit
 
 After filing:
 
@@ -288,7 +288,7 @@ After filing:
 3. Update a per-test "known failure" register so subsequent runs
    can correlate.
 
-## Worked example — pytest + JUnit → GitHub Issues
+## Worked example - pytest + JUnit → GitHub Issues
 
 ```python
 from pathlib import Path
@@ -321,7 +321,7 @@ for f in failures:
 | No reproduction section | Triager can't repro; bug bounces back | Always include Step 3's commit + command |
 | File before deduplication | Same defect filed N times in N CI runs | Search first |
 | No artefacts linked | Triager can't see what happened | Always link screenshots / videos / HAR |
-| Inferred classification not flagged as a proposal | Triager assumes it's confirmed; bad data downstream | Always label classification fields as "proposed — triager confirms" |
+| Inferred classification not flagged as a proposal | Triager assumes it's confirmed; bad data downstream | Always label classification fields as "proposed - triager confirms" |
 
 ## Limitations
 
@@ -332,7 +332,7 @@ for f in failures:
   attributes, Playwright's extended fields). The parser must
   handle gracefully.
 - **Coverage is per-test-failure.** Tests that crash before
-  pytest catches them (segfault) produce no JUnit output —
+  pytest catches them (segfault) produce no JUnit output - 
   pair with CI step-failure detection.
 - **No root-cause inference.** Root cause (CTAL-TA) requires
   human investigation; the skill leaves the field blank for
@@ -342,12 +342,12 @@ for f in failures:
 
 ## References
 
-- JUnit XML de-facto schema —
+- JUnit XML de-facto schema - 
   [llg.cubic.org/docs/junit/](https://llg.cubic.org/docs/junit/)
   (community-curated canonical reference).
-- Allure framework results format —
+- Allure framework results format - 
   [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/).
-- TestNG XML — [testng.org/doc](https://testng.org/doc/).
+- TestNG XML - [testng.org/doc](https://testng.org/doc/).
 - Composed:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md),
@@ -357,5 +357,4 @@ for f in failures:
   [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
 - Sibling-plugin neighbour:
-  [`bug-report-from-recording`](../../../qa-bug-repro/agents/bug-report-from-recording.md)
-  — A4 (screen-recording-driven); this is S3 (failure-record-driven).
+  [`bug-report-from-recording`](../../../qa-bug-repro/agents/bug-report-from-recording.md) - A4 (screen-recording-driven); this is S3 (failure-record-driven).

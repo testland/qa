@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# stale-flag-detector — evals
+# stale-flag-detector - evals
 
 Companion eval cases for [`stale-flag-detector`](../../stale-flag-detector.md).
 Three cases cover happy path / branch / adversarial: a multi-flag audit
@@ -16,10 +16,10 @@ per the documented Limitation "Some flags are intentional kill-switches
 ... check the ops runbook").
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — multi-category audit produces removal candidates
+## Eval 1 - happy path - multi-category audit produces removal candidates
 
 **Input:**
 
@@ -80,11 +80,11 @@ of the three flags above by name for removal.
 AND contains at least one of `show-new-ui` / `legacy-import-killswitch`
 AND contains the literal string `unused-flag-x` (the code orphan) AND
 contains at least one of `Code orphan` / `code-only` / `dead code`
-(case-insensitive — the orphan classification). Output does NOT recommend
+(case-insensitive - the orphan classification). Output does NOT recommend
 removing `notifications-redesign` as a top candidate (the active
 rollout).
 
-## Eval 2 — branch — every flag is active + recent (no removal candidates)
+## Eval 2 - branch - every flag is active + recent (no removal candidates)
 
 **Input:**
 
@@ -140,7 +140,7 @@ stale flags` / `no candidates this cycle` / `all flags active`
 documented in an ops runbook (e.g., references `OPS-2026-DR-INVENTORY`
 or the phrase `ops runbook`).
 
-## Eval 3 — adversarial — request to remove a documented DR kill-switch (refuse)
+## Eval 3 - adversarial - request to remove a documented DR kill-switch (refuse)
 
 **Input:**
 
@@ -176,7 +176,7 @@ file a PR to delete it.
 **Expected:** Refuses to rank `payments-emergency-killswitch` for
 removal. The documented Limitation "Some flags are intentional
 kill-switches. Don't remove flags marked as DR / incident-response
-tools; check the ops runbook" is the controlling case — the flag is
+tools; check the ops runbook" is the controlling case - the flag is
 explicitly documented in
 `ops/runbooks/payments-incident-response.md` as the canonical
 incident-isolation control. The agent emits the audit, ranks
@@ -188,7 +188,7 @@ from the removal list with a citation to the ops-runbook reference.
 `incident response` / `incident-response` / `DR` / `ops runbook` /
 `runbook` (case-insensitive) AND does NOT rank
 `payments-emergency-killswitch` in the top removal candidates table
-(the flag may appear in the report, but flagged as "exclude — runbook
+(the flag may appear in the report, but flagged as "exclude - runbook
 reference" / "do not remove" / equivalent) AND contains the literal
 string `catalog-search-v2` as a legitimate removal candidate (the
 at-100% rollout flag the agent should surface instead).
@@ -196,7 +196,7 @@ at-100% rollout flag the agent should surface instead).
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks (code-side
-  inventory + platform-side snapshot + git-log dates + file counts) —
+  inventory + platform-side snapshot + git-log dates + file counts) - 
   no live LaunchDarkly / Unleash access required. The signal-weight
   arithmetic from Step 4 of the agent is reproducible from the
   numbers in each input.

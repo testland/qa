@@ -39,7 +39,7 @@ If the team uses TypeScript / JavaScript and prefers code-first
 authoring, evaluate
 [`tavern-testing`](../tavern-testing/SKILL.md) (YAML) or
 [`karate-testing`](../karate-testing/SKILL.md) (Karate DSL) before
-adopting Postman/Newman — those keep tests next to source code rather
+adopting Postman/Newman - those keep tests next to source code rather
 than in a separate JSON artifact.
 
 ## Install
@@ -115,10 +115,10 @@ The four built-in / canonical reporters per [newman-readme][readme]:
 |----------|------------------------------------------------------------------|
 | `cli`    | Terminal output; enabled by default.                              |
 | `json`   | Full JSON summary of every request and assertion result.          |
-| `junit`  | JUnit XML — consumable by GitHub Actions, GitLab, Jenkins.        |
+| `junit`  | JUnit XML - consumable by GitHub Actions, GitLab, Jenkins.        |
 | `html`   | Static HTML report; requires `newman-reporter-htmlextra`.         |
 
-**JUnit is the canonical CI choice** — every major CI platform
+**JUnit is the canonical CI choice** - every major CI platform
 ingests JUnit XML, surfaces test counts on the run summary, and lets
 the team click through to per-assertion failures.
 
@@ -148,7 +148,7 @@ pm.test('saves order_id for next request', () => {
 ```
 
 Each `pm.test('...', () => {})` call becomes one entry in the JUnit
-XML / JSON output — name them clearly so the CI run summary is
+XML / JSON output - name them clearly so the CI run summary is
 readable.
 
 ## CI integration
@@ -206,7 +206,7 @@ jobs:
           reporter: java-junit
 ```
 
-`if: always()` on both upload + reporter steps is critical — when a
+`if: always()` on both upload + reporter steps is critical - when a
 collection fails, the reports are exactly when you need them.
 
 ## Anti-patterns
@@ -216,7 +216,7 @@ collection fails, the reports are exactly when you need them.
 | Hard-coded environment URLs in the collection JSON       | Collection breaks across staging / prod / local.         | Move to `*.postman_environment.json` files; pass via `-e`. |
 | Storing API tokens in the collection JSON                 | Tokens leak into git.                                     | Use environment files committed without secrets, or pull tokens from CI env vars referenced as `{{API_TOKEN}}`. |
 | Running collections in PR CI against production           | Tests pollute prod data; rate limits trip; observability noise. | Always run against a staging or ephemeral env. |
-| Sequential `pm.test` blocks that share state              | One failure cascades into N false positives.             | Each request's tests should be independent — use `pm.collectionVariables` to share derived data, not assertion state. |
+| Sequential `pm.test` blocks that share state              | One failure cascades into N false positives.             | Each request's tests should be independent - use `pm.collectionVariables` to share derived data, not assertion state. |
 | One giant collection with 200 requests                    | Newman runs serially; CI time grows linearly.            | Split into per-domain collections; parallelize at the CI matrix level. |
 | Missing `--bail` in CI                                    | Newman runs all requests even after a failure; noisy logs. | Use `--bail failure` for fast feedback; `--bail folder` to scope the bail to a logical group. |
 
@@ -226,7 +226,7 @@ collection fails, the reports are exactly when you need them.
   the JSON file is the artifact. Teams that prefer code-first DSLs
   should evaluate [`karate-testing`](../karate-testing/SKILL.md) or
   [`tavern-testing`](../tavern-testing/SKILL.md).
-- **Sandboxed JS only.** Tests can't import npm packages — the `pm.*`
+- **Sandboxed JS only.** Tests can't import npm packages - the `pm.*`
   sandbox provides chai / lodash / cheerio pre-loaded; for richer
   logic, consider Karate or Tavern.
 - **No native parallelism inside one Newman run.** Parallelize across
@@ -234,10 +234,10 @@ collection fails, the reports are exactly when you need them.
 
 ## References
 
-- [newman-readme][readme] — install, `newman run` syntax, flags,
+- [newman-readme][readme] - install, `newman run` syntax, flags,
   reporters, example invocation.
-- [`tavern-testing`](../tavern-testing/SKILL.md) — YAML alternative.
-- [`karate-testing`](../karate-testing/SKILL.md) — DSL alternative.
-- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) —
+- [`tavern-testing`](../tavern-testing/SKILL.md) - YAML alternative.
+- [`karate-testing`](../karate-testing/SKILL.md) - DSL alternative.
+- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
   property-based fuzzing as a complement (not replacement) for
   example-based collections.

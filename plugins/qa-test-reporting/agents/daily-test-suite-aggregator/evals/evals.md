@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# daily-test-suite-aggregator — evals
+# daily-test-suite-aggregator - evals
 
 Companion eval cases for [`daily-test-suite-aggregator`](../../daily-test-suite-aggregator.md).
 Three cases cover happy path / branch / adversarial: a `last-24h` roll-up
@@ -16,7 +16,7 @@ Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
 the eval-authoring date.
 
-## Eval 1 — happy path — `last-24h` cell matrix with one FAIL cell
+## Eval 1 - happy path - `last-24h` cell matrix with one FAIL cell
 
 **Input:**
 
@@ -72,7 +72,7 @@ hand-off to `contract-drift-investigator`.
 of `97.3%` / `97.3` (the prod-canary E2E pass rate that drives
 the FAIL verdict).
 
-## Eval 2 — branch — `last-7d` window over the same inventory
+## Eval 2 - branch - `last-7d` window over the same inventory
 
 **Input:**
 
@@ -113,7 +113,7 @@ Task: emit the daily roll-up for 2026-05-26 UTC using the last-7d window.
 `not-run` surfaced for the Wednesday cron gap (per the "Drop
 `not-run` cells silently" refusal). The Δ-vs-yesterday section
 emits `n/a (no prior data)` for cells whose 7-day prior baseline
-is missing — the agent does NOT fabricate a Δ. `## Cells of
+is missing - the agent does NOT fabricate a Δ. `## Cells of
 concern` lists the prod-canary cells.
 
 **Pass condition:** Output contains the literal string
@@ -121,7 +121,7 @@ concern` lists the prod-canary cells.
 baselines). Output does NOT contain `last-24h` in the report
 header (that would mean the agent ignored the window override).
 
-## Eval 3 — adversarial — no inventory file (refuse)
+## Eval 3 - adversarial - no inventory file (refuse)
 
 **Input:**
 
@@ -154,12 +154,12 @@ fixed-shape report header without an inventory).
 
 - All three inputs are concrete pasted-content blocks (inventory YAML
   + pre-parsed artifact summaries). No need to materialise real CI
-  artifacts — the eval supplies the summary the parsers would have
+  artifacts - the eval supplies the summary the parsers would have
   produced, so re-runs grade only the aggregation + report logic.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Glob`, `Grep`,
-  `Bash(jq *)` / `Bash(xmllint *)` / `Bash(find *)`) is read-only —
+  `Bash(jq *)` / `Bash(xmllint *)` / `Bash(find *)`) is read-only - 
   eval re-runs cannot modify the artifact tree or source.
 - Eval cases were authored 2026-05-26 against the v3.0 / v4.0
   framework's D7 sub-checks (Evals exist, Multi-model coverage,

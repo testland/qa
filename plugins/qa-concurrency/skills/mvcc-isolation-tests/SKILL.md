@@ -1,6 +1,6 @@
 ---
 name: mvcc-isolation-tests
-description: "Build per-database MVCC isolation-level tests — Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB."
+description: "Build per-database MVCC isolation-level tests - Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB."
 type: skill
 archetype: S3
 rating: 22
@@ -17,19 +17,19 @@ keywords:
 
 Per the [PostgreSQL transaction isolation docs], the four standard
 SQL isolation levels permit different anomalies. Production code
-must run at the right level — and tests verify both that the
+must run at the right level - and tests verify both that the
 chosen level prevents the anomalies the business cares about AND
 that the code copes when the level allows them.
 
 ## When to use
 
-- Banking, inventory, booking — anywhere two transactions can
+- Banking, inventory, booking - anywhere two transactions can
   conflict on the same data.
 - Choosing or auditing default isolation level for a new service.
 - Migration: changing isolation level (e.g., Read Committed →
-  Repeatable Read) — tests verify nothing relies on old behavior.
+  Repeatable Read) - tests verify nothing relies on old behavior.
 
-## Step 1 — Anomaly catalog
+## Step 1 - Anomaly catalog
 
 Per the [PostgreSQL transaction isolation docs]:
 
@@ -41,7 +41,7 @@ Per the [PostgreSQL transaction isolation docs]:
 | Serialization anomaly | Concurrent execution produces a result no serial order would |
 | Write skew | T1 reads {x, y} = {0, 0}; T2 reads same; both decide based on read-set; both commit; final state inconsistent |
 
-## Step 2 — PostgreSQL isolation matrix
+## Step 2 - PostgreSQL isolation matrix
 
 Per the [PostgreSQL transaction isolation docs]:
 
@@ -52,10 +52,10 @@ Per the [PostgreSQL transaction isolation docs]:
 | Repeatable Read | NO | NO | NO (PG strict) | YES |
 | Serializable | NO | NO | NO | NO |
 
-PostgreSQL's Repeatable Read is stricter than SQL standard — it
+PostgreSQL's Repeatable Read is stricter than SQL standard - it
 prevents phantoms via snapshot isolation. Other databases differ.
 
-## Step 3 — Test setup: two-connection harness
+## Step 3 - Test setup: two-connection harness
 
 ```python
 import psycopg
@@ -85,7 +85,7 @@ def two_connection_test(workload_a, workload_b, isolation="read committed"):
     return results
 ```
 
-## Step 4 — Test for non-repeatable read at Read Committed
+## Step 4 - Test for non-repeatable read at Read Committed
 
 ```python
 def test_non_repeatable_read_under_read_committed():
@@ -113,7 +113,7 @@ def test_non_repeatable_read_under_read_committed():
     assert second == 200, "Read Committed permits non-repeatable read"
 ```
 
-## Step 5 — Test phantom read prevented at Repeatable Read (PG)
+## Step 5 - Test phantom read prevented at Repeatable Read (PG)
 
 ```python
 def test_phantom_read_prevented_under_repeatable_read():
@@ -140,7 +140,7 @@ def test_phantom_read_prevented_under_repeatable_read():
     assert first == second == 3, "PG Repeatable Read should prevent phantom"
 ```
 
-## Step 6 — Test write-skew at Repeatable Read (still possible!)
+## Step 6 - Test write-skew at Repeatable Read (still possible!)
 
 Per the [PostgreSQL transaction isolation docs], write skew is a
 serialization anomaly that Repeatable Read does NOT prevent:
@@ -178,7 +178,7 @@ def test_write_skew_under_repeatable_read():
         assert on_call_after in (0, 1)  # demonstrate anomaly OR safe outcome
 ```
 
-## Step 7 — Test Serializable rolls back conflicting transactions
+## Step 7 - Test Serializable rolls back conflicting transactions
 
 ```python
 def test_serializable_aborts_one_of_skew_pair():
@@ -208,9 +208,9 @@ def test_serializable_aborts_one_of_skew_pair():
 
 Per the [PostgreSQL transaction isolation docs]: Serializable raises
 `could not serialize access due to read/write dependencies among
-transactions` — application must catch + retry.
+transactions` - application must catch + retry.
 
-## Step 8 — Per-database differences
+## Step 8 - Per-database differences
 
 | DB | Default | RR prevents phantoms? | Serializable cost |
 |---|---|---|---|
@@ -221,9 +221,9 @@ transactions` — application must catch + retry.
 | DynamoDB | Eventually consistent reads | Strongly consistent reads opt-in | Transactions: ACID with TransactWriteItems |
 | MongoDB | Snapshot read concern | Multi-doc txn (4.0+) ACID | Limit on doc size (16MB / txn) |
 
-Test the *actual* DB you ship with — defaults differ.
+Test the *actual* DB you ship with - defaults differ.
 
-## Step 9 — Application-level retry pattern
+## Step 9 - Application-level retry pattern
 
 ```python
 def with_serializable_retry(fn, max_retries=3):
@@ -265,20 +265,20 @@ def test_serializable_retry_completes():
   adjustment per machine speed.
 - Eventually-consistent NoSQL stores need different tests
   (probabilistic + windowed).
-- ORM abstractions can hide explicit SET ISOLATION LEVEL — verify
+- ORM abstractions can hide explicit SET ISOLATION LEVEL - verify
   the actual SQL emitted.
 
 ## References
 
-- [PostgreSQL transaction isolation docs] — anomaly definitions,
+- [PostgreSQL transaction isolation docs] - anomaly definitions,
   per-level matrix, retry patterns
-- MySQL InnoDB isolation — dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html
-- A Critique of ANSI SQL Isolation Levels (Berenson 1995) — seminal
+- MySQL InnoDB isolation - dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html
+- A Critique of ANSI SQL Isolation Levels (Berenson 1995) - seminal
   paper on isolation levels
 - [`race-condition-test-author`](../race-condition-test-author/SKILL.md),
-  [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) —
+  [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) - 
   in-process concurrency siblings
-- [`jepsen-patterns`](../jepsen-patterns/SKILL.md) — distributed
+- [`jepsen-patterns`](../jepsen-patterns/SKILL.md) - distributed
   consistency analogue
 
 [PostgreSQL transaction isolation docs]: https://www.postgresql.org/docs/current/transaction-iso.html

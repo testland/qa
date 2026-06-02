@@ -1,6 +1,6 @@
 ---
 name: unreal-automation-system
-description: "Author and run Unreal Engine's Automation Test Framework — Epic's C++ test framework for UE 4.x / 5.x, documented at dev.epicgames.com/documentation/en-us/unreal-engine. Covers the five test categories Epic defines (Unit / Feature / Smoke / Content Stress / Screenshot Comparison), the IMPLEMENT_SIMPLE_AUTOMATION_TEST and IMPLEMENT_COMPLEX_AUTOMATION_TEST macros, the BDD-style Automation Spec API (DEFINE_SPEC / BEGIN_DEFINE_SPEC / Describe / It / BeforeEach / LatentIt / xIt), latent commands (ADD_LATENT_AUTOMATION_COMMAND), the Automation Driver for UI input simulation (IAutomationDriverModule::Get().CreateDriver(), By::Id / By::Path locators), running via Session Frontend (Window > Test Automation) and command line (-ExecCmds=\"Automation RunTests …\"), and CI integration. Use when the unit under test is C++ Unreal code that needs the UE runtime, editor, or UMG UI surface."
+description: "Author and run Unreal Engine's Automation Test Framework - Epic's C++ test framework for UE 4.x / 5.x, documented at dev.epicgames.com/documentation/en-us/unreal-engine. Covers the five test categories Epic defines (Unit / Feature / Smoke / Content Stress / Screenshot Comparison), the IMPLEMENT_SIMPLE_AUTOMATION_TEST and IMPLEMENT_COMPLEX_AUTOMATION_TEST macros, the BDD-style Automation Spec API (DEFINE_SPEC / BEGIN_DEFINE_SPEC / Describe / It / BeforeEach / LatentIt / xIt), latent commands (ADD_LATENT_AUTOMATION_COMMAND), the Automation Driver for UI input simulation (IAutomationDriverModule::Get().CreateDriver(), By::Id / By::Path locators), running via Session Frontend (Window > Test Automation) and command line (-ExecCmds=\"Automation RunTests …\"), and CI integration. Use when the unit under test is C++ Unreal code that needs the UE runtime, editor, or UMG UI surface."
 rating: 24
 d6: 4
 archetype: S1
@@ -19,10 +19,10 @@ Content Stress, Screenshot Comparison) and supports multiple
 authoring styles (traditional, BDD Spec, UI Driver, Functional,
 Python / Blueprint).
 
-- **Automation Spec** — BDD-style `Describe` / `It` /
+- **Automation Spec** - BDD-style `Describe` / `It` /
   `BeforeEach` per
   [Automation Spec documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-spec-in-unreal-engine).
-- **Automation Driver** — UI input simulation per
+- **Automation Driver** - UI input simulation per
   [Automation Driver documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-driver-in-unreal-engine).
 
 Composes with:
@@ -70,9 +70,9 @@ Epic's five categories are:
 
 Each test declares flags from `EAutomationTestFlags` that mix:
 
-- **Filter** — `SmokeFilter`, `EngineFilter`, `ProductFilter`,
+- **Filter** - `SmokeFilter`, `EngineFilter`, `ProductFilter`,
   `PerfFilter`, `StressFilter`, `NegativeFilter`.
-- **Application context** — `EditorContext`, `ClientContext`,
+- **Application context** - `EditorContext`, `ClientContext`,
   `ServerContext`, `CommandletContext`, plus the convenience mask
   `ApplicationContextMask`.
 
@@ -236,7 +236,7 @@ void FBackendSpec::Define()
 `LatentIt` (per the
 [Automation Spec docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-spec-in-unreal-engine))
 gives the test a `FDoneDelegate` it must invoke when the async
-work has finished — Unreal's analogue of a Promise / future-based
+work has finished - Unreal's analogue of a Promise / future-based
 test.
 
 Disabling: prefix the spec function with `x` (`xIt(…)`,
@@ -292,7 +292,7 @@ void FMenuDriverSpec::Define()
 | Locator | When | Caveat |
 |---|---|---|
 | `By::Id("SubmitButton")` | Most reliable | Requires explicit metadata tagging on the widget |
-| `By::Path("…")` | Powerful | "Brittle" per the docs — depends on widget hierarchy |
+| `By::Path("…")` | Powerful | "Brittle" per the docs - depends on widget hierarchy |
 | `By::Cursor()` | Returns widget under cursor | Mainly for hover tests |
 | `By::Delegate(…)` | Custom lambda discovery | Power-user fallback |
 
@@ -329,10 +329,10 @@ UnrealEditor-Cmd.exe MyGame.uproject \
 
 Variants:
 
-- `Automation RunTests <Filter>` — run tests matching the path
+- `Automation RunTests <Filter>` - run tests matching the path
   prefix.
-- `Automation RunAll` — run every registered test.
-- `Automation Quit` — quit when queue drains.
+- `Automation RunAll` - run every registered test.
+- `Automation Quit` - quit when queue drains.
 
 On Windows the editor binary is `UnrealEditor-Cmd.exe`; on
 macOS / Linux the launcher script is `UnrealEditor` with the
@@ -345,7 +345,7 @@ target devkit, run automation, collect artifacts), the next
 layer up is **Gauntlet** (Unreal's automation harness referenced
 on the
 [Automation Test Framework page](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine)).
-Out of scope for this skill — gauntlet wraps the same `Automation
+Out of scope for this skill - gauntlet wraps the same `Automation
 RunTests` command-line surface internally.
 
 ## Parsing results
@@ -422,11 +422,11 @@ jobs:
 
 CI pipelines typically split the test run into:
 
-- **PR job** — `EAutomationTestFlags::SmokeFilter` only
+- **PR job** - `EAutomationTestFlags::SmokeFilter` only
   ("complete within 1 second" per the
   [framework docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine)),
   for sub-minute PR feedback.
-- **Nightly job** — `ProductFilter | StressFilter` plus screenshot
+- **Nightly job** - `ProductFilter | StressFilter` plus screenshot
   comparison.
 
 For a sketch of how internal QA categories
@@ -437,7 +437,7 @@ For a sketch of how internal QA categories
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| All tests as `SmokeFilter` | Smoke tests "complete within 1 second" per [framework docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine) — long tests break the smoke contract | Use `ProductFilter` for tests > 1 s |
+| All tests as `SmokeFilter` | Smoke tests "complete within 1 second" per [framework docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine) - long tests break the smoke contract | Use `ProductFilter` for tests > 1 s |
 | Running Automation Driver on GameThread | API "cannot run on the GameThread" per [Driver docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-driver-in-unreal-engine) | Use `EAsyncExecution::ThreadPool` on the driver-using `It` |
 | Spec without `It` descriptions starting with "should" | Runner output reads poorly | Per [Spec docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-spec-in-unreal-engine), start descriptions with "should" |
 | Trusting `By::Path` locators | "Brittle" per [Driver docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-driver-in-unreal-engine) | Prefer `By::Id` with tagged metadata |
@@ -451,8 +451,8 @@ For a sketch of how internal QA categories
 - **C++ build required.** Tests live in C++ modules; pure-content
   Blueprint projects need a code module added to use this
   framework. (Pure Blueprint projects can use Blueprint Functional
-  Tests in-level — see Epic's docs on Functional Testing.)
-- **No common exit code definition** comparable to Unity's caveat —
+  Tests in-level - see Epic's docs on Functional Testing.)
+- **No common exit code definition** comparable to Unity's caveat - 
   parse the `-ReportOutputPath` JSON or scrape the log for
   `LogAutomationController` Fail lines.
 - **Spec parameterised tests** are loop-generated per
@@ -460,16 +460,16 @@ For a sketch of how internal QA categories
   there is no `[TestCase]` analogue from NUnit. The framework is
   NUnit-inspired but **not** NUnit-derived (unlike Unity's UTF).
 - **Screenshot comparison** baseline storage + tolerance
-  configuration is engine-version-specific — consult per-version
+  configuration is engine-version-specific - consult per-version
   Epic docs.
 - **Editor-context tests cannot run in dedicated-server only
-  builds** — declare `EditorContext` on those tests; client / server
+  builds** - declare `EditorContext` on those tests; client / server
   tests need their own flag set.
 - **Documentation source.** The
   [dev.epicgames.com docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine)
   are the public mirror; deeper detail (full macro implementations,
   precise JSON report schema) lives in the engine source under
   `Engine/Source/Runtime/AutomationController/` and
-  `Engine/Source/Developer/AutomationMessages/` — partners with
+  `Engine/Source/Developer/AutomationMessages/` - partners with
   engine source access should consult those for authoritative
   details.

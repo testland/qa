@@ -1,6 +1,6 @@
 ---
 name: langfuse-tracing
-description: "Wires Langfuse tracing into LLM apps for production observability and offline eval — instruments via `@observe` (Python) / `startActiveObservation` (TS) decorators that auto-capture inputs / outputs / timings / errors per generation; exposes `langfuse.update_current_span()` for metadata + cost / latency annotation; supports trace-bound scoring for eval datasets and prompt-as-code management. Use when the user needs production LLM observability beyond pre-deploy eval, or wants to ship traces from production to an eval dataset for offline regression testing."
+description: "Wires Langfuse tracing into LLM apps for production observability and offline eval - instruments via `@observe` (Python) / `startActiveObservation` (TS) decorators that auto-capture inputs / outputs / timings / errors per generation; exposes `langfuse.update_current_span()` for metadata + cost / latency annotation; supports trace-bound scoring for eval datasets and prompt-as-code management. Use when the user needs production LLM observability beyond pre-deploy eval, or wants to ship traces from production to an eval dataset for offline regression testing."
 rating: 22
 d6: 4
 archetype: S1
@@ -13,13 +13,13 @@ archetype: S1
 [lf-gh]: https://github.com/langfuse/langfuse-python
 
 Langfuse complements pre-deploy LLM eval (Promptfoo / DeepEval /
-Ragas / Giskard) with production-side observability — captures every
+Ragas / Giskard) with production-side observability - captures every
 LLM call as a `trace` containing nested `observation`s (generations,
 spans, events), with token / cost / latency metadata, scores, and
 linked datasets for offline eval (per [lf-gh][lf-gh]).
 
 **Important version note (2026-05-06):** per [lf-gh][lf-gh], "The
-SDK was rewritten in v4 and released in March 2026" — this skill
+SDK was rewritten in v4 and released in March 2026" - this skill
 targets the v4 API. For v3 codebases, see the upstream migration
 guide.
 
@@ -34,7 +34,7 @@ guide.
 - An eval framework (Promptfoo / DeepEval / Ragas / Giskard) is
   in place pre-deploy; Langfuse extends it post-deploy.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [lf-gh][lf-gh]:
 
@@ -52,7 +52,7 @@ Set up project credentials per Langfuse self-hosted or cloud
 project (`LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` +
 `LANGFUSE_HOST`).
 
-## Step 2 — Instrument with `@observe`
+## Step 2 - Instrument with `@observe`
 
 Per [langfuse.com/docs/sdk/python/decorators][lf-py-deco]:
 
@@ -80,7 +80,7 @@ import { startActiveObservation, startObservation } from "@langfuse/tracing";
 (Per [lf-py-deco][lf-py-deco]; the TS SDK uses an explicit
 `startObservation` API rather than a decorator.)
 
-## Step 3 — Update current observation with metadata
+## Step 3 - Update current observation with metadata
 
 Per [lf-py-deco][lf-py-deco]:
 
@@ -95,16 +95,16 @@ with langfuse.start_as_current_observation(as_type="span", name="data-processing
 
 Common metadata fields used in production:
 
-- `model` — the model name (e.g., `claude-haiku-4-5`)
-- `model_parameters` — temperature / top_p / max_tokens
-- `usage` — input/output tokens, cost
-- `tags` — environment (`prod` / `staging`), feature flag, customer ID
-- `level` — `DEBUG` / `DEFAULT` / `WARNING` / `ERROR`
+- `model` - the model name (e.g., `claude-haiku-4-5`)
+- `model_parameters` - temperature / top_p / max_tokens
+- `usage` - input/output tokens, cost
+- `tags` - environment (`prod` / `staging`), feature flag, customer ID
+- `level` - `DEBUG` / `DEFAULT` / `WARNING` / `ERROR`
 
-## Step 4 — Score traces
+## Step 4 - Score traces
 
 Scores attach evaluation results to a trace or observation. Three
-data types per Langfuse: numeric (0–1), categorical (string), boolean
+data types per Langfuse: numeric (0 - 1), categorical (string), boolean
 (true/false). The full API and example invocation live at
 [langfuse.com/docs/scores][lf-scores]; the trace-side wiring is:
 
@@ -120,13 +120,13 @@ langfuse.score(
 ```
 
 Per [lf-scores][lf-scores] the current Python SDK API is the source
-of truth — consult that page when wiring scores. Scores can come from:
+of truth - consult that page when wiring scores. Scores can come from:
 
 - **Manual review** (human raters via the Langfuse UI)
 - **Automated eval** (run a metric in batch, score by `trace_id`)
 - **User feedback** (thumbs-up / thumbs-down from the app)
 
-## Step 5 — Datasets for offline eval
+## Step 5 - Datasets for offline eval
 
 Langfuse datasets (collections of `(input, expected_output)` items)
 can be:
@@ -149,14 +149,14 @@ for item in items:
 
 [lf-ds]: https://langfuse.com/docs/datasets
 
-## Step 6 — Prompt management
+## Step 6 - Prompt management
 
 Pin prompt versions in code; iterate prompts in the Langfuse UI;
 roll out new prompt versions per environment (`production` /
 `staging` labels) without code deploys. The `langfuse.get_prompt()`
 API fetches the current production prompt at runtime.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 Langfuse is observability-side, not pre-deploy CI-side. CI integration
 patterns:
@@ -185,7 +185,7 @@ Datadog), not CI-pipeline assertions.
 
 - Langfuse cloud is hosted; for data-residency-strict teams,
   self-host (well-supported but operational overhead).
-- v4 API rewrite (March 2026) — pin SDK version in requirements;
+- v4 API rewrite (March 2026) - pin SDK version in requirements;
   v3 patterns no longer supported per [lf-gh][lf-gh].
 - Integration with eval frameworks evolves rapidly; consult
   [langfuse.com/docs][lf-docs] for current Promptfoo / DeepEval /
@@ -197,17 +197,17 @@ Datadog), not CI-pipeline assertions.
 
 ## References
 
-- [lf-gh][lf-gh] — Python SDK repo, install, version note
-- [lf-py-deco][lf-py-deco] — `@observe` decorator + observation
+- [lf-gh][lf-gh] - Python SDK repo, install, version note
+- [lf-py-deco][lf-py-deco] - `@observe` decorator + observation
   patterns
-- [lf-scores][lf-scores] — score API
-- [lf-ds][lf-ds] — datasets
-- [lf-docs][lf-docs] — full documentation
+- [lf-scores][lf-scores] - score API
+- [lf-ds][lf-ds] - datasets
+- [lf-docs][lf-docs] - full documentation
 - [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
   [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
   [`ragas-evaluation`](../ragas-evaluation/SKILL.md),
-  [`giskard-llm`](../giskard-llm/SKILL.md) — pre-deploy eval sister
+  [`giskard-llm`](../giskard-llm/SKILL.md) - pre-deploy eval sister
   tools
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) —
+- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
   adversarial reviewer that flags eval suites without observability
   feedback loop

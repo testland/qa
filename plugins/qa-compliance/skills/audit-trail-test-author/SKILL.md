@@ -1,6 +1,6 @@
 ---
 name: audit-trail-test-author
-description: "Build-an-X for audit-log tests across compliance frameworks — required-events catalog (auth events / privilege change / data access / admin action / config change / export / impersonation); structured-log-format assertions per OWASP A09:2021; tamper-evident chain (hash-chain + signed-batch patterns) for HIPAA §164.312(b) + PCI Req 10 + SOC 2 CC7.3; immutability + retention per framework; query-replay tests for forensic reconstruction. Use when authoring audit log tests for any compliance framework (HIPAA / PCI / SOC 2 / GDPR / etc.)."
+description: "Build-an-X for audit-log tests across compliance frameworks - required-events catalog (auth events / privilege change / data access / admin action / config change / export / impersonation); structured-log-format assertions per OWASP A09:2021; tamper-evident chain (hash-chain + signed-batch patterns) for HIPAA §164.312(b) + PCI Req 10 + SOC 2 CC7.3; immutability + retention per framework; query-replay tests for forensic reconstruction. Use when authoring audit log tests for any compliance framework (HIPAA / PCI / SOC 2 / GDPR / etc.)."
 rating: 23
 d6: 4
 archetype: S3
@@ -23,7 +23,7 @@ requirements:
 | ISO 27001 A.8.15 | Logging |
 | NIST 800-53 AU family | Audit + accountability controls |
 
-This is a **build-an-X workflow** (S3) — the per-system audit-log
+This is a **build-an-X workflow** (S3) - the per-system audit-log
 test recipe. Different from a generic logging skill; specifically
 focused on compliance-grade audit trails (tamper-evidence, retention,
 required events).
@@ -36,7 +36,7 @@ required events).
 - New service/component must be onboarded to org-wide audit
   pipeline.
 
-## Step 1 — Required-events catalog
+## Step 1 - Required-events catalog
 
 Universal events (required by most compliance frameworks):
 
@@ -59,10 +59,10 @@ Per-framework additions:
 - **SOC 2**: change-management events
 - **GDPR**: data-subject-rights workflow events (SAR, erasure)
 
-## Step 2 — Structured log format
+## Step 2 - Structured log format
 
 Per OWASP A09:2021 (Security Logging + Monitoring Failures), audit
-logs MUST be structured (JSON) — NOT free-text. Schema:
+logs MUST be structured (JSON) - NOT free-text. Schema:
 
 ```json
 {
@@ -108,7 +108,7 @@ def test_audit_log_structure_valid():
     assert validate_against_schema(audit, 'audit-event-v1.json-schema')
 ```
 
-## Step 3 — Tamper-evident chain (hash-chain)
+## Step 3 - Tamper-evident chain (hash-chain)
 
 For HIPAA §164.312(b) / PCI Req 10 / SOC 2 CC7.3 integrity
 requirements:
@@ -139,7 +139,7 @@ def test_audit_batch_signed_by_kms():
     assert kms.verify_signature(today_batch.content, today_batch.signature)
 ```
 
-## Step 4 — Immutability + retention
+## Step 4 - Immutability + retention
 
 Audit logs MUST be append-only + retention-enforced:
 
@@ -171,7 +171,7 @@ Retention requirements vary:
 | GDPR | as long as needed for the documented purpose |
 | ISO 27001 | per ISMS retention policy |
 
-## Step 5 — PII redaction
+## Step 5 - PII redaction
 
 For frameworks that require audit logs but forbid PII in logs (PCI:
 no PAN; HIPAA: minimum-necessary):
@@ -194,7 +194,7 @@ def test_phi_redacted_in_audit():
     assert 'diagnosis' not in audit.full_event_text
 ```
 
-## Step 6 — Forensic reconstruction (query-replay)
+## Step 6 - Forensic reconstruction (query-replay)
 
 Compliance frameworks require ability to reconstruct events for
 investigation:
@@ -219,7 +219,7 @@ def test_can_reconstruct_user_activity_in_window():
         # Annotate: this would be domain-specific; just ensure queryable
 ```
 
-## Step 7 — Cross-system aggregation
+## Step 7 - Cross-system aggregation
 
 Modern systems span microservices; per-service local audit logs
 must aggregate to a central audit store:
@@ -240,7 +240,7 @@ def test_audit_events_aggregated_centrally():
     pytest.fail(f"Event {event_id} not aggregated to central store within 30s")
 ```
 
-## Step 8 — End-to-end test recipe
+## Step 8 - End-to-end test recipe
 
 For each system handling regulated data:
 
@@ -269,19 +269,17 @@ For each system handling regulated data:
 - Tamper-evidence is implementation-specific; hash-chain is one
   option; signed-batch + WORM storage another.
 - Some frameworks (GDPR) require subject access to their own audit
-  logs — adds a SAR-flow assertion that varies by interpretation.
+  logs - adds a SAR-flow assertion that varies by interpretation.
 - Distributed-system clock-skew can cause hash-chain disorder;
   use logical clocks (Lamport / vector) for ordering critical
   events.
 
 ## References
 
-- owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures
-  — OWASP Top 10 2021 audit logging
-- nist.gov/publications/sp-800-92-guide-computer-security-log-management
-  — NIST SP 800-92 log management guide
-- [`hipaa-test-patterns`](../hipaa-test-patterns/SKILL.md) — §164.312(b)
-- [`pci-dss-scope-checker`](../pci-dss-scope-checker/SKILL.md) — Req 10
-- [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) — CC7.3
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) — Art. 5(1)(f)
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) — agent
+- owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures - OWASP Top 10 2021 audit logging
+- nist.gov/publications/sp-800-92-guide-computer-security-log-management - NIST SP 800-92 log management guide
+- [`hipaa-test-patterns`](../hipaa-test-patterns/SKILL.md) - §164.312(b)
+- [`pci-dss-scope-checker`](../pci-dss-scope-checker/SKILL.md) - Req 10
+- [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) - CC7.3
+- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) - Art. 5(1)(f)
+- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

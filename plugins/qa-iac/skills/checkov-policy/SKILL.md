@@ -1,6 +1,6 @@
 ---
 name: checkov-policy
-description: "Configures Checkov for IaC security scanning across Terraform, CloudFormation, Kubernetes, Helm, ARM, Serverless, AWS CDK — installs `pip install checkov`, runs against per-framework directories, customizes rules via skip / override / custom Python checks, integrates SARIF / JUnit output for CI dashboards. Per Checkov: \"scans cloud infrastructure configurations to find misconfigurations before they''''re deployed.\" Use as the broad-coverage IaC security scanner."
+description: "Configures Checkov for IaC security scanning across Terraform, CloudFormation, Kubernetes, Helm, ARM, Serverless, AWS CDK - installs `pip install checkov`, runs against per-framework directories, customizes rules via skip / override / custom Python checks, integrates SARIF / JUnit output for CI dashboards. Per Checkov: \"scans cloud infrastructure configurations to find misconfigurations before they''''re deployed.\" Use as the broad-coverage IaC security scanner."
 rating: 23
 d6: 4
 archetype: S1
@@ -15,7 +15,7 @@ archetype: S1
 Per [checkov-home][ch], supported frameworks: Terraform and
 Terraform plan, CloudFormation, Kubernetes, Helm, ARM Templates,
 Serverless framework, AWS CDK. Checkov is the broadest IaC
-security scanner — covers more frameworks than tfsec
+security scanner - covers more frameworks than tfsec
 (Terraform-only) or KICS (similar coverage but Checkov has more
 built-in checks per release).
 
@@ -27,7 +27,7 @@ built-in checks per release).
 - Want one tool covering Terraform + Kubernetes + Dockerfile + CI
   pipelines.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install checkov
@@ -41,7 +41,7 @@ echo 'checkov==3.2.500' >> requirements-dev.txt
 pip install -r requirements-dev.txt
 ```
 
-## Step 2 — Run
+## Step 2 - Run
 
 ```bash
 # Scan a directory
@@ -59,7 +59,7 @@ terraform show -json plan.tfplan > plan.json
 checkov -f plan.json
 ```
 
-## Step 3 — Output formats
+## Step 3 - Output formats
 
 ```bash
 # Default (CLI)
@@ -78,7 +78,7 @@ checkov -d . -o junitxml > checkov.xml
 checkov -d . -o cli -o sarif
 ```
 
-## Step 4 — Skip checks
+## Step 4 - Skip checks
 
 ```bash
 # Skip specific checks
@@ -99,10 +99,10 @@ resource "aws_s3_bucket" "logs" {
 }
 ```
 
-The `:skip=` annotation requires a justification — reviewable in
+The `:skip=` annotation requires a justification - reviewable in
 PRs.
 
-## Step 5 — Custom Python checks
+## Step 5 - Custom Python checks
 
 ```python
 # .checkov/custom_checks/cost_center_tag.py
@@ -134,7 +134,7 @@ checkov -d . --external-checks-dir .checkov/custom_checks
 For custom YAML policies (no Python required), use the graph-based
 `policies/` directory (Checkov supports YAML rules).
 
-## Step 6 — Soft fail / hard fail
+## Step 6 - Soft fail / hard fail
 
 ```bash
 # Default: any failed check exits non-zero (CI fails)
@@ -150,7 +150,7 @@ checkov -d . --soft-fail-on CKV_AWS_*
 Pattern: hard fail on critical / new findings; soft fail on legacy
 issues being ratcheted down.
 
-## Step 7 — Baseline comparison
+## Step 7 - Baseline comparison
 
 ```bash
 # Generate baseline (current state of findings)
@@ -161,10 +161,10 @@ checkov -d . --baseline .checkov.baseline
 ```
 
 Baselines let teams adopt Checkov against legacy code without
-fixing all existing issues at once — only new findings break the
+fixing all existing issues at once - only new findings break the
 build.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -186,7 +186,7 @@ jobs:
 The SARIF upload to GitHub Code Scanning surfaces findings as PR
 comments + the Security tab.
 
-## Step 9 — Combine with other scanners
+## Step 9 - Combine with other scanners
 
 Checkov + tfsec + KICS catch overlapping but non-identical issues.
 Per [`iac-policy-checker`](../../agents/iac-policy-checker.md):
@@ -222,12 +222,12 @@ kics scan -p . --report-formats json -o ./kics-results
 
 ## References
 
-- [ch][ch] — Checkov overview, supported IaC frameworks, common
+- [ch][ch] - Checkov overview, supported IaC frameworks, common
   CLI usage, Palo Alto Networks maintainer.
 - [`tfsec-policy`](../tfsec-policy/SKILL.md),
-  [`kics-policy`](../kics-policy/SKILL.md) — sister scanners.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) —
+  [`kics-policy`](../kics-policy/SKILL.md) - sister scanners.
+- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   custom policies via OPA / Conftest (Checkov for built-in; OPA
   for custom).
-- [`iac-policy-checker`](../../agents/iac-policy-checker.md) —
+- [`iac-policy-checker`](../../agents/iac-policy-checker.md) - 
   combines Checkov + tfsec + KICS results.

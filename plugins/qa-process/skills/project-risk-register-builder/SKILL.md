@@ -1,6 +1,6 @@
 ---
 name: project-risk-register-builder
-description: "Build-an-X workflow that produces a project-level risk register — risks tied to the project execution (schedule slippage, environment instability, people / staffing, vendor / dependency, scope creep) rather than the product itself. Walks the author through ISO 31000-aligned identification, impact × likelihood scoring, mitigation strategies (avoid / mitigate / transfer / accept), and ownership. Output is a register the project manager reviews weekly. Use for project / release execution risks; complements product-risk-register-builder (product-quality risks) and risk-matrix (per-release product risks)."
+description: "Build-an-X workflow that produces a project-level risk register - risks tied to the project execution (schedule slippage, environment instability, people / staffing, vendor / dependency, scope creep) rather than the product itself. Walks the author through ISO 31000-aligned identification, impact × likelihood scoring, mitigation strategies (avoid / mitigate / transfer / accept), and ownership. Output is a register the project manager reviews weekly. Use for project / release execution risks; complements product-risk-register-builder (product-quality risks) and risk-matrix (per-release product risks)."
 rating: 23
 d6: 4
 archetype: S3
@@ -10,17 +10,16 @@ archetype: S3
 
 ## Overview
 
-A **project risk register** captures risks to **project execution**
-— schedule, environment, people, vendor, scope — separate from
+A **project risk register** captures risks to **project execution** - schedule, environment, people, vendor, scope - separate from
 product-quality risks. Per ISTQB CTAL-TM, the distinction is:
 
-- **Product risk** — "the possibility that the system or software
+- **Product risk** - "the possibility that the system or software
   might fail to satisfy or fulfil some reasonable expectation of
   the customer, user, or stakeholder." → captured in
   [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md)
   and per-release in
   [`risk-matrix`](../risk-matrix/SKILL.md).
-- **Project risk** — "any risk that affects project success."
+- **Project risk** - "any risk that affects project success."
   Schedule, resources, etc.
 
 This skill scopes **project** risks. Cite ISTQB glossary
@@ -29,13 +28,13 @@ risk" + "project risk".
 
 ## When to use
 
-- Sprint planning — capture sprint-specific project risks.
-- Release planning — capture release execution risks (deadlines,
+- Sprint planning - capture sprint-specific project risks.
+- Release planning - capture release execution risks (deadlines,
   dependencies, staffing).
-- Quarterly OKR review — capture longer-horizon project risks.
-- Project kickoff — establish the baseline.
+- Quarterly OKR review - capture longer-horizon project risks.
+- Project kickoff - establish the baseline.
 
-## Step 1 — Identify by category
+## Step 1 - Identify by category
 
 Per ISO 31000:2018 (cite by stable ID) and PMI PMBOK 7th edition
 risk categorisation, project risks fall into broad buckets:
@@ -54,7 +53,7 @@ risk categorisation, project risks fall into broad buckets:
 Aim for 8-20 active project risks at any time. Stale entries get
 retired.
 
-## Step 2 — Score per impact × likelihood
+## Step 2 - Score per impact × likelihood
 
 ```
 Impact 1-5:
@@ -74,7 +73,7 @@ Likelihood 1-5:
 Score = Impact × Likelihood (range 1-25)
 ```
 
-## Step 3 — Pick a mitigation strategy
+## Step 3 - Pick a mitigation strategy
 
 Per ISO 31000:2018, four standard responses:
 
@@ -87,7 +86,7 @@ Per ISO 31000:2018, four standard responses:
 
 Document the chosen strategy per risk.
 
-## Step 4 — Document the register
+## Step 4 - Document the register
 
 ```markdown
 # Project risk register — <project / quarter>
@@ -115,7 +114,7 @@ Document the chosen strategy per risk.
 | PJ-R-002 | Staffing — onboarding lag | Not triggered | Mitigation (early hire) effective |
 ```
 
-## Step 5 — Weekly review cadence
+## Step 5 - Weekly review cadence
 
 Project risks evolve fast. Weekly review at standup or PM
 syncpoint:
@@ -134,7 +133,7 @@ syncpoint:
   retire.
 ```
 
-## Step 6 — Escalation triggers
+## Step 6 - Escalation triggers
 
 Risks scoring ≥15 trigger escalation:
 
@@ -146,7 +145,7 @@ Risks scoring ≥15 trigger escalation:
   blocked on engineer availability.
 ```
 
-## Worked example — quarterly project risk distribution
+## Worked example - quarterly project risk distribution
 
 For a 12-risk register in a Q2 release:
 
@@ -159,7 +158,7 @@ For a 12-risk register in a Q2 release:
 | Environment | 2 | 10 | 12 |
 | Compliance | 1 | 15 | 15 |
 
-People + Schedule are dominant — staffing + dependency
+People + Schedule are dominant - staffing + dependency
 mitigations need most attention.
 
 ## Anti-patterns
@@ -182,18 +181,18 @@ mitigations need most attention.
   industry / org maturity.
 - **Doesn't replace project plan.** Risks supplement the plan;
   they don't replace it.
-- **"Transfer" via vendor contract** is often theoretical —
+- **"Transfer" via vendor contract** is often theoretical - 
   contract clauses without enforcement don't actually transfer
   risk.
 
 ## References
 
-- ISO 31000:2018 "Risk management — Guidelines" — cite by stable
+- ISO 31000:2018 "Risk management - Guidelines" - cite by stable
   ID; iso.org paywall.
-- PMI PMBOK Guide 7th edition — risk management chapter.
+- PMI PMBOK Guide 7th edition - risk management chapter.
 - ISTQB Advanced Test Manager (CTAL-TM) syllabus, ch. 5.
-- ISTQB Glossary —
-  [glossary.istqb.org](https://glossary.istqb.org/) — "project
+- ISTQB Glossary - 
+  [glossary.istqb.org](https://glossary.istqb.org/) - "project
   risk" entry.
 - Sibling skill (different scope):
   [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),

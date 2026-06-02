@@ -1,6 +1,6 @@
 ---
 name: test-isolation-patterns
-description: "Pure reference catalog of test-isolation and fixture-lifecycle patterns — fixture scope (per-test / per-describe / shared / global), Meszaros's four-phase test pattern, Fowler's Fresh-Fixture-vs-Shared-Fixture trade-off, database isolation (transaction-rollback / database-per-worker / template-database), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup). Distinct from `test-code-conventions` §6 (file-level fixture coupling rule) — this catalog is the architecture-tier reference. Preloaded by `framework-architecture-auditor` to anchor the §A3 fixture-coupling and §A6 retry/wait audits."
+description: "Pure reference catalog of test-isolation and fixture-lifecycle patterns - fixture scope (per-test / per-describe / shared / global), Meszaros's four-phase test pattern, Fowler's Fresh-Fixture-vs-Shared-Fixture trade-off, database isolation (transaction-rollback / database-per-worker / template-database), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup). Distinct from `test-code-conventions` §6 (file-level fixture coupling rule) - this catalog is the architecture-tier reference. Preloaded by `framework-architecture-auditor` to anchor the §A3 fixture-coupling and §A6 retry/wait audits."
 rating: 25
 d6: 5
 archetype: S2
@@ -10,20 +10,20 @@ archetype: S2
 
 ## Overview
 
-A test that fails sometimes for non-obvious reasons is non-deterministic. Per [Martin Fowler — *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html): "A test is non-deterministic when it passes sometimes and fails sometimes, without any noticeable change in the code, tests, or environment… Once you start ignoring a regression test failure, then that test is useless and you might as well throw it away." The dominant cause is **broken isolation** — one test affecting another, the environment leaking, fixtures sharing state. This catalog is the canonical reference for the isolation patterns that prevent it.
+A test that fails sometimes for non-obvious reasons is non-deterministic. Per [Martin Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html): "A test is non-deterministic when it passes sometimes and fails sometimes, without any noticeable change in the code, tests, or environment… Once you start ignoring a regression test failure, then that test is useless and you might as well throw it away." The dominant cause is **broken isolation** - one test affecting another, the environment leaking, fixtures sharing state. This catalog is the canonical reference for the isolation patterns that prevent it.
 
-This skill is a **pure reference** (S2) — no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) cites when auditing fixture coupling (§A3), retry/wait policy consistency (§A6), and CI integration health (§A8). It complements [`test-code-conventions §6`](../test-code-conventions/SKILL.md) (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) which catalogs flake symptoms; this skill catalogs the prevention patterns.
+This skill is a **pure reference** (S2) - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) cites when auditing fixture coupling (§A3), retry/wait policy consistency (§A6), and CI integration health (§A8). It complements [`test-code-conventions §6`](../test-code-conventions/SKILL.md) (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) which catalogs flake symptoms; this skill catalogs the prevention patterns.
 
 ## When to use
 
-- Designing a new framework — pick the fixture scope and isolation strategy.
-- Auditing an existing framework where flake-rate is rising (per [TestDino 2026](https://testdino.com/blog/flaky-test-benchmark), flake rates rose from 10% in 2022 to 26% in 2025 — broken isolation is the dominant cause).
-- Migrating from sequential to parallel execution — the parallel-safety patterns become load-bearing.
-- Refactoring fixture inheritance chains — apply the cleanup-discipline patterns.
+- Designing a new framework - pick the fixture scope and isolation strategy.
+- Auditing an existing framework where flake-rate is rising (per [TestDino 2026](https://testdino.com/blog/flaky-test-benchmark), flake rates rose from 10% in 2022 to 26% in 2025 - broken isolation is the dominant cause).
+- Migrating from sequential to parallel execution - the parallel-safety patterns become load-bearing.
+- Refactoring fixture inheritance chains - apply the cleanup-discipline patterns.
 
-## Pattern 1 — The four-phase test pattern
+## Pattern 1 - The four-phase test pattern
 
-**Canonical source:** [Gerard Meszaros — *xUnit Test Patterns: Refactoring Test Code* (2007)](https://www.amazon.com/xUnit-Test-Patterns-Refactoring-Code/dp/0131495054). Referenced in the [Wikipedia entry on test fixture](https://en.wikipedia.org/wiki/Test_fixture).
+**Canonical source:** [Gerard Meszaros - *xUnit Test Patterns: Refactoring Test Code* (2007)](https://www.amazon.com/xUnit-Test-Patterns-Refactoring-Code/dp/0131495054). Referenced in the [Wikipedia entry on test fixture](https://en.wikipedia.org/wiki/Test_fixture).
 
 Every test has four phases:
 
@@ -36,7 +36,7 @@ Every test has four phases:
 
 Phases 1 and 4 together are **fixture management**. Patterns 2-6 below cover how to do them safely.
 
-## Pattern 2 — Fixture scope
+## Pattern 2 - Fixture scope
 
 The framework's test runner offers three or four scopes; the team picks the tightest scope that meets the constraint.
 
@@ -67,11 +67,11 @@ The framework's test runner offers three or four scopes; the team picks the tigh
 | Global fixture for anything that has state | Cannot reset between test runs; CI run pollutes the next run |
 | Inheritance hierarchy of fixtures (`BaseTest` → `AppTest` → `DomainTest` → `SpecificTest`) | Per [`framework-architecture-auditor §A2`](../../agents/framework-architecture-auditor.md), depth-3+ chains break unpredictably |
 
-## Pattern 3 — Fresh Fixture vs Shared Fixture trade-off
+## Pattern 3 - Fresh Fixture vs Shared Fixture trade-off
 
-**Canonical source:** [Martin Fowler — *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html).
+**Canonical source:** [Martin Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html).
 
-Fowler's framing: "I prefer the former [Fresh Fixture], as it's often easier — and in particular easier to find the source of a problem… [but] rebuilding the database each time can add a lot of time to test runs, so that argues for switching to a clean-up strategy."
+Fowler's framing: "I prefer the former [Fresh Fixture], as it's often easier - and in particular easier to find the source of a problem… [but] rebuilding the database each time can add a lot of time to test runs, so that argues for switching to a clean-up strategy."
 
 | Approach | Setup cost | Isolation | When |
 |---|---|---|---|
@@ -90,27 +90,27 @@ Fowler's framing: "I prefer the former [Fresh Fixture], as it's often easier —
 | Transaction-rollback that doesn't actually rollback (autocommit, DDL changes) | Silent state leakage |
 | Shared Fixture documented as "immutable" but tests mutate it anyway | The documentation is unverified; flake follows |
 
-## Pattern 4 — Database / external-store isolation
+## Pattern 4 - Database / external-store isolation
 
 The dominant source of test flake at scale. Five canonical strategies, each with trade-offs.
 
-### 4a — Transaction-rollback (the default)
+### 4a - Transaction-rollback (the default)
 
 Each test runs in a transaction; teardown rollbacks. Works for: relational DBs with full transaction support. Doesn't work for: DDL changes, multiple DB connections, queues, caches.
 
-### 4b — Database-per-test-worker
+### 4b - Database-per-test-worker
 
 Each parallel worker gets its own database (named `app_test_worker_1`, `app_test_worker_2`, etc.). Created once at startup; reused across tests within the worker; dropped at suite end. Works for: parallel execution with mutation-heavy tests. Cost: pre-suite setup time + N× DB storage.
 
-### 4c — Template database / pristine clone
+### 4c - Template database / pristine clone
 
 Pre-create a template database with seed data; clone it per test (or per worker). PostgreSQL's `CREATE DATABASE … TEMPLATE template_db` is the canonical mechanism. Works for: tests needing complex seed state. Cost: template maintenance.
 
-### 4d — Containerised DB-per-test
+### 4d - Containerised DB-per-test
 
 Each test gets a fresh Docker container ([Testcontainers](https://testcontainers.com/) is the canonical library). Maximum isolation; highest cost. Works for: integration tests where the DB version / extensions / config matter. Don't use for: unit tests.
 
-### 4e — In-memory substitution
+### 4e - In-memory substitution
 
 Use SQLite in-memory instead of the production DB engine. Fast; works for simple SQL. Doesn't work for: production-specific features (PostgreSQL JSON, Postgres extensions, MySQL spatial types). Cited as an anti-pattern by [Fowler on integration tests](https://martinfowler.com/articles/practical-test-pyramid.html) when the production engine has features the in-memory substitute lacks.
 
@@ -124,9 +124,9 @@ Use SQLite in-memory instead of the production DB engine. Fast; works for simple
 | Database-per-worker without a maximum-worker limit | Storage explodes; CI cost surges |
 | Containerised DB-per-test for unit tests | 5-second container startup × 1000 unit tests = unworkable |
 
-## Pattern 5 — Parallel safety
+## Pattern 5 - Parallel safety
 
-**Canonical source:** [Fowler — *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html) on isolation as the parallel-safety prerequisite + [TestDino 2026 flake benchmark](https://testdino.com/blog/flaky-test-benchmark) which attributes 20% of flakes to "concurrency problems: race conditions and deadlocks" (after Luo et al. FSE 2014).
+**Canonical source:** [Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html) on isolation as the parallel-safety prerequisite + [TestDino 2026 flake benchmark](https://testdino.com/blog/flaky-test-benchmark) which attributes 20% of flakes to "concurrency problems: race conditions and deadlocks" (after Luo et al. FSE 2014).
 
 Parallel execution magnifies every isolation bug. The patterns that make parallel safe:
 
@@ -147,11 +147,11 @@ Parallel execution magnifies every isolation bug. The patterns that make paralle
 | Hard-coded port 3000 in tests (port collisions) | First worker binds; others fail |
 | Tests writing to `/tmp/test.log` (path collision) | Workers stomp each other's files |
 | Test-name-based DB seeding (collides across workers if names overlap) | Cross-worker state pollution |
-| Per-test setup that does `setTimeout` / `sleep` to "let things settle" | Flake source per [TestDino 2026 §async-wait — 45% of flakes](https://testdino.com/blog/flaky-test-benchmark); use proper event-based synchronisation |
+| Per-test setup that does `setTimeout` / `sleep` to "let things settle" | Flake source per [TestDino 2026 §async-wait - 45% of flakes](https://testdino.com/blog/flaky-test-benchmark); use proper event-based synchronisation |
 
-## Pattern 6 — Cleanup discipline
+## Pattern 6 - Cleanup discipline
 
-**Canonical source:** Meszaros's *xUnit Test Patterns* (2007) — the **Garbage-Collected Teardown** vs **In-line Teardown** vs **Implicit Teardown** vs **Setup Decorator** patterns.
+**Canonical source:** Meszaros's *xUnit Test Patterns* (2007) - the **Garbage-Collected Teardown** vs **In-line Teardown** vs **Implicit Teardown** vs **Setup Decorator** patterns.
 
 The four canonical cleanup approaches:
 
@@ -173,7 +173,7 @@ The four canonical cleanup approaches:
 | Teardown that depends on test-pass state (`if (test.passed) cleanup()`) | Failing tests don't clean up; cascading flake |
 | Teardown order-dependent on setup order | Refactoring setup breaks teardown |
 
-## Pattern 7 — Network / external-service isolation
+## Pattern 7 - Network / external-service isolation
 
 Tests should not depend on external services they don't control. Three patterns:
 
@@ -219,7 +219,7 @@ Tests should not depend on external services they don't control. Three patterns:
 
 - **Audit a framework's isolation strategy** → [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) (preloads this skill).
 - **Per-file fixture coupling rule** → [`test-code-conventions §6`](../test-code-conventions/SKILL.md).
-- **Flake symptoms / pattern catalog** → [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) — symptoms; this skill is the prevention reference.
+- **Flake symptoms / pattern catalog** → [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) - symptoms; this skill is the prevention reference.
 - **Classify a single failing test** → [`failure-classifier`](../../../qa-bug-repro/agents/failure-classifier.md).
 - **Quarantine a chronically flaky test** → [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
 - **Stub / mock external services** → [`msw-handlers`](../../../qa-test-data/skills/msw-handlers/SKILL.md), [`wiremock-stubs`](../../../qa-test-data/skills/wiremock-stubs/SKILL.md), [`mountebank-imposters`](../../../qa-test-data/skills/mountebank-imposters/SKILL.md).
@@ -229,15 +229,15 @@ Tests should not depend on external services they don't control. Three patterns:
 
 ## References
 
-- Martin Fowler — *Eradicating Non-Determinism in Tests* (the load-bearing reference for Fresh-vs-Shared-Fixture trade-off and the "non-deterministic test is useless" rule): https://martinfowler.com/articles/nonDeterminism.html
-- Martin Fowler — *Practical Test Pyramid* (cited for the in-memory-substitution anti-pattern): https://martinfowler.com/articles/practical-test-pyramid.html
-- Gerard Meszaros — *xUnit Test Patterns: Refactoring Test Code* (2007) — the canonical reference for the four-phase test pattern and all named fixture / teardown patterns: ISBN 978-0131495050.
-- Wikipedia — *Test fixture* (cites Meszaros's four-phase pattern): https://en.wikipedia.org/wiki/Test_fixture
-- TestDino Flaky Test Benchmark 2026 — flake rate trend (10% → 26%) and root-cause breakdown (45% async-wait, 20% concurrency, 12% order-dependent, 8% resource leaks) which this catalog's patterns prevent: https://testdino.com/blog/flaky-test-benchmark
-- Luo et al. (FSE 2014) — *An Empirical Analysis of Flaky Tests* (the original academic taxonomy of flake categories cited in TestDino): https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
-- Testcontainers — https://testcontainers.com/ (the canonical containerised-DB-per-test reference)
-- ISTQB glossary — test isolation: https://glossary.istqb.org/en_US/term/independent-testing
-- ISTQB glossary — test fixture: https://glossary.istqb.org/en_US/term/test-fixture
-- ISTQB glossary — flaky test: https://glossary.istqb.org/en_US/term/flaky-test
-- [`test-code-conventions §6`](../test-code-conventions/SKILL.md), [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md), [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) — companion file-level / symptom-level / audit-level references.
-- [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md), [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md) — sister architecture-tier pattern catalogs.
+- Martin Fowler - *Eradicating Non-Determinism in Tests* (the load-bearing reference for Fresh-vs-Shared-Fixture trade-off and the "non-deterministic test is useless" rule): https://martinfowler.com/articles/nonDeterminism.html
+- Martin Fowler - *Practical Test Pyramid* (cited for the in-memory-substitution anti-pattern): https://martinfowler.com/articles/practical-test-pyramid.html
+- Gerard Meszaros - *xUnit Test Patterns: Refactoring Test Code* (2007) - the canonical reference for the four-phase test pattern and all named fixture / teardown patterns: ISBN 978-0131495050.
+- Wikipedia - *Test fixture* (cites Meszaros's four-phase pattern): https://en.wikipedia.org/wiki/Test_fixture
+- TestDino Flaky Test Benchmark 2026 - flake rate trend (10% → 26%) and root-cause breakdown (45% async-wait, 20% concurrency, 12% order-dependent, 8% resource leaks) which this catalog's patterns prevent: https://testdino.com/blog/flaky-test-benchmark
+- Luo et al. (FSE 2014) - *An Empirical Analysis of Flaky Tests* (the original academic taxonomy of flake categories cited in TestDino): https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
+- Testcontainers - https://testcontainers.com/ (the canonical containerised-DB-per-test reference)
+- ISTQB glossary - test isolation: https://glossary.istqb.org/en_US/term/independent-testing
+- ISTQB glossary - test fixture: https://glossary.istqb.org/en_US/term/test-fixture
+- ISTQB glossary - flaky test: https://glossary.istqb.org/en_US/term/flaky-test
+- [`test-code-conventions §6`](../test-code-conventions/SKILL.md), [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md), [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) - companion file-level / symptom-level / audit-level references.
+- [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md), [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md) - sister architecture-tier pattern catalogs.

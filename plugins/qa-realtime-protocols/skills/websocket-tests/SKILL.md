@@ -1,6 +1,6 @@
 ---
 name: websocket-tests
-description: "Test WebSocket protocol behavior — opening handshake (HTTP Upgrade with Sec-WebSocket-Key + Sec-WebSocket-Version: 13), control frames (ping 0x9 / pong 0xA / close 0x8), close-frame status codes (1000 normal, 1001 going-away, 1006 abnormal, 1011 server error), subprotocol negotiation, backpressure, and reconnect with jitter. Use ws (Node), websockets (Python), or Playwright frame inspection per language."
+description: "Test WebSocket protocol behavior - opening handshake (HTTP Upgrade with Sec-WebSocket-Key + Sec-WebSocket-Version: 13), control frames (ping 0x9 / pong 0xA / close 0x8), close-frame status codes (1000 normal, 1001 going-away, 1006 abnormal, 1011 server error), subprotocol negotiation, backpressure, and reconnect with jitter. Use ws (Node), websockets (Python), or Playwright frame inspection per language."
 type: skill
 archetype: S1
 rating: 23
@@ -16,7 +16,7 @@ keywords:
 # websocket-tests
 
 Per [RFC 6455], tests must cover the **handshake**, **control
-frames**, **close codes**, and **subprotocol negotiation** — not
+frames**, **close codes**, and **subprotocol negotiation** - not
 just message round-trips.
 
 ## When to use
@@ -28,7 +28,7 @@ just message round-trips.
 - Pre-deployment gate: the close-code matrix is correct + ping/pong
   keepalive is wired.
 
-## Step 1 — Pick the client lib
+## Step 1 - Pick the client lib
 
 | Stack | Library |
 |---|---|
@@ -38,7 +38,7 @@ just message round-trips.
 | Go | `github.com/gorilla/websocket` |
 | Java | `io.javalin/javalin-testtools` or `org.glassfish.tyrus/tyrus-client` |
 
-## Step 2 — Handshake assertions
+## Step 2 - Handshake assertions
 
 Per [RFC 6455], the opening handshake requires:
 
@@ -75,7 +75,7 @@ test('handshake completes with correct accept header', async () => {
 });
 ```
 
-## Step 3 — Subprotocol negotiation
+## Step 3 - Subprotocol negotiation
 
 Per [RFC 6455], the `Sec-WebSocket-Protocol` header negotiates a
 subprotocol. Server selects one or none.
@@ -94,7 +94,7 @@ test('server rejects unknown subprotocol', async () => {
 });
 ```
 
-## Step 4 — Ping/pong keepalive
+## Step 4 - Ping/pong keepalive
 
 Per [RFC 6455], control frames include `ping (0x9)`, `pong (0xA)`,
 `close (0x8)`; payloads ≤ 125 bytes.
@@ -118,7 +118,7 @@ test('client receives pong within 5s of ping', async () => {
 });
 ```
 
-## Step 5 — Close-frame status code matrix
+## Step 5 - Close-frame status code matrix
 
 Per [RFC 6455], standard close codes:
 
@@ -153,7 +153,7 @@ test('graceful shutdown sends 1001', async () => {
 });
 ```
 
-## Step 6 — Backpressure / large message tests
+## Step 6 - Backpressure / large message tests
 
 Per [RFC 6455], control frame payloads are ≤ 125 bytes; data frames
 have no upper bound but implementations apply limits. Test
@@ -172,7 +172,7 @@ test('server rejects message > maxPayload', async () => {
 });
 ```
 
-## Step 7 — Reconnect with jitter
+## Step 7 - Reconnect with jitter
 
 Reconnect logic should exponential backoff + jitter (not RFC 6455
 itself, but field-tested practice):
@@ -192,7 +192,7 @@ test('client reconnects within 30s after server bounce', async () => {
 Cross-ref `qa-resilience-drills/error-budget-tests` for SLO-driven
 reconnect budget.
 
-## Step 8 — Playwright frame inspection (browser e2e)
+## Step 8 - Playwright frame inspection (browser e2e)
 
 ```ts
 test('app sends auth frame on open', async ({ page }) => {
@@ -228,10 +228,10 @@ test('app sends auth frame on open', async ({ page }) => {
 
 ## References
 
-- [RFC 6455] — WebSocket protocol (handshake, frames, close codes)
-- [`server-sent-events-tests`](../server-sent-events-tests/SKILL.md) —
+- [RFC 6455] - WebSocket protocol (handshake, frames, close codes)
+- [`server-sent-events-tests`](../server-sent-events-tests/SKILL.md) - 
   one-way push alternative
-- [`grpc-streaming-tests`](../grpc-streaming-tests/SKILL.md) — typed
+- [`grpc-streaming-tests`](../grpc-streaming-tests/SKILL.md) - typed
   RPC streaming alternative
 
 [RFC 6455]: https://datatracker.ietf.org/doc/html/rfc6455

@@ -1,6 +1,6 @@
 ---
 name: elasticsearch-relevance-tests
-description: "Author Elasticsearch relevance regression tests using the Ranking Evaluation API (`POST <index>/_rank_eval`) — judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring."
+description: "Author Elasticsearch relevance regression tests using the Ranking Evaluation API (`POST <index>/_rank_eval`) - judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring."
 type: skill
 archetype: S1
 rating: 23
@@ -18,7 +18,7 @@ keywords:
 Per the [Elasticsearch Rank Eval API], the `_rank_eval` endpoint
 "evaluates search result quality across typical queries using
 relevance metrics." This is the canonical IR-metrics-driven approach
-to search QA — far better than spot-checking results.
+to search QA - far better than spot-checking results.
 
 ## When to use
 
@@ -29,7 +29,7 @@ to search QA — far better than spot-checking results.
 - A/B baseline: capture today's NDCG/MRR before tuning so you can
   prove improvement (or detect regression).
 
-## Step 1 — Build the judgment list
+## Step 1 - Build the judgment list
 
 A judgment is `(query, doc_id, rating)`. Ratings: 0 = irrelevant,
 1 = somewhat, 2 = relevant, 3 = highly relevant (4-point scale).
@@ -52,22 +52,22 @@ query,doc_id,rating
 "red dress",sku-2222,3
 ```
 
-## Step 2 — Define metrics for your domain
+## Step 2 - Define metrics for your domain
 
 Per the [Elasticsearch Rank Eval API]:
 
 | Metric | When to use |
 |---|---|
-| **Precision@K** | "Of the top K, how many relevant?" — flat scoring |
-| **Recall@K** | "Of all relevant, how many in top K?" — completeness |
-| **MRR** | "Where's the first relevant?" — search where one good answer suffices |
+| **Precision@K** | "Of the top K, how many relevant?" - flat scoring |
+| **Recall@K** | "Of all relevant, how many in top K?" - completeness |
+| **MRR** | "Where's the first relevant?" - search where one good answer suffices |
 | **DCG / NDCG** | Graded relevance; rank-discounted; the default for graded judgments |
 | **ERR (Expected Reciprocal Rank)** | User-stops-at-first-relevant model; rank-decay sensitive |
 
 For e-commerce with graded judgments → NDCG@10 + MRR. For Q&A → MRR
 + Precision@1.
 
-## Step 3 — Submit a rank_eval request
+## Step 3 - Submit a rank_eval request
 
 Per the [Elasticsearch Rank Eval API]:
 
@@ -112,7 +112,7 @@ Response shape:
 }
 ```
 
-## Step 4 — Wrap as a test
+## Step 4 - Wrap as a test
 
 ```python
 import requests, csv
@@ -149,7 +149,7 @@ def test_search_relevance_baseline():
     assert result["metric_score"] >= 0.80, f"NDCG@10 regressed: {result['metric_score']}"
 ```
 
-## Step 5 — Per-query regression detection
+## Step 5 - Per-query regression detection
 
 Aggregate metric only catches large shifts. Track per-query:
 
@@ -165,7 +165,7 @@ def test_no_query_drops_more_than_10_percent():
             f"Query {query_id} dropped {delta:.2f} (was {baseline_score['metric_score']:.2f}, now {current_score:.2f})"
 ```
 
-## Step 6 — `relevant_rating_threshold` for binary metrics
+## Step 6 - `relevant_rating_threshold` for binary metrics
 
 Per the [Elasticsearch Rank Eval API]: Precision/Recall/MRR accept
 `relevant_rating_threshold` (default 1). For graded judgments:
@@ -184,7 +184,7 @@ Rating ≥ 2 counted as "relevant"; below counted as "not relevant".
 The `ignore_unlabeled` flag controls whether unrated docs in
 results count against precision.
 
-## Step 7 — Reproducible test corpus
+## Step 7 - Reproducible test corpus
 
 Snapshot the index state used for tests:
 
@@ -207,7 +207,7 @@ Restore for each CI run:
 Otherwise document changes (new docs, re-indexes) silently shift
 relevance baselines.
 
-## Step 8 — Quepid + Splainer integration
+## Step 8 - Quepid + Splainer integration
 
 [Quepid](https://github.com/o19s/quepid) (open source from
 OpenSource Connections) provides:
@@ -217,7 +217,7 @@ OpenSource Connections) provides:
 - "Try" tab to test query template changes against current judgments
 
 [Splainer](https://github.com/o19s/splainer-search) explains _why_
-a doc ranked where it did — invaluable for debugging unexpected
+a doc ranked where it did - invaluable for debugging unexpected
 results.
 
 ## Anti-patterns
@@ -238,16 +238,16 @@ results.
   click models (cascade, dynamic Bayesian).
 - Rank Eval API doesn't natively support relevance graded > 4 or
   pairwise comparisons.
-- Synonyms, language analyzers, custom scoring matter — pin in CI.
+- Synonyms, language analyzers, custom scoring matter - pin in CI.
 
 ## References
 
-- [Elasticsearch Rank Eval API] — request/response schema, metrics
-- Quepid (judgment authoring UI) — github.com/o19s/quepid
-- Splainer (debug per-doc ranking) — github.com/o19s/splainer-search
-- [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) —
+- [Elasticsearch Rank Eval API] - request/response schema, metrics
+- Quepid (judgment authoring UI) - github.com/o19s/quepid
+- Splainer (debug per-doc ranking) - github.com/o19s/splainer-search
+- [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) - 
   sister skill (compatible API)
-- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) —
+- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) - 
   vector search analogue
 - [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md)
 

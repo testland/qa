@@ -27,7 +27,7 @@ The agent takes:
 Output: per-finding pass/fail report + a single verdict
 (`pass`, `block`, `pass-with-caveats`).
 
-## Step 1 — Required-field check
+## Step 1 - Required-field check
 
 Per
 [`bug-lifecycle-reference`](../skills/bug-lifecycle-reference/SKILL.md)
@@ -49,7 +49,7 @@ every report must have:
 
 Any missing required field = BLOCK.
 
-## Step 2 — Title quality check
+## Step 2 - Title quality check
 
 Apply the single-description test from
 [`docs/CONTRIBUTING.md`](../../../docs/CONTRIBUTING.md):
@@ -61,7 +61,7 @@ Apply the single-description test from
 
 Failures here = BLOCK + coach.
 
-## Step 3 — Severity-priority consistency
+## Step 3 - Severity-priority consistency
 
 Per
 [`severity-vs-priority-reference`](../skills/severity-vs-priority-reference/SKILL.md):
@@ -74,7 +74,7 @@ Per
 - If severity and priority always equal → flag as suspicious
   (likely auto-equated).
 
-## Step 4 — Reproduction quality
+## Step 4 - Reproduction quality
 
 Reproduction section must include:
 
@@ -87,7 +87,7 @@ Reproduction section must include:
 
 Missing any = BLOCK.
 
-## Step 5 — Classification proposal sanity
+## Step 5 - Classification proposal sanity
 
 If [`bug-report-from-failure`](../skills/bug-report-from-failure/SKILL.md)
 proposed classification fields, sanity-check:
@@ -100,7 +100,7 @@ proposed classification fields, sanity-check:
 
 Inconsistencies = caveat (proposed value shown but flagged).
 
-## Step 6 — Verdict + report
+## Step 6 - Verdict + report
 
 ```markdown
 ## Bug report audit — <bug-spec-id>
@@ -146,7 +146,7 @@ The agent **refuses** to:
 
 - Mark a report "pass" if any required field is missing.
 - Mark a report "pass" if reproduction lacks a commit SHA.
-- Auto-fill missing fields — only reviews and recommends.
+- Auto-fill missing fields - only reviews and recommends.
 - Suppress findings without justification.
 - Override the severity-vs-priority independence rule.
 

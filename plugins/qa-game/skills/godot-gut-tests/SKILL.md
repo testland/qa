@@ -1,6 +1,6 @@
 ---
 name: godot-gut-tests
-description: "Author and run GUT (Godot Unit Test) — the community-canonical GDScript test framework at github.com/bitwes/Gut and gut.readthedocs.io. Covers install (Godot Asset Library or manual `addons/gut/` copy + plugin enable), GUT panel inside the editor, writing tests that extend GutTest with `test_` prefix methods, the assertion family (assert_eq / assert_almost_eq / assert_true / assert_signal_emitted), lifecycle hooks (before_each / after_each / before_all / after_all), inner classes for grouping, parameterized tests via `params=[...]`, doubles / stubs / spies, async / coroutine tests, the command-line runner (`-d -s addons/gut/gut_cmdln.gd -gdir=res://test -gjunit_xml_file=... -gexit`), JUnit XML export, and CI integration. Godot 4.x uses GUT 9.x (current main branch supports 4.6.x; godot_4_7 branch for 4.7.x); Godot 3.x uses GUT 7.x. Use when the unit under test is GDScript code in a Godot project."
+description: "Author and run GUT (Godot Unit Test) - the community-canonical GDScript test framework at github.com/bitwes/Gut and gut.readthedocs.io. Covers install (Godot Asset Library or manual `addons/gut/` copy + plugin enable), GUT panel inside the editor, writing tests that extend GutTest with `test_` prefix methods, the assertion family (assert_eq / assert_almost_eq / assert_true / assert_signal_emitted), lifecycle hooks (before_each / after_each / before_all / after_all), inner classes for grouping, parameterized tests via `params=[...]`, doubles / stubs / spies, async / coroutine tests, the command-line runner (`-d -s addons/gut/gut_cmdln.gd -gdir=res://test -gjunit_xml_file=... -gexit`), JUnit XML export, and CI integration. Godot 4.x uses GUT 9.x (current main branch supports 4.6.x; godot_4_7 branch for 4.7.x); Godot 3.x uses GUT 7.x. Use when the unit under test is GDScript code in a Godot project."
 rating: 24
 d6: 4
 archetype: S1
@@ -12,7 +12,7 @@ keywords: ["godot", "gut", "gdscript", "unit-test", "game-engine", "junit-xml", 
 ## Overview
 
 This skill wraps [GUT (Godot Unit
-Test)](https://github.com/bitwes/Gut) — the community-canonical
+Test)](https://github.com/bitwes/Gut) - the community-canonical
 GDScript test framework. Godot does not ship a first-party
 equivalent of Unity's Test Framework or Unreal's Automation
 System for GDScript user code.
@@ -46,7 +46,7 @@ Composes with:
   surface failures.
 
 For pure-C# tests inside Godot's C# scripting layer, use
-.NET-canonical test runners (xUnit, NUnit) rather than GUT — GUT
+.NET-canonical test runners (xUnit, NUnit) rather than GUT - GUT
 is GDScript-first.
 
 ## Authoring
@@ -158,7 +158,7 @@ Common assertions per
 | `assert_called(double, "method_name", args)` | Spy verification |
 
 Per the README, GUT exposes "a plethora of asserts and utility
-methods" — check the `addons/gut/test.gd` source in your installed
+methods" - check the `addons/gut/test.gd` source in your installed
 version for the complete signature list at the engine version you
 ship against.
 
@@ -245,7 +245,7 @@ assertion.
 ### Async / coroutine tests
 
 Per [gut.readthedocs.io](https://gut.readthedocs.io/), GUT
-supports "coroutines and async test support" — a `test_*` method
+supports "coroutines and async test support" - a `test_*` method
 can `await` signals or timers and the runner waits before moving
 on:
 
@@ -299,10 +299,10 @@ Common GUT CLI flags (per the same docs):
 | `-gconfig=res://.gutconfig.json` | Load config from JSON |
 | `-gjunit_xml_file=artifacts/gut-junit.xml` | Write JUnit XML report |
 | `-gjunit_xml_timestamp` | Add timestamp suffix to filename |
-| `-glog=3` | Log verbosity (0–3) |
+| `-glog=3` | Log verbosity (0 - 3) |
 | `-gexit` | Exit Godot after run (essential in CI) |
 
-`--headless` runs Godot without a display window — required for
+`--headless` runs Godot without a display window - required for
 most CI environments. `-d` runs in debug mode so the test runner
 script (`addons/gut/gut_cmdln.gd`) executes.
 
@@ -322,7 +322,7 @@ CLI runner share settings:
 ```
 
 (Field names per
-[gut.readthedocs.io](https://gut.readthedocs.io/) — check your
+[gut.readthedocs.io](https://gut.readthedocs.io/) - check your
 installed `addons/gut/` version for the authoritative schema.)
 
 ## Parsing results
@@ -348,11 +348,11 @@ recommended CI-consumable output. Top-level shape:
 </testsuites>
 ```
 
-Standard JUnit XML — consumed by GitHub Actions test reporters,
+Standard JUnit XML - consumed by GitHub Actions test reporters,
 Jenkins JUnit plugin, GitLab CI test report widget, etc.
 
 Per the [GUT README](https://github.com/bitwes/Gut), GUT also
-tracks pre-test errors / orphan nodes / unhandled signals — these
+tracks pre-test errors / orphan nodes / unhandled signals - these
 surface in the GUT panel and the JUnit report.
 
 ## CI integration
@@ -414,12 +414,12 @@ For Godot 3.x projects, swap the engine version and use GUT 7.x.
 
 - **No official Godot test framework.** Unlike Unity (UTF) or
   Unreal (Automation), Godot does not ship a first-party
-  GDScript test framework — GUT is community-maintained at
+  GDScript test framework - GUT is community-maintained at
   [github.com/bitwes/Gut](https://github.com/bitwes/Gut) (MIT
   license). For platform-cert evidence trails, vendor / partner
   reviewers may ask for the framework's provenance.
 - **GDScript-only.** C# Godot projects should use .NET test
-  runners (xUnit / NUnit) — GUT is GDScript-first.
+  runners (xUnit / NUnit) - GUT is GDScript-first.
 - **Godot version coupling.** GUT 9.x requires Godot 4.x; GUT 7.x
   requires Godot 3.4.x per the
   [README's Godot Versions section](https://github.com/bitwes/Gut).
@@ -428,12 +428,12 @@ For Godot 3.x projects, swap the engine version and use GUT 7.x.
   needs the script's `res://` path; doubling autoloads or engine
   C++ classes is not supported directly.
 - **No common exit-code definition for engine failures.** A
-  Godot crash mid-run gives exit 0 in some configurations — parse
+  Godot crash mid-run gives exit 0 in some configurations - parse
   the JUnit XML for `failures>0` as the source of truth.
 - **GUT panel inside editor is the canonical UX.** Running tests
   via `--headless` CI works but is slower per-test than the
   in-editor panel because Godot starts fresh each run.
 - **gut.readthedocs.io page churn.** Direct deep links (e.g., a
-  Configuration page) sometimes return 404 between releases —
+  Configuration page) sometimes return 404 between releases - 
   the [project README on github.com](https://github.com/bitwes/Gut)
   is the most stable entry point.

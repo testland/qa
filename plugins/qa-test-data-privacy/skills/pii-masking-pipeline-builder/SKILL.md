@@ -29,7 +29,7 @@ a **deployable YAML spec** that downstream tools execute:
 - Building a recurring refresh pipeline that masks nightly.
 - Establishing a per-table contract that PR-reviewers can audit.
 
-## Step 1 — Inventory the source
+## Step 1 - Inventory the source
 
 Enumerate every column / field in the source dataset. For each,
 record:
@@ -45,7 +45,7 @@ record:
 A schema introspector can produce the first columns; cardinality
 and join graph need a quick analytical pass.
 
-## Step 2 — Classify each field
+## Step 2 - Classify each field
 
 Look up each column in
 [`pii-categories-reference`](../pii-categories-reference/SKILL.md)
@@ -54,18 +54,18 @@ fields explicitly (NIST 800-122 §2.2).
 
 | Column | GDPR | CPRA SPI | NIST | HIPAA | Risk |
 |---|:---:|:---:|:---:|:---:|---|
-| `users.email` | ✓ | — | ✓ | ✓ #6 | direct |
+| `users.email` | ✓ | - | ✓ | ✓ #6 | direct |
 | `users.ssn` | ✓ | ✓ | ✓ | ✓ #7 | direct, high-sensitivity |
-| `users.dob` | linkable | — | linkable | ✓ #3 | linkable |
-| `users.zip` | linkable | — | linkable | ✓ #2 (sub-state) | linkable |
-| `users.country` | — | — | — | — | non-PII |
+| `users.dob` | linkable | - | linkable | ✓ #3 | linkable |
+| `users.zip` | linkable | - | linkable | ✓ #2 (sub-state) | linkable |
+| `users.country` | - | - | - | - | non-PII |
 
 Any field marked direct OR linkable enters the masking scope. A
 field marked only "linkable" still gets masked because it
 identifies in combination with others (Sweeney 87% rule, see
 [`pii-categories-reference`](../pii-categories-reference/SKILL.md)).
 
-## Step 3 — Pick an operator per field
+## Step 3 - Pick an operator per field
 
 Match each field to a technique in
 [`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md).
@@ -90,7 +90,7 @@ Decision tree:
 | `users.zip` | Truncation to first 3 digits | HIPAA Safe Harbor #2 rule (>20k pop only) | No |
 | `users.country` | Pass-through | Not PII | n/a |
 
-## Step 4 — Pseudonymisation vs anonymisation gate
+## Step 4 - Pseudonymisation vs anonymisation gate
 
 For each masked field, mark whether the result remains *personal
 data* under GDPR Art. 4(5):
@@ -124,27 +124,27 @@ access_control: open
 The author cannot claim "anonymised" if any reversible technique
 is in the pipeline.
 
-## Step 5 — Compose the pipeline
+## Step 5 - Compose the pipeline
 
 A standard order:
 
-1. **Schema-aware mask** — apply per-column operators from Step 3
+1. **Schema-aware mask** - apply per-column operators from Step 3
    (deterministic, fast, no NER needed).
-2. **Free-text detect + mask** — for any string column wider than
+2. **Free-text detect + mask** - for any string column wider than
    ~50 characters, run
    [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)
    to catch embedded PII (e.g., a user-typed comment that contains
    an email).
-3. **Audit hook** — sample N rows of output and run
+3. **Audit hook** - sample N rows of output and run
    [`pii-leak-critic`](../../agents/pii-leak-critic.md) before
    declaring the run complete.
-4. **Manifest** — emit a per-run manifest recording: pipeline
+4. **Manifest** - emit a per-run manifest recording: pipeline
    version, source snapshot ID, row count in / out, operator
    versions, salt vault key version.
 
-## Step 6 — Emit the YAML spec
+## Step 6 - Emit the YAML spec
 
-Recommended shape — consumable by a generic pipeline runner:
+Recommended shape - consumable by a generic pipeline runner:
 
 ```yaml
 pipeline:
@@ -199,7 +199,7 @@ pipeline:
     write_to: s3://masking-manifests/${run_id}.json
 ```
 
-## Step 7 — Worked example
+## Step 7 - Worked example
 
 A SaaS app refreshes its staging from prod nightly. Source has 4M
 users with 22 columns, 3 of which are free-text. Synthesised spec:
@@ -254,7 +254,7 @@ accepts that this output remains in GDPR scope.
 ## Limitations
 
 - **No automated regime mapping.** The author must classify each
-  field against the regimes (Step 2) — the tool doesn't infer it.
+  field against the regimes (Step 2) - the tool doesn't infer it.
 - **Pipeline runners vary.** This skill emits a generic YAML; the
   team needs a runner (custom Python / dbt / Spark job / commercial
   tool) to execute it.
@@ -264,7 +264,7 @@ accepts that this output remains in GDPR scope.
   limitations).
 - **Doesn't cover application-layer PII generation.** A pipeline
   masks data at rest; the application might still write fresh PII
-  to logs at runtime — pair with log-masking middleware.
+  to logs at runtime - pair with log-masking middleware.
 
 ## References
 
@@ -276,7 +276,7 @@ accepts that this output remains in GDPR scope.
   [`synthea-healthcare-data`](../synthea-healthcare-data/SKILL.md).
 - Audited by:
   [`pii-leak-critic`](../../agents/pii-leak-critic.md).
-- GDPR Art. 4(5) pseudonymisation —
+- GDPR Art. 4(5) pseudonymisation - 
   [gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/).
-- NIST SP 800-188 privacy models —
+- NIST SP 800-188 privacy models - 
   [csrc.nist.gov/pubs/sp/800/188/final](https://csrc.nist.gov/pubs/sp/800/188/final).

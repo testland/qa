@@ -27,12 +27,12 @@ A trace parser that turns "the app crashed in production" into "this commit on t
    introducing commit.
 5. **Form the hypothesis**: (a) clear regression in the implicated
    commit, (b) long-standing fault exposed by environmental change,
-   (c) inconclusive — needs more data.
+   (c) inconclusive - needs more data.
 6. **Emit findings** per the output format below.
 
 ## Frame-skip heuristics
 
-The crashing frame is rarely the bug — it's typically the most recent
+The crashing frame is rarely the bug - it's typically the most recent
 **application** frame. Skip:
 
 | Frame pattern                                        | Reason |
@@ -51,12 +51,12 @@ The output is a markdown block with: `**Trace format:**`, `**Crashing frame:**`,
 `**Top app frame:**`, `### Source line` (the literal line of code),
 `### Blame` (table of commit SHA + subject + author + date), `### Hypothesis`
 (one or two paragraphs labeled (a)/(b)/(c)), `### Recommended next step`
-(numbered actions — `git show <sha>` first; for (a) hand off to
+(numbered actions - `git show <sha>` first; for (a) hand off to
 [`bug-repro-builder`](./bug-repro-builder.md); for (b) re-blame on the
 commit's parent or use
 [`regression-bisector`](../../../qa-flake-triage/agents/regression-bisector.md)).
 
-## Example — V8 trace with a clear culprit
+## Example - V8 trace with a clear culprit
 
 Input:
 ```
@@ -66,7 +66,7 @@ TypeError: Cannot read properties of undefined (reading 'amount')
 `git blame src/checkout/total.ts:23` →
 `abc1234 (pat 2026-04-30) const tax = order.items[0].amount * 0.08;`
 
-Hypothesis (a) — clear regression. `calculateTotal` assumes
+Hypothesis (a) - clear regression. `calculateTotal` assumes
 `order.items[0]` exists, but the order endpoint accepts empty carts
 (subscription renewals); the added test only covered populated carts.
 Hand off to [`bug-repro-builder`](./bug-repro-builder.md) to write
@@ -77,9 +77,9 @@ sourcemaps.
 
 ## Limitations
 
-- **The crashing line is not always the bug** — symptom of earlier
+- **The crashing line is not always the bug** - symptom of earlier
   state. The hypothesis is a starting point, not a verdict.
-- **`git blame` is line-based** — a refactor that moved a line
+- **`git blame` is line-based** - a refactor that moved a line
   appears as the introducer; walk past with `git log -L`.
 - **Native traces require symbol files** (`addr2line` + matching debug
   symbols).
@@ -88,6 +88,6 @@ sourcemaps.
 
 ## References
 
-- [`bug-repro-builder`](./bug-repro-builder.md) — regression test handoff once hypothesis confirmed.
-- [`regression-bisector`](../../../qa-flake-triage/agents/regression-bisector.md) — for hypothesis (b) cases blame can't pinpoint.
-- [`bug-report-template`](../skills/bug-report-template/SKILL.md) — paste the hypothesis into the template's Notes section.
+- [`bug-repro-builder`](./bug-repro-builder.md) - regression test handoff once hypothesis confirmed.
+- [`regression-bisector`](../../../qa-flake-triage/agents/regression-bisector.md) - for hypothesis (b) cases blame can't pinpoint.
+- [`bug-report-template`](../skills/bug-report-template/SKILL.md) - paste the hypothesis into the template's Notes section.

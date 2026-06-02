@@ -1,6 +1,6 @@
 ---
 name: xunit-tests
-description: "Configures and runs xUnit.net (xUnit v2 + v3) — current de facto .NET test framework with `[Fact]` for single tests + `[Theory]` + `[InlineData]`/`[ClassData]`/`[MemberData]` for parametrized; collection fixtures (`[Collection]`) + class fixtures (`IClassFixture<T>`) for shared setup; output via `ITestOutputHelper`; parallel test config via assembly attribute. Use when working with .NET (C# / F# / VB.NET) on the modern test stack."
+description: "Configures and runs xUnit.net (xUnit v2 + v3) - current de facto .NET test framework with `[Fact]` for single tests + `[Theory]` + `[InlineData]`/`[ClassData]`/`[MemberData]` for parametrized; collection fixtures (`[Collection]`) + class fixtures (`IClassFixture<T>`) for shared setup; output via `ITestOutputHelper`; parallel test config via assembly attribute. Use when working with .NET (C# / F# / VB.NET) on the modern test stack."
 rating: 23
 d6: 4
 archetype: S1
@@ -18,7 +18,7 @@ xUnit.net is the current .NET test standard (used by .NET Foundation
 projects + Microsoft's own .NET runtime). v3 released 2024;
 v2 still widely used in production.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 dotnet new xunit -n MyProjectTests
@@ -28,7 +28,7 @@ dotnet add package xunit.runner.visualstudio
 dotnet add package Microsoft.NET.Test.Sdk
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 ```csharp
 using Xunit;
@@ -45,7 +45,7 @@ public class CalculatorTests
 
 Run: `dotnet test`.
 
-## Step 3 — Parametrized tests
+## Step 3 - Parametrized tests
 
 Per [xn-docs][xn-docs]:
 
@@ -86,7 +86,7 @@ public static IEnumerable<object[]> AddCases =>
 public void Adds_FromMemberData(int a, int b, int expected) { ... }
 ```
 
-## Step 4 — Skip + traits
+## Step 4 - Skip + traits
 
 ```csharp
 [Fact(Skip = "Requires staging DB")]
@@ -99,7 +99,7 @@ public void IntegrationTest() { }
 // Filter:  dotnet test --filter "Category=Integration"
 ```
 
-## Step 5 — Fixtures
+## Step 5 - Fixtures
 
 ```csharp
 // Per-test (default): xUnit creates a new test class instance per test
@@ -133,7 +133,7 @@ public class TestsA { ... }
 public class TestsB { ... }   // shares the same DatabaseFixture
 ```
 
-## Step 6 — Output (ITestOutputHelper)
+## Step 6 - Output (ITestOutputHelper)
 
 xUnit suppresses Console.WriteLine in tests. Use `ITestOutputHelper`:
 
@@ -149,7 +149,7 @@ public class TestsWithOutput {
 }
 ```
 
-## Step 7 — Parallel execution
+## Step 7 - Parallel execution
 
 By default xUnit runs **collections** in parallel; tests in the same
 collection run sequentially.
@@ -162,7 +162,7 @@ collection run sequentially.
 [assembly: CollectionBehavior(MaxParallelThreads = 4)]
 ```
 
-## Step 8 — Pair with FluentAssertions
+## Step 8 - Pair with FluentAssertions
 
 ```csharp
 result.Should().Be(42);
@@ -174,7 +174,7 @@ See [`fluentassertions`](../fluentassertions/SKILL.md). **Note:**
 FluentAssertions changed license in 2024 (paid commercial; free for
 OSS); v6 is the last fully-free version.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: dotnet test --logger "trx;LogFileName=test-results.trx" \
@@ -201,10 +201,10 @@ OSS); v6 is the last fully-free version.
 
 ## References
 
-- [xn-docs][xn-docs] — xUnit.net documentation
-- xunit.net — landing
-- learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test — dotnet test
+- [xn-docs][xn-docs] - xUnit.net documentation
+- xunit.net - landing
+- learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test - dotnet test
 - [`nunit-tests`](../nunit-tests/SKILL.md),
   [`mstest-tests`](../mstest-tests/SKILL.md),
-  [`fluentassertions`](../fluentassertions/SKILL.md) — sister tools
+  [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

@@ -13,7 +13,7 @@ archetype: S2
 Cache coherence is the discipline of keeping cached values
 consistent with their source of truth across multiple tiers
 (browser, CDN, reverse-proxy, application, data store). It is
-the "C" in "two hard things in computer science" — wrong
+the "C" in "two hard things in computer science" - wrong
 coherence shows as stale data, wrong invalidation shows as
 cache stampedes per
 [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
@@ -44,7 +44,7 @@ skills.
 A coherence bug at any tier surfaces at the user. The test
 surface is layered; each tier needs its own coherence tests.
 
-## RFC 9111 directives — the contract layer
+## RFC 9111 directives - the contract layer
 
 Per [www.rfc-editor.org/rfc/rfc9111.html](https://www.rfc-editor.org/rfc/rfc9111.html):
 
@@ -67,7 +67,7 @@ permitted by the client or origin server." This is the formal
 basis for stale-while-revalidate per
 [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md).
 
-### Vary — the cache key
+### Vary - the cache key
 
 Per RFC 9111 §4.1: "When a cache receives a request that can be
 satisfied by a stored response and that stored response contains

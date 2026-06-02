@@ -4,7 +4,7 @@ type: agent
 archetype: A1
 ---
 
-# crash-stack-trace-analyzer — evals
+# crash-stack-trace-analyzer - evals
 
 Companion eval cases for [`crash-stack-trace-analyzer`](../../crash-stack-trace-analyzer.md).
 Three cases cover happy path / branch / adversarial: a V8 trace with a clear
@@ -14,7 +14,7 @@ no sourcemap (must refuse to localize). Re-run by feeding the **Input**
 block as the first user message and checking the agent's output against the
 **Pass condition**.
 
-## Eval 1 — happy path — V8 trace, clear regression (hypothesis (a))
+## Eval 1 - happy path - V8 trace, clear regression (hypothesis (a))
 
 **Input:**
 
@@ -45,7 +45,7 @@ And git log abc1234 --oneline -1 returns:
 resolves the source line to `const tax = order.items[0].amount * 0.08;`.
 Step 4 reports the blame for `abc1234` with author `pat` and the commit
 subject `feat(checkout): apply jurisdiction-aware tax on cart total`. Step
-5 classifies the hypothesis as **(a) clear regression** — the implicated
+5 classifies the hypothesis as **(a) clear regression** - the implicated
 commit introduced the unguarded `items[0]` access. Step 6 recommends
 `git show abc1234` and hand-off to `bug-repro-builder` to write an
 empty-cart failing test.
@@ -56,7 +56,7 @@ substring `(a)` (case-sensitive). Output does NOT recommend
 `regression-bisector` (that is the hypothesis (b) hand-off, not the
 (a) one).
 
-## Eval 2 — branch — Python traceback, hypothesis (b) (long-standing fault)
+## Eval 2 - branch - Python traceback, hypothesis (b) (long-standing fault)
 
 **Input:**
 
@@ -86,7 +86,7 @@ The Python 3.12 rollout commit was abc9999 last week.
 `_normalize_unicode (transform.py:142)` as the top application frame
 (`transform_row` calls it; the deepest frame is the localizing one). Step
 3 resolves the source line to the `.encode('utf-8').decode('ascii')` call.
-Step 4 reports blame for `d4e5f60` from 2024-12-03 — over a year old. Step
+Step 4 reports blame for `d4e5f60` from 2024-12-03 - over a year old. Step
 5 classifies the hypothesis as **(b) long-standing fault exposed by an
 environmental change** (the Python 3.12 rollout last week, not the
 14-month-old code), and recommends re-blaming on the parent or using
@@ -96,9 +96,9 @@ Python 3.11 build and the Python 3.12 build.
 **Pass condition:** Output classifies the hypothesis with the substring
 `(b)` (case-sensitive) AND mentions `regression-bisector`. Output does NOT
 classify the hypothesis as `(a)` (the 14-month-old code is not the
-regression — the environment change is).
+regression - the environment change is).
 
-## Eval 3 — adversarial — minified JavaScript, no sourcemap (must refuse)
+## Eval 3 - adversarial - minified JavaScript, no sourcemap (must refuse)
 
 **Input:**
 
@@ -121,11 +121,11 @@ build pipeline does not currently publish sourcemaps to the CDN.
 DevTools / V8 over HTTP URLs. Step 3 attempts sourcemap resolution and
 finds no sibling `.map` file. Per the frame-skip heuristics table
 (`<unknown> minified without sourcemap` → "Cannot localize; flag and
-stop"), the agent halts. Hypothesis is **(c) inconclusive — needs more
+stop"), the agent halts. Hypothesis is **(c) inconclusive - needs more
 data**. The recommended next step is to publish sourcemaps to the CDN
 (or to the error-monitoring vendor) and re-run the analysis once they
 are available. The agent does NOT emit a blame table or a commit SHA
-guess — there is no way to localize without the sourcemap, and guessing
+guess - there is no way to localize without the sourcemap, and guessing
 would defeat the purpose of the analysis.
 
 **Pass condition:** Output classifies the hypothesis with the substring
@@ -136,7 +136,7 @@ SHAs claiming to localize the bug; does NOT classify the hypothesis as
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a repo. Blame / log output is included
   inline so the eval is self-contained.
 - Pass conditions are literal-string checks; a reviewer can grep the

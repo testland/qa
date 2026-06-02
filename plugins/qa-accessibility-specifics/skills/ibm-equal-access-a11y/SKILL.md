@@ -1,6 +1,6 @@
 ---
 name: ibm-equal-access-a11y
-description: "Authors and runs IBM Equal Access accessibility-checker scans — IBM's open-source a11y engine with WCAG 2.0 / 2.1 / 2.2 + US Section 508 rule sets, integrating with Node / Selenium / Puppeteer / Playwright / Karma / Cypress test runners. Distinguished by IBM's enterprise-tier rule coverage and Section 508 specificity. Use when the project ships to US federal / public-sector customers (Section 508 mandate) or when the team values IBM-branded a11y reporting."
+description: "Authors and runs IBM Equal Access accessibility-checker scans - IBM's open-source a11y engine with WCAG 2.0 / 2.1 / 2.2 + US Section 508 rule sets, integrating with Node / Selenium / Puppeteer / Playwright / Karma / Cypress test runners. Distinguished by IBM's enterprise-tier rule coverage and Section 508 specificity. Use when the project ships to US federal / public-sector customers (Section 508 mandate) or when the team values IBM-branded a11y reporting."
 rating: 23
 d6: 4
 archetype: S1
@@ -31,7 +31,7 @@ and IBM-branded enterprise rule sets.
   are required.
 
 For most projects without Section 508 / enterprise-IBM constraints,
-[`axe-a11y`](../axe-a11y/SKILL.md) is the standard recommendation —
+[`axe-a11y`](../axe-a11y/SKILL.md) is the standard recommendation - 
 larger ecosystem, simpler integration. IBM Equal Access becomes
 the right choice when the constraints above apply.
 
@@ -250,19 +250,19 @@ the JSON output to
   answers, fewer third-party integrations.
 - **Heavier integration.** The toolkit is comprehensive but the
   setup is more involved than axe-core's drop-in.
-- **Section 508 specificity.** This is also the strength — but
+- **Section 508 specificity.** This is also the strength - but
   for non-US-public-sector projects, the extra coverage may not
   be load-bearing.
 
 ## References
 
-- [equal-access][readme] — main repo: install, supported test
+- [equal-access][readme] - main repo: install, supported test
   frameworks, rule archives.
-- IBM Equal Access Toolkit — https://www.ibm.com/able/toolkit/
-- US Section 508 — https://www.section508.gov/
+- IBM Equal Access Toolkit - https://www.ibm.com/able/toolkit/
+- US Section 508 - https://www.section508.gov/
 - [`axe-a11y`](../axe-a11y/SKILL.md),
   [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
   [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md),
-  [`wave-a11y`](../wave-a11y/SKILL.md) — alternative scanners.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) — CI
+  [`wave-a11y`](../wave-a11y/SKILL.md) - alternative scanners.
+- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
   gate for ratchet-pattern blocking.

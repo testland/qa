@@ -14,10 +14,10 @@ Payment webhooks are the **source of truth** for asynchronous
 state transitions (settlement, refund completion, dispute
 state). Every webhook handler must be:
 
-1. **Signature-verified** — reject spoofed payloads.
-2. **Idempotent** — redelivery doesn't double-charge.
-3. **Order-tolerant** — out-of-order delivery is normal.
-4. **Replay-safe** — months-old replay doesn't break.
+1. **Signature-verified** - reject spoofed payloads.
+2. **Idempotent** - redelivery doesn't double-charge.
+3. **Order-tolerant** - out-of-order delivery is normal.
+4. **Replay-safe** - months-old replay doesn't break.
 
 This skill walks through producing the test suite for these
 properties.
@@ -29,7 +29,7 @@ properties.
   processing).
 - Migrating between gateways or webhook formats.
 
-## Step 1 — Signature verification tests
+## Step 1 - Signature verification tests
 
 ### Stripe
 
@@ -103,7 +103,7 @@ verify via PayPal verification endpoint or SDK helper.
 Webhook parser validates `bt_signature` against the merchant's
 public key.
 
-## Step 2 — Idempotency tests
+## Step 2 - Idempotency tests
 
 ```typescript
 test('redelivered webhook handled idempotently', async () => {
@@ -138,7 +138,7 @@ async function handleEvent(event) {
 }
 ```
 
-## Step 3 — Order-tolerance tests
+## Step 3 - Order-tolerance tests
 
 Webhooks can arrive out of order:
 
@@ -171,7 +171,7 @@ def handle_event(event):
     # else: stale event, ignore
 ```
 
-## Step 4 — Replay simulators
+## Step 4 - Replay simulators
 
 ### Stripe CLI
 
@@ -205,7 +205,7 @@ Per [developer.paypal.com/braintree/docs/guides/webhooks](https://developer.payp
 use `gateway.webhookTesting.sampleNotification(kind, id)` to
 generate a test signature for any event kind.
 
-## Step 5 — Partial-failure scenarios
+## Step 5 - Partial-failure scenarios
 
 What happens when the handler crashes mid-processing?
 
@@ -229,11 +229,11 @@ test('crash mid-processing → retry succeeds', async () => {
 });
 ```
 
-Handlers should commit state changes atomically — either the
+Handlers should commit state changes atomically - either the
 processing succeeds and the event is marked handled, or both
 roll back.
 
-## Step 6 — Replay-from-archive
+## Step 6 - Replay-from-archive
 
 Production sometimes loses webhooks (network outage, deploy
 issue). Per gateway docs, all support some form of replay:
@@ -255,7 +255,7 @@ test('handler accepts replay from 7-day-old event', async () => {
 });
 ```
 
-## Step 7 — Emit the test suite
+## Step 7 - Emit the test suite
 
 ```
 tests/payment/webhooks/

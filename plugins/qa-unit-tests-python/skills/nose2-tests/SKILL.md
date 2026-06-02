@@ -1,6 +1,6 @@
 ---
 name: nose2-tests
-description: "Configures and runs nose2 — successor to nose (the original Python test discovery library, end-of-life 2015) and an alternative to pytest's discovery model; supports plugin architecture, layers (per-test-class setUp/tearDown shared across modules), parameterized tests via `nose2.tools.params`, multi-process parallelism via mp plugin. Use when migrating from legacy nose1 codebases or when the team prefers nose2's plugin model over pytest."
+description: "Configures and runs nose2 - successor to nose (the original Python test discovery library, end-of-life 2015) and an alternative to pytest's discovery model; supports plugin architecture, layers (per-test-class setUp/tearDown shared across modules), parameterized tests via `nose2.tools.params`, multi-process parallelism via mp plugin. Use when migrating from legacy nose1 codebases or when the team prefers nose2's plugin model over pytest."
 rating: 21
 d6: 4
 archetype: S1
@@ -15,7 +15,7 @@ Per [docs.nose2.io][n2-docs]:
 [n2-docs]: https://docs.nose2.io/
 
 nose2 is the successor to `nose` (the original third-party Python
-test discovery library; reached end-of-life in 2015 — do NOT use
+test discovery library; reached end-of-life in 2015 - do NOT use
 nose1 in new projects). nose2 inherits nose's discovery model
 plus a plugin architecture.
 
@@ -32,13 +32,13 @@ for new work. nose2 fits two cases:
 - Specific need for nose2 features (layers, certain plugins).
 - Maintenance scenario where pytest migration is too costly.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install nose2
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 nose2 supports both unittest-style TestCase classes + simple
 function tests:
@@ -68,7 +68,7 @@ nose2 tests.test_sum               # specific module
 nose2 tests.test_sum.TestSum       # specific class
 ```
 
-## Step 3 — Configuration
+## Step 3 - Configuration
 
 `unittest.cfg` or `nose2.cfg`:
 
@@ -92,7 +92,7 @@ coverage = src
 coverage-report = term-missing
 ```
 
-## Step 4 — Layers (nose2-distinctive)
+## Step 4 - Layers (nose2-distinctive)
 
 Layers are setUp/tearDown shared across multiple test classes:
 
@@ -123,7 +123,7 @@ class TestOrders(unittest.TestCase):
 Layers establish setup once; multiple test classes consume.
 Pytest's session-scoped fixtures cover similar territory.
 
-## Step 5 — Parameterized tests
+## Step 5 - Parameterized tests
 
 ```python
 from nose2.tools import params
@@ -137,10 +137,10 @@ def test_sum_param(a, b, expected):
     assert sum(a, b) == expected
 ```
 
-Each row runs as a separate test — failures don't stop subsequent
+Each row runs as a separate test - failures don't stop subsequent
 rows.
 
-## Step 6 — Attribute-based filtering
+## Step 6 - Attribute-based filtering
 
 ```python
 from nose2.tools import attr
@@ -160,7 +160,7 @@ nose2 -A 'type=integration'
 
 Equivalent to pytest markers (cleaner in pytest).
 
-## Step 7 — Plugins
+## Step 7 - Plugins
 
 | Plugin | Use |
 |---|---|
@@ -173,7 +173,7 @@ Equivalent to pytest markers (cleaner in pytest).
 
 Enable via `unittest.cfg` `plugins =` list (Step 3).
 
-## Step 8 — Migration from nose1
+## Step 8 - Migration from nose1
 
 nose1's API:
 
@@ -188,9 +188,9 @@ nose1's API:
 Most test bodies survive migration unchanged; mostly config + import path changes.
 
 For more aggressive migration, consider migrating directly to
-pytest — discovery is even simpler + ecosystem is much richer.
+pytest - discovery is even simpler + ecosystem is much richer.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: pip install nose2
@@ -223,12 +223,11 @@ coverage report --fail-under=80
 
 ## References
 
-- [n2-docs][n2-docs] — nose2 documentation
-- nose2.io — landing
-- github.com/nose-devs/nose2 — repository
+- [n2-docs][n2-docs] - nose2 documentation
+- nose2.io - landing
+- github.com/nose-devs/nose2 - repository
 - (NB: `nose` package itself is unmaintained; do not use)
 - [`pytest-tests`](../pytest-tests/SKILL.md),
   [`unittest-tests`](../unittest-tests/SKILL.md),
-  [`doctest-tests`](../doctest-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — test code hygiene
+  [`doctest-tests`](../doctest-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene

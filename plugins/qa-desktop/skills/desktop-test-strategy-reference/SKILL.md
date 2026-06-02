@@ -1,6 +1,6 @@
 ---
 name: desktop-test-strategy-reference
-description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, a per-OS decision matrix, the per-OS asynchronous-wait hierarchies (XCTest waitForExistence/XCTestExpectation/XCTWaiter, FlaUI Retry primitives, AT-SPI manual polling), per-OS parallel-test policy, foreground-lock and UAC / TCC / AT-SPI elevation hazards, and the Microsoft-blessed high-DPI / per-monitor test matrix. Use as the strategic reference before picking a desktop test stack — the per-tool S1 skills in this plugin are the implementation arms."
+description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, a per-OS decision matrix, the per-OS asynchronous-wait hierarchies (XCTest waitForExistence/XCTestExpectation/XCTWaiter, FlaUI Retry primitives, AT-SPI manual polling), per-OS parallel-test policy, foreground-lock and UAC / TCC / AT-SPI elevation hazards, and the Microsoft-blessed high-DPI / per-monitor test matrix. Use as the strategic reference before picking a desktop test stack - the per-tool S1 skills in this plugin are the implementation arms."
 archetype: S2
 rating: 24
 d6: 5
@@ -19,12 +19,12 @@ keywords:
 
 Desktop GUI testing is fragmented along two axes: **operating system**
 (Windows / macOS / Linux) and **UI toolkit** (native, Electron, Qt,
-GTK, Cocoa, WPF, WinUI, Win32). Unlike the web — where a single
-DOM-driving tool (Playwright / Selenium) covers every browser — each
+GTK, Cocoa, WPF, WinUI, Win32). Unlike the web - where a single
+DOM-driving tool (Playwright / Selenium) covers every browser - each
 desktop OS exposes its own accessibility tree, and that tree is the
 substrate every reliable desktop test driver uses.
 
-Per [Microsoft Learn — UI Automation Win32 overview][msuia]:
+Per [Microsoft Learn - UI Automation Win32 overview][msuia]:
 
 [msuia]: https://learn.microsoft.com/windows/win32/winauto/entry-uiauto-win32
 
@@ -33,7 +33,7 @@ Per [Microsoft Learn — UI Automation Win32 overview][msuia]:
 > information about user interfaces (UIs). … UI Automation also
 > allows automated test scripts to interact with the UI."
 
-Per [Apple — *Testing with Xcode*, UI Testing chapter][appleuit]:
+Per [Apple - *Testing with Xcode*, UI Testing chapter][appleuit]:
 
 [appleuit]: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
 
@@ -52,13 +52,13 @@ skills in this plugin and by anyone choosing a desktop test stack.
 
 ## When to use
 
-- Starting a new desktop test program — which OS + toolkit needs
+- Starting a new desktop test program - which OS + toolkit needs
   which driver?
-- Auditing an existing desktop test suite — is the right backend
+- Auditing an existing desktop test suite - is the right backend
   in use, or is the suite working around a wrong-tool fit?
-- Cross-platform desktop app (Electron, Qt, .NET MAUI) — which test
+- Cross-platform desktop app (Electron, Qt, .NET MAUI) - which test
   tools cover which platforms?
-- Onboarding a tester from web E2E — what's the mental-model
+- Onboarding a tester from web E2E - what's the mental-model
   difference between DOM-driving and accessibility-tree-driving?
 
 ## The three OS backends
@@ -67,7 +67,7 @@ Every reliable desktop driver routes through one of three OS-native
 accessibility trees. Direct pixel / coordinate scripting (SikuliX,
 AutoIt screen scraping) is in the **anti-pattern** column below.
 
-### Windows — Microsoft UI Automation (UIA)
+### Windows - Microsoft UI Automation (UIA)
 
 UI Automation (UIA) is Microsoft's accessibility framework for
 Windows desktop applications, replacing the older Microsoft Active
@@ -85,10 +85,10 @@ Per [msuia][msuia]:
 
 Higher-level language bindings (C#, PowerShell, Python via `pywinauto`)
 sit on top. **For test-automation purposes**, the WinAppDriver and
-Appium-Windows projects expose UIA as a W3C WebDriver endpoint —
+Appium-Windows projects expose UIA as a W3C WebDriver endpoint - 
 which is what most QA toolchains in this plugin actually drive.
 
-### macOS — Apple Accessibility + XCTest
+### macOS - Apple Accessibility + XCTest
 
 macOS GUI testing uses the same `XCTest` framework that ships with
 Xcode for unit and integration tests. Per [appleuit][appleuit]:
@@ -116,15 +116,15 @@ companion: it walks the same tree the tests see, lets the engineer
 verify accessibility identifiers exist before writing the query, and
 flags WCAG-style accessibility gaps in the same pass.
 
-### Linux — AT-SPI
+### Linux - AT-SPI
 
 The Linux desktop accessibility stack is **AT-SPI** (Assistive
 Technology Service Provider Interface). Per [atspi2core][atspi2core],
 the canonical implementation `at-spi2-core` provides "Base DBus XML
 interfaces for accessibility, the accessibility registry daemon,
 and atspi library." The registry daemon (`at-spi2-registryd`)
-exposes a system-wide D-Bus service that assistive tools — and test
-clients — connect to.
+exposes a system-wide D-Bus service that assistive tools - and test
+clients - connect to.
 
 GTK applications expose AT-SPI automatically via the `atk` bridge
 (`at-spi2-atk`); Qt applications expose AT-SPI via the
@@ -147,23 +147,23 @@ ride on top of (or around) the OS backends:
 Electron apps are Chromium + Node.js wrapped in a native window. They
 expose two parallel surfaces:
 
-1. **Renderer process** — a normal Chromium DOM. Page-level
+1. **Renderer process** - a normal Chromium DOM. Page-level
    Playwright / Selenium / Puppeteer drive this just like a browser
    tab.
-2. **Main process** — the Node.js process that owns native windows,
+2. **Main process** - the Node.js process that owns native windows,
    menus, IPC, file dialogs, lifecycle.
 
 A **packaged** Electron app cannot be driven by browser-only
-Playwright — the entry point is the packaged binary, not a URL. The
+Playwright - the entry point is the packaged binary, not a URL. The
 **Playwright `_electron` API** (`electron-playwright` SKILL in this
 plugin) launches the packaged binary, exposes the main process as a
 typed `ElectronApplication` handle, and returns Chromium-window
 pages for the renderer. Legacy alternative (deprecated 2021):
-Spectron — covered as a legacy reference in `electron-spectron`.
+Spectron - covered as a legacy reference in `electron-spectron`.
 
 ### Qt
 
-Qt has its own first-party test framework — **QtTest** — that lives
+Qt has its own first-party test framework - **QtTest** - that lives
 in the application's process and emits events directly into the
 `QObject` event queue. It does **not** go through the OS
 accessibility tree by default. For UI tests of Qt apps that need
@@ -179,33 +179,32 @@ Qt's `QAccessible`) are the path. See `qt-test-framework` SKILL.
 | WinUI 3 / UWP | WinAppDriver, Appium-Windows | n/a | n/a |
 | Cocoa / SwiftUI / AppKit | n/a | XCTest UI (XCUIApplication) | n/a |
 | GTK | n/a | n/a | AT-SPI (dogtail / pyatspi) |
-| Qt — in-process | QtTest (`QTEST_MAIN`) | QtTest | QtTest |
-| Qt — out-of-process | WinAppDriver (via UIA) | XCTest UI | AT-SPI (via QAccessible) |
-| Electron — renderer only | Playwright `_electron` page handle | Playwright `_electron` page handle | Playwright `_electron` page handle |
-| Electron — main + IPC | Playwright `_electron` | Playwright `_electron` | Playwright `_electron` |
+| Qt - in-process | QtTest (`QTEST_MAIN`) | QtTest | QtTest |
+| Qt - out-of-process | WinAppDriver (via UIA) | XCTest UI | AT-SPI (via QAccessible) |
+| Electron - renderer only | Playwright `_electron` page handle | Playwright `_electron` page handle | Playwright `_electron` page handle |
+| Electron - main + IPC | Playwright `_electron` | Playwright `_electron` | Playwright `_electron` |
 
 Cross-references to per-tool S1 SKILLs:
 
-- `winappdriver` — WinAppDriver against UIA
-- `appium-windows-driver` — Appium-Windows driver (newer
+- `winappdriver` - WinAppDriver against UIA
+- `appium-windows-driver` - Appium-Windows driver (newer
   WinAppDriver wrapping)
-- `xctest-mac-desktop` — XCTest UI for macOS
-- `at-spi-linux` — AT-SPI via dogtail / pyatspi
-- `qt-test-framework` — QtTest in-process
-- `electron-playwright` — Playwright `_electron` API
-- `electron-spectron` — legacy reference for migrations
+- `xctest-mac-desktop` - XCTest UI for macOS
+- `at-spi-linux` - AT-SPI via dogtail / pyatspi
+- `qt-test-framework` - QtTest in-process
+- `electron-playwright` - Playwright `_electron` API
+- `electron-spectron` - legacy reference for migrations
 
 ## Locator strategy across backends
 
 The portable lesson from web E2E (per
-[`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md))
-— **accessibility-first locators** — carries directly over: every
+[`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)) - **accessibility-first locators** - carries directly over: every
 desktop backend resolves elements through the same accessibility
 tree assistive technology uses.
 
 | Backend | Stable locator | Brittle locator |
 |---|---|---|
-| UIA (WinAppDriver, Appium-Windows) | `AutomationId` (preferred — locale-independent), `ControlType` + property combo (disambiguation when no AutomationId) | `Name` (last resort — Name **is the localised label**, fails across language packs); absolute screen coordinates; XPath (officially supported by WinAppDriver but the community-canonical guidance treats it as fragile and slow) |
+| UIA (WinAppDriver, Appium-Windows) | `AutomationId` (preferred - locale-independent), `ControlType` + property combo (disambiguation when no AutomationId) | `Name` (last resort - Name **is the localised label**, fails across language packs); absolute screen coordinates; XPath (officially supported by WinAppDriver but the community-canonical guidance treats it as fragile and slow) |
 | XCTest (macOS) | `accessibilityIdentifier`, role-based queries (`buttons["Submit"]`) | Label-based queries when the label is localised; image matching; hard-coded coordinates |
 | AT-SPI (Linux) | Object `name` field set explicitly on the widget (GTK `widget.set_property('name', ...)`, Qt `QObject::setObjectName`) | Visible label or role-only queries (collapse under localisation and theme changes); pixel coordinates |
 | QtTest in-process | Qt object name (`setObjectName("…")`) | child-index navigation through `QWidget` tree |
@@ -219,7 +218,7 @@ key is the human-visible label, which collapses under localisation.
 **Localisation rule of thumb:** if the test passes on a US-English build
 but the same app ships in 20 locales, every `Name` / label-based locator
 is a latent failure. AccessibilityId / AutomationId / object name are
-locale-independent by design — make the developer set them at the source.
+locale-independent by design - make the developer set them at the source.
 
 ## Coverage scope per layer
 
@@ -232,11 +231,11 @@ locale-independent by design — make the developer set them at the source.
 
 Cross-references for the upstream + downstream slots:
 
-- Unit testing — see the per-language `qa-unit-tests-*` plugins.
-- Visual regression — see
+- Unit testing - see the per-language `qa-unit-tests-*` plugins.
+- Visual regression - see
   [`qa-visual-regression`](../../../qa-visual-regression/) for
   desktop screenshot comparison patterns.
-- CI integration — desktop runners cost more than web runners;
+- CI integration - desktop runners cost more than web runners;
   see the `winappdriver` and `xctest-mac-desktop` SKILLs for
   GitHub-hosted vs self-hosted considerations.
 
@@ -246,7 +245,7 @@ Every reliable desktop test routes UI polls through the driver's
 retry primitive, never raw `Thread.Sleep` / `Task.Delay`. The three
 backends ship distinct mechanisms.
 
-**macOS — three-tier XCTest hierarchy** ([XCUIElement.waitForExistence][appwait1],
+**macOS - three-tier XCTest hierarchy** ([XCUIElement.waitForExistence][appwait1],
 [Asynchronous Tests and Expectations][appwait2]):
 
 [appwait1]: https://developer.apple.com/documentation/xctest/xcuielement/2879412-waitforexistence
@@ -254,17 +253,17 @@ backends ship distinct mechanisms.
 
 | Mechanism | Use when |
 |---|---|
-| `waitForExistence(timeout:)` — boolean, fastest | Single existence check |
+| `waitForExistence(timeout:)` - boolean, fastest | Single existence check |
 | `XCTestExpectation` + `waitForExpectations(timeout:)` | Custom predicate |
-| `XCTWaiter` — multi-expectation, returns enum | Composing several conditions |
+| `XCTWaiter` - multi-expectation, returns enum | Composing several conditions |
 
-Predicate-based waits expose no polling-interval setting — prefer
+Predicate-based waits expose no polling-interval setting - prefer
 `waitForExistence` for simple existence checks, escalate only when
 the wait is on a custom predicate.
 
-**Windows — FlaUI `Retry` primitives** ([FlaUI Retry wiki][flauiretry]) parameterise any UI
+**Windows - FlaUI `Retry` primitives** ([FlaUI Retry wiki][flauiretry]) parameterise any UI
 poll with explicit `timeout` and `interval` `TimeSpan` values.
-Defaults are not documented — pass them explicitly. Typical
+Defaults are not documented - pass them explicitly. Typical
 interval: 100 to 200ms (10ms hammers UIA; 1s hides 100ms races).
 
 [flauiretry]: https://github.com/FlaUI/FlaUI/wiki/Retry
@@ -275,30 +274,30 @@ interval: 100 to 200ms (10ms hammers UIA; 1s hides 100ms races).
 | `Retry.WhileFalse(func, timeout, interval)` | Boolean state |
 | `Retry.WhileException(func, timeout, interval)` | Transient throws during element creation |
 
-**Linux — AT-SPI manual polling.** No built-in retry primitive; the
+**Linux - AT-SPI manual polling.** No built-in retry primitive; the
 dogtail / pyatspi community pattern is an explicit `time.time()`
 polling loop with `timeout` + `interval` (100 to 250ms balances
 responsiveness against `at-spi2-registryd` D-Bus traffic).
 
 ## Concurrency: per-OS parallel-test policy
 
-**macOS** — per [Apple — Running tests serially or in parallel][appleparallel],
+**macOS** - per [Apple - Running tests serially or in parallel][appleparallel],
 parallelisation is opt-in. The cited page is under Apple's modern
 `documentation/testing/` (Swift Testing) namespace; the same opt-in
 design applies to XCTest test plans, which are configured in Xcode
 (Edit Scheme → Test → Options → Execute in parallel on Simulator).
 Tests sharing mutable state must opt out; performance bundles must
 disable parallelisation (parallel introduces timing noise). On
-macOS the Simulator clones spin per worker — real disk + RAM cost.
+macOS the Simulator clones spin per worker - real disk + RAM cost.
 
 [appleparallel]: https://developer.apple.com/documentation/testing/parallelization
 
-**Windows** — UIA is per-session: one AutomationElement tree per
+**Windows** - UIA is per-session: one AutomationElement tree per
 interactive Windows session. Two workers in the same session race
 for foreground (see below). Scaling: one runner per VM, or one
 RDP / per-user session per worker.
 
-**Linux** — `at-spi2-registryd` is bound to one D-Bus session.
+**Linux** - `at-spi2-registryd` is bound to one D-Bus session.
 Workers writing events into the same session race for focus.
 Scaling: one Xvfb + dbus-launch per worker, or one container per
 worker with its own session bus.
@@ -310,8 +309,8 @@ on desktop are actually documented platform behaviours.
 
 ### Windows foreground-lock
 
-Per [Microsoft — SetForegroundWindow][winsetfg] and
-[Microsoft — LockSetForegroundWindow][winlockfg]:
+Per [Microsoft - SetForegroundWindow][winsetfg] and
+[Microsoft - LockSetForegroundWindow][winlockfg]:
 
 [winsetfg]: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow
 [winlockfg]: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow
@@ -319,7 +318,7 @@ Per [Microsoft — SetForegroundWindow][winsetfg] and
 `SetForegroundWindow` can be refused by Windows. The foreground
 process can also call `LockSetForegroundWindow` to suppress
 foreground transfer entirely. The system re-enables the transfer
-when the user presses ALT or interacts with a background window —
+when the user presses ALT or interacts with a background window - 
 neither of which happens in CI. Modal dialogs and active menus
 also suppress it. Symptoms in test logs: a click "succeeds" but
 the next action observes the previous window.
@@ -343,20 +342,19 @@ Per the WinAppDriver maintainers
 
 The UAC consent prompt renders on a **secure desktop** that lives
 outside the standard accessibility tree. WinAppDriver / UIA cannot
-interact with the consent button — by Windows design, not driver
+interact with the consent button - by Windows design, not driver
 bug. Three supported workarounds:
 
 - Run the test session itself elevated (the simplest, the prevailing
   CI pattern); the UAC prompt then never appears for in-session
   privileged actions.
-- Pre-disable UAC in the CI VM image (`EnableLUA=0` in the registry
-  — locks the VM to test use only).
+- Pre-disable UAC in the CI VM image (`EnableLUA=0` in the registry - locks the VM to test use only).
 - Send `Alt+Y` / `Alt+N` keystrokes hoping the secure desktop has
   focus (unreliable and version-dependent; not recommended).
 
 ### macOS TCC privacy prompts
 
-Per [Jamf — *Resetting Transparency, Consent, and Control Prompts
+Per [Jamf - *Resetting Transparency, Consent, and Control Prompts
 on macOS*][jamftcc]:
 
 [jamftcc]: https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html
@@ -388,14 +386,14 @@ it session-wide **before** launching the AUT:
 gsettings set org.gnome.desktop.interface toolkit-accessibility true
 ```
 
-This only takes effect for newly-spawned processes — start the AUT
+This only takes effect for newly-spawned processes - start the AUT
 after the gsettings call, not before. Accerciser is the GNOME
 inspector and the canonical pre-write verification tool: walk the
 tree in Accerciser before writing the first locator.
 
 ## High-DPI / per-monitor test matrix
 
-Per [Microsoft — *High DPI Desktop Application Development on
+Per [Microsoft - *High DPI Desktop Application Development on
 Windows*][msdpi]:
 
 [msdpi]: https://learn.microsoft.com/en-us/windows/win32/hidpi/high-dpi-desktop-application-development-on-windows
@@ -426,7 +424,7 @@ scaling lands in GNOME 47+ but is still maturing.
 |---|---|---|
 | Image-recognition / pixel-matching as the primary driver (SikuliX-only, AutoIt screen scraping) | Brittle to font / theme / DPI / OS-chrome changes; opaque to localisation | Use the OS accessibility tree; reserve image matching for canvas-rendered content only |
 | Hard-coded screen coordinates | Multi-monitor / DPI / window-state dependent | Resolve via accessibility identifier; click resolves to the element's hit-test centre |
-| Win32 message sending (`SendMessage` / `PostMessage`) for modern apps | Doesn't reach UIA-only WinUI / WPF controls; bypasses event ordering | Route through UIA (WinAppDriver) — the documented control-pattern API |
+| Win32 message sending (`SendMessage` / `PostMessage`) for modern apps | Doesn't reach UIA-only WinUI / WPF controls; bypasses event ordering | Route through UIA (WinAppDriver) - the documented control-pattern API |
 | Using only XCTest on a packaged macOS app shipped to the App Store via TestFlight | Loses cross-platform consistency with Windows + Linux | Pair with a higher-level cross-platform layer (Appium Mac2 driver) only when the same test source must run on multiple OSes; otherwise XCTest is the right tool on macOS |
 | Spectron for new Electron projects (archived 2022) | No maintenance, no support for modern Electron | Use Playwright `_electron` (`electron-playwright` SKILL) |
 | Driving Qt apps with Win32-only tools when accessibility isn't wired in | Qt's `QAccessible` interface must be enabled; without it UIA sees no children | Verify with Accessibility Insights for Windows before writing tests; enable `QAccessible` in the Qt build |
@@ -436,14 +434,14 @@ scaling lands in GNOME 47+ but is still maturing.
 
 - **Apple developer documentation is behind a Cloudflare-style
   challenge** on most "https://developer.apple.com/documentation/…"
-  pages — automated fetches return the SPA shell only. This
+  pages - automated fetches return the SPA shell only. This
   reference cites Apple's stable-archive `testing_with_xcode` chapter
   ([appleuit][appleuit]) for prose; per-API surface (XCUIApplication,
   XCUIElement) is treated as a stable identifier in the
   `xctest-mac-desktop` SKILL.
 - **No single cross-platform driver.** Tools that claim to be one
   (Appium across Windows + macOS + Linux desktop) are thin facades
-  over the per-OS backends — coverage gaps follow the underlying
+  over the per-OS backends - coverage gaps follow the underlying
   backend's gaps.
 - **GPU-accelerated content** (canvas, WebGL, custom-painted Qt
   widgets, Win32 DirectComposition surfaces) does not expose itself
@@ -458,32 +456,30 @@ scaling lands in GNOME 47+ but is still maturing.
 
 ## References
 
-- Microsoft UI Automation overview — [msuia][msuia].
-- Apple *Testing with Xcode* — UI Testing chapter
+- Microsoft UI Automation overview - [msuia][msuia].
+- Apple *Testing with Xcode* - UI Testing chapter
   ([appleuit][appleuit]).
-- Apple — XCUIElement.waitForExistence ([appwait1][appwait1])
+- Apple - XCUIElement.waitForExistence ([appwait1][appwait1])
   and Asynchronous Tests and Expectations ([appwait2][appwait2]).
-- Apple — Running tests serially or in parallel
+- Apple - Running tests serially or in parallel
   ([appleparallel][appleparallel]).
-- Microsoft — SetForegroundWindow ([winsetfg][winsetfg]),
+- Microsoft - SetForegroundWindow ([winsetfg][winsetfg]),
   LockSetForegroundWindow ([winlockfg][winlockfg]),
   High-DPI Desktop Application Development on Windows
   ([msdpi][msdpi]).
 - WinAppDriver UAC issue threads ([wad306][wad306], [wad2033][wad2033]).
 - FlaUI Retry wiki ([flauiretry][flauiretry]).
-- Jamf — Resetting TCC prompts on macOS ([jamftcc][jamftcc]).
-- at-spi2-core — [atspi2core][atspi2core].
-- dogtail (Python AT-SPI client) — [dogtail][dogtail].
-- Ubuntu DogtailTutorial — [ubuntudogtail][ubuntudogtail].
+- Jamf - Resetting TCC prompts on macOS ([jamftcc][jamftcc]).
+- at-spi2-core - [atspi2core][atspi2core].
+- dogtail (Python AT-SPI client) - [dogtail][dogtail].
+- Ubuntu DogtailTutorial - [ubuntudogtail][ubuntudogtail].
 - Per-tool implementation SKILLs in this plugin:
   `winappdriver`, `appium-windows-driver`, `xctest-mac-desktop`,
   `at-spi-linux`, `qt-test-framework`, `electron-playwright`,
   `electron-spectron`.
 - Web-side neighbour:
-  [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)
-  — DOM-driving for browser apps (the contrast surface for
+  [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md) - DOM-driving for browser apps (the contrast surface for
   desktop drivers).
 - Architecture-pattern sibling:
-  [`object-model-patterns`](../../../qa-test-review/skills/object-model-patterns/SKILL.md)
-  — Pattern 7 (Screen Object) is the desktop analog of POM and
+  [`object-model-patterns`](../../../qa-test-review/skills/object-model-patterns/SKILL.md) - Pattern 7 (Screen Object) is the desktop analog of POM and
   cites this skill for the backend substrate.

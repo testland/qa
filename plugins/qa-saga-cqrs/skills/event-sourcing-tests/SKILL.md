@@ -1,6 +1,6 @@
 ---
 name: event-sourcing-tests
-description: "Build event-sourcing tests — aggregate root replay determinism (same events ⇒ same state), event-versioning + upcasting, snapshot equivalence (replay-to-N vs snapshot-at-N must agree), projection rebuild from event log, retroactive event correction. Per martinfowler.com EventSourcing reference."
+description: "Build event-sourcing tests - aggregate root replay determinism (same events ⇒ same state), event-versioning + upcasting, snapshot equivalence (replay-to-N vs snapshot-at-N must agree), projection rebuild from event log, retroactive event correction. Per martinfowler.com EventSourcing reference."
 type: skill
 archetype: S3
 rating: 22
@@ -15,9 +15,9 @@ keywords:
 
 # event-sourcing-tests
 
-Per [Fowler — Event Sourcing], "all changes to application state are
+Per [Fowler - Event Sourcing], "all changes to application state are
 stored as a sequence of events." Tests verify replay determinism,
-snapshot equivalence, and version-evolution correctness — without
+snapshot equivalence, and version-evolution correctness - without
 these, the event log silently drifts from the rebuilt state.
 
 ## When to use
@@ -25,12 +25,12 @@ these, the event log silently drifts from the rebuilt state.
 - Domain model is event-sourced (orders, accounts, inventory).
 - Audit / compliance requirements demand event log as system of
   record.
-- Adding a new event type or changing payload schema —
+- Adding a new event type or changing payload schema - 
   retro-compat tests are mandatory.
 
-## Step 1 — Replay determinism test
+## Step 1 - Replay determinism test
 
-Per [Fowler — Event Sourcing], replay = "rebuild application state
+Per [Fowler - Event Sourcing], replay = "rebuild application state
 from scratch by replaying events in order." Same input → same
 state, every time:
 
@@ -52,9 +52,9 @@ def test_replay_is_deterministic():
 ```
 
 If `replay` references `time.now()` or random IDs, replay isn't
-deterministic — test catches.
+deterministic - test catches.
 
-## Step 2 — Order independence within causality
+## Step 2 - Order independence within causality
 
 Within a single aggregate, events ARE causally ordered. Across
 aggregates, only causal events are ordered. Test the boundary:
@@ -78,9 +78,9 @@ def test_unrelated_aggregates_replay_independently():
     assert o2.line_items == [("sku2", 1)]
 ```
 
-## Step 3 — Snapshot equivalence
+## Step 3 - Snapshot equivalence
 
-Snapshots cache replayed state at version N. Per [Fowler — Event
+Snapshots cache replayed state at version N. Per [Fowler - Event
 Sourcing], "Most implementations cache the current application
 state, using snapshots to avoid replaying thousands of events."
 
@@ -101,10 +101,10 @@ If snapshot diverges, snapshot-creation logic is broken or events
 post-snapshot apply differently than they did during snapshot
 creation.
 
-## Step 4 — Event versioning + upcasting
+## Step 4 - Event versioning + upcasting
 
 Schema evolves: `ItemAdded(sku, qty)` → `ItemAdded(sku, qty,
-unit_price)`. Old events lack `unit_price` — upcast on read.
+unit_price)`. Old events lack `unit_price` - upcast on read.
 
 ```python
 def test_upcasting_v1_to_v2():
@@ -129,7 +129,7 @@ def test_replay_handles_mixed_event_versions():
     assert state_via_upcast.line_items_count == 3
 ```
 
-## Step 5 — Projection rebuild from event log
+## Step 5 - Projection rebuild from event log
 
 Read models (projections) are derived from events. Rebuild from
 scratch must produce same result:
@@ -149,11 +149,11 @@ def test_projection_rebuild_idempotent():
 ```
 
 When projection logic changes, drop the materialized view and
-rebuild from events — test the rebuild matches expectations.
+rebuild from events - test the rebuild matches expectations.
 
-## Step 6 — Retroactive event correction
+## Step 6 - Retroactive event correction
 
-Per [Fowler — Event Sourcing], "Incorrect past events can be
+Per [Fowler - Event Sourcing], "Incorrect past events can be
 reversed and corrected, with downstream consequences automatically
 recalculated."
 
@@ -180,9 +180,9 @@ Strategy (a) preserves audit trail (corrections visible).
 Strategy (b) requires careful migration but produces a clean log.
 Tests verify both yield the right final state.
 
-## Step 7 — External system integration during replay
+## Step 7 - External system integration during replay
 
-Per [Fowler — Event Sourcing]: "Gateways must distinguish between
+Per [Fowler - Event Sourcing]: "Gateways must distinguish between
 real processing and replay modes to avoid sending duplicate
 notifications or using stale data."
 
@@ -204,7 +204,7 @@ def test_live_mode_invokes_external_calls():
     assert email_gateway.sent_count == 1
 ```
 
-## Step 8 — Concurrency: optimistic concurrency on append
+## Step 8 - Concurrency: optimistic concurrency on append
 
 Append must check expected version:
 
@@ -239,16 +239,16 @@ def test_concurrent_append_rejected():
   Postgres). Test against the actual store.
 - Snapshot strategy choice (every N events, every X minutes) has
   performance implications outside this skill's scope.
-- Cross-aggregate transactions are not part of event sourcing —
+- Cross-aggregate transactions are not part of event sourcing - 
   use sagas (`saga-transaction-tests`) for those.
 
 ## References
 
-- [Fowler — Event Sourcing] — pattern overview, replay, snapshots,
+- [Fowler - Event Sourcing] - pattern overview, replay, snapshots,
   retroactive corrections, gateway considerations
-- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md) —
+- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md) - 
   cross-aggregate transactions
-- [`cqrs-projection-tests`](../cqrs-projection-tests/SKILL.md) —
+- [`cqrs-projection-tests`](../cqrs-projection-tests/SKILL.md) - 
   projection-from-event-log testing
 
-[Fowler — Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
+[Fowler - Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html

@@ -13,7 +13,7 @@ archetype: S1
 Per [github.com/mercurius-js/mercurius](https://github.com/mercurius-js/mercurius/blob/master/README.md),
 the plugin is registered as `await app.register(mercurius, {
 schema, resolvers })`. Tests then submit POSTs via Fastify's
-`app.inject()` — the HTTP-layer simulator that runs requests
+`app.inject()` - the HTTP-layer simulator that runs requests
 through the full middleware stack without binding a port.
 
 ## When to use
@@ -203,7 +203,7 @@ jobs:
 ```
 
 For multi-process / cluster-mode tests, Fastify's `inject` won't
-exercise cluster behaviour — use a real `app.listen({ port: 0 })`
+exercise cluster behaviour - use a real `app.listen({ port: 0 })`
 for those cases.
 
 ## Anti-patterns

@@ -1,6 +1,6 @@
 ---
 name: web-e2e-framework-selector
-description: "Action-taking agent that reads a target web app project (`package.json`, `playwright.config.*`, `cypress.config.*`, `wdio.conf.*`, `nightwatch.conf.*`, existing E2E directory) and recommends ONE E2E framework — Playwright, Cypress, Selenium, Puppeteer, TestCafe, WebdriverIO — plus the cloud runner (BrowserStack / Sauce Labs / LambdaTest) when cross-browser matrix coverage is needed. Distinct from `qa-process/framework-choice-advisor` (S2 reference catalog laying out trade-offs in prose). Use when starting a new E2E test project and the team has not yet committed to a framework."
+description: "Action-taking agent that reads a target web app project (`package.json`, `playwright.config.*`, `cypress.config.*`, `wdio.conf.*`, `nightwatch.conf.*`, existing E2E directory) and recommends ONE E2E framework - Playwright, Cypress, Selenium, Puppeteer, TestCafe, WebdriverIO - plus the cloud runner (BrowserStack / Sauce Labs / LambdaTest) when cross-browser matrix coverage is needed. Distinct from `qa-process/framework-choice-advisor` (S2 reference catalog laying out trade-offs in prose). Use when starting a new E2E test project and the team has not yet committed to a framework."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(cat package.json)"
 model: inherit
 skills:
@@ -34,7 +34,7 @@ Inputs (refuses if both are missing):
 
 Also considers: target browsers (Chromium-only vs all-three vs include Safari iOS), CI environment (GitHub Actions vs Jenkins vs self-hosted), and team's existing JS/TS vs Java/Python stack.
 
-## Step 1 — Detect existing convention
+## Step 1 - Detect existing convention
 
 Read `package.json` devDependencies and check for any of these signals:
 
@@ -50,7 +50,7 @@ Read `package.json` devDependencies and check for any of these signals:
 
 If a convention is detected, **recommend continuing with it** unless the user provides a reason to switch. Don't force a framework swap without cause.
 
-## Step 2 — If no existing convention, apply the decision tree
+## Step 2 - If no existing convention, apply the decision tree
 
 | Goal × constraint | Recommended framework | Why | Read next |
 |---|---|---|---|
@@ -61,17 +61,17 @@ If a convention is detected, **recommend continuing with it** unless the user pr
 | Need to support older browsers (IE11) | **TestCafe** | Proxy-based driver runs in any browser without a WebDriver binary | [`testcafe-testing`](../skills/testcafe-testing/SKILL.md) |
 | Mobile-web + native parity via Appium-via-WebDriver | **WebdriverIO** | First-class Appium integration; WebDriver-protocol-native | [`webdriverio-testing`](../skills/webdriverio-testing/SKILL.md) |
 
-## Step 3 — If cross-browser matrix coverage is needed, co-recommend a cloud runner
+## Step 3 - If cross-browser matrix coverage is needed, co-recommend a cloud runner
 
 | Need | Recommended cloud runner |
 |---|---|
-| Broadest device + browser matrix, enterprise procurement | **BrowserStack** — [`browserstack-automate`](../skills/browserstack-automate/SKILL.md) |
-| Selenium-grid-centric, parallel CI farm | **Sauce Labs** — [`saucelabs-automate`](../skills/saucelabs-automate/SKILL.md) |
-| Cost-sensitive, smaller scale | **LambdaTest** — [`lambdatest-automate`](../skills/lambdatest-automate/SKILL.md) |
+| Broadest device + browser matrix, enterprise procurement | **BrowserStack** - [`browserstack-automate`](../skills/browserstack-automate/SKILL.md) |
+| Selenium-grid-centric, parallel CI farm | **Sauce Labs** - [`saucelabs-automate`](../skills/saucelabs-automate/SKILL.md) |
+| Cost-sensitive, smaller scale | **LambdaTest** - [`lambdatest-automate`](../skills/lambdatest-automate/SKILL.md) |
 
 Cloud runners are recommended in addition to the chosen framework, never as a substitute.
 
-## Step 4 — Emit the recommendation
+## Step 4 - Emit the recommendation
 
 Output template (Markdown, copyable to a decision record):
 

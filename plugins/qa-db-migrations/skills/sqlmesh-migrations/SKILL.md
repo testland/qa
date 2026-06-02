@@ -1,6 +1,6 @@
 ---
 name: sqlmesh-migrations
-description: "Authors and runs SQLMesh — data-transformation framework with version control, virtual data environments, automatic breaking-vs-non-breaking change classification, and downstream impact analysis; supports `sqlmesh init` / `plan` / `apply` / `run` / `audit` / `test` lifecycle; covers DuckDB, Postgres, Snowflake, BigQuery, Redshift, Databricks. Use when the user works with SQL data pipelines (warehouse + dbt-adjacent ELT), needs safer model evolution than dbt's deploy-and-pray, or wants the strongest impact-analysis story in the OSS data tooling space."
+description: "Authors and runs SQLMesh - data-transformation framework with version control, virtual data environments, automatic breaking-vs-non-breaking change classification, and downstream impact analysis; supports `sqlmesh init` / `plan` / `apply` / `run` / `audit` / `test` lifecycle; covers DuckDB, Postgres, Snowflake, BigQuery, Redshift, Databricks. Use when the user works with SQL data pipelines (warehouse + dbt-adjacent ELT), needs safer model evolution than dbt's deploy-and-pray, or wants the strongest impact-analysis story in the OSS data tooling space."
 rating: 23
 d6: 4
 archetype: S1
@@ -43,7 +43,7 @@ schema-only tools (Flyway / Liquibase / Atlas):
 - A staging-to-prod promotion needs explicit breaking-vs-non-breaking
   review before apply.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [sm-cli][sm-cli]:
 
@@ -54,7 +54,7 @@ pip install sqlmesh
 Optionally with extras for specific engines (e.g.,
 `pip install sqlmesh[bigquery]`).
 
-## Step 2 — Initialize a project
+## Step 2 - Initialize a project
 
 Per [sm-cli][sm-cli]:
 
@@ -67,7 +67,7 @@ sqlmesh init duckdb
 Generates project skeleton: `config.yaml`, `models/`, `macros/`,
 `tests/`, `audits/`, `seeds/`.
 
-## Step 3 — Author a model
+## Step 3 - Author a model
 
 A SQLMesh model is a SQL (or Python) file in `models/` with a
 `MODEL` directive header:
@@ -95,7 +95,7 @@ Model kinds (per SQLMesh docs): `FULL` (rebuild every run),
 `INCREMENTAL_BY_UNIQUE_KEY` (upsert by key), `VIEW` (no persisted
 table), `SEED` (static data).
 
-## Step 4 — Plan + apply (the core workflow)
+## Step 4 - Plan + apply (the core workflow)
 
 Per [sm-cli][sm-cli]:
 
@@ -108,7 +108,7 @@ sqlmesh plan dev
 - Each change classified as **breaking** or **non-breaking**
 - Backfill plan (how much data needs reprocessing)
 
-The user reviews the plan, then confirms — `plan` is **integrated
+The user reviews the plan, then confirms - `plan` is **integrated
 with apply**: confirming the plan applies it.
 
 ```bash
@@ -118,7 +118,7 @@ sqlmesh plan prod  # promote dev to prod
 The promotion is virtual until apply: `prod` continues serving
 existing data until the new env is built.
 
-## Step 5 — Run scheduled execution
+## Step 5 - Run scheduled execution
 
 ```bash
 sqlmesh run
@@ -128,7 +128,7 @@ Runs models per their `cron` schedule. Typically scheduled in CI/CD
 (daily / hourly), `sqlmesh run` checks each model and executes if
 its cron is due.
 
-## Step 6 — Audits
+## Step 6 - Audits
 
 Audits are SQL-based data-quality checks attached to models:
 
@@ -152,7 +152,7 @@ SQLMesh audits are tightly coupled to SQLMesh models; GE/Soda are
 standalone data-quality frameworks. Choose audits when you're
 already in SQLMesh; GE/Soda for cross-framework data quality.
 
-## Step 7 — Tests (unit tests on models)
+## Step 7 - Tests (unit tests on models)
 
 Unlike audits (which run on real data), tests run on synthetic
 input → synthetic output:
@@ -176,7 +176,7 @@ test_orders_summary:
 sqlmesh test
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - run: pip install sqlmesh
@@ -190,10 +190,10 @@ The per-PR env approach gives full data-pipeline isolation: each PR
 materializes its own copy of the models, audits run against real
 PR data, and merge-then-promote is the production path.
 
-## Step 9 — Composition with sister tools
+## Step 9 - Composition with sister tools
 
 Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-for adversarial review of breaking changes — `sqlmesh plan` already
+for adversarial review of breaking changes - `sqlmesh plan` already
 classifies, but the reviewer adds estimation of downstream consumer
 impact (BI dashboards, downstream services) that SQLMesh's model
 graph alone doesn't capture.
@@ -220,21 +220,19 @@ or [`atlas-migrations`](../atlas-migrations/SKILL.md).
   dbt's "single shared dev/prod" default).
 - Engine support is broader than dbt's (DuckDB-first), but
   vendor-specific feature coverage varies by engine.
-- Migration-from-dbt is non-trivial — model metadata maps roughly
+- Migration-from-dbt is non-trivial - model metadata maps roughly
   but tests / macros / sources / packages need translation.
 
 ## References
 
-- [sm-cli][sm-cli] — quickstart CLI walkthrough
-- sqlmesh.readthedocs.io — full documentation
-- github.com/TobikoData/sqlmesh — repository
+- [sm-cli][sm-cli] - quickstart CLI walkthrough
+- sqlmesh.readthedocs.io - full documentation
+- github.com/TobikoData/sqlmesh - repository
 - [`flyway-migrations`](../flyway-migrations/SKILL.md),
   [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
-  [`atlas-migrations`](../atlas-migrations/SKILL.md) — sister tools
+  [`atlas-migrations`](../atlas-migrations/SKILL.md) - sister tools
   (DDL-focused; SQLMesh complements them at the data-model layer)
 - [`dbt-testing`](../../qa-data-quality/skills/dbt-testing/SKILL.md),
   [`great-expectations`](../../qa-data-quality/skills/great-expectations/SKILL.md),
-  [`soda-checks`](../../qa-data-quality/skills/soda-checks/SKILL.md)
-  — sister data-quality frameworks
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-  — adversarial reviewer
+  [`soda-checks`](../../qa-data-quality/skills/soda-checks/SKILL.md) - sister data-quality frameworks
+- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer

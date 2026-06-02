@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 LaunchDarkly's server-side SDK exposes a `TestData` data source
-that lets tests configure flag values without any network call —
+that lets tests configure flag values without any network call - 
 the canonical hermetic-test pattern. Per
 [launchdarkly.com/docs/sdk](https://launchdarkly.com/docs/sdk),
 TestData replaces the production data source; everything else
@@ -140,7 +140,7 @@ jobs:
       - run: npm ci && npm test
 ```
 
-No `LAUNCHDARKLY_SDK_KEY` needed in CI — TestData/file source
+No `LAUNCHDARKLY_SDK_KEY` needed in CI - TestData/file source
 replaces it.
 
 ## Anti-patterns

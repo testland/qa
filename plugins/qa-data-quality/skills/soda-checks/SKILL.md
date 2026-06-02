@@ -11,9 +11,8 @@ archetype: S1
 ## Overview
 
 SodaCL (Soda Checks Language) is a YAML-based domain-specific language for
-data reliability. A typical Soda project ships two YAML files —
-`configuration.yml` (data source connection) and `checks.yml` (assertions)
-— and runs them through the `soda scan` CLI ([sodacl-overview][1],
+data reliability. A typical Soda project ships two YAML files - 
+`configuration.yml` (data source connection) and `checks.yml` (assertions) - and runs them through the `soda scan` CLI ([sodacl-overview][1],
 [sodacl-quickstart][2]).
 
 [1]: https://docs.soda.io/soda-v3/soda-cl-overview.md
@@ -29,7 +28,7 @@ is Python-first) or compiling a dbt project.
 - The repo has `configuration.yml` + `checks.yml` (the canonical Soda
   filenames per [sodacl-quickstart][2]).
 - The user asks about `checks for <table>:`, `missing_count`,
-  `duplicate_count`, `freshness`, or `invalid_count` — SodaCL check types
+  `duplicate_count`, `freshness`, or `invalid_count` - SodaCL check types
   per [sodacl-overview][1].
 - A pipeline needs warehouse-side data quality with no programmatic
   glue: SQL warehouses (Snowflake, BigQuery, Postgres, Redshift) are
@@ -95,7 +94,7 @@ checks for transactions:
 ```
 
 For non-schema checks, alert configurations apply via the
-`alert configurations:` syntax — see Soda's optional-config docs at
+`alert configurations:` syntax - see Soda's optional-config docs at
 https://docs.soda.io/soda-v3/sodacl-reference/optional-config.md for
 the full grammar.
 
@@ -103,7 +102,7 @@ the full grammar.
 
 `configuration.yml` defines one or more data sources and (optionally)
 Soda Cloud credentials. Use environment-variable substitution for
-secrets — Soda expands `${ ENV_VAR }` at scan time
+secrets - Soda expands `${ ENV_VAR }` at scan time
 ([quick-start-dev][3]):
 
 [3]: https://docs.soda.io/soda-v3/use-case-guides/quick-start-dev.md
@@ -126,7 +125,7 @@ soda_cloud:
   api_key_secret: ${ SODA_CLOUD_API_SECRET }
 ```
 
-The `soda_cloud:` block is optional — omit it for a fully local scan.
+The `soda_cloud:` block is optional - omit it for a fully local scan.
 
 ## Running
 
@@ -174,7 +173,7 @@ grep -E '^\s*FAIL' scan.log || echo "All checks passed"
 
 > **Note:** if your team needs structured (JSON) scan output for richer
 > downstream reporting, check the current `soda scan` flag set on
-> https://docs.soda.io/ — flag availability evolves between major Soda
+> https://docs.soda.io/ - flag availability evolves between major Soda
 > Library / Soda Core versions.
 
 ## CI integration
@@ -224,16 +223,16 @@ jobs:
 ```
 
 The `if: always()` on the artifact upload is required to capture the log
-on a failed scan — when you most need it for triage. For a managed
+on a failed scan - when you most need it for triage. For a managed
 GitHub-Action wrapper that auto-comments on PRs, see the
 [Soda GitHub Action][4].
 
 ## References
 
-- [sodacl-overview][1] — SodaCL concept overview, common check types,
+- [sodacl-overview][1] - SodaCL concept overview, common check types,
   threshold syntax.
-- [sodacl-quickstart][2] — quickstart with canonical CLI invocation
+- [sodacl-quickstart][2] - quickstart with canonical CLI invocation
   and default filenames.
-- [quick-start-dev][3] — `configuration.yml` shape, env-var
+- [quick-start-dev][3] - `configuration.yml` shape, env-var
   substitution, CI-flow example.
-- [Soda GitHub Action][4] — first-party CI-action wrapper.
+- [Soda GitHub Action][4] - first-party CI-action wrapper.

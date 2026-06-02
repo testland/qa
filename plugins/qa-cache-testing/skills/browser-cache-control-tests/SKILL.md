@@ -170,7 +170,7 @@ test('api uses network-first with fallback', async ({ context, page }) => {
 npx playwright test cache-tests.spec.ts
 ```
 
-For service-worker tests, increase the test timeout — SW
+For service-worker tests, increase the test timeout - SW
 registration is async.
 
 ## Parsing results

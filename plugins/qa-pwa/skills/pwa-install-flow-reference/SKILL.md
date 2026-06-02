@@ -1,6 +1,6 @@
 ---
 name: pwa-install-flow-reference
-description: "Pure reference for the PWA install flow as a test surface — the installability gate (manifest required fields per [web.dev/articles/install-criteria][install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` event handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), the per-platform divergences (Chromium desktop install badge, Android WebAPK minting, iOS manual Share → Add to Home Screen), and the `display-mode` media-query post-install signal. For generic service-worker tests, install-flow tests, and SW cache-strategy authoring see `qa-modern-web/service-worker-tests`, `pwa-install-flow-tests`, and `sw-cache-strategy-author`. For channel-agnostic push-notification harness see `qa-notifications/push-notification-test-author`. This plugin covers Workbox recipes, offline-fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle."
+description: "Pure reference for the PWA install flow as a test surface - the installability gate (manifest required fields per [web.dev/articles/install-criteria][install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` event handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), the per-platform divergences (Chromium desktop install badge, Android WebAPK minting, iOS manual Share → Add to Home Screen), and the `display-mode` media-query post-install signal. For generic service-worker tests, install-flow tests, and SW cache-strategy authoring see `qa-modern-web/service-worker-tests`, `pwa-install-flow-tests`, and `sw-cache-strategy-author`. For channel-agnostic push-notification harness see `qa-notifications/push-notification-test-author`. This plugin covers Workbox recipes, offline-fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle."
 rating: 23
 d6: 4
 archetype: S2
@@ -24,7 +24,7 @@ per-stage builders ([`add-to-homescreen-flow-test`](../add-to-homescreen-flow-te
 [`web-push-test`](../web-push-test/SKILL.md)) and the audit reader
 ([`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md)) consult.
 
-This is a **pure reference** — no execution steps. The body is
+This is a **pure reference** - no execution steps. The body is
 tables + verbatim spec quotes. Builders consume it to emit tests
 without re-fetching the source pages.
 
@@ -36,14 +36,14 @@ without re-fetching the source pages.
 
 - Bootstrapping a PWA test plan and need the gate fields up-front
   before writing a single assertion.
-- A `beforeinstallprompt` test is flaking — consult the contract to
+- A `beforeinstallprompt` test is flaking - consult the contract to
   separate "gate not met" from "test setup wrong".
 - A team wants per-platform expectations (Chromium vs iOS Safari vs
   Android Chrome vs Edge) without re-reading three vendor docs.
 - An auditor (PR reviewer, accessibility reviewer) needs a
   one-screen summary of what "installable" actually means.
 
-## Stage 1 — Installability gate
+## Stage 1 - Installability gate
 
 Per [install-criteria], a page becomes installable on Chromium when
 every cell below is satisfied. Failures are silent: the
@@ -72,7 +72,7 @@ of the installed experience."* Edge, Samsung Internet, and Opera
 follow the Chromium criteria; Firefox desktop does not implement
 `beforeinstallprompt`; Safari uses a manual flow (Stage 3 below).
 
-## Stage 2 — The `beforeinstallprompt` handshake
+## Stage 2 - The `beforeinstallprompt` handshake
 
 Per [customize-install], the canonical four-call lifecycle:
 
@@ -82,14 +82,14 @@ Per [customize-install], the canonical four-call lifecycle:
 | Stash `event` reference | Save the deferred prompt for the app's own "Install" button | [customize-install] |
 | `event.prompt()` | Show the prompt; must be called from a user-gesture handler. "You can only call `prompt()` on the deferred event once" per [customize-install] | [customize-install] |
 | `await event.userChoice` | Resolves to `{ outcome: 'accepted' \| 'dismissed' }` per [customize-install] | [customize-install] |
-| `appinstalled` event | Fires "whenever installation succeeds, regardless of the trigger mechanism" per [customize-install] — covers both custom-button installs and browser-driven installs | [customize-install] |
+| `appinstalled` event | Fires "whenever installation succeeds, regardless of the trigger mechanism" per [customize-install] - covers both custom-button installs and browser-driven installs | [customize-install] |
 
 The `BeforeInstallPromptEvent` instance also exposes a `platforms`
-property — the array of install targets the browser would offer
+property - the array of install targets the browser would offer
 (typically `['web']` on desktop Chromium); tests can assert against
 this to detect WebView vs full Chromium environments.
 
-## Stage 3 — Per-platform install path
+## Stage 3 - Per-platform install path
 
 The install path itself diverges by platform. Tests must branch:
 
@@ -99,20 +99,20 @@ The install path itself diverges by platform. Tests must branch:
 | Android Chrome | WebAPK minting (a real APK signed by Google Play services and registered with the launcher) per [learn-pwa] | `beforeinstallprompt` fires; user accepts via mini-infobar or app-driven prompt | Smoke on a real device farm; Playwright on Android Chrome works for the prompt itself but cannot assert WebAPK minting completion |
 | Android Chrome (alternate) | Shortcuts or QuickApp formats per [learn-pwa] | Same as WebAPK path | WebAPK is the canonical path; shortcut path is a fallback |
 | iOS / iPadOS Safari | "Open the Share menu... Click Add to Home Screen... Confirm the name of the app... Click Add" per [learn-pwa] | Manual user gesture only; no `beforeinstallprompt` event | Test the metadata (`apple-touch-icon`, `apple-mobile-web-app-capable` meta) statically; assert installed runtime via `display-mode` MQ (Stage 4); the actual install step is manual smoke |
-| Desktop Safari | App-driven install on macOS Sonoma+ via the "Add to Dock" Share menu | Manual user gesture only | Same posture as iOS — static metadata + post-install MQ |
+| Desktop Safari | App-driven install on macOS Sonoma+ via the "Add to Dock" Share menu | Manual user gesture only | Same posture as iOS - static metadata + post-install MQ |
 | Firefox desktop | Install UI not exposed | n/a | No `beforeinstallprompt`; no install assertion path |
 
-Per [learn-pwa]: iOS install "requires `apple-touch-icon` tag" — a
+Per [learn-pwa]: iOS install "requires `apple-touch-icon` tag" - a
 test that omits this assertion misses a class of icon-missing
 install regressions that are otherwise invisible until a user
 files a bug.
 
-## Stage 4 — Post-install runtime signal
+## Stage 4 - Post-install runtime signal
 
 After install, the running PWA can detect its installed state via
 the `display-mode` media query. The query matches `standalone`,
 `minimal-ui`, `fullscreen`, or `window-controls-overlay` per the
-manifest's `display` field — the same values Stage 1 enumerates.
+manifest's `display` field - the same values Stage 1 enumerates.
 
 Tests use this signal to:
 
@@ -170,7 +170,7 @@ A test plan covers each step with an assertion or a documented gap
   not the precise threshold.
 - **WebAPK minting completion is opaque.** Per [learn-pwa] Android
   Chrome mints a WebAPK on install, but the test surface ends at
-  `appinstalled` — the minting is a background-service-worker
+  `appinstalled` - the minting is a background-service-worker
   operation, not a DOM-observable event.
 - **iOS Safari has no programmatic install API.** Stage 3 iOS
   cells must be tested with manual smoke or device-farm Appium
@@ -186,13 +186,13 @@ A test plan covers each step with an assertion or a documented gap
 
 ## References
 
-- web.dev — Install criteria (the Stage 1 gate cells and the
-  Chromium-side engagement requirement) — [install-criteria].
-- web.dev — Learn PWA: Installation (per-platform install paths,
-  WebAPK, iOS Share-menu flow, `apple-touch-icon` requirement) —
+- web.dev - Install criteria (the Stage 1 gate cells and the
+  Chromium-side engagement requirement) - [install-criteria].
+- web.dev - Learn PWA: Installation (per-platform install paths,
+  WebAPK, iOS Share-menu flow, `apple-touch-icon` requirement) - 
   [learn-pwa].
-- web.dev — Customize the install experience (Stage 2 handshake:
-  `preventDefault` / `prompt()` / `userChoice` / `appinstalled`) —
+- web.dev - Customize the install experience (Stage 2 handshake:
+  `preventDefault` / `prompt()` / `userChoice` / `appinstalled`) - 
   [customize-install].
 - Consumed by:
   [`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md),

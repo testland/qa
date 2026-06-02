@@ -18,17 +18,17 @@ and detectors
 reference for scope. It enumerates four regimes:
 
 - **GDPR** (EU General Data Protection Regulation, Regulation
-  2016/679) — definitive for EU personal data.
+  2016/679) - definitive for EU personal data.
 - **CCPA/CPRA** (California Consumer Privacy Act + California
-  Privacy Rights Act) — broadest US state law; many other states
+  Privacy Rights Act) - broadest US state law; many other states
   (VA, CO, CT, UT) follow its shape.
-- **NIST SP 800-122** (US federal guide) — the federal
+- **NIST SP 800-122** (US federal guide) - the federal
   agency-applicable definition; influential as a US-default model.
 - **HIPAA** (Health Insurance Portability and Accountability Act,
-  45 CFR § 164.514) — the Safe Harbor 18 identifiers for
+  45 CFR § 164.514) - the Safe Harbor 18 identifiers for
   de-identification of protected health information (PHI).
 
-This is a **pure reference** — no execution steps. Workflow skills
+This is a **pure reference** - no execution steps. Workflow skills
 in this plugin consume it.
 
 ## When to use
@@ -42,7 +42,7 @@ in this plugin consume it.
 - Onboarding a tester to the vocabulary used by
   ([`pii-leak-critic`](../../agents/pii-leak-critic.md)).
 
-## GDPR — personal data (Article 4(1))
+## GDPR - personal data (Article 4(1))
 
 **Definition** (Article 4(1)): "any information relating to an
 identified or identifiable natural person ('data subject')"
@@ -66,7 +66,7 @@ The article enumerates identifiers that make a person identifiable:
 Source: Article 4(1) GDPR
 ([gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/)).
 
-### GDPR Article 9 — special categories of personal data
+### GDPR Article 9 - special categories of personal data
 
 Article 9(1) lists categories whose processing is **prohibited by
 default** unless one of the Article 9(2) exceptions applies:
@@ -87,11 +87,11 @@ falling under Art. 9 (special categories carry higher fines and
 must be either redacted or fully anonymised, not merely
 pseudonymised).
 
-### GDPR Article 4(5) — pseudonymisation vs anonymisation
+### GDPR Article 4(5) - pseudonymisation vs anonymisation
 
 "Pseudonymisation" (Art. 4(5)) keeps data attributable to a subject
 **with additional information**, kept separately. Pseudonymised
-data is **still personal data** under GDPR — it remains in scope.
+data is **still personal data** under GDPR - it remains in scope.
 
 Anonymised data (no longer linkable to a subject under any
 reasonably likely method, per Recital 26) falls **out** of GDPR
@@ -99,7 +99,7 @@ scope. The masking pipeline must mark which output is which
 ([`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md)
 explains the techniques).
 
-## CCPA / CPRA — personal information
+## CCPA / CPRA - personal information
 
 **Definition** (Cal. Civ. Code § 1798.140(v)(1), as amended by
 CPRA): "information that identifies, relates to, describes, is
@@ -107,12 +107,12 @@ reasonably capable of being associated with, or could reasonably be
 linked, directly or indirectly, with a particular consumer or
 household" ([oag.ca.gov/privacy/ccpa](https://oag.ca.gov/privacy/ccpa)).
 
-Statutory categories enumerated in § 1798.140(v)(1)(A)–(K):
+Statutory categories enumerated in § 1798.140(v)(1)(A) - (K):
 
 | # | Category | Examples |
 |---|---|---|
 | A | **Identifiers** | Name, postal address, email, IP address, account name, SSN, driver's licence, passport |
-| B | **Customer records** | Records covered by Cal. Civ. Code § 1798.80(e) — name, signature, education, employment, financial info, medical, health-insurance, with paper/electronic regardless of storage medium |
+| B | **Customer records** | Records covered by Cal. Civ. Code § 1798.80(e) - name, signature, education, employment, financial info, medical, health-insurance, with paper/electronic regardless of storage medium |
 | C | **Protected classifications** | Race, religion, gender, sexual orientation, age, national origin, disability, marital status (under California or federal law) |
 | D | **Commercial information** | Purchases, products considered, consuming history |
 | E | **Biometric information** | Fingerprints, retina, hand prints, voice recordings, keystroke patterns |
@@ -121,14 +121,14 @@ Statutory categories enumerated in § 1798.140(v)(1)(A)–(K):
 | H | **Sensory data** | Audio, electronic, visual, thermal, olfactory recordings |
 | I | **Professional/employment** | Job titles, salaries, employment records |
 | J | **Education** | Education records as defined in 20 USC § 1232g (FERPA) |
-| K | **Inferences** | Profile drawn from any of A–J to predict preferences, characteristics, predispositions, behaviour |
+| K | **Inferences** | Profile drawn from any of A - J to predict preferences, characteristics, predispositions, behaviour |
 
-### CPRA — sensitive personal information (SPI)
+### CPRA - sensitive personal information (SPI)
 
 CPRA added a subcategory of personal information requiring extra
 protection (Cal. Civ. Code § 1798.140(ae)):
 
-- Government identifiers — SSN, driver's licence, state ID,
+- Government identifiers - SSN, driver's licence, state ID,
   passport number
 - Account log-in + password / financial account / debit-card /
   credit-card number with security code
@@ -147,7 +147,7 @@ protection (Cal. Civ. Code § 1798.140(ae)):
 Citation: oag.ca.gov/privacy/ccpa "Sensitive Personal Information"
 ([oag.ca.gov/privacy/ccpa](https://oag.ca.gov/privacy/ccpa)).
 
-## NIST SP 800-122 — PII
+## NIST SP 800-122 - PII
 
 **Definition** (citing OMB Memorandum 07-16, reproduced in NIST SP
 800-122 Section 2.1): "information which can be used to distinguish
@@ -172,7 +172,7 @@ NIST 800-122 §2.2 introduces a crucial distinction:
   association with other information about the individual.
 
 A masking pipeline must consider *linkable* fields (e.g., birth
-date alone isn't identifying, but date + zip + sex is — the
+date alone isn't identifying, but date + zip + sex is - the
 Sweeney 87 % rule). The pipeline shouldn't only protect direct
 identifiers.
 
@@ -181,17 +181,17 @@ identifiers.
 NIST 800-122 §3 names six factors that drive the PII
 confidentiality impact level (low / moderate / high):
 
-1. **Identifiability** — how directly the PII identifies
-2. **Quantity** — how many individuals' data
-3. **Data field sensitivity** — what specific fields (SSN > name)
-4. **Context of use** — what the PII is used for
-5. **Obligation to protect confidentiality** — legal duty
-6. **Access to and location of PII** — where stored, who can
+1. **Identifiability** - how directly the PII identifies
+2. **Quantity** - how many individuals' data
+3. **Data field sensitivity** - what specific fields (SSN > name)
+4. **Context of use** - what the PII is used for
+5. **Obligation to protect confidentiality** - legal duty
+6. **Access to and location of PII** - where stored, who can
    access
 
 Masking aggressiveness scales with impact level.
 
-## HIPAA Safe Harbor — 18 identifiers (45 CFR § 164.514(b)(2))
+## HIPAA Safe Harbor - 18 identifiers (45 CFR § 164.514(b)(2))
 
 For health data (PHI), the HIPAA Privacy Rule defines two
 de-identification methods (Expert Determination, 45 CFR §
@@ -202,7 +202,7 @@ guidance,
 
 1. Names
 2. All geographic subdivisions smaller than a state (street, city,
-   county, precinct, ZIP — except first 3 digits of ZIP if
+   county, precinct, ZIP - except first 3 digits of ZIP if
    population > 20,000)
 3. All elements of dates (except year) directly related to the
    individual, including birth, admission, discharge, death; all
@@ -226,7 +226,7 @@ guidance,
 A masking pipeline operating on health data must catch all 18; a
 detector configured only for GDPR's broader categories will miss
 HIPAA-required identifiers (e.g., medical record number is not
-explicit in GDPR Art. 4(1) — covered by "identification number"
+explicit in GDPR Art. 4(1) - covered by "identification number"
 but a detector may not flag it without a HIPAA-specific
 recogniser).
 
@@ -237,27 +237,27 @@ present in the dataset and look up which regimes flag each:
 
 | Field | GDPR Art. 4(1) | GDPR Art. 9 | CCPA/CPRA | CPRA SPI | NIST 800-122 | HIPAA Safe Harbor |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| Full name | ✓ | — | ✓ (A) | — | ✓ | ✓ (#1) |
-| Email | ✓ | — | ✓ (A) | — | ✓ | ✓ (#6) |
-| Phone | ✓ | — | ✓ (A) | — | ✓ | ✓ (#4) |
-| SSN | ✓ | — | ✓ (A, B) | ✓ | ✓ | ✓ (#7) |
-| Passport / driver's licence | ✓ | — | ✓ (A) | ✓ | ✓ | ✓ (#11) |
-| IP address | ✓ (Recital 30) | — | ✓ (A) | — | linkable | ✓ (#15) |
-| Cookie / device ID | ✓ | — | ✓ (A) | — | linkable | ✓ (#13) |
-| Birth date | linkable | — | ✓ (A) | — | linkable | ✓ (#3 — months/days) |
-| Precise geolocation | ✓ | — | ✓ (G) | ✓ | ✓ | ✓ (#2 — sub-state) |
-| Race / ethnicity | ✓ | ✓ | ✓ (C) | ✓ | — | — |
-| Religion | ✓ | ✓ | ✓ (C) | ✓ | — | — |
-| Sexual orientation | ✓ | ✓ | ✓ (C) | ✓ | — | — |
-| Health condition | ✓ | ✓ (Art. 4(15)) | ✓ (B) | ✓ | ✓ | — (covered by PHI rules) |
-| Genetic data | ✓ | ✓ (Art. 4(13)) | ✓ (B) | ✓ | — | — |
+| Full name | ✓ | - | ✓ (A) | - | ✓ | ✓ (#1) |
+| Email | ✓ | - | ✓ (A) | - | ✓ | ✓ (#6) |
+| Phone | ✓ | - | ✓ (A) | - | ✓ | ✓ (#4) |
+| SSN | ✓ | - | ✓ (A, B) | ✓ | ✓ | ✓ (#7) |
+| Passport / driver's licence | ✓ | - | ✓ (A) | ✓ | ✓ | ✓ (#11) |
+| IP address | ✓ (Recital 30) | - | ✓ (A) | - | linkable | ✓ (#15) |
+| Cookie / device ID | ✓ | - | ✓ (A) | - | linkable | ✓ (#13) |
+| Birth date | linkable | - | ✓ (A) | - | linkable | ✓ (#3 - months/days) |
+| Precise geolocation | ✓ | - | ✓ (G) | ✓ | ✓ | ✓ (#2 - sub-state) |
+| Race / ethnicity | ✓ | ✓ | ✓ (C) | ✓ | - | - |
+| Religion | ✓ | ✓ | ✓ (C) | ✓ | - | - |
+| Sexual orientation | ✓ | ✓ | ✓ (C) | ✓ | - | - |
+| Health condition | ✓ | ✓ (Art. 4(15)) | ✓ (B) | ✓ | ✓ | - (covered by PHI rules) |
+| Genetic data | ✓ | ✓ (Art. 4(13)) | ✓ (B) | ✓ | - | - |
 | Biometric (face, fingerprint) | ✓ | ✓ (Art. 4(14)) | ✓ (E) | ✓ (if uniquely identifying) | ✓ | ✓ (#16, #17) |
-| Account login + password | ✓ | — | ✓ (A) | ✓ | ✓ | ✓ (#10) |
-| Credit-card / IBAN | ✓ | — | ✓ (A, D) | ✓ | ✓ | ✓ (#10) |
-| Medical record number | ✓ | — (covered in B) | ✓ (B) | ✓ (health subset) | ✓ | ✓ (#8) |
-| Browsing history | ✓ | — | ✓ (F) | — | ✓ | ✓ (#14) |
-| Purchase records | ✓ | — | ✓ (D) | — | ✓ | — |
-| Inferred profile / score | ✓ | — | ✓ (K) | — | linkable | — |
+| Account login + password | ✓ | - | ✓ (A) | ✓ | ✓ | ✓ (#10) |
+| Credit-card / IBAN | ✓ | - | ✓ (A, D) | ✓ | ✓ | ✓ (#10) |
+| Medical record number | ✓ | - (covered in B) | ✓ (B) | ✓ (health subset) | ✓ | ✓ (#8) |
+| Browsing history | ✓ | - | ✓ (F) | - | ✓ | ✓ (#14) |
+| Purchase records | ✓ | - | ✓ (D) | - | ✓ | - |
+| Inferred profile / score | ✓ | - | ✓ (K) | - | linkable | - |
 
 "linkable" = field alone may not identify, but combined with other
 fields it does (NIST §2.2).
@@ -270,16 +270,16 @@ fields it does (NIST §2.2).
 | "If we pseudonymise, GDPR doesn't apply." | False. Pseudonymised data **remains** personal data under GDPR Art. 4(5); only full anonymisation removes it from scope. |
 | "CCPA only covers consumers." | CCPA "consumer" includes employees and job applicants under CPRA (Cal. Civ. Code § 1798.140(i)). |
 | "HIPAA only covers hospitals." | HIPAA covers covered entities (providers, plans, clearinghouses) and business associates. Business associates inherit HIPAA obligations via BAAs. |
-| "Birth date alone isn't PII." | Per NIST §2.2 it's **linkable** — combined with ZIP + sex it identifies ~87 % of US population (Sweeney 2000). Treat as PII. |
+| "Birth date alone isn't PII." | Per NIST §2.2 it's **linkable** - combined with ZIP + sex it identifies ~87 % of US population (Sweeney 2000). Treat as PII. |
 | "IP address isn't personal data." | GDPR Recital 30 lists IP addresses as online identifiers. CJEU *Breyer* (C-582/14) confirmed dynamic IPs are personal data when linkable. |
-| "CPRA SPI is the same as GDPR Art. 9." | Overlaps but isn't identical — CPRA SPI explicitly includes government IDs + financial-account + login credentials that aren't in Art. 9. Map both lists separately. |
+| "CPRA SPI is the same as GDPR Art. 9." | Overlaps but isn't identical - CPRA SPI explicitly includes government IDs + financial-account + login credentials that aren't in Art. 9. Map both lists separately. |
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Single-list scoping | Only catches one regime's identifiers; leaks the others. | Use the cross-jurisdiction map above as the union scope. |
-| Treating PHI as "just sensitive PII" | HIPAA Safe Harbor has 18 specific identifiers — birth date months, vehicle IDs, certificate numbers — that GDPR lists don't enumerate. | Apply HIPAA Safe Harbor when the dataset is PHI. |
+| Treating PHI as "just sensitive PII" | HIPAA Safe Harbor has 18 specific identifiers - birth date months, vehicle IDs, certificate numbers - that GDPR lists don't enumerate. | Apply HIPAA Safe Harbor when the dataset is PHI. |
 | Mapping CCPA to GDPR Art. 9 only | CPRA SPI includes financial + government identifiers Art. 9 doesn't. | Apply CPRA SPI as a separate scope layer. |
 | Stopping at "direct identifiers" | NIST §2.2 says linkable info is PII. Date-of-birth + ZIP + sex re-identifies most individuals. | Include linkable fields in scope. |
 | Pseudonymisation = anonymisation | GDPR Art. 4(5) keeps pseudonymised data personal. | Document which masking outputs are pseudonymised (in scope) vs anonymised (out of scope). |
@@ -306,24 +306,23 @@ fields it does (NIST §2.2).
 
 ## References
 
-- Article 4 GDPR (Definitions) —
+- Article 4 GDPR (Definitions) - 
   [gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/)
-- Article 9 GDPR (Processing of special categories) —
+- Article 9 GDPR (Processing of special categories) - 
   [gdpr-info.eu/art-9-gdpr/](https://gdpr-info.eu/art-9-gdpr/)
 - California Consumer Privacy Act (as amended by CPRA), Office of
-  the Attorney General overview —
+  the Attorney General overview - 
   [oag.ca.gov/privacy/ccpa](https://oag.ca.gov/privacy/ccpa)
-- California Civil Code § 1798.140 (definitions) — cite by stable
+- California Civil Code § 1798.140 (definitions) - cite by stable
   ID; statutory text available via leginfo.legislature.ca.gov
 - NIST Special Publication 800-122, "Guide to Protecting the
-  Confidentiality of PII" (2010) —
+  Confidentiality of PII" (2010) - 
   [csrc.nist.gov/pubs/sp/800/122/final](https://csrc.nist.gov/pubs/sp/800/122/final)
-- HIPAA Privacy Rule, 45 CFR § 164.514 — De-identification
+- HIPAA Privacy Rule, 45 CFR § 164.514 - De-identification
   Standard. HHS guidance:
   [hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification](https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/index.html)
 - Consumer-side neighbour:
-  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md)
-  — generates fake PII for test fixtures (different scope; this
+  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - generates fake PII for test fixtures (different scope; this
   reference defines what to mask in **existing** data).
 - Downstream consumers:
   [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md),

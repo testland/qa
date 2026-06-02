@@ -29,7 +29,7 @@ A bisector that varies one axis at a time to localize the flake source.
 
 ## Axes to vary
 
-The bisector sweeps these in order — cheapest / most-discriminating first:
+The bisector sweeps these in order - cheapest / most-discriminating first:
 
 | Axis                        | Variations                                                    | Pattern surfaced |
 |-----------------------------|---------------------------------------------------------------|------------------|
@@ -43,7 +43,7 @@ The bisector sweeps these in order — cheapest / most-discriminating first:
 | **Repetition count**        | 100 sequential runs of just this test.                         | resource leak |
 
 The bisector runs each axis with N=20 repetitions per variation. With
-8 axes × 2-4 variations × 20 reps, expect 320-640 test runs total —
+8 axes × 2-4 variations × 20 reps, expect 320-640 test runs total - 
 that's why this agent is invoked on a per-test basis, not blanket on
 the suite.
 
@@ -134,7 +134,7 @@ that setup into `beforeEach`.
 | (every axis)      | (every variation) | 0/20-2/20  | within noise |
 ```
 
-Classification: **inconclusive — likely Pattern 8 (randomness) or a
+Classification: **inconclusive - likely Pattern 8 (randomness) or a
 real low-rate environmental flake.** Recommend persisting the random
 seed used in each run; replay-on-failure pattern.
 
@@ -145,7 +145,7 @@ test (assuming ~2s per test execution). For tests with longer
 runtimes (multi-step E2E flows), reduce N to 10 and skip the
 **100 sequential** axis unless a leak is suspected.
 
-The bisector is **not** for screening the entire suite — it's for a
+The bisector is **not** for screening the entire suite - it's for a
 single test the team has decided is worth investigating. For
 suite-wide screening, use
 [`ai-flake-detector`](./ai-flake-detector.md).

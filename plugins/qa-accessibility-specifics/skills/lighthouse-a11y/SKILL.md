@@ -1,6 +1,6 @@
 ---
 name: lighthouse-a11y
-description: "Configures Lighthouse CI's Accessibility category — `categories:accessibility` audits backed by axe-core — with per-URL minimum-score assertions and per-audit overrides, distinct from the Performance category that `lighthouse-perf` covers. Use when the project already runs Lighthouse CI for Web Vitals and the team wants to add a11y coverage in the same pipeline rather than spinning up a separate scanner."
+description: "Configures Lighthouse CI's Accessibility category - `categories:accessibility` audits backed by axe-core - with per-URL minimum-score assertions and per-audit overrides, distinct from the Performance category that `lighthouse-perf` covers. Use when the project already runs Lighthouse CI for Web Vitals and the team wants to add a11y coverage in the same pipeline rather than spinning up a separate scanner."
 rating: 25
 d6: 4
 archetype: S1
@@ -36,7 +36,7 @@ produces both reports.
   counts.
 
 If the project doesn't already use Lighthouse CI, prefer
-[`axe-a11y`](../axe-a11y/SKILL.md) directly — Lighthouse adds a
+[`axe-a11y`](../axe-a11y/SKILL.md) directly - Lighthouse adds a
 layer.
 
 ## Install
@@ -102,8 +102,8 @@ Per [lhci][lhci], assertion levels are `'error'` (CI fails),
 ## What Lighthouse a11y measures
 
 Lighthouse's accessibility category runs a curated set of axe-core
-rules. The category score (0–1) reflects rule pass rate weighted
-by severity. **A score of 1.0 doesn't mean perfect a11y** — manual
+rules. The category score (0 - 1) reflects rule pass rate weighted
+by severity. **A score of 1.0 doesn't mean perfect a11y** - manual
 testing per
 [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md)
 remains essential.
@@ -152,8 +152,7 @@ for both perf and a11y assertions.
 ## CI integration
 
 (See the same workflow in
-[`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md)
-— one workflow runs both.)
+[`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md) - one workflow runs both.)
 
 ```yaml
 # .github/workflows/lighthouse.yml
@@ -207,13 +206,12 @@ jobs:
 
 ## References
 
-- [lhci][lhci] — Lighthouse CI install, `lhci autorun`,
+- [lhci][lhci] - Lighthouse CI install, `lhci autorun`,
   configuration shape, assertion levels.
-- [`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md)
-  — sibling skill for the Performance / Web Vitals category in
+- [`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md) - sibling skill for the Performance / Web Vitals category in
   the same Lighthouse run.
-- [`axe-a11y`](../axe-a11y/SKILL.md) — direct axe-core usage for
+- [`axe-a11y`](../axe-a11y/SKILL.md) - direct axe-core usage for
   component-level coverage.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) — CI
+- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
   gate consuming Lighthouse a11y output.
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/

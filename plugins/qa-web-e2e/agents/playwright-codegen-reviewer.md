@@ -1,6 +1,6 @@
 ---
 name: playwright-codegen-reviewer
-description: "Adversarial reviewer that takes Playwright codegen output (raw recorded test code) and refactors it to idiomatic Page Object Model code — extracts repeated selectors into constants, identifies common interactions worth Page Object methods, replaces brittle CSS selectors with `getByRole` accessibility-first equivalents per the convention, restructures the recorded sequence into AAA-pattern tests. Use after recording a flow with `npx playwright codegen`; the agent produces team-ready code from the raw recording."
+description: "Adversarial reviewer that takes Playwright codegen output (raw recorded test code) and refactors it to idiomatic Page Object Model code - extracts repeated selectors into constants, identifies common interactions worth Page Object methods, replaces brittle CSS selectors with `getByRole` accessibility-first equivalents per the convention, restructures the recorded sequence into AAA-pattern tests. Use after recording a flow with `npx playwright codegen`; the agent produces team-ready code from the raw recording."
 tools: "Read, Write, Edit, Grep, Glob"
 model: sonnet
 skills:
@@ -23,7 +23,7 @@ The agent takes:
 
 Output: refactored test + new / updated Page Object classes.
 
-## Step 1 — Identify the recorded flow
+## Step 1 - Identify the recorded flow
 
 Codegen output looks like:
 
@@ -48,7 +48,7 @@ The agent identifies:
 - The recorded steps (login + add to cart).
 - Selectors used (mix of CSS + roles).
 
-## Step 2 — Refactor selectors
+## Step 2 - Refactor selectors
 
 Per [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md):
 
@@ -62,7 +62,7 @@ Per [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-qua
 Codegen sometimes emits CSS where a role-based selector would be
 clearer. The agent rewrites.
 
-## Step 3 — Identify Page Object opportunities
+## Step 3 - Identify Page Object opportunities
 
 The login flow (4 steps) is clearly a Page Object candidate. The
 agent extracts:
@@ -103,7 +103,7 @@ export class ProductPage {
 }
 ```
 
-## Step 4 — Refactor the test
+## Step 4 - Refactor the test
 
 ```typescript
 // tests/checkout.spec.ts (refactored)
@@ -135,10 +135,10 @@ The refactor:
   [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
   §1.
 - Page Objects encapsulate the per-page interactions.
-- Final assertion (the codegen often omits this — the agent adds
+- Final assertion (the codegen often omits this - the agent adds
   one).
 
-## Step 5 — Output
+## Step 5 - Output
 
 ```markdown
 ## Playwright codegen refactor — `<file>`
@@ -170,10 +170,10 @@ Then merge.
 
 The agent **refuses** to:
 
-- Auto-merge — refactor lands in a PR for human review.
+- Auto-merge - refactor lands in a PR for human review.
 - Skip Page Object extraction when the recorded flow is >5 steps
   (the recording would be unmaintainable as-is).
-- Leave the test name as `'test'` — always names per the test's
+- Leave the test name as `'test'` - always names per the test's
   intent.
 - Skip the final assertion when the codegen omitted one.
 
@@ -199,9 +199,7 @@ The agent **refuses** to:
 ## References
 
 - Playwright codegen at `playwright.dev/docs/codegen`.
-- [`playwright-testing`](../skills/playwright-testing/SKILL.md) —
+- [`playwright-testing`](../skills/playwright-testing/SKILL.md) - 
   upstream skill for the framework conventions.
-- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)
-  — sibling: enforces selector convention.
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — preloaded; AAA + naming + assertion conventions.
+- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md) - sibling: enforces selector convention.
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - preloaded; AAA + naming + assertion conventions.

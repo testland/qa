@@ -1,6 +1,6 @@
 ---
 name: compatibility-budget
-description: "Pure-reference for choosing the compatibility matrix — defines tier-1 (must work; covered per-PR) vs tier-2 (must work; covered nightly) vs tier-3 (should work; covered pre-release) vs unsupported (explicitly out of scope). Includes example budgets per product type (web / desktop / mobile / library), the matrix-size cost / coverage trade-off, and templates for documenting \"what we support\" externally. Use when a team needs to decide which browser / OS / runtime combinations to commit to."
+description: "Pure-reference for choosing the compatibility matrix - defines tier-1 (must work; covered per-PR) vs tier-2 (must work; covered nightly) vs tier-3 (should work; covered pre-release) vs unsupported (explicitly out of scope). Includes example budgets per product type (web / desktop / mobile / library), the matrix-size cost / coverage trade-off, and templates for documenting \"what we support\" externally. Use when a team needs to decide which browser / OS / runtime combinations to commit to."
 rating: 22
 d6: 3
 archetype: S2
@@ -31,7 +31,7 @@ what consequences for unsupported configurations.
   needs the documented stance.
 - A contractual obligation requires a compatibility statement.
 
-## §1 — Tier model
+## §1 - Tier model
 
 | Tier         | Definition                                          | CI cadence       |
 |--------------|-----------------------------------------------------|------------------|
@@ -40,11 +40,11 @@ what consequences for unsupported configurations.
 | **Tier 3**    | Should work; broken-here is a known issue.          | Pre-release manual / weekly. |
 | **Unsupported** | Explicitly out of scope; bugs closed as "not supported." | None.    |
 
-The tier signals **engineering investment**, not user importance —
+The tier signals **engineering investment**, not user importance - 
 a configuration with low traffic but contractual obligation may be
 Tier 1.
 
-## §2 — Example budget per product type
+## §2 - Example budget per product type
 
 ### Modern web app
 
@@ -96,7 +96,7 @@ Tier 1.
 | Android 11                                | 3     |
 | < Android 11                             | unsupported |
 
-## §3 — Cost / coverage trade-off
+## §3 - Cost / coverage trade-off
 
 The budget directly affects CI cost:
 
@@ -114,7 +114,7 @@ For a typical web product (5 Tier 1 configs + 2 Tier 2 + 4 Tier
 
 A team's CI budget caps the total; the budget shapes the matrix.
 
-## §4 — "What we support" template
+## §4 - "What we support" template
 
 Publish externally (docs, marketing, README):
 
@@ -149,7 +149,7 @@ please open an issue but understand the priority is lower.
 The external statement sets user expectations; the internal tiers
 guide engineering.
 
-## §5 — Quarterly review
+## §5 - Quarterly review
 
 Browsers / OS / runtime versions evolve; the budget needs review:
 
@@ -157,10 +157,10 @@ Browsers / OS / runtime versions evolve; the budget needs review:
 |----------------------------------------------|---------------------------------------|
 | New major OS / browser release                | Add to Tier 1; re-evaluate older.    |
 | Tier 3 configuration generates >5 issues      | Promote to Tier 2 OR retire to unsupported. |
-| Tier 1 configuration generates 0 issues / quarter | Consider demoting (controversial — get team consensus). |
+| Tier 1 configuration generates 0 issues / quarter | Consider demoting (controversial - get team consensus). |
 | Vendor announces EOL                          | Move to unsupported on EOL date.     |
 
-## §6 — User-agent telemetry → budget
+## §6 - User-agent telemetry → budget
 
 If the team has analytics on browser / OS distribution, use it:
 
@@ -178,13 +178,13 @@ If the team has analytics on browser / OS distribution, use it:
 The 80/20 rule: if a configuration has <1% usage, Tier 3 or
 unsupported. If <0.1%, unsupported.
 
-## §7 — Compatibility statement vs accessibility commitment
+## §7 - Compatibility statement vs accessibility commitment
 
 These are different:
 
 - **Compatibility:** which configurations the product runs on.
 - **Accessibility:** which assistive technologies the product
-  supports (per WCAG conformance — see
+  supports (per WCAG conformance - see
   [`wcag-compliance-reporter`](../../qa-test-reporting/skills/wcag-compliance-reporter/SKILL.md)).
 
 A user with a screen reader on Tier 1 Chrome should have Tier 1
@@ -214,11 +214,9 @@ accessibility experience. The two budgets compose.
 
 ## References
 
-- [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md) —
+- [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md) - 
   the runner this budget configures.
-- [`os-matrix-runner`](../os-matrix-runner/SKILL.md) — sibling for
+- [`os-matrix-runner`](../os-matrix-runner/SKILL.md) - sibling for
   OS matrix.
-- [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md)
-  — mobile-specific equivalent.
-- [`wcag-compliance-reporter`](../../qa-test-reporting/skills/wcag-compliance-reporter/SKILL.md)
-  — accessibility compliance complement to the compatibility budget.
+- [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md) - mobile-specific equivalent.
+- [`wcag-compliance-reporter`](../../qa-test-reporting/skills/wcag-compliance-reporter/SKILL.md) - accessibility compliance complement to the compatibility budget.

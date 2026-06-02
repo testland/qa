@@ -17,8 +17,8 @@ jurisdictions, on dates that vary by region, and create
 local times** (fall-back).
 
 The IANA Time Zone Database
-([iana.org/time-zones](https://www.iana.org/time-zones)) — also
-known as the tz database or the Olson database — is the
+([iana.org/time-zones](https://www.iana.org/time-zones)) - also
+known as the tz database or the Olson database - is the
 canonical source of historical and current DST rules.
 
 ## When to use
@@ -52,7 +52,7 @@ ambiguous or invalid results depending on library:
 
 In US Eastern: 1st Sunday of November at 02:00 local time, the
 clock falls back to 01:00. The 01:00-01:59 hour **occurs
-twice** — once as EDT (UTC-4), once as EST (UTC-5).
+twice** - once as EDT (UTC-4), once as EST (UTC-5).
 
 `2026-11-01 01:30 America/New_York` is ambiguous. Libraries
 either:

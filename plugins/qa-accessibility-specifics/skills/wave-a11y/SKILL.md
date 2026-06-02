@@ -1,6 +1,6 @@
 ---
 name: wave-a11y
-description: "Runs WebAIM WAVE accessibility scans via the WAVE API or the browser-extension UI — produces visual overlay of errors / alerts / structural elements directly on the page, plus categorized JSON output for CI use. Use when the team values manual-review-friendly visual feedback (the WAVE overlay) alongside automated CI scans, or when a regulatory audit requires WebAIM-branded reports."
+description: "Runs WebAIM WAVE accessibility scans via the WAVE API or the browser-extension UI - produces visual overlay of errors / alerts / structural elements directly on the page, plus categorized JSON output for CI use. Use when the team values manual-review-friendly visual feedback (the WAVE overlay) alongside automated CI scans, or when a regulatory audit requires WebAIM-branded reports."
 rating: 23
 d6: 4
 archetype: S1
@@ -11,13 +11,13 @@ archetype: S1
 ## Overview
 
 WAVE (Web Accessibility Evaluation Tool) is WebAIM's flagship a11y
-scanner — distinguished by its **visual overlay** that places
+scanner - distinguished by its **visual overlay** that places
 icons directly on a rendered page showing errors, alerts, and
 structural elements. It runs via:
 
-- **Browser extension** — manual, immediate, visual.
-- **WAVE API** — programmatic scans against any URL.
-- **Standalone library (Stand-Alone API)** — for self-hosted
+- **Browser extension** - manual, immediate, visual.
+- **WAVE API** - programmatic scans against any URL.
+- **Standalone library (Stand-Alone API)** - for self-hosted
   scanning.
 
 The WAVE convention is to categorize findings into: **errors**
@@ -30,7 +30,7 @@ specifically).
 > **Source-fetch note (2026-05-04):** WAVE's documentation lives
 > across `wave.webaim.org`, `webaim.org/articles`, and tool-
 > specific subpages. This skill cites WebAIM as the canonical
-> source for WAVE conventions; the API specifics may evolve —
+> source for WAVE conventions; the API specifics may evolve - 
 > verify the current WAVE API v3+ documentation at
 > `wave.webaim.org/api` before authoring CI integrations against
 > specific endpoints.
@@ -41,9 +41,9 @@ specifically).
   US public-sector and education compliance work).
 - The team includes designers / non-technical reviewers who
   benefit from the visual overlay.
-- Auditing a third-party / external site without code access —
+- Auditing a third-party / external site without code access - 
   WAVE works against any public URL.
-- Cross-checking automated axe / pa11y findings — WAVE's
+- Cross-checking automated axe / pa11y findings - WAVE's
   classification differs slightly and surfaces different
   presentation issues.
 
@@ -76,7 +76,7 @@ path; pricing / signup at `wave.webaim.org/api`.
 5. Click the "Details" tab in the WAVE sidebar for per-icon
    explanations.
 
-The visual feedback is the WAVE differentiator — designers can
+The visual feedback is the WAVE differentiator - designers can
 review without reading text reports.
 
 ## Programmatic usage (API)
@@ -178,7 +178,7 @@ this CI workflow's job is to capture the WAVE outputs.
 | Storing WAVE API key in committed config                          | Key leak; quota theft.                                              | Always in CI secrets. |
 | Running WAVE against production                                    | API hits load production; possible PII leakage in scan data.        | Always staging or pre-prod. |
 | Using WAVE alone without axe / pa11y                              | WAVE has different rule coverage; misses some structural / ARIA issues. | Pair with [`axe-a11y`](../axe-a11y/SKILL.md) for full coverage. |
-| Ignoring "contrast errors" because they're "not real bugs"        | Contrast errors are SC 1.4.3 violations — definite WCAG failures.  | Treat as errors; aggregate via gate. |
+| Ignoring "contrast errors" because they're "not real bugs"        | Contrast errors are SC 1.4.3 violations - definite WCAG failures.  | Treat as errors; aggregate via gate. |
 
 ## Limitations
 
@@ -191,18 +191,18 @@ this CI workflow's job is to capture the WAVE outputs.
 - **Quotas / costs.** The free WAVE API tier has limits;
   high-traffic CI usage requires a paid tier.
 - **Different rule coverage.** WAVE finds a slightly different
-  set of issues than axe / pa11y — it's complementary, not
+  set of issues than axe / pa11y - it's complementary, not
   replacing.
 
 ## References
 
-- WAVE landing page — https://wave.webaim.org/
-- WAVE API documentation — https://wave.webaim.org/api/
-- WebAIM (the organization behind WAVE) — https://webaim.org/
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
+- WAVE landing page - https://wave.webaim.org/
+- WAVE API documentation - https://wave.webaim.org/api/
+- WebAIM (the organization behind WAVE) - https://webaim.org/
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - [`axe-a11y`](../axe-a11y/SKILL.md),
   [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md) —
+  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md) - 
   alternative scanners.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) — CI
+- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
   gate aggregating WAVE + sibling-scanner results.

@@ -1,6 +1,6 @@
 ---
 name: test-case-anatomy-reference
-description: "Pure-reference catalog of test-case anatomy — what fields a well-formed test case must have and what each field means. Enumerates the ISO/IEC/IEEE 29119-3:2021 test-case template fields (identifier, objective, preconditions, inputs, steps, expected results, postconditions, environment, traceability) and the ISTQB CTAL-TM specification-technique-driven additions (equivalence partition, boundary value, decision table, state transition). Maps the canonical anatomy to the five tracker-specific schemas this plugin covers (TestRail, Xray, Zephyr Scale, Allure TestOps, Qase). Use as the authoritative source when authoring a case template, reviewing case quality, or migrating between tools."
+description: "Pure-reference catalog of test-case anatomy - what fields a well-formed test case must have and what each field means. Enumerates the ISO/IEC/IEEE 29119-3:2021 test-case template fields (identifier, objective, preconditions, inputs, steps, expected results, postconditions, environment, traceability) and the ISTQB CTAL-TM specification-technique-driven additions (equivalence partition, boundary value, decision table, state transition). Maps the canonical anatomy to the five tracker-specific schemas this plugin covers (TestRail, Xray, Zephyr Scale, Allure TestOps, Qase). Use as the authoritative source when authoring a case template, reviewing case quality, or migrating between tools."
 rating: 25
 d6: 5
 archetype: S2
@@ -25,14 +25,13 @@ and the five platform-specific case-management skills.
 
 - Authoring a case template for a new project.
 - Reviewing whether a draft case has all required fields.
-- Migrating cases between tools (TestRail → Xray; Zephyr → Qase)
-  — need to map fields consistently.
+- Migrating cases between tools (TestRail → Xray; Zephyr → Qase) - need to map fields consistently.
 - Onboarding a tester to "what makes a case complete?"
 
 ## The nine canonical fields (ISO 29119-3 §6)
 
-Per ISO/IEC/IEEE 29119-3:2021 "Software and systems engineering —
-Software testing — Part 3: Test documentation" (cite by stable
+Per ISO/IEC/IEEE 29119-3:2021 "Software and systems engineering - 
+Software testing - Part 3: Test documentation" (cite by stable
 ID; full text behind iso.org paywall):
 
 | # | Field | Purpose | Common mistakes |
@@ -62,7 +61,7 @@ technique-specific metadata:
 | **Use case** | Main success scenario step, extension point |
 | **Classification tree** | Tree node path |
 
-These fields don't replace the nine above — they're traceability
+These fields don't replace the nine above - they're traceability
 to the design technique that produced the case. Per the ISTQB
 glossary
 ([glossary.istqb.org](https://glossary.istqb.org/)).
@@ -127,7 +126,7 @@ are stored.
 | Identifier | `id` (numeric, e.g., `1234`) |
 | Objective | `name` |
 | Preconditions | `precondition` |
-| Steps | `scenario.steps` (recursive — steps can have sub-steps) |
+| Steps | `scenario.steps` (recursive - steps can have sub-steps) |
 | Expected results | Within step `expectedResult` |
 | Environment | `tags` (key=value pairs) + execution env |
 | Traceability | `relations` (links to other cases / requirements) |
@@ -184,8 +183,8 @@ one-to-one and which are one-to-many:
 |---|---|---|
 | One step per case | Cases proliferate; coverage harder to track | Group related steps into one case with multiple ordered steps |
 | Steps as a single text blob | Per-step pass/fail tracking impossible | Use Steps template (TestRail) / steps array (everywhere else) |
-| Implicit preconditions | "User is logged in" — but as whom? | State preconditions in verifiable terms |
-| Generic inputs | "Use a valid email" — tester picks one, results vary | Specify concrete inputs |
+| Implicit preconditions | "User is logged in" - but as whom? | State preconditions in verifiable terms |
+| Generic inputs | "Use a valid email" - tester picks one, results vary | Specify concrete inputs |
 | No traceability links | Case-to-requirement orphans; coverage reporting broken | Always link to at least one requirement |
 | Missing expected results per step | Tester runs steps but can't tell what to assert | Pair every step with its expected outcome |
 | Tracker-specific case structure mixed in | Migration cost exploded | Author cases in the canonical anatomy; let tracker mapping be additive |
@@ -198,28 +197,28 @@ one-to-one and which are one-to-many:
 - **Specification-technique linkage is optional.** Most teams
   don't carry the technique metadata; ISTQB-aligned orgs do.
 - **Environment as a case-level field is imperfect.** Some
-  trackers (Xray, Zephyr) push environment to the run level — the
+  trackers (Xray, Zephyr) push environment to the run level - the
   case is environment-agnostic until executed.
 - **Traceability is bidirectional in theory, often unidirectional
   in practice.** Tools support bidirectional but discipline lapses.
 
 ## References
 
-- ISO/IEC/IEEE 29119-3:2021 §6 "Test case specification" — cite
+- ISO/IEC/IEEE 29119-3:2021 §6 "Test case specification" - cite
   by stable ID; canonical anatomy. Full text behind iso.org paywall.
-- ISTQB Advanced Test Manager (CTAL-TM) syllabus —
+- ISTQB Advanced Test Manager (CTAL-TM) syllabus - 
   specification-technique-driven case derivation.
-- ISTQB Glossary —
+- ISTQB Glossary - 
   [glossary.istqb.org](https://glossary.istqb.org/).
-- TestRail Cases API reference —
+- TestRail Cases API reference - 
   support.testrail.com/hc/en-us/articles/7077871398036-Cases
   (Cloudflare-protected; cite by stable URL).
-- Xray Cloud REST API — docs.getxray.app/display/XRAYCLOUD/REST+API.
-- Zephyr Scale Cloud REST API v2 —
+- Xray Cloud REST API - docs.getxray.app/display/XRAYCLOUD/REST+API.
+- Zephyr Scale Cloud REST API v2 - 
   smartbear.com/test-management/zephyr-scale.
-- Allure TestOps REST API —
+- Allure TestOps REST API - 
   docs.qameta.io/allure-testops/integrations/rest-api/.
-- Qase Public API — developers.qase.io.
+- Qase Public API - developers.qase.io.
 - Sibling skills:
   [`traceability-matrix-builder`](../traceability-matrix-builder/SKILL.md),
   [`testrail-case-management`](../testrail-case-management/SKILL.md),

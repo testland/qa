@@ -1,6 +1,6 @@
 ---
 name: kics-policy
-description: "Configures KICS (Keeping Infrastructure as Code Secure) for IaC scanning — Checkmarx open-source tool covering Terraform, Kubernetes, Helm, Dockerfile, Docker Compose, OpenAPI, Ansible, ARM, CloudFormation, Pulumi, Crossplane, Knative. CLI / Docker / GitHub Action / pre-commit integrations. Output to JSON / SARIF / HTML / JUnit. Use as a complement to Checkov + tfsec — KICS catches different rule classes (broader IaC + OpenAPI / Pulumi / Crossplane support)."
+description: "Configures KICS (Keeping Infrastructure as Code Secure) for IaC scanning - Checkmarx open-source tool covering Terraform, Kubernetes, Helm, Dockerfile, Docker Compose, OpenAPI, Ansible, ARM, CloudFormation, Pulumi, Crossplane, Knative. CLI / Docker / GitHub Action / pre-commit integrations. Output to JSON / SARIF / HTML / JUnit. Use as a complement to Checkov + tfsec - KICS catches different rule classes (broader IaC + OpenAPI / Pulumi / Crossplane support)."
 rating: 22
 d6: 3
 archetype: S1
@@ -12,7 +12,7 @@ archetype: S1
 
 KICS (Keeping Infrastructure as Code Secure) covers Terraform,
 Kubernetes, Helm, Dockerfile, Docker Compose, OpenAPI, Ansible,
-ARM, CloudFormation, Pulumi, Crossplane, Knative — comparable
+ARM, CloudFormation, Pulumi, Crossplane, Knative - comparable
 breadth to Checkov.
 
 KICS's specific strengths:
@@ -27,7 +27,7 @@ KICS's specific strengths:
 - Want a third opinion alongside Checkov + tfsec (different rules
   catch different things).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 # Docker (recommended)
@@ -37,7 +37,7 @@ docker pull checkmarx/kics:latest
 curl -sfL https://raw.githubusercontent.com/Checkmarx/kics/master/install.sh | sh
 ```
 
-## Step 2 — Run
+## Step 2 - Run
 
 ```bash
 # Scan a directory (Docker)
@@ -50,7 +50,7 @@ kics scan -p . --output-path ./kics-results
 kics scan -p . -t terraform,kubernetes
 ```
 
-## Step 3 — Output formats
+## Step 3 - Output formats
 
 ```bash
 # JSON
@@ -69,7 +69,7 @@ kics scan -p . --report-formats html --output-path results/
 kics scan -p . --report-formats json,sarif,html --output-path results/
 ```
 
-## Step 4 — Severity threshold
+## Step 4 - Severity threshold
 
 ```bash
 # Fail only on HIGH+
@@ -79,7 +79,7 @@ kics scan -p . --fail-on high,critical
 kics scan -p . --no-progress --silent
 ```
 
-## Step 5 — Skip checks
+## Step 5 - Skip checks
 
 In code:
 
@@ -105,7 +105,7 @@ resource "aws_s3_bucket" "public_logs" {
 The disable directive references the specific KICS query ID
 (visible in the output).
 
-## Step 6 — Custom queries (Rego)
+## Step 6 - Custom queries (Rego)
 
 KICS queries are written in Rego (same as OPA):
 
@@ -130,7 +130,7 @@ CxPolicy[result] {
 kics scan -p . -q ./custom-queries/
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -150,7 +150,7 @@ jobs:
           sarif_file: kics-results.sarif
 ```
 
-## Step 8 — OpenAPI scanning
+## Step 8 - OpenAPI scanning
 
 KICS's distinguishing feature: scan OpenAPI specs for security
 issues:
@@ -169,7 +169,7 @@ Catches:
 For most teams, this is the unique reason to use KICS alongside
 Checkov.
 
-## Step 9 — Pulumi / Crossplane
+## Step 9 - Pulumi / Crossplane
 
 ```bash
 kics scan -p ./pulumi-project/ -t pulumi
@@ -204,8 +204,8 @@ don't.
 
 - KICS at `kics.io` and `github.com/Checkmarx/kics`.
 - [`checkov-policy`](../checkov-policy/SKILL.md),
-  [`tfsec-policy`](../tfsec-policy/SKILL.md) — sister scanners.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) —
+  [`tfsec-policy`](../tfsec-policy/SKILL.md) - sister scanners.
+- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   custom OPA / Rego.
-- [`iac-policy-checker`](../../agents/iac-policy-checker.md) —
+- [`iac-policy-checker`](../../agents/iac-policy-checker.md) - 
   combines results.

@@ -31,7 +31,7 @@ The agent takes:
 
 Output: prioritized findings table + verdict (BLOCK / PASS).
 
-## Step 1 — Detect configured scanners
+## Step 1 - Detect configured scanners
 
 | Tool | Detection signal |
 |---|---|
@@ -42,7 +42,7 @@ Output: prioritized findings table + verdict (BLOCK / PASS).
 
 Run only configured scanners; don't manufacture data sources.
 
-## Step 2 — Normalize per-tool output
+## Step 2 - Normalize per-tool output
 
 ```typescript
 interface ContainerFinding {
@@ -83,7 +83,7 @@ curl -s https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabi
 jq '.vulnerabilities[] | select(.cveID == "CVE-2024-1234")' kev.json
 ```
 
-## Step 3 — Apply VEX assertions
+## Step 3 - Apply VEX assertions
 
 If a VEX file is provided, filter findings by status:
 
@@ -101,7 +101,7 @@ def apply_vex(findings, vex_doc):
 Findings with `vex_status: not_affected` are filtered from the
 fail-on bucket but tracked in the report (audit trail).
 
-## Step 4 — Deduplicate
+## Step 4 - Deduplicate
 
 ```python
 def dedupe(findings):
@@ -117,7 +117,7 @@ def dedupe(findings):
 The deduped finding records all scanners that caught it
 (multi-scanner consensus = high confidence).
 
-## Step 5 — Priority bucket assignment
+## Step 5 - Priority bucket assignment
 
 ```python
 def priority(f):
@@ -140,7 +140,7 @@ def priority(f):
     return 'Accept-Risk'
 ```
 
-## Step 6 — Apply waivers
+## Step 6 - Apply waivers
 
 ```yaml
 # .vuln-waivers.yaml
@@ -167,7 +167,7 @@ waivers:
 - **Refuse to waive any CVE in CISA KEV** (active exploitation;
   no acceptable justification)
 
-## Step 7 — Report
+## Step 7 - Report
 
 ```markdown
 ## Vuln prioritization (container + SBOM) — `<sha>`
@@ -228,7 +228,7 @@ waivers:
 After fixes, rebuild image + re-run scanners + this agent.
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -277,25 +277,25 @@ The agent **refuses** to:
 
 - EPSS scores update daily; pin EPSS data version per scan for
   reproducibility OR refresh per CI run.
-- KEV catalog is opt-in for CISA-tracked attacks — many real
+- KEV catalog is opt-in for CISA-tracked attacks - many real
   exploitations don't appear.
 - VEX claims are only as good as the analysis behind them;
   `not_affected` without justification is worse than no claim.
-- Container layer attribution can be coarse — a finding's
+- Container layer attribution can be coarse - a finding's
   responsible-team mapping needs additional metadata.
 
 ## References
 
 - [`syft-generation`](../skills/syft-generation/SKILL.md),
   [`grype-scanning`](../skills/grype-scanning/SKILL.md),
-  [`trivy-image`](../skills/trivy-image/SKILL.md) — preloaded sister
+  [`trivy-image`](../skills/trivy-image/SKILL.md) - preloaded sister
   skills
-- first.org/epss — EPSS scoring + API
-- cisa.gov/known-exploited-vulnerabilities-catalog — CISA KEV
-- openvex.dev — OpenVEX specification
-- [`sca-prioritizer`](../../qa-sca/agents/sca-prioritizer.md) —
+- first.org/epss - EPSS scoring + API
+- cisa.gov/known-exploited-vulnerabilities-catalog - CISA KEV
+- openvex.dev - OpenVEX specification
+- [`sca-prioritizer`](../../qa-sca/agents/sca-prioritizer.md) - 
   cross-plugin sibling for source-side dependency scanning (same
   prioritization pattern; different data source)
 - [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md),
-  [`dast-finding-triager`](../../qa-dast/agents/dast-finding-triager.md) —
+  [`dast-finding-triager`](../../qa-dast/agents/dast-finding-triager.md) - 
   sister-plugin triagers for SAST + DAST

@@ -1,6 +1,6 @@
 ---
 name: idempotency-test-author
-description: "Build-an-X for idempotency tests in any async/job/API context — idempotency-key handling (per Stripe / AWS prescriptive guidance pattern), retry-safe semantics (exactly-once vs at-least-once vs at-most-once), side-effect commutativity verification, fingerprint-based dedup, idempotency-window tuning. Use when authoring tests for any system where the same input could be processed twice (SQS Standard at-least-once, RabbitMQ requeue, retry-on-error logic, webhook redelivery, browser double-click, mobile-network retry)."
+description: "Build-an-X for idempotency tests in any async/job/API context - idempotency-key handling (per Stripe / AWS prescriptive guidance pattern), retry-safe semantics (exactly-once vs at-least-once vs at-most-once), side-effect commutativity verification, fingerprint-based dedup, idempotency-window tuning. Use when authoring tests for any system where the same input could be processed twice (SQS Standard at-least-once, RabbitMQ requeue, retry-on-error logic, webhook redelivery, browser double-click, mobile-network retry)."
 rating: 23
 d6: 4
 archetype: S3
@@ -35,10 +35,10 @@ response` and returns the cached response on duplicates.
 - Authoring tests for any handler that mutates state on input.
 - Reviewing PRs that add a new POST/PATCH endpoint or job processor.
 - The system is on at-least-once delivery (SQS Standard, RabbitMQ
-  requeue) — idempotency tests are mandatory, not optional.
+  requeue) - idempotency tests are mandatory, not optional.
 - Webhook receivers that must handle vendor-side redelivery.
 
-## Step 1 — Classify delivery semantics
+## Step 1 - Classify delivery semantics
 
 | Semantics | Examples | Test requirement |
 |---|---|---|
@@ -49,7 +49,7 @@ response` and returns the cached response on duplicates.
 Most production systems are at-least-once (or are at-least-once
 in failure modes). Default to mandatory tests.
 
-## Step 2 — Idempotency-key pattern
+## Step 2 - Idempotency-key pattern
 
 The canonical pattern (per Stripe):
 
@@ -93,7 +93,7 @@ def test_duplicate_idempotency_key_returns_cached_response(endpoint, store):
     assert charge_processor.execute.call_count == 1
 ```
 
-## Step 3 — Hash mismatch on key reuse
+## Step 3 - Hash mismatch on key reuse
 
 If a client reuses an idempotency key with a DIFFERENT body, the
 server must reject (per Stripe spec):
@@ -110,7 +110,7 @@ def test_idempotency_key_with_different_body_rejected(endpoint):
 This catches client bugs (key not properly scoped to one logical
 operation).
 
-## Step 4 — Side-effect commutativity for non-key designs
+## Step 4 - Side-effect commutativity for non-key designs
 
 Some systems can't add idempotency keys (legacy webhook receivers,
 existing APIs). For these, design idempotent side effects:
@@ -143,7 +143,7 @@ def test_credit_idempotent_via_txn_id():
     assert get_balance(1) == 100   # not 200
 ```
 
-## Step 5 — Idempotency-window tuning
+## Step 5 - Idempotency-window tuning
 
 Idempotency keys consume storage; choose a TTL based on the maximum
 expected retry window. Common choices:
@@ -168,7 +168,7 @@ def test_idempotency_key_expires(endpoint, freezer):
     assert charge_processor.execute.call_count == 2
 ```
 
-## Step 6 — Race-condition test (concurrent duplicate)
+## Step 6 - Race-condition test (concurrent duplicate)
 
 The hardest case: two requests with the same idempotency key arrive
 simultaneously. Without atomic store + check, both can pass the
@@ -194,7 +194,7 @@ The implementation must use atomic CAS (e.g., DB unique constraint
 on `idempotency_key` column with `ON CONFLICT DO NOTHING`, or Redis
 `SETNX`).
 
-## Step 7 — End-to-end test recipe per handler
+## Step 7 - End-to-end test recipe per handler
 
 For each at-least-once handler:
 
@@ -232,15 +232,14 @@ For each at-least-once handler:
 
 ## References
 
-- [aws-idem][aws-idem] — AWS Prescriptive Guidance on building
+- [aws-idem][aws-idem] - AWS Prescriptive Guidance on building
   idempotent applications
-- stripe.com/docs/api/idempotent_requests — Stripe's idempotency-key
+- stripe.com/docs/api/idempotent_requests - Stripe's idempotency-key
   pattern (the de facto industry standard)
-- [`sqs-patterns`](../sqs-patterns/SKILL.md) — Standard SQS is
+- [`sqs-patterns`](../sqs-patterns/SKILL.md) - Standard SQS is
   at-least-once; idempotency tests are mandatory
-- [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) — requeue +
+- [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) - requeue +
   redelivery semantics need idempotent consumers
-- [`cron-job-test-author`](../cron-job-test-author/SKILL.md) — cron
+- [`cron-job-test-author`](../cron-job-test-author/SKILL.md) - cron
   jobs need idempotency for safe overlap recovery
-- [`webhook-delivery-tester`](../../qa-notifications/skills/webhook-delivery-tester/SKILL.md)
-  — cross-plugin: webhook receivers need idempotency
+- [`webhook-delivery-tester`](../../qa-notifications/skills/webhook-delivery-tester/SKILL.md) - cross-plugin: webhook receivers need idempotency

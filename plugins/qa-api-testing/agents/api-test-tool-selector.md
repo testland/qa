@@ -1,6 +1,6 @@
 ---
 name: api-test-tool-selector
-description: "Action-taking agent that reads a target API project (`*.openapi.yaml`, `*.proto`, `*.graphql`, `pact.json`, `package.json`, `pom.xml`, `requirements.txt`, Postman collection JSON) and recommends one API test tool — Postman, REST Assured, Karate, Tavern, Schemathesis, RESTler, or API Chaos Runner — plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-contract-testing/contract-test-scaffolder` (consumer/provider contract tests against a Pact). Use when starting a new API test project and the team has not yet committed to a tool."
+description: "Action-taking agent that reads a target API project (`*.openapi.yaml`, `*.proto`, `*.graphql`, `pact.json`, `package.json`, `pom.xml`, `requirements.txt`, Postman collection JSON) and recommends one API test tool - Postman, REST Assured, Karate, Tavern, Schemathesis, RESTler, or API Chaos Runner - plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-contract-testing/contract-test-scaffolder` (consumer/provider contract tests against a Pact). Use when starting a new API test project and the team has not yet committed to a tool."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(curl *)"
 model: inherit
 skills:
@@ -34,7 +34,7 @@ Additionally, the agent looks for **goal** clues: functional smoke testing vs. f
 
 If neither input is supplied, the agent halts with a refuse-to-proceed message.
 
-## Step 1 — Detect API style + project language
+## Step 1 - Detect API style + project language
 
 The agent reads the project and matches against this table:
 
@@ -48,7 +48,7 @@ The agent reads the project and matches against this table:
 | `package.json` with `karate` / `postman-newman` | JS stack |
 | `requirements.txt` with `tavern` / `schemathesis` | Python stack |
 
-## Step 2 — Apply the decision tree
+## Step 2 - Apply the decision tree
 
 | Goal × style | Recommended tool | Why | Read next |
 |---|---|---|---|
@@ -60,9 +60,9 @@ The agent reads the project and matches against this table:
 | Fuzzing + REST without spec | **RESTler** | Stateful black-box REST fuzzer; learns endpoints by traffic capture | [`restler-fuzzing`](../skills/restler-fuzzing/SKILL.md) |
 | Chaos / resilience | **API Chaos Runner** | Injects latency, errors, and partitions at the HTTP layer | [`api-chaos-runner`](../skills/api-chaos-runner/SKILL.md) |
 
-The agent emits **exactly one** primary recommendation. A secondary fallback may be listed for close calls (REST without spec + JS team: Postman vs Karate) — never as a tie-breaker the user must resolve.
+The agent emits **exactly one** primary recommendation. A secondary fallback may be listed for close calls (REST without spec + JS team: Postman vs Karate) - never as a tie-breaker the user must resolve.
 
-## Step 3 — Emit the recommendation
+## Step 3 - Emit the recommendation
 
 Output template (Markdown, copyable to a decision record):
 
@@ -91,8 +91,8 @@ Output template (Markdown, copyable to a decision record):
 - No project markers AND no API style declared → refuse; README + endpoint URLs alone are too weak.
 - Spec asks for contract testing (consumer/provider Pact) → refuse; recommend [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract-testing/agents/contract-test-scaffolder.md).
 - Spec asks for load testing → refuse; recommend the qa-load-testing plugin (k6 / JMeter / Gatling / Locust).
-- Multiple API styles in one repo (`mixed` — REST + gRPC + GraphQL all present) → emit per-style recommendations rather than one primary.
-- Don't recommend a tool the team can't run because of language mismatch (e.g., REST Assured for a Python-only team) — flip to the stack-native peer.
+- Multiple API styles in one repo (`mixed` - REST + gRPC + GraphQL all present) → emit per-style recommendations rather than one primary.
+- Don't recommend a tool the team can't run because of language mismatch (e.g., REST Assured for a Python-only team) - flip to the stack-native peer.
 
 ## Anti-patterns
 

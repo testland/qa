@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# failure-classifier — evals
+# failure-classifier - evals
 
 Companion eval cases for [`failure-classifier`](../../failure-classifier.md).
 Three cases cover happy path / branch / adversarial: a clean R2-fires
@@ -16,7 +16,7 @@ brand-new test with no 7-day history that triggers the documented
 block as the first user message and checking the agent's output
 against the **Pass condition**.
 
-## Eval 1 — happy path — assertion-fail with code-change proximity (defect, R2)
+## Eval 1 - happy path - assertion-fail with code-change proximity (defect, R2)
 
 **Input:**
 
@@ -72,11 +72,11 @@ listed.
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25), opus (2026-05-25)
 
-**Expected:** Step 1 extracts signals — failure mode `assertion-fail`,
+**Expected:** Step 1 extracts signals - failure mode `assertion-fail`,
 12-run clean prior history, code-change proximity in `src/cart/`,
 reproducible on re-run, environment unchanged. Step 2 walks the rules
 in order: R1 fails (test not on quarantine list); R2 fires (all four
-conditions satisfied — clean prior history, call-graph file changed,
+conditions satisfied - clean prior history, call-graph file changed,
 assertion-fail mode, reproducible on re-run). Step 3 emits verdict
 `defect` with `high` confidence. Recommended next step references the
 hand-off chain `bug-report-from-recording` → `bug-repro-builder`.
@@ -91,7 +91,7 @@ named hand-off agents). Output does NOT contain a verdict line set to
 `flaky-known`, `environment-drift`, `timeout`, `flaky-pre-incident`,
 or `flake-of-unknown-cause`.
 
-## Eval 2 — branch — intermittent async-wait, no code change (flaky-pre-incident, R5)
+## Eval 2 - branch - intermittent async-wait, no code change (flaky-pre-incident, R5)
 
 **Input:**
 
@@ -152,7 +152,7 @@ environment unchanged. Step 2: R1 fails (not quarantined); R2 fails
 image unchanged); R4 fails (the failure is async-wait on a single
 locator, not a generic "exceeded test timeout" infra-wide pattern and
 the history shows the same test specifically, not other tests
-timing out — though this can be borderline; the agent should reach R5
+timing out - though this can be borderline; the agent should reach R5
 because (a) intermittent history of THIS test, (b) no code change, (c)
 async-wait pattern, matching R5's three conditions). R5 fires →
 verdict `flaky-pre-incident` with `medium` confidence. Recommended
@@ -165,7 +165,7 @@ pattern attribution.
 NOT contain a verdict line set to `defect`, `flaky-known`,
 `environment-drift`, or `flake-of-unknown-cause`.
 
-## Eval 3 — adversarial — brand-new test, no history (refuse: INSUFFICIENT_HISTORY)
+## Eval 3 - adversarial - brand-new test, no history (refuse: INSUFFICIENT_HISTORY)
 
 **Input:**
 
@@ -222,7 +222,7 @@ anyone.
 
 **Expected:** Per the Refuse-to-proceed rule "Issue a verdict without
 7-day history. The history is the load-bearing input; without it, the
-agent emits `INSUFFICIENT_HISTORY — supply at least 7 days of test
+agent emits `INSUFFICIENT_HISTORY - supply at least 7 days of test
 results before classification`", the agent refuses. Per the Limitation
 note: "A new test (just merged) cannot be classified for at least the
 first 7 days." The agent does NOT issue any of the six verdict labels
@@ -237,7 +237,7 @@ to any of `defect`, `flaky-known`, `flaky-pre-incident`,
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the agent's
+- All three inputs are concrete pasted-content blocks - the agent's
   `Read` / `Grep` / `Glob` / `Bash(jq *)` / `Bash(xmllint *)` /
   `Bash(git log *)` / `Bash(git diff *)` tool surface is not exercised
   since logs, history, env, and git diff are supplied inline.

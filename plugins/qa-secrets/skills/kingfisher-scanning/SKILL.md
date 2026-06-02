@@ -1,6 +1,6 @@
 ---
 name: kingfisher-scanning
-description: "Configures and runs Kingfisher — MongoDB-built Rust-based secret scanner combining Intel Hyperscan regex engine with language-aware parsing; ships 950 built-in detection rules with **live secret validation** and offline checksum verification; multi-target (local files / Git history / GitHub / GitLab / AWS S3 / Docker images); browser-based report viewer; suppression via `--skip-regex` / `--skip-word` / `--baseline-file` / inline `kingfisher:ignore`. Use when the team needs the broadest rule coverage + Hyperscan performance, or wants the modern alternative to gitleaks/trufflehog."
+description: "Configures and runs Kingfisher - MongoDB-built Rust-based secret scanner combining Intel Hyperscan regex engine with language-aware parsing; ships 950 built-in detection rules with **live secret validation** and offline checksum verification; multi-target (local files / Git history / GitHub / GitLab / AWS S3 / Docker images); browser-based report viewer; suppression via `--skip-regex` / `--skip-word` / `--baseline-file` / inline `kingfisher:ignore`. Use when the team needs the broadest rule coverage + Hyperscan performance, or wants the modern alternative to gitleaks/trufflehog."
 rating: 23
 d6: 4
 archetype: S1
@@ -19,12 +19,12 @@ Per [github.com/mongodb/kingfisher][kf-gh]:
 
 Three differentiating capabilities:
 
-1. **Intel Hyperscan + language-aware parsing** — significantly
+1. **Intel Hyperscan + language-aware parsing** - significantly
    faster than regex-only scanners on large repos.
 2. **950 built-in rules** covering "cloud keys, AI tokens, CI/CD
    secrets, database credentials, and SaaS API keys" per
    [kf-gh][kf-gh]. Largest rule set of the three OSS scanners.
-3. **Access mapping** — "Maps discovered credentials to their
+3. **Access mapping** - "Maps discovered credentials to their
    effective cloud identities and exposed resources." Beyond
    "is it a real secret?" → "what does this secret unlock?".
 
@@ -43,7 +43,7 @@ For battle-tested defaults, [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md)
 or [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md) are
 lower-risk picks.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [kf-gh][kf-gh]:
 
@@ -61,7 +61,7 @@ curl -sSL https://raw.githubusercontent.com/mongodb/kingfisher/main/scripts/inst
 docker run --rm -v "$PWD":/src ghcr.io/mongodb/kingfisher:latest scan /src
 ```
 
-## Step 2 — Basic scan
+## Step 2 - Basic scan
 
 Per [kf-gh][kf-gh]:
 
@@ -94,15 +94,15 @@ kingfisher s3 --bucket my-bucket
 kingfisher docker my-image:latest
 ```
 
-(Verify exact subcommand syntax against current Kingfisher release —
+(Verify exact subcommand syntax against current Kingfisher release - 
 the surface evolves.)
 
-## Step 3 — Live validation
+## Step 3 - Live validation
 
 Per [kf-gh][kf-gh]: "Confirms discovered secrets against provider
 APIs to reduce false positives."
 
-Same model as TruffleHog's verification — discovered candidates are
+Same model as TruffleHog's verification - discovered candidates are
 tested against the provider API to confirm they're real,
 unexpired credentials. The output distinguishes verified vs
 unverified findings; CI gating typically uses verified-only for
@@ -111,9 +111,9 @@ PR-blocking.
 Plus per [kf-gh][kf-gh]: "Validates tokens with built-in checksums
 offline, eliminating many false positives." Some providers (AWS
 keys, Stripe keys) include checksums that Kingfisher validates
-without making API calls — fast + no audit-log impact.
+without making API calls - fast + no audit-log impact.
 
-## Step 4 — Access mapping (Kingfisher-distinctive)
+## Step 4 - Access mapping (Kingfisher-distinctive)
 
 Per [kf-gh][kf-gh]: "Maps discovered credentials to their effective
 cloud identities and exposed resources."
@@ -127,13 +127,13 @@ appropriate permissions) report:
 - The resources the key can access
 
 This turns a finding from "leaked AWS key" into "leaked AWS key
-that could `s3:GetObject` from `prod-customer-data` bucket" — a
+that could `s3:GetObject` from `prod-customer-data` bucket" - a
 much sharper severity signal.
 
 This requires Kingfisher to have read-only API access to the cloud
 account; configure via standard cloud-SDK credential mechanisms.
 
-## Step 5 — False-positive triage (MANDATORY)
+## Step 5 - False-positive triage (MANDATORY)
 
 Per [kf-gh][kf-gh] suppression options:
 
@@ -181,7 +181,7 @@ DUMMY_AWS_KEY = "AKIAIOSFODNN7EXAMPLE"
 Cadence: every quarter, audit `kingfisher-baseline-reasons.md` +
 inline `kingfisher:ignore` comments; expired re-review dates removed.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 Kingfisher is newer; first-party CI integrations are still maturing.
 Pattern (verify against current docs):
@@ -201,7 +201,7 @@ jobs:
         with: { name: kingfisher-report, path: kingfisher.json }
 ```
 
-## Step 7 — Cross-tool layering
+## Step 7 - Cross-tool layering
 
 Three secret scanners in this plugin overlap deliberately:
 
@@ -229,19 +229,19 @@ trufflehog (CI verified-only) is the conservative pick.
 
 - Newer than gitleaks (2018) and trufflehog (2017); ecosystem
   smaller (fewer plugins, less StackOverflow coverage).
-- Access mapping requires cloud read-only access — operational
+- Access mapping requires cloud read-only access - operational
   setup overhead.
-- Hyperscan dependency (Intel x86) — limited ARM coverage in
+- Hyperscan dependency (Intel x86) - limited ARM coverage in
   early releases (verify current support).
 - Some custom-rule patterns require Rust-friendly regex (no
   PCRE-only features).
 
 ## References
 
-- [kf-gh][kf-gh] — repository, install, scan commands, key features
-- mongodb.com/blog (search "kingfisher") — release announcements
+- [kf-gh][kf-gh] - repository, install, scan commands, key features
+- mongodb.com/blog (search "kingfisher") - release announcements
 - [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md),
-  [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md) —
+  [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md) - 
   sister scanners
-- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) —
+- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) - 
   rotation workflow after detection

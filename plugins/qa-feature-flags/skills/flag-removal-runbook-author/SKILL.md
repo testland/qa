@@ -13,8 +13,8 @@ archetype: S3
 Stale feature flags are technical debt: they bloat the codebase,
 expand the flag-state matrix per
 [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md),
-and confuse readers. But removing a flag wrong — deleting code
-that's actually still gated for some users — is a regression.
+and confuse readers. But removing a flag wrong - deleting code
+that's actually still gated for some users - is a regression.
 
 This skill produces the **runbook** for safely removing a flag.
 
@@ -28,7 +28,7 @@ This skill produces the **runbook** for safely removing a flag.
   [`stale-flag-detector`](../../agents/stale-flag-detector.md))
   surfaced the flag.
 
-## Step 1 — Pre-removal verification
+## Step 1 - Pre-removal verification
 
 Before any code touches:
 
@@ -43,7 +43,7 @@ Before any code touches:
 
 **Failure of any check** = abort and resolve first.
 
-## Step 2 — Identify dependent code
+## Step 2 - Identify dependent code
 
 Grep:
 
@@ -62,7 +62,7 @@ For each match, classify:
 | Test fixtures with the flag | Update or delete |
 | Configuration with default = the old value | Update default; document |
 
-## Step 3 — Code removal
+## Step 3 - Code removal
 
 For boolean flag at 100% rollout = true:
 
@@ -97,7 +97,7 @@ else { ... }  // control
 Keep the **shipped variant's logic, inlined**. Delete the
 others.
 
-## Step 4 — Update tests
+## Step 4 - Update tests
 
 Per [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md):
 
@@ -105,26 +105,26 @@ Per [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md):
 - Update any matrix that included this flag.
 - Update the `flag-coverage.yaml` to remove entries.
 - Keep any test that asserts the new behaviour (it's no longer
-  flag-gated — it's just the behaviour).
+  flag-gated - it's just the behaviour).
 
 ```bash
 # Find tests referencing the flag
 grep -rn 'show-new-ui' tests/
 ```
 
-## Step 5 — Platform-side removal
+## Step 5 - Platform-side removal
 
 | Platform | Removal action |
 |---|---|
-| LaunchDarkly | Archive the flag (UI: flag → ⋯ → Archive). Don't delete — archived flags retain analytics. Per [launchdarkly.com/docs](https://launchdarkly.com/docs/) |
+| LaunchDarkly | Archive the flag (UI: flag → ⋯ → Archive). Don't delete - archived flags retain analytics. Per [launchdarkly.com/docs](https://launchdarkly.com/docs/) |
 | Unleash | Archive in the UI; deletion is permanent |
 | Flagsmith | Delete feature (UI); the environment.json on next regenerate will lack it |
 | GrowthBook | Archive in the UI |
 
-**Archive instead of delete** where possible — retains
+**Archive instead of delete** where possible - retains
 historical analytics in case of regression.
 
-## Step 6 — Deploy
+## Step 6 - Deploy
 
 Standard deploy. The flag is now:
 
@@ -134,7 +134,7 @@ Standard deploy. The flag is now:
 
 Production should see identical behaviour as before removal.
 
-## Step 7 — Post-removal verification
+## Step 7 - Post-removal verification
 
 Within 24h of deploy:
 
@@ -147,7 +147,7 @@ Within 24h of deploy:
 
 If any check fails → roll back (revert the removal commit).
 
-## Step 8 — Rollback plan
+## Step 8 - Rollback plan
 
 ```bash
 # If removal regresses something
@@ -157,9 +157,9 @@ git push
 ```
 
 The rollback plan must be **in the PR description** for the
-removal — not memorized.
+removal - not memorized.
 
-## Step 9 — Document the removal
+## Step 9 - Document the removal
 
 Add to the project's `flag-history.md`:
 
@@ -182,7 +182,7 @@ faster but riskier. Per
 
 | Batch size | When |
 |---|---|
-| 1 flag per PR | Default — easy to revert, clear analytics |
+| 1 flag per PR | Default - easy to revert, clear analytics |
 | 3-5 flags per PR | Same area of codebase; same owner |
 | 10+ flags per PR | Periodic audit; experienced reviewer required |
 

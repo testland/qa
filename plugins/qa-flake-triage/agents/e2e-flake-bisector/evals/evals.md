@@ -4,13 +4,13 @@ type: agent
 archetype: A2
 ---
 
-# e2e-flake-bisector — evals
+# e2e-flake-bisector - evals
 
 Companion eval cases for [`e2e-flake-bisector`](../../e2e-flake-bisector.md).
 Three cases cover happy path / branch / adversarial: a Playwright
 bisect that isolates parallel-state + ordering as the axis (happy
 artifact = bisect report), a Cypress bisect against a different
-framework / driver / config (branch — non-Playwright runner with
+framework / driver / config (branch - non-Playwright runner with
 different axis variations), and a refusal when the input scope is
 incomplete (no baseline failure rate, no known-flake test target). Re-run
 by feeding the **Input** block as the first user message and checking
@@ -18,10 +18,10 @@ the agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates below are the
-eval-authoring date — each case is designed to be reproducible against
+eval-authoring date - each case is designed to be reproducible against
 any tier.
 
-## Eval 1 — happy path — Playwright bisect produces report (parallel + ordering)
+## Eval 1 - happy path - Playwright bisect produces report (parallel + ordering)
 
 **Input:**
 
@@ -75,7 +75,7 @@ the word `parallel` and the word `order` (or `ordering`)
 case-insensitive. Output does NOT classify the root cause as
 `async/timing` or `network`.
 
-## Eval 2 — branch — Cypress bisect (different runner, different axes)
+## Eval 2 - branch - Cypress bisect (different runner, different axes)
 
 **Input:**
 
@@ -111,11 +111,10 @@ Playwright does — each node is a separate Cypress process. Treat
 
 **Target models:** sonnet (2026-05-26), haiku (2026-05-26)
 
-**Expected:** Produces the bisect report adapted to the Cypress runner
-— different framework / driver / config than Eval 1. Run-alone passes
+**Expected:** Produces the bisect report adapted to the Cypress runner - different framework / driver / config than Eval 1. Run-alone passes
 (0/20); parallel-across-4-nodes (50%) and random-order (70%) both
 show >2x increase vs. local baseline. Classification: test ordering
-(Pattern 2) is the dominant signal — random order alone hits 70%.
+(Pattern 2) is the dominant signal - random order alone hits 70%.
 Parallelism interacts with ordering (specs distributed differently
 across nodes), so a shared-parallel-state classification is also
 acceptable. The report should not assert "worker count" findings
@@ -131,7 +130,7 @@ because the underlying root cause is the same family.
 `workers` config (different framework) AND does NOT classify the root
 cause as `viewport` or `network`.
 
-## Eval 3 — adversarial — incomplete input (no baseline, refuse)
+## Eval 3 - adversarial - incomplete input (no baseline, refuse)
 
 **Input:**
 
@@ -153,7 +152,7 @@ turnkey answer by EOD.
 no target test identifier (file:line), no baseline failure rate, no
 runner / config, no axis sweep data, no clarification on whether the
 failure is deterministic. The agent's own "When NOT to use this agent"
-note also covers the deterministic-vs-intermittent question — for
+note also covers the deterministic-vs-intermittent question - for
 intermittent failures, bisect is right; for deterministic regressions,
 the right hand-off is
 [`regression-bisector`](../../regression-bisector.md). The agent
@@ -171,7 +170,7 @@ does NOT claim a classification such as `parallel`, `ordering`,
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the eval
+- All three inputs are concrete pasted-content blocks - the eval
   feeds pre-recorded axis sweep data so reviewers do not need to burn
   hundreds of CI runs to reproduce; the bisect-orchestration logic
   is what is under test.
@@ -180,7 +179,7 @@ does NOT claim a classification such as `parallel`, `ordering`,
   (`tests/checkout.spec.ts:42`, `parallel-isolation-checker`,
   `cypress/e2e/users.spec.cy.ts`, `missing`, etc.).
 - The agent's tool surface includes `Bash(npx playwright test *)`,
-  `Bash(jest *)`, `Bash(npx cypress *)` — eval re-runs against a real
+  `Bash(jest *)`, `Bash(npx cypress *)` - eval re-runs against a real
   repo would actually execute the test runners; against the pasted
   data above, the eval verifies the orchestration / classification /
   hand-off logic without needing a sandbox.

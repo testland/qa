@@ -13,7 +13,7 @@ archetype: S2
 Postgres Row-Level Security (RLS) lets the database itself
 enforce per-tenant row visibility, independent of the application
 code. It is the canonical defence-in-depth layer for pool /
-horizontally-partitioned tenancy models — even if the application
+horizontally-partitioned tenancy models - even if the application
 forgets to add a `WHERE tenant_id = ?` filter, the database
 refuses to return another tenant's rows.
 
@@ -43,7 +43,7 @@ ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
 ```
 
 Per Postgres docs: "Once enabled, a default-deny policy
-applies — no rows are visible or modifiable unless explicitly
+applies - no rows are visible or modifiable unless explicitly
 allowed by a policy."
 
 To disable:
@@ -55,7 +55,7 @@ ALTER TABLE accounts DISABLE ROW LEVEL SECURITY;
 ### Force RLS on table owner
 
 By default, the **table owner bypasses RLS**. For tenant
-isolation this is dangerous — the application's connecting role
+isolation this is dangerous - the application's connecting role
 is often the table owner. Force the owner to obey policies too:
 
 ```sql
@@ -120,8 +120,8 @@ CREATE POLICY user_mod_policy ON users
 
 | Type | Combination |
 |---|---|
-| **PERMISSIVE** (default) | Multiple policies combine with **OR** — any match grants access |
-| **RESTRICTIVE** | Multiple policies combine with **AND** — all must allow |
+| **PERMISSIVE** (default) | Multiple policies combine with **OR** - any match grants access |
+| **RESTRICTIVE** | Multiple policies combine with **AND** - all must allow |
 
 Restrictive policies layer additional constraints on top of
 permissive ones. Per Postgres docs:
@@ -164,7 +164,7 @@ CREATE POLICY tenant_isolation ON documents
     USING (tenant_id = current_setting('app.tenant_id')::uuid);
 ```
 
-`SET LOCAL` confines the value to the current transaction —
+`SET LOCAL` confines the value to the current transaction - 
 critical when the connection is from a shared connection pool.
 
 ### 2. `current_user` / `session_user`
@@ -198,7 +198,7 @@ USING ( team_id IN (SELECT auth.jwt() -> 'app_metadata' -> 'teams') );
 ```
 
 **Critical:** Per Supabase docs, never trust
-`raw_user_meta_data` for authorisation — it's user-modifiable.
+`raw_user_meta_data` for authorisation - it's user-modifiable.
 Use `raw_app_meta_data` (server-set) or a separate server-side
 claim store.
 
@@ -299,7 +299,7 @@ ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents FORCE ROW LEVEL SECURITY;
 ```
 
-Both `USING` and `WITH CHECK` use the same expression — a tenant
+Both `USING` and `WITH CHECK` use the same expression - a tenant
 can't read OR insert rows for another tenant.
 
 ### Pattern 2: Tenant + per-row ACL
@@ -331,21 +331,21 @@ CREATE POLICY tenant_isolation ON documents
     );
 ```
 
-Global admin claim bypasses the tenant filter. Audit usage —
+Global admin claim bypasses the tenant filter. Audit usage - 
 admin connections must be logged and short-lived.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| RLS enabled but no policy | Default-deny means no rows return — broken silently | Always create at least one policy after enabling |
+| RLS enabled but no policy | Default-deny means no rows return - broken silently | Always create at least one policy after enabling |
 | Policy on table without `FORCE ROW LEVEL SECURITY` | Table owner bypasses; app role often is the owner | Add FORCE ROW LEVEL SECURITY |
 | `current_user` for tenant_id without per-tenant roles | Tenants share a role; no isolation | Use SET LOCAL or JWT claim |
 | `tenant_id` from request header → SET LOCAL | Spoofable; never derive from request input | Derive from authenticated session/JWT only |
-| `auth.uid()` not wrapped in SELECT | Per-row evaluation — major perf hit at scale | `(SELECT auth.uid())` for initPlan caching |
+| `auth.uid()` not wrapped in SELECT | Per-row evaluation - major perf hit at scale | `(SELECT auth.uid())` for initPlan caching |
 | No index on tenant_id | Sequential scan after policy filter | btree index on tenant_id always |
 | Permissive policy + missing TO clause | Applies to all roles including superusers | Always specify TO app_user |
-| Tests use superuser to verify policies | Bypasses RLS — test passes but prod leaks | Tests must connect as a non-superuser without BYPASSRLS |
+| Tests use superuser to verify policies | Bypasses RLS - test passes but prod leaks | Tests must connect as a non-superuser without BYPASSRLS |
 | Trusting raw_user_meta_data in Supabase policies | User-modifiable per Supabase docs | Use raw_app_meta_data (server-set) |
 | Single policy mixing tenant + per-row ACL with OR | Permissive OR widens access; one bad clause leaks tenant | Split into permissive (tenant) + restrictive (ACL) |
 
@@ -393,7 +393,7 @@ tenant-B-owned rows and assert 0 rows returned.
   default; the subscriber sees all rows. Per-publication filters
   needed.
 - **Schema migrations.** ALTER TABLE for new columns runs as
-  table owner — review whether new columns need to be added to
+  table owner - review whether new columns need to be added to
   policies.
 
 ## References

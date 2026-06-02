@@ -1,6 +1,6 @@
 # qa-data-notebooks
 
-Jupyter notebook testing — three complementary tools, one workflow.
+Jupyter notebook testing - three complementary tools, one workflow.
 Use **papermill** as the executor (parameterize + run), **nbval**
 for full-notebook output regression, **testbook** for function-level
 unit tests against notebook-defined functions.

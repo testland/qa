@@ -1,6 +1,6 @@
 ---
 name: cobertura-analysis
-description: "Parses Cobertura XML coverage reports (the JVM-canonical format originally from the cobertura-cobertura tool, also emitted by JaCoCo `--coverage-xml`, coverage.py `--xml`, Istanbul / Jest `cobertura` reporter, gocover-cobertura, and dotnet's `coverlet`). Walks the coverage-04 DTD structure (coverage → packages → classes → methods → lines + conditions), computes per-file deltas, and emits PR-time gating verdicts. Use when the existing CI emits Cobertura XML — typical for JVM-heavy stacks and tools that ship Cobertura as a default reporter."
+description: "Parses Cobertura XML coverage reports (the JVM-canonical format originally from the cobertura-cobertura tool, also emitted by JaCoCo `--coverage-xml`, coverage.py `--xml`, Istanbul / Jest `cobertura` reporter, gocover-cobertura, and dotnet's `coverlet`). Walks the coverage-04 DTD structure (coverage → packages → classes → methods → lines + conditions), computes per-file deltas, and emits PR-time gating verdicts. Use when the existing CI emits Cobertura XML - typical for JVM-heavy stacks and tools that ship Cobertura as a default reporter."
 rating: 24
 d6: 4
 archetype: S1
@@ -12,7 +12,7 @@ archetype: S1
 
 Cobertura is "a free Java tool that calculates the percentage of
 code accessed by tests" ([cobertura-home][cob-home]). Its XML report
-format — sometimes called **coverage-04.dtd** after its DTD —
+format - sometimes called **coverage-04.dtd** after its DTD - 
 became the de-facto JVM coverage interchange and is now emitted by
 JaCoCo, coverage.py (`--xml`), Jest's `cobertura` reporter, Istanbul,
 gocover-cobertura, .NET's `coverlet`, and many CI plugins.
@@ -35,11 +35,11 @@ PR-gating.
   native runtime tooling.
 
 If the CI already emits LCOV, see
-[`lcov-analysis`](../lcov-analysis/SKILL.md) — Cobertura and LCOV
+[`lcov-analysis`](../lcov-analysis/SKILL.md) - Cobertura and LCOV
 are sibling formats; pick whichever the existing reporter produces
 to avoid running two coverage tools.
 
-## Step 1 — Schema (coverage-04.dtd)
+## Step 1 - Schema (coverage-04.dtd)
 
 Per [cobertura-dtd][cob-dtd], the DTD declares this hierarchy:
 
@@ -69,12 +69,12 @@ Required attributes per [cobertura-dtd][cob-dtd]:
 
 Two important nuances:
 
-- **`line-rate` and `branch-rate` are decimals 0–1**, not
+- **`line-rate` and `branch-rate` are decimals 0 - 1**, not
   percentages. `0.85` = 85%.
-- **`class` is a misnomer** — it usually maps to one source file.
+- **`class` is a misnomer** - it usually maps to one source file.
   Non-Java emitters set `name = filename` for clarity.
 
-## Step 2 — Sample document
+## Step 2 - Sample document
 
 ```xml
 <?xml version="1.0" ?>
@@ -110,7 +110,7 @@ The `condition-coverage` attribute on a branch line ("50% (1/2)")
 means one of two branch arms was hit. Parse it as
 `/(\d+(?:\.\d+)?)% \((\d+)\/(\d+)\)/` to extract `(pct, hit, total)`.
 
-## Step 3 — Parse
+## Step 3 - Parse
 
 ```python
 # scripts/parse_cobertura.py
@@ -157,10 +157,10 @@ def parse_cobertura(path):
     }
 ```
 
-## Step 4 — Diff vs baseline + gate
+## Step 4 - Diff vs baseline + gate
 
 The same shape as [`lcov-analysis`](../lcov-analysis/SKILL.md)
-Step 4 / Step 5 — pivot on `filename`, compute deltas, apply
+Step 4 / Step 5 - pivot on `filename`, compute deltas, apply
 per-file + whole-repo gates.
 
 ```python
@@ -180,7 +180,7 @@ def diff(current, baseline):
     return out
 ```
 
-## Step 5 — Cross-tool normalization
+## Step 5 - Cross-tool normalization
 
 When the team has Cobertura from one language and LCOV from another,
 emit a normalized intermediate (file → line% → branch% → uncovered
@@ -202,7 +202,7 @@ def normalize_cobertura(parsed):
 The downstream gate / reporter consumes the normalized shape,
 language-agnostic.
 
-## Step 6 — CI shape
+## Step 6 - CI shape
 
 ```yaml
 # Java with JaCoCo emitting Cobertura
@@ -228,7 +228,7 @@ language-agnostic.
 
 | Anti-pattern                                                       | Why it fails                                                                  | Fix |
 |--------------------------------------------------------------------|-------------------------------------------------------------------------------|-----|
-| Treating `line-rate` as a percentage                                | The DTD specifies decimal 0–1 ([cobertura-dtd][cob-dtd]); code mistakes 0.85 for 85 / 100 mid-pipeline. | Multiply by 100 only in display layer; preserve decimal in storage. |
+| Treating `line-rate` as a percentage                                | The DTD specifies decimal 0 - 1 ([cobertura-dtd][cob-dtd]); code mistakes 0.85 for 85 / 100 mid-pipeline. | Multiply by 100 only in display layer; preserve decimal in storage. |
 | Pivoting on `class@name` instead of `class@filename`                 | "name" can be a Java FQCN that overlaps two physical files (inner classes).   | Pivot on `filename` (Step 3). |
 | Ignoring `condition-coverage`                                        | Branch coverage drops invisible; line% looks fine while branch% degrades.     | Parse the `pct (hit/total)` form (Step 3); gate branch% separately. |
 | Mixing Cobertura + LCOV without normalization                       | Branch coverage definitions differ; cross-tool sums lie.                      | Normalize first (Step 5). |
@@ -247,22 +247,22 @@ language-agnostic.
 - **No native PR / commit / VCS metadata.** The format is a snapshot
   of a single run. Pair with git context for diff-aware gating.
 - **`hits` is a count, not a unique-test count.** `hits=0` ≠ "no
-  test exists" — a test may exercise the line via a path the
+  test exists" - a test may exercise the line via a path the
   instrumentation didn't observe.
 
 ## References
 
-- [cobertura-home][cob-home] — Cobertura overview and tool
+- [cobertura-home][cob-home] - Cobertura overview and tool
   positioning ("free Java tool that calculates the percentage of
   code accessed by tests").
-- [cobertura-dtd][cob-dtd] — `coverage-04.dtd` element /
+- [cobertura-dtd][cob-dtd] - `coverage-04.dtd` element /
   attribute declarations: `coverage`, `sources`, `packages`,
   `package`, `classes`, `class`, `methods`, `method`, `lines`,
   `line` with required attributes.
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) — sibling parser for
+- [`lcov-analysis`](../lcov-analysis/SKILL.md) - sibling parser for
   the LCOV `.info` format with the same gating shape.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) —
+- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   build-an-X workflow that consumes the parsed Cobertura output
   for a PR comment.
-- [`jacoco-analysis`](../jacoco-analysis/SKILL.md) — JVM-specific
+- [`jacoco-analysis`](../jacoco-analysis/SKILL.md) - JVM-specific
   JaCoCo native XML (when Cobertura conversion isn't desired).

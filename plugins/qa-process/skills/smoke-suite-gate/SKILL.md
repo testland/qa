@@ -1,6 +1,6 @@
 ---
 name: smoke-suite-gate
-description: "Build-an-X workflow for a critical-path smoke suite that runs in <5 minutes — picks the 5-15 highest-business-value journeys (login, hero flow, checkout, payment, primary read), implements as fast E2E or API tests, gates per-deploy, retries on transient failures with quarantine. Use as the canary-precursor or per-deploy verification gate; the team's \"if this fails, the build can't proceed\" floor."
+description: "Build-an-X workflow for a critical-path smoke suite that runs in <5 minutes - picks the 5-15 highest-business-value journeys (login, hero flow, checkout, payment, primary read), implements as fast E2E or API tests, gates per-deploy, retries on transient failures with quarantine. Use as the canary-precursor or per-deploy verification gate; the team's \"if this fails, the build can't proceed\" floor."
 rating: 22
 d6: 3
 archetype: S3
@@ -24,18 +24,18 @@ release.
 - A new release process needs the "first-line defense" check.
 
 For broader coverage, see the team's full E2E suite (per
-[`qa-web-e2e`](../../qa-web-e2e/) plugin) — smoke is the
+[`qa-web-e2e`](../../qa-web-e2e/) plugin) - smoke is the
 narrow, fast subset.
 
-## Step 1 — Identify the critical paths
+## Step 1 - Identify the critical paths
 
 The smoke suite covers 5-15 journeys. Picking criteria:
 
-1. **High business value** — broken = revenue / brand impact within
+1. **High business value** - broken = revenue / brand impact within
    minutes.
-2. **High traffic** — most users hit this; broken = many users
+2. **High traffic** - most users hit this; broken = many users
    affected.
-3. **Cross-system** — exercises multiple components; broken =
+3. **Cross-system** - exercises multiple components; broken =
    integration regression.
 
 Examples by product:
@@ -47,7 +47,7 @@ Examples by product:
 | Banking app           | Sign-in, account balance, recent transactions, payment      |
 | Content site          | Home page, article load, search, sign-up                     |
 
-## Step 2 — Implement fast
+## Step 2 - Implement fast
 
 Smoke tests must run in **<5 minutes total**. Constraints:
 
@@ -88,9 +88,9 @@ test.describe('Smoke — checkout', () => {
 
 Note: smoke tests use a pre-seeded test account, test-mode
 payment, and a known SKU (`SMOKE-001`). They don't create or
-delete data — pure read flows are best.
+delete data - pure read flows are best.
 
-## Step 3 — Pre-deploy vs post-deploy
+## Step 3 - Pre-deploy vs post-deploy
 
 | Stage             | Smoke check                                              |
 |-------------------|----------------------------------------------------------|
@@ -103,9 +103,9 @@ delete data — pure read flows are best.
 Per stage, smoke acts as the "is this deploy worth proceeding
 with" gate.
 
-## Step 4 — Failure handling
+## Step 4 - Failure handling
 
-A failing smoke isn't always a real regression — sometimes flake.
+A failing smoke isn't always a real regression - sometimes flake.
 Pattern:
 
 ```yaml
@@ -125,13 +125,13 @@ Pattern:
 The 2-retry rule kills most transients. A 3-retry-failure smoke
 test is either:
 
-1. A real regression — block the deploy.
-2. A genuinely flaky test — quarantine + investigate via
+1. A real regression - block the deploy.
+2. A genuinely flaky test - quarantine + investigate via
    [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
 
 Don't suppress failures by raising the retry count.
 
-## Step 5 — Smoke suite curation
+## Step 5 - Smoke suite curation
 
 The smoke suite must stay fast. Add tests deliberately:
 
@@ -144,7 +144,7 @@ The smoke suite must stay fast. Add tests deliberately:
 Quarterly review: drop smoke tests that haven't caught a real
 regression in N quarters and aren't covering a new business value.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 # .github/workflows/smoke-gate.yml
@@ -180,7 +180,7 @@ jobs:
           path: playwright-report/
 ```
 
-`timeout-minutes: 10` is the hard fail-fast — if smoke takes
+`timeout-minutes: 10` is the hard fail-fast - if smoke takes
 longer, something's wrong (the suite has bloated; deploy is slow).
 
 ## Anti-patterns
@@ -211,11 +211,7 @@ longer, something's wrong (the suite has bloated; deploy is slow).
 
 ## References
 
-- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md)
-  — handles repeat-failing smoke tests.
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md)
-  — downstream gate after smoke passes.
-- [`release-readiness-checker`](../../agents/release-readiness-checker.md)
-  — orchestrates smoke as one gate among many.
-- [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md)
-  — same critical journeys, but continuous-in-prod (not per-deploy).
+- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - handles repeat-failing smoke tests.
+- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - downstream gate after smoke passes.
+- [`release-readiness-checker`](../../agents/release-readiness-checker.md) - orchestrates smoke as one gate among many.
+- [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - same critical journeys, but continuous-in-prod (not per-deploy).

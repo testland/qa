@@ -1,6 +1,6 @@
 ---
 name: async-ordering-tests
-description: "Test async ordering — event-loop / queue / channel ordering assertions, JS Promise microtask vs macrotask ordering, Python `asyncio.gather` vs `asyncio.wait_for` semantics, Go goroutine + channel happens-before relationships, async/await re-entrancy. Use deterministic schedulers (sinon fake timers, asyncio test mode) to remove run-to-run variance."
+description: "Test async ordering - event-loop / queue / channel ordering assertions, JS Promise microtask vs macrotask ordering, Python `asyncio.gather` vs `asyncio.wait_for` semantics, Go goroutine + channel happens-before relationships, async/await re-entrancy. Use deterministic schedulers (sinon fake timers, asyncio test mode) to remove run-to-run variance."
 type: skill
 archetype: S3
 rating: 22
@@ -29,7 +29,7 @@ scheduler). Tests must control the scheduler to be deterministic.
 - Callback-heavy code where re-entrancy (sync vs async dispatch)
   matters.
 
-## Step 1 — JS Promise microtask vs macrotask
+## Step 1 - JS Promise microtask vs macrotask
 
 ```ts
 // Microtasks (Promise callbacks) drain BEFORE next macrotask (setTimeout)
@@ -50,7 +50,7 @@ Critical: promise resolution callbacks run in the microtask queue,
 which drains *between* macrotasks. Misunderstanding this causes
 "why did this fire twice" bugs.
 
-## Step 2 — Use deterministic timers (Sinon / Vitest fake)
+## Step 2 - Use deterministic timers (Sinon / Vitest fake)
 
 ```ts
 import { vi } from 'vitest';
@@ -75,7 +75,7 @@ test('debounced search fires once after 300ms', () => {
 
 Real timers + sleep = flake. Fake timers = deterministic.
 
-## Step 3 — `Promise.all` vs sequential await
+## Step 3 - `Promise.all` vs sequential await
 
 ```ts
 test('parallel fetch starts both before either completes', async () => {
@@ -113,7 +113,7 @@ test('sequential await runs A fully before B starts', async () => {
 Test the actual model your code uses, especially when "parallelize"
 is an intentional optimization.
 
-## Step 4 — Python asyncio ordering
+## Step 4 - Python asyncio ordering
 
 ```python
 import asyncio
@@ -138,7 +138,7 @@ async def test_gather_concurrency_with_first_completed():
 For race-style: use `asyncio.wait(..., return_when=FIRST_COMPLETED)`
 to test "whoever finishes first wins" semantics.
 
-## Step 5 — Async re-entrancy
+## Step 5 - Async re-entrancy
 
 A callback fires while another callback is still running. Tests:
 
@@ -170,7 +170,7 @@ test('handler not invoked while previous invocation in progress', async () => {
 Test guards: queue serializes enqueued work even if event loop
 allows interleaving.
 
-## Step 6 — Go channel happens-before
+## Step 6 - Go channel happens-before
 
 ```go
 func TestChannelHappensBefore(t *testing.T) {
@@ -199,7 +199,7 @@ For tests, run with `-race`:
 go test -race ./...
 ```
 
-## Step 7 — Backpressure / queue overflow
+## Step 7 - Backpressure / queue overflow
 
 ```python
 async def test_queue_drops_when_full():
@@ -220,7 +220,7 @@ async def test_queue_drops_when_full():
 Bounded queues + drop-on-full = silent data loss. Test the policy
 explicitly.
 
-## Step 8 — Cancellation propagation
+## Step 8 - Cancellation propagation
 
 ```python
 async def test_cancellation_propagates_to_children():
@@ -268,13 +268,13 @@ Common bug: parent cancelled, child task leaks (continues running).
   task-cancellation handling differs from 3.7).
 - Go's `-race` finds data races, not all happens-before violations.
 - Some libraries (RxJS) layer their own scheduling over the
-  runtime — test their semantics, not just the runtime's.
+  runtime - test their semantics, not just the runtime's.
 
 ## References
 
-- ECMAScript spec — runtime job semantics; consult tc39.es/ecma262
-- Python asyncio docs — docs.python.org/3/library/asyncio.html
-- Go memory model — go.dev/ref/mem
+- ECMAScript spec - runtime job semantics; consult tc39.es/ecma262
+- Python asyncio docs - docs.python.org/3/library/asyncio.html
+- Go memory model - go.dev/ref/mem
 - [`race-condition-test-author`](../race-condition-test-author/SKILL.md),
-  [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) —
+  [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) - 
   sister concurrency skills

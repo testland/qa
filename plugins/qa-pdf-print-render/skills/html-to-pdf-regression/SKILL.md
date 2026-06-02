@@ -1,6 +1,6 @@
 ---
 name: html-to-pdf-regression
-description: "Cross-engine HTML→PDF regression — generate the same source HTML through Chromium `page.pdf()`, WeasyPrint (Python, BSD), and wkhtmltopdf, then compare per-engine outputs page-by-page. Catches engine-specific font embedding bugs, page-break drift, @page rule support gaps. Pair with pdf-snapshot-tester for the per-engine pixel diff."
+description: "Cross-engine HTML→PDF regression - generate the same source HTML through Chromium `page.pdf()`, WeasyPrint (Python, BSD), and wkhtmltopdf, then compare per-engine outputs page-by-page. Catches engine-specific font embedding bugs, page-break drift, @page rule support gaps. Pair with pdf-snapshot-tester for the per-engine pixel diff."
 type: skill
 archetype: S1
 rating: 22
@@ -16,7 +16,7 @@ keywords:
 # html-to-pdf-regression
 
 Different HTML→PDF engines produce different output for the same
-input — fonts embed differently, `@page` support varies, page-break
+input - fonts embed differently, `@page` support varies, page-break
 algorithms differ. Tests verify the chosen engine produces the
 expected output AND (optionally) that two engines agree on the
 critical pages.
@@ -30,7 +30,7 @@ critical pages.
 - Regression after engine version upgrade (Chromium revs change PDF
   output; WeasyPrint major versions break layout subtly).
 
-## Step 1 — Set up the three engines
+## Step 1 - Set up the three engines
 
 **Chromium via Playwright:**
 
@@ -59,7 +59,7 @@ apt-get install -y wkhtmltopdf
 (Note: wkhtmltopdf is no longer actively maintained; verify
 suitability for your stack.)
 
-## Step 2 — Generate via Chromium
+## Step 2 - Generate via Chromium
 
 ```ts
 import { test, chromium } from '@playwright/test';
@@ -79,7 +79,7 @@ test('generate via Chromium', async () => {
 });
 ```
 
-## Step 3 — Generate via WeasyPrint
+## Step 3 - Generate via WeasyPrint
 
 Per the [WeasyPrint docs] Python API:
 
@@ -96,7 +96,7 @@ CLI alternative:
 weasyprint invoice.html out/weasyprint.pdf
 ```
 
-## Step 4 — Generate via wkhtmltopdf
+## Step 4 - Generate via wkhtmltopdf
 
 ```bash
 wkhtmltopdf \
@@ -107,7 +107,7 @@ wkhtmltopdf \
   invoice.html out/wkhtmltopdf.pdf
 ```
 
-## Step 5 — Per-engine baseline assertion
+## Step 5 - Per-engine baseline assertion
 
 ```python
 import pytest
@@ -125,7 +125,7 @@ def test_invoice_per_engine(engine, tmp_path):
 Each engine has its own baseline set. Don't expect them to be
 identical to each other.
 
-## Step 6 — Cross-engine agreement test (advisory)
+## Step 6 - Cross-engine agreement test (advisory)
 
 For pages where layout MUST be identical across engines (regulatory
 filings, forms with strict positioning):
@@ -145,7 +145,7 @@ def test_form_field_positions_agree_across_engines():
         assert abs(chrome_pos.y - weasy_pos.y) < 5
 ```
 
-## Step 7 — Font embedding verification
+## Step 7 - Font embedding verification
 
 ```bash
 pdfinfo -list-embedded-fonts out/chromium.pdf
@@ -164,7 +164,7 @@ def test_required_fonts_embedded(engine):
     assert "Helvetica" not in fonts
 ```
 
-## Step 8 — CSS feature support matrix
+## Step 8 - CSS feature support matrix
 
 Capture which @page features each engine handles for your templates:
 
@@ -175,10 +175,10 @@ Capture which @page features each engine handles for your templates:
 | `target-counter()` | none | full | none |
 | `bleeds`, `marks` | none | partial | none |
 
-(Verify per current engine version — features evolve. Per [MDN Paged
+(Verify per current engine version - features evolve. Per [MDN Paged
 Media], "marks" / "bleeds" support is browser-limited.)
 
-## Step 9 — Engine-version pinning in CI
+## Step 9 - Engine-version pinning in CI
 
 ```yaml
 - name: Install WeasyPrint
@@ -190,7 +190,7 @@ Media], "marks" / "bleeds" support is browser-limited.)
     npx playwright install --with-deps chromium
 ```
 
-Engine upgrades change output — pin in CI; bump intentionally with
+Engine upgrades change output - pin in CI; bump intentionally with
 baseline updates in same PR.
 
 ## Anti-patterns
@@ -215,12 +215,12 @@ baseline updates in same PR.
 
 ## References
 
-- [WeasyPrint docs] — Python API, CLI, CSS support
-- [MDN Paged Media] — cross-browser @page support notes
-- [Playwright page.pdf docs] — Chromium PDF API
-- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) — sister
+- [WeasyPrint docs] - Python API, CLI, CSS support
+- [MDN Paged Media] - cross-browser @page support notes
+- [Playwright page.pdf docs] - Chromium PDF API
+- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) - sister
   skill for per-engine pixel-diff assertions
-- [`print-stylesheet-tests`](../print-stylesheet-tests/SKILL.md) —
+- [`print-stylesheet-tests`](../print-stylesheet-tests/SKILL.md) - 
   CSS print-media verification (pre-PDF)
 
 [WeasyPrint docs]: https://doc.courtbouillon.org/weasyprint/stable/

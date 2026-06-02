@@ -1,6 +1,6 @@
 ---
 name: spock-tests
-description: "Configures and runs Spock — Groovy-based JVM testing framework with given/when/then BDD blocks, where: data tables for parametrized tests, built-in mocking via Mock()/Stub()/Spy(), interaction-based testing (verify method calls in declarative DSL), implicit assertions in then: blocks. Use when working with Java/Kotlin codebases that benefit from Groovy DSL expressiveness, or maintaining existing Spock projects."
+description: "Configures and runs Spock - Groovy-based JVM testing framework with given/when/then BDD blocks, where: data tables for parametrized tests, built-in mocking via Mock()/Stub()/Spy(), interaction-based testing (verify method calls in declarative DSL), implicit assertions in then: blocks. Use when working with Java/Kotlin codebases that benefit from Groovy DSL expressiveness, or maintaining existing Spock projects."
 rating: 22
 d6: 4
 archetype: S1
@@ -27,7 +27,7 @@ For Kotlin-only projects, [`kotest-tests`](../kotest-tests/SKILL.md)
 covers similar BDD territory natively. Spock's Groovy syntax is the
 strongest argument; modern JVM projects often prefer Kotlin DSLs.
 
-## Step 1 — Install
+## Step 1 - Install
 
 `build.gradle.kts`:
 
@@ -49,7 +49,7 @@ tasks.test {
 
 Test files: `src/test/groovy/**/*Spec.groovy`.
 
-## Step 2 — First test
+## Step 2 - First test
 
 Per [sp-docs][sp-docs] structure:
 
@@ -71,10 +71,10 @@ class CalculatorSpec extends Specification {
 ```
 
 The `then:` block contains assertions. Each statement is implicitly
-a boolean assertion — failure shows the full expression value, not
+a boolean assertion - failure shows the full expression value, not
 just true/false.
 
-## Step 3 — given/when/then blocks
+## Step 3 - given/when/then blocks
 
 Per [sp-docs][sp-docs]:
 
@@ -110,7 +110,7 @@ def "registration validates email"() {
 }
 ```
 
-## Step 4 — Data tables (Spock-distinctive)
+## Step 4 - Data tables (Spock-distinctive)
 
 The where: data table is Spock's killer feature:
 
@@ -131,7 +131,7 @@ def "addition cases"() {
 Cleaner than JUnit 5's `@CsvSource` for visual inspection. Each row
 runs as a separate test; failures don't stop subsequent rows.
 
-## Step 5 — Built-in mocking
+## Step 5 - Built-in mocking
 
 ```groovy
 def "user service calls repository"() {
@@ -175,11 +175,11 @@ def "spy delegates but observes"() {
 ```
 
 **Mock vs Stub vs Spy:**
-- `Mock()` — verify-able interactions; throws on uninstructed calls
-- `Stub()` — no verification; default-value response unless instructed
-- `Spy()` — wraps real object; observe calls + optionally override
+- `Mock()` - verify-able interactions; throws on uninstructed calls
+- `Stub()` - no verification; default-value response unless instructed
+- `Spy()` - wraps real object; observe calls + optionally override
 
-## Step 6 — Interaction cardinality
+## Step 6 - Interaction cardinality
 
 ```groovy
 then:
@@ -193,7 +193,7 @@ then:
 1 * service.method() >>> [1, 2, 3]   // returns 1 first call, 2 second, etc.
 ```
 
-## Step 7 — Lifecycle hooks
+## Step 7 - Lifecycle hooks
 
 ```groovy
 def setupSpec() { /* once before all tests in spec */ }
@@ -202,7 +202,7 @@ def setup() { /* before each test */ }
 def cleanup() { /* after each test */ }
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 Same as JUnit (Spock runs on JUnit Platform):
 
@@ -233,10 +233,10 @@ Same as JUnit (Spock runs on JUnit Platform):
 
 ## References
 
-- [sp-docs][sp-docs] — Spock documentation
-- spockframework.org — landing
+- [sp-docs][sp-docs] - Spock documentation
+- spockframework.org - landing
 - [`junit5-tests`](../junit5-tests/SKILL.md),
   [`kotest-tests`](../kotest-tests/SKILL.md),
   [`testng-tests`](../testng-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) — sister tools
+  [`scalatest`](../scalatest/SKILL.md) - sister tools
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

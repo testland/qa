@@ -1,6 +1,6 @@
 ---
 name: feature-flag-experiment-validator
-description: "Validates the statistical significance of an A/B / feature-flag experiment result — computes per-metric effect size + p-value (chi-square for proportions, Welch's t-test for continuous metrics), applies a multiple-comparison correction (Bonferroni / Benjamini-Hochberg) when N>1 metric, surfaces practical-vs-statistical-significance distinction, and emits a ship/don't-ship verdict per metric. Use to keep PMs / engineers from \"shipping the winning variant\" based on under-powered or multiple-tested results — the rigorous version of \"the variant looks better in the dashboard."
+description: "Validates the statistical significance of an A/B / feature-flag experiment result - computes per-metric effect size + p-value (chi-square for proportions, Welch's t-test for continuous metrics), applies a multiple-comparison correction (Bonferroni / Benjamini-Hochberg) when N>1 metric, surfaces practical-vs-statistical-significance distinction, and emits a ship/don't-ship verdict per metric. Use to keep PMs / engineers from \"shipping the winning variant\" based on under-powered or multiple-tested results - the rigorous version of \"the variant looks better in the dashboard."
 rating: 23
 d6: 4
 archetype: S3
@@ -49,7 +49,7 @@ This skill validates the analysis.
 - A close-call experiment (treatment 2.1% better; p=0.06) needs
   rigorous interpretation.
 
-## Step 1 — Inputs
+## Step 1 - Inputs
 
 The validator needs, per variant:
 
@@ -78,14 +78,14 @@ variants:
 
 Per-metric, identify whether it's:
 
-- **Proportion** (count / total — e.g. completion rate, sign-up
+- **Proportion** (count / total - e.g. completion rate, sign-up
   rate, click-through rate).
 - **Continuous** (latency, revenue per user, session duration,
   page count).
 
 Different statistical tests apply.
 
-## Step 2 — Test per metric type
+## Step 2 - Test per metric type
 
 ### Proportions: chi-square or Fisher's exact
 
@@ -128,16 +128,16 @@ def continuous_test(c_samples, t_samples, parametric=True):
 ```
 
 Use **Mann-Whitney U** when the metric isn't normally distributed
-(revenue per user — heavy right tail; latency — log-normal).
+(revenue per user - heavy right tail; latency - log-normal).
 Welch's t-test for approximately-normal metrics.
 
-## Step 3 — Multiple-comparisons correction
+## Step 3 - Multiple-comparisons correction
 
 Per [ab-test-wiki][ab]'s "challenges" framing: testing many metrics
 inflates the false-positive rate. With α=0.05 and 10 independent
 metrics, P(at least one false positive) ≈ 1 - 0.95^10 = 40%.
 
-**Default: Benjamini-Hochberg FDR control** — balances false-positive
+**Default: Benjamini-Hochberg FDR control** - balances false-positive
 vs false-negative rates; controls the proportion of "wins" that are
 actually noise. Use Bonferroni when the cost of any false positive is
 catastrophic (regulatory / safety contexts) and over-conservatism is
@@ -152,19 +152,19 @@ reject, p_adj, _, _ = multipletests(p_values, alpha=0.05, method='fdr_bh')
 # `reject[i]` is True when metric i is significant after FDR control.
 ```
 
-### Bonferroni (escape hatch — conservative)
+### Bonferroni (escape hatch - conservative)
 
 ```python
 adjusted_alpha = alpha / n_metrics    # e.g. 0.05 / 10 = 0.005
 # Each metric must have p < 0.005 to be significant.
 ```
 
-Over-conservative — increases false negatives.
+Over-conservative - increases false negatives.
 
 For pre-registered single-primary-metric experiments, no correction
 needed for the primary; correction applies to secondary metrics.
 
-## Step 4 — Power analysis (was the experiment big enough?)
+## Step 4 - Power analysis (was the experiment big enough?)
 
 A non-significant result might mean "no effect" or "experiment too
 small." Compute post-hoc power:
@@ -181,10 +181,10 @@ def required_sample(effect_size, alpha=0.05, power=0.8):
 If the observed effect (e.g., 0.5% relative lift) requires N=50,000
 users per variant for 80% power and the experiment had N=12,000,
 the experiment was under-powered. The verdict shouldn't be "no
-effect"; it should be "inconclusive — re-run at higher N or accept
+effect"; it should be "inconclusive - re-run at higher N or accept
 that we can't detect effects this small."
 
-## Step 5 — Practical vs statistical significance
+## Step 5 - Practical vs statistical significance
 
 A 0.1% lift can be statistically significant at N=10M; that doesn't
 mean the team should ship.
@@ -204,7 +204,7 @@ avg_revenue_per_user:
 The verdict requires **both** statistical significance AND practical
 significance (effect ≥ MDE).
 
-## Step 6 — Output
+## Step 6 - Output
 
 ```markdown
 ## Experiment validation — `checkout-promo-banner-v2`
@@ -257,13 +257,13 @@ significant): would need ~22,000 users per variant for 80% power;
 current 12,400 is under-powered.
 ```
 
-## Step 7 — Recommended cadence
+## Step 7 - Recommended cadence
 
 Validate the experiment:
 
-- **At pre-defined stop date** (preferred — pre-registered).
+- **At pre-defined stop date** (preferred - pre-registered).
 - **At minimum required sample** (per Step 4 power analysis).
-- **NOT at "first day of significance"** — peeking at running
+- **NOT at "first day of significance"** - peeking at running
   experiments inflates false positives (the "early stopping"
   problem).
 
@@ -301,18 +301,16 @@ tests.
 
 ## References
 
-- [ab-test-wiki][ab] — A/B testing definition; "A/B tests are
+- [ab-test-wiki][ab] - A/B testing definition; "A/B tests are
   sensitive to variance; they require a large sample size in order
   to reduce standard error and produce a statistically significant
   result"; statistical hypothesis testing framing.
-- [feature-toggles][toggles] — experiment toggles: per-cohort
+- [feature-toggles][toggles] - experiment toggles: per-cohort
   routing; "highly dynamic ... requires sufficient runtime to
   generate statistically valid results."
-- [`feature-flag-test-harness`](../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md)
-  — sibling: harness that runs the experiment IN test (this skill
+- [`feature-flag-test-harness`](../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md) - sibling: harness that runs the experiment IN test (this skill
   validates the experiment IN production).
-- [`prod-canary-validator`](../prod-canary-validator/SKILL.md) —
+- [`prod-canary-validator`](../prod-canary-validator/SKILL.md) - 
   sibling: same statistical framework, different application
   (canary verdict vs experiment verdict).
-- [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md)
-  — sibling: production-side verification, different role.
+- [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) - sibling: production-side verification, different role.

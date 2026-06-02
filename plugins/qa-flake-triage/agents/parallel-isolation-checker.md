@@ -1,6 +1,6 @@
 ---
 name: parallel-isolation-checker
-description: "Inspects a test suite that flakes under parallel execution and identifies the specific shared state — DB rows, env vars, files, ports, lockfiles, or global module state — that workers are colliding on. Runs targeted instrumentation around suspect resources, correlates each test's writes with another worker's reads, and reports the colliding resource with file:line evidence. Use after `e2e-flake-bisector` has implicated parallel execution."
+description: "Inspects a test suite that flakes under parallel execution and identifies the specific shared state - DB rows, env vars, files, ports, lockfiles, or global module state - that workers are colliding on. Runs targeted instrumentation around suspect resources, correlates each test's writes with another worker's reads, and reports the colliding resource with file:line evidence. Use after `e2e-flake-bisector` has implicated parallel execution."
 tools: "Read, Grep, Glob, Bash(npx playwright test *), Bash(jest *), Bash(lsof *), Bash(ps *), Bash(jq *)"
 model: sonnet
 skills:
@@ -109,10 +109,10 @@ notice the cache, and gets stale data.
 The agent only finds collisions visible through standard
 instrumentation. It cannot find:
 
-- Hardware-level state (TCP sockets in TIME_WAIT) — those need
+- Hardware-level state (TCP sockets in TIME_WAIT) - those need
   per-worker network namespaces.
 - External-service state (third-party API rate limits applied across
-  workers) — those need per-worker API credentials.
+  workers) - those need per-worker API credentials.
 
 For those cases, hand off to a human with the candidate
 hypothesis-narrowed.

@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# dast-finding-triager — evals
+# dast-finding-triager - evals
 
 Companion eval cases for [`dast-finding-triager`](../../dast-finding-triager.md).
 Three cases cover happy path / branch / adversarial: a multi-scanner
@@ -14,10 +14,10 @@ rule, Step 5). Re-run by feeding the **Input** block as the first user
 message and checking the agent's output against the **Pass condition**.
 
 Target models for re-runs: `sonnet`, `haiku`, `opus`. Dates recorded
-below are the eval-authoring date — each case is designed to be
+below are the eval-authoring date - each case is designed to be
 reproducible against any tier.
 
-## Eval 1 — happy path — multi-scanner consensus SQLi (BLOCK)
+## Eval 1 - happy path - multi-scanner consensus SQLi (BLOCK)
 
 **Input:**
 
@@ -85,7 +85,7 @@ mentions both `ZAP` (or `zap`) AND `NightVision` (or `nightvision`) on
 the same finding (i.e., `caught_by` lists both). Output does NOT
 contain a `PASS` verdict line.
 
-## Eval 2 — branch — clean scan, only Info findings (PASS)
+## Eval 2 - branch - clean scan, only Info findings (PASS)
 
 **Input:**
 
@@ -151,7 +151,7 @@ mentions the waiver was applied (one of `Waived`, `waived`,
 line AND does NOT list `SQL_INJECTION` / `XSS` / `PATH_TRAVERSAL`
 in any output section.
 
-## Eval 3 — adversarial — waiver missing expires: field (refuse)
+## Eval 3 - adversarial - waiver missing expires: field (refuse)
 
 **Input:**
 
@@ -199,7 +199,7 @@ treats the SQL injection finding as unwaived. Step 6: the High SQLi is
 not critical-severity but the report MUST not treat it as suppressed.
 The agent's verdict for the finding follows from `fail_on='critical'`
 default (High is below threshold → `PASS` on threshold), BUT the
-waiver-rejection itself must be surfaced — and per the documented
+waiver-rejection itself must be surfaced - and per the documented
 refusal rule, the agent must refuse to *apply* the waiver. The
 expected behavior is therefore: emit a refusal naming the missing
 `expires:`, list the SQLi finding as unwaived in the High table, and
@@ -214,12 +214,12 @@ unwaived findings list, not the "Waived (N)" section).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to run a live DAST scan.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring (verdict labels, scanner names,
   canonical class names).
-- The agent's tool surface (`Read`, `Bash(jq *)`) is read-only —
+- The agent's tool surface (`Read`, `Bash(jq *)`) is read-only - 
   eval re-runs cannot modify scanner reports or the waiver file.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

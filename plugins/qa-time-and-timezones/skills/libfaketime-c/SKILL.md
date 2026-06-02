@@ -17,7 +17,7 @@ it intercepts the libc functions `time()`, `gettimeofday()`,
 `clock_gettime()`, and similar, returning a value derived from
 environment variables instead of the real clock.
 
-Works for **any binary** that uses libc time functions — not
+Works for **any binary** that uses libc time functions - not
 just C/C++. Useful for Go, Rust, Python, anything-not-statically-
 linked.
 
@@ -114,7 +114,7 @@ TZ='America/New_York' faketime '2026-03-08 02:30:00' ./my-program
 
 ## Parsing results
 
-libfaketime doesn't emit output itself — it transparently
+libfaketime doesn't emit output itself - it transparently
 intercepts time syscalls. Your tests assert on the program's
 visible behaviour:
 

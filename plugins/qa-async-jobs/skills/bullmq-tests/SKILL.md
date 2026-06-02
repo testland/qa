@@ -1,6 +1,6 @@
 ---
 name: bullmq-tests
-description: "Authors and runs BullMQ job tests in TypeScript / JavaScript — `Queue` and `Worker` patterns, processor mocking, retry/backoff/repeat-job assertions, FlowProducer for parent-child job dependencies, QueueEvents listeners; tests use a real Redis instance (Docker / Testcontainers / `ioredis-mock` for stricter unit-test isolation). Use when the user works with BullMQ in Node.js services and needs unit / integration tests for queue producers, worker processors, or flow orchestration."
+description: "Authors and runs BullMQ job tests in TypeScript / JavaScript - `Queue` and `Worker` patterns, processor mocking, retry/backoff/repeat-job assertions, FlowProducer for parent-child job dependencies, QueueEvents listeners; tests use a real Redis instance (Docker / Testcontainers / `ioredis-mock` for stricter unit-test isolation). Use when the user works with BullMQ in Node.js services and needs unit / integration tests for queue producers, worker processors, or flow orchestration."
 rating: 22
 d6: 4
 archetype: S1
@@ -31,7 +31,7 @@ typically validate: queue add → worker processor → completion event.
 - A test verifies retry / backoff / FlowProducer parent-child
   semantics.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [bm-gh][bm-gh]:
 
@@ -47,7 +47,7 @@ For tests, add `ioredis-mock` for in-memory Redis simulation:
 npm install --save-dev ioredis-mock
 ```
 
-## Step 2 — Basic Queue + Worker pattern
+## Step 2 - Basic Queue + Worker pattern
 
 Per [bm-gh][bm-gh] (verbatim):
 
@@ -71,7 +71,7 @@ const worker = new Worker('Paint', async job => {
 The `Queue` produces; the `Worker` consumes. Tests typically import
 and invoke both within the test process.
 
-## Step 3 — Test producer (assert job added to queue)
+## Step 3 - Test producer (assert job added to queue)
 
 ```typescript
 import { Queue } from 'bullmq';
@@ -97,7 +97,7 @@ describe('order producer', () => {
 Other states: `'active'`, `'completed'`, `'failed'`, `'delayed'`,
 `'paused'`.
 
-## Step 4 — Test worker processor
+## Step 4 - Test worker processor
 
 Test the processor function directly (avoid spinning up a real
 Worker for unit tests):
@@ -139,7 +139,7 @@ it('processes via real worker', async () => {
 });
 ```
 
-## Step 5 — Test retry + backoff
+## Step 5 - Test retry + backoff
 
 ```typescript
 await queue.add('flaky', { id: 1 }, {
@@ -162,7 +162,7 @@ const worker = new Worker('flaky', flakyProcessor, { connection: redisConfig });
 // ... await events.completed → assert attempts === 3
 ```
 
-## Step 6 — Test repeat-job (cron / interval)
+## Step 6 - Test repeat-job (cron / interval)
 
 ```typescript
 await queue.add('hourly-cleanup', {}, {
@@ -181,7 +181,7 @@ expect(repeatJobs[0].pattern).toBe('0 * * * *');
 Cross-ref [`cron-job-test-author`](../cron-job-test-author/SKILL.md)
 for cron-expression validation patterns.
 
-## Step 7 — FlowProducer for parent-child jobs
+## Step 7 - FlowProducer for parent-child jobs
 
 Per [bm-gh][bm-gh] the README references parent-child relationships
 via FlowProducer:
@@ -203,7 +203,7 @@ const tree = await flow.add({
 // Test: parent only completes after all children complete
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 For tests that need real Redis:
 
@@ -223,7 +223,7 @@ const queue = new Queue('test', { connection });
 ```
 
 `ioredis-mock` doesn't perfectly emulate every Redis command BullMQ
-uses — for full integration, use real Redis. For pure unit tests of
+uses - for full integration, use real Redis. For pure unit tests of
 producer logic, ioredis-mock is faster.
 
 ## Anti-patterns
@@ -238,24 +238,24 @@ producer logic, ioredis-mock is faster.
 
 ## Limitations
 
-- BullMQ has no first-party "fake mode" like Sidekiq —
+- BullMQ has no first-party "fake mode" like Sidekiq - 
   test-vs-production parity comes from real Redis.
 - `ioredis-mock` covers 90% of BullMQ usage but can produce
   false-passing tests on edge-case Redis commands.
 - FlowProducer parent-child tests require coordination across two
-  queues — tests are integration-only, can't be pure unit tests.
+  queues - tests are integration-only, can't be pure unit tests.
 - BullMQ Pro features (rate limiters, observables) follow the same
   testing pattern but require Pro license.
 
 ## References
 
-- [bm-gh][bm-gh] — repo, install, basic Queue/Worker pattern,
+- [bm-gh][bm-gh] - repo, install, basic Queue/Worker pattern,
   FlowProducer
-- docs.bullmq.io — full documentation
+- docs.bullmq.io - full documentation
 - [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
   [`celery-tests`](../celery-tests/SKILL.md),
   [`sqs-patterns`](../sqs-patterns/SKILL.md),
-  [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) — sister tools
+  [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) - sister tools
 - [`cron-job-test-author`](../cron-job-test-author/SKILL.md),
-  [`idempotency-test-author`](../idempotency-test-author/SKILL.md) —
+  [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
   build-an-X authors

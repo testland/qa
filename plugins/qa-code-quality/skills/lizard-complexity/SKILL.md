@@ -1,6 +1,6 @@
 ---
 name: lizard-complexity
-description: "Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds — language-agnostic (30+ languages). Scoped to production code via `-x\"./tests/*\"`; test complexity is owned by qa-test-review."
+description: "Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds - language-agnostic (30+ languages). Scoped to production code via `-x\"./tests/*\"`; test complexity is owned by qa-test-review."
 type: skill
 archetype: S1
 rating: 23
@@ -29,7 +29,7 @@ warning threshold is 15.
 - One-off audit of "where is the most complex code?" before a
   refactor.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install lizard
@@ -43,7 +43,7 @@ python lizard.py path/to/code
 
 Per the [Lizard README], no external deps required.
 
-## Step 2 — Baseline scan
+## Step 2 - Baseline scan
 
 ```bash
 lizard src/
@@ -52,7 +52,7 @@ lizard src/
 Default output groups by file with per-function NLOC/CCN/token/param
 counts. Default warning threshold: CCN ≥ 15.
 
-## Step 3 — Set production-only thresholds
+## Step 3 - Set production-only thresholds
 
 ```bash
 lizard src/ \
@@ -67,10 +67,10 @@ lizard src/ \
 |---|---|
 | `-x PATTERN` | Exclude (must include `tests/**` for production-only scope) |
 | `-C N` | CCN warning threshold (default 15; tighten to 10 for new codebases) |
-| `-L N` | Max function NLOC (default 1000; tighten to 80–100) |
+| `-L N` | Max function NLOC (default 1000; tighten to 80 - 100) |
 | `-a N` | Max parameter count (5 = "if you need more, pass an object") |
 
-## Step 4 — CSV/XML for CI
+## Step 4 - CSV/XML for CI
 
 ```bash
 # CSV for grep / jq pipelines
@@ -83,7 +83,7 @@ lizard src/ -x"./tests/*" -C 10 -X > lizard.xml
 lizard src/ -x"./tests/*" -C 10 -H > lizard.html
 ```
 
-## Step 5 — Fail CI on warnings
+## Step 5 - Fail CI on warnings
 
 ```bash
 lizard src/ -x"./tests/*" -C 10 -L 100 -a 5 -w
@@ -97,7 +97,7 @@ fi
 `-w` prints warnings only (clang/gcc style). Lizard exits non-zero
 when any function exceeds the configured threshold.
 
-## Step 6 — Per-language scope
+## Step 6 - Per-language scope
 
 ```bash
 # Only Python
@@ -130,6 +130,6 @@ Python tolerates higher CCN than C).
 
 ## References
 
-- [Lizard README] — CLI reference, language list, threshold flags
+- [Lizard README] - CLI reference, language list, threshold flags
 
 [Lizard README]: https://github.com/terryyin/lizard

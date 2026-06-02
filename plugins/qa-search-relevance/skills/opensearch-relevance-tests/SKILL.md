@@ -25,17 +25,17 @@ Relevance Workbench UI.
 - Team standardized on OpenSearch (often AWS shops, often migrated
   from Elasticsearch ≤ 7.10).
 - Adopting OpenSearch's neural search or hybrid search features.
-- Migration test between Elasticsearch and OpenSearch — relevance
+- Migration test between Elasticsearch and OpenSearch - relevance
   parity must hold.
 
-## Step 1 — Reuse judgment list format
+## Step 1 - Reuse judgment list format
 
 OpenSearch's `_rank_eval` accepts the same JSON as Elasticsearch's.
 See [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md)
 Step 1 for judgment list format + sourcing patterns. The CSV
 `(query, doc_id, rating)` schema is reusable.
 
-## Step 2 — Submit `_rank_eval` request
+## Step 2 - Submit `_rank_eval` request
 
 ```http
 POST products/_rank_eval
@@ -56,21 +56,21 @@ POST products/_rank_eval
 Endpoint + metrics identical to Elasticsearch (per the [OpenSearch
 search-relevance docs]).
 
-## Step 3 — Search Relevance Workbench
+## Step 3 - Search Relevance Workbench
 
 Per the [OpenSearch search-relevance docs], the Search Relevance
 Workbench plugin (UI in OpenSearch Dashboards) provides:
 
-- **Query Set Management** — group queries logically (e.g., "head
+- **Query Set Management** - group queries logically (e.g., "head
   queries", "long-tail queries").
-- **Judgment management** — pairwise UI for judges + bulk import.
-- **Experiments** — run query-template A/B against the same
+- **Judgment management** - pairwise UI for judges + bulk import.
+- **Experiments** - run query-template A/B against the same
   judgment list; compare metric scores side-by-side.
 
 Workbench experiments are the easiest pre-tuning baseline-and-compare
 workflow.
 
-## Step 4 — Neural search query
+## Step 4 - Neural search query
 
 OpenSearch supports k-NN vector search natively. Test setup:
 
@@ -124,7 +124,7 @@ def test_neural_recall_at_10():
 
 Pair with `vector-search-precision-tests` for HNSW parameter tuning.
 
-## Step 5 — Hybrid (BM25 + neural)
+## Step 5 - Hybrid (BM25 + neural)
 
 ```http
 POST my_index/_search?search_pipeline=hybrid_pipeline
@@ -168,7 +168,7 @@ def test_hybrid_weight_change_shifts_results():
     assert bm25_heavy_results != neural_heavy_results
 ```
 
-## Step 6 — Per-query metric regression (same as ES)
+## Step 6 - Per-query metric regression (same as ES)
 
 ```python
 def test_no_query_drops_more_than_10_percent():
@@ -181,7 +181,7 @@ def test_no_query_drops_more_than_10_percent():
         assert delta >= -0.10, f"{q_id} dropped {delta:.2f}"
 ```
 
-## Step 7 — ES → OS migration parity test
+## Step 7 - ES → OS migration parity test
 
 Run the same judgment list against both clusters; metric scores
 should be within ε:
@@ -220,10 +220,10 @@ should match. Differences point to subtle config drift.
 
 ## References
 
-- [OpenSearch search-relevance docs] — workbench, neural, hybrid
-- [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) —
+- [OpenSearch search-relevance docs] - workbench, neural, hybrid
+- [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) - 
   sister skill (compatible Rank Eval API + judgment format)
-- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) —
+- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) - 
   vector search precision/recall tooling
 - [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md)
 

@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# go-rust-test-author — evals
+# go-rust-test-author - evals
 
 Companion eval cases for [`go-rust-test-author`](../../go-rust-test-author.md).
 Three cases covering happy path (Go) + branch (Rust) + adversarial
@@ -14,10 +14,10 @@ the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Run dates recorded below
-are the eval-authoring date — each eval is designed to be re-run against
+are the eval-authoring date - each eval is designed to be re-run against
 each tier.
 
-## Eval 1 — happy path — Go project with stdlib `testing` → `func TestXxx(t *testing.T)` + table cases via `t.Run`
+## Eval 1 - happy path - Go project with stdlib `testing` → `func TestXxx(t *testing.T)` + table cases via `t.Run`
 
 **Input:**
 
@@ -60,7 +60,7 @@ introduce Ginkgo/Gomega imports. Does NOT modify `user.go`.
 `Describe(` OR `RegisterFailHandler` OR `Expect(` (no Ginkgo/Gomega
 imports).
 
-## Eval 2 — branch — Rust project with `rstest` in dev-deps → inline `#[cfg(test)] mod tests` + `#[rstest]` + `#[case]`
+## Eval 2 - branch - Rust project with `rstest` in dev-deps → inline `#[cfg(test)] mod tests` + `#[rstest]` + `#[case]`
 
 **Input:**
 
@@ -91,10 +91,10 @@ rstest = "0.26"
 `rstest` as the framework (in `[dev-dependencies]`). Emits an inline
 `#[cfg(test)] mod tests { use super::*; use rstest::rstest; ... }`
 block appended to `src/user_id.rs` (the conventional Rust unit-test
-location — NOT a new file under `tests/`). The test uses `#[rstest]`
+location - NOT a new file under `tests/`). The test uses `#[rstest]`
 with at least two `#[case(...)]` attributes covering an empty string
 and a whitespace-only string. The test body uses `assert!(!...)` (or
-`assert_eq!(..., false)`) — NOT a bare `assert!(true)`. Does NOT
+`assert_eq!(..., false)`) - NOT a bare `assert!(true)`. Does NOT
 introduce a `tests/` integration-test file. Does NOT install/add
 dependencies.
 
@@ -105,7 +105,7 @@ contains `#[cfg(test)]` AND `mod tests` AND `use super::*` AND
 file at `tests/user_id.rs` AND does NOT contain `[dev-dependencies]`
 edits to `Cargo.toml`.
 
-## Eval 3 — adversarial — project root has BOTH `go.mod` AND `Cargo.toml` → refuse and ask which language to target
+## Eval 3 - adversarial - project root has BOTH `go.mod` AND `Cargo.toml` → refuse and ask which language to target
 
 **Input:**
 
@@ -149,7 +149,7 @@ the language` / `polyglot`). Output does NOT create or modify any
   modify production code outside the target file (Eval 2 explicitly
   appends to `src/user_id.rs` because Rust's inline-unit-test
   convention puts `#[cfg(test)] mod tests` at the bottom of the source
-  file — this is allowed by the agent's "never modifies existing
+  file - this is allowed by the agent's "never modifies existing
   tests" rule because the appended block IS the new test).
 - Eval cases were authored 2026-05-24 against the v3.0 framework's D7
   sub-checks (≥3 cases, ≥1 adversarial, concrete pass conditions).

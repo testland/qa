@@ -1,6 +1,6 @@
 ---
 name: jazzer-jvm-fuzzing
-description: "Author and run Jazzer — Code Intelligence's JVM coverage-guided fuzzer built on libFuzzer. Covers Maven / Gradle / standalone JAR installation, the @FuzzTest annotation (JUnit 5 integration), typed parameter mutation (String, primitives, byte[]), built-in JVM sanitisers (SSRF / path traversal / OS command injection / deserialization gadget / ReDoS), and the JAZZER_FUZZ=1 env var to switch between regression and fuzzing modes. Use for fuzz testing Java / Kotlin libraries — particularly effective against parsing, deserialization, and HTTP-handling code."
+description: "Author and run Jazzer - Code Intelligence's JVM coverage-guided fuzzer built on libFuzzer. Covers Maven / Gradle / standalone JAR installation, the @FuzzTest annotation (JUnit 5 integration), typed parameter mutation (String, primitives, byte[]), built-in JVM sanitisers (SSRF / path traversal / OS command injection / deserialization gadget / ReDoS), and the JAZZER_FUZZ=1 env var to switch between regression and fuzzing modes. Use for fuzz testing Java / Kotlin libraries - particularly effective against parsing, deserialization, and HTTP-handling code."
 rating: 23
 d6: 4
 archetype: S1
@@ -14,7 +14,7 @@ Distinct from C/C++ fuzzers: Jazzer (per
 [github.com/CodeIntelligenceTesting/jazzer](https://github.com/CodeIntelligenceTesting/jazzer))
 ships **JVM-level sanitisers**
 that detect security-sensitive misuse of standard APIs
-(deserialization gadgets, SSRF, ReDoS) — not memory-safety bugs
+(deserialization gadgets, SSRF, ReDoS) - not memory-safety bugs
 (the JVM handles those).
 
 For corpus discipline see
@@ -23,10 +23,10 @@ For corpus discipline see
 ## When to use
 
 - Fuzz testing Java / Kotlin / Scala / Groovy libraries.
-- Targets handling user input — parsers, deserialisers, HTTP
+- Targets handling user input - parsers, deserialisers, HTTP
   handlers, URL constructors (Jazzer's JVM sanitisers catch
   injection bugs).
-- JUnit 5-anchored projects — Jazzer integrates as a JUnit test
+- JUnit 5-anchored projects - Jazzer integrates as a JUnit test
   type.
 
 ## Authoring
@@ -122,12 +122,12 @@ void fuzzComplex(FuzzedDataProvider data) {
 
 ## Running
 
-### Modes — regression vs fuzzing
+### Modes - regression vs fuzzing
 
 Per Jazzer docs:
 
 - **Regression mode** (default): runs the test against any saved
-  inputs in `src/test/resources/<TestClass>/<methodName>/` —
+  inputs in `src/test/resources/<TestClass>/<methodName>/` - 
   fast, deterministic.
 - **Fuzzing mode**: set `JAZZER_FUZZ=1` env var; explores new
   inputs.
@@ -182,7 +182,7 @@ misuse:
 | **Naming context** | JNDI lookup with untrusted name |
 | **SQL injection (via Hibernate / direct JDBC)** | Query string concatenation |
 
-These run automatically — no additional configuration. Disable
+These run automatically - no additional configuration. Disable
 selectively via `--disabled_hooks=...`.
 
 ## Parsing results
@@ -200,7 +200,7 @@ Reproducer input written to: src/test/resources/com/example/ParserFuzzTest/fuzzD
 ```
 
 The reproducer is saved to `src/test/resources/...` as part of
-the test fixtures — commit it for regression coverage.
+the test fixtures - commit it for regression coverage.
 
 ## CI integration
 
@@ -237,25 +237,25 @@ the test fixtures — commit it for regression coverage.
 ## Limitations
 
 - **JVM startup cost.** Each fuzz iteration shares the JVM, so
-  startup is amortised — but JIT warmup still affects early
+  startup is amortised - but JIT warmup still affects early
   iterations.
 - **Allocation-heavy targets slow.** GC dominates iteration time
   for allocation-heavy code.
 - **Native (JNI) code not coverage-instrumented.** For native
   bug-hunting in JNI libraries use libFuzzer + JNI wrappers.
 - **`@FuzzTest` on Kotlin works** but parameter mutation respects
-  Kotlin nullability — null-tolerant Kotlin parameters fuzz with
+  Kotlin nullability - null-tolerant Kotlin parameters fuzz with
   null values too.
-- **Distinguishes "test failure" from "fuzz finding"** loosely —
+- **Distinguishes "test failure" from "fuzz finding"** loosely - 
   any `AssertionError` is a finding; tune assertions deliberately.
 
 ## References
 
-- Jazzer —
+- Jazzer - 
   [github.com/CodeIntelligenceTesting/jazzer](https://github.com/CodeIntelligenceTesting/jazzer).
-- Jazzer junit dependency —
+- Jazzer junit dependency - 
   [search.maven.org/artifact/com.code-intelligence/jazzer-junit](https://search.maven.org/artifact/com.code-intelligence/jazzer-junit).
-- LLVM libFuzzer (underlying) —
+- LLVM libFuzzer (underlying) - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
 - Composes:
   [`corpus-management-reference`](../corpus-management-reference/SKILL.md).

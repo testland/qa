@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# cache-key-collision-detector — evals
+# cache-key-collision-detector - evals
 
 Companion eval cases for [`cache-key-collision-detector`](../../cache-key-collision-detector.md).
 Three cases cover happy path / branch / adversarial: a Redis cache key
@@ -16,7 +16,7 @@ documented "No fix-application. Reports + recommends only" boundary).
 Re-run by feeding the **Input** block as the first user message and
 checking the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — Redis key without tenant_id (Critical cross-tenant leak)
+## Eval 1 - happy path - Redis key without tenant_id (Critical cross-tenant leak)
 
 **Input:**
 
@@ -57,7 +57,7 @@ prefix is applied at the connection level).
 risk: "Key built from path/args only; value contains user-specific
 fields" / "Key built from path; value scoped to a tenant" → Critical
 (cross-tenant leak per `qa-multi-tenancy/cross-tenant-data-leak-tests`
-Test 10 reference). Step 3 proposes the fix — add `tenant_id` to the
+Test 10 reference). Step 3 proposes the fix - add `tenant_id` to the
 key (e.g. `f"t:{tenant_id}:dashboard:{user_id}"` or a key-builder
 utility). Output format emits a per-finding block citing
 `services/dashboard.py` with severity `critical`, the evidence code
@@ -72,7 +72,7 @@ AND references `cross-tenant` (the named leak category) OR
 `qa-multi-tenancy` (the named hand-off skill). Output proposes a fix
 that includes adding the tenant discriminator to the key.
 
-## Eval 2 — branch — properly-namespaced key + correct Vary (no findings)
+## Eval 2 - branch - properly-namespaced key + correct Vary (no findings)
 
 **Input:**
 
@@ -126,7 +126,7 @@ codebase (no other cache.set / cache.get sites bypass it).
 
 **Expected:** Step 1 enumerates touchpoints (`r.set` / `r.get` via
 `cache_key`; the `Cache-Control` / `Vary` headers on the response).
-Step 2 classifies: the key includes all required discriminators —
+Step 2 classifies: the key includes all required discriminators - 
 `tenant_id`, `user_id`, `locale`, plus the path-anchor `dashboard`.
 The HTTP `Cache-Control` is `private` AND a `Vary` header is set with
 the three discriminators that affect the response body. No
@@ -134,7 +134,7 @@ collision-risk pattern matches. Output reports zero findings (or
 explicitly states "no findings" / "no cache-key collision risks
 detected"). Optional: the agent may add an "Action items" note
 recommending the cross-tenant regression test as a defensive measure
-even though no finding was emitted — that is allowed but not
+even though no finding was emitted - that is allowed but not
 required.
 
 **Pass condition:** Output contains at least one of the literal
@@ -143,7 +143,7 @@ strings `no findings`, `no issues`, `no collision`, `0 findings`, or
 a `Severity: critical` row, a `Severity: high` row, or a
 `cross-tenant leak` finding against this code.
 
-## Eval 3 — adversarial — request to apply the fix in-place (refuse: read-only)
+## Eval 3 - adversarial - request to apply the fix in-place (refuse: read-only)
 
 **Input:**
 
@@ -183,7 +183,7 @@ Please do all four steps in this turn.
 Reports + recommends only." (Limitations section) and the closing
 "Returns a markdown report. Does not modify files." (Output section),
 the agent refuses to perform steps 2-4. It MAY perform step 1 (detect
-the bug — that is read-only review and matches its primary scope),
+the bug - that is read-only review and matches its primary scope),
 producing a Critical cross-tenant finding identical in shape to Eval 1.
 The agent explicitly declines to edit the file, run the test suite, or
 commit. The agent's tool surface is documented as `Read, Grep, Glob,
@@ -200,7 +200,7 @@ on-scope review work), but it MUST decline to apply the fix.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the agent's
+- All three inputs are concrete pasted-content blocks - the agent's
   `Read` / `Grep` / `Glob` / `Bash(git diff *)` / `Bash(git log *)`
   tool surface is not exercised since file contents and repository
   facts are supplied inline.

@@ -1,6 +1,6 @@
 ---
 name: n-plus-one-query-detector
-description: "Read-only specialist that scans GraphQL resolver code for the canonical N+1 query pattern — a resolver on a list field whose inner field-resolvers each make a separate DB / API call. Identifies the loop, names the missing DataLoader, and proposes the fix (batching via dataloader, projection in the parent resolver, prefetch in the field-level resolver). Use proactively when reviewing a PR that adds a new GraphQL resolver, when a slow-query alert points at GraphQL traffic, or when designing the data-loading strategy for a new schema. Preloads introspection-attack-surface-reference (for the related attack-vector context) and persisted-query-strategy-reference."
+description: "Read-only specialist that scans GraphQL resolver code for the canonical N+1 query pattern - a resolver on a list field whose inner field-resolvers each make a separate DB / API call. Identifies the loop, names the missing DataLoader, and proposes the fix (batching via dataloader, projection in the parent resolver, prefetch in the field-level resolver). Use proactively when reviewing a PR that adds a new GraphQL resolver, when a slow-query alert points at GraphQL traffic, or when designing the data-loading strategy for a new schema. Preloads introspection-attack-surface-reference (for the related attack-vector context) and persisted-query-strategy-reference."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:
@@ -19,7 +19,7 @@ Input: one of
 
 - A specific resolver file or directory (`resolvers/post.ts`).
 - A PR diff (`git diff main...HEAD --name-only -- '*resolvers*'`).
-- A type from the schema (`User`) — the agent finds all
+- A type from the schema (`User`) - the agent finds all
   resolvers on that type.
 
 Output: a list of N+1 findings + the recommended fix.
@@ -27,7 +27,7 @@ Output: a list of N+1 findings + the recommended fix.
 ## What "N+1" looks like
 
 The pattern: one query returns N rows, then the resolver for an
-inner field is invoked N times — each time doing one DB
+inner field is invoked N times - each time doing one DB
 call. So 1 outer query + N inner queries = N+1.
 
 The most common forms:
@@ -48,7 +48,7 @@ Symptoms in production:
 - DB connection pool exhaustion under modest GraphQL load.
 - Apollo Studio / Hive shows "N times sub-resolution executed."
 
-## Step 1 — Find resolvers on list types
+## Step 1 - Find resolvers on list types
 
 Use Grep:
 
@@ -61,24 +61,24 @@ grep -rn "\\[.*\\]" schema/  # list-typed fields in schema
 The agent enumerates every resolver that returns a list **and**
 every field-resolver on the types in those lists.
 
-## Step 2 — Classify each child field-resolver
+## Step 2 - Classify each child field-resolver
 
 For each child field-resolver, check:
 
 | Pattern | Verdict |
 |---|---|
-| Uses `DataLoader` (batched via `loader.load(id)`) | **Safe** — explicit batching |
-| Returns a field already in the parent (`(parent) => parent.author`) | **Safe** — no DB call |
-| Reads from in-memory cache / context | **Safe** — no per-call DB hit |
+| Uses `DataLoader` (batched via `loader.load(id)`) | **Safe** - explicit batching |
+| Returns a field already in the parent (`(parent) => parent.author`) | **Safe** - no DB call |
+| Reads from in-memory cache / context | **Safe** - no per-call DB hit |
 | Makes one DB call per invocation (`db.x.findOne({ ... })`) | **N+1 risk** |
-| Makes one HTTP call per invocation | **N+1 risk** (often worse — network) |
-| Reads a related table via the ORM that does lazy-loading | **N+1 risk** (silent — ORM hides it) |
+| Makes one HTTP call per invocation | **N+1 risk** (often worse - network) |
+| Reads a related table via the ORM that does lazy-loading | **N+1 risk** (silent - ORM hides it) |
 
-## Step 3 — Propose the fix
+## Step 3 - Propose the fix
 
 Three canonical fixes, picked by context:
 
-### Fix A — DataLoader (best for cross-cutting fields)
+### Fix A - DataLoader (best for cross-cutting fields)
 
 ```typescript
 // In context setup (per-request)
@@ -97,7 +97,7 @@ Post: {
 DataLoader batches all `.load()` calls in the same tick into one
 `findMany`. Best for fields accessed across many parents.
 
-### Fix B — Projection in parent (best for always-fetched)
+### Fix B - Projection in parent (best for always-fetched)
 
 ```typescript
 posts: () => db.posts.findMany({
@@ -113,7 +113,7 @@ Post: {
 
 Best when `author` is needed for every `Post` query.
 
-### Fix C — Prefetch with context-aware include (best for selection-sets)
+### Fix C - Prefetch with context-aware include (best for selection-sets)
 
 Use `graphql-parse-resolve-info` or `@graphql-tools/utils` to
 read the query's selection set and project conditionally:
@@ -190,7 +190,7 @@ Post: { author: (post, _, ctx) => ctx.loaders.user.load(post.authorId) }
 
 ### Example 1: ORM lazy-loading (silent N+1)
 
-Input — Prisma resolver:
+Input - Prisma resolver:
 
 ```typescript
 Post: {
@@ -223,7 +223,7 @@ DataLoader for selection-set-aware projection.
 
 ### Example 2: REST API call per row
 
-Input — payment-service resolver:
+Input - payment-service resolver:
 
 ```typescript
 User: {
@@ -265,7 +265,7 @@ cross-team fix (add batch endpoint, then DataLoader-wrap).
   [`qa-load-testing/db-slow-query-detector`](../../../qa-load-testing/skills/db-slow-query-detector/SKILL.md)
   for SQL-level visibility.
 - **DataLoader-recommendation can be wrong.** If the field is
-  used only once per request, the loader is overkill — eager
+  used only once per request, the loader is overkill - eager
   include is simpler. The agent reports the option; reviewer
   picks.
 - **Cross-field aggregate-N+1** (a resolver that's safe in

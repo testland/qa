@@ -19,7 +19,7 @@ information" with three command-line utilities: **`geninfo`**
 [lcov]: https://github.com/linux-test-project/lcov
 
 The toolchain is "language-agnostic (via converter scripts:
-llvm2lcov, py2lcov, perl2lcov, xml2lcov)" ([lcov-readme][lcov]) —
+llvm2lcov, py2lcov, perl2lcov, xml2lcov)" ([lcov-readme][lcov]) - 
 LCOV `.info` is the **lingua franca** every coverage UI (Coveralls,
 Codecov, Codacy, SonarQube, in-house dashboards) ingests.
 
@@ -36,7 +36,7 @@ team can gate PRs without running the full HTML generation step.
   via `gcov` → `lcov`).
 - A custom coverage UI / Slack bot needs structured input.
 
-## Step 1 — `.info` format reference
+## Step 1 - `.info` format reference
 
 Per [lcov-readme][lcov], the LCOV coverage data format uses these
 record types:
@@ -61,7 +61,7 @@ Per record, `BRDA`'s fourth value `<taken>` is the hit count for
 that branch arm or `-` if the branch was never reached (the
 preceding line wasn't executed).
 
-## Step 2 — Sample `.info` block
+## Step 2 - Sample `.info` block
 
 ```
 TN:
@@ -90,7 +90,7 @@ Reading: `cart.ts` has 2 functions, 1 hit (50% function coverage); 5
 lines, 2 hit (40% line); 2 branches, 1 hit (50% branch).
 `removeItem` was never called.
 
-## Step 3 — Parse
+## Step 3 - Parse
 
 ```python
 # scripts/parse_lcov.py
@@ -140,12 +140,12 @@ def parse_lcov(path):
     return files
 ```
 
-**Don't trust the FNF/FNH/LF/LH/BRF/BRH summary fields blindly** —
+**Don't trust the FNF/FNH/LF/LH/BRF/BRH summary fields blindly** - 
 some buggy emitters produce summaries that don't match the per-line
 data. For correctness, recompute from `lines`, `functions`,
 `branches`.
 
-## Step 4 — Diff vs baseline
+## Step 4 - Diff vs baseline
 
 ```python
 def coverage_diff(current, baseline):
@@ -173,14 +173,14 @@ def pct(num, denom):
 The interesting outputs are **drops** (line_now < line_then) and
 **new files with sub-threshold coverage** (is_new and line_now < gate).
 
-## Step 5 — Gate
+## Step 5 - Gate
 
 A defensible gate has three rules:
 
 1. **Whole-repo line coverage MAY drop by at most N pp** (typically
-   N = 0.5 — guards against runaway erosion without blocking
+   N = 0.5 - guards against runaway erosion without blocking
    refactors).
-2. **No file MAY drop more than M pp** (typically M = 5 — calls out
+2. **No file MAY drop more than M pp** (typically M = 5 - calls out
    the specific file that lost coverage).
 3. **New files MUST hit threshold** (typically 80% line, 70%
    branch).
@@ -205,7 +205,7 @@ Per-file gates beat whole-repo gates: an aggregate drop hides which
 file caused it. Per-file output gives the reviewer a direct
 target.
 
-## Step 6 — CI shape
+## Step 6 - CI shape
 
 ```yaml
 - name: Run tests with LCOV reporter
@@ -253,7 +253,7 @@ target.
 - **No file-level "this is a test file" marker.** Filter by path
   convention.
 - **No PR-context awareness.** The format doesn't know about
-  `git diff` — pair with `git diff --name-only` to scope coverage
+  `git diff` - pair with `git diff --name-only` to scope coverage
   changes to PR-touched files when needed.
 - **Branch coverage shape varies.** Some emitters report
   per-condition (multi-arm `BRDA`); some report per-decision
@@ -261,14 +261,13 @@ target.
 
 ## References
 
-- [lcov-readme][lcov] — LCOV toolchain (geninfo / lcov / genhtml),
+- [lcov-readme][lcov] - LCOV toolchain (geninfo / lcov / genhtml),
   `.info` format keywords, language-agnostic converters.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) — sibling
+- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - sibling
   for the Cobertura XML format (same PR-gating shape, different
   parser).
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) —
+- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   build-an-X workflow that consumes parsed coverage and emits a PR
   comment with file-level deltas.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md)
-  — picks which uncovered branches to target first using the parsed
+- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - picks which uncovered branches to target first using the parsed
   output.

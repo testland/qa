@@ -234,7 +234,7 @@ jobs:
 - **Permission rules are SQL-translated.** Some rules that look
   right in metadata may produce slow SQL; performance is a
   separate test concern (use `EXPLAIN` queries via Hasura's
-  introspection — admin-only).
+  introspection - admin-only).
 - **Action / Remote-schema testing.** Hasura's Actions and
   Remote Schemas delegate to other services; this skill tests
   the Hasura → upstream contract, not the upstream itself.

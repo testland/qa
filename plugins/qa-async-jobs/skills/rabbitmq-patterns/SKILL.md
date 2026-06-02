@@ -1,6 +1,6 @@
 ---
 name: rabbitmq-patterns
-description: "Tests RabbitMQ producer/consumer interactions — supports AMQP 0.9.1 and AMQP 1.0 protocols across 6 tutorial patterns (Hello World, Work Queues, Publish/Subscribe, Routing, Topics, RPC) plus Publisher Confirms; consumer ack/nack/requeue patterns; durable queues + persistent messages; quorum vs classic queue; tests via Testcontainers RabbitMQ image or LocalStack-equivalent. Use when the user works with RabbitMQ producers/consumers (pika, amqplib, RabbitMQ.Client, spring-amqp) and needs unit/integration tests."
+description: "Tests RabbitMQ producer/consumer interactions - supports AMQP 0.9.1 and AMQP 1.0 protocols across 6 tutorial patterns (Hello World, Work Queues, Publish/Subscribe, Routing, Topics, RPC) plus Publisher Confirms; consumer ack/nack/requeue patterns; durable queues + persistent messages; quorum vs classic queue; tests via Testcontainers RabbitMQ image or LocalStack-equivalent. Use when the user works with RabbitMQ producers/consumers (pika, amqplib, RabbitMQ.Client, spring-amqp) and needs unit/integration tests."
 rating: 22
 d6: 4
 archetype: S1
@@ -26,8 +26,8 @@ six tutorials covering progressively more sophisticated patterns:
 | RPC | Request-reply via reply-to + correlation-id |
 
 All six tutorials exist in both AMQP 0.9.1 and AMQP 1.0 variants per
-[rmq-tut][rmq-tut]; AMQP 0.9.1 also has a 7th tutorial — Publisher
-Confirms — for delivery guarantees.
+[rmq-tut][rmq-tut]; AMQP 0.9.1 also has a 7th tutorial - Publisher
+Confirms - for delivery guarantees.
 
 Per [rmq-tut][rmq-tut]: "Executable versions of these tutorials [are
 open source](https://github.com/rabbitmq/rabbitmq-tutorials)."
@@ -42,7 +42,7 @@ open source](https://github.com/rabbitmq/rabbitmq-tutorials)."
 - A test verifies ack semantics, retry-via-requeue, dead-letter
   exchanges, or publisher confirms.
 
-## Step 1 — Test approach
+## Step 1 - Test approach
 
 Three approaches:
 
@@ -55,7 +55,7 @@ Three approaches:
 Pick Testcontainers for integration tests; mocking for pure
 producer-logic unit tests.
 
-## Step 2 — Testcontainers setup (Python)
+## Step 2 - Testcontainers setup (Python)
 
 ```python
 from testcontainers.rabbitmq import RabbitMqContainer
@@ -77,7 +77,7 @@ def channel(rabbitmq):
 (Testcontainers cleans up the container automatically when the
 fixture scope ends.)
 
-## Step 3 — Hello World pattern (basic publish + consume)
+## Step 3 - Hello World pattern (basic publish + consume)
 
 Producer side:
 
@@ -103,7 +103,7 @@ def test_publish_order(channel):
     assert json.loads(body) == {"id": 1}
 ```
 
-## Step 4 — Test consumer ack / nack / requeue
+## Step 4 - Test consumer ack / nack / requeue
 
 ```python
 def consume_order(channel):
@@ -138,7 +138,7 @@ def test_consumer_requeues_on_transient_error(channel, mocker):
     assert body == b'msg-1'
 ```
 
-## Step 5 — Test dead-letter exchange (DLX)
+## Step 5 - Test dead-letter exchange (DLX)
 
 ```python
 channel.exchange_declare(exchange='dlx', exchange_type='direct', durable=True)
@@ -158,7 +158,7 @@ channel.queue_declare(
 After `basic_nack(requeue=False)` or message TTL expiry, the message
 routes to `orders-dlq`. Test by consuming from the DLQ.
 
-## Step 6 — Publisher Confirms
+## Step 6 - Publisher Confirms
 
 Per the AMQP 0.9.1 Publisher Confirms tutorial (per [rmq-tut][rmq-tut]):
 
@@ -181,7 +181,7 @@ except pika.exceptions.UnroutableError:
 For tests asserting publisher confirms succeed, simply enable confirm
 mode and assert no exception.
 
-## Step 7 — Quorum queue testing
+## Step 7 - Quorum queue testing
 
 Quorum queues (since RabbitMQ 3.8) replace mirrored classic queues
 for HA. Test pattern is identical to classic queues at the API
@@ -196,10 +196,10 @@ channel.queue_declare(
 ```
 
 Quorum-specific testing (e.g., partition-tolerance) requires
-multi-node clusters — Jepsen-style; out of scope for typical
+multi-node clusters - Jepsen-style; out of scope for typical
 integration tests.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 services:
@@ -224,13 +224,13 @@ debugging in CI logs.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Use `auto_ack=True` for tests of error paths | Message ack-ed before processing → no requeue test possible | `auto_ack=False` (Step 4) |
-| Test publisher without `confirm_delivery()` | Can't assert delivery happened — broker may have dropped the message | Enable confirm mode (Step 6) |
+| Test publisher without `confirm_delivery()` | Can't assert delivery happened - broker may have dropped the message | Enable confirm mode (Step 6) |
 | Skip queue cleanup between tests | Stale messages cause flaky assertions | `queue_purge` or per-test queue names |
 | Use `durable=False` on production-mirrored queues in tests | Tests pass; production loses messages on broker restart | Match production queue config in tests |
 
 ## Limitations
 
-- AMQP 0.9.1 vs AMQP 1.0 protocol differences — pick one per
+- AMQP 0.9.1 vs AMQP 1.0 protocol differences - pick one per
   service; tutorials cover both per [rmq-tut][rmq-tut].
 - Multi-node cluster behavior (network partitions, leader
   election) is out of scope for typical integration tests; use
@@ -242,20 +242,20 @@ debugging in CI logs.
 
 ## References
 
-- [rmq-tut][rmq-tut] — six canonical tutorials (Hello World, Work
+- [rmq-tut][rmq-tut] - six canonical tutorials (Hello World, Work
   Queues, Publish/Subscribe, Routing, Topics, RPC) + Publisher
   Confirms; covers AMQP 0.9.1 and AMQP 1.0
-- github.com/rabbitmq/rabbitmq-tutorials — executable versions of
+- github.com/rabbitmq/rabbitmq-tutorials - executable versions of
   the tutorials
-- rabbitmq.com/docs — full RabbitMQ documentation
-- testcontainers.com/modules/rabbitmq — Testcontainers RabbitMQ
+- rabbitmq.com/docs - full RabbitMQ documentation
+- testcontainers.com/modules/rabbitmq - Testcontainers RabbitMQ
   module
 - [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
   [`celery-tests`](../celery-tests/SKILL.md),
   [`bullmq-tests`](../bullmq-tests/SKILL.md),
-  [`sqs-patterns`](../sqs-patterns/SKILL.md) — sister tools (Celery
+  [`sqs-patterns`](../sqs-patterns/SKILL.md) - sister tools (Celery
   often runs on RabbitMQ; the celery-tests skill complements this
   for Python-Celery deployments)
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) —
+- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
   critical companion: requeue + redelivery semantics need
   idempotent consumers

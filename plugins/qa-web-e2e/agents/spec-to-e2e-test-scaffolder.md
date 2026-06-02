@@ -1,6 +1,6 @@
 ---
 name: spec-to-e2e-test-scaffolder
-description: "Builder agent that takes a user story or test-case row plus a target framework (Playwright / Cypress / Selenium / WebdriverIO) and outputs an E2E test scaffold with explicit `// TODO` placeholders for selectors and assertions — never inventing locators, never asserting against fabricated DOM. Sibling of `playwright-codegen-reviewer` (which refines existing codegen output, downstream); this agent is upstream — it generates the scaffold to be reviewed. Always recommends `assertion-quality-reviewer` and `e2e-selector-quality-critic` (in qa-test-review) and `ai-test-shallow-coverage-critic` (in qa-ai-assisted) as required downstream gates. Use when starting a new E2E test from a story or matrix row and the team wants a clean skeleton instead of dropping into raw codegen."
+description: "Builder agent that takes a user story or test-case row plus a target framework (Playwright / Cypress / Selenium / WebdriverIO) and outputs an E2E test scaffold with explicit `// TODO` placeholders for selectors and assertions - never inventing locators, never asserting against fabricated DOM. Sibling of `playwright-codegen-reviewer` (which refines existing codegen output, downstream); this agent is upstream - it generates the scaffold to be reviewed. Always recommends `assertion-quality-reviewer` and `e2e-selector-quality-critic` (in qa-test-review) and `ai-test-shallow-coverage-critic` (in qa-ai-assisted) as required downstream gates. Use when starting a new E2E test from a story or matrix row and the team wants a clean skeleton instead of dropping into raw codegen."
 tools: "Read, Write, Edit, Grep, Glob, Bash(npx playwright codegen *), Bash(npm test --dry-run *)"
 model: sonnet
 skills:
@@ -26,7 +26,7 @@ Inputs (halts if a required input is missing):
 | **Target URL** | The base URL the test will hit | yes |
 | **Page Object dir + test-config** | Reused if present; informs version + locator conventions | no |
 
-## Step 1 — Detect framework version and conventions
+## Step 1 - Detect framework version and conventions
 
 ```bash
 # For Playwright
@@ -39,7 +39,7 @@ cat package.json | jq -r '.devDependencies["@wdio/cli"], .devDependencies["selen
 
 If `playwright.config.ts` declares `testIdAttribute: 'data-qa'`, use `getByTestId` with that attribute; otherwise fall back to framework defaults (https://playwright.dev/docs/locators).
 
-## Step 2 — Map the test case to the framework's idioms
+## Step 2 - Map the test case to the framework's idioms
 
 The scaffolder selects the **correct test-layer construct** per framework and the **recommended locator pattern** per https://playwright.dev/docs/locators (Playwright's official priority: `getByRole` > `getByText` > `getByLabel` > `getByPlaceholder` > `getByTestId` > CSS / XPath; CSS and XPath flagged as a "bad practice that leads to unstable tests"):
 
@@ -47,23 +47,23 @@ The scaffolder selects the **correct test-layer construct** per framework and th
 |---|---|---|---|
 | **Playwright** | `test('<title>', async ({ page }) => …)` | `page.getByRole('button', { name: 'Add to cart' })` | `expect(locator).toHaveText(...)` web-first |
 | **Cypress** | `it('<title>', () => …)` | `cy.findByRole(...)` (with `@testing-library/cypress`) or `cy.get('[data-cy=…]')` | `cy.get(...).should('have.text', …)` |
-| **Selenium** | `it(...)` (Mocha) or `@Test` (JUnit) | `By.cssSelector('[data-testid=…]')` — flag as inferior to accessibility locators | `assertEquals(...)` after explicit fetch |
+| **Selenium** | `it(...)` (Mocha) or `@Test` (JUnit) | `By.cssSelector('[data-testid=…]')` - flag as inferior to accessibility locators | `assertEquals(...)` after explicit fetch |
 | **WebdriverIO** | `it('<title>', async () => …)` | `$('aria/Add to cart')` or `$('=Add to cart')` accessibility/text locators | `expect(elem).toHaveText(...)` |
 
 For Selenium specifically, the agent emits a comment recommending Playwright or WebdriverIO for new code, citing the [TestDino flake benchmark](https://testdino.com/blog/flaky-test-benchmark) ("50% fewer flaky tests" on Selenium → Playwright migrations).
 
-## Step 3 — Emit the scaffold
+## Step 3 - Emit the scaffold
 
 The scaffold has six required parts:
 
-1. **Imports** — framework-canonical, no inventions.
-2. **`describe` / `test.describe` block** — title from the test-case `Title`.
-3. **`beforeEach` / hooks** — only state declared in `Precondition`.
-4. **`test` / `it` body** — Arrange / Act / Assert; each step gets a `// Step N: <declarative>` comment plus the framework call.
-5. **`// TODO: replace with real selector`** — at every locator the agent could not derive with certainty. Never invents `data-testid` / role names / placeholder text. "Add to cart button" → `getByRole('button', { name: 'Add to cart' }) /* TODO: confirm */`.
-6. **Hand-off footer** — instructs the engineer to run once, then pair with `assertion-quality-reviewer`, `e2e-selector-quality-critic`, and (once the suite grows) `ai-test-shallow-coverage-critic`.
+1. **Imports** - framework-canonical, no inventions.
+2. **`describe` / `test.describe` block** - title from the test-case `Title`.
+3. **`beforeEach` / hooks** - only state declared in `Precondition`.
+4. **`test` / `it` body** - Arrange / Act / Assert; each step gets a `// Step N: <declarative>` comment plus the framework call.
+5. **`// TODO: replace with real selector`** - at every locator the agent could not derive with certainty. Never invents `data-testid` / role names / placeholder text. "Add to cart button" → `getByRole('button', { name: 'Add to cart' }) /* TODO: confirm */`.
+6. **Hand-off footer** - instructs the engineer to run once, then pair with `assertion-quality-reviewer`, `e2e-selector-quality-critic`, and (once the suite grows) `ai-test-shallow-coverage-critic`.
 
-### Worked example — Playwright scaffold
+### Worked example - Playwright scaffold
 
 Input test-case row:
 
@@ -100,7 +100,7 @@ test.describe('CART-142 — Add to cart', () => {
 // ai-test-shallow-coverage-critic — same block as Step 3.
 ```
 
-## Step 4 — Compose with codegen for selector resolution
+## Step 4 - Compose with codegen for selector resolution
 
 Not a recorder. For unresolved `TODO`s, emits `npx playwright codegen <base-url>/<path>`; recording is refactored by [`playwright-codegen-reviewer`](playwright-codegen-reviewer.md) into Page Object code that replaces the `TODO`s.
 
@@ -108,10 +108,10 @@ Not a recorder. For unresolved `TODO`s, emits `npx playwright codegen <base-url>
 
 The agent **refuses** to:
 
-- Invent selectors when the description names no role / test-id / label — emits `TODO`, never guesses.
+- Invent selectors when the description names no role / test-id / label - emits `TODO`, never guesses.
 - Write Selenium scaffolds for greenfield projects without the "consider Playwright/WDIO" comment (TestDino: CSS/XPath drift is the dominant flake source).
 - Generate a "passing" smoke assertion (`expect(true).toBe(true)`) when `Expected` is missing. Halt and request the field.
-- Skip the hand-off comment block — the scaffold is explicitly non-final.
+- Skip the hand-off comment block - the scaffold is explicitly non-final.
 - Produce more than one `it` / `test` per test-case row.
 
 ## Anti-patterns

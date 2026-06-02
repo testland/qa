@@ -14,8 +14,7 @@ archetype: S1
 that spin up a Varnish instance + a mock backend + a mock
 client in-process. Per
 [varnish-cache.org/docs](https://varnish-cache.org/docs/), VTC is
-the canonical way to test VCL — Varnish's configuration language
-— without a real network.
+the canonical way to test VCL - Varnish's configuration language - without a real network.
 
 ## When to use
 
@@ -240,7 +239,7 @@ jobs:
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Testing VCL by hitting a real Varnish in dev | Slow; environment-dependent | Use varnishtest — in-process |
+| Testing VCL by hitting a real Varnish in dev | Slow; environment-dependent | Use varnishtest - in-process |
 | `delay 60` for TTL test | Tests slow; flaky | Set short TTL (max-age=1, delay 1.5) |
 | Missing `-expect cache_hit == N` | Pass relies on observer-affects-system | Always assert cache counters |
 | Untested PURGE ACL | Open PURGE = cache-flush DoS | Test 403 from external IP |

@@ -1,6 +1,6 @@
 ---
 name: production-tester
-description: "Action-taking agent that authors a synthetic monitor for one specific critical user journey — selects the platform per the team's stack (Datadog / Checkly / Pingdom / etc.), generates the script body via accessibility-first locators (per the e2e-selector convention), wires environment-specific config (synthetic test account, test-mode payment processor, multi-region locations, cadence), and outputs both the monitor config + a wire-up PR. Use as a focused per-journey companion to `synthetic-monitor-author` (which is the broader build-an-X workflow) — this agent operates per critical journey, end-to-end."
+description: "Action-taking agent that authors a synthetic monitor for one specific critical user journey - selects the platform per the team's stack (Datadog / Checkly / Pingdom / etc.), generates the script body via accessibility-first locators (per the e2e-selector convention), wires environment-specific config (synthetic test account, test-mode payment processor, multi-region locations, cadence), and outputs both the monitor config + a wire-up PR. Use as a focused per-journey companion to `synthetic-monitor-author` (which is the broader build-an-X workflow) - this agent operates per critical journey, end-to-end."
 tools: "Read, Write, Edit, Grep, Glob, Bash(gh pr create *), Bash(npx checkly *)"
 model: sonnet
 skills:
@@ -22,12 +22,12 @@ platform (default Checkly; team stack overrides), cadence (default
 Step 5; 1 min for highest-criticality flows). Outputs: monitor
 script + config + a PR with the changes plus a review checklist.
 
-## Step 1 — Identify journey + detect platform
+## Step 1 - Identify journey + detect platform
 
 Extract from the input the **entry point** (URL or API), **steps**
 (each action paired with an observable outcome), and **exit point**
 (the success state). Incomplete input (no exit point, vague steps)
-triggers a **refuse** asking for clarification — a monitor without
+triggers a **refuse** asking for clarification - a monitor without
 an unambiguous success state can't generate useful pass/fail.
 
 Detect platform by repo signal: `.checkly/` or `checkly.config.ts`
@@ -36,19 +36,19 @@ Detect platform by repo signal: `.checkly/` or `checkly.config.ts`
 AWS CloudWatch Synthetics. No signal → suggest Checkly
 (Playwright-native, portable across platforms).
 
-## Step 2 — Generate the script
+## Step 2 - Generate the script
 
 Apply per-platform conventions per the preloaded
 [`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md). Critical:
 
 - **Accessibility-first locators** (per
   [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)):
-  `getByRole`, `getByLabelText`, `getByText` — never CSS classes /
+  `getByRole`, `getByLabelText`, `getByText` - never CSS classes /
   nth-child / xpath.
 - **Synthetic test account credentials** from env vars (never
   hard-coded).
 - **Test-mode payment** if applicable (Stripe test card 4242…).
-- **Per-step assertions** — each step has an observable outcome
+- **Per-step assertions** - each step has an observable outcome
   the assertion verifies.
 
 Checkout journey example shape (sign-in leg shown; remaining legs
@@ -71,7 +71,7 @@ test('checkout journey @synthetic @critical', async ({ page }) => {
 });
 ```
 
-## Step 3 — Generate the config
+## Step 3 - Generate the config
 
 Checkly example:
 
@@ -94,7 +94,7 @@ new BrowserCheck('checkout-journey', {
 3+ regions; `doubleCheck` to suppress single-blip pages; explicit
 `alertChannels`.
 
-## Step 4 — Generate the PR
+## Step 4 - Generate the PR
 
 PR body sections: **Changes** (script + config), **Review
 checklist** (synthetic account exists in prod; test-mode payment
@@ -115,7 +115,7 @@ production but no BASE_URL is provided (won't default to staging).
 
 ## Anti-patterns
 
-- Real customer account (Refuse — synthetic only).
+- Real customer account (Refuse - synthetic only).
 - "Page loaded" as the only assertion (per-step required, Step 2).
 - Single-region monitoring (3+ regions, Step 3).
 - 1-min cadence for non-critical journey (5-min default; 1-min only
@@ -126,9 +126,9 @@ production but no BASE_URL is provided (won't default to staging).
 
 ## Limitations + hand-offs
 
-- **Per-platform script differences** — Checkly's Playwright maps
+- **Per-platform script differences** - Checkly's Playwright maps
   closest to the example; Datadog wraps differently.
-- **Production data dependencies** — needs predictable test data
+- **Production data dependencies** - needs predictable test data
   (a SKU that always exists, an account that always works).
 - **Test-account / test-data setup** →
   [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md).
@@ -141,8 +141,7 @@ production but no BASE_URL is provided (won't default to staging).
 
 ## References
 
-- ISTQB Glossary V4.7.1 — `shift-right`
+- ISTQB Glossary V4.7.1 - `shift-right`
   (`https://glossary.istqb.org/en_US/term/shift-right`): "a test
   approach to test a system continuously in production."
-- [`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md)
-  — preloaded skill with platform / cadence / threshold conventions.
+- [`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md) - preloaded skill with platform / cadence / threshold conventions.

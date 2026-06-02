@@ -17,7 +17,7 @@ keywords:
 
 testbook is a *"unit testing framework for testing code in Jupyter
 Notebooks"* per the [testbook docs]. It treats `.ipynb` files like
-`.py` files for testing — the test runs separately from the notebook
+`.py` files for testing - the test runs separately from the notebook
 itself.
 
 ## When to use
@@ -30,7 +30,7 @@ itself.
 - Teaching example where students implement functions in a notebook
   and grading happens via assertions on those functions.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install testbook pytest
@@ -38,7 +38,7 @@ pip install testbook pytest
 
 Per the [testbook docs].
 
-## Step 2 — Basic decorator pattern
+## Step 2 - Basic decorator pattern
 
 Given a notebook cell:
 
@@ -61,7 +61,7 @@ def test_func(tb):
 Per the [testbook docs]: the decorator accepts the notebook path +
 `execute` parameter controlling cell execution.
 
-## Step 3 — `tb.ref()` for notebook objects
+## Step 3 - `tb.ref()` for notebook objects
 
 ```python
 @testbook('analysis.ipynb', execute=True)
@@ -72,10 +72,10 @@ def test_clean_data_drops_nulls(tb):
     assert len(result) == 2
 ```
 
-`tb.ref()` returns a proxy to the notebook-side object — calls run
+`tb.ref()` returns a proxy to the notebook-side object - calls run
 in the kernel.
 
-## Step 4 — `tb.inject()` for setup code
+## Step 4 - `tb.inject()` for setup code
 
 ```python
 @testbook('model.ipynb', execute=True)
@@ -92,10 +92,10 @@ def test_predict_with_specific_input(tb):
     assert result.shape == (1,)
 ```
 
-`tb.inject()` runs arbitrary code in the kernel — useful for
+`tb.inject()` runs arbitrary code in the kernel - useful for
 deterministic seeding, mocking globals, fixture setup.
 
-## Step 5 — Selective cell execution
+## Step 5 - Selective cell execution
 
 ```python
 # Execute only specific cells (by tag)
@@ -107,7 +107,7 @@ def test_with_partial_execution(tb):
 
 Avoids slow training cells when testing pure-function helpers.
 
-## Step 6 — Pytest fixture (shared kernel)
+## Step 6 - Pytest fixture (shared kernel)
 
 ```python
 import pytest
@@ -126,10 +126,10 @@ def test_func_b(tb):
 ```
 
 Per the [testbook docs]: shared kernel context across tests via
-pytest fixtures — much faster than re-executing the notebook per
+pytest fixtures - much faster than re-executing the notebook per
 test.
 
-## Step 7 — Object patching
+## Step 7 - Object patching
 
 ```python
 @testbook('api_client.ipynb', execute=True)
@@ -155,7 +155,7 @@ notebook's kernel.
 
 ## Limitations
 
-- testbook executes notebook cells via the standard Jupyter kernel —
+- testbook executes notebook cells via the standard Jupyter kernel - 
   notebooks with browser-only widgets (ipywidgets without backend)
   may behave differently in tests.
 - Long-running cells in `execute=True` slow tests; use selective
@@ -166,7 +166,7 @@ notebook's kernel.
 
 ## References
 
-- [testbook docs] — `@testbook` decorator, `tb.ref()`, `tb.inject()`,
+- [testbook docs] - `@testbook` decorator, `tb.ref()`, `tb.inject()`,
   `tb.patch()`, pytest fixture pattern
 
 [testbook docs]: https://testbook.readthedocs.io/

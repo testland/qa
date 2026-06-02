@@ -1,6 +1,6 @@
 ---
 name: grpc-status-code-mapping-reference
-description: "Pure-reference catalog of gRPC standard status codes — the 17 canonical codes (OK..UNAUTHENTICATED), their numeric values, semantics, retry behaviour per AIP-194 (only UNAVAILABLE is auto-retry-safe), and the gRPC-to-HTTP status mapping used by grpc-gateway (NOT_FOUND→404, INVALID_ARGUMENT→400, PERMISSION_DENIED→403, UNAUTHENTICATED→401, RESOURCE_EXHAUSTED→429, FAILED_PRECONDITION→400 not 412, ABORTED→409, UNAVAILABLE→503, DEADLINE_EXCEEDED→504, etc.). Use when designing a gRPC service's error vocabulary, writing assertions in gRPC client tests, configuring retry policies, or mapping gRPC errors to HTTP via a gateway. Consumed by buf-cli-lint-breaking-build, ghz-load, grpcurl-cli, grpc-mock, grpc-streaming-test-author."
+description: "Pure-reference catalog of gRPC standard status codes - the 17 canonical codes (OK..UNAUTHENTICATED), their numeric values, semantics, retry behaviour per AIP-194 (only UNAVAILABLE is auto-retry-safe), and the gRPC-to-HTTP status mapping used by grpc-gateway (NOT_FOUND→404, INVALID_ARGUMENT→400, PERMISSION_DENIED→403, UNAUTHENTICATED→401, RESOURCE_EXHAUSTED→429, FAILED_PRECONDITION→400 not 412, ABORTED→409, UNAVAILABLE→503, DEADLINE_EXCEEDED→504, etc.). Use when designing a gRPC service's error vocabulary, writing assertions in gRPC client tests, configuring retry policies, or mapping gRPC errors to HTTP via a gateway. Consumed by buf-cli-lint-breaking-build, ghz-load, grpcurl-cli, grpc-mock, grpc-streaming-test-author."
 rating: 24
 d6: 4
 archetype: S2
@@ -18,11 +18,11 @@ HTTP gateway translation, and observability dashboards.
 
 Three things to get right:
 
-1. **The semantic meaning** — OK..UNAUTHENTICATED have specific
+1. **The semantic meaning** - OK..UNAUTHENTICATED have specific
    definitions; picking the wrong one mis-signals to clients.
-2. **The retry behaviour** — per [AIP-194](https://google.aip.dev/194),
+2. **The retry behaviour** - per [AIP-194](https://google.aip.dev/194),
    only `UNAVAILABLE` is generally safe to auto-retry.
-3. **The HTTP mapping** — per
+3. **The HTTP mapping** - per
    [grpc-gateway runtime/errors.go](https://github.com/grpc-ecosystem/grpc-gateway/blob/main/runtime/errors.go),
    `FAILED_PRECONDITION → 400 Bad Request` (NOT 412
    "Precondition Failed" despite the name).
@@ -38,7 +38,7 @@ configurators.
   expect?
 - Configuring a retry policy in the gRPC client.
 - Mapping gRPC errors to HTTP in a `grpc-gateway` setup.
-- PR review — is this `status.Errorf` call using the right code?
+- PR review - is this `status.Errorf` call using the right code?
 
 ## The canonical 17 codes
 
@@ -126,7 +126,7 @@ Per
 | `PERMISSION_DENIED` | 403 | Forbidden |
 | `UNAUTHENTICATED` | 401 | Unauthorized |
 | `RESOURCE_EXHAUSTED` | 429 | Too Many Requests |
-| `FAILED_PRECONDITION` | **400** | Bad Request — **NOT** 412 "Precondition Failed" despite the name. grpc-gateway code comment: "deliberately doesn't translate to the similarly named '412 Precondition Failed'" |
+| `FAILED_PRECONDITION` | **400** | Bad Request - **NOT** 412 "Precondition Failed" despite the name. grpc-gateway code comment: "deliberately doesn't translate to the similarly named '412 Precondition Failed'" |
 | `ABORTED` | 409 | Conflict (concurrency) |
 | `OUT_OF_RANGE` | 400 | Bad Request |
 | `UNIMPLEMENTED` | 501 | Not Implemented |
@@ -136,7 +136,7 @@ Per
 
 ### Implications for HTTP clients
 
-- `UNAUTHENTICATED` (401) vs `PERMISSION_DENIED` (403) — same
+- `UNAUTHENTICATED` (401) vs `PERMISSION_DENIED` (403) - same
   distinction as plain HTTP.
 - `INVALID_ARGUMENT`, `FAILED_PRECONDITION`, `OUT_OF_RANGE` all
   → 400; the gRPC code carries the semantic distinction.
@@ -144,7 +144,7 @@ Per
 - HTTP 499 (Cancelled) is **non-standard**; some HTTP clients
   don't handle it.
 
-## Choosing the right code — disambiguators
+## Choosing the right code - disambiguators
 
 The hardest pairs:
 
@@ -219,7 +219,7 @@ def test_unauthenticated_call_returns_unauthenticated(stub_no_auth):
 | Returning `INTERNAL` for caller-side errors | Surfaces server bugs that don't exist; alarms fire | Use `INVALID_ARGUMENT` for bad inputs |
 | Returning `UNKNOWN` everywhere | No retry semantics, no HTTP mapping clarity | Pick the specific code |
 | Returning `FAILED_PRECONDITION` for transient unavailability | Clients don't retry → user-visible failures | Use `UNAVAILABLE` |
-| Using `NOT_FOUND` for "you don't have permission" | Information leak (tenant probes) — OR — opacity (debugging hard); document the choice | Per [`tenant-leak-test-author`](../../../qa-multi-tenancy/skills/tenant-leak-test-author/SKILL.md) the 404-vs-403 trade-off is project policy |
+| Using `NOT_FOUND` for "you don't have permission" | Information leak (tenant probes) - OR - opacity (debugging hard); document the choice | Per [`tenant-leak-test-author`](../../../qa-multi-tenancy/skills/tenant-leak-test-author/SKILL.md) the 404-vs-403 trade-off is project policy |
 | `OK` with error message in payload | Breaks every gRPC client's error handling | Always use a non-OK status for errors |
 | Adding all codes to retryableStatusCodes | Retries non-idempotent operations; data corruption | Only `UNAVAILABLE` per AIP-194 (case-by-case for others) |
 | Treating HTTP 412 as `FAILED_PRECONDITION` in gateway | grpc-gateway maps FP→400 (not 412) | Verify the mapping in `runtime/errors.go` |

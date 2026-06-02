@@ -32,14 +32,14 @@ This is the Protobuf-specific counterpart to
   modules.
 - A CI gate is needed on schema regressions before pushing a new
   version of generated client / server code.
-- The team needs **per-category** strictness — e.g. FILE-level checks
+- The team needs **per-category** strictness - e.g. FILE-level checks
   during early development, downgrade to WIRE for stable v1+ APIs
   where source-level changes are acceptable but wire-format breakage
   is not.
 
 ## Breaking categories
 
-`buf breaking` rules ship in four nested categories — **stricter
+`buf breaking` rules ship in four nested categories - **stricter
 subsumes looser** ([buf-breaking][breaking]):
 
 | Category    | Detects                                                 |
@@ -81,7 +81,7 @@ breaking:
 `v1beta1` files use a different shape ([buf-yaml][buf-yaml]). When
 migrating, run `buf migrate v1tov2` to convert.
 
-`ignore_unstable_packages: true` is the canonical pattern — Protobuf
+`ignore_unstable_packages: true` is the canonical pattern - Protobuf
 convention is that `v1alpha1`, `v1beta1`, and `*test*` packages are
 unstable and explicitly NOT covered by compatibility guarantees.
 
@@ -189,7 +189,7 @@ jobs:
         run: buf breaking --against '.git#branch=main,subdir=.'
 ```
 
-`fetch-depth: 0` is required so the `.git#branch=main` ref resolves —
+`fetch-depth: 0` is required so the `.git#branch=main` ref resolves - 
 the default shallow clone doesn't have it.
 
 For stricter pipelines, also gate on `buf lint`:
@@ -212,17 +212,15 @@ buf breaking --against ".git#tag=${LATEST_TAG}"
 ```
 
 This catches breaking changes vs production, not just vs the trunk
-HEAD — useful when `main` itself contains in-progress un-released work.
+HEAD - useful when `main` itself contains in-progress un-released work.
 
 ## References
 
-- [buf-breaking][breaking] — `buf breaking` semantics, categories,
+- [buf-breaking][breaking] - `buf breaking` semantics, categories,
   baseline reference formats.
-- [buf-yaml][buf-yaml] — v2 `buf.yaml` configuration; `breaking.use`,
+- [buf-yaml][buf-yaml] - v2 `buf.yaml` configuration; `breaking.use`,
   `except`, `ignore`, `ignore_only`, `ignore_unstable_packages`.
-- [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) — REST
+- [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) - REST
   counterpart.
-- [`graphql-schema-regression`](../graphql-schema-regression/SKILL.md)
-  — GraphQL counterpart.
-- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md)
-  — gate skill aggregating breaking-change verdicts across protocols.
+- [`graphql-schema-regression`](../graphql-schema-regression/SKILL.md) - GraphQL counterpart.
+- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md) - gate skill aggregating breaking-change verdicts across protocols.

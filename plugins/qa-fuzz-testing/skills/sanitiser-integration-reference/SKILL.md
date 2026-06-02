@@ -1,6 +1,6 @@
 ---
 name: sanitiser-integration-reference
-description: "Pure-reference catalog of compiler sanitisers used with fuzz testing — AddressSanitizer (ASan), UndefinedBehaviorSanitizer (UBSan), MemorySanitizer (MSan), ThreadSanitizer (TSan), and LeakSanitizer (LSan). Explains what each detects, compatibility (can ASan + UBSan combine? — yes; ASan + MSan? — no), build flags, runtime options (ASAN_OPTIONS / UBSAN_OPTIONS env vars), and the typical ~2x slowdown per ASan. Use to pick the right sanitiser per fuzz target, configure the build, and interpret crash reports."
+description: "Pure-reference catalog of compiler sanitisers used with fuzz testing - AddressSanitizer (ASan), UndefinedBehaviorSanitizer (UBSan), MemorySanitizer (MSan), ThreadSanitizer (TSan), and LeakSanitizer (LSan). Explains what each detects, compatibility (can ASan + UBSan combine? - yes; ASan + MSan? - no), build flags, runtime options (ASAN_OPTIONS / UBSAN_OPTIONS env vars), and the typical ~2x slowdown per ASan. Use to pick the right sanitiser per fuzz target, configure the build, and interpret crash reports."
 rating: 23
 d6: 4
 archetype: S2
@@ -11,7 +11,7 @@ archetype: S2
 ## Overview
 
 Pure-reference catalog of the five clang sanitisers (ASan, UBSan,
-MSan, TSan, LSan) used with coverage-guided fuzz targets — what
+MSan, TSan, LSan) used with coverage-guided fuzz targets - what
 each detects, build flags, runtime options, compatibility matrix,
 performance overhead. Consumed by the per-language fuzzer skills
 and the fuzz-target authoring agent. For corpus discipline see
@@ -64,15 +64,15 @@ type mismatch, etc.
 
 **Build flag:** `-fsanitize=undefined -fno-sanitize-recover=all`
 
-The `-fno-sanitize-recover=all` is important for fuzzing — without
+The `-fno-sanitize-recover=all` is important for fuzzing - without
 it, UBSan logs but doesn't abort, so the fuzzer doesn't see the
 bug.
 
-**Performance:** ~10% slowdown — much lighter than ASan.
+**Performance:** ~10% slowdown - much lighter than ASan.
 
 **Runtime options** (`UBSAN_OPTIONS`):
-- `print_stacktrace=1` — include stack trace in reports
-- `halt_on_error=1` — abort on first error
+- `print_stacktrace=1` - include stack trace in reports
+- `halt_on_error=1` - abort on first error
 
 ### MemorySanitizer (MSan)
 
@@ -95,7 +95,7 @@ violations.
 
 **Build flag:** `-fsanitize=thread -O1 -g`
 
-**Performance:** 5–15x slowdown + 5–10x memory.
+**Performance:** 5 - 15x slowdown + 5 - 10x memory.
 
 **Compatibility:** TSan is incompatible with ASan and MSan.
 
@@ -107,7 +107,7 @@ violations.
 
 - **Embedded in ASan:** `-fsanitize=address` enables LSan by default
   on Linux. Toggle via `detect_leaks=1`.
-- **Standalone:** `-fsanitize=leak` — leak detection only, no other
+- **Standalone:** `-fsanitize=leak` - leak detection only, no other
   checks. Smaller overhead.
 
 ## Compatibility matrix
@@ -116,10 +116,10 @@ Can multiple sanitisers run in the same binary?
 
 | Sanitiser | ASan | UBSan | MSan | TSan |
 |---|:---:|:---:|:---:|:---:|
-| ASan | — | ✓ | ✗ | ✗ |
-| UBSan | ✓ | — | ✓ | ✓ |
-| MSan | ✗ | ✓ | — | ✗ |
-| TSan | ✗ | ✓ | ✗ | — |
+| ASan | - | ✓ | ✗ | ✗ |
+| UBSan | ✓ | - | ✓ | ✓ |
+| MSan | ✗ | ✓ | - | ✗ |
+| TSan | ✗ | ✓ | ✗ | - |
 
 The standard fuzzing pair is **ASan + UBSan** (catches most
 memory + UB issues, manageable slowdown):
@@ -188,9 +188,9 @@ to extract the failure assertion.
 |---|:---:|:---:|:---:|:---:|:---:|
 | C / C++ (clang / GCC) | ✓ | ✓ | ✓ (clang) | ✓ | ✓ |
 | Rust (nightly) | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Go | partial (race detector for TSan-equivalent) | — | — | ✓ | — |
-| Swift | ✓ | ✓ | — | ✓ | ✓ |
-| Objective-C | ✓ | ✓ | — | ✓ | ✓ |
+| Go | partial (race detector for TSan-equivalent) | - | - | ✓ | - |
+| Swift | ✓ | ✓ | - | ✓ | ✓ |
+| Objective-C | ✓ | ✓ | - | ✓ | ✓ |
 
 Java / Kotlin (Jazzer) uses **JVM-level sanitisers** (sanitisers
 for unsafe-API misuse, deserialisation gadgets, ReDoS) rather than
@@ -228,15 +228,15 @@ itself.
 
 ## References
 
-- LLVM AddressSanitizer —
+- LLVM AddressSanitizer - 
   [clang.llvm.org/docs/AddressSanitizer.html](https://clang.llvm.org/docs/AddressSanitizer.html).
-- LLVM UBSan —
+- LLVM UBSan - 
   [clang.llvm.org/docs/UndefinedBehaviorSanitizer.html](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html).
-- LLVM MemorySanitizer —
+- LLVM MemorySanitizer - 
   [clang.llvm.org/docs/MemorySanitizer.html](https://clang.llvm.org/docs/MemorySanitizer.html).
-- LLVM ThreadSanitizer —
+- LLVM ThreadSanitizer - 
   [clang.llvm.org/docs/ThreadSanitizerCppManual.html](https://clang.llvm.org/docs/ThreadSanitizerCppManual.html).
-- LLVM libFuzzer —
+- LLVM libFuzzer - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
 - Sibling references:
   [`corpus-management-reference`](../corpus-management-reference/SKILL.md).

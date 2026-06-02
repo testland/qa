@@ -17,8 +17,8 @@ of three severity tiers ([oasdiff-breaking][breaking]):
 
 | Severity | Meaning                                                        |
 |----------|----------------------------------------------------------------|
-| `ERR`    | Definite breaking change — should be avoided.                 |
-| `WARN`   | Potential breaking change — developers should be aware.        |
+| `ERR`    | Definite breaking change - should be avoided.                 |
+| `WARN`   | Potential breaking change - developers should be aware.        |
 | `INFO`   | Non-breaking change.                                           |
 
 [readme]: https://github.com/oasdiff/oasdiff
@@ -41,11 +41,11 @@ the spec alone.
 - You need a one-shot review tool for "is this PR going to break
   consumers?"
 
-## Authoring (no authoring — the spec is the contract)
+## Authoring (no authoring - the spec is the contract)
 
 Unlike Pact, oasdiff doesn't add tests to the repo. Instead it consumes
 two OpenAPI specs and emits a diff. Authoring effort goes into
-**keeping the spec authoritative** — i.e. ensuring the OpenAPI file in
+**keeping the spec authoritative** - i.e. ensuring the OpenAPI file in
 the repo accurately describes the implementation. Tools that close the
 spec-vs-implementation gap (Schemathesis, Spectral lint) pair well with
 this skill but are out of scope.
@@ -123,15 +123,15 @@ breaking changes need explicit acceptance.
 oasdiff ships 250+ checks. The headline breaking patterns
 ([oasdiff-breaking][breaking]):
 
-- **Endpoint deletion** — removing a path or HTTP method.
-- **Removed success response** — e.g. dropping the 200 from a `responses` block.
-- **Deleted schemas from `components.schemas`** — even if no longer referenced.
-- **Enum value removal** — removing a value from an `enum` array.
+- **Endpoint deletion** - removing a path or HTTP method.
+- **Removed success response** - e.g. dropping the 200 from a `responses` block.
+- **Deleted schemas from `components.schemas`** - even if no longer referenced.
+- **Enum value removal** - removing a value from an `enum` array.
   Mark the enum `x-extensible-enum: true` to treat removals as
   non-breaking (clients should ignore unknown values).
-- **Response shape narrowing** — changing a property type from `string`
+- **Response shape narrowing** - changing a property type from `string`
   to `integer`, removing a `required` array entry, etc.
-- **Request shape widening into `required`** — making a previously-
+- **Request shape widening into `required`** - making a previously-
   optional request field required.
 
 For the full list, run `oasdiff checks` to dump the active rule set.
@@ -218,17 +218,16 @@ shallow clone GitHub uses by default doesn't include the merge-base
 commit.
 
 For a PR comment workflow, generate `--format markdown` and post via
-`actions/github-script@v7` — the markdown table format includes a
+`actions/github-script@v7` - the markdown table format includes a
 clickable per-finding rationale.
 
 ## References
 
-- [oasdiff-readme][readme] — install (Go + Docker), output formats, key
+- [oasdiff-readme][readme] - install (Go + Docker), output formats, key
   flags.
-- [oasdiff-breaking][breaking] — `breaking` subcommand, severity tiers,
+- [oasdiff-breaking][breaking] - `breaking` subcommand, severity tiers,
   `--fail-on` semantics, breaking-change categories.
-- [`pact-contract-testing`](../pact-contract-testing/SKILL.md) — the
+- [`pact-contract-testing`](../pact-contract-testing/SKILL.md) - the
   consumer-driven counterpart for cases where you control consumers.
-- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md)
-  — the gate skill that aggregates oasdiff output with Pact and
+- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md) - the gate skill that aggregates oasdiff output with Pact and
   Protobuf verdicts.

@@ -1,6 +1,6 @@
 ---
 name: npm-pip-maven-audit
-description: "Configures and runs native package-manager audit commands across ecosystems — `npm audit --audit-level=high` (npm), `yarn npm audit` (Yarn 2+), `pnpm audit` (pnpm), `pip-audit` (Python via PyPA), `mvn dependency:check` (Maven via OWASP Dependency-Check plugin), `cargo audit` (Rust), `bundle audit` (Ruby Bundler); fastest no-install-required SCA option. Use when the team wants fast, no-extra-tooling SCA in CI as a first line of defense, or pairs with snyk/osv-scanner for layered coverage."
+description: "Configures and runs native package-manager audit commands across ecosystems - `npm audit --audit-level=high` (npm), `yarn npm audit` (Yarn 2+), `pnpm audit` (pnpm), `pip-audit` (Python via PyPA), `mvn dependency:check` (Maven via OWASP Dependency-Check plugin), `cargo audit` (Rust), `bundle audit` (Ruby Bundler); fastest no-install-required SCA option. Use when the team wants fast, no-extra-tooling SCA in CI as a first line of defense, or pairs with snyk/osv-scanner for layered coverage."
 rating: 22
 d6: 4
 archetype: S1
@@ -13,14 +13,14 @@ archetype: S1
 Most package managers ship native audit subcommands that query the
 ecosystem-specific advisory feed (npm advisories, PyPA database,
 RubySec, Cargo advisory DB, etc.). They're the **fastest first-line
-defense** — already installed where the package manager is, no extra
+defense** - already installed where the package manager is, no extra
 tooling, runs in seconds.
 
 Tradeoffs vs [`snyk-test`](../snyk-test/SKILL.md) / [`osv-scanner`](../osv-scanner/SKILL.md):
 
 | Property | Native audit | Snyk / OSV |
 |---|---|---|
-| Speed | <5s typical | 10s–60s |
+| Speed | <5s typical | 10s - 60s |
 | DB coverage | Per-ecosystem only | Cross-ecosystem aggregated |
 | False-positive triage | Per-ecosystem CLI | Unified config |
 | Reachability analysis | None | None (most tools) |
@@ -40,7 +40,7 @@ and waivers.
 - Layered with [`snyk-test`](../snyk-test/SKILL.md) +
   [`osv-scanner`](../osv-scanner/SKILL.md) for full coverage.
 
-## Step 1 — npm / Yarn / pnpm
+## Step 1 - npm / Yarn / pnpm
 
 ```bash
 # npm (built-in since npm 6)
@@ -63,7 +63,7 @@ pnpm audit --json
 
 Source: docs.npmjs.com/cli/v10/commands/npm-audit + yarnpkg.com/cli/npm/audit + pnpm.io/cli/audit.
 
-## Step 2 — pip-audit (Python)
+## Step 2 - pip-audit (Python)
 
 ```bash
 pip install pip-audit
@@ -92,7 +92,7 @@ Source: pypi.org/project/pip-audit + github.com/pypa/pip-audit.
 `pip-audit` is the official PyPA tool (preferred over the older
 `safety` package).
 
-## Step 3 — Maven (OWASP Dependency-Check)
+## Step 3 - Maven (OWASP Dependency-Check)
 
 Maven's audit story is via the OWASP Dependency-Check plugin
 (no native `mvn audit`):
@@ -131,7 +131,7 @@ Source: jeremylong.github.io/DependencyCheck/dependency-check-maven/.
 For Gradle: same plugin via `org.owasp.dependencycheck` Gradle
 plugin.
 
-## Step 4 — cargo audit (Rust)
+## Step 4 - cargo audit (Rust)
 
 ```bash
 cargo install cargo-audit
@@ -144,7 +144,7 @@ cargo audit --ignore RUSTSEC-2023-0001   # specific advisory
 
 Source: rustsec.org + github.com/rustsec/rustsec.
 
-## Step 5 — bundler-audit (Ruby)
+## Step 5 - bundler-audit (Ruby)
 
 ```bash
 gem install bundler-audit
@@ -157,7 +157,7 @@ bundle-audit check --ignore CVE-2024-1234 # specific CVE
 
 Source: github.com/rubysec/bundler-audit.
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Each native audit has its own suppression mechanism:
 
@@ -194,7 +194,7 @@ the ignore is invisible to reviewers.
 Cadence: every quarter, audit suppression entries; expired
 re-review dates remove entries.
 
-## Step 7 — CI integration patterns
+## Step 7 - CI integration patterns
 
 ```yaml
 # Fast first-line gate
@@ -223,7 +223,7 @@ jobs:
 The `if: hashFiles(...)` pattern auto-skips ecosystems not present
 in the repo.
 
-## Step 8 — Output aggregation
+## Step 8 - Output aggregation
 
 For [`sca-prioritizer`](../../agents/sca-prioritizer.md), output
 each tool's JSON to a stable filename:
@@ -251,10 +251,10 @@ findings.
 
 ## Limitations
 
-- Per-ecosystem DB coverage varies — npm advisories often have CVE
+- Per-ecosystem DB coverage varies - npm advisories often have CVE
   earlier than PyPA; pip-audit may miss a npm-only-disclosed
   advisory.
-- No reachability analysis — every CVE on a declared dep counts
+- No reachability analysis - every CVE on a declared dep counts
   even if the vulnerable function isn't called.
 - Maven Dependency-Check requires NVD data sync (slow first run; ~1
   GB cache).
@@ -265,15 +265,15 @@ findings.
 
 ## References
 
-- docs.npmjs.com/cli/v10/commands/npm-audit — npm audit reference
-- yarnpkg.com/cli/npm/audit — Yarn audit reference
-- pnpm.io/cli/audit — pnpm audit reference
-- pypa.github.io/pip-audit — pip-audit docs
-- jeremylong.github.io/DependencyCheck/ — OWASP Dependency-Check
-- rustsec.org / github.com/rustsec/rustsec — cargo-audit
-- github.com/rubysec/bundler-audit — bundler-audit
+- docs.npmjs.com/cli/v10/commands/npm-audit - npm audit reference
+- yarnpkg.com/cli/npm/audit - Yarn audit reference
+- pnpm.io/cli/audit - pnpm audit reference
+- pypa.github.io/pip-audit - pip-audit docs
+- jeremylong.github.io/DependencyCheck/ - OWASP Dependency-Check
+- rustsec.org / github.com/rustsec/rustsec - cargo-audit
+- github.com/rubysec/bundler-audit - bundler-audit
 - [`snyk-test`](../snyk-test/SKILL.md),
   [`osv-scanner`](../osv-scanner/SKILL.md),
   [`dependabot-config`](../dependabot-config/SKILL.md),
-  [`renovate-config`](../renovate-config/SKILL.md) — sister tools
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) — unifier agent
+  [`renovate-config`](../renovate-config/SKILL.md) - sister tools
+- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

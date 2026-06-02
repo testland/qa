@@ -114,7 +114,7 @@ makes it reproducible.
 afterEach(() => clock.uninstall());
 ```
 
-Critical — leaked clocks contaminate subsequent tests.
+Critical - leaked clocks contaminate subsequent tests.
 
 ## Running
 

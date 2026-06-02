@@ -4,20 +4,20 @@ type: agent
 archetype: A2
 ---
 
-# risk-based-test-planner — evals
+# risk-based-test-planner - evals
 
 Companion eval cases for [`risk-based-test-planner`](../../risk-based-test-planner.md).
 Three cases cover happy path (within-budget plan emitted), branch
 (different test-type mix because the implicated risks fall into different
-classes), and adversarial (no risk matrix supplied — refuse). Re-run by
+classes), and adversarial (no risk matrix supplied - refuse). Re-run by
 feeding the **Input** block as the first user message and checking the
 agent's transcript against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates below are the eval-authoring date — each case
+`claude-opus-4-7`. Dates below are the eval-authoring date - each case
 is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — within-budget plan
+## Eval 1 - happy path - within-budget plan
 
 **Input:**
 
@@ -65,9 +65,9 @@ naming R-15 and R-19 with rationale.
 contains the substring `Risks NOT addressed` (or `Risks not addressed`
 case-insensitive) AND mentions `R-15` AND `R-19` in the skip list.
 Output does NOT recommend skipping the highest-scored risk (R-2, score
-16) — R-2 MUST appear with at least one test-type assignment.
+16) - R-2 MUST appear with at least one test-type assignment.
 
-## Eval 2 — branch — security-heavy feature, different test-type mix
+## Eval 2 - branch - security-heavy feature, different test-type mix
 
 **Input:**
 
@@ -103,7 +103,7 @@ maps the three Security-class risks (R-A1, R-A2, R-A4) to
 threat-model + SAST + DAST + pen test per the Step 2 mapping table.
 R-A3 (Integration) gets contract + canary; R-A8 (Technical) gets
 integration + chaos. The plan's test-type mix is dominated by security
-work — distinct from Eval 1's UX/perf/regulatory mix. R-A1 (score 20,
+work - distinct from Eval 1's UX/perf/regulatory mix. R-A1 (score 20,
 Critical) MUST appear with at least threat-model + DAST coverage; the
 agent refuses to skip it per Step 5.
 
@@ -115,7 +115,7 @@ NOT recommend `load` / `a11y` / `visual regression` as primary coverage
 for R-A1 / R-A2 / R-A4 (those test types are wrong-class for security
 risks per Step 2).
 
-## Eval 3 — adversarial — no risk matrix supplied (refuse)
+## Eval 3 - adversarial - no risk matrix supplied (refuse)
 
 **Input:**
 
@@ -140,7 +140,7 @@ feature.
 **Expected:** The agent refuses to plan per Step 5 ("The agent refuses
 to: plan without a risk matrix") AND per Limitations ("No matrix → no
 plan"). Output does NOT emit a "Risk-driven test investment" table.
-Output does NOT name specific risks (R-1, R-A1, etc. — there are none).
+Output does NOT name specific risks (R-1, R-A1, etc. - there are none).
 The agent recommends running [`risk-storming-facilitator`](../skills/risk-storming-facilitator/SKILL.md)
 or otherwise populating the risk matrix first, then re-invoking the
 planner. The agent may also reference its sibling
@@ -157,14 +157,14 @@ emit a final plan with effort totals.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   matrix file or repo clone needed. The matrix excerpt is supplied
   inline (or explicitly absent in Eval 3).
 - Pass conditions are literal-string checks against the agent's
   transcript; a reviewer can grep for each substring (e.g. `R-1`,
   `Risks NOT addressed`, `threat model`).
 - The agent's tool surface (`Read`, `Write`, `Edit`, `Grep`, `Glob`)
-  is read/write to docs only — eval re-runs cannot modify production
+  is read/write to docs only - eval re-runs cannot modify production
   code or execute tests. The plan is a markdown artifact, not a test
   invocation.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7

@@ -1,6 +1,6 @@
 ---
 name: regression-suite-selector
-description: "Builds a CI workflow that runs only the subset of tests impacted by a PR's changes — combines a per-test → source-file dependency map (built from coverage profiles or, in build-graph projects, queried from the build system itself like Bazel `rdeps`) with the PR's `git diff --name-only`, then selects the union of (impacted by changed files + previously failing + newly added). Always pairs with a periodic full-suite run so a misconfigured map can't silently shrink coverage. Use when the regression suite is large enough that PR-time CI is the bottleneck and a full run is reserved for nightly / pre-release."
+description: "Builds a CI workflow that runs only the subset of tests impacted by a PR's changes - combines a per-test → source-file dependency map (built from coverage profiles or, in build-graph projects, queried from the build system itself like Bazel `rdeps`) with the PR's `git diff --name-only`, then selects the union of (impacted by changed files + previously failing + newly added). Always pairs with a periodic full-suite run so a misconfigured map can't silently shrink coverage. Use when the regression suite is large enough that PR-time CI is the bottleneck and a full run is reserved for nightly / pre-release."
 rating: 24
 d6: 4
 archetype: S3
@@ -28,8 +28,8 @@ dependencies during execution and stores mappings like
 Google's Blaze (Bazel's predecessor) uses static build-graph
 declarations to achieve the same selection.
 
-This skill builds a TIA-style selector for any team — without
-requiring Microsoft's tooling — by stitching together coverage data,
+This skill builds a TIA-style selector for any team - without
+requiring Microsoft's tooling - by stitching together coverage data,
 git diff, and a fallback policy.
 
 ## When to use
@@ -41,17 +41,17 @@ git diff, and a fallback policy.
 - The team has coverage instrumentation (per
   [`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md),
   [`jest-coverage-analysis`](../../../qa-test-reporting/skills/jest-coverage-analysis/SKILL.md),
-  etc.) — the per-test → source map is computable from it.
+  etc.) - the per-test → source map is computable from it.
 
 If the build is a Bazel / Pants / Buck monorepo, the selection
 already comes from the build graph (Step 5) and this skill is
 mostly orchestration around it.
 
-## Step 1 — Decide the selection policy
+## Step 1 - Decide the selection policy
 
 Per [tia-azure][azure], a robust selector includes "existing
 impacted tests, **previously failing tests**, and **newly added
-tests**" — and falls back to running **all tests** when it
+tests**" - and falls back to running **all tests** when it
 encounters changes it can't reason about:
 
 [azure]: https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-impact-analysis
@@ -81,11 +81,11 @@ if the code commit contains changes to HTML or CSS files, it can't
 reason about them and falls back to running all tests"
 ([tia-azure][azure]).
 
-## Step 2 — Build the per-test → source map
+## Step 2 - Build the per-test → source map
 
 Two paths:
 
-### Path A — From coverage data (any framework)
+### Path A - From coverage data (any framework)
 
 Modify the test runner to emit per-test coverage instead of merged
 coverage:
@@ -114,7 +114,7 @@ def build_map(per_test_coverage):
 Persist as `test-map.json` checked into the repo or stored as a CI
 artifact updated on every main run.
 
-### Path B — From the build graph (Bazel / Pants / Buck)
+### Path B - From the build graph (Bazel / Pants / Buck)
 
 In Bazel projects, the dependency graph IS the test-source map:
 
@@ -137,12 +137,12 @@ bazel query "kind('_test', rdeps(//..., set(${CHANGED})))" \
 ```
 
 Per [bazel-deps][bz]: "declared dependencies must comprehensively
-cover actual dependencies to ensure correct incremental rebuilds" —
+cover actual dependencies to ensure correct incremental rebuilds" - 
 which means the build-graph approach is only as good as the BUILD
 file discipline. Lint via `buildozer` / `gazelle` to catch missing
 declarations.
 
-## Step 3 — Compute the changed-file set
+## Step 3 - Compute the changed-file set
 
 ```bash
 git diff --name-only origin/${{ github.base_ref }}...HEAD
@@ -153,7 +153,7 @@ changed on this branch since it diverged from main", which matches
 PR semantics. Two-dot diff is "differences vs current main HEAD"
 which can show changes the PR didn't make if main moved forward.
 
-## Step 4 — Combine
+## Step 4 - Combine
 
 ```python
 def select_tests(map, changed_files, previously_failing, newly_added):
@@ -170,7 +170,7 @@ def select_tests(map, changed_files, previously_failing, newly_added):
 main (CI artifact). `newly_added` comes from
 `git diff --diff-filter=A --name-only` filtered to test files.
 
-## Step 5 — Add safety: periodic full run + drift detection
+## Step 5 - Add safety: periodic full run + drift detection
 
 Per [tia-azure][azure]:
 
@@ -182,15 +182,15 @@ Per [tia-azure][azure]:
 
 Two safety patterns:
 
-### Pattern A — Nightly full-suite run
+### Pattern A - Nightly full-suite run
 
 Cron a full-suite job nightly. Failures here that didn't appear in
 PR runs reveal selection misses; investigate and update the map.
 
-### Pattern B — N-th PR full run
+### Pattern B - N-th PR full run
 
 Every N-th PR (e.g. every 5th, configurable) runs the full suite as
-a "shadow" — silently if it agrees with selection; a warning issue
+a "shadow" - silently if it agrees with selection; a warning issue
 if it doesn't.
 
 ```yaml
@@ -223,7 +223,7 @@ jobs:
         run: python scripts/compare_results.py selected.xml shadow.xml
 ```
 
-## Step 6 — Surface the selection
+## Step 6 - Surface the selection
 
 PR-comment summary so reviewers know what ran:
 
@@ -248,7 +248,7 @@ PR-comment summary so reviewers know what ran:
 **Last full-suite run:** 2026-05-04 22:00 UTC (12 hours ago) — passed.
 ```
 
-## Step 7 — Configurable overrides
+## Step 7 - Configurable overrides
 
 Per [tia-azure][azure], the team should be able to **opt out** for
 a specific build:
@@ -284,10 +284,10 @@ Implement:
   missed tests. Update on every main full run.
 - **Build-config / CI-config / dependency changes are unmappable.**
   The fallback rule (Step 1) is non-negotiable.
-- **Per-test coverage instrumentation has overhead.** ~30–60% slower
+- **Per-test coverage instrumentation has overhead.** ~30 - 60% slower
   than merged coverage. Run on main only; PRs use the artifact.
 - **Multi-machine topologies break the mapping.** Per [tia-azure][azure],
-  Microsoft's TIA is "single machine topology" only — the same
+  Microsoft's TIA is "single machine topology" only - the same
   applies here unless the test/SUT topology is captured in the map.
 - **Doesn't fix slow tests.** Selection cuts the count; per-test
   speed is still on the team. Pair with
@@ -296,17 +296,16 @@ Implement:
 
 ## References
 
-- [tia-fowler][tia] — Hammant + Fowler on Test Impact Analysis:
+- [tia-fowler][tia] - Hammant + Fowler on Test Impact Analysis:
   bidirectional mapping, Microsoft's investment since 2009, Google
   Blaze approach.
-- [tia-azure][azure] — Azure Pipelines TIA: selection mechanism,
+- [tia-azure][azure] - Azure Pipelines TIA: selection mechanism,
   safe fallback, configurable overrides, what's NOT supported (data
   driven tests, multi-machine, .NET Core, UWP), the "Run TIA + run
   all in sequence" comparison pattern.
-- [bazel-deps][bz] — Bazel target dependency model, `rdeps` reverse
+- [bazel-deps][bz] - Bazel target dependency model, `rdeps` reverse
   dependency query, declared-vs-actual dependency principle.
-- [`coverage-debt-tracker`](../coverage-debt-tracker/SKILL.md) —
+- [`coverage-debt-tracker`](../coverage-debt-tracker/SKILL.md) - 
   sibling skill: tracks files that lost coverage / went stale.
 - [`test-suite-pruner`](../../agents/test-suite-pruner.md) and
-  [`regression-suite-curator`](../../agents/regression-suite-curator.md)
-  — agents that prune the suite this selector runs against.
+  [`regression-suite-curator`](../../agents/regression-suite-curator.md) - agents that prune the suite this selector runs against.

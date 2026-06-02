@@ -1,6 +1,6 @@
 ---
 name: e2e-suite-budget
-description: "Build-an-X workflow that caps the E2E suite size by computing flakiness ROI per test — for each E2E test, computes (regressions caught × value) ÷ (runtime × flake rate × maintenance cost), ranks all tests by ROI, identifies the bottom decile (low ROI = high cost / low signal), and recommends specific tests to retire / move to lower layer / fix flake. Use quarterly to keep E2E count from growing past the team's maintenance capacity."
+description: "Build-an-X workflow that caps the E2E suite size by computing flakiness ROI per test - for each E2E test, computes (regressions caught × value) ÷ (runtime × flake rate × maintenance cost), ranks all tests by ROI, identifies the bottom decile (low ROI = high cost / low signal), and recommends specific tests to retire / move to lower layer / fix flake. Use quarterly to keep E2E count from growing past the team's maintenance capacity."
 rating: 22
 d6: 3
 archetype: S3
@@ -29,7 +29,7 @@ retire / move to a lower layer / fix.
 - Flake rate >5%; team is fatigued.
 - Quarterly: scheduled budget review.
 
-## Step 1 — Inputs
+## Step 1 - Inputs
 
 Per-E2E-test, the agent / skill needs:
 
@@ -45,7 +45,7 @@ Per-E2E-test, the agent / skill needs:
   months (proxy for fragility).
 - **Value tier:** 1-5; assigned by team (5 = critical journey).
 
-## Step 2 — ROI formula
+## Step 2 - ROI formula
 
 ```
 ROI = (regressions_caught × value_tier) / (runtime_min × (1 + flake_rate) × (1 + maintenance_count_norm))
@@ -64,7 +64,7 @@ Where:
 
 Higher ROI = more value per cost.
 
-## Step 3 — Per-test scoring
+## Step 3 - Per-test scoring
 
 ```python
 # scripts/e2e-budget.py
@@ -93,7 +93,7 @@ ranked = sorted(scores.items(), key=lambda x: x[1])
 print(json.dumps(ranked))
 ```
 
-## Step 4 — Output: bottom decile
+## Step 4 - Output: bottom decile
 
 ```markdown
 ## E2E suite budget — `<repo>` — Q2 2026
@@ -119,7 +119,7 @@ print(json.dumps(ranked))
 - Maintenance load: -20% (these 14 had the highest PR-touch count)
 ```
 
-## Step 5 — Categorize recommendations
+## Step 5 - Categorize recommendations
 
 | Class                | Action                                                 |
 |----------------------|--------------------------------------------------------|
@@ -131,7 +131,7 @@ print(json.dumps(ranked))
 
 The team picks the appropriate class per test; the skill recommends.
 
-## Step 6 — Cap discipline
+## Step 6 - Cap discipline
 
 Set an **absolute budget**:
 
@@ -147,7 +147,7 @@ When the suite exceeds budget, the next sprint's "add new E2E
 test" requires retiring / moving an existing one. Force the
 trade-off.
 
-## Step 7 — Cadence
+## Step 7 - Cadence
 
 | Cadence    | Trigger                                                 |
 |------------|---------------------------------------------------------|
@@ -161,7 +161,7 @@ trade-off.
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | ROI formula without "regressions caught" data                         | All tests look equal; no basis for prioritization.                       | Track real-bug catches over time (Step 1). |
 | Treating value_tier as binary (critical / not)                        | Misses tier-2 / tier-3 nuance.                                           | 1-5 scale (Step 1). |
-| Auto-retiring bottom-decile without review                            | False positives — important tests retired.                               | Recommendation only; team confirms (Step 5). |
+| Auto-retiring bottom-decile without review                            | False positives - important tests retired.                               | Recommendation only; team confirms (Step 5). |
 | Adding E2E tests without budget enforcement                           | Suite grows; no constraint forcing trade-offs.                           | Per-quarter cap (Step 6). |
 | Recommending "retire" without alternative                             | Tests that catch important bugs may have low ROI due to runtime; deletion regrets. | Per-test categorization (Step 5). |
 | Cherry-picking tests to retire (favorites stay)                       | Bias.                                                                     | Apply ranking uniformly; document overrides. |
@@ -172,7 +172,7 @@ trade-off.
   postmortem cross-references, defaults to 0 for all tests;
   ranking gets degraded.
 - **ROI formula is heuristic.** Tune weights per team's priorities.
-- **Doesn't account for "test of last resort"** — some tests have
+- **Doesn't account for "test of last resort"** - some tests have
   low historical catch rate but exist because regression there
   would be catastrophic (auth, payment).
 - **Migration cost.** Moving an E2E test to a unit test isn't
@@ -180,15 +180,12 @@ trade-off.
 
 ## References
 
-- [tp][tp] — Cohn's pyramid: UI tests "brittle, expensive to
+- [tp][tp] - Cohn's pyramid: UI tests "brittle, expensive to
   write, and time consuming to run."
-- [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) —
+- [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) - 
   sibling: identifies the layer-balance issue this skill
   addresses tactically.
-- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md)
-  — sibling: handles the flake side of low-ROI tests.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — upstream: provides per-test runtime + flake stats.
-- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
-  — complementary: identifies what to add at the unit layer when
+- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - sibling: handles the flake side of low-ROI tests.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - upstream: provides per-test runtime + flake stats.
+- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - complementary: identifies what to add at the unit layer when
   E2E tests get retired.

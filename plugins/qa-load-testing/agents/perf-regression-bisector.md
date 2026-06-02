@@ -1,6 +1,6 @@
 ---
 name: perf-regression-bisector
-description: "Action-taking agent that bisects a performance regression across commits — drives `git bisect run` with a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-slow-query-detector for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear."
+description: "Action-taking agent that bisects a performance regression across commits - drives `git bisect run` with a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-slow-query-detector for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear."
 tools: "Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(k6 run *), Bash(npx lhci *), Bash(jq *)"
 model: sonnet
 skills:
@@ -17,18 +17,17 @@ A bisector that turns "p95 latency went up 3x sometime in the last 50 commits" i
 
 ## When invoked
 
-1. **Confirm the regression is deterministic** — run-to-run variance
+1. **Confirm the regression is deterministic** - run-to-run variance
    must be smaller than the regression delta, else bisect converges
    on noise (increase iterations / load-test duration).
 2. **Identify bad and good commits.** Bad = current `HEAD` (or a
    deployed slow commit). Good = a recent commit known to meet the
    budget (release tag, last green Lighthouse CI run).
-3. **Build the per-commit measurement script** — runs the perf test
+3. **Build the per-commit measurement script** - runs the perf test
    against the current commit's build; exits 0 within budget,
    non-zero if regressed, 125 if the build broke (skip).
 4. **Run `git bisect run`** per the canonical workflow in
-   [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)
-   — same mechanics, perf-tuned thresholds.
+   [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md) - same mechanics, perf-tuned thresholds.
 5. **Hand off the introducing commit** to
    [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md)
    for app-side hot paths or
@@ -54,7 +53,7 @@ npx wait-on http://localhost:3000 --timeout 30000
 k6 run --quiet --summary-export=summary.json tests/perf/orders.js
 ```
 
-`k6 run` returns non-zero when a `thresholds` assertion fails — that
+`k6 run` returns non-zero when a `thresholds` assertion fails - that
 becomes the "bad commit" signal automatically; no extra plumbing
 needed.
 
@@ -120,7 +119,7 @@ culprit commit:
    forward-fix in a new commit.
 ```
 
-## Example — clear culprit, app-side
+## Example - clear culprit, app-side
 
 A k6 test asserting `http_req_duration p(95)<500` started failing.
 Bisect over 30 commits identifies `abc1234` ("Refactor order
@@ -130,7 +129,7 @@ sample share. Match. If the flame graph shows DB-bound time
 (e.g. `pg_send_query_blocking`), hand off to db-slow-query-detector
 for `EXPLAIN ANALYZE`. If bisect variance exceeds the budget margin
 (e.g. control p95 280ms ±80ms vs budget 500ms), the result is
-INCONCLUSIVE — increase load-test duration / iterations and re-run
+INCONCLUSIVE - increase load-test duration / iterations and re-run
 rather than pretending a noisy result is a clear culprit.
 
 ## Limitations
@@ -150,13 +149,11 @@ rather than pretending a noisy result is a clear culprit.
 
 ## References
 
-- [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)
-  — generic git-bisect framework; this agent specializes for perf.
+- [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md) - generic git-bisect framework; this agent specializes for perf.
 - [`k6-load-testing`](../skills/k6-load-testing/SKILL.md),
-  [`lighthouse-perf`](../skills/lighthouse-perf/SKILL.md) — runners
+  [`lighthouse-perf`](../skills/lighthouse-perf/SKILL.md) - runners
   consumed by the per-commit measurement script.
 - [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md),
-  [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md)
-  — downstream skills for in-commit analysis.
-- [`perf-budget-gate`](../skills/perf-budget-gate/SKILL.md) — the
+  [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md) - downstream skills for in-commit analysis.
+- [`perf-budget-gate`](../skills/perf-budget-gate/SKILL.md) - the
   gate that produces the regression alert this agent acts on.

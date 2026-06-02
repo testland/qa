@@ -1,6 +1,6 @@
 ---
 name: test-run-summary-author
-description: "Build-an-X workflow that takes a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr API export) plus optional release context (version, build URL, deploy target) and emits a narrative markdown summary suitable for release notes, exec status updates, or stand-up Slack posts. Distinct from the per-framework parsers in `qa-test-reporting` (junit-xml-analysis / allure-reports / coverage-diff-reporter) which produce structured tabular reports — this skill takes the same data and produces the **narrative draft** practitioners use today by pasting raw results into ChatGPT. Distinct from `e2e-test-trend-reporter` (qa-flake-triage) which reports longitudinal suite health. Use when a manager needs a draft release note or a stand-up summary from a single test run."
+description: "Build-an-X workflow that takes a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr API export) plus optional release context (version, build URL, deploy target) and emits a narrative markdown summary suitable for release notes, exec status updates, or stand-up Slack posts. Distinct from the per-framework parsers in `qa-test-reporting` (junit-xml-analysis / allure-reports / coverage-diff-reporter) which produce structured tabular reports - this skill takes the same data and produces the **narrative draft** practitioners use today by pasting raw results into ChatGPT. Distinct from `e2e-test-trend-reporter` (qa-flake-triage) which reports longitudinal suite health. Use when a manager needs a draft release note or a stand-up summary from a single test run."
 rating: 23
 d6: 4
 archetype: S3
@@ -23,23 +23,23 @@ The skill is the manager-layer equivalent of the structured-parser skills alread
 
 Do **not** use this skill to:
 
-- Produce a full tabular report — that is the job of [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), or [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md).
-- Surface flake patterns over time — that is [`e2e-test-trend-reporter`](../../../qa-flake-triage/agents/e2e-test-trend-reporter.md).
-- Roll up multiple suites across multiple environments in one report — that is [`daily-test-suite-aggregator`](../../agents/daily-test-suite-aggregator.md), the sister agent in this plugin.
+- Produce a full tabular report - that is the job of [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), or [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md).
+- Surface flake patterns over time - that is [`e2e-test-trend-reporter`](../../../qa-flake-triage/agents/e2e-test-trend-reporter.md).
+- Roll up multiple suites across multiple environments in one report - that is [`daily-test-suite-aggregator`](../../agents/daily-test-suite-aggregator.md), the sister agent in this plugin.
 
-## Step 1 — Ingest the structured run data
+## Step 1 - Ingest the structured run data
 
 Accept one of three input shapes:
 
 | Input | Format | Source |
 |---|---|---|
 | **JUnit XML** | One or more `*.xml` files conforming to the JUnit XML schema (testsuite + testcase + failure / error / skipped child elements) | CI runners, surefire, gradle, pytest --junitxml, jest-junit |
-| **Allure results** | Directory of `*-result.json` + `*-container.json` per https://allurereport.org/docs/ — Allure organises results by test status (passed / failed / broken / skipped / unknown), categories, and severity levels | allure-pytest, allure-jest, allure-junit5, allure-cucumber, etc. |
+| **Allure results** | Directory of `*-result.json` + `*-container.json` per https://allurereport.org/docs/ - Allure organises results by test status (passed / failed / broken / skipped / unknown), categories, and severity levels | allure-pytest, allure-jest, allure-junit5, allure-cucumber, etc. |
 | **Test-management API export** | TestRail run export, Xray run export, Zephyr cycle export | The integration skills in this plugin |
 
 If multiple inputs are supplied, merge by run-id (or by test-name + start-time if no id) before summarisation. Conflicts in pass/fail status (same test reported as passing in one source and failing in another) are flagged in the output, not silently resolved.
 
-## Step 2 — Compute the load-bearing numbers
+## Step 2 - Compute the load-bearing numbers
 
 Six metrics anchor every narrative. The skill computes them from the input and never invents:
 
@@ -52,13 +52,13 @@ Six metrics anchor every narrative. The skill computes them from the input and n
 | **New failures vs. last run** | Tests that passed in the prior run and failed in this one | The "what changed" answer the exec wants |
 | **Severity / category breakdown** | Per Allure's severity and categories taxonomy when available; otherwise omitted | Risk-weighted reading of the same numbers |
 
-If the input lacks a metric (e.g., JUnit XML has no severity), the skill emits "n/a" rather than fabricating. The d6 discipline matters most here — every number cited in the narrative is a number that appears in the input data.
+If the input lacks a metric (e.g., JUnit XML has no severity), the skill emits "n/a" rather than fabricating. The d6 discipline matters most here - every number cited in the narrative is a number that appears in the input data.
 
-## Step 3 — Pick the output shape
+## Step 3 - Pick the output shape
 
 The skill emits one of four narrative shapes. The shape is an explicit input parameter (defaults to `status-update`):
 
-### 3.1 — `status-update` (Slack-ready, ≤3 lines)
+### 3.1 - `status-update` (Slack-ready, ≤3 lines)
 
 ```markdown
 **:white_check_mark: 2026-05-09 nightly regression — 1,247 pass, 18 fail, 3 skipped.**
@@ -66,9 +66,9 @@ Pass rate 98.6% (-0.3pp vs Wed). Top regressions: `cart.checkout.spec` (timeout)
 Duration 1h 12m, +4 min vs Wed; investigation owners: @cart, @auth, @payments.
 ```
 
-The single-line lead is the load-bearing claim; the second and third lines are deltas + ownership. `:white_check_mark:` / `:warning:` / `:x:` map to pass-rate ≥99% / 95–98.99% / <95% by default (configurable per project).
+The single-line lead is the load-bearing claim; the second and third lines are deltas + ownership. `:white_check_mark:` / `:warning:` / `:x:` map to pass-rate ≥99% / 95 - 98.99% / <95% by default (configurable per project).
 
-### 3.2 — `release-notes` (PR / changelog form)
+### 3.2 - `release-notes` (PR / changelog form)
 
 ```markdown
 ## QA — v3.4.0
@@ -80,7 +80,7 @@ The single-line lead is the load-bearing claim; the second and third lines are d
 - **Known issues being shipped:** 3 P3 cosmetic flakes (tracked in [JIRA-1234, JIRA-1235, JIRA-1236]), waivers attached.
 ```
 
-### 3.3 — `exec-summary` (one-paragraph + bullets)
+### 3.3 - `exec-summary` (one-paragraph + bullets)
 
 For the QBR / weekly leadership update. Three sentences plus a 4-bullet outlook:
 
@@ -93,11 +93,11 @@ The v3.4.0 release went through nightly regression with a 98.3% pass rate, margi
 - **What we'd ask of leadership:** confirm the 90-minute regression SLO is still the right ceiling; current trend is +4 minutes per release.
 ```
 
-### 3.4 — `cross-run-trend` (multi-run window, narrative)
+### 3.4 - `cross-run-trend` (multi-run window, narrative)
 
-A narrative form covering a time window (last N runs, last N days). The skill computes per-run metrics, identifies the run-over-run direction, and writes the trend in prose. This is the manager-layer complement to the tabular [`e2e-test-trend-reporter`](../../../qa-flake-triage/agents/e2e-test-trend-reporter.md) — the trend reporter answers "what is the suite health"; this shape answers "tell me the story over the last sprint."
+A narrative form covering a time window (last N runs, last N days). The skill computes per-run metrics, identifies the run-over-run direction, and writes the trend in prose. This is the manager-layer complement to the tabular [`e2e-test-trend-reporter`](../../../qa-flake-triage/agents/e2e-test-trend-reporter.md) - the trend reporter answers "what is the suite health"; this shape answers "tell me the story over the last sprint."
 
-## Step 4 — Verify the narrative against the source
+## Step 4 - Verify the narrative against the source
 
 Before emitting the output, the skill walks each numeric claim in the draft and confirms it exists in the input data. The walk produces a small audit appendix (suppressible via `--no-audit`):
 
@@ -145,10 +145,10 @@ If any claim cannot be sourced (e.g., the SLO baseline isn't in the input), the 
 
 ## References
 
-- Allure Report documentation — results format (`*-result.json`, `*-container.json`), status taxonomy (passed / failed / broken / skipped / unknown), severity, categories: https://allurereport.org/docs/
-- JUnit XML schema reference — testsuite / testcase / failure / error / skipped element shape (the de facto interchange format used by surefire, jest-junit, pytest --junitxml): https://github.com/testmoapp/junitxml
-- ISO/IEC/IEEE 29119-3:2021 — test reporting structures (cite by stable ID; the canonical ISO page sits behind Cloudflare Turnstile).
-- ISTQB glossary — test report: https://glossary.istqb.org/en_US/term/test-report
-- ISTQB glossary — release readiness: https://glossary.istqb.org/en_US/term/release
-- PractiTest 2026 State of Testing Report — 70% use AI for test-case creation, "test factory" framing, narrative drafting as the dominant manager-layer use case: https://www.practitest.com/state-of-testing/
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) — the per-tool parsers this skill consumes.
+- Allure Report documentation - results format (`*-result.json`, `*-container.json`), status taxonomy (passed / failed / broken / skipped / unknown), severity, categories: https://allurereport.org/docs/
+- JUnit XML schema reference - testsuite / testcase / failure / error / skipped element shape (the de facto interchange format used by surefire, jest-junit, pytest --junitxml): https://github.com/testmoapp/junitxml
+- ISO/IEC/IEEE 29119-3:2021 - test reporting structures (cite by stable ID; the canonical ISO page sits behind Cloudflare Turnstile).
+- ISTQB glossary - test report: https://glossary.istqb.org/en_US/term/test-report
+- ISTQB glossary - release readiness: https://glossary.istqb.org/en_US/term/release
+- PractiTest 2026 State of Testing Report - 70% use AI for test-case creation, "test factory" framing, narrative drafting as the dominant manager-layer use case: https://www.practitest.com/state-of-testing/
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - the per-tool parsers this skill consumes.

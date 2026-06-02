@@ -1,6 +1,6 @@
 ---
 name: dr-drill-runner
-description: "Run scheduled DR drills — author the runbook (per-tier RTO + RPO), pre-drill checklist (data sync state, alert silencing, customer comms), drill workflow (announce → fail-over → verify → fail-back), post-drill report. Per Google Cloud DR planning guide; covers cold / warm / hot standby tier-specific patterns."
+description: "Run scheduled DR drills - author the runbook (per-tier RTO + RPO), pre-drill checklist (data sync state, alert silencing, customer comms), drill workflow (announce → fail-over → verify → fail-back), post-drill report. Per Google Cloud DR planning guide; covers cold / warm / hot standby tier-specific patterns."
 type: skill
 archetype: S3
 rating: 22
@@ -30,7 +30,7 @@ the team can run it. Both surface different failures.
 - New service onboarding: every new tier-1 service ships with its
   drill defined.
 
-## Step 1 — Define RTO + RPO per service tier
+## Step 1 - Define RTO + RPO per service tier
 
 Per the [Google Cloud DR planning guide]:
 
@@ -48,7 +48,7 @@ Per the [Google Cloud DR planning guide]:
 Document per service in a service catalog; drills enforce the
 contract.
 
-## Step 2 — DR-pattern tier per service
+## Step 2 - DR-pattern tier per service
 
 Per the [Google Cloud DR planning guide]:
 
@@ -60,12 +60,12 @@ Per the [Google Cloud DR planning guide]:
   interruption.
 
 Drill expectations differ:
-- Cold: Test bring-up from backup (Restore-time test — see
+- Cold: Test bring-up from backup (Restore-time test - see
   `restore-time-tests` skill).
 - Warm: Test failover automation + warm-up time.
 - Hot: Test traffic redirection + sticky-session impact.
 
-## Step 3 — Pre-drill checklist
+## Step 3 - Pre-drill checklist
 
 ```markdown
 ## Pre-Drill Checklist — `<service>` `<date>`
@@ -85,7 +85,7 @@ Drill expectations differ:
 
 Skipping the pre-drill = drills become incidents.
 
-## Step 4 — Drill workflow
+## Step 4 - Drill workflow
 
 ```markdown
 ## Drill Workflow
@@ -115,7 +115,7 @@ Skipping the pre-drill = drills become incidents.
 - Reconcile any drill-introduced data divergence.
 ```
 
-## Step 5 — Post-drill report
+## Step 5 - Post-drill report
 
 ```markdown
 ## Drill Report — `<service>` `<date>`
@@ -149,7 +149,7 @@ Skipping the pre-drill = drills become incidents.
 **Next drill:** 2026-08-06 (quarterly cadence).
 ```
 
-## Step 6 — Cold-tier-specific drill pattern
+## Step 6 - Cold-tier-specific drill pattern
 
 Cold drills = bring up from backup. Verifies:
 
@@ -161,7 +161,7 @@ Cold drills = bring up from backup. Verifies:
   planning guide], "Permission and access validation in DR
   environments" + "Security synchronization").
 
-## Step 7 — Hot-tier-specific drill pattern
+## Step 7 - Hot-tier-specific drill pattern
 
 Hot drills = redirect traffic between active replicas. Verifies:
 
@@ -171,7 +171,7 @@ Hot drills = redirect traffic between active replicas. Verifies:
 - Cache warmup not required (or warmup time is within RTO).
 - Cross-region replication lag stays within RPO during the drill.
 
-## Step 8 — Cadence
+## Step 8 - Cadence
 
 | Tier | Cadence |
 |---|---|
@@ -194,22 +194,21 @@ noting any issues." Without cadence, runbooks rot.
 
 ## Limitations
 
-- DR drills don't replace chaos engineering (`qa-chaos-resilience`)
-  — they test rehearsed paths; chaos tests unrehearsed ones.
+- DR drills don't replace chaos engineering (`qa-chaos-resilience`) - they test rehearsed paths; chaos tests unrehearsed ones.
 - Cloud-managed services may have built-in regional failover that
   bypasses your runbook; document boundaries.
 - Some compliance regimes (FFIEC for banks) prescribe specific
-  drill frequencies + scopes — verify per regulation.
+  drill frequencies + scopes - verify per regulation.
 
 ## References
 
-- [Google Cloud DR planning guide] — RTO / RPO / cold-warm-hot
+- [Google Cloud DR planning guide] - RTO / RPO / cold-warm-hot
   tiers / testing requirements
 - [`backup-verification-author`](../backup-verification-author/SKILL.md),
-  [`restore-time-tests`](../restore-time-tests/SKILL.md) — sister
+  [`restore-time-tests`](../restore-time-tests/SKILL.md) - sister
   skills for drill prerequisites
 - [`error-budget-tests`](../error-budget-tests/SKILL.md),
-  [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) — incident
+  [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - incident
   metrics fed by drills
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide

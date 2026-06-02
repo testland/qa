@@ -1,6 +1,6 @@
 ---
 name: kotest-tests
-description: "Configures and runs Kotest — Kotlin-native test framework with multiple specification styles (StringSpec, FunSpec, BehaviorSpec, DescribeSpec, ShouldSpec, FreeSpec, FeatureSpec, ExpectSpec, AnnotationSpec); rich matcher library; built-in property-based testing (alternative to jqwik); coroutines support; data-driven testing; isolation modes per-spec or per-test; integrates with Gradle JVM test task. Use when working with Kotlin and wanting Kotlin-idiomatic DSL over JUnit 5's annotation-driven approach."
+description: "Configures and runs Kotest - Kotlin-native test framework with multiple specification styles (StringSpec, FunSpec, BehaviorSpec, DescribeSpec, ShouldSpec, FreeSpec, FeatureSpec, ExpectSpec, AnnotationSpec); rich matcher library; built-in property-based testing (alternative to jqwik); coroutines support; data-driven testing; isolation modes per-spec or per-test; integrates with Gradle JVM test task. Use when working with Kotlin and wanting Kotlin-idiomatic DSL over JUnit 5's annotation-driven approach."
 rating: 23
 d6: 4
 archetype: S1
@@ -17,16 +17,16 @@ Per [kotest.io/docs][kt-docs]:
 Kotest is the Kotlin-native test framework. Differentiated from
 JUnit 5 (which works fine with Kotlin too) by:
 
-- **Multiple specification styles** — DSL choice per team preference
-- **Rich matchers** — `shouldBe`, `shouldContain`, `shouldThrow`, etc.
-- **Built-in property-based testing** — alternative to [`jqwik-testing`](../../qa-property-based/skills/jqwik-testing/SKILL.md)
-- **Coroutines-first** — `runTest`/`runBlocking` integrated cleanly
-- **Spec-level isolation modes** — per-test fresh instances vs single
+- **Multiple specification styles** - DSL choice per team preference
+- **Rich matchers** - `shouldBe`, `shouldContain`, `shouldThrow`, etc.
+- **Built-in property-based testing** - alternative to [`jqwik-testing`](../../qa-property-based/skills/jqwik-testing/SKILL.md)
+- **Coroutines-first** - `runTest`/`runBlocking` integrated cleanly
+- **Spec-level isolation modes** - per-test fresh instances vs single
 
 For multi-language JVM projects, JUnit 5 is more universal. For
 Kotlin-only or Kotlin-primary, Kotest's DSL is more ergonomic.
 
-## Step 1 — Install
+## Step 1 - Install
 
 `build.gradle.kts`:
 
@@ -42,7 +42,7 @@ tasks.test {
 }
 ```
 
-## Step 2 — Specification styles
+## Step 2 - Specification styles
 
 Per [kt-docs][kt-docs] Kotest supports 8+ styles. Common picks:
 
@@ -97,7 +97,7 @@ class UserServiceTest : BehaviorSpec({
 
 Pick one style per project + stick with it.
 
-## Step 3 — Matchers
+## Step 3 - Matchers
 
 Per [kotest.io/docs/assertions/matchers.html][kt-matchers]:
 
@@ -120,7 +120,7 @@ Core matchers:
 | `result.shouldBeSuccess()` / `shouldBeFailure()` | Kotlin Result |
 | `shouldThrow<E> { ... }` | Exception |
 
-## Step 4 — Property-based testing
+## Step 4 - Property-based testing
 
 Built-in (no separate library):
 
@@ -143,7 +143,7 @@ class PropertyTest : StringSpec({
 For deeper property-based work see [`jqwik-testing`](../../qa-property-based/skills/jqwik-testing/SKILL.md)
 or the dedicated qa-property-based plugin.
 
-## Step 5 — Coroutines
+## Step 5 - Coroutines
 
 ```kotlin
 class AsyncTest : StringSpec({
@@ -157,7 +157,7 @@ class AsyncTest : StringSpec({
 Test bodies are suspend functions; `runTest` etc. wrappers from
 kotlinx-coroutines-test work directly.
 
-## Step 6 — Data-driven testing
+## Step 6 - Data-driven testing
 
 ```kotlin
 class DataDrivenTest : FunSpec({
@@ -173,10 +173,10 @@ class DataDrivenTest : FunSpec({
 })
 ```
 
-Each row reports as a separate test — failures don't stop subsequent
+Each row reports as a separate test - failures don't stop subsequent
 rows.
 
-## Step 7 — Isolation modes
+## Step 7 - Isolation modes
 
 Per [kotest.io/docs/framework/isolation-mode.html][kt-iso]:
 
@@ -201,7 +201,7 @@ class StatefulTest : StringSpec({
 
 Or globally via `AbstractProjectConfig`.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 Same as JUnit 5 (Kotest's runner is `kotest-runner-junit5`):
 
@@ -230,13 +230,13 @@ JaCoCo coverage works identically.
 
 ## References
 
-- [kt-docs][kt-docs] — Kotest documentation
-- kotest.io — landing
-- [kt-matchers][kt-matchers] — matcher catalog
-- [kt-iso][kt-iso] — isolation modes
+- [kt-docs][kt-docs] - Kotest documentation
+- kotest.io - landing
+- [kt-matchers][kt-matchers] - matcher catalog
+- [kt-iso][kt-iso] - isolation modes
 - [`junit5-tests`](../junit5-tests/SKILL.md),
   [`spock-tests`](../spock-tests/SKILL.md),
   [`testng-tests`](../testng-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) — sister tools
-- [`jqwik-testing`](../../qa-property-based/skills/jqwik-testing/SKILL.md) — JVM property-based
+  [`scalatest`](../scalatest/SKILL.md) - sister tools
+- [`jqwik-testing`](../../qa-property-based/skills/jqwik-testing/SKILL.md) - JVM property-based
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

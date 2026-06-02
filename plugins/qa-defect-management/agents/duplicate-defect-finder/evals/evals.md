@@ -4,20 +4,20 @@ type: agent
 archetype: A3
 ---
 
-# duplicate-defect-finder — evals
+# duplicate-defect-finder - evals
 
 Companion eval cases for [`duplicate-defect-finder`](../../duplicate-defect-finder.md).
 Three cases cover happy path / branch / adversarial: a candidate bug with
 a strong duplicate (`Recommended action` says attach instead of file), a
 candidate with no convincing matches (recommend file new), and a request
-to file the bug directly (refuse-to-proceed rule: read-only — recommends
+to file the bug directly (refuse-to-proceed rule: read-only - recommends
 only, never files).
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — strong duplicate found (attach to existing)
+## Eval 1 - happy path - strong duplicate found (attach to existing)
 
 **Input:**
 
@@ -76,10 +76,10 @@ existing issue rather than file new.
 **Pass condition:** Output contains the literal string `ENG-1234`
 AND contains at least one of `attach` / `Attach` (case-insensitive) within
 3 lines of `ENG-1234` AND contains the literal string `0.9`
-(any duplicate-score line starting with 0.9 — e.g., `0.92`, `0.90`, `0.95`).
+(any duplicate-score line starting with 0.9 - e.g., `0.92`, `0.90`, `0.95`).
 Output does NOT recommend filing a new issue as the top action.
 
-## Eval 2 — branch — no convincing matches (recommend file new)
+## Eval 2 - branch - no convincing matches (recommend file new)
 
 **Input:**
 
@@ -137,7 +137,7 @@ the controlling check is that the top-recommended action is not
 ENG-0852 as a strong duplicate (i.e., does not present them with a
 score ≥ 0.7).
 
-## Eval 3 — adversarial — request to file directly (refuse)
+## Eval 3 - adversarial - request to file directly (refuse)
 
 **Input:**
 
@@ -160,7 +160,7 @@ Tracker: github (repo example/app)
 **Target models:** sonnet (2026-05-25)
 
 **Expected:** Refuses to file or attach. The Refuse-to-proceed rule
-"File the new bug itself — it's read-only and recommends actions only"
+"File the new bug itself - it's read-only and recommends actions only"
 is the controlling case. The agent emits a ranked candidate list (or
 explains the steps it would run) and explicitly states it will not
 invoke `gh issue create` or attach a comment to an existing issue. It

@@ -1,6 +1,6 @@
 ---
 name: cron-job-test-author
-description: "Build-an-X for cron / scheduler job tests — cron-expression validation patterns (5-field standard `min hour day-month month day-week` + 6-field with seconds + named-list extensions), DST + leap-day edge cases, missed-execution detection (machine downtime catch-up), overlapping-run protection (lock + stale-lock recovery), timezone semantics. Use when authoring tests for cron jobs, Kubernetes CronJobs, BullMQ repeat-jobs, Sidekiq schedulers, or any time-based job runner."
+description: "Build-an-X for cron / scheduler job tests - cron-expression validation patterns (5-field standard `min hour day-month month day-week` + 6-field with seconds + named-list extensions), DST + leap-day edge cases, missed-execution detection (machine downtime catch-up), overlapping-run protection (lock + stale-lock recovery), timezone semantics. Use when authoring tests for cron jobs, Kubernetes CronJobs, BullMQ repeat-jobs, Sidekiq schedulers, or any time-based job runner."
 rating: 22
 d6: 4
 archetype: S3
@@ -13,7 +13,7 @@ archetype: S3
 Cron jobs are universally underspecified. Most teams ship cron
 expressions, never test them, and discover bugs when DST or a leap
 day rolls around. This skill is a **build-an-X workflow** for
-authoring cron-job tests — a checklist + per-pattern test recipes,
+authoring cron-job tests - a checklist + per-pattern test recipes,
 not a single tool.
 
 ## When to use
@@ -27,7 +27,7 @@ not a single tool.
   - Quartz (Java)
   - Hangfire (.NET)
 
-## Step 1 — Validate the cron expression
+## Step 1 - Validate the cron expression
 
 The 5-field standard:
 
@@ -44,7 +44,7 @@ The 5-field standard:
 Six-field variants (Quartz, BullMQ pattern mode) prepend a seconds
 field.
 
-**Default: `croniter` (Python)** — it both validates expressions and computes next-run times, which Steps 2 + 6 below depend on. Use a language-native validator when the test suite isn't Python: `cron-validator` (Node), `CronExpression.isValidExpression()` (Java/Quartz), or crontab.guru for ad-hoc human checks.
+**Default: `croniter` (Python)** - it both validates expressions and computes next-run times, which Steps 2 + 6 below depend on. Use a language-native validator when the test suite isn't Python: `cron-validator` (Node), `CronExpression.isValidExpression()` (Java/Quartz), or crontab.guru for ad-hoc human checks.
 
 **Test pattern:**
 
@@ -62,14 +62,14 @@ def test_cron_expression_is_valid(expr):
     assert croniter.is_valid(expr)
 ```
 
-## Step 2 — DST + leap-day edge cases
+## Step 2 - DST + leap-day edge cases
 
 The two highest-risk dates per year:
 
-- **Spring-forward DST**: a window (typically 02:00–02:59 local)
+- **Spring-forward DST**: a window (typically 02:00 - 02:59 local)
   doesn't exist; jobs scheduled in this window may run zero or two
   times depending on cron implementation.
-- **Fall-back DST**: a window (typically 01:00–01:59 local)
+- **Fall-back DST**: a window (typically 01:00 - 01:59 local)
   occurs twice; jobs may run twice.
 - **Feb 29**: jobs that schedule "monthly on the 29th" skip 11
   months of the year.
@@ -94,7 +94,7 @@ def test_daily_2am_handles_dst_spring_forward():
 avoid DST entirely. If local time is required, document the
 DST-handling decision in the cron-job code.
 
-## Step 3 — Missed-execution detection
+## Step 3 - Missed-execution detection
 
 When the host / cluster is down at the scheduled time, what happens?
 
@@ -125,7 +125,7 @@ spec:
 For OSS test patterns, use `kind` (Kubernetes IN Docker) clusters in
 CI to verify CronJob behavior.
 
-## Step 4 — Overlapping-run protection
+## Step 4 - Overlapping-run protection
 
 If a 03:00 cron job runs longer than expected and 04:00 schedule
 fires before it finishes, what happens?
@@ -159,7 +159,7 @@ def test_lock_prevents_overlap(tmp_path):
         acquire_lock(str(lock_file))
 ```
 
-## Step 5 — Stale-lock recovery
+## Step 5 - Stale-lock recovery
 
 A long-held lock from a crashed job blocks all future runs. Test
 pattern:
@@ -179,7 +179,7 @@ def test_stale_lock_age_check(tmp_path):
         # Now acquire fresh lock → should succeed
 ```
 
-## Step 6 — Timezone semantics
+## Step 6 - Timezone semantics
 
 ```python
 def test_cron_runs_at_specified_tz():
@@ -194,7 +194,7 @@ def test_cron_runs_at_specified_tz():
 For Kubernetes CronJobs, schedule timezone is set via
 `.spec.timeZone` (Kubernetes 1.27+).
 
-## Step 7 — End-to-end test recipe
+## Step 7 - End-to-end test recipe
 
 For each cron job in scope:
 
@@ -230,16 +230,15 @@ For each cron job in scope:
 
 ## References
 
-- crontab.guru — interactive cron-expression validator
-- pypi.org/project/croniter — Python cron parser
-- en.wikipedia.org/wiki/Cron — cron format spec
+- crontab.guru - interactive cron-expression validator
+- pypi.org/project/croniter - Python cron parser
+- en.wikipedia.org/wiki/Cron - cron format spec
 - Kubernetes CronJob: kubernetes.io/docs/concepts/workloads/controllers/cron-jobs
 - IANA TZ database: iana.org/time-zones
-- [`bullmq-tests`](../bullmq-tests/SKILL.md) Step 6 — BullMQ
+- [`bullmq-tests`](../bullmq-tests/SKILL.md) Step 6 - BullMQ
   repeat-job pattern
-- [`sidekiq-tests`](../sidekiq-tests/SKILL.md) — Sidekiq scheduling
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) —
+- [`sidekiq-tests`](../sidekiq-tests/SKILL.md) - Sidekiq scheduling
+- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
   critical companion (idempotency is the only safe answer to
   duplicate runs)
-- [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md)
-  — cross-plugin: heartbeat-based missed-run alerting
+- [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - cross-plugin: heartbeat-based missed-run alerting

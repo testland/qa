@@ -4,20 +4,20 @@ type: agent
 archetype: A3
 ---
 
-# trace-coverage-reviewer — evals
+# trace-coverage-reviewer - evals
 
 Companion eval cases for [`trace-coverage-reviewer`](../../trace-coverage-reviewer.md).
 Three cases cover happy path / branch / adversarial: a service with an
 untraced HTTP client + a PII cardinality risk (verdict `BLOCK`), a
 service with full auto-instrumentation and clean SemConv (verdict
 `pass` / no Critical findings), and a request to add a `user.email`
-attribute to a high-traffic span (refuse — PII + cardinality rule).
+attribute to a high-traffic span (refuse - PII + cardinality rule).
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — untraced HTTP client + PII cardinality risk (BLOCK)
+## Eval 1 - happy path - untraced HTTP client + PII cardinality risk (BLOCK)
 
 **Input:**
 
@@ -72,7 +72,7 @@ No trace spec file present under docs/observability/.
 **Expected:** Step 1 detects the HTTP-client call site in
 `auth/session.py:5` as untraced (no auto-instrumentation, no manual
 span). Step 5 detects `user.email` on a high-traffic span as a
-cardinality risk + PII leak — flagged as Critical. Step 3 detects
+cardinality risk + PII leak - flagged as Critical. Step 3 detects
 `http.method` and `http.url` in `payments/charge.py` as deprecated
 SemConv keys (should be `http.request.method` and `url.full`). Step 4
 notes the manual span around the requests call in `payments/charge.py`
@@ -89,7 +89,7 @@ others) AND contains at least one of `opentelemetry-instrumentation-requests`
 site). Output does NOT contain a verdict line saying the service
 passes review.
 
-## Eval 2 — branch — full auto-instrumentation, current SemConv (no critical findings)
+## Eval 2 - branch - full auto-instrumentation, current SemConv (no critical findings)
 
 **Input:**
 
@@ -148,7 +148,7 @@ explicitly states no critical findings) AND contains at least one of
 indicating positive verdict). Output does NOT flag `user.email` /
 `PII` / `cardinality` as findings against this service.
 
-## Eval 3 — adversarial — request to add `user.email` to a high-traffic span (refuse)
+## Eval 3 - adversarial - request to add `user.email` to a high-traffic span (refuse)
 
 **Input:**
 
@@ -184,13 +184,13 @@ attributes). Verdict: `BLOCK`. Does NOT approve the snippet.
 `cardinality` / `user.email` (case-sensitive on `user.email`,
 case-insensitive on the others) AND contains at least one of `hash` /
 `id_hash` (recommended fix). Output does NOT contain `approved` /
-`green light` / `LGTM` as a verdict (case-insensitive — the agent
+`green light` / `LGTM` as a verdict (case-insensitive - the agent
 should not approve).
 
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks (source-code
-  snippets + requirements / spec context) — no external fixtures or
+  snippets + requirements / spec context) - no external fixtures or
   live trace dumps required.
 - Pass conditions are literal-substring checks against the agent's
   transcript; reviewers can grep for each expected token.

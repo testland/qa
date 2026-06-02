@@ -1,6 +1,6 @@
 ---
 name: seed-data-curator
-description: "Builds a reproducible E2E seed dataset for the project's test environments — picks a representative user / org / data-product cross-section, generates the rows via the project's chosen factory library (FactoryBot / mimesis / Bogus / Faker + factory_boy), persists the dataset as a checked-in fixture (SQL dump / JSON / per-engine seed file), and wires it into the test bootstrap. Use when starting E2E coverage on a project that has no seed strategy, or when an existing seed has drifted."
+description: "Builds a reproducible E2E seed dataset for the project's test environments - picks a representative user / org / data-product cross-section, generates the rows via the project's chosen factory library (FactoryBot / mimesis / Bogus / Faker + factory_boy), persists the dataset as a checked-in fixture (SQL dump / JSON / per-engine seed file), and wires it into the test bootstrap. Use when starting E2E coverage on a project that has no seed strategy, or when an existing seed has drifted."
 rating: 23
 d6: 3
 archetype: S3
@@ -10,7 +10,7 @@ archetype: S3
 
 ## Overview
 
-E2E tests need **repeatable starting state** — the same set of
+E2E tests need **repeatable starting state** - the same set of
 users, orgs, products, etc. before every run. Generating fresh data
 per run produces flake; pulling from production raises PII /
 security concerns; hand-crafted SQL fixtures rot. This skill
@@ -32,7 +32,7 @@ defines a workflow for building a **curated seed set** that:
 - A new role / tier / feature flag needs to be exercised by E2E
   tests; the seed needs an example user.
 
-## Step 1 — Define the coverage matrix
+## Step 1 - Define the coverage matrix
 
 Enumerate the business-relevant states the seed must cover:
 
@@ -45,10 +45,10 @@ Enumerate the business-relevant states the seed must cover:
 | Data volume | Empty / 1 item / 10 items / 100 items                         | Pagination, empty-states, truncation.        |
 | Time        | New (created today) / Old (created 1y ago) / Anniversary     | Date-relative business logic.                |
 
-Pick the **minimum cross-product** that covers your test surface —
+Pick the **minimum cross-product** that covers your test surface - 
 not every combination. A typical sweet spot is 12-20 seed users.
 
-## Step 2 — Pick the persistence format
+## Step 2 - Pick the persistence format
 
 | Format           | When to use                                                                  |
 |------------------|------------------------------------------------------------------------------|
@@ -57,12 +57,12 @@ not every combination. A typical sweet spot is 12-20 seed users.
 | **Factory script** (`scripts/seed.rb` / `seed.py`) | Most flexible; runs the factories at boot time. |
 | **Per-engine seed file** (`seeds/snowflake.sql` + `seeds/postgres.sql`) | Multi-warehouse projects. |
 
-Default: **factory script** — runs the team's factory library to
+Default: **factory script** - runs the team's factory library to
 build the dataset every time the test environment starts. SQL
 dumps are faster but harder to review; reserve them for very large
 seed sets.
 
-## Step 3 — Author the factory script
+## Step 3 - Author the factory script
 
 Example with FactoryBot (Ruby):
 
@@ -97,7 +97,7 @@ end
 puts "Seeded #{users.count} users"
 ```
 
-The **predictable email** is intentional — E2E tests reference
+The **predictable email** is intentional - E2E tests reference
 `admin-pro@example.com` rather than guessing a Faker-generated
 email. The factory still uses Faker for non-identifying fields
 (name, address, phone).
@@ -106,7 +106,7 @@ For Python equivalent with factory_boy + mimesis, see the
 [`mimesis-data`](../mimesis-data/SKILL.md) examples; the same
 deterministic-seed-plus-predictable-email pattern applies.
 
-## Step 4 — Wire into test bootstrap
+## Step 4 - Wire into test bootstrap
 
 ### Local development
 
@@ -132,7 +132,7 @@ Expose this as a single command (`make seed`, `npm run seed`,
   run: bundle exec rspec spec/system
 ```
 
-Reset between test suites — never share state across suites unless
+Reset between test suites - never share state across suites unless
 the team explicitly designed for it (and accepted the flake risk;
 see [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md)
 Pattern 2).
@@ -155,7 +155,7 @@ services:
       "
 ```
 
-## Step 5 — Refresh intentionally
+## Step 5 - Refresh intentionally
 
 The seed dataset is a **maintained artifact**, not a one-shot. Refresh
 when:
@@ -238,9 +238,7 @@ emits:
   [`factory-bot-data`](../factory-bot-data/SKILL.md),
   [`mimesis-data`](../mimesis-data/SKILL.md),
   [`bogus-data`](../bogus-data/SKILL.md).
-- [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md)
-  — for PII fields in the seed; ensures the seed never carries
+- [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) - for PII fields in the seed; ensures the seed never carries
   real-looking PII.
-- [`golden-file-conventions`](../golden-file-conventions/SKILL.md)
-  — sibling reference for snapshot fixtures (similar
+- [`golden-file-conventions`](../golden-file-conventions/SKILL.md) - sibling reference for snapshot fixtures (similar
   long-lived-fixture concerns).

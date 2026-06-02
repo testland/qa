@@ -1,6 +1,6 @@
 ---
 name: gherkin-from-stories
-description: "Build-an-X workflow that converts user stories into Gherkin scenarios — extracts the actor / capability / value triple from \"As a … I want … so that …\", maps acceptance criteria to Scenario blocks, identifies parameterizable axes for Scenario Outlines, and emits a Feature file ready for `bdd-step-library-curator`-curated step definitions. Sister to `acceptance-criteria-extractor` (qa-shift-left) — that one handles the AC layer; this skill operates at the user-story layer and produces Gherkin directly."
+description: "Build-an-X workflow that converts user stories into Gherkin scenarios - extracts the actor / capability / value triple from \"As a … I want … so that …\", maps acceptance criteria to Scenario blocks, identifies parameterizable axes for Scenario Outlines, and emits a Feature file ready for `bdd-step-library-curator`-curated step definitions. Sister to `acceptance-criteria-extractor` (qa-shift-left) - that one handles the AC layer; this skill operates at the user-story layer and produces Gherkin directly."
 rating: 22
 d6: 3
 archetype: S3
@@ -35,7 +35,7 @@ If the team uses AC docs as primary, use
 [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md);
 this skill is the user-story-first variant.
 
-## Step 1 — Extract the user-story triple
+## Step 1 - Extract the user-story triple
 
 ```markdown
 # Story: Apply promo code at checkout
@@ -55,11 +55,11 @@ Feature: Apply promo code at checkout
   So that I receive the advertised discount on my order
 ```
 
-If the story doesn't have the triple, **flag and ask** — a story
+If the story doesn't have the triple, **flag and ask** - a story
 without explicit value is a signal the team should clarify before
 testing.
 
-## Step 2 — Extract acceptance criteria
+## Step 2 - Extract acceptance criteria
 
 The story body usually has a list:
 
@@ -94,7 +94,7 @@ Each AC becomes a Scenario:
     Then an error appears: "This code has expired"
 ```
 
-## Step 3 — Identify Scenario Outline opportunities
+## Step 3 - Identify Scenario Outline opportunities
 
 Multiple ACs that vary only in input data become a Scenario
 Outline:
@@ -117,7 +117,7 @@ Per [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-crit
 Step 2: "Use Scenario Outline whenever the underlying logic is
 identical and only the data varies."
 
-## Step 4 — Use existing steps from the library
+## Step 4 - Use existing steps from the library
 
 Per
 [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md),
@@ -134,7 +134,7 @@ Given I have authenticated to the system   # NEW STEP — duplicates "I am a log
 
 Before authoring a new step, search the library README.
 
-## Step 5 — Flag implicit Givens
+## Step 5 - Flag implicit Givens
 
 Stories often imply preconditions:
 
@@ -166,7 +166,7 @@ Same flag-and-ask pattern as
 [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
 Step 6.
 
-## Step 6 — Validate Gherkin style
+## Step 6 - Validate Gherkin style
 
 The output should pass
 [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md)
@@ -177,7 +177,7 @@ checks:
 - Every Then has an observable outcome.
 - No technical leakage (DB names, internal API endpoints).
 
-## Step 7 — Output
+## Step 7 - Output
 
 ```markdown
 ## Gherkin scenarios for `<story>`
@@ -232,11 +232,7 @@ conventions. Pair with the framework's runner per the team's stack
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-  — sibling: AC-first variant.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)
-  — step library this skill draws from.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md)
-  — output-quality check.
-- [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md)
-  — sibling: ATDD-flavored variant.
+- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - sibling: AC-first variant.
+- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from.
+- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - output-quality check.
+- [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md) - sibling: ATDD-flavored variant.

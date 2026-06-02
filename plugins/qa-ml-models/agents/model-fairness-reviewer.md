@@ -36,7 +36,7 @@ The agent takes:
 
 Output: per-dimension coverage matrix + verdict + action items.
 
-## Step 1 — Classify model risk
+## Step 1 - Classify model risk
 
 ```
 Low risk:    Internal recommendation; reversible; no individual decisions
@@ -50,14 +50,14 @@ Different risk classes require different evidence:
 | Evidence | Low | Medium | High |
 |---|:-:|:-:|:-:|
 | Performance metrics | ✓ | ✓ | ✓ |
-| Group fairness (Fairlearn) | — | ✓ | ✓ |
-| Intersectional fairness (2+ sensitive features) | — | ✓ | ✓ |
+| Group fairness (Fairlearn) | - | ✓ | ✓ |
+| Intersectional fairness (2+ sensitive features) | - | ✓ | ✓ |
 | Vulnerability scan (Giskard) | ✓ | ✓ | ✓ |
-| Drift monitoring plan (Evidently) | — | ✓ | ✓ |
-| Per-prediction explanation logging (Alibi) | — | — | ✓ |
-| Mitigation provenance (if disparity > 0) | — | ✓ | ✓ |
+| Drift monitoring plan (Evidently) | - | ✓ | ✓ |
+| Per-prediction explanation logging (Alibi) | - | - | ✓ |
+| Mitigation provenance (if disparity > 0) | - | ✓ | ✓ |
 
-## Step 2 — Validate sensitive-feature declaration
+## Step 2 - Validate sensitive-feature declaration
 
 The model card MUST declare which sensitive features were considered.
 "None" is allowed only for the lowest-risk class.
@@ -68,7 +68,7 @@ jq '.sensitive_features' model_card.json
 # Refuse if: missing OR ["none"] for medium/high risk
 ```
 
-## Step 3 — Per-group fairness review (Fairlearn)
+## Step 3 - Per-group fairness review (Fairlearn)
 
 Read `MetricFrame.by_group`:
 
@@ -91,11 +91,11 @@ Verdict logic:
 | 0.05 < DPD ≤ 0.10 | 🟡 needs justification + monitoring plan |
 | DPD > 0.10 | ❌ requires mitigation (Reductions or ThresholdOptimizer) before promotion, OR documented waiver |
 
-DPD thresholds tuned per use case + legal context — defer to legal
+DPD thresholds tuned per use case + legal context - defer to legal
 counsel for binding numbers (the 80% rule for selection-rate ratio
 is one common reference but not universally binding).
 
-## Step 4 — Intersectional check
+## Step 4 - Intersectional check
 
 For medium/high risk, verify intersectional analysis exists:
 
@@ -107,7 +107,7 @@ jq '.intersectional_groups' model_card.json
 Refuse if missing for medium/high risk. Single-attribute fairness
 hides intersectional disparities (Black women / older Asians / etc.).
 
-## Step 5 — Vulnerability scan review (Giskard)
+## Step 5 - Vulnerability scan review (Giskard)
 
 ```bash
 # Read scan summary
@@ -123,9 +123,9 @@ Per-category triage:
 | Underconfidence | NO (advisory) |
 | Stochasticity | NO if reproducible runs configured |
 | Ethical issues | YES (manual review required) |
-| Unrobustness | Depends on input source — block if user-controlled |
+| Unrobustness | Depends on input source - block if user-controlled |
 
-## Step 6 — Drift monitoring plan (Evidently)
+## Step 6 - Drift monitoring plan (Evidently)
 
 For medium/high risk:
 
@@ -136,7 +136,7 @@ For medium/high risk:
 If model card claims "monitored in production" but no Evidently
 schedule exists, refuse promotion.
 
-## Step 7 — Per-prediction explanations (high-risk only)
+## Step 7 - Per-prediction explanations (high-risk only)
 
 For high-risk models, verify Alibi sample explanations exist for at
 least one positive + one negative prediction class:
@@ -148,7 +148,7 @@ ls evidence/explanations/*.json
 
 Refuse promotion if missing for high-risk class.
 
-## Step 8 — Emit verdict
+## Step 8 - Emit verdict
 
 ```markdown
 ## Model fairness review — `<model_id>` v`<version>`
@@ -185,7 +185,7 @@ attach waiver per template (`Reason:` + `Approved-by:` + `Re-review-date:` + `ex
 4. Resubmit for review
 ```
 
-## Step 9 — Refuse-to-proceed rules
+## Step 9 - Refuse-to-proceed rules
 
 Refuse ✅ promote when:
 
@@ -210,7 +210,7 @@ Refuse ✅ promote when:
 
 ## Examples
 
-### Example 1 — Low-risk recommender (✅ promote)
+### Example 1 - Low-risk recommender (✅ promote)
 
 ```
 Risk: Low (internal product recommendations)
@@ -218,7 +218,7 @@ Evidence: performance metrics + Giskard scan
 Verdict: ✅ promote — risk class doesn't require fairness/explanation evidence
 ```
 
-### Example 2 — Credit decisioning model (❌ block)
+### Example 2 - Credit decisioning model (❌ block)
 
 ```
 Risk: High (consumer credit decisions, ECOA-regulated)
@@ -233,7 +233,7 @@ Action: mitigate disparity + add intersectional + add Alibi logging before resub
   [`deepchecks-tests`](../skills/deepchecks-tests/SKILL.md),
   [`evidently-monitoring`](../skills/evidently-monitoring/SKILL.md),
   [`fairlearn-fairness`](../skills/fairlearn-fairness/SKILL.md),
-  [`alibi-explainability`](../skills/alibi-explainability/SKILL.md) —
+  [`alibi-explainability`](../skills/alibi-explainability/SKILL.md) - 
   preloaded sister skills providing per-tool evidence formats
-- EU AI Act Annex III high-risk classification — consult regulation
+- EU AI Act Annex III high-risk classification - consult regulation
   text for current criteria

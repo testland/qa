@@ -27,7 +27,7 @@ Node ≥ 20.19.0 (or Bun).
   bundle-size win).
 - Pre-merge gate to prevent new dead exports from accumulating.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 # Recommended: setup wizard (auto-detects framework)
@@ -49,7 +49,7 @@ Add `package.json` script:
 
 Per the [Knip docs].
 
-## Step 2 — Configure entry points
+## Step 2 - Configure entry points
 
 `knip.json`:
 
@@ -76,7 +76,7 @@ Or `knip.config.ts` for typed config.
 graph from. `project` = the universe of files it considers reachable.
 Anything in `project` not reached from `entry` is unused.
 
-## Step 3 — First run
+## Step 3 - First run
 
 ```bash
 npx knip
@@ -92,7 +92,7 @@ Unused exported types (4)
 Unused exported enum members (1)
 ```
 
-## Step 4 — Use framework plugins
+## Step 4 - Use framework plugins
 
 For framework-aware scanning, enable plugins (auto-detected by `npm
 init @knip/config`):
@@ -110,9 +110,9 @@ init @knip/config`):
 ```
 
 Plugin list (Next.js, Remix, Astro, Vite, Storybook, Playwright, Jest,
-etc.) — see the [Knip plugins page].
+etc.) - see the [Knip plugins page].
 
-## Step 5 — Limit output during cleanup
+## Step 5 - Limit output during cleanup
 
 ```bash
 # Show only top 5 of each issue type — useful when first adopting
@@ -121,7 +121,7 @@ npx knip --max-show-issues 5
 
 Per the [Knip docs] for overwhelming output.
 
-## Step 6 — CI gate
+## Step 6 - CI gate
 
 ```yaml
 # GitHub Actions
@@ -137,7 +137,7 @@ existing dead code first:
 npx knip --no-exit-code > knip-baseline.txt
 ```
 
-## Step 7 — Per-issue triage
+## Step 7 - Per-issue triage
 
 | Reported as | True positive? | Action |
 |---|---|---|
@@ -168,8 +168,8 @@ npx knip --no-exit-code > knip-baseline.txt
 
 ## References
 
-- [Knip docs] — install, entry/project config, framework plugins
-- [Knip plugins page] — full plugin list (Next.js, Remix, Astro,
+- [Knip docs] - install, entry/project config, framework plugins
+- [Knip plugins page] - full plugin list (Next.js, Remix, Astro,
   Storybook, Vite, etc.)
 
 [Knip docs]: https://knip.dev/overview/getting-started

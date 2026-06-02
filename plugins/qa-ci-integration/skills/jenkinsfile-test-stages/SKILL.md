@@ -1,6 +1,6 @@
 ---
 name: jenkinsfile-test-stages
-description: "Configures Jenkins declarative pipeline test stages — `Jenkinsfile` with stages, parallel + per-agent execution, post-actions (always / failure / success), pipeline-junit-plugin for test reports, lockable resources for shared infra. Use for Jenkins-based CI (common in enterprise / regulated environments)."
+description: "Configures Jenkins declarative pipeline test stages - `Jenkinsfile` with stages, parallel + per-agent execution, post-actions (always / failure / success), pipeline-junit-plugin for test reports, lockable resources for shared infra. Use for Jenkins-based CI (common in enterprise / regulated environments)."
 rating: 22
 d6: 3
 archetype: S1
@@ -11,17 +11,17 @@ archetype: S1
 ## Overview
 
 Jenkins Declarative Pipeline (introduced 2017) is the modern
-Jenkinsfile syntax — replaces older Scripted Pipeline for most
+Jenkinsfile syntax - replaces older Scripted Pipeline for most
 use cases.
 
 A Jenkinsfile defines:
 
-- **Pipeline** — top-level container.
-- **Agent** — where stages run (any agent / specific node /
+- **Pipeline** - top-level container.
+- **Agent** - where stages run (any agent / specific node /
   Docker container).
-- **Stages** — sequential or parallel phases.
-- **Steps** — commands within a stage.
-- **Post** — actions after stages (always / success / failure /
+- **Stages** - sequential or parallel phases.
+- **Steps** - commands within a stage.
+- **Post** - actions after stages (always / success / failure /
   unstable / changed).
 
 ## When to use
@@ -36,7 +36,7 @@ For new projects in 2026+: GitHub Actions / GitLab CI offer
 better managed-runner experiences. Jenkins shines in self-hosted
 + plugin-rich environments.
 
-## Step 1 — Basic Jenkinsfile
+## Step 1 - Basic Jenkinsfile
 
 ```groovy
 // Jenkinsfile
@@ -61,7 +61,7 @@ pipeline {
 `agent any` runs on any available executor; pin via `agent { label 'linux' }`
 or `agent { docker { image 'node:22' } }`.
 
-## Step 2 — Docker agent
+## Step 2 - Docker agent
 
 ```groovy
 pipeline {
@@ -82,10 +82,10 @@ pipeline {
 }
 ```
 
-Docker agents provide reproducibility — same Node version on
+Docker agents provide reproducibility - same Node version on
 every run.
 
-## Step 3 — Parallel stages
+## Step 3 - Parallel stages
 
 ```groovy
 pipeline {
@@ -112,10 +112,10 @@ pipeline {
 }
 ```
 
-Parallel stages can have different agents — useful when E2E
+Parallel stages can have different agents - useful when E2E
 needs a Playwright-equipped image.
 
-## Step 4 — Matrix builds (Jenkins 2.302+)
+## Step 4 - Matrix builds (Jenkins 2.302+)
 
 ```groovy
 pipeline {
@@ -150,7 +150,7 @@ pipeline {
 
 Matrix runs all OS × Node combinations in parallel.
 
-## Step 5 — Post actions
+## Step 5 - Post actions
 
 ```groovy
 pipeline {
@@ -184,13 +184,13 @@ pipeline {
 }
 ```
 
-`post { always {} }` runs on any outcome — essential for artifact
+`post { always {} }` runs on any outcome - essential for artifact
 upload + notifications.
 
 The `junit '...'` step (from JUnit Plugin) parses XML and renders
 results in Jenkins UI.
 
-## Step 6 — Lockable resources
+## Step 6 - Lockable resources
 
 ```groovy
 pipeline {
@@ -211,7 +211,7 @@ pipeline {
 `lock(...)` uses the Lockable Resources Plugin to serialize
 access to shared resources (test DB, license-locked tool, etc.).
 
-## Step 7 — Environment + credentials
+## Step 7 - Environment + credentials
 
 ```groovy
 pipeline {
@@ -236,7 +236,7 @@ pipeline {
 
 `withCredentials([...])` masks secrets in build logs.
 
-## Step 8 — Multi-branch + scheduled
+## Step 8 - Multi-branch + scheduled
 
 ```groovy
 pipeline {
@@ -261,7 +261,7 @@ pipeline {
 Per-branch behavior via Multibranch Pipeline job type (separate
 config in Jenkins UI).
 
-## Step 9 — When to retry
+## Step 9 - When to retry
 
 ```groovy
 stage('Test') {
@@ -273,7 +273,7 @@ stage('Test') {
 }
 ```
 
-Use sparingly — retries hide flake. Prefer
+Use sparingly - retries hide flake. Prefer
 [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
 
 ## Anti-patterns
@@ -302,7 +302,6 @@ Use sparingly — retries hide flake. Prefer
 - Jenkins Declarative Pipeline at `jenkins.io/doc/book/pipeline/`.
 - [`github-actions-test-jobs`](../github-actions-test-jobs/SKILL.md),
   [`gitlab-ci-test-jobs`](../gitlab-ci-test-jobs/SKILL.md),
-  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) —
+  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
   alternatives.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — JUnit XML parser.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - JUnit XML parser.

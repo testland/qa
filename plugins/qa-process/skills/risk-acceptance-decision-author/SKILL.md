@@ -1,6 +1,6 @@
 ---
 name: risk-acceptance-decision-author
-description: "Build-an-X workflow that produces a structured risk-acceptance decision document — for risks the team has decided to accept (rather than mitigate / transfer / avoid). Walks the author through the ISO 31000 risk-acceptance criteria (rationale, sign-off, scope, review trigger, exit conditions), captures stakeholder approval, and links to the originating risk register entry. Output is a Markdown decision artefact that lives alongside the risk register and provides audit-defensible justification for the team's acceptance choice."
+description: "Build-an-X workflow that produces a structured risk-acceptance decision document - for risks the team has decided to accept (rather than mitigate / transfer / avoid). Walks the author through the ISO 31000 risk-acceptance criteria (rationale, sign-off, scope, review trigger, exit conditions), captures stakeholder approval, and links to the originating risk register entry. Output is a Markdown decision artefact that lives alongside the risk register and provides audit-defensible justification for the team's acceptance choice."
 rating: 22
 d6: 4
 archetype: S3
@@ -23,15 +23,15 @@ stable ID).
 ## When to use
 
 - A risk register entry's "Strategy" column has been set to
-  "Accept" — open the decision document immediately.
-- Annual review of accepted risks — re-justify acceptance with
+  "Accept" - open the decision document immediately.
+- Annual review of accepted risks - re-justify acceptance with
   current data.
-- Audit prep — assemble the accepted-risk decision trail.
-- Post-incident review — if an accepted risk triggered, document
+- Audit prep - assemble the accepted-risk decision trail.
+- Post-incident review - if an accepted risk triggered, document
   whether the acceptance was justified given what was known at
   the time.
 
-## Step 1 — Identify the risk being accepted
+## Step 1 - Identify the risk being accepted
 
 Pull the entry from the relevant register:
 
@@ -42,23 +42,23 @@ Pull the entry from the relevant register:
 Cross-reference: risk ID, score, category, current mitigations
 already in place.
 
-## Step 2 — State the rationale
+## Step 2 - State the rationale
 
 The hardest part. Common defensible rationales:
 
 | Rationale | When applicable | Anti-rationale (do NOT accept this) |
 |---|---|---|
-| **Cost of mitigation > expected loss** | Quantified: mitigation costs $100k; expected loss = score × loss-per-incident < $100k | "Mitigation is hard" — without quantification |
+| **Cost of mitigation > expected loss** | Quantified: mitigation costs $100k; expected loss = score × loss-per-incident < $100k | "Mitigation is hard" - without quantification |
 | **Mitigation degrades user experience** | E.g., rate-limiting risk; mitigation = strict throttle, would hurt 95% of users to catch <1% abuse | Without UX measurement |
 | **Risk is in a deprecated subsystem** | Subsystem retiring within N quarters; mitigation effort wasted | "We'll get to it eventually" |
 | **Risk likelihood demonstrably low** | Historical data: 0 incidents in 36 months of comparable systems | Hand-wave likelihood claim |
 | **Compensating monitoring exists** | Real-time alert on the risk's failure mode; can respond fast enough that detect→fix < tolerable downtime | "We'll notice" |
 
-## Step 3 — Sign-off + scope
+## Step 3 - Sign-off + scope
 
 Two questions need explicit answers:
 
-1. **Who signs off?** — Authority level should match score:
+1. **Who signs off?** - Authority level should match score:
    - Score 1-5: Tech lead
    - Score 6-9: Engineering manager
    - Score 10-14: Director + QA lead
@@ -71,7 +71,7 @@ Two questions need explicit answers:
    - Across all releases until N? (Scope: time-bound)
    - Indefinitely until conditions change? (Scope: conditions)
 
-## Step 4 — Review trigger + exit conditions
+## Step 4 - Review trigger + exit conditions
 
 A risk acceptance is **not permanent**. Document the trigger that
 re-opens the decision:
@@ -87,7 +87,7 @@ re-opens the decision:
 At minimum: time + score-change trigger. Indefinitely-accepted
 risks (no trigger) are anti-patterns.
 
-## Step 5 — Author the decision document
+## Step 5 - Author the decision document
 
 ```markdown
 # Risk acceptance decision — PR-008
@@ -157,7 +157,7 @@ Reopen this decision if ANY of:
 - (future review entries logged here)
 ```
 
-## Step 6 — Link bidirectionally
+## Step 6 - Link bidirectionally
 
 Update the risk register entry:
 
@@ -177,7 +177,7 @@ And add to the decisions index:
 | ... | ... | ... | ... | ... |
 ```
 
-## Step 7 — Annual review log
+## Step 7 - Annual review log
 
 ```markdown
 ## Q4 2026 review of PR-008
@@ -189,7 +189,7 @@ And add to the decisions index:
 - Re-signed: <names> ✓ YYYY-MM-DD
 ```
 
-## Worked example — a security-risk acceptance (S4 score)
+## Worked example - a security-risk acceptance (S4 score)
 
 Some risks score high (≥15) but acceptance is still legitimate.
 Example: a known-exploitable but rate-limited internal endpoint.
@@ -239,7 +239,7 @@ Accepting because:
 | Accept without document | Decision rationale lost; auditor finds nothing | Always author a decision per accepted risk |
 | Indefinite acceptance (no review trigger) | Risk silently persists into next product cycle | Always set at least time + score-change triggers |
 | Sign-off at lower authority than the score warrants | Decisions undocumented at the right level; audit fails | Step 3 authority-matching matrix |
-| Hand-wave rationale | "We'll just monitor" without specifics — fails post-mortem | Quantify (cost, probability, compensating control); name specific monitors |
+| Hand-wave rationale | "We'll just monitor" without specifics - fails post-mortem | Quantify (cost, probability, compensating control); name specific monitors |
 | No compensating controls | Acceptance = "we hope nothing bad happens" | Document detective controls (monitoring, alerts, runbooks) |
 | Stale decisions never re-reviewed | Risk landscape evolves; old rationale no longer holds | Annual cycle minimum; quarterly for high-score |
 | Acceptance hidden in a comment field | Not searchable, not auditable | Versioned Markdown in repo; index file |
@@ -252,21 +252,21 @@ Accepting because:
 - **Sign-off chain depends on org structure.** The matrix in
   Step 3 is a default; adapt to actual org authorities.
 - **Doesn't cover statutory non-acceptance.** Some risks (e.g.,
-  GDPR violations) can't be accepted regardless of cost — the
+  GDPR violations) can't be accepted regardless of cost - the
   authority isn't yours to delegate. Flag these explicitly.
 - **Annual review can be performative.** Just re-stamping
   without re-evaluating isn't real review.
 
 ## References
 
-- ISO 31000:2018 "Risk management — Guidelines" §6.5
-  (risk-treatment options including acceptance) — cite by stable
+- ISO 31000:2018 "Risk management - Guidelines" §6.5
+  (risk-treatment options including acceptance) - cite by stable
   ID.
 - ISTQB Advanced Test Manager (CTAL-TM) syllabus, ch. 5.
-- ISTQB Glossary —
-  [glossary.istqb.org](https://glossary.istqb.org/) — "risk
+- ISTQB Glossary - 
+  [glossary.istqb.org](https://glossary.istqb.org/) - "risk
   acceptance".
-- ISO/IEC 27005:2022 (information security risk management) —
+- ISO/IEC 27005:2022 (information security risk management) - 
   alternate authority for security-domain acceptance decisions;
   cite by stable ID.
 - Sibling skills:

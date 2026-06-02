@@ -43,13 +43,13 @@ A read-only investigator that turns "the contract gate failed, why?" into a cate
 
 | Category                 | Signal                                                                                                  | Typical owner |
 |--------------------------|---------------------------------------------------------------------------------------------------------|---------------|
-| `provider-implementation`| Pact verification fails on the provider side; the OpenAPI spec is unchanged but the running provider's response differs from the contract. | Provider team — restore the documented behavior or update the spec + republish the contract. |
-| `schema-rename`          | Field renamed in OpenAPI / GraphQL / Protobuf without keeping the old name as an alias. `git log` shows a single rename commit. | Spec author — add a deprecation alias and shift the rename to a later release. |
-| `schema-removal`         | Field / type / endpoint deleted. The spec change is intentional but no consumer migration plan exists. | Spec author + downstream teams — schedule deprecate-then-remove. |
-| `schema-narrowing`       | Type narrowed (`string` → `int`), enum value removed, response field made required. | Spec author — keep the contract additive; reverse the narrowing. |
-| `consumer-expectation`   | Pact pact file changed; the consumer added a new `uponReceiving` interaction that the provider doesn't implement. | Consumer team + provider team — provider must support, or consumer rolls back. |
-| `data-fixture`           | Pact provider-state hook didn't seed the data the consumer expects (`given('I have a list of dogs')` returned empty). | Provider test setup — fix the state handler. |
-| `version-skew`           | The deployed provider version is older than the version the consumer's pact targets; `can-i-deploy` returns no on the matrix. | Release coordinator — deploy the matching provider version first. |
+| `provider-implementation`| Pact verification fails on the provider side; the OpenAPI spec is unchanged but the running provider's response differs from the contract. | Provider team - restore the documented behavior or update the spec + republish the contract. |
+| `schema-rename`          | Field renamed in OpenAPI / GraphQL / Protobuf without keeping the old name as an alias. `git log` shows a single rename commit. | Spec author - add a deprecation alias and shift the rename to a later release. |
+| `schema-removal`         | Field / type / endpoint deleted. The spec change is intentional but no consumer migration plan exists. | Spec author + downstream teams - schedule deprecate-then-remove. |
+| `schema-narrowing`       | Type narrowed (`string` → `int`), enum value removed, response field made required. | Spec author - keep the contract additive; reverse the narrowing. |
+| `consumer-expectation`   | Pact pact file changed; the consumer added a new `uponReceiving` interaction that the provider doesn't implement. | Consumer team + provider team - provider must support, or consumer rolls back. |
+| `data-fixture`           | Pact provider-state hook didn't seed the data the consumer expects (`given('I have a list of dogs')` returned empty). | Provider test setup - fix the state handler. |
+| `version-skew`           | The deployed provider version is older than the version the consumer's pact targets; `can-i-deploy` returns no on the matrix. | Release coordinator - deploy the matching provider version first. |
 
 ## Output format
 
@@ -76,7 +76,7 @@ A read-only investigator that turns "the contract gate failed, why?" into a cate
 
 ### Example 1: oasdiff fails after a "rename" commit
 
-Input — `oasdiff breaking openapi.base.yaml openapi.yaml --format json`
+Input - `oasdiff breaking openapi.base.yaml openapi.yaml --format json`
 returns one finding: `request-property-removed` for
 `POST /orders.body.customer_email`. `git log -p -- openapi.yaml`
 shows commit `abc1234` "Rename customer_email to customer.email
@@ -106,7 +106,7 @@ both spellings simultaneously, which breaks every consumer.
 
 ### Example 2: Pact provider verification fails on a state hook
 
-Input — `pact_verifier_log.txt` shows verification failed for
+Input - `pact_verifier_log.txt` shows verification failed for
 interaction "request for all dogs" because
 `given('I have a list of dogs')` returned an empty list. `git log -p`
 on `provider/state-handlers.ts` shows no recent change.
@@ -137,7 +137,7 @@ gate was added. Restore unconditional seeding for the
 
 ### Example 3: buf breaking after enum value removal
 
-Input — `buf breaking --against '.git#branch=main'` reports
+Input - `buf breaking --against '.git#branch=main'` reports
 `ENUM_VALUE_NO_DELETE` on `OrderStatus.SHIPPED_OLD`. `git log -p` shows
 commit `def0011` deleted the enum value.
 

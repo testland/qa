@@ -1,6 +1,6 @@
 ---
 name: data-quality-conventions
-description: "Reference catalog of data-quality conventions — when to choose dbt-tests vs Great Expectations vs Soda, column-level vs table-level coverage, severity tiering, SLA and freshness conventions, and common anti-patterns to avoid. Use when designing coverage for a new data product or auditing an existing one."
+description: "Reference catalog of data-quality conventions - when to choose dbt-tests vs Great Expectations vs Soda, column-level vs table-level coverage, severity tiering, SLA and freshness conventions, and common anti-patterns to avoid. Use when designing coverage for a new data product or auditing an existing one."
 rating: 24
 d6: 3
 archetype: S2
@@ -12,13 +12,13 @@ A reference catalog for **how** to design data-quality coverage. Pairs
 with the engine-specific skills in this plugin
 ([`dbt-testing`](../dbt-testing/SKILL.md),
 [`great-expectations`](../great-expectations/SKILL.md),
-[`soda-checks`](../soda-checks/SKILL.md)) — those tell you the **how**
+[`soda-checks`](../soda-checks/SKILL.md)) - those tell you the **how**
 of running checks; this tells you **which** checks and **where**.
 
 ## Engine selection
 
 Use this matrix to pick an engine before authoring any checks. Mixing
-engines is fine in a large platform — the [`data-quality-gate`](../data-quality-gate/SKILL.md)
+engines is fine in a large platform - the [`data-quality-gate`](../data-quality-gate/SKILL.md)
 skill exists precisely to reconcile their outputs.
 
 | Use case                                              | Preferred engine | Why |
@@ -30,7 +30,7 @@ skill exists precisely to reconcile their outputs.
 | Brand-new project, no preference                       | dbt-tests if you already have dbt; otherwise Soda for YAML simplicity | Lowest cognitive overhead. |
 
 **Anti-pattern:** running all three engines on the same dataset for the
-same checks "for redundancy" — duplicate checks shift the failure cost
+same checks "for redundancy" - duplicate checks shift the failure cost
 to humans triaging three CI signals for the same root cause.
 
 ## Column-level vs table-level coverage
@@ -47,10 +47,10 @@ for a new data product:
 | Column (numeric) | range / `between` for business-bounded columns  | Catches arithmetic errors and unit mismatches. |
 | Column (date)| `not_null` on required timestamps                   | Catches dropped fields. |
 | Table        | `row_count > 0` (and an upper bound if known)       | Catches catastrophic ingestion drop or runaway duplicate. |
-| Table        | `freshness` on the load-time timestamp              | Catches "pipeline didn't run" — the most common silent failure. |
+| Table        | `freshness` on the load-time timestamp              | Catches "pipeline didn't run" - the most common silent failure. |
 
 For numeric columns, prefer **business-bounded ranges** (e.g. discount
-0–100 %) over **distribution-bounded ranges** (e.g. mean ± 3σ). Statistical
+0 - 100 %) over **distribution-bounded ranges** (e.g. mean ± 3σ). Statistical
 ranges drift with seasonality and produce false positives at scale; the
 shop should treat distribution monitoring as a separate concern from
 data-quality assertions.
@@ -77,7 +77,7 @@ a quarter; the team eventually disables the gate entirely. Reserve
 
 ## Freshness and SLAs
 
-A freshness check is the highest-leverage assertion in most pipelines —
+A freshness check is the highest-leverage assertion in most pipelines - 
 it catches the "pipeline didn't run" failure mode that no row-level
 check can detect (because there are no rows to check).
 
@@ -89,7 +89,7 @@ Conventions:
   pipeline gets `freshness < 2d`; an hourly pipeline gets `< 2h`.
   This avoids false alarms from a single late run while still catching
   a stuck pipeline.
-- Freshness is `error`-severity by convention — a stuck pipeline blocks
+- Freshness is `error`-severity by convention - a stuck pipeline blocks
   every downstream business decision, so a noisy alert is the right
   behavior.
 
@@ -119,9 +119,9 @@ Conventions:
 A check is healthy when it fails roughly **once per quarter on a real
 issue**. Two failure modes warrant retirement:
 
-- **Always passing** — the check costs scan time and bugs in it go
+- **Always passing** - the check costs scan time and bugs in it go
   undetected; consider whether the invariant moved upstream and the
   check is now redundant.
-- **Always failing on the same root cause** — the team has learned to
+- **Always failing on the same root cause** - the team has learned to
   ignore it; either fix the root cause or relax the threshold to a
   level that catches *new* regressions.

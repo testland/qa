@@ -1,6 +1,6 @@
 ---
 name: jepsen-patterns
-description: "Reference for Jepsen-style distributed-systems testing — consistency models hierarchy (linearizability vs sequential vs causal vs monotonic-reads vs eventual), nemesis primitives (network partitions, clock skew, kill nodes), workload generators, Knossos + Elle linearizability checkers. Reference-only because Jepsen tests are typically Clojure-bespoke per system; use this skill to evaluate vendor claims and structure your own test."
+description: "Reference for Jepsen-style distributed-systems testing - consistency models hierarchy (linearizability vs sequential vs causal vs monotonic-reads vs eventual), nemesis primitives (network partitions, clock skew, kill nodes), workload generators, Knossos + Elle linearizability checkers. Reference-only because Jepsen tests are typically Clojure-bespoke per system; use this skill to evaluate vendor claims and structure your own test."
 type: skill
 archetype: S2
 rating: 22
@@ -20,7 +20,7 @@ property which declares what a system can do." Jepsen tests
 distributed databases by injecting faults (the *nemesis*) and
 checking the operation history against a consistency model.
 
-This skill is **reference-only** — Jepsen itself is a Clojure library
+This skill is **reference-only** - Jepsen itself is a Clojure library
 + DSL; production tests are bespoke per database. Use this skill to:
 read vendor "we passed Jepsen" claims with the right framing, scope a
 custom Jepsen-style test, or evaluate a competing data-store choice.
@@ -30,17 +30,17 @@ custom Jepsen-style test, or evaluate a competing data-store choice.
 - Evaluating a distributed database vendor's consistency claims.
 - Designing in-house consistency tests for a custom store
   (CRDT-based KV, custom replication).
-- Onboarding to a system already tested by Jepsen — read
+- Onboarding to a system already tested by Jepsen - read
   the report intelligently.
 
-## Step 1 — Map the consistency model your system claims
+## Step 1 - Map the consistency model your system claims
 
 Per the [Jepsen consistency docs], models are organized by their
 guarantees + the phenomena they prohibit:
 
 | Model | Allowed phenomena | Forbidden phenomena |
 |---|---|---|
-| Linearizability | None — operations totally ordered respecting real time | Stale read, lost update, write skew |
+| Linearizability | None - operations totally ordered respecting real time | Stale read, lost update, write skew |
 | Sequential consistency | Per-process order respected; cross-process not real-time | Real-time-ordering violations |
 | Causal consistency | Cause-before-effect respected | Causally unrelated operations may appear out of order |
 | Monotonic reads | Once a read sees value v, no later read sees an older value | Cross-client divergence allowed |
@@ -49,7 +49,7 @@ guarantees + the phenomena they prohibit:
 Your system claims one of these (or a hybrid: snapshot isolation,
 read-your-writes, etc.). The test must match the claim.
 
-## Step 2 — Pick a nemesis
+## Step 2 - Pick a nemesis
 
 Nemesis primitives Jepsen ships:
 
@@ -65,7 +65,7 @@ Nemesis primitives Jepsen ships:
 Combine nemeses (partition + crash + clock skew) to find compound
 bugs.
 
-## Step 3 — Generator: construct the workload
+## Step 3 - Generator: construct the workload
 
 A Jepsen workload is per-client operations: invoke `read` / `write` /
 `cas` / `append`, observe outcome (`ok` / `fail` / `info`).
@@ -82,19 +82,19 @@ Pseudocode shape (Jepsen DSL is Clojure):
 Concurrent N clients hit the system; outcomes recorded as a
 *history* (an ordered list of invocations + completions).
 
-## Step 4 — Check the history with Knossos / Elle
+## Step 4 - Check the history with Knossos / Elle
 
 | Checker | Use |
 |---|---|
 | **Knossos** | Linearizability checker for register-style ops (read/write/cas) |
-| **Elle** | Transactional anomaly checker (G0/G1a/G1b/G1c, G-nonadjacent, G-single, G2-item, G2) — finds dirty/non-monotonic/non-repeatable read violations |
+| **Elle** | Transactional anomaly checker (G0/G1a/G1b/G1c, G-nonadjacent, G-single, G2-item, G2) - finds dirty/non-monotonic/non-repeatable read violations |
 
 Both surface counterexamples (specific operation sequences) that
 violate the claimed model. Counterexamples are the value: vendor
 claim says "linearizable"; checker says "here's an op sequence that
 isn't" → you have evidence.
 
-## Step 5 — Workload patterns
+## Step 5 - Workload patterns
 
 Common workload shapes per consistency claim:
 
@@ -107,7 +107,7 @@ Common workload shapes per consistency claim:
 
 Pick the workload closest to your system's user-facing invariants.
 
-## Step 6 — Reading vendor Jepsen reports
+## Step 6 - Reading vendor Jepsen reports
 
 Check for these red flags:
 
@@ -120,10 +120,10 @@ Check for these red flags:
   transactions.
 
 Per the [Jepsen consistency docs], Jepsen's value is that "consistency
-models and phenomena are often defined in terms of dependencies" —
+models and phenomena are often defined in terms of dependencies" - 
 gaps in the test = gaps in confidence.
 
-## Step 7 — In-house test scoping
+## Step 7 - In-house test scoping
 
 For your own system (custom KV / custom replication):
 
@@ -154,19 +154,19 @@ Out-of-the-box Jepsen test rigs exist for many systems
   features.
 - Test runs are infra-heavy: real cluster, real network, real disk.
   Cloud-friendly via Docker but expensive.
-- Not all bugs reproduce 100% — expect probabilistic findings.
+- Not all bugs reproduce 100% - expect probabilistic findings.
 - This skill is a reference; actually running Jepsen requires
   Clojure familiarity + significant per-system engineering.
 
 ## References
 
-- [Jepsen consistency docs] — model hierarchy, phenomena,
+- [Jepsen consistency docs] - model hierarchy, phenomena,
   dependencies
-- jepsen-io/jepsen on GitHub — DSL, nemesis primitives, ready-made
+- jepsen-io/jepsen on GitHub - DSL, nemesis primitives, ready-made
   test rigs
-- [`race-condition-test-author`](../race-condition-test-author/SKILL.md) —
+- [`race-condition-test-author`](../race-condition-test-author/SKILL.md) - 
   in-process race detection (Jepsen is for distributed)
-- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) — async
+- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) - async
   ordering within a single process
 
 [Jepsen consistency docs]: https://jepsen.io/consistency

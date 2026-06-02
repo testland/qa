@@ -1,6 +1,6 @@
 ---
 name: server-sent-events-tests
-description: "Test Server-Sent Events (SSE) flows — `EventSource` API on the browser side (`onmessage`, `onerror`, `readyState` 0/1/2), event stream format (`data:`, `event:`, `id:`, `retry:`), `Last-Event-ID` reconnect-with-replay header, content-type `text/event-stream`, and HTTP/1.1 connection-pool limits. Use Playwright for browser-side, raw HTTP client for server-side stream tests."
+description: "Test Server-Sent Events (SSE) flows - `EventSource` API on the browser side (`onmessage`, `onerror`, `readyState` 0/1/2), event stream format (`data:`, `event:`, `id:`, `retry:`), `Last-Event-ID` reconnect-with-replay header, content-type `text/event-stream`, and HTTP/1.1 connection-pool limits. Use Playwright for browser-side, raw HTTP client for server-side stream tests."
 type: skill
 archetype: S1
 rating: 22
@@ -30,7 +30,7 @@ HTTP/1.1 connection-pool ceiling.
 - Pre-deploy gate: SSE retry interval, replay via `Last-Event-ID`,
   and HTTP/1.1 connection limits all behave as designed.
 
-## Step 1 — Server-side event stream format
+## Step 1 - Server-side event stream format
 
 Per the [WHATWG SSE spec], response must use
 `Content-Type: text/event-stream` (UTF-8) and stream lines:
@@ -56,7 +56,7 @@ data: {"orderId":"o124","status":"shipped"}
 
 ```
 
-## Step 2 — Browser test (Playwright)
+## Step 2 - Browser test (Playwright)
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -83,7 +83,7 @@ test('client receives server-pushed events', async ({ page }) => {
 });
 ```
 
-## Step 3 — `readyState` lifecycle
+## Step 3 - `readyState` lifecycle
 
 Per the [WHATWG SSE spec], `readyState` values:
 
@@ -115,7 +115,7 @@ test('readyState transitions through CONNECTING → OPEN', async ({ page }) => {
 });
 ```
 
-## Step 4 — Reconnect-with-replay via `Last-Event-ID`
+## Step 4 - Reconnect-with-replay via `Last-Event-ID`
 
 Per the [WHATWG SSE spec], on disconnect the client automatically
 reconnects with `Last-Event-ID: <last-id-seen>`. Server uses this
@@ -148,7 +148,7 @@ def test_replay_via_last_event_id():
         assert int(replay[0]["id"]) > int(last_id)
 ```
 
-## Step 5 — Reconnect interval (`retry:`)
+## Step 5 - Reconnect interval (`retry:`)
 
 Server hints at reconnect interval:
 
@@ -181,7 +181,7 @@ test('client honors retry: 10000 on disconnect', async ({ page }) => {
 });
 ```
 
-## Step 6 — Disable reconnect via `204 No Content`
+## Step 6 - Disable reconnect via `204 No Content`
 
 Per the [WHATWG SSE spec], server responding `204 No Content`
 disables further reconnection. Useful for "subscription ended"
@@ -214,10 +214,10 @@ test('client stops reconnecting after server returns 204', async ({ page }) => {
 });
 ```
 
-## Step 7 — HTTP/1.1 connection-pool ceiling
+## Step 7 - HTTP/1.1 connection-pool ceiling
 
 Browsers cap concurrent HTTP/1.1 connections per origin (~6 in
-Chrome). SSE consumes one persistently — apps with many
+Chrome). SSE consumes one persistently - apps with many
 EventSource connections starve.
 
 ```ts
@@ -252,15 +252,15 @@ end-to-end.
   responses, breaking real-time push.
 - No native binary support; SSE is text-only (use WebSocket if
   binary needed).
-- Reconnect uses `Last-Event-ID` only — server must persist event
+- Reconnect uses `Last-Event-ID` only - server must persist event
   IDs (or generate from timestamp) for replay to work.
 
 ## References
 
-- [WHATWG SSE spec] — EventSource API, stream format, replay, retry
-- [`websocket-tests`](../websocket-tests/SKILL.md) — bidirectional
+- [WHATWG SSE spec] - EventSource API, stream format, replay, retry
+- [`websocket-tests`](../websocket-tests/SKILL.md) - bidirectional
   alternative
-- [`grpc-streaming-tests`](../grpc-streaming-tests/SKILL.md) — typed
+- [`grpc-streaming-tests`](../grpc-streaming-tests/SKILL.md) - typed
   RPC streaming alternative
 
 [WHATWG SSE spec]: https://html.spec.whatwg.org/multipage/server-sent-events.html

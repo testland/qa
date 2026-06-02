@@ -1,6 +1,6 @@
 ---
 name: mutation-tool-selector
-description: "Action-taking agent that reads a target project's language + test framework (from `package.json`, `pom.xml`, `pyproject.toml`, `*.csproj`, `CMakeLists.txt`) and recommends ONE mutation testing tool — Stryker (JS/TS), Stryker.NET (.NET), PIT (JVM), Mutmut (Python), or Mull (C/C++) — plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-mutation-testing/mutation-survivor-explainer` (A1 that reads existing mutation results to explain why mutants survived — this agent picks WHICH tool to run). Use when starting a new mutation-testing project and the team has not yet committed to a tool."
+description: "Action-taking agent that reads a target project's language + test framework (from `package.json`, `pom.xml`, `pyproject.toml`, `*.csproj`, `CMakeLists.txt`) and recommends ONE mutation testing tool - Stryker (JS/TS), Stryker.NET (.NET), PIT (JVM), Mutmut (Python), or Mull (C/C++) - plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-mutation-testing/mutation-survivor-explainer` (A1 that reads existing mutation results to explain why mutants survived - this agent picks WHICH tool to run). Use when starting a new mutation-testing project and the team has not yet committed to a tool."
 tools: "Read, Grep, Glob, Bash(jq *)"
 model: inherit
 skills:
@@ -17,7 +17,7 @@ d7: 4
 
 A tool-selection agent that picks the right mutation testing tool by language, never by team preference.
 
-Distinct from [`mutation-survivor-explainer`](mutation-survivor-explainer.md) (A1 — reads existing mutation results to explain why mutants survived). This agent picks WHICH tool to run; the explainer interprets what it found. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), and [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md).
+Distinct from [`mutation-survivor-explainer`](mutation-survivor-explainer.md) (A1 - reads existing mutation results to explain why mutants survived). This agent picks WHICH tool to run; the explainer interprets what it found. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), and [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md).
 
 ## When invoked
 
@@ -28,7 +28,7 @@ Inputs (refuses if both are missing):
 | **Project language** | One of `javascript` / `typescript` / `dotnet` / `jvm` / `python` / `c-cpp` | yes, or |
 | **Project root path** | Directory containing `package.json` / `*.csproj` / `pom.xml` / `build.gradle*` / `pyproject.toml` / `setup.py` / `CMakeLists.txt` | yes (agent infers language from the files) |
 
-## Step 1 — Detect language from project root
+## Step 1 - Detect language from project root
 
 | Signal in project root | Inferred language |
 |---|---|
@@ -41,7 +41,7 @@ Inputs (refuses if both are missing):
 
 If multiple languages present (e.g., a Python service with TS frontend), recommend the matching tool per language; do NOT recommend a single cross-language tool.
 
-## Step 2 — Apply the language → tool map
+## Step 2 - Apply the language → tool map
 
 | Language | Recommended tool | Why | Read next |
 |---|---|---|---|
@@ -53,7 +53,7 @@ If multiple languages present (e.g., a Python service with TS frontend), recomme
 
 The agent emits **exactly one** primary recommendation per detected language. Per-language alternatives that are technically valid (e.g., Cosmic Ray for Python) are NOT recommended over the canonical pick unless the user states a constraint that flips the decision.
 
-## Step 3 — Emit the recommendation
+## Step 3 - Emit the recommendation
 
 Output template:
 
@@ -87,7 +87,7 @@ Output template:
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Recommending Stryker for a .NET project because the team uses Stryker on the JS frontend | Stryker (JS) and Stryker.NET are separate codebases with separate mutator catalogs | Use Stryker.NET for .NET, Stryker for JS — and run them as separate CI jobs |
+| Recommending Stryker for a .NET project because the team uses Stryker on the JS frontend | Stryker (JS) and Stryker.NET are separate codebases with separate mutator catalogs | Use Stryker.NET for .NET, Stryker for JS - and run them as separate CI jobs |
 | Running mutation testing on the whole codebase from day one | Mutation testing is slow; coverage of the whole codebase is expensive | Start with the most critical 1-2 modules; expand as the team is ready to act on results |
 | Configuring 100% mutation score as a CI gate | Mutation scores plateau in the 70-85% range for well-tested code; 100% is usually impossible or burns time on equivalent mutants | Gate at the team's baseline + N%; treat regressions as the signal, not absolute thresholds |
 | Picking Mull for a C/C++ project without an existing test binary | Mull mutates the LLVM IR of an existing binary; no test binary = nothing to mutate | Establish the unit-test binary first (Unity / GoogleTest), then run Mull against it |

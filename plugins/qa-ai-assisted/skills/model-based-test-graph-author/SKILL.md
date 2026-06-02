@@ -1,6 +1,6 @@
 ---
 name: model-based-test-graph-author
-description: "Build-an-X workflow for model-based testing (MBT) per the canonical definition — authors a state-machine model of the SUT (states + transitions + guards + actions), validates the model is connected and complete, and feeds the model to a test generator (manual / AI / dedicated MBT tool) that produces test paths covering each transition. Per [Wikipedia](https://en.wikipedia.org/wiki/Model-based_testing): MBT \"leverages model-based design for designing and possibly executing tests.\" Use when a complex stateful flow (checkout, onboarding, multi-step wizard) needs systematic coverage that ad-hoc tests miss."
+description: "Build-an-X workflow for model-based testing (MBT) per the canonical definition - authors a state-machine model of the SUT (states + transitions + guards + actions), validates the model is connected and complete, and feeds the model to a test generator (manual / AI / dedicated MBT tool) that produces test paths covering each transition. Per [Wikipedia](https://en.wikipedia.org/wiki/Model-based_testing): MBT \"leverages model-based design for designing and possibly executing tests.\" Use when a complex stateful flow (checkout, onboarding, multi-step wizard) needs systematic coverage that ad-hoc tests miss."
 rating: 22
 d6: 3
 archetype: S3
@@ -35,7 +35,7 @@ AI test generators).
 - The team wants exhaustive transition coverage that manual tests
   can't provide.
 
-## Step 1 — Identify the SUT's state space
+## Step 1 - Identify the SUT's state space
 
 For a checkout flow:
 
@@ -65,7 +65,7 @@ Per [mbt-wiki][mbt]: "The automaton represents possible system
 configurations, and a possible execution path can serve as a test
 case."
 
-## Step 2 — Author in a portable format
+## Step 2 - Author in a portable format
 
 ```yaml
 # models/checkout.yaml
@@ -127,7 +127,7 @@ transitions:
     event: close_browser
 ```
 
-## Step 3 — Validate the model
+## Step 3 - Validate the model
 
 ```python
 # scripts/validate-model.py
@@ -166,7 +166,7 @@ print(f"States: {len(states)}; Transitions: {len(model['transitions'])}")
 print(f"Possible test paths (transition coverage): {len(model['transitions'])}")
 ```
 
-## Step 4 — Generate test paths
+## Step 4 - Generate test paths
 
 Coverage criterion: **every transition is exercised at least
 once** (transition coverage).
@@ -194,7 +194,7 @@ Path 3: empty_cart → add_item → cart_with_items → close_browser → abando
 
 Each path is one test scenario.
 
-## Step 5 — Convert to test code
+## Step 5 - Convert to test code
 
 For each path, generate a test:
 
@@ -221,7 +221,7 @@ test('Path 1 — happy path', async ({ page }) => {
 });
 ```
 
-## Step 6 — Pair with AI test generator
+## Step 6 - Pair with AI test generator
 
 The model + paths can feed [`ai-test-generator`](../ai-test-generator/SKILL.md):
 
@@ -234,10 +234,10 @@ input:
 ```
 
 The LLM generates test code per path; [`ai-test-curator`](../../agents/ai-test-curator.md)
-reviews. The model provides structure that constrains the LLM —
+reviews. The model provides structure that constrains the LLM - 
 better than free-form generation.
 
-## Step 7 — Per [mbt-wiki][mbt] caveats
+## Step 7 - Per [mbt-wiki][mbt] caveats
 
 > "Because systems can have enormous numbers of possible
 > configurations, finding all paths is impractical. Instead, test
@@ -277,10 +277,10 @@ paths.
 
 ## References
 
-- [mbt][mbt] — Model-based testing definition; finite-state automata;
+- [mbt][mbt] - Model-based testing definition; finite-state automata;
   abstract vs executable test suites; coverage criteria; black-box
   framing.
-- [`ai-test-generator`](../ai-test-generator/SKILL.md) —
+- [`ai-test-generator`](../ai-test-generator/SKILL.md) - 
   downstream consumer of the generated paths.
-- [`ai-test-curator`](../../agents/ai-test-curator.md) — review
+- [`ai-test-curator`](../../agents/ai-test-curator.md) - review
   the AI-generated tests.

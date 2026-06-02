@@ -22,7 +22,7 @@ The official guidance is explicit:
 > (NON GUI) must be used for load testing." ([jmeter-getstarted][getstarted])
 
 This skill covers the CLI / CI side. Authoring is GUI-driven and out
-of scope here — see the JMeter user manual for the Thread Group /
+of scope here - see the JMeter user manual for the Thread Group /
 HTTP Sampler / Assertion authoring flow.
 
 ## When to use
@@ -31,21 +31,21 @@ HTTP Sampler / Assertion authoring flow.
 - The team is on the JVM and prefers JMeter's mature ecosystem
   (BlazeMeter, Taurus, plugin manager, distributed mode).
 - A specific protocol is needed that JMeter has first-class support
-  for: JDBC, JMS, MQTT, FTP, LDAP, SOAP — k6's plugin landscape is
+  for: JDBC, JMS, MQTT, FTP, LDAP, SOAP - k6's plugin landscape is
   weaker for niche protocols.
 
 If the team is starting fresh, evaluate
 [`k6-load-testing`](../k6-load-testing/SKILL.md) (developer-friendly
 JS), [`gatling-load-testing`](../gatling-load-testing/SKILL.md) (JVM
 DSL), or [`locust-load-testing`](../locust-load-testing/SKILL.md)
-(Python) before adopting JMeter — XML authoring has a steep learning
+(Python) before adopting JMeter - XML authoring has a steep learning
 curve.
 
 ## Install
 
 JMeter requires **Java 8 or higher** with `JAVA_HOME` set. Download
 the latest release from
-[jmeter.apache.org](https://jmeter.apache.org/) and extract — there
+[jmeter.apache.org](https://jmeter.apache.org/) and extract - there
 is no installer ([jmeter-getstarted][getstarted]).
 
 For Docker-based CI, official images are at `apache/jmeter`. Pin to
@@ -65,7 +65,7 @@ jmeter -n -t test.jmx -l results.jtl
 |------|---------------------------------------------------------|
 | `-n` | Non-GUI mode. **Required for load tests.**              |
 | `-t` | Path to the `.jmx` test plan.                            |
-| `-l` | Output file for raw sample results (JTL — CSV-shaped).  |
+| `-l` | Output file for raw sample results (JTL - CSV-shaped).  |
 
 ### With HTML dashboard
 
@@ -81,7 +81,7 @@ jmeter -n -t test.jmx -l results.jtl -e -o report_folder
 | `-o` | Output folder (must be empty or non-existent).           |
 
 The dashboard shows percentiles, throughput, error rates, response-
-time graphs, and per-sampler breakdowns — the canonical JMeter
+time graphs, and per-sampler breakdowns - the canonical JMeter
 output for human review.
 
 ### Other useful flags
@@ -123,7 +123,7 @@ awk -F',' 'NR>1 { sum+=$2; n++ } END { print sum/n }' results.jtl
 ```
 
 For richer parsing, use the JMeter HTML report's
-`statistics.json` under the report folder — it contains the
+`statistics.json` under the report folder - it contains the
 percentiles per sampler in JSON form.
 
 ## CI integration
@@ -177,7 +177,7 @@ jobs:
           retention-days: 14
 ```
 
-The Docker invocation pattern keeps the CI runner clean — no Java /
+The Docker invocation pattern keeps the CI runner clean - no Java /
 JMeter install on the runner.
 
 ## Anti-patterns
@@ -205,12 +205,12 @@ JMeter install on the runner.
 
 ## References
 
-- [jmeter-getstarted][getstarted] — canonical CLI flags, GUI-vs-CLI
+- [jmeter-getstarted][getstarted] - canonical CLI flags, GUI-vs-CLI
   guidance, dashboard generation.
-- Apache JMeter user manual — https://jmeter.apache.org/usermanual/
+- Apache JMeter user manual - https://jmeter.apache.org/usermanual/
 - [`k6-load-testing`](../k6-load-testing/SKILL.md),
   [`gatling-load-testing`](../gatling-load-testing/SKILL.md),
-  [`locust-load-testing`](../locust-load-testing/SKILL.md) —
+  [`locust-load-testing`](../locust-load-testing/SKILL.md) - 
   alternatives by stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) — downstream
+- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
   gate aggregating multiple runner verdicts.

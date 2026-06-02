@@ -1,6 +1,6 @@
 ---
 name: ava-tests
-description: "Configures and runs AVA — concurrent-by-default JS/TS test framework with isolated test files (each file runs in its own Node process), no globals (explicit `import test from 'ava'`), async-first API, snapshot support, and TypeScript via `@ava/typescript`. Use when the user wants minimal-API parallel-by-default tests, or works with libraries (vs apps) where per-file isolation prevents test interference."
+description: "Configures and runs AVA - concurrent-by-default JS/TS test framework with isolated test files (each file runs in its own Node process), no globals (explicit `import test from 'ava'`), async-first API, snapshot support, and TypeScript via `@ava/typescript`. Use when the user wants minimal-API parallel-by-default tests, or works with libraries (vs apps) where per-file isolation prevents test interference."
 rating: 22
 d6: 4
 archetype: S1
@@ -18,7 +18,7 @@ AVA's distinguishing properties:
 
 - **Concurrent by default**: each test file runs in a separate Node
   process; tests within a file run concurrently unless serial.
-- **No globals**: `import test from 'ava'` — explicit, easier to
+- **No globals**: `import test from 'ava'` - explicit, easier to
   type, no dependency-injection hacks.
 - **Async-first**: native promise/async-await support; no `done`
   callback dance.
@@ -40,7 +40,7 @@ classes that Jest/Mocha allow.
 For React component testing, prefer [`vitest-tests`](../vitest-tests/SKILL.md)
 or [`jest-tests`](../jest-tests/SKILL.md) (ecosystem density).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [ava-gh][ava-gh]:
 
@@ -50,7 +50,7 @@ npm init ava
 npm install --save-dev ava
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 ```javascript
 // test/sum.test.js
@@ -69,9 +69,9 @@ test('async addition', async t => {
 
 `t` is the AVA-injected test context; assertion methods live on it
 (`t.is`, `t.deepEqual`, `t.truthy`, `t.snapshot`, `t.throws`, etc.).
-No global `expect` / `assert` — explicit per test.
+No global `expect` / `assert` - explicit per test.
 
-## Step 3 — Configuration
+## Step 3 - Configuration
 
 Config lives in `package.json` `ava` key OR `ava.config.js`:
 
@@ -108,7 +108,7 @@ npm install --save-dev @ava/typescript typescript
 }
 ```
 
-## Step 4 — Concurrency model
+## Step 4 - Concurrency model
 
 - Each **test file** runs in its own Node worker process.
 - **Tests within a file** run concurrently by default.
@@ -124,7 +124,7 @@ test('this runs concurrently with the previous', t => { /* ... */ });
 For tests that share file-level state (rare, often a smell),
 serial is necessary.
 
-## Step 5 — Hooks
+## Step 5 - Hooks
 
 ```javascript
 test.before(async t => {
@@ -149,7 +149,7 @@ test('uses fixture', t => {
 });
 ```
 
-## Step 6 — Assertion API
+## Step 6 - Assertion API
 
 Common matchers (full list at [github.com/avajs/ava/blob/main/docs/03-assertions.md](https://github.com/avajs/ava/blob/main/docs/03-assertions.md)):
 
@@ -167,7 +167,7 @@ Common matchers (full list at [github.com/avajs/ava/blob/main/docs/03-assertions
 | `t.snapshot(value)` | Snapshot test |
 | `t.like(actual, partial)` | Partial structural match |
 
-## Step 7 — Snapshot tests
+## Step 7 - Snapshot tests
 
 ```javascript
 test('snapshot user profile', t => {
@@ -179,7 +179,7 @@ test('snapshot user profile', t => {
 Snapshots stored under `test/snapshots/` per config (Step 3).
 Update via `npx ava --update-snapshots` (or `-u`).
 
-## Step 8 — Exclusive + skipped
+## Step 8 - Exclusive + skipped
 
 ```javascript
 test.only('runs only this', t => { /* ... */ });
@@ -190,10 +190,10 @@ test.failing('expected to fail (TODO marker)', t => {
 test.todo('write this test');   // marker; doesn't run
 ```
 
-`test.failing` is AVA-distinctive — encodes "this test is expected
+`test.failing` is AVA-distinctive - encodes "this test is expected
 to fail" so the suite signals when the underlying bug is fixed.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: npm ci
@@ -228,13 +228,12 @@ similar.
 
 ## References
 
-- [ava-gh][ava-gh] — repository, install, basic usage
-- github.com/avajs/ava/tree/main/docs — full documentation
-- github.com/avajs/ava/blob/main/docs/03-assertions.md — assertion API
-- github.com/avajs/typescript — @ava/typescript adapter
+- [ava-gh][ava-gh] - repository, install, basic usage
+- github.com/avajs/ava/tree/main/docs - full documentation
+- github.com/avajs/ava/blob/main/docs/03-assertions.md - assertion API
+- github.com/avajs/typescript - @ava/typescript adapter
 - [`jest-tests`](../jest-tests/SKILL.md),
   [`vitest-tests`](../vitest-tests/SKILL.md),
   [`mocha-tests`](../mocha-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — cross-plugin: test code hygiene
+  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene

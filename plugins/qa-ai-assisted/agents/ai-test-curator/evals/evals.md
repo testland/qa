@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# ai-test-curator — evals
+# ai-test-curator - evals
 
 Companion eval cases for [`ai-test-curator`](../../ai-test-curator.md).
 Three cases cover happy path / branch / adversarial: an AI-generated test
@@ -15,7 +15,7 @@ a hand-written test submitted to the wrong gate (refuse-to-proceed per
 block as the first user message and checking the agent's output against
 the **Pass condition**.
 
-## Eval 1 — happy path — hallucinated API + weak assertion (Not ready to merge)
+## Eval 1 - happy path - hallucinated API + weak assertion (Not ready to merge)
 
 **Input:**
 
@@ -58,7 +58,7 @@ tests against `applyPromo` (Step 4 redundancy candidate, low confidence).
 (`@/checkout/promo.calculatePromoDiscount` does not exist; nearest match
 `applyPromo`). Step 3 detects two weak assertions (`.toBeTruthy()`,
 `.toBeDefined()`) per `test-code-conventions` §4. Step 5 detects
-third-party mock (`jest.mock('stripe')` — `stripe` is a package.json
+third-party mock (`jest.mock('stripe')` - `stripe` is a package.json
 dependency). Step 6 emits per-category counts table; per-finding detail
 calls out the hallucinated symbol and proposes `applyPromo`. Per the
 Refuse-to-proceed rule "Mark generated tests 'ready' with any
@@ -70,7 +70,7 @@ flagged in the finding detail) AND at least one of `toBeTruthy` /
 `toBeDefined` (a weak-assertion finding). Output does NOT claim the
 tests are ready.
 
-## Eval 2 — branch — clean AI-generated test (no high-severity findings)
+## Eval 2 - branch - clean AI-generated test (no high-severity findings)
 
 **Input:**
 
@@ -106,21 +106,21 @@ The existing suite does not contain any test of `applyPromo` against
 
 **Expected:** Step 2 finds zero hallucinations (`applyPromo` exists with
 the asserted shape). Step 3 finds zero weak assertions (both use
-`.toEqual({...})` — specific structural matcher). Step 4 finds zero
+`.toEqual({...})` - specific structural matcher). Step 4 finds zero
 redundancy. Step 5 finds zero third-party mocks (no `jest.mock(...)`).
 Setup is implicit (pure function; no setup needed). Naming is concrete
 (`returns discounted total for a valid WELCOME10 code on a $100 cart`,
 not "should work"). Per-category counts table is all zeros on the
-high-severity rows. Verdict is positive — the agent indicates the tests
+high-severity rows. Verdict is positive - the agent indicates the tests
 are ready to merge (no Refuse-to-proceed trigger fires).
 
-**Pass condition:** Output's high-severity issue count is zero — the
+**Pass condition:** Output's high-severity issue count is zero - the
 table row(s) for `Hallucinated API` and `Third-party mock` show `0` AND
 the output does NOT contain the literal string `Not ready to merge`. The
 output includes the phrase `ready` in a positive context (e.g. "ready to
 merge" or equivalent approval).
 
-## Eval 3 — adversarial — hand-written test misrouted (refuse to operate)
+## Eval 3 - adversarial - hand-written test misrouted (refuse to operate)
 
 **Input:**
 
@@ -163,8 +163,8 @@ double-check."
 **Expected:** Per the Refuse-to-proceed rule "Operate on non-AI-generated
 tests (those go through `test-code-critic` /
 `assertion-quality-reviewer` instead)", the agent refuses the request.
-Output names the correct downstream agents — `test-code-critic` and/or
-`assertion-quality-reviewer` — as the appropriate gate for hand-written
+Output names the correct downstream agents - `test-code-critic` and/or
+`assertion-quality-reviewer` - as the appropriate gate for hand-written
 tests. The agent does NOT emit the per-category counts table or
 per-finding detail. The agent does NOT classify the test as ready or
 not-ready (those verdicts are scoped to AI-generated input only).
@@ -173,12 +173,12 @@ not-ready (those verdicts are scoped to AI-generated input only).
 AND at least one of `not AI-generated` / `hand-written` / `non-AI` /
 `out of scope` (the refuse-rationale phrasing). Output does NOT contain
 the literal string `Not ready to merge` and does NOT contain a "ready
-to merge" approval — both are inapplicable because the agent refused
+to merge" approval - both are inapplicable because the agent refused
 to evaluate.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the agent's
+- All three inputs are concrete pasted-content blocks - the agent's
   `Read` / `Grep` / `Glob` / `Bash(git diff *)` tool surface is not
   exercised since file contents and the git-log facts are supplied inline.
 - Pass conditions are literal-substring checks; a reviewer can grep the

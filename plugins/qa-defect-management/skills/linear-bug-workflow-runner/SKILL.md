@@ -1,6 +1,6 @@
 ---
 name: linear-bug-workflow-runner
-description: "Author and run Linear bug workflows via GraphQL API — issue creation, state transitions (workflowState assignment), priority assignment (0=No priority / 1=Urgent / 2=High / 3=Medium / 4=Low), label-based classification, search by team and content. Covers the issueCreate mutation, issueUpdate mutation for state transitions, workflowStates query for per-team state IDs, and Linear's API-key vs OAuth Bearer auth modes. Use when programmatically managing Linear bug lifecycle states — distinct from qa-bug-repro which is reproduction-focused."
+description: "Author and run Linear bug workflows via GraphQL API - issue creation, state transitions (workflowState assignment), priority assignment (0=No priority / 1=Urgent / 2=High / 3=Medium / 4=Low), label-based classification, search by team and content. Covers the issueCreate mutation, issueUpdate mutation for state transitions, workflowStates query for per-team state IDs, and Linear's API-key vs OAuth Bearer auth modes. Use when programmatically managing Linear bug lifecycle states - distinct from qa-bug-repro which is reproduction-focused."
 rating: 23
 d6: 4
 archetype: S1
@@ -57,7 +57,7 @@ ENDPOINT = "https://api.linear.app/graphql"
 
 Note: personal API keys use the `Authorization` header **without**
 the `Bearer` prefix; OAuth tokens use `Bearer`. This is
-unusual — many GraphQL APIs reject the bareword auth — confirmed
+unusual - many GraphQL APIs reject the bareword auth - confirmed
 in Linear's quickstart.
 
 ### Create a bug
@@ -143,7 +143,7 @@ query { workflowStates { nodes { id name } } }
 per-team).
 
 `type` is one of `backlog`, `unstarted`, `started`, `completed`,
-`canceled` — the canonical lifecycle bucket independent of the
+`canceled` - the canonical lifecycle bucket independent of the
 state's display name.
 
 ### Transition (update state)
@@ -272,18 +272,18 @@ The `type` enum is stable; the `name` is team-customisable.
 - **Webhook complement.** For event-driven workflows
   (notification on state change), pair with Linear webhooks
   rather than polling.
-- **Personal API key bypasses 2FA** — use OAuth bearer for
+- **Personal API key bypasses 2FA** - use OAuth bearer for
   user-impersonating flows.
 - **Rate limits.** ~1500 requests / 15 min per token; bulk
   operations need throttling.
 
 ## References
 
-- Linear GraphQL API quickstart —
+- Linear GraphQL API quickstart - 
   [linear.app/developers/graphql](https://linear.app/developers/graphql).
-- Linear API overview —
+- Linear API overview - 
   [linear.app/developers](https://linear.app/developers).
-- Linear GraphQL schema (Apollo Studio) — referenced from the
+- Linear GraphQL schema (Apollo Studio) - referenced from the
   developer docs.
 - Sibling references:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),

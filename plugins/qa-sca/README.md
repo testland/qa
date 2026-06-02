@@ -1,6 +1,6 @@
 # qa-sca
 
-SCA (Software Composition Analysis) — dependency scanning + update
+SCA (Software Composition Analysis) - dependency scanning + update
 orchestration. Three per-tool scanner skills (Snyk, OSV-Scanner,
 native package-manager audit) plus two reference skills for the
 update-orchestration tools (Dependabot, Renovate) plus an
@@ -9,7 +9,7 @@ adversarial prioritizer agent that combines CVSS + EPSS + CISA KEV
 Fix-Backlog / Accept-Risk bucket.
 
 Sister to [`qa-sast`](../qa-sast/) (code security) and
-[`qa-dast`](../qa-dast/) (runtime security) — qa-sca covers
+[`qa-dast`](../qa-dast/) (runtime security) - qa-sca covers
 third-party dependency security.
 
 ## Components

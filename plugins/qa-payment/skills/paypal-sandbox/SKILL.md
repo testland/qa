@@ -80,7 +80,7 @@ expect(capture.result.status).toBe('COMPLETED');
 ```
 
 In test code, you need a sandbox buyer to approve the order via
-the PayPal checkout UI — for fully-automated tests, this
+the PayPal checkout UI - for fully-automated tests, this
 requires Playwright + a sandbox Personal account login.
 
 ### Sandbox test cards

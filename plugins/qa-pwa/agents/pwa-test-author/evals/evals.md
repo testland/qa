@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# pwa-test-author — evals
+# pwa-test-author - evals
 
 Companion eval cases for [`pwa-test-author`](../../pwa-test-author.md). Three cases
 covering happy path + branch + adversarial. Re-run by feeding the **Input** block as the
@@ -12,10 +12,10 @@ first user message to the agent and comparing the emitted spec file (or the agen
 refuse-to-proceed message) against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date — each eval is
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - each eval is
 designed to be re-run against each tier.
 
-## Eval 1 — happy path — SW activation → tests/pwa-sw-activation.spec.ts + navigator.serviceWorker.ready
+## Eval 1 - happy path - SW activation → tests/pwa-sw-activation.spec.ts + navigator.serviceWorker.ready
 
 **Input:**
 
@@ -50,7 +50,7 @@ emit a Lighthouse audit invocation as a per-test assertion.
 `context.setOffline` (wrong surface), `grantPermissions(['notifications']` (wrong
 surface), OR edits to `service-worker.js` / `manifest.webmanifest`.
 
-## Eval 2 — branch — offline fallback → tests/pwa-offline-fallback.spec.ts + context.setOffline(true)
+## Eval 2 - branch - offline fallback → tests/pwa-offline-fallback.spec.ts + context.setOffline(true)
 
 **Input:**
 
@@ -87,7 +87,7 @@ an SW activation assertion (wrong surface) or a `beforeinstallprompt` listener.
 Output does NOT contain `beforeinstallprompt`, `grantPermissions(['notifications']`, OR
 edits to `sw.js` / `manifest.json`.
 
-## Eval 3 — adversarial — iOS Safari install-flow → refuse, recommend manual testing
+## Eval 3 - adversarial - iOS Safari install-flow → refuse, recommend manual testing
 
 **Input:**
 

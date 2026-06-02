@@ -25,7 +25,7 @@ three tiers ([gqi-diff][diff]):
 [diff]: https://the-guild.dev/graphql/inspector/docs/essentials/diff
 
 The tool exits non-zero when breaking changes exist, exits zero
-otherwise — the gate is the exit code.
+otherwise - the gate is the exit code.
 
 This is the GraphQL-specific counterpart to
 [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md). Use it
@@ -39,7 +39,7 @@ supergraph) instead of REST.
 - The team wants a CI gate on schema regressions between the PR and
   the deployed schema.
 - The team uses **deprecated field tracking** (`@deprecated`) and
-  wants `suppressRemovalOfDeprecatedField` semantics — i.e. removing a
+  wants `suppressRemovalOfDeprecatedField` semantics - i.e. removing a
   field that has been marked `@deprecated` long enough is acceptable,
   removing a non-deprecated field is not.
 - The schema is part of a Federation supergraph and you need to gate
@@ -67,7 +67,7 @@ graphql-inspector diff schema.old.graphql schema.new.graphql
 (Per [gqi-diff][diff].)
 
 The command supports SDL files, introspection result JSON, GitHub
-URLs, and live endpoints — when passing an endpoint use the `--header`
+URLs, and live endpoints - when passing an endpoint use the `--header`
 flag to attach an auth token.
 
 ### Comparing against the deployed schema
@@ -111,13 +111,13 @@ Custom rules live as JS modules:
 graphql-inspector diff old.graphql new.graphql --rule './rules/our-custom.js'
 ```
 
-A custom rule exports a function `({ changes }) => filteredChanges` —
+A custom rule exports a function `({ changes }) => filteredChanges` - 
 useful when the team has a project-specific severity policy
 (e.g. "removing any field under `internalAdmin*` is non-breaking").
 
 ## CI integration
 
-### GitHub Actions — minimal
+### GitHub Actions - minimal
 
 ```yaml
 # .github/workflows/graphql-diff.yml
@@ -162,7 +162,7 @@ for projects that take deprecation seriously: removing a field with
 ### Federation supergraphs
 
 For Apollo Federation, run `graphql-inspector diff` once per subgraph,
-not against the supergraph composite — the composite includes all
+not against the supergraph composite - the composite includes all
 subgraph types and a single subgraph PR's "added type" would appear as
 "already present" on the composite side.
 
@@ -180,8 +180,8 @@ supergraph after the PR's changes.
 
 ## Alternatives noted (out of scope)
 
-- **`graphql-cli`** — older umbrella tool; superseded by `@graphql-inspector/cli`.
-- **Apollo `rover graph check`** — Apollo Studio's hosted equivalent;
+- **`graphql-cli`** - older umbrella tool; superseded by `@graphql-inspector/cli`.
+- **Apollo `rover graph check`** - Apollo Studio's hosted equivalent;
   use this when the project is on Apollo Studio for the usage-based
   `considerUsage` analog.
 
@@ -190,11 +190,10 @@ self-hosted, vendor-neutral default.
 
 ## References
 
-- [gqi-overview][overview] — GraphQL Inspector landing page; install
+- [gqi-overview][overview] - GraphQL Inspector landing page; install
   command.
-- [gqi-diff][diff] — `diff` CLI semantics, change classifications,
+- [gqi-diff][diff] - `diff` CLI semantics, change classifications,
   rule flags.
-- [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) — REST
+- [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) - REST
   counterpart for OpenAPI.
-- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md)
-  — gate skill that aggregates this output with Pact / oasdiff verdicts.
+- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md) - gate skill that aggregates this output with Pact / oasdiff verdicts.

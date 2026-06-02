@@ -1,6 +1,6 @@
 ---
 name: fluentassertions
-description: "Reference for FluentAssertions — the canonical .NET fluent-assertion library pairable with xUnit / NUnit / MSTest; provides `.Should()` extension API (`.Should().Be()`, `.Should().BeOfType<T>()`, `.Should().Throw<T>()`, `.Should().BeEquivalentTo()` for deep equality, `.Should().Satisfy()` for predicates, `.Should().BeApproximately()` for floats); rich failure messages with object structure visualization. Body MUST include the 2024 license change note: v8+ commercial license required for new use; v7 is the last fully OSS version."
+description: "Reference for FluentAssertions - the canonical .NET fluent-assertion library pairable with xUnit / NUnit / MSTest; provides `.Should()` extension API (`.Should().Be()`, `.Should().BeOfType<T>()`, `.Should().Throw<T>()`, `.Should().BeEquivalentTo()` for deep equality, `.Should().Satisfy()` for predicates, `.Should().BeApproximately()` for floats); rich failure messages with object structure visualization. Body MUST include the 2024 license change note: v8+ commercial license required for new use; v7 is the last fully OSS version."
 rating: 22
 d6: 4
 archetype: S2
@@ -23,7 +23,7 @@ license to commercial starting v8. v7 (and earlier) remain OSS-licensed.
 For new commercial use, either pay for v8+ or pin to v7. For OSS
 projects, v7 may be sufficient indefinitely.
 
-This skill is a **reference** (S2 archetype) — defines the matcher
+This skill is a **reference** (S2 archetype) - defines the matcher
 catalog; doesn't run tests. Pair with one of the test frameworks.
 
 ## When to use
@@ -34,7 +34,7 @@ catalog; doesn't run tests. Pair with one of the test frameworks.
 - Deep-equality checking via `BeEquivalentTo`.
 - Migrating between test frameworks (assertion code stays the same).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 # Pin to v7 for OSS-license safety
@@ -47,7 +47,7 @@ Or current (commercial license):
 dotnet add package FluentAssertions
 ```
 
-## Step 2 — Basic syntax
+## Step 2 - Basic syntax
 
 ```csharp
 using FluentAssertions;
@@ -60,7 +60,7 @@ exception.Should().Be<ArgumentNullException>();
 
 The `.Should()` extension method provides the fluent entry-point.
 
-## Step 3 — Matchers catalog
+## Step 3 - Matchers catalog
 
 Per [fluentassertions.com/introduction][fa-intro]:
 
@@ -157,7 +157,7 @@ opt.Should().NotBeNull().And.NotBeEmpty();
 user.Should().Satisfy(u => u.Email.Contains("@") && u.Age >= 18);
 ```
 
-## Step 4 — Combining matchers
+## Step 4 - Combining matchers
 
 `.And` chains assertions:
 
@@ -172,7 +172,7 @@ result.Should().BeOfType<Success>()
               .Which.Value.Should().Be(42);
 ```
 
-## Step 5 — Failure messages
+## Step 5 - Failure messages
 
 FluentAssertions failure output is rich:
 
@@ -190,7 +190,7 @@ But was: 3
 
 The difference matters for debug velocity.
 
-## Step 6 — `BeEquivalentTo` deep equality
+## Step 6 - `BeEquivalentTo` deep equality
 
 Most powerful matcher; structural comparison:
 
@@ -208,7 +208,7 @@ user.Should().BeEquivalentTo(dto, opts => opts
 Options control: `Excluding`, `Including`, `ComparingByMembers`,
 `WithStrictOrdering`, `WithoutStrictOrdering`, `IgnoringCyclicReferences`.
 
-## Step 7 — Migration considerations
+## Step 7 - Migration considerations
 
 For migration FROM:
 
@@ -241,12 +241,12 @@ failure messages + chainable assertions.
 
 ## References
 
-- [fa][fa] — FluentAssertions landing
-- [fa-intro][fa-intro] — Introduction guide
-- fluentassertions.com/objectgraphs — BeEquivalentTo deep dive
-- github.com/fluentassertions/fluentassertions — repository
+- [fa][fa] - FluentAssertions landing
+- [fa-intro][fa-intro] - Introduction guide
+- fluentassertions.com/objectgraphs - BeEquivalentTo deep dive
+- github.com/fluentassertions/fluentassertions - repository
 - v7 license note: github.com/fluentassertions/fluentassertions/discussions
 - [`xunit-tests`](../xunit-tests/SKILL.md),
   [`nunit-tests`](../nunit-tests/SKILL.md),
-  [`mstest-tests`](../mstest-tests/SKILL.md) — sister tools (test runners)
+  [`mstest-tests`](../mstest-tests/SKILL.md) - sister tools (test runners)
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

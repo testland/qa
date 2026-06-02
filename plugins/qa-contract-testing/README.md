@@ -12,7 +12,7 @@ Contract testing for microservices: Pact (consumer + provider + broker + can-i-d
 | Skill | [protobuf-compat-checking](skills/protobuf-compat-checking/SKILL.md) | S1 | Wrap `buf breaking` with category selection (FILE/PACKAGE/WIRE_JSON/WIRE), ignore patterns, and CI gating. |
 | Skill | [contract-compatibility-gate](skills/contract-compatibility-gate/SKILL.md) | S3 | Aggregate Pact / oasdiff / graphql-inspector / buf-breaking verdicts into a single severity-aware go/no-go gate with markdown + JSON artifact for CI. |
 | Agent | [contract-drift-investigator](agents/contract-drift-investigator.md) | A1 | Diff current contracts vs last-known-green; categorize drift (provider-implementation / schema-rename / removal / narrowing / consumer-expectation / data-fixture / version-skew); route to owner. |
-| Agent | [contract-test-scaffolder](agents/contract-test-scaffolder.md) | A4 | Read OpenAPI / GraphQL SDL / Protobuf / existing pact and emit scaffolded Pact consumer or provider tests, schemathesis fuzzing runners, or `buf breaking` baselines — never inventing example values the artifact does not declare. |
+| Agent | [contract-test-scaffolder](agents/contract-test-scaffolder.md) | A4 | Read OpenAPI / GraphQL SDL / Protobuf / existing pact and emit scaffolded Pact consumer or provider tests, schemathesis fuzzing runners, or `buf breaking` baselines - never inventing example values the artifact does not declare. |
 
 ## Install
 

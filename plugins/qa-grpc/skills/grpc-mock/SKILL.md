@@ -188,7 +188,7 @@ def test_get_user_not_found(fake_service, grpc_channel):
 ```
 
 `server.add_insecure_port("[::]:0")` lets the OS pick a free
-port — important for parallel test execution.
+port - important for parallel test execution.
 
 ### Python: unittest.mock patching of stub
 
@@ -290,12 +290,12 @@ Per-language test runners; no separate harness needed.
 
 Test failures point to:
 
-- **Wrong status code** — fix server-side error mapping or
+- **Wrong status code** - fix server-side error mapping or
   test expectation per
   [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
-- **Marshalling errors** — proto definition / generated code
+- **Marshalling errors** - proto definition / generated code
   drift; regenerate via [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
-- **Timeout** — server not responding; fake handler hung;
+- **Timeout** - server not responding; fake handler hung;
   check `context.WithTimeout` usage.
 
 ## CI integration
@@ -310,7 +310,7 @@ jobs:
       - run: go test ./... -race -timeout=60s
 ```
 
-`-race` is critical for mock-server tests — concurrent client +
+`-race` is critical for mock-server tests - concurrent client +
 server goroutines often surface races.
 
 ## Anti-patterns

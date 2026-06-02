@@ -13,7 +13,7 @@ archetype: S1
 Percy is BrowserStack's visual testing platform. The integration shape is
 two-layered: **the CLI** (`@percy/cli`) plus **a framework SDK**
 (`@percy/playwright`, `@percy/cypress`, `@percy/selenium`,
-`@percy/storybook`, etc. — the [Percy CLI README][percy-cli] lists the
+`@percy/storybook`, etc. - the [Percy CLI README][percy-cli] lists the
 available SDKs as Playwright, Cypress, Selenium, Storybook, Puppeteer,
 Appium, plus framework-specific wrappers like Ember, Gatsby, Jekyll, and
 a custom SDK option).
@@ -82,7 +82,7 @@ Per the [percy-playwright README][percy-playwright]:
 | `customIgnoreRegions`     | Coordinate-based exclusion zones for ad-hoc cases.   |
 
 Other SDKs (`@percy/cypress`, `@percy/selenium`, `@percy/storybook`)
-expose the same shape with framework-specific calling conventions —
+expose the same shape with framework-specific calling conventions - 
 check the matching SDK README on github.com/percy.
 
 ### Configuration file
@@ -98,7 +98,7 @@ The Percy CLI looks for config in this order ([percy-config][percy-config]):
 The first found wins, searched from CWD up to the home directory. Use this
 file to set project-wide defaults (viewports, percyCSS, network idle
 timeout). For the current schema of the snapshot block (widths array,
-minimum height, etc.), check the latest [percy-cli][percy-cli] release —
+minimum height, etc.), check the latest [percy-cli][percy-cli] release - 
 the schema evolves with major versions and reproducing it from memory
 risks drift.
 
@@ -194,11 +194,11 @@ to `percy exec` and use Percy's parallel-build coordinator
 
 ## References
 
-- [percy-cli][percy-cli] — main CLI package; install instructions and
+- [percy-cli][percy-cli] - main CLI package; install instructions and
   supported SDKs.
-- [percy-playwright][percy-playwright] — Playwright SDK with
+- [percy-playwright][percy-playwright] - Playwright SDK with
   `percySnapshot` options.
-- [percy-exec][percy-exec] — `percy exec` flags and behavior.
-- [percy-config][percy-config] — config file resolution order.
-- [percy-overview][percy-overview] — Percy product overview, build review
+- [percy-exec][percy-exec] - `percy exec` flags and behavior.
+- [percy-config][percy-config] - config file resolution order.
+- [percy-overview][percy-overview] - Percy product overview, build review
   flow, AI Agents mode.

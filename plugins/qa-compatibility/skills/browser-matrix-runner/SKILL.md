@@ -16,12 +16,12 @@ Per [pw-browsers][pwb]:
 
 Playwright supports **three browser engines**:
 
-> 1. **Chromium** — "Open source builds used by default. Playwright
+> 1. **Chromium** - "Open source builds used by default. Playwright
 >    versions support Chromium N+1 before branded browsers release
 >    it."
-> 2. **Firefox** — "Playwright's Firefox version matches the recent
+> 2. **Firefox** - "Playwright's Firefox version matches the recent
 >    Firefox Stable build."
-> 3. **WebKit** — "Derived from latest WebKit main branch sources,
+> 3. **WebKit** - "Derived from latest WebKit main branch sources,
 >    often before Safari incorporation."
 
 Plus branded variants ([pw-browsers][pwb]):
@@ -38,7 +38,7 @@ Plus branded variants ([pw-browsers][pwb]):
 - A bug report says "works in Chrome, broken in Safari."
 - Pre-release: scheduled cross-browser smoke.
 
-## Step 1 — Install browsers
+## Step 1 - Install browsers
 
 Per [pw-browsers][pwb]:
 
@@ -60,7 +60,7 @@ npx playwright install msedge   # only on Windows / macOS
 npx playwright install chrome
 ```
 
-## Step 2 — Configure projects
+## Step 2 - Configure projects
 
 ```typescript
 // playwright.config.ts
@@ -77,7 +77,7 @@ export default defineConfig({
 });
 ```
 
-## Step 3 — Run
+## Step 3 - Run
 
 ```bash
 # All browsers
@@ -90,7 +90,7 @@ npx playwright test --project=firefox
 npx playwright test --project=chromium --project=webkit
 ```
 
-## Step 4 — CI matrix
+## Step 4 - CI matrix
 
 ```yaml
 # .github/workflows/cross-browser.yml
@@ -123,7 +123,7 @@ jobs:
 `fail-fast: false` ensures Chromium failure doesn't cancel
 WebKit / Firefox.
 
-## Step 5 — Per-browser failure analysis
+## Step 5 - Per-browser failure analysis
 
 When per-browser failures appear:
 
@@ -150,7 +150,7 @@ When per-browser failures appear:
 WebKit-only failures often cluster around well-known iOS Safari
 quirks (viewport units, scroll behavior, font rendering).
 
-## Step 6 — Engine vs channel choice
+## Step 6 - Engine vs channel choice
 
 | Use the engine (Playwright-bundled) when                 | Use the branded channel when                       |
 |----------------------------------------------------------|----------------------------------------------------|
@@ -184,12 +184,11 @@ manual / spot-check.
 
 ## References
 
-- [pwb][pwb] — Playwright supported browsers (Chromium / Firefox /
+- [pwb][pwb] - Playwright supported browsers (Chromium / Firefox /
   WebKit + branded channels), install commands, disk-space
   estimates.
-- [`os-matrix-runner`](../os-matrix-runner/SKILL.md) — sibling for
+- [`os-matrix-runner`](../os-matrix-runner/SKILL.md) - sibling for
   OS / runtime matrices.
-- [`compatibility-budget`](../compatibility-budget/SKILL.md) —
+- [`compatibility-budget`](../compatibility-budget/SKILL.md) - 
   conventions for choosing the matrix.
-- [`mobile-web-emulation-runner`](../../qa-mobile-native/skills/mobile-web-emulation-runner/SKILL.md)
-  — sibling: mobile viewport variants of the same browsers.
+- [`mobile-web-emulation-runner`](../../qa-mobile-native/skills/mobile-web-emulation-runner/SKILL.md) - sibling: mobile viewport variants of the same browsers.

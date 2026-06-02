@@ -1,6 +1,6 @@
 ---
 name: backup-verification-author
-description: "Author backup-verification harness — per-backup-type integrity (SHA-256 / encrypted-payload signature), restore-to-test-env spot-check cadence, partial-restore (single-table / single-object) verification, cross-region replication validation, retention-policy assertions. \"An untested backup is not a backup."
+description: "Author backup-verification harness - per-backup-type integrity (SHA-256 / encrypted-payload signature), restore-to-test-env spot-check cadence, partial-restore (single-table / single-object) verification, cross-region replication validation, retention-policy assertions. \"An untested backup is not a backup."
 type: skill
 archetype: S3
 rating: 22
@@ -15,7 +15,7 @@ keywords:
 
 # backup-verification-author
 
-Backups silently fail in many ways — wrong encryption key, missing
+Backups silently fail in many ways - wrong encryption key, missing
 volume, corrupted file, expired credential. Per the [Google Cloud
 DR planning guide], DR success requires "end-to-end recovery design
 addressing backup, restoration, and cleanup procedures." This skill
@@ -24,11 +24,11 @@ authors the verification harness.
 ## When to use
 
 - Building DR readiness for a new service.
-- Backup-tool migration (Restic → Borg, AWS Backup → Veeam) —
+- Backup-tool migration (Restic → Borg, AWS Backup → Veeam) - 
   verify the new tool works on real data.
 - Compliance audit: prove backups are tested + integrity-checked.
 
-## Step 1 — Catalog backup types
+## Step 1 - Catalog backup types
 
 ```markdown
 ## Backup Catalog — `<service>`
@@ -44,7 +44,7 @@ authors the verification harness.
 
 Each row needs its own verification step (Step 3).
 
-## Step 2 — Integrity checks at backup time
+## Step 2 - Integrity checks at backup time
 
 ```bash
 #!/usr/bin/env bash
@@ -77,7 +77,7 @@ Tests assert:
 - Signature verifies with the correct key.
 - Tag present.
 
-## Step 3 — Restore-to-test-env spot check
+## Step 3 - Restore-to-test-env spot check
 
 A restore that has never been done is not a backup. Schedule:
 
@@ -109,7 +109,7 @@ A restore that has never been done is not a backup. Schedule:
         # Verify count > 0 (or whatever invariant fits)
 ```
 
-## Step 4 — Partial-restore test
+## Step 4 - Partial-restore test
 
 Real DR scenarios often need single-table or single-object restore
 (not full DB):
@@ -133,7 +133,7 @@ aws s3 cp \
   ./restored-object
 ```
 
-## Step 5 — Cross-region replication test
+## Step 5 - Cross-region replication test
 
 ```python
 def test_backup_replicated_to_dr_region():
@@ -151,10 +151,10 @@ def test_backup_replicated_to_dr_region():
 ```
 
 Per the [Google Cloud DR planning guide]: "Security synchronization"
-also matters — DR region must have the same KMS keys / IAM /
+also matters - DR region must have the same KMS keys / IAM /
 secrets, not just the data.
 
-## Step 6 — Retention-policy verification
+## Step 6 - Retention-policy verification
 
 ```python
 def test_old_backups_purged_per_retention_policy():
@@ -167,7 +167,7 @@ def test_old_backups_purged_per_retention_policy():
     pytest.fail(f"Backup {obj_key} still exists past 30-day retention")
 ```
 
-Wrap in a try/except — actual missing object = pass.
+Wrap in a try/except - actual missing object = pass.
 
 ```python
 def test_recent_backups_present():
@@ -178,7 +178,7 @@ def test_recent_backups_present():
         s3.head_object(Bucket="backup", Key=key)  # raises if missing
 ```
 
-## Step 7 — Encryption verification
+## Step 7 - Encryption verification
 
 For encrypted backups, verify both:
 - The backup is encrypted at rest (S3 SSE-KMS / GCP CMEK / Azure
@@ -193,7 +193,7 @@ def test_backup_encrypted_with_correct_key():
     assert obj["SSEKMSKeyId"] == EXPECTED_KMS_KEY_ARN
 ```
 
-## Step 8 — Customer-induced backup test (compliance)
+## Step 8 - Customer-induced backup test (compliance)
 
 Some regulations (HIPAA, SOC 2) require demonstrated ability to
 restore on demand. Author the workflow:
@@ -220,7 +220,7 @@ restore on demand. Author the workflow:
 
 ## Limitations
 
-- Backup verification doesn't test the restore-time SLA — see
+- Backup verification doesn't test the restore-time SLA - see
   `restore-time-tests` for that.
 - Some legal regimes prescribe per-restore audit records; this skill
   covers the test pattern, not the legal compliance.
@@ -229,12 +229,12 @@ restore on demand. Author the workflow:
 
 ## References
 
-- [Google Cloud DR planning guide] — DR planning context
-- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) — drill-level
+- [Google Cloud DR planning guide] - DR planning context
+- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drill-level
   workflow that consumes verified backups
-- [`restore-time-tests`](../restore-time-tests/SKILL.md) — RTO
+- [`restore-time-tests`](../restore-time-tests/SKILL.md) - RTO
   verification of the restore process
-- [`qa-secrets/secrets-rotation-runner`](../../../qa-secrets/skills/secrets-rotation-runner/SKILL.md) —
+- [`qa-secrets/secrets-rotation-runner`](../../../qa-secrets/skills/secrets-rotation-runner/SKILL.md) - 
   related rotation workflow
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide

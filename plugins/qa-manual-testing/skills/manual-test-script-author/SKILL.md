@@ -1,6 +1,6 @@
 ---
 name: manual-test-script-author
-description: "Builds stakeholder-readable scripted manual test cases from a feature spec — emits either a step-table format (preconditions / steps / expected result / actual / pass-fail / notes) for spreadsheet review or a Gherkin Given/When/Then format for BDD-aware teams. Each script is self-contained (no implicit team knowledge), single-scenario (one happy + N edge per script), and includes the data setup the tester needs without being a developer. Use when a feature can't be (or shouldn't be) fully automated and a human tester needs an executable script — UAT, regression baselines, certification testing, exploratory follow-up scripts."
+description: "Builds stakeholder-readable scripted manual test cases from a feature spec - emits either a step-table format (preconditions / steps / expected result / actual / pass-fail / notes) for spreadsheet review or a Gherkin Given/When/Then format for BDD-aware teams. Each script is self-contained (no implicit team knowledge), single-scenario (one happy + N edge per script), and includes the data setup the tester needs without being a developer. Use when a feature can't be (or shouldn't be) fully automated and a human tester needs an executable script - UAT, regression baselines, certification testing, exploratory follow-up scripts."
 rating: 22
 d6: 3
 archetype: S3
@@ -17,7 +17,7 @@ Not every test should (or can) be automated. Some need a human:
   automation exceeds the test's run frequency.
 - **Certification / compliance** scripts that an auditor walks
   step-by-step.
-- **First-pass exploration follow-up** — a script formalizing what
+- **First-pass exploration follow-up** - a script formalizing what
   exploratory testing surfaced.
 
 This skill builds those scripts in two interchangeable formats: a
@@ -38,11 +38,11 @@ predetermine steps), see
   the runner can't reach.
 
 If the feature is fully automatable and the team has the budget,
-write an automated test — see
+write an automated test - see
 [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
 for the upstream Gherkin generation.
 
-## Step 1 — Read the input
+## Step 1 - Read the input
 
 The skill takes one of:
 
@@ -51,14 +51,14 @@ The skill takes one of:
 - An exploratory testing session debrief (for follow-up scripts).
 - An acceptance criterion line item (for UAT scripts).
 
-Extract the **actor**, **trigger**, and **observable outcomes** —
+Extract the **actor**, **trigger**, and **observable outcomes** - 
 the same Gherkin structure as
 [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
 A manual script is the same logical shape as a Gherkin scenario;
 the difference is the level of detail + the inclusion of setup
 data.
 
-## Step 2 — Format A: step-table (spreadsheet)
+## Step 2 - Format A: step-table (spreadsheet)
 
 The default format. Reads top-to-bottom; each row is one step the
 tester executes:
@@ -97,12 +97,12 @@ tester executes:
 (list)
 ```
 
-The **Preconditions** block is load-bearing — without it, the
+The **Preconditions** block is load-bearing - without it, the
 tester improvises setup, and the script's repeatability collapses.
 Cite specific test data (account email, SKU, code) so two runs
 produce the same result.
 
-## Step 3 — Format B: Gherkin (BDD-aware)
+## Step 3 - Format B: Gherkin (BDD-aware)
 
 ```gherkin
 Feature: Apply promo code at checkout
@@ -135,7 +135,7 @@ Feature: Apply promo code at checkout
 Same content as Format A, different shape. Pick based on the
 team's tooling: spreadsheets prefer A; Cucumber / Behat prefer B.
 
-## Step 4 — Single-scenario discipline
+## Step 4 - Single-scenario discipline
 
 A 30-step script that bundles 5 scenarios (happy path + 4 edge
 cases) is unmaintainable. The pattern:
@@ -156,7 +156,7 @@ The cost is more TCs; the benefit is per-TC pass/fail clarity. A
 30-step bundle that fails at step 17 obscures whether step 17 was
 the bug or step 12 was a precondition violation.
 
-## Step 5 — Self-contained data
+## Step 5 - Self-contained data
 
 Per [exploratory-wiki][exp]:
 
@@ -174,10 +174,10 @@ script must specify:
 - Specific SKUs / product IDs / record IDs.
 - Specific test cards / synthetic PII per the canonical sources
   (e.g. Stripe test cards `4242 4242 4242 4242`).
-- Expected URLs, button labels, copy text — verbatim where
+- Expected URLs, button labels, copy text - verbatim where
   copy is checked by the test.
 
-## Step 6 — Defect-raising integration
+## Step 6 - Defect-raising integration
 
 When a step fails, the tester needs to log a defect with enough
 context for the developer to reproduce. The script's **Defects
@@ -244,22 +244,19 @@ for the structured bug-reproduction package.
   observational judgment ("the toast was visible but the
   animation looked broken").
 - **Coverage of edge cases.** Manual scripts cover what the author
-  imagined; exploratory testing catches what the author didn't —
+  imagined; exploratory testing catches what the author didn't - 
   pair with [`exploratory-charter-author`](../../agents/exploratory-charter-author.md).
 
 ## References
 
-- [exp][exp] — Exploratory vs scripted testing distinction;
+- [exp][exp] - Exploratory vs scripted testing distinction;
   "most real-world testing combines both approaches with emphasis
   depending on project context."
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-  — upstream: emits Gherkin from a story; this skill turns Gherkin
+- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits Gherkin from a story; this skill turns Gherkin
   into a tester-runnable script.
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
-  — sibling: when the test is **not** scripted; charter-driven
+- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - sibling: when the test is **not** scripted; charter-driven
   exploration instead.
-- [`uat-script-author`](../uat-script-author/SKILL.md) — sibling:
+- [`uat-script-author`](../uat-script-author/SKILL.md) - sibling:
   same shape, scoped to UAT.
-- [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md)
-  — downstream: package the manual-test failures into structured
+- [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md) - downstream: package the manual-test failures into structured
   bug reports.

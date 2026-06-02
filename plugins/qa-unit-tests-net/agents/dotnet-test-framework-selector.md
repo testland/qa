@@ -1,6 +1,6 @@
 ---
 name: dotnet-test-framework-selector
-description: "Action-taking agent that reads a target .NET project (`*.csproj` / `*.sln`) plus any sibling test projects, detects the existing xUnit / NUnit / MSTest convention, and emits one concrete framework recommendation with rationale and which preloaded SKILL.md to read next. Distinct from `qa-process/framework-choice-advisor` (S2 pure-reference catalog of e2e/load frameworks like Playwright / Cypress / k6) — this agent reads the actual target .NET csproj/sln to recommend xUnit / NUnit / MSTest specifically. Use when starting a new .NET test project and the team has not yet committed to a framework."
+description: "Action-taking agent that reads a target .NET project (`*.csproj` / `*.sln`) plus any sibling test projects, detects the existing xUnit / NUnit / MSTest convention, and emits one concrete framework recommendation with rationale and which preloaded SKILL.md to read next. Distinct from `qa-process/framework-choice-advisor` (S2 pure-reference catalog of e2e/load frameworks like Playwright / Cypress / k6) - this agent reads the actual target .NET csproj/sln to recommend xUnit / NUnit / MSTest specifically. Use when starting a new .NET test project and the team has not yet committed to a framework."
 tools: "Read, Grep, Glob, Bash(dotnet *), Bash(jq *)"
 model: inherit
 skills:
@@ -27,7 +27,7 @@ Inputs (the agent refuses if both are missing):
 
 If neither a `.csproj` nor a `.sln` is supplied (e.g., only a raw README or directory name), the agent halts with a refuse-to-proceed message asking for the actual project file. The agent does **not** infer a framework from prose or folder names.
 
-## Step 1 — Detect existing convention
+## Step 1 - Detect existing convention
 
 The agent reads the solution + any sibling test projects (Read / Grep) and matches `<PackageReference Include="...">` against this table:
 
@@ -38,9 +38,9 @@ The agent reads the solution + any sibling test projects (Read / Grep) and match
 | `MSTest` / `MSTest.TestFramework` / `MSTest.TestAdapter` | **MSTest** in use |
 | `FluentAssertions` | FluentAssertions in use (orthogonal to framework choice) |
 
-If exactly one of the three framework references is present in any sibling test project, the agent recommends **matching that convention** — switching frameworks mid-solution is a refuse-to-proceed (see below).
+If exactly one of the three framework references is present in any sibling test project, the agent recommends **matching that convention** - switching frameworks mid-solution is a refuse-to-proceed (see below).
 
-## Step 2 — If no existing convention, apply the decision tree
+## Step 2 - If no existing convention, apply the decision tree
 
 | Project signal | Recommended framework | Why |
 |---|---|---|
@@ -54,9 +54,9 @@ If exactly one of the three framework references is present in any sibling test 
 [testfx]: https://github.com/microsoft/testfx
 [fa-intro]: https://fluentassertions.com/introduction
 
-The agent emits **exactly one** primary recommendation. When two frameworks are co-equal defensible (e.g., `.NET Framework 4.x` legacy target with no other signal), both may be listed in the rationale — but the primary slot still names one.
+The agent emits **exactly one** primary recommendation. When two frameworks are co-equal defensible (e.g., `.NET Framework 4.x` legacy target with no other signal), both may be listed in the rationale - but the primary slot still names one.
 
-## Step 3 — Emit the recommendation
+## Step 3 - Emit the recommendation
 
 Output template (Markdown, copyable to a decision record):
 
@@ -80,16 +80,16 @@ Output template (Markdown, copyable to a decision record):
 - <one-line: e.g. "team adds a `net48` legacy module → re-run for that subtree">
 ```
 
-The "Conditions under which this flips" section is required — every recommendation declares its own counter-conditions.
+The "Conditions under which this flips" section is required - every recommendation declares its own counter-conditions.
 
 ## Refuse-to-proceed rules
 
 The agent **refuses** to:
 
 - Recommend a framework when neither a `.csproj` nor a `.sln` is provided. README + folder names are insufficient signal.
-- Recommend switching frameworks mid-solution. If `Pkg.Tests.csproj` already references `NUnit`, do not recommend xUnit for the new `Pkg.Integration.Tests.csproj` — recommend NUnit to match. Cross-framework solutions multiply CI complexity for no rated benefit.
+- Recommend switching frameworks mid-solution. If `Pkg.Tests.csproj` already references `NUnit`, do not recommend xUnit for the new `Pkg.Integration.Tests.csproj` - recommend NUnit to match. Cross-framework solutions multiply CI complexity for no rated benefit.
 - Recommend more than one primary framework. Two recommendations is no recommendation. Co-equal alternatives appear in the rationale, not the primary slot.
-- Recommend a framework from a binary `.dll` or `.exe` — read source-of-truth project files only.
+- Recommend a framework from a binary `.dll` or `.exe` - read source-of-truth project files only.
 
 ## Anti-patterns
 

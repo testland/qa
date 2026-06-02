@@ -1,6 +1,6 @@
 ---
 name: saga-transaction-tests
-description: "Build saga transaction tests — orchestration vs choreography variants, per-step compensating-action verification, partial-failure scenarios (Step 3 fails → Steps 1+2 must compensate), idempotency of compensations, outbox pattern for atomic DB-update + message-publish. Per microservices.io/saga; tests guard against ACD-without-Isolation anomalies."
+description: "Build saga transaction tests - orchestration vs choreography variants, per-step compensating-action verification, partial-failure scenarios (Step 3 fails → Steps 1+2 must compensate), idempotency of compensations, outbox pattern for atomic DB-update + message-publish. Per microservices.io/saga; tests guard against ACD-without-Isolation anomalies."
 type: skill
 archetype: S3
 rating: 22
@@ -19,7 +19,7 @@ Per [microservices.io/saga], a saga is "a sequence of local
 transactions. Each local transaction updates the database and
 publishes a message or event to trigger the next local transaction
 in the saga." Sagas guarantee Atomicity / Consistency / Durability
-but sacrifice the I (Isolation) — tests verify both happy-path
+but sacrifice the I (Isolation) - tests verify both happy-path
 completion AND every failure-and-compensate path.
 
 ## When to use
@@ -28,10 +28,10 @@ completion AND every failure-and-compensate path.
   payment → fulfillment).
 - Replacing distributed-2PC with sagas; need test coverage of
   every compensating path.
-- Pre-deployment after compensation logic changes — partial
+- Pre-deployment after compensation logic changes - partial
   failures are the canonical untested code path.
 
-## Step 1 — Pick orchestration or choreography
+## Step 1 - Pick orchestration or choreography
 
 Per [microservices.io/saga]:
 
@@ -40,12 +40,12 @@ Per [microservices.io/saga]:
 | **Orchestration** | Central orchestrator commands each step; explicit state machine |
 | **Choreography** | Services publish domain events; subsequent services react autonomously |
 
-**Default: orchestration** — the state machine has clear edges, so
+**Default: orchestration** - the state machine has clear edges, so
 the test matrix (steps × failures) is enumerable. Use choreography
 when services must remain autonomous (no central coordinator owned
 by one team) or fan-out is wide; Step 7 covers that path.
 
-## Step 2 — Identify steps + compensations
+## Step 2 - Identify steps + compensations
 
 For an order-creation saga:
 
@@ -53,11 +53,11 @@ For an order-creation saga:
 |---|---|---|
 | 1. Reserve inventory | `inventory.reserve(items)` | `inventory.release(reservation_id)` |
 | 2. Charge payment | `payments.charge(amount)` | `payments.refund(charge_id)` |
-| 3. Create shipment | `shipping.create(order_id)` | (none — last step) |
+| 3. Create shipment | `shipping.create(order_id)` | (none - last step) |
 
 Document this table; tests assert one row at a time.
 
-## Step 3 — Happy-path orchestration test
+## Step 3 - Happy-path orchestration test
 
 ```python
 def test_orchestration_completes_all_steps():
@@ -70,7 +70,7 @@ def test_orchestration_completes_all_steps():
     assert shipping.shipments_for(saga.id) is not None
 ```
 
-## Step 4 — Per-failure compensation test
+## Step 4 - Per-failure compensation test
 
 For each step, test that failure triggers compensation of all prior
 steps. Use mock failures + parametrize:
@@ -98,7 +98,7 @@ def test_failure_at_step_triggers_compensation(fail_at):
 The matrix of failure points × compensation invocations is the test
 suite.
 
-## Step 5 — Idempotency of compensations
+## Step 5 - Idempotency of compensations
 
 Per [microservices.io/saga], compensations must be idempotent
 because retries happen during partial failure. Test:
@@ -114,7 +114,7 @@ def test_compensation_idempotent():
 
 Compensations that aren't idempotent → double-refund, double-release.
 
-## Step 6 — Outbox pattern test
+## Step 6 - Outbox pattern test
 
 Per [microservices.io/saga], "Services must atomically update
 databases AND publish messages/events." The Outbox pattern: write
@@ -147,7 +147,7 @@ def test_outbox_publisher_publishes_pending():
     assert db.query("SELECT status FROM outbox WHERE event = 'OrderPlaced'").scalar() == "published"
 ```
 
-## Step 7 — Choreography fan-out test
+## Step 7 - Choreography fan-out test
 
 For choreographed sagas, test that the right services react to the
 right events. Use an in-memory event broker:
@@ -180,7 +180,7 @@ def test_choreography_inventory_failure_compensates_payment():
     assert payment_svc.refunds == [("o1", 100)]
 ```
 
-## Step 8 — Saga timeout test
+## Step 8 - Saga timeout test
 
 Sagas can hang (orchestrator waiting for a step that never
 responds). Test timeout + escalation:
@@ -219,13 +219,13 @@ def test_saga_times_out_when_step_hangs():
 
 ## References
 
-- [microservices.io/saga] — orchestration vs choreography, ACD, outbox,
+- [microservices.io/saga] - orchestration vs choreography, ACD, outbox,
   countermeasures
-- [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md) — pairs
+- [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md) - pairs
   with sagas for event-sourced systems
-- [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) —
+- [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) - 
   isolation-window assertions
-- [`mvcc-isolation-tests`](../../qa-concurrency/skills/mvcc-isolation-tests/SKILL.md) —
+- [`mvcc-isolation-tests`](../../qa-concurrency/skills/mvcc-isolation-tests/SKILL.md) - 
   per-DB isolation when sagas overlap
 
 [microservices.io/saga]: https://microservices.io/patterns/data/saga.html

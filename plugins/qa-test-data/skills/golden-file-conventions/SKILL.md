@@ -1,6 +1,6 @@
 ---
 name: golden-file-conventions
-description: "Reference catalog for snapshot / golden file management — naming conventions, directory layout, when to add / update / remove a baseline, sanitization (timestamps, IDs, PII), per-OS / per-runtime variant strategy, and review workflow for snapshot diffs in PRs. Use when designing a snapshot-testing convention or auditing an existing one for drift."
+description: "Reference catalog for snapshot / golden file management - naming conventions, directory layout, when to add / update / remove a baseline, sanitization (timestamps, IDs, PII), per-OS / per-runtime variant strategy, and review workflow for snapshot diffs in PRs. Use when designing a snapshot-testing convention or auditing an existing one for drift."
 rating: 24
 d6: 4
 archetype: S2
@@ -10,7 +10,7 @@ archetype: S2
 
 > **Terminology note:** "golden file" / "golden master" are
 > practitioner-emergent terms popularized by the Working Effectively
-> with Legacy Code tradition. ISTQB has no canonical entry — the
+> with Legacy Code tradition. ISTQB has no canonical entry - the
 > closest formal term is "snapshot test." This catalog uses both
 > interchangeably; assume "golden file" and "snapshot" mean the same
 > thing in the rest of the body.
@@ -59,7 +59,7 @@ exports[`Button renders with primary variant 1`] = `<button class="primary">...<
 ```
 
 The trailing ` 1` is the snapshot index when one test takes multiple
-snapshots — keep these to a minimum (≤3 per test); beyond that,
+snapshots - keep these to a minimum (≤3 per test); beyond that,
 split the test.
 
 ### Per-OS / per-browser variants (visual snapshots)
@@ -74,7 +74,7 @@ Button-primary-1-firefox-linux.png
 Button-primary-1-webkit-darwin.png
 ```
 
-OS / browser suffixes are load-bearing — anti-aliasing and font
+OS / browser suffixes are load-bearing - anti-aliasing and font
 metrics differ. Don't strip them.
 
 ## Directory layout
@@ -102,8 +102,7 @@ Add a snapshot when:
 **Don't** add a snapshot for:
 
 - Output that's expected to change frequently (e.g. timestamps,
-  randomized IDs). Snapshot the **shape**, not the volatile values
-  — see Sanitization below.
+  randomized IDs). Snapshot the **shape**, not the volatile values - see Sanitization below.
 - Internal-only rendering paths the user never sees.
 - Test scaffolding output (e.g. test runner banners).
 
@@ -122,7 +121,7 @@ snapshotting:**
 | Memory addresses (object refs) | Avoid in serialized output; use a custom serializer. |
 | User-data tokens          | Strip before snapshotting; tokens shouldn't be in the test surface anyway. |
 
-Most frameworks support custom serializers / matchers — use them.
+Most frameworks support custom serializers / matchers - use them.
 Jest's `expect.any(Date)` matcher pattern is canonical:
 
 ```javascript
@@ -150,7 +149,7 @@ Is the diff explained by code changes in the same PR?
 ```
 
 The most common review failure is **rubber-stamping snapshot
-updates** — accepting a 47-component diff because the PR title says
+updates** - accepting a 47-component diff because the PR title says
 "Refactor Button". The diff classifier in
 [`golden-file-manager`](../../agents/golden-file-manager.md)
 implements this decision tree.
@@ -175,7 +174,7 @@ Remove a snapshot when:
 - The associated test is deleted.
 - The component / page is removed from the product.
 - The snapshot has produced more false positives than real
-  regressions over a 3-month window — it's noise, not signal.
+  regressions over a 3-month window - it's noise, not signal.
 
 The [`golden-file-manager`](../../agents/golden-file-manager.md)
 agent automates the "test deleted but snapshot remained" cleanup.
@@ -207,12 +206,10 @@ agent automates the "test deleted but snapshot remained" cleanup.
 
 ## References
 
-- ISO/IEC/IEEE 29119 series — formal test-document conventions
+- ISO/IEC/IEEE 29119 series - formal test-document conventions
   (cite by stable ID).
-- [`golden-file-manager`](../../agents/golden-file-manager.md) —
+- [`golden-file-manager`](../../agents/golden-file-manager.md) - 
   active-management agent that uses this catalog.
-- [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)
-  — visual-snapshot-specific naming and per-OS suffix conventions.
-- [`visual-baseline-conventions`](../../../qa-visual-regression/skills/visual-baseline-conventions/SKILL.md)
-  — broader visual-coverage conventions; this skill is the
+- [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md) - visual-snapshot-specific naming and per-OS suffix conventions.
+- [`visual-baseline-conventions`](../../../qa-visual-regression/skills/visual-baseline-conventions/SKILL.md) - broader visual-coverage conventions; this skill is the
   text/object-snapshot equivalent.

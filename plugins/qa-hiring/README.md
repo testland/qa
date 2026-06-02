@@ -1,16 +1,16 @@
 # qa-hiring
 
-QA hiring toolkit: a structured-interview triple — questions, rubric, calibration guide — for QA / SDET / test-lead / quality-manager roles. Implements the canonical Levashina 2014 *et al.* structured-interview methodology with ISTQB-aligned competency vocabulary.
+QA hiring toolkit: a structured-interview triple - questions, rubric, calibration guide - for QA / SDET / test-lead / quality-manager roles. Implements the canonical Levashina 2014 *et al.* structured-interview methodology with ISTQB-aligned competency vocabulary.
 
 ## Components
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| Skill | [interview-question-author](skills/interview-question-author/SKILL.md) | S3 | Build a role + seniority-specific question bank — technical, behavioural (STAR-format), scenario-based, system-design — classified by ISTQB competency and Bloom's-taxonomy difficulty. |
+| Skill | [interview-question-author](skills/interview-question-author/SKILL.md) | S3 | Build a role + seniority-specific question bank - technical, behavioural (STAR-format), scenario-based, system-design - classified by ISTQB competency and Bloom's-taxonomy difficulty. |
 | Skill | [hiring-rubric-author](skills/hiring-rubric-author/SKILL.md) | S3 | Build a competency-anchored 4-level scoring rubric (no-hire / borderline / hire / strong-hire) with concrete behavioural anchors per competency dimension. |
-| Skill | [calibration-guide-author](skills/calibration-guide-author/SKILL.md) | S3 | Build an interviewer calibration guide — gold-standard model answers per question per score level, common interviewer pitfalls, and a panel-calibration session script. |
+| Skill | [calibration-guide-author](skills/calibration-guide-author/SKILL.md) | S3 | Build an interviewer calibration guide - gold-standard model answers per question per score level, common interviewer pitfalls, and a panel-calibration session script. |
 
-The three skills compose: questions are authored first, then the matching rubric, then the calibration guide. None of the three is sufficient alone — running structured interviews requires all three.
+The three skills compose: questions are authored first, then the matching rubric, then the calibration guide. None of the three is sufficient alone - running structured interviews requires all three.
 
 ## Install
 

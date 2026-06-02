@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# jvm-test-author — evals
+# jvm-test-author - evals
 
 Companion eval cases for [`jvm-test-author`](../../jvm-test-author.md). Three
 cases covering happy path + branch + adversarial. Re-run by feeding the
@@ -12,10 +12,10 @@ cases covering happy path + branch + adversarial. Re-run by feeding the
 emitted test file against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - 
 each eval is designed to be re-run against each tier.
 
-## Eval 1 — happy path — Maven + JUnit 5 → @Test + Assertions.assertTrue(result.isEmpty())
+## Eval 1 - happy path - Maven + JUnit 5 → @Test + Assertions.assertTrue(result.isEmpty())
 
 **Input:**
 
@@ -62,7 +62,7 @@ enhancement.
 `UserServiceTest.java` under `src/test/java/`. Output does NOT contain
 `org.testng`, `io.kotest`, `spock.lang`, OR `org.scalatest`.
 
-## Eval 2 — branch — Gradle Kotlin DSL + Kotest runner → StringSpec + shouldBe
+## Eval 2 - branch - Gradle Kotlin DSL + Kotest runner → StringSpec + shouldBe
 
 **Input:**
 
@@ -102,7 +102,7 @@ Kotest spec style import) AND `shouldBe` (Kotest matcher). Output does NOT
 contain `@Test` from `org.junit.jupiter.api.Test` AND does NOT contain
 `org.testng`, `spock.lang`, OR `org.scalatest`.
 
-## Eval 3 — adversarial — JUnit 5 AND TestNG both declared in pom.xml → refuse, ask which to use
+## Eval 3 - adversarial - JUnit 5 AND TestNG both declared in pom.xml → refuse, ask which to use
 
 **Input:**
 
@@ -135,7 +135,7 @@ pom.xml dependencies (excerpt):
 
 **Expected:** Refuses to author. Detects the conflicting framework signals
 (`junit-jupiter-api` AND `testng` both in `pom.xml`). Asks the user which
-framework to use. Does NOT silently pick one — JUnit 5 and TestNG both
+framework to use. Does NOT silently pick one - JUnit 5 and TestNG both
 expose `@Test` but in different packages with different `Assert`
 parameter orders (JUnit: `assertEquals(expected, actual)`; TestNG:
 `assertEquals(actual, expected)`), so a wrong default produces a file
@@ -144,7 +144,7 @@ whose assertion diagnostics are backwards.
 **Pass condition:** Output does NOT contain a generated test method body
 (no `@Test`-annotated method that calls the target `findById`). Output
 contains `junit` AND `testng` AND at least one of the words
-`refuse` / `conflict` / `which` / `ambiguous` / `both` (any one — signals
+`refuse` / `conflict` / `which` / `ambiguous` / `both` (any one - signals
 the refuse-to-proceed message). Output asks the user to choose one
 framework before proceeding.
 

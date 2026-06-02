@@ -1,6 +1,6 @@
 ---
 name: prod-canary-validator
-description: "Builds a canary-validation workflow that compares a canary deploy's metrics against the baseline (current main) — picks the metric set (error rate, p50/p95/p99 latency, business KPIs like checkout-completion), defines per-metric thresholds (absolute + relative-to-baseline), runs a statistical-comparison check (effect size + significance) over the canary's observation window, and emits a promote/rollback verdict. Use as the gate between canary deploy and full rollout — the deterministic version of \"the on-call eyeballs the dashboard for 30 min."
+description: "Builds a canary-validation workflow that compares a canary deploy's metrics against the baseline (current main) - picks the metric set (error rate, p50/p95/p99 latency, business KPIs like checkout-completion), defines per-metric thresholds (absolute + relative-to-baseline), runs a statistical-comparison check (effect size + significance) over the canary's observation window, and emits a promote/rollback verdict. Use as the gate between canary deploy and full rollout - the deterministic version of \"the on-call eyeballs the dashboard for 30 min."
 rating: 23
 d6: 4
 archetype: S3
@@ -36,7 +36,7 @@ human review.
 - A SLO depends on production verification; the canary is the
   earliest gate where regressions can be caught.
 
-## Step 1 — Pick the metric set
+## Step 1 - Pick the metric set
 
 Canary metrics should cover three classes:
 
@@ -49,18 +49,18 @@ Canary metrics should cover three classes:
 Pick 5-10 metrics. More = noisier verdict (more chances to
 trip); fewer = blind spots.
 
-Always include **at least one business KPI** — performance and
+Always include **at least one business KPI** - performance and
 reliability metrics can both look fine while the actual user
 outcome (checkout completion) regresses.
 
-## Step 2 — Set thresholds (absolute + relative)
+## Step 2 - Set thresholds (absolute + relative)
 
 Per metric, define two thresholds:
 
 | Threshold type    | Example                                                      |
 |-------------------|--------------------------------------------------------------|
-| **Absolute**      | "Error rate <0.5%" — a hard floor regardless of baseline.    |
-| **Relative**      | "Error rate ≤ 1.5× baseline" — catches regressions even when baseline is high. |
+| **Absolute**      | "Error rate <0.5%" - a hard floor regardless of baseline.    |
+| **Relative**      | "Error rate ≤ 1.5× baseline" - catches regressions even when baseline is high. |
 
 ```yaml
 # canary-thresholds.yml
@@ -80,10 +80,10 @@ The combination is essential: **absolute** catches "unacceptable
 regardless"; **relative** catches "worse than the baseline by a
 meaningful amount."
 
-## Step 3 — Statistical significance
+## Step 3 - Statistical significance
 
 A 1-minute window of canary data has high variance. The verdict
-"canary error rate 0.4% vs baseline 0.3% — promote?" depends on
+"canary error rate 0.4% vs baseline 0.3% - promote?" depends on
 sample size:
 
 - **N=10 requests, 0.4% diff** → meaningless; could be 1 vs 0
@@ -139,16 +139,16 @@ def verdict(canary_metrics, baseline_metrics, thresholds, alpha=0.05):
 ```
 
 `alpha = 0.05` is convention; use `0.01` for high-criticality
-metrics. **Skip relative checks when not significant** — otherwise
+metrics. **Skip relative checks when not significant** - otherwise
 random variance triggers false rollbacks.
 
-## Step 4 — Observation window
+## Step 4 - Observation window
 
 Default: **30 minutes**. Pattern:
 
 | Window  | Use                                                                |
 |---------|--------------------------------------------------------------------|
-| 5 min   | Smoke check only — sanity; not the promote gate.                    |
+| 5 min   | Smoke check only - sanity; not the promote gate.                    |
 | 15 min  | Low-traffic services where 30 min wouldn't add sample size.        |
 | 30 min  | Default for most services.                                          |
 | 1 hour  | High-variance metrics (sparse business KPIs).                       |
@@ -158,7 +158,7 @@ Per [canary-release][cr]: the observation window is "early warning
 for potential problems before impacting your entire production
 infrastructure or user base." Longer = more signal, slower release.
 
-## Step 5 — Per-traffic-share scaling
+## Step 5 - Per-traffic-share scaling
 
 Canary at 5% traffic with N requests/min collects 1/20 the sample
 of baseline at 95% traffic. Adjust the statistical confidence
@@ -177,7 +177,7 @@ For very low canary shares (1%), prefer to bump the share before
 verdict (5% canary for 30 min beats 1% canary for 2 hours on
 sample-size grounds).
 
-## Step 6 — Output
+## Step 6 - Output
 
 ```markdown
 ## Canary verdict — `<release>` `<sha>`
@@ -215,7 +215,7 @@ Investigate the new error categories before promoting.
 Recommend: investigate the NPE before any promotion decision.
 ```
 
-## Step 7 — CI / orchestration integration
+## Step 7 - CI / orchestration integration
 
 Wire as a step in the release pipeline:
 
@@ -284,16 +284,13 @@ ambiguous case); rollback is automatic on clear failure.
 
 ## References
 
-- [cr][cr] — Martin Fowler on canary releases: gradual rollout,
+- [cr][cr] - Martin Fowler on canary releases: gradual rollout,
   monitoring + rollback, "early warning for potential problems
   before impacting your entire production infrastructure or user
   base."
-- [`release-engineer`](../../qa-roles/agents/release-engineer.md)
-  — orchestrating role agent that calls this skill at the canary
+- [`release-engineer`](../../qa-roles/agents/release-engineer.md) - orchestrating role agent that calls this skill at the canary
   observation step.
-- [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md)
-  — sibling: continuous-in-production verification (different
+- [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) - sibling: continuous-in-production verification (different
   cadence, different goal).
-- [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md)
-  — sibling: A/B test analysis (different statistical framework
+- [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md) - sibling: A/B test analysis (different statistical framework
   but related).

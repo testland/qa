@@ -1,6 +1,6 @@
 ---
 name: pact-contract-testing
-description: "Authors and verifies Pact consumer-driven contract tests across the full Pact lifecycle — consumer tests producing pact files, publishing to the Pact Broker, provider verification, and `can-i-deploy` deployment gates. Use when introducing a new HTTP/JSON API contract between two services, diagnosing breaking changes, or wiring contract verification into CI."
+description: "Authors and verifies Pact consumer-driven contract tests across the full Pact lifecycle - consumer tests producing pact files, publishing to the Pact Broker, provider verification, and `can-i-deploy` deployment gates. Use when introducing a new HTTP/JSON API contract between two services, diagnosing breaking changes, or wiring contract verification into CI."
 rating: 25
 d6: 4
 archetype: S1
@@ -12,8 +12,7 @@ archetype: S1
 
 Pact is a code-first tool for testing HTTP and message integrations using
 **consumer-driven contract tests** ([pact-overview][overview]). The
-contract is generated as a side-effect of the consumer's automated tests
-— each test case documents one request/response pair, and only the parts
+contract is generated as a side-effect of the consumer's automated tests - each test case documents one request/response pair, and only the parts
 the consumer actually uses get tested.
 
 [overview]: https://docs.pact.io/
@@ -41,7 +40,7 @@ The full lifecycle has five steps ([pact-how-it-works][how]):
 
 - Two or more services communicate over HTTP/JSON or a message bus.
 - The team owns both consumer and provider (or has access to the
-  provider team) — Pact requires provider buy-in for verification.
+  provider team) - Pact requires provider buy-in for verification.
 - A team wants a deployment safety net richer than schema-only
   comparison: contract-by-example asserts what consumers **actually
   use**, not the full provider surface.
@@ -51,7 +50,7 @@ The full lifecycle has five steps ([pact-how-it-works][how]):
 
 If the API has no consumers under your control (public APIs, third-party
 integrations), prefer
-[`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) — schema-
+[`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) - schema-
 based diffs need no provider/consumer coordination.
 
 ## Authoring (consumer side)
@@ -138,7 +137,7 @@ The Broker stores ([overview][overview]):
   (e.g. `production`, `staging`, `main`).
 
 Tagging by branch + the Git SHA as `consumer-app-version` is the
-canonical pattern — `can-i-deploy` queries the matrix using these
+canonical pattern - `can-i-deploy` queries the matrix using these
 identifiers.
 
 ## Provider verification
@@ -166,11 +165,11 @@ new Verifier({
 The provider replays every request from each pact file against a
 running provider instance and compares responses
 ([pact-how-it-works][how]). `consumerVersionSelectors` controls which
-consumer pacts get verified — `mainBranch` plus `deployedOrReleased`
+consumer pacts get verified - `mainBranch` plus `deployedOrReleased`
 ensures the provider stays compatible with both the latest consumer
 work and what's currently in production.
 
-`publishVerificationResult: true` is what makes the matrix update —
+`publishVerificationResult: true` is what makes the matrix update - 
 without it, the broker has no record of this provider version's
 verification status.
 
@@ -195,7 +194,7 @@ new Verifier({
 State setup that fails causes the matching interaction to fail
 verification.
 
-## `can-i-deploy` — deployment gate
+## `can-i-deploy` - deployment gate
 
 Per [can-i-deploy][cid]:
 
@@ -214,8 +213,8 @@ pact-broker can-i-deploy \
 
 Exit codes ([can-i-deploy][cid]):
 
-- `0` — "Computer says yes \\o/" — safe to deploy.
-- `1` — "Computer says no" — at least one matrix cell is missing or
+- `0` - "Computer says yes \\o/" - safe to deploy.
+- `1` - "Computer says no" - at least one matrix cell is missing or
   failed.
 
 The output includes a markdown-style matrix of consumer/provider
@@ -288,13 +287,13 @@ A complete CI flow per side:
       --to-environment=production
 ```
 
-`can-i-deploy` is the actual gate — pact verification happens in step
+`can-i-deploy` is the actual gate - pact verification happens in step
 1, but a green verification alone doesn't prove every paired version
 is compatible.
 
 ## References
 
-- [pact-overview][overview] — what Pact is, contract-by-example.
-- [pact-how-it-works][how] — consumer / provider / broker lifecycle.
-- [pact-js][js] — Node SDK install + `PactV3` DSL + Verifier setup.
-- [can-i-deploy][cid] — the deployment-gate CLI.
+- [pact-overview][overview] - what Pact is, contract-by-example.
+- [pact-how-it-works][how] - consumer / provider / broker lifecycle.
+- [pact-js][js] - Node SDK install + `PactV3` DSL + Verifier setup.
+- [can-i-deploy][cid] - the deployment-gate CLI.

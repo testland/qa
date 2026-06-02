@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# mocking-anti-pattern-detector — evals
+# mocking-anti-pattern-detector - evals
 
 Companion eval cases for [`mocking-anti-pattern-detector`](../../mocking-anti-pattern-detector.md).
 Three cases cover happy path / branch / adversarial: over-mocking and
@@ -15,7 +15,7 @@ legitimately use the patterns flagged as anti-patterns). Re-run by
 pasting the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — over-mocking + mock-what-you-don't-own
+## Eval 1 - happy path - over-mocking + mock-what-you-don't-own
 
 **Input:**
 
@@ -64,9 +64,9 @@ describe('Cart checkout', () => {
 
 **Expected:** Step 1 identifies Jest mock primitives. Step 2 flags
 `mockLogger` as an **over-mock** (mock created but only state asserted
-via `cart.itemCount` — recommend replacing with a no-op stub). Step 3
+via `cart.itemCount` - recommend replacing with a no-op stub). Step 3
 flags the `send` / `format` / `parse` triple as **behavior-verification
-leakage** (asserts on dispatch internals — recommend asserting on
+leakage** (asserts on dispatch internals - recommend asserting on
 caller-observable state). Step 5 flags `jest.mock('lodash')` and
 `jest.mock('@aws-sdk/client-ses')` as **mock-what-you-don't-own** (both
 are third-party `dependencies`; recommend wrapping in a team-owned
@@ -79,7 +79,7 @@ Fowler's `mocks-stubs` article.
 `mock-what-you-don't-own` / `Mocking what you don't own`. Output names
 at least one of the third-party modules (`lodash` / `@aws-sdk/client-ses`).
 
-## Eval 2 — branch — state verification only (no anti-pattern findings)
+## Eval 2 - branch - state verification only (no anti-pattern findings)
 
 **Input:**
 
@@ -121,7 +121,7 @@ describe('Cart', () => {
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25)
 
-**Expected:** Step 1 finds zero mock-setup primitives — no `vi.fn()`,
+**Expected:** Step 1 finds zero mock-setup primitives - no `vi.fn()`,
 `jest.mock(...)`, `Mock()`, `spy()`, or `when(...)` calls.
 `InMemoryCartRepo` is a fake (state-bearing in-memory implementation)
 per Rule 3, exactly the pattern the agent recommends. Step 2-6 find
@@ -129,7 +129,7 @@ no over-mocks, no behavior-verification leakage, no mock chains, no
 mock-what-you-don't-own, and no fake-candidate clusters. The findings
 table reports 0 across all anti-pattern rows.
 
-**Pass condition:** Output explicitly indicates zero findings — contains
+**Pass condition:** Output explicitly indicates zero findings - contains
 one of `no anti-patterns` / `0 findings` / `Test doubles found: 0` /
 `no findings detected` (case-insensitive) OR every anti-pattern row in
 the findings table reports a count of 0. Output does NOT recommend
@@ -137,7 +137,7 @@ replacing `InMemoryCartRepo` with a mock or naming any specific
 finding (`over-mock`, `behavior-verification leakage`, `mock chain`,
 `mock-what-you-don't-own`, `fake-candidate`).
 
-## Eval 3 — adversarial — refuse on contract-test path
+## Eval 3 - adversarial - refuse on contract-test path
 
 **Input:**
 
@@ -181,7 +181,7 @@ describe('OrderService consumer contract', () => {
 **Target models:** sonnet (2026-05-25)
 
 **Expected:** Per the Refuse-to-proceed rule "Operate on tests in
-`tests/contract/` paths — contract tests legitimately use the patterns
+`tests/contract/` paths - contract tests legitimately use the patterns
 this agent flags as anti-patterns (the patterns ARE the contract),"
 the agent refuses to issue a mocking anti-pattern verdict. The file
 path is `tests/contract/order-service.pact.spec.ts`; the `provider`
@@ -197,12 +197,12 @@ anti-pattern rows.
 Output does NOT contain any of `over-mock` / `Behavior verification
 leakage` / `Mock chain` / `Mocking what you don't own` /
 `Fake-candidate` as a findings-table row. The agent must not claim
-to flag mock-chain patterns in a Pact contract test — that is the
+to flag mock-chain patterns in a Pact contract test - that is the
 entire adversarial point of the eval.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo. Tool surface (`Read`,
   `Grep`, `Glob`) is read-only.
 - Pass conditions are literal-substring checks; a reviewer can grep the

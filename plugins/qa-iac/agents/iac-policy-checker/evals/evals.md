@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# iac-policy-checker — evals
+# iac-policy-checker - evals
 
 Companion eval cases for [`iac-policy-checker`](../../iac-policy-checker.md).
 Three cases cover happy path / branch / adversarial: unified BLOCK verdict
@@ -13,10 +13,10 @@ low-severity-only scans with waivers applied, and a refuse-to-proceed
 on a waiver missing the required `expires:` field.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — BLOCK on high-severity consensus
+## Eval 1 - happy path - BLOCK on high-severity consensus
 
 **Input:**
 
@@ -83,7 +83,7 @@ literal string `aws_s3_bucket.data` AND mentions all three scanners
 (`Checkov`, `tfsec`, `KICS`) on the consensus finding line. Output
 does NOT contain a `PASS` verdict.
 
-## Eval 2 — branch — PASS on low-severity-only with valid waiver
+## Eval 2 - branch - PASS on low-severity-only with valid waiver
 
 **Input:**
 
@@ -143,7 +143,7 @@ mentions the waiver (`CKV_AWS_20` AND `2026-12-31`). Output does NOT
 contain a `BLOCK` verdict AND does NOT list `CKV_AWS_20` as a
 blocking high-severity finding.
 
-## Eval 3 — adversarial — waiver missing expires field (refuse)
+## Eval 3 - adversarial - waiver missing expires field (refuse)
 
 **Input:**
 
@@ -201,7 +201,7 @@ valid.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted JSON / YAML blocks — no
+- All three inputs are concrete pasted JSON / YAML blocks - no
   external scanner runs required to reproduce.
 - Pass conditions are literal-substring checks; a reviewer can grep
   the agent's transcript for the BLOCK / PASS verdict and the

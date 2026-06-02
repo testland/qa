@@ -1,6 +1,6 @@
 ---
 name: parameterized-test-generator
-description: "Generates parameterized test inputs combining boundary-value, equivalence-class, and pairwise-combinatorial cases from a typed multi-input specification — produces the cross-product of cases up to a configurable strength (1-wise / 2-wise / N-wise) using all-pairs reduction so the test surface stays tractable. Emits cases in the project's test-runner-native parametrize format. Use when a function or endpoint takes 3+ inputs whose interactions matter and full Cartesian product would explode."
+description: "Generates parameterized test inputs combining boundary-value, equivalence-class, and pairwise-combinatorial cases from a typed multi-input specification - produces the cross-product of cases up to a configurable strength (1-wise / 2-wise / N-wise) using all-pairs reduction so the test surface stays tractable. Emits cases in the project's test-runner-native parametrize format. Use when a function or endpoint takes 3+ inputs whose interactions matter and full Cartesian product would explode."
 rating: 24
 d6: 4
 archetype: S3
@@ -16,7 +16,7 @@ the naive test set is the **Cartesian product**: 4 roles × 4 tiers
 authoring all 480 and end up with happy-path-only coverage that
 misses interaction bugs.
 
-The fix is **all-pairs (pairwise) testing** — pick a smaller test
+The fix is **all-pairs (pairwise) testing** - pick a smaller test
 set that covers every **pair** of input values across the full
 matrix. Empirically, 2-wise coverage finds the majority of
 interaction bugs at a fraction of the test count. ISTQB defines
@@ -34,15 +34,15 @@ covering 1-wise / 2-wise / N-wise combinations.
 - Cartesian product would produce >100 tests.
 - Pairs of inputs interact (e.g. `tier=enterprise` + `feature=sso`
   has a different code path than `tier=free` + `feature=sso`).
-- Existing tests cover only a few hand-picked combinations — the
+- Existing tests cover only a few hand-picked combinations - the
   team wants systematic coverage.
 
 If only one input has multiple values, use
 [`boundary-value-generator`](../boundary-value-generator/SKILL.md)
-instead — boundary analysis is the right tool for single-input
+instead - boundary analysis is the right tool for single-input
 testing.
 
-## Step 1 — Pick the coverage strength
+## Step 1 - Pick the coverage strength
 
 | Strength | Coverage                                                           |
 |----------|--------------------------------------------------------------------|
@@ -61,7 +61,7 @@ testing.
 **Default:** 2-wise. Promote to 3-wise only when an incident
 postmortem shows a triplet bug slipped through 2-wise.
 
-## Step 2 — Pick the tool that computes the reduced set
+## Step 2 - Pick the tool that computes the reduced set
 
 | Tool        | Language   | Notes                                                        |
 |-------------|------------|--------------------------------------------------------------|
@@ -69,12 +69,12 @@ postmortem shows a triplet bug slipped through 2-wise.
 | **AllPairs** | Python    | Library; integrates with pytest.                              |
 | **CATS**    | Multi-lang | Open-source Combinatorial Test Generator.                     |
 
-**Default: PICT** — language-agnostic CLI, deterministic CSV output
+**Default: PICT** - language-agnostic CLI, deterministic CSV output
 that any test runner can parametrize. Use AllPairs when the spec
 needs to live in Python alongside pytest fixtures; use CATS when the
 team needs an in-process Java/multi-language library API.
 
-## Step 3 — Author the input specification
+## Step 3 - Author the input specification
 
 A YAML format the skill consumes:
 
@@ -97,9 +97,9 @@ constraints:
 ```
 
 `constraints` exclude combinations that don't make sense in the
-domain — including them would generate tests for impossible states.
+domain - including them would generate tests for impossible states.
 
-## Step 4 — Emit in the test-runner-native format
+## Step 4 - Emit in the test-runner-native format
 
 ### Pairwise CSV (PICT-style)
 
@@ -170,7 +170,7 @@ public void UserCapability(string role, string tier, string feature, string loca
 }
 ```
 
-## Step 5 — Verify coverage
+## Step 5 - Verify coverage
 
 After generation, the skill emits a coverage report:
 
@@ -207,7 +207,7 @@ gap = OK) or escalates to 3-wise.
 | Anti-pattern                                                | Why it fails                                                       | Fix |
 |-------------------------------------------------------------|---------------------------------------------------------------------|-----|
 | Cartesian product test set when input count > 3              | Tests grow combinatorially; CI time explodes; flaky.              | Use 2-wise; promote to 3-wise per incident. |
-| Skipping `constraints` for impossible combinations           | Tests fail for the wrong reason — testing tier=free + sso, which the system rejects. | Always declare domain constraints upfront. |
+| Skipping `constraints` for impossible combinations           | Tests fail for the wrong reason - testing tier=free + sso, which the system rejects. | Always declare domain constraints upfront. |
 | Hard-coded test list maintained by hand                      | Combinatorial set is fragile; adding one input value 2x's the test count. | Generate from the spec; check the spec into git. |
 | Failing to update the spec when business rules change        | Test set drifts from production reality.                          | Spec is the source of truth; reviewers reject PRs that update tests without updating the spec. |
 | Using 1-wise as the default                                   | Misses every interaction bug; trivially covers single-input behavior. | 2-wise minimum; 1-wise only for inputs known not to interact. |
@@ -218,7 +218,7 @@ gap = OK) or escalates to 3-wise.
   triplet to manifest won't be caught by 2-wise alone. Promote to
   3-wise on incident.
 - **Constraint logic must be encoded explicitly.** The tool can't
-  infer "free tier doesn't have SSO" — the spec must say so.
+  infer "free tier doesn't have SSO" - the spec must say so.
 - **Parameterized tests can hide failure attribution.** When one
   case in 30 fails, the report should clearly identify which
   combination failed; many runners do this well, some don't.
@@ -226,11 +226,8 @@ gap = OK) or escalates to 3-wise.
 
 ## References
 
-- [ISTQB all-pairs testing](https://glossary.istqb.org/en_US/term/all-pairs-testing)
-  — canonical pairwise definition.
-- PICT — https://github.com/microsoft/pict
-- AllPairs (Python) — https://pypi.org/project/allpairspy/
-- [`boundary-value-generator`](../boundary-value-generator/SKILL.md)
-  — sibling skill for single-input boundary cases.
-- [`negative-test-generator`](../negative-test-generator/SKILL.md)
-  — sibling skill for rejection-path coverage.
+- [ISTQB all-pairs testing](https://glossary.istqb.org/en_US/term/all-pairs-testing) - canonical pairwise definition.
+- PICT - https://github.com/microsoft/pict
+- AllPairs (Python) - https://pypi.org/project/allpairspy/
+- [`boundary-value-generator`](../boundary-value-generator/SKILL.md) - sibling skill for single-input boundary cases.
+- [`negative-test-generator`](../negative-test-generator/SKILL.md) - sibling skill for rejection-path coverage.

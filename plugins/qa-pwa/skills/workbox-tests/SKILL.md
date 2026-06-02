@@ -1,6 +1,6 @@
 ---
 name: workbox-tests
-description: "Test Workbox-built service workers — pin behavior of the named recipes (`pageCache`, `staticResourceCache`, `imageCache`, `googleFontsCache`, `offlineFallback`, `warmStrategyCache`) per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes]; validate `workbox-precaching` manifest injection (`__WB_MANIFEST` revisioning); assert `workbox-routing` route handler matches; assert `workbox-expiration` and `workbox-cacheable-response` plugin gates; and verify the `workbox-window` registration helper events (`installed`, `waiting`, `controlling`, `activated`). For generic service-worker tests, install-flow tests, and SW cache-strategy authoring see `qa-modern-web/service-worker-tests`, `pwa-install-flow-tests`, and `sw-cache-strategy-author`. For channel-agnostic push-notification harness see `qa-notifications/push-notification-test-author`. This plugin covers Workbox recipes, offline-fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle."
+description: "Test Workbox-built service workers - pin behavior of the named recipes (`pageCache`, `staticResourceCache`, `imageCache`, `googleFontsCache`, `offlineFallback`, `warmStrategyCache`) per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes]; validate `workbox-precaching` manifest injection (`__WB_MANIFEST` revisioning); assert `workbox-routing` route handler matches; assert `workbox-expiration` and `workbox-cacheable-response` plugin gates; and verify the `workbox-window` registration helper events (`installed`, `waiting`, `controlling`, `activated`). For generic service-worker tests, install-flow tests, and SW cache-strategy authoring see `qa-modern-web/service-worker-tests`, `pwa-install-flow-tests`, and `sw-cache-strategy-author`. For channel-agnostic push-notification harness see `qa-notifications/push-notification-test-author`. This plugin covers Workbox recipes, offline-fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle."
 rating: 23
 d6: 4
 archetype: S1
@@ -16,7 +16,7 @@ keywords:
 
 ## Overview
 
-This skill tests Workbox-built service workers — distinct from
+This skill tests Workbox-built service workers - distinct from
 [`sw-cache-strategy-author`](../../../qa-modern-web/skills/sw-cache-strategy-author/SKILL.md)
 which *authors* the strategies. Here we assert that an
 already-shipped Workbox SW behaves the way its recipes claim, using
@@ -35,16 +35,16 @@ release line at time of authoring: **v7.4.1** per
 
 - A PWA already uses Workbox and tests need to lock its behavior
   against future refactors.
-- Migrating from Workbox v6 → v7 — assert each recipe behaves the
+- Migrating from Workbox v6 → v7 - assert each recipe behaves the
   same on the new release.
-- A "stale forever" bug report — pin the `workbox-expiration`
+- A "stale forever" bug report - pin the `workbox-expiration`
   plugin's TTL with a test before patching.
 - A `workbox-precaching` injection drifted (build emits wrong
-  `__WB_MANIFEST`) — assert the precache manifest shape in CI.
+  `__WB_MANIFEST`) - assert the precache manifest shape in CI.
 
 ## Authoring
 
-### Step 1 — Install test dependencies
+### Step 1 - Install test dependencies
 
 Workbox ships no first-party test runner; the canonical pairing is
 Playwright (for runtime SW assertions) plus a unit-test runner
@@ -55,7 +55,7 @@ npm install --save-dev @playwright/test vitest
 # Workbox itself is already a runtime dep at this point
 ```
 
-### Step 2 — Decide where each assertion lives
+### Step 2 - Decide where each assertion lives
 
 | Subject | Runner | Why |
 |---|---|---|
@@ -64,7 +64,7 @@ npm install --save-dev @playwright/test vitest
 | `workbox-window` events on the page | Playwright (page side) | Listens on `wb.addEventListener(...)` from page code |
 | Plugin TTL / quota (`workbox-expiration`) | Playwright with clock manipulation | Needs the SW to actually call the plugin's pruning logic |
 
-### Step 3 — Author the precache-manifest static assertion
+### Step 3 - Author the precache-manifest static assertion
 
 ```ts
 // tests/precache-manifest.spec.ts
@@ -95,12 +95,12 @@ describe('workbox-precaching manifest', () => {
 `workbox-precaching` per [wb-modules]: *"Easily precache a set of
 files and efficiently manage updates to files."*
 
-### Step 4 — Author per-recipe runtime tests
+### Step 4 - Author per-recipe runtime tests
 
 Per [wb-recipes], each named recipe has a documented default. Pin
 those defaults with tests.
 
-`pageCache()` — "respond to a request for an HTML page (through URL
+`pageCache()` - "respond to a request for an HTML page (through URL
 navigation) with a network first caching strategy" with a default
 3-second network timeout per [wb-recipes]:
 
@@ -123,7 +123,7 @@ test('pageCache() falls back to cache when network exceeds 3s', async ({ page, c
 });
 ```
 
-`imageCache()` — "respond to a request for images with a cache-first
+`imageCache()` - "respond to a request for images with a cache-first
 caching strategy" with "defaults of 60 maximum images cached for 30
 days" per [wb-recipes]. Pin the 60-entry cap:
 
@@ -152,7 +152,7 @@ test('imageCache() applies the 60-entry default cap', async ({ context, page }) 
 });
 ```
 
-`offlineFallback()` — "serve a web page, image, or font if there's
+`offlineFallback()` - "serve a web page, image, or font if there's
 a routing error" when users are offline per [wb-recipes], defaulting
 to `offline.html`:
 
@@ -168,10 +168,10 @@ test('offlineFallback() serves offline.html on navigation failure', async ({ pag
 });
 ```
 
-The `offline.html` default name is per [wb-recipes] — if a project
+The `offline.html` default name is per [wb-recipes] - if a project
 overrides it via the `pageFallback` option, the test must match.
 
-`googleFontsCache()` — uses "stale-while-revalidate for stylesheets
+`googleFontsCache()` - uses "stale-while-revalidate for stylesheets
 and cache-first for font files, with defaults of 30 font files
 cached for one year" per [wb-recipes]:
 
@@ -189,7 +189,7 @@ test('googleFontsCache stylesheet uses stale-while-revalidate', async ({ page, c
 });
 ```
 
-`staticResourceCache()` — "respond to CSS, JavaScript, and Web
+`staticResourceCache()` - "respond to CSS, JavaScript, and Web
 Worker requests with a stale-while-revalidate strategy" per
 [wb-recipes]:
 
@@ -206,7 +206,7 @@ test('staticResourceCache serves cached CSS offline', async ({ page, context }) 
 });
 ```
 
-`warmStrategyCache()` — "load provided URLs into your cache during
+`warmStrategyCache()` - "load provided URLs into your cache during
 the service worker's install phase, caching them with the options
 of the provided strategy" per [wb-recipes]. Pin which URLs are
 warmed:
@@ -231,7 +231,7 @@ test('warmStrategyCache() warms the declared URL list on install', async ({ cont
 });
 ```
 
-### Step 5 — Author `workbox-window` event tests
+### Step 5 - Author `workbox-window` event tests
 
 `workbox-window` is the page-side companion that "helps with
 registering a service worker, managing updates, and responding to
@@ -264,7 +264,7 @@ test('wb.addEventListener installed fires after register()', async ({ page }) =>
 The five-event vocabulary is enumerated in [wb-modules] under
 `workbox-window`.
 
-### Step 6 — Test the cacheable-response plugin gate
+### Step 6 - Test the cacheable-response plugin gate
 
 Per [wb-modules], `workbox-cacheable-response` "restrict[s] which
 requests are cached based on a response's status code or headers."
@@ -303,7 +303,7 @@ npx vitest run tests/precache-manifest.spec.ts
 npx playwright test tests/workbox-recipes.spec.ts
 ```
 
-The build step is non-optional — `workbox-precaching` only emits
+The build step is non-optional - `workbox-precaching` only emits
 the precache manifest at build time per [wb-modules]
 (`workbox-build` / `workbox-webpack-plugin` / `workbox-cli`).
 
@@ -359,7 +359,7 @@ For projects that ship Workbox: lock both the precache manifest
 
 For projects that publish a service worker as part of a release
 artifact (separate from app deploy), gate the release on the same
-two steps — a Workbox regression that escapes to prod usually
+two steps - a Workbox regression that escapes to prod usually
 manifests as stale-forever or never-installed, both invisible
 without test coverage.
 
@@ -381,15 +381,14 @@ without test coverage.
   defaults per [wb-recipes]; consult the recipe page at the pinned
   Workbox version before treating the numbers as test invariants.
 - **`__WB_MANIFEST` is build-tool-injected.** Tests against the
-  static `dist/sw.js` only pass when the bundler ran — local
+  static `dist/sw.js` only pass when the bundler ran - local
   `vitest run` against `src/sw.js` will fail to find the array.
 - **Cache Storage quota is browser-internal.** Workbox's
   `ExpirationPlugin` `maxEntries` is asserted here; the browser's
   own quota (Step 4 of [`offline-fallback-test`](../offline-fallback-test/SKILL.md))
   is a separate ceiling not testable from `workbox-*` alone.
 - **`workbox-window`'s `waiting` event only fires on update.** A
-  test that asserts `waiting` on first install will fail by design
-  — see [wb-modules] for the per-event firing conditions.
+  test that asserts `waiting` on first install will fail by design - see [wb-modules] for the per-event firing conditions.
 - **CDN-served `workbox-sw`** sidesteps precaching entirely per
   [wb-modules]; this skill's Step 3 assertion does not apply to
   CDN-loader projects.
@@ -397,14 +396,14 @@ without test coverage.
 ## References
 
 - Workbox overview ("Production-ready service worker libraries and
-  tooling") — [wb-overview].
+  tooling") - [wb-overview].
 - Workbox modules (per-package one-line descriptions; the
   `workbox-precaching` / `workbox-window` / `workbox-routing` /
-  `workbox-strategies` / `workbox-recipes` family) — [wb-modules].
+  `workbox-strategies` / `workbox-recipes` family) - [wb-modules].
 - Workbox recipes (`pageCache`, `staticResourceCache`, `imageCache`,
   `googleFontsCache`, `offlineFallback`, `warmStrategyCache` with
-  defaults) — [wb-recipes].
-- Workbox repo (v7.4.1 release, May 2026) — [wb-gh].
+  defaults) - [wb-recipes].
+- Workbox repo (v7.4.1 release, May 2026) - [wb-gh].
 - Differentiation:
   [`qa-modern-web/service-worker-tests`](../../../qa-modern-web/skills/service-worker-tests/SKILL.md)
   covers generic `context.serviceWorkers()` Playwright patterns;

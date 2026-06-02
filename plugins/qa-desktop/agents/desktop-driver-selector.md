@@ -1,6 +1,6 @@
 ---
 name: desktop-driver-selector
-description: "Action-taking agent that reads a target Windows / macOS / Linux / cross-platform desktop project (`*.csproj` / `*.sln` / `package.json` / `*.pro` / `CMakeLists.txt`) and emits one concrete desktop UI driver recommendation — FlaUI, WinAppDriver, Appium-Windows, electron-playwright, QtTest, XCUITest, or AT-SPI — plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-process/framework-choice-advisor` (S2 pure-reference catalog of e2e/load frameworks laying out trade-offs in prose): this agent reads the actual target repo and returns one desktop UI driver per app rather than enumerating options. Use when starting a new desktop test project and the team has not yet committed to a driver."
+description: "Action-taking agent that reads a target Windows / macOS / Linux / cross-platform desktop project (`*.csproj` / `*.sln` / `package.json` / `*.pro` / `CMakeLists.txt`) and emits one concrete desktop UI driver recommendation - FlaUI, WinAppDriver, Appium-Windows, electron-playwright, QtTest, XCUITest, or AT-SPI - plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-process/framework-choice-advisor` (S2 pure-reference catalog of e2e/load frameworks laying out trade-offs in prose): this agent reads the actual target repo and returns one desktop UI driver per app rather than enumerating options. Use when starting a new desktop test project and the team has not yet committed to a driver."
 tools: "Read, Grep, Glob, Bash(dotnet *), Bash(jq *)"
 model: inherit
 skills:
@@ -31,7 +31,7 @@ Inputs (the agent refuses if both are missing):
 
 If neither is supplied, the agent halts with a refuse-to-proceed message asking the user to provide one. The agent does **not** guess from a bare directory name or a README.
 
-## Step 1 — Detect target platform + toolkit
+## Step 1 - Detect target platform + toolkit
 
 The agent reads the project file (Read tool) and matches against this table:
 
@@ -48,11 +48,11 @@ The agent reads the project file (Read tool) and matches against this table:
 | Avalonia or .NET MAUI references | `cross-platform-unknown` (see Step 3) |
 
 Per [`desktop-test-strategy-reference`](../skills/desktop-test-strategy-reference/SKILL.md),
-the underlying accessibility backend is locked by the OS — Windows
+the underlying accessibility backend is locked by the OS - Windows
 apps use Microsoft UI Automation (UIA); macOS apps use XCTest +
 Apple Accessibility; Linux apps use AT-SPI.
 
-## Step 2 — Apply the decision tree
+## Step 2 - Apply the decision tree
 
 | App type | Recommended driver | Why | Read next |
 |---|---|---|---|
@@ -68,20 +68,20 @@ Apple Accessibility; Linux apps use AT-SPI.
 
 The agent emits **exactly one** primary recommendation. A secondary
 fallback driver may be listed only when two drivers are co-equal
-defensible (UWP, Win32, Qt) — never as a tie-breaker the user must
+defensible (UWP, Win32, Qt) - never as a tie-breaker the user must
 resolve.
 
-### Step 2b — Elevation constraint (Windows)
+### Step 2b - Elevation constraint (Windows)
 
-If the SUT requires admin privileges, **the driver session itself must run elevated**. UAC's secure desktop is outside the accessibility tree — non-elevated WinAppDriver / FlaUI / Appium-Windows sees the entire elevated UI as empty, not just the consent prompt ([WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306), [#2033](https://github.com/microsoft/WinAppDriver/issues/2033)).
+If the SUT requires admin privileges, **the driver session itself must run elevated**. UAC's secure desktop is outside the accessibility tree - non-elevated WinAppDriver / FlaUI / Appium-Windows sees the entire elevated UI as empty, not just the consent prompt ([WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306), [#2033](https://github.com/microsoft/WinAppDriver/issues/2033)).
 
 Signals: `<requestedExecutionLevel level="requireAdministrator" />` in `app.manifest`; manifest-embedded `requireAdministrator`; README "Run as administrator." Each adds an elevation flag to the recommendation's "Conditions under which this flips" block.
 
-### Step 2c — Cross-OS Electron
+### Step 2c - Cross-OS Electron
 
-`electron-playwright` is the same driver across Windows / macOS / Linux (`_electron.launch()` + `electronApp.evaluate()` per the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication)); the CI bootstrap differs per OS — see [`desktop-test-scaffolder` Step 1b](desktop-test-scaffolder.md).
+`electron-playwright` is the same driver across Windows / macOS / Linux (`_electron.launch()` + `electronApp.evaluate()` per the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication)); the CI bootstrap differs per OS - see [`desktop-test-scaffolder` Step 1b](desktop-test-scaffolder.md).
 
-## Step 3 — Emit the recommendation
+## Step 3 - Emit the recommendation
 
 Output template (Markdown, copyable to a decision record):
 
@@ -104,7 +104,7 @@ Output template (Markdown, copyable to a decision record):
 - <one-line: e.g. "team needs non-.NET test clients → switch to winappdriver">
 ```
 
-The "Conditions under which this flips" section is required — every
+The "Conditions under which this flips" section is required - every
 recommendation declares its own counter-conditions so the team can
 re-run the agent when those conditions appear.
 
@@ -126,7 +126,7 @@ The agent **refuses** to:
 - Recommend a driver when no project file AND no app type are declared. README / folder names are not enough.
 - Recommend a Windows driver for a project whose `csproj` targets only `net8.0` (no `-windows` suffix) without confirmation of a Windows variant. Cross-platform .NET (Avalonia / MAUI) goes through the cross-platform row.
 - Recommend more than one primary driver. Co-equals go in "secondary fallback," not the primary slot.
-- Recommend both UIA2 and UIA3 in the same FlaUI test process — unsupported per the FlaUI README.
+- Recommend both UIA2 and UIA3 in the same FlaUI test process - unsupported per the FlaUI README.
 - Reverse-engineer the app type from binary artefacts. Read source-of-truth project files only.
 - Recommend a Windows driver for an SUT with `requireAdministrator` without flagging that the test session itself must run elevated (per [WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306)) or that UAC must be disabled in the CI VM.
 

@@ -19,12 +19,12 @@ measurement and CI regression gating.
 
 ## When to use
 
-- New gRPC service — what's the throughput ceiling?
-- Suspected latency regression — quantify before / after a
+- New gRPC service - what's the throughput ceiling?
+- Suspected latency regression - quantify before / after a
   change.
 - CI gate: each PR runs a short ghz pass and fails if p99 exceeds
   the previous baseline.
-- Capacity planning — at what concurrency does the service hit
+- Capacity planning - at what concurrency does the service hit
   its CPU/memory ceiling?
 
 ## Authoring
@@ -99,7 +99,7 @@ Per [ghz.sh/docs/usage](https://ghz.sh/docs/usage):
 | `-n, --total=N` | "Number of requests to run. Default is 200" |
 | `-c, --concurrency=N` | "Number of request workers to run concurrently" |
 | `-r, --rps=N` | "Requests per second (RPS) rate limit"; 0 = unlimited |
-| `-z, --duration=N` | Total duration (`30s`, `5m`) — alternative to `-n` |
+| `-z, --duration=N` | Total duration (`30s`, `5m`) - alternative to `-n` |
 | `-t, --timeout=N` | Per-request timeout (default `20s`) |
 | `-d` | JSON message payload |
 | `-D` | Path to a JSON file containing the payload |
@@ -124,7 +124,7 @@ for confirming the service can sustain the target rate.
 ghz -z 5m -c 100 ...
 ```
 
-When testing for stability / soak, `-z` beats `-n` — the test
+When testing for stability / soak, `-z` beats `-n` - the test
 ends after N minutes regardless of throughput.
 
 ### Streaming methods

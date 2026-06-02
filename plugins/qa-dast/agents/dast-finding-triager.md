@@ -31,7 +31,7 @@ The agent takes:
 
 Output: combined report + verdict (BLOCK / PASS).
 
-## Step 1 — Detect configured scanners
+## Step 1 - Detect configured scanners
 
 Run only the scanners the team uses. Detection signals:
 
@@ -41,7 +41,7 @@ Run only the scanners the team uses. Detection signals:
 | Burp Pro/Enterprise | `BURP_ENT_URL` env / `.burp/` config dir |
 | NightVision | `nightvision-config.yaml` / `nightvision` in CI workflow |
 
-## Step 2 — Normalize per-scanner output
+## Step 2 - Normalize per-scanner output
 
 Each scanner emits a different schema. Normalize to:
 
@@ -76,7 +76,7 @@ Severity normalization:
 - Low: ZAP Low; Burp Pro Low; Burp Enterprise LOW; NightVision Low
 - Info: ZAP Informational; Burp Pro Information; Burp Enterprise INFO; NightVision Info
 
-## Step 3 — Finding-class normalization
+## Step 3 - Finding-class normalization
 
 Each scanner uses different rule IDs for the same vulnerability
 class. Map to a canonical class for dedup:
@@ -101,7 +101,7 @@ CANONICAL_CLASSES = {
 
 (Maintain this mapping per-scanner-version; rule-IDs evolve.)
 
-## Step 4 — Deduplicate
+## Step 4 - Deduplicate
 
 ```python
 def dedupe(findings):
@@ -117,7 +117,7 @@ def dedupe(findings):
 The deduped finding records all scanners that caught it
 (multi-scanner consensus = high confidence).
 
-## Step 5 — Apply waivers
+## Step 5 - Apply waivers
 
 ```yaml
 # .dast-waivers.yaml
@@ -155,7 +155,7 @@ def apply_waivers(findings, waivers):
 - Reject any waiver without `reason:` field
 - Reject any waiver with `expires:` in the past
 
-## Step 6 — Verdict
+## Step 6 - Verdict
 
 ```python
 def verdict(findings, fail_on='critical'):
@@ -167,7 +167,7 @@ def verdict(findings, fail_on='critical'):
 
 Default fail-on: `critical` (any unwaived critical → BLOCK).
 
-## Step 7 — Report
+## Step 7 - Report
 
 ```markdown
 ## DAST policy review — `<sha>`
@@ -214,7 +214,7 @@ Default fail-on: `critical` (any unwaived critical → BLOCK).
 After fixes, re-run scanners + this agent.
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -258,7 +258,7 @@ The agent **refuses** to:
 
 - **Per-tool ID drift.** Scanner rule IDs change between versions;
   finding-class mapping (Step 3) needs maintenance.
-- **URL parameter normalization** is heuristic — `/users/123` vs
+- **URL parameter normalization** is heuristic - `/users/123` vs
   `/users/{id}` may dedupe inconsistently if the scanner
   templates URLs differently.
 - **Doesn't replace SAST.** DAST catches runtime patterns; pair
@@ -271,12 +271,12 @@ The agent **refuses** to:
 
 - [`zap-baseline`](../skills/zap-baseline/SKILL.md),
   [`burp-headless`](../skills/burp-headless/SKILL.md),
-  [`nightvision-dast`](../skills/nightvision-dast/SKILL.md) —
+  [`nightvision-dast`](../skills/nightvision-dast/SKILL.md) - 
   preloaded sister skills
-- [`dast-baseline-runner`](../skills/dast-baseline-runner/SKILL.md) —
+- [`dast-baseline-runner`](../skills/dast-baseline-runner/SKILL.md) - 
   build-an-X for cadence
-- [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md) —
+- [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md) - 
   cross-plugin sibling: same pattern for SAST
-- [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md) —
+- [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md) - 
   cross-plugin sibling: same pattern for IaC
-- OWASP WSTG — owasp.org/www-project-web-security-testing-guide
+- OWASP WSTG - owasp.org/www-project-web-security-testing-guide

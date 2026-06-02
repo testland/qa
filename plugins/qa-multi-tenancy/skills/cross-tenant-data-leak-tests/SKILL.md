@@ -1,6 +1,6 @@
 ---
 name: cross-tenant-data-leak-tests
-description: "Workflow-driven skill that emits the runtime CI gate of cross-tenant leak tests — the actual battery a multi-tenant codebase must pass on every PR. Defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the expected response codes per pattern (404 vs 403 disclosure trade-off), the Postgres-RLS-direct test patterns, and the CI integration (run with non-superuser non-BYPASSRLS role, fail the build on any leak). Use when implementing the actual leak-test suite (after tenant-leak-test-author produces the plan), when adding the CI gate to an existing project, or when investigating a leak finding. Composes tenant-leak-test-author + row-level-security-postgres-reference."
+description: "Workflow-driven skill that emits the runtime CI gate of cross-tenant leak tests - the actual battery a multi-tenant codebase must pass on every PR. Defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the expected response codes per pattern (404 vs 403 disclosure trade-off), the Postgres-RLS-direct test patterns, and the CI integration (run with non-superuser non-BYPASSRLS role, fail the build on any leak). Use when implementing the actual leak-test suite (after tenant-leak-test-author produces the plan), when adding the CI gate to an existing project, or when investigating a leak finding. Composes tenant-leak-test-author + row-level-security-postgres-reference."
 rating: 23
 d6: 4
 archetype: S3
@@ -13,7 +13,7 @@ archetype: S3
 The runtime CI gate. While
 [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md)
 produces the *plan* (which surfaces, which patterns), this skill
-produces the *executing tests* — the actual code that fails the
+produces the *executing tests* - the actual code that fails the
 build when isolation breaks.
 
 The contract:
@@ -29,19 +29,19 @@ The contract:
 - Implementing the leak-test suite after planning with
   [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md).
 - Adding the CI gate to an existing multi-tenant project.
-- Investigating a leak finding — reproduce with a minimal test.
+- Investigating a leak finding - reproduce with a minimal test.
 - Adding coverage for a newly-introduced tenant-bearing surface.
 
-## Step 1 — Choose the test runner and DB connection role
+## Step 1 - Choose the test runner and DB connection role
 
 For Postgres-backed apps, this is the most-common-bug step:
 
 | Connection used in test | Result |
 |---|---|
-| Superuser | Bypasses RLS — tests pass, prod leaks. **Do not use.** |
+| Superuser | Bypasses RLS - tests pass, prod leaks. **Do not use.** |
 | Role with `BYPASSRLS` attribute | Same as superuser. **Do not use.** |
 | Role that **owns** the tenant table (and table not `FORCE`d) | Bypasses RLS. **Do not use** unless `FORCE ROW LEVEL SECURITY` is set. |
-| Plain application role (no BYPASSRLS, not owner) | **Correct** — same role prod uses. |
+| Plain application role (no BYPASSRLS, not owner) | **Correct** - same role prod uses. |
 
 Per [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md),
 verify with:
@@ -57,11 +57,11 @@ in the test settings. For Rails, `config/database.yml` test
 section. For Spring Boot, `spring.datasource.username` in
 `application-test.yml`.
 
-## Step 2 — The canonical battery
+## Step 2 - The canonical battery
 
 These tests should exist for every tenant-bearing API surface.
 
-### Test 1 — Read-other-tenant-by-id
+### Test 1 - Read-other-tenant-by-id
 
 ```python
 def test_get_other_tenant_resource_returns_404(
@@ -77,7 +77,7 @@ can't access in another tenant. 403 leaks existence (tenant A
 learns tenant B has resource with this ID). The trade-off:
 debugging slightly harder. Document the project's choice.
 
-### Test 2 — List-leak
+### Test 2 - List-leak
 
 ```python
 def test_list_does_not_include_other_tenant_resources(
@@ -93,7 +93,7 @@ def test_list_does_not_include_other_tenant_resources(
 Even with RLS enforcing visibility, application-layer caches can
 leak. Test against fresh queries.
 
-### Test 3 — Spoofed-tenant-id-in-body
+### Test 3 - Spoofed-tenant-id-in-body
 
 ```python
 def test_tenant_id_in_body_ignored_or_rejected(
@@ -110,7 +110,7 @@ def test_tenant_id_in_body_ignored_or_rejected(
             "Server accepted tenant_id from body — must derive from session"
 ```
 
-### Test 4 — JWT replay across tenants
+### Test 4 - JWT replay across tenants
 
 ```python
 def test_jwt_for_tenant_a_rejected_on_tenant_b_path(
@@ -126,10 +126,10 @@ def test_jwt_for_tenant_a_rejected_on_tenant_b_path(
 
 If the API has tenant-scoped paths (`/api/tenants/<id>/...`),
 also test that tenant A's JWT cannot be used with tenant B's
-path even with a valid signature — the `tenant_id` claim must
+path even with a valid signature - the `tenant_id` claim must
 be checked against the path.
 
-### Test 5 — FK cross-tenant
+### Test 5 - FK cross-tenant
 
 ```python
 def test_cannot_create_fk_referencing_other_tenant(
@@ -149,7 +149,7 @@ This tests FK-based leak via reference: the FK constraint
 [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md),
 so the FK must be validated at application layer too.
 
-### Test 6 — Unique-collision side channel
+### Test 6 - Unique-collision side channel
 
 ```python
 def test_unique_violation_does_not_disclose_other_tenant_existence(
@@ -174,7 +174,7 @@ Per
 TRUNCATE, and REFERENCES privilege checks bypass RLS." Solution:
 make `slug` unique per tenant: `UNIQUE (tenant_id, slug)`.
 
-### Test 7 — Object-storage IDOR
+### Test 7 - Object-storage IDOR
 
 ```python
 def test_storage_presigned_url_path_traversal_denied(
@@ -193,10 +193,10 @@ def test_storage_presigned_url_path_traversal_denied(
     assert resp.status_code == 403
 ```
 
-The S3 / GCS bucket policy must enforce the prefix — application
+The S3 / GCS bucket policy must enforce the prefix - application
 code is not sufficient.
 
-### Test 8 — Search-index direct query
+### Test 8 - Search-index direct query
 
 ```python
 def test_search_query_must_include_tenant_filter(
@@ -217,7 +217,7 @@ def test_search_query_must_include_tenant_filter(
             )
 ```
 
-### Test 9 — Async-job context-reload
+### Test 9 - Async-job context-reload
 
 ```python
 def test_async_job_reloads_tenant_from_db_not_payload(
@@ -234,7 +234,7 @@ def test_async_job_reloads_tenant_from_db_not_payload(
     assert result.tenant_id == tenant_b_resource.tenant_id
 ```
 
-### Test 10 — Cache key collision
+### Test 10 - Cache key collision
 
 ```python
 def test_cache_keys_are_tenant_scoped(self, cache, tenant_a, tenant_b):
@@ -246,7 +246,7 @@ def test_cache_keys_are_tenant_scoped(self, cache, tenant_a, tenant_b):
 
 Cache wrappers must prepend tenant_id to every key.
 
-### Postgres-RLS-direct (test 1–6 at DB layer)
+### Postgres-RLS-direct (test 1 - 6 at DB layer)
 
 Run these as the application role (not superuser):
 
@@ -271,7 +271,7 @@ Per
 test fails if either assertion fails (count != 0, or INSERT
 succeeds).
 
-## Step 3 — CI integration
+## Step 3 - CI integration
 
 ```yaml
 # .github/workflows/tenant-isolation.yml
@@ -324,18 +324,18 @@ Key: the **test job connects as `app_user`**, not as the
 postgres superuser. The migrations run as superuser; the tests
 run as the application role.
 
-## Step 4 — Diagnose a failure
+## Step 4 - Diagnose a failure
 
 When a leak test fails:
 
-1. **Read the assertion** — which surface + pattern leaked?
-2. **Check the connection role** — `SELECT current_user;` in the
+1. **Read the assertion** - which surface + pattern leaked?
+2. **Check the connection role** - `SELECT current_user;` in the
    test. If it's superuser, the test was bypassed. Fix the test
    connection first.
 3. **Reproduce locally** with the same role.
-4. **Check the policy** — is there a policy on the table? Is RLS
+4. **Check the policy** - is there a policy on the table? Is RLS
    enabled? Is FORCE ROW LEVEL SECURITY set?
-5. **Check the application path** — is `tenant_id` derived from
+5. **Check the application path** - is `tenant_id` derived from
    the session, or from request payload?
 6. **Write the minimal regression test** before fixing.
 

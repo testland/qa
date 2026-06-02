@@ -1,6 +1,6 @@
 ---
 name: cyclonedx-format
-description: "Reference for the CycloneDX v1.6 SBOM specification — OWASP-curated, BOM-format-rich format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language tooling (cyclonedx-bom-tool family) for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via gen + sign + attest workflow. Use when the team adopts CycloneDX as primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus)."
+description: "Reference for the CycloneDX v1.6 SBOM specification - OWASP-curated, BOM-format-rich format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language tooling (cyclonedx-bom-tool family) for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via gen + sign + attest workflow. Use when the team adopts CycloneDX as primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus)."
 rating: 22
 d6: 4
 archetype: S2
@@ -18,18 +18,18 @@ other). Per [cyclonedx.org/specification][cdx-spec]:
 CycloneDX is OWASP-curated and security-focused. Distinguishing
 features vs SPDX:
 
-- **Vulnerability schema** — first-class `vulnerabilities[]` block
+- **Vulnerability schema** - first-class `vulnerabilities[]` block
   with VEX-style status assertions
-- **Services + dataflow** — `services[]` block describes service
+- **Services + dataflow** - `services[]` block describes service
   endpoints + data flows
-- **Formulation** — describes how the software was built (build
+- **Formulation** - describes how the software was built (build
   steps, tools, env)
-- **ML BOMs (CycloneDX 1.5+)** — first-class ML model + dataset
+- **ML BOMs (CycloneDX 1.5+)** - first-class ML model + dataset
   components
-- **SaaS BOMs** — describes hosted services not just shipped
+- **SaaS BOMs** - describes hosted services not just shipped
   artifacts
 
-This is a **reference skill** (S2 archetype) — defines the schema +
+This is a **reference skill** (S2 archetype) - defines the schema +
 tooling landscape; doesn't run scans. Pair with [`syft-generation`](../syft-generation/SKILL.md)
 to generate CycloneDX-format SBOMs from real codebases.
 
@@ -46,7 +46,7 @@ to generate CycloneDX-format SBOMs from real codebases.
 For licensing-focused / Linux Foundation contexts, [`spdx-format`](../spdx-format/SKILL.md)
 is more idiomatic.
 
-## Step 1 — Top-level structure
+## Step 1 - Top-level structure
 
 A minimal CycloneDX 1.6 BOM (JSON):
 
@@ -86,7 +86,7 @@ A minimal CycloneDX 1.6 BOM (JSON):
 }
 ```
 
-## Step 2 — Required fields per spec
+## Step 2 - Required fields per spec
 
 Per [cdx-spec][cdx-spec]:
 
@@ -103,7 +103,7 @@ Per [cdx-spec][cdx-spec]:
 | `vulnerabilities[]` | optional | Per-finding records |
 | `formulation[]` | optional | Build metadata |
 
-## Step 3 — Component types
+## Step 3 - Component types
 
 Per [cdx-spec][cdx-spec] common component types:
 
@@ -124,7 +124,7 @@ Per [cdx-spec][cdx-spec] common component types:
 The `purl` (Package URL) field is the canonical identifier per
 [github.com/package-url/purl-spec](https://github.com/package-url/purl-spec).
 
-## Step 4 — Vulnerability block (VEX-equivalent)
+## Step 4 - Vulnerability block (VEX-equivalent)
 
 CycloneDX has first-class vuln support (unlike SPDX which delegates
 to companion files):
@@ -153,7 +153,7 @@ The `analysis.state` field uses VEX-equivalent values:
 `resolved`, `resolved_with_pedigree`, `exploitable`,
 `in_triage`, `false_positive`, `not_affected`.
 
-## Step 5 — Per-language tooling
+## Step 5 - Per-language tooling
 
 CycloneDX has per-language native generators (alternative to Syft):
 
@@ -170,7 +170,7 @@ CycloneDX has per-language native generators (alternative to Syft):
 Per-language tools often produce richer SBOMs than Syft (deeper
 metadata, language-specific quirks handled).
 
-## Step 6 — Validation
+## Step 6 - Validation
 
 Validate a CycloneDX SBOM against the schema:
 
@@ -185,10 +185,10 @@ npx @cyclonedx/cyclonedx-bom validate sbom.json
 Validation catches structural issues (missing required fields,
 invalid PURLs, unknown component types) before publishing.
 
-## Step 7 — VEX integration
+## Step 7 - VEX integration
 
 CycloneDX 1.4+ supports embedded VEX (Vulnerability Exploitability
-Exchange) — assertions about whether a known CVE actually affects
+Exchange) - assertions about whether a known CVE actually affects
 the shipped product.
 
 ```json
@@ -208,7 +208,7 @@ VEX assertions allow downstream consumers to filter false-positive
 findings from your shipped SBOM rather than re-doing reachability
 analysis themselves.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -252,14 +252,14 @@ jobs:
 
 ## References
 
-- [cdx-spec][cdx-spec] — official specification
-- cyclonedx.org — landing
-- github.com/CycloneDX — org with per-language tools
-- github.com/package-url/purl-spec — Package URL spec
-- openvex.dev — OpenVEX standalone spec (compatible with CycloneDX
+- [cdx-spec][cdx-spec] - official specification
+- cyclonedx.org - landing
+- github.com/CycloneDX - org with per-language tools
+- github.com/package-url/purl-spec - Package URL spec
+- openvex.dev - OpenVEX standalone spec (compatible with CycloneDX
   1.4+ embedded VEX)
 - [`syft-generation`](../syft-generation/SKILL.md),
   [`grype-scanning`](../grype-scanning/SKILL.md),
   [`spdx-format`](../spdx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) — sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) — unifier agent
+  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent

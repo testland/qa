@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# production-tester — evals
+# production-tester - evals
 
 Companion eval cases for [`production-tester`](../../production-tester.md).
 Three cases cover happy path / branch / adversarial: Checkly checkout
@@ -17,7 +17,7 @@ Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
 the eval-authoring date.
 
-## Eval 1 — happy path — Checkly checkout monitor
+## Eval 1 - happy path - Checkly checkout monitor
 
 **Input:**
 
@@ -61,7 +61,7 @@ Rollback sections.
 `getByRole` AND at least one of `us-east-1` / `eu-west-1` /
 `ap-southeast-1`. Output does NOT contain `nth-child` or `xpath=`.
 
-## Eval 2 — branch — Datadog Synthetics target
+## Eval 2 - branch - Datadog Synthetics target
 
 **Input:**
 
@@ -98,7 +98,7 @@ PagerDuty channel + the Datadog-specific verification command.
 or `frequency: 1`. Output does NOT contain `new BrowserCheck(`
 (that would mean it scaffolded Checkly despite the Datadog signal).
 
-## Eval 3 — adversarial — missing synthetic test account (refuse)
+## Eval 3 - adversarial - missing synthetic test account (refuse)
 
 **Input:**
 
@@ -141,14 +141,14 @@ into a script).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Write`, `Edit`, `Grep`, `Glob`,
   narrow `Bash(gh pr create *)` / `Bash(npx checkly *)`) can write
   files in the eval workspace but does not need network access to
-  satisfy any pass condition — every check is on the text output.
+  satisfy any pass condition - every check is on the text output.
 - Eval cases were authored 2026-05-26 against the v3.0 / v4.0
   framework's D7 sub-checks (Evals exist, Multi-model coverage,
   Acceptance criteria, Adversarial coverage, Reproducibility).

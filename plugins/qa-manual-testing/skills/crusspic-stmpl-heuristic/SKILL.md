@@ -1,6 +1,6 @@
 ---
 name: crusspic-stmpl-heuristic
-description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic — twelve quality criteria a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use as the quality-criteria checklist for evaluating a product holistically; complementary to ISO/IEC 25010 quality model."
+description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - twelve quality criteria a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use as the quality-criteria checklist for evaluating a product holistically; complementary to ISO/IEC 25010 quality model."
 rating: 23
 d6: 4
 archetype: S2
@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-CRUSSPIC STMPL is James Bach's quality-criteria mnemonic — twelve
+CRUSSPIC STMPL is James Bach's quality-criteria mnemonic - twelve
 categories of "what does it mean for this system to be good?"
 Published in James Bach's testing-curriculum materials
 ([satisfice.com](https://www.satisfice.com/rapid-software-testing))
@@ -28,30 +28,30 @@ when categorising risks (see its "Quality characteristic" step).
 
 ## When to use
 
-- Authoring a charter — pick which quality criteria the session
+- Authoring a charter - pick which quality criteria the session
   will evaluate.
 - Categorising risks in the product register
   ([`product-risk-register-builder`](../../../qa-process/skills/product-risk-register-builder/SKILL.md)).
 - Evaluating a vendor / framework
   ([`qa-vendor-evaluator`](../../../qa-process/skills/qa-vendor-evaluator/SKILL.md)).
-- Reviewing a release candidate — walk CRUSSPIC STMPL to confirm
+- Reviewing a release candidate - walk CRUSSPIC STMPL to confirm
   each criterion is addressed.
 
 ## The twelve criteria
 
-### CRUSSPIC — primary criteria
+### CRUSSPIC - primary criteria
 
-#### C — Capability
+#### C - Capability
 
 > Does the system **do** what's claimed?
 
-Functional correctness — the product performs its stated
+Functional correctness - the product performs its stated
 functions. Maps to ISO/IEC 25010 "Functional suitability."
 
 Test heuristics: HICCUPPS-F's Claims oracle + Coverage from FCC
 CUTS VIDS.
 
-#### R — Reliability
+#### R - Reliability
 
 > Does the system **work consistently** over time?
 
@@ -62,7 +62,7 @@ CUTS VIDS.
 
 Maps to ISO 25010 "Reliability."
 
-#### U — Usability
+#### U - Usability
 
 > Can the user **figure out** how to use it?
 
@@ -74,7 +74,7 @@ Maps to ISO 25010 "Reliability."
 
 Per Nielsen's usability heuristics.
 
-#### S — Security
+#### S - Security
 
 > Is the system **safe** from misuse?
 
@@ -90,7 +90,7 @@ Maps to ISO 25010 "Security." Composes with
 [`qa-secrets`](../../../qa-secrets/),
 [`qa-test-data-privacy`](../../../qa-test-data-privacy/).
 
-#### S — Scalability
+#### S - Scalability
 
 > Does the system **grow** with load?
 
@@ -101,7 +101,7 @@ Maps to ISO 25010 "Security." Composes with
 
 Composes with [`qa-load-testing`](../../../qa-load-testing/).
 
-#### P — Performance
+#### P - Performance
 
 > Is the system **fast enough**?
 
@@ -110,11 +110,11 @@ Composes with [`qa-load-testing`](../../../qa-load-testing/).
 - Resource efficiency (CPU, memory, network, disk)
 - Startup / cold-start time
 
-Distinct from Scalability — performance is "fast for the user";
+Distinct from Scalability - performance is "fast for the user";
 scalability is "still fast when load grows." Composes with
 [`qa-load-testing`](../../../qa-load-testing/).
 
-#### I — Installability
+#### I - Installability
 
 > Can the user **install + configure** the system?
 
@@ -124,9 +124,9 @@ scalability is "still fast when load grows." Composes with
 - Upgrade path from prior versions
 - Uninstall completeness
 
-Maps to ISO 25010 "Portability — Installability."
+Maps to ISO 25010 "Portability - Installability."
 
-#### C — Compatibility
+#### C - Compatibility
 
 > Does the system **work alongside** other things?
 
@@ -139,9 +139,9 @@ Maps to ISO 25010 "Portability — Installability."
 Maps to ISO 25010 "Compatibility." Composes with
 [`qa-compatibility`](../../../qa-compatibility/).
 
-### STMPL — secondary (operational) criteria
+### STMPL - secondary (operational) criteria
 
-#### S — Supportability
+#### S - Supportability
 
 > Can the support team **diagnose + fix** issues?
 
@@ -154,7 +154,7 @@ Maps to ISO 25010 "Compatibility." Composes with
 A system with terrible logs is hard to support even when it's
 otherwise high-quality.
 
-#### T — Testability
+#### T - Testability
 
 > Can the testers **verify** the system?
 
@@ -167,7 +167,7 @@ otherwise high-quality.
 A system that's hard to test usually has worse quality everywhere
 else.
 
-#### M — Maintainability
+#### M - Maintainability
 
 > Can the team **change** the system?
 
@@ -179,7 +179,7 @@ else.
 
 Maps to ISO 25010 "Maintainability."
 
-#### P — Portability
+#### P - Portability
 
 > Can the system **move** between environments?
 
@@ -191,7 +191,7 @@ Maps to ISO 25010 "Maintainability."
 
 Maps to ISO 25010 "Portability."
 
-#### L — Localizability
+#### L - Localizability
 
 > Can the system be **adapted to other languages + cultures**?
 
@@ -222,7 +222,7 @@ CRUSSPIC STMPL is more granular; ISO 25010 is more formal. The
 two are complementary, not substitutable. Per ISO/IEC 25010:2023
 (cite by stable ID).
 
-## Worked example — applying CRUSSPIC STMPL to a release review
+## Worked example - applying CRUSSPIC STMPL to a release review
 
 Pre-release review:
 
@@ -280,14 +280,14 @@ Verdict: cleared for release.
 
 ## References
 
-- Bach J. *Quality criteria* and the CRUSSPIC STMPL mnemonic —
+- Bach J. *Quality criteria* and the CRUSSPIC STMPL mnemonic - 
   [satisfice.com](https://www.satisfice.com/rapid-software-testing).
-- Bach J. *Heuristics of Software Testability* —
+- Bach J. *Heuristics of Software Testability* - 
   [satisfice.com/heuristics-of-software-testability](https://www.satisfice.com/heuristics-of-software-testability).
 - ISO/IEC 25010:2023 "Systems and software Quality Requirements
-  and Evaluation (SQuaRE) — Product quality model" — cite by
+  and Evaluation (SQuaRE) - Product quality model" - cite by
   stable ID; iso.org paywall.
-- Nielsen J. Usability heuristics — nngroup.com/articles/ten-usability-heuristics.
+- Nielsen J. Usability heuristics - nngroup.com/articles/ten-usability-heuristics.
 - Sibling references:
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
   [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),

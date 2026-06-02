@@ -1,6 +1,6 @@
 ---
 name: syft-generation
-description: "Generates Software Bill of Materials (SBOMs) using Anchore Syft — supports container images / directories / archives across OCI / Docker / Singularity formats; output formats CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON; pairs with `grype-scanning` for SBOM-driven vuln scanning. Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance) or as input to vuln scanners."
+description: "Generates Software Bill of Materials (SBOMs) using Anchore Syft - supports container images / directories / archives across OCI / Docker / Singularity formats; output formats CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON; pairs with `grype-scanning` for SBOM-driven vuln scanning. Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance) or as input to vuln scanners."
 rating: 23
 d6: 4
 archetype: S1
@@ -40,7 +40,7 @@ delivery (SPDX or CycloneDX format per consumer requirement).
 - Container-image build pipelines need accompanying SBOM for
   delivery alongside the image.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [sf-gh][sf-gh]:
 
@@ -57,7 +57,7 @@ docker run --rm -v "$PWD:/scan" anchore/syft scan dir:/scan -o cyclonedx-json
 
 Other paths (consult [sf-gh][sf-gh]): Scoop, Chocolatey, Nix.
 
-## Step 2 — Basic SBOM generation
+## Step 2 - Basic SBOM generation
 
 Per [sf-gh][sf-gh]:
 
@@ -78,7 +78,7 @@ syft <image> -o spdx-json=./spdx.json -o cyclonedx-json=./cdx.json
 The default output is the table format (human-readable); use
 explicit `-o` for machine-readable formats in CI.
 
-## Step 3 — Output format catalog
+## Step 3 - Output format catalog
 
 Per [sf-gh][sf-gh] format support:
 
@@ -95,10 +95,10 @@ Per [sf-gh][sf-gh] format support:
 For [`grype-scanning`](../grype-scanning/SKILL.md) input, use
 `syft-json` (richest metadata) or `cyclonedx-json` (broader compat).
 
-For compliance delivery, the consumer's requirement dictates —
+For compliance delivery, the consumer's requirement dictates - 
 SPDX-JSON for US federal, CycloneDX-JSON for most EU contexts.
 
-## Step 4 — Source types
+## Step 4 - Source types
 
 Per [sf-gh][sf-gh] supported sources:
 
@@ -112,7 +112,7 @@ Per [sf-gh][sf-gh] supported sources:
 | File | `syft file:./pom.xml` |
 | Singularity image | `syft singularity:./image.sif` |
 
-## Step 5 — Attestation pattern (cosign)
+## Step 5 - Attestation pattern (cosign)
 
 For supply-chain integrity, attach the SBOM to the container image
 via Sigstore cosign:
@@ -131,9 +131,9 @@ cosign verify-attestation --type cyclonedx my-image:1.0
 The attestation lives alongside the image in the registry; downstream
 consumers can verify provenance + retrieve the SBOM.
 
-## Step 6 — False-positive triage analogue
+## Step 6 - False-positive triage analogue
 
-Syft generates inventories, not findings — there's no FP triage
+Syft generates inventories, not findings - there's no FP triage
 per se. The analogue here is **inventory accuracy**: ensuring
 Syft correctly identifies all components.
 
@@ -158,7 +158,7 @@ downstream vuln scan misses any CVEs against that component.
 Periodic accuracy validation against known dependencies catches
 this.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -185,7 +185,7 @@ jobs:
 The `anchore/sbom-action` GHA wraps Syft + handles GitHub
 dependency-graph submission automatically when `format: github-json`.
 
-## Step 8 — Composition with sister tools
+## Step 8 - Composition with sister tools
 
 | Sister tool | Use |
 |---|---|
@@ -207,24 +207,22 @@ dependency-graph submission automatically when `format: github-json`.
 
 ## Limitations
 
-- Syft can't scan what it can't see — encrypted archives, custom
+- Syft can't scan what it can't see - encrypted archives, custom
   package formats may produce incomplete SBOMs.
 - Some language-specific catalogers have edge cases (e.g., npm
   workspaces, Python wheel quirks); validate against known deps.
-- SBOM generation alone doesn't prove the deps are vulnerability-free
-  — pair with [`grype-scanning`](../grype-scanning/SKILL.md).
+- SBOM generation alone doesn't prove the deps are vulnerability-free - pair with [`grype-scanning`](../grype-scanning/SKILL.md).
 - Multi-arch container scanning is per-platform; combine SBOMs
   manually or via tooling for unified view.
 
 ## References
 
-- [sf-gh][sf-gh] — repository, install, scan commands, formats
-- anchore.com/syft — landing
-- ntia.gov/SBOM — NTIA SBOM minimum elements
-- whitehouse.gov/briefing-room/presidential-actions/2021/05/12/executive-order-on-improving-the-nations-cybersecurity/
-  — US EO 14028
+- [sf-gh][sf-gh] - repository, install, scan commands, formats
+- anchore.com/syft - landing
+- ntia.gov/SBOM - NTIA SBOM minimum elements
+- whitehouse.gov/briefing-room/presidential-actions/2021/05/12/executive-order-on-improving-the-nations-cybersecurity/ - US EO 14028
 - [`grype-scanning`](../grype-scanning/SKILL.md),
   [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
   [`spdx-format`](../spdx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) — sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) — unifier agent
+  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent

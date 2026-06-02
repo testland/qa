@@ -1,6 +1,6 @@
 ---
 name: error-budget-tests
-description: "Build error-budget gate tests — SLO + error-budget calculation per Google SRE workbook (\"difference between target uptime and actual uptime\"); burn-rate alerting; monthly-budget exhaustion test; freeze-trigger when budget consumed. Per sre.google embracing-risk reference."
+description: "Build error-budget gate tests - SLO + error-budget calculation per Google SRE workbook (\"difference between target uptime and actual uptime\"); burn-rate alerting; monthly-budget exhaustion test; freeze-trigger when budget consumed. Per sre.google embracing-risk reference."
 type: skill
 archetype: S3
 rating: 22
@@ -15,7 +15,7 @@ keywords:
 
 # error-budget-tests
 
-Per [Google SRE — Embracing Risk], "the difference between [SLO] and
+Per [Google SRE - Embracing Risk], "the difference between [SLO] and
 [actual uptime] is the 'budget' of how much 'unreliability' is
 remaining for the quarter." When the budget is consumed, releases
 freeze. Tests verify this contract is enforced.
@@ -28,7 +28,7 @@ freeze. Tests verify this contract is enforced.
 - After an incident: did the budget burn correctly? Did alerts
   fire? Did the freeze take effect?
 
-## Step 1 — Define the SLI + SLO
+## Step 1 - Define the SLI + SLO
 
 | Element | Example |
 |---|---|
@@ -36,10 +36,10 @@ freeze. Tests verify this contract is enforced.
 | SLO (objective) | 99.9% over 30 days |
 | Error budget | 100% − 99.9% = 0.1% of 30 days = ~43.2 minutes downtime allowed per 30 days |
 
-Per [Google SRE — Embracing Risk]: "A failure affecting 0.0002% of
+Per [Google SRE - Embracing Risk]: "A failure affecting 0.0002% of
 queries consumes 20% of a 0.001% quarterly budget."
 
-## Step 2 — Test SLI calculation
+## Step 2 - Test SLI calculation
 
 ```python
 def test_sli_excludes_planned_maintenance():
@@ -58,7 +58,7 @@ def test_sli_excludes_planned_maintenance():
 Maintenance windows + planned outages: agreed-upon exclusions
 matter. Test the rule.
 
-## Step 3 — Test budget consumption
+## Step 3 - Test budget consumption
 
 ```python
 def test_30_min_outage_consumes_70_percent_of_monthly_budget():
@@ -70,15 +70,15 @@ def test_30_min_outage_consumes_70_percent_of_monthly_budget():
     assert 65 < consumed_pct < 75
 ```
 
-## Step 4 — Burn-rate alerting
+## Step 4 - Burn-rate alerting
 
 Per the SRE workbook, burn-rate alerting fires when budget is
 being consumed faster than safe.
 
 | Window | Burn rate | Alert |
 |---|---|---|
-| 1 hour | 14.4× | "Critical — page" (consumes 2% in 1 hr) |
-| 6 hours | 6× | "Major — ticket" (consumes 5% in 6 hr) |
+| 1 hour | 14.4× | "Critical - page" (consumes 2% in 1 hr) |
+| 6 hours | 6× | "Major - ticket" (consumes 5% in 6 hr) |
 
 ```python
 def test_critical_burn_alert_fires_at_14_4x():
@@ -93,9 +93,9 @@ def test_critical_burn_alert_fires_at_14_4x():
 Test both directions: burn at 14.4× → critical; below threshold →
 no alert.
 
-## Step 5 — Freeze-trigger test
+## Step 5 - Freeze-trigger test
 
-Per [Google SRE — Embracing Risk]: "If SLO violations occur frequently
+Per [Google SRE - Embracing Risk]: "If SLO violations occur frequently
 enough to expend the error budget, releases are temporarily halted."
 
 ```python
@@ -109,7 +109,7 @@ def test_freeze_engaged_when_budget_below_zero():
     assert release_gate(budget_state).reason == "Error budget exhausted"
 ```
 
-## Step 6 — Reset on rolling window
+## Step 6 - Reset on rolling window
 
 ```python
 def test_budget_resets_as_old_outages_age_out():
@@ -121,7 +121,7 @@ def test_budget_resets_as_old_outages_age_out():
     assert tracker.remaining_seconds > 0
 ```
 
-## Step 7 — Multi-window multi-burn-rate (Google SRE practice)
+## Step 7 - Multi-window multi-burn-rate (Google SRE practice)
 
 The SRE workbook recommends multi-window burn-rate alerts to balance
 sensitivity vs noise:
@@ -146,9 +146,9 @@ def test_both_windows_must_trigger_to_page():
     assert page_fired is False  # don't page when issue resolved
 ```
 
-## Step 8 — Stakeholder reporting
+## Step 8 - Stakeholder reporting
 
-Per [Google SRE — Embracing Risk]: "Rather than political negotiations,
+Per [Google SRE - Embracing Risk]: "Rather than political negotiations,
 teams reference objective metrics." Report budget remaining to
 product + leadership:
 
@@ -185,13 +185,13 @@ def test_weekly_budget_report_format():
 
 ## References
 
-- [Google SRE — Embracing Risk] — error budget concept, SLO
+- [Google SRE - Embracing Risk] - error budget concept, SLO
   enforcement, freeze trigger
-- Google SRE Workbook — Implementing SLOs (consult sre.google for
+- Google SRE Workbook - Implementing SLOs (consult sre.google for
   the full workbook chapter)
-- [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) — incident
+- [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - incident
   metrics that consume budget
-- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) — drills that
+- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drills that
   intentionally affect SLI
 
-[Google SRE — Embracing Risk]: https://sre.google/sre-book/embracing-risk/
+[Google SRE - Embracing Risk]: https://sre.google/sre-book/embracing-risk/

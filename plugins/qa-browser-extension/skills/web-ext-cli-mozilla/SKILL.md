@@ -67,7 +67,7 @@ npm install --save-dev web-ext
 ```
 
 Mozilla recommends "the current LTS (long term support) version of
-NodeJS" (per [we-readme]) — verify your CI image matches before
+NodeJS" (per [we-readme]) - verify your CI image matches before
 asserting reproducibility.
 
 ### Project layout assumed by `web-ext`
@@ -85,8 +85,8 @@ my-extension/
 ```
 
 `web-ext` operates on the directory passed via `--source-dir` (or
-`-s`); per [we-cmd], `--source-dir` is a **global option** —
-available to every subcommand — and `--artifacts-dir` (default
+`-s`); per [we-cmd], `--source-dir` is a **global option** - 
+available to every subcommand - and `--artifacts-dir` (default
 `./web-ext-artifacts`) controls where `build` / `sign` write zips.
 
 ### Optional `web-ext-config.cjs`
@@ -141,7 +141,7 @@ web-ext lint \
   --warnings-as-errors > lint-report.json
 ```
 
-`--warnings-as-errors` is the right CI default — by [we-cmd] this
+`--warnings-as-errors` is the right CI default - by [we-cmd] this
 escalates lint warnings (e.g., unsupported manifest fields, MV2-only
 APIs flagged for MV3) into a non-zero exit code.
 
@@ -172,7 +172,7 @@ web-ext run \
 ```
 
 `--keep-profile-changes` (per [we-cmd]) persists profile
-modifications across runs — useful for snapshot-style tests.
+modifications across runs - useful for snapshot-style tests.
 
 ### Run on Chromium
 
@@ -362,7 +362,7 @@ jobs:
             --amo-metadata ./amo-metadata.json
 ```
 
-`--warnings-as-errors` in the lint step is what gates the PR — per
+`--warnings-as-errors` in the lint step is what gates the PR - per
 [we-cmd] it converts warnings into exit-1.
 
 ## Anti-patterns
@@ -385,7 +385,7 @@ jobs:
   behavioural assertions.
 - **Chromium target is run-only.** `web-ext run --target chromium`
   installs the unpacked extension into a fresh Chromium profile,
-  but per [we-cmd] does not provide the AMO-style signing path —
+  but per [we-cmd] does not provide the AMO-style signing path - 
   Chrome Web Store has its own publishing flow.
 - **No Firefox MV3 parity check.** `web-ext lint` does not warn
   when a manifest uses a key that's MV3-supported in Chrome but
@@ -401,11 +401,11 @@ jobs:
 
 ## References
 
-- Mozilla `web-ext` README (install, basic usage) —
+- Mozilla `web-ext` README (install, basic usage) - 
   [github.com/mozilla/web-ext][we-readme].
-- Extension Workshop — `web-ext` v8 command reference (every flag
-  on every subcommand) — [we-cmd].
-- Mozilla `addons-linter` (what `web-ext lint` wraps) —
+- Extension Workshop - `web-ext` v8 command reference (every flag
+  on every subcommand) - [we-cmd].
+- Mozilla `addons-linter` (what `web-ext lint` wraps) - 
   github.com/mozilla/addons-linter.
 - Composes:
   [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md).

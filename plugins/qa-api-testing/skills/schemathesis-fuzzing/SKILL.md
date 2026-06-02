@@ -14,7 +14,7 @@ Schemathesis is a property-based API testing tool that "automatically
 generates property-based tests from your OpenAPI or GraphQL schema
 and exercises the edge cases that break your API"
 ([schemathesis-readme][readme]). The schema is the **single source of
-truth** — every endpoint, parameter, and response shape becomes a
+truth** - every endpoint, parameter, and response shape becomes a
 generator that produces hundreds of targeted variations per run.
 
 [readme]: https://github.com/schemathesis/schemathesis
@@ -23,7 +23,7 @@ This is **complementary** to example-based API testing
 ([`postman-collections`](../postman-collections/SKILL.md),
 [`tavern-testing`](../tavern-testing/SKILL.md),
 [`restassured-testing`](../restassured-testing/SKILL.md),
-[`karate-testing`](../karate-testing/SKILL.md)) — example-based tests
+[`karate-testing`](../karate-testing/SKILL.md)) - example-based tests
 verify happy paths; Schemathesis attacks the boundaries the team
 forgot.
 
@@ -38,7 +38,7 @@ forgot.
 - A CI gate on **5xx responses** (any unexpected server error) is
   desired.
 
-If the API has no schema, Schemathesis cannot help — generate a
+If the API has no schema, Schemathesis cannot help - generate a
 schema first (FastAPI, Flask-Smorest, NestJS Swagger, dropwizard, or
 hand-author a spec), then return.
 
@@ -56,7 +56,7 @@ For the latest CLI without modifying the project's Python env:
 uvx schemathesis run <schema-url>
 ```
 
-(Adapted from [schemathesis-docs][docs] — `uvx` is the `uv` runner
+(Adapted from [schemathesis-docs][docs] - `uvx` is the `uv` runner
 for one-off tool execution.)
 
 [docs]: https://schemathesis.readthedocs.io/en/stable/
@@ -123,7 +123,7 @@ schemathesis run <schema>
 schemathesis run <schema> --checks not_a_server_error
 ```
 
-A failing check produces a deterministic reproduction — Schemathesis
+A failing check produces a deterministic reproduction - Schemathesis
 prints the exact `curl` command and Hypothesis seed to reproduce the
 generated request.
 
@@ -229,7 +229,7 @@ without sacrificing nightly depth.
 | Weekly   | 1000+                 | Pre-release deep validation.              |
 
 Hypothesis (the underlying property-based engine) **shrinks** failures
-to minimal reproducers automatically — a 200-example PR run is
+to minimal reproducers automatically - a 200-example PR run is
 plenty to surface most regressions; nightly depth catches the rare
 ones.
 
@@ -264,14 +264,14 @@ ones.
 
 ## References
 
-- [schemathesis-readme][readme] — main repo: install, CLI flags,
+- [schemathesis-readme][readme] - main repo: install, CLI flags,
   built-in checks, pytest integration with `@schema.parametrize()`.
-- [schemathesis-docs][docs] — full docs (CLI reference, hooks,
+- [schemathesis-docs][docs] - full docs (CLI reference, hooks,
   authentication strategies).
-- [`restler-fuzzing`](../restler-fuzzing/SKILL.md) — stateful
+- [`restler-fuzzing`](../restler-fuzzing/SKILL.md) - stateful
   fuzzing complement.
 - [`postman-collections`](../postman-collections/SKILL.md),
   [`tavern-testing`](../tavern-testing/SKILL.md),
   [`restassured-testing`](../restassured-testing/SKILL.md),
-  [`karate-testing`](../karate-testing/SKILL.md) — example-based
+  [`karate-testing`](../karate-testing/SKILL.md) - example-based
   authoring; use alongside Schemathesis for happy-path coverage.

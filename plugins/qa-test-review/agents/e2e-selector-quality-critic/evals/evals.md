@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# e2e-selector-quality-critic — evals
+# e2e-selector-quality-critic - evals
 
 Companion eval cases for [`e2e-selector-quality-critic`](../../e2e-selector-quality-critic.md).
 Three cases cover happy path / branch / adversarial: brittle CSS / XPath
@@ -14,7 +14,7 @@ that triggers the refuse-to-proceed rule (out-of-scope: non-E2E file).
 Re-run by pasting the **Input** block as the first user message and
 checking the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — brittle selectors + non-web-first assertion
+## Eval 1 - happy path - brittle selectors + non-web-first assertion
 
 **Input:**
 
@@ -62,7 +62,7 @@ at least one of `css-class` / `xpath` / `nth-position` (a classification
 label). Output flags the non-web-first assertion (contains one of
 `toBeVisible` / `web-first` / `auto-wait`).
 
-## Eval 2 — branch — accessibility-first file (no high-priority findings)
+## Eval 2 - branch - accessibility-first file (no high-priority findings)
 
 **Input:**
 
@@ -91,7 +91,7 @@ test('registered user can sign in', async ({ page }) => {
 `getByLabel('Email')` and `getByLabel('Password')` as `semantic-ok`,
 `getByRole('button', ...)` and `getByRole('heading', ...)` as
 `accessibility`, `getByTestId('user-menu')` as `testid` (acceptable
-last-resort). Step 3 finds zero non-web-first assertions — both `expect`
+last-resort). Step 3 finds zero non-web-first assertions - both `expect`
 calls use the web-first `toBeVisible()` form. Step 4 emits no
 recommended replacements. The findings table reports 0 for
 `css-class` / `nth-position` / `xpath` / non-web-first asserts.
@@ -103,7 +103,7 @@ contain `css-class` listed as a finding count >0 (the findings table
 row for `css-class` reads 0 or the section explicitly notes no
 high-priority findings).
 
-## Eval 3 — adversarial — refuse on non-E2E (unit) test file
+## Eval 3 - adversarial - refuse on non-E2E (unit) test file
 
 **Input:**
 
@@ -135,7 +135,7 @@ describe('computeTotal', () => {
 **Expected:** Per Step 1's E2E-file heuristic (must import
 `@playwright/test` / `cypress` / `webdriverio` / `selenium-webdriver` or
 contain `browser.` / `page.` / `cy.` patterns), this file is a Vitest
-unit test — there is no E2E framework import and no `page.` / `cy.`
+unit test - there is no E2E framework import and no `page.` / `cy.`
 usage. Per the Refuse-to-proceed rule "Operate on unit / integration
 tests. Strictly E2E test files (Step 1)," the agent refuses to issue a
 selector-quality verdict. Output names the unit / integration scope
@@ -148,12 +148,12 @@ restriction and the E2E filter, and does NOT classify any locator as
 contain any selector classification label (`accessibility`,
 `semantic-ok`, `testid`, `css-class`, `nth-position`, `xpath`) as a
 findings-table row. The agent must not claim to have classified
-selectors in a unit test — that is the entire adversarial point of
+selectors in a unit test - that is the entire adversarial point of
 the eval.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo. Tool surface (`Read`,
   `Grep`, `Glob`) is read-only.
 - Pass conditions are literal-substring checks; a reviewer can grep the

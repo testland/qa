@@ -1,6 +1,6 @@
 ---
 name: secrets-rotation-runner
-description: "Build-an-X for the secret-rotation workflow after detection — detect via gitleaks/trufflehog/kingfisher → identify provider via verifier → rotate via provider API (AWS IAM / GitHub PAT / Stripe / GCP / Azure / Twilio / Slack / etc.) → invalidate old secret → audit log via observability stack → post-mortem cross-ref. Use when a secret is detected in code (or proactively for periodic rotation) — assume git-history scrub does NOT prevent compromise."
+description: "Build-an-X for the secret-rotation workflow after detection - detect via gitleaks/trufflehog/kingfisher → identify provider via verifier → rotate via provider API (AWS IAM / GitHub PAT / Stripe / GCP / Azure / Twilio / Slack / etc.) → invalidate old secret → audit log via observability stack → post-mortem cross-ref. Use when a secret is detected in code (or proactively for periodic rotation) - assume git-history scrub does NOT prevent compromise."
 rating: 24
 d6: 4
 archetype: S3
@@ -11,8 +11,8 @@ archetype: S3
 ## Overview
 
 Detecting a leaked secret in code is the easy part. Rotating it
-correctly — without breaking production, with full audit trail,
-across all the systems that referenced the old value — is the hard
+correctly - without breaking production, with full audit trail,
+across all the systems that referenced the old value - is the hard
 part. This skill is a **build-an-X workflow** for the rotation
 process.
 
@@ -34,7 +34,7 @@ Rotation is mandatory; history scrub is at most cosmetic.
 - Incident response after a known breach (assume all secrets in
   affected scope are compromised).
 
-## Step 1 — Identify the secret type
+## Step 1 - Identify the secret type
 
 The scanner output identifies the credential class:
 
@@ -54,7 +54,7 @@ For automation-friendly providers (AWS, GitHub, GCP, Azure, Stripe,
 Twilio), rotation can be scripted. For others (often custom or
 on-prem), rotation is manual + documented.
 
-## Step 2 — Pre-rotation: assess blast radius
+## Step 2 - Pre-rotation: assess blast radius
 
 Before rotating, identify everything that uses the old value:
 
@@ -75,12 +75,12 @@ gh secret list                       # GitHub Actions secrets
 
 The blast radius shapes the rotation strategy:
 
-- **Single use** — straightforward swap
-- **Multiple services** — coordinated swap (rolling deploy)
-- **Distributed (cached, replicated)** — staged swap with
+- **Single use** - straightforward swap
+- **Multiple services** - coordinated swap (rolling deploy)
+- **Distributed (cached, replicated)** - staged swap with
   invalidation window
 
-## Step 3 — Rotation strategy by use pattern
+## Step 3 - Rotation strategy by use pattern
 
 ### A. Two-secret pattern (preferred)
 
@@ -130,7 +130,7 @@ If active exploitation is confirmed:
 2. Service consumers will fail until new secret deploys
 3. Accept brief outage as cost of compromise mitigation
 
-## Step 4 — Audit + verify
+## Step 4 - Audit + verify
 
 After rotation:
 
@@ -153,7 +153,7 @@ Audit verifies:
 - New secret IS being used by expected consumers
 - No unauthorized usage in the exposure window before rotation
 
-## Step 5 — Post-rotation: incident documentation
+## Step 5 - Post-rotation: incident documentation
 
 Cross-ref [`post-mortem-author`](../../qa-process/skills/post-mortem-author/SKILL.md):
 
@@ -165,7 +165,7 @@ Cross-ref [`post-mortem-author`](../../qa-process/skills/post-mortem-author/SKIL
 - Fix: how was the leak prevented going forward?
 - Lessons learned: what process gap allowed the leak?
 
-## Step 6 — Add detection rule for future
+## Step 6 - Add detection rule for future
 
 If the scanner missed the format that leaked, add a custom rule:
 
@@ -180,7 +180,7 @@ This is the "test that catches the bug" pattern for security:
 make sure the same leak format gets caught at PR time going
 forward.
 
-## Step 7 — Proactive rotation cadence
+## Step 7 - Proactive rotation cadence
 
 Beyond reactive rotation, schedule periodic rotation:
 
@@ -197,22 +197,22 @@ Beyond reactive rotation, schedule periodic rotation:
 Automate via the same workflow (Step 3 two-secret pattern); don't
 wait for an incident to discover the rotation runbook is broken.
 
-## Step 8 — Tooling integration
+## Step 8 - Tooling integration
 
 For coordinated rotation across consumers, use a secrets-management
 platform:
 
-- **HashiCorp Vault** — dynamic secrets, lease management
-- **AWS Secrets Manager** — automatic rotation Lambda functions
+- **HashiCorp Vault** - dynamic secrets, lease management
+- **AWS Secrets Manager** - automatic rotation Lambda functions
   for RDS, Redshift, DocumentDB
-- **GCP Secret Manager** — version pinning + rotation
-- **Azure Key Vault** — automated rotation policies
-- **Doppler / Akeyless / Infisical** — multi-cloud secret platforms
+- **GCP Secret Manager** - version pinning + rotation
+- **Azure Key Vault** - automated rotation policies
+- **Doppler / Akeyless / Infisical** - multi-cloud secret platforms
 
 These platforms handle the consumer-update-and-coordinate part
 (Step 3 deploy phase) more reliably than ad-hoc scripts.
 
-## Step 9 — End-to-end test recipe
+## Step 9 - End-to-end test recipe
 
 After every rotation:
 
@@ -233,7 +233,7 @@ After every rotation:
 | Trust git-history scrub to fix the leak | Leaked secret IS exposed; assume compromise | Always rotate (Overview) |
 | Atomic swap without coordination | Brief outage during deploy | Two-secret pattern (Step 3A) |
 | Skip audit-log review post-rotation | Miss unauthorized usage during exposure | Always audit (Step 4) |
-| Rotate; skip post-mortem | Same leak pattern recurs | Document + add detection rule (Steps 5–6) |
+| Rotate; skip post-mortem | Same leak pattern recurs | Document + add detection rule (Steps 5 - 6) |
 | Ad-hoc rotation; no proactive cadence | Rotation runbook stale; emergency rotation breaks | Quarterly cadence per secret type (Step 7) |
 
 ## Limitations
@@ -252,11 +252,11 @@ After every rotation:
 
 - [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md),
   [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md),
-  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) — sister
+  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) - sister
   scanners (the detection step)
 - AWS IAM key rotation: docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
 - GitHub PAT management: docs.github.com/en/authentication/keeping-your-account-and-data-secure
 - HashiCorp Vault: developer.hashicorp.com/vault
 - AWS Secrets Manager rotation: docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html
-- [`post-mortem-author`](../../qa-process/skills/post-mortem-author/SKILL.md) —
+- [`post-mortem-author`](../../qa-process/skills/post-mortem-author/SKILL.md) - 
   cross-plugin: post-rotation incident documentation

@@ -13,10 +13,10 @@ archetype: S2
 Per [aws.amazon.com/blogs/compute on cold starts](https://aws.amazon.com/blogs/compute/),
 Lambda's cold start has three phases:
 
-1. **Init** — download deployment package, unzip, bootstrap
+1. **Init** - download deployment package, unzip, bootstrap
    the runtime (Node/Python/Java/etc.).
-2. **Init code** — execute module-level imports + global setup.
-3. **Invoke** — the actual handler call.
+2. **Init code** - execute module-level imports + global setup.
+3. **Invoke** - the actual handler call.
 
 Phases 1 + 2 are the "cold" part. Phase 3 is what runs every
 invocation (cold or warm).
@@ -26,7 +26,7 @@ invocation (cold or warm).
 - Designing a latency budget for a Lambda / Workers / Edge
   function.
 - Investigating "p95 is fine but p99 is 5s."
-- Choosing a runtime — Cloudflare's isolate model is qualitatively
+- Choosing a runtime - Cloudflare's isolate model is qualitatively
   different from Lambda containers.
 - Auditing provisioned-concurrency / SnapStart configurations.
 
@@ -51,7 +51,7 @@ packages and bigger memory-class skew higher):
 
 The "Workers / Edge" qualitative leap is the isolate model:
 each function is a V8 isolate, spun up in microseconds per
-[developers.cloudflare.com](https://developers.cloudflare.com/workers/) —
+[developers.cloudflare.com](https://developers.cloudflare.com/workers/) - 
 no container, no OS startup.
 
 ## Mitigations

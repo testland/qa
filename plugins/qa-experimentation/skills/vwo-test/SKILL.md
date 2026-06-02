@@ -48,7 +48,7 @@ client = vwo.launch(settings, is_development_mode=True)
 ```
 
 `is_development_mode=True` disables event tracking to VWO
-servers — fully-offline tests.
+servers - fully-offline tests.
 
 ### Activate an experiment / variation
 
@@ -70,7 +70,7 @@ def test_feature_variable_value():
 
 VWO doesn't have a direct "force decision" API like Optimizely;
 the canonical approach is to construct user IDs that hash into
-specific buckets — or use the SDK's `userPreSegment` callback
+specific buckets - or use the SDK's `userPreSegment` callback
 where supported.
 
 Per VWO docs, the bucketing is **deterministic on the user ID**.

@@ -2,7 +2,7 @@
 
 Patterns for `{% test %}` blocks beyond the four built-in generics. Each
 test is a Jinja macro that takes a model (and optional column arguments)
-and returns a `select` of **failing rows** — empty result set means pass
+and returns a `select` of **failing rows** - empty result set means pass
 (per the canonical [data-tests][1] doc).
 
 [1]: https://docs.getdbt.com/docs/build/data-tests
@@ -76,7 +76,7 @@ having max({{ column_name }}) < dateadd(hour, -{{ max_age_hours }}, current_time
 {% endtest %}
 ```
 
-`dateadd` syntax varies by warehouse adapter — adjust per Snowflake /
+`dateadd` syntax varies by warehouse adapter - adjust per Snowflake /
 BigQuery / Postgres / Redshift dialect. Test the raw SQL in your warehouse
 console first.
 
@@ -123,7 +123,7 @@ threshold based on the row count returned:
 ```
 
 This is the canonical mechanism to prevent a single test from blocking
-downstream models in `dbt build` — relaxing severity to `warn` lets the
+downstream models in `dbt build` - relaxing severity to `warn` lets the
 DAG keep flowing while still surfacing the assertion in `run_results.json`
 ([dbt-build][2]).
 
@@ -140,5 +140,5 @@ under the configured `dbt_test__audit` schema.
 dbt test --select state:modified+ --store-failures
 ```
 
-Use this when the failure count alone is not enough to debug — the audit
+Use this when the failure count alone is not enough to debug - the audit
 table contains the actual rows the test SELECT returned.

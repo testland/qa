@@ -1,6 +1,6 @@
 ---
 name: zap-baseline
-description: "Configures and runs OWASP ZAP baseline scanning — `zap-baseline.py` Docker-packaged spider + passive scan suitable for CI gating; supports `-t target_url` + `-r html_report` + `-c config_file` rule customization (INFO/IGNORE/FAIL warnings); pairs with `zap-full-scan.py` for active scanning; supports authenticated scans via `-n context_file` and Ajax spider via `-j` for JS-heavy SPAs. Use when the user runs OWASP ZAP for pre-prod web app DAST."
+description: "Configures and runs OWASP ZAP baseline scanning - `zap-baseline.py` Docker-packaged spider + passive scan suitable for CI gating; supports `-t target_url` + `-r html_report` + `-c config_file` rule customization (INFO/IGNORE/FAIL warnings); pairs with `zap-full-scan.py` for active scanning; supports authenticated scans via `-n context_file` and Ajax spider via `-j` for JS-heavy SPAs. Use when the user runs OWASP ZAP for pre-prod web app DAST."
 rating: 23
 d6: 4
 archetype: S1
@@ -19,7 +19,7 @@ Per [zaproxy.org/docs/docker/baseline-scan/][zap-base]:
 > target for (by default) 1 minute and then waits for the passive
 > scanning to complete before reporting the results."
 
-The baseline scan is **passive only** — non-intrusive, safe for
+The baseline scan is **passive only** - non-intrusive, safe for
 production. The companion `zap-full-scan.py` adds active scanning
 (injection probes, XSS payloads) and is **NOT** safe for
 production; reserve for staging.
@@ -34,9 +34,9 @@ production; reserve for staging.
 - Pair with [`burp-headless`](../burp-headless/SKILL.md) for
   deeper paid-tool coverage on critical flows.
 
-## Step 1 — Install
+## Step 1 - Install
 
-ZAP baseline runs from the official Docker image — no host install
+ZAP baseline runs from the official Docker image - no host install
 needed. Per [zap-base][zap-base]:
 
 ```bash
@@ -51,7 +51,7 @@ Image variants:
 | `:weekly` | Latest features; for evaluation |
 | `:bare` | Headless minimal; smallest |
 
-## Step 2 — First baseline scan
+## Step 2 - First baseline scan
 
 Per [zap-base][zap-base] (verbatim):
 
@@ -64,7 +64,7 @@ The `-v $(pwd):/zap/wrk/:rw` mount makes the report writable to the
 host directory. The report file lands at `./testreport.html` after
 the scan.
 
-## Step 3 — Common flags
+## Step 3 - Common flags
 
 Per [zap-base][zap-base]:
 
@@ -83,7 +83,7 @@ Per [zap-base][zap-base]:
 | `-I` | Don't return failure on warning (gate softly) |
 | `-n CONTEXT_FILE` | Authenticated scan context file |
 
-## Step 4 — Authenticated scans
+## Step 4 - Authenticated scans
 
 For apps requiring login, export a ZAP context file from the GUI
 (Sites → right-click → Export Context). The context file encodes:
@@ -103,7 +103,7 @@ docker run -v $(pwd):/zap/wrk/:rw \
   zap-baseline.py -t https://app.example.com -n /zap/wrk/context.xml -J report.json
 ```
 
-## Step 5 — Active scan companion (`zap-full-scan.py`)
+## Step 5 - Active scan companion (`zap-full-scan.py`)
 
 For staging-only deeper analysis:
 
@@ -113,10 +113,10 @@ docker run -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable \
 ```
 
 `zap-full-scan.py` triggers active payloads (SQLi probes, XSS,
-SSRF). **NEVER point at production** — risk of data corruption +
+SSRF). **NEVER point at production** - risk of data corruption +
 generates audit-log noise.
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Per [zap-base][zap-base], rule customization via `-c config_file`
 where each line is `<rule_id>\t<INFO|WARN|IGNORE|FAIL>\t<URL_pattern>`:
@@ -148,11 +148,11 @@ Three suppression layers:
 10049	IGNORE	*
 ```
 
-Cadence: every quarter, audit the config TSV — every IGNORE entry
+Cadence: every quarter, audit the config TSV - every IGNORE entry
 should have an Re-review-date. Past-due entries are removed +
 re-evaluated.
 
-## Step 7 — Output formats for `dast-finding-triager`
+## Step 7 - Output formats for `dast-finding-triager`
 
 ```bash
 docker run -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable \
@@ -163,7 +163,7 @@ The JSON report feeds [`dast-finding-triager`](../../agents/dast-finding-triager
 For SARIF output (GitHub Code Scanning), use a converter (zap-sarif
 container action).
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 GitHub Actions:
 
@@ -204,17 +204,17 @@ invocation. Auto-creates a GitHub Issue on failure.
   increase via `-m` (Step 3).
 - ZAP scans single-target only; for multi-app fleet, run per-app
   + aggregate via `dast-finding-triager`.
-- Authentication setup via context file is fragile —
+- Authentication setup via context file is fragile - 
   apps with complex login flows often need custom ZAP scripts.
 
 ## References
 
-- [zap-base][zap-base] — official baseline scan documentation
-- zaproxy.org/docs/docker — full Docker docs
-- github.com/zaproxy/action-baseline — official GHA action
+- [zap-base][zap-base] - official baseline scan documentation
+- zaproxy.org/docs/docker - full Docker docs
+- github.com/zaproxy/action-baseline - official GHA action
 - [`burp-headless`](../burp-headless/SKILL.md),
-  [`nightvision-dast`](../nightvision-dast/SKILL.md) — sister DAST tools
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) —
+  [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister DAST tools
+- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
   build-an-X for layered DAST (baseline → full → optional Burp deep)
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) —
+- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - 
   unifier agent

@@ -14,8 +14,8 @@ Per
 [buf.build/docs/cli/quickstart/](https://buf.build/docs/cli/quickstart/),
 "the Buf CLI requires version 1.32.0 or higher" and provides
 five primary commands: `build`, `lint`, `breaking`, `generate`,
-`format`. This skill wraps three of them — `build`, `lint`,
-`breaking` — as the proto-PR gate. Pairs with
+`format`. This skill wraps three of them - `build`, `lint`,
+`breaking` - as the proto-PR gate. Pairs with
 [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md)
 for the catalog of what counts as breaking and why.
 
@@ -23,8 +23,8 @@ for the catalog of what counts as breaking and why.
 
 - Adding buf as the proto lint + breaking-change gate on a new
   repo.
-- A PR changes `.proto` files — need to gate the merge.
-- Investigating a `buf breaking` failure — what rule fired?
+- A PR changes `.proto` files - need to gate the merge.
+- Investigating a `buf breaking` failure - what rule fired?
 - Configuring buf for a monorepo with multiple proto modules.
 
 ## Authoring

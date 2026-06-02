@@ -14,7 +14,7 @@ AWS SAM Local is the canonical local-testing toolchain for AWS
 Lambda. Per
 [docs.aws.amazon.com/serverless-application-model](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-test.html),
 it runs Lambdas in Docker containers locally with images that
-mirror the Lambda runtime — same Linux, same Node/Python/Java
+mirror the Lambda runtime - same Linux, same Node/Python/Java
 binaries, same handler-invocation contract.
 
 ## When to use

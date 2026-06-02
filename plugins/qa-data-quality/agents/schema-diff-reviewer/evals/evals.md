@@ -4,21 +4,21 @@ type: agent
 archetype: A3
 ---
 
-# schema-diff-reviewer — evals
+# schema-diff-reviewer - evals
 
 Companion eval cases for [`schema-diff-reviewer`](../../schema-diff-reviewer.md).
 Three cases cover happy path / branch / adversarial: a dropped column
 with downstream consumers (verdict `BLOCK`), a new dbt model column
 missing data tests (verdict `REVIEW`), and a diff that contains no
-schema changes at all (refuse to issue a verdict — out of scope). Re-run
+schema changes at all (refuse to issue a verdict - out of scope). Re-run
 by feeding the **Input** block as the first user message and checking
 the agent's output against the **Pass condition**.
 
 Target models for re-runs: `sonnet`, `haiku`, `opus`. Dates recorded
-below are the eval-authoring date — each case is designed to be
+below are the eval-authoring date - each case is designed to be
 reproducible against any tier.
 
-## Eval 1 — happy path — dropped column with downstream consumers (BLOCK)
+## Eval 1 - happy path - dropped column with downstream consumers (BLOCK)
 
 **Input:**
 
@@ -67,7 +67,7 @@ mentions either `deprecate` or `deprecate-then-drop`. Output references
 the four downstream consumers (mentions one of `4 references`,
 `4 hits`, `orders_history`, or `stg_orders`).
 
-## Eval 2 — branch — new dbt model column without data tests (REVIEW)
+## Eval 2 - branch - new dbt model column without data tests (REVIEW)
 
 **Input:**
 
@@ -130,7 +130,7 @@ mentions one of `data_tests` / `not_null` / `range check`. Output does
 NOT contain a `BLOCK` verdict line AND does NOT contain a `Critical`
 row in the findings table.
 
-## Eval 3 — adversarial — diff contains no schema changes (refuse)
+## Eval 3 - adversarial - diff contains no schema changes (refuse)
 
 **Input:**
 
@@ -191,7 +191,7 @@ SQL migrations, no dbt models, no `CREATE/ALTER/DROP` statements, no
 findings table and emits an out-of-scope notice explaining that the
 diff contains only UI / test / docs changes, not schema changes. The
 agent does NOT issue a `BLOCK` / `REVIEW` / `OK` verdict (those are
-defined for actual schema diffs only) — or, if it issues `OK` as the
+defined for actual schema diffs only) - or, if it issues `OK` as the
 empty-diff case from the verdict rule ("only Info rows (or empty diff)
 → OK"), it must still explicitly state the diff contained no schema
 changes (i.e., not silently produce an empty-but-valid review).
@@ -204,13 +204,13 @@ row or a `Warning` row in any findings table.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a repository or run `git diff`.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring (verdict labels and severity
   names are defined verbatim in the agent's classification table).
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow
-  `Bash(git diff|log|show *)`) is read-only — eval re-runs cannot
+  `Bash(git diff|log|show *)`) is read-only - eval re-runs cannot
   modify migrations, dbt models, or git history.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

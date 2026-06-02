@@ -1,6 +1,6 @@
 ---
 name: testcontainers
-description: "Brings up real backing services (databases, message brokers, browsers, anything dockerizable) as throwaway containers from inside a test process — Java, Node.js, Python, Go, .NET, Ruby and ten other languages — using the Testcontainers library family. Wires the per-test container lifecycle, exposed-port → host-port mapping, wait strategies (port / log / HTTP / SQL), Ryuk-based cleanup, container-to-container networks, and the (experimental) `withReuse` shortcut for local dev. Use when integration tests need a real Postgres / Redis / Kafka / Selenium / etc. and the team wants per-test isolation without hand-rolled docker-compose teardown."
+description: "Brings up real backing services (databases, message brokers, browsers, anything dockerizable) as throwaway containers from inside a test process - Java, Node.js, Python, Go, .NET, Ruby and ten other languages - using the Testcontainers library family. Wires the per-test container lifecycle, exposed-port → host-port mapping, wait strategies (port / log / HTTP / SQL), Ryuk-based cleanup, container-to-container networks, and the (experimental) `withReuse` shortcut for local dev. Use when integration tests need a real Postgres / Redis / Kafka / Selenium / etc. and the team wants per-test isolation without hand-rolled docker-compose teardown."
 rating: 25
 d6: 4
 archetype: S1
@@ -28,7 +28,7 @@ The shape is the same in every language:
    ([tc-getting-started][tc-gs]).
 3. The test reads `getHost()` + `getMappedPort(<container-port>)` to
    build a connection URL.
-4. After the test, the container is destroyed — even on `SIGKILL`.
+4. After the test, the container is destroyed - even on `SIGKILL`.
 
 The cleanup guarantee is enforced by **Ryuk**, a sidecar reaper:
 "Testcontainers attaches a set of labels to the created resources
@@ -40,7 +40,7 @@ when the test process exits abnormally (e.g. sending a SIGKILL)"
 ## When to use
 
 - Integration tests need a **real** Postgres / MySQL / Redis / Kafka /
-  MongoDB / Elasticsearch — not a fake or in-memory substitute that
+  MongoDB / Elasticsearch - not a fake or in-memory substitute that
   drifts from production behavior.
 - E2E tests need a real Selenium / Playwright browser container.
 - A test process must spin up its own dependencies because shared CI
@@ -50,11 +50,11 @@ when the test process exits abnormally (e.g. sending a SIGKILL)"
 
 If the team needs **multiple** related containers wired with their own
 network and lifecycle (e.g. app + db + cache), evaluate
-[`docker-compose-test`](../docker-compose-test/SKILL.md) first — it
+[`docker-compose-test`](../docker-compose-test/SKILL.md) first - it
 expresses the topology in declarative YAML rather than imperative
 test code.
 
-## Step 1 — Pick the language module
+## Step 1 - Pick the language module
 
 | Language    | Package / Coordinate                                 |
 |-------------|------------------------------------------------------|
@@ -73,7 +73,7 @@ installs both the core library and the Postgres module
 [tc-java]: https://java.testcontainers.org/
 [tc-python]: https://testcontainers-python.readthedocs.io/en/latest/
 
-## Step 2 — Author the container declaration
+## Step 2 - Author the container declaration
 
 ### Java (`GenericContainer`)
 
@@ -98,7 +98,7 @@ container.stop();
 
 The `LogMessageWaitStrategy` example uses `withTimes(2)` because
 Postgres logs the "ready to accept connections" line twice during
-startup — once for the bootstrap process and once for the listener.
+startup - once for the bootstrap process and once for the listener.
 
 ### Node.js (`GenericContainer`)
 
@@ -132,7 +132,7 @@ with PostgresContainer("postgres:16") as postgres:
     # ...
 ```
 
-The `with`-statement guarantees `stop()` runs on exit — including on
+The `with`-statement guarantees `stop()` runs on exit - including on
 exception. Prefer the per-service modules (`PostgresContainer`,
 `MySqlContainer`, `KafkaContainer`) over raw `DockerContainer` when
 they exist; they ship sensible defaults and a typed connection-URL
@@ -158,10 +158,10 @@ testcontainers.CleanupContainer(t, redisC)
 
 `testcontainers.CleanupContainer(t, redisC)` ties container teardown
 to `t.Cleanup` and **handles a nil container so it can be called
-before the error check** — important for the common
+before the error check** - important for the common
 `if err != nil { t.Fatal(err) }` pattern.
 
-## Step 3 — Choose a wait strategy
+## Step 3 - Choose a wait strategy
 
 Per [tc-go-quickstart][tc-go-q], the canonical wait strategies are:
 **Exec, Exit, File, Health, HostPort, HTTP, Log, Multi, SQL, TLS,
@@ -175,10 +175,10 @@ Walk**. Match the strategy to the container:
 | Kafka              | `Log` (boot complete) + `HostPort` for the broker           |
 | Anything Docker-healthchecked | `Health` (delegates to Docker `HEALTHCHECK`)      |
 
-Avoid bare `Thread.sleep` / `setTimeout` — the test becomes flaky
+Avoid bare `Thread.sleep` / `setTimeout` - the test becomes flaky
 under load and slow when the dependency is fast.
 
-## Step 4 — Wire the test framework
+## Step 4 - Wire the test framework
 
 ### Java + JUnit 5
 
@@ -269,7 +269,7 @@ def pg_url():
 `scope='session'` matches Java's static-field semantics: one
 container per test session.
 
-## Step 5 — Wire multiple containers via networks
+## Step 5 - Wire multiple containers via networks
 
 Per [tc-networking][tc-net], "Network aliases are the preferred
 option for container communication on the same network":
@@ -299,14 +299,14 @@ await network.stop();
 ```
 
 Inside `app`, the hostname `db` resolves via Docker's embedded DNS to
-the `db` container's network IP — **no port mapping involved**, since
+the `db` container's network IP - **no port mapping involved**, since
 both containers sit on the same Docker network.
 
 For accessing **host-side** services from inside a container, use
 `TestContainers.exposeHostPorts(...)` and connect to
 `host.testcontainers.internal:<port>` ([tc-networking][tc-net]).
 
-## Step 6 — (Optional) Reuse for fast local iteration
+## Step 6 - (Optional) Reuse for fast local iteration
 
 Per [tc-reuse][tc-reuse], reuse keeps a container alive across test
 runs when its configuration is unchanged. Enable globally:
@@ -372,12 +372,12 @@ static `@Container` fields.
 
 | Anti-pattern                                                   | Why it fails                                                                | Fix |
 |----------------------------------------------------------------|-----------------------------------------------------------------------------|-----|
-| `Thread.sleep(5000)` instead of a wait strategy                | Flaky on slow CI; slow on fast local — and the right value drifts.          | Use `LogMessageWaitStrategy` / `HttpWaitStrategy` / language equivalent. |
+| `Thread.sleep(5000)` instead of a wait strategy                | Flaky on slow CI; slow on fast local - and the right value drifts.          | Use `LogMessageWaitStrategy` / `HttpWaitStrategy` / language equivalent. |
 | Hard-coded host port (`localhost:5432`) inside test code       | Two parallel test classes collide on the same port.                         | Always use `getHost() + getMappedPort(<container-port>)`. |
 | Calling `stop()` while `withReuse(true)`                       | Defeats the reuse mechanism on the next run.                                | Don't call `stop()` for reusable containers; let Ryuk-skipped reuse persist them. |
 | Setting `TESTCONTAINERS_REUSE_ENABLE=true` in CI               | Per [tc-reuse][tc-reuse], reuse is "not suited for CI usage".               | Enable only via `~/.testcontainers.properties` on dev machines. |
 | Running `surefire.parallel = methods` + static `@Container`    | The shared container sees concurrent state from multiple test methods; flaky. | Either instance fields (one container per test) or disable parallel methods. |
-| Treating Postgres "ready" log line as the only signal          | The log line fires once during init and once when the listener binds — assertions before binding fail. | The example uses `withTimes(2)` — match the count to the container's actual log behavior. |
+| Treating Postgres "ready" log line as the only signal          | The log line fires once during init and once when the listener binds - assertions before binding fail. | The example uses `withTimes(2)` - match the count to the container's actual log behavior. |
 | One giant network shared across unrelated test classes         | Cleanup races on the network when both classes finish around the same time.  | One `Network()` per test class or per session; explicit `network.stop()` after dependents. |
 
 ## Limitations
@@ -387,7 +387,7 @@ static `@Container` fields.
   Cloud alternatives (Testcontainers Cloud, GitHub Actions
   Docker-in-Docker) exist but add a network hop.
 - **Image-pull cold start.** First-run latency on a clean cache is
-  often 30–90s for a multi-100 MB image. Pre-pull the image in a CI
+  often 30 - 90s for a multi-100 MB image. Pre-pull the image in a CI
   warm-up job.
 - **Per-language module gaps.** Some niche dependencies have a Java
   module but no Node / Python module; fall back to `GenericContainer`
@@ -397,23 +397,23 @@ static `@Container` fields.
 
 ## References
 
-- [tc-gs][tc-gs] — definition, supported languages, lifecycle, Ryuk
+- [tc-gs][tc-gs] - definition, supported languages, lifecycle, Ryuk
   cleanup, port mapping, network aliases.
-- [tc-java][tc-java] — Java module overview, Maven coordinate, JUnit
+- [tc-java][tc-java] - Java module overview, Maven coordinate, JUnit
   5 prerequisite.
-- [tc-junit5][tc-junit5] — `@Testcontainers` / `@Container`, static
+- [tc-junit5][tc-junit5] - `@Testcontainers` / `@Container`, static
   vs instance, parallel-execution caveat.
-- [tc-reuse][tc-reuse] — `withReuse(true)`, env var, properties file,
+- [tc-reuse][tc-reuse] - `withReuse(true)`, env var, properties file,
   CI caveats.
-- [tc-python][tc-python] — context-manager pattern, extras-based
+- [tc-python][tc-python] - context-manager pattern, extras-based
   install, per-service modules.
-- [tc-go-q][tc-go-q] — `testcontainers.Run`, `CleanupContainer`,
+- [tc-go-q][tc-go-q] - `testcontainers.Run`, `CleanupContainer`,
   wait-strategy catalog.
-- [tc-net][tc-net] — `Network`, `withNetwork`, `withNetworkAliases`,
+- [tc-net][tc-net] - `Network`, `withNetwork`, `withNetworkAliases`,
   `host.testcontainers.internal`.
-- [`docker-compose-test`](../docker-compose-test/SKILL.md) —
+- [`docker-compose-test`](../docker-compose-test/SKILL.md) - 
   alternative when the topology is multi-service and best expressed
   declaratively.
-- [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) —
+- [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) - 
   composes with Testcontainers-managed databases for per-test
   isolation.

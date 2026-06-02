@@ -4,7 +4,7 @@ type: agent
 archetype: A1
 ---
 
-# defect-trend-narrator — evals
+# defect-trend-narrator - evals
 
 Companion eval cases for [`defect-trend-narrator`](../../defect-trend-narrator.md).
 Three cases cover happy path / branch / adversarial: a two-window WoW
@@ -15,7 +15,7 @@ than fabricating a trend. Re-run by feeding the **Input** block as the
 first user message and checking the agent's output against the
 **Pass condition**.
 
-## Eval 1 — happy path — two-window WoW trend with Pareto + movers
+## Eval 1 - happy path - two-window WoW trend with Pareto + movers
 
 **Input:**
 
@@ -58,11 +58,11 @@ MTTD / MTTF: not computable (no closed_at timestamps in this export).
 **Expected:** Step 1 uses the tracker categories directly (already
 categorised input). Step 2 computes total 47, prior 42, Δ +5 (+11.9%);
 Pareto sort identifies regression (38.3%) + integration (27.7%) +
-environment (12.8%) = 78.8% — the smallest k accounting for ≥80% (with
+environment (12.8%) = 78.8% - the smallest k accounting for ≥80% (with
 data added it becomes 87.3%). Top-3 movers up: regression (+7pp), race
 (+4pp), other (+2pp). Top-3 movers down: environment (-9pp), integration
-(-6pp), data (-3pp). Step 3 emits the four sections — headline like
-"2026-W18 defect review: 47 defects (+11.9% WoW) — 3 categories account
+(-6pp), data (-3pp). Step 3 emits the four sections - headline like
+"2026-W18 defect review: 47 defects (+11.9% WoW) - 3 categories account
 for ~79% of volume" with the Pareto reference; movers paragraph
 correlates the regression spike with the v4.7.0 release on 2026-04-29
 (mid-window). Step 4 emits a citation appendix mapping each claim to
@@ -78,7 +78,7 @@ explicitly lacks `found_in` metadata, and the agent must not guess).
 Output does NOT contain a sentence prescribing a specific fix, test
 addition, or process change (the agent narrates; the team decides).
 
-## Eval 2 — branch — escape-rate path (found_in metadata supplied)
+## Eval 2 - branch - escape-rate path (found_in metadata supplied)
 
 **Input:**
 
@@ -118,13 +118,13 @@ Release events from git log this window:
 (prior 105, Δ +15, +14.3%); escape rate this month = 18/120 = 15.0%
 (prior month 21/105 = 20.0%) → escape rate is **down -5pp** despite
 total defects growing. Pareto on production escapes: regression (8/18 =
-44.4%) + integration (6/18 = 33.3%) = 77.8% — those two categories
+44.4%) + integration (6/18 = 33.3%) = 77.8% - those two categories
 account for the bulk. MTTD is computed from the supplied timestamps
 (report `n/a` if some rows are missing closed_at, but at least one
 windowed mean is computable). Step 3 narrative explicitly separates
-total defect growth (+14.3%) from escape-rate trajectory (down -5pp) —
+total defect growth (+14.3%) from escape-rate trajectory (down -5pp) - 
 the agent must NOT conflate them per the anti-pattern note ("conflating
-escape rate with bug count growth — they are orthogonal; report
+escape rate with bug count growth - they are orthogonal; report
 independently"). Step 4 citation appendix maps the escape rate to the
 `found_in: production` filter on the export. Movers paragraph
 correlates the escape-rate drop with the v4.6.0 canary-deploy workflow
@@ -136,7 +136,7 @@ reports separate numeric values for total defects and escape rate
 NOT state that "defects went up" without also surfacing that escape
 rate went down (per the anti-pattern, conflating the two is rejected).
 
-## Eval 3 — adversarial — single window only (refuse to emit a trend)
+## Eval 3 - adversarial - single window only (refuse to emit a trend)
 
 **Input:**
 
@@ -166,7 +166,7 @@ a snapshot. It still computes the Pareto distribution within the single
 window (regression 36.4% + integration 24.2% + environment 15.2% =
 75.8%, with data added 87.9%) and reports total 33 + escape rate (6/33
 = 18.2%) for the snapshot. It does NOT compute WoW deltas, movers up /
-down, or trailing averages — there is no prior window to compare
+down, or trailing averages - there is no prior window to compare
 against. The narrative explicitly states this is a baseline snapshot,
 not a trend, and that subsequent windows can be compared against it.
 The 4-week trailing average mentioned in anti-patterns is also `n/a`
@@ -183,7 +183,7 @@ without a prior window).
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks with pre-counted
-  category summaries — no external Linear / Jira / GitHub export
+  category summaries - no external Linear / Jira / GitHub export
   fixture needed.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

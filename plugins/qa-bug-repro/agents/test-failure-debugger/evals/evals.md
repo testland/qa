@@ -4,7 +4,7 @@ type: agent
 archetype: A1
 ---
 
-# test-failure-debugger — evals
+# test-failure-debugger - evals
 
 Companion eval cases for [`test-failure-debugger`](../../test-failure-debugger.md).
 Three cases covering happy path (assertion mismatch) + branch (selector
@@ -13,10 +13,10 @@ the **Input** block as the first user message to the agent and comparing
 the agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - 
 the eval cases are designed to be re-run by a reviewer against each tier.
 
-## Eval 1 — happy path — assertion mismatch with production constant change
+## Eval 1 - happy path - assertion mismatch with production constant change
 
 **Input:**
 
@@ -46,7 +46,7 @@ Last-known-good ref: a1b2c3d
 
 **Pass condition:** Output contains the literal strings `assertion-mismatch` (or `Assertion mismatch`), `SALES_TAX_RATE` (or `0.0775` / `0.08`), AND either "intent" / "which is" / "confirm" (the surfaced ambiguity check). Output does NOT silently propose changing the expected value to 41 without flagging the ambiguity.
 
-## Eval 2 — branch — selector breakage from data-test → data-testid rename
+## Eval 2 - branch - selector breakage from data-test → data-testid rename
 
 **Input:**
 
@@ -73,9 +73,9 @@ Last-known-good ref: main
 
 **Expected:** Classifies as `selector-breakage` with high confidence. Hypothesis names the attribute rename (`data-test` → `data-testid`) in the production DOM. Proposed fix updates the test's selector from `[data-test="submit"]` to `[data-testid="submit"]`. Confidence is high because Step 1 (locator resolved to 0 elements) AND Step 2 (diff shows attribute rename) align.
 
-**Pass condition:** Output contains the literal strings `selector-breakage` (or `Selector breakage`), `data-test`, AND `data-testid`. Output proposes updating the test selector (not the production attribute) — that is, the Proposed-fix line names the test file path, not `SubmitButton.tsx`. Output does NOT classify as `timing-logic` despite the surface "Test timeout" message — the locator-resolved-to-0 signal takes precedence.
+**Pass condition:** Output contains the literal strings `selector-breakage` (or `Selector breakage`), `data-test`, AND `data-testid`. Output proposes updating the test selector (not the production attribute) - that is, the Proposed-fix line names the test file path, not `SubmitButton.tsx`. Output does NOT classify as `timing-logic` despite the surface "Test timeout" message - the locator-resolved-to-0 signal takes precedence.
 
-## Eval 3 — adversarial — flake disguised as failure
+## Eval 3 - adversarial - flake disguised as failure
 
 **Input:**
 
@@ -103,5 +103,5 @@ No recent diff on dashboard code. Last 50 runs: 43 passed, 7 failed.
 
 - Inputs are concrete pasted-content blocks; no external fixtures.
 - Pass conditions are string-match checks; a reviewer can grep the agent's transcript output.
-- The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash(git diff|log|show *)`) is read-only — eval re-runs do not modify the test repository or production source.
+- The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash(git diff|log|show *)`) is read-only - eval re-runs do not modify the test repository or production source.
 - Eval cases were authored 2026-05-24 against the v3.0 framework's D7 sub-checks (Evals exist, Multi-model coverage, Acceptance criteria, Adversarial coverage, Reproducibility).

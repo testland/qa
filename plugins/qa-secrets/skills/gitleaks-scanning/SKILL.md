@@ -1,6 +1,6 @@
 ---
 name: gitleaks-scanning
-description: "Configures and runs gitleaks — Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; baseline file for legacy debt. Use when the team needs OSS secret scanning at commit time + CI gate."
+description: "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; baseline file for legacy debt. Use when the team needs OSS secret scanning at commit time + CI gate."
 rating: 23
 d6: 4
 archetype: S1
@@ -33,7 +33,7 @@ for non-git (e.g., extracted CI artifact); `stdin` for diff-piping.
 - Layered with [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md)
   for live-validation cross-check.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [gl-gh][gl-gh]:
 
@@ -51,7 +51,7 @@ cd gitleaks
 make build
 ```
 
-## Step 2 — Basic scans
+## Step 2 - Basic scans
 
 ```bash
 # Scan current git repo (full history)
@@ -69,13 +69,13 @@ gitleaks git --report-format sarif --report-path leaks.sarif
 gitleaks git --report-format csv --report-path leaks.csv
 ```
 
-For PR-time scanning (faster — only check what changed):
+For PR-time scanning (faster - only check what changed):
 
 ```bash
 gitleaks git --log-opts="origin/main..HEAD"
 ```
 
-## Step 3 — `.gitleaks.toml` config
+## Step 3 - `.gitleaks.toml` config
 
 Per [gl-gh][gl-gh] config structure:
 
@@ -100,7 +100,7 @@ Built-in rules cover AWS, GCP, Azure, GitHub, GitLab, Stripe,
 Twilio, Slack, npm, PyPI, etc. Use `gitleaks <command> --no-banner`
 to discover the full default rule list.
 
-## Step 4 — Custom rule example
+## Step 4 - Custom rule example
 
 ```toml
 # .gitleaks.toml
@@ -128,7 +128,7 @@ paths = ['''vendor/.*''', '''third_party/.*''']
 The `[extend] useDefault = true` keeps built-in rules; without it,
 your custom rules replace the defaults entirely.
 
-## Step 5 — False-positive triage (MANDATORY)
+## Step 5 - False-positive triage (MANDATORY)
 
 Suppression mechanisms in priority order:
 
@@ -166,7 +166,7 @@ paths = ['''tests/fixtures/.*\.json$''']
 Cadence: every quarter, audit `.gitleaks.toml` allowlist entries;
 expired re-review-date entries removed.
 
-## Step 6 — Pre-commit hook integration
+## Step 6 - Pre-commit hook integration
 
 Per [gl-gh][gl-gh]:
 
@@ -182,7 +182,7 @@ repos:
 Pre-commit prevents commits containing secrets from being created.
 Faster local feedback than CI-only scanning.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 Per [gl-gh][gl-gh]:
 
@@ -202,25 +202,24 @@ jobs:
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}   # for organizations
 ```
 
-`fetch-depth: 0` is critical — without full git history, git-aware
+`fetch-depth: 0` is critical - without full git history, git-aware
 scan only sees the latest commit.
 
-## Step 8 — Rotation when a secret is found
+## Step 8 - Rotation when a secret is found
 
-Finding a leaked secret in git history is **not enough** — git
+Finding a leaked secret in git history is **not enough** - git
 history is permanent (mirrored in clones, GitHub forks, archives).
 The secret IS exposed. Workflow:
 
-1. **Rotate immediately** — invalidate the leaked credential at
+1. **Rotate immediately** - invalidate the leaked credential at
    the provider (AWS IAM key rotation, GitHub PAT revoke, etc.)
-2. **Audit usage** — check provider audit logs for unauthorized
+2. **Audit usage** - check provider audit logs for unauthorized
    use during the exposure window
-3. **Document the incident** — track in postmortem (cross-ref
+3. **Document the incident** - track in postmortem (cross-ref
    [`post-mortem-author`](../../qa-process/skills/post-mortem-author/SKILL.md))
 4. **Add the leaked-pattern to gitleaks** so future similar leaks
    are detected
-5. **Optional: rewrite git history** (BFG Repo-Cleaner / git filter-repo)
-   — but assume the secret IS exposed regardless
+5. **Optional: rewrite git history** (BFG Repo-Cleaner / git filter-repo) - but assume the secret IS exposed regardless
 
 For automated rotation workflow, see [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md).
 
@@ -230,7 +229,7 @@ For automated rotation workflow, see [`secrets-rotation-runner`](../secrets-rota
 |---|---|---|
 | `fetch-depth: 1` in CI | git-aware scan misses history; only catches new leaks | Always `fetch-depth: 0` (Step 7) |
 | Allowlist without `Re-review-date` | Permanent debt | Mandatory template (Step 5) |
-| Rely only on pre-commit (no CI) | Bypass `--no-verify`; CI is the catch-net | Both pre-commit AND CI (Steps 6–7) |
+| Rely only on pre-commit (no CI) | Bypass `--no-verify`; CI is the catch-net | Both pre-commit AND CI (Steps 6 - 7) |
 | Skip baseline; legacy findings block all PRs | Team disables gitleaks | `--baseline-path` (Step 5) |
 | Find leak; assume git-history scrub fixes it | Leaked secret IS exposed; assume compromise | Rotate immediately (Step 8) |
 
@@ -249,10 +248,10 @@ For automated rotation workflow, see [`secrets-rotation-runner`](../secrets-rota
 
 ## References
 
-- [gl-gh][gl-gh] — repository, install, commands, config
-- gitleaks.io — landing page
+- [gl-gh][gl-gh] - repository, install, commands, config
+- gitleaks.io - landing page
 - [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md),
-  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) —
+  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) - 
   sister scanners
-- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) —
+- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) - 
   build-an-X for rotation workflow after detection

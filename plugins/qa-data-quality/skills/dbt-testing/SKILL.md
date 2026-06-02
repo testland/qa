@@ -24,7 +24,7 @@ on the same resource at the same time
 - The repo contains a `dbt_project.yml` or a `models/` directory with `.sql`
   files referencing `{{ ref(...) }}` / `{{ source(...) }}`.
 - The user asks about generic tests (`unique`, `not_null`, `accepted_values`,
-  `relationships`) — the four built-in generics shipped with dbt
+  `relationships`) - the four built-in generics shipped with dbt
   ([data-tests][1]).
 - The user mentions dbt build failures, schema drift, or wants assertions
   on data flowing through models.
@@ -35,7 +35,7 @@ on the same resource at the same time
 
 ### Generic tests in `schema.yml`
 
-Use `data_tests:` (canonical) — `tests:` is the legacy alias and cannot
+Use `data_tests:` (canonical) - `tests:` is the legacy alias and cannot
 coexist with `data_tests:` on the same resource ([data-tests][1]).
 
 ```yaml
@@ -66,7 +66,7 @@ The `arguments:` key under parameterized generics (`accepted_values`,
 ### Singular tests
 
 Singular tests live as `.sql` files under `tests/` (or a custom `test-paths`
-config). Each file is one `select` that returns **failing rows** — empty
+config). Each file is one `select` that returns **failing rows** - empty
 result set means pass ([data-tests][1]).
 
 `tests/assert_payment_total_non_negative.sql`:
@@ -81,7 +81,7 @@ having sum(amount) < 0
 ```
 
 > **Trap:** dbt requires you to **omit trailing semicolons** in singular
-> test SQL — a `;` at the end can cause the test to fail spuriously
+> test SQL - a `;` at the end can cause the test to fail spuriously
 > ([data-tests][1]). This is unlike most SQL editors which add the
 > semicolon by default.
 
@@ -134,7 +134,7 @@ dbt test --select "my_package.*"
 
 `dbt build` is the integrated command that runs models, tests, snapshots,
 seeds, and user-defined functions in **DAG order**. Critically, **a failing
-upstream test causes downstream resources to skip** — so `dbt build` is
+upstream test causes downstream resources to skip** - so `dbt build` is
 the right command for a pipeline that should not propagate bad data
 ([dbt-build][3]):
 
@@ -173,7 +173,7 @@ artifacts directory. Each result entry is a node-level record with
 
 A failing data test typically appears as `status: "fail"` with `failures:
 <N>` (rows returned). A test that errored before producing rows (e.g. a
-SQL compilation error) appears differently — handle both when parsing.
+SQL compilation error) appears differently - handle both when parsing.
 
 Quick triage with `jq`:
 
@@ -200,11 +200,11 @@ to changed nodes.
 
 ## References
 
-- [`references/macros.md`](references/macros.md) — custom generic test
+- [`references/macros.md`](references/macros.md) - custom generic test
   patterns, severity overrides, conditional assertions.
-- [`references/ci-integration.md`](references/ci-integration.md) — CI
+- [`references/ci-integration.md`](references/ci-integration.md) - CI
   workflow snippets, slim CI via `state:modified+`, artifact upload.
-- [data-tests][1] — canonical dbt docs page.
-- [dbt-test][2] — `dbt test` command reference.
-- [dbt-build][3] — `dbt build` command reference.
-- [run-results-json][4] — `run_results.json` artifact schema.
+- [data-tests][1] - canonical dbt docs page.
+- [dbt-test][2] - `dbt test` command reference.
+- [dbt-build][3] - `dbt build` command reference.
+- [run-results-json][4] - `run_results.json` artifact schema.

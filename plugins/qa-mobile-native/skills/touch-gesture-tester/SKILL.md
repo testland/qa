@@ -1,6 +1,6 @@
 ---
 name: touch-gesture-tester
-description: "Verifies touch-gesture handlers (tap, double-tap, long-press, swipe, pinch, rotate, pan) work as expected under both mobile-emulation (Playwright) and native (XCUITest / Espresso / Detox) — distinguishes \"mouse click handler also fires on tap\" from \"real touch event fired with correct properties.\" Use when the app has bespoke gesture handlers (custom carousels, sliders, drag-drop, pull-to-refresh) and the team needs targeted gesture verification beyond generic UI assertions."
+description: "Verifies touch-gesture handlers (tap, double-tap, long-press, swipe, pinch, rotate, pan) work as expected under both mobile-emulation (Playwright) and native (XCUITest / Espresso / Detox) - distinguishes \"mouse click handler also fires on tap\" from \"real touch event fired with correct properties.\" Use when the app has bespoke gesture handlers (custom carousels, sliders, drag-drop, pull-to-refresh) and the team needs targeted gesture verification beyond generic UI assertions."
 rating: 22
 d6: 3
 archetype: S3
@@ -29,10 +29,10 @@ that exercise the actual touch event sequences.
 - Pre-release sweep needs gesture-specific coverage on mobile
   emulation + (optionally) device.
 
-If the app uses only standard click handlers, this is overkill —
+If the app uses only standard click handlers, this is overkill - 
 the standard E2E suite covers it.
 
-## Step 1 — Map the app's gesture handlers
+## Step 1 - Map the app's gesture handlers
 
 ```javascript
 // Inventory: grep production code for touch event listeners
@@ -52,7 +52,7 @@ grep -rn "GestureDetector\|onTouchEvent\|MotionEvent" .
 The output is the test target list. Each handler needs at least
 one gesture test.
 
-## Step 2 — Per-gesture test patterns (Playwright + mobile project)
+## Step 2 - Per-gesture test patterns (Playwright + mobile project)
 
 ### Tap
 
@@ -150,10 +150,10 @@ val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 device.executeShellCommand("input ...")    // simulate pinch
 ```
 
-For browser-based testing, multi-touch is generally not reliable —
+For browser-based testing, multi-touch is generally not reliable - 
 defer to native tests for pinch/rotate features.
 
-## Step 3 — Native gesture testing (XCUITest)
+## Step 3 - Native gesture testing (XCUITest)
 
 ```swift
 // XCUITest gesture catalog
@@ -169,10 +169,10 @@ app.images["map"].twoFingerTap()
 app.images["map"].rotate(.pi/4, withVelocity: 1.0)
 ```
 
-XCUITest's gesture API is the most complete — use for high-fidelity
+XCUITest's gesture API is the most complete - use for high-fidelity
 gesture tests on iOS.
 
-## Step 4 — Native gesture testing (Detox, RN)
+## Step 4 - Native gesture testing (Detox, RN)
 
 ```javascript
 await element(by.id('msg-001')).swipe('left', 'fast');
@@ -185,7 +185,7 @@ await element(by.id('map')).pinch(2.0);    // zoom in 2×
 Detox covers most common gestures; for less common ones, fall back
 to UIAutomator (Android) / XCUITest (iOS) via custom matchers.
 
-## Step 5 — Assertions per gesture class
+## Step 5 - Assertions per gesture class
 
 Each gesture test should assert:
 
@@ -214,7 +214,7 @@ test('swipe-left + tap delete', async ({ page }) => {
 });
 ```
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 jobs:
@@ -267,7 +267,6 @@ For native tests, see per-platform CI in
   `playwright.dev/docs/api/class-touchscreen`).
 - [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
   [`detox-testing`](../detox-testing/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md) — native
+  [`espresso-suite`](../espresso-suite/SKILL.md) - native
   alternatives with deeper gesture support.
-- [`mobile-web-emulation-runner`](../mobile-web-emulation-runner/SKILL.md)
-  — the mobile-profile config this skill builds gesture tests on.
+- [`mobile-web-emulation-runner`](../mobile-web-emulation-runner/SKILL.md) - the mobile-profile config this skill builds gesture tests on.

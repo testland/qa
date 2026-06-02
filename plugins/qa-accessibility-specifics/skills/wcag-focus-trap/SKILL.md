@@ -1,6 +1,6 @@
 ---
 name: wcag-focus-trap
-description: "Reference for **intentional** focus management in modal / dialog / drawer / popover components — the canonical pattern that satisfies WCAG SC 2.4.3 (Focus Order) without violating SC 2.1.2 (No Keyboard Trap). Covers focus-on-open, focus-cycle-within-container, Escape-closes-and-restores, return-to-trigger, and inert-the-rest-of-the-page. Use when authoring or reviewing any component that displays content over the page (modals, drawers, popovers, command palettes)."
+description: "Reference for **intentional** focus management in modal / dialog / drawer / popover components - the canonical pattern that satisfies WCAG SC 2.4.3 (Focus Order) without violating SC 2.1.2 (No Keyboard Trap). Covers focus-on-open, focus-cycle-within-container, Escape-closes-and-restores, return-to-trigger, and inert-the-rest-of-the-page. Use when authoring or reviewing any component that displays content over the page (modals, drawers, popovers, command palettes)."
 rating: 25
 d6: 5
 archetype: S2
@@ -13,7 +13,7 @@ archetype: S2
 A modal that doesn't manage focus is broken: keyboard users tab past
 it into the dimmed page underneath; screen-reader users hear the
 page content as if the modal isn't open. The fix is **intentional
-focus management** — sometimes called a "focus trap" — but the term
+focus management** - sometimes called a "focus trap" - but the term
 is misleading: it's not a trap, it's a **scope**. WCAG SC 2.1.2
 forbids unintentional traps; this skill describes the intentional
 pattern that satisfies SC 2.4.3 (Focus Order) without violating
@@ -31,11 +31,11 @@ pattern that satisfies SC 2.4.3 (Focus Order) without violating
 
 ## The 6-step canonical pattern
 
-### Step 1 — On open, move focus into the container
+### Step 1 - On open, move focus into the container
 
 The first focusable element in the modal receives focus
 automatically. If the modal has no focusable content (a notification
-modal with one OK button — focus the OK button), focus the close
+modal with one OK button - focus the OK button), focus the close
 button.
 
 ```javascript
@@ -48,7 +48,7 @@ function openModal(modalEl) {
 }
 ```
 
-### Step 2 — Set `aria-modal="true"` and `role="dialog"`
+### Step 2 - Set `aria-modal="true"` and `role="dialog"`
 
 ```html
 <div role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
@@ -63,7 +63,7 @@ technologies to treat content outside the dialog as inert.
 
 [aria-dialog]: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
 
-### Step 3 — Inert the rest of the page
+### Step 3 - Inert the rest of the page
 
 Content outside the modal must be untabbable AND untraversable by
 screen readers. Two mechanisms:
@@ -83,7 +83,7 @@ screen readers. Two mechanisms:
 reader navigation. Browsers that don't support `inert` need a
 polyfill.
 
-### Step 4 — Cycle focus within the container on Tab / Shift+Tab
+### Step 4 - Cycle focus within the container on Tab / Shift+Tab
 
 Tab from the last focusable element wraps to the first; Shift+Tab
 from the first wraps to the last:
@@ -114,7 +114,7 @@ function trapFocus(event, modalEl) {
 }
 ```
 
-### Step 5 — Escape closes the modal
+### Step 5 - Escape closes the modal
 
 Per the [ARIA Dialog pattern][aria-dialog], Escape SHOULD close
 non-destructive dialogs. Destructive ("Are you sure?") dialogs may
@@ -128,7 +128,7 @@ function onKeyDown(event) {
 }
 ```
 
-### Step 6 — On close, restore focus to the trigger
+### Step 6 - On close, restore focus to the trigger
 
 The element that opened the modal receives focus back. Without
 this, focus lands on `<body>` and the user is disoriented:
@@ -193,7 +193,7 @@ the pattern. Verify they do all 6 steps:
 
 ## Test scripts
 
-### Test 1 — Focus moves on open
+### Test 1 - Focus moves on open
 
 ```typescript
 test('SC 2.4.3 — focus enters dialog on open', async ({ page }) => {
@@ -202,7 +202,7 @@ test('SC 2.4.3 — focus enters dialog on open', async ({ page }) => {
 });
 ```
 
-### Test 2 — Tab cycles within dialog
+### Test 2 - Tab cycles within dialog
 
 ```typescript
 test('SC 2.1.2 — Tab cycles within dialog', async ({ page }) => {
@@ -215,7 +215,7 @@ test('SC 2.1.2 — Tab cycles within dialog', async ({ page }) => {
 });
 ```
 
-### Test 3 — Escape closes; focus returns to trigger
+### Test 3 - Escape closes; focus returns to trigger
 
 ```typescript
 test('SC 2.1.2 + 2.4.3 — Escape closes; focus restored', async ({ page }) => {
@@ -227,7 +227,7 @@ test('SC 2.1.2 + 2.4.3 — Escape closes; focus restored', async ({ page }) => {
 });
 ```
 
-### Test 4 — Outside content is inert
+### Test 4 - Outside content is inert
 
 ```typescript
 test('outside content is unreachable by Tab', async ({ page }) => {
@@ -248,10 +248,10 @@ test('outside content is unreachable by Tab', async ({ page }) => {
 
 | Bug                                                  | Symptom                                                            | Fix |
 |------------------------------------------------------|---------------------------------------------------------------------|-----|
-| No focus on open                                      | Screen reader doesn't announce the dialog; user must Tab to find it. | Step 1 — focus first element. |
+| No focus on open                                      | Screen reader doesn't announce the dialog; user must Tab to find it. | Step 1 - focus first element. |
 | Tab escapes to page                                   | Keyboard users lose context.                                       | Step 3 (inert) or Step 4 (cycle). |
-| Escape doesn't close                                  | Users assume modal is broken; close-button-only.                   | Step 5 — bind Escape. |
-| Focus jumps to body on close                          | User is disoriented; must Tab back to where they were.             | Step 6 — restore to trigger. |
+| Escape doesn't close                                  | Users assume modal is broken; close-button-only.                   | Step 5 - bind Escape. |
+| Focus jumps to body on close                          | User is disoriented; must Tab back to where they were.             | Step 6 - restore to trigger. |
 | Background page scrolls while modal is open           | Not a focus issue but related; user thinks they're on the page.    | `body { overflow: hidden; }` while modal open. |
 
 ## Anti-patterns
@@ -266,12 +266,10 @@ test('outside content is unreachable by Tab', async ({ page }) => {
 
 ## References
 
-- [wcag22][wcag22] — WCAG 2.2; SC 2.1.2, 2.4.3, 2.4.11.
-- [aria-dialog][aria-dialog] — ARIA Authoring Practices Guide:
+- [wcag22][wcag22] - WCAG 2.2; SC 2.1.2, 2.4.3, 2.4.11.
+- [aria-dialog][aria-dialog] - ARIA Authoring Practices Guide:
   Dialog (Modal) Pattern.
-- HTML Living Standard `<dialog>` element — https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
-- `inert` attribute — https://html.spec.whatwg.org/multipage/interaction.html#the-inert-attribute
-- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md)
-  — broader keyboard-conformance skill.
-- [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md)
-  — pattern reference for other widgets.
+- HTML Living Standard `<dialog>` element - https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
+- `inert` attribute - https://html.spec.whatwg.org/multipage/interaction.html#the-inert-attribute
+- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md) - broader keyboard-conformance skill.
+- [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md) - pattern reference for other widgets.

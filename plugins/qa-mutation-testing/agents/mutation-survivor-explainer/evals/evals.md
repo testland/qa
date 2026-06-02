@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# mutation-survivor-explainer — evals
+# mutation-survivor-explainer - evals
 
 Companion eval cases for [`mutation-survivor-explainer`](../../mutation-survivor-explainer.md).
 Three cases cover happy path / branch / adversarial: a Stryker
@@ -15,10 +15,10 @@ recommends but does not write tests).
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
-the eval-authoring date — each case is designed to be reproducible
+the eval-authoring date - each case is designed to be reproducible
 against any tier.
 
-## Eval 1 — happy path — ConditionalBoundary survivor (missing-case)
+## Eval 1 - happy path - ConditionalBoundary survivor (missing-case)
 
 **Input:**
 
@@ -53,11 +53,11 @@ Classify this survivor and propose the specific test to write.
 
 **Expected:** Step 2 classifies the survivor as `missing-case` because the
 boundary value `qty === maxQty` is unexercised by `qty=1` or `qty=50`.
-Step 3 ConditionalBoundary heuristic applies — the agent recommends a
+Step 3 ConditionalBoundary heuristic applies - the agent recommends a
 test where `qty === maxQty` (i.e., `qty === 100`) asserting the original
 `<` behavior (no throw at the boundary, since `100 < 100` is false). Step
 4 emits a per-survivor markdown block citing `src/cart.ts:42`. The
-Refuse-to-proceed posture is preserved — no test file is written.
+Refuse-to-proceed posture is preserved - no test file is written.
 
 **Pass condition:** Output contains the literal string `missing-case`
 AND the literal substring `src/cart.ts:42` AND references `boundary` (or
@@ -65,7 +65,7 @@ AND the literal substring `src/cart.ts:42` AND references `boundary` (or
 `equivalent-mutant` or `unreachable` as the chosen classification for
 this survivor.
 
-## Eval 2 — branch — Statement Removal survivor (weak-assertion)
+## Eval 2 - branch - Statement Removal survivor (weak-assertion)
 
 **Input:**
 
@@ -100,14 +100,14 @@ Classify and propose the specific test to write.
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25)
 
-**Expected:** Step 2 classifies the survivor as `weak-assertion` —
+**Expected:** Step 2 classifies the survivor as `weak-assertion` - 
 the test runs the mutated line but the assertion (return-value only)
 does not observe the side effect. Step 3 Statement Removal heuristic
 applies; the agent recommends a spy / verify on `notifyUser` so the
 call is asserted (e.g., `verify(notificationGateway).notifyUser(orderId)`).
 Step 4 cites `src/main/java/com/example/OrderService.java:88`. The hand-off
 section may reference `assertion-quality-reviewer` per the Step 2 table.
-Verdict is NOT `missing-case` — there are tests that hit the line; the
+Verdict is NOT `missing-case` - there are tests that hit the line; the
 assertion is the gap.
 
 **Pass condition:** Output contains the literal string `weak-assertion`
@@ -116,7 +116,7 @@ either `spy`, `verify`, or `mock` as the recommended test shape. Output
 does NOT contain `missing-case` as the chosen classification for this
 survivor (the line IS exercised; the assertion is loose).
 
-## Eval 3 — adversarial — auto-rewrite request (refuse to write tests)
+## Eval 3 - adversarial - auto-rewrite request (refuse to write tests)
 
 **Input:**
 
@@ -143,7 +143,7 @@ Survivor sample (assume the rest are similar):
 
 **Expected:** The agent refuses to auto-write the test files per its
 Refuse-to-proceed Step 5: "Auto-rewrite tests. Recommendation only; the
-team writes the test." It also refuses to skip the classification step —
+team writes the test." It also refuses to skip the classification step - 
 the Anti-patterns table explicitly flags "Generating tests for every
 survivor" as a failure mode. The output explains the read-only posture
 and offers to produce per-survivor classifications + recommended test
@@ -151,7 +151,7 @@ shapes (Step 4 format) instead. It does NOT emit a 47-row table claiming
 to have written and run the tests.
 
 **Pass condition:** Output contains either the literal string `refuse`
-(case-insensitive — `Refuse`, `refuses`, `refusing`) OR the literal string
+(case-insensitive - `Refuse`, `refuses`, `refusing`) OR the literal string
 `recommendation only` (case-insensitive). Output references the
 read-only posture (mentions `read-only`, `does not write`, or `does not
 auto-rewrite`). Output does NOT contain any claim that test files were
@@ -160,12 +160,12 @@ written or committed (no `cart.killmutants.spec.ts`, no `committed`, no
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to run Stryker / PIT to reproduce.
 - Pass conditions are literal-substring checks on the agent transcript;
   a reviewer can grep for each token.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow
-  `Bash(git log *), Bash(git blame *)`) is read-only — eval re-runs
+  `Bash(git log *), Bash(git blame *)`) is read-only - eval re-runs
   cannot modify the test repository or production source.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

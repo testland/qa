@@ -12,7 +12,7 @@ archetype: S3
 
 Building a flag-state coverage matrix from scratch is hard
 because the combinatorics explode. This skill walks through
-producing a **realistic** coverage matrix — not exhaustive, but
+producing a **realistic** coverage matrix - not exhaustive, but
 sufficient.
 
 The output: a coverage-matrix YAML + per-cell test skeletons +
@@ -26,7 +26,7 @@ gaps documented for follow-up.
 - Adopting a new flag platform; existing tests need re-pointing.
 - Periodic audit of flag-test coverage.
 
-## Step 1 — Inventory flags
+## Step 1 - Inventory flags
 
 Grep for SDK calls:
 
@@ -60,7 +60,7 @@ flags:
   # ...
 ```
 
-## Step 2 — Classify each flag
+## Step 2 - Classify each flag
 
 | Category | Signals | Coverage need |
 |---|---|---|
@@ -71,7 +71,7 @@ flags:
 | **Migration** | Naming: `use-new-*`, `migrate-to-*` | Test both paths to verify equivalence |
 | **Plan / tier gating** | Used with subscription / plan check | Per (flag, plan) cell |
 
-## Step 3 — Choose coverage strategy per category
+## Step 3 - Choose coverage strategy per category
 
 Per
 [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md):
@@ -84,7 +84,7 @@ Per
 | Full matrix | Kill-switches + flags with regulatory impact |
 | Risk-driven | Catch-all for the rest |
 
-## Step 4 — Generate the matrix
+## Step 4 - Generate the matrix
 
 For pairwise: use PICT (Microsoft):
 
@@ -105,7 +105,7 @@ For risk-driven: combine with risk register from
 [`qa-process/risk-matrix`](../../../qa-process/skills/risk-matrix/SKILL.md).
 Cells with high impact + high likelihood become required tests.
 
-## Step 5 — Emit per-cell test skeleton
+## Step 5 - Emit per-cell test skeleton
 
 For each cell of the matrix, generate a test stub:
 
@@ -138,7 +138,7 @@ describe('auth flag matrix', () => {
 The platform-specific SDK setup comes from
 [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md) etc.
 
-## Step 6 — Special category tests
+## Step 6 - Special category tests
 
 Add these regardless of matrix coverage:
 
@@ -175,7 +175,7 @@ test('user assignment sticky across sessions', () => {
 });
 ```
 
-## Step 7 — Document coverage + gaps
+## Step 7 - Document coverage + gaps
 
 Emit a coverage doc:
 

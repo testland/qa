@@ -1,6 +1,6 @@
 ---
 name: assertion-quality-reviewer
-description: "Adversarial reviewer specialized for assertion quality — flags weak / vague matchers (`expect(x).toBeTruthy()` / `.toBeDefined()` / `.toContain('error')` style) and recommends specific replacements (`.toEqual({...})` / `.toBe(expected)` / `.toMatch(regex)`). Walks per-§4 of `test-code-conventions`. Use during PR review against test files; complements `test-code-critic` (which handles structure / naming) and `mocking-anti-pattern-detector` (which handles mocking specificity)."
+description: "Adversarial reviewer specialized for assertion quality - flags weak / vague matchers (`expect(x).toBeTruthy()` / `.toBeDefined()` / `.toContain('error')` style) and recommends specific replacements (`.toEqual({...})` / `.toBe(expected)` / `.toMatch(regex)`). Walks per-§4 of `test-code-conventions`. Use during PR review against test files; complements `test-code-critic` (which handles structure / naming) and `mocking-anti-pattern-detector` (which handles mocking specificity)."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
@@ -30,7 +30,7 @@ files and rates each as:
 | `wide-vague`   | `.toBeTruthy()`, `.toBeDefined()`, `.toBeFalsy()`  | Replace with specific matcher. |
 | `match-vague`  | `.toContain('error')`, `.includes(...)`            | Use regex / structured matcher with anchors. |
 
-## Step 1 — Walk the assertions
+## Step 1 - Walk the assertions
 
 ```python
 # Pseudocode — per-language adapter parses the AST
@@ -60,7 +60,7 @@ The matcher names map per language / framework:
 - RSpec: `expect(x).to eq(y)`, `expect(x).to be_truthy`,
   `expect(x).to match(regex)`.
 
-## Step 2 — Rate each assertion
+## Step 2 - Rate each assertion
 
 ### `wide-vague` matchers
 
@@ -69,7 +69,7 @@ Per §4 of [`test-code-conventions`](../skills/test-code-conventions/SKILL.md):
 | Matcher                               | Why it's wide-vague | Recommended replacement |
 |---------------------------------------|---------------------|--------------------------|
 | `.toBeTruthy()`                        | Passes for `1`, `'a'`, `{}`, `[]`, `Infinity`. | `.toBe(true)` if the SUT returns boolean; `.toEqual({...})` if returning object. |
-| `.toBeFalsy()`                         | Passes for `0`, `''`, `false`, `null`, `undefined`, `NaN`. | `.toBe(false)` / `.toBeNull()` / `.toBeUndefined()` — pick the specific case. |
+| `.toBeFalsy()`                         | Passes for `0`, `''`, `false`, `null`, `undefined`, `NaN`. | `.toBe(false)` / `.toBeNull()` / `.toBeUndefined()` - pick the specific case. |
 | `.toBeDefined()`                       | Passes for any non-`undefined` value. | `.toBe(<expected>)` or shape match. |
 | `.toBeNull()`/`.toBeUndefined()` (when both could be valid) | Returns differ semantically; tests that don't distinguish hide bugs. | Pick the specific one. |
 | `.toBeInstanceOf(Error)`                 | Passes for any error subclass; misses "right type, wrong message". | `expect(err.code).toBe('VALIDATION_ERROR')` / `expect(err.message).toMatch(/expected pattern/)`. |
@@ -81,7 +81,7 @@ Matchers that bound but don't pin the value:
 
 | Matcher                               | When it's wrong | Recommended |
 |---------------------------------------|------------------|-------------|
-| `.toBeGreaterThan(N)` when the SUT returns an exact value | Status code `201` becomes `.toBeGreaterThan(199)` — passes for 200, 204, 299. | `.toBe(201)`. |
+| `.toBeGreaterThan(N)` when the SUT returns an exact value | Status code `201` becomes `.toBeGreaterThan(199)` - passes for 200, 204, 299. | `.toBe(201)`. |
 | `.toHaveLength(>0)` when exact length is known | Hides off-by-one in count. | `.toHaveLength(<exact>)`. |
 | `.toBeInTheDocument()` (testing-library) when specific text is known | DOM presence ≠ correct content. | `.toHaveTextContent(<expected>)`. |
 
@@ -95,7 +95,7 @@ String / array containment matchers without anchors:
 | `expect(text).toContain('Welcome')`    | Passes for `"Not Welcome"`. | `.toMatch(/^Welcome\b/)`. |
 | `expect(html).toContain('<error>')`    | Passes for `<error class="hidden">`. | Parse HTML; structural assertion. |
 
-## Step 3 — Generate recommendations
+## Step 3 - Generate recommendations
 
 For each `wide-vague` / `narrow-vague` / `match-vague` finding,
 produce a specific replacement candidate (when computable from
@@ -172,11 +172,11 @@ The agent **refuses** to:
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Auto-fixing `.toBeTruthy()` to `.toBe(true)`                          | Often the SUT returns an object, not a boolean — auto-fix is wrong.      | Recommend, don't fix (Refuse rules). |
+| Auto-fixing `.toBeTruthy()` to `.toBe(true)`                          | Often the SUT returns an object, not a boolean - auto-fix is wrong.      | Recommend, don't fix (Refuse rules). |
 | Treating `.toMatchObject(...)` as `wide-vague`                        | Partial-shape matching is intentional and tighter than `.toBeTruthy()`.  | `.toMatchObject` is `specific` (it pins specific keys). |
 | Ignoring intentional loose matchers                                    | Some tests legitimately bound rather than pin (smoke tests, idempotency tests). | `@loose-assertion` escape hatch (Refuse rules). |
 | Treating bare `assert x is not None` as wide-vague always              | When the test only verifies "result was returned at all", not-None is the right matcher. | Read context: if test name says "returns User", recommend `assert isinstance(x, User)`. |
-| Flagging assertions in `_test.go` `if got != want` blocks the same way as Jest | Go convention is `if got != want { t.Errorf(...) }` — not a matcher API. | Per-language adapter (Step 1). |
+| Flagging assertions in `_test.go` `if got != want` blocks the same way as Jest | Go convention is `if got != want { t.Errorf(...) }` - not a matcher API. | Per-language adapter (Step 1). |
 
 ## Limitations
 
@@ -205,4 +205,4 @@ The agent **refuses** to:
 ## References
 
 - [`test-code-conventions`](../skills/test-code-conventions/SKILL.md)
-  §4 — assertion specificity rules this agent enforces.
+  §4 - assertion specificity rules this agent enforces.

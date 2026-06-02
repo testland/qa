@@ -37,14 +37,14 @@ Per [pcisecuritystandards.org](https://www.pcisecuritystandards.org/document_lib
 
 | SAQ | Description | Scope |
 |---|---|---|
-| **A** | Card-not-present, fully outsourced (hosted gateway pages, iFrame redirects, Stripe Elements) | Smallest — your servers never see PAN |
+| **A** | Card-not-present, fully outsourced (hosted gateway pages, iFrame redirects, Stripe Elements) | Smallest - your servers never see PAN |
 | **A-EP** | Hosted-form-with-merchant-customisation (e.g., your domain shows the form but iframe is the gateway's) | Slightly larger; some elements visible to your server |
 | **B** | Payment terminals only (POS) | N/A for web-only |
 | **C** | Web-based merchants with stored cardholder data | Mostly POS-related |
-| **D** | All merchants not covered by A-C; full PCI DSS | Largest — for cases where you must handle PAN |
+| **D** | All merchants not covered by A-C; full PCI DSS | Largest - for cases where you must handle PAN |
 
 Choose **A** when feasible. The architecture difference: A
-requires that PAN never touches your servers — the customer
+requires that PAN never touches your servers - the customer
 inputs it directly into a gateway-hosted iframe / element.
 
 ## PAN storage rules
@@ -121,7 +121,7 @@ broader IT environment.
 |---|---|
 | No 16-digit numbers in DB | SQL regex against all string columns |
 | No CVV / CVC stored | Search code for `cvc`, `cvv`, `cardholderVerification` |
-| Hosted fields render without exposing PAN to your JS | Browser DevTools Network tab — no PAN in requests to your origin |
+| Hosted fields render without exposing PAN to your JS | Browser DevTools Network tab - no PAN in requests to your origin |
 | Webhooks contain tokens not PAN | Parse webhook payloads; assert no 16-digit numbers |
 | Log scrubbing | Test logs for PAN patterns; should be redacted |
 | Backup snapshots PAN-free | Same regex against backup files |

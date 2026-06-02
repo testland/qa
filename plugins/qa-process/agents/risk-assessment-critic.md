@@ -29,7 +29,7 @@ The agent takes:
 Output: per-risk findings + a single register-level verdict
 (pass / block / pass-with-caveats).
 
-## Step 1 — Field-completeness check
+## Step 1 - Field-completeness check
 
 Per
 [`risk-matrix`](../skills/risk-matrix/SKILL.md) and
@@ -49,7 +49,7 @@ every entry must have:
 | Owner | ✓ | ✓ |
 | Last review date | ✓ | ✓ |
 
-## Step 2 — Independence check
+## Step 2 - Independence check
 
 Impact + likelihood must be **independently scored**, not
 auto-equated:
@@ -72,7 +72,7 @@ suspect. Per
 [`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md)
 the analogous principle applies.
 
-## Step 3 — Strategy consideration check
+## Step 3 - Strategy consideration check
 
 For each "Accept" decision, verify there's a
 [`risk-acceptance-decision-author`](../skills/risk-acceptance-decision-author/SKILL.md)
@@ -82,7 +82,7 @@ For each "Transfer" decision, verify the receiving party
 (insurance / vendor / SLA) is named. Without it, "Transfer" is
 hand-wave Accept.
 
-## Step 4 — Mitigation-to-coverage linkage
+## Step 4 - Mitigation-to-coverage linkage
 
 Run
 [`risk-coverage-mapper`](../skills/risk-coverage-mapper/SKILL.md):
@@ -97,7 +97,7 @@ orphans_high = [r for r in matrix if r["coverage_depth"] == 0 and 10 <= r["score
 - High-score orphans (10-14) = warning
 - Medium-score orphans (5-9) = info
 
-## Step 5 — Escalation evidence check
+## Step 5 - Escalation evidence check
 
 Risks scoring ≥15 must have escalation evidence:
 
@@ -108,7 +108,7 @@ Risks scoring ≥15 must have escalation evidence:
 
 Without it, the register has under-escalated risks = caveat.
 
-## Step 6 — Review cadence check
+## Step 6 - Review cadence check
 
 Per the register type:
 
@@ -121,7 +121,7 @@ Per the register type:
 If most entries' `last_review` is older than the threshold,
 register is stale.
 
-## Step 7 — Verdict + report
+## Step 7 - Verdict + report
 
 ```markdown
 # Risk-register audit — Q2 2026 release matrix — YYYY-MM-DD
@@ -222,7 +222,7 @@ The agent **refuses** to:
   [`product-risk-register-builder`](../skills/product-risk-register-builder/SKILL.md),
   [`risk-coverage-mapper`](../skills/risk-coverage-mapper/SKILL.md),
   [`risk-acceptance-decision-author`](../skills/risk-acceptance-decision-author/SKILL.md).
-- ISO 31000:2018 — cite by stable ID.
+- ISO 31000:2018 - cite by stable ID.
 - ISTQB Advanced Test Manager (CTAL-TM) syllabus, ch. 5.
 - Sibling agents:
   [`risk-based-test-selector`](risk-based-test-selector.md),

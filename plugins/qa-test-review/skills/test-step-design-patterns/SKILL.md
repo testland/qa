@@ -1,6 +1,6 @@
 ---
 name: test-step-design-patterns
-description: "Pure reference catalog of test-step design patterns at the architecture tier — step granularity (one logical action per step), abstraction layers (mechanical → page → business), step extraction rules (when to inline / when to extract to a helper / when to extract to a Page Object method), the declarative-vs-imperative phrasing rule, FIRST principles (Fast / Independent / Repeatable / Self-validating / Timely), and the AAA / Given-When-Then mapping. Distinct from `test-code-conventions` §1 (AAA structure at the file level) and from `manual-step-to-gherkin` (Gherkin-specific translation) — this catalog is the cross-framework architecture-tier reference for what a step IS, when it should exist, and where it should live."
+description: "Pure reference catalog of test-step design patterns at the architecture tier - step granularity (one logical action per step), abstraction layers (mechanical → page → business), step extraction rules (when to inline / when to extract to a helper / when to extract to a Page Object method), the declarative-vs-imperative phrasing rule, FIRST principles (Fast / Independent / Repeatable / Self-validating / Timely), and the AAA / Given-When-Then mapping. Distinct from `test-code-conventions` §1 (AAA structure at the file level) and from `manual-step-to-gherkin` (Gherkin-specific translation) - this catalog is the cross-framework architecture-tier reference for what a step IS, when it should exist, and where it should live."
 rating: 24
 d6: 5
 archetype: S2
@@ -10,32 +10,32 @@ archetype: S2
 
 ## Overview
 
-This skill is a **pure reference** (S2) — no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`test-code-critic`](../../agents/test-code-critic.md), and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite when auditing step granularity at the architecture tier — within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
+This skill is a **pure reference** (S2) - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`test-code-critic`](../../agents/test-code-critic.md), and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite when auditing step granularity at the architecture tier - within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
 
 ## When to use
 
-- Designing a test framework — pick the abstraction layers up front (mechanical / page / business).
+- Designing a test framework - pick the abstraction layers up front (mechanical / page / business).
 - Auditing existing tests where step count per test is high (>15 actions per test signals granularity problems).
 - Refactoring codegen output where every UI mechanic became its own step.
-- Onboarding engineers who are writing first tests — point them at the canonical citations.
+- Onboarding engineers who are writing first tests - point them at the canonical citations.
 
-## Pattern 1 — FIRST principles
+## Pattern 1 - FIRST principles
 
-**Canonical source:** [Robert C. "Uncle Bob" Martin — *Clean Code* (2008), chapter 9 "Unit Tests"](https://www.oreilly.com/library/view/clean-code-a/9780136083238/), reaffirmed in *Clean Coder* and across his blog. The FIRST mnemonic is the foundational quality bar for every test step.
+**Canonical source:** [Robert C. "Uncle Bob" Martin - *Clean Code* (2008), chapter 9 "Unit Tests"](https://www.oreilly.com/library/view/clean-code-a/9780136083238/), reaffirmed in *Clean Coder* and across his blog. The FIRST mnemonic is the foundational quality bar for every test step.
 
 | Letter | Principle |
 |---|---|
-| **F — Fast** | Tests must be fast. Slow tests don't get run; tests that don't get run don't catch bugs. |
-| **I — Independent** | Tests must not depend on each other. Each test sets up its own world. Per [Fowler on test isolation](https://martinfowler.com/articles/nonDeterminism.html), this is the prerequisite to parallel execution and selective re-runs. |
-| **R — Repeatable** | Tests run consistently on any environment (laptop, CI, prod-like). No "runs only on Tuesdays" / "passes on Linux only." |
-| **S — Self-validating** | Tests pass or fail on their own. No human reads logs to determine the outcome. |
-| **T — Timely** | Tests are written close to (ideally before) the production code. Stale tests rot. |
+| **F - Fast** | Tests must be fast. Slow tests don't get run; tests that don't get run don't catch bugs. |
+| **I - Independent** | Tests must not depend on each other. Each test sets up its own world. Per [Fowler on test isolation](https://martinfowler.com/articles/nonDeterminism.html), this is the prerequisite to parallel execution and selective re-runs. |
+| **R - Repeatable** | Tests run consistently on any environment (laptop, CI, prod-like). No "runs only on Tuesdays" / "passes on Linux only." |
+| **S - Self-validating** | Tests pass or fail on their own. No human reads logs to determine the outcome. |
+| **T - Timely** | Tests are written close to (ideally before) the production code. Stale tests rot. |
 
 FIRST is the underlying rationale for most of the patterns below. A step that violates FIRST is the smell; the patterns prescribe the fix.
 
-## Pattern 2 — Step granularity
+## Pattern 2 - Step granularity
 
-A "step" is the minimal unit a test reader can name in business terms. **One logical action per step** — not one click, not one assertion, but one *meaningful operation*.
+A "step" is the minimal unit a test reader can name in business terms. **One logical action per step** - not one click, not one assertion, but one *meaningful operation*.
 
 ### The single-purpose-step rule
 
@@ -49,7 +49,7 @@ A "step" is the minimal unit a test reader can name in business terms. **One log
 
 ### Step count per test
 
-Aim for **3-8 steps per test body** (counting Arrange / Act / Assert phases as steps). >15 is the threshold the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) flags as a smell — the test is doing too much or operating at the wrong abstraction.
+Aim for **3-8 steps per test body** (counting Arrange / Act / Assert phases as steps). >15 is the threshold the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) flags as a smell - the test is doing too much or operating at the wrong abstraction.
 
 ### Anti-patterns
 
@@ -60,7 +60,7 @@ Aim for **3-8 steps per test body** (counting Arrange / Act / Assert phases as s
 | Mixed Act + Assert in one line (`expect(await page.click(...)).toBeTruthy()`) | Cannot distinguish "the action failed" from "the assertion failed" in the diagnostic |
 | One step with two unrelated assertions (`expect(cart.total).toBe(10); expect(user.role).toBe('admin');`) | Test fails on the first assert; the second is never evaluated. Split per [`test-code-critic`](../../agents/test-code-critic.md) §2 single-responsibility |
 
-## Pattern 3 — Abstraction layers
+## Pattern 3 - Abstraction layers
 
 The dominant test-code smell at scale is **mechanical steps in the test body**. The fix is layered abstraction. Three layers, named consistently:
 
@@ -106,7 +106,7 @@ The mechanics live in the Page Object / Task / fixture. The test body reads as t
 
 ### When to keep the test mechanical
 
-Some tests legitimately operate at the mechanical layer — testing the mechanical surface itself:
+Some tests legitimately operate at the mechanical layer - testing the mechanical surface itself:
 
 - Accessibility tests asserting keyboard navigation order.
 - Visual regression tests asserting pixel-level rendering.
@@ -114,7 +114,7 @@ Some tests legitimately operate at the mechanical layer — testing the mechanic
 
 For these, the test body at the mechanical layer is correct. Tag them (`@a11y`, `@visual`) so reviewers don't refactor them by mistake.
 
-## Pattern 4 — Step extraction rules
+## Pattern 4 - Step extraction rules
 
 When should a step move out of the test body?
 
@@ -124,7 +124,7 @@ When should a step move out of the test body?
 | The step is mechanical (click, fill, navigate) but the test isn't about that mechanic | Extract |
 | The step is business-meaningful and only used here | Keep inline; name it well |
 | The step is 5+ lines of mechanical operations | Always extract |
-| The step requires explanatory comments | The comment is a smell; the abstraction is missing — extract |
+| The step requires explanatory comments | The comment is a smell; the abstraction is missing - extract |
 | The step is the first thing in 80% of tests | Extract to a fixture (per-test or per-describe setup) |
 
 ### The "rule of three" for extraction
@@ -143,7 +143,7 @@ This applies to test steps: don't pre-extract on the first test ("we might need 
 | Extracted helper that takes 8 parameters | The helper is doing too much; split it |
 | Helper that hides Act vs Arrange (named `setupAndDoThing()`) | Test reads as if it's doing one thing when it does two |
 
-## Pattern 5 — AAA / Given-When-Then mapping
+## Pattern 5 - AAA / Given-When-Then mapping
 
 Two equivalent step-grouping vocabularies. Same content, different name conventions.
 
@@ -199,7 +199,7 @@ test('places an order', async () => {
 
 Either works; lacking either fails [`test-code-critic`](../../agents/test-code-critic.md) §1 AAA review.
 
-## Pattern 6 — Declarative vs imperative step phrasing
+## Pattern 6 - Declarative vs imperative step phrasing
 
 Even at the business layer, two phrasings exist:
 
@@ -215,7 +215,7 @@ The declarative form is **preferred** per [Cucumber's better-Gherkin guidance](h
 
 ### When imperative is correct
 
-- Tests that test the imperative mechanic (e.g., "the form submits on Enter key press" — Enter is the mechanic under test).
+- Tests that test the imperative mechanic (e.g., "the form submits on Enter key press" - Enter is the mechanic under test).
 - Accessibility tests where the keyboard sequence IS the test.
 
 ### Anti-patterns
@@ -226,7 +226,7 @@ The declarative form is **preferred** per [Cucumber's better-Gherkin guidance](h
 | Imperative step that re-describes the system internals | Brittle to refactors; the test breaks when the implementation changes for unrelated reasons |
 | Mixing imperative and declarative within one test | Reader can't tell what abstraction level they're operating at |
 
-## Pattern 7 — Step naming
+## Pattern 7 - Step naming
 
 Per [Roy Osherove's *The Art of Unit Testing* (2013)](https://www.artofunittesting.com/), test names follow the pattern `<system_under_test>_<scenario>_<expected_outcome>`. Step naming (within the test) follows similar discipline:
 
@@ -243,7 +243,7 @@ A reviewer should be able to read the test body aloud and have it sound like a s
 
 > "A customer signs in. They add SKU-001 to their cart. They place an order with default shipping. The order is confirmed."
 
-If reading aloud doesn't produce a specification — if it produces "click, type, click, click, navigate, click, expect-truthy" — the steps are at the wrong abstraction.
+If reading aloud doesn't produce a specification - if it produces "click, type, click, click, navigate, click, expect-truthy" - the steps are at the wrong abstraction.
 
 ## Pattern selection guide
 
@@ -254,7 +254,7 @@ If reading aloud doesn't produce a specification — if it produces "click, type
 | Three tests share the same first 4 lines | Extract to fixture / helper (Pattern 4 rule of three) |
 | Test phases not visually separable | Add blank lines or AAA comments (Pattern 5) |
 | Step name reads as implementation detail | Rewrite declaratively (Pattern 6) |
-| Step requires explanatory comment to understand | The abstraction is missing — extract (Pattern 4) |
+| Step requires explanatory comment to understand | The abstraction is missing - extract (Pattern 4) |
 | Test mixes business and mechanical vocabulary | Pick one layer per test (Pattern 3) |
 
 ## Cross-cutting anti-patterns
@@ -281,14 +281,14 @@ If reading aloud doesn't produce a specification — if it produces "click, type
 
 ## References
 
-- Robert C. Martin — *Clean Code: A Handbook of Agile Software Craftsmanship* (2008), chapter 9 "Unit Tests" (the FIRST principles): ISBN 978-0132350884. The canonical reference for the FIRST mnemonic. https://www.oreilly.com/library/view/clean-code-a/9780136083238/
-- Roy Osherove — *The Art of Unit Testing* (2nd ed. 2013) (the `<sut>_<scenario>_<expected>` naming pattern cited in [`test-code-conventions §3`](../test-code-conventions/SKILL.md)): ISBN 978-1617290893.
-- Kent Beck — *Test-Driven Development by Example* (2002) — the canonical TDD reference for step / test design rhythm: ISBN 978-0321146533.
-- Martin Fowler — *Refactoring: Improving the Design of Existing Code* (2nd ed. 2018) — the "rule of three" for extraction (Pattern 4): https://martinfowler.com/books/refactoring.html
-- Martin Fowler — *Eradicating Non-Determinism in Tests* (cited for the Independent principle): https://martinfowler.com/articles/nonDeterminism.html
-- Cucumber documentation — *Better Gherkin* (declarative vs imperative phrasing rule, Pattern 6): https://cucumber.io/docs/bdd/better-gherkin/
-- Gerard Meszaros — *xUnit Test Patterns* (2007) — the named-pattern catalog for `Test Method`, `Assertion Method`, `Custom Assertion`, `Inline Resource`: ISBN 978-0131495050.
-- ISTQB glossary — test step: https://glossary.istqb.org/en_US/term/test-step
-- ISTQB glossary — test procedure (the imperative form, by ISTQB convention): https://glossary.istqb.org/en_US/term/test-procedure-1
-- [`test-code-conventions`](../test-code-conventions/SKILL.md), [`test-code-critic`](../../agents/test-code-critic.md), [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md), [`manual-step-to-gherkin`](../../../qa-bdd/skills/manual-step-to-gherkin/SKILL.md) — the related-tier components.
-- [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md), [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md) — sister architecture-tier pattern catalogs.
+- Robert C. Martin - *Clean Code: A Handbook of Agile Software Craftsmanship* (2008), chapter 9 "Unit Tests" (the FIRST principles): ISBN 978-0132350884. The canonical reference for the FIRST mnemonic. https://www.oreilly.com/library/view/clean-code-a/9780136083238/
+- Roy Osherove - *The Art of Unit Testing* (2nd ed. 2013) (the `<sut>_<scenario>_<expected>` naming pattern cited in [`test-code-conventions §3`](../test-code-conventions/SKILL.md)): ISBN 978-1617290893.
+- Kent Beck - *Test-Driven Development by Example* (2002) - the canonical TDD reference for step / test design rhythm: ISBN 978-0321146533.
+- Martin Fowler - *Refactoring: Improving the Design of Existing Code* (2nd ed. 2018) - the "rule of three" for extraction (Pattern 4): https://martinfowler.com/books/refactoring.html
+- Martin Fowler - *Eradicating Non-Determinism in Tests* (cited for the Independent principle): https://martinfowler.com/articles/nonDeterminism.html
+- Cucumber documentation - *Better Gherkin* (declarative vs imperative phrasing rule, Pattern 6): https://cucumber.io/docs/bdd/better-gherkin/
+- Gerard Meszaros - *xUnit Test Patterns* (2007) - the named-pattern catalog for `Test Method`, `Assertion Method`, `Custom Assertion`, `Inline Resource`: ISBN 978-0131495050.
+- ISTQB glossary - test step: https://glossary.istqb.org/en_US/term/test-step
+- ISTQB glossary - test procedure (the imperative form, by ISTQB convention): https://glossary.istqb.org/en_US/term/test-procedure-1
+- [`test-code-conventions`](../test-code-conventions/SKILL.md), [`test-code-critic`](../../agents/test-code-critic.md), [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md), [`manual-step-to-gherkin`](../../../qa-bdd/skills/manual-step-to-gherkin/SKILL.md) - the related-tier components.
+- [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md), [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md) - sister architecture-tier pattern catalogs.

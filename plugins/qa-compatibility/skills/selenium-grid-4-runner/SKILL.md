@@ -1,6 +1,6 @@
 ---
 name: selenium-grid-4-runner
-description: "Author and operate Selenium Grid 4 — self-hosted distributed WebDriver. Covers the six-component architecture (Router / Distributor / Session Map / Event Bus / New Session Queue / Node), standalone vs hub-and-node deployment modes, Docker-image stack (selenium/standalone-chrome, selenium/hub, selenium/node-chrome), node registration, session-queue tuning, and observability. Use for self-hosted cross-browser testing — alternative to cloud grids (BrowserStack / Sauce Labs / LambdaTest) when data residency or cost-control require an on-prem solution."
+description: "Author and operate Selenium Grid 4 - self-hosted distributed WebDriver. Covers the six-component architecture (Router / Distributor / Session Map / Event Bus / New Session Queue / Node), standalone vs hub-and-node deployment modes, Docker-image stack (selenium/standalone-chrome, selenium/hub, selenium/node-chrome), node registration, session-queue tuning, and observability. Use for self-hosted cross-browser testing - alternative to cloud grids (BrowserStack / Sauce Labs / LambdaTest) when data residency or cost-control require an on-prem solution."
 rating: 23
 d6: 4
 archetype: S1
@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 Selenium Grid 4 is the self-hosted distributed WebDriver
-infrastructure — the open-source alternative to cloud-grid SaaS
+infrastructure - the open-source alternative to cloud-grid SaaS
 providers. Per
 [selenium.dev/documentation/grid](https://www.selenium.dev/documentation/grid/).
 
@@ -189,7 +189,7 @@ For Kubernetes-deployed Grid use the cluster-internal DNS:
 
 ### Capabilities
 
-Standard W3C — no grid-specific options needed:
+Standard W3C - no grid-specific options needed:
 
 ```json
 {
@@ -226,7 +226,7 @@ For production add a Grafana dashboard polling Prometheus.
 
 ## Parsing results
 
-Grid 4 doesn't add session videos / HAR by default — that's the
+Grid 4 doesn't add session videos / HAR by default - that's the
 test client's responsibility (or via a sidecar like
 selenoid + selenoid-ui for Grid 3-style recording).
 
@@ -272,7 +272,7 @@ jobs:
 ## Limitations
 
 - **No real-device support out of box.** Mobile testing needs
-  Appium server + emulators / real devices — significant
+  Appium server + emulators / real devices - significant
   additional infrastructure.
 - **Browser-version matrix is self-managed.** Cloud grids ship
   3000+ combinations; self-hosted ≤ what your team builds.
@@ -283,11 +283,11 @@ jobs:
 
 ## References
 
-- Selenium Grid 4 documentation —
+- Selenium Grid 4 documentation - 
   [selenium.dev/documentation/grid](https://www.selenium.dev/documentation/grid/).
-- Selenium Docker images —
+- Selenium Docker images - 
   [github.com/SeleniumHQ/docker-selenium](https://github.com/SeleniumHQ/docker-selenium).
-- W3C WebDriver specification —
+- W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Composes:
   [`browser-matrix-strategy-reference`](../browser-matrix-strategy-reference/SKILL.md).

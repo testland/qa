@@ -1,6 +1,6 @@
 ---
 name: docker-compose-test
-description: "Authors a `compose.test.yaml` for tests — declares the SUT plus its real backing services as one declarative topology, wires healthcheck-driven `depends_on: condition: service_healthy` start ordering, isolates parallel CI jobs via per-job `--project-name`, gates the test step on `--wait` / `--wait-timeout` / `--exit-code-from`, and tears the stack down deterministically with `down --volumes --remove-orphans`. Use when the test environment is multi-service (app + db + cache + queue) and the topology is best expressed in YAML rather than imperative test code."
+description: "Authors a `compose.test.yaml` for tests - declares the SUT plus its real backing services as one declarative topology, wires healthcheck-driven `depends_on: condition: service_healthy` start ordering, isolates parallel CI jobs via per-job `--project-name`, gates the test step on `--wait` / `--wait-timeout` / `--exit-code-from`, and tears the stack down deterministically with `down --volumes --remove-orphans`. Use when the test environment is multi-service (app + db + cache + queue) and the topology is best expressed in YAML rather than imperative test code."
 rating: 24
 d6: 4
 archetype: S1
@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 Docker Compose is "a tool for defining and running multi-container
-applications" — services, networks, and volumes declared "in a single
+applications" - services, networks, and volumes declared "in a single
 YAML configuration file" and managed "with a single command"
 ([compose-overview][compose]).
 
@@ -20,7 +20,7 @@ YAML configuration file" and managed "with a single command"
 For tests, Compose is the right choice when:
 
 - The SUT needs **two or more** real backing services that have to
-  see each other (app → db → cache → queue) — the topology is the
+  see each other (app → db → cache → queue) - the topology is the
   artifact.
 - The same definition must run locally **and** in CI without
   imperative drift.
@@ -29,7 +29,7 @@ For tests, Compose is the right choice when:
 
 When the test process only needs **one** dependency wired into a
 single test, [`testcontainers`](../testcontainers/SKILL.md) is the
-lighter option — it lives inside the test process and doesn't need
+lighter option - it lives inside the test process and doesn't need
 a separate `docker compose up` step.
 
 ## When to use
@@ -41,7 +41,7 @@ a separate `docker compose up` step.
 - An end-to-end test suite (Playwright, Cypress, native E2E) needs a
   full stack reachable on a network.
 
-## Step 1 — Author `compose.test.yaml`
+## Step 1 - Author `compose.test.yaml`
 
 Compose's default file lookup is `compose.yaml` or `docker-compose.yaml`
 in the working directory or any parent ([compose-cli][cli]); using
@@ -108,10 +108,10 @@ services:
 ```
 
 The `name:` top-level key sets the project name (which Compose
-normally derives from the working directory) — important for CI
+normally derives from the working directory) - important for CI
 isolation, see Step 4.
 
-## Step 2 — Healthchecks are load-bearing
+## Step 2 - Healthchecks are load-bearing
 
 Per [compose-services][compose-svc], `depends_on` accepts three
 conditions:
@@ -120,9 +120,9 @@ conditions:
 
 | Condition                      | Meaning                                                               |
 |--------------------------------|------------------------------------------------------------------------|
-| `service_started`              | Container has been created and started (default — usually wrong for tests). |
-| `service_healthy`              | Dependency's `healthcheck` succeeded — the right choice for DBs / queues / app. |
-| `service_completed_successfully` | Dependency ran to completion and exited 0 — for one-shot init / migration containers. |
+| `service_started`              | Container has been created and started (default - usually wrong for tests). |
+| `service_healthy`              | Dependency's `healthcheck` succeeded - the right choice for DBs / queues / app. |
+| `service_completed_successfully` | Dependency ran to completion and exited 0 - for one-shot init / migration containers. |
 
 **`service_started` is almost never what a test wants.** Postgres
 "started" doesn't mean "accepting connections". Always pair a real
@@ -143,7 +143,7 @@ For tests, use **shorter** intervals (2s vs the 1m30s default) and
 **more retries** so the gate trips quickly when the service is up
 but waits long enough for cold starts.
 
-## Step 3 — Migrations as one-shot dependencies
+## Step 3 - Migrations as one-shot dependencies
 
 Database migrations belong in their own service that the app
 `depends_on` with `service_completed_successfully`:
@@ -172,10 +172,10 @@ services:
       DATABASE_URL: postgres://postgres:test@db:5432/orders_test
 ```
 
-The chain — db healthy → migrate runs → migrate exits 0 → app starts —
+The chain - db healthy → migrate runs → migrate exits 0 → app starts - 
 ensures the app never connects to an unmigrated database.
 
-## Step 4 — Per-job isolation in CI
+## Step 4 - Per-job isolation in CI
 
 Per [compose-cli][cli], the project name controls the namespace of
 **every** resource Compose creates (containers, networks, volumes).
@@ -213,7 +213,7 @@ the in-file `name:` per CI job.
 > dashes, and underscores, and must begin with a lowercase letter or
 > decimal digit." ([compose-cli][cli])
 
-## Step 5 — Gate the test step on readiness
+## Step 5 - Gate the test step on readiness
 
 Per [compose-up][up], two flags pair for "block until everything is
 healthy":
@@ -230,7 +230,7 @@ healthy":
 
 Two valid CI shapes:
 
-### Shape A — `up --wait` then `run` the test service
+### Shape A - `up --wait` then `run` the test service
 
 ```bash
 docker compose -f compose.test.yaml up --build --wait --wait-timeout 180
@@ -244,7 +244,7 @@ The `up --wait` step blocks until every service is healthy or the
 180s budget elapses. The `run` step executes the test container; its
 exit code is the build verdict.
 
-### Shape B — `up --abort-on-container-exit --exit-code-from <test-service>`
+### Shape B - `up --abort-on-container-exit --exit-code-from <test-service>`
 
 ```bash
 docker compose -f compose.test.yaml up \
@@ -256,7 +256,7 @@ docker compose -f compose.test.yaml up \
 Compose returns the test container's exit code as its own. Cleaner
 when the test runs as a Compose service rather than via `run`.
 
-## Step 6 — Tear down deterministically
+## Step 6 - Tear down deterministically
 
 Per [compose-cli][cli], `down` "Stop[s] and remove[s] containers,
 networks". For tests, two flags matter:
@@ -271,10 +271,10 @@ docker compose -f compose.test.yaml down --volumes --remove-orphans
 ```
 
 Always run `down` in an `if: always()` step (GitHub Actions) or
-trap-on-EXIT (shell) — leaked containers consume CI runner disk and
+trap-on-EXIT (shell) - leaked containers consume CI runner disk and
 poison the next run.
 
-## Step 7 — Profiles for selective enablement
+## Step 7 - Profiles for selective enablement
 
 When the test compose file has services that aren't always needed
 (seeded fixtures, a debugging admin UI, a heavyweight observability
@@ -299,7 +299,7 @@ docker compose -f compose.test.yaml --profile debug up
 COMPOSE_PROFILES=debug docker compose -f compose.test.yaml up
 ```
 
-Per [compose-cli][cli]: "Specify a profile to enable" — multiple
+Per [compose-cli][cli]: "Specify a profile to enable" - multiple
 profiles via repeating `--profile` or comma-separated
 `COMPOSE_PROFILES`.
 
@@ -307,7 +307,7 @@ profiles via repeating `--profile` or comma-separated
 
 | Anti-pattern                                                           | Why it fails                                                                  | Fix |
 |------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----|
-| `depends_on: db` without `condition: service_healthy`                  | Default `service_started` means "container exists" — Postgres isn't ready; app crashes on first connection. | Add a `healthcheck` to the dependency and gate with `condition: service_healthy`. |
+| `depends_on: db` without `condition: service_healthy`                  | Default `service_started` means "container exists" - Postgres isn't ready; app crashes on first connection. | Add a `healthcheck` to the dependency and gate with `condition: service_healthy`. |
 | Sharing one project name across parallel CI jobs                       | Two jobs pick the same container/network names; one accidentally tears down the other's state. | `COMPOSE_PROJECT_NAME=<unique-per-job>` ([compose-cli][cli]). |
 | `down` without `--volumes`                                             | DB state carries over to the next run; tests pass on dirty state, fail on clean state. | Always `down --volumes --remove-orphans` in `if: always()`. |
 | `up` foreground in CI without `--abort-on-container-exit`              | The test container exits but Compose keeps the others running; the job hangs until timeout. | `--abort-on-container-exit --exit-code-from <test-svc>`, or `up --wait` then explicit `run --rm`. |
@@ -325,7 +325,7 @@ profiles via repeating `--profile` or comma-separated
   in topological order; "parallel" tests come from running multiple
   Compose projects per CI matrix shard.
 - **Healthcheck images need the probe binary.** Minimal/distroless
-  images often don't ship `curl` / `pg_isready` — either switch to a
+  images often don't ship `curl` / `pg_isready` - either switch to a
   slim variant or use a TCP probe via `nc` / `wget`.
 - **Per-test reset is coarse.** The Compose stack is per-suite; for
   per-test DB reset, layer
@@ -334,16 +334,16 @@ profiles via repeating `--profile` or comma-separated
 
 ## References
 
-- [compose-overview][compose] — overview, "tool for defining and
+- [compose-overview][compose] - overview, "tool for defining and
   running multi-container applications".
-- [compose-cli][cli] — `docker compose` subcommand list, `-f`,
+- [compose-cli][cli] - `docker compose` subcommand list, `-f`,
   `--project-name`, `--profile`, project-name resolution rules.
-- [compose-up][up] — `up` flags: `--wait`, `--wait-timeout`,
+- [compose-up][up] - `up` flags: `--wait`, `--wait-timeout`,
   `--abort-on-container-exit`, `--exit-code-from`, `--build`.
-- [compose-svc][compose-svc] — `services` schema: `healthcheck`,
+- [compose-svc][compose-svc] - `services` schema: `healthcheck`,
   `depends_on` conditions (`service_started` / `service_healthy` /
   `service_completed_successfully`).
-- [`testcontainers`](../testcontainers/SKILL.md) — alternative when
+- [`testcontainers`](../testcontainers/SKILL.md) - alternative when
   the topology is one container per test, expressed in test code.
-- [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) —
+- [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) - 
   per-test isolation layered on top of a Compose-managed database.

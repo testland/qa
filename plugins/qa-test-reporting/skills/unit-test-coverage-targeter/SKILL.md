@@ -1,6 +1,6 @@
 ---
 name: unit-test-coverage-targeter
-description: "Builds a \"what to test next\" recommendation by combining a coverage report (LCOV / Cobertura / coverage.py JSON / Jest JSON / JaCoCo XML) with the PR's `git diff`, ranking uncovered branches by risk × cost — risk weighted by McCabe cyclomatic complexity and code-churn frequency, cost weighted by the unit-test pyramid layer (unit tests cheaper than integration than E2E). Emits a prioritized list with concrete file:line targets and the test layer recommended for each. Use when a team has the budget to write 5–10 new tests and needs help picking which uncovered code to target first instead of blindly chasing 100% coverage."
+description: "Builds a \"what to test next\" recommendation by combining a coverage report (LCOV / Cobertura / coverage.py JSON / Jest JSON / JaCoCo XML) with the PR's `git diff`, ranking uncovered branches by risk × cost - risk weighted by McCabe cyclomatic complexity and code-churn frequency, cost weighted by the unit-test pyramid layer (unit tests cheaper than integration than E2E). Emits a prioritized list with concrete file:line targets and the test layer recommended for each. Use when a team has the budget to write 5 - 10 new tests and needs help picking which uncovered code to target first instead of blindly chasing 100% coverage."
 rating: 23
 d6: 4
 archetype: S3
@@ -18,22 +18,22 @@ function that gets edited every week.
 This skill builds a ranked list of uncovered branches, scoring
 each by:
 
-- **Risk weight** — McCabe cyclomatic complexity ([cyclomatic][cc])
+- **Risk weight** - McCabe cyclomatic complexity ([cyclomatic][cc])
   + git churn frequency (commits in last N days) + PR-touch (was the
   file changed in this PR?).
-- **Cost weight** — Per the test pyramid ([test-pyramid][tp]),
+- **Cost weight** - Per the test pyramid ([test-pyramid][tp]),
   unit tests are cheap, integration tests are medium, UI tests are
   expensive. The recommendation includes the layer.
 
 [cc]: https://en.wikipedia.org/wiki/Cyclomatic_complexity
 [tp]: https://martinfowler.com/bliki/TestPyramid.html
 
-The output is **5–10 specific test targets** the team can take in
-one PR — not a 200-line "everything uncovered" dump.
+The output is **5 - 10 specific test targets** the team can take in
+one PR - not a 200-line "everything uncovered" dump.
 
 ## When to use
 
-- A coverage report shows 60–80% — adding 5 tests should target the
+- A coverage report shows 60 - 80% - adding 5 tests should target the
   highest-impact uncovered code, not random low-hanging fruit.
 - A PR's coverage gate is failing on new files; the team needs to
   know which uncovered branches actually matter.
@@ -42,7 +42,7 @@ one PR — not a 200-line "everything uncovered" dump.
 - Pair with [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md)
   for the "what regressed" + "what to add" combo.
 
-## Step 1 — Inputs
+## Step 1 - Inputs
 
 Two required + two optional inputs:
 
@@ -53,7 +53,7 @@ Two required + two optional inputs:
 | `git log` history  |   opt    | For churn weighting (Step 3).                                |
 | PR diff            |   opt    | For PR-touch weighting (Step 4).                             |
 
-## Step 2 — Extract uncovered branches
+## Step 2 - Extract uncovered branches
 
 The shape (after parsing per upstream parser):
 
@@ -81,7 +81,7 @@ Per language tool:
   per method, then read source lines for context.
   Use [`jacoco-analysis`](../jacoco-analysis/SKILL.md).
 
-## Step 3 — Compute the risk weight
+## Step 3 - Compute the risk weight
 
 ```python
 def risk_weight(file_path, branch):
@@ -98,9 +98,9 @@ def risk_weight(file_path, branch):
 Per [cyclomatic][cc]: McCabe's formula is `M = E - N + 2`
 (edges − nodes + 2). The threshold convention:
 
-> "1–10: Simple procedure, little risk"
-> "11–20: More complex, moderate risk"
-> "21–50: Complex, high risk"
+> "1 - 10: Simple procedure, little risk"
+> "11 - 20: More complex, moderate risk"
+> "21 - 50: Complex, high risk"
 > ">50: Untestable code, very high risk"
 > ([cyclomatic][cc])
 
@@ -133,7 +133,7 @@ Per [cyclomatic][cc]: "reducing the cyclomatic complexity of code is
 not proven to reduce the number of errors or bugs in that code." Use
 complexity as a *risk indicator*, not a goal.
 
-## Step 4 — PR-touch boost
+## Step 4 - PR-touch boost
 
 If the PR diff (Step 1 optional input) changed a file, **boost its
 risk weight by 1.5×**. Newly-edited code is strictly higher
@@ -146,7 +146,7 @@ def pr_boost(file_path, pr_changed_files):
 final_risk = risk_weight(...) * pr_boost(...)
 ```
 
-## Step 5 — Cost weight (test pyramid layer)
+## Step 5 - Cost weight (test pyramid layer)
 
 Per [test-pyramid][tp], the canonical layers (Cohn 2009):
 
@@ -173,7 +173,7 @@ def layer(path):
     return 'unit'
 ```
 
-## Step 6 — Score and rank
+## Step 6 - Score and rank
 
 ```python
 COST_BY_LAYER = {'unit': 1, 'service': 3, 'ui-or-e2e': 10}
@@ -187,10 +187,10 @@ candidates.sort(key=lambda c: c['score'], reverse=True)
 Score = risk / cost. A unit-layer branch with risk 0.6 (score
 0.60) beats a UI-layer branch with risk 0.9 (score 0.09).
 
-Take the top **5–10 candidates** (configurable). More than 10 is a
+Take the top **5 - 10 candidates** (configurable). More than 10 is a
 to-do list, not a recommendation.
 
-## Step 7 — Render
+## Step 7 - Render
 
 ```markdown
 ## Uncovered branches — recommended targets (top 7)
@@ -226,7 +226,7 @@ For each target above, the recommended test shape:
   branch outcome.
 ```
 
-## Step 8 — Wire into CI as advisory
+## Step 8 - Wire into CI as advisory
 
 This skill is **advisory, not gating**. Post the recommendation as
 a PR comment via `coverage-diff-reporter`'s sticky-comment mechanism
@@ -255,7 +255,7 @@ Step 7) but don't fail the build on it:
 | Anti-pattern                                                            | Why it fails                                                                  | Fix |
 |-------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----|
 | Recommending coverage targets without considering test layer            | Suggests UI tests for branches that should be unit-tested; cost ignored.     | Score = risk / cost (Step 6). |
-| Listing every uncovered branch                                           | 200-row list; team ignores.                                                  | Top 5–10 (Step 6). |
+| Listing every uncovered branch                                           | 200-row list; team ignores.                                                  | Top 5 - 10 (Step 6). |
 | Pure-coverage chase (every uncovered line is a target)                  | Hits 100% by writing low-value tests; signal-to-noise collapses.            | Risk-weight by complexity + churn (Step 3). |
 | Treating cyclomatic complexity as a goal                                 | Per [cyclomatic][cc]: reducing complexity isn't proven to reduce defects.   | Use complexity as a risk indicator only (Step 3). |
 | Ignoring PR-changed files                                                | A new function added in the PR with 0 coverage isn't surfaced.               | PR-touch boost (Step 4). |
@@ -283,20 +283,20 @@ Step 7) but don't fail the build on it:
 
 ## References
 
-- [test-pyramid][tp] — Mike Cohn's pyramid (2009), three layers
+- [test-pyramid][tp] - Mike Cohn's pyramid (2009), three layers
   (unit / service / UI), "many more low-level UnitTests than high
   level BroadStackTests" rationale (UI tests "brittle, expensive
   to write, and time consuming to run").
-- [cyclomatic][cc] — McCabe (1976) cyclomatic complexity formula
-  `M = E - N + 2`, threshold convention (1–10 / 11–20 / 21–50 /
+- [cyclomatic][cc] - McCabe (1976) cyclomatic complexity formula
+  `M = E - N + 2`, threshold convention (1 - 10 / 11 - 20 / 21 - 50 /
   >50), the warning that "reducing the cyclomatic complexity of
   code is not proven to reduce the number of errors or bugs".
 - [`lcov-analysis`](../lcov-analysis/SKILL.md),
   [`cobertura-analysis`](../cobertura-analysis/SKILL.md),
   [`jest-coverage-analysis`](../jest-coverage-analysis/SKILL.md),
   [`jacoco-analysis`](../jacoco-analysis/SKILL.md),
-  [`coverage-py-analysis`](../coverage-py-analysis/SKILL.md) —
+  [`coverage-py-analysis`](../coverage-py-analysis/SKILL.md) - 
   upstream parsers this skill consumes.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) —
+- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   sibling reporter; the diff identifies what regressed, the
   targeter identifies what to add next.

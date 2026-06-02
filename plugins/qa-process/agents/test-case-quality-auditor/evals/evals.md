@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# test-case-quality-auditor — evals
+# test-case-quality-auditor - evals
 
 Companion eval cases for [`test-case-quality-auditor`](../../test-case-quality-auditor.md).
 Three cases cover happy path / branch / adversarial: a TestRail CSV
@@ -15,10 +15,10 @@ supplied as input that triggers the `WRONG_TOOL` refuse rule.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
-the eval-authoring date — each case is designed to be reproducible
+the eval-authoring date - each case is designed to be reproducible
 against any tier.
 
-## Eval 1 — happy path — vague title + non-testable expected (FAIL)
+## Eval 1 - happy path - vague title + non-testable expected (FAIL)
 
 **Input:**
 
@@ -44,11 +44,11 @@ Run the audit.
 
 **Expected:** Step 1 identifies the input as `tracker-csv`. Step 2
 walks each case. CHECKOUT-LIVE-12 fails §1 (title "Verify checkout
-works" — the case-version of `it('it works')`) and §4 (expected
+works" - the case-version of `it('it works')`) and §4 (expected
 "checkout works correctly" not testable). CHECKOUT-LIVE-21 fails §1
 (title "Should be tested"), §2 ("system is ready" is non-specific
 precondition), §4 ("it works" non-testable), §8 (source_claim "TBD").
-CHECKOUT-LIVE-07 is WEAK on §4 (disjunctive expected — collapse after
+CHECKOUT-LIVE-07 is WEAK on §4 (disjunctive expected - collapse after
 first run). CHECKOUT-LIVE-04 is PASS across axes. Step 3 set-level
 notes the small sample. Verdict line: at least 2 FAIL cases.
 
@@ -58,7 +58,7 @@ per-case verdict) AND names both `CHECKOUT-LIVE-12` AND
 clarity`) or §4 (`Expected-result testability`) as the failing axis.
 Output does NOT mark CHECKOUT-LIVE-04 as FAIL (that case is PASS-shape).
 
-## Eval 2 — branch — parameter-aware set with EP + BV coverage (PASS)
+## Eval 2 - branch - parameter-aware set with EP + BV coverage (PASS)
 
 **Input:**
 
@@ -88,13 +88,13 @@ Run the audit.
 
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25)
 
-**Expected:** Step 1 identifies `markdown-matrix`. Step 2 — all 7 cases
+**Expected:** Step 1 identifies `markdown-matrix`. Step 2 - all 7 cases
 have specific titles, identifiable preconditions, declarative steps,
 testable expected results, source_claim → AC. Step 3 set-level:
 identifier consistency PASS (C-NN pattern), source-claim provenance
-PASS (100% trace to AC-12 / AC-13). §5 equivalence partitioning PASS —
+PASS (100% trace to AC-12 / AC-13). §5 equivalence partitioning PASS - 
 valid (C-01, C-02), invalid (C-03, C-04, C-05, C-06, C-07) classes
-all present. §6 boundary value PASS — min-1 / min / max / max+1
+all present. §6 boundary value PASS - min-1 / min / max / max+1
 covered (empty + whitespace-only / 8 / 32 / 33). Tier distribution
 healthy. Verdict: PASS.
 
@@ -104,7 +104,7 @@ verdict line for the set) AND mentions either `equivalence` or `EP`
 (the §6 axis being satisfied). Output does NOT contain `FAIL` against
 any of C-01..C-07 (no case in this set is shaped to fail).
 
-## Eval 3 — adversarial — test code supplied (refuse, WRONG_TOOL)
+## Eval 3 - adversarial - test code supplied (refuse, WRONG_TOOL)
 
 **Input:**
 
@@ -156,13 +156,13 @@ line for `addItem increments count` or `removeItem decrements count`
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   TestRail / Qase / Xray API access needed. The CSV / markdown matrix
   / `.spec.ts` content is inlined.
 - Pass conditions are literal-substring checks on the agent transcript;
   a reviewer can grep for each token.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash(jq
-  *), Bash(csvkit *)`) is read-only — eval re-runs cannot mutate the
+  *), Bash(csvkit *)`) is read-only - eval re-runs cannot mutate the
   tracker or the case files.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

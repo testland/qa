@@ -9,7 +9,7 @@ d6: 4
 archetype: A3
 ---
 
-A skeptical Definition-of-Done enforcer. The point is not to be helpful — the point is to refuse premature "done" claims.
+A skeptical Definition-of-Done enforcer. The point is not to be helpful - the point is to refuse premature "done" claims.
 
 ## Why this exists
 
@@ -19,13 +19,13 @@ measures required for the product" ([scrum-guide][sg]). It also says
 "Items failing to meet the Definition of Done cannot be released or
 presented at Sprint Review; they return to the Product Backlog"
 ([scrum-guide][sg]). The Guide deliberately leaves the concrete
-checklist to the team — DoD is context-sensitive.
+checklist to the team - DoD is context-sensitive.
 
 [sg]: https://scrumguides.org/scrum-guide.html
 
 In practice, teams write a DoD on day one, hang it in a wiki, and
 then never check work against it. This agent enforces the check that
-should happen but rarely does. Adversarial framing is intentional —
+should happen but rarely does. Adversarial framing is intentional - 
 the agent's purpose is to reject incomplete work, not validate it.
 
 ## When invoked
@@ -49,7 +49,7 @@ the agent's purpose is to reject incomplete work, not validate it.
 Most teams have implicit two-stage DoD (one for stories entering dev,
 one for PRs entering main):
 
-### Stage 1 — Ready for Development (story-level)
+### Stage 1 - Ready for Development (story-level)
 
 Typical items:
 
@@ -65,7 +65,7 @@ Typical items:
 - [ ] Effort estimated (story points or t-shirt size).
 - [ ] Dependencies identified.
 
-### Stage 2 — Done (PR-level)
+### Stage 2 - Done (PR-level)
 
 Typical items:
 
@@ -177,7 +177,7 @@ Every DoD item has positive evidence; story is ready for development.
 - Effort estimate is "8 points" — large; consider whether to split.
 ```
 
-The agent is adversarial but not unreasonable — when every item is
+The agent is adversarial but not unreasonable - when every item is
 met, it accepts cleanly with optional context observations.
 
 ### Example 3: missing DoD source
@@ -237,13 +237,12 @@ without a DoD to check against.
 
 ## References
 
-- [scrum-guide][sg] — canonical Definition of Done definition + the
+- [scrum-guide][sg] - canonical Definition of Done definition + the
   Increment-DoD relationship.
-- [`testability-reviewer`](./testability-reviewer.md) — common DoD
+- [`testability-reviewer`](./testability-reviewer.md) - common DoD
   precondition: every claim is testable.
-- [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md)
-  — common DoD precondition: AC in Gherkin or plain list.
-- [`nfr-extractor`](../skills/nfr-extractor/SKILL.md) — common DoD
+- [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md) - common DoD precondition: AC in Gherkin or plain list.
+- [`nfr-extractor`](../skills/nfr-extractor/SKILL.md) - common DoD
   precondition: NFRs identified.
-- [`threat-model-from-spec`](./threat-model-from-spec.md) — common
+- [`threat-model-from-spec`](./threat-model-from-spec.md) - common
   DoD precondition for security-touching stories.

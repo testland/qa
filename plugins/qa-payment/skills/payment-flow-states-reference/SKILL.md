@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-Every payment platform exposes a state machine — the
+Every payment platform exposes a state machine - the
 PaymentIntent in Stripe, the Authorisation in Adyen, the Order
 in PayPal, the Transaction in Braintree. Each has different
 terminology for what is fundamentally the same lifecycle.
@@ -46,9 +46,9 @@ Most payment systems share the same conceptual states:
 
 Two-step:
 
-1. **Authorize** — bank reserves funds; merchant doesn't get
+1. **Authorize** - bank reserves funds; merchant doesn't get
    them yet.
-2. **Capture** — funds transferred to merchant.
+2. **Capture** - funds transferred to merchant.
 
 Default in most systems is auto-capture (auth + capture in one
 call). Separate auth-then-capture is used for:

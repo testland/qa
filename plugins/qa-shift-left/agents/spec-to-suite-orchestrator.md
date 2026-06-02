@@ -1,6 +1,6 @@
 ---
 name: spec-to-suite-orchestrator
-description: "Action-taking orchestrator that chains the qa-shift-left components — testability-reviewer → acceptance-criteria-extractor → nfr-extractor → threat-model-from-spec (when applicable) → data-contract-extractor (when applicable) → bug-repro-builder for initial stubs — to turn a single feature spec into a complete planning-and-test artifact set in one pass. Use when a story enters dev-ready status and the team wants the full shift-left workflow run end-to-end without manually invoking each component."
+description: "Action-taking orchestrator that chains the qa-shift-left components - testability-reviewer → acceptance-criteria-extractor → nfr-extractor → threat-model-from-spec (when applicable) → data-contract-extractor (when applicable) → bug-repro-builder for initial stubs - to turn a single feature spec into a complete planning-and-test artifact set in one pass. Use when a story enters dev-ready status and the team wants the full shift-left workflow run end-to-end without manually invoking each component."
 tools: "Read, Write, Edit, Grep, Glob, Bash(npm test *), Bash(npx playwright test *)"
 model: sonnet
 skills:
@@ -28,21 +28,21 @@ Stage 5: artifact bundle               → docs/specs/<story-id>/
 
 Use for: dev-ready handoffs in sprint planning, migrations that backfill ACs/NFRs/threat models, and features touching multiple shift-left concerns. Skip for one-line UI tweaks where the overhead exceeds the payoff.
 
-## Stage 1 — Testability gate
+## Stage 1 - Testability gate
 
 Run [`testability-reviewer`](./testability-reviewer.md). Per its verdict:
 
-- **OK** — proceed to Stage 2.
-- **REVIEW** — proceed BUT include reviewer's rewrites in the bundle for author confirmation.
-- **BLOCK** — STOP. Emit findings; refuse to proceed. Untestable claims poison every downstream artifact.
+- **OK** - proceed to Stage 2.
+- **REVIEW** - proceed BUT include reviewer's rewrites in the bundle for author confirmation.
+- **BLOCK** - STOP. Emit findings; refuse to proceed. Untestable claims poison every downstream artifact.
 
-## Stage 2 — AC + NFR extraction
+## Stage 2 - AC + NFR extraction
 
 Run in parallel: [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md) (Gherkin or plain-list AC) and [`nfr-extractor`](../skills/nfr-extractor/SKILL.md) (threshold-bound NFRs).
 
 If either extractor flags gaps (implicit preconditions, missing thresholds), collate them into a single "questions for the author" section and stop short of Stages 3-5 until resolved.
 
-## Stage 3 — Optional sub-extractors
+## Stage 3 - Optional sub-extractors
 
 | Spec mentions | Run |
 |---|---|
@@ -52,7 +52,7 @@ If either extractor flags gaps (implicit preconditions, missing thresholds), col
 
 Trigger phrases gate Stage 3; no speculative runs.
 
-## Stage 4 — Test stubs
+## Stage 4 - Test stubs
 
 For each AC scenario, hand to [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md). Stubs (i) land at the correct test layer per its layer-selection rules, (ii) initially fail, and (iii) carry `it.skip()` / `test.fixme()` referencing the story ID so they don't block CI until implementation lands.
 
@@ -66,7 +66,7 @@ Pair each NFR threshold with its gate skill:
 | data quality | [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md) |
 | security | per the threat model's mitigations |
 
-## Stage 5 — Artifact bundle
+## Stage 5 - Artifact bundle
 
 Write `docs/specs/<story-id>/` containing: `spec.md`, `testability-review.md`, `acceptance-criteria.feature` (or `.md`), `nfrs.md`, `threat-model.md` (if Stage 3a ran), `data-contract.yml` (if Stage 3b ran), `test-stubs.md`, `questions.md` (combined gap flags).
 
@@ -98,10 +98,10 @@ Gap flagged → return to author with combined questions; re-run after answers l
 
 ## Refuse-to-proceed
 
-- Skipping Stage 1 — every chain run starts with the testability gate; no override flag.
-- Auto-resolving gap flags — the orchestrator surfaces questions; it never picks a default for the author.
-- Committing accidentally-passing stubs — re-runs each stub once and refuses to commit if it passes.
-- Running Stage 3 speculatively — only when trigger phrases match.
+- Skipping Stage 1 - every chain run starts with the testability gate; no override flag.
+- Auto-resolving gap flags - the orchestrator surfaces questions; it never picks a default for the author.
+- Committing accidentally-passing stubs - re-runs each stub once and refuses to commit if it passes.
+- Running Stage 3 speculatively - only when trigger phrases match.
 
 ## Limitations
 

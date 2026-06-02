@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# sast-finding-triager — evals
+# sast-finding-triager - evals
 
 Companion eval cases for [`sast-finding-triager`](../../sast-finding-triager.md).
 Three cases cover happy path / branch / adversarial: an unwaived
@@ -15,10 +15,10 @@ multi-scanner run with no critical / unwaived findings (verdict
 message and checking the agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — multi-scanner critical, BLOCK verdict
+## Eval 1 - happy path - multi-scanner critical, BLOCK verdict
 
 **Input:**
 
@@ -82,7 +82,7 @@ case-insensitive) AND lists both `Semgrep` and `CodeQL` as the
 catching scanners on the same finding. Output does NOT contain `PASS`
 as the verdict.
 
-## Eval 2 — branch — clean run, PASS verdict
+## Eval 2 - branch - clean run, PASS verdict
 
 **Input:**
 
@@ -124,7 +124,7 @@ verdict AND contains `0` as the total findings count (e.g.,
 as the verdict; does NOT contain a Critical findings table with any
 rows.
 
-## Eval 3 — adversarial — invalid waiver, refuse to apply
+## Eval 3 - adversarial - invalid waiver, refuse to apply
 
 **Input:**
 
@@ -169,7 +169,7 @@ refuses to apply the waiver because all three required fields are
 missing. The finding remains unwaived and is surfaced in the report.
 Since the Semgrep ERROR-severity finding normalizes to `high`
 (NOT critical per the normalization rule "High: Semgrep ERROR"), the
-verdict on the default fail-on=`critical` threshold would be `PASS` —
+verdict on the default fail-on=`critical` threshold would be `PASS` - 
 BUT the agent must explicitly call out the rejected waiver and the
 remaining high finding. The agent does NOT silently apply the
 malformed waiver; does NOT mark the finding as suppressed.
@@ -183,8 +183,7 @@ table heading. Output does NOT silently apply the malformed waiver
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content scanner-output excerpts
-  — no external scanner runs required.
+- All three inputs are concrete pasted-content scanner-output excerpts - no external scanner runs required.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - Eval cases were authored 2026-05-25 against the v3.0 framework's D7

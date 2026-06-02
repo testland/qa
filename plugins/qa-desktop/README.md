@@ -9,14 +9,14 @@ Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows)
 | skill | desktop-test-strategy-reference | S2 | Pure-reference catalog of desktop GUI test strategies across Windows (UIA), macOS (XCTest + Accessibility), Linux (AT-SPI), Electron, and Qt |
 | skill | electron-spectron | S2 | Legacy reference for the deprecated Spectron framework; documents migration path to Playwright `_electron` |
 | skill | electron-playwright | S1 | Authors Playwright `_electron` tests for packaged Electron apps; drives main process + renderer windows from one suite |
-| skill | flaui-tests | S1 | Authors and runs FlaUI-based Windows UI tests — the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3) with idiomatic C# API |
+| skill | flaui-tests | S1 | Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3) with idiomatic C# API |
 | skill | winappdriver | S1 | Authors and runs UI tests against Microsoft WinAppDriver (W3C WebDriver for UWP, WPF, WinForms, and Win32 apps on Windows 10) |
-| skill | appium-windows-driver | S1 | Authors Appium 2.x tests against the Windows driver — the Node.js proxy in front of WinAppDriver with `windows:` gestures and PowerShell hooks |
-| skill | qt-test-framework | S1 | Authors and runs Qt Test — the first-party C++ in-process unit + GUI test framework for Qt 6 with QTEST_MAIN, QSignalSpy, and QBENCHMARK |
+| skill | appium-windows-driver | S1 | Authors Appium 2.x tests against the Windows driver - the Node.js proxy in front of WinAppDriver with `windows:` gestures and PowerShell hooks |
+| skill | qt-test-framework | S1 | Authors and runs Qt Test - the first-party C++ in-process unit + GUI test framework for Qt 6 with QTEST_MAIN, QSignalSpy, and QBENCHMARK |
 | skill | xctest-mac-desktop | S1 | Authors XCTest UI + unit tests for macOS apps with XCUIApplication / XCUIElement queries and `xcodebuild test` CI integration |
-| skill | at-spi-linux | S1 | Authors Linux desktop tests via AT-SPI accessibility — dogtail for GTK + Qt apps, Accerciser for tree inspection, Xvfb + dbus-launch CI |
+| skill | at-spi-linux | S1 | Authors Linux desktop tests via AT-SPI accessibility - dogtail for GTK + Qt apps, Accerciser for tree inspection, Xvfb + dbus-launch CI |
 | agent | desktop-driver-selector | A2 | Reads a target desktop project (`csproj` / `package.json` / `.pro` / `CMakeLists.txt`) and emits one driver recommendation (FlaUI / WinAppDriver / electron-playwright / QtTest / XCUITest / AT-SPI) plus rationale |
-| agent | desktop-test-scaffolder | A4 | Scaffolds a fresh desktop test project — test project file, driver-init module, one screen-object skeleton, and a CI workflow tagged for the matching Windows / macOS / Linux runner |
+| agent | desktop-test-scaffolder | A4 | Scaffolds a fresh desktop test project - test project file, driver-init module, one screen-object skeleton, and a CI workflow tagged for the matching Windows / macOS / Linux runner |
 | agent | desktop-test-author | A2 | Authors one desktop UI test for one user flow given a spec + target app + chosen driver; composes FlaUI / WinAppDriver / Appium-Windows / electron-playwright / QtTest skills with xUnit / NUnit / MSTest harnesses |
 
 ## Install

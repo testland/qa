@@ -1,6 +1,6 @@
 ---
 name: keycloak-tests
-description: "Authors and runs integration tests against Keycloak — uses Testcontainers Keycloak module to spin up an isolated server per test class, imports realm JSON for fixtures, exercises OIDC discovery / token endpoint / token introspection / admin REST API; tests password / authorization-code / client-credentials / token-exchange flows; covers UMA (User-Managed Access) permission tickets. Use when the user works with self-hosted Keycloak and needs unit / integration tests for realms, clients, users, or auth flows."
+description: "Authors and runs integration tests against Keycloak - uses Testcontainers Keycloak module to spin up an isolated server per test class, imports realm JSON for fixtures, exercises OIDC discovery / token endpoint / token introspection / admin REST API; tests password / authorization-code / client-credentials / token-exchange flows; covers UMA (User-Managed Access) permission tickets. Use when the user works with self-hosted Keycloak and needs unit / integration tests for realms, clients, users, or auth flows."
 rating: 23
 d6: 4
 archetype: S1
@@ -44,7 +44,7 @@ OIDC endpoints from your application.
 - Custom auth flows (per [kc-admin][kc-admin]: "password-less browser
   login flow") need integration coverage.
 
-## Step 1 — Testcontainers Keycloak setup
+## Step 1 - Testcontainers Keycloak setup
 
 ```python
 from testcontainers.keycloak import KeycloakContainer
@@ -68,7 +68,7 @@ static KeycloakContainer keycloak = new KeycloakContainer("quay.io/keycloak/keyc
 The Testcontainers Keycloak module ships at
 `testcontainers.com/modules/keycloak`.
 
-## Step 2 — Realm import fixture
+## Step 2 - Realm import fixture
 
 Author one canonical `test-realm.json` per test scope (or per class
 if scopes differ). Realm JSON exports from Admin Console (Realm
@@ -83,7 +83,7 @@ jq 'del(.. | .secret? // .credential.value? // empty)' realm.json > test-realm.j
 Mount the file via `withRealmImportFile()` (Java) or environment
 variable `KEYCLOAK_IMPORT` (Python testcontainers).
 
-## Step 3 — Test the OIDC token endpoint
+## Step 3 - Test the OIDC token endpoint
 
 Per RFC 6749 (cited in [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
 the token endpoint accepts `grant_type` plus flow-specific params.
@@ -114,10 +114,10 @@ def test_password_grant(keycloak):
 ```
 
 Note: the password grant is **deprecated** per RFC 9700 (Best
-Current Practice for OAuth 2.0 Security) — use it only for legacy
+Current Practice for OAuth 2.0 Security) - use it only for legacy
 test scenarios; new code should use authorization-code + PKCE.
 
-## Step 4 — Test client-credentials grant
+## Step 4 - Test client-credentials grant
 
 For service-to-service auth:
 
@@ -141,7 +141,7 @@ def test_client_credentials_grant(keycloak):
     assert api_response.status_code == 200
 ```
 
-## Step 5 — Test token introspection
+## Step 5 - Test token introspection
 
 For RP (Resource Provider) integration:
 
@@ -159,7 +159,7 @@ def test_token_introspection(keycloak, access_token):
     assert "preferred_username" in body
 ```
 
-## Step 6 — Test custom authentication flows
+## Step 6 - Test custom authentication flows
 
 Per [kc-admin][kc-admin], Keycloak supports custom auth flows
 (e.g., "Creating a password-less browser login flow"). Custom flows
@@ -167,10 +167,10 @@ are configured via the Admin Console + exported in realm JSON.
 
 Test pattern: import a realm with the custom flow, then exercise
 the browser flow via Playwright or a mock OIDC client. The exact
-pattern depends on the custom flow — consult the per-flow docs
+pattern depends on the custom flow - consult the per-flow docs
 on [kc-admin][kc-admin].
 
-## Step 7 — Admin REST API tests
+## Step 7 - Admin REST API tests
 
 Keycloak exposes its admin functionality via REST. Pattern: obtain
 an admin-realm token, then call the admin endpoints:
@@ -190,7 +190,7 @@ def test_create_user_via_admin_api(keycloak):
     assert response.status_code == 201
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 services:
@@ -225,14 +225,13 @@ ubuntu-latest has it pre-installed.
 
 ## References
 
-- [kc-admin][kc-admin] — Keycloak Server Admin Guide: realms,
+- [kc-admin][kc-admin] - Keycloak Server Admin Guide: realms,
   clients, custom flows
-- testcontainers.com/modules/keycloak — Testcontainers module
-- IETF RFC 6749 — OAuth 2.0 (cross-ref [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
-- IETF RFC 7636 — PKCE (cross-ref [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
-- IETF RFC 9700 — OAuth 2.0 Security Best Current Practice
+- testcontainers.com/modules/keycloak - Testcontainers module
+- IETF RFC 6749 - OAuth 2.0 (cross-ref [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
+- IETF RFC 7636 - PKCE (cross-ref [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
+- IETF RFC 9700 - OAuth 2.0 Security Best Current Practice
 - [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) — sister IdP tools
+  [`okta-tests`](../okta-tests/SKILL.md) - sister IdP tools
 - [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md),
-  [`session-management-test-author`](../session-management-test-author/SKILL.md)
-  — build-an-X authors
+  [`session-management-test-author`](../session-management-test-author/SKILL.md) - build-an-X authors

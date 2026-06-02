@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# test-suite-pruner — evals
+# test-suite-pruner - evals
 
 Companion eval cases for [`test-suite-pruner`](../../test-suite-pruner.md).
 Three cases cover happy path / branch / adversarial: a multi-class
@@ -14,7 +14,7 @@ test that triggers refuse-to-proceed. Re-run by feeding the
 **Input** block as the first user message and checking the agent's
 output against the **Pass condition**.
 
-## Eval 1 — happy path — multi-class find (duplicate + tautology + trivial)
+## Eval 1 - happy path - multi-class find (duplicate + tautology + trivial)
 
 **Input:**
 
@@ -70,17 +70,16 @@ Branch: feature/cleanup-tests (not main / master / release/*).
 **Expected:** Per Mode 1 (duplicates) the agent flags
 `cart.spec.ts:12` and `cart.spec.ts:34` as a duplicate pair (same
 describe path, same normalized assertion `cart.items.length === 1`,
-same setup) — recommend keep one, delete the other. Per Mode 2
+same setup) - recommend keep one, delete the other. Per Mode 2
 (tautologies) the agent flags `add.spec.ts:5`
-(`expect(add(2,3)).toBe(2+3)` — RHS recomputes the operation) and
-`format.spec.ts:18` (`expect(formatPrice(100)).toBe(formatPrice(100))`
-— RHS calls the SUT). Per Mode 3 (trivial) the agent flags
+(`expect(add(2,3)).toBe(2+3)` - RHS recomputes the operation) and
+`format.spec.ts:18` (`expect(formatPrice(100)).toBe(formatPrice(100))` - RHS calls the SUT). Per Mode 3 (trivial) the agent flags
 `placeholder.spec.ts:3` (`expect(true).toBe(true)`) and
 `placeholder.spec.ts:7` (no assertions / empty body). Per the
 "Output format" table, the agent classifies counts per class with
 confidence (`duplicate: high`, `tautology: medium`,
 `trivial: high`). Per Refuse-to-proceed: "Delete tests without
-producing a PR (auto-delete is off)" — the agent recommends a PR
+producing a PR (auto-delete is off)" - the agent recommends a PR
 with the deletions, does NOT delete in place.
 
 **Pass condition:** Output contains all three of `duplicate`,
@@ -89,7 +88,7 @@ at least one of `cart.spec.ts`, `add.spec.ts`, `format.spec.ts`, or
 `placeholder.spec.ts` (a flagged file). Output also mentions `PR`
 or `pull request` or `human review` (the no-auto-delete guarantee).
 
-## Eval 2 — branch — clean suite (no candidates)
+## Eval 2 - branch - clean suite (no candidates)
 
 **Input:**
 
@@ -152,12 +151,12 @@ manufacture candidates to look productive. Output uses the table
 shape from "Output format" with all class counts at 0 or `None`.
 
 **Pass condition:** Output indicates zero candidates across all
-classes — at least one of `0 duplicate`, `0 tautology`,
+classes - at least one of `0 duplicate`, `0 tautology`,
 `0 trivial`, `No candidates`, `Candidates flagged: 0`, or
 `no candidates flagged`. Output does NOT contain a populated
 `Auto-PR candidates` table with a specific file:line entry.
 
-## Eval 3 — adversarial — refuse on @critical / main-branch (refuse to proceed)
+## Eval 3 - adversarial - refuse on @critical / main-branch (refuse to proceed)
 
 **Input:**
 
@@ -195,12 +194,11 @@ src/payment/stripe.ts:144-167 (the 3DS challenge branch).
 
 **Expected:** Per Refuse-to-proceed rules, FOUR independent refusals
 fire: (a) "Delete tests covering production code marked with
-explicit business-criticality labels (e.g. `// @critical:payment-flow`)"
-— the test carries the exact `@critical:payment-flow` label called
+explicit business-criticality labels (e.g. `// @critical:payment-flow`)" - the test carries the exact `@critical:payment-flow` label called
 out in the rule; (b) "Operate on a branch named `main` / `master` /
-`release/*` directly; always proposes via PR" — the caller asked
+`release/*` directly; always proposes via PR" - the caller asked
 to operate against `main`; (c) "Delete tests without producing a PR
-(auto-delete is off)" — the caller asked for an in-place delete;
+(auto-delete is off)" - the caller asked for an in-place delete;
 (d) per Mode 4 caveat, the test is the sole coverer of a code path
 (no redundant coverage), so dead-signal classification doesn't even
 qualify it as a delete candidate. The agent refuses the in-place
@@ -218,7 +216,7 @@ deletion in this transcript).
 ## Reproducibility notes
 
 - All three inputs are concrete pasted test-file excerpts plus
-  CI-history summaries — no external Jest / pytest collection
+  CI-history summaries - no external Jest / pytest collection
   needed at eval time.
 - Pass conditions are literal-string checks; a reviewer can grep
   the agent's transcript for each substring.

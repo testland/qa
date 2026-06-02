@@ -4,9 +4,9 @@ type: agent
 archetype: A2
 ---
 
-# load-test-tool-selector — evals
+# load-test-tool-selector - evals
 
-## Eval 1: happy path — k6 for a JS team, API RPS soak
+## Eval 1: happy path - k6 for a JS team, API RPS soak
 
 **Input:**
 - Goal: "200 RPS sustained for 30 minutes against the /orders endpoint."
@@ -19,7 +19,7 @@ archetype: A2
 
 **Pass condition:** Output contains the literal substrings `k6` AND `k6-load-testing` AND (`RPS` OR `JS` OR `TypeScript`) and does NOT recommend JMeter / Gatling / Locust / Lighthouse as the primary.
 
-## Eval 2: branch — Lighthouse for browser-side Core Web Vitals
+## Eval 2: branch - Lighthouse for browser-side Core Web Vitals
 
 **Input:**
 - Goal: "Web Vitals (LCP, INP, CLS) regression detection on the marketing site, on every PR."
@@ -31,7 +31,7 @@ archetype: A2
 
 **Pass condition:** Output contains the literal substrings `Lighthouse` AND `lighthouse-perf` AND (`Web Vitals` OR `LCP` OR `INP`) and does NOT recommend k6 / JMeter / Gatling / Locust as the primary.
 
-## Eval 3: adversarial — "test the system" with no load profile
+## Eval 3: adversarial - "test the system" with no load profile
 
 **Input:**
 - Goal: "Load test the platform."
@@ -46,6 +46,6 @@ archetype: A2
 
 ## Notes
 
-- Eval file lives outside the lint glob — no rating frontmatter needed.
+- Eval file lives outside the lint glob - no rating frontmatter needed.
 - Pass conditions are literal-string checks.
 - Target-model dates are eval-authoring dates (2026-05-25).

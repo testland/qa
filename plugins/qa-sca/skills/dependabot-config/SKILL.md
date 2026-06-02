@@ -1,6 +1,6 @@
 ---
 name: dependabot-config
-description: "Reference for `.github/dependabot.yml` — GitHub-native dependency-update orchestrator. Required keys (`version: 2`, `updates[]` array) plus per-update fields (`package-ecosystem`, `directory` / `directories`, `schedule.interval`); common optional fields (`ignore`, `groups`, `allow`, `labels`, `milestone`, `open-pull-requests-limit`, `target-branch`, `vendor`, `versioning-strategy`, `assignees`, `commit-message`); auto-rebase + grouped-PR + security-only updates. Use when authoring or reviewing Dependabot configs in GitHub-hosted repos."
+description: "Reference for `.github/dependabot.yml` - GitHub-native dependency-update orchestrator. Required keys (`version: 2`, `updates[]` array) plus per-update fields (`package-ecosystem`, `directory` / `directories`, `schedule.interval`); common optional fields (`ignore`, `groups`, `allow`, `labels`, `milestone`, `open-pull-requests-limit`, `target-branch`, `vendor`, `versioning-strategy`, `assignees`, `commit-message`); auto-rebase + grouped-PR + security-only updates. Use when authoring or reviewing Dependabot configs in GitHub-hosted repos."
 rating: 22
 d6: 4
 archetype: S2
@@ -19,7 +19,7 @@ opens PRs (or issues, for security-only) when a new version is
 available for a declared dependency. Configuration via
 `.github/dependabot.yml` at repo root.
 
-This is a **reference skill** (S2 archetype) — defines the config
+This is a **reference skill** (S2 archetype) - defines the config
 surface; doesn't run scans (that's [`snyk-test`](../snyk-test/SKILL.md)
 or [`osv-scanner`](../osv-scanner/SKILL.md)). Dependabot complements
 SCA tools by automating the upgrade PR.
@@ -34,7 +34,7 @@ SCA tools by automating the upgrade PR.
 
 For non-GitHub repos, see [`renovate-config`](../renovate-config/SKILL.md).
 
-## Step 1 — Top-level structure
+## Step 1 - Top-level structure
 
 Per [db-cfg][db-cfg]:
 
@@ -54,7 +54,7 @@ Required top-level keys:
 | `version` | Always `2` (only supported version) |
 | `updates` | Array of per-ecosystem update configurations |
 
-## Step 2 — Per-update required fields
+## Step 2 - Per-update required fields
 
 Per [db-cfg][db-cfg]:
 
@@ -74,7 +74,7 @@ Per [db-cfg][db-cfg]:
     - "/packages/shared"
 ```
 
-## Step 3 — Common optional fields
+## Step 3 - Common optional fields
 
 Per [db-cfg][db-cfg]:
 
@@ -106,7 +106,7 @@ groups:
     exclude-patterns: ["express*", "fastify*"]
 ```
 
-Grouped PRs reduce review noise — instead of 30 individual PRs for
+Grouped PRs reduce review noise - instead of 30 individual PRs for
 dev-deps, get one consolidated PR.
 
 ### `allow`
@@ -119,7 +119,7 @@ allow:
   - dependency-type: "direct"
 ```
 
-Use carefully — overly-narrow `allow` lists silently drop coverage
+Use carefully - overly-narrow `allow` lists silently drop coverage
 of newly-added deps.
 
 ### Other common fields
@@ -135,7 +135,7 @@ of newly-added deps.
 | `assignees` | GitHub usernames for assignment |
 | `commit-message` | Customize prefix + scope |
 
-## Step 4 — Realistic multi-ecosystem example
+## Step 4 - Realistic multi-ecosystem example
 
 ```yaml
 version: 2
@@ -183,7 +183,7 @@ updates:
     labels: ["dependencies", "docker"]
 ```
 
-## Step 5 — Security updates (always-on)
+## Step 5 - Security updates (always-on)
 
 Dependabot security updates are **enabled separately** in
 repo settings (Security → Code security and analysis → Dependabot
@@ -196,9 +196,9 @@ security updates). Security PRs:
   the package generally, but Dependabot will still PR a security
   fix unless you explicitly ignore the CVE)
 
-## Step 6 — False-positive triage analogue
+## Step 6 - False-positive triage analogue
 
-Dependabot doesn't produce findings to triage — it produces upgrade
+Dependabot doesn't produce findings to triage - it produces upgrade
 PRs. The "FP triage" analogue is **suppressing unwanted update PRs**:
 
 | Mechanism | Use |
@@ -221,7 +221,7 @@ ignore:
 Cadence: every quarter, audit `ignore:` entries; expired re-review
 dates removed.
 
-## Step 7 — Auto-merge integration
+## Step 7 - Auto-merge integration
 
 Dependabot creates PRs but doesn't auto-merge. For auto-merge,
 pair with GitHub Auto-merge or a workflow:
@@ -264,25 +264,24 @@ Auto-merge only after CI passes; gates auto-merge to patch updates
 
 ## Limitations
 
-- GitHub-only — for GitLab / Bitbucket / non-GitHub, use
+- GitHub-only - for GitLab / Bitbucket / non-GitHub, use
   [`renovate-config`](../renovate-config/SKILL.md).
 - No support for non-language manifests (Helm Chart.yaml,
   pre-commit hook updates, etc.) without workarounds.
-- Grouped PRs introduce coupling — one breaking change blocks the
+- Grouped PRs introduce coupling - one breaking change blocks the
   whole group.
 - Per-CVE waivers (vs per-version-range) are not first-class; the
   `ignore` mechanism is dependency-centric.
 
 ## References
 
-- [db-cfg][db-cfg] — official configuration reference
-- docs.github.com/en/code-security/dependabot — full Dependabot docs
-- docs.github.com/en/code-security/dependabot/dependabot-security-updates
-  — security updates feature
-- github.com/dependabot/fetch-metadata — auto-merge helper
+- [db-cfg][db-cfg] - official configuration reference
+- docs.github.com/en/code-security/dependabot - full Dependabot docs
+- docs.github.com/en/code-security/dependabot/dependabot-security-updates - security updates feature
+- github.com/dependabot/fetch-metadata - auto-merge helper
 - [`snyk-test`](../snyk-test/SKILL.md),
   [`osv-scanner`](../osv-scanner/SKILL.md),
   [`renovate-config`](../renovate-config/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) —
+  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
   sister tools
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) — unifier agent
+- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

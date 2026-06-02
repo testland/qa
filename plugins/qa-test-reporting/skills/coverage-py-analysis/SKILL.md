@@ -1,6 +1,6 @@
 ---
 name: coverage-py-analysis
-description: "Configures coverage.py for Python projects — wires `coverage run` (replacing `python` for instrumentation), enables branch coverage via the `--branch` flag or `branch = True` config, manages the `.coverage` data file (single-process and `combine` for parallel pytest-xdist runs), authors `.coveragerc` with `source` / `omit` / `fail_under`, and emits the format the downstream tool needs (`coverage report` for terminal, `coverage xml` for Cobertura, `coverage html` for human review, `coverage lcov` for SaaS, `coverage json` for programmatic post-processing). Use for any Python test stack (pytest, unittest, nose) that needs PR-time coverage signal."
+description: "Configures coverage.py for Python projects - wires `coverage run` (replacing `python` for instrumentation), enables branch coverage via the `--branch` flag or `branch = True` config, manages the `.coverage` data file (single-process and `combine` for parallel pytest-xdist runs), authors `.coveragerc` with `source` / `omit` / `fail_under`, and emits the format the downstream tool needs (`coverage report` for terminal, `coverage xml` for Cobertura, `coverage html` for human review, `coverage lcov` for SaaS, `coverage json` for programmatic post-processing). Use for any Python test stack (pytest, unittest, nose) that needs PR-time coverage signal."
 rating: 24
 d6: 4
 archetype: S1
@@ -30,11 +30,11 @@ the source fetch on 2026-05-05, "Current version is 7.13.5 (March
 - The project tests with pytest, unittest, or nose, and the team
   needs PR-time coverage signal.
 - A SaaS coverage dashboard (Codecov, Coveralls, Codacy) consumes
-  LCOV or Cobertura — both are first-party output formats.
+  LCOV or Cobertura - both are first-party output formats.
 - A multi-language project (Python + JS + Java) needs per-language
   coverage in a unified format (LCOV).
 
-## Step 1 — Install + replace `python` with `coverage run`
+## Step 1 - Install + replace `python` with `coverage run`
 
 ```bash
 pip install coverage[toml]
@@ -61,7 +61,7 @@ Or via `pytest-cov`:
 pytest --cov=src --cov-branch --cov-report=term-missing --cov-report=xml --cov-report=lcov
 ```
 
-## Step 2 — Enable branch coverage
+## Step 2 - Enable branch coverage
 
 Per [coveragepy-docs][cov], coverage.py defaults to **statement
 coverage** (line coverage). Branch coverage requires opt-in:
@@ -78,10 +78,10 @@ branch = True
 ```
 
 Branch coverage catches the case where every line is executed but
-not every condition arm — `if x and y` where only the true branch
+not every condition arm - `if x and y` where only the true branch
 is tested.
 
-## Step 3 — Author `.coveragerc`
+## Step 3 - Author `.coveragerc`
 
 The canonical config (`.coveragerc` or `[tool.coverage]` in
 `pyproject.toml`):
@@ -131,7 +131,7 @@ Per [coveragepy-docs][cov], the four key `[run]` settings:
 code with magic comments (`# pragma: no cover`) and sentinel patterns
 like `raise NotImplementedError`.
 
-## Step 4 — Combine parallel runs
+## Step 4 - Combine parallel runs
 
 Pytest-xdist runs tests across multiple processes; each process
 writes its own `.coverage.<host>.<pid>.<rand>` file. Per
@@ -149,10 +149,10 @@ coverage lcov
 write per-process files instead of overwriting `.coverage`.
 `coverage combine` then merges them into the final `.coverage`.
 
-**Without combine, only the last process's data survives** — the
+**Without combine, only the last process's data survives** - the
 most common new-user mistake.
 
-## Step 5 — Pick the output format
+## Step 5 - Pick the output format
 
 Per [coveragepy-docs][cov], coverage.py emits five formats:
 
@@ -172,7 +172,7 @@ coverage lcov     # for Codecov
 coverage report   # for the CI log
 ```
 
-## Step 6 — `coverage report --fail-under`
+## Step 6 - `coverage report --fail-under`
 
 For a self-contained gate (without external scripting):
 
@@ -219,7 +219,7 @@ Per-file gates beat global gates for the same reason as in Jest:
 critical paths get a strict floor; the rest gets a refactor-friendly
 global.
 
-## Step 7 — `# pragma: no cover` discipline
+## Step 7 - `# pragma: no cover` discipline
 
 `exclude_lines` lets the team annotate unreachable code:
 
@@ -231,14 +231,14 @@ def divide(a, b):
 ```
 
 Use sparingly. Each `pragma: no cover` is a confession that the
-code is excluded from coverage — make sure the exclusion is
+code is excluded from coverage - make sure the exclusion is
 intentional and reviewable.
 
 The default `exclude_lines` patterns (Step 3) auto-exclude
 `raise NotImplementedError` and `if __name__ == "__main__":` blocks
 that are typically untested boilerplate.
 
-## Step 8 — CI shape
+## Step 8 - CI shape
 
 ```yaml
 - uses: actions/setup-python@v5
@@ -285,7 +285,7 @@ that are typically untested boilerplate.
 | `# pragma: no cover` as escape hatch for "I'm too lazy to test this"     | Coverage number stays high; risk hidden.                                  | Reserve pragmas for truly unreachable / untestable; review each addition. |
 | Running coverage in production / staging                                  | Instrumentation overhead; coverage's tracer slows the program.            | Coverage is for tests only. |
 | Forgetting to omit `tests/` from `source`                                | Tests count as covered code; aggregate inflated.                          | Add `tests/` to `omit` (Step 3) or restrict `source` to `src/`. |
-| `pytest-cov` without `--cov-branch`                                      | Same as above — statement-only coverage.                                  | Always pass `--cov-branch`. |
+| `pytest-cov` without `--cov-branch`                                      | Same as above - statement-only coverage.                                  | Always pass `--cov-branch`. |
 | Per-process `--cov-report=html` in xdist runs                            | Each worker writes a partial HTML; the report is incomplete.              | Generate reports after combine, not during pytest-cov. |
 
 ## Limitations
@@ -306,17 +306,16 @@ that are typically untested boilerplate.
 
 ## References
 
-- [coveragepy-docs][cov] — overview, `coverage run` / `report` /
+- [coveragepy-docs][cov] - overview, `coverage run` / `report` /
   `combine` workflow, branch coverage, `.coveragerc` config
   (`source`, `omit`, `branch`, `fail_under`), output formats
   (text, HTML, XML, LCOV, JSON), supported Python versions.
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) — coverage.py
+- [`lcov-analysis`](../lcov-analysis/SKILL.md) - coverage.py
   `coverage lcov` produces the LCOV file this parser consumes.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) — coverage.py
+- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - coverage.py
   `coverage xml` produces the Cobertura file this parser consumes.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) —
+- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   PR-comment formatter built on top of the parsed coverage.py
   output.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md)
-  — picks which uncovered branches to target next, given the
+- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - picks which uncovered branches to target next, given the
   coverage.py output.

@@ -1,6 +1,6 @@
 ---
 name: data-contract-extractor
-description: "Reads a data-product spec (data PRD, dataset README, lineage doc) and emits a structured data contract — schema (columns + types + nullability + PII flags), freshness SLA, volume bounds, distribution invariants, and ownership. The contract is consumable by the qa-data-quality plugin's dbt-testing / great-expectations / soda-checks skills as their assertion baseline. Use when scoping a new data product or formalizing assertions on an existing one."
+description: "Reads a data-product spec (data PRD, dataset README, lineage doc) and emits a structured data contract - schema (columns + types + nullability + PII flags), freshness SLA, volume bounds, distribution invariants, and ownership. The contract is consumable by the qa-data-quality plugin's dbt-testing / great-expectations / soda-checks skills as their assertion baseline. Use when scoping a new data product or formalizing assertions on an existing one."
 rating: 24
 d6: 4
 archetype: S3
@@ -11,8 +11,8 @@ archetype: S3
 ## Overview
 
 A **data contract** is the agreement between a data producer and its
-consumers about what the producer will deliver — schema, freshness,
-volume, semantic invariants — and what the consumer is allowed to
+consumers about what the producer will deliver - schema, freshness,
+volume, semantic invariants - and what the consumer is allowed to
 depend on. Practitioner-emergent terminology popularized by
 Andrew Jones / Chad Sanderson and now standard in the data-engineering
 literature.
@@ -23,7 +23,7 @@ literature.
 > data-contract entry. This skill cites industry-engineering sources.
 
 This skill formalizes the prose of a data PRD into a contract that
-the QA test suite can mechanically assert against — typically via
+the QA test suite can mechanically assert against - typically via
 `dbt-tests`, `great-expectations`, or `soda-checks` (see
 [`qa-data-quality`](../../../qa-data-quality/) plugin).
 
@@ -51,7 +51,7 @@ For each column:
 |---------------|----------|-------|
 | Name          | yes      | snake_case; matches the warehouse table.            |
 | Type          | yes      | Warehouse-native type (`VARCHAR`, `BIGINT`, `TIMESTAMP`, etc.). |
-| Nullable      | yes      | `true` / `false` — the test suite's `not_null` decision. |
+| Nullable      | yes      | `true` / `false` - the test suite's `not_null` decision. |
 | PK            | yes      | `true` for primary-key column(s).                    |
 | Unique        | yes      | `true` for candidate keys (separate from PK).        |
 | FK            | optional | If foreign key, the `<table>.<column>` reference.    |
@@ -180,20 +180,20 @@ ownership:
 
 When reading a data PRD:
 
-1. **Schema** — look for table-spec sections, ER diagrams, or
+1. **Schema** - look for table-spec sections, ER diagrams, or
    per-column descriptions. If only column names are given, flag
    missing types as gaps; do not guess.
-2. **PII tagging** — every column gets a `pii:` tag, even `pii: none`.
+2. **PII tagging** - every column gets a `pii:` tag, even `pii: none`.
    Force the data-product author to confirm; PII handling drives
    downstream architecture.
-3. **Freshness** — look for "updated daily" / "real-time" / "<X
+3. **Freshness** - look for "updated daily" / "real-time" / "<X
    minutes." If absent, flag as a gap.
-4. **Volume** — look for traffic projections or current scale. If
+4. **Volume** - look for traffic projections or current scale. If
    absent, flag as a gap to be filled before the contract is
    actionable.
-5. **Distribution** — look for business rules in prose form ("status
+5. **Distribution** - look for business rules in prose form ("status
    is one of...", "discount up to 100%") and translate.
-6. **Ownership** — look for the responsible team / Slack channel.
+6. **Ownership** - look for the responsible team / Slack channel.
 
 ## Gap flagging
 
@@ -258,7 +258,7 @@ Discovered via `git grep` of the warehouse client code.
 Output:
 
 The agent reads the SQL queries hitting `events` and infers the
-*observed* contract — column references, status values used in
+*observed* contract - column references, status values used in
 WHERE clauses, recency expectations from `INTERVAL` filters. Then
 it produces a contract draft with a header note:
 
@@ -268,7 +268,7 @@ The producer team must review and amend; this contract is the
 consumers' best-effort reverse-engineering.
 ```
 
-Until the producer attests, the contract is one-sided — useful for
+Until the producer attests, the contract is one-sided - useful for
 the consumer's tests, NOT a binding agreement.
 
 ## Anti-patterns
@@ -277,20 +277,19 @@ the consumer's tests, NOT a binding agreement.
 |---------------------------------------------------|---------------------------------------------------------------|-----|
 | Auto-tagging every column `pii: none`              | Misses real PII; downstream ungoverned.                       | Force the author to make the call; default to "needs review" rather than "none". |
 | Generic freshness "real-time"                      | Ambiguous; "real-time" varies from <100ms to <1min by team.   | Quantify: `cadence: continuous, max_staleness: 60s`. |
-| Distribution rules without a window                | "Cancellation rate ≤5%" — over what window? Lifetime?         | Always specify a window: `rolling_window: 7d`. |
+| Distribution rules without a window                | "Cancellation rate ≤5%" - over what window? Lifetime?         | Always specify a window: `rolling_window: 7d`. |
 | Skipping Ownership                                  | A contract without an owner is a wishlist; nobody's on the hook. | Require ownership before declaring the contract complete. |
 
 ## References
 
-- ISTQB Glossary V4.7.1 — testability + non-functional testing
+- ISTQB Glossary V4.7.1 - testability + non-functional testing
   (cited in [`testability-reviewer`](../../agents/testability-reviewer.md)
-  and [`nfr-extractor`](../nfr-extractor/SKILL.md)) — for the
+  and [`nfr-extractor`](../nfr-extractor/SKILL.md)) - for the
   underlying observability heuristic.
-- ISO/IEC 25012:2008 — data-quality model (cite by stable ID;
+- ISO/IEC 25012:2008 - data-quality model (cite by stable ID;
   paywalled at iso.org).
-- [`qa-data-quality`](../../../qa-data-quality/README.md) plugin —
+- [`qa-data-quality`](../../../qa-data-quality/README.md) plugin - 
   the downstream consumer of this skill's output. The
   [`data-quality-engineer`](../../../qa-data-quality/agents/data-quality-engineer.md)
   agent reads contracts produced by this skill.
-- [`data-quality-conventions`](../../../qa-data-quality/skills/data-quality-conventions/SKILL.md)
-  — naming and threshold conventions referenced from the contract.
+- [`data-quality-conventions`](../../../qa-data-quality/skills/data-quality-conventions/SKILL.md) - naming and threshold conventions referenced from the contract.

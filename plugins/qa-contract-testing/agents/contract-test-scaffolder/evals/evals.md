@@ -4,7 +4,7 @@ type: agent
 archetype: A4
 ---
 
-# contract-test-scaffolder — evals
+# contract-test-scaffolder - evals
 
 Companion eval cases for [`contract-test-scaffolder`](../../contract-test-scaffolder.md).
 Three cases cover happy path / branch / adversarial: scaffolding a Pact-JS
@@ -16,7 +16,7 @@ Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
 the eval-authoring date.
 
-## Eval 1 — happy path — Pact-JS consumer from OpenAPI
+## Eval 1 - happy path - Pact-JS consumer from OpenAPI
 
 **Input:**
 
@@ -73,10 +73,10 @@ Pact-JS spec at the documented path
 (`tests/contracts/cart-service.consumer.spec.ts`) that imports
 `Pact` from `@pact-foundation/pact`, constructs the provider with
 `consumer: 'web-app', provider: 'cart-service'`, and emits ONE
-`addInteraction` per documented response code (201, 400, 401 — 3
+`addInteraction` per documented response code (201, 400, 401 - 3
 interactions in total). Because no OpenAPI `examples:` block was
 supplied, every payload field is emitted as an `INPUT-NEEDED`
-placeholder with the JSON Schema fragment quoted as a comment —
+placeholder with the JSON Schema fragment quoted as a comment - 
 the agent does NOT invent example values like `'SKU-001'`. Step 4
 appends a `HAND-OFF` block.
 
@@ -88,7 +88,7 @@ appends a `HAND-OFF` block.
 (the agent must not invent payload examples absent from the
 artifact).
 
-## Eval 2 — branch — Protobuf `buf breaking` runner
+## Eval 2 - branch - Protobuf `buf breaking` runner
 
 **Input:**
 
@@ -137,7 +137,7 @@ does NOT contain `addInteraction` (those belong to the
 Pact-JS / OpenAPI branch and would mean the agent picked the
 wrong strategy).
 
-## Eval 3 — adversarial — no contract artifact supplied (refuse)
+## Eval 3 - adversarial - no contract artifact supplied (refuse)
 
 **Input:**
 
@@ -156,7 +156,7 @@ Provider name: cart-service
 **Target models:** sonnet (2026-05-26)
 
 **Expected:** Refuses to scaffold. Cites the persona of the agent
-("Generates the tests; engineer fills the values — does not invent
+("Generates the tests; engineer fills the values - does not invent
 contract behavior the artifact does not declare") and the
 Refuse-to-proceed rule ("invent example payloads"). No artifact
 means no `addInteraction` can be derived from documented
@@ -185,7 +185,7 @@ fabricated from prior knowledge) and does NOT contain
   narrow `Bash(jq *)` / `Bash(npx schemathesis *)` /
   `Bash(uvx schemathesis *)` / `Bash(buf *)` / `Bash(oasdiff *)`)
   may write files into the eval workspace but does not need network
-  access — the schemathesis / buf binaries are only invoked when
+  access - the schemathesis / buf binaries are only invoked when
   asked, and eval 3 explicitly tests the refuse path with no
   artifact.
 - Eval cases were authored 2026-05-26 against the v3.0 / v4.0

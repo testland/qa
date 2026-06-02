@@ -1,6 +1,6 @@
 ---
 name: acceptance-test-from-criteria
-description: "Build-an-X workflow for ATDD (Acceptance Test-Driven Development) — converts acceptance criteria into executable acceptance tests in the team's BDD framework (Cucumber / Behave / Reqnroll), pairs with the relevant runner, scaffolds step definitions for new patterns, marks generated tests as \"AC-N\" so failures map back to the story's acceptance criterion. Use when the team practices ATDD and wants automation generated from ACs as a first-class step before development."
+description: "Build-an-X workflow for ATDD (Acceptance Test-Driven Development) - converts acceptance criteria into executable acceptance tests in the team's BDD framework (Cucumber / Behave / Reqnroll), pairs with the relevant runner, scaffolds step definitions for new patterns, marks generated tests as \"AC-N\" so failures map back to the story's acceptance criterion. Use when the team practices ATDD and wants automation generated from ACs as a first-class step before development."
 rating: 22
 d6: 4
 archetype: S3
@@ -38,7 +38,7 @@ For Gherkin generation from prose stories, see
 upstream AC extraction, see
 [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
 
-## Step 1 — Read the AC list
+## Step 1 - Read the AC list
 
 ```markdown
 ## Acceptance criteria
@@ -50,10 +50,10 @@ upstream AC extraction, see
 - AC-1.5: Promo applies before tax (per current pricing logic).
 ```
 
-Each AC has an ID — preserved end-to-end so test failures map
+Each AC has an ID - preserved end-to-end so test failures map
 back.
 
-## Step 2 — One test per AC
+## Step 2 - One test per AC
 
 ```gherkin
 # Features/promo-application.feature
@@ -106,7 +106,7 @@ Feature: Apply promo code at checkout
 The `@AC-X.Y` tag is the load-bearing traceability: failing tests
 report which AC failed.
 
-## Step 3 — Initial state — all tests fail
+## Step 3 - Initial state - all tests fail
 
 Per ATDD, tests are written **before** implementation. Initial
 run:
@@ -123,7 +123,7 @@ Scenario: Valid promo reduces subtotal
 
 The failing tests are the work backlog.
 
-## Step 4 — Implementation drives tests green
+## Step 4 - Implementation drives tests green
 
 Engineer implements the promo logic; tests turn green one by one:
 
@@ -143,10 +143,10 @@ After implementing all paths:
   AC-1.5 ✅
 ```
 
-Story is "done" only when all AC tests pass — per the team's DoD
+Story is "done" only when all AC tests pass - per the team's DoD
 ([`definition-of-done`](../../qa-process/skills/definition-of-done/SKILL.md)).
 
-## Step 5 — Scaffold new step definitions
+## Step 5 - Scaffold new step definitions
 
 The skill detects undefined steps and emits stub definitions:
 
@@ -178,12 +178,12 @@ def step_subtotal(context, expected):
     raise NotImplementedError(f"Implement: assert subtotal == {expected}")
 ```
 
-The `NotImplementedError` body makes the test failure helpful —
+The `NotImplementedError` body makes the test failure helpful - 
 the engineer knows exactly what to implement.
 
 The implementations land in PRs alongside the production code.
 
-## Step 6 — Traceability artifact
+## Step 6 - Traceability artifact
 
 ```markdown
 ## AC-to-test mapping — `<story>` (auto-generated)
@@ -202,9 +202,9 @@ The implementations land in PRs alongside the production code.
 This artifact answers: "Did we test what the customer asked for?"
 A 1:1 mapping of AC → test → status answers it definitively.
 
-## Step 7 — Run via the team's framework
+## Step 7 - Run via the team's framework
 
-**Default: match the team's existing BDD runner** — ATDD lives or dies by adoption, and forcing a runner switch alongside test-first authoring stalls both. Use the team's incumbent runner (Cucumber-JVM, Behave, or Reqnroll). Pick a new runner only when no incumbent exists; in that case default to the runner matching the production stack's primary language (JVM → Cucumber-JVM, Python → Behave, .NET → Reqnroll).
+**Default: match the team's existing BDD runner** - ATDD lives or dies by adoption, and forcing a runner switch alongside test-first authoring stalls both. Use the team's incumbent runner (Cucumber-JVM, Behave, or Reqnroll). Pick a new runner only when no incumbent exists; in that case default to the runner matching the production stack's primary language (JVM → Cucumber-JVM, Python → Behave, .NET → Reqnroll).
 
 ```bash
 # Cucumber-JVM
@@ -240,16 +240,13 @@ dotnet test --filter "Category=AC-1.1|Category=AC-1.2|..."
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-  — upstream: emits the AC this skill consumes.
-- [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md) —
+- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits the AC this skill consumes.
+- [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md) - 
   sibling: story-first variant.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)
-  — step library this skill draws from + adds to.
+- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from + adds to.
 - [`cucumber-testing`](../cucumber-testing/SKILL.md),
   [`behave-testing`](../behave-testing/SKILL.md),
-  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) — runners.
-- [`definition-of-done`](../../qa-process/skills/definition-of-done/SKILL.md)
-  — DoD that requires AC tests to pass.
-- ISTQB Glossary V4.7.1 — `https://glossary.istqb.org/en_US/term/acceptance-test-driven-development`
+  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - runners.
+- [`definition-of-done`](../../qa-process/skills/definition-of-done/SKILL.md) - DoD that requires AC tests to pass.
+- ISTQB Glossary V4.7.1 - `https://glossary.istqb.org/en_US/term/acceptance-test-driven-development`
   defines ATDD as "a collaboration-based test-first approach."

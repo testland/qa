@@ -114,7 +114,7 @@ exporter.csv.export = true
 
 For quick starts MITRE distributes pre-generated SyntheaMass
 populations (1M patient Massachusetts simulation, etc.) on the
-project site — search for "Synthea downloadable populations" if
+project site - search for "Synthea downloadable populations" if
 you don't need to regenerate.
 
 ### Disease modules
@@ -162,7 +162,7 @@ output/csv/
 ```
 
 The `patients.csv` `ssn` column contains **fake** SSNs in
-Synthea's reserved test range — they look real-formatted but
+Synthea's reserved test range - they look real-formatted but
 don't correspond to issued SSAs. This is the intended
 HIPAA-safe replacement.
 
@@ -197,7 +197,7 @@ jobs:
 For repeatable tests, pin Synthea to a tag (`git checkout v3.x.x`)
 since modules evolve.
 
-## Example — generate 100 diabetic patients in MA
+## Example - generate 100 diabetic patients in MA
 
 ```bash
 ./run_synthea -p 100 -s 42 -a 40-75 Massachusetts \
@@ -241,11 +241,11 @@ synthea.properties).
 
 ## References
 
-- Synthea GitHub —
+- Synthea GitHub - 
   [github.com/synthetichealth/synthea](https://github.com/synthetichealth/synthea).
-- MITRE Synthea project site — synthea.mitre.org (the canonical
+- MITRE Synthea project site - synthea.mitre.org (the canonical
   project home; documentation, downloads, community).
-- HIPAA Safe Harbor (45 CFR § 164.514(b)(2)) — the de-identification
+- HIPAA Safe Harbor (45 CFR § 164.514(b)(2)) - the de-identification
   standard Synthea output is engineered against. See
   [`pii-categories-reference`](../pii-categories-reference/SKILL.md).
 - Sibling generator (generic):

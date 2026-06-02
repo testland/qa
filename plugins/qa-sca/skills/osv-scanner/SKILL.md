@@ -1,6 +1,6 @@
 ---
 name: osv-scanner
-description: "Configures and runs Google OSV-Scanner — open-source SCA against the OSV.dev vulnerability database; supports `osv-scanner scan -r ./` recursive scan + per-lockfile scan via `-L package-lock.json`; SBOM input (CycloneDX / SPDX) for non-standard package managers; `--format json|sarif|markdown|vertical|html` output; suppressions via `osv-scanner.toml` config. Use when the team needs OSS-native SCA without commercial-license overhead, or wants a second-opinion DB pair with Snyk's commercial DB."
+description: "Configures and runs Google OSV-Scanner - open-source SCA against the OSV.dev vulnerability database; supports `osv-scanner scan -r ./` recursive scan + per-lockfile scan via `-L package-lock.json`; SBOM input (CycloneDX / SPDX) for non-standard package managers; `--format json|sarif|markdown|vertical|html` output; suppressions via `osv-scanner.toml` config. Use when the team needs OSS-native SCA without commercial-license overhead, or wants a second-opinion DB pair with Snyk's commercial DB."
 rating: 23
 d6: 4
 archetype: S1
@@ -13,13 +13,13 @@ archetype: S1
 ## When to use
 
 - Team prefers OSS tooling over commercial Snyk.
-- Layered SCA strategy — pair with [`snyk-test`](../snyk-test/SKILL.md)
+- Layered SCA strategy - pair with [`snyk-test`](../snyk-test/SKILL.md)
   for cross-DB consensus signal.
 - Custom package manager produces SBOMs not natively supported;
   feed SBOM directly to OSV-Scanner.
 - Lightweight CI gate without commercial-license setup.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [osv-usage][osv-usage]:
 
@@ -40,7 +40,7 @@ brew install osv-scanner
 # Direct binary download from github.com/google/osv-scanner/releases
 ```
 
-## Step 2 — Basic recursive scan
+## Step 2 - Basic recursive scan
 
 Per [osv-usage][osv-usage]:
 
@@ -60,7 +60,7 @@ osv-scanner scan -L package-lock.json --output-file scan-results.txt
 The `-L` flag is useful in monorepos to scan a specific lockfile
 without recursing.
 
-## Step 3 — Output formats
+## Step 3 - Output formats
 
 Per [osv-usage][osv-usage]: `--format json` and `--format=vertical`
 and `--format=html` are referenced. Full format list per the
@@ -74,7 +74,7 @@ osv-scanner documentation:
 | `--format vertical` | Default human-readable |
 | `--format html` | Standalone report |
 
-## Step 4 — SBOM-driven scanning
+## Step 4 - SBOM-driven scanning
 
 For projects with custom build systems that emit SBOMs but lack
 natively-parsed lockfiles:
@@ -85,10 +85,10 @@ osv-scanner scan --sbom my-app.spdx.json
 ```
 
 This composes with [`syft-generation`](../../qa-sbom/skills/syft-generation/SKILL.md)
-in the qa-sbom plugin — Syft generates the SBOM, OSV-Scanner
+in the qa-sbom plugin - Syft generates the SBOM, OSV-Scanner
 queries OSV.dev against it.
 
-## Step 5 — `osv-scanner.toml` config
+## Step 5 - `osv-scanner.toml` config
 
 Per [osv-usage][osv-usage]:
 
@@ -118,7 +118,7 @@ ignore = true   # Suppress all vulns in this exact pinned version
 reason = "Test fixture; not in production dependency graph"
 ```
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Three suppression layers:
 
@@ -143,20 +143,20 @@ Re-review-date: 2026-09-15
 """
 ```
 
-`ignoreUntil` is enforced by osv-scanner — past-due ignores are
+`ignoreUntil` is enforced by osv-scanner - past-due ignores are
 re-surfaced in the scan results.
 
 Cadence: every quarter, list all `[[IgnoredVulns]]` entries +
 re-validate the `reason`; expired ones removed; persistent ones
 escalated to upgrade work.
 
-## Step 7 — Exit codes + CI gating
+## Step 7 - Exit codes + CI gating
 
 OSV-Scanner exit codes (verify against current docs):
 
-- 0 — no vulnerabilities found
-- 1 — vulnerabilities found
-- 127 — config error
+- 0 - no vulnerabilities found
+- 1 - vulnerabilities found
+- 127 - config error
 
 ```yaml
 jobs:
@@ -180,7 +180,7 @@ jobs:
 The `google/osv-scanner-action` GHA wraps the Docker invocation +
 SARIF upload.
 
-## Step 8 — License-checking (adjacent feature)
+## Step 8 - License-checking (adjacent feature)
 
 OSV-Scanner has experimental license-summary support:
 
@@ -203,28 +203,28 @@ or use a dedicated tool like ScanCode / FOSSology.
 
 ## Limitations
 
-- OSV.dev DB coverage varies by ecosystem — Python / npm / Go are
+- OSV.dev DB coverage varies by ecosystem - Python / npm / Go are
   strong; less common ecosystems thinner.
-- Reachability analysis is NOT included — every CVE on a declared
+- Reachability analysis is NOT included - every CVE on a declared
   dep counts even if the vulnerable function isn't called.
 - Container image scanning is limited; for that, prefer
   [`trivy-image`](../../qa-sbom/skills/trivy-image/SKILL.md) or
   [`grype-scanning`](../../qa-sbom/skills/grype-scanning/SKILL.md).
-- Per [osv-usage][osv-usage], some CLI surface evolves — verify
+- Per [osv-usage][osv-usage], some CLI surface evolves - verify
   against current osv-scanner help output.
 
 ## References
 
-- [osv-usage][osv-usage] — usage page (lockfile, SBOM, config)
-- google.github.io/osv-scanner — full docs
-- github.com/google/osv-scanner — repository
-- osv.dev — OSV vulnerability database
-- ossf.github.io/osv-schema/ — OSV schema
+- [osv-usage][osv-usage] - usage page (lockfile, SBOM, config)
+- google.github.io/osv-scanner - full docs
+- github.com/google/osv-scanner - repository
+- osv.dev - OSV vulnerability database
+- ossf.github.io/osv-schema/ - OSV schema
 - [`snyk-test`](../snyk-test/SKILL.md),
   [`dependabot-config`](../dependabot-config/SKILL.md),
   [`renovate-config`](../renovate-config/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) —
+  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
   sister tools
-- [`syft-generation`](../../qa-sbom/skills/syft-generation/SKILL.md) —
+- [`syft-generation`](../../qa-sbom/skills/syft-generation/SKILL.md) - 
   cross-plugin SBOM source
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) — unifier agent
+- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

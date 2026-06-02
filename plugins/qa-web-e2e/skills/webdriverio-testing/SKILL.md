@@ -1,6 +1,6 @@
 ---
 name: webdriverio-testing
-description: "Authors WebdriverIO E2E tests — `npm init wdio@latest` scaffolding, services architecture (sauce, browserstack, appium, devtools), reporters (spec, allure, junit), built-in Mocha/Jasmine/Cucumber framework integrations. WebdriverIO sits between Selenium (W3C protocol) and Playwright (modern API) — Selenium-protocol-compatible with rich plugin ecosystem. Use when the team needs WebDriver protocol + service-based device-farm integration."
+description: "Authors WebdriverIO E2E tests - `npm init wdio@latest` scaffolding, services architecture (sauce, browserstack, appium, devtools), reporters (spec, allure, junit), built-in Mocha/Jasmine/Cucumber framework integrations. WebdriverIO sits between Selenium (W3C protocol) and Playwright (modern API) - Selenium-protocol-compatible with rich plugin ecosystem. Use when the team needs WebDriver protocol + service-based device-farm integration."
 rating: 22
 d6: 3
 archetype: S1
@@ -33,7 +33,7 @@ Selenium by:
 For pure-modern E2E, Playwright is simpler. For non-WebDriver
 architecture, Cypress.
 
-## Step 1 — Scaffold
+## Step 1 - Scaffold
 
 ```bash
 npm init wdio@latest
@@ -50,7 +50,7 @@ Interactive prompts pick:
 What lands: `wdio.conf.ts` + `tests/specs/*.e2e.ts` +
 `package.json` updates.
 
-## Step 2 — Configure
+## Step 2 - Configure
 
 ```typescript
 // wdio.conf.ts
@@ -79,7 +79,7 @@ export const config: WebdriverIO.Config = {
 
 `maxInstances: 4` runs 4 specs in parallel.
 
-## Step 3 — Author a test (Mocha)
+## Step 3 - Author a test (Mocha)
 
 ```typescript
 // tests/specs/checkout.e2e.ts
@@ -111,12 +111,12 @@ describe('Checkout flow', () => {
 The `$` selector returns a wdio element (Promise-wrapped); methods
 auto-wait. WDIO selectors have shortcuts:
 
-- `$('h1=Welcome')` — text equals
-- `$('h1*=Welcome')` — text contains
-- `$('[data-testid=foo]')` — CSS selector
-- `$('//button[@type="submit"]')` — XPath
+- `$('h1=Welcome')` - text equals
+- `$('h1*=Welcome')` - text contains
+- `$('[data-testid=foo]')` - CSS selector
+- `$('//button[@type="submit"]')` - XPath
 
-## Step 4 — Services
+## Step 4 - Services
 
 ```typescript
 services: [
@@ -139,7 +139,7 @@ services: [
 Services handle setup / teardown; tests connect via the configured
 capability.
 
-## Step 5 — Run
+## Step 5 - Run
 
 ```bash
 # Run all specs
@@ -152,7 +152,7 @@ npx wdio run wdio.conf.ts --spec ./tests/specs/checkout.e2e.ts
 npx wdio run wdio.conf.ts --watch
 ```
 
-## Step 6 — Cucumber framework (BDD)
+## Step 6 - Cucumber framework (BDD)
 
 ```typescript
 // wdio.conf.ts
@@ -195,7 +195,7 @@ Given(/^I am logged in as "(.+)"$/, async (email) => {
 Pairs with [`cucumber-testing`](../../qa-bdd/skills/cucumber-testing/SKILL.md)
 conventions for the Gherkin layer.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -240,8 +240,6 @@ JUnit XML in `reports/junit/` feeds
 - WebdriverIO at `webdriver.io`.
 - [`playwright-testing`](../playwright-testing/SKILL.md),
   [`cypress-testing`](../cypress-testing/SKILL.md),
-  [`selenium-testing`](../selenium-testing/SKILL.md) — alternatives.
-- [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md)
-  — wdio's appium service uses Appium underneath.
-- [`cucumber-testing`](../../qa-bdd/skills/cucumber-testing/SKILL.md)
-  — wdio's cucumber framework integration.
+  [`selenium-testing`](../selenium-testing/SKILL.md) - alternatives.
+- [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md) - wdio's appium service uses Appium underneath.
+- [`cucumber-testing`](../../qa-bdd/skills/cucumber-testing/SKILL.md) - wdio's cucumber framework integration.

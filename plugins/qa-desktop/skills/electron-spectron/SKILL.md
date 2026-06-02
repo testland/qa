@@ -1,6 +1,6 @@
 ---
 name: electron-spectron
-description: "Legacy reference for Spectron — Electron's original ChromeDriver-based testing framework, officially deprecated 2022-02-01 at v19.0.0. Documents what Spectron was, the architectural reason it became unmaintainable, the migration path to Playwright `_electron`, and the residual support contract for projects still on Spectron. Use only when auditing a legacy suite or planning a migration off Spectron — for new work use `electron-playwright` in this plugin."
+description: "Legacy reference for Spectron - Electron's original ChromeDriver-based testing framework, officially deprecated 2022-02-01 at v19.0.0. Documents what Spectron was, the architectural reason it became unmaintainable, the migration path to Playwright `_electron`, and the residual support contract for projects still on Spectron. Use only when auditing a legacy suite or planning a migration off Spectron - for new work use `electron-playwright` in this plugin."
 archetype: S2
 rating: 23
 d6: 4
@@ -18,7 +18,7 @@ keywords:
 
 Spectron was a Node.js library that drove Electron applications
 through ChromeDriver + the legacy WebDriverIO API. It shipped from
-the official `electron-userland` org and was — for several years —
+the official `electron-userland` org and was - for several years - 
 the only sanctioned end-to-end driver for Electron apps.
 
 Per the [Spectron repository][spectronrepo]:
@@ -41,7 +41,7 @@ commands" steps because no new project should start on Spectron.
 - Estimating migration effort from Spectron to Playwright.
 - Triaging Spectron test failures in projects that haven't migrated
   yet (and shouldn't migrate this sprint).
-- Writing a deprecation-debt ticket — quoting the cited deprecation
+- Writing a deprecation-debt ticket - quoting the cited deprecation
   notice for stakeholder context.
 
 For new projects: stop here and read `electron-playwright` in this
@@ -68,8 +68,8 @@ deprecation moment:
    surface.
 3. **Native testing tools matured.** Per [Electron's automated-
    testing guide][electrontest], Electron now recommends three
-   first-class alternatives — Playwright, WebDriverIO (modern
-   async), Selenium — each with native Electron support paths.
+   first-class alternatives - Playwright, WebDriverIO (modern
+   async), Selenium - each with native Electron support paths.
 
 [electrontest]: https://www.electronjs.org/docs/latest/tutorial/automated-testing
 
@@ -82,7 +82,7 @@ recommendations are:
 | **WebdriverIO (WDIO)** | `npm init wdio@latest ./` → wizard asks "Desktop Testing - of Electron Applications" |
 | **Selenium** | WebDriver API bindings; lower-level than the above |
 
-Playwright is the de-facto replacement most projects migrate to —
+Playwright is the de-facto replacement most projects migrate to - 
 see `electron-playwright` in this plugin for the implementation
 SKILL.
 
@@ -147,12 +147,12 @@ A Spectron-to-Playwright migration touches:
 | `new Application({ path })` | `electron.launch({ args: ['.'] })` ([electrontest][electrontest]) |
 | `app.start()` / `app.stop()` | `electronApp.launch()` / `electronApp.close()` |
 | `app.client.<webdriver-method>` | `page = await electronApp.firstWindow()`; then standard `page.<method>` ([electrontest][electrontest]) |
-| `app.browserWindow.<method>` (sync RPC into main process) | `electronApp.evaluate(({ BrowserWindow }) => { … })` — typed handle ([electrontest][electrontest]) |
+| `app.browserWindow.<method>` (sync RPC into main process) | `electronApp.evaluate(({ BrowserWindow }) => { … })` - typed handle ([electrontest][electrontest]) |
 | Window counting via `app.client.getWindowCount()` | `electronApp.windows().length` |
-| ChromeDriver binary lifecycle | Implicit — Playwright bundles Chromium and exposes packaged-app launch directly |
+| ChromeDriver binary lifecycle | Implicit - Playwright bundles Chromium and exposes packaged-app launch directly |
 
 Plan migration **test-file-by-test-file**, not big-bang. Per Step 7
-of the migration playbook (kept implicit here — see your project's
+of the migration playbook (kept implicit here - see your project's
 test-strategy doc): tag each file as migrated, run both suites in
 CI until the Spectron set is empty, then delete `spectron` from
 `package.json`.
@@ -165,8 +165,8 @@ If a project must remain on Spectron in the short term:
   [spectronrepo][spectronrepo]) and `electron: ^19.0.0`. Newer
   Electron versions will break.
 - **Pin Node.js** to a version compatible with the bundled
-  ChromeDriver — typically Node 16 for the Spectron 19 era.
-- **Do not file issues upstream** — the repository is archived
+  ChromeDriver - typically Node 16 for the Spectron 19 era.
+- **Do not file issues upstream** - the repository is archived
   ([spectronrepo][spectronrepo]). Patches must live as local
   forks.
 - **Schedule the migration.** Spectron will not get security or
@@ -181,7 +181,7 @@ If a project must remain on Spectron in the short term:
 | "Just upgrade Electron" without migrating off Spectron | Spectron pinned to Electron 19; newer Electron breaks Spectron's ChromeDriver bridge | Migrate to Playwright `_electron` |
 | Big-bang Spectron → Playwright migration in one PR | High risk; no fall-back if behaviour differs | File-by-file migration with both suites green |
 | Patching the archived Spectron repository upstream | Repository is read-only; PRs aren't being merged ([spectronrepo][spectronrepo]) | Fork; or invest the same effort into migration |
-| Citing Spectron's deprecation as the only reason to migrate | Stakeholders ask "but it still works" | Cite (1) Electron-version lock, (2) no security updates, (3) no support — all in the deprecation notice ([spectronrepo][spectronrepo]) |
+| Citing Spectron's deprecation as the only reason to migrate | Stakeholders ask "but it still works" | Cite (1) Electron-version lock, (2) no security updates, (3) no support - all in the deprecation notice ([spectronrepo][spectronrepo]) |
 
 ## Limitations
 
@@ -190,7 +190,7 @@ If a project must remain on Spectron in the short term:
   ported per test file.
 - **API surface drift.** Spectron's main-process RPC (`app.electron.<…>`)
   doesn't have a 1:1 mapping to Playwright's
-  `electronApp.evaluate()` for every case — some tests need a
+  `electronApp.evaluate()` for every case - some tests need a
   small refactor.
 - **WebDriverIO modern path** is technically also a Spectron
   successor ([electrontest][electrontest]). For projects already
@@ -201,8 +201,8 @@ If a project must remain on Spectron in the short term:
 
 ## References
 
-- Spectron repository (archived) — [spectronrepo][spectronrepo].
-- Electron Automated Testing tutorial — [electrontest][electrontest].
+- Spectron repository (archived) - [spectronrepo][spectronrepo].
+- Electron Automated Testing tutorial - [electrontest][electrontest].
 - Successor SKILL in this plugin: `electron-playwright`.
 - Strategic context: `desktop-test-strategy-reference` (this plugin)
   describes the Electron-renderer + Electron-main two-surface

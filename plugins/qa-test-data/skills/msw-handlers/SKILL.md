@@ -13,7 +13,7 @@ archetype: S1
 Mock Service Worker (MSW) intercepts HTTP requests at the network
 layer using **Service Workers in the browser** and a **request-
 interception adapter in Node.js** ([msw-getting-started][gs]). The
-same handler set works for both — the test author writes one
+same handler set works for both - the test author writes one
 `http.get` mock and uses it from Vitest unit tests AND from a
 Cypress browser test.
 
@@ -22,11 +22,11 @@ Cypress browser test.
 ## When to use
 
 - The project is JavaScript / TypeScript.
-- Tests need to mock HTTP at the **same layer as the SUT** —
+- Tests need to mock HTTP at the **same layer as the SUT** - 
   intercepting actual `fetch` / `XHR` calls rather than stubbing
   the HTTP client library.
 - Both browser tests (Cypress / Playwright) and Node tests (Vitest /
-  Jest) need the same mock data — MSW's cross-environment
+  Jest) need the same mock data - MSW's cross-environment
   consistency is its key advantage.
 - The team wants per-test handler overrides (`server.use(...)`)
   layered on top of project-wide defaults.
@@ -89,7 +89,7 @@ receives `{ request, params, cookies }` and returns an
 | `HttpResponse.error()`         | Network-level error (e.g. simulate offline).         |
 | `new HttpResponse(...)`        | Full-control raw response.                            |
 
-The `init` object accepts `status`, `statusText`, `headers` —
+The `init` object accepts `status`, `statusText`, `headers` - 
 matching the standard `Response` API.
 
 ### Pattern matching
@@ -101,7 +101,7 @@ matching the standard `Response` API.
 | `'*\\/orders'`                              | Wildcards via standard URL pattern.                |
 | `/^\\/api\\/orders\\/[0-9]+$/`              | Regex match.                                        |
 
-## Browser setup — `setupWorker`
+## Browser setup - `setupWorker`
 
 ```javascript
 // src/mocks/browser.js
@@ -122,7 +122,7 @@ In a Storybook + MSW combo, kick off `worker.start()` from the
 preview file. For Cypress: register the worker before any test
 that depends on the mocks.
 
-## Node setup — `setupServer`
+## Node setup - `setupServer`
 
 ```javascript
 // src/mocks/node.js
@@ -150,7 +150,7 @@ afterAll(() => server.close());
 | `server.close()`      | `afterAll`                         | Tear down; release resources.        |
 | `server.use(...)`     | Per-test                           | Add / override handlers for the current test only. |
 
-`onUnhandledRequest: 'error'` is the canonical strict mode — fails
+`onUnhandledRequest: 'error'` is the canonical strict mode - fails
 the test if the SUT makes any HTTP call that doesn't have a
 matching handler. Catches "we forgot to mock that endpoint" silently
 passing.
@@ -212,9 +212,9 @@ service worker script is in `public/`.
 
 ## References
 
-- [msw-getting-started][gs] — install, handler authoring, browser
+- [msw-getting-started][gs] - install, handler authoring, browser
   vs node setup, lifecycle hooks, `server.use()` per-test overrides.
-- MSW Docs — https://mswjs.io/docs/
-- [`wiremock-stubs`](../wiremock-stubs/SKILL.md) — JVM counterpart.
-- [`mountebank-imposters`](../mountebank-imposters/SKILL.md) —
+- MSW Docs - https://mswjs.io/docs/
+- [`wiremock-stubs`](../wiremock-stubs/SKILL.md) - JVM counterpart.
+- [`mountebank-imposters`](../mountebank-imposters/SKILL.md) - 
   multi-protocol alternative.

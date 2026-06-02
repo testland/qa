@@ -1,6 +1,6 @@
 ---
 name: bug-report-template
-description: "Builds a well-formed bug (defect) report from raw observation notes — fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale. Validates that each field has the load-bearing content reviewers and engineers need to triage. Use when a stakeholder reports a problem informally (chat, email, voice) and the team needs a triageable issue without round-tripping for missing fields."
+description: "Builds a well-formed bug (defect) report from raw observation notes - fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale. Validates that each field has the load-bearing content reviewers and engineers need to triage. Use when a stakeholder reports a problem informally (chat, email, voice) and the team needs a triageable issue without round-tripping for missing fields."
 rating: 24
 d6: 4
 archetype: S3
@@ -19,7 +19,7 @@ incident-report format converges on the same eight fields:
 
 | Field             | Purpose                                                      |
 |-------------------|--------------------------------------------------------------|
-| **Summary**       | Triage line — describes the problem, not the cause.         |
+| **Summary**       | Triage line - describes the problem, not the cause.         |
 | **Environment**   | OS, build, browser/runtime version, locale, device.         |
 | **Steps to Reproduce** | Numbered, deterministic, copy-pasteable.              |
 | **Expected**      | What should have happened.                                  |
@@ -37,7 +37,7 @@ incident-report format converges on the same eight fields:
 
 The skill is a workflow that takes raw input (a chat message, a voice
 memo transcription, a copy-pasted error) and produces a filled
-template — refusing to leave any required field blank.
+template - refusing to leave any required field blank.
 
 ## When to use
 
@@ -49,10 +49,10 @@ template — refusing to leave any required field blank.
   clean baseline report to anchor the timeline.
 
 If the team already has a working bug template in their tracker, this
-skill is **not** for replacing it — it's for **filling** it correctly.
+skill is **not** for replacing it - it's for **filling** it correctly.
 Adapt the field set below to the team's existing template.
 
-## Step 1 — Extract raw evidence
+## Step 1 - Extract raw evidence
 
 From the input (chat message, error log, screenshot caption, voice
 memo), extract:
@@ -62,13 +62,13 @@ memo), extract:
   observed.
 - **Any environmental details** the reporter mentioned (OS, browser,
   app version).
-- **What the reporter expected** vs. **what they observed** —
+- **What the reporter expected** vs. **what they observed** - 
   separately. Often the reporter conflates these; tease them apart.
 
 If any of these is missing, **flag the gap** rather than fabricating;
 the gap is a triage signal in itself.
 
-## Step 2 — Draft the Summary
+## Step 2 - Draft the Summary
 
 Per Mozilla's guidance, summaries should be **under 60 characters**
 and describe the **problem, not the solution** ([mozilla-bug-writing][moz]).
@@ -82,14 +82,14 @@ and describe the **problem, not the solution** ([mozilla-bug-writing][moz]).
 A good summary names the **surface** (URL/screen) and the **observable
 behavior** (what's wrong).
 
-## Step 3 — Build the Steps to Reproduce
+## Step 3 - Build the Steps to Reproduce
 
 Per [mozilla-bug-writing][moz], reproduction steps must be:
 
 - **Numbered** in execution order.
-- **Specific** — exact buttons, exact URLs, exact input values.
-- **Deterministic** — no "around step 5 it sometimes...".
-- **Self-contained** — start from a known state (logged out, fresh
+- **Specific** - exact buttons, exact URLs, exact input values.
+- **Deterministic** - no "around step 5 it sometimes...".
+- **Self-contained** - start from a known state (logged out, fresh
   browser session).
 
 Example contrasting good vs. bad:
@@ -110,9 +110,9 @@ Good:
 If the bug is **intermittent**, document the reproduction rate ("8 out
 of 20 attempts on macOS Sonoma 14.4 / Firefox 128"). The
 [`e2e-flake-bisector`](../../../qa-flake-triage/agents/e2e-flake-bisector.md)
-agent works the same way — quantify the rate, don't guess.
+agent works the same way - quantify the rate, don't guess.
 
-## Step 4 — Separate Expected from Actual
+## Step 4 - Separate Expected from Actual
 
 Mozilla's example pattern ([mozilla-bug-writing][moz]):
 
@@ -123,7 +123,7 @@ Actual:   The page shows "Your browser does not support cookies
 ```
 
 Reject blurry phrasings like "it doesn't work" or "page displays
-incorrectly" — they push the cost of investigation onto the engineer
+incorrectly" - they push the cost of investigation onto the engineer
 instead of the reporter.
 
 For UI bugs, attach a screenshot as the **Actual** body. For backend
@@ -132,10 +132,10 @@ is available, the
 [`crash-stack-trace-analyzer`](../../agents/crash-stack-trace-analyzer.md)
 takes the trace as input.
 
-## Step 5 — Pick Severity (intrinsic) and Priority (extrinsic)
+## Step 5 - Pick Severity (intrinsic) and Priority (extrinsic)
 
 Per ISO/IEC/IEEE 29119-3:2021 (incident-report content; cite by
-stable standard ID — the spec is paywalled but the field semantics
+stable standard ID - the spec is paywalled but the field semantics
 are widely adopted):
 
 **Severity** describes what the defect does to the user when it
@@ -161,16 +161,16 @@ The two are independent: a Critical-severity bug for one user might
 be P2 if the user is non-paying; a Minor-severity bug on the marketing
 homepage might be P0 if launch is tomorrow.
 
-## Step 6 — Score Reproducibility
+## Step 6 - Score Reproducibility
 
 Per [mozilla-bug-writing][moz]:
 
-- **Always** — every attempt reproduces.
-- **Sometimes** — quantify the rate (`12/20`, `~30%`).
-- **Once** — observed once; cannot reproduce despite trying.
-- **Unable** — reporter could not reproduce after the initial sighting.
+- **Always** - every attempt reproduces.
+- **Sometimes** - quantify the rate (`12/20`, `~30%`).
+- **Once** - observed once; cannot reproduce despite trying.
+- **Unable** - reporter could not reproduce after the initial sighting.
 
-A `Once` or `Unable` bug is **not** a candidate for fix-then-close —
+A `Once` or `Unable` bug is **not** a candidate for fix-then-close - 
 it's a candidate for adding monitoring or extending the test suite to
 catch it next time.
 
@@ -277,18 +277,17 @@ agent to extract a hypothesis.
 | Anti-pattern                                                | Why it fails                                                | Fix |
 |-------------------------------------------------------------|-------------------------------------------------------------|-----|
 | Filing without environment fields                           | Engineer cannot reproduce; bug bounces back to reporter.    | Force the GAP markers in the template; refuse to file without them. |
-| Combining multiple unrelated symptoms in one bug            | Triage rate-limits — one of the symptoms gets fixed, the bug closes, and the others get lost. | Split into separate bugs; cross-link if related. |
+| Combining multiple unrelated symptoms in one bug            | Triage rate-limits - one of the symptoms gets fixed, the bug closes, and the others get lost. | Split into separate bugs; cross-link if related. |
 | Severity = Priority shorthand ("Critical = P0")              | Confuses intrinsic impact with business prioritization.    | Score them independently; let the PM/engineering decide priority. |
 | `Always` reproducibility on first observation               | The reporter may have triggered a one-off race condition.   | Verify "Always" with at least 5 deterministic repros before claiming it. |
 
 ## References
 
-- [mozilla-bug-writing][moz] — Mozilla's bug-writing guide;
+- [mozilla-bug-writing][moz] - Mozilla's bug-writing guide;
   practitioner-emergent canonical for summary / steps / expected /
   actual structure.
-- ISO/IEC/IEEE 29119-3:2021 — incident-report content (cite by
+- ISO/IEC/IEEE 29119-3:2021 - incident-report content (cite by
   stable standard ID; spec is paywalled at iso.org).
-- [`bug-repro-builder`](../../agents/bug-repro-builder.md) — agent
+- [`bug-repro-builder`](../../agents/bug-repro-builder.md) - agent
   that turns a filled template into a minimal failing test.
-- [`crash-stack-trace-analyzer`](../../agents/crash-stack-trace-analyzer.md)
-  — agent that extracts hypothesis from a stack-trace-only input.
+- [`crash-stack-trace-analyzer`](../../agents/crash-stack-trace-analyzer.md) - agent that extracts hypothesis from a stack-trace-only input.

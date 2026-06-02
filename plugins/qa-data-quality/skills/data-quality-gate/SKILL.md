@@ -33,35 +33,35 @@ for cross-team observability) and still ship a single gate.
 - A pipeline runs more than one data-quality engine and needs a unified
   pass/fail summary (instead of one CI job per engine).
 - Some checks are blocking (`severity: error`) and others should warn
-  but not stop the pipeline (`severity: warn`) — the gate must
+  but not stop the pipeline (`severity: warn`) - the gate must
   distinguish.
 - The team wants a structured artifact (JSON / markdown table) for PR
-  comments, dashboards, or post-mortems — not just `exit 1`.
+  comments, dashboards, or post-mortems - not just `exit 1`.
 - A migration is rolling out new checks; the gate needs to honor a
   per-check "ratchet" (existing failures grandfathered, new failures
   block).
 
 If a project uses only **one** engine and does not need severity
 tiering, prefer that engine's native CI integration directly (see the
-relevant S1 skill's "CI integration" section) — this gate adds
+relevant S1 skill's "CI integration" section) - this gate adds
 machinery you do not need.
 
-## Step 1 — Identify your sources
+## Step 1 - Identify your sources
 
 Enumerate every check-emitting engine the gate must consume. For each:
 
 | Engine | Result artifact | Schema |
 |---|---|---|
 | dbt   | `target/run_results.json` | `.results[]` with `unique_id`, `status`, `failures`, `message` ([dbt-run-results][1]) |
-| GX    | Python object from `validation_definition.run()` or `checkpoint.run()` — has `success: bool` plus `results[]` of per-expectation outcomes ([gx-run-validation-definition][2]) |
+| GX    | Python object from `validation_definition.run()` or `checkpoint.run()` - has `success: bool` plus `results[]` of per-expectation outcomes ([gx-run-validation-definition][2]) |
 | Soda  | stdout summary from `soda scan`; non-zero exit on any failure ([sodacl-overview][3]) |
-| Other | custom — must be flattened into the unified shape below |
+| Other | custom - must be flattened into the unified shape below |
 
 Persist each engine's raw artifact as a CI build artifact (matching the
 pattern from each S1 skill's "CI integration" section) so the gate input
 is reproducible and triageable.
 
-## Step 2 — Define the unified check record
+## Step 2 - Define the unified check record
 
 Flatten every engine's result into one record shape:
 
@@ -88,10 +88,10 @@ Flatten every engine's result into one record shape:
 | `severity`  | `error` (gate-blocking) or `warn` (gate-tolerable). Source: dbt `severity:` config; GX `meta` block convention; Soda `warn:` / `fail:` blocks. |
 | `failures`  | row count for row-level checks; 0/1 for boolean checks. |
 | `message`   | human-readable failure message. |
-| `ratchet`   | optional — `true` if the failure existed before the ratchet date and is grandfathered. |
-| `owner`     | optional — team/handle responsible for the dataset. |
+| `ratchet`   | optional - `true` if the failure existed before the ratchet date and is grandfathered. |
+| `owner`     | optional - team/handle responsible for the dataset. |
 
-## Step 3 — Apply the gate decision rule
+## Step 3 - Apply the gate decision rule
 
 Pseudocode:
 
@@ -124,7 +124,7 @@ report but do not block.
 For a stricter mode (no warn tolerance), set `allow_warn_failures=False`
 and treat `warning_count > 0` as a blocker.
 
-## Step 4 — Emit the artifact
+## Step 4 - Emit the artifact
 
 The gate produces a markdown summary suitable for both `$GITHUB_STEP_SUMMARY`
 and Soda Cloud / Slack pipelines:
@@ -244,13 +244,13 @@ final gate is the single source of CI truth.
 
 ## References
 
-- [`dbt-testing/SKILL.md`](../dbt-testing/SKILL.md) — dbt
+- [`dbt-testing/SKILL.md`](../dbt-testing/SKILL.md) - dbt
   `run_results.json` schema and field meanings.
-- [`great-expectations/SKILL.md`](../great-expectations/SKILL.md) — GX
+- [`great-expectations/SKILL.md`](../great-expectations/SKILL.md) - GX
   result object shape and `result_format` levels.
-- [`soda-checks/SKILL.md`](../soda-checks/SKILL.md) — Soda CLI invocation
+- [`soda-checks/SKILL.md`](../soda-checks/SKILL.md) - Soda CLI invocation
   and stdout summary format.
-- [dbt-run-results][1] — canonical run_results.json schema.
-- [gx-run-validation-definition][2] — GX `validation_definition.run()`
+- [dbt-run-results][1] - canonical run_results.json schema.
+- [gx-run-validation-definition][2] - GX `validation_definition.run()`
   return shape.
-- [sodacl-overview][3] — SodaCL check vocabulary.
+- [sodacl-overview][3] - SodaCL check vocabulary.

@@ -1,6 +1,6 @@
 ---
 name: espresso-suite
-description: "Authors Espresso UI tests for Android — uses `onView(withId(...)).perform(...).check(matches(...))`, leans on Espresso's automatic synchronization (no `Thread.sleep`), wires `IdlingResource` for app-specific async, runs via `./gradlew connectedAndroidTest` and parses the JUnit XML output. Use when an Android app needs UI tests in Google's first-party framework."
+description: "Authors Espresso UI tests for Android - uses `onView(withId(...)).perform(...).check(matches(...))`, leans on Espresso's automatic synchronization (no `Thread.sleep`), wires `IdlingResource` for app-specific async, runs via `./gradlew connectedAndroidTest` and parses the JUnit XML output. Use when an Android app needs UI tests in Google's first-party framework."
 rating: 23
 d6: 4
 archetype: S1
@@ -51,7 +51,7 @@ async work.
 - A flake-prone Espresso suite needs the IdlingResource pattern
   to stabilize.
 
-## Step 1 — Add dependencies
+## Step 1 - Add dependencies
 
 ```gradle
 // app/build.gradle
@@ -81,7 +81,7 @@ Per [espresso-doc][esp], Espresso ships as multiple packages:
 | `espresso-intents`             | Intent validation + stubbing.                                   |
 | `espresso-remote`              | Multi-process functionality.                                    |
 
-## Step 2 — Author tests
+## Step 2 - Author tests
 
 ```kotlin
 import androidx.test.espresso.Espresso.onView
@@ -104,7 +104,7 @@ class CheckoutTest {
 }
 ```
 
-## Step 3 — IdlingResource for app-specific async
+## Step 3 - IdlingResource for app-specific async
 
 When the app uses something Espresso doesn't auto-track (e.g.
 custom thread pool, RxJava chains), wire an IdlingResource:
@@ -137,10 +137,10 @@ api.fetchOrders().enqueue { _, _ -> networkIdlingResource.decrement() }
 ```
 
 Without IdlingResource, Espresso assumes idle when its built-in
-trackers report idle — async work the framework can't see triggers
+trackers report idle - async work the framework can't see triggers
 flake.
 
-## Step 4 — Common matchers and actions
+## Step 4 - Common matchers and actions
 
 ```kotlin
 // Matchers
@@ -163,7 +163,7 @@ matches(isEnabled())
 doesNotExist()
 ```
 
-## Step 5 — RecyclerView interactions
+## Step 5 - RecyclerView interactions
 
 ```kotlin
 // espresso-contrib provides RecyclerViewActions
@@ -174,7 +174,7 @@ onView(withId(R.id.cart_list))
     .perform(RecyclerViewActions.scrollTo<MyViewHolder>(hasDescendant(withText("BOOK-001"))))
 ```
 
-## Step 6 — Run
+## Step 6 - Run
 
 ```bash
 # Unit + UI tests on connected device / emulator
@@ -191,7 +191,7 @@ android {
 }
 ```
 
-## Step 7 — CI integration (Android emulator on GitHub Actions)
+## Step 7 - CI integration (Android emulator on GitHub Actions)
 
 ```yaml
 jobs:
@@ -211,7 +211,7 @@ jobs:
 ```
 
 The test results land in JUnit XML at
-`app/build/outputs/androidTest-results/.../TEST-*.xml` —
+`app/build/outputs/androidTest-results/.../TEST-*.xml` - 
 consumable by [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Anti-patterns
@@ -239,12 +239,11 @@ consumable by [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-an
 
 ## References
 
-- [esp][esp] — Espresso doc: small/predictable API, automatic
+- [esp][esp] - Espresso doc: small/predictable API, automatic
   synchronization (message queue / AsyncTask / IdlingResource),
   package list (`-core`, `-web`, `-contrib`, `-idling-resource`,
   `-intents`, `-remote`).
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md) — iOS sibling.
-- [`appium-testing`](../appium-testing/SKILL.md) — cross-platform
+- [`xcuitest-suite`](../xcuitest-suite/SKILL.md) - iOS sibling.
+- [`appium-testing`](../appium-testing/SKILL.md) - cross-platform
   alternative.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — downstream parser.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream parser.

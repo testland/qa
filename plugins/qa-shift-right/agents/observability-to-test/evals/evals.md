@@ -4,21 +4,21 @@ type: agent
 archetype: A2
 ---
 
-# observability-to-test — evals
+# observability-to-test - evals
 
 Companion eval cases for [`observability-to-test`](../../observability-to-test.md).
 Three cases cover happy path (Sentry pure-logic exception → unit test at
 the cheapest catching layer + fix), branch (Pact contract failure →
 contract regression test instead of unit), and adversarial (incident is
-180 days old with no recent reproduction — refuse). Re-run by feeding the
+180 days old with no recent reproduction - refuse). Re-run by feeding the
 **Input** block as the first user message and checking the agent's
 transcript against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates below are the eval-authoring date — each case
+`claude-opus-4-7`. Dates below are the eval-authoring date - each case
 is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — Sentry pure-logic bug (unit test layer)
+## Eval 1 - happy path - Sentry pure-logic bug (unit test layer)
 
 **Input:**
 
@@ -61,25 +61,25 @@ release `v2.14.3`, frequency 47/day. Step 2 classifies as **Pure-logic
 bug** (specific input → wrong output; no infra involved) → **unit** test
 layer per the Step 2 table. Step 3 proposes a Jest unit test in
 `tests/checkout/cart.unit.spec.ts` (NOT a Playwright E2E, NOT an
-integration test — those would violate the layer-down rule). The test
+integration test - those would violate the layer-down rule). The test
 pins the EXACT failing input (`{ sku: 'BOOK-001', qty: -1 }`) and uses
 `toThrow` with a specific message. Step 3 also pairs the test with a
 fix in `src/checkout/cart.ts` validating `qty > 0`. Step 4: PR body has
 the 5 named sections (Production signal, Class, Proposed regression
-test, Proposed fix, Verification) AND appends a "Prevention —
+test, Proposed fix, Verification) AND appends a "Prevention - 
 regression test added" section to `docs/postmortems/2026-05-22-cart-npe.md`.
 
 **Pass condition:** Output contains the literal strings `unit` (test
 layer) AND `src/checkout/cart` AND `qty` (the failing input dimension)
-AND `Pure-logic bug` (the classification — case-sensitive). Output
+AND `Pure-logic bug` (the classification - case-sensitive). Output
 proposes a test under `tests/checkout/cart.unit.spec.ts` or
-`src/checkout/cart.spec.ts` — NOT under `tests/e2e/` or
+`src/checkout/cart.spec.ts` - NOT under `tests/e2e/` or
 `tests/integration/`. Output proposes a fix in `src/checkout/cart.ts`
 that validates `qty` is positive (substring `qty > 0` OR
 `Quantity must be positive` OR `qty <= 0`). Output mentions appending
 to `docs/postmortems/2026-05-22-cart-npe.md`.
 
-## Eval 2 — branch — Pact contract failure (contract test layer)
+## Eval 2 - branch - Pact contract failure (contract test layer)
 
 **Input:**
 
@@ -118,9 +118,9 @@ Postmortem: docs/postmortems/2026-05-23-payments-schema-drift.md — present.
 
 **Expected:** Step 2 classifies as **Contract bug** (consumer expected
 schema X; provider returned schema Y) → **Contract** test layer per
-the Step 2 table. Step 3 emits a Pact regression — extends
+the Step 2 table. Step 3 emits a Pact regression - extends
 `tests/contract/payments.pact.spec.ts` to assert the `currency` field
-shape (per the `pact-contract-testing` skill reference) — NOT a Jest
+shape (per the `pact-contract-testing` skill reference) - NOT a Jest
 unit test against a domain object, NOT a Playwright E2E. Output names
 `pact-contract-testing` (or `schemathesis-fuzzing` as the body
 mentions for the API fuzz alternative) as the framework for the
@@ -129,7 +129,7 @@ drift (consumer-side stub update OR provider-side response shape
 correction); the agent pairs test + fix.
 
 **Pass condition:** Output contains the literal string `Contract bug`
-(case-sensitive — the Step 2 classification name). Output references
+(case-sensitive - the Step 2 classification name). Output references
 `tests/contract/payments.pact.spec.ts` OR the `pact-contract-testing`
 skill (substring `pact-contract-testing` OR `pact`). Output does NOT
 propose a Jest unit test as the primary regression (no
@@ -138,7 +138,7 @@ NOT propose an E2E Playwright test as the primary regression layer.
 Output mentions both `currency` AND `currency_code` (the two competing
 shapes).
 
-## Eval 3 — adversarial — incident older than 90 days, no recent repro (refuse)
+## Eval 3 - adversarial - incident older than 90 days, no recent repro (refuse)
 
 **Input:**
 
@@ -192,7 +192,7 @@ test artefact).
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks. The Sentry /
-  Datadog payloads are inlined so the eval is deterministic — the
+  Datadog payloads are inlined so the eval is deterministic - the
   agent does not actually need to hit the Sentry / Datadog API.
 - Pass conditions are literal-string checks against the agent's
   transcript; a reviewer can grep for each substring (`Pure-logic bug`,

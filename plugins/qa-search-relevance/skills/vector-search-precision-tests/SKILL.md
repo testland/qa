@@ -1,6 +1,6 @@
 ---
 name: vector-search-precision-tests
-description: "Vector search benchmarking — recall@k vs latency tradeoffs, ground-truth construction via brute-force, HNSW tuning (M / ef_construct / ef per Qdrant docs), embedding-model-upgrade drift detection. Use ANN-Benchmarks framework for cross-engine comparison; per-engine clients (Qdrant, Weaviate, pgvector, Pinecone, Elasticsearch k-NN, Milvus) for in-product tests."
+description: "Vector search benchmarking - recall@k vs latency tradeoffs, ground-truth construction via brute-force, HNSW tuning (M / ef_construct / ef per Qdrant docs), embedding-model-upgrade drift detection. Use ANN-Benchmarks framework for cross-engine comparison; per-engine clients (Qdrant, Weaviate, pgvector, Pinecone, Elasticsearch k-NN, Milvus) for in-product tests."
 type: skill
 archetype: S1
 rating: 23
@@ -16,19 +16,19 @@ keywords:
 # vector-search-precision-tests
 
 Per the [ANN-Benchmarks docs] and [Qdrant search docs], tests must
-measure recall@k against known ground truth — engine self-eval
+measure recall@k against known ground truth - engine self-eval
 doesn't catch index corruption or parameter drift.
 
 ## When to use
 
 - Production uses vector search for retrieval (RAG, semantic search,
   recommendations).
-- HNSW / IVF / ScaNN parameter tuning — need quantitative test for
+- HNSW / IVF / ScaNN parameter tuning - need quantitative test for
   the recall/latency Pareto curve.
-- Embedding model upgrade — verify recall doesn't drop on the
+- Embedding model upgrade - verify recall doesn't drop on the
   existing corpus.
 
-## Step 1 — Construct ground truth (brute-force k-NN)
+## Step 1 - Construct ground truth (brute-force k-NN)
 
 Ground truth = top-k closest documents under exact (brute-force)
 distance. Compute once for a fixed query set:
@@ -47,7 +47,7 @@ def compute_ground_truth(corpus_vectors, query_vectors, k=10):
 Save indices alongside corpus + queries; recompute only if corpus
 or embedding model changes.
 
-## Step 2 — Recall@k measurement
+## Step 2 - Recall@k measurement
 
 ```python
 def recall_at_k(retrieved_ids, ground_truth_ids):
@@ -62,7 +62,7 @@ For a given engine + parameter set, retrieve via the engine's API,
 then compute recall@k. Typical target: recall@10 ≥ 0.95 for
 production search.
 
-## Step 3 — HNSW parameter sweep
+## Step 3 - HNSW parameter sweep
 
 Per [Qdrant search docs], HNSW tunables:
 
@@ -96,7 +96,7 @@ for r in results:
         break
 ```
 
-## Step 4 — Latency p50 / p95 / p99 budget
+## Step 4 - Latency p50 / p95 / p99 budget
 
 Recall-only is a trap. Pair with latency:
 
@@ -121,7 +121,7 @@ def test_latency_under_budget():
     assert lat["p95"] < 50, f"p95 {lat['p95']:.1f}ms exceeds 50ms budget"
 ```
 
-## Step 5 — Embedding-model drift test
+## Step 5 - Embedding-model drift test
 
 Embedding model upgrade (`text-embedding-3-small` → `-3-large`) =
 all vectors invalidated. Test the new corpus's ground truth:
@@ -149,7 +149,7 @@ def test_recall_holds_after_embedding_upgrade():
 The brute-force ground-truth is per-model. After upgrade, both
 sides of the comparison change.
 
-## Step 6 — Cross-engine baseline (ANN-Benchmarks)
+## Step 6 - Cross-engine baseline (ANN-Benchmarks)
 
 Per the [ANN-Benchmarks docs], the framework "evaluates 37+ ANN
 algorithms ... by plotting recall against queries per second across
@@ -169,7 +169,7 @@ python plot.py --dataset glove-100-angular
 Outputs per-engine recall/QPS curves. Use to pick an engine + initial
 parameter set.
 
-## Step 7 — Filter tests
+## Step 7 - Filter tests
 
 Vector search + filter (e.g., "find similar products WHERE price <
 50") interacts in surprising ways: pre-filter shrinks the search
@@ -188,9 +188,9 @@ def test_filtered_search_recall():
     assert recall >= 0.90
 ```
 
-Pre-filter vs post-filter strategy matters per engine — see engine docs.
+Pre-filter vs post-filter strategy matters per engine - see engine docs.
 
-## Step 8 — Index rebuild vs incremental
+## Step 8 - Index rebuild vs incremental
 
 Some engines (Qdrant, Weaviate) support online updates; others
 (some FAISS configurations) require full rebuild on insert. Test:
@@ -209,7 +209,7 @@ def test_recall_after_incremental_inserts():
     assert new_recall >= initial_recall - 0.05
 ```
 
-Some engines degrade significantly without periodic rebuild —
+Some engines degrade significantly without periodic rebuild - 
 catch in test.
 
 ## Anti-patterns
@@ -224,7 +224,7 @@ catch in test.
 
 ## Limitations
 
-- Brute-force ground truth is O(N×Q) — feasible to ~1M docs ×
+- Brute-force ground truth is O(N×Q) - feasible to ~1M docs ×
   1k queries. Beyond, sample.
 - Recall@10 ≥ 0.95 is the hand-wavy default; production requirements
   vary widely (medical search vs e-commerce).
@@ -233,13 +233,13 @@ catch in test.
 
 ## References
 
-- [ANN-Benchmarks docs] — cross-engine recall/QPS curves
-- [Qdrant search docs] — HNSW parameters (M, ef_construct, ef),
+- [ANN-Benchmarks docs] - cross-engine recall/QPS curves
+- [Qdrant search docs] - HNSW parameters (M, ef_construct, ef),
   recall vs latency tradeoff
 - [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md),
-  [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) —
+  [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) - 
   classic IR-metrics relevance tests for term-based retrieval
-- [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md) —
+- [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md) - 
   reviewer that synthesizes findings across all 3 search skills
 
 [ANN-Benchmarks docs]: https://ann-benchmarks.com/

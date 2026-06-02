@@ -1,6 +1,6 @@
 ---
 name: bandit-python
-description: "Configures and runs Bandit — Python-specific SAST from the OpenStack security plugin set covering 60+ rule IDs across 7 categories (B1xx misc, B2xx application, B3xx blacklists/cryptography, B4xx imports, B5xx, B6xx injections, B7xx XSS); supports `bandit -r .` recursive scan, `--severity-level low|medium|high`, `--confidence-level low|medium|high` filtering, `# nosec` and `# nosec B404` per-line + per-rule suppressions, `pyproject.toml` `[tool.bandit]` config including `exclude_dirs`. Use when the user works with Python and needs a focused, low-overhead SAST integrated with pre-commit / CI."
+description: "Configures and runs Bandit - Python-specific SAST from the OpenStack security plugin set covering 60+ rule IDs across 7 categories (B1xx misc, B2xx application, B3xx blacklists/cryptography, B4xx imports, B5xx, B6xx injections, B7xx XSS); supports `bandit -r .` recursive scan, `--severity-level low|medium|high`, `--confidence-level low|medium|high` filtering, `# nosec` and `# nosec B404` per-line + per-rule suppressions, `pyproject.toml` `[tool.bandit]` config including `exclude_dirs`. Use when the user works with Python and needs a focused, low-overhead SAST integrated with pre-commit / CI."
 rating: 23
 d6: 4
 archetype: S1
@@ -17,8 +17,8 @@ Per [bandit.readthedocs.io/en/latest/start.html][bd-start]:
 Bandit is the Python-specific SAST originally from OpenStack
 Security. Each finding has two dimensions:
 
-- **Severity** (LOW / MEDIUM / HIGH) — how dangerous if exploited
-- **Confidence** (LOW / MEDIUM / HIGH) — how certain Bandit is the
+- **Severity** (LOW / MEDIUM / HIGH) - how dangerous if exploited
+- **Confidence** (LOW / MEDIUM / HIGH) - how certain Bandit is the
   finding is real
 
 The two-dimensional scoring lets you tune false-positive vs
@@ -34,7 +34,7 @@ false-negative tradeoff per project.
 - Pair with [`semgrep-rules`](../semgrep-rules/SKILL.md) (broader,
   cross-language) for layered coverage.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [bd-start][bd-start]:
 
@@ -44,7 +44,7 @@ pip install bandit[toml]
 
 The `[toml]` extra enables `pyproject.toml` config support.
 
-## Step 2 — Basic recursive scan
+## Step 2 - Basic recursive scan
 
 Per [bd-start][bd-start]:
 
@@ -61,7 +61,7 @@ bandit -r . -x tests,vendor              # exclude dirs
 bandit -r . -ll                           # minimum LOW confidence + LOW severity
 ```
 
-## Step 3 — Severity + confidence filtering
+## Step 3 - Severity + confidence filtering
 
 Per [bd-start][bd-start] verbatim CLI usage:
 
@@ -81,7 +81,7 @@ bandit -r . --severity-level=medium
 
 The two flags compose; neither is a strict subset of the other.
 
-## Step 4 — `pyproject.toml` config
+## Step 4 - `pyproject.toml` config
 
 ```toml
 # pyproject.toml
@@ -98,7 +98,7 @@ skips = ["**/test_*.py", "**/*_test.py"]
 `skips = [...]` activates blacklist mode (run all checks except
 listed). They're mutually exclusive.
 
-## Step 5 — Rule ID catalog
+## Step 5 - Rule ID catalog
 
 Bandit rules are organized by category prefix:
 
@@ -108,13 +108,13 @@ Bandit rules are organized by category prefix:
 | B2xx | Application/Framework | B201 flask debug=True, B202 tarfile unsafe extract |
 | B3xx | Blacklists / Cryptography | B301 pickle, B303 MD5, B311 random for crypto, B321 ftplib (cleartext), B324 hashlib weak hash, B403 import_pickle |
 | B4xx | Imports | B401 import_telnetlib, B404 subprocess imported, B405 import_xml_etree, B413 import_pyCrypto |
-| B5xx | (less common — varies) | |
+| B5xx | (less common - varies) | |
 | B6xx | Injections | B602 subprocess shell=True, B603 subprocess without shell=False, B608 sql_injection, B610 django extra used (sql injection-prone) |
 | B7xx | XSS / templating | B701 jinja2 autoescape false, B703 django mark_safe |
 
 Full catalog: bandit.readthedocs.io/en/latest/plugins/.
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Per the canonical Bandit workflow, three suppression layers:
 
@@ -137,13 +137,13 @@ result = subprocess.run("ls -la /tmp", shell=True, check=True)
 
 For rules that can never apply (e.g., B311 `random` is fine
 outside crypto contexts), prefer per-rule disable in `pyproject.toml`
-over per-line suppressions — fewer comments to maintain, easier to
+over per-line suppressions - fewer comments to maintain, easier to
 audit at the project level.
 
 Cadence: every quarter, grep for `# nosec` patterns lacking
 `# Reason:` lines; flag for review.
 
-## Step 7 — Output formats
+## Step 7 - Output formats
 
 ```bash
 bandit -r . -f txt                      # default human-readable
@@ -155,7 +155,7 @@ bandit -r . -f csv -o bandit.csv        # CSV
 bandit -r . -f screen                    # colorized terminal
 ```
 
-## Step 8 — Pre-commit integration
+## Step 8 - Pre-commit integration
 
 ```yaml
 # .pre-commit-config.yaml
@@ -169,7 +169,7 @@ repos:
         exclude: ^(tests/|venv/|.venv/)
 ```
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 jobs:
@@ -207,18 +207,18 @@ noise.
   rules can catch.
 - No native cross-file taint analysis (use [`codeql-queries`](../codeql-queries/SKILL.md)
   for that).
-- Rule depth varies — well-maintained for OpenStack-era patterns;
+- Rule depth varies - well-maintained for OpenStack-era patterns;
   newer Python ecosystem (FastAPI, async patterns) coverage thinner.
 
 ## References
 
-- [bd-start][bd-start] — install + basic scan reference
-- bandit.readthedocs.io — full documentation
-- bandit.readthedocs.io/en/latest/plugins/ — rule catalog
-- github.com/PyCQA/bandit — repository
+- [bd-start][bd-start] - install + basic scan reference
+- bandit.readthedocs.io - full documentation
+- bandit.readthedocs.io/en/latest/plugins/ - rule catalog
+- github.com/PyCQA/bandit - repository
 - [`semgrep-rules`](../semgrep-rules/SKILL.md),
   [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
   [`codeql-queries`](../codeql-queries/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) — sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) —
+  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
   unifier agent

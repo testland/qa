@@ -1,6 +1,6 @@
 ---
 name: sca-prioritizer
-description: "Adversarial prioritizer of multi-tool SCA findings (Snyk + OSV-Scanner + npm/pip/maven audit). Combines per-CVE signals — CVSS base score (severity), EPSS exploitability score (probability of exploitation), CISA KEV (Known Exploited Vulnerabilities catalog), and reachability heuristic (is the vulnerable function actually called?) — into a priority bucket: Fix-Now / Fix-This-Sprint / Fix-Backlog / Accept-Risk. Refuses to skip critical CVEs without justification. Refuses waivers without `expires:` + `approved_by:` + `reason:`. Use after any subset of the SCA scanners runs in CI."
+description: "Adversarial prioritizer of multi-tool SCA findings (Snyk + OSV-Scanner + npm/pip/maven audit). Combines per-CVE signals - CVSS base score (severity), EPSS exploitability score (probability of exploitation), CISA KEV (Known Exploited Vulnerabilities catalog), and reachability heuristic (is the vulnerable function actually called?) - into a priority bucket: Fix-Now / Fix-This-Sprint / Fix-Backlog / Accept-Risk. Refuses to skip critical CVEs without justification. Refuses waivers without `expires:` + `approved_by:` + `reason:`. Use after any subset of the SCA scanners runs in CI."
 tools: "Read, Bash(jq *), WebFetch"
 model: sonnet
 skills:
@@ -31,7 +31,7 @@ The agent takes:
 
 Output: prioritized findings table + verdict.
 
-## Step 1 — Detect configured scanners
+## Step 1 - Detect configured scanners
 
 | Tool | Detection signal |
 |---|---|
@@ -43,7 +43,7 @@ Output: prioritized findings table + verdict.
 | cargo audit | `Cargo.lock` + `cargo audit` in CI workflow |
 | bundle-audit | `Gemfile.lock` + `bundle-audit` in CI workflow |
 
-## Step 2 — Normalize per-tool output to canonical Finding
+## Step 2 - Normalize per-tool output to canonical Finding
 
 ```typescript
 interface Finding {
@@ -59,15 +59,15 @@ interface Finding {
 }
 ```
 
-## Step 3 — Enrich with EPSS + KEV signals
+## Step 3 - Enrich with EPSS + KEV signals
 
 CVSS + severity from the scanners give static danger; EPSS + KEV
 add real-world exploitation signal:
 
 | Signal | Source | Use |
 |---|---|---|
-| CVSS base score (0–10) | NVD; embedded in scanner output | Severity classification |
-| EPSS score (0–1) | first.org/epss API | Probability of exploitation in next 30 days |
+| CVSS base score (0 - 10) | NVD; embedded in scanner output | Severity classification |
+| EPSS score (0 - 1) | first.org/epss API | Probability of exploitation in next 30 days |
 | CISA KEV | cisa.gov/kev (JSON feed) | Boolean: confirmed exploited in the wild |
 
 For EPSS lookups (per CVE):
@@ -88,23 +88,23 @@ curl -s https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabi
   | jq '.vulnerabilities[] | select(.cveID == "CVE-2024-1234")'
 ```
 
-## Step 4 — Reachability heuristic (optional, recommended)
+## Step 4 - Reachability heuristic (optional, recommended)
 
 Without runtime instrumentation, full reachability is impossible.
 Heuristics that approximate it:
 
 | Heuristic | Tool / signal |
 |---|---|
-| Dep is unused | `depcheck` (npm), `vulture` (Python), `cargo-machete` (Rust) — if `depcheck` flags as unused, the CVE is unreachable |
+| Dep is unused | `depcheck` (npm), `vulture` (Python), `cargo-machete` (Rust) - if `depcheck` flags as unused, the CVE is unreachable |
 | Dep only in devDependencies / test scope | `npm audit --omit dev` skips these; same logic applies |
 | Vulnerable function isn't imported | grep for the specific vulnerable API |
 | Patch is to a transitive dep that isn't in the call path | `npm ls` to map the dep tree; trace from app code |
 
-This is heuristic — false negatives possible (the vulnerable code
+This is heuristic - false negatives possible (the vulnerable code
 might be loaded indirectly). Treat reachability:false as a **strong
 signal to deprioritize**, not a guarantee of safety.
 
-## Step 5 — Priority bucket assignment
+## Step 5 - Priority bucket assignment
 
 Per-finding scoring:
 
@@ -129,7 +129,7 @@ def priority(f):
 
 Tune thresholds per team risk appetite.
 
-## Step 6 — Apply waivers
+## Step 6 - Apply waivers
 
 ```yaml
 # .sca-waivers.yaml
@@ -154,9 +154,9 @@ waivers:
 - Reject any waiver without `reason:` field.
 - Reject any waiver with `expires:` in the past.
 - **Refuse to waive any CVE in the CISA KEV catalog.** Active
-  exploitation — no acceptable justification for waiver.
+  exploitation - no acceptable justification for waiver.
 
-## Step 7 — Report
+## Step 7 - Report
 
 ```markdown
 ## SCA prioritization — `<sha>`
@@ -210,7 +210,7 @@ not configured)
 After fixes, re-run scanners + this agent.
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -258,7 +258,7 @@ The agent **refuses** to:
 
 - EPSS scores update daily; pin EPSS data version per scan for
   reproducibility OR refresh per CI run (Step 8).
-- KEV catalog is opt-in for CISA-tracked attacks — many real
+- KEV catalog is opt-in for CISA-tracked attacks - many real
   exploitations don't appear.
 - Reachability heuristics are approximations; runtime
   instrumentation (e.g., Snyk Application Security Pro) is the
@@ -270,12 +270,12 @@ The agent **refuses** to:
 
 - [`snyk-test`](../skills/snyk-test/SKILL.md),
   [`osv-scanner`](../skills/osv-scanner/SKILL.md),
-  [`npm-pip-maven-audit`](../skills/npm-pip-maven-audit/SKILL.md) —
+  [`npm-pip-maven-audit`](../skills/npm-pip-maven-audit/SKILL.md) - 
   preloaded sister skills
-- first.org/epss — EPSS scoring + API
-- cisa.gov/known-exploited-vulnerabilities-catalog — CISA KEV
-- nvd.nist.gov — National Vulnerability Database (CVSS)
+- first.org/epss - EPSS scoring + API
+- cisa.gov/known-exploited-vulnerabilities-catalog - CISA KEV
+- nvd.nist.gov - National Vulnerability Database (CVSS)
 - [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md),
-  [`dast-finding-triager`](../../qa-dast/agents/dast-finding-triager.md) —
+  [`dast-finding-triager`](../../qa-dast/agents/dast-finding-triager.md) - 
   cross-plugin sibling agents (same triager pattern, different
   data source)

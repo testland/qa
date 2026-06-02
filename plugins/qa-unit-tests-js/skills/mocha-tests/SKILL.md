@@ -1,6 +1,6 @@
 ---
 name: mocha-tests
-description: "Configures and runs Mocha — pluggable JS test runner pairable with Chai assertions, Sinon mocking, and nyc / c8 coverage; supports BDD interface (`describe` / `it`) and TDD interface (`suite` / `test`); async tests via callbacks / promises / async-await; `--parallel` mode (Mocha 8+); `.mocharc.json` config; per-test exclusivity via `.only()` / `.skip()`. Use when the user prefers a minimal pluggable runner (vs Jest's batteries-included) or maintains legacy Mocha codebases."
+description: "Configures and runs Mocha - pluggable JS test runner pairable with Chai assertions, Sinon mocking, and nyc / c8 coverage; supports BDD interface (`describe` / `it`) and TDD interface (`suite` / `test`); async tests via callbacks / promises / async-await; `--parallel` mode (Mocha 8+); `.mocharc.json` config; per-test exclusivity via `.only()` / `.skip()`. Use when the user prefers a minimal pluggable runner (vs Jest's batteries-included) or maintains legacy Mocha codebases."
 rating: 23
 d6: 4
 archetype: S1
@@ -19,7 +19,7 @@ features:
 
 - **Pluggable**: assertions (Chai / Node assert), mocking (Sinon /
   Jest's vi.fn equivalent), coverage (nyc / c8) are separate
-  libraries — pick what you need.
+  libraries - pick what you need.
 - **Two interfaces**: BDD (`describe`/`it`, default) and TDD
   (`suite`/`test`).
 - **Reporter ecosystem**: spec, json, html, tap, dot, nyan, mocha-junit-reporter, etc.
@@ -31,7 +31,7 @@ codebases.
 
 ## When to use
 
-- Legacy codebase already on Mocha — migrating away has cost.
+- Legacy codebase already on Mocha - migrating away has cost.
 - Library / tooling project where minimal-deps + pluggable
   architecture matters.
 - Team prefers Chai's assertion-fluency syntax over Jest's
@@ -41,7 +41,7 @@ codebases.
 For new browser-side projects, prefer [`vitest-tests`](../vitest-tests/SKILL.md)
 or [`jest-tests`](../jest-tests/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 npm install --save-dev mocha
@@ -49,7 +49,7 @@ npm install --save-dev mocha
 npm install --save-dev chai sinon nyc
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 ```javascript
 // test/sum.test.js
@@ -87,7 +87,7 @@ Wire `package.json`:
 
 Default test glob: `./test/*.{js,cjs,mjs}` plus `./test/**/*.spec.js`.
 
-## Step 3 — `.mocharc.json` configuration
+## Step 3 - `.mocharc.json` configuration
 
 Mocha supports config files (`.mocharc.json`, `.mocharc.js`,
 `.mocharc.yaml`, or `mocha` key in package.json):
@@ -110,12 +110,12 @@ Mocha supports config files (`.mocharc.json`, `.mocharc.js`,
 
 Key options:
 
-- `parallel: true` + `jobs: N` — multi-process parallel mode (Mocha 8+)
-- `ui: 'bdd'` (default) vs `ui: 'tdd'` — interface choice
-- `recursive: true` — scan nested test directories
-- `require: [...]` — preload modules (TS support, custom setup)
+- `parallel: true` + `jobs: N` - multi-process parallel mode (Mocha 8+)
+- `ui: 'bdd'` (default) vs `ui: 'tdd'` - interface choice
+- `recursive: true` - scan nested test directories
+- `require: [...]` - preload modules (TS support, custom setup)
 
-## Step 4 — Async patterns
+## Step 4 - Async patterns
 
 Per [mocha][mocha], three async approaches:
 
@@ -142,10 +142,10 @@ it('async/await', async () => {
 });
 ```
 
-The async function MUST `return` (or `await`) — without that, the
+The async function MUST `return` (or `await`) - without that, the
 promise's rejection isn't surfaced to Mocha and tests pass-by-accident.
 
-## Step 5 — Hooks
+## Step 5 - Hooks
 
 ```javascript
 describe('User service', () => {
@@ -171,7 +171,7 @@ describe('User service', () => {
 
 Hooks support async/promise patterns same as tests.
 
-## Step 6 — Exclusive + skipped tests
+## Step 6 - Exclusive + skipped tests
 
 ```javascript
 it.only('runs only this test', () => { /* ... */ });
@@ -183,7 +183,7 @@ xit('also skipped (alternate syntax)', () => { /* ... */ });
 CI gating: forbid `.only` in committed code via lint rule (most
 codebases use `eslint-plugin-mocha`'s `mocha/no-exclusive-tests`).
 
-## Step 7 — Coverage with nyc
+## Step 7 - Coverage with nyc
 
 ```bash
 npm install --save-dev nyc
@@ -220,7 +220,7 @@ npm install --save-dev c8
 c8 mocha
 ```
 
-## Step 8 — Parallel mode
+## Step 8 - Parallel mode
 
 Per [mocha][mocha] (Mocha 8+):
 
@@ -228,14 +228,14 @@ Per [mocha][mocha] (Mocha 8+):
 mocha --parallel --jobs 4
 ```
 
-Tests must be independent — shared state across describe blocks
+Tests must be independent - shared state across describe blocks
 breaks parallel runs. Limitations:
 - `before` / `after` hooks at the top-level scope don't run
   per-process consistently
 - File-level state mutations leak between describes in the same
   process
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: npm ci
@@ -261,7 +261,7 @@ The `mocha-junit-reporter` package emits JUnit XML for
 
 ## Limitations
 
-- Mocha doesn't bundle assertions / mocking / coverage — more
+- Mocha doesn't bundle assertions / mocking / coverage - more
   setup vs Jest/Vitest.
 - Watch mode less polished than Vitest's.
 - Snapshot testing not built-in (use `mocha-chai-jest-snapshot`
@@ -271,15 +271,14 @@ The `mocha-junit-reporter` package emits JUnit XML for
 
 ## References
 
-- [mocha][mocha] — official site
-- mochajs.org/api — API reference
-- chaijs.com — Chai assertions (typical pairing)
-- sinonjs.org — Sinon mocking (typical pairing)
-- istanbul.js.org / github.com/bcoe/c8 — coverage tools
-- github.com/michaelleeallen/mocha-junit-reporter — JUnit XML reporter
+- [mocha][mocha] - official site
+- mochajs.org/api - API reference
+- chaijs.com - Chai assertions (typical pairing)
+- sinonjs.org - Sinon mocking (typical pairing)
+- istanbul.js.org / github.com/bcoe/c8 - coverage tools
+- github.com/michaelleeallen/mocha-junit-reporter - JUnit XML reporter
 - [`jest-tests`](../jest-tests/SKILL.md),
   [`vitest-tests`](../vitest-tests/SKILL.md),
   [`ava-tests`](../ava-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — cross-plugin: test code hygiene
+  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene

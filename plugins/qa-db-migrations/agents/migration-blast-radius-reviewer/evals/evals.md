@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# migration-blast-radius-reviewer — evals
+# migration-blast-radius-reviewer - evals
 
 Companion eval cases for [`migration-blast-radius-reviewer`](../../migration-blast-radius-reviewer.md).
 Three cases cover happy path / branch / adversarial: a Flyway migration
@@ -14,10 +14,10 @@ findings: 2`), a purely additive Liquibase changeset (verdict
 hits the Refuse-to-proceed rule (the agent refuses to mark passing).
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — Flyway migration with breaking + unsafe-default ops
+## Eval 1 - happy path - Flyway migration with breaking + unsafe-default ops
 
 **Input:**
 
@@ -63,11 +63,11 @@ deprecate/drop pattern and the two-step NOT NULL pattern.
 
 **Pass condition:** Output contains the literal string `Critical findings: 2`
 AND contains `Warning findings: 1` AND contains at least one of
-`legacy_status` / `NOT NULL` (case-sensitive — the literal column name
+`legacy_status` / `NOT NULL` (case-sensitive - the literal column name
 or the literal SQL keyword). Output does NOT contain a `Critical findings: 0`
 line.
 
-## Eval 2 — branch — additive-only Liquibase changeset (no critical findings)
+## Eval 2 - branch - additive-only Liquibase changeset (no critical findings)
 
 **Input:**
 
@@ -103,7 +103,7 @@ Target DBMS: PostgreSQL 14.
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25)
 
 **Expected:** Step 2 classifies both `addColumn` operations as Additive
-(both columns are nullable-by-omission with a computed default — safe
+(both columns are nullable-by-omission with a computed default - safe
 on PG 14). Step 5 verifies the rollback block is present and reversible
 (`dropColumn` × 2 matches the forward ops). Verdict block: `Critical
 findings: 0`, `Warning findings: 0`, `Info findings: 1` (or up to 2).
@@ -115,7 +115,7 @@ AND `Rollback verified: yes` (case-insensitive on `yes`). Output does NOT
 contain a `Critical findings: 2` (or higher) line; does NOT recommend
 splitting the migration into multiple deploys.
 
-## Eval 3 — adversarial — `flyway clean` in production config (refuse to approve)
+## Eval 3 - adversarial - `flyway clean` in production config (refuse to approve)
 
 **Input:**
 
@@ -148,7 +148,7 @@ Target DBMS: PostgreSQL 13. This is the production deployment workflow.
 
 **Expected:** Refuses to mark this migration "passing". The Refuse-to-proceed
 rule "Approve a Flyway `flyway clean` invocation in production config" is
-the controlling case — `FLYWAY_CLEAN_DISABLED=false` plus a `flyway clean`
+the controlling case - `FLYWAY_CLEAN_DISABLED=false` plus a `flyway clean`
 step in the prod workflow is exactly what the rule blocks. The agent
 flags the operation as Critical (data-loss across the entire schema),
 calls out that `cleanDisabled` must be `true` for any production
@@ -165,7 +165,7 @@ does NOT contain the line `Critical findings: 0`.
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks (migration files +
-  surrounding grep / CI context) — no external fixtures required.
+  surrounding grep / CI context) - no external fixtures required.
 - Pass conditions are literal-substring checks against the agent's
   transcript; reviewers can grep for each expected token.
 - Eval cases authored 2026-05-25 against the v3.0 framework's D7

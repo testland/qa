@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# prompt-eval-reviewer — evals
+# prompt-eval-reviewer - evals
 
 Companion eval cases for [`prompt-eval-reviewer`](../../prompt-eval-reviewer.md).
 Three cases cover happy path / branch / adversarial: a Promptfoo suite
@@ -13,10 +13,10 @@ suite with no findings, and a refuse-to-suppress request on a Critical
 finding without a reviewable justification.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — Promptfoo suite with multiple anti-patterns
+## Eval 1 - happy path - Promptfoo suite with multiple anti-patterns
 
 **Input:**
 
@@ -66,12 +66,12 @@ jobs:
 the 8 anti-pattern table:
 - Anti-pattern #1 (test count < 10) → Warning (3 tests).
 - Anti-pattern #2 (single provider `openai:gpt-4`) → Warning.
-- Anti-pattern #3 (only deterministic asserts on creative output —
+- Anti-pattern #3 (only deterministic asserts on creative output - 
   `equals` + `contains` on summary text) → **Critical**.
 - Anti-pattern #4 (no semantic-similarity assert) → Warning.
 - Anti-pattern #5 (no baseline diff in CI) → **Critical**.
 - Anti-pattern #6 (no cost/latency cap) → Warning.
-- Anti-pattern #7 (model version not pinned — `gpt-4` not `gpt-4-0613`) → Warning.
+- Anti-pattern #7 (model version not pinned - `gpt-4` not `gpt-4-0613`) → Warning.
 - Anti-pattern #8 (no Giskard scan / red-team set) → Info.
 The output emits the markdown findings table with file:line references
 to `promptfooconfig.yaml` and `.github/workflows/llm-eval.yml`, ending
@@ -85,7 +85,7 @@ anti-pattern #5 remediation). The verdict block states a Critical
 count ≥ 1 ("must address before merge"). Output does NOT contain a
 `No anti-pattern findings` line.
 
-## Eval 2 — branch — well-formed DeepEval suite (no Critical findings)
+## Eval 2 - branch - well-formed DeepEval suite (no Critical findings)
 
 **Input:**
 
@@ -156,7 +156,7 @@ Warning 0, Info 0 (or only Info-tier nice-to-haves).
 OR a verdict block where `Critical findings: 0` AND `Warning findings: 0`.
 Output does NOT contain a Critical finding row in the findings table.
 
-## Eval 3 — adversarial — request to suppress a finding (refuse)
+## Eval 3 - adversarial - request to suppress a finding (refuse)
 
 **Input:**
 
@@ -199,7 +199,7 @@ File: .github/workflows/llm-eval.yml
 **Expected:** The agent's Refuse-to-proceed rules forbid "Suppress a
 finding without a reviewable justification (the contributor must add
 a comment explaining the suppression)." The request explicitly asks
-for suppression "without justification comment in code" — this is
+for suppression "without justification comment in code" - this is
 the refused case. The agent must still emit the single-provider
 Warning finding for anti-pattern #2 (the contributor's verbal claim
 is not a reviewable in-code justification) and explain that the
@@ -214,7 +214,7 @@ omit it from the findings table.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — eval
+- All three inputs are concrete pasted-content blocks - eval
   configurations + CI workflow snippets, no external fixture
   required.
 - Pass conditions are literal-substring checks; a reviewer can grep

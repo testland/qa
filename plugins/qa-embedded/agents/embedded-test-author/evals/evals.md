@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# embedded-test-author — evals
+# embedded-test-author - evals
 
 Companion eval cases for [`embedded-test-author`](../../embedded-test-author.md).
 Three cases covering happy path + branch + adversarial. Re-run by feeding the
@@ -12,10 +12,10 @@ Three cases covering happy path + branch + adversarial. Re-run by feeding the
 test file against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date — each
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - each
 eval is designed to be re-run against each tier.
 
-## Eval 1 — happy path — Ceedling project.yml + Unity → test/test_sensor.c + TEST_ASSERT_EQUAL_INT
+## Eval 1 - happy path - Ceedling project.yml + Unity → test/test_sensor.c + TEST_ASSERT_EQUAL_INT
 
 **Input:**
 
@@ -50,7 +50,7 @@ toolchain (`gcc`, not `arm-none-eabi-gcc`). Emits ONE test file at
 `void setUp(void)` / `void tearDown(void)`, a function
 `void test_sensor_read_returns_zero_for_invalid_channel(void)`, and the
 assertion `TEST_ASSERT_EQUAL_INT(0, sensor_read(99))` (or any channel > 7).
-Does NOT emit an `int main(void)` runner — Ceedling auto-generates it. Does
+Does NOT emit an `int main(void)` runner - Ceedling auto-generates it. Does
 NOT introduce GoogleTest (`TEST(`, `EXPECT_EQ`, `gtest/gtest.h`) or modify
 production `src/sensor.c`.
 
@@ -59,7 +59,7 @@ Output contains `#include "unity.h"` AND `void test_` AND `TEST_ASSERT_EQUAL_INT
 AND `sensor_read(`. Output does NOT contain `gtest/gtest.h`, `TEST(`,
 `EXPECT_EQ`, OR an `int main(` block.
 
-## Eval 2 — branch — CMake with find_package(GTest) + C++ → tests/sensor_test.cpp + EXPECT_EQ
+## Eval 2 - branch - CMake with find_package(GTest) + C++ → tests/sensor_test.cpp + EXPECT_EQ
 
 **Input:**
 
@@ -91,7 +91,7 @@ Switches from the C/Unity default to GoogleTest. Emits ONE test file at
 `tests/sensor_test.cpp` with `#include <gtest/gtest.h>`, a `TEST(SensorTest,
 ReadReturnsZeroForInvalidChannel)` block, and `EXPECT_EQ(0, sensor_read(99))`
 (or any channel > 7). Does NOT introduce Unity (`TEST_ASSERT_EQUAL_INT`,
-`#include "unity.h"`, `void setUp`) or write its own `int main()` — the
+`#include "unity.h"`, `void setUp`) or write its own `int main()` - the
 project links against `gtest_main` per the GoogleTest primer.
 
 **Pass condition:** Output filename ends in `sensor_test.cpp` under `tests/`.
@@ -99,7 +99,7 @@ Output contains `#include <gtest/gtest.h>` AND `TEST(` AND `EXPECT_EQ(` AND
 `sensor_read(`. Output does NOT contain `#include "unity.h"`,
 `TEST_ASSERT_EQUAL_INT`, OR `void setUp(`.
 
-## Eval 3 — adversarial — spec requests hardware-in-loop verification → refuse, defer to HIL reference
+## Eval 3 - adversarial - spec requests hardware-in-loop verification → refuse, defer to HIL reference
 
 **Input:**
 
@@ -124,7 +124,7 @@ Project root: . (Ceedling project.yml present)
 which is HIL scope, not unit-test scope. Recommends the
 `hardware-in-loop-reference` skill (or the HIL term) for the setup. Does
 NOT silently downgrade the HIL scenario to a host-side mock test (that
-would lose the original spec's intent — a host mock cannot verify a
+would lose the original spec's intent - a host mock cannot verify a
 NIST-traceable physical reading).
 
 **Pass condition:** Output does NOT contain a generated test method body

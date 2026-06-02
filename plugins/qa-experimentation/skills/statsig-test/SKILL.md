@@ -12,7 +12,7 @@ archetype: S1
 
 Per [docs.statsig.com](https://docs.statsig.com/), the Statsig
 SDK is available for Node.js, Java, Python, Go, Ruby, .NET, PHP,
-Rust, and C++ — all with the same conceptual surface: gates,
+Rust, and C++ - all with the same conceptual surface: gates,
 experiments, dynamic configs.
 
 ## When to use
@@ -48,7 +48,7 @@ afterAll(async () => {
 });
 ```
 
-`localMode: true` is the **test-mode flag** — gates fall back to
+`localMode: true` is the **test-mode flag** - gates fall back to
 the default value, configs return empty, no network calls.
 
 ### Override gates / experiments per user
@@ -65,7 +65,7 @@ test('user in treatment sees new UI', async () => {
 });
 ```
 
-`statsig.overrideGate(gateName, value, userID)` — pin a user to
+`statsig.overrideGate(gateName, value, userID)` - pin a user to
 a value for the lifetime of the test.
 
 ### Experiment evaluation

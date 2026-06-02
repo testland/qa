@@ -5,7 +5,7 @@ wrappers (OWASP ZAP, Burp Suite Pro/Enterprise, NightVision) plus
 a build-an-X cadence skill (`dast-baseline-runner`) and an
 adversarial unifier agent (`dast-finding-triager`).
 
-Sister to [`qa-sast`](../qa-sast/) — covers runtime vulnerabilities
+Sister to [`qa-sast`](../qa-sast/) - covers runtime vulnerabilities
 (auth, session, input handling at runtime) that SAST can't see by
 reading source code. Every scanner skill includes a
 `## False-positive triage` section.

@@ -56,7 +56,7 @@ Syntax: `Cache-Control: max-age=60, stale-while-revalidate=300`.
    subsequent request blocks on origin.
 
 The client always sees a response in steps 1-3. Stampedes are
-eliminated in step 2 — only the first request triggers
+eliminated in step 2 - only the first request triggers
 revalidation; others coast on the stale value.
 
 ### When the async revalidation fails
@@ -66,7 +66,7 @@ Vendors differ here:
 
 - **Cloudflare:** keeps serving stale until SWR window expires,
   then enters origin-block mode.
-- **Fastly:** more aggressive — surfaces 5xx after one failed
+- **Fastly:** more aggressive - surfaces 5xx after one failed
   revalidation.
 - **Varnish (via `grace`):** configurable per VCL.
 

@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# compliance-readiness-reviewer — evals
+# compliance-readiness-reviewer - evals
 
 Companion eval cases for [`compliance-readiness-reviewer`](../../compliance-readiness-reviewer.md).
 Three cases cover happy path / branch / adversarial: a HIPAA Security Rule
@@ -15,10 +15,10 @@ by feeding the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
 Target models for re-runs: `sonnet`, `haiku`, `opus`. Dates recorded below
-are the eval-authoring date — each case is designed to be reproducible
+are the eval-authoring date - each case is designed to be reproducible
 against any tier.
 
-## Eval 1 — happy path — HIPAA missing audit logging (NOT READY)
+## Eval 1 - happy path - HIPAA missing audit logging (NOT READY)
 
 **Input:**
 
@@ -72,7 +72,7 @@ string `Missing` AND at least one of `audit log`/`audit logging`.
 Output does NOT contain a verdict line of `READY` (without the `NOT`
 qualifier).
 
-## Eval 2 — branch — SOC 2 CC suite fully covered (READY)
+## Eval 2 - branch - SOC 2 CC suite fully covered (READY)
 
 **Input:**
 
@@ -111,7 +111,7 @@ passing in CI for the last 30 days.
 
 **Target models:** sonnet (2026-05-25), opus (2026-05-25)
 
-**Expected:** Step 1 resolves SOC 2 CC1–CC9. Step 3: 34 criteria `Covered`,
+**Expected:** Step 1 resolves SOC 2 CC1 - CC9. Step 3: 34 criteria `Covered`,
 1 `N/A` (CC1.2 with all four required fields), 0 `Partial`, 0 `Missing`.
 Step 5 emits the coverage matrix. Step 6 finds no refusal trigger (no
 missing criteria, N/A is fully justified, audit-trail criterion is
@@ -124,7 +124,7 @@ NOT contain `NOT READY` AND does NOT contain a `❌ Missing` row in any
 emitted matrix. Output mentions either `0 missing` / `no missing
 criteria` / `all CC criteria covered` (one of these phrasings).
 
-## Eval 3 — adversarial — unjustified N/A scope exclusion (refuse)
+## Eval 3 - adversarial - unjustified N/A scope exclusion (refuse)
 
 **Input:**
 
@@ -175,12 +175,12 @@ one of the unaddressed requirements (one of `Req 1`, `Req 5`, `Req 7`,
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone an evidence repository.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow
-  `Bash(jq *)`) is read-only — eval re-runs cannot modify scope
+  `Bash(jq *)`) is read-only - eval re-runs cannot modify scope
   documents, test files, or evidence artifacts.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

@@ -32,23 +32,23 @@ The agent takes:
 
 Output: per-criterion coverage matrix + go/no-go verdict.
 
-## Step 1 — Resolve target framework + criteria list
+## Step 1 - Resolve target framework + criteria list
 
 Per skills preloaded, the per-framework criteria sets are:
 
 | Framework | Criteria source |
 |---|---|
-| GDPR | Articles 5–22 + 24–43 (depending on data-subject-rights vs processor obligations) |
-| CCPA / CPRA | Cal. Civ. Code §1798.100–.199 |
-| SOC 2 | AICPA Trust Services Criteria CC1–CC9 + optional A1, C1, PI1, P1–P9 |
+| GDPR | Articles 5 - 22 + 24 - 43 (depending on data-subject-rights vs processor obligations) |
+| CCPA / CPRA | Cal. Civ. Code §1798.100 - .199 |
+| SOC 2 | AICPA Trust Services Criteria CC1 - CC9 + optional A1, C1, PI1, P1 - P9 |
 | HIPAA | 45 CFR §164.308 (admin), §164.310 (physical), §164.312 (technical), §164.502 (privacy) |
-| PCI DSS v4.0 | Requirements 1–12 with sub-requirements |
+| PCI DSS v4.0 | Requirements 1 - 12 with sub-requirements |
 | ISO 27001 | Annex A controls (114 controls in 14 domains) |
 
 For each in-scope criterion, identify expected test patterns
 (per the skill catalogs).
 
-## Step 2 — Discover existing tests
+## Step 2 - Discover existing tests
 
 ```bash
 # Search test directories for compliance-relevant tests
@@ -63,7 +63,7 @@ find evidence/ -name "*.json" -o -name "*.py" -newer evidence/.last-collected
 
 For each criterion, map to discovered tests + evidence.
 
-## Step 3 — Score per criterion
+## Step 3 - Score per criterion
 
 | Status | Meaning |
 |---|---|
@@ -78,7 +78,7 @@ A scope-exclusion claim must include:
 - Approver (compliance officer / DPO / CISO)
 - Re-review date
 
-## Step 4 — Per-criterion sample assertions
+## Step 4 - Per-criterion sample assertions
 
 Per [`hipaa-test-patterns`](../skills/hipaa-test-patterns/SKILL.md):
 
@@ -108,7 +108,7 @@ expected_tests = [
 (Pattern repeats per framework + criterion; the skills catalog the
 expected test patterns.)
 
-## Step 5 — Emit coverage matrix
+## Step 5 - Emit coverage matrix
 
 ```markdown
 ## Compliance readiness review — HIPAA Security Rule — `<sha>`
@@ -149,7 +149,7 @@ expected test patterns.)
 3. **§164.312(e)(1) transmission security** — add cipher-strength assertion to existing TLS test
 ```
 
-## Step 6 — Refuse-to-proceed rules
+## Step 6 - Refuse-to-proceed rules
 
 The agent **refuses** to:
 
@@ -159,13 +159,13 @@ The agent **refuses** to:
 - Accept a scope exclusion older than its re-review date.
 - Approve a coverage map where audit-evidence is older than the
   observation period start.
-- Map a single test to multiple criteria as "covers all" — each
+- Map a single test to multiple criteria as "covers all" - each
   criterion needs its own dedicated assertion or composite test
   with explicit per-criterion verification.
 - Skip the audit-trail criterion in any framework requiring it (HIPAA,
   PCI, SOC 2, GDPR Art. 5(1)(f)).
 
-## Step 7 — Pre-audit dry-run pattern
+## Step 7 - Pre-audit dry-run pattern
 
 For Type II audits (SOC 2 / HIPAA continuous evidence):
 
@@ -187,7 +187,7 @@ For Type II audits (SOC 2 / HIPAA continuous evidence):
 
 ## Examples
 
-### Example 1 — SOC 2 Type II readiness check
+### Example 1 - SOC 2 Type II readiness check
 
 Input: SOC 2 Common Criteria scope; 6-month observation period
 starting 2026-06-01.
@@ -207,7 +207,7 @@ Recommended action: address all 6 in next sprint; re-run before
 2026-06-01 observation start.
 ```
 
-### Example 2 — GDPR audit before DPA inquiry
+### Example 2 - GDPR audit before DPA inquiry
 
 Input: GDPR scope; DPA inquiry expected 2026-07-01.
 
@@ -231,8 +231,8 @@ should be completed before DPA inquiry.
   [`soc2-evidence-collector`](../skills/soc2-evidence-collector/SKILL.md),
   [`hipaa-test-patterns`](../skills/hipaa-test-patterns/SKILL.md),
   [`pci-dss-scope-checker`](../skills/pci-dss-scope-checker/SKILL.md),
-  [`audit-trail-test-author`](../skills/audit-trail-test-author/SKILL.md) —
+  [`audit-trail-test-author`](../skills/audit-trail-test-author/SKILL.md) - 
   preloaded sister skills providing per-framework criteria catalog
 - AICPA TSC + 45 CFR §164 + Cal. Civ. Code §1798 + EU Reg
-  2016/679 + PCI DSS v4.0 + ISO/IEC 27001:2022 — canonical
+  2016/679 + PCI DSS v4.0 + ISO/IEC 27001:2022 - canonical
   framework sources

@@ -1,6 +1,6 @@
 ---
 name: qemu-system-test-runner
-description: "Author and run QEMU system emulation as an embedded-test target — qemu-system-arm / qemu-system-aarch64 / qemu-system-riscv32 launching cross-compiled ELF binaries on virtual MCUs and SoCs. Covers machine selection (-M virt / mps2-an385 / mps2-an386 / mps2-an500 / mps2-an511 / mps3-an524 / lm3s6965evb / raspi3b / xilinx-zynq-a9), CPU selection (-cpu cortex-m0 / cortex-m3 / cortex-m4 / cortex-m33 / cortex-a15 / cortex-a57 / max), -kernel ELF load, -nographic + -serial stdio, ARM semihosting via -semihosting-config enable=on,target=native (so cross-compiled GoogleTest / Unity binaries print to host stdio and exit with the test return code), GDB stub via -S -gdb tcp::1234, QMP monitor via -qmp tcp:host:port for automated test orchestration, and CI wiring. Use when host-only test runs are insufficient and the team wants arch-correct (endianness / alignment / interrupt-vector) behaviour on a virtual MCU without committing to physical hardware-in-loop."
+description: "Author and run QEMU system emulation as an embedded-test target - qemu-system-arm / qemu-system-aarch64 / qemu-system-riscv32 launching cross-compiled ELF binaries on virtual MCUs and SoCs. Covers machine selection (-M virt / mps2-an385 / mps2-an386 / mps2-an500 / mps2-an511 / mps3-an524 / lm3s6965evb / raspi3b / xilinx-zynq-a9), CPU selection (-cpu cortex-m0 / cortex-m3 / cortex-m4 / cortex-m33 / cortex-a15 / cortex-a57 / max), -kernel ELF load, -nographic + -serial stdio, ARM semihosting via -semihosting-config enable=on,target=native (so cross-compiled GoogleTest / Unity binaries print to host stdio and exit with the test return code), GDB stub via -S -gdb tcp::1234, QMP monitor via -qmp tcp:host:port for automated test orchestration, and CI wiring. Use when host-only test runs are insufficient and the team wants arch-correct (endianness / alignment / interrupt-vector) behaviour on a virtual MCU without committing to physical hardware-in-loop."
 rating: 24
 d6: 4
 archetype: S1
@@ -16,7 +16,7 @@ QEMU system emulation, per
 is the mode "for users using QEMU for full system emulation (as
 opposed to user-mode emulation). This includes working with
 hypervisors such as KVM, Xen or Hypervisor.Framework". Each
-target architecture has a `qemu-system-<arch>` binary —
+target architecture has a `qemu-system-<arch>` binary - 
 `qemu-system-arm`, `qemu-system-aarch64`, `qemu-system-riscv32`,
 `qemu-system-riscv64` are the embedded-relevant ones.
 
@@ -29,20 +29,20 @@ code; CI gates on it.
 
 Composes with:
 
-- [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md) —
+- [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md) - 
   cross-compiled C++ test binary.
-- [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md) —
+- [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md) - 
   cross-compiled C test binary.
-- [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) —
+- [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) - 
   Ceedling project configured for ARM cross-compile.
-- [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md) —
+- [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md) - 
   the next rung up the V-cycle (PIL / HIL).
 
 ## When to use
 
 - Host tests pass but you suspect arch-specific bugs (endianness,
   alignment, interrupt-vector ordering, weak-symbol resolution).
-- Physical HIL is expensive / scheduled — QEMU is the V-cycle
+- Physical HIL is expensive / scheduled - QEMU is the V-cycle
   PIL stage between SIL and HIL.
 - The team wants reproducible "on-target" tests in CI without
   flashing a real board.
@@ -51,7 +51,7 @@ Composes with:
   raspi / zynq; RISC-V via virt).
 
 QEMU does **not** emulate analog I/O, sensor wiring, or
-real-time timing precisely — for that, escalate to a real HIL
+real-time timing precisely - for that, escalate to a real HIL
 rig per
 [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md).
 
@@ -81,7 +81,7 @@ hardware and is designed for use in virtual machines".
 | Raspberry Pi 3B (Cortex-A53) | `qemu-system-aarch64 -M raspi3b` | implicit (`cortex-a53`) |
 
 Per [www.qemu.org/docs/master/system/arm/cpu-features.html](https://www.qemu.org/docs/master/system/arm/cpu-features.html),
-"Named CPU models generally do not work with KVM" — for
+"Named CPU models generally do not work with KVM" - for
 emulation-only test runs (not KVM-accelerated) the named models
 work fine. The special **`max` CPU type** is "available for
 comprehensive feature testing".
@@ -94,15 +94,15 @@ Per [www.qemu.org/docs/master/system/invocation.html](https://www.qemu.org/docs/
 |---|---|
 | `-M [type=]name[,prop=value,...]` | Select emulated machine; `-machine help` lists all |
 | `-cpu model` | Select CPU model; `-cpu help` lists models for the target |
-| `-smp [cpus=]n[,cores=...,...]` | SMP topology — for multi-core test targets |
+| `-smp [cpus=]n[,cores=...,...]` | SMP topology - for multi-core test targets |
 | `-m [size=]megs[,slots=n,maxmem=size]` | Guest RAM; M / G suffixes |
-| `-kernel file` | Kernel image loaded directly into guest memory — for embedded tests, this is the test ELF |
+| `-kernel file` | Kernel image loaded directly into guest memory - for embedded tests, this is the test ELF |
 | `-bios file` | Custom BIOS / ROM image |
 | `-append "<string>"` | Kernel command-line arguments (Linux targets) |
 | `-nographic` | No GUI; serial → console |
 | `-serial stdio` | Redirect serial port to host stdin / stdout |
 | `-monitor stdio` / `-monitor tcp:host:port` | QEMU human monitor |
-| `-qmp tcp:host:port[,server,nowait]` | QMP machine protocol over TCP — JSON-RPC |
+| `-qmp tcp:host:port[,server,nowait]` | QMP machine protocol over TCP - JSON-RPC |
 
 ### ARM semihosting
 
@@ -218,7 +218,7 @@ qemu-system-arm -M mps2-an386 -cpu cortex-m4 -nographic \
 
 A test harness then connects to `localhost:4444` and issues
 `{"execute":"query-status"}`, `{"execute":"stop"}`,
-`{"execute":"cont"}` — useful for staged fault injection that
+`{"execute":"cont"}` - useful for staged fault injection that
 mirrors the [HIL fault-injection patterns](../hardware-in-loop-reference/SKILL.md#fault-injection-patterns).
 
 ## Parsing results
@@ -243,7 +243,7 @@ the failure count. CI gates on the exit code directly.
 
 For Unity / GoogleTest, the canonical line format reaches host
 stdout via semihosting → QEMU stdio. Grep / tee / pipe-to-JUnit
-the same way as a host run — see
+the same way as a host run - see
 [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md#parsing-results)
 and
 [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md#parsing-results).
@@ -251,7 +251,7 @@ and
 ### Timing the run
 
 QEMU emulation is not real-time. For a test that asserts on
-wall-clock latency, the result is **wrong** — QEMU executes
+wall-clock latency, the result is **wrong** - QEMU executes
 faster than physical hardware for compute-bound code and slower
 for I/O-heavy code. For real-time-sensitive tests, escalate to
 [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md).
@@ -299,7 +299,7 @@ jobs:
 ```
 
 The "run under multiple CPUs" pattern is the cheap-as-chips way
-to catch CPU-feature regressions — float vs no-float, ARMv6-M vs
+to catch CPU-feature regressions - float vs no-float, ARMv6-M vs
 ARMv7-M.
 
 ## Anti-patterns
@@ -309,7 +309,7 @@ ARMv7-M.
 | Forgetting `-semihosting-config enable=on,target=native` | Test prints nothing; QEMU never exits | Always set both `-semihosting-config enable=on` and `target=native` (or `auto`) |
 | `-kernel` pointed at a stripped binary | QEMU loads but symbol info gone for debug | Keep `-g` debug info; strip only the release binary |
 | Asserting on wall-clock timing under QEMU | QEMU is not real-time | Move timing assertions to HIL; QEMU asserts only logical correctness |
-| Using `-M virt` for a Cortex-M test | virt is Cortex-A — wrong instruction set | Match machine to CPU profile (mps2-* for M-profile, virt for A-profile) |
+| Using `-M virt` for a Cortex-M test | virt is Cortex-A - wrong instruction set | Match machine to CPU profile (mps2-* for M-profile, virt for A-profile) |
 | Not pinning the QEMU version | Newer QEMU may emulate differently; CI flakes | Pin `qemu-system-arm` version in the runner image |
 | Skipping `-cpu` and relying on board default | Board defaults shift between QEMU versions | Always specify `-cpu` explicitly |
 | Reading `-monitor stdio` and `-nographic` together without `-serial mon:stdio` | Serial and monitor share stdio; output garbles | Use `-monitor none -serial stdio` for clean output |
@@ -341,11 +341,11 @@ ARMv7-M.
 
 Cited inline. Foundational documents:
 
-- QEMU System Emulation overview — [www.qemu.org/docs/master/system/](https://www.qemu.org/docs/master/system/).
-- QEMU invocation flags — [www.qemu.org/docs/master/system/invocation.html](https://www.qemu.org/docs/master/system/invocation.html).
-- QEMU ARM target machines — [www.qemu.org/docs/master/system/target-arm.html](https://www.qemu.org/docs/master/system/target-arm.html).
-- QEMU ARM CPU features (`max`, named CPUs) — [www.qemu.org/docs/master/system/arm/cpu-features.html](https://www.qemu.org/docs/master/system/arm/cpu-features.html).
-- ARM GNU Toolchain (`--specs=rdimon.specs`, semihosting) — [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
+- QEMU System Emulation overview - [www.qemu.org/docs/master/system/](https://www.qemu.org/docs/master/system/).
+- QEMU invocation flags - [www.qemu.org/docs/master/system/invocation.html](https://www.qemu.org/docs/master/system/invocation.html).
+- QEMU ARM target machines - [www.qemu.org/docs/master/system/target-arm.html](https://www.qemu.org/docs/master/system/target-arm.html).
+- QEMU ARM CPU features (`max`, named CPUs) - [www.qemu.org/docs/master/system/arm/cpu-features.html](https://www.qemu.org/docs/master/system/arm/cpu-features.html).
+- ARM GNU Toolchain (`--specs=rdimon.specs`, semihosting) - [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 - Sibling skills:
   [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),

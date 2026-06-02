@@ -1,6 +1,6 @@
 ---
 name: pitest-mutation
-description: "Configures PIT (PITest) for mutation testing of JVM projects (Java, Kotlin via the Kotlin plugin) — wires the `pitest-maven` or `pitest-gradle-plugin` with `mutationThreshold`, `coverageThreshold`, target classes/tests filtering, runs `mvn pitest:mutationCoverage`, parses the HTML + XML reports. Use when the JVM suite needs mutation-quality verification — the canonical Java mutation testing tool, fast (PIT analyzes \"in minutes rather than days\")."
+description: "Configures PIT (PITest) for mutation testing of JVM projects (Java, Kotlin via the Kotlin plugin) - wires the `pitest-maven` or `pitest-gradle-plugin` with `mutationThreshold`, `coverageThreshold`, target classes/tests filtering, runs `mvn pitest:mutationCoverage`, parses the HTML + XML reports. Use when the JVM suite needs mutation-quality verification - the canonical Java mutation testing tool, fast (PIT analyzes \"in minutes rather than days\")."
 rating: 23
 d6: 4
 archetype: S1
@@ -35,7 +35,7 @@ minutes rather than days" vs older mutation tools.
 - Maven / Gradle integration is required (PIT is first-class for
   both).
 
-## Step 1 — Install (Maven)
+## Step 1 - Install (Maven)
 
 ```xml
 <plugin>
@@ -69,7 +69,7 @@ minutes rather than days" vs older mutation tools.
 For JUnit 5, the `pitest-junit5-plugin` is required; for JUnit 4
 the default plugin works.
 
-## Step 2 — Run
+## Step 2 - Run
 
 ```bash
 mvn pitest:mutationCoverage
@@ -78,7 +78,7 @@ mvn pitest:mutationCoverage
 Reports land at `target/pit-reports/<timestamp>/`. The
 `index.html` shows per-class mutation coverage.
 
-## Step 3 — Configure (Gradle)
+## Step 3 - Configure (Gradle)
 
 ```gradle
 plugins {
@@ -99,7 +99,7 @@ pitest {
 // ./gradlew pitest
 ```
 
-## Step 4 — Mutators
+## Step 4 - Mutators
 
 PIT's default mutator set covers conditional, arithmetic, return
 value, void method calls, and constructor calls. Activate
@@ -116,7 +116,7 @@ additional mutator sets via `<mutators>`:
 Per [pit-home][pit], reports "combine line coverage with mutation
 coverage data."
 
-## Step 5 — `pitmp-maven-plugin` for incremental runs
+## Step 5 - `pitmp-maven-plugin` for incremental runs
 
 For PRs, only mutate changed code:
 
@@ -137,7 +137,7 @@ mvn pitest:mutationCoverage \
 (The `pitmp-maven-plugin` extension adds git-diff-based scoping;
 not in core PIT.)
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 - uses: actions/setup-java@v4
@@ -161,12 +161,12 @@ not in core PIT.)
 The XML output (`mutations.xml`) is machine-parseable for
 dashboards.
 
-## Step 7 — Kotlin support
+## Step 7 - Kotlin support
 
 PIT works with Kotlin via standard Maven/Gradle Kotlin plugins;
 mutators apply to compiled bytecode. Per [pit-home][pit], "ArcMutate,
 from the same team, extends PIT with Kotlin support, Spring
-integration, and Git analysis" — for richer Kotlin / Spring
+integration, and Git analysis" - for richer Kotlin / Spring
 support, evaluate ArcMutate (commercial).
 
 ## Anti-patterns
@@ -194,13 +194,12 @@ support, evaluate ArcMutate (commercial).
 
 ## References
 
-- [pit][pit] — PIT overview: mutation testing definition, JVM-only,
+- [pit][pit] - PIT overview: mutation testing definition, JVM-only,
   speed claim ("minutes rather than days"), Maven/Gradle/Ant
   integration, ArcMutate Pro extension.
 - [`stryker-mutation`](../stryker-mutation/SKILL.md),
   [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md),
   [`mutmut-mutation`](../mutmut-mutation/SKILL.md),
-  [`mull-mutation`](../mull-mutation/SKILL.md) — per-language
+  [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
   siblings.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md)
-  — surviving-mutant analysis agent.
+- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - surviving-mutant analysis agent.

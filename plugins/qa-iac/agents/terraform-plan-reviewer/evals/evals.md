@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# terraform-plan-reviewer — evals
+# terraform-plan-reviewer - evals
 
 Companion eval cases for [`terraform-plan-reviewer`](../../terraform-plan-reviewer.md).
 Three cases cover happy path / branch / adversarial: a high-blast-radius
@@ -13,10 +13,10 @@ a low-risk in-place plan with only safe updates (no critical/high flags),
 and a refusal when the JSON plan is missing.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — destructive plan (REVIEW REQUIRED)
+## Eval 1 - happy path - destructive plan (REVIEW REQUIRED)
 
 **Input:**
 
@@ -88,7 +88,7 @@ literal string `aws_db_instance.orders_prod` AND at least one of
 `data loss` / `moved` / `import` (referencing the DB destroy-recreate
 fix). Output does NOT mark the plan as `safe` or `pass`.
 
-## Eval 2 — branch — safe in-place update only
+## Eval 2 - branch - safe in-place update only
 
 **Input:**
 
@@ -158,7 +158,7 @@ AND does NOT contain `critical` or `high` as a finding severity row
 either absent or explicitly empty. The recommended-actions list does
 NOT call to `block` the PR.
 
-## Eval 3 — adversarial — missing JSON plan (refuse)
+## Eval 3 - adversarial - missing JSON plan (refuse)
 
 **Input:**
 
@@ -195,7 +195,7 @@ caller to regenerate the plan in JSON form via
 `terraform plan -out=plan.tfplan && terraform show -json plan.tfplan
 > plan.json`. It should NOT silently parse the text plan and emit a
 findings table (even though the text would obviously warrant
-flagging) — that would normalize the anti-pattern called out in
+flagging) - that would normalize the anti-pattern called out in
 Step 1 ("Text plan harder to parse; misses signals").
 
 **Pass condition:** Output contains the literal string

@@ -1,6 +1,6 @@
 ---
 name: gitlab-ci-test-jobs
-description: "Configures GitLab CI/CD test stages — `.gitlab-ci.yml` with parallel matrix, artifact reports (junit, coverage), services (postgres, redis), needs / dependencies between jobs, only/except + rules for trigger filtering, retry policy. Use when the project hosts on GitLab and the team wants idiomatic GitLab CI patterns."
+description: "Configures GitLab CI/CD test stages - `.gitlab-ci.yml` with parallel matrix, artifact reports (junit, coverage), services (postgres, redis), needs / dependencies between jobs, only/except + rules for trigger filtering, retry policy. Use when the project hosts on GitLab and the team wants idiomatic GitLab CI patterns."
 rating: 22
 d6: 3
 archetype: S1
@@ -21,7 +21,7 @@ stage) → **steps** (a job's `script:` array).
 - The team values GitLab's tight VCS / CI / registry / artifacts
   integration.
 
-## Step 1 — Basic test job
+## Step 1 - Basic test job
 
 ```yaml
 # .gitlab-ci.yml
@@ -39,7 +39,7 @@ test:
 Default: runs on every push to any branch. Per-branch / per-MR
 filtering via `rules:` (Step 7).
 
-## Step 2 — Parallel matrix
+## Step 2 - Parallel matrix
 
 ```yaml
 test:
@@ -58,7 +58,7 @@ test:
 GitLab's matrix syntax for cross-product / explicit `include` for
 specific combinations.
 
-## Step 3 — Services (PostgreSQL, Redis)
+## Step 3 - Services (PostgreSQL, Redis)
 
 ```yaml
 test:
@@ -82,7 +82,7 @@ test:
 The service hostname is the `alias` field; reachable from the job
 container.
 
-## Step 4 — JUnit + coverage reports
+## Step 4 - JUnit + coverage reports
 
 ```yaml
 test:
@@ -109,7 +109,7 @@ GitLab natively renders:
 - Coverage in the MR widget (the `coverage:` regex parses %).
 - Cobertura coverage as inline annotations on diff lines.
 
-## Step 5 — Stages + needs
+## Step 5 - Stages + needs
 
 ```yaml
 stages:
@@ -138,11 +138,11 @@ e2e:
   needs: [integration]
 ```
 
-`needs:` enables DAG-style pipelines (newer GitLab feature) — jobs
+`needs:` enables DAG-style pipelines (newer GitLab feature) - jobs
 run as soon as their dependencies finish, not waiting for the
 full stage.
 
-## Step 6 — Retry policy
+## Step 6 - Retry policy
 
 ```yaml
 test:
@@ -155,11 +155,11 @@ test:
 ```
 
 Distinguish retry classes:
-- `runner_system_failure` — runner died; safe to retry.
-- `script_failure` — test failed; **don't retry** (masks bugs).
-- `unknown_failure` — case by case.
+- `runner_system_failure` - runner died; safe to retry.
+- `script_failure` - test failed; **don't retry** (masks bugs).
+- `unknown_failure` - case by case.
 
-## Step 7 — Trigger filtering via `rules:`
+## Step 7 - Trigger filtering via `rules:`
 
 ```yaml
 test:
@@ -178,7 +178,7 @@ test:
 Modern `rules:` replaces older `only:` / `except:` (still work but
 deprecated for new config).
 
-## Step 8 — Caching
+## Step 8 - Caching
 
 ```yaml
 test:
@@ -197,7 +197,7 @@ test:
 `cache:` per-job; speeds repeat installs. Pin the key to
 `package-lock.json` so cache invalidates on dep changes.
 
-## Step 9 — Variables + secrets
+## Step 9 - Variables + secrets
 
 ```yaml
 variables:
@@ -241,11 +241,8 @@ Secrets configured in **Project Settings → CI/CD → Variables**
 - GitLab CI/CD docs at `docs.gitlab.com/ee/ci/`.
 - [`github-actions-test-jobs`](../github-actions-test-jobs/SKILL.md),
   [`jenkinsfile-test-stages`](../jenkinsfile-test-stages/SKILL.md),
-  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) —
+  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
   alternatives.
-- [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md)
-  — cross-CI conventions.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — JUnit XML parser.
-- [`cobertura-analysis`](../../qa-test-reporting/skills/cobertura-analysis/SKILL.md)
-  — Cobertura parser (GitLab's native coverage format).
+- [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md) - cross-CI conventions.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - JUnit XML parser.
+- [`cobertura-analysis`](../../qa-test-reporting/skills/cobertura-analysis/SKILL.md) - Cobertura parser (GitLab's native coverage format).

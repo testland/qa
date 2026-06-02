@@ -1,6 +1,6 @@
 ---
 name: boundary-value-generator
-description: "Generates boundary-value test cases from typed input specifications — for each input field, produces the canonical 6-point set (one below, at, and above the lower bound; one below, at, and above the upper bound) plus equivalence-class representatives. Emits cases as parameterized test inputs (pytest @parametrize / Jest test.each / xUnit InlineData / etc.). Use when a function or endpoint has numeric / string-length / collection-size constraints and the team needs systematic edge-case coverage."
+description: "Generates boundary-value test cases from typed input specifications - for each input field, produces the canonical 6-point set (one below, at, and above the lower bound; one below, at, and above the upper bound) plus equivalence-class representatives. Emits cases as parameterized test inputs (pytest @parametrize / Jest test.each / xUnit InlineData / etc.). Use when a function or endpoint has numeric / string-length / collection-size constraints and the team needs systematic edge-case coverage."
 rating: 24
 d6: 4
 archetype: S3
@@ -30,9 +30,9 @@ inputs ready to paste into the project's test runner.
   produced AC with numeric thresholds; this skill turns each
   threshold into matching test cases.
 
-## Step 1 — Capture the input specification
+## Step 1 - Capture the input specification
 
-The skill consumes a structured input spec — for each field:
+The skill consumes a structured input spec - for each field:
 
 | Field         | Notes                                                             |
 |---------------|-------------------------------------------------------------------|
@@ -70,7 +70,7 @@ fields:
     nullable: true
 ```
 
-## Step 2 — Apply the generation rules per type
+## Step 2 - Apply the generation rules per type
 
 ### Numeric (`int`, `float`)
 
@@ -108,7 +108,7 @@ For `username` with `min=3, max=30`:
 If a regex is also specified, the cases must satisfy the regex
 (e.g. `[a-zA-Z0-9_]+` rejects empty string and any
 underscore-prefixed value depending on regex anchors). Generate
-**both** regex-matching and regex-violating cases — the latter
+**both** regex-matching and regex-violating cases - the latter
 verifies the rejection path.
 
 ### Collection (count-bounded)
@@ -126,7 +126,7 @@ Same six boundary points applied to count. For `items` with
 ```
 
 Item shape comes from the matching factory (Faker / mimesis /
-FactoryBot — see [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md)).
+FactoryBot - see [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md)).
 
 ### Enum
 
@@ -144,9 +144,9 @@ tier name.
 ### Nullable fields
 
 If `nullable: true`, also test `null` / missing. If `nullable: false`,
-also test that null IS rejected — the rejection-path case.
+also test that null IS rejected - the rejection-path case.
 
-## Step 3 — Emit in the test-runner-native format
+## Step 3 - Emit in the test-runner-native format
 
 The skill emits cases in the project's test-runner-native format.
 
@@ -229,7 +229,7 @@ Some inputs don't have meaningful boundaries:
 | Booleans                             | Two values; just test both.                            |
 | Dates without business semantics     | A date in 1900 isn't a "boundary"; the boundaries are business-level (minimum age, max future date for scheduling). |
 
-For those, use [`equivalence partitioning`][istqb-eq] — group
+For those, use [`equivalence partitioning`][istqb-eq] - group
 inputs into classes that should produce identical behavior, test
 one representative per class.
 
@@ -242,7 +242,7 @@ one representative per class.
 | Testing only `min` and `max` (skip `±1`)                          | Off-by-one bugs hide in `min-1` / `min+1` adjacency.              | Always six points. |
 | `min`-only when `max` is "infinite"                                | `Integer.MAX_VALUE`-class overflows are still bugs.                 | Use the type's max as `max` (e.g. `2^31 - 1` for int32). |
 | String boundary using random characters every run                | Non-deterministic; flaky when the runner picks a regex-violating value by chance. | Seed the generator; use a fixed alphabet. |
-| One mega-test that asserts every boundary at once                | One failing boundary breaks the whole test; remediation hard.     | One test per boundary point — parametrized. |
+| One mega-test that asserts every boundary at once                | One failing boundary breaks the whole test; remediation hard.     | One test per boundary point - parametrized. |
 | Skipping enum invalid-value test                                 | The "INVALID" rejection path is untested; a removed enum value silently breaks. | Always include one invalid enum case. |
 
 ## Limitations
@@ -253,7 +253,7 @@ one representative per class.
   [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md)
   with pairwise-combinatorial logic.
 - **Domain-specific boundaries.** A "valid US ZIP code" is
-  5 digits — boundary analysis won't surface that 99999 is valid
+  5 digits - boundary analysis won't surface that 99999 is valid
   but 10000 is not (Manhattan vs. Atlantic Ocean). Pair with
   domain validation rules.
 - **Float arithmetic.** Floating-point boundaries depend on
@@ -262,14 +262,10 @@ one representative per class.
 
 ## References
 
-- [ISTQB boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis)
-  — canonical definition.
-- [ISTQB equivalence partitioning][istqb-eq] — the complementary
+- [ISTQB boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis) - canonical definition.
+- [ISTQB equivalence partitioning][istqb-eq] - the complementary
   technique.
-- [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md)
-  — broader skill including pairwise combinatorial cases.
-- [`negative-test-generator`](../negative-test-generator/SKILL.md)
-  — sibling skill for rejection-path coverage.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md)
-  — for value generation when the boundary string requires a
+- [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md) - broader skill including pairwise combinatorial cases.
+- [`negative-test-generator`](../negative-test-generator/SKILL.md) - sibling skill for rejection-path coverage.
+- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - for value generation when the boundary string requires a
   realistic-looking string.

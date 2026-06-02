@@ -1,6 +1,6 @@
 ---
 name: ai-test-generator
-description: "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) — outputs tests with confidence scoring per case (LLM's own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team's existing test framework. Critical: AI-generated tests are unreliable without curation; pairs with `ai-test-curator` (the adversarial reviewer). Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement."
+description: "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) - outputs tests with confidence scoring per case (LLM's own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team's existing test framework. Critical: AI-generated tests are unreliable without curation; pairs with `ai-test-curator` (the adversarial reviewer). Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement."
 rating: 22
 d6: 3
 archetype: S3
@@ -11,7 +11,7 @@ archetype: S3
 ## Overview
 
 LLMs can generate test code from natural-language specs. They're
-fast — turn 10 ACs into 10 test stubs in seconds. They're also
+fast - turn 10 ACs into 10 test stubs in seconds. They're also
 unreliable: hallucinated APIs, weak assertions
 (`expect(x).toBeTruthy()`), missed edge cases, plausible-but-wrong
 implementations.
@@ -34,7 +34,7 @@ If the team treats AI output as production-ready without review,
 the worst-of-both-worlds: tests exist (false confidence) but
 verify the wrong things or nothing.
 
-## Step 1 — Define the input
+## Step 1 - Define the input
 
 ```yaml
 # input/cart-promo.yaml
@@ -59,11 +59,11 @@ acceptance_criteria:
       error: "This code has expired"
 ```
 
-The structured input is critical — vague natural-language input
+The structured input is critical - vague natural-language input
 produces hallucinated tests. Concrete inputs/expected outputs
 constrain the LLM.
 
-## Step 2 — Run the generator
+## Step 2 - Run the generator
 
 ```bash
 # scripts/ai-gen.py
@@ -91,7 +91,7 @@ for ac in input_yaml['acceptance_criteria']:
     save_test(ac['id'], response.choices[0].message.content)
 ```
 
-## Step 3 — Confidence scoring
+## Step 3 - Confidence scoring
 
 Per generated test, compute a confidence score:
 
@@ -122,11 +122,11 @@ def score(test_code, ac):
 
 | Score      | Action                                              |
 |------------|-----------------------------------------------------|
-| 80-100     | High-confidence — review can be quick.               |
-| 50-79      | Medium — careful review required.                    |
-| <50         | Low — likely needs rewrite or rejection.             |
+| 80-100     | High-confidence - review can be quick.               |
+| 50-79      | Medium - careful review required.                    |
+| <50         | Low - likely needs rewrite or rejection.             |
 
-## Step 4 — Output structure
+## Step 4 - Output structure
 
 ```markdown
 ## AI-generated tests — `<spec>`
@@ -160,7 +160,7 @@ each generated test for:
 After curation: merge.
 ```
 
-## Step 5 — Iteration loop
+## Step 5 - Iteration loop
 
 ```
 Spec → Generate → Score → Review → (rewrite | merge | reject)
@@ -172,7 +172,7 @@ The team's prompt evolves: when the LLM keeps producing
 `.toBeTruthy()`, add an explicit prohibition. When it hallucinates
 an API, add an example of the real API.
 
-## Step 6 — Cost + rate management
+## Step 6 - Cost + rate management
 
 LLM calls have cost and rate limits. Pattern:
 
@@ -205,11 +205,8 @@ LLM calls have cost and rate limits. Pattern:
 
 ## References
 
-- [`ai-test-curator`](../../agents/ai-test-curator.md) — required
+- [`ai-test-curator`](../../agents/ai-test-curator.md) - required
   downstream review.
-- [`ai-spec-coverage-mapper`](../ai-spec-coverage-mapper/SKILL.md)
-  — sister: maps existing tests to spec sections.
-- [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md)
-  — non-AI alternative for AC-to-test conversion.
-- [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md)
-  — runs alongside curator on generated tests.
+- [`ai-spec-coverage-mapper`](../ai-spec-coverage-mapper/SKILL.md) - sister: maps existing tests to spec sections.
+- [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - non-AI alternative for AC-to-test conversion.
+- [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md) - runs alongside curator on generated tests.

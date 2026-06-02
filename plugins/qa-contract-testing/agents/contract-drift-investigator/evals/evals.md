@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# contract-drift-investigator — evals
+# contract-drift-investigator - evals
 
 Companion eval cases for [`contract-drift-investigator`](../../contract-drift-investigator.md).
 Three cases cover happy path / branch / adversarial: an OpenAPI rename
@@ -15,10 +15,10 @@ contract surface (refuse to investigate). Re-run by feeding the
 output against the **Pass condition**.
 
 Target models for re-runs: `sonnet`, `haiku`, `opus`. Dates recorded
-below are the eval-authoring date — each case is designed to be
+below are the eval-authoring date - each case is designed to be
 reproducible against any tier.
 
-## Eval 1 — happy path — OpenAPI rename without alias (schema-rename)
+## Eval 1 - happy path - OpenAPI rename without alias (schema-rename)
 
 **Input:**
 
@@ -86,7 +86,7 @@ finding as `schema-removal` only (i.e., must not emit a
 `schema-removal` row for `customer_email` without also emitting the
 `schema-rename` category).
 
-## Eval 2 — branch — Pact provider-state failure (data-fixture)
+## Eval 2 - branch - Pact provider-state failure (data-fixture)
 
 **Input:**
 
@@ -134,7 +134,7 @@ Pact pact file (pacts/web-app-pet-service.json) `uponReceiving` for
 verifier log and identifies that the provider-state hook
 `given('I have a list of dogs')` returned an empty list. Step 4
 classifies as `data-fixture` (per the table: "Pact provider-state
-hook didn't seed the data the consumer expects — `given(...)` returned
+hook didn't seed the data the consumer expects - `given(...)` returned
 empty"). Step 5 identifies the introducing commit (`xyz789`, ~3 weeks
 ago, on `provider/state-handlers.ts`). The consumer pact file is
 unchanged, so the agent must NOT classify this as
@@ -149,7 +149,7 @@ AND the literal string `xyz789` AND mentions one of `FEATURE_FIXTURES` /
 NOT classify the finding as `consumer-expectation` AND does NOT
 classify the finding as `provider-implementation`.
 
-## Eval 3 — adversarial — no contract surface present (refuse)
+## Eval 3 - adversarial - no contract surface present (refuse)
 
 **Input:**
 
@@ -202,14 +202,14 @@ NOT emit a findings table with any of the seven drift categories
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a consumer or provider repository.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring (including category names
   from the agent's own table).
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow
   `Bash(git diff|log|show *)`, `Bash(jq *)`, `Bash(buf *)`,
-  `Bash(oasdiff *)`) is read-only — eval re-runs cannot modify
+  `Bash(oasdiff *)`) is read-only - eval re-runs cannot modify
   contract artifacts or git history.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

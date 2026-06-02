@@ -1,6 +1,6 @@
 ---
 name: api-chaos-runner
-description: "Builds a workflow that runs the project's existing API tests under injected network chaos — latency, timeouts, dropped connections, bandwidth caps, packet loss — using Toxiproxy as the proxy layer (with notes on alternatives Pumba / Gremlin / LitmusChaos). Defines a chaos matrix per test scenario, runs each, and reports which assertions break under which conditions. Use when the API surface needs to verify resilience patterns (retry, circuit-breaker, timeout, fallback) actually work."
+description: "Builds a workflow that runs the project's existing API tests under injected network chaos - latency, timeouts, dropped connections, bandwidth caps, packet loss - using Toxiproxy as the proxy layer (with notes on alternatives Pumba / Gremlin / LitmusChaos). Defines a chaos matrix per test scenario, runs each, and reports which assertions break under which conditions. Use when the API surface needs to verify resilience patterns (retry, circuit-breaker, timeout, fallback) actually work."
 rating: 23
 d6: 3
 archetype: S3
@@ -13,11 +13,11 @@ archetype: S3
 Most API tests run against perfect networks: <1ms latency, no
 packet loss, infinite bandwidth, deterministic ordering. Real
 production isn't like that. **Network chaos testing** drives the
-existing tests under controlled network impairment — the team
+existing tests under controlled network impairment - the team
 discovers which retry / circuit-breaker / timeout patterns actually
 hold up before real customers find out.
 
-The canonical open-source primitive is **Toxiproxy** — Shopify's
+The canonical open-source primitive is **Toxiproxy** - Shopify's
 "TCP proxy to simulate network and system conditions for chaos and
 resiliency testing" ([toxiproxy-readme][toxiproxy]). The pattern:
 sit Toxiproxy between client and upstream; manipulate **toxics**
@@ -25,7 +25,7 @@ sit Toxiproxy between client and upstream; manipulate **toxics**
 
 [toxiproxy]: https://github.com/Shopify/toxiproxy
 
-This skill is **build-an-X** — the workflow chains the team's
+This skill is **build-an-X** - the workflow chains the team's
 existing API tests (Postman / Karate / RestAssured / Tavern /
 Schemathesis) through a Toxiproxy-managed connection and orchestrates
 a per-scenario chaos matrix.
@@ -44,11 +44,11 @@ a per-scenario chaos matrix.
   signal value via fault injection.
 
 If the team is just starting API testing and has no resilience
-patterns to verify, this skill is overkill — start with happy-path
+patterns to verify, this skill is overkill - start with happy-path
 coverage via [`postman-collections`](../postman-collections/SKILL.md)
 or the language-native equivalents first.
 
-## Step 1 — Pick the chaos primitive
+## Step 1 - Pick the chaos primitive
 
 | Tool                | Layer                       | Best for                                              |
 |---------------------|-----------------------------|-------------------------------------------------------|
@@ -62,7 +62,7 @@ Default recommendation: **Toxiproxy** for per-API chaos in CI. The
 others fit when the team is already in those ecosystems
 (Docker-Compose-heavy projects, Kubernetes-first projects).
 
-## Step 2 — Define the chaos matrix
+## Step 2 - Define the chaos matrix
 
 For each existing API test scenario, define a matrix of conditions
 to run it under:
@@ -84,7 +84,7 @@ The matrix is the load-bearing artifact: what the team **expects**
 under each condition is what differentiates resilience verification
 from "did the test pass?" The Expected column drives the assertions.
 
-## Step 3 — Wire Toxiproxy into the test environment
+## Step 3 - Wire Toxiproxy into the test environment
 
 ### Setup (Docker example)
 
@@ -138,7 +138,7 @@ For a stateless add-test-remove cycle, the language-native client
 libraries (`toxiproxy-python`, `toxiproxy-node`, `toxiproxy-ruby`,
 `toxiproxy-go`) wrap the HTTP API.
 
-## Step 4 — Run the matrix
+## Step 4 - Run the matrix
 
 A minimal runner shell script:
 
@@ -171,7 +171,7 @@ run_with_toxic 'timeout'   timeout   '-a timeout=5000'
 The matrix produces one JUnit XML per scenario. Aggregate them in
 the report stage.
 
-## Step 5 — Report what broke under what
+## Step 5 - Report what broke under what
 
 A successful chaos run produces a **resilience matrix** report:
 
@@ -192,7 +192,7 @@ A successful chaos run produces a **resilience matrix** report:
 | GET /orders/:id | bandwidth=10k | 200 in <30s | 408 timeout at 10s |
 ```
 
-A green matrix isn't the goal — finding where resilience is **missing**
+A green matrix isn't the goal - finding where resilience is **missing**
 is the goal. A failure under a chaos scenario is a feature request,
 not a bug in the test.
 
@@ -236,13 +236,13 @@ every toxic against every endpoint is noise.
 
 ## References
 
-- [toxiproxy][toxiproxy] — main repo: install, control API, toxic
+- [toxiproxy][toxiproxy] - main repo: install, control API, toxic
   types, language-native clients.
-- Pumba — https://github.com/alexei-led/pumba
-- LitmusChaos — https://litmuschaos.io/
-- Principles of Chaos Engineering — https://principlesofchaos.org/
+- Pumba - https://github.com/alexei-led/pumba
+- LitmusChaos - https://litmuschaos.io/
+- Principles of Chaos Engineering - https://principlesofchaos.org/
 - [`postman-collections`](../postman-collections/SKILL.md),
   [`tavern-testing`](../tavern-testing/SKILL.md),
   [`karate-testing`](../karate-testing/SKILL.md),
-  [`restassured-testing`](../restassured-testing/SKILL.md) —
+  [`restassured-testing`](../restassured-testing/SKILL.md) - 
   example-based test suites that this skill drives through chaos.

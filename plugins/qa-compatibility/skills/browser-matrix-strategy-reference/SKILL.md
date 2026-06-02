@@ -26,21 +26,21 @@ skills
 
 ## When to use
 
-- New project — defining the initial browser matrix.
-- Quarterly review — re-tier browsers as traffic shifts (e.g.,
+- New project - defining the initial browser matrix.
+- Quarterly review - re-tier browsers as traffic shifts (e.g.,
   IE11 traffic drops to <0.1%, demote from T2 to T3).
-- Audit / compliance — defending why specific browsers were tested
+- Audit / compliance - defending why specific browsers were tested
   (or weren't).
-- Cost optimisation — moving low-tier browsers from cloud grid
+- Cost optimisation - moving low-tier browsers from cloud grid
   (paid) to bundled engines (free).
 
 ## The three-tier model
 
 | Tier | Cadence | Coverage criterion | Example |
 |---|---|---|---|
-| **T1 — Must pass every PR** | Per-PR + main | Currently using >5% of traffic + must-not-break | Chrome current + Chrome-1 |
-| **T2 — Pre-release / nightly** | Nightly + pre-release | 1-5% traffic share OR statutory (regulated industries) | Firefox / Safari / Edge current |
-| **T3 — Quarterly / on-demand** | Quarterly | <1% traffic but customer demand | Safari iOS 16 / IE11 / niche Android |
+| **T1 - Must pass every PR** | Per-PR + main | Currently using >5% of traffic + must-not-break | Chrome current + Chrome-1 |
+| **T2 - Pre-release / nightly** | Nightly + pre-release | 1-5% traffic share OR statutory (regulated industries) | Firefox / Safari / Edge current |
+| **T3 - Quarterly / on-demand** | Quarterly | <1% traffic but customer demand | Safari iOS 16 / IE11 / niche Android |
 
 ## Data sources for traffic share
 
@@ -48,7 +48,7 @@ skills
 |---|---|
 | **Your product's own analytics** (GA / Plausible / etc.) | Definitive ground truth for *your* users |
 | **StatCounter** ([gs.statcounter.com](https://gs.statcounter.com/)) | Global / regional baseline when own data thin |
-| **MDN browser-compat-data** ([github.com/mdn/browser-compat-data](https://github.com/mdn/browser-compat-data)) | Per-feature compatibility map — which versions support a given Web API |
+| **MDN browser-compat-data** ([github.com/mdn/browser-compat-data](https://github.com/mdn/browser-compat-data)) | Per-feature compatibility map - which versions support a given Web API |
 | **caniuse.com** | Same purpose as MDN, easier UI |
 | **web-platform.org browser support** ([webstatus.dev](https://webstatus.dev/)) | Web Platform features cross-browser readiness |
 | **GitHub Actions browser-default versions** ([github.com/actions/runner-images](https://github.com/actions/runner-images)) | What CI runners ship with by default |
@@ -156,9 +156,9 @@ Grid 4 for T1 + cloud grid for T2 / T3 is the optimum mix.
 
 A T1 entry "Chrome latest" can mean:
 
-- **Bundled Chromium engine in Playwright** — fast, free, but
+- **Bundled Chromium engine in Playwright** - fast, free, but
   engineered for testing (not 1:1 with stable Chrome)
-- **Real Chrome stable channel via cloud grid** — slower, paid,
+- **Real Chrome stable channel via cloud grid** - slower, paid,
   but exactly what users have
 
 For T1 the bundled-engine path is usually sufficient; for T2 / T3,
@@ -175,7 +175,7 @@ matters (some bugs are real-Chrome-only).
 | Counting Chromium-engine browsers separately (Chrome, Brave, Vivaldi, Opera) | Same engine; one test covers them | Group by engine; test the dominant browser only |
 | IE11 in 2026 | Trivial traffic in nearly all contexts | Audit own analytics before committing |
 | Mobile and desktop in same tier | Different breakage surfaces | Treat mobile as its own dimension |
-| No tier-change log | "Why is Safari 14 in T2?" — nobody remembers | Always log tier changes |
+| No tier-change log | "Why is Safari 14 in T2?" - nobody remembers | Always log tier changes |
 
 ## Limitations
 
@@ -191,21 +191,21 @@ matters (some bugs are real-Chrome-only).
 
 ## References
 
-- StatCounter GlobalStats —
+- StatCounter GlobalStats - 
   [gs.statcounter.com](https://gs.statcounter.com/).
-- MDN browser-compat-data —
+- MDN browser-compat-data - 
   [github.com/mdn/browser-compat-data](https://github.com/mdn/browser-compat-data).
-- caniuse.com — [caniuse.com](https://caniuse.com/).
-- web-platform-tests / web-platform.org —
+- caniuse.com - [caniuse.com](https://caniuse.com/).
+- web-platform-tests / web-platform.org - 
   [web-platform-tests.org](https://web-platform-tests.org/).
-- Web feature status — [webstatus.dev](https://webstatus.dev/).
-- GitHub Actions runner-images —
+- Web feature status - [webstatus.dev](https://webstatus.dev/).
+- GitHub Actions runner-images - 
   [github.com/actions/runner-images](https://github.com/actions/runner-images).
-- W3C WebDriver specification —
+- W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Sibling skills:
   [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md)
-  (existing — bundled engines),
+  (existing - bundled engines),
   [`selenium-grid-4-runner`](../selenium-grid-4-runner/SKILL.md),
   [`browserstack-automate`](../../../qa-web-e2e/skills/browserstack-automate/SKILL.md),
   [`saucelabs-automate`](../../../qa-web-e2e/skills/saucelabs-automate/SKILL.md),

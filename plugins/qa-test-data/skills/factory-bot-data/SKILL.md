@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 FactoryBot (formerly factory_girl) is the canonical Ruby fixture-
-factory library — it builds object graphs with referential integrity
+factory library - it builds object graphs with referential integrity
 that raw [`faker-data`](../faker-data/SKILL.md) cannot
 ([factory_bot-readme][readme]).
 
@@ -20,7 +20,7 @@ that raw [`faker-data`](../faker-data/SKILL.md) cannot
 The split:
 - **Faker** generates field values (`Faker::Name.name`).
 - **FactoryBot** orchestrates object creation (`create(:user, :admin,
-  posts_count: 3)`) — including sequence-based unique IDs,
+  posts_count: 3)`) - including sequence-based unique IDs,
   associations between models, and trait composition.
 
 ## When to use
@@ -28,7 +28,7 @@ The split:
 - The project is Ruby (Rails or pure Ruby).
 - Tests need structured fixtures: a `User` with three `Posts` and a
   `Profile`, all linked correctly.
-- The test suite uses RSpec or Minitest — both are first-class.
+- The test suite uses RSpec or Minitest - both are first-class.
 - The team wants "intent-revealing" fixture names (`create(:admin)`)
   rather than per-field overrides.
 
@@ -66,7 +66,7 @@ end
 
 (Per [factory_bot-readme][readme].)
 
-Each attribute is a block — the block is evaluated lazily at object
+Each attribute is a block - the block is evaluated lazily at object
 creation, so `Faker::Name.name` re-runs per `create` call.
 
 ### Sequences
@@ -135,7 +135,7 @@ FactoryBot.create(:user, :admin, :with_posts)
 
 (Per [factory_bot-readme][readme].)
 
-Traits are the canonical way to keep factory bodies DRY — instead of
+Traits are the canonical way to keep factory bodies DRY - instead of
 ten variant factories (`:admin_user`, `:premium_user`,
 `:admin_premium_user`, …), one base factory plus N traits composes
 to all variants.
@@ -209,7 +209,7 @@ end
 ```
 
 Per [factory_bot-readme][readme]; both syntaxes mirror the same
-DSL — only the test-framework hookup differs.
+DSL - only the test-framework hookup differs.
 
 ## Anti-patterns
 
@@ -220,7 +220,7 @@ DSL — only the test-framework hookup differs.
 | Per-test-class factory definitions                                | Two test files re-define `:user` differently; subtle bug. | One factory per class, in `spec/factories/` (auto-loaded by `factory_bot_rails`). |
 | `sequence` for fields that should be **random** (e.g. names)       | Sequence values are predictable; tests pass on `User 1` `User 2` patterns that wouldn't pass on real names. | Use Faker for **value variety**, sequence for **uniqueness only**. |
 | `create_list(:user, 100)` per test                                | DB write storm; even fast tests stall on bulk insert. | Use `build_stubbed_list` if persistence isn't required; if it is, use raw SQL bulk insert. |
-| Factory associations that always create the parent                 | A test of `Post` creates a `User`; that creates 5 `Permission`s; etc. — explosion of objects. | Pass an existing parent: `create(:post, user: existing_user)`. |
+| Factory associations that always create the parent                 | A test of `Post` creates a `User`; that creates 5 `Permission`s; etc. - explosion of objects. | Pass an existing parent: `create(:post, user: existing_user)`. |
 
 ## Limitations
 
@@ -237,12 +237,12 @@ DSL — only the test-framework hookup differs.
 
 ## References
 
-- [factory_bot-readme][readme] — canonical: install, factory
+- [factory_bot-readme][readme] - canonical: install, factory
   definition, traits, associations, sequences, build / create /
   build_stubbed strategies.
-- [`faker-data`](../faker-data/SKILL.md) — Ruby Faker (the value
+- [`faker-data`](../faker-data/SKILL.md) - Ruby Faker (the value
   engine for FactoryBot fields).
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) —
+- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
   dispatcher selecting the right factory library per language.
-- [`seed-data-curator`](../seed-data-curator/SKILL.md) — downstream
+- [`seed-data-curator`](../seed-data-curator/SKILL.md) - downstream
   workflow consuming FactoryBot for E2E suite seeds.

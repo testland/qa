@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# golden-file-manager — evals
+# golden-file-manager - evals
 
 Companion eval cases for [`golden-file-manager`](../../golden-file-manager.md).
 Three cases cover happy path / branch / adversarial: Jest `add` mode for a
@@ -15,7 +15,7 @@ Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
 the eval-authoring date.
 
-## Eval 1 — happy path — `add` mode (Jest, new component snapshot)
+## Eval 1 - happy path - `add` mode (Jest, new component snapshot)
 
 **Input:**
 
@@ -52,7 +52,7 @@ the documented `## Golden-file maintenance` shape with
 `**Mode:** add` AND `Added` AND `Modal.test.tsx.snap`. Output
 does NOT contain `**Mode:** update` or `**Mode:** prune`.
 
-## Eval 2 — branch — `prune` mode (orphans after feature removal)
+## Eval 2 - branch - `prune` mode (orphans after feature removal)
 
 **Input:**
 
@@ -88,7 +88,7 @@ the files. The output report shows `**Mode:** prune` with
 `LegacyPicker`. Output does NOT contain `**Mode:** add` or
 `**Mode:** update`.
 
-## Eval 3 — adversarial — `update` mode with unrelated diff (refuse)
+## Eval 3 - adversarial - `update` mode with unrelated diff (refuse)
 
 **Input:**
 
@@ -131,7 +131,7 @@ that the agent must not auto-update the unrelated cascade).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo. The "inventory" lines and
   `git log` evidence stand in for the file-system state the agent
   would otherwise discover via its own tool calls.
@@ -139,7 +139,7 @@ that the agent must not auto-update the unrelated cascade).
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Write`, `Edit`, `Grep`, `Glob`,
   narrow `Bash(git *)` / `Bash(npm test *)` / `Bash(npx vitest *)` /
-  `Bash(npx jest *)` / `Bash(pytest *)`) — eval re-runs evaluate the
+  `Bash(npx jest *)` / `Bash(pytest *)`) - eval re-runs evaluate the
   text output, not file-system side effects.
 - Eval cases were authored 2026-05-26 against the v3.0 / v4.0
   framework's D7 sub-checks (Evals exist, Multi-model coverage,

@@ -1,6 +1,6 @@
 ---
 name: allure-testops-case-management
-description: "Author and manage Allure TestOps test cases via the REST API — create cases, manage projects + suites, attach scenarios with nested steps, link to Jira / GitHub issues, sync with allure-results from CI runs. Covers Bearer-token auth, /api/rs/testcase CRUD endpoints, nested-step `scenario` shape, and the unique Allure TestOps feature of linking automated results back to manual case definitions. Use for pre-execution case authoring in teams using Allure TestOps as the canonical TCM."
+description: "Author and manage Allure TestOps test cases via the REST API - create cases, manage projects + suites, attach scenarios with nested steps, link to Jira / GitHub issues, sync with allure-results from CI runs. Covers Bearer-token auth, /api/rs/testcase CRUD endpoints, nested-step `scenario` shape, and the unique Allure TestOps feature of linking automated results back to manual case definitions. Use for pre-execution case authoring in teams using Allure TestOps as the canonical TCM."
 rating: 22
 d6: 4
 archetype: S1
@@ -194,7 +194,7 @@ Response shape: `{"content": [...], "page", "totalPages", "totalElements", "last
 
 ### Sync allure-results into manual cases
 
-The unique Allure TestOps integration — link automated tests'
+The unique Allure TestOps integration - link automated tests'
 results to manual case IDs:
 
 ```python
@@ -284,12 +284,12 @@ and links to manual cases by ID:
 
 ## References
 
-- Allure TestOps docs —
+- Allure TestOps docs - 
   docs.qameta.io/allure-testops (Cloudflare-protected; cite by
   stable URL).
-- Allure TestOps REST API —
+- Allure TestOps REST API - 
   docs.qameta.io/allure-testops/integrations/rest-api/.
-- allurectl CLI —
+- allurectl CLI - 
   github.com/allure-framework/allurectl.
 - Sibling references:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
@@ -299,5 +299,4 @@ and links to manual cases by ID:
   [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`allure-reports`](../../../qa-test-reporting/skills/allure-reports/SKILL.md)
-  — different scope (allure-results parser; not case repository).
+  [`allure-reports`](../../../qa-test-reporting/skills/allure-reports/SKILL.md) - different scope (allure-results parser; not case repository).

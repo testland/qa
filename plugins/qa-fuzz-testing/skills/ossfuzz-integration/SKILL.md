@@ -1,6 +1,6 @@
 ---
 name: ossfuzz-integration
-description: "Author and submit a project to Google OSS-Fuzz — the open-source continuous fuzzing service that runs libFuzzer / AFL++ / Honggfuzz campaigns on Google infrastructure 24x7. Covers the project.yaml + Dockerfile + build.sh contract, the $OUT/$WORK conventions, supported languages + sanitisers, seed-corpus + dictionary submission, the OSS-Fuzz Build Status dashboard, and the disclosure SLA (issues filed in Monorail with 90-day deadline). Use to offload long-running fuzz campaigns to dedicated infrastructure rather than self-hosting."
+description: "Author and submit a project to Google OSS-Fuzz - the open-source continuous fuzzing service that runs libFuzzer / AFL++ / Honggfuzz campaigns on Google infrastructure 24x7. Covers the project.yaml + Dockerfile + build.sh contract, the $OUT/$WORK conventions, supported languages + sanitisers, seed-corpus + dictionary submission, the OSS-Fuzz Build Status dashboard, and the disclosure SLA (issues filed in Monorail with 90-day deadline). Use to offload long-running fuzz campaigns to dedicated infrastructure rather than self-hosting."
 rating: 23
 d6: 4
 archetype: S1
@@ -24,11 +24,11 @@ for sanitiser pairing see
 
 ## When to use
 
-- Production-grade fuzzing of an open-source library — OSS-Fuzz
+- Production-grade fuzzing of an open-source library - OSS-Fuzz
   runs continuously, finds bugs you'd miss with periodic CI fuzz.
-- Established projects with mature fuzz targets — OSS-Fuzz wants
+- Established projects with mature fuzz targets - OSS-Fuzz wants
   proven harnesses, not experimental ones.
-- Pre-disclosure pipeline for security-sensitive libraries —
+- Pre-disclosure pipeline for security-sensitive libraries - 
   OSS-Fuzz files in Monorail with structured severity + 90-day
   deadline.
 
@@ -222,25 +222,25 @@ for downstream bug-tracker filing.
 
 - **Open-source only.** Closed-source projects use ClusterFuzz
   self-hosted, not OSS-Fuzz.
-- **Maintainer review required.** New project PRs need approval —
+- **Maintainer review required.** New project PRs need approval - 
   cycle time 1-4 weeks.
 - **Severity classification is automated.** OSS-Fuzz heuristic
   may misclassify; maintainer can re-tag in Monorail.
 - **Resource allocation is opaque.** Google decides how much
   compute to allocate per project.
 - **Builds break on dependency drift.** When upstream
-  dependencies change, build.sh may break — monitor the build
+  dependencies change, build.sh may break - monitor the build
   status page.
 
 ## References
 
-- OSS-Fuzz —
+- OSS-Fuzz - 
   [google.github.io/oss-fuzz](https://google.github.io/oss-fuzz/).
-- New project guide —
+- New project guide - 
   [google.github.io/oss-fuzz/getting-started/new-project-guide](https://google.github.io/oss-fuzz/getting-started/new-project-guide/).
-- ClusterFuzz (self-hosted backend) —
+- ClusterFuzz (self-hosted backend) - 
   [google.github.io/clusterfuzz](https://google.github.io/clusterfuzz/).
-- Monorail (issue tracker) — issues.oss-fuzz.com.
+- Monorail (issue tracker) - issues.oss-fuzz.com.
 - Composes:
   [`corpus-management-reference`](../corpus-management-reference/SKILL.md),
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).

@@ -4,13 +4,13 @@ type: agent
 archetype: A2
 ---
 
-# regression-bisector — evals
+# regression-bisector - evals
 
 Companion eval cases for [`regression-bisector`](../../regression-bisector.md).
 Three cases cover happy path / branch / adversarial: a clean Playwright
 + npm bisect that pinpoints a culprit commit (happy artifact = culprit
 report), a Jest + Make bisect that hits skipped-build commits and
-re-runs with `--first-parent` (branch — different framework / driver /
+re-runs with `--first-parent` (branch - different framework / driver /
 config), and a refusal when the failure is intermittent rather than
 deterministic (git bisect prerequisite violated). Re-run by feeding
 the **Input** block as the first user message and checking the agent's
@@ -18,10 +18,10 @@ output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates below are the
-eval-authoring date — each case is designed to be reproducible against
+eval-authoring date - each case is designed to be reproducible against
 any tier.
 
-## Eval 1 — happy path — Playwright + npm bisect to clear culprit
+## Eval 1 - happy path - Playwright + npm bisect to clear culprit
 
 **Input:**
 
@@ -76,10 +76,10 @@ documented output. Does NOT classify as flake / hand off to
 
 **Pass condition:** Output contains the literal string `abc1234` AND
 mentions `src/checkout/Summary.tsx` AND mentions one of `useMemo` /
-`subtotal` / `stale` (case-insensitive — the hypothesis terms). Output
+`subtotal` / `stale` (case-insensitive - the hypothesis terms). Output
 does NOT recommend hand-off to `e2e-flake-bisector`.
 
-## Eval 2 — branch — Jest + Make bisect with skipped commits, `--first-parent`
+## Eval 2 - branch - Jest + Make bisect with skipped commits, `--first-parent`
 
 **Input:**
 
@@ -124,7 +124,7 @@ stalls on skipped commits?
 **Target models:** sonnet (2026-05-26), haiku (2026-05-26)
 
 **Expected:** Produces a regression bisect report that acknowledges
-the stall — different framework / driver / config than Eval 1 (Jest +
+the stall - different framework / driver / config than Eval 1 (Jest +
 Make + native build, not Playwright + npm). Lists the 12 skipped
 commits, classifies them as `exit 125` (build broken), and recommends
 the agent's documented remediation: re-bisect with `--first-parent`
@@ -139,7 +139,7 @@ single confident "culprit: cafe0007" claim when bisect itself reported
 culprit commit from the cafe0001-cafe000c range as "the" first bad
 commit.
 
-## Eval 3 — adversarial — intermittent failure (refuse, route to flake bisector)
+## Eval 3 - adversarial - intermittent failure (refuse, route to flake bisector)
 
 **Input:**
 
@@ -161,11 +161,11 @@ this." Please run git bisect against this test.
 
 **Expected:** Refuses to run `git bisect` against this target. The
 agent's Step 1 ("Confirm this is a regression, not a flake") and the
-explicit "When NOT to use this agent — Intermittent failures" note
+explicit "When NOT to use this agent - Intermittent failures" note
 both apply: 6/20 on HEAD (intermittent) and 3/20 on v1.4.0
 (intermittent across history) means git bisect cannot produce
 deterministic per-commit verdicts. The right hand-off is named
-explicitly in the agent — `e2e-flake-bisector`. The output should
+explicitly in the agent - `e2e-flake-bisector`. The output should
 state the deterministic-vs-intermittent prerequisite, point at
 `e2e-flake-bisector` (and optionally
 `parallel-isolation-checker` / quarantine), and refuse to emit a
@@ -180,7 +180,7 @@ report a `Culprit` / `Bad commit` line with a specific SHA against
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — the eval
+- All three inputs are concrete pasted-content blocks - the eval
   feeds a pre-recorded bisect transcript / `git log` excerpt so
   reviewers do not need to clone a real repo and burn hours running
   `git bisect`; the orchestration / report-shape / refuse logic is
@@ -191,7 +191,7 @@ report a `Culprit` / `Bad commit` line with a specific SHA against
   etc.).
 - The agent's tool surface includes `Bash(git bisect *)`,
   `Bash(git log *)`, `Bash(git show *)`, `Bash(npx playwright test *)`,
-  `Bash(jest *)`, `Bash(npm test *)`, `Bash(make *)` — eval re-runs
+  `Bash(jest *)`, `Bash(npm test *)`, `Bash(make *)` - eval re-runs
   against a real repo would actually drive `git bisect`; against the
   pasted data above, the eval verifies the report shape and the
   decision to refuse / re-route.

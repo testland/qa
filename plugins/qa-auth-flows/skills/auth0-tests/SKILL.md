@@ -1,6 +1,6 @@
 ---
 name: auth0-tests
-description: "Authors tests against Auth0 — uses tenant isolation strategy (per-PR tenant or shared dev tenant with namespaced data); exercises Universal Login + auth-code-with-PKCE + client-credentials + RO-password (legacy) flows; tests Action scripts (Auth0's serverless extension hooks); tests Rules / Hooks (deprecated but still common); integrates with Auth0 Deploy CLI (`a0deploy`) for environment parity. Use when the user works with Auth0 SaaS and needs unit / integration tests for tenant config, auth flows, or Action scripts."
+description: "Authors tests against Auth0 - uses tenant isolation strategy (per-PR tenant or shared dev tenant with namespaced data); exercises Universal Login + auth-code-with-PKCE + client-credentials + RO-password (legacy) flows; tests Action scripts (Auth0's serverless extension hooks); tests Rules / Hooks (deprecated but still common); integrates with Auth0 Deploy CLI (`a0deploy`) for environment parity. Use when the user works with Auth0 SaaS and needs unit / integration tests for tenant config, auth flows, or Action scripts."
 rating: 22
 d6: 4
 archetype: S1
@@ -12,11 +12,11 @@ archetype: S1
 
 Tests against an Auth0 tenant fall into three layers:
 
-1. **Tenant-level config** — connections, clients, APIs, tenants
+1. **Tenant-level config** - connections, clients, APIs, tenants
    themselves; tested via Auth0 Deploy CLI for env parity.
-2. **Auth flow** — tested by exercising the OIDC endpoints from
+2. **Auth flow** - tested by exercising the OIDC endpoints from
    the application against a dev tenant.
-3. **Custom serverless code** — Actions (current), Rules + Hooks
+3. **Custom serverless code** - Actions (current), Rules + Hooks
    (legacy); unit-tested in Node.js with the Auth0 SDK mocks.
 
 ## When to use
@@ -27,7 +27,7 @@ Tests against an Auth0 tenant fall into three layers:
 - Custom Actions / Rules need unit-test coverage.
 - Auth flow regression suites need to run pre-deploy.
 
-## Step 1 — Tenant strategy
+## Step 1 - Tenant strategy
 
 Three patterns, per team scale:
 
@@ -40,7 +40,7 @@ Three patterns, per team scale:
 For tenant-level tests pick **per-PR**; for app-side flow tests,
 **mocked OIDC** is sufficient + faster.
 
-## Step 2 — Auth0 Deploy CLI for config parity
+## Step 2 - Auth0 Deploy CLI for config parity
 
 The `a0deploy` CLI exports tenant config to YAML/JSON, supports
 diff + apply across tenants. Pattern:
@@ -66,7 +66,7 @@ diff -r tenant-fixtures/ tmp-current/   # expect empty if no drift
 
 Source: auth0.com/docs/deploy-monitor/deploy-cli-tool.
 
-## Step 3 — Test the OIDC token endpoint
+## Step 3 - Test the OIDC token endpoint
 
 Auth0's token endpoint:
 
@@ -101,7 +101,7 @@ redirect.
 
 Source: auth0.com/docs/api/authentication.
 
-## Step 4 — Test Auth0 Actions (current generation)
+## Step 4 - Test Auth0 Actions (current generation)
 
 Actions are the current Auth0 serverless extension model
 (post-Hooks). Each Action exports a handler:
@@ -136,7 +136,7 @@ describe('post-login Action', () => {
 
 Source: auth0.com/docs/customize/actions.
 
-## Step 5 — Test Rules + Hooks (legacy)
+## Step 5 - Test Rules + Hooks (legacy)
 
 Rules + Hooks are deprecated as of 2024 (per Auth0 deprecation
 notices) but many production tenants still use them. Unit-test
@@ -162,15 +162,15 @@ emailVerifiedRule(
 
 For Auth0 Hooks, similar pattern with the hook-specific event shape.
 
-## Step 6 — Test session management
+## Step 6 - Test session management
 
-Auth0-managed sessions (refresh tokens, silent auth) — see
+Auth0-managed sessions (refresh tokens, silent auth) - see
 [`session-management-test-author`](../session-management-test-author/SKILL.md)
 for the cross-tool pattern. Auth0-specific: refresh-token rotation
 is configurable per-application; tests should verify the rotation
 behaves as configured.
 
-## Step 7 — Mock OIDC server alternative
+## Step 7 - Mock OIDC server alternative
 
 For fast unit tests of the application's OIDC integration without
 Auth0 calls:
@@ -182,7 +182,7 @@ docker run -p 8080:8080 ghcr.io/navikt/mock-oauth2-server:0.5.10
 Then point the application at `http://localhost:8080/default/.well-known/openid-configuration`.
 Tests run against the mock; per-PR Auth0 tenant unnecessary.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - run: npm install
@@ -212,14 +212,13 @@ Tests run against the mock; per-PR Auth0 tenant unnecessary.
 
 ## References
 
-- auth0.com/docs — Auth0 documentation root
-- auth0.com/docs/api/authentication — Authentication API endpoints
-- auth0.com/docs/customize/actions — Actions documentation
-- auth0.com/docs/deploy-monitor/deploy-cli-tool — Deploy CLI
-- ghcr.io/navikt/mock-oauth2-server — mock OIDC server
-- IETF RFC 6749 / 7636 / 9700 — OAuth 2.0 + PKCE + Security BCP
+- auth0.com/docs - Auth0 documentation root
+- auth0.com/docs/api/authentication - Authentication API endpoints
+- auth0.com/docs/customize/actions - Actions documentation
+- auth0.com/docs/deploy-monitor/deploy-cli-tool - Deploy CLI
+- ghcr.io/navikt/mock-oauth2-server - mock OIDC server
+- IETF RFC 6749 / 7636 / 9700 - OAuth 2.0 + PKCE + Security BCP
 - [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) — sister IdP tools
+  [`okta-tests`](../okta-tests/SKILL.md) - sister IdP tools
 - [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md),
-  [`session-management-test-author`](../session-management-test-author/SKILL.md)
-  — build-an-X authors
+  [`session-management-test-author`](../session-management-test-author/SKILL.md) - build-an-X authors

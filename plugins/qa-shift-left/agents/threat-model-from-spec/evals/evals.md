@@ -4,7 +4,7 @@ type: agent
 archetype: A4
 ---
 
-# threat-model-from-spec — evals
+# threat-model-from-spec - evals
 
 Companion eval cases for [`threat-model-from-spec`](../../threat-model-from-spec.md).
 Three cases cover happy path / branch / adversarial: a file-upload
@@ -15,10 +15,10 @@ user message and checking the agent's output against the
 **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — profile photo upload (Tampering / DoS / Info disclosure)
+## Eval 1 - happy path - profile photo upload (Tampering / DoS / Info disclosure)
 
 **Input:**
 
@@ -39,13 +39,13 @@ Write the artifact to docs/threat-models/2026-05-26-profile-photo-upload.md.
 
 **Target models:** sonnet (2026-05-26), haiku (2026-05-26), opus (2026-05-26)
 
-**Expected:** Step 1 tags assets — `users` profile records, S3 upload
+**Expected:** Step 1 tags assets - `users` profile records, S3 upload
 keys, session cookie, image-processing worker, CDN. Step 2 emits one
 row per relevant (asset × STRIDE category): T-T (decompression-bomb /
-polyglot file), T-D (mass-upload exhausts S3 storage budget — no rate
+polyglot file), T-D (mass-upload exhausts S3 storage budget - no rate
 limit named in spec is the controlling signal), T-I (predictable S3
 URLs let attackers enumerate uploads), T-S (session replay). Step 3
-filters out categories that don't apply (e.g., R — Repudiation is
+filters out categories that don't apply (e.g., R - Repudiation is
 weak here; agent should not force a row just to fill the matrix).
 Step 4 scores each threat 1-3 × 1-3. Step 5 cites OWASP ASVS controls
 (V12.4 file upload, V3.5 session, V4 access control) inline, not
@@ -60,7 +60,7 @@ contains the artifact path
 `docs/threat-models/2026-05-26-profile-photo-upload.md`. Output does
 NOT contain a generic `Use TLS` mitigation row (rejected anti-pattern).
 
-## Eval 2 — branch — read-only public marketing page (small or no surface)
+## Eval 2 - branch - read-only public marketing page (small or no surface)
 
 **Input:**
 
@@ -83,7 +83,7 @@ Write the artifact to docs/threat-models/2026-05-26-about-page.md.
 **Expected:** Per the agent's worked example: "for a static text edit
 on a public marketing page, the agent emits 'No STRIDE-relevant assets
 identified' and recommends skipping; it does not fabricate threats."
-Step 1 tags very few assets — the rendered HTML, the deploy pipeline
+Step 1 tags very few assets - the rendered HTML, the deploy pipeline
 (an indirect supply-chain surface but out of scope for STRIDE applied
 to this spec excerpt). Steps 2-5 emit either a single-row or empty
 threats table with an explicit "No STRIDE-relevant assets identified
@@ -102,7 +102,7 @@ the rejected anti-pattern). Output mentions the artifact path
 `docs/threat-models/2026-05-26-about-page.md` (the write still
 happens; the table is just minimal).
 
-## Eval 3 — adversarial — no spec, just "model our app" (refuse)
+## Eval 3 - adversarial - no spec, just "model our app" (refuse)
 
 **Input:**
 
@@ -125,7 +125,7 @@ spec excerpt or a path to one and refuses to enumerate threats for
 features it has not read. Does NOT fabricate a generic STRIDE matrix
 for "a SaaS app." Does NOT write any file under `docs/threat-models/`.
 The "Anti-patterns" section's "Treating spec ambiguity as security
-findings" rule informs the refusal — though here it's not even
+findings" rule informs the refusal - though here it's not even
 ambiguity, it's absence.
 
 **Pass condition:** Output asks for a concrete spec / PRD / user story
@@ -138,13 +138,13 @@ has not been shown.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo. The spec excerpts are
   short enough to inline.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Write`, `Edit`, `Grep`, `Glob`)
-  writes the threat-model markdown — eval 3 is observable as the
+  writes the threat-model markdown - eval 3 is observable as the
   absence of a populated threats table plus the absence of a written
   artifact under `docs/threat-models/`.
 - Eval cases were authored 2026-05-26 against the v4.0 framework's D7

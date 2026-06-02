@@ -33,7 +33,7 @@ The agent takes:
 
 Output: combined report + verdict (BLOCK / PASS).
 
-## Step 1 — Run all configured scanners
+## Step 1 - Run all configured scanners
 
 Not every project uses all 5. Check the repo for evidence and run
 only the configured ones:
@@ -54,7 +54,7 @@ bandit -r . -f json -o bandit.json
 gosec -fmt json -out gosec.json ./...
 ```
 
-## Step 2 — Normalize per-scanner output
+## Step 2 - Normalize per-scanner output
 
 Each scanner emits a different schema. Normalize to:
 
@@ -84,12 +84,12 @@ Per-scanner normalization (key fields):
 
 Severity normalization:
 - Critical: SonarQube BLOCKER; CodeQL security-severity ≥ 9.0
-- High: Semgrep ERROR; SonarQube CRITICAL; CodeQL 7.0–8.9; Bandit/gosec HIGH
-- Medium: SonarQube MAJOR; CodeQL 4.0–6.9; Bandit/gosec MEDIUM; Semgrep WARNING
+- High: Semgrep ERROR; SonarQube CRITICAL; CodeQL 7.0 - 8.9; Bandit/gosec HIGH
+- Medium: SonarQube MAJOR; CodeQL 4.0 - 6.9; Bandit/gosec MEDIUM; Semgrep WARNING
 - Low: SonarQube MINOR; CodeQL <4.0; Bandit/gosec LOW
 - Info: Semgrep INFO; SonarQube INFO
 
-## Step 3 — Deduplicate
+## Step 3 - Deduplicate
 
 Multiple scanners may catch the same underlying issue. Dedupe by
 `(file, line, normalized_cwe)`:
@@ -109,7 +109,7 @@ The deduped finding records all scanners that caught it
 (multi-scanner consensus = high confidence, surface this in the
 report).
 
-## Step 4 — Apply waivers
+## Step 4 - Apply waivers
 
 ```yaml
 # .sast-waivers.yaml
@@ -148,7 +148,7 @@ def apply_waivers(findings, waivers):
 - Reject any waiver without `reason:` field
 - Reject any waiver with `expires:` in the past
 
-## Step 5 — Verdict
+## Step 5 - Verdict
 
 ```python
 def verdict(findings, fail_on='critical'):
@@ -160,7 +160,7 @@ def verdict(findings, fail_on='critical'):
 
 Default fail-on: `critical` (any unwaived critical → BLOCK).
 
-## Step 6 — Report
+## Step 6 - Report
 
 ```markdown
 ## SAST policy review — `<sha>`
@@ -207,7 +207,7 @@ Default fail-on: `critical` (any unwaived critical → BLOCK).
 After fixes, re-run the scanners + this agent.
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -261,7 +261,7 @@ The agent **refuses** to:
   CWE may not dedupe automatically if CWE tags are missing.
 - **Doesn't replace runtime DAST.** SAST + this triager catches
   source-code patterns; runtime auth bypasses, business-logic
-  flaws need DAST coverage (see [`qa-dast`](../../qa-dast/) — sibling
+  flaws need DAST coverage (see [`qa-dast`](../../qa-dast/) - sibling
   plugin).
 - **SonarQube integration requires server connectivity** at
   triage time (issue list lives server-side, not in a local file).
@@ -272,9 +272,9 @@ The agent **refuses** to:
   [`sonarqube-rules`](../skills/sonarqube-rules/SKILL.md),
   [`codeql-queries`](../skills/codeql-queries/SKILL.md),
   [`bandit-python`](../skills/bandit-python/SKILL.md),
-  [`gosec-go`](../skills/gosec-go/SKILL.md) — preloaded sister skills
-- [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md) —
+  [`gosec-go`](../skills/gosec-go/SKILL.md) - preloaded sister skills
+- [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md) - 
   cross-plugin sibling: same pattern for IaC scanners (Checkov +
   tfsec + KICS)
-- OWASP SAMM v2.0 (owaspsamm.org) — Verification practice
-- NIST SP 800-218 — Secure Software Development Framework
+- OWASP SAMM v2.0 (owaspsamm.org) - Verification practice
+- NIST SP 800-218 - Secure Software Development Framework

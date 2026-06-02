@@ -13,7 +13,7 @@ archetype: S2
 A codebase with N feature flags, each having M variants, and
 users in K segments, has N × M × K possible flag-state-segment
 combinations. At realistic numbers (50 flags, 2 variants each,
-5 segments) that's 500 — and at 50 flags with 3 variants and 10
+5 segments) that's 500 - and at 50 flags with 3 variants and 10
 segments, it's 1500. Testing every combination is infeasible.
 
 Per [launchdarkly.com/blog](https://launchdarkly.com/blog/):
@@ -25,9 +25,9 @@ coverage-builder skills.
 ## When to use
 
 - Designing the test surface for a new flag-heavy product.
-- Auditing existing flag-test coverage — are critical
+- Auditing existing flag-test coverage - are critical
   combinations covered?
-- PR review of a new flag — does it create a coverage gap?
+- PR review of a new flag - does it create a coverage gap?
 - Investigating an "only happens with flag X + flag Y on"
   incident.
 
@@ -41,7 +41,7 @@ coverage-builder skills.
 | Combinatorial total | Quickly enters thousands |
 
 **Insight:** most flag combinations are inert (independent). Only
-a small subset interact — the test matrix should target
+a small subset interact - the test matrix should target
 interactions.
 
 ## Five coverage strategies

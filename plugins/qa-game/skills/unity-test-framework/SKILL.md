@@ -1,6 +1,6 @@
 ---
 name: unity-test-framework
-description: "Author and run the Unity game-engine Test Framework (`com.unity.test-framework`, currently v1.8). Distinct from the ThrowTheSwitch Unity C testing library at throwtheswitch.org/unity (covered by `qa-embedded/unity-test-framework-c` in this marketplace) — the two tools share only a name. Covers package install via Package Manager, the EditMode vs PlayMode split, the [Test] / [UnityTest] / [SetUp] / [TearDown] / [UnityPlatform] attributes, assembly-definition setup (Editor folder vs asmdef with `includePlatforms` / `optionalUnityReferences: [TestAssemblies]`), Test Runner window, command-line batch invocation with `-runTests` / `-testPlatform` / `-testResults` / `-testFilter` / `-testCategory`, NUnit 3.5 assertion API, and CI integration. Use when the unit under test is C# Unity code that needs to exercise the Unity runtime or editor."
+description: "Author and run the Unity game-engine Test Framework (`com.unity.test-framework`, currently v1.8). Distinct from the ThrowTheSwitch Unity C testing library at throwtheswitch.org/unity (covered by `qa-embedded/unity-test-framework-c` in this marketplace) - the two tools share only a name. Covers package install via Package Manager, the EditMode vs PlayMode split, the [Test] / [UnityTest] / [SetUp] / [TearDown] / [UnityPlatform] attributes, assembly-definition setup (Editor folder vs asmdef with `includePlatforms` / `optionalUnityReferences: [TestAssemblies]`), Test Runner window, command-line batch invocation with `-runTests` / `-testPlatform` / `-testResults` / `-testFilter` / `-testCategory`, NUnit 3.5 assertion API, and CI integration. Use when the unit under test is C# Unity code that needs to exercise the Unity runtime or editor."
 rating: 24
 d6: 4
 archetype: S1
@@ -12,7 +12,7 @@ keywords: ["unity", "unity3d", "test-framework", "utf", "edit-mode", "play-mode"
 ## Overview
 
 **Disambiguation up front.** This skill covers the
-**Unity game-engine Test Framework** — the official Unity package
+**Unity game-engine Test Framework** - the official Unity package
 `com.unity.test-framework` documented at
 [docs.unity3d.com/Packages/com.unity.test-framework@latest](https://docs.unity3d.com/Packages/com.unity.test-framework@latest)
 (currently version 1.8 per the canonical-version redirect on
@@ -185,7 +185,7 @@ namespace MyGame.Tests.PlayMode
 The `[UnityTest]` attribute, returning `IEnumerator`, lets the
 test yield frames (`yield return null`), seconds
 (`yield return new WaitForSeconds(2f)`), or custom yield
-instructions — necessary for any frame-driven behaviour.
+instructions - necessary for any frame-driven behaviour.
 
 ### Attribute cheatsheet
 
@@ -194,20 +194,20 @@ and NUnit 3.5 docs the framework wraps:
 
 | Attribute | Purpose | Source |
 |---|---|---|
-| `[Test]` | Plain NUnit test — synchronous | NUnit; recommended default per edit-mode-vs-play-mode docs |
+| `[Test]` | Plain NUnit test - synchronous | NUnit; recommended default per edit-mode-vs-play-mode docs |
 | `[UnityTest]` | Coroutine-style test that can yield frames / seconds in PlayMode or skip frames in EditMode | UTF-specific |
 | `[SetUp]` / `[TearDown]` | Per-test fixture setup / cleanup | NUnit |
 | `[OneTimeSetUp]` / `[OneTimeTearDown]` | Once-per-fixture setup / cleanup | NUnit |
 | `[TestFixture]` | Marks a class as containing tests (optional in NUnit 3) | NUnit |
 | `[Category("Smoke")]` | Tag a test for filtering | NUnit; selectable via CLI `-testCategory` |
 | `[UnityPlatform(RuntimePlatform.WindowsPlayer)]` | Restrict test to specific runtime platforms | UTF-specific |
-| `[ValueSource(nameof(MyCases))]` | Parameterised inputs | NUnit; `ValueSource` is supported per the [v1.4 manual](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html) (other parameterised attributes have known limitations — see Limitations section) |
+| `[ValueSource(nameof(MyCases))]` | Parameterised inputs | NUnit; `ValueSource` is supported per the [v1.4 manual](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html) (other parameterised attributes have known limitations - see Limitations section) |
 
 ### NUnit assertion APIs
 
 Per the [package overview](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html),
 UTF is built on **NUnit 3.5**. The full NUnit 3 assertion model
-applies — `Assert.AreEqual`, `Assert.Throws<T>(() => ...)`,
+applies - `Assert.AreEqual`, `Assert.Throws<T>(() => ...)`,
 `Assert.That(actual, Is.EqualTo(expected).Within(0.01f))`, etc.
 Per Unity's recommendation in the edit-mode-vs-play-mode docs,
 prefer the NUnit `Test` attribute over `UnityTest` "unless you
@@ -220,9 +220,9 @@ need to yield special instructions".
 **Window → General → Test Runner** (path may be Window → Test
 Runner in older Editor versions). The window shows two tabs:
 
-- **EditMode** — synchronous tests executed against the editor
+- **EditMode** - synchronous tests executed against the editor
   domain.
-- **PlayMode** — tests that enter and exit play mode for each
+- **PlayMode** - tests that enter and exit play mode for each
   fixture.
 
 Click **Run All**, **Run Selected**, or right-click a fixture →
@@ -301,7 +301,7 @@ Top-level structure (per NUnit 3):
 
 Surface `result="Failed"` at the `<test-run>` level for the
 overall pass / fail, then enumerate `<test-case result="Failed">`
-for per-test detail. The schema is NUnit-canonical — parsers exist
+for per-test detail. The schema is NUnit-canonical - parsers exist
 for JUnit consumers (e.g., `nunit-junit-xml` converters) for tools
 that expect JUnit XML.
 
@@ -336,13 +336,13 @@ jobs:
           path: artifacts/**/*.xml
 ```
 
-Bare-CLI equivalent — invoke Unity directly with the flags from
+Bare-CLI equivalent - invoke Unity directly with the flags from
 the
 [command-line reference](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/reference-command-line.html)
 and treat the `-testResults` XML as source of truth.
 
-Cache the `Library/` folder across runs — Unity re-imports all
-assets without it, adding 5–15 min per CI run.
+Cache the `Library/` folder across runs - Unity re-imports all
+assets without it, adding 5 - 15 min per CI run.
 
 ## Anti-patterns
 
@@ -353,7 +353,7 @@ assets without it, adding 5–15 min per CI run.
 | Test asmdef references production asmdef but production has no public types | Tests can't compile | Use `InternalsVisibleTo` attribute on production asmdef or expose minimal public surface |
 | Not cleaning up `GameObject`s between EditMode tests | Cross-test contamination | `[TearDown]` `Object.DestroyImmediate(go)` on every fixture |
 | Trusting Unity process exit code in CI | Per [command-line reference](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/reference-command-line.html), "no common definition for exit codes" | Parse `-testResults` XML in CI |
-| Skipping the `Library/` cache | 5–15 min asset reimport per CI run | `actions/cache@v4` with the `Library/` path |
+| Skipping the `Library/` cache | 5 - 15 min asset reimport per CI run | `actions/cache@v4` with the `Library/` path |
 | Confusing this skill with ThrowTheSwitch Unity (C) | Different tool with the same name | See [`qa-embedded/unity-test-framework-c`](../../../qa-embedded/skills/unity-test-framework-c/SKILL.md) |
 
 ## Limitations
@@ -362,12 +362,12 @@ Per the
 [v1.4 manual index page](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html),
 known constraints:
 
-- **No WSA platform support for `UnityTest`** — Windows Store
+- **No WSA platform support for `UnityTest`** - Windows Store
   Apps cannot run `[UnityTest]` coroutine-style tests.
-- **Parameterised tests unsupported (except `ValueSource`)** —
+- **Parameterised tests unsupported (except `ValueSource`)** - 
   NUnit `[TestCase]`, `[TestCaseSource]` have historical caveats
   in UTF.
-- **`[Repeat]` attribute incompatibility** — listed as a known
+- **`[Repeat]` attribute incompatibility** - listed as a known
   limitation.
 - **Nested test fixtures cannot run from the Editor UI.**
 - **`[Retry]` attribute causes `InvalidCastException` in PlayMode
@@ -379,7 +379,7 @@ Other practical limitations:
   cannot freely create / mutate assets the way EditMode tests can.
 - **Coverage** requires the separate `com.unity.testtools.codecoverage`
   package; not included by default.
-- **License gating on CI** — Unity batch-mode CI requires either a
+- **License gating on CI** - Unity batch-mode CI requires either a
   Personal/Plus license seat (`-username -password -serial`) or a
   manual `.ulf` license file; consult Unity's documentation for
   the current activation flow before standing up CI.

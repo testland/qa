@@ -21,7 +21,7 @@ and by the HIL reference
 
 ## When to use
 
-- Choosing a coverage criterion for a new embedded test suite —
+- Choosing a coverage criterion for a new embedded test suite - 
   what does "enough coverage" mean for this project?
 - Wiring gcov or llvm-cov into the cross-compile build.
 - Reading a coverage report and translating between gcov, LCOV,
@@ -47,7 +47,7 @@ and not WebFetchable):
 | **Multiple-condition coverage** | All combinations of conditions in a decision exercised | "multiple condition coverage" |
 
 The escalation matters because higher criteria find different
-defect classes — branch coverage finds an unreached `else`;
+defect classes - branch coverage finds an unreached `else`;
 MC/DC finds a short-circuit-evaluated condition whose change
 never alters the decision.
 
@@ -57,7 +57,7 @@ Per [gcc.gnu.org/onlinedocs/gcc/Invoking-Gcov.html](https://gcc.gnu.org/onlinedo
 
 ### Compilation
 
-Build the program (or test harness) with `--coverage` — a
+Build the program (or test harness) with `--coverage` - a
 convenience alias that "tells the compiler to generate additional
 information needed by gcov (basically a flow graph of the
 program) and also includes additional code in the object files
@@ -93,7 +93,7 @@ Key flags from the same invocation page:
 | `-n` | `--no-output` | Suppress the `.gcov` file |
 | `-p` | `--preserve-paths` | Preserve full path in generated filenames |
 | `-u` | `--unconditional-branches` | Include unconditional branches in `-b` output |
-| `--json-format` | — | Emit `.gcov.json.gz` (gzip-compressed JSON, "does not require source code for generation") |
+| `--json-format` | - | Emit `.gcov.json.gz` (gzip-compressed JSON, "does not require source code for generation") |
 
 The text `.gcov` file annotates each source line with an
 execution count (or `-` for non-executable, `#####` for
@@ -138,7 +138,7 @@ For MC/DC, add `-fcoverage-mcdc` per the Clang docs.
 
 Running the binary writes `default.profraw` in the current
 directory (or to the path in `LLVM_PROFILE_FILE`, with pattern
-strings `%p` for PID, `%h` for hostname, `%Nm` for merge-pool —
+strings `%p` for PID, `%h` for hostname, `%Nm` for merge-pool - 
 per the Clang docs).
 
 ```bash
@@ -170,16 +170,16 @@ The LLVM coverage-mapping format (per
 [llvm.org/docs/CoverageMappingFormat.html](https://llvm.org/docs/CoverageMappingFormat.html))
 distinguishes:
 
-- **Code regions** — associate source ranges with counters.
-- **Skipped regions** — preprocessor-excluded code (e.g.
+- **Code regions** - associate source ranges with counters.
+- **Skipped regions** - preprocessor-excluded code (e.g.
   `#ifdef` branches not taken at compile time).
-- **Expansion regions** — macro expansions, so a macro that
+- **Expansion regions** - macro expansions, so a macro that
   fires from multiple call sites has separate coverage per site.
-- **Branch regions** — true / false condition paths (added with
+- **Branch regions** - true / false condition paths (added with
   `-fcoverage-mapping`).
 
 This region taxonomy is why llvm-cov can show separate counts
-inside macro expansions — gcov cannot.
+inside macro expansions - gcov cannot.
 
 ## On-target vs host vs QEMU instrumentation
 
@@ -189,7 +189,7 @@ A practical trade-off for embedded teams:
 |---|---|---|---|
 | **Host build** (same source, x86_64 toolchain, no MCU) | Misses MCU-specific paths | Lowest | Default for Ceedling per [throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling); use when business logic dominates |
 | **QEMU system emulation** | Catches arch-specific paths (endianness, alignment) | Medium | See [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md); reports written to host filesystem via virtio / semihosting |
-| **On-target with semihosting** | Highest fidelity | Highest (flash space, RAM for counters) | `.gcda` files written back via semihosting; needs ARM `--specs=rdimon.specs` (`librdimon` is the gcc-arm-none-eabi semihosting library — see [developer.arm.com toolchain docs](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)) |
+| **On-target with semihosting** | Highest fidelity | Highest (flash space, RAM for counters) | `.gcda` files written back via semihosting; needs ARM `--specs=rdimon.specs` (`librdimon` is the gcc-arm-none-eabi semihosting library - see [developer.arm.com toolchain docs](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)) |
 | **On-target with file-system shim** | High | High | Counters streamed over UART / SWO; host re-assembles `.gcda` |
 
 For most safety-critical projects, the standard recipe is
@@ -198,7 +198,7 @@ build for the certification artefact**.
 
 ## Safety-standard coverage expectations
 
-These are cited by stable ID — the standards themselves are
+These are cited by stable ID - the standards themselves are
 gated and not WebFetchable.
 
 | Standard / level | Minimum structural coverage |
@@ -241,7 +241,7 @@ on the `.info` totals.
 | **No regressions on changed lines** | PR-scoped; lets the absolute number drift down only for code not touched |
 | **MC/DC on annotated decisions** (clang `-fcoverage-mcdc` + a `_MCDC` decorator) | Targets the cost where the standard demands it |
 
-A flat "global ≥85% branch" gate is the failure mode — it
+A flat "global ≥85% branch" gate is the failure mode - it
 penalises the team for unreviewed legacy code and rewards
 removing tests for hard-to-cover error paths.
 
@@ -258,19 +258,19 @@ removing tests for hard-to-cover error paths.
 
 ## Limitations
 
-- **Statement coverage is the weakest meaningful target** — a
+- **Statement coverage is the weakest meaningful target** - a
   100%-statement-covered suite can miss every `else` branch.
 - **Branch coverage from gcov has known imprecision on
-  short-circuit `&&` / `||`** — these compile to two branches;
+  short-circuit `&&` / `||`** - these compile to two branches;
   the count attributes to the source line, not the individual
   operand. For per-operand visibility, use clang
   `-fcoverage-mcdc` per the Clang docs.
 - **`.gcda` files accumulate across runs.** Re-run without
   deleting them and counters keep climbing. Use
   `__gcov_reset()` (provided by `libgcov`) to zero between
-  scenarios — per the gcov source.
+  scenarios - per the gcov source.
 - **Counter overflow.** Default counters are 64-bit on modern
-  GCC but were 32-bit historically — on a long-running
+  GCC but were 32-bit historically - on a long-running
   on-target run, check `gcov-tool overlap` for saturated counts.
 - **No path coverage from either toolchain.** Path coverage
   ("path coverage" per ISTQB) is exponential and neither gcov nor
@@ -281,18 +281,18 @@ removing tests for hard-to-cover error paths.
 
 Cited inline above. Foundational documents:
 
-- GCC gcov manual —
+- GCC gcov manual - 
   [gcc.gnu.org/onlinedocs/gcc/Invoking-Gcov.html](https://gcc.gnu.org/onlinedocs/gcc/Invoking-Gcov.html).
-- Clang Source-Based Code Coverage —
+- Clang Source-Based Code Coverage - 
   [clang.llvm.org/docs/SourceBasedCodeCoverage.html](https://clang.llvm.org/docs/SourceBasedCodeCoverage.html).
-- LLVM Coverage Mapping Format —
+- LLVM Coverage Mapping Format - 
   [llvm.org/docs/CoverageMappingFormat.html](https://llvm.org/docs/CoverageMappingFormat.html).
-- ARM GNU Toolchain docs (for `--specs=rdimon.specs` semihosting) —
+- ARM GNU Toolchain docs (for `--specs=rdimon.specs` semihosting) - 
   [developer.arm.com/Tools and Software/GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 - ISTQB glossary V4.7.1 terms cited by stable term ID (glossary
-  is a JS SPA at glossary.istqb.org — not WebFetchable).
-- MISRA-C:2012 §8 Coverage Guidance (gated standard — cite by
+  is a JS SPA at glossary.istqb.org - not WebFetchable).
+- MISRA-C:2012 §8 Coverage Guidance (gated standard - cite by
   stable ID).
-- DO-178C §6.4.4 Structural Coverage (gated standard — cite by
+- DO-178C §6.4.4 Structural Coverage (gated standard - cite by
   stable ID).
-- ISO 26262-6:2018 Table 12 (gated standard — cite by stable ID).
+- ISO 26262-6:2018 Table 12 (gated standard - cite by stable ID).

@@ -1,6 +1,6 @@
 ---
 name: detox-testing
-description: "Authors React Native E2E tests using Detox (Wix) — uses gray-box architecture (test runs in-process with the app), `element(by.id|by.text|by.label)` matchers, `waitFor()` for explicit synchronization beyond Detox's automatic async tracking, and Jest as the default test runner. Use when the app is React Native and the team wants the fastest / most-reliable RN-specific framework."
+description: "Authors React Native E2E tests using Detox (Wix) - uses gray-box architecture (test runs in-process with the app), `element(by.id|by.text|by.label)` matchers, `waitFor()` for explicit synchronization beyond Detox's automatic async tracking, and Jest as the default test runner. Use when the app is React Native and the team wants the fastest / most-reliable RN-specific framework."
 rating: 23
 d6: 4
 archetype: S1
@@ -19,7 +19,7 @@ for **automatic synchronization**:
 > eliminate test flakiness at its core." ([detox-docs][det])
 
 Detox knows when network calls finish, when animations settle,
-when timers fire — without explicit IdlingResource-style hooks.
+when timers fire - without explicit IdlingResource-style hooks.
 
 ## When to use
 
@@ -34,7 +34,7 @@ If the app is native iOS/Android (not RN), use
 non-RN-specific cross-platform, see
 [`appium-testing`](../appium-testing/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 npm install --save-dev detox
@@ -44,7 +44,7 @@ npx detox init   # scaffolds .detoxrc.js + e2e/ directory
 `.detoxrc.js` configures device + app + runner; the default
 template is sensible.
 
-## Step 2 — Build the app for testing
+## Step 2 - Build the app for testing
 
 ```bash
 # Android
@@ -55,10 +55,10 @@ detox build --configuration ios.sim.debug
 ```
 
 The build configuration in `.detoxrc.js` references the project's
-existing build commands (Gradle / xcodebuild) — Detox doesn't
+existing build commands (Gradle / xcodebuild) - Detox doesn't
 introduce a new build pipeline.
 
-## Step 3 — Author tests with matchers
+## Step 3 - Author tests with matchers
 
 Per [detox-matchers][dm]:
 
@@ -70,7 +70,7 @@ Per [detox-matchers][dm]:
 | `by.text('Tap Me')`   | Visible text content.                               |
 | `by.label('...')`     | iOS accessibility label / Android content description. |
 | `by.type('RCTImageView')` | Component class name (iOS / Android-specific). |
-| `by.traits(['button'])` | iOS only — accessibility traits.                 |
+| `by.traits(['button'])` | iOS only - accessibility traits.                 |
 
 Each accepts strings or regex (`by.id(/^tap_[a-z]+$/)`).
 
@@ -109,7 +109,7 @@ describe('Cart flow', () => {
 });
 ```
 
-## Step 4 — Production code: set `testID`
+## Step 4 - Production code: set `testID`
 
 In RN production code:
 
@@ -124,7 +124,7 @@ In RN production code:
 `testID` is React Native's prop for `accessibilityIdentifier`
 (iOS) / `resource-id` (Android). Detox finds elements by it.
 
-## Step 5 — Actions
+## Step 5 - Actions
 
 ```javascript
 await element(by.id('btn')).tap();
@@ -142,7 +142,7 @@ await element(by.id('list')).swipe('left', 'fast');
 await element(by.id('toggle')).pinch(1.5);
 ```
 
-## Step 6 — Assertions
+## Step 6 - Assertions
 
 ```javascript
 await expect(element(by.id('toast'))).toBeVisible();
@@ -152,10 +152,10 @@ await expect(element(by.id('field'))).toHaveValue('expected');
 ```
 
 `expect(...)` from Detox auto-waits up to a default timeout
-(typically 5s) — no explicit `waitFor` needed for normal
+(typically 5s) - no explicit `waitFor` needed for normal
 synchronization-tracked work.
 
-## Step 7 — `waitFor` for explicit sync
+## Step 7 - `waitFor` for explicit sync
 
 When Detox's automatic tracking misses something:
 
@@ -170,10 +170,10 @@ await waitFor(element(by.id('progress-bar')))
 ```
 
 `waitFor(...).withTimeout(N)` polls the condition for up to N ms.
-`whileElement(...)` performs an action (scroll) while waiting —
+`whileElement(...)` performs an action (scroll) while waiting - 
 useful for "scroll until visible."
 
-## Step 8 — Run
+## Step 8 - Run
 
 ```bash
 detox test --configuration android.emu.debug
@@ -190,7 +190,7 @@ Per [detox-docs][det], Detox is "CI-Ready: Tests execute seamlessly
 on continuous integration platforms like Travis CI, CircleCI, and
 Jenkins."
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 jobs:
@@ -243,11 +243,11 @@ jobs:
 
 ## References
 
-- [det][det] — Detox overview: gray-box architecture, automatic
+- [det][det] - Detox overview: gray-box architecture, automatic
   async monitoring, JS test syntax, CI-ready, RN-specific.
-- [dm][dm] — Detox matchers: `by.id`, `by.text`, `by.label`,
+- [dm][dm] - Detox matchers: `by.id`, `by.text`, `by.label`,
   `by.type`, `by.traits`, regex support, combinators.
 - [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
   [`espresso-suite`](../espresso-suite/SKILL.md),
   [`appium-testing`](../appium-testing/SKILL.md),
-  [`maestro-flows`](../maestro-flows/SKILL.md) — alternatives.
+  [`maestro-flows`](../maestro-flows/SKILL.md) - alternatives.

@@ -1,6 +1,6 @@
 ---
 name: xctest-mac-desktop
-description: "Authors and runs XCTest UI + unit tests for macOS desktop apps — the Apple-first-party test framework that ships with Xcode. Covers the `XCTestCase` subclass + `test*` method-naming convention, `XCUIApplication` / `XCUIElement` / `XCUIElementQuery` for UI tests, accessibility-identifier-based locators (the stable replacement for label-based queries), `XCTAssert*` macros, `measureBlock:` for performance regressions, and `xcodebuild test` for CI execution. Use when the macOS app is built with Xcode and the test target is in-tree alongside the app — for cross-OS sharing see Appium Mac2 driver as a separate path."
+description: "Authors and runs XCTest UI + unit tests for macOS desktop apps - the Apple-first-party test framework that ships with Xcode. Covers the `XCTestCase` subclass + `test*` method-naming convention, `XCUIApplication` / `XCUIElement` / `XCUIElementQuery` for UI tests, accessibility-identifier-based locators (the stable replacement for label-based queries), `XCTAssert*` macros, `measureBlock:` for performance regressions, and `xcodebuild test` for CI execution. Use when the macOS app is built with Xcode and the test target is in-tree alongside the app - for cross-OS sharing see Appium Mac2 driver as a separate path."
 archetype: S1
 rating: 23
 d6: 4
@@ -17,7 +17,7 @@ keywords:
 ## Overview
 
 XCTest is the **first-party test framework** bundled with Xcode. Per
-Apple's [*Testing with Xcode* — UI Testing chapter][appleuit]:
+Apple's [*Testing with Xcode* - UI Testing chapter][appleuit]:
 
 [appleuit]: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
 
@@ -25,7 +25,7 @@ Apple's [*Testing with Xcode* — UI Testing chapter][appleuit]:
 > and Accessibility."
 
 This is the same framework used for unit tests and performance
-tests — UI testing is layered on top via three classes
+tests - UI testing is layered on top via three classes
 ([appleuit][appleuit]):
 
 > "UI Testing in Xcode rests on two core technologies: the XCTest
@@ -33,7 +33,7 @@ tests — UI testing is layered on top via three classes
 > XCUIElementQuery."
 
 This skill wraps XCTest for **macOS desktop** apps. For iOS / iPadOS
-the same APIs apply with different launch + simulator semantics —
+the same APIs apply with different launch + simulator semantics - 
 that path is intentionally out of scope; this plugin covers desktop
 only.
 
@@ -45,18 +45,18 @@ backends converges on accessibility identifiers.
 
 ## When to use
 
-- macOS desktop app built with Xcode (AppKit, SwiftUI, Catalyst) —
+- macOS desktop app built with Xcode (AppKit, SwiftUI, Catalyst) - 
   XCTest is the default sanctioned path per
   [appleuit][appleuit].
 - Tests need to run on the same macOS runner that builds the app
   (`xcodebuild test`).
-- Mixed unit + UI + performance suites — one framework covers all
+- Mixed unit + UI + performance suites - one framework covers all
   three (Apple's [*Writing Tests* chapter][applewt] documents the
   shared `XCTestCase` base).
 
 [applewt]: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/04-writing_tests.html
 
-## Step 1 — Create a UI test target
+## Step 1 - Create a UI test target
 
 In Xcode: **File → New → Target → UI Testing Bundle**. The
 generated test class inherits from `XCTestCase` and ships with a
@@ -83,7 +83,7 @@ Per [appleuit][appleuit]:
 > "Set continueAfterFailure to NO ensures tests stop on first
 > failure (recommended since UI test steps are dependent)."
 
-## Step 2 — Test-method naming + lifecycle
+## Step 2 - Test-method naming + lifecycle
 
 Per [applewt][applewt], a test method must:
 
@@ -93,11 +93,11 @@ Per [applewt][applewt], a test method must:
 
 Lifecycle order ([applewt][applewt]):
 
-1. Class setup (`+ (void)setUp`) — once before all tests.
+1. Class setup (`+ (void)setUp`) - once before all tests.
 2. Per test: `setUp` → test method → `tearDown`.
-3. Class teardown (`+ (void)tearDown`) — once after all tests.
+3. Class teardown (`+ (void)tearDown`) - once after all tests.
 
-## Step 3 — Author UI tests with accessibility identifiers
+## Step 3 - Author UI tests with accessibility identifiers
 
 The portable lesson per
 [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md):
@@ -146,7 +146,7 @@ Per [appleuit][appleuit], the canonical pattern is:
 primitive used in place of fixed sleeps (stable identifier in Apple's
 XCUIElement reference; cited inline by name).
 
-## Step 4 — Assertion macros
+## Step 4 - Assertion macros
 
 Per [applewt][applewt], XCTAssert macros fall into five categories:
 
@@ -161,7 +161,7 @@ Per [applewt][applewt], XCTAssert macros fall into five categories:
 All accept an optional format string for the failure message
 ([applewt][applewt]).
 
-## Step 5 — Performance tests with measureBlock:
+## Step 5 - Performance tests with measureBlock:
 
 Per [applewt][applewt], performance tests "run a code block 10
 times, collecting average execution time and standard deviation":
@@ -182,7 +182,7 @@ configuration." Practical implication: the first CI run on a new
 Mac architecture (Intel → Apple Silicon migration) fails until the
 baseline is committed.
 
-## Step 6 — Recording UI tests
+## Step 6 - Recording UI tests
 
 Per [appleuit][appleuit], Xcode's "UI Recording" workflow generates
 test code from interactive use:
@@ -191,16 +191,16 @@ test code from interactive use:
 2. Click the red "record" button in the editor.
 3. The app launches automatically.
 4. Exercise the app with the desired UI actions.
-5. Stop recording — Xcode captures actions as source code.
+5. Stop recording - Xcode captures actions as source code.
 6. Add `XCTAssert` assertions to validate behaviour.
 
-Treat recordings as a **starting point** — the generated locator
+Treat recordings as a **starting point** - the generated locator
 chain tends to rely on label paths rather than
 `accessibilityIdentifier`. Refactor to identifier-based queries (per
 the [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
 locator table) before checking in.
 
-## Step 7 — Run
+## Step 7 - Run
 
 From the command line:
 
@@ -229,10 +229,10 @@ xcodebuild test \
 
 `-destination 'platform=macOS'` targets the host Mac. `-resultBundlePath`
 writes a `.xcresult` bundle that contains attachments (screenshots
-on failure, performance metrics, logs) — the canonical artefact for
+on failure, performance metrics, logs) - the canonical artefact for
 post-mortem.
 
-## Step 8 — Parsing results
+## Step 8 - Parsing results
 
 The `.xcresult` bundle is queryable via `xcrun xcresulttool`:
 
@@ -249,7 +249,7 @@ For CI dashboards that expect JUnit XML, the open-source `xcresultparser`
 project converts `.xcresult` → JUnit XML; pair downstream with
 [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 # .github/workflows/macos-xctest.yml
@@ -275,7 +275,7 @@ jobs:
           path: build/result.xcresult
 ```
 
-Hosted macOS runners on GitHub-hosted are interactive sessions —
+Hosted macOS runners on GitHub-hosted are interactive sessions - 
 XCUIApplication launches work without extra display setup. Self-
 hosted Mac headless setups need an attached console or VNC session;
 XCTest UI cannot run under launchd alone.
@@ -316,7 +316,7 @@ XCTest UI cannot run under launchd alone.
   flows often need Apple Mac2 driver via Appium for parity with
   Windows / Linux test sources.
 - **GPU-rendered content** (Metal, CALayer-only views) does not
-  publish accessibility children — same caveat as
+  publish accessibility children - same caveat as
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - **Sandbox restrictions** for App-Store apps under test prevent
   some test-time file-system writes; use `XCTestObservationCenter`
@@ -324,12 +324,12 @@ XCTest UI cannot run under launchd alone.
 
 ## References
 
-- *Testing with Xcode* — UI Testing chapter ([appleuit][appleuit]).
-- *Testing with Xcode* — Writing Tests chapter ([applewt][applewt]).
-- Apple XCTest framework reference — stable identifier "Apple XCTest
+- *Testing with Xcode* - UI Testing chapter ([appleuit][appleuit]).
+- *Testing with Xcode* - Writing Tests chapter ([applewt][applewt]).
+- Apple XCTest framework reference - stable identifier "Apple XCTest
   framework reference" (modern docs at
   developer.apple.com/documentation/xctest; SPA-shell, cite by ID).
-- Apple XCUIApplication / XCUIElement / XCUIElementQuery — stable
+- Apple XCUIApplication / XCUIElement / XCUIElementQuery - stable
   identifiers in the Apple developer documentation; cite by class
   name.
 - Strategic frame:

@@ -1,6 +1,6 @@
 ---
 name: spdx-format
-description: "Reference for the SPDX (Software Package Data Exchange) v2.3 + v3.0 SBOM specification — Linux Foundation-curated, license-focused format covering packages, files, snippets, relationships, license declarations, and (in 3.0) AI / dataset / build / security profiles; supports Tag-Value / JSON / YAML / RDF / Spreadsheet encodings; preferred by US Federal procurement (NIST guidance) and Linux distros. Use when the team's SBOM consumer requires SPDX format (federal procurement, Linux Foundation members, license-compliance focus)."
+description: "Reference for the SPDX (Software Package Data Exchange) v2.3 + v3.0 SBOM specification - Linux Foundation-curated, license-focused format covering packages, files, snippets, relationships, license declarations, and (in 3.0) AI / dataset / build / security profiles; supports Tag-Value / JSON / YAML / RDF / Spreadsheet encodings; preferred by US Federal procurement (NIST guidance) and Linux distros. Use when the team's SBOM consumer requires SPDX format (federal procurement, Linux Foundation members, license-compliance focus)."
 rating: 22
 d6: 4
 archetype: S2
@@ -22,7 +22,7 @@ Two active major versions:
 | SPDX 2.3 | Stable; broadly tooled | Tag-Value / JSON / YAML / RDF / Spreadsheet; ISO/IEC 5962:2021 |
 | SPDX 3.0 | Recent (2024); growing tooling | Profile-based: core + software + AI + dataset + build + security; JSON-LD primary |
 
-This is a **reference skill** (S2 archetype) — defines the schema +
+This is a **reference skill** (S2 archetype) - defines the schema +
 tooling landscape; doesn't run scans. Pair with [`syft-generation`](../syft-generation/SKILL.md)
 to generate SPDX-format SBOMs.
 
@@ -39,7 +39,7 @@ to generate SPDX-format SBOMs.
 For security-focused use cases, [`cyclonedx-format`](../cyclonedx-format/SKILL.md)
 has richer first-class vuln support.
 
-## Step 1 — SPDX 2.3 top-level structure (JSON)
+## Step 1 - SPDX 2.3 top-level structure (JSON)
 
 ```json
 {
@@ -87,14 +87,14 @@ has richer first-class vuln support.
 }
 ```
 
-## Step 2 — Required fields per SPDX 2.3
+## Step 2 - Required fields per SPDX 2.3
 
 Per [spdx-spec][spdx-spec]:
 
 | Field | Required? | Use |
 |---|---|---|
 | `spdxVersion` | yes | Must be `"SPDX-2.3"` |
-| `dataLicense` | yes | `"CC0-1.0"` (CC0 — the SBOM data itself) |
+| `dataLicense` | yes | `"CC0-1.0"` (CC0 - the SBOM data itself) |
 | `SPDXID` | yes | `"SPDXRef-DOCUMENT"` |
 | `name` | yes | Human-readable doc name |
 | `documentNamespace` | yes | Unique URI per BOM revision |
@@ -103,10 +103,10 @@ Per [spdx-spec][spdx-spec]:
 | `packages[]` | required for non-empty BOM | Inventory |
 | `relationships[]` | required (at least DESCRIBES) | Dep graph |
 
-## Step 3 — License expressions
+## Step 3 - License expressions
 
 SPDX is the canonical source for license identifiers (cross-format
-standard — even CycloneDX uses SPDX license IDs).
+standard - even CycloneDX uses SPDX license IDs).
 
 ```json
 "licenseConcluded": "Apache-2.0",
@@ -126,7 +126,7 @@ The `LicenseRef-` prefix declares custom licenses:
 "licenseConcluded": "LicenseRef-AcmeProprietary"
 ```
 
-## Step 4 — Relationships
+## Step 4 - Relationships
 
 The `relationships[]` block is the dep-graph (SPDX equivalent of
 CycloneDX's `dependencies[]`):
@@ -143,7 +143,7 @@ CycloneDX's `dependencies[]`):
 | `GENERATED_FROM` | Source-of-build |
 | `STATIC_LINK` / `DYNAMIC_LINK` | Linkage type |
 
-## Step 5 — Tag-Value format (SPDX-native)
+## Step 5 - Tag-Value format (SPDX-native)
 
 Some toolchains use the SPDX Tag-Value format (older but well-tooled):
 
@@ -171,7 +171,7 @@ Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package-myapp
 JSON is preferred for new toolchains; Tag-Value persists for legacy
 integrations.
 
-## Step 6 — SPDX 3.0 profiles
+## Step 6 - SPDX 3.0 profiles
 
 SPDX 3.0 (2024 release) restructures into composable profiles:
 
@@ -188,10 +188,9 @@ SPDX 3.0 (2024 release) restructures into composable profiles:
 JSON-LD is the primary encoding; tooling support is growing but
 less mature than 2.3 as of 2026.
 
-For most teams, **stay on SPDX 2.3 unless 3.0 features are required**
-— 2.3 has broader tooling.
+For most teams, **stay on SPDX 2.3 unless 3.0 features are required** - 2.3 has broader tooling.
 
-## Step 7 — Tooling
+## Step 7 - Tooling
 
 | Tool | Use |
 |---|---|
@@ -203,7 +202,7 @@ For most teams, **stay on SPDX 2.3 unless 3.0 features are required**
 | `tern` | Container image SPDX generation |
 | `Trivy` | Cross-purpose scanner with SPDX output |
 
-## Step 8 — Validation
+## Step 8 - Validation
 
 ```bash
 # Python spdx-tools
@@ -215,7 +214,7 @@ pyspdxtools --infile sbom.spdx.json --version SPDX-2.3
 # Upload to https://tools.spdx.org/app/
 ```
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 jobs:
@@ -249,7 +248,7 @@ jobs:
 ## Limitations
 
 - SPDX 2.3 vuln support is weaker than CycloneDX 1.6 (no first-class
-  vulnerabilities block — relies on companion VEX docs).
+  vulnerabilities block - relies on companion VEX docs).
 - License-expression validation is strict; non-standard licenses
   require `LicenseRef-` boilerplate.
 - SPDX 3.0 tooling is still maturing; many tools still produce 2.3.
@@ -258,15 +257,15 @@ jobs:
 
 ## References
 
-- [spdx-spec][spdx-spec] — official specification
-- spdx.dev — landing
-- spdx.org/licenses — license ID list
-- iso.org/standard/81870.html — ISO/IEC 5962:2021 (SPDX 2.2.1
+- [spdx-spec][spdx-spec] - official specification
+- spdx.dev - landing
+- spdx.org/licenses - license ID list
+- iso.org/standard/81870.html - ISO/IEC 5962:2021 (SPDX 2.2.1
   ISO publication)
-- tools.spdx.org — online validator
-- github.com/spdx/tools-python — Python reference impl
+- tools.spdx.org - online validator
+- github.com/spdx/tools-python - Python reference impl
 - [`syft-generation`](../syft-generation/SKILL.md),
   [`grype-scanning`](../grype-scanning/SKILL.md),
   [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) — sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) — unifier agent
+  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent

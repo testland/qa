@@ -15,11 +15,11 @@ The Serverless Framework
 is one of the older deploy-frameworks for Lambda. Its
 test-friendly ecosystem includes:
 
-- **serverless-offline** — emulates API Gateway + Lambda
+- **serverless-offline** - emulates API Gateway + Lambda
   locally; HTTP test surface.
-- **serverless invoke local** — one-off invocation from CLI.
+- **serverless invoke local** - one-off invocation from CLI.
 - **Per-runtime test plugins** (serverless-jest-plugin,
-  serverless-mocha-plugin) — install runners aware of
+  serverless-mocha-plugin) - install runners aware of
   serverless project structure.
 
 ## When to use
@@ -112,7 +112,7 @@ test('hello-world', async () => {
 });
 ```
 
-This skips the Serverless plugin entirely — often the cleanest
+This skips the Serverless plugin entirely - often the cleanest
 path.
 
 ### Environment variables

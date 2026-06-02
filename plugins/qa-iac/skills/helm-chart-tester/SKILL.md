@@ -1,6 +1,6 @@
 ---
 name: helm-chart-tester
-description: "Configures helm-unittest for Helm chart unit testing — installs `helm-unittest` plugin, authors `tests/*.yaml` per template, asserts on rendered manifests (`isKind`, `isAPIVersion`, `equal`, `matchRegex`), runs via `helm unittest`. Plus chart linting (`helm lint`) and render testing (`helm template`). Use when the team ships Helm charts and needs unit-level verification of the templates."
+description: "Configures helm-unittest for Helm chart unit testing - installs `helm-unittest` plugin, authors `tests/*.yaml` per template, asserts on rendered manifests (`isKind`, `isAPIVersion`, `equal`, `matchRegex`), runs via `helm unittest`. Plus chart linting (`helm lint`) and render testing (`helm template`). Use when the team ships Helm charts and needs unit-level verification of the templates."
 rating: 22
 d6: 3
 archetype: S1
@@ -11,8 +11,8 @@ archetype: S1
 ## Overview
 
 **helm-unittest** (Helm plugin) unit-tests the rendered chart
-output — assert specific fields, conditional behaviors, value
-substitutions — to catch template bugs before deploying.
+output - assert specific fields, conditional behaviors, value
+substitutions - to catch template bugs before deploying.
 
 ## When to use
 
@@ -22,14 +22,14 @@ substitutions — to catch template bugs before deploying.
 - A chart's rendered output must satisfy specific shape contracts
   (env vars, ports, labels).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 helm plugin install https://github.com/helm-unittest/helm-unittest
 helm plugin list   # verify
 ```
 
-## Step 2 — Author a test
+## Step 2 - Author a test
 
 ```yaml
 # charts/mychart/tests/deployment_test.yaml
@@ -82,7 +82,7 @@ tests:
 The `set:` block overrides values; `asserts:` checks the rendered
 output.
 
-## Step 3 — Common assertions
+## Step 3 - Common assertions
 
 | Assertion         | Use                                                |
 |-------------------|----------------------------------------------------|
@@ -100,7 +100,7 @@ output.
 | `notMatchRegex`    | Inverse                                             |
 | `failedTemplate`    | Template should fail to render (negative test)    |
 
-## Step 4 — Run
+## Step 4 - Run
 
 ```bash
 # All tests for a chart
@@ -113,7 +113,7 @@ helm unittest charts/mychart/ -f tests/deployment_test.yaml
 helm unittest charts/mychart/ -u
 ```
 
-## Step 5 — Snapshot testing
+## Step 5 - Snapshot testing
 
 For complex rendered manifests, snapshot the output:
 
@@ -130,7 +130,7 @@ fails the test. Useful for catching unintended template changes.
 Per [`golden-file-conventions`](../../qa-test-data/skills/golden-file-conventions/SKILL.md):
 sanitize the snapshots (strip volatile fields like timestamps).
 
-## Step 6 — Chart linting
+## Step 6 - Chart linting
 
 ```bash
 helm lint charts/mychart/
@@ -144,7 +144,7 @@ Catches:
 
 Run alongside unit tests in CI.
 
-## Step 7 — Render testing
+## Step 7 - Render testing
 
 ```bash
 # See the rendered output without applying
@@ -160,7 +160,7 @@ diff old.yaml new.yaml
 
 Useful for review: "what does this change actually produce?"
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -175,7 +175,7 @@ jobs:
       - run: helm unittest charts/mychart/
 ```
 
-## Step 9 — Kubernetes admission integration
+## Step 9 - Kubernetes admission integration
 
 For deeper verification, render charts and run them through OPA /
 Conftest:
@@ -212,7 +212,6 @@ cover (e.g., "all containers must have resource limits"). See
 
 - helm-unittest at `github.com/helm-unittest/helm-unittest`.
 - Helm docs at `helm.sh/docs/`.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) —
+- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   policy-level testing of rendered manifests.
-- [`golden-file-conventions`](../../qa-test-data/skills/golden-file-conventions/SKILL.md)
-  — for snapshot sanitization patterns.
+- [`golden-file-conventions`](../../qa-test-data/skills/golden-file-conventions/SKILL.md) - for snapshot sanitization patterns.

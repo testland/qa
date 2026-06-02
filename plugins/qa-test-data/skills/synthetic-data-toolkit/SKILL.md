@@ -1,6 +1,6 @@
 ---
 name: synthetic-data-toolkit
-description: "Dispatcher across the four synthetic-data generators in this plugin (Faker / FactoryBot / mimesis / Bogus) — picks the right tool by language and use case (raw value generation vs. typed factory orchestration), shows side-by-side equivalents for the same fixture across all four, and emits the language-appropriate code. Use when starting test-data work on a project and the team wants the \"which tool should I use\" decision documented."
+description: "Dispatcher across the four synthetic-data generators in this plugin (Faker / FactoryBot / mimesis / Bogus) - picks the right tool by language and use case (raw value generation vs. typed factory orchestration), shows side-by-side equivalents for the same fixture across all four, and emits the language-appropriate code. Use when starting test-data work on a project and the team wants the \"which tool should I use\" decision documented."
 rating: 23
 d6: 3
 archetype: S4
@@ -27,15 +27,15 @@ patterns regardless of which language the codebase uses.
   one page."
 
 If the project is already standardized on one library, defer this
-skill — go directly to the matching per-tool skill:
+skill - go directly to the matching per-tool skill:
 
-- [`faker-data`](../faker-data/SKILL.md) — Python / JS / Ruby
+- [`faker-data`](../faker-data/SKILL.md) - Python / JS / Ruby
   Faker.
-- [`factory-bot-data`](../factory-bot-data/SKILL.md) — Ruby
+- [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby
   FactoryBot.
-- [`mimesis-data`](../mimesis-data/SKILL.md) — Python mimesis
+- [`mimesis-data`](../mimesis-data/SKILL.md) - Python mimesis
   (alternative to Faker).
-- [`bogus-data`](../bogus-data/SKILL.md) — .NET Bogus.
+- [`bogus-data`](../bogus-data/SKILL.md) - .NET Bogus.
 
 ## Dispatch by language
 
@@ -66,8 +66,8 @@ Project language?
 | Typed-object factory with referential integrity                       | FactoryBot (Ruby) / Bogus (.NET) / hand-roll (Python+factory_boy, JS+fishery). |
 | Locale-aware data (Japanese names, German addresses)                  | mimesis (Python; 46 locales) or Faker (any; 70+ locales).     |
 | Bulk generation (10k+ rows for DB seeding)                            | mimesis Schema/Field (Python) or Bogus `GenerateLazy` (.NET). |
-| Realistic but deterministic (seed-driven for repro)                   | All four — every library supports a seed; pin the version.    |
-| Adversarial / security payloads                                       | None of these — use [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md). |
+| Realistic but deterministic (seed-driven for repro)                   | All four - every library supports a seed; pin the version.    |
+| Adversarial / security payloads                                       | None of these - use [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md). |
 | Realistic-but-fake PII for non-prod                                   | [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (sibling skill that wraps Faker / mimesis). |
 
 ## Side-by-side: same fixture in four languages
@@ -227,5 +227,5 @@ adversarial, boundary, narrative, and persistent cases.
   [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md),
   [`boundary-value-generator`](../boundary-value-generator/SKILL.md),
   [`negative-test-generator`](../negative-test-generator/SKILL.md),
-  [`seed-data-curator`](../seed-data-curator/SKILL.md) — sibling
+  [`seed-data-curator`](../seed-data-curator/SKILL.md) - sibling
   skills for the cases this dispatcher does NOT cover.

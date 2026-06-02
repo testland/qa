@@ -1,6 +1,6 @@
 ---
 name: sqs-patterns
-description: "Tests AWS SQS queue interactions — Standard (at-least-once delivery, near-unlimited throughput) vs FIFO (exactly-once processing, ordered) queue semantics; visibility-timeout interaction model; dead-letter queue (DLQ) for poison-message isolation; message retention period (default 4 days, configurable 60s–1209600s); test patterns via LocalStack or `aws-sdk-client-mock` (TypeScript) / `moto` (Python). Use when the user works with AWS SQS producers/consumers and needs unit/integration tests for queue interactions."
+description: "Tests AWS SQS queue interactions - Standard (at-least-once delivery, near-unlimited throughput) vs FIFO (exactly-once processing, ordered) queue semantics; visibility-timeout interaction model; dead-letter queue (DLQ) for poison-message isolation; message retention period (default 4 days, configurable 60s - 1209600s); test patterns via LocalStack or `aws-sdk-client-mock` (TypeScript) / `moto` (Python). Use when the user works with AWS SQS producers/consumers and needs unit/integration tests for queue interactions."
 rating: 23
 d6: 4
 archetype: S1
@@ -38,7 +38,7 @@ must assume strict ordering.
 - A test verifies visibility-timeout, DLQ-routing, or
   long-polling behavior.
 
-## Step 1 — Test approach: mock vs LocalStack vs real
+## Step 1 - Test approach: mock vs LocalStack vs real
 
 Three approaches, ordered by isolation:
 
@@ -52,7 +52,7 @@ For pure logic tests (does the code call SendMessage with the right
 body?), use mocks. For semantic tests (does retry-on-failure work
 end-to-end?), use LocalStack. For pre-prod smoke, use real SQS.
 
-## Step 2 — Mock-based unit test (TypeScript)
+## Step 2 - Mock-based unit test (TypeScript)
 
 ```typescript
 import { mockClient } from 'aws-sdk-client-mock';
@@ -74,7 +74,7 @@ it('sends order-placed message to SQS', async () => {
 });
 ```
 
-## Step 3 — Mock-based unit test (Python)
+## Step 3 - Mock-based unit test (Python)
 
 ```python
 import boto3
@@ -96,7 +96,7 @@ def test_send_order_message():
 `moto`'s `@mock_aws` decorator intercepts boto3 SQS calls; tests run
 without network.
 
-## Step 4 — LocalStack integration test
+## Step 4 - LocalStack integration test
 
 ```yaml
 # docker-compose.yml
@@ -119,7 +119,7 @@ queue_url = sqs.create_queue(QueueName='orders')['QueueUrl']
 # ... full SQS API works, including visibility timeouts, DLQ, FIFO
 ```
 
-## Step 5 — Test visibility-timeout behavior
+## Step 5 - Test visibility-timeout behavior
 
 Per [sqs-dg][sqs-dg], visibility timeout is the lifecycle property
 that prevents duplicate-processing within a configurable window:
@@ -146,7 +146,7 @@ msg3 = sqs.receive_message(QueueUrl=queue_url)
 assert msg3['Messages'][0]['MessageId'] == msg1['MessageId']
 ```
 
-## Step 6 — Test DLQ routing
+## Step 6 - Test DLQ routing
 
 Per [sqs-dg][sqs-dg]: SQS supports "dead-letter queues" for
 poison-message isolation. After `maxReceiveCount` failed deliveries,
@@ -175,7 +175,7 @@ dlq_msg = sqs.receive_message(QueueUrl=dlq_url)
 assert dlq_msg['Messages'][0]['Body'] == 'poison'
 ```
 
-## Step 7 — Test FIFO ordering + dedup
+## Step 7 - Test FIFO ordering + dedup
 
 ```python
 fifo_url = sqs.create_queue(
@@ -194,7 +194,7 @@ bodies = [m['Body'] for m in response['Messages']]
 assert bodies == ['msg-1', 'msg-2']  # Strict order; dedup applied
 ```
 
-## Step 8 — Message retention
+## Step 8 - Message retention
 
 Per [sqs-dg][sqs-dg]:
 
@@ -208,7 +208,7 @@ Tests rarely need to verify retention directly; document the
 expected retention in queue setup (Terraform / CloudFormation) and
 review per-team.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 services:
@@ -225,14 +225,14 @@ steps:
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Test visibility-timeout via mock | Mock doesn't track invisibility window; tests pass-by-accident | Use LocalStack (Step 4–5) |
+| Test visibility-timeout via mock | Mock doesn't track invisibility window; tests pass-by-accident | Use LocalStack (Step 4 - 5) |
 | Skip DLQ-routing test | Poison-message handling unverified; production incidents | Always cover DLQ for production queues (Step 6) |
 | Use Standard-queue body assertions sensitive to delivery order | At-least-once = duplicates + reordering | Assert per-message processing idempotency, not order |
 | Hard-code queue URLs in tests | Tests break when account / region changes | Pull from env vars / fixtures |
 
 ## Limitations
 
-- LocalStack ≠ real SQS — some behaviors (extreme latency, AWS
+- LocalStack ≠ real SQS - some behaviors (extreme latency, AWS
   throttling) are not emulated.
 - FIFO throughput limits (300 messages/sec without
   high-throughput mode) need real SQS to verify.
@@ -241,15 +241,15 @@ steps:
 
 ## References
 
-- [sqs-dg][sqs-dg] — official SQS developer guide; standard vs FIFO,
+- [sqs-dg][sqs-dg] - official SQS developer guide; standard vs FIFO,
   visibility timeout, DLQ, retention
-- docs.aws.amazon.com/AWSSimpleQueueService — full SQS docs
-- localstack.cloud — LocalStack SQS emulator
-- pypi.org/project/moto — Python AWS mock
-- npmjs.com/package/aws-sdk-client-mock — TypeScript AWS mock
+- docs.aws.amazon.com/AWSSimpleQueueService - full SQS docs
+- localstack.cloud - LocalStack SQS emulator
+- pypi.org/project/moto - Python AWS mock
+- npmjs.com/package/aws-sdk-client-mock - TypeScript AWS mock
 - [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
   [`celery-tests`](../celery-tests/SKILL.md),
   [`bullmq-tests`](../bullmq-tests/SKILL.md),
-  [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) — sister tools
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) —
+  [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) - sister tools
+- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
   critical companion for at-least-once SQS Standard queues

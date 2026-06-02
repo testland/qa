@@ -11,8 +11,8 @@ archetype: S1
 ## Overview
 
 Optimizely Feature Experimentation (Optimizely Full Stack /
-Optimizely X) uses a **datafile** — a JSON blob describing all
-flags, experiments, and audiences — that the SDK fetches and
+Optimizely X) uses a **datafile** - a JSON blob describing all
+flags, experiments, and audiences - that the SDK fetches and
 evaluates locally. Per
 [docs.developers.optimizely.com/feature-experimentation/docs/python-sdk](https://docs.developers.optimizely.com/feature-experimentation/docs/python-sdk),
 the SDK supports datafile-based testing: load a fixture datafile

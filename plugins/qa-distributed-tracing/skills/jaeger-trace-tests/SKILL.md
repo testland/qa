@@ -1,6 +1,6 @@
 ---
 name: jaeger-trace-tests
-description: "Author integration tests that query Jaeger for cross-service trace verification — Jaeger all-in-one Docker for CI (OTLP gRPC :4317 + HTTP :4318 ingest, query API on :16686), `/api/traces?service=X&operation=Y` query patterns, span set + parent-child + duration assertions. Pairs with `opentelemetry-trace-assertions` for in-process unit-level tests."
+description: "Author integration tests that query Jaeger for cross-service trace verification - Jaeger all-in-one Docker for CI (OTLP gRPC :4317 + HTTP :4318 ingest, query API on :16686), `/api/traces?service=X&operation=Y` query patterns, span set + parent-child + duration assertions. Pairs with `opentelemetry-trace-assertions` for in-process unit-level tests."
 type: skill
 archetype: S1
 rating: 23
@@ -18,7 +18,7 @@ keywords:
 Jaeger ingests traces over OTLP and exposes a query API for
 verification. Per the [Jaeger getting-started docs], the all-in-one
 image *"combines collector and query components in a single process
-and uses a transient in-memory storage for trace data"* — perfect
+and uses a transient in-memory storage for trace data"* - perfect
 for CI.
 
 ## When to use
@@ -28,10 +28,10 @@ for CI.
   spans).
 - Production observability stack uses Jaeger; tests should reflect
   the same query API your alerts/SLOs depend on.
-- Smoke test after instrumentation changes — confirm spans actually
+- Smoke test after instrumentation changes - confirm spans actually
   reach Jaeger (not just the SDK exporter).
 
-## Step 1 — Run Jaeger all-in-one in CI
+## Step 1 - Run Jaeger all-in-one in CI
 
 Per the [Jaeger getting-started docs]:
 
@@ -65,7 +65,7 @@ services:
       - 4318:4318
 ```
 
-## Step 2 — Configure SDK to ship to Jaeger
+## Step 2 - Configure SDK to ship to Jaeger
 
 ```python
 from opentelemetry import trace
@@ -80,10 +80,10 @@ provider.add_span_processor(
 trace.set_tracer_provider(provider)
 ```
 
-For tests use `BatchSpanProcessor` + manual flush — Step 4 covers
+For tests use `BatchSpanProcessor` + manual flush - Step 4 covers
 flushing before query.
 
-## Step 3 — Query API patterns
+## Step 3 - Query API patterns
 
 Jaeger query API endpoints:
 
@@ -113,7 +113,7 @@ Trace JSON response shape (selected fields):
 }
 ```
 
-## Step 4 — Force span flush before query
+## Step 4 - Force span flush before query
 
 ```python
 def test_order_trace_visible_in_jaeger():
@@ -137,7 +137,7 @@ def test_order_trace_visible_in_jaeger():
     assert tag["value"] == 1
 ```
 
-## Step 5 — Parent-child via `references`
+## Step 5 - Parent-child via `references`
 
 Jaeger encodes parent links as `references` with `refType: "CHILD_OF"`.
 
@@ -150,7 +150,7 @@ def parent_id(span):
 assert parent_id(db_span) == order_span["spanID"]
 ```
 
-## Step 6 — Per-test trace isolation
+## Step 6 - Per-test trace isolation
 
 CI runs many tests against shared Jaeger. Use unique
 `service.name` per test or unique trace tag to scope queries:
@@ -164,7 +164,7 @@ service_name = f"orders-test-{uuid4()}"
 In-memory storage is bounded by Jaeger's eviction; long test runs
 should restart the container or accept eviction.
 
-## Step 7 — Cleanup + retention
+## Step 7 - Cleanup + retention
 
 All-in-one uses transient memory storage per the [Jaeger
 getting-started docs]. For longer test runs, mount a config:
@@ -199,12 +199,12 @@ Or restart the container between test workflows.
 
 ## References
 
-- [Jaeger getting-started docs] — Docker run, ports, OTLP ingest
-- [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md) —
+- [Jaeger getting-started docs] - Docker run, ports, OTLP ingest
+- [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md) - 
   in-process unit pattern
-- [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) — sister
+- [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister
   skill for Zipkin-using teams
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) —
+- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) - 
   adversarial reviewer
 
 [Jaeger getting-started docs]: https://www.jaegertracing.io/docs/latest/getting-started/

@@ -27,7 +27,7 @@ The output: a test directory layout + per-function test files
 - Migrating between platforms (e.g., Lambda → Workers); need to
   port test discipline.
 
-## Step 1 — Inventory functions from IaC
+## Step 1 - Inventory functions from IaC
 
 Per platform:
 
@@ -71,9 +71,9 @@ functions:
         events: ['s3:ObjectCreated:*']
 ```
 
-## Step 2 — Pick the emulator per function
+## Step 2 - Pick the emulator per function
 
-**Default: pick one emulator per platform detected in Step 1's inventory** —
+**Default: pick one emulator per platform detected in Step 1's inventory** - 
 the per-platform skill below is the canonical driver for that runtime. Use
 multiple emulators only when the project mixes platforms (e.g., Vercel app
 + AWS Lambdas).
@@ -87,7 +87,7 @@ multiple emulators only when the project mixes platforms (e.g., Vercel app
 | Netlify Functions | netlify dev + direct handler | [`netlify-functions-test`](../netlify-functions-test/SKILL.md) |
 | Serverless Framework | serverless-offline / direct | [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md) |
 
-## Step 3 — Generate test events per event source
+## Step 3 - Generate test events per event source
 
 | Event source | Tool |
 |---|---|
@@ -101,7 +101,7 @@ multiple emulators only when the project mixes platforms (e.g., Vercel app
 
 Commit events to `tests/fixtures/events/`. Reference in tests.
 
-## Step 4 — Emit test scaffold per function
+## Step 4 - Emit test scaffold per function
 
 ```
 tests/
@@ -146,7 +146,7 @@ describe('get-user', () => {
 });
 ```
 
-## Step 5 — Cold-start + timeout budget assertions
+## Step 5 - Cold-start + timeout budget assertions
 
 For each function, derive a budget from
 [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md)
@@ -170,7 +170,7 @@ budgets:
 These become assertion thresholds in `staging-smoke` tests (run
 against deployed functions, not local).
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 # .github/workflows/serverless-tests.yml
@@ -196,7 +196,7 @@ jobs:
 
 Two-tier: local-fast tests on every PR; deploy + smoke on main.
 
-## Step 7 — Document coverage matrix
+## Step 7 - Document coverage matrix
 
 ```markdown
 # Serverless Integration Test Matrix

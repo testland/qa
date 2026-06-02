@@ -25,7 +25,7 @@ for state-transition logic.
 - Onboarding a tester to the vocabulary used by
   [`bug-report-critic`](../../agents/bug-report-critic.md).
 
-## ISTQB terms — error, fault, defect, failure, anomaly
+## ISTQB terms - error, fault, defect, failure, anomaly
 
 Per the ISTQB Glossary
 ([glossary.istqb.org](https://glossary.istqb.org/)):
@@ -36,7 +36,7 @@ Per the ISTQB Glossary
 | **Fault** (synonyms: defect, bug) | A manifestation of an error in software. |
 | **Defect** | An imperfection or deficiency in a work product where it does not meet its requirements or specifications. Synonyms: bug, fault, problem. |
 | **Failure** | An event in which a component or system does not perform a required function within specified limits. Failure is what users experience; fault is what produced it. |
-| **Anomaly** | Any condition that deviates from expectation. Broader than defect — could be a usability issue, a documentation gap, or a defect. |
+| **Anomaly** | Any condition that deviates from expectation. Broader than defect - could be a usability issue, a documentation gap, or a defect. |
 
 These terms are surprisingly often misused: developers say "the
 bug failed in production" when they mean "the **failure**, caused
@@ -63,8 +63,8 @@ documentation":
 | **Rejected** (or **Not a Bug**) | Triage concluded this isn't a defect (misuse, by design, dup). | Triage lead |
 | **Duplicate** | Already tracked as another defect. Link to canonical. | Triage lead |
 
-Cite: ISO/IEC/IEEE 29119-3:2021 §6 "Test documentation — Anomaly
-report" — section enumerates the recommended fields and lifecycle
+Cite: ISO/IEC/IEEE 29119-3:2021 §6 "Test documentation - Anomaly
+report" - section enumerates the recommended fields and lifecycle
 states. Cite by stable ID; full text behind iso.org paywall.
 
 ## State transition diagram
@@ -121,16 +121,16 @@ states. Cite by stable ID; full text behind iso.org paywall.
 | Assigned | In Progress, Deferred, Reopened |
 | In Progress | Fixed, Deferred |
 | Fixed | Verified, Reopened |
-| Verified | Closed, Reopened (rare — late finding) |
+| Verified | Closed, Reopened (rare - late finding) |
 | Reopened | Assigned, In Progress |
 | Deferred | Open, Closed (wontfix) |
 
 **Forbidden transitions** (smells):
 
-- New → Closed (skips triage + verification — only legitimate for
+- New → Closed (skips triage + verification - only legitimate for
   spam / duplicate where triager catches it immediately)
-- Assigned → Closed (no fix, no verification — what was closed?)
-- Fixed → Closed without Verified (no verification — possibly the
+- Assigned → Closed (no fix, no verification - what was closed?)
+- Fixed → Closed without Verified (no verification - possibly the
   fix never worked)
 - Closed → anything except Reopened (reopening is the only way back)
 
@@ -145,7 +145,7 @@ The canonical lifecycle maps to platform-specific terminology:
 | Assigned | (Assignee set) | In Progress + assignee | Open + assignee |
 | In Progress | In Progress | In Progress | Open + linked PR draft |
 | Fixed | In Review | In Review | Open + linked PR ready |
-| Verified | Done (pre-release) | Done | Closed (PR merged) — but often kept Open until verified |
+| Verified | Done (pre-release) | Done | Closed (PR merged) - but often kept Open until verified |
 | Closed | Done | Done | Closed |
 | Reopened | Reopened | Reopened (custom) | Reopened |
 | Deferred | Won't Do (deferred subtype) | Cancelled (with reason) | Closed not-planned |
@@ -155,7 +155,7 @@ The canonical lifecycle maps to platform-specific terminology:
 Per the platform docs (Atlassian "Issue workflow", Linear "Workflow
 states", GitHub "Issue templates"):
 
-- Jira workflow is **fully configurable** — the table reflects the
+- Jira workflow is **fully configurable** - the table reflects the
   default Software project template.
 - Linear workflow states are **fixed enums** (Backlog, Todo, In
   Progress, In Review, Done, Cancelled) but each can be subdivided
@@ -184,7 +184,7 @@ The platform-workflow skills enforce these:
 | Reopened defects re-counted as new in metrics | Inflates inflow / understates fix quality | Distinguish New vs Reopened in dashboards |
 | Deferred = forgotten | Deferred items accumulate; technical debt | Deferred review at every sprint planning |
 | Multiple "Open" subtypes ("In Triage", "Triaged", "Confirmed") | Workflow becomes opaque; reporters don't know which state means what | Collapse to fewer states; use fields for nuance |
-| Direct New → Closed by triage | Lost signal — was it spam? duplicate? rejected? | Always transition through a meaningful state |
+| Direct New → Closed by triage | Lost signal - was it spam? duplicate? rejected? | Always transition through a meaningful state |
 | Different teams use different workflows in the same tracker | Cross-team metrics impossible | Standardise to the canonical lifecycle above |
 
 ## Limitations
@@ -200,25 +200,24 @@ The platform-workflow skills enforce these:
 - **The terms "bug" and "defect" remain interchangeable in
   practice.** ISTQB makes the distinction sharp; most trackers
   don't. Adopt the canonical vocabulary or accept the colloquial
-  use — but don't mix midstream.
+  use - but don't mix midstream.
 - **Severity / priority are separate axes.** State doesn't
   capture how bad / how urgent. See
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
 
 ## References
 
-- ISTQB Glossary —
+- ISTQB Glossary - 
   [glossary.istqb.org](https://glossary.istqb.org/). Canonical
   definitions of error / fault / defect / failure / anomaly.
-- IEEE 1044-2009 "Standard Classification for Software Anomalies"
-  — cite by stable ID; defines defect lifecycle.
-- ISO/IEC/IEEE 29119-3:2021 "Software and systems engineering —
-  Software testing — Part 3: Test documentation" §6 — defines
+- IEEE 1044-2009 "Standard Classification for Software Anomalies" - cite by stable ID; defines defect lifecycle.
+- ISO/IEC/IEEE 29119-3:2021 "Software and systems engineering - 
+  Software testing - Part 3: Test documentation" §6 - defines
   anomaly-report fields and lifecycle.
-- Atlassian "Configure issue workflows" — Jira default workflows.
-- Linear documentation "Workflow states" — fixed enum + per-team
+- Atlassian "Configure issue workflows" - Jira default workflows.
+- Linear documentation "Workflow states" - fixed enum + per-team
   subdivision.
-- GitHub Issues docs — Open / Closed + labels + Projects.
+- GitHub Issues docs - Open / Closed + labels + Projects.
 - Sibling references in this plugin:
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md),
   [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).

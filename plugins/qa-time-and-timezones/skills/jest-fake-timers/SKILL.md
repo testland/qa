@@ -12,7 +12,7 @@ archetype: S1
 
 Per [jestjs.io/docs/timer-mocks](https://jestjs.io/docs/timer-mocks),
 Jest 27+ uses **modern fake timers** built on `@sinonjs/fake-timers`.
-The API differs slightly from raw Sinon — Jest exposes
+The API differs slightly from raw Sinon - Jest exposes
 `jest.advanceTimersByTime` instead of `clock.tick`, and
 `jest.setSystemTime` instead of `clock.setSystemTime`.
 
@@ -183,7 +183,7 @@ jobs:
 - **Modern fake timers are the default since Jest 27.** Older
   projects may still use legacy.
 - **`doNotFake` is fragile.** Some functions internally use
-  `Date.now()` — may behave unexpectedly.
+  `Date.now()` - may behave unexpectedly.
 - **DST + TZ interaction is Node-runtime-dependent.** ICU data
   ships with Node.
 - **`advanceTimersByTime` doesn't process Promises.** Use the

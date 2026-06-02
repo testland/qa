@@ -1,6 +1,6 @@
 ---
 name: bdd-step-library-curator
-description: "Build-an-X workflow that keeps step definitions DRY across a Cucumber / Behave / Reqnroll project — periodically inventories step definitions, finds duplicates (different patterns matching the same intent), suggests consolidation, organizes by domain, and publishes a step library reference doc the team uses for \"is there already a step for X?\" before authoring new ones. Use as the antidote to step-definition proliferation in long-lived BDD projects."
+description: "Build-an-X workflow that keeps step definitions DRY across a Cucumber / Behave / Reqnroll project - periodically inventories step definitions, finds duplicates (different patterns matching the same intent), suggests consolidation, organizes by domain, and publishes a step library reference doc the team uses for \"is there already a step for X?\" before authoring new ones. Use as the antidote to step-definition proliferation in long-lived BDD projects."
 rating: 22
 d6: 3
 archetype: S3
@@ -15,7 +15,7 @@ After 6 months of a BDD project, step definitions proliferate:
 - Two engineers write `Given a user` and `Given a logged-in user`
   for the same fixture.
 - Three slightly-different "I click X" steps (one for buttons,
-  one for links, one for arbitrary elements) — all do the same
+  one for links, one for arbitrary elements) - all do the same
   thing.
 - A new engineer can't find existing steps and writes a fourth
   variant.
@@ -33,7 +33,7 @@ This skill builds a curation workflow.
 - Before adopting BDD across multiple teams (proactively design
   the step library shape).
 
-## Step 1 — Inventory step definitions
+## Step 1 - Inventory step definitions
 
 Per-language extraction:
 
@@ -63,7 +63,7 @@ Per Gherkin verb:
   And:    3
 ```
 
-## Step 2 — Detect duplicates / overlaps
+## Step 2 - Detect duplicates / overlaps
 
 Two patterns are likely duplicates when:
 
@@ -100,7 +100,7 @@ for n, group in normalized.items():
             print(f"  {s['pattern']} — {s['file']}:{s['line']}")
 ```
 
-## Step 3 — Recommend consolidation
+## Step 3 - Recommend consolidation
 
 For each duplicate group:
 
@@ -123,7 +123,7 @@ in `shared_steps.py`. Update the Gherkin features that use the
 deprecated patterns.
 ```
 
-## Step 4 — Domain organization
+## Step 4 - Domain organization
 
 Group steps per domain area:
 
@@ -174,7 +174,7 @@ The README is the discoverability artifact:
 
 The README + grep is the team's "is there a step for X?" tool.
 
-## Step 5 — Pre-merge step gate
+## Step 5 - Pre-merge step gate
 
 Add a CI check that flags new step definitions:
 
@@ -193,7 +193,7 @@ fi
 The check warns; doesn't block. Forces the author to acknowledge
 the new step.
 
-## Step 6 — Quarterly cadence
+## Step 6 - Quarterly cadence
 
 | Cadence            | Trigger                                           |
 |--------------------|---------------------------------------------------|
@@ -228,8 +228,7 @@ the new step.
 
 - [`cucumber-testing`](../cucumber-testing/SKILL.md),
   [`behave-testing`](../behave-testing/SKILL.md),
-  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) — per-language
+  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - per-language
   runners this curator works alongside.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md)
-  — sibling: addresses Gherkin quality, this addresses step
+- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - sibling: addresses Gherkin quality, this addresses step
   library quality.

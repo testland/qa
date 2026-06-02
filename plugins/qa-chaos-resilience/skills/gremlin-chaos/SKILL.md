@@ -1,6 +1,6 @@
 ---
 name: gremlin-chaos
-description: "Configures Gremlin (commercial) for cross-platform chaos engineering — installs the Gremlin agent on Linux / Windows / Kubernetes, picks attack types (resource, network, state, request), creates Scenarios chaining attacks, integrates with the Reliability Score for forward-looking metrics. Use when the platform spans multiple environments (bare metal + cloud + serverless) and the team needs a commercial-supported solution per Gremlin's multi-platform support."
+description: "Configures Gremlin (commercial) for cross-platform chaos engineering - installs the Gremlin agent on Linux / Windows / Kubernetes, picks attack types (resource, network, state, request), creates Scenarios chaining attacks, integrates with the Reliability Score for forward-looking metrics. Use when the platform spans multiple environments (bare metal + cloud + serverless) and the team needs a commercial-supported solution per Gremlin's multi-platform support."
 rating: 22
 d6: 3
 archetype: S1
@@ -19,7 +19,7 @@ Per [gremlin-home][gh]:
 > incident metrics to proactive reliability measurement."
 
 Per [gremlin-home][gh], the platform provides "forward-looking
-reliability scores—so your teams can see where systems will fail,
+reliability scores - so your teams can see where systems will fail,
 fix them first, and prove the results."
 
 Multi-platform: per [gremlin-home][gh], Gremlin works across "bare
@@ -27,7 +27,7 @@ metal, on-prem, multi-cloud, and serverless."
 
 ## When to use
 
-- The platform spans multiple environments (not just Kubernetes —
+- The platform spans multiple environments (not just Kubernetes - 
   Gremlin's differentiator vs LitmusChaos / Chaos Mesh).
 - Enterprise support is required (compliance, audit, SLA).
 - The team wants reliability scoring (vs just per-experiment
@@ -39,7 +39,7 @@ If the team is K8s-only and OSS-preferred, see
 [`litmus-chaos`](../litmus-chaos/SKILL.md) or
 [`chaos-mesh`](../chaos-mesh/SKILL.md).
 
-## Step 1 — Install Gremlin agent
+## Step 1 - Install Gremlin agent
 
 Linux:
 
@@ -63,7 +63,7 @@ helm install gremlin gremlin/gremlin \
 The agent connects to the Gremlin Control Plane (cloud); attacks
 trigger via web UI or API.
 
-## Step 2 — Attack types
+## Step 2 - Attack types
 
 Per [gremlin-home][gh] and the broader Gremlin docs:
 
@@ -82,7 +82,7 @@ Per [gremlin-home][gh] and the broader Gremlin docs:
 | State        | Time travel         | Skew the system clock                       |
 | Request     | Request injection    | Modify HTTP requests in flight             |
 
-## Step 3 — Run an attack via UI
+## Step 3 - Run an attack via UI
 
 Web UI workflow:
 
@@ -95,7 +95,7 @@ Web UI workflow:
 The UI provides safety: blast-radius scoping, abort button,
 notifications.
 
-## Step 4 — Author a Scenario
+## Step 4 - Author a Scenario
 
 A Scenario chains multiple attacks:
 
@@ -119,13 +119,13 @@ scenario:
 ```
 
 Scenarios match per the [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
-"vary real-world events" principle — combinations approximate real
+"vary real-world events" principle - combinations approximate real
 incidents.
 
-## Step 5 — Reliability score
+## Step 5 - Reliability score
 
 Per [gremlin-home][gh], Gremlin's differentiator is the
-"Reliability Score" — "individual services" get scores "based on
+"Reliability Score" - "individual services" get scores "based on
 dependency mapping, risk detection, and failure testing."
 
 Score components (per Gremlin docs):
@@ -137,7 +137,7 @@ Score components (per Gremlin docs):
 A service moving from "untested" to "score 80" via passing
 attacks creates an objective improvement signal.
 
-## Step 6 — API + automation
+## Step 6 - API + automation
 
 ```bash
 curl -X POST "https://api.gremlin.com/v1/attacks/new" \
@@ -166,7 +166,7 @@ API enables CI integration:
   run: sleep 600 && ./scripts/datadog-verdict.sh
 ```
 
-## Step 7 — Compliance + audit
+## Step 7 - Compliance + audit
 
 Gremlin's enterprise tier (per [gremlin-home][gh]'s positioning)
 provides:
@@ -200,12 +200,11 @@ Important for regulated industries where audit is non-negotiable.
 
 ## References
 
-- [gh][gh] — Gremlin overview: enterprise reliability platform,
+- [gh][gh] - Gremlin overview: enterprise reliability platform,
   forward-looking reliability scores, multi-platform (bare metal /
   on-prem / multi-cloud / serverless), fault injection +
   reliability scoring + dependency discovery.
 - [`litmus-chaos`](../litmus-chaos/SKILL.md),
-  [`chaos-mesh`](../chaos-mesh/SKILL.md) — open-source K8s-only
+  [`chaos-mesh`](../chaos-mesh/SKILL.md) - open-source K8s-only
   alternatives.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
-  — methodology Gremlin Scenarios implement.
+- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology Gremlin Scenarios implement.

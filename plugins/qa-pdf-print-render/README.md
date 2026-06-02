@@ -1,6 +1,6 @@
 # qa-pdf-print-render
 
-Print + PDF rendering testing — closes the gap left by
+Print + PDF rendering testing - closes the gap left by
 `qa-visual-regression` (which covers screen output but not
 print/PDF). Critical for invoices, contracts, statements,
 regulatory filings.

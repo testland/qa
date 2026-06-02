@@ -1,6 +1,6 @@
 ---
 name: gdpr-test-patterns
-description: "Reference catalog of GDPR-aligned test patterns — data-subject-rights workflows (Art. 15 access, Art. 16 rectification, Art. 17 erasure / \"right to be forgotten\", Art. 18 restriction, Art. 20 portability, Art. 21 objection); consent recording + revocation per Art. 7; data-residency assertions per Art. 44–50 international transfers; breach-notification timing tests per Art. 33 (72 hours); data-minimization assertions in fixtures per Art. 5(1)(c). Use when authoring GDPR-readiness tests for any product processing EU personal data."
+description: "Reference catalog of GDPR-aligned test patterns - data-subject-rights workflows (Art. 15 access, Art. 16 rectification, Art. 17 erasure / \"right to be forgotten\", Art. 18 restriction, Art. 20 portability, Art. 21 objection); consent recording + revocation per Art. 7; data-residency assertions per Art. 44 - 50 international transfers; breach-notification timing tests per Art. 33 (72 hours); data-minimization assertions in fixtures per Art. 5(1)(c). Use when authoring GDPR-readiness tests for any product processing EU personal data."
 rating: 22
 d6: 4
 archetype: S2
@@ -20,7 +20,7 @@ applies to any processing of EU personal data regardless of the
 processor's location. Failure to demonstrate compliance carries
 fines up to €20M or 4% of global annual turnover (whichever higher).
 
-This is a **reference skill** (S2) — defines the test-pattern
+This is a **reference skill** (S2) - defines the test-pattern
 catalog by Article. Tests use the team's existing test framework;
 this skill is the per-Article test recipe.
 
@@ -35,7 +35,7 @@ this skill is the per-Article test recipe.
 
 ## Test patterns by GDPR Article
 
-### Art. 7 — Conditions for consent
+### Art. 7 - Conditions for consent
 
 ```python
 def test_consent_recorded_at_collection_time():
@@ -59,7 +59,7 @@ def test_consent_revocable():
     assert not user.is_eligible_for(EmailType.MARKETING)
 ```
 
-### Art. 15 — Right of access
+### Art. 15 - Right of access
 
 ```python
 def test_subject_access_request_returns_all_personal_data():
@@ -76,7 +76,7 @@ def test_subject_access_request_returns_all_personal_data():
     assert response.headers['X-Processing-Time'] < timedelta(days=30)
 ```
 
-### Art. 17 — Right to erasure ("right to be forgotten")
+### Art. 17 - Right to erasure ("right to be forgotten")
 
 ```python
 def test_erasure_removes_all_personal_data():
@@ -90,7 +90,7 @@ def test_erasure_removes_all_personal_data():
     assert ErasureMarker.objects.filter(subject='alice@example.com').exists()
 ```
 
-### Art. 20 — Right to data portability
+### Art. 20 - Right to data portability
 
 ```python
 def test_data_portability_export_machine_readable():
@@ -103,7 +103,7 @@ def test_data_portability_export_machine_readable():
     assert 'orders' in export
 ```
 
-### Art. 33 — Breach notification (72-hour test)
+### Art. 33 - Breach notification (72-hour test)
 
 ```python
 def test_breach_notification_workflow_within_72h():
@@ -117,7 +117,7 @@ def test_breach_notification_workflow_within_72h():
     assert notification.recipient == 'supervisory.authority@dpa.example.eu'
 ```
 
-### Art. 44–50 — International transfers (data residency)
+### Art. 44 - 50 - International transfers (data residency)
 
 ```python
 def test_eu_user_data_stored_in_eu_region():
@@ -130,7 +130,7 @@ def test_eu_user_data_stored_in_eu_region():
         assert b.region in EU_REGIONS
 ```
 
-### Art. 5(1)(c) — Data minimization
+### Art. 5(1)(c) - Data minimization
 
 ```python
 def test_signup_fixtures_contain_only_required_pii():
@@ -152,7 +152,7 @@ def test_signup_fixtures_contain_only_required_pii():
 | Marketing emails sent to revoked-consent users | Step Art. 7 + email-flow tests |
 | SAR returns incomplete dataset (missing analytics/CRM) | Step Art. 15 multi-system assertion |
 | Erasure leaves data in unindexed backup tables | Step Art. 17 multi-system assertion |
-| EU user data quietly replicated to US region | Step Art. 44–50 region assertion |
+| EU user data quietly replicated to US region | Step Art. 44 - 50 region assertion |
 | Breach detected but DPO not notified within 72h | Step Art. 33 timing test |
 
 ## Anti-patterns
@@ -179,12 +179,12 @@ def test_signup_fixtures_contain_only_required_pii():
 
 ## References
 
-- [gdpr][gdpr] — community reference + Article navigation
-- eur-lex.europa.eu/eli/reg/2016/679/oj — canonical GDPR text
-- edpb.europa.eu — European Data Protection Board guidelines
-- ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/ — UK ICO guide
-- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) —
+- [gdpr][gdpr] - community reference + Article navigation
+- eur-lex.europa.eu/eli/reg/2016/679/oj - canonical GDPR text
+- edpb.europa.eu - European Data Protection Board guidelines
+- ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/ - UK ICO guide
+- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
   cross-plugin: safe test fixture generation
-- [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md) — sister: California analogue
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) — companion: GDPR audit logs
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) — agent
+- [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md) - sister: California analogue
+- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - companion: GDPR audit logs
+- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

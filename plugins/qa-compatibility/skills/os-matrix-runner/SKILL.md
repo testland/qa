@@ -17,7 +17,7 @@ archetype: S1
 
 For browsers specifically, see [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md).
 
-## Step 1 — Define the OS matrix
+## Step 1 - Define the OS matrix
 
 ```yaml
 # .github/workflows/os-matrix.yml
@@ -38,7 +38,7 @@ GitHub Actions provides:
 | `windows-latest`  | Windows; tests Windows-specific paths.    |
 | `windows-2022`    | Pin Windows version.                       |
 
-## Step 2 — Define the runtime matrix
+## Step 2 - Define the runtime matrix
 
 Per language:
 
@@ -78,7 +78,7 @@ The full cross-product is 3 OSes × 3 runtimes = 9 jobs. For
 larger matrices, use `include` + `exclude` to skip uninteresting
 combinations.
 
-## Step 3 — Address OS-specific quirks
+## Step 3 - Address OS-specific quirks
 
 ### Path separators
 
@@ -124,7 +124,7 @@ import { foo } from './utils';   // matches utils.js
 `shell: bash` works on Linux + macOS + Windows (via Git Bash on
 Windows runners).
 
-## Step 4 — Per-OS conditional steps
+## Step 4 - Per-OS conditional steps
 
 When OS-specific setup is needed:
 
@@ -142,7 +142,7 @@ When OS-specific setup is needed:
   run: choco install openssl
 ```
 
-## Step 5 — Aggregate per-OS results
+## Step 5 - Aggregate per-OS results
 
 ```markdown
 ## OS / runtime matrix results — `<sha>`
@@ -158,7 +158,7 @@ When OS-specific setup is needed:
 | ...
 ```
 
-## Step 6 — Per-OS conditional tests
+## Step 6 - Per-OS conditional tests
 
 Some tests are OS-specific:
 
@@ -179,7 +179,7 @@ test.skipIf(process.platform === 'win32')('uses fork()', () => {
 });
 ```
 
-## Step 7 — Cost management
+## Step 7 - Cost management
 
 Matrix size grows multiplicatively. Manage cost:
 
@@ -217,7 +217,7 @@ less frequently.
 ## References
 
 - GitHub Actions runners docs at `docs.github.com/en/actions/using-github-hosted-runners`.
-- [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md) —
+- [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md) - 
   sibling: browser-specific.
-- [`compatibility-budget`](../compatibility-budget/SKILL.md) —
+- [`compatibility-budget`](../compatibility-budget/SKILL.md) - 
   conventions for matrix sizing.

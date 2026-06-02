@@ -4,7 +4,7 @@ type: agent
 archetype: A4
 ---
 
-# spec-to-e2e-test-scaffolder — evals
+# spec-to-e2e-test-scaffolder - evals
 
 Companion eval cases for [`spec-to-e2e-test-scaffolder`](../../spec-to-e2e-test-scaffolder.md).
 Three cases cover happy path / branch / adversarial: a Playwright
@@ -14,10 +14,10 @@ feeding the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — Playwright scaffold for an add-to-cart smoke test
+## Eval 1 - happy path - Playwright scaffold for an add-to-cart smoke test
 
 **Input:**
 
@@ -62,7 +62,7 @@ contains the hand-off mentions `assertion-quality-reviewer` AND
 anti-pattern). Output contains exactly one `test(` / `it(` block (one
 test per test-case row).
 
-## Eval 2 — branch — Cypress scaffold for the same test case
+## Eval 2 - branch - Cypress scaffold for the same test case
 
 **Input:**
 
@@ -88,7 +88,7 @@ is installed in devDependencies. cypress version: ^13.6.0.
 Library is installed) and the `cy.get(...).should('have.text', …)`
 assertion style. Step 3 emits a scaffold at
 `cypress/e2e/cart/CART-142-TC-01.cy.ts` (or equivalent Cypress path)
-with `describe('CART-142 — Add to cart', () => { it('...', () => { ...
+with `describe('CART-142 - Add to cart', () => { it('...', () => { ...
 }) })`, `cy.visit('/product/SKU-001')`, `cy.findByRole('button',
 { name: 'Add to cart' }).click() /* TODO: confirm */`,
 `cy.findByTestId('cart-count').should('have.text', '1')`, plus the
@@ -100,11 +100,11 @@ does).
 Cypress chain) AND `it(` AND `findByRole` (Testing Library priority).
 Output contains the hand-off mention of
 `assertion-quality-reviewer`. Output does NOT contain
-`import { test, expect } from '@playwright/test'` (Playwright import —
+`import { test, expect } from '@playwright/test'` (Playwright import - 
 wrong-branch failure). Output does NOT contain `page.getByRole`
-(Playwright locator — wrong-branch failure).
+(Playwright locator - wrong-branch failure).
 
-## Eval 3 — adversarial — test-case row with no Expected field (refuse)
+## Eval 3 - adversarial - test-case row with no Expected field (refuse)
 
 **Input:**
 
@@ -130,12 +130,12 @@ does NOT emit a populated `expect(...)` block, does NOT generate
 `expect(true).toBe(true)` as a placeholder, does NOT silently invent
 an Expected from the test Title. It requests the missing Expected
 field and pauses scaffolding. The "Anti-patterns" row "Auto-running
-the scaffold and reporting 'passes'" reinforces the refusal — a
+the scaffold and reporting 'passes'" reinforces the refusal - a
 scaffold without a real Expected would produce false-passing tests.
 
 **Pass condition:** Output asks for the missing Expected field
 (contains the word `Expected` framed as a request / clarifying
-question — e.g. "the Expected column is empty" or "please supply
+question - e.g. "the Expected column is empty" or "please supply
 Expected"). Output does NOT contain `expect(true).toBe(true)` (the
 explicitly-rejected placeholder). Output does NOT contain a full
 `tests/cart/CART-142-TC-02.spec.ts` file body with a populated
@@ -144,14 +144,14 @@ explicitly-rejected placeholder). Output does NOT contain a full
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks (test-case
-  table + framework + URL) — no external fixtures, no need to clone
+  table + framework + URL) - no external fixtures, no need to clone
   a sample repo. The CART-142-TC-01 row mirrors the agent's own
   worked example so Step 2's framework-idiom mapping is observable.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Write`, `Edit`, `Grep`, `Glob`,
   `Bash(npx playwright codegen *)`, `Bash(npm test --dry-run *)`)
-  writes the scaffold .spec file — eval 3 is observable as the
+  writes the scaffold .spec file - eval 3 is observable as the
   absence of a written `.spec.ts` / `.cy.ts` file plus the explicit
   request for the missing Expected field.
 - Eval cases were authored 2026-05-26 against the v4.0 framework's D7

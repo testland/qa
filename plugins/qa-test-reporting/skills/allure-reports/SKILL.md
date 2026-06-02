@@ -1,6 +1,6 @@
 ---
 name: allure-reports
-description: "Configures Allure Report for the project (test-runner adapter installation, `allure-results` directory wiring, `categories.json` for failure classification, `history-trend.json` retention via the copy-history-between-runs pattern), runs the Allure CLI to convert `allure-results` to a static HTML site, and uploads the report as a CI artifact. Use when the team needs richer test reporting than JUnit XML — step-level attachments, per-test history, retry tracking, and severity / epic / feature labeling — across the framework-agnostic adapter ecosystem (pytest, Jest, JUnit, TestNG, NUnit, Mocha, etc.)."
+description: "Configures Allure Report for the project (test-runner adapter installation, `allure-results` directory wiring, `categories.json` for failure classification, `history-trend.json` retention via the copy-history-between-runs pattern), runs the Allure CLI to convert `allure-results` to a static HTML site, and uploads the report as a CI artifact. Use when the team needs richer test reporting than JUnit XML - step-level attachments, per-test history, retry tracking, and severity / epic / feature labeling - across the framework-agnostic adapter ecosystem (pytest, Jest, JUnit, TestNG, NUnit, Mocha, etc.)."
 rating: 23
 d6: 3
 archetype: S1
@@ -31,7 +31,7 @@ runner-emitted; the report is a static deliverable.
 
 ## When to use
 
-- The team needs richer reporting than JUnit XML — per-step
+- The team needs richer reporting than JUnit XML - per-step
   attachments, screenshots on failure, history trends, severity /
   epic / feature labels, custom categorization of failures.
 - A multi-framework project (pytest + Jest + JUnit) needs **one**
@@ -40,10 +40,10 @@ runner-emitted; the report is a static deliverable.
   HTML output (vs SaaS test-management).
 
 If the team only needs JUnit pass/fail and the CI already surfaces
-that, see [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) —
+that, see [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - 
 that's a much lighter dependency.
 
-## Step 1 — Install the framework adapter
+## Step 1 - Install the framework adapter
 
 Each runner has a per-language adapter that writes to
 `allure-results/`. Examples:
@@ -65,7 +65,7 @@ directory of per-test JSON files (`<uuid>-result.json`,
 `<uuid>-container.json`, plus `attachment-<uuid>.<ext>` files for
 screenshots / logs).
 
-## Step 2 — Generate the static report
+## Step 2 - Generate the static report
 
 Install the Allure CLI ([allure-docs][allure] linked from
 "Installation"):
@@ -91,7 +91,7 @@ To preview locally:
 allure open allure-report
 ```
 
-Or in one shot (useful in dev — runs a temp server with a freshly
+Or in one shot (useful in dev - runs a temp server with a freshly
 generated report):
 
 ```bash
@@ -99,10 +99,10 @@ allure serve allure-results
 ```
 
 (See `allurereport.org/docs/` for the CLI reference; specific flags
-have evolved across Allure 2.x and Allure 3 — pin a version in CI to
+have evolved across Allure 2.x and Allure 3 - pin a version in CI to
 avoid drift.)
 
-## Step 3 — Configure failure categories
+## Step 3 - Configure failure categories
 
 Per [allure-categories][cats], `categories.json` placed in
 `allure-results/` defines custom failure classification. Each entry
@@ -136,7 +136,7 @@ mark a category as flaky-by-default.
 So order from most-specific to least-specific. A "DB connection
 refused" category should precede a generic "Infrastructure" category.
 
-## Step 4 — Wire history retention
+## Step 4 - Wire history retention
 
 Per [allure-history][hist], history is what drives the trends panel
 ("first failed", "last passed", flake / retry rate over time):
@@ -186,7 +186,7 @@ For Allure 3 ([allure-history][hist]):
 > You configure it in your settings file with a `historyPath`
 > parameter."
 
-## Step 5 — Distinguish retries from history
+## Step 5 - Distinguish retries from history
 
 Per [allure-history][hist]:
 
@@ -196,11 +196,11 @@ Per [allure-history][hist]:
 > "**History**: Links to the same test across different launches,
 > enabling trend analysis and stability tracking."
 
-Don't clear `allure-results` between retries within a run — that
+Don't clear `allure-results` between retries within a run - that
 collapses retry data. Do clear it between launches (different
-commits / runs) — only `history/` subdir is preserved.
+commits / runs) - only `history/` subdir is preserved.
 
-## Step 6 — CI integration (GitHub Actions)
+## Step 6 - CI integration (GitHub Actions)
 
 ```yaml
 # .github/workflows/test-with-allure.yml
@@ -259,13 +259,13 @@ jobs:
           retention-days: 90
 ```
 
-`if: always()` on the report-generation steps is critical — Allure
+`if: always()` on the report-generation steps is critical - Allure
 matters most on failure.
 
 For Allure history hosted on GitHub Pages, the `simple-elf/allure-report-action` GitHub Action automates the publish-to-Pages
 workflow (third-party, not first-party Allure tooling).
 
-## Step 7 — Add metadata to test cases
+## Step 7 - Add metadata to test cases
 
 Allure's value compounds with metadata. The adapter exposes
 per-language helpers; the canonical labels are **severity** (blocker
@@ -295,7 +295,7 @@ allure.feature('Promo codes');
 
 Severity drives the "blocker" / "critical" filter on the report's
 overview; epic / feature / story drive the BDD-grouped view. Without
-them, the report is a flat list — usable but missing Allure's main
+them, the report is a flat list - usable but missing Allure's main
 selling point.
 
 ## Anti-patterns
@@ -303,11 +303,11 @@ selling point.
 | Anti-pattern                                                            | Why it fails                                                              | Fix |
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | Skipping the history step                                               | Trends panel is empty; retry/flake history can't be tracked across runs.  | Wire the copy-history pattern (Step 4) per [allure-history][hist]. |
-| Clearing `allure-results` mid-run                                        | Retry information is lost — retries appear as separate failed launches.   | Clear only between launches; preserve `history/` subdir per [allure-history][hist]. |
+| Clearing `allure-results` mid-run                                        | Retry information is lost - retries appear as separate failed launches.   | Clear only between launches; preserve `history/` subdir per [allure-history][hist]. |
 | `categories.json` ordered least-specific first                           | Generic "Infrastructure" category catches everything; specific categories never match. | Order most-specific first per [allure-categories][cats]. |
 | Allure as a substitute for JUnit XML in PR gating                        | Allure's report is for humans, not gating; JUnit XML is the gate.         | Emit both; gate on JUnit; surface Allure as artifact. |
 | One Allure adapter version + a different CLI version                     | Schema drift between adapter (results writer) and CLI (results reader); empty / corrupt report. | Pin both to compatible versions; bump together per [allure-docs][allure]. |
-| Adapter installed but no metadata                                        | Report is a flat pass/fail list — same value as JUnit XML.                | Add severity / epic / feature / story (Step 7). |
+| Adapter installed but no metadata                                        | Report is a flat pass/fail list - same value as JUnit XML.                | Add severity / epic / feature / story (Step 7). |
 | Treating `<uuid>-result.json` files as durable                            | The file naming and schema are per-Allure-version internal contracts.    | Don't post-process raw `allure-results/` files; consume the generated `allure-report/data/*.json` instead. |
 
 ## Limitations
@@ -318,7 +318,7 @@ selling point.
 - **History is per-CI-runner-local** unless explicitly persisted.
   GitHub Actions artifacts have a retention cap (default 90 days);
   for long-running history, consider GitHub Pages or S3 hosting.
-- **Allure 2 vs Allure 3** ([allure-history][hist]) — Allure 2 is
+- **Allure 2 vs Allure 3** ([allure-history][hist]) - Allure 2 is
   "stable, mature version with broader integrations"; Allure 3 is
   the rebuild. Many adapters still target 2.x. Don't mix versions.
 - **Adapter feature parity varies.** Java adapters tend to be the
@@ -327,17 +327,17 @@ selling point.
 
 ## References
 
-- [allure-docs][allure] — overview, framework-agnostic positioning,
+- [allure-docs][allure] - overview, framework-agnostic positioning,
   supported language list, navigation root.
-- [allure-history][hist] — history ID mechanism, copy-history-between-runs
+- [allure-history][hist] - history ID mechanism, copy-history-between-runs
   routine for Allure 2, Allure 3 JSONL pattern, retries vs history
   distinction.
-- [allure-categories][cats] — `categories.json` schema (`name`,
+- [allure-categories][cats] - `categories.json` schema (`name`,
   `messageRegex`, `traceRegex`, `matchedStatuses`, `flaky`),
   matching order, sample.
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) — leaner
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - leaner
   alternative when only pass/fail + flake detection is needed.
 - [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md),
   [`lcov-analysis`](../lcov-analysis/SKILL.md),
-  [`cobertura-analysis`](../cobertura-analysis/SKILL.md) — coverage
+  [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - coverage
   side of the same PR review.

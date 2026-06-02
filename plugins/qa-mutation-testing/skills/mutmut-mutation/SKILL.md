@@ -1,6 +1,6 @@
 ---
 name: mutmut-mutation
-description: "Configures mutmut for Python mutation testing — `pip install mutmut`, runs via `mutmut run`, browses results via `mutmut browse` or `mutmut results`, applies surviving mutants to disk via `mutmut apply <id>`, suppresses with `# pragma: no mutate` annotations. Configures via `setup.cfg` / `pyproject.toml` with `source_paths` + per-test selection. Use for Python codebases needing mutation-quality verification of pytest / unittest suites."
+description: "Configures mutmut for Python mutation testing - `pip install mutmut`, runs via `mutmut run`, browses results via `mutmut browse` or `mutmut results`, applies surviving mutants to disk via `mutmut apply <id>`, suppresses with `# pragma: no mutate` annotations. Configures via `setup.cfg` / `pyproject.toml` with `source_paths` + per-test selection. Use for Python codebases needing mutation-quality verification of pytest / unittest suites."
 rating: 22
 d6: 4
 archetype: S1
@@ -31,10 +31,10 @@ Key features per [mutmut-docs][md]:
   and the team wants to verify the assertions.
 - A specific module needs mutation-quality verification before
   shipping a release.
-- The team is debating "should we add another test?" — surviving
+- The team is debating "should we add another test?" - surviving
   mutants tell you where.
 
-## Step 1 — Install + first run
+## Step 1 - Install + first run
 
 Per [mutmut-docs][md]:
 
@@ -49,7 +49,7 @@ mutmut run
 The first run is slow (full suite per mutant); subsequent runs use
 the cached state.
 
-## Step 2 — Configure
+## Step 2 - Configure
 
 Per [mutmut-docs][md], settings go in `setup.cfg` or
 `pyproject.toml`:
@@ -78,7 +78,7 @@ Common config:
 | `tests_dir`                             | Override auto-detected test directory.                     |
 | `do_not_mutate`                         | Regex of files / lines to skip.                            |
 
-## Step 3 — Browse results
+## Step 3 - Browse results
 
 Per [mutmut-docs][md], "Results are explored via `mutmut browse`,
 where mutants can be retested or written to disk using `mutmut
@@ -100,7 +100,7 @@ Timeout: 0
 Suspicious: 0
 ```
 
-## Step 4 — Mutators
+## Step 4 - Mutators
 
 Per [mutmut-docs][md], common mutations include:
 
@@ -114,7 +114,7 @@ Per [mutmut-docs][md], common mutations include:
 Other mutators: arithmetic (`+` → `-`), comparison flipping,
 constant replacement, statement removal.
 
-## Step 5 — Suppress with pragmas
+## Step 5 - Suppress with pragmas
 
 Per [mutmut-docs][md]:
 
@@ -130,10 +130,10 @@ def divide(a, b):
     return a / b
 ```
 
-Use sparingly — each pragma is a confession that a line isn't
+Use sparingly - each pragma is a confession that a line isn't
 mutation-tested. Reviewable in PRs.
 
-## Step 6 — Apply a survivor
+## Step 6 - Apply a survivor
 
 Once a surviving mutant is identified, write a test that catches
 it. To verify the test catches this specific mutation:
@@ -146,7 +146,7 @@ git checkout src/             # revert the mutant
 
 This proves the test catches the specific bug class.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - name: Mutation testing
@@ -196,14 +196,13 @@ mutmut run --paths-to-mutate "$CHANGED"
 
 ## References
 
-- [md][md] — mutmut overview: ease of use, incremental work,
+- [md][md] - mutmut overview: ease of use, incremental work,
   intelligent test selection, parallel execution, configuration via
   `setup.cfg` / `pyproject.toml`, mutator examples (integer
   literals, comparison flipping, break/continue).
 - [`stryker-mutation`](../stryker-mutation/SKILL.md),
   [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md),
   [`pitest-mutation`](../pitest-mutation/SKILL.md),
-  [`mull-mutation`](../mull-mutation/SKILL.md) — per-language
+  [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
   siblings.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md)
-  — agent that suggests the missing test for survivors.
+- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent that suggests the missing test for survivors.

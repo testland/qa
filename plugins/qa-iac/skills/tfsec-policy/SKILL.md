@@ -1,6 +1,6 @@
 ---
 name: tfsec-policy
-description: "Configures tfsec for Terraform-specific security scanning — covers AWS / Azure / GCP / Kubernetes / OpenStack / Oracle / DigitalOcean / CloudStack with developer-friendly output. Important: tfsec is **transitioning to Trivy** per Aqua Security''''s positioning; new projects evaluate Trivy first. For existing tfsec users, this skill covers config + custom rules + CI integration. Use for Terraform-only projects mid-transition or where tfsec''''s specific check coverage matters."
+description: "Configures tfsec for Terraform-specific security scanning - covers AWS / Azure / GCP / Kubernetes / OpenStack / Oracle / DigitalOcean / CloudStack with developer-friendly output. Important: tfsec is **transitioning to Trivy** per Aqua Security''''s positioning; new projects evaluate Trivy first. For existing tfsec users, this skill covers config + custom rules + CI integration. Use for Terraform-only projects mid-transition or where tfsec''''s specific check coverage matters."
 rating: 22
 d6: 4
 archetype: S1
@@ -29,7 +29,7 @@ existing usage.
   scanner.
 - A specific tfsec rule covers something Trivy doesn't yet.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 # macOS
@@ -41,7 +41,7 @@ curl -L https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-lin
 chmod +x /usr/local/bin/tfsec
 ```
 
-## Step 2 — Run
+## Step 2 - Run
 
 ```bash
 # Scan current directory
@@ -57,7 +57,7 @@ tfsec . --concise-output
 tfsec . --minimum-severity HIGH
 ```
 
-## Step 3 — Output formats
+## Step 3 - Output formats
 
 Per [tfsec-home][tfs]: "JSON and SARIF output capabilities for
 integration with external tools and workflows."
@@ -76,7 +76,7 @@ tfsec . -f junit -O tfsec.xml
 tfsec . -f markdown
 ```
 
-## Step 4 — Skip checks
+## Step 4 - Skip checks
 
 ```bash
 # Skip specific checks
@@ -98,7 +98,7 @@ resource "aws_s3_bucket" "public_data" {
 }
 ```
 
-## Step 5 — Custom rules
+## Step 5 - Custom rules
 
 ```yaml
 # .tfsec/custom_checks.yml
@@ -119,7 +119,7 @@ checks:
     errorMessage: EC2 instance is missing cost_center tag
 ```
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 jobs:
@@ -138,7 +138,7 @@ jobs:
           sarif_file: tfsec.sarif
 ```
 
-## Step 7 — Supported clouds
+## Step 7 - Supported clouds
 
 Per [tfsec-home][tfs]:
 
@@ -157,7 +157,7 @@ Per [tfsec-home][tfs]:
 For unsupported clouds, fall back to OPA / Conftest with custom
 Rego per [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md).
 
-## Step 8 — Migration to Trivy
+## Step 8 - Migration to Trivy
 
 Per [tfsec-home][tfs] guidance:
 
@@ -169,10 +169,10 @@ brew install trivy   # or apt-get / etc.
 trivy config ./terraform/
 ```
 
-The migration is mostly mechanical — Trivy ingests the same
+The migration is mostly mechanical - Trivy ingests the same
 .tf files; rule names may differ.
 
-## Step 9 — Combine with Checkov + KICS
+## Step 9 - Combine with Checkov + KICS
 
 Per [`iac-policy-checker`](../../agents/iac-policy-checker.md):
 multiple scanners catch overlapping but non-identical issues.
@@ -209,14 +209,14 @@ kics scan -p . --report-formats json
 
 ## References
 
-- [tfs][tfs] — tfsec overview, transition-to-Trivy positioning,
+- [tfs][tfs] - tfsec overview, transition-to-Trivy positioning,
   developer-friendly output, AWS / Azure / GCP / Kubernetes /
   OpenStack / Oracle / DigitalOcean / CloudStack support, JSON /
   SARIF output.
 - [`checkov-policy`](../checkov-policy/SKILL.md),
-  [`kics-policy`](../kics-policy/SKILL.md) — sister scanners.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) —
+  [`kics-policy`](../kics-policy/SKILL.md) - sister scanners.
+- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   custom OPA / Rego policies (for unsupported clouds or custom
   rules).
-- [`iac-policy-checker`](../../agents/iac-policy-checker.md) —
+- [`iac-policy-checker`](../../agents/iac-policy-checker.md) - 
   combines results.

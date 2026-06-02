@@ -1,6 +1,6 @@
 ---
 name: github-actions-test-jobs
-description: "Configures GitHub Actions test workflows — `.github/workflows/test.yml` with matrix builds (OS × runtime), JUnit XML artifact upload, retry/sharding, services (PostgreSQL, Redis), per-trigger filtering (pull_request, push, schedule, workflow_dispatch). Use when the project hosts on GitHub and the team wants idiomatic GitHub Actions patterns for test workflows."
+description: "Configures GitHub Actions test workflows - `.github/workflows/test.yml` with matrix builds (OS × runtime), JUnit XML artifact upload, retry/sharding, services (PostgreSQL, Redis), per-trigger filtering (pull_request, push, schedule, workflow_dispatch). Use when the project hosts on GitHub and the team wants idiomatic GitHub Actions patterns for test workflows."
 rating: 23
 d6: 4
 archetype: S1
@@ -23,11 +23,11 @@ Per [gha-workflows][gha]:
 
 A workflow has three essential elements ([gha-workflows][gha]):
 
-> 1. **Events** — "One or more events that will trigger the
+> 1. **Events** - "One or more events that will trigger the
 >    workflow"
-> 2. **Jobs** — "One or more jobs, each of which will execute on
+> 2. **Jobs** - "One or more jobs, each of which will execute on
 >    a runner machine"
-> 3. **Steps** — Each job contains "a series of one or more steps"
+> 3. **Steps** - Each job contains "a series of one or more steps"
 
 ## When to use
 
@@ -35,7 +35,7 @@ A workflow has three essential elements ([gha-workflows][gha]):
 - Need to set up test CI for a new repo.
 - Existing GitHub Actions workflows need standardization.
 
-## Step 1 — Basic test workflow
+## Step 1 - Basic test workflow
 
 ```yaml
 # .github/workflows/test.yml
@@ -60,7 +60,7 @@ jobs:
 The minimal pattern: trigger on PR + push-to-main, install deps,
 run tests.
 
-## Step 2 — Matrix builds
+## Step 2 - Matrix builds
 
 ```yaml
 jobs:
@@ -82,7 +82,7 @@ jobs:
 `fail-fast: false` ensures one matrix failure doesn't cancel
 others. Matrix size is OS × Node = 3 × 2 = 6 jobs.
 
-## Step 3 — Sharding for parallel execution
+## Step 3 - Sharding for parallel execution
 
 For large suites:
 
@@ -101,7 +101,7 @@ jobs:
 4 parallel jobs, each running 1/4 of the test suite. Faster than
 serial execution; cost-equivalent (same total CPU-time).
 
-## Step 4 — Services (PostgreSQL, Redis, etc.)
+## Step 4 - Services (PostgreSQL, Redis, etc.)
 
 ```yaml
 jobs:
@@ -134,7 +134,7 @@ GitHub Actions provides container-based services on Linux
 runners. Healthcheck options ensure tests don't start before the
 DB is ready.
 
-## Step 5 — JUnit reporting + artifacts
+## Step 5 - JUnit reporting + artifacts
 
 ```yaml
 - run: npm test -- --reporters=default --reporters=jest-junit
@@ -157,7 +157,7 @@ DB is ready.
 The `dorny/test-reporter` action surfaces results in the
 PR check summary.
 
-## Step 6 — Retry policy
+## Step 6 - Retry policy
 
 GitHub Actions doesn't ship native test-retry; use the framework's
 retry mechanism (e.g., Playwright's `retries` config) or a wrapper
@@ -171,10 +171,10 @@ action:
     command: npm test
 ```
 
-Use sparingly — retries hide flake. Prefer
+Use sparingly - retries hide flake. Prefer
 [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
 
-## Step 7 — Per-trigger filtering
+## Step 7 - Per-trigger filtering
 
 ```yaml
 on:
@@ -202,10 +202,10 @@ on:
         default: chrome
 ```
 
-Path filters skip workflows when only docs change — saves CI
+Path filters skip workflows when only docs change - saves CI
 budget.
 
-## Step 8 — Concurrency control
+## Step 8 - Concurrency control
 
 ```yaml
 concurrency:
@@ -213,10 +213,10 @@ concurrency:
   cancel-in-progress: true
 ```
 
-When a PR receives multiple pushes, the older runs cancel —
+When a PR receives multiple pushes, the older runs cancel - 
 saves CI cost on superseded commits.
 
-## Step 9 — Secrets + env
+## Step 9 - Secrets + env
 
 ```yaml
 env:
@@ -253,15 +253,12 @@ Secrets configured in repo settings; never committed.
 
 ## References
 
-- [gha][gha] — GitHub Actions workflow basics: events + jobs +
+- [gha][gha] - GitHub Actions workflow basics: events + jobs +
   steps; YAML in `.github/workflows/`.
 - [`gitlab-ci-test-jobs`](../gitlab-ci-test-jobs/SKILL.md),
   [`jenkinsfile-test-stages`](../jenkinsfile-test-stages/SKILL.md),
-  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) —
+  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
   per-platform alternatives.
-- [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md)
-  — cross-CI conventions.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — downstream JUnit XML parser.
-- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md)
-  — preferred over retries.
+- [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md) - cross-CI conventions.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream JUnit XML parser.
+- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - preferred over retries.

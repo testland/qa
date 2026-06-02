@@ -1,6 +1,6 @@
 ---
 name: cucumber-testing
-description: "Configures Cucumber for BDD scenarios — Cucumber-JVM (Java/Kotlin via JUnit 5), Cucumber-JS (Node), Cucumber-Ruby. Authors `.feature` files in Gherkin, writes step definitions in the host language, runs via the framework's runner, integrates with JUnit XML reporting. Use as the canonical Cucumber wrapper for any of the three official implementations."
+description: "Configures Cucumber for BDD scenarios - Cucumber-JVM (Java/Kotlin via JUnit 5), Cucumber-JS (Node), Cucumber-Ruby. Authors `.feature` files in Gherkin, writes step definitions in the host language, runs via the framework's runner, integrates with JUnit XML reporting. Use as the canonical Cucumber wrapper for any of the three official implementations."
 rating: 23
 d6: 4
 archetype: S1
@@ -39,9 +39,9 @@ This skill covers the three most-used official implementations:
   [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
 
 If only engineers will read the tests, BDD's collaboration value
-is wasted — plain xUnit-style tests are simpler.
+is wasted - plain xUnit-style tests are simpler.
 
-## Step 1 — Install (Cucumber-JVM)
+## Step 1 - Install (Cucumber-JVM)
 
 Maven:
 
@@ -62,13 +62,13 @@ Maven:
 
 For Kotlin: replace `cucumber-java` with `cucumber-kotlin`.
 
-## Step 2 — Install (Cucumber-JS)
+## Step 2 - Install (Cucumber-JS)
 
 ```bash
 npm install --save-dev @cucumber/cucumber
 ```
 
-## Step 3 — Install (Cucumber-Ruby)
+## Step 3 - Install (Cucumber-Ruby)
 
 ```bash
 gem install cucumber
@@ -78,7 +78,7 @@ group :test do
 end
 ```
 
-## Step 4 — Author a Feature
+## Step 4 - Author a Feature
 
 ```gherkin
 # features/cart.feature
@@ -106,7 +106,7 @@ Feature: Apply promo code at checkout
       | "" (empty)   | Please enter a code      |
 ```
 
-## Step 5 — Write step definitions
+## Step 5 - Write step definitions
 
 ### JVM (Java)
 
@@ -167,7 +167,7 @@ Then('the subtotal updates to ${float}', function(expected) {
 });
 ```
 
-## Step 6 — Run
+## Step 6 - Run
 
 JVM (via Maven):
 
@@ -189,7 +189,7 @@ Ruby:
 cucumber features/
 ```
 
-## Step 7 — Reporting
+## Step 7 - Reporting
 
 Cucumber outputs to multiple formats; JUnit XML is the
 CI-canonical:
@@ -210,7 +210,7 @@ npx cucumber-js features/ \
 
 The JUnit XML feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
-## Step 8 — Tags + filtering
+## Step 8 - Tags + filtering
 
 ```gherkin
 @regression @critical
@@ -250,13 +250,10 @@ npx cucumber-js features/ --tags 'not @wip'
 
 ## References
 
-- [ci][ci] — Cucumber installation: official + semi-official + unofficial
+- [ci][ci] - Cucumber installation: official + semi-official + unofficial
   implementation tiers; recommendation to match production language.
-- [`behave-testing`](../behave-testing/SKILL.md) — Python sibling.
-- [`reqnroll-testing`](../reqnroll-testing/SKILL.md) — .NET sibling.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)
-  — addresses step proliferation.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md)
-  — adversarial reviewer for declarative-vs-imperative.
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-  — upstream skill that generates Gherkin from stories.
+- [`behave-testing`](../behave-testing/SKILL.md) - Python sibling.
+- [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - .NET sibling.
+- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - addresses step proliferation.
+- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - adversarial reviewer for declarative-vs-imperative.
+- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream skill that generates Gherkin from stories.

@@ -1,6 +1,6 @@
 ---
 name: pci-dss-scope-checker
-description: "Build-an-X for PCI DSS v4.0 scope verification — cardholder data environment (CDE) boundary tests, segmentation tests (PCI Req 1), prohibited-data-storage assertions per Req 3 (no full track data, no CVV/CAV2/CVC2/CID, no PIN/PIN block post-authorization), key-management tests per Req 3.6, encryption-of-transmissions per Req 4. Use when authoring PCI DSS scope-reduction + control tests for any system handling payment-card data."
+description: "Build-an-X for PCI DSS v4.0 scope verification - cardholder data environment (CDE) boundary tests, segmentation tests (PCI Req 1), prohibited-data-storage assertions per Req 3 (no full track data, no CVV/CAV2/CVC2/CID, no PIN/PIN block post-authorization), key-management tests per Req 3.6, encryption-of-transmissions per Req 4. Use when authoring PCI DSS scope-reduction + control tests for any system handling payment-card data."
 rating: 23
 d6: 4
 archetype: S3
@@ -34,7 +34,7 @@ The 12 high-level requirements:
 11. Test security of systems + networks regularly
 12. Support information security with org policies + programs
 
-This is a **build-an-X workflow** (S3) — the workflow for verifying
+This is a **build-an-X workflow** (S3) - the workflow for verifying
 your CDE scope is correctly bounded + the prohibited-data
 assertions in fixtures.
 
@@ -53,11 +53,11 @@ Per PCI DSS v4.0:
 
 | Category | Examples | Storage allowed? |
 |---|---|---|
-| **CHD — Account Data** | Primary Account Number (PAN) | Yes, but encrypted |
-| **CHD — Account Data** | Cardholder name | Yes |
-| **CHD — Account Data** | Service code | Yes |
-| **CHD — Account Data** | Expiration date | Yes |
-| **SAD — Sensitive Auth Data** | Full track data (Track 1 + Track 2) | **NEVER store post-authorization** |
+| **CHD - Account Data** | Primary Account Number (PAN) | Yes, but encrypted |
+| **CHD - Account Data** | Cardholder name | Yes |
+| **CHD - Account Data** | Service code | Yes |
+| **CHD - Account Data** | Expiration date | Yes |
+| **SAD - Sensitive Auth Data** | Full track data (Track 1 + Track 2) | **NEVER store post-authorization** |
 | **SAD** | CVV2 / CVC2 / CID (3-4 digit security codes) | **NEVER store post-authorization** |
 | **SAD** | PIN / PIN block | **NEVER store post-authorization** |
 
@@ -65,7 +65,7 @@ The "post-authorization" rule is critical: SAD may transit during
 the auth flow, but storage after auth completes (logs, DB, audit
 trails, backup) is forbidden.
 
-## Step 1 — Define + assert CDE boundary
+## Step 1 - Define + assert CDE boundary
 
 ```python
 # pci_scope.py
@@ -94,7 +94,7 @@ Segmentation testing per PCI DSS Req 11.4.1 must be performed at
 least every 6 months by a qualified internal resource OR external
 penetration tester.
 
-## Step 2 — Assert no SAD storage post-authorization (Req 3.2)
+## Step 2 - Assert no SAD storage post-authorization (Req 3.2)
 
 ```python
 import re
@@ -120,7 +120,7 @@ def test_no_cvv_in_logs():
                 assert m == '***' or m == '----', f"Possible CVV in log: {entry.id}"
 ```
 
-## Step 3 — Assert PAN encryption at rest (Req 3.4)
+## Step 3 - Assert PAN encryption at rest (Req 3.4)
 
 ```python
 def test_pan_stored_encrypted():
@@ -154,7 +154,7 @@ def test_decryption_keys_not_in_app_repo():
         assert 'kms-private-key.pem' not in f
 ```
 
-## Step 4 — Encryption of transmissions (Req 4)
+## Step 4 - Encryption of transmissions (Req 4)
 
 ```python
 def test_pan_only_transmitted_via_strong_crypto():
@@ -169,7 +169,7 @@ def test_pan_only_transmitted_via_strong_crypto():
         assert tls_info.cipher not in DEPRECATED_CIPHERS
 ```
 
-## Step 5 — Access control (Req 7 + 8)
+## Step 5 - Access control (Req 7 + 8)
 
 ```python
 def test_cde_access_requires_unique_id():
@@ -189,7 +189,7 @@ def test_cde_access_requires_mfa():
     assert response.json()['error'] == 'mfa_required'
 ```
 
-## Step 6 — Logging (Req 10)
+## Step 6 - Logging (Req 10)
 
 Cross-ref [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md):
 
@@ -208,11 +208,11 @@ def test_pan_access_creates_audit_record():
     assert not re.search(r'\d{13,19}', audit.full_event_text)
 ```
 
-## Step 7 — Scope reduction strategies
+## Step 7 - Scope reduction strategies
 
 PCI DSS scope reduction is the highest-leverage cost-saving.
 
-**Default: tokenization** — replace PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only. This shrinks the CDE the most for the least integration churn in a typical SaaS architecture. Use the alternatives when tokenization doesn't fit:
+**Default: tokenization** - replace PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only. This shrinks the CDE the most for the least integration churn in a typical SaaS architecture. Use the alternatives when tokenization doesn't fit:
 
 | Strategy | Use when |
 |---|---|
@@ -248,14 +248,14 @@ Tests verify scope-reduction is actually reducing scope (Step 1).
 
 ## References
 
-- [pci][pci] — PCI Security Standards Council
-- pcisecuritystandards.org/document_library/ — PCI DSS v4.0 docs
-- pcisecuritystandards.org/glossary/ — PCI terminology
+- [pci][pci] - PCI Security Standards Council
+- pcisecuritystandards.org/document_library/ - PCI DSS v4.0 docs
+- pcisecuritystandards.org/glossary/ - PCI terminology
 - [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md),
   [`hipaa-test-patterns`](../hipaa-test-patterns/SKILL.md),
   [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md),
-  [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) —
+  [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) - 
   sister compliance pattern catalogs
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) —
+- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
   Req 10 audit log requirements
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) — agent
+- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

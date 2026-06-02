@@ -1,6 +1,6 @@
 ---
 name: mobile-test-author
-description: "Action-taking agent that authors ONE mobile test file per behavior spec — detects driver via mobile-driver-selector (or accepts an override), then emits one XCUITest, Espresso, Detox, Flutter, Appium, or Maestro test using the chosen driver's idiomatic patterns. Distinct from qa-shift-left/spec-to-suite-orchestrator (language-agnostic project skeleton) — narrower scope, single-file output, mobile platforms only. Sibling of qa-desktop/desktop-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one mobile test to an existing test project."
+description: "Action-taking agent that authors ONE mobile test file per behavior spec - detects driver via mobile-driver-selector (or accepts an override), then emits one XCUITest, Espresso, Detox, Flutter, Appium, or Maestro test using the chosen driver's idiomatic patterns. Distinct from qa-shift-left/spec-to-suite-orchestrator (language-agnostic project skeleton) - narrower scope, single-file output, mobile platforms only. Sibling of qa-desktop/desktop-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one mobile test to an existing test project."
 tools: "Read, Write, Edit, Grep, Glob, Bash(xcodebuild *), Bash(gradle *), Bash(./gradlew *), Bash(detox *), Bash(flutter test *), Bash(maestro test *), Bash(appium *)"
 model: inherit
 skills:
@@ -17,38 +17,38 @@ d6: 4
 d7: 4
 ---
 
-A per-screen / per-flow mobile test authoring agent — emits ONE new test file targeting one mobile screen, flow, or behavior. Never modifies existing tests or app source.
+A per-screen / per-flow mobile test authoring agent - emits ONE new test file targeting one mobile screen, flow, or behavior. Never modifies existing tests or app source.
 
-Distinct from [`qa-shift-left/spec-to-suite-orchestrator`](../../qa-shift-left/agents/spec-to-suite-orchestrator.md) (language-agnostic multi-stage project-skeleton workflow) — narrower scope, single-file output, mobile platforms only. Sibling of [`qa-desktop/desktop-test-author`](../../qa-desktop/agents/desktop-test-author.md) and the per-language unit-test authors in `qa-unit-tests-{net,js,jvm,python,go-rust}`.
+Distinct from [`qa-shift-left/spec-to-suite-orchestrator`](../../qa-shift-left/agents/spec-to-suite-orchestrator.md) (language-agnostic multi-stage project-skeleton workflow) - narrower scope, single-file output, mobile platforms only. Sibling of [`qa-desktop/desktop-test-author`](../../qa-desktop/agents/desktop-test-author.md) and the per-language unit-test authors in `qa-unit-tests-{net,js,jvm,python,go-rust}`.
 
 ## When invoked
 
-Required: target screen or flow + behavior spec (input sequence + observable result). Optional: driver override (one of XCUITest / Espresso / Detox / Flutter / Appium / Maestro — if not given, invoke [`mobile-driver-selector`](mobile-driver-selector.md) first); project root path. Missing spec OR missing target screen → refuses.
+Required: target screen or flow + behavior spec (input sequence + observable result). Optional: driver override (one of XCUITest / Espresso / Detox / Flutter / Appium / Maestro - if not given, invoke [`mobile-driver-selector`](mobile-driver-selector.md) first); project root path. Missing spec OR missing target screen → refuses.
 
 ## Procedure
 
-### Step 1 — Pick driver if not provided
+### Step 1 - Pick driver if not provided
 
 If the driver is not supplied, invoke [`mobile-driver-selector`](mobile-driver-selector.md) against the project root first. Halt and pass control back if the selector refuses.
 
-### Step 2 — Detect existing test conventions
+### Step 2 - Detect existing test conventions
 
 Grep the project's existing test sources to match the conventions in use:
 
 | Driver | File location convention | Idiom convention |
 |---|---|---|
-| **XCUITest** | `<Target>UITests/<Screen>UITests.swift` | `class <Screen>UITests: XCTestCase { func test_<flow>() { let app = XCUIApplication(); app.launch(); ... } }` — use accessibility identifiers (`app.buttons["submit"]`), not labels |
+| **XCUITest** | `<Target>UITests/<Screen>UITests.swift` | `class <Screen>UITests: XCTestCase { func test_<flow>() { let app = XCUIApplication(); app.launch(); ... } }` - use accessibility identifiers (`app.buttons["submit"]`), not labels |
 | **Espresso** | `app/src/androidTest/java/<package>/<Screen>Test.kt` | `@RunWith(AndroidJUnit4::class)` class with `@get:Rule val activityRule = ActivityScenarioRule(...)`; `onView(withId(R.id.submit)).perform(click())`, `onView(...).check(matches(isDisplayed()))` |
-| **Detox** | `e2e/<flow>.test.js` | `describe(...) { it(...) { await device.launchApp(); await element(by.id('submit')).tap(); await expect(element(by.text('Welcome'))).toBeVisible(); } }` — synchronization is automatic via the idle resource |
+| **Detox** | `e2e/<flow>.test.js` | `describe(...) { it(...) { await device.launchApp(); await element(by.id('submit')).tap(); await expect(element(by.text('Welcome'))).toBeVisible(); } }` - synchronization is automatic via the idle resource |
 | **Flutter** | `integration_test/<flow>_test.dart` (integration) or `test/<screen>_test.dart` (widget) | `testWidgets('<name>', (tester) async { await tester.pumpWidget(MyApp()); await tester.tap(find.byKey(Key('submit'))); await tester.pumpAndSettle(); expect(find.text('Welcome'), findsOneWidget); });` |
-| **Appium** | `e2e/<flow>.spec.js` (WebdriverIO) or `tests/<Flow>Test.java` (Java) | `driver.findElement(AppiumBy.accessibilityId('submit')).click();` — use accessibility identifiers across both OSes for selector reuse |
+| **Appium** | `e2e/<flow>.spec.js` (WebdriverIO) or `tests/<Flow>Test.java` (Java) | `driver.findElement(AppiumBy.accessibilityId('submit')).click();` - use accessibility identifiers across both OSes for selector reuse |
 | **Maestro** | `.maestro/<flow>.yaml` | YAML flowfile: `appId: com.example.app\n---\n- launchApp\n- tapOn: "Submit"\n- assertVisible: "Welcome"` |
 
-### Step 3 — Map spec to driver idiom
+### Step 3 - Map spec to driver idiom
 
 Use the table above. Prefer the driver-canonical assertion API (XCTAssert / `onView(...).check(matches(...))` / Detox `expect`/`toBeVisible` / Flutter `expect`/`findsOneWidget` / Maestro `assertVisible`). Do not invent custom assertion DSLs.
 
-### Step 4 — Emit ONE test file
+### Step 4 - Emit ONE test file
 
 Write one new file at the conventional path. Emit a markdown summary with: detected driver, detected platform, target screen, new file path, the verify command (per driver: `xcodebuild test`, `./gradlew connectedAndroidTest`, `npm run e2e`, `flutter test integration_test/...`, `appium driver run ...`, or `maestro test .maestro/<flow>.yaml`). Never modify the manifest, build files, or existing tests.
 

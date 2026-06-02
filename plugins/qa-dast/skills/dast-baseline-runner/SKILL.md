@@ -1,6 +1,6 @@
 ---
 name: dast-baseline-runner
-description: "Build-an-X for a layered DAST baseline workflow — ZAP baseline (passive, PR-blocking) → ZAP full-scan (active, nightly on staging) → optional Burp Pro deep scan (per-release, paid-tool deep coverage); manages baseline-finding ratchet, alert deduplication across runs, and CI cadence (PR-blocking baseline + nightly deep scan + per-release deep). Use when the team adopts DAST and needs an end-to-end coverage strategy beyond running a single tool."
+description: "Build-an-X for a layered DAST baseline workflow - ZAP baseline (passive, PR-blocking) → ZAP full-scan (active, nightly on staging) → optional Burp Pro deep scan (per-release, paid-tool deep coverage); manages baseline-finding ratchet, alert deduplication across runs, and CI cadence (PR-blocking baseline + nightly deep scan + per-release deep). Use when the team adopts DAST and needs an end-to-end coverage strategy beyond running a single tool."
 rating: 23
 d6: 4
 archetype: S3
@@ -13,7 +13,7 @@ archetype: S3
 DAST tools alone don't make a coverage strategy. A team running
 ZAP baseline once per PR catches 30% of what ZAP can find; running
 ZAP full + Burp + NightVision together at the right cadence catches
-~80%. This skill is a **build-an-X workflow** — the per-team
+~80%. This skill is a **build-an-X workflow** - the per-team
 DAST cadence and aggregation strategy.
 
 ## When to use
@@ -27,20 +27,20 @@ DAST cadence and aggregation strategy.
 - Multiple DAST tools are configured + need coordinated cadence
   (vs running each independently).
 
-## Step 1 — Layer the scans by intrusiveness
+## Step 1 - Layer the scans by intrusiveness
 
 Three scan types stack:
 
 | Layer | Scan type | Cadence | Target | Risk |
 |---|---|---|---|---|
-| 1 | Passive baseline (ZAP baseline) | Per-PR (blocking) | Staging | Safe — passive only |
-| 2 | Active full scan (ZAP full / NightVision) | Nightly | Staging | Active probes — pollute staging data |
+| 1 | Passive baseline (ZAP baseline) | Per-PR (blocking) | Staging | Safe - passive only |
+| 2 | Active full scan (ZAP full / NightVision) | Nightly | Staging | Active probes - pollute staging data |
 | 3 | Deep paid scan (Burp Pro / Enterprise) | Per-release / weekly | Staging | Active + extension-driven |
 
-PR-blocking layer is intentionally narrow — only fail on findings
+PR-blocking layer is intentionally narrow - only fail on findings
 that didn't exist before. This requires baseline ratchet (Step 3).
 
-## Step 2 — Baseline-finding ratchet
+## Step 2 - Baseline-finding ratchet
 
 The first scan against a legacy app surfaces 100s of pre-existing
 findings; if they all block PRs, the team disables DAST. The
@@ -76,7 +76,7 @@ if any(f['severity'] in ['critical', 'high'] for f in new_findings):
 ZAP baseline natively supports this via the `-c config.tsv` rule
 file; mirror the pattern for the cross-tool aggregation layer.
 
-## Step 3 — Alert deduplication across runs
+## Step 3 - Alert deduplication across runs
 
 Consecutive PR-runs catch the same vulnerability multiple times;
 each PR comment shows duplicate noise. Dedupe by `(rule_id, url,
@@ -98,7 +98,7 @@ For [`dast-finding-triager`](../../agents/dast-finding-triager.md)
 integration, the triager handles cross-tool dedup; this skill's
 dedup is per-tool per-run.
 
-## Step 4 — CI cadence
+## Step 4 - CI cadence
 
 ```yaml
 # .github/workflows/dast.yml
@@ -162,23 +162,23 @@ jobs:
       - run: ./ci/burp-enterprise-trigger.sh
 ```
 
-## Step 5 — Per-finding triage workflow
+## Step 5 - Per-finding triage workflow
 
 When a new finding appears in a PR-blocking scan, the team has
 4 options:
 
-1. **Fix** — code change resolves the finding
-2. **Suppress with justification** — add to `.zap/rules.tsv`
+1. **Fix** - code change resolves the finding
+2. **Suppress with justification** - add to `.zap/rules.tsv`
    with `# Reason: ... Re-review-date: ...`
-3. **Add to baseline** — explicit acceptance; finding tracked
+3. **Add to baseline** - explicit acceptance; finding tracked
    in baseline file with reviewer attribution
-4. **Escalate** — beyond PR scope; create JIRA ticket + waive
+4. **Escalate** - beyond PR scope; create JIRA ticket + waive
    per-PR with explicit JIRA reference
 
 Each option requires reviewer + reason + Re-review-date in commit
 message or PR comment. No silent suppression.
 
-## Step 6 — Coverage measurement
+## Step 6 - Coverage measurement
 
 Post-scan, measure coverage to detect blind spots:
 
@@ -193,7 +193,7 @@ jq '.paths | length' openapi.yaml
 If coverage < 80% of API surface, the spider missed routes; investigate
 auth flows, JS-heavy SPAs, route-discovery gaps.
 
-## Step 7 — Aggregate via [`dast-finding-triager`](../../agents/dast-finding-triager.md)
+## Step 7 - Aggregate via [`dast-finding-triager`](../../agents/dast-finding-triager.md)
 
 Once 2+ tools run, ingest each tool's JSON output into the triager:
 
@@ -209,7 +209,7 @@ curl ... -o burp.json
 The agent handles cross-tool dedup, severity normalization, waiver
 enforcement.
 
-## Step 8 — Anti-patterns specific to DAST cadence
+## Step 8 - Anti-patterns specific to DAST cadence
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
@@ -219,7 +219,7 @@ enforcement.
 | One scan per app, never re-baseline | Baseline grows stale; misses regressions in old code | Quarterly re-baseline + waiver review |
 | Run ZAP + Burp + NightVision without dedup | Same finding shows 3x | Aggregate via triager (Step 7) |
 
-## Step 9 — End-to-end test recipe
+## Step 9 - End-to-end test recipe
 
 For each app's DAST coverage:
 
@@ -248,8 +248,8 @@ For each app's DAST coverage:
 
 - [`zap-baseline`](../zap-baseline/SKILL.md),
   [`burp-headless`](../burp-headless/SKILL.md),
-  [`nightvision-dast`](../nightvision-dast/SKILL.md) — sister tools
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) —
+  [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister tools
+- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - 
   cross-tool unifier
-- OWASP WSTG — owasp.org/www-project-web-security-testing-guide
+- OWASP WSTG - owasp.org/www-project-web-security-testing-guide
 - OWASP DSOMM (DevSecOps Maturity Model) for cadence guidance

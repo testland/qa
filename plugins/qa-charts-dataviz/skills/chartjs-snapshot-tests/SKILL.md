@@ -1,6 +1,6 @@
 ---
 name: chartjs-snapshot-tests
-description: "Snapshot-test Chart.js charts — render via headless Chromium / jsdom + canvas mock, capture canvas pixels via `canvas.toDataURL()` + image-diff, disable animations (`options.animation = false`) for stable snapshots, test tooltip + legend interactions. Pairs with qa-visual-regression for general UI snapshot patterns."
+description: "Snapshot-test Chart.js charts - render via headless Chromium / jsdom + canvas mock, capture canvas pixels via `canvas.toDataURL()` + image-diff, disable animations (`options.animation = false`) for stable snapshots, test tooltip + legend interactions. Pairs with qa-visual-regression for general UI snapshot patterns."
 type: skill
 archetype: S1
 rating: 22
@@ -16,7 +16,7 @@ keywords:
 # chartjs-snapshot-tests
 
 Per the [Chart.js docs], Chart.js renders to `<canvas>`. Canvas
-output is a pixel buffer — testable via `canvas.toDataURL()` snapshot
+output is a pixel buffer - testable via `canvas.toDataURL()` snapshot
 diff.
 
 ## When to use
@@ -24,10 +24,10 @@ diff.
 - Dashboards or analytics products where chart accuracy is product
   surface.
 - Library upgrade gate (Chart.js v4 → v5 changes default styles).
-- Custom theme integration — verify the brand styling renders
+- Custom theme integration - verify the brand styling renders
   correctly.
 
-## Step 1 — Disable animations for stable snapshots
+## Step 1 - Disable animations for stable snapshots
 
 Per the [Chart.js docs], the basic config object accepts `options`:
 
@@ -49,7 +49,7 @@ new Chart(ctx, {
 Without `animation: false`, snapshots capture mid-animation frames
 randomly.
 
-## Step 2 — Playwright canvas snapshot
+## Step 2 - Playwright canvas snapshot
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -73,7 +73,7 @@ test('revenue bar chart matches snapshot', async ({ page }) => {
 `maxDiffPixels` allows for sub-pixel anti-aliasing variance across
 runs.
 
-## Step 3 — Programmatic canvas dataURL diff
+## Step 3 - Programmatic canvas dataURL diff
 
 For finer control without Playwright's screenshot helper:
 
@@ -94,7 +94,7 @@ test('chart canvas data URL is stable', async ({ page }) => {
 });
 ```
 
-## Step 4 — jsdom + canvas-mock unit testing
+## Step 4 - jsdom + canvas-mock unit testing
 
 For unit-test-speed feedback (no browser):
 
@@ -125,7 +125,7 @@ test('chart renders with expected dataset count', () => {
 without a browser. Use for fast assertions on dataset shape +
 config; rely on Step 2 for visual regression.
 
-## Step 5 — Tooltip + legend interaction
+## Step 5 - Tooltip + legend interaction
 
 ```ts
 test('tooltip shows data point value on hover', async ({ page }) => {
@@ -153,7 +153,7 @@ test('legend click toggles dataset visibility', async ({ page }) => {
 });
 ```
 
-## Step 6 — Data-driven assertion (without snapshot)
+## Step 6 - Data-driven assertion (without snapshot)
 
 For non-visual assertions, query Chart.js internal state via the
 chart instance:
@@ -168,7 +168,7 @@ test('chart shows all 12 months', async ({ page }) => {
 });
 ```
 
-## Step 7 — Multi-DPI handling
+## Step 7 - Multi-DPI handling
 
 High-DPI displays render canvas at 2× / 3× device pixel ratio.
 Snapshots taken at different DPRs differ. Pin DPR in test config:
@@ -197,16 +197,16 @@ use: {
 - Chart.js plugins (annotation, datalabels) may have separate
   init paths; verify they render before snapshotting.
 - Tooltips render in DOM (not canvas), so canvas snapshot misses
-  them — test interactions separately (Step 5).
+  them - test interactions separately (Step 5).
 
 ## References
 
-- [Chart.js docs] — install, basic config, options
-- [`d3-snapshot-tests`](../d3-snapshot-tests/SKILL.md) — sister
+- [Chart.js docs] - install, basic config, options
+- [`d3-snapshot-tests`](../d3-snapshot-tests/SKILL.md) - sister
   skill for SVG-based charts
-- [`vega-spec-validator`](../vega-spec-validator/SKILL.md) — sister
+- [`vega-spec-validator`](../vega-spec-validator/SKILL.md) - sister
   skill for declarative-spec validation
-- node-canvas — github.com/Automattic/node-canvas (Node-native
+- node-canvas - github.com/Automattic/node-canvas (Node-native
   Canvas implementation for unit tests)
 
 [Chart.js docs]: https://www.chartjs.org/docs/latest/getting-started/

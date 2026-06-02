@@ -1,6 +1,6 @@
 ---
 name: wcag-compliance-reporter
-description: "Builds a per-page WCAG 2.2 compliance score report by aggregating output from one or more accessibility scanners (axe-core / pa11y / lighthouse / WAVE / IBM Equal Access), pivoting violations by Success Criterion (1.4.3 contrast, 2.4.7 focus visible, etc.), grouping by conformance level (A / AA / AAA), reporting per-page coverage gaps explicitly (the \"this page wasn't scanned\" failure mode), and emitting both an executive summary and a per-page drill-down. Use after a multi-page accessibility scan — pa11y-ci, axe across a sitemap, lighthouse-batch — when the team needs a shareable conformance report rather than a per-page tool dump."
+description: "Builds a per-page WCAG 2.2 compliance score report by aggregating output from one or more accessibility scanners (axe-core / pa11y / lighthouse / WAVE / IBM Equal Access), pivoting violations by Success Criterion (1.4.3 contrast, 2.4.7 focus visible, etc.), grouping by conformance level (A / AA / AAA), reporting per-page coverage gaps explicitly (the \"this page wasn't scanned\" failure mode), and emitting both an executive summary and a per-page drill-down. Use after a multi-page accessibility scan - pa11y-ci, axe across a sitemap, lighthouse-batch - when the team needs a shareable conformance report rather than a per-page tool dump."
 rating: 24
 d6: 4
 archetype: S3
@@ -12,7 +12,7 @@ archetype: S3
 
 WCAG 2.2 has 77 success criteria (SC) split across three
 conformance levels: 25 at A, 24 at AA, 28 at AAA
-([wcag-spec][wcag-tr]) — for a total of 49 SC at the AA level (which
+([wcag-spec][wcag-tr]) - for a total of 49 SC at the AA level (which
 is the typical legal / contractual target in the US, EU, UK).
 
 [wcag-tr]: https://www.w3.org/TR/WCAG22/
@@ -28,7 +28,7 @@ Per [wcag-conformance][wcag-conf]:
 > exceptions."
 
 That binary verdict ("conforms or doesn't") makes per-tool output
-("axe found 17 violations in 5 pages") hard to act on — the team
+("axe found 17 violations in 5 pages") hard to act on - the team
 needs to know **which SC at which level on which page** is failing
 the conformance claim.
 
@@ -50,7 +50,7 @@ If only one tool is in use, the tool's native HTML report may
 suffice; this skill is for **aggregation** across multiple tools or
 multiple pages.
 
-## Step 1 — Author normalizers per upstream tool
+## Step 1 - Author normalizers per upstream tool
 
 Each scanner has its own JSON shape. The first step is normalizing
 to a single intermediate format keyed by SC:
@@ -69,7 +69,7 @@ interface Violation {
 ```
 
 Normalizer per tool maps tool-specific rule IDs to the SC they cover.
-The mapping is curated upstream — axe ships `tags` like `wcag2a`,
+The mapping is curated upstream - axe ships `tags` like `wcag2a`,
 `wcag143`; pa11y ships `WCAG2AA.Principle1.Guideline1_4.1_4_3`;
 Lighthouse uses an internal mapping documented in its audit catalog.
 
@@ -97,7 +97,7 @@ def normalize_axe(json_blob, page_url):
 A central `sc-mapping.json` file holds rule-to-SC for every tool
 the report consumes. Update it when a tool's catalog changes.
 
-## Step 2 — Aggregate
+## Step 2 - Aggregate
 
 ```python
 def aggregate(violations):
@@ -115,7 +115,7 @@ def aggregate(violations):
     }
 ```
 
-## Step 3 — Conformance verdict per level
+## Step 3 - Conformance verdict per level
 
 Per [wcag-conformance][wcag-conf], conformance is binary per level
 ("All success criteria at a claimed level must be satisfied with no
@@ -142,11 +142,11 @@ def conformance(agg, level):
 `level_set('AA')` returns `{'A', 'AA'}` because AA "satisfies all the
 Level A and Level AA success criteria" ([wcag-conformance][wcag-conf]).
 
-The "unknown" verdict is critical — automated tools cover roughly
+The "unknown" verdict is critical - automated tools cover roughly
 30% of WCAG SCs. A green automated scan ≠ AA conformance. The
 report must surface what wasn't scanned.
 
-## Step 4 — Per-page coverage gaps
+## Step 4 - Per-page coverage gaps
 
 Equally important: did every relevant page get scanned at all? A
 checkout flow with a missing scan on the payment page can't claim
@@ -178,7 +178,7 @@ processes:
 Compare scanned pages against the spec; flag missing ones in the
 report.
 
-## Step 5 — Render the report
+## Step 5 - Render the report
 
 ```markdown
 # WCAG 2.2 Compliance Report
@@ -248,7 +248,7 @@ cannot claim conformance regardless of per-page results
 `docs/manual-checklist.md` for the per-SC checklist.
 ```
 
-## Step 6 — Emit machine-readable output too
+## Step 6 - Emit machine-readable output too
 
 In addition to the markdown, emit `compliance.json` for downstream
 consumption (dashboards, ASR, programmatic gates):
@@ -266,7 +266,7 @@ consumption (dashboards, ASR, programmatic gates):
 }
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - name: Run scanners
@@ -316,20 +316,20 @@ consumption (dashboards, ASR, programmatic gates):
   add or remove SC coverage. Pin tool versions in CI; bump the SC
   mapping in lock-step.
 - **VPAT / ACR is a different document.** This report informs the
-  VPAT but isn't the VPAT itself — those documents have specific
+  VPAT but isn't the VPAT itself - those documents have specific
   formats (Section 508, EN 301 549) that go beyond WCAG.
 
 ## References
 
-- [wcag-tr][wcag-tr] — WCAG 2.2 specification: 77 SC across A / AA
+- [wcag-tr][wcag-tr] - WCAG 2.2 specification: 77 SC across A / AA
   / AAA, four POUR principles, 13 guidelines.
-- [wcag-conformance][wcag-conf] — WCAG 2.2 conformance requirements:
+- [wcag-conformance][wcag-conf] - WCAG 2.2 conformance requirements:
   binary per-level verdict, complete-processes rule, no-exceptions
   rule.
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) — sibling
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - sibling
   reporter for test execution (different domain, same PR-time
   reporting shape).
 - The `qa-accessibility-specifics` plugin's per-tool wrappers
   (`axe-a11y`, `pa11y-a11y`, `lighthouse-a11y`, `wave-a11y`,
-  `ibm-equal-access-a11y`) — produce the upstream input this skill
+  `ibm-equal-access-a11y`) - produce the upstream input this skill
   consumes.

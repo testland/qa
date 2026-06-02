@@ -1,6 +1,6 @@
 ---
 name: chaos-experiment-author
-description: "Build-an-X workflow for a chaos experiment per the Principles of Chaos Engineering — defines steady-state hypothesis, picks the variables (real-world events: network latency, node failure, region outage), sets the blast radius (which percentage / namespace / user cohort), automates execution, and emits the verdict (steady-state held / didn''''t hold). Use to scope a chaos experiment before running it via Litmus / Chaos Mesh / Gremlin / Toxiproxy."
+description: "Build-an-X workflow for a chaos experiment per the Principles of Chaos Engineering - defines steady-state hypothesis, picks the variables (real-world events: network latency, node failure, region outage), sets the blast radius (which percentage / namespace / user cohort), automates execution, and emits the verdict (steady-state held / didn''''t hold). Use to scope a chaos experiment before running it via Litmus / Chaos Mesh / Gremlin / Toxiproxy."
 rating: 23
 d6: 4
 archetype: S3
@@ -20,11 +20,11 @@ Per [chaos-principles][cp]:
 
 The 5 advanced principles ([chaos-principles][cp]):
 
-> 1. **Build a Hypothesis around Steady State Behavior** — "Focus on the measurable output of a system, rather than internal attributes of the system."
-> 2. **Vary Real-world Events** — "Chaos variables reflect real-world events. Prioritize events either by potential impact or estimated frequency."
-> 3. **Run Experiments in Production** — "To guarantee both authenticity of the way in which the system is exercised and relevance to the current deployed system, Chaos strongly prefers to experiment directly on production traffic."
-> 4. **Automate Experiments to Run Continuously** — "Running experiments manually is labor-intensive and ultimately unsustainable. Automate experiments and run them continuously."
-> 5. **Minimize Blast Radius** — "It is the responsibility and obligation of the Chaos Engineer to ensure the fallout from experiments are minimized and contained."
+> 1. **Build a Hypothesis around Steady State Behavior** - "Focus on the measurable output of a system, rather than internal attributes of the system."
+> 2. **Vary Real-world Events** - "Chaos variables reflect real-world events. Prioritize events either by potential impact or estimated frequency."
+> 3. **Run Experiments in Production** - "To guarantee both authenticity of the way in which the system is exercised and relevance to the current deployed system, Chaos strongly prefers to experiment directly on production traffic."
+> 4. **Automate Experiments to Run Continuously** - "Running experiments manually is labor-intensive and ultimately unsustainable. Automate experiments and run them continuously."
+> 5. **Minimize Blast Radius** - "It is the responsibility and obligation of the Chaos Engineer to ensure the fallout from experiments are minimized and contained."
 
 This skill walks the team through authoring an experiment that
 honors all five.
@@ -38,7 +38,7 @@ honors all five.
 - Pre-production sign-off requires a chaos test pass.
 - Recurring monthly / quarterly: scheduled experiments.
 
-## Step 1 — Define the steady-state hypothesis
+## Step 1 - Define the steady-state hypothesis
 
 Per [chaos-principles][cp] principle 1: focus on **measurable
 output**. The hypothesis must be a number, not a feeling:
@@ -63,7 +63,7 @@ Good hypotheses:
 - "p95 API latency stays <=300ms."
 - "Sentry error rate stays <0.5%."
 
-## Step 2 — Pick a real-world event to inject
+## Step 2 - Pick a real-world event to inject
 
 Per [chaos-principles][cp] principle 2: vary real-world events.
 Don't inject "anything"; inject what could plausibly happen.
@@ -81,7 +81,7 @@ Don't inject "anything"; inject what could plausibly happen.
 Pick events the team has already seen (real incidents) or
 realistically expects.
 
-## Step 3 — Set the blast radius
+## Step 3 - Set the blast radius
 
 Per [chaos-principles][cp] principle 5: minimize blast radius.
 
@@ -97,14 +97,14 @@ blast_radius:
 
 Start small; expand as confidence grows.
 
-## Step 4 — Pick the chaos tool
+## Step 4 - Pick the chaos tool
 
-**Default: [`chaos-mesh`](../chaos-mesh/SKILL.md) for Kubernetes stacks** — CNCF-graduated, broadest fault catalog (network / pod / IO / time / stress), declarative CRDs that compose with the experiment YAML in Step 1. Use [`litmus-chaos`](../litmus-chaos/SKILL.md) when the team already runs Litmus workflows; [`gremlin-chaos`](../gremlin-chaos/SKILL.md) for commercial multi-platform support outside Kubernetes; [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) when the failure surface is purely TCP-level.
+**Default: [`chaos-mesh`](../chaos-mesh/SKILL.md) for Kubernetes stacks** - CNCF-graduated, broadest fault catalog (network / pod / IO / time / stress), declarative CRDs that compose with the experiment YAML in Step 1. Use [`litmus-chaos`](../litmus-chaos/SKILL.md) when the team already runs Litmus workflows; [`gremlin-chaos`](../gremlin-chaos/SKILL.md) for commercial multi-platform support outside Kubernetes; [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) when the failure surface is purely TCP-level.
 
 The tool's syntax (CRD, attack config, etc.) goes alongside the
 experiment YAML.
 
-## Step 5 — Automate
+## Step 5 - Automate
 
 Per [chaos-principles][cp] principle 4: automate continuously.
 
@@ -126,10 +126,10 @@ jobs:
           kubectl get chaosengine/checkout-network-latency -o jsonpath='{.status.experimentStatus.verdict}'
 ```
 
-Schedule per the team's appetite — monthly for new experiments,
+Schedule per the team's appetite - monthly for new experiments,
 weekly for established ones, on-demand for incident reproduction.
 
-## Step 6 — Run in production?
+## Step 6 - Run in production?
 
 Per [chaos-principles][cp] principle 3: experiments in production
 are the gold standard. But:
@@ -143,7 +143,7 @@ are the gold standard. But:
 Most teams should start in staging. Move to production after the
 team has confidence and abort procedures.
 
-## Step 7 — Verdict + report
+## Step 7 - Verdict + report
 
 ```markdown
 ## Chaos experiment verdict — `checkout-network-latency`
@@ -194,15 +194,13 @@ team has confidence and abort procedures.
 
 ## References
 
-- [cp][cp] — Principles of Chaos Engineering: 5 advanced
+- [cp][cp] - Principles of Chaos Engineering: 5 advanced
   principles (steady-state, real-world events, production,
   automation, blast radius).
 - [`litmus-chaos`](../litmus-chaos/SKILL.md),
   [`chaos-mesh`](../chaos-mesh/SKILL.md),
   [`gremlin-chaos`](../gremlin-chaos/SKILL.md),
-  [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) — per-tool
+  [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) - per-tool
   runners.
-- [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md)
-  — sibling: combines chaos with test suites.
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md)
-  — provides the steady-state metrics that verdict the experiment.
+- [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md) - sibling: combines chaos with test suites.
+- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - provides the steady-state metrics that verdict the experiment.

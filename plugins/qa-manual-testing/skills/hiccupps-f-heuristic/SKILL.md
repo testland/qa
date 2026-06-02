@@ -1,6 +1,6 @@
 ---
 name: hiccupps-f-heuristic
-description: "Pure-reference catalog of Michael Bolton's HICCUPPS-F oracle heuristic — eight (plus one) reference points for deciding whether something is a problem. Each letter is a kind of oracle the tester consults: History, Image, Comparable products, Claims, Users' desires, Product (internal consistency), Purpose, Standards / statutes, plus Familiar problems. Use as the heuristic vocabulary an exploratory session draws on when asking 'should this behaviour be a bug?'"
+description: "Pure-reference catalog of Michael Bolton's HICCUPPS-F oracle heuristic - eight (plus one) reference points for deciding whether something is a problem. Each letter is a kind of oracle the tester consults: History, Image, Comparable products, Claims, Users' desires, Product (internal consistency), Purpose, Standards / statutes, plus Familiar problems. Use as the heuristic vocabulary an exploratory session draws on when asking 'should this behaviour be a bug?'"
 rating: 24
 d6: 4
 archetype: S2
@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-HICCUPPS-F is Michael Bolton's oracle heuristic — a mnemonic for
+HICCUPPS-F is Michael Bolton's oracle heuristic - a mnemonic for
 the **kinds of references** a tester consults to decide whether
 an observation is a problem. It's published at
 [developsense.com/blog/2012/07/hiccupps-f](https://developsense.com/blog/2012/07/hiccupps-f-the-heuristic/).
@@ -28,7 +28,7 @@ and by individual testers during sessions
 
 ## When to use
 
-- Mid-session: tester sees behaviour X, asks "is this a bug?" —
+- Mid-session: tester sees behaviour X, asks "is this a bug?" - 
   walk HICCUPPS-F to find the matching oracle.
 - Authoring a charter: pre-identify which oracles the session
   should consult.
@@ -41,7 +41,7 @@ and by individual testers during sessions
 
 Per Bolton's published catalog:
 
-### H — History
+### H - History
 
 > Does the system's current behaviour match what it did before?
 
@@ -52,7 +52,7 @@ Behaviour regressed from a known prior version = bug. Sources:
 - Old screenshots / videos in user-acceptance archives
 - The release-1.2 regression suite ([`qa-test-impact-analysis`](../../../qa-test-impact-analysis/))
 
-### I — Image
+### I - Image
 
 > Does the behaviour match the company's brand and reputation?
 
@@ -64,7 +64,7 @@ Sources:
 - Marketing materials
 - Comparable user touchpoints (the company's other products)
 
-### C — Comparable products
+### C - Comparable products
 
 > Does the behaviour match what competitors / peers do?
 
@@ -75,7 +75,7 @@ when every competitor has one. Sources:
 - Industry benchmark reports
 - Stack Overflow / dev forum norms
 
-### C — Claims
+### C - Claims
 
 > Does the behaviour match what stakeholders said it would do?
 
@@ -87,7 +87,7 @@ the sales-deck slide. Sources:
 - Sales / marketing collateral
 - Customer escalation transcripts
 
-### U — Users' desires
+### U - Users' desires
 
 > Does the behaviour match what users actually want / need?
 
@@ -99,7 +99,7 @@ Sources:
 - NPS / CSAT comments
 - Direct customer feedback
 
-### P — Product (internal consistency)
+### P - Product (internal consistency)
 
 > Does the behaviour match other behaviours in the same product?
 
@@ -107,11 +107,11 @@ The settings page uses a save button; the profile page does
 auto-save. The same data field is formatted differently across
 two screens. Sources:
 
-- The product itself — explore adjacent areas
+- The product itself - explore adjacent areas
 - Internal style guide
 - Component library / design system
 
-### P — Purpose
+### P - Purpose
 
 > Does the behaviour match the actual reason the feature exists?
 
@@ -122,7 +122,7 @@ do Y. Sources:
 - OKR / business justification
 - Customer success outcomes
 
-### S — Standards / statutes
+### S - Standards / statutes
 
 > Does the behaviour comply with relevant standards + regulations?
 
@@ -134,7 +134,7 @@ network protocols. Sources:
 - Regulatory body guidance
 - Industry compliance reports
 
-### F — Familiar problems
+### F - Familiar problems
 
 > Have we seen this kind of bug before, in this or other systems?
 
@@ -152,7 +152,7 @@ Sources:
 - OWASP Top 10 / CWE Top 25
 - Industry bug catalogs (Beizer, Kaner, Myers)
 
-## Worked example — applying HICCUPPS-F mid-session
+## Worked example - applying HICCUPPS-F mid-session
 
 ```markdown
 Observation: Cart total shows $24.99 when promo "TAX10" applied,
@@ -189,7 +189,7 @@ high-priority.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Consulting only one oracle | Misses bugs visible from other angles | Walk all 9; even briefly |
-| "I don't see an oracle ⇒ probably fine" | Some bugs only one oracle catches (F — familiar problem patterns from elsewhere) | Look at F (familiar problems) before concluding "no oracle" |
+| "I don't see an oracle ⇒ probably fine" | Some bugs only one oracle catches (F - familiar problem patterns from elsewhere) | Look at F (familiar problems) before concluding "no oracle" |
 | Charter doesn't pre-state expected oracles | Session aimless | Charter should hint at applicable oracles ("explore X with HICCUPPS-F focusing on Claims + Users + Standards") |
 | Bug report without HICCUPPS-F citation | Report's "why is this a bug?" weak | Every bug report should cite at least one oracle from HICCUPPS-F |
 | Treating Standards as final authority | Standards lag; users / purpose may indicate the real bug | Use all 9 as inputs, not as final-word hierarchy |
@@ -209,9 +209,9 @@ high-priority.
 
 ## References
 
-- Bolton M. *HICCUPPS-F* (2012, refined from earlier HICCUPP) —
+- Bolton M. *HICCUPPS-F* (2012, refined from earlier HICCUPP) - 
   [developsense.com/blog/2012/07/hiccupps-f-the-heuristic/](https://developsense.com/blog/2012/07/hiccupps-f-the-heuristic/).
-- Bolton M. *Testing oracle* concept —
+- Bolton M. *Testing oracle* concept - 
   [developsense.com](https://developsense.com/).
 - Sibling references (other heuristic catalogues):
   [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),

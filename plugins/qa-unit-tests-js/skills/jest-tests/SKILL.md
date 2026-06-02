@@ -1,6 +1,6 @@
 ---
 name: jest-tests
-description: "Configures and runs Jest — Meta-built batteries-included JS/TS unit framework with built-in `expect`, snapshot testing, mocking (`jest.mock`, `jest.fn`, `jest.spyOn`, manual `__mocks__/`), test environment selection (`jsdom` / `node`), parallel workers, coverage via Istanbul, watch mode, and CI integration via `--ci` flag. Use when the user works with React (CRA / older Next.js) or Node services and needs the most ecosystem-supported JS test framework."
+description: "Configures and runs Jest - Meta-built batteries-included JS/TS unit framework with built-in `expect`, snapshot testing, mocking (`jest.mock`, `jest.fn`, `jest.spyOn`, manual `__mocks__/`), test environment selection (`jsdom` / `node`), parallel workers, coverage via Istanbul, watch mode, and CI integration via `--ci` flag. Use when the user works with React (CRA / older Next.js) or Node services and needs the most ecosystem-supported JS test framework."
 rating: 24
 d6: 4
 archetype: S1
@@ -21,7 +21,7 @@ Works with TypeScript via `babel-jest` (faster) or `ts-jest` (full
 type-checking).
 
 This skill targets **per-framework lifecycle** (configure / run /
-mock / coverage / CI) — NOT test code hygiene patterns. For
+mock / coverage / CI) - NOT test code hygiene patterns. For
 hygiene (assertion quality / AAA structure / mocking anti-patterns),
 see [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
 and the qa-test-review agents.
@@ -38,7 +38,7 @@ and the qa-test-review agents.
 For Vite-based projects, prefer [`vitest-tests`](../vitest-tests/SKILL.md)
 (Vite-native; faster transform-pipeline reuse).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [jest-start][jest-start]:
 
@@ -83,7 +83,7 @@ import {sum} from './sum';
 
 This avoids global pollution + is the modern recommendation.
 
-## Step 2 — First test
+## Step 2 - First test
 
 Per [jest-start][jest-start]:
 
@@ -116,7 +116,7 @@ Wire `package.json`:
 
 Run via `npm test`.
 
-## Step 3 — Configuration
+## Step 3 - Configuration
 
 Generate config (per [jest-start][jest-start]):
 
@@ -152,7 +152,7 @@ module.exports = {
 `testEnvironment` defaults to `jsdom` in Jest 26 and earlier; from
 Jest 27+ defaults to `node`. Set explicitly to avoid surprise.
 
-## Step 4 — Mocking patterns (per-framework lifecycle)
+## Step 4 - Mocking patterns (per-framework lifecycle)
 
 Three forms:
 
@@ -194,7 +194,7 @@ expect(callback).toHaveBeenCalled();
 jest.useRealTimers();
 ```
 
-## Step 5 — Coverage
+## Step 5 - Coverage
 
 ```bash
 jest --coverage
@@ -218,7 +218,7 @@ coverageThreshold: {
 },
 ```
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 Per Jest CLI, `--ci` flag is critical for CI runs:
 
@@ -231,7 +231,7 @@ Per Jest CLI, `--ci` flag is critical for CI runs:
 ```
 
 `--ci` semantics:
-- Disables snapshot writing on missing snapshots (fails instead — prevents accidental snapshot generation in CI)
+- Disables snapshot writing on missing snapshots (fails instead - prevents accidental snapshot generation in CI)
 - Disables interactive prompts
 - Equivalent to `process.env.CI=true`
 
@@ -246,7 +246,7 @@ JEST_JUNIT_OUTPUT_FILE=./test-results/junit.xml \
   jest --ci --reporters=default --reporters=jest-junit
 ```
 
-## Step 7 — ESLint integration
+## Step 7 - ESLint integration
 
 Per [jest-start][jest-start]:
 
@@ -297,22 +297,21 @@ npm install --save-dev eslint-plugin-jest
   Vite-based projects (Jest doesn't share dev-server transform).
 - Snapshot testing brittle at scale; pair with `jest-image-snapshot`
   for visual snapshots.
-- ESM (ECMAScript Modules) support has rough edges — many projects
+- ESM (ECMAScript Modules) support has rough edges - many projects
   still use CommonJS for tests.
 - Module hoisting (`jest.mock` at top of file) has subtle ordering
   semantics; test code hygiene addressed in qa-test-review.
 
 ## References
 
-- [jest-start][jest-start] — install, basic patterns, TS, ESLint
-- jestjs.io/docs/configuration — full config reference
-- jestjs.io/docs/cli — CLI reference incl. `--ci`
-- jestjs.io/docs/mock-functions — mocking deep dive
-- jestjs.io/docs/configuration#coverageThreshold-object — coverage gating
+- [jest-start][jest-start] - install, basic patterns, TS, ESLint
+- jestjs.io/docs/configuration - full config reference
+- jestjs.io/docs/cli - CLI reference incl. `--ci`
+- jestjs.io/docs/mock-functions - mocking deep dive
+- jestjs.io/docs/configuration#coverageThreshold-object - coverage gating
 - [`vitest-tests`](../vitest-tests/SKILL.md),
   [`mocha-tests`](../mocha-tests/SKILL.md),
   [`ava-tests`](../ava-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — cross-plugin: test code hygiene (separate from per-framework
+  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene (separate from per-framework
   lifecycle)

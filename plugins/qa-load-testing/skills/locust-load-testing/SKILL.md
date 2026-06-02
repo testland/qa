@@ -1,6 +1,6 @@
 ---
 name: locust-load-testing
-description: "Authors Locust load tests as Python classes — HttpUser with @task-decorated methods plus on_start hooks and between() wait_time — runs via `locust -f locustfile.py` headless mode (or distributed via `--master` / `--worker`), and exports CSV / JUnit reports for CI gating. Use when the project's primary stack is Python and the team wants load tests in the same language as the application."
+description: "Authors Locust load tests as Python classes - HttpUser with @task-decorated methods plus on_start hooks and between() wait_time - runs via `locust -f locustfile.py` headless mode (or distributed via `--master` / `--worker`), and exports CSV / JUnit reports for CI gating. Use when the project's primary stack is Python and the team wants load tests in the same language as the application."
 rating: 25
 d6: 4
 archetype: S1
@@ -18,12 +18,12 @@ headless for CI.
 
 ## When to use
 
-- The project's primary stack is Python — load tests live in the
+- The project's primary stack is Python - load tests live in the
   same language as the application.
 - The team wants programmatic test logic that's hard to express in
   declarative DSLs (e.g. branching based on response content,
   custom auth flows, Redis / queue interactions).
-- Distributed load is a requirement — Locust's master / worker
+- Distributed load is a requirement - Locust's master / worker
   pattern is straightforward.
 
 If the team isn't on Python and just needs HTTP perf testing,
@@ -74,7 +74,7 @@ class WebsiteUser(HttpUser):
 |---------------------|-----------------------------------------------------------------|
 | `HttpUser`          | Base class; provides `self.client` (a Requests-style HTTP client). |
 | `@task`             | Marks a method as a callable VU action.                          |
-| `@task(N)`          | Weighted task — gets `N` "lottery tickets" vs. unweighted's 1.  |
+| `@task(N)`          | Weighted task - gets `N` "lottery tickets" vs. unweighted's 1.  |
 | `wait_time = between(min, max)` | Random pause between tasks per VU.                  |
 | `on_start(self)`    | Runs once per VU at startup (auth, session setup).               |
 | `on_stop(self)`     | Runs once per VU before exit (cleanup).                          |
@@ -143,7 +143,7 @@ locust -f locustfile.py \
 ```
 
 `--exit-code-on-error 1` tells Locust to exit non-zero if any
-request failed during the run — the canonical CI gate.
+request failed during the run - the canonical CI gate.
 
 ### Distributed mode
 
@@ -173,7 +173,7 @@ Locust outputs three CSVs on `--csv <prefix>`:
 | `<prefix>_failures.csv`       | Per-failure rows: name, reason, count.                  |
 | `<prefix>_exceptions.csv`     | Python exception stacks (if any task raised).           |
 
-The HTML report (`--html`) renders charts from the same data — for
+The HTML report (`--html`) renders charts from the same data - for
 human review.
 
 ## CI integration
@@ -242,7 +242,7 @@ jobs:
           retention-days: 14
 ```
 
-The custom Python gate parses `results_stats.csv` — Locust's
+The custom Python gate parses `results_stats.csv` - Locust's
 `--exit-code-on-error` only fails on errors; latency budgets need
 the post-run check.
 
@@ -262,7 +262,7 @@ the post-run check.
 - **Per-process VU limits.** ~500-2000 VUs per worker depending on
   task complexity; beyond that, distribute.
 - **Synchronous-by-default.** `self.client` is sync. For
-  high-concurrency-per-VU patterns, use `FastHttpUser` (async) —
+  high-concurrency-per-VU patterns, use `FastHttpUser` (async) - 
   faster per request but slightly different semantics.
 - **No native browser execution.** Locust is HTTP-only; for Web Vitals
   perf testing use [`lighthouse-perf`](../lighthouse-perf/SKILL.md).
@@ -272,11 +272,11 @@ the post-run check.
 
 ## References
 
-- [locust-quickstart][quickstart] — canonical install, locustfile
+- [locust-quickstart][quickstart] - canonical install, locustfile
   structure, headless flags, distributed mode.
 - [`k6-load-testing`](../k6-load-testing/SKILL.md),
   [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md),
-  [`gatling-load-testing`](../gatling-load-testing/SKILL.md) —
+  [`gatling-load-testing`](../gatling-load-testing/SKILL.md) - 
   alternatives by stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) — downstream
+- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
   gate that consumes Locust's CSV output for unified verdicts.

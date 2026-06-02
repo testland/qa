@@ -1,6 +1,6 @@
 ---
 name: manual-test-debrief
-description: "Session debrief template + tour-coverage tracker — captures the SBTM PROOF format (Past, Results, Outlook, Obstacles, Feelings) plus three-bucket time accounting (test design / setup / bug investigation), the tours applied + areas covered + areas skipped, and the per-session quality-of-attention signal. Output is the artifact a charter delivers into; the team aggregates debriefs across sessions to track what's been explored vs what's still uncharted. Use after every exploratory session — without the debrief, the session's findings disappear."
+description: "Session debrief template + tour-coverage tracker - captures the SBTM PROOF format (Past, Results, Outlook, Obstacles, Feelings) plus three-bucket time accounting (test design / setup / bug investigation), the tours applied + areas covered + areas skipped, and the per-session quality-of-attention signal. Output is the artifact a charter delivers into; the team aggregates debriefs across sessions to track what's been explored vs what's still uncharted. Use after every exploratory session - without the debrief, the session's findings disappear."
 rating: 22
 d6: 3
 archetype: S3
@@ -10,7 +10,7 @@ archetype: S3
 
 ## Overview
 
-A session without a debrief is a session that didn't happen — the
+A session without a debrief is a session that didn't happen - the
 findings live only in the tester's head, no team learning, no
 audit trail, no follow-up scheduling.
 
@@ -36,17 +36,17 @@ The acronym from the original Bach & Bach SBTM paper:
 
 | Letter | Section       | What it captures |
 |--------|---------------|-------------------|
-| **P**  | Past          | What was tested — areas covered, paths walked, tours applied. |
-| **R**  | Results       | What was learned — confirmed-working items, surprises, novel observations. |
-| **O**  | Outlook       | What's left — areas NOT covered; what to explore next session. |
-| **O**  | Obstacles     | What slowed the session — broken setup, missing test data, environment instability. |
+| **P**  | Past          | What was tested - areas covered, paths walked, tours applied. |
+| **R**  | Results       | What was learned - confirmed-working items, surprises, novel observations. |
+| **O**  | Outlook       | What's left - areas NOT covered; what to explore next session. |
+| **O**  | Obstacles     | What slowed the session - broken setup, missing test data, environment instability. |
 | **F**  | Feelings      | Tester's qualitative read on product quality (confident / uneasy / unsure). |
 
 **Feelings** is the load-bearing field most teams want to skip.
 Resist that. The tester's qualitative judgment is signal that no
 metric captures.
 
-## Step 1 — Template
+## Step 1 - Template
 
 ```markdown
 # Session debrief — `<session-id>`
@@ -158,7 +158,7 @@ high setup % suggests test-data or environment investment is
 worth it.)
 ```
 
-## Step 2 — Aggregation across sessions
+## Step 2 - Aggregation across sessions
 
 Individual debriefs are useful; aggregating them surfaces patterns:
 
@@ -192,7 +192,7 @@ The rollup shows what's been explored vs what's stale vs what's
 never been touched. Charter authoring uses this to pick where the
 next session should focus.
 
-## Step 3 — Quality-of-attention signal
+## Step 3 - Quality-of-attention signal
 
 The Feelings section produces a per-session subjective signal.
 Track over time:
@@ -204,7 +204,7 @@ Track over time:
 | ses-203  |                       5 | Excellent; new tester, fresh eyes.  |
 
 When attention is consistently low across a tester / area, change
-something — different tester, different time-box, different tour,
+something - different tester, different time-box, different tour,
 different scope.
 
 ## Anti-patterns
@@ -228,17 +228,15 @@ different scope.
 - **Aggregation is manual.** A rollup script can compute coverage %
   but the action items need a human's call.
 - **Per-team conventions vary.** Some teams add a 6th letter
-  (PROOFS — Stakeholders) for who needs to see the report. Adapt
+  (PROOFS - Stakeholders) for who needs to see the report. Adapt
   the template per team norms.
 
 ## References
 
 - Bach, J. & Bach, J., *Session-Based Test Management* (HP, 2000;
-  PDF at `satisfice.com/download/session-based-test-management`) —
+  PDF at `satisfice.com/download/session-based-test-management`) - 
   PROOF debrief format origin, three-bucket time accounting.
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
-  — upstream: charters this debrief delivers into.
-- [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md)
-  — the tours catalogued in the Past section.
-- [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md) —
+- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - upstream: charters this debrief delivers into.
+- [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md) - the tours catalogued in the Past section.
+- [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md) - 
   multi-cohort bug bash inherits this debrief format.

@@ -1,6 +1,6 @@
 ---
 name: proptest-testing
-description: "Authors property-based tests in Rust using proptest — wires the `proptest!` macro, defines strategies (`prop::collection::vec`, `any::<T>()`, regex-based string strategies), uses the strategy-per-value model (vs QuickCheck's per-type) for flexible composition, and exploits proptest's automatic shrinking + persistence of failed cases (regression test artifact). Use when a Rust codebase needs PBT — pairs especially well with parsers, serializers, and any function with a structured input domain."
+description: "Authors property-based tests in Rust using proptest - wires the `proptest!` macro, defines strategies (`prop::collection::vec`, `any::<T>()`, regex-based string strategies), uses the strategy-per-value model (vs QuickCheck's per-type) for flexible composition, and exploits proptest's automatic shrinking + persistence of failed cases (regression test artifact). Use when a Rust codebase needs PBT - pairs especially well with parsers, serializers, and any function with a structured input domain."
 rating: 23
 d6: 4
 archetype: S1
@@ -23,7 +23,7 @@ Per [proptest-readme][pt]:
 > flexible composition." ([proptest-readme][pt])
 
 The strategy-based design is the key differentiator from Rust's
-`quickcheck` crate — proptest separates the generation strategy
+`quickcheck` crate - proptest separates the generation strategy
 from the type, so multiple strategies can produce the same type
 without newtype wrappers.
 
@@ -45,7 +45,7 @@ cases.
 - A refactor needs equivalence verification (new vs old produce
   same outputs for all inputs).
 
-## Step 1 — Install
+## Step 1 - Install
 
 In `Cargo.toml`:
 
@@ -55,9 +55,9 @@ proptest = "1"
 ```
 
 Note: per [proptest-readme][pt], "the crate mainly sees passive
-maintenance" — the API is stable; new development is rare.
+maintenance" - the API is stable; new development is rare.
 
-## Step 2 — Basic property
+## Step 2 - Basic property
 
 Per [proptest-readme][pt]:
 
@@ -80,7 +80,7 @@ Per [proptest-readme][pt], one of proptest's distinguishing
 features is **regex-based string generation**: `"[0-9]{4}-[0-9]{2}-[0-9]{2}"`
 generates date-shaped strings without writing a custom strategy.
 
-## Step 3 — Strategy catalog
+## Step 3 - Strategy catalog
 
 | Strategy                             | Generates                              |
 |--------------------------------------|----------------------------------------|
@@ -97,7 +97,7 @@ generates date-shaped strings without writing a custom strategy.
 | `s.prop_filter("reason", f)`          | Filter (with reason for shrinking)      |
 | `s.prop_flat_map(f)`                  | Dependent generation                    |
 
-## Step 4 — Custom strategies via `prop_compose!`
+## Step 4 - Custom strategies via `prop_compose!`
 
 ```rust
 use proptest::prelude::*;
@@ -126,7 +126,7 @@ proptest! {
 the body returns a constructed value. The `()` after the function
 name is for non-generated parameters (rare).
 
-## Step 5 — Configuration
+## Step 5 - Configuration
 
 ```rust
 proptest! {
@@ -150,10 +150,10 @@ Common config options:
 | `cases`                |    256  | More for higher confidence; slower CI.               |
 | `max_shrink_iters`     |   1024  | Cap shrinking time on slow tests.                    |
 | `max_shrink_time`      |    0    | Time-based shrink cap (ms; 0 = unlimited).           |
-| `verbose`              |    0    | 0 / 1 / 2 — verbosity level.                        |
+| `verbose`              |    0    | 0 / 1 / 2 - verbosity level.                        |
 | `failure_persistence`  |  enabled | Persist failed cases to `proptest-regressions/`.    |
 
-## Step 6 — Failure persistence (the regression file)
+## Step 6 - Failure persistence (the regression file)
 
 When a property fails, proptest writes:
 
@@ -165,13 +165,13 @@ cc abc1234567890 # shrinks to s = "1900-02-30"
 ```
 
 **Commit this file to git.** Future runs replay these seeds before
-generating new cases — locks the regression in.
+generating new cases - locks the regression in.
 
 If the regression is no longer relevant (the bug was fixed via a
 different code path that doesn't fail this case anymore), delete
 the entry. Don't suppress failures; understand them first.
 
-## Step 7 — Round-trip and invariant patterns
+## Step 7 - Round-trip and invariant patterns
 
 Per [proptest-readme][pt]: property testing checks "that certain
 properties of your code hold for arbitrary inputs."
@@ -208,15 +208,15 @@ proptest! {
 ```
 
 `prop_assert!` and `prop_assert_eq!` integrate with the shrinker
-better than vanilla `assert!` — use them inside `proptest!` blocks.
+better than vanilla `assert!` - use them inside `proptest!` blocks.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - run: cargo test --workspace
 ```
 
-That's it — proptest tests are regular `#[test]` functions wrapped
+That's it - proptest tests are regular `#[test]` functions wrapped
 in the macro. Cargo's `--test-threads` and parallel test execution
 work normally.
 
@@ -256,12 +256,12 @@ env:
 
 ## References
 
-- [pt][pt] — proptest README: strategy-based approach,
+- [pt][pt] - proptest README: strategy-based approach,
   regex-string generation, failure persistence, comparison vs
   QuickCheck, MSRV, license.
-- [`hypothesis-testing`](../hypothesis-testing/SKILL.md) — Python
+- [`hypothesis-testing`](../hypothesis-testing/SKILL.md) - Python
   sibling proptest is inspired by.
 - [`fast-check-testing`](../fast-check-testing/SKILL.md),
   [`jqwik-testing`](../jqwik-testing/SKILL.md),
-  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) —
+  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) - 
   per-language siblings.

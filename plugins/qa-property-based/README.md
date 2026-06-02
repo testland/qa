@@ -12,7 +12,7 @@ Property-based testing for the QuickCheck-derived family. Per ISTQB: PBT is "a t
 | Skill | [jqwik-testing](skills/jqwik-testing/SKILL.md) | S1 | JVM jqwik: `@Property` + `@ForAll` + Arbitraries API + `@Provide` + JUnit 5 integration. |
 | Skill | [quickcheck-testing](skills/quickcheck-testing/SKILL.md) | S1 | Haskell QuickCheck (the original) + ScalaCheck: `quickCheck` / `forAll` + `Arbitrary` typeclass + `shrink`. |
 | Agent | [property-based-tool-selector](agents/property-based-tool-selector.md) | A2 | Reads project markers (package.json / pyproject.toml / pom.xml / Cargo.toml / *.cabal / mix.exs) and recommends one library per language: fast-check (JS/TS), Hypothesis (Python), jqwik (JVM), proptest (Rust), QuickCheck (Haskell / Erlang / Elixir). |
-| Agent | [property-based-test-author](agents/property-based-test-author.md) | A2 | Authors one property-based test per stated invariant (roundtrip / idempotence / conservation / monotonicity / commutativity / inverse / reference). Picks tool via property-based-tool-selector or accepts an override. Refuses to encode "test with random inputs" as a property — that's fuzzing or parameterized unit testing, not property-based. |
+| Agent | [property-based-test-author](agents/property-based-test-author.md) | A2 | Authors one property-based test per stated invariant (roundtrip / idempotence / conservation / monotonicity / commutativity / inverse / reference). Picks tool via property-based-tool-selector or accepts an override. Refuses to encode "test with random inputs" as a property - that's fuzzing or parameterized unit testing, not property-based. |
 
 ## Install
 

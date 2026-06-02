@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# js-test-author — evals
+# js-test-author - evals
 
 Companion eval cases for [`js-test-author`](../../js-test-author.md). Three
 cases covering happy path + branch + adversarial. Re-run by feeding the
@@ -12,10 +12,10 @@ cases covering happy path + branch + adversarial. Re-run by feeding the
 emitted test file against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - 
 each eval is designed to be re-run against each tier.
 
-## Eval 1 — happy path — Jest in devDeps → test(...) + expect(...).toBeNull()
+## Eval 1 - happy path - Jest in devDeps → test(...) + expect(...).toBeNull()
 
 **Input:**
 
@@ -52,7 +52,7 @@ introduce `vitest`, `mocha`, `jasmine`, or `ava` imports. Does NOT add
 `from 'mocha'`, `import test from 'ava'`, OR `from '@faker-js/faker'`. Output
 contains exactly ONE `test(` or `it(` invocation under the target name.
 
-## Eval 2 — branch — Vitest in devDeps + TypeScript → ESM import + describe/it/expect from 'vitest'
+## Eval 2 - branch - Vitest in devDeps + TypeScript → ESM import + describe/it/expect from 'vitest'
 
 **Input:**
 
@@ -93,7 +93,7 @@ Uses Vitest's Jest-compatible matcher API: `expect(result).toBeNull()`.
 `require(`, OR `from 'mocha'`. Output contains an `import { ... } from 'vitest'`
 statement that includes at least `expect` (and typically `describe`, `it`).
 
-## Eval 3 — adversarial — Jest AND Vitest both in devDeps → refuse, ask which to use
+## Eval 3 - adversarial - Jest AND Vitest both in devDeps → refuse, ask which to use
 
 **Input:**
 
@@ -121,14 +121,14 @@ package.json contents:
 
 **Expected:** Refuses to author. Detects the conflicting framework signals
 (`jest` AND `vitest` both in `devDependencies`). Asks the user which
-framework to use. Does NOT silently pick one — both `jest` and `vitest`
+framework to use. Does NOT silently pick one - both `jest` and `vitest`
 ship near-identical `expect`/`describe`/`it` surfaces, so a wrong default
 emits a file that runs under the wrong tool.
 
 **Pass condition:** Output does NOT contain a generated test function body
 (no `test(`, `it(`, OR `describe(` invocation that calls the target export).
 Output contains `jest` AND `vitest` AND at least one of the words
-`refuse` / `conflict` / `which` / `ambiguous` / `both` (any one — signals
+`refuse` / `conflict` / `which` / `ambiguous` / `both` (any one - signals
 the refuse-to-proceed message). Output asks the user to choose one
 framework before proceeding.
 

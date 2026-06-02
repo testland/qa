@@ -1,6 +1,6 @@
 ---
 name: scalatest
-description: "Configures and runs ScalaTest — Scala-native test framework with multiple specification styles (FlatSpec, FunSuite, WordSpec, FreeSpec, AsyncFlatSpec for async); Matchers DSL (`should equal`, `should contain`, `shouldBe a [Class]`); integrates with ScalaCheck for property-based testing; sbt + Maven + Gradle support; tagged-test selective execution. Use when working with Scala codebases."
+description: "Configures and runs ScalaTest - Scala-native test framework with multiple specification styles (FlatSpec, FunSuite, WordSpec, FreeSpec, AsyncFlatSpec for async); Matchers DSL (`should equal`, `should contain`, `shouldBe a [Class]`); integrates with ScalaCheck for property-based testing; sbt + Maven + Gradle support; tagged-test selective execution. Use when working with Scala codebases."
 rating: 22
 d6: 4
 archetype: S1
@@ -27,7 +27,7 @@ ScalaTest is the right pick for Scala-primary or Scala-only projects.
 - Existing ScalaTest codebase.
 - Property-based testing alongside ScalaCheck (canonical pairing).
 
-## Step 1 — Install
+## Step 1 - Install
 
 `build.sbt`:
 
@@ -38,7 +38,7 @@ libraryDependencies += "org.scalatestplus" %% "scalacheck-1-17" % "3.2.18.0" % T
 
 Test files live under `src/test/scala/`.
 
-## Step 2 — Specification styles
+## Step 2 - Specification styles
 
 Per [scalatest.org/user_guide/selecting_a_style][st-styles]:
 
@@ -95,7 +95,7 @@ class UserServiceSpec extends AnyWordSpec with Matchers {
 
 Pick one style per project + stick with it.
 
-## Step 3 — Matchers DSL
+## Step 3 - Matchers DSL
 
 Per [scalatest.org/user_guide/using_matchers][st-matchers]:
 
@@ -124,7 +124,7 @@ result should be (within(1.0) of 42.0)   // float tolerance
 
 For full Matchers reference, see [st-matchers][st-matchers].
 
-## Step 4 — Async tests
+## Step 4 - Async tests
 
 ```scala
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -139,10 +139,10 @@ class AsyncSpec extends AsyncFlatSpec with Matchers {
 }
 ```
 
-`AsyncFlatSpec` test bodies return `Future[Assertion]` — ScalaTest
+`AsyncFlatSpec` test bodies return `Future[Assertion]` - ScalaTest
 handles the async lifecycle.
 
-## Step 5 — ScalaCheck integration
+## Step 5 - ScalaCheck integration
 
 ```scala
 import org.scalatest.flatspec.AnyFlatSpec
@@ -168,7 +168,7 @@ class PropertyCheckSpec extends AnyFlatSpec with Matchers
 Cross-ref [`quickcheck-testing`](../../qa-property-based/skills/quickcheck-testing/SKILL.md)
 for the property-based discipline (covers QuickCheck + ScalaCheck).
 
-## Step 6 — Lifecycle hooks
+## Step 6 - Lifecycle hooks
 
 ```scala
 class WithFixturesSpec extends AnyFlatSpec with BeforeAndAfterAll
@@ -206,7 +206,7 @@ def withDatabase(test: Database => Unit): Unit = {
 }
 ```
 
-## Step 7 — Tagged tests
+## Step 7 - Tagged tests
 
 ```scala
 import org.scalatest.Tag
@@ -228,7 +228,7 @@ class TaggedSpec extends AnyFlatSpec {
 Selective run: `sbt 'testOnly * -- -n Slow'` or
 `-l Slow` to exclude Slow.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - run: sbt clean coverage test coverageReport
@@ -255,13 +255,13 @@ Coverage via `sbt-scoverage` plugin (Scala-native; not JaCoCo).
 
 ## References
 
-- [st][st] — ScalaTest landing
-- [st-styles][st-styles] — selecting a style
-- [st-matchers][st-matchers] — Matchers reference
-- scalacheck.org — ScalaCheck (property-based)
+- [st][st] - ScalaTest landing
+- [st-styles][st-styles] - selecting a style
+- [st-matchers][st-matchers] - Matchers reference
+- scalacheck.org - ScalaCheck (property-based)
 - [`junit5-tests`](../junit5-tests/SKILL.md),
   [`kotest-tests`](../kotest-tests/SKILL.md),
   [`spock-tests`](../spock-tests/SKILL.md),
-  [`testng-tests`](../testng-tests/SKILL.md) — sister tools
-- [`quickcheck-testing`](../../qa-property-based/skills/quickcheck-testing/SKILL.md) — Haskell + Scala property-based
+  [`testng-tests`](../testng-tests/SKILL.md) - sister tools
+- [`quickcheck-testing`](../../qa-property-based/skills/quickcheck-testing/SKILL.md) - Haskell + Scala property-based
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

@@ -1,6 +1,6 @@
 ---
 name: storybook-visual-regression-testing
-description: "Sets up visual regression coverage for a Storybook project — either via the official @chromatic-com/storybook addon (hosted) or via @storybook/test-runner with a postVisit hook that calls Playwright's toHaveScreenshot (self-hosted). Covers test-runner install, lifecycle hooks (setup / preVisit / postVisit), and CI integration."
+description: "Sets up visual regression coverage for a Storybook project - either via the official @chromatic-com/storybook addon (hosted) or via @storybook/test-runner with a postVisit hook that calls Playwright's toHaveScreenshot (self-hosted). Covers test-runner install, lifecycle hooks (setup / preVisit / postVisit), and CI integration."
 rating: 25
 d6: 4
 archetype: S1
@@ -39,7 +39,7 @@ for `toHaveScreenshot` option syntax, pair with
 - Either: the team is already paying for / using Chromatic (path 1), or
   the team prefers committed-to-repo baselines (path 2).
 
-## Path 1 — Hosted via Chromatic addon
+## Path 1 - Hosted via Chromatic addon
 
 ### Install
 
@@ -56,17 +56,17 @@ Chromatic from the Storybook UI, link the project, then click "Catch a
 UI change" to capture the **first baseline** ([storybook-visual-testing][st-vt]).
 
 After the first baseline, every story functions as a visual test
-automatically — no per-story `parameters` block, no custom assertion
+automatically - no per-story `parameters` block, no custom assertion
 code.
 
 ### CI integration
 
-Chromatic CI invocation is identical to running it standalone — see
+Chromatic CI invocation is identical to running it standalone - see
 [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
 for the `npx chromatic` CLI flag set, exit codes, TurboSnap, and
 `chromatic.config.json` schema.
 
-## Path 2 — Self-hosted via test-runner
+## Path 2 - Self-hosted via test-runner
 
 ### Install
 
@@ -95,7 +95,7 @@ It requires a Storybook running on a discoverable URL (default
 
 ### Lifecycle hooks
 
-Configure in `.storybook/test-runner.ts` — three hooks
+Configure in `.storybook/test-runner.ts` - three hooks
 ([storybook-test-runner][st-tr]):
 
 | Hook                      | When                                    | Use for                                          |
@@ -167,7 +167,7 @@ npm run test-storybook
 kill $SERVER_PID
 ```
 
-The `wait-on` step is important — `test-storybook` will fail
+The `wait-on` step is important - `test-storybook` will fail
 unhelpfully if the server is not up before it starts.
 
 ## Choosing between paths
@@ -235,15 +235,14 @@ jobs:
 ```
 
 `concurrently -k -s first` ensures the server is killed when the test
-process exits — without `-k`, the workflow hangs.
+process exits - without `-k`, the workflow hangs.
 
 ## References
 
-- [storybook-visual-testing][st-vt] — official Chromatic addon path
+- [storybook-visual-testing][st-vt] - official Chromatic addon path
   for visual coverage.
-- [storybook-test-runner][st-tr] — `@storybook/test-runner` install,
+- [storybook-test-runner][st-tr] - `@storybook/test-runner` install,
   lifecycle hooks, integration with Jest + Playwright.
-- [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
-  — Chromatic CLI behavior, exit codes, TurboSnap.
-- [`playwright-snapshots`](../playwright-snapshots/SKILL.md) — full
+- [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md) - Chromatic CLI behavior, exit codes, TurboSnap.
+- [`playwright-snapshots`](../playwright-snapshots/SKILL.md) - full
   `toHaveScreenshot` options for Path 2.

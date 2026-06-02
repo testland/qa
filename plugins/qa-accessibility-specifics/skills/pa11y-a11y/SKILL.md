@@ -1,6 +1,6 @@
 ---
 name: pa11y-a11y
-description: "Authors and runs pa11y accessibility scans — a CLI / Node.js tool that wraps HTML CodeSniffer (htmlcs) and / or axe-core engines — with `pa11y <url>` invocation, reporter selection (cli / csv / json / html / tsv), WCAG standard selection (WCAG2A / WCAG2AA / WCAG2AAA), and rule ignoring. Use when the project needs scriptable a11y scans without a full test framework, or when a Node-stack project wants an alternative to direct axe-core use."
+description: "Authors and runs pa11y accessibility scans - a CLI / Node.js tool that wraps HTML CodeSniffer (htmlcs) and / or axe-core engines - with `pa11y <url>` invocation, reporter selection (cli / csv / json / html / tsv), WCAG standard selection (WCAG2A / WCAG2AA / WCAG2AAA), and rule ignoring. Use when the project needs scriptable a11y scans without a full test framework, or when a Node-stack project wants an alternative to direct axe-core use."
 rating: 24
 d6: 4
 archetype: S1
@@ -10,7 +10,7 @@ archetype: S1
 
 ## Overview
 
-pa11y is "your automated accessibility testing pal" — a Node.js CLI
+pa11y is "your automated accessibility testing pal" - a Node.js CLI
 that runs a11y tests on a page either via the command line or
 programmatic API ([pa11y][readme]). It can use HTML CodeSniffer
 (htmlcs, default) or axe-core as the underlying engine.
@@ -27,7 +27,7 @@ programmatic API ([pa11y][readme]). It can use HTML CodeSniffer
   multi-URL runner).
 
 If the project already runs Playwright / Cypress with axe-core,
-prefer [`axe-a11y`](../axe-a11y/SKILL.md) — pa11y adds a layer.
+prefer [`axe-a11y`](../axe-a11y/SKILL.md) - pa11y adds a layer.
 
 ## Install
 
@@ -73,7 +73,7 @@ pa11y --standard WCAG2AA \
 ```
 
 `--runner htmlcs --runner axe` runs **both** engines and merges
-the issue list — broader coverage at the cost of duplicate
+the issue list - broader coverage at the cost of duplicate
 findings (different engines flag the same issue).
 
 ## Multi-URL with pa11y-ci
@@ -108,7 +108,7 @@ Run:
 pa11y-ci
 ```
 
-`pa11y-ci` exits non-zero if any URL exceeds threshold — the canonical
+`pa11y-ci` exits non-zero if any URL exceeds threshold - the canonical
 CI gate signal.
 
 ## Programmatic API
@@ -157,7 +157,7 @@ console.log(results.issues);
 }
 ```
 
-Note the **same issue from two engines** — htmlcs flags as
+Note the **same issue from two engines** - htmlcs flags as
 `WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail` (WCAG-SC-coded);
 axe flags as `color-contrast` (rule-coded). Pipe through
 [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) to
@@ -222,11 +222,11 @@ jobs:
 
 ## References
 
-- [pa11y][readme] — main repo: install, CLI flags, runners,
+- [pa11y][readme] - main repo: install, CLI flags, runners,
   reporter formats.
-- pa11y-ci — https://github.com/pa11y/pa11y-ci (multi-URL).
-- HTML CodeSniffer (the htmlcs runner) — https://github.com/squizlabs/HTML_CodeSniffer
-- [`axe-a11y`](../axe-a11y/SKILL.md) — direct axe usage (pa11y's
+- pa11y-ci - https://github.com/pa11y/pa11y-ci (multi-URL).
+- HTML CodeSniffer (the htmlcs runner) - https://github.com/squizlabs/HTML_CodeSniffer
+- [`axe-a11y`](../axe-a11y/SKILL.md) - direct axe usage (pa11y's
   alternative engine).
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) — CI
+- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
   gate consuming pa11y / axe results.

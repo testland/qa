@@ -1,6 +1,6 @@
 ---
 name: synthetic-monitor-author
-description: "Drafts a synthetic monitor configuration for one critical user journey — picks the platform (Datadog Synthetics, Pingdom, Checkly, New Relic, etc.), authors the scripted-transaction body (Playwright-style for browser checks; HTTP-step for API checks), wires the cadence (typical 1-15 min), defines per-step assertions (DOM presence, API status, response shape) and aggregate alert thresholds (consecutive-failure count + on-call routing). Use when a critical journey needs continuous-in-production verification per ISTQB-canonical shift-right (\"a test approach to test a system continuously in production\")."
+description: "Drafts a synthetic monitor configuration for one critical user journey - picks the platform (Datadog Synthetics, Pingdom, Checkly, New Relic, etc.), authors the scripted-transaction body (Playwright-style for browser checks; HTTP-step for API checks), wires the cadence (typical 1-15 min), defines per-step assertions (DOM presence, API status, response shape) and aggregate alert thresholds (consecutive-failure count + on-call routing). Use when a critical journey needs continuous-in-production verification per ISTQB-canonical shift-right (\"a test approach to test a system continuously in production\")."
 rating: 23
 d6: 4
 archetype: S3
@@ -21,12 +21,12 @@ Per [synthetic-mon-wiki][sm]:
 
 Per the ISTQB Glossary V4.7.1, **shift right** is "a test approach
 to test a system continuously in production." Synthetic monitors
-are the load-bearing primitive — they exercise critical journeys
+are the load-bearing primitive - they exercise critical journeys
 against production at a regular cadence and alert when they fail.
 
 > "These scripts run continuously at set intervals to measure
 > performance metrics like functionality, availability, and response
-> time—without requiring actual traffic." ([synthetic-mon-wiki][sm])
+> time - without requiring actual traffic." ([synthetic-mon-wiki][sm])
 
 This skill builds the configuration: which journey, how often, what
 to assert, when to page.
@@ -39,15 +39,15 @@ to assert, when to page.
 - A SLO depends on a specific user-facing flow being available; the
   monitor is the SLO-evidence source.
 - An incident postmortem identified "we should have caught this in
-  production faster" — the monitor is the prevention.
+  production faster" - the monitor is the prevention.
 - A regulatory requirement (uptime SLA, healthcare availability)
   needs continuous active verification.
 
 If real-user traffic is high and well-instrumented, real-user
-monitoring (RUM) is the complement — see "Synthetic vs. Real User
+monitoring (RUM) is the complement - see "Synthetic vs. Real User
 Monitoring" per [synthetic-mon-wiki][sm].
 
-## Step 1 — Pick the journey
+## Step 1 - Pick the journey
 
 Synthetic monitors should target the **highest-business-value
 journey** the team would page on at 3am if it broke. Examples:
@@ -59,9 +59,9 @@ journey** the team would page on at 3am if it broke. Examples:
 
 Per [synthetic-mon-wiki][sm]: "Synthetic monitoring tests commonly
 used paths and critical business processes." Don't monitor every
-flow — pick the 3-5 hero flows that map to the team's SLOs.
+flow - pick the 3-5 hero flows that map to the team's SLOs.
 
-## Step 2 — Pick the platform
+## Step 2 - Pick the platform
 
 | Platform                        | Notes                                                                 |
 |---------------------------------|----------------------------------------------------------------------|
@@ -77,7 +77,7 @@ The platform decision typically follows the existing observability
 stack (Datadog APM → Datadog Synthetics; New Relic → New Relic
 Synthetics).
 
-## Step 3 — Author the script (browser check)
+## Step 3 - Author the script (browser check)
 
 For browser checks, Playwright-style is the de-facto standard
 (Checkly natively, Datadog Synthetics increasingly):
@@ -125,7 +125,7 @@ Use **dedicated synthetic test accounts** (not real customer data)
 and **test-mode payment processors** so the script doesn't trigger
 real charges / orders.
 
-## Step 4 — Author the script (API check)
+## Step 4 - Author the script (API check)
 
 For API checks, HTTP-step format:
 
@@ -183,12 +183,12 @@ request:
 ```
 
 Per-step assertions distinguish "the API returned" from "the API
-returned the right thing" — distinguish status code, response
+returned the right thing" - distinguish status code, response
 shape, and response time.
 
-## Step 5 — Cadence
+## Step 5 - Cadence
 
-**Default: 5 min** — matches most user journeys and fits within a
+**Default: 5 min** - matches most user journeys and fits within a
 99.9% uptime SLO budget (5-min monitor with 2-failure alert rule
 gives ~10 min to detection, well within ~9 hours/year of allowed
 downtime). Use 1 min for the highest-criticality flows (auth,
@@ -207,17 +207,17 @@ side effects. Use daily for compliance / audit verification flows.
 Per [synthetic-mon-wiki][sm]: "These scripts run continuously at
 set intervals." Match the cadence to the SLO.
 
-## Step 6 — Alert thresholds
+## Step 6 - Alert thresholds
 
 A single failure isn't an alert; a single failure is noise. Pattern:
 
 - **Page if N consecutive failures** (typical N = 2 or 3).
-- **Page if M-of-K window** (e.g., 3 of last 5 failed) — catches
+- **Page if M-of-K window** (e.g., 3 of last 5 failed) - catches
   flapping monitors.
 - **Per-region**: alert per geographic region; a single-region
   failure is often a CDN issue, not the application.
 - **Per-step**: distinguish "the journey failed at step 1 (login)"
-  from "the journey failed at step 4 (checkout)" — different
+  from "the journey failed at step 4 (checkout)" - different
   on-call routing.
 
 ```yaml
@@ -236,18 +236,18 @@ alerts:
     cooldownPeriod: 1h
 ```
 
-## Step 7 — Locations
+## Step 7 - Locations
 
 Run from multiple geographic regions (3-5 minimum):
 
 - **us-east**, **us-west**, **eu-west**, **ap-southeast**, **sa-east**.
 
 Per [synthetic-mon-wiki][sm], synthetic monitoring measures
-"functionality, availability, and response time" — response time
+"functionality, availability, and response time" - response time
 varies dramatically by region; multi-region monitoring catches
 CDN / DNS / TLS issues that single-region misses.
 
-## Step 8 — As-code lifecycle
+## Step 8 - As-code lifecycle
 
 Treat monitors as code:
 
@@ -280,7 +280,7 @@ for why a monitor was added / removed.
 | Production payments triggered by monitors                                  | Real charges every minute add up; refunds are a nightmare.                    | Test-mode payment processor in production (Step 3). |
 | Single-region monitoring                                                   | CDN / DNS / TLS / regional issues invisible.                                   | 3-5 regions (Step 7). |
 | Page on first failure                                                      | Flake = page; on-call burnout.                                                | N consecutive failures (Step 6). |
-| Single one-step alert for the whole journey                                 | "Checkout failed" — but where? Triage takes longer than fix.                  | Per-step alerts (Step 6). |
+| Single one-step alert for the whole journey                                 | "Checkout failed" - but where? Triage takes longer than fix.                  | Per-step alerts (Step 6). |
 | Brittle CSS-class selectors in browser checks                              | Monitor breaks on every UI refactor; team disables.                           | Accessibility-first locators (Step 3). |
 | Monitor that asserts only `status_code = 200`                              | "200 OK" with empty body / wrong shape passes; bug ships.                     | Assert response shape too (Step 4). |
 | One-hour cadence on a 99.99% SLO                                            | SLO breach detected after the budget is gone.                                  | Cadence matches SLO (Step 5 table). |
@@ -301,20 +301,18 @@ for why a monitor was added / removed.
 
 ## References
 
-- [synthetic-mon-wiki][sm] — Synthetic monitoring definition,
+- [synthetic-mon-wiki][sm] - Synthetic monitoring definition,
   active vs proactive vs real-user monitoring distinction, common
   metrics (Time to First Byte, Speed Index, Time to Interactive,
   Page Complete), named providers (Datadog, F5).
-- ISTQB Glossary V4.7.1 — `https://glossary.istqb.org/en_US/term/shift-right`
+- ISTQB Glossary V4.7.1 - `https://glossary.istqb.org/en_US/term/shift-right`
   defines shift right as "A test approach to test a system
   continuously in production." (Per workspace memory: ISTQB glossary
   is JS-rendered; navigate via Playwright or real browser.)
-- [`production-tester`](../../agents/production-tester.md) — agent
+- [`production-tester`](../../agents/production-tester.md) - agent
   variant: authors a single monitor for one critical journey.
-- [`observability-to-test`](../../agents/observability-to-test.md)
-  — sibling: closes the loop from "monitor failed" back to
+- [`observability-to-test`](../../agents/observability-to-test.md) - sibling: closes the loop from "monitor failed" back to
   "regression test added."
-- [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md)
-  — sibling skill: validates A/B experiments running behind flags.
-- [`prod-canary-validator`](../prod-canary-validator/SKILL.md) —
+- [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md) - sibling skill: validates A/B experiments running behind flags.
+- [`prod-canary-validator`](../prod-canary-validator/SKILL.md) - 
   sibling: catches regressions in canary stage before full rollout.

@@ -1,6 +1,6 @@
 ---
 name: stryker-net-mutation
-description: "Configures Stryker.NET for mutation testing of .NET Core / .NET Framework projects — installs `dotnet-stryker` global tool, scopes mutation to specific csproj, supports xUnit / NUnit / MSTest, authors `stryker-config.json` with thresholds, runs in CI. Use when a .NET test suite needs mutation-quality verification — closes the .NET ecosystem gap left by Stryker.NET being newer than the JS variant."
+description: "Configures Stryker.NET for mutation testing of .NET Core / .NET Framework projects - installs `dotnet-stryker` global tool, scopes mutation to specific csproj, supports xUnit / NUnit / MSTest, authors `stryker-config.json` with thresholds, runs in CI. Use when a .NET test suite needs mutation-quality verification - closes the .NET ecosystem gap left by Stryker.NET being newer than the JS variant."
 rating: 22
 d6: 3
 archetype: S1
@@ -28,7 +28,7 @@ family in 2018 as the .NET ecosystem mutation testing answer.
 - A C# library needs higher confidence than coverage alone shows.
 - The team wants Stryker-family parity across JS + .NET.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 dotnet tool install -g dotnet-stryker
@@ -41,7 +41,7 @@ dotnet new tool-manifest
 dotnet tool install dotnet-stryker
 ```
 
-## Step 2 — Run
+## Step 2 - Run
 
 ```bash
 # From the test project directory
@@ -52,7 +52,7 @@ dotnet stryker
 The first run discovers the test framework, reports baseline
 coverage, then mutates and re-tests.
 
-## Step 3 — Configure via `stryker-config.json`
+## Step 3 - Configure via `stryker-config.json`
 
 ```json
 {
@@ -74,7 +74,7 @@ coverage, then mutates and re-tests.
 - `Advanced`
 - `Complete` (most mutators; slowest)
 
-## Step 4 — Solution mode
+## Step 4 - Solution mode
 
 For multi-project solutions:
 
@@ -85,7 +85,7 @@ dotnet stryker --solution path/to/MyApp.sln
 Stryker.NET discovers all test projects and mutates the production
 projects each test references.
 
-## Step 5 — CI integration
+## Step 5 - CI integration
 
 ```yaml
 - uses: actions/setup-dotnet@v4
@@ -101,7 +101,7 @@ projects each test references.
 
 Reports land under `StrykerOutput/<timestamp>/reports/mutation-report.html`.
 
-## Step 6 — Mutators (per Standard level)
+## Step 6 - Mutators (per Standard level)
 
 Common mutators include:
 
@@ -141,13 +141,12 @@ original behavior from the mutated one.
 
 ## References
 
-- [sni][sni] — Stryker.NET overview, NuGet distribution, .NET
+- [sni][sni] - Stryker.NET overview, NuGet distribution, .NET
   Core + .NET Framework support, history.
-- [`stryker-mutation`](../stryker-mutation/SKILL.md) — JS sibling
+- [`stryker-mutation`](../stryker-mutation/SKILL.md) - JS sibling
   with the same Stryker model.
 - [`pitest-mutation`](../pitest-mutation/SKILL.md),
   [`mutmut-mutation`](../mutmut-mutation/SKILL.md),
-  [`mull-mutation`](../mull-mutation/SKILL.md) — per-language
+  [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
   alternatives.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md)
-  — agent for surviving-mutant analysis.
+- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent for surviving-mutant analysis.

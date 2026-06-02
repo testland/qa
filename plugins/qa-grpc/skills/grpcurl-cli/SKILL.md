@@ -58,7 +58,7 @@ grpcurl -version
 | **Proto source files** (`-import-path` + `-proto`) | Reflection disabled; you have the `.proto` files |
 | **Protoset file** (`-protoset`) | Pre-compiled descriptor distributed alongside the binary |
 
-Server reflection is the easiest but security-sensitive — many
+Server reflection is the easiest but security-sensitive - many
 production deployments disable it (`reflection.Register(s)` not
 called). Plan accordingly.
 

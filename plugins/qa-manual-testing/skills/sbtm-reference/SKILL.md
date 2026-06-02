@@ -1,6 +1,6 @@
 ---
 name: sbtm-reference
-description: "Pure-reference catalog of Session-Based Test Management (SBTM) — Bach + Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary that exploratory-charter-author + manual-test-debrief consume."
+description: "Pure-reference catalog of Session-Based Test Management (SBTM) - Bach + Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary that exploratory-charter-author + manual-test-debrief consume."
 rating: 24
 d6: 4
 archetype: S2
@@ -16,7 +16,7 @@ activity. It was developed by Jonathan Bach + James Bach
 (1999-2000) and is documented at
 [satisfice.com/sbtm](https://www.satisfice.com/exploratory-testing).
 
-The unit of work is a **session** — a time-boxed (60-90 min)
+The unit of work is a **session** - a time-boxed (60-90 min)
 chunk of focused exploratory testing against a mission stated as
 a **charter**. Sessions produce **session sheets** that capture
 what happened in a structured-enough format for management to
@@ -38,7 +38,7 @@ session, see
 ## When to use
 
 - Onboarding a tester to SBTM vocabulary.
-- Authoring a charter — what fields belong, what mission framing
+- Authoring a charter - what fields belong, what mission framing
   to use.
 - Reviewing a session sheet for completeness.
 - Building a session-tracking dashboard.
@@ -151,7 +151,7 @@ tours applied, heuristics applied, hypotheses formed)
 (See manual-test-debrief)
 ```
 
-## TBS metrics — time breakdown
+## TBS metrics - time breakdown
 
 Per Bach's SBTM paper, sessions decompose into:
 
@@ -167,10 +167,10 @@ Plus often-included:
 - **Idle:** waiting on a build / response
 
 Healthy session: T 60-80%, B 10-20%, S 10-15%. Skewed sessions
-(T < 50%) signal problems — environment instability, charter too
+(T < 50%) signal problems - environment instability, charter too
 broad, etc.
 
-## Dashboard metrics — across sessions
+## Dashboard metrics - across sessions
 
 Per Bach's SBTM Reporting paper (satisfice.com), the lead views:
 
@@ -178,7 +178,7 @@ Per Bach's SBTM Reporting paper (satisfice.com), the lead views:
 |---|---|
 | **Sessions per week** | Throughput |
 | **Avg T% across sessions** | Environment / charter-scope health |
-| **Bugs per session** | Find rate (interpret carefully — not all sessions should find bugs) |
+| **Bugs per session** | Find rate (interpret carefully - not all sessions should find bugs) |
 | **Charters complete / in-progress / blocked** | Coverage progress |
 | **Charter-to-bug ratio** | Quality of charter framing (too broad = many small bugs; too narrow = few) |
 
@@ -187,7 +187,7 @@ These feed the testing-strategy review at sprint planning.
 ## PROOF debrief
 
 Per
-[`manual-test-debrief`](../manual-test-debrief/SKILL.md) — the
+[`manual-test-debrief`](../manual-test-debrief/SKILL.md) - the
 post-session debrief structure:
 
 | Letter | Stands for |
@@ -237,17 +237,17 @@ the session sheet is filed.
   (sessions/week, bugs/session) can mislead without
   charter-framing context.
 - **Doesn't replace automated coverage.** SBTM is for
-  exploration, not regression — pair with automated suites.
+  exploration, not regression - pair with automated suites.
 
 ## References
 
-- Bach J., Bach J. *Session-Based Test Management* (2000) —
+- Bach J., Bach J. *Session-Based Test Management* (2000) - 
   [satisfice.com/articles/sbtm.pdf](https://www.satisfice.com/articles/sbtm.pdf).
-- Bach J. *Exploratory Testing Explained* —
+- Bach J. *Exploratory Testing Explained* - 
   [satisfice.com/articles/et-article.pdf](https://www.satisfice.com/articles/et-article.pdf).
-- Bolton M. *Exploratory testing series* —
+- Bolton M. *Exploratory testing series* - 
   [developsense.com](https://developsense.com/).
-- Hendrickson E. *Explore It!* (Pragmatic Bookshelf, 2013) — book.
+- Hendrickson E. *Explore It!* (Pragmatic Bookshelf, 2013) - book.
 - Sibling references (heuristic catalogues the session applies):
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
   [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),

@@ -1,6 +1,6 @@
 ---
 name: bogus-data
-description: "Authors .NET test fixtures using the Bogus library — fluent `Faker<T>` typed builders with `.RuleFor` per property, generation via `Generate()` / `GenerateBetween(min, max)` / `GenerateLazy()`, and `UseSeed()` for reproducibility. Provides the Bogus equivalent of Python's Faker / Ruby's FactoryBot. Use when the project is C# / F# / VB.NET and the team needs typed fixture creation."
+description: "Authors .NET test fixtures using the Bogus library - fluent `Faker<T>` typed builders with `.RuleFor` per property, generation via `Generate()` / `GenerateBetween(min, max)` / `GenerateLazy()`, and `UseSeed()` for reproducibility. Provides the Bogus equivalent of Python's Faker / Ruby's FactoryBot. Use when the project is C# / F# / VB.NET and the team needs typed fixture creation."
 rating: 25
 d6: 4
 archetype: S1
@@ -13,7 +13,7 @@ archetype: S1
 Bogus is the canonical .NET test-data generator, ported from
 faker.js's spirit but typed for the C#-first ecosystem
 ([bogus-readme][readme]). It uses **typed `Faker<T>` builders** with
-fluent `.RuleFor` calls per property — the .NET equivalent of
+fluent `.RuleFor` calls per property - the .NET equivalent of
 combining Faker's value generation with a factory library's
 referential integrity.
 
@@ -69,7 +69,7 @@ var faker = new Faker<User>()
 modules as the JS / Python ports: `f.Name`, `f.Internet`, `f.Date`,
 `f.Commerce`, `f.Address`, `f.Lorem`, `f.Random`, etc.
 
-`f.IndexFaker` gives a sequential integer per generation — useful
+`f.IndexFaker` gives a sequential integer per generation - useful
 for IDs that must be unique within a test.
 
 ### Strict mode (recommended)
@@ -84,7 +84,7 @@ var faker = new Faker<User>()
 ```
 
 `.StrictMode(true)` causes Bogus to **fail at runtime if any property
-of `T` lacks a `RuleFor`**. Recommended — it prevents silent fixture
+of `T` lacks a `RuleFor`**. Recommended - it prevents silent fixture
 drift when a model adds a new property and the factory isn't
 updated.
 
@@ -99,7 +99,7 @@ var faker = new Faker<User>()
 ```
 
 The second-argument-form of `RuleFor` (`(f, u) => ...`) lets a rule
-reference already-generated properties on the same instance — useful
+reference already-generated properties on the same instance - useful
 for derived fields.
 
 ## Generation
@@ -111,7 +111,7 @@ Per [bogus-readme][readme]:
 | `faker.Generate()`            | One `T` instance.                                |
 | `faker.Generate(N)`           | List of `N` instances.                            |
 | `faker.GenerateBetween(min, max)` | Random count in `[min, max]`.                |
-| `faker.GenerateLazy(N)`        | Lazy enumerable — generates on iteration; saves memory for large N. |
+| `faker.GenerateLazy(N)`        | Lazy enumerable - generates on iteration; saves memory for large N. |
 
 ```csharp
 var oneUser   = faker.Generate();           // single
@@ -119,7 +119,7 @@ var hundred   = faker.Generate(100);         // list of 100
 var lazyTen   = faker.GenerateLazy(10);      // IEnumerable<User>; deferred
 ```
 
-Use `GenerateLazy` when seeding a database with thousands of rows —
+Use `GenerateLazy` when seeding a database with thousands of rows - 
 it streams instead of materializing.
 
 ## Seeding
@@ -132,7 +132,7 @@ var faker = new Faker<Order>()
 
 (Per [bogus-readme][readme].)
 
-`UseSeed(int)` makes generation reproducible across runs — same
+`UseSeed(int)` makes generation reproducible across runs - same
 seed produces same data. Mirror the
 [`faker-data`](../faker-data/SKILL.md) seeding guidance: seed in
 test setup so failures reproduce.
@@ -177,7 +177,7 @@ public class UserTests
 }
 ```
 
-NUnit and MSTest wire identically — Bogus is framework-agnostic.
+NUnit and MSTest wire identically - Bogus is framework-agnostic.
 
 ## Anti-patterns
 
@@ -203,11 +203,11 @@ NUnit and MSTest wire identically — Bogus is framework-agnostic.
 
 ## References
 
-- [bogus-readme][readme] — canonical: install, `Faker<T>`, `RuleFor`,
+- [bogus-readme][readme] - canonical: install, `Faker<T>`, `RuleFor`,
   `Generate` / `GenerateBetween` / `GenerateLazy`, `UseSeed`.
 - [`faker-data`](../faker-data/SKILL.md),
-  [`mimesis-data`](../mimesis-data/SKILL.md) — Python alternatives.
-- [`factory-bot-data`](../factory-bot-data/SKILL.md) — Ruby
+  [`mimesis-data`](../mimesis-data/SKILL.md) - Python alternatives.
+- [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby
   alternative.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) —
+- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
   dispatcher.

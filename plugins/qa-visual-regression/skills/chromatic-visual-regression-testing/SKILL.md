@@ -28,7 +28,7 @@ choice, TurboSnap) is a flag or env var.
 
 - The project uses Storybook and wants a hosted UI for visual review with
   team sign-off on baseline changes.
-- The team needs **TurboSnap** — a per-PR speedup that snapshots only
+- The team needs **TurboSnap** - a per-PR speedup that snapshots only
   stories whose dependency graph changed ([turbosnap][turbosnap]).
 - The repo already has `chromatic` in `devDependencies` or a
   `chromatic.config.json` at the root.
@@ -111,7 +111,7 @@ Useful flags ([cli][cli]):
 
 ### Configuration file
 
-`chromatic.config.json` at the project root — config keys mirror the CLI
+`chromatic.config.json` at the project root - config keys mirror the CLI
 flags converted to `kebab-case` ([cli][cli]):
 
 ```json
@@ -130,9 +130,9 @@ assets) ([turbosnap][turbosnap]).
 
 ## Reading exit codes
 
-Per the [Chromatic CLI docs][cli], exit codes carry semantic meaning —
+Per the [Chromatic CLI docs][cli], exit codes carry semantic meaning - 
 the gate logic should treat *visual changes* (1) differently from
-*system errors* (3, 21–23, 101–105, 201–220):
+*system errors* (3, 21 - 23, 101 - 105, 201 - 220):
 
 | Code     | Meaning                                       |
 |---------:|-----------------------------------------------|
@@ -141,12 +141,12 @@ the gate logic should treat *visual changes* (1) differently from
 | `2`      | Build has component (Storybook) errors.       |
 | `3`      | Build failed (system error).                  |
 | `4`      | No stories found.                             |
-| `5`–`6`  | Build limited / canceled.                     |
-| `11`–`12`| Account quota / payment issues.               |
-| `21`–`23`| Storybook build / load failures.              |
-| `101`–`105` | Git or dependency issues.                  |
-| `201`–`220` | Network / API errors.                      |
-| `254`–`255` | Invalid options / unknown error.           |
+| `5` - `6`  | Build limited / canceled.                     |
+| `11` - `12`| Account quota / payment issues.               |
+| `21` - `23`| Storybook build / load failures.              |
+| `101` - `105` | Git or dependency issues.                  |
+| `201` - `220` | Network / API errors.                      |
+| `254` - `255` | Invalid options / unknown error.           |
 
 Use `--exit-zero-on-changes` only when changes are reviewed in the
 Chromatic UI (not in CI) and you want CI to remain green pending
@@ -223,8 +223,8 @@ PR-vs-baseline commit ancestry ([turbosnap][turbosnap]).
 
 ## References
 
-- [chromatic-overview][overview] — product overview, framework support.
-- [chromatic-quickstart][quickstart] — install + first-run baseline.
-- [chromatic-cli][cli] — full CLI flag set + exit codes + config schema.
-- [chromatic-turbosnap][turbosnap] — TurboSnap mechanism, full-rebuild
+- [chromatic-overview][overview] - product overview, framework support.
+- [chromatic-quickstart][quickstart] - install + first-run baseline.
+- [chromatic-cli][cli] - full CLI flag set + exit codes + config schema.
+- [chromatic-turbosnap][turbosnap] - TurboSnap mechanism, full-rebuild
   triggers, bundler requirements.

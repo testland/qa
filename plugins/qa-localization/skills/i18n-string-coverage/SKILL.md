@@ -1,6 +1,6 @@
 ---
 name: i18n-string-coverage
-description: "Build-an-X workflow that scans source code for untranslated strings — finds hardcoded user-facing text not wrapped in the i18n function (`t()`, `i18n.t`, `gettext`, `__()`, etc.), maps gaps to the team''''s translation file, reports per-language coverage (en: 100%; fr: 87%; es: 60%), gates per-PR for new untranslated strings. Use when the product ships in multiple locales and the team needs continuous coverage tracking."
+description: "Build-an-X workflow that scans source code for untranslated strings - finds hardcoded user-facing text not wrapped in the i18n function (`t()`, `i18n.t`, `gettext`, `__()`, etc.), maps gaps to the team''''s translation file, reports per-language coverage (en: 100%; fr: 87%; es: 60%), gates per-PR for new untranslated strings. Use when the product ships in multiple locales and the team needs continuous coverage tracking."
 rating: 22
 d6: 3
 archetype: S3
@@ -28,7 +28,7 @@ diff.
 - Quarterly: scheduled coverage review.
 - A new locale launches and the team needs the gap inventory.
 
-## Step 1 — Identify the i18n library
+## Step 1 - Identify the i18n library
 
 Per stack, the wrap function differs:
 
@@ -45,7 +45,7 @@ Per stack, the wrap function differs:
 
 Configure per project.
 
-## Step 2 — Scan for untranslated strings
+## Step 2 - Scan for untranslated strings
 
 ```bash
 # Pattern: JSX/TSX text children that aren't wrapped
@@ -54,20 +54,20 @@ grep -rn -E '>[A-Z][a-z]+ ?[A-Za-z ]*<' src/components/ \
   | grep -v -E '\$?\{?t\(|i18n\.t\(|trans|formatMessage'
 ```
 
-This catches the obvious cases — `<button>Submit</button>` —
+This catches the obvious cases - `<button>Submit</button>` - 
 without false-positive on `<button>{t('submit')}</button>`.
 
 For more comprehensive detection, language-specific tooling:
 
 | Tool                   | Use                                                |
 |------------------------|----------------------------------------------------|
-| `i18n-extract` (npm)    | JS/TS — extracts keys + finds missing             |
-| `eslint-plugin-i18next` | JS/TS — ESLint rule for unwrapped strings         |
-| `pylint-django-i18n`    | Django — pylint plugin                              |
+| `i18n-extract` (npm)    | JS/TS - extracts keys + finds missing             |
+| `eslint-plugin-i18next` | JS/TS - ESLint rule for unwrapped strings         |
+| `pylint-django-i18n`    | Django - pylint plugin                              |
 | `i18nspector` (Debian)   | Lints `.po` files                                   |
 | `xgettext`              | Cross-language: extracts strings from source       |
 
-## Step 3 — Diff translation files
+## Step 3 - Diff translation files
 
 ```python
 # scripts/i18n-coverage.py
@@ -102,7 +102,7 @@ def flatten(d, prefix=''):
             yield full
 ```
 
-## Step 4 — Report
+## Step 4 - Report
 
 ```markdown
 ## i18n coverage report — `<sha>`
@@ -136,7 +136,7 @@ deprecated. Recommend deletion:
 - `legacy.old_checkout_button`
 ```
 
-## Step 5 — PR gate
+## Step 5 - PR gate
 
 ```yaml
 - name: i18n coverage check
@@ -151,11 +151,11 @@ deprecated. Recommend deletion:
 ```
 
 For new locales without 100% coverage, gate is informational, not
-blocking — the gap is tracked, not blocked.
+blocking - the gap is tracked, not blocked.
 
-## Step 6 — Bilingual / RTL flagging
+## Step 6 - Bilingual / RTL flagging
 
-For RTL languages (Arabic, Hebrew, Persian, Urdu — per
+For RTL languages (Arabic, Hebrew, Persian, Urdu - per
 [w3-rtl][w3rtl]), the report also flags:
 
 [w3rtl]: https://www.w3.org/International/questions/qa-html-dir
@@ -165,7 +165,7 @@ For RTL languages (Arabic, Hebrew, Persian, Urdu — per
 - Strings combining RTL and LTR text (need bidi handling).
 
 These need extra translator attention even when
-"translated" — character-by-character translation may not
+"translated" - character-by-character translation may not
 render correctly without bidi guidance.
 
 ## Anti-patterns
@@ -190,10 +190,8 @@ render correctly without bidi guidance.
 
 ## References
 
-- [w3rtl][w3rtl] — W3C on `dir` attribute + RTL languages.
-- [`pseudo-localization-runner`](../pseudo-localization-runner/SKILL.md)
-  — sibling: layout-level i18n testing.
-- [`rtl-rendering-tester`](../rtl-rendering-tester/SKILL.md) —
+- [w3rtl][w3rtl] - W3C on `dir` attribute + RTL languages.
+- [`pseudo-localization-runner`](../pseudo-localization-runner/SKILL.md) - sibling: layout-level i18n testing.
+- [`rtl-rendering-tester`](../rtl-rendering-tester/SKILL.md) - 
   RTL-specific rendering verification.
-- [`locale-format-validator`](../locale-format-validator/SKILL.md)
-  — date / number / currency format verification.
+- [`locale-format-validator`](../locale-format-validator/SKILL.md) - date / number / currency format verification.

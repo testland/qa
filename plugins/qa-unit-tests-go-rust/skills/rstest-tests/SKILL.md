@@ -1,6 +1,6 @@
 ---
 name: rstest-tests
-description: "Configures and runs rstest — Rust parametrized + fixture-based testing crate; `#[rstest]` attribute + `#[case(...)]` for parametrize; `#[fixture]` for reusable test setup; matrix tests via multiple `#[case]` × N (cartesian product); async test support via `#[async_std::test]` / `#[tokio::test]` + `#[rstest]`; `#[future]` for async fixtures. Use when working with Rust and needing parametrize/fixture patterns beyond stdlib `#[test]`."
+description: "Configures and runs rstest - Rust parametrized + fixture-based testing crate; `#[rstest]` attribute + `#[case(...)]` for parametrize; `#[fixture]` for reusable test setup; matrix tests via multiple `#[case]` × N (cartesian product); async test support via `#[async_std::test]` / `#[tokio::test]` + `#[rstest]`; `#[future]` for async fixtures. Use when working with Rust and needing parametrize/fixture patterns beyond stdlib `#[test]`."
 rating: 21
 d6: 4
 archetype: S1
@@ -14,7 +14,7 @@ Per [github.com/la10736/rstest][rs-gh]:
 
 [rs-gh]: https://github.com/la10736/rstest
 
-rstest is a Rust crate for parametrize + fixture testing — features
+rstest is a Rust crate for parametrize + fixture testing - features
 that Rust's stdlib `#[test]` lacks. Pairs with [`cargo-test`](../cargo-test/SKILL.md)
 (rstest tests are still discovered by `cargo test`).
 
@@ -26,7 +26,7 @@ that Rust's stdlib `#[test]` lacks. Pairs with [`cargo-test`](../cargo-test/SKIL
 - Async test patterns benefit from rstest's async-fixture support.
 - Migration from pytest/JUnit5 patterns to Rust.
 
-## Step 1 — Install
+## Step 1 - Install
 
 `Cargo.toml`:
 
@@ -35,7 +35,7 @@ that Rust's stdlib `#[test]` lacks. Pairs with [`cargo-test`](../cargo-test/SKIL
 rstest = "0.21"
 ```
 
-## Step 2 — Parametrize with `#[case]`
+## Step 2 - Parametrize with `#[case]`
 
 ```rust
 use rstest::rstest;
@@ -50,11 +50,11 @@ fn add_cases(#[case] a: i32, #[case] b: i32, #[case] expected: i32) {
 }
 ```
 
-Each `#[case]` runs as a separate test — failures don't stop
+Each `#[case]` runs as a separate test - failures don't stop
 subsequent cases. Test names become `add_cases::case_1`,
 `add_cases::case_2`, etc.
 
-## Step 3 — Named cases
+## Step 3 - Named cases
 
 ```rust
 #[rstest]
@@ -66,10 +66,10 @@ fn add_named(#[case] a: i32, #[case] b: i32, #[case] expected: i32) {
 }
 ```
 
-Test names: `add_named::positive`, `add_named::zero`, etc. — much
+Test names: `add_named::positive`, `add_named::zero`, etc. - much
 better for failure logs.
 
-## Step 4 — Fixtures
+## Step 4 - Fixtures
 
 ```rust
 use rstest::{fixture, rstest};
@@ -99,7 +99,7 @@ Fixtures are functions with `#[fixture]`; tests with `#[rstest]`
 auto-receive them via parameter name matching. Fixture chaining
 works (a fixture can request other fixtures).
 
-## Step 5 — Matrix tests (cartesian product)
+## Step 5 - Matrix tests (cartesian product)
 
 ```rust
 #[rstest]
@@ -115,7 +115,7 @@ fn test_matrix(
 Runs 3 × 3 = 9 tests with all combinations. Equivalent to
 nested `#[case]` for cartesian product.
 
-## Step 6 — Combined `#[case]` + `#[values]`
+## Step 6 - Combined `#[case]` + `#[values]`
 
 ```rust
 #[rstest]
@@ -130,7 +130,7 @@ fn test_with_values(
 }
 ```
 
-## Step 7 — Async tests
+## Step 7 - Async tests
 
 ```rust
 use rstest::rstest;
@@ -163,7 +163,7 @@ async fn test_async(#[future] db_async: Database) {
 }
 ```
 
-## Step 8 — Indirect fixtures (parameterize fixture instances)
+## Step 8 - Indirect fixtures (parameterize fixture instances)
 
 ```rust
 #[fixture]
@@ -181,7 +181,7 @@ fn test_user(#[case] expected_name: &str, #[with(expected_name)] user: User) {
 
 `#[with(...)]` injects custom args into the fixture for that test.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 Same as plain `cargo test`:
 
@@ -189,7 +189,7 @@ Same as plain `cargo test`:
 - run: cargo test --all-targets
 ```
 
-rstest tests are discovered + run by `cargo test` natively — no
+rstest tests are discovered + run by `cargo test` natively - no
 separate runner.
 
 ## Anti-patterns
@@ -212,11 +212,11 @@ separate runner.
 
 ## References
 
-- [rs-gh][rs-gh] — rstest repository + docs
-- crates.io/crates/rstest — published crate
-- docs.rs/rstest — API reference
+- [rs-gh][rs-gh] - rstest repository + docs
+- crates.io/crates/rstest - published crate
+- docs.rs/rstest - API reference
 - [`go-test`](../go-test/SKILL.md),
   [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
-  [`cargo-test`](../cargo-test/SKILL.md) — sister tools
-- [`proptest-testing`](../../qa-property-based/skills/proptest-testing/SKILL.md) — Rust property-based
+  [`cargo-test`](../cargo-test/SKILL.md) - sister tools
+- [`proptest-testing`](../../qa-property-based/skills/proptest-testing/SKILL.md) - Rust property-based
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)

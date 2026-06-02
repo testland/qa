@@ -1,6 +1,6 @@
 ---
 name: presidio-pii-detection
-description: "Author and run Microsoft Presidio PII detection — wraps presidio-analyzer (PII detector) + presidio-anonymizer (replace/redact/mask/hash/encrypt operators) for scanning datasets, log streams, and free-text fields. Covers AnalyzerEngine + AnonymizerEngine setup, built-in recognizers (PERSON, EMAIL_ADDRESS, CREDIT_CARD, US_SSN, IBAN_CODE, country-specific IDs across US/UK/Spain/Italy/Poland/Singapore/Australia/India and more), custom PatternRecognizer authoring, score thresholds, and CI gating. Use when scanning *existing* data for PII (vs synthesising fresh fixtures with synthetic-pii-generator)."
+description: "Author and run Microsoft Presidio PII detection - wraps presidio-analyzer (PII detector) + presidio-anonymizer (replace/redact/mask/hash/encrypt operators) for scanning datasets, log streams, and free-text fields. Covers AnalyzerEngine + AnonymizerEngine setup, built-in recognizers (PERSON, EMAIL_ADDRESS, CREDIT_CARD, US_SSN, IBAN_CODE, country-specific IDs across US/UK/Spain/Italy/Poland/Singapore/Australia/India and more), custom PatternRecognizer authoring, score thresholds, and CI gating. Use when scanning *existing* data for PII (vs synthesising fresh fixtures with synthetic-pii-generator)."
 rating: 25
 d6: 5
 archetype: S1
@@ -13,9 +13,9 @@ archetype: S1
 Microsoft Presidio is an open-source SDK for PII detection and
 anonymisation. Two engines compose:
 
-- **`presidio-analyzer`** — detects PII entities in free text using
+- **`presidio-analyzer`** - detects PII entities in free text using
   per-entity recognisers (regex + NER + checksum validation).
-- **`presidio-anonymizer`** — applies operators to the detected
+- **`presidio-anonymizer`** - applies operators to the detected
   spans (replace, redact, mask, hash, encrypt, custom).
 
 This skill wraps both. For the **categories** of PII that Presidio
@@ -75,7 +75,7 @@ for r in results:
 recognisers. Per
 [microsoft.github.io/presidio/analyzer](https://microsoft.github.io/presidio/analyzer/),
 `analyze()` returns a list of `RecognizerResult` with fields
-`start`, `end`, `score` (0–1 confidence), and `entity_type`.
+`start`, `end`, `score` (0 - 1 confidence), and `entity_type`.
 
 ### Restricting entity types
 
@@ -88,8 +88,8 @@ results = analyzer.analyze(
 )
 ```
 
-`entities` whitelists which recognisers run. `score_threshold` (0–1)
-drops low-confidence hits. Default threshold is 0; raise to 0.4–0.6
+`entities` whitelists which recognisers run. `score_threshold` (0 - 1)
+drops low-confidence hits. Default threshold is 0; raise to 0.4 - 0.6
 for noisy text (logs) where partial matches inflate false positives.
 
 ### Built-in entity catalog
@@ -99,7 +99,7 @@ the global entities are:
 
 | Entity | Detects |
 |---|---|
-| `CREDIT_CARD` | 12–19 digit numbers (Luhn-validated) |
+| `CREDIT_CARD` | 12 - 19 digit numbers (Luhn-validated) |
 | `CRYPTO` | Bitcoin wallet addresses |
 | `DATE_TIME` | Absolute or relative dates / times |
 | `EMAIL_ADDRESS` | Email box identifiers |
@@ -135,8 +135,8 @@ For the full list and entity descriptions see
 
 ### Custom PatternRecognizer
 
-For entities Presidio doesn't ship — internal employee IDs, custom
-account-number formats, vendor-specific IDs — extend the analyzer:
+For entities Presidio doesn't ship - internal employee IDs, custom
+account-number formats, vendor-specific IDs - extend the analyzer:
 
 ```python
 from presidio_analyzer import PatternRecognizer, Pattern
@@ -285,11 +285,11 @@ if violations:
 print("No blocking PII found.")
 ```
 
-Tune `score_threshold` per project — 0.5 balances false positives
+Tune `score_threshold` per project - 0.5 balances false positives
 (synthetic-looking fixtures) against false negatives (real emails
 in random strings).
 
-## Example — scanning a log line
+## Example - scanning a log line
 
 ```python
 text = (
@@ -311,7 +311,7 @@ Note: the SSN `123-45-6789` is the
 `4111-1111-1111-1111` is a Visa test card from
 [Stripe test-cards docs](https://stripe.com/docs/testing). Presidio
 does not distinguish "real-looking but reserved-for-testing"
-values — it flags the format regardless. Pair the detector with a
+values - it flags the format regardless. Pair the detector with a
 known-safe-value allowlist if your test fixtures intentionally use
 these reserved values.
 
@@ -320,19 +320,19 @@ these reserved values.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Skipping spaCy model download | `PERSON` and `LOCATION` recognisers return zero hits silently | Always run `python -m spacy download en_core_web_lg` before first use |
-| Default `score_threshold = 0` on log files | Flood of low-confidence PHONE_NUMBER hits on numeric IDs | Raise threshold to 0.4–0.6 for log scanning |
+| Default `score_threshold = 0` on log files | Flood of low-confidence PHONE_NUMBER hits on numeric IDs | Raise threshold to 0.4 - 0.6 for log scanning |
 | Single regex for SSN | Misses unformatted `123456789` and `123 45 6789` variants | Use the built-in `US_SSN` recogniser; it covers Luhn-like variants |
 | No custom recogniser for in-house IDs | Internal employee IDs slip through | Define `PatternRecognizer` per Authoring section |
 | `replace` operator with default placeholder for analytics | Loses distribution / cardinality | Use deterministic hash or substitution for analytics-bound output |
 | Running analyzer + anonymizer on every request in prod | High latency (NER model is heavy) | Run as batch / offline; or use a lighter recogniser set |
-| Trusting Presidio to be regime-complete | Built-in recognisers cover GDPR/CCPA broadly but miss specialised IDs (e.g., medical record numbers); HIPAA #8 not detected by default | Add custom `PatternRecognizer` per regime — see [`pii-categories-reference`](../pii-categories-reference/SKILL.md) |
+| Trusting Presidio to be regime-complete | Built-in recognisers cover GDPR/CCPA broadly but miss specialised IDs (e.g., medical record numbers); HIPAA #8 not detected by default | Add custom `PatternRecognizer` per regime - see [`pii-categories-reference`](../pii-categories-reference/SKILL.md) |
 
 ## Limitations
 
 - **NER models drift.** `en_core_web_lg` from spaCy is updated
   periodically; recogniser hits may shift between versions.
 - **Score is a heuristic.** A score of 0.85 on PERSON doesn't mean
-  85 % chance of correctness — it's a calibration relative to
+  85 % chance of correctness - it's a calibration relative to
   Presidio's training data.
 - **No formal de-identification guarantee.** Presidio is a
   detect-and-mask toolkit, not a k-anonymity / differential
@@ -342,16 +342,16 @@ these reserved values.
 - **English-default NLP.** Non-English text needs a different
   spaCy model and may have weaker built-in PERSON detection.
 - **Free-text only.** Structured-column detection (PII in a column
-  with no surrounding text) needs schema-aware logic on top — see
+  with no surrounding text) needs schema-aware logic on top - see
   [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md).
 
 ## References
 
-- Presidio Analyzer docs —
+- Presidio Analyzer docs - 
   [microsoft.github.io/presidio/analyzer](https://microsoft.github.io/presidio/analyzer/).
-- Presidio Anonymizer docs —
+- Presidio Anonymizer docs - 
   [microsoft.github.io/presidio/anonymizer](https://microsoft.github.io/presidio/anonymizer/).
-- Supported entities —
+- Supported entities - 
   [microsoft.github.io/presidio/supported_entities](https://microsoft.github.io/presidio/supported_entities/).
 - Sibling references:
   [`pii-categories-reference`](../pii-categories-reference/SKILL.md),
@@ -360,5 +360,4 @@ these reserved values.
   [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md),
   [`pii-leak-critic`](../../agents/pii-leak-critic.md).
 - Orthogonal sibling:
-  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md)
-  — fixture generation (distinct from detection of existing data).
+  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - fixture generation (distinct from detection of existing data).

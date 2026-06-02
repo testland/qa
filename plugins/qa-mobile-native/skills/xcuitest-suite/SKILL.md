@@ -1,6 +1,6 @@
 ---
 name: xcuitest-suite
-description: "Authors XCUIest UI tests for iOS / iPadOS / tvOS — uses the three-class XCUIApplication / XCUIElement / XCUIElementQuery pattern, sets accessibility identifiers on production code, runs via `xcodebuild test` with destination, parses the `xcresult` bundle. Use when an iOS app needs UI tests in Apple's first-party framework (no external runtime; native to Xcode)."
+description: "Authors XCUIest UI tests for iOS / iPadOS / tvOS - uses the three-class XCUIApplication / XCUIElement / XCUIElementQuery pattern, sets accessibility identifiers on production code, runs via `xcodebuild test` with destination, parses the `xcresult` bundle. Use when an iOS app needs UI tests in Apple's first-party framework (no external runtime; native to Xcode)."
 rating: 23
 d6: 4
 archetype: S1
@@ -37,7 +37,7 @@ If the app is React Native, see
 Appium-style coverage, see
 [`appium-testing`](../appium-testing/SKILL.md).
 
-## Step 1 — Add a UI test target
+## Step 1 - Add a UI test target
 
 In Xcode: File → New → Target → UI Testing Bundle. The template
 generates a `.swift` test class with a default `setUp`:
@@ -58,10 +58,10 @@ Per [xcui-fundamentals][xcui]:
 > "`continueAfterFailure = NO` is the default (recommended) because
 > UI test steps are dependent on previous steps."
 
-## Step 2 — Set accessibility identifiers in production code
+## Step 2 - Set accessibility identifiers in production code
 
 XCUITest finds elements via the accessibility tree. Hard-coded
-labels / text are brittle — set explicit identifiers in the SUT:
+labels / text are brittle - set explicit identifiers in the SUT:
 
 ```swift
 // Production code
@@ -76,10 +76,10 @@ let app = XCUIApplication()
 app.buttons["place-order-button"].tap()
 ```
 
-`accessibilityIdentifier` (not `accessibilityLabel`) — labels are
+`accessibilityIdentifier` (not `accessibilityLabel`) - labels are
 user-facing and translated; identifiers are dev-only and stable.
 
-## Step 3 — Query patterns
+## Step 3 - Query patterns
 
 ```swift
 let app = XCUIApplication()
@@ -101,7 +101,7 @@ cells.element(boundBy: 0).tap()
 XCTAssert(app.staticTexts["Order confirmed"].waitForExistence(timeout: 5))
 ```
 
-## Step 4 — Synthesize events
+## Step 4 - Synthesize events
 
 ```swift
 // Tap
@@ -123,7 +123,7 @@ app.buttons["context-menu"].press(forDuration: 1.0)
 app.keyboards.buttons["return"].tap()
 ```
 
-## Step 5 — Assert state
+## Step 5 - Assert state
 
 ```swift
 let confirmation = app.staticTexts["Order confirmed"]
@@ -138,7 +138,7 @@ XCTAssertTrue(app.buttons["submit"].isEnabled)
 up to N seconds. Use `waitForExistence` for any post-tap state
 that depends on async work.
 
-## Step 6 — Run
+## Step 6 - Run
 
 ```bash
 # From the project directory:
@@ -158,7 +158,7 @@ Per-destination patterns:
 | Connected device   | `'platform=iOS,id=<UDID>'`                                         |
 | Multi-device matrix | Pass `-destination` multiple times.                              |
 
-## Step 7 — Parse `.xcresult`
+## Step 7 - Parse `.xcresult`
 
 The result bundle is binary. Extract via `xcresulttool`:
 
@@ -170,7 +170,7 @@ Then use [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysi
 on the JUnit-equivalent shape (or directly on the JSON for richer
 data).
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 # .github/workflows/ios-tests.yml
@@ -216,11 +216,10 @@ GitHub Actions provides `macos-15` runners with Xcode pre-installed.
 
 ## References
 
-- [xcui][xcui] — Apple's XCUITest fundamentals: three-class
+- [xcui][xcui] - Apple's XCUITest fundamentals: three-class
   pattern (XCUIApplication / XCUIElement / XCUIElementQuery),
   Query→Synthesize→Assert, `continueAfterFailure = NO` default.
-- [`espresso-suite`](../espresso-suite/SKILL.md) — Android sibling.
-- [`appium-testing`](../appium-testing/SKILL.md) — cross-platform
+- [`espresso-suite`](../espresso-suite/SKILL.md) - Android sibling.
+- [`appium-testing`](../appium-testing/SKILL.md) - cross-platform
   alternative when iOS + Android share tests.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  — downstream parser for JUnit-converted xcresult.
+- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream parser for JUnit-converted xcresult.

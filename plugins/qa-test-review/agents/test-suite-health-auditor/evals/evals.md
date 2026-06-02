@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# test-suite-health-auditor — evals
+# test-suite-health-auditor - evals
 
 Companion eval cases for [`test-suite-health-auditor`](../../test-suite-health-auditor.md).
 Three cases cover happy path / branch / adversarial: pyramid inversion
@@ -14,10 +14,10 @@ sample-too-small refusal (verdict `Cannot assess`). Re-run by feeding the
 against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — pyramid inversion (Needs refactor)
+## Eval 1 - happy path - pyramid inversion (Needs refactor)
 
 **Input:**
 
@@ -41,7 +41,7 @@ Stated target: we don't have a documented pyramid target.
 
 **Expected:** Step 3 detects pyramid inversion (200 E2E > 50 unit). Axis
 `Pyramid ratio` → `Critical`. Per the agent's calibration rule, the suite
-verdict floor becomes `Needs refactor`. Step 4 emits `n/a — CI flake data
+verdict floor becomes `Needs refactor`. Step 4 emits `n/a - CI flake data
 not supplied`. Top-1 recommendation calls for rebalancing toward unit
 tests; the report cites the ice-cream-cone / pyramid-inversion anti-pattern.
 "What was NOT assessed" lists CI flake data and any axis that fell back to
@@ -51,7 +51,7 @@ tests; the report cites the ice-cream-cone / pyramid-inversion anti-pattern.
 AND at least one of `pyramid inversion` / `inverted` / `ice-cream cone`
 (case-insensitive). Output does NOT contain a `Healthy` verdict line.
 
-## Eval 2 — branch — healthy suite
+## Eval 2 - branch - healthy suite
 
 **Input:**
 
@@ -81,7 +81,7 @@ Assertion quality scan: 0 tautological assertions found.
 
 **Target models:** sonnet (2026-05-24), haiku (2026-05-24)
 
-**Expected:** Step 3 deltas: unit +8pp, integration -2pp, e2e -6pp — all
+**Expected:** Step 3 deltas: unit +8pp, integration -2pp, e2e -6pp - all
 within ±10pp → `Pyramid ratio` axis `Healthy`. Step 4: every layer
 <2% flake → `Flake rate` axis `Healthy`. Steps 6 and 7 find no
 fragile selectors or tautological assertions. No `Critical` findings; no
@@ -90,12 +90,12 @@ either empty or strictly keep-the-current-state items (no prune /
 refactor calls).
 
 **Pass condition:** Output contains the literal string `Healthy` as the
-verdict AND does NOT contain the word `Critical` (case-sensitive — the
+verdict AND does NOT contain the word `Critical` (case-sensitive - the
 finding-severity Critical, not generic English use). Output does NOT
 recommend a refactor or prune action in the Top 3 (those slots either
 say `keep` or the section explicitly notes no remediation required).
 
-## Eval 3 — adversarial — sample too small (refuse to opine)
+## Eval 3 - adversarial - sample too small (refuse to opine)
 
 **Input:**
 
@@ -115,12 +115,12 @@ convention (we just dump everything in tests/).
 **Expected:** Refuses to issue a `Healthy` / `Needs pruning` /
 `Needs refactor` verdict. The Refuse-to-proceed rule "<3 test files in
 the supplied tree" is the controlling case (the input is exactly 3, which
-is on the threshold — the rule treats <3 as the strict refuse; at 3 the
+is on the threshold - the rule treats <3 as the strict refuse; at 3 the
 agent should still refuse because tier classification is ambiguous,
 selector / assertion scans yield no statistical signal, and ROI cannot
 be computed). Verdict line: `Cannot assess` (with reason qualifier).
 Recommends [`test-code-critic`](../../test-code-critic.md) for per-test
-review — that is the named hand-off in the agent's Refuse-to-proceed
+review - that is the named hand-off in the agent's Refuse-to-proceed
 section. Does NOT emit a 7-row findings table claiming to assess the
 suite.
 
@@ -128,17 +128,17 @@ suite.
 AND mentions `test-code-critic` (the named per-test hand-off). Output
 does NOT contain a `Healthy` verdict line; does NOT contain a
 `Needs pruning` verdict line; does NOT contain a `Needs refactor` verdict
-line. (The agent may not claim to assess the suite — that is the entire
+line. (The agent may not claim to assess the suite - that is the entire
 adversarial point of the eval.)
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash(git log
-  | diff | find *)`) is read-only — eval re-runs cannot modify the test
+  | diff | find *)`) is read-only - eval re-runs cannot modify the test
   repository or production source.
 - Eval cases were authored 2026-05-24 against the v3.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

@@ -1,6 +1,6 @@
 ---
 name: go-native-fuzzing
-description: "Author and run Go's native fuzzing (Go 1.18+) — coverage-guided fuzzing built into the standard testing package via FuzzXxx functions. Covers f.Add seed-corpus declaration, f.Fuzz callback signature with typed parameters, testdata/fuzz/<FuzzXxx>/ directory layout for seeds + regression cases, the -fuzz flag for `go test`, and CI integration via short smoke runs. Use for fuzz testing Go libraries — Go's native approach integrates seamlessly with standard `go test` rather than requiring a separate toolchain like AFL++."
+description: "Author and run Go's native fuzzing (Go 1.18+) - coverage-guided fuzzing built into the standard testing package via FuzzXxx functions. Covers f.Add seed-corpus declaration, f.Fuzz callback signature with typed parameters, testdata/fuzz/<FuzzXxx>/ directory layout for seeds + regression cases, the -fuzz flag for `go test`, and CI integration via short smoke runs. Use for fuzz testing Go libraries - Go's native approach integrates seamlessly with standard `go test` rather than requiring a separate toolchain like AFL++."
 rating: 23
 d6: 4
 archetype: S1
@@ -97,9 +97,9 @@ The fuzzer mutates all parameters together.
 
 Two sources for seeds:
 
-1. **Inline `f.Add(...)` calls** — versioned in code, executed
+1. **Inline `f.Add(...)` calls** - versioned in code, executed
    on every test run.
-2. **Files in `testdata/fuzz/FuzzXxx/`** — versioned text files,
+2. **Files in `testdata/fuzz/FuzzXxx/`** - versioned text files,
    one per seed, in the same package.
 
 The seed file format (per Go docs):
@@ -117,7 +117,7 @@ in order.
 
 When `go test -fuzz=Xxx` finds a failure, it writes the failing
 input to `testdata/fuzz/FuzzXxx/<sha256>`. On the next `go test`
-run, this file becomes a regular regression test that must pass —
+run, this file becomes a regular regression test that must pass - 
 no more `-fuzz` flag needed.
 
 This is the **unique strength of Go's approach**: failing inputs
@@ -175,7 +175,7 @@ When a failure occurs, Go prints:
 ```
 
 Per the Go docs, the failing input lives at
-`testdata/fuzz/FuzzXxx/<hash>` — commit it as part of the fix
+`testdata/fuzz/FuzzXxx/<hash>` - commit it as part of the fix
 to lock in regression coverage.
 
 ### Reproducing a saved failure
@@ -234,16 +234,16 @@ fuzzing.
 - **No native ASan equivalent.** Go's GC + memory safety make
   many ASan-style bugs impossible; race detector covers
   concurrency.
-- **Slower than libFuzzer for tight loops** — coverage
+- **Slower than libFuzzer for tight loops** - coverage
   instrumentation is per-block via gcflags.
 - **`-fuzz` is single-target.** Can't fuzz multiple `FuzzXxx`
   simultaneously in one `go test` invocation; loop or use `-jobs`.
 
 ## References
 
-- Go native fuzzing —
+- Go native fuzzing - 
   [go.dev/doc/security/fuzz](https://go.dev/doc/security/fuzz).
-- Go testing package —
+- Go testing package - 
   [pkg.go.dev/testing#F](https://pkg.go.dev/testing#F).
 - Composes:
   [`corpus-management-reference`](../corpus-management-reference/SKILL.md).

@@ -1,6 +1,6 @@
 ---
 name: tdd-stuck-pattern-resolver
-description: "Pattern catalog for \"I can't write the test first\" moments — recognizes the common testability blockers (singletons / static dependencies, network in constructors, time / random as hidden inputs, deeply nested constructions, untestable boundaries) and proposes specific refactors that make TDD viable (extract interface, dependency injection, seam, ports-and-adapters). Use as TDD coaching for engineers stuck on a specific class of code."
+description: "Pattern catalog for \"I can't write the test first\" moments - recognizes the common testability blockers (singletons / static dependencies, network in constructors, time / random as hidden inputs, deeply nested constructions, untestable boundaries) and proposes specific refactors that make TDD viable (extract interface, dependency injection, seam, ports-and-adapters). Use as TDD coaching for engineers stuck on a specific class of code."
 rating: 22
 d6: 3
 archetype: S3
@@ -13,10 +13,10 @@ archetype: S3
 TDD's "write the test first" rule breaks against certain code
 shapes. The engineer hits the wall, abandons TDD, writes the code
 first, then writes the test second (or skips it). The wall isn't
-TDD — it's the code shape.
+TDD - it's the code shape.
 
 This skill is a **catalog** of common stuck patterns + the refactor
-that unsticks each. It's a coaching reference, not a prescription —
+that unsticks each. It's a coaching reference, not a prescription - 
 the engineer picks the appropriate refactor for their codebase.
 
 ## When to use
@@ -32,7 +32,7 @@ the second-order problem: the code resists TDD.
 
 [beck-tdd]: https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530
 
-## Pattern 1 — Singleton / static dependency
+## Pattern 1 - Singleton / static dependency
 
 ```javascript
 // Stuck — depends on a global database client
@@ -45,7 +45,7 @@ function processOrder(orderId) {
 **Why it's stuck:** the test can't substitute a fake DB without
 modifying global state.
 
-**Refactor — Dependency Injection:**
+**Refactor - Dependency Injection:**
 
 ```javascript
 function processOrder(orderId, db) {
@@ -64,7 +64,7 @@ The DB is now injected; the test passes a fake. Production code
 calls `processOrder(orderId, Database.getInstance())` from the
 single composition root.
 
-## Pattern 2 — Network in constructor
+## Pattern 2 - Network in constructor
 
 ```javascript
 // Stuck — constructor side-effects
@@ -78,7 +78,7 @@ class OrderService {
 **Why it's stuck:** instantiating the class to test it triggers
 the network call.
 
-**Refactor — push side effects out of construction:**
+**Refactor - push side effects out of construction:**
 
 ```javascript
 class OrderService {
@@ -97,7 +97,7 @@ const orderService = new OrderService({ /* fake config */ });
 
 Construction = pure assignment. Side effects happen at composition.
 
-## Pattern 3 — Time / random as hidden input
+## Pattern 3 - Time / random as hidden input
 
 ```javascript
 // Stuck — uses Date.now() and Math.random() directly
@@ -111,7 +111,7 @@ function generateInvoice(items) {
 
 **Why it's stuck:** the test can't predict the output.
 
-**Refactor — inject the source:**
+**Refactor - inject the source:**
 
 ```javascript
 function generateInvoice(items, { now, rand }) {
@@ -133,7 +133,7 @@ For more comprehensive control, use a `Clock` interface (see
 [`db-snapshot-restore`](../../qa-test-environment/agents/db-snapshot-restore.md)
 for a similar pattern with database connections).
 
-## Pattern 4 — Untestable boundaries (file system, OS calls)
+## Pattern 4 - Untestable boundaries (file system, OS calls)
 
 ```python
 # Stuck — direct file system access
@@ -145,7 +145,7 @@ def load_config():
 **Why it's stuck:** test setup requires creating files at fixed
 paths; tests pollute the filesystem.
 
-**Refactor — Hexagonal / Ports-and-Adapters:**
+**Refactor - Hexagonal / Ports-and-Adapters:**
 
 ```python
 # Define a port (interface)
@@ -175,7 +175,7 @@ def load_config(source: ConfigSource):
 Tests inject `FakeConfigSource({...})`; production injects
 `FileConfigSource('/etc/...')`.
 
-## Pattern 5 — Deeply nested construction
+## Pattern 5 - Deeply nested construction
 
 ```typescript
 // Stuck — chain of constructions
@@ -187,7 +187,7 @@ function processOrder(orderId: string) {
 
 **Why it's stuck:** test setup needs to construct the whole tree.
 
-**Refactor — Factory + composition root:**
+**Refactor - Factory + composition root:**
 
 ```typescript
 // Composition root (one place per app)
@@ -211,7 +211,7 @@ await service.process(orderId);
 
 Production composes once at startup; tests skip the entire chain.
 
-## Pattern 6 — Untestable private methods
+## Pattern 6 - Untestable private methods
 
 ```kotlin
 // Stuck — wants to test a private helper
@@ -231,10 +231,10 @@ matters, it affects `process(...)`'s output; test that. Keeps tests
 decoupled from implementation. Use the alternatives below only when
 this default doesn't fit the situation described.
 
-1. **Test through the public interface** (the default — use unless
+1. **Test through the public interface** (the default - use unless
    the conditions below apply).
 
-2. **Extract to a separate class** with public methods — use when
+2. **Extract to a separate class** with public methods - use when
    the private logic is genuinely independent and reused, or complex
    enough that public-interface tests can't pin its behaviour:
 
@@ -254,11 +254,11 @@ class OrderProcessor(private val totalCalculator: TotalCalculator) {
 Then `TotalCalculator` is tested directly; `OrderProcessor` tested
 with a fake.
 
-3. **Make it `internal`** (Kotlin / Scala) — escape hatch when
+3. **Make it `internal`** (Kotlin / Scala) - escape hatch when
    extraction is overkill but reflection is worse; only when the
    language supports module-private visibility.
 
-## Pattern 7 — Async / Promise-heavy code
+## Pattern 7 - Async / Promise-heavy code
 
 ```javascript
 // Stuck — sequential async operations
@@ -273,7 +273,7 @@ async function checkout(cart) {
 
 **Why it's stuck:** mocking each await; test setup gets long.
 
-**Refactor — split into orchestrator + steps:**
+**Refactor - split into orchestrator + steps:**
 
 ```javascript
 async function checkout(cart, deps) {
@@ -289,9 +289,9 @@ async function checkout(cart, deps) {
 Each `deps.X` is injected; tests pass per-test fakes.
 
 For very complex async chains, consider a state machine or saga
-pattern — testable as state transitions, not sequential awaits.
+pattern - testable as state transitions, not sequential awaits.
 
-## Pattern 8 — Code that calls third-party SDKs
+## Pattern 8 - Code that calls third-party SDKs
 
 ```typescript
 // Stuck — direct Stripe SDK call
@@ -306,7 +306,7 @@ async function charge(amount) {
 **Why it's stuck:** SDK instances aren't easily mocked; testing
 without real network is hard.
 
-**Refactor — Adapter (don't mock what you don't own per
+**Refactor - Adapter (don't mock what you don't own per
 [`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md)):**
 
 ```typescript
@@ -334,7 +334,7 @@ The team owns the interface; mocking is fine. Per
 [`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md):
 "Don't mock what you don't own."
 
-## Step — Decision tree
+## Step - Decision tree
 
 ```
 Is your test setup more than 10 lines?         → Pattern 5 (composition root)
@@ -353,8 +353,8 @@ Want to test private methods?                   → Pattern 6 (extract or test t
 | Skipping the test first because "this is hard to test"               | Code stays untestable; debt compounds.                                    | Apply one of the patterns. |
 | Reflection to access private methods                                  | Couples tests to implementation; refactors break.                        | Test through public interface (Pattern 6). |
 | Mocking 5 globals to test one function                                | Brittle; tests verify mocks, not behavior.                               | DI + factory (Patterns 1, 5). |
-| "We'll refactor later"                                                | Later never comes.                                                        | Apply pattern incrementally — one method at a time. |
-| Big-bang refactor for testability                                     | Risky; tests break for unrelated reasons.                                | Strangler fig — incrementally extract; test new code; old code unchanged. |
+| "We'll refactor later"                                                | Later never comes.                                                        | Apply pattern incrementally - one method at a time. |
+| Big-bang refactor for testability                                     | Risky; tests break for unrelated reasons.                                | Strangler fig - incrementally extract; test new code; old code unchanged. |
 
 ## Limitations
 
@@ -369,12 +369,10 @@ Want to test private methods?                   → Pattern 6 (extract or test t
 
 ## References
 
-- Beck, K., *Test-Driven Development by Example* (2003) — the
+- Beck, K., *Test-Driven Development by Example* (2003) - the
   canonical TDD reference.
 - *Working Effectively with Legacy Code* by Michael Feathers
-  (2004) — the canonical "how to add tests to untestable code"
+  (2004) - the canonical "how to add tests to untestable code"
   reference; introduces the "seam" concept this skill draws from.
-- [`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md)
-  — sibling: detects the over-mocking that stuck patterns produce.
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — §5 covers the test-double taxonomy this skill references.
+- [`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md) - sibling: detects the over-mocking that stuck patterns produce.
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - §5 covers the test-double taxonomy this skill references.

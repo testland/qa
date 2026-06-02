@@ -1,6 +1,6 @@
 ---
 name: visual-diff-summarizer
-description: "Builds a per-PR visual-diff summary that clusters intentional vs incidental changes across snapshots emitted by Percy, Chromatic, Playwright `toHaveScreenshot`, Storybook test-runner, and other visual testing tools — groups diffs by component / route, separates \"intent-aligned with PR scope\" from \"cascade / regression suspect\", surfaces baseline-update recommendations, and emits a single PR comment that points the reviewer at the screenshots that need actual eyes. Use when a PR has 20+ visual diffs and the reviewer needs help triaging which ones to actually open."
+description: "Builds a per-PR visual-diff summary that clusters intentional vs incidental changes across snapshots emitted by Percy, Chromatic, Playwright `toHaveScreenshot`, Storybook test-runner, and other visual testing tools - groups diffs by component / route, separates \"intent-aligned with PR scope\" from \"cascade / regression suspect\", surfaces baseline-update recommendations, and emits a single PR comment that points the reviewer at the screenshots that need actual eyes. Use when a PR has 20+ visual diffs and the reviewer needs help triaging which ones to actually open."
 rating: 23
 d6: 3
 archetype: S3
@@ -15,7 +15,7 @@ reviewer either rubber-stamps everything or starts skipping. Both
 fail.
 
 This skill turns "50 diffs" into "3 components changed as the PR
-intended; 1 component changed unexpectedly — focus here":
+intended; 1 component changed unexpectedly - focus here":
 
 1. Read each visual tool's per-snapshot diff output (Percy /
    Chromatic / Playwright snapshots / Storybook).
@@ -29,7 +29,7 @@ intended; 1 component changed unexpectedly — focus here":
    cluster.
 
 The intent-vs-diff classification mirrors the same logic used by
-`golden-file-manager` and `visual-diff-classifier` — **a wrong-but-consistent
+`golden-file-manager` and `visual-diff-classifier` - **a wrong-but-consistent
 visual baseline is worse than no baseline at all.**
 
 ## When to use
@@ -41,10 +41,10 @@ visual baseline is worse than no baseline at all.**
 - A "design system update" cascades into many components and the
   team needs to confirm the cascade was intentional.
 
-If the PR has 1–2 diffs in scoped files, this skill is overkill —
+If the PR has 1 - 2 diffs in scoped files, this skill is overkill - 
 the reviewer can open them directly. The value compounds at scale.
 
-## Step 1 — Pick the upstream tool's output
+## Step 1 - Pick the upstream tool's output
 
 Each tool exposes per-snapshot diff data via API or local artifact:
 
@@ -59,10 +59,10 @@ Each tool exposes per-snapshot diff data via API or local artifact:
 The upstream tool wrappers in `qa-visual-regression`
 (`percy-visual-regression-testing`, `chromatic-visual-regression-testing`,
 `playwright-snapshots`, `storybook-visual-regression-testing`) cover
-the per-tool integration. This skill is downstream — it consumes
+the per-tool integration. This skill is downstream - it consumes
 their output.
 
-## Step 2 — Normalize to per-snapshot rows
+## Step 2 - Normalize to per-snapshot rows
 
 ```typescript
 interface SnapshotDiff {
@@ -86,7 +86,7 @@ function clusterKey(d: SnapshotDiff): string {
 }
 ```
 
-## Step 3 — Read PR intent
+## Step 3 - Read PR intent
 
 The PR's **title + description + labels** is the stated intent
 signal. Pull via `gh pr view`:
@@ -117,7 +117,7 @@ interface Intent {
 - From changedFiles: walk paths; the leaf directory under
   `src/components/` or `src/routes/` is a component / route name.
 
-## Step 4 — Classify each cluster against intent
+## Step 4 - Classify each cluster against intent
 
 ```typescript
 type Classification = 'aligned' | 'adjacent' | 'unrelated';
@@ -140,7 +140,7 @@ function classify(cluster: string, diffs: SnapshotDiff[], intent: Intent): Class
 `parentOf`/`childOf` use the team's component-graph manifest (from
 Storybook or a hand-maintained JSON) to identify hierarchy.
 
-## Step 5 — Render the report
+## Step 5 - Render the report
 
 ```markdown
 ## Visual diff summary — `<sha>`
@@ -180,11 +180,11 @@ chromatic --auto-accept-changes --only-changed --components Button,ButtonGroup,I
 # OR for Percy:
 percy approve <build-id> --snapshots Button,ButtonGroup,IconButton
 
-# Refused — Footer cluster needs investigation; do NOT auto-approve.
+# Refused - Footer cluster needs investigation; do NOT auto-approve.
 ```
 ```
 
-## Step 6 — Cluster sort order
+## Step 6 - Cluster sort order
 
 The reviewer scans top-down. Order:
 
@@ -192,21 +192,21 @@ The reviewer scans top-down. Order:
 2. **Adjacent** (action required: confirm).
 3. **Aligned** (action: bulk-approve).
 
-Inside each group, sort by max diff ratio descending — biggest
+Inside each group, sort by max diff ratio descending - biggest
 visual change first.
 
-## Step 7 — Auto-update only the aligned cluster
+## Step 7 - Auto-update only the aligned cluster
 
 The summary report includes the safe-to-run command for the aligned
 cluster only. Adjacent and unrelated clusters never get an
-auto-update suggestion — those need eyes.
+auto-update suggestion - those need eyes.
 
 This matches the `visual-diff-classifier` agent's adversarial logic
 in `qa-visual-regression`: aligned diffs go through; unrelated diffs
 are refused with a recommendation to escalate to
 `regression-bisector` in `qa-flake-triage`.
 
-## Step 8 — CI integration (sticky comment)
+## Step 8 - CI integration (sticky comment)
 
 ```yaml
 - name: Fetch tool diff data
@@ -228,7 +228,7 @@ are refused with a recommendation to escalate to
 | Anti-pattern                                                       | Why it fails                                                                  | Fix |
 |--------------------------------------------------------------------|-------------------------------------------------------------------------------|-----|
 | Posting one comment per snapshot                                   | PR conversation is buried; reviewer can't see the forest.                    | One sticky summary (Step 8); per-snapshot detail in linked tool UI. |
-| No intent classification — just listing diffs                       | Reviewer has to figure out what's expected vs surprise; same problem as no summary. | Aligned / adjacent / unrelated buckets (Step 4). |
+| No intent classification - just listing diffs                       | Reviewer has to figure out what's expected vs surprise; same problem as no summary. | Aligned / adjacent / unrelated buckets (Step 4). |
 | Auto-approving every diff                                           | Regressions silently become baselines. The point of visual tests is defeated. | Auto-approve only aligned cluster (Step 7); refuse unrelated. |
 | Sorting by alphabetical name                                        | High-impact diffs sit below low-impact alphabetical earlier-letter ones.     | Sort by max diff ratio within each classification group (Step 6). |
 | Cross-tool deduplication missing                                    | Same snapshot appears in 3 reports (Percy + Playwright + Chromatic dual-instrumentation). | Deduplicate by `(componentOrRoute, variant)` cluster key. |
@@ -245,7 +245,7 @@ are refused with a recommendation to escalate to
   curated graph (typical: Storybook tree). Without it, every diff
   outside the changed-files set looks unrelated.
 - **No cross-PR memory.** A diff that's been "unrelated" for 3 PRs
-  in a row probably isn't a regression — but the summary doesn't
+  in a row probably isn't a regression - but the summary doesn't
   remember. Persist verdicts in a per-component history table for
   long-term context.
 - **Tool-specific quirks.** Chromatic's "interaction tests" can
@@ -258,15 +258,15 @@ are refused with a recommendation to escalate to
 - The `qa-visual-regression` plugin's per-tool wrappers
   (`percy-visual-regression-testing`,
   `chromatic-visual-regression-testing`, `playwright-snapshots`,
-  `storybook-visual-regression-testing`) — the producers of the
+  `storybook-visual-regression-testing`) - the producers of the
   upstream diff data this skill consumes.
 - `visual-diff-classifier` and `visual-baseline-curator` agents in
-  `qa-visual-regression` — the per-snapshot adversarial logic that
+  `qa-visual-regression` - the per-snapshot adversarial logic that
   this skill summarizes at the cluster level.
-- `golden-file-manager` agent in `qa-test-data` — same intent-vs-diff
+- `golden-file-manager` agent in `qa-test-data` - same intent-vs-diff
   classification applied to text snapshots.
-- `regression-bisector` agent in `qa-flake-triage` — escalation
+- `regression-bisector` agent in `qa-flake-triage` - escalation
   target for unrelated clusters.
 - [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md),
-  [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) —
+  [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   sibling PR-summary skills.

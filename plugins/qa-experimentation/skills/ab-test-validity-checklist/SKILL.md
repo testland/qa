@@ -28,7 +28,7 @@ form for the experiment owner.
 - Building experimentation governance / a peer-review process.
 - PR review of experiment configuration changes.
 
-## Step 1 — Pre-registration
+## Step 1 - Pre-registration
 
 Document **before launch**:
 
@@ -36,7 +36,7 @@ Document **before launch**:
 |---|---|
 | OEC | The single metric (or weighted combination) to improve |
 | Power | Expected effect size, sample size, alpha, beta |
-| Guardrails | Per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md) — list each + threshold |
+| Guardrails | Per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md) - list each + threshold |
 | Randomization unit | User / session / device / cookie / IP / tenant |
 | Allocation | Percentages per arm; rules for ramp-up |
 | Look schedule | Pre-declared days; per [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md) |
@@ -46,7 +46,7 @@ Document **before launch**:
 Commit this to the repo as `experiments/<id>/proposal.yml`.
 Any post-launch change requires explicit team approval.
 
-## Step 2 — Sample Ratio Mismatch (SRM)
+## Step 2 - Sample Ratio Mismatch (SRM)
 
 Per Microsoft Experimentation Platform research (KDD 2019 paper
 "Diagnosing Sample Ratio Mismatch in Online Controlled
@@ -80,7 +80,7 @@ threshold prevents false-positive SRM alarms).
 If SRM is detected: **stop ship discussion; root-cause first**.
 Use [`sample-ratio-mismatch-detector`](../../agents/sample-ratio-mismatch-detector.md).
 
-## Step 3 — Assignment integrity
+## Step 3 - Assignment integrity
 
 Tests for the assignment SDK / service:
 
@@ -96,19 +96,19 @@ These tests live in the SDK-specific test skills per
 [`statsig-test`](../statsig-test/SKILL.md),
 [`optimizely-test`](../optimizely-test/SKILL.md), etc.
 
-## Step 4 — Telemetry correctness
+## Step 4 - Telemetry correctness
 
 Verify the **event firing** matches the proposal:
 
 - Conversion events fire exactly once per user per
   conversion-eligible session.
 - Exposure events fire for everyone who could see the variant
-  (not just those who actually saw it — that's a different
+  (not just those who actually saw it - that's a different
   measure, "treatment effect on the treated").
 - Guardrail metrics are queryable against the experiment
   partition (variant ID joined to event stream).
 
-## Step 5 — Peeking discipline
+## Step 5 - Peeking discipline
 
 Per [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md):
 
@@ -118,7 +118,7 @@ Per [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md):
 | If fixed-horizon: no early-stop UI | "Ship" button disabled until N reached |
 | If Pocock/OBF: look schedule pre-declared | Dashboards lock looks outside the schedule |
 
-## Step 6 — Novelty / primacy effects
+## Step 6 - Novelty / primacy effects
 
 Per Kohavi et al.: users react differently to novel UX. Novelty
 inflates the early-period effect; primacy depresses it. Mitigation:
@@ -128,7 +128,7 @@ inflates the early-period effect; primacy depresses it. Mitigation:
 - For long-running tests, segment by week to spot trend
   reversal.
 
-## Step 7 — Post-experiment validation
+## Step 7 - Post-experiment validation
 
 Before ship:
 
@@ -146,7 +146,7 @@ Before ship:
 Document each pass in `experiments/<id>/result.md` with the
 specific numbers.
 
-## Step 8 — Emit the checklist
+## Step 8 - Emit the checklist
 
 The output of this skill: a markdown checklist + sign-off form.
 

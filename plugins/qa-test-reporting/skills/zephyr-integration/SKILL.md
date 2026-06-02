@@ -1,6 +1,6 @@
 ---
 name: zephyr-integration
-description: "Syncs automated test results to Zephyr Scale for Jira (formerly TM4J / SmartBear / Adaptavist) — picks the right product variant (Scale Cloud vs Scale Server vs Squad), authenticates via the JWT-from-API-token pattern, opens a Test Cycle for the build, batches per-test-case executions back via the `POST /testresults` endpoint, and maps automated test methods to Zephyr Test Cases via `@TestCaseKey`-style annotations or test-name parsing. Use when the team's Jira test management is Zephyr Scale (the most common Zephyr variant in 2026) and CI must keep Test Cycles in sync with automation."
+description: "Syncs automated test results to Zephyr Scale for Jira (formerly TM4J / SmartBear / Adaptavist) - picks the right product variant (Scale Cloud vs Scale Server vs Squad), authenticates via the JWT-from-API-token pattern, opens a Test Cycle for the build, batches per-test-case executions back via the `POST /testresults` endpoint, and maps automated test methods to Zephyr Test Cases via `@TestCaseKey`-style annotations or test-name parsing. Use when the team's Jira test management is Zephyr Scale (the most common Zephyr variant in 2026) and CI must keep Test Cycles in sync with automation."
 rating: 22
 d6: 3
 archetype: S1
@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 "Zephyr" disambiguates into three Jira test-management products
-that are **not API-compatible** — picking the right one is step
+that are **not API-compatible** - picking the right one is step
 zero:
 
 | Product                               | Origin / current owner            | Key API host pattern                                  |
@@ -20,7 +20,7 @@ zero:
 | **Zephyr Squad** (the older one)      | Atlassian → SmartBear             | `https://prod-api.zephyr4jiracloud.com/connect/`      |
 | **Zephyr Enterprise** (server-only)   | SmartBear                          | On-prem Jira; per-instance                             |
 
-This skill covers **Zephyr Scale Cloud** as the primary path —
+This skill covers **Zephyr Scale Cloud** as the primary path - 
 it's the most-deployed Zephyr variant in 2026 and the one new
 projects pick. Notes for Squad / Enterprise are inline.
 
@@ -38,15 +38,15 @@ client).
 - The team uses Jira + Zephyr Scale and needs CI-side automation
   to update Zephyr Test Cycles.
 - A release-process gate is "all Zephyr Test Cycles for the release
-  must be green" — automated runs need to feed the cycle.
+  must be green" - automated runs need to feed the cycle.
 - The team is migrating from TestRail or Xray to Zephyr Scale and
   needs the same automation-sync pattern.
 
 If the team uses **Zephyr Squad**, the endpoints + auth differ
-significantly — see the Squad-specific REST API docs and the
+significantly - see the Squad-specific REST API docs and the
 distinct `prod-api.zephyr4jiracloud.com` host.
 
-## Step 1 — Authenticate (Zephyr Scale Cloud)
+## Step 1 - Authenticate (Zephyr Scale Cloud)
 
 Zephyr Scale Cloud uses a long-lived API token (generated via
 "API Access Tokens" in the Zephyr Scale settings) sent as a Bearer
@@ -59,16 +59,16 @@ curl -H "Authorization: Bearer $ZEPHYR_TOKEN" \
   'https://api.zephyrscale.smartbear.com/v2/healthcheck'
 ```
 
-Unlike Xray Cloud, no JWT exchange step — the token is used directly.
+Unlike Xray Cloud, no JWT exchange step - the token is used directly.
 
-The token is **per-account, not per-project** — guard it with the
+The token is **per-account, not per-project** - guard it with the
 same care as a Jira admin credential.
 
-## Step 2 — Map test methods to Zephyr Test Cases
+## Step 2 - Map test methods to Zephyr Test Cases
 
 Two patterns mirror the TestRail / Xray approach.
 
-### Pattern A — Embed Test Case key in test name
+### Pattern A - Embed Test Case key in test name
 
 ```python
 def test_TC1234_can_add_to_cart():
@@ -82,7 +82,7 @@ test('can add to cart [TC1234]', async () => { /* ... */ });
 A regex extracts `TC1234` (the Zephyr Scale Test Case key) at
 sync time.
 
-### Pattern B — JUnit metadata via custom adapter
+### Pattern B - JUnit metadata via custom adapter
 
 For Java / TestNG:
 
@@ -97,7 +97,7 @@ The `@TestCaseKey` annotation is provided by community adapters
 a small custom JUnit extension reads the annotation and emits a
 Zephyr-compatible JSON file alongside the JUnit XML.
 
-## Step 3 — Open a Test Cycle for the build
+## Step 3 - Open a Test Cycle for the build
 
 ```python
 # scripts/zephyr_sync.py
@@ -125,7 +125,7 @@ def open_cycle(name, version=None):
 The returned `key` (e.g. `CALC-R42`) is the Test Cycle's identifier;
 results land inside it.
 
-## Step 4 — Post execution results
+## Step 4 - Post execution results
 
 Per the documented Zephyr Scale Cloud `/testexecutions` endpoint
 shape (consistent across SmartBear KB versions):
@@ -148,14 +148,14 @@ def post_execution(cycle_key, test_case_key, status, comment=None,
 
 `statusName` accepts the Zephyr-installed status names. For projects
 with custom statuses, query `/statuses?projectKey=...&statusType=TEST_EXECUTION`
-at script init to confirm the available names — don't hard-code beyond
+at script init to confirm the available names - don't hard-code beyond
 the four built-ins (`Pass`, `Fail`, `Blocked`, `Not Executed`).
 
-## Step 5 — Batch multiple results
+## Step 5 - Batch multiple results
 
 The `/testexecutions` endpoint is per-execution. For batched POSTs,
 the documented `/automations/executions` endpoint accepts a payload
-that wraps multiple results — the exact shape is variant per Zephyr
+that wraps multiple results - the exact shape is variant per Zephyr
 Scale version. The conservative pattern is to retry per-execution
 with bounded concurrency:
 
@@ -170,7 +170,7 @@ def post_all(cycle_key, results, max_concurrent=5):
 `max_concurrent=5` keeps under the rate limit (60 req/min on most
 plans) for typical run sizes.
 
-## Step 6 — Wire into CI
+## Step 6 - Wire into CI
 
 ```yaml
 - name: Run tests
@@ -192,13 +192,13 @@ The script:
 3. Opens a Test Cycle (Step 3).
 4. Posts executions (Step 4) with bounded concurrency (Step 5).
 
-## Step 7 — Folder + label organization
+## Step 7 - Folder + label organization
 
 Zephyr Scale Test Cases live in folders. Two patterns:
 
-- **Per-feature folder**: `Checkout/`, `Cart/`, `Auth/` — automated
+- **Per-feature folder**: `Checkout/`, `Cart/`, `Auth/` - automated
   tests in those folders sync to Test Cases there.
-- **Per-tier folder**: `Smoke/`, `Regression/`, `Edge cases/` —
+- **Per-tier folder**: `Smoke/`, `Regression/`, `Edge cases/` - 
   automated tests carry a tier label that the sync script translates
   to folder.
 
@@ -206,7 +206,7 @@ The folder structure is created via the Zephyr UI; the sync script
 references existing Test Case keys and doesn't create folders on
 the fly.
 
-## Step 8 — JUnit XML import (alternative path)
+## Step 8 - JUnit XML import (alternative path)
 
 Zephyr Scale also accepts a JUnit XML file via the
 `/automations/executions/junit` endpoint with a multipart body. This
@@ -254,16 +254,16 @@ matters; Pattern B (this step) is the lightweight default.
 
 ## References
 
-- `https://support.smartbear.com/zephyr-scale-cloud/` — canonical
+- `https://support.smartbear.com/zephyr-scale-cloud/` - canonical
   Zephyr Scale Cloud documentation portal (auth/region-gated;
   consult in a real browser).
-- `https://support.smartbear.com/zephyr-scale-cloud/api-docs/` —
+- `https://support.smartbear.com/zephyr-scale-cloud/api-docs/` - 
   REST API reference for Scale Cloud.
-- `https://support.smartbear.com/zephyr-squad-cloud/` — Squad Cloud
+- `https://support.smartbear.com/zephyr-squad-cloud/` - Squad Cloud
   reference (different product, different API).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) — upstream
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - upstream
   parser for the input the sync script consumes.
 - [`xray-integration`](../xray-integration/SKILL.md),
-  [`testrail-integration`](../testrail-integration/SKILL.md) —
+  [`testrail-integration`](../testrail-integration/SKILL.md) - 
   sibling test-management integrations with the same architecture
   but different APIs.

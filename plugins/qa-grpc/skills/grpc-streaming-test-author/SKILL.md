@@ -1,6 +1,6 @@
 ---
 name: grpc-streaming-test-author
-description: "Workflow-driven skill that builds gRPC streaming-RPC test suites from a proto definition. Classifies each RPC by streaming pattern (unary, server-streaming, client-streaming, bidi), then for each streaming pattern emits the required test categories — ordering preservation, completion semantics (server closes after stream end, client closes by half-close), cancellation behaviour, deadline handling, and partial-stream-failure scenarios. Produces test skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end). Composes grpc-status-code-mapping-reference (for error-path assertions), grpc-mock (for in-process test harness), and protobuf-versioning-strategy-reference (for evolving streaming RPCs safely)."
+description: "Workflow-driven skill that builds gRPC streaming-RPC test suites from a proto definition. Classifies each RPC by streaming pattern (unary, server-streaming, client-streaming, bidi), then for each streaming pattern emits the required test categories - ordering preservation, completion semantics (server closes after stream end, client closes by half-close), cancellation behaviour, deadline handling, and partial-stream-failure scenarios. Produces test skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end). Composes grpc-status-code-mapping-reference (for error-path assertions), grpc-mock (for in-process test harness), and protobuf-versioning-strategy-reference (for evolving streaming RPCs safely)."
 rating: 23
 d6: 4
 archetype: S3
@@ -11,7 +11,7 @@ archetype: S3
 ## Overview
 
 Streaming RPCs are where gRPC clients and servers most often
-diverge from the proto contract — message ordering, completion
+diverge from the proto contract - message ordering, completion
 signalling, cancellation, and partial-failure semantics are all
 testable surfaces.
 
@@ -35,15 +35,15 @@ for status-code assertions.
 ## When to use
 
 - Adding tests for a new streaming RPC.
-- Auditing an existing streaming-RPC test suite — is each
+- Auditing an existing streaming-RPC test suite - is each
   pattern's required category covered?
-- Investigating a streaming-RPC bug — minimal repro from the
+- Investigating a streaming-RPC bug - minimal repro from the
   test matrix.
 - PR review of changes to streaming RPCs (the
   [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md)
   rules on `stream` changes are subtle).
 
-## Step 1 — Classify each RPC
+## Step 1 - Classify each RPC
 
 Walk the `.proto` file and tabulate:
 
@@ -63,7 +63,7 @@ service Chat {
 | `Upload` | client-stream | success, server completes before client finishes, server-side error mid-upload, client-side cancel before send, empty stream |
 | `Conversation` | bidi | success, ordering per direction, client closes send while still receiving, server closes send while still receiving, both close, deadline mid-conversation, error mid-conversation |
 
-## Step 2 — Test categories per pattern
+## Step 2 - Test categories per pattern
 
 ### Unary (covered for completeness)
 
@@ -80,7 +80,7 @@ def test_send_returns_invalid_argument(stub):
 
 ### Server-streaming
 
-**Ordering preservation** — per gRPC docs: "gRPC guarantees
+**Ordering preservation** - per gRPC docs: "gRPC guarantees
 message ordering within an individual RPC call."
 
 ```python
@@ -92,7 +92,7 @@ def test_subscribe_preserves_ordering(stub_with_fake):
     assert [e.seq for e in received] == [1, 2, 3]
 ```
 
-**Server closes after N messages** — completion is the
+**Server closes after N messages** - completion is the
 finalisation signal:
 
 ```python
@@ -144,7 +144,7 @@ def test_subscribe_deadline_exceeded(stub_with_slow_fake):
 
 ### Client-streaming
 
-**Success** — Go bufconn example:
+**Success** - Go bufconn example:
 
 ```go
 func TestUpload_Success(t *testing.T) {
@@ -164,7 +164,7 @@ func TestUpload_Success(t *testing.T) {
 }
 ```
 
-**Server completes before client finishes** — per gRPC docs:
+**Server completes before client finishes** - per gRPC docs:
 server response may arrive "typically but not necessarily after
 it has received all the client's messages":
 
@@ -270,7 +270,7 @@ func TestConversation_ServerSideCancel(t *testing.T) {
 }
 ```
 
-## Step 3 — Coverage matrix
+## Step 3 - Coverage matrix
 
 For each streaming RPC, generate the matrix:
 
@@ -292,7 +292,7 @@ server half-close              -       -        -         X
 Empty cells in covered patterns = coverage gap. PR must justify
 or add a test.
 
-## Step 4 — Pick the test harness
+## Step 4 - Pick the test harness
 
 Per [`grpc-mock`](../grpc-mock/SKILL.md):
 
@@ -303,11 +303,11 @@ Per [`grpc-mock`](../grpc-mock/SKILL.md):
 | JVM | `InProcessServerBuilder` + `StreamObserver` |
 | Node | `@grpc/grpc-js` server with `bindAsync("127.0.0.1:0")` + `call.write` / `call.end` |
 
-Don't use `mockgen` / interface-mocks for streaming — they skip
+Don't use `mockgen` / interface-mocks for streaming - they skip
 the marshalling + ordering guarantees that the streaming
 contract depends on.
 
-## Step 5 — Emit the test directory
+## Step 5 - Emit the test directory
 
 ```
 tests/grpc-streaming/
@@ -324,7 +324,7 @@ The `README.md` should document the matrix from Step 3 so
 reviewers and new contributors can see at a glance what is and
 isn't covered.
 
-## Streaming evolution — version-safety reminder
+## Streaming evolution - version-safety reminder
 
 Per
 [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md),
@@ -351,7 +351,7 @@ catches this with `FILE` or `PACKAGE` category.
 | Test asserts on the last message only | Misses ordering bugs in earlier messages | Collect entire stream, assert on the full sequence |
 | `time.sleep` to wait for server messages | Race-prone; flakes in CI | Use channel close / iterator exhaustion as completion signal |
 | Cancellation test sleeps then cancels | Race: server may finish before cancel | Inject a controllable blocker in the fake server |
-| No deadline-exceeded test | Production deadlines surface in mid-stream | Always include — per [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md), `DEADLINE_EXCEEDED` is its own code |
+| No deadline-exceeded test | Production deadlines surface in mid-stream | Always include - per [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md), `DEADLINE_EXCEEDED` is its own code |
 | Mock at interface level for streaming | Skips marshalling + ordering | In-process server only for streaming |
 | Bidi test where client and server are deterministic-interleaved | Misses race conditions inherent in "operate independently" | One test per direction + one test with concurrent send/recv |
 | Don't `CloseSend()` in client-streaming tests | Server waits forever | Always close the send side explicitly |

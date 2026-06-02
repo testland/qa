@@ -1,6 +1,6 @@
 ---
 name: cli-output-conventions
-description: "Conventions for designing AND testing CLI output so it stays parseable and assertable — exit-code policy (0 success, non-zero failure with stable codes per failure mode), `stdout` for primary data / `stderr` for messages, `--json` / `--plain` for machine-readable output, deterministic ordering and timestamps, `NO_COLOR` / TTY-aware color, `-q` / `--verbose` discipline, and stable `--help` / `--version`. Built on the [Command Line Interface Guidelines][clig]. Use as the assertion contract for `bats-testing` (text CLIs) and to tell `tui-snapshot-tester` what does NOT need a snapshot."
+description: "Conventions for designing AND testing CLI output so it stays parseable and assertable - exit-code policy (0 success, non-zero failure with stable codes per failure mode), `stdout` for primary data / `stderr` for messages, `--json` / `--plain` for machine-readable output, deterministic ordering and timestamps, `NO_COLOR` / TTY-aware color, `-q` / `--verbose` discipline, and stable `--help` / `--version`. Built on the [Command Line Interface Guidelines][clig]. Use as the assertion contract for `bats-testing` (text CLIs) and to tell `tui-snapshot-tester` what does NOT need a snapshot."
 rating: 22
 d6: 4
 archetype: S2
@@ -33,10 +33,10 @@ against them.
   or error message).
 - Writing tests for a CLI: this skill tells you WHAT to assert
   on; bats / pytest etc. tell you HOW.
-- A CLI's tests are flaky / brittle — usually the underlying
+- A CLI's tests are flaky / brittle - usually the underlying
   output isn't deterministic. Fix the output, not the assertion.
 
-## Convention 1 — Exit codes
+## Convention 1 - Exit codes
 
 Per [clig][clig]:
 
@@ -71,10 +71,10 @@ Exit code | Meaning
 }
 ```
 
-Don't test `[ "$status" -ne 0 ]` — assert the **specific** code.
+Don't test `[ "$status" -ne 0 ]` - assert the **specific** code.
 Otherwise refactors silently change the contract.
 
-## Convention 2 — stdout vs stderr
+## Convention 2 - stdout vs stderr
 
 Per [clig][clig]: "This separation ensures piped commands receive
 only data, not messages."
@@ -103,7 +103,7 @@ fetched 2 users in 0.3s
 `run --separate-stderr` (Bats 1.5+) splits the streams; without
 it, `$output` mixes both.
 
-## Convention 3 — Machine-readable mode
+## Convention 3 - Machine-readable mode
 
 Per [clig][clig]:
 
@@ -138,13 +138,13 @@ JSON is the contract.
 }
 ```
 
-## Convention 4 — Determinism
+## Convention 4 - Determinism
 
 Stable output for tests requires:
 
 - **No timestamps** in default output (only with `--verbose` or
   human-mode banner).
-- **Stable ordering** — sort lists by a canonical key, not insertion
+- **Stable ordering** - sort lists by a canonical key, not insertion
   order.
 - **No random IDs** in output unless documented.
 - **Locale-independent number formatting** in `--json` /
@@ -164,7 +164,7 @@ bob   2026-04-20
 
 **Test pattern:** golden-file comparison with sorted output.
 
-## Convention 5 — Color & TTY
+## Convention 5 - Color & TTY
 
 Per [clig][clig]:
 
@@ -180,7 +180,7 @@ Disable color when:
 > "If `stdout` is not an interactive terminal, don't display any
 > animations."
 
-Progress bars / spinners only on TTY — they pollute CI logs and
+Progress bars / spinners only on TTY - they pollute CI logs and
 break `wc -l` assertions.
 
 **Test pattern:**
@@ -198,7 +198,7 @@ break `wc -l` assertions.
 }
 ```
 
-## Convention 6 — Quiet & verbose
+## Convention 6 - Quiet & verbose
 
 Per [clig][clig]:
 
@@ -228,7 +228,7 @@ Debug     | -vv / --debug| Internal traces on stderr
 }
 ```
 
-## Convention 7 — `--help` and `--version`
+## Convention 7 - `--help` and `--version`
 
 Per [clig][clig]:
 
@@ -257,9 +257,9 @@ Per [clig][clig]:
 ```
 
 `--version` should be parseable: `mycli 1.2.3` or
-`mycli version 1.2.3` — never `Welcome to mycli! Version 1.2.3`.
+`mycli version 1.2.3` - never `Welcome to mycli! Version 1.2.3`.
 
-## Convention 8 — Document the contract
+## Convention 8 - Document the contract
 
 Each CLI repo should have a CONVENTIONS.md (or section in README):
 
@@ -302,12 +302,12 @@ the document and the tests update in the same PR.
 
 ## References
 
-- [clig][clig] — Command Line Interface Guidelines: exit codes,
+- [clig][clig] - Command Line Interface Guidelines: exit codes,
   stdout / stderr, `--json` / `--plain`, `NO_COLOR`, `-q` /
   `--verbose`, `--help` / `--version`.
-- `https://no-color.org/` — `NO_COLOR` informal standard.
-- ISO 8601 — date / time format for `--json` output.
-- [`bats-testing`](../bats-testing/SKILL.md) — Bash-based
+- `https://no-color.org/` - `NO_COLOR` informal standard.
+- ISO 8601 - date / time format for `--json` output.
+- [`bats-testing`](../bats-testing/SKILL.md) - Bash-based
   assertion runner that consumes this contract.
-- [`tui-snapshot-tester`](../tui-snapshot-tester/SKILL.md) —
+- [`tui-snapshot-tester`](../tui-snapshot-tester/SKILL.md) - 
   layout-level snapshots; this skill covers text-level contract.

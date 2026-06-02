@@ -19,13 +19,13 @@ keywords:
 A service worker moves through six formal states per the W3C
 spec [sw-spec]: *"`parsed`, `installing`, `installed`, `activating`,
 `activated`, `redundant`"*. Most "PWA broke after deploy" bugs are
-lifecycle bugs — a v2 SW stuck in `installed` (waiting) behind a v1
+lifecycle bugs - a v2 SW stuck in `installed` (waiting) behind a v1
 that won't release control; a `skipWaiting()` that activates v2 but
 leaves v1's caches alive; a `Clients.claim()` race against a hot-
 reload that flips the `navigator.serviceWorker.controller`
 mid-fetch.
 
-This skill produces the per-extension lifecycle spec — a Playwright
+This skill produces the per-extension lifecycle spec - a Playwright
 file with one test per transition cell plus a worked v1 → v2
 upgrade-path test. It is **distinct from**
 [`qa-modern-web/service-worker-tests`](../../../qa-modern-web/skills/service-worker-tests/SKILL.md),
@@ -40,11 +40,10 @@ the state machine.
 
 Composes with:
 
-- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
-  — the Stage 1 service-worker-registered prerequisite, which
+- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md) - the Stage 1 service-worker-registered prerequisite, which
   *this* builder takes as input (assumes registration already
   works).
-- [`workbox-tests`](../workbox-tests/SKILL.md) — the
+- [`workbox-tests`](../workbox-tests/SKILL.md) - the
   `workbox-window` event vocabulary (`installed`, `waiting`,
   `controlling`, `activated`, `redundant`) is the page-side
   observable for the same state machine asserted here from the SW
@@ -52,20 +51,20 @@ Composes with:
 
 ## When to use
 
-- New PWA — author the baseline lifecycle spec before the team
+- New PWA - author the baseline lifecycle spec before the team
   ships any SW logic that mutates state.
-- Upgrade-path regression — a deploy left users on v1 because v2's
+- Upgrade-path regression - a deploy left users on v1 because v2's
   `skipWaiting()` was missing; emit the per-transition test cells
   to catch it next time.
-- "Stale UI after deploy" reports — the test cells localize
+- "Stale UI after deploy" reports - the test cells localize
   whether the bug is `skipWaiting`, `Clients.claim`, or cache
   invalidation.
 - Migrating from Workbox `workbox-window` to a hand-rolled
-  registration helper — assert the same five events still fire.
+  registration helper - assert the same five events still fire.
 
 ## Workflow
 
-### Step 1 — Capture the SW under test
+### Step 1 - Capture the SW under test
 
 Read the SW file the team ships and record three facts:
 
@@ -83,13 +82,13 @@ grep -E "skipWaiting|clients\.claim" src/sw.ts > sw-lifecycle-inventory.txt
 Per [mdn-sw]: *"Activation can happen sooner using
 `ServiceWorkerGlobalScope.skipWaiting()` and existing pages can be
 claimed by the active worker using `Clients.claim()`."* The
-combination matters — `skipWaiting` without `claim` activates the
+combination matters - `skipWaiting` without `claim` activates the
 new SW but leaves current tabs uncontrolled until reload.
 
-### Step 2 — Test: state machine entry — fresh install
+### Step 2 - Test: state machine entry - fresh install
 
 Per [mdn-sw]: *"The service worker is immediately downloaded when
-a user first accesses a service worker–controlled site/page."* The
+a user first accesses a service worker - controlled site/page."* The
 first-install test:
 
 ```ts
@@ -125,7 +124,7 @@ The `statechange` event is fired *"on the corresponding
 `ServiceWorker` object"* whenever its `state` attribute changes per
 [sw-spec].
 
-### Step 3 — Test: `event.waitUntil` extends the install phase
+### Step 3 - Test: `event.waitUntil` extends the install phase
 
 Per [mdn-sw]: *"Because `install`/`activate` events could take a
 while to complete, the service worker spec provides a `waitUntil()`
@@ -154,7 +153,7 @@ This requires a slow-install SW fixture under `tests/fixtures/sw-slow-install.js
 that calls `event.waitUntil(new Promise(r => setTimeout(r, 2000)))`
 inside its `install` handler.
 
-### Step 4 — Test: `skipWaiting()` collapses the waiting phase
+### Step 4 - Test: `skipWaiting()` collapses the waiting phase
 
 Per [mdn-skipwaiting], `skipWaiting()` "causes the waiting service
 worker to become the active service worker." Test the transition:
@@ -191,9 +190,9 @@ test('skipWaiting() makes v2 active without page reload', async ({ context, page
 
 If the SW under test does *not* call `skipWaiting()`, this test
 must assert v2 stays in `installed/waiting` until all v1-controlled
-tabs close — flip the expectation accordingly.
+tabs close - flip the expectation accordingly.
 
-### Step 5 — Test: `Clients.claim()` flips the controller
+### Step 5 - Test: `Clients.claim()` flips the controller
 
 Per [mdn-claim], `Clients.claim()` *"allows an active service
 worker to set itself as the controller for all clients within its
@@ -225,9 +224,9 @@ Per [mdn-sw], the combination of `skipWaiting()` *and* `claim()`
 is needed to "force-activate" the new SW; one without the other
 leaves a gap.
 
-### Step 6 — Test: old SW transitions to `redundant`
+### Step 6 - Test: old SW transitions to `redundant`
 
-Per [sw-spec], `redundant` is the terminal state — the old SW
+Per [sw-spec], `redundant` is the terminal state - the old SW
 enters it when superseded. The transition is the cleanup signal
 the `activate` handler typically uses to drop old caches:
 
@@ -256,7 +255,7 @@ test('old SW transitions to redundant after v2 activates', async ({ context, pag
 });
 ```
 
-### Step 7 — Test: `navigator.serviceWorker.controller` semantics
+### Step 7 - Test: `navigator.serviceWorker.controller` semantics
 
 Per [mdn-sw], `navigator.serviceWorker.controller` returns the SW
 controlling the current page, or `null` if no SW controls it (e.g.
@@ -278,12 +277,12 @@ test('controller is null on first hard-reload, set after activation', async ({ p
 });
 ```
 
-Per [mdn-sw]: a hard-reload (`Ctrl+Shift+R`) bypasses the SW —
+Per [mdn-sw]: a hard-reload (`Ctrl+Shift+R`) bypasses the SW - 
 `controller` is `null` for that page even if an SW is registered.
 Playwright's `page.reload({ waitUntil: 'networkidle' })` is a soft
 reload; the SW controls it.
 
-### Step 8 — Test: `updatefound` event on registration
+### Step 8 - Test: `updatefound` event on registration
 
 Per [mdn-sw], the registration object fires `updatefound` when a
 new SW is in the `installing` state. This is the canonical
@@ -304,7 +303,7 @@ test('updatefound fires when a new SW is found', async ({ page, context }) => {
 });
 ```
 
-### Step 9 — Emit the lifecycle spec artifact
+### Step 9 - Emit the lifecycle spec artifact
 
 Write `tests/sw-lifecycle.spec.ts` with all eight test cells above.
 Pair with a matrix YAML mapping each spec to the state-machine
@@ -385,7 +384,7 @@ test('v1 → v2 upgrade: skip waiting + claim, old cache deleted', async ({ page
 This single test exercises four state transitions (installed →
 activating in v2, activated → redundant in v1) plus the cache-
 cleanup convention. Pair with the per-transition cells from
-Steps 2–8 for the full lifecycle surface.
+Steps 2 - 8 for the full lifecycle surface.
 
 ## Anti-patterns
 
@@ -413,7 +412,7 @@ Steps 2–8 for the full lifecycle surface.
   `serviceWorker.controller`; a full multi-tab assertion needs a
   second `context.newPage()`.
 - **Hard-reload (`Ctrl+Shift+R`) behavior** can't be triggered
-  programmatically in Playwright — `page.reload()` is always soft.
+  programmatically in Playwright - `page.reload()` is always soft.
   Manual smoke covers this cell.
 - **The push and fetch events** that `waitUntil` gates aren't
   tested here directly; pair with
@@ -428,12 +427,12 @@ Steps 2–8 for the full lifecycle surface.
 ## References
 
 - W3C Service Worker spec (`ServiceWorkerState` enum, formal state
-  values, `statechange` event semantics) — [sw-spec].
+  values, `statechange` event semantics) - [sw-spec].
 - MDN Service Worker API (lifecycle prose, `waitUntil`,
-  `skipWaiting` + `claim` pairing, `controller` semantics) —
+  `skipWaiting` + `claim` pairing, `controller` semantics) - 
   [mdn-sw].
-- MDN `ServiceWorkerGlobalScope.skipWaiting()` — [mdn-skipwaiting].
-- MDN `Clients.claim()` — [mdn-claim].
+- MDN `ServiceWorkerGlobalScope.skipWaiting()` - [mdn-skipwaiting].
+- MDN `Clients.claim()` - [mdn-claim].
 - Differentiation:
   [`qa-modern-web/service-worker-tests`](../../../qa-modern-web/skills/service-worker-tests/SKILL.md)
   covers general `context.serviceWorkers()` + cache-strategy

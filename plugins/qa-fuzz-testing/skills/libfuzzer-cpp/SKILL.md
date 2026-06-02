@@ -1,6 +1,6 @@
 ---
 name: libfuzzer-cpp
-description: "Author and run LLVM libFuzzer for C/C++ — in-process coverage-guided fuzzing. Covers harness authoring (LLVMFuzzerTestOneInput entry point), build with -fsanitize=fuzzer,address,undefined, runtime flags (-max_total_time, -runs, -dict, -fork, -workers), corpus + crash-artefact handling, and CI integration. Use for libraries / parsers / decoders in C/C++ where in-process fuzzing of a function is the right scope. Compose with ASan + UBSan from sanitiser-integration-reference and corpus discipline from corpus-management-reference."
+description: "Author and run LLVM libFuzzer for C/C++ - in-process coverage-guided fuzzing. Covers harness authoring (LLVMFuzzerTestOneInput entry point), build with -fsanitize=fuzzer,address,undefined, runtime flags (-max_total_time, -runs, -dict, -fork, -workers), corpus + crash-artefact handling, and CI integration. Use for libraries / parsers / decoders in C/C++ where in-process fuzzing of a function is the right scope. Compose with ASan + UBSan from sanitiser-integration-reference and corpus discipline from corpus-management-reference."
 rating: 24
 d6: 4
 archetype: S1
@@ -22,7 +22,7 @@ for C/C++ targets. Composes with:
 ## When to use
 
 - Fuzzing a C / C++ library function (parser, decoder, validator).
-- Targeting a specific function — in-process fuzzing is faster
+- Targeting a specific function - in-process fuzzing is faster
   than out-of-process AFL.
 - Pairing with ASan + UBSan for memory-safety + UB detection.
 
@@ -181,10 +181,10 @@ Invoke: `./fuzz_target -dict=fuzz.dict corpus/`.
 
 libFuzzer crash artefacts are saved as:
 
-- `crash-<sha1>` — segfault / sanitiser-detected error
-- `leak-<sha1>` — memory leak detected by LSan
-- `timeout-<sha1>` — exceeded `-timeout`
-- `oom-<sha1>` — RSS exceeded `-rss_limit_mb`
+- `crash-<sha1>` - segfault / sanitiser-detected error
+- `leak-<sha1>` - memory leak detected by LSan
+- `timeout-<sha1>` - exceeded `-timeout`
+- `oom-<sha1>` - RSS exceeded `-rss_limit_mb`
 
 Each file's contents are the input bytes that triggered the
 crash. Pair with the sanitiser report (stderr) for stack +
@@ -262,16 +262,16 @@ is the canonical infrastructure.
 - **Coverage instrumentation overhead.** Hot inner loops slow
   significantly under `-fsanitize=fuzzer`.
 - **Crash uniqueness heuristic.** libFuzzer dedup is sha1-based on
-  the input; the same bug from two inputs creates two artefacts —
+  the input; the same bug from two inputs creates two artefacts - 
   pair with crash-stack-deduplication tooling.
 - **No coverage report by default.** Use `-coverage` flag or
   external `llvm-profdata` + `llvm-cov` for line-level coverage.
 
 ## References
 
-- LLVM libFuzzer —
+- LLVM libFuzzer - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
-- `FuzzedDataProvider.h` —
+- `FuzzedDataProvider.h` - 
   github.com/llvm/llvm-project/blob/main/compiler-rt/include/fuzzer/FuzzedDataProvider.h.
 - Composes:
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),

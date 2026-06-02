@@ -8,10 +8,10 @@ the failure-mode matrix that's invisible until production.
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| Skill | [websocket-tests](skills/websocket-tests/SKILL.md) | S1 | RFC 6455 — handshake (`Sec-WebSocket-Key/Accept`), control frames (ping/pong/close), close codes (1000/1001/1006/1011), subprotocol negotiation, ping/pong keepalive, reconnect-with-jitter, Playwright frame inspection |
-| Skill | [server-sent-events-tests](skills/server-sent-events-tests/SKILL.md) | S1 | WHATWG SSE — `EventSource` lifecycle, event-stream format (`data:`/`event:`/`id:`/`retry:`), `Last-Event-ID` reconnect-with-replay, `204` disable-reconnect, HTTP/1.1 connection-pool ceiling |
+| Skill | [websocket-tests](skills/websocket-tests/SKILL.md) | S1 | RFC 6455 - handshake (`Sec-WebSocket-Key/Accept`), control frames (ping/pong/close), close codes (1000/1001/1006/1011), subprotocol negotiation, ping/pong keepalive, reconnect-with-jitter, Playwright frame inspection |
+| Skill | [server-sent-events-tests](skills/server-sent-events-tests/SKILL.md) | S1 | WHATWG SSE - `EventSource` lifecycle, event-stream format (`data:`/`event:`/`id:`/`retry:`), `Last-Event-ID` reconnect-with-replay, `204` disable-reconnect, HTTP/1.1 connection-pool ceiling |
 | Skill | [grpc-streaming-tests](skills/grpc-streaming-tests/SKILL.md) | S1 | gRPC streaming RPCs (Server / Client / Bidi); deadline + cancellation propagation; status code matrix (CANCELLED, DEADLINE_EXCEEDED, INVALID_ARGUMENT, UNAUTHENTICATED, etc.); ghz load test |
-| Skill | [mqtt-tests](skills/mqtt-tests/SKILL.md) | S1 | MQTT v5 — QoS 0/1/2 redelivery semantics, retained messages, Last Will and Testament, shared subscriptions (`$share/...`), `$SYS/...` introspection; Mosquitto in CI |
+| Skill | [mqtt-tests](skills/mqtt-tests/SKILL.md) | S1 | MQTT v5 - QoS 0/1/2 redelivery semantics, retained messages, Last Will and Testament, shared subscriptions (`$share/...`), `$SYS/...` introspection; Mosquitto in CI |
 | Skill | [webhook-replay-tests](skills/webhook-replay-tests/SKILL.md) | S3 | Standard Webhooks signature scheme (svix-id + svix-timestamp + svix-signature, HMAC-SHA256), 5-minute replay window, idempotency dedup, multi-key acceptance for rotation |
 
 ## Install

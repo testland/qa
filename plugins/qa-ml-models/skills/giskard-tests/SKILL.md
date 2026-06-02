@@ -24,10 +24,10 @@ leakage, stochasticity, underconfidence, ethical issues"* per the
 
 - Pre-deployment model audit (fairness + robustness scan).
 - Pre-merge gate after a feature-engineering or hyperparameter
-  change — re-run scan, fail PR if new vulnerabilities surface.
+  change - re-run scan, fail PR if new vulnerabilities surface.
 - Generating an initial test suite for a model with no existing tests.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install giskard --upgrade
@@ -35,7 +35,7 @@ pip install giskard --upgrade
 
 Per the [Giskard tabular quickstart].
 
-## Step 2 — Wrap the dataset
+## Step 2 - Wrap the dataset
 
 ```python
 from giskard import Dataset
@@ -48,10 +48,10 @@ giskard_dataset = Dataset(
 )
 ```
 
-`cat_columns` matters — Giskard treats categoricals differently for
+`cat_columns` matters - Giskard treats categoricals differently for
 slicing + drift detection.
 
-## Step 3 — Wrap the model
+## Step 3 - Wrap the model
 
 ```python
 from giskard import Model
@@ -72,9 +72,9 @@ giskard_model = Model(
 ```
 
 The `prediction_function` returns probabilities (not class labels)
-for classification — required by Giskard's calibration checks.
+for classification - required by Giskard's calibration checks.
 
-## Step 4 — Scan for vulnerabilities
+## Step 4 - Scan for vulnerabilities
 
 ```python
 from giskard import scan
@@ -88,7 +88,7 @@ performance bias, unrobustness, data leakage, stochasticity,
 underconfidence, ethical issues. HTML report is artifact-friendly
 for CI.
 
-## Step 5 — Generate a test suite from scan
+## Step 5 - Generate a test suite from scan
 
 ```python
 test_suite = results.generate_test_suite("My first test suite")
@@ -98,7 +98,7 @@ if not suite_results.passed:
     raise SystemExit("Giskard test suite failed; see report")
 ```
 
-## Step 6 — Add specific tests from catalog
+## Step 6 - Add specific tests from catalog
 
 ```python
 from giskard import testing
@@ -128,7 +128,7 @@ Catalog includes `test_f1`, `test_accuracy`, `test_recall`,
 `test_drift_*`, metamorphic transformations. Reference the
 [Giskard tabular quickstart] for the current full list.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - name: Giskard scan
@@ -162,6 +162,6 @@ Catalog includes `test_f1`, `test_accuracy`, `test_recall`,
 
 ## References
 
-- [Giskard tabular quickstart] — Model/Dataset wrapping, scan, suite generation, test catalog
+- [Giskard tabular quickstart] - Model/Dataset wrapping, scan, suite generation, test catalog
 
 [Giskard tabular quickstart]: https://legacy-docs.giskard.ai/en/latest/getting_started/quickstart/quickstart_tabular.html

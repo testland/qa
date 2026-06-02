@@ -1,6 +1,6 @@
 ---
 name: tui-snapshot-tester
-description: "Snapshot testing for terminal UI apps (TUIs) — captures rendered terminal frames as deterministic SVG / text snapshots, diffs them on every run, surfaces a reviewable HTML report on failure, and supports `--snapshot-update` to accept changes intentionally. Wraps `pytest-textual-snapshot` for Python Textual apps; provides equivalent recipes for Ratatui (Rust) `insta` snapshots, Charm Bracelet (Go) `teatest` golden files, and Ink (Node) `ink-testing-library`. Use for any TUI where layout regressions otherwise reach users via `screenshot looks wrong in terminal`."
+description: "Snapshot testing for terminal UI apps (TUIs) - captures rendered terminal frames as deterministic SVG / text snapshots, diffs them on every run, surfaces a reviewable HTML report on failure, and supports `--snapshot-update` to accept changes intentionally. Wraps `pytest-textual-snapshot` for Python Textual apps; provides equivalent recipes for Ratatui (Rust) `insta` snapshots, Charm Bracelet (Go) `teatest` golden files, and Ink (Node) `ink-testing-library`. Use for any TUI where layout regressions otherwise reach users via `screenshot looks wrong in terminal`."
 rating: 21
 d6: 3
 archetype: S3
@@ -14,7 +14,7 @@ Per [textual-testing][txt]:
 
 [txt]: https://textual.textualize.io/guide/testing/
 
-> "Snapshot testing for TUI apps with pytest-textual-snapshot" —
+> "Snapshot testing for TUI apps with pytest-textual-snapshot" - 
 > the plugin generates "SVG _screenshot_" files from your app.
 
 A TUI snapshot test:
@@ -31,7 +31,7 @@ widths, broken borders) that exit-code / output assertions miss.
 
 - The unit-under-test is a TUI (Textual / Ratatui / Bubble Tea /
   Ink / curses).
-- The TUI's value is its visual layout — assertions on individual
+- The TUI's value is its visual layout - assertions on individual
   cells are brittle and miss "the box border now looks broken."
 - The team needs PR-time review of layout changes (vs catching
   them in user feedback).
@@ -41,7 +41,7 @@ For headless CLIs that emit text only, prefer
 [`cli-output-conventions`](../cli-output-conventions/SKILL.md);
 TUI snapshots are only needed for layout-rich UIs.
 
-## Step 1 — Install (Python / Textual)
+## Step 1 - Install (Python / Textual)
 
 Per [txt][txt]:
 
@@ -51,7 +51,7 @@ pip install pytest-textual-snapshot
 
 This pulls Textual + the `snap_compare` pytest fixture.
 
-## Step 2 — First snapshot test
+## Step 2 - First snapshot test
 
 Per [txt][txt] (verbatim):
 
@@ -75,7 +75,7 @@ Workflow:
    to accept it.
 4. Commit the updated `__snapshots__/` directory.
 
-## Step 3 — Drive interactions before capture
+## Step 3 - Drive interactions before capture
 
 Per [txt][txt]:
 
@@ -106,7 +106,7 @@ async def test_keys():
 `pilot.press()` / `pilot.click()` / `pilot.pause()` simulate user
 input.
 
-## Step 4 — CI integration (Textual)
+## Step 4 - CI integration (Textual)
 
 Per [txt][txt]:
 
@@ -133,7 +133,7 @@ jobs:
 Reviewer downloads `snapshot_report.html` from the failed CI
 artifact, opens it locally, and decides accept / reject.
 
-## Step 5 — Equivalent for Rust / Ratatui
+## Step 5 - Equivalent for Rust / Ratatui
 
 Use `insta` for snapshot testing:
 
@@ -156,7 +156,7 @@ fn renders_main_view() {
 Update with `cargo insta accept` (or `cargo insta review` for
 interactive triage). Snapshots stored in `tests/snapshots/`.
 
-## Step 6 — Equivalent for Go / Bubble Tea
+## Step 6 - Equivalent for Go / Bubble Tea
 
 Use `teatest`:
 
@@ -177,7 +177,7 @@ func TestApp(t *testing.T) {
 go test -update ./...
 ```
 
-## Step 7 — Equivalent for Node / Ink
+## Step 7 - Equivalent for Node / Ink
 
 Use `ink-testing-library`:
 
@@ -194,7 +194,7 @@ test('renders welcome screen', () => {
 Jest's built-in `toMatchSnapshot` writes to
 `__snapshots__/`. Update with `jest -u`.
 
-## Step 8 — Determinism
+## Step 8 - Determinism
 
 Snapshots fail randomly if any of these vary:
 
@@ -207,7 +207,7 @@ Snapshots fail randomly if any of these vary:
 
 Without determinism, snapshot tests become noise → team disables.
 
-## Step 9 — Snapshot review discipline
+## Step 9 - Snapshot review discipline
 
 Treat snapshot diffs like test diffs in code review:
 
@@ -242,14 +242,13 @@ screenshots.
 
 ## References
 
-- [txt][txt] — `pytest-textual-snapshot`, `snap_compare`,
+- [txt][txt] - `pytest-textual-snapshot`, `snap_compare`,
   `--snapshot-update`, `Pilot.press` / `Pilot.click` / `Pilot.pause`,
   HTML report, CI workflow.
 - `insta` (Rust): `https://insta.rs/`.
 - `teatest` (Go Bubble Tea): `https://github.com/charmbracelet/x/tree/main/exp/teatest`.
 - `ink-testing-library` (Node Ink): `https://github.com/vadimdemedes/ink-testing-library`.
-- [`bats-testing`](../bats-testing/SKILL.md) — exit-code + text
+- [`bats-testing`](../bats-testing/SKILL.md) - exit-code + text
   output testing (text CLIs); pair with TUI snapshots for
   layout regression.
-- [`visual-baseline-curator`](../../qa-visual-regression/agents/visual-baseline-curator.md)
-  — sister-plugin baseline discipline (browser).
+- [`visual-baseline-curator`](../../qa-visual-regression/agents/visual-baseline-curator.md) - sister-plugin baseline discipline (browser).

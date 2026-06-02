@@ -14,16 +14,16 @@ Most teams need to assert a UI across multiple breakpoints (mobile,
 tablet, desktop, sometimes wide-desktop). The four engines covered in
 this plugin each have their own way to express a viewport list:
 
-- **Percy** — widths array in `.percy.yml` / `.percy.config.js`.
-- **Chromatic** — `parameters.chromatic.viewports` per story.
-- **Playwright snapshots** — one `project` per breakpoint in
+- **Percy** - widths array in `.percy.yml` / `.percy.config.js`.
+- **Chromatic** - `parameters.chromatic.viewports` per story.
+- **Playwright snapshots** - one `project` per breakpoint in
   `playwright.config.ts`.
-- **Storybook test-runner** — Storybook viewport addon parameters
+- **Storybook test-runner** - Storybook viewport addon parameters
   consumed in a `preVisit` hook.
 
 This skill is a dispatcher: pick the engine the project already runs,
 follow the matching pattern below, then aggregate into a single
-breakpoint report. **It does not replace any engine** — it composes the
+breakpoint report. **It does not replace any engine** - it composes the
 plugin's per-engine S1 skills.
 
 ## When to use
@@ -36,7 +36,7 @@ plugin's per-engine S1 skills.
   page-driven coverage (other breakpoints) and needs a single source
   of truth.
 
-If the project only covers a single breakpoint, defer this skill — go
+If the project only covers a single breakpoint, defer this skill - go
 directly to the relevant per-engine SKILL.md.
 
 ## Dispatcher: pick by engine
@@ -109,7 +109,7 @@ For a single overridden snapshot, pass the widths in the SDK call:
 await percySnapshot(page, 'Homepage', { widths: [375, 1280] });
 ```
 
-(Per the per-engine readme — when in doubt, check the latest
+(Per the per-engine readme - when in doubt, check the latest
 [percy/cli][percy-cli] release for the current snapshot config schema.)
 
 ## Playwright dispatch
@@ -175,7 +175,7 @@ const config: TestRunnerConfig = {
 export default config;
 ```
 
-Note this pattern multiplies snapshot count by `VIEWPORTS.length` —
+Note this pattern multiplies snapshot count by `VIEWPORTS.length` - 
 acceptable for a few hundred stories; reconsider above ~1000 stories
 where Chromatic's TurboSnap makes more economic sense.
 
@@ -213,7 +213,7 @@ which is the entire reason this skill exists. Pipe the matrix into
 clickable PR-side summary.
 
 For a hard CI gate that fails on any cell, use
-[`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) — it accepts
+[`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) - it accepts
 this row shape directly.
 
 ## CI integration
@@ -243,8 +243,8 @@ URL) so a reviewer can see the diff for a specific cell:
 - [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
 - [`playwright-snapshots`](../playwright-snapshots/SKILL.md)
 - [`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)
-- [`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) — the
+- [`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) - the
   matching gate skill that consumes the unified row shape.
-- [chrom-vp][chrom-vp] — Chromatic per-story viewport syntax.
-- [pw-snap][pw-snap] — Playwright snapshot framework.
-- [st-tr][st-tr] — Storybook test-runner lifecycle hooks.
+- [chrom-vp][chrom-vp] - Chromatic per-story viewport syntax.
+- [pw-snap][pw-snap] - Playwright snapshot framework.
+- [st-tr][st-tr] - Storybook test-runner lifecycle hooks.

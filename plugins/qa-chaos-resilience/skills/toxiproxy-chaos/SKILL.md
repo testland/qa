@@ -1,6 +1,6 @@
 ---
 name: toxiproxy-chaos
-description: "Configures Toxiproxy for TCP-level fault injection — runs as a sidecar / proxy between client and upstream, applies toxics (latency, bandwidth, slow_close, timeout, slicer, limit_data, reset_peer) via control API. Sister to api-chaos-runner (qa-api-testing) but focused on the proxy itself + non-test usage (chaos in dev environments, integration tests, pre-prod simulation). Use when the team needs TCP-precise fault injection in development / integration environments without K8s or commercial tooling."
+description: "Configures Toxiproxy for TCP-level fault injection - runs as a sidecar / proxy between client and upstream, applies toxics (latency, bandwidth, slow_close, timeout, slicer, limit_data, reset_peer) via control API. Sister to api-chaos-runner (qa-api-testing) but focused on the proxy itself + non-test usage (chaos in dev environments, integration tests, pre-prod simulation). Use when the team needs TCP-precise fault injection in development / integration environments without K8s or commercial tooling."
 rating: 22
 d6: 3
 archetype: S1
@@ -33,7 +33,7 @@ both rely on the same Toxiproxy primitive.
 For test-suite integration, see
 [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md).
 
-## Step 1 — Install + run
+## Step 1 - Install + run
 
 ```bash
 # Pull the official image
@@ -50,7 +50,7 @@ brew install toxiproxy   # macOS
 Port 8474 is the control API; other ports are listeners for
 proxied traffic.
 
-## Step 2 — Define a proxy
+## Step 2 - Define a proxy
 
 Via the control API:
 
@@ -69,7 +69,7 @@ toxiproxy-cli list
 The application connects to `localhost:5432` (Toxiproxy listener);
 Toxiproxy forwards to `orders-db-real:5432`.
 
-## Step 3 — Toxic catalog
+## Step 3 - Toxic catalog
 
 Per [toxiproxy-readme][tp], the canonical toxics:
 
@@ -84,7 +84,7 @@ Per [toxiproxy-readme][tp], the canonical toxics:
 | `limit_data`      | Cap total bytes through the proxy                               |
 | `reset_peer`      | Reset connection on the next byte                               |
 
-## Step 4 — Add toxics
+## Step 4 - Add toxics
 
 ```bash
 # 500ms latency on every request through the orders-db proxy
@@ -103,7 +103,7 @@ toxiproxy-cli toxic remove orders-db -n latency
 Toxics can apply on **upstream** (data going from client → server)
 or **downstream** (server → client) directions. Default: both.
 
-## Step 5 — Direction-specific toxics
+## Step 5 - Direction-specific toxics
 
 ```bash
 toxiproxy-cli toxic add -t latency -a latency=500 -n upstream-latency --downstream=false orders-db
@@ -112,7 +112,7 @@ toxiproxy-cli toxic add -t latency -a latency=200 -n downstream-latency --upstre
 
 Useful when the client / server have asymmetric tolerances.
 
-## Step 6 — Language SDKs
+## Step 6 - Language SDKs
 
 Per [toxiproxy-readme][tp], SDKs exist for Python, Node, Go, Ruby:
 
@@ -138,7 +138,7 @@ The SDKs make integration into test fixtures (per
 [`playwright-fixture-builder`](../../qa-test-environment/skills/playwright-fixture-builder/SKILL.md))
 clean.
 
-## Step 7 — docker-compose integration
+## Step 7 - docker-compose integration
 
 ```yaml
 # docker-compose.test.yml
@@ -160,14 +160,14 @@ services:
 The app points at Toxiproxy; tests configure toxics via the
 control API.
 
-## Step 8 — Use cases
+## Step 8 - Use cases
 
 | Use case               | How                                                       |
 |------------------------|-----------------------------------------------------------|
 | Test resilience patterns | Inject latency / failure; verify retry / timeout / circuit-breaker |
 | Reproduce a production incident | Replicate the network conditions; debug locally     |
 | Pre-prod simulation     | Chaos in staging; verify the team's runbook              |
-| Dev-time exploration    | "What if the DB is slow?" — engineer toggles a toxic     |
+| Dev-time exploration    | "What if the DB is slow?" - engineer toggles a toxic     |
 | Integration test fixtures | Per-test toxic add / remove via SDK (per Step 6)       |
 
 ## Anti-patterns
@@ -182,7 +182,7 @@ control API.
 
 ## Limitations
 
-- **TCP only.** UDP, QUIC, raw IP — out of scope.
+- **TCP only.** UDP, QUIC, raw IP - out of scope.
 - **Not for K8s pod chaos.** For pod-level / node-level chaos, use
   [`chaos-mesh`](../chaos-mesh/SKILL.md) or
   [`litmus-chaos`](../litmus-chaos/SKILL.md).
@@ -193,11 +193,9 @@ control API.
 
 ## References
 
-- [tp][tp] — Toxiproxy README: TCP proxy, toxic types (latency,
+- [tp][tp] - Toxiproxy README: TCP proxy, toxic types (latency,
   down, bandwidth, slow_close, timeout, slicer, limit_data,
   reset_peer), control API on port 8474, language SDKs.
-- [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md)
-  — sister skill: same Toxiproxy primitive, test-suite-driven
+- [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md) - sister skill: same Toxiproxy primitive, test-suite-driven
   matrix workflow.
-- [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md)
-  — composes Toxiproxy + WireMock for richer failure scenarios.
+- [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md) - composes Toxiproxy + WireMock for richer failure scenarios.

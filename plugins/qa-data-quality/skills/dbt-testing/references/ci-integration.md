@@ -2,7 +2,7 @@
 
 Patterns for running `dbt build` (preferred over standalone `dbt test`) in
 CI, with artifact upload and slim-CI scoping. All snippets use `dbt build`
-because of its DAG-aware skip-on-failure behavior — a failing upstream
+because of its DAG-aware skip-on-failure behavior - a failing upstream
 test causes downstream resources to skip, which is what you want in a
 quality gate ([dbt-build][1]).
 
@@ -59,7 +59,7 @@ jobs:
           retention-days: 14
 ```
 
-The `if: always()` on the artifact upload is important — without it,
+The `if: always()` on the artifact upload is important - without it,
 `run_results.json` is lost on failure, which is exactly when you need it
 for triage.
 

@@ -1,6 +1,6 @@
 ---
 name: race-condition-test-author
-description: "Build deterministic race-condition tests — identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++/Go data race detection; use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing."
+description: "Build deterministic race-condition tests - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++/Go data race detection; use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing."
 type: skill
 archetype: S3
 rating: 22
@@ -29,7 +29,7 @@ to expose them.
 - Pre-release smoke: TSan-instrumented binary catches data races
   that compile clean.
 
-## Step 1 — Identify shared mutable state
+## Step 1 - Identify shared mutable state
 
 Code-review checklist:
 
@@ -45,7 +45,7 @@ Code-review checklist:
 For each: ask "what if two threads / goroutines / async tasks hit
 this concurrently?"
 
-## Step 2 — Deterministic interleaving via barriers
+## Step 2 - Deterministic interleaving via barriers
 
 ```python
 import threading
@@ -68,10 +68,10 @@ def test_lazy_init_thread_safe():
 ```
 
 Barrier ensures both threads start the contended section at the
-same time — much higher probability of triggering the race than
+same time - much higher probability of triggering the race than
 naive `threading.Thread()`.
 
-## Step 3 — ThreadSanitizer for C/C++/Go
+## Step 3 - ThreadSanitizer for C/C++/Go
 
 Per the [ThreadSanitizer docs], TSan detects data races at runtime
 with ~5-15× overhead. For C/C++:
@@ -105,7 +105,7 @@ Per the [ThreadSanitizer docs], adaptive delay injection
 (`TSAN_OPTIONS=enable_adaptive_delay=1`) helps surface races at
 synchronization points.
 
-## Step 4 — jcstress for JVM
+## Step 4 - jcstress for JVM
 
 Per the [jcstress docs], jcstress is "the experimental harness ... for
 the correctness of concurrency support in the JVM."
@@ -145,7 +145,7 @@ java -jar jcstress.jar -m quick CounterTest
 Per the [jcstress docs]: tests are probabilistic; longer runs find
 more reorderings.
 
-## Step 5 — Loom virtual-thread interleavings (Java 21+)
+## Step 5 - Loom virtual-thread interleavings (Java 21+)
 
 Java 21+ Project Loom enables cheap virtual threads. Use to test
 many-concurrent-task interleavings without OS thread cost:
@@ -164,10 +164,10 @@ void test_handles_10000_concurrent_orders() throws Exception {
 }
 ```
 
-Virtual threads run M:N on OS threads — the JVM scheduler interleaves
+Virtual threads run M:N on OS threads - the JVM scheduler interleaves
 them aggressively, exposing schedule-dependent races.
 
-## Step 6 — Property-based + concurrency
+## Step 6 - Property-based + concurrency
 
 Combine Hypothesis (Python) / fast-check (JS) with concurrency:
 
@@ -195,7 +195,7 @@ def test_counter_property_under_concurrency(operations):
 Cross-ref `qa-property-based` plugin for property-based test
 authoring patterns.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 # Go
@@ -240,15 +240,15 @@ mode ~minutes per test class.
 
 ## References
 
-- [ThreadSanitizer docs] — clang `-fsanitize=thread`, runtime
+- [ThreadSanitizer docs] - clang `-fsanitize=thread`, runtime
   options, adaptive delay
-- [jcstress docs] — `@JCStressTest`, `@Actor`, `@Outcome` outcomes
-- ThreadSanitizer C++ Manual — github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
-- [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) —
+- [jcstress docs] - `@JCStressTest`, `@Actor`, `@Outcome` outcomes
+- ThreadSanitizer C++ Manual - github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
+- [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) - 
   sister skill for deadlock-specific patterns
-- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) —
+- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) - 
   sister skill for async/await ordering
-- [`jepsen-patterns`](../jepsen-patterns/SKILL.md) — distributed
+- [`jepsen-patterns`](../jepsen-patterns/SKILL.md) - distributed
   consistency testing alternative
 
 [ThreadSanitizer docs]: https://clang.llvm.org/docs/ThreadSanitizer.html

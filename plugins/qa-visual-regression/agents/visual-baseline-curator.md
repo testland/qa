@@ -43,7 +43,7 @@ A baseline-coverage architect that turns "we should add visual tests" into a wor
    - Default breakpoint set: 375 / 768 / 1280 / 1920.
 4. **Generate the config files** for the detected engine.
 5. **Run a dry-run** capture to verify the config compiles (do NOT
-   commit the captured baselines yet — those are the team's first
+   commit the captured baselines yet - those are the team's first
    review).
 6. **Emit the summary** in the output format below.
 
@@ -114,7 +114,7 @@ The agent will EXCLUDE:
 
 ## Examples
 
-### Example 1 — fresh Chromatic on Storybook (47 stories)
+### Example 1 - fresh Chromatic on Storybook (47 stories)
 
 Generates `chromatic.config.json` (with `onlyChanged: true`,
 `exitZeroOnChanges: false`, `externals: ["public/**","tokens/**"]`),
@@ -122,7 +122,7 @@ adds `parameters.chromatic.viewports: [375,768,1280,1920]` to each
 template story, and writes `.github/workflows/chromatic.yml`. Output:
 108 baselines (27 × 4 breakpoints, TurboSnap-eligible).
 
-### Example 2 — page-driven app, Playwright snapshots
+### Example 2 - page-driven app, Playwright snapshots
 
 For a Next.js app with 4 top-level routes, generates a
 `playwright.config.ts` with one project per breakpoint (375 / 768 /
@@ -131,12 +131,12 @@ calling `page.goto(route)` + `expect(page).toHaveScreenshot({
 animations: 'disabled', fullPage: true })`. Output: 16 baselines
 (4 routes × 4 breakpoints).
 
-### Example 3 — audit existing coverage
+### Example 3 - audit existing coverage
 
 For a project with 312 existing baselines, the agent enumerates them
 from a recent Chromatic build's diagnostics, applies the conventions
 checklist, and surfaces deviations: auto-generated control combos
 (e.g. `Atoms/Button/*-Disabled-Loading-Outline`), `[INTERNAL]` stories
 that should opt out, and stories missing the 1920 wide-desktop
-breakpoint. The agent does NOT delete baselines on audit — it
+breakpoint. The agent does NOT delete baselines on audit - it
 produces a recommendation list for human review.

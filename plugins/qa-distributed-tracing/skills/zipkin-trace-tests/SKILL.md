@@ -1,6 +1,6 @@
 ---
 name: zipkin-trace-tests
-description: "Author integration tests that query Zipkin for trace verification — Zipkin all-in-one Docker for CI, REST API (`/api/v2/traces`, `/api/v2/services`, `/api/v2/dependencies`), B3 propagation header tests (single-header and multi-header X-B3-* form), dependency-graph assertions. Use when the team uses Zipkin (legacy or Spring Cloud Sleuth heritage)."
+description: "Author integration tests that query Zipkin for trace verification - Zipkin all-in-one Docker for CI, REST API (`/api/v2/traces`, `/api/v2/services`, `/api/v2/dependencies`), B3 propagation header tests (single-header and multi-header X-B3-* form), dependency-graph assertions. Use when the team uses Zipkin (legacy or Spring Cloud Sleuth heritage)."
 type: skill
 archetype: S1
 rating: 22
@@ -25,10 +25,10 @@ provides the full server + UI.
 - Existing Spring Cloud Sleuth / Spring Boot Actuator setup uses
   Zipkin as the trace store.
 - Team standardized on B3 header propagation (vs W3C Trace Context).
-- Migrating from Zipkin to Jaeger / OpenTelemetry — these tests
+- Migrating from Zipkin to Jaeger / OpenTelemetry - these tests
   protect during cutover.
 
-## Step 1 — Run Zipkin in CI
+## Step 1 - Run Zipkin in CI
 
 Per the [Zipkin quickstart docs]:
 
@@ -46,7 +46,7 @@ services:
       - 9411:9411
 ```
 
-## Step 2 — REST API endpoints
+## Step 2 - REST API endpoints
 
 Per the [Zipkin API spec]:
 
@@ -61,7 +61,7 @@ Per the [Zipkin API spec]:
 
 `lookback` is in milliseconds.
 
-## Step 3 — Configure SDK to ship to Zipkin
+## Step 3 - Configure SDK to ship to Zipkin
 
 ```python
 from opentelemetry import trace
@@ -79,7 +79,7 @@ trace.set_tracer_provider(provider)
 OTLP ingest is also possible via Zipkin's compatibility port (port
 9411 also accepts B3-format JSON via OTLP-to-Zipkin bridges).
 
-## Step 4 — Query trace + assert shape
+## Step 4 - Query trace + assert shape
 
 ```python
 import requests, time
@@ -107,7 +107,7 @@ def test_order_trace_in_zipkin():
 Note Zipkin V2 stores tag values as strings (vs Jaeger's typed
 tags). Cast in assertions accordingly.
 
-## Step 5 — B3 propagation header tests
+## Step 5 - B3 propagation header tests
 
 Per the [B3 propagation spec]:
 
@@ -146,7 +146,7 @@ def test_b3_single_header_propagates():
     assert any(s["traceId"] == trace_id for s in traces)
 ```
 
-## Step 6 — Dependency graph assertion
+## Step 6 - Dependency graph assertion
 
 Zipkin computes service dependencies from observed traces:
 
@@ -171,12 +171,12 @@ def test_orders_calls_payments():
     assert pair["callCount"] >= 1
 ```
 
-Note dependency calculation is **lazy + aggregated** — may need a
+Note dependency calculation is **lazy + aggregated** - may need a
 short delay or explicit dependency-aggregation trigger depending on
 storage backend. In-memory storage computes inline; Cassandra
 backend uses Spark batch.
 
-## Step 7 — Per-test isolation
+## Step 7 - Per-test isolation
 
 ```python
 service_name = f"orders-test-{uuid4()}"
@@ -207,11 +207,11 @@ Same pattern as Jaeger; Zipkin in-memory storage is bounded.
 
 ## References
 
-- [Zipkin quickstart docs] — Docker run, port 9411
-- [Zipkin API spec] — REST endpoints
-- [B3 propagation spec] — header formats, sampling values
+- [Zipkin quickstart docs] - Docker run, port 9411
+- [Zipkin API spec] - REST endpoints
+- [B3 propagation spec] - header formats, sampling values
 - [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md),
-  [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) — sister skills
+  [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skills
 - [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md)
 
 [Zipkin quickstart docs]: https://zipkin.io/pages/quickstart.html

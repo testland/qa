@@ -41,7 +41,7 @@ Per [`ab-test-validity-checklist`](../skills/ab-test-validity-checklist/SKILL.md
 Step 2: SRM at p < 0.0001 invalidates ship decisions until root
 cause is found.
 
-## Step 1 — Compute chi-square
+## Step 1 - Compute chi-square
 
 ```python
 from scipy.stats import chisquare
@@ -63,7 +63,7 @@ expected = [333333, 333333, 333333]
 chi2, p_value = chisquare(observed, expected)
 ```
 
-## Step 2 — Classify likely root cause
+## Step 2 - Classify likely root cause
 
 Per the KDD 2019 SRM taxonomy:
 
@@ -76,7 +76,7 @@ Per the KDD 2019 SRM taxonomy:
 | One arm has fewer events but same users | Per-user activity differs | Likely real treatment effect → not SRM-as-bug but document |
 | Redirect-induced loss | Variant routes users through extra hop → drop-off | Check redirect chain |
 
-## Step 3 — Output format
+## Step 3 - Output format
 
 ```markdown
 ## SRM Detection — Experiment `<id>`

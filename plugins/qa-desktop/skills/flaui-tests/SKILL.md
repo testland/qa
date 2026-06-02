@@ -1,6 +1,6 @@
 ---
 name: flaui-tests
-description: "Authors and runs FlaUI-based Windows UI tests — the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3). Covers the `FlaUI.Core` / `FlaUI.UIA2` / `FlaUI.UIA3` NuGet packages, `Application.Launch` / `Application.Attach` lifecycles, `ConditionFactory` + `FindFirstDescendant` locator patterns, `Retry` waits, and xUnit / NUnit / MSTest harness integration. Use when the test stack is C# / .NET-first and the team wants idiomatic in-process UIA calls rather than the HTTP/JSON wire protocol of `winappdriver` or the Appium proxy layer of `appium-windows-driver`."
+description: "Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3). Covers the `FlaUI.Core` / `FlaUI.UIA2` / `FlaUI.UIA3` NuGet packages, `Application.Launch` / `Application.Attach` lifecycles, `ConditionFactory` + `FindFirstDescendant` locator patterns, `Retry` waits, and xUnit / NUnit / MSTest harness integration. Use when the test stack is C# / .NET-first and the team wants idiomatic in-process UIA calls rather than the HTTP/JSON wire protocol of `winappdriver` or the Appium proxy layer of `appium-windows-driver`."
 archetype: S1
 rating: 25
 d6: 4
@@ -25,19 +25,18 @@ Per the [FlaUI repository README][flaui]:
 > "FlaUI is a .NET library for automated UI testing of Windows
 > applications."
 
-FlaUI wraps Microsoft UI Automation (UIA) — the Windows accessibility
+FlaUI wraps Microsoft UI Automation (UIA) - the Windows accessibility
 tree described in
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
-— behind an idiomatic C# API. Per [flaui][flaui], the library supports
+[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md) - behind an idiomatic C# API. Per [flaui][flaui], the library supports
 "Win32, WinForms, WPF, and Store Apps" via two UIA bindings:
 **UIA2** (managed `System.Windows.Automation`, per
-[Microsoft Learn — UI Automation Overview][msuia2]) and **UIA3** (COM
+[Microsoft Learn - UI Automation Overview][msuia2]) and **UIA3** (COM
 interop). v5.0.0 was released February 2025 ([flaui][flaui]); the
 project is MIT-licensed and remains actively maintained.
 
 [msuia2]: https://learn.microsoft.com/dotnet/framework/ui-automation/ui-automation-overview
 
-### Disambiguation — FlaUI vs winappdriver vs appium-windows-driver
+### Disambiguation - FlaUI vs winappdriver vs appium-windows-driver
 
 FlaUI is a **.NET library** that links into the test process and
 calls UIA directly. By contrast:
@@ -61,7 +60,7 @@ top of WinAppDriver.
 - Test code lives in a C# / .NET project alongside the application
   (a `dotnet test` solution).
 - Application under test is WPF, WinForms, Win32, or a Windows Store
-  app — the four classes FlaUI documents support for ([flaui][flaui]).
+  app - the four classes FlaUI documents support for ([flaui][flaui]).
 - The team prefers strongly-typed control wrappers (`AsButton()`,
   `AsTextBox()`) over WebDriver's stringly-typed locators.
 - No HTTP wire protocol required between test and driver
@@ -78,20 +77,20 @@ Per [flaui][flaui], three packages cover the surface:
 
 | Package | Purpose |
 |---|---|
-| `FlaUI.Core` | Base library — element abstractions, `Application`, `ConditionFactory`, `Retry`, control patterns |
-| `FlaUI.UIA3` | COM-based UIA binding — recommended for WPF and Store Apps ([flaui][flaui]) |
-| `FlaUI.UIA2` | Managed UIA binding using `System.Windows.Automation` ([msuia2][msuia2]) — better legacy WinForms compatibility ([flaui][flaui]) |
+| `FlaUI.Core` | Base library - element abstractions, `Application`, `ConditionFactory`, `Retry`, control patterns |
+| `FlaUI.UIA3` | COM-based UIA binding - recommended for WPF and Store Apps ([flaui][flaui]) |
+| `FlaUI.UIA2` | Managed UIA binding using `System.Windows.Automation` ([msuia2][msuia2]) - better legacy WinForms compatibility ([flaui][flaui]) |
 
 Reference both `FlaUI.Core` and one of UIA2 / UIA3 from the test
 project. Mixed-mode authoring (UIA2 and UIA3 in the same process) is
-unsupported — see [FlaUInspect][flauinspect] which requires the
+unsupported - see [FlaUInspect][flauinspect] which requires the
 inspector mode to be picked at startup.
 
 [flauinspect]: https://github.com/FlaUI/FlaUInspect
 
 ### Launching the application under test
 
-Per the [FlaUI wiki — Application page][flauiapp]:
+Per the [FlaUI wiki - Application page][flauiapp]:
 
 [flauiapp]: https://github.com/FlaUI/FlaUI/wiki/Application
 
@@ -122,7 +121,7 @@ are cleaned up after each test class.
 
 ### Finding elements with ConditionFactory
 
-Per the [FlaUI wiki — Searching page][flauisearch]:
+Per the [FlaUI wiki - Searching page][flauisearch]:
 
 [flauisearch]: https://github.com/FlaUI/FlaUI/wiki/Searching
 
@@ -156,13 +155,13 @@ combinators `AndCondition`, `OrCondition`, `NotCondition`
 
 Locator-selection order (most stable first):
 
-1. `ByAutomationId` — `AutomationId` is a developer-set stable
+1. `ByAutomationId` - `AutomationId` is a developer-set stable
    identifier per [msuia2][msuia2]; locale-independent and
    theme-independent.
-2. `ByControlType` + nested condition — when no AutomationId is
+2. `ByControlType` + nested condition - when no AutomationId is
    available, pair the control type (Button / Edit / ListItem) with
    another property.
-3. `ByName` — last resort; localised apps change `Name` per language.
+3. `ByName` - last resort; localised apps change `Name` per language.
 
 ### Interacting with elements
 
@@ -180,13 +179,13 @@ var listbox = window.FindFirstDescendant(cf => cf.ByControlType(ControlType.List
 listbox.Select(2);
 ```
 
-`AsButton().Invoke()` calls the UIA `InvokePattern` on the element —
+`AsButton().Invoke()` calls the UIA `InvokePattern` on the element - 
 the accessibility-canonical "press" action, distinct from a synthetic
 mouse click ([msuia2][msuia2] §Control Patterns).
 
 ### Waits with the Retry class
 
-Per the [FlaUI wiki — Retry page][flauiretry]:
+Per the [FlaUI wiki - Retry page][flauiretry]:
 
 [flauiretry]: https://github.com/FlaUI/FlaUI/wiki/Retry
 
@@ -211,7 +210,7 @@ Retry.WhileTrue(
 `Retry.WhileNull` / `Retry.WhileTrue` / `Retry.WhileFalse` /
 `Retry.WhileException` are the four variants ([flauiretry][flauiretry]).
 Each returns a `RetryResult` carrying iteration count, duration, and
-the last value — the test can assert on those metrics when
+the last value - the test can assert on those metrics when
 diagnosing slow-loading screens.
 
 ### Waits with Application.WaitWhileBusy
@@ -229,7 +228,7 @@ public bool WaitWhileBusy(TimeSpan? waitTimeout = null)
 ```
 
 Use it after a launch or a window-level action (menu open, modal
-dismiss, dialog confirm) before driving the next element — it blocks
+dismiss, dialog confirm) before driving the next element - it blocks
 on the Win32 message-pump-idle signal of the target process. Pair
 with `WaitWhileMainHandleIsMissing` right after `Launch` so the test
 doesn't race the splash screen:
@@ -246,14 +245,14 @@ app.WaitWhileBusy(TimeSpan.FromSeconds(5)); // wait for save handler
 
 `Retry.*` waits on *element-level* conditions (descendant appears /
 disappears / matches a predicate); `WaitWhileBusy` waits on the
-*process-level* idle signal. Both belong in the same test — pick by
+*process-level* idle signal. Both belong in the same test - pick by
 what you can actually observe.
 
 ## Running
 
 ### Test framework integration
 
-FlaUI integrates with any .NET test runner — xUnit, NUnit, MSTest:
+FlaUI integrates with any .NET test runner - xUnit, NUnit, MSTest:
 
 ```csharp
 // xUnit collection fixture for one-time app launch per test class
@@ -339,7 +338,7 @@ test logger flag. Pair with
 for cross-runner aggregation.
 
 For interactive selector discovery during authoring, use
-[FlaUInspect][flauinspect] — per its README it is "based on FlaUI"
+[FlaUInspect][flauinspect] - per its README it is "based on FlaUI"
 and presents the UIA tree with AutomationId, Name, ControlType, and
 XPath fields. Pre-built `FlaUInspect.UIA2` and `FlaUInspect.UIA3`
 binaries are downloadable from the releases page; pick the build
@@ -347,7 +346,7 @@ matching the UIA mode used by the test project.
 
 ## CI integration
 
-Windows runner required — UIA is Windows-only per [msuia2][msuia2]:
+Windows runner required - UIA is Windows-only per [msuia2][msuia2]:
 
 ```yaml
 # .github/workflows/flaui.yml
@@ -369,7 +368,7 @@ jobs:
           path: '**/ui.trx'
 ```
 
-`windows-latest` provides an interactive desktop session by default —
+`windows-latest` provides an interactive desktop session by default - 
 required because UIA cannot drive Session-0 / non-interactive
 desktops. Self-hosted Windows-container runners need additional
 setup (interactive logon + Auto-Login + an unlocked desktop).
@@ -380,8 +379,8 @@ Per [flaui][flaui]:
 
 | Choose | When |
 |---|---|
-| **UIA3** | WPF / Store Apps / new code — COM-based, fewer compatibility gaps with modern controls |
-| **UIA2** | Legacy WinForms / older Win32 — managed `System.Windows.Automation` ([msuia2][msuia2]) handles some legacy controls UIA3 misses |
+| **UIA3** | WPF / Store Apps / new code - COM-based, fewer compatibility gaps with modern controls |
+| **UIA2** | Legacy WinForms / older Win32 - managed `System.Windows.Automation` ([msuia2][msuia2]) handles some legacy controls UIA3 misses |
 
 For new projects, UIA3 is the default recommendation
 ([flaui][flaui]). UIA2 remains supported as a peer binding; FlaUI
@@ -403,7 +402,7 @@ itself ships both packages.
 ## Limitations
 
 - **Windows-only.** UIA is a Windows-specific API per [msuia2][msuia2].
-  No macOS / Linux equivalent — see
+  No macOS / Linux equivalent - see
   [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md) and
   [`at-spi-linux`](../at-spi-linux/SKILL.md).
 - **Requires an interactive desktop session.** UIA cannot drive
@@ -413,7 +412,7 @@ itself ships both packages.
 - **UIA2 vs UIA3 picked once per process.** Mixed-mode authoring is
   unsupported ([flauinspect][flauinspect]). New code should prefer
   UIA3 ([flaui][flaui]); UIA2 is retained for legacy WinForms
-  compatibility but no hard deprecation date is published — pin the
+  compatibility but no hard deprecation date is published - pin the
   decision per project.
 - **GPU / DirectComposition surfaces.** Some WPF + WinUI 3 controls
   rendered via DirectX may not expose a UIA tree. Inspect with
@@ -430,17 +429,17 @@ Eval authoring for this skill is **deferred** per the v3.0 framework
 §10 backfill priority order: per-tool S1 wrappers rank lowest for eval
 investment because "the tool itself is the oracle; 'the test runs as
 documented' is the pass condition." This skill ships with `d7: 1`
-(no evals authored yet) — that satisfies the v3.0 hard floor on D7
+(no evals authored yet) - that satisfies the v3.0 hard floor on D7
 without expending eval budget that better targets A3 critics and the
 qa-llm-evaluation / qa-ai-assisted plugins first.
 
 ## References
 
-- FlaUI repository (README) — [flaui][flaui].
-- FlaUI wiki — [Application][flauiapp], [Searching][flauisearch],
+- FlaUI repository (README) - [flaui][flaui].
+- FlaUI wiki - [Application][flauiapp], [Searching][flauisearch],
   [Retry][flauiretry].
-- FlaUInspect inspector tool — [flauinspect][flauinspect].
-- Microsoft Learn — UI Automation Overview — [msuia2][msuia2].
+- FlaUInspect inspector tool - [flauinspect][flauinspect].
+- Microsoft Learn - UI Automation Overview - [msuia2][msuia2].
 - Sibling skills:
   [`winappdriver`](../winappdriver/SKILL.md),
   [`appium-windows-driver`](../appium-windows-driver/SKILL.md),

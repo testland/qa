@@ -12,7 +12,7 @@ archetype: S3
 
 A tenant-leak test suite is the runtime guarantee that cross-
 tenant access fails. This skill **builds** that suite from an
-inventory of tenant-bearing surfaces — not a pre-canned set of
+inventory of tenant-bearing surfaces - not a pre-canned set of
 tests, since every product has a different surface area.
 
 The workflow is:
@@ -34,13 +34,13 @@ skill describes the runtime contract those tests must satisfy.
 
 - New feature introduces a tenant-bearing surface (table, API
   resource, queue topic, search index).
-- Audit existing coverage — does the test suite probe every
+- Audit existing coverage - does the test suite probe every
   surface?
 - PR review adds a new tenant_id column or scoped endpoint.
-- Migrating from pool to bridge (or vice versa) — test surface
+- Migrating from pool to bridge (or vice versa) - test surface
   shifts.
 
-## Step 1 — Inventory tenant-bearing surfaces
+## Step 1 - Inventory tenant-bearing surfaces
 
 Walk the codebase and enumerate every surface that should be
 tenant-scoped. Categorise:
@@ -73,7 +73,7 @@ Tests differ:
 - **Silo** → tenant-to-deployment routing tests (tenant A's
   request must not hit tenant B's deployment).
 
-## Step 2 — Enumerate attack patterns per surface
+## Step 2 - Enumerate attack patterns per surface
 
 Per OWASP WSTG-ATHZ-02
 ([owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema)),
@@ -83,24 +83,24 @@ three primary scenarios:
 |---|---|---|
 | **Horizontal escalation** | Tenant A accesses tenant B's data, identical privilege | All pool/bridge surfaces |
 | **Vertical escalation** | Non-admin in tenant A accesses admin-only resources | All admin-scoped surfaces |
-| **IDOR / BOLA** | Direct reference attack — change ID in URL/payload | All ID-bearing endpoints |
+| **IDOR / BOLA** | Direct reference attack - change ID in URL/payload | All ID-bearing endpoints |
 
 Plus tenant-isolation-specific patterns:
 
 | Pattern | Test |
 |---|---|
-| **tenant_id from request payload** | Send tenant A's session with `tenant_id=B` in body — must reject |
+| **tenant_id from request payload** | Send tenant A's session with `tenant_id=B` in body - must reject |
 | **Missing tenant_id filter in new endpoint** | Enumerate routes added in last N commits; verify each filters by tenant |
-| **Cross-tenant via foreign key** | Create FK from tenant-A row to tenant-B row — must fail |
-| **Cross-tenant via unique constraint** | Insert tenant-A row with key that exists in tenant B — observe error timing as side channel |
-| **JWT replay across tenants** | Tenant A's JWT used to call tenant B's endpoint — must reject signature/iss/aud check |
-| **Object storage path traversal** | Tenant A presigned URL → modify prefix to tenant B's — must 403 |
-| **Search query without tenant filter** | Direct search index query — must include tenant routing key |
+| **Cross-tenant via foreign key** | Create FK from tenant-A row to tenant-B row - must fail |
+| **Cross-tenant via unique constraint** | Insert tenant-A row with key that exists in tenant B - observe error timing as side channel |
+| **JWT replay across tenants** | Tenant A's JWT used to call tenant B's endpoint - must reject signature/iss/aud check |
+| **Object storage path traversal** | Tenant A presigned URL → modify prefix to tenant B's - must 403 |
+| **Search query without tenant filter** | Direct search index query - must include tenant routing key |
 | **Async job tenant context** | Job enqueued by tenant A → executor must reload tenant context, not trust message |
-| **Cache key collision** | Tenant A and tenant B have same logical key — cache must namespace |
+| **Cache key collision** | Tenant A and tenant B have same logical key - cache must namespace |
 | **Log scrubbing** | Tenant A errors must not leak tenant B identifiers |
 
-## Step 3 — Generate test cases
+## Step 3 - Generate test cases
 
 For each (surface, pattern) cell of the matrix, generate one or
 more test cases. Conventions:
@@ -137,7 +137,7 @@ For tenant testing, the same approach with tenant_id as the
 | `tenant_a_resource` | A document/record/etc owned by A |
 | `tenant_b_resource` | Same shape, owned by B |
 
-## Step 4 — Pick the test framework + emit skeleton
+## Step 4 - Pick the test framework + emit skeleton
 
 Pick by stack:
 
@@ -224,7 +224,7 @@ INSERT INTO documents (tenant_id, body) VALUES ('<tenant_a_uuid>', 'leak');
 ROLLBACK;
 ```
 
-## Step 5 — Coverage assertions
+## Step 5 - Coverage assertions
 
 The suite is incomplete unless it covers every (surface, pattern)
 cell. Track via a coverage matrix:
@@ -245,7 +245,7 @@ pattern list. Empty cells are coverage gaps the PR must justify.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Tests run as superuser/BYPASSRLS role | Tests pass; prod leaks per [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md) | Run with prod-equivalent role |
-| Single tenant in test fixtures | Can't test cross-tenant — that's the whole point | Always fixture two disjoint tenants |
+| Single tenant in test fixtures | Can't test cross-tenant - that's the whole point | Always fixture two disjoint tenants |
 | 403 instead of 404 | Existence disclosure: tenant A learns B's resource exists | Return 404 for unauthorised resources (debatable; document the choice) |
 | Coverage by route only | Misses object storage, queues, search, caches | Inventory all surfaces (Step 1) |
 | Static fixture IDs | Coincidental match between A's and B's IDs masks bugs | UUIDs, random per-test |
@@ -258,7 +258,7 @@ pattern list. Empty cells are coverage gaps the PR must justify.
 This skill produces:
 
 - A surface inventory document (Step 1).
-- An attack-pattern × surface coverage matrix (Steps 2–3).
+- An attack-pattern × surface coverage matrix (Steps 2 - 3).
 - A test suite skeleton (Step 4) committed to the project repo.
 - A README in the test directory documenting the matrix and how
   to add a surface.

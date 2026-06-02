@@ -1,6 +1,6 @@
 ---
 name: testrail-case-management
-description: "Author and manage test cases in TestRail via REST API v2 — create cases, organise into suites + sections, update steps + expected results, bulk import from CSV/JSON, set automation status, link to references (Jira / requirements). Covers the Steps / Text / Exploratory templates, custom-field discovery (`get_case_fields`), and pagination on `get_cases`. Use for pre-execution case authoring and repository management. Distinct from qa-test-reporting/testrail-integration (post-execution result sync via add_results_for_cases)."
+description: "Author and manage test cases in TestRail via REST API v2 - create cases, organise into suites + sections, update steps + expected results, bulk import from CSV/JSON, set automation status, link to references (Jira / requirements). Covers the Steps / Text / Exploratory templates, custom-field discovery (`get_case_fields`), and pagination on `get_cases`. Use for pre-execution case authoring and repository management. Distinct from qa-test-reporting/testrail-integration (post-execution result sync via add_results_for_cases)."
 rating: 24
 d6: 4
 archetype: S1
@@ -14,7 +14,7 @@ TestRail organises tests as `cases` inside `sections` inside
 `suites` inside `projects`. The API v2 covers full CRUD on each
 plus templates, custom fields, references, and types. Authentication
 is HTTP Basic with email + API key per the TestRail support docs
-(support.testrail.com/hc/en-us/articles/7077871398036-Cases —
+(support.testrail.com/hc/en-us/articles/7077871398036-Cases - 
 Cloudflare-protected, cite by stable URL).
 
 For the canonical anatomy this skill operates on, see
@@ -23,8 +23,7 @@ For the canonical anatomy this skill operates on, see
 **Differentiation vs sibling-plugin
 `qa-test-reporting/testrail-integration`:** that skill posts
 *test-run results* via `add_results_for_cases`. This one operates
-on the *case repository* — create, update, organise, traceability
-— a strictly upstream concern.
+on the *case repository* - create, update, organise, traceability - a strictly upstream concern.
 
 ## When to use
 
@@ -279,10 +278,10 @@ merge, post updates back:
 
 ## References
 
-- TestRail API v2 Cases reference —
+- TestRail API v2 Cases reference - 
   support.testrail.com/hc/en-us/articles/7077871398036-Cases
   (Cloudflare-protected; cite by stable URL).
-- TestRail API v2 Suites + Sections + Custom Fields docs —
+- TestRail API v2 Suites + Sections + Custom Fields docs - 
   support.testrail.com/hc/en-us/categories/7076541806228.
 - Sibling references:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
@@ -292,5 +291,4 @@ merge, post updates back:
   [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md)
-  — different scope (result sync; not case authoring).
+  [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md) - different scope (result sync; not case authoring).

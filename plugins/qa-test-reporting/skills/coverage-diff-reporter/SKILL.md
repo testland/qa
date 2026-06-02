@@ -1,6 +1,6 @@
 ---
 name: coverage-diff-reporter
-description: "Builds a per-PR coverage delta report from any pair of LCOV / Cobertura / JSON coverage outputs (current run + baseline from the merge target) — emits a per-file table with line% / branch% deltas, called-out new files, hidden drops (overall +0.1pp but one file -8pp), and a single-line PR-comment summary. Use when the team has coverage in CI but needs human-readable PR feedback that points at the specific file the reviewer should focus on, not just an aggregate number."
+description: "Builds a per-PR coverage delta report from any pair of LCOV / Cobertura / JSON coverage outputs (current run + baseline from the merge target) - emits a per-file table with line% / branch% deltas, called-out new files, hidden drops (overall +0.1pp but one file -8pp), and a single-line PR-comment summary. Use when the team has coverage in CI but needs human-readable PR feedback that points at the specific file the reviewer should focus on, not just an aggregate number."
 rating: 24
 d6: 4
 archetype: S3
@@ -35,12 +35,12 @@ This skill **builds a coverage diff report** that solves the
 - A coverage SaaS isn't an option (compliance, cost) and the team
   wants a self-hosted equivalent.
 
-This skill **does not** decide pass/fail — that's the gate's job
+This skill **does not** decide pass/fail - that's the gate's job
 (see [`lcov-analysis`](../lcov-analysis/SKILL.md) or
 [`cobertura-analysis`](../cobertura-analysis/SKILL.md) Step 5). This
 skill just makes the diff legible.
 
-## Step 1 — Pick the parser
+## Step 1 - Pick the parser
 
 Match the existing CI's reporter:
 
@@ -55,11 +55,11 @@ Match the existing CI's reporter:
 The reporter writes to `current.json` (parsed). The same parser
 runs against the baseline → `baseline.json`.
 
-## Step 2 — Get the baseline
+## Step 2 - Get the baseline
 
 Two patterns:
 
-### Pattern A — cached artifact (recommended)
+### Pattern A - cached artifact (recommended)
 
 The main branch's last successful CI run uploaded its coverage as
 an artifact. PR jobs download it.
@@ -83,7 +83,7 @@ an artifact. PR jobs download it.
   run: python scripts/coverage_diff.py current.json baseline.json > diff.md
 ```
 
-### Pattern B — recompute the baseline in the PR job
+### Pattern B - recompute the baseline in the PR job
 
 The PR job checks out main, runs tests + coverage, then checks out
 the PR head. Slower (~2x runtime) but always-fresh.
@@ -105,7 +105,7 @@ the PR head. Slower (~2x runtime) but always-fresh.
 Pattern A is the default. Pattern B is the fallback when artifact
 retention has expired or main coverage is non-deterministic.
 
-## Step 3 — Compute the per-file delta
+## Step 3 - Compute the per-file delta
 
 ```python
 # scripts/coverage_diff.py
@@ -131,7 +131,7 @@ def compute_diff(current, baseline):
     return rows
 ```
 
-## Step 4 — Sort and classify
+## Step 4 - Sort and classify
 
 Reviewers care most about big drops. Sort by `line_delta` ascending
 (most-negative first), with new sub-threshold files at the top:
@@ -150,7 +150,7 @@ def classify(row):
 The thresholds (80% for new files, -5pp for regression) are tunable
 per repo.
 
-## Step 5 — Render the report
+## Step 5 - Render the report
 
 ```markdown
 ## Coverage diff — `<sha>` vs `main` `<base-sha>`
@@ -185,10 +185,10 @@ per repo.
 ```
 
 The four-section split (Regressions / New / Improvements / Deleted)
-matches reviewer attention budget. Improvements get airtime —
+matches reviewer attention budget. Improvements get airtime - 
 positive feedback prevents the gate from feeling adversarial.
 
-## Step 6 — One-line summary for the PR top
+## Step 6 - One-line summary for the PR top
 
 PR comment APIs render long markdown by default; the summary line
 sits at the top so the reviewer doesn't have to scroll:
@@ -203,7 +203,7 @@ Or if all-clear:
 ✅ Coverage 84.5% (+0.2pp) — no regressions, 2 files improved.
 ```
 
-## Step 7 — Post to the PR
+## Step 7 - Post to the PR
 
 ```yaml
 - name: Generate diff report
@@ -217,14 +217,14 @@ Or if all-clear:
 ```
 
 `sticky-pull-request-comment` uses the `header` to update the same
-comment across pushes — the reviewer doesn't see N copies of the
+comment across pushes - the reviewer doesn't see N copies of the
 report as the PR evolves.
 
 ## Anti-patterns
 
 | Anti-pattern                                                      | Why it fails                                                                  | Fix |
 |-------------------------------------------------------------------|-------------------------------------------------------------------------------|-----|
-| Posting only the aggregate (overall ± Xpp)                        | Hides which file regressed; reviewer can't act.                              | Per-file table sorted by drop (Step 4–5). |
+| Posting only the aggregate (overall ± Xpp)                        | Hides which file regressed; reviewer can't act.                              | Per-file table sorted by drop (Step 4 - 5). |
 | One thread per push (new comment per commit)                      | PR conversation drowns in coverage churn; nobody reads.                      | Sticky comment updated in place (Step 7). |
 | Showing every unchanged file                                       | 500-row tables; the 3 regressions are buried.                                | Filter to only changed files; one summary line for unchanged count. |
 | Adversarial framing ("FAIL: coverage dropped")                    | Reviewer associates coverage tool with friction; team disables.              | Show improvements too (Step 5). Gate failures are the gate's job; this report is informational. |
@@ -249,15 +249,14 @@ report as the PR evolves.
 
 ## References
 
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) — LCOV parser this
+- [`lcov-analysis`](../lcov-analysis/SKILL.md) - LCOV parser this
   skill consumes.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) — Cobertura
+- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - Cobertura
   parser this skill consumes.
 - [`jest-coverage-analysis`](../jest-coverage-analysis/SKILL.md),
   [`jacoco-analysis`](../jacoco-analysis/SKILL.md),
-  [`coverage-py-analysis`](../coverage-py-analysis/SKILL.md) —
+  [`coverage-py-analysis`](../coverage-py-analysis/SKILL.md) - 
   language-specific parsers; convert to LCOV / Cobertura before
   feeding this skill.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md)
-  — downstream skill that reads the same data to suggest which
+- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - downstream skill that reads the same data to suggest which
   uncovered branches to target next.

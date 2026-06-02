@@ -1,6 +1,6 @@
 ---
 name: behave-testing
-description: "Configures Behave for Python BDD scenarios — `pip install behave`, authors `.feature` files in Gherkin, writes step implementations in `features/steps/*.py`, configures via `environment.py` for setup/teardown hooks, organizes via tags, runs via `behave`. Use for Python codebases that want Cucumber-family BDD without Cucumber-Ruby / Cucumber-JS."
+description: "Configures Behave for Python BDD scenarios - `pip install behave`, authors `.feature` files in Gherkin, writes step implementations in `features/steps/*.py`, configures via `environment.py` for setup/teardown hooks, organizes via tags, runs via `behave`. Use for Python codebases that want Cucumber-family BDD without Cucumber-Ruby / Cucumber-JS."
 rating: 22
 d6: 4
 archetype: S1
@@ -31,16 +31,16 @@ components but maintained outside the main org).
 - The codebase is Python and the team uses BDD.
 - Acceptance criteria are authored in Gherkin (per
   [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)).
-- pytest with parametrize isn't sufficient — non-engineers read
+- pytest with parametrize isn't sufficient - non-engineers read
   the tests.
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 pip install behave
 ```
 
-## Step 2 — Project layout
+## Step 2 - Project layout
 
 Behave's conventional layout:
 
@@ -55,7 +55,7 @@ project/
 └── ...
 ```
 
-## Step 3 — Author a Feature
+## Step 3 - Author a Feature
 
 ```gherkin
 # features/cart.feature
@@ -81,7 +81,7 @@ Feature: Apply promo code at checkout
       | NOTREAL   | Code not found        |
 ```
 
-## Step 4 — Write step implementations
+## Step 4 - Write step implementations
 
 ```python
 # features/steps/cart_steps.py
@@ -121,7 +121,7 @@ def step_error(context, message):
 
 The `context` object carries state across steps within a scenario.
 
-## Step 5 — Hooks via `environment.py`
+## Step 5 - Hooks via `environment.py`
 
 Per [behave-docs][bd], `environment.py` provides "Environmental
 Controls":
@@ -158,7 +158,7 @@ def after_tag(context, tag):
 The hook hierarchy: `before_all` > `before_feature` >
 `before_scenario` > `before_step` (and the matching `after_*`).
 
-## Step 6 — Tags + filtering
+## Step 6 - Tags + filtering
 
 Per [behave-docs][bd], "Controlling Things With Tags" is the
 filter mechanism:
@@ -184,7 +184,7 @@ behave --tags=~wip
 behave --tags=critical --tags=~slow
 ```
 
-## Step 7 — Reporting
+## Step 7 - Reporting
 
 ```bash
 # Plain text + JUnit XML for CI
@@ -196,7 +196,7 @@ behave --format=plain --no-color > test-results.txt
 
 The JUnit XML feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
-## Step 8 — Run
+## Step 8 - Run
 
 ```bash
 behave                         # all features
@@ -205,7 +205,7 @@ behave --tags=@critical         # by tag
 behave -i cart                  # match file pattern
 ```
 
-## Step 9 — pytest-bdd alternative
+## Step 9 - pytest-bdd alternative
 
 Per [behave-docs][bd], Behave is the canonical Python BDD; the
 ecosystem also includes **pytest-bdd** which integrates Gherkin
@@ -239,13 +239,11 @@ into pytest. Choose:
 
 ## References
 
-- [bd][bd] — Behave overview: BDD Python-style; step
+- [bd][bd] - Behave overview: BDD Python-style; step
   implementations + environment.py + tags; cross-stakeholder
   collaboration framing.
 - [`cucumber-testing`](../cucumber-testing/SKILL.md),
-  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) — sibling
+  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - sibling
   language wrappers.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)
-  — keeps step proliferation in check.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md)
-  — adversarial Gherkin reviewer.
+- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - keeps step proliferation in check.
+- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - adversarial Gherkin reviewer.

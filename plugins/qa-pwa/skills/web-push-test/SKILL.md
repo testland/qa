@@ -1,6 +1,6 @@
 ---
 name: web-push-test
-description: "Test the browser web-push subscription lifecycle — `pushManager.subscribe({ userVisibleOnly, applicationServerKey })` per [W3C Push API][w3c-push] returning a `PushSubscription` with `endpoint` + `keys.p256dh` + `keys.auth` + optional `expirationTime`; the `pushsubscriptionchange` service-worker event on refresh / revoke / expiry; the `push` event delivery with `PushMessageData`; VAPID auth per RFC 8292 (ES256 JWT, `aud` / `exp` ≤ 24h / `sub`); RFC 8030 push-service responses (201 Created, 410 Gone for expired endpoints, 413 Payload Too Large, 429); and `unsubscribe()` cleanup. Distinct from `qa-notifications/push-notification-test-author` (cross-channel push including mobile + native APNs/FCM); this is browser web-push subscription lifecycle (`pushManager.subscribe`, VAPID, endpoint expiry)."
+description: "Test the browser web-push subscription lifecycle - `pushManager.subscribe({ userVisibleOnly, applicationServerKey })` per [W3C Push API][w3c-push] returning a `PushSubscription` with `endpoint` + `keys.p256dh` + `keys.auth` + optional `expirationTime`; the `pushsubscriptionchange` service-worker event on refresh / revoke / expiry; the `push` event delivery with `PushMessageData`; VAPID auth per RFC 8292 (ES256 JWT, `aud` / `exp` ≤ 24h / `sub`); RFC 8030 push-service responses (201 Created, 410 Gone for expired endpoints, 413 Payload Too Large, 429); and `unsubscribe()` cleanup. Distinct from `qa-notifications/push-notification-test-author` (cross-channel push including mobile + native APNs/FCM); this is browser web-push subscription lifecycle (`pushManager.subscribe`, VAPID, endpoint expiry)."
 rating: 23
 d6: 5
 archetype: S1
@@ -36,7 +36,7 @@ territory.
 
 - A PWA implements web-push and needs a subscription-lifecycle test
   before each release.
-- Users report "I subscribed but never got a push" — author the
+- Users report "I subscribed but never got a push" - author the
   endpoint-expiry test that catches stale subscriptions.
 - A VAPID key was rotated and the team needs evidence subscriptions
   survived (they should, since VAPID identifies the *server* per
@@ -46,7 +46,7 @@ territory.
 
 ## Authoring
 
-### Step 1 — Set up the Playwright fixture with notification permission
+### Step 1 - Set up the Playwright fixture with notification permission
 
 Web-push subscription requires the `notifications` permission per
 [w3c-push] `userVisibleOnly: true` requirement (and per browser UX
@@ -80,7 +80,7 @@ Per [w3c-push], `userVisibleOnly` *"indicates that the push
 subscription will only be used for push messages whose effect is
 made visible to the user."* Most browsers require it to be `true`.
 
-### Step 2 — Test subscription creation
+### Step 2 - Test subscription creation
 
 ```ts
 test('pushManager.subscribe returns a PushSubscription with VAPID-bound keys', async ({ page, context }) => {
@@ -118,7 +118,7 @@ Per [w3c-push], the `PushSubscription` exposes:
 | `keys.auth` | "authentication secret that an application server uses" |
 | `options` | The `PushSubscriptionOptions` that created it |
 
-### Step 3 — Test `getSubscription()` returns the same endpoint
+### Step 3 - Test `getSubscription()` returns the same endpoint
 
 ```ts
 test('PushManager.getSubscription returns the active subscription', async ({ page }) => {
@@ -139,7 +139,7 @@ test('PushManager.getSubscription returns the active subscription', async ({ pag
 Per [mdn-push], `PushManager.getSubscription()` returns the active
 subscription if one exists, else `null`.
 
-### Step 4 — Test the SW `push` event with `PushMessageData`
+### Step 4 - Test the SW `push` event with `PushMessageData`
 
 Drive a push event into the registered service worker. In a real
 test environment, the application server sends to the endpoint;
@@ -192,7 +192,7 @@ Per [w3c-push], `PushMessageData` exposes:
 | `json()` | "Parses as JSON" |
 | `text()` | "Decodes UTF-8" |
 
-### Step 5 — Test `pushsubscriptionchange`
+### Step 5 - Test `pushsubscriptionchange`
 
 Per [w3c-push], `pushsubscriptionchange` is *"Fired when
 subscriptions refresh, revoke, or expire outside app control,
@@ -232,15 +232,15 @@ test('pushsubscriptionchange triggers re-subscription', async ({ context, page }
 ```
 
 The real-world trigger for `pushsubscriptionchange` is the push
-service revoking / refreshing the endpoint per [w3c-push] — not
+service revoking / refreshing the endpoint per [w3c-push] - not
 testable headlessly without the push service in the loop, which is
 why Step 6 covers the server-side expiry signal instead.
 
-### Step 6 — Server-side: handle `410 Gone` for expired endpoints
+### Step 6 - Server-side: handle `410 Gone` for expired endpoints
 
 Per [rfc8030], `410 Gone` is *"Returned when the push service
 ceases retry delivery before advertised expiration."* In practice
-it indicates the subscription is no longer valid — the application
+it indicates the subscription is no longer valid - the application
 server must delete the endpoint from its store. Test the cleanup
 path:
 
@@ -269,11 +269,11 @@ Per [rfc8030], the other relevant push-service responses:
 | Code | Per [rfc8030] |
 |---|---|
 | `201 Created` | "Indicates accepted push messages without delivery confirmation requests" |
-| `410 Gone` | "Returned when the push service ceases retry delivery before advertised expiration" — delete endpoint |
-| `413 Payload Too Large` | "may be returned for entity bodies exceeding size limits (though not for bodies ≤ 4096 bytes)" — split or shrink payload |
-| `429 Too Many Requests` | "Used to reject requests exceeding rate limits" — back off |
+| `410 Gone` | "Returned when the push service ceases retry delivery before advertised expiration" - delete endpoint |
+| `413 Payload Too Large` | "may be returned for entity bodies exceeding size limits (though not for bodies ≤ 4096 bytes)" - split or shrink payload |
+| `429 Too Many Requests` | "Used to reject requests exceeding rate limits" - back off |
 
-### Step 7 — VAPID JWT shape
+### Step 7 - VAPID JWT shape
 
 Per [rfc8292], the application server signs a JWT with ECDSA on
 P-256 (the `ES256` algorithm) and sends:
@@ -308,7 +308,7 @@ it('VAPID JWT has aud, exp ≤ 24h, mailto sub', () => {
 });
 ```
 
-### Step 8 — Test `unsubscribe()`
+### Step 8 - Test `unsubscribe()`
 
 Per [w3c-push], `PushSubscription.unsubscribe()` "deactivates a
 subscription, returning a promise resolving to `true` on success or
@@ -366,7 +366,7 @@ jobs:
       - run: npx vitest run tests/subscription-cleanup.spec.ts
 ```
 
-Inject VAPID keys via secret env vars per [rfc8292] — the public
+Inject VAPID keys via secret env vars per [rfc8292] - the public
 key only is needed in the browser, but the private signs the JWT
 and must never reach the client.
 
@@ -423,8 +423,8 @@ service.
 | Test `pushsubscriptionchange` by waiting for real expiry | Hours-to-months wait; not feasible in CI | Synthetic dispatch (Step 5) |
 | Use `userVisibleOnly: false` | Most browsers reject; per [w3c-push] the flag means "made visible to the user" | Always `true` in tests (Step 1) |
 | Skip permission grant in the fixture | `subscribe()` rejects silently with `PermissionDeniedError` | `permissions: ['notifications']` (Step 1) |
-| Treat all `4xx` from the push service the same | `410` means delete; `413` means shrink; `429` means back off — per [rfc8030] | Step 6 maps each |
-| Sign VAPID JWTs with `exp` longer than 24h | Per [rfc8292] `exp` "MUST NOT be more than 24 hours" — push service rejects | Step 7 asserts the cap |
+| Treat all `4xx` from the push service the same | `410` means delete; `413` means shrink; `429` means back off - per [rfc8030] | Step 6 maps each |
+| Sign VAPID JWTs with `exp` longer than 24h | Per [rfc8292] `exp` "MUST NOT be more than 24 hours" - push service rejects | Step 7 asserts the cap |
 | Test only one push service endpoint | FCM vs Mozilla vs others behave differently; multi-browser test matrix | Run on Chromium + Firefox (Mozilla push service) |
 
 ## Limitations
@@ -435,17 +435,17 @@ service.
   push-service-compatible mock (e.g. a `web-push-testing-service`
   local instance).
 - **Firefox push quota** per [mdn-push]: *"Limited quota per app
-  (except notifications); refreshes on site visit"* — tests
+  (except notifications); refreshes on site visit"* - tests
   asserting unlimited sends will fail on Firefox.
 - **Endpoint host pinning is brittle.** The push service hostname
   varies by browser and may rotate within a browser; tests should
   match `^https?://` not specific hostnames.
 - **The push payload encryption per RFC 8291** is opaque to the
-  browser-side test — `PushMessageData.text()` returns the
+  browser-side test - `PushMessageData.text()` returns the
   *decrypted* payload. Server-side tests need the encryption
   library (`web-push` npm package) to validate the wire format.
 - **`getSubscription()` may return `null` after a browser restart**
-  even when the user had previously subscribed — local browser
+  even when the user had previously subscribed - local browser
   state can clear without firing `pushsubscriptionchange`. Tests
   that assume subscription persistence across runs must
   re-subscribe defensively.
@@ -457,15 +457,15 @@ service.
 ## References
 
 - W3C Push API spec (PushManager, PushSubscription,
-  PushMessageData methods, pushsubscriptionchange) — [w3c-push].
+  PushMessageData methods, pushsubscriptionchange) - [w3c-push].
 - MDN Push API (Baseline status, Firefox quota notes, security
-  considerations) — [mdn-push].
-- RFC 8030 — Web Push Protocol (TTL header, Urgency header,
-  201/410/413/429 response codes) — [rfc8030].
-- RFC 8292 — VAPID for Web Push (ES256 JWT, `aud`/`exp`/`sub`
-  claims, Authorization header format) — [rfc8292].
-- web.dev — Notifications (the showNotification options reference
-  Step 4 paired with) — [web-dev-notifications].
+  considerations) - [mdn-push].
+- RFC 8030 - Web Push Protocol (TTL header, Urgency header,
+  201/410/413/429 response codes) - [rfc8030].
+- RFC 8292 - VAPID for Web Push (ES256 JWT, `aud`/`exp`/`sub`
+  claims, Authorization header format) - [rfc8292].
+- web.dev - Notifications (the showNotification options reference
+  Step 4 paired with) - [web-dev-notifications].
 - Differentiation:
   [`qa-notifications/push-notification-test-author`](../../../qa-notifications/skills/push-notification-test-author/SKILL.md)
   covers cross-channel push (Web Push + APNs + FCM in one suite).

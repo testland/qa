@@ -4,20 +4,20 @@ type: agent
 archetype: A2
 ---
 
-# perf-regression-bisector — evals
+# perf-regression-bisector - evals
 
 Companion eval cases for [`perf-regression-bisector`](../../perf-regression-bisector.md).
 Three cases cover happy path (k6 regression → bisect → app-side hot path
 hand-off), branch (Lighthouse driver instead of k6), and adversarial
-(run-to-run variance exceeds the regression delta — refuse to bisect on
+(run-to-run variance exceeds the regression delta - refuse to bisect on
 noise). Re-run by feeding the **Input** block as the first user message
 and checking the agent's transcript against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates below are the eval-authoring date — each case
+`claude-opus-4-7`. Dates below are the eval-authoring date - each case
 is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — k6 regression, app-side culprit
+## Eval 1 - happy path - k6 regression, app-side culprit
 
 **Input:**
 
@@ -48,7 +48,7 @@ Repo layout:
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25), opus (2026-05-25)
 
 **Expected:** Step 1 confirms determinism (variance ±35 ms is much
-smaller than the 890 ms regression delta — bisect proceeds). Step 2
+smaller than the 890 ms regression delta - bisect proceeds). Step 2
 names bad = `HEAD` / `9f3c0e2`, good = `v1.4.0` / `4a11bbe`. Step 3
 emits a per-commit measurement script that runs `npm install` →
 `npm run build` → `npm run start` → `npx wait-on` → `k6 run` with
@@ -66,7 +66,7 @@ hands off to `flame-graph-analyzer` (substring match). Output does NOT
 recommend running `git bisect` without the determinism check from
 Step 1.
 
-## Eval 2 — branch — Lighthouse driver instead of k6
+## Eval 2 - branch - Lighthouse driver instead of k6
 
 **Input:**
 
@@ -110,7 +110,7 @@ but not as the actual measurement invocation). Output references exit
 code `125`. Output preserves the `category:performance >= 0.85` budget
 or its numeric value as the bad/good signal.
 
-## Eval 3 — adversarial — variance exceeds regression delta (refuse)
+## Eval 3 - adversarial - variance exceeds regression delta (refuse)
 
 **Input:**
 
@@ -139,7 +139,7 @@ Proceed with the bisect.
 **Expected:** Step 1 detects that the run-to-run variance (±120 ms) is
 LARGER than the regression delta (60 ms). The agent refuses to start
 `git bisect` because the bad/good signal cannot be distinguished from
-noise — `git bisect run` would converge on whichever commit happened
+noise - `git bisect run` would converge on whichever commit happened
 to land on the noisier side of the distribution. Output recommends
 either (a) increasing load-test duration / iterations until variance
 shrinks below the delta, or (b) declaring the result INCONCLUSIVE per
@@ -157,14 +157,14 @@ inconclusive (substring `iterations` OR `duration` OR `inconclusive`).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no live
+- All three inputs are concrete pasted-content blocks - no live
   repository or running build is required. The agent reads the
   measurements + variance stated in the input to drive Step 1.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, `Bash(git bisect *)`,
   `Bash(git log *)`, `Bash(git show *)`, `Bash(k6 run *)`,
-  `Bash(npx lhci *)`, `Bash(jq *)`) is scoped — eval re-runs cannot
+  `Bash(npx lhci *)`, `Bash(jq *)`) is scoped - eval re-runs cannot
   execute arbitrary shell, modify the repository, or push commits.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

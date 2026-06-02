@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# framework-architecture-auditor — evals
+# framework-architecture-auditor - evals
 
 Companion eval cases for [`framework-architecture-auditor`](../../framework-architecture-auditor.md).
 Three cases cover happy path / branch / adversarial: a Playwright framework
@@ -14,7 +14,7 @@ multiple axes, a healthy framework with all-PASS axes, and a single-file
 Re-run by pasting the **Input** block as the first user message and
 checking the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — deep hierarchy + hardcoded sleeps (FAIL on §A2 + §A6)
+## Eval 1 - happy path - deep hierarchy + hardcoded sleeps (FAIL on §A2 + §A6)
 
 **Input:**
 
@@ -87,7 +87,7 @@ at least two of `§A2` / `§A6` / `depth 4` / `hardcoded sleep` /
 `waitForTimeout`. Output does NOT issue a top-line PASS verdict for
 the suite.
 
-## Eval 2 — branch — healthy framework (all axes PASS or WARN-only)
+## Eval 2 - branch - healthy framework (all axes PASS or WARN-only)
 
 **Input:**
 
@@ -144,7 +144,7 @@ NOT contain `FAIL` on any axis row. The Recommendations section does
 NOT call for a refactor / hierarchy collapse / sleep removal as a top-3
 item.
 
-## Eval 3 — adversarial — refuse on single-file framework
+## Eval 3 - adversarial - refuse on single-file framework
 
 **Input:**
 
@@ -174,7 +174,7 @@ Audit scope: full.
 
 **Expected:** Per the Refuse-to-proceed rule "Operate on a 'test
 framework' of one file. Cross-file pattern detection requires a
-corpus — minimum 10 test files, 3 POMs," the agent refuses to issue
+corpus - minimum 10 test files, 3 POMs," the agent refuses to issue
 the 8-axis audit. The input has 4 test files (below the 10-file floor)
 and 1 POM (below the 3-POM floor). The agent emits the corpus-minimum
 refusal, names the thresholds, and does NOT emit a per-axis verdict
@@ -184,7 +184,7 @@ table with WARN / FAIL / PASS rows for §A1-§A8.
 `corpus` / `too small` / `not a corpus` / `cross-file pattern detection`
 (case-insensitive) AND does NOT contain a per-axis verdict for §A2
 (`depth`) or §A6 (`hardcoded sleep` / `retry / wait`). The agent must
-not claim to audit a one-POM, four-test framework — that is the entire
+not claim to audit a one-POM, four-test framework - that is the entire
 adversarial point of the eval.
 
 ## Reproducibility notes

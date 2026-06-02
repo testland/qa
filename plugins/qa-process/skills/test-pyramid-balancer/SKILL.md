@@ -1,6 +1,6 @@
 ---
 name: test-pyramid-balancer
-description: "Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward Cohn's pyramid ratios per the change-set shape — pure-logic-heavy repo wants ~80/15/5; UI-heavy repo wants ~60/25/15. Detects \"ice-cream cone\" (E2E-heavy) and \"hourglass\" (integration-thin) anti-patterns. Use quarterly to keep the test mix calibrated to the codebase reality."
+description: "Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward Cohn's pyramid ratios per the change-set shape - pure-logic-heavy repo wants ~80/15/5; UI-heavy repo wants ~60/25/15. Detects \"ice-cream cone\" (E2E-heavy) and \"hourglass\" (integration-thin) anti-patterns. Use quarterly to keep the test mix calibrated to the codebase reality."
 rating: 22
 d6: 3
 archetype: S3
@@ -22,8 +22,8 @@ ratio between them depends on the codebase. A repo with mostly
 pure-logic changes wants more unit tests; a repo with mostly UI
 changes legitimately needs more E2E.
 
-The anti-patterns ("ice-cream cone" — heavy E2E + thin unit, or
-"hourglass" — heavy unit + heavy E2E + thin integration) accumulate
+The anti-patterns ("ice-cream cone" - heavy E2E + thin unit, or
+"hourglass" - heavy unit + heavy E2E + thin integration) accumulate
 silently. This skill makes them visible.
 
 ## When to use
@@ -34,7 +34,7 @@ silently. This skill makes them visible.
 - New team owner: understand the inherited test-mix.
 - Refactor planning: where's the highest-leverage test-debt?
 
-## Step 1 — Inventory current test mix
+## Step 1 - Inventory current test mix
 
 Per-language adapters classify by path heuristic:
 
@@ -65,7 +65,7 @@ for path in glob.glob('**/*.{js,ts,py,kt,java,rb,go}', recursive=True):
 print(mix)
 ```
 
-## Step 2 — Inventory current runtime
+## Step 2 - Inventory current runtime
 
 ```bash
 # Per-layer runtime (one-off measurement)
@@ -75,7 +75,7 @@ time npx playwright test         # E2E
 # OR via JUnit XML aggregation per [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
 ```
 
-## Step 3 — Compare to ideal ratios
+## Step 3 - Compare to ideal ratios
 
 Per [test-pyramid][tp]: the right ratio depends on the codebase.
 Defaults:
@@ -92,7 +92,7 @@ each PR's primary impact via path heuristic (per
 [`test-architect`](../../qa-roles/agents/test-architect.md) Mode 1
 Step 2).
 
-## Step 4 — Detect anti-patterns
+## Step 4 - Detect anti-patterns
 
 ### Ice-cream cone (E2E-heavy)
 
@@ -138,10 +138,10 @@ Symptoms:
 - Same as ice-cream cone but with integration-heavy variant.
 - CI is slow; flake is high.
 
-Fix: aggressive layer-down — move tests to lower layers
+Fix: aggressive layer-down - move tests to lower layers
 where they catch the same bugs faster.
 
-## Step 5 — Recommend specific changes
+## Step 5 - Recommend specific changes
 
 Output a stack-ranked list of layer-changes:
 
@@ -184,7 +184,7 @@ Output a stack-ranked list of layer-changes:
 - Per-PR feedback: <5 min for unit + integration (vs current 15 min).
 ```
 
-## Step 6 — Cadence
+## Step 6 - Cadence
 
 | Cadence    | Trigger                                       |
 |------------|-----------------------------------------------|
@@ -219,14 +219,13 @@ Output a stack-ranked list of layer-changes:
 
 ## References
 
-- [tp][tp] — Mike Cohn's pyramid: unit / service / UI; "many more
+- [tp][tp] - Mike Cohn's pyramid: unit / service / UI; "many more
   low-level UnitTests than high level BroadStackTests"; UI tests
   "brittle, expensive to write, and time consuming to run."
-- [`test-architect`](../../qa-roles/agents/test-architect.md) —
+- [`test-architect`](../../qa-roles/agents/test-architect.md) - 
   per-repo pyramid + framework recommendation; complementary
   agent (this skill is the analytical workflow).
-- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
-  — risk-weighted "what to add at unit layer" once the team decides
+- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - risk-weighted "what to add at unit layer" once the team decides
   to layer-down.
-- [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) — sibling
+- [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling
   skill for capping E2E suite size.

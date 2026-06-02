@@ -1,6 +1,6 @@
 ---
 name: ceedling-build-runner
-description: "Author and run the Ceedling build system for C unit testing — the canonical build orchestration on top of Unity (assertions) + CMock (mocks) + CException (exceptions). Covers ceedling new project scaffolding, the project.yml schema (:project / :paths / :files / :defines / :flags / :tools / :test_runner / :cmock / :unity / :cexception / :gcov / :plugins), the task surface (ceedling test:all, ceedling test:<name>, ceedling test:pattern, ceedling test:path, ceedling release, ceedling clean / clobber, ceedling gcov:all, ceedling module:create, ceedling environment, ceedling dumpconfig), JUnit XML output via the report_tests_pretty_stdout / report_tests_junit_xml plugins, gcov plugin integration, host vs cross-build flow, and CI wiring. Use when a C project wants the standard ThrowTheSwitch trio bundled by one build command. For the Unity assertion API see unity-test-framework-c; for CMock semantics see ceedling-mocks-reference."
+description: "Author and run the Ceedling build system for C unit testing - the canonical build orchestration on top of Unity (assertions) + CMock (mocks) + CException (exceptions). Covers ceedling new project scaffolding, the project.yml schema (:project / :paths / :files / :defines / :flags / :tools / :test_runner / :cmock / :unity / :cexception / :gcov / :plugins), the task surface (ceedling test:all, ceedling test:<name>, ceedling test:pattern, ceedling test:path, ceedling release, ceedling clean / clobber, ceedling gcov:all, ceedling module:create, ceedling environment, ceedling dumpconfig), JUnit XML output via the report_tests_pretty_stdout / report_tests_junit_xml plugins, gcov plugin integration, host vs cross-build flow, and CI wiring. Use when a C project wants the standard ThrowTheSwitch trio bundled by one build command. For the Unity assertion API see unity-test-framework-c; for CMock semantics see ceedling-mocks-reference."
 rating: 24
 d6: 4
 archetype: S1
@@ -22,7 +22,7 @@ it "starts with the Unity test framework and CMock mock and stub
 generation, then adds a build system for coordinating, executing,
 and summarizing test and release builds".
 
-This skill wraps the Ceedling build orchestration — the
+This skill wraps the Ceedling build orchestration - the
 `ceedling` command-line tool, `project.yml` schema, and rake
 tasks. For the Unity assertion API see
 [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md);
@@ -35,15 +35,14 @@ for coverage see
 
 ## When to use
 
-- C unit-test project — Ceedling is the canonical setup for the
+- C unit-test project - Ceedling is the canonical setup for the
   ThrowTheSwitch stack.
 - Host-build-driven test loop (most embedded teams test on the
   host first, then cross-compile under
-  [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md))
-  — Ceedling handles the host pipeline natively.
-- Coverage required — the bundled gcov plugin produces LCOV /
+  [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md)) - Ceedling handles the host pipeline natively.
+- Coverage required - the bundled gcov plugin produces LCOV /
   HTML / Cobertura without external glue.
-- Mock-heavy module — CMock is integrated; no separate generator
+- Mock-heavy module - CMock is integrated; no separate generator
   invocation needed.
 
 If the unit-under-test is C++ instead of C, prefer
@@ -176,12 +175,12 @@ Per `CeedlingPacket.md`, the canonical top-level sections:
 | `:files` | `.c` / `.h` / `.o` extension mapping (rarely changed) |
 | `:defines` | Test-only vs release-only `-D` symbols (e.g. `UNITY_INCLUDE_DOUBLE` is a test-only define) |
 | `:flags` | Test vs release compile / link flags, by file glob (`'*'` = all) |
-| `:tools` | Override toolchain binaries — set the compiler to `arm-none-eabi-gcc` here for a cross-build |
+| `:tools` | Override toolchain binaries - set the compiler to `arm-none-eabi-gcc` here for a cross-build |
 | `:test_runner` | Controls the `generate_test_runner.rb` invocation; e.g. extra includes |
 | `:unity` | Unity build-time defines (e.g. `UNITY_INT_WIDTH=16` for 16-bit MCUs) |
 | `:cmock` | CMock plugin list (see [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md)) |
 | `:cexception` | CException type override (default `int`; some MCUs prefer `signed char`) |
-| `:gcov` | Coverage reports — `HtmlDetailed`, `Cobertura`, `SonarQube` formats per the plugin docs |
+| `:gcov` | Coverage reports - `HtmlDetailed`, `Cobertura`, `SonarQube` formats per the plugin docs |
 | `:plugins` | Enable optional functionality; common ones below |
 
 ### Common plugins
@@ -189,8 +188,8 @@ Per `CeedlingPacket.md`, the canonical top-level sections:
 | Plugin | Effect |
 |---|---|
 | `report_tests_pretty_stdout` | Coloured terminal report |
-| `report_tests_junit_xml` | JUnit XML at `build/artifacts/test/report.xml` — feeds CI dashboards |
-| `report_tests_log_factory` | Generic reporter — emit multiple formats at once |
+| `report_tests_junit_xml` | JUnit XML at `build/artifacts/test/report.xml` - feeds CI dashboards |
+| `report_tests_log_factory` | Generic reporter - emit multiple formats at once |
 | `gcov` | Coverage via gcov + gcovr (see coverage skill) |
 | `module_generator` | Powers `ceedling module:create[<name>]` |
 | `command_hooks` | Run shell commands at pre/post lifecycle points |
@@ -202,7 +201,7 @@ ceedling module:create[ringbuffer]
 # Creates src/ringbuffer.c, src/ringbuffer.h, test/test_ringbuffer.c
 ```
 
-The generator emits the canonical skeleton — production header /
+The generator emits the canonical skeleton - production header /
 source with includes wired, test file with `setUp` / `tearDown` /
 one `test_ringbuffer_NeedToImplement` placeholder.
 
@@ -246,7 +245,7 @@ ceedling version      # Ceedling version
 ```
 
 `dumpconfig` is invaluable for debugging mysterious flag
-behaviour — Ceedling merges several layers (defaults, project,
+behaviour - Ceedling merges several layers (defaults, project,
 plugin) and the final flags can surprise.
 
 ### Coverage
@@ -295,7 +294,7 @@ test/test_ringbuffer.c:48:test_overflow_returns_minus_one:FAIL: Expected -1 Was 
 ### JUnit XML
 
 With `report_tests_junit_xml` enabled, `ceedling test:all` writes
-`build/artifacts/test/report.xml` in the canonical JUnit schema —
+`build/artifacts/test/report.xml` in the canonical JUnit schema - 
 the same one GoogleTest produces, so the same CI pipeline plugin
 (GitHub `mikepenz/action-junit-report`, GitLab JUnit, Jenkins
 JUnit) consumes both.
@@ -362,11 +361,11 @@ results route through `qemu-system-test-runner`.
 
 - **Ruby dependency.** Ceedling runs on Ruby; embedded teams
   without a Ruby toolchain have an adoption cost.
-- **C only.** No C++ support — for C++ pair
+- **C only.** No C++ support - for C++ pair
   [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md)
   with CMake.
 - **Per-file flag overrides are verbose.** The `:flags` schema's
-  glob keys are powerful but error-prone — `dumpconfig` is the
+  glob keys are powerful but error-prone - `dumpconfig` is the
   only reliable verifier.
 - **No native parallel test execution.** Each `test_*` runs
   serially. Parallelise across multiple `test:path[...]` jobs in
@@ -382,9 +381,9 @@ results route through `qemu-system-test-runner`.
 
 Cited inline. Foundational documents:
 
-- Ceedling repository — [github.com/ThrowTheSwitch/Ceedling](https://github.com/ThrowTheSwitch/Ceedling).
-- Ceedling overview — [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
-- CeedlingPacket (project.yml + task reference) — [github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md](https://github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md).
+- Ceedling repository - [github.com/ThrowTheSwitch/Ceedling](https://github.com/ThrowTheSwitch/Ceedling).
+- Ceedling overview - [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
+- CeedlingPacket (project.yml + task reference) - [github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md](https://github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md).
 - Sibling skills:
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
   [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md),

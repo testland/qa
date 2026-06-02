@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# desktop-driver-selector — evals
+# desktop-driver-selector - evals
 
 Companion eval cases for [`desktop-driver-selector`](desktop-driver-selector.md).
 Three cases covering happy path + branch + adversarial. Re-run by feeding
@@ -12,10 +12,10 @@ the **Input** block as the first user message to the agent and comparing
 the agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Run dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Run dates recorded below are the eval-authoring date - 
 the eval cases are designed to be re-run by a reviewer against each tier.
 
-## Eval 1 — happy path — WPF csproj → FlaUI
+## Eval 1 - happy path - WPF csproj → FlaUI
 
 **Input:**
 
@@ -40,7 +40,7 @@ File contents:
 
 **Pass condition:** Output contains the literal strings `FlaUI`, `UIA3` (or `flaui-tests`), AND `wpf` (case-insensitive). Output does NOT recommend `WinAppDriver` as the primary driver. Output contains a "Conditions" or "flips" section header.
 
-## Eval 2 — branch — Electron package.json → electron-playwright
+## Eval 2 - branch - Electron package.json → electron-playwright
 
 **Input:**
 
@@ -64,7 +64,7 @@ Recommend a desktop UI driver for this project. package.json contents:
 
 **Pass condition:** Output contains the literal string `electron-playwright`. Output does NOT recommend `FlaUI` or `WinAppDriver` as the primary driver. Output contains the word `Chromium` OR `_electron` (rationale evidence).
 
-## Eval 3 — adversarial — empty repo / README only → refuse to recommend
+## Eval 3 - adversarial - empty repo / README only → refuse to recommend
 
 **Input:**
 
@@ -81,11 +81,11 @@ No csproj, no package.json, no *.pro, no CMakeLists.txt, no Xcode project.
 
 **Expected:** Refuses to recommend a driver. Asks the user to provide either a project file path (csproj / package.json / pro / CMakeLists / xcodeproj) OR an explicit app-type declaration (`wpf` / `electron` / etc.). Does NOT guess from the README's free-form prose ("invoices" → "probably WPF").
 
-**Pass condition:** Output does NOT contain a "Recommended driver:" line with a concrete driver name. Output contains either "refuse" / "cannot recommend" / "need" / "provide" / "missing" (any one — the agent surfaces the refuse-to-proceed message). Output asks for a project file path OR an explicit app-type declaration.
+**Pass condition:** Output does NOT contain a "Recommended driver:" line with a concrete driver name. Output contains either "refuse" / "cannot recommend" / "need" / "provide" / "missing" (any one - the agent surfaces the refuse-to-proceed message). Output asks for a project file path OR an explicit app-type declaration.
 
 ## Reproducibility notes
 
 - Inputs are concrete file contents inlined above; no external fixtures.
 - Pass conditions are string-match checks; a reviewer can grep the agent's transcript output.
-- The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash`) is read-only — eval re-runs do not modify the test repository.
+- The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash`) is read-only - eval re-runs do not modify the test repository.
 - Eval cases were authored 2026-05-23 against the v3.0 framework's D7 sub-checks.

@@ -20,16 +20,16 @@ Test case management discipline (pre-execution authoring + lifecycle + traceabil
 This plugin scopes **pre-execution case authoring + repository
 management + traceability**. Sibling neighbours:
 
-- [`qa-test-reporting`](../qa-test-reporting/) — has TestRail /
+- [`qa-test-reporting`](../qa-test-reporting/) - has TestRail /
   Xray / Zephyr `*-integration` skills for **post-execution
   result sync** (different lifecycle stage).
-- [`qa-process`](../qa-process/) — contains
+- [`qa-process`](../qa-process/) - contains
   `test-case-quality-auditor` (A3) that audits exported case
   reports for quality metrics; this plugin's
   [`test-case-quality-critic`](agents/test-case-quality-critic.md)
   operates *in* the TCM (via API) and includes traceability
   analysis.
-- [`qa-bdd`](../qa-bdd/) — Gherkin / Cucumber composability;
+- [`qa-bdd`](../qa-bdd/) - Gherkin / Cucumber composability;
   `xray-case-management` accepts `.feature` imports.
 
 ## Install

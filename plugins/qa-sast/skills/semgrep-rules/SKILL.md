@@ -1,6 +1,6 @@
 ---
 name: semgrep-rules
-description: "Configures and runs Semgrep — pattern-based SAST across 30+ languages with the Semgrep Registry rulesets (`p/owasp-top-ten`, `p/default`, `auto`) plus custom YAML rules; integrates `semgrep ci` for PR-blocking gates with `--baseline-commit` diff-aware scanning, per-finding inline `nosemgrep` suppressions, `--exclude` / `--include` path filters, output formats (`--json` / `--sarif` / `--gitlab-sast` / `--junit-xml`), and severity filter (INFO/WARNING/ERROR). Use when the user runs Semgrep, asks about pattern rules, or needs a low-friction SAST gate without semantic-DB setup."
+description: "Configures and runs Semgrep - pattern-based SAST across 30+ languages with the Semgrep Registry rulesets (`p/owasp-top-ten`, `p/default`, `auto`) plus custom YAML rules; integrates `semgrep ci` for PR-blocking gates with `--baseline-commit` diff-aware scanning, per-finding inline `nosemgrep` suppressions, `--exclude` / `--include` path filters, output formats (`--json` / `--sarif` / `--gitlab-sast` / `--junit-xml`), and severity filter (INFO/WARNING/ERROR). Use when the user runs Semgrep, asks about pattern rules, or needs a low-friction SAST gate without semantic-DB setup."
 rating: 24
 d6: 4
 archetype: S1
@@ -39,7 +39,7 @@ Per [semgrep.dev/docs/cli-reference][sg-cli]:
 - A team prefers pattern-DSL rule authoring over semantic-database
   query languages.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [sg-quick][sg-quick]:
 
@@ -59,7 +59,7 @@ pipx install semgrep
 docker pull semgrep/semgrep
 ```
 
-## Step 2 — First scan
+## Step 2 - First scan
 
 ```bash
 semgrep scan --config auto
@@ -74,7 +74,7 @@ semgrep scan --config p/default            # broad community ruleset
 semgrep scan --config p/python p/javascript   # multiple
 ```
 
-## Step 3 — Custom rule authoring
+## Step 3 - Custom rule authoring
 
 A minimal Semgrep rule in `.semgrep.yml`:
 
@@ -98,21 +98,21 @@ semgrep validate --config .semgrep.yml
 
 (Per [sg-cli][sg-cli] subcommand list.)
 
-## Step 4 — CI integration with baseline diff
+## Step 4 - CI integration with baseline diff
 
 Per [sg-cli][sg-cli]:
 
-> "`--baseline-commit=VAL` — Show only findings not in specified
+> "`--baseline-commit=VAL` - Show only findings not in specified
 > commit"
 
 ```yaml
 - run: semgrep ci --baseline-ref=main --json --output=semgrep.json
 ```
 
-Diff-aware mode is critical for legacy adoption — only NEW findings
+Diff-aware mode is critical for legacy adoption - only NEW findings
 on the PR fail; pre-existing findings are tracked but don't block.
 
-## Step 5 — False-positive triage (MANDATORY)
+## Step 5 - False-positive triage (MANDATORY)
 
 Suppression mechanisms in priority order:
 
@@ -144,7 +144,7 @@ Cadence: every quarter, audit `nosemgrep` suppressions for
 staleness. Expired ones removed; persistent ones reviewed for
 escalation.
 
-## Step 6 — Output formats per [sg-cli][sg-cli]
+## Step 6 - Output formats per [sg-cli][sg-cli]
 
 | Flag | Purpose |
 |---|---|
@@ -155,18 +155,18 @@ escalation.
 | `--text` | Default human-readable |
 | `--output VAL` | Write to file or URL |
 
-## Step 7 — Performance flags
+## Step 7 - Performance flags
 
 ```bash
 semgrep scan -j 8 --timeout 10 --max-target-bytes 5000000
 ```
 
 Per [sg-cli][sg-cli]:
-- `-j VALUE` — Parallelism degree (default: 3)
-- `--timeout=DOUBLE` — Per-rule per-file timeout in seconds (default: 5.0)
-- `--max-target-bytes=VALUE` — Skip files exceeding size (default: 1000000)
+- `-j VALUE` - Parallelism degree (default: 3)
+- `--timeout=DOUBLE` - Per-rule per-file timeout in seconds (default: 5.0)
+- `--max-target-bytes=VALUE` - Skip files exceeding size (default: 1000000)
 
-## Step 8 — Exit codes (per [sg-cli][sg-cli])
+## Step 8 - Exit codes (per [sg-cli][sg-cli])
 
 | Code | Meaning |
 |---|---|
@@ -180,7 +180,7 @@ Per [sg-cli][sg-cli]:
 | 8 | Unsupported language specified |
 | 13 | Invalid API key |
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 jobs:
@@ -216,13 +216,13 @@ jobs:
 
 ## References
 
-- [sg-quick][sg-quick] — install, quickstart
-- [sg-cli][sg-cli] — full CLI reference, exit codes, all flags
-- semgrep.dev/docs/writing-rules/rule-syntax — custom rules
-- semgrep.dev/docs/semgrep-ci/overview — CI integration
+- [sg-quick][sg-quick] - install, quickstart
+- [sg-cli][sg-cli] - full CLI reference, exit codes, all flags
+- semgrep.dev/docs/writing-rules/rule-syntax - custom rules
+- semgrep.dev/docs/semgrep-ci/overview - CI integration
 - [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
   [`codeql-queries`](../codeql-queries/SKILL.md),
   [`bandit-python`](../bandit-python/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) — sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) —
+  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
   unifier agent across all 5 SAST tools

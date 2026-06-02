@@ -1,6 +1,6 @@
 ---
 name: afl-plus-plus
-description: "Author and run AFL++ — out-of-process coverage-guided fuzzer (a community fork of Google's original AFL with improved mutations and instrumentation). Covers afl-cc / afl-clang-fast instrumented build, afl-fuzz invocation, parallel master/slave (-M / -S), dictionary support (-x), QEMU mode (-Q) for binaries without source, output structure (queue / crashes / hangs), and CI integration. Use for fuzzing standalone binaries (file processors, command-line tools) where libFuzzer's in-process model doesn't fit."
+description: "Author and run AFL++ - out-of-process coverage-guided fuzzer (a community fork of Google's original AFL with improved mutations and instrumentation). Covers afl-cc / afl-clang-fast instrumented build, afl-fuzz invocation, parallel master/slave (-M / -S), dictionary support (-x), QEMU mode (-Q) for binaries without source, output structure (queue / crashes / hangs), and CI integration. Use for fuzzing standalone binaries (file processors, command-line tools) where libFuzzer's in-process model doesn't fit."
 rating: 23
 d6: 4
 archetype: S1
@@ -10,7 +10,7 @@ archetype: S1
 
 ## Overview
 
-Distinct from libFuzzer (in-process) — AFL++ (per
+Distinct from libFuzzer (in-process) - AFL++ (per
 [github.com/AFLplusplus/AFLplusplus](https://github.com/AFLplusplus/AFLplusplus))
 fits binaries you can't compile-in (closed-source, multi-language)
 and tools that process inputs end-to-end (parsers reading files,
@@ -26,7 +26,7 @@ for corpus discipline see
 - Fuzzing a file-format parser whose API isn't directly callable.
 - Targeting a binary you don't have source for (QEMU mode).
 - Parallel campaigns across many cores via master/slave.
-- Comparison fuzzing — different mutation strategies catch
+- Comparison fuzzing - different mutation strategies catch
   different bugs than libFuzzer.
 
 ## Authoring
@@ -83,9 +83,9 @@ through AFL's compiler driver.
 
 Per AFL++ README:
 
-- `-i seeds/` — input seed corpus
-- `-o output/` — output directory (created if absent)
-- `-- ./target @@` — target binary; `@@` is replaced by AFL with
+- `-i seeds/` - input seed corpus
+- `-o output/` - output directory (created if absent)
+- `-- ./target @@` - target binary; `@@` is replaced by AFL with
   the input filename
 - For stdin-driven targets, omit `@@`: `-- ./target` (AFL pipes
   the input)
@@ -101,7 +101,7 @@ Per AFL++ README:
 | `-m N` | Memory limit per child (MB) |
 | `-Q` | QEMU mode for non-instrumented binaries |
 | `-c path` | CMPLog binary (companion mode for collisions) |
-| `-d` | "Quick" mode — deterministic mutations skipped |
+| `-d` | "Quick" mode - deterministic mutations skipped |
 
 ### Parallel fuzzing
 
@@ -150,11 +150,11 @@ output/
 
 Crash filename encoding (per AFL++ docs):
 
-- `id:N` — sequence number
-- `sig:S` — signal (11=SEGV, 6=SIGABRT, 9=SIGKILL, etc.)
-- `src:M` — derived from queue entry M
-- `op:X` — mutation operator that produced it
-- `rep:R` — repetition count
+- `id:N` - sequence number
+- `sig:S` - signal (11=SEGV, 6=SIGABRT, 9=SIGKILL, etc.)
+- `src:M` - derived from queue entry M
+- `op:X` - mutation operator that produced it
+- `rep:R` - repetition count
 
 Reproduce a crash:
 
@@ -234,11 +234,11 @@ afl-cmin -i output/default/queue/ -o minimised_queue/ -- ./target @@
 
 ## References
 
-- AFL++ —
+- AFL++ - 
   [github.com/AFLplusplus/AFLplusplus](https://github.com/AFLplusplus/AFLplusplus).
-- AFL++ docs —
+- AFL++ docs - 
   [github.com/AFLplusplus/AFLplusplus/blob/stable/docs](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/).
-- Original AFL paper — lcamtuf.coredump.cx/afl/ (Michał Zalewski's
+- Original AFL paper - lcamtuf.coredump.cx/afl/ (Michał Zalewski's
   original AFL post; AFL++ extends).
 - Composes:
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),

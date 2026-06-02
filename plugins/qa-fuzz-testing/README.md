@@ -23,15 +23,15 @@ Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-r
 This plugin scopes **structure-aware coverage-guided fuzzing** at
 the binary / system level. Sibling neighbours:
 
-- [`qa-property-based`](../qa-property-based/) — hypothesis-driven
+- [`qa-property-based`](../qa-property-based/) - hypothesis-driven
   property-based testing with shrinking (Hypothesis, fast-check,
   proptest, jqwik, quickcheck). Different methodology: PBT
   generates from specifications; fuzzing follows coverage
   feedback.
-- [`qa-api-testing`](../qa-api-testing/) — has `schemathesis-fuzzing`
+- [`qa-api-testing`](../qa-api-testing/) - has `schemathesis-fuzzing`
   (schema-driven API fuzzing) and `restler-fuzzing` (stateful API
   sequences). API-layer; this plugin is binary/system-level.
-- [`qa-sast`](../qa-sast/) / [`qa-dast`](../qa-dast/) — static /
+- [`qa-sast`](../qa-sast/) / [`qa-dast`](../qa-dast/) - static /
   dynamic security analysis without coverage-guided mutation.
 
 ## Install

@@ -1,6 +1,6 @@
 ---
 name: saucelabs-automate
-description: "Author and run E2E tests on Sauce Labs — cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers SAUCE_USERNAME + SAUCE_ACCESS_KEY auth, regional hub URLs (us-west-1 / eu-central-1), W3C capabilities, sauce:options dict (build, name, screenResolution, tunnelName), Sauce Connect Proxy for internal-environment testing. Use for cross-browser regression with Sauce Labs as the cloud grid; complements BrowserStack + LambdaTest as alternative providers."
+description: "Author and run E2E tests on Sauce Labs - cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers SAUCE_USERNAME + SAUCE_ACCESS_KEY auth, regional hub URLs (us-west-1 / eu-central-1), W3C capabilities, sauce:options dict (build, name, screenResolution, tunnelName), Sauce Connect Proxy for internal-environment testing. Use for cross-browser regression with Sauce Labs as the cloud grid; complements BrowserStack + LambdaTest as alternative providers."
 rating: 23
 d6: 4
 archetype: S1
@@ -30,7 +30,7 @@ for cross-cloud workflows.
   provider.
 - Real-device testing via Sauce's mobile cloud.
 - Internal-network apps via Sauce Connect Proxy.
-- Comparison testing — Sauce + BrowserStack run the same suite to
+- Comparison testing - Sauce + BrowserStack run the same suite to
   catch grid-specific flakes.
 
 ## Authoring
@@ -96,7 +96,7 @@ Standard W3C: `browserName`, `browserVersion`, `platformName`.
 | `tags` | Free-form tags for filtering |
 
 Per Sauce docs the `browserVersion` accepts `"latest"`,
-`"latest-1"`, etc. — version-relative pinning works across
+`"latest-1"`, etc. - version-relative pinning works across
 release cycles.
 
 ### Python example
@@ -167,14 +167,14 @@ For ephemeral CI: spawn → wait-for-ready → run tests → terminate.
 
 ### Parallel session limits
 
-Same as BrowserStack — plan tiers limit concurrent sessions.
+Same as BrowserStack - plan tiers limit concurrent sessions.
 Throttle via `ThreadPoolExecutor` or CI-matrix `max-parallel`.
 
 ## Parsing results
 
 Per Sauce docs, session reports include:
 
-- Session video (always — `recordVideo: true` default)
+- Session video (always - `recordVideo: true` default)
 - Network HAR (if `extendedDebugging: true`)
 - Browser console logs
 - Selenium logs
@@ -239,13 +239,13 @@ jobs:
 
 ## References
 
-- Sauce Labs test config options —
+- Sauce Labs test config options - 
   [docs.saucelabs.com/dev/test-configuration-options](https://docs.saucelabs.com/dev/test-configuration-options/).
-- Sauce Connect 5 docs —
+- Sauce Connect 5 docs - 
   [docs.saucelabs.com/secure-connections/sauce-connect-5](https://docs.saucelabs.com/secure-connections/sauce-connect-5/).
-- Sauce Labs REST API —
+- Sauce Labs REST API - 
   docs.saucelabs.com/dev/api.
-- W3C WebDriver specification —
+- W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Composes:
   [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).

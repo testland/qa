@@ -19,11 +19,11 @@ A data-quality engineer that produces an initial assertion suite for a single da
 
 Required inputs: a single data product (one dbt model, one GX-validated table, or one Soda dataset). Optional: a CSV / Parquet / SQL sample (≤ 1000 rows is plenty); a `CREATE TABLE` DDL when the schema isn't already declared.
 
-## Step 1 — Detect the engine
+## Step 1 - Detect the engine
 
 Look for `dbt_project.yml` (dbt), a `gx/` directory or `great_expectations` Python imports (GX), or `configuration.yml` + `checks.yml` (Soda) per [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
 
-## Step 2 — Read the schema
+## Step 2 - Read the schema
 
 Sources, in order of preference:
 
@@ -31,11 +31,11 @@ Sources, in order of preference:
 - GX / Soda: `information_schema.columns` query (provided as a `--columns` CSV or in a sample file).
 - User-provided DDL: a `CREATE TABLE` statement passed as input.
 
-## Step 3 — Read a sample
+## Step 3 - Read a sample
 
 If the user provides a CSV / Parquet / SQL snapshot, summarize per column: null %, distinct count, min / max for numeric, top-K for categorical, most-recent timestamp for date/datetime columns.
 
-## Step 4 — Propose coverage
+## Step 4 - Propose coverage
 
 Per the conventions in [`data-quality-conventions/SKILL.md`](../skills/data-quality-conventions/SKILL.md):
 
@@ -46,7 +46,7 @@ Per the conventions in [`data-quality-conventions/SKILL.md`](../skills/data-qual
 - Referential integrity for known FKs.
 - One freshness check on the table's modified-at / loaded-at timestamp.
 
-## Step 5 — Generate suite artifacts
+## Step 5 - Generate suite artifacts
 
 Use the matching skill for the detected engine:
 
@@ -54,11 +54,11 @@ Use the matching skill for the detected engine:
 - GX → Python suite using the `gxe` namespace per [`great-expectations/SKILL.md`](../skills/great-expectations/SKILL.md).
 - Soda → SodaCL `checks for <dataset>:` block per [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
 
-## Step 6 — Run once against the sample
+## Step 6 - Run once against the sample
 
 Run `dbt build --select <model>` / `soda scan` / the GX checkpoint against a dev warehouse and report pass/fail.
 
-## Step 7 — Emit the summary
+## Step 7 - Emit the summary
 
 In the output format below.
 
@@ -98,14 +98,14 @@ In the output format below.
    `warn` to `error` (or removing `severity: warn` overrides).
 ```
 
-## Example — dbt model with no existing schema.yml block
+## Example - dbt model with no existing schema.yml block
 
 Input: `models/orders.sql` exists; `models/orders.yml` is empty;
 sample of 500 rows provided.
 
 Sample summary: `order_id` 500 distinct, 0 nulls; `status` 4 distinct
 values {placed, shipped, completed, returned}; `discount_pct` range
-0–95, 12 nulls; `updated_at` most-recent < 1h ago.
+0 - 95, 12 nulls; `updated_at` most-recent < 1h ago.
 
 Generated `models/orders.yml` (excerpt):
 
@@ -130,7 +130,7 @@ models:
 ```
 
 Reported coverage: 5 expectations across 4 columns. Sample run
-fails on `discount_pct.not_null` (12 nulls) — flagged as
+fails on `discount_pct.not_null` (12 nulls) - flagged as
 "confirm nullability" in next steps, not auto-added.
 
 For GX / Soda projects the agent emits the equivalent suite shape

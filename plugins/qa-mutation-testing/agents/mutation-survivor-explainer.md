@@ -1,6 +1,6 @@
 ---
 name: mutation-survivor-explainer
-description: "Read-only investigator that takes a surviving mutant from any mutation testing tool (Stryker / PIT / mutmut / Mull / Stryker.NET) — reads the mutated line + surrounding context + the existing tests that should have caught it, classifies the survival reason (missing test case / weak assertion / equivalent mutant / unreachable code), and proposes the specific test to write to kill the mutant. Use after a mutation run when 5+ mutants survived and the team wants help triaging which to address first."
+description: "Read-only investigator that takes a surviving mutant from any mutation testing tool (Stryker / PIT / mutmut / Mull / Stryker.NET) - reads the mutated line + surrounding context + the existing tests that should have caught it, classifies the survival reason (missing test case / weak assertion / equivalent mutant / unreachable code), and proposes the specific test to write to kill the mutant. Use after a mutation run when 5+ mutants survived and the team wants help triaging which to address first."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git blame *)"
 model: sonnet
 rating: 22
@@ -19,7 +19,7 @@ The agent takes:
 
 For each surviving mutant, the agent classifies and proposes.
 
-## Step 1 — Parse the report
+## Step 1 - Parse the report
 
 Per-tool output shapes differ; the agent normalizes:
 
@@ -35,7 +35,7 @@ interface SurvivedMutant {
 }
 ```
 
-## Step 2 — Classify
+## Step 2 - Classify
 
 | Class                | Signal                                                                       | Recommended action |
 |----------------------|------------------------------------------------------------------------------|--------------------|
@@ -45,7 +45,7 @@ interface SurvivedMutant {
 | `unreachable`        | Mutated code is in a dead-code path (genuinely never executed).             | Remove the dead code OR mark as intentional. |
 | `flaky-killer`       | A test does kill it but only intermittently (timing-dependent).              | Stabilize the test (see [`parallel-isolation-checker`](../../qa-flake-triage/agents/parallel-isolation-checker.md)). |
 
-## Step 3 — Heuristics per mutator
+## Step 3 - Heuristics per mutator
 
 ### ConditionalBoundary (`<` → `<=`)
 
@@ -110,7 +110,7 @@ If tests pass with `PAGE_SIZE = 0`, either:
 **Recommend:** add a pagination test that asserts page size matches
 the constant.
 
-## Step 4 — Propose the specific test
+## Step 4 - Propose the specific test
 
 Per surviving mutant, emit:
 
@@ -144,7 +144,7 @@ spec; either:
 Either way, the surviving mutant is signal — investigate.
 ```
 
-## Step 5 — Refuse-to-proceed rules
+## Step 5 - Refuse-to-proceed rules
 
 The agent refuses to:
 
@@ -203,10 +203,8 @@ The agent refuses to:
   [`stryker-net-mutation`](../skills/stryker-net-mutation/SKILL.md),
   [`pitest-mutation`](../skills/pitest-mutation/SKILL.md),
   [`mutmut-mutation`](../skills/mutmut-mutation/SKILL.md),
-  [`mull-mutation`](../skills/mull-mutation/SKILL.md) — upstream
+  [`mull-mutation`](../skills/mull-mutation/SKILL.md) - upstream
   tools producing the survivors this agent analyzes.
-- [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md)
-  — sibling for the weak-assertion class of survivors.
-- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
-  — complementary: identifies WHERE to add tests; this agent
+- [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md) - sibling for the weak-assertion class of survivors.
+- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - complementary: identifies WHERE to add tests; this agent
   identifies WHAT to test.

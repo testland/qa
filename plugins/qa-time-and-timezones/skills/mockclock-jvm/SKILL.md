@@ -112,7 +112,7 @@ Tests can `setInstant` / `advance` to simulate time progression.
 
 Per [docs.oracle.com](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/InstantSource.html),
 `InstantSource` is a narrower interface than `Clock` (just
-`instant()` — no zone). Useful when code only needs the instant:
+`instant()` - no zone). Useful when code only needs the instant:
 
 ```java
 public class Logger {

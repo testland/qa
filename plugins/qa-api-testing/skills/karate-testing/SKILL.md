@@ -13,8 +13,8 @@ archetype: S1
 Karate is "an open-source tool that combines API testing, mocks,
 performance testing, and UI automation into a single, unified
 framework" ([karate-readme][readme]). The authoring style is Gherkin-
-flavored — every test is a `.feature` file with `Given / When / Then`
-steps — but unlike Cucumber the steps are **executable directly**;
+flavored - every test is a `.feature` file with `Given / When / Then`
+steps - but unlike Cucumber the steps are **executable directly**;
 no glue code is required ([karate-docs][docs]).
 
 [readme]: https://github.com/karatelabs/karate
@@ -29,7 +29,7 @@ and UI-automation modes are out of scope here.
   step-definition glue code (the Cucumber pain point).
 - Multi-language test teams: Karate's DSL is approachable for non-
   Java developers (the `.feature` file IS the test; no Java to read).
-- API + mock + perf in one tool — Karate's distinguishing feature is
+- API + mock + perf in one tool - Karate's distinguishing feature is
   cross-mode reuse of feature files.
 - Teams that need built-in JSON path + schema-fuzzy matching with
   one keyword (`match`).
@@ -41,7 +41,7 @@ or [`tavern-testing`](../tavern-testing/SKILL.md).
 
 ## Install
 
-Maven (consult [karate-docs][docs] for the current version — Karate
+Maven (consult [karate-docs][docs] for the current version - Karate
 publishes regularly under group `io.karatelabs`, artifacts
 `karate-core` and `karate-junit5`):
 
@@ -55,7 +55,7 @@ publishes regularly under group `io.karatelabs`, artifacts
 ```
 
 Pin `${karate.version}` to a specific release (e.g. `2.0.7` per the
-GitHub release page as of 2026-05-04). Do not float on `LATEST` —
+GitHub release page as of 2026-05-04). Do not float on `LATEST` - 
 DSL keywords have evolved across major versions.
 
 ## Authoring
@@ -63,7 +63,7 @@ DSL keywords have evolved across major versions.
 ### Feature file shape
 
 Each `.feature` file lives under `src/test/java/<package>/` (yes,
-under `java/` even though it's not Java — Maven's resource
+under `java/` even though it's not Java - Maven's resource
 conventions). Per [karate-docs][docs]:
 
 ```gherkin
@@ -94,7 +94,7 @@ The keywords:
 
 ### The `match` keyword
 
-`match` is Karate's superpower — fuzzy structural matching on JSON
+`match` is Karate's superpower - fuzzy structural matching on JSON
 or XML ([karate-docs][docs]):
 
 ```gherkin
@@ -149,7 +149,7 @@ Feature: Orders API
 ```
 
 `karate.properties['api.token']` reads a system property (passed via
-`mvn test -Dapi.token=...`) — the canonical pattern for secret
+`mvn test -Dapi.token=...`) - the canonical pattern for secret
 injection without hard-coding.
 
 ### Variables and chaining
@@ -169,7 +169,7 @@ Scenario: Create then read
 ```
 
 `* def name = expr` declares a variable usable in subsequent steps.
-`*` is a step prefix (synonym of `Given/When/Then` — Karate keywords
+`*` is a step prefix (synonym of `Given/When/Then` - Karate keywords
 are documentation only when not asserting).
 
 ## Running via JUnit 5
@@ -283,12 +283,12 @@ jobs:
 
 ## References
 
-- [karate-readme][readme] — main repo: positioning, dependency name,
+- [karate-readme][readme] - main repo: positioning, dependency name,
   release cadence.
-- [karate-docs][docs] — canonical DSL reference: feature-file syntax,
+- [karate-docs][docs] - canonical DSL reference: feature-file syntax,
   match keyword, scenario / background / scenario outline, JUnit 5
   runner pattern.
-- [`postman-collections`](../postman-collections/SKILL.md) — JSON-driven
+- [`postman-collections`](../postman-collections/SKILL.md) - JSON-driven
   alternative.
-- [`restassured-testing`](../restassured-testing/SKILL.md) — Java
+- [`restassured-testing`](../restassured-testing/SKILL.md) - Java
   fluent-DSL alternative on the same JVM stack.

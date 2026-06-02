@@ -1,6 +1,6 @@
 ---
 name: ccpa-test-patterns
-description: "Reference catalog of CCPA + CPRA-aligned test patterns — do-not-sell-or-share opt-out via Global Privacy Control (GPC) signal; data-disclosure category tests per Cal. Civ. Code §1798.110; sensitive personal information (SPI) handling per CPRA §1798.121; deletion-request workflows per §1798.105; CPRA's right to correct (§1798.106) + limit-use (§1798.121). Use when authoring CCPA/CPRA-readiness tests for any product processing California consumer data."
+description: "Reference catalog of CCPA + CPRA-aligned test patterns - do-not-sell-or-share opt-out via Global Privacy Control (GPC) signal; data-disclosure category tests per Cal. Civ. Code §1798.110; sensitive personal information (SPI) handling per CPRA §1798.121; deletion-request workflows per §1798.105; CPRA's right to correct (§1798.106) + limit-use (§1798.121). Use when authoring CCPA/CPRA-readiness tests for any product processing California consumer data."
 rating: 22
 d6: 4
 archetype: S2
@@ -27,7 +27,7 @@ Failure carries civil penalties up to $7,500 per intentional
 violation + $2,500 per non-intentional violation; private right of
 action for data breaches.
 
-This is a **reference skill** (S2) — defines the test-pattern
+This is a **reference skill** (S2) - defines the test-pattern
 catalog by Cal. Civ. Code section. Pair with [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md)
 for international compliance footprint.
 
@@ -42,7 +42,7 @@ for international compliance footprint.
 
 ## Test patterns by Cal. Civ. Code section
 
-### §1798.135 — Right to opt out via Global Privacy Control (GPC)
+### §1798.135 - Right to opt out via Global Privacy Control (GPC)
 
 CPRA mandates honoring the GPC browser signal (per
 [globalprivacycontrol.org](https://globalprivacycontrol.org/)):
@@ -59,7 +59,7 @@ def test_gpc_signal_blocks_sale_and_share():
     assert OptOutRecord.objects.filter(visitor_id=session_id).exists()
 ```
 
-### §1798.110 — Right to know (categories of PI collected)
+### §1798.110 - Right to know (categories of PI collected)
 
 ```python
 def test_consumer_request_returns_all_pi_categories():
@@ -82,7 +82,7 @@ def test_consumer_request_returns_all_pi_categories():
         assert cat in body
 ```
 
-### §1798.105 — Right to delete
+### §1798.105 - Right to delete
 
 ```python
 def test_deletion_request_completes_within_45_days():
@@ -94,7 +94,7 @@ def test_deletion_request_completes_within_45_days():
     assert completion.completed_at <= deadline
 ```
 
-### §1798.121 — Right to limit sensitive PI use (CPRA)
+### §1798.121 - Right to limit sensitive PI use (CPRA)
 
 ```python
 def test_limit_sensitive_pi_use():
@@ -109,7 +109,7 @@ def test_limit_sensitive_pi_use():
         assert feature not in forbidden_spi
 ```
 
-### §1798.106 — Right to correct (CPRA)
+### §1798.106 - Right to correct (CPRA)
 
 ```python
 def test_correction_request_updates_records_within_45_days():
@@ -125,7 +125,7 @@ def test_correction_request_updates_records_within_45_days():
     ).exists()
 ```
 
-### §1798.130 — Notice requirements
+### §1798.130 - Notice requirements
 
 ```python
 def test_privacy_policy_disclosed_at_collection():
@@ -184,13 +184,13 @@ Test patterns above (§1798.121) protect these categories specifically.
 
 ## References
 
-- [ccpa-oag][ccpa-oag] — California Attorney General CCPA + CPRA reference
-- cppa.ca.gov — California Privacy Protection Agency
-- leginfo.legislature.ca.gov — California Civil Code §1798.100–.199
-- globalprivacycontrol.org — GPC technical specification
-- iapp.org/resources/article/state-comparison/ — state-law comparison
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) — sister: EU analogue
-- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) —
+- [ccpa-oag][ccpa-oag] - California Attorney General CCPA + CPRA reference
+- cppa.ca.gov - California Privacy Protection Agency
+- leginfo.legislature.ca.gov - California Civil Code §1798.100 - .199
+- globalprivacycontrol.org - GPC technical specification
+- iapp.org/resources/article/state-comparison/ - state-law comparison
+- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) - sister: EU analogue
+- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
   safe test data generation
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) — audit log requirements
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) — agent
+- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - audit log requirements
+- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

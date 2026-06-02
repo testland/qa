@@ -1,6 +1,6 @@
 ---
 name: axe-a11y
-description: "Authors and runs axe-core accessibility scans — the most-deployed open-source a11y engine — via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses the `violations[]` results into per-rule severity (critical / serious / moderate / minor), configures rule disable / disable-by-tag patterns, and emits JUnit-shaped output for CI gating. Use when the project ships UI tests in JavaScript / TypeScript and wants automated a11y coverage on every PR."
+description: "Authors and runs axe-core accessibility scans - the most-deployed open-source a11y engine - via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses the `violations[]` results into per-rule severity (critical / serious / moderate / minor), configures rule disable / disable-by-tag patterns, and emits JUnit-shaped output for CI gating. Use when the project ships UI tests in JavaScript / TypeScript and wants automated a11y coverage on every PR."
 rating: 26
 d6: 4
 archetype: S1
@@ -27,7 +27,7 @@ fixture, browser extension, or framework adapter), call
 - The project ships JavaScript / TypeScript UI tests
   (Playwright / Cypress / Jest / Vitest).
 - Automated a11y coverage on every PR is a goal.
-- The team values **WCAG SC tagging** — axe rules map cleanly to
+- The team values **WCAG SC tagging** - axe rules map cleanly to
   WCAG 2.0 / 2.1 / 2.2 SCs.
 - Pair with [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md)
   for the ratchet pattern over baseline.
@@ -118,7 +118,7 @@ cy.checkA11y();
 
 | Field          | Meaning                                                       |
 |----------------|---------------------------------------------------------------|
-| `violations`   | Definite issues — block this in CI.                          |
+| `violations`   | Definite issues - block this in CI.                          |
 | `incomplete`   | Items needing human review (axe couldn't determine).        |
 | `passes`       | Successful checks.                                            |
 | `inapplicable` | Rules that don't apply to this page.                         |
@@ -129,7 +129,7 @@ Each violation has:
 |----------------|---------------------------------------------------------------|
 | `id`           | Rule ID (e.g. `color-contrast`, `label`, `aria-required-attr`). |
 | `impact`       | `critical` / `serious` / `moderate` / `minor`.                |
-| `tags`         | Includes `wcag2a`, `wcag22aa`, etc. — for severity-by-SC tagging. |
+| `tags`         | Includes `wcag2a`, `wcag22aa`, etc. - for severity-by-SC tagging. |
 | `description`  | One-line explanation.                                         |
 | `help`         | Longer remediation guidance.                                  |
 | `helpUrl`      | Direct link to Deque's rule documentation.                    |
@@ -238,7 +238,7 @@ JSON as a build artifact and pipe to
 
 ## Limitations
 
-- **Catches ~57% of WCAG issues** ([axe-core][readme]) — the rest
+- **Catches ~57% of WCAG issues** ([axe-core][readme]) - the rest
   require manual screen-reader testing
   (per [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md)).
 - **Rule false positives.** Rare but real; `disableRules` /
@@ -249,15 +249,15 @@ JSON as a build artifact and pipe to
 
 ## References
 
-- [axe-core][readme] — main repo: install, `axe.run()`, results
+- [axe-core][readme] - main repo: install, `axe.run()`, results
   structure.
-- Deque rule documentation — https://dequeuniversity.com/rules/axe/
-- @axe-core/playwright — https://github.com/dequelabs/axe-core-npm/tree/master/packages/playwright
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) —
+- Deque rule documentation - https://dequeuniversity.com/rules/axe/
+- @axe-core/playwright - https://github.com/dequelabs/axe-core-npm/tree/master/packages/playwright
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
+- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - 
   CI gate using axe results.
 - [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
   [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md),
   [`wave-a11y`](../wave-a11y/SKILL.md),
-  [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md) —
+  [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md) - 
   alternative scanners.

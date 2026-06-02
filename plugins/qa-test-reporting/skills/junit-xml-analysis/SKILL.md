@@ -1,6 +1,6 @@
 ---
 name: junit-xml-analysis
-description: "Parses JUnit-format XML reports (the de-facto interchange format every CI ingests — Jenkins, GitHub Actions, GitLab, Buildkite, CircleCI), extracts per-suite + per-case metrics (passed / failed / errored / skipped, time, classname, message, stack), groups failures by classname for trend analysis, and distinguishes \"new failures vs flakes\" by cross-referencing rerun elements (`<flakyFailure>`, `<rerunFailure>`). Use when the team needs PR-time test analytics from any framework that emits JUnit XML — almost all of them."
+description: "Parses JUnit-format XML reports (the de-facto interchange format every CI ingests - Jenkins, GitHub Actions, GitLab, Buildkite, CircleCI), extracts per-suite + per-case metrics (passed / failed / errored / skipped, time, classname, message, stack), groups failures by classname for trend analysis, and distinguishes \"new failures vs flakes\" by cross-referencing rerun elements (`<flakyFailure>`, `<rerunFailure>`). Use when the team needs PR-time test analytics from any framework that emits JUnit XML - almost all of them."
 rating: 25
 d6: 4
 archetype: S1
@@ -12,7 +12,7 @@ archetype: S1
 
 The "JUnit XML" format is the de-facto schema every CI consumes. It
 originated with Apache Ant's JUnit task, was widened by Jenkins, and
-is now emitted by **virtually every test runner** — pytest, Jest,
+is now emitted by **virtually every test runner** - pytest, Jest,
 Mocha, Vitest, Go test (`gotestsum`), Maven Surefire, Gradle,
 Newman, Cypress, Playwright (via reporter), RSpec (via formatter),
 and the rest.
@@ -40,11 +40,11 @@ modern `<rerunFailure>` / `<flakyFailure>` extensions
   (failure clusters, slow-test list, flake suspects) without
   buying a commercial test analytics SaaS.
 - A single team has multiple frameworks (pytest in services, Jest
-  in frontend, Go test in tools) — JUnit XML is the lowest common
+  in frontend, Go test in tools) - JUnit XML is the lowest common
   denominator across them.
 - A regression dashboard needs structured input.
 
-## Step 1 — Schema overview
+## Step 1 - Schema overview
 
 Per [llg-junit][junit]:
 
@@ -56,25 +56,25 @@ Per [llg-junit][junit]:
 
 Each `<testcase>` contains **at most one** of:
 
-- `<skipped message="">` — test not executed
-- `<error message="" type="">` — "unanticipated problem (uncaught
+- `<skipped message="">` - test not executed
+- `<error message="" type="">` - "unanticipated problem (uncaught
   exception, crash)" ([llg-junit][junit])
-- `<failure message="" type="">` — "explicit test failure
+- `<failure message="" type="">` - "explicit test failure
   (assertion failed)" ([llg-junit][junit])
 
 Plus optional:
 
-- `<system-out>` — stdout captured during execution
-- `<system-err>` — stderr captured during execution
-- `<properties>` — environment settings as name/value pairs
+- `<system-out>` - stdout captured during execution
+- `<system-err>` - stderr captured during execution
+- `<properties>` - environment settings as name/value pairs
 
 **Critical distinction**: per [llg-junit][junit], `<failure>` is an
 assertion failure (the test made a claim that came back false).
 `<error>` is an exception or crash before the assertion ran. Group
-them differently in dashboards — errors are usually environment /
+them differently in dashboards - errors are usually environment /
 infra; failures are usually code or fixture drift.
 
-## Step 2 — Parse safely
+## Step 2 - Parse safely
 
 Use a streaming parser for large files (multi-thousand-test suites
 are common). Python:
@@ -130,7 +130,7 @@ for (const suite of suites) {
 (one testsuite/testcase = bare object, multiple = array) is also
 common in JS XML libs.
 
-## Step 3 — Distinguish new failures from flakes
+## Step 3 - Distinguish new failures from flakes
 
 Per [llg-junit][junit], the schema "supports modern variants
 including `<flakyFailure>`, `<flakyError>`, `<rerunFailure>`, and
@@ -157,10 +157,10 @@ def reliability(case):
     return 'pass'
 ```
 
-Surface flaky tests in a separate report — they're noise to the
+Surface flaky tests in a separate report - they're noise to the
 PR author but signal to the test-suite owner.
 
-## Step 4 — Aggregate per-suite metrics
+## Step 4 - Aggregate per-suite metrics
 
 ```python
 from collections import defaultdict
@@ -173,7 +173,7 @@ def per_suite(cases):
     return agg
 ```
 
-## Step 5 — Trend analysis (cross-run)
+## Step 5 - Trend analysis (cross-run)
 
 To detect "is this a new failure or has this test been failing for
 a week?", store every run's parsed metrics in a per-suite history
@@ -194,13 +194,13 @@ Compare by suite + classname:
 The first row is a stale failure; the second is a probable
 regression.
 
-## Step 6 — Per-case slow-test list
+## Step 6 - Per-case slow-test list
 
 Sort `testcases` by `time` descending. The top 1% is the fast
-feedback target — moving any one of them from 30s → 3s saves more
+feedback target - moving any one of them from 30s → 3s saves more
 than refactoring a hundred tests that already run in <100ms.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 # .github/workflows/test-analytics.yml
@@ -223,7 +223,7 @@ than refactoring a hundred tests that already run in <100ms.
       analytics.json
 ```
 
-`if: always()` is critical — JUnit XML matters most on failed runs.
+`if: always()` is critical - JUnit XML matters most on failed runs.
 
 ## Anti-patterns
 
@@ -235,7 +235,7 @@ than refactoring a hundred tests that already run in <100ms.
 | Failing the build on any `<skipped>` count > 0                          | Many runners legitimately skip (platform-gated, conditional).             | Skip is informational; only fail on `failure` / `error`. |
 | Hardcoding `<testsuites>` as the root                                   | Some runners emit a single `<testsuite>` as the root.                     | Detect both shapes (Step 2). |
 | Trusting `time` for sub-millisecond tests                                | Some runners emit `0` for any test under their granularity; sort breaks. | Treat `time = 0` as "not measured"; don't include in slow-test list. |
-| Cross-suite aggregation by `name` alone                                  | Two suites can have a `it('renders')` each — merging false-flags both.   | Always group by `(classname, name)` tuple. |
+| Cross-suite aggregation by `name` alone                                  | Two suites can have a `it('renders')` each - merging false-flags both.   | Always group by `(classname, name)` tuple. |
 
 ## Limitations
 
@@ -243,24 +243,24 @@ than refactoring a hundred tests that already run in <100ms.
   format with framework-specific dialects. Fields like `assertions`
   may or may not appear; the parser must be tolerant.
 - **No structured assertion details by default.** The `<failure>`
-  element's body is unstructured text — assertion targets,
+  element's body is unstructured text - assertion targets,
   expected vs actual, and source line are runner-dependent.
 - **Time precision varies.** Java runners report ms; some Node
   runners report seconds with 3-decimal precision; some report 0
   for fast tests.
 - **Reruns require runner support.** Frameworks without a built-in
-  retry mechanism don't emit `<flakyFailure>` — flake detection
+  retry mechanism don't emit `<flakyFailure>` - flake detection
   has to come from cross-run comparison instead (Step 5).
 
 ## References
 
-- [llg-junit][junit] — community-maintained JUnit XML schema
+- [llg-junit][junit] - community-maintained JUnit XML schema
   reference (used by Jenkins's parser): root element variants,
   required vs optional attributes, child element catalog including
   modern `<flakyFailure>` / `<rerunFailure>`.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) —
+- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   parallel skill for coverage report diffs (different format,
   same PR-time analytics shape).
-- [`allure-reports`](../allure-reports/SKILL.md) — richer reporting
+- [`allure-reports`](../allure-reports/SKILL.md) - richer reporting
   built on top of `allure-results`; consumes JUnit XML via per-runner
   adapters when needed.

@@ -1,6 +1,6 @@
 ---
 name: policy-as-code-runner
-description: "Configures policy-as-code testing using OPA / Conftest / Cedar — authors policies in Rego (OPA''''s language), runs Conftest against Kubernetes manifests / Terraform plans / Dockerfiles / arbitrary structured data, integrates with CI for PR-time policy gates. Per OPA''''s docs: \"an open source, general-purpose policy engine that unifies policy enforcement across the stack.\" Use to express + enforce custom policies (cost limits, tagging requirements, security baselines) that Checkov / tfsec / KICS don''''t cover."
+description: "Configures policy-as-code testing using OPA / Conftest / Cedar - authors policies in Rego (OPA''''s language), runs Conftest against Kubernetes manifests / Terraform plans / Dockerfiles / arbitrary structured data, integrates with CI for PR-time policy gates. Per OPA''''s docs: \"an open source, general-purpose policy engine that unifies policy enforcement across the stack.\" Use to express + enforce custom policies (cost limits, tagging requirements, security baselines) that Checkov / tfsec / KICS don''''t cover."
 rating: 23
 d6: 4
 archetype: S1
@@ -29,7 +29,7 @@ built-in checks).
   upgrade`, etc.).
 - A multi-language IaC stack needs unified policy enforcement.
 
-## Step 1 — Install Conftest
+## Step 1 - Install Conftest
 
 ```bash
 # macOS
@@ -39,7 +39,7 @@ brew install conftest
 curl -LO https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_<version>_Linux_x86_64.tar.gz
 ```
 
-## Step 2 — Author a policy in Rego
+## Step 2 - Author a policy in Rego
 
 ```rego
 # policies/kubernetes/required_labels.rego
@@ -74,7 +74,7 @@ deny[msg] {
 The `deny` rule pattern: each `deny[msg]` rule that holds adds a
 message to the deny set. If `deny` is non-empty, the test fails.
 
-## Step 3 — Run Conftest
+## Step 3 - Run Conftest
 
 ```bash
 # Test a single manifest
@@ -90,7 +90,7 @@ conftest test deployment.yaml --policy ./policies/
 conftest test deployment.yaml --output json
 ```
 
-## Step 4 — Test against Helm chart output
+## Step 4 - Test against Helm chart output
 
 ```bash
 helm template myrelease charts/mychart/ -f values.yaml | conftest test -
@@ -98,7 +98,7 @@ helm template myrelease charts/mychart/ -f values.yaml | conftest test -
 
 The chart renders to manifests; Conftest validates them.
 
-## Step 5 — Test against Terraform plan
+## Step 5 - Test against Terraform plan
 
 ```bash
 terraform plan -out=plan.tfplan
@@ -118,7 +118,7 @@ deny[msg] {
 }
 ```
 
-## Step 6 — Test against Dockerfile
+## Step 6 - Test against Dockerfile
 
 ```rego
 # policies/dockerfile/no_latest.rego
@@ -143,7 +143,7 @@ deny[msg] {
 conftest test Dockerfile
 ```
 
-## Step 7 — Author tests for policies
+## Step 7 - Author tests for policies
 
 Policies themselves should be tested:
 
@@ -172,7 +172,7 @@ test_deployment_with_all_labels {
 opa test policies/
 ```
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -196,7 +196,7 @@ jobs:
           conftest test plan.json --policy policies/terraform/
 ```
 
-## Step 9 — Bundle policies for OPA Gatekeeper (Kubernetes admission)
+## Step 9 - Bundle policies for OPA Gatekeeper (Kubernetes admission)
 
 For runtime enforcement (vs PR-time):
 
@@ -239,11 +239,11 @@ that violate the policy at admission time.
 
 ## References
 
-- [opa][opa] — OPA overview, Rego language, common applications,
+- [opa][opa] - OPA overview, Rego language, common applications,
   CNCF graduated status.
 - Conftest at `conftest.dev`.
 - OPA Gatekeeper at `open-policy-agent.github.io/gatekeeper/`.
 - [`checkov-policy`](../checkov-policy/SKILL.md),
   [`tfsec-policy`](../tfsec-policy/SKILL.md),
-  [`kics-policy`](../kics-policy/SKILL.md) — sister scanners with
+  [`kics-policy`](../kics-policy/SKILL.md) - sister scanners with
   built-in checks (use these first; OPA for custom).

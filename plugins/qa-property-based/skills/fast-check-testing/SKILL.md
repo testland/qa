@@ -1,6 +1,6 @@
 ---
 name: fast-check-testing
-description: "Authors property-based tests in JavaScript / TypeScript using fast-check — wires `fc.assert(fc.property(arbitrary, ...))`, picks arbitraries (`fc.integer`, `fc.string`, `fc.array`, `fc.tuple`, `fc.record`), uses `.map()` / `.chain()` / `.filter()` to build domain arbitraries, and integrates with Jest / Vitest / Mocha / Jasmine / AVA / Tape. Use when a JS/TS codebase needs PBT to catch edge cases — fast-check has been used to find bugs in major libraries (`query-string`, etc.) and is trusted by Jest, Jasmine, fp-ts, Ramda."
+description: "Authors property-based tests in JavaScript / TypeScript using fast-check - wires `fc.assert(fc.property(arbitrary, ...))`, picks arbitraries (`fc.integer`, `fc.string`, `fc.array`, `fc.tuple`, `fc.record`), uses `.map()` / `.chain()` / `.filter()` to build domain arbitraries, and integrates with Jest / Vitest / Mocha / Jasmine / AVA / Tape. Use when a JS/TS codebase needs PBT to catch edge cases - fast-check has been used to find bugs in major libraries (`query-string`, etc.) and is trusted by Jest, Jasmine, fp-ts, Ramda."
 rating: 24
 d6: 4
 archetype: S1
@@ -39,7 +39,7 @@ testing frameworks without special integration."
 - Existing example-based tests pass but production bugs keep
   appearing in edge cases not covered.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [fast-check-readme][fcr]:
 
@@ -51,7 +51,7 @@ yarn add fast-check --dev
 pnpm add -D fast-check
 ```
 
-## Step 2 — Basic property
+## Step 2 - Basic property
 
 Per [fast-check-readme][fcr], the canonical Mocha-style example:
 
@@ -86,7 +86,7 @@ The predicate returns:
 `fc.assert` runs the property with 100 generated cases by default;
 on failure, fast-check shrinks to the minimal counterexample.
 
-## Step 3 — Arbitraries catalog
+## Step 3 - Arbitraries catalog
 
 Per [fast-check-overview][fco]:
 
@@ -107,7 +107,7 @@ Per [fast-check-overview][fco]:
 | `fc.uniqueArray(item)` | Arrays without duplicates                |
 | `fc.dictionary(key, value)` | Map / Record types                  |
 
-## Step 4 — Combinators (.map / .chain / .filter)
+## Step 4 - Combinators (.map / .chain / .filter)
 
 Per [fast-check-overview][fco]: "Extensible via `map()` and
 `chain()` combinators."
@@ -130,7 +130,7 @@ const positiveInteger = fc.integer({ min: 1 });
 `.map()` and constrained arbitraries over `.filter()` when
 possible.
 
-## Step 5 — Composite arbitraries via `fc.record`
+## Step 5 - Composite arbitraries via `fc.record`
 
 ```typescript
 const user = fc.record({
@@ -156,7 +156,7 @@ it('serializes user to JSON and back', () => {
 `fc.record` produces objects with the specified shape; each field
 is sampled per its arbitrary.
 
-## Step 6 — Integrate with the test runner
+## Step 6 - Integrate with the test runner
 
 Per [fast-check-overview][fco]: works "with major testing
 frameworks including Jest, Vitest, Mocha, Jasmine, AVA, and Tape"
@@ -179,7 +179,7 @@ test('reverse is involutive', () => {
 The assertion library (`expect`, `assert`) is the runner's; fast-check
 hooks into thrown errors as failures.
 
-## Step 7 — Race condition detection
+## Step 7 - Race condition detection
 
 Per [fast-check-overview][fco]: "Race condition detection for async
 code."
@@ -207,10 +207,10 @@ test('concurrent counter increments are atomic', async () => {
 
 `fc.scheduler` exhaustively explores task interleavings; `s.schedule`
 queues an async operation; `s.waitAll()` advances. fast-check finds
-interleavings that cause the property to fail — the canonical
+interleavings that cause the property to fail - the canonical
 race-condition catcher.
 
-## Step 8 — Shrinking and reproducibility
+## Step 8 - Shrinking and reproducibility
 
 When a property fails, fast-check prints the falsifying input + a
 shrunk minimal version + a seed:
@@ -241,7 +241,7 @@ import fc from 'fast-check';
 fc.configureGlobal({ seed: process.env.CI ? 42 : Date.now() });
 ```
 
-## Step 9 — Model-based testing
+## Step 9 - Model-based testing
 
 Per [fast-check-overview][fco]: "Model-based testing for stateful
 systems."
@@ -301,13 +301,12 @@ bug in the real implementation.
 
 ## References
 
-- [fast-check-readme][fcr] — install, basic example with
+- [fast-check-readme][fcr] - install, basic example with
   `fc.assert` / `fc.property` / `fc.string`, runner integration,
   trust list.
-- [fast-check-overview][fco] — arbitraries catalog, `.map` /
+- [fast-check-overview][fco] - arbitraries catalog, `.map` /
   `.chain` combinators, race-condition detection, model-based
   testing, framework-agnostic positioning.
-- [`hypothesis-testing`](../hypothesis-testing/SKILL.md) — Python
+- [`hypothesis-testing`](../hypothesis-testing/SKILL.md) - Python
   sibling.
-- [`schemathesis-fuzzing`](../../qa-api-testing/skills/schemathesis-fuzzing/SKILL.md)
-  — applies fast-check-shaped PBT to API schemas.
+- [`schemathesis-fuzzing`](../../qa-api-testing/skills/schemathesis-fuzzing/SKILL.md) - applies fast-check-shaped PBT to API schemas.

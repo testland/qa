@@ -1,6 +1,6 @@
 ---
 name: junit5-tests
-description: "Configures and runs JUnit 5 (Jupiter) — modern JVM testing platform with annotations (`@Test` / `@ParameterizedTest` / `@RepeatedTest` / `@TestFactory`), lifecycle hooks (`@BeforeAll` / `@BeforeEach` / `@AfterEach` / `@AfterAll`), extension model (`@ExtendWith`), display names (`@DisplayName`), conditional execution (`@EnabledOnOs`, `@EnabledIf`), parallel execution config; integrates with Maven Surefire / Gradle test task / IntelliJ. Use when the user works with Java / Kotlin codebases needing the modern JVM standard."
+description: "Configures and runs JUnit 5 (Jupiter) - modern JVM testing platform with annotations (`@Test` / `@ParameterizedTest` / `@RepeatedTest` / `@TestFactory`), lifecycle hooks (`@BeforeAll` / `@BeforeEach` / `@AfterEach` / `@AfterAll`), extension model (`@ExtendWith`), display names (`@DisplayName`), conditional execution (`@EnabledOnOs`, `@EnabledIf`), parallel execution config; integrates with Maven Surefire / Gradle test task / IntelliJ. Use when the user works with Java / Kotlin codebases needing the modern JVM standard."
 rating: 24
 d6: 4
 archetype: S1
@@ -16,15 +16,15 @@ Per [junit.org/junit5/docs/current/user-guide][j5-ug]:
 
 Three components (released 2017, replacing JUnit 4):
 
-- **JUnit Jupiter** — the new programming + extension model
-- **JUnit Vintage** — backward-compat for JUnit 3/4 tests
-- **JUnit Platform** — runner foundation (used by Jupiter, other test
+- **JUnit Jupiter** - the new programming + extension model
+- **JUnit Vintage** - backward-compat for JUnit 3/4 tests
+- **JUnit Platform** - runner foundation (used by Jupiter, other test
   frameworks)
 
 This skill targets JUnit Jupiter (the modern API). For Kotlin-native
 tests with similar power but DSL-style, see [`kotest-tests`](../kotest-tests/SKILL.md).
 
-## Step 1 — Install (Maven / Gradle)
+## Step 1 - Install (Maven / Gradle)
 
 Maven `pom.xml`:
 
@@ -49,7 +49,7 @@ tasks.test {
 }
 ```
 
-## Step 2 — First test
+## Step 2 - First test
 
 ```java
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class CalculatorTest {
 
 Run: `mvn test` or `./gradlew test`.
 
-## Step 3 — Lifecycle annotations
+## Step 3 - Lifecycle annotations
 
 Per [j5-ug][j5-ug]:
 
@@ -91,7 +91,7 @@ class UserServiceTest {
 }
 ```
 
-## Step 4 — Parameterized tests
+## Step 4 - Parameterized tests
 
 ```java
 import org.junit.jupiter.params.ParameterizedTest;
@@ -132,7 +132,7 @@ class ParametrizedTest {
 Source providers: `@ValueSource`, `@CsvSource`, `@CsvFileSource`,
 `@MethodSource`, `@EnumSource`, `@ArgumentsSource`.
 
-## Step 5 — Extensions (`@ExtendWith`)
+## Step 5 - Extensions (`@ExtendWith`)
 
 JUnit 5's extension model (replaces JUnit 4's `@Rule` /
 `@RunWith`):
@@ -159,7 +159,7 @@ Common extensions: `MockitoExtension`, `SpringExtension` (Spring),
 `SystemStubsExtension` (env vars / system properties),
 `TempDirectory`.
 
-## Step 6 — Display names + conditional execution
+## Step 6 - Display names + conditional execution
 
 ```java
 @DisplayName("User service")
@@ -182,7 +182,7 @@ class UserServiceTest {
 }
 ```
 
-## Step 7 — Parallel execution
+## Step 7 - Parallel execution
 
 Enable in `junit-platform.properties`:
 
@@ -199,7 +199,7 @@ Per-test override:
 class TestNotParallelizable { ... }
 ```
 
-## Step 8 — Coverage with JaCoCo
+## Step 8 - Coverage with JaCoCo
 
 Maven:
 
@@ -239,7 +239,7 @@ Maven:
 </plugin>
 ```
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: ./gradlew test jacocoTestReport
@@ -269,13 +269,12 @@ Surefire (Maven) emits JUnit XML for [`junit-xml-analysis`](../../qa-test-report
 
 ## References
 
-- [j5-ug][j5-ug] — official user guide
-- junit.org/junit5 — landing
-- maven.apache.org/surefire — Maven Surefire (test runner)
-- jacoco.org — coverage tool
+- [j5-ug][j5-ug] - official user guide
+- junit.org/junit5 - landing
+- maven.apache.org/surefire - Maven Surefire (test runner)
+- jacoco.org - coverage tool
 - [`kotest-tests`](../kotest-tests/SKILL.md),
   [`spock-tests`](../spock-tests/SKILL.md),
   [`testng-tests`](../testng-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — test code hygiene
+  [`scalatest`](../scalatest/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene

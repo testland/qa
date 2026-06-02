@@ -1,6 +1,6 @@
 ---
 name: wcag-checklist-builder
-description: "Builds a per-component WCAG 2.2 accessibility checklist from a component spec — covers focus management, color contrast, ARIA roles & states, keyboard interaction, error handling, and live-region announcements — emitting a markdown checklist or YAML test plan that pairs with screen-reader-test-author for manual verification and the violation gate for automated scans. Use during component-spec review or pre-implementation acceptance."
+description: "Builds a per-component WCAG 2.2 accessibility checklist from a component spec - covers focus management, color contrast, ARIA roles & states, keyboard interaction, error handling, and live-region announcements - emitting a markdown checklist or YAML test plan that pairs with screen-reader-test-author for manual verification and the violation gate for automated scans. Use during component-spec review or pre-implementation acceptance."
 rating: 24
 d6: 4
 archetype: S3
@@ -33,7 +33,7 @@ The checklist pairs with:
   retrofit a11y verification.
 - Pre-PR self-review for component contributors.
 
-## Step 1 — Identify the component archetype
+## Step 1 - Identify the component archetype
 
 The skill maps to one of these archetypes; each has its own
 checklist pattern:
@@ -41,17 +41,17 @@ checklist pattern:
 | Archetype                    | Examples                                |
 |------------------------------|-----------------------------------------|
 | Static text / display        | Heading, badge, banner, blockquote.     |
-| Interactive — single trigger  | Button, link, icon button.              |
-| Interactive — form input     | Text input, checkbox, radio, select, switch. |
-| Interactive — multi-state    | Disclosure, accordion, tabs, popover.   |
-| Interactive — overlay        | Modal, drawer, dropdown menu, command palette. |
+| Interactive - single trigger  | Button, link, icon button.              |
+| Interactive - form input     | Text input, checkbox, radio, select, switch. |
+| Interactive - multi-state    | Disclosure, accordion, tabs, popover.   |
+| Interactive - overlay        | Modal, drawer, dropdown menu, command palette. |
 | Composite                    | Combobox, date picker, multi-select, tree. |
 | Live region                  | Toast, alert, in-page status, error banner. |
 | Layout / navigation         | Header, footer, breadcrumb, pagination.  |
 
 For each archetype, the matching checklist sections are below.
 
-## Step 2 — Apply the per-archetype checklist
+## Step 2 - Apply the per-archetype checklist
 
 ### Static text / display
 
@@ -63,7 +63,7 @@ For each archetype, the matching checklist sections are below.
 - [ ] Information conveyed by color alone is also conveyed in
       another way (text, icon, pattern; SC 1.4.1).
 
-### Interactive — single trigger
+### Interactive - single trigger
 
 - [ ] Native `<button>` / `<a href>` used (no `<div onclick>`).
 - [ ] Visible focus indicator at ≥3:1 contrast vs. background.
@@ -75,7 +75,7 @@ For each archetype, the matching checklist sections are below.
 - [ ] Loading / disabled states programmatically conveyed
       (`aria-disabled` / `aria-busy`).
 
-### Interactive — form input
+### Interactive - form input
 
 - [ ] Has a `<label for="...">` OR `aria-labelledby` referencing a
       visible label.
@@ -88,7 +88,7 @@ For each archetype, the matching checklist sections are below.
       (`autocomplete="email"`, `"name"`, etc.).
 - [ ] Placeholder is NOT used as the only label.
 
-### Interactive — multi-state (disclosure / accordion / tabs)
+### Interactive - multi-state (disclosure / accordion / tabs)
 
 - [ ] `aria-expanded` reflects open/closed state on the trigger.
 - [ ] `aria-controls` references the controlled region's `id`.
@@ -102,7 +102,7 @@ For each archetype, the matching checklist sections are below.
 
 [apg]: https://www.w3.org/WAI/ARIA/apg/patterns/
 
-### Interactive — overlay (modal / drawer / popover)
+### Interactive - overlay (modal / drawer / popover)
 
 (See [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) for the
 6-step pattern.)
@@ -136,7 +136,7 @@ For each archetype, the matching checklist sections are below.
 - [ ] Container exists in the DOM **before** content is inserted
       (live regions only announce changes; pre-mounted with
       content suppresses the first announcement).
-- [ ] Content updates are detected — for SPA frameworks, ensure
+- [ ] Content updates are detected - for SPA frameworks, ensure
       the framework's render produces a real DOM mutation rather
       than a virtual-DOM-only update.
 
@@ -149,20 +149,20 @@ For each archetype, the matching checklist sections are below.
 - [ ] Breadcrumb has `aria-label="Breadcrumb"` and
       `aria-current="page"` on the current page.
 
-## Step 3 — Add per-component customization
+## Step 3 - Add per-component customization
 
 Beyond the archetype defaults, the spec may declare:
 
-- **Custom keyboard shortcuts** — verify SC 2.1.4 (Character Key
+- **Custom keyboard shortcuts** - verify SC 2.1.4 (Character Key
   Shortcuts).
-- **Animation / motion** — verify SC 2.3.3 (Animation from
+- **Animation / motion** - verify SC 2.3.3 (Animation from
   Interactions) and respect `prefers-reduced-motion`.
-- **Auto-rotating content** (carousel, ticker) — pause / play
+- **Auto-rotating content** (carousel, ticker) - pause / play
   control; SC 2.2.2 (Pause, Stop, Hide).
-- **Time-limited interactions** (countdown timer) — pause /
+- **Time-limited interactions** (countdown timer) - pause /
   extend control; SC 2.2.1 (Timing Adjustable).
 
-## Step 4 — Emit the artifact
+## Step 4 - Emit the artifact
 
 The skill produces two outputs:
 
@@ -236,8 +236,8 @@ checks:
 
 ## References
 
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
-- W3C ARIA Authoring Practices — [apg][apg].
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
+- W3C ARIA Authoring Practices - [apg][apg].
 - All sibling skills in this plugin:
   [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md),
   [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md),
@@ -245,5 +245,4 @@ checks:
   [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md),
   [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md),
   [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md).
-- [`accessibility-code-critic`](../../agents/accessibility-code-critic.md)
-  — adversarial agent that consumes this skill's output.
+- [`accessibility-code-critic`](../../agents/accessibility-code-critic.md) - adversarial agent that consumes this skill's output.

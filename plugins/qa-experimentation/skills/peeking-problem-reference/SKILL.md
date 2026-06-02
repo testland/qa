@@ -14,7 +14,7 @@ In classical (fixed-horizon) hypothesis testing, the test is run
 once, on a pre-declared sample size, at a pre-declared alpha
 (typically 0.05). Looking at the data and stopping when
 significance is reached **before** the pre-declared end inflates
-the false-positive rate well above alpha — sometimes to 30%+ at
+the false-positive rate well above alpha - sometimes to 30%+ at
 naive 0.05.
 
 This is the **peeking problem**. Per Kohavi et al. *Trustworthy
@@ -28,7 +28,7 @@ validity checklist and the SRM detector agent.
 ## When to use
 
 - Designing the stop-early policy for an experiment platform.
-- Auditing an "early ship" decision — was the math valid?
+- Auditing an "early ship" decision - was the math valid?
 - PR review of a new experiment dashboard / analysis flow.
 - Investigating "we shipped, then the effect disappeared."
 
@@ -36,13 +36,13 @@ validity checklist and the SRM detector agent.
 
 At alpha=0.05, the test is calibrated to give a 5% false-positive
 rate **if you look once**. If you look every day for 30 days and
-ship at the first significance — at each look, the test has a
+ship at the first significance - at each look, the test has a
 fresh chance to spuriously hit. The total false-positive rate
 compounds.
 
 Per Microsoft Experimentation Platform research
 ([microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/)):
-common patterns that surface this — dashboards that update
+common patterns that surface this - dashboards that update
 hourly, "early-stop" buttons in experimentation UIs, manager
 asks for "where are we now?" mid-experiment.
 
@@ -85,7 +85,7 @@ often** without inflating alpha. The trade-off: less powerful per
 sample than fixed-horizon.
 
 This is the foundation of "valid sequential" experimentation in
-Optimizely / Statsig / similar — they expose p-values that are
+Optimizely / Statsig / similar - they expose p-values that are
 **always valid** under continuous monitoring.
 
 Per Optimizely's sequential-testing docs (a derivative of mSPRT):
@@ -137,7 +137,7 @@ formal multi-comparison correction across guardrails.
 | Peek + early-stop on naive p-value | False positive rate explodes | Use sequential / always-valid |
 | Dashboards refresh hourly, treated as "data" | Implicit peeking; humans see + react | Lock decisions to pre-declared look schedule |
 | Stop-loss without symmetric stop-win | One-sided peeking still inflates | Symmetric or pre-committed |
-| "We'll just look once at midpoint" | One unscheduled look = one inflation event | Either fixed-horizon OR sequential — not "fixed + one peek" |
+| "We'll just look once at midpoint" | One unscheduled look = one inflation event | Either fixed-horizon OR sequential - not "fixed + one peek" |
 | Different metric uses different schedule | Coordination mismatch; inconsistent alpha | One schedule per experiment |
 | Re-running an experiment after p=0.06 to "find significance" | Garden of forking paths | Pre-commit; accept null result |
 | Stop-early on a guardrail alone | Guardrails should be assessed at horizon | Stop-early only on OEC (with sequential math) |

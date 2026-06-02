@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# test-quality-coach — evals
+# test-quality-coach - evals
 
 Companion eval cases for [`test-quality-coach`](../../test-quality-coach.md).
 Three cases cover happy path / branch / adversarial: a junior engineer's
@@ -16,10 +16,10 @@ no-conventions-document refuse rule.
 
 Target models for re-runs: `claude-sonnet-4-6`,
 `claude-haiku-4-5-20251001`, `claude-opus-4-7`. Dates recorded below are
-the eval-authoring date — each case is designed to be reproducible
+the eval-authoring date - each case is designed to be reproducible
 against any tier.
 
-## Eval 1 — happy path — junior PR with mixed quality (growth coaching)
+## Eval 1 - happy path - junior PR with mixed quality (growth coaching)
 
 **Input:**
 
@@ -72,20 +72,20 @@ test ("works") has poor §3 naming (`it('works')` is the canonical
 failure example in the agent's own scoring rubric) and §2
 single-responsibility violation (3 assertion targets in one test:
 `itemCount`, `total`, `items.length`). The output uses growth framing
-("Growth opportunities", 🌱 markers per Step 2) — NOT pass/fail
+("Growth opportunities", 🌱 markers per Step 2) - NOT pass/fail
 language. Step 3 emits a per-PR summary with the score trend (3.5 →
 3.7 → current) and one growth focus for next sprint. The Step 3
 closing note "This is coaching, not gating. Your PR can ship." is
 present.
 
 **Pass condition:** Output contains the literal string `Growth
-opportunit` (matches `Growth opportunity` / `Growth opportunities` —
+opportunit` (matches `Growth opportunity` / `Growth opportunities` - 
 the §2 growth-framing header) AND mentions both
 `addItem increments count` AND `works` (the two `it()` blocks under
 review). Output does NOT contain `FAIL` or `VIOLATION` as a per-test
 verdict (the coach's framing rule forbids these).
 
-## Eval 2 — branch — senior-team gating request (refuse, recommend test-code-critic)
+## Eval 2 - branch - senior-team gating request (refuse, recommend test-code-critic)
 
 **Input:**
 
@@ -115,7 +115,7 @@ Team has been operating with these conventions for 18 months.
 **Target models:** sonnet (2026-05-25), haiku (2026-05-25)
 
 **Expected:** The agent refuses per Refuse-to-proceed: "Use this agent
-for senior-team gating — `test-code-critic` is the appropriate
+for senior-team gating - `test-code-critic` is the appropriate
 adversarial reviewer for that." It also refuses to "Frame anything as
 failure / pass-fail. The coach uses 'growth opportunity' not
 'violation.'" The output explains the coaching-vs-gating split (per
@@ -127,12 +127,12 @@ block.
 
 **Pass condition:** Output contains the literal string
 `test-code-critic` (the named hand-off for adversarial gating) AND
-either the literal string `coaching` (case-insensitive — the agent's
+either the literal string `coaching` (case-insensitive - the agent's
 self-description) OR the literal string `gating` (the surfaced
 distinction). Output does NOT contain `VIOLATION` or `BLOCK MERGE` as a
 verdict (the coach must not gate).
 
-## Eval 3 — adversarial — no test-code-conventions document (refuse)
+## Eval 3 - adversarial - no test-code-conventions document (refuse)
 
 **Input:**
 
@@ -162,7 +162,7 @@ Just score it.
 **Target models:** sonnet (2026-05-25)
 
 **Expected:** The agent refuses per Refuse-to-proceed: "Generate the
-report if the team has no `test-code-conventions` document —
+report if the team has no `test-code-conventions` document - 
 recommends the team adopt one first." It explains that coaching against
 unwritten conventions is unfair (the score has no shared reference) and
 recommends authoring
@@ -180,14 +180,14 @@ reference).
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   PR / repo access required. The diff content is inlined; the
   presence / absence of `docs/test-code-conventions.md` is stated
   explicitly in each prompt.
 - Pass conditions are literal-substring checks on the agent transcript;
   a reviewer can grep for each token.
 - The agent's tool surface (`Read`, `Grep`, `Glob`, narrow `Bash(git
-  diff *)`) is read-only — eval re-runs cannot mutate the PR or the
+  diff *)`) is read-only - eval re-runs cannot mutate the PR or the
   test files.
 - Eval cases were authored 2026-05-25 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

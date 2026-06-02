@@ -1,6 +1,6 @@
 ---
 name: restassured-testing
-description: "Authors REST Assured (Java) API tests using the given().when().then() BDD-style DSL — status code + JSON/XML path assertions + authentication (Basic, OAuth2, API key). Configures Maven / Gradle dependencies, runs via JUnit 5, and emits Surefire / JaCoCo reports for CI gating. Use when the project is on the JVM and the team wants type-safe API tests in the same language as the application."
+description: "Authors REST Assured (Java) API tests using the given().when().then() BDD-style DSL - status code + JSON/XML path assertions + authentication (Basic, OAuth2, API key). Configures Maven / Gradle dependencies, runs via JUnit 5, and emits Surefire / JaCoCo reports for CI gating. Use when the project is on the JVM and the team wants type-safe API tests in the same language as the application."
 rating: 26
 d6: 4
 archetype: S1
@@ -31,7 +31,7 @@ type-safe authoring + same-language refactoring matter.
   (refactor-safe, IDE-aware).
 - Tests need to compose fluently with JUnit 5 / TestNG fixtures.
 - Authentication patterns required: Basic (preemptive), OAuth2
-  (bearer token), API key in header — all first-class.
+  (bearer token), API key in header - all first-class.
 
 If the team is non-JVM, evaluate
 [`postman-collections`](../postman-collections/SKILL.md) (JSON-driven),
@@ -161,7 +161,7 @@ then().statusCode(200);
 ```
 
 `preemptive()` sends the `Authorization` header on the first request
-without waiting for a 401 challenge — required for most modern APIs
+without waiting for a 401 challenge - required for most modern APIs
 that don't issue WWW-Authenticate.
 
 ### API Key in header
@@ -170,7 +170,7 @@ that don't issue WWW-Authenticate.
 given().header("X-API-KEY", "your-api-key").when().get("/endpoint");
 ```
 
-For any custom auth scheme, fall through to the `header()` form —
+For any custom auth scheme, fall through to the `header()` form - 
 REST Assured doesn't impose a structure beyond the standard Basic /
 OAuth1/2 patterns.
 
@@ -264,7 +264,7 @@ jobs:
 
 The `*IT.java` suffix is the Maven Failsafe convention for
 **integration tests** (separate from `*Test.java` unit tests). Failsafe
-uploads JUnit XML to `target/failsafe-reports/` automatically — same
+uploads JUnit XML to `target/failsafe-reports/` automatically - same
 format as Newman's `--reporter-junit-export`.
 
 ## Anti-patterns
@@ -292,12 +292,12 @@ format as Newman's `--reporter-junit-export`.
 
 ## References
 
-- [restassured-readme][readme] — main repo README; basic given/when/then
+- [restassured-readme][readme] - main repo README; basic given/when/then
   + Maven groupId.
-- [restassured-usage][usage] — full DSL reference: Maven dep XML,
+- [restassured-usage][usage] - full DSL reference: Maven dep XML,
   imports, status code, JSON/XML path, OAuth2, preemptive Basic,
   API-key header.
-- [`postman-collections`](../postman-collections/SKILL.md) —
+- [`postman-collections`](../postman-collections/SKILL.md) - 
   JSON-driven counterpart for non-JVM teams.
-- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) —
+- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
   property-based fuzzing complement (different approach to coverage).

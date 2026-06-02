@@ -6,7 +6,7 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 
 | Type | Name | Archetype | Description |
 |---|---|---|---|
-| Skill | [manual-test-script-author](skills/manual-test-script-author/SKILL.md) | S3 | Build-an-X scripted manual test cases — step-table or Gherkin format with self-contained data and per-step expected results. |
+| Skill | [manual-test-script-author](skills/manual-test-script-author/SKILL.md) | S3 | Build-an-X scripted manual test cases - step-table or Gherkin format with self-contained data and per-step expected results. |
 | Skill | [test-execution-checklist](skills/test-execution-checklist/SKILL.md) | S3 | Build-an-X focused checklists for smoke / first-pass / bug-bash / compliance scenarios. |
 | Skill | [tour-based-explorer-prompt](skills/tour-based-explorer-prompt/SKILL.md) | S2 | Pure-reference catalog of the seven canonical Whittaker tours: Feature, Money, Landmark, Intellectual, Bad-data, Configuration, Garbage collector. |
 | Skill | [bug-bash-facilitator](skills/bug-bash-facilitator/SKILL.md) | S3 | Build-an-X structured multi-tester session: pre-bash kit + cohort charters + real-time triage board + scoring + post-bash cluster debrief. |

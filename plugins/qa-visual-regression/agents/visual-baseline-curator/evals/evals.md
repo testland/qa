@@ -4,7 +4,7 @@ type: agent
 archetype: A4
 ---
 
-# visual-baseline-curator — evals
+# visual-baseline-curator - evals
 
 Companion eval cases for [`visual-baseline-curator`](../../visual-baseline-curator.md).
 Three cases cover happy path / branch / adversarial: a Chromatic +
@@ -14,10 +14,10 @@ feeding the **Input** block as the first user message and checking the
 agent's output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — fresh Chromatic on a Storybook project
+## Eval 1 - happy path - fresh Chromatic on a Storybook project
 
 **Input:**
 
@@ -50,7 +50,7 @@ Target build runs on staging; CI is GitHub Actions.
 
 **Expected:** Step 1 detects Chromatic from
 `@chromatic-com/storybook` + `chromatic` in `devDependencies`.
-Step 2 inventories the candidate set — 47 stories. Step 3 applies the
+Step 2 inventories the candidate set - 47 stories. Step 3 applies the
 coverage rules from `visual-baseline-conventions`: includes Atoms /
 Molecules / Organisms / Templates / Pages business variants; excludes
 the 240 Button control combinatorics, excludes `[INTERNAL]
@@ -69,9 +69,9 @@ with rationale from the conventions skill.
 `### Excluded (with rationale)` (or equivalent) AND mentions
 `[INTERNAL]` AND `Atoms/Button` (or `control combinatorics`). Output
 does NOT contain `Percy` config / `playwright.config.ts` (other-engine
-branches — would indicate wrong-branch failure).
+branches - would indicate wrong-branch failure).
 
-## Eval 2 — branch — page-driven Next.js app with Playwright snapshots
+## Eval 2 - branch - page-driven Next.js app with Playwright snapshots
 
 **Input:**
 
@@ -99,7 +99,7 @@ No existing visual-test config. Target staging URL: https://staging.acme.local.
 
 **Expected:** Step 1 detects Playwright snapshots from `@playwright/test`
 in `devDependencies`, no Chromatic / Percy packages present.
-Step 2 inventories the router config — enumerates 4 top-level routes;
+Step 2 inventories the router config - enumerates 4 top-level routes;
 excludes `/admin/users` per the conventions ("Routes that require auth
 setup the agent cannot fulfill"). Step 4 generates a
 `playwright.config.ts` with one project per breakpoint
@@ -114,10 +114,10 @@ agent's Example 2). The "Excluded" table mentions
 `playwright.config.ts` AND `toHaveScreenshot` AND `375` AND `1920`.
 Output mentions `/admin/users` AND `auth` (the excluded-route
 rationale). Output does NOT contain `chromatic.config.json` /
-`@percy/cli` (other-engine branches — would indicate wrong-branch
+`@percy/cli` (other-engine branches - would indicate wrong-branch
 failure).
 
-## Eval 3 — adversarial — no visual-test engine present (refuse)
+## Eval 3 - adversarial - no visual-test engine present (refuse)
 
 **Input:**
 
@@ -139,7 +139,7 @@ Project: a Vite + React SPA with hand-written routes. No Storybook.
 **Target models:** sonnet (2026-05-26)
 
 **Expected:** Refuses to scaffold baselines. The agent's "When invoked"
-Step 1 is "Detect the engine" — Chromatic / Percy / Playwright /
+Step 1 is "Detect the engine" - Chromatic / Percy / Playwright /
 Storybook test-runner. None of the four packages is present in
 `devDependencies`. The agent does NOT silently install an engine, does
 NOT pick one at random, does NOT generate `chromatic.config.json` or
@@ -161,14 +161,14 @@ must not pretend to have produced a plan).
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks (`package.json`
-  excerpts + story inventory / router config) — no external fixtures,
+  excerpts + story inventory / router config) - no external fixtures,
   no need to clone a sample repo. The story counts in eval 1 mirror
   the agent's own Example 1.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.
 - The agent's tool surface (`Read`, `Write`, `Edit`,
   `Bash(npx storybook *)`, `Bash(jq *)`, `Glob`, `Grep`) writes
-  config files — eval 3 is observable as the absence of any written
+  config files - eval 3 is observable as the absence of any written
   config file plus the explicit engine-pick request.
 - Eval cases were authored 2026-05-26 against the v4.0 framework's D7
   sub-checks (Evals exist, Multi-model coverage, Acceptance criteria,

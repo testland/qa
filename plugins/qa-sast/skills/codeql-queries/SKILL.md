@@ -1,6 +1,6 @@
 ---
 name: codeql-queries
-description: "Configures and runs GitHub CodeQL — semantic-database SAST with queries written in the CodeQL declarative query language; supports `codeql database create` (per-language) + `codeql database analyze` with --format=sarif; ships query packs (`codeql/javascript-queries`, `codeql/python-queries`, `codeql/java-queries`, `codeql/go-queries`, etc.); integrates with GitHub Code Scanning via SARIF upload; suppression via inline comment + sarif-filter + Security-tab dismissal. Use when the team uses GitHub-hosted repos and needs deep semantic SAST beyond pattern matching (cross-file taint flows, dataflow analysis)."
+description: "Configures and runs GitHub CodeQL - semantic-database SAST with queries written in the CodeQL declarative query language; supports `codeql database create` (per-language) + `codeql database analyze` with --format=sarif; ships query packs (`codeql/javascript-queries`, `codeql/python-queries`, `codeql/java-queries`, `codeql/go-queries`, etc.); integrates with GitHub Code Scanning via SARIF upload; suppression via inline comment + sarif-filter + Security-tab dismissal. Use when the team uses GitHub-hosted repos and needs deep semantic SAST beyond pattern matching (cross-file taint flows, dataflow analysis)."
 rating: 23
 d6: 4
 archetype: S1
@@ -39,12 +39,12 @@ sanitization") that pattern matchers can't express.
 For multi-platform CI without GitHub, use [`semgrep-rules`](../semgrep-rules/SKILL.md)
 or [`sonarqube-rules`](../sonarqube-rules/SKILL.md).
 
-## Step 1 — Install
+## Step 1 - Install
 
 CodeQL CLI download from
 [github.com/github/codeql-cli-binaries/releases](https://github.com/github/codeql-cli-binaries/releases).
 Per [cql-docs][cql-docs] the CLI is bundled separately from the
-queries — install both:
+queries - install both:
 
 ```bash
 # Download CodeQL CLI (per platform)
@@ -59,7 +59,7 @@ codeql --version
 Query packs (the `.ql` files) are pulled per-scan via
 `--download` flag or pre-installed via `codeql pack download`.
 
-## Step 2 — Create a database
+## Step 2 - Create a database
 
 ```bash
 # For interpreted languages (JS, Python, Ruby): no build needed
@@ -79,7 +79,7 @@ For JS/TS + Python, the `--build-mode none` extraction works
 without a build step. For Java/C#/C++, you MUST wrap the project's
 build via `--command` so CodeQL can observe compilation.
 
-## Step 3 — Analyze with query packs
+## Step 3 - Analyze with query packs
 
 ```bash
 codeql database analyze my-db \
@@ -112,7 +112,7 @@ codeql database analyze my-db \
   --output=results.sarif
 ```
 
-## Step 4 — Custom query authoring
+## Step 4 - Custom query authoring
 
 ```ql
 /**
@@ -142,7 +142,7 @@ overkill for simple "find this token" rules.
 Custom queries register in a query suite (`.qls`) for selective
 execution.
 
-## Step 5 — False-positive triage (MANDATORY)
+## Step 5 - False-positive triage (MANDATORY)
 
 Three layers:
 
@@ -169,7 +169,7 @@ suppressions.
 Cadence: every quarter, review GitHub Security → "Dismissed alerts"
 filter; expired ones reopened for re-review.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 Most teams use the GitHub-hosted action (recommended for any
 GitHub-hosted repo):
@@ -193,10 +193,10 @@ jobs:
 ```
 
 For non-GitHub CI (GitLab / Jenkins), use the CodeQL CLI directly
-(Steps 2–3) and upload SARIF to GitHub Code Scanning via the API
+(Steps 2 - 3) and upload SARIF to GitHub Code Scanning via the API
 or to a SARIF-compatible viewer.
 
-## Step 7 — Database performance
+## Step 7 - Database performance
 
 CodeQL databases can be GBs for large codebases. Performance flags:
 
@@ -219,12 +219,12 @@ GitHub).
 | Skip `--command` for compiled languages | Database empty; analysis returns no findings silently | Always wrap the build (Step 2) |
 | Use `security-extended` without baseline | Flood of pre-existing findings overwhelms the team | Start with `code-scanning`; ratchet up |
 | Inline comment without GitHub dismissal | No audit trail | Use Security-tab dismissal for persistent FPs (Step 5) |
-| Run CodeQL on every PR for large codebase | Database creation is slow (10–30 min); PR cycle slow | Schedule full scan nightly; PR-only delta scanning via Code Scanning |
+| Run CodeQL on every PR for large codebase | Database creation is slow (10 - 30 min); PR cycle slow | Schedule full scan nightly; PR-only delta scanning via Code Scanning |
 | Custom queries without test suite | Bugs in custom queries miss real findings | Use `codeql test` to validate against expected-results files |
 
 ## Limitations
 
-- Database creation is slow for large codebases (10–30 min on
+- Database creation is slow for large codebases (10 - 30 min on
   monorepos); incremental scanning helps but requires caching.
 - Custom-query learning curve is steep (CodeQL is a declarative
   logic language; CodeQL University courses recommended).
@@ -237,14 +237,14 @@ GitHub).
 
 ## References
 
-- [cql-docs][cql-docs] — CodeQL CLI getting started
-- codeql.github.com/docs — official documentation root
-- codeql.github.com/codeql-standard-libraries/ — per-language stdlibs
-- github.com/github/codeql — query packs source
-- learningqltest.github.io/learningql/ — CodeQL University training
+- [cql-docs][cql-docs] - CodeQL CLI getting started
+- codeql.github.com/docs - official documentation root
+- codeql.github.com/codeql-standard-libraries/ - per-language stdlibs
+- github.com/github/codeql - query packs source
+- learningqltest.github.io/learningql/ - CodeQL University training
 - [`semgrep-rules`](../semgrep-rules/SKILL.md),
   [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
   [`bandit-python`](../bandit-python/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) — sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) —
+  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
   unifier agent

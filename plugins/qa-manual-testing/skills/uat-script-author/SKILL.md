@@ -1,6 +1,6 @@
 ---
 name: uat-script-author
-description: "Emits User Acceptance Testing scripts in stakeholder-readable format — pre-conditions / business-language steps / expected business outcome / pass-fail / sign-off. Tailored for non-developer testers (end users, SMEs, solution owners) per the UAT canonical definition. Output is one TC per stakeholder-meaningful scenario with explicit sign-off, suitable for compliance / contract / audit records. Use when a release requires formal UAT before sign-off — typical for B2B contracts, regulated industries, or any delivery where the customer's acceptance is the contractual gate."
+description: "Emits User Acceptance Testing scripts in stakeholder-readable format - pre-conditions / business-language steps / expected business outcome / pass-fail / sign-off. Tailored for non-developer testers (end users, SMEs, solution owners) per the UAT canonical definition. Output is one TC per stakeholder-meaningful scenario with explicit sign-off, suitable for compliance / contract / audit records. Use when a release requires formal UAT before sign-off - typical for B2B contracts, regulated industries, or any delivery where the customer's acceptance is the contractual gate."
 rating: 22
 d6: 3
 archetype: S3
@@ -16,7 +16,7 @@ Per [uat-wiki][uat]:
 
 > "User acceptance testing (UAT) consists of a process of verifying
 > that a solution works for the user. It differs from system
-> testing—rather than checking if software merely functions without
+> testing - rather than checking if software merely functions without
 > crashing, UAT ensures the solution will work for actual users."
 > ([uat-wiki][uat])
 
@@ -36,7 +36,7 @@ This skill emits those scripts.
 
 ## When to use
 
-- A release requires formal UAT — B2B contracts, regulated
+- A release requires formal UAT - B2B contracts, regulated
   industries (finance, healthcare, gov), enterprise SaaS.
 - A new feature needs business sign-off before launch.
 - A vendor contract requires "customer acceptance" as the
@@ -45,10 +45,9 @@ This skill emits those scripts.
   is what we wanted" before old system shutdown.
 
 If the test is technical (verify HTTP 200, validate schema), see
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md)
-— that's the developer-facing format.
+[`manual-test-script-author`](../manual-test-script-author/SKILL.md) - that's the developer-facing format.
 
-## Step 1 — Identify the user journey
+## Step 1 - Identify the user journey
 
 Per [uat-wiki][uat]:
 
@@ -69,9 +68,9 @@ Examples:
   log in with the assigned permissions."
 
 Per [uat-wiki][uat], select the "three most common or difficult
-tasks users will perform" — UAT depth, not breadth.
+tasks users will perform" - UAT depth, not breadth.
 
-## Step 2 — Format
+## Step 2 - Format
 
 ```markdown
 # UAT-001 — New customer first-order flow
@@ -138,7 +137,7 @@ Statement of Work, dated YYYY-MM-DD.
 |        |      |          |             |
 ```
 
-## Step 3 — Business language, not implementation
+## Step 3 - Business language, not implementation
 
 UAT scripts are read by stakeholders who don't speak HTTP / DB /
 React. Translate:
@@ -154,10 +153,10 @@ React. Translate:
 The stakeholder shouldn't need to know what an HTTP status code is;
 the script is about **outcomes**, not **mechanisms**.
 
-## Step 4 — Three-tasks rule
+## Step 4 - Three-tasks rule
 
 Per [uat-wiki][uat]: "the three most common or difficult tasks
-users will perform" — UAT covers depth, not breadth.
+users will perform" - UAT covers depth, not breadth.
 
 A UAT round shouldn't have 50 scripts. The pattern:
 
@@ -168,7 +167,7 @@ A UAT round shouldn't have 50 scripts. The pattern:
 If the contract has 30 acceptance criteria, group them into ~10
 journeys; one script per journey.
 
-## Step 5 — Sign-off as artifact
+## Step 5 - Sign-off as artifact
 
 The signed UAT scripts go into the customer record:
 
@@ -205,14 +204,11 @@ go-live authorization, vendor approval).
 
 ## References
 
-- [uat-wiki][uat] — User acceptance testing definition: who runs
+- [uat-wiki][uat] - User acceptance testing definition: who runs
   it (end user / SME / solution owner), purpose (sign-off as
   contractual artifact), format (user journeys, not technical
   click-steps), three-most-common-or-difficult-tasks rule.
-- [`manual-test-script-author`](../manual-test-script-author/SKILL.md)
-  — sibling: developer-facing format.
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-  — upstream: emits the ACs this skill turns into UAT scripts.
-- [`definition-of-done-checker`](../../../qa-shift-left/agents/definition-of-done-checker.md)
-  — sibling check: a story may not be "done" without UAT sign-off
+- [`manual-test-script-author`](../manual-test-script-author/SKILL.md) - sibling: developer-facing format.
+- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits the ACs this skill turns into UAT scripts.
+- [`definition-of-done-checker`](../../../qa-shift-left/agents/definition-of-done-checker.md) - sibling check: a story may not be "done" without UAT sign-off
   if the team's DoD requires it.

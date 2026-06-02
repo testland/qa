@@ -1,6 +1,6 @@
 ---
 name: openai-evals
-description: "Authors and runs OpenAI Evals — Python framework + registry for evaluating LLMs and LLM-backed systems with `oaieval <model> <eval-name>` CLI; supports template-based evals (Match / Includes / FuzzyMatch / ModelBasedClassify) defined in `evals/registry/evals/*.yaml` against JSONL data files in `evals/registry/data/`, plus custom Python eval classes implementing the Eval interface. Use when the user works with the openai/evals repo, needs the OpenAI-curated eval registry, or contributes new evals via PR to the registry."
+description: "Authors and runs OpenAI Evals - Python framework + registry for evaluating LLMs and LLM-backed systems with `oaieval <model> <eval-name>` CLI; supports template-based evals (Match / Includes / FuzzyMatch / ModelBasedClassify) defined in `evals/registry/evals/*.yaml` against JSONL data files in `evals/registry/data/`, plus custom Python eval classes implementing the Eval interface. Use when the user works with the openai/evals repo, needs the OpenAI-curated eval registry, or contributes new evals via PR to the registry."
 rating: 22
 d6: 4
 archetype: S1
@@ -15,7 +15,7 @@ archetype: S1
 Per [oa-gh][oa-gh], a registry of YAML eval-specs lives under
 `evals/registry/evals/`, each pointing to a JSONL data file under
 `evals/registry/data/` (Git-LFS managed). The `oaieval` CLI runs
-an eval against any completion-function-protocol model — either
+an eval against any completion-function-protocol model - either
 one of OpenAI's curated evals or a custom one registered by the
 team.
 
@@ -31,10 +31,10 @@ team.
 
 For new projects without a registry-contribution motive, evaluate
 [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md) or
-[`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) first —
+[`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) first - 
 both have lower friction for non-OpenAI workflows.
 
-## Step 1 — Install
+## Step 1 - Install
 
 For running existing evals (per [oa-gh][oa-gh]):
 
@@ -53,7 +53,7 @@ pip install -e .
 The editable install is required to register new evals and access
 the full registry source.
 
-## Step 2 — Run an eval
+## Step 2 - Run an eval
 
 Per [github.com/openai/evals/blob/main/docs/run-evals.md][oa-run]:
 
@@ -72,7 +72,7 @@ Eval names are `"specified in the YAML files under
 evals/registry/evals"` ([oa-run][oa-run]); implementations live in
 `evals/elsuite`.
 
-## Step 3 — Logging
+## Step 3 - Logging
 
 Per [oa-run][oa-run]:
 
@@ -84,23 +84,23 @@ programmatically" ([oa-run][oa-run]).
 
 Common flags ([oa-run][oa-run]):
 
-- `--no-local-run` — Snowflake DB logging
-- `--record_path <dir>` — output directory
-- `oaieval --help` — full CLI options
+- `--no-local-run` - Snowflake DB logging
+- `--record_path <dir>` - output directory
+- `oaieval --help` - full CLI options
 
-## Step 4 — Eval templates (YAML-defined)
+## Step 4 - Eval templates (YAML-defined)
 
 Eval templates avoid Python authoring for common evaluation
 patterns. The four built-in templates per [oa-gh][oa-gh] (referenced
 in `eval-templates.md`):
 
-- **Match** — exact-match scoring: completion must equal an entry in
+- **Match** - exact-match scoring: completion must equal an entry in
   `ideal` (single string or list)
-- **Includes** — substring scoring: completion must contain `ideal`
+- **Includes** - substring scoring: completion must contain `ideal`
   text
-- **FuzzyMatch** — relaxed-match scoring: token-level overlap
+- **FuzzyMatch** - relaxed-match scoring: token-level overlap
   between completion and ideal
-- **ModelBasedClassify** — judge-model evaluates a completion (used
+- **ModelBasedClassify** - judge-model evaluates a completion (used
   for open-ended outputs where exact-match doesn't apply)
 
 A registered eval YAML lives at `evals/registry/evals/<name>.yaml`
@@ -108,14 +108,14 @@ and references a JSONL file at `evals/registry/data/<name>/samples.jsonl`.
 Each JSONL row contains the input prompt + the `ideal` field used by
 the template.
 
-## Step 5 — Custom Python evals
+## Step 5 - Custom Python evals
 
 For grading logic beyond templates, subclass the `Eval` interface.
 The full pattern lives in `docs/custom-eval.md` and `docs/build-eval.md`
-in the [oa-gh][oa-gh] repository — author per the doc when authoring,
+in the [oa-gh][oa-gh] repository - author per the doc when authoring,
 then register in the YAML registry.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 OpenAI Evals does not ship a first-party CI action. Pattern:
 
@@ -139,25 +139,25 @@ and post via gh CLI (no built-in action).
 
 ## Limitations
 
-- OpenAI-first design — non-OpenAI providers via the
+- OpenAI-first design - non-OpenAI providers via the
   CompletionFn protocol work but require shim code; for
   multi-provider evals start with [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md).
-- The registry is large but dated — many evals target older OpenAI
+- The registry is large but dated - many evals target older OpenAI
   models; check eval-spec freshness before contributing.
-- No first-party CI integration — assemble pass-rate gates
+- No first-party CI integration - assemble pass-rate gates
   manually.
 - JSONL log inspection requires familiarity with the events
   schema (per-event types: `sampling`, `match`, `metrics`).
 
 ## References
 
-- [oa-gh][oa-gh] — main repo + framework overview
-- [oa-run][oa-run] — `oaieval` CLI reference
+- [oa-gh][oa-gh] - main repo + framework overview
+- [oa-run][oa-run] - `oaieval` CLI reference
 - `docs/build-eval.md`, `docs/custom-eval.md`, `docs/eval-templates.md`
-  in [oa-gh][oa-gh] — authoring details (load from repo when
+  in [oa-gh][oa-gh] - authoring details (load from repo when
   building a new eval)
 - [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
-  [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) —
+  [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) - 
   lower-friction alternatives for new projects
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) —
+- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
   adversarial reviewer

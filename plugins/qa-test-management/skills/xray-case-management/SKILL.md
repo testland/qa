@@ -1,6 +1,6 @@
 ---
 name: xray-case-management
-description: "Author and manage Xray test cases (Jira issues with Test issue type) via the GraphQL + REST APIs — create tests, attach steps, link preconditions, set testType (Manual / Cucumber / Generic), associate with requirements, bulk import via JSON. Covers OAuth client_id/client_secret auth, the GraphQL createTest mutation, the REST /api/v2/import/test/bulk endpoint, and the Cucumber-style scenario authoring path. Use for pre-execution case authoring in Jira-anchored teams using Xray. Distinct from Xray's test-execution / test-run features which post results."
+description: "Author and manage Xray test cases (Jira issues with Test issue type) via the GraphQL + REST APIs - create tests, attach steps, link preconditions, set testType (Manual / Cucumber / Generic), associate with requirements, bulk import via JSON. Covers OAuth client_id/client_secret auth, the GraphQL createTest mutation, the REST /api/v2/import/test/bulk endpoint, and the Cucumber-style scenario authoring path. Use for pre-execution case authoring in Jira-anchored teams using Xray. Distinct from Xray's test-execution / test-run features which post results."
 rating: 23
 d6: 4
 archetype: S1
@@ -33,7 +33,7 @@ For canonical anatomy this skill operates on, see
 
 ## Authoring
 
-### Authentication — OAuth client credentials
+### Authentication - OAuth client credentials
 
 Xray Cloud requires OAuth client credentials (different from Jira
 auth):
@@ -131,7 +131,7 @@ def bulk_import(token, project_key, tests):
     return r.json()  # returns job id + status poll URL
 ```
 
-Bulk import returns a job ID — poll `/api/v2/import/test/bulk/{jobId}/status`
+Bulk import returns a job ID - poll `/api/v2/import/test/bulk/{jobId}/status`
 until complete.
 
 ### Cucumber feature import
@@ -280,12 +280,12 @@ Sync Cucumber `.feature` files on every PR merge:
 
 ## References
 
-- Xray Cloud REST API —
+- Xray Cloud REST API - 
   docs.getxray.app/display/XRAYCLOUD/REST+API (Cloudflare-
   protected; cite by stable URL).
-- Xray Cloud GraphQL —
+- Xray Cloud GraphQL - 
   docs.getxray.app/display/XRAYCLOUD/GraphQL+API.
-- Xray Cloud Authentication —
+- Xray Cloud Authentication - 
   docs.getxray.app/display/XRAYCLOUD/Authentication+-+REST.
 - Sibling references:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
@@ -295,7 +295,6 @@ Sync Cucumber `.feature` files on every PR merge:
   [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`xray-integration`](../../../qa-test-reporting/skills/xray-integration/SKILL.md)
-  — different scope (result sync).
+  [`xray-integration`](../../../qa-test-reporting/skills/xray-integration/SKILL.md) - different scope (result sync).
 - Composes with [`qa-bdd`](../../../qa-bdd/) when importing
   Cucumber features.

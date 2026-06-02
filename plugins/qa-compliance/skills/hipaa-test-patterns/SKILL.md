@@ -1,6 +1,6 @@
 ---
 name: hipaa-test-patterns
-description: "Reference catalog of HIPAA Security Rule-aligned test patterns — administrative safeguards (45 CFR §164.308: workforce training, access management, contingency planning), physical safeguards (§164.310: facility access, workstation security, device disposal), technical safeguards (§164.312: access control, audit logs, integrity, transmission security); PHI handling assertions in fixtures; minimum-necessary tests per §164.502(b); BAA-scope boundary verification. Use when authoring HIPAA-readiness tests for any product handling Protected Health Information."
+description: "Reference catalog of HIPAA Security Rule-aligned test patterns - administrative safeguards (45 CFR §164.308: workforce training, access management, contingency planning), physical safeguards (§164.310: facility access, workstation security, device disposal), technical safeguards (§164.312: access control, audit logs, integrity, transmission security); PHI handling assertions in fixtures; minimum-necessary tests per §164.502(b); BAA-scope boundary verification. Use when authoring HIPAA-readiness tests for any product handling Protected Health Information."
 rating: 22
 d6: 4
 archetype: S2
@@ -57,7 +57,7 @@ to generate safe substitutes).
 
 ## Test patterns by Security Rule section
 
-### §164.308(a)(3) — Workforce access management
+### §164.308(a)(3) - Workforce access management
 
 ```python
 def test_user_role_grants_only_minimum_necessary_phi():
@@ -69,7 +69,7 @@ def test_user_role_grants_only_minimum_necessary_phi():
     assert not user.can_access(PhiType.GENETIC_TEST_RESULTS)
 ```
 
-### §164.308(a)(5) — Workforce training
+### §164.308(a)(5) - Workforce training
 
 Test that training-completion is enforced before access grant:
 
@@ -81,7 +81,7 @@ def test_user_cannot_access_phi_without_training_completion():
     assert 'training_required' in response.json()['error']
 ```
 
-### §164.310(d)(2) — Device + media disposal
+### §164.310(d)(2) - Device + media disposal
 
 ```python
 def test_phi_overwritten_when_device_decommissioned():
@@ -94,7 +94,7 @@ def test_phi_overwritten_when_device_decommissioned():
     assert AuditLog.objects.filter(action='device_wipe', subject=device.serial).exists()
 ```
 
-### §164.312(a)(1) — Access control
+### §164.312(a)(1) - Access control
 
 ```python
 def test_phi_access_requires_unique_user_id():
@@ -104,7 +104,7 @@ def test_phi_access_requires_unique_user_id():
     assert response.status_code == 403  # generic 'admin' account forbidden
 ```
 
-### §164.312(b) — Audit controls
+### §164.312(b) - Audit controls
 
 Cross-ref [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md):
 
@@ -124,7 +124,7 @@ def test_phi_access_creates_audit_record():
     assert audit.tamper_evident_hash is not None   # required for integrity
 ```
 
-### §164.312(c)(1) — Integrity
+### §164.312(c)(1) - Integrity
 
 ```python
 def test_phi_modification_requires_authentication_and_audit():
@@ -152,7 +152,7 @@ def test_phi_modification_requires_authentication_and_audit():
     assert audit.after_value == 'updated'
 ```
 
-### §164.312(e)(1) — Transmission security
+### §164.312(e)(1) - Transmission security
 
 ```python
 def test_phi_transmitted_only_via_encrypted_channels():
@@ -166,7 +166,7 @@ def test_phi_transmitted_only_via_encrypted_channels():
     assert tls_info.cipher in ALLOWED_CIPHERS
 ```
 
-### §164.502(b) — Minimum necessary standard
+### §164.502(b) - Minimum necessary standard
 
 ```python
 def test_query_returns_only_minimum_necessary_fields():
@@ -183,7 +183,7 @@ def test_query_returns_only_minimum_necessary_fields():
     assert 'genetic_test_results' not in body
 ```
 
-### §164.504(e) — Business Associate Agreement scope
+### §164.504(e) - Business Associate Agreement scope
 
 ```python
 def test_phi_only_processed_for_baa_purposes():
@@ -217,7 +217,7 @@ def test_phi_only_processed_for_baa_purposes():
   rules, accounting of disclosures); test patterns there are
   use-case specific.
 - HITECH Act (2009) added breach-notification + enforcement; tests
-  intersect with §164.404–§164.414.
+  intersect with §164.404 - §164.414.
 - State laws (e.g., California CMIA) may add additional
   requirements beyond HIPAA.
 - This skill doesn't replace a HIPAA risk analysis or compliance
@@ -225,18 +225,16 @@ def test_phi_only_processed_for_baa_purposes():
 
 ## References
 
-- [hipaa-hhs][hipaa-hhs] — HHS HIPAA reference
-- ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164 —
+- [hipaa-hhs][hipaa-hhs] - HHS HIPAA reference
+- ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164 - 
   HIPAA regulations text (45 CFR §164)
-- nist.gov/publications/sp-800-66-revision-1-introductory-resource-guide-implementing-hipaa-security
-  — NIST SP 800-66 implementation guidance
-- nist.gov/publications/sp-800-88-revision-1-guidelines-media-sanitization
-  — NIST SP 800-88 device sanitization
+- nist.gov/publications/sp-800-66-revision-1-introductory-resource-guide-implementing-hipaa-security - NIST SP 800-66 implementation guidance
+- nist.gov/publications/sp-800-88-revision-1-guidelines-media-sanitization - NIST SP 800-88 device sanitization
 - [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md),
-  [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md) — sister
+  [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md) - sister
   privacy-pattern catalogs
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) —
+- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
   §164.312(b) audit log requirements
-- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) —
+- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
   cross-plugin: safe PHI fixture generation
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) — agent
+- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

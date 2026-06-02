@@ -17,12 +17,12 @@ the fuzz-target authoring agent.
 
 ## When to use
 
-- Bootstrapping a new fuzz target — what should the seed corpus
+- Bootstrapping a new fuzz target - what should the seed corpus
   contain?
-- Running a long-running fuzz campaign — when to minimise, where
+- Running a long-running fuzz campaign - when to minimise, where
   to back up, how to share across CI runs.
-- Debugging a crash — locating the crash artefact, reproducing it.
-- Migrating between fuzzers (libFuzzer ↔ AFL++) — corpus format
+- Debugging a crash - locating the crash artefact, reproducing it.
+- Migrating between fuzzers (libFuzzer ↔ AFL++) - corpus format
   compatibility.
 
 ## Corpus components
@@ -32,7 +32,7 @@ A fuzzing corpus has three roles:
 | Role | What it is | Where it lives |
 |---|---|---|
 | **Seed corpus** | Hand-curated initial inputs covering known interesting paths | Versioned in repo (`fuzz/seeds/`) |
-| **Evolved corpus** | Inputs the fuzzer added because they hit new coverage | Output directory (`fuzz/corpus/`) — typically not committed |
+| **Evolved corpus** | Inputs the fuzzer added because they hit new coverage | Output directory (`fuzz/corpus/`) - typically not committed |
 | **Crash artefacts** | Inputs that triggered a sanitiser / crash / timeout | Output directory + bug-report attachments |
 
 ## Directory layout per fuzzer
@@ -78,7 +78,7 @@ afl-fuzz -i inputs/ -o output/ -- ./fuzz_target @@
 
 Crash format: `output/default/crashes/id:<num>,sig:<signal>,src:<id>,op:<mutator>,...`.
 
-AFL++ corpora are **not directly compatible** with libFuzzer — the
+AFL++ corpora are **not directly compatible** with libFuzzer - the
 queue files have a different on-disk format. Convert via
 `afl-fuzz -i` + `afl-cmin` round-trip.
 
@@ -97,7 +97,7 @@ package/
 ```
 
 Failures auto-write to `testdata/fuzz/FuzzXxx/` with a generated
-filename — they're meant to be committed as regression cases.
+filename - they're meant to be committed as regression cases.
 
 ### cargo-fuzz
 
@@ -175,7 +175,7 @@ The corpus syncs to `gs://<project>-corpus.clusterfuzz-external.appspot.com/`.
 | **From OSS-Fuzz cousin** | Same format, different target | Reuse `<format>_seed_corpus.zip` from a related OSS-Fuzz project |
 
 A seed corpus of 5-50 hand-curated diverse inputs is typically
-enough to bootstrap. Bigger isn't always better — the fuzzer
+enough to bootstrap. Bigger isn't always better - the fuzzer
 finds new paths via mutation.
 
 ## Dictionary files
@@ -202,7 +202,7 @@ structured formats (JSON, XML, protobuf, SQL).
 
 ## Corpus minimisation
 
-A corpus that grows over time becomes redundant — many inputs hit
+A corpus that grows over time becomes redundant - many inputs hit
 the same coverage. Minimise periodically:
 
 ```bash
@@ -234,7 +234,7 @@ When the fuzzer finds a crash:
    [`bug-report-from-failure`](../../../qa-defect-management/skills/bug-report-from-failure/SKILL.md)
    with the minimised crash as an attachment.
 4. **Add the original (non-minimised) crash to the seed corpus**
-   as a regression test — re-runs will catch reintroduction.
+   as a regression test - re-runs will catch reintroduction.
 
 ## CI integration
 
@@ -279,7 +279,7 @@ across runs:
   coverage instrumentation; rebuilding the target may invalidate
   some coverage information.
 - **Dictionary maintenance.** Dictionaries should evolve with the
-  target's grammar — manual upkeep.
+  target's grammar - manual upkeep.
 - **Corpus storage.** Long campaigns produce GB-scale corpora;
   needs deliberate storage strategy (S3 / GCS / artifacts).
 - **No semantic seeding for opaque formats.** Custom binary
@@ -287,12 +287,12 @@ across runs:
 
 ## References
 
-- LLVM libFuzzer —
+- LLVM libFuzzer - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
-- AFL++ docs — [github.com/AFLplusplus/AFLplusplus/blob/stable/docs](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/).
-- Go native fuzzing — [go.dev/doc/security/fuzz](https://go.dev/doc/security/fuzz).
-- cargo-fuzz — [github.com/rust-fuzz/cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz).
-- OSS-Fuzz — [google.github.io/oss-fuzz](https://google.github.io/oss-fuzz/).
+- AFL++ docs - [github.com/AFLplusplus/AFLplusplus/blob/stable/docs](https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/).
+- Go native fuzzing - [go.dev/doc/security/fuzz](https://go.dev/doc/security/fuzz).
+- cargo-fuzz - [github.com/rust-fuzz/cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz).
+- OSS-Fuzz - [google.github.io/oss-fuzz](https://google.github.io/oss-fuzz/).
 - Sibling references:
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
 - Consumed by:

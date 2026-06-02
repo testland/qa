@@ -1,6 +1,6 @@
 ---
 name: grype-scanning
-description: "Scans for vulnerabilities using Anchore Grype — SBOM-aware scanner with `grype <image>`, `grype dir:./`, `grype sbom:./sbom.json` invocations; covers OS-package + language-package ecosystems (Alpine / Debian / Ubuntu / RHEL / Amazon Linux / Ruby / Java / JavaScript / Python / .NET / Go / PHP / Rust); includes EPSS + KEV + risk-score prioritization; OpenVEX support for filtering; `.grype.yaml` ignore rules with expiration. Use when the team wants Grype-native vuln scanning (or pairs with Syft for SBOM-driven workflow)."
+description: "Scans for vulnerabilities using Anchore Grype - SBOM-aware scanner with `grype <image>`, `grype dir:./`, `grype sbom:./sbom.json` invocations; covers OS-package + language-package ecosystems (Alpine / Debian / Ubuntu / RHEL / Amazon Linux / Ruby / Java / JavaScript / Python / .NET / Go / PHP / Rust); includes EPSS + KEV + risk-score prioritization; OpenVEX support for filtering; `.grype.yaml` ignore rules with expiration. Use when the team wants Grype-native vuln scanning (or pairs with Syft for SBOM-driven workflow)."
 rating: 23
 d6: 4
 archetype: S1
@@ -47,7 +47,7 @@ Per [gr-gh][gr-gh] coverage:
 - OpenVEX-based finding filtering (status assertions like "not
   affected" / "fixed" / "under-investigation" filter scan output).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [gr-gh][gr-gh]:
 
@@ -58,7 +58,7 @@ curl -sSfL https://get.anchore.io/grype | sudo sh -s -- -b /usr/local/bin
 Other install paths (verify against [gr-gh][gr-gh]): brew install
 grype; Docker image `anchore/grype`.
 
-## Step 2 — Basic scans
+## Step 2 - Basic scans
 
 Per [gr-gh][gr-gh]:
 
@@ -79,7 +79,7 @@ cat ./sbom.json | grype
 The SBOM-input mode skips re-generation; the scan output is
 deterministic given the same SBOM + vuln DB version.
 
-## Step 3 — Output formats
+## Step 3 - Output formats
 
 Per [gr-gh][gr-gh]: "support for multiple output formats (table,
 json, cyclonedx, sarif, template)".
@@ -95,11 +95,11 @@ grype my-image:1.0 -o template -t my-template.tmpl   # custom Go template
 ```
 
 Per [gr-gh][gr-gh]: includes "threat prioritization with EPSS,
-KEV, and risk scoring" — the JSON output annotates each finding
+KEV, and risk scoring" - the JSON output annotates each finding
 with these signals for downstream prioritization (see
 [`vuln-prioritizer`](../../agents/vuln-prioritizer.md)).
 
-## Step 4 — Severity filtering + fail-on
+## Step 4 - Severity filtering + fail-on
 
 Per [gr-gh][gr-gh]:
 
@@ -110,7 +110,7 @@ grype my-image --fail-on high
 # Common severity levels: critical, high, medium, low, negligible, unknown
 ```
 
-`--fail-on` controls CI exit code — exit 1 if any finding meets or
+`--fail-on` controls CI exit code - exit 1 if any finding meets or
 exceeds the severity. Pair with `--only-fixed` to focus on
 upgradable findings:
 
@@ -118,7 +118,7 @@ upgradable findings:
 grype my-image --fail-on high --only-fixed
 ```
 
-## Step 5 — `.grype.yaml` ignore rules
+## Step 5 - `.grype.yaml` ignore rules
 
 Per [gr-gh][gr-gh]: "Configuration can be managed through
 `.grype.yaml` files with ignore rules for customized scanning
@@ -149,7 +149,7 @@ ignore:
     expires: 2026-12-15
 ```
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Suppression mechanisms (per [gr-gh][gr-gh] + standard practice):
 
@@ -160,7 +160,7 @@ Suppression mechanisms (per [gr-gh][gr-gh] + standard practice):
 | `--only-fixed` flag | Filter to findings with available fixes (skip "stuck" findings) |
 | `--fail-on <severity>` filter | Threshold for CI gate |
 
-OpenVEX is a particularly clean way to manage findings — the VEX
+OpenVEX is a particularly clean way to manage findings - the VEX
 document is signed + persistent + machine-readable; consumers can
 verify supply-chain assertions about vulnerability status.
 
@@ -181,7 +181,7 @@ ignore:
 Cadence: every quarter, audit `.grype.yaml` ignore entries; expired
 re-review-date entries removed.
 
-## Step 7 — DB management
+## Step 7 - DB management
 
 Grype's vuln DB updates frequently (multiple times per day):
 
@@ -199,7 +199,7 @@ grype db import grype-db-v6-2026-05-06.tar.gz
 For CI determinism, pin DB version per scan; otherwise Grype
 pulls the latest.
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 jobs:
@@ -222,7 +222,7 @@ jobs:
 
 The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 
-## Step 9 — Composition with sister tools
+## Step 9 - Composition with sister tools
 
 | Sister tool | Use |
 |---|---|
@@ -250,20 +250,20 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
   for that.
 - License-detection support is basic; for compliance, pair with
   ScanCode / FOSSology.
-- Reachability analysis NOT included — every CVE on a declared
+- Reachability analysis NOT included - every CVE on a declared
   component counts.
 
 ## References
 
-- [gr-gh][gr-gh] — repository, install, basic commands
-- oss.anchore.com/docs/reference/grype/cli/ — full CLI reference
-- openvex.dev — OpenVEX specification
-- first.org/epss — EPSS data source for prioritization
+- [gr-gh][gr-gh] - repository, install, basic commands
+- oss.anchore.com/docs/reference/grype/cli/ - full CLI reference
+- openvex.dev - OpenVEX specification
+- first.org/epss - EPSS data source for prioritization
 - [`syft-generation`](../syft-generation/SKILL.md),
   [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
   [`spdx-format`](../spdx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) — sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) — unifier agent
-- [`sca-prioritizer`](../../qa-sca/agents/sca-prioritizer.md) —
+  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent
+- [`sca-prioritizer`](../../qa-sca/agents/sca-prioritizer.md) - 
   cross-plugin sibling for SCA findings (similar prioritization
   logic)

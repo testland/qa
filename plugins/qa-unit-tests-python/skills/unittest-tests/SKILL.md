@@ -1,6 +1,6 @@
 ---
 name: unittest-tests
-description: "Configures and runs Python's stdlib unittest — TestCase + setUp/tearDown lifecycle hooks, assertion catalog (assertEqual / assertRaises / assertIn / assertAlmostEqual), unittest.mock module (Mock / MagicMock / patch / patch.object / patch.dict), test discovery via `python -m unittest discover`, subTest for parametrized cases, expectedFailure decorator. Use when constrained to stdlib-only (no pip install) or migrating legacy unittest codebases."
+description: "Configures and runs Python's stdlib unittest - TestCase + setUp/tearDown lifecycle hooks, assertion catalog (assertEqual / assertRaises / assertIn / assertAlmostEqual), unittest.mock module (Mock / MagicMock / patch / patch.object / patch.dict), test discovery via `python -m unittest discover`, subTest for parametrized cases, expectedFailure decorator. Use when constrained to stdlib-only (no pip install) or migrating legacy unittest codebases."
 rating: 22
 d6: 4
 archetype: S1
@@ -17,7 +17,7 @@ Per [docs.python.org/3/library/unittest.html][ut-docs]:
 `unittest` is Python's stdlib testing framework, modeled on JUnit
 (xUnit family). Distinguishing properties:
 
-- **Stdlib**: no pip install required — runs anywhere Python runs.
+- **Stdlib**: no pip install required - runs anywhere Python runs.
 - **Class-based**: tests as `TestCase` methods (vs pytest's
   function-style).
 - **Mock module bundled**: `unittest.mock` is the canonical Python
@@ -35,7 +35,7 @@ legacy maintenance.
   (pytest test bodies can use unittest.mock directly).
 - Embedded environments where pip install isn't possible.
 
-## Step 1 — First test
+## Step 1 - First test
 
 Per [ut-docs][ut-docs]:
 
@@ -65,7 +65,7 @@ python -m unittest                     # discover from cwd
 python -m unittest discover -s tests/ -p 'test_*.py'
 ```
 
-## Step 2 — TestCase lifecycle hooks
+## Step 2 - TestCase lifecycle hooks
 
 ```python
 class TestUserService(unittest.TestCase):
@@ -90,7 +90,7 @@ class TestUserService(unittest.TestCase):
         self.assertEqual(self.user.id, 1)
 ```
 
-## Step 3 — Assertion catalog
+## Step 3 - Assertion catalog
 
 Per [ut-docs][ut-docs]:
 
@@ -110,7 +110,7 @@ Per [ut-docs][ut-docs]:
 | `assertCountEqual(a, b)` | Same elements regardless of order |
 | `assertDictContainsSubset(subset, dict)` | Partial dict match (deprecated; use `<=` operator) |
 
-## Step 4 — `unittest.mock` patterns
+## Step 4 - `unittest.mock` patterns
 
 Per [docs.python.org/3/library/unittest.mock.html][mock-docs]:
 
@@ -159,7 +159,7 @@ def test_with_env():
 where it's *defined*. If `mymodule.py` does `from api import
 fetch_user`, patch `mymodule.fetch_user`, not `api.fetch_user`.
 
-## Step 5 — subTest for parametrization
+## Step 5 - subTest for parametrization
 
 ```python
 class TestCalculator(unittest.TestCase):
@@ -170,10 +170,9 @@ class TestCalculator(unittest.TestCase):
                 self.assertEqual(sum(a, b), expected)
 ```
 
-`subTest` reports each iteration as a separate failure if it fails
-— without it, the loop stops at the first failure.
+`subTest` reports each iteration as a separate failure if it fails - without it, the loop stops at the first failure.
 
-## Step 6 — Skip + expected failure
+## Step 6 - Skip + expected failure
 
 ```python
 @unittest.skip("Requires staging DB")
@@ -189,7 +188,7 @@ def test_known_bug():
     self.assertEqual(1, 2)   # passes the test (because it's expected to fail)
 ```
 
-## Step 7 — Test discovery
+## Step 7 - Test discovery
 
 ```bash
 # From cwd
@@ -205,7 +204,7 @@ python -m unittest discover -v
 python -m unittest tests.test_user.TestUser.test_creation
 ```
 
-## Step 8 — pytest interop
+## Step 8 - pytest interop
 
 `pytest` runs `unittest.TestCase` classes natively. Migration path:
 
@@ -214,7 +213,7 @@ python -m unittest tests.test_user.TestUser.test_creation
 3. Gradually convert TestCase to functions over time.
 4. unittest.mock continues to work in either style.
 
-## Step 9 — CI integration
+## Step 9 - CI integration
 
 ```yaml
 - run: pip install -e .[dev]
@@ -244,10 +243,9 @@ python -m unittest tests.test_user.TestUser.test_creation
 
 ## References
 
-- [ut-docs][ut-docs] — unittest reference
-- [mock-docs][mock-docs] — unittest.mock reference
+- [ut-docs][ut-docs] - unittest reference
+- [mock-docs][mock-docs] - unittest.mock reference
 - [`pytest-tests`](../pytest-tests/SKILL.md),
   [`doctest-tests`](../doctest-tests/SKILL.md),
-  [`nose2-tests`](../nose2-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — test code hygiene
+  [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene

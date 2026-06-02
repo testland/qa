@@ -1,6 +1,6 @@
 ---
 name: test-strategy-author
-description: "Build-an-X workflow that produces a test strategy document for a project / release / feature — covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based prioritization mapping (per `risk-matrix`), tooling stack, environments, exit criteria, ownership. Use as the artifact stakeholders sign off on before significant test investment, and the reference engineering teams come back to when scope / quality questions arise."
+description: "Build-an-X workflow that produces a test strategy document for a project / release / feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based prioritization mapping (per `risk-matrix`), tooling stack, environments, exit criteria, ownership. Use as the artifact stakeholders sign off on before significant test investment, and the reference engineering teams come back to when scope / quality questions arise."
 rating: 22
 d6: 3
 archetype: S3
@@ -27,10 +27,10 @@ This skill produces the document.
 - A new team forming around a product needs onboarding context.
 
 For per-feature test plans (smaller scope), use the lighter-weight
-[`risk-matrix`](../risk-matrix/SKILL.md) — strategy is for
+[`risk-matrix`](../risk-matrix/SKILL.md) - strategy is for
 larger horizons.
 
-## Step 1 — Document structure
+## Step 1 - Document structure
 
 ```markdown
 # Test Strategy — `<product / release>`
@@ -142,7 +142,7 @@ Release ships when:
 - [ ] Security (if applicable)
 ```
 
-## Step 2 — Tailor per project size
+## Step 2 - Tailor per project size
 
 | Project size | Strategy length | Scope    |
 |--------------|----------------:|----------|
@@ -150,7 +150,7 @@ Release ships when:
 | Medium (1-2 quarters) | 5-7 pages | All sections |
 | Large (multi-quarter) | 10+ pages | All + sub-strategies per major feature |
 
-## Step 3 — Review cadence
+## Step 3 - Review cadence
 
 | Trigger                                          | Action                                           |
 |--------------------------------------------------|--------------------------------------------------|
@@ -159,7 +159,7 @@ Release ships when:
 | Post-incident                                     | Update Section 2 (new risks); Section 7 (new exit criterion). |
 | New compliance requirement                        | Section 1 + Section 7.                            |
 
-## Step 4 — Reference patterns
+## Step 4 - Reference patterns
 
 Common strategy patterns by product type:
 
@@ -177,7 +177,7 @@ Common strategy patterns by product type:
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | Generic strategy template not tailored to product                     | Reads like boilerplate; nobody references.                               | Tailor per Section 1 (scope) and Section 4 (tooling). |
 | Strategy authored once; never reviewed                                | Becomes obsolete; team distrusts.                                        | Quarterly cadence (Step 3). |
-| No exit criteria                                                       | "Done" is subjective; release decisions arbitrary.                       | Section 7 — explicit + measurable. |
+| No exit criteria                                                       | "Done" is subjective; release decisions arbitrary.                       | Section 7 - explicit + measurable. |
 | Strategy = test plan                                                   | Strategy is high-level; per-feature plans are detailed (different artifact). | Use [`risk-matrix`](../risk-matrix/SKILL.md) for per-feature. |
 | Owner column missing                                                   | Activities slip; "everyone owns it = nobody."                            | Section 8 explicit owners. |
 | Strategy in slides, not version-controlled                             | History lost; updates invisible.                                          | Markdown + git. |
@@ -185,7 +185,7 @@ Common strategy patterns by product type:
 ## Limitations
 
 - **Strategy ≠ execution.** A great strategy doesn't ensure great
-  testing — pair with per-feature plans + per-PR enforcement.
+  testing - pair with per-feature plans + per-PR enforcement.
 - **Quarterly cadence is a floor.** Fast-moving products may need
   more frequent revisits.
 - **Stakeholder buy-in required.** A strategy nobody read is
@@ -193,10 +193,9 @@ Common strategy patterns by product type:
 
 ## References
 
-- [`risk-matrix`](../risk-matrix/SKILL.md) — feeds Section 2.
-- [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) —
+- [`risk-matrix`](../risk-matrix/SKILL.md) - feeds Section 2.
+- [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) - 
   feeds Section 3.
-- [`definition-of-done`](../definition-of-done/SKILL.md) — feeds
+- [`definition-of-done`](../definition-of-done/SKILL.md) - feeds
   Section 7.
-- [`release-readiness-checker`](../../agents/release-readiness-checker.md)
-  — automates the pre-release exit-criteria check.
+- [`release-readiness-checker`](../../agents/release-readiness-checker.md) - automates the pre-release exit-criteria check.

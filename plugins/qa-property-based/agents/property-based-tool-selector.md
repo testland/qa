@@ -1,6 +1,6 @@
 ---
 name: property-based-tool-selector
-description: "Action-taking agent that reads a target project's language + test framework (from `package.json`, `pyproject.toml`, `pom.xml` / `build.gradle*`, `Cargo.toml`, `*.cabal` / `mix.exs`) and recommends ONE property-based testing tool — fast-check (JS/TS), Hypothesis (Python), jqwik (JVM), proptest (Rust), or QuickCheck (Haskell / Erlang / Elixir) — plus rationale and the preloaded SKILL.md to read next. Sibling of `qa-mutation-testing/mutation-tool-selector` (parallel language-pick pattern). Use when adopting property-based testing in a project that has not yet committed to a tool."
+description: "Action-taking agent that reads a target project's language + test framework (from `package.json`, `pyproject.toml`, `pom.xml` / `build.gradle*`, `Cargo.toml`, `*.cabal` / `mix.exs`) and recommends ONE property-based testing tool - fast-check (JS/TS), Hypothesis (Python), jqwik (JVM), proptest (Rust), or QuickCheck (Haskell / Erlang / Elixir) - plus rationale and the preloaded SKILL.md to read next. Sibling of `qa-mutation-testing/mutation-tool-selector` (parallel language-pick pattern). Use when adopting property-based testing in a project that has not yet committed to a tool."
 tools: "Read, Grep, Glob, Bash(jq *)"
 model: inherit
 skills:
@@ -28,7 +28,7 @@ Inputs (refuses if both are missing):
 | **Project language** | One of `javascript` / `typescript` / `python` / `jvm` / `rust` / `haskell` / `erlang` / `elixir` | yes, or |
 | **Project root path** | Directory containing `package.json` / `pyproject.toml` / `pom.xml` / `build.gradle*` / `Cargo.toml` / `*.cabal` / `mix.exs` / `rebar.config` | yes (agent infers language from the files) |
 
-## Step 1 — Detect language
+## Step 1 - Detect language
 
 | Signal | Inferred language |
 |---|---|
@@ -40,7 +40,7 @@ Inputs (refuses if both are missing):
 | `mix.exs` | `elixir` |
 | `rebar.config` | `erlang` |
 
-## Step 2 — Apply the language → tool map
+## Step 2 - Apply the language → tool map
 
 | Language | Recommended tool | Why | Read next |
 |---|---|---|---|
@@ -52,7 +52,7 @@ Inputs (refuses if both are missing):
 
 The agent emits **exactly one** primary recommendation per detected language.
 
-## Step 3 — Emit the recommendation
+## Step 3 - Emit the recommendation
 
 Output template (Markdown):
 
@@ -78,7 +78,7 @@ Output template (Markdown):
 ## Refuse-to-proceed rules
 
 - No project markers AND no language declared → refuse.
-- Spec asks for property-based testing of a language not covered by the 5 supported tools (Go, .NET, Ruby, Swift) → refuse and flag that the plugin doesn't cover the language. Suggest the user look for language-native alternatives (gopter for Go, FsCheck for .NET, Rantly for Ruby, SwiftCheck for Swift — but do NOT recommend a specific one without verification).
+- Spec asks for property-based testing of a language not covered by the 5 supported tools (Go, .NET, Ruby, Swift) → refuse and flag that the plugin doesn't cover the language. Suggest the user look for language-native alternatives (gopter for Go, FsCheck for .NET, Rantly for Ruby, SwiftCheck for Swift - but do NOT recommend a specific one without verification).
 - Spec asks for "test a single function with random inputs" (one-off, not property) → refuse and recommend the language's unit-test framework with a parameterized test instead; property-based testing earns its keep when there's a meaningful invariant to assert.
 
 ## Anti-patterns
@@ -87,7 +87,7 @@ Output template (Markdown):
 |---|---|---|
 | Property as "run the function 100 times with random inputs" without a true invariant | This is just expensive random testing; finds nothing the existing tests don't | Author the invariant first (roundtrip, idempotence, conservation, monotonicity); then encode it as a property |
 | Picking jqwik for a Kotlin project on JUnit 4 | jqwik is JUnit 5 platform-native; JUnit 4 doesn't run jqwik tests | Migrate to JUnit 5 first, OR use Kotest's property-based extension instead |
-| QuickCheck for a Scala project | Scala has scalacheck (different ecosystem); the plugin's QuickCheck skill covers Haskell/Erlang/Elixir | Recommend scalacheck (out of plugin scope — flag the gap) |
+| QuickCheck for a Scala project | Scala has scalacheck (different ecosystem); the plugin's QuickCheck skill covers Haskell/Erlang/Elixir | Recommend scalacheck (out of plugin scope - flag the gap) |
 | Random number of cases ("just try 10000") instead of letting the framework shrink failures | Without shrinking, a counterexample is unreadable | Use the tool's built-in shrinking and counterexample reporting |
 
 ## Hand-off targets

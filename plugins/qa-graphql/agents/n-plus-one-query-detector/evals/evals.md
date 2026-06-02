@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# n-plus-one-query-detector — evals
+# n-plus-one-query-detector - evals
 
 Companion eval cases for [`n-plus-one-query-detector`](../../n-plus-one-query-detector.md).
 Three cases cover happy path / branch / adversarial: a classic per-row DB
@@ -13,10 +13,10 @@ batched-loader resolver (verdict `Safe`), and an out-of-scope refusal for
 a REST controller with no GraphQL resolvers in scope.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — per-row DB call (N+1 risk)
+## Eval 1 - happy path - per-row DB call (N+1 risk)
 
 **Input:**
 
@@ -61,7 +61,7 @@ table where `Post.author` shows severity `high` and fix `DataLoader`.
 literal string `DataLoader` AND the literal string `Post.author`.
 Output does NOT mark `Post.author` as `Safe`.
 
-## Eval 2 — branch — DataLoader already in use (Safe)
+## Eval 2 - branch - DataLoader already in use (Safe)
 
 **Input:**
 
@@ -117,7 +117,7 @@ acknowledgement that batching is already in place (NOT as a proposed
 fix). Output does NOT contain the literal string `N+1 risk` as a
 finding row label for `Post.author`.
 
-## Eval 3 — adversarial — out of scope (no GraphQL resolvers)
+## Eval 3 - adversarial - out of scope (no GraphQL resolvers)
 
 **Input:**
 
@@ -171,7 +171,7 @@ table with `N+1 risk` rows pointing at the controller methods.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted-content blocks — no external
+- All three inputs are concrete pasted-content blocks - no external
   fixtures, no need to clone a sample repo.
 - Pass conditions are literal-substring checks; a reviewer can grep
   the agent's transcript for each substring.

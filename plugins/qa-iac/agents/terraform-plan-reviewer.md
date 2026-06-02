@@ -1,6 +1,6 @@
 ---
 name: terraform-plan-reviewer
-description: "Read-only adversarial reviewer that analyzes a `terraform plan` output (JSON form via `terraform show -json`) for high-blast-radius changes — flags resource destruction (deletes), security degradation (broader IAM, public exposure, encryption disabled), drift (manually-changed resources), and risky combinations (DB destroy + new DB without import). Per-flag severity + remediation. Use as a PR-time gate against unintentional infrastructure damage."
+description: "Read-only adversarial reviewer that analyzes a `terraform plan` output (JSON form via `terraform show -json`) for high-blast-radius changes - flags resource destruction (deletes), security degradation (broader IAM, public exposure, encryption disabled), drift (manually-changed resources), and risky combinations (DB destroy + new DB without import). Per-flag severity + remediation. Use as a PR-time gate against unintentional infrastructure damage."
 tools: "Read, Grep, Glob, Bash(terraform show *), Bash(jq *)"
 model: sonnet
 rating: 23
@@ -8,7 +8,7 @@ d6: 4
 archetype: A3
 ---
 
-A specialized reviewer for Terraform plan output — catches the "I didn't mean to delete production" class of changes.
+A specialized reviewer for Terraform plan output - catches the "I didn't mean to delete production" class of changes.
 
 ## When invoked
 
@@ -20,7 +20,7 @@ The agent takes:
 
 For each planned action, the agent classifies + flags.
 
-## Step 1 — Generate the plan JSON
+## Step 1 - Generate the plan JSON
 
 ```bash
 terraform plan -out=plan.tfplan
@@ -40,7 +40,7 @@ Or in a CI job:
 The agent reads `plan.json` to get structured access to every
 planned change.
 
-## Step 2 — Categorize changes
+## Step 2 - Categorize changes
 
 Per [terraform-resource-change schema][trc]:
 
@@ -48,12 +48,12 @@ Per [terraform-resource-change schema][trc]:
 
 The plan JSON has `resource_changes[]` with each entry's `change.actions[]`:
 
-- `["create"]` — new resource.
-- `["delete"]` — destroying a resource.
-- `["update"]` — in-place change.
-- `["delete", "create"]` — replace (destroy + recreate).
-- `["create", "delete"]` — replace (no-op identifier change).
-- `["no-op"]` — no change.
+- `["create"]` - new resource.
+- `["delete"]` - destroying a resource.
+- `["update"]` - in-place change.
+- `["delete", "create"]` - replace (destroy + recreate).
+- `["create", "delete"]` - replace (no-op identifier change).
+- `["no-op"]` - no change.
 
 ```python
 # scripts/tf-review.py
@@ -77,7 +77,7 @@ for severity, msg in findings:
     print(f"[{severity}] {msg}")
 ```
 
-## Step 3 — Detect security degradation
+## Step 3 - Detect security degradation
 
 Per-resource-type, certain attribute changes are security-degrading:
 
@@ -94,7 +94,7 @@ Per-resource-type, certain attribute changes are security-degrading:
 The agent walks `change.before` vs `change.after` for each
 resource and flags drift to less-secure values.
 
-## Step 4 — Detect drift
+## Step 4 - Detect drift
 
 ```python
 # Drift = current state differs from terraform state without code change
@@ -106,10 +106,10 @@ for change in plan.get('resource_changes', []):
             findings.append(('warning', f"Drift detected at {change['address']}: runtime state differs"))
 ```
 
-Drift indicates someone manually changed the resource — investigate
+Drift indicates someone manually changed the resource - investigate
 why before applying.
 
-## Step 5 — Risky combinations
+## Step 5 - Risky combinations
 
 ```python
 def detect_risky_combos(changes):
@@ -128,7 +128,7 @@ def detect_risky_combos(changes):
     return risky
 ```
 
-## Step 6 — Output
+## Step 6 - Output
 
 ```markdown
 ## Terraform plan review — `<sha>`
@@ -168,13 +168,13 @@ def detect_risky_combos(changes):
    the needed actions.
 ```
 
-## Step 7 — Refuse-to-proceed rules
+## Step 7 - Refuse-to-proceed rules
 
 The agent **refuses** to:
 
 - Mark a plan "safe" with any critical-severity flag.
 - Auto-apply the plan; this is a reviewer agent only.
-- Skip security checks — even if the team has them in another tool
+- Skip security checks - even if the team has them in another tool
   (Checkov / tfsec / KICS), this agent's review is independent.
 - Operate without the JSON plan; refuses with "run terraform show
   -json first."
@@ -203,7 +203,7 @@ The agent **refuses** to:
   `developer.hashicorp.com/terraform/internals/json-format`.
 - [`checkov-policy`](../skills/checkov-policy/SKILL.md),
   [`tfsec-policy`](../skills/tfsec-policy/SKILL.md),
-  [`kics-policy`](../skills/kics-policy/SKILL.md) — sister
+  [`kics-policy`](../skills/kics-policy/SKILL.md) - sister
   scanners (static, not plan-based).
-- [`iac-policy-checker`](iac-policy-checker.md) — agent that
+- [`iac-policy-checker`](iac-policy-checker.md) - agent that
   unifies the scanner outputs.

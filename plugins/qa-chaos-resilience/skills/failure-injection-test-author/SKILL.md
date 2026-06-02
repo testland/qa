@@ -1,6 +1,6 @@
 ---
 name: failure-injection-test-author
-description: "Build-an-X workflow that combines WireMock fault stubs (HTTP-level fault: 500s, malformed JSON, slow responses) with Toxiproxy (TCP-level: latency, packet loss, reset) into one orchestrated test scenario — the test starts both, applies fault per scenario, runs the SUT against the impaired endpoints, verifies the SUT''''s resilience patterns. Use when neither pure HTTP fault stubs nor pure TCP chaos covers the actual production failure modes — most real failures span both layers."
+description: "Build-an-X workflow that combines WireMock fault stubs (HTTP-level fault: 500s, malformed JSON, slow responses) with Toxiproxy (TCP-level: latency, packet loss, reset) into one orchestrated test scenario - the test starts both, applies fault per scenario, runs the SUT against the impaired endpoints, verifies the SUT''''s resilience patterns. Use when neither pure HTTP fault stubs nor pure TCP chaos covers the actual production failure modes - most real failures span both layers."
 rating: 22
 d6: 3
 archetype: S3
@@ -21,7 +21,7 @@ chaos. A test using **only** Toxiproxy misses payload-level
 faults. Production failures combine both.
 
 This skill builds a workflow that **chains WireMock + Toxiproxy**
-into one orchestrated test scenario — closer to production
+into one orchestrated test scenario - closer to production
 reality.
 
 ## When to use
@@ -38,7 +38,7 @@ For pure HTTP fault stubs, see
 [`wiremock-stubs`](../../qa-test-data/skills/wiremock-stubs/SKILL.md).
 For pure TCP chaos, see [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md).
 
-## Step 1 — Topology
+## Step 1 - Topology
 
 ```
 [ SUT (App) ] → [ Toxiproxy ] → [ WireMock ] → (returns canned response or 500)
@@ -51,7 +51,7 @@ The SUT connects to Toxiproxy; Toxiproxy forwards to WireMock;
 WireMock returns the configured response. The combined chain
 exercises both layers.
 
-## Step 2 — docker-compose setup
+## Step 2 - docker-compose setup
 
 ```yaml
 # docker-compose.test.yml
@@ -77,7 +77,7 @@ services:
 The SUT's `EXTERNAL_API_URL` points at Toxiproxy:8080; Toxiproxy
 forwards to wiremock:8080.
 
-## Step 3 — Configure the proxy
+## Step 3 - Configure the proxy
 
 Once both containers are up:
 
@@ -87,7 +87,7 @@ curl -d '{"name":"external-api","listen":"0.0.0.0:8080","upstream":"wiremock:808
   http://toxiproxy:8474/proxies
 ```
 
-## Step 4 — Per-scenario test setup
+## Step 4 - Per-scenario test setup
 
 ```typescript
 // tests/resilience.spec.ts
@@ -145,10 +145,10 @@ test('SUT retries on TCP reset followed by 500 then succeeds', async () => {
 ```
 
 The test verifies: SUT made 2 calls (per WireMock log) and the
-second succeeded — the retry pattern works under TCP-reset +
+second succeeded - the retry pattern works under TCP-reset +
 HTTP-500 combined fault.
 
-## Step 5 — Scenario catalog
+## Step 5 - Scenario catalog
 
 Common scenarios:
 
@@ -161,7 +161,7 @@ Common scenarios:
 | Cascade: timeout + 503     | timeout 5000ms     | 503                    | Circuit breaker opens after N timeouts |
 | Network partition           | timeout (forever)   | (n/a)                  | Fallback to cached / null         |
 
-## Step 6 — Verdict
+## Step 6 - Verdict
 
 Each scenario produces a per-resilience-pattern verdict:
 
@@ -178,7 +178,7 @@ Each scenario produces a per-resilience-pattern verdict:
 | Network partition       | Fell back to cached value                 |   ⚠ partial — fallback returned stale > 1h |
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - run: docker compose -f docker-compose.test.yml up --wait --wait-timeout 120
@@ -210,11 +210,8 @@ Each scenario produces a per-resilience-pattern verdict:
 
 ## References
 
-- [`wiremock-stubs`](../../qa-test-data/skills/wiremock-stubs/SKILL.md)
-  — HTTP fault stub primitive this skill orchestrates.
-- [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) — TCP-level
+- [`wiremock-stubs`](../../qa-test-data/skills/wiremock-stubs/SKILL.md) - HTTP fault stub primitive this skill orchestrates.
+- [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) - TCP-level
   fault primitive this skill orchestrates.
-- [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md)
-  — sister: pure Toxiproxy + test-suite matrix.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
-  — methodology for the chaos-experiment shape.
+- [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md) - sister: pure Toxiproxy + test-suite matrix.
+- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology for the chaos-experiment shape.

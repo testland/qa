@@ -1,6 +1,6 @@
 ---
 name: mimesis-data
-description: "Authors Python test fixtures using mimesis — a fast, type-hinted, locale-aware test-data generator with 46 locales — covering Person / Address / Internet / Datetime providers and the Schema/Field pattern for typed-dict generation. Pairs with factory_boy when referential integrity is needed. Use when the project is Python and the team values speed, type hints, or strong locale coverage over Faker's larger ecosystem."
+description: "Authors Python test fixtures using mimesis - a fast, type-hinted, locale-aware test-data generator with 46 locales - covering Person / Address / Internet / Datetime providers and the Schema/Field pattern for typed-dict generation. Pairs with factory_boy when referential integrity is needed. Use when the project is Python and the team values speed, type hints, or strong locale coverage over Faker's larger ecosystem."
 rating: 24
 d6: 4
 archetype: S1
@@ -24,16 +24,16 @@ schema-based generator for typed-dict shapes.
 
 - The project is Python and the team values mimesis's speed (~10-100x
   faster than Faker on bulk generation, per the upstream benchmarks).
-- Type hints matter — mimesis exposes typed return values that show
+- Type hints matter - mimesis exposes typed return values that show
   up in IDE autocomplete.
-- The project needs strong locale coverage — mimesis ships 46
+- The project needs strong locale coverage - mimesis ships 46
   locales; Faker ships 70+ but many are Faker-thin (only a few
   providers populated).
-- Schema-based generation is a fit — mimesis's `Schema` / `Field`
+- Schema-based generation is a fit - mimesis's `Schema` / `Field`
   pattern produces typed dicts directly.
 
 If the team is already standardized on Faker, switching is rarely
-worth it — see [`faker-data`](../faker-data/SKILL.md). If the team
+worth it - see [`faker-data`](../faker-data/SKILL.md). If the team
 needs factory orchestration with referential integrity, pair mimesis
 with factory_boy (or use [`factory-bot-data`](../factory-bot-data/SKILL.md)
 in Ruby projects).
@@ -78,7 +78,7 @@ dt.formatted_datetime()
 
 (Adapted from [mimesis-readme][readme].)
 
-### Generic — one entry point per locale
+### Generic - one entry point per locale
 
 ```python
 from mimesis import Generic
@@ -90,11 +90,11 @@ g.address.city()
 g.internet.email()
 ```
 
-`Generic` aggregates every provider under one instance — preferred
+`Generic` aggregates every provider under one instance - preferred
 when a fixture needs values from multiple providers; avoids
 constructing one provider per type.
 
-### Schema-based — typed-dict generation
+### Schema-based - typed-dict generation
 
 ```python
 from mimesis import Field, Schema, Locale
@@ -121,7 +121,7 @@ data = generator.create()    # → list of 1000 dicts
 
 (Adapted from [mimesis-readme][readme] schema documentation.)
 
-The schema/field pattern is mimesis's distinguishing feature — it
+The schema/field pattern is mimesis's distinguishing feature - it
 produces typed-dict shapes without per-field method calls, which
 makes it convenient for bulk fixture generation (e.g. seeding a
 test DB with 10k rows).
@@ -175,7 +175,7 @@ class UserFactory(Factory):
 ```
 
 `LazyFunction` ensures each factory instantiation re-calls the
-mimesis method — getting a new value per fixture, not a single
+mimesis method - getting a new value per fixture, not a single
 shared one.
 
 ## Anti-patterns
@@ -199,9 +199,9 @@ shared one.
 
 ## References
 
-- [mimesis-readme][readme] — install, providers, Generic, Schema/Field,
+- [mimesis-readme][readme] - install, providers, Generic, Schema/Field,
   46 locales.
-- mimesis docs — https://mimesis.name/
-- [`faker-data`](../faker-data/SKILL.md) — Python Faker alternative.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) —
+- mimesis docs - https://mimesis.name/
+- [`faker-data`](../faker-data/SKILL.md) - Python Faker alternative.
+- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
   dispatcher selecting between mimesis / Faker / FactoryBot / Bogus.

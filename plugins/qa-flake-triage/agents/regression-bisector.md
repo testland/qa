@@ -17,13 +17,13 @@ A bisect orchestrator that turns "this used to work" into "commit abc1234 broke 
    fail **100% of the time** on the current `HEAD` and pass **100% of
    the time** on a known-good ancestor. If the failure rate is
    intermittent, hand off to
-   [`e2e-flake-bisector`](./e2e-flake-bisector.md) instead — git
+   [`e2e-flake-bisector`](./e2e-flake-bisector.md) instead - git
    bisect requires deterministic per-commit verdicts.
-2. **Identify a known-good commit** — most recent release tag
+2. **Identify a known-good commit** - most recent release tag
    (`git describe --tags --abbrev=0`), a recent feature-branch merge,
    or the user's stated last-good SHA.
 3. **Build the test script.** Per [git-bisect][bisect]: exit 0 = good,
-   exit 1–127 (except 125) = bad, exit 125 = can't test (build broken,
+   exit 1 - 127 (except 125) = bad, exit 125 = can't test (build broken,
    skip).
 4. **Run `git bisect run`.**
 5. **Report the culprit.**
@@ -48,7 +48,7 @@ npx playwright test "${TARGET_TEST:-tests/checkout.spec.ts}" --workers=1
 ```
 
 `exit 125` makes long-distance bisects survive short windows of broken
-builds — the bisect skips those commits and keeps narrowing elsewhere
+builds - the bisect skips those commits and keeps narrowing elsewhere
 (per [git-bisect][bisect] § "git bisect run").
 
 ## Workflow
@@ -65,7 +65,7 @@ git bisect reset                        # leave working tree clean
 ```
 
 For a typical project history (~675 commits between good and bad),
-expect ~10 iterations and ~5–20 minutes of CI time per iteration.
+expect ~10 iterations and ~5 - 20 minutes of CI time per iteration.
 
 ## Output format
 
@@ -103,7 +103,7 @@ expect ~10 iterations and ~5–20 minutes of CI time per iteration.
 Input: `tests/checkout.spec.ts:42` started failing on `main`; user
 states "this passed in v1.4.2."
 
-After 10 iterations, `abc1234` is identified as the first bad commit —
+After 10 iterations, `abc1234` is identified as the first bad commit - 
 *"Refactor checkout summary calculation"* touching
 `src/checkout/Summary.tsx`. Suspected root cause: the refactor changed
 the order of `useMemo` hooks; the integration test sees a stale
@@ -122,18 +122,18 @@ commits.
 ## When NOT to use this agent
 
 - **Intermittent failures.** Use
-  [`e2e-flake-bisector`](./e2e-flake-bisector.md) — git bisect needs
+  [`e2e-flake-bisector`](./e2e-flake-bisector.md) - git bisect needs
   deterministic per-commit verdicts.
 - **Failures that depend on external state** (flaky third-party API,
   clock skew). Bisect may flap-converge on the wrong commit; mock or
   stub the external dependency first.
 - **Performance regressions** below per-commit measurement noise.
-  `bisect run` doesn't repeat each commit N times — use a benchmarking
+  `bisect run` doesn't repeat each commit N times - use a benchmarking
   tool with paired samples instead.
 
 ## References
 
-- [git-bisect][bisect] — canonical workflow, `bisect run` exit codes,
+- [git-bisect][bisect] - canonical workflow, `bisect run` exit codes,
   `git bisect skip`, `--first-parent`, `--term-old/new`.
-- [`e2e-flake-bisector`](./e2e-flake-bisector.md) — for intermittent
+- [`e2e-flake-bisector`](./e2e-flake-bisector.md) - for intermittent
   failures that don't deterministically reproduce per commit.

@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# regression-suite-curator — evals
+# regression-suite-curator - evals
 
 Companion eval cases for [`regression-suite-curator`](../../regression-suite-curator.md).
 Three cases cover happy path / branch / adversarial: a quarterly
@@ -15,7 +15,7 @@ keep/fold/delete decisions). Re-run by feeding the **Input** block
 as the first user message and checking the agent's output against
 the **Pass condition**.
 
-## Eval 1 — happy path — quarterly review with fold + delete candidates
+## Eval 1 - happy path - quarterly review with fold + delete candidates
 
 **Input:**
 
@@ -75,7 +75,7 @@ four conditions hold: zero regressions, redundant coverage from
 ≥3 other tests, no `@critical`, no quality-flag. Output uses the
 "Output format" template with the verdict tables (`keep` / `fold` /
 `delete`) and a `Process` section noting the agent does NOT
-auto-merge. Per Refuse-to-proceed: never auto-merge — always opens
+auto-merge. Per Refuse-to-proceed: never auto-merge - always opens
 for human review.
 
 **Pass condition:** Output contains the literal strings `keep` AND
@@ -85,7 +85,7 @@ candidate), or `payment.spec.ts > stripe_3ds_failure` (a keep
 example). Output also mentions `human review` or `review` (the
 no-auto-merge guarantee from the Process section / Refuse rules).
 
-## Eval 2 — branch — every test passes keep criteria (no fold, no delete)
+## Eval 2 - branch - every test passes keep criteria (no fold, no delete)
 
 **Input:**
 
@@ -115,10 +115,9 @@ Signal history summary (per-test):
 **Expected:** Per Mode 2 every test qualifies for `keep` via at
 least one of the three keep signals. Per Mode 3 no two tests meet
 the fold criteria (same describe + same setup + assertions differ
-only in data) — zero fold candidates. Per Mode 4 no test meets all
+only in data) - zero fold candidates. Per Mode 4 no test meets all
 four delete conditions (because every test has at least one keep
-signal — either regressions caught or @critical or unique coverage)
-— zero delete candidates. Output reports `Suite size before: 312`
+signal - either regressions caught or @critical or unique coverage) - zero delete candidates. Output reports `Suite size before: 312`
 and `Suite size after recommended changes: 312` (no net change).
 Fold-groups table is empty or `None`; Deletes table is empty or
 `None`. The agent does NOT manufacture deletes to look productive.
@@ -128,7 +127,7 @@ indicates zero deletes (e.g., `0 delete` or `No deletes` or
 `Deletes (0)` or `No delete candidates`). Output does NOT contain
 a populated `Deletes` table row with a specific test ID.
 
-## Eval 3 — adversarial — signal-history window too short (refuse)
+## Eval 3 - adversarial - signal-history window too short (refuse)
 
 **Input:**
 
@@ -149,7 +148,7 @@ re-add them if we miss them."
 
 **Expected:** Per Refuse-to-proceed rule "Operate when the
 signal-history window is shorter than 90 days (insufficient
-signal)" — the window is 45 days, well below the 90-day floor.
+signal)" - the window is 45 days, well below the 90-day floor.
 The agent refuses to recommend deletes (and refuses to issue a
 `keep`/`fold`/`delete` decision set), regardless of the team
 lead's "we can always re-add them" framing. Per Limitations,
@@ -159,8 +158,7 @@ data' and recommends starting the history collection." The agent
 recommends continuing to collect history and re-running the
 curation pass after the window crosses 90 days (or sooner if the
 team has a documented exception). May still recommend `fold`
-candidates if structural / AST analysis is independent of history
-— or may defer all decisions.
+candidates if structural / AST analysis is independent of history - or may defer all decisions.
 
 **Pass condition:** Output contains at least one of `insufficient
 data`, `insufficient signal`, `90 days`, `90-day`, or
@@ -171,7 +169,7 @@ deleted.
 
 ## Reproducibility notes
 
-- All three inputs are concrete pasted signal-history summaries —
+- All three inputs are concrete pasted signal-history summaries - 
   no external CI log fetching needed at eval time.
 - Pass conditions are literal-string checks; a reviewer can grep
   the agent's transcript for each substring.

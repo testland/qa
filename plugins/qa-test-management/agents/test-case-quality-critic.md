@@ -25,7 +25,7 @@ The agent takes:
 
 Output: per-case findings + a single repository-level verdict.
 
-## Step 1 — Required-field check
+## Step 1 - Required-field check
 
 Per
 [`test-case-anatomy-reference`](../skills/test-case-anatomy-reference/SKILL.md),
@@ -42,14 +42,13 @@ every case must have:
 | Traceability (refs) | proposed | ✗ (warning) |
 | Severity / priority / type | proposed | ✗ (warning) |
 
-## Step 2 — Step granularity check
+## Step 2 - Step granularity check
 
 For each case's steps:
 
 - One action per step (reject "log in **and** click checkout")
 - Each step has a paired expected result
-- Action verbs concrete ("Click Submit" — yes; "Test the button"
-  — no)
+- Action verbs concrete ("Click Submit" - yes; "Test the button" - no)
 - Step count between 1 and ~15 (more than 15 = case too broad)
 
 ```
@@ -67,7 +66,7 @@ def check_steps(case):
     return issues
 ```
 
-## Step 3 — Title quality
+## Step 3 - Title quality
 
 - Behavioural (states what's verified, not "test X")
 - Single-clause (no `and` joining two unrelated verifications)
@@ -75,7 +74,7 @@ def check_steps(case):
 - Single-description test per
   [`docs/CONTRIBUTING.md`](../../../docs/CONTRIBUTING.md)
 
-## Step 4 — Traceability validity
+## Step 4 - Traceability validity
 
 For each case's `refs` (or platform equivalent):
 
@@ -91,14 +90,14 @@ def check_refs(case, requirements_set):
     return issues
 ```
 
-## Step 5 — Cross-case coverage
+## Step 5 - Cross-case coverage
 
 Run
 [`traceability-matrix-builder`](../skills/traceability-matrix-builder/SKILL.md)
 to identify orphan cases (no refs) and uncovered requirements
 (no cases). Report both.
 
-## Step 6 — Severity / priority sanity
+## Step 6 - Severity / priority sanity
 
 Per
 [`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md):
@@ -107,7 +106,7 @@ Per
 - Severity matches stated impact (a case verifying a critical
   flow should not be Severity = Trivial)?
 
-## Step 7 — Verdict + report
+## Step 7 - Verdict + report
 
 ```markdown
 ## Test-case quality audit — <project> — <date>
@@ -167,12 +166,12 @@ The agent **refuses** to:
 | Skipping ref validation | Stale refs masquerade as coverage | Always resolve refs against the requirements source |
 | Auto-pass cases marked "Draft" | Drafts become permanent without audit | Audit drafts the same way |
 | One-shot audit | Repository drifts | Run weekly via CI |
-| Reporting findings count without context | "100 findings" — meaningless without breakdown | Always categorise critical / warning / info |
+| Reporting findings count without context | "100 findings" - meaningless without breakdown | Always categorise critical / warning / info |
 
 ## Limitations
 
 - **Detection is heuristic.** "Combined action" detection via
-  ` and ` substring is imperfect — sometimes the conjunction is
+  ` and ` substring is imperfect - sometimes the conjunction is
   legitimate ("log in and observe redirect").
 - **Title quality is judgmental.** Single-description test catches
   common smells; doesn't catch all bad titles.
@@ -180,7 +179,7 @@ The agent **refuses** to:
   When the requirements source is unreachable, ref validity skips
   (warn but don't block).
 - **No semantic correctness.** The agent can't tell that a step is
-  *technically incorrect* — only that it's *structurally
+  *technically incorrect* - only that it's *structurally
   malformed*.
 - **No automated remediation.** Reports + recommends; doesn't
   rewrite cases.
@@ -193,5 +192,4 @@ The agent **refuses** to:
 - Composes with:
   [`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md).
 - Sibling-plugin neighbour:
-  [`test-code-critic`](../../../qa-test-review/agents/test-code-critic.md)
-  — different scope (test *code* in repo, not TCM cases).
+  [`test-code-critic`](../../../qa-test-review/agents/test-code-critic.md) - different scope (test *code* in repo, not TCM cases).

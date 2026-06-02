@@ -1,6 +1,6 @@
 ---
 name: persisted-query-strategy-reference
-description: "Pure-reference catalog of GraphQL Persisted Query strategies. Covers Apollo Automatic Persisted Queries (APQ) — the SHA-256 hash protocol, PersistedQueryNotFoundError flow (client retries with full query + hash; server caches), the `extensions.persistedQuery` payload shape, GET-vs-POST + CDN-cache implications, and the strict-allowlist mode (no auto-registration; only pre-registered hashes execute). Differentiates the three operation modes: APQ auto-register (default; permissive), persisted-query-only (allowlist; rejects unknown hashes), and hybrid (allowlist for prod, auto for dev). Use when designing the request layer for a GraphQL server's prod deployment, choosing between size-optimisation and allowlist-enforcement, or auditing an existing persisted-query configuration. Consumed by apollo-server-test, graphql-yoga-test, mercurius-test, pothos-builder-tests."
+description: "Pure-reference catalog of GraphQL Persisted Query strategies. Covers Apollo Automatic Persisted Queries (APQ) - the SHA-256 hash protocol, PersistedQueryNotFoundError flow (client retries with full query + hash; server caches), the `extensions.persistedQuery` payload shape, GET-vs-POST + CDN-cache implications, and the strict-allowlist mode (no auto-registration; only pre-registered hashes execute). Differentiates the three operation modes: APQ auto-register (default; permissive), persisted-query-only (allowlist; rejects unknown hashes), and hybrid (allowlist for prod, auto for dev). Use when designing the request layer for a GraphQL server's prod deployment, choosing between size-optimisation and allowlist-enforcement, or auditing an existing persisted-query configuration. Consumed by apollo-server-test, graphql-yoga-test, mercurius-test, pothos-builder-tests."
 rating: 23
 d6: 4
 archetype: S2
@@ -19,8 +19,8 @@ hash)."
 
 Two motivations, often conflated:
 
-1. **Performance** — smaller payloads, GET-cacheable on CDNs.
-2. **Security** — allowlist enforcement; only registered queries
+1. **Performance** - smaller payloads, GET-cacheable on CDNs.
+2. **Security** - allowlist enforcement; only registered queries
    execute (which mitigates the introspection-attack surface per
    [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md)).
 
@@ -31,7 +31,7 @@ Consumed by per-framework test authors.
 
 - Designing the GraphQL request layer for a new production
   service.
-- Auditing an existing APQ configuration — is it allowlist-mode
+- Auditing an existing APQ configuration - is it allowlist-mode
   or auto-register-mode?
 - Investigating CDN-cache hit-rate or payload-size issues.
 - PR review of changes to the persisted-query setup.
@@ -65,7 +65,7 @@ Apollo's example: `{ __typename }` hashes to
 
 ## The three modes
 
-### Mode 1 — APQ auto-register (default, permissive)
+### Mode 1 - APQ auto-register (default, permissive)
 
 ```js
 const server = new ApolloServer({
@@ -92,12 +92,12 @@ const server = new ApolloServer({
 - CDN-cacheable GETs (per Apollo: "When configured with
   `useGETForHashedQueries: true`, queries become GET requests
   that CDNs can cache").
-- **No allowlist enforcement** — any client can register any
+- **No allowlist enforcement** - any client can register any
   query.
 
 **Best for:** performance optimisation; not a security control.
 
-### Mode 2 — Persisted-query-only (allowlist, strict)
+### Mode 2 - Persisted-query-only (allowlist, strict)
 
 ```js
 const server = new ApolloServer({
@@ -141,7 +141,7 @@ app (web / mobile).
 internal Postman collections). Mitigate via a separate
 admin-only endpoint, or a long-lived admin token that bypasses.
 
-### Mode 3 — Hybrid (allowlist prod, auto-register dev)
+### Mode 3 - Hybrid (allowlist prod, auto-register dev)
 
 ```js
 const server = new ApolloServer({
@@ -155,7 +155,7 @@ const server = new ApolloServer({
 ```
 
 Best of both: dev gets the iteration speed of auto-register;
-prod gets the allowlist. **Risk:** config drift — staging may use
+prod gets the allowlist. **Risk:** config drift - staging may use
 dev settings.
 
 ## Implementation patterns
@@ -177,7 +177,7 @@ const link = createPersistedQueryLink({
 const client = new ApolloClient({ link, cache: new InMemoryCache() });
 ```
 
-`useGETForHashedQueries` is the CDN-cache lever — without it,
+`useGETForHashedQueries` is the CDN-cache lever - without it,
 POST requests aren't cacheable by most CDNs.
 
 ### Generating a manifest for strict mode

@@ -1,6 +1,6 @@
 ---
 name: liquibase-migrations
-description: "Authors and runs Liquibase database migrations — changelog-driven schema management with changesets in XML / YAML / JSON / SQL formats; supports `liquibase update` / `status` / `rollback` / `tag` / `history` lifecycle; offers per-changeset preconditions, contexts and labels for selective execution, and rollback semantics; tracks state in `DATABASECHANGELOG` + `DATABASECHANGELOGLOCK` tables. Use when the user works with Liquibase-managed schemas (Spring Boot heritage, polyglot DB shops), needs cross-DBMS portable migrations, or requires fine-grained rollback control."
+description: "Authors and runs Liquibase database migrations - changelog-driven schema management with changesets in XML / YAML / JSON / SQL formats; supports `liquibase update` / `status` / `rollback` / `tag` / `history` lifecycle; offers per-changeset preconditions, contexts and labels for selective execution, and rollback semantics; tracks state in `DATABASECHANGELOG` + `DATABASECHANGELOGLOCK` tables. Use when the user works with Liquibase-managed schemas (Spring Boot heritage, polyglot DB shops), needs cross-DBMS portable migrations, or requires fine-grained rollback control."
 rating: 22
 d6: 4
 archetype: S1
@@ -18,16 +18,15 @@ Per [github.com/liquibase/liquibase][lb-gh]:
 > deploy database schema changes."
 
 Liquibase's distinguishing feature vs Flyway: changesets are
-**format-portable** (XML / YAML / JSON / SQL) and **rollback-aware**
-— each changeset declares its own rollback action, enabling
+**format-portable** (XML / YAML / JSON / SQL) and **rollback-aware** - each changeset declares its own rollback action, enabling
 deterministic per-changeset rollback rather than versioned-only
 migration replay.
 
 State tracked in two tables (per Liquibase docs):
 
-- `DATABASECHANGELOG` — applied changeset history (id + author +
+- `DATABASECHANGELOG` - applied changeset history (id + author +
   filename + dateExecuted + checksum)
-- `DATABASECHANGELOGLOCK` — distributed lock to serialize concurrent
+- `DATABASECHANGELOGLOCK` - distributed lock to serialize concurrent
   `update` runs
 
 ## When to use
@@ -40,7 +39,7 @@ State tracked in two tables (per Liquibase docs):
 - Per-changeset rollback support is required (vs Flyway's
   whole-version rollback).
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [lb-gh][lb-gh] the documented quickstart:
 
@@ -62,12 +61,12 @@ docker run --rm -v "$PWD/changelog:/liquibase/changelog" \
   update
 ```
 
-Maven dependency / Gradle plugin available for in-build invocation —
+Maven dependency / Gradle plugin available for in-build invocation - 
 consult [docs.liquibase.com][lb-docs].
 
 [lb-docs]: https://docs.liquibase.com/
 
-## Step 2 — Changelog + changeset basics
+## Step 2 - Changelog + changeset basics
 
 A `changelog` is a file (or set of included files) containing one or
 more `changeset` entries. Each changeset has an `id` + `author` (these
@@ -108,11 +107,11 @@ databaseChangeLog:
         - dropColumn: { tableName: users, columnName: created_at }
 ```
 
-Equivalent forms in XML / JSON / SQL exist — pick by team
+Equivalent forms in XML / JSON / SQL exist - pick by team
 preference; they're functionally equivalent at apply time. (Per
 [lb-docs][lb-docs] for format-specific syntax.)
 
-## Step 3 — Core commands
+## Step 3 - Core commands
 
 Per [lb-gh][lb-gh] and Liquibase command reference:
 
@@ -127,7 +126,7 @@ Per [lb-gh][lb-gh] and Liquibase command reference:
 | `liquibase changelog-sync` | Mark all pending changesets as applied without running them (legacy adoption) |
 | `liquibase validate` | Check changelog syntax + checksums |
 
-## Step 4 — Preconditions
+## Step 4 - Preconditions
 
 Changesets can declare preconditions that must hold before they're
 applied (or the changeset is skipped / failed):
@@ -149,10 +148,10 @@ Common precondition predicates: `tableExists`, `columnExists`,
 `changeSetExecuted`, `dbms` (e.g., only-on-postgresql),
 `primaryKeyExists`, `sqlCheck` (custom SQL returning a single value).
 
-`onFail` / `onError` actions: `HALT` (default — fails the run),
+`onFail` / `onError` actions: `HALT` (default - fails the run),
 `CONTINUE`, `MARK_RAN`, `WARN`.
 
-## Step 5 — Contexts and labels
+## Step 5 - Contexts and labels
 
 Selective changeset execution per environment / feature:
 
@@ -173,7 +172,7 @@ liquibase update --contexts="dev,test"
 liquibase update --label-filter="!experimental"  # exclude experimental
 ```
 
-## Step 6 — Include + includeAll for splitting changelogs
+## Step 6 - Include + includeAll for splitting changelogs
 
 Master changelog references file groups (per [docs.liquibase.com/concepts/changelogs][lb-cl]):
 
@@ -189,7 +188,7 @@ databaseChangeLog:
 The `includeAll` orders files alphabetically; use prefixes
 (`001-users.yaml`, `002-orders.yaml`) to enforce order.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 - run: docker run --rm --network=host \
@@ -205,10 +204,10 @@ The `includeAll` orders files alphabetically; use prefixes
 Per `qa-test-environment/testcontainers` skill, ephemeral DB +
 liquibase update is the standard pattern.
 
-## Step 8 — Composition with sister tools
+## Step 8 - Composition with sister tools
 
 Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-for adversarial review of new changesets — classifies as
+for adversarial review of new changesets - classifies as
 additive / breaking / data-loss / locking; estimates downtime.
 
 ## Anti-patterns
@@ -226,7 +225,7 @@ additive / breaking / data-loss / locking; estimates downtime.
 - Per-changeset rollback only works if every author writes the
   rollback section; OSS Liquibase doesn't auto-generate them for
   most change types.
-- Cross-DBMS portability of changesets has limits — DBMS-specific
+- Cross-DBMS portability of changesets has limits - DBMS-specific
   syntax (e.g., Postgres JSONB columns) requires `dbms` precondition
   + per-DBMS variants.
 - The `DATABASECHANGELOGLOCK` table can deadlock if a previous run
@@ -238,13 +237,12 @@ additive / breaking / data-loss / locking; estimates downtime.
 
 ## References
 
-- [lb-gh][lb-gh] — repository, install, supported databases
-- [lb-cl][lb-cl] — changelog concept page
-- [lb-docs][lb-docs] — full documentation
+- [lb-gh][lb-gh] - repository, install, supported databases
+- [lb-cl][lb-cl] - changelog concept page
+- [lb-docs][lb-docs] - full documentation
 - [`flyway-migrations`](../flyway-migrations/SKILL.md),
   [`atlas-migrations`](../atlas-migrations/SKILL.md),
-  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) — sister
+  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
   tools (Flyway = SQL-first versioned; Atlas = declarative HCL;
   SQLMesh = data-pipeline + schema)
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-  — adversarial reviewer
+- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer

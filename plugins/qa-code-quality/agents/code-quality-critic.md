@@ -34,7 +34,7 @@ The agent takes:
 Output: deduped finding list + verdict (✅ ready / 🟡 needs-work /
 ❌ blocked) + ratchet recommendation.
 
-## Step 1 — Verify scope is production-only
+## Step 1 - Verify scope is production-only
 
 qa-code-quality scopes production code only.
 Test files are owned by `qa-test-review`. Refuse to run if any
@@ -57,7 +57,7 @@ jq '.excludeRegExp' .madgerc | grep -qE 'test|spec' || \
 If warnings appear, **return early** with a config-fix recommendation
 before producing findings.
 
-## Step 2 — Dedupe across tools
+## Step 2 - Dedupe across tools
 
 Same function flagged by multiple tools = one finding (with all
 sources cited). Common overlaps:
@@ -72,7 +72,7 @@ sources cited). Common overlaps:
 Dedupe key: `(file, function/symbol, finding_category)`. Cite all
 flagging tools in the merged finding.
 
-## Step 3 — Classify net debt change
+## Step 3 - Classify net debt change
 
 Per Sonar Way new-code Quality Gate logic + the diff-scope analyzers
 in Qlty/Knip, separate findings into three buckets:
@@ -86,19 +86,19 @@ in Qlty/Knip, separate findings into three buckets:
 **Refusal rule:** if `count(Net new) > count(Removed by PR)`, verdict
 is ❌ blocked.
 
-## Step 4 — Per-finding severity rubric
+## Step 4 - Per-finding severity rubric
 
 | Severity | Examples |
 |---|---|
 | **Blocker** | Madge circular dep that wasn't in baseline; Knip new unused dependency in `dependencies:` (not `devDependencies:`) |
 | **Critical** | Lizard CCN ≥ 30; SonarQube Bug + Reliability Rating drops to D/E |
-| **Major** | Lizard CCN 15–29; new Code Smell on touched file; new dead export |
+| **Major** | Lizard CCN 15 - 29; new Code Smell on touched file; new dead export |
 | **Minor** | Style smells; duplication < 5 lines |
 
 Blocker + Critical = block merge. Major = require justification or
 ratchet ticket. Minor = advisory.
 
-## Step 5 — Ratchet vs fix-now
+## Step 5 - Ratchet vs fix-now
 
 For each Major+ finding on a touched-but-not-introduced line:
 
@@ -114,7 +114,7 @@ This is a "ratcheting up" of existing debt. Block merge unless:
 - (b) Ticket created with `Reason:` + `Approved-by:` + `Re-review-date:` + `expires:` per the standard waiver template.
 ```
 
-## Step 6 — Emit verdict block
+## Step 6 - Emit verdict block
 
 ```markdown
 ## Code quality review — `<sha>` vs `main`
@@ -156,7 +156,7 @@ This is a "ratcheting up" of existing debt. Block merge unless:
 3. Delete `legacy-helper.ts` (no consumers).
 ```
 
-## Step 7 — Refuse-to-proceed rules
+## Step 7 - Refuse-to-proceed rules
 
 Refuse to verdict ✅ ready if:
 
@@ -179,7 +179,7 @@ Refuse to verdict ✅ ready if:
 
 ## Examples
 
-### Example 1 — Refactor PR (good case)
+### Example 1 - Refactor PR (good case)
 
 ```
 Net new: 0 findings
@@ -189,7 +189,7 @@ Inherited: unchanged
 Verdict: ✅ READY — net debt reduced by 2 Major findings.
 ```
 
-### Example 2 — Feature PR (block case)
+### Example 2 - Feature PR (block case)
 
 ```
 Net new: 1 Critical (new circular dep), 2 Major (high CCN)
@@ -200,7 +200,7 @@ Verdict: ❌ BLOCK — 1 net-new Critical.
 Action: break the circular dep via interface extraction; resubmit.
 ```
 
-### Example 3 — Tactical hot-fix (ratchet case)
+### Example 3 - Tactical hot-fix (ratchet case)
 
 ```
 Net new: 1 Major (CCN 14 in new function — under threshold but worth tracking)
@@ -217,7 +217,7 @@ PR description must cite ticket ID + approver before merge.
   [`codeclimate-config`](../skills/codeclimate-config/SKILL.md),
   [`lizard-complexity`](../skills/lizard-complexity/SKILL.md),
   [`madge-deps`](../skills/madge-deps/SKILL.md),
-  [`knip-dead-code`](../skills/knip-dead-code/SKILL.md) — preloaded
+  [`knip-dead-code`](../skills/knip-dead-code/SKILL.md) - preloaded
   sister skills providing per-tool report formats
 - Sonar Way Quality Gate (new-code conditions) per
   https://docs.sonarsource.com/sonarqube-server/user-guide/issues/introduction.md

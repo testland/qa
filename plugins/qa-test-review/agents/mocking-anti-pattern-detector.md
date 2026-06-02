@@ -1,6 +1,6 @@
 ---
 name: mocking-anti-pattern-detector
-description: "Adversarial reviewer specialized for mocking patterns — flags over-mocking (mocking what the team owns when state verification would do), mock chains (`when(a.method()).thenReturn(when(b.x).thenReturn(...))` style coupling), behavior-verification leakage (asserting which methods were called instead of asserting on the SUT''''s resulting state), and mocking what the team doesn''''t own (third-party libraries / framework internals). Per Fowler''''s classical (Detroit) school: prefer state verification; fakes over mocks for stateful collaborators. Use during PR review against test files."
+description: "Adversarial reviewer specialized for mocking patterns - flags over-mocking (mocking what the team owns when state verification would do), mock chains (`when(a.method()).thenReturn(when(b.x).thenReturn(...))` style coupling), behavior-verification leakage (asserting which methods were called instead of asserting on the SUT''''s resulting state), and mocking what the team doesn''''t own (third-party libraries / framework internals). Per Fowler''''s classical (Detroit) school: prefer state verification; fakes over mocks for stateful collaborators. Use during PR review against test files."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
@@ -23,7 +23,7 @@ Per [`test-code-conventions`](../skills/test-code-conventions/SKILL.md)
 
 This agent flags violations of all three across the PR's test diff.
 
-## Step 1 — Identify test doubles
+## Step 1 - Identify test doubles
 
 The agent recognizes per-framework mocking primitives:
 
@@ -37,7 +37,7 @@ The agent recognizes per-framework mocking primitives:
 | RSpec mocks           | `double(...)`, `instance_double(...)`, `allow(...).to receive(...)` |
 | testify mock (Go)     | `mock.On(...).Return(...)`                                       |
 
-## Step 2 — Detect over-mocking (Rule 1)
+## Step 2 - Detect over-mocking (Rule 1)
 
 Per [mocks-stubs][ms]:
 
@@ -48,7 +48,7 @@ Per [mocks-stubs][ms]:
 
 Heuristic: a test that creates a mock and then asserts on the
 SUT's resulting state (not on what was called on the mock) doesn't
-need a mock — a stub or fake would do. Flag mocks where the
+need a mock - a stub or fake would do. Flag mocks where the
 assertions don't verify the mock's call history.
 
 ```typescript
@@ -61,7 +61,7 @@ expect(cart.itemCount).toBe(1);   // state assertion, not behavior
 // Recommendation: replace mockLogger with a no-op stub.
 ```
 
-## Step 3 — Detect behavior-verification leakage (Rule 1)
+## Step 3 - Detect behavior-verification leakage (Rule 1)
 
 Asserting on **which methods were called** instead of on the SUT's
 **state**:
@@ -89,7 +89,7 @@ expect(mockGateway.parse).toHaveBeenCalled();
 Tests that re-implement the production-code dispatch pattern in
 their assertions are coupled to **how**, not **what**.
 
-## Step 4 — Detect mock chains (Rule 1 + readability)
+## Step 4 - Detect mock chains (Rule 1 + readability)
 
 Per §5 anti-pattern: nested `when()` / `thenReturn()` / `thenAnswer()`
 chains where the test sets up a deep tree of mock responses.
@@ -110,7 +110,7 @@ Recommendation: the deep chain is a smell that the team is testing
 through the wrong abstraction layer. Test at the boundary, not at
 the leaf.
 
-## Step 5 — Detect mocking-what-you-don't-own (Rule 2)
+## Step 5 - Detect mocking-what-you-don't-own (Rule 2)
 
 Heuristic: detect mocks of imported third-party modules vs imports
 from the team's own packages.
@@ -136,7 +136,7 @@ own. Prefer (a) writing an adapter the team owns and mocking the
 adapter, or (b) writing a contract test against the real boundary
 via [`pact-contract-testing`](../../qa-contract-testing/skills/pact-contract-testing/SKILL.md)."
 
-## Step 6 — Recommend fakes over mocks (Rule 3)
+## Step 6 - Recommend fakes over mocks (Rule 3)
 
 For state-bearing collaborators (DBs, file systems, clocks,
 caches), the agent flags mock usage and recommends a fake
@@ -236,9 +236,9 @@ The agent **refuses** to:
 
 - Auto-rewrite mock setups. Recommendation only.
 - Flag tests that legitimately verify side effects (audit log
-  events, queue messages emitted) as "behavior leakage" — those
+  events, queue messages emitted) as "behavior leakage" - those
   are the cases where behavior verification is correct.
-- Operate on tests in `tests/contract/` paths — contract tests
+- Operate on tests in `tests/contract/` paths - contract tests
   legitimately use the patterns this agent flags as anti-patterns
   (the patterns ARE the contract).
 - Flag the use of [`@vi.fn()` / `jest.fn()`] in factory test
@@ -287,11 +287,11 @@ The agent **refuses** to:
 
 ## References
 
-- [mocks-stubs][ms] — Martin Fowler on test-double taxonomy +
+- [mocks-stubs][ms] - Martin Fowler on test-double taxonomy +
   state-vs-behavior verification + classical-vs-mockist schools;
   the foundation §5 of `test-code-conventions` cites.
 - [`test-code-conventions`](../skills/test-code-conventions/SKILL.md)
-  §5 — the convention rules this agent enforces.
+  §5 - the convention rules this agent enforces.
 - Sibling agents: [`test-code-critic`](test-code-critic.md),
   [`assertion-quality-reviewer`](assertion-quality-reviewer.md),
   [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md).

@@ -1,6 +1,6 @@
 ---
 name: sonarqube-rules
-description: "Configures and runs SonarQube / SonarCloud — multi-language SAST + Quality Gate platform with built-in Sonar Way rule profiles + custom rule plugins; integrates `sonar-scanner` with `sonar-project.properties` config; supports Quality Gate definitions including new-code-period blocking, branch + PR analysis, and per-issue suppression via `// NOSONAR` comment or `@SuppressWarnings(\"squid:RULE_ID\")` annotation. Use when the user runs SonarQube Community / Developer / Enterprise edition or SonarCloud, or needs a multi-language SAST + code-quality platform with persistent issue tracking."
+description: "Configures and runs SonarQube / SonarCloud - multi-language SAST + Quality Gate platform with built-in Sonar Way rule profiles + custom rule plugins; integrates `sonar-scanner` with `sonar-project.properties` config; supports Quality Gate definitions including new-code-period blocking, branch + PR analysis, and per-issue suppression via `// NOSONAR` comment or `@SuppressWarnings(\"squid:RULE_ID\")` annotation. Use when the user runs SonarQube Community / Developer / Enterprise edition or SonarCloud, or needs a multi-language SAST + code-quality platform with persistent issue tracking."
 rating: 22
 d6: 4
 archetype: S1
@@ -19,16 +19,16 @@ Per [github.com/SonarSource/sonarqube][sq-gh]:
 
 The platform's distinguishing features vs Semgrep / CodeQL:
 
-- **Quality Gate** — pass/fail decision based on configurable
+- **Quality Gate** - pass/fail decision based on configurable
   threshold conditions (coverage on new code, duplication, security
   hotspots reviewed, maintainability rating, etc.).
-- **New-code-period** — issues are categorized as "new code" vs
+- **New-code-period** - issues are categorized as "new code" vs
   "overall code"; gates focus on new-code metrics so legacy debt
   doesn't block deploys.
-- **Persistent issue tracking** — server-side storage of issues
+- **Persistent issue tracking** - server-side storage of issues
   across scans; status workflow (open / confirmed / resolved / false
   positive / won't fix).
-- **Cross-language coverage** — 30+ languages with one tool +
+- **Cross-language coverage** - 30+ languages with one tool +
   unified UI.
 
 ## When to use
@@ -43,7 +43,7 @@ For new projects without a SonarQube investment, evaluate
 [`semgrep-rules`](../semgrep-rules/SKILL.md) (lower friction; no
 server) first.
 
-## Step 1 — Install (server side)
+## Step 1 - Install (server side)
 
 Per [docs.sonarsource.com/sonarqube-server][sq-docs]:
 
@@ -61,7 +61,7 @@ For production, consult [sq-docs][sq-docs] for Postgres + JVM
 sizing + reverse-proxy configuration. Default admin: `admin` /
 `admin` (change immediately).
 
-## Step 2 — sonar-scanner CLI
+## Step 2 - sonar-scanner CLI
 
 Download from [docs.sonarsource.com/sonarqube-server][sq-docs] →
 "Analysis scanners". Place on PATH.
@@ -77,7 +77,7 @@ sonar-scanner \
 For Maven / Gradle / .NET, use the language-native scanner plugin
 (`mvn sonar:sonar` / `./gradlew sonar` / `dotnet sonarscanner`).
 
-## Step 3 — `sonar-project.properties` config
+## Step 3 - `sonar-project.properties` config
 
 Project-root file replaces `-D` flags:
 
@@ -101,9 +101,9 @@ sonar.qualitygate.wait=true
 ```
 
 `sonar.qualitygate.wait=true` makes the scanner block until the
-gate decision is computed — critical for CI gating.
+gate decision is computed - critical for CI gating.
 
-## Step 4 — Quality Gate concept
+## Step 4 - Quality Gate concept
 
 The default "Sonar Way" gate enforces (consult your SonarQube UI
 at `Quality Gates → Sonar Way` for current conditions):
@@ -118,7 +118,7 @@ at `Quality Gates → Sonar Way` for current conditions):
 Custom gates can be defined via UI or REST API
 (`/api/qualitygates/create`).
 
-## Step 5 — Branch + PR analysis
+## Step 5 - Branch + PR analysis
 
 For PR analysis (Developer edition+):
 
@@ -132,7 +132,7 @@ sonar-scanner \
 PR results post as comments to GitHub / GitLab / Bitbucket per
 the integration setup in SonarQube admin.
 
-## Step 6 — False-positive triage (MANDATORY)
+## Step 6 - False-positive triage (MANDATORY)
 
 Three suppression layers in priority order:
 
@@ -153,14 +153,14 @@ System.out.println(message);
 ```
 
 Server-side resolution requires a comment per SonarQube workflow
-config — make it mandatory in admin settings (`Administration →
+config - make it mandatory in admin settings (`Administration →
 Configuration → Issues → Comment required to set status`).
 
 Cadence: `Issues → False Positive` filter periodically; review for
-expiration. Server-side resolutions are persistent and auditable —
+expiration. Server-side resolutions are persistent and auditable - 
 the audit trail is the value over Semgrep's per-comment approach.
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -179,10 +179,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 ```
 
-`fetch-depth: 0` is critical — without full git history, new-code-period
+`fetch-depth: 0` is critical - without full git history, new-code-period
 detection is broken.
 
-## Step 8 — REST API integration
+## Step 8 - REST API integration
 
 For automation / dashboards:
 
@@ -209,26 +209,24 @@ API token via `User → My Account → Security → Generate Tokens`.
 
 - SonarQube server requires hosting + maintenance; SonarCloud is
   the SaaS alternative.
-- Branch + PR analysis are Developer-edition+ features — Community
+- Branch + PR analysis are Developer-edition+ features - Community
   edition only supports main branch.
 - Some language-specific deep-rule features require Developer or
   Enterprise edition.
 - New-code-period requires accurate git history; shallow clones
   break it.
-- License changed from LGPL to SSPL in 2024 — verify license
+- License changed from LGPL to SSPL in 2024 - verify license
   compatibility for commercial use.
 
 ## References
 
-- [sq-gh][sq-gh] — repository
-- [sq-docs][sq-docs] — official SonarQube documentation root
-- docs.sonarsource.com/sonarqube-server/latest/user-guide/quality-gates
-  — Quality Gates user guide
-- docs.sonarsource.com/sonarqube-server/latest/user-guide/issues
-  — Issue workflow + transitions
+- [sq-gh][sq-gh] - repository
+- [sq-docs][sq-docs] - official SonarQube documentation root
+- docs.sonarsource.com/sonarqube-server/latest/user-guide/quality-gates - Quality Gates user guide
+- docs.sonarsource.com/sonarqube-server/latest/user-guide/issues - Issue workflow + transitions
 - [`semgrep-rules`](../semgrep-rules/SKILL.md),
   [`codeql-queries`](../codeql-queries/SKILL.md),
   [`bandit-python`](../bandit-python/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) — sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) —
+  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
   unifier agent

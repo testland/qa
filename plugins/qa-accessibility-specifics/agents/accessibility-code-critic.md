@@ -1,6 +1,6 @@
 ---
 name: accessibility-code-critic
-description: "Adversarial reviewer of one component's source code for WCAG 2.2 violations — reads the JSX / template / CSS, hunts for `<div onclick>`, missing focus management, color-only state cues, mishandled ARIA, missing label associations, and other anti-patterns from the four WCAG / ARIA reference skills, and produces a per-finding report with WCAG SC citation plus concrete remediation. Use proactively in PR review of any UI component, especially custom interactive widgets."
+description: "Adversarial reviewer of one component's source code for WCAG 2.2 violations - reads the JSX / template / CSS, hunts for `<div onclick>`, missing focus management, color-only state cues, mishandled ARIA, missing label associations, and other anti-patterns from the four WCAG / ARIA reference skills, and produces a per-finding report with WCAG SC citation plus concrete remediation. Use proactively in PR review of any UI component, especially custom interactive widgets."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
@@ -18,7 +18,7 @@ A skeptical accessibility reviewer that finds the WCAG 2.2 violations a hand-rol
 ## Why adversarial
 
 A11y bugs are rarely caught by a friendly review pass: the reviewer
-trusts the author's intent. The bugs are systemic patterns — `<div
+trusts the author's intent. The bugs are systemic patterns - `<div
 onclick>` instead of `<button>`, `outline: none` without a
 replacement, `aria-hidden` on focusable elements. Adversarial
 framing is the lever: assume the worst, then verify each suspicion.
@@ -32,7 +32,7 @@ The agent works from the four WCAG / ARIA reference skills:
 
 ## When invoked
 
-1. Read the component's source — JSX / Vue / Svelte / Angular
+1. Read the component's source - JSX / Vue / Svelte / Angular
    template, plus the CSS / Tailwind classes.
 2. Read the matching test file and any storybook story to
    understand intended interaction.
@@ -235,9 +235,9 @@ Hand off to:
 
 ## References
 
-- W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/
+- W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - All four sibling reference skills (frontmatter `skills:`).
 - [`axe-a11y`](../skills/axe-a11y/SKILL.md),
   [`pa11y-a11y`](../skills/pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../skills/lighthouse-a11y/SKILL.md) —
+  [`lighthouse-a11y`](../skills/lighthouse-a11y/SKILL.md) - 
   runtime scanners that complement static review.

@@ -1,6 +1,6 @@
 ---
 name: sfdpot-heuristic
-description: "Pure-reference catalog of James Bach's SFDPOT heuristic — 'San Francisco Depot' — a 'you are here' framework that catalogues what a tester can vary in a system to find bugs. Six dimensions: Structure, Function, Data, Platform, Operations, Time. Use as a what-to-vary checklist during an exploratory session, complementing HICCUPPS-F (which catalogues what to compare against)."
+description: "Pure-reference catalog of James Bach's SFDPOT heuristic - 'San Francisco Depot' - a 'you are here' framework that catalogues what a tester can vary in a system to find bugs. Six dimensions: Structure, Function, Data, Platform, Operations, Time. Use as a what-to-vary checklist during an exploratory session, complementing HICCUPPS-F (which catalogues what to compare against)."
 rating: 24
 d6: 4
 archetype: S2
@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-SFDPOT is James Bach's "San Francisco Depot" heuristic — a
+SFDPOT is James Bach's "San Francisco Depot" heuristic - a
 catalogue of **what can be varied** during testing. Published at
 [satisfice.com](https://www.satisfice.com/heuristics-of-software-testability)
 and in James Bach's testing-curriculum materials.
@@ -29,14 +29,14 @@ and by testers mid-session.
 
 - Authoring a charter: pick which SFDPOT dimensions the session
   should vary.
-- Mid-session: tester feels stuck — walk SFDPOT for new ideas of
+- Mid-session: tester feels stuck - walk SFDPOT for new ideas of
   what to vary.
 - Bug-bashing: assign different dimensions to different testers
   so coverage spreads.
 
 ## The six dimensions
 
-### S — Structure
+### S - Structure
 
 > What can I vary about how the system is **built**?
 
@@ -53,7 +53,7 @@ A "Structure" exploration might toggle internal options, route
 through a non-standard code path, or inspect how the system behaves
 under a non-default build.
 
-### F — Function
+### F - Function
 
 > What can I vary about what the system **does**?
 
@@ -64,10 +64,10 @@ The feature surface area. Includes:
 - Error / recovery paths (what happens when X fails?)
 - Boundary / edge functions (cancel, undo, redo, rollback)
 
-A "Function" exploration runs each function — and especially
-combinations — that the test plan didn't enumerate.
+A "Function" exploration runs each function - and especially
+combinations - that the test plan didn't enumerate.
 
-### D — Data
+### D - Data
 
 > What can I vary about the **values** the system handles?
 
@@ -80,11 +80,11 @@ The input + state space. Includes:
 - Data corruption (truncated, malformed, missing fields)
 - Special values (null, undefined, NaN, Infinity)
 
-A "Data" exploration feeds pathological inputs — see
+A "Data" exploration feeds pathological inputs - see
 [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md)
 for canonical payloads.
 
-### P — Platform
+### P - Platform
 
 > What can I vary about the **environment** the system runs on?
 
@@ -101,14 +101,14 @@ A "Platform" exploration tests across the matrix. Compose with
 [`qa-compatibility`](../../../qa-compatibility/) for systematic
 matrix testing.
 
-### O — Operations
+### O - Operations
 
 > What can I vary about **how the system is used**?
 
 User behaviour patterns. Includes:
 
 - User workflows (paths through the UI / API)
-- Tasks (the user's actual goals — see ISTQB use-case)
+- Tasks (the user's actual goals - see ISTQB use-case)
 - User skill levels (novice vs expert pacing, undo + redo
   frequency)
 - Concurrency (single user vs many, simultaneous edits)
@@ -117,7 +117,7 @@ User behaviour patterns. Includes:
 An "Operations" exploration simulates real user workflows rather
 than test scripts.
 
-### T — Time
+### T - Time
 
 > What can I vary about **when / for how long** things happen?
 
@@ -131,13 +131,13 @@ Temporal dimensions. Includes:
 - Cache TTLs (just expired vs just refreshed)
 - Session timeouts (just before expiry, at expiry, after expiry)
 
-A "Time" exploration is the hardest to plan — many time-related
+A "Time" exploration is the hardest to plan - many time-related
 bugs require deliberate clock manipulation. See
 [`qa-time-and-timezones`](../../../qa-time-and-timezones/) for
-clock-mocking tooling (Tier 2 ROADMAP — not yet shipped at this
+clock-mocking tooling (Tier 2 ROADMAP - not yet shipped at this
 writing).
 
-## Worked example — applying SFDPOT to a checkout charter
+## Worked example - applying SFDPOT to a checkout charter
 
 Charter: "Explore the checkout flow to discover bugs."
 
@@ -173,7 +173,7 @@ page."
 | **CRUSSPIC-STMPL** | Quality **criteria** to evaluate against |
 | **Tours (Whittaker)** | Themed exploration **missions** |
 
-They're complementary, not competing — a strong session uses
+They're complementary, not competing - a strong session uses
 multiple. Bach + Bolton's
 *Rapid Software Testing* curriculum teaches all of them as a
 toolkit.
@@ -192,7 +192,7 @@ toolkit.
 
 - **Heuristic, not exhaustive.** Bugs can hide in dimensions
   SFDPOT doesn't enumerate (cross-cutting concerns like security,
-  observability) — those have their own heuristic catalogs.
+  observability) - those have their own heuristic catalogs.
 - **Requires deliberate practice.** A new tester walks SFDPOT
   mechanically; an experienced one fluently considers each
   dimension in seconds.
@@ -202,11 +202,11 @@ toolkit.
 
 ## References
 
-- Bach J. *Heuristics of Software Testability* —
+- Bach J. *Heuristics of Software Testability* - 
   [satisfice.com/heuristics-of-software-testability](https://www.satisfice.com/heuristics-of-software-testability).
-- Bach J. + Bolton M. *Rapid Software Testing* curriculum —
+- Bach J. + Bolton M. *Rapid Software Testing* curriculum - 
   [satisfice.com/rapid-software-testing](https://www.satisfice.com/rapid-software-testing).
-- Bolton M. *San Francisco Depot* —
+- Bolton M. *San Francisco Depot* - 
   [developsense.com](https://developsense.com/).
 - Sibling references:
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),

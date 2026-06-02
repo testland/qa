@@ -1,6 +1,6 @@
 ---
 name: selenium-testing
-description: "Authors Selenium WebDriver tests in any of its 6+ supported languages (Java, Python, JavaScript, C#, Ruby, Kotlin, PHP) — picks the appropriate language binding, configures WebDriver per browser, uses `By.*` locators with the team's accessibility-first preference where supported, runs locally + via Selenium Grid for distributed execution, parses results to JUnit XML. Use for legacy Selenium-locked stacks; new projects pick Playwright or Cypress."
+description: "Authors Selenium WebDriver tests in any of its 6+ supported languages (Java, Python, JavaScript, C#, Ruby, Kotlin, PHP) - picks the appropriate language binding, configures WebDriver per browser, uses `By.*` locators with the team's accessibility-first preference where supported, runs locally + via Selenium Grid for distributed execution, parses results to JUnit XML. Use for legacy Selenium-locked stacks; new projects pick Playwright or Cypress."
 rating: 22
 d6: 3
 archetype: S1
@@ -13,7 +13,7 @@ archetype: S1
 Selenium WebDriver is the long-standing W3C-standard browser
 automation protocol. It predates Playwright and Cypress and has
 the broadest language support: Java, Python, JavaScript, C#,
-Ruby, Kotlin, PHP — all official.
+Ruby, Kotlin, PHP - all official.
 
 Selenium 4 (2021) introduced relative locators and a more
 modern API; Selenium 4 IDE replaces the old Selenium IDE for
@@ -31,7 +31,7 @@ record-and-playback.
 For new projects in 2026+: pick Playwright or Cypress unless
 constraints dictate Selenium.
 
-## Step 1 — Install (Java + JUnit example)
+## Step 1 - Install (Java + JUnit example)
 
 ```xml
 <!-- pom.xml -->
@@ -52,7 +52,7 @@ constraints dictate Selenium.
 WebDriverManager handles browser-driver download (saves the
 "download chromedriver.exe" step).
 
-## Step 2 — Author a test (Java)
+## Step 2 - Author a test (Java)
 
 ```java
 import org.junit.jupiter.api.*;
@@ -106,7 +106,7 @@ class CheckoutTest {
 }
 ```
 
-## Step 3 — Locator strategies
+## Step 3 - Locator strategies
 
 | Strategy             | When                                         |
 |----------------------|----------------------------------------------|
@@ -133,7 +133,7 @@ import static org.openqa.selenium.support.locators.RelativeLocator.*;
 driver.findElement(with(By.tagName("button")).near(By.id("password-field")));
 ```
 
-## Step 4 — Explicit waits
+## Step 4 - Explicit waits
 
 ```java
 // WebDriverWait with ExpectedConditions
@@ -143,10 +143,10 @@ WebElement element = wait.until(
 element.click();
 ```
 
-**Never use `Thread.sleep()`** — `WebDriverWait` polls until the
+**Never use `Thread.sleep()`** - `WebDriverWait` polls until the
 condition is met. Sleep is the most common Selenium flake source.
 
-## Step 5 — Selenium Grid for distributed execution
+## Step 5 - Selenium Grid for distributed execution
 
 ```yaml
 # docker-compose.grid.yml
@@ -177,11 +177,11 @@ WebDriver driver = new RemoteWebDriver(
 );
 ```
 
-Grid distributes tests across nodes — handles parallelism. For
+Grid distributes tests across nodes - handles parallelism. For
 managed grids, see commercial: BrowserStack, Sauce Labs,
 LambdaTest (covered by [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md)).
 
-## Step 6 — Other languages
+## Step 6 - Other languages
 
 ### Python (pytest)
 
@@ -236,7 +236,7 @@ public class CheckoutTest : IDisposable
 }
 ```
 
-## Step 7 — CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -283,9 +283,7 @@ JUnit XML lands at `target/surefire-reports/`; feeds
 - Selenium project at `selenium.dev`.
 - W3C WebDriver spec.
 - [`playwright-testing`](../playwright-testing/SKILL.md),
-  [`cypress-testing`](../cypress-testing/SKILL.md) — modern
+  [`cypress-testing`](../cypress-testing/SKILL.md) - modern
   alternatives.
-- [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md)
-  — manages distributed Selenium runs.
-- [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md)
-  — mobile via WebDriver protocol.
+- [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md) - manages distributed Selenium runs.
+- [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md) - mobile via WebDriver protocol.

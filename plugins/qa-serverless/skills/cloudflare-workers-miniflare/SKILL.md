@@ -12,7 +12,7 @@ archetype: S1
 
 Miniflare 3 is the official Workers simulator. Per
 [developers.cloudflare.com/workers](https://developers.cloudflare.com/workers/testing/miniflare/),
-Miniflare 3 is built on top of `workerd` — the same runtime that
+Miniflare 3 is built on top of `workerd` - the same runtime that
 serves production Workers traffic. This means local-mode
 behaviour matches prod with very high fidelity.
 
@@ -105,7 +105,7 @@ test('writes to KV', async () => {
 });
 ```
 
-This is the **lowest-overhead** test path — runs inside workerd.
+This is the **lowest-overhead** test path - runs inside workerd.
 
 ### Durable Objects testing
 
@@ -159,7 +159,7 @@ jobs:
       - run: npx vitest run
 ```
 
-No CF account/API key needed — `vitest-pool-workers` runs
+No CF account/API key needed - `vitest-pool-workers` runs
 locally via workerd.
 
 ## Anti-patterns

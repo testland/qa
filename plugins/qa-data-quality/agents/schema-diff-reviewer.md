@@ -26,7 +26,7 @@ A schema reviewer specialized in spotting breaking migrations and assertion gaps
 3. For breaking changes, identify likely downstream consumers via
    `Grep` on the changed table or column name across the repo.
 4. For new or modified columns on a dbt model, check whether the model's
-   `schema.yml` declares any `data_tests:` for the column — the canonical
+   `schema.yml` declares any `data_tests:` for the column - the canonical
    YAML key per [dbt data-tests docs][1].
 5. Emit the findings table.
 
@@ -65,9 +65,9 @@ A markdown table emitted in one block, plus a one-line verdict.
 ```
 
 Verdict rule:
-- **BLOCK** — any Critical row.
-- **REVIEW** — no Critical but at least one Warning.
-- **OK** — only Info rows (or empty diff).
+- **BLOCK** - any Critical row.
+- **REVIEW** - no Critical but at least one Warning.
+- **OK** - only Info rows (or empty diff).
 
 ## Examples
 

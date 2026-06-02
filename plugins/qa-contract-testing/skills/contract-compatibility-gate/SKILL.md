@@ -40,15 +40,15 @@ emit one verdict.
   GraphQL and REST).
 - The team wants the verdict in `$GITHUB_STEP_SUMMARY` (or equivalent)
   rather than four separate "❌ pact" / "❌ oasdiff" CI badges.
-- Some checks should be advisory rather than blocking — e.g. block on
+- Some checks should be advisory rather than blocking - e.g. block on
   oasdiff ERR but let WARN pass with a comment.
 - The team wants per-tool ratchet behavior (existing failures
   grandfathered, new failures block).
 
-If the project uses one protocol only, defer this gate — use the
+If the project uses one protocol only, defer this gate - use the
 matching per-tool SKILL.md's "CI integration" section directly.
 
-## Step 1 — Identify your sources
+## Step 1 - Identify your sources
 
 For each protocol the deployment consumes, pick the tool from the
 matching plugin skill and ensure its output is captured as a CI
@@ -61,7 +61,7 @@ artifact (always with `if: always()` on the upload):
 | GraphQL      | [`graphql-schema-regression`](../graphql-schema-regression/SKILL.md)                        | grep-parsed text or JSON action     |
 | Protobuf     | [`protobuf-compat-checking`](../protobuf-compat-checking/SKILL.md)                          | `--error-format json` array         |
 
-## Step 2 — Define the unified record
+## Step 2 - Define the unified record
 
 Flatten every tool's per-finding output into one shape:
 
@@ -83,11 +83,11 @@ Flatten every tool's per-finding output into one shape:
 | `tool`       | `pact` / `oasdiff` / `graphql-inspector` / `buf`.                                                                   |
 | `protocol`   | `pact` / `openapi` / `graphql` / `protobuf`.                                                                        |
 | `finding`    | tool-specific rule ID (oasdiff `id`, graphql-inspector change type, buf rule like `FIELD_NO_DELETE`).                |
-| `severity`   | normalized — `blocker` / `warn` / `info`.                                                                            |
+| `severity`   | normalized - `blocker` / `warn` / `info`.                                                                            |
 | `subject`    | endpoint / type / message + field that's affected.                                                                  |
 | `message`    | human-readable rationale (tool's own message).                                                                       |
-| `ratchet`    | optional — `true` if grandfathered; `false` blocks if severity is `blocker`.                                         |
-| `owner`      | optional — team/handle responsible for the surface.                                                                 |
+| `ratchet`    | optional - `true` if grandfathered; `false` blocks if severity is `blocker`.                                         |
+| `owner`      | optional - team/handle responsible for the surface.                                                                 |
 
 ### Severity normalization
 
@@ -102,12 +102,12 @@ Flatten every tool's per-finding output into one shape:
 | graphql-inspector   | `Non-breaking`                 | `info`     |
 | buf breaking        | any rule under active category | `blocker`  |
 
-`buf breaking` doesn't classify by severity — every violation is
+`buf breaking` doesn't classify by severity - every violation is
 treated as a blocker. To downgrade, exclude rules in `buf.yaml` rather
 than at the gate level (see
 [`protobuf-compat-checking`](../protobuf-compat-checking/SKILL.md)).
 
-## Step 3 — Apply the gate decision rule
+## Step 3 - Apply the gate decision rule
 
 Pseudocode:
 
@@ -131,7 +131,7 @@ Default behavior is **strict-but-warn-tolerant**: any non-ratcheted
 blocker fails the gate; warnings show up in the report but don't
 block. For stricter projects, set `allow_warn=False`.
 
-## Step 4 — Emit the artifact
+## Step 4 - Emit the artifact
 
 Markdown summary suitable for `$GITHUB_STEP_SUMMARY`:
 
@@ -240,11 +240,10 @@ final gate is the single source of CI truth.
 - [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md)
 - [`graphql-schema-regression`](../graphql-schema-regression/SKILL.md)
 - [`protobuf-compat-checking`](../protobuf-compat-checking/SKILL.md)
-- [can-i-deploy][cid] — Pact deployment gate exit codes.
-- [oasdiff-breaking][oasdiff] — oasdiff severity tiers.
-- [gqi-diff][gqi] — GraphQL Inspector breaking classification.
-- [buf-breaking][buf] — buf breaking-change category model.
+- [can-i-deploy][cid] - Pact deployment gate exit codes.
+- [oasdiff-breaking][oasdiff] - oasdiff severity tiers.
+- [gqi-diff][gqi] - GraphQL Inspector breaking classification.
+- [buf-breaking][buf] - buf breaking-change category model.
 - [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md)
   and
-  [`visual-baseline-gate`](../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md)
-  — sibling gate skills with the same artifact shape.
+  [`visual-baseline-gate`](../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md) - sibling gate skills with the same artifact shape.

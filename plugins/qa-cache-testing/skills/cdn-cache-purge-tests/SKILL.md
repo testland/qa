@@ -11,7 +11,7 @@ archetype: S1
 ## Overview
 
 CDN cache-purge tests verify that the
-write-origin-then-invalidate-edge sequence works end-to-end —
+write-origin-then-invalidate-edge sequence works end-to-end - 
 the most-likely-broken cache integration in real deployments.
 
 Per
@@ -29,7 +29,7 @@ and CloudFront's invalidation API offer similar shapes.
 
 ## Authoring
 
-### Cloudflare — purge by URL
+### Cloudflare - purge by URL
 
 ```bash
 curl -X POST \
@@ -45,7 +45,7 @@ Response:
 { "success": true, "result": { "id": "...." } }
 ```
 
-### Cloudflare — purge by cache-tag (Enterprise)
+### Cloudflare - purge by cache-tag (Enterprise)
 
 ```bash
 curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/purge_cache" \
@@ -56,7 +56,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/purge_cache"
 The response headers from the origin must have included
 `Cache-Tag: user-1, posts-feed` for this to work.
 
-### Fastly — purge by surrogate-key
+### Fastly - purge by surrogate-key
 
 ```bash
 curl -X POST "https://api.fastly.com/service/${SERVICE_ID}/purge/${SURROGATE_KEY}" \
@@ -65,7 +65,7 @@ curl -X POST "https://api.fastly.com/service/${SERVICE_ID}/purge/${SURROGATE_KEY
 
 Origin responses include `Surrogate-Key: user-1 posts-feed` (space-separated).
 
-### CloudFront — invalidation
+### CloudFront - invalidation
 
 ```bash
 aws cloudfront create-invalidation \
@@ -76,7 +76,7 @@ aws cloudfront create-invalidation \
 Cloud-side wait + propagation. Returns an InvalidationId; poll
 status via `get-invalidation`.
 
-## Running — end-to-end test
+## Running - end-to-end test
 
 The canonical purge test:
 

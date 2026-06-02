@@ -1,6 +1,6 @@
 ---
 name: currents-integration
-description: "Wires Currents.dev test analytics into a Playwright test run — installs `@currents/playwright`, authors a `currents.config.ts` with `recordKey` (env-sourced) and `projectId`, registers `currentsReporter()` in `playwright.config.ts`, enables `trace: \"on\" / video: \"on\" / screenshot: \"on\"` artifacts, and runs via `npx pwc` (Currents-aware Playwright wrapper) so per-test traces / videos / screenshots stream to the Currents dashboard with longitudinal trends. Use when a Playwright suite needs over-time test-suite-health analytics (\"test suite over time, and more\") that the per-run HTML reporter can''''t provide."
+description: "Wires Currents.dev test analytics into a Playwright test run - installs `@currents/playwright`, authors a `currents.config.ts` with `recordKey` (env-sourced) and `projectId`, registers `currentsReporter()` in `playwright.config.ts`, enables `trace: \"on\" / video: \"on\" / screenshot: \"on\"` artifacts, and runs via `npx pwc` (Currents-aware Playwright wrapper) so per-test traces / videos / screenshots stream to the Currents dashboard with longitudinal trends. Use when a Playwright suite needs over-time test-suite-health analytics (\"test suite over time, and more\") that the per-run HTML reporter can''''t provide."
 rating: 23
 d6: 4
 archetype: S1
@@ -37,10 +37,10 @@ integration follows the same shape with `@currents/cypress` instead.
   shape).
 
 If the suite is small (<50 tests) and the team only needs the
-per-run report, Playwright's built-in HTML reporter is enough — no
+per-run report, Playwright's built-in HTML reporter is enough - no
 SaaS dependency.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [currents-pw-quickstart][cqs]:
 
@@ -51,7 +51,7 @@ npm i -D @currents/playwright
 # Equivalent for pnpm / yarn / bun.
 ```
 
-## Step 2 — Author `currents.config.ts`
+## Step 2 - Author `currents.config.ts`
 
 Place next to `playwright.config.ts`. Per [currents-pw-quickstart][cqs]:
 
@@ -66,11 +66,11 @@ const config: CurrentsConfig = {
 export default config;
 ```
 
-The `recordKey` is the project's record-write secret — **never check
+The `recordKey` is the project's record-write secret - **never check
 it into the repo**. The `projectId` is non-secret (visible in the
 Currents dashboard URL); it's safe to inline.
 
-## Step 3 — Register the reporter in `playwright.config.ts`
+## Step 3 - Register the reporter in `playwright.config.ts`
 
 Per [currents-pw-quickstart][cqs]:
 
@@ -87,7 +87,7 @@ export default defineConfig({
 The reporter forwards every test event (start, finish, attachments)
 to the Currents API.
 
-## Step 4 — Enable artifacts
+## Step 4 - Enable artifacts
 
 Per [currents-pw-quickstart][cqs], the `use` section should enable
 the three artifact types Currents consumes:
@@ -105,7 +105,7 @@ the artifact volume; Currents wants every test's trace to drive
 its analytics. For a high-volume suite, consider `trace: "retain-on-failure"`
 as a middle ground.
 
-## Step 5 — Run
+## Step 5 - Run
 
 Per [currents-pw-quickstart][cqs]:
 
@@ -121,7 +121,7 @@ npx pwc --key XXX --project-id YYY
 with the Currents reporter active and streams results in real-time;
 on completion, it prints a dashboard URL.
 
-## Step 6 — CI integration
+## Step 6 - CI integration
 
 ```yaml
 # .github/workflows/e2e.yml
@@ -156,10 +156,10 @@ jobs:
 ```
 
 `if: always()` on the artifact upload preserves the local report
-even when the Currents stream succeeds — useful when the
+even when the Currents stream succeeds - useful when the
 dashboard is unreachable.
 
-## Step 7 — Per-PR vs main runs
+## Step 7 - Per-PR vs main runs
 
 The Currents dashboard separates main runs (baseline) from PR runs
 (comparison). For the analytics to make sense:
@@ -173,9 +173,9 @@ The Currents dashboard separates main runs (baseline) from PR runs
 Set the CI workflow's branch + PR triggers (Step 6 example) to
 record both.
 
-## Step 8 — Cypress shape (sister skill, same pattern)
+## Step 8 - Cypress shape (sister skill, same pattern)
 
-For completeness — the Cypress integration follows the same shape:
+For completeness - the Cypress integration follows the same shape:
 
 ```bash
 npm i -D @currents/cypress
@@ -225,18 +225,18 @@ Run via `npx cypress-cloud run` (the Cypress equivalent of `pwc`).
 
 ## References
 
-- [currents-docs][currents] — Currents.dev overview, "test suite
+- [currents-docs][currents] - Currents.dev overview, "test suite
   over time, and more" positioning, supported runners
   (Playwright explicit; Cypress per Step 8).
-- [currents-pw-quickstart][cqs] — Playwright integration: install,
+- [currents-pw-quickstart][cqs] - Playwright integration: install,
   `currents.config.ts` shape (`recordKey` + `projectId`),
   reporter registration, artifact config (`trace` / `video` /
   `screenshot`), `npx pwc` run command.
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) — pair
+- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - pair
   with Currents to keep CI gating self-hosted (JUnit) while
   Currents handles longitudinal analytics.
 - [`testrail-integration`](../testrail-integration/SKILL.md),
   [`xray-integration`](../xray-integration/SKILL.md),
-  [`zephyr-integration`](../zephyr-integration/SKILL.md) — sibling
+  [`zephyr-integration`](../zephyr-integration/SKILL.md) - sibling
   test-management integrations (different role: test management
   vs analytics).

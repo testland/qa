@@ -31,7 +31,7 @@ The agent takes:
 
 Output: per-metric delta + per-query change summary + verdict.
 
-## Step 1 — Validate change scope
+## Step 1 - Validate change scope
 
 Match the change type to the appropriate test set:
 
@@ -46,7 +46,7 @@ Match the change type to the appropriate test set:
 
 Refuse to evaluate if the test set doesn't match the change.
 
-## Step 2 — Aggregate metric delta
+## Step 2 - Aggregate metric delta
 
 ```python
 before = json.loads(before_path.read_text())
@@ -60,10 +60,10 @@ Verdict thresholds (tune per organization):
 | Delta | Verdict |
 |---|---|
 | ≥ +0.02 | ✅ improvement |
-| -0.01 to +0.02 | 🟡 essentially flat — verify it's intended |
-| < -0.01 | ❌ regression — block |
+| -0.01 to +0.02 | 🟡 essentially flat - verify it's intended |
+| < -0.01 | ❌ regression - block |
 
-## Step 3 — Per-query analysis
+## Step 3 - Per-query analysis
 
 Aggregate hides per-query carnage. For each query in judgments:
 
@@ -87,9 +87,9 @@ Refuse if:
 - Any "head query" (top-traffic) dropped > 0.05
 - Aggregate improvement masks > 10% of queries that worsened
 
-## Step 4 — Unrated docs check
+## Step 4 - Unrated docs check
 
-`_rank_eval` reports `unrated_docs` per query — docs in results
+`_rank_eval` reports `unrated_docs` per query - docs in results
 but absent from judgment list. High unrated% means judgments are
 out of date with the index.
 
@@ -104,7 +104,7 @@ for q_id, detail in after["details"].items():
 If > 30% of queries have > 50% unrated, refuse: judgments must be
 refreshed before merge.
 
-## Step 5 — Latency regression (vector search)
+## Step 5 - Latency regression (vector search)
 
 For HNSW parameter changes, recall is half the story:
 
@@ -117,7 +117,7 @@ def check_latency_regression(before_lat, after_lat):
     return None
 ```
 
-## Step 6 — Embedding-upgrade-specific checks
+## Step 6 - Embedding-upgrade-specific checks
 
 For embedding-model upgrades, the ground truth changed. Verify:
 
@@ -126,7 +126,7 @@ For embedding-model upgrades, the ground truth changed. Verify:
   `vector-search-precision-tests` Step 5).
 - Production data was sampled (not synthetic GloVe / SIFT).
 
-## Step 7 — Filter-change correctness
+## Step 7 - Filter-change correctness
 
 For changes to filter logic:
 
@@ -134,7 +134,7 @@ For changes to filter logic:
 - Pre-filter vs post-filter strategy didn't change without intent
   (drops recall@k for post-filter).
 
-## Step 8 — Emit verdict
+## Step 8 - Emit verdict
 
 ```markdown
 ## Search relevance review — `<sha>`
@@ -179,7 +179,7 @@ running") not race-distance filters.
    "running socks" rank shift.
 ```
 
-## Step 9 — Refuse-to-proceed rules
+## Step 9 - Refuse-to-proceed rules
 
 Refuse ✅ when:
 
@@ -205,7 +205,7 @@ Refuse ✅ when:
 
 - [`elasticsearch-relevance-tests`](../skills/elasticsearch-relevance-tests/SKILL.md),
   [`opensearch-relevance-tests`](../skills/opensearch-relevance-tests/SKILL.md),
-  [`vector-search-precision-tests`](../skills/vector-search-precision-tests/SKILL.md) —
+  [`vector-search-precision-tests`](../skills/vector-search-precision-tests/SKILL.md) - 
   preloaded sister skills providing per-engine eval format
-- Splainer (per-doc rank explanation) — github.com/o19s/splainer-search
-- Quepid (judgment authoring) — github.com/o19s/quepid
+- Splainer (per-doc rank explanation) - github.com/o19s/splainer-search
+- Quepid (judgment authoring) - github.com/o19s/quepid

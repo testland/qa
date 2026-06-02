@@ -1,6 +1,6 @@
 ---
 name: deadlock-detection-harness
-description: "Build deadlock-detection harnesses — extract lock-acquire-order graph via instrumentation, run cycle detection (DFS) to spot inconsistent ordering, use lock-acquire timeouts to surface rather than hang, JVM `jstack` / `gdb thread apply all bt` for postmortem analysis. Pair with ThreadSanitizer's `detect_deadlocks=1` for runtime detection."
+description: "Build deadlock-detection harnesses - extract lock-acquire-order graph via instrumentation, run cycle detection (DFS) to spot inconsistent ordering, use lock-acquire timeouts to surface rather than hang, JVM `jstack` / `gdb thread apply all bt` for postmortem analysis. Pair with ThreadSanitizer's `detect_deadlocks=1` for runtime detection."
 type: skill
 archetype: S3
 rating: 22
@@ -28,7 +28,7 @@ for Y; thread B holds Y waiting for X. Tests prevent deadlocks via
 - Pre-release: `detect_deadlocks` ThreadSanitizer mode passes on
   the test workload.
 
-## Step 1 — Lock-order convention
+## Step 1 - Lock-order convention
 
 Establish a strict ordering for all locks and document it:
 
@@ -45,7 +45,7 @@ LOCK_ORDER = {
 Any code that violates this order = potential deadlock. The
 deadlock harness's job: detect violations.
 
-## Step 2 — Instrument lock acquisitions
+## Step 2 - Instrument lock acquisitions
 
 For Python (rough sketch using contextvars + decorator):
 
@@ -80,7 +80,7 @@ class OrderedLock:
 In tests, use `OrderedLock` everywhere. Violations raise
 synchronously (test fails) instead of silently risking deadlock.
 
-## Step 3 — Build lock-acquire-order graph from logs
+## Step 3 - Build lock-acquire-order graph from logs
 
 For dynamic analysis (when static order isn't enough), capture
 acquire events and build the graph:
@@ -105,7 +105,7 @@ def build_lock_graph(events):
     return edges
 ```
 
-## Step 4 — Cycle detection (DFS)
+## Step 4 - Cycle detection (DFS)
 
 ```python
 def find_cycles(graph):
@@ -137,7 +137,7 @@ def test_no_lock_cycles_in_workload():
 
 Any cycle = potential deadlock under the right scheduling.
 
-## Step 5 — Lock-acquire timeout (fail-fast)
+## Step 5 - Lock-acquire timeout (fail-fast)
 
 ```python
 def test_lock_acquired_within_timeout():
@@ -158,9 +158,9 @@ def test_lock_acquired_within_timeout():
 ```
 
 In production code, use timed acquires + escalation (log + alert)
-instead of indefinite wait — tests verify the contract.
+instead of indefinite wait - tests verify the contract.
 
-## Step 6 — TSan deadlock detection (C/C++/Go)
+## Step 6 - TSan deadlock detection (C/C++/Go)
 
 ThreadSanitizer (per the [TSan docs]) supports deadlock detection.
 Enable per-process:
@@ -173,7 +173,7 @@ Output identifies the inconsistent lock orderings causing potential
 deadlocks. Catches bugs that haven't manifested as actual deadlock
 yet.
 
-## Step 7 — Postmortem dump analysis
+## Step 7 - Postmortem dump analysis
 
 When deadlock happens in production, capture state for offline
 analysis:
@@ -191,7 +191,7 @@ jstack 12345 > thread-dump.txt
 grep -A 5 "Found one Java-level deadlock" thread-dump.txt
 ```
 
-## Step 8 — Lock-acquire fingerprint test
+## Step 8 - Lock-acquire fingerprint test
 
 For systems where lock order is too complex for Step 1 static
 ordering, fingerprint each acquire site and verify it's stable:
@@ -232,18 +232,18 @@ Fewer acquire sites = easier to reason about lock order.
 - Static lock-order works for "manual" locks; not for ad-hoc
   synchronization (channels, semaphores, condition variables).
 - Cycle detection misses async deadlocks (callback-based,
-  promise-based) — see `async-ordering-tests`.
+  promise-based) - see `async-ordering-tests`.
 - TSan adds significant overhead (5-15×); not suitable for prod.
 - Postmortem dumps reveal current state only; root cause still
   needs human analysis.
 
 ## References
 
-- [TSan docs] — `detect_deadlocks=1` runtime option
-- jstack — included with JDK; `man jstack`
-- [`race-condition-test-author`](../race-condition-test-author/SKILL.md) —
+- [TSan docs] - `detect_deadlocks=1` runtime option
+- jstack - included with JDK; `man jstack`
+- [`race-condition-test-author`](../race-condition-test-author/SKILL.md) - 
   data-race detection (different problem class)
-- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) —
+- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) - 
   async-equivalent of deadlock detection
 
 [TSan docs]: https://clang.llvm.org/docs/ThreadSanitizer.html

@@ -21,7 +21,7 @@ test loop per the [Chrome Extensions "Hello World" tutorial][cr-hello]:
 toggle Developer mode in `chrome://extensions`, click **Load
 unpacked**, point at the source directory containing
 `manifest.json`. This is the contract every other test rig
-(Playwright fixtures, Puppeteer launchers, CI smoke tests) wraps —
+(Playwright fixtures, Puppeteer launchers, CI smoke tests) wraps - 
 knowing it directly is what lets you reason about why a fixture
 fails, which surface a regression hit, and what a "service-worker
 reload" actually re-evaluates.
@@ -35,7 +35,7 @@ surface (`chrome.runtime.sendMessage`, `chrome.runtime.connect`,
 
 For Playwright-driven MV3 popup / content-script fixtures see
 [`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
-That skill is a Playwright wrapper for fixture-style testing — this
+That skill is a Playwright wrapper for fixture-style testing - this
 skill is the lower-level developer flow + the messaging API surface
 itself.
 
@@ -52,7 +52,7 @@ Composes with:
   Chrome before wiring a Playwright fixture.
 - Asserting message-passing behaviour (one-shot + long-lived port)
   end-to-end against a real browser.
-- Diagnosing a "popup works but content script doesn't" bug — the
+- Diagnosing a "popup works but content script doesn't" bug - the
   reload table below shows which component reloads on what trigger.
 - Exercising the `externally_connectable` allow-list before
   publishing.
@@ -104,7 +104,7 @@ manifest.json file in the extension's root directory."*
 
 ## Running
 
-### Step 1 — Open `chrome://extensions`
+### Step 1 - Open `chrome://extensions`
 
 Per [cr-hello]: *"By design `chrome://` URLs are not linkable."*
 Three routes to the page:
@@ -115,27 +115,27 @@ Three routes to the page:
 | Toolbar | Click the **Extensions** puzzle icon → **Manage Extensions** |
 | Menu | Chrome menu → **More Tools** → **Extensions** |
 
-### Step 2 — Toggle Developer mode on
+### Step 2 - Toggle Developer mode on
 
 Per [cr-hello], toggle the switch labeled **Developer mode** at the
 top-right of the Extensions page. Three buttons appear:
 **Load unpacked**, **Pack extension**, **Update**.
 
-### Step 3 — Load unpacked
+### Step 3 - Load unpacked
 
 Per [cr-hello], click **Load unpacked**, then select the extension's
 source directory (the one containing `manifest.json`). Chrome
 parses the manifest immediately; a malformed manifest produces an
 on-page error card.
 
-### Step 4 — Pin the extension to the toolbar
+### Step 4 - Pin the extension to the toolbar
 
 Per [cr-hello]: *"Pin your extension to the toolbar to quickly
 access your extension during development."* Click the puzzle-icon
 **Extensions** menu, find the row, click the pin icon. The popup
 becomes a single-click target.
 
-### Step 5 — Reload after edits
+### Step 5 - Reload after edits
 
 Per [cr-hello], the reload semantics are:
 
@@ -144,8 +144,8 @@ Per [cr-hello], the reload semantics are:
 | `manifest.json` | Click refresh on the extension card |
 | Service worker (`background.service_worker`) | Click refresh on the extension card |
 | Content scripts | Click refresh on the extension card **plus refresh the host page** |
-| Popup HTML/JS | None — next open re-evaluates |
-| Options page | None — next open re-evaluates |
+| Popup HTML/JS | None - next open re-evaluates |
+| Options page | None - next open re-evaluates |
 | Other extension HTML pages | None |
 
 The "click refresh on the card" gesture is what every test harness
@@ -195,7 +195,7 @@ rejected `sendMessage()` promise on the sender side.
 
 **Gotcha per [cr-msg]:** an `async` listener implicitly returns a
 promise. If the body returns no value, the promise resolves
-`undefined` and the sender receives `null` — interfering with other
+`undefined` and the sender receives `null` - interfering with other
 listeners that meant to respond. Author either a non-async listener
 with `return true`, or an async one that returns a value.
 
@@ -237,7 +237,7 @@ Test assertion targets:
 
 - `port.onDisconnect` fires on tab unload, frame unload, missing
   `onConnect` listener, or explicit `disconnect()` (per [cr-msg]).
-- "A port may have multiple receivers" per [cr-msg] — disconnect
+- "A port may have multiple receivers" per [cr-msg] - disconnect
   can fire more than once. Tests must accumulate, not assume one.
 
 ### Cross-extension / external-page messaging
@@ -270,7 +270,7 @@ will be looking at custom DOM events or content-script injection.
 **Firefox parity note:** per the
 [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
 key matrix, `externally_connectable` is **not supported in
-Firefox** — cross-extension flows must be gated on browser
+Firefox** - cross-extension flows must be gated on browser
 detection.
 
 ### Native messaging
@@ -288,10 +288,10 @@ live on the dedicated Native Messaging guide.
 A malformed manifest yields an error card on `chrome://extensions`
 with a "Errors" button. Common shapes:
 
-- `Manifest file is missing or unreadable.` — wrong directory selected.
-- `Could not load manifest.` — JSON parse error.
-- `Required value 'name' is missing or invalid.` — bad shape.
-- `Permission 'X' is unknown or URL pattern is malformed.` — invalid
+- `Manifest file is missing or unreadable.` - wrong directory selected.
+- `Could not load manifest.` - JSON parse error.
+- `Required value 'name' is missing or invalid.` - bad shape.
+- `Permission 'X' is unknown or URL pattern is malformed.` - invalid
   permission string (often a leftover MV2 host pattern in
   `permissions[]` instead of `host_permissions[]` per
   [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)).
@@ -304,7 +304,7 @@ network panel, and breakpoints all work.
 
 ### Content-script logs
 
-Inspect from the host page's DevTools — content scripts log into
+Inspect from the host page's DevTools - content scripts log into
 the page's console, not the extension's.
 
 ### Message-passing payload constraints
@@ -323,7 +323,7 @@ arrays, `Date` round-tripping with type preserved, and any object
 
 ## CI integration
 
-Manual `chrome://extensions` loading isn't CI-friendly — automate via
+Manual `chrome://extensions` loading isn't CI-friendly - automate via
 either:
 
 1. **Chrome flags** (the
@@ -355,7 +355,7 @@ manifest error before the fixture-driven test job runs.
   page is unautomatable from page-context JavaScript per [cr-hello]
   (`chrome://` URLs aren't linkable / framable). Automation hooks
   into the load via Chrome launch flags, not by clicking the UI.
-- **Pinning is profile-state.** A fresh launch loses the pin —
+- **Pinning is profile-state.** A fresh launch loses the pin - 
   tests asserting toolbar interaction must drive the pin or use the
   fallback puzzle-menu route.
 - **Service-worker auto-suspend complicates assertions.** Per
@@ -366,16 +366,16 @@ manifest error before the fixture-driven test job runs.
   Tests for `chrome.runtime.sendMessage(otherExtId, ...)` must load
   the recipient extension first.
 - **Native messaging needs host install.** The native host registry
-  entry must exist on the test machine — CI images need a setup
+  entry must exist on the test machine - CI images need a setup
   step.
 
 ## References
 
-- Chrome Extensions — Hello World tutorial (load unpacked, reload
-  semantics, pinning) — [cr-hello].
-- Chrome Extensions — Get started overview —
+- Chrome Extensions - Hello World tutorial (load unpacked, reload
+  semantics, pinning) - [cr-hello].
+- Chrome Extensions - Get started overview - 
   [developer.chrome.com/docs/extensions/get-started](https://developer.chrome.com/docs/extensions/get-started).
-- Chrome Extensions — Message passing concepts —
+- Chrome Extensions - Message passing concepts - 
   [cr-msg].
 - Composes:
   [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md).

@@ -17,7 +17,7 @@ keywords:
 
 Per the [PWA installation guide], installability requires a Web App
 Manifest with `display: standalone | minimal-ui`, `start_url`, icons,
-and `name` — plus a registered service worker (most browsers) and
+and `name` - plus a registered service worker (most browsers) and
 HTTPS.
 
 ## When to use
@@ -29,7 +29,7 @@ HTTPS.
 - UX testing: the in-app install prompt fires when expected and
   records `outcome` for analytics.
 
-## Step 1 — Validate manifest fields
+## Step 1 - Validate manifest fields
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -59,7 +59,7 @@ test('manifest meets installability criteria', async ({ page, request }) => {
 Per the [PWA installation guide]: manifest fields drive desktop
 install badge + Android WebAPK minting + iOS home-screen icon.
 
-## Step 2 — Validate service worker registered
+## Step 2 - Validate service worker registered
 
 ```ts
 test('service worker registered (installability prerequisite)', async ({ page, context }) => {
@@ -74,7 +74,7 @@ test('service worker registered (installability prerequisite)', async ({ page, c
 
 Cross-ref `service-worker-tests` skill for SW lifecycle testing.
 
-## Step 3 — Trigger and capture `beforeinstallprompt`
+## Step 3 - Trigger and capture `beforeinstallprompt`
 
 ```ts
 test('beforeinstallprompt fires; user accept resolves', async ({ page }) => {
@@ -111,7 +111,7 @@ Note: `beforeinstallprompt` only fires when Chromium's heuristics +
 Step 1 + Step 2 criteria pass + the user has not already installed.
 Test environments may need `--enable-features=InstallPromptForApp`.
 
-## Step 4 — Verify `appinstalled` event analytics
+## Step 4 - Verify `appinstalled` event analytics
 
 ```ts
 test('appinstalled fires after acceptance', async ({ page }) => {
@@ -131,7 +131,7 @@ test('appinstalled fires after acceptance', async ({ page }) => {
 
 Useful for analytics: increment install counter on this event.
 
-## Step 5 — iOS path (manual / advisory)
+## Step 5 - iOS path (manual / advisory)
 
 Per the [PWA installation guide]: iOS/iPadOS requires manual install
 via Share menu → "Add to Home Screen". Cannot be triggered
@@ -150,7 +150,7 @@ test('iOS install metadata present', async ({ page }) => {
 });
 ```
 
-## Step 6 — Display-mode media query test
+## Step 6 - Display-mode media query test
 
 After install, display mode shifts. Detect:
 
@@ -168,7 +168,7 @@ test('display-mode standalone after install', async ({ page }) => {
 });
 ```
 
-Apps often hide the "Install" button when already installed —
+Apps often hide the "Install" button when already installed - 
 check via `display-mode: standalone` MQ.
 
 ## Anti-patterns
@@ -192,7 +192,7 @@ check via `display-mode: standalone` MQ.
 
 ## References
 
-- [PWA installation guide] — manifest requirements, install criteria,
+- [PWA installation guide] - manifest requirements, install criteria,
   per-platform behavior
 
 [PWA installation guide]: https://web.dev/learn/pwa/installation

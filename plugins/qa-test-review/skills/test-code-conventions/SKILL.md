@@ -1,6 +1,6 @@
 ---
 name: test-code-conventions
-description: "Pure-reference catalog of test code conventions — AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. The agents in this plugin (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic) load this as their shared rule book. Use as a team's onboarding reference for \"what makes a test code-reviewable\" and as the source-of-truth the critics' verdicts cite back to."
+description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. The agents in this plugin (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic) load this as their shared rule book. Use as a team's onboarding reference for \"what makes a test code-reviewable\" and as the source-of-truth the critics' verdicts cite back to."
 rating: 22
 d6: 3
 archetype: S2
@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-This skill is a **pure reference** — no actions, no workflows. It
+This skill is a **pure reference** - no actions, no workflows. It
 catalogs the test-code conventions that the rest of `qa-test-review`'s
 critics enforce. When a critic flags an issue, it cites this
 reference for the reviewer to learn the underlying rule.
@@ -26,9 +26,9 @@ reference for the reviewer to learn the underlying rule.
 - The team is authoring its own per-team test conventions document
   and wants a starting point.
 
-## §1 — AAA structure
+## §1 - AAA structure
 
-The canonical test shape — **Arrange, Act, Assert** — splits each
+The canonical test shape - **Arrange, Act, Assert** - splits each
 test into three phases:
 
 ```typescript
@@ -47,7 +47,7 @@ test('addItem increases cart count', () => {
 The phases are visually separated (blank line; comment; or
 `// arrange / act / assert` headers). The benefits:
 
-- Reviewer can scan a 50-test file by reading only the Act lines —
+- Reviewer can scan a 50-test file by reading only the Act lines - 
   knows what each test actually exercises.
 - Failure debugging is faster: the failed assertion points to the
   specific Assert; the Arrange and Act are isolated.
@@ -56,7 +56,7 @@ The phases are visually separated (blank line; comment; or
 on multiple Acts is the canonical refactor when a single test grows
 too long.
 
-## §2 — Single-responsibility per test
+## §2 - Single-responsibility per test
 
 A test that asserts `cart.count === 1 AND cart.totalPrice === 10
 AND cart.lastUpdated > now()` is three tests in disguise. When one
@@ -64,7 +64,7 @@ assertion fails, the test stops; the other two failures are
 masked.
 
 The rule: **one logical assertion per test**. "Logical" means
-related to the same observable property — multiple `expect` calls
+related to the same observable property - multiple `expect` calls
 that all verify "the cart has one item" (count = 1, items.length = 1,
 contents[0].sku = '...') are one logical assertion.
 
@@ -85,11 +85,11 @@ test('addItem updates totalPrice', () => { /* ... */ });
 test('addItem updates lastUpdated', () => { /* ... */ });
 ```
 
-## §3 — Naming patterns
+## §3 - Naming patterns
 
 Two well-established conventions:
 
-### A — `<system_under_test>_<scenario>_<expected>` (Roy Osherove)
+### A - `<system_under_test>_<scenario>_<expected>` (Roy Osherove)
 
 ```typescript
 test('addItem_validQty_incrementsCount', () => { /* ... */ });
@@ -100,7 +100,7 @@ test('addItem_negativeQty_throwsValidationError', () => { /* ... */ });
 The triple makes the test self-documenting; no need to read the body
 to understand what's verified.
 
-### B — Nested describe + it
+### B - Nested describe + it
 
 ```typescript
 describe('Cart', () => {
@@ -122,24 +122,24 @@ two in one suite is the smell.
 `test('addItem 1')`, `test('addItem 2')`. Generic names are zero
 debugging help when the failure surfaces.
 
-## §4 — Assertion specificity
+## §4 - Assertion specificity
 
 Assertions should narrow the verification window to exactly what's
 being asserted. Vague matchers hide regressions:
 
 | Vague                                    | Specific                                    | Why specific is better |
 |------------------------------------------|---------------------------------------------|------------------------|
-| `expect(x).toBeTruthy()`                  | `expect(x).toEqual({ id: 1, name: 'foo' })` | "truthy" passes for `1`, `'a'`, `{}`, `[]` — many bug shapes pass. |
+| `expect(x).toBeTruthy()`                  | `expect(x).toEqual({ id: 1, name: 'foo' })` | "truthy" passes for `1`, `'a'`, `{}`, `[]` - many bug shapes pass. |
 | `expect(arr).toBeDefined()`               | `expect(arr).toEqual(['BOOK-001'])`          | "defined" passes for `[]`, `null`-prototype, …             |
 | `expect(err).toBeInstanceOf(Error)`       | `expect(err.code).toBe('VALIDATION_ERROR')` | Catches "right type, wrong reason" regressions.            |
-| `expect(response.status).toBeGreaterThan(199)` | `expect(response.status).toBe(201)`     | 200, 204, 299 also pass — masks status-code regressions.   |
+| `expect(response.status).toBeGreaterThan(199)` | `expect(response.status).toBe(201)`     | 200, 204, 299 also pass - masks status-code regressions.   |
 | `expect(html).toContain('error')`         | `expect(html).toMatch(/<div class="error">.*Invalid/)` | "error" matches "no errors" too. |
 
 The general principle: the assertion should fail on **any change to
 the SUT's behavior** that isn't intentional. If the assertion
 passes for behaviors that shouldn't, it's too loose.
 
-## §5 — Mocking
+## §5 - Mocking
 
 The full taxonomy per [mocks-stubs][ms]:
 
@@ -181,7 +181,7 @@ Convention rules:
    fake DB / fake clock / fake feature-flag service is reusable
    across tests; mocks are bespoke per test.
 
-## §6 — Fixture coupling
+## §6 - Fixture coupling
 
 Tests that share fixtures (parameters, builders, factory functions)
 should be coupled at the smallest scope:
@@ -197,9 +197,9 @@ Anti-pattern: a giant `globalFixtures.ts` that every test imports.
 Tests now break in unrelated ways when the global is touched; the
 test no longer "owns" what it verifies.
 
-## §7 — Magic numbers and strings
+## §7 - Magic numbers and strings
 
-Test code is more tolerant of magic numbers than production code —
+Test code is more tolerant of magic numbers than production code - 
 the test's job is often to assert against specific values. But
 **meaningful magic** matters:
 
@@ -218,7 +218,7 @@ expect(cart.totalPrice).toBeCloseTo(EXPECTED_TOTAL, 2);
 The named constants double as documentation. The reviewer sees the
 math; the assertion failure message becomes interpretable.
 
-## §8 — E2E selectors
+## §8 - E2E selectors
 
 Per [pw-best-practices][pwb]: "Your DOM can easily change so having
 your tests depend on your DOM structure can lead to failing tests."
@@ -231,14 +231,14 @@ Per [tl-queries][tl] (Testing Library priority order):
 
 | Priority | Query                                       | When to use |
 |----------|---------------------------------------------|-------------|
-| 1        | `getByRole('button', { name: 'Submit' })`    | Default. Tests via the accessibility tree — same path as users. |
+| 1        | `getByRole('button', { name: 'Submit' })`    | Default. Tests via the accessibility tree - same path as users. |
 | 2        | `getByLabelText('Email')`                    | Form fields with associated `<label>`. |
 | 3        | `getByPlaceholderText`, `getByText`, `getByDisplayValue` | When labels aren't available. |
 | 4        | `getByAltText`, `getByTitle`                 | Images, tooltips. |
 | 5        | `getByTestId('submit-button')`               | Last resort. Per [tl-queries][tl]: "The user cannot see (or hear) these." |
 
 CSS class selectors (`.button-primary`) and XPath
-(`//div[@class='cart']//button[1]`) are not on the priority list —
+(`//div[@class='cart']//button[1]`) are not on the priority list - 
 per [pw-best-practices][pwb] they are explicitly identified as
 brittle.
 
@@ -247,7 +247,7 @@ Cypress (`cy.findByRole(...)` via cypress-testing-library), and
 Selenium (when the test framework supports role-based queries via
 extensions).
 
-## §9 — Web-first assertions (E2E)
+## §9 - Web-first assertions (E2E)
 
 Per [pw-best-practices][pwb]: avoid "manual assertions without
 waiting. Using `isVisible()` checks immediately without awaiting,
@@ -266,7 +266,7 @@ The web-first form auto-waits for the assertion to become true
 within the test's timeout, eliminating the wait-N-seconds-and-hope
 pattern.
 
-## §10 — Slow setup is a smell
+## §10 - Slow setup is a smell
 
 A test that takes >1s in setup (creating fixtures, seeding DB,
 warming caches) has a coupling problem. The remedies:
@@ -275,7 +275,7 @@ warming caches) has a coupling problem. The remedies:
 - Use [`db-snapshot-restore`](../../qa-test-environment/agents/db-snapshot-restore.md)
   template-DB pattern for DB tests instead of `db:reset`.
 - Move the unit test to an integration layer if it really needs the
-  full stack — don't run integration tests under the unit-test
+  full stack - don't run integration tests under the unit-test
   budget.
 
 The whole-suite cost of slow setup compounds: 10 tests × 2s =
@@ -283,17 +283,16 @@ The whole-suite cost of slow setup compounds: 10 tests × 2s =
 
 ## References
 
-- [mocks-stubs][ms] — Martin Fowler on the test-double taxonomy:
+- [mocks-stubs][ms] - Martin Fowler on the test-double taxonomy:
   dummies, fakes, stubs, spies, mocks; state vs behavior
   verification; classical (Detroit) vs mockist (London) styles.
-- [tl-queries][tl] — Testing Library query priority: role-based
+- [tl-queries][tl] - Testing Library query priority: role-based
   → label → placeholder/text → testId. The "as users find them"
   principle; testid is the last resort.
-- [pw-best-practices][pwb] — Playwright best practices: user-facing
+- [pw-best-practices][pwb] - Playwright best practices: user-facing
   locators, web-first assertions, "automated tests should verify
   that the application code works for the end users."
 - [`test-code-critic`](../../agents/test-code-critic.md),
   [`assertion-quality-reviewer`](../../agents/assertion-quality-reviewer.md),
   [`mocking-anti-pattern-detector`](../../agents/mocking-anti-pattern-detector.md),
-  [`e2e-selector-quality-critic`](../../agents/e2e-selector-quality-critic.md)
-  — the four agents that consume this reference.
+  [`e2e-selector-quality-critic`](../../agents/e2e-selector-quality-critic.md) - the four agents that consume this reference.

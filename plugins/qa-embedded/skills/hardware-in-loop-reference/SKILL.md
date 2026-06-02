@@ -31,7 +31,7 @@ host / QEMU.
 
 ## When to use
 
-- Scoping a new HIL rig — what hardware, what protocols, what level
+- Scoping a new HIL rig - what hardware, what protocols, what level
   of plant fidelity.
 - Reading an HIL test report from a vendor (NI / dSPACE / Vector /
   Speedgoat) and translating their proprietary terms.
@@ -59,7 +59,7 @@ host / QEMU.
 ```
 
 Per Wikipedia (citation above), the rig "must include electrical
-emulation of sensors and actuators" — that emulation is what
+emulation of sensors and actuators" - that emulation is what
 distinguishes HIL from pure software simulation. The ECU sees
 voltage / current / bus traffic, not numbers in RAM.
 
@@ -73,7 +73,7 @@ voltage / current / bus traffic, not numbers in RAM.
 | **HIL** (Hardware-in-the-loop) | Real-time plant model on real-time target | Production firmware on production ECU | Production hardware + real-time simulator |
 
 (The terms MIL / SIL / PIL / HIL are not in Wikipedia's HIL article
-but are universal in automotive ECU verification — cite by stable
+but are universal in automotive ECU verification - cite by stable
 term "automotive V-model verification stages".) Each stage tightens
 the realism by replacing one block with the real artefact. HIL is
 the last gate before SOP (Start Of Production) sign-off.
@@ -92,7 +92,7 @@ cited by stable ID.
 | **OPAL-RT** | OP4510 / OP5707 | **RT-LAB** + **eMEGAsim** | Power electronics / grid; sub-microsecond loops |
 
 The S1 reader should treat vendor choice as a procurement decision,
-not a technical one — all the vendors support the core HIL pattern.
+not a technical one - all the vendors support the core HIL pattern.
 Vendor differentiation is in I/O density, FPGA latency, and which
 test-authoring language the team has skill in (CAPL for Vector,
 LabVIEW for NI, Simulink for Speedgoat).
@@ -128,47 +128,46 @@ The reason HIL exists. Sw-only sims can't reproduce these:
 | **Latency injection** | Bus delay added | Real-time deadline handling |
 | **Power glitch** | V_bat dips below threshold momentarily | Brown-out behaviour |
 
-These map directly to ISO 26262-5 fault models — see standard
+These map directly to ISO 26262-5 fault models - see standard
 expectations below.
 
 ## Safety-standard alignment
 
-Cited by stable ID — the standards are gated, not WebFetchable.
+Cited by stable ID - the standards are gated, not WebFetchable.
 
 | Standard | HIL expectation |
 |---|---|
 | **DO-178C §6.4.4 Structural Coverage** | Aircraft software at DAL A requires MC/DC; HIL is one of the means to *produce* that coverage on the integrated target |
-| **DO-254** | The companion hardware standard. HIL exercises the **DO-254 + DO-178C interface** — the FPGA boundary |
-| **ISO 26262-4 §7** | Vehicle-level test specification — HIL is mentioned as one of the recommended methods for system + integration test |
-| **ISO 26262-5 §10** | Hardware fault injection — HIL fault patterns above map directly to this clause |
+| **DO-254** | The companion hardware standard. HIL exercises the **DO-254 + DO-178C interface** - the FPGA boundary |
+| **ISO 26262-4 §7** | Vehicle-level test specification - HIL is mentioned as one of the recommended methods for system + integration test |
+| **ISO 26262-5 §10** | Hardware fault injection - HIL fault patterns above map directly to this clause |
 | **IEC 61508-3 Table A.5** | "Functional testing on a HIL rig" is a recommended technique at SIL 3 / SIL 4 |
-| **IEC 62304** | Medical device software — HIL applies to perfusion pumps, ventilators, surgical robots; less prescriptive than 26262 |
+| **IEC 62304** | Medical device software - HIL applies to perfusion pumps, ventilators, surgical robots; less prescriptive than 26262 |
 
 ## Test evidence the HIL produces
 
-A typical HIL test report — the artefacts a certifier expects to
-see — contains:
+A typical HIL test report - the artefacts a certifier expects to
+see - contains:
 
-1. **System Definition** (NI: `.nivssdf`; dSPACE: SCALEXIO project)
-   — the I/O map + plant-model binding. The "what is wired to what".
-2. **Stimulus profile / scenario script** — the test inputs over
+1. **System Definition** (NI: `.nivssdf`; dSPACE: SCALEXIO project) - the I/O map + plant-model binding. The "what is wired to what".
+2. **Stimulus profile / scenario script** - the test inputs over
    time. Vector calls these "test modules" (CAPL); NI "real-time
    sequence" or "stimulus profile"; dSPACE "AutomationDesk
    sequence".
-3. **Recorded signals** — every bus message + analog channel for
+3. **Recorded signals** - every bus message + analog channel for
    the duration of the test, indexed by simulation time.
-4. **Pass / fail verdict** — each scenario asserts on expected
+4. **Pass / fail verdict** - each scenario asserts on expected
    signal values, expected DTCs, expected timing.
-5. **Coverage artefact** — pair with
+5. **Coverage artefact** - pair with
    [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md);
    on-target structural coverage is captured via semihosting or a
    debug probe write-back.
-6. **Traceability** — each scenario links back to a requirement ID
+6. **Traceability** - each scenario links back to a requirement ID
    (Polarion / DOORS / Jama). Required for any DAL or ASIL claim.
 
 ## CAPL / VeriStand stimulus example shapes
 
-CAPL test module (Vector CANoe — cite "Vector CANoe 17 CAPL
+CAPL test module (Vector CANoe - cite "Vector CANoe 17 CAPL
 Function Reference"):
 
 ```c
@@ -195,7 +194,7 @@ WaitUntilSettled Motor/Torque == 50.0 (tolerance 5.0, timeout 200 ms)
 ReportTestResult
 ```
 
-The two languages encode the same scenario — choose the one the
+The two languages encode the same scenario - choose the one the
 team is fluent in.
 
 ## Anti-patterns
@@ -215,9 +214,9 @@ team is fluent in.
 - **Plant-model fidelity is the ceiling.** HIL can only test what
   the plant model knows about. A motor model that omits thermal
   derating won't reveal a missing thermal-protection feature.
-- **Cost.** A rig is $50k–$2M; rig-hours are scheduled like CT
+- **Cost.** A rig is $50k - $2M; rig-hours are scheduled like CT
   scanners. Push left aggressively.
-- **Throughput.** Real-time means real time — a 60-second drive
+- **Throughput.** Real-time means real time - a 60-second drive
   cycle takes 60 seconds to test. Parallel rigs help; faster-than-
   real-time isn't an HIL property.
 - **Vendor lock-in.** Test assets in CAPL don't run on VeriStand
@@ -232,24 +231,24 @@ team is fluent in.
 
 Cited inline. Foundational documents:
 
-- Wikipedia, "Hardware-in-the-loop simulation" —
+- Wikipedia, "Hardware-in-the-loop simulation" - 
   [en.wikipedia.org/wiki/Hardware-in-the-loop_simulation](https://en.wikipedia.org/wiki/Hardware-in-the-loop_simulation).
-- Vector CANoe 17 User Manual (gated — cite by stable ID at
+- Vector CANoe 17 User Manual (gated - cite by stable ID at
   [www.vector.com/int/en/products/products-a-z/software/canoe/](https://www.vector.com/int/en/products/products-a-z/software/canoe/)).
-- NI VeriStand 2024 documentation (gated — cite by stable ID at
+- NI VeriStand 2024 documentation (gated - cite by stable ID at
   [www.ni.com/en/shop/labview/labview-test/veristand.html](https://www.ni.com/en/shop/labview/labview-test/veristand.html)).
-- dSPACE SCALEXIO 2024 / ControlDesk 2024 Help (gated — cite by
+- dSPACE SCALEXIO 2024 / ControlDesk 2024 Help (gated - cite by
   stable ID).
 - ISO 11898-1:2015 (CAN), ISO 17987-1:2016 (LIN),
-  ISO 17458-1:2013 (FlexRay) — gated standards, cite by stable ID.
-- IEEE 802.3bw-2015 (100BASE-T1), IEEE 802.3bp-2016 (1000BASE-T1) —
+  ISO 17458-1:2013 (FlexRay) - gated standards, cite by stable ID.
+- IEEE 802.3bw-2015 (100BASE-T1), IEEE 802.3bp-2016 (1000BASE-T1) - 
   gated standards, cite by stable ID.
-- AUTOSAR FO R23-11 SOME-IP Protocol Specification — open standard
+- AUTOSAR FO R23-11 SOME-IP Protocol Specification - open standard
   available from
   [www.autosar.org](https://www.autosar.org/)
   (subject to registration).
 - DO-178C §6.4.4 Structural Coverage, DO-254, ISO 26262-4 §7 /
-  ISO 26262-5 §10, IEC 61508-3 Table A.5, IEC 62304 — gated
+  ISO 26262-5 §10, IEC 61508-3 Table A.5, IEC 62304 - gated
   standards, cite by stable ID.
 - Sibling reference:
   [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md).

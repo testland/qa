@@ -14,11 +14,11 @@ Flagsmith (open-source, also SaaS at flagsmith.com) supports
 three test-friendly modes per
 [docs.flagsmith.com/clients/server-side](https://docs.flagsmith.com/clients/server-side):
 
-1. **Local-evaluation mode** — fetches environment + flags
+1. **Local-evaluation mode** - fetches environment + flags
    periodically, evaluates locally without per-request network.
-2. **Offline mode with LocalFileHandler** — loads a downloaded
+2. **Offline mode with LocalFileHandler** - loads a downloaded
    `environment.json` snapshot; zero network.
-3. **Default flag handler** — programmatic fallback for any
+3. **Default flag handler** - programmatic fallback for any
    flag (mock-flag-only mode).
 
 ## When to use
@@ -70,7 +70,7 @@ flagsmith = Flagsmith(
 Local mode polls; offline mode doesn't. For tests, offline is
 usually preferred.
 
-### default_flag_handler — per-flag mock
+### default_flag_handler - per-flag mock
 
 ```python
 from flagsmith import Flagsmith

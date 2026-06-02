@@ -12,7 +12,7 @@ archetype: S2
 
 A **guardrail metric** is a measure that must not significantly
 degrade for an experiment to ship, even if the primary metric
-(the **OEC** — Overall Evaluation Criterion) improves. The
+(the **OEC** - Overall Evaluation Criterion) improves. The
 guardrail prevents "we shipped 5% revenue improvement, but
 latency 30% worse and we discovered too late." Per Kohavi et al.
 *Trustworthy Online Controlled Experiments* (Cambridge Univ.
@@ -49,16 +49,16 @@ ship-and-regret sources.
 
 ## The OEC vs guardrail relationship
 
-- **OEC** — the metric you want to *improve* (e.g., revenue,
+- **OEC** - the metric you want to *improve* (e.g., revenue,
   signups, retention).
-- **Guardrail** — the metric you don't want to *break* (e.g.,
+- **Guardrail** - the metric you don't want to *break* (e.g.,
   latency, error rate).
-- **Driver** — intermediate metric that explains *why* OEC
+- **Driver** - intermediate metric that explains *why* OEC
   changes (e.g., click-through rate explains conversion).
 
 Per Kohavi et al.: the OEC is **one metric** (or a weighted
 combination), declared in advance, with a power calculation. The
-guardrails are the **rest of the dashboard** — short-term loss is
+guardrails are the **rest of the dashboard** - short-term loss is
 acceptable if within bounds, but a significant degradation
 **blocks ship**.
 
@@ -81,7 +81,7 @@ Example for API latency p95:
 The "whichever is greater" handles fast endpoints where 10% is
 trivially small in absolute terms.
 
-## Standard guardrails — the canonical set
+## Standard guardrails - the canonical set
 
 | Domain | Guardrail | Direction |
 |---|---|---|
@@ -93,13 +93,13 @@ trivially small in absolute terms.
 | Trust | Opt-out rate, complaint rate, refund rate | Should not increase |
 
 Per Kohavi et al.: **always include a quality guardrail**
-(latency / error) — the most-missed category in real
+(latency / error) - the most-missed category in real
 experiments.
 
 ## Pre-commitment vs post-hoc
 
 Guardrails must be **declared before** the experiment starts.
-Per Kohavi et al.: post-hoc guardrails are p-hacking — if you
+Per Kohavi et al.: post-hoc guardrails are p-hacking - if you
 look at 50 metrics, some will spuriously fail.
 
 Document declarations in the experiment config:

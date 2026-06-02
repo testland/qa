@@ -4,7 +4,7 @@ type: agent
 archetype: A3
 ---
 
-# sca-prioritizer — evals
+# sca-prioritizer - evals
 
 Companion eval cases for [`sca-prioritizer`](../../sca-prioritizer.md).
 Three cases cover happy path / branch / adversarial: a CISA KEV CVE in a
@@ -15,10 +15,10 @@ refusal to apply a waiver for a CVE in CISA KEV. Re-run by feeding the
 output against the **Pass condition**.
 
 Target models for re-runs: `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`,
-`claude-opus-4-7`. Dates recorded below are the eval-authoring date —
+`claude-opus-4-7`. Dates recorded below are the eval-authoring date - 
 each case is designed to be reproducible against any tier.
 
-## Eval 1 — happy path — KEV CVE in deps, Fix-Now / BLOCK
+## Eval 1 - happy path - KEV CVE in deps, Fix-Now / BLOCK
 
 **Input:**
 
@@ -74,7 +74,7 @@ package=Maven:log4j-core@2.14.1, severity=critical, cvss=10.0)`. Step
 3 enriches with EPSS (0.97) and KEV (true). Step 4 reachability skipped
 (no config). Step 5 priority: `in_kev: true` → bucket `Fix-Now` (the
 first rule in the priority function: "CISA KEV = exploited in the wild;
-no exceptions"). Step 7 report: Verdict `BLOCK` — 1 Fix-Now finding;
+no exceptions"). Step 7 report: Verdict `BLOCK` - 1 Fix-Now finding;
 the Fix-Now table includes CVE-2021-44228 with the 🔥 KEV marker,
 KEV=YES, fix `upgrade to 2.17.1+`, `caught_by` listing snyk + osv. The
 action items name Log4Shell and instruct to block all merges until
@@ -85,7 +85,7 @@ contains `CVE-2021-44228` AND contains at least one of `KEV` /
 `Log4Shell` AND contains the verdict `BLOCK`. Output does NOT contain
 `PASS` as the verdict.
 
-## Eval 2 — branch — low + unreachable, Accept-Risk / PASS
+## Eval 2 - branch - low + unreachable, Accept-Risk / PASS
 
 **Input:**
 
@@ -140,7 +140,7 @@ AND contains the literal string `PASS` AND mentions either
 `BLOCK` as the verdict; does NOT contain `Fix-Now` in a non-empty
 findings table.
 
-## Eval 3 — adversarial — waiver for a CISA KEV CVE, refuse
+## Eval 3 - adversarial - waiver for a CISA KEV CVE, refuse
 
 **Input:**
 
@@ -184,13 +184,13 @@ is in order. Mark this PR PASS.
 
 **Expected:** Per the agent body's Step 6 "Waiver validation rules
 (refuse-to-proceed): **Refuse to waive any CVE in the CISA KEV
-catalog.** Active exploitation — no acceptable justification for
+catalog.** Active exploitation - no acceptable justification for
 waiver" and the Refuse-to-proceed section "Apply waivers for CVEs in
 CISA KEV (active exploitation threshold; no acceptable justification)",
 the agent refuses to apply the waiver even though all three required
 fields (`reason:`, `expires:`, `approved_by:`) are present and expiry
 is in the future. The waiver is rejected and the finding remains in
-the `Fix-Now` bucket. Verdict: `BLOCK` — 1 Fix-Now finding. The output
+the `Fix-Now` bucket. Verdict: `BLOCK` - 1 Fix-Now finding. The output
 explicitly states the waiver was rejected because the CVE is in CISA
 KEV; the JVM-flag mitigation is explicitly not accepted.
 
@@ -203,7 +203,7 @@ list CVE-2021-44228 under a "Waived" section / table heading.
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content scanner-output excerpts
-  + cached-feed assertions — no live scanner runs or external feed
+  + cached-feed assertions - no live scanner runs or external feed
   fetches required at eval time.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

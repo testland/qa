@@ -1,6 +1,6 @@
 ---
 name: qa-okr-author
-description: "Build-an-X workflow that drafts a QA team's quarterly OKR set — one to three Objectives, each with 3–5 measurable Key Results — from the team's current state (risk matrix, defect-trend narrative, test-run history, test-pyramid balance, compliance coverage). Every numeric target cites its source artifact (e.g., `defect-trend-narrator` 2026-Q1 escape rate). QA-specific by design — generic OKR generators (Tability, Asana, ClickUp) don't know test metrics; the differentiation is the domain. Distinct from `test-strategy-author` (which authors the strategy doc) and from `risk-matrix-recommender` (which calibrates risk inputs). Use at the start of each quarter to draft the OKR set the manager edits and the team commits to."
+description: "Build-an-X workflow that drafts a QA team's quarterly OKR set - one to three Objectives, each with 3 - 5 measurable Key Results - from the team's current state (risk matrix, defect-trend narrative, test-run history, test-pyramid balance, compliance coverage). Every numeric target cites its source artifact (e.g., `defect-trend-narrator` 2026-Q1 escape rate). QA-specific by design - generic OKR generators (Tability, Asana, ClickUp) don't know test metrics; the differentiation is the domain. Distinct from `test-strategy-author` (which authors the strategy doc) and from `risk-matrix-recommender` (which calibrates risk inputs). Use at the start of each quarter to draft the OKR set the manager edits and the team commits to."
 rating: 24
 d6: 4
 archetype: S3
@@ -12,7 +12,7 @@ archetype: S3
 
 The QA manager opens a blank document at quarter-start to draft OKRs. Generic OKR templates (Tability, Asana, ClickUp) all share the same flaw: they don't know what to measure for a QA team. "Improve quality" is not an Objective; "achieve 95% pass rate" is not a Key Result without a baseline and a documented method. This skill produces a draft anchored on the team's actual current-state data, with every numeric target citing the artifact it came from.
 
-Per the canonical OKR framework ([Doerr 2018, *Measure What Matters*; Grove's original formulation at Intel](https://en.wikipedia.org/wiki/Objectives_and_key_results)), each Objective is "a significant, concrete, clearly defined goal that is inspirational," and each Key Result is "measurable success criteria using 0–100% scales or numerical values with no ambiguity." Doerr recommends organizations target a **70% success rate** — consistently hitting 100% means the OKRs need to be more aspirational. This skill emits both Committed KRs (target: 1.0 grading, binary outcomes) and Aspirational KRs (target: 0.7 grading, stretch).
+Per the canonical OKR framework ([Doerr 2018, *Measure What Matters*; Grove's original formulation at Intel](https://en.wikipedia.org/wiki/Objectives_and_key_results)), each Objective is "a significant, concrete, clearly defined goal that is inspirational," and each Key Result is "measurable success criteria using 0 - 100% scales or numerical values with no ambiguity." Doerr recommends organizations target a **70% success rate** - consistently hitting 100% means the OKRs need to be more aspirational. This skill emits both Committed KRs (target: 1.0 grading, binary outcomes) and Aspirational KRs (target: 0.7 grading, stretch).
 
 ## When to use
 
@@ -23,28 +23,28 @@ Per the canonical OKR framework ([Doerr 2018, *Measure What Matters*; Grove's or
 
 Do **not** use this skill when:
 
-- The team has no measurable baseline data (no defect history, no test-run history, no risk matrix). Without measurable inputs, the KRs are aspirational fiction — escalate to upstream authoring skills first.
-- The Objective is already locked by leadership and you only need the KRs — use the [Committed KR shape](#step-3--draft-committed-vs-aspirational-key-results) directly.
-- You want a generic company-wide OKR — that's Tability / Asana / ClickUp territory; this skill is QA-domain-specific.
+- The team has no measurable baseline data (no defect history, no test-run history, no risk matrix). Without measurable inputs, the KRs are aspirational fiction - escalate to upstream authoring skills first.
+- The Objective is already locked by leadership and you only need the KRs - use the [Committed KR shape](#step-3--draft-committed-vs-aspirational-key-results) directly.
+- You want a generic company-wide OKR - that's Tability / Asana / ClickUp territory; this skill is QA-domain-specific.
 
-## Step 1 — Capture the inputs
+## Step 1 - Capture the inputs
 
 Required:
 
 | Input | Source | Why load-bearing |
 |---|---|---|
 | **Quarterly objective(s)** | Manager-provided; aligned with engineering / product OKRs | The skill drafts KRs *under* objectives the team owns; it won't invent strategic direction |
-| **Current-state metrics** | At least one of: [`risk-matrix`](../risk-matrix/SKILL.md) output, [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md) recent report, [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md) cross-run-trend, [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) audit | Every KR needs a baseline — without it, the target is unanchored |
+| **Current-state metrics** | At least one of: [`risk-matrix`](../risk-matrix/SKILL.md) output, [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md) recent report, [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md) cross-run-trend, [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) audit | Every KR needs a baseline - without it, the target is unanchored |
 | **Time horizon** | Quarterly (default) or other (semi-annual) | OKR cadence; per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results), quarterly is the canonical rhythm |
 | **Prior OKR set** | If exists; the prior quarter's KRs + their grading | Continuity: drift from prior commitments is itself a signal |
 
 The skill halts with `MISSING_BASELINE — supply ≥1 current-state metric source` if no measurable input is offered.
 
-## Step 2 — Walk the QA-OKR shape catalog
+## Step 2 - Walk the QA-OKR shape catalog
 
-Five canonical QA Objective shapes the skill recognises (catalog, not prescription). Each maps to a measurable KR family. The manager picks 1–3; the skill drafts the KRs.
+Five canonical QA Objective shapes the skill recognises (catalog, not prescription). Each maps to a measurable KR family. The manager picks 1 - 3; the skill drafts the KRs.
 
-### Shape 1 — Strengthen the test pyramid
+### Shape 1 - Strengthen the test pyramid
 
 Anchored on [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md). Used when the suite is E2E-heavy and shifting weight downward improves cycle time + maintainability.
 
@@ -54,7 +54,7 @@ Anchored on [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md). Used w
 | Cycle time | regression suite duration < 45 min per shard | current per `test-run-summary-author` |
 | E2E suite budget | E2E test count ≤ 200, growth rate ≤ 5/quarter | [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) |
 
-### Shape 2 — Reduce escape-defect rate
+### Shape 2 - Reduce escape-defect rate
 
 Anchored on [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md). Used when production defects are above the team's tolerance.
 
@@ -64,7 +64,7 @@ Anchored on [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-
 | Time-to-detect | MTTD on P1 < 4 hours | per [`mttr-mtbf-tracker`](../../../qa-resilience-drills/skills/mttr-mtbf-tracker/SKILL.md) |
 | Category-specific | regression-class escapes -50% WoW | per [`defect-clusterer`](../../../qa-bug-repro/agents/defect-clusterer.md) + `defect-trend-narrator` |
 
-### Shape 3 — Cut regression cycle time
+### Shape 3 - Cut regression cycle time
 
 Anchored on [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md). Used when CI is the bottleneck.
 
@@ -74,9 +74,9 @@ Anchored on [`test-run-summary-author`](../../../qa-test-reporting/skills/test-r
 | Parallelisation | sharding factor ≥ 8 with no shard >90 min | CI config + `test-run-summary-author` |
 | CI cost | per-PR CI cost -30% via TIA | [`regression-suite-selector`](../../../qa-test-impact-analysis/skills/regression-suite-selector/SKILL.md) |
 
-### Shape 4 — Reduce flake-budget consumption
+### Shape 4 - Reduce flake-budget consumption
 
-Anchored on [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md) + [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). Used when flake rate is above the team's tolerance ([TestDino 2026 baseline](https://testdino.com/blog/flaky-test-benchmark) — flake rates rose from 10% in 2022 to 26% in 2025; targets below 5% are aspirational; <10% is committed).
+Anchored on [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md) + [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). Used when flake rate is above the team's tolerance ([TestDino 2026 baseline](https://testdino.com/blog/flaky-test-benchmark) - flake rates rose from 10% in 2022 to 26% in 2025; targets below 5% are aspirational; <10% is committed).
 
 | KR axis | Example KR | Baseline source |
 |---|---|---|
@@ -84,7 +84,7 @@ Anchored on [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detec
 | Flake rate | flake rate < 3% of CI runs (vs 8% current baseline) | per `ai-flake-detector` weekly history |
 | Repair velocity | mean time-to-repair on quarantined test < 5 days | per `flaky-test-quarantine` |
 
-### Shape 5 — Close compliance evidence gaps
+### Shape 5 - Close compliance evidence gaps
 
 Anchored on [`compliance-readiness-reviewer`](../../../qa-compliance/agents/compliance-readiness-reviewer.md). Used in regulated industries (healthcare, finance, automotive).
 
@@ -96,7 +96,7 @@ Anchored on [`compliance-readiness-reviewer`](../../../qa-compliance/agents/comp
 
 Other Objective shapes are valid; these are the most-cited in QA-manager-facing literature.
 
-## Step 3 — Draft committed vs aspirational Key Results
+## Step 3 - Draft committed vs aspirational Key Results
 
 Per the [canonical framework](https://en.wikipedia.org/wiki/Objectives_and_key_results), each KR is either **Committed** (target grading 1.0, binary outcomes the team promises to ship) or **Aspirational** (target grading 0.7, stretch goals where 70% completion is success).
 
@@ -127,7 +127,7 @@ The skill flags each KR explicitly:
 The team avoids risk by setting only committed KRs at safe levels. Per Doerr: "Consistently meeting 100% indicates OKRs need re-evaluation." Mix at least one aspirational KR per Objective.
 ```
 
-## Step 4 — Cite every numeric target
+## Step 4 - Cite every numeric target
 
 The skill refuses to emit a KR target without citing the baseline. The output's audit appendix is the load-bearing artifact that lets the team verify the draft is grounded:
 
@@ -146,7 +146,7 @@ The skill refuses to emit a KR target without citing the baseline. The output's 
 
 If a baseline is not retrievable, the KR is flagged `[BASELINE_NEEDED]` in the draft and excluded from the committed set until the team supplies the data.
 
-## Step 5 — Cross-check against organisational alignment
+## Step 5 - Cross-check against organisational alignment
 
 OKRs are not authored in isolation. The skill emits an **alignment check** section the manager fills before committing:
 
@@ -163,7 +163,7 @@ OKRs are not authored in isolation. The skill emits an **alignment check** secti
 
 Per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results), OKRs at the team level should "ladder up" to company OKRs. The skill makes the laddering explicit so the team can validate alignment in stakeholder review.
 
-## Step 6 — Hand off to retro / quarterly review
+## Step 6 - Hand off to retro / quarterly review
 
 The OKR set is the start of the loop, not the end. Hand-offs at quarter-end:
 
@@ -171,7 +171,7 @@ The OKR set is the start of the loop, not the end. Hand-offs at quarter-end:
 - **Drift analysis**: if multiple quarters show the same Objective without progress, the Objective is wrong (too vague, too ambitious, or not under the team's control).
 - **Source-artifact regeneration**: the same baseline-source skills (`defect-trend-narrator`, `test-run-summary-author`, etc.) emit the end-of-quarter metrics; the comparison is mechanical.
 
-## Worked example — quarter-start draft for a 6-engineer QA team
+## Worked example - quarter-start draft for a 6-engineer QA team
 
 Input:
 - Objectives the manager has aligned with engineering: (a) reduce escape-defect rate, (b) cut regression cycle time.
@@ -229,10 +229,10 @@ Output:
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Setting KRs without baselines | "Reach 99% pass rate" — from what? The KR is unanchored; success can't be measured | Step 4 enforces baseline citation; flag `[BASELINE_NEEDED]` if missing |
+| Setting KRs without baselines | "Reach 99% pass rate" - from what? The KR is unanchored; success can't be measured | Step 4 enforces baseline citation; flag `[BASELINE_NEEDED]` if missing |
 | 100% committed KRs, no aspirational | Per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results): "Consistently meeting 100% indicates OKRs need re-evaluation" | At least one aspirational KR per Objective |
-| KRs that aren't team-controllable | "Customer churn -50%" — QA can't move that lever alone | KRs are scoped to outcomes QA can directly cause |
-| Six or more Objectives | Loss of focus; per the canonical framework, 1–3 Objectives is the recommended ceiling | Step 1 caps Objectives at 3 |
+| KRs that aren't team-controllable | "Customer churn -50%" - QA can't move that lever alone | KRs are scoped to outcomes QA can directly cause |
+| Six or more Objectives | Loss of focus; per the canonical framework, 1 - 3 Objectives is the recommended ceiling | Step 1 caps Objectives at 3 |
 | KR with no measurable axis ("improve quality") | Not gradeable; the team cannot tell if it succeeded | Step 3 rejects un-measurable KRs |
 | KRs that drift from the prior quarter without acknowledging the drift | Continuous re-targeting hides chronic underperformance | Step 1 ingests prior OKR set; drift surfaces in the rationale |
 | Generic OKR template adopted without QA-specific KRs | The team commits to "ship more features" goals that don't measure quality | This skill is QA-domain-specific by design |
@@ -259,12 +259,12 @@ Output:
 
 ## References
 
-- *Measure What Matters* (John Doerr, 2018) — canonical modern OKR reference; covers committed vs aspirational, 0.7 sweet spot, 1–3 objectives per cadence. Origin: Andy Grove at Intel in the 1970s, documented in *High Output Management* (1983), introduced to Google by Doerr in 1999: https://en.wikipedia.org/wiki/Objectives_and_key_results
-- ISTQB glossary — test management (the discipline OKRs sit under): https://glossary.istqb.org/en_US/term/test-management
-- ISTQB glossary — quality goal: https://glossary.istqb.org/en_US/term/quality-goal
-- ISTQB glossary — defect density (canonical metric for Shape 2 KRs): https://glossary.istqb.org/en_US/term/defect-density
-- ISTQB glossary — escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
-- TestDino Flaky Test Benchmark 2026 — flake rate baselines for Shape 4 KRs (10% in 2022 → 26% in 2025; <5% aspirational, <10% committed): https://testdino.com/blog/flaky-test-benchmark
-- PractiTest 2026 State of Testing Report — manager-tier survey; 19.9% of teams use AI for risk identification (cited in Shape 2 rationale): https://www.practitest.com/state-of-testing/
-- [`test-strategy-author`](../test-strategy-author/SKILL.md), [`risk-matrix`](../risk-matrix/SKILL.md), [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md), [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md), [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) — sibling skills in the same plugin that feed inputs.
-- [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md), [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md), [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md), [`compliance-readiness-reviewer`](../../../qa-compliance/agents/compliance-readiness-reviewer.md), [`mttr-mtbf-tracker`](../../../qa-resilience-drills/skills/mttr-mtbf-tracker/SKILL.md) — cross-plugin baseline-source skills.
+- *Measure What Matters* (John Doerr, 2018) - canonical modern OKR reference; covers committed vs aspirational, 0.7 sweet spot, 1 - 3 objectives per cadence. Origin: Andy Grove at Intel in the 1970s, documented in *High Output Management* (1983), introduced to Google by Doerr in 1999: https://en.wikipedia.org/wiki/Objectives_and_key_results
+- ISTQB glossary - test management (the discipline OKRs sit under): https://glossary.istqb.org/en_US/term/test-management
+- ISTQB glossary - quality goal: https://glossary.istqb.org/en_US/term/quality-goal
+- ISTQB glossary - defect density (canonical metric for Shape 2 KRs): https://glossary.istqb.org/en_US/term/defect-density
+- ISTQB glossary - escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
+- TestDino Flaky Test Benchmark 2026 - flake rate baselines for Shape 4 KRs (10% in 2022 → 26% in 2025; <5% aspirational, <10% committed): https://testdino.com/blog/flaky-test-benchmark
+- PractiTest 2026 State of Testing Report - manager-tier survey; 19.9% of teams use AI for risk identification (cited in Shape 2 rationale): https://www.practitest.com/state-of-testing/
+- [`test-strategy-author`](../test-strategy-author/SKILL.md), [`risk-matrix`](../risk-matrix/SKILL.md), [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md), [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md), [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling skills in the same plugin that feed inputs.
+- [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md), [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md), [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md), [`compliance-readiness-reviewer`](../../../qa-compliance/agents/compliance-readiness-reviewer.md), [`mttr-mtbf-tracker`](../../../qa-resilience-drills/skills/mttr-mtbf-tracker/SKILL.md) - cross-plugin baseline-source skills.

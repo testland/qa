@@ -53,14 +53,14 @@ Per RFC 3339:
 
 | ISO 8601 valid | RFC 3339 |
 |---|---|
-| `20260520T143000Z` (compact, no separators) | **Forbidden** — needs hyphens + colons |
-| `2026-05-20T14:30:00+02` (offset short form) | **Forbidden** — must be `+02:00` |
-| `2026-W21-3` (week date) | **Forbidden** — week dates not supported |
-| `2026-140` (ordinal date) | **Forbidden** — ordinal dates not supported |
-| `2026-05-20T14:30:00,123Z` (comma decimal) | **Forbidden** — period only |
-| `--05-20` (omitted year) | **Forbidden** — year required |
-| `+002026-05-20T...` (extended year) | **Forbidden** — 4 digits |
-| `24:00:00` (midnight as end-of-day) | **Forbidden** — only `00:00:00` (start) |
+| `20260520T143000Z` (compact, no separators) | **Forbidden** - needs hyphens + colons |
+| `2026-05-20T14:30:00+02` (offset short form) | **Forbidden** - must be `+02:00` |
+| `2026-W21-3` (week date) | **Forbidden** - week dates not supported |
+| `2026-140` (ordinal date) | **Forbidden** - ordinal dates not supported |
+| `2026-05-20T14:30:00,123Z` (comma decimal) | **Forbidden** - period only |
+| `--05-20` (omitted year) | **Forbidden** - year required |
+| `+002026-05-20T...` (extended year) | **Forbidden** - 4 digits |
+| `24:00:00` (midnight as end-of-day) | **Forbidden** - only `00:00:00` (start) |
 
 ## Per-language parser support
 
@@ -112,7 +112,7 @@ For wire format, **always include offset**.
 ### Sortability
 
 UTC strings (`...Z`) are lexically sortable. Mixed-offset strings
-are not — `2026-05-20T14:30:00+02:00` sorts before `2026-05-20T13:00:00Z`
+are not - `2026-05-20T14:30:00+02:00` sorts before `2026-05-20T13:00:00Z`
 even though it's later in time.
 
 **Always store UTC. Display local if needed.**

@@ -1,6 +1,6 @@
 ---
 name: observability-to-test
-description: "Closes the loop between production observability signals and the test suite — reads a synthetic-monitor failure / Sentry error / Datadog incident / log alert, isolates the failing condition (input + state + system version), proposes the regression test that would have caught it (unit + integration + E2E layers per the test pyramid), and emits a PR adding the test plus the bug-repro package. Use after every production-side incident — converts \"we caught it in prod\" into \"we'll catch it earlier next time."
+description: "Closes the loop between production observability signals and the test suite - reads a synthetic-monitor failure / Sentry error / Datadog incident / log alert, isolates the failing condition (input + state + system version), proposes the regression test that would have caught it (unit + integration + E2E layers per the test pyramid), and emits a PR adding the test plus the bug-repro package. Use after every production-side incident - converts \"we caught it in prod\" into \"we'll catch it earlier next time."
 tools: "Read, Write, Edit, Grep, Glob, Bash(gh issue view *), Bash(curl *), Bash(jq *)"
 model: sonnet
 skills:
@@ -28,7 +28,7 @@ per the [test pyramid][tp], a PR bundling the test with the fix, and
 
 [tp]: https://martinfowler.com/bliki/TestPyramid.html
 
-## Step 1 — Pull the production signal
+## Step 1 - Pull the production signal
 
 Fetch via the source's API (`curl ... | jq` against Checkly
 `/v1/check-results/`, Sentry `/api/0/organizations/$ORG/issues/`,
@@ -37,7 +37,7 @@ or Datadog `/api/v1/incidents/`). Extract: the failure point
 error / assertion message, the system version (commit SHA, deploy
 version), and the frequency.
 
-## Step 2 — Classify the regression class
+## Step 2 - Classify the regression class
 
 | Class                          | Signal                                                                       | Test layer |
 |--------------------------------|------------------------------------------------------------------------------|-----------|
@@ -52,10 +52,10 @@ version), and the frequency.
 
 Per [test-pyramid][tp]: "many more low-level UnitTests than high
 level BroadStackTests". The agent picks the **cheapest layer that
-definitively catches the regression** — adding the test higher to
+definitively catches the regression** - adding the test higher to
 "be safe" duplicates coverage and slows the suite.
 
-## Step 3 — Propose the test + fix
+## Step 3 - Propose the test + fix
 
 Input: Sentry `NullPointerException at Cart.addItem:42` triggered by
 `{ sku: 'BOOK-001', qty: -1 }`. Classification: pure-logic bug → unit.
@@ -84,10 +84,10 @@ For contract bugs, use the OpenAPI / Pact regression shape per
 [`pact-contract-testing`](../../qa-contract-testing/skills/pact-contract-testing/SKILL.md)
 or [`schemathesis-fuzzing`](../../qa-api-testing/skills/schemathesis-fuzzing/SKILL.md).
 For stale-selector synthetic-monitor failures, the verdict is
-"not a regression — update the monitor's selector" rather than a
+"not a regression - update the monitor's selector" rather than a
 new test.
 
-## Step 4 — Generate the PR + postmortem note
+## Step 4 - Generate the PR + postmortem note
 
 PR body sections: **Production signal** (source, first-seen version,
 frequency, trigger input), **Class** (one of the Step 2 categories),
@@ -95,7 +95,7 @@ frequency, trigger input), **Class** (one of the Step 2 categories),
 fix** (path:line + diff summary), **Verification** (CI re-runs the
 failing input; `grep` for other vulnerable call sites).
 
-If `docs/postmortems/<incident>.md` exists, append a "Prevention —
+If `docs/postmortems/<incident>.md` exists, append a "Prevention - 
 regression test added" section linking the PR + test path.
 
 ## Refuse-to-proceed rules
@@ -137,8 +137,7 @@ The agent **refuses** to:
 
 ## References
 
-- [tp][tp] — test pyramid; drives the layer-down rule (Step 2).
-- ISTQB Glossary V4.7.1 — `shift-right`
+- [tp][tp] - test pyramid; drives the layer-down rule (Step 2).
+- ISTQB Glossary V4.7.1 - `shift-right`
   (`https://glossary.istqb.org/en_US/term/shift-right`).
-- [`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md)
-  — preloaded skill; upstream side of the same loop.
+- [`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md) - preloaded skill; upstream side of the same loop.

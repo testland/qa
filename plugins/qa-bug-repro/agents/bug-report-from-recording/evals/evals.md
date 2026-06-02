@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# bug-report-from-recording — evals
+# bug-report-from-recording - evals
 
 Companion eval cases for [`bug-report-from-recording`](../../bug-report-from-recording.md).
 Three cases cover happy path / branch / adversarial: producing a filled
@@ -14,7 +14,7 @@ refusing to operate on a passing-test trace (no failure to report).
 Re-run by feeding the **Input** block as the first user message and
 checking the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — Playwright trace.zip with failed assertion
+## Eval 1 - happy path - Playwright trace.zip with failed assertion
 
 **Input:**
 
@@ -75,7 +75,7 @@ rule) AND contains the verbatim error or response body substring
 (e.g. `out_of_stock` or `409`). Output mentions
 `bug-repro-builder` (the hand-off named in the agent body).
 
-## Eval 2 — branch — HAR + console + screenshot bundle (no Playwright trace)
+## Eval 2 - branch - HAR + console + screenshot bundle (no Playwright trace)
 
 **Input:**
 
@@ -108,17 +108,17 @@ URL: https://shop.example.com/product/SKU-002
 
 **Expected:** Step 1 detects the input shape as `har` + console +
 screenshot bundle (NOT a Playwright trace). Step 2 parses
-`log.entries[]`, filters to the first non-2xx response — entry [3]
-`POST /api/cart/items → 500` — and extracts the response body
+`log.entries[]`, filters to the first non-2xx response - entry [3]
+`POST /api/cart/items → 500` - and extracts the response body
 (`{"error":"internal_error","traceId":"t-9f3a"}`) and the matched
 console errors. Step 3 fills the template: **Environment** populated
 from `log.browser` and `log.creator` (Chrome 138.0.7204.92), viewport
 inferred from the screenshot (1366x768). **Actual** is the verbatim
-500 response body. **Expected** is the documented HTTP contract — 200
+500 response body. **Expected** is the documented HTTP contract - 200
 (or 201) for a successful add-to-cart. **Severity** is high (5xx).
 **Priority** is `[set by triage]`. **Reproducibility** is `Once (per
 this recording)`. The agent flags HAR-only as a limited input shape per
-its "HAR-only inputs lose UI evidence" note — but since a screenshot
+its "HAR-only inputs lose UI evidence" note - but since a screenshot
 and console were also supplied, the report has enough evidence to
 emit. The agent does NOT halt on the missing trace.
 
@@ -127,7 +127,7 @@ emit. The agent does NOT halt on the missing trace.
 contains `[set by triage]` for Priority. Output classifies severity
 as `high` (the 5xx surface).
 
-## Eval 3 — adversarial — passing-test trace (refuse: no failure to report)
+## Eval 3 - adversarial - passing-test trace (refuse: no failure to report)
 
 **Input:**
 
@@ -155,11 +155,10 @@ No non-2xx network entries. No console errors. No error.message in
 **Target models:** sonnet (2026-05-25)
 
 **Expected:** Step 1 detects the input as `playwright-trace`. Step 2
-attempts to find a failed action or non-2xx response and finds neither
-— every action is `success`, the test outcome is `passed`, no console
+attempts to find a failed action or non-2xx response and finds neither - every action is `success`, the test outcome is `passed`, no console
 errors, no non-2xx requests. Per the refuse-to-proceed rule "Emit a
 report from a passing test recording. A passing trace has no failing
-action; the agent returns `NO_FAILURE_DETECTED — recording does not
+action; the agent returns `NO_FAILURE_DETECTED - recording does not
 contain a failed assertion or non-2xx response`", the agent halts. It
 does NOT fabricate a `Summary`, `Expected`, or `Actual`. It does NOT
 emit a filled `bug-report-template` block. It returns the exact
@@ -174,7 +173,7 @@ bug-report-template body (no filled report is emitted).
 ## Reproducibility notes
 
 - All three inputs are concrete pasted-content blocks describing the
-  trace / HAR contents — no need to capture real `.zip` / `.har`
+  trace / HAR contents - no need to capture real `.zip` / `.har`
   fixtures. The agent reads the described structure.
 - Pass conditions are literal-string checks; a reviewer can grep the
   agent's transcript for each substring.

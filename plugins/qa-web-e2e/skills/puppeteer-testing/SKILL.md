@@ -1,6 +1,6 @@
 ---
 name: puppeteer-testing
-description: "Authors browser automation scripts using Puppeteer — Chrome / Chromium-only headless / headed automation, Page object via `page.*` API, network interception, PDF generation, screenshot capture, scraping. Distinct from Playwright (Puppeteer's older sibling, Chrome-only) — use Puppeteer for Chrome-only browser automation tasks (scraping, generating PDFs from HTML, screenshot pipelines) where Playwright's multi-browser support is unneeded overhead."
+description: "Authors browser automation scripts using Puppeteer - Chrome / Chromium-only headless / headed automation, Page object via `page.*` API, network interception, PDF generation, screenshot capture, scraping. Distinct from Playwright (Puppeteer's older sibling, Chrome-only) - use Puppeteer for Chrome-only browser automation tasks (scraping, generating PDFs from HTML, screenshot pipelines) where Playwright's multi-browser support is unneeded overhead."
 rating: 22
 d6: 3
 archetype: S1
@@ -31,7 +31,7 @@ Puppeteer is still maintained and useful when:
 For E2E testing specifically: **Playwright is the recommended
 successor**. Migration is mostly mechanical (similar API).
 
-## Step 1 — Install
+## Step 1 - Install
 
 ```bash
 npm install --save-dev puppeteer
@@ -44,7 +44,7 @@ npm install --save-dev puppeteer-core
 `puppeteer` (full) bundles Chromium; `puppeteer-core` (lite) lets
 you point at an existing Chrome.
 
-## Step 2 — Basic browser automation
+## Step 2 - Basic browser automation
 
 ```javascript
 // scripts/screenshot.js
@@ -62,7 +62,7 @@ import puppeteer from 'puppeteer';
 The `page.*` API mirrors Playwright's: `page.goto`, `page.click`,
 `page.type`, `page.evaluate`, etc.
 
-## Step 3 — E2E test (with Jest)
+## Step 3 - E2E test (with Jest)
 
 ```javascript
 // __tests__/checkout.test.js
@@ -99,7 +99,7 @@ test('checkout flow', async () => {
 }, 60000);
 ```
 
-## Step 4 — Network interception
+## Step 4 - Network interception
 
 ```javascript
 // Intercept and modify requests
@@ -121,7 +121,7 @@ page.on('request', request => {
 Useful for stubbing third-party APIs in tests or mocking
 responses.
 
-## Step 5 — PDF generation
+## Step 5 - PDF generation
 
 ```javascript
 import puppeteer from 'puppeteer';
@@ -143,7 +143,7 @@ import puppeteer from 'puppeteer';
 Common production use: server-side PDF generation from HTML
 templates.
 
-## Step 6 — Screenshot pipelines
+## Step 6 - Screenshot pipelines
 
 ```javascript
 // Generate screenshots for marketing site at multiple viewports
@@ -160,7 +160,7 @@ for (const vp of viewports) {
 }
 ```
 
-## Step 7 — Web scraping
+## Step 7 - Web scraping
 
 ```javascript
 await page.goto('https://example.com/products');
@@ -176,7 +176,7 @@ const products = await page.$$eval('.product-card', cards =>
 console.log(products);
 ```
 
-## Step 8 — Run
+## Step 8 - Run
 
 ```bash
 node scripts/screenshot.js
@@ -185,7 +185,7 @@ node scripts/screenshot.js
 npx jest
 ```
 
-## Step 9 — Migration to Playwright
+## Step 9 - Migration to Playwright
 
 When ready to migrate:
 
@@ -201,7 +201,7 @@ const page = await browser.newPage();
 
 The APIs are similar; mechanical find-replace covers most cases.
 Playwright adds: cross-browser, web-first assertions, trace viewer,
-codegen — net win unless Chrome-only is intentional.
+codegen - net win unless Chrome-only is intentional.
 
 ## Anti-patterns
 
@@ -224,7 +224,7 @@ codegen — net win unless Chrome-only is intentional.
 ## References
 
 - Puppeteer docs at `pptr.dev`.
-- [`playwright-testing`](../playwright-testing/SKILL.md) —
+- [`playwright-testing`](../playwright-testing/SKILL.md) - 
   recommended successor.
-- [`testcafe-testing`](../testcafe-testing/SKILL.md) — alternative
+- [`testcafe-testing`](../testcafe-testing/SKILL.md) - alternative
   Chrome-friendly E2E.

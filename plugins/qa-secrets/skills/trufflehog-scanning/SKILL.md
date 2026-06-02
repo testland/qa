@@ -1,6 +1,6 @@
 ---
 name: trufflehog-scanning
-description: "Configures and runs TruffleHog v3 — secret scanner with **live verification** (validates discovered secrets against provider APIs to confirm actual exposure vs entropy false positive); supports per-source subcommands (`git`, `github`, `gitlab`, `filesystem`, `s3`, `docker`, `gcs`, `postman`); `--results=verified` filter for high-precision output; `--exclude-detectors=TYPE` for noise reduction; exits 183 on findings via `--fail`. Use when the team needs verified secret findings (low false-positive rate) or scans across cloud + repo + container surfaces."
+description: "Configures and runs TruffleHog v3 - secret scanner with **live verification** (validates discovered secrets against provider APIs to confirm actual exposure vs entropy false positive); supports per-source subcommands (`git`, `github`, `gitlab`, `filesystem`, `s3`, `docker`, `gcs`, `postman`); `--results=verified` filter for high-precision output; `--exclude-detectors=TYPE` for noise reduction; exits 183 on findings via `--fail`. Use when the team needs verified secret findings (low false-positive rate) or scans across cloud + repo + container surfaces."
 rating: 23
 d6: 4
 archetype: S1
@@ -14,7 +14,7 @@ Per [github.com/trufflesecurity/trufflehog][th-gh]:
 
 [th-gh]: https://github.com/trufflesecurity/trufflehog
 
-TruffleHog v3's distinguishing feature is **live verification** —
+TruffleHog v3's distinguishing feature is **live verification** - 
 discovered secrets are tested against the provider API to confirm
 they're actual valid credentials. This dramatically reduces
 false-positive rate vs entropy-only scanners.
@@ -34,7 +34,7 @@ unverified hits in CI gating.
 - Layered with [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md)
   for cross-tool consensus.
 
-## Step 1 — Install
+## Step 1 - Install
 
 Per [th-gh][th-gh]:
 
@@ -55,7 +55,7 @@ git clone https://github.com/trufflesecurity/trufflehog.git
 cd trufflehog && go install
 ```
 
-## Step 2 — Per-source subcommands
+## Step 2 - Per-source subcommands
 
 Per [th-gh][th-gh] TruffleHog uses subcommands per data source:
 
@@ -83,7 +83,7 @@ trufflehog github --org=trufflesecurity --results=verified --json
 trufflehog filesystem path/to/file1.txt path/to/dir
 ```
 
-## Step 3 — Verification: the killer feature
+## Step 3 - Verification: the killer feature
 
 Per [th-gh][th-gh]:
 
@@ -105,7 +105,7 @@ will let an attacker into your account" (definitely real).
 + may generate audit-log entries. For compliance-sensitive scans,
 disable via `--no-verification`.
 
-## Step 4 — Output formats
+## Step 4 - Output formats
 
 Per [th-gh][th-gh]:
 
@@ -122,7 +122,7 @@ integration, use `--json --results=verified`:
 trufflehog git . --json --results=verified > verified-secrets.json
 ```
 
-## Step 5 — False-positive triage (MANDATORY)
+## Step 5 - False-positive triage (MANDATORY)
 
 TruffleHog has fewer false positives than entropy-only scanners
 (thanks to verification), but unverified findings still need
@@ -133,7 +133,7 @@ triage:
 | `--results=verified` filter | Most aggressive: only confirmed-real secrets in output |
 | `--exclude-detectors=TYPE,TYPE2` | Disable specific detectors (e.g., overly noisy ones) |
 | `--include-detectors=TYPE,TYPE2` | Whitelist mode: ONLY listed detectors |
-| `--no-verification` | Disable API calls (use entropy + regex only — more FPs) |
+| `--no-verification` | Disable API calls (use entropy + regex only - more FPs) |
 | `--exclude-paths=PATH_PATTERN` | Skip directories (vendor, generated code) |
 | `--config=trufflehog.yaml` | YAML config for advanced control |
 
@@ -170,16 +170,16 @@ detectors:
 Cadence: every quarter, audit `trufflehog.yaml` disabled detectors
 + exclude_paths; expired entries removed.
 
-## Step 6 — Failure semantics
+## Step 6 - Failure semantics
 
 Per [th-gh][th-gh]:
 
 > "`--fail` - Exit with code 183 if secrets found"
 
 Exit codes:
-- `0` — no secrets found
-- `183` — secrets found (with `--fail`)
-- (other) — runtime errors
+- `0` - no secrets found
+- `183` - secrets found (with `--fail`)
+- (other) - runtime errors
 
 CI usage:
 
@@ -189,7 +189,7 @@ trufflehog git . --results=verified --fail
 # CI workflow fails the job on non-zero exit
 ```
 
-## Step 7 — Pre-commit + CI integration
+## Step 7 - Pre-commit + CI integration
 
 Pre-commit hook (community-supported, not first-party):
 
@@ -222,7 +222,7 @@ jobs:
 
 `base` + `head` enable diff-only scanning on PRs (faster).
 
-## Step 8 — Cross-tool layering
+## Step 8 - Cross-tool layering
 
 Pair with [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md):
 - gitleaks: faster, regex-based, runs in pre-commit
@@ -250,17 +250,17 @@ formats not yet in gitleaks' rule library).
 - Rate-limited APIs may slow scans or fail verification on
   large secret pools.
 - Verification doesn't prove the secret hasn't been already
-  rotated — a "valid" key per TruffleHog might be a recently-rotated
+  rotated - a "valid" key per TruffleHog might be a recently-rotated
   legacy key still active for grace period.
 - TruffleHog Enterprise (paid) has more detectors + features; the
   OSS version covers ~200 detectors.
 
 ## References
 
-- [th-gh][th-gh] — repository, install, commands, exit codes
-- trufflesecurity.com — company site
+- [th-gh][th-gh] - repository, install, commands, exit codes
+- trufflesecurity.com - company site
 - [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md),
-  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) —
+  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) - 
   sister scanners
-- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) —
+- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) - 
   rotation workflow after detection

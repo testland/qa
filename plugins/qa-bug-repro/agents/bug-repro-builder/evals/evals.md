@@ -4,7 +4,7 @@ type: agent
 archetype: A2
 ---
 
-# bug-repro-builder — evals
+# bug-repro-builder - evals
 
 Companion eval cases for [`bug-repro-builder`](../../bug-repro-builder.md).
 Three cases cover happy path / branch / adversarial: unit-test layer for
@@ -14,7 +14,7 @@ and refusing to proceed when the bug report is missing the Expected
 field. Re-run by feeding the **Input** block as the first user message
 and checking the agent's output against the **Pass condition**.
 
-## Eval 1 — happy path — unit test in a Vitest repo
+## Eval 1 - happy path - unit test in a Vitest repo
 
 **Input:**
 
@@ -68,7 +68,7 @@ international numbers untouched (regression for #1234)', ...)` assertion
 that calls `formatPhoneNumber('+44 20 1234 5678')` and expects the
 verbatim international output. Step 5 reports running the test once
 and quotes the verbatim failure output. Step 6 emits the artifact path
-+ run output per the output format block — `Layer chosen: unit`, `Test
++ run output per the output format block - `Layer chosen: unit`, `Test
 framework: vitest`, `Test path: src/lib/format-phone-number.test.ts`,
 the captured failure substring including `AssertionError`. The agent
 does NOT fix the bug or modify any existing passing tests.
@@ -79,7 +79,7 @@ does NOT fix the bug or modify any existing passing tests.
 does NOT modify or remove any of the 3 existing passing US-domestic
 test cases.
 
-## Eval 2 — branch — E2E test in a Playwright repo (different framework + layer)
+## Eval 2 - branch - E2E test in a Playwright repo (different framework + layer)
 
 **Input:**
 
@@ -120,7 +120,7 @@ Repo facts:
 Assume `npx playwright test tests/checkout.spec.ts --grep "postal-code required"`
 returns:
 ```
-✘ tests/checkout.spec.ts:67 — postal-code required validation
+✘ tests/checkout.spec.ts:67 - postal-code required validation
   Error: expect(getByText('Postal code is required')).toBeVisible()
   Timed out 5000ms waiting for element to be visible.
 1 failed, 0 passed
@@ -145,7 +145,7 @@ e2e` AND `Test framework: playwright` AND mentions `Postal code is
 required` (the load-bearing literal from the bug). Output does NOT
 choose a unit-test layer (the multi-page flow rules out unit).
 
-## Eval 3 — adversarial — bug report missing Expected (refuse to proceed)
+## Eval 3 - adversarial - bug report missing Expected (refuse to proceed)
 
 **Input:**
 
@@ -183,7 +183,7 @@ is `[not filled in by the reporter]` and the **Actual** field
 ("something weird") is non-load-bearing prose. There is no specific
 assertion to encode and no input/output pair to anchor the failing
 test on. Without an Expected value, the agent CANNOT write a
-regression-prevention test — a passing "failing test" is worse than no
+regression-prevention test - a passing "failing test" is worse than no
 test (the agent's body explicitly states this). The agent halts and
 recommends running the report through
 [`bug-report-template`](../skills/bug-report-template/SKILL.md) first to

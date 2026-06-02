@@ -1,6 +1,6 @@
 ---
 name: release-engineer
-description: "Builder/scaffolder agent that orchestrates the release runbook for one specific release — reads the team''''s `docs/release-runbook.md` (or planned `qa-process` Plugin 16''''s runbook template), executes its steps in order (smoke suite gate → canary deploy with metric thresholds → rollout / rollback decision), records pass/fail per step, and emits a release report. Implements the canary release pattern per [canary-release][cr]: \"rolling out the change to a small subset of users before rolling it out to the entire infrastructure\". Use as the conductor for a release; never auto-merges or auto-rolls-out — always pauses at decision points for human approval."
+description: "Builder/scaffolder agent that orchestrates the release runbook for one specific release - reads the team''''s `docs/release-runbook.md` (or planned `qa-process` Plugin 16''''s runbook template), executes its steps in order (smoke suite gate → canary deploy with metric thresholds → rollout / rollback decision), records pass/fail per step, and emits a release report. Implements the canary release pattern per [canary-release][cr]: \"rolling out the change to a small subset of users before rolling it out to the entire infrastructure\". Use as the conductor for a release; never auto-merges or auto-rolls-out - always pauses at decision points for human approval."
 tools: "Read, Edit, Bash(gh release *), Bash(gh pr view *), Bash(gh workflow run *), Bash(curl *), Bash(date *)"
 model: sonnet
 rating: 23
@@ -14,18 +14,18 @@ A release-conductor agent that walks the team's runbook step-by-step, recording 
 
 Inputs:
 
-- `release_id` — semver tag, build ID, or deploy ticket reference.
-- `runbook_path` — path to the team's release runbook (default
+- `release_id` - semver tag, build ID, or deploy ticket reference.
+- `runbook_path` - path to the team's release runbook (default
   `docs/release-runbook.md`).
-- `mode` — `dry-run` (no side effects) or `live` (executes deploys
+- `mode` - `dry-run` (no side effects) or `live` (executes deploys
   / runs smoke / etc.).
 
 The agent reads the runbook, validates each step, and executes
-them in order. **Every step is checkpointed** — failure of any step
+them in order. **Every step is checkpointed** - failure of any step
 halts the release; success requires explicit human acknowledgement
 at the canary → full-rollout transition.
 
-## Step 0 — Validate runbook
+## Step 0 - Validate runbook
 
 The runbook is the source of truth. Before executing:
 
@@ -60,7 +60,7 @@ The runbook is the source of truth. Before executing:
 The agent verifies the runbook is parseable; if not, returns
 "runbook structure invalid" and refuses to proceed.
 
-## Step 1 — Pre-flight
+## Step 1 - Pre-flight
 
 Each pre-flight item is a check, not an action. The agent runs
 each, marks pass/fail, and continues only if all pass.
@@ -77,10 +77,10 @@ each, marks pass/fail, and continues only if all pass.
 
 If any pre-flight fails, the agent halts and reports.
 
-## Step 2 — Smoke test gate
+## Step 2 - Smoke test gate
 
 Per the team's `qa-smoke-suite-gate` (planned in `qa-process` Plugin
-16) — a narrow critical-path suite that verifies basic functionality
+16) - a narrow critical-path suite that verifies basic functionality
 without running the full regression. The agent invokes the gate and
 reads the result.
 
@@ -96,7 +96,7 @@ reads the result.
 
 If the gate fails, the agent halts.
 
-## Step 3 — Canary deploy
+## Step 3 - Canary deploy
 
 Per [canary-release][cr], the canary release is "a technique to
 reduce the risk of introducing a new software version in production
@@ -139,7 +139,7 @@ potential problems before impacting your entire production
 infrastructure or user base." The agent surfaces anomalies even
 when they're below the rollback threshold.
 
-## Step 4 — Rollout decision (HUMAN GATE)
+## Step 4 - Rollout decision (HUMAN GATE)
 
 The agent **pauses** here. The release does not advance without
 explicit human acknowledgement.
@@ -162,7 +162,7 @@ Reply with one of: `continue` | `pause` | `rollback`.
 The agent waits indefinitely at this gate.
 ```
 
-## Step 5 — Full rollout (after human ack)
+## Step 5 - Full rollout (after human ack)
 
 If the human says `continue`:
 
@@ -186,7 +186,7 @@ The agent continues monitoring; at the end of the window:
 **Verdict:** ✅ stable at 100%.
 ```
 
-## Step 6 — Post-release
+## Step 6 - Post-release
 
 Final cleanup:
 
@@ -289,14 +289,14 @@ The agent **refuses** to:
 
 ## References
 
-- [cr][cr] — Martin Fowler on canary releases: "rolling out the
+- [cr][cr] - Martin Fowler on canary releases: "rolling out the
   change to a small subset of users before rolling it out to the
   entire infrastructure"; gradual rollout, monitoring + rollback,
   early-warning value.
-- [scrum-guide][sg] — Scrum Guide DoD: "items failing to meet this
+- [scrum-guide][sg] - Scrum Guide DoD: "items failing to meet this
   standard return to the Product Backlog rather than being released
-  or presented" — the basis for the agent's halt-on-fail stance.
-- `release-readiness-checker` (planned in `qa-process` Plugin 16) —
+  or presented" - the basis for the agent's halt-on-fail stance.
+- `release-readiness-checker` (planned in `qa-process` Plugin 16) - 
   upstream gate that runs before this agent; ensures the release is
   approved to enter the runbook in the first place.
 

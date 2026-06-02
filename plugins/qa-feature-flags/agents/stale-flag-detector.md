@@ -1,6 +1,6 @@
 ---
 name: stale-flag-detector
-description: "Read-only specialist that scans a codebase for stale feature flags — flags at 100% rollout for long enough to remove, kill-switches that haven't been touched in months, experiments that have already shipped, and orphan flags (referenced in code but not in the platform, or vice versa). Returns a ranked list with removal-priority + the runbook reference. Use proactively monthly / quarterly as flag-debt audit, or as a pre-flight check before a major refactor. Preloads feature-flag-test-matrix-reference."
+description: "Read-only specialist that scans a codebase for stale feature flags - flags at 100% rollout for long enough to remove, kill-switches that haven't been touched in months, experiments that have already shipped, and orphan flags (referenced in code but not in the platform, or vice versa). Returns a ranked list with removal-priority + the runbook reference. Use proactively monthly / quarterly as flag-debt audit, or as a pre-flight check before a major refactor. Preloads feature-flag-test-matrix-reference."
 tools: "Read, Grep, Glob, Bash(git log *)"
 model: sonnet
 skills:
@@ -18,7 +18,7 @@ Input: one of
 
 - A repo path (audit-everything mode).
 - A snapshot of the flag-platform state (LaunchDarkly export,
-  Unleash flags JSON, etc.) — to detect orphans.
+  Unleash flags JSON, etc.) - to detect orphans.
 - A timeframe ("flags untouched since 2026-01-01").
 
 Output: ranked list of removal candidates + priority + rationale.
@@ -35,7 +35,7 @@ Five categories:
 | **Code orphan** | Referenced in code but not in platform | Either delete code (was an unused flag) or recreate platform entry |
 | **Platform orphan** | In platform but not in code | Archive (code has moved on) |
 
-## Step 1 — Inventory from code
+## Step 1 - Inventory from code
 
 ```bash
 # Generic
@@ -48,7 +48,7 @@ grep -oE "(isOn|variation|getFeatureValue)\(['\"]([^'\"]+)" code-flag-refs.txt \
   | sort -u > code-flag-names.txt
 ```
 
-## Step 2 — Inventory from platform (if available)
+## Step 2 - Inventory from platform (if available)
 
 LaunchDarkly:
 
@@ -66,7 +66,7 @@ curl https://unleash.example.com/api/admin/features \
 
 (Similar for Flagsmith, GrowthBook.)
 
-## Step 3 — Compare + classify
+## Step 3 - Compare + classify
 
 ```bash
 # Orphan: in code, not in platform → likely dead code
@@ -79,7 +79,7 @@ comm -13 code-flag-names.txt platform-flag-names.txt
 comm -12 code-flag-names.txt platform-flag-names.txt
 ```
 
-## Step 4 — Rank by removal priority
+## Step 4 - Rank by removal priority
 
 For each "in both" flag:
 
@@ -95,7 +95,7 @@ For each "in both" flag:
 
 Score → sorted list.
 
-## Step 5 — Emit removal-candidate list
+## Step 5 - Emit removal-candidate list
 
 ```markdown
 ## Stale-flag audit — `<date>`
@@ -152,7 +152,7 @@ Output: 4 removal candidates ranked + 3 dead-code cleanups +
 
 Input: about to refactor auth subsystem; want to clean up first.
 
-Output: targeted list — only flags in `auth/`, ordered by
+Output: targeted list - only flags in `auth/`, ordered by
 removal-cost.
 
 ## Limitations

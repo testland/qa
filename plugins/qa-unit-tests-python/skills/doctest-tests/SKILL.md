@@ -1,6 +1,6 @@
 ---
 name: doctest-tests
-description: "Configures and runs Python''''s stdlib doctest — embeds executable test cases in docstrings using `>>>` Python interactive prompt convention; supports `# doctest: +ELLIPSIS` / `+NORMALIZE_WHITESPACE` / `+SKIP` directives; integrates with pytest via `--doctest-modules` flag; runs as `python -m doctest module.py -v`. Use for self-documenting reference implementations + simple smoke-test coverage embedded in API docs."
+description: "Configures and runs Python''''s stdlib doctest - embeds executable test cases in docstrings using `>>>` Python interactive prompt convention; supports `# doctest: +ELLIPSIS` / `+NORMALIZE_WHITESPACE` / `+SKIP` directives; integrates with pytest via `--doctest-modules` flag; runs as `python -m doctest module.py -v`. Use for self-documenting reference implementations + simple smoke-test coverage embedded in API docs."
 rating: 22
 d6: 4
 archetype: S1
@@ -39,7 +39,7 @@ Distinguishing properties:
 For non-trivial test suites, prefer [`pytest-tests`](../pytest-tests/SKILL.md).
 Use doctest as a complement (smoke + docs), not replacement.
 
-## Step 1 — Basic doctest
+## Step 1 - Basic doctest
 
 ```python
 def sum(a, b):
@@ -64,7 +64,7 @@ python -m doctest module.py -v   # verbose; show all examples
 
 Pass if the doctest output matches; fail if mismatch.
 
-## Step 2 — Multi-line + intermediate state
+## Step 2 - Multi-line + intermediate state
 
 ```python
 def fibonacci(n):
@@ -86,7 +86,7 @@ def fibonacci(n):
     return b
 ```
 
-## Step 3 — Directives
+## Step 3 - Directives
 
 Per [dt-docs][dt-docs]:
 
@@ -124,7 +124,7 @@ def buggy_function():
     raise ValueError("specific message that may change")
 ```
 
-## Step 4 — Expected exceptions
+## Step 4 - Expected exceptions
 
 ```python
 def divide(a, b):
@@ -143,7 +143,7 @@ def divide(a, b):
 The `Traceback...` + `...` ellipsis + exception line pattern is
 specific to doctest expected-error format.
 
-## Step 5 — pytest integration
+## Step 5 - pytest integration
 
 ```bash
 pip install pytest
@@ -166,7 +166,7 @@ In `pyproject.toml`:
 addopts = "--doctest-modules"
 ```
 
-## Step 6 — Sphinx integration
+## Step 6 - Sphinx integration
 
 `sphinx.ext.doctest` runs doctests during Sphinx HTML build:
 
@@ -183,10 +183,10 @@ import mymodule
 sphinx-build -b doctest docs/ build/doctest/
 ```
 
-This catches docs that drift from the implementation — examples in
+This catches docs that drift from the implementation - examples in
 RST/MD docs are also doctest-runnable.
 
-## Step 7 — When doctest is the WRONG choice
+## Step 7 - When doctest is the WRONG choice
 
 doctest is **not** for:
 
@@ -200,7 +200,7 @@ doctest is **not** for:
 
 For those, use [`pytest-tests`](../pytest-tests/SKILL.md).
 
-## Step 8 — CI integration
+## Step 8 - CI integration
 
 ```yaml
 - run: pip install pytest
@@ -230,11 +230,10 @@ For those, use [`pytest-tests`](../pytest-tests/SKILL.md).
 
 ## References
 
-- [dt-docs][dt-docs] — official doctest reference
-- docs.pytest.org/en/stable/how-to/doctest.html — pytest --doctest-modules
-- sphinx-doc.org/en/master/usage/extensions/doctest.html — Sphinx integration
+- [dt-docs][dt-docs] - official doctest reference
+- docs.pytest.org/en/stable/how-to/doctest.html - pytest --doctest-modules
+- sphinx-doc.org/en/master/usage/extensions/doctest.html - Sphinx integration
 - [`pytest-tests`](../pytest-tests/SKILL.md),
   [`unittest-tests`](../unittest-tests/SKILL.md),
-  [`nose2-tests`](../nose2-tests/SKILL.md) — sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
-  — test code hygiene
+  [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
+- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene

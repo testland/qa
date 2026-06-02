@@ -81,7 +81,7 @@ Each cell in the 5×5 matrix below represents a real combination:
 
 **Worked examples that prove the distinction**:
 
-- **S1 / P5** (Critical / Deferred) — Real defect: a security
+- **S1 / P5** (Critical / Deferred) - Real defect: a security
   vulnerability in a legacy system scheduled for deprecation
   next quarter. Severity is objectively Critical (the bug, if
   triggered, breaks the system) but priority is Deferred (the
@@ -89,19 +89,19 @@ Each cell in the 5×5 matrix below represents a real combination:
   Action: track + monitor; if exploited before deprecation,
   re-prioritise.
 
-- **S5 / P1** (Trivial / Immediate) — Real defect: a typo on the
+- **S5 / P1** (Trivial / Immediate) - Real defect: a typo on the
   hero copy of the marketing site that says "Bweekly" instead of
   "Biweekly," and the CEO just shared the page on LinkedIn.
   Severity is objectively Trivial (no function broken) but
   priority is Immediate (PR / brand impact).
 
-- **S2 / P3** (High / Medium) — Real defect: checkout intermittently
+- **S2 / P3** (High / Medium) - Real defect: checkout intermittently
   fails for a specific bank's cards (3 % of transactions),
   workaround = use a different card. Severity is High (major
   function impaired), priority is Medium (workaround exists +
   no SLA breach yet).
 
-- **S3 / P1** (Medium / Immediate) — Real defect: a regression
+- **S3 / P1** (Medium / Immediate) - Real defect: a regression
   surfaced 4 hours before a marketing email lands that mentions
   the feature. Severity is Medium (function works in 90 % of
   cases) but priority is Immediate (marketing dependency).
@@ -157,7 +157,7 @@ each cover the platform-specific configuration.
 |---|---|---|
 | Single combined field | Loses information; everyone fights about whether to bump severity to escalate or vice versa | Two fields, explicit per defect |
 | Default both fields to "Medium" | Triagers don't engage with the distinction | Require both fields explicitly on transition from New → Open |
-| Auto-equate severity with priority | "S1 must be P1" — disallows S1/P5 deferred legacy bugs | Allow both axes independently |
+| Auto-equate severity with priority | "S1 must be P1" - disallows S1/P5 deferred legacy bugs | Allow both axes independently |
 | Severity is purely subjective | Variability across reporters; metrics unreliable | Use the IEEE 1044 examples + team-calibrated rubric |
 | Priority changes weekly without reason | Metrics chaos; no accountability | Log priority changes with rationale |
 | Critical defects always escalated to release manager | Floods the escalation channel | Use severity *and* priority for escalation rules |
@@ -178,15 +178,14 @@ each cover the platform-specific configuration.
 
 ## References
 
-- ISTQB Glossary — "severity" and "priority" entries —
+- ISTQB Glossary - "severity" and "priority" entries - 
   [glossary.istqb.org](https://glossary.istqb.org/).
-- IEEE 1044-2009 "Standard Classification for Software Anomalies"
-  — cite by stable ID; canonical severity classification.
-- ISO/IEC/IEEE 29119-3:2021 §6 anomaly-report fields — cite by
+- IEEE 1044-2009 "Standard Classification for Software Anomalies" - cite by stable ID; canonical severity classification.
+- ISO/IEC/IEEE 29119-3:2021 §6 anomaly-report fields - cite by
   stable ID.
-- Atlassian "Configure priority levels" — Jira priority docs.
-- Linear "Priority levels" — Linear priority docs.
-- GitHub Issues — labels + Projects status documentation.
+- Atlassian "Configure priority levels" - Jira priority docs.
+- Linear "Priority levels" - Linear priority docs.
+- GitHub Issues - labels + Projects status documentation.
 - Sibling references:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
   [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).

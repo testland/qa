@@ -1,6 +1,6 @@
 ---
 name: product-risk-register-builder
-description: "Build-an-X workflow that produces a product-level risk register catalogue — per-feature / per-component product risks (functionality, performance, security, usability, compatibility, reliability) that persist across releases, distinct from per-release risk matrices. Walks the author through risk identification by ISO 25010 quality characteristic, scoring per impact × likelihood, and linking each register entry to mitigations + owners + review cadence. Output is a Markdown register the team reviews quarterly and that seeds release-level risk matrices. Use for long-lived product-quality risks; complements risk-matrix for per-release risks."
+description: "Build-an-X workflow that produces a product-level risk register catalogue - per-feature / per-component product risks (functionality, performance, security, usability, compatibility, reliability) that persist across releases, distinct from per-release risk matrices. Walks the author through risk identification by ISO 25010 quality characteristic, scoring per impact × likelihood, and linking each register entry to mitigations + owners + review cadence. Output is a Markdown register the team reviews quarterly and that seeds release-level risk matrices. Use for long-lived product-quality risks; complements risk-matrix for per-release risks."
 rating: 23
 d6: 4
 archetype: S3
@@ -11,7 +11,7 @@ archetype: S3
 ## Overview
 
 The product risk register catalogs **long-lived product-quality
-risks** — risks tied to the product's architecture, domain, and
+risks** - risks tied to the product's architecture, domain, and
 user base that persist across releases. Distinct from the
 per-release risk matrix
 ([`risk-matrix`](../risk-matrix/SKILL.md)) which captures
@@ -20,21 +20,21 @@ release-scoped risks. Both feed
 and [`risk-based-test-planner`](../../agents/risk-based-test-planner.md).
 
 Per ISTQB CTAL-TM syllabus chapter 5 on risk-based testing and
-ISO 31000:2018 (risk management) — cite by stable ID; ISO behind
+ISO 31000:2018 (risk management) - cite by stable ID; ISO behind
 paywall.
 
 ## When to use
 
-- Onboarding a new test lead — establish the product-quality risk
+- Onboarding a new test lead - establish the product-quality risk
   baseline.
-- Quarterly product-quality review — re-score persistent risks.
-- Compliance audit — document long-lived product risks beyond the
+- Quarterly product-quality review - re-score persistent risks.
+- Compliance audit - document long-lived product risks beyond the
   current release.
 - Seeding a new release's
-  [`risk-matrix`](../risk-matrix/SKILL.md) — copy persistent risks
+  [`risk-matrix`](../risk-matrix/SKILL.md) - copy persistent risks
   forward, add release-specific ones.
 
-## Step 1 — Identify risks by quality characteristic
+## Step 1 - Identify risks by quality characteristic
 
 Walk through ISO 25010 quality characteristics. For each, ask:
 "What could go wrong here in this product?"
@@ -55,7 +55,7 @@ Per ISO/IEC 25010:2023 quality model (cite by stable ID).
 Aim for 15-30 product-level risks. Fewer than 10 = too sparse;
 more than 50 = mix with per-release risks.
 
-## Step 2 — Score per impact × likelihood
+## Step 2 - Score per impact × likelihood
 
 Use the same 1-5 scale as
 [`risk-matrix`](../risk-matrix/SKILL.md). Score is `impact ×
@@ -68,7 +68,7 @@ likelihood`:
 | 5-9 | Medium | Documented mitigation strategy + biannual review |
 | 1-4 | Low | Acknowledged; mitigation optional |
 
-## Step 3 — Document the register
+## Step 3 - Document the register
 
 ```markdown
 # Product risk register — <product-name>
@@ -93,7 +93,7 @@ likelihood`:
 | ... | ... | ... | ... |
 ```
 
-## Step 4 — Link mitigations to test coverage
+## Step 4 - Link mitigations to test coverage
 
 For each active risk, name at least one **mitigation** and link
 it to existing test coverage (or flag a gap):
@@ -105,7 +105,7 @@ it to existing test coverage (or flag a gap):
 Use [`risk-coverage-mapper`](../risk-coverage-mapper/SKILL.md) to
 generate the test↔risk map.
 
-## Step 5 — Quarterly review
+## Step 5 - Quarterly review
 
 Per ISTQB CTAL-TM, product risks should be re-scored at least
 quarterly:
@@ -125,7 +125,7 @@ quarterly:
 Net change: 1 new, 1 retired, 1 risen, 1 lowered. Total active: 22.
 ```
 
-## Step 6 — Seed the release matrix
+## Step 6 - Seed the release matrix
 
 When a release matrix starts:
 
@@ -137,7 +137,7 @@ When a release matrix starts:
    [`risk-matrix`](../risk-matrix/SKILL.md), assign the
    release-specific testing strategy.
 
-## Worked example — e-commerce product
+## Worked example - e-commerce product
 
 A 24-risk register might decompose like:
 
@@ -177,20 +177,20 @@ top areas to invest in.
   high-altitude; per-feature risk analysis happens at release.
 - **Mitigation linkage is one-directional.** Test coverage may
   exceed risk mitigation (defensible: unconnected coverage isn't
-  bad). Reverse — risks without coverage — needs explicit
+  bad). Reverse - risks without coverage - needs explicit
   attention.
 
 ## References
 
 - ISTQB Advanced Test Manager (CTAL-TM) syllabus, ch. 5 on
   risk-based testing.
-- ISO 31000:2018 "Risk management — Guidelines" — cite by stable
+- ISO 31000:2018 "Risk management - Guidelines" - cite by stable
   ID; iso.org paywall.
-- ISO/IEC 25010:2023 "Systems and software engineering — Systems
-  and software Quality Requirements and Evaluation (SQuaRE) —
-  Product quality model" — cite by stable ID.
-- ISTQB Glossary —
-  [glossary.istqb.org](https://glossary.istqb.org/) — "product
+- ISO/IEC 25010:2023 "Systems and software engineering - Systems
+  and software Quality Requirements and Evaluation (SQuaRE) - 
+  Product quality model" - cite by stable ID.
+- ISTQB Glossary - 
+  [glossary.istqb.org](https://glossary.istqb.org/) - "product
   risk", "project risk", "risk identification".
 - Composes:
   [`risk-matrix`](../risk-matrix/SKILL.md) (release-scoped),
@@ -200,5 +200,4 @@ top areas to invest in.
   [`risk-based-test-planner`](../../agents/risk-based-test-planner.md),
   [`risk-assessment-critic`](../../agents/risk-assessment-critic.md).
 - Sibling skill:
-  [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md)
-  — different scope (project-level: schedule, env, people).
+  [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md) - different scope (project-level: schedule, env, people).
