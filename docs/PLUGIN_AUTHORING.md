@@ -202,9 +202,9 @@ tell. Prefer rewriting:
 - parentheses for a true aside.
 
 When a separator genuinely reads best, fall back to a **hyphen with spaces**
-(` - `) — the only dash form permitted in prose. Hyphens inside compound
+(` - `): the only dash form permitted in prose. Hyphens inside compound
 words (`end-to-end`, `flaky-test`, `30-minute`) are word-joiners, not dashes,
-and stay as-is. Dashes **inside code fences and inline code are left alone** —
+and stay as-is. Dashes **inside code fences and inline code are left alone**:
 they are part of the code, regex, CLI examples, or expected output.
 
 ### Inline code is for literal tokens, not prose
@@ -352,6 +352,55 @@ When all components in the plugin land:
    component count if needed.
 3. Run all three CI scripts.
 4. Tag: `git tag <plugin-name>-1.0.0 && git push --tags`.
+
+## Keeping installed users up to date
+
+Once the marketplace is public and users have added it, **a version bump is
+what delivers your change to them.** Claude Code resolves a plugin's version
+from the first of:
+
+1. `version` in the plugin's `plugin.json`
+2. `version` in the plugin's marketplace entry
+3. the git commit SHA of the plugin source
+
+Because every plugin here sets `version` in `plugin.json`, that value wins.
+Pushing new commits **without changing it does nothing for existing users**:
+Claude Code sees the same version and keeps its cached copy. So:
+
+> **Bump `plugins/<name>/.claude-plugin/plugin.json` `version` every time you
+> change anything a user receives** (skill, agent, command, hook, or README),
+> not just on the first `1.0.0` release. Adding one agent to a shipped plugin
+> is a release: bump the version (patch or minor, as appropriate).
+
+Do not also set `version` in the marketplace entry. The `plugin.json` value
+silently overrides it, so a stale marketplace value can mask the one you meant
+to ship. Pick one place (we use `plugin.json`).
+
+Omitting `version` entirely is the supported alternative: then every commit
+SHA is a new version and users get each change automatically on refresh. That
+trades away semantic versioning, so this repo keeps the pinned-version
+convention above instead.
+
+### What users run to get updates
+
+```
+/plugin marketplace update testland-qa   # refresh the catalog + new versions
+/reload-plugins                          # activate newly loaded agents/skills
+```
+
+A brand-new plugin shows up in `/plugin` -> Discover after the refresh. New
+agents or skills inside a plugin a user already installed arrive only when that
+plugin's `version` is bumped and the user runs the two commands above.
+Third-party marketplaces have auto-update **off by default**, so most users
+refresh manually unless they opt in via `/plugin` -> Marketplaces -> enable
+auto-update.
+
+### Guardrail
+
+Both `make version-check` (locally) and the `enforce-version-bump` PR workflow
+(`.github/workflows/version-bump.yml`) fail when files under a plugin changed
+but its `plugin.json` `version` did not. Run `make version-check` before
+pushing to catch it before CI does.
 
 ## Authoring evaluations for an agent (D7)
 
