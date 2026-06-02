@@ -213,7 +213,7 @@ The agent **refuses** to:
 - Modify any file. Architecture changes need design review; the agent flags only.
 - Audit individual test files for per-file conventions. That overlaps with the four sibling A3 critics. Step 2 axes are explicitly **cross-file** patterns.
 - Audit production code. Same refusal as [`test-code-critic`](test-code-critic.md) - production reviewer turf is saturated in the ecosystem.
-- Issue verdicts without the framework being detected. If Step 1 cannot identify a framework, the audit halts with `FRAMEWORK_UNKNOWN — please specify framework hint`.
+- Issue verdicts without the framework being detected. If Step 1 cannot identify a framework, the audit halts with `FRAMEWORK_UNKNOWN`: please specify a framework hint.
 - Apply project defaults when the team has `docs/test-conventions.md`. The team's doc overrides; the agent reads it and adjusts §A7's baseline.
 - Operate on a "test framework" of one file. Cross-file pattern detection requires a corpus - minimum 10 test files, 3 POMs.
 
@@ -227,7 +227,7 @@ The agent **refuses** to:
 | Flagging hardcoded sleep without offering the framework's idiomatic replacement | The team replaces sleep with `await new Promise(r => setTimeout(r, 2000))` - same flake, different syntax. | §A6 evidence includes the framework-specific web-first or auto-wait alternative. |
 | Treating depth-3+ POM hierarchies as automatically broken | Some product surfaces legitimately need composition. | §A2 verdict is WARN at depth 3, FAIL at depth 4+; teams can document an exemption in `test-conventions.md`. |
 | Reporting all 8 axes equally | Different axes have different blast-radius. Hardcoded sleeps (§A6) cause flakes today; naming drift (§A5) is hygiene. | The Recommendations section ranks by blast-radius. |
-| Running on a test-framework that's mid-migration | The drift signal is false; the team is on its way to a new convention. | Step 1 detects mixed-framework signals (`@playwright/test` AND `cypress` in package.json) and halts with `MIGRATION_IN_PROGRESS — re-run after consolidation`. |
+| Running on a test-framework that's mid-migration | The drift signal is false; the team is on its way to a new convention. | Step 1 detects mixed-framework signals (`@playwright/test` AND `cypress` in package.json) and halts with `MIGRATION_IN_PROGRESS`: re-run after consolidation. |
 
 ## Limitations
 

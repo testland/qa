@@ -125,7 +125,7 @@ If any claim cannot be sourced (e.g., the SLO baseline isn't in the input), the 
 | Using pass-rate ≥99% as the default green threshold for a smoke suite | Smoke suites are tiny; one flake takes pass rate to ≤95%. | Threshold is configurable per suite kind (smoke / regression / e2e). |
 | Picking top-3 failures by name only | Reader cannot tell why they matter. | Ranking is by failure-impact: longest-failing, most-recently-regressed, severity (when available). |
 | Producing a `release-notes` shape with no link to the build / report | Reader cannot drill into the data; the narrative becomes load-bearing without source. | Build URL is required in the input; the skill refuses to emit a `release-notes` shape without it. |
-| Drafting a cross-run-trend over 2 runs | Two data points are not a trend. | Step 3.4 requires ≥5 runs; otherwise emit `INSUFFICIENT_RUNS — 2 runs supplied; 5+ required for a trend`. |
+| Drafting a cross-run-trend over 2 runs | Two data points are not a trend. | Step 3.4 requires ≥5 runs; otherwise emit `INSUFFICIENT_RUNS`: 2 runs supplied, 5+ required for a trend. |
 
 ## Limitations
 
