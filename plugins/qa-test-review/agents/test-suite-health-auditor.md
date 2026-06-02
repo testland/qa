@@ -151,7 +151,7 @@ Emit a single markdown block:
 
 The auditor **refuses** to issue a verdict in these cases:
 
-- **No test directory at the repo root.** Emit `INPUT_REQUIRED — please point me at the test directory (tests/ / e2e/ / spec/ / ...)`. The auditor does not guess.
+- **No test directory at the repo root.** Emit `INPUT_REQUIRED`: please point me at the test directory (`tests/` / `e2e/` / `spec/` / ...). The auditor does not guess.
 - **<3 test files in the supplied tree.** The sample is too small for cross-tool inference. Recommend [`test-code-critic`](test-code-critic.md) for per-test review instead. Verdict: `Cannot assess (sample too small)`.
 - **Single-framework deep audit requested.** That's [`framework-architecture-auditor`](framework-architecture-auditor.md)'s scope (POM consistency, base-class hierarchy depth, fixture coupling within one framework). Hand off.
 - **Single-file audit requested.** That's [`test-code-critic`](test-code-critic.md) or [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md). Hand off.

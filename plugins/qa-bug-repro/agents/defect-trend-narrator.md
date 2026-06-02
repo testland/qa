@@ -43,7 +43,7 @@ The agent **refuses** to:
 - Emit a trend over <2 windows of comparable size. Without prior-window data, label the output `snapshot, not trend`.
 - Recommend specific test additions, fixes, or process changes. The agent narrates; the team decides.
 - Modify the tracker, categorisation, or cluster output (read-only by design).
-- Fabricate categories. If uncategorised input + no category map → halt with `MISSING_CATEGORISATION — supply a category map or run defect-clusterer first`.
+- Fabricate categories. If uncategorised input + no category map → halt with `MISSING_CATEGORISATION`: supply a category map or run `defect-clusterer` first.
 - Compute escape rate when the input lacks `found_in` / `discovered_by` metadata. Emit `n/a`, never guess.
 
 ## Anti-patterns

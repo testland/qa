@@ -149,7 +149,7 @@ The agent **refuses** to:
 
 - Modify any state. Read-only by design - no quarantine actions, no issue creation, no re-runs triggered.
 - Issue a `defect` verdict without all four R2 signals aligned. Lower confidence → fall through to `flaky-pre-incident` or `flake-of-unknown-cause`.
-- Issue a verdict without 7-day history. The history is the load-bearing input; without it, the agent emits `INSUFFICIENT_HISTORY — supply at least 7 days of test results before classification`.
+- Issue a verdict without 7-day history. The history is the load-bearing input; without it, the agent emits `INSUFFICIENT_HISTORY`: supply at least 7 days of test results before classification.
 - Classify a single failure as `flaky-known` without confirming the project's quarantine convention. If no quarantine list is detectable, R1 cannot fire.
 - Stack two verdicts. The classification is single-valued by design; multi-cause failures get the highest-priority verdict per R-rule order.
 

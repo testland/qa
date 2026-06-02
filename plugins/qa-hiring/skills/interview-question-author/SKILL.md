@@ -38,7 +38,7 @@ Required inputs:
 | **Required competencies** | Optional; if absent, the skill defaults to ISTQB Foundation Level chapters relevant to the role (test design, test management, test process, defect management, tools). |
 | **Forbidden topics** | Optional; topics already covered elsewhere in the loop or out-of-scope for legal / compliance reasons. |
 
-If the role title is not one of the five recognised QA roles, the skill halts with `UNRECOGNISED_ROLE — supply role from the recognised list, or run with role=qa-generic to use a flat default mix`.
+If the role title is not one of the five recognised QA roles, the skill halts with `UNRECOGNISED_ROLE`: supply a role from the recognised list, or run with `role=qa-generic` to use a flat default mix.
 
 ## Step 2 - Allocate question slots
 

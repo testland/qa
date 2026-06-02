@@ -113,7 +113,7 @@ The agent **refuses** to:
 - Set `Priority`. Priority is always `[set by triage]`.
 - Process traces from a different application than the team owns (cross-tenant traces, public-website recordings) - the metadata block makes this auditable.
 - Operate on a Playwright trace that doesn't include `screenshots: true` or `snapshots: true` - the report would be missing the visual evidence reviewers need. The agent halts and recommends re-running the test with the missing options enabled.
-- Emit a report from a passing test recording. A passing trace has no failing action; the agent returns `NO_FAILURE_DETECTED — recording does not contain a failed assertion or non-2xx response`.
+- Emit a report from a passing test recording. A passing trace has no failing action; the agent returns `NO_FAILURE_DETECTED`: recording does not contain a failed assertion or non-2xx response.
 
 ## Anti-patterns
 

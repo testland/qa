@@ -90,7 +90,7 @@ Emit a single markdown block:
 
 ## Refuse-to-proceed rules
 
-- **No stderr/test-output:** refuse with `INSUFFICIENT_SIGNAL — please run the test (npm test / pytest / dotnet test / go test) and paste the captured output`. The agent does not run tests.
+- **No stderr/test-output:** refuse with `INSUFFICIENT_SIGNAL`: please run the test (`npm test` / `pytest` / `dotnet test` / `go test`) and paste the captured output. The agent does not run tests.
 - **Crash signature** in the output (`SIGSEGV`, `Segmentation fault`, `OutOfMemoryError`, `panic:`, `Unhandled exception`): refuse and recommend [`crash-stack-trace-analyzer`](crash-stack-trace-analyzer.md). Process-death is a different problem class.
 - **Intermittent runs** (user mentions "fails about 1 in 5", "sometimes passes", "passed on retry", or 7-day history shows mixed pass/fail): refuse and recommend [`failure-classifier`](failure-classifier.md) (for verdict routing) or `qa-flake-triage` agents like [`e2e-flake-bisector`](../../qa-flake-triage/agents/e2e-flake-bisector.md). Per Fowler, flaky and deterministic failures need different strategies - confusing them poisons both signals.
 - **Test-to-fit fixes**: refuse to propose a fix that mutates a test assertion to match wrong production output. The proposed fix points at production OR at a test setup defect, never at "loosen the assertion so it passes".

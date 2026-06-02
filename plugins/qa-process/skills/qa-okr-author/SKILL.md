@@ -38,7 +38,7 @@ Required:
 | **Time horizon** | Quarterly (default) or other (semi-annual) | OKR cadence; per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results), quarterly is the canonical rhythm |
 | **Prior OKR set** | If exists; the prior quarter's KRs + their grading | Continuity: drift from prior commitments is itself a signal |
 
-The skill halts with `MISSING_BASELINE — supply ≥1 current-state metric source` if no measurable input is offered.
+The skill halts with `MISSING_BASELINE` (supply ≥1 current-state metric source) if no measurable input is offered.
 
 ## Step 2 - Walk the QA-OKR shape catalog
 

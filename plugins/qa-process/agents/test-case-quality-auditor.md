@@ -22,7 +22,7 @@ Inputs:
 | **Source artifact (optional)** | The story / AC / observation log the cases were derived from | Required for §traceability checks; without it, that axis is `n/a` |
 | **Project convention overrides (optional)** | Team's case-style guide if it differs from the defaults | `docs/test-case-conventions.md` if present |
 
-The agent refuses to operate on test **code** files (those are [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md)'s turf). If `Step 1` finds `.spec.ts` / `.test.py` / `.feature` files, it exits with `WRONG_TOOL — use test-code-critic / gherkin-style-reviewer instead`.
+The agent refuses to operate on test **code** files (those are [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md)'s turf). If `Step 1` finds `.spec.ts` / `.test.py` / `.feature` files, it exits with `WRONG_TOOL`: use `test-code-critic` / `gherkin-style-reviewer` instead.
 
 ## Step 1 - Identify the input shape
 
@@ -123,7 +123,7 @@ The agent **refuses** to:
 
 - Operate on test code files. Step 1 fails-closed with `WRONG_TOOL` if `.spec.*` / `.test.*` / `.feature` files are supplied.
 - Auto-rewrite cases. Case-level rewrites need authoring judgement; the auditor flags.
-- Audit a set without identifying the input format. If Step 1 cannot parse the input, halt with `UNPARSEABLE — supply TestRail CSV / Qase JSON / Xray export / markdown matrix in the expected shape`.
+- Audit a set without identifying the input format. If Step 1 cannot parse the input, halt with `UNPARSEABLE`: supply TestRail CSV / Qase JSON / Xray export / markdown matrix in the expected shape.
 - Issue verdicts on §5 / §6 without parameter information. If the case set doesn't expose parameter axes (the cases describe flows without input parameters), §5 and §6 emit `n/a — no parameterised cases detected` rather than fabricate findings.
 - Apply project-default conventions when the project has its own. If `docs/test-case-conventions.md` exists, the agent reads it and applies project conventions instead of the defaults documented here.
 
