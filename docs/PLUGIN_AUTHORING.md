@@ -183,6 +183,56 @@ would have caught at authoring time.
   additional sources, (ii) remove the claim, or (iii) explicitly mark it
   `[author opinion]` (rare; methodology framing only).
 
+## Prose style
+
+These conventions keep component content (skills, agents, READMEs) readable
+both in the terminal and on the published marketplace site. `validate.sh`
+emits **advisory `WARN` lines** for the two rules below — they never block a
+merge, but reviewers should resolve them.
+
+### No em / en dashes in prose
+
+Do not use `—` (em dash) or `–` (en dash) in body prose, descriptions, or
+table cells. They read as ornamental and are a common machine-generated
+tell. Prefer rewriting:
+
+- a colon when introducing a clarification or list,
+- a period and a new sentence when the clause stands alone,
+- a comma for a softer pause,
+- parentheses for a true aside.
+
+When a separator genuinely reads best, fall back to a **hyphen with spaces**
+(` - `) — the only dash form permitted in prose. Hyphens inside compound
+words (`end-to-end`, `flaky-test`, `30-minute`) are word-joiners, not dashes,
+and stay as-is. Dashes **inside code fences and inline code are left alone** —
+they are part of the code, regex, CLI examples, or expected output.
+
+### Inline code is for literal tokens, not prose
+
+Backticks mark a literal token the reader could type or grep: an identifier,
+command, flag, file path, config key, or error code. Do not wrap a whole
+guidance sentence in backticks.
+
+```text
+Bad:   halt with `UNRECOGNISED_ROLE — supply a role from the recognised list`.
+Good:  halt with `UNRECOGNISED_ROLE`: supply a role from the recognised list.
+```
+
+Multi-statement code belongs in a fenced block with a language tag, not in an
+inline span:
+
+```text
+Bad:   the agent emits `test('x', async () => { await page.goto('/'); ... })`.
+Good:  the agent emits:
+
+       ​```ts
+       test('x', async () => { await page.goto('/'); ... });
+       ​```
+```
+
+A single long token (a CLI command, a method signature, a test name) is a
+correct inline-code use even when it is long — leave it.
+
 ## Step 7 — Self-rate (v4.0 — 8 dimensions, 0-40 scale)
 
 Score each of D1–D8 (0–5 per dimension):

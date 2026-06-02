@@ -14,6 +14,10 @@ Lint rules (anti-pattern guard):
   - Command files must have a non-empty body
   - All plugin.json + marketplace.json files parse as valid JSON
 
+Advisory (WARN only, never changes the exit code):
+  - No em/en dashes in prose (outside code) — use a spaced hyphen ' - '
+  - Inline code holds literal tokens, not whole prose sentences
+
 Note: persona-shaped scopes (qa-expert-style names without a trigger
 condition) are NOT rejected here — the lint is structural only. Reviewer
 judgment on D3 (description quality) and D4 (use-case fit) catches them.
@@ -37,6 +41,14 @@ KEBAB_RE = re.compile(r"^[a-z0-9]([a-z0-9-]*[a-z0-9])?$")
 RESERVED_RE = re.compile(r"(anthropic|claude)")
 PLACEHOLDER_RE = re.compile(r"DESCRIPTION_PLACEHOLDER|CONTENT_PLACEHOLDER")
 TODO_RE = re.compile(r"(^|\s)(TODO|FIXME)(\s|$)", re.MULTILINE)
+
+# Advisory prose-style checks (see docs/PLUGIN_AUTHORING.md "Prose style").
+# These emit WARN lines but never change the exit code.
+FENCE_RE = re.compile(r"^\s*(```|~~~)")
+INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
+EM_EN_DASH_RE = re.compile("[–—]")  # en dash, em dash
+# A whole guidance sentence wrapped in backticks: ALLCAPS_TOKEN <sep> words.
+SENTENCE_IN_CODE_RE = re.compile(r"^[A-Z][A-Z0-9_]{3,}\s*[-–—:]\s+\w")
 
 
 def extract_frontmatter(text: str) -> tuple[str, str]:
@@ -67,6 +79,66 @@ def fm_field(fm: str, key: str) -> str:
 def fail(file: str, reason: str, exit_holder: list[int]) -> None:
     print(f"FAIL ({file}): {reason}")
     exit_holder[0] = 1
+
+
+def warn(file: str, reason: str, warn_holder: list[int]) -> None:
+    """Advisory only — prints a WARN line but never sets the exit code."""
+    print(f"WARN ({file}): {reason}")
+    warn_holder[0] += 1
+
+
+def check_prose_style(file: str, warn_holder: list[int]) -> None:
+    """Advisory style guard for the conventions in docs/PLUGIN_AUTHORING.md:
+
+      - No em/en dashes in prose (use a spaced hyphen ' - ' or rewrite).
+        Dashes inside code fences and inline code are left alone — they're code.
+      - Inline code holds literal tokens, not whole prose sentences (the
+        `UNRECOGNISED_ROLE — supply role ...` anti-pattern).
+    """
+    with open(file, encoding="utf-8") as f:
+        text = f.read()
+
+    in_fence = False
+    dash_count = 0
+    dash_first = None
+    sentence_spans: list[tuple[int, str]] = []
+
+    for lineno, raw in enumerate(text.split("\n"), 1):
+        line = raw.rstrip("\r")
+        if FENCE_RE.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+
+        # Dashes: count only those outside inline code.
+        prose = INLINE_CODE_RE.sub("", line)
+        hits = len(EM_EN_DASH_RE.findall(prose))
+        if hits:
+            dash_count += hits
+            if dash_first is None:
+                dash_first = lineno
+
+        # Sentence-in-inline-code: an ALLCAPS token + separator + words.
+        for span in INLINE_CODE_RE.findall(line):
+            inner = span[1:-1]
+            if len(inner) > 40 and inner.count(" ") >= 2 and SENTENCE_IN_CODE_RE.match(inner):
+                sentence_spans.append((lineno, inner[:48]))
+
+    if dash_count:
+        warn(
+            file,
+            f"{dash_count} em/en dash(es) in prose (first at line {dash_first}); "
+            "use a spaced hyphen ' - ' or rewrite (docs/PLUGIN_AUTHORING.md §Prose style)",
+            warn_holder,
+        )
+    for lineno, snippet in sentence_spans:
+        warn(
+            file,
+            f"line {lineno}: inline code reads like a prose sentence "
+            f'("{snippet}..."); keep only the literal token in backticks, guidance as prose',
+            warn_holder,
+        )
 
 
 def check_yaml_frontmatter(file: str, exit_holder: list[int]) -> None:
@@ -189,10 +261,12 @@ def iter_json_files(root: str):
 def main() -> int:
     root = sys.argv[1] if len(sys.argv) > 1 else "."
     exit_holder = [0]
+    warn_holder = [0]
 
     for f in iter_components(root):
         check_yaml_frontmatter(f, exit_holder)
         check_no_placeholders(f, exit_holder)
+        check_prose_style(f, warn_holder)
 
     for f in iter_commands(root):
         check_empty_command_body(f, exit_holder)
@@ -205,6 +279,8 @@ def main() -> int:
         except (json.JSONDecodeError, OSError):
             fail(jf, "invalid JSON syntax", exit_holder)
 
+    if warn_holder[0]:
+        print(f"validate.sh: {warn_holder[0]} prose-style warning(s) (advisory — not blocking)")
     if exit_holder[0] == 0:
         print("validate.sh: all checks passed")
     return exit_holder[0]
