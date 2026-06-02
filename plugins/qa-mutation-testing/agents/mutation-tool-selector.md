@@ -1,6 +1,6 @@
 ---
 name: mutation-tool-selector
-description: "Action-taking agent that reads a target project's language + test framework (from `package.json`, `pom.xml`, `pyproject.toml`, `*.csproj`, `CMakeLists.txt`) and recommends ONE mutation testing tool - Stryker (JS/TS), Stryker.NET (.NET), PIT (JVM), Mutmut (Python), or Mull (C/C++) - plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-mutation-testing/mutation-survivor-explainer` (A1 that reads existing mutation results to explain why mutants survived - this agent picks WHICH tool to run). Use when starting a new mutation-testing project and the team has not yet committed to a tool."
+description: "Action-taking agent that reads a target project's language + test framework (from `package.json`, `pom.xml`, `pyproject.toml`, `*.csproj`, `CMakeLists.txt`) and recommends ONE mutation testing tool - Stryker (JS/TS), Stryker.NET (.NET), PIT (JVM), Mutmut (Python), or Mull (C/C++) - plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-mutation-testing/mutation-survivor-explainer` (reads existing mutation results to explain why mutants survived - this agent picks WHICH tool to run). Use when starting a new mutation-testing project and the team has not yet committed to a tool."
 tools: "Read, Grep, Glob, Bash(jq *)"
 model: inherit
 skills:
@@ -17,7 +17,7 @@ d7: 4
 
 A tool-selection agent that picks the right mutation testing tool by language, never by team preference.
 
-Distinct from [`mutation-survivor-explainer`](mutation-survivor-explainer.md) (A1 - reads existing mutation results to explain why mutants survived). This agent picks WHICH tool to run; the explainer interprets what it found. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), and [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md).
+Distinct from [`mutation-survivor-explainer`](mutation-survivor-explainer.md) (reads existing mutation results to explain why mutants survived). This agent picks WHICH tool to run; the explainer interprets what it found. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), and [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md).
 
 ## When invoked
 

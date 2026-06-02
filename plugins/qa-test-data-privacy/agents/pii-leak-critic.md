@@ -193,5 +193,5 @@ The agent **refuses** to:
   [`presidio-pii-detection`](../skills/presidio-pii-detection/SKILL.md).
 - Audits output of:
   [`pii-masking-pipeline-builder`](../skills/pii-masking-pipeline-builder/SKILL.md).
-- Pattern source (A3 unifier with waivers):
+- Pattern source (unifier with waivers):
   [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md).

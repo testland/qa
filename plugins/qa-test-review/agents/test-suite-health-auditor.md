@@ -1,6 +1,6 @@
 ---
 name: test-suite-health-auditor
-description: "Adversarial cross-tool auditor that evaluates an existing test suite's current state across seven axes: file inventory, tier classification (unit/integration/E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, and assertion quality. Emits a categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with per-axis findings and top-3 recommendations. Distinct from qa-roles/test-architect (A2 that *prescribes* strategy) and qa-test-review/framework-architecture-auditor (A3 - single-framework, narrow scope). Use when a team wants an outside read on overall suite health rather than per-test or per-framework review."
+description: "Adversarial cross-tool auditor that evaluates an existing test suite's current state across seven axes: file inventory, tier classification (unit/integration/E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, and assertion quality. Emits a categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with per-axis findings and top-3 recommendations. Distinct from qa-roles/test-architect (prescribes strategy) and qa-test-review/framework-architecture-auditor (single-framework, narrow scope). Use when a team wants an outside read on overall suite health rather than per-test or per-framework review."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(find *)"
 model: inherit
 skills:
@@ -13,7 +13,7 @@ d6: 4
 d7: 4
 ---
 
-A whole-suite adversarial auditor that walks an existing test estate cross-tool and emits a categorical verdict on its current state. Distinct from [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md) (A2 - *prescribes* test strategy ahead of authoring) and [`framework-architecture-auditor`](framework-architecture-auditor.md) (A3 - single-framework deep architectural audit, narrow scope). This auditor evaluates the *current state* cross-tool: pyramid ratios, flake rate per layer, ROI per tier, selector quality, and assertion quality. Use when a team wants an outside read on overall suite health rather than per-test review or per-framework audit.
+A whole-suite adversarial auditor that walks an existing test estate cross-tool and emits a categorical verdict on its current state. Distinct from [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md) (prescribes test strategy ahead of authoring) and [`framework-architecture-auditor`](framework-architecture-auditor.md) (single-framework deep architectural audit, narrow scope). This auditor evaluates the *current state* cross-tool: pyramid ratios, flake rate per layer, ROI per tier, selector quality, and assertion quality. Use when a team wants an outside read on overall suite health rather than per-test review or per-framework audit.
 
 ## When invoked
 
@@ -221,5 +221,5 @@ A repo with 3 test files total in a flat `tests/` dir:
 - Kent C. Dodds - Write tests. Not too many. Mostly integration (testing-trophy counterpoint): [kentcdodds.com/blog/write-tests](https://kentcdodds.com/blog/write-tests)
 - ISTQB glossary - test pyramid (canonical terminology; URL is JS-rendered and may not load directly, cite by stable URL ID): [glossary.istqb.org/en_US/term/test-pyramid](https://glossary.istqb.org/en_US/term/test-pyramid)
 - ISTQB glossary - defect (for defect-filing terminology): [glossary.istqb.org/en_US/term/defect-1](https://glossary.istqb.org/en_US/term/defect-1)
-- Sibling A3 critics - per-file scope; do not duplicate: [`test-code-critic`](test-code-critic.md), [`assertion-quality-reviewer`](assertion-quality-reviewer.md), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md), [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md), [`framework-architecture-auditor`](framework-architecture-auditor.md).
-- Upstream sibling A2 - [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md) prescribes test strategy before authoring; this auditor reads the suite that resulted.
+- Sibling critics - per-file scope; do not duplicate: [`test-code-critic`](test-code-critic.md), [`assertion-quality-reviewer`](assertion-quality-reviewer.md), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md), [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md), [`framework-architecture-auditor`](framework-architecture-auditor.md).
+- Upstream sibling - [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md) prescribes test strategy before authoring; this auditor reads the suite that resulted.

@@ -1,6 +1,6 @@
 ---
 name: mobile-driver-selector
-description: "Action-taking agent that reads a target mobile project (`ios/`, `android/`, `lib/`, `package.json`, `pubspec.yaml`, `*.xcodeproj`, `app/build.gradle`) and emits one concrete mobile test driver recommendation - XCUITest, Espresso, Detox, Flutter, Appium, or Maestro - plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-mobile-native/mobile-device-matrix-toolkit` (S4 - picks DEVICE matrix to run against, not the test framework). Use when starting a new mobile test project and the team has not yet committed to a driver."
+description: "Action-taking agent that reads a target mobile project (`ios/`, `android/`, `lib/`, `package.json`, `pubspec.yaml`, `*.xcodeproj`, `app/build.gradle`) and emits one concrete mobile test driver recommendation - XCUITest, Espresso, Detox, Flutter, Appium, or Maestro - plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-mobile-native/mobile-device-matrix-toolkit` (picks DEVICE matrix to run against, not the test framework). Use when starting a new mobile test project and the team has not yet committed to a driver."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(cat package.json), Bash(cat pubspec.yaml)"
 model: inherit
 skills:
@@ -18,7 +18,7 @@ d7: 4
 
 A driver-selection agent that turns "which mobile test driver should we use?" into a single, defended recommendation by reading the actual target project files.
 
-Distinct from [`mobile-device-matrix-toolkit`](../skills/mobile-device-matrix-toolkit/SKILL.md) (S4 - picks DEVICE matrix to run against). These two are orthogonal: this agent picks the test framework; the toolkit picks the hardware. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
+Distinct from [`mobile-device-matrix-toolkit`](../skills/mobile-device-matrix-toolkit/SKILL.md) (picks DEVICE matrix to run against). These two are orthogonal: this agent picks the test framework; the toolkit picks the hardware. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
 
 ## When invoked
 

@@ -25,16 +25,16 @@ fetch) hangs off a manifest field. Knowing which field maps to which
 runtime behaviour is what lets a test author decide whether a
 behaviour is testable in unit, integration, or full-browser scope.
 
-This skill is the **pure reference** consumed by the per-tool S1
+This skill is the **pure reference** consumed by the per-tool
 wrappers in this plugin (`web-ext-cli-mozilla`,
 `chrome-extension-test-loader`, `playwright-extension-fixtures`) and
-the two S3 builders (`mv2-to-mv3-migration-test-checklist`,
+the two builders (`mv2-to-mv3-migration-test-checklist`,
 `extension-storage-test-author`).
 
 For Playwright-driven MV3 popup / content-script fixtures see
 [`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
 That skill is a Chromium-only, popup + content-script + service-
-worker-fixture S1. This reference is browser-agnostic, manifest-
+worker-fixture skill. This reference is browser-agnostic, manifest-
 field-keyed, and covers the Firefox column explicitly.
 
 ## When to use

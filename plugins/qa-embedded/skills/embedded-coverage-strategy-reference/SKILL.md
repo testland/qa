@@ -11,7 +11,7 @@ keywords: ["coverage", "gcov", "llvm-cov", "mcdc", "misra", "do-178c", "embedded
 
 ## Overview
 
-This skill is a **pure reference** consumed by the per-tool S1
+This skill is a **pure reference** consumed by the per-tool
 skills ([`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
 [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
 [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
@@ -214,7 +214,7 @@ gated and not WebFetchable.
 
 The number "100% MC/DC" in aviation is famously expensive; the
 standard accepts "MC/DC of the integrated executable object code"
-which is interpreted differently by certifiers. The S2 reader
+which is interpreted differently by certifiers. The reader
 should treat these as the *floor*, not a turnkey recipe.
 
 ## Coverage report formats

@@ -1,6 +1,6 @@
 ---
 name: test-case-quality-auditor
-description: "Adversarial reviewer for test **cases** (not test code) - reads a TestRail / Qase / Xray export (CSV / JSON / API) or a markdown matrix produced by `test-case-ideation-from-story` / `test-case-from-live-feature` and flags untestable assertions, vague preconditions, non-reproducible steps, missing equivalence-partitioning coverage, duplication across cases, imperative UI mechanics in declarative slots, and traceability gaps to source requirements. Distinct from `test-code-critic` and the four sibling A3 agents in `qa-test-review` (which review test **code** files); this auditor operates on case matrices and tracker exports. Use as the gate between case authoring and execution / automation."
+description: "Adversarial reviewer for test **cases** (not test code) - reads a TestRail / Qase / Xray export (CSV / JSON / API) or a markdown matrix produced by `test-case-ideation-from-story` / `test-case-from-live-feature` and flags untestable assertions, vague preconditions, non-reproducible steps, missing equivalence-partitioning coverage, duplication across cases, imperative UI mechanics in declarative slots, and traceability gaps to source requirements. Distinct from `test-code-critic` and the four sibling agents in `qa-test-review` (which review test **code** files); this auditor operates on case matrices and tracker exports. Use as the gate between case authoring and execution / automation."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(csvkit *)"
 model: sonnet
 skills:
@@ -166,4 +166,4 @@ The agent **refuses** to:
 - Cucumber documentation - Better Gherkin (declarative-vs-imperative; grounds §3): https://cucumber.io/docs/bdd/better-gherkin/
 - ISO/IEC/IEEE 29119-3:2021 - test case documentation structures (cite by stable ID; canonical ISO page is behind Cloudflare).
 - [`test-case-ideation-from-story`](../skills/test-case-ideation-from-story/SKILL.md), [`test-case-from-live-feature`](../skills/test-case-from-live-feature/SKILL.md) - the upstream authoring skills whose output this auditor reviews.
-- [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md), [`ai-test-shallow-coverage-critic`](../../qa-ai-assisted/agents/ai-test-shallow-coverage-critic.md) - sibling A3 critics at the test-code tier (different artifact; do not duplicate).
+- [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md), [`ai-test-shallow-coverage-critic`](../../qa-ai-assisted/agents/ai-test-shallow-coverage-critic.md) - sibling critics at the test-code tier (different artifact; do not duplicate).

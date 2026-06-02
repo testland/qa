@@ -17,7 +17,7 @@ Mobile testing has a combinatorial explosion problem:
 
 Running every test on every config = CI cost / time disaster.
 
-This skill is a **dispatcher** (S4 archetype) that picks the right
+This skill is a **dispatcher** that picks the right
 subset per cadence. It wraps the per-platform test runners
 ([`xcuitest-suite`](../xcuitest-suite/SKILL.md),
 [`espresso-suite`](../espresso-suite/SKILL.md),

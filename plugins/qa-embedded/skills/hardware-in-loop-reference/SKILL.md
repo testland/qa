@@ -22,7 +22,7 @@ real-time simulator that emulates the rest of the vehicle / aircraft
 / machine in closed loop, with the same electrical interfaces the
 ECU sees in the field.
 
-This skill is a **pure reference** consumed by the per-tool S1
+This skill is a **pure reference** consumed by the per-tool
 skills ([`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
 [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
 [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md))
@@ -91,7 +91,7 @@ cited by stable ID.
 | **Speedgoat** | Performance / Mobile / Baseline real-time targets | **Simulink Real-Time** test harnesses | Tight MathWorks integration; xPC-Target descendant |
 | **OPAL-RT** | OP4510 / OP5707 | **RT-LAB** + **eMEGAsim** | Power electronics / grid; sub-microsecond loops |
 
-The S1 reader should treat vendor choice as a procurement decision,
+The reader should treat vendor choice as a procurement decision,
 not a technical one - all the vendors support the core HIL pattern.
 Vendor differentiation is in I/O density, FPGA latency, and which
 test-authoring language the team has skill in (CAPL for Vector,

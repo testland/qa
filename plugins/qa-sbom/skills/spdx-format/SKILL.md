@@ -22,7 +22,7 @@ Two active major versions:
 | SPDX 2.3 | Stable; broadly tooled | Tag-Value / JSON / YAML / RDF / Spreadsheet; ISO/IEC 5962:2021 |
 | SPDX 3.0 | Recent (2024); growing tooling | Profile-based: core + software + AI + dataset + build + security; JSON-LD primary |
 
-This is a **reference skill** (S2 archetype) - defines the schema +
+This is a **reference skill** - defines the schema +
 tooling landscape; doesn't run scans. Pair with [`syft-generation`](../syft-generation/SKILL.md)
 to generate SPDX-format SBOMs.
 

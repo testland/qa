@@ -1,6 +1,6 @@
 ---
 name: desktop-test-strategy-reference
-description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, a per-OS decision matrix, the per-OS asynchronous-wait hierarchies (XCTest waitForExistence/XCTestExpectation/XCTWaiter, FlaUI Retry primitives, AT-SPI manual polling), per-OS parallel-test policy, foreground-lock and UAC / TCC / AT-SPI elevation hazards, and the Microsoft-blessed high-DPI / per-monitor test matrix. Use as the strategic reference before picking a desktop test stack - the per-tool S1 skills in this plugin are the implementation arms."
+description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, a per-OS decision matrix, the per-OS asynchronous-wait hierarchies (XCTest waitForExistence/XCTestExpectation/XCTWaiter, FlaUI Retry primitives, AT-SPI manual polling), per-OS parallel-test policy, foreground-lock and UAC / TCC / AT-SPI elevation hazards, and the Microsoft-blessed high-DPI / per-monitor test matrix. Use as the strategic reference before picking a desktop test stack - the per-tool skills in this plugin are the implementation arms."
 archetype: S2
 rating: 24
 d6: 5
@@ -47,7 +47,7 @@ Per the [at-spi2-core project][atspi2core]:
 > "Base DBus XML interfaces for accessibility, the accessibility
 > registry daemon, and atspi library."
 
-This skill is a **pure reference** consumed by the per-tool S1
+This skill is a **pure reference** consumed by the per-tool
 skills in this plugin and by anyone choosing a desktop test stack.
 
 ## When to use
@@ -184,7 +184,7 @@ Qt's `QAccessible`) are the path. See `qt-test-framework` SKILL.
 | Electron - renderer only | Playwright `_electron` page handle | Playwright `_electron` page handle | Playwright `_electron` page handle |
 | Electron - main + IPC | Playwright `_electron` | Playwright `_electron` | Playwright `_electron` |
 
-Cross-references to per-tool S1 SKILLs:
+Cross-references to per-tool SKILLs:
 
 - `winappdriver` - WinAppDriver against UIA
 - `appium-windows-driver` - Appium-Windows driver (newer

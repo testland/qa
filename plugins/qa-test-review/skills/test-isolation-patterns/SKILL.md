@@ -12,7 +12,7 @@ archetype: S2
 
 A test that fails sometimes for non-obvious reasons is non-deterministic. Per [Martin Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html): "A test is non-deterministic when it passes sometimes and fails sometimes, without any noticeable change in the code, tests, or environment… Once you start ignoring a regression test failure, then that test is useless and you might as well throw it away." The dominant cause is **broken isolation** - one test affecting another, the environment leaking, fixtures sharing state. This catalog is the canonical reference for the isolation patterns that prevent it.
 
-This skill is a **pure reference** (S2) - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) cites when auditing fixture coupling (§A3), retry/wait policy consistency (§A6), and CI integration health (§A8). It complements [`test-code-conventions §6`](../test-code-conventions/SKILL.md) (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) which catalogs flake symptoms; this skill catalogs the prevention patterns.
+This skill is a **pure reference** - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) cites when auditing fixture coupling (§A3), retry/wait policy consistency (§A6), and CI integration health (§A8). It complements [`test-code-conventions §6`](../test-code-conventions/SKILL.md) (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) which catalogs flake symptoms; this skill catalogs the prevention patterns.
 
 ## When to use
 
@@ -49,7 +49,7 @@ The framework's test runner offers three or four scopes; the team picks the tigh
 
 **The single rule that prevents most flake:** *never share mutable fixtures across tests.* If a fixture is mutated by any test, it must be per-test scoped.
 
-### Framework-specific scope syntax (illustrative; cite the per-framework S1 skill for tool-specific details)
+### Framework-specific scope syntax (illustrative; cite the per-framework skill for tool-specific details)
 
 - **Jest / Vitest**: `beforeEach` / `beforeAll` (per-describe by default within a `describe` block).
 - **Playwright Test**: `test.beforeEach` / `test.beforeAll`; `test.use({})` for per-test config; fixtures via `test.extend()`.

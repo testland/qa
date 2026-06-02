@@ -20,7 +20,7 @@ applies to any processing of EU personal data regardless of the
 processor's location. Failure to demonstrate compliance carries
 fines up to €20M or 4% of global annual turnover (whichever higher).
 
-This is a **reference skill** (S2) - defines the test-pattern
+This is a **reference skill** - defines the test-pattern
 catalog by Article. Tests use the team's existing test framework;
 this skill is the per-Article test recipe.
 

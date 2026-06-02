@@ -2,7 +2,7 @@
 
 Modern web reality testing: PWAs, service workers, browser extensions
 (MV3), and the responsiveness Core Web Vital (INP, which replaced FID
-in March 2024). Five skills (4 S1 + 1 S3) covering the platform
+in March 2024). Five skills covering the platform
 surfaces that the bulk of e2e/UI test plugins under-cover.
 
 ## Components

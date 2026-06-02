@@ -25,7 +25,7 @@ replays:
 3. **Esports / spectator / clip sharing.** Match replays surfaced
    in-product.
 
-This is an **S3 workflow** that produces, per engine, a working
+This is a **workflow** that produces, per engine, a working
 record/replay setup plus a CI regression test that runs it.
 
 The three engine surfaces differ:

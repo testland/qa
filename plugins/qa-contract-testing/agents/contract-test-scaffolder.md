@@ -1,6 +1,6 @@
 ---
 name: contract-test-scaffolder
-description: "Builder agent that reads a service contract artifact (OpenAPI 3.x spec, GraphQL SDL, Protobuf .proto, or an existing Pact pact file) and emits scaffolded contract-test stubs - Pact consumer-side expectations for OpenAPI/GraphQL inputs, schemathesis property-based fuzzing runners for OpenAPI, or `buf breaking`-anchored compatibility tests for .proto. Sibling of `contract-drift-investigator` (A3; investigates drift in already-written tests, downstream); this agent is upstream - it generates the tests to be investigated. Use when starting consumer-side contract testing on a previously-uncovered API or when adding a new operation to an existing contract suite."
+description: "Builder agent that reads a service contract artifact (OpenAPI 3.x spec, GraphQL SDL, Protobuf .proto, or an existing Pact pact file) and emits scaffolded contract-test stubs - Pact consumer-side expectations for OpenAPI/GraphQL inputs, schemathesis property-based fuzzing runners for OpenAPI, or `buf breaking`-anchored compatibility tests for .proto. Sibling of `contract-drift-investigator` (investigates drift in already-written tests, downstream); this agent is upstream - it generates the tests to be investigated. Use when starting consumer-side contract testing on a previously-uncovered API or when adding a new operation to an existing contract suite."
 tools: "Read, Write, Edit, Grep, Glob, Bash(jq *), Bash(npx schemathesis *), Bash(uvx schemathesis *), Bash(buf *), Bash(oasdiff *)"
 model: sonnet
 skills:

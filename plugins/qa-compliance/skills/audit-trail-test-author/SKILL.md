@@ -23,7 +23,7 @@ requirements:
 | ISO 27001 A.8.15 | Logging |
 | NIST 800-53 AU family | Audit + accountability controls |
 
-This is a **build-an-X workflow** (S3) - the per-system audit-log
+This is a **build-an-X workflow** - the per-system audit-log
 test recipe. Different from a generic logging skill; specifically
 focused on compliance-grade audit trails (tamper-evidence, retention,
 required events).

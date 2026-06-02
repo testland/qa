@@ -36,7 +36,7 @@ contract by emitting verification cells.
 
 Distinct from
 [`qa-modern-web/pwa-install-flow-tests`](../../../qa-modern-web/skills/pwa-install-flow-tests/SKILL.md):
-that skill authors install-flow tests as a generic S1 wrapper.
+that skill authors install-flow tests as a generic wrapper.
 This builder generates the *per-PWA* suite from the project's
 actual manifest + SW + page handler - the artifact you check into
 the repo, not the pattern reference.
@@ -452,7 +452,7 @@ the four classes of install regression most teams hit:
   [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md).
 - Differentiation:
   [`qa-modern-web/pwa-install-flow-tests`](../../../qa-modern-web/skills/pwa-install-flow-tests/SKILL.md)
-  is the generic S1 pattern wrapper. This S3 builder emits the
+  is the generic pattern wrapper. This builder emits the
   *per-PWA* suite tied to the project's actual manifest /
   handlers - the checked-in artifact, not the pattern reference.
 - Sibling builders:

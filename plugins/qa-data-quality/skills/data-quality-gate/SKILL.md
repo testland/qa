@@ -10,7 +10,7 @@ archetype: S3
 
 ## Overview
 
-The S1 skills in this plugin (`dbt-testing`, `great-expectations`,
+The skills in this plugin (`dbt-testing`, `great-expectations`,
 `soda-checks`) each produce their own per-check output: dbt writes
 `run_results.json` ([dbt-run-results][1]), Great Expectations returns a
 JSON result with a `success` flag and a `results` list
@@ -43,7 +43,7 @@ for cross-team observability) and still ship a single gate.
 
 If a project uses only **one** engine and does not need severity
 tiering, prefer that engine's native CI integration directly (see the
-relevant S1 skill's "CI integration" section) - this gate adds
+relevant skill's "CI integration" section) - this gate adds
 machinery you do not need.
 
 ## Step 1 - Identify your sources
@@ -58,7 +58,7 @@ Enumerate every check-emitting engine the gate must consume. For each:
 | Other | custom - must be flattened into the unified shape below |
 
 Persist each engine's raw artifact as a CI build artifact (matching the
-pattern from each S1 skill's "CI integration" section) so the gate input
+pattern from each skill's "CI integration" section) so the gate input
 is reproducible and triageable.
 
 ## Step 2 - Define the unified check record

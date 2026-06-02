@@ -23,7 +23,7 @@ license to commercial starting v8. v7 (and earlier) remain OSS-licensed.
 For new commercial use, either pay for v8+ or pin to v7. For OSS
 projects, v7 may be sufficient indefinitely.
 
-This skill is a **reference** (S2 archetype) - defines the matcher
+This skill is a **reference** - defines the matcher
 catalog; doesn't run tests. Pair with one of the test frameworks.
 
 ## When to use

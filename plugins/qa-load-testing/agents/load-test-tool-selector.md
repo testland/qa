@@ -1,6 +1,6 @@
 ---
 name: load-test-tool-selector
-description: "Action-taking agent that reads a target project's stack + load-testing goal (RPS profile, soak duration, browser-side metrics, CI gating) and recommends ONE load testing tool - k6 (JS scripts), JMeter (GUI / XML scenarios), Gatling (Scala DSL), Locust (Python), or Lighthouse (browser-side perf budgets) - plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-load-testing/perf-regression-bisector` (A1 that bisects regressions in EXISTING load-test data). Use when starting a new load testing effort and the team has not yet committed to a tool."
+description: "Action-taking agent that reads a target project's stack + load-testing goal (RPS profile, soak duration, browser-side metrics, CI gating) and recommends ONE load testing tool - k6 (JS scripts), JMeter (GUI / XML scenarios), Gatling (Scala DSL), Locust (Python), or Lighthouse (browser-side perf budgets) - plus rationale and the preloaded SKILL.md to read next. Distinct from `qa-load-testing/perf-regression-bisector` (bisects regressions in EXISTING load-test data). Use when starting a new load testing effort and the team has not yet committed to a tool."
 tools: "Read, Grep, Glob, Bash(jq *)"
 model: inherit
 skills:
@@ -17,7 +17,7 @@ d7: 4
 
 A tool-selection agent that picks one load testing tool from goal + stack signals.
 
-Distinct from [`perf-regression-bisector`](perf-regression-bisector.md) (A1 - bisects regressions in EXISTING load-test data). This agent picks WHICH tool to run; the bisector interprets regressions across a series of runs.
+Distinct from [`perf-regression-bisector`](perf-regression-bisector.md) (bisects regressions in EXISTING load-test data). This agent picks WHICH tool to run; the bisector interprets regressions across a series of runs.
 
 Sibling of the full Tier 4 tool-selector family: [`qa-mutation-testing/mutation-tool-selector`](../../qa-mutation-testing/agents/mutation-tool-selector.md), [`qa-property-based/property-based-tool-selector`](../../qa-property-based/agents/property-based-tool-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), and [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
 

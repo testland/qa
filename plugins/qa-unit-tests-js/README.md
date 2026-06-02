@@ -1,7 +1,7 @@
 # qa-unit-tests-js
 
-JS/TS unit testing per-framework wrappers + orchestrator agent. Five S1
-framework skills + 1 A2 agent.
+JS/TS unit testing per-framework wrappers + orchestrator agent. Five
+framework skills + 1 agent.
 
 Per-framework lifecycle scope (configure / run / mock / coverage /
 CI). Does **not** duplicate `qa-test-review` (test code hygiene); for

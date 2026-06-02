@@ -19,7 +19,7 @@ opens PRs (or issues, for security-only) when a new version is
 available for a declared dependency. Configuration via
 `.github/dependabot.yml` at repo root.
 
-This is a **reference skill** (S2 archetype) - defines the config
+This is a **reference skill** - defines the config
 surface; doesn't run scans (that's [`snyk-test`](../snyk-test/SKILL.md)
 or [`osv-scanner`](../osv-scanner/SKILL.md)). Dependabot complements
 SCA tools by automating the upgrade PR.

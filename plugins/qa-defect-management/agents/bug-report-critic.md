@@ -182,7 +182,7 @@ The agent **refuses** to:
   [`severity-vs-priority-reference`](../skills/severity-vs-priority-reference/SKILL.md),
   [`defect-taxonomy-istqb`](../skills/defect-taxonomy-istqb/SKILL.md),
   [`bug-report-from-failure`](../skills/bug-report-from-failure/SKILL.md).
-- Pattern source (A3 verdict + waiver model):
+- Pattern source (verdict + waiver model):
   [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md).
 - Sibling agent:
   [`duplicate-defect-finder`](duplicate-defect-finder.md) (runs

@@ -19,7 +19,7 @@ GitHub, GitLab, Bitbucket, Azure DevOps, Gitea, Forgejo. Configuration
 via `renovate.json` at repo root (or `renovate.json5`,
 `.renovaterc`, `package.json` `renovate` key, etc.).
 
-This is a **reference skill** (S2 archetype) - defines the config
+This is a **reference skill** - defines the config
 surface; doesn't run scans. Renovate complements SCA tools by
 automating the upgrade PR.
 

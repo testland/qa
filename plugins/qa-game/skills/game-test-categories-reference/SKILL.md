@@ -26,11 +26,11 @@ six buckets with minor wording differences.
 
 This skill is the **pure-reference taxonomy** consumed by:
 
-- the engine-specific S1 skills
+- the engine-specific skills
   ([`unity-test-framework`](../unity-test-framework/SKILL.md),
   [`unreal-automation-system`](../unreal-automation-system/SKILL.md),
   [`godot-gut-tests`](../godot-gut-tests/SKILL.md)),
-- the S3 builders
+- the builders
   ([`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md),
   [`gameplay-recording-replay-skill`](../gameplay-recording-replay-skill/SKILL.md)),
 - and the platform submission reference

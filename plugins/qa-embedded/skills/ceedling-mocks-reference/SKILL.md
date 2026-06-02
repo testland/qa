@@ -23,7 +23,7 @@ then adds a build system for coordinating, executing, and
 summarizing test and release builds".
 
 This skill is a **pure reference** for CMock's generated API
-surface and the cmock.yml plugin model. The per-tool S1
+surface and the cmock.yml plugin model. The per-tool
 counterparts are
 [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) (the
 build orchestration) and

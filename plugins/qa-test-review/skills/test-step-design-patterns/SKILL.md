@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-This skill is a **pure reference** (S2) - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`test-code-critic`](../../agents/test-code-critic.md), and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite when auditing step granularity at the architecture tier - within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
+This skill is a **pure reference** - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`test-code-critic`](../../agents/test-code-critic.md), and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite when auditing step granularity at the architecture tier - within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
 
 ## When to use
 

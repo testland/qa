@@ -1,6 +1,6 @@
 # qa-unit-tests-net
 
-.NET unit testing per-framework wrappers + orchestrator agents. Three S1 framework skills + 1 S2 assertion-library reference + 2 A2 agents.
+.NET unit testing per-framework wrappers + orchestrator agents. Three framework skills + 1 assertion-library reference + 2 agents.
 
 Per-framework lifecycle scope. Does **not** duplicate
 `qa-test-review` (test code hygiene).

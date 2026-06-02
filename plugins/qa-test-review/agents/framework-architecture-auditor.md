@@ -1,6 +1,6 @@
 ---
 name: framework-architecture-auditor
-description: "Adversarial reviewer that audits the test framework codebase at the **architecture tier** - POM consistency across pages, base-class hierarchy depth, fixture coupling and scope, helper sprawl, naming-convention drift between modules, retry / wait convention consistency, documented-vs-actual convention drift, CI integration health, and dead helpers. Operates on the whole test directory, not individual test files. Distinct from `test-code-critic`, `assertion-quality-reviewer`, `e2e-selector-quality-critic`, and `mocking-anti-pattern-detector` (sibling A3 critics in this plugin, each reviewing individual test files); this agent reviews **patterns across files** that per-file critics structurally cannot see. Use as a quarterly / per-release framework-health audit, or before a major refactor."
+description: "Adversarial reviewer that audits the test framework codebase at the **architecture tier** - POM consistency across pages, base-class hierarchy depth, fixture coupling and scope, helper sprawl, naming-convention drift between modules, retry / wait convention consistency, documented-vs-actual convention drift, CI integration health, and dead helpers. Operates on the whole test directory, not individual test files. Distinct from `test-code-critic`, `assertion-quality-reviewer`, `e2e-selector-quality-critic`, and `mocking-anti-pattern-detector` (sibling critics in this plugin, each reviewing individual test files); this agent reviews **patterns across files** that per-file critics structurally cannot see. Use as a quarterly / per-release framework-health audit, or before a major refactor."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(jq *)"
 model: sonnet
 skills:
@@ -211,7 +211,7 @@ Refer to [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-
 The agent **refuses** to:
 
 - Modify any file. Architecture changes need design review; the agent flags only.
-- Audit individual test files for per-file conventions. That overlaps with the four sibling A3 critics. Step 2 axes are explicitly **cross-file** patterns.
+- Audit individual test files for per-file conventions. That overlaps with the four sibling critics. Step 2 axes are explicitly **cross-file** patterns.
 - Audit production code. Same refusal as [`test-code-critic`](test-code-critic.md) - production reviewer turf is saturated in the ecosystem.
 - Issue verdicts without the framework being detected. If Step 1 cannot identify a framework, the audit halts with `FRAMEWORK_UNKNOWN`: please specify a framework hint.
 - Apply project defaults when the team has `docs/test-conventions.md`. The team's doc overrides; the agent reads it and adjusts §A7's baseline.
@@ -255,6 +255,6 @@ The agent **refuses** to:
 - ISTQB glossary - test automation framework: https://glossary.istqb.org/en_US/term/test-automation-framework
 - ISO/IEC/IEEE 29119-5:2016 - Keyword-driven testing (relevant to POM and abstraction-layer audits; cite by stable ID).
 - [`test-code-conventions`](../skills/test-code-conventions/SKILL.md) - the §convention reference whose actual-application this agent measures in §A7.
-- Sibling A3 critics - per-file scope; do not duplicate: [`test-code-critic`](test-code-critic.md), [`assertion-quality-reviewer`](assertion-quality-reviewer.md), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md), [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md).
+- Sibling critics - per-file scope; do not duplicate: [`test-code-critic`](test-code-critic.md), [`assertion-quality-reviewer`](assertion-quality-reviewer.md), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md), [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md).
 - [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) - canonical replacements for hardcoded sleeps flagged in §A6.
 - [`framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md) - sibling skill for the upstream framework-selection decision.

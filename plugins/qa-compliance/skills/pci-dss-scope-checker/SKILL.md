@@ -34,7 +34,7 @@ The 12 high-level requirements:
 11. Test security of systems + networks regularly
 12. Support information security with org policies + programs
 
-This is a **build-an-X workflow** (S3) - the workflow for verifying
+This is a **build-an-X workflow** - the workflow for verifying
 your CDE scope is correctly bounded + the prohibited-data
 assertions in fixtures.
 

@@ -1,6 +1,6 @@
 ---
 name: bug-report-from-failure
-description: "Build-an-X workflow that turns a test failure record (JUnit XML, Allure JSON, pytest --tb=short, Playwright HTML report, Cypress mocha-junit) into a structured bug report ready to file via jira/linear/github-issues-bug-workflow runners. Extracts test name, failure assertion, stack trace, environment, screenshots/video artefacts, and reproduces classification fields (severity proposal, defect type per IEEE 1044, root cause hypothesis per ISTQB CTAL-TA). Output is a tracker-agnostic JSON spec the platform runner consumes. Distinct from qa-bug-repro/bug-report-from-recording (A4, screen-recording-driven); this is S3, failure-record-driven."
+description: "Build-an-X workflow that turns a test failure record (JUnit XML, Allure JSON, pytest --tb=short, Playwright HTML report, Cypress mocha-junit) into a structured bug report ready to file via jira/linear/github-issues-bug-workflow runners. Extracts test name, failure assertion, stack trace, environment, screenshots/video artefacts, and reproduces classification fields (severity proposal, defect type per IEEE 1044, root cause hypothesis per ISTQB CTAL-TA). Output is a tracker-agnostic JSON spec the platform runner consumes. Distinct from qa-bug-repro/bug-report-from-recording (screen-recording-driven); this is failure-record-driven."
 rating: 22
 d6: 4
 archetype: S3
@@ -357,4 +357,4 @@ for f in failures:
   [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
 - Sibling-plugin neighbour:
-  [`bug-report-from-recording`](../../../qa-bug-repro/agents/bug-report-from-recording.md) - A4 (screen-recording-driven); this is S3 (failure-record-driven).
+  [`bug-report-from-recording`](../../../qa-bug-repro/agents/bug-report-from-recording.md) - screen-recording-driven; this is failure-record-driven.

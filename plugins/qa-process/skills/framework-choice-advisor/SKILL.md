@@ -1,6 +1,6 @@
 ---
 name: framework-choice-advisor
-description: "Pure reference catalog for picking a test automation framework - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso / XCUITest / RestAssured / Karate / k6 / Locust with side-by-side tradeoffs on speed, cross-browser, mobile, parallelisation, language support, ecosystem maturity, CI integration; a decision tree for matching project NFRs to framework choice; and reference directory / fixture / CI layouts for the chosen stack. Distinct from the per-framework S1 skills (`playwright-testing`, `cypress-testing`, etc.) which document configuration once a framework is chosen - this skill is the **upstream selection step**. Distinct from `test-pyramid-balancer` (which tunes the layer mix for an existing suite). Use when starting a new test-automation suite from scratch, before installing any tool."
+description: "Pure reference catalog for picking a test automation framework - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso / XCUITest / RestAssured / Karate / k6 / Locust with side-by-side tradeoffs on speed, cross-browser, mobile, parallelisation, language support, ecosystem maturity, CI integration; a decision tree for matching project NFRs to framework choice; and reference directory / fixture / CI layouts for the chosen stack. Distinct from the per-framework skills (`playwright-testing`, `cypress-testing`, etc.) which document configuration once a framework is chosen - this skill is the **upstream selection step**. Distinct from `test-pyramid-balancer` (which tunes the layer mix for an existing suite). Use when starting a new test-automation suite from scratch, before installing any tool."
 rating: 24
 d6: 4
 archetype: S2
@@ -12,7 +12,7 @@ archetype: S2
 
 A team is starting a new test automation suite and needs to pick the stack: framework, runner, assertion library, reporter, CI integration, fixture system, parallelisation strategy, retry policy. Most "AI for testing" tooling pretends to scaffold the whole framework for you in one shot - per the [2025 World Quality Report](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/), this is exactly the integration-friction failure mode (37% of teams cite integration friction as the dominant AI-in-testing blocker). The honest deliverable is **decision support**, not auto-scaffolding.
 
-This skill is a **pure reference** (S2): a decision tree + tradeoff matrix the team uses as a checklist. It does not generate framework boilerplate. After the team picks a stack, the per-framework S1 skills (`playwright-testing`, `cypress-testing`, etc.) document the configuration; this skill stops at "you picked Playwright + Jest, here's the canonical directory layout to use".
+This skill is a **pure reference**: a decision tree + tradeoff matrix the team uses as a checklist. It does not generate framework boilerplate. After the team picks a stack, the per-framework skills (`playwright-testing`, `cypress-testing`, etc.) document the configuration; this skill stops at "you picked Playwright + Jest, here's the canonical directory layout to use".
 
 ## When to use
 
@@ -23,7 +23,7 @@ This skill is a **pure reference** (S2): a decision tree + tradeoff matrix the t
 
 Do **not** use this skill when:
 
-- The framework is already chosen and the team needs configuration / API help - use the per-framework S1 skill ([`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), etc.).
+- The framework is already chosen and the team needs configuration / API help - use the per-framework skill ([`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), etc.).
 - The team's question is "should we add E2E vs unit vs contract tests" - that's [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
 - Mobile-native vs hybrid app selection - use the [`qa-mobile-native`](../../../qa-mobile-native/) plugin's documentation directly.
 
@@ -89,7 +89,7 @@ Decision: if the team is single-platform native (iOS only or Android only), use 
 
 ## Step 4 - Reference directory layouts
 
-After the team has chosen a stack, this skill provides the **canonical directory layout** the per-framework S1 skill assumes. Layouts are conventions, not mandates - every project has reasons to deviate, but the canonical layout is the starting point a newcomer can read.
+After the team has chosen a stack, this skill provides the **canonical directory layout** the per-framework skill assumes. Layouts are conventions, not mandates - every project has reasons to deviate, but the canonical layout is the starting point a newcomer can read.
 
 ### Playwright + Jest (TypeScript) - the 2026 default for web E2E
 
@@ -197,16 +197,16 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 - **Tradeoff matrix is point-in-time.** Frameworks evolve quickly; the 2026 ranking will be stale in 18 months. Re-read this skill before every greenfield decision.
 - **Tradeoffs are illustrative.** A specific product can have constraints that flip the recommendation - e.g., a Salesforce internal app where the legacy stack is JVM-only would override the "Playwright by default" guidance.
 - **Hire-ability is geography-dependent.** "Hire-ability" assumes US / EU markets in the matrix; for other markets, the team's local pool is the authority.
-- **No automated framework scaffolding.** Per the introduction, this is intentional - auto-scaffolded boilerplate is the dominant failure mode the [research](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/) flags. Use the per-framework S1 skill after the decision.
+- **No automated framework scaffolding.** Per the introduction, this is intentional - auto-scaffolded boilerplate is the dominant failure mode the [research](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/) flags. Use the per-framework skill after the decision.
 - **No closed-platform comparison.** Mabl / Testim / Functionize / TestSigma are no-code platforms; they compete with this entire category, not with one framework. If the team is choosing "code vs no-code", that's a strategic decision beyond this skill's scope.
 
 ## Hand-off targets
 
-- **After the framework is chosen, configure it** → per-framework S1 skill ([`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), [`selenium-testing`](../../../qa-web-e2e/skills/selenium-testing/SKILL.md), [`webdriverio-testing`](../../../qa-web-e2e/skills/webdriverio-testing/SKILL.md)).
+- **After the framework is chosen, configure it** → per-framework skill ([`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), [`selenium-testing`](../../../qa-web-e2e/skills/selenium-testing/SKILL.md), [`webdriverio-testing`](../../../qa-web-e2e/skills/webdriverio-testing/SKILL.md)).
 - **Tune the layer balance after the framework is in place** → [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
 - **Author the first scaffold** → [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md).
 - **Audit the framework after it's grown for 6+ months** → [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) (sibling, in `qa-test-review`).
-- **Convert Selenium suite → Playwright (the most common 2026 migration)** → migration is a project, not an agent; this skill provides the decision input, the per-framework S1 skills provide the target configuration.
+- **Convert Selenium suite → Playwright (the most common 2026 migration)** → migration is a project, not an agent; this skill provides the decision input, the per-framework skills provide the target configuration.
 
 ## References
 

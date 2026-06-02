@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-This skill is a **pure reference** (S2) - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) cites when it audits a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
+This skill is a **pure reference** - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) cites when it audits a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
 
 ## When to use
 
@@ -21,7 +21,7 @@ This skill is a **pure reference** (S2) - no execution steps. It is the catalog 
 
 Do **not** use this skill to:
 
-- Configure a specific tool - that's the per-language S1 skill in this plugin.
+- Configure a specific tool - that's the per-language skill in this plugin.
 - Generate negative / boundary / parameterized test data - that's [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md).
 - Author an E2E seed fixture for the whole suite - that's [`seed-data-curator`](../seed-data-curator/SKILL.md).
 

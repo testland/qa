@@ -1,6 +1,6 @@
 ---
 name: web-e2e-framework-selector
-description: "Action-taking agent that reads a target web app project (`package.json`, `playwright.config.*`, `cypress.config.*`, `wdio.conf.*`, `nightwatch.conf.*`, existing E2E directory) and recommends ONE E2E framework - Playwright, Cypress, Selenium, Puppeteer, TestCafe, WebdriverIO - plus the cloud runner (BrowserStack / Sauce Labs / LambdaTest) when cross-browser matrix coverage is needed. Distinct from `qa-process/framework-choice-advisor` (S2 reference catalog laying out trade-offs in prose). Use when starting a new E2E test project and the team has not yet committed to a framework."
+description: "Action-taking agent that reads a target web app project (`package.json`, `playwright.config.*`, `cypress.config.*`, `wdio.conf.*`, `nightwatch.conf.*`, existing E2E directory) and recommends ONE E2E framework - Playwright, Cypress, Selenium, Puppeteer, TestCafe, WebdriverIO - plus the cloud runner (BrowserStack / Sauce Labs / LambdaTest) when cross-browser matrix coverage is needed. Distinct from `qa-process/framework-choice-advisor` (reference catalog laying out trade-offs in prose). Use when starting a new E2E test project and the team has not yet committed to a framework."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(cat package.json)"
 model: inherit
 skills:
@@ -21,7 +21,7 @@ d7: 4
 
 A framework-selection agent that turns "which web E2E framework should we use?" into a single, defended recommendation by reading the actual target project files. Co-recommends the cloud cross-browser runner when matrix coverage is needed.
 
-Distinct from [`qa-process/framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md) (S2 pure-reference catalog of frameworks + trade-offs in prose). This agent reads the actual project and returns one concrete framework per app. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), and [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md).
+Distinct from [`qa-process/framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md) (pure-reference catalog of frameworks + trade-offs in prose). This agent reads the actual project and returns one concrete framework per app. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), and [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md).
 
 ## When invoked
 

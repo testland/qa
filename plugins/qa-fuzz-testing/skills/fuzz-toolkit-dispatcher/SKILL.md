@@ -11,8 +11,8 @@ archetype: S4
 ## Overview
 
 Decision tree routing a fuzz-target authoring task to the right
-per-language fuzzer skill. Composes the seven per-language S1
-skills + the two S2 references in the plugin. Picks based on
+per-language fuzzer skill. Composes the seven per-language
+skills + the two references in the plugin. Picks based on
 target language, source-availability, and OSS-Fuzz eligibility.
 
 ## When to use
@@ -151,7 +151,7 @@ on Google infrastructure with automatic crash reports.
 ## Limitations
 
 - **Doesn't replace per-language expertise.** Knowing libFuzzer's
-  flags vs AFL++'s requires reading the linked S1 skill.
+  flags vs AFL++'s requires reading the linked skill.
 - **Doesn't handle cross-language targets.** A JNI library: Java
   side via Jazzer, C side via libFuzzer; two separate campaigns.
 - **OSS-Fuzz eligibility heuristic.** "Mature open-source" is
@@ -159,7 +159,7 @@ on Google infrastructure with automatic crash reports.
 
 ## References
 
-- Composes per-language S1 skills:
+- Composes per-language skills:
   [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
   [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
   [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
@@ -167,7 +167,7 @@ on Google infrastructure with automatic crash reports.
   [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
   [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
   [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
-- Composes S2 references:
+- Composes references:
   [`corpus-management-reference`](../corpus-management-reference/SKILL.md),
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
 - Consumed by:

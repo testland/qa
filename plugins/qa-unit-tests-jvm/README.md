@@ -1,6 +1,6 @@
 # qa-unit-tests-jvm
 
-JVM unit testing per-framework wrappers. Five S1 skills covering Java + Kotlin + Scala + Groovy test frameworks, plus one A2 orchestrator that authors a single test per spec by detecting the framework convention from the project's build file.
+JVM unit testing per-framework wrappers. Five skills covering Java + Kotlin + Scala + Groovy test frameworks, plus one orchestrator that authors a single test per spec by detecting the framework convention from the project's build file.
 
 Per-framework lifecycle scope. Does **not** duplicate
 `qa-test-review` (test code hygiene).

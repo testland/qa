@@ -1,9 +1,9 @@
 # qa-unit-tests-python
 
-Python unit testing per-framework wrappers. Four S1 skills covering
+Python unit testing per-framework wrappers. Four skills covering
 stdlib + community Python test frameworks: pytest (modern de facto),
 unittest (stdlib JUnit-port), doctest (docstring-embedded tests),
-nose2 (legacy alternative), plus one A2 orchestrator that authors a
+nose2 (legacy alternative), plus one orchestrator that authors a
 single test per spec by detecting the framework convention from the
 project's config or existing tests.
 

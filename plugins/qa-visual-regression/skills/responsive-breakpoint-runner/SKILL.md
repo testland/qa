@@ -24,7 +24,7 @@ this plugin each have their own way to express a viewport list:
 This skill is a dispatcher: pick the engine the project already runs,
 follow the matching pattern below, then aggregate into a single
 breakpoint report. **It does not replace any engine** - it composes the
-plugin's per-engine S1 skills.
+plugin's per-engine skills.
 
 ## When to use
 

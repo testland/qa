@@ -1,6 +1,6 @@
 ---
 name: object-model-patterns
-description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework S1 skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` (A3) and `playwright-codegen-reviewer` (A3) as the architecture-tier reference for what each pattern actually is."
+description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` and `playwright-codegen-reviewer` as the architecture-tier reference for what each pattern actually is."
 rating: 25
 d6: 5
 archetype: S2
@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-This skill is a **pure reference** (S2) - no execution steps; it is the canonical catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
+This skill is a **pure reference** - no execution steps; it is the canonical catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
 
 ## When to use
 
@@ -21,7 +21,7 @@ This skill is a **pure reference** (S2) - no execution steps; it is the canonica
 
 Do **not** use this skill to:
 
-- Author per-framework tool configuration - that's the per-framework S1 skill (`playwright-testing`, `cypress-testing`, etc.).
+- Author per-framework tool configuration - that's the per-framework skill (`playwright-testing`, `cypress-testing`, etc.).
 - Pick the framework itself - that's [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md).
 - Audit a running codebase against the chosen pattern - that's [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), which preloads this skill.
 
@@ -279,5 +279,5 @@ The patterns are not equally good for every project. The matrix:
 - ISTQB glossary - Page Object (the canonical ISTQB entry confirming the pattern is industry-standard): https://glossary.istqb.org/en_US/term/page-object
 - ISTQB glossary - Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization
 - [`test-code-conventions`](../test-code-conventions/SKILL.md) - file-level companion (§1-§10).
-- [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) - the A3 that audits codebases against these patterns; preloads this skill.
+- [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) - the reviewer that audits codebases against these patterns; preloads this skill.
 - [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md), [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md) - agents that apply these patterns.

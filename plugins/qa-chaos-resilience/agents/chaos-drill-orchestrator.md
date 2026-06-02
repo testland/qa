@@ -1,6 +1,6 @@
 ---
 name: chaos-drill-orchestrator
-description: "Action-taking orchestrator that runs a full chaos drill end-to-end - pre-flight checks → experiment injection (via chaos-experiment-author + chosen runner: Chaos Mesh / Litmus / Gremlin / Toxiproxy) → blast-radius monitoring → automatic abort if blast radius exceeds bounds → recovery validation. Distinct from `qa-chaos-resilience/chaos-experiment-author` (S1 - authors ONE experiment file). This agent orchestrates the four-stage drill workflow, not a single experiment. Use when running a planned chaos drill against a non-prod environment and the team wants the full pre-flight → inject → monitor → recover loop executed as one workflow."
+description: "Action-taking orchestrator that runs a full chaos drill end-to-end - pre-flight checks → experiment injection (via chaos-experiment-author + chosen runner: Chaos Mesh / Litmus / Gremlin / Toxiproxy) → blast-radius monitoring → automatic abort if blast radius exceeds bounds → recovery validation. Distinct from `qa-chaos-resilience/chaos-experiment-author` (authors ONE experiment file). This agent orchestrates the four-stage drill workflow, not a single experiment. Use when running a planned chaos drill against a non-prod environment and the team wants the full pre-flight → inject → monitor → recover loop executed as one workflow."
 tools: "Read, Write, Edit, Grep, Glob, Bash(kubectl *), Bash(chaos-mesh *), Bash(litmusctl *), Bash(gremlin *), Bash(toxiproxy-cli *)"
 model: inherit
 skills:
@@ -18,7 +18,7 @@ d7: 4
 
 A workflow-orchestrator agent - drives a full chaos drill across four stages (pre-flight → experiment → blast-radius monitor → recovery validation). Composes the chosen chaos-runner skill (Chaos Mesh / Litmus / Gremlin / Toxiproxy) for the injection step and the experiment-author skill for the YAML / scenario emission.
 
-Distinct from [`chaos-experiment-author`](../skills/chaos-experiment-author/SKILL.md) (S1 - authors ONE experiment file in isolation). This agent runs the full drill, with abort-on-blast-radius-exceeded guarantees.
+Distinct from [`chaos-experiment-author`](../skills/chaos-experiment-author/SKILL.md) (authors ONE experiment file in isolation). This agent runs the full drill, with abort-on-blast-radius-exceeded guarantees.
 
 Sibling of the Tier 4 tool-selector family (mutation-tool-selector, load-test-tool-selector, etc.) but **not** a selector - chaos runner choice is usually pre-determined by the platform (Chaos Mesh / Litmus on Kubernetes; Gremlin / Toxiproxy on bare-metal / mixed).
 

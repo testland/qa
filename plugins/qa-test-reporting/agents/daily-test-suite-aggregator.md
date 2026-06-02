@@ -1,6 +1,6 @@
 ---
 name: daily-test-suite-aggregator
-description: "Action-taking agent that ingests test-run artifacts from multiple suites (unit, integration, E2E, contract, performance, accessibility) and multiple environments (dev, staging, prod-canary) for a single day and emits a unified cross-suite cross-environment summary suitable for the team stand-up. Distinct from `test-run-summary-author` (S3 sister skill that narrativises a single run) and from `e2e-test-trend-reporter` (qa-flake-triage; longitudinal weekly health for one E2E suite). Use as the morning routine that answers \"how did everything we run yesterday actually go?\" in one report."
+description: "Action-taking agent that ingests test-run artifacts from multiple suites (unit, integration, E2E, contract, performance, accessibility) and multiple environments (dev, staging, prod-canary) for a single day and emits a unified cross-suite cross-environment summary suitable for the team stand-up. Distinct from `test-run-summary-author` (sister skill that narrativises a single run) and from `e2e-test-trend-reporter` (qa-flake-triage; longitudinal weekly health for one E2E suite). Use as the morning routine that answers \"how did everything we run yesterday actually go?\" in one report."
 tools: "Read, Glob, Grep, Bash(jq *), Bash(xmllint *), Bash(find *)"
 model: sonnet
 skills:

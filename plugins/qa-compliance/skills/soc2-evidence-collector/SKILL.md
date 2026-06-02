@@ -29,7 +29,7 @@ period (3 - 12 months).
 Type II requires evidence collection across the period - auditors
 sample, but every control should have continuous evidence available.
 
-This is a **build-an-X workflow** (S3) - the per-criterion evidence
+This is a **build-an-X workflow** - the per-criterion evidence
 collection script, not a standalone tool. Pair with Vanta / Drata /
 Secureframe (commercial GRC platforms) for evidence storage +
 auditor-facing dashboards.

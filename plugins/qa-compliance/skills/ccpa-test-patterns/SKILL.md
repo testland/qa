@@ -27,7 +27,7 @@ Failure carries civil penalties up to $7,500 per intentional
 violation + $2,500 per non-intentional violation; private right of
 action for data breaches.
 
-This is a **reference skill** (S2) - defines the test-pattern
+This is a **reference skill** - defines the test-pattern
 catalog by Cal. Civ. Code section. Pair with [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md)
 for international compliance footprint.
 

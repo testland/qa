@@ -2,11 +2,11 @@
 
 ML model testing: vulnerability scanning, data validation, drift
 monitoring, group fairness, and per-prediction explainability. Five
-S1 skills covering Giskard (`scan()` + test catalog), Deepchecks
+skills covering Giskard (`scan()` + test catalog), Deepchecks
 (suites for data integrity / train-test / model evaluation),
 Evidently (drift monitoring + 100+ metrics), Fairlearn (`MetricFrame`
 + Reductions mitigation), Alibi Explain (Anchors / SHAP / Integrated
-Gradients / Counterfactuals) - plus an A3 reviewer agent
+Gradients / Counterfactuals) - plus a reviewer agent
 (`model-fairness-reviewer`) that gates promotion based on the model's
 risk class.
 

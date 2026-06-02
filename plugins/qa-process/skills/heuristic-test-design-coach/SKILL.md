@@ -10,7 +10,7 @@ archetype: S2
 
 ## Overview
 
-The exploratory-testing literature converged on four canonical heuristic test-design models, each cited inline at point of use below. This skill is a **pure reference** (S2) - no execution steps; it is the catalog `test-case-from-live-feature` (S3) and `exploratory-charter-author` (A4) consume to generate coverage when no documented input exists.
+The exploratory-testing literature converged on four canonical heuristic test-design models, each cited inline at point of use below. This skill is a **pure reference** - no execution steps; it is the catalog `test-case-from-live-feature` and `exploratory-charter-author` consume to generate coverage when no documented input exists.
 
 ## When to use
 

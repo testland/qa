@@ -29,7 +29,7 @@ features vs SPDX:
 - **SaaS BOMs** - describes hosted services not just shipped
   artifacts
 
-This is a **reference skill** (S2 archetype) - defines the schema +
+This is a **reference skill** - defines the schema +
 tooling landscape; doesn't run scans. Pair with [`syft-generation`](../syft-generation/SKILL.md)
 to generate CycloneDX-format SBOMs from real codebases.
 

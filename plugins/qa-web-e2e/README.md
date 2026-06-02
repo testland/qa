@@ -1,6 +1,6 @@
 # qa-web-e2e
 
-Web E2E framework wrappers (per-framework S1 skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Plus two agents for codegen review and Selenium Grid orchestration.
+Web E2E framework wrappers (per-framework skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Plus two agents for codegen review and Selenium Grid orchestration.
 
 ## Components
 
