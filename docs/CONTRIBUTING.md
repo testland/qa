@@ -15,50 +15,37 @@ the gate so contributions land cleanly.
 3. **Read [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md)** for the rubric
    your PR will be scored against.
 
-## Quality gate (CI-enforced + shadow-audited)
+## Quality gate (CI-enforced)
 
-Every component ships with these YAML frontmatter fields:
+Every component ships with these YAML scoring fields:
 
 ```yaml
 ---
 name: kebab-case-name           # 1-64 chars, no claude/anthropic reserved words
 description: ...                # ≤1024 chars; 3rd-person, action-oriented; no "You are..." / "I help..."
-rating: 28                      # 0-30 sub-total (D1+D2+D3+D4+D5+D6); script enforces ≥21
-d6: 4                           # 0-5; D6 Terminology Compliance; d6=0 is hard reject
-d7: 4                           # 0-5; D7 Evaluation Coverage (v3.0+); hard floor ≥1 after 2026-06-01
-d8: 4                           # 0-5; D8 Best-Practices Adherence (v4.0+); hard floor ≥1 after 2026-07-01
+rating: 28                      # 0-30; the D1-D6 sum; merge bar ≥21
+d6: 4                           # 0-5; D6 Terminology Compliance; d6=0 is a hard reject
 ---
 ```
 
-(`archetype:` is no longer required — see D2 below. An optional shape hint is
-fine but nothing gates on it.)
-
-The v4.0 total `rating + d7 + d8` is the importable score (out of 40).
-
-CI runs three checks on every PR:
+CI runs these checks on every PR:
 
 1. **`scripts/test-validate.sh`** — self-test of validate.sh against fixtures.
-2. **`scripts/validate.sh`** — lint rules: kebab-case naming, no reserved
-   words (`claude`/`anthropic`), no "You are.../I help..." openers (must be
-   third-person, action-oriented), no placeholder strings, no empty command
-   bodies, JSON syntax.
-3. **`scripts/rating-check.sh`** — `rating ∈ [21, 30]` and `d6 ≥ 1` (where
-   d6 is present); `d6 = 0` blocks merge regardless of total.
+2. **`scripts/validate.sh`** — frontmatter/file lint: kebab-case naming, no
+   reserved words (`claude`/`anthropic`), no "You are.../I help..." openers,
+   no placeholder strings, no empty command bodies, JSON syntax.
+3. **`scripts/rating-check.sh`** — `rating ∈ [21, 30]` and `d6 ≥ 1`;
+   `d6 = 0` blocks merge regardless of total.
+4. **`scripts/content-audit.py`** — description ≤1024 chars, body within the
+   type cap (skill 600 / agent 350 lines), Windows-path hygiene.
+5. **`scripts/composition-graph.py`** — every agent `skills:` preload resolves
+   to a real skill.
+6. **`scripts/generate-catalog.py`** — `CATALOG.md` is regenerated and current.
 
-**Shadow window:** the lint script currently enforces v2.0 thresholds
-(rating ≥21 + d6 ≥1). v3.0 (d7) and v4.0 (d8) sub-scores are advisory
-during the shadow launch. Hard floors `d7 ≥ 1` becomes enforced after
-2026-06-01; `d8 ≥ 1` becomes enforced after 2026-07-01. Author against
-v4.0 from day one — the shadow audit reports your full v4.0 score to
-the marketplace-wide backfill priority list.
+## The six rating dimensions (D1–D6)
 
-## The eight rating dimensions (v4.0)
-
-Score each 0–5 per the framework at
-[`elv1s42k-qa-research/qa-rating-framework-2026-05-25.md`](https://github.com/elv1s42/qa-research).
-Total ≥28 of 40 to be importable under v4.0; v3.0 enforcement (≥21 of 30
-on D1–D6 sub-total) is what the lint script actually checks during the
-shadow window.
+A reviewer scores each dimension 0–5; the sum is the `rating` (0–30, merge
+bar ≥21). `d6` is surfaced as its own field because it carries a hard floor.
 
 - **D1 — Spec compliance:** frontmatter follows Anthropic's plugin spec
   (name format + name matches parent dir + description ≤1024 chars +
@@ -74,27 +61,16 @@ shadow window.
 - **D4 — Use-case fit:** real triggers; differentiated from neighbors
   (Anthropic-bundled patterns set the bar, not aggregator-clone saturation).
 - **D5 — Body quality:** progressive disclosure, concrete steps + examples,
-  output format. For A1/A3 agents ≥120 lines: explicit `## Output format`
-  section. No Windows-style paths in cited examples.
+  output format. For read-only/reviewer agents ≥120 lines: explicit
+  `## Output format` section. No Windows-style paths in cited examples.
 - **D6 — Terminology compliance:** ISTQB-canonical terms cited to canonical
   sources; tool-specific claims grounded in fetched vendor docs;
   practitioner-emergent terms (flaky test, contract test, golden file)
   attributed to industry-engineering sources, not ISTQB. **D6 = 0 hard
   rejects.**
-- **D7 — Evaluation coverage** (v3.0+): ≥3 evals colocated at
-  `agents/<name>/evals/evals.md`, multi-model targets, ≥1 adversarial,
-  concrete pass conditions (string-match / behavioral check). **D7 = 0
-  hard rejects** (after 2026-06-01).
-- **D8 — Best-practices adherence** (v4.0+): five sub-checks against
-  Anthropic's `agent-skills/best-practices` doc — concision (no
-  over-explanation), degrees-of-freedom calibration, single-default
-  discipline (no multi-option paralysis), workflow + feedback-loop
-  literacy, path + script + MCP hygiene. **D8 = 0 hard rejects** (after
-  2026-07-01).
 
 The full per-dimension rubric and review questions live in
-[`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md). The framework spec
-lives in the [research repo](https://github.com/elv1s42/qa-research).
+[`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md).
 
 ## The single-description test
 
@@ -120,14 +96,7 @@ If any check fails, reshape the scope before authoring.
    `plugins/<name>/agents/<name>.md`. Copy from `templates/skill/SKILL.md.tmpl`
    or `templates/agent/agent.md.tmpl`.
 
-3. **Build evals FIRST** (v4.0 / Anthropic-required). Before drafting any
-   body content, author ≥3 evals at
-   `plugins/<name>/agents/<agent>/evals/evals.md` with ≥1 adversarial case.
-   The evals are the spec the body is written against. See
-   [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md) Step 4 for the full
-   evaluation-driven-development workflow.
-
-4. **Fetch canonical sources** for every concrete claim. The standard
+3. **Fetch canonical sources** for every concrete claim. The standard
    anchors are: the [ISTQB glossary](https://glossary.istqb.org/) for
    terminology; ISO 25010 / 29119 / IEEE 829 for standards-level concepts;
    the W3C WCAG 2.x specs for accessibility; OWASP for security; and the
@@ -135,28 +104,22 @@ If any check fails, reshape the scope before authoring.
    Cypress, k6, dbt, Pact, etc.). Cite URLs inline at the point of each
    claim — not as an appended References list.
 
-5. **Self-rate** D1–D8 against the v4.0 framework. Add `rating:`, `d6:`,
-   `d7:`, `d8:` to frontmatter.
+4. **Self-rate** D1–D6. Add `rating:` (the 0–30 sum) and `d6:` to frontmatter.
 
-6. **Run CI locally:**
+5. **Run CI locally:**
 
    ```bash
    bash scripts/test-validate.sh
    bash scripts/validate.sh
    bash scripts/rating-check.sh
+   python3 scripts/content-audit.py --strict
    ```
 
-7. **Commit** with a message that includes the source-fetch date and v4.0
-   total, e.g.:
+6. **Commit** with a message that includes the source-fetch date and rating,
+   e.g.:
 
    ```
-   Add k6-load-testing skill (S1, rated 35/40 [d6=5, d7=4, d8=4]; sources fetched 2026-05-25 from grafana.com/docs/k6)
-   ```
-
-   For components scored under v3.0 (no D8 yet), use the v3.0 format:
-
-   ```
-   Add foo-bar agent (A2, rated 30/35 [d6=4, d7=4]; sources fetched 2026-05-22 from ...)
+   Add k6-load-testing skill (rated 27/30 [d6=5]; sources fetched 2026-05-25 from grafana.com/docs/k6)
    ```
 
 ## Anti-patterns the reviewer rejects
@@ -193,10 +156,8 @@ admitted on the strength of three things:
    existing components and explains the axis on which the new one is
    distinguishable (tool, lifecycle stage, output shape, scope of inputs).
    "It's the same idea, but mine" is not an axis.
-3. **The rating bar** — v4.0 importable bar is total ≥ 28/40 with d6 ≥ 1,
-   d7 ≥ 1 (hard floor after 2026-06-01), d8 ≥ 1 (hard floor after
-   2026-07-01); the lint script enforces v2.0 thresholds (rating ≥ 21/30 +
-   d6 ≥ 1) during the shadow window. Per the framework in
+3. **The rating bar** — `rating ≥ 21/30` with `d6 ≥ 1` (the lint enforces
+   both; `d6 = 0` is a hard reject). Per the rubric in
    [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md).
 
 What this changes vs. earlier policy:

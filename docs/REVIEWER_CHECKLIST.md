@@ -5,16 +5,10 @@ land within 2 points of each other on the rating total — if divergence
 exceeds 2 points on any single dimension, calibrate by walking through
 the calibration anchors at the bottom of this file.
 
-> **Framework version: v4.0** (8 dimensions, 0–40 scale, importable bar 28/40).
-> The per-dimension sub-checks below cover D1–D6 in detail; D7 (Evaluation
-> Coverage, v3.0+) and D8 (Best-Practices Adherence, v4.0+) are summarized in
-> [`CONTRIBUTING.md`](CONTRIBUTING.md) §"The eight rating dimensions" and
-> documented in full at
-> [`elv1s42k-qa-research/qa-rating-framework-2026-05-25.md`](https://github.com/elv1s42/qa-research).
-> When scoring D7 or D8, consult the framework spec directly — this checklist
-> has not yet been backfilled with D7/D8 sub-check tables (Tier 5 follow-up).
-> Lint script enforces v2.0 thresholds during the shadow window; v3.0 d7
-> hard-gates after 2026-06-01; v4.0 d8 hard-gates after 2026-07-01.
+> **The D6 rubric** — six dimensions (D1–D6), each scored 0–5; the sum is the
+> `rating` (0–30). Merge bar: `rating ≥ 21` with `d6 ≥ 1` (`d6 = 0` is a hard
+> reject). Mechanical hygiene (description / body length, Windows-path checks)
+> runs separately in `content-audit.py`; this checklist is the human rubric.
 
 ## Pre-review smoke checks
 

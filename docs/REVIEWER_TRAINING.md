@@ -1,6 +1,6 @@
 # Reviewer Training Pack
 
-Calibration material for the v2.0 6-dimension rating framework. Two
+Calibration material for the D6 rating framework (six dimensions, D1–D6). Two
 reviewers should land within 2 points of each other on the same
 component. This document walks three exemplars (A / C / F) with
 per-dimension scoring rationale so reviewers can self-calibrate.
@@ -178,7 +178,7 @@ Just ask me anything QA-related.
 | D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined with "and". Predicts nothing — the body could be literally anything. PR doesn't name nearest neighbors or articulate a differentiation axis. |
 | D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. The differentiation requirement in [`CONTRIBUTING.md`](CONTRIBUTING.md) is not met — contributor cannot say "use this when X but not when Y." |
 | D5 Body quality | 1 | Body has structure (sections), but no steps, no output format, no examples. **1 point for not being empty.** |
-| D6 Terminology | 0 | Zero citations; zero source-grounded claims. **`d6: 0` is a hard reject** per the v2.0 framework. |
+| D6 Terminology | 0 | Zero citations; zero source-grounded claims. **`d6: 0` is a hard reject** regardless of total. |
 | **Total** | **2/30 + d6: 0** | Hard reject. No differentiation axis, no trigger, no source grounding. Don't merge. |
 
 ### What makes this an F-grade

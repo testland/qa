@@ -84,8 +84,6 @@ def iter_components(root: str):
     for pat in patterns:
         for p in glob.glob(pat):
             norm = p.replace("\\", "/")
-            if "/agents/" in norm and "/evals/" in norm:
-                continue
             if norm not in seen:
                 seen.add(norm)
                 yield p

@@ -12,9 +12,8 @@
 
 ## Why testland-qa
 
-- **8-dimension quality gate** before merge: includes a hard-reject for
-  uncited claims (citation theater), plus eval coverage and Anthropic
-  best-practices adherence (v4.0 framework)
+- **6-dimension quality rubric** (D1–D6) before merge, with a hard-reject for
+  uncited claims (citation theater) via the `d6` floor
 - **CI-validated composition**: every agent's preloaded skills are
   reference-checked, no dangling deps
 - **Differentiation required**: every component must articulate how it
@@ -87,8 +86,8 @@ table with versions, component counts, and archetype breakdowns.
 
 ## Quality bar
 
-Every component is scored on eight dimensions before merge (v4.0 framework,
-0 to 40 scale, importable bar 28/40):
+Every component is scored on six dimensions before merge (the D6 rubric,
+0-30 scale, merge bar 21):
 
 | Dim | Name | Anchor |
 |---|---|---|
@@ -98,13 +97,12 @@ Every component is scored on eight dimensions before merge (v4.0 framework,
 | **D4** | Use-case fit | Explicit trigger ("Use when…"), not a persona |
 | **D5** | Body quality | Concrete steps + worked examples |
 | **D6** | Terminology compliance | Concrete claims cited inline at point of use |
-| **D7** | Evaluation coverage | ≥3 evals authored (happy + branch + adversarial) |
-| **D8** | Best-practices adherence | Concision, single-default, workflow literacy, path/MCP hygiene (per Anthropic `agent-skills/best-practices`) |
 
-CI enforces **rating ≥ 21/30 and d6 ≥ 1** (v2.0 floor, addressing the
-dominant "citation theater" failure mode). `d6 = 0` is a hard reject.
-D7 hard-gates agents after 2026-06-01; D8 hard-gates after 2026-07-01.
-Both are advisory during the v4.0 shadow window.
+A reviewer scores each dimension; the sum is the `rating` (0-30). CI enforces
+**rating ≥ 21 and d6 ≥ 1** — `d6` surfaces the dominant "citation theater"
+failure mode, so `d6 = 0` is a hard reject. Mechanical lint (naming, JSON,
+description/body length, Windows-path hygiene) runs alongside in `validate.py`
+and `content-audit.py`.
 
 See [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md) for the rubric
 and [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the framework details.
