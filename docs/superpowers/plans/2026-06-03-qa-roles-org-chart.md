@@ -528,24 +528,36 @@ git commit -m "docs(qa-roles): rewrite README as the 14-role QA org chart
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```
 
-### Task 14: Regenerate catalog + composition graph
+### Task 14: Regenerate CATALOG.md + hand-update COMPOSITION.md
 
-**Files:** Modify `CATALOG.md`, `COMPOSITION.md` (generated)
+**Files:** Modify `CATALOG.md` (generated), `docs/COMPOSITION.md` (hand-maintained)
 
-- [ ] **Step 1: Regenerate**
+> CORRECTION (verified during execution): `generate-catalog.py` writes **only** `CATALOG.md`, sourced from `marketplace.json` + per-plugin manifests (so it reflects the Task 12 manifest edits, not the raw agent files). `composition-graph.py` does **not** write any file — it only validates and prints. `docs/COMPOSITION.md` is hand-maintained and already self-describes its per-plugin subsections as a non-backfilled snapshot, with the live validator as authoritative. So COMPOSITION.md gets targeted manual edits, not regen.
+
+- [ ] **Step 1: Regenerate CATALOG.md**
 
 Run: `python3 scripts/generate-catalog.py`
+Expected: writes CATALOG.md; qa-roles shows 14 agents, the four source plugins show decreased counts (reflecting the Task 12 manifest edits).
 
-- [ ] **Step 2: Sanity-check the diff**
+- [ ] **Step 2: Hand-update COMPOSITION.md**
 
-Run: `git diff --stat CATALOG.md COMPOSITION.md`
-Expected: qa-roles now lists 14 agents; qa-data-quality/qa-shift-right/qa-manual-testing/qa-process counts decreased accordingly.
+In `docs/COMPOSITION.md`, relocate the rows for the 4 moved agents from their old plugin subsection into the `### qa-roles` subsection:
+- `data-quality-engineer` (from `### qa-data-quality`)
+- `production-tester` (from `### qa-shift-right`)
+- `exploratory-charter-author` (from `### qa-manual-testing`)
+- `test-quality-coach` (from `### qa-process`)
+Then fix the "Cross-plugin preload edges" row labelled `qa-process/test-quality-coach` → relabel to `qa-roles/test-quality-coach` (the preloaded skill `test-code-conventions` in qa-test-review is unchanged). Do not attempt a full backfill — the doc disclaims completeness; only fix what these moves made wrong. Update the header per-plugin counts only if trivially derivable.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Sanity-check the diff**
+
+Run: `git diff --stat CATALOG.md docs/COMPOSITION.md`
+Expected: both touched; counts reconcile.
+
+- [ ] **Step 4: Commit**
 
 ```bash
-git add CATALOG.md COMPOSITION.md
-git commit -m "chore: regenerate catalog + composition for qa-roles org chart
+git add CATALOG.md docs/COMPOSITION.md
+git commit -m "chore: refresh catalog + composition for qa-roles org chart
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```
