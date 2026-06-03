@@ -112,4 +112,4 @@ Gap flagged → return to author with combined questions; re-run after answers l
 
 - Sibling components: [`testability-reviewer`](./testability-reviewer.md), [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md), [`nfr-extractor`](../skills/nfr-extractor/SKILL.md), [`threat-model-from-spec`](./threat-model-from-spec.md), [`data-contract-extractor`](../skills/data-contract-extractor/SKILL.md), [`definition-of-done-checker`](./definition-of-done-checker.md).
 - Stage 4 stub generator: [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md).
-- Downstream consumer of data contracts: [`data-quality-engineer`](../../qa-data-quality/agents/data-quality-engineer.md).
+- Downstream consumer of data contracts: [`data-quality-engineer`](../../qa-roles/agents/data-quality-engineer.md).

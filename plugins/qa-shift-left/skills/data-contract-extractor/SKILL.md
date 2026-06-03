@@ -35,7 +35,7 @@ the QA test suite can mechanically assert against - typically via
 - A PRD or design doc references a dataset and the team needs the
   schema / SLA pulled out into structured form.
 - A data-quality engineer (per
-  [`data-quality-engineer`](../../../qa-data-quality/agents/data-quality-engineer.md))
+  [`data-quality-engineer`](../../../qa-roles/agents/data-quality-engineer.md))
   needs the contract as input to suite generation.
 
 ## What goes in a data contract
@@ -289,6 +289,6 @@ the consumer's tests, NOT a binding agreement.
   paywalled at iso.org).
 - [`qa-data-quality`](../../../qa-data-quality/README.md) plugin - 
   the downstream consumer of this skill's output. The
-  [`data-quality-engineer`](../../../qa-data-quality/agents/data-quality-engineer.md)
+  [`data-quality-engineer`](../../../qa-roles/agents/data-quality-engineer.md)
   agent reads contracts produced by this skill.
 - [`data-quality-conventions`](../../../qa-data-quality/skills/data-quality-conventions/SKILL.md) - naming and threshold conventions referenced from the contract.
