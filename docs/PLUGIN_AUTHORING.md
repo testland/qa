@@ -8,17 +8,20 @@ Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
 
 - Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the rating gate, lint rules,
   and the differentiation requirement.
-- Read the archetype definitions in the next section before drafting any
+- Skim the common component shapes in the next section before drafting any
   component scope.
 - Identify the 2–3 nearest existing components (in this marketplace or
   the broader ecosystem) and write down the differentiation axis on which
   the new component is distinguishable. Reviewers will check this against
   the description.
 
-## Archetypes
+## Common component shapes (optional)
 
-Every component maps cleanly to one archetype. If a draft fits no archetype,
-the scope is wrong — reshape before authoring.
+Most well-scoped components fall into one of the shapes below. They are a
+**thinking aid for getting scope right, not a required label** — nothing in the
+rating gate or CI keys on them, and the `archetype:` frontmatter field is
+optional. If a draft matches none of these cleanly, the scope is probably
+wrong; reshape before authoring. (D2 scores scope *coherence*, not box-fitting.)
 
 ### Skills (S1-S4)
 
@@ -80,7 +83,7 @@ For each component you intend to ship, write a one-line draft of:
 - Archetype: S1 / S2 / S3 / S4 (skills) or A1 / A2 / A3 / A4 (agents).
 - Draft description (the single-description test goes here).
 
-If a draft fits no archetype, the scope is wrong — reshape before authoring.
+If a draft matches no common shape cleanly, the scope is probably wrong — reshape before authoring.
 
 ## Step 3 — Run the single-description test
 
@@ -170,8 +173,8 @@ would have caught at authoring time.
 
 - **Body structure** uses progressive disclosure: a short main body that
   links to deeper material under `references/`. The main body covers the
-  archetype's required sections (Authoring/Running/Parsing/CI for S1; etc.)
-  with concrete steps and at least one worked example.
+  sections its shape needs (e.g. Authoring/Running/Parsing/CI for a tool
+  wrapper) with concrete steps and at least one worked example.
 - **Body content** — every concrete claim about how a tool works, every
   command syntax, every config field, every threshold value, every
   assertion API — comes from the fetched canonical source.
@@ -240,9 +243,10 @@ Score each of D1–D8 (0–5 per dimension):
 - **D1 Spec compliance** — frontmatter follows Anthropic's plugin spec.
   Name format, name matches parent dir, description ≤1024 chars, no XML tags,
   folder + body placement correct.
-- **D2 Scope quality** — archetype fit (S1–S4 / A1–A4); body length within
-  the v3.0 / v4.0 archetype band; progressive disclosure when approaching
-  the band cap (not splitting the skill).
+- **D2 Scope quality** — one coherent scope the description predicts; single
+  responsibility (no two-things-stapled-together); progressive disclosure;
+  skill body under ~500 lines (Anthropic's SKILL.md guidance), agent body kept
+  brief. The common shapes above are an optional aid, not a scored label.
 - **D3 Description quality** — single-description test passes; for agents,
   description includes a "Use when…" / "Use proactively" / "Use immediately
   after…" trigger clause; skill names prefer gerund form.
@@ -250,10 +254,10 @@ Score each of D1–D8 (0–5 per dimension):
   (Anthropic-bundled patterns set the bar, not aggregator-clone saturation).
 - **D5 Body quality** — actionable instructions (credit checklist patterns
   + feedback loops); examples or expected output; progressive-disclosure
-  layout; body length within archetype band; body hygiene (no broken refs,
-  contradictions, marketing filler, time-sensitive language, Windows-style
-  paths in cited examples). For A1/A3 agents ≥120 lines: explicit
-  `## Output format` section.
+  layout; body length proportionate to type (skill <~500 lines); body hygiene
+  (no broken refs, contradictions, marketing filler, time-sensitive language,
+  Windows-style paths in cited examples). For read-only or adversarial-reviewer
+  agents ≥120 lines: explicit `## Output format` section.
 - **D6 Terminology compliance** — ISTQB-canonical terms cited to canonical
   source; tool-specific claims grounded in fetched docs. **D6 = 0 is a
   hard reject.**
@@ -295,7 +299,6 @@ rating: 24      # D1+D2+D3+D4+D5+D6 sum (script enforces 21..30)
 d6: 4           # D6 sub-score (hard floor ≥1)
 d7: 4           # D7 sub-score (v3.0+; hard floor ≥1 after 2026-06-01)
 d8: 4           # D8 sub-score (v4.0+; advisory, hard floor ≥1 after 2026-07-01)
-archetype: S1   # the matching archetype
 ```
 
 The v4.0 total is computed as `rating + d7 + d8` and reported in commit
@@ -325,7 +328,7 @@ All three must pass.
 Commit message format includes source-fetch date and v4.0 total:
 
 ```
-Add <component-name> <type> (<archetype>, rated <total_v4>/40 [d6=<n>, d7=<n>, d8=<n>]; sources fetched <YYYY-MM-DD> from <domain>)
+Add <component-name> <type> (rated <total_v4>/40 [d6=<n>, d7=<n>, d8=<n>]; sources fetched <YYYY-MM-DD> from <domain>)
 ```
 
 Where `<total_v4>` = `rating + d7 + d8`.
@@ -333,13 +336,13 @@ Where `<total_v4>` = `rating + d7 + d8`.
 Example:
 
 ```
-Add k6-load-testing skill (S1, rated 35/40 [d6=5, d7=4, d8=4]; sources fetched 2026-05-25 from grafana.com/docs/k6)
+Add k6-load-testing skill (rated 35/40 [d6=5, d7=4, d8=4]; sources fetched 2026-05-25 from grafana.com/docs/k6)
 ```
 
 For components scored under v3.0 (no D8 yet), use the v3.0 format:
 
 ```
-Add foo-bar agent (A2, rated 30/35 [d6=4, d7=4]; sources fetched 2026-05-22 from ...)
+Add foo-bar agent (rated 30/35 [d6=4, d7=4]; sources fetched 2026-05-22 from ...)
 ```
 
 ## Step 12 — Release the plugin
@@ -436,7 +439,6 @@ catch it and force placeholder frontmatter.
 ---
 component: <agent-name>
 type: agent
-archetype: <A1 / A2 / A3 / A4>
 ---
 ```
 

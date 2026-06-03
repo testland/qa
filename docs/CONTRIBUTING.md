@@ -27,9 +27,11 @@ rating: 28                      # 0-30 sub-total (D1+D2+D3+D4+D5+D6); script enf
 d6: 4                           # 0-5; D6 Terminology Compliance; d6=0 is hard reject
 d7: 4                           # 0-5; D7 Evaluation Coverage (v3.0+); hard floor ≥1 after 2026-06-01
 d8: 4                           # 0-5; D8 Best-Practices Adherence (v4.0+); hard floor ≥1 after 2026-07-01
-archetype: S1                   # S1-S4 (skills) or A1-A4 (agents)
 ---
 ```
+
+(`archetype:` is no longer required — see D2 below. An optional shape hint is
+fine but nothing gates on it.)
 
 The v4.0 total `rating + d7 + d8` is the importable score (out of 40).
 
@@ -61,10 +63,11 @@ shadow window.
 - **D1 — Spec compliance:** frontmatter follows Anthropic's plugin spec
   (name format + name matches parent dir + description ≤1024 chars +
   no XML tags + folder + body placement).
-- **D2 — Scope quality:** archetype fit (S1–S4 / A1–A4); body length
-  within the archetype band; progressive disclosure when approaching the
-  band cap. See [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md) for archetype
-  definitions and length bands.
+- **D2 — Scope quality:** one coherent scope the description predicts;
+  single responsibility (no two-things-stapled-together); progressive
+  disclosure; skill body under ~500 lines (Anthropic's SKILL.md guidance),
+  agent body kept brief. See [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md) for
+  the optional "common shapes" authoring aid.
 - **D3 — Description quality:** passes the single-description test (below);
   for agents, includes a "Use when…" / "Use proactively" trigger; skill
   names prefer gerund form.
@@ -188,8 +191,8 @@ admitted on the strength of three things:
    route, so it must predict the body).
 2. **A documented differentiation axis** — the PR identifies the closest
    existing components and explains the axis on which the new one is
-   distinguishable (tool, lifecycle stage, output shape, scope of inputs,
-   archetype). "It's the same idea, but mine" is not an axis.
+   distinguishable (tool, lifecycle stage, output shape, scope of inputs).
+   "It's the same idea, but mine" is not an axis.
 3. **The rating bar** — v4.0 importable bar is total ≥ 28/40 with d6 ≥ 1,
    d7 ≥ 1 (hard floor after 2026-06-01), d8 ≥ 1 (hard floor after
    2026-07-01); the lint script enforces v2.0 thresholds (rating ≥ 21/30 +

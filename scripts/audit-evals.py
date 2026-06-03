@@ -5,7 +5,7 @@ Complements scripts/d8-audit.py (which only checks file presence). This
 script verifies the *contents* of every `plugins/<p>/agents/<a>/evals/evals.md`
 file:
 
-  - frontmatter present with 3 required fields (component, type, archetype)
+  - frontmatter present with 2 required fields (component, type)
   - body contains >=3 eval headings (`## Eval N`)
   - body contains all four required phrases: Input:, Target models:,
     Expected:, Pass condition:
@@ -41,7 +41,7 @@ def main() -> int:
         body = parts[2]
 
         missing = []
-        for field in ("component", "type", "archetype"):
+        for field in ("component", "type"):
             if not re.search(rf"^{field}:\s*\S", fm, re.MULTILINE):
                 missing.append(field)
         if missing:

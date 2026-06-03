@@ -25,7 +25,7 @@ Before scoring dimensions, confirm:
 - [ ] Component file is in the correct path
   (`plugins/<plugin>/skills/<name>/SKILL.md` or `plugins/<plugin>/agents/<name>.md`)
 - [ ] Plugin's `README.md` component table updated with new row
-- [ ] Frontmatter has `rating:`, `d6:`, `archetype:` fields
+- [ ] Frontmatter has `rating:`, `d6:` fields
 
 If any pre-check fails, request fixes before scoring.
 
@@ -44,26 +44,26 @@ Ground: Anthropic's official Claude Code plugin spec.
 
 Score: __/5
 
-## D2 — Archetype fit (0-5)
+## D2 — Scope quality (0-5)
 
-Ground: archetype definitions in [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md).
+A component must have ONE coherent scope that its description predicts, sized
+with progressive disclosure.
 
-For skills (S1-S4):
+- [ ] Single responsibility — the body does one thing, not two stapled
+      together (e.g., an agent that both reports read-only AND mutates files
+      mixes scopes)
+- [ ] Body matches the description — no capability in the body the description
+      doesn't predict, and nothing the description promises that the body omits
+- [ ] Progressive disclosure — deep detail lives in `references/` (skills) or a
+      preloaded skill (agents), not inline
+- [ ] Body length proportionate — skill body under ~500 lines (Anthropic's
+      SKILL.md guidance); agent body stays brief (move depth to preloaded skills)
 
-- **S1 file-format/domain** — body has Authoring + Running + Parsing + CI sections
-- **S2 pure reference** — body is a stable reference catalog; no execution steps
-- **S3 build-an-X workflow** — body produces an artifact; has decision points
-- **S4 toolkit/dispatcher** — body lists sub-tools and routes between them
-
-For agents (A1-A4):
-
-- **A1 read-only specialist** — body emits findings; `tools` are read-only
-- **A2 action-taking task** — body produces files/changes; `tools` include Write/Edit
-- **A3 adversarial critic** — body classifies/rejects; framed adversarially
-- **A4 builder/scaffolder** — body generates new artifacts/structure
-
-- [ ] Body shape matches declared archetype
-- [ ] No archetype-mixing (e.g., agent that does both A1 read-only AND A2 action)
+**Common shapes (optional authoring aid, not a required label):** a skill is
+usually a tool/format wrapper, a pure reference, a build-an-X workflow, or a
+dispatcher; an agent is usually a read-only specialist, an action-taker, an
+adversarial critic, or a builder. If a draft matches none of these cleanly, the
+scope is probably wrong — but the score is for coherence, not for fitting a box.
 
 Score: __/5
 
@@ -170,7 +170,7 @@ When in doubt, walk through these calibration anchors:
   doesn't actually walk the user through running, parsing, or gating —
   weak D5. The body reads like a setup README rather than a workflow.
 - **F-grade exemplar (<16/30):** a persona-shaped agent — vague
-  description ("expert in all aspects of X"), no archetype fit, no
+  description ("expert in all aspects of X"), no clear scope, no
   trigger condition, no concrete output shape. Reject and ask the
   contributor to reshape into a sharp, task-scoped component with a
   documented differentiation axis vs. its nearest existing neighbors.

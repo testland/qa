@@ -22,8 +22,8 @@ plugin's `plugin.json` `version` from `0.1.0` to `1.0.0` and run validation
 
 ## Authoring a skill or agent
 
-See [`docs/PLUGIN_AUTHORING.md`](docs/PLUGIN_AUTHORING.md) for full archetype
-guidance.
+See [`docs/PLUGIN_AUTHORING.md`](docs/PLUGIN_AUTHORING.md) for the common
+component shapes and authoring guidance.
 
 **Frontmatter checklist** (every SKILL.md or agent.md):
 
@@ -31,7 +31,7 @@ guidance.
 |---|---|---|
 | `name` | yes | kebab-case, matches the directory / filename |
 | `description` | yes | third-person, no "You are…" / "I help…" openers |
-| `archetype` | yes | one of S1, S2, S3, S4 (skills) or A1, A2, A3, A4 (agents) |
+| `archetype` | no | optional shape hint (S1-S4 / A1-A4); not gated — see "Common component shapes" |
 | `rating` | yes | integer 0–30; CI rejects below 21 |
 | `d6` | yes | integer 0–5; CI rejects 0 (citation theater) |
 | `keywords` | optional | array of strings; flows into marketplace search |
@@ -39,10 +39,10 @@ guidance.
 | `model` (agents only) | optional | `sonnet`, `opus`, `haiku` |
 | `skills` (agents only) | optional | array of skill names this agent preloads |
 
-**Body structure**: matches the declared archetype. S1 = file-format/domain
-wrapper (Step 1 install, Step 2 first run, Step 3+ workflows, Anti-patterns,
-Limitations, References). S3 = build-an-X workflow. A3 = adversarial reviewer
-(When invoked → Steps 1..N → Verdict → Refuse-to-proceed rules).
+**Body structure**: matches the component's shape. A tool/format wrapper has
+Step 1 install, Step 2 first run, Step 3+ workflows, Anti-patterns, Limitations,
+References. A build-an-X workflow walks the workflow end to end. An adversarial
+reviewer agent has When invoked → Steps 1..N → Verdict → Refuse-to-proceed rules.
 
 ## The quality bar
 
@@ -51,7 +51,7 @@ Every component is scored on six dimensions before merge:
 | Dim | Name | Anchor |
 |---|---|---|
 | **D1** | Spec compliance | Lint passes; required frontmatter fields present |
-| **D2** | Archetype fit | Body structure matches declared archetype |
+| **D2** | Scope quality | One coherent scope; single responsibility; progressive disclosure |
 | **D3** | Description quality | Distinguishes vs neighbors; predicts the body |
 | **D4** | Use-case fit | Explicit trigger ("Use when…"), not a persona |
 | **D5** | Body quality | Concrete steps + worked examples |
@@ -86,7 +86,7 @@ What still fails the bar today:
 - **Components that overlap an existing one without a documented
   differentiation axis.** The PR description must name the closest
   existing component(s) and state the axis on which the new one differs
-  (tool, lifecycle stage, output shape, scope of inputs, archetype).
+  (tool, lifecycle stage, output shape, scope of inputs).
   Cross-ref `qa-iac` for the per-tool S1 + A3 unifier model.
 
 See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the differentiation

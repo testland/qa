@@ -61,36 +61,20 @@ def parse_frontmatter(path: Path) -> dict:
 
 
 def count_components(plugin_dir: Path) -> dict:
-    archetype_counts: dict[str, int] = defaultdict(int)
     skills: list[str] = []
     agents: list[str] = []
     for skill_md in sorted(glob.glob(str(plugin_dir / "skills" / "*" / "SKILL.md"))):
-        fm = parse_frontmatter(Path(skill_md))
-        a = fm.get("archetype", "?")
-        archetype_counts[a] += 1
         skills.append(Path(skill_md).parent.name)
     for agent_md in sorted(glob.glob(str(plugin_dir / "agents" / "*.md"))):
         if agent_md.endswith(".gitkeep"):
             continue
-        fm = parse_frontmatter(Path(agent_md))
-        a = fm.get("archetype", "?")
-        archetype_counts[a] += 1
         agents.append(Path(agent_md).stem)
     return {
         "skills": skills,
         "agents": agents,
         "skill_count": len(skills),
         "agent_count": len(agents),
-        "archetypes": dict(archetype_counts),
     }
-
-
-def render_archetype_summary(archetypes: dict) -> str:
-    parts = []
-    for code in ("S1", "S2", "S3", "S4", "A1", "A2", "A3", "A4"):
-        if archetypes.get(code, 0):
-            parts.append(f"{code}×{archetypes[code]}")
-    return " · ".join(parts) if parts else "—"
 
 
 def main() -> int:
@@ -125,7 +109,6 @@ def main() -> int:
             "description": entry.get("description", ""),
             "skill_count": counts["skill_count"],
             "agent_count": counts["agent_count"],
-            "archetypes": counts["archetypes"],
         })
 
     lines: list[str] = []
@@ -148,13 +131,12 @@ def main() -> int:
         lines.append("")
         lines.append(f"_{sub}_")
         lines.append("")
-        lines.append("| Plugin | Version | Components | Archetypes |")
-        lines.append("|---|---|---:|---|")
+        lines.append("| Plugin | Version | Components |")
+        lines.append("|---|---|---:|")
         for p in bucket:
-            arche = render_archetype_summary(p["archetypes"])
             comp = f"{p['skill_count']} skills + {p['agent_count']} agents"
             lines.append(
-                f"| [{p['name']}](plugins/{p['name']}/) | {p['version']} | {comp} | {arche} |"
+                f"| [{p['name']}](plugins/{p['name']}/) | {p['version']} | {comp} |"
             )
         lines.append("")
 
