@@ -132,7 +132,7 @@
     {
       "name": "qa-shift-right",
       "source": "./plugins/qa-shift-right",
-      "description": "Production-side QA per ISTQB-canonical shift right (\"a test approach to test a system continuously in production\"): 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
+      "description": "Production-side QA per ISTQB-canonical shift right (\"a test approach to test a system continuously in production\"): 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 1 agent (observability-to-test).",
       "strict": true,
       "category": "operations-resilience"
     },

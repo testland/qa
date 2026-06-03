@@ -9,7 +9,6 @@ Production-side QA per ISTQB-canonical shift right ("a test approach to test a s
 | Skill | [synthetic-monitor-author](skills/synthetic-monitor-author/SKILL.md) | Build-an-X synthetic monitor: pick journey + platform (Datadog/Checkly/Pingdom/etc.) + Playwright-style script + per-step assertions + multi-region cadence + alert thresholds. |
 | Skill | [prod-canary-validator](skills/prod-canary-validator/SKILL.md) | Build-an-X canary verdict: per-metric absolute + relative thresholds, two-sample statistical tests (chi-square / Welch's t-test), promote/pause/rollback verdict. |
 | Skill | [feature-flag-experiment-validator](skills/feature-flag-experiment-validator/SKILL.md) | Build-an-X A/B test analysis: chi-square / Welch's / Mann-Whitney U per metric, FDR multiple-comparisons correction, practical-vs-statistical significance, ship/don't-ship verdict. |
-| Agent | [production-tester](agents/production-tester.md) | Authors a synthetic monitor for one critical journey end-to-end: script + config + PR with review checklist; refuses real-data / real-payment monitors. |
 | Agent | [observability-to-test](agents/observability-to-test.md) | Closes the loop: production-signal → regression test (cheapest catching layer per test pyramid) + fix PR + postmortem update. |
 
 ## Install

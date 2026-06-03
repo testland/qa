@@ -17,7 +17,7 @@ Inputs: journey description, target environment (production URL +
 synthetic test account credentials + test-mode payment keys),
 platform (default Checkly; team stack overrides), cadence (default
 5 min per
-[`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md)
+[`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md)
 Step 5; 1 min for highest-criticality flows). Outputs: monitor
 script + config + a PR with the changes plus a review checklist.
 
@@ -38,7 +38,7 @@ AWS CloudWatch Synthetics. No signal → suggest Checkly
 ## Step 2 - Generate the script
 
 Apply per-platform conventions per the preloaded
-[`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md). Critical:
+[`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md). Critical:
 
 - **Accessibility-first locators** (per
   [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)):
@@ -134,13 +134,13 @@ production but no BASE_URL is provided (won't default to staging).
 - **Selector quality review** →
   [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md).
 - **Closing the loop monitor → regression test** →
-  [`observability-to-test`](observability-to-test.md).
+  [`observability-to-test`](../../qa-shift-right/agents/observability-to-test.md).
 - **Broader synthetic-monitor strategy** →
-  [`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md).
+  [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md).
 
 ## References
 
 - ISTQB Glossary V4.7.1 - `shift-right`
   (`https://glossary.istqb.org/en_US/term/shift-right`): "a test
   approach to test a system continuously in production."
-- [`synthetic-monitor-author`](../skills/synthetic-monitor-author/SKILL.md) - preloaded skill with platform / cadence / threshold conventions.
+- [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - preloaded skill with platform / cadence / threshold conventions.

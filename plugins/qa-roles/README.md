@@ -2,7 +2,7 @@
 
 Sharply-scoped QA role agents - each one ships a **specific task** for the role, not a job-title persona. The marketplace's lint rules reject `qa-expert` / `quality-engineer` / `qa-master` style names; this plugin demonstrates the correct pattern.
 
-`production-tester` lives in `qa-shift-right`. `exploratory-charter-author` lives in `qa-manual-testing`.
+`exploratory-charter-author` lives in `qa-manual-testing`.
 
 ## Components
 
