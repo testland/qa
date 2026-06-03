@@ -3,7 +3,6 @@ name: peeking-problem-reference
 description: "Pure-reference catalog of the peeking problem in online A/B testing. Defines the problem (repeatedly looking at experiment results inflates the false-positive rate above the declared alpha because each look is a separate test), the canonical mitigations (fixed-horizon test with pre-declared sample size; sequential testing with alpha-spending functions e.g., O'Brien-Fleming, Pocock; always-valid inference / mSPRT per Johari et al.), and the policy choices (data-peek schedule, stop-early thresholds, decision-time guard rails). Use when designing an experimentation platform's stop-early policy or auditing why a result was declared significant. Composes guardrail-metrics-reference."
 rating: 23
 d6: 4
-archetype: S2
 ---
 
 # peeking-problem-reference

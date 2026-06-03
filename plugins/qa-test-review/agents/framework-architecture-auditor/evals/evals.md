@@ -1,7 +1,6 @@
 ---
 component: framework-architecture-auditor
 type: agent
-archetype: A3
 ---
 
 # framework-architecture-auditor - evals

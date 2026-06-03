@@ -1,7 +1,6 @@
 ---
 component: ai-test-shallow-coverage-critic
 type: agent
-archetype: A3
 ---
 
 # ai-test-shallow-coverage-critic - evals

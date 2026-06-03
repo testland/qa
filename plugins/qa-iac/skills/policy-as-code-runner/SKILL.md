@@ -3,7 +3,6 @@ name: policy-as-code-runner
 description: "Configures policy-as-code testing using OPA / Conftest / Cedar - authors policies in Rego (OPA''''s language), runs Conftest against Kubernetes manifests / Terraform plans / Dockerfiles / arbitrary structured data, integrates with CI for PR-time policy gates. Per OPA''''s docs: \"an open source, general-purpose policy engine that unifies policy enforcement across the stack.\" Use to express + enforce custom policies (cost limits, tagging requirements, security baselines) that Checkov / tfsec / KICS don''''t cover."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # policy-as-code-runner

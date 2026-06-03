@@ -3,7 +3,6 @@ name: maestro-flows
 description: "Authors mobile + web UI flows using Maestro - declarative YAML files (`tapOn`, `inputText`, `assertVisible`, `swipe`), supported targets (iOS, Android, Flutter, React Native, web), nested flow imports, JavaScript hooks for complex conditions. Use when the team wants the lowest barrier to entry for cross-platform mobile UI tests - YAML-first, no language compile step."
 rating: 22
 d6: 3
-archetype: S1
 ---
 
 # maestro-flows

@@ -1,7 +1,6 @@
 ---
 component: sca-prioritizer
 type: agent
-archetype: A3
 ---
 
 # sca-prioritizer - evals

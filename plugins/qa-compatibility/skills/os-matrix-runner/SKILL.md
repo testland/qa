@@ -3,7 +3,6 @@ name: os-matrix-runner
 description: "Configures a CI matrix that runs tests across operating systems (Linux / macOS / Windows) and runtime versions (Node 18/20/22; Python 3.10/3.11/3.12; Java 17/21; .NET 6/8). Wires GitHub Actions matrix syntax, addresses OS-specific quirks (path separators, line endings, file permissions). Use when the product ships across OS / runtime combinations and the team needs continuous cross-platform coverage."
 rating: 22
 d6: 3
-archetype: S1
 ---
 
 # os-matrix-runner

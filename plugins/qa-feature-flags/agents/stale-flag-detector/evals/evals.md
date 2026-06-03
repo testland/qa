@@ -1,7 +1,6 @@
 ---
 component: stale-flag-detector
 type: agent
-archetype: A3
 ---
 
 # stale-flag-detector - evals

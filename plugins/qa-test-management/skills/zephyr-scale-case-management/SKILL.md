@@ -3,7 +3,6 @@ name: zephyr-scale-case-management
 description: "Author and manage Zephyr Scale Cloud test cases via the REST API v2 - create tests, attach steps, link to Jira issues, organise into folders, manage test cycles. Covers Bearer-token auth, the /testcases endpoints, the testScript / steps shape, and folder hierarchy. Use for pre-execution case authoring in Jira-anchored teams using Zephyr Scale (formerly TM4J). Distinct from Zephyr's test-cycle / execution endpoints which post results."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # zephyr-scale-case-management

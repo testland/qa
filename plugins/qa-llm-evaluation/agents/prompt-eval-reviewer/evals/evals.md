@@ -1,7 +1,6 @@
 ---
 component: prompt-eval-reviewer
 type: agent
-archetype: A3
 ---
 
 # prompt-eval-reviewer - evals

@@ -7,7 +7,6 @@ skills:
   - regression-suite-selector
 rating: 22
 d6: 3
-archetype: A3
 ---
 
 A maintenance agent that surfaces low-signal tests and proposes removals - never executes deletes without a human's PR review.

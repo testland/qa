@@ -8,7 +8,6 @@ skills:
   - row-level-security-postgres-reference
 rating: 23
 d6: 4
-archetype: A1
 ---
 
 A read-only specialist that traces tenant_id propagation through one code path and flags hazards.

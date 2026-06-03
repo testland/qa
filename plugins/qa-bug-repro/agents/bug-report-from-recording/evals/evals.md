@@ -1,7 +1,6 @@
 ---
 component: bug-report-from-recording
 type: agent
-archetype: A2
 ---
 
 # bug-report-from-recording - evals

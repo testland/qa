@@ -3,7 +3,6 @@ name: cli-output-conventions
 description: "Conventions for designing AND testing CLI output so it stays parseable and assertable - exit-code policy (0 success, non-zero failure with stable codes per failure mode), `stdout` for primary data / `stderr` for messages, `--json` / `--plain` for machine-readable output, deterministic ordering and timestamps, `NO_COLOR` / TTY-aware color, `-q` / `--verbose` discipline, and stable `--help` / `--version`. Built on the [Command Line Interface Guidelines][clig]. Use as the assertion contract for `bats-testing` (text CLIs) and to tell `tui-snapshot-tester` what does NOT need a snapshot."
 rating: 22
 d6: 4
-archetype: S2
 ---
 
 # cli-output-conventions

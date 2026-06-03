@@ -1,7 +1,6 @@
 ---
 component: regression-bisector
 type: agent
-archetype: A2
 ---
 
 # regression-bisector - evals

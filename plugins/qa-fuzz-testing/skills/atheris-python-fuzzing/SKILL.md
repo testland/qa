@@ -3,7 +3,6 @@ name: atheris-python-fuzzing
 description: "Author and run Atheris - Google's Python coverage-guided fuzzer built on libFuzzer. Covers pip installation, atheris.Setup + atheris.Fuzz invocation, TestOneInput(data: bytes) target signature, FuzzedDataProvider for structured input, instrument_imports() / instrument_func decorators for coverage instrumentation, and libFuzzer-passthrough flags (-atheris_runs, -max_total_time, -dict). Use for fuzzing Python libraries - also supports CPython native-extension fuzzing."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # atheris-python-fuzzing

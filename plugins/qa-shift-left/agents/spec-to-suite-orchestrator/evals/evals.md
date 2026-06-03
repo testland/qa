@@ -1,7 +1,6 @@
 ---
 component: spec-to-suite-orchestrator
 type: agent
-archetype: A2
 ---
 
 # spec-to-suite-orchestrator - evals

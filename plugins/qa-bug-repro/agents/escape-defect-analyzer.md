@@ -7,7 +7,6 @@ skills:
   - bug-report-template
 rating: 23
 d6: 3
-archetype: A4
 ---
 
 A retrospective builder that turns "this bug escaped to production" into "here's the prevention asset we'll commit."

@@ -1,7 +1,6 @@
 ---
 component: extension-test-author
 type: agent
-archetype: A2
 ---
 
 # extension-test-author - evals

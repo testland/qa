@@ -3,7 +3,6 @@ name: chaos-experiment-author
 description: "Build-an-X workflow for a chaos experiment per the Principles of Chaos Engineering - defines steady-state hypothesis, picks the variables (real-world events: network latency, node failure, region outage), sets the blast radius (which percentage / namespace / user cohort), automates execution, and emits the verdict (steady-state held / didn''''t hold). Use to scope a chaos experiment before running it via Litmus / Chaos Mesh / Gremlin / Toxiproxy."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # chaos-experiment-author

@@ -3,7 +3,6 @@ name: playwright-testing
 description: "Authors Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` projects per browser/device, accessibility-first locators (`getByRole`/`getByLabelText` per the e2e-selector convention), Page Object pattern, trace viewer for debugging, parallel + sharded execution, HTML reporter for CI. Per Playwright''''s docs: \"an end-to-end test framework for modern web apps. It bundles test runner, assertions, isolation, parallelization and rich tooling."
 rating: 24
 d6: 4
-archetype: S1
 ---
 
 # playwright-testing

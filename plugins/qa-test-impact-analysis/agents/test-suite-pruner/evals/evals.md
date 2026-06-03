@@ -1,7 +1,6 @@
 ---
 component: test-suite-pruner
 type: agent
-archetype: A3
 ---
 
 # test-suite-pruner - evals

@@ -1,7 +1,6 @@
 ---
 component: quality-coach
 type: agent
-archetype: A3
 ---
 
 # quality-coach - evals

@@ -3,7 +3,6 @@ name: coverage-debt-tracker
 description: "Builds a per-file coverage-debt ledger by walking N runs of historical coverage data - flags files whose line% / branch% has slid more than M pp over the period (`falling`), files whose coverage hasn't moved while their churn has (`stale`), and files that lost their last covering test (`orphan`). Emits a sorted backlog the team can ratchet down: each PR fixes one or two debt items, the rest stays visible. Use when whole-repo coverage is \"fine\" but specific modules are eroding silently and the team needs a stack-ranked list to fix."
 rating: 23
 d6: 3
-archetype: S3
 ---
 
 # coverage-debt-tracker

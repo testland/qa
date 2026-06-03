@@ -1,7 +1,6 @@
 ---
 component: ai-flake-detector
 type: agent
-archetype: A1
 ---
 
 # ai-flake-detector - evals

@@ -1,7 +1,6 @@
 ---
 component: chaos-drill-orchestrator
 type: agent
-archetype: A2
 ---
 
 # chaos-drill-orchestrator - evals

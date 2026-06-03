@@ -7,7 +7,6 @@ skills:
   - test-code-conventions
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 A specialized adversarial reviewer for AI-generated tests. Catches the failure modes that human-authored tests rarely exhibit but LLM-authored tests commonly do.

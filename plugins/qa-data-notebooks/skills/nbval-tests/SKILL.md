@@ -2,7 +2,6 @@
 name: nbval-tests
 description: "Validate Jupyter notebooks via the `pytest --nbval` plugin - re-execute cells and compare outputs to stored results. Cover the strict path (output match required), `--nbval-lax` (failure-only), `--sanitize-with` for dynamic outputs, and per-cell controls (`#NBVAL_SKIP`, `#NBVAL_IGNORE_OUTPUT`, `#NBVAL_RAISES_EXCEPTION`)."
 type: skill
-archetype: S1
 rating: 23
 d6: 4
 keywords:

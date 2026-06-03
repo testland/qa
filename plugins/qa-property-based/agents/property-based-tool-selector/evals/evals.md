@@ -1,7 +1,6 @@
 ---
 component: property-based-tool-selector
 type: agent
-archetype: A2
 ---
 
 # property-based-tool-selector - evals

@@ -1,7 +1,6 @@
 ---
 component: risk-assessment-critic
 type: agent
-archetype: A3
 ---
 
 # risk-assessment-critic - evals

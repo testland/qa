@@ -3,7 +3,6 @@ name: wiremock-stubs
 description: "Authors WireMock stub mappings for HTTP service mocking - `stubFor` with verb/path/header matchers + `willReturn` response shaping, lifecycle via `WireMockServer` (start / stop) or JUnit `WireMockExtension`, request verification via `verify()`, and dynamic-port allocation for parallel tests. Use when the project is JVM-based and tests need to mock HTTP dependencies (third-party APIs, internal microservices) at the network layer."
 rating: 25
 d6: 4
-archetype: S1
 ---
 
 # wiremock-stubs

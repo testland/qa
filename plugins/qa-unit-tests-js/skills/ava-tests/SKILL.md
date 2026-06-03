@@ -3,7 +3,6 @@ name: ava-tests
 description: "Configures and runs AVA - concurrent-by-default JS/TS test framework with isolated test files (each file runs in its own Node process), no globals (explicit `import test from 'ava'`), async-first API, snapshot support, and TypeScript via `@ava/typescript`. Use when the user wants minimal-API parallel-by-default tests, or works with libraries (vs apps) where per-file isolation prevents test interference."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # ava-tests

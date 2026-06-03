@@ -3,7 +3,6 @@ name: mimesis-data
 description: "Authors Python test fixtures using mimesis - a fast, type-hinted, locale-aware test-data generator with 46 locales - covering Person / Address / Internet / Datetime providers and the Schema/Field pattern for typed-dict generation. Pairs with factory_boy when referential integrity is needed. Use when the project is Python and the team values speed, type hints, or strong locale coverage over Faker's larger ecosystem."
 rating: 24
 d6: 4
-archetype: S1
 ---
 
 # mimesis-data

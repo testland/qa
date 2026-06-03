@@ -3,7 +3,6 @@ name: tour-based-explorer-prompt
 description: "Pure-reference catalog of exploratory testing tours - heuristics that frame an exploratory session around a theme. The seven canonical tours from Whittaker''''s *Exploratory Software Testing* (2009): Feature tour, Money tour, Landmark tour, Intellectual tour, Bad-data tour, Configuration tour, Garbage collector''''s tour. Each tour has a mission, a typical signal it surfaces, and an example application. Use as the heuristics menu the charter author and tester pick from when designing a session."
 rating: 22
 d6: 3
-archetype: S2
 ---
 
 # tour-based-explorer-prompt

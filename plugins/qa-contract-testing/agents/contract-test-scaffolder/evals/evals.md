@@ -1,7 +1,6 @@
 ---
 component: contract-test-scaffolder
 type: agent
-archetype: A4
 ---
 
 # contract-test-scaffolder - evals

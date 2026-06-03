@@ -1,7 +1,6 @@
 ---
 component: release-readiness-checker
 type: agent
-archetype: A3
 ---
 
 # release-readiness-checker - evals

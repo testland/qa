@@ -3,7 +3,6 @@ name: audit-trail-test-author
 description: "Build-an-X for audit-log tests across compliance frameworks - required-events catalog (auth events / privilege change / data access / admin action / config change / export / impersonation); structured-log-format assertions per OWASP A09:2021; tamper-evident chain (hash-chain + signed-batch patterns) for HIPAA §164.312(b) + PCI Req 10 + SOC 2 CC7.3; immutability + retention per framework; query-replay tests for forensic reconstruction. Use when authoring audit log tests for any compliance framework (HIPAA / PCI / SOC 2 / GDPR / etc.)."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # audit-trail-test-author

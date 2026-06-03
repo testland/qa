@@ -3,7 +3,6 @@ name: compatibility-budget
 description: "Pure-reference for choosing the compatibility matrix - defines tier-1 (must work; covered per-PR) vs tier-2 (must work; covered nightly) vs tier-3 (should work; covered pre-release) vs unsupported (explicitly out of scope). Includes example budgets per product type (web / desktop / mobile / library), the matrix-size cost / coverage trade-off, and templates for documenting \"what we support\" externally. Use when a team needs to decide which browser / OS / runtime combinations to commit to."
 rating: 22
 d6: 3
-archetype: S2
 ---
 
 # compatibility-budget

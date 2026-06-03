@@ -1,7 +1,6 @@
 ---
 component: embedded-test-author
 type: agent
-archetype: A2
 ---
 
 # embedded-test-author - evals

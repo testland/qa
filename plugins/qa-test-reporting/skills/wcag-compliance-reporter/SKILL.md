@@ -3,7 +3,6 @@ name: wcag-compliance-reporter
 description: "Builds a per-page WCAG 2.2 compliance score report by aggregating output from one or more accessibility scanners (axe-core / pa11y / lighthouse / WAVE / IBM Equal Access), pivoting violations by Success Criterion (1.4.3 contrast, 2.4.7 focus visible, etc.), grouping by conformance level (A / AA / AAA), reporting per-page coverage gaps explicitly (the \"this page wasn't scanned\" failure mode), and emitting both an executive summary and a per-page drill-down. Use after a multi-page accessibility scan - pa11y-ci, axe across a sitemap, lighthouse-batch - when the team needs a shareable conformance report rather than a per-page tool dump."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # wcag-compliance-reporter

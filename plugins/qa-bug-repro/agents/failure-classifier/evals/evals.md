@@ -1,7 +1,6 @@
 ---
 component: failure-classifier
 type: agent
-archetype: A3
 ---
 
 # failure-classifier - evals

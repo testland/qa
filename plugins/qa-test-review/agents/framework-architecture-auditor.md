@@ -11,7 +11,6 @@ skills:
   - test-data-patterns
 rating: 25
 d6: 5
-archetype: A3
 ---
 
 A specialised adversarial reviewer that walks the test framework codebase and flags **architectural** debt - patterns across files that per-file critics structurally cannot see. Compose with the four per-file critics in this plugin; do not duplicate their per-file work.

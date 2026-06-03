@@ -1,7 +1,6 @@
 ---
 component: regression-suite-curator
 type: agent
-archetype: A3
 ---
 
 # regression-suite-curator - evals

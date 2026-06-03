@@ -3,7 +3,6 @@ name: test-case-anatomy-reference
 description: "Pure-reference catalog of test-case anatomy - what fields a well-formed test case must have and what each field means. Enumerates the ISO/IEC/IEEE 29119-3:2021 test-case template fields (identifier, objective, preconditions, inputs, steps, expected results, postconditions, environment, traceability) and the ISTQB CTAL-TM specification-technique-driven additions (equivalence partition, boundary value, decision table, state transition). Maps the canonical anatomy to the five tracker-specific schemas this plugin covers (TestRail, Xray, Zephyr Scale, Allure TestOps, Qase). Use as the authoritative source when authoring a case template, reviewing case quality, or migrating between tools."
 rating: 25
 d6: 5
-archetype: S2
 ---
 
 # test-case-anatomy-reference

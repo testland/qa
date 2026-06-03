@@ -1,7 +1,6 @@
 ---
 component: daily-test-suite-aggregator
 type: agent
-archetype: A2
 ---
 
 # daily-test-suite-aggregator - evals

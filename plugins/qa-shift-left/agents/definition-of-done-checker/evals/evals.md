@@ -1,7 +1,6 @@
 ---
 component: definition-of-done-checker
 type: agent
-archetype: A3
 ---
 
 # definition-of-done-checker - evals

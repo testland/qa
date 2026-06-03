@@ -3,7 +3,6 @@ name: github-actions-test-jobs
 description: "Configures GitHub Actions test workflows - `.github/workflows/test.yml` with matrix builds (OS × runtime), JUnit XML artifact upload, retry/sharding, services (PostgreSQL, Redis), per-trigger filtering (pull_request, push, schedule, workflow_dispatch). Use when the project hosts on GitHub and the team wants idiomatic GitHub Actions patterns for test workflows."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # github-actions-test-jobs

@@ -11,7 +11,6 @@ skills:
   - gameplay-recording-replay-skill
   - game-test-categories-reference
   - platform-cert-overview-reference
-archetype: A2
 rating: 27
 d6: 4
 d7: 4

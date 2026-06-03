@@ -1,7 +1,6 @@
 ---
 component: spec-to-e2e-test-scaffolder
 type: agent
-archetype: A4
 ---
 
 # spec-to-e2e-test-scaffolder - evals

@@ -3,7 +3,6 @@ name: tenant-isolation-models-reference
 description: "Pure-reference catalog of tenant-isolation models for B2B SaaS. Defines the isolation continuum from full-isolation (separate compute + data + network per tenant) to fully-shared (one deployment, tenant_id discriminator), names the canonical models (Microsoft's automated-single-tenant / fully-multitenant / vertically-partitioned / horizontally-partitioned; AWS Well-Architected's silo / pool / bridge framing; deployment-stamps / supertenants terminology), enumerates the trade-offs (cost, blast radius, noisy neighbor, compliance, scale limits), and lists the test surfaces each model creates (cross-tenant data leak, tenant-id propagation, deployment-routing). Use as the model-selection reference when designing or auditing tenant isolation. Consumed by tenant-leak-test-author, cross-tenant-data-leak-tests, tenant-leak-critic, tenant-id-propagation-tracer."
 rating: 23
 d6: 4
-archetype: S2
 ---
 
 # tenant-isolation-models-reference

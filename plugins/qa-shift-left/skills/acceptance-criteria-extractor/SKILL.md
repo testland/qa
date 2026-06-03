@@ -3,7 +3,6 @@ name: acceptance-criteria-extractor
 description: "Reads a user story, PRD section, or feature spec and emits well-formed acceptance criteria as Given/When/Then steps in Gherkin (Feature/Scenario file format) or as a numbered plain-text list. Identifies missing-precondition gaps and proposes Background blocks for shared context. Use after a story is testability-confirmed and before implementation begins."
 rating: 25
 d6: 5
-archetype: S3
 ---
 
 # acceptance-criteria-extractor

@@ -3,7 +3,6 @@ name: detox-testing
 description: "Authors React Native E2E tests using Detox (Wix) - uses gray-box architecture (test runs in-process with the app), `element(by.id|by.text|by.label)` matchers, `waitFor()` for explicit synchronization beyond Detox's automatic async tracking, and Jest as the default test runner. Use when the app is React Native and the team wants the fastest / most-reliable RN-specific framework."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # detox-testing

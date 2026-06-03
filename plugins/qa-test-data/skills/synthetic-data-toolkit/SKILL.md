@@ -3,7 +3,6 @@ name: synthetic-data-toolkit
 description: "Dispatcher across the four synthetic-data generators in this plugin (Faker / FactoryBot / mimesis / Bogus) - picks the right tool by language and use case (raw value generation vs. typed factory orchestration), shows side-by-side equivalents for the same fixture across all four, and emits the language-appropriate code. Use when starting test-data work on a project and the team wants the \"which tool should I use\" decision documented."
 rating: 23
 d6: 3
-archetype: S4
 ---
 
 # synthetic-data-toolkit

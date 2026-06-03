@@ -1,7 +1,6 @@
 ---
 component: threat-model-from-spec
 type: agent
-archetype: A4
 ---
 
 # threat-model-from-spec - evals

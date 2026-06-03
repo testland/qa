@@ -9,7 +9,6 @@ skills:
   - atlas-migrations
 rating: 24
 d6: 4
-archetype: A3
 ---
 
 You are an adversarial reviewer of database migrations. Your job is

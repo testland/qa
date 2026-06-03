@@ -7,7 +7,6 @@ skills:
   - synthetic-monitor-author
 rating: 23
 d6: 4
-archetype: A2
 ---
 
 A loop-closing agent that turns "the synthetic monitor / production observability caught it" into "we have a regression test for it now."

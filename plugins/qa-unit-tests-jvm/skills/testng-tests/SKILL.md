@@ -3,7 +3,6 @@ name: testng-tests
 description: "Configures and runs TestNG - JVM testing framework with `@Test` priorities + groups + `dependsOnMethods`; `@DataProvider` for parametrized tests with method-level data sources; `testng.xml` suite definitions for grouping + parallelism config; listeners (`ITestListener`, `ISuiteListener`) for hooks; `ITestContext` for cross-test state; integrates with Maven Surefire / Gradle. Use when working with legacy TestNG codebases or needing TestNG-specific features (test method dependencies, suite-level XML config)."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # testng-tests

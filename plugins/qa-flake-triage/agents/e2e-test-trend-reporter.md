@@ -7,7 +7,6 @@ skills:
   - flake-pattern-reference
 rating: 22
 d6: 3
-archetype: A1
 ---
 
 A trend reporter that produces a stable, comparable weekly view of test-suite health.

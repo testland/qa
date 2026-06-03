@@ -3,7 +3,6 @@ name: ab-test-validity-checklist
 description: "Workflow-driven skill that builds an A/B test validity checklist from an experiment proposal. Walks through the canonical validity gates (pre-registration of OEC + power calc + guardrails, randomization unit + SRM check, assignment integrity, telemetry correctness, peeking discipline per peeking-problem-reference, novelty/primacy assessment, post-experiment SRM re-check, results-interpretation guardrails per Kohavi et al.) and emits a per-experiment checklist + a sign-off form. Use when launching a new experiment, auditing an existing one, or building experimentation governance. Composes guardrail-metrics-reference + peeking-problem-reference."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # ab-test-validity-checklist

@@ -1,7 +1,6 @@
 ---
 component: test-case-quality-auditor
 type: agent
-archetype: A3
 ---
 
 # test-case-quality-auditor - evals

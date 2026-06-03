@@ -3,7 +3,6 @@ name: framework-choice-advisor
 description: "Pure reference catalog for picking a test automation framework - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso / XCUITest / RestAssured / Karate / k6 / Locust with side-by-side tradeoffs on speed, cross-browser, mobile, parallelisation, language support, ecosystem maturity, CI integration; a decision tree for matching project NFRs to framework choice; and reference directory / fixture / CI layouts for the chosen stack. Distinct from the per-framework skills (`playwright-testing`, `cypress-testing`, etc.) which document configuration once a framework is chosen - this skill is the **upstream selection step**. Distinct from `test-pyramid-balancer` (which tunes the layer mix for an existing suite). Use when starting a new test-automation suite from scratch, before installing any tool."
 rating: 24
 d6: 4
-archetype: S2
 ---
 
 # framework-choice-advisor

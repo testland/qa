@@ -1,7 +1,6 @@
 ---
 component: model-fairness-reviewer
 type: agent
-archetype: A3
 ---
 
 # model-fairness-reviewer - evals

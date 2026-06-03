@@ -1,7 +1,6 @@
 ---
 component: golden-file-manager
 type: agent
-archetype: A2
 ---
 
 # golden-file-manager - evals

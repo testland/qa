@@ -8,7 +8,6 @@ skills:
   - peeking-problem-reference
 rating: 22
 d6: 4
-archetype: A3
 ---
 
 A read-only specialist that detects SRM and proposes a root-cause investigation path.

@@ -3,7 +3,6 @@ name: mobile-device-matrix-toolkit
 description: "Dispatcher skill for orchestrating mobile UI test runs across simulators, emulators, and device farms - picks the right matrix per CI cost / coverage trade-off (3-tier model: smoke set, regression set, full release matrix), wires per-target capabilities (Appium / Detox / XCUITest), aggregates per-target JUnit XML, and emits a coverage matrix verdict. Use when a mobile suite needs to run across many target devices/OSes - directly executing 50 device configs is a CI-cost disaster; this dispatcher right-sizes per cadence."
 rating: 22
 d6: 3
-archetype: S4
 ---
 
 # mobile-device-matrix-toolkit

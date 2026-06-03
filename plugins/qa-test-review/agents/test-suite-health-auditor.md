@@ -7,7 +7,6 @@ skills:
   - test-code-conventions
   - flake-pattern-reference
   - framework-choice-advisor
-archetype: A3
 rating: 29
 d6: 4
 d7: 4

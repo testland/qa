@@ -1,7 +1,6 @@
 ---
 component: data-quality-engineer
 type: agent
-archetype: A2
 ---
 
 # data-quality-engineer - evals

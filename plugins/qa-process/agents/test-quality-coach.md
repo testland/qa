@@ -7,7 +7,6 @@ skills:
   - test-code-conventions
 rating: 22
 d6: 3
-archetype: A3
 ---
 
 A coaching-mode reviewer for test PRs. Same convention enforcement as `test-code-critic` but with growth framing - for new team members, junior engineers, or teams ramping up test discipline.

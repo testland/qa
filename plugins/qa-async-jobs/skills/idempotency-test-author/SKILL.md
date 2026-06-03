@@ -3,7 +3,6 @@ name: idempotency-test-author
 description: "Build-an-X for idempotency tests in any async/job/API context - idempotency-key handling (per Stripe / AWS prescriptive guidance pattern), retry-safe semantics (exactly-once vs at-least-once vs at-most-once), side-effect commutativity verification, fingerprint-based dedup, idempotency-window tuning. Use when authoring tests for any system where the same input could be processed twice (SQS Standard at-least-once, RabbitMQ requeue, retry-on-error logic, webhook redelivery, browser double-click, mobile-network retry)."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # idempotency-test-author

@@ -7,7 +7,6 @@ skills:
   - risk-matrix
 rating: 25
 d6: 5
-archetype: A3
 ---
 
 A calibration agent that asks the question "is the team's risk matrix consistent with what actually broke?" and surfaces the gaps. Read-only by design - the matrix is the team's authority, not the agent's.

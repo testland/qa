@@ -3,7 +3,6 @@ name: vwo-test
 description: "Wraps VWO (Visual Website Optimizer) SDK testing patterns: SDK initialization with the settings file (offline-capable), `getFeatureVariableValue` and `activate` API, force-bucketing for per-test assignment, and assignment-integrity tests against the bucketing algorithm. Use when writing tests for VWO-instrumented application code. Composes guardrail-metrics-reference + peeking-problem-reference + ab-test-validity-checklist."
 rating: 21
 d6: 4
-archetype: S1
 ---
 
 # vwo-test

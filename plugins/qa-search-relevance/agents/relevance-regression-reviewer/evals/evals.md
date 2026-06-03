@@ -1,7 +1,6 @@
 ---
 component: relevance-regression-reviewer
 type: agent
-archetype: A3
 ---
 
 # relevance-regression-reviewer - evals

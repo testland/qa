@@ -1,7 +1,6 @@
 ---
 component: sample-ratio-mismatch-detector
 type: agent
-archetype: A3
 ---
 
 # sample-ratio-mismatch-detector - evals

@@ -2,7 +2,6 @@
 name: evidently-monitoring
 description: "Use Evidently OSS (100+ evaluation metrics, declarative testing API) to detect data drift, target drift, and model performance regression - wired into CI as a gate and into production monitoring as a continuous check. Reports as HTML + JSON for both human review and pipeline assertions."
 type: skill
-archetype: S1
 rating: 22
 d6: 4
 keywords:

@@ -3,7 +3,6 @@ name: test-pyramid-balancer
 description: "Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward Cohn's pyramid ratios per the change-set shape - pure-logic-heavy repo wants ~80/15/5; UI-heavy repo wants ~60/25/15. Detects \"ice-cream cone\" (E2E-heavy) and \"hourglass\" (integration-thin) anti-patterns. Use quarterly to keep the test mix calibrated to the codebase reality."
 rating: 22
 d6: 3
-archetype: S3
 ---
 
 # test-pyramid-balancer

@@ -1,7 +1,6 @@
 ---
 component: ai-test-curator
 type: agent
-archetype: A3
 ---
 
 # ai-test-curator - evals

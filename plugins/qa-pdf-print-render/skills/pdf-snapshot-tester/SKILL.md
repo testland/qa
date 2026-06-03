@@ -2,7 +2,6 @@
 name: pdf-snapshot-tester
 description: "Test PDF outputs by converting per-page to images (`pdftocairo` / pdf2image / Poppler) and running pixel-diff (pixelmatch / Resemble.js / Pillow `ImageChops`) against approved baselines. Per-page-range targeting, threshold tuning, font-substitution warnings, byte-stable PDF metadata stripping (CreationDate, /ID)."
 type: skill
-archetype: S1
 rating: 23
 d6: 4
 keywords:

@@ -11,7 +11,6 @@ skills:
   - maestro-flows
   - flutter-testing
   - parameterized-test-generator
-archetype: A2
 rating: 27
 d6: 4
 d7: 4

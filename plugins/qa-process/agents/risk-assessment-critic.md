@@ -10,7 +10,6 @@ skills:
   - risk-acceptance-decision-author
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 An adversarial risk-register auditor that blocks substandard risk assessments from driving release planning.

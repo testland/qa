@@ -3,7 +3,6 @@ name: flaky-test-quarantine
 description: "Builds a quarantine workflow for flaky tests - marks the test with the framework's skip/fixme/retry annotation, records the failure-rate observation and a bisect link in the annotation body, sets an auto-expiry date, and produces a CI report listing every quarantined test that has expired and needs re-evaluation. Use when a flaky test is blocking the trunk and must be removed from the gating path without losing track of it."
 rating: 23
 d6: 3
-archetype: S3
 ---
 
 # flaky-test-quarantine

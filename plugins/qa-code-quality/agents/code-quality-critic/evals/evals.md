@@ -1,7 +1,6 @@
 ---
 component: code-quality-critic
 type: agent
-archetype: A3
 ---
 
 # code-quality-critic - evals

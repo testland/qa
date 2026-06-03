@@ -1,7 +1,6 @@
 ---
 component: observability-to-test
 type: agent
-archetype: A2
 ---
 
 # observability-to-test - evals

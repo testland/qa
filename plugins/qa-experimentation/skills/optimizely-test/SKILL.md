@@ -3,7 +3,6 @@ name: optimizely-test
 description: "Wraps Optimizely Feature Experimentation SDK testing patterns: client initialization with a datafile (offline-friendly), the decide / decideAll API (Optimizely Feature Experimentation, the v5 API), forced-decisions for per-test arm pinning, OptimizelyUserContext + activate / track events, and assignment-integrity tests. Use when writing tests for Optimizely-instrumented application code. Composes guardrail-metrics-reference + peeking-problem-reference + ab-test-validity-checklist."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # optimizely-test

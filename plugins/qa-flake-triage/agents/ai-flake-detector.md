@@ -7,7 +7,6 @@ skills:
   - flake-pattern-reference
 rating: 23
 d6: 3
-archetype: A1
 ---
 
 A predictive screen that ranks currently-green tests by their flakiness risk profile. "AI" reflects the heuristic-based predictor framing - the agent matches structured test-history data against pattern signals, with no embedded ML model. For learned-weight prediction, integrate Datadog CI Visibility or Launchable separately.

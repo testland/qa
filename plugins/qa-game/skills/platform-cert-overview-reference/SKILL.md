@@ -3,7 +3,6 @@ name: platform-cert-overview-reference
 description: "Pure-reference catalog of the four platform-holder certification regimes a multi-platform title submits to before release: Microsoft Xbox Requirements (XR) / Xbox certification on learn.microsoft.com, Sony Technical Requirements Checklist (TRC) on the gated PlayStation DevNet portal, Nintendo Lotcheck on the gated Nintendo Developer Portal, and Steam Direct review on partner.steamgames.com. Documents the submission workflow, severity / pass-fail vocabulary, test-bench configurations, and known SLAs for each platform. Cites public sources inline; cites gated NDA portals by stable ID per PLUGIN_AUTHORING.md Step 4 fallback. Use when planning a cert calendar, mapping internal QA findings to the platform's vocabulary, or sequencing submissions across platforms."
 rating: 24
 d6: 4
-archetype: S2
 keywords: ["xbox-cert", "xr", "playstation-trc", "nintendo-lotcheck", "steam-direct", "submission", "certification", "release"]
 ---
 

@@ -3,7 +3,6 @@ name: wcag-checklist-builder
 description: "Builds a per-component WCAG 2.2 accessibility checklist from a component spec - covers focus management, color contrast, ARIA roles & states, keyboard interaction, error handling, and live-region announcements - emitting a markdown checklist or YAML test plan that pairs with screen-reader-test-author for manual verification and the violation gate for automated scans. Use during component-spec review or pre-implementation acceptance."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # wcag-checklist-builder

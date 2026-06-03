@@ -1,7 +1,6 @@
 ---
 component: risk-based-test-selector
 type: agent
-archetype: A2
 ---
 
 # risk-based-test-selector - evals

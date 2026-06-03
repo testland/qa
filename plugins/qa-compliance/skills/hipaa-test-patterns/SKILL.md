@@ -3,7 +3,6 @@ name: hipaa-test-patterns
 description: "Reference catalog of HIPAA Security Rule-aligned test patterns - administrative safeguards (45 CFR §164.308: workforce training, access management, contingency planning), physical safeguards (§164.310: facility access, workstation security, device disposal), technical safeguards (§164.312: access control, audit logs, integrity, transmission security); PHI handling assertions in fixtures; minimum-necessary tests per §164.502(b); BAA-scope boundary verification. Use when authoring HIPAA-readiness tests for any product handling Protected Health Information."
 rating: 22
 d6: 4
-archetype: S2
 ---
 
 # hipaa-test-patterns

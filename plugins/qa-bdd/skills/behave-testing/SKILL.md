@@ -3,7 +3,6 @@ name: behave-testing
 description: "Configures Behave for Python BDD scenarios - `pip install behave`, authors `.feature` files in Gherkin, writes step implementations in `features/steps/*.py`, configures via `environment.py` for setup/teardown hooks, organizes via tags, runs via `behave`. Use for Python codebases that want Cucumber-family BDD without Cucumber-Ruby / Cucumber-JS."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # behave-testing

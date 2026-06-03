@@ -10,7 +10,6 @@ skills:
   - mv2-to-mv3-migration-test-checklist
   - extension-storage-test-author
   - manifest-v3-test-surface-reference
-archetype: A2
 rating: 27
 d6: 4
 d7: 4

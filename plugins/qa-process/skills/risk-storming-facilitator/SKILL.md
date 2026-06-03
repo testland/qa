@@ -3,7 +3,6 @@ name: risk-storming-facilitator
 description: "Build-an-X workflow for a risk-storming session - collaborative risk identification meeting where engineers brainstorm \"what could go wrong\" via structured prompts (per category from `risk-matrix`), score impact × likelihood, propose mitigations, and assign owners. Output is a populated risk matrix per `risk-matrix` skill. Distinct from `risk-matrix` (the artifact) - this is the facilitation pattern that produces it. Use to fill the matrix at feature-kickoff time."
 rating: 22
 d6: 3
-archetype: S3
 ---
 
 # risk-storming-facilitator

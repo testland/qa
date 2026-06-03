@@ -3,7 +3,6 @@ name: xray-case-management
 description: "Author and manage Xray test cases (Jira issues with Test issue type) via the GraphQL + REST APIs - create tests, attach steps, link preconditions, set testType (Manual / Cucumber / Generic), associate with requirements, bulk import via JSON. Covers OAuth client_id/client_secret auth, the GraphQL createTest mutation, the REST /api/v2/import/test/bulk endpoint, and the Cucumber-style scenario authoring path. Use for pre-execution case authoring in Jira-anchored teams using Xray. Distinct from Xray's test-execution / test-run features which post results."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # xray-case-management

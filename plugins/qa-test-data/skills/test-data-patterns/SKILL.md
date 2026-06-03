@@ -3,7 +3,6 @@ name: test-data-patterns
 description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers in this plugin (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Preloaded by `framework-architecture-auditor` as the data-construction-tier reference."
 rating: 24
 d6: 5
-archetype: S2
 ---
 
 # test-data-patterns

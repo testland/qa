@@ -1,7 +1,6 @@
 ---
 component: go-rust-test-author
 type: agent
-archetype: A2
 ---
 
 # go-rust-test-author - evals

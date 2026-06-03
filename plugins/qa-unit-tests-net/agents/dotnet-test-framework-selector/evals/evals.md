@@ -1,7 +1,6 @@
 ---
 component: dotnet-test-framework-selector
 type: agent
-archetype: A2
 ---
 
 # dotnet-test-framework-selector - evals

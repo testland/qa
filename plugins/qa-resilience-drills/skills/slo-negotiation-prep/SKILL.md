@@ -3,7 +3,6 @@ name: slo-negotiation-prep
 description: "Build-an-X workflow that produces the manager's prep pack for the QA - SRE - Product SLO conversation - current error-budget consumption + MTTR/MTBF trend + a single framed decision question + an explicit 3-5 option matrix with reversibility / stakeholder cost / impact scoring + recommended posture with cited alternatives. Distinct from `error-budget-tests` (which computes the SLI / SLO / budget math; this skill consumes it) and from `mttr-mtbf-tracker` (pure-reference incident schema; this skill consumes per-incident metrics). Use when budget is burning or a proposed change will stress the SLO - the output is the evidence pack the manager carries into the meeting, not a recommendation about which option to pick."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # slo-negotiation-prep

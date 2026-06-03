@@ -3,7 +3,6 @@ name: data-quality-conventions
 description: "Reference catalog of data-quality conventions - when to choose dbt-tests vs Great Expectations vs Soda, column-level vs table-level coverage, severity tiering, SLA and freshness conventions, and common anti-patterns to avoid. Use when designing coverage for a new data product or auditing an existing one."
 rating: 24
 d6: 3
-archetype: S2
 ---
 
 # data-quality-conventions

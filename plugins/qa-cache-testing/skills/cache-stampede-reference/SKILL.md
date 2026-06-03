@@ -3,7 +3,6 @@ name: cache-stampede-reference
 description: "Pure-reference catalog of cache-stampede (thundering-herd) phenomena and mitigations. Defines the stampede (massively-parallel cache misses on key expiry trigger simultaneous recomputation, often congestion-collapse) and the three canonical mitigation families: locking (one writer recomputes, others wait or serve stale), external recomputation (a separate process refreshes on schedule or near-expiry), and probabilistic early expiration via XFetch (each requester independently decides to refresh with probability rising toward expiry; uses formula `(time() - delta * beta * log(rand(0,1))) >= expiry`). Use when designing cache-refresh strategy or diagnosing a known stampede incident. Composes cache-coherence-patterns-reference + stale-while-revalidate-reference."
 rating: 23
 d6: 4
-archetype: S2
 ---
 
 # cache-stampede-reference

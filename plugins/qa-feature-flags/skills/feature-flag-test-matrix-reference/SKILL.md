@@ -3,7 +3,6 @@ name: feature-flag-test-matrix-reference
 description: "Pure-reference catalog of feature-flag test matrix design. Defines the flag-state combinatorics problem (N flags × M variants × K user-segments = N×M×K test cases), the canonical coverage strategies (pairwise interaction coverage; default-only smoke; full matrix; risk-driven matrix), the kill-switch + percentage-rollout test patterns, and the relationship between flags + experiments (flags toggle behaviour; experiments measure outcome). Use when designing the flag-test surface for a new project or auditing existing flag-test coverage. Composes flag-state-coverage-builder + flag-removal-runbook-author."
 rating: 22
 d6: 4
-archetype: S2
 ---
 
 # feature-flag-test-matrix-reference

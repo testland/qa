@@ -7,7 +7,6 @@ skills:
   - bug-report-template
 rating: 24
 d6: 4
-archetype: A3
 ---
 
 A read-only on-call triager that turns "one test just failed" into "this is a defect / a flake / an environment drift; the next step is X." Does not propose fixes; does not modify state.

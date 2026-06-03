@@ -7,7 +7,6 @@ skills:
   - bug-report-template
 rating: 24
 d6: 4
-archetype: A2
 ---
 
 A reconstruction agent that turns a captured Playwright trace + HAR + console + screenshot into a filled `bug-report-template`. The recording is the input contract; the filled template is the output.

@@ -3,7 +3,6 @@ name: buf-cli-lint-breaking-build
 description: "Wraps the buf CLI for protobuf workflow gating: `buf build` (compile / validate .proto files), `buf lint` (STANDARD rule set: snake_case field names, Service-suffixed service names), `buf breaking --against <ref>` (detect breaking changes vs a git baseline or registry image), and `buf format`. Use as the proto-lint + breaking-change gate in CI for any gRPC service. Composes protobuf-versioning-strategy-reference for the catalog of what is and isn't breaking. Distinct from qa-contract-testing/protobuf-compat-checking which performs cross-service contract testing; this skill is single-service schema lint + breaking-build."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # buf-cli-lint-breaking-build

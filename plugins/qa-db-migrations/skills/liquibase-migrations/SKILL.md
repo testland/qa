@@ -3,7 +3,6 @@ name: liquibase-migrations
 description: "Authors and runs Liquibase database migrations - changelog-driven schema management with changesets in XML / YAML / JSON / SQL formats; supports `liquibase update` / `status` / `rollback` / `tag` / `history` lifecycle; offers per-changeset preconditions, contexts and labels for selective execution, and rollback semantics; tracks state in `DATABASECHANGELOG` + `DATABASECHANGELOGLOCK` tables. Use when the user works with Liquibase-managed schemas (Spring Boot heritage, polyglot DB shops), needs cross-DBMS portable migrations, or requires fine-grained rollback control."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # liquibase-migrations

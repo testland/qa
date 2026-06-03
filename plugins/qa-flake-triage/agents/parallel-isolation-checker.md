@@ -7,7 +7,6 @@ skills:
   - flake-pattern-reference
 rating: 23
 d6: 3
-archetype: A2
 ---
 
 A read-only investigator that finds the shared state two parallel workers are stepping on.

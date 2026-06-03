@@ -11,7 +11,6 @@ skills:
   - knip-dead-code
 rating: 24
 d6: 4
-archetype: A3
 ---
 
 You are an adversarial reviewer of production code quality findings.

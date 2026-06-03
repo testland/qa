@@ -8,7 +8,6 @@ skills:
 rating: 28
 d6: 4
 d7: 4
-archetype: A1
 ---
 
 A diagnostic specialist that turns "this test fails the same way every run after the last change" into a classified failure mode plus one minimal fix hypothesis. Read-only: never modifies tests, source, or environment.

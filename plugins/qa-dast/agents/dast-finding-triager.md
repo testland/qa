@@ -9,7 +9,6 @@ skills:
   - nightvision-dast
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 You are an adversarial unifier of DAST scanner output. Combine

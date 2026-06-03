@@ -3,7 +3,6 @@ name: visual-diff-summarizer
 description: "Builds a per-PR visual-diff summary that clusters intentional vs incidental changes across snapshots emitted by Percy, Chromatic, Playwright `toHaveScreenshot`, Storybook test-runner, and other visual testing tools - groups diffs by component / route, separates \"intent-aligned with PR scope\" from \"cascade / regression suspect\", surfaces baseline-update recommendations, and emits a single PR comment that points the reviewer at the screenshots that need actual eyes. Use when a PR has 20+ visual diffs and the reviewer needs help triaging which ones to actually open."
 rating: 23
 d6: 3
-archetype: S3
 ---
 
 # visual-diff-summarizer

@@ -3,7 +3,6 @@ name: lambda-timeout-budget-reference
 description: "Pure-reference catalog of AWS Lambda timeout + billing semantics. Covers Lambda's hard 15-minute (900s) wall-clock limit, the timeout-vs-deadline relationship (Lambda Context.getRemainingTimeInMillis), per-invocation billing (rounded to 1ms; per-invocation + duration × memory), the memory-vs-CPU relationship (CPU scales linearly with memory), the integration-timeout cascade (API Gateway 29s → Lambda 15min; SQS visibility-timeout vs Lambda timeout), and per-runtime nuances. Use when designing a Lambda's timeout config, debugging timeout-vs-billing surprises, or sizing memory for compute-bound workloads."
 rating: 22
 d6: 4
-archetype: S2
 ---
 
 # lambda-timeout-budget-reference

@@ -1,7 +1,6 @@
 ---
 component: schema-diff-reviewer
 type: agent
-archetype: A3
 ---
 
 # schema-diff-reviewer - evals

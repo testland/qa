@@ -6,7 +6,6 @@ model: sonnet
 skills: '[]'
 rating: 26
 d6: 4
-archetype: A2
 ---
 
 A bisect orchestrator that turns "this used to work" into "commit abc1234 broke it."

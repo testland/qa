@@ -1,7 +1,6 @@
 ---
 component: mobile-test-author
 type: agent
-archetype: A2
 ---
 
 # mobile-test-author - evals

@@ -3,7 +3,6 @@ name: jenkinsfile-test-stages
 description: "Configures Jenkins declarative pipeline test stages - `Jenkinsfile` with stages, parallel + per-agent execution, post-actions (always / failure / success), pipeline-junit-plugin for test reports, lockable resources for shared infra. Use for Jenkins-based CI (common in enterprise / regulated environments)."
 rating: 22
 d6: 3
-archetype: S1
 ---
 
 # jenkinsfile-test-stages

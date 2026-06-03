@@ -11,7 +11,6 @@ skills:
   - offline-fallback-test
   - add-to-homescreen-flow-test
   - pwa-install-flow-reference
-archetype: A2
 rating: 30
 d6: 4
 d7: 5

@@ -3,7 +3,6 @@ name: bug-bash-facilitator
 description: "Builds a structured bug-bash session - pre-bash kit (charter, test-data prep, environment setup, sign-up sheet), in-bash structure (role rotation across cohorts, shared backlog board, real-time triage), scoring rubric (severity weighting, novelty bonus), and post-bash debrief (cluster the bugs by area + severity, decide which surface as bugs vs spikes vs quirks). Use when a team needs a coordinated multi-tester sweep before a release or after a major change - converts an ad-hoc \"everyone test for an hour\" into a recorded, comparable session with deliverables."
 rating: 22
 d6: 3
-archetype: S3
 ---
 
 # bug-bash-facilitator

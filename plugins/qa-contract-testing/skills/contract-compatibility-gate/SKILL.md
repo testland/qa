@@ -3,7 +3,6 @@ name: contract-compatibility-gate
 description: "Builds a unified deployment-readiness gate that aggregates verdicts from any combination of Pact `can-i-deploy`, oasdiff (OpenAPI), graphql-inspector (GraphQL), and `buf breaking` (Protobuf), applies severity-aware pass/fail thresholds, and emits a single go / no-go decision with per-finding rationale. Use when authoring a CI step that gates a deployment on cross-protocol contract compatibility."
 rating: 23
 d6: 3
-archetype: S3
 ---
 
 # contract-compatibility-gate

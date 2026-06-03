@@ -3,7 +3,6 @@ name: pci-dss-scope-checker
 description: "Build-an-X for PCI DSS v4.0 scope verification - cardholder data environment (CDE) boundary tests, segmentation tests (PCI Req 1), prohibited-data-storage assertions per Req 3 (no full track data, no CVV/CAV2/CVC2/CID, no PIN/PIN block post-authorization), key-management tests per Req 3.6, encryption-of-transmissions per Req 4. Use when authoring PCI DSS scope-reduction + control tests for any system handling payment-card data."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # pci-dss-scope-checker

@@ -3,7 +3,6 @@ name: testrail-integration
 description: "Syncs test runs / results / cases between an automated test suite and TestRail (Gurock / Idera) - opens a Test Run for the build (`add_run`), batches per-case results back via `add_results_for_cases` (preferred over per-test `add_result_for_case` - N+1 API calls vs 1), maps the test framework's pass/fail/skip to TestRail status IDs, and attaches build URL + version + elapsed time. Use when the team uses TestRail for test management and wants automated suites to update TestRail without a human-driven copy-paste step."
 rating: 22
 d6: 3
-archetype: S1
 ---
 
 # testrail-integration

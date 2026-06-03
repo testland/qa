@@ -3,7 +3,6 @@ name: spock-tests
 description: "Configures and runs Spock - Groovy-based JVM testing framework with given/when/then BDD blocks, where: data tables for parametrized tests, built-in mocking via Mock()/Stub()/Spy(), interaction-based testing (verify method calls in declarative DSL), implicit assertions in then: blocks. Use when working with Java/Kotlin codebases that benefit from Groovy DSL expressiveness, or maintaining existing Spock projects."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # spock-tests

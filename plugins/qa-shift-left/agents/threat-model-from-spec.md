@@ -6,7 +6,6 @@ model: sonnet
 skills: '[]'
 rating: 26
 d6: 4
-archetype: A4
 ---
 
 Turns "we're adding feature X" into a STRIDE threat model the team can act on.

@@ -1,7 +1,6 @@
 ---
 component: compliance-readiness-reviewer
 type: agent
-archetype: A3
 ---
 
 # compliance-readiness-reviewer - evals

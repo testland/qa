@@ -3,7 +3,6 @@ name: browser-matrix-strategy-reference
 description: "Pure-reference catalog for designing a browser / OS / device test matrix. Defines the tiered-matrix model (T1 = must-pass-every-PR; T2 = pre-release; T3 = quarterly), explains how to select tiers based on traffic share (StatCounter / MDN browser-compat-data / web-platform.org), discusses the trade-off between bundled-engine + cloud-grid + real-device dimensions, and provides a worked matrix template. Use as the strategy reference before configuring browserstack-automate / saucelabs-automate / lambdatest-automate / selenium-grid-4-runner / playwright-cross-browser."
 rating: 23
 d6: 4
-archetype: S2
 ---
 
 # browser-matrix-strategy-reference

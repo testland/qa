@@ -1,7 +1,6 @@
 ---
 component: game-test-scenario-author
 type: agent
-archetype: A2
 ---
 
 # game-test-scenario-author - evals

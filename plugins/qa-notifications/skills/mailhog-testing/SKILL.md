@@ -3,7 +3,6 @@ name: mailhog-testing
 description: "Configures and runs MailHog - legacy dev mailbox preceding Mailpit; SMTP `1025` + HTTP UI `8025`; Go-based single binary or Docker; APIv2 (`/api/v2/messages`, `/api/v2/search`); Jim chaos-monkey toggle for failure injection. Use when the user maintains an existing MailHog setup; for new projects prefer [`mailpit-testing`](../mailpit-testing/SKILL.md) (richer API, active maintenance). Migration path documented in body."
 rating: 21
 d6: 4
-archetype: S1
 ---
 
 # mailhog-testing

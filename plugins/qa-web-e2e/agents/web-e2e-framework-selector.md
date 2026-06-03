@@ -13,7 +13,6 @@ skills:
   - browserstack-automate
   - saucelabs-automate
   - lambdatest-automate
-archetype: A2
 rating: 28
 d6: 4
 d7: 4

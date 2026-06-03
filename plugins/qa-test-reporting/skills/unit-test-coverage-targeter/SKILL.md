@@ -3,7 +3,6 @@ name: unit-test-coverage-targeter
 description: "Builds a \"what to test next\" recommendation by combining a coverage report (LCOV / Cobertura / coverage.py JSON / Jest JSON / JaCoCo XML) with the PR's `git diff`, ranking uncovered branches by risk × cost - risk weighted by McCabe cyclomatic complexity and code-churn frequency, cost weighted by the unit-test pyramid layer (unit tests cheaper than integration than E2E). Emits a prioritized list with concrete file:line targets and the test layer recommended for each. Use when a team has the budget to write 5 - 10 new tests and needs help picking which uncovered code to target first instead of blindly chasing 100% coverage."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # unit-test-coverage-targeter

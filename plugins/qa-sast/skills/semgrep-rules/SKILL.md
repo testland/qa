@@ -3,7 +3,6 @@ name: semgrep-rules
 description: "Configures and runs Semgrep - pattern-based SAST across 30+ languages with the Semgrep Registry rulesets (`p/owasp-top-ten`, `p/default`, `auto`) plus custom YAML rules; integrates `semgrep ci` for PR-blocking gates with `--baseline-commit` diff-aware scanning, per-finding inline `nosemgrep` suppressions, `--exclude` / `--include` path filters, output formats (`--json` / `--sarif` / `--gitlab-sast` / `--junit-xml`), and severity filter (INFO/WARNING/ERROR). Use when the user runs Semgrep, asks about pattern rules, or needs a low-friction SAST gate without semantic-DB setup."
 rating: 24
 d6: 4
-archetype: S1
 ---
 
 # semgrep-rules

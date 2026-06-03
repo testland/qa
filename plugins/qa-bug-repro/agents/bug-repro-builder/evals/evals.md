@@ -1,7 +1,6 @@
 ---
 component: bug-repro-builder
 type: agent
-archetype: A2
 ---
 
 # bug-repro-builder - evals

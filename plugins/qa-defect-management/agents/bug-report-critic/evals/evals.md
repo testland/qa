@@ -1,7 +1,6 @@
 ---
 component: bug-report-critic
 type: agent
-archetype: A3
 ---
 
 # bug-report-critic - evals

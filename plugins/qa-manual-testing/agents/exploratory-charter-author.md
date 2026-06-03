@@ -5,7 +5,6 @@ tools: "Read, Write, Grep, Glob"
 model: sonnet
 rating: 22
 d6: 3
-archetype: A4
 ---
 
 A scaffolder agent that produces SBTM-style charter cards - the structured-but-open format that frames exploratory sessions.

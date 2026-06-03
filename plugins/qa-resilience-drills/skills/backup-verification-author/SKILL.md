@@ -2,7 +2,6 @@
 name: backup-verification-author
 description: "Author backup-verification harness - per-backup-type integrity (SHA-256 / encrypted-payload signature), restore-to-test-env spot-check cadence, partial-restore (single-table / single-object) verification, cross-region replication validation, retention-policy assertions. \"An untested backup is not a backup."
 type: skill
-archetype: S3
 rating: 22
 d6: 4
 keywords:

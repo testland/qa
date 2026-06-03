@@ -1,7 +1,6 @@
 ---
 component: dast-finding-triager
 type: agent
-archetype: A3
 ---
 
 # dast-finding-triager - evals

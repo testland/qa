@@ -7,7 +7,6 @@ skills:
   - test-code-conventions
 rating: 22
 d6: 3
-archetype: A3
 ---
 
 A focused critic that walks every assertion in a test file and rates its specificity, recommending tighter matchers for the weak ones.

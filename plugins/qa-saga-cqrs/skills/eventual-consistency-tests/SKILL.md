@@ -2,7 +2,6 @@
 name: eventual-consistency-tests
 description: "Build eventual-consistency tests - convergence-window assertions (\"within 5s\"), monotonic-read tests, anti-entropy tests, conflict-resolution rules tests (CRDT-merge / LWW / vector clocks). Distinguishes \"eventually\" from \"never\" by asserting bounded convergence; pair with qa-saga-cqrs for saga + CQRS workloads."
 type: skill
-archetype: S3
 rating: 22
 d6: 4
 keywords:

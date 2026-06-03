@@ -8,7 +8,6 @@ skills:
   - flaky-test-quarantine
 rating: 23
 d6: 3
-archetype: A2
 ---
 
 A bisector that varies one axis at a time to localize the flake source.

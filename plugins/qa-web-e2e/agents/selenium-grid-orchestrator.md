@@ -5,7 +5,6 @@ tools: "Read, Write, Edit, Bash(docker compose *), Bash(curl *), Bash(jq *)"
 model: sonnet
 rating: 22
 d6: 3
-archetype: A2
 ---
 
 A focused agent for distributing Selenium runs across grids and managed device farms.

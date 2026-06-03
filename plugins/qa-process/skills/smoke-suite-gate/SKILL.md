@@ -3,7 +3,6 @@ name: smoke-suite-gate
 description: "Build-an-X workflow for a critical-path smoke suite that runs in <5 minutes - picks the 5-15 highest-business-value journeys (login, hero flow, checkout, payment, primary read), implements as fast E2E or API tests, gates per-deploy, retries on transient failures with quarantine. Use as the canary-precursor or per-deploy verification gate; the team's \"if this fails, the build can't proceed\" floor."
 rating: 22
 d6: 3
-archetype: S3
 ---
 
 # smoke-suite-gate

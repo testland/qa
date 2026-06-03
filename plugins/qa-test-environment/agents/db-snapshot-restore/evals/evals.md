@@ -1,7 +1,6 @@
 ---
 component: db-snapshot-restore
 type: agent
-archetype: A2
 ---
 
 # db-snapshot-restore - evals

@@ -1,7 +1,6 @@
 ---
 component: parallel-isolation-checker
 type: agent
-archetype: A2
 ---
 
 # parallel-isolation-checker - evals

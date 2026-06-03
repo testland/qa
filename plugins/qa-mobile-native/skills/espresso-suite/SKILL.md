@@ -3,7 +3,6 @@ name: espresso-suite
 description: "Authors Espresso UI tests for Android - uses `onView(withId(...)).perform(...).check(matches(...))`, leans on Espresso's automatic synchronization (no `Thread.sleep`), wires `IdlingResource` for app-specific async, runs via `./gradlew connectedAndroidTest` and parses the JUnit XML output. Use when an Android app needs UI tests in Google's first-party framework."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # espresso-suite

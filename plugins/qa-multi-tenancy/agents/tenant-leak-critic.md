@@ -10,7 +10,6 @@ skills:
   - cross-tenant-data-leak-tests
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 An adversarial critic that returns a single verdict on tenant-leak risk for a PR or change set.

@@ -3,7 +3,6 @@ name: apollo-server-test
 description: "Wraps Apollo Server testing patterns: `server.executeOperation()` (in-process, no HTTP), `supertest` against an ephemeral-port HTTP server (port 0), context injection via the `contextValue` second-argument, and assertion patterns for response shape + errors. Includes the production-config gates testable through this skill - introspection-disabled, persisted-query mode, hideSchemaDetailsFromClientErrors. Use when writing tests for an Apollo Server v4+ GraphQL service. Composes introspection-attack-surface-reference + persisted-query-strategy-reference for the production-safety assertions."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # apollo-server-test

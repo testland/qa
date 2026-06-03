@@ -3,7 +3,6 @@ name: kotest-tests
 description: "Configures and runs Kotest - Kotlin-native test framework with multiple specification styles (StringSpec, FunSpec, BehaviorSpec, DescribeSpec, ShouldSpec, FreeSpec, FeatureSpec, ExpectSpec, AnnotationSpec); rich matcher library; built-in property-based testing (alternative to jqwik); coroutines support; data-driven testing; isolation modes per-spec or per-test; integrates with Gradle JVM test task. Use when working with Kotlin and wanting Kotlin-idiomatic DSL over JUnit 5's annotation-driven approach."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # kotest-tests

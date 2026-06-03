@@ -2,7 +2,6 @@
 name: web-vitals-inp-deep
 description: "Deep INP (Interaction to Next Paint) testing - break the metric into input delay, processing duration, and presentation delay; identify long tasks blocking the main thread; assert per-interaction INP budgets in CI via the `web-vitals` library and Playwright traces. INP became the Core Web Vital for responsiveness in 2024."
 type: skill
-archetype: S1
 rating: 23
 d6: 4
 keywords:

@@ -9,7 +9,6 @@ skills:
   - pitest-mutation
   - mutmut-mutation
   - mull-mutation
-archetype: A2
 rating: 27
 d6: 4
 d7: 4

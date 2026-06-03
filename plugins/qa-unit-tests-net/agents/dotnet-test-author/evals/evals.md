@@ -1,7 +1,6 @@
 ---
 component: dotnet-test-author
 type: agent
-archetype: A2
 ---
 
 # dotnet-test-author - evals

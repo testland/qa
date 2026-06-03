@@ -32,7 +32,6 @@ def parse_frontmatter(path):
 def main():
     components = []
     by_plugin = defaultdict(list)
-    archetype_counts = defaultdict(int)
 
     # Skills
     for skill_md in sorted(glob.glob("plugins/*/skills/*/SKILL.md")):
@@ -44,14 +43,12 @@ def main():
             "kind": "skill",
             "plugin": plugin,
             "name": name,
-            "archetype": fm.get("archetype", "?"),
             "rating": int(fm.get("rating", 0)),
             "d6": int(fm.get("d6", 0)),
             "description": fm.get("description", ""),
         }
         components.append(rec)
         by_plugin[plugin].append(rec)
-        archetype_counts[rec["archetype"]] += 1
 
     # Agents
     for agent_md in sorted(glob.glob("plugins/*/agents/*.md")):
@@ -65,7 +62,6 @@ def main():
             "kind": "agent",
             "plugin": plugin,
             "name": name,
-            "archetype": fm.get("archetype", "?"),
             "rating": int(fm.get("rating", 0)),
             "d6": int(fm.get("d6", 0)),
             "description": fm.get("description", ""),
@@ -73,7 +69,6 @@ def main():
         }
         components.append(rec)
         by_plugin[plugin].append(rec)
-        archetype_counts[rec["archetype"]] += 1
 
     if "--json" in sys.argv:
         print(json.dumps({"components": components}, indent=2))
@@ -86,10 +81,6 @@ def main():
     agents = [c for c in components if c["kind"] == "agent"]
     print(f"  Skills: {len(skills)}")
     print(f"  Agents: {len(agents)}")
-    print()
-    print("=== Archetype distribution ===")
-    for a in sorted(archetype_counts):
-        print(f"  {a}: {archetype_counts[a]}")
     print()
     print("=== Rating distribution ===")
     rating_counts = defaultdict(int)

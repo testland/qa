@@ -3,7 +3,6 @@ name: faker-data
 description: "Authors test-data factories using Faker - covering the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem - to generate names, emails, addresses, phone numbers, dates, and locale-aware variants. Configures seed-based determinism for reproducible runs and selects providers (person / internet / location / date / finance / lorem) per language. Use when authoring fixtures or factories that need realistic-looking field values."
 rating: 25
 d6: 4
-archetype: S1
 ---
 
 # faker-data

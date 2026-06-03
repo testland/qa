@@ -3,7 +3,6 @@ name: bandit-python
 description: "Configures and runs Bandit - Python-specific SAST from the OpenStack security plugin set covering 60+ rule IDs across 7 categories (B1xx misc, B2xx application, B3xx blacklists/cryptography, B4xx imports, B5xx, B6xx injections, B7xx XSS); supports `bandit -r .` recursive scan, `--severity-level low|medium|high`, `--confidence-level low|medium|high` filtering, `# nosec` and `# nosec B404` per-line + per-rule suppressions, `pyproject.toml` `[tool.bandit]` config including `exclude_dirs`. Use when the user works with Python and needs a focused, low-overhead SAST integrated with pre-commit / CI."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # bandit-python

@@ -1,7 +1,6 @@
 ---
 component: perf-regression-bisector
 type: agent
-archetype: A2
 ---
 
 # perf-regression-bisector - evals

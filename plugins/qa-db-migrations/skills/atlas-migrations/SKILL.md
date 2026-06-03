@@ -3,7 +3,6 @@ name: atlas-migrations
 description: "Authors and runs Atlas database schema migrations - declarative HCL or SQL schema definition with `atlas schema apply` for desired-state apply OR `atlas migrate diff` to generate versioned migrations against a dev DB; `atlas migrate apply` to deploy; `atlas migrate lint` to flag destructive / locking / data-loss patterns; `atlas migrate hash` to detect tampering. Supports PostgreSQL, MySQL, SQL Server, ClickHouse, SQLite, MariaDB, Snowflake, Oracle, Redshift, Spanner, CockroachDB, Databricks. Use when the user wants Terraform-style declarative DB schema management or modern SQL-first migration linting beyond Flyway / Liquibase."
 rating: 24
 d6: 4
-archetype: S1
 ---
 
 # atlas-migrations

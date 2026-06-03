@@ -1,7 +1,6 @@
 ---
 component: data-anomaly-triager
 type: agent
-archetype: A3
 ---
 
 # data-anomaly-triager - evals

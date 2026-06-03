@@ -7,7 +7,6 @@ skills:
   - regression-suite-selector
 rating: 22
 d6: 3
-archetype: A3
 ---
 
 A read-and-recommend agent that turns "should we adopt Cypress vs Playwright?" or "is our pyramid upside-down?" into a per-repo, evidence-backed decision document.

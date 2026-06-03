@@ -1,7 +1,6 @@
 ---
 component: e2e-selector-quality-critic
 type: agent
-archetype: A3
 ---
 
 # e2e-selector-quality-critic - evals

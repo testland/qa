@@ -1,7 +1,6 @@
 ---
 component: test-case-quality-critic
 type: agent
-archetype: A3
 ---
 
 # test-case-quality-critic - evals

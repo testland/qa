@@ -7,7 +7,6 @@ skills:
   - synthetic-monitor-author
 rating: 22
 d6: 3
-archetype: A2
 ---
 
 A focused agent that takes one critical user journey and ships its synthetic monitor configuration, end-to-end.

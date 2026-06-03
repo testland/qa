@@ -3,7 +3,6 @@ name: qa-vendor-evaluator
 description: "Build-an-X workflow that produces a side-by-side **commercial-vendor** evaluation matrix for QA tools - test-management platforms (TestRail / Qase / Xray / Zephyr / TestCollab), no-code platforms (mabl / Testim / Functionize / TestSigma / Reflect), visual regression services (Applitools / Percy / Chromatic), and commercial AI copilots - scoring each on capability fit, cost model, integration depth, vendor lock-in risk, exit cost, contractual posture, and customer-reference data. Distinct from `framework-choice-advisor` which evaluates **open-source code-first frameworks** (different axis: architecture, no contract / lock-in / exit-cost dimension). Use for commercial procurement decisions only - refuses to recommend a winner; the team owns the procurement choice."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # qa-vendor-evaluator

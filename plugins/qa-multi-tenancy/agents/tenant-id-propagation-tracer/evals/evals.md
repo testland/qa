@@ -1,7 +1,6 @@
 ---
 component: tenant-id-propagation-tracer
 type: agent
-archetype: A1
 ---
 
 # tenant-id-propagation-tracer - evals

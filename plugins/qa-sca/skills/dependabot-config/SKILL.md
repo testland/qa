@@ -3,7 +3,6 @@ name: dependabot-config
 description: "Reference for `.github/dependabot.yml` - GitHub-native dependency-update orchestrator. Required keys (`version: 2`, `updates[]` array) plus per-update fields (`package-ecosystem`, `directory` / `directories`, `schedule.interval`); common optional fields (`ignore`, `groups`, `allow`, `labels`, `milestone`, `open-pull-requests-limit`, `target-branch`, `vendor`, `versioning-strategy`, `assignees`, `commit-message`); auto-rebase + grouped-PR + security-only updates. Use when authoring or reviewing Dependabot configs in GitHub-hosted repos."
 rating: 22
 d6: 4
-archetype: S2
 ---
 
 # dependabot-config

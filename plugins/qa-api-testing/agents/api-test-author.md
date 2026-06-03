@@ -12,7 +12,6 @@ skills:
   - restler-fuzzing
   - api-chaos-runner
   - parameterized-test-generator
-archetype: A2
 rating: 27
 d6: 4
 d7: 4

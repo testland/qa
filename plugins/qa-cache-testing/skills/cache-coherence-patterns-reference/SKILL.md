@@ -3,7 +3,6 @@ name: cache-coherence-patterns-reference
 description: "Pure-reference catalog of cache-coherence patterns across the request path. Covers the canonical RFC 9111 directives (Cache-Control: max-age, s-maxage, no-cache, no-store, must-revalidate, private/public, immutable; Vary for key derivation; ETag + If-None-Match revalidation), the layered-cache discipline (browser → CDN → reverse-proxy → application → data store), per-tier coherence patterns (write-through, write-back, write-around, cache-aside), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged keys). Use as the cache-design reference when picking patterns or auditing an existing setup. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, cache-key-collision-detector."
 rating: 23
 d6: 4
-archetype: S2
 ---
 
 # cache-coherence-patterns-reference

@@ -3,7 +3,6 @@ name: npm-pip-maven-audit
 description: "Configures and runs native package-manager audit commands across ecosystems - `npm audit --audit-level=high` (npm), `yarn npm audit` (Yarn 2+), `pnpm audit` (pnpm), `pip-audit` (Python via PyPA), `mvn dependency:check` (Maven via OWASP Dependency-Check plugin), `cargo audit` (Rust), `bundle audit` (Ruby Bundler); fastest no-install-required SCA option. Use when the team wants fast, no-extra-tooling SCA in CI as a first line of defense, or pairs with snyk/osv-scanner for layered coverage."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # npm-pip-maven-audit

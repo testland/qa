@@ -3,7 +3,6 @@ name: libfuzzer-cpp
 description: "Author and run LLVM libFuzzer for C/C++ - in-process coverage-guided fuzzing. Covers harness authoring (LLVMFuzzerTestOneInput entry point), build with -fsanitize=fuzzer,address,undefined, runtime flags (-max_total_time, -runs, -dict, -fork, -workers), corpus + crash-artefact handling, and CI integration. Use for libraries / parsers / decoders in C/C++ where in-process fuzzing of a function is the right scope. Compose with ASan + UBSan from sanitiser-integration-reference and corpus discipline from corpus-management-reference."
 rating: 24
 d6: 4
-archetype: S1
 ---
 
 # libfuzzer-cpp

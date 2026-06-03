@@ -3,7 +3,6 @@ name: faker-synthetic-data
 description: "Author and run Faker libraries (Python `Faker`, JavaScript `@faker-js/faker`, Java `JavaFaker`, .NET `Bogus`) for generating synthetic substitute data when masking pipelines remove real PII. Covers locale-aware generators, deterministic seeding for test reproducibility, the common provider methods (name / email / address / phone / SSN / credit card / IBAN / date / UUID / text), pytest fixture integration, and the trade-off between random vs deterministic substitution for referential integrity. Use after a PII detector flags fields that need synthetic replacement (distinct from synthetic-pii-generator which assembles fixtures from scratch - this is the underlying library skill those build skills compose)."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # faker-synthetic-data

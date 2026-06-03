@@ -3,7 +3,6 @@ name: lighthouse-perf
 description: "Configures Lighthouse CI (`@lhci/cli`) to audit Web Vitals (LCP, INP, CLS) on every PR, asserts against canonical thresholds (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1 at the 75th percentile), uploads Lighthouse reports as build artifacts, and posts deltas as PR comments. Use when the project ships a web frontend and the team needs continuous Web Vitals monitoring tied to PR gating."
 rating: 26
 d6: 5
-archetype: S1
 ---
 
 # lighthouse-perf

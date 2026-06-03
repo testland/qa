@@ -3,7 +3,6 @@ name: postman-collections
 description: "Authors Postman collections (requests + tests + variables + environments), runs them headless via the Newman CLI, configures reporters (cli / json / junit / html) for CI artifact upload, and uses iteration data files (JSON / CSV) for data-driven runs. Use when the project ships HTTP API tests authored in Postman and the team needs CI execution alongside or instead of the Postman desktop runner."
 rating: 26
 d6: 4
-archetype: S1
 ---
 
 # postman-collections

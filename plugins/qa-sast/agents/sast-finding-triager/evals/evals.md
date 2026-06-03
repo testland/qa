@@ -1,7 +1,6 @@
 ---
 component: sast-finding-triager
 type: agent
-archetype: A3
 ---
 
 # sast-finding-triager - evals

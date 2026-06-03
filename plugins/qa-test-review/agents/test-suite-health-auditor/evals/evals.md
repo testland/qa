@@ -1,7 +1,6 @@
 ---
 component: test-suite-health-auditor
 type: agent
-archetype: A3
 ---
 
 # test-suite-health-auditor - evals

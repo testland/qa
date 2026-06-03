@@ -2,7 +2,6 @@
 name: race-condition-test-author
 description: "Build deterministic race-condition tests - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++/Go data race detection; use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing."
 type: skill
-archetype: S3
 rating: 22
 d6: 4
 keywords:

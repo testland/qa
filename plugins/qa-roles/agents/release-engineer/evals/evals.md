@@ -1,7 +1,6 @@
 ---
 component: release-engineer
 type: agent
-archetype: A3
 ---
 
 # release-engineer - evals

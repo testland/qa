@@ -9,7 +9,6 @@ skills:
   - kics-policy
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 A unified policy verdict from multiple IaC scanners. Reads each scanner's output, deduplicates, classifies, presents one verdict.

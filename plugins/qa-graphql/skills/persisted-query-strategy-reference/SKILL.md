@@ -3,7 +3,6 @@ name: persisted-query-strategy-reference
 description: "Pure-reference catalog of GraphQL Persisted Query strategies. Covers Apollo Automatic Persisted Queries (APQ) - the SHA-256 hash protocol, PersistedQueryNotFoundError flow (client retries with full query + hash; server caches), the `extensions.persistedQuery` payload shape, GET-vs-POST + CDN-cache implications, and the strict-allowlist mode (no auto-registration; only pre-registered hashes execute). Differentiates the three operation modes: APQ auto-register (default; permissive), persisted-query-only (allowlist; rejects unknown hashes), and hybrid (allowlist for prod, auto for dev). Use when designing the request layer for a GraphQL server's prod deployment, choosing between size-optimisation and allowlist-enforcement, or auditing an existing persisted-query configuration. Consumed by apollo-server-test, graphql-yoga-test, mercurius-test, pothos-builder-tests."
 rating: 23
 d6: 4
-archetype: S2
 ---
 
 # persisted-query-strategy-reference

@@ -1,7 +1,6 @@
 ---
 component: defect-trend-narrator
 type: agent
-archetype: A1
 ---
 
 # defect-trend-narrator - evals

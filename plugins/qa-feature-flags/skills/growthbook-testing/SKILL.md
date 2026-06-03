@@ -3,7 +3,6 @@ name: growthbook-testing
 description: "Wraps GrowthBook Node SDK testing patterns: GrowthBookClient initialization with direct payload (initSync; no network), isOn / getFeatureValue / evalFeature, scoped instances (createScopedInstance) for per-request user context, inline experiment (runInlineExperiment) tests, and tracking-callback assertion patterns. Use when writing tests for code using GrowthBook for flags + experiments. Composes feature-flag-test-matrix-reference + qa-experimentation/ab-test-validity-checklist."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # growthbook-testing

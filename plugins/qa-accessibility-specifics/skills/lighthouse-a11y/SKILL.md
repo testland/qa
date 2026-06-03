@@ -3,7 +3,6 @@ name: lighthouse-a11y
 description: "Configures Lighthouse CI's Accessibility category - `categories:accessibility` audits backed by axe-core - with per-URL minimum-score assertions and per-audit overrides, distinct from the Performance category that `lighthouse-perf` covers. Use when the project already runs Lighthouse CI for Web Vitals and the team wants to add a11y coverage in the same pipeline rather than spinning up a separate scanner."
 rating: 25
 d6: 4
-archetype: S1
 ---
 
 # lighthouse-a11y

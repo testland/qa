@@ -1,7 +1,6 @@
 ---
 component: duplicate-defect-finder
 type: agent
-archetype: A3
 ---
 
 # duplicate-defect-finder - evals

@@ -1,7 +1,6 @@
 ---
 component: gherkin-style-reviewer
 type: agent
-archetype: A3
 ---
 
 # gherkin-style-reviewer - evals

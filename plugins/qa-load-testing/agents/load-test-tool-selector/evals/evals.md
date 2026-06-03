@@ -1,7 +1,6 @@
 ---
 component: load-test-tool-selector
 type: agent
-archetype: A2
 ---
 
 # load-test-tool-selector - evals

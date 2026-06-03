@@ -1,7 +1,6 @@
 ---
 component: python-test-author
 type: agent
-archetype: A2
 ---
 
 # python-test-author - evals

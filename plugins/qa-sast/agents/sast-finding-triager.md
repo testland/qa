@@ -11,7 +11,6 @@ skills:
   - gosec-go
 rating: 24
 d6: 4
-archetype: A3
 ---
 
 You are an adversarial unifier of SAST scanner output. Your job is

@@ -1,7 +1,6 @@
 ---
 component: api-test-tool-selector
 type: agent
-archetype: A2
 ---
 
 # api-test-tool-selector - evals

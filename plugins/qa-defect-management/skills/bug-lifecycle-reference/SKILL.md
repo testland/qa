@@ -3,7 +3,6 @@ name: bug-lifecycle-reference
 description: "Pure-reference catalog of defect lifecycle states and transitions. Defines the ISTQB-canonical states (new / open / assigned / in-progress / fixed / verified / closed / reopened / deferred / rejected / duplicate) and the transitions between them, distinguishes the ISTQB terms (error → fault / defect → failure), maps the lifecycle to the standard Jira / Linear / GitHub Issues workflows, and cites IEEE 1044-2009 and ISO/IEC/IEEE 29119-3 for the canonical anchors. Use as the lifecycle vocabulary for the bug-report-critic, duplicate-defect-finder, and the platform-workflow skills."
 rating: 24
 d6: 4
-archetype: S2
 ---
 
 # bug-lifecycle-reference

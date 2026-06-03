@@ -10,7 +10,6 @@ skills:
   - db-slow-query-detector
 rating: 24
 d6: 4
-archetype: A2
 ---
 
 A bisector that turns "p95 latency went up 3x sometime in the last 50 commits" into "this commit is the culprit, here's the suspected hot path."

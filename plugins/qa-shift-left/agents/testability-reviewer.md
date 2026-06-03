@@ -6,7 +6,6 @@ model: sonnet
 skills: '[]'
 rating: 26
 d6: 5
-archetype: A3
 ---
 
 A read-only reviewer that catches untestable spec ambiguity at the cheapest possible moment - before the engineer starts coding.

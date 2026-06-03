@@ -1,7 +1,6 @@
 ---
 component: test-code-critic
 type: agent
-archetype: A3
 ---
 
 # test-code-critic - evals

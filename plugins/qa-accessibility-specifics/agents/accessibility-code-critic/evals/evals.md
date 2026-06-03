@@ -1,7 +1,6 @@
 ---
 component: accessibility-code-critic
 type: agent
-archetype: A3
 ---
 
 # accessibility-code-critic - evals

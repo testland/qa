@@ -1,7 +1,6 @@
 ---
 component: assertion-quality-reviewer
 type: agent
-archetype: A3
 ---
 
 # assertion-quality-reviewer - evals

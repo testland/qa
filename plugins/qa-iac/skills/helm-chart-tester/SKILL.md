@@ -3,7 +3,6 @@ name: helm-chart-tester
 description: "Configures helm-unittest for Helm chart unit testing - installs `helm-unittest` plugin, authors `tests/*.yaml` per template, asserts on rendered manifests (`isKind`, `isAPIVersion`, `equal`, `matchRegex`), runs via `helm unittest`. Plus chart linting (`helm lint`) and render testing (`helm template`). Use when the team ships Helm charts and needs unit-level verification of the templates."
 rating: 22
 d6: 3
-archetype: S1
 ---
 
 # helm-chart-tester

@@ -3,7 +3,6 @@ name: sbtm-reference
 description: "Pure-reference catalog of Session-Based Test Management (SBTM) - Bach + Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary that exploratory-charter-author + manual-test-debrief consume."
 rating: 24
 d6: 4
-archetype: S2
 ---
 
 # sbtm-reference

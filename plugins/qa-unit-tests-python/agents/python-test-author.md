@@ -10,7 +10,6 @@ skills:
   - nose2-tests
   - mimesis-data
   - parameterized-test-generator
-archetype: A2
 rating: 26
 d6: 4
 d7: 4

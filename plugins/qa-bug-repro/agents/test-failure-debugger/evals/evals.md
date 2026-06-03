@@ -1,7 +1,6 @@
 ---
 component: test-failure-debugger
 type: agent
-archetype: A1
 ---
 
 # test-failure-debugger - evals

@@ -3,7 +3,6 @@ name: soda-checks
 description: "Authors and runs SodaCL (Soda Checks Language) checks against SQL warehouses (Snowflake, BigQuery, Postgres, Redshift, etc.) via `soda scan`, configures scan profiles in configuration.yml, and gates CI on scan exit code. Use when the user works with Soda Core / Soda Cloud or needs YAML-driven warehouse data quality."
 rating: 24
 d6: 4
-archetype: S1
 ---
 
 # soda-checks

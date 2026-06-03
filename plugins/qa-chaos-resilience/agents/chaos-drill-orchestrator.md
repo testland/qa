@@ -10,7 +10,6 @@ skills:
   - litmus-chaos
   - gremlin-chaos
   - toxiproxy-chaos
-archetype: A2
 rating: 28
 d6: 4
 d7: 4

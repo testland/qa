@@ -1,7 +1,6 @@
 ---
 component: trace-coverage-reviewer
 type: agent
-archetype: A3
 ---
 
 # trace-coverage-reviewer - evals

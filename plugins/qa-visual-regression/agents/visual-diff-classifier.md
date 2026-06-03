@@ -10,7 +10,6 @@ skills:
   - visual-baseline-conventions
 rating: 24
 d6: 3
-archetype: A3
 ---
 
 A skeptical reviewer that hunts for subtle regressions hiding inside plausible-looking visual diffs.

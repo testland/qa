@@ -3,7 +3,6 @@ name: tdd-stuck-pattern-resolver
 description: "Pattern catalog for \"I can't write the test first\" moments - recognizes the common testability blockers (singletons / static dependencies, network in constructors, time / random as hidden inputs, deeply nested constructions, untestable boundaries) and proposes specific refactors that make TDD viable (extract interface, dependency injection, seam, ports-and-adapters). Use as TDD coaching for engineers stuck on a specific class of code."
 rating: 22
 d6: 3
-archetype: S3
 ---
 
 # tdd-stuck-pattern-resolver

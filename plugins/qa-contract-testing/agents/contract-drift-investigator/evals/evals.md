@@ -1,7 +1,6 @@
 ---
 component: contract-drift-investigator
 type: agent
-archetype: A3
 ---
 
 # contract-drift-investigator - evals

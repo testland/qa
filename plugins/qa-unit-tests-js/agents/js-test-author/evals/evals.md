@@ -1,7 +1,6 @@
 ---
 component: js-test-author
 type: agent
-archetype: A2
 ---
 
 # js-test-author - evals

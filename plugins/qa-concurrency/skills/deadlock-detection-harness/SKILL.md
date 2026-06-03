@@ -2,7 +2,6 @@
 name: deadlock-detection-harness
 description: "Build deadlock-detection harnesses - extract lock-acquire-order graph via instrumentation, run cycle detection (DFS) to spot inconsistent ordering, use lock-acquire timeouts to surface rather than hang, JVM `jstack` / `gdb thread apply all bt` for postmortem analysis. Pair with ThreadSanitizer's `detect_deadlocks=1` for runtime detection."
 type: skill
-archetype: S3
 rating: 22
 d6: 4
 keywords:

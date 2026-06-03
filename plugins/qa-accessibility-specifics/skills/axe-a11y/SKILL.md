@@ -3,7 +3,6 @@ name: axe-a11y
 description: "Authors and runs axe-core accessibility scans - the most-deployed open-source a11y engine - via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses the `violations[]` results into per-rule severity (critical / serious / moderate / minor), configures rule disable / disable-by-tag patterns, and emits JUnit-shaped output for CI gating. Use when the project ships UI tests in JavaScript / TypeScript and wants automated a11y coverage on every PR."
 rating: 26
 d6: 4
-archetype: S1
 ---
 
 # axe-a11y

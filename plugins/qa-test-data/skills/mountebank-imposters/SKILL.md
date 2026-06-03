@@ -3,7 +3,6 @@ name: mountebank-imposters
 description: "Authors Mountebank imposters (multi-protocol mock servers - HTTP, HTTPS, TCP, SMTP, LDAP, gRPC, WebSockets, GraphQL, and more) by POSTing JSON definitions to the Mountebank control API on port 2525, configures stubs with predicates and responses, and uses record-playback proxy mode to capture upstream traffic. Use when the project needs a multi-protocol mock server beyond HTTP-only tools like WireMock or MSW."
 rating: 23
 d6: 3
-archetype: S1
 ---
 
 # mountebank-imposters

@@ -1,7 +1,6 @@
 ---
 component: exploratory-charter-author
 type: agent
-archetype: A4
 ---
 
 # exploratory-charter-author - evals

@@ -1,7 +1,6 @@
 ---
 component: desktop-test-scaffolder
 type: agent
-archetype: A4
 ---
 
 # desktop-test-scaffolder - evals

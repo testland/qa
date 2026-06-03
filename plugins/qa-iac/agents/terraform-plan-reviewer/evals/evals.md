@@ -1,7 +1,6 @@
 ---
 component: terraform-plan-reviewer
 type: agent
-archetype: A3
 ---
 
 # terraform-plan-reviewer - evals

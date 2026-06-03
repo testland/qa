@@ -1,7 +1,6 @@
 ---
 component: iac-policy-checker
 type: agent
-archetype: A3
 ---
 
 # iac-policy-checker - evals

@@ -1,7 +1,6 @@
 ---
 name: xctest-mac-desktop
 description: "Authors and runs XCTest UI + unit tests for macOS desktop apps - the Apple-first-party test framework that ships with Xcode. Covers the `XCTestCase` subclass + `test*` method-naming convention, `XCUIApplication` / `XCUIElement` / `XCUIElementQuery` for UI tests, accessibility-identifier-based locators (the stable replacement for label-based queries), `XCTAssert*` macros, `measureBlock:` for performance regressions, and `xcodebuild test` for CI execution. Use when the macOS app is built with Xcode and the test target is in-tree alongside the app - for cross-OS sharing see Appium Mac2 driver as a separate path."
-archetype: S1
 rating: 23
 d6: 4
 keywords:

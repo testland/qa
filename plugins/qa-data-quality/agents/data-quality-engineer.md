@@ -10,7 +10,6 @@ skills:
   - data-quality-conventions
 rating: 24
 d6: 3
-archetype: A2
 ---
 
 A data-quality engineer that produces an initial assertion suite for a single data product, in the engine the project already uses.

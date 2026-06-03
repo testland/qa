@@ -3,7 +3,6 @@ name: test-execution-checklist
 description: "Converts a regression suite (or test plan) into an executable manual checklist for cases when automation isn't viable - a release-day smoke checklist, a post-incident verification list, or a periodic compliance check. Outputs a per-TC checkbox list with the minimal preconditions, the action, and a one-line \"what to look for\" - short enough to fit on one page per major flow. Use when the team needs a focused human-runnable list (not full step-tables), e.g., for production smoke after deploy or for the on-call rotation's quick verification."
 rating: 22
 d6: 3
-archetype: S3
 ---
 
 # test-execution-checklist

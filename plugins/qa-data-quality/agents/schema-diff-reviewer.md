@@ -7,7 +7,6 @@ skills:
   - dbt-testing
 rating: 24
 d6: 3
-archetype: A3
 ---
 
 A schema reviewer specialized in spotting breaking migrations and assertion gaps before they ship.

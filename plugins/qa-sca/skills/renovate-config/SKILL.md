@@ -3,7 +3,6 @@ name: renovate-config
 description: "Reference for `renovate.json` - Mend Renovate dependency-update orchestrator (multi-platform: GitHub / GitLab / Bitbucket / Azure DevOps / Gitea); top-level keys (`extends` for preset references, `schedule`, `prConcurrentLimit`, `vulnerabilityAlerts`); `packageRules[]` array with `matchPackageNames` / `matchUpdateTypes` / `automerge` matching; `ignoreDeps`, `addLabels`, `automergeSchedule`. Use when authoring or reviewing Renovate configs in any repo platform Renovate supports."
 rating: 22
 d6: 4
-archetype: S2
 ---
 
 # renovate-config

@@ -8,7 +8,6 @@ skills:
   - test-strategy-author
 rating: 22
 d6: 3
-archetype: A2
 ---
 
 Takes "this is the feature; this is the matrix" and returns "this is the test plan."

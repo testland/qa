@@ -1,7 +1,6 @@
 ---
 component: risk-based-test-planner
 type: agent
-archetype: A2
 ---
 
 # risk-based-test-planner - evals

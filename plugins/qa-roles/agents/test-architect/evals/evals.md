@@ -1,7 +1,6 @@
 ---
 component: test-architect
 type: agent
-archetype: A3
 ---
 
 # test-architect - evals

@@ -1,7 +1,6 @@
 ---
 component: api-test-author
 type: agent
-archetype: A2
 ---
 
 # api-test-author - evals

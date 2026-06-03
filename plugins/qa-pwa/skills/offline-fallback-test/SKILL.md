@@ -3,7 +3,6 @@ name: offline-fallback-test
 description: "Build-an-X workflow that emits the offline-fallback test suite. Walks the eight Jake Archibald offline recipes per [web.dev/articles/offline-cookbook][off-cookbook] (`Cache only`, `Network only`, `Cache, falling back to network`, `Cache and network race`, `Network falling back to cache`, `Cache then network`, `Generic fallback`, `Service Worker side templating`), maps each recipe to its assertion shape, layers the Workbox `offlineFallback()` recipe per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes], and pins the offline storage strategy (Cache Storage vs IndexedDB vs Storage Manager `persist()`/`estimate()`) per [web.dev/learn/pwa/offline-data][off-data]. Output: a Playwright spec file with one test per route's chosen recipe + a coverage matrix mapping recipes to URL patterns."
 rating: 23
 d6: 4
-archetype: S3
 keywords:
   - offline-fallback
   - offline-cookbook

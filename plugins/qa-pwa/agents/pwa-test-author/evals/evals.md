@@ -1,7 +1,6 @@
 ---
 component: pwa-test-author
 type: agent
-archetype: A2
 ---
 
 # pwa-test-author - evals

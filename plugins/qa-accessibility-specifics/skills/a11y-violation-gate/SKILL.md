@@ -3,7 +3,6 @@ name: a11y-violation-gate
 description: "Builds a CI gate that fails the build on **new** WCAG / a11y violations introduced by a PR while grandfathering pre-existing violations on a per-rule / per-page baseline. Aggregates verdicts from axe-core / pa11y / Lighthouse a11y / WAVE / IBM Equal Access scans. Use when a project has accumulated a11y debt and a strict \"zero violations\" gate would block every PR - the ratchet pattern lets the team ship while preventing regressions."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # a11y-violation-gate

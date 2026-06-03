@@ -9,7 +9,6 @@ skills:
   - sanitiser-integration-reference
 rating: 22
 d6: 4
-archetype: A4
 ---
 
 A builder agent that scaffolds a coverage-guided fuzz target from a function signature, routed via fuzz-toolkit-dispatcher.

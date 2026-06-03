@@ -3,7 +3,6 @@ name: pii-masking-pipeline-builder
 description: "Build-an-X workflow that produces a PII masking pipeline spec from a source-data inventory. Walks the author through (1) classifying each field against pii-categories-reference, (2) picking a masking operator from data-masking-techniques-reference, (3) deciding pseudonymisation (reversible, in GDPR scope) vs anonymisation (irreversible, out of scope), (4) ordering the pipeline (detect → operator → audit), and (5) emitting a deployable config for Presidio + Faker + Synthea wrappers. Output is a YAML pipeline spec plus a per-field rationale table. Use after classifying a dataset's PII risk; this is the workflow that translates classification into runnable masking config."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # pii-masking-pipeline-builder

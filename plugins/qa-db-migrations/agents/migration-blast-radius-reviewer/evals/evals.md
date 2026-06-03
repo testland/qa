@@ -1,7 +1,6 @@
 ---
 component: migration-blast-radius-reviewer
 type: agent
-archetype: A3
 ---
 
 # migration-blast-radius-reviewer - evals

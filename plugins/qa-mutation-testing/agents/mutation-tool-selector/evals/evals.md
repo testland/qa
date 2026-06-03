@@ -1,7 +1,6 @@
 ---
 component: mutation-tool-selector
 type: agent
-archetype: A2
 ---
 
 # mutation-tool-selector - evals

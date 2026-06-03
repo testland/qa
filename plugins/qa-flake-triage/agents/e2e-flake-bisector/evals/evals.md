@@ -1,7 +1,6 @@
 ---
 component: e2e-flake-bisector
 type: agent
-archetype: A2
 ---
 
 # e2e-flake-bisector - evals

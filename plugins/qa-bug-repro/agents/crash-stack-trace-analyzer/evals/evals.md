@@ -1,7 +1,6 @@
 ---
 component: crash-stack-trace-analyzer
 type: agent
-archetype: A1
 ---
 
 # crash-stack-trace-analyzer - evals

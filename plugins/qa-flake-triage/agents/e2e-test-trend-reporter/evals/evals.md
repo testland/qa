@@ -1,7 +1,6 @@
 ---
 component: e2e-test-trend-reporter
 type: agent
-archetype: A1
 ---
 
 # e2e-test-trend-reporter - evals

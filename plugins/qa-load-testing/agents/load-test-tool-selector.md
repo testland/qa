@@ -9,7 +9,6 @@ skills:
   - gatling-load-testing
   - locust-load-testing
   - lighthouse-perf
-archetype: A2
 rating: 27
 d6: 4
 d7: 4

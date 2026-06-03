@@ -3,7 +3,6 @@ name: qa-okr-author
 description: "Build-an-X workflow that drafts a QA team's quarterly OKR set - one to three Objectives, each with 3 - 5 measurable Key Results - from the team's current state (risk matrix, defect-trend narrative, test-run history, test-pyramid balance, compliance coverage). Every numeric target cites its source artifact (e.g., `defect-trend-narrator` 2026-Q1 escape rate). QA-specific by design - generic OKR generators (Tability, Asana, ClickUp) don't know test metrics; the differentiation is the domain. Distinct from `test-strategy-author` (which authors the strategy doc) and from `risk-matrix-recommender` (which calibrates risk inputs). Use at the start of each quarter to draft the OKR set the manager edits and the team commits to."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # qa-okr-author

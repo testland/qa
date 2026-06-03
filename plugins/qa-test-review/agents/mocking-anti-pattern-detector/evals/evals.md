@@ -1,7 +1,6 @@
 ---
 component: mocking-anti-pattern-detector
 type: agent
-archetype: A3
 ---
 
 # mocking-anti-pattern-detector - evals

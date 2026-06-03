@@ -3,7 +3,6 @@ name: aws-sam-local-testing
 description: "Wraps AWS SAM (Serverless Application Model) Local CLI for testing Lambda functions locally: `sam local invoke` (single invocation with event payload), `sam local start-api` (local API Gateway emulator), `sam local start-lambda` (local Lambda invoke endpoint for AWS SDK clients), and event-payload generation (`sam local generate-event`). Use when testing Lambda + API Gateway + integrated AWS services locally. Composes cold-start-budget-reference + lambda-timeout-budget-reference."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # aws-sam-local-testing

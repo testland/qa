@@ -10,7 +10,6 @@ skills:
   - protobuf-compat-checking
 rating: 24
 d6: 3
-archetype: A3
 ---
 
 A read-only investigator that turns "the contract gate failed, why?" into a categorized, file-anchored explanation.

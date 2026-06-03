@@ -2,7 +2,6 @@
 name: server-sent-events-tests
 description: "Test Server-Sent Events (SSE) flows - `EventSource` API on the browser side (`onmessage`, `onerror`, `readyState` 0/1/2), event stream format (`data:`, `event:`, `id:`, `retry:`), `Last-Event-ID` reconnect-with-replay header, content-type `text/event-stream`, and HTTP/1.1 connection-pool limits. Use Playwright for browser-side, raw HTTP client for server-side stream tests."
 type: skill
-archetype: S1
 rating: 22
 d6: 4
 keywords:

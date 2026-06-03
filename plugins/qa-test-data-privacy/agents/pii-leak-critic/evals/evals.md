@@ -1,7 +1,6 @@
 ---
 component: pii-leak-critic
 type: agent
-archetype: A3
 ---
 
 # pii-leak-critic - evals

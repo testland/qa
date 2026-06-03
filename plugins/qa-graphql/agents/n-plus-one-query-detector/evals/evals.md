@@ -1,7 +1,6 @@
 ---
 component: n-plus-one-query-detector
 type: agent
-archetype: A3
 ---
 
 # n-plus-one-query-detector - evals

@@ -3,7 +3,6 @@ name: risk-matrix
 description: "Build-an-X workflow that produces a per-feature / per-release risk matrix - captures risks via a structured intake (feature → category → impact 1-5 × likelihood 1-5 → score), tracks mitigations + owners + due dates, supports both lightweight (impact × likelihood) and heavyweight (FMEA / Cost of Exposure) methods per RBT canon. Output is a Markdown / spreadsheet artifact the team reviews per sprint and that drives test prioritization. Use as the artifact `risk-based-test-selector` and `risk-based-test-planner` consume."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # risk-matrix

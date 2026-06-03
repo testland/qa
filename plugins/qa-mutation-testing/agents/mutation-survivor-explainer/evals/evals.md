@@ -1,7 +1,6 @@
 ---
 component: mutation-survivor-explainer
 type: agent
-archetype: A3
 ---
 
 # mutation-survivor-explainer - evals

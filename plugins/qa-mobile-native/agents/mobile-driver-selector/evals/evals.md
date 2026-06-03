@@ -1,7 +1,6 @@
 ---
 component: mobile-driver-selector
 type: agent
-archetype: A2
 ---
 
 # mobile-driver-selector - evals

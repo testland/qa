@@ -3,7 +3,6 @@ name: grpc-status-code-mapping-reference
 description: "Pure-reference catalog of gRPC standard status codes - the 17 canonical codes (OK..UNAUTHENTICATED), their numeric values, semantics, retry behaviour per AIP-194 (only UNAVAILABLE is auto-retry-safe), and the gRPC-to-HTTP status mapping used by grpc-gateway (NOT_FOUND→404, INVALID_ARGUMENT→400, PERMISSION_DENIED→403, UNAUTHENTICATED→401, RESOURCE_EXHAUSTED→429, FAILED_PRECONDITION→400 not 412, ABORTED→409, UNAVAILABLE→503, DEADLINE_EXCEEDED→504, etc.). Use when designing a gRPC service's error vocabulary, writing assertions in gRPC client tests, configuring retry policies, or mapping gRPC errors to HTTP via a gateway. Consumed by buf-cli-lint-breaking-build, ghz-load, grpcurl-cli, grpc-mock, grpc-streaming-test-author."
 rating: 24
 d6: 4
-archetype: S2
 ---
 
 # grpc-status-code-mapping-reference

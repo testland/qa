@@ -1,7 +1,6 @@
 ---
 name: winappdriver
 description: "Authors and runs Windows UI tests against WinAppDriver - Microsoft's W3C-WebDriver service for UWP, WPF, WinForms, and Win32 applications. Covers installing + launching `WinAppDriver.exe` on the default `127.0.0.1:4723` endpoint, declaring `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities, finding elements by `AccessibilityId` / `Name` / `ClassName`, and CI integration on Windows runners. Use when driving a native Windows desktop app from a Selenium-style client (C#, Java, Python, Ruby, JavaScript)."
-archetype: S1
 rating: 24
 d6: 4
 keywords:

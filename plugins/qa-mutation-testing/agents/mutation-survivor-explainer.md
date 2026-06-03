@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob, Bash(git log *), Bash(git blame *)"
 model: sonnet
 rating: 22
 d6: 3
-archetype: A3
 ---
 
 A read-only investigator that turns "this mutant survived" into "here's the specific test that would kill it."

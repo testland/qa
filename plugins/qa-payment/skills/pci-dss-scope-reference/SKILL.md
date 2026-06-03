@@ -3,7 +3,6 @@ name: pci-dss-scope-reference
 description: "Pure-reference catalog of PCI DSS v4.0 scope reduction techniques + the testable scope boundaries. Covers the SAQ levels (A through D, picked by how cardholder data flows), the PAN-storage prohibitions (only first-6 + last-4 retained; nothing else cleartext), the tokenization + hosted-fields scope-reduction patterns (Stripe Elements / Adyen Drop-in / Braintree Hosted Fields keep PAN off your servers), Network-Segmentation as PCI scope-reduction, and the testable behaviours the scope boundary creates. Distinct from qa-compliance/pci-dss-scope-checker (the compliance / scope-verification skill); this is the catalog of WHY the boundary matters. Use when designing or auditing the PCI scope of a payment integration."
 rating: 22
 d6: 4
-archetype: S2
 ---
 
 # pci-dss-scope-reference

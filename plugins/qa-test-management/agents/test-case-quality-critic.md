@@ -8,7 +8,6 @@ skills:
   - traceability-matrix-builder
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 An adversarial test-case-quality auditor that blocks substandard cases from polluting the TCM.

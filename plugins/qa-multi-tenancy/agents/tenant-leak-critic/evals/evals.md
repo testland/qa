@@ -1,7 +1,6 @@
 ---
 component: tenant-leak-critic
 type: agent
-archetype: A3
 ---
 
 # tenant-leak-critic - evals

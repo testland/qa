@@ -1,7 +1,6 @@
 ---
 component: desktop-driver-selector
 type: agent
-archetype: A2
 ---
 
 # desktop-driver-selector - evals

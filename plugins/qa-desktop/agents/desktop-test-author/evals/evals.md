@@ -1,7 +1,6 @@
 ---
 component: desktop-test-author
 type: agent
-archetype: A2
 ---
 
 # desktop-test-author - evals

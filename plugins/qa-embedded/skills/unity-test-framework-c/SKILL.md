@@ -3,7 +3,6 @@ name: unity-test-framework-c
 description: "Author and run ThrowTheSwitch Unity (the C unit-testing library) for bare-metal and RTOS C code. Distinct from the Unity game-engine Test Framework at docs.unity3d.com - this is the ThrowTheSwitch C testing library at throwtheswitch.org/unity, a single C file plus headers that runs on 8-bit MCUs through 64-bit hosts. Covers the assertion families (TEST_ASSERT_EQUAL_INT / _UINT / _HEX / _FLOAT / _DOUBLE / _STRING / _MEMORY / _PTR / _ARRAY / _WITHIN / _GREATER_THAN / _BITS), setUp/tearDown/RUN_TEST/UNITY_BEGIN/UNITY_END, the generate_test_runner.rb generator, host-build vs cross-build vs QEMU-run, and CI integration via the JUnit XML produced through Ceedling. Use when the unit-under-test is pure C and the target ranges from 8-bit AVR to Cortex-M0 to Linux ARM."
 rating: 24
 d6: 4
-archetype: S1
 keywords: ["unity", "throwtheswitch", "c", "embedded", "unit-testing", "arm", "avr", "cortex-m"]
 ---
 

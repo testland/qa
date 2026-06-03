@@ -10,7 +10,6 @@ skills:
   - bug-report-from-failure
 rating: 24
 d6: 4
-archetype: A3
 ---
 
 An adversarial bug-report auditor that blocks substandard reports from entering the tracker.

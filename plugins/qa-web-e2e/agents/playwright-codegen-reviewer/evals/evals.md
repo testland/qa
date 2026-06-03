@@ -1,7 +1,6 @@
 ---
 component: playwright-codegen-reviewer
 type: agent
-archetype: A3
 ---
 
 # playwright-codegen-reviewer - evals

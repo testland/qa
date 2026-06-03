@@ -3,7 +3,6 @@ name: browserstack-automate
 description: "Author and run E2E tests on BrowserStack Automate - cloud grid covering 3000+ real device + browser combinations. Covers BROWSERSTACK_USERNAME + ACCESS_KEY auth, hub URL https://hub-cloud.browserstack.com/wd/hub, W3C capabilities + bstack:options (projectName, buildName, sessionName), BrowserStackLocal for testing against localhost / internal environments, parallel session limits, and CI integration. Use for cross-browser regression on real devices + browsers - distinct from qa-web-e2e/playwright-testing (single-runner) and qa-compatibility/browser-matrix-runner (bundled engines only)."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # browserstack-automate

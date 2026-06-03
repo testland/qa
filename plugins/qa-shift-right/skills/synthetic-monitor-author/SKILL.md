@@ -3,7 +3,6 @@ name: synthetic-monitor-author
 description: "Drafts a synthetic monitor configuration for one critical user journey - picks the platform (Datadog Synthetics, Pingdom, Checkly, New Relic, etc.), authors the scripted-transaction body (Playwright-style for browser checks; HTTP-step for API checks), wires the cadence (typical 1-15 min), defines per-step assertions (DOM presence, API status, response shape) and aggregate alert thresholds (consecutive-failure count + on-call routing). Use when a critical journey needs continuous-in-production verification per ISTQB-canonical shift-right (\"a test approach to test a system continuously in production\")."
 rating: 23
 d6: 4
-archetype: S3
 ---
 
 # synthetic-monitor-author

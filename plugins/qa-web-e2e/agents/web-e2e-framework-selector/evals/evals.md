@@ -1,7 +1,6 @@
 ---
 component: web-e2e-framework-selector
 type: agent
-archetype: A2
 ---
 
 # web-e2e-framework-selector - evals

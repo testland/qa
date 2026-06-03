@@ -3,7 +3,6 @@ name: linear-bug-workflow-runner
 description: "Author and run Linear bug workflows via GraphQL API - issue creation, state transitions (workflowState assignment), priority assignment (0=No priority / 1=Urgent / 2=High / 3=Medium / 4=Low), label-based classification, search by team and content. Covers the issueCreate mutation, issueUpdate mutation for state transitions, workflowStates query for per-team state IDs, and Linear's API-key vs OAuth Bearer auth modes. Use when programmatically managing Linear bug lifecycle states - distinct from qa-bug-repro which is reproduction-focused."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # linear-bug-workflow-runner

@@ -3,7 +3,6 @@ name: tfsec-policy
 description: "Configures tfsec for Terraform-specific security scanning - covers AWS / Azure / GCP / Kubernetes / OpenStack / Oracle / DigitalOcean / CloudStack with developer-friendly output. Important: tfsec is **transitioning to Trivy** per Aqua Security''''s positioning; new projects evaluate Trivy first. For existing tfsec users, this skill covers config + custom rules + CI integration. Use for Terraform-only projects mid-transition or where tfsec''''s specific check coverage matters."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # tfsec-policy

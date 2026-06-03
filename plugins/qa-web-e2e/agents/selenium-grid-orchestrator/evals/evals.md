@@ -1,7 +1,6 @@
 ---
 component: selenium-grid-orchestrator
 type: agent
-archetype: A2
 ---
 
 # selenium-grid-orchestrator - evals

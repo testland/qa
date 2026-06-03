@@ -9,7 +9,6 @@ skills:
   - mstest-tests
   - fluentassertions
   - bogus-data
-archetype: A2
 rating: 26
 d6: 4
 d7: 4

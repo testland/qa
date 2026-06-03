@@ -1,7 +1,6 @@
 ---
 component: production-tester
 type: agent
-archetype: A2
 ---
 
 # production-tester - evals

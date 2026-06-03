@@ -3,7 +3,6 @@ name: redis-cache-tests
 description: "Wraps Redis cache testing patterns: EXPIRE / PEXPIRE / TTL command verification (with the Redis 7+ NX/XX/GT/LT flags), the cache-aside write-then-invalidate test pattern (write to source → DEL key → assert next read fetches fresh), eviction-policy testing under memory pressure (maxmemory + allkeys-lru), Redis-side pub/sub invalidation across cache nodes, and key-namespacing tests for tenant scope. Use when writing tests for an application using Redis as its primary cache. Composes cache-coherence-patterns-reference + cache-stampede-reference + qa-multi-tenancy/cross-tenant-data-leak-tests (cache-key collision Test 10)."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # redis-cache-tests

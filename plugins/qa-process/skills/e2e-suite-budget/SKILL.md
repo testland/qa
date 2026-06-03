@@ -3,7 +3,6 @@ name: e2e-suite-budget
 description: "Build-an-X workflow that caps the E2E suite size by computing flakiness ROI per test - for each E2E test, computes (regressions caught × value) ÷ (runtime × flake rate × maintenance cost), ranks all tests by ROI, identifies the bottom decile (low ROI = high cost / low signal), and recommends specific tests to retire / move to lower layer / fix flake. Use quarterly to keep E2E count from growing past the team's maintenance capacity."
 rating: 22
 d6: 3
-archetype: S3
 ---
 
 # e2e-suite-budget

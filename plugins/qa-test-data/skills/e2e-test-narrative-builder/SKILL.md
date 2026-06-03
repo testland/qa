@@ -3,7 +3,6 @@ name: e2e-test-narrative-builder
 description: "Assembles a multi-step end-to-end user-journey test from a list of high-level user intents - translates each intent (\"user signs up\", \"user adds product to cart\", \"user completes checkout with promo code\") into the corresponding test-runner step (Playwright / Cypress / Selenium / Karate), wires shared state across steps via test fixtures, and emits the resulting test as a single Scenario in the project's E2E framework. Use when scaffolding an E2E test that exercises a complete user flow rather than a single page."
 rating: 23
 d6: 3
-archetype: S3
 ---
 
 # e2e-test-narrative-builder

@@ -1,7 +1,6 @@
 ---
 component: vuln-prioritizer
 type: agent
-archetype: A3
 ---
 
 # vuln-prioritizer - evals

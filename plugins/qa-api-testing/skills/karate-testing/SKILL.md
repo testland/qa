@@ -3,7 +3,6 @@ name: karate-testing
 description: "Authors Karate `.feature` files using its Gherkin-flavored DSL for HTTP API tests, leverages the `match` keyword with fuzzy validators (#number / #string / #regex / contains / arrays), runs the suite via JUnit 5 plus Maven Surefire, and produces JUnit XML for CI gating. Use when the project is on the JVM and prefers a feature-file authoring flow over Java-DSL fluent chains."
 rating: 25
 d6: 4
-archetype: S1
 ---
 
 # karate-testing

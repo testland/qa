@@ -3,7 +3,6 @@ name: jest-fake-timers
 description: "Wraps Jest's built-in modern fake-timers (built on @sinonjs/fake-timers since Jest 27): jest.useFakeTimers(), jest.setSystemTime(), jest.advanceTimersByTime(), jest.runAllTimers(), and jest.useRealTimers() for selective restoration. Use when testing JS/TS code in Jest where setTimeout / setInterval / Date / Date.now need deterministic control. Composes dst-transition-reference."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # jest-fake-timers

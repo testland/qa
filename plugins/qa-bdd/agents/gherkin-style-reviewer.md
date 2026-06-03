@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob"
 model: sonnet
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 A specialized adversarial reviewer for Gherkin features - keeps BDD's collaboration value alive by enforcing declarative, business-readable scenarios.

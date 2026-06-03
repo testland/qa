@@ -3,7 +3,6 @@ name: browser-cache-control-tests
 description: "Wraps browser-side Cache-Control testing patterns using Playwright (and Cypress for legacy stacks): verifying response Cache-Control headers from Network events, asserting ETag round-trips (request includes If-None-Match → server returns 304), testing service-worker cache strategies (Workbox cacheFirst / networkFirst / staleWhileRevalidate), and verifying browser cache behavior under reload (normal reload vs hard reload semantics). Covers MDN's Cache-Control semantics + RFC 9111. Use when designing browser-cache-respecting endpoints or auditing caching behaviour in E2E tests."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # browser-cache-control-tests

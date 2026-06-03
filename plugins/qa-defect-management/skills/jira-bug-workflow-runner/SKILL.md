@@ -3,7 +3,6 @@ name: jira-bug-workflow-runner
 description: "Author and run Jira Cloud bug workflows via REST API v3 - issue creation, state transitions, JQL search for triage queues, severity/priority field updates. Covers issue creation with ADF description, transition lookup + apply, JQL search for duplicate detection, label-based classification (severity/priority/regression), and CI-driven bug filing from test failures. Use when programmatically managing Jira bug lifecycle states (creates, triages, transitions, closes) - distinct from qa-test-reporting/jira-issue-importer which posts test-result-link issues."
 rating: 24
 d6: 4
-archetype: S1
 ---
 
 # jira-bug-workflow-runner

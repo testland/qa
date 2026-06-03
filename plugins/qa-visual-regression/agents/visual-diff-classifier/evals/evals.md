@@ -1,7 +1,6 @@
 ---
 component: visual-diff-classifier
 type: agent
-archetype: A3
 ---
 
 # visual-diff-classifier - evals

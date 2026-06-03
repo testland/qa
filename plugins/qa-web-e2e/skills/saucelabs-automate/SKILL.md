@@ -3,7 +3,6 @@ name: saucelabs-automate
 description: "Author and run E2E tests on Sauce Labs - cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers SAUCE_USERNAME + SAUCE_ACCESS_KEY auth, regional hub URLs (us-west-1 / eu-central-1), W3C capabilities, sauce:options dict (build, name, screenResolution, tunnelName), Sauce Connect Proxy for internal-environment testing. Use for cross-browser regression with Sauce Labs as the cloud grid; complements BrowserStack + LambdaTest as alternative providers."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # saucelabs-automate

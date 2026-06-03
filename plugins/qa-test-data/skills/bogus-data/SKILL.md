@@ -3,7 +3,6 @@ name: bogus-data
 description: "Authors .NET test fixtures using the Bogus library - fluent `Faker<T>` typed builders with `.RuleFor` per property, generation via `Generate()` / `GenerateBetween(min, max)` / `GenerateLazy()`, and `UseSeed()` for reproducibility. Provides the Bogus equivalent of Python's Faker / Ruby's FactoryBot. Use when the project is C# / F# / VB.NET and the team needs typed fixture creation."
 rating: 25
 d6: 4
-archetype: S1
 ---
 
 # bogus-data

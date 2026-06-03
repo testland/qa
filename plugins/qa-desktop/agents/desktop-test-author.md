@@ -16,7 +16,6 @@ skills:
   - xunit-tests
   - nunit-tests
   - mstest-tests
-archetype: A2
 rating: 26
 d6: 4
 d7: 4

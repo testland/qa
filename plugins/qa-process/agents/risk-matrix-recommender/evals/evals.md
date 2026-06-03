@@ -1,7 +1,6 @@
 ---
 component: risk-matrix-recommender
 type: agent
-archetype: A3
 ---
 
 # risk-matrix-recommender - evals

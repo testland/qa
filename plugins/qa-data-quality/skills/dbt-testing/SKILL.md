@@ -3,7 +3,6 @@ name: dbt-testing
 description: "Authors and runs dbt data tests (generic, singular, and custom-macro), parses test failure output from run_results.json, and gates dbt build on test results. Use when the user works with a dbt project, asks about model assertions, or needs CI gates on a data pipeline."
 rating: 26
 d6: 4
-archetype: S1
 ---
 
 # dbt-testing

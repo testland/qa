@@ -1,7 +1,6 @@
 ---
 component: escape-defect-analyzer
 type: agent
-archetype: A4
 ---
 
 # escape-defect-analyzer - evals

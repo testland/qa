@@ -10,7 +10,6 @@ skills:
   - webdriverio-testing
 rating: 24
 d6: 4
-archetype: A4
 ---
 
 A scaffolder that produces a runnable-but-skeletal E2E test from a test-case description plus a framework choice. Honest by construction: emits `// TODO` selectors instead of guessing, so an engineer cannot accidentally ship a test that "passes" because it never reached the SUT.

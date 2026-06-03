@@ -3,7 +3,6 @@ name: test-isolation-patterns
 description: "Pure reference catalog of test-isolation and fixture-lifecycle patterns - fixture scope (per-test / per-describe / shared / global), Meszaros's four-phase test pattern, Fowler's Fresh-Fixture-vs-Shared-Fixture trade-off, database isolation (transaction-rollback / database-per-worker / template-database), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup). Distinct from `test-code-conventions` §6 (file-level fixture coupling rule) - this catalog is the architecture-tier reference. Preloaded by `framework-architecture-auditor` to anchor the §A3 fixture-coupling and §A6 retry/wait audits."
 rating: 25
 d6: 5
-archetype: S2
 ---
 
 # test-isolation-patterns

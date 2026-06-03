@@ -3,7 +3,6 @@ name: cron-job-test-author
 description: "Build-an-X for cron / scheduler job tests - cron-expression validation patterns (5-field standard `min hour day-month month day-week` + 6-field with seconds + named-list extensions), DST + leap-day edge cases, missed-execution detection (machine downtime catch-up), overlapping-run protection (lock + stale-lock recovery), timezone semantics. Use when authoring tests for cron jobs, Kubernetes CronJobs, BullMQ repeat-jobs, Sidekiq schedulers, or any time-based job runner."
 rating: 22
 d6: 4
-archetype: S3
 ---
 
 # cron-job-test-author

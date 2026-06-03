@@ -3,7 +3,6 @@ name: game-test-categories-reference
 description: "Pure-reference catalog of the testing categories that apply to a video-game build before it ships. Defines the six canonical buckets the industry tests against - functional / compliance / compatibility / performance / localization / accessibility - plus the multiplayer and content-rating sub-axes. Cross-references each bucket to the platform-holder vocabulary that drives it (Microsoft Xbox Requirements / XR test cases, Sony TRC, Nintendo Lotcheck, Steam Direct review). Use as the taxonomy lookup when planning a game test pass, scoping QA effort, or mapping platform-cert findings back to internal test categories. Pairs with platform-cert-overview-reference for the platform-by-platform submission process."
 rating: 24
 d6: 4
-archetype: S2
 keywords: ["game-testing", "functional-test", "compliance-test", "compatibility-test", "performance-test", "localization", "accessibility", "xag", "xr", "lotcheck", "trc"]
 ---
 

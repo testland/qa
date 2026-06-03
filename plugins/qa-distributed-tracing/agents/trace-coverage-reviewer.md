@@ -10,7 +10,6 @@ skills:
   - trace-spec-author
 rating: 23
 d6: 4
-archetype: A3
 ---
 
 You are an adversarial reviewer of OpenTelemetry instrumentation

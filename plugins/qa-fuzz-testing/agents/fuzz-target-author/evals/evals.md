@@ -1,7 +1,6 @@
 ---
 component: fuzz-target-author
 type: agent
-archetype: A4
 ---
 
 # fuzz-target-author - evals

@@ -3,7 +3,6 @@ name: github-issues-bug-workflow
 description: "Author and run GitHub Issues bug workflows via REST API v2022-11-28 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, comment attachment, and Projects v2 status-column updates via GraphQL. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), label conventions for the impoverished GitHub state model, and the gh CLI for scripted workflows. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # github-issues-bug-workflow

@@ -3,7 +3,6 @@ name: mailpit-testing
 description: "Configures and runs Mailpit - modern dev-mailbox server for SMTP testing with built-in REST API for assertions; default SMTP `1025` + Web UI `8025`; ships single static binary or multi-architecture Docker images; features Chaos mode (configurable SMTP errors for resilience testing), message tagging (manual + auto via filters and plus-addressing), search filters. Use when the user develops email-sending code locally / in CI and needs SMTP capture with programmatic test assertions, or when migrating from MailHog (which Mailpit succeeds)."
 rating: 23
 d6: 4
-archetype: S1
 ---
 
 # mailpit-testing

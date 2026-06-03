@@ -3,7 +3,6 @@ name: restler-fuzzing
 description: "Runs stateful REST API fuzzing using Microsoft's RESTler - infers producer-consumer dependencies from an OpenAPI spec, drives sequences of requests (POST → GET → DELETE chains), and reports 5xx errors, resource leaks, and hierarchy violations. Wraps the canonical 4-stage workflow (compile → test → fuzz-lean → fuzz). Use when the API is stateful (resources are created, queried, modified, deleted) and Schemathesis's stateless fuzzing is missing the multi-step bugs."
 rating: 25
 d6: 4
-archetype: S1
 ---
 
 # restler-fuzzing

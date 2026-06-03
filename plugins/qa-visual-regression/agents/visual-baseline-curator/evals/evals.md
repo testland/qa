@@ -1,7 +1,6 @@
 ---
 component: visual-baseline-curator
 type: agent
-archetype: A4
 ---
 
 # visual-baseline-curator - evals

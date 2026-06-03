@@ -1,7 +1,6 @@
 ---
 component: defect-clusterer
 type: agent
-archetype: A1
 ---
 
 # defect-clusterer - evals

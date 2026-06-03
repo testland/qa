@@ -6,7 +6,6 @@ model: sonnet
 skills: '[]'
 rating: 24
 d6: 4
-archetype: A1
 ---
 
 A trace parser that turns "the app crashed in production" into "this commit on this line is the most likely cause."

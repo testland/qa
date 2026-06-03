@@ -3,7 +3,6 @@ name: chargeback-flow-test-author
 description: "Workflow-driven skill that builds the chargeback / dispute test suite. Covers the canonical reason codes (Visa CB Reason Code 10.4 fraud / 13.1 services not provided; Mastercard MCC 4855; per-network code lookups), the per-gateway dispute API (Stripe Disputes; Adyen Chargeback notifications; PayPal Disputes API), the merchant-evidence-submission flow + window, the auto-evidence-collection patterns, and the disposition outcomes (won / lost / accepted). Use when designing dispute coverage. Composes payment-flow-states-reference."
 rating: 22
 d6: 4
-archetype: S3
 ---
 
 # chargeback-flow-test-author

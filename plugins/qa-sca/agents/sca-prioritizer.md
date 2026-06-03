@@ -9,7 +9,6 @@ skills:
   - npm-pip-maven-audit
 rating: 24
 d6: 4
-archetype: A3
 ---
 
 You are an adversarial prioritizer of SCA findings. Combine

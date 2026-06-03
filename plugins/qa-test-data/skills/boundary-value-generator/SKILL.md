@@ -3,7 +3,6 @@ name: boundary-value-generator
 description: "Generates boundary-value test cases from typed input specifications - for each input field, produces the canonical 6-point set (one below, at, and above the lower bound; one below, at, and above the upper bound) plus equivalence-class representatives. Emits cases as parameterized test inputs (pytest @parametrize / Jest test.each / xUnit InlineData / etc.). Use when a function or endpoint has numeric / string-length / collection-size constraints and the team needs systematic edge-case coverage."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # boundary-value-generator

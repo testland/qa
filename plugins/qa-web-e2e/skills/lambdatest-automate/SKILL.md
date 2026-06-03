@@ -3,7 +3,6 @@ name: lambdatest-automate
 description: "Author and run E2E tests on LambdaTest - cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers LT_USERNAME + LT_ACCESS_KEY auth, hub URL hub.lambdatest.com/wd/hub, W3C capabilities + LT:Options dict (build, name, project, smartUI, network, console, video, tunnel), LambdaTest Tunnel for internal apps. Use for cross-browser regression with LambdaTest as the cloud grid; complements BrowserStack + Sauce Labs."
 rating: 22
 d6: 4
-archetype: S1
 ---
 
 # lambdatest-automate

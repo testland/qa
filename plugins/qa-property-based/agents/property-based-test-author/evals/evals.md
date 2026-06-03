@@ -1,7 +1,6 @@
 ---
 component: property-based-test-author
 type: agent
-archetype: A2
 ---
 
 # property-based-test-author - evals

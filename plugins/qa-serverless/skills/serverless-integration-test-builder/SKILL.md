@@ -3,7 +3,6 @@ name: serverless-integration-test-builder
 description: "Workflow-driven skill that builds the integration-test suite for a serverless application from its IaC definition (SAM template / serverless.yml / Wrangler config / Vercel functions / Netlify functions). Walks through: identifying the function inventory + event sources, picking the right local-emulator per function (sam local / Miniflare / netlify dev / vercel dev / serverless-offline), generating test events per event source, asserting on cold-start + timeout budgets, and emitting the test directory + CI config. Use when introducing integration tests to a serverless project. Composes cold-start-budget-reference + lambda-timeout-budget-reference + per-platform S1s."
 rating: 22
 d6: 4
-archetype: S3
 ---
 
 # serverless-integration-test-builder

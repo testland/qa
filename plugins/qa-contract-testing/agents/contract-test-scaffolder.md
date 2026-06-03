@@ -10,7 +10,6 @@ skills:
   - protobuf-compat-checking
 rating: 24
 d6: 4
-archetype: A4
 ---
 
 A scaffolder that takes a contract artifact and emits the test stubs the consumer or provider runs to enforce that contract. Generates the tests; engineer fills the values - does not invent contract behavior the artifact does not declare.

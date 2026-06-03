@@ -3,7 +3,6 @@ name: bug-report-template
 description: "Builds a well-formed bug (defect) report from raw observation notes - fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale. Validates that each field has the load-bearing content reviewers and engineers need to triage. Use when a stakeholder reports a problem informally (chat, email, voice) and the team needs a triageable issue without round-tripping for missing fields."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # bug-report-template

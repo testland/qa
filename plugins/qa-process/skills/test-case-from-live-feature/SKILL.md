@@ -3,7 +3,6 @@ name: test-case-from-live-feature
 description: "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the heuristic models in `heuristic-test-design-coach` (SFDPOT, Whittaker attacks, FEW HICCUPPS, ISO 25010). Distinct from `test-case-ideation-from-story` (which requires a written story / AC) and from `exploratory-charter-author` (which produces a session charter, not a structured matrix). Use when there is no story, no AC, and no documentation - only a live feature."
 rating: 24
 d6: 4
-archetype: S3
 ---
 
 # test-case-from-live-feature

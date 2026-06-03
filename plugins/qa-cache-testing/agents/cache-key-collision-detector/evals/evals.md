@@ -1,7 +1,6 @@
 ---
 component: cache-key-collision-detector
 type: agent
-archetype: A3
 ---
 
 # cache-key-collision-detector - evals

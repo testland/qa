@@ -1,7 +1,6 @@
 ---
 component: jvm-test-author
 type: agent
-archetype: A2
 ---
 
 # jvm-test-author - evals

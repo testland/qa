@@ -3,7 +3,6 @@ name: object-model-patterns
 description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` and `playwright-codegen-reviewer` as the architecture-tier reference for what each pattern actually is."
 rating: 25
 d6: 5
-archetype: S2
 ---
 
 # object-model-patterns

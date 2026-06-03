@@ -3,7 +3,6 @@ name: crusspic-stmpl-heuristic
 description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - twelve quality criteria a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use as the quality-criteria checklist for evaluating a product holistically; complementary to ISO/IEC 25010 quality model."
 rating: 23
 d6: 4
-archetype: S2
 ---
 
 # crusspic-stmpl-heuristic

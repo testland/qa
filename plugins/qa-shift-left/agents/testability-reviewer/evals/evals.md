@@ -1,7 +1,6 @@
 ---
 component: testability-reviewer
 type: agent
-archetype: A3
 ---
 
 # testability-reviewer - evals
