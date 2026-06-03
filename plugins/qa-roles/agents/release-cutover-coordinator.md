@@ -55,11 +55,10 @@ accepted by the release authority.
 ## Step 2 - Sequence the cutover
 
 Order the cutover steps across teams. Per Google SRE release engineering,
-releases are governed by gated operations - "code reviews, build
-approvals, deployment authorization, and access controls ensure
-intentional changes rather than accidental ones" [sre-re]. Apply the same
-gate logic across teams: no team advances until the preceding gate is
-confirmed.
+releases are governed by layered access controls and the principle that
+"changes to any aspect of the release process should be intentional,
+rather than accidental" [sre-re]. Apply the same gate logic across teams:
+no team advances until the preceding gate is confirmed.
 
 For services that share no upstream dependency, apply parallel cutover
 tracks. For those with dependencies, enforce strict sequencing.
@@ -98,10 +97,10 @@ owns all HUMAN GO gates. Timeboxes are hard: if a gate has not cleared by
 its time, the release authority calls rollback or extends - the agent does
 not decide.
 
-Per Google SRE, self-service release models allow "teams [to] control
-their own release processes independently" [sre-re]. In the cutover
-context this means each team owns their gate's execution, but the
-org-level go/no-go remains with one named release authority.
+Per Google SRE, self-service release tooling is designed to let "product
+development teams to control and run their own release processes" [sre-re].
+In the cutover context this means each team owns their gate's execution,
+but the org-level go/no-go remains with one named release authority.
 
 Document the authority explicitly:
 
@@ -161,7 +160,7 @@ The agent produces a single cutover runbook document:
 (table from Step 1)
 
 ## Dependency order
-(narrative + diagram from Step 1)
+(narrative from Step 1)
 
 ## Cutover sequence
 (gate table from Step 2 with status column added at runtime)
@@ -200,7 +199,7 @@ document becomes the release record.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Coordinates across teams, does not execute one service's runbook | Conflates cutover coordination with runbook execution - the latter belongs to `release-engineer` (single service, pre-flight → canary → rollout). | Use `release-engineer` per service; this agent sequences the cross-team gates above that level. |
+| Using this agent to execute a single service's release runbook | Conflates cutover coordination with runbook execution - the latter belongs to `release-engineer` (single service, pre-flight → canary → rollout). | Use `release-engineer` per service; this agent sequences the cross-team gates above that level. |
 | Org-level go/no-go, not a single readiness gate | Conflates final cutover decision with the upstream "should we enter the window at all?" check - that belongs to `release-readiness-checker` in qa-process. | Run `release-readiness-checker` before opening the window; this agent runs during the window. |
 | Rollback is a planned decision point, not automatic | Treating a metric threshold as an auto-rollback trigger removes human judgment from a high-stakes decision mid-window. | Every rollback is called by the named release authority on evidence; the agent presents evidence, never rolls back autonomously. |
 | One go/no-go gate for all teams at the end | A late org gate catches failures only after all services have cut over, making rollback more complex. | Gate per service in dependency order; each service gets its own smoke pass + go/no-go before the next dependent service proceeds. |
@@ -235,10 +234,10 @@ document becomes the release record.
 
 - [sre-re] Google SRE Book, "Release Engineering" chapter -
   https://sre.google/sre-book/release-engineering/ - release gating
-  principles ("gated operations: code reviews, build approvals, deployment
-  authorization, and access controls ensure intentional changes rather than
-  accidental ones"); self-service release model ("teams control their own
-  release processes independently").
+  principles ("changes to any aspect of the release process should be
+  intentional, rather than accidental"); self-service release model
+  (tooling designed to let "product development teams to control and run
+  their own release processes").
 - [bgd] Martin Fowler, "BlueGreenDeployment" -
   https://martinfowler.com/bliki/BlueGreenDeployment.html - instant
   cutover via router switch ("you switch the router so that all incoming
