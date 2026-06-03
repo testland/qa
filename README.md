@@ -93,7 +93,7 @@ Every component is scored on eight dimensions before merge (v4.0 framework,
 | Dim | Name | Anchor |
 |---|---|---|
 | **D1** | Spec compliance | Lint passes; required frontmatter fields present |
-| **D2** | Archetype fit | Body structure matches declared archetype (S1 to S4 / A1 to A4) |
+| **D2** | Scope quality | One coherent scope the description predicts; single responsibility; progressive disclosure |
 | **D3** | Description quality | Distinguishes vs neighbors; predicts the body |
 | **D4** | Use-case fit | Explicit trigger ("Use when…"), not a persona |
 | **D5** | Body quality | Concrete steps + worked examples |
