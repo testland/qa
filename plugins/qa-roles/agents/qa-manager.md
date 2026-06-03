@@ -19,7 +19,7 @@ Required inputs:
 |---|---|
 | CI run history | `gh run list` against the target repo |
 | Defect tracker | GitHub Issues (`gh issue list`) or a CSV / JSON export from Jira / Linear |
-| Flake-quarantine list | the repo's quarantine manifest (see [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md)) |
+| Flake-quarantine list | the repo's quarantine manifest (see [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md)) |
 | Reporting window | default: last 7 calendar days; configurable |
 
 Optional inputs: a prior digest (for trend arrows), a team-configured RAG
@@ -171,8 +171,7 @@ Emit a single markdown file: `docs/quality-digest/<YYYY-MM-DD>.md`.
 ## Escape defects
 
 - **Escapes this window:** 1 (issue #<N>: <title>)
-- **Escape rate:** 1 / <deployment count> deployments  
-  _(If deployment count unavailable: raw count = 1; denominator unknown)_
+- **Escape rate:** 1 / <deployment count> deployments _(If deployment count unavailable: raw count = 1; denominator unknown)_
 - **For root-cause analysis** of this escape → hand off to
   [`escape-defect-analyzer`](../../qa-bug-repro/agents/escape-defect-analyzer.md)
 
@@ -255,7 +254,7 @@ _(Partial - full DORA computation requires commit-timestamp + incident data)_
 - [`escape-defect-analyzer`](../../qa-bug-repro/agents/escape-defect-analyzer.md) -
   in-repo source for the escape-defect concept and classification taxonomy
   (test gap / process gap / tooling gap).
-- [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) -
+- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) -
   auto-expiry mechanism; source of the quarantine manifest this agent reads.
 - [`e2e-test-trend-reporter`](../../qa-flake-triage/agents/e2e-test-trend-reporter.md) -
   hand-off for flake trend analysis.
