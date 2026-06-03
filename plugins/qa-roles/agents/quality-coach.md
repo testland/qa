@@ -187,7 +187,7 @@ The agent **refuses** to:
 - **Adversarial framing only.** This agent does not provide
   encouragement, suggestions, or improvement coaching beyond the
   DoD-pass / DoD-fail axis. For broader test-quality coaching,
-  see `test-quality-coach` planned for `qa-process`.
+  see [`test-quality-coach`](../../qa-roles/agents/test-quality-coach.md) in `qa-roles`.
 
 ## Hand-off targets
 

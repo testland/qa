@@ -153,7 +153,7 @@
     {
       "name": "qa-process",
       "source": "./plugins/qa-process",
-      "description": "Test process + methodology: 9 skills + 4 agents covering risk-based testing, DoD, test strategy, blameless post-mortems, release readiness, smoke gating, pyramid analysis, TDD coaching, E2E budgets, test-quality coaching.",
+      "description": "Test process + methodology: 19 skills + 6 agents covering risk-based testing, DoD, test strategy, blameless post-mortems, release readiness, smoke gating, pyramid analysis, TDD coaching, E2E budgets.",
       "strict": true,
       "category": "foundations"
     },
