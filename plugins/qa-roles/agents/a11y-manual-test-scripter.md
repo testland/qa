@@ -71,7 +71,7 @@ fetched 2026-06-03:
 
 | Step | Key | Expected behavior |
 |------|-----|-------------------|
-| Open dialog | `Enter` / `Space` on trigger button | Dialog appears; focus moves to first tabbable element inside dialog (or dialog heading) |
+| Open dialog | `Enter` / `Space` on trigger button | Dialog appears; focus moves to first tabbable element inside dialog (or dialog heading) - key activation per [apg-button] |
 | Tab inside dialog | `Tab` | Focus cycles forward through tabbable elements inside dialog; does NOT leave dialog |
 | Shift+Tab inside dialog | `Shift+Tab` | Focus cycles backward; from first element wraps to last inside dialog |
 | Close via Escape | `Escape` | Dialog closes; focus returns to triggering element |
@@ -164,7 +164,7 @@ auto-associate the label to the form control based on proximity" - explicit
 | Modal (on open) | Trigger dialog open | "[Dialog name], web dialog" then first element announced |
 | Combobox | Tab to input | "[Label], combo box, [current value or placeholder]" |
 | Checkbox | Tab to checkbox | "[Label], checkbox, checked / unchecked" |
-| Navigation landmark | `VO+Command+L` (next link) or rotor | Region / landmark name read |
+| Page structure (headers, links, form controls) | `VO+U` to open Rotor, then `Left` / `Right` Arrow to choose category, `Up` / `Down` Arrow to navigate items | Selected item name and type announced; rotor categories include Headers, Links, Form controls, Auto Web Spots (per [WebAIM VoiceOver article](https://webaim.org/articles/voiceover/), fetched 2026-06-03) |
 
 ### Focus order verification (both AT)
 
@@ -187,7 +187,7 @@ only. Confirm:
 | No keyboard trap outside modal | 2.1.2 No Keyboard Trap | A |
 | Tab order matches visual/logical reading order | 2.4.3 Focus Order | A |
 | Focus indicator visible on every focusable element | 2.4.7 Focus Visible | AA |
-| Modal focus trap (Tab stays inside) | 2.1.2 No Keyboard Trap + APG Dialog | A |
+| Modal focus trap (Tab stays inside) - APG Dialog specifies Tab/Shift+Tab must not move focus outside dialog | 2.1.2 No Keyboard Trap | A |
 | Modal returns focus to trigger on close | 2.4.3 Focus Order | A |
 | Button announced: name + role | 4.1.2 Name, Role, Value | A |
 | Input announced: name + role | 4.1.2 Name, Role, Value | A |
@@ -288,6 +288,7 @@ Leave the Pass / Fail column blank - it is filled in by the human tester.
   Escape closes, focus returns to trigger. Menu Button: Enter/Space opens to
   first item, Up Arrow opens to last item, Escape closes. Combobox: Down/Up
   Arrow open popup, Enter accepts, Escape dismisses.
+- [apg-button]: https://www.w3.org/WAI/ARIA/apg/patterns/button/ "WAI-ARIA APG Button pattern - fetched 2026-06-03" - Enter activates the button; Space activates the button.
 - [WebAIM Keyboard Testing](https://webaim.org/techniques/keyboard/) (fetched
   2026-06-03) - Tab / Shift+Tab navigation; focus indicators must be present;
   logical Tab order; "focus can be moved away from any element using only a
