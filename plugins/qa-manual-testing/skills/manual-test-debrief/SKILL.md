@@ -23,7 +23,7 @@ This skill provides the template and the aggregation conventions.
 ## When to use
 
 - After every charter session per
-  [`exploratory-charter-author`](../../agents/exploratory-charter-author.md).
+  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
 - After a bug bash cohort completes its 90-min slot per
   [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md).
 - After a free-form tester exploration (even without a formal
@@ -235,7 +235,7 @@ different scope.
 - Bach, J. & Bach, J., *Session-Based Test Management* (HP, 2000;
   PDF at `satisfice.com/download/session-based-test-management`) - 
   PROOF debrief format origin, three-bucket time accounting.
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - upstream: charters this debrief delivers into.
+- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - upstream: charters this debrief delivers into.
 - [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md) - the tours catalogued in the Past section.
 - [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md) - 
   multi-cohort bug bash inherits this debrief format.

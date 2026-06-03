@@ -3,12 +3,12 @@
 [![validate](https://github.com/testland/qa/actions/workflows/validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/validate.yml)
 [![plugin-validate](https://github.com/testland/qa/actions/workflows/plugin-validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/plugin-validate.yml)
 [![plugins](https://img.shields.io/badge/plugins-77-blue)](#plugin-catalog)
-[![components](https://img.shields.io/badge/components-568-blue)](#plugin-catalog)
+[![components](https://img.shields.io/badge/components-575-blue)](#plugin-catalog)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![marketplace](https://img.shields.io/badge/marketplace-v4.0.0-orange)](.claude-plugin/marketplace.json)
 
 > A rigorously curated quality-engineering plugin marketplace for Claude Code.
-> 77 plugins, 568 components, every one rating-gated before merge.
+> 77 plugins, 575 components, every one rating-gated before merge.
 
 ## Why testland-qa
 

@@ -17,7 +17,7 @@ The exploratory-testing literature converged on four canonical heuristic test-de
 - A legacy / brownfield codebase has no test coverage and you are onboarding cold.
 - A competitor or reverse-engineered product is under review (security audit, market intel).
 - A spec exists but is so thin that heuristic supplementation is needed alongside it.
-- A team's exploratory charter (per [`exploratory-charter-author`](../../agents/exploratory-charter-author.md)) needs a structured prompt set instead of pure intuition.
+- A team's exploratory charter (per [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)) needs a structured prompt set instead of pure intuition.
 
 Do **not** use this skill alone to produce a deliverable. It is the **input** to a downstream authoring skill (`test-case-from-live-feature`, `exploratory-charter-author`, `manual-test-script-author`). The catalog tells you *what to look at*; the downstream skill turns observations into a matrix or charter.
 
@@ -157,7 +157,7 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 ## Hand-off targets
 
 - **Turn the heuristic walk into a test-case matrix** → [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md).
-- **Turn the heuristic walk into an exploratory charter** → [`exploratory-charter-author`](../../../qa-manual-testing/agents/exploratory-charter-author.md).
+- **Turn the heuristic walk into an exploratory charter** → [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
 - **Turn the heuristic walk into a manual execution script** → [`manual-test-script-author`](../../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).
 - **When a written spec exists, prefer the spec-driven path** → [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md).
 - **Risk-based prioritisation of which guidewords matter most** → [`risk-matrix`](../risk-matrix/SKILL.md), [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md).
@@ -172,4 +172,4 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 - Exploratory testing - Kaner's 1984 definition ("simultaneous learning, test design and test execution"); Whittaker "How to Break Software" attack patterns; session-based test management: https://en.wikipedia.org/wiki/Exploratory_testing
 - ISTQB glossary - exploratory testing: https://glossary.istqb.org/en_US/term/exploratory-testing
 - ISTQB glossary - heuristic evaluation: https://glossary.istqb.org/en_US/term/heuristic-evaluation
-- [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md), [`exploratory-charter-author`](../../../qa-manual-testing/agents/exploratory-charter-author.md) - downstream skills that consume this catalog.
+- [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md), [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - downstream skills that consume this catalog.

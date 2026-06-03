@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-shift-right",
   "version": "1.0.0",
-  "description": "Production-side QA per ISTQB-canonical shift-right ('a test approach to test a system continuously in production'): 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
+  "description": "Production-side QA per ISTQB-canonical shift-right ('a test approach to test a system continuously in production'): 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 1 agent (observability-to-test).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

@@ -1,6 +1,6 @@
 # qa-data-quality
 
-Data quality testing for analytical pipelines: dbt-tests, Great Expectations, Soda, schema drift detection, and a data-quality engineer agent.
+Data quality testing for analytical pipelines: dbt-tests, Great Expectations, Soda, schema drift detection, anomaly triage, and schema-diff review.
 
 ## Components
 
@@ -12,7 +12,6 @@ Data quality testing for analytical pipelines: dbt-tests, Great Expectations, So
 | Skill | [data-quality-gate](skills/data-quality-gate/SKILL.md) | Aggregate dbt / GX / Soda check results into a single severity-aware go/no-go gate with markdown + JSON artifact for CI. |
 | Agent | [schema-diff-reviewer](agents/schema-diff-reviewer.md) | Review a DB schema diff for breaking-vs-additive changes, missing data tests, and downstream consumer impact; returns a Critical/Warning/Info findings table. |
 | Agent | [data-anomaly-triager](agents/data-anomaly-triager.md) | Classify a data-quality failure (dbt/GX/Soda) into drift / outlier / missing / referential / freshness with owner routing and remediation. |
-| Agent | [data-quality-engineer](agents/data-quality-engineer.md) | Build an initial coverage suite for a data product: read schema + sample, generate dbt/GX/Soda artifacts, run once. |
 | Skill | [data-quality-conventions](skills/data-quality-conventions/SKILL.md) | Reference catalog: engine selection, column/table coverage, severity tiering, freshness/SLA conventions, anti-patterns. |
 
 ## Install

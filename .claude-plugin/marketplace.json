@@ -13,7 +13,7 @@
     {
       "name": "qa-data-quality",
       "source": "./plugins/qa-data-quality",
-      "description": "Data quality testing for analytical pipelines: 5 skills (dbt-testing, great-expectations, soda-checks, data-quality-gate, data-quality-conventions) and 3 agents (schema-diff-reviewer, data-anomaly-triager, data-quality-engineer).",
+      "description": "Data quality testing for analytical pipelines: 5 skills (dbt-testing, great-expectations, soda-checks, data-quality-gate, data-quality-conventions) and 2 agents (schema-diff-reviewer, data-anomaly-triager).",
       "strict": true,
       "category": "quality-engineering"
     },
@@ -104,7 +104,7 @@
     {
       "name": "qa-roles",
       "source": "./plugins/qa-roles",
-      "description": "Sharply-scoped QA role agents (3): test-architect (A2 \u2014 pyramid + framework recommendation per repo), quality-coach (A3 \u2014 DoD adherence enforcer), release-engineer (A4 \u2014 runbook + canary release conductor). No generic persona-as-scope agents.",
+      "description": "QA org chart of 14 sharply-scoped role agents across three tiers. Tier 1 IC: exploratory-charter-author, automation-harness-bootstrapper, load-test-plan-designer, security-test-plan-builder, a11y-manual-test-scripter, data-quality-engineer, production-tester. Tier 2 Lead: test-architect, test-effort-estimator, quality-coach, test-quality-coach. Tier 3 Manager: release-engineer, release-cutover-coordinator, qa-manager. No generic persona-as-scope agents.",
       "strict": true,
       "category": "foundations"
     },
@@ -118,7 +118,7 @@
     {
       "name": "qa-manual-testing",
       "source": "./plugins/qa-manual-testing",
-      "description": "Manual scripted + exploratory testing: 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief) and 1 agent (exploratory-charter-author). Covers SBTM, Whittaker's seven tours, UAT, bug bashes, and PROOF debriefs.",
+      "description": "Manual scripted + exploratory testing: 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief). Covers SBTM, Whittaker's seven tours, UAT, bug bashes, and PROOF debriefs.",
       "strict": true,
       "category": "tooling"
     },
@@ -132,7 +132,7 @@
     {
       "name": "qa-shift-right",
       "source": "./plugins/qa-shift-right",
-      "description": "Production-side QA per ISTQB-canonical shift right (\"a test approach to test a system continuously in production\"): 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 2 agents (production-tester, observability-to-test).",
+      "description": "Production-side QA per ISTQB-canonical shift right (\"a test approach to test a system continuously in production\"): 3 skills (synthetic-monitor-author, prod-canary-validator, feature-flag-experiment-validator) and 1 agent (observability-to-test).",
       "strict": true,
       "category": "operations-resilience"
     },
@@ -153,7 +153,7 @@
     {
       "name": "qa-process",
       "source": "./plugins/qa-process",
-      "description": "Test process + methodology: 9 skills + 4 agents covering risk-based testing, DoD, test strategy, blameless post-mortems, release readiness, smoke gating, pyramid analysis, TDD coaching, E2E budgets, test-quality coaching.",
+      "description": "Test process + methodology: 19 skills + 6 agents covering risk-based testing, DoD, test strategy, blameless post-mortems, release readiness, smoke gating, pyramid analysis, TDD coaching, E2E budgets.",
       "strict": true,
       "category": "foundations"
     },

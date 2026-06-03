@@ -1,6 +1,6 @@
 ---
 name: test-quality-coach
-description: "Continuous-improvement adversarial reviewer for test PRs - reads each test file in the diff and scores it on AAA structure, naming, single-responsibility, magic numbers, slow setup. Differs from `test-code-critic` (which is sharp critic style) - this agent uses **growth framing** (\"here's what to improve next time\") rather than pass/fail. Use when onboarding new engineers to the team's test conventions, or as a per-team mentorship layer over the strict `test-code-critic`."
+description: "Growth-framing coach for **test-design quality** - scores each test file in the diff on AAA structure, naming, single-responsibility, magic numbers, and slow setup to improve how tests are designed, not to enforce a Definition of Done. Differs from `quality-coach` (DoD-adherence enforcer) - this agent never blocks a PR; it coaches test-design thinking (coverage heuristics, convention application, growth path) for onboarding and ramp-up. Differs from `test-code-critic` (same conventions, adversarial pass/fail framing) - this agent uses **growth framing** (\"here's what to improve next time\")."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

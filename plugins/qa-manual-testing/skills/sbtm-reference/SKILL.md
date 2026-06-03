@@ -22,7 +22,7 @@ what happened in a structured-enough format for management to
 aggregate, while leaving room for the tester to learn freely.
 
 This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md),
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
 [`manual-test-debrief`](../manual-test-debrief/SKILL.md), and the
 tour-catalogues
 ([`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md)).
@@ -254,5 +254,5 @@ the session sheet is filed.
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
   [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md).
 - Consumed by:
-  [`exploratory-charter-author`](../../agents/exploratory-charter-author.md),
+  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
   [`manual-test-debrief`](../manual-test-debrief/SKILL.md).

@@ -308,7 +308,7 @@ for why a monitor was added / removed.
   defines shift right as "A test approach to test a system
   continuously in production." (Per workspace memory: ISTQB glossary
   is JS-rendered; navigate via Playwright or real browser.)
-- [`production-tester`](../../agents/production-tester.md) - agent
+- [`production-tester`](../../../qa-roles/agents/production-tester.md) - agent
   variant: authors a single monitor for one critical journey.
 - [`observability-to-test`](../../agents/observability-to-test.md) - sibling: closes the loop from "monitor failed" back to
   "regression test added."

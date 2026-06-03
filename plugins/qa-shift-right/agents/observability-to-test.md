@@ -130,7 +130,7 @@ The agent **refuses** to:
 - **Bug repro structuring** →
   [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md).
 - **Production monitor creation** →
-  [`production-tester`](production-tester.md).
+  [`production-tester`](../../qa-roles/agents/production-tester.md).
 - **Verifying the new test runs on relevant PRs** →
   [`regression-suite-selector`](../../qa-test-impact-analysis/skills/regression-suite-selector/SKILL.md).
 

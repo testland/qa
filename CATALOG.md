@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 568 components**
+**77 plugins · 575 components**
 
 ## Foundations
 
@@ -12,8 +12,8 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components |
 |---|---|---:|
 | [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents |
-| [qa-process](plugins/qa-process/) | 1.5.0 | 19 skills + 7 agents |
-| [qa-roles](plugins/qa-roles/) | 1.0.0 | 0 skills + 3 agents |
+| [qa-process](plugins/qa-process/) | 1.5.0 | 19 skills + 6 agents |
+| [qa-roles](plugins/qa-roles/) | 1.1.0 | 0 skills + 14 agents |
 | [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents |
@@ -52,7 +52,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 | [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) | 1.0.0 | 12 skills + 1 agents |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.1.0 | 6 skills + 1 agents |
 | [qa-charts-dataviz](plugins/qa-charts-dataviz/) | 1.0.0 | 3 skills + 0 agents |
-| [qa-data-quality](plugins/qa-data-quality/) | 1.0.0 | 5 skills + 3 agents |
+| [qa-data-quality](plugins/qa-data-quality/) | 1.0.0 | 5 skills + 2 agents |
 | [qa-localization](plugins/qa-localization/) | 1.0.0 | 4 skills + 0 agents |
 | [qa-modern-web](plugins/qa-modern-web/) | 1.0.0 | 5 skills + 0 agents |
 | [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 1.0.0 | 4 skills + 0 agents |
@@ -88,7 +88,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | [qa-load-testing](plugins/qa-load-testing/) | 1.1.0 | 9 skills + 2 agents |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.1.0 | 6 skills + 0 agents |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.0.0 | 3 skills + 4 agents |
-| [qa-shift-right](plugins/qa-shift-right/) | 1.0.0 | 3 skills + 2 agents |
+| [qa-shift-right](plugins/qa-shift-right/) | 1.0.0 | 3 skills + 1 agents |
 
 ## AI & specialized
 
@@ -129,7 +129,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.1.0 | 5 skills + 0 agents |
 | [qa-iac](plugins/qa-iac/) | 1.0.0 | 5 skills + 2 agents |
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.1.0 | 11 skills + 1 agents |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.1.0 | 11 skills + 0 agents |
 
 ## Alphabetical index
 

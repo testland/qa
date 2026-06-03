@@ -25,7 +25,7 @@ Do **not** use this skill when:
 
 - A written story / AC exists - use [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) (faster and more traceable to source).
 - The feature is not yet deployed (no running surface to probe) - escalate the documentation gap; heuristic test design without **any** observable surface is divination, not testing.
-- The task is open-ended exploration / learning - use [`exploratory-charter-author`](../../../qa-manual-testing/agents/exploratory-charter-author.md) for a session charter instead.
+- The task is open-ended exploration / learning - use [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) for a session charter instead.
 
 ## Step 1 - Probe the live feature
 

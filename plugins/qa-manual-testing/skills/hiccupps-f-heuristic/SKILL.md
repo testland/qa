@@ -21,7 +21,7 @@ to consult before deciding "no oracle ⇒ probably not a bug" or
 "oracle says X ⇒ behaviour Y is wrong."
 
 This skill is a **pure reference** consumed by the
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
 and by individual testers during sessions
 ([`sbtm-reference`](../sbtm-reference/SKILL.md)).
 
@@ -219,4 +219,4 @@ high-priority.
   [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md),
   [`sbtm-reference`](../sbtm-reference/SKILL.md).
 - Consumed by:
-  [`exploratory-charter-author`](../../agents/exploratory-charter-author.md).
+  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
