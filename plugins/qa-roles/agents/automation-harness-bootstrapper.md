@@ -37,7 +37,7 @@ canonical layout:
 |-------------|----------------------------|-----------------|-----------------------|
 | Playwright  | `playwright.config.ts`     | `tests/e2e/`    | `tests/fixtures/`     |
 | Cypress     | `cypress.config.ts`        | `cypress/e2e/`  | `cypress/support/`    |
-| Selenium    | `jest.config.ts` + `wdio`  | `tests/e2e/`    | `tests/support/`      |
+| Selenium    | `wdio.conf.ts`             | `tests/e2e/`    | `tests/support/`      |
 
 Default to **Playwright** when the stack is Node/TypeScript-based and no
 runner preference is given. Per the Playwright configuration docs
@@ -239,7 +239,7 @@ spec files, or to **js-test-author** (qa-unit-tests-js) for unit layer coverage.
 | Scaffolding with `git add .` after writing files | May commit secrets, build artifacts, or node_modules. | Stage named files only; prompt user to review. |
 | Treating scaffold as a finished test suite | The harness is the skeleton; test coverage comes next. | Hand off to `*-test-author` agents after scaffolding. |
 
-**Scope boundary — scaffolds new, doesn't audit existing:** this agent
+**Scope boundary - scaffolds new, doesn't audit existing:** this agent
 generates the harness when no E2E infrastructure exists. For repos with
 an existing framework, use `framework-architecture-auditor` (qa-test-review).
 For writing the actual tests once the harness is in place, use
@@ -249,13 +249,13 @@ For writing the actual tests once the harness is in place, use
 ## Limitations
 
 - **Runner coverage:** Playwright and Cypress emit full skeletons;
-  Selenium/WebDriverIO emits a partial skeleton (config + base class only —
+  Selenium/WebDriverIO emits a partial skeleton (config + base class only -
   no CI snippet, as CI integration varies by grid provider).
 - **Auth flows not scaffolded:** login fixtures, session storage, and
   OAuth helpers are out of scope; add them after the base harness is in place.
 - **Non-Node stacks:** Python (pytest-playwright), Java (Playwright Java),
   and C# (Playwright .NET) produce a folder tree and base-class template but
-  no `npm init` / CI snippet — those require stack-specific commands.
+  no `npm init` / CI snippet - those require stack-specific commands.
 
 ## Hand-off targets
 
