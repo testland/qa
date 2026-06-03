@@ -26,7 +26,7 @@ roadmap of what we want to land next.
 
 ## Current coverage snapshot
 
-The catalog ships **77 plugins / 568 components** across seven groupings:
+The catalog ships **77 plugins / 575 components** across seven groupings:
 **foundations** (process / environment / data / reporting / impact /
 roles / review / management / hiring), **functional testing** (API / BDD
 / E2E / mobile / desktop / embedded / game / contract / mutation /
@@ -548,6 +548,8 @@ a new top-level plugin. Listed in plugin order for easy scanning.
 - `engineering-manager-quality-coach` (A3) — coach EM on quality
   conversations in 1:1s.
 - `release-manager-cutover-checklist` (S3) — extends release-engineer.
+  Note: `release-cutover-coordinator` (agent, shipped) partially covers this;
+  a dedicated S3 skill would add structured checklist scaffolding.
 
 ### qa-test-data
 

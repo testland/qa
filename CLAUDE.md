@@ -1,7 +1,7 @@
 # Claude Code instructions — testland-qa
 
 This is **testland-qa**, a Pattern B2 multi-plugin Claude Code marketplace.
-77 plugins / 568 components. Every component is rating-gated before merge.
+77 plugins / 575 components. Every component is rating-gated before merge.
 
 If you're using Claude Code to contribute to this repo, this file tells you
 what conventions to follow.
@@ -114,7 +114,7 @@ make all
 
 | Pattern | Canonical plugin |
 |---|---|
-| S1 wrappers + multi-archetype agent set | [`plugins/qa-data-quality/`](plugins/qa-data-quality/) (5 skills S1 + 3 agents A1/A2/A3) |
+| S1 wrappers + multi-archetype agent set | [`plugins/qa-data-quality/`](plugins/qa-data-quality/) (5 skills S1 + 2 agents) |
 | Per-tool S1 + A3 unifier | [`plugins/qa-iac/`](plugins/qa-iac/), [`plugins/qa-sast/`](plugins/qa-sast/) |
 | Per-tool S1 only (no agent) | [`plugins/qa-api-testing/`](plugins/qa-api-testing/), [`plugins/qa-property-based/`](plugins/qa-property-based/) |
 | Test-only A3 family | [`plugins/qa-test-review/`](plugins/qa-test-review/) |
