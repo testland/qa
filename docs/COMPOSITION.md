@@ -73,7 +73,6 @@ material that lives in skills.
 | Agent | Preloads |
 |---|---|
 | `data-anomaly-triager` | `dbt-testing`, `great-expectations`, `soda-checks` |
-| `data-quality-engineer` | `dbt-testing`, `great-expectations`, `soda-checks`, `data-quality-conventions` |
 | `schema-diff-reviewer` | `dbt-testing` |
 
 ### qa-flake-triage
@@ -101,9 +100,7 @@ material that lives in skills.
 
 ### qa-manual-testing
 
-| Agent | Preloads |
-|---|---|
-| `exploratory-charter-author` | (none) |
+*(no agents with preloads)*
 
 ### qa-mutation-testing
 
@@ -118,15 +115,18 @@ material that lives in skills.
 | `release-readiness-checker` | `definition-of-done`, `smoke-suite-gate` |
 | `risk-based-test-planner` | `risk-matrix`, `test-strategy-author` |
 | `risk-based-test-selector` | `risk-matrix` |
-| `test-quality-coach` | `test-code-conventions` *(qa-test-review)* |
 
 ### qa-roles
 
 | Agent | Preloads |
 |---|---|
+| `data-quality-engineer` | `dbt-testing`, `great-expectations`, `soda-checks`, `data-quality-conventions` |
+| `exploratory-charter-author` | (none) |
+| `production-tester` | `synthetic-monitor-author` *(qa-shift-right)* |
 | `quality-coach` | (none) |
 | `release-engineer` | (none) |
 | `test-architect` | `regression-suite-selector` *(qa-test-impact-analysis)* |
+| `test-quality-coach` | `test-code-conventions` *(qa-test-review)* |
 
 ### qa-shift-left
 
@@ -142,7 +142,6 @@ material that lives in skills.
 | Agent | Preloads |
 |---|---|
 | `observability-to-test` | `synthetic-monitor-author` |
-| `production-tester` | `synthetic-monitor-author` |
 
 ### qa-test-data
 
@@ -194,7 +193,7 @@ Most agents preload skills from their own plugin. The 20 documented cross-plugin
 |---|---|---|---|
 | `qa-ai-assisted/ai-test-curator` | `qa-test-review` | `test-code-conventions` | AI-generated tests are reviewed against the same hygiene catalog as human-authored ones. |
 | `qa-ai-assisted/ai-test-shallow-coverage-critic` | `qa-test-review` | `test-code-conventions` | Shallow-coverage critic uses the same hygiene catalog as test-code-critic. |
-| `qa-process/test-quality-coach` | `qa-test-review` | `test-code-conventions` | The coach uses the same conventions reference (continuous-improvement framing vs `test-code-critic`'s sharp-critic framing). |
+| `qa-roles/test-quality-coach` | `qa-test-review` | `test-code-conventions` | The coach uses the same conventions reference (continuous-improvement framing vs `test-code-critic`'s sharp-critic framing). |
 | `qa-roles/test-architect` | `qa-test-impact-analysis` | `regression-suite-selector` | Architect reads change-set shape; needs the selector's heuristics for pyramid recommendations. |
 | `qa-test-review/framework-architecture-auditor` | `qa-test-data` | `test-data-patterns` | Cross-framework audit covers fixture / data-factory patterns documented in qa-test-data. |
 | `qa-web-e2e/playwright-codegen-reviewer` | `qa-test-review` | `test-code-conventions` | Codegen output is reviewed against the same selector / assertion hygiene rules. |
