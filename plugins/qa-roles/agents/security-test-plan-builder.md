@@ -60,7 +60,7 @@ chapter structure below is taken from the v4.0.3 GitHub source fetched
 | Deserialization | V5 Validation, Sanitization and Encoding | V5.5 Deserialization Prevention [(ASVS v4.0.3 ch. V5)][asvs-v5] |
 | Access control | V4 Access Control | V4.1 General Access Control Design, V4.2 Operation Level Access Control, V4.3 Other Access Control Considerations [(ASVS v4.0.3 ch. V4)][asvs-v4] |
 | API / web service | V13 API and Web Service | V13.1 Generic Web Service Security, V13.2 RESTful Web Service, V13.4 GraphQL [(ASVS v4.0.3 ch. V13)][asvs-v13] |
-| Cryptography | V6 Stored Cryptography | V6.2 Algorithms, V6.3 Random Values, V6.4 Secret Management [(ASVS v4.0.3 ch. V6, via ASVS v4.0.3 en/ tree)][asvs-root] |
+| Cryptography | V6 Stored Cryptography | V6.2 Algorithms, V6.3 Random Values, V6.4 Secret Management [(ASVS v4.0.3 ch. V6)][asvs-v6] |
 | Data protection | V8 Data Protection | V8.1 General Data Protection, V8.2 Client-side Data Protection, V8.3 Sensitive Private Data [(ASVS v4.0.3 ch. V8)][asvs-v8] |
 
 ASVS assigns three compliance levels (L1 = baseline, L2 = standard, L3 =
@@ -186,10 +186,34 @@ Manual:
 Automated:
 - API schema diff: new fields/endpoints added without documented auth requirements.
 
+### Cryptography surface
+
+Manual:
+- Verify changed code uses only approved algorithms (AES-256, RSA-2048+, SHA-256+) and rejects weak ciphers ([ASVS V6.2][asvs-v6]; [A02:2021][top10-a02]; WSTG 4.9 [(WSTG stable TOC)][wstg-stable]).
+- Confirm TLS enforced on all changed transport paths - no plaintext fallback ([ASVS V6.2][asvs-v6]; [A02:2021][top10-a02]).
+- Inspect changed key/IV generation: IVs unique per operation, not hard-coded or reused ([ASVS V6.3][asvs-v6]).
+- Confirm cryptographic keys/secrets are not embedded in source or config; key storage uses a vault or secrets manager ([ASVS V6.4][asvs-v6]).
+
+Automated:
+- SAST rule: flag hard-coded key/IV literals and use of MD5/SHA-1/DES in changed files.
+- SAST rule: flag `random()` / `Math.random()` in security contexts (must use CSPRNG per [ASVS V6.3][asvs-v6]).
+
+### Data protection surface
+
+Manual:
+- Review changed model/schema fields for sensitive data (PII, credentials, tokens) stored in plaintext; verify encryption at rest ([ASVS V8.1][asvs-v8]; [A02:2021][top10-a02]).
+- Confirm changed logging paths do not write sensitive values (passwords, tokens, PII) to log outputs ([ASVS V8.1][asvs-v8]).
+- Verify changed cache layers set appropriate TTLs and do not persist sensitive data past its required lifetime ([ASVS V8.2][asvs-v8]).
+- For changed endpoints returning PII, confirm response minimization - only fields required for the use case ([ASVS V8.3][asvs-v8]).
+
+Automated:
+- SAST rule: flag log statements in changed files concatenating model fields without a redaction/masking helper.
+- SAST rule: flag changed serializers exposing sensitive fields without an explicit exclude annotation.
+
 ## Output format
 
 ```markdown
-## Security test plan — `<repo>` PR #<number> — `<sha>`
+## Security test plan - `<repo>` PR #<number> - `<sha>`
 
 **Surfaces touched:** authentication | session management | input handling | ...
 **ASVS target level:** L1 | L2
@@ -245,22 +269,11 @@ When tests above produce findings, route to:
 
 ## Limitations
 
-- **Path-heuristic surface detection is approximate.** A utility module touched
-  by the diff may indirectly affect an auth flow not flagged by path analysis.
-  Supplement with a brief human read of the diff context.
-- **ASVS level selection is conservative.** The agent defaults to L1. If the
-  application is classified as high-assurance (financial, medical), the operator
-  should override to L2/L3 before running the checklist.
-- **No dynamic analysis.** The agent produces a plan; it does not run probes.
-  Automated items require a running environment and a DAST/fuzzing tool.
-- **No threat model.** The agent maps surfaces to known categories; it does not
-  reason about attacker motivation, likelihood, or business impact. A threat
-  model is a separate upstream input.
-- **WSTG test numbering uses stable-version section numbers (4.x.y)** as
-  fetched from `owasp.org/www-project-web-security-testing-guide/stable/`
-  2026-06-03. The formal `WSTG-<CAT>-<NN>` shorthand IDs exist in the standard
-  but the stable site does not enumerate them per-test on index pages; section
-  numbers are used here as the stable, fetched reference.
+- **Path-heuristic surface detection is approximate.** A utility module in the diff may indirectly affect an auth flow not flagged by path analysis; supplement with a brief human read.
+- **ASVS level selection is conservative.** Defaults to L1. For high-assurance apps (financial, medical), override to L2/L3.
+- **No dynamic analysis.** Automated items are specifications; the agent does not execute SAST, DAST, or fuzzing tools.
+- **No threat model.** Surfaces are mapped to known categories; attacker motivation, likelihood, and impact are out of scope.
+- **WSTG section numbers (4.x.y)** are from the stable site fetched 2026-06-03. The formal `WSTG-<CAT>-<NN>` per-test shorthand IDs are not enumerated on the stable index pages; section numbers are the stable, fetched reference.
 
 ## Hand-off targets
 
@@ -277,64 +290,67 @@ and `plugins/qa-dast/agents/dast-finding-triager.md` (Glob verified 2026-06-03).
 ## References
 
 [asvs-root]: https://github.com/OWASP/ASVS/tree/v4.0.3/4.0/en
-  "OWASP ASVS v4.0.3 chapter index — fetched 2026-06-03"
+  "OWASP ASVS v4.0.3 chapter index - fetched 2026-06-03"
 
 [asvs-v2]: https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V2-Authentication.md
-  "ASVS v4.0.3 V2 Authentication — fetched 2026-06-03; sections V2.1 Password Security, V2.2 General Authenticator Security, V2.4 Credential Storage, V2.5 Credential Recovery, V2.7 Out of Band Verifier, V2.10 Service Authentication"
+  "ASVS v4.0.3 V2 Authentication - fetched 2026-06-03; sections V2.1 Password Security, V2.2 General Authenticator Security, V2.4 Credential Storage, V2.5 Credential Recovery, V2.7 Out of Band Verifier, V2.10 Service Authentication"
 
 [asvs-v3]: https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V3-Session-management.md
-  "ASVS v4.0.3 V3 Session Management — fetched 2026-06-03; sections V3.2 Session Binding, V3.3 Session Termination, V3.4 Cookie-based Session Management, V3.7 Defenses Against Session Management Exploits"
+  "ASVS v4.0.3 V3 Session Management - fetched 2026-06-03; sections V3.2 Session Binding, V3.3 Session Termination, V3.4 Cookie-based Session Management, V3.7 Defenses Against Session Management Exploits"
 
 [asvs-v4]: https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V4-Access-Control.md
-  "ASVS v4.0.3 V4 Access Control — fetched 2026-06-03; sections V4.1 General Access Control Design, V4.2 Operation Level Access Control, V4.3 Other Access Control Considerations"
+  "ASVS v4.0.3 V4 Access Control - fetched 2026-06-03; sections V4.1 General Access Control Design, V4.2 Operation Level Access Control, V4.3 Other Access Control Considerations"
 
 [asvs-v5]: https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md
-  "ASVS v4.0.3 V5 Validation, Sanitization and Encoding — fetched 2026-06-03; sections V5.1 Input Validation, V5.2 Sanitization and Sandboxing, V5.3 Output Encoding and Injection Prevention, V5.5 Deserialization Prevention"
+  "ASVS v4.0.3 V5 Validation, Sanitization and Encoding - fetched 2026-06-03; sections V5.1 Input Validation, V5.2 Sanitization and Sandboxing, V5.3 Output Encoding and Injection Prevention, V5.5 Deserialization Prevention"
+
+[asvs-v6]: https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x14-V6-Cryptography.md
+  "OWASP ASVS v4.0.3 V6 Cryptography (V6.1 Data Classification, V6.2 Algorithms, V6.3 Random Values, V6.4 Secret Management) - fetched 2026-06-03"
 
 [asvs-v8]: https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x16-V8-Data-Protection.md
-  "ASVS v4.0.3 V8 Data Protection — fetched 2026-06-03; sections V8.1 General Data Protection, V8.2 Client-side Data Protection, V8.3 Sensitive Private Data"
+  "ASVS v4.0.3 V8 Data Protection - fetched 2026-06-03; sections V8.1 General Data Protection, V8.2 Client-side Data Protection, V8.3 Sensitive Private Data"
 
 [asvs-v12]: https://github.com/OWASP/ASVS/raw/v4.0.3/4.0/en/0x20-V12-Files-Resources.md
-  "ASVS v4.0.3 V12 Files and Resources — fetched 2026-06-03; sections V12.1 File Upload, V12.2 File Integrity, V12.3 File Execution, V12.4 File Storage, V12.6 SSRF Protection"
+  "ASVS v4.0.3 V12 Files and Resources - fetched 2026-06-03; sections V12.1 File Upload, V12.2 File Integrity, V12.3 File Execution, V12.4 File Storage, V12.6 SSRF Protection"
 
 [asvs-v13]: https://github.com/OWASP/ASVS/raw/v4.0.3/4.0/en/0x21-V13-API.md
-  "ASVS v4.0.3 V13 API and Web Service — fetched 2026-06-03; sections V13.1 Generic Web Service Security, V13.2 RESTful Web Service, V13.4 GraphQL"
+  "ASVS v4.0.3 V13 API and Web Service - fetched 2026-06-03; sections V13.1 Generic Web Service Security, V13.2 RESTful Web Service, V13.4 GraphQL"
 
 [top10-a01]: https://owasp.org/Top10/A01_2021-Broken_Access_Control/
-  "OWASP Top 10 2021 A01:2021 - Broken Access Control — fetched 2026-06-03"
+  "OWASP Top 10 2021 A01:2021 - Broken Access Control - fetched 2026-06-03"
 
 [top10-a02]: https://owasp.org/Top10/A02_2021-Cryptographic_Failures/
-  "OWASP Top 10 2021 A02:2021 - Cryptographic Failures — fetched 2026-06-03"
+  "OWASP Top 10 2021 A02:2021 - Cryptographic Failures - fetched 2026-06-03"
 
 [top10-a03]: https://owasp.org/Top10/A03_2021-Injection/
-  "OWASP Top 10 2021 A03:2021 - Injection — fetched 2026-06-03"
+  "OWASP Top 10 2021 A03:2021 - Injection - fetched 2026-06-03"
 
 [top10-a04]: https://owasp.org/Top10/A04_2021-Insecure_Design/
-  "OWASP Top 10 2021 A04:2021 - Insecure Design — fetched 2026-06-03"
+  "OWASP Top 10 2021 A04:2021 - Insecure Design - fetched 2026-06-03"
 
 [top10-a05]: https://owasp.org/Top10/A05_2021-Security_Misconfiguration/
-  "OWASP Top 10 2021 A05:2021 - Security Misconfiguration — fetched 2026-06-03"
+  "OWASP Top 10 2021 A05:2021 - Security Misconfiguration - fetched 2026-06-03"
 
 [top10-a07]: https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/
-  "OWASP Top 10 2021 A07:2021 - Identification and Authentication Failures — fetched 2026-06-03"
+  "OWASP Top 10 2021 A07:2021 - Identification and Authentication Failures - fetched 2026-06-03"
 
 [top10-a08]: https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/
-  "OWASP Top 10 2021 A08:2021 - Software and Data Integrity Failures — fetched 2026-06-03"
+  "OWASP Top 10 2021 A08:2021 - Software and Data Integrity Failures - fetched 2026-06-03"
 
 [top10-a10]: https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/
-  "OWASP Top 10 2021 A10:2021 - Server-Side Request Forgery (SSRF) — fetched 2026-06-03"
+  "OWASP Top 10 2021 A10:2021 - Server-Side Request Forgery (SSRF) - fetched 2026-06-03"
 
 [wstg-stable]: https://owasp.org/www-project-web-security-testing-guide/stable/
-  "OWASP WSTG stable table of contents — fetched 2026-06-03; categories WSTG-INFO (4.1), WSTG-CONF (4.2), WSTG-IDNT (4.3), WSTG-AUTHN (4.4), WSTG-AUTHZ (4.5), WSTG-SESS (4.6), WSTG-INPV (4.7), WSTG-CRYP (4.9), WSTG-APIT (4.12)"
+  "OWASP WSTG stable table of contents - fetched 2026-06-03; categories WSTG-INFO (4.1), WSTG-CONF (4.2), WSTG-IDNT (4.3), WSTG-AUTHN (4.4), WSTG-AUTHZ (4.5), WSTG-SESS (4.6), WSTG-INPV (4.7), WSTG-CRYP (4.9), WSTG-APIT (4.12)"
 
 [wstg-authn]: https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/04-Authentication_Testing/README
-  "WSTG stable section 4.4 Authentication Testing — fetched 2026-06-03; 4.4.3 Weak Lock Out Mechanism, 4.4.4 Bypassing Authentication Schema, 4.4.9 Weak Password Change or Reset, 4.4.10 Weaker Authentication in Alternative Channel"
+  "WSTG stable section 4.4 Authentication Testing - fetched 2026-06-03; 4.4.3 Weak Lock Out Mechanism, 4.4.4 Bypassing Authentication Schema, 4.4.9 Weak Password Change or Reset, 4.4.10 Weaker Authentication in Alternative Channel"
 
 [wstg-authz]: https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/05-Authorization_Testing/README
-  "WSTG stable section 4.5 Authorization Testing — fetched 2026-06-03; 4.5.2 Bypassing Authorization Schema, 4.5.3 Privilege Escalation, 4.5.4 Insecure Direct Object References"
+  "WSTG stable section 4.5 Authorization Testing - fetched 2026-06-03; 4.5.2 Bypassing Authorization Schema, 4.5.3 Privilege Escalation, 4.5.4 Insecure Direct Object References"
 
 [wstg-sess]: https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/06-Session_Management_Testing/README
-  "WSTG stable section 4.6 Session Management Testing — fetched 2026-06-03; 4.6.2 Cookies Attributes, 4.6.3 Session Fixation, 4.6.6 Logout Functionality, 4.6.9 Session Hijacking"
+  "WSTG stable section 4.6 Session Management Testing - fetched 2026-06-03; 4.6.2 Cookies Attributes, 4.6.3 Session Fixation, 4.6.6 Logout Functionality, 4.6.9 Session Hijacking"
 
 [wstg-inpv]: https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/07-Input_Validation_Testing/README
-  "WSTG stable section 4.7 Input Validation Testing — fetched 2026-06-03; 4.7.1 Reflected XSS, 4.7.2 Stored XSS, 4.7.5 SQL Injection, 4.7.7 XML Injection, 4.7.11 Code Injection/LFI/RFI, 4.7.12 Command Injection, 4.7.18 SSTI, 4.7.19 SSRF"
+  "WSTG stable section 4.7 Input Validation Testing - fetched 2026-06-03; 4.7.1 Reflected XSS, 4.7.2 Stored XSS, 4.7.5 SQL Injection, 4.7.7 XML Injection, 4.7.11 Code Injection/LFI/RFI, 4.7.12 Command Injection, 4.7.18 SSTI, 4.7.19 SSRF"
