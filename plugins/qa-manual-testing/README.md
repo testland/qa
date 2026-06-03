@@ -12,7 +12,6 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | Skill | [bug-bash-facilitator](skills/bug-bash-facilitator/SKILL.md) | Build-an-X structured multi-tester session: pre-bash kit + cohort charters + real-time triage board + scoring + post-bash cluster debrief. |
 | Skill | [uat-script-author](skills/uat-script-author/SKILL.md) | Build-an-X UAT scripts in stakeholder-readable business language: pre-conditions + journey steps + expected outcomes + AC verification + sign-off. |
 | Skill | [manual-test-debrief](skills/manual-test-debrief/SKILL.md) | Build-an-X session debrief in PROOF format (Past, Results, Outlook, Obstacles, Feelings) + 3-bucket time accounting + cross-session aggregation. |
-| Agent | [exploratory-charter-author](agents/exploratory-charter-author.md) | Builder/scaffolder for SBTM charter cards: mission + areas + time-box + suggested tours + PROOF deliverables + out-of-scope. |
 
 ## Install
 

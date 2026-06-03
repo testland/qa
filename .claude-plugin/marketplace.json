@@ -118,7 +118,7 @@
     {
       "name": "qa-manual-testing",
       "source": "./plugins/qa-manual-testing",
-      "description": "Manual scripted + exploratory testing: 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief) and 1 agent (exploratory-charter-author). Covers SBTM, Whittaker's seven tours, UAT, bug bashes, and PROOF debriefs.",
+      "description": "Manual scripted + exploratory testing: 6 skills (manual-test-script-author, test-execution-checklist, tour-based-explorer-prompt, bug-bash-facilitator, uat-script-author, manual-test-debrief). Covers SBTM, Whittaker's seven tours, UAT, bug bashes, and PROOF debriefs.",
       "strict": true,
       "category": "tooling"
     },

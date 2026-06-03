@@ -33,6 +33,6 @@ the repository root for the rubric.
 
 - The `quality-manager` role's rubric leans on [`risk-matrix-recommender`](../qa-process/agents/risk-matrix-recommender.md)'s "decision-support with traceability" framing for the risk-prioritisation competency.
 - The `qa-automation-engineer` and `sdet` roles' rubrics anchor on [`test-code-conventions`](../qa-test-review/skills/test-code-conventions/SKILL.md) for the test-code-quality dimension.
-- The `manual-qa-engineer` role's rubric anchors on [`bug-report-template`](../qa-bug-repro/skills/bug-report-template/SKILL.md) and [`exploratory-charter-author`](../qa-manual-testing/agents/exploratory-charter-author.md) for the defect-lifecycle and exploratory-testing dimensions.
+- The `manual-qa-engineer` role's rubric anchors on [`bug-report-template`](../qa-bug-repro/skills/bug-report-template/SKILL.md) and [`exploratory-charter-author`](../qa-roles/agents/exploratory-charter-author.md) for the defect-lifecycle and exploratory-testing dimensions.
 
 These cross-references keep hiring rubrics anchored on the same conventions the team already uses for execution.

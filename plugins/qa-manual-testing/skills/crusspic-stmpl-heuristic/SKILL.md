@@ -20,7 +20,7 @@ quality model) but offers a more practitioner-friendly mnemonic
 form that fits in an exploratory tester's working memory.
 
 This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
 when shaping a session's evaluation lens, and by the
 [`product-risk-register-builder`](../../../qa-process/skills/product-risk-register-builder/SKILL.md)
 when categorising risks (see its "Quality characteristic" step).
@@ -293,5 +293,5 @@ Verdict: cleared for release.
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
   [`sbtm-reference`](../sbtm-reference/SKILL.md).
 - Consumed by:
-  [`exploratory-charter-author`](../../agents/exploratory-charter-author.md),
+  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
   [`product-risk-register-builder`](../../../qa-process/skills/product-risk-register-builder/SKILL.md).

@@ -21,7 +21,7 @@ Published in the Rapid Software Testing curriculum (
 and referenced widely in Bach + Bolton teaching material.
 
 This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
 and senior testers building system models.
 
 ## When to use
@@ -257,4 +257,4 @@ on edge cases where Postgres + Stripe + Redis disagree about state."
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
   [`sbtm-reference`](../sbtm-reference/SKILL.md).
 - Consumed by:
-  [`exploratory-charter-author`](../../agents/exploratory-charter-author.md).
+  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).

@@ -30,7 +30,7 @@ This skill builds the kit + structure + scoring + debrief.
   for new joiners.
 
 If the goal is a single tester running a charter, use
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
 directly. Bug bashes are the multi-tester / scaled version.
 
 ## Step 1 - Pre-bash kit (1 week before)
@@ -243,7 +243,7 @@ triage) but it broadens coverage.
 
 ## References
 
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - provides the per-cohort charters this bash composes.
+- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - provides the per-cohort charters this bash composes.
 - [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md) - the heuristics menu the cohorts pick from.
 - [`manual-test-debrief`](../manual-test-debrief/SKILL.md) - the
   PROOF debrief format the bug-bash debrief inherits from.

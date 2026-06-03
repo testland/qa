@@ -19,7 +19,7 @@ in the testing community as the practitioner-emergent vocabulary for
 exploration.
 
 This skill is a **pure reference** - the charter author
-([`exploratory-charter-author`](../../agents/exploratory-charter-author.md))
+([`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md))
 and the tester pick which tours to apply per session.
 
 ## When to use
@@ -230,7 +230,7 @@ time to apply any of them well.
 ## Capturing tour findings
 
 Per the PROOF debrief in
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
 Step 5, each tour produces:
 
 - **Past:** which paths the tour covered.
@@ -273,6 +273,6 @@ Step 5, each tour produces:
   source-fetch convention, the book is the primary reference;
   community summaries (developsense.com tour-and-testing post) are
   secondary.
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - consumer of this reference.
+- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - consumer of this reference.
 - [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md) - canonical payloads for the Bad-data tour.
 - [`feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md) - automated complement for the Configuration tour.

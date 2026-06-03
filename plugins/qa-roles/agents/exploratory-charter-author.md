@@ -46,7 +46,7 @@ tester focus drops past that window), 120 min (wide-area). >120 min:
 split the charter.
 
 **Suggested tours** from
-[`tour-based-explorer-prompt`](../skills/tour-based-explorer-prompt/SKILL.md):
+[`tour-based-explorer-prompt`](../../qa-manual-testing/skills/tour-based-explorer-prompt/SKILL.md):
 Feature tour, Money tour, Configuration tour, Garbage-collector's
 tour, Bad-data tour (per
 [`malicious-payload-bank`](../../qa-test-data/skills/malicious-payload-bank/SKILL.md)).
@@ -56,7 +56,7 @@ The charter suggests; the tester picks.
 
 Per SBTM, sessions deliver a structured debrief (Past, Results,
 Outlook, Obstacles, **Feelings**) into the
-[`manual-test-debrief`](../skills/manual-test-debrief/SKILL.md)
+[`manual-test-debrief`](../../qa-manual-testing/skills/manual-test-debrief/SKILL.md)
 template. The Feelings field is intentional - the tester's
 qualitative judgment is signal no automated report captures.
 
@@ -83,7 +83,7 @@ discover usability issues, edge cases, and integration risks.
 (per Step 2)
 
 ## Deliverables
-- PROOF debrief at session end ([`manual-test-debrief`](../skills/manual-test-debrief/SKILL.md)).
+- PROOF debrief at session end ([`manual-test-debrief`](../../qa-manual-testing/skills/manual-test-debrief/SKILL.md)).
 - Defects in `BUG-*` format via [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md).
 - Coverage notes: which areas had time, which didn't.
 
@@ -126,7 +126,7 @@ The agent **refuses** to:
 | Charter without PROOF debrief deliverable | Required PROOF debrief (Step 3). |
 | Re-issuing a charter for an already-explored area | Review last debrief; refuse if no incremental scope. |
 | Time-box >120 min | Cap 120 min; split (Step 2). |
-| Confusing charter with script | Use [`manual-test-script-author`](../skills/manual-test-script-author/SKILL.md) for scripts. |
+| Confusing charter with script | Use [`manual-test-script-author`](../../qa-manual-testing/skills/manual-test-script-author/SKILL.md) for scripts. |
 
 ## Limitations
 
@@ -146,7 +146,7 @@ The agent **refuses** to:
   PDF at `satisfice.com/download/session-based-test-management`;
   PROOF debrief, time-box rationale, three-bucket time accounting
   (fetched 2026-05-05).
-- [`tour-based-explorer-prompt`](../skills/tour-based-explorer-prompt/SKILL.md),
-  [`manual-test-debrief`](../skills/manual-test-debrief/SKILL.md),
+- [`tour-based-explorer-prompt`](../../qa-manual-testing/skills/tour-based-explorer-prompt/SKILL.md),
+  [`manual-test-debrief`](../../qa-manual-testing/skills/manual-test-debrief/SKILL.md),
   [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md),
-  [`manual-test-script-author`](../skills/manual-test-script-author/SKILL.md).
+  [`manual-test-script-author`](../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).

@@ -21,7 +21,7 @@ catalogues *what to compare against* (oracles), SFDPOT catalogues
 "how to think about a session" pair.
 
 This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md)
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
 and by testers mid-session.
 
 ## When to use
@@ -214,4 +214,4 @@ toolkit.
   [`sbtm-reference`](../sbtm-reference/SKILL.md),
   [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md).
 - Consumed by:
-  [`exploratory-charter-author`](../../agents/exploratory-charter-author.md).
+  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).

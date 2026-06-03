@@ -24,7 +24,7 @@ step-table for spreadsheet review or Gherkin for BDD-aware teams.
 
 For session-based exploratory tests (where the script doesn't
 predetermine steps), see
-[`exploratory-charter-author`](../../agents/exploratory-charter-author.md).
+[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
 
 ## When to use
 
@@ -244,7 +244,7 @@ for the structured bug-reproduction package.
   animation looked broken").
 - **Coverage of edge cases.** Manual scripts cover what the author
   imagined; exploratory testing catches what the author didn't - 
-  pair with [`exploratory-charter-author`](../../agents/exploratory-charter-author.md).
+  pair with [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
 
 ## References
 
@@ -253,7 +253,7 @@ for the structured bug-reproduction package.
   depending on project context."
 - [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits Gherkin from a story; this skill turns Gherkin
   into a tester-runnable script.
-- [`exploratory-charter-author`](../../agents/exploratory-charter-author.md) - sibling: when the test is **not** scripted; charter-driven
+- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - sibling: when the test is **not** scripted; charter-driven
   exploration instead.
 - [`uat-script-author`](../uat-script-author/SKILL.md) - sibling:
   same shape, scoped to UAT.
