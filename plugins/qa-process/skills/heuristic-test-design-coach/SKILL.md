@@ -17,7 +17,7 @@ The exploratory-testing literature converged on four canonical heuristic test-de
 - A legacy / brownfield codebase has no test coverage and you are onboarding cold.
 - A competitor or reverse-engineered product is under review (security audit, market intel).
 - A spec exists but is so thin that heuristic supplementation is needed alongside it.
-- A team's exploratory charter (per [`exploratory-charter-author`](../../agents/exploratory-charter-author.md)) needs a structured prompt set instead of pure intuition.
+- A team's exploratory charter (per [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)) needs a structured prompt set instead of pure intuition.
 
 Do **not** use this skill alone to produce a deliverable. It is the **input** to a downstream authoring skill (`test-case-from-live-feature`, `exploratory-charter-author`, `manual-test-script-author`). The catalog tells you *what to look at*; the downstream skill turns observations into a matrix or charter.
 
