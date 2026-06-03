@@ -3,8 +3,13 @@
 
 Outputs a markdown report with severity-tagged findings:
 - CRITICAL: D1 / D2 / D7 hard violations (would block merge under cutover)
-- IMPORTANT: D5 / D8 hygiene violations (Windows paths, multi-option, etc.)
-- ADVISORY: signals worth LLM review (long bodies, dense option lists)
+- IMPORTANT/INFO: D8 Windows-path hygiene (allowlist for vendor-canonical paths)
+- ADVISORY: skill bodies over Anthropic's 500-line line
+
+Only mechanical, low-false-positive checks live here. Two noisy heuristics
+(multi-option-no-default, first-person-body-opener) were removed 2026-06-03 —
+both fired ~100% false positives on legitimate content and duplicated checks
+already enforced on the description by validate.py.
 """
 import re, os, glob, json
 from collections import defaultdict
@@ -149,24 +154,6 @@ def audit():
             else:
                 findings["D8_windows_paths_allowlisted"].append({"path": p})
 
-        # ADVISORY: first-person body opener (heuristic; known to false-positive
-        # on adversarial-reviewer agents). The frontmatter `description:` field
-        # is the actual D3/D4 enforcement point — validate.sh catches
-        # "You are…"/"I help…" there. This body-level check is retained as a
-        # triage signal but NOT a violation: Anthropic's canonical code-reviewer
-        # agent body opens "You are a senior code reviewer…", the established
-        # pattern for adversarial-reviewer agents.
-        body_start = body.strip()[:200].lower()
-        if body_start.startswith("you are ") or body_start.startswith("i help ") or body_start.startswith("i am "):
-            findings["D3_first_person_opener"].append({"path": p})
-
-        # ADVISORY: multi-option paralysis signal — body lists 4+ tools/options without "Default:" / "Recommended:" / "Use [X]"
-        # heuristic: find "or" lists of 3+ proper-noun-ish tokens within a small window
-        option_pattern = re.compile(r"(?:[A-Z][\w-]+(?:\.[a-z]+)?(?:\s*/\s*|\s*,\s*|\s+or\s+)){3,}[A-Z][\w-]+", re.MULTILINE)
-        option_hits = option_pattern.findall(body)
-        if option_hits and not re.search(r"(?i)(default[:\s]|recommended[:\s]|use\s+\*\*|primary\s+choice)", body):
-            findings["D8_multi_option_no_default"].append({"path": p, "sample": option_hits[0][:120]})
-
         # ADVISORY: body over Anthropic's "keep SKILL.md body under 500 lines"
         if body_lines > SKILL_BODY_ADVISORY and not is_agent:
             findings["D2_body_over_500"].append({"path": p, "body_lines": body_lines})
@@ -205,8 +192,6 @@ if __name__ == "__main__":
         ("D7_missing_evals", d7_sev),
         ("D8_windows_paths", d8_sev),
         ("D8_windows_paths_allowlisted", "INFO (vendor-canonical Windows install paths — see allowlist in d8-audit.py)"),
-        ("D3_first_person_opener", "ADVISORY (adversarial-reviewer agents legitimately open \"You are…\")"),
-        ("D8_multi_option_no_default", "ADVISORY"),
         ("D2_body_over_500", "ADVISORY"),
         ("UNPARSEABLE", "CRITICAL"),
     ]
