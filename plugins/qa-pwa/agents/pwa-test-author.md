@@ -13,7 +13,6 @@ skills:
   - pwa-install-flow-reference
 rating: 30
 d6: 4
-d7: 5
 ---
 
 A per-surface PWA test authoring agent - emits ONE new Playwright spec file targeting one

@@ -13,7 +13,6 @@ skills:
   - hardware-in-loop-reference
 rating: 26
 d6: 4
-d7: 4
 ---
 
 A per-callable embedded C/C++ test-authoring agent - emits one new test file in the

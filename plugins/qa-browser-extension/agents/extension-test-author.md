@@ -12,7 +12,6 @@ skills:
   - manifest-v3-test-surface-reference
 rating: 27
 d6: 4
-d7: 4
 ---
 
 A per-surface browser-extension test authoring agent - emits ONE new Playwright spec file

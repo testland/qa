@@ -12,7 +12,6 @@ skills:
   - toxiproxy-chaos
 rating: 28
 d6: 4
-d7: 4
 ---
 
 A workflow-orchestrator agent - drives a full chaos drill across four stages (pre-flight → experiment → blast-radius monitor → recovery validation). Composes the chosen chaos-runner skill (Chaos Mesh / Litmus / Gremlin / Toxiproxy) for the injection step and the experiment-author skill for the YAML / scenario emission.

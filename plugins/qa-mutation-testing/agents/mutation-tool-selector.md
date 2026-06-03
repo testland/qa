@@ -11,7 +11,6 @@ skills:
   - mull-mutation
 rating: 27
 d6: 4
-d7: 4
 ---
 
 A tool-selection agent that picks the right mutation testing tool by language, never by team preference.

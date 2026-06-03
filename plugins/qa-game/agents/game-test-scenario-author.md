@@ -13,7 +13,6 @@ skills:
   - platform-cert-overview-reference
 rating: 27
 d6: 4
-d7: 4
 ---
 
 A per-scenario game-test authoring agent - emits one new scenario file in the detected

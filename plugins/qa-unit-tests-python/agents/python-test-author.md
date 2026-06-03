@@ -12,7 +12,6 @@ skills:
   - parameterized-test-generator
 rating: 26
 d6: 4
-d7: 4
 ---
 
 A per-callable test-authoring agent that emits one new Python unit test file - never modifies existing tests, never fabricates attributes the spec did not name.

@@ -6,15 +6,14 @@ Windows MSYS2 and share frontmatter parsing with `validate.py`.
 
 Enforces, per component (skill or agent):
   - rating: present, integer, 21 <= value <= 30
-            (v2.0 30-point sub-total of D1+D2+D3+D4+D5+D6; importable bar at 21)
+            (the D1-D6 sum on the 0-30 scale; merge bar at 21)
   - d6:     when present, integer 0-5; d6 == 0 is a hard reject
             (citation theater — see docs/REVIEWER_CHECKLIST.md "D6")
 
-Framework version note (v2.0 vs v4.0):
-  The active framework is v4.0 (8 dimensions, 0-40 scale, importable bar
-  28/40). The `rating:` field intentionally stays on the v2.0 0-30 sub-total
-  during the v4.0 shadow window. D7 (eval coverage) and D8 (best-practices
-  adherence) are scored separately by `d8-audit.py`.
+The framework is the six-dimension review rubric (D1-D6): a human scores each
+dimension and the sum lands in `rating`, with `d6` surfaced as the one hard
+floor. There is no d7/d8 — mechanical content checks live in content-audit.py,
+not as scored dimensions.
 
 Output format is preserved byte-for-byte from the bash implementation so
 that any external grep-based assertions keep working unchanged.
@@ -55,9 +54,9 @@ def check_component(file: str, exit_holder: list[int]) -> None:
 
     rv = int(rating)
     if rv < 21:
-        fail(file, f"rating {rating} < 21 (importable bar on v2.0 30-point scale)", exit_holder)
+        fail(file, f"rating {rating} < 21 (merge bar; rating is the 0-30 D1-D6 sum)", exit_holder)
     if rv > 30:
-        fail(file, f"rating {rating} > 30 (max on v2.0 scale)", exit_holder)
+        fail(file, f"rating {rating} > 30 (max of the 0-30 D1-D6 sum)", exit_holder)
 
     if d6:
         if not re.match(r"^[0-9]+$", d6):

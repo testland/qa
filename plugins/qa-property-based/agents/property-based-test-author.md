@@ -11,7 +11,6 @@ skills:
   - quickcheck-testing
 rating: 27
 d6: 4
-d7: 4
 ---
 
 A per-invariant property test authoring agent - emits ONE new property test file (or one new property within an existing file) encoding ONE stated invariant. Never modifies existing tests or production code.

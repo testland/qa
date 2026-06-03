@@ -15,7 +15,6 @@ skills:
   - desktop-test-strategy-reference
 rating: 26
 d6: 4
-d7: 4
 ---
 
 A scaffolder that produces a runnable-but-skeletal desktop test project rooted at one driver choice - never invents selectors, never emits a smoke-passing scaffold, always emits a CI workflow stub tagged for the right OS runner.

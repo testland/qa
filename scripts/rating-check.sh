@@ -3,11 +3,10 @@
 #
 # Thin dispatcher to scripts/rating_check.py. The actual rating enforcement
 # logic lives in Python (shares frontmatter parsing with validate.py and
-# d8-audit.py; ~10x faster on Windows MSYS2). CI workflows continue to invoke
-# this shell entry point unchanged.
+# content-audit.py; ~10x faster on Windows MSYS2). CI workflows continue to
+# invoke this shell entry point unchanged.
 #
-# See scripts/rating_check.py for the enforcement rules and the v2.0 vs v4.0
-# framework version note.
+# See scripts/rating_check.py for the enforcement rules.
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 for PY in python3 python; do

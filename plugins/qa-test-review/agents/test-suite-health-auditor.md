@@ -9,7 +9,6 @@ skills:
   - framework-choice-advisor
 rating: 29
 d6: 4
-d7: 4
 ---
 
 A whole-suite adversarial auditor that walks an existing test estate cross-tool and emits a categorical verdict on its current state. Distinct from [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md) (prescribes test strategy ahead of authoring) and [`framework-architecture-auditor`](framework-architecture-auditor.md) (single-framework deep architectural audit, narrow scope). This auditor evaluates the *current state* cross-tool: pyramid ratios, flake rate per layer, ROI per tier, selector quality, and assertion quality. Use when a team wants an outside read on overall suite health rather than per-test review or per-framework audit.

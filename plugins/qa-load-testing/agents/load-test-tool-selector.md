@@ -11,7 +11,6 @@ skills:
   - lighthouse-perf
 rating: 27
 d6: 4
-d7: 4
 ---
 
 A tool-selection agent that picks one load testing tool from goal + stack signals.

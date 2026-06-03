@@ -182,9 +182,9 @@ def check_yaml_frontmatter(file: str, exit_holder: list[int]) -> None:
     # Rule 6: not "You are..." / "I help..."
     # Scoped to the frontmatter `description:` field only — the body is
     # allowed to address the agent in second person, which is the Anthropic-
-    # canonical pattern for A3 adversarial reviewers. Extending this check
-    # to the body would false-positive 11 valid A3 components in the current
-    # corpus. See d8-audit.py's D3_first_person_opener (ADVISORY).
+    # canonical pattern for adversarial-reviewer agents ("You are a senior
+    # reviewer…"). Extending this check to the body would false-positive those
+    # legitimate reviewer agents.
     desc_lower = desc.lower()
     if desc_lower.startswith("you are") or desc_lower.startswith("i help"):
         fail(
@@ -228,7 +228,7 @@ def check_empty_command_body(file: str, exit_holder: list[int]) -> None:
 
 
 def iter_components(root: str):
-    """Skills, agents, commands. Excludes `*/agents/<name>/evals/*` files."""
+    """Skills, agents, and commands."""
     patterns = [
         os.path.join(root, "plugins", "*", "skills", "*", "SKILL.md"),
         os.path.join(root, "plugins", "*", "agents", "*.md"),
@@ -238,8 +238,6 @@ def iter_components(root: str):
     for pat in patterns:
         for p in glob.glob(pat):
             norm = p.replace("\\", "/")
-            if "/agents/" in norm and "/evals/" in norm:
-                continue
             if norm not in seen:
                 seen.add(norm)
                 yield p

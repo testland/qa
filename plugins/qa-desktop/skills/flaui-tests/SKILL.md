@@ -3,7 +3,6 @@ name: flaui-tests
 description: "Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3). Covers the `FlaUI.Core` / `FlaUI.UIA2` / `FlaUI.UIA3` NuGet packages, `Application.Launch` / `Application.Attach` lifecycles, `ConditionFactory` + `FindFirstDescendant` locator patterns, `Retry` waits, and xUnit / NUnit / MSTest harness integration. Use when the test stack is C# / .NET-first and the team wants idiomatic in-process UIA calls rather than the HTTP/JSON wire protocol of `winappdriver` or the Appium proxy layer of `appium-windows-driver`."
 rating: 25
 d6: 4
-d7: 1
 keywords:
   - flaui
   - uia

@@ -13,7 +13,6 @@ skills:
   - parameterized-test-generator
 rating: 27
 d6: 4
-d7: 4
 ---
 
 A per-screen / per-flow mobile test authoring agent - emits ONE new test file targeting one mobile screen, flow, or behavior. Never modifies existing tests or app source.

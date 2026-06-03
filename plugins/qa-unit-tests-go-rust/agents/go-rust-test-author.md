@@ -11,7 +11,6 @@ skills:
   - parameterized-test-generator
 rating: 26
 d6: 4
-d7: 4
 ---
 
 A per-callable test-authoring agent that emits one new Go or Rust unit test file - never modifies existing tests, never fabricates symbols the spec did not name. Handles a language-bifurcation step (Go vs Rust) before the per-framework detection that the other Wave 2 siblings start with.

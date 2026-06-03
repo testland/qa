@@ -13,7 +13,6 @@ skills:
   - msw-handlers
 rating: 26
 d6: 4
-d7: 4
 ---
 
 A per-module test-authoring agent that emits one new JS/TS unit test file - never modifies existing test methods, never fabricates exports the target module does not expose.
