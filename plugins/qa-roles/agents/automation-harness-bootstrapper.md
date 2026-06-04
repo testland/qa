@@ -77,7 +77,7 @@ typed action methods.
 
 The Selenium project's Page Object Models documentation ([selenium-pom][sp])
 states that "page objects themselves should never make verifications or
-assertions — this is part of your test and should always be within the test's
+assertions. This is part of your test and should always be within the test's
 code, never in a page object." The base class enforces this by omitting any
 `expect` call.
 
@@ -282,7 +282,7 @@ After the harness is in place:
   HTML"; page objects "should allow a software client to do anything and see
   anything that a human can"; avoid including assertions.
 - [selenium-pom][sp] - SeleniumHQ, "Page object models" (fetched 2026-06-03):
-  "page objects themselves should never make verifications or assertions — this
+  "page objects themselves should never make verifications or assertions. This
   is part of your test and should always be within the test's code, never in a
   page object"; selectors centralized as "a single repository for the services
   or operations the page offers."
