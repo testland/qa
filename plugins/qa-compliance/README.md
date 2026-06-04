@@ -20,6 +20,8 @@ operations, federal contractors).
 | Skill | [pci-dss-scope-checker](skills/pci-dss-scope-checker/SKILL.md) | Build-an-X for PCI DSS v4.0 scope verification: CDE boundary, segmentation, no-SAD-storage, encryption at rest + in transit, access control, scope-reduction strategies |
 | Skill | [audit-trail-test-author](skills/audit-trail-test-author/SKILL.md) | Build-an-X for compliance-grade audit logs: required-events catalog, structured format, hash-chain or signed-batch tamper-evidence, immutability + retention, PII redaction, cross-system aggregation |
 | Agent | [compliance-readiness-reviewer](agents/compliance-readiness-reviewer.md) | Adversarial readiness reviewer per framework; per-criterion coverage matrix (covered/partial/missing/N/A); refuses "ready" if missing required criterion; refuses N/A without justification + approver + re-review-date |
+| Skill | [iso27001-test-patterns](skills/iso27001-test-patterns/SKILL.md) | Pure reference: ISO/IEC 27001:2022 Annex A control themes and testable technical controls. |
+| Skill | [compliance-evidence-generator](skills/compliance-evidence-generator/SKILL.md) | Build auditor-facing evidence packages: control-to-test mapping, evidence matrix, chain of custody. |
 
 ## Install
 

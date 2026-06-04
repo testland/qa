@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-data-privacy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "PII detection, masking, and synthetic data generation for test environments: 5 skills (pii-categories-reference, data-masking-techniques-reference, presidio-pii-detection, faker-synthetic-data, synthea-healthcare-data) + 1 build skill (pii-masking-pipeline-builder) and 1 agent (pii-leak-critic).",
   "author": {
     "name": "testland",

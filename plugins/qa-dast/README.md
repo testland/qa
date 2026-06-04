@@ -19,6 +19,8 @@ reading source code. Every scanner skill includes a
 | Skill | [nightvision-dast](skills/nightvision-dast/SKILL.md) | White-box-assisted DAST tracing findings to source; OpenAPI / Postman / GraphQL targets; Interactive Logins / Header / Cookie / TOTP auth |
 | Skill | [dast-baseline-runner](skills/dast-baseline-runner/SKILL.md) | Build-an-X for layered DAST cadence: ZAP baseline (PR) → ZAP full + NightVision (nightly) → Burp deep (per-release); baseline-finding ratchet; coverage measurement |
 | Agent | [dast-finding-triager](agents/dast-finding-triager.md) | Adversarial unifier across all 3 sister scanners; deduplicates by `(URL, method, parameter, finding-class)`; waiver enforcement; refuses pass with unwaived critical findings |
+| Skill | [nuclei-dast](skills/nuclei-dast/SKILL.md) | Nuclei template-based HTTP scanning; JSONL output feeds dast-finding-triager. |
+| Skill | [dast-auth-helper](skills/dast-auth-helper/SKILL.md) | Authenticated DAST setup: ZAP auth scripts, session management, OAuth/CSRF handling. |
 
 ## Install
 
