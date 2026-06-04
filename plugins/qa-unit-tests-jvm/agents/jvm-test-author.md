@@ -9,6 +9,7 @@ skills:
   - kotest-tests
   - scalatest
   - spock-tests
+  - assertj
   - parameterized-test-generator
 rating: 26
 d6: 4

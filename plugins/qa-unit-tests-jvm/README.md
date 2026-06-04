@@ -15,6 +15,8 @@ Per-framework lifecycle scope. Does **not** duplicate
 | Skill | [testng-tests](skills/testng-tests/SKILL.md) | Test method dependencies; groups; suite XML; legacy + Selenium-tradition |
 | Skill | [scalatest](skills/scalatest/SKILL.md) | Scala-native; multi-style (FlatSpec/FunSuite/WordSpec); ScalaCheck pairing |
 | Agent | [jvm-test-author](agents/jvm-test-author.md) | Authors one JVM unit test per spec; detects JUnit 5 / TestNG / Kotest / Spock / ScalaTest from pom.xml / build.gradle[.kts] / build.sbt; pairs with AssertJ when present |
+| Agent | [jvm-framework-selector](agents/jvm-framework-selector.md) | Reads pom.xml/build.gradle/build.sbt + language and recommends one JVM test framework (JUnit 5 / TestNG / Kotest / Spock / ScalaTest). |
+| Skill | [assertj](skills/assertj/SKILL.md) | AssertJ fluent assertions for JVM tests: assertThat, collection/exception/soft assertions, recursive comparison, custom assertions. |
 
 ## Install
 

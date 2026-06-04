@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-go-rust",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Go + Rust unit testing per-framework wrappers: 4 skills (go-test, ginkgo-tests, cargo-test, rstest-tests) plus 1 A2 agent (go-rust-test-author) that authors one unit test per spec by first detecting the language (go.mod vs Cargo.toml) then the existing framework. Per-framework lifecycle (configure / run / coverage / CI).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-go-rust",

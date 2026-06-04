@@ -14,6 +14,8 @@ Game engine testing (Unity, Unreal, Godot), platform certification overview (Son
 | skill | multiplayer-state-machine-coverage | Build a coverage matrix for connect / authority-handoff / disconnect / reconnect / host-migration paths across Unity NGO, Unreal replication, and Mirror Networking; cross with latency / loss / drop fault matrix; map to Xbox XR-067 / XR-074 / XR-064 / XR-045 / XR-015 cert clauses; emit go / no-go gate |
 | skill | gameplay-recording-replay-skill | Build a deterministic gameplay record/replay artefact for regression tests, bug repros, or spectator/esports - Unity InputEventTrace, Unreal Replay System (DemoRec / DemoPlay / NetworkReplayStreamer), Godot community deterministic-RNG + InputEvent pattern. CI loop hashes final state vs baseline; replay header pins build hash + format version |
 | agent | game-test-scenario-author | Authors one game-engine test scenario per spec - detects engine from project markers (Unity ProjectSettings, Unreal *.uproject, Godot project.godot), picks Unity Test Framework / Unreal Automation / Godot GUT, pairs with gameplay-recording-replay artefacts when present |
+| Agent | [game-test-scaffolder](agents/game-test-scaffolder.md) | Detects the engine and emits a new test directory structure (Unity EditMode/PlayMode, Unreal, Godot GUT). |
+| Agent | [platform-cert-checklist-author](agents/platform-cert-checklist-author.md) | Translates a target console/store platform into a certification checklist mapped to test categories. |
 
 ## Install
 

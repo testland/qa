@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 620 components**
+**77 plugins · 630 components**
 
 ## Foundations
 
@@ -31,14 +31,14 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-bdd](plugins/qa-bdd/) | 1.2.0 | 8 skills + 2 agents |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents |
 | [qa-desktop](plugins/qa-desktop/) | 1.2.0 | 9 skills + 4 agents |
-| [qa-embedded](plugins/qa-embedded/) | 1.1.0 | 7 skills + 1 agents |
-| [qa-game](plugins/qa-game/) | 1.1.0 | 7 skills + 1 agents |
-| [qa-mobile-native](plugins/qa-mobile-native/) | 1.1.0 | 10 skills + 2 agents |
+| [qa-embedded](plugins/qa-embedded/) | 1.2.0 | 7 skills + 3 agents |
+| [qa-game](plugins/qa-game/) | 1.2.0 | 7 skills + 3 agents |
+| [qa-mobile-native](plugins/qa-mobile-native/) | 1.2.0 | 10 skills + 3 agents |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.1.0 | 5 skills + 2 agents |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.0 | 5 skills + 3 agents |
-| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.1.0 | 4 skills + 1 agents |
+| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.2.0 | 5 skills + 2 agents |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.1.0 | 5 skills + 1 agents |
-| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.1.0 | 5 skills + 1 agents |
+| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.2.0 | 6 skills + 2 agents |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.1.0 | 4 skills + 2 agents |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.1.0 | 4 skills + 1 agents |
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.5.0 | 9 skills + 5 agents |
@@ -57,7 +57,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 | [qa-modern-web](plugins/qa-modern-web/) | 1.1.0 | 5 skills + 1 agents |
 | [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 1.1.0 | 4 skills + 1 agents |
 | [qa-pwa](plugins/qa-pwa/) | 1.1.0 | 7 skills + 1 agents |
-| [qa-visual-regression](plugins/qa-visual-regression/) | 1.1.0 | 7 skills + 2 agents |
+| [qa-visual-regression](plugins/qa-visual-regression/) | 1.2.0 | 7 skills + 3 agents |
 
 ## Security & compliance
 

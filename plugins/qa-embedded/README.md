@@ -14,6 +14,8 @@ Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, 
 | skill | ceedling-build-runner | Ceedling build orchestration: project.yml schema, ceedling new / test:all / gcov:all / release tasks, JUnit XML + gcov plugins, CI wiring |
 | skill | qemu-system-test-runner | QEMU system emulation for embedded tests: mps2-* / virt / lm3s6965evb boards, -kernel ELF, ARM semihosting, GDB stub, QMP, CI integration |
 | agent | embedded-test-author | Authors one embedded C/C++ unit test per spec - detects Ceedling / CMake+GoogleTest / bare Makefile from the project root, picks Unity / GoogleTest / Ceedling-Unity, pairs with QEMU for cross-compiled runs |
+| Agent | [embedded-framework-selector](agents/embedded-framework-selector.md) | Recommends an embedded test framework + execution path (host / QEMU / on-target) from the project's toolchain. |
+| Agent | [embedded-test-scaffolder](agents/embedded-test-scaffolder.md) | Generates a from-zero embedded test-project skeleton (Ceedling project.yml / GoogleTest CMakeLists). |
 
 ## Install
 
