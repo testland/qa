@@ -18,6 +18,7 @@ webhook delivery (Standard Webhooks signing + replay defense).
 | Skill | [sms-test-author](skills/sms-test-author/SKILL.md) | Build-an-X for SMS via Twilio Test Credentials + Magic Numbers; segment counting (GSM-7 vs UCS-2); rate limit; STOP/HELP keyword handling; sender-type per geography |
 | Skill | [push-notification-test-author](skills/push-notification-test-author/SKILL.md) | Build-an-X across Web Push (RFC 8030+VAPID) + APNs + FCM; subscription handshake; payload + click-action; 410-cleanup; silent vs alert |
 | Skill | [webhook-delivery-tester](skills/webhook-delivery-tester/SKILL.md) | Build-an-X per Standard Webhooks: HMAC-SHA256 signing, retry+backoff, replay window, idempotent processing, vendor sample payloads (Stripe/Twilio/SendGrid/GitHub/GitLab) |
+| Agent | [notification-delivery-critic](agents/notification-delivery-critic.md) | Adversarial critic scanning notification-send code (email/SMS/push/webhook) for delivery-reliability defects: missing idempotency, absent bounce/unsubscribe handlers, missing DKIM/SPF/DMARC alignment, missing retry/backoff, absent dead-letter handling; emits BLOCK or PASS |
 
 ## Install
 
