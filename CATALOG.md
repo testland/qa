@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 600 components**
+**77 plugins · 604 components**
 
 ## Foundations
 
@@ -49,7 +49,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 
 | Plugin | Version | Components |
 |---|---|---:|
-| [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) | 1.0.0 | 12 skills + 1 agents |
+| [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) | 1.1.0 | 12 skills + 2 agents |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.1.0 | 6 skills + 1 agents |
 | [qa-charts-dataviz](plugins/qa-charts-dataviz/) | 1.1.0 | 3 skills + 1 agents |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.0 | 5 skills + 2 agents |
@@ -129,7 +129,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.0 | 5 skills + 1 agents |
 | [qa-iac](plugins/qa-iac/) | 1.0.0 | 5 skills + 2 agents |
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.1.1 | 11 skills + 0 agents |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.2.0 | 11 skills + 3 agents |
 
 ## Alphabetical index
 

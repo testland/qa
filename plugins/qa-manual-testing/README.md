@@ -17,6 +17,9 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | Skill | [sfdpot-heuristic](skills/sfdpot-heuristic/SKILL.md) | Pure-reference catalog of Bach's SFDPOT ("San Francisco Depot") product-element coverage heuristic. |
 | Skill | [fcc-cuts-vids-heuristic](skills/fcc-cuts-vids-heuristic/SKILL.md) | Pure-reference catalog of Bach's FCC CUTS VIDS mnemonic for modelling a system under test. |
 | Skill | [crusspic-stmpl-heuristic](skills/crusspic-stmpl-heuristic/SKILL.md) | Pure-reference catalog of Bach's CRUSSPIC STMPL twelve quality-criteria heuristic. |
+| Agent | [charter-coach](agents/charter-coach.md) | Turns a feature + risk areas into a well-formed SBTM exploratory charter (mission, areas, HICCUPPS-F oracles, SFDPOT elements, tours). |
+| Agent | [session-debrief-coach](agents/session-debrief-coach.md) | Reviews a completed SBTM session sheet: PROOF completeness, TBS time-split health, and the recommended next charter. |
+| Agent | [test-script-quality-critic](agents/test-script-quality-critic.md) | Adversarial review of authored manual scripts for vague preconditions, bundled steps, missing expected results, and imperative-where-declarative slots. |
 
 ## Install
 

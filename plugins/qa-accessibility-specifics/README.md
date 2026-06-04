@@ -14,6 +14,7 @@ Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, con
 | Skill | [a11y-violation-gate](skills/a11y-violation-gate/SKILL.md) | CI gate with ratchet pattern: fail on new violations vs. baseline; aggregate axe / pa11y / Lighthouse / WAVE / IBM Equal Access. |
 | Skill | [wcag-checklist-builder](skills/wcag-checklist-builder/SKILL.md) | Per-archetype WCAG 2.2 checklist generator (static / trigger / form / multi-state / overlay / composite / live region / layout). |
 | Agent | [accessibility-code-critic](agents/accessibility-code-critic.md) | Adversarial source-code review for `<div onclick>`, missing focus mgmt, color-only cues, ARIA misuse; cites WCAG SC + remediation. |
+| Agent | [screen-reader-test-executor](agents/screen-reader-test-executor.md) | Orchestrates a structured NVDA (Windows) / VoiceOver (macOS) manual test session - merges screen-reader-test-author scripts with wcag-checklist-builder checklists and emits a signed pass/fail session report. |
 | Skill | [axe-a11y](skills/axe-a11y/SKILL.md) | Run axe-core scans via JS API or @axe-core/playwright; tag-based WCAG selection; rule disable / per-element exclude. |
 | Skill | [pa11y-a11y](skills/pa11y-a11y/SKILL.md) | `pa11y` / `pa11y-ci` CLI runners; htmlcs + axe engines; WCAG2A/AA/AAA standard; multi-format reports. |
 | Skill | [lighthouse-a11y](skills/lighthouse-a11y/SKILL.md) | Lighthouse CI Accessibility category - `categories:accessibility` + per-audit overrides; pairs with lighthouse-perf. |
