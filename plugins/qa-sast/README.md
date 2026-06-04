@@ -21,6 +21,8 @@ shelf-ware (the team disables it, then forgets).
 | Skill | [bandit-python](skills/bandit-python/SKILL.md) | Python-specific SAST; 60+ rules across 7 categories (B1xx-B7xx); two-dimensional severity + confidence filtering; pyproject.toml config |
 | Skill | [gosec-go](skills/gosec-go/SKILL.md) | Go-specific SAST; 40+ rules (G101-G602); AST + SSA + taint analysis; integrated with golangci-lint |
 | Agent | [sast-finding-triager](agents/sast-finding-triager.md) | Adversarial unifier across all 5 sister scanners; deduplicates by `(file, line, normalized_cwe)`; waiver enforcement (`expires:` + `approved_by:` + `reason:` mandatory); refuses pass with unwaived critical findings |
+| Skill | [eslint-security-rules](skills/eslint-security-rules/SKILL.md) | ESLint security plugins (eslint-plugin-security + no-unsanitized) as the JS/TS first-party SAST layer. |
+| Skill | [pmd-apex-rules](skills/pmd-apex-rules/SKILL.md) | PMD Apex security ruleset for Salesforce Apex SAST. |
 
 ## Install
 

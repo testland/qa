@@ -20,6 +20,8 @@ medical-device guidance, and most enterprise supply-chain audits.
 | Skill | [spdx-format](skills/spdx-format/SKILL.md) | SPDX 2.3 + 3.0 spec reference: packages, files, relationships, licenses (canonical license-ID source); preferred by US Federal procurement |
 | Skill | [trivy-image](skills/trivy-image/SKILL.md) | Aqua Trivy all-in-one container scanner: vuln + secret + misconfig + license in one pass; `--ignore-unfixed` actionable filter; `.trivyignore` + VEX |
 | Agent | [vuln-prioritizer](agents/vuln-prioritizer.md) | Adversarial multi-scanner prioritizer (Grype + Trivy + Snyk + OSV-SBOM); CVSS + EPSS + KEV + VEX-status into Fix-Now/This-Sprint/Backlog/Accept-Risk; refuses to waive CISA KEV CVEs |
+| Skill | [sbom-diff](skills/sbom-diff/SKILL.md) | Diff two SBOMs to detect net-new / removed / version-changed components between releases. |
+| Skill | [vex-author](skills/vex-author/SKILL.md) | Author and validate OpenVEX documents (not_affected justifications) that vuln-prioritizer consumes. |
 
 ## Install
 

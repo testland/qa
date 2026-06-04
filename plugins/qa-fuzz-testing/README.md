@@ -18,6 +18,7 @@ Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-r
 | skill | [fuzz-toolkit-dispatcher](skills/fuzz-toolkit-dispatcher/SKILL.md) | Decision tree routing fuzz-target authoring per language |
 | agent | [fuzz-target-author](agents/fuzz-target-author.md) | Scaffold a fuzz target from a function signature (routed via dispatcher) |
 | agent | [fuzz-findings-critic](agents/fuzz-findings-critic.md) | Classify, deduplicate, and verdict crash artifacts from a fuzz campaign (ASan / UBSan / timeout / OOM) |
+| Skill | [crash-triage-reference](skills/crash-triage-reference/SKILL.md) | Pure reference: triaging fuzzer crashes (exploitability classification, stack-hash dedup, minimization). |
 
 ## Differentiation
 

@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 630 components**
+**77 plugins · 638 components**
 
 ## Foundations
 
@@ -67,11 +67,11 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 |---|---|---:|
 | [qa-compliance](plugins/qa-compliance/) | 1.0.0 | 6 skills + 1 agents |
 | [qa-dast](plugins/qa-dast/) | 1.0.0 | 4 skills + 1 agents |
-| [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.1.0 | 10 skills + 2 agents |
+| [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.2.0 | 11 skills + 2 agents |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.0.0 | 4 skills + 2 agents |
-| [qa-sast](plugins/qa-sast/) | 1.0.0 | 5 skills + 1 agents |
-| [qa-sbom](plugins/qa-sbom/) | 1.0.0 | 5 skills + 1 agents |
-| [qa-sca](plugins/qa-sca/) | 1.0.0 | 5 skills + 1 agents |
+| [qa-sast](plugins/qa-sast/) | 1.1.0 | 7 skills + 1 agents |
+| [qa-sbom](plugins/qa-sbom/) | 1.1.0 | 7 skills + 1 agents |
+| [qa-sca](plugins/qa-sca/) | 1.1.0 | 8 skills + 1 agents |
 | [qa-secrets](plugins/qa-secrets/) | 1.1.0 | 4 skills + 1 agents |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.0.0 | 6 skills + 1 agents |
 

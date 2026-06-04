@@ -22,6 +22,9 @@ third-party dependency security.
 | Skill | [renovate-config](skills/renovate-config/SKILL.md) | Multi-platform `renovate.json` reference (GitHub/GitLab/Bitbucket/Azure DevOps/Gitea); presets, packageRules, vulnerabilityAlerts, automergeSchedule |
 | Skill | [npm-pip-maven-audit](skills/npm-pip-maven-audit/SKILL.md) | Native package-manager audit commands: `npm audit`, `pip-audit`, `mvn dependency-check:check`, `cargo audit`, `bundle-audit` |
 | Agent | [sca-prioritizer](agents/sca-prioritizer.md) | Adversarial prioritizer combining CVSS + EPSS + CISA KEV + reachability heuristic; refuses to waive CVEs in CISA KEV; refuses waivers without `expires:` + `approved_by:` + `reason:` |
+| Skill | [cargo-audit-rust](skills/cargo-audit-rust/SKILL.md) | cargo-audit (RustSec advisory DB) for scanning Rust Cargo.lock dependencies. |
+| Skill | [bundle-audit-ruby](skills/bundle-audit-ruby/SKILL.md) | bundler-audit (ruby-advisory-db) for scanning Ruby Gemfile.lock dependencies. |
+| Skill | [reachability-analyzer](skills/reachability-analyzer/SKILL.md) | Dead-dependency / reachability analysis (depcheck, vulture, cargo-machete) to downrank unreachable vuln dependencies. |
 
 ## Install
 
