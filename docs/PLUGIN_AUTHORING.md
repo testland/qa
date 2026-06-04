@@ -19,40 +19,40 @@ Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
 
 Most well-scoped components fall into one of the shapes below. They are a
 **thinking aid for getting scope right, not a required label** — nothing in the
-rating gate or CI keys on them, and the `archetype:` frontmatter field is
-optional. If a draft matches none of these cleanly, the scope is probably
-wrong; reshape before authoring. (D2 scores scope *coherence*, not box-fitting.)
+rating gate or CI keys on them. If a draft matches none of these cleanly, the
+scope is probably wrong; reshape before authoring. (D2 scores scope
+*coherence*, not box-fitting.)
 
-### Skills (S1-S4)
+### Skill shapes
 
-- **S1 — file-format / domain skill.** Wraps a single tool, file format, or
+- **File-format / domain skill.** Wraps a single tool, file format, or
   bounded domain. Body has Authoring + Running + Parsing-results +
   CI-integration sections. Example shape: a Playwright-snapshots skill that
   covers authoring, running, updating, and CI gating in one skill.
-- **S2 — pure reference.** A stable reference catalog that the agent reads;
+- **Pure reference.** A stable reference catalog that the agent reads;
   no execution steps. Body is well-structured prose plus tables. Example
   shape: a flake-pattern catalog enumerating timing, ordering, shared-state,
   and locator-drift patterns with detection heuristics.
-- **S3 — build-an-X workflow.** Produces an artifact through a workflow with
+- **Build-an-X workflow.** Produces an artifact through a workflow with
   decision points. Body walks the workflow end-to-end. Example shape: a
   data-quality-gate skill that gathers expectation results, computes
   pass/fail vs thresholds, and emits a go/no-go.
-- **S4 — toolkit / dispatcher.** Lists sub-tools and routes between them.
+- **Toolkit / dispatcher.** Lists sub-tools and routes between them.
   Body is a decision tree. Example shape: a responsive-breakpoint-runner
   that dispatches to Percy / Chromatic / Playwright snapshots based on the
   active toolchain.
 
-### Agents (A1-A4)
+### Agent shapes
 
-- **A1 — read-only specialist.** Inspects state, emits findings; tools are
+- **Read-only specialist.** Inspects state, emits findings; tools are
   read-only (`Read`, `Grep`, `Glob`, narrowly-scoped `Bash(git diff *)`).
   Body has When-invoked, Output-format, Examples.
-- **A2 — action-taking task.** Produces files / changes; tools include
+- **Action-taking task.** Produces files / changes; tools include
   `Write`, `Edit`, broader `Bash`. Composes preloaded skills via the
   `skills:` frontmatter field.
-- **A3 — adversarial critic.** Classifies / rejects; framed adversarially.
+- **Adversarial critic.** Classifies / rejects; framed adversarially.
   Body emits a verdict + rationale + recommended action.
-- **A4 — builder / scaffolder.** Generates new artifacts or repository
+- **Builder / scaffolder.** Generates new artifacts or repository
   structure (templates, baseline configs, scaffolds). Body produces
   working artifacts the user can immediately commit.
 
@@ -80,7 +80,7 @@ For each component you intend to ship, write a one-line draft of:
 
 - Component type: `skill` or `agent`.
 - Name (kebab-case, distinct vs. nearest neighbors in the ecosystem).
-- Archetype: S1 / S2 / S3 / S4 (skills) or A1 / A2 / A3 / A4 (agents).
+- Shape: which common shape it matches (or note that it fits none, and reshape).
 - Draft description (the single-description test goes here).
 
 If a draft matches no common shape cleanly, the scope is probably wrong — reshape before authoring.

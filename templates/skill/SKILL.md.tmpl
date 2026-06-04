@@ -3,7 +3,6 @@ name: SKILL_NAME_KEBAB
 description: ONE_SENTENCE_THIRD_PERSON_ACTION. Use when SPECIFIC_TRIGGER_CONDITION.
 rating: 21
 d6: 1
-archetype: S1
 ---
 
 # SKILL_NAME_KEBAB
@@ -53,9 +52,6 @@ Authoring notes (delete before commit):
 - `d6` is the D6 Terminology Compliance sub-score (0-5). d6 = 0 is a hard
   reject (citation theater). When you cite ISTQB-canonical terms accurately
   and inline-link the canonical source, this is at least 3-4.
-- `archetype` is one of S1 (file-format/domain), S2 (pure reference),
-  S3 (build-an-X workflow), S4 (toolkit/dispatcher). See
-  docs/PLUGIN_AUTHORING.md "Archetypes" for definitions.
 - Body content must be drafted from canonical sources fetched at build
   time (WebFetch / Playwright); cite URLs inline at the point of each
   tool-specific claim. Sprinkled "References:" lists at the bottom

@@ -31,7 +31,6 @@ component shapes and authoring guidance.
 |---|---|---|
 | `name` | yes | kebab-case, matches the directory / filename |
 | `description` | yes | third-person, no "You are…" / "I help…" openers |
-| `archetype` | no | optional shape hint (S1-S4 / A1-A4); not gated — see "Common component shapes" |
 | `rating` | yes | integer 0–30; CI rejects below 21 |
 | `d6` | yes | integer 0–5; CI rejects 0 (citation theater) |
 | `keywords` | optional | array of strings; flows into marketplace search |
@@ -87,7 +86,7 @@ What still fails the bar today:
   differentiation axis.** The PR description must name the closest
   existing component(s) and state the axis on which the new one differs
   (tool, lifecycle stage, output shape, scope of inputs).
-  Cross-ref `qa-iac` for the per-tool S1 + A3 unifier model.
+  Cross-ref `qa-iac` for the per-tool wrapper + adversarial-critic unifier model.
 
 See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the differentiation
 requirement in full, and [`docs/ROADMAP.md`](docs/ROADMAP.md) for the
@@ -114,11 +113,11 @@ make all
 
 | Pattern | Canonical plugin |
 |---|---|
-| S1 wrappers + multi-archetype agent set | [`plugins/qa-data-quality/`](plugins/qa-data-quality/) (5 skills S1 + 2 agents) |
-| Per-tool S1 + A3 unifier | [`plugins/qa-iac/`](plugins/qa-iac/), [`plugins/qa-sast/`](plugins/qa-sast/) |
-| Per-tool S1 only (no agent) | [`plugins/qa-api-testing/`](plugins/qa-api-testing/), [`plugins/qa-property-based/`](plugins/qa-property-based/) |
-| Test-only A3 family | [`plugins/qa-test-review/`](plugins/qa-test-review/) |
-| Build-an-X S3 workflows | [`plugins/qa-resilience-drills/`](plugins/qa-resilience-drills/) |
+| Tool wrappers + a mixed agent set | [`plugins/qa-data-quality/`](plugins/qa-data-quality/) (5 skills + 2 agents) |
+| Per-tool wrappers + an adversarial-critic unifier | [`plugins/qa-iac/`](plugins/qa-iac/), [`plugins/qa-sast/`](plugins/qa-sast/) |
+| Per-tool wrappers only (no agent) | [`plugins/qa-api-testing/`](plugins/qa-api-testing/), [`plugins/qa-property-based/`](plugins/qa-property-based/) |
+| Adversarial-critic agent family | [`plugins/qa-test-review/`](plugins/qa-test-review/) |
+| Build-an-X workflow skills | [`plugins/qa-resilience-drills/`](plugins/qa-resilience-drills/) |
 
 ## Common pitfalls
 
@@ -138,5 +137,5 @@ make all
   "is a QA expert" is not.
 - **Reusing existing tools without differentiation**: if a similar component
   already exists in the marketplace or a peer repo, document the
-  differentiation axis in the description (e.g., "S1 wrapper + A3 unifier"
-  per the qa-iac model).
+  differentiation axis in the description (e.g., "per-tool wrapper +
+  adversarial-critic unifier" per the qa-iac model).

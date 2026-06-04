@@ -20,7 +20,6 @@ cat > "$FIXTURES/plugins/test-plugin/skills/valid-name/SKILL.md" <<'EOF'
 name: valid-name
 description: Demonstrates kebab-case naming and a third-person, action-oriented description that distinguishes itself from the other fixtures used by the validate.sh harness.
 rating: 22
-archetype: S1
 ---
 # Body
 Valid body content.

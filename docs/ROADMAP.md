@@ -67,17 +67,17 @@ traceability) before and after execution.
 
 **Suggested components:**
 
-| Type | Name | Archetype | Purpose |
-|---|---|---|---|
-| skill | testrail-integration | S1 | Author cases, run sets, post results via TestRail API |
-| skill | xray-jira-integration | S1 | Cases-as-Jira-issues, executions, requirements traceability |
-| skill | zephyr-scale-integration | S1 | Native Jira test repository (Zephyr Scale) |
-| skill | allure-testops-integration | S1 | Allure TestOps cases + runs |
-| skill | testlink-runner | S1 | Open-source test case management |
-| skill | qase-io-runner | S1 | Modern hosted TCM |
-| skill | traceability-matrix-builder | S3 | Build a requirements-to-tests matrix |
-| skill | test-case-anatomy-reference | S2 | Pre/steps/expected/post structure, parametric cases |
-| agent | test-case-quality-critic | A3 | Reject vague steps, missing preconditions, ambiguous expected results |
+| Type | Name | Purpose |
+|---|---|---|
+| skill | testrail-integration | Author cases, run sets, post results via TestRail API |
+| skill | xray-jira-integration | Cases-as-Jira-issues, executions, requirements traceability |
+| skill | zephyr-scale-integration | Native Jira test repository (Zephyr Scale) |
+| skill | allure-testops-integration | Allure TestOps cases + runs |
+| skill | testlink-runner | Open-source test case management |
+| skill | qase-io-runner | Modern hosted TCM |
+| skill | traceability-matrix-builder | Build a requirements-to-tests matrix |
+| skill | test-case-anatomy-reference | Pre/steps/expected/post structure, parametric cases |
+| agent | test-case-quality-critic | Reject vague steps, missing preconditions, ambiguous expected results |
 
 **Canonical sources to fetch:** TestRail / Xray / Zephyr Scale /
 Allure TestOps / Qase.io official docs; ISTQB Test Manager syllabus on
@@ -99,17 +99,17 @@ failing scenario); this is workflow / classification / lifecycle.
 
 **Suggested components:**
 
-| Type | Name | Archetype | Purpose |
-|---|---|---|---|
-| skill | bug-lifecycle-reference | S2 | New → triaged → in-progress → fixed → verified → closed states |
-| skill | severity-vs-priority-reference | S2 | The two axes, with worked examples |
-| skill | defect-taxonomy-istqb | S2 | ISTQB defect categories (functional, performance, usability, …) |
-| skill | jira-bug-workflow-runner | S1 | Author / triage / link bugs in Jira |
-| skill | linear-bug-workflow-runner | S1 | Same for Linear |
-| skill | github-issues-bug-workflow | S1 | Same for GitHub Issues with template enforcement |
-| skill | bug-report-from-failure | S3 | Build a complete bug report from a test failure + repro steps |
-| agent | duplicate-defect-finder | A1 | Search the bug tracker for likely duplicates before file |
-| agent | bug-report-critic | A3 | Reject bug reports missing repro, expected/actual, environment |
+| Type | Name | Purpose |
+|---|---|---|
+| skill | bug-lifecycle-reference | New → triaged → in-progress → fixed → verified → closed states |
+| skill | severity-vs-priority-reference | The two axes, with worked examples |
+| skill | defect-taxonomy-istqb | ISTQB defect categories (functional, performance, usability, …) |
+| skill | jira-bug-workflow-runner | Author / triage / link bugs in Jira |
+| skill | linear-bug-workflow-runner | Same for Linear |
+| skill | github-issues-bug-workflow | Same for GitHub Issues with template enforcement |
+| skill | bug-report-from-failure | Build a complete bug report from a test failure + repro steps |
+| agent | duplicate-defect-finder | Search the bug tracker for likely duplicates before file |
+| agent | bug-report-critic | Reject bug reports missing repro, expected/actual, environment |
 
 **Canonical sources to fetch:** ISTQB glossary (`defect`, `bug`,
 `failure`, `error`), IEEE 1044 defect classification, Jira / Linear /
@@ -131,15 +131,15 @@ prioritisation* (business / product-driven, upstream of execution).
 
 **Suggested components:**
 
-| Type | Name | Archetype | Purpose |
-|---|---|---|---|
-| skill | istqb-risk-based-testing-reference | S2 | ISTQB Test Manager view of RBT |
-| skill | risk-impact-likelihood-matrix-reference | S2 | The 5×5 / 3×3 matrices, scoring rubrics |
-| skill | product-risk-matrix-builder | S3 | Build a per-feature risk matrix from requirements |
-| skill | project-risk-register-builder | S3 | Project-level risk register (schedule, env, people) |
-| skill | risk-coverage-mapper | S3 | Map test cases / suites to risk items |
-| skill | risk-acceptance-decision-skill | S3 | Document risk-acceptance decisions for unfixed defects |
-| agent | risk-assessment-critic | A3 | Reject risk assessments missing likelihood justification or coverage gaps |
+| Type | Name | Purpose |
+|---|---|---|
+| skill | istqb-risk-based-testing-reference | ISTQB Test Manager view of RBT |
+| skill | risk-impact-likelihood-matrix-reference | The 5×5 / 3×3 matrices, scoring rubrics |
+| skill | product-risk-matrix-builder | Build a per-feature risk matrix from requirements |
+| skill | project-risk-register-builder | Project-level risk register (schedule, env, people) |
+| skill | risk-coverage-mapper | Map test cases / suites to risk items |
+| skill | risk-acceptance-decision-skill | Document risk-acceptance decisions for unfixed defects |
+| agent | risk-assessment-critic | Reject risk assessments missing likelihood justification or coverage gaps |
 
 **Canonical sources to fetch:** ISTQB CTAL-TM syllabus chapters on
 risk-based testing; ISO 31000 (risk management); examples from FMEA
@@ -161,17 +161,17 @@ manual execution; this covers unscripted heuristic-driven exploration.
 
 **Suggested components:**
 
-| Type | Name | Archetype | Purpose |
-|---|---|---|---|
-| skill | sbtm-reference | S2 | Session-Based Test Management (Bach / Bolton) |
-| skill | charter-author | S3 | Build a focused exploration charter (mission + areas + tactics) |
-| skill | session-debrief-template | S3 | PROOF (Past / Results / Outlook / Obstacles / Feelings) debrief structure |
-| skill | hiccupps-f-heuristic | S2 | History / Image / Comparable / Claims / Users / Product / Purpose / Familiar (problems) / Standards |
-| skill | sfdpot-heuristic | S2 | Structure / Function / Data / Platform / Operations / Time |
-| skill | fcc-cuts-vids-heuristic | S2 | Format / Coverage / Constraints / Users / Tasks / Sequences / Variables / Inputs / Data / Storage |
-| skill | crusspic-stmpl-heuristic | S2 | Capability / Reliability / Usability / Security / Scalability / Performance / Installability / Compatibility — Supportability / Testability / Maintainability / Portability / Localisability |
-| agent | charter-coach | A2 | Take a vague exploration goal and shape it into a charter with explicit mission |
-| agent | session-debrief-extractor | A1 | Pull issues / questions / coverage / risks from a session note |
+| Type | Name | Purpose |
+|---|---|---|
+| skill | sbtm-reference | Session-Based Test Management (Bach / Bolton) |
+| skill | charter-author | Build a focused exploration charter (mission + areas + tactics) |
+| skill | session-debrief-template | PROOF (Past / Results / Outlook / Obstacles / Feelings) debrief structure |
+| skill | hiccupps-f-heuristic | History / Image / Comparable / Claims / Users / Product / Purpose / Familiar (problems) / Standards |
+| skill | sfdpot-heuristic | Structure / Function / Data / Platform / Operations / Time |
+| skill | fcc-cuts-vids-heuristic | Format / Coverage / Constraints / Users / Tasks / Sequences / Variables / Inputs / Data / Storage |
+| skill | crusspic-stmpl-heuristic | Capability / Reliability / Usability / Security / Scalability / Performance / Installability / Compatibility — Supportability / Testability / Maintainability / Portability / Localisability |
+| agent | charter-coach | Take a vague exploration goal and shape it into a charter with explicit mission |
+| agent | session-debrief-extractor | Pull issues / questions / coverage / risks from a session note |
 
 **Canonical sources to fetch:** James Bach / Michael Bolton's writings
 on SBTM (satisfice.com / developsense.com); Elisabeth Hendrickson's
@@ -196,18 +196,18 @@ crash-detection sanitisers.
 
 **Suggested components:**
 
-| Type | Name | Archetype | Purpose |
-|---|---|---|---|
-| skill | libfuzzer-cpp | S1 | LibFuzzer + sanitisers for C/C++ |
-| skill | afl-plus-plus | S1 | AFL++ fuzzing harness authoring |
-| skill | go-native-fuzzing | S1 | `go test -fuzz` (Go 1.18+) |
-| skill | cargo-fuzz-rust | S1 | cargo-fuzz / libFuzzer-rust |
-| skill | atheris-python-fuzzing | S1 | Atheris (Python coverage-guided) |
-| skill | jazzer-jvm-fuzzing | S1 | Jazzer for Java / Kotlin |
-| skill | ossfuzz-integration | S1 | Onboard a project to Google OSS-Fuzz |
-| skill | corpus-management-reference | S2 | Seed corpora, minimisation, dictionary files |
-| skill | sanitiser-integration-reference | S2 | ASan / UBSan / MSan / TSan + fuzzers |
-| agent | fuzz-target-author | A4 | Scaffold a fuzz target from a parsing / decoding function |
+| Type | Name | Purpose |
+|---|---|---|
+| skill | libfuzzer-cpp | LibFuzzer + sanitisers for C/C++ |
+| skill | afl-plus-plus | AFL++ fuzzing harness authoring |
+| skill | go-native-fuzzing | `go test -fuzz` (Go 1.18+) |
+| skill | cargo-fuzz-rust | cargo-fuzz / libFuzzer-rust |
+| skill | atheris-python-fuzzing | Atheris (Python coverage-guided) |
+| skill | jazzer-jvm-fuzzing | Jazzer for Java / Kotlin |
+| skill | ossfuzz-integration | Onboard a project to Google OSS-Fuzz |
+| skill | corpus-management-reference | Seed corpora, minimisation, dictionary files |
+| skill | sanitiser-integration-reference | ASan / UBSan / MSan / TSan + fuzzers |
+| agent | fuzz-target-author | Scaffold a fuzz target from a parsing / decoding function |
 
 **Canonical sources to fetch:** llvm.org libFuzzer docs; AFL++ docs;
 Go 1.18 fuzzing announcement + `testing/fuzz` package docs; Atheris /
@@ -228,15 +228,15 @@ browser-grid strategy + cloud-grid tool integration.
 
 **Suggested components:**
 
-| Type | Name | Archetype | Purpose |
-|---|---|---|---|
-| skill | browserstack-automate | S1 | Run E2E suites against BrowserStack Automate |
-| skill | saucelabs-automate | S1 | Same for Sauce Labs |
-| skill | lambdatest-automate | S1 | Same for LambdaTest |
-| skill | playwright-cross-browser | S1 | Playwright project configs for Chromium / Firefox / WebKit |
-| skill | selenium-grid-runner | S1 | Self-hosted Selenium Grid 4 |
-| skill | browser-matrix-strategy-reference | S2 | When to test against full matrix vs. tiered (T1/T2/T3 browsers) |
-| skill | flaky-grid-failure-decider | S3 | Distinguish grid-flake from app-bug from browser-engine-difference |
+| Type | Name | Purpose |
+|---|---|---|
+| skill | browserstack-automate | Run E2E suites against BrowserStack Automate |
+| skill | saucelabs-automate | Same for Sauce Labs |
+| skill | lambdatest-automate | Same for LambdaTest |
+| skill | playwright-cross-browser | Playwright project configs for Chromium / Firefox / WebKit |
+| skill | selenium-grid-runner | Self-hosted Selenium Grid 4 |
+| skill | browser-matrix-strategy-reference | When to test against full matrix vs. tiered (T1/T2/T3 browsers) |
+| skill | flaky-grid-failure-decider | Distinguish grid-flake from app-bug from browser-engine-difference |
 
 **Canonical sources to fetch:** BrowserStack / Sauce Labs / LambdaTest
 official docs; Playwright `playwright.config.ts` reference; Selenium
@@ -259,15 +259,15 @@ generating *synthetic* substitutes.
 
 **Suggested components:**
 
-| Type | Name | Archetype | Purpose |
-|---|---|---|---|
-| skill | presidio-pii-detection | S1 | Microsoft Presidio for PII detection + masking |
-| skill | faker-synthetic-data | S1 | Python Faker / faker-js / Java JavaFaker libraries |
-| skill | synthea-healthcare-data | S1 | Synthetic patient records for HIPAA-bound systems |
-| skill | data-masking-techniques-reference | S2 | Tokenisation / shuffling / nulling / encryption-at-rest |
-| skill | pii-categories-reference | S2 | GDPR Art. 4(1) personal data, CCPA personal info, sensitive data |
-| skill | pii-masking-pipeline-builder | S3 | Build a refresh pipeline: prod-snapshot → mask → load to staging |
-| agent | pii-leak-critic | A3 | Spot PII patterns leaking into test fixtures / logs / CI |
+| Type | Name | Purpose |
+|---|---|---|
+| skill | presidio-pii-detection | Microsoft Presidio for PII detection + masking |
+| skill | faker-synthetic-data | Python Faker / faker-js / Java JavaFaker libraries |
+| skill | synthea-healthcare-data | Synthetic patient records for HIPAA-bound systems |
+| skill | data-masking-techniques-reference | Tokenisation / shuffling / nulling / encryption-at-rest |
+| skill | pii-categories-reference | GDPR Art. 4(1) personal data, CCPA personal info, sensitive data |
+| skill | pii-masking-pipeline-builder | Build a refresh pipeline: prod-snapshot → mask → load to staging |
+| agent | pii-leak-critic | Spot PII patterns leaking into test fixtures / logs / CI |
 
 **Canonical sources to fetch:** microsoft.github.io/presidio docs;
 Faker docs (Python / JS / Java); Synthea documentation; GDPR Article 4
@@ -287,7 +287,7 @@ plugin rather than being absorbed into `qa-api-testing`.
 **Components to scope:** apollo-server-test, graphql-yoga-test,
 hasura-test, mercurius-test (fastify-graphql), pothos-builder-tests,
 introspection-attack-surface-reference, persisted-query-strategy-reference,
-n-plus-one-query-detector (A1).
+n-plus-one-query-detector.
 
 **Canonical sources:** spec.graphql.org (October 2021), Apollo Server
 docs, graphql-yoga docs, hasura.io/docs.
@@ -300,7 +300,7 @@ deserve a dedicated plugin.
 
 **Components to scope:** buf-cli-lint-breaking-build, ghz-load,
 grpcurl-cli, grpc-mock, protobuf-versioning-strategy-reference,
-grpc-streaming-test-author (S3), grpc-status-code-mapping-reference (S2).
+grpc-streaming-test-author, grpc-status-code-mapping-reference.
 
 **Canonical sources:** grpc.io docs, buf.build/docs, ghz.sh,
 protobuf.dev.
@@ -314,8 +314,8 @@ testing, percentage-rollout validation.
 
 **Components to scope:** launchdarkly-testing, unleash-testing,
 flagsmith-testing, growthbook-testing, feature-flag-test-matrix-reference,
-flag-state-coverage-builder (S3), stale-flag-detector (A1),
-flag-removal-runbook-author (S3).
+flag-state-coverage-builder, stale-flag-detector,
+flag-removal-runbook-author.
 
 **Canonical sources:** launchdarkly.com/docs, getunleash.io/docs,
 flagsmith.com/docs, growthbook.io/docs.
@@ -329,8 +329,8 @@ emulators, edge-runtime divergence) absent from the catalog.
 **Components to scope:** aws-sam-local-testing, lambda-test-tools-net,
 cloudflare-workers-miniflare, vercel-edge-runtime-testing,
 netlify-functions-test, serverless-framework-test-plugin,
-cold-start-budget-reference (S2), lambda-timeout-budget-reference (S2),
-serverless-integration-test-builder (S3).
+cold-start-budget-reference, lambda-timeout-budget-reference,
+serverless-integration-test-builder.
 
 **Canonical sources:** aws.amazon.com/serverless docs,
 developers.cloudflare.com/workers, vercel.com/docs/functions,
@@ -346,7 +346,7 @@ timecop, jest fake timers).
 **Components to scope:** libfaketime-c, sinon-fake-timers-js,
 jest-fake-timers, freezegun-python, timecop-ruby,
 mockclock-jvm, dst-transition-reference, leap-second-reference,
-iso-8601-vs-rfc-3339-reference, timezone-test-matrix-builder (S3).
+iso-8601-vs-rfc-3339-reference, timezone-test-matrix-builder.
 
 **Canonical sources:** library docs for each fake-timer; IETF
 RFC 3339; ICU timezone database notes; pytz / zoneinfo docs.
@@ -360,7 +360,7 @@ Cache invalidation is famously hard. Layer-specific testing patterns
 (Cloudflare / Fastly / CloudFront), varnish-test-vtc-syntax,
 browser-cache-control-tests, cache-coherence-patterns-reference,
 cache-stampede-reference, stale-while-revalidate-reference,
-cache-key-collision-detector (A1).
+cache-key-collision-detector.
 
 **Canonical sources:** redis.io, varnish-cache.org, fastly.com/docs,
 developers.cloudflare.com/cache, RFC 9111 (HTTP caching).
@@ -372,9 +372,9 @@ silo, cross-tenant data leak detection — is a deployment-blocking
 requirement for B2B SaaS and absent from the catalog.
 
 **Components to scope:** tenant-isolation-models-reference,
-row-level-security-postgres-reference, tenant-leak-test-author (S3),
-cross-tenant-data-leak-tests (S3), tenant-id-propagation-tracer (A1),
-tenant-leak-critic (A3).
+row-level-security-postgres-reference, tenant-leak-test-author,
+cross-tenant-data-leak-tests, tenant-id-propagation-tracer,
+tenant-leak-critic.
 
 **Canonical sources:** AWS SaaS Tenant Isolation whitepaper; Postgres
 RLS docs; Microsoft "Multitenant SaaS database tenancy patterns" docs.
@@ -388,8 +388,8 @@ that nothing in the catalog covers.
 **Components to scope:** stripe-test-cards-and-webhooks,
 adyen-test-mode, paypal-sandbox, braintree-test-cards,
 3ds-test-flow-reference, pci-dss-scope-reference,
-payment-flow-states-reference, refund-test-matrix-builder (S3),
-chargeback-flow-test-author (S3), payment-webhook-replay-skill (S3).
+payment-flow-states-reference, refund-test-matrix-builder,
+chargeback-flow-test-author, payment-webhook-replay-skill.
 
 **Canonical sources:** stripe.com/docs/testing, docs.adyen.com/checkout/test,
 developer.paypal.com/tools/sandbox, developer.paypal.com/braintree,
@@ -402,9 +402,9 @@ sample-ratio-mismatch detection, randomisation tests) — distinct from
 feature-flag testing.
 
 **Components to scope:** statsig-test, optimizely-test, vwo-test,
-amplitude-experiment-test, sample-ratio-mismatch-detector (A1),
-ab-test-validity-checklist (S3), guardrail-metrics-reference (S2),
-peeking-problem-reference (S2).
+amplitude-experiment-test, sample-ratio-mismatch-detector,
+ab-test-validity-checklist, guardrail-metrics-reference,
+peeking-problem-reference.
 
 **Canonical sources:** docs.statsig.com, docs.optimizely.com,
 amplitude.com/docs/experiment, Kohavi/Tang/Xu *Trustworthy Online
@@ -428,9 +428,9 @@ on Sony / Nintendo / Microsoft / Steam platforms) with engine-specific
 tooling that doesn't fit anywhere else.
 
 **Components to scope:** unity-test-framework, unreal-automation-system,
-godot-gut-tests, game-test-categories-reference (S2 — functional /
+godot-gut-tests, game-test-categories-reference (functional /
 gameplay / balance / load / cert / soak), multiplayer-state-machine-coverage,
-platform-cert-overview-reference (S2 — Sony TRC / Nintendo Lotcheck /
+platform-cert-overview-reference (Sony TRC / Nintendo Lotcheck /
 MS XR / Steam), gameplay-recording-replay-skill.
 
 **Canonical sources:** docs.unity3d.com Test Framework, docs.unrealengine.com
@@ -464,9 +464,9 @@ extension-specific test surfaces (service worker, content scripts,
 storage.sync, host permission prompts).
 
 **Components to scope:** web-ext-cli-mozilla, chrome-extension-test-loader,
-playwright-extension-fixtures, manifest-v3-test-surface-reference (S2),
-mv2-to-mv3-migration-test-checklist (S3),
-extension-storage-test-author (S3).
+playwright-extension-fixtures, manifest-v3-test-surface-reference,
+mv2-to-mv3-migration-test-checklist,
+extension-storage-test-author.
 
 **Canonical sources:** developer.chrome.com/docs/extensions,
 extensionworkshop.com (Mozilla web-ext docs), developer.mozilla.org/MDN
@@ -538,167 +538,167 @@ a new top-level plugin. Listed in plugin order for easy scanning.
 
 ### qa-process
 
-- `quality-metrics-dora-space-reference` (S2) — DORA / SPACE /
+- `quality-metrics-dora-space-reference` — DORA / SPACE /
   DevEx metrics applied to QA.
-- `team-test-strategy-author` (S3) — per-team test strategy doc
+- `team-test-strategy-author` — per-team test strategy doc
   builder (IEEE 829-adjacent).
 
 ### qa-roles
 
-- `engineering-manager-quality-coach` (A3) — coach EM on quality
+- `engineering-manager-quality-coach` — coach EM on quality
   conversations in 1:1s.
-- `release-manager-cutover-checklist` (S3) — extends release-engineer.
+- `release-manager-cutover-checklist` — extends release-engineer.
   Note: `release-cutover-coordinator` (agent, shipped) partially covers this;
-  a dedicated S3 skill would add structured checklist scaffolding.
+  a dedicated skill would add structured checklist scaffolding.
 
 ### qa-test-data
 
-- `mimesis-python` (S1) — Mimesis as Faker alternative.
-- `factory-bot-rails` (S1) — Rails / Ruby factory pattern.
-- `factory-boy-django` (S1) — Django equivalent.
-- `bogus-net` (S1) — .NET Faker equivalent.
-- `synthetic-event-stream-builder` (S3) — generate Kafka / Kinesis
+- `mimesis-python` — Mimesis as Faker alternative.
+- `factory-bot-rails` — Rails / Ruby factory pattern.
+- `factory-boy-django` — Django equivalent.
+- `bogus-net` — .NET Faker equivalent.
+- `synthetic-event-stream-builder` — generate Kafka / Kinesis
   test streams.
 
 ### qa-test-environment
 
-- `devcontainers-test-env` (S1) — VS Code devcontainer.json for QA-ready environments.
-- `nix-shell-test-env` (S1) — reproducible test environments via Nix.
-- `testcontainers-go` (S1) — Go testcontainers (sibling of existing language skills).
+- `devcontainers-test-env` — VS Code devcontainer.json for QA-ready environments.
+- `nix-shell-test-env` — reproducible test environments via Nix.
+- `testcontainers-go` — Go testcontainers (sibling of existing language skills).
 
 ### qa-test-reporting
 
-- `junit-xml-parser-skill` (S2) — JUnit XML schema reference.
-- `xunit-net-reporter` (S1) — xUnit.net reporter integration.
-- `allure-3-reporter` (S1) — Allure 3 if/when it ships.
-- `currents-dashboard-integration` (S1) — currents.dev as Cypress dashboard alt.
+- `junit-xml-parser-skill` — JUnit XML schema reference.
+- `xunit-net-reporter` — xUnit.net reporter integration.
+- `allure-3-reporter` — Allure 3 if/when it ships.
+- `currents-dashboard-integration` — currents.dev as Cypress dashboard alt.
 
 ### qa-test-impact-analysis
 
-- `nx-affected-test-runner` (S1) — Nx monorepo affected-test selection.
-- `bazel-test-affected-selection` (S1) — Bazel `--affected` selection.
+- `nx-affected-test-runner` — Nx monorepo affected-test selection.
+- `bazel-test-affected-selection` — Bazel `--affected` selection.
 
 ### qa-test-review
 
-- `review-comment-conventions-reference` (S2) — review comment
+- `review-comment-conventions-reference` — review comment
   taxonomy (blocking / non-blocking / nit / question / praise).
-- `pr-test-coverage-critic` (A3) — agent that rejects PRs lacking
+- `pr-test-coverage-critic` — agent that rejects PRs lacking
   meaningful new test coverage on changed code paths.
 
 ### qa-api-testing
 
-- `oas-spec-validation` (S1) — OpenAPI spec lint + validate.
-- `prism-mock-server` (S1) — OpenAPI mock from spec.
-- `mockoon-builder` (S1) — local mock GUI / CLI.
-- `dredd-contract-runner` (S1) — Dredd API/spec testing.
-- `schemathesis-fuzzer` (S1) — schema-based API fuzzing.
+- `oas-spec-validation` — OpenAPI spec lint + validate.
+- `prism-mock-server` — OpenAPI mock from spec.
+- `mockoon-builder` — local mock GUI / CLI.
+- `dredd-contract-runner` — Dredd API/spec testing.
+- `schemathesis-fuzzer` — schema-based API fuzzing.
 
 ### qa-bdd
 
-- `cucumber-rules-runner` (S1) — Rules-style Gherkin (Cucumber 7+).
-- `karate-bdd` (S1) — Karate framework (API-focused Gherkin).
-- `gauge-framework` (S1) — Gauge as Cucumber alternative.
+- `cucumber-rules-runner` — Rules-style Gherkin (Cucumber 7+).
+- `karate-bdd` — Karate framework (API-focused Gherkin).
+- `gauge-framework` — Gauge as Cucumber alternative.
 
 ### qa-contract-testing
 
-- `pact-broker-self-hosting` (S1) — Pact Broker setup.
-- `pactflow-integration` (S1) — managed Pact (Pactflow).
-- `spring-cloud-contract` (S1) — JVM contract testing.
+- `pact-broker-self-hosting` — Pact Broker setup.
+- `pactflow-integration` — managed Pact (Pactflow).
+- `spring-cloud-contract` — JVM contract testing.
 
 ### qa-mobile-native
 
-- `detox-react-native` (S1) — Detox E2E for RN.
-- `maestro-mobile-flows` (S1) — Maestro YAML flows.
-- `xctest-runner` (S1) — XCTest for iOS native.
-- `espresso-runner` (S1) — Espresso for Android native.
-- `firebase-test-lab-runner` (S1) — Firebase Test Lab device farm.
+- `detox-react-native` — Detox E2E for RN.
+- `maestro-mobile-flows` — Maestro YAML flows.
+- `xctest-runner` — XCTest for iOS native.
+- `espresso-runner` — Espresso for Android native.
+- `firebase-test-lab-runner` — Firebase Test Lab device farm.
 
 ### qa-mutation-testing
 
-- `mutmut-python` (S1) — mutmut as alternative to existing Python entry.
-- `infection-php` (S1) — Infection for PHP.
+- `mutmut-python` — mutmut as alternative to existing Python entry.
+- `infection-php` — Infection for PHP.
 
 ### qa-property-based
 
-- `proptest-rust` (S1) — proptest for Rust.
-- `gopter-go` (S1) — gopter for Go.
+- `proptest-rust` — proptest for Rust.
+- `gopter-go` — gopter for Go.
 
 ### qa-web-e2e
 
-- `puppeteer-testing` (S1) — Puppeteer-specific patterns.
-- `webdriver-io-testing` (S1) — WebdriverIO (sync mode, multi-remote).
-- `screenplay-pattern-reference` (S2) — Screenplay vs Page Object.
-- `page-object-pattern-reference` (S2) — Page Object Model canonical.
-- `playwright-component-testing` (S1) — Playwright component-test mode.
+- `puppeteer-testing` — Puppeteer-specific patterns.
+- `webdriver-io-testing` — WebdriverIO (sync mode, multi-remote).
+- `screenplay-pattern-reference` — Screenplay vs Page Object.
+- `page-object-pattern-reference` — Page Object Model canonical.
+- `playwright-component-testing` — Playwright component-test mode.
 
 ### qa-accessibility-specifics
 
-- `axe-devtools-cli` (S1) — Deque axe DevTools CLI.
-- `pa11y-runner` (S1) — pa11y CLI runner.
-- `lighthouse-a11y-only` (S1) — Lighthouse a11y audit subset.
-- `wave-evaluator` (S1) — WAVE API.
-- `nvda-screen-reader-test-script-reference` (S2) — manual NVDA test scripts.
-- `voiceover-test-script-reference` (S2) — manual VoiceOver test scripts.
+- `axe-devtools-cli` — Deque axe DevTools CLI.
+- `pa11y-runner` — pa11y CLI runner.
+- `lighthouse-a11y-only` — Lighthouse a11y audit subset.
+- `wave-evaluator` — WAVE API.
+- `nvda-screen-reader-test-script-reference` — manual NVDA test scripts.
+- `voiceover-test-script-reference` — manual VoiceOver test scripts.
 
 ### qa-visual-regression
 
-- `chromatic-storybook` (S1) — Chromatic for Storybook.
-- `percy-snapshot` (S1) — Percy CLI.
-- `loki-storybook` (S1) — Loki visual diff for Storybook.
+- `chromatic-storybook` — Chromatic for Storybook.
+- `percy-snapshot` — Percy CLI.
+- `loki-storybook` — Loki visual diff for Storybook.
 
 ### qa-localization
 
-- `pseudo-localization-runner` (S3) — generate pseudo-locales for layout drift detection.
-- `rtl-test-runner` (S3) — RTL layout regression tests.
-- `icu-messageformat-validator` (S1) — ICU MessageFormat plural/select validation.
+- `pseudo-localization-runner` — generate pseudo-locales for layout drift detection.
+- `rtl-test-runner` — RTL layout regression tests.
+- `icu-messageformat-validator` — ICU MessageFormat plural/select validation.
 
 ### qa-sast
 
-- `codeql-rule-author` (S1) — write custom CodeQL queries.
-- `sonar-scanner-cli` (S1) — SonarQube CLI scan.
+- `codeql-rule-author` — write custom CodeQL queries.
+- `sonar-scanner-cli` — SonarQube CLI scan.
 
 ### qa-dast
 
-- `nuclei-templates-scanner` (S1) — ProjectDiscovery Nuclei templates.
-- `caido-proxy` (S1) — Caido as Burp Suite alternative.
+- `nuclei-templates-scanner` — ProjectDiscovery Nuclei templates.
+- `caido-proxy` — Caido as Burp Suite alternative.
 
 ### qa-sca
 
-- `osv-scanner` (S1) — Google OSV-Scanner.
-- `dependabot-config-author` (S1) — Dependabot config patterns.
-- `renovate-config-author` (S1) — Renovate config patterns.
+- `osv-scanner` — Google OSV-Scanner.
+- `dependabot-config-author` — Dependabot config patterns.
+- `renovate-config-author` — Renovate config patterns.
 
 ### qa-secrets
 
-- `trufflehog-scanner` (S1) — TruffleHog secrets scanner.
-- `detect-secrets-yelp` (S1) — Yelp detect-secrets.
+- `trufflehog-scanner` — TruffleHog secrets scanner.
+- `detect-secrets-yelp` — Yelp detect-secrets.
 
 ### qa-flake-triage
 
-- `test-quarantine-policies-reference` (S2) — when / how / for how long.
-- `flake-bug-template-author` (S3) — file a flake bug with classification.
+- `test-quarantine-policies-reference` — when / how / for how long.
+- `flake-bug-template-author` — file a flake bug with classification.
 
 ### qa-load-testing
 
-- `vegeta-load` (S1) — Tsenart Vegeta.
-- `wrk2-load` (S1) — Will Glozer wrk2.
-- `bombardier-load` (S1) — bombardier HTTP/2 / fast Go-native.
-- `artillery-load` (S1) — Artillery (cloud / OSS).
-- `slo-error-budget-reference` (S2) — error-budget math for load tests.
+- `vegeta-load` — Tsenart Vegeta.
+- `wrk2-load` — Will Glozer wrk2.
+- `bombardier-load` — bombardier HTTP/2 / fast Go-native.
+- `artillery-load` — Artillery (cloud / OSS).
+- `slo-error-budget-reference` — error-budget math for load tests.
 
 ### qa-ci-integration
 
-- `github-actions-test-workflow-author` (S3) — `.github/workflows/test.yml` patterns.
-- `circleci-test-config-author` (S3) — CircleCI `config.yml` test patterns.
-- `gitlab-ci-test-author` (S3) — `.gitlab-ci.yml` test patterns.
-- `buildkite-test-author` (S3) — Buildkite pipeline test patterns.
-- `azure-pipelines-test-author` (S3) — Azure Pipelines YAML test patterns.
+- `github-actions-test-workflow-author` — `.github/workflows/test.yml` patterns.
+- `circleci-test-config-author` — CircleCI `config.yml` test patterns.
+- `gitlab-ci-test-author` — `.gitlab-ci.yml` test patterns.
+- `buildkite-test-author` — Buildkite pipeline test patterns.
+- `azure-pipelines-test-author` — Azure Pipelines YAML test patterns.
 
 ### qa-shift-right
 
-- `synthetic-monitoring-author` (S3) — Pingdom / Datadog Synthetics / Checkly script author.
-- `canary-validator` (S3) — canary-release validation gate.
-- `featureflag-rollback-runbook-author` (S3).
+- `synthetic-monitoring-author` — Pingdom / Datadog Synthetics / Checkly script author.
+- `canary-validator` — canary-release validation gate.
+- `featureflag-rollback-runbook-author`.
 
 ## How to contribute against this roadmap
 

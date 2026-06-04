@@ -54,7 +54,7 @@ git clone https://github.com/testland/qa ~/.claude/marketplaces/testland-qa
 ## Plugin catalog
 
 77 plugins across 7 categories. See [`CATALOG.md`](CATALOG.md) for the full
-table with versions, component counts, and archetype breakdowns.
+table with versions and component counts.
 
 **Foundations** (9): test process, environment, data, reporting, impact, roles, review, management, hiring
 

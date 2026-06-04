@@ -10,11 +10,11 @@
 
 For each new or modified component (skill / agent):
 
-- [ ] Frontmatter complete: `name`, `description`, `archetype`, `rating`, `d6`
+- [ ] Frontmatter complete: `name`, `description`, `rating`, `d6`
 - [ ] `description` follows the single-description test (third-person, no "You are…" / "I help…", distinguishes vs neighbors)
 - [ ] `rating` ≥ 21
 - [ ] `d6` ≥ 1 — every concrete claim cited inline at point of use (no end-of-body References-only blocks)
-- [ ] Body structure matches declared archetype (S1–S4 / A1–A4)
+- [ ] Body structure matches one of the common component shapes (see [`docs/PLUGIN_AUTHORING.md`](../docs/PLUGIN_AUTHORING.md) "Common component shapes")
 - [ ] Differentiation axis documented vs. 2–3 nearest neighbors (see [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) "Differentiation requirement")
 
 ## Plugin manifest
