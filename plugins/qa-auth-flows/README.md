@@ -14,6 +14,7 @@ covers the runtime validation.
 
 | Type | Name | Description |
 | --- | --- | --- |
+| Agent | [token-storage-security-critic](agents/token-storage-security-critic.md) | Adversarial critic: scans source for token-storage and session anti-patterns (localStorage/sessionStorage JWTs, missing httpOnly/Secure/SameSite, tokens in logs or URLs, missing rotation/expiry, JS-exposed refresh tokens); emits BLOCK / PASS |
 | Skill | [keycloak-tests](skills/keycloak-tests/SKILL.md) | Testcontainers Keycloak; OIDC token endpoint; introspection; Admin REST API; UMA permission tickets |
 | Skill | [auth0-tests](skills/auth0-tests/SKILL.md) | Tenant strategy; Auth0 Deploy CLI for env parity; Action / Rules unit tests; mock OIDC server alternative |
 | Skill | [okta-tests](skills/okta-tests/SKILL.md) | Org strategy; Terraform Okta provider for config parity; OIE workflows; SCIM provisioning; scoped API tokens |
