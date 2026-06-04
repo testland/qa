@@ -13,6 +13,7 @@ unit tests against notebook-defined functions.
 | Skill | [testbook-tests](skills/testbook-tests/SKILL.md) | `@testbook` decorator + `tb.ref()` / `tb.inject()` / `tb.patch()` for function-level unit tests; pytest fixture pattern for shared kernel |
 | Skill | [papermill-tests](skills/papermill-tests/SKILL.md) | Parameterized execution (CLI + Python API); `parameters` cell tag; matrix sweeps; pairs with nbval/testbook |
 | Agent | [notebook-quality-reviewer](agents/notebook-quality-reviewer.md) | Adversarial PR reviewer: flags untested cells, `--nbval-lax` misuse, hardcoded credentials, non-deterministic outputs, missing `parameters` tag, and committed outputs; emits BLOCK/PASS verdict |
+| Skill | [notebook-ci-pipeline-author](skills/notebook-ci-pipeline-author/SKILL.md) | Stand up the full notebook CI pipeline: papermill execute, nbval regression, testbook unit, artifacts. |
 
 ## Install
 

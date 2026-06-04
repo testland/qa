@@ -16,6 +16,7 @@ Game engine testing (Unity, Unreal, Godot), platform certification overview (Son
 | agent | game-test-scenario-author | Authors one game-engine test scenario per spec - detects engine from project markers (Unity ProjectSettings, Unreal *.uproject, Godot project.godot), picks Unity Test Framework / Unreal Automation / Godot GUT, pairs with gameplay-recording-replay artefacts when present |
 | Agent | [game-test-scaffolder](agents/game-test-scaffolder.md) | Detects the engine and emits a new test directory structure (Unity EditMode/PlayMode, Unreal, Godot GUT). |
 | Agent | [platform-cert-checklist-author](agents/platform-cert-checklist-author.md) | Translates a target console/store platform into a certification checklist mapped to test categories. |
+| Skill | [game-perf-profiling](skills/game-perf-profiling/SKILL.md) | Game performance profiling + budgets: frame-time, Unity Profiler / Performance Testing, Unreal Insights. |
 
 ## Install
 

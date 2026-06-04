@@ -19,6 +19,7 @@ across any of these frameworks.
 | Skill | [langfuse-tracing](skills/langfuse-tracing/SKILL.md) | Production observability with `@observe` decorator, score API, datasets for offline eval |
 | Agent | [prompt-eval-reviewer](agents/prompt-eval-reviewer.md) | Adversarial reviewer flagging 8 anti-patterns across all 6 sister tools; preloads all 6 |
 | Agent | [llm-red-team-planner](agents/llm-red-team-planner.md) | Plans an LLM red-team campaign across an attack taxonomy, composing Giskard scans + promptfoo red-team configs. |
+| Skill | [llm-regression-suite-author](skills/llm-regression-suite-author/SKILL.md) | Versioned golden-dataset LLM regression suite across model upgrades with CI gating. |
 
 ## Install
 

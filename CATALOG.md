@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 678 components**
+**77 plugins · 686 components**
 
 ## Foundations
 
@@ -32,8 +32,8 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents |
 | [qa-desktop](plugins/qa-desktop/) | 1.2.0 | 9 skills + 4 agents |
 | [qa-embedded](plugins/qa-embedded/) | 1.2.0 | 7 skills + 3 agents |
-| [qa-game](plugins/qa-game/) | 1.2.0 | 7 skills + 3 agents |
-| [qa-mobile-native](plugins/qa-mobile-native/) | 1.2.0 | 10 skills + 3 agents |
+| [qa-game](plugins/qa-game/) | 1.3.0 | 8 skills + 3 agents |
+| [qa-mobile-native](plugins/qa-mobile-native/) | 1.3.0 | 11 skills + 3 agents |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.1.0 | 5 skills + 2 agents |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.0 | 5 skills + 3 agents |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.2.0 | 5 skills + 2 agents |
@@ -101,20 +101,20 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.2.0 | 6 skills + 1 agents |
 | [qa-cache-testing](plugins/qa-cache-testing/) | 1.1.0 | 8 skills + 1 agents |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.2.0 | 6 skills + 1 agents |
-| [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.1.0 | 3 skills + 1 agents |
+| [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.2.0 | 4 skills + 1 agents |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.1.0 | 4 skills + 2 agents |
 | [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.1.0 | 6 skills + 1 agents |
 | [qa-experimentation](plugins/qa-experimentation/) | 1.1.0 | 9 skills + 1 agents |
 | [qa-feature-flags](plugins/qa-feature-flags/) | 1.3.0 | 9 skills + 2 agents |
 | [qa-graphql](plugins/qa-graphql/) | 1.1.0 | 9 skills + 1 agents |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.0 | 8 skills + 1 agents |
-| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.1.0 | 6 skills + 2 agents |
-| [qa-ml-models](plugins/qa-ml-models/) | 1.1.0 | 5 skills + 2 agents |
+| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.2.0 | 7 skills + 2 agents |
+| [qa-ml-models](plugins/qa-ml-models/) | 1.2.0 | 6 skills + 2 agents |
 | [qa-notifications](plugins/qa-notifications/) | 1.1.0 | 6 skills + 1 agents |
 | [qa-payment](plugins/qa-payment/) | 1.2.0 | 11 skills + 1 agents |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.2.0 | 7 skills + 1 agents |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.2.0 | 5 skills + 1 agents |
-| [qa-search-relevance](plugins/qa-search-relevance/) | 1.0.0 | 3 skills + 1 agents |
+| [qa-search-relevance](plugins/qa-search-relevance/) | 1.1.0 | 6 skills + 1 agents |
 | [qa-serverless](plugins/qa-serverless/) | 1.2.0 | 10 skills + 1 agents |
 | [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.2.0 | 11 skills + 1 agents |
 

@@ -13,6 +13,9 @@ analysis across term-based and vector search.
 | Skill | [opensearch-relevance-tests](skills/opensearch-relevance-tests/SKILL.md) | Search Relevance Workbench; reuse ES judgment format; neural query DSL; hybrid (BM25 + neural) ranking + pipeline weighting; ES → OS migration parity |
 | Skill | [vector-search-precision-tests](skills/vector-search-precision-tests/SKILL.md) | Brute-force ground truth; recall@k vs latency Pareto; HNSW M / ef_construct / ef sweep; embedding-model-upgrade drift; ANN-Benchmarks framework |
 | Agent | [relevance-regression-reviewer](agents/relevance-regression-reviewer.md) | Adversarial reviewer; per-query regression detection; refuses when head queries drop > 0.05 OR when judgments are stale (> 50% unrated) |
+| Skill | [solr-relevance-tests](skills/solr-relevance-tests/SKILL.md) | Apache Solr relevance testing: LTR, debugQuery score explain, edismax tuning, nDCG checks. |
+| Skill | [judgment-list-author](skills/judgment-list-author/SKILL.md) | Bootstrap human-judgment ground-truth lists: query sampling, grading scales, kappa, Quepid, pooling. |
+| Skill | [hybrid-search-eval-author](skills/hybrid-search-eval-author/SKILL.md) | Evaluate hybrid retrieval (BM25 + vector + reranker) with RRF fusion and nDCG/MRR. |
 
 ## Install
 

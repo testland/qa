@@ -21,6 +21,7 @@ risk class.
 | Skill | [alibi-explainability](skills/alibi-explainability/SKILL.md) | Anchors / SHAP / Integrated Gradients / Counterfactuals; per-prediction explanation logging for high-risk systems |
 | Agent | [model-fairness-reviewer](agents/model-fairness-reviewer.md) | Adversarial reviewer that gates promotion on risk-class-appropriate evidence; refuses ✅ when sensitive features missing or intersectional analysis absent |
 | Agent | [data-drift-incident-responder](agents/data-drift-incident-responder.md) | Triages a live Evidently drift alert into ranked root-cause hypotheses (schema change, pipeline bug, skew, seasonality, population shift) plus a remediation checklist; decides rollback, retrain, quarantine, or alert re-tune |
+| Skill | [model-performance-regression-gate](skills/model-performance-regression-gate/SKILL.md) | CI gate that blocks a retrained model regressing on held-out metrics vs production. |
 
 ## Install
 
