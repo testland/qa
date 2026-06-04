@@ -24,6 +24,8 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 | Skill | [test-data-patterns](skills/test-data-patterns/SKILL.md) | Architecture-tier reference: Test Data Builder (Pryce), Factory (with traits), Object Mother (Fowler), Fixture composition (Meszaros four-phase + Fresh-vs-Shared), Snapshot (defers to `golden-file-conventions`), Production-Data Anonymisation. |
 | Skill | [negative-test-generator](skills/negative-test-generator/SKILL.md) | Generate rejection-path tests mirroring happy-path: schema / auth / authz / rate / conflict / adversarial / server-error categories. |
 | Agent | [golden-file-manager](agents/golden-file-manager.md) | Active maintenance: add / update / prune snapshot baselines; refuse updates whose diff doesn't match PR intent. |
+| Agent | [test-data-setup-agent](agents/test-data-setup-agent.md) | Stands up a full test-data setup for a feature: fixtures + seed data, composing the plugin's generators. |
+| Agent | [mock-server-composer](agents/mock-server-composer.md) | Detects the stack and generates the matching mock-server config (WireMock / MSW / Mountebank). |
 
 ## Install
 

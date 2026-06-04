@@ -15,6 +15,7 @@ Bug reproduction workflow: extracts bug reports from Playwright traces / HARs, b
 | Agent | [defect-clusterer](agents/defect-clusterer.md) | Group a backlog of bug reports by fingerprint (top-frame, error+route, error alone) into root-cause clusters; flag weak-signal clusters for human review. |
 | Agent | [escape-defect-analyzer](agents/escape-defect-analyzer.md) | Builder: classify a production-found bug as test-gap / process-gap / tooling-gap; generate a prevention-asset report with concrete test or monitoring change. |
 | Agent | [test-failure-debugger](agents/test-failure-debugger.md) | Read-only diagnoser for a consistently-failing test: reads stderr + diff against last-known-good baseline, classifies failure mode (assertion mismatch / setup error / environmental / selector breakage / timing-logic), proposes one minimal fix. |
+| Agent | [defect-pipeline-runner](agents/defect-pipeline-runner.md) | Weekly defect-review orchestrator: chains defect-clusterer, defect-trend-narrator, and escape-defect-analyzer into one report. |
 
 ## Install
 

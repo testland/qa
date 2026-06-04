@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 604 components**
+**77 plugins · 620 components**
 
 ## Foundations
 
@@ -11,14 +11,14 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components |
 |---|---|---:|
-| [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents |
-| [qa-process](plugins/qa-process/) | 1.5.1 | 19 skills + 6 agents |
+| [qa-hiring](plugins/qa-hiring/) | 1.1.0 | 3 skills + 1 agents |
+| [qa-process](plugins/qa-process/) | 1.6.0 | 19 skills + 7 agents |
 | [qa-roles](plugins/qa-roles/) | 1.2.0 | 0 skills + 14 agents |
-| [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents |
-| [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents |
+| [qa-test-data](plugins/qa-test-data/) | 1.2.0 | 17 skills + 3 agents |
+| [qa-test-environment](plugins/qa-test-environment/) | 1.1.0 | 4 skills + 2 agents |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents |
-| [qa-test-management](plugins/qa-test-management/) | 1.0.0 | 7 skills + 1 agents |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.1.0 | 17 skills + 1 agents |
+| [qa-test-management](plugins/qa-test-management/) | 1.1.0 | 7 skills + 2 agents |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.2.0 | 17 skills + 2 agents |
 | [qa-test-review](plugins/qa-test-review/) | 1.3.0 | 4 skills + 6 agents |
 
 ## Functional testing
@@ -28,7 +28,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | Plugin | Version | Components |
 |---|---|---:|
 | [qa-api-testing](plugins/qa-api-testing/) | 1.1.0 | 7 skills + 2 agents |
-| [qa-bdd](plugins/qa-bdd/) | 1.1.0 | 8 skills + 1 agents |
+| [qa-bdd](plugins/qa-bdd/) | 1.2.0 | 8 skills + 2 agents |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents |
 | [qa-desktop](plugins/qa-desktop/) | 1.2.0 | 9 skills + 4 agents |
 | [qa-embedded](plugins/qa-embedded/) | 1.1.0 | 7 skills + 1 agents |
@@ -81,14 +81,14 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components |
 |---|---|---:|
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.4.0 | 1 skills + 8 agents |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.5.0 | 1 skills + 9 agents |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.1.0 | 6 skills + 1 agents |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.0.0 | 7 skills + 2 agents |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.1.0 | 7 skills + 3 agents |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents |
-| [qa-load-testing](plugins/qa-load-testing/) | 1.1.0 | 9 skills + 2 agents |
-| [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.1.0 | 6 skills + 0 agents |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.2.0 | 9 skills + 3 agents |
+| [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.2.0 | 6 skills + 2 agents |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.0.0 | 3 skills + 4 agents |
-| [qa-shift-right](plugins/qa-shift-right/) | 1.0.0 | 3 skills + 1 agents |
+| [qa-shift-right](plugins/qa-shift-right/) | 1.1.0 | 3 skills + 2 agents |
 
 ## AI & specialized
 
@@ -96,7 +96,7 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 
 | Plugin | Version | Components |
 |---|---|---:|
-| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.1.0 | 3 skills + 2 agents |
+| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.2.0 | 3 skills + 3 agents |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.1.0 | 7 skills + 1 agents |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.1.0 | 5 skills + 1 agents |
 | [qa-cache-testing](plugins/qa-cache-testing/) | 1.0.0 | 7 skills + 1 agents |
@@ -108,7 +108,7 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 | [qa-feature-flags](plugins/qa-feature-flags/) | 1.2.0 | 7 skills + 2 agents |
 | [qa-graphql](plugins/qa-graphql/) | 1.0.0 | 7 skills + 1 agents |
 | [qa-grpc](plugins/qa-grpc/) | 1.1.0 | 7 skills + 1 agents |
-| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.0.0 | 6 skills + 1 agents |
+| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.1.0 | 6 skills + 2 agents |
 | [qa-ml-models](plugins/qa-ml-models/) | 1.1.0 | 5 skills + 2 agents |
 | [qa-notifications](plugins/qa-notifications/) | 1.1.0 | 6 skills + 1 agents |
 | [qa-payment](plugins/qa-payment/) | 1.1.0 | 10 skills + 1 agents |

@@ -17,6 +17,7 @@ Test environment management: containerized backing services (Testcontainers + do
 | Type | Name | Lives in | Description |
 |---|---|---|---|
 | Agent | [parallel-isolation-checker](../qa-flake-triage/agents/parallel-isolation-checker.md) | `qa-flake-triage` | Read-only investigator that finds the shared state two parallel workers are stepping on (DB rows, env vars, files, ports, lockfiles, module state). Install `qa-flake-triage` to use it; it composes naturally with this plugin's `db-snapshot-restore` and Playwright fixtures. |
+| Agent | [test-environment-bootstrapper](agents/test-environment-bootstrapper.md) | Bootstraps a full integration/E2E environment: containers + DB + feature flags + Playwright fixtures. |
 
 ## Install
 

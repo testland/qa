@@ -24,6 +24,7 @@ Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV, Cobert
 | Skill | [unit-test-coverage-targeter](skills/unit-test-coverage-targeter/SKILL.md) | Build-an-X risk-weighted "what to test next" recommendation; cyclomatic complexity + churn for risk; pyramid layer for cost; top 5 - 10 targets. |
 | Skill | [test-run-summary-author](skills/test-run-summary-author/SKILL.md) | Build-an-X narrative drafter: takes a JUnit / Allure / TestRail-API run + release context, emits status-update / release-notes / exec-summary / cross-run-trend markdown with a citation appendix. |
 | Agent | [daily-test-suite-aggregator](agents/daily-test-suite-aggregator.md) | Action-taking: ingests CI artifacts across multiple suites and environments for a configurable window, emits a unified (suite × environment) cell-matrix roll-up plus comparison-to-yesterday for stand-up reading. |
+| Agent | [release-quality-report-agent](agents/release-quality-report-agent.md) | Evidence-backed release go/no-go report (test-run summary + coverage diff + targets) for managers. |
 
 ## Install
 
