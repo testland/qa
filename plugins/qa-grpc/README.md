@@ -6,7 +6,14 @@ gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl
 
 | Type | Name | Description |
 | --- | --- | --- |
-| (filled in as components are added) |  |  |
+| skill | buf-cli-lint-breaking-build | Gate proto PRs with `buf build`, `buf lint`, and `buf breaking` |
+| skill | ghz-load | Benchmark gRPC throughput and latency with ghz |
+| skill | grpc-mock | Author in-process gRPC mock servers for client-side tests |
+| skill | grpc-status-code-mapping-reference | Reference catalog of the 17 canonical gRPC status codes, retry semantics, and HTTP mapping |
+| skill | grpc-streaming-test-author | Build streaming-RPC test suites covering ordering, cancellation, and deadline paths |
+| skill | grpcurl-cli | Invoke gRPC services from the CLI with grpcurl |
+| skill | protobuf-versioning-strategy-reference | Reference catalog of protobuf3 breaking-change categories and safe evolution patterns |
+| agent | grpc-service-reviewer | Adversarial PR reviewer that gates gRPC service changes on status-code coverage, deadline tests, buf CI wiring, streaming-RPC tests, and mock harness presence |
 
 ## Install
 
