@@ -21,6 +21,7 @@ idempotency.
 | Skill | [rabbitmq-patterns](skills/rabbitmq-patterns/SKILL.md) | 6 canonical tutorial patterns (Hello World / Work Queues / Pub-Sub / Routing / Topics / RPC); Publisher Confirms; ack/nack/requeue; DLX |
 | Skill | [cron-job-test-author](skills/cron-job-test-author/SKILL.md) | Build-an-X for cron tests: expression validation, DST + leap-day edge cases, missed-execution detection, overlap protection, stale-lock recovery |
 | Skill | [idempotency-test-author](skills/idempotency-test-author/SKILL.md) | Build-an-X for idempotency tests: idempotency-key pattern (Stripe/AWS), commutative side effects, TTL tuning, concurrent-duplicate race tests |
+| Skill | [kafka-consumer-tests](skills/kafka-consumer-tests/SKILL.md) | Test Kafka consumers/producers: Testcontainers, offsets, rebalance, EOS/transactions, dead-letter topics. |
 
 ## Install
 

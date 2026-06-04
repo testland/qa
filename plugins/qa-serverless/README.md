@@ -16,6 +16,7 @@ Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare W
 | Skill | [lambda-timeout-budget-reference](skills/lambda-timeout-budget-reference/SKILL.md) | Pure reference: AWS Lambda timeout and billing semantics. |
 | Skill | [serverless-integration-test-builder](skills/serverless-integration-test-builder/SKILL.md) | Build-an-X integration suite from a SAM / serverless.yml / Wrangler definition. |
 | Agent | [serverless-cold-start-critic](agents/serverless-cold-start-critic.md) | Adversarial critic: detects cold-start anti-patterns (client init inside handler, heavy top-level imports, missing /tmp cache, missing SnapStart on JVM, oversized bundles) and emits BLOCK or PASS. |
+| Skill | [azure-functions-test](skills/azure-functions-test/SKILL.md) | Test Azure Functions locally: Core Tools func start, Azurite, isolated worker, triggers/bindings. |
 
 ## Install
 

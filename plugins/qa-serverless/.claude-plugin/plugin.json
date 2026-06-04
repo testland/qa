@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-serverless",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare Workers Miniflare, Vercel Edge Runtime, Netlify Functions, Serverless Framework, plus cold-start + timeout budget references and a serverless integration-test builder. Covers Lambda / Workers / Edge runtimes which have specific testing patterns (cold-start budgets, timeout testing, local emulators, edge-runtime divergence) absent from generic web-server test plugins.",
   "author": {
     "name": "testland",

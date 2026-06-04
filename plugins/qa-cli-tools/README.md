@@ -13,6 +13,7 @@ both consume.
 | Skill | [bats-testing](skills/bats-testing/SKILL.md) | Bats-core testing for shell scripts and CLIs (`@test`, `run`, `setup`/`teardown`, parallel, JUnit/TAP). |
 | Skill | [tui-snapshot-tester](skills/tui-snapshot-tester/SKILL.md) | TUI snapshot tests via `pytest-textual-snapshot` + Pilot; equivalents for Ratatui (insta), Bubble Tea (teatest), Ink. |
 | Skill | [cli-output-conventions](skills/cli-output-conventions/SKILL.md) | Output-contract conventions: exit codes, stdout/stderr, `--json`/`--plain`, `NO_COLOR`, `-q`/`--verbose`, `--help`/`--version`. |
+| Skill | [pester-cli-testing](skills/pester-cli-testing/SKILL.md) | Test PowerShell CLIs/scripts with Pester v5: Describe/It, Should, Mock, coverage, CI. |
 
 ## Install
 

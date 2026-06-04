@@ -16,6 +16,7 @@ Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skill
 | agent | [duplicate-defect-finder](agents/duplicate-defect-finder.md) | Search the tracker for likely duplicates; rank candidates by similarity |
 | agent | [bug-report-critic](agents/bug-report-critic.md) | Audit a bug report against required fields, severity-priority independence, reproduction quality |
 | Agent | [ci-defect-filer](agents/ci-defect-filer.md) | One-step CI auto-filer: turns a test failure into a deduped bug filed in Jira / Linear / GitHub Issues. |
+| Skill | [azuredevops-bug-workflow](skills/azuredevops-bug-workflow/SKILL.md) | Author/triage/link bugs in Azure DevOps Boards via the Work Item Tracking REST API + WIQL. |
 
 ## Differentiation
 

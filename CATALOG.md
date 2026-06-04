@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 670 components**
+**77 plugins · 678 components**
 
 ## Foundations
 
@@ -40,7 +40,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.1.0 | 5 skills + 1 agents |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.2.0 | 6 skills + 2 agents |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.1.0 | 4 skills + 2 agents |
-| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.1.0 | 4 skills + 1 agents |
+| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.2.0 | 5 skills + 1 agents |
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.5.0 | 9 skills + 5 agents |
 
 ## Quality engineering
@@ -83,7 +83,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 |---|---|---:|
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.5.0 | 1 skills + 9 agents |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.2.0 | 8 skills + 1 agents |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.1.0 | 7 skills + 3 agents |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.2.0 | 8 skills + 3 agents |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.1.0 | 4 skills + 5 agents |
 | [qa-load-testing](plugins/qa-load-testing/) | 1.3.0 | 11 skills + 3 agents |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.2.0 | 6 skills + 2 agents |
@@ -97,9 +97,9 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 | Plugin | Version | Components |
 |---|---|---:|
 | [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.2.0 | 3 skills + 3 agents |
-| [qa-async-jobs](plugins/qa-async-jobs/) | 1.1.0 | 7 skills + 1 agents |
+| [qa-async-jobs](plugins/qa-async-jobs/) | 1.2.0 | 8 skills + 1 agents |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.2.0 | 6 skills + 1 agents |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.0.0 | 7 skills + 1 agents |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.1.0 | 8 skills + 1 agents |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.2.0 | 6 skills + 1 agents |
 | [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.1.0 | 3 skills + 1 agents |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.1.0 | 4 skills + 2 agents |
@@ -115,8 +115,8 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.2.0 | 7 skills + 1 agents |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.2.0 | 5 skills + 1 agents |
 | [qa-search-relevance](plugins/qa-search-relevance/) | 1.0.0 | 3 skills + 1 agents |
-| [qa-serverless](plugins/qa-serverless/) | 1.1.0 | 9 skills + 1 agents |
-| [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.1.0 | 10 skills + 1 agents |
+| [qa-serverless](plugins/qa-serverless/) | 1.2.0 | 10 skills + 1 agents |
+| [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.2.0 | 11 skills + 1 agents |
 
 ## Tooling
 
@@ -125,10 +125,10 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | Plugin | Version | Components |
 |---|---|---:|
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.1.0 | 5 skills + 1 agents |
-| [qa-cli-tools](plugins/qa-cli-tools/) | 1.0.0 | 3 skills + 0 agents |
+| [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.0 | 4 skills + 0 agents |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.0 | 5 skills + 1 agents |
-| [qa-iac](plugins/qa-iac/) | 1.0.0 | 5 skills + 2 agents |
+| [qa-iac](plugins/qa-iac/) | 1.1.0 | 6 skills + 2 agents |
 | [qa-manual-testing](plugins/qa-manual-testing/) | 1.2.0 | 11 skills + 3 agents |
 
 ## Alphabetical index
