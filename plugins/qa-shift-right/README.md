@@ -11,6 +11,7 @@ Production-side QA per ISTQB-canonical shift right ("a test approach to test a s
 | Skill | [feature-flag-experiment-validator](skills/feature-flag-experiment-validator/SKILL.md) | Build-an-X A/B test analysis: chi-square / Welch's / Mann-Whitney U per metric, FDR multiple-comparisons correction, practical-vs-statistical significance, ship/don't-ship verdict. |
 | Agent | [observability-to-test](agents/observability-to-test.md) | Closes the loop: production-signal → regression test (cheapest catching layer per test pyramid) + fix PR + postmortem update. |
 | Agent | [canary-and-experiment-coordinator](agents/canary-and-experiment-coordinator.md) | Coordinates a simultaneous canary deploy + A/B experiment, catching cohort contamination and sequencing the validators. |
+| Skill | [rum-to-synthetic-gap-analyzer](skills/rum-to-synthetic-gap-analyzer/SKILL.md) | Finds high-traffic user journeys with no synthetic monitor by analyzing RUM / CrUX data. |
 
 ## Install
 

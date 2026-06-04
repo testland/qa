@@ -16,6 +16,7 @@ database isolation levels.
 | Skill | [async-ordering-tests](skills/async-ordering-tests/SKILL.md) | Microtask vs macrotask; deterministic timers (Sinon / Vitest fake); Promise.all vs sequential await; asyncio gather/cancel propagation; Go channel happens-before |
 | Skill | [mvcc-isolation-tests](skills/mvcc-isolation-tests/SKILL.md) | Two-connection harness; per-anomaly tests (dirty / non-repeatable / phantom / serialization / write skew); Read Committed → Repeatable Read → Serializable matrix per PostgreSQL; per-DB differences (PG / MySQL / SQL Server / DynamoDB) |
 | Agent | [concurrency-critic](agents/concurrency-critic.md) | Adversarial static pass over concurrent code (threads / goroutines / async): unguarded shared mutable state, lock-ordering cycles (deadlock risk), missing happens-before / memory visibility, check-then-act races; emits findings table + BLOCK/PASS verdict |
+| Skill | [go-race-detector-workflow](skills/go-race-detector-workflow/SKILL.md) | Go race-detector + goroutine-leak workflow: go test -race, goleak, CI matrix, stress runs. |
 
 ## Install
 

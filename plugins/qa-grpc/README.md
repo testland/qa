@@ -14,6 +14,7 @@ gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl
 | skill | grpcurl-cli | Invoke gRPC services from the CLI with grpcurl |
 | skill | protobuf-versioning-strategy-reference | Reference catalog of protobuf3 breaking-change categories and safe evolution patterns |
 | agent | grpc-service-reviewer | Adversarial PR reviewer that gates gRPC service changes on status-code coverage, deadline tests, buf CI wiring, streaming-RPC tests, and mock harness presence |
+| Skill | [grpc-interceptor-test-author](skills/grpc-interceptor-test-author/SKILL.md) | Tests gRPC interceptors (auth/retry/logging/tracing; unary + streaming; client + server). |
 
 ## Install
 

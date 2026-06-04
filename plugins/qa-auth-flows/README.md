@@ -20,6 +20,7 @@ covers the runtime validation.
 | Skill | [okta-tests](skills/okta-tests/SKILL.md) | Org strategy; Terraform Okta provider for config parity; OIE workflows; SCIM provisioning; scoped API tokens |
 | Skill | [oauth-flow-test-author](skills/oauth-flow-test-author/SKILL.md) | Build-an-X for OAuth/OIDC: auth-code + PKCE (S256), state CSRF defense, refresh-token rotation + reuse detection, OIDC nonce, scope-grant verification, redirect-URI strict matching |
 | Skill | [session-management-test-author](skills/session-management-test-author/SKILL.md) | Build-an-X for sessions per OWASP ASVS V3: cookie attrs, session-fixation defense, absolute + idle timeout, concurrent-session limits, server-side logout invalidation, CSRF, session binding |
+| Skill | [mfa-flow-test-author](skills/mfa-flow-test-author/SKILL.md) | MFA flow test authoring: TOTP (RFC 6238), HOTP, OTP, and WebAuthn/passkey via virtual authenticator. |
 
 ## Install
 

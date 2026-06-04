@@ -17,6 +17,7 @@ Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode,
 | Skill | [chargeback-flow-test-author](skills/chargeback-flow-test-author/SKILL.md) | Build-an-X chargeback / dispute test suite (Visa reason codes). |
 | Skill | [payment-webhook-replay-skill](skills/payment-webhook-replay-skill/SKILL.md) | Build-an-X webhook replay + recovery tests (idempotency contract). |
 | Agent | [payment-flow-critic](agents/payment-flow-critic.md) | Adversarial read-only reviewer: flags missing idempotency keys, unverified webhook signatures, PAN/CVV in logs, unhandled requires_action/3DS states, and double-charge race risk. Emits per-finding severity + BLOCK/PASS verdict. |
+| Skill | [subscription-billing-test-author](skills/subscription-billing-test-author/SKILL.md) | Tests recurring-billing flows: trials, proration, dunning, cancel/reactivate, via Stripe Billing test clocks. |
 
 ## Install
 

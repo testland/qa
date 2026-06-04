@@ -14,6 +14,7 @@ that holds them together.
 | Skill | [event-sourcing-tests](skills/event-sourcing-tests/SKILL.md) | Aggregate-replay determinism; snapshot equivalence; event-versioning + upcasting; projection rebuild from event log; replay-mode external-call suppression |
 | Skill | [cqrs-projection-tests](skills/cqrs-projection-tests/SKILL.md) | Per-event projection update; eventual-consistency window assertion; multiple projections per stream; zero-downtime swap; idempotency + out-of-order delivery |
 | Skill | [eventual-consistency-tests](skills/eventual-consistency-tests/SKILL.md) | Convergence-window assertions; monotonic-read tests; anti-entropy / read-repair; CRDT merge tests (G-Counter, LWW, OR-Set); vector-clock causality |
+| Skill | [outbox-pattern-test-author](skills/outbox-pattern-test-author/SKILL.md) | Tests the transactional outbox: atomic write+event, relay at-least-once + dedup + ordering + retry. |
 
 ## Install
 
