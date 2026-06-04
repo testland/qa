@@ -19,6 +19,7 @@ webhook delivery (Standard Webhooks signing + replay defense).
 | Skill | [push-notification-test-author](skills/push-notification-test-author/SKILL.md) | Build-an-X across Web Push (RFC 8030+VAPID) + APNs + FCM; subscription handshake; payload + click-action; 410-cleanup; silent vs alert |
 | Skill | [webhook-delivery-tester](skills/webhook-delivery-tester/SKILL.md) | Build-an-X per Standard Webhooks: HMAC-SHA256 signing, retry+backoff, replay window, idempotent processing, vendor sample payloads (Stripe/Twilio/SendGrid/GitHub/GitLab) |
 | Agent | [notification-delivery-critic](agents/notification-delivery-critic.md) | Adversarial critic scanning notification-send code (email/SMS/push/webhook) for delivery-reliability defects: missing idempotency, absent bounce/unsubscribe handlers, missing DKIM/SPF/DMARC alignment, missing retry/backoff, absent dead-letter handling; emits BLOCK or PASS |
+| Skill | [in-app-notification-test-author](skills/in-app-notification-test-author/SKILL.md) | Test real-time in-app notifications (WebSocket/SSE/Firebase): delivery, read state, fan-out, reconnect. |
 
 ## Install
 

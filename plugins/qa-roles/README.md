@@ -1,6 +1,6 @@
 # qa-roles
 
-Consolidated QA org chart of 14 sharply-scoped role agents - each ships a specific task for the role, not a job-title persona.
+Consolidated QA org chart of 15 sharply-scoped role agents - each ships a specific task for the role, not a job-title persona.
 
 ## Components
 
@@ -32,6 +32,12 @@ Consolidated QA org chart of 14 sharply-scoped role agents - each ships a specif
 | Release Engineer | [release-engineer](agents/release-engineer.md) | Orchestrates one release runbook (smoke gate, canary deploy, metric thresholds, rollout/rollback) pausing at every human decision point. |
 | Release Manager | [release-cutover-coordinator](agents/release-cutover-coordinator.md) | Coordinates a multi-team release cutover - builds the go/no-go checklist, sequences cross-team gates, assigns owners and timeboxes. |
 | QA Manager | [qa-manager](agents/qa-manager.md) | Generates a weekly RAG quality-status digest from CI history, defect tracker, and flake-quarantine state. |
+
+### Tier 4 - Head / Director
+
+| Role | Agent | One-line task |
+| --- | --- | --- |
+| Head of QA / Director | [head-of-quality](agents/head-of-quality.md) | Aggregates per-team signals into a portfolio quality roll-up: cross-team KPIs, risk heatmap, and capacity view across squads. |
 
 ## Install
 

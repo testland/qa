@@ -20,6 +20,7 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | Agent | [charter-coach](agents/charter-coach.md) | Turns a feature + risk areas into a well-formed SBTM exploratory charter (mission, areas, HICCUPPS-F oracles, SFDPOT elements, tours). |
 | Agent | [session-debrief-coach](agents/session-debrief-coach.md) | Reviews a completed SBTM session sheet: PROOF completeness, TBS time-split health, and the recommended next charter. |
 | Agent | [test-script-quality-critic](agents/test-script-quality-critic.md) | Adversarial review of authored manual scripts for vague preconditions, bundled steps, missing expected results, and imperative-where-declarative slots. |
+| Skill | [getting-started](skills/getting-started/SKILL.md) | Junior on-ramp: the SBTM charter to session to debrief path and when to use each heuristic. |
 
 ## Install
 

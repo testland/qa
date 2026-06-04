@@ -18,6 +18,7 @@ Covers the universal pre-commit + repo-history hygiene gap.
 | Skill | [kingfisher-scanning](skills/kingfisher-scanning/SKILL.md) | MongoDB-built Rust scanner with Intel Hyperscan + 950 rules + live validation + checksum verification + cloud access mapping |
 | Skill | [secrets-rotation-runner](skills/secrets-rotation-runner/SKILL.md) | Build-an-X for rotation workflow after detection: identify provider → two-secret rotation → audit → invalidate → post-mortem → add detection rule |
 | Agent | [secrets-finding-triager](agents/secrets-finding-triager.md) | Adversarial unifier of gitleaks + TruffleHog + Kingfisher JSON; dedupes by (file, line, secret-class); enforces waivers with `expires:` + `approved_by:` + `reason:`; emits BLOCK/PASS verdict |
+| Skill | [secrets-baseline-manager](skills/secrets-baseline-manager/SKILL.md) | Unified secrets baseline/allowlist management across gitleaks, trufflehog, kingfisher (waiver lifecycle). |
 
 ## Install
 
