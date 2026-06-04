@@ -13,7 +13,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 |---|---|---:|
 | [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents |
 | [qa-process](plugins/qa-process/) | 1.5.0 | 19 skills + 6 agents |
-| [qa-roles](plugins/qa-roles/) | 1.1.0 | 0 skills + 14 agents |
+| [qa-roles](plugins/qa-roles/) | 1.1.1 | 0 skills + 14 agents |
 | [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents |
