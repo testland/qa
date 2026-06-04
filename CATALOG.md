@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 596 components**
+**77 plugins · 600 components**
 
 ## Foundations
 
@@ -51,11 +51,11 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 |---|---|---:|
 | [qa-accessibility-specifics](plugins/qa-accessibility-specifics/) | 1.0.0 | 12 skills + 1 agents |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.1.0 | 6 skills + 1 agents |
-| [qa-charts-dataviz](plugins/qa-charts-dataviz/) | 1.0.0 | 3 skills + 0 agents |
+| [qa-charts-dataviz](plugins/qa-charts-dataviz/) | 1.1.0 | 3 skills + 1 agents |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.0 | 5 skills + 2 agents |
-| [qa-localization](plugins/qa-localization/) | 1.0.0 | 4 skills + 0 agents |
-| [qa-modern-web](plugins/qa-modern-web/) | 1.0.0 | 5 skills + 0 agents |
-| [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 1.0.0 | 4 skills + 0 agents |
+| [qa-localization](plugins/qa-localization/) | 1.1.0 | 4 skills + 1 agents |
+| [qa-modern-web](plugins/qa-modern-web/) | 1.1.0 | 5 skills + 1 agents |
+| [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 1.1.0 | 4 skills + 1 agents |
 | [qa-pwa](plugins/qa-pwa/) | 1.1.0 | 7 skills + 1 agents |
 | [qa-visual-regression](plugins/qa-visual-regression/) | 1.1.0 | 7 skills + 2 agents |
 

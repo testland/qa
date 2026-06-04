@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-pdf-print-render",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "PDF + print rendering tests: 4 skills (pdf-snapshot-tester, print-stylesheet-tests, html-to-pdf-regression, pdf-accessibility-checker). Covers print/PDF output where qa-visual-regression covers screen output.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-pdf-print-render",
