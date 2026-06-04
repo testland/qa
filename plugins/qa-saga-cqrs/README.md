@@ -9,6 +9,7 @@ that holds them together.
 
 | Type | Name | Description |
 | --- | --- | --- |
+| Agent | [saga-critic](agents/saga-critic.md) | Audits saga orchestrators and event-sourcing write paths for missing compensating transactions, non-idempotent compensations, dual-write without outbox, absent retry policy, and missing optimistic-concurrency guard on event append. Emits BLOCK / PASS verdict. |
 | Skill | [saga-transaction-tests](skills/saga-transaction-tests/SKILL.md) | Orchestration vs choreography; per-step compensating-action verification; partial-failure matrix; outbox pattern atomicity; saga timeout |
 | Skill | [event-sourcing-tests](skills/event-sourcing-tests/SKILL.md) | Aggregate-replay determinism; snapshot equivalence; event-versioning + upcasting; projection rebuild from event log; replay-mode external-call suppression |
 | Skill | [cqrs-projection-tests](skills/cqrs-projection-tests/SKILL.md) | Per-event projection update; eventual-consistency window assertion; multiple projections per stream; zero-downtime swap; idempotency + out-of-order delivery |
