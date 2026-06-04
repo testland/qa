@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 662 components**
+**77 plugins · 670 components**
 
 ## Foundations
 
@@ -28,7 +28,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | Plugin | Version | Components |
 |---|---|---:|
 | [qa-api-testing](plugins/qa-api-testing/) | 1.1.0 | 7 skills + 2 agents |
-| [qa-bdd](plugins/qa-bdd/) | 1.2.0 | 8 skills + 2 agents |
+| [qa-bdd](plugins/qa-bdd/) | 1.3.0 | 9 skills + 2 agents |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.0 | 5 skills + 2 agents |
 | [qa-desktop](plugins/qa-desktop/) | 1.2.0 | 9 skills + 4 agents |
 | [qa-embedded](plugins/qa-embedded/) | 1.2.0 | 7 skills + 3 agents |
@@ -82,12 +82,12 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | Plugin | Version | Components |
 |---|---|---:|
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.5.0 | 1 skills + 9 agents |
-| [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.1.0 | 6 skills + 1 agents |
+| [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.2.0 | 8 skills + 1 agents |
 | [qa-defect-management](plugins/qa-defect-management/) | 1.1.0 | 7 skills + 3 agents |
-| [qa-flake-triage](plugins/qa-flake-triage/) | 1.0.0 | 2 skills + 5 agents |
-| [qa-load-testing](plugins/qa-load-testing/) | 1.2.0 | 9 skills + 3 agents |
+| [qa-flake-triage](plugins/qa-flake-triage/) | 1.1.0 | 4 skills + 5 agents |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.3.0 | 11 skills + 3 agents |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.2.0 | 6 skills + 2 agents |
-| [qa-shift-left](plugins/qa-shift-left/) | 1.0.0 | 3 skills + 4 agents |
+| [qa-shift-left](plugins/qa-shift-left/) | 1.1.0 | 4 skills + 4 agents |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.2.0 | 4 skills + 2 agents |
 
 ## AI & specialized

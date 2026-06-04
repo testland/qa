@@ -13,6 +13,7 @@ Shift-left QA: testability review, acceptance-criteria + NFR extraction from pro
 | Agent | [threat-model-from-spec](agents/threat-model-from-spec.md) | Builder: produce a STRIDE threat model from a feature spec; one row per (asset × category); likelihood × impact scoring; OWASP ASVS-anchored mitigations. |
 | Skill | [data-contract-extractor](skills/data-contract-extractor/SKILL.md) | Extract data contracts (schema + freshness + volume + distribution + ownership) from data PRDs; flag gaps; emit YAML for dbt/GX/Soda consumption. |
 | Agent | [spec-to-suite-orchestrator](agents/spec-to-suite-orchestrator.md) | W3 workflow: chain testability → AC + NFR → threat model + data contract → test stubs → artifact bundle. |
+| Skill | [bdd-suite-to-test-map](skills/bdd-suite-to-test-map/SKILL.md) | Map new Gherkin scenarios against the existing suite to prevent duplicate tests. |
 
 ## Install
 

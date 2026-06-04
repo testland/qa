@@ -18,6 +18,8 @@ Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI
 | Agent | [perf-regression-bisector](agents/perf-regression-bisector.md) | `git bisect run` against a per-commit perf measurement (k6 / Lighthouse); hand off culprit to flame-graph or db-slow-query analysis. |
 | Agent | [load-test-tool-selector](agents/load-test-tool-selector.md) | Reads project stack + load-testing goal (RPS profile, soak duration, browser-side metrics, CI gating) and recommends one tool from k6 / JMeter / Gatling / Locust / Lighthouse. Refuses when goal lacks a concrete load profile. Sibling of qa-mutation-testing/mutation-tool-selector. |
 | Agent | [perf-incident-responder](agents/perf-incident-responder.md) | On-call perf-incident orchestrator: confirm with k6, flame-graph the hot path, check slow queries, localize the cause. |
+| Skill | [latency-percentile-analyzer](skills/latency-percentile-analyzer/SKILL.md) | Interpret latency distributions beyond p95/p99: tail ratio, bimodal detection, coordinated omission. |
+| Skill | [jvm-gc-tuning](skills/jvm-gc-tuning/SKILL.md) | Diagnose JVM GC under load: GC logs, collector selection, the GC-pause to latency-tail link. |
 
 ## Install
 
