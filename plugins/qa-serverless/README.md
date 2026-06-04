@@ -15,6 +15,7 @@ Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare W
 | Skill | [cold-start-budget-reference](skills/cold-start-budget-reference/SKILL.md) | Pure reference: cold-start budgets across serverless runtimes. |
 | Skill | [lambda-timeout-budget-reference](skills/lambda-timeout-budget-reference/SKILL.md) | Pure reference: AWS Lambda timeout and billing semantics. |
 | Skill | [serverless-integration-test-builder](skills/serverless-integration-test-builder/SKILL.md) | Build-an-X integration suite from a SAM / serverless.yml / Wrangler definition. |
+| Agent | [serverless-cold-start-critic](agents/serverless-cold-start-critic.md) | Adversarial critic: detects cold-start anti-patterns (client init inside handler, heavy top-level imports, missing /tmp cache, missing SnapStart on JVM, oversized bundles) and emits BLOCK or PASS. |
 
 ## Install
 
