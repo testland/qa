@@ -10,14 +10,15 @@ script just catches objective violations.
     - desc_too_long            description > 1024 chars (Anthropic spec cap)
     - body_too_long            body over the type cap (skill 600 / agent 350)
     - unparseable_frontmatter
+    - readme_count_mismatch    README component-table row count != SKILL.md +
+                               agent .md files on disk. Counts a table row as a
+                               component when its first cell is skill/agent or it
+                               carries a plugin-local component link; cross-plugin
+                               reference rows (`](../`) are excluded.
 
   WARNING (advisory, never blocks):
     - windows_path             Windows backslash paths in body (vendor allowlist)
     - skill_body_over_500      skill body over Anthropic's 500-line guidance
-    - readme_count_mismatch    README component-table row count != SKILL.md +
-                               agent .md files on disk. Advisory while the
-                               backlog is burned down; promote to CRITICAL once
-                               all plugin READMEs enumerate their components.
 
 Usage: python3 scripts/content-audit.py [--strict]
 """
@@ -113,11 +114,19 @@ def audit():
         disk = len(glob.glob(f"plugins/{plugin}/skills/*/SKILL.md")) + len(
             glob.glob(f"plugins/{plugin}/agents/*.md")
         )
+        # Count component rows by the link they carry, not the first-column
+        # label, so org-chart tables (`| Role | Agent | task |`) count too.
         rows = 0
+        linkre = re.compile(r"\]\((?:agents/[^)]+\.md|skills/[^)]+/SKILL\.md)\)")
         with open(readme, encoding="utf-8") as fh:
             for line in fh:
+                if not line.lstrip().startswith("|"):
+                    continue
+                if "](../" in line:  # cross-plugin reference row, not a local component
+                    continue
                 cells = [c.strip() for c in line.split("|")]
-                if len(cells) >= 3 and cells[1].lower() in ("skill", "agent"):
+                first = cells[1].lower() if len(cells) > 1 else ""
+                if first in ("skill", "agent") or linkre.search(line):
                     rows += 1
         if rows != disk:
             findings["readme_count_mismatch"].append(
@@ -140,7 +149,7 @@ if __name__ == "__main__":
         ("desc_too_long", "CRITICAL"),
         ("body_too_long", "CRITICAL"),
         ("unparseable_frontmatter", "CRITICAL"),
-        ("readme_count_mismatch", "WARNING"),
+        ("readme_count_mismatch", "CRITICAL"),
         ("windows_path", "WARNING"),
         ("skill_body_over_500", "WARNING"),
     ]

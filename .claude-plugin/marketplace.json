@@ -104,7 +104,7 @@
     {
       "name": "qa-roles",
       "source": "./plugins/qa-roles",
-      "description": "QA org chart of 14 sharply-scoped role agents across three tiers. Tier 1 IC: exploratory-charter-author, automation-harness-bootstrapper, load-test-plan-designer, security-test-plan-builder, a11y-manual-test-scripter, data-quality-engineer, production-tester. Tier 2 Lead: test-architect, test-effort-estimator, quality-coach, test-quality-coach. Tier 3 Manager: release-engineer, release-cutover-coordinator, qa-manager. No generic persona-as-scope agents.",
+      "description": "QA org chart of 15 sharply-scoped role agents across four tiers. Tier 1 IC: exploratory-charter-author, automation-harness-bootstrapper, load-test-plan-designer, security-test-plan-builder, a11y-manual-test-scripter, data-quality-engineer, production-tester. Tier 2 Lead: test-architect, test-effort-estimator, quality-coach, test-quality-coach. Tier 3 Manager: release-engineer, release-cutover-coordinator, qa-manager. Tier 4 Head/Director: head-of-quality. No generic persona-as-scope agents.",
       "strict": true,
       "category": "foundations"
     },

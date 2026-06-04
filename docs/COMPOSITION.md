@@ -5,13 +5,13 @@ regenerated from the source files via `scripts/composition-graph.py`.
 
 ## Scope
 
-**Last refreshed: 2026-05-25 (Tier 4 close).** The header counts below are kept current; the per-plugin subsections later in this document are a snapshot from an earlier tier and have NOT been backfilled for every Tier 3/4 plugin addition. For the live, authoritative graph run `python3 scripts/composition-graph.py`.
+**Last refreshed: 2026-06-04 (marketplace gap-remediation).** The header counts below are kept current; the per-plugin subsections and the cross-plugin table later in this document are an earlier-tier snapshot that has NOT been backfilled for the 2026-06 remediation additions (54 new agents, 66 new skills). For the live, authoritative graph run `python3 scripts/composition-graph.py`.
 
-- **464 skills** across 77 plugins.
-- **104 agents** across 77 plugins.
-- **90 agents** preload one or more skills (~87%).
-- **14 agents** carry their own context inline (no preloads).
-- **20 cross-plugin preload edges** (see §"Cross-plugin preload edges" below).
+- **530 skills** across 77 plugins.
+- **165 agents** across 77 plugins.
+- **145 agents** preload one or more skills (~88%).
+- **20 agents** carry their own context inline (no preloads).
+- **28 cross-plugin preload edges** (see §"Cross-plugin preload edges" below).
 
 ## How preloading works
 

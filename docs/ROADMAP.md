@@ -10,6 +10,16 @@ It replaces the older "NOT-GAPS" exclusion list. The marketplace no
 longer blocks categories by name. The gap analysis below is a *positive*
 roadmap of what we want to land next.
 
+> **Note (2026-06-04 gap-remediation):** A large remediation pass shipped
+> ~120 new components (see
+> `docs/superpowers/plans/2026-06-04-marketplace-gap-remediation.md`). Many
+> items in the per-discipline gap tables and the "Within-plugin extensions"
+> list below have since landed (e.g. Kafka, Azure Functions, .NET TimeProvider,
+> Solr, Split.io, OpenFeature, Trivy config, Pester, Memcached, Azure DevOps
+> bug workflow, judgment-list authoring, and many critic/orchestrator agents).
+> **`CATALOG.md` is the source of truth for what currently ships** - check it
+> before picking a slot, as some entries below are already implemented.
+
 ## How to use this document
 
 - Each gap is sized as a **plugin** (new top-level `plugins/<name>/`)
@@ -26,7 +36,7 @@ roadmap of what we want to land next.
 
 ## Current coverage snapshot
 
-The catalog ships **77 plugins / 575 components** across seven groupings:
+The catalog ships **77 plugins / 695 components** across seven groupings:
 **foundations** (process / environment / data / reporting / impact /
 roles / review / management / hiring), **functional testing** (API / BDD
 / E2E / mobile / desktop / embedded / game / contract / mutation /
