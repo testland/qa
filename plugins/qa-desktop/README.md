@@ -18,6 +18,7 @@ Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows)
 | agent | desktop-driver-selector | Reads a target desktop project (`csproj` / `package.json` / `.pro` / `CMakeLists.txt`) and emits one driver recommendation (FlaUI / WinAppDriver / electron-playwright / QtTest / XCUITest / AT-SPI) plus rationale |
 | agent | desktop-test-scaffolder | Scaffolds a fresh desktop test project - test project file, driver-init module, one screen-object skeleton, and a CI workflow tagged for the matching Windows / macOS / Linux runner |
 | agent | desktop-test-author | Authors one desktop UI test for one user flow given a spec + target app + chosen driver; composes FlaUI / WinAppDriver / Appium-Windows / electron-playwright / QtTest skills with xUnit / NUnit / MSTest harnesses |
+| agent | desktop-test-reviewer | Adversarial read-only reviewer for existing desktop UI test files (WPF, WinForms, Electron, Qt, macOS); checks screen-object encapsulation, AutomationId locator stability, explicit-wait usage, and OS-platform hazards (STA threading, foreground-lock, UAC/TCC elevation); emits BLOCK or PASS |
 
 ## Install
 

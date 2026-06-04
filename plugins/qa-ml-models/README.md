@@ -20,6 +20,7 @@ risk class.
 | Skill | [fairlearn-fairness](skills/fairlearn-fairness/SKILL.md) | `MetricFrame` group-disaggregated metrics; `ExponentiatedGradient` + `ThresholdOptimizer` mitigation |
 | Skill | [alibi-explainability](skills/alibi-explainability/SKILL.md) | Anchors / SHAP / Integrated Gradients / Counterfactuals; per-prediction explanation logging for high-risk systems |
 | Agent | [model-fairness-reviewer](agents/model-fairness-reviewer.md) | Adversarial reviewer that gates promotion on risk-class-appropriate evidence; refuses ✅ when sensitive features missing or intersectional analysis absent |
+| Agent | [data-drift-incident-responder](agents/data-drift-incident-responder.md) | Triages a live Evidently drift alert into ranked root-cause hypotheses (schema change, pipeline bug, skew, seasonality, population shift) plus a remediation checklist; decides rollback, retrain, quarantine, or alert re-tune |
 
 ## Install
 

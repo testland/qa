@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-db-migrations",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Database migration testing: 4 skills (flyway-migrations, liquibase-migrations, atlas-migrations, sqlmesh-migrations) and 1 agent (migration-blast-radius-reviewer).",
   "author": {
     "name": "testland",

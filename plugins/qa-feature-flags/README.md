@@ -6,7 +6,7 @@ Feature-flag platform testing: SDK-specific tests for LaunchDarkly, Unleash, Fla
 
 | Type | Name | Description |
 | --- | --- | --- |
-| (filled in as components are added) |  |  |
+| agent | flag-coverage-gap-detector | Scan flag-evaluation call sites and identify OFF/non-default branches with no test coverage |
 
 ## Install
 
