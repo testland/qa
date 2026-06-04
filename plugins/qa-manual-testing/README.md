@@ -12,6 +12,11 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | Skill | [bug-bash-facilitator](skills/bug-bash-facilitator/SKILL.md) | Build-an-X structured multi-tester session: pre-bash kit + cohort charters + real-time triage board + scoring + post-bash cluster debrief. |
 | Skill | [uat-script-author](skills/uat-script-author/SKILL.md) | Build-an-X UAT scripts in stakeholder-readable business language: pre-conditions + journey steps + expected outcomes + AC verification + sign-off. |
 | Skill | [manual-test-debrief](skills/manual-test-debrief/SKILL.md) | Build-an-X session debrief in PROOF format (Past, Results, Outlook, Obstacles, Feelings) + 3-bucket time accounting + cross-session aggregation. |
+| Skill | [sbtm-reference](skills/sbtm-reference/SKILL.md) | Pure-reference catalog of Session-Based Test Management (Bach + Bach): charters, time-boxed sessions, TBS metrics. |
+| Skill | [hiccupps-f-heuristic](skills/hiccupps-f-heuristic/SKILL.md) | Pure-reference catalog of Bolton's HICCUPPS-F oracle heuristic for deciding whether something is a problem. |
+| Skill | [sfdpot-heuristic](skills/sfdpot-heuristic/SKILL.md) | Pure-reference catalog of Bach's SFDPOT ("San Francisco Depot") product-element coverage heuristic. |
+| Skill | [fcc-cuts-vids-heuristic](skills/fcc-cuts-vids-heuristic/SKILL.md) | Pure-reference catalog of Bach's FCC CUTS VIDS mnemonic for modelling a system under test. |
+| Skill | [crusspic-stmpl-heuristic](skills/crusspic-stmpl-heuristic/SKILL.md) | Pure-reference catalog of Bach's CRUSSPIC STMPL twelve quality-criteria heuristic. |
 
 ## Install
 

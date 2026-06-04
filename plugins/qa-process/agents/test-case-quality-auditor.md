@@ -5,6 +5,7 @@ tools: "Read, Grep, Glob, Bash(jq *), Bash(csvkit *)"
 model: sonnet
 skills:
   - test-case-ideation-from-story
+  - test-case-from-live-feature
 rating: 25
 d6: 5
 ---

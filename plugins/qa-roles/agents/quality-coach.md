@@ -3,6 +3,8 @@ name: quality-coach
 description: "Adversarial reviewer that critiques a story / PR / Increment against the team's Definition of Done - reads the team's `docs/definition-of-done.md` (or whichever path the project uses), then walks each DoD line and tags it `met` / `not met` / `unverifiable`, calling out which lines lack evidence in the PR. Per the Scrum Guide DoD is \"a formal description of the state of the Increment when it meets the quality measures required for the product\"; this agent makes adherence visible. Use during PR review or before a story moves to \"done\" - surfaces the unmet items so the team doesn't ship work that doesn't actually meet quality."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(gh pr view *)"
 model: sonnet
+skills:
+  - definition-of-done
 rating: 22
 d6: 3
 ---

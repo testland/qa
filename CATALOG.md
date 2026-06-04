@@ -12,8 +12,8 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components |
 |---|---|---:|
 | [qa-hiring](plugins/qa-hiring/) | 1.0.0 | 3 skills + 0 agents |
-| [qa-process](plugins/qa-process/) | 1.5.0 | 19 skills + 6 agents |
-| [qa-roles](plugins/qa-roles/) | 1.1.1 | 0 skills + 14 agents |
+| [qa-process](plugins/qa-process/) | 1.5.1 | 19 skills + 6 agents |
+| [qa-roles](plugins/qa-roles/) | 1.2.0 | 0 skills + 14 agents |
 | [qa-test-data](plugins/qa-test-data/) | 1.1.0 | 17 skills + 1 agents |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.0.0 | 4 skills + 1 agents |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents |
@@ -41,7 +41,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.1.0 | 5 skills + 1 agents |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.1.0 | 4 skills + 2 agents |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.1.0 | 4 skills + 1 agents |
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.3.0 | 9 skills + 4 agents |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.4.0 | 9 skills + 4 agents |
 
 ## Quality engineering
 
@@ -57,7 +57,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 | [qa-modern-web](plugins/qa-modern-web/) | 1.0.0 | 5 skills + 0 agents |
 | [qa-pdf-print-render](plugins/qa-pdf-print-render/) | 1.0.0 | 4 skills + 0 agents |
 | [qa-pwa](plugins/qa-pwa/) | 1.1.0 | 7 skills + 1 agents |
-| [qa-visual-regression](plugins/qa-visual-regression/) | 1.0.0 | 7 skills + 2 agents |
+| [qa-visual-regression](plugins/qa-visual-regression/) | 1.1.0 | 7 skills + 2 agents |
 
 ## Security & compliance
 
@@ -105,18 +105,18 @@ _LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, se
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.0.0 | 4 skills + 1 agents |
 | [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.0.0 | 4 skills + 1 agents |
 | [qa-experimentation](plugins/qa-experimentation/) | 1.0.0 | 7 skills + 1 agents |
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.0.0 | 7 skills + 1 agents |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.1.0 | 7 skills + 1 agents |
 | [qa-graphql](plugins/qa-graphql/) | 1.0.0 | 7 skills + 1 agents |
 | [qa-grpc](plugins/qa-grpc/) | 1.0.0 | 7 skills + 0 agents |
 | [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.0.0 | 6 skills + 1 agents |
 | [qa-ml-models](plugins/qa-ml-models/) | 1.0.0 | 5 skills + 1 agents |
 | [qa-notifications](plugins/qa-notifications/) | 1.0.0 | 6 skills + 0 agents |
-| [qa-payment](plugins/qa-payment/) | 1.0.0 | 10 skills + 0 agents |
+| [qa-payment](plugins/qa-payment/) | 1.0.1 | 10 skills + 0 agents |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.0.0 | 5 skills + 0 agents |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.0.0 | 4 skills + 0 agents |
 | [qa-search-relevance](plugins/qa-search-relevance/) | 1.0.0 | 3 skills + 1 agents |
-| [qa-serverless](plugins/qa-serverless/) | 1.0.0 | 9 skills + 0 agents |
-| [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.0.0 | 10 skills + 0 agents |
+| [qa-serverless](plugins/qa-serverless/) | 1.0.1 | 9 skills + 0 agents |
+| [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.0.1 | 10 skills + 0 agents |
 
 ## Tooling
 
@@ -129,7 +129,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.1.0 | 5 skills + 0 agents |
 | [qa-iac](plugins/qa-iac/) | 1.0.0 | 5 skills + 2 agents |
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.1.0 | 11 skills + 0 agents |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.1.1 | 11 skills + 0 agents |
 
 ## Alphabetical index
 

@@ -1,10 +1,11 @@
 ---
 name: stale-flag-detector
-description: "Read-only specialist that scans a codebase for stale feature flags - flags at 100% rollout for long enough to remove, kill-switches that haven't been touched in months, experiments that have already shipped, and orphan flags (referenced in code but not in the platform, or vice versa). Returns a ranked list with removal-priority + the runbook reference. Use proactively monthly / quarterly as flag-debt audit, or as a pre-flight check before a major refactor. Preloads feature-flag-test-matrix-reference."
+description: "Read-only specialist that scans a codebase for stale feature flags - flags at 100% rollout for long enough to remove, kill-switches that haven't been touched in months, experiments that have already shipped, and orphan flags (referenced in code but not in the platform, or vice versa). Returns a ranked list with removal-priority + the runbook reference. Use proactively monthly / quarterly as flag-debt audit, or as a pre-flight check before a major refactor. Preloads feature-flag-test-matrix-reference and flag-removal-runbook-author."
 tools: "Read, Grep, Glob, Bash(git log *)"
 model: sonnet
 skills:
   - feature-flag-test-matrix-reference
+  - flag-removal-runbook-author
 rating: 22
 d6: 4
 ---

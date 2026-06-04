@@ -14,6 +14,10 @@ script just catches objective violations.
   WARNING (advisory, never blocks):
     - windows_path             Windows backslash paths in body (vendor allowlist)
     - skill_body_over_500      skill body over Anthropic's 500-line guidance
+    - readme_count_mismatch    README component-table row count != SKILL.md +
+                               agent .md files on disk. Advisory while the
+                               backlog is burned down; promote to CRITICAL once
+                               all plugin READMEs enumerate their components.
 
 Usage: python3 scripts/content-audit.py [--strict]
 """
@@ -99,6 +103,27 @@ def audit():
         if not is_agent and body_lines > SKILL_BODY_ADVISORY:
             findings["skill_body_over_500"].append({"path": p, "body_lines": body_lines})
 
+    # README component-table vs filesystem: every plugin README lists its
+    # components in a markdown table whose rows start `| Skill |` / `| Agent |`.
+    # That row count must equal the number of SKILL.md + agent .md files on disk,
+    # or the catalog page misleads users browsing the README.
+    for readme in sorted(glob.glob("plugins/*/README.md")):
+        readme = readme.replace("\\", "/")
+        plugin = readme.split("/")[1]
+        disk = len(glob.glob(f"plugins/{plugin}/skills/*/SKILL.md")) + len(
+            glob.glob(f"plugins/{plugin}/agents/*.md")
+        )
+        rows = 0
+        with open(readme, encoding="utf-8") as fh:
+            for line in fh:
+                cells = [c.strip() for c in line.split("|")]
+                if len(cells) >= 3 and cells[1].lower() in ("skill", "agent"):
+                    rows += 1
+        if rows != disk:
+            findings["readme_count_mismatch"].append(
+                {"path": readme, "readme_rows": rows, "disk": disk}
+            )
+
     return findings, total
 
 
@@ -115,6 +140,7 @@ if __name__ == "__main__":
         ("desc_too_long", "CRITICAL"),
         ("body_too_long", "CRITICAL"),
         ("unparseable_frontmatter", "CRITICAL"),
+        ("readme_count_mismatch", "WARNING"),
         ("windows_path", "WARNING"),
         ("skill_body_over_500", "WARNING"),
     ]

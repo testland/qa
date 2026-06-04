@@ -3,6 +3,11 @@ name: selenium-grid-orchestrator
 description: "Action-taking agent that manages distributed Selenium runs across local Selenium Grid (Docker), Sauce Labs, BrowserStack, and LambdaTest - given a test suite and a target matrix, picks the appropriate provider per matrix combination, generates the per-target capabilities, schedules the run, aggregates results into a per-target verdict matrix. Use when a Selenium suite needs to run across many browser/OS combinations and the team doesn't want to manage the orchestration manually."
 tools: "Read, Write, Edit, Bash(docker compose *), Bash(curl *), Bash(jq *)"
 model: sonnet
+skills:
+  - selenium-testing
+  - browserstack-automate
+  - saucelabs-automate
+  - lambdatest-automate
 rating: 22
 d6: 3
 ---

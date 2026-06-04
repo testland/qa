@@ -6,7 +6,15 @@ Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare W
 
 | Type | Name | Description |
 | --- | --- | --- |
-| (filled in as components are added) |  |  |
+| Skill | [aws-sam-local-testing](skills/aws-sam-local-testing/SKILL.md) | AWS SAM Local CLI: `sam local invoke` / `start-api` for Lambda. |
+| Skill | [cloudflare-workers-miniflare](skills/cloudflare-workers-miniflare/SKILL.md) | Miniflare 3 + Wrangler dev for testing Cloudflare Workers locally. |
+| Skill | [netlify-functions-test](skills/netlify-functions-test/SKILL.md) | Netlify Dev + `@netlify/functions` handler testing. |
+| Skill | [vercel-edge-runtime-testing](skills/vercel-edge-runtime-testing/SKILL.md) | Vercel Edge Runtime via `@edge-runtime/jest-environment`. |
+| Skill | [lambda-test-tools-net](skills/lambda-test-tools-net/SKILL.md) | `Amazon.Lambda.TestTool` for invoking .NET Lambda handlers locally. |
+| Skill | [serverless-framework-test-plugin](skills/serverless-framework-test-plugin/SKILL.md) | serverless-offline + jest / mocha plugins for the Serverless Framework. |
+| Skill | [cold-start-budget-reference](skills/cold-start-budget-reference/SKILL.md) | Pure reference: cold-start budgets across serverless runtimes. |
+| Skill | [lambda-timeout-budget-reference](skills/lambda-timeout-budget-reference/SKILL.md) | Pure reference: AWS Lambda timeout and billing semantics. |
+| Skill | [serverless-integration-test-builder](skills/serverless-integration-test-builder/SKILL.md) | Build-an-X integration suite from a SAM / serverless.yml / Wrangler definition. |
 
 ## Install
 
@@ -22,5 +30,4 @@ All components in this plugin pass the v4.0 quality gate
 >=21/30 with d6 >=1 (v2.0 floor); D7 (eval coverage) and D8 (best-practices
 adherence) are advisory through the shadow window. See
 [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) for the
-rubric.See [`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at
-the repository root for the rubric.
+rubric.

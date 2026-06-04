@@ -135,3 +135,11 @@ Output:
 
 The agent does not auto-accept - it surfaces the question. The human
 reviewer decides.
+
+## Hand-off
+
+After classification, feed the per-diff verdicts into the
+[`visual-baseline-gate`](../skills/visual-baseline-gate/SKILL.md) skill to
+aggregate them into a single CI BLOCK / REVIEW / OK verdict. This agent
+produces the per-diff judgement; the gate turns the set of judgements into the
+pipeline pass/fail decision.
