@@ -19,6 +19,8 @@ Pairs naturally with `qa-shift-right` (synthetic monitoring),
 | Skill | [zipkin-trace-tests](skills/zipkin-trace-tests/SKILL.md) | Zipkin Docker on :9411; REST API (`/api/v2/traces`, `/api/v2/dependencies`); B3 single-header + multi-header propagation tests |
 | Skill | [trace-spec-author](skills/trace-spec-author/SKILL.md) | Build-an-X for trace specifications: per-feature span set + required SemConv attributes + status semantics + cardinality rules + assertion checklist |
 | Agent | [trace-coverage-reviewer](agents/trace-coverage-reviewer.md) | Adversarial reviewer: untraced critical paths + missing SemConv attrs + deprecated keys + hand-rolled span code + cardinality risks + spec drift |
+| Skill | [tempo-trace-tests](skills/tempo-trace-tests/SKILL.md) | Grafana Tempo trace testing via TraceQL queries and the Tempo HTTP API. |
+| Skill | [otel-collector-config-tester](skills/otel-collector-config-tester/SKILL.md) | Validate an OpenTelemetry Collector pipeline config (receivers/processors/exporters) end to end. |
 
 ## Install
 
