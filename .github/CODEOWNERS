@@ -1,10 +1,10 @@
 # See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-security/customizing-your-repository/about-code-owners
 
 # Default owners for everything in the repo
-*       @testland
+*       @elv1s42
 
 # Marketplace manifest changes need extra review
-/.claude-plugin/   @testland
-/scripts/          @testland
-/.github/          @testland
-/docs/             @testland
+/.claude-plugin/   @elv1s42
+/scripts/          @elv1s42
+/.github/          @elv1s42
+/docs/             @elv1s42
