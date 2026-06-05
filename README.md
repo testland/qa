@@ -24,6 +24,24 @@
 
 See [Quality bar](#quality-bar) and [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md).
 
+## How it works
+
+The marketplace ships three kinds of building block:
+
+- **Plugin** — an installable bundle scoped to one QA area (e.g.
+  `qa-api-testing`, `qa-load-testing`). You install only the plugins your
+  stack needs.
+- **Skill** — an atomic, self-contained capability inside a plugin, usually
+  wrapping one tool or one technique (e.g. `great-expectations`,
+  `oauth-flow-test-author`). Claude loads a skill when your request matches
+  its trigger; you can also ask for it by name.
+- **Agent** — a task-scoped subagent that runs one focused job (e.g.
+  `schema-diff-reviewer` reviews a migration diff and returns a findings
+  table). An agent may preload one or more skills to do its work.
+
+Installed components stay dormant until a matching task comes up, so adding a
+plugin doesn't add noise — it adds capability that activates on demand.
+
 ## Install
 
 ### Claude Code marketplace (recommended)
@@ -50,6 +68,47 @@ For example:
 ```bash
 git clone https://github.com/testland/qa ~/.claude/marketplaces/testland-qa
 ```
+
+> **Before you install:** plugins run inside your Claude Code session and ship
+> agent instructions and tool wrappers. Anthropic doesn't vet marketplace
+> contents — review a plugin's components before installing it into a sensitive
+> project. Every component here is rating-gated (see [Quality bar](#quality-bar)),
+> but you remain in control of what runs.
+
+## Start here
+
+New to the marketplace? Install one or two plugins for your role rather than
+everything — components activate on demand, so a focused set keeps things sharp.
+
+| If you're a… | Try first |
+|---|---|
+| Manual / exploratory tester | [qa-manual-testing](plugins/qa-manual-testing/) · [qa-bdd](plugins/qa-bdd/) · [qa-bug-repro](plugins/qa-bug-repro/) |
+| Test automation engineer | [qa-web-e2e](plugins/qa-web-e2e/) · [qa-api-testing](plugins/qa-api-testing/) · [qa-unit-tests-js](plugins/qa-unit-tests-js/) |
+| Performance engineer | [qa-load-testing](plugins/qa-load-testing/) · [qa-chaos-resilience](plugins/qa-chaos-resilience/) |
+| Security tester | [qa-sast](plugins/qa-sast/) · [qa-secrets](plugins/qa-secrets/) · [qa-dast](plugins/qa-dast/) |
+| Lead / manager / head of quality | [qa-roles](plugins/qa-roles/) · [qa-test-management](plugins/qa-test-management/) · [qa-process](plugins/qa-process/) |
+
+The full catalog is below; for versions and component counts see
+[`CATALOG.md`](CATALOG.md).
+
+## Using an installed plugin
+
+Once a plugin is installed, its skills and agents are available to Claude
+Code — invoke them by describing the task in plain language. Example with
+[`qa-data-quality`](plugins/qa-data-quality/):
+
+```
+/plugin install qa-data-quality@testland-qa
+```
+
+- Ask **"add Great Expectations checks to my orders pipeline"** → the
+  `great-expectations` skill scaffolds an ExpectationSuite + Checkpoint and
+  wires the results into a CI gate.
+- On a database change, ask **"review this migration's schema diff"** → the
+  `schema-diff-reviewer` agent returns a Critical / Warning / Info findings
+  table covering breaking-vs-additive changes and downstream impact.
+
+Each plugin's `README.md` lists its skills and agents and what each one does.
 
 ## Plugin catalog
 
@@ -127,6 +186,15 @@ testland-qa/
   Makefile                           # validate / rate / compose / catalog targets
   LICENSE                            # MIT
 ```
+
+## Questions & feedback
+
+- **Bug or a broken component?** Open an [issue](https://github.com/testland/qa/issues/new/choose).
+- **Want a plugin that doesn't exist yet?** Use the plugin-request issue template.
+- **General questions or ideas?** Start a thread in
+  [Discussions](https://github.com/testland/qa/discussions).
+- **Security report?** See [`SECURITY.md`](.github/SECURITY.md) — don't open a
+  public issue.
 
 ## Contributing
 
