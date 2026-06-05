@@ -1,6 +1,0 @@
-# Configure how GitHub displays a "Sponsor" button on the repo.
-# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-security/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
-# Leave keys empty until a funding channel is set up.
-
-github:        # [testland-org-or-user]
-custom:        # [https://testland.io/sponsor]

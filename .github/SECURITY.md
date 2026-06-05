@@ -25,7 +25,10 @@
 
 Please **do not** open a public GitHub issue for sensitive reports.
 
-Email: `security@testland.io`
+Use GitHub's private vulnerability reporting: open the repository's
+**Security** tab and click **Report a vulnerability**
+(<https://github.com/testland/qa/security/advisories/new>). This keeps the
+report private to the maintainers until a fix ships.
 
 Include:
 
