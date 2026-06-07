@@ -185,7 +185,7 @@ Per-bug triage:
 1. Read `bug_replay_log.txt` - the deterministic sequence.
 2. Confirm the bug locally with `restler replay --replay_log <path>`.
 3. File a ticket with the replay log attached;
-   [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md)
+   [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md)
    in the qa-bug-repro plugin can convert the replay into a
    project-specific failing test.
 
@@ -290,5 +290,5 @@ jobs:
 - [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
   stateless complement; lower setup cost; cover happy / boundary on
   PRs.
-- [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md) - converts a RESTler replay log into a project-specific failing
+- [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md) - converts a RESTler replay log into a project-specific failing
   regression test.

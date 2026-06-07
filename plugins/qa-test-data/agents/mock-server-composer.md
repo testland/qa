@@ -49,7 +49,7 @@ the correct fit when "the project is JVM-based and tests need to mock HTTP
 dependencies." Per the [`msw-handlers`](../skills/msw-handlers/SKILL.md) skill: MSW's
 "cross-environment consistency" (same handler set for browser + Node) is its key
 advantage over WireMock for JS/TS projects. Per the
-[`mountebank-imposters`](../mountebank-imposters/SKILL.md) skill: Mountebank is
+[`mountebank-imposters`](../skills/mountebank-imposters/SKILL.md) skill: Mountebank is
 "the only open source service virtualization tool that competes with the commercial
 offerings in terms of protocol diversity, capability, and performance"
 ([bbyars/mountebank][mb-readme]) - use it when non-HTTP protocols are in scope.

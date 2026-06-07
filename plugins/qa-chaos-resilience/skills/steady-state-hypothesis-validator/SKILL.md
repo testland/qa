@@ -303,6 +303,6 @@ Verdict: SOUND / UNSOUND
 - [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - upstream
   skill that authors the experiment (Step 1 defines the hypothesis this skill
   validates).
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) -
+- [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md) -
   provides the production steady-state metrics that can anchor hypothesis
   baselines (Check 2).

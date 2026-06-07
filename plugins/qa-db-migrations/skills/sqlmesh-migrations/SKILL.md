@@ -145,8 +145,8 @@ sqlmesh audit
 
 Returns failures if the audit query returns any rows.
 
-Compare with [`great-expectations`](../../qa-data-quality/skills/great-expectations/SKILL.md)
-and [`soda-checks`](../../qa-data-quality/skills/soda-checks/SKILL.md):
+Compare with [`great-expectations`](../../../qa-data-quality/skills/great-expectations/SKILL.md)
+and [`soda-checks`](../../../qa-data-quality/skills/soda-checks/SKILL.md):
 SQLMesh audits are tightly coupled to SQLMesh models; GE/Soda are
 standalone data-quality frameworks. Choose audits when you're
 already in SQLMesh; GE/Soda for cross-framework data quality.
@@ -231,7 +231,7 @@ or [`atlas-migrations`](../atlas-migrations/SKILL.md).
   [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
   [`atlas-migrations`](../atlas-migrations/SKILL.md) - sister tools
   (DDL-focused; SQLMesh complements them at the data-model layer)
-- [`dbt-testing`](../../qa-data-quality/skills/dbt-testing/SKILL.md),
-  [`great-expectations`](../../qa-data-quality/skills/great-expectations/SKILL.md),
-  [`soda-checks`](../../qa-data-quality/skills/soda-checks/SKILL.md) - sister data-quality frameworks
+- [`dbt-testing`](../../../qa-data-quality/skills/dbt-testing/SKILL.md),
+  [`great-expectations`](../../../qa-data-quality/skills/great-expectations/SKILL.md),
+  [`soda-checks`](../../../qa-data-quality/skills/soda-checks/SKILL.md) - sister data-quality frameworks
 - [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer

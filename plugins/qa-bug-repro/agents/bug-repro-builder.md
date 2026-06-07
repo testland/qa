@@ -112,10 +112,10 @@ exercises the failure, generate the test, run it, confirm red.
   tests - modifying a passing test to match the new bug defeats the
   regression-prevention purpose. If the test only fails alongside other
   tests, that's a test-ordering bug - hand off to
-  [`parallel-isolation-checker`](../../../qa-flake-triage/agents/parallel-isolation-checker.md).
+  [`parallel-isolation-checker`](../../qa-flake-triage/agents/parallel-isolation-checker.md).
 
 ## References
 
 - [`bug-report-template`](../skills/bug-report-template/SKILL.md) - input shape.
 - [`crash-stack-trace-analyzer`](./crash-stack-trace-analyzer.md) - pre-step when the report is just a stack trace.
-- [`parallel-isolation-checker`](../../../qa-flake-triage/agents/parallel-isolation-checker.md) - escalation for test-ordering failures.
+- [`parallel-isolation-checker`](../../qa-flake-triage/agents/parallel-isolation-checker.md) - escalation for test-ordering failures.

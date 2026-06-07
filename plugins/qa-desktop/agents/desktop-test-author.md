@@ -67,7 +67,7 @@ Never emit `Thread.Sleep` / `Task.Delay` / `time.sleep` between actions.
 
 ### Step 3 - Identify the assertion target
 
-Per [`xunit-tests`](../../../qa-unit-tests-net/skills/xunit-tests/SKILL.md) / [`nunit-tests`](../../../qa-unit-tests-net/skills/nunit-tests/SKILL.md) / [`mstest-tests`](../../../qa-unit-tests-net/skills/mstest-tests/SKILL.md): assert on observable state, not on internal flags. Acceptable shapes: window title change (`Assert.Equal("Invoices", window.Title)`), element presence (`Assert.NotNull(window.FindFirstDescendant(...))`), element text. Refuse `Assert.True(true)` smoke asserts.
+Per [`xunit-tests`](../../qa-unit-tests-net/skills/xunit-tests/SKILL.md) / [`nunit-tests`](../../qa-unit-tests-net/skills/nunit-tests/SKILL.md) / [`mstest-tests`](../../qa-unit-tests-net/skills/mstest-tests/SKILL.md): assert on observable state, not on internal flags. Acceptable shapes: window title change (`Assert.Equal("Invoices", window.Title)`), element presence (`Assert.NotNull(window.FindFirstDescendant(...))`), element text. Refuse `Assert.True(true)` smoke asserts.
 
 ### Step 4 - Emit ONE test file
 
@@ -90,7 +90,7 @@ public class LoginTests : IClassFixture<AppFixture> {
 }
 ```
 
-The agent adds new screen-object members to existing screen-object classes only if they are not already present. It does **not** modify other test files, other test methods, or unrelated screen-object members. The screen-object class follows the **Screen Object** pattern documented in [`object-model-patterns` §7](../../../qa-test-review/skills/object-model-patterns/SKILL.md): no assertions inside the screen body, navigation methods return the next Screen Object, methods named after the user-meaningful action.
+The agent adds new screen-object members to existing screen-object classes only if they are not already present. It does **not** modify other test files, other test methods, or unrelated screen-object members. The screen-object class follows the **Screen Object** pattern documented in [`object-model-patterns` §7](../../qa-test-review/skills/object-model-patterns/SKILL.md): no assertions inside the screen body, navigation methods return the next Screen Object, methods named after the user-meaningful action.
 
 ### Step 4a - Emit OS-specific bootstrap (setUp / teardown)
 
@@ -138,7 +138,7 @@ The agent **refuses** to:
 
 | Anti-pattern | Why it fails / fix |
 |---|---|
-| Inline locator chains in the test body | Use a Screen Object class ([`object-model-patterns` §7](../../../qa-test-review/skills/object-model-patterns/SKILL.md)) |
+| Inline locator chains in the test body | Use a Screen Object class ([`object-model-patterns` §7](../../qa-test-review/skills/object-model-patterns/SKILL.md)) |
 | Fabricating an AutomationId from visible text | `Name` IS the localised label - first non-English build breaks. Mark provisional IDs with `CONFIRM:` and verify via FlaUInspect / Accessibility Inspector / Accerciser |
 | Asserting on internal flags (`Assert.True(viewmodel.IsLoggedIn)`) | Assert on observable UI state (window title, element presence, label text) |
 | `Thread.Sleep` / `Task.Delay` / `time.sleep` between actions | Use the per-OS retry primitive from Step 2b with explicit `timeout` AND `interval` |

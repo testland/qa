@@ -69,7 +69,7 @@ A QA hiring rubric scores against 5 - 8 competency dimensions. The default set (
 ### quality-manager
 
 1. **Quality strategy across releases / quarters**.
-2. **Risk-based prioritisation** - the [risk-matrix-recommender](../../qa-process/agents/risk-matrix-recommender.md) framing; data-informed decisions with traceability.
+2. **Risk-based prioritisation** - the [risk-matrix-recommender](../../../qa-process/agents/risk-matrix-recommender.md) framing; data-informed decisions with traceability.
 3. **Stakeholder communication, exec-level**.
 4. **Hiring & team development**.
 5. **Process / methodology fluency** - agile, BDD, shift-left, shift-right, when each applies.
@@ -165,4 +165,4 @@ The output is a single markdown document with:
 - Bloom's taxonomy - K1 - K4 cognitive levels used to align the rubric's anchor depth with the question's intended difficulty: https://en.wikipedia.org/wiki/Bloom%27s_taxonomy
 - PractiTest 2026 State of Testing Report - hiring rubric authoring named as a high-adoption, low-risk AI use case for QA managers: https://www.practitest.com/state-of-testing/
 - [`interview-question-author`](../interview-question-author/SKILL.md), [`calibration-guide-author`](../calibration-guide-author/SKILL.md) - sibling skills that complete the structured-interview triple.
-- [`risk-matrix-recommender`](../../qa-process/agents/risk-matrix-recommender.md) - the data-informed-decisions-with-traceability framing this rubric inherits for the `quality-manager` role's risk-prioritisation dimension.
+- [`risk-matrix-recommender`](../../../qa-process/agents/risk-matrix-recommender.md) - the data-informed-decisions-with-traceability framing this rubric inherits for the `quality-manager` role's risk-prioritisation dimension.

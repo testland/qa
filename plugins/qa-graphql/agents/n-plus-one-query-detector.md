@@ -261,7 +261,7 @@ cross-team fix (add batch endpoint, then DataLoader-wrap).
   cache is a false positive.
 - **Doesn't catch SQL-side N+1.** ORM-emitted queries that look
   fine at JS level can fan-out at SQL level. Pair with
-  [`qa-load-testing/db-slow-query-detector`](../../../qa-load-testing/skills/db-slow-query-detector/SKILL.md)
+  [`qa-load-testing/db-slow-query-detector`](../../qa-load-testing/skills/db-slow-query-detector/SKILL.md)
   for SQL-level visibility.
 - **DataLoader-recommendation can be wrong.** If the field is
   used only once per request, the loader is overkill - eager
@@ -283,7 +283,7 @@ Returns a markdown report. Does not modify files.
 - Apollo guide on N+1:
   apollographql.com/docs.
 - Cross-plugin DB-side detection:
-  [`qa-load-testing/db-slow-query-detector`](../../../qa-load-testing/skills/db-slow-query-detector/SKILL.md).
+  [`qa-load-testing/db-slow-query-detector`](../../qa-load-testing/skills/db-slow-query-detector/SKILL.md).
 - Related concerns:
   [`introspection-attack-surface-reference`](../skills/introspection-attack-surface-reference/SKILL.md)
   (introspection probes often look like N+1),

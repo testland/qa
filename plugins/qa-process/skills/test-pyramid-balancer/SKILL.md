@@ -88,7 +88,7 @@ Defaults:
 
 To detect change shape: walk last 90 days of `git log`; classify
 each PR's primary impact via path heuristic (per
-[`test-architect`](../../qa-roles/agents/test-architect.md) Mode 1
+[`test-architect`](../../../qa-roles/agents/test-architect.md) Mode 1
 Step 2).
 
 ## Step 4 - Detect anti-patterns
@@ -221,10 +221,10 @@ Output a stack-ranked list of layer-changes:
 - [tp][tp] - Mike Cohn's pyramid: unit / service / UI; "many more
   low-level UnitTests than high level BroadStackTests"; UI tests
   "brittle, expensive to write, and time consuming to run."
-- [`test-architect`](../../qa-roles/agents/test-architect.md) - 
+- [`test-architect`](../../../qa-roles/agents/test-architect.md) - 
   per-repo pyramid + framework recommendation; complementary
   agent (this skill is the analytical workflow).
-- [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - risk-weighted "what to add at unit layer" once the team decides
+- [`unit-test-coverage-targeter`](../../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - risk-weighted "what to add at unit layer" once the team decides
   to layer-down.
 - [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling
   skill for capping E2E suite size.

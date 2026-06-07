@@ -277,8 +277,8 @@ Per-farm wiring:
   [`detox-testing`](../detox-testing/SKILL.md),
   [`maestro-flows`](../maestro-flows/SKILL.md) - per-platform
   runners this dispatcher orchestrates.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - parser for the per-target JUnit XML aggregation.
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - parser for the per-target JUnit XML aggregation.
 - Per Mike Cohn's test pyramid (cited in
-  [`test-pyramid-balancer`](../../qa-process/skills/test-pyramid-balancer/SKILL.md)),
+  [`test-pyramid-balancer`](../../../qa-process/skills/test-pyramid-balancer/SKILL.md)),
   mobile UI tests are the most expensive layer; matrix dispatch
   is the cost-management discipline.

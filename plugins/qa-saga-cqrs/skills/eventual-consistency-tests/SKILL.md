@@ -240,7 +240,7 @@ def test_bounded_staleness_under_2_seconds():
   sister skills
 - CRDT theory - Shapiro et al., "A comprehensive study of
   Convergent and Commutative Replicated Data Types" (INRIA report)
-- [`mvcc-isolation-tests`](../../qa-concurrency/skills/mvcc-isolation-tests/SKILL.md) - 
+- [`mvcc-isolation-tests`](../../../qa-concurrency/skills/mvcc-isolation-tests/SKILL.md) - 
   per-DB transaction isolation (different consistency dimension)
 
 [Fowler - Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html

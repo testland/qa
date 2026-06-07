@@ -129,7 +129,7 @@ generateInvoice([item], { now: () => 1000, rand: () => 0.5 });
 ```
 
 For more comprehensive control, use a `Clock` interface (see
-[`db-snapshot-restore`](../../qa-test-environment/agents/db-snapshot-restore.md)
+[`db-snapshot-restore`](../../../qa-test-environment/agents/db-snapshot-restore.md)
 for a similar pattern with database connections).
 
 ## Pattern 4 - Untestable boundaries (file system, OS calls)
@@ -306,7 +306,7 @@ async function charge(amount) {
 without real network is hard.
 
 **Refactor - Adapter (don't mock what you don't own per
-[`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md)):**
+[`mocking-anti-pattern-detector`](../../../qa-test-review/agents/mocking-anti-pattern-detector.md)):**
 
 ```typescript
 interface PaymentGateway {
@@ -330,7 +330,7 @@ class FakePaymentGateway implements PaymentGateway {
 
 Tests use `FakePaymentGateway`; production uses `StripeGateway`.
 The team owns the interface; mocking is fine. Per
-[`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md):
+[`mocking-anti-pattern-detector`](../../../qa-test-review/agents/mocking-anti-pattern-detector.md):
 "Don't mock what you don't own."
 
 ## Step - Decision tree
@@ -373,5 +373,5 @@ Want to test private methods?                   → Pattern 6 (extract or test t
 - *Working Effectively with Legacy Code* by Michael Feathers
   (2004) - the canonical "how to add tests to untestable code"
   reference; introduces the "seam" concept this skill draws from.
-- [`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md) - sibling: detects the over-mocking that stuck patterns produce.
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - §5 covers the test-double taxonomy this skill references.
+- [`mocking-anti-pattern-detector`](../../../qa-test-review/agents/mocking-anti-pattern-detector.md) - sibling: detects the over-mocking that stuck patterns produce.
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - §5 covers the test-double taxonomy this skill references.

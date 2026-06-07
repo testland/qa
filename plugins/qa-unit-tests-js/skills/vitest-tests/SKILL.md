@@ -260,4 +260,4 @@ Vitest enters watch mode and hangs the runner.
   [`mocha-tests`](../mocha-tests/SKILL.md),
   [`ava-tests`](../ava-tests/SKILL.md),
   [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene

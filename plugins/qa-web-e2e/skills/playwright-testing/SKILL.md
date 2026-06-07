@@ -24,7 +24,7 @@ Per [pw-intro][pwi]:
 
 - New web E2E project; pick Playwright as the modern default.
 - Cross-browser coverage matters (per
-  [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md)) - Playwright's three-engine support is the differentiator.
+  [`browser-matrix-runner`](../../../qa-compatibility/skills/browser-matrix-runner/SKILL.md)) - Playwright's three-engine support is the differentiator.
 - Migration from Selenium / WebDriver-based stacks (see
   [`selenium-testing`](../selenium-testing/SKILL.md)).
 
@@ -64,7 +64,7 @@ test('checkout flow happy path', async ({ page }) => {
 });
 ```
 
-Per [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md):
+Per [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md):
 prefer `getByRole` / `getByLabelText` / `getByText` over CSS class
 / XPath. Web-first assertions (`await expect(...)`) auto-wait
 within the test timeout.
@@ -234,13 +234,13 @@ npx playwright show-report
 ```
 
 For programmatic / CI consumption, the JUnit reporter (Step 4)
-feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| CSS-class / XPath selectors                                           | Brittle to DOM changes.                                                   | `getByRole` / `getByLabelText` per [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md). |
+| CSS-class / XPath selectors                                           | Brittle to DOM changes.                                                   | `getByRole` / `getByLabelText` per [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md). |
 | `page.waitForTimeout(2000)`                                            | Flaky on slow CI; slow on fast.                                           | Web-first assertions (auto-wait). |
 | One mega-test that spans multiple flows                                | Failure mid-test obscures cause.                                          | Per-flow tests; share setup via Page Objects. |
 | Skipping `--with-deps` in CI                                           | Linux runner missing browser deps.                                       | Always `--with-deps` (Step 8). |
@@ -248,10 +248,10 @@ feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/S
 
 ## Limitations
 
-- **No real Safari.** WebKit ≠ Safari (per [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md));
+- **No real Safari.** WebKit ≠ Safari (per [`browser-matrix-runner`](../../../qa-compatibility/skills/browser-matrix-runner/SKILL.md));
   iOS Safari needs real-device testing.
 - **Per-test runtime ~2-30s.** E2E expensive vs unit tests; use
-  pyramid balance per [`test-pyramid-balancer`](../../qa-process/skills/test-pyramid-balancer/SKILL.md).
+  pyramid balance per [`test-pyramid-balancer`](../../../qa-process/skills/test-pyramid-balancer/SKILL.md).
 - **Browser version drift.** Playwright N+1 ahead of stable; some
   tests pass in Playwright but fail in shipped Chrome.
 
@@ -260,7 +260,7 @@ feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/S
 - [pwi][pwi] - Playwright overview, install via `npm init
   playwright@latest`, three-engine support, CLI flags, HTML
   Reporter.
-- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.
+- [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.
 - [`playwright-codegen-reviewer`](../../agents/playwright-codegen-reviewer.md) - sibling agent for codegen output review.
-- [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md) - cross-browser matrix.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream JUnit XML parsing.
+- [`browser-matrix-runner`](../../../qa-compatibility/skills/browser-matrix-runner/SKILL.md) - cross-browser matrix.
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream JUnit XML parsing.

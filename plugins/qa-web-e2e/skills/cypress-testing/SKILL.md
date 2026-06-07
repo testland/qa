@@ -106,7 +106,7 @@ needed.
 ## Step 4 - Use cypress-testing-library
 
 For accessibility-first selectors (per the team's
-[`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)
+[`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md)
 convention):
 
 ```bash
@@ -205,7 +205,7 @@ Cloud provides:
 - Per-test analytics.
 - Flaky-test detection.
 
-OSS alternative: [`currents-integration`](../../qa-test-reporting/skills/currents-integration/SKILL.md)
+OSS alternative: [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md)
 covers similar analytics for both Cypress + Playwright.
 
 ## Step 9 - CI integration
@@ -249,9 +249,9 @@ jobs:
 - **Same-tab restriction.** Originally Cypress only tested
   same-tab; multi-tab support added later but with caveats.
 - **No native mobile.** Mobile via emulation only; for native, see
-  [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md).
+  [`appium-testing`](../../../qa-mobile-native/skills/appium-testing/SKILL.md).
 - **Cypress Cloud is paid.** OSS-budget teams use
-  [`currents-integration`](../../qa-test-reporting/skills/currents-integration/SKILL.md).
+  [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md).
 
 ## References
 
@@ -262,5 +262,5 @@ jobs:
   [`selenium-testing`](../selenium-testing/SKILL.md),
   [`webdriverio-testing`](../webdriverio-testing/SKILL.md) - 
   alternative E2E frameworks.
-- [`currents-integration`](../../qa-test-reporting/skills/currents-integration/SKILL.md) - OSS analytics alternative to Cypress Cloud.
-- [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.
+- [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md) - OSS analytics alternative to Cypress Cloud.
+- [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.

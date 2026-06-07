@@ -207,5 +207,5 @@ LLM calls have cost and rate limits. Pattern:
 - [`ai-test-curator`](../../agents/ai-test-curator.md) - required
   downstream review.
 - [`ai-spec-coverage-mapper`](../ai-spec-coverage-mapper/SKILL.md) - sister: maps existing tests to spec sections.
-- [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - non-AI alternative for AC-to-test conversion.
-- [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md) - runs alongside curator on generated tests.
+- [`acceptance-test-from-criteria`](../../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - non-AI alternative for AC-to-test conversion.
+- [`assertion-quality-reviewer`](../../../qa-test-review/agents/assertion-quality-reviewer.md) - runs alongside curator on generated tests.

@@ -164,7 +164,7 @@ class PropertyCheckSpec extends AnyFlatSpec with Matchers
 }
 ```
 
-Cross-ref [`quickcheck-testing`](../../qa-property-based/skills/quickcheck-testing/SKILL.md)
+Cross-ref [`quickcheck-testing`](../../../qa-property-based/skills/quickcheck-testing/SKILL.md)
 for the property-based discipline (covers QuickCheck + ScalaCheck).
 
 ## Step 6 - Lifecycle hooks
@@ -262,5 +262,5 @@ Coverage via `sbt-scoverage` plugin (Scala-native; not JaCoCo).
   [`kotest-tests`](../kotest-tests/SKILL.md),
   [`spock-tests`](../spock-tests/SKILL.md),
   [`testng-tests`](../testng-tests/SKILL.md) - sister tools
-- [`quickcheck-testing`](../../qa-property-based/skills/quickcheck-testing/SKILL.md) - Haskell + Scala property-based
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- [`quickcheck-testing`](../../../qa-property-based/skills/quickcheck-testing/SKILL.md) - Haskell + Scala property-based
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)

@@ -211,7 +211,7 @@ jobs:
 
 The test results land in JUnit XML at
 `app/build/outputs/androidTest-results/.../TEST-*.xml` - 
-consumable by [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+consumable by [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Anti-patterns
 
@@ -245,4 +245,4 @@ consumable by [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-an
 - [`xcuitest-suite`](../xcuitest-suite/SKILL.md) - iOS sibling.
 - [`appium-testing`](../appium-testing/SKILL.md) - cross-platform
   alternative.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream parser.
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream parser.

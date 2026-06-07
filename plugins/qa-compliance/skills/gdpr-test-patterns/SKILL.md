@@ -161,7 +161,7 @@ def test_signup_fixtures_contain_only_required_pii():
 | Test only main-app data store on SAR/erasure | Misses analytics, CRM, support, backups | Multi-system assertion (Steps Art. 15 + 17) |
 | Hardcode 30-day SAR window assumption | GDPR allows extension to 3 months in complex cases | Test timeline against actual policy doc |
 | Test consent recording without revocation | Half the workflow uncovered | Both grant + revoke tests (Step Art. 7) |
-| Fixture data uses real customer PII | GDPR violation in tests themselves | Use [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) |
+| Fixture data uses real customer PII | GDPR violation in tests themselves | Use [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) |
 | Skip data-minimization assertions | New PII types creep in via schema changes | Step Art. 5(1)(c) field-allowlist test |
 
 ## Limitations
@@ -182,7 +182,7 @@ def test_signup_fixtures_contain_only_required_pii():
 - eur-lex.europa.eu/eli/reg/2016/679/oj - canonical GDPR text
 - edpb.europa.eu - European Data Protection Board guidelines
 - ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/ - UK ICO guide
-- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
+- [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
   cross-plugin: safe test fixture generation
 - [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md) - sister: California analogue
 - [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - companion: GDPR audit logs

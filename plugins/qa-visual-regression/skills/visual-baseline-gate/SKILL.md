@@ -29,7 +29,7 @@ go/no-go verdict.
 
 - The team uses two or more visual engines and wants one CI gate
   (similar in motivation to
-  [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md)
+  [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md)
   for data quality).
 - The team wants to enforce a "reviewer approval" rule on baseline
   updates - i.e. a `--update-snapshots` commit by the PR author cannot
@@ -137,7 +137,7 @@ from someone other than the last committer" branch protection.
 ## Step 4 - Emit the artifact
 
 Markdown summary (matches the
-[`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md)
+[`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md)
 shape for cross-domain consistency):
 
 ```markdown
@@ -239,4 +239,4 @@ the visual-diff-classifier has produced `visual-classifications.json`):
 - [`playwright-snapshots`](../playwright-snapshots/SKILL.md)
 - [`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)
 - [`visual-baseline-conventions`](../visual-baseline-conventions/SKILL.md) - the conventions this gate enforces.
-- [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md) - sibling gate skill for data-quality results, same artifact shape.
+- [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md) - sibling gate skill for data-quality results, same artifact shape.

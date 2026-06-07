@@ -19,7 +19,7 @@ This skill builds the **deterministic** canary verdict: a
 machine-checkable comparison of canary metrics vs baseline that
 emits promote / pause / rollback.
 
-It composes with [`release-engineer`](../../qa-roles/agents/release-engineer.md)'s
+It composes with [`release-engineer`](../../../qa-roles/agents/release-engineer.md)'s
 canary observation step and per
 [`canary-release`][cr] runs the analytical layer underneath the
 human review.
@@ -287,7 +287,7 @@ ambiguous case); rollback is automatic on clear failure.
   monitoring + rollback, "early warning for potential problems
   before impacting your entire production infrastructure or user
   base."
-- [`release-engineer`](../../qa-roles/agents/release-engineer.md) - orchestrating role agent that calls this skill at the canary
+- [`release-engineer`](../../../qa-roles/agents/release-engineer.md) - orchestrating role agent that calls this skill at the canary
   observation step.
 - [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) - sibling: continuous-in-production verification (different
   cadence, different goal).

@@ -9,7 +9,7 @@ d6: 3
 
 ## Overview
 
-Coverage tools (per [`lcov-analysis`](../../qa-test-reporting/skills/lcov-analysis/SKILL.md))
+Coverage tools (per [`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md))
 report which **lines** are tested. They don't report which **spec
 sections** are tested.
 
@@ -137,7 +137,7 @@ jobs:
 LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 - Spot-check the highest-priority ACs manually.
-- Cross-reference with [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md)
+- Cross-reference with [`acceptance-test-from-criteria`](../../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md)
   if the team uses `@AC-X.Y` tags - those are the ground truth.
 - Compare LLM's claim vs. test code via human review.
 
@@ -166,5 +166,5 @@ LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 - [`ai-test-generator`](../ai-test-generator/SKILL.md) - sister
   skill: generates tests for the gaps this skill identifies.
-- [`acceptance-test-from-criteria`](../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - for tag-based AC traceability without LLM.
-- [`coverage-debt-tracker`](../../qa-test-impact-analysis/skills/coverage-debt-tracker/SKILL.md) - line-coverage debt; complementary to spec coverage.
+- [`acceptance-test-from-criteria`](../../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - for tag-based AC traceability without LLM.
+- [`coverage-debt-tracker`](../../../qa-test-impact-analysis/skills/coverage-debt-tracker/SKILL.md) - line-coverage debt; complementary to spec coverage.

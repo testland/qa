@@ -124,7 +124,7 @@ The DoD becomes a PR template:
 (any DoD line marked N/A — explain)
 ```
 
-[`quality-coach`](../../qa-roles/agents/quality-coach.md) reads
+[`quality-coach`](../../../qa-roles/agents/quality-coach.md) reads
 this template + the actual PR state and verifies each line.
 
 ## DoD evolution
@@ -154,7 +154,7 @@ better tooling, not a lower bar.
 |--------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | No DoD                                                              | Per [scrum-guide][sg], the team must define one if not org-mandated.     | Adopt the starter (above). |
 | 30-line DoD that nobody can satisfy per-PR                          | Team marks everything "N/A"; defeats the purpose.                        | Trim to 7-10 lines covering the highest-value gates. |
-| DoD as aspirational, not enforced                                   | "We have a DoD but PRs ship without meeting it."                         | [`quality-coach`](../../qa-roles/agents/quality-coach.md) enforces; PRs blocked on unmet lines. |
+| DoD as aspirational, not enforced                                   | "We have a DoD but PRs ship without meeting it."                         | [`quality-coach`](../../../qa-roles/agents/quality-coach.md) enforces; PRs blocked on unmet lines. |
 | Per-PR DoD different from team's "done"                              | Drift; team can't tell what's done.                                      | One DoD; one PR template referencing it. |
 | Lowering the DoD when it gets in the way                            | Quality bar erodes silently.                                             | Discuss in retro before lowering; document the reason. |
 | DoD never updated after an incident                                  | Same incident class recurs.                                              | Post-incident DoD review (above cadence). |
@@ -175,8 +175,8 @@ better tooling, not a lower bar.
   of the Increment when it meets the quality measures required for
   the product"; team owns it (or follows org-mandated minimum);
   items not Done return to the Product Backlog.
-- [`quality-coach`](../../qa-roles/agents/quality-coach.md) - agent
+- [`quality-coach`](../../../qa-roles/agents/quality-coach.md) - agent
   that enforces the DoD per-PR.
-- [`definition-of-done-checker`](../../qa-shift-left/agents/definition-of-done-checker.md) - sibling adversarial agent for the same purpose.
+- [`definition-of-done-checker`](../../../qa-shift-left/agents/definition-of-done-checker.md) - sibling adversarial agent for the same purpose.
 - [`smoke-suite-gate`](../smoke-suite-gate/SKILL.md) - CI gate
   that satisfies the "staging deploy + smoke passed" line.

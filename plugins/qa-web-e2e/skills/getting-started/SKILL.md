@@ -21,7 +21,7 @@ If you are not sure which tool to use, run the `web-e2e-framework-selector` agen
 |------|-----------|---------------------|
 | Scaffold and author your first tests | [`playwright-testing`](../playwright-testing/SKILL.md) | Greenfield project or no existing E2E suite. Playwright is the modern default for new web projects. |
 | Generate a test skeleton from a user story | `spec-to-e2e-test-scaffolder` agent | You have a story or test-case row and want a clean scaffold with `// TODO` placeholders rather than raw codegen. |
-| Make the test code team-ready | [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) | After authoring: enforce selector, naming, and structure conventions before the PR lands. |
+| Make the test code team-ready | [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) | After authoring: enforce selector, naming, and structure conventions before the PR lands. |
 
 Start with `playwright-testing` unless `web-e2e-framework-selector` sends you elsewhere.
 

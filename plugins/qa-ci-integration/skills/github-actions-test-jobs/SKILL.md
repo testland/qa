@@ -171,7 +171,7 @@ action:
 ```
 
 Use sparingly - retries hide flake. Prefer
-[`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
+[`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
 
 ## Step 7 - Per-trigger filtering
 
@@ -259,5 +259,5 @@ Secrets configured in repo settings; never committed.
   [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
   per-platform alternatives.
 - [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md) - cross-CI conventions.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream JUnit XML parser.
-- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - preferred over retries.
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream JUnit XML parser.
+- [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - preferred over retries.

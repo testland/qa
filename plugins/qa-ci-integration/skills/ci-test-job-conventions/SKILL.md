@@ -25,7 +25,7 @@ matrix:
 | 2-10 min            | Optional. Shard if PR feedback time matters.   |
 | 10-30 min           | 2-4 shards.                                    |
 | > 30 min            | 4-8 shards. Investigate the suite - may be too big. |
-| > 60 min            | 8+ shards + investigate suite refactoring (per [`e2e-suite-budget`](../../qa-process/skills/e2e-suite-budget/SKILL.md)). |
+| > 60 min            | 8+ shards + investigate suite refactoring (per [`e2e-suite-budget`](../../../qa-process/skills/e2e-suite-budget/SKILL.md)). |
 
 Sharding cost-equivalent is N parallel × ~runtime/N - same total
 CPU-time, faster wall-clock.
@@ -38,7 +38,7 @@ Distinguish retry classes:
 |------------------------------|------------------|---------------------------------------------|
 | Runner died / system failure | Yes (1-2x)       | CI platform's retry-on-runner-failure.    |
 | Network timeout to dependency | Yes (1x)         | Test framework retry; flag for analysis.  |
-| Test flake (passed on retry)  | No               | Mark + quarantine via [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). |
+| Test flake (passed on retry)  | No               | Mark + quarantine via [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). |
 | Test consistently fails       | No               | Real bug; investigate.                      |
 
 **Rule:** Maximum 1 framework-level retry. More retries hide flake.
@@ -52,7 +52,7 @@ Failed-on-first-run-passed-on-retry tests are flake. Pattern:
    (move to separate suite that doesn't gate).
 3. Periodic review of quarantined tests → fix or delete.
 
-Per [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md)
+Per [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md)
 for the workflow.
 
 ## §4 - Artifact lifecycle
@@ -137,7 +137,7 @@ third-party action:
 | Jenkins          | `junit '...'` (JUnit Plugin; native)               |
 | CircleCI         | `store_test_results:` (native; feeds Insights)     |
 
-Always emit JUnit XML; downstream parser via [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+Always emit JUnit XML; downstream parser via [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## §8 - Secret management
 
@@ -222,6 +222,6 @@ The goal: `.github/workflows/test.yml`, `.gitlab-ci.yml`, and
   [`jenkinsfile-test-stages`](../jenkinsfile-test-stages/SKILL.md),
   [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
   per-CI implementation skills.
-- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - flake handling.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - JUnit XML parser.
-- [`e2e-suite-budget`](../../qa-process/skills/e2e-suite-budget/SKILL.md) - when to refactor instead of shard more.
+- [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - flake handling.
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - JUnit XML parser.
+- [`e2e-suite-budget`](../../../qa-process/skills/e2e-suite-budget/SKILL.md) - when to refactor instead of shard more.

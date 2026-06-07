@@ -213,4 +213,4 @@ public void ConditionalTest()
 - [`xunit-tests`](../xunit-tests/SKILL.md),
   [`nunit-tests`](../nunit-tests/SKILL.md),
   [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)

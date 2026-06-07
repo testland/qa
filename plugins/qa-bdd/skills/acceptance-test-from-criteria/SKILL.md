@@ -35,7 +35,7 @@ test is the executable formalization.
 For Gherkin generation from prose stories, see
 [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md). For
 upstream AC extraction, see
-[`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
+[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
 
 ## Step 1 - Read the AC list
 
@@ -143,7 +143,7 @@ After implementing all paths:
 ```
 
 Story is "done" only when all AC tests pass - per the team's DoD
-([`definition-of-done`](../../qa-process/skills/definition-of-done/SKILL.md)).
+([`definition-of-done`](../../../qa-process/skills/definition-of-done/SKILL.md)).
 
 ## Step 5 - Scaffold new step definitions
 
@@ -239,13 +239,13 @@ dotnet test --filter "Category=AC-1.1|Category=AC-1.2|..."
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits the AC this skill consumes.
+- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits the AC this skill consumes.
 - [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md) - 
   sibling: story-first variant.
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from + adds to.
 - [`cucumber-testing`](../cucumber-testing/SKILL.md),
   [`behave-testing`](../behave-testing/SKILL.md),
   [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - runners.
-- [`definition-of-done`](../../qa-process/skills/definition-of-done/SKILL.md) - DoD that requires AC tests to pass.
+- [`definition-of-done`](../../../qa-process/skills/definition-of-done/SKILL.md) - DoD that requires AC tests to pass.
 - ISTQB Glossary V4.7.1 - `https://glossary.istqb.org/en_US/term/acceptance-test-driven-development`
   defines ATDD as "a collaboration-based test-first approach."

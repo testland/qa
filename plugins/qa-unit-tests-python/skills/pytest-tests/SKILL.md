@@ -21,7 +21,7 @@ parametrize for data-driven tests, intuitive assertions via plain
 
 Per-framework lifecycle scope: configure / run / fixtures / mocking
 / coverage / CI. Test code hygiene (assertion quality, AAA structure,
-mocking anti-patterns) is in [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md).
+mocking anti-patterns) is in [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md).
 
 ## When to use
 
@@ -265,4 +265,4 @@ pytest -n auto   # uses CPU count
 - [`unittest-tests`](../unittest-tests/SKILL.md),
   [`doctest-tests`](../doctest-tests/SKILL.md),
   [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene

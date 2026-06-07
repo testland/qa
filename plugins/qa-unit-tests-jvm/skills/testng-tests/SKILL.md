@@ -264,4 +264,4 @@ JaCoCo coverage works identically to JUnit setups.
   [`kotest-tests`](../kotest-tests/SKILL.md),
   [`spock-tests`](../spock-tests/SKILL.md),
   [`scalatest`](../scalatest/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)

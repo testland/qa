@@ -167,7 +167,7 @@ Test patterns above (§1798.121) protect these categories specifically.
 | Right-to-know returns only main app data | Misses analytics, CRM | Multi-system response (Step §1798.110) |
 | Correction propagated only locally | Third parties retain incorrect data | Notification log assertion (Step §1798.106) |
 | SPI categorical restriction tested only at API edge | Inference engines bypass | Feature-attribution-level test (Step §1798.121) |
-| Test fixtures use real California PII | CCPA violation in tests | [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) |
+| Test fixtures use real California PII | CCPA violation in tests | [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) |
 
 ## Limitations
 
@@ -189,7 +189,7 @@ Test patterns above (§1798.121) protect these categories specifically.
 - globalprivacycontrol.org - GPC technical specification
 - iapp.org/resources/article/state-comparison/ - state-law comparison
 - [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) - sister: EU analogue
-- [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
+- [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
   safe test data generation
 - [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - audit log requirements
 - [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

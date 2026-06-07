@@ -247,4 +247,4 @@ python -m unittest tests.test_user.TestUser.test_creation
 - [`pytest-tests`](../pytest-tests/SKILL.md),
   [`doctest-tests`](../doctest-tests/SKILL.md),
   [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene

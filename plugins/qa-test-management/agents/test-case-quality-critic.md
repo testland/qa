@@ -99,7 +99,7 @@ to identify orphan cases (no refs) and uncovered requirements
 ## Step 6 - Severity / priority sanity
 
 Per
-[`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md):
+[`severity-vs-priority-reference`](../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md):
 
 - Both fields populated independently?
 - Severity matches stated impact (a case verifying a critical
@@ -189,6 +189,6 @@ The agent **refuses** to:
   [`test-case-anatomy-reference`](../skills/test-case-anatomy-reference/SKILL.md),
   [`traceability-matrix-builder`](../skills/traceability-matrix-builder/SKILL.md).
 - Composes with:
-  [`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md).
+  [`severity-vs-priority-reference`](../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md).
 - Sibling-plugin neighbour:
-  [`test-code-critic`](../../../qa-test-review/agents/test-code-critic.md) - different scope (test *code* in repo, not TCM cases).
+  [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md) - different scope (test *code* in repo, not TCM cases).

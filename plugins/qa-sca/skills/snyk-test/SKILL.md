@@ -20,8 +20,8 @@ Per [github.com/snyk/snyk][sn-gh], companion subcommands cover adjacent surfaces
 | `snyk monitor` | Continuous monitoring with new-vuln alerts |
 
 This skill focuses on `snyk test` for SCA. For SAST coverage,
-prefer the OSS-first patterns in [`semgrep-rules`](../../qa-sast/skills/semgrep-rules/SKILL.md);
-for container scanning, see [`trivy-image`](../../qa-sbom/skills/trivy-image/SKILL.md).
+prefer the OSS-first patterns in [`semgrep-rules`](../../../qa-sast/skills/semgrep-rules/SKILL.md);
+for container scanning, see [`trivy-image`](../../../qa-sbom/skills/trivy-image/SKILL.md).
 
 ## When to use
 

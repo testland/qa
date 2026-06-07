@@ -83,7 +83,7 @@ osv-scanner scan --sbom my-app.cyclonedx.json
 osv-scanner scan --sbom my-app.spdx.json
 ```
 
-This composes with [`syft-generation`](../../qa-sbom/skills/syft-generation/SKILL.md)
+This composes with [`syft-generation`](../../../qa-sbom/skills/syft-generation/SKILL.md)
 in the qa-sbom plugin - Syft generates the SBOM, OSV-Scanner
 queries OSV.dev against it.
 
@@ -187,7 +187,7 @@ OSV-Scanner has experimental license-summary support:
 osv-scanner --experimental-licenses-summary scan -r .
 ```
 
-For full license-compliance + scanning, pair with [`spdx-format`](../../qa-sbom/skills/spdx-format/SKILL.md)
+For full license-compliance + scanning, pair with [`spdx-format`](../../../qa-sbom/skills/spdx-format/SKILL.md)
 or use a dedicated tool like ScanCode / FOSSology.
 
 ## Anti-patterns
@@ -207,8 +207,8 @@ or use a dedicated tool like ScanCode / FOSSology.
 - Reachability analysis is NOT included - every CVE on a declared
   dep counts even if the vulnerable function isn't called.
 - Container image scanning is limited; for that, prefer
-  [`trivy-image`](../../qa-sbom/skills/trivy-image/SKILL.md) or
-  [`grype-scanning`](../../qa-sbom/skills/grype-scanning/SKILL.md).
+  [`trivy-image`](../../../qa-sbom/skills/trivy-image/SKILL.md) or
+  [`grype-scanning`](../../../qa-sbom/skills/grype-scanning/SKILL.md).
 - Per [osv-usage][osv-usage], some CLI surface evolves - verify
   against current osv-scanner help output.
 
@@ -224,6 +224,6 @@ or use a dedicated tool like ScanCode / FOSSology.
   [`renovate-config`](../renovate-config/SKILL.md),
   [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
   sister tools
-- [`syft-generation`](../../qa-sbom/skills/syft-generation/SKILL.md) - 
+- [`syft-generation`](../../../qa-sbom/skills/syft-generation/SKILL.md) - 
   cross-plugin SBOM source
 - [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

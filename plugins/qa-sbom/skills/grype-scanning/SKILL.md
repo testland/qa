@@ -40,8 +40,8 @@ Per [gr-gh][gr-gh] coverage:
   scanning.
 - Container-image vuln scanning where Trivy isn't already in
   place.
-- Language-package vuln coverage layered with [`osv-scanner`](../../qa-sca/skills/osv-scanner/SKILL.md)
-  + [`snyk-test`](../../qa-sca/skills/snyk-test/SKILL.md) for
+- Language-package vuln coverage layered with [`osv-scanner`](../../../qa-sca/skills/osv-scanner/SKILL.md)
+  + [`snyk-test`](../../../qa-sca/skills/snyk-test/SKILL.md) for
   cross-DB consensus.
 - OpenVEX-based finding filtering (status assertions like "not
   affected" / "fixed" / "under-investigation" filter scan output).
@@ -228,7 +228,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 | [`syft-generation`](../syft-generation/SKILL.md) | Generates the SBOM Grype scans |
 | [`trivy-image`](../trivy-image/SKILL.md) | Alternative all-in-one (SBOM gen + scan) |
 | [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) | Unifies Grype + Trivy + Snyk findings |
-| [`osv-scanner`](../../qa-sca/skills/osv-scanner/SKILL.md) | Cross-plugin alternative for OSV.dev DB |
+| [`osv-scanner`](../../../qa-sca/skills/osv-scanner/SKILL.md) | Cross-plugin alternative for OSV.dev DB |
 
 ## Anti-patterns
 
@@ -245,7 +245,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 - Grype's DB is Anchore-curated; coverage differs from OSV.dev,
   Snyk, NVD; pair with another scanner for consensus.
 - Container-only secret scanning is limited; use [`trivy-image`](../trivy-image/SKILL.md)
-  + [`gitleaks-scanning`](../../qa-secrets/skills/gitleaks-scanning/SKILL.md)
+  + [`gitleaks-scanning`](../../../qa-secrets/skills/gitleaks-scanning/SKILL.md)
   for that.
 - License-detection support is basic; for compliance, pair with
   ScanCode / FOSSology.
@@ -263,6 +263,6 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
   [`spdx-format`](../spdx-format/SKILL.md),
   [`trivy-image`](../trivy-image/SKILL.md) - sister tools
 - [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent
-- [`sca-prioritizer`](../../qa-sca/agents/sca-prioritizer.md) - 
+- [`sca-prioritizer`](../../../qa-sca/agents/sca-prioritizer.md) - 
   cross-plugin sibling for SCA findings (similar prioritization
   logic)

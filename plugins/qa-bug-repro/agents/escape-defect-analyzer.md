@@ -47,7 +47,7 @@ The right test **existed** but **was not run** in the gating path.
 
 | Sub-pattern                                    | Typical fix |
 |------------------------------------------------|-------------|
-| Test marked skipped / quarantined              | Triage per [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). |
+| Test marked skipped / quarantined              | Triage per [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). |
 | Test on a non-blocking CI job                  | Move to the blocking workflow. |
 | Test ran but result was ignored                | Audit CI; ensure exit codes propagate. |
 | Required env-var / fixture only in some envs   | Standardize test setup across environments. |
@@ -126,4 +126,4 @@ with a 1-hour rolling-window alert for a multi-hour memory leak), with
 
 - [`bug-report-template`](../skills/bug-report-template/SKILL.md) - upstream input.
 - [`bug-repro-builder`](./bug-repro-builder.md) - generates the failing test that often becomes the prevention asset for test-gap escapes.
-- [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - the auto-expiry mechanism that prevents process-gap escapes via abandoned quarantine.
+- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - the auto-expiry mechanism that prevents process-gap escapes via abandoned quarantine.

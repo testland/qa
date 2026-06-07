@@ -29,7 +29,7 @@ components but maintained outside the main org).
 
 - The codebase is Python and the team uses BDD.
 - Acceptance criteria are authored in Gherkin (per
-  [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)).
+  [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)).
 - pytest with parametrize isn't sufficient - non-engineers read
   the tests.
 
@@ -193,7 +193,7 @@ behave --junit --junit-directory reports/junit/
 behave --format=plain --no-color > test-results.txt
 ```
 
-The JUnit XML feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+The JUnit XML feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Step 8 - Run
 

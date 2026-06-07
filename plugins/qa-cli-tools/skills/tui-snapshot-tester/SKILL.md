@@ -215,7 +215,7 @@ Treat snapshot diffs like test diffs in code review:
 - Auto-update in CI (e.g., bot pushes `--snapshot-update` commit
   on diff) defeats the purpose.
 
-Pair with the [`visual-baseline-curator`](../../qa-visual-regression/agents/visual-baseline-curator.md)
+Pair with the [`visual-baseline-curator`](../../../qa-visual-regression/agents/visual-baseline-curator.md)
 discipline (sister plugin): same review pattern for browser
 screenshots.
 
@@ -250,4 +250,4 @@ screenshots.
 - [`bats-testing`](../bats-testing/SKILL.md) - exit-code + text
   output testing (text CLIs); pair with TUI snapshots for
   layout regression.
-- [`visual-baseline-curator`](../../qa-visual-regression/agents/visual-baseline-curator.md) - sister-plugin baseline discipline (browser).
+- [`visual-baseline-curator`](../../../qa-visual-regression/agents/visual-baseline-curator.md) - sister-plugin baseline discipline (browser).

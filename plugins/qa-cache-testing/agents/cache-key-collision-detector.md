@@ -28,7 +28,7 @@ Missing discriminators = collision. The high-risk discriminators:
 
 | Discriminator | Missing-it causes |
 |---|---|
-| `tenant_id` | Cross-tenant leak per [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md) Test 10 |
+| `tenant_id` | Cross-tenant leak per [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md) Test 10 |
 | `user_id` | User A sees user B's data |
 | Locale (`Accept-Language`) | Wrong-language content |
 | Region / geo | Geo-routed content cross-leaks |
@@ -259,7 +259,7 @@ Returns a markdown report. Does not modify files.
 - Cache-coherence patterns:
   [`cache-coherence-patterns-reference`](../skills/cache-coherence-patterns-reference/SKILL.md).
 - Cross-tenant tests:
-  [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md)
+  [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md)
   Test 10.
 - RFC 9111 §4.1 (Vary):
   [www.rfc-editor.org/rfc/rfc9111.html#section-4.1](https://www.rfc-editor.org/rfc/rfc9111.html#section-4.1).

@@ -17,7 +17,7 @@ configure toxics via its HTTP control API.
 [tp]: https://github.com/Shopify/toxiproxy
 
 This skill is the **infrastructure / dev-environment** angle. The
-test-suite-driven angle is in [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md);
+test-suite-driven angle is in [`api-chaos-runner`](../../../qa-api-testing/skills/api-chaos-runner/SKILL.md);
 both rely on the same Toxiproxy primitive.
 
 ## When to use
@@ -30,7 +30,7 @@ both rely on the same Toxiproxy primitive.
 - A team wants OSS chaos without Litmus / Chaos Mesh / Gremlin.
 
 For test-suite integration, see
-[`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md).
+[`api-chaos-runner`](../../../qa-api-testing/skills/api-chaos-runner/SKILL.md).
 
 ## Step 1 - Install + run
 
@@ -134,7 +134,7 @@ await proxy.addToxic({ type: 'latency', attributes: { latency: 500 } });
 ```
 
 The SDKs make integration into test fixtures (per
-[`playwright-fixture-builder`](../../qa-test-environment/skills/playwright-fixture-builder/SKILL.md))
+[`playwright-fixture-builder`](../../../qa-test-environment/skills/playwright-fixture-builder/SKILL.md))
 clean.
 
 ## Step 7 - docker-compose integration
@@ -195,6 +195,6 @@ control API.
 - [tp][tp] - Toxiproxy README: TCP proxy, toxic types (latency,
   down, bandwidth, slow_close, timeout, slicer, limit_data,
   reset_peer), control API on port 8474, language SDKs.
-- [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md) - sister skill: same Toxiproxy primitive, test-suite-driven
+- [`api-chaos-runner`](../../../qa-api-testing/skills/api-chaos-runner/SKILL.md) - sister skill: same Toxiproxy primitive, test-suite-driven
   matrix workflow.
 - [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md) - composes Toxiproxy + WireMock for richer failure scenarios.

@@ -115,7 +115,7 @@ test('checkout journey — happy path', async ({ page }) => {
 ```
 
 Use accessibility-first locators per
-[`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md);
+[`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md);
 synthetic monitors that depend on CSS classes break on every UI
 refactor.
 

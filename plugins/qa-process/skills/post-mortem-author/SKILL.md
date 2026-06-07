@@ -257,6 +257,6 @@ Markdown + git. Quarterly rollup identifies patterns:
   triggers, blamelessness principle, learning-opportunity framing.
 - [`release-readiness-checker`](../../agents/release-readiness-checker.md) - sibling: pre-release gate; post-mortems feed back to update
   the gate criteria.
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - sibling: canary verdict; post-mortems often surface threshold
+- [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - sibling: canary verdict; post-mortems often surface threshold
   tuning needs.
-- [`observability-to-test`](../../qa-shift-right/agents/observability-to-test.md) - agent that turns post-mortem action items into regression tests.
+- [`observability-to-test`](../../../qa-shift-right/agents/observability-to-test.md) - agent that turns post-mortem action items into regression tests.

@@ -15,7 +15,7 @@ The shift-left flow:
 User story → Acceptance Criteria → Gherkin Feature → Step definitions → Tests
 ```
 
-[`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
 covers the AC layer (it can emit Gherkin too). This skill is a
 **direct user-story → Gherkin** path for teams that author
 Gherkin features as the primary artifact (skipping the
@@ -31,7 +31,7 @@ intermediate AC step).
   stories into Gherkin in bulk.
 
 If the team uses AC docs as primary, use
-[`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md);
+[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md);
 this skill is the user-story-first variant.
 
 ## Step 1 - Extract the user-story triple
@@ -112,7 +112,7 @@ Outline:
       | WELCOME10*2  | Already applied       |
 ```
 
-Per [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+Per [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
 Step 2: "Use Scenario Outline whenever the underlying logic is
 identical and only the data varies."
 
@@ -162,7 +162,7 @@ The Gherkin Feature can't be authored without these answers.
 ```
 
 Same flag-and-ask pattern as
-[`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
 Step 6.
 
 ## Step 6 - Validate Gherkin style
@@ -231,7 +231,7 @@ conventions. Pair with the framework's runner per the team's stack
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - sibling: AC-first variant.
+- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - sibling: AC-first variant.
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from.
 - [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - output-quality check.
 - [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md) - sibling: ATDD-flavored variant.

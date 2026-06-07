@@ -174,7 +174,7 @@ manual / spot-check.
 
 - **WebKit on CI is approximate.** Bundled WebKit ≠ Safari;
   per-browser quirks (especially iOS) need real-device testing
-  via [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md).
+  via [`mobile-device-matrix-toolkit`](../../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md).
 - **Edge / Chrome require host OS.** msedge needs Windows or macOS;
   not Linux.
 - **Per-browser CI cost adds up.** 5 browsers × N tests = 5x CI
@@ -190,4 +190,4 @@ manual / spot-check.
   OS / runtime matrices.
 - [`compatibility-budget`](../compatibility-budget/SKILL.md) - 
   conventions for choosing the matrix.
-- [`mobile-web-emulation-runner`](../../qa-mobile-native/skills/mobile-web-emulation-runner/SKILL.md) - sibling: mobile viewport variants of the same browsers.
+- [`mobile-web-emulation-runner`](../../../qa-mobile-native/skills/mobile-web-emulation-runner/SKILL.md) - sibling: mobile viewport variants of the same browsers.

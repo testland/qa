@@ -20,7 +20,7 @@ Required inputs: a single data product (one dbt model, one GX-validated table, o
 
 ## Step 1 - Detect the engine
 
-Look for `dbt_project.yml` (dbt), a `gx/` directory or `great_expectations` Python imports (GX), or `configuration.yml` + `checks.yml` (Soda) per [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
+Look for `dbt_project.yml` (dbt), a `gx/` directory or `great_expectations` Python imports (GX), or `configuration.yml` + `checks.yml` (Soda) per [`soda-checks/SKILL.md`](../../qa-data-quality/skills/soda-checks/SKILL.md).
 
 ## Step 2 - Read the schema
 
@@ -36,7 +36,7 @@ If the user provides a CSV / Parquet / SQL snapshot, summarize per column: null 
 
 ## Step 4 - Propose coverage
 
-Per the conventions in [`data-quality-conventions/SKILL.md`](../skills/data-quality-conventions/SKILL.md):
+Per the conventions in [`data-quality-conventions/SKILL.md`](../../qa-data-quality/skills/data-quality-conventions/SKILL.md):
 
 - Required (non-null) columns from schema constraints.
 - Unique columns (PK / candidate keys).
@@ -49,9 +49,9 @@ Per the conventions in [`data-quality-conventions/SKILL.md`](../skills/data-qual
 
 Use the matching skill for the detected engine:
 
-- dbt → `data_tests:` block in `schema.yml` per [`dbt-testing/SKILL.md`](../skills/dbt-testing/SKILL.md).
-- GX → Python suite using the `gxe` namespace per [`great-expectations/SKILL.md`](../skills/great-expectations/SKILL.md).
-- Soda → SodaCL `checks for <dataset>:` block per [`soda-checks/SKILL.md`](../skills/soda-checks/SKILL.md).
+- dbt → `data_tests:` block in `schema.yml` per [`dbt-testing/SKILL.md`](../../qa-data-quality/skills/dbt-testing/SKILL.md).
+- GX → Python suite using the `gxe` namespace per [`great-expectations/SKILL.md`](../../qa-data-quality/skills/great-expectations/SKILL.md).
+- Soda → SodaCL `checks for <dataset>:` block per [`soda-checks/SKILL.md`](../../qa-data-quality/skills/soda-checks/SKILL.md).
 
 ## Step 6 - Run once against the sample
 

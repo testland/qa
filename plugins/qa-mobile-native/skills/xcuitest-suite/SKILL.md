@@ -165,7 +165,7 @@ The result bundle is binary. Extract via `xcresulttool`:
 xcrun xcresulttool get test-results summary --path TestResults.xcresult --format json > results.json
 ```
 
-Then use [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+Then use [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
 on the JUnit-equivalent shape (or directly on the JSON for richer
 data).
 
@@ -210,7 +210,7 @@ GitHub Actions provides `macos-15` runners with Xcode pre-installed.
   produce intermittent failures; use retries cautiously (don't mask
   real bugs).
 - **No first-party visual regression.** Pair with
-  [`percy-visual-regression-testing`](../../qa-visual-regression/skills/percy-visual-regression-testing/SKILL.md)
+  [`percy-visual-regression-testing`](../../../qa-visual-regression/skills/percy-visual-regression-testing/SKILL.md)
   or screenshot-comparison helpers.
 
 ## References
@@ -221,4 +221,4 @@ GitHub Actions provides `macos-15` runners with Xcode pre-installed.
 - [`espresso-suite`](../espresso-suite/SKILL.md) - Android sibling.
 - [`appium-testing`](../appium-testing/SKILL.md) - cross-platform
   alternative when iOS + Android share tests.
-- [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream parser for JUnit-converted xcresult.
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream parser for JUnit-converted xcresult.

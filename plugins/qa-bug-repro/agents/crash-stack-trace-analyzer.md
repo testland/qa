@@ -53,7 +53,7 @@ The output is a markdown block with: `**Trace format:**`, `**Crashing frame:**`,
 (numbered actions - `git show <sha>` first; for (a) hand off to
 [`bug-repro-builder`](./bug-repro-builder.md); for (b) re-blame on the
 commit's parent or use
-[`regression-bisector`](../../../qa-flake-triage/agents/regression-bisector.md)).
+[`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md)).
 
 ## Example - V8 trace with a clear culprit
 
@@ -88,5 +88,5 @@ sourcemaps.
 ## References
 
 - [`bug-repro-builder`](./bug-repro-builder.md) - regression test handoff once hypothesis confirmed.
-- [`regression-bisector`](../../../qa-flake-triage/agents/regression-bisector.md) - for hypothesis (b) cases blame can't pinpoint.
+- [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md) - for hypothesis (b) cases blame can't pinpoint.
 - [`bug-report-template`](../skills/bug-report-template/SKILL.md) - paste the hypothesis into the template's Notes section.

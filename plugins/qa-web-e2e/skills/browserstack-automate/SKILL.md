@@ -279,8 +279,8 @@ jobs:
 - Composes:
   [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).
 - Sibling skills:
-  [`saucelabs-automate`](saucelabs-automate/SKILL.md),
-  [`lambdatest-automate`](lambdatest-automate/SKILL.md),
+  [`saucelabs-automate`](../saucelabs-automate/SKILL.md),
+  [`lambdatest-automate`](../lambdatest-automate/SKILL.md),
   [`selenium-grid-4-runner`](../../../qa-compatibility/skills/selenium-grid-4-runner/SKILL.md).
 - Existing orchestrator:
   [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md) - routes between local Selenium Grid + BrowserStack + Sauce

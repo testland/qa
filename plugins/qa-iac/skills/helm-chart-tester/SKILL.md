@@ -126,7 +126,7 @@ tests:
 First run captures the snapshot; subsequent runs compare. A diff
 fails the test. Useful for catching unintended template changes.
 
-Per [`golden-file-conventions`](../../qa-test-data/skills/golden-file-conventions/SKILL.md):
+Per [`golden-file-conventions`](../../../qa-test-data/skills/golden-file-conventions/SKILL.md):
 sanitize the snapshots (strip volatile fields like timestamps).
 
 ## Step 6 - Chart linting
@@ -213,4 +213,4 @@ cover (e.g., "all containers must have resource limits"). See
 - Helm docs at `helm.sh/docs/`.
 - [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   policy-level testing of rendered manifests.
-- [`golden-file-conventions`](../../qa-test-data/skills/golden-file-conventions/SKILL.md) - for snapshot sanitization patterns.
+- [`golden-file-conventions`](../../../qa-test-data/skills/golden-file-conventions/SKILL.md) - for snapshot sanitization patterns.

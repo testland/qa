@@ -34,7 +34,7 @@ reality.
   single test pattern.
 
 For pure HTTP fault stubs, see
-[`wiremock-stubs`](../../qa-test-data/skills/wiremock-stubs/SKILL.md).
+[`wiremock-stubs`](../../../qa-test-data/skills/wiremock-stubs/SKILL.md).
 For pure TCP chaos, see [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md).
 
 ## Step 1 - Topology
@@ -209,8 +209,8 @@ Each scenario produces a per-resilience-pattern verdict:
 
 ## References
 
-- [`wiremock-stubs`](../../qa-test-data/skills/wiremock-stubs/SKILL.md) - HTTP fault stub primitive this skill orchestrates.
+- [`wiremock-stubs`](../../../qa-test-data/skills/wiremock-stubs/SKILL.md) - HTTP fault stub primitive this skill orchestrates.
 - [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) - TCP-level
   fault primitive this skill orchestrates.
-- [`api-chaos-runner`](../../qa-api-testing/skills/api-chaos-runner/SKILL.md) - sister: pure Toxiproxy + test-suite matrix.
+- [`api-chaos-runner`](../../../qa-api-testing/skills/api-chaos-runner/SKILL.md) - sister: pure Toxiproxy + test-suite matrix.
 - [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology for the chaos-experiment shape.

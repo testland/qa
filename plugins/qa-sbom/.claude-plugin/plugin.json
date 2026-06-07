@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-sbom",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "SBOM generation + container image scanning + vuln prioritization: 5 skills (syft-generation, grype-scanning, cyclonedx-format, spdx-format, trivy-image) and 1 agent (vuln-prioritizer with CVSS + EPSS + CISA KEV + VEX prioritization).",
   "author": {
     "name": "testland",

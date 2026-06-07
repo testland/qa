@@ -206,4 +206,4 @@ OSS); v6 is the last fully-free version.
 - [`nunit-tests`](../nunit-tests/SKILL.md),
   [`mstest-tests`](../mstest-tests/SKILL.md),
   [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)

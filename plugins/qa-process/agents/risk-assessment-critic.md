@@ -68,7 +68,7 @@ def check_independence(risks):
 
 If >70% of risks have `impact == likelihood`, the register is
 suspect. Per
-[`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md)
+[`severity-vs-priority-reference`](../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md)
 the analogous principle applies.
 
 ## Step 3 - Strategy consideration check

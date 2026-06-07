@@ -44,7 +44,7 @@ Per the AAA convention preserved across all three frameworks ([Microsoft Learn][
 
 [ms-testing]: https://learn.microsoft.com/dotnet/core/testing/
 
-- **Arrange:** instantiate the SUT and any test data. Use [`bogus-data`](../../../qa-test-data/skills/bogus-data/SKILL.md) `Faker<T>` builders if the test needs domain-shaped fixtures.
+- **Arrange:** instantiate the SUT and any test data. Use [`bogus-data`](../../qa-test-data/skills/bogus-data/SKILL.md) `Faker<T>` builders if the test needs domain-shaped fixtures.
 - **Act:** call the target method, capture the return value.
 - **Assert:** observable post-condition only (return value, collection count, thrown exception type). Refuse `Assert.True(true)` smoke asserts.
 
@@ -123,5 +123,5 @@ The agent **refuses** to:
 - **NUnit `Assert.That(...)` constraint model** → [`nunit-tests`](../skills/nunit-tests/SKILL.md).
 - **MSTest `[DataRow]` parametrized tests** → [`mstest-tests`](../skills/mstest-tests/SKILL.md).
 - **FluentAssertions `.Should()` API** → [`fluentassertions`](../skills/fluentassertions/SKILL.md).
-- **Typed test-data fixtures (`Faker<T>`)** → [`qa-test-data/bogus-data`](../../../qa-test-data/skills/bogus-data/SKILL.md).
+- **Typed test-data fixtures (`Faker<T>`)** → [`qa-test-data/bogus-data`](../../qa-test-data/skills/bogus-data/SKILL.md).
 - **Review the emitted test against assertion-quality conventions** → `assertion-quality-reviewer` (qa-test-review).

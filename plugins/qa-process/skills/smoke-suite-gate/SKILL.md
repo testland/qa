@@ -126,7 +126,7 @@ test is either:
 
 1. A real regression - block the deploy.
 2. A genuinely flaky test - quarantine + investigate via
-   [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
+   [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
 
 Don't suppress failures by raising the retry count.
 
@@ -205,12 +205,12 @@ longer, something's wrong (the suite has bloated; deploy is slow).
   ~95% like prod; some prod-only edge cases need separate
   verification.
 - **Mobile smoke is different.** Mobile uses
-  [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md)
+  [`mobile-device-matrix-toolkit`](../../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md)
   smoke tier; same principle, different platform.
 
 ## References
 
-- [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - handles repeat-failing smoke tests.
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - downstream gate after smoke passes.
+- [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - handles repeat-failing smoke tests.
+- [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - downstream gate after smoke passes.
 - [`release-readiness-checker`](../../agents/release-readiness-checker.md) - orchestrates smoke as one gate among many.
-- [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - same critical journeys, but continuous-in-prod (not per-deploy).
+- [`synthetic-monitor-author`](../../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - same critical journeys, but continuous-in-prod (not per-deploy).

@@ -266,7 +266,7 @@ the post-run check.
 - **No native browser execution.** Locust is HTTP-only; for Web Vitals
   perf testing use [`lighthouse-perf`](../lighthouse-perf/SKILL.md).
 - **Python-only authoring.** Same constraint applies as for
-  [`tavern-testing`](../../qa-api-testing/skills/tavern-testing/SKILL.md):
+  [`tavern-testing`](../../../qa-api-testing/skills/tavern-testing/SKILL.md):
   Python team or bust.
 
 ## References

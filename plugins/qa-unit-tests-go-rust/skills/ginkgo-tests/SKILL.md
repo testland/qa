@@ -231,4 +231,4 @@ ginkgo --junit-report=junit.xml -r
 - [`go-test`](../go-test/SKILL.md),
   [`cargo-test`](../cargo-test/SKILL.md),
   [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)

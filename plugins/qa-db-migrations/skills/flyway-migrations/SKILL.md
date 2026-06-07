@@ -153,7 +153,7 @@ migrations + run tests against the migrated schema.
   run: mvn test
 ```
 
-For full integration with [`testcontainers`](../../qa-test-environment/skills/testcontainers/SKILL.md):
+For full integration with [`testcontainers`](../../../qa-test-environment/skills/testcontainers/SKILL.md):
 spin up the DB via Testcontainers, then call `Flyway.configure()`
 in JUnit `@BeforeAll`.
 
@@ -164,7 +164,7 @@ for adversarial review of new migrations before merge - classifies
 each migration as additive / breaking / data-loss / locking.
 
 For schema-diff review (compare two migration sets), see
-[`schema-diff-reviewer`](../../qa-data-quality/agents/schema-diff-reviewer.md)
+[`schema-diff-reviewer`](../../../qa-data-quality/agents/schema-diff-reviewer.md)
 in qa-data-quality.
 
 ## Anti-patterns

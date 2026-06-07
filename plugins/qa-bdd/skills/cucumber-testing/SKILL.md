@@ -35,7 +35,7 @@ This skill covers the three most-used official implementations:
 - Cross-stakeholder collaboration is the value (Gherkin scenarios
   read by non-engineers).
 - Acceptance criteria authored as Gherkin scenarios per
-  [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
+  [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
 
 If only engineers will read the tests, BDD's collaboration value
 is wasted - plain xUnit-style tests are simpler.
@@ -207,7 +207,7 @@ npx cucumber-js features/ \
   --format junit:reports/cucumber.xml
 ```
 
-The JUnit XML feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+The JUnit XML feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Step 8 - Tags + filtering
 
@@ -255,4 +255,4 @@ npx cucumber-js features/ --tags 'not @wip'
 - [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - .NET sibling.
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - addresses step proliferation.
 - [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - adversarial reviewer for declarative-vs-imperative.
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream skill that generates Gherkin from stories.
+- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream skill that generates Gherkin from stories.

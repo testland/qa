@@ -38,7 +38,7 @@ predetermine steps), see
 
 If the feature is fully automatable and the team has the budget,
 write an automated test - see
-[`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
 for the upstream Gherkin generation.
 
 ## Step 1 - Read the input
@@ -52,7 +52,7 @@ The skill takes one of:
 
 Extract the **actor**, **trigger**, and **observable outcomes** - 
 the same Gherkin structure as
-[`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
+[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
 A manual script is the same logical shape as a Gherkin scenario;
 the difference is the level of detail + the inclusion of setup
 data.
@@ -188,7 +188,7 @@ raised** section captures:
 | BUG-9876  |   2   | Subtotal updates to `$22.49`       | Subtotal stays at `$24.99`; toast says "Invalid code" | high    |
 ```
 
-Pair with [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md)
+Pair with [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md)
 for the structured bug-reproduction package.
 
 ## Output format
@@ -251,11 +251,11 @@ for the structured bug-reproduction package.
 - [exp][exp] - Exploratory vs scripted testing distinction;
   "most real-world testing combines both approaches with emphasis
   depending on project context."
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits Gherkin from a story; this skill turns Gherkin
+- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits Gherkin from a story; this skill turns Gherkin
   into a tester-runnable script.
 - [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - sibling: when the test is **not** scripted; charter-driven
   exploration instead.
 - [`uat-script-author`](../uat-script-author/SKILL.md) - sibling:
   same shape, scoped to UAT.
-- [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md) - downstream: package the manual-test failures into structured
+- [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md) - downstream: package the manual-test failures into structured
   bug reports.

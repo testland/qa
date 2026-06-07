@@ -27,8 +27,8 @@ This skill catalogs the canonical thresholds and budget patterns.
 - A regression "the page got slower on mobile" needs an objective
   comparison framework.
 
-For the runner, see [`lighthouse-perf`](../../qa-load-testing/skills/lighthouse-perf/SKILL.md).
-For per-route authoring, see [`lighthouse-budget-author`](../../qa-load-testing/skills/lighthouse-budget-author/SKILL.md).
+For the runner, see [`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md).
+For per-route authoring, see [`lighthouse-budget-author`](../../../qa-load-testing/skills/lighthouse-budget-author/SKILL.md).
 
 ## §1 - Core Web Vitals (current)
 
@@ -196,7 +196,7 @@ team has competitive / SEO motivation.
 | Cadence              | Use                                                                       |
 |----------------------|---------------------------------------------------------------------------|
 | **Per-PR (CI gate)** | Lab measurement via Lighthouse CI; fast feedback; blocks regressions.    |
-| **Per-deploy (canary)** | RUM check during canary observation; pair with [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md). |
+| **Per-deploy (canary)** | RUM check during canary observation; pair with [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md). |
 | **Continuous (RUM)** | The `web-vitals` JS library reports to your analytics; field truth.       |
 | **Weekly review**    | Aggregate RUM dashboard; spot trends; correlate with deploy markers.      |
 
@@ -206,7 +206,7 @@ team has competitive / SEO motivation.
   percentile + segmented mobile/desktop, INP replaced FID March 2024,
   field vs lab measurement, web-vitals JS library, Lighthouse TBT
   as INP proxy.
-- [`lighthouse-perf`](../../qa-load-testing/skills/lighthouse-perf/SKILL.md) - the runner this skill's budgets feed.
-- [`lighthouse-budget-author`](../../qa-load-testing/skills/lighthouse-budget-author/SKILL.md) - sibling: per-route budget authoring.
+- [`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md) - the runner this skill's budgets feed.
+- [`lighthouse-budget-author`](../../../qa-load-testing/skills/lighthouse-budget-author/SKILL.md) - sibling: per-route budget authoring.
 - [`mobile-web-emulation-runner`](../mobile-web-emulation-runner/SKILL.md) - exercises the mobile profile in E2E tests.
-- [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - uses Web Vitals metrics in canary verdicts.
+- [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - uses Web Vitals metrics in canary verdicts.

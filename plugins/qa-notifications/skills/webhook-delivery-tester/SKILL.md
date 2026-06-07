@@ -197,7 +197,7 @@ vulnerable.
 ## Step 6 - Receiver: idempotent processing
 
 Webhooks are sent at-least-once (vendor retries on 5xx); receiver
-must be idempotent. Cross-ref [`idempotency-test-author`](../../qa-async-jobs/skills/idempotency-test-author/SKILL.md):
+must be idempotent. Cross-ref [`idempotency-test-author`](../../../qa-async-jobs/skills/idempotency-test-author/SKILL.md):
 
 ```python
 def test_receiver_idempotent_via_webhook_id(client):
@@ -294,7 +294,7 @@ For receiver:
 - IETF RFC 2104 - HMAC: Keyed-Hashing for Message Authentication
 - stripe.com/docs/webhooks - Stripe webhooks reference (de-facto standard for many patterns)
 - docs.github.com/en/webhooks - GitHub webhooks reference
-- [`idempotency-test-author`](../../qa-async-jobs/skills/idempotency-test-author/SKILL.md) - companion: receivers must be idempotent (cross-plugin)
+- [`idempotency-test-author`](../../../qa-async-jobs/skills/idempotency-test-author/SKILL.md) - companion: receivers must be idempotent (cross-plugin)
 - [`email-flow-test-author`](../email-flow-test-author/SKILL.md),
   [`sms-test-author`](../sms-test-author/SKILL.md) - sister channels
   (bounce/complaint webhooks + STOP-keyword webhooks reuse these

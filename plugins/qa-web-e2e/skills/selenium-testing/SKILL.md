@@ -118,7 +118,7 @@ class CheckoutTest {
 | `By.tagName`          | Generic (e.g., all `input` elements)           |
 | `By.className`        | Single CSS class (brittle)                      |
 
-Per the team's [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)
+Per the team's [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md)
 convention: prefer `data-testid` selectors; avoid XPath / classes.
 
 For accessibility-first equivalents (Selenium doesn't ship
@@ -254,7 +254,7 @@ jobs:
 ```
 
 JUnit XML lands at `target/surefire-reports/`; feeds
-[`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Anti-patterns
 
@@ -273,7 +273,7 @@ JUnit XML lands at `target/surefire-reports/`; feeds
 - **Async / Promise handling weaker.** Per-language; some
   frameworks better than others.
 - **No native mobile.** Mobile via Appium (uses Selenium WebDriver
-  protocol underneath) per [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md).
+  protocol underneath) per [`appium-testing`](../../../qa-mobile-native/skills/appium-testing/SKILL.md).
 - **Per-language idioms vary.** A Python pytest test looks
   different from a Java JUnit test.
 
@@ -285,4 +285,4 @@ JUnit XML lands at `target/surefire-reports/`; feeds
   [`cypress-testing`](../cypress-testing/SKILL.md) - modern
   alternatives.
 - [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md) - manages distributed Selenium runs.
-- [`appium-testing`](../../qa-mobile-native/skills/appium-testing/SKILL.md) - mobile via WebDriver protocol.
+- [`appium-testing`](../../../qa-mobile-native/skills/appium-testing/SKILL.md) - mobile via WebDriver protocol.

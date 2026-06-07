@@ -238,4 +238,4 @@ Same as JUnit (Spock runs on JUnit Platform):
   [`kotest-tests`](../kotest-tests/SKILL.md),
   [`testng-tests`](../testng-tests/SKILL.md),
   [`scalatest`](../scalatest/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)

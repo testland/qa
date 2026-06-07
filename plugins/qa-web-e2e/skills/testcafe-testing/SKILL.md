@@ -188,7 +188,7 @@ jobs:
           path: reports/
 ```
 
-The JUnit XML feeds [`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+The JUnit XML feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Anti-patterns
 

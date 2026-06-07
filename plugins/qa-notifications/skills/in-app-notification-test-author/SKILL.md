@@ -427,9 +427,9 @@ For each in-app notification transport in the codebase:
 - This skill covers the notification feature layer. For WebSocket frame-level
   protocol tests (masking, fragmentation, opcode handling per RFC 6455
   Sections 5.2-5.4) and SSE stream-format tests, use
-  [`websocket-tests`](../../qa-realtime-protocols/skills/websocket-tests/SKILL.md)
+  [`websocket-tests`](../../../qa-realtime-protocols/skills/websocket-tests/SKILL.md)
   and
-  [`server-sent-events-tests`](../../qa-realtime-protocols/skills/server-sent-events-tests/SKILL.md)
+  [`server-sent-events-tests`](../../../qa-realtime-protocols/skills/server-sent-events-tests/SKILL.md)
   in `qa-realtime-protocols`.
 - Firebase emulator covers most RTDB / Firestore behavior; a small set of
   server-side trigger behaviors (Cloud Functions fan-out) require a real
@@ -454,8 +454,8 @@ For each in-app notification transport in the codebase:
   (`onSnapshot`, `hasPendingWrites`, `fromCache`, latency compensation)
 - [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite)
   (RTDB + Firestore emulator usage for offline/reconnect testing)
-- [`websocket-tests`](../../qa-realtime-protocols/skills/websocket-tests/SKILL.md),
-  [`server-sent-events-tests`](../../qa-realtime-protocols/skills/server-sent-events-tests/SKILL.md)
+- [`websocket-tests`](../../../qa-realtime-protocols/skills/websocket-tests/SKILL.md),
+  [`server-sent-events-tests`](../../../qa-realtime-protocols/skills/server-sent-events-tests/SKILL.md)
   in `qa-realtime-protocols` - transport-layer protocol tests
 - [`push-notification-test-author`](../push-notification-test-author/SKILL.md),
   [`email-flow-test-author`](../email-flow-test-author/SKILL.md),

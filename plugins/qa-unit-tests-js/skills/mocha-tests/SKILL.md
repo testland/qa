@@ -246,7 +246,7 @@ breaks parallel runs. Limitations:
 ```
 
 The `mocha-junit-reporter` package emits JUnit XML for
-[`junit-xml-analysis`](../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
 
 ## Anti-patterns
 
@@ -280,4 +280,4 @@ The `mocha-junit-reporter` package emits JUnit XML for
   [`vitest-tests`](../vitest-tests/SKILL.md),
   [`ava-tests`](../ava-tests/SKILL.md),
   [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene
+- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene

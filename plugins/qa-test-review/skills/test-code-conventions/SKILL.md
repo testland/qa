@@ -271,7 +271,7 @@ A test that takes >1s in setup (creating fixtures, seeding DB,
 warming caches) has a coupling problem. The remedies:
 
 - Move fixture creation to a per-suite `beforeAll` if shared.
-- Use [`db-snapshot-restore`](../../qa-test-environment/agents/db-snapshot-restore.md)
+- Use [`db-snapshot-restore`](../../../qa-test-environment/agents/db-snapshot-restore.md)
   template-DB pattern for DB tests instead of `db:reset`.
 - Move the unit test to an integration layer if it really needs the
   full stack - don't run integration tests under the unit-test
