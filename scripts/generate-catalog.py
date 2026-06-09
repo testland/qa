@@ -122,21 +122,30 @@ def main() -> int:
                             for plist in by_category.values() for p in plist)
     lines.append(f"**{total_plugins} plugins · {total_components} components**")
     lines.append("")
+    lines.append(
+        "Within each category, plugins are sorted by **Total** (skills + agents); "
+        "larger plugins cover more of an area."
+    )
+    lines.append("")
 
     for key, label, sub in CATEGORY_ORDER:
-        bucket = sorted(by_category.get(key, []), key=lambda p: p["name"])
+        bucket = sorted(
+            by_category.get(key, []),
+            key=lambda p: (-(p["skill_count"] + p["agent_count"]), p["name"]),
+        )
         if not bucket:
             continue
         lines.append(f"## {label}")
         lines.append("")
         lines.append(f"_{sub}_")
         lines.append("")
-        lines.append("| Plugin | Version | Components |")
-        lines.append("|---|---|---:|")
+        lines.append("| Plugin | Version | Components | Total |")
+        lines.append("|---|---|---|---:|")
         for p in bucket:
+            total = p["skill_count"] + p["agent_count"]
             comp = f"{p['skill_count']} skills + {p['agent_count']} agents"
             lines.append(
-                f"| [{p['name']}](plugins/{p['name']}/) | {p['version']} | {comp} |"
+                f"| [{p['name']}](plugins/{p['name']}/) | {p['version']} | {comp} | {total} |"
             )
         lines.append("")
 
