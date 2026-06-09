@@ -41,6 +41,12 @@ those releases.
   running `/plugin install` once per plugin
 
 ### Changed
+- Recategorized the marketplace from 7 to 9 categories: split the 21-plugin
+  `ai-specialized` catch-all into `ai-ml` (5), `backend-distributed` (8), and
+  `integrations-protocols` (8) so each category honestly predicts its members
+  (e.g. `qa-db-migrations` is database tooling, not "AI"). The `category` values
+  in `marketplace.json`, `CATEGORY_ORDER` in the catalog generator, and the
+  README catalog section move together; `CATALOG.md` regenerated.
 - Replaced the NOT-GAPS doctrine with a plain "Differentiation requirement"
   in `docs/CONTRIBUTING.md`. Component categories formerly listed as
   "saturated" (generic code-reviewer, security-auditor, debugger,

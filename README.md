@@ -137,7 +137,7 @@ Each plugin's `README.md` lists its skills and agents and what each one does.
 
 ## Plugin catalog
 
-77 plugins across 7 categories. See [`CATALOG.md`](CATALOG.md) for the full
+77 plugins across 9 categories. See [`CATALOG.md`](CATALOG.md) for the full
 table with versions and component counts.
 
 **Foundations** (9): test process, environment, data, reporting, impact, roles, review, management, hiring
@@ -160,9 +160,17 @@ table with versions and component counts.
 
 [qa-bug-repro](plugins/qa-bug-repro/) · [qa-chaos-resilience](plugins/qa-chaos-resilience/) · [qa-defect-management](plugins/qa-defect-management/) · [qa-flake-triage](plugins/qa-flake-triage/) · [qa-load-testing](plugins/qa-load-testing/) · [qa-resilience-drills](plugins/qa-resilience-drills/) · [qa-shift-left](plugins/qa-shift-left/) · [qa-shift-right](plugins/qa-shift-right/)
 
-**AI & specialized** (21): LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time protocols, search, saga/CQRS, concurrency, db migrations, async jobs, auth flows, notifications, cache, experimentation, feature flags, GraphQL, gRPC, payment, serverless, time/timezones
+**Backend & distributed systems** (8): db migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS, serverless, time/timezones
 
-[qa-ai-assisted](plugins/qa-ai-assisted/) · [qa-async-jobs](plugins/qa-async-jobs/) · [qa-auth-flows](plugins/qa-auth-flows/) · [qa-cache-testing](plugins/qa-cache-testing/) · [qa-concurrency](plugins/qa-concurrency/) · [qa-data-notebooks](plugins/qa-data-notebooks/) · [qa-db-migrations](plugins/qa-db-migrations/) · [qa-distributed-tracing](plugins/qa-distributed-tracing/) · [qa-experimentation](plugins/qa-experimentation/) · [qa-feature-flags](plugins/qa-feature-flags/) · [qa-graphql](plugins/qa-graphql/) · [qa-grpc](plugins/qa-grpc/) · [qa-llm-evaluation](plugins/qa-llm-evaluation/) · [qa-ml-models](plugins/qa-ml-models/) · [qa-notifications](plugins/qa-notifications/) · [qa-payment](plugins/qa-payment/) · [qa-realtime-protocols](plugins/qa-realtime-protocols/) · [qa-saga-cqrs](plugins/qa-saga-cqrs/) · [qa-search-relevance](plugins/qa-search-relevance/) · [qa-serverless](plugins/qa-serverless/) · [qa-time-and-timezones](plugins/qa-time-and-timezones/)
+[qa-async-jobs](plugins/qa-async-jobs/) · [qa-cache-testing](plugins/qa-cache-testing/) · [qa-concurrency](plugins/qa-concurrency/) · [qa-db-migrations](plugins/qa-db-migrations/) · [qa-distributed-tracing](plugins/qa-distributed-tracing/) · [qa-saga-cqrs](plugins/qa-saga-cqrs/) · [qa-serverless](plugins/qa-serverless/) · [qa-time-and-timezones](plugins/qa-time-and-timezones/)
+
+**Integrations & protocols** (8): GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature flags, experimentation
+
+[qa-auth-flows](plugins/qa-auth-flows/) · [qa-experimentation](plugins/qa-experimentation/) · [qa-feature-flags](plugins/qa-feature-flags/) · [qa-graphql](plugins/qa-graphql/) · [qa-grpc](plugins/qa-grpc/) · [qa-notifications](plugins/qa-notifications/) · [qa-payment](plugins/qa-payment/) · [qa-realtime-protocols](plugins/qa-realtime-protocols/)
+
+**AI & ML** (5): LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, search relevance
+
+[qa-ai-assisted](plugins/qa-ai-assisted/) · [qa-data-notebooks](plugins/qa-data-notebooks/) · [qa-llm-evaluation](plugins/qa-llm-evaluation/) · [qa-ml-models](plugins/qa-ml-models/) · [qa-search-relevance](plugins/qa-search-relevance/)
 
 **Tooling** (6): IaC, CI integration, CLI tools, code quality, compatibility, manual testing
 

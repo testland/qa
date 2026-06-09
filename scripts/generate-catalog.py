@@ -38,7 +38,9 @@ CATEGORY_ORDER = [
     ("quality-engineering", "Quality engineering", "Data quality, visual regression, accessibility, localization, charts, PDF/print, modern web."),
     ("security-compliance", "Security & compliance", "SAST, DAST, SCA, secrets, SBOM, compliance."),
     ("operations-resilience", "Operations & resilience", "Flake triage, bug repro, chaos, resilience drills, shift-right/left, load."),
-    ("ai-specialized", "AI & specialized", "LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, search, saga/CQRS, concurrency, db migrations, async jobs, auth flows, notifications."),
+    ("backend-distributed", "Backend & distributed systems", "DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS, serverless, time & timezones."),
+    ("integrations-protocols", "Integrations & protocols", "GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature flags, experimentation."),
+    ("ai-ml", "AI & ML", "LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, search relevance."),
     ("tooling", "Tooling", "IaC, CI integration, CLI tools, code quality, compatibility, manual testing."),
 ]
 CATEGORY_KEYS = {k for k, _, _ in CATEGORY_ORDER}

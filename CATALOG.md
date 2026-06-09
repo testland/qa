@@ -92,32 +92,46 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | [qa-shift-left](plugins/qa-shift-left/) | 1.1.0 | 4 skills + 4 agents | 8 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.2.1 | 4 skills + 2 agents | 6 |
 
-## AI & specialized
+## Backend & distributed systems
 
-_LLM eval, ML models, AI-assisted, notebooks, distributed tracing, real-time, search, saga/CQRS, concurrency, db migrations, async jobs, auth flows, notifications._
+_DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS, serverless, time & timezones._
+
+| Plugin | Version | Components | Total |
+|---|---|---|---:|
+| [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.2.0 | 11 skills + 1 agents | 12 |
+| [qa-serverless](plugins/qa-serverless/) | 1.2.0 | 10 skills + 1 agents | 11 |
+| [qa-async-jobs](plugins/qa-async-jobs/) | 1.2.1 | 8 skills + 1 agents | 9 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.1.1 | 8 skills + 1 agents | 9 |
+| [qa-concurrency](plugins/qa-concurrency/) | 1.2.0 | 6 skills + 1 agents | 7 |
+| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.1.0 | 6 skills + 1 agents | 7 |
+| [qa-db-migrations](plugins/qa-db-migrations/) | 1.1.1 | 4 skills + 2 agents | 6 |
+| [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.2.1 | 5 skills + 1 agents | 6 |
+
+## Integrations & protocols
+
+_GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature flags, experimentation._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-payment](plugins/qa-payment/) | 1.2.0 | 11 skills + 1 agents | 12 |
-| [qa-time-and-timezones](plugins/qa-time-and-timezones/) | 1.2.0 | 11 skills + 1 agents | 12 |
 | [qa-feature-flags](plugins/qa-feature-flags/) | 1.3.0 | 9 skills + 2 agents | 11 |
-| [qa-serverless](plugins/qa-serverless/) | 1.2.0 | 10 skills + 1 agents | 11 |
 | [qa-experimentation](plugins/qa-experimentation/) | 1.1.0 | 9 skills + 1 agents | 10 |
 | [qa-graphql](plugins/qa-graphql/) | 1.1.1 | 9 skills + 1 agents | 10 |
-| [qa-async-jobs](plugins/qa-async-jobs/) | 1.2.1 | 8 skills + 1 agents | 9 |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.1.1 | 8 skills + 1 agents | 9 |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.0 | 8 skills + 1 agents | 9 |
-| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.2.0 | 7 skills + 2 agents | 9 |
-| [qa-ml-models](plugins/qa-ml-models/) | 1.2.0 | 6 skills + 2 agents | 8 |
 | [qa-notifications](plugins/qa-notifications/) | 1.2.1 | 7 skills + 1 agents | 8 |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.2.0 | 7 skills + 1 agents | 8 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.2.1 | 6 skills + 1 agents | 7 |
-| [qa-concurrency](plugins/qa-concurrency/) | 1.2.0 | 6 skills + 1 agents | 7 |
-| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.1.0 | 6 skills + 1 agents | 7 |
+
+## AI & ML
+
+_LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, search relevance._
+
+| Plugin | Version | Components | Total |
+|---|---|---|---:|
+| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.2.0 | 7 skills + 2 agents | 9 |
+| [qa-ml-models](plugins/qa-ml-models/) | 1.2.0 | 6 skills + 2 agents | 8 |
 | [qa-search-relevance](plugins/qa-search-relevance/) | 1.1.0 | 6 skills + 1 agents | 7 |
 | [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.2.1 | 3 skills + 3 agents | 6 |
-| [qa-db-migrations](plugins/qa-db-migrations/) | 1.1.1 | 4 skills + 2 agents | 6 |
-| [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.2.1 | 5 skills + 1 agents | 6 |
 | [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.2.0 | 4 skills + 1 agents | 5 |
 
 ## Tooling

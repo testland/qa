@@ -183,7 +183,7 @@
       "source": "./plugins/qa-ai-assisted",
       "description": "AI-assisted test generation + curation: 3 skills (ai-test-generator, ai-spec-coverage-mapper, model-based-test-graph-author) and 1 agent (ai-test-curator).",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "ai-ml"
     },
     {
       "name": "qa-compatibility",
@@ -225,35 +225,35 @@
       "source": "./plugins/qa-llm-evaluation",
       "description": "LLM and prompt evaluation: 6 skills (promptfoo-evaluation, openai-evals, deepeval-evaluation, ragas-evaluation, giskard-llm, langfuse-tracing) and 1 agent (prompt-eval-reviewer). Covers the mainstream OSS LLM-eval ecosystem: Promptfoo + OpenAI Evals + DeepEval + Ragas for functional eval, Giskard for adversarial scan, Langfuse for production observability.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "ai-ml"
     },
     {
       "name": "qa-db-migrations",
       "source": "./plugins/qa-db-migrations",
       "description": "Database migration testing: 4 skills (flyway-migrations, liquibase-migrations, atlas-migrations, sqlmesh-migrations) and 1 agent (migration-blast-radius-reviewer). Covers schema-change safety, blast-radius review, and rollback verification across the major migration tools.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-async-jobs",
       "source": "./plugins/qa-async-jobs",
       "description": "Background job and queue testing: 7 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, cron-job-test-author, idempotency-test-author). Covers async job runners, queue patterns, scheduled jobs, and idempotency guarantees.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-auth-flows",
       "source": "./plugins/qa-auth-flows",
       "description": "Auth flow testing: 5 skills (keycloak-tests, auth0-tests, okta-tests, oauth-flow-test-author, session-management-test-author). Anchored on OAuth 2.0 / RFC 7636 PKCE / RFC 9700 / OWASP ASVS V3.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-notifications",
       "source": "./plugins/qa-notifications",
       "description": "Notifications + messaging testing across email/SMS/push/webhooks: 6 skills (mailpit-testing, mailhog-testing, email-flow-test-author, sms-test-author, push-notification-test-author, webhook-delivery-tester).",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-sast",
@@ -344,7 +344,7 @@
       "source": "./plugins/qa-ml-models",
       "description": "ML model testing: 5 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, alibi-explainability) and 1 agent (model-fairness-reviewer). Covers vulnerability scanning, drift monitoring, group fairness, and per-prediction explainability.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "ai-ml"
     },
     {
       "name": "qa-modern-web",
@@ -358,21 +358,21 @@
       "source": "./plugins/qa-data-notebooks",
       "description": "Jupyter notebook testing: 3 skills (nbval-tests, testbook-tests, papermill-tests). Covers full-notebook regression (nbval), function-level unit tests (testbook), and parameterized execution (papermill).",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "ai-ml"
     },
     {
       "name": "qa-distributed-tracing",
       "source": "./plugins/qa-distributed-tracing",
       "description": "Distributed tracing assertion testing: 4 skills (opentelemetry-trace-assertions, jaeger-trace-tests, zipkin-trace-tests, trace-spec-author) and 1 agent (trace-coverage-reviewer). Asserts on production trace shape (spans, attributes, parent links, status), not just on aggregate metrics.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-realtime-protocols",
       "source": "./plugins/qa-realtime-protocols",
       "description": "Real-time protocol testing: 5 skills (websocket-tests, server-sent-events-tests, grpc-streaming-tests, mqtt-tests, webhook-replay-tests). Anchored on RFC 6455, WHATWG SSE, gRPC streaming, MQTT v5, and the Standard Webhooks signature scheme.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-pdf-print-render",
@@ -386,21 +386,21 @@
       "source": "./plugins/qa-search-relevance",
       "description": "Search relevance testing: 3 skills (elasticsearch-relevance-tests, opensearch-relevance-tests, vector-search-precision-tests) and 1 agent (relevance-regression-reviewer). IR-metrics-driven NDCG / MRR / Recall@k regression detection.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "ai-ml"
     },
     {
       "name": "qa-concurrency",
       "source": "./plugins/qa-concurrency",
       "description": "Concurrency + race-condition testing: 5 skills (jepsen-patterns, race-condition-test-author, deadlock-detection-harness, async-ordering-tests, mvcc-isolation-tests). Code-level data races, distinct from qa-chaos-resilience (infrastructure fault injection).",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-saga-cqrs",
       "source": "./plugins/qa-saga-cqrs",
       "description": "Saga + CQRS + event sourcing test patterns: 4 skills (saga-transaction-tests, event-sourcing-tests, cqrs-projection-tests, eventual-consistency-tests). Covers ACD-without-isolation saga tests, replay determinism, and projection consistency windows.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-charts-dataviz",
@@ -463,56 +463,56 @@
       "source": "./plugins/qa-grpc",
       "description": "gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl CLI, grpc-mock servers, protobuf versioning strategy reference, gRPC streaming test patterns, and status-code mapping reference. Distinct from qa-realtime-protocols/grpc-streaming-tests (wire-level streaming semantics) and qa-contract-testing/protobuf-compat-checking (schema-level breaking detection); this plugin scopes to tooling, load, linting, and framework-level testing.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-graphql",
       "source": "./plugins/qa-graphql",
       "description": "GraphQL server testing: introspection attack-surface reference, persisted-query strategy, per-framework testing (Apollo Server, GraphQL Yoga, Hasura, Mercurius, Pothos), and an N+1 query detector. Distinct from qa-contract-testing/graphql-schema-regression (contract drift detection); this plugin covers server/runtime + framework-specific patterns.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-cache-testing",
       "source": "./plugins/qa-cache-testing",
       "description": "Cache testing across layers: Redis cache patterns, CDN cache-purge testing (Cloudflare, Fastly, CloudFront), Varnish VTC syntax, browser Cache-Control tests, cache-coherence + stampede + stale-while-revalidate references, and a cache-key collision detector. Covers RFC 9111 HTTP caching and the canonical multi-tier cache discipline (browser to CDN to app to data store).",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-experimentation",
       "source": "./plugins/qa-experimentation",
       "description": "Experimentation harness testing: SDK-specific testing for Statsig, Optimizely, VWO, Amplitude Experiment; sample-ratio-mismatch (SRM) detection; AB-test validity checklist; guardrail-metrics + peeking-problem references. Distinct from qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin tests the experimentation harness itself (SDK behaviour, assignment integrity, statistical-validity gates).",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-feature-flags",
       "source": "./plugins/qa-feature-flags",
       "description": "Feature-flag platform testing: SDK-specific tests for LaunchDarkly, Unleash, Flagsmith, GrowthBook; feature-flag test matrix reference; flag-state coverage builder; flag-removal runbook author; stale-flag detector. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin scopes to platform-SDK testing + flag-lifecycle hygiene.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-serverless",
       "source": "./plugins/qa-serverless",
       "description": "Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare Workers Miniflare, Vercel Edge Runtime, Netlify Functions, Serverless Framework, plus cold-start + timeout budget references and a serverless integration-test builder. Covers Lambda / Workers / Edge runtimes which have specific testing patterns (cold-start budgets, timeout testing, local emulators, edge-runtime divergence) absent from generic web-server test plugins.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-time-and-timezones",
       "source": "./plugins/qa-time-and-timezones",
       "description": "Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest-fake-timers, freezegun, timecop, mockclock), DST + leap-second references, ISO-8601 vs RFC 3339 reference, and a timezone test matrix builder. Covers time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock skew) which are high-incident-rate but specific tooling is scattered.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "backend-distributed"
     },
     {
       "name": "qa-payment",
       "source": "./plugins/qa-payment",
       "description": "Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-scope-checker (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.",
       "strict": true,
-      "category": "ai-specialized"
+      "category": "integrations-protocols"
     },
     {
       "name": "qa-browser-extension",
