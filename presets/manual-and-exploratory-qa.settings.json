@@ -1,0 +1,17 @@
+{
+  "extraKnownMarketplaces": {
+    "testland-qa": {
+      "source": {
+        "source": "github",
+        "repo": "testland/qa"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "qa-manual-testing@testland-qa": true,
+    "qa-bdd@testland-qa": true,
+    "qa-bug-repro@testland-qa": true,
+    "qa-defect-management@testland-qa": true,
+    "qa-test-management@testland-qa": true
+  }
+}

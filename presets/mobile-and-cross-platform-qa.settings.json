@@ -1,0 +1,18 @@
+{
+  "extraKnownMarketplaces": {
+    "testland-qa": {
+      "source": {
+        "source": "github",
+        "repo": "testland/qa"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "qa-mobile-native@testland-qa": true,
+    "qa-desktop@testland-qa": true,
+    "qa-pwa@testland-qa": true,
+    "qa-browser-extension@testland-qa": true,
+    "qa-compatibility@testland-qa": true,
+    "qa-game@testland-qa": true
+  }
+}

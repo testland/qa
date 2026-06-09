@@ -32,6 +32,13 @@ those releases.
 - `docs/ROADMAP.md` — tiered gap analysis listing high-frequency QA
   disciplines, common gaps, and previously-excluded categories now open
   for contribution
+- `presets/` — drop-in `.claude/settings.json` role bundles for 10 personas
+  (frontend-web, backend-api, security, performance/resilience, data, AI/ML,
+  mobile/cross-platform, leadership, manual/exploratory, polyglot-unit) that
+  register the marketplace and enable a curated plugin set in one gesture,
+  plus `presets/README.md`. README "Start here" gains an "adopt a whole role
+  at once" path linking the bundles, so adopting a role no longer means
+  running `/plugin install` once per plugin
 
 ### Changed
 - Replaced the NOT-GAPS doctrine with a plain "Differentiation requirement"

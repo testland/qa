@@ -1,0 +1,20 @@
+{
+  "extraKnownMarketplaces": {
+    "testland-qa": {
+      "source": {
+        "source": "github",
+        "repo": "testland/qa"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "qa-unit-tests-js@testland-qa": true,
+    "qa-unit-tests-python@testland-qa": true,
+    "qa-unit-tests-jvm@testland-qa": true,
+    "qa-unit-tests-net@testland-qa": true,
+    "qa-unit-tests-go-rust@testland-qa": true,
+    "qa-mutation-testing@testland-qa": true,
+    "qa-property-based@testland-qa": true,
+    "qa-test-reporting@testland-qa": true
+  }
+}

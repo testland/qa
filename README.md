@@ -77,8 +77,12 @@ git clone https://github.com/testland/qa ~/.claude/marketplaces/testland-qa
 
 ## Start here
 
-New to the marketplace? Install one or two plugins for your role rather than
-everything — components activate on demand, so a focused set keeps things sharp.
+New to the marketplace? Two ways in, depending on how much you want at once.
+
+### Try one or two first
+
+Install a couple of plugins for your role rather than everything — components
+activate on demand, so a focused set keeps things sharp.
 
 | If you're a… | Try first |
 |---|---|
@@ -87,6 +91,27 @@ everything — components activate on demand, so a focused set keeps things shar
 | Performance engineer | [qa-load-testing](plugins/qa-load-testing/) · [qa-chaos-resilience](plugins/qa-chaos-resilience/) |
 | Security tester | [qa-sast](plugins/qa-sast/) · [qa-secrets](plugins/qa-secrets/) · [qa-dast](plugins/qa-dast/) |
 | Lead / manager / head of quality | [qa-roles](plugins/qa-roles/) · [qa-test-management](plugins/qa-test-management/) · [qa-process](plugins/qa-process/) |
+
+### Or adopt a whole role at once
+
+Don't install plugins one at a time. Each [role bundle](presets/README.md) is a
+drop-in `.claude/settings.json` that registers the marketplace and enables a
+curated set for one role — paste it, trust the folder, restart. See
+[`presets/`](presets/README.md) for how to apply one (and how to scope it to
+just yourself).
+
+| Bundle | Role | Plugins |
+|---|---|---:|
+| [frontend-web-qa](presets/frontend-web-qa.settings.json) | Frontend / web-app QA & automation | 7 |
+| [backend-api-qa](presets/backend-api-qa.settings.json) | Backend / API / microservices QA | 9 |
+| [security-qa](presets/security-qa.settings.json) | Application security tester / AppSec | 9 |
+| [performance-and-resilience-qa](presets/performance-and-resilience-qa.settings.json) | Performance / reliability engineer | 7 |
+| [data-qa](presets/data-qa.settings.json) | Data / analytics-pipeline QA | 6 |
+| [ai-ml-qa](presets/ai-ml-qa.settings.json) | ML / LLM application QA | 5 |
+| [mobile-and-cross-platform-qa](presets/mobile-and-cross-platform-qa.settings.json) | Mobile / desktop / cross-platform | 6 |
+| [test-leadership](presets/test-leadership.settings.json) | QA lead / manager / head of quality | 8 |
+| [manual-and-exploratory-qa](presets/manual-and-exploratory-qa.settings.json) | Manual / exploratory / UAT tester | 5 |
+| [polyglot-unit-and-coverage](presets/polyglot-unit-and-coverage.settings.json) | Unit + coverage across the language stack | 8 |
 
 The full catalog is below; for versions and component counts see
 [`CATALOG.md`](CATALOG.md).
