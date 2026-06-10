@@ -1,13 +1,12 @@
 ---
-name: getting-started
+name: manual-testing-getting-started
 description: "Orients a new tester to the qa-manual-testing plugin: explains the two testing modes (session-based exploratory and scripted manual), maps the recommended starting path through the plugin's agents and skills, and names the four heuristic references with guidance on when to reach for each. Use when a junior or new manual or exploratory tester does not know where to start in this plugin and needs a single entry-point that connects the pieces."
 rating: 23
 d6: 3
 keywords: [onboarding, exploratory-testing, sbtm, scripted-testing, heuristics, manual-testing]
 ---
 
-# getting-started
-
+# manual-testing-getting-started
 ## What this plugin covers
 
 This plugin covers two modes of human-driven testing. **Session-based exploratory testing**
@@ -33,7 +32,7 @@ If you want to run an exploratory session, follow this sequence:
    SFDPOT elements to vary, and 1-3 tours to try. You do not need to know the heuristics
    in advance - charter-coach preloads them.
 
-2. **Run the session using `tour-based-explorer-prompt` heuristics.**
+2. **Run the session using `exploratory-tours-reference` heuristics.**
    Open the skill during your session to pick a tour if you feel the exploration drifting.
    The seven canonical Whittaker tours (Feature, Money, Landmark, Intellectual, Bad-data,
    Configuration, Garbage collector's) each frame the session around a different class
@@ -83,12 +82,12 @@ vocabulary will be natural.
 - Bach J., Bach J. *Session-Based Test Management* (2000) -
   [satisfice.com/sbtm](https://www.satisfice.com/sbtm).
 - Whittaker J. *Exploratory Software Testing* (Addison-Wesley, 2009) - source of the
-  seven canonical tours in `tour-based-explorer-prompt`.
+  seven canonical tours in `exploratory-tours-reference`.
 - Bolton M. HICCUPPS-F oracle heuristic -
   [developsense.com](https://developsense.com/blog/2012/07/hiccupps-f-the-heuristic/).
 - Sibling skills:
   [`sbtm-reference`](../sbtm-reference/SKILL.md),
-  [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md),
+  [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md),
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
   [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),

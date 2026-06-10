@@ -1,6 +1,6 @@
 ---
 name: subscription-billing-test-author
-description: "Builds test suites for Stripe recurring-billing flows: trial-to-paid conversion, proration on plan upgrade and downgrade, dunning on failed renewal, cancel and reactivation, and the full subscription webhook event matrix (invoice.payment_failed, customer.subscription.updated, customer.subscription.deleted, invoice.paid). Uses Stripe Billing test clocks (POST /v1/test_helpers/test_clocks) to time-travel through billing cycles without calendar delay. Distinct from stripe-test-cards-and-webhooks (one-time PaymentIntents) and payment-webhook-replay-skill (idempotency + replay robustness). Use when authoring tests for subscription or recurring-billing integrations."
+description: "Builds test suites for Stripe recurring-billing flows: trial-to-paid conversion, proration on plan upgrade and downgrade, dunning on failed renewal, cancel and reactivation, and the full subscription webhook event matrix (invoice.payment_failed, customer.subscription.updated, customer.subscription.deleted, invoice.paid). Uses Stripe Billing test clocks (POST /v1/test_helpers/test_clocks) to time-travel through billing cycles without calendar delay. Distinct from stripe-test-cards-and-webhooks (one-time PaymentIntents) and payment-webhook-replay (idempotency + replay robustness). Use when authoring tests for subscription or recurring-billing integrations."
 rating: 24
 d6: 4
 keywords:
@@ -359,4 +359,4 @@ tests do need `STRIPE_WEBHOOK_SECRET`.
   [docs.stripe.com/stripe-cli](https://docs.stripe.com/stripe-cli).
 - Sibling skills:
   [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`payment-webhook-replay-skill`](../payment-webhook-replay-skill/SKILL.md).
+  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).

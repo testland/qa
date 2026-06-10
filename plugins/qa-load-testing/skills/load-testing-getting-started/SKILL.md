@@ -1,5 +1,5 @@
 ---
-name: getting-started
+name: load-testing-getting-started
 description: "Orients an engineer who is new to performance and load testing through the qa-load-testing plugin: explains the core metrics (throughput, latency percentiles, error rate), selects the right tool via the load-test-tool-selector agent, walks the first k6 script through to a passing threshold, adds a perf-budget-gate CI step, and routes failing results to latency-percentile-analyzer or perf-incident-responder. Use when an engineer new to performance or load testing does not know where to start in this plugin."
 rating: 23
 d6: 2
@@ -11,8 +11,7 @@ keywords:
   - onboarding
 ---
 
-# getting-started
-
+# load-testing-getting-started
 [running]: https://grafana.com/docs/k6/latest/get-started/running-k6/
 [thresholds]: https://grafana.com/docs/k6/latest/using-k6/thresholds/
 

@@ -31,7 +31,7 @@ Composes with:
 - [`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
   for cert-gated requirements GUT tests should cover where the
   title ships to Xbox / PlayStation / Switch via Godot exports.
-- [`gameplay-recording-replay-skill`](../gameplay-recording-replay-skill/SKILL.md)
+- [`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md)
   for replay-driven coverage authored on top of GUT.
 
 ## When to use

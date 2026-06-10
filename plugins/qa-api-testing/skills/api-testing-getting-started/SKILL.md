@@ -1,13 +1,12 @@
 ---
-name: getting-started
+name: api-testing-getting-started
 description: "Orients a junior engineer who is new to API testing in the qa-api-testing plugin: explains what API testing is, maps each tool in the plugin to its stack, and walks through the literal first steps to write and run a minimal request with a status and schema assertion. Use when a junior engineer is new to API testing and does not know where to start in this plugin."
 rating: 23
 d6: 2
 keywords: [api-testing, onboarding, getting-started, postman, rest-assured, tavern]
 ---
 
-# getting-started
-
+# api-testing-getting-started
 ## What is API testing?
 
 API testing verifies that the HTTP interfaces between components behave

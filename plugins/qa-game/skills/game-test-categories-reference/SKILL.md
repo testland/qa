@@ -31,7 +31,7 @@ This skill is the **pure-reference taxonomy** consumed by:
   [`godot-gut-tests`](../godot-gut-tests/SKILL.md)),
 - the builders
   ([`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md),
-  [`gameplay-recording-replay-skill`](../gameplay-recording-replay-skill/SKILL.md)),
+  [`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md)),
 - and the platform submission reference
   ([`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)),
   which maps each category onto the four platform holders.
@@ -88,7 +88,7 @@ specification.
 [`unreal-automation-system`](../unreal-automation-system/SKILL.md),
 [`godot-gut-tests`](../godot-gut-tests/SKILL.md)) for unit + play-mode
 tests; recorded-input replay (per
-[`gameplay-recording-replay-skill`](../gameplay-recording-replay-skill/SKILL.md))
+[`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md))
 for scripted scenario coverage.
 
 **Where it shows up in cert.** Microsoft's

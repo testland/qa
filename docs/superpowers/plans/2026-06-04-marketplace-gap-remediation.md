@@ -178,7 +178,7 @@ Also create `agents/.gitkeep` removal where the dir gains a real agent. **Closeo
 
 | # | Agent | Plugin | Preloads | Trigger |
 |---|---|---|---|---|
-|3.1|`charter-coach`|qa-manual-testing|`sbtm-reference`, `hiccupps-f-heuristic`, `sfdpot-heuristic`, `tour-based-explorer-prompt`|Takes a feature + risk areas, produces a well-formed SBTM charter (mission + areas + tactics) using the heuristic catalog. Local to this plugin (do not rely on qa-roles).|
+|3.1|`charter-coach`|qa-manual-testing|`sbtm-reference`, `hiccupps-f-heuristic`, `sfdpot-heuristic`, `exploratory-tours-reference`|Takes a feature + risk areas, produces a well-formed SBTM charter (mission + areas + tactics) using the heuristic catalog. Local to this plugin (do not rely on qa-roles).|
 |3.2|`session-debrief-coach`|qa-manual-testing|`manual-test-debrief`, `sbtm-reference`|Reviews a completed session sheet: checks PROOF completeness, flags thin Feelings, detects S%>30% env problems, recommends next charter from Outlook.|
 |3.3|`test-script-quality-critic`|qa-manual-testing|`manual-test-script-author`, `test-execution-checklist`|Reviews authored manual scripts for vague preconditions, bundled scenarios, missing expected results.|
 |3.4|`screen-reader-test-executor`|qa-accessibility-specifics|`screen-reader-test-author`, `wcag-checklist-builder`|Orchestrates a structured NVDA/VoiceOver session and emits a pass/fail checklist (executes the handoff `accessibility-code-critic` recommends).|
@@ -272,7 +272,7 @@ All follow the **NEW SKILL DoD**. Group commits per plugin. Each row: skill name
 |`experiment-results-interpreter`|qa-experimentation|build-an-X|Kohavi/Tang/Xu (cite by ISBN); guardrail refs|
 |`killswitch-test-author`|qa-feature-flags|build-an-X|platform kill-switch docs|
 |`nuclei-dast`|qa-dast|tool-wrapper|projectdiscovery.io/nuclei|
-|`dast-auth-helper`|qa-dast|build-an-X|OWASP ZAP authentication docs|
+|`zap-authenticated-scans`|qa-dast|build-an-X|OWASP ZAP authentication docs|
 |`crash-triage-reference`|qa-fuzz-testing|reference|LLVM ASan/UBSan output docs|
 |`sbom-diff`|qa-sbom|build-an-X|syft diff; CycloneDX diff|
 |`vex-author`|qa-sbom|build-an-X|openvex spec|

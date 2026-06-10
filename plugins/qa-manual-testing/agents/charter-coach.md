@@ -3,7 +3,7 @@ name: charter-coach
 description: "Action-taking agent that converts a feature description and a set of risk areas into a well-formed SBTM exploratory charter - a ready-to-execute mission card with mission statement, scoped areas, applicable HICCUPPS-F oracles, SFDPOT product elements to vary, and 1-3 recommended tours - so a junior or mid-level manual tester can start a session without needing qa-roles installed. Use when a tester has a feature and a risk list but needs a structured charter before starting an exploratory session."
 tools: "Read, Write"
 model: sonnet
-skills: [sbtm-reference, hiccupps-f-heuristic, sfdpot-heuristic, tour-based-explorer-prompt]
+skills: [sbtm-reference, hiccupps-f-heuristic, sfdpot-heuristic, exploratory-tours-reference]
 rating: 25
 d6: 3
 ---
@@ -87,7 +87,7 @@ Example for "expiry timing" risk area:
 
 ## Step 5 - Recommend 1-3 tours
 
-From `tour-based-explorer-prompt` (Whittaker J., *Exploratory Software Testing*,
+From `exploratory-tours-reference` (Whittaker J., *Exploratory Software Testing*,
 Addison-Wesley, 2009), select tours by mission type:
 
 | Mission type | Recommended tours |
@@ -129,7 +129,7 @@ Write to `charters/<YYYY-MM-DD>-<kebab-feature>.md`. The file contains:
 
 ## Recommended tours
 
-(1-3 tours with brief rationale - see tour-based-explorer-prompt)
+(1-3 tours with brief rationale - see exploratory-tours-reference)
 
 ## Suggested test ideas
 
@@ -186,4 +186,4 @@ No other files created or modified.
 - Bach J., SFDPOT - satisfice.com/heuristics-of-software-testability.
 - Whittaker J., *Exploratory Software Testing* (Addison-Wesley, 2009).
 - Preloaded skills: sbtm-reference, hiccupps-f-heuristic, sfdpot-heuristic,
-  tour-based-explorer-prompt (all in plugins/qa-manual-testing/skills/).
+  exploratory-tours-reference (all in plugins/qa-manual-testing/skills/).

@@ -46,7 +46,7 @@ tester focus drops past that window), 120 min (wide-area). >120 min:
 split the charter.
 
 **Suggested tours** from
-[`tour-based-explorer-prompt`](../../qa-manual-testing/skills/tour-based-explorer-prompt/SKILL.md):
+[`exploratory-tours-reference`](../../qa-manual-testing/skills/exploratory-tours-reference/SKILL.md):
 Feature tour, Money tour, Configuration tour, Garbage-collector's
 tour, Bad-data tour (per
 [`malicious-payload-bank`](../../qa-test-data/skills/malicious-payload-bank/SKILL.md)).
@@ -146,7 +146,7 @@ The agent **refuses** to:
   PDF at `satisfice.com/download/session-based-test-management`;
   PROOF debrief, time-box rationale, three-bucket time accounting
   (fetched 2026-05-05).
-- [`tour-based-explorer-prompt`](../../qa-manual-testing/skills/tour-based-explorer-prompt/SKILL.md),
+- [`exploratory-tours-reference`](../../qa-manual-testing/skills/exploratory-tours-reference/SKILL.md),
   [`manual-test-debrief`](../../qa-manual-testing/skills/manual-test-debrief/SKILL.md),
   [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md),
   [`manual-test-script-author`](../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).

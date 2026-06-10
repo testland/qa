@@ -210,4 +210,4 @@ jobs:
 - Builders:
   [`refund-test-matrix-builder`](../refund-test-matrix-builder/SKILL.md),
   [`chargeback-flow-test-author`](../chargeback-flow-test-author/SKILL.md),
-  [`payment-webhook-replay-skill`](../payment-webhook-replay-skill/SKILL.md).
+  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).

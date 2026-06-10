@@ -53,9 +53,9 @@ checkout flow before the release on YYYY-MM-DD.
 
 Per cohort, 1-2 testers + 1 facilitator-roving:
 
-- **Cohort A — Money:** Apply the [Money tour](../tour-based-explorer-prompt/SKILL.md)
+- **Cohort A — Money:** Apply the [Money tour](../exploratory-tours-reference/SKILL.md)
   across the new checkout discount + tax flow.
-- **Cohort B — Bad data:** Apply the [Bad-data tour](../tour-based-explorer-prompt/SKILL.md)
+- **Cohort B — Bad data:** Apply the [Bad-data tour](../exploratory-tours-reference/SKILL.md)
   across promo code input, address fields, payment fields.
 - **Cohort C — Configuration:** Vary user state (new vs existing
   account, EU vs US user, mobile vs desktop) and re-run hero flows.
@@ -244,7 +244,7 @@ triage) but it broadens coverage.
 ## References
 
 - [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - provides the per-cohort charters this bash composes.
-- [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md) - the heuristics menu the cohorts pick from.
+- [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md) - the heuristics menu the cohorts pick from.
 - [`manual-test-debrief`](../manual-test-debrief/SKILL.md) - the
   PROOF debrief format the bug-bash debrief inherits from.
 - [`synthetic-data-toolkit`](../../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md) - used in the test-data-prep step.

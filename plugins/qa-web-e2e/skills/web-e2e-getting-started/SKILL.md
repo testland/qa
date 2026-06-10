@@ -1,12 +1,11 @@
 ---
-name: getting-started
+name: web-e2e-getting-started
 description: "Orients a junior engineer to web E2E testing in the qa-web-e2e plugin - maps the available skills and agents, routes framework choice through the right agent, and walks the three entry-point skills for first-time setup. Use when a junior engineer is new to web E2E and does not know where to start in this plugin."
 rating: 22
 d6: 2
 ---
 
-# getting-started
-
+# web-e2e-getting-started
 ## What is web E2E testing
 
 Web end-to-end (E2E) testing exercises a web application the way a real user would: a browser is launched, pages are loaded, interactions are performed (clicks, form fills, navigations), and outcomes are asserted against what the user should see. Per [playwright.dev/docs/intro][pwi]: "Playwright Test is an end-to-end test framework for modern web apps. It bundles test runner, assertions, isolation, parallelization and rich tooling." E2E tests sit at the top of the testing pyramid - they are the most realistic but also the slowest and most resource-intensive layer, so they complement, rather than replace, unit and integration tests.

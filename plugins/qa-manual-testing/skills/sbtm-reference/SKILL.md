@@ -25,7 +25,7 @@ This skill is a **pure reference** consumed by
 [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
 [`manual-test-debrief`](../manual-test-debrief/SKILL.md), and the
 tour-catalogues
-([`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md)).
+([`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md)).
 
 For the canonical heuristic catalogs the tester applies during a
 session, see
@@ -252,7 +252,7 @@ the session sheet is filed.
   [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md).
+  [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md).
 - Consumed by:
   [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
   [`manual-test-debrief`](../manual-test-debrief/SKILL.md).

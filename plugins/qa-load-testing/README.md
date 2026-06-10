@@ -20,7 +20,7 @@ Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI
 | Agent | [perf-incident-responder](agents/perf-incident-responder.md) | On-call perf-incident orchestrator: confirm with k6, flame-graph the hot path, check slow queries, localize the cause. |
 | Skill | [latency-percentile-analyzer](skills/latency-percentile-analyzer/SKILL.md) | Interpret latency distributions beyond p95/p99: tail ratio, bimodal detection, coordinated omission. |
 | Skill | [jvm-gc-tuning](skills/jvm-gc-tuning/SKILL.md) | Diagnose JVM GC under load: GC logs, collector selection, the GC-pause to latency-tail link. |
-| Skill | [getting-started](skills/getting-started/SKILL.md) | Junior on-ramp: load-testing metrics, which tool to pick, and a first k6 run + threshold. |
+| Skill | [load-testing-getting-started](skills/load-testing-getting-started/SKILL.md) | Junior on-ramp: load-testing metrics, which tool to pick, and a first k6 run + threshold. |
 
 ## Install
 

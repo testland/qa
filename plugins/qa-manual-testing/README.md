@@ -8,7 +8,7 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | --- | --- | --- |
 | Skill | [manual-test-script-author](skills/manual-test-script-author/SKILL.md) | Build-an-X scripted manual test cases - step-table or Gherkin format with self-contained data and per-step expected results. |
 | Skill | [test-execution-checklist](skills/test-execution-checklist/SKILL.md) | Build-an-X focused checklists for smoke / first-pass / bug-bash / compliance scenarios. |
-| Skill | [tour-based-explorer-prompt](skills/tour-based-explorer-prompt/SKILL.md) | Pure-reference catalog of the seven canonical Whittaker tours: Feature, Money, Landmark, Intellectual, Bad-data, Configuration, Garbage collector. |
+| Skill | [exploratory-tours-reference](skills/exploratory-tours-reference/SKILL.md) | Pure-reference catalog of the seven canonical Whittaker tours: Feature, Money, Landmark, Intellectual, Bad-data, Configuration, Garbage collector. |
 | Skill | [bug-bash-facilitator](skills/bug-bash-facilitator/SKILL.md) | Build-an-X structured multi-tester session: pre-bash kit + cohort charters + real-time triage board + scoring + post-bash cluster debrief. |
 | Skill | [uat-script-author](skills/uat-script-author/SKILL.md) | Build-an-X UAT scripts in stakeholder-readable business language: pre-conditions + journey steps + expected outcomes + AC verification + sign-off. |
 | Skill | [manual-test-debrief](skills/manual-test-debrief/SKILL.md) | Build-an-X session debrief in PROOF format (Past, Results, Outlook, Obstacles, Feelings) + 3-bucket time accounting + cross-session aggregation. |
@@ -22,7 +22,7 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | Agent | [charter-coach](agents/charter-coach.md) | Turns a feature + risk areas into a well-formed SBTM exploratory charter (mission, areas, HICCUPPS-F oracles, SFDPOT elements, tours). |
 | Agent | [session-debrief-coach](agents/session-debrief-coach.md) | Reviews a completed SBTM session sheet: PROOF completeness, TBS time-split health, and the recommended next charter. |
 | Agent | [test-script-quality-critic](agents/test-script-quality-critic.md) | Adversarial review of authored manual scripts for vague preconditions, bundled steps, missing expected results, and imperative-where-declarative slots. |
-| Skill | [getting-started](skills/getting-started/SKILL.md) | Junior on-ramp: the SBTM charter to session to debrief path and when to use each heuristic. |
+| Skill | [manual-testing-getting-started](skills/manual-testing-getting-started/SKILL.md) | Junior on-ramp: the SBTM charter to session to debrief path and when to use each heuristic. |
 
 ## Install
 

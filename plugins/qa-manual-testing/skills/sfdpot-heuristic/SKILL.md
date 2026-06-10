@@ -212,6 +212,6 @@ toolkit.
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
   [`sbtm-reference`](../sbtm-reference/SKILL.md),
-  [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md).
+  [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md).
 - Consumed by:
   [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).

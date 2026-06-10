@@ -17,7 +17,7 @@ Behavior-driven development pipelines: per-language Cucumber-family runners (Cuc
 | Agent | [gherkin-style-reviewer](agents/gherkin-style-reviewer.md) | Adversarial reviewer for Gherkin Feature files - flags imperative steps (\"click button #foo\"), technical leakage (DB names / API URLs / CSS selectors in steps), \"And And And\" chains (excessive coordination), missing Background extraction (repeated Givens across scenarios), and Then-without-observable-outcome (vague assertions). Refuses to mark a Feature \"good\" if any flag remains. Use during PR review against `*.feature` files. |
 | Agent | [bdd-scenario-author](agents/bdd-scenario-author.md) | End-to-end BDD author: story or acceptance criteria to Gherkin to step definitions wired to the detected runner. |
 | Skill | [living-documentation-publisher](skills/living-documentation-publisher/SKILL.md) | Publish passing Gherkin as stakeholder-facing living documentation (Serenity / cucumber-html-reporter). |
-| Skill | [getting-started](skills/getting-started/SKILL.md) | Junior/BA on-ramp: BDD/Gherkin basics and the manual-to-automation bridge path. |
+| Skill | [bdd-getting-started](skills/bdd-getting-started/SKILL.md) | Junior/BA on-ramp: BDD/Gherkin basics and the manual-to-automation bridge path. |
 
 ## Install
 

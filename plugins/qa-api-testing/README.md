@@ -15,7 +15,7 @@ API testing across Postman/Newman, RestAssured, Karate, Tavern; Schemathesis + R
 | Skill | [api-chaos-runner](skills/api-chaos-runner/SKILL.md) | Run API tests under Toxiproxy-injected latency / timeout / bandwidth / reset_peer; produce a resilience matrix. |
 | Agent | [api-test-tool-selector](agents/api-test-tool-selector.md) | Reads target API project markers (`*.openapi.yaml` / `*.proto` / `*.graphql` / Postman collection / language stack) plus testing goal (functional vs fuzzing vs chaos) and recommends one tool from the 7 skills above with rationale and the matching SKILL.md to read next. |
 | Agent | [api-test-author](agents/api-test-author.md) | Authors one API test artifact per endpoint + scenario in the chosen tool's idiomatic shape (Postman request, REST Assured Java test, Karate feature, Tavern YAML stage, Schemathesis test, RESTler grammar, or Chaos Runner scenario). Sibling of qa-mobile-native/mobile-test-author. |
-| Skill | [getting-started](skills/getting-started/SKILL.md) | Junior on-ramp: what API testing is, which tool to pick, and a first request + assertion. |
+| Skill | [api-testing-getting-started](skills/api-testing-getting-started/SKILL.md) | Junior on-ramp: what API testing is, which tool to pick, and a first request + assertion. |
 
 ## Install
 

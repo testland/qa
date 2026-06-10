@@ -259,4 +259,4 @@ test('lost dispute reverses funds in ledger', async () => {
   [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
 - Sibling builders:
   [`refund-test-matrix-builder`](../refund-test-matrix-builder/SKILL.md),
-  [`payment-webhook-replay-skill`](../payment-webhook-replay-skill/SKILL.md).
+  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).

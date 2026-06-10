@@ -1,12 +1,12 @@
 ---
-name: gameplay-recording-replay-skill
+name: gameplay-recording-replay
 description: "Build a deterministic gameplay record/replay test artefact for Unity, Unreal, or Godot - record a player session, save it to disk, replay it bit-for-bit, and assert that the resulting game state matches the original. Covers Unity Input System's InputEventTrace API (Enable / Disable / WriteTo / ReadFrom / Replay) for input-level capture, Unreal's Replay System (DemoRec / DemoPlay / DemoStop console commands plus DemoNetDriver + NetworkReplayStreamer, default storage at %LOCALAPPDATA%/<Project>/Saved/Demos) for replication-stream capture, and Godot's community-pattern deterministic-RNG + input-script replay since Godot ships no first-party replay system. Use when authoring a regression-test artefact for player-recorded sessions, building a netcode replay for spectator / esports, or producing reproducible bug repros for cert teams."
 rating: 23
 d6: 4
 keywords: ["replay", "recording", "input-trace", "demonet", "deterministic", "regression", "unity", "unreal", "godot", "esports"]
 ---
 
-# gameplay-recording-replay-skill
+# gameplay-recording-replay
 
 ## Overview
 

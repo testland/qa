@@ -8,7 +8,7 @@ skills:
   - unreal-automation-system
   - godot-gut-tests
   - multiplayer-state-machine-coverage
-  - gameplay-recording-replay-skill
+  - gameplay-recording-replay
   - game-test-categories-reference
   - platform-cert-overview-reference
 rating: 27
@@ -56,7 +56,7 @@ Unity ProjectSettings AND `*.uproject`) → halt (Refuse-to-proceed); never gues
 Prefer replay-driven inputs when an artefact exists: Unity `Assets/Recordings/*.inputtrace`
 (`InputEventTrace`), Unreal `Saved/Demos/*.demo` (`DemoRec`/`DemoPlay`), or Godot
 `user://recordings/` - all per the local
-[`gameplay-recording-replay-skill`](../skills/gameplay-recording-replay-skill/SKILL.md).
+[`gameplay-recording-replay`](../skills/gameplay-recording-replay/SKILL.md).
 Otherwise hand-author the input sequence inline. Flag which mode in the output.
 
 ### Step 4 - Map the spec to the engine's idiomatic shape
@@ -129,7 +129,7 @@ hand-authored), new file path, verify command (`unity ... -runTests`,
   [`godot-gut-tests`](../skills/godot-gut-tests/SKILL.md).
 - **Multiplayer / replay / categories / cert** →
   [`multiplayer-state-machine-coverage`](../skills/multiplayer-state-machine-coverage/SKILL.md),
-  [`gameplay-recording-replay-skill`](../skills/gameplay-recording-replay-skill/SKILL.md),
+  [`gameplay-recording-replay`](../skills/gameplay-recording-replay/SKILL.md),
   [`game-test-categories-reference`](../skills/game-test-categories-reference/SKILL.md),
   [`platform-cert-overview-reference`](../skills/platform-cert-overview-reference/SKILL.md).
 - **Test-code review** → `test-code-conventions` (qa-test-review).

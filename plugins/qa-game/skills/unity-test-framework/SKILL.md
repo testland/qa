@@ -43,7 +43,7 @@ Composes with:
   remove).
 - [`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md)
   and
-  [`gameplay-recording-replay-skill`](../gameplay-recording-replay-skill/SKILL.md)
+  [`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md)
   for state-machine and replay-driven test patterns inside UTF
   PlayMode tests.
 

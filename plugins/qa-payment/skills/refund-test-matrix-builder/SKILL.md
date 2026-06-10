@@ -249,4 +249,4 @@ Refund-test coverage matrix should be reported per release:
   [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
 - Sibling builders:
   [`chargeback-flow-test-author`](../chargeback-flow-test-author/SKILL.md),
-  [`payment-webhook-replay-skill`](../payment-webhook-replay-skill/SKILL.md).
+  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).

@@ -216,7 +216,7 @@ high-priority.
   [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md),
+  [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md),
   [`sbtm-reference`](../sbtm-reference/SKILL.md).
 - Consumed by:
   [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).

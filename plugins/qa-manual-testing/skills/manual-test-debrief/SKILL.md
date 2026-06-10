@@ -59,7 +59,7 @@ metric captures.
 ## Past — what was tested
 
 **Tours applied:**
-- [x] Money tour (per [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md))
+- [x] Money tour (per [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md))
 - [x] Bad-data tour
 - [ ] Configuration tour (skipped — out of time)
 
@@ -236,6 +236,6 @@ different scope.
   PDF at `satisfice.com/download/session-based-test-management`) - 
   PROOF debrief format origin, three-bucket time accounting.
 - [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - upstream: charters this debrief delivers into.
-- [`tour-based-explorer-prompt`](../tour-based-explorer-prompt/SKILL.md) - the tours catalogued in the Past section.
+- [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md) - the tours catalogued in the Past section.
 - [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md) - 
   multi-cohort bug bash inherits this debrief format.
