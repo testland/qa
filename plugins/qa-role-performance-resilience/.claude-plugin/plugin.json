@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-role-performance-resilience",
+  "version": "1.0.0",
+  "description": "Performance & reliability QA role bundle: one-command install of load testing, chaos engineering, resilience drills, and shift-left / shift-right production QA.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-performance-resilience",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "bundle",
+    "role",
+    "performance",
+    "load",
+    "resilience",
+    "chaos"
+  ],
+  "dependencies": [
+    "qa-load-testing",
+    "qa-chaos-resilience",
+    "qa-resilience-drills",
+    "qa-shift-right",
+    "qa-shift-left"
+  ]
+}

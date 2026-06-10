@@ -20,6 +20,28 @@ Then author the components. When all components are written, bump the
 plugin's `plugin.json` `version` from `0.1.0` to `1.0.0` and run validation
 (see below).
 
+### Role-bundle plugins (one-command role installs)
+
+A **role bundle** (`qa-starter` and the `qa-role-*` family) is a special plugin
+that owns **no components** — it exists only to install a curated set of plugins
+together, so a user adopts a whole role with one `/plugin install`. To author one:
+
+- `plugins/<bundle>/.claude-plugin/plugin.json` **only** — no `skills/`, `agents/`,
+  `commands/`, or `hooks/` dirs. Set `"dependencies"` to an array of **bare member
+  plugin-name strings** (e.g. `["qa-sast", "qa-dast"]`) — never `{name, version}`
+  objects and never `name@testland-qa`. Bare same-marketplace names resolve with no
+  git tag; a version-pinned dep looks for a `{plugin}--v{version}` tag this repo
+  doesn't publish and would disable the bundle.
+- `plugins/<bundle>/README.md` is **prose-only**: an Install block plus a plain
+  "What this installs" list. It must contain **no** component-table rows (no
+  first-cell `Skill`/`Agent`, no `](skills/…)`/`](agents/…)` links) or
+  `content-audit.py --strict` fails `readme_count_mismatch`.
+- Register it in `marketplace.json` with `"category": "role-bundles"`, then
+  regenerate + commit `CATALOG.md`.
+- Bundles carry no `rating`/`d6` frontmatter and are exempt from the D1–D6 gate
+  (no components to score). Bump the bundle's `plugin.json` `version` whenever you
+  change its `dependencies`, or the update never reaches installed users.
+
 ## Authoring a skill or agent
 
 See [`docs/PLUGIN_AUTHORING.md`](docs/PLUGIN_AUTHORING.md) for the common

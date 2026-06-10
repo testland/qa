@@ -42,6 +42,7 @@ CATEGORY_ORDER = [
     ("integrations-protocols", "Integrations & protocols", "GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature flags, experimentation."),
     ("ai-ml", "AI & ML", "LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, search relevance."),
     ("tooling", "Tooling", "IaC, CI integration, CLI tools, code quality, compatibility, manual testing."),
+    ("role-bundles", "Role bundles", "One-command role installs - each bundles a curated capability set as dependencies: qa-starter essentials plus frontend, backend, security, performance, mobile/desktop, AI/ML & data, and leadership."),
 ]
 CATEGORY_KEYS = {k for k, _, _ in CATEGORY_ORDER}
 

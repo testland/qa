@@ -32,15 +32,25 @@ those releases.
 - `docs/ROADMAP.md` — tiered gap analysis listing high-frequency QA
   disciplines, common gaps, and previously-excluded categories now open
   for contribution
-- `presets/` — drop-in `.claude/settings.json` role bundles for 10 personas
-  (frontend-web, backend-api, security, performance/resilience, data, AI/ML,
-  mobile/cross-platform, leadership, manual/exploratory, polyglot-unit) that
-  register the marketplace and enable a curated plugin set in one gesture,
-  plus `presets/README.md`. README "Start here" gains an "adopt a whole role
-  at once" path linking the bundles, so adopting a role no longer means
-  running `/plugin install` once per plugin
+- 8 **role-bundle plugins** — `qa-starter` (essentials) plus seven `qa-role-*`
+  packs (frontend-web, backend-api, security, performance-resilience,
+  mobile-desktop, ai-ml-data, leadership). Each is a dependency-only plugin that
+  installs a whole role in ONE command (`/plugin install qa-role-security@testland-qa`
+  pulls in its member plugins via bare-name `dependencies`). New `role-bundles`
+  catalog category. This is the recommended install path — one command replaces
+  installing each plugin by hand
+- `presets/README.md` — a config-as-code note for the secondary committed-
+  `.claude/settings.json` path (shared-team / CI / pre-2.1.143 clients)
 
 ### Changed
+- Role bundles are now the recommended install path: README Install + "Start
+  here" restructured to lead with one-command `/plugin install qa-role-<x>@testland-qa`;
+  single-plugin install demoted to a follow-on. Plugins 77 → 85 (8 bundles add 0
+  components); marketplace `metadata.version` 4.0.0 → 4.1.0; a `role-bundles`
+  category brings the total to 10.
+- Retired the 10 `.claude/settings.json` presets in favor of the role-bundle
+  plugins; `presets/` shrinks to a single config-as-code note for the secondary
+  team/CI path.
 - Recategorized the marketplace from 7 to 9 categories: split the 21-plugin
   `ai-specialized` catch-all into `ai-ml` (5), `backend-distributed` (8), and
   `integrations-protocols` (8) so each category honestly predicts its members

@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Quality engineering plugin marketplace for modern software teams: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, security testing (SAST/DAST/SCA/SBOM/secrets/compliance), LLM evaluation, ML model testing, distributed tracing, real-time protocols, PDF/print, search relevance, concurrency, saga/CQRS, charts, resilience drills, and more. Every component is rating-gated before merge.",
-    "version": "4.0.0"
+    "version": "4.1.0"
   },
   "plugins": [
     {
@@ -548,6 +548,62 @@
       "description": "Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework)",
       "strict": true,
       "category": "functional-testing"
+    },
+    {
+      "name": "qa-starter",
+      "source": "./plugins/qa-starter",
+      "description": "QA essentials role bundle: one-command install of the cross-cutting plugins every tester needs regardless of stack - test process, test data, environments, test-code review, reporting, flake triage, bug repro, defect management, CI integration, and manual/exploratory testing. Start here.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-frontend-web",
+      "source": "./plugins/qa-role-frontend-web",
+      "description": "Frontend & web-app QA role bundle: one-command install of web E2E, visual regression, accessibility, modern web, PWA, browser-extension, localization, charts, PDF/print, browser/OS compatibility, and JS/TS unit testing.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-backend-api",
+      "source": "./plugins/qa-role-backend-api",
+      "description": "Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, feature flags, and experimentation.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-security",
+      "source": "./plugins/qa-role-security",
+      "description": "Application-security & compliance QA role bundle: one-command install of SAST, DAST, SCA, secrets scanning, SBOM, fuzzing, compliance, multi-tenancy isolation, test-data privacy, and IaC policy testing.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-performance-resilience",
+      "source": "./plugins/qa-role-performance-resilience",
+      "description": "Performance & reliability QA role bundle: one-command install of load testing, chaos engineering, resilience drills, and shift-left / shift-right production QA.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-mobile-desktop",
+      "source": "./plugins/qa-role-mobile-desktop",
+      "description": "Mobile, desktop & cross-platform QA role bundle: one-command install of mobile-native, desktop, embedded, game, and browser/OS compatibility testing.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-ai-ml-data",
+      "source": "./plugins/qa-role-ai-ml-data",
+      "description": "AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing, AI-assisted test generation, search relevance, data notebooks, and data quality.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-leadership",
+      "source": "./plugins/qa-role-leadership",
+      "description": "QA leadership & test-management role bundle: one-command install of the QA role org-chart, test process, test management, impact analysis, reporting, hiring, shift-left, defect management, and production-code quality governance.",
+      "strict": true,
+      "category": "role-bundles"
     }
   ]
 }

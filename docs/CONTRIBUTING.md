@@ -122,6 +122,18 @@ If any check fails, reshape the scope before authoring.
    Add k6-load-testing skill (rated 27/30 [d6=5]; sources fetched 2026-05-25 from grafana.com/docs/k6)
    ```
 
+## Role bundles
+
+A **role bundle** (`qa-starter`, the `qa-role-*` family) is a dependency-only
+plugin that installs a curated set of plugins in one command. A bundle PR is
+**exempt from the D1–D6 rating gate** — it ships no components — but it must
+declare its members as **bare plugin-name strings** in `plugin.json`
+`dependencies` (never `{name, version}` or `name@testland-qa`), ship a
+**prose-only** README with no component-table rows, register
+`"category": "role-bundles"`, and regenerate + commit `CATALOG.md`. See
+[`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md#authoring-a-role-bundle-plugin-no-components)
+for the full recipe.
+
 ## Anti-patterns the reviewer rejects
 
 - Body content that contradicts the cited source.

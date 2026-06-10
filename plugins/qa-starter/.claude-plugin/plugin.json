@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-starter",
+  "version": "1.0.0",
+  "description": "QA essentials role bundle: one-command install of the cross-cutting plugins every tester needs regardless of stack - test process, test data, environments, test-code review, reporting, flake triage, bug repro, defect management, CI integration, and manual/exploratory testing. Start here.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-starter",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "bundle",
+    "role",
+    "starter",
+    "essentials"
+  ],
+  "dependencies": [
+    "qa-process",
+    "qa-test-data",
+    "qa-test-environment",
+    "qa-test-review",
+    "qa-test-reporting",
+    "qa-flake-triage",
+    "qa-bug-repro",
+    "qa-defect-management",
+    "qa-ci-integration",
+    "qa-manual-testing"
+  ]
+}

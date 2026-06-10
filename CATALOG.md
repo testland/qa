@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**77 plugins · 695 components**
+**85 plugins · 695 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -147,6 +147,21 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.1 | 5 skills + 1 agents | 6 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.1 | 4 skills + 0 agents | 4 |
 
+## Role bundles
+
+_One-command role installs - each bundles a curated capability set as dependencies: qa-starter essentials plus frontend, backend, security, performance, mobile/desktop, AI/ML & data, and leadership._
+
+| Plugin | Version | Components | Total |
+|---|---|---|---:|
+| [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-backend-api](plugins/qa-role-backend-api/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-frontend-web](plugins/qa-role-frontend-web/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-leadership](plugins/qa-role-leadership/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-performance-resilience](plugins/qa-role-performance-resilience/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-security](plugins/qa-role-security/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-starter](plugins/qa-starter/) | 1.0.0 | 0 skills + 0 agents | 0 |
+
 ## Alphabetical index
 
 - [qa-accessibility-specifics](plugins/qa-accessibility-specifics/)
@@ -201,6 +216,13 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-pwa](plugins/qa-pwa/)
 - [qa-realtime-protocols](plugins/qa-realtime-protocols/)
 - [qa-resilience-drills](plugins/qa-resilience-drills/)
+- [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/)
+- [qa-role-backend-api](plugins/qa-role-backend-api/)
+- [qa-role-frontend-web](plugins/qa-role-frontend-web/)
+- [qa-role-leadership](plugins/qa-role-leadership/)
+- [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/)
+- [qa-role-performance-resilience](plugins/qa-role-performance-resilience/)
+- [qa-role-security](plugins/qa-role-security/)
 - [qa-roles](plugins/qa-roles/)
 - [qa-saga-cqrs](plugins/qa-saga-cqrs/)
 - [qa-sast](plugins/qa-sast/)
@@ -211,6 +233,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 - [qa-serverless](plugins/qa-serverless/)
 - [qa-shift-left](plugins/qa-shift-left/)
 - [qa-shift-right](plugins/qa-shift-right/)
+- [qa-starter](plugins/qa-starter/)
 - [qa-test-data](plugins/qa-test-data/)
 - [qa-test-data-privacy](plugins/qa-test-data-privacy/)
 - [qa-test-environment](plugins/qa-test-environment/)

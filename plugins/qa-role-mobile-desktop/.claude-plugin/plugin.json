@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-role-mobile-desktop",
+  "version": "1.0.0",
+  "description": "Mobile, desktop & cross-platform QA role bundle: one-command install of mobile-native, desktop, embedded, game, and browser/OS compatibility testing.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-mobile-desktop",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "bundle",
+    "role",
+    "mobile",
+    "desktop",
+    "cross-platform"
+  ],
+  "dependencies": [
+    "qa-mobile-native",
+    "qa-desktop",
+    "qa-embedded",
+    "qa-game",
+    "qa-compatibility"
+  ]
+}

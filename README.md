@@ -2,13 +2,13 @@
 
 [![validate](https://github.com/testland/qa/actions/workflows/validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/validate.yml)
 [![plugin-validate](https://github.com/testland/qa/actions/workflows/plugin-validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/plugin-validate.yml)
-[![plugins](https://img.shields.io/badge/plugins-77-blue)](#plugin-catalog)
+[![plugins](https://img.shields.io/badge/plugins-85-blue)](#plugin-catalog)
 [![components](https://img.shields.io/badge/components-695-blue)](#plugin-catalog)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![marketplace](https://img.shields.io/badge/marketplace-v4.0.0-orange)](.claude-plugin/marketplace.json)
+[![marketplace](https://img.shields.io/badge/marketplace-v4.1.0-orange)](.claude-plugin/marketplace.json)
 
 > A rigorously curated quality-engineering plugin marketplace for Claude Code.
-> 77 plugins, 695 components, every one rating-gated before merge.
+> 85 plugins, 695 components, every one rating-gated before merge.
 
 ## Why testland-qa
 
@@ -26,10 +26,13 @@ See [Quality bar](#quality-bar) and [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER
 
 ## How it works
 
-The marketplace ships three kinds of building block:
+The marketplace ships these building blocks:
 
-- **Plugin** — an installable bundle scoped to one QA area (e.g.
-  `qa-api-testing`, `qa-load-testing`). You install only the plugins your
+- **Role bundle** — a one-command install of a whole role: `qa-starter`
+  (the essentials every tester needs) plus seven `qa-role-*` packs. Installing
+  a bundle installs its member plugins for you. **Start here.**
+- **Plugin** — an installable unit scoped to one QA area (e.g.
+  `qa-api-testing`, `qa-load-testing`). Install only the plugins your
   stack needs.
 - **Skill** — an atomic, self-contained capability inside a plugin, usually
   wrapping one tool or one technique (e.g. `great-expectations`,
@@ -44,14 +47,33 @@ plugin doesn't add noise — it adds capability that activates on demand.
 
 ## Install
 
-### Claude Code marketplace (recommended)
+### Install a whole role in one command (recommended)
+
+Add the marketplace once, then install a role bundle — Claude Code pulls in all
+of its member plugins automatically:
 
 ```
 /plugin marketplace add testland/qa
-/plugin install <plugin-name>@testland-qa
+/plugin install qa-starter@testland-qa
 ```
 
-For example:
+`qa-starter` is the essentials every tester needs. For a stack-specific role,
+install one of the seven `qa-role-*` bundles instead:
+
+```
+/plugin install qa-role-security@testland-qa      # AppSec / security testing
+/plugin install qa-role-frontend-web@testland-qa  # web / UI automation
+/plugin install qa-role-backend-api@testland-qa   # API / microservices / distributed
+```
+
+One bundle install brings in its whole member set (Claude Code lists what it
+added). The eight bundles are listed under [Start here](#start-here) and in
+[`CATALOG.md`](CATALOG.md). Requires Claude Code v2.1.110+ (v2.1.143+ to enable
+the set together).
+
+### Install individual plugins
+
+Prefer a narrower set? Install plugins one at a time:
 
 ```
 /plugin install qa-data-quality@testland-qa
@@ -94,24 +116,24 @@ activate on demand, so a focused set keeps things sharp.
 
 ### Or adopt a whole role at once
 
-Don't install plugins one at a time. Each [role bundle](presets/README.md) is a
-drop-in `.claude/settings.json` that registers the marketplace and enables a
-curated set for one role — paste it, trust the folder, restart. See
-[`presets/`](presets/README.md) for how to apply one (and how to scope it to
-just yourself).
+Don't install plugins one at a time. A **role bundle** installs a curated set for
+your role in a single command — `/plugin install <bundle>@testland-qa` pulls in
+every member plugin. Start with `qa-starter`, or pick a role:
 
 | Bundle | Role | Plugins |
 |---|---|---:|
-| [frontend-web-qa](presets/frontend-web-qa.settings.json) | Frontend / web-app QA & automation | 7 |
-| [backend-api-qa](presets/backend-api-qa.settings.json) | Backend / API / microservices QA | 9 |
-| [security-qa](presets/security-qa.settings.json) | Application security tester / AppSec | 9 |
-| [performance-and-resilience-qa](presets/performance-and-resilience-qa.settings.json) | Performance / reliability engineer | 7 |
-| [data-qa](presets/data-qa.settings.json) | Data / analytics-pipeline QA | 6 |
-| [ai-ml-qa](presets/ai-ml-qa.settings.json) | ML / LLM application QA | 5 |
-| [mobile-and-cross-platform-qa](presets/mobile-and-cross-platform-qa.settings.json) | Mobile / desktop / cross-platform | 6 |
-| [test-leadership](presets/test-leadership.settings.json) | QA lead / manager / head of quality | 8 |
-| [manual-and-exploratory-qa](presets/manual-and-exploratory-qa.settings.json) | Manual / exploratory / UAT tester | 5 |
-| [polyglot-unit-and-coverage](presets/polyglot-unit-and-coverage.settings.json) | Unit + coverage across the language stack | 8 |
+| [qa-starter](plugins/qa-starter/) | Essentials every tester needs — **start here** | 10 |
+| [qa-role-frontend-web](plugins/qa-role-frontend-web/) | Frontend / web-app QA & UI automation | 11 |
+| [qa-role-backend-api](plugins/qa-role-backend-api/) | Backend / API / distributed systems | 18 |
+| [qa-role-security](plugins/qa-role-security/) | Application security & compliance | 10 |
+| [qa-role-performance-resilience](plugins/qa-role-performance-resilience/) | Performance & reliability | 5 |
+| [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | Mobile / desktop / cross-platform | 5 |
+| [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/) | AI/ML & data-pipeline QA | 6 |
+| [qa-role-leadership](plugins/qa-role-leadership/) | QA lead / manager / head of quality | 9 |
+
+Bundles overlap where roles do (installing a plugin twice is harmless). The
+per-language unit-test plugins and a few language-agnostic extras stay à la carte
+— add them on top of a bundle as your stack needs.
 
 The full catalog is below; for versions and component counts see
 [`CATALOG.md`](CATALOG.md).
@@ -137,8 +159,12 @@ Each plugin's `README.md` lists its skills and agents and what each one does.
 
 ## Plugin catalog
 
-77 plugins across 9 categories. See [`CATALOG.md`](CATALOG.md) for the full
+85 plugins across 10 categories. See [`CATALOG.md`](CATALOG.md) for the full
 table with versions and component counts.
+
+**Role bundles** (8): one-command role installs — `qa-starter` essentials plus seven `qa-role-*` packs
+
+[qa-starter](plugins/qa-starter/) · [qa-role-frontend-web](plugins/qa-role-frontend-web/) · [qa-role-backend-api](plugins/qa-role-backend-api/) · [qa-role-security](plugins/qa-role-security/) · [qa-role-performance-resilience](plugins/qa-role-performance-resilience/) · [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) · [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/) · [qa-role-leadership](plugins/qa-role-leadership/)
 
 **Foundations** (9): test process, environment, data, reporting, impact, roles, review, management, hiring
 

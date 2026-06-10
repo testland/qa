@@ -59,6 +59,47 @@ scope is probably wrong; reshape before authoring. (D2 scores scope
 Agent bodies stay 30-60 lines; reference material lives in preloaded skills,
 not in the agent body.
 
+## Authoring a role-bundle plugin (no components)
+
+A **role bundle** is a distinct plugin type: it ships no skills or agents and
+exists only to install a curated set of other plugins in one command (`qa-starter`
+and the `qa-role-*` family). It is the recommended way for users to adopt a whole
+role. A bundle is exempt from the D1–D6 rating gate (it has no components to
+score), but it has its own rules.
+
+1. **Manifest only.** Create `plugins/<bundle>/.claude-plugin/plugin.json` and
+   **nothing else under** `plugins/<bundle>/` except the README — no `skills/`,
+   `agents/`, `commands/`, or `hooks/` directories. House-style fields
+   (`name`, `version`, `description`, `author`, `homepage`, `repository`,
+   `license`, `keywords`) match every other plugin.
+2. **Bare-name dependencies.** Set `"dependencies"` to an array of **bare member
+   plugin-name strings**:
+   ```json
+   "dependencies": ["qa-sast", "qa-dast", "qa-sca"]
+   ```
+   Do **not** use `{ "name": "...", "version": "..." }` objects or
+   `"qa-sast@testland-qa"`. A bare name resolves to whatever version the same
+   marketplace provides, with no git tag. A version-pinned dependency resolves
+   against a `{plugin}--v{version}` tag that this SHA-versioned repo does not
+   publish, so it would fail `no-matching-tag` and disable the bundle.
+3. **Prose-only README.** `plugins/<bundle>/README.md` has a title, a one-line
+   purpose, an Install fenced block (`/plugin install <bundle>@testland-qa`), and
+   a "What this installs" list written as **plain text** (e.g. `- **qa-sast** -
+   static analysis`). It must contain **no component-table row** — nothing whose
+   first cell is `Skill`/`Agent`, and no `](skills/…)` / `](agents/…)` links — or
+   `content-audit.py --strict` fails `readme_count_mismatch` (rows on disk = 0).
+   Do not start from the scaffolder's component-table README.
+4. **Register + categorize.** Add a `marketplace.json` entry with
+   `"category": "role-bundles"`, then regenerate and commit `CATALOG.md`
+   (`make catalog`). The bundle renders as `0 skills + 0 agents`; that is expected.
+5. **Version on every dependency change.** Bump the bundle's `plugin.json`
+   `version` whenever you add or remove a member, or the change never reaches
+   users who already installed it.
+
+Keep bundles **flat** — list member plugins, not other bundles. A bundle that
+depends on another bundle works but obscures what installs and complicates the
+disable chain.
+
 ## Step 1 — Scaffold the plugin
 
 ```bash

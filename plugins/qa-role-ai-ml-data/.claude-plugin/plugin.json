@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-role-ai-ml-data",
+  "version": "1.0.0",
+  "description": "AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing, AI-assisted test generation, search relevance, data notebooks, and data quality.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-ai-ml-data",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "bundle",
+    "role",
+    "ai",
+    "ml",
+    "llm",
+    "data"
+  ],
+  "dependencies": [
+    "qa-llm-evaluation",
+    "qa-ml-models",
+    "qa-ai-assisted",
+    "qa-search-relevance",
+    "qa-data-notebooks",
+    "qa-data-quality"
+  ]
+}
