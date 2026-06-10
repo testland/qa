@@ -1,6 +1,6 @@
 # qa-defect-management
 
-Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skills (bug-lifecycle-reference, severity-vs-priority-reference, defect-taxonomy-istqb) + 3 platform-workflow skills (jira-bug-workflow-runner, linear-bug-workflow-runner, github-issues-bug-workflow) + 1 build skill (bug-report-from-failure) + 2 agents (duplicate-defect-finder, bug-report-critic). Distinct from qa-bug-repro which covers reproduction + clustering + trend narration; this covers triage workflow + taxonomy + severity classification.
+Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skills (bug-lifecycle-reference, severity-vs-priority-reference, defect-taxonomy-istqb) + 4 platform-workflow skills (jira-bug-workflow-runner, linear-bug-workflow-runner, github-issues-bug-workflow, azuredevops-bug-workflow) + 1 build skill (bug-report-from-failure) + 4 agents (duplicate-defect-finder, bug-report-critic, ci-defect-filer, defect-fix-verifier). Distinct from qa-bug-repro which covers reproduction + clustering + trend narration; this covers triage workflow + taxonomy + severity classification, and closes the lifecycle with post-fix confirmation testing.
 
 ## Components
 
@@ -17,6 +17,7 @@ Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skill
 | agent | [bug-report-critic](agents/bug-report-critic.md) | Audit a bug report against required fields, severity-priority independence, reproduction quality |
 | Agent | [ci-defect-filer](agents/ci-defect-filer.md) | One-step CI auto-filer: turns a test failure into a deduped bug filed in Jira / Linear / GitHub Issues. |
 | Skill | [azuredevops-bug-workflow](skills/azuredevops-bug-workflow/SKILL.md) | Author/triage/link bugs in Azure DevOps Boards via the Work Item Tracking REST API + WIQL. |
+| Agent | [defect-fix-verifier](agents/defect-fix-verifier.md) | Confirmation testing: re-runs a defect's reproduction after the fix merges, verdicts VERIFIED / NOT FIXED / BLOCKED, and transitions the tracker with evidence. |
 
 ## Differentiation
 
