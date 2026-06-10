@@ -10,15 +10,21 @@ It replaces the older "NOT-GAPS" exclusion list. The marketplace no
 longer blocks categories by name. The gap analysis below is a *positive*
 roadmap of what we want to land next.
 
-> **Note (2026-06-04 gap-remediation):** A large remediation pass shipped
-> ~120 new components (see
-> `docs/superpowers/plans/2026-06-04-marketplace-gap-remediation.md`). Many
-> items in the per-discipline gap tables and the "Within-plugin extensions"
-> list below have since landed (e.g. Kafka, Azure Functions, .NET TimeProvider,
-> Solr, Split.io, OpenFeature, Trivy config, Pester, Memcached, Azure DevOps
-> bug workflow, judgment-list authoring, and many critic/orchestrator agents).
-> **`CATALOG.md` is the source of truth for what currently ships** - check it
-> before picking a slot, as some entries below are already implemented.
+> **Note (2026-06-10 refresh):** every plugin-sized gap from the previous
+> revision of this document has shipped or been absorbed:
+> `qa-test-management`, `qa-defect-management`, `qa-fuzz-testing`, and
+> `qa-test-data-privacy` shipped as plugins; risk-based testing was
+> absorbed into `qa-process` (the `risk-*` skill/agent family);
+> exploratory testing was absorbed into `qa-manual-testing` (SBTM,
+> charters, heuristics, tours); cross-browser grids were absorbed into
+> `qa-web-e2e` (BrowserStack / Sauce Labs / LambdaTest / Selenium Grid)
+> and `qa-compatibility` (matrix strategy). All nine former Tier-2 and
+> all five former Tier-3 plugin gaps also shipped. The tables below are
+> a fresh gap list derived from a June 2026 review of the catalog
+> against ISTQB role definitions (CTFL v4.0, CTAL-TM v3.0, CTAL-TAE
+> v2.0) and practitioner surveys.
+> **`CATALOG.md` is the source of truth for what currently ships** —
+> check it before picking a slot.
 
 ## How to use this document
 
@@ -31,488 +37,222 @@ roadmap of what we want to land next.
   state their differentiation axis in the PR.
 - Tiers reflect priority for testland-qa, not absolute importance in the
   QA industry. T1 = high-frequency disciplines real teams use daily that
-  the marketplace lacks. T2 = common, narrower gaps. T3 = previously
-  excluded specialised domains now open to differentiated contributions.
+  the marketplace lacks. T2 = common, narrower gaps. T3 = niche or
+  polish-level gaps open to differentiated contributions.
 
 ## Current coverage snapshot
 
-The catalog ships **77 plugins / 695 components** across seven groupings:
-**foundations** (process / environment / data / reporting / impact /
-roles / review / management / hiring), **functional testing** (API / BDD
-/ E2E / mobile / desktop / embedded / game / contract / mutation /
-property-based / 5 per-language unit-test plugins), **quality engineering**
-(data quality / visual regression / accessibility / localization / charts /
-PDF / modern web / browser extension / PWA), **security & compliance**
-(SAST / DAST / SCA / secrets / SBOM / fuzz / compliance / multi-tenancy /
-test-data privacy), **operations & resilience** (flake triage / bug repro /
-defect management / chaos / resilience drills / shift-left/right / load),
-**AI & specialised** (LLM eval / ML models / AI-assisted / notebooks /
-distributed tracing / realtime protocols / search / saga-CQRS / concurrency
-/ DB migrations / async jobs / auth flows / notifications / cache /
-experimentation / feature flags / GraphQL / gRPC / payment / serverless /
-time-and-timezones), and **tooling** (IaC / CI integration / CLI tools /
-code quality / compatibility / manual testing).
+The catalog ships **89 plugins / 706 components** across ten categories
+(foundations, functional testing, quality engineering, security &
+compliance, operations & resilience, backend & distributed systems,
+integrations & protocols, AI & ML, tooling, and role bundles). The role
+bundles cover both axes: technology domains (frontend-web, backend-api,
+mobile-desktop, security, performance-resilience, ai-ml-data) and career
+roles (manual-tester, automation-engineer, sdet, leadership, starter).
 
 See [`CATALOG.md`](../CATALOG.md) for the authoritative list.
 
-## Tier 1 — High-frequency disciplines genuinely missing
+## Tier 1 — High-frequency gaps
 
-These are widely practised in real QA teams, expected by ISTQB-aligned
-test managers, and absent from the catalog.
+Widely practised in real QA teams, expected by ISTQB-aligned managers
+or visible in practitioner surveys, and absent from the catalog.
 
-### qa-test-management (new plugin)
+### Headcount and budget planning (extension: `qa-team-management`)
 
-**Why missing matters:** test case management is where real QA teams
-spend most of their non-execution time. Without coverage of TestRail,
-Xray, Zephyr, or Allure TestOps, the catalog has no story for
-traceability, test repository management, or coverage reporting against
-requirements.
+**Why missing matters:** `qa-team-management` now covers skill matrices,
+career ladders, 1:1s, feedback, and exec narratives, but a QA manager's
+resourcing work — headcount-vs-roadmap modeling, budget lines for tools
+and device clouds, build-vs-buy framing — still has no component.
+`qa-vendor-evaluator` (in `qa-process`) covers single-procurement
+decisions only.
 
-**Nearest existing components:** `qa-test-reporting`,
-`qa-test-impact-analysis`, `qa-process`.
+**Nearest existing components:** `qa-vendor-evaluator`,
+`test-effort-estimator` (qa-roles), `team-capability-gap-analyst`.
 
-**Differentiation axis:** test-reporting is about *executed* results;
-this is about the *test repository* (cases, suites, runs,
-traceability) before and after execution.
+**Differentiation axis:** effort estimation is per-epic;
+capability-gap analysis is per-skill; this is annual/quarterly
+resource planning across a team or org.
 
-**Suggested components:**
+**Suggested components:** skill `headcount-and-budget-planner`.
 
-| Type | Name | Purpose |
-|---|---|---|
-| skill | testrail-integration | Author cases, run sets, post results via TestRail API |
-| skill | xray-jira-integration | Cases-as-Jira-issues, executions, requirements traceability |
-| skill | zephyr-scale-integration | Native Jira test repository (Zephyr Scale) |
-| skill | allure-testops-integration | Allure TestOps cases + runs |
-| skill | testlink-runner | Open-source test case management |
-| skill | qase-io-runner | Modern hosted TCM |
-| skill | traceability-matrix-builder | Build a requirements-to-tests matrix |
-| skill | test-case-anatomy-reference | Pre/steps/expected/post structure, parametric cases |
-| agent | test-case-quality-critic | Reject vague steps, missing preconditions, ambiguous expected results |
+**Canonical sources to fetch:** ISTQB CTAL-TM v3.0 (estimation
+chapters), Capgemini World Quality Report (team-structure data).
 
-**Canonical sources to fetch:** TestRail / Xray / Zephyr Scale /
-Allure TestOps / Qase.io official docs; ISTQB Test Manager syllabus on
-test conditions and coverage items; ISO/IEC/IEEE 29119-3 (test
+### DORA metrics computation (extension: `qa-test-reporting`)
+
+**Why missing matters:** the `qa-manager` and `head-of-quality` agents
+(qa-roles) consume DORA metrics as context but nothing in the catalog
+*computes* deployment frequency, change failure rate, lead time, or
+MTTR from repo + CI history. Quality leadership reporting stops at
+whatever numbers the team already has.
+
+**Nearest existing components:** `qa-manager`, `head-of-quality`,
+`daily-test-suite-aggregator`.
+
+**Differentiation axis:** the existing agents aggregate and narrate
+already-computed signals; this computes the four keys from raw git/CI
+data.
+
+**Suggested components:** skill `dora-metrics-computer` (git log + CI
+API + incident records in, four keys out), plus the long-suggested
+`quality-metrics-dora-space-reference`.
+
+**Canonical sources to fetch:** dora.dev (metric definitions and the
+five-metric evolution), SPACE framework paper (ACM Queue).
+
+### Manual cross-browser / device spot-check workflow (extension: `qa-compatibility`)
+
+**Why missing matters:** the grid skills (`browserstack-automate`,
+`saucelabs-automate`, `lambdatest-automate`, `selenium-grid-4-runner`)
+and `browser-matrix-runner` are automation-oriented. A manual tester
+doing a responsive pass or a per-release browser/device spot check has
+no checklist-shaped workflow.
+
+**Nearest existing components:** `browser-matrix-strategy-reference`,
+`compatibility-budget`, `test-execution-checklist` (qa-manual-testing).
+
+**Differentiation axis:** matrix strategy decides *what* to cover;
+this produces the human-executable spot-check run for a release.
+
+**Suggested components:** skill `manual-compat-spot-check-author`
+(tiered browser/device checklist + responsive breakpoints + recording
+template).
+
+**Canonical sources to fetch:** BrowserStack Live docs, MDN responsive
+design docs, statcounter browser-share data.
+
+### Manual-tester test data preparation (extension: `qa-test-data`)
+
+**Why missing matters:** every generator in `qa-test-data` is
+code-based (Faker / FactoryBot / mimesis / Bogus). A manual tester who
+needs 20 test accounts, a populated demo org, or a data reset between
+test cycles gets no workflow that doesn't assume programming.
+
+**Nearest existing components:** `seed-data-curator`,
+`test-data-setup-agent`, `synthetic-data-toolkit`.
+
+**Differentiation axis:** existing components generate data *in code*
+for automated suites; this covers UI/API-driven preparation an analyst
+can execute, plus reset-between-cycles discipline.
+
+**Suggested components:** skill `manual-test-data-prep` (account/org
+setup recipes, import-file generation, reset checklists).
+
+**Canonical sources to fetch:** the data-generation tool docs already
+cited by the sibling skills; ISO/IEC/IEEE 29119-3 (test data in test
 documentation).
 
-### qa-defect-management (new plugin)
+### Requirements / acceptance-criteria ambiguity review (extension: `qa-manual-testing` or `qa-shift-left`)
 
-**Why missing matters:** every team handles bugs but the lifecycle
-patterns (severity vs. priority vs. probability, duplicate detection,
-defect taxonomies, root-cause categorisation) are nowhere in the
-catalog. `qa-bug-repro` covers *reproducing* a defect; this plugin
-covers everything else.
+**Why missing matters:** raising ambiguities in requirements before
+build is a daily manual-tester activity (ISTQB CTFL v4.0 static
+testing), but the catalog only touches it indirectly:
+`acceptance-criteria-extractor` converts a story into AC, and
+`test-case-ideation-from-story` designs cases from one — neither
+*reviews* requirements for testability-blocking ambiguity.
 
-**Nearest existing components:** `qa-bug-repro` (sibling), `qa-test-reporting`.
+**Nearest existing components:** `acceptance-criteria-extractor`,
+`testability-reviewer`, `test-case-ideation-from-story`.
 
-**Differentiation axis:** bug-repro is execution-focused (run the
-failing scenario); this is workflow / classification / lifecycle.
+**Differentiation axis:** extraction converts; testability review
+targets the *design*; this critiques the *requirement text* (vague
+quantifiers, missing negative paths, undefined states) before any
+test design happens.
 
-**Suggested components:**
+**Suggested components:** agent `requirement-ambiguity-critic`.
 
-| Type | Name | Purpose |
-|---|---|---|
-| skill | bug-lifecycle-reference | New → triaged → in-progress → fixed → verified → closed states |
-| skill | severity-vs-priority-reference | The two axes, with worked examples |
-| skill | defect-taxonomy-istqb | ISTQB defect categories (functional, performance, usability, …) |
-| skill | jira-bug-workflow-runner | Author / triage / link bugs in Jira |
-| skill | linear-bug-workflow-runner | Same for Linear |
-| skill | github-issues-bug-workflow | Same for GitHub Issues with template enforcement |
-| skill | bug-report-from-failure | Build a complete bug report from a test failure + repro steps |
-| agent | duplicate-defect-finder | Search the bug tracker for likely duplicates before file |
-| agent | bug-report-critic | Reject bug reports missing repro, expected/actual, environment |
+**Canonical sources to fetch:** ISTQB CTFL v4.0 §3 (static testing,
+review types), INVEST criteria (original Wake article), ISO/IEC/IEEE
+29148 (requirements engineering).
 
-**Canonical sources to fetch:** ISTQB glossary (`defect`, `bug`,
-`failure`, `error`), IEEE 1044 defect classification, Jira / Linear /
-GitHub Issues docs, ISO/IEC/IEEE 29119-3 on defect reporting.
+### Design-for-testability remediation patterns (extension: `qa-shift-left`)
 
-### qa-risk-based-testing (new plugin)
+**Why missing matters:** `testability-reviewer` flags
+Observable/Decidable/Bounded failures and `tdd-stuck-pattern-resolver`
+names blockers (singletons, statics), but nothing teaches the
+remediation patterns — dependency injection, seams, ports-and-adapters
+boundaries, observability hooks for tests.
 
-**Why missing matters:** risk-based testing is the dominant
-prioritisation framework in ISTQB-aligned organisations and in modern
-fast-moving product teams. The catalog has nothing that walks an author
-through risk identification, impact × likelihood scoring, or
-test-coverage-vs-risk mapping.
+**Nearest existing components:** `testability-reviewer`,
+`tdd-stuck-pattern-resolver`, `observability-to-test`.
 
-**Nearest existing components:** `qa-process`, `qa-test-impact-analysis`.
+**Differentiation axis:** the reviewer finds the problem; this is the
+pattern catalog for fixing it.
 
-**Differentiation axis:** test-impact-analysis is about *change → test
-selection* (technical, CI-driven); this is about *risk → test
-prioritisation* (business / product-driven, upstream of execution).
+**Suggested components:** skill `testability-remediation-patterns`.
 
-**Suggested components:**
-
-| Type | Name | Purpose |
-|---|---|---|
-| skill | istqb-risk-based-testing-reference | ISTQB Test Manager view of RBT |
-| skill | risk-impact-likelihood-matrix-reference | The 5×5 / 3×3 matrices, scoring rubrics |
-| skill | product-risk-matrix-builder | Build a per-feature risk matrix from requirements |
-| skill | project-risk-register-builder | Project-level risk register (schedule, env, people) |
-| skill | risk-coverage-mapper | Map test cases / suites to risk items |
-| skill | risk-acceptance-decision-skill | Document risk-acceptance decisions for unfixed defects |
-| agent | risk-assessment-critic | Reject risk assessments missing likelihood justification or coverage gaps |
-
-**Canonical sources to fetch:** ISTQB CTAL-TM syllabus chapters on
-risk-based testing; ISO 31000 (risk management); examples from FMEA
-literature.
-
-### qa-exploratory-testing (new plugin)
-
-**Why missing matters:** `qa-manual-testing` contains *some* exploratory
-content but exploratory testing has its own discipline (SBTM, charters,
-heuristics) deep enough to warrant its own plugin. Heuristic models
-(HICCUPPS-F, SFDPOT, FCC-CUTS-VIDS, CRUSSPIC-STMPL) are well-cited and
-nowhere in the catalog.
-
-**Nearest existing components:** `qa-manual-testing` (sibling),
-`qa-test-review`.
-
-**Differentiation axis:** manual-testing covers structured scripted
-manual execution; this covers unscripted heuristic-driven exploration.
-
-**Suggested components:**
-
-| Type | Name | Purpose |
-|---|---|---|
-| skill | sbtm-reference | Session-Based Test Management (Bach / Bolton) |
-| skill | charter-author | Build a focused exploration charter (mission + areas + tactics) |
-| skill | session-debrief-template | PROOF (Past / Results / Outlook / Obstacles / Feelings) debrief structure |
-| skill | hiccupps-f-heuristic | History / Image / Comparable / Claims / Users / Product / Purpose / Familiar (problems) / Standards |
-| skill | sfdpot-heuristic | Structure / Function / Data / Platform / Operations / Time |
-| skill | fcc-cuts-vids-heuristic | Format / Coverage / Constraints / Users / Tasks / Sequences / Variables / Inputs / Data / Storage |
-| skill | crusspic-stmpl-heuristic | Capability / Reliability / Usability / Security / Scalability / Performance / Installability / Compatibility — Supportability / Testability / Maintainability / Portability / Localisability |
-| agent | charter-coach | Take a vague exploration goal and shape it into a charter with explicit mission |
-| agent | session-debrief-extractor | Pull issues / questions / coverage / risks from a session note |
-
-**Canonical sources to fetch:** James Bach / Michael Bolton's writings
-on SBTM (satisfice.com / developsense.com); Elisabeth Hendrickson's
-*Explore It!*; the heuristic models as published in their canonical
-references (satisfice.com test-heuristics).
-
-### qa-fuzz-testing (new plugin)
-
-**Why missing matters:** structure-aware fuzzing (libFuzzer, AFL++,
-Atheris, Jazzer, native Go / cargo fuzz) is a primary technique for
-finding security-critical and robustness bugs. The catalog's
-property-based plugin covers Hypothesis / fast-check / proptest /
-jqwik / Stout, but fuzzing is a different discipline — corpus
-management, sanitiser integration, OSS-Fuzz onboarding.
-
-**Nearest existing components:** `qa-property-based` (sibling),
-`qa-sast`, `qa-dast`.
-
-**Differentiation axis:** property-based testing is hypothesis-driven
-with shrinking; fuzzing is coverage-guided with corpus evolution and
-crash-detection sanitisers.
-
-**Suggested components:**
-
-| Type | Name | Purpose |
-|---|---|---|
-| skill | libfuzzer-cpp | LibFuzzer + sanitisers for C/C++ |
-| skill | afl-plus-plus | AFL++ fuzzing harness authoring |
-| skill | go-native-fuzzing | `go test -fuzz` (Go 1.18+) |
-| skill | cargo-fuzz-rust | cargo-fuzz / libFuzzer-rust |
-| skill | atheris-python-fuzzing | Atheris (Python coverage-guided) |
-| skill | jazzer-jvm-fuzzing | Jazzer for Java / Kotlin |
-| skill | ossfuzz-integration | Onboard a project to Google OSS-Fuzz |
-| skill | corpus-management-reference | Seed corpora, minimisation, dictionary files |
-| skill | sanitiser-integration-reference | ASan / UBSan / MSan / TSan + fuzzers |
-| agent | fuzz-target-author | Scaffold a fuzz target from a parsing / decoding function |
-
-**Canonical sources to fetch:** llvm.org libFuzzer docs; AFL++ docs;
-Go 1.18 fuzzing announcement + `testing/fuzz` package docs; Atheris /
-Jazzer GitHub READMEs; OSS-Fuzz `getting started` docs.
-
-### qa-cross-browser (new plugin)
-
-**Why missing matters:** `qa-web-e2e` covers single-runner Playwright /
-Cypress patterns. Real teams use cloud browser grids (BrowserStack /
-Sauce Labs / LambdaTest) and have explicit browser-matrix strategies
-the catalog has nothing to say about.
-
-**Nearest existing components:** `qa-web-e2e`, `qa-compatibility`.
-
-**Differentiation axis:** web-e2e is single-environment; compatibility
-is broader (devices, OS, screen sizes); this is specifically about
-browser-grid strategy + cloud-grid tool integration.
-
-**Suggested components:**
-
-| Type | Name | Purpose |
-|---|---|---|
-| skill | browserstack-automate | Run E2E suites against BrowserStack Automate |
-| skill | saucelabs-automate | Same for Sauce Labs |
-| skill | lambdatest-automate | Same for LambdaTest |
-| skill | playwright-cross-browser | Playwright project configs for Chromium / Firefox / WebKit |
-| skill | selenium-grid-runner | Self-hosted Selenium Grid 4 |
-| skill | browser-matrix-strategy-reference | When to test against full matrix vs. tiered (T1/T2/T3 browsers) |
-| skill | flaky-grid-failure-decider | Distinguish grid-flake from app-bug from browser-engine-difference |
-
-**Canonical sources to fetch:** BrowserStack / Sauce Labs / LambdaTest
-official docs; Playwright `playwright.config.ts` reference; Selenium
-Grid 4 docs; statcounter.com browser-share data for matrix calibration.
-
-### qa-test-data-privacy (new plugin)
-
-**Why missing matters:** `qa-test-data` covers data generation but not
-the privacy / masking / PII handling that real teams need when their
-test environments are downstream of production. GDPR / CCPA scrutiny
-makes this a deployment-blocking gap for many orgs.
-
-**Nearest existing components:** `qa-test-data`, `qa-compliance`,
-`qa-secrets`.
-
-**Differentiation axis:** test-data is about *availability* (do we have
-data to test with?); compliance is regulatory umbrella; this is
-specifically about *transforming* prod data into safe test data, and
-generating *synthetic* substitutes.
-
-**Suggested components:**
-
-| Type | Name | Purpose |
-|---|---|---|
-| skill | presidio-pii-detection | Microsoft Presidio for PII detection + masking |
-| skill | faker-synthetic-data | Python Faker / faker-js / Java JavaFaker libraries |
-| skill | synthea-healthcare-data | Synthetic patient records for HIPAA-bound systems |
-| skill | data-masking-techniques-reference | Tokenisation / shuffling / nulling / encryption-at-rest |
-| skill | pii-categories-reference | GDPR Art. 4(1) personal data, CCPA personal info, sensitive data |
-| skill | pii-masking-pipeline-builder | Build a refresh pipeline: prod-snapshot → mask → load to staging |
-| agent | pii-leak-critic | Spot PII patterns leaking into test fixtures / logs / CI |
-
-**Canonical sources to fetch:** microsoft.github.io/presidio docs;
-Faker docs (Python / JS / Java); Synthea documentation; GDPR Article 4
-text; CCPA / CPRA statutes; NIST SP 800-122.
+**Canonical sources to fetch:** Michael Feathers, *Working Effectively
+with Legacy Code* (ISBN 978-0131177055) for seams; framework DI docs.
 
 ## Tier 2 — Common gaps
 
-Narrower or more specialised than T1, but commonly requested by real
-teams.
+### Framework migration toolkits (extensions: `qa-web-e2e`, `qa-unit-tests-js`)
 
-### qa-graphql (new plugin)
+Selenium → Playwright and Mocha/Jest → Vitest migrations are common
+modernization projects with no step-by-step toolkit in the catalog
+(only SpecFlow → Reqnroll is documented, in `qa-bdd`). Suggested:
+`selenium-to-playwright-migrator`, `jest-to-vitest-migrator`.
+Nearest: the per-framework skills themselves; `test-framework-blueprint`
+(green-field design, not migration). Sources: playwright.dev migration
+guides, vitest.dev migration guide.
 
-GraphQL has enough distinct testing surface (introspection, persisted
-queries, dataloader N+1, subscription transport) to warrant its own
-plugin rather than being absorbed into `qa-api-testing`.
+### Test process maturity assessment (extension: `qa-process` or `qa-team-management`)
 
-**Components to scope:** apollo-server-test, graphql-yoga-test,
-hasura-test, mercurius-test (fastify-graphql), pothos-builder-tests,
-introspection-attack-surface-reference, persisted-query-strategy-reference,
-n-plus-one-query-detector.
+TMMi-style maturity benchmarking (where is this QA org, what's the
+improvement roadmap) has no component. Nearest: `test-strategy-author`,
+`qa-okr-author`, `post-mortem-author`. Sources: tmmi.org framework
+documents (TMMi specification is freely downloadable).
 
-**Canonical sources:** spec.graphql.org (October 2021), Apollo Server
-docs, graphql-yoga docs, hasura.io/docs.
+### QA org-topology decision support (extension: `qa-team-management`)
 
-### qa-grpc (new plugin)
+Embedded vs centralized QA, squad assignment, reporting lines — a
+head-of-quality decision with no component.
+Nearest: `head-of-quality` (reads embedded-vs-silo staffing as input),
+`career-ladder-author`. Sources: Skelton & Pais, *Team Topologies*
+(ISBN 978-1942788812); DevOps Topologies patterns (web.devopstopologies.com).
 
-Partial coverage today in `qa-realtime-protocols` and `qa-api-testing`,
-but gRPC contract testing (buf), load (ghz), and streaming patterns
-deserve a dedicated plugin.
+### Defect-triage meeting orchestration (extension: `qa-defect-management`)
 
-**Components to scope:** buf-cli-lint-breaking-build, ghz-load,
-grpcurl-cli, grpc-mock, protobuf-versioning-strategy-reference,
-grpc-streaming-test-author, grpc-status-code-mapping-reference.
+The critics (`bug-report-critic`, `duplicate-defect-finder`) audit
+single reports; nothing runs the recurring triage ritual end to end
+(queue ordering, severity calibration, decision recording). Suggested:
+agent `triage-meeting-runner`. Sources: ISTQB CTAL-TM defect
+management sections; tracker workflow docs already cited in-plugin.
 
-**Canonical sources:** grpc.io docs, buf.build/docs, ghz.sh,
-protobuf.dev.
+### Stateful-service sharding patterns (extension: `qa-ci-integration`)
 
-### qa-feature-flags (new plugin)
+`ci-test-job-conventions` covers when to shard; nothing covers
+isolation design for stateful systems under parallelism
+(user-per-shard, schema-per-worker, data partitioning). Suggested:
+`stateful-shard-isolation-reference`. Nearest:
+`parallel-isolation-checker` (detects collisions after the fact;
+this designs them away). Sources: Playwright/Cypress parallelism docs,
+testcontainers isolation docs.
 
-Feature flag platforms (LaunchDarkly, Unleash, Flagsmith, GrowthBook)
-introduce test-matrix complexity (flag × variant × user-segment) the
-catalog doesn't address. Flag-coverage strategies, kill-switch
-testing, percentage-rollout validation.
+### Mass test-code refactoring support (extension: `qa-test-review`)
 
-**Components to scope:** launchdarkly-testing, unleash-testing,
-flagsmith-testing, growthbook-testing, feature-flag-test-matrix-reference,
-flag-state-coverage-builder, stale-flag-detector,
-flag-removal-runbook-author.
+Bulk selector updates and page-object extraction across a large suite
+have no component — `e2e-selector-quality-critic` flags one file at a
+time. Suggested: agent `selector-mass-refactorer`. Sources:
+playwright.dev locators docs, testing-library query priority docs.
 
-**Canonical sources:** launchdarkly.com/docs, getunleash.io/docs,
-flagsmith.com/docs, growthbook.io/docs.
+## Tier 3 — Niche and polish
 
-### qa-serverless (new plugin)
-
-Lambda / Cloud Functions / Vercel Functions / Cloudflare Workers have
-specific testing patterns (cold-start budgets, timeout testing, local
-emulators, edge-runtime divergence) absent from the catalog.
-
-**Components to scope:** aws-sam-local-testing, lambda-test-tools-net,
-cloudflare-workers-miniflare, vercel-edge-runtime-testing,
-netlify-functions-test, serverless-framework-test-plugin,
-cold-start-budget-reference, lambda-timeout-budget-reference,
-serverless-integration-test-builder.
-
-**Canonical sources:** aws.amazon.com/serverless docs,
-developers.cloudflare.com/workers, vercel.com/docs/functions,
-docs.netlify.com/functions, www.serverless.com/docs.
-
-### qa-time-and-timezones (new plugin)
-
-Time-based bugs (DST transitions, leap seconds, timezone arithmetic,
-clock skew across services) are a high-incident-rate category with
-specific test tooling (libfaketime, sinon fake-timers, freezegun,
-timecop, jest fake timers).
-
-**Components to scope:** libfaketime-c, sinon-fake-timers-js,
-jest-fake-timers, freezegun-python, timecop-ruby,
-mockclock-jvm, dst-transition-reference, leap-second-reference,
-iso-8601-vs-rfc-3339-reference, timezone-test-matrix-builder.
-
-**Canonical sources:** library docs for each fake-timer; IETF
-RFC 3339; ICU timezone database notes; pytz / zoneinfo docs.
-
-### qa-cache-testing (new plugin)
-
-Cache invalidation is famously hard. Layer-specific testing patterns
-(Redis, CDN, browser cache, Varnish, Fastly) aren't covered.
-
-**Components to scope:** redis-cache-tests, cdn-cache-purge-tests
-(Cloudflare / Fastly / CloudFront), varnish-test-vtc-syntax,
-browser-cache-control-tests, cache-coherence-patterns-reference,
-cache-stampede-reference, stale-while-revalidate-reference,
-cache-key-collision-detector.
-
-**Canonical sources:** redis.io, varnish-cache.org, fastly.com/docs,
-developers.cloudflare.com/cache, RFC 9111 (HTTP caching).
-
-### qa-multi-tenancy (new plugin)
-
-Tenant isolation testing — row-level security, shared-pool versus
-silo, cross-tenant data leak detection — is a deployment-blocking
-requirement for B2B SaaS and absent from the catalog.
-
-**Components to scope:** tenant-isolation-models-reference,
-row-level-security-postgres-reference, tenant-leak-test-author,
-cross-tenant-data-leak-tests, tenant-id-propagation-tracer,
-tenant-leak-critic.
-
-**Canonical sources:** AWS SaaS Tenant Isolation whitepaper; Postgres
-RLS docs; Microsoft "Multitenant SaaS database tenancy patterns" docs.
-
-### qa-payment (new plugin)
-
-Payment processing is one of the highest-stakes testing domains and
-has well-defined sandbox flows from Stripe / Adyen / PayPal / Braintree
-that nothing in the catalog covers.
-
-**Components to scope:** stripe-test-cards-and-webhooks,
-adyen-test-mode, paypal-sandbox, braintree-test-cards,
-3ds-test-flow-reference, pci-dss-scope-reference,
-payment-flow-states-reference, refund-test-matrix-builder,
-chargeback-flow-test-author, payment-webhook-replay-skill.
-
-**Canonical sources:** stripe.com/docs/testing, docs.adyen.com/checkout/test,
-developer.paypal.com/tools/sandbox, developer.paypal.com/braintree,
-PCI DSS v4.0 spec.
-
-### qa-experimentation (new plugin)
-
-A/B test harness validation (statistical-validity checks,
-sample-ratio-mismatch detection, randomisation tests) — distinct from
-feature-flag testing.
-
-**Components to scope:** statsig-test, optimizely-test, vwo-test,
-amplitude-experiment-test, sample-ratio-mismatch-detector,
-ab-test-validity-checklist, guardrail-metrics-reference,
-peeking-problem-reference.
-
-**Canonical sources:** docs.statsig.com, docs.optimizely.com,
-amplitude.com/docs/experiment, Kohavi/Tang/Xu *Trustworthy Online
-Controlled Experiments* (book; cite by ISBN), Microsoft Experimentation
-Platform papers.
-
-## Tier 3 — Previously excluded categories now open
-
-The following categories were on the old NOT-GAPS exclusion list. They
-are now open to differentiated contributions. Each remains niche
-relative to the T1/T2 plugins above, but a sharply-scoped contribution
-that satisfies the rating bar is welcome.
-
-### qa-game
-
-**Why it was excluded:** "niche audience" per the old doctrine.
-
-**Why it's worth opening now:** game testing is a well-defined
-discipline (functional, gameplay, balance, multiplayer load, certification
-on Sony / Nintendo / Microsoft / Steam platforms) with engine-specific
-tooling that doesn't fit anywhere else.
-
-**Components to scope:** unity-test-framework, unreal-automation-system,
-godot-gut-tests, game-test-categories-reference (functional /
-gameplay / balance / load / cert / soak), multiplayer-state-machine-coverage,
-platform-cert-overview-reference (Sony TRC / Nintendo Lotcheck /
-MS XR / Steam), gameplay-recording-replay-skill.
-
-**Canonical sources:** docs.unity3d.com Test Framework, docs.unrealengine.com
-Automation, docs.godotengine.org GUT plugin, platform-holder developer
-portals (gated; cite by stable ID).
-
-### qa-desktop
-
-**Why it was excluded:** "niche audience".
-
-**Why it's worth opening now:** Electron apps are widespread (VS Code,
-Slack, Discord, Figma desktop). WinAppDriver / Appium-Windows are the
-canonical tools for native Windows desktop. macOS XCTest and
-Linux AT-SPI testing have their own niches.
-
-**Components to scope:** electron-playwright, electron-spectron (legacy
-reference), winappdriver, appium-windows-driver, qt-test-framework,
-xctest-mac-desktop, at-spi-linux, desktop-test-strategy-reference.
-
-**Canonical sources:** playwright.dev/docs/api/class-electron;
-github.com/microsoft/WinAppDriver; appium.io/docs;
-doc.qt.io/qt-6/qttest-overview.html.
-
-### qa-browser-extension
-
-**Why it was excluded:** "niche audience".
-
-**Why it's worth opening now:** the Manifest V3 transition broke many
-extension test patterns. There is no mainstream coverage of
-extension-specific test surfaces (service worker, content scripts,
-storage.sync, host permission prompts).
-
-**Components to scope:** web-ext-cli-mozilla, chrome-extension-test-loader,
-playwright-extension-fixtures, manifest-v3-test-surface-reference,
-mv2-to-mv3-migration-test-checklist,
-extension-storage-test-author.
-
-**Canonical sources:** developer.chrome.com/docs/extensions,
-extensionworkshop.com (Mozilla web-ext docs), developer.mozilla.org/MDN
-WebExtensions.
-
-### qa-pwa
-
-**Why it was excluded:** absorbed into "modern web" assumptions.
-
-**Why it's worth opening now:** service-worker lifecycle, offline /
-install / push notifications all have specific test patterns Workbox
-docs cover that nothing in `qa-modern-web` exposes.
-
-**Components to scope:** workbox-tests, lighthouse-pwa-audit,
-service-worker-lifecycle-test, offline-fallback-test,
-add-to-homescreen-flow-test, web-push-test, pwa-install-flow-reference.
-
-**Canonical sources:** developer.chrome.com/docs/workbox,
-web.dev/learn/pwa, developer.mozilla.org Service Worker API.
-
-### qa-embedded
-
-**Why it was excluded:** "niche audience".
-
-**Why it's worth opening now:** Unity / Ceedling / GoogleTest are the
-canonical C/C++ embedded harnesses; HIL (hardware-in-loop) testing has
-specific tooling (Vector CANoe, NI VeriStand) the catalog could touch.
-
-**Components to scope:** googletest-embedded-arm, unity-test-framework-c,
-ceedling-build-runner, qemu-system-test-runner,
-hardware-in-loop-reference, ceedling-mocks-reference,
-embedded-coverage-strategy-reference.
-
-**Canonical sources:** github.com/google/googletest,
-www.throwtheswitch.org/unity, www.throwtheswitch.org/ceedling,
-qemu.org/docs.
+- **Org-chart seats (`qa-roles`):** a Tier-1 agent for *scripted*
+  manual execution (companion to `exploratory-charter-author`;
+  guides a human through a `test-execution-checklist` run and records
+  results), plus the previously-suggested
+  `engineering-manager-quality-coach` and
+  `release-manager-cutover-checklist` (note:
+  `release-cutover-coordinator` partially covers the latter).
+- **Load-generator wrappers (`qa-load-testing`):** `vegeta-load`,
+  `wrk2-load`, `bombardier-load`, `artillery-load` — per-tool skills
+  alongside the shipped k6/JMeter/Gatling/Locust set.
+- **CI providers (`qa-ci-integration`):** `buildkite-test-author`,
+  `azure-pipelines-test-author`.
+- **Advanced mocking (`qa-test-data`):** WireMock stateful scenarios +
+  JSONPath/array matchers beyond what `wiremock-stubs` covers
+  (wiremock.org docs); Mountebank record-playback.
 
 ### Differentiated generic categories
 
@@ -544,29 +284,13 @@ ecosystem clones.
 ## Within-plugin extensions
 
 Skills and agents that would deepen existing plugins without warranting
-a new top-level plugin. Listed in plugin order for easy scanning.
-
-### qa-process
-
-- `quality-metrics-dora-space-reference` — DORA / SPACE /
-  DevEx metrics applied to QA.
-- `team-test-strategy-author` — per-team test strategy doc
-  builder (IEEE 829-adjacent).
-
-### qa-roles
-
-- `engineering-manager-quality-coach` — coach EM on quality
-  conversations in 1:1s.
-- `release-manager-cutover-checklist` — extends release-engineer.
-  Note: `release-cutover-coordinator` (agent, shipped) partially covers this;
-  a dedicated skill would add structured checklist scaffolding.
+a new top-level plugin. Pruned 2026-06-10 against the shipped catalog;
+listed in plugin order.
 
 ### qa-test-data
 
-- `mimesis-python` — Mimesis as Faker alternative.
-- `factory-bot-rails` — Rails / Ruby factory pattern.
-- `factory-boy-django` — Django equivalent.
-- `bogus-net` — .NET Faker equivalent.
+- `factory-boy-django` — Django factory pattern (sibling of shipped
+  factory-bot-data / bogus-data / mimesis-data).
 - `synthetic-event-stream-builder` — generate Kafka / Kinesis
   test streams.
 
@@ -574,14 +298,11 @@ a new top-level plugin. Listed in plugin order for easy scanning.
 
 - `devcontainers-test-env` — VS Code devcontainer.json for QA-ready environments.
 - `nix-shell-test-env` — reproducible test environments via Nix.
-- `testcontainers-go` — Go testcontainers (sibling of existing language skills).
 
 ### qa-test-reporting
 
-- `junit-xml-parser-skill` — JUnit XML schema reference.
 - `xunit-net-reporter` — xUnit.net reporter integration.
 - `allure-3-reporter` — Allure 3 if/when it ships.
-- `currents-dashboard-integration` — currents.dev as Cypress dashboard alt.
 
 ### qa-test-impact-analysis
 
@@ -601,12 +322,10 @@ a new top-level plugin. Listed in plugin order for easy scanning.
 - `prism-mock-server` — OpenAPI mock from spec.
 - `mockoon-builder` — local mock GUI / CLI.
 - `dredd-contract-runner` — Dredd API/spec testing.
-- `schemathesis-fuzzer` — schema-based API fuzzing.
 
 ### qa-bdd
 
 - `cucumber-rules-runner` — Rules-style Gherkin (Cucumber 7+).
-- `karate-bdd` — Karate framework (API-focused Gherkin).
 - `gauge-framework` — Gauge as Cucumber alternative.
 
 ### qa-contract-testing
@@ -617,98 +336,39 @@ a new top-level plugin. Listed in plugin order for easy scanning.
 
 ### qa-mobile-native
 
-- `detox-react-native` — Detox E2E for RN.
-- `maestro-mobile-flows` — Maestro YAML flows.
-- `xctest-runner` — XCTest for iOS native.
-- `espresso-runner` — Espresso for Android native.
 - `firebase-test-lab-runner` — Firebase Test Lab device farm.
 
 ### qa-mutation-testing
 
-- `mutmut-python` — mutmut as alternative to existing Python entry.
 - `infection-php` — Infection for PHP.
 
 ### qa-property-based
 
-- `proptest-rust` — proptest for Rust.
 - `gopter-go` — gopter for Go.
 
 ### qa-web-e2e
 
-- `puppeteer-testing` — Puppeteer-specific patterns.
-- `webdriver-io-testing` — WebdriverIO (sync mode, multi-remote).
-- `screenplay-pattern-reference` — Screenplay vs Page Object.
-- `page-object-pattern-reference` — Page Object Model canonical.
 - `playwright-component-testing` — Playwright component-test mode.
-
-### qa-accessibility-specifics
-
-- `axe-devtools-cli` — Deque axe DevTools CLI.
-- `pa11y-runner` — pa11y CLI runner.
-- `lighthouse-a11y-only` — Lighthouse a11y audit subset.
-- `wave-evaluator` — WAVE API.
-- `nvda-screen-reader-test-script-reference` — manual NVDA test scripts.
-- `voiceover-test-script-reference` — manual VoiceOver test scripts.
 
 ### qa-visual-regression
 
-- `chromatic-storybook` — Chromatic for Storybook.
-- `percy-snapshot` — Percy CLI.
 - `loki-storybook` — Loki visual diff for Storybook.
 
 ### qa-localization
 
-- `pseudo-localization-runner` — generate pseudo-locales for layout drift detection.
-- `rtl-test-runner` — RTL layout regression tests.
 - `icu-messageformat-validator` — ICU MessageFormat plural/select validation.
-
-### qa-sast
-
-- `codeql-rule-author` — write custom CodeQL queries.
-- `sonar-scanner-cli` — SonarQube CLI scan.
 
 ### qa-dast
 
-- `nuclei-templates-scanner` — ProjectDiscovery Nuclei templates.
 - `caido-proxy` — Caido as Burp Suite alternative.
-
-### qa-sca
-
-- `osv-scanner` — Google OSV-Scanner.
-- `dependabot-config-author` — Dependabot config patterns.
-- `renovate-config-author` — Renovate config patterns.
 
 ### qa-secrets
 
-- `trufflehog-scanner` — TruffleHog secrets scanner.
 - `detect-secrets-yelp` — Yelp detect-secrets.
 
 ### qa-flake-triage
 
-- `test-quarantine-policies-reference` — when / how / for how long.
 - `flake-bug-template-author` — file a flake bug with classification.
-
-### qa-load-testing
-
-- `vegeta-load` — Tsenart Vegeta.
-- `wrk2-load` — Will Glozer wrk2.
-- `bombardier-load` — bombardier HTTP/2 / fast Go-native.
-- `artillery-load` — Artillery (cloud / OSS).
-- `slo-error-budget-reference` — error-budget math for load tests.
-
-### qa-ci-integration
-
-- `github-actions-test-workflow-author` — `.github/workflows/test.yml` patterns.
-- `circleci-test-config-author` — CircleCI `config.yml` test patterns.
-- `gitlab-ci-test-author` — `.gitlab-ci.yml` test patterns.
-- `buildkite-test-author` — Buildkite pipeline test patterns.
-- `azure-pipelines-test-author` — Azure Pipelines YAML test patterns.
-
-### qa-shift-right
-
-- `synthetic-monitoring-author` — Pingdom / Datadog Synthetics / Checkly script author.
-- `canary-validator` — canary-release validation gate.
-- `featureflag-rollback-runbook-author`.
 
 ## How to contribute against this roadmap
 
