@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**88 plugins · 695 components**
+**89 plugins · 706 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -17,10 +17,11 @@ _Test process, environment, data, reporting, impact, roles, review._
 | [qa-test-data](plugins/qa-test-data/) | 1.2.1 | 17 skills + 3 agents | 20 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.2.0 | 17 skills + 2 agents | 19 |
 | [qa-roles](plugins/qa-roles/) | 1.3.1 | 0 skills + 15 agents | 15 |
-| [qa-test-review](plugins/qa-test-review/) | 1.3.1 | 4 skills + 6 agents | 10 |
+| [qa-test-review](plugins/qa-test-review/) | 1.4.0 | 5 skills + 6 agents | 11 |
 | [qa-test-management](plugins/qa-test-management/) | 1.1.1 | 7 skills + 2 agents | 9 |
+| [qa-hiring](plugins/qa-hiring/) | 1.3.0 | 5 skills + 1 agents | 6 |
+| [qa-team-management](plugins/qa-team-management/) | 1.0.0 | 5 skills + 1 agents | 6 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.1.0 | 4 skills + 2 agents | 6 |
-| [qa-hiring](plugins/qa-hiring/) | 1.2.1 | 4 skills + 1 agents | 5 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.0.0 | 2 skills + 2 agents | 4 |
 
 ## Functional testing
@@ -84,7 +85,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-load-testing](plugins/qa-load-testing/) | 1.4.1 | 12 skills + 3 agents | 15 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.2.0 | 8 skills + 3 agents | 11 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.3.0 | 8 skills + 4 agents | 12 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.5.1 | 1 skills + 9 agents | 10 |
 | [qa-chaos-resilience](plugins/qa-chaos-resilience/) | 1.2.1 | 8 skills + 1 agents | 9 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.1.0 | 4 skills + 5 agents | 9 |
@@ -140,7 +141,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.3.1 | 12 skills + 3 agents | 15 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.4.0 | 14 skills + 3 agents | 17 |
 | [qa-iac](plugins/qa-iac/) | 1.1.1 | 6 skills + 2 agents | 8 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.1.1 | 5 skills + 1 agents | 6 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents | 6 |
@@ -240,6 +241,7 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-shift-left](plugins/qa-shift-left/)
 - [qa-shift-right](plugins/qa-shift-right/)
 - [qa-starter](plugins/qa-starter/)
+- [qa-team-management](plugins/qa-team-management/)
 - [qa-test-data](plugins/qa-test-data/)
 - [qa-test-data-privacy](plugins/qa-test-data-privacy/)
 - [qa-test-environment](plugins/qa-test-environment/)
