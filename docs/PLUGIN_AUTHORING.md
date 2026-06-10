@@ -126,6 +126,40 @@ For each component you intend to ship, write a one-line draft of:
 
 If a draft matches no common shape cleanly, the scope is probably wrong — reshape before authoring.
 
+### Naming rules
+
+Hard constraints (Anthropic validation — see the
+[skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
+and [subagents](https://code.claude.com/docs/en/sub-agents) docs):
+
+- Lowercase letters, numbers, and hyphens only; **max 64 characters**.
+- `name` must match the skill directory / agent filename (lint-enforced here).
+- No reserved words: a skill name cannot contain `anthropic` or `claude`.
+- Descriptions: non-empty, **max 1024 characters**, third person, no XML tags.
+
+Marketplace conventions (stricter than Anthropic's namespace-only rule):
+
+- **Unique bare names across the whole marketplace**, not just within your
+  plugin. Plugin skills are namespaced (`qa-bdd:bdd-getting-started`), so
+  Claude Code tolerates duplicates — but agent `skills:` preloads and
+  cross-plugin body links resolve by **bare name**, and duplicates make them
+  ambiguous. Check the alphabetical index in `CATALOG.md` before naming.
+- **Name the behavior or the tool, never the reader's state or the artifact
+  kind.** `bdd-getting-started` not `getting-started`; `payment-webhook-replay`
+  not `payment-webhook-replay-skill`. Anthropic's docs recommend gerund-form
+  names (`processing-pdfs`) and explicitly accept noun phrases
+  (`pdf-processing`) — this marketplace's tool-wrapper (`jest-tests`),
+  build-an-X (`*-author`, `*-builder`), reference (`*-reference`), and
+  adversarial-agent (`*-critic`, `*-reviewer`) conventions all qualify.
+- **No filler words.** Anthropic's avoid-list names `helper`, `utils`,
+  `tools`; this marketplace also rejects `-skill`, `-prompt`, and other
+  suffixes that restate the component type instead of the behavior.
+- **Onramp skills are domain-prefixed**: `<domain>-getting-started`
+  (`web-e2e-getting-started`), one per plugin at most.
+- Descriptions should end with an explicit trigger sentence — "Use when …"
+  (skills) or a delegation cue like "Use proactively when …" (agents). The
+  description, not the name, is what makes Claude invoke the component.
+
 ## Step 3 — Run the single-description test
 
 For each draft description, check:

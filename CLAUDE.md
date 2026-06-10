@@ -62,6 +62,13 @@ component shapes and authoring guidance.
 | `model` (agents only) | optional | `sonnet`, `opus`, `haiku` |
 | `skills` (agents only) | optional | array of skill names this agent preloads |
 
+**Naming**: lowercase/numbers/hyphens, ≤64 chars, no `anthropic`/`claude` in
+skill names (Anthropic hard constraints); bare names unique across the WHOLE
+marketplace (preloads + cross-links resolve by bare name); name the behavior
+or tool, never the reader's state (`getting-started`) or the component type
+(`-skill`, `-prompt`, `-helper`). Full rules:
+[`docs/PLUGIN_AUTHORING.md` § Naming rules](docs/PLUGIN_AUTHORING.md).
+
 **Body structure**: matches the component's shape. A tool/format wrapper has
 Step 1 install, Step 2 first run, Step 3+ workflows, Anti-patterns, Limitations,
 References. A build-an-X workflow walks the workflow end to end. An adversarial
