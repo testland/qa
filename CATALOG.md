@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**85 plugins · 695 components**
+**88 plugins · 695 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -154,11 +154,14 @@ _One-command role installs - each bundles a curated capability set as dependenci
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-automation-engineer](plugins/qa-role-automation-engineer/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-backend-api](plugins/qa-role-backend-api/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-frontend-web](plugins/qa-role-frontend-web/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-leadership](plugins/qa-role-leadership/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-manual-tester](plugins/qa-role-manual-tester/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-performance-resilience](plugins/qa-role-performance-resilience/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-security](plugins/qa-role-security/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-starter](plugins/qa-starter/) | 1.0.0 | 0 skills + 0 agents | 0 |
 
@@ -217,11 +220,14 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-realtime-protocols](plugins/qa-realtime-protocols/)
 - [qa-resilience-drills](plugins/qa-resilience-drills/)
 - [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/)
+- [qa-role-automation-engineer](plugins/qa-role-automation-engineer/)
 - [qa-role-backend-api](plugins/qa-role-backend-api/)
 - [qa-role-frontend-web](plugins/qa-role-frontend-web/)
 - [qa-role-leadership](plugins/qa-role-leadership/)
+- [qa-role-manual-tester](plugins/qa-role-manual-tester/)
 - [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/)
 - [qa-role-performance-resilience](plugins/qa-role-performance-resilience/)
+- [qa-role-sdet](plugins/qa-role-sdet/)
 - [qa-role-security](plugins/qa-role-security/)
 - [qa-roles](plugins/qa-roles/)
 - [qa-saga-cqrs](plugins/qa-saga-cqrs/)

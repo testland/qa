@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-role-automation-engineer",
+  "version": "1.0.0",
+  "description": "Test automation engineer role bundle: one-command install of web E2E, API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-automation-engineer",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "bundle",
+    "role",
+    "automation",
+    "e2e",
+    "ci",
+    "flake"
+  ],
+  "dependencies": [
+    "qa-web-e2e",
+    "qa-api-testing",
+    "qa-mobile-native",
+    "qa-bdd",
+    "qa-visual-regression",
+    "qa-ci-integration",
+    "qa-flake-triage",
+    "qa-test-review",
+    "qa-test-data",
+    "qa-compatibility"
+  ]
+}

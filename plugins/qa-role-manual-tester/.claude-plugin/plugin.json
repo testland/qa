@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-role-manual-tester",
+  "version": "1.0.0",
+  "description": "Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-manual-tester",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "bundle",
+    "role",
+    "manual-testing",
+    "exploratory",
+    "qa-analyst",
+    "functional-testing"
+  ],
+  "dependencies": [
+    "qa-manual-testing",
+    "qa-test-management",
+    "qa-defect-management",
+    "qa-bug-repro",
+    "qa-test-reporting",
+    "qa-process",
+    "qa-test-data",
+    "qa-compatibility"
+  ]
+}

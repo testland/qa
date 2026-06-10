@@ -604,6 +604,27 @@
       "description": "QA leadership & test-management role bundle: one-command install of the QA role org-chart, test process, test management, impact analysis, reporting, hiring, shift-left, defect management, and production-code quality governance.",
       "strict": true,
       "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-manual-tester",
+      "source": "./plugins/qa-role-manual-tester",
+      "description": "Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-automation-engineer",
+      "source": "./plugins/qa-role-automation-engineer",
+      "description": "Test automation engineer role bundle: one-command install of web E2E, API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
+      "strict": true,
+      "category": "role-bundles"
+    },
+    {
+      "name": "qa-role-sdet",
+      "source": "./plugins/qa-role-sdet",
+      "description": "SDET role bundle: one-command install of the full automation-engineer stack plus per-language unit testing (JS/TS, Python, JVM, .NET, Go/Rust), contract testing, mutation testing, code quality, test impact analysis, and load testing. Organized around the job role, not a technology stack.",
+      "strict": true,
+      "category": "role-bundles"
     }
   ]
 }
