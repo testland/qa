@@ -564,15 +564,15 @@
       "category": "role-bundles"
     },
     {
-      "name": "qa-role-frontend-web",
-      "source": "./plugins/qa-role-frontend-web",
+      "name": "qa-role-frontend",
+      "source": "./plugins/qa-role-frontend",
       "description": "Frontend & web-app QA role bundle: one-command install of web E2E, visual regression, accessibility, modern web, PWA, browser-extension, localization, charts, PDF/print, browser/OS compatibility, and JS/TS unit testing.",
       "strict": true,
       "category": "role-bundles"
     },
     {
-      "name": "qa-role-backend-api",
-      "source": "./plugins/qa-role-backend-api",
+      "name": "qa-role-backend",
+      "source": "./plugins/qa-role-backend",
       "description": "Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, feature flags, and experimentation.",
       "strict": true,
       "category": "role-bundles"
@@ -585,8 +585,8 @@
       "category": "role-bundles"
     },
     {
-      "name": "qa-role-performance-resilience",
-      "source": "./plugins/qa-role-performance-resilience",
+      "name": "qa-role-performance",
+      "source": "./plugins/qa-role-performance",
       "description": "Performance & reliability QA role bundle: one-command install of load testing, chaos engineering, resilience drills, and shift-left / shift-right production QA.",
       "strict": true,
       "category": "role-bundles"
@@ -599,8 +599,8 @@
       "category": "role-bundles"
     },
     {
-      "name": "qa-role-ai-ml-data",
-      "source": "./plugins/qa-role-ai-ml-data",
+      "name": "qa-role-ai",
+      "source": "./plugins/qa-role-ai",
       "description": "AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing, AI-assisted test generation, search relevance, data notebooks, and data quality.",
       "strict": true,
       "category": "role-bundles"

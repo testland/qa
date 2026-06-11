@@ -2,7 +2,7 @@
 
 Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, test data, and browser/OS compatibility.
 
-Unlike the tech-domain bundles (`qa-role-frontend-web`, `qa-role-backend-api`), this bundle is organized around the **job role**: it covers a manual tester's whole week — design test cases, run exploratory sessions, execute scripted runs, file and verify bugs, sync results to your test case management tool — regardless of which technology stack the product is built on.
+Unlike the tech-domain bundles (`qa-role-frontend`, `qa-role-backend`), this bundle is organized around the **job role**: it covers a manual tester's whole week — design test cases, run exploratory sessions, execute scripted runs, file and verify bugs, sync results to your test case management tool — regardless of which technology stack the product is built on.
 
 Installing this one plugin installs all 8 member plugins below in a single command.
 

@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "qa-role-frontend-web",
+  "name": "qa-role-frontend",
   "version": "1.0.0",
   "description": "Frontend & web-app QA role bundle: one-command install of web E2E, visual regression, accessibility, modern web, PWA, browser-extension, localization, charts, PDF/print, browser/OS compatibility, and JS/TS unit testing.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-frontend-web",
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-frontend",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

@@ -8,7 +8,7 @@ Installing this one plugin installs all 5 member plugins below in a single comma
 
 ```
 /plugin marketplace add testland/qa
-/plugin install qa-role-performance-resilience@testland-qa
+/plugin install qa-role-performance@testland-qa
 ```
 
 Claude Code resolves and installs the member plugins automatically and lists what it added. Requires Claude Code v2.1.110+ (v2.1.143+ to enable the whole set together).

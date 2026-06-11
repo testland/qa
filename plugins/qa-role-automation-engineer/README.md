@@ -2,7 +2,7 @@
 
 Test automation engineer role bundle: one-command install of web E2E, API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, test data, and browser/OS compatibility.
 
-Unlike the tech-domain bundles (`qa-role-frontend-web`, `qa-role-backend-api`), this bundle is organized around the **job role**: it covers an automation engineer's whole week — author and maintain automated suites across web, API, and mobile, wire them into CI, keep them stable (flake triage, quarantine, bisection), and keep the test code itself reviewable — regardless of which layer of the product you automate.
+Unlike the tech-domain bundles (`qa-role-frontend`, `qa-role-backend`), this bundle is organized around the **job role**: it covers an automation engineer's whole week — author and maintain automated suites across web, API, and mobile, wire them into CI, keep them stable (flake triage, quarantine, bisection), and keep the test code itself reviewable — regardless of which layer of the product you automate.
 
 Installing this one plugin installs all 10 member plugins below in a single command.
 

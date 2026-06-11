@@ -8,7 +8,7 @@ Installing this one plugin installs all 11 member plugins below in a single comm
 
 ```
 /plugin marketplace add testland/qa
-/plugin install qa-role-frontend-web@testland-qa
+/plugin install qa-role-frontend@testland-qa
 ```
 
 Claude Code resolves and installs the member plugins automatically and lists what it added. Requires Claude Code v2.1.110+ (v2.1.143+ to enable the whole set together).

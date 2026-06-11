@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "qa-role-backend-api",
+  "name": "qa-role-backend",
   "version": "1.0.0",
   "description": "Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, feature flags, and experimentation.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-backend-api",
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-backend",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

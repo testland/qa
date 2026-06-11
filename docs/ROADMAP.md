@@ -46,9 +46,9 @@ The catalog ships **89 plugins / 706 components** across ten categories
 (foundations, functional testing, quality engineering, security &
 compliance, operations & resilience, backend & distributed systems,
 integrations & protocols, AI & ML, tooling, and role bundles). The role
-bundles cover both axes: technology domains (frontend-web, backend-api,
-mobile-desktop, security, performance-resilience, ai-ml-data) and career
-roles (manual-tester, automation-engineer, sdet, leadership, starter).
+bundles cover both axes: technology domains (frontend, backend,
+mobile-desktop, security, performance, ai) and career roles
+(manual-tester, automation-engineer, sdet, leadership, starter).
 
 See [`CATALOG.md`](../CATALOG.md) for the authoritative list.
 

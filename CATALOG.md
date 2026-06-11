@@ -154,14 +154,14 @@ _One-command role installs - each bundles a curated capability set as dependenci
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-ai](plugins/qa-role-ai/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-automation-engineer](plugins/qa-role-automation-engineer/) | 1.0.0 | 0 skills + 0 agents | 0 |
-| [qa-role-backend-api](plugins/qa-role-backend-api/) | 1.0.0 | 0 skills + 0 agents | 0 |
-| [qa-role-frontend-web](plugins/qa-role-frontend-web/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-backend](plugins/qa-role-backend/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-frontend](plugins/qa-role-frontend/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-leadership](plugins/qa-role-leadership/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-manual-tester](plugins/qa-role-manual-tester/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.0 | 0 skills + 0 agents | 0 |
-| [qa-role-performance-resilience](plugins/qa-role-performance-resilience/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-performance](plugins/qa-role-performance/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-security](plugins/qa-role-security/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-starter](plugins/qa-starter/) | 1.0.0 | 0 skills + 0 agents | 0 |
@@ -220,14 +220,14 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-pwa](plugins/qa-pwa/)
 - [qa-realtime-protocols](plugins/qa-realtime-protocols/)
 - [qa-resilience-drills](plugins/qa-resilience-drills/)
-- [qa-role-ai-ml-data](plugins/qa-role-ai-ml-data/)
+- [qa-role-ai](plugins/qa-role-ai/)
 - [qa-role-automation-engineer](plugins/qa-role-automation-engineer/)
-- [qa-role-backend-api](plugins/qa-role-backend-api/)
-- [qa-role-frontend-web](plugins/qa-role-frontend-web/)
+- [qa-role-backend](plugins/qa-role-backend/)
+- [qa-role-frontend](plugins/qa-role-frontend/)
 - [qa-role-leadership](plugins/qa-role-leadership/)
 - [qa-role-manual-tester](plugins/qa-role-manual-tester/)
 - [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/)
-- [qa-role-performance-resilience](plugins/qa-role-performance-resilience/)
+- [qa-role-performance](plugins/qa-role-performance/)
 - [qa-role-sdet](plugins/qa-role-sdet/)
 - [qa-role-security](plugins/qa-role-security/)
 - [qa-roles](plugins/qa-roles/)
