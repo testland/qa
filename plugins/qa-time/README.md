@@ -1,4 +1,4 @@
-# qa-time-and-timezones
+# qa-time
 
 Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest-fake-timers, freezegun, timecop, mockclock), DST + leap-second references, ISO-8601 vs RFC 3339 reference, and a timezone test matrix builder. Covers time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock skew) which are high-incident-rate but specific tooling is scattered.
 
@@ -23,7 +23,7 @@ Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest
 
 ```
 /plugin marketplace add testland/qa
-/plugin install qa-time-and-timezones@testland-qa
+/plugin install qa-time@testland-qa
 ```
 
 ## Rating

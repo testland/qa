@@ -1,7 +1,7 @@
 # qa-concurrency
 
 Code-level concurrency + race-condition testing - distinct from
-`qa-chaos-resilience` (infra fault) and `qa-distributed-tracing`
+`qa-chaos` (infra fault) and `qa-distributed-tracing`
 (observability). Five skills covering distributed consistency,
 in-process data races, deadlock detection, async ordering, and
 database isolation levels.

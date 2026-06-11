@@ -1,6 +1,6 @@
 ---
 name: api-test-author
-description: "Action-taking agent that authors ONE API test file per behavior spec - detects tool via api-test-tool-selector (or accepts an override), then emits a Postman collection request, REST Assured test, Karate feature, Tavern YAML stage, Schemathesis spec-driven test, or RESTler grammar using the chosen tool's idiomatic patterns. Distinct from qa-contract-testing/contract-test-scaffolder (consumer/provider Pact tests). Sibling of qa-mobile-native/mobile-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one API test (functional, not contract or load) to an existing test project."
+description: "Action-taking agent that authors ONE API test file per behavior spec - detects tool via api-test-tool-selector (or accepts an override), then emits a Postman collection request, REST Assured test, Karate feature, Tavern YAML stage, Schemathesis spec-driven test, or RESTler grammar using the chosen tool's idiomatic patterns. Distinct from qa-contract-testing/contract-test-scaffolder (consumer/provider Pact tests). Sibling of qa-mobile/mobile-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one API test (functional, not contract or load) to an existing test project."
 tools: "Read, Write, Edit, Grep, Glob, Bash(newman *), Bash(mvn test *), Bash(./mvnw test *), Bash(karate *), Bash(pytest *), Bash(schemathesis *)"
 model: inherit
 skills:
@@ -18,7 +18,7 @@ d6: 4
 
 A per-endpoint API test authoring agent - emits ONE new test file (or one new collection request) targeting one endpoint + scenario. Never modifies the OpenAPI spec, the existing tests, or the production server code.
 
-Distinct from [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract-testing/agents/contract-test-scaffolder.md) (consumer/provider Pact tests against a contract). This agent produces functional tests against a live endpoint + scenario. Sibling of [`qa-mobile-native/mobile-test-author`](../../qa-mobile-native/agents/mobile-test-author.md) and the per-language unit-test authors in `qa-unit-tests-{net,js,jvm,python,go-rust}`.
+Distinct from [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract-testing/agents/contract-test-scaffolder.md) (consumer/provider Pact tests against a contract). This agent produces functional tests against a live endpoint + scenario. Sibling of [`qa-mobile/mobile-test-author`](../../qa-mobile/agents/mobile-test-author.md) and the per-language unit-test authors in `qa-unit-tests-{net,js,jvm,python,go-rust}`.
 
 ## When invoked
 

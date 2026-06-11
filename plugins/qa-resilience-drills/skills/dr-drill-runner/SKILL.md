@@ -193,7 +193,7 @@ noting any issues." Without cadence, runbooks rot.
 
 ## Limitations
 
-- DR drills don't replace chaos engineering (`qa-chaos-resilience`) - they test rehearsed paths; chaos tests unrehearsed ones.
+- DR drills don't replace chaos engineering (`qa-chaos`) - they test rehearsed paths; chaos tests unrehearsed ones.
 - Cloud-managed services may have built-in regional failover that
   bypasses your runbook; document boundaries.
 - Some compliance regimes (FFIEC for banks) prescribe specific

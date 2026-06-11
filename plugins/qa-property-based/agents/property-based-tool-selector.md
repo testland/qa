@@ -15,7 +15,7 @@ d6: 4
 
 A tool-selection agent that picks the right property-based testing library by language. Reads project markers and emits one concrete recommendation per language.
 
-Sibling of the full Tier 4 tool-selector family: [`qa-mutation-testing/mutation-tool-selector`](../../qa-mutation-testing/agents/mutation-tool-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), and [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
+Sibling of the full Tier 4 tool-selector family: [`qa-mutation-testing/mutation-tool-selector`](../../qa-mutation-testing/agents/mutation-tool-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md), [`qa-mobile/mobile-driver-selector`](../../qa-mobile/agents/mobile-driver-selector.md), and [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
 
 ## When invoked
 

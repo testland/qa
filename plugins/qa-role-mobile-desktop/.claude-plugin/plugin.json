@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-mobile-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mobile, desktop & cross-platform QA role bundle: one-command install of mobile-native, desktop, embedded, game, and browser/OS compatibility testing.",
   "author": {
     "name": "testland",
@@ -20,7 +20,7 @@
     "cross-platform"
   ],
   "dependencies": [
-    "qa-mobile-native",
+    "qa-mobile",
     "qa-desktop",
     "qa-embedded",
     "qa-game",

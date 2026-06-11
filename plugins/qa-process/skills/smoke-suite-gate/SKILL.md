@@ -205,7 +205,7 @@ longer, something's wrong (the suite has bloated; deploy is slow).
   ~95% like prod; some prod-only edge cases need separate
   verification.
 - **Mobile smoke is different.** Mobile uses
-  [`mobile-device-matrix-toolkit`](../../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md)
+  [`mobile-device-matrix-toolkit`](../../../qa-mobile/skills/mobile-device-matrix-toolkit/SKILL.md)
   smoke tier; same principle, different platform.
 
 ## References

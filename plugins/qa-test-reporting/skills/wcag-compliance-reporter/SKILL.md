@@ -310,7 +310,7 @@ consumption (dashboards, ASR, programmatic gates):
 - **No screen-reader reality check.** Tools find the absence of
   ARIA; they don't verify that the screen-reader narration is
   helpful. Pair with `screen-reader-test-author` from
-  `qa-accessibility-specifics`.
+  `qa-accessibility`.
 - **Per-tool drift.** Rule catalogs evolve; new tool versions may
   add or remove SC coverage. Pin tool versions in CI; bump the SC
   mapping in lock-step.
@@ -328,7 +328,7 @@ consumption (dashboards, ASR, programmatic gates):
 - [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - sibling
   reporter for test execution (different domain, same PR-time
   reporting shape).
-- The `qa-accessibility-specifics` plugin's per-tool wrappers
+- The `qa-accessibility` plugin's per-tool wrappers
   (`axe-a11y`, `pa11y-a11y`, `lighthouse-a11y`, `wave-a11y`,
   `ibm-equal-access-a11y`) - produce the upstream input this skill
   consumes.

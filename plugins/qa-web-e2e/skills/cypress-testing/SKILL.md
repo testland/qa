@@ -249,7 +249,7 @@ jobs:
 - **Same-tab restriction.** Originally Cypress only tested
   same-tab; multi-tab support added later but with caveats.
 - **No native mobile.** Mobile via emulation only; for native, see
-  [`appium-testing`](../../../qa-mobile-native/skills/appium-testing/SKILL.md).
+  [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md).
 - **Cypress Cloud is paid.** OSS-budget teams use
   [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md).
 

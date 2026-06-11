@@ -1,6 +1,6 @@
 ---
 name: mobile-driver-selector
-description: "Action-taking agent that reads a target mobile project (`ios/`, `android/`, `lib/`, `package.json`, `pubspec.yaml`, `*.xcodeproj`, `app/build.gradle`) and emits one concrete mobile test driver recommendation - XCUITest, Espresso, Detox, Flutter, Appium, or Maestro - plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-mobile-native/mobile-device-matrix-toolkit` (picks DEVICE matrix to run against, not the test framework). Use when starting a new mobile test project and the team has not yet committed to a driver."
+description: "Action-taking agent that reads a target mobile project (`ios/`, `android/`, `lib/`, `package.json`, `pubspec.yaml`, `*.xcodeproj`, `app/build.gradle`) and emits one concrete mobile test driver recommendation - XCUITest, Espresso, Detox, Flutter, Appium, or Maestro - plus rationale and which preloaded SKILL.md to read next. Distinct from `qa-mobile/mobile-device-matrix-toolkit` (picks DEVICE matrix to run against, not the test framework). Use when starting a new mobile test project and the team has not yet committed to a driver."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(cat package.json), Bash(cat pubspec.yaml)"
 model: inherit
 skills:

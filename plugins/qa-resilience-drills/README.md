@@ -2,7 +2,7 @@
 
 Production-grade resilience discipline - DR drills, backup
 verification, restore-time SLAs, error budgets, MTTR/MTBF tracking.
-Distinct from `qa-chaos-resilience` (experiment-authoring) - this
+Distinct from `qa-chaos` (experiment-authoring) - this
 plugin covers measured, scheduled drills + the metrics they feed.
 
 ## Components

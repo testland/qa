@@ -1,4 +1,4 @@
-# qa-accessibility-specifics
+# qa-accessibility
 
 Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, contrast, ARIA), screen-reader narrative authoring, a11y violation gate, adversarial code critic, checklist builder, and 5 tool wrappers (axe / pa11y / Lighthouse a11y / WAVE / IBM Equal Access).
 
@@ -25,7 +25,7 @@ Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, con
 
 ```
 /plugin marketplace add testland/qa
-/plugin install qa-accessibility-specifics@testland-qa
+/plugin install qa-accessibility@testland-qa
 ```
 
 ## Rating

@@ -16,7 +16,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 ## What this installs
 
 - **qa-load-testing** - Load and performance testing
-- **qa-chaos-resilience** - Chaos engineering + fault injection
+- **qa-chaos** - Chaos engineering + fault injection
 - **qa-resilience-drills** - Resilience drills
 - **qa-shift-right** - Production-side QA per ISTQB-canonical shift-right ('a test approach to test a
 - **qa-shift-left** - Shift-left QA

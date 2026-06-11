@@ -96,7 +96,7 @@ Emit the output format below. One sentence per bullet. No speculation about caus
 - Deeper incident analysis: [`defect-trend-narrator`](../../qa-bug-repro/agents/defect-trend-narrator.md) for defect-category breakdowns.
 - Error-budget gate authoring or audit: [`error-budget-tests`](../skills/error-budget-tests/SKILL.md).
 - Incident schema setup or MTTR dashboard authoring: [`mttr-mtbf-tracker`](../skills/mttr-mtbf-tracker/SKILL.md).
-- Chaos drill data feeding into this report: [`chaos-drill-orchestrator`](../../qa-chaos-resilience/agents/chaos-drill-orchestrator.md).
+- Chaos drill data feeding into this report: [`chaos-drill-orchestrator`](../../qa-chaos/agents/chaos-drill-orchestrator.md).
 
 ## References
 

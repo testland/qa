@@ -89,7 +89,7 @@ discover usability issues, edge cases, and integration risks.
 
 ## Out of scope
 - Performance / load ([`k6-load-testing`](../../qa-load-testing/skills/k6-load-testing/SKILL.md)).
-- A11y (`qa-accessibility-specifics`); cross-browser (`qa-compatibility`).
+- A11y (`qa-accessibility`); cross-browser (`qa-compatibility`).
 
 ## Session log
 (tester fills during the session)

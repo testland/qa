@@ -200,7 +200,7 @@ This is a recommendation, not an action. The next step is:
 2. Reviewer rejects any rows with surprising recommendations.
 3. The agent emits a PR with the accepted changes, one commit per
    fold-group, one squashed commit for deletes.
-4. Run the full suite + a chaos test (per `qa-chaos-resilience`)
+4. Run the full suite + a chaos test (per `qa-chaos`)
    against the post-curation suite; verify no new regressions.
 ```
 

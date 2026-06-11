@@ -60,7 +60,7 @@ Pair each NFR threshold with its gate skill:
 | NFR family | Gate skill |
 |---|---|
 | perf | [`lighthouse-perf`](../../qa-load-testing/skills/lighthouse-perf/SKILL.md) |
-| a11y | [`axe-a11y`](../../qa-accessibility-specifics/skills/axe-a11y/SKILL.md) |
+| a11y | [`axe-a11y`](../../qa-accessibility/skills/axe-a11y/SKILL.md) |
 | visual | [`visual-baseline-gate`](../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md) |
 | data quality | [`data-quality-gate`](../../qa-data-quality/skills/data-quality-gate/SKILL.md) |
 | security | per the threat model's mitigations |

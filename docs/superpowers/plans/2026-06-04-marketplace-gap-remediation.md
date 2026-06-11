@@ -108,10 +108,10 @@ aggregate them into a single CI BLOCK / REVIEW / OK verdict.
 
 ### Task 0.5: Fix stale / mismatched plugin READMEs
 
-**Files:** `plugins/qa-payment/README.md`, `plugins/qa-serverless/README.md`, `plugins/qa-time-and-timezones/README.md`, `plugins/qa-manual-testing/README.md`. (No version bump — README-only? **No:** README changes ship to users, so bump each plugin's patch version.)
+**Files:** `plugins/qa-payment/README.md`, `plugins/qa-serverless/README.md`, `plugins/qa-time/README.md`, `plugins/qa-manual-testing/README.md`. (No version bump — README-only? **No:** README changes ship to users, so bump each plugin's patch version.)
 
 - [ ] **Step 1:** `qa-payment/README.md` — replace the `(filled in as components are added)` placeholder table with a real component table listing all 10 skills (read `plugins/qa-payment/skills/` for names + each SKILL.md `description`). Remove the duplicated REVIEWER_CHECKLIST sentence at the end.
-- [ ] **Step 2:** `qa-serverless/README.md` and `qa-time-and-timezones/README.md` — same placeholder-table fix; list all 9 and 10 skills respectively.
+- [ ] **Step 2:** `qa-serverless/README.md` and `qa-time/README.md` — same placeholder-table fix; list all 9 and 10 skills respectively.
 - [ ] **Step 3:** `qa-manual-testing/README.md` — add the 5 missing reference skills to the component table: `sbtm-reference`, `hiccupps-f-heuristic`, `sfdpot-heuristic`, `fcc-cuts-vids-heuristic`, `crusspic-stmpl-heuristic` (the table currently lists 6 of 11).
 - [ ] **Step 4:** Bump each of the 4 plugins' patch versions.
 - [ ] **Step 5:** `bash scripts/validate.sh .` (pass). Commit `docs: fix stale/mismatched plugin READMEs (payment, serverless, time, manual-testing)`.
@@ -142,7 +142,7 @@ Each follows the **NEW AGENT DoD**. Shape = read-only adversarial critic (or act
 |1.7|`async-job-health-critic`|qa-async-jobs|`idempotency-test-author`, `cron-job-test-author`|"Scans queue/worker code for missing retry limits, absent DLQ routing, uncapped backoff, missing idempotency keys across BullMQ/Celery/Sidekiq/SQS/RabbitMQ."|existing skill citations|
 |1.8|`saga-critic`|qa-saga-cqrs|`saga-transaction-tests`, `event-sourcing-tests`|"Reviews saga/orchestration code for missing compensating transactions, non-idempotent compensation, missing outbox on atomic publish, absent step retry policy."|microservices.io saga/outbox patterns|
 |1.9|`serverless-cold-start-critic`|qa-serverless|`cold-start-budget-reference`, `lambda-timeout-budget-reference`|"Reviews serverless function code for cold-start anti-patterns: heavy top-level imports, client init in handler, no /tmp reuse, missing SnapStart for JVM."|AWS Lambda, Cloudflare Workers docs|
-|1.10|`time-handling-critic`|qa-time-and-timezones|`dst-transition-reference`, `iso-8601-vs-rfc-3339-reference`|"Scans code for naive `now()` without tz, implicit local-time arithmetic, DST-unsafe parsing, missing ZonedDateTime/ZoneInfo."|IETF RFC 3339, tz database notes|
+|1.10|`time-handling-critic`|qa-time|`dst-transition-reference`, `iso-8601-vs-rfc-3339-reference`|"Scans code for naive `now()` without tz, implicit local-time arithmetic, DST-unsafe parsing, missing ZonedDateTime/ZoneInfo."|IETF RFC 3339, tz database notes|
 |1.11|`notification-delivery-critic`|qa-notifications|`webhook-delivery-tester`, `email-flow-test-author`|"Scans notification-send code for missing idempotency, no bounce/unsubscribe handling, missing DKIM/SPF, no retry/backoff on transient SMTP failures."|RFC 5321/6376, provider docs|
 |1.12|`token-storage-security-critic`|qa-auth-flows|`session-management-test-author`, `oauth-flow-test-author`|"Scans frontend/mobile code for token-storage anti-patterns (JWT in localStorage, non-httpOnly cookies) per OWASP."|OWASP Token Storage / Session Mgmt cheat sheets|
 |1.13|`db-migration-performance-critic`|qa-db-migrations|`flyway-migrations`, `liquibase-migrations`, `atlas-migrations`|"Reviews a migration for index-after-migration gaps, missing ANALYZE, partition-pruning impact, large-table ALTER lock time."|PostgreSQL/MySQL DDL-locking docs|
@@ -165,8 +165,8 @@ These give the four `.gitkeep`-only plugins their composing agent, mirroring `qa
 
 | # | Agent | Plugin | Preloads | Trigger |
 |---|---|---|---|---|
-|2.1|`chart-test-author`|qa-charts-dataviz|`chartjs-snapshot-tests`, `d3-snapshot-tests`, `vega-spec-validator`|Detects Chart.js/D3/Vega from package.json, emits one chart regression test.|
-|2.2|`pdf-test-author`|qa-pdf-print-render|`pdf-snapshot-tester`, `print-stylesheet-tests`, `html-to-pdf-regression`, `pdf-accessibility-checker`|Detects PDF engine (page.pdf/WeasyPrint/wkhtmltopdf), emits matching tests.|
+|2.1|`chart-test-author`|qa-charts|`chartjs-snapshot-tests`, `d3-snapshot-tests`, `vega-spec-validator`|Detects Chart.js/D3/Vega from package.json, emits one chart regression test.|
+|2.2|`pdf-test-author`|qa-pdf-print|`pdf-snapshot-tester`, `print-stylesheet-tests`, `html-to-pdf-regression`, `pdf-accessibility-checker`|Detects PDF engine (page.pdf/WeasyPrint/wkhtmltopdf), emits matching tests.|
 |2.3|`modern-web-health-agent`|qa-modern-web|`service-worker-tests`, `pwa-install-flow-tests`, `web-vitals-inp-deep`, `browser-extension-tests`|Runs SW + manifest + INP + extension smoke as one pre-deploy readiness check.|
 |2.4|`l10n-audit-runner`|qa-localization|`i18n-string-coverage`, `pseudo-localization-runner`, `rtl-rendering-tester`, `locale-format-validator`|Orchestrates the 4 l10n skills into a single pre-release locale audit report.|
 
@@ -181,7 +181,7 @@ Also create `agents/.gitkeep` removal where the dir gains a real agent. **Closeo
 |3.1|`charter-coach`|qa-manual-testing|`sbtm-reference`, `hiccupps-f-heuristic`, `sfdpot-heuristic`, `exploratory-tours-reference`|Takes a feature + risk areas, produces a well-formed SBTM charter (mission + areas + tactics) using the heuristic catalog. Local to this plugin (do not rely on qa-roles).|
 |3.2|`session-debrief-coach`|qa-manual-testing|`manual-test-debrief`, `sbtm-reference`|Reviews a completed session sheet: checks PROOF completeness, flags thin Feelings, detects S%>30% env problems, recommends next charter from Outlook.|
 |3.3|`test-script-quality-critic`|qa-manual-testing|`manual-test-script-author`, `test-execution-checklist`|Reviews authored manual scripts for vague preconditions, bundled scenarios, missing expected results.|
-|3.4|`screen-reader-test-executor`|qa-accessibility-specifics|`screen-reader-test-author`, `wcag-checklist-builder`|Orchestrates a structured NVDA/VoiceOver session and emits a pass/fail checklist (executes the handoff `accessibility-code-critic` recommends).|
+|3.4|`screen-reader-test-executor`|qa-accessibility|`screen-reader-test-author`, `wcag-checklist-builder`|Orchestrates a structured NVDA/VoiceOver session and emits a pass/fail checklist (executes the handoff `accessibility-code-critic` recommends).|
 
 **Closeout** as Phase 1. Note: this finally gives manual/exploratory + manual-a11y testers an agent-driven path.
 
@@ -226,7 +226,7 @@ Multi-stage workflows that today require manual chaining. **NEW AGENT DoD** (act
 |5.6|`embedded-test-scaffolder`|qa-embedded|agent|Emits Ceedling project.yml / GoogleTest CMakeLists for a new project.|
 |5.7|`game-test-scaffolder`|qa-game|agent|Emits Unity/Unreal/Godot test dir structure.|
 |5.8|`platform-cert-checklist-author`|qa-game|agent|Build-an-X per-platform certification checklist (Xbox XR/Sony TRC/Nintendo Lotcheck/Steam).|
-|5.9|`mobile-test-scaffolder`|qa-mobile-native|agent|Emits Detox e2e/ + config / XCUITest target / Espresso module.|
+|5.9|`mobile-test-scaffolder`|qa-mobile|agent|Emits Detox e2e/ + config / XCUITest target / Espresso module.|
 |5.10|`visual-ci-gate-orchestrator`|qa-visual-regression|agent|Pipes `visual-diff-classifier` → `visual-baseline-gate` → BLOCK/REVIEW/OK.|
 
 **Closeout** as Phase 1.
@@ -242,7 +242,7 @@ All follow the **NEW SKILL DoD**. Group commits per plugin. Each row: skill name
 |---|---|---|---|
 |`kafka-consumer-tests`|qa-async-jobs|tool-wrapper|kafka.apache.org/documentation; Testcontainers Kafka module|
 |`azure-functions-test`|qa-serverless|tool-wrapper|learn.microsoft.com/azure/azure-functions + Core Tools|
-|`dotnet-faketime`|qa-time-and-timezones|tool-wrapper|learn.microsoft.com TimeProvider/ISystemClock (.NET 8)|
+|`dotnet-faketime`|qa-time|tool-wrapper|learn.microsoft.com TimeProvider/ISystemClock (.NET 8)|
 |`memcached-tests`|qa-cache-testing|tool-wrapper|memcached.org wiki; AWS ElastiCache Memcached docs|
 |`azuredevops-bug-workflow`|qa-defect-management|tool-wrapper|learn.microsoft.com/azure/devops/boards REST API|
 |`cargo-audit-rust`|qa-sca|tool-wrapper|rustsec.org / cargo-audit README|
@@ -287,8 +287,8 @@ All follow the **NEW SKILL DoD**. Group commits per plugin. Each row: skill name
 |`jvm-gc-tuning`|qa-load-testing|reference|OpenJDK GC tuning docs|
 |`flake-dashboard-author`|qa-flake-triage|build-an-X|Grafana/Datadog CI dashboards|
 |`flake-remediation-guide`|qa-flake-triage|build-an-X|maps each of the 8 `flake-pattern-reference` patterns to a fix|
-|`chaos-results-reporter`|qa-chaos-resilience|build-an-X|Principles of Chaos|
-|`steady-state-hypothesis-validator`|qa-chaos-resilience|build-an-X|Principles of Chaos|
+|`chaos-results-reporter`|qa-chaos|build-an-X|Principles of Chaos|
+|`steady-state-hypothesis-validator`|qa-chaos|build-an-X|Principles of Chaos|
 |`rum-to-synthetic-gap-analyzer`|qa-shift-right|build-an-X|Datadog RUM / web-vitals docs|
 |`bdd-suite-to-test-map`|qa-shift-left|build-an-X|Cucumber tag/coverage docs|
 |`living-documentation-publisher`|qa-bdd|build-an-X|Pickles/Serenity docs|
@@ -299,7 +299,7 @@ All follow the **NEW SKILL DoD**. Group commits per plugin. Each row: skill name
 |`hybrid-search-eval-author`|qa-search-relevance|build-an-X|BM25+vector+reranker eval docs|
 |`notebook-ci-pipeline-author`|qa-data-notebooks|build-an-X|papermill+nbval+testbook CI wiring|
 |`game-perf-profiling`|qa-game|reference|Unity Profiler / Unreal Insights docs|
-|`mobile-a11y-test-author`|qa-mobile-native|build-an-X|Apple VoiceOver / Android TalkBack testing docs|
+|`mobile-a11y-test-author`|qa-mobile|build-an-X|Apple VoiceOver / Android TalkBack testing docs|
 |`secrets-baseline-manager`|qa-secrets|build-an-X|gitleaks/trufflehog/kingfisher baseline docs|
 |`in-app-notification-test-author`|qa-notifications|build-an-X|WebSocket/Firebase RTDB docs|
 |`onboarding-plan-author`|qa-hiring|build-an-X|—|

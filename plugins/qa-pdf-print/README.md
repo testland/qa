@@ -1,4 +1,4 @@
-# qa-pdf-print-render
+# qa-pdf-print
 
 Print + PDF rendering testing - closes the gap left by
 `qa-visual-regression` (which covers screen output but not
@@ -19,7 +19,7 @@ regulatory filings.
 
 ```
 /plugin marketplace add testland/qa
-/plugin install qa-pdf-print-render@testland-qa
+/plugin install qa-pdf-print@testland-qa
 ```
 
 ## Rating

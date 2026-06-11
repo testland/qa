@@ -100,7 +100,7 @@ Nightly scheduled:
   - Mutation testing (per [`stryker-mutation`](../../qa-mutation-testing/skills/stryker-mutation/SKILL.md)).
 
 Pre-release tag:
-  - Cross-platform matrix (per [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md)).
+  - Cross-platform matrix (per [`mobile-device-matrix-toolkit`](../../qa-mobile/skills/mobile-device-matrix-toolkit/SKILL.md)).
   - Cross-browser matrix (per [`browser-matrix-runner`](../../qa-compatibility/skills/browser-matrix-runner/SKILL.md)).
   - Manual UAT sign-off.
 

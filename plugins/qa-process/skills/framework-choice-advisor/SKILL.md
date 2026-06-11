@@ -24,7 +24,7 @@ Do **not** use this skill when:
 
 - The framework is already chosen and the team needs configuration / API help - use the per-framework skill ([`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), etc.).
 - The team's question is "should we add E2E vs unit vs contract tests" - that's [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
-- Mobile-native vs hybrid app selection - use the [`qa-mobile-native`](../../../qa-mobile-native/) plugin's documentation directly.
+- Mobile-native vs hybrid app selection - use the [`qa-mobile`](../../../qa-mobile/) plugin's documentation directly.
 
 ## Step 1 - Frame the decision against the project's NFRs
 

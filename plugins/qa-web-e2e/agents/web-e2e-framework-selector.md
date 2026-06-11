@@ -19,7 +19,7 @@ d6: 4
 
 A framework-selection agent that turns "which web E2E framework should we use?" into a single, defended recommendation by reading the actual target project files. Co-recommends the cloud cross-browser runner when matrix coverage is needed.
 
-Distinct from [`qa-process/framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md) (pure-reference catalog of frameworks + trade-offs in prose). This agent reads the actual project and returns one concrete framework per app. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), and [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md).
+Distinct from [`qa-process/framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md) (pure-reference catalog of frameworks + trade-offs in prose). This agent reads the actual project and returns one concrete framework per app. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile/mobile-driver-selector`](../../qa-mobile/agents/mobile-driver-selector.md), and [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md).
 
 ## When invoked
 

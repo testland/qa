@@ -74,8 +74,8 @@
       "category": "foundations"
     },
     {
-      "name": "qa-accessibility-specifics",
-      "source": "./plugins/qa-accessibility-specifics",
+      "name": "qa-accessibility",
+      "source": "./plugins/qa-accessibility",
       "description": "Atomic accessibility coverage: 12 skills (a11y-violation-gate, aria-authoring-patterns, axe-a11y, ibm-equal-access-a11y, lighthouse-a11y, pa11y-a11y, screen-reader-test-author, wave-a11y, wcag-checklist-builder, wcag-color-contrast, wcag-focus-trap, wcag-keyboard-navigation) and 2 agents (accessibility-code-critic, screen-reader-test-executor).",
       "strict": true,
       "category": "quality-engineering"
@@ -137,8 +137,8 @@
       "category": "operations-resilience"
     },
     {
-      "name": "qa-mobile-native",
-      "source": "./plugins/qa-mobile-native",
+      "name": "qa-mobile",
+      "source": "./plugins/qa-mobile",
       "description": "Mobile + mobile-web E2E testing: 11 skills covering xcuitest-suite, espresso-suite, appium-testing, detox-testing, maestro-flows, flutter-testing, mobile-device-matrix-toolkit, mobile-web-emulation-runner, touch-gesture-tester, mobile-perf-budget, mobile-a11y-test-author — plus 3 agents (mobile-driver-selector, mobile-test-author, mobile-test-scaffolder).",
       "strict": true,
       "category": "functional-testing"
@@ -158,8 +158,8 @@
       "category": "foundations"
     },
     {
-      "name": "qa-chaos-resilience",
-      "source": "./plugins/qa-chaos-resilience",
+      "name": "qa-chaos",
+      "source": "./plugins/qa-chaos",
       "description": "Chaos engineering + fault injection: 8 skills (chaos-experiment-author, chaos-mesh, chaos-results-reporter, failure-injection-test-author, gremlin-chaos, litmus-chaos, steady-state-hypothesis-validator, toxiproxy-chaos) and 1 agent (chaos-drill-orchestrator).",
       "strict": true,
       "category": "operations-resilience"
@@ -375,8 +375,8 @@
       "category": "integrations-protocols"
     },
     {
-      "name": "qa-pdf-print-render",
-      "source": "./plugins/qa-pdf-print-render",
+      "name": "qa-pdf-print",
+      "source": "./plugins/qa-pdf-print",
       "description": "PDF + print rendering tests: 4 skills (html-to-pdf-regression, pdf-accessibility-checker, pdf-snapshot-tester, print-stylesheet-tests) and 1 agent (pdf-test-author). Covers print/PDF output where qa-visual-regression covers screen output.",
       "strict": true,
       "category": "quality-engineering"
@@ -391,7 +391,7 @@
     {
       "name": "qa-concurrency",
       "source": "./plugins/qa-concurrency",
-      "description": "Concurrency + race-condition testing: 6 skills (async-ordering-tests, deadlock-detection-harness, go-race-detector-workflow, jepsen-patterns, mvcc-isolation-tests, race-condition-test-author) and 1 agent (concurrency-critic). Code-level data races, distinct from qa-chaos-resilience (infrastructure fault injection).",
+      "description": "Concurrency + race-condition testing: 6 skills (async-ordering-tests, deadlock-detection-harness, go-race-detector-workflow, jepsen-patterns, mvcc-isolation-tests, race-condition-test-author) and 1 agent (concurrency-critic). Code-level data races, distinct from qa-chaos (infrastructure fault injection).",
       "strict": true,
       "category": "backend-distributed"
     },
@@ -403,8 +403,8 @@
       "category": "backend-distributed"
     },
     {
-      "name": "qa-charts-dataviz",
-      "source": "./plugins/qa-charts-dataviz",
+      "name": "qa-charts",
+      "source": "./plugins/qa-charts",
       "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator) and 1 agent (chart-test-author). Covers Canvas + SVG + declarative-spec visualizations, complementing qa-visual-regression which targets general UI screens.",
       "strict": true,
       "category": "quality-engineering"
@@ -508,8 +508,8 @@
       "category": "backend-distributed"
     },
     {
-      "name": "qa-time-and-timezones",
-      "source": "./plugins/qa-time-and-timezones",
+      "name": "qa-time",
+      "source": "./plugins/qa-time",
       "description": "Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest-fake-timers, freezegun, timecop, mockclock), DST + leap-second references, ISO-8601 vs RFC 3339 reference, and a timezone test matrix builder. Covers time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock skew) which are high-incident-rate but specific tooling is scattered.",
       "strict": true,
       "category": "backend-distributed"

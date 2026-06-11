@@ -278,7 +278,7 @@ ecosystem clones.
   cover a specific workflow the existing skills don't.
 - **WCAG umbrella skills** — atomic accessibility skills (keyboard,
   focus-trap, colour-contrast, ARIA-roles, axe-rules) are admissible
-  under `qa-accessibility-specifics`. "Audit my app for WCAG" as a
+  under `qa-accessibility`. "Audit my app for WCAG" as a
   single skill is still bad scope but no longer name-blocked.
 
 ## Within-plugin extensions
@@ -334,7 +334,7 @@ listed in plugin order.
 - `pactflow-integration` — managed Pact (Pactflow).
 - `spring-cloud-contract` — JVM contract testing.
 
-### qa-mobile-native
+### qa-mobile
 
 - `firebase-test-lab-runner` — Firebase Test Lab device farm.
 

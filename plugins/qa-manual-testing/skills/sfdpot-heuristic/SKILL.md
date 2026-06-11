@@ -132,7 +132,7 @@ Temporal dimensions. Includes:
 
 A "Time" exploration is the hardest to plan - many time-related
 bugs require deliberate clock manipulation. See
-[`qa-time-and-timezones`](../../../qa-time-and-timezones/) for
+[`qa-time`](../../../qa-time/) for
 clock-mocking tooling (Tier 2 ROADMAP - not yet shipped at this
 writing).
 

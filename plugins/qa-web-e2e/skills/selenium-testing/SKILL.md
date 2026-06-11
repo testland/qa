@@ -273,7 +273,7 @@ JUnit XML lands at `target/surefire-reports/`; feeds
 - **Async / Promise handling weaker.** Per-language; some
   frameworks better than others.
 - **No native mobile.** Mobile via Appium (uses Selenium WebDriver
-  protocol underneath) per [`appium-testing`](../../../qa-mobile-native/skills/appium-testing/SKILL.md).
+  protocol underneath) per [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md).
 - **Per-language idioms vary.** A Python pytest test looks
   different from a Java JUnit test.
 
@@ -285,4 +285,4 @@ JUnit XML lands at `target/surefire-reports/`; feeds
   [`cypress-testing`](../cypress-testing/SKILL.md) - modern
   alternatives.
 - [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md) - manages distributed Selenium runs.
-- [`appium-testing`](../../../qa-mobile-native/skills/appium-testing/SKILL.md) - mobile via WebDriver protocol.
+- [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md) - mobile via WebDriver protocol.

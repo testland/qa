@@ -17,7 +17,7 @@ d6: 4
 
 A tool-selection agent that turns "which API test tool should we use?" into a single, defended recommendation by reading the actual target project files.
 
-Distinct from [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract-testing/agents/contract-test-scaffolder.md) (scaffolds consumer/provider tests against a Pact). This agent picks between functional + fuzz + chaos tools; contract testing is a separate concern. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md) and [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md).
+Distinct from [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract-testing/agents/contract-test-scaffolder.md) (scaffolds consumer/provider tests against a Pact). This agent picks between functional + fuzz + chaos tools; contract testing is a separate concern. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md) and [`qa-mobile/mobile-driver-selector`](../../qa-mobile/agents/mobile-driver-selector.md).
 
 ## When invoked
 

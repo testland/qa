@@ -15,7 +15,7 @@ d6: 4
 
 A tool-selection agent that picks the right mutation testing tool by language, never by team preference.
 
-Distinct from [`mutation-survivor-explainer`](mutation-survivor-explainer.md) (reads existing mutation results to explain why mutants survived). This agent picks WHICH tool to run; the explainer interprets what it found. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), and [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md).
+Distinct from [`mutation-survivor-explainer`](mutation-survivor-explainer.md) (reads existing mutation results to explain why mutants survived). This agent picks WHICH tool to run; the explainer interprets what it found. Sibling of [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md), [`qa-mobile/mobile-driver-selector`](../../qa-mobile/agents/mobile-driver-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), and [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md).
 
 ## When invoked
 

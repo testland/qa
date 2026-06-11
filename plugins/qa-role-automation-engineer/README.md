@@ -19,7 +19,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 - **qa-web-e2e** - Web E2E frameworks (Playwright, Cypress, Selenium, WebdriverIO, Puppeteer, TestCafe) + cloud grids
 - **qa-api-testing** - API test automation (Postman/Newman, REST Assured, Karate, Tavern, fuzzing, chaos)
-- **qa-mobile-native** - Mobile automation (XCUITest, Espresso, Appium, Detox, Maestro, Flutter)
+- **qa-mobile** - Mobile automation (XCUITest, Espresso, Appium, Detox, Maestro, Flutter)
 - **qa-bdd** - BDD frameworks (Cucumber, Behave, Reqnroll) + Gherkin authoring
 - **qa-visual-regression** - Visual regression (Percy, Chromatic, Playwright snapshots, Storybook)
 - **qa-ci-integration** - CI test workflows (GitHub Actions, GitLab, Jenkins, CircleCI) + sharding/retry conventions

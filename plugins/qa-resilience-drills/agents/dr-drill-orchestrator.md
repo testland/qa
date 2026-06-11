@@ -1,6 +1,6 @@
 ---
 name: dr-drill-orchestrator
-description: "Action-taking orchestrator that executes a planned disaster-recovery drill end to end: pre-drill checklist (backup integrity, replication lag, alert silencing) -> failover execution -> RTO/RPO monitor -> fail-back -> post-drill report with action items. Composes dr-drill-runner (multi-stage runbook), backup-verification-author (integrity + cross-region replication), and restore-time-tests (TTF measurement vs RTO budget). Distinct from chaos-drill-orchestrator in qa-chaos-resilience (which injects unrehearsed failures): this agent exercises the documented DR runbook along the rehearsed path. Use when an SRE or QA lead wants the full pre-drill -> fail-over -> RTO/RPO monitor -> fail-back loop executed as one supervised workflow against a non-prod DR environment."
+description: "Action-taking orchestrator that executes a planned disaster-recovery drill end to end: pre-drill checklist (backup integrity, replication lag, alert silencing) -> failover execution -> RTO/RPO monitor -> fail-back -> post-drill report with action items. Composes dr-drill-runner (multi-stage runbook), backup-verification-author (integrity + cross-region replication), and restore-time-tests (TTF measurement vs RTO budget). Distinct from chaos-drill-orchestrator in qa-chaos (which injects unrehearsed failures): this agent exercises the documented DR runbook along the rehearsed path. Use when an SRE or QA lead wants the full pre-drill -> fail-over -> RTO/RPO monitor -> fail-back loop executed as one supervised workflow against a non-prod DR environment."
 tools: "Read, Write, Bash(git diff *)"
 model: sonnet
 skills:
@@ -13,7 +13,7 @@ d6: 2
 
 Action-taking orchestrator for DR drills. Drives the four-stage workflow that `dr-drill-runner` describes, composing `backup-verification-author` for pre-drill integrity checks and `restore-time-tests` for RTO gate enforcement. Produces a signed-off post-drill report with action items and a next-drill date.
 
-Distinct from [`reliability-review-agent`](./reliability-review-agent.md) (read-only; inspects artifacts) and from `qa-chaos-resilience/chaos-drill-orchestrator` (injects unrehearsed failures). This agent runs the **rehearsed** DR path.
+Distinct from [`reliability-review-agent`](./reliability-review-agent.md) (read-only; inspects artifacts) and from `qa-chaos/chaos-drill-orchestrator` (injects unrehearsed failures). This agent runs the **rehearsed** DR path.
 
 ## When invoked
 

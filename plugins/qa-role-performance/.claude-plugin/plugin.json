@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-performance",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Performance & reliability QA role bundle: one-command install of load testing, chaos engineering, resilience drills, and shift-left / shift-right production QA.",
   "author": {
     "name": "testland",
@@ -22,7 +22,7 @@
   ],
   "dependencies": [
     "qa-load-testing",
-    "qa-chaos-resilience",
+    "qa-chaos",
     "qa-resilience-drills",
     "qa-shift-right",
     "qa-shift-left"

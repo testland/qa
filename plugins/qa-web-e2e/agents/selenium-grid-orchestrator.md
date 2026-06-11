@@ -131,4 +131,4 @@ Refuses to: run cloud-farm tests without explicit budget approval; use Sauce/Bro
 - Selenium Grid docs: https://selenium.dev/documentation/grid/.
 - Provider docs: BrowserStack, Sauce Labs, LambdaTest.
 - [`selenium-testing`](../skills/selenium-testing/SKILL.md) - upstream test framework.
-- [`mobile-device-matrix-toolkit`](../../qa-mobile-native/skills/mobile-device-matrix-toolkit/SKILL.md) - sister mobile equivalent.
+- [`mobile-device-matrix-toolkit`](../../qa-mobile/skills/mobile-device-matrix-toolkit/SKILL.md) - sister mobile equivalent.

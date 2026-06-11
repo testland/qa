@@ -21,7 +21,7 @@ The automation-engineer stack:
 
 - **qa-web-e2e** - Web E2E frameworks + cloud grids
 - **qa-api-testing** - API test automation + fuzzing + chaos
-- **qa-mobile-native** - Mobile automation
+- **qa-mobile** - Mobile automation
 - **qa-bdd** - BDD frameworks + Gherkin authoring
 - **qa-visual-regression** - Visual regression
 - **qa-ci-integration** - CI test workflows + sharding/retry conventions

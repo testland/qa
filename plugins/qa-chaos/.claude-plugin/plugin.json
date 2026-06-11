@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "qa-chaos-resilience",
+  "name": "qa-chaos",
   "version": "1.2.1",
   "description": "Chaos engineering + fault injection: 6 skills (chaos-experiment-author, litmus-chaos, chaos-mesh, gremlin-chaos, toxiproxy-chaos, failure-injection-test-author) plus 1 A2 orchestrator agent (chaos-drill-orchestrator) that runs the full 4-stage drill workflow with auto-abort on blast-radius breach.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-chaos-resilience",
+  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-chaos",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "chaos-engineering", "resilience"]

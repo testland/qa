@@ -17,13 +17,13 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 - **qa-web-e2e** - Web E2E framework wrappers + cloud-grid integrations
 - **qa-visual-regression** - Visual regression testing
-- **qa-accessibility-specifics** - Atomic accessibility coverage
+- **qa-accessibility** - Atomic accessibility coverage
 - **qa-modern-web** - Modern web testing
 - **qa-pwa** - Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation,
 - **qa-browser-extension** - Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission
 - **qa-localization** - Localization (l10n) + internationalization (i18n) testing
-- **qa-charts-dataviz** - Chart + data viz testing
-- **qa-pdf-print-render** - PDF + print rendering tests
+- **qa-charts** - Chart + data viz testing
+- **qa-pdf-print** - PDF + print rendering tests
 - **qa-compatibility** - Browser + OS compatibility testing + self-hosted grid
 - **qa-unit-tests-js** - JS/TS unit testing per-framework wrappers + orchestrator agent
 

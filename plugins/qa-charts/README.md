@@ -1,4 +1,4 @@
-# qa-charts-dataviz
+# qa-charts
 
 Chart + data viz testing - Canvas (Chart.js), SVG (D3), declarative
 spec (Vega / Vega-Lite). Closes the gap left by `qa-visual-regression`
@@ -17,7 +17,7 @@ which covers UI screens but not chart-render correctness.
 
 ```
 /plugin marketplace add testland/qa
-/plugin install qa-charts-dataviz@testland-qa
+/plugin install qa-charts@testland-qa
 ```
 
 ## Rating

@@ -251,7 +251,7 @@ The agent **refuses** to:
 
 - **WCAG keyboard / focus-trap / contrast checks (production-side
   accessibility, not test-side selectors)** → see the
-  `qa-accessibility-specifics` plugin.
+  `qa-accessibility` plugin.
 - **WCAG compliance reporting** → see
   [`wcag-compliance-reporter`](../../qa-test-reporting/skills/wcag-compliance-reporter/SKILL.md).
 - **Test-code structure / naming** → [`test-code-critic`](test-code-critic.md).

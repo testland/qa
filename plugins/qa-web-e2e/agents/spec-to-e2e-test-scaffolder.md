@@ -128,7 +128,7 @@ The agent **refuses** to:
 
 - **Four frameworks only.** Playwright / Cypress / Selenium / WebdriverIO. Other runners (Nightwatch, TestCafé, Puppeteer) fall through to a generic scaffold the engineer adapts.
 - **Selector derivation is conservative.** Under-derives rather than guesses (see refuse-to-proceed).
-- **No mobile / desktop.** Appium, Espresso, XCUITest, Spectron, Tauri are out of scope; see [`qa-mobile-native`](../../qa-mobile-native/).
+- **No mobile / desktop.** Appium, Espresso, XCUITest, Spectron, Tauri are out of scope; see [`qa-mobile`](../../qa-mobile/).
 - **Agent does not run the scaffold.** Auto-running with unresolved TODOs would produce false-passing results.
 
 ## Hand-off targets

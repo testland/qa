@@ -240,5 +240,5 @@ JUnit XML in `reports/junit/` feeds
 - [`playwright-testing`](../playwright-testing/SKILL.md),
   [`cypress-testing`](../cypress-testing/SKILL.md),
   [`selenium-testing`](../selenium-testing/SKILL.md) - alternatives.
-- [`appium-testing`](../../../qa-mobile-native/skills/appium-testing/SKILL.md) - wdio's appium service uses Appium underneath.
+- [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md) - wdio's appium service uses Appium underneath.
 - [`cucumber-testing`](../../../qa-bdd/skills/cucumber-testing/SKILL.md) - wdio's cucumber framework integration.

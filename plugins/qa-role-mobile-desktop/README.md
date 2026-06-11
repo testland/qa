@@ -15,7 +15,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 ## What this installs
 
-- **qa-mobile-native** - Mobile + mobile-web E2E testing
+- **qa-mobile** - Mobile + mobile-web E2E testing
 - **qa-desktop** - Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows),
 - **qa-embedded** - Embedded C/C++ testing
 - **qa-game** - Game engine testing (Unity, Unreal, Godot), platform certification overview (Sony

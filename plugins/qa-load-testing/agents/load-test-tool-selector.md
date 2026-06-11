@@ -17,7 +17,7 @@ A tool-selection agent that picks one load testing tool from goal + stack signal
 
 Distinct from [`perf-regression-bisector`](perf-regression-bisector.md) (bisects regressions in EXISTING load-test data). This agent picks WHICH tool to run; the bisector interprets regressions across a series of runs.
 
-Sibling of the full Tier 4 tool-selector family: [`qa-mutation-testing/mutation-tool-selector`](../../qa-mutation-testing/agents/mutation-tool-selector.md), [`qa-property-based/property-based-tool-selector`](../../qa-property-based/agents/property-based-tool-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md), [`qa-mobile-native/mobile-driver-selector`](../../qa-mobile-native/agents/mobile-driver-selector.md), and [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
+Sibling of the full Tier 4 tool-selector family: [`qa-mutation-testing/mutation-tool-selector`](../../qa-mutation-testing/agents/mutation-tool-selector.md), [`qa-property-based/property-based-tool-selector`](../../qa-property-based/agents/property-based-tool-selector.md), [`qa-api-testing/api-test-tool-selector`](../../qa-api-testing/agents/api-test-tool-selector.md), [`qa-web-e2e/web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md), [`qa-mobile/mobile-driver-selector`](../../qa-mobile/agents/mobile-driver-selector.md), and [`qa-desktop/desktop-driver-selector`](../../qa-desktop/agents/desktop-driver-selector.md).
 
 ## When invoked
 
@@ -88,7 +88,7 @@ Output template:
 
 - No project markers AND no goal declared → refuse.
 - Spec asks "test the system end-to-end" without specifying load profile (RPS, soak duration, ramp) → refuse and ask for the load profile; load testing without a profile is undirected.
-- Spec asks for chaos / fault injection → refuse and recommend qa-chaos-resilience.
+- Spec asks for chaos / fault injection → refuse and recommend qa-chaos.
 - Spec asks for functional API testing → refuse and recommend qa-api-testing.
 - Multiple existing conventions detected (k6 AND JMeter both present) → refuse and ask which is canonical.
 
@@ -106,5 +106,5 @@ Output template:
 - **Per-tool scenario authoring + CI** → the chosen tool's SKILL.md.
 - **Performance budget gate** → [`perf-budget-gate`](../skills/perf-budget-gate/SKILL.md).
 - **Bisect regressions across runs** → [`perf-regression-bisector`](perf-regression-bisector.md).
-- **Chaos / fault injection** → qa-chaos-resilience plugin.
+- **Chaos / fault injection** → qa-chaos plugin.
 - **Functional API testing** → qa-api-testing plugin.

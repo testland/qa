@@ -30,7 +30,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 - **qa-saga-cqrs** - Saga + CQRS + event sourcing test patterns
 - **qa-distributed-tracing** - Distributed tracing assertion testing
 - **qa-serverless** - Serverless platform testing
-- **qa-time-and-timezones** - Time-related testing
+- **qa-time** - Time-related testing
 - **qa-feature-flags** - Feature-flag platform testing
 - **qa-experimentation** - Experimentation harness testing
 

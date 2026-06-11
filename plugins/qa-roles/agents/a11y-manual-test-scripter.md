@@ -1,6 +1,6 @@
 ---
 name: a11y-manual-test-scripter
-description: "Produces a manual accessibility test script for a component or page - generates step-by-step keyboard-navigation and screen-reader (NVDA / VoiceOver) test cases mapped to specific WCAG 2.2 success criteria, with expected focus order and announcements. Use when a human needs to manually verify accessibility beyond automated checks; not when statically reviewing code for a11y issues (see accessibility-code-critic in qa-accessibility-specifics)."
+description: "Produces a manual accessibility test script for a component or page - generates step-by-step keyboard-navigation and screen-reader (NVDA / VoiceOver) test cases mapped to specific WCAG 2.2 success criteria, with expected focus order and announcements. Use when a human needs to manually verify accessibility beyond automated checks; not when statically reviewing code for a11y issues (see accessibility-code-critic in qa-accessibility)."
 tools: "Read, Grep, Glob"
 model: sonnet
 rating: 22
@@ -232,7 +232,7 @@ Leave the Pass / Fail column blank - it is filled in by the human tester.
 | Replacing this script with an automated axe scan | axe catches ~30-40% of WCAG issues; it cannot observe focus order in practice, test AT announcements, or verify focus-trap behavior at runtime. This script covers what axe misses. |
 | Checking only "can Tab reach it?" | Reachability is necessary but not sufficient. SC 2.4.3 requires logical focus order; SC 4.1.2 requires correct role and state - both require human observation. |
 | Writing expected announcements from memory | Announcement wording varies by AT version and browser. Seed expected strings from WebAIM NVDA / VoiceOver articles (cited above), then note actual vs expected during the test run. |
-| Conflating this agent with accessibility-code-critic | `accessibility-code-critic` (qa-accessibility-specifics) reads source code for violations. This agent produces scripts for a human to run against the live rendered component. Use both: code review first, manual script after. |
+| Conflating this agent with accessibility-code-critic | `accessibility-code-critic` (qa-accessibility) reads source code for violations. This agent produces scripts for a human to run against the live rendered component. Use both: code review first, manual script after. |
 | Testing only NVDA or only VoiceOver | NVDA + Firefox and VoiceOver + Safari exercise different AT/browser stacks. An element correctly announced in one may be silent in the other due to AT implementation differences. |
 
 ## Limitations
@@ -250,9 +250,9 @@ Leave the Pass / Fail column blank - it is filled in by the human tester.
   expected state but cannot prescribe exact timing.
 - **No visual design coverage.** Contrast ratios, color-only cues, and target
   size are outside this script's scope. Use
-  [`wcag-color-contrast`](../../qa-accessibility-specifics/skills/wcag-color-contrast/SKILL.md)
+  [`wcag-color-contrast`](../../qa-accessibility/skills/wcag-color-contrast/SKILL.md)
   for color and
-  [`accessibility-code-critic`](../../qa-accessibility-specifics/agents/accessibility-code-critic.md)
+  [`accessibility-code-critic`](../../qa-accessibility/agents/accessibility-code-critic.md)
   for static source checks.
 - **Focus order ambiguity in complex layouts.** CSS grid / flexbox order
   differences from DOM order can make "logical focus order" judgement calls;
@@ -261,21 +261,21 @@ Leave the Pass / Fail column blank - it is filled in by the human tester.
 ## Hand-off targets
 
 - **Code-level fixes after a failing test case** - hand to
-  [`accessibility-code-critic`](../../qa-accessibility-specifics/agents/accessibility-code-critic.md)
-  (qa-accessibility-specifics): it reads source code, identifies the violating
+  [`accessibility-code-critic`](../../qa-accessibility/agents/accessibility-code-critic.md)
+  (qa-accessibility): it reads source code, identifies the violating
   line, and proposes a concrete fix.
 - **Focus trap implementation** - see
-  [`wcag-focus-trap`](../../qa-accessibility-specifics/skills/wcag-focus-trap/SKILL.md)
+  [`wcag-focus-trap`](../../qa-accessibility/skills/wcag-focus-trap/SKILL.md)
   for the 6-step focus-trap pattern.
 - **ARIA role and keyboard pattern reference** - see
-  [`aria-authoring-patterns`](../../qa-accessibility-specifics/skills/aria-authoring-patterns/SKILL.md).
+  [`aria-authoring-patterns`](../../qa-accessibility/skills/aria-authoring-patterns/SKILL.md).
 - **Keyboard navigation rules** - see
-  [`wcag-keyboard-navigation`](../../qa-accessibility-specifics/skills/wcag-keyboard-navigation/SKILL.md).
+  [`wcag-keyboard-navigation`](../../qa-accessibility/skills/wcag-keyboard-navigation/SKILL.md).
 - **Automated pre-check before manual run** - see
-  [`axe-a11y`](../../qa-accessibility-specifics/skills/axe-a11y/SKILL.md) for
+  [`axe-a11y`](../../qa-accessibility/skills/axe-a11y/SKILL.md) for
   a runtime axe scan to clear low-hanging fruit before a human tester sits down.
 - **Screen-reader test script authoring (standalone skill)** - see
-  [`screen-reader-test-author`](../../qa-accessibility-specifics/skills/screen-reader-test-author/SKILL.md).
+  [`screen-reader-test-author`](../../qa-accessibility/skills/screen-reader-test-author/SKILL.md).
 
 ## References
 

@@ -187,7 +187,7 @@ test('rects have aria-labels', async ({ page }) => {
 });
 ```
 
-Cross-ref `qa-accessibility-specifics` plugin for broader a11y
+Cross-ref `qa-accessibility` plugin for broader a11y
 patterns.
 
 ## Anti-patterns
@@ -217,7 +217,7 @@ patterns.
   Canvas-based alternative
 - [`vega-spec-validator`](../vega-spec-validator/SKILL.md) - 
   declarative-spec testing alternative
-- [`qa-accessibility-specifics`](../../qa-accessibility-specifics/) - 
+- [`qa-accessibility`](../../qa-accessibility/) - 
   cross-cutting a11y plugin
 
 [D3 getting-started docs]: https://d3js.org/getting-started
