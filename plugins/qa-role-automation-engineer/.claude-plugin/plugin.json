@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-automation-engineer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Test automation engineer role bundle: one-command install of web E2E, API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
   "author": {
     "name": "testland",

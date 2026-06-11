@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-manual-tester",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
   "author": {
     "name": "testland",
