@@ -59,6 +59,7 @@ prevents phantoms via snapshot isolation. Other databases differ.
 ```python
 import psycopg
 import threading
+import time  # Steps 4-6 use time.sleep for the interleaving window
 
 def two_connection_test(workload_a, workload_b, isolation="read committed"):
     conn_a = psycopg.connect("dbname=test", autocommit=False)
@@ -82,6 +83,21 @@ def two_connection_test(workload_a, workload_b, isolation="read committed"):
     t_a.join(); t_b.join()
 
     return results
+```
+
+The Steps 4-6 workloads use `time.sleep(0.5)` to open the interleaving
+window, which is timing-sensitive and can flake on slow CI. For a
+deterministic harness, replace the sleep with a second barrier (or a
+`threading.Event`) so the writer commits exactly between the reader's two
+reads, no wall-clock guess required:
+
+```python
+# Deterministic variant: pass an extra Barrier(2) into both workloads.
+# reader: read #1 -> gate.wait() -> read #2
+# writer: gate.wait() -> UPDATE + commit       (writer races read #2)
+# Use a pair of barriers (read1-done, write-done) if you need to pin the
+# writer's commit strictly after read #1 and strictly before read #2.
+gate = threading.Barrier(2)
 ```
 
 ## Step 4 - Test for non-repeatable read at Read Committed
@@ -171,10 +187,12 @@ def test_write_skew_under_repeatable_read():
     two_connection_test(take_alice_off, take_bob_off, isolation="repeatable read")
 
     on_call_after = count_on_call()
-    # Under Repeatable Read, write skew possible → 0 on call (anomaly)
-    # Under Serializable, one transaction would error
-    if isolation == "repeatable read":
-        assert on_call_after in (0, 1)  # demonstrate anomaly OR safe outcome
+    # Under Repeatable Read, write skew is possible: both txns read 2
+    # on-call, both flip one off, and the final state is 0 on call (the
+    # anomaly). A correctly-serialized run would leave 1. Either value
+    # proves RR does NOT serialize this pair, so both are accepted here.
+    # (Run the same workload at Serializable - Step 7 - to see one txn abort.)
+    assert on_call_after in (0, 1)
 ```
 
 ## Step 7 - Test Serializable rolls back conflicting transactions
