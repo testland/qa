@@ -1,6 +1,6 @@
 ---
 name: eventual-consistency-tests
-description: "Build eventual-consistency tests - convergence-window assertions (\"within 5s\"), monotonic-read tests, anti-entropy tests, conflict-resolution rules tests (CRDT-merge / LWW / vector clocks). Distinguishes \"eventually\" from \"never\" by asserting bounded convergence; pair with qa-saga-cqrs for saga + CQRS workloads."
+description: "Build eventual-consistency tests for distributed infrastructure: multi-region replication convergence windows (\"within 5s\"), monotonic-read guarantees, anti-entropy self-healing, and CRDT merge semantics (OR-Set, G-Counter, LWW, vector clocks). Distinguishes \"eventually\" from \"never\" by asserting bounded convergence. Use when the consistency boundary is a cache cluster, replication topology, or CRDT store, not a CQRS command/query split (use cqrs-projection-tests for read-model lag after a command)."
 type: skill
 rating: 22
 d6: 4
