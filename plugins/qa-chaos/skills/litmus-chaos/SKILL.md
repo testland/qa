@@ -1,6 +1,6 @@
 ---
 name: litmus-chaos
-description: "Configures LitmusChaos for Kubernetes-native chaos engineering - installs via Helm, picks ChaosExperiments from the ChaosHub (`pod-delete`, `network-latency`, `node-cpu-hog`, etc.), authors a ChaosEngine CR scoping the experiment + steady-state probes, runs as part of the cluster, exports Prometheus metrics for the verdict. Use when the platform is Kubernetes (CNCF-hosted; cloud-native)."
+description: "Configures LitmusChaos for Kubernetes-native chaos engineering - installs via Helm, picks ChaosExperiments from the ChaosHub (`pod-delete`, `network-latency`, `node-cpu-hog`, etc.), authors a ChaosEngine CR scoping the experiment + steady-state probes, runs as part of the cluster, exports Prometheus metrics for the verdict. Use when the platform is Kubernetes (CNCF-hosted; cloud-native). Prefer over chaos-mesh when the team wants a ChaosCenter web UI for workflow scheduling and ChaosHub catalog browsing; use chaos-mesh for fine-grained network-fault policies via its own CRD family."
 rating: 23
 d6: 4
 ---
