@@ -6,8 +6,8 @@ model: sonnet
 skills:
   - model-based-test-graph-author
   - ai-test-generator
-rating: 23
-d6: 2
+rating: 24
+d6: 3
 ---
 
 Action-taking orchestrator for the model-based testing pipeline. Drives
@@ -48,13 +48,44 @@ coverage (every edge exercised at least once). If the SDET specifies a
 stricter criterion (`state`, `all-pairs`), use it; document the choice in
 the suite header comment.
 
-### Step 3 - Generate covering test cases
+### Step 3 - Bridge the paths, then generate covering test cases
 
-Feed `models/<flow>.yaml` and the coverage paths to
-[`ai-test-generator`](../skills/ai-test-generator/SKILL.md) Step 1-4:
-produce a structured input YAML per path (states visited as inputs, guard
-values as preconditions, final observable state as expected), run
-generation, and tier the output by confidence score (high / medium / low).
+The two sub-skills do not share a format, so the orchestrator must convert
+between them. `model-based-test-graph-author` Step 4 emits a list of paths
+(each a list of transitions), serialized to `generated/paths.json`. But
+`ai-test-generator` Step 1 does NOT consume a model or a path list: it
+consumes an `acceptance_criteria` list, each entry having `id`, `description`,
+`inputs`, and `expected`. Skipping this bridge is the most common way the
+pipeline silently produces nothing.
+
+Map each path to exactly one acceptance-criterion entry: `id` is the path id,
+`description` is the transition sequence as a sentence, `inputs` are the
+trigger events and guard values along the path, and `expected.final_state` is
+the path's terminal observable state:
+
+```yaml
+# input/<flow>-mbt.yaml  (derived from generated/paths.json)
+spec_source: "models/<flow>.yaml"
+acceptance_criteria:
+  - id: AC-PATH-1
+    description: "empty_cart -> add_item -> ... -> confirmed (happy path)"
+    inputs:
+      events: [add_item, enter_shipping, enter_payment, place_order]
+      guards: { item_in_stock: true, payment_valid: true }
+    expected:
+      final_state: confirmed
+  - id: AC-PATH-2
+    description: "... -> payment_fails -> retry_payment -> confirmed"
+    inputs:
+      events: [add_item, enter_shipping, enter_payment, place_order, retry_payment]
+      guards: { payment_valid: false }
+    expected:
+      final_state: confirmed
+```
+
+Feed the bridged `input/<flow>-mbt.yaml` to
+[`ai-test-generator`](../skills/ai-test-generator/SKILL.md) Steps 2-4: run
+generation, then tier the output by confidence score (high / medium / low).
 
 ### Step 4 - Assemble the suite
 
