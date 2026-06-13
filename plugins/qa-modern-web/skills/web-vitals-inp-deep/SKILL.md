@@ -1,6 +1,6 @@
 ---
 name: web-vitals-inp-deep
-description: "Deep INP (Interaction to Next Paint) testing - break the metric into input delay, processing duration, and presentation delay; identify long tasks blocking the main thread; assert per-interaction INP budgets in CI via the `web-vitals` library and Playwright traces. INP became the Core Web Vital for responsiveness in 2024."
+description: "Deep INP (Interaction to Next Paint) testing: decomposes input delay, processing duration, and presentation delay via the web-vitals/attribution build, asserts per-interaction INP budgets in Playwright using PerformanceObserver plus the web-vitals visibilitychange flush, and identifies long tasks blocking the main thread. Use when a page feels unresponsive while LCP and CLS are green, or to gate key interactions (form submit, modal open, route change) under an INP budget in CI. Covers interactions only: for service-worker cache-strategy latency use service-worker-tests."
 type: skill
 rating: 23
 d6: 4
@@ -99,11 +99,17 @@ test('modal open INP under 200ms', async ({ page }) => {
   await page.click('[data-testid="open-modal"]');
   await page.waitForSelector('[role="dialog"]');
 
-  // Force INP to flush (web-vitals reports on hidden/pagehide)
-  await page.evaluate(() => document.visibilityState);
+  // Force INP to flush. web-vitals finalizes INP inside its own
+  // visibilitychange handler, which reads document.visibilityState
+  // synchronously (per the [web-vitals README]). Redefine the property to
+  // 'hidden' FIRST, THEN dispatch the event: if you dispatch first, the
+  // handler still sees 'visible' and never reports.
   await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'hidden',
+    });
     document.dispatchEvent(new Event('visibilitychange'));
-    Object.defineProperty(document, 'visibilityState', { value: 'hidden', writable: true });
   });
 
   const inps = await page.evaluate(() => (window as any).__inpValues);
@@ -116,28 +122,38 @@ test('modal open INP under 200ms', async ({ page }) => {
 
 ```ts
 test('no long tasks > 50ms during route change', async ({ page }) => {
-  await page.goto('https://localhost:3000');
-
-  const longTasks = await page.evaluate(() => {
-    return new Promise<any[]>((resolve) => {
-      const seen: any[] = [];
-      const obs = new PerformanceObserver((list) => {
-        seen.push(...list.getEntries().map((e) => ({
-          name: e.name, duration: e.duration, startTime: e.startTime
-        })));
-      });
-      obs.observe({ type: 'longtask', buffered: true });
-      setTimeout(() => { obs.disconnect(); resolve(seen); }, 3000);
+  // Install the observer BEFORE navigation and push entries onto a
+  // window-scoped array. A closure-local array would never reach
+  // window.__longTasks, so the later read returns [] and the assertion
+  // passes vacuously regardless of real long tasks.
+  await page.addInitScript(() => {
+    (window as any).__longTasks = [];
+    const obs = new PerformanceObserver((list) => {
+      for (const e of list.getEntries()) {
+        (window as any).__longTasks.push({
+          name: e.name, duration: e.duration, startTime: e.startTime,
+        });
+      }
     });
+    // 'longtask' is the Long Tasks API entry type; buffered:true replays
+    // tasks recorded before the observer attached (per [MDN longtask]).
+    obs.observe({ type: 'longtask', buffered: true });
   });
 
+  await page.goto('https://localhost:3000');
   await page.click('[data-testid="route-link"]');
+  await page.waitForLoadState('networkidle');
 
   const blocking = (await page.evaluate(() => (window as any).__longTasks ?? []))
     .filter((t: any) => t.duration > 50);
   expect(blocking).toEqual([]);
 });
 ```
+
+The richer successor to Long Tasks is the Long Animation Frames (LoAF) API
+(`type: 'long-animation-frame'`), but it is not yet Baseline across browsers
+per [MDN LoAF], so attach it as a separate, guarded observer rather than
+relying on it alone.
 
 ## Step 6 - CrUX field data correlation
 
@@ -170,7 +186,8 @@ article]. Lab passing + field failing = sample population mismatch
   FID). Some older audit tools still report FID - verify the tool
   uses INP.
 - Service worker interception adds presentation-delay variance
-  (cache miss vs hit). Pin to a known cache state in tests.
+  (cache miss vs hit). Pin to a known cache state in tests. Testing the
+  cache strategy itself is out of scope here: use service-worker-tests.
 - `attribution` API requires the `web-vitals/attribution` build
   bundle, not the default.
 
@@ -178,5 +195,12 @@ article]. Lab passing + field failing = sample population mismatch
 
 - [INP web.dev article] - definition, thresholds, decomposition,
   measurement via `web-vitals` library
+- [web-vitals README] - attribution build, `onINP`, and the
+  visibilitychange flush behavior
+- [MDN longtask] - Long Tasks API entry type and buffered observe
+- [MDN LoAF] - Long Animation Frames API (richer, not yet Baseline)
 
 [INP web.dev article]: https://web.dev/articles/inp
+[web-vitals README]: https://github.com/GoogleChrome/web-vitals#readme
+[MDN longtask]: https://developer.mozilla.org/en-US/docs/Web/API/PerformanceLongTaskTiming
+[MDN LoAF]: https://developer.mozilla.org/en-US/docs/Web/API/PerformanceLongAnimationFrameTiming
