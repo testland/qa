@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-bug-repro",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Bug reproduction workflow: 1 skill (bug-report-template) and 8 agents (bug-report-from-recording, bug-repro-builder, crash-stack-trace-analyzer, defect-clusterer, defect-trend-narrator, escape-defect-analyzer, failure-classifier, test-failure-debugger).",
   "author": {
     "name": "testland",
