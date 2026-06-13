@@ -1,6 +1,6 @@
 ---
 name: risk-storming-facilitator
-description: "Build-an-X workflow for a risk-storming session - collaborative risk identification meeting where engineers brainstorm \"what could go wrong\" via structured prompts (per category from `risk-matrix`), score impact × likelihood, propose mitigations, and assign owners. Output is a populated risk matrix per `risk-matrix` skill. Distinct from `risk-matrix` (the artifact) - this is the facilitation pattern that produces it. Use to fill the matrix at feature-kickoff time."
+description: "Reference guide for planning and facilitating a risk-storming session yourself - covers meeting structure, participant roster, per-category brainstorm prompts (categories drawn from `risk-matrix`), affinity grouping, impact by likelihood scoring, and mitigation assignment. Static reference only, not an active runner: distinct from `risk-storming-session-runner` (an agent that interactively runs the session and writes the matrix file), and distinct from `risk-matrix` (the artifact itself). Use when you want to understand or teach the facilitation pattern, or run the session at feature-kickoff time without agent assistance."
 rating: 22
 d6: 3
 ---
