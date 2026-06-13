@@ -92,7 +92,10 @@ def test_pdf_is_tagged():
     catalog = pdf.Root
     assert "/StructTreeRoot" in catalog, "PDF lacks StructTreeRoot (untagged)"
     mark_info = catalog.get("/MarkInfo", {})
-    assert mark_info.get("/Marked") is True, "PDF MarkInfo /Marked is false"
+    # Use bool(), not `is True`: pikepdf can return a pikepdf.Object wrapper
+    # rather than the singleton Python True, so `is True` is always False
+    # even when /Marked is set (per [pikepdf objects]).
+    assert bool(mark_info.get("/Marked", False)), "PDF MarkInfo /Marked is false"
 ```
 
 ## Step 6 - Verify document title + language metadata
@@ -119,19 +122,31 @@ def test_all_images_have_alt():
     pdf = pikepdf.open("out.pdf")
     structure_root = pdf.Root["/StructTreeRoot"]
 
-    # Walk the structure tree (simplified; real impl traverses /K children recursively)
+    # The structure tree is NESTED: each element's /K can hold child
+    # elements to arbitrary depth, so /Figure tags live below /Document,
+    # /Sect, /P, etc. A top-level-only scan misses nested figures and
+    # passes vacuously. Walk every /K recursively. Each /Figure must carry
+    # an /Alt (or /ActualText) per [WCAG PDF1].
     untagged_images = []
-    for kid in structure_root.get("/K", []):
-        if kid.get("/S") == "/Figure":
-            alt = kid.get("/Alt")
-            if not alt or not str(alt).strip():
-                untagged_images.append(kid)
 
+    def walk(node):
+        if isinstance(node, pikepdf.Array):
+            for child in node:
+                walk(child)
+            return
+        if not isinstance(node, pikepdf.Dictionary):
+            return  # marked-content id (int) or other leaf
+        if node.get("/S") == "/Figure":
+            alt = node.get("/Alt")
+            if not alt or not str(alt).strip():
+                untagged_images.append(node)
+        kids = node.get("/K")
+        if kids is not None:
+            walk(kids)
+
+    walk(structure_root.get("/K"))
     assert untagged_images == [], f"Images without /Alt: {len(untagged_images)}"
 ```
-
-For real walks, use a library like `pdfix` or write a recursive
-visitor - the structure tree is nested.
 
 ## Step 8 - Reading order verification
 
@@ -141,13 +156,17 @@ expect:
 
 ```python
 def test_reading_order_matches_visual_order():
+    # TEMPLATE: the title and section labels below are placeholders for an
+    # invoice layout. Replace them with the expected reading-order landmarks
+    # for your own document before using this test.
     text_per_page = extract_text_with_structure_order("out.pdf")
 
-    # First page should start with title
-    assert text_per_page[0].startswith("Invoice #")
-    # Body sections in order
-    for i, section in enumerate(["Bill To", "Items", "Total", "Footer"]):
-        assert section in text_per_page[i // 1] or i == 0  # adjust per layout
+    # First page should start with the document's leading landmark.
+    assert text_per_page[0].startswith("Invoice #")  # replace per document
+    # Each expected landmark appears on its page, in reading order.
+    expected = ["Bill To", "Items", "Total", "Footer"]  # replace per document
+    for i, section in enumerate(expected):
+        assert section in text_per_page[i] or i == 0
 ```
 
 This is best done via PAC or visual inspection for high-stakes
@@ -181,7 +200,11 @@ assert title, "PDF18: Document title required (WCAG 2.1)"
 - name: PDF/UA conformance
   run: |
     for pdf in out/*.pdf; do
-      verapdf --flavour ua1 --format json "$pdf" | jq '.report.jobs[0].validationResult.details.failedRules == 0' || exit 1
+      # jq -e sets the exit status from the result: false/null gives exit 1,
+      # so the gate actually fails on violations. Plain jq exits 0 regardless
+      # of the printed boolean (per [jq manual]), so `|| exit 1` never fired.
+      verapdf --flavour ua1 --format json "$pdf" \
+        | jq -e '.report.jobs[0].validationResult.details.failedRules == 0' > /dev/null || exit 1
     done
 ```
 
@@ -213,7 +236,13 @@ assert title, "PDF18: Document title required (WCAG 2.1)"
 - PAC by axes4 - pac.pdf-accessibility.org (Matterhorn Protocol)
 - ISO 14289-1 (PDF/UA-1) - cite by stable ID; consult ISO for spec text
 - pikepdf Python library - pikepdf.readthedocs.io
+- [pikepdf objects] - how pikepdf maps PDF scalars to Python types
+- [WCAG PDF1] - applying /Alt text to /Figure structure elements
+- [jq manual] - the `-e` / `--exit-status` flag for CI gating
 - [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) - sister
   skill for visual-regression on the same PDFs
 
 [WCAG 2.1 spec]: https://www.w3.org/TR/WCAG21/
+[pikepdf objects]: https://pikepdf.readthedocs.io/en/stable/topics/objects.html
+[WCAG PDF1]: https://www.w3.org/TR/WCAG20-TECHS/PDF1.html
+[jq manual]: https://jqlang.org/manual/
