@@ -1,6 +1,6 @@
 ---
 name: acceptance-test-from-criteria
-description: "Build-an-X workflow for ATDD (Acceptance Test-Driven Development) - converts acceptance criteria into executable acceptance tests in the team's BDD framework (Cucumber / Behave / Reqnroll), pairs with the relevant runner, scaffolds step definitions for new patterns, marks generated tests as \"AC-N\" so failures map back to the story's acceptance criterion. Use when the team practices ATDD and wants automation generated from ACs as a first-class step before development."
+description: "ATDD (Acceptance Test-Driven Development) workflow that generates @AC-N-tagged Gherkin scenarios from a signed-off acceptance-criteria list, scaffolds NotImplementedError step stubs, and produces an AC-to-test traceability table, all before implementation begins, in the team's BDD framework (Cucumber / Behave / Reqnroll). Use when devs are gated on green acceptance tests and failures must map back to a specific criterion. For story-narrative-to-Gherkin without prior ACs, use gherkin-from-stories. For BDD scenario authoring without the ATDD test-first gate, use bdd-scenario-author."
 rating: 22
 d6: 4
 ---
