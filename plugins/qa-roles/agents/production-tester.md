@@ -1,6 +1,6 @@
 ---
 name: production-tester
-description: "Action-taking agent that authors a synthetic monitor for one specific critical user journey - selects the platform per the team's stack (Datadog / Checkly / Pingdom / etc.), generates the script body via accessibility-first locators (per the e2e-selector convention), wires environment-specific config (synthetic test account, test-mode payment processor, multi-region locations, cadence), and outputs both the monitor config + a wire-up PR. Use as a focused per-journey companion to `synthetic-monitor-author` (which is the broader build-an-X workflow) - this agent operates per critical journey, end-to-end."
+description: "Action-taking agent that authors a synthetic monitor for one specific critical user journey, end-to-end - selects the platform per the team's stack (Datadog / Checkly / Pingdom / etc.), generates the script body via accessibility-first locators (per the e2e-selector convention), wires environment-specific config (synthetic test account, test-mode payment processor, multi-region locations, cadence), and outputs both the monitor config + a wire-up PR. Use as a focused per-journey companion to `synthetic-monitor-author` (the broader build-an-X workflow). Does not design the broader monitoring program (platform selection strategy, journey-tier taxonomy, repo layout): for that use synthetic-monitor-author."
 tools: "Read, Write, Edit, Grep, Glob, Bash(gh pr create *), Bash(npx checkly *)"
 model: sonnet
 skills:

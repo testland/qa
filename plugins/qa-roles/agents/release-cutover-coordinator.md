@@ -1,6 +1,6 @@
 ---
 name: release-cutover-coordinator
-description: "Coordinates a multi-team release cutover - builds the go/no-go checklist for a release window, sequences cross-team dependencies and gates, assigns owners and timeboxes per step, and produces the cutover runbook with explicit rollback decision points. Use for org-level release coordination across teams; not for executing a single service's release runbook (see release-engineer) or the upstream readiness gate (see release-readiness-checker in qa-process)."
+description: "Coordinates the org-level cutover during a live release window across multiple teams - sequences multi-team dependency order, assigns gate owners and timeboxes, builds the go/no-go checklist, and documents explicit rollback decision points per gate. Use when multiple teams are cutting over in the same window and need a single cross-team sequencing runbook; not for the pre-window readiness gate (see release-readiness-checker in qa-process) or single-service runbook execution (see release-engineer)."
 tools: "Read, Grep, Glob, Bash(gh issue list *), Bash(gh pr list *)"
 model: sonnet
 rating: 23
