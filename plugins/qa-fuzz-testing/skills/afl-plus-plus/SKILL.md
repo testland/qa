@@ -1,6 +1,6 @@
 ---
 name: afl-plus-plus
-description: "Author and run AFL++ - out-of-process coverage-guided fuzzer (a community fork of Google's original AFL with improved mutations and instrumentation). Covers afl-cc / afl-clang-fast instrumented build, afl-fuzz invocation, parallel master/slave (-M / -S), dictionary support (-x), QEMU mode (-Q) for binaries without source, output structure (queue / crashes / hangs), and CI integration. Use for fuzzing standalone binaries (file processors, command-line tools) where libFuzzer's in-process model doesn't fit."
+description: "Author and run AFL++ - out-of-process coverage-guided fuzzer (a community fork of Google's original AFL with improved mutations and instrumentation). Covers afl-cc / afl-clang-fast instrumented build, afl-fuzz invocation, parallel master/slave (-M / -S), dictionary support (-x), QEMU mode (-Q) for binaries without source, output structure (queue / crashes / hangs), crash minimisation (afl-tmin), corpus minimisation (afl-cmin), crash filename triage, and CI integration. Use for fuzzing standalone binaries (file processors, command-line tools) where libFuzzer's in-process model doesn't fit; for cross-fuzzer corpus strategy see corpus-management-reference."
 rating: 23
 d6: 4
 ---
