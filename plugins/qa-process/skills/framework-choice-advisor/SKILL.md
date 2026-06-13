@@ -16,7 +16,7 @@ This skill is a **pure reference**: a decision tree + tradeoff matrix the team u
 ## When to use
 
 - Greenfield: starting a new test automation suite from zero.
-- Migration: the team is moving off a legacy framework (most commonly Selenium → Playwright per [TestDino's 2026 flake benchmark](https://testdino.com/blog/flaky-test-benchmark) - teams report "50% fewer flaky tests" after migration).
+- Migration: the team is moving off a legacy framework (most commonly Selenium to Playwright, whose auto-waiting removes the manual-wait flakiness that dominates Selenium suites, per the [Playwright actionability docs](https://playwright.dev/docs/actionability)).
 - Multi-stack consolidation: the team has three frameworks across product areas and is deciding which to standardise on.
 - Hiring-driven re-evaluation: the team's skills mix shifted (e.g., from Java to TypeScript) and the framework choice should follow.
 
@@ -43,9 +43,9 @@ Six NFR axes drive framework choice. Score each 1 - 5 for the project; rank them
 
 | Framework | Cross-browser | Mobile | Language | Speed (parallel) | Ecosystem | Hire-ability | Notes |
 |---|---|---|---|---|---|---|---|
-| **Playwright** | Chromium / Firefox / WebKit native, all in one runtime | Mobile-viewport emulation + real device via Playwright Mobile (beta) | TS / JS / Python / .NET / Java | Excellent (auto-parallel, sharding built-in) | Strong (trace viewer, visual snapshots, fixtures, MCP integration) | High (fastest-growing 2024-26) | The default for greenfield web E2E in 2026 per [TestDino](https://testdino.com/blog/flaky-test-benchmark). Auto-wait reduces flake by ~50% vs Selenium. |
+| **Playwright** | Chromium / Firefox / WebKit native, all in one runtime | Mobile-viewport emulation + real device via Playwright Mobile (beta) | TS / JS / Python / .NET / Java | Excellent (auto-parallel, sharding built-in) | Strong (trace viewer, visual snapshots, fixtures, MCP integration) | High (fastest-growing 2024-26) | A common default for greenfield web E2E; its built-in auto-waiting removes the manual-wait flakiness that dominates Selenium suites ([Playwright actionability](https://playwright.dev/docs/actionability)). |
 | **Cypress** | Chromium-family + Firefox + WebKit (newer) | Mobile viewport only; no real-device | JS / TS only | Good (parallel via Cypress Cloud; CLI-parallel limited) | Strong (huge plugin ecosystem) | High | Strong DX for component testing; runs inside-browser limits cross-origin and iframe scenarios. |
-| **Selenium / WebdriverIO** | All browsers via WebDriver protocol | Real device via Appium | All major languages (Java / Python / C# / JS / Ruby) | Moderate (Selenium Grid; WDIO improves on Selenium's runner) | Mature (oldest ecosystem) | Highest (historical talent pool) | Mature but flake-prone vs Playwright per [TestDino 2026](https://testdino.com/blog/flaky-test-benchmark) - async-wait issues are the dominant cause. Migration target, not greenfield default. |
+| **Selenium / WebdriverIO** | All browsers via WebDriver protocol | Real device via Appium | All major languages (Java / Python / C# / JS / Ruby) | Moderate (Selenium Grid; WDIO improves on Selenium's runner) | Mature (oldest ecosystem) | Highest (historical talent pool) | Mature but more flake-prone than Playwright: async-wait is the single largest flake category at 45% ([Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf)), and Selenium leaves that synchronization manual. Migration target, not greenfield default. |
 | **TestCafe** | All browsers; proxy-based (no WebDriver) | Mobile via emulators | JS / TS | Moderate | Smaller ecosystem | Lower | Niche; integrated runner. |
 | **Puppeteer** | Chromium-only natively (Firefox via experimental) | Limited | JS / TS | Good | Smaller than Playwright | Lower | Mostly superseded by Playwright (the team that built Puppeteer started Playwright). |
 
@@ -184,7 +184,7 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 |---|---|---|
 | Picking the framework before the NFRs are scored | Choice driven by hype, not fit; high migration cost when the wrong framework can't deliver. | Step 1 - score the NFRs first. |
 | Standardising on one framework across every test layer | Different layers need different tools (Playwright for E2E ≠ k6 for perf ≠ Pact for contract). | Pick per layer; the stack is multiple frameworks. |
-| Picking Selenium for greenfield in 2026 | Selenium's WebDriver-based async-wait model is the dominant flake cause per [TestDino 2026](https://testdino.com/blog/flaky-test-benchmark). | Use Playwright for greenfield; reserve Selenium for legacy maintenance. |
+| Picking Selenium for greenfield in 2026 | Manual async-wait is the dominant flake category at 45% ([Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf)), and Selenium does not auto-wait. | Use Playwright for greenfield; reserve Selenium for legacy maintenance. |
 | Cross-language teams picking a single-language framework | Engineers can't contribute; suite becomes one person's domain. | Either pick a multi-language framework (Playwright / Selenium) or commit to retraining. |
 | Adopting a framework because a contractor used it | Contractor leaves; team can't maintain. | Hire-ability is an NFR. |
 | Skipping the directory-layout convention | Every newcomer authoring tests in a different shape; review burden grows. | Step 4 - pick a canonical layout up front, even if you deviate later. |
@@ -213,7 +213,8 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 - Cypress documentation: https://docs.cypress.io/
 - WebdriverIO documentation: https://webdriver.io/
 - Martin Fowler - Page Object pattern (canonical definition): https://martinfowler.com/bliki/PageObject.html
-- TestDino Flaky Test Benchmark 2026 - Selenium → Playwright migration data (50% fewer flakes); 45% async-wait root-cause share: https://testdino.com/blog/flaky-test-benchmark
+- Luo et al., "An Empirical Analysis of Flaky Tests" (FSE 2014) - async-wait is the largest flake category (45%), the class Selenium leaves to manual synchronization: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
+- Playwright actionability docs - built-in auto-waiting and auto-retrying assertions that remove a major Selenium flake source: https://playwright.dev/docs/actionability
 - Capgemini World Quality Report 2025-26 - 37% cite integration friction as the dominant AI-in-testing blocker (justifies why this is decision-support, not auto-scaffolding): https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/
 - ISTQB glossary - test automation framework: https://glossary.istqb.org/en_US/term/test-automation-framework
 - ISTQB glossary - keyword-driven testing (relevant to Karate / Postman DSL choice): https://glossary.istqb.org/en_US/term/keyword-driven-testing

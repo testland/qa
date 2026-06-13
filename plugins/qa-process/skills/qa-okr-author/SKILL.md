@@ -75,7 +75,7 @@ Anchored on [`test-run-summary-author`](../../../qa-test-reporting/skills/test-r
 
 ### Shape 4 - Reduce flake-budget consumption
 
-Anchored on [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md) + [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). Used when flake rate is above the team's tolerance ([TestDino 2026 baseline](https://testdino.com/blog/flaky-test-benchmark) - flake rates rose from 10% in 2022 to 26% in 2025; targets below 5% are aspirational; <10% is committed).
+Anchored on [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md) + [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). Used when flake rate is above the team's tolerance (flakiness is widespread and well-documented: about 16% of tests at Google show some flakiness per the [Google Testing Blog](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html); for KR targets, below 5% is aspirational and under 10% is a reasonable committed bar).
 
 | KR axis | Example KR | Baseline source |
 |---|---|---|
@@ -263,7 +263,7 @@ Output:
 - ISTQB glossary - quality goal: https://glossary.istqb.org/en_US/term/quality-goal
 - ISTQB glossary - defect density (canonical metric for Shape 2 KRs): https://glossary.istqb.org/en_US/term/defect-density
 - ISTQB glossary - escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
-- TestDino Flaky Test Benchmark 2026 - flake rate baselines for Shape 4 KRs (10% in 2022 → 26% in 2025; <5% aspirational, <10% committed): https://testdino.com/blog/flaky-test-benchmark
+- Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - flake-prevalence baseline for Shape 4 KRs (about 16% of tests show some flakiness): https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 - PractiTest 2026 State of Testing Report - manager-tier survey; 19.9% of teams use AI for risk identification (cited in Shape 2 rationale): https://www.practitest.com/state-of-testing/
 - [`test-strategy-author`](../test-strategy-author/SKILL.md), [`risk-matrix`](../risk-matrix/SKILL.md), [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md), [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md), [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling skills in the same plugin that feed inputs.
 - [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md), [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md), [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md), [`compliance-readiness-reviewer`](../../../qa-compliance/agents/compliance-readiness-reviewer.md), [`mttr-mtbf-tracker`](../../../qa-resilience-drills/skills/mttr-mtbf-tracker/SKILL.md) - cross-plugin baseline-source skills.
