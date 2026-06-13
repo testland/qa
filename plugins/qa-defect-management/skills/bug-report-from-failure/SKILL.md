@@ -1,6 +1,6 @@
 ---
 name: bug-report-from-failure
-description: "Build-an-X workflow that turns a test failure record (JUnit XML, Allure JSON, pytest --tb=short, Playwright HTML report, Cypress mocha-junit) into a structured bug report ready to file via jira/linear/github-issues-bug-workflow runners. Extracts test name, failure assertion, stack trace, environment, screenshots/video artefacts, and reproduces classification fields (severity proposal, defect type per IEEE 1044, root cause hypothesis per ISTQB CTAL-TA). Output is a tracker-agnostic JSON spec the platform runner consumes. Distinct from qa-bug-repro/bug-report-from-recording (screen-recording-driven); this is failure-record-driven."
+description: "On-demand builder that converts a SINGLE test failure record (JUnit XML, Allure JSON, pytest --tb=short, Playwright HTML, Cypress mocha-junit) into a structured, tracker-agnostic bug SPEC: extracts test name, assertion, stack trace, environment, and artefacts, and proposes severity, defect type (IEEE 1044), and a root-cause hypothesis (ISTQB CTAL-TA), then hands the JSON spec to a jira/linear/github-issues-bug-workflow runner to file. Use when you already hold a failure artefact and want one classified, ready-to-file report. Distinct from ci-defect-filer (the event-driven CI orchestrator that triggers automatically on a pipeline failure and files in bulk) and from qa-bug-repro/bug-report-from-recording (screen-recording-driven); this is the on-demand, single-record spec builder."
 rating: 22
 d6: 4
 ---
