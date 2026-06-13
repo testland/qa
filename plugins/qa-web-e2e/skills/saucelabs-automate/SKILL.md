@@ -1,6 +1,6 @@
 ---
 name: saucelabs-automate
-description: "Author and run E2E tests on Sauce Labs - cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers SAUCE_USERNAME + SAUCE_ACCESS_KEY auth, regional hub URLs (us-west-1 / eu-central-1), W3C capabilities, sauce:options dict (build, name, screenResolution, tunnelName), Sauce Connect Proxy for internal-environment testing. Use for cross-browser regression with Sauce Labs as the cloud grid; complements BrowserStack + LambdaTest as alternative providers."
+description: "Author and run E2E tests on Sauce Labs - cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and Appium support. Covers SAUCE_USERNAME + SAUCE_ACCESS_KEY auth, regional hub URLs (us-west-1 / us-east-4 / eu-central-1), W3C capabilities, sauce:options dict (build, name, screenResolution, tunnelName), Sauce Connect Proxy for internal-environment testing. Use for cross-browser regression with Sauce Labs as the cloud grid; complements BrowserStack + LambdaTest as alternative providers."
 rating: 23
 d6: 4
 ---
@@ -104,27 +104,29 @@ release cycles.
 import os
 from selenium import webdriver
 
-caps = {
-    "browserName": "firefox",
-    "browserVersion": "latest",
-    "platformName": "Windows 11",
-    "sauce:options": {
-        "build": os.environ.get("BUILD_TAG", "local"),
-        "name": "Checkout flow Firefox",
-        "username": os.environ["SAUCE_USERNAME"],
-        "accessKey": os.environ["SAUCE_ACCESS_KEY"],
-        "screenResolution": "1920x1080",
-        "extendedDebugging": True,
-    },
+options = webdriver.FirefoxOptions()
+options.browser_version = "latest"
+options.platform_name = "Windows 11"
+
+sauce_options = {
+    "build": os.environ.get("BUILD_TAG", "local"),
+    "name": "Checkout flow Firefox",
+    "username": os.environ["SAUCE_USERNAME"],
+    "accessKey": os.environ["SAUCE_ACCESS_KEY"],
+    "screenResolution": "1920x1080",
+    "extendedDebugging": True,
 }
+
+# Set vendor caps on the Options object BEFORE creating the driver. In
+# Selenium 4 W3C mode driver.capabilities is a read-only result dict, so
+# assigning to it after Remote() is a no-op and sauce:options never applies
+# (per the [Selenium options] docs).
+options.set_capability("sauce:options", sauce_options)
 
 driver = webdriver.Remote(
     command_executor="https://ondemand.us-west-1.saucelabs.com:443/wd/hub",
-    options=webdriver.FirefoxOptions(),
+    options=options,
 )
-# apply caps
-for k, v in caps.items():
-    driver.capabilities[k] = v
 
 driver.get("https://example.com")
 # test...
@@ -166,8 +168,9 @@ For ephemeral CI: spawn → wait-for-ready → run tests → terminate.
 
 ### Parallel session limits
 
-Same as BrowserStack - plan tiers limit concurrent sessions.
-Throttle via `ThreadPoolExecutor` or CI-matrix `max-parallel`.
+Sauce plans cap concurrent (parallel) sessions by tier; throttle to
+stay under your account's limit via `ThreadPoolExecutor` or the
+CI-matrix `max-parallel` key.
 
 ## Parsing results
 
@@ -201,7 +204,7 @@ jobs:
           - { name: safari, version: "17", platform: "macOS 14" }
           - { name: edge, version: latest, platform: "Windows 11" }
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Run on Sauce Labs
         env:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
@@ -246,6 +249,8 @@ jobs:
   docs.saucelabs.com/dev/api.
 - W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
+- [Selenium options] - Selenium 4 browser-options classes;
+  `set_capability` for vendor-prefixed caps before driver creation.
 - Composes:
   [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).
 - Sibling skills:
@@ -254,3 +259,5 @@ jobs:
   [`selenium-grid-4-runner`](../../../qa-compatibility/skills/selenium-grid-4-runner/SKILL.md).
 - Routed by:
   [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md).
+
+[Selenium options]: https://www.selenium.dev/documentation/webdriver/drivers/options/

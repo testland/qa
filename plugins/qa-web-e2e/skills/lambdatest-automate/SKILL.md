@@ -95,28 +95,31 @@ https://hub.lambdatest.com/wd/hub
 import os
 from selenium import webdriver
 
-caps = {
-    "browserName": "Edge",
-    "browserVersion": "latest",
-    "platformName": "Windows 11",
-    "LT:Options": {
-        "user": os.environ["LT_USERNAME"],
-        "accessKey": os.environ["LT_ACCESS_KEY"],
-        "build": os.environ.get("BUILD_TAG", "local"),
-        "name": "Checkout on Edge",
-        "project": "my-app",
-        "console": "errors",
-        "network": True,
-        "video": True,
-    },
+options = webdriver.EdgeOptions()
+options.browser_version = "latest"
+options.platform_name = "Windows 11"
+
+lt_options = {
+    "user": os.environ["LT_USERNAME"],
+    "accessKey": os.environ["LT_ACCESS_KEY"],
+    "build": os.environ.get("BUILD_TAG", "local"),
+    "name": "Checkout on Edge",
+    "project": "my-app",
+    "console": "errors",
+    "network": True,
+    "video": True,
 }
+
+# Set vendor caps on the Options object BEFORE creating the driver. In
+# Selenium 4 W3C mode driver.capabilities is a read-only result dict, so
+# assigning to it after Remote() is a no-op and LT:Options never applies
+# (per the [Selenium options] docs).
+options.set_capability("LT:Options", lt_options)
 
 driver = webdriver.Remote(
     command_executor="https://hub.lambdatest.com/wd/hub",
-    options=webdriver.EdgeOptions(),
+    options=options,
 )
-for k, v in caps.items():
-    driver.capabilities[k] = v
 
 driver.get("https://example.com")
 # test...
@@ -191,7 +194,7 @@ jobs:
           - { name: Firefox, version: latest, platform: "Windows 11" }
           - { name: Safari, version: "17", platform: "macOS Sonoma" }
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Run on LambdaTest
         env:
           LT_USERNAME: ${{ secrets.LT_USERNAME }}
@@ -237,6 +240,8 @@ jobs:
   lambdatest.com/support/docs/lambda-tunnel.
 - W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
+- [Selenium options] - Selenium 4 browser-options classes;
+  `set_capability` for vendor-prefixed caps before driver creation.
 - Composes:
   [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).
 - Sibling skills:
@@ -245,3 +250,5 @@ jobs:
   [`selenium-grid-4-runner`](../../../qa-compatibility/skills/selenium-grid-4-runner/SKILL.md).
 - Routed by:
   [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md).
+
+[Selenium options]: https://www.selenium.dev/documentation/webdriver/drivers/options/
