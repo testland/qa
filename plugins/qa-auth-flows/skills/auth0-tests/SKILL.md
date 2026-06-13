@@ -1,6 +1,6 @@
 ---
 name: auth0-tests
-description: "Authors tests against Auth0 - uses tenant isolation strategy (per-PR tenant or shared dev tenant with namespaced data); exercises Universal Login + auth-code-with-PKCE + client-credentials + RO-password (legacy) flows; tests Action scripts (Auth0's serverless extension hooks); tests Rules / Hooks (deprecated but still common); integrates with Auth0 Deploy CLI (`a0deploy`) for environment parity. Use when the user works with Auth0 SaaS and needs unit / integration tests for tenant config, auth flows, or Action scripts."
+description: "Authors tests against Auth0 - uses tenant isolation strategy (per-PR tenant or shared dev tenant with namespaced data); exercises Universal Login + auth-code-with-PKCE + client-credentials + RO-password (legacy) flows; tests Action scripts (Auth0's serverless extension hooks); tests Rules / Hooks (deprecated but still common); integrates with Auth0 Deploy CLI (`a0deploy`) for environment parity. Use when the user works with Auth0 SaaS and needs unit / integration tests for tenant config, auth flows, or Action scripts. Does not cover session lifecycle (refresh-token rotation, silent re-auth): use session-management-test-author for that. Differentiates from oauth-flow-test-author by Auth0-tenant specifics: Action scripts, Rules / Hooks, a0deploy config-drift, and Universal Login."
 rating: 22
 d6: 4
 ---

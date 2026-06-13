@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-auth-flows",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Auth flow testing: 5 skills (keycloak-tests, auth0-tests, okta-tests, oauth-flow-test-author, session-management-test-author).",
   "author": {
     "name": "testland",
