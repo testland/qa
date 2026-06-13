@@ -1,6 +1,6 @@
 ---
 name: amplitude-experiment-test
-description: "Wraps Amplitude Experiment SDK testing patterns: client initialization with API key (or local-flags JSON), the fetch / variant API, exposure-event suppression in tests, and assignment-integrity tests. Use when writing tests for code that uses Amplitude Experiment for A/B testing or flag management. Composes guardrail-metrics-reference + peeking-problem-reference + ab-test-validity-checklist."
+description: "Wraps Amplitude Experiment SDK testing patterns: client initialization with API key (or a bootstrapped local flag config for offline tests), the fetch / variant API, exposure-event suppression in tests, and assignment-integrity tests. Use when writing tests for code that uses Amplitude Experiment for A/B testing or flag management. Composes guardrail-metrics-reference + peeking-problem-reference + ab-test-validity-checklist."
 rating: 21
 d6: 4
 ---
@@ -47,27 +47,34 @@ const client = Experiment.Experiment.initializeRemote(API_KEY, {
 });
 ```
 
-For fully-offline tests, use the **local evaluation** mode with a
-flags snapshot:
+For fully-offline tests, use the **local evaluation** mode and seed the
+flag config via the `bootstrap` option. Per the
+[local-evaluation docs](https://amplitude.com/docs/experiment/general/evaluation/local-evaluation),
+`start()` takes no arguments and always performs an initial network fetch
+(it throws offline and would clear a bootstrapped cache), so do NOT call it
+for a no-network test: `bootstrap` populates the cache in the constructor.
 
 ```typescript
 import { LocalEvaluationClient } from '@amplitude/experiment-node-server';
+import { readFileSync } from 'fs';
+
+// Commit the flag config the flags endpoint would return, keyed by flag key.
+const flagFixture = JSON.parse(readFileSync('fixtures/flags.json', 'utf8'));
 
 const localClient = new LocalEvaluationClient(API_KEY, {
-  flagConfigPollerIntervalMillis: 0,   // No polling in tests
+  bootstrap: flagFixture,   // seeds the cache; no start() / no network
 });
-
-// Or provide flags directly via the local-evaluation-config fixture
-await localClient.start(localFlagConfigJson);
 ```
 
-### Fetch + read variant
+### Read variant (offline, synchronous)
+
+`evaluateV2` reads straight from the bootstrapped cache, no fetch required:
 
 ```typescript
 const user = { user_id: 'user-1', device_id: 'dev-1' };
 
-test('user variant from local eval', async () => {
-  const variants = localClient.evaluate(user);
+test('user variant from local eval', () => {
+  const variants = localClient.evaluateV2(user);
   expect(variants['checkout-experiment'].value).toBe('treatment-a');
 });
 ```
@@ -83,11 +90,11 @@ modifying the local-eval fixture. Alternatively, mock the
 import { jest } from '@jest/globals';
 
 test('user in treatment', () => {
-  jest.spyOn(localClient, 'evaluate').mockReturnValue({
+  jest.spyOn(localClient, 'evaluateV2').mockReturnValue({
     'checkout-experiment': { value: 'treatment-a' } as any,
   });
 
-  const variants = localClient.evaluate(user);
+  const variants = localClient.evaluateV2(user);
   expect(variants['checkout-experiment'].value).toBe('treatment-a');
 });
 ```
@@ -110,8 +117,8 @@ const client = Experiment.Experiment.initializeRemote(API_KEY, {
 
 ```typescript
 test('deterministic assignment', () => {
-  const v1 = localClient.evaluate({ user_id: 'user-1' });
-  const v2 = localClient.evaluate({ user_id: 'user-1' });
+  const v1 = localClient.evaluateV2({ user_id: 'user-1' });
+  const v2 = localClient.evaluateV2({ user_id: 'user-1' });
   expect(v1).toEqual(v2);
 });
 ```
@@ -129,7 +136,7 @@ jobs:
   amplitude-experiment-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
       - run: npm ci
       - run: npm test
