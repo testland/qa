@@ -16,7 +16,7 @@ This skill is a **pure reference** - no execution steps. It is the catalog the [
 ## When to use
 
 - Designing a new framework - pick the fixture scope and isolation strategy.
-- Auditing an existing framework where flake-rate is rising (per [TestDino 2026](https://testdino.com/blog/flaky-test-benchmark), flake rates rose from 10% in 2022 to 26% in 2025 - broken isolation is the dominant cause).
+- Auditing an existing framework where flake-rate is rising (broken isolation drives the concurrency and test-order-dependency flake categories, together about a third of flakes per [Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf)).
 - Migrating from sequential to parallel execution - the parallel-safety patterns become load-bearing.
 - Refactoring fixture inheritance chains - apply the cleanup-discipline patterns.
 
@@ -125,7 +125,7 @@ Use SQLite in-memory instead of the production DB engine. Fast; works for simple
 
 ## Pattern 5 - Parallel safety
 
-**Canonical source:** [Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html) on isolation as the parallel-safety prerequisite + [TestDino 2026 flake benchmark](https://testdino.com/blog/flaky-test-benchmark) which attributes 20% of flakes to "concurrency problems: race conditions and deadlocks" (after Luo et al. FSE 2014).
+**Canonical source:** [Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html) on isolation as the parallel-safety prerequisite, plus [Luo et al. FSE 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf), which attributes 20% of flakes to concurrency problems (race conditions and deadlocks).
 
 Parallel execution magnifies every isolation bug. The patterns that make parallel safe:
 
@@ -146,7 +146,7 @@ Parallel execution magnifies every isolation bug. The patterns that make paralle
 | Hard-coded port 3000 in tests (port collisions) | First worker binds; others fail |
 | Tests writing to `/tmp/test.log` (path collision) | Workers stomp each other's files |
 | Test-name-based DB seeding (collides across workers if names overlap) | Cross-worker state pollution |
-| Per-test setup that does `setTimeout` / `sleep` to "let things settle" | Flake source per [TestDino 2026 §async-wait - 45% of flakes](https://testdino.com/blog/flaky-test-benchmark); use proper event-based synchronisation |
+| Per-test setup that does `setTimeout` / `sleep` to "let things settle" | Flake source: async-wait is the largest flake category at 45% per [Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf); use proper event-based synchronisation |
 
 ## Pattern 6 - Cleanup discipline
 
@@ -196,7 +196,7 @@ Tests should not depend on external services they don't control. Three patterns:
 | Anti-pattern | Why it fails |
 |---|---|
 | Implicit ordering (test B depends on test A's side effects) | Per [Fowler](https://martinfowler.com/articles/nonDeterminism.html): "isolation… gives you more flexibility in running subsets of tests and parallelizing tests." Ordering breaks both. |
-| Tests that "sleep until it works" | Timing-fragile; 45% of all flakes per [TestDino 2026](https://testdino.com/blog/flaky-test-benchmark) |
+| Tests that "sleep until it works" | Timing-fragile; async-wait is 45% of all flakes per [Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf) |
 | Tests that read system time without overrides | Tests fail at midnight / DST / leap year |
 | Tests that read random data without seeding | Non-reproducible failures |
 | Tests that depend on file-system layout | OS / CI-runner-specific failures |
@@ -232,8 +232,8 @@ Tests should not depend on external services they don't control. Three patterns:
 - Martin Fowler - *Practical Test Pyramid* (cited for the in-memory-substitution anti-pattern): https://martinfowler.com/articles/practical-test-pyramid.html
 - Gerard Meszaros - *xUnit Test Patterns: Refactoring Test Code* (2007) - the canonical reference for the four-phase test pattern and all named fixture / teardown patterns: ISBN 978-0131495050.
 - Wikipedia - *Test fixture* (cites Meszaros's four-phase pattern): https://en.wikipedia.org/wiki/Test_fixture
-- TestDino Flaky Test Benchmark 2026 - flake rate trend (10% → 26%) and root-cause breakdown (45% async-wait, 20% concurrency, 12% order-dependent, 8% resource leaks) which this catalog's patterns prevent: https://testdino.com/blog/flaky-test-benchmark
-- Luo et al. (FSE 2014) - *An Empirical Analysis of Flaky Tests* (the original academic taxonomy of flake categories cited in TestDino): https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
+- Luo et al. (FSE 2014) - *An Empirical Analysis of Flaky Tests* (the original academic taxonomy of flake categories: 45% async-wait, 20% concurrency, 12% test-order-dependency, from 201 fixes across 51 projects) which this catalog's patterns prevent: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
+- Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - flake prevalence (about 16% of tests show some flakiness): https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 - Testcontainers - https://testcontainers.com/ (the canonical containerised-DB-per-test reference)
 - ISTQB glossary - test isolation: https://glossary.istqb.org/en_US/term/independent-testing
 - ISTQB glossary - test fixture: https://glossary.istqb.org/en_US/term/test-fixture

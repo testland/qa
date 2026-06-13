@@ -106,7 +106,7 @@ Detection: classify each file's naming pattern; if the suite uses more than one 
 
 ### §A6 - Retry / wait convention consistency
 
-Per the [TestDino 2026 flake benchmark](https://testdino.com/blog/flaky-test-benchmark), 45% of flakes are async-wait issues. Inconsistent retry / wait policies are the proximate cause. The audit flags:
+Per [Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf), async-wait is the largest flake category at 45%. Inconsistent retry / wait policies are the proximate cause. The audit flags:
 
 - Hardcoded sleeps (`setTimeout`, `cy.wait(2000)`, `page.waitForTimeout`) - these are the #1 flake source per [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md). Each instance flagged.
 - Wait-timeout inconsistency: some calls use 5s, others 30s, others framework default - flag if 3+ distinct timeouts in the codebase.
@@ -130,7 +130,7 @@ Walk the CI config (`*.yml`, `playwright.config.ts`, `cypress.config.ts`, `wdio.
 
 - **Parallel sharding configured**: Playwright `--shard`, Cypress Cloud parallelisation, WDIO `maxInstances` - wall-clock should be <10min per shard.
 - **Traces / videos on first retry**: storage-efficient, debug-effective. Off for green runs.
-- **Retry policy explicit**: `retries: 1` (CI only) is the [TestDino 2026 default](https://testdino.com/blog/flaky-test-benchmark).
+- **Retry policy explicit**: enabling a small retry count on CI only (e.g. `retries: 1`) is standard practice, per the [Playwright test-retries docs](https://playwright.dev/docs/test-retries).
 - **Secrets via CI secret store**: no hardcoded API keys.
 - **JUnit XML output**: for the CI's test-result panel.
 - **Per-(browser, environment) job split**: one job per matrix cell; not mixed.
@@ -249,7 +249,8 @@ The agent **refuses** to:
 ## References
 
 - Martin Fowler - Page Object pattern (canonical definition; POM purity rule, navigation return-shape rule): https://martinfowler.com/bliki/PageObject.html
-- TestDino Flaky Test Benchmark 2026 - 45% of flakes are async-wait; hardcoded sleeps are the dominant pattern: https://testdino.com/blog/flaky-test-benchmark
+- Luo et al., "An Empirical Analysis of Flaky Tests" (FSE 2014) - async-wait is the largest flake category (45%); hardcoded sleeps are the dominant anti-pattern: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
+- Playwright test-retries docs - CI retry-policy convention: https://playwright.dev/docs/test-retries
 - Capgemini World Quality Report 2025-26 - framework integration friction as the dominant AI-in-testing blocker (37%): https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/
 - ISTQB glossary - test automation framework: https://glossary.istqb.org/en_US/term/test-automation-framework
 - ISO/IEC/IEEE 29119-5:2016 - Keyword-driven testing (relevant to POM and abstraction-layer audits; cite by stable ID).
