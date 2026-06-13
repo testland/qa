@@ -1,6 +1,6 @@
 ---
 name: cypress-testing
-description: "Authors Cypress E2E tests - `npm install cypress`, `cypress.config.ts` setup, `cy.*` command chains, automatic-waiting commands, time-travel debugger via Cypress GUI, custom commands for reusable patterns, Cypress Cloud for parallel/recording. Per Cypress''''s positioning: \"fast, consistent and reliable tests that are flake-free\" via in-browser execution architecture."
+description: "Authors and improves Cypress E2E tests - installs Cypress, configures `cypress.config.ts`, authors `cy.*` command chains, refactors existing specs (`cy.wait(ms)` sleeps into assertions, repeated flows into `cy.session` custom commands), and debugs with the time-travel GUI; Cypress Cloud for parallel runs and recording. Use for both greenfield test authoring and improving hand-written specs already in the codebase. For automated refactor of raw Cypress Studio recordings specifically, see cypress-codegen-reviewer."
 rating: 23
 d6: 4
 ---

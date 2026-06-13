@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: "Authors Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` projects per browser/device, accessibility-first locators (`getByRole`/`getByLabelText` per the e2e-selector convention), Page Object pattern, trace viewer for debugging, parallel + sharded execution, HTML reporter for CI. Per Playwright''''s docs: \"an end-to-end test framework for modern web apps. It bundles test runner, assertions, isolation, parallelization and rich tooling."
+description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, and CI setup; for reviewing codegen output specifically, see playwright-codegen-reviewer."
 rating: 24
 d6: 4
 ---
