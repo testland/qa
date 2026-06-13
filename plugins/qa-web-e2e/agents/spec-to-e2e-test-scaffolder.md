@@ -49,7 +49,7 @@ The scaffolder selects the **correct test-layer construct** per framework and th
 | **Selenium** | `it(...)` (Mocha) or `@Test` (JUnit) | `By.cssSelector('[data-testid=…]')` - flag as inferior to accessibility locators | `assertEquals(...)` after explicit fetch |
 | **WebdriverIO** | `it('<title>', async () => …)` | `$('aria/Add to cart')` or `$('=Add to cart')` accessibility/text locators | `expect(elem).toHaveText(...)` |
 
-For Selenium specifically, the agent emits a comment recommending Playwright or WebdriverIO for new code, citing the [TestDino flake benchmark](https://testdino.com/blog/flaky-test-benchmark) ("50% fewer flaky tests" on Selenium → Playwright migrations).
+For Selenium specifically, the agent emits a comment recommending Playwright or WebdriverIO for new code, because their auto-waiting and accessibility-first locators avoid the manual-wait synchronization and CSS/XPath drift that make Selenium suites flaky (per the [Playwright locators docs](https://playwright.dev/docs/locators), which flag CSS/XPath as a bad practice that leads to unstable tests).
 
 ## Step 3 - Emit the scaffold
 
@@ -88,9 +88,10 @@ test.describe('CART-142 — Add to cart', () => {
       .getByRole('button', { name: 'Add to cart' }) /* TODO: confirm accessible name with live UI */
       .click();
 
-    // Assert — TODO: replace selectors when run against the live UI.
-    await expect(page.getByTestId('cart-count')).toHaveText('1');
-    await expect(page.getByTestId('cart-line-SKU-001')).toBeVisible();
+    // Assert — these data-testid values are placeholders the agent did NOT
+    // derive from the spec; confirm each against the live DOM before running.
+    await expect(page.getByTestId('cart-count') /* TODO: confirm data-testid */).toHaveText('1');
+    await expect(page.getByTestId('cart-line-SKU-001') /* TODO: confirm data-testid */).toBeVisible();
   });
 });
 
@@ -108,7 +109,7 @@ Not a recorder. For unresolved `TODO`s, emits `npx playwright codegen <base-url>
 The agent **refuses** to:
 
 - Invent selectors when the description names no role / test-id / label - emits `TODO`, never guesses.
-- Write Selenium scaffolds for greenfield projects without the "consider Playwright/WDIO" comment (TestDino: CSS/XPath drift is the dominant flake source).
+- Write Selenium scaffolds for greenfield projects without the "consider Playwright/WDIO" comment (CSS/XPath locator drift is a dominant flake source, which [Playwright](https://playwright.dev/docs/locators) flags as a bad practice).
 - Generate a "passing" smoke assertion (`expect(true).toBe(true)`) when `Expected` is missing. Halt and request the field.
 - Skip the hand-off comment block - the scaffold is explicitly non-final.
 - Produce more than one `it` / `test` per test-case row.
@@ -118,7 +119,7 @@ The agent **refuses** to:
 | Anti-pattern | Fix |
 |---|---|
 | Inventing `data-testid` values that don't exist | Always `TODO` for unconfirmed selectors |
-| Defaulting to CSS / XPath when role / name is derivable ([TestDino 2026](https://testdino.com/blog/flaky-test-benchmark) flake source) | `getByRole` first; `getByTestId` only when role is ambiguous |
+| Defaulting to CSS / XPath when role / name is derivable ([Playwright](https://playwright.dev/docs/locators) flags CSS/XPath as an unstable-locator practice) | `getByRole` first; `getByTestId` only when role is ambiguous |
 | `try { … } catch { /* swallow */ }` around the test body | Never emit suppressing catch blocks |
 | One mega-test exercising five cases | One test per case; group via `describe` |
 | Auto-running the scaffold and reporting "passes" | Hand-off block makes "run once" the human's first step |
@@ -145,5 +146,5 @@ The agent **refuses** to:
 - Playwright codegen: https://playwright.dev/docs/codegen
 - Cypress Testing Library: https://testing-library.com/docs/cypress-testing-library/intro/
 - WebdriverIO Selectors: https://webdriver.io/docs/selectors
-- TestDino Flaky Test Benchmark 2026 (50% fewer flakes on Selenium → Playwright migrations): https://testdino.com/blog/flaky-test-benchmark
+- Luo et al., "An Empirical Analysis of Flaky Tests" (FSE 2014) - async-wait (45%) and order/concurrency are the dominant flake categories that auto-waiting and accessibility-first locators mitigate: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
 - Preloaded skills: [`playwright-testing`](../skills/playwright-testing/SKILL.md), [`cypress-testing`](../skills/cypress-testing/SKILL.md), [`selenium-testing`](../skills/selenium-testing/SKILL.md), [`webdriverio-testing`](../skills/webdriverio-testing/SKILL.md).
