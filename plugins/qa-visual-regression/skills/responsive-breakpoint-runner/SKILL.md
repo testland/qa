@@ -1,6 +1,6 @@
 ---
 name: responsive-breakpoint-runner
-description: "Dispatches a single conceptual visual run across a viewport matrix using whichever engine the project has configured (Percy, Chromatic, Playwright snapshots, Storybook test-runner). Routes per-engine viewport syntax, runs each, aggregates the results into one cross-breakpoint report. Use when a project ships responsive UI and the breakpoint matrix is large enough to need a unifying entry point."
+description: "Produces a single breakpoint-matrix report (rows = pages/stories, columns = viewports) across Percy, Chromatic, Playwright snapshots, or Storybook test-runner. Routes per-engine viewport syntax, runs each, and aggregates the results into one cross-breakpoint view. Use when the team needs one unified pass/fail view across three or more viewport widths instead of separate per-engine or per-breakpoint reports. The matrix-view output is the distinguishing trait: it dispatches to playwright-snapshots (and the other engines) rather than replacing any single-engine skill."
 rating: 23
 d6: 3
 ---

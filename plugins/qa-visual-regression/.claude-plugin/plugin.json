@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-visual-regression",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Visual regression testing: 7 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots, storybook-visual-regression-testing, responsive-breakpoint-runner, visual-baseline-conventions, visual-baseline-gate) and 2 agents (visual-diff-classifier, visual-baseline-curator).",
   "author": {
     "name": "testland",

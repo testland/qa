@@ -1,6 +1,6 @@
 ---
 name: visual-ci-gate-orchestrator
-description: "CI-enforcement orchestrator that aggregates per-diff judgements from visual-diff-classifier into a single pipeline BLOCK / REVIEW / OK verdict via the visual-baseline-gate skill. Use when a visual-regression build has completed and classified diffs are ready to be turned into a hard pass/fail merge-gate decision - closing the advisory-classifier to CI-gate path."
+description: "CI-enforcement agent that reads visual-classifications.json, applies the visual-baseline-gate decision rules, enforces author-cannot-self-approve, and writes visual-gate.json + visual-gate.md so the pipeline can exit non-zero on BLOCK. Use after visual-diff-classifier has finished and you need binding gate output files, not just the decision logic the skill provides."
 tools: "Read, Grep, Glob, Bash(jq *)"
 model: sonnet
 skills:
