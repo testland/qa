@@ -1,8 +1,8 @@
 ---
 name: mull-mutation
-description: "Configures Mull for mutation testing of C / C++ (and via LLVM IR, Swift / Rust to a lesser extent) - LLVM-based, requires building the project with Mull-compatible LLVM toolchain, runs via `mull-runner` against the test binary. Use when a C/C++ project needs mutation-quality verification - the canonical native-language LLVM-IR-level mutation tool."
-rating: 22
-d6: 3
+description: "Runs Mull, the LLVM-IR mutation testing tool, against C/C++ test binaries built with Clang: covers install (the version-matched mull-NN package), the -fpass-plugin build flags for the Mull IR frontend, mull-runner invocation, the mutator catalog, path filtering, and GitHub Actions CI. Use when a C or C++ project needs mutation-score verification with the tool already chosen. Does not select among mutation tools (use mutation-tool-selector for that) and does not cover other languages (stryker-mutation for JS/TS, stryker-net-mutation for .NET, pitest-mutation for the JVM, mutmut-mutation for Python)."
+rating: 23
+d6: 4
 ---
 
 # mull-mutation
@@ -38,25 +38,35 @@ Mutation Testing Based on LLVM" (2018), Denisov & Pankevich.
 
 ## Step 1 - Install
 
-```bash
-# Linux / macOS — install via package or build from source per the README
-# Latest release per [mull-readme]: 0.33.0 (April 2026)
-brew install mull-project/mull/mull   # macOS
-# OR build from source via cmake (Linux)
-```
+Latest release per [mull-changelog]: 0.34.0 (May 2026). Mull ships as a
+version-matched package: `mull-19` bundles LLVM 19.1.7, and the suffix MUST
+match the Clang you compile with (plugin / ABI compatibility), per
+[mull-install].
 
-The CI route is typically `apt install mull` (Debian repos) or
-the released `.deb` / `.rpm` packages.
+```bash
+# Linux (Ubuntu/Debian): add the Mull apt repo, then install a version-matched
+# package alongside the matching clang.
+curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' | sudo -E bash
+sudo apt-get update && sudo apt-get install -y mull-19 clang-19
+
+# macOS
+brew install mull-project/mull/mull
+```
 
 ## Step 2 - Build the project for mutation
 
 Mull needs the test binary built with `-O0 -g` (no optimization,
-debug symbols) and Mull's LLVM pass:
+debug symbols) and the Mull IR frontend, which current Mull loads as a
+compiler plugin via `-fpass-plugin` (the old `-Xclang -load` legacy-pass
+approach is gone), per [mull-tutorial]. The plugin path is version-suffixed
+and must match the installed `mull-NN` package and the Clang version:
 
 ```bash
-# CMake-based project
-cmake -DCMAKE_C_FLAGS="-O0 -g -fexperimental-new-pass-manager -Xclang -load -Xclang $MULL_LIB" \
-      -DCMAKE_CXX_FLAGS="-O0 -g -fexperimental-new-pass-manager -Xclang -load -Xclang $MULL_LIB" \
+# CMake-based project. The "19" in the plugin path, the mull-19 package, and
+# clang-19 must all agree.
+cmake -DCMAKE_C_COMPILER=clang-19 -DCMAKE_CXX_COMPILER=clang-19 \
+      -DCMAKE_C_FLAGS="-O0 -g -grecord-command-line -fpass-plugin=/usr/lib/mull-ir-frontend-19" \
+      -DCMAKE_CXX_FLAGS="-O0 -g -grecord-command-line -fpass-plugin=/usr/lib/mull-ir-frontend-19" \
       -B build/
 
 cmake --build build/
@@ -69,7 +79,9 @@ to test which the test suite catches.
 ## Step 3 - Run
 
 ```bash
-mull-runner build/tests/MyTests --reporters json
+# The runner binary is version-suffixed too. The default IDE reporter prints
+# killed / survived mutants to the console (per [mull-cli]).
+mull-runner-19 build/tests/MyTests
 ```
 
 Output:
@@ -105,7 +117,7 @@ equivalent IR (no mutation possible) - Mull skips those silently.
 Mull accepts include / exclude path filters:
 
 ```bash
-mull-runner build/tests/MyTests \
+mull-runner-19 build/tests/MyTests \
   --include-path "src/checkout/*" \
   --exclude-path "third_party/*" \
   --exclude-path "tests/*"
@@ -117,36 +129,43 @@ meaningless.
 ## Step 6 - Reports
 
 ```bash
-mull-runner build/tests/MyTests --reporters json,html
+# Elements = interactive HTML report (mutation-testing-elements);
+# Sarif = machine-readable for GitHub Code Scanning. Per [mull-cli], pick
+# reporters by name and set the output dir / base name explicitly.
+mull-runner-19 build/tests/MyTests \
+  --reporters Elements,Sarif --report-dir ./mull-report --report-name results
 
-# Outputs:
-# mull-results.json
-# mull-results.html
+# Outputs under ./mull-report/ (results.html, results.sarif)
 ```
 
-The HTML report shows per-file mutation breakdown with line-level
-diffs; the JSON is machine-parseable for dashboards.
+The Elements report shows a per-file mutation breakdown; the Sarif output
+uploads to a code-scanning dashboard. Other reporters per [mull-cli]:
+`IDE` (console), `SQLite`, `GithubAnnotations`, `Patches`.
 
 ## Step 7 - CI integration
 
 ```yaml
 - run: |
-    sudo apt-get install -y mull-12   # adjust version per LLVM
-    cmake -B build/ -DCMAKE_BUILD_TYPE=Debug
+    curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' | sudo -E bash
+    sudo apt-get update && sudo apt-get install -y mull-19 clang-19
+    cmake -B build/ -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_C_COMPILER=clang-19 -DCMAKE_CXX_COMPILER=clang-19 \
+      -DCMAKE_C_FLAGS="-O0 -g -fpass-plugin=/usr/lib/mull-ir-frontend-19" \
+      -DCMAKE_CXX_FLAGS="-O0 -g -fpass-plugin=/usr/lib/mull-ir-frontend-19"
     cmake --build build/
-    mull-runner build/tests/MyTests --reporters json
+    mull-runner-19 build/tests/MyTests --reporters Sarif --report-dir ./mull-report --report-name results
 - uses: actions/upload-artifact@v4
   if: always()
   with:
     name: mull-results
-    path: mull-results.json
+    path: ./mull-report/
 ```
 
 For PR-incremental runs, scope to changed files:
 
 ```bash
 CHANGED=$(git diff --name-only origin/main...HEAD | grep -E '\.(c|cpp|h|hpp)$')
-mull-runner build/tests/MyTests --include-path "$(echo $CHANGED | tr ' ' ',')"
+mull-runner-19 build/tests/MyTests --include-path "$(echo $CHANGED | tr ' ' ',')"
 ```
 
 ## Anti-patterns
@@ -155,7 +174,7 @@ mull-runner build/tests/MyTests --include-path "$(echo $CHANGED | tr ' ' ',')"
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | Mutating Release builds                                                | Optimizer changes IR shape; mutators behave unpredictably.                | Build with `-O0 -g` (Step 2). |
 | Including `tests/` in mutation                                         | Mutates the tests; meaningless.                                          | Exclude tests path (Step 5). |
-| Mismatched LLVM versions (Mull built against LLVM 12 but project on LLVM 14) | Linker errors / ABI incompatibility.                                  | Match LLVM versions strictly. |
+| Mismatched LLVM versions (mull-19 plugin but compiled with clang-17) | Plugin load / ABI incompatibility.                                  | Match the suffix across package, plugin path, and clang (Step 2). |
 | Running on every PR                                                    | Slow; team disables.                                                      | Schedule + per-changed-file scope (Step 7). |
 | Setting an unrealistic mutation score gate                             | Forces low-value tests.                                                   | Start at current baseline. |
 
@@ -175,12 +194,21 @@ mull-runner build/tests/MyTests --include-path "$(echo $CHANGED | tr ' ' ',')"
 
 ## References
 
-- [mr][mr] - Mull README: LLVM-based, C/C++ primary, version
-  0.33.0, foundational 2018 paper "Mull It Over: Mutation Testing
-  Based on LLVM" (Denisov & Pankevich).
+- [mr][mr] - Mull README: LLVM-based, C/C++ primary, foundational
+  2018 paper "Mull It Over: Mutation Testing Based on LLVM"
+  (Denisov & Pankevich).
+- [mull-changelog] - release history (latest 0.34.0, May 2026).
+- [mull-install] - apt repo + version-matched `mull-NN` package.
+- [mull-tutorial] - `-fpass-plugin` build instrumentation.
+- [mull-cli] - `mull-runner` flags and reporter names.
 - [`stryker-mutation`](../stryker-mutation/SKILL.md),
   [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md),
   [`pitest-mutation`](../pitest-mutation/SKILL.md),
   [`mutmut-mutation`](../mutmut-mutation/SKILL.md) - 
   per-language siblings.
 - [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent for surviving-mutant analysis.
+
+[mull-changelog]: https://github.com/mull-project/mull/blob/main/CHANGELOG.md
+[mull-install]: https://mull.readthedocs.io/en/latest/Installation.html
+[mull-tutorial]: https://mull.readthedocs.io/en/latest/tutorials/HelloWorld.html
+[mull-cli]: https://mull.readthedocs.io/en/latest/CommandLineReference.html
