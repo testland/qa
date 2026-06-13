@@ -1,6 +1,6 @@
 ---
 name: testrail-case-management
-description: "Author and manage test cases in TestRail via REST API v2 - create cases, organise into suites + sections, update steps + expected results, bulk import from CSV/JSON, set automation status, link to references (Jira / requirements). Covers the Steps / Text / Exploratory templates, custom-field discovery (`get_case_fields`), and pagination on `get_cases`. Use for pre-execution case authoring and repository management. Distinct from qa-test-reporting/testrail-integration (post-execution result sync via add_results_for_cases)."
+description: "Author and manage test cases in TestRail via REST API v2 - create cases, organise into suites + sections, update steps + expected results, bulk import from CSV/JSON, set automation status, link to references (Jira / requirements). Covers the Steps / Text / Exploratory templates, custom-field discovery (`get_case_fields`), and pagination on `get_cases`. Use for pre-execution case authoring and repository management. Do NOT use for submitting test-run results (pass/fail, status updates): that is testrail-integration in qa-test-reporting. Distinct from qa-test-reporting/testrail-integration (post-execution result sync via add_results_for_cases)."
 rating: 24
 d6: 4
 ---
