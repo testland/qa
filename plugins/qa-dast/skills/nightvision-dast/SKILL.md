@@ -1,6 +1,6 @@
 ---
 name: nightvision-dast
-description: "Configures and runs NightVision - \"white-box-assisted Dynamic Application Security Testing (DAST) tool\" that \"analyzes code before simulating attacks and traces findings back to their origin\"; supports OpenAPI / Postman / GraphQL / web app + REST API targets; auth via Interactive Logins / Header & Cookie / TOTP; per-finding suppression via Alert Rules; CLI integration via `nightvision` command. Use when the team needs DAST that traces findings back to source code (white-box-assisted) on top of OWASP ZAP's pure black-box approach."
+description: "Configures and runs NightVision white-box-assisted DAST: analyzes source code before attacking, traces every finding to its origin line, and drives coverage from OpenAPI / Postman / GraphQL specs rather than crawling. Supports Header, Cookie, TOTP, and recorded Interactive Login auth; exports findings as SARIF for GitHub Code Scanning, plus JSON, CSV, or PDF. Per-finding suppression via Alert Rules; CLI integration via the `nightvision` command. Use when source-traceable findings and spec-driven request coverage matter, not just authenticated black-box scanning (see zap-authenticated-scans for that)."
 rating: 22
 d6: 4
 ---

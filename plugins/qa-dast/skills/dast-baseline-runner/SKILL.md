@@ -1,6 +1,6 @@
 ---
 name: dast-baseline-runner
-description: "Build-an-X for a layered DAST baseline workflow - ZAP baseline (passive, PR-blocking) → ZAP full-scan (active, nightly on staging) → optional Burp Pro deep scan (per-release, paid-tool deep coverage); manages baseline-finding ratchet, alert deduplication across runs, and CI cadence (PR-blocking baseline + nightly deep scan + per-release deep). Use when the team adopts DAST and needs an end-to-end coverage strategy beyond running a single tool."
+description: "Designs an end-to-end DAST cadence for teams adopting dynamic scanning: ZAP passive baseline (PR-blocking) then ZAP full active scan (nightly on staging) then optional Burp Pro deep scan (per-release). Handles the baseline-finding ratchet for legacy apps so pre-existing findings do not immediately block PRs, plus per-tool per-run deduplication and CI workflow YAML. Use when the team is setting up DAST from scratch or restructuring scan cadence, not when tools are already running and you need to merge their output (see dast-finding-triager for cross-tool aggregation of existing independent runs)."
 rating: 23
 d6: 4
 ---
