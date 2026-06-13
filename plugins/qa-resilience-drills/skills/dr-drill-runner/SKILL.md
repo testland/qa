@@ -1,6 +1,6 @@
 ---
 name: dr-drill-runner
-description: "Run scheduled DR drills - author the runbook (per-tier RTO + RPO), pre-drill checklist (data sync state, alert silencing, customer comms), drill workflow (announce → fail-over → verify → fail-back), post-drill report. Per Google Cloud DR planning guide; covers cold / warm / hot standby tier-specific patterns."
+description: "Author and execute a single DR drill for one service: author the runbook (per-tier RTO + RPO), pre-drill checklist (data sync state, alert silencing, customer comms), drill workflow (announce, fail-over, verify, fail-back) with timestamps, standby verification, failback, and an auditor-ready post-drill report. Per Google Cloud DR planning guide; covers cold / warm / hot standby tier-specific patterns. For coordinating drills across multiple services or teams, use dr-drill-orchestrator."
 type: skill
 rating: 22
 d6: 4
