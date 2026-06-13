@@ -67,9 +67,12 @@ def test_postgres_restore_time_under_rto():
     elapsed = time.time() - start
 
     RTO_BUDGET_SECONDS = 4 * 3600  # 4 hours
-    # Restore should be < 50% of total RTO budget (rest is provision + verify + cutover)
-    assert elapsed < RTO_BUDGET_SECONDS * 0.5, \
-        f"Restore took {elapsed:.0f}s; budget {RTO_BUDGET_SECONDS * 0.5:.0f}s"
+    # The 0.5 split (restore gets half the RTO, the rest goes to provision +
+    # verify + cutover) is a planning choice, NOT a standard. Set the fraction
+    # from your own per-segment RTO budget (Step 1).
+    RESTORE_SEGMENT_FRACTION = 0.5
+    budget = RTO_BUDGET_SECONDS * RESTORE_SEGMENT_FRACTION
+    assert elapsed < budget, f"Restore took {elapsed:.0f}s; budget {budget:.0f}s"
 ```
 
 Run weekly in CI; track trend.
@@ -92,7 +95,10 @@ def test_parallel_restore_faster_than_serial():
     parallel = run_restore(parallel_jobs=8)
 
     speedup = serial / parallel
-    assert speedup > 3.0, f"Parallel restore only {speedup:.1f}x faster — diminishing returns"
+    # 3.0x is an illustrative target; real speedup depends on I/O saturation,
+    # CPU count, and backup format. Set the expected ratio from your own
+    # measured serial-vs-parallel baseline rather than this placeholder.
+    assert speedup > 3.0, f"Parallel restore only {speedup:.1f}x faster"
 ```
 
 Find the sweet spot (often 4-8 jobs); past that, contention
@@ -103,23 +109,38 @@ diminishes returns.
 PITR = restore the database to an arbitrary point in the past
 (within retention). Restore time + WAL replay time:
 
+PITR recovers a **pre-existing** base backup *forward* to a target time by
+replaying archived WAL. It needs two things that must already exist before
+the restore: a base backup taken earlier and retained, and a continuous WAL
+archive covering the window up to the target. Do NOT call `pg_basebackup` at
+restore time: a backup taken "now" captures the present, leaving nothing
+earlier to recover to. Per the [PostgreSQL PITR docs]:
+
 ```python
 def test_pitr_to_5min_ago_under_30min():
     target_time = datetime.utcnow() - timedelta(minutes=5)
 
-    start = time.time()
-    subprocess.run([
-        "pg_basebackup", "-h", "prod-db", "-D", "/restore", "-Ft", "-z",
-    ], check=True)
-    subprocess.run([
-        "pg_ctl", "start", "-D", "/restore",
-        "-o", f"-c recovery_target_time='{target_time.isoformat()}'",
-    ], check=True)
+    # 1. Lay down the PRE-EXISTING base backup into a clean data dir
+    #    (untar the retained base backup; do not take a fresh one here).
+    restore_retained_base_backup(dest="/restore")
 
-    # Wait for recovery_target_action='pause' or successful replay
+    # 2. PG12+ recovery config: restore_command pulls archived WAL,
+    #    recovery_target_time is the stop point, and recovery.signal triggers
+    #    targeted recovery (recovery.conf was removed in PG12).
+    write_conf("/restore/postgresql.auto.conf", {
+        "restore_command": "cp /wal_archive/%f %p",
+        "recovery_target_time": f"'{target_time.isoformat()}'",
+        "recovery_target_action": "promote",
+    })
+    Path("/restore/recovery.signal").touch()
+
+    # 3. Time the restore + WAL replay: this is the real PITR latency.
+    start = time.time()
+    subprocess.run(["pg_ctl", "start", "-D", "/restore", "-w"], check=True)
     wait_for_recovery_complete(timeout=1800)
     elapsed = time.time() - start
 
+    # 1800s is illustrative; set the budget from your service's RTO segment SLA.
     assert elapsed < 1800, f"PITR took {elapsed:.0f}s; budget 30min"
 ```
 
@@ -146,7 +167,8 @@ def test_partial_object_restore_under_5_min():
     assert elapsed < 300, f"500-object restore took {elapsed:.0f}s"
 ```
 
-500 objects = realistic single-customer-account restore size.
+The 500-object count and the 300s budget are illustrative; size both from
+your own per-account object inventory and restore SLA.
 
 ## Step 6 - Track restore-time trend
 
@@ -160,8 +182,9 @@ def emit_restore_time_metric(elapsed_seconds, backup_size_bytes):
                           backup_size_bytes / elapsed_seconds)
 ```
 
-Alert if restore time grows > 20% in 90 days. Indicates need for
-backup compaction, parallelism increase, or RTO renegotiation.
+Alert when restore time grows beyond a threshold you choose (e.g. 20% over
+90 days; tune to your data-growth profile). Sustained growth indicates a
+need for backup compaction, more parallelism, or RTO renegotiation.
 
 ## Step 7 - Verification time
 
@@ -196,6 +219,7 @@ def test_cold_start_latency_within_sla():
         latencies.append(time.time() - start)
 
     p99_cold = sorted(latencies)[99]
+    # 2.0s is a placeholder; set the cold-start bound from your service's SLO.
     assert p99_cold < 2.0, f"Cold-start p99 {p99_cold:.2f}s exceeds 2s SLA"
 ```
 
@@ -224,6 +248,9 @@ queries before declaring "functional").
 ## References
 
 - [Google Cloud DR planning guide] - RTO context
+- [PostgreSQL PITR docs] - continuous archiving + point-in-time
+  recovery (base backup + WAL archive, `restore_command`,
+  `recovery_target_time`, `recovery.signal`)
 - [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drill-level
   end-to-end timing
 - [`backup-verification-author`](../backup-verification-author/SKILL.md) - 
@@ -232,3 +259,4 @@ queries before declaring "functional").
   failures consume error budget
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide
+[PostgreSQL PITR docs]: https://www.postgresql.org/docs/current/continuous-archiving.html
