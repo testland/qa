@@ -71,14 +71,14 @@ Classify as `timeout` if:
 - The 7-day history shows similar timing-edge failures on different tests (suggesting CI infrastructure, not test logic), OR
 - The runner's reported CPU / memory profile during the run shows resource saturation.
 
-The recommended downstream is `e2e-suite-budget` (in `qa-process`) for budget review, OR the platform team for runner resource tuning. Async-wait timeouts (the dominant flake cause per the [TestDino 2026 benchmark](https://testdino.com/blog/flaky-test-benchmark) - 45% of flakes are async-wait issues) flow into this category and hand off to [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) for pattern-based remediation.
+The recommended downstream is `e2e-suite-budget` (in `qa-process`) for budget review, OR the platform team for runner resource tuning. Async-wait timeouts (the dominant flake cause per [Luo et al. FSE 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf) - 45% of flakes are async-wait issues) flow into this category and hand off to [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) for pattern-based remediation.
 
 ### Rule R5 - `flaky-pre-incident`
 
 Classify as `flaky-pre-incident` if:
 - The 7-day history shows ≥1 prior failure of this same test in the last 50 runs (intermittent), AND
 - No code-change proximity (R2 third condition fails), AND
-- Failure mode is async-wait, race, or order-dependent (the top three flake categories per [Luo et al. FSE 2014](https://testdino.com/blog/flaky-test-benchmark) - 45% async-wait, 20% concurrency, 12% order).
+- Failure mode is async-wait, race, or order-dependent (the top three flake categories per [Luo et al. FSE 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf) - 45% async-wait, 20% concurrency, 12% order).
 
 This is the "this isn't quarantined yet but it's flaking" verdict. Recommended downstream is [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md) for full pattern attribution, then [`flaky-test-quarantine`](../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) for quarantine if the pattern is confirmed.
 
@@ -183,8 +183,8 @@ The agent **refuses** to:
 
 ## References
 
-- TestDino Flaky Test Benchmark 2026 - flake rate climbed from 10% (2022) to 26% (2025); root-cause breakdown (45% async-wait, 20% concurrency, 12% order, 8% resource leaks, 5% network), per Luo et al. FSE 2014: https://testdino.com/blog/flaky-test-benchmark
-- Bach / Atlassian / Microsoft / Google / GitHub flake rates from the same benchmark: https://testdino.com/blog/flaky-test-benchmark
+- Luo et al., "An Empirical Analysis of Flaky Tests" (FSE 2014) - root-cause breakdown (45% async-wait, 20% concurrency, 12% test-order-dependency) from 201 flaky-test fixes across 51 projects: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
+- Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - about 16% of tests show some flakiness and 84% of pass-to-fail transitions involve a flaky test: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 - Playwright Tracing API - produces the trace artifact the defect path consumes: https://playwright.dev/docs/api/class-tracing
 - ISTQB glossary - defect (fault, bug) vs failure (the deviation observed in the test): https://glossary.istqb.org/en_US/term/defect-3
 - ISTQB glossary - flaky test: https://glossary.istqb.org/en_US/term/flaky-test
