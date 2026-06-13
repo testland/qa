@@ -1,6 +1,6 @@
 ---
 name: experiment-results-interpreter
-description: "Pure-reference catalog for interpreting the results of an online controlled experiment after harness validity is confirmed. Covers the distinction between practical and statistical significance, reading confidence intervals instead of binary p-values, novelty and primacy effects that cause post-ship reversion, interaction effects from concurrent experiments, Simpson's paradox in segmented results, and the ordered guardrail-check sequence required before a ship decision. Use when a data scientist or PM is ready to draw conclusions from an experiment whose telemetry and randomisation have already passed the ab-test-validity-checklist."
+description: "Interprets the results of a valid online controlled experiment, one whose harness, SRM, and telemetry have already been confirmed. Covers the distinction between practical and statistical significance, reading confidence intervals instead of binary p-values, novelty and primacy week-over-week decay that causes post-ship reversion, interaction effects from concurrent experiments, Simpson's paradox in segmented results, and the ordered guardrail-check sequence required before a ship decision. Use when a data scientist or PM is ready to draw conclusions from an experiment whose telemetry and randomisation have already passed the ab-test-validity-checklist. Distinct from ab-test-validity-checklist (harness setup and SRM detection) and from interaction-effect overlap auditing during experiment design."
 rating: 24
 d6: 4
 keywords:
