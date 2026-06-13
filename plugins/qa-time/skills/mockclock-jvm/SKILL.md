@@ -1,6 +1,6 @@
 ---
 name: mockclock-jvm
-description: "Wraps Java's java.time.Clock + InstantSource dependency-injection pattern for testing time-sensitive code. Covers Clock.fixed(instant, zone), Clock.offset(baseClock, duration), Clock.systemDefaultZone() for production, the InstantSource interface (Java 17+), and the recommended dependency-injection pattern (constructor-inject Clock instead of calling Instant.now() directly). Use when testing JVM (Java / Kotlin / Scala) code that uses java.time. Composes dst-transition-reference + iso-8601-vs-rfc-3339-reference."
+description: "Wraps Java's java.time.Clock + InstantSource dependency-injection pattern for testing time-sensitive code. Covers Clock.fixed(instant, zone), Clock.offset(baseClock, duration), Clock.systemDefaultZone() for production, the InstantSource interface (Java 17+), and the recommended dependency-injection pattern (constructor-inject Clock instead of calling Instant.now() directly). Use when you need to wire the clock-injection pattern (Clock.fixed, Clock.offset, MutableClock, InstantSource, Spring @Bean) into JVM (Java / Kotlin / Scala) production or test code. For pure DST transition reference (skipped or repeated hours, IANA DB, cron-double-fire bug classes) without a clock-injection need, use dst-transition-reference instead. Composes dst-transition-reference + iso-8601-vs-rfc-3339-reference."
 rating: 22
 d6: 4
 ---
