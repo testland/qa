@@ -74,25 +74,64 @@ Per [Qdrant search docs], HNSW tunables:
 Per [Qdrant search docs]: "Increasing `ef` and `ef_construct`
 improves recall but increases computational latency."
 
-Sweep:
+Sweep, using the real Qdrant client. Per the [Qdrant search docs], `ef`
+(a.k.a. `hnsw_ef`) is a query-time parameter passed in `SearchParams`, so the
+sweep just varies it per call:
 
 ```python
+from qdrant_client import QdrantClient, models
+
+client = QdrantClient(url="http://localhost:6333")
+COLLECTION = "docs"  # points upserted with id == corpus index (to match ground truth)
+
+def qdrant_search(query_vec, ef, k=10):
+    # client.search() was removed in qdrant-client 1.18; use query_points.
+    # exact=False keeps the query on the HNSW path; exact=True is the oracle.
+    resp = client.query_points(
+        collection_name=COLLECTION,
+        query=query_vec,
+        search_params=models.SearchParams(hnsw_ef=ef, exact=False),
+        limit=k,
+        with_payload=False,
+    )
+    return [p.id for p in resp.points]
+
 ef_values = [16, 32, 64, 128, 256]
 results = []
-
 for ef in ef_values:
-    # Configure engine to use this ef
-    set_qdrant_search_params(ef=ef)
-    retrieved = retrieve_topk(queries, k=10)
+    retrieved = [qdrant_search(q, ef=ef, k=10) for q in query_vectors]
     recall = recall_at_k(retrieved, ground_truth)
-    p95_ms = measure_latency_p95(queries)
-    results.append({"ef": ef, "recall": recall, "p95_ms": p95_ms})
+    results.append({"ef": ef, "recall": recall})
+    # Pair with measure_latency() from Step 4 to capture p95 at this ef.
 
-# Find smallest ef that hits recall target
+# Find smallest ef that hits the recall target.
 for r in results:
     if r["recall"] >= 0.95:
-        print(f"Optimal ef={r['ef']} → recall {r['recall']:.3f} @ p95 {r['p95_ms']:.1f}ms")
+        print(f"smallest ef hitting target: ef={r['ef']} -> recall {r['recall']:.3f}")
         break
+```
+
+In **Weaviate v4** `ef` is not a query argument: it is a collection
+`vectorIndexConfig` setting, so the sweep updates the collection config
+between rounds, then re-queries (per the [Weaviate Python client docs]):
+
+```python
+from weaviate.classes.config import Reconfigure
+from weaviate.classes.query import MetadataQuery
+
+def set_weaviate_ef(client, ef, vector_name="default"):
+    client.collections.use("Docs").config.update(
+        vector_config=Reconfigure.Vectors.update(
+            name=vector_name,
+            vector_index_config=Reconfigure.VectorIndex.hnsw(ef=ef),
+        ),
+    )
+
+def weaviate_search(client, query_vec, k=10):
+    resp = client.collections.use("Docs").query.near_vector(
+        near_vector=query_vec, limit=k, return_metadata=MetadataQuery(distance=True)
+    )
+    return [o.uuid for o in resp.objects]  # match against UUID-keyed ground truth
 ```
 
 ## Step 4 - Latency p50 / p95 / p99 budget
@@ -233,8 +272,10 @@ catch in test.
 ## References
 
 - [ANN-Benchmarks docs] - cross-engine recall/QPS curves
-- [Qdrant search docs] - HNSW parameters (M, ef_construct, ef),
-  recall vs latency tradeoff
+- [Qdrant search docs] - `query_points` + `SearchParams(hnsw_ef=...)`,
+  HNSW parameters (M, ef_construct, ef), recall vs latency tradeoff
+- [Weaviate Python client docs] - v4 `near_vector` query and the
+  collection-level `ef` (`Reconfigure.VectorIndex.hnsw`) config
 - [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md),
   [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) - 
   classic IR-metrics relevance tests for term-based retrieval
@@ -243,3 +284,4 @@ catch in test.
 
 [ANN-Benchmarks docs]: https://ann-benchmarks.com/
 [Qdrant search docs]: https://qdrant.tech/documentation/concepts/search/
+[Weaviate Python client docs]: https://docs.weaviate.io/weaviate/client-libraries/python
