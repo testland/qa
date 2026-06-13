@@ -98,6 +98,42 @@ module.exports = {
 Per [lhci][lhci], assertion levels are `'error'` (CI fails),
 `'warn'` (surfaced but doesn't fail), and `'off'` (disabled).
 
+### Per-URL thresholds with `assertMatrix`
+
+`assert.assertions` applies one threshold set to every collected URL. When
+pages need different bars (a marketing homepage at 0.90, a checkout at 0.98),
+use `assertMatrix` instead: an array where each entry pairs a
+`matchingUrlPattern` (a regex matched against the audited URL) with its own
+`assertions` block ([lhci]). `assertMatrix` and `assertions` are mutually
+exclusive at the `assert` level, and the first matching pattern wins, so order
+specific patterns before the catch-all:
+
+```js
+// .lighthouserc.js — different a11y bars per URL
+module.exports = {
+  ci: {
+    assert: {
+      assertMatrix: [
+        {
+          matchingUrlPattern: '.*/checkout.*',
+          assertions: {
+            'categories:accessibility': ['error', { minScore: 0.98 }],
+            'color-contrast':           ['warn'],
+          },
+        },
+        {
+          matchingUrlPattern: '.*',
+          assertions: {
+            'categories:accessibility': ['error', { minScore: 0.90 }],
+            'color-contrast':           ['warn'],
+          },
+        },
+      ],
+    },
+  },
+};
+```
+
 ## What Lighthouse a11y measures
 
 Lighthouse's accessibility category runs a curated set of axe-core
@@ -167,7 +203,7 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm' }
       - run: npm ci
