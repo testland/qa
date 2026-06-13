@@ -22,10 +22,13 @@ Inputs:
 - `runner` - test runner choice: `playwright` (default), `cypress`,
   or `selenium-webdriver`.
 
-The agent reads the repo root to confirm no existing test harness is present
-before writing anything. If `playwright.config.ts`, `cypress.config.ts`, or
-a `tests/` directory with spec files already exists, it stops and hands off
-to the appropriate `*-test-author` agent instead.
+The agent reads the repo root to confirm no existing E2E harness is present
+before writing anything. It checks for a runner config (`playwright.config.ts`,
+`cypress.config.ts`, `wdio.conf.ts`) or an E2E spec directory (`tests/e2e/`,
+`cypress/e2e/`), NOT a bare `tests/` directory, which often holds only unit
+tests and would trigger a false-positive stop on a repo that is genuinely
+greenfield for E2E. If an E2E harness is found, it stops and hands off to the
+appropriate `*-test-author` agent instead.
 
 ## Step 1 - Detect stack and choose layout
 
@@ -75,11 +78,9 @@ manipulate page elements without digging around in the HTML." The base class
 enforces this by making the raw `Page` handle private and exposing only
 typed action methods.
 
-The Selenium project's Page Object Models documentation ([selenium-pom][sp])
-states that "page objects themselves should never make verifications or
-assertions. This is part of your test and should always be within the test's
-code, never in a page object." The base class enforces this by omitting any
-`expect` call.
+Per the Selenium Page Object Models docs ([selenium-pom][sp]), page objects
+must never make assertions: that is the test's job. The base class enforces
+this by omitting any `expect` call.
 
 ```typescript
 // tests/pages/BasePage.ts
@@ -208,6 +209,60 @@ jobs:
           CI: true
 ```
 
+## Cypress variant
+
+When the runner is `cypress`, emit the Cypress equivalents. Per the
+[Cypress configuration docs][cyc], v10+ uses `cypress.config.ts` with an `e2e`
+block (no more `cypress.json` / `pluginsFile`); Cypress favors shared **custom
+commands** over a page-object base class, so the skeleton wires those.
+
+```typescript
+// cypress.config.ts
+import { defineConfig } from "cypress";
+
+export default defineConfig({
+  e2e: {
+    baseUrl: process.env.BASE_URL ?? "http://localhost:3000",
+    specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    supportFile: "cypress/support/e2e.ts",
+    setupNodeEvents(on, config) { return config; },
+  },
+});
+
+// cypress/support/e2e.ts  - loads shared commands per [cyx]
+import "./commands";
+
+// cypress/support/commands.ts
+Cypress.Commands.add("openHome", () => cy.visit("/"));
+declare global {
+  namespace Cypress { interface Chainable { openHome(): Chainable<void> } }
+}
+
+// cypress/e2e/home.cy.ts  - one smoke test; assertions live in the test
+describe("home page", () => {
+  it("loads", () => {
+    cy.visit("/");
+    cy.get("h1").should("be.visible");
+  });
+});
+```
+
+CI uses the official [cypress-io/github-action][cya] (installs deps + runs Cypress):
+
+```yaml
+# .github/workflows/e2e.yml — runner: cypress
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: cypress-io/github-action@v7
+        with:
+          start: npm run dev
+          wait-on: "http://localhost:3000"
+```
+
 ## Output format
 
 The agent emits a summary of every file written:
@@ -248,9 +303,12 @@ For writing the actual tests once the harness is in place, use
 
 ## Limitations
 
-- **Runner coverage:** Playwright and Cypress emit full skeletons;
-  Selenium/WebDriverIO emits a partial skeleton (config + base class only -
-  no CI snippet, as CI integration varies by grid provider).
+- **Runner coverage:** Playwright is the fully-worked example (folder tree,
+  page-object base, fixtures, smoke test, config, CI). Cypress emits config +
+  support/custom-commands + a smoke spec + the official CI action (the
+  "Cypress variant" section). Selenium/WebDriverIO emits a partial skeleton
+  (config + base class only, no CI snippet, as CI integration varies by grid
+  provider).
 - **Auth flows not scaffolded:** login fixtures, session storage, and
   OAuth helpers are out of scope; add them after the base harness is in place.
 - **Non-Node stacks:** Python (pytest-playwright), Java (Playwright Java),
@@ -276,25 +334,23 @@ After the harness is in place:
 
 ## References
 
-- [fowler-po][fp] - Martin Fowler, "Page Object" (fetched 2026-06-03):
-  "a page object wraps an HTML page, or fragment, with an application-specific
-  API, allowing you to manipulate page elements without digging around in the
-  HTML"; page objects "should allow a software client to do anything and see
-  anything that a human can"; avoid including assertions.
-- [selenium-pom][sp] - SeleniumHQ, "Page object models" (fetched 2026-06-03):
-  "page objects themselves should never make verifications or assertions. This
-  is part of your test and should always be within the test's code, never in a
-  page object"; selectors centralized as "a single repository for the services
-  or operations the page offers."
-- [playwright-pom][pp] - Playwright, "Page object models" (fetched 2026-06-03):
-  constructor accepts a Page object; locators defined as class properties via
-  `page.locator()`; "simplify maintenance by capturing element selectors in
-  one place."
-- [playwright-config][pc] - Playwright, "Test configuration" (fetched 2026-06-03):
-  `testDir`, `forbidOnly`, `retries`, `workers`, `webServer`; recommends
-  `forbidOnly: !!process.env.CI`, `retries: 2` on CI, `workers: 1` on CI.
+- [fowler-po][fp] - Martin Fowler, "Page Object": wrap a page behind an
+  application-specific API; page objects avoid assertions.
+- [selenium-pom][sp] - SeleniumHQ, "Page object models": assertions belong in
+  the test, never in a page object; selectors centralized in one place.
+- [playwright-pom][pp] - Playwright, "Page object models": constructor accepts
+  a `Page`; locators defined as class properties via `page.locator()`.
+- [playwright-config][pc] - Playwright, "Test configuration": `testDir`,
+  `forbidOnly`, `retries`, `workers`, `webServer` (recommends
+  `forbidOnly: !!process.env.CI`, `retries: 2` and `workers: 1` on CI).
+- [cyc] / [cyx] / [cya] - Cypress configuration, custom commands, and the
+  official GitHub Action (v10+ `cypress.config.ts` e2e block; `cypress/e2e`
+  spec glob; `cypress-io/github-action@v7`).
 
 [fp]: https://martinfowler.com/bliki/PageObject.html
 [sp]: https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
 [pp]: https://playwright.dev/docs/pom
 [pc]: https://playwright.dev/docs/test-configuration
+[cyc]: https://docs.cypress.io/app/references/configuration
+[cyx]: https://docs.cypress.io/api/cypress-api/custom-commands
+[cya]: https://github.com/cypress-io/github-action
