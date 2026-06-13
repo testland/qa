@@ -1,6 +1,6 @@
 ---
 name: 3ds-test-flow-reference
-description: "Pure-reference catalog of 3-D Secure (3DS) authentication test flows. Covers the EMVCo 3DS 2.x spec (3DS 1.0 is deprecated since 2022), the frictionless / challenge / not-applicable flow paths, the Strong Customer Authentication (SCA) requirement under EU PSD2 (mandatory since 2021 for most EU card transactions), the test-card patterns each gateway provides (Stripe / Adyen / Braintree authentication challenges via specific PANs), and the testable behaviours per flow. Use when designing 3DS test coverage or auditing existing 3DS flow implementation. Composes payment-flow-states-reference."
+description: "Cross-gateway, protocol-level reference for 3-D Secure (3DS 2.x) test coverage. Covers the EMVCo frictionless / challenge / not-applicable flow paths, SCA under EU PSD2, and the per-PAN test cards for Stripe, Adyen, and Braintree. The gateway-specific wrappers (adyen-test-mode / stripe-test-cards-and-webhooks / braintree-test-cards) compose this skill for single-gateway work, so use one of those for a single-gateway query. Use this skill when designing multi-gateway 3DS test coverage, auditing a 3DS redirect round-trip, or investigating a challenge-flow regression that is not gateway-specific. Composes payment-flow-states-reference."
 rating: 22
 d6: 4
 ---
