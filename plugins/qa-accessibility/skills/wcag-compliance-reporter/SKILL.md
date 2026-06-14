@@ -325,7 +325,7 @@ consumption (dashboards, ASR, programmatic gates):
 - [wcag-conformance][wcag-conf] - WCAG 2.2 conformance requirements:
   binary per-level verdict, complete-processes rule, no-exceptions
   rule.
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - sibling
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - sibling
   reporter for test execution (different domain, same PR-time
   reporting shape).
 - The `qa-accessibility` plugin's per-tool wrappers

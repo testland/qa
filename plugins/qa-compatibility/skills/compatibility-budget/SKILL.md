@@ -184,7 +184,7 @@ These are different:
 - **Compatibility:** which configurations the product runs on.
 - **Accessibility:** which assistive technologies the product
   supports (per WCAG conformance - see
-  [`wcag-compliance-reporter`](../../../qa-test-reporting/skills/wcag-compliance-reporter/SKILL.md)).
+  [`wcag-compliance-reporter`](../../../qa-accessibility/skills/wcag-compliance-reporter/SKILL.md)).
 
 A user with a screen reader on Tier 1 Chrome should have Tier 1
 accessibility experience. The two budgets compose.
@@ -218,4 +218,4 @@ accessibility experience. The two budgets compose.
 - [`os-matrix-runner`](../os-matrix-runner/SKILL.md) - sibling for
   OS matrix.
 - [`mobile-device-matrix-toolkit`](../../../qa-mobile/skills/mobile-device-matrix-toolkit/SKILL.md) - mobile-specific equivalent.
-- [`wcag-compliance-reporter`](../../../qa-test-reporting/skills/wcag-compliance-reporter/SKILL.md) - accessibility compliance complement to the compatibility budget.
+- [`wcag-compliance-reporter`](../../../qa-accessibility/skills/wcag-compliance-reporter/SKILL.md) - accessibility compliance complement to the compatibility budget.

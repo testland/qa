@@ -1,6 +1,6 @@
 # qa-accessibility
 
-Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, contrast, ARIA), screen-reader narrative authoring, a11y violation gate, adversarial code critic, checklist builder, and 5 tool wrappers (axe / pa11y / Lighthouse a11y / WAVE / IBM Equal Access).
+Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, contrast, ARIA), screen-reader narrative authoring, a11y violation gate, adversarial code critic, checklist builder, 5 tool wrappers (axe / pa11y / Lighthouse a11y / WAVE / IBM Equal Access), and a WCAG conformance reporter.
 
 ## Components
 
@@ -20,6 +20,7 @@ Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, con
 | Skill | [lighthouse-a11y](skills/lighthouse-a11y/SKILL.md) | Lighthouse CI Accessibility category - `categories:accessibility` + per-audit overrides; pairs with lighthouse-perf. |
 | Skill | [wave-a11y](skills/wave-a11y/SKILL.md) | WebAIM WAVE - visual overlay extension + WAVE API; WebAIM-branded reports for Section 508 / public-sector audits. |
 | Skill | [ibm-equal-access-a11y](skills/ibm-equal-access-a11y/SKILL.md) | IBM Equal Access accessibility-checker; WCAG 2.0/2.1/2.2 + IBM superset + Section 508; integrates with Playwright/Selenium/Cypress. |
+| Skill | [wcag-compliance-reporter](skills/wcag-compliance-reporter/SKILL.md) | Build-an-X per-page WCAG 2.2 conformance report aggregating axe / pa11y / Lighthouse / WAVE / IBM output; per-SC + per-level rollup; "unknown" verdict for SCs no tool covers. |
 
 ## Install
 

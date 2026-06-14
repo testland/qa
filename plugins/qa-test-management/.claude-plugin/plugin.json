@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-management",
-  "version": "1.1.2",
-  "description": "Test case management discipline (pre-execution authoring + lifecycle + traceability): 1 reference skill (test-case-anatomy-reference) + 5 platform case-management skills (testrail-case-management, xray-case-management, zephyr-scale-case-management, allure-testops-case-management, qase-io-case-management) + 1 build skill (traceability-matrix-builder) + 1 agent (test-case-quality-critic). Distinct from qa-test-reporting's *-integration skills (post-execution result sync); this is pre-execution case authoring + repository management.",
+  "version": "1.1.3",
+  "description": "Test case management discipline (pre-execution authoring + lifecycle + traceability): 1 reference skill (test-case-anatomy-reference) + 5 platform case-management skills (testrail-case-management, xray-case-management, zephyr-scale-case-management, allure-testops-case-management, qase-io-case-management) + 1 build skill (traceability-matrix-builder) + 2 agents (test-case-quality-critic, tcm-migration-agent). Distinct from qa-test-reporting's *-integration skills (post-execution result sync); this is pre-execution case authoring + repository management.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

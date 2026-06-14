@@ -1,6 +1,6 @@
 # qa-test-reporting
 
-Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV, Cobertura, Allure), build-an-X PR reporters (coverage delta, WCAG compliance, visual-diff summary), commercial test-management integrations (Currents, TestRail, Xray, Zephyr), per-language coverage analyzers (Jest, JaCoCo, coverage.py), and a risk-weighted coverage-targeting heuristic.
+Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV, Cobertura, Allure), build-an-X PR reporters (coverage delta, run-summary narrative), commercial test-management integrations (Currents, TestRail, Xray, Zephyr), per-language coverage analyzers (Jest, JaCoCo, coverage.py), and a risk-weighted coverage-targeting heuristic.
 
 ## Components
 
@@ -11,8 +11,6 @@ Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV, Cobert
 | Skill | [cobertura-analysis](skills/cobertura-analysis/SKILL.md) | Parse Cobertura XML (coverage-04.dtd); per-class line + branch + complexity; cross-tool normalization. |
 | Skill | [allure-reports](skills/allure-reports/SKILL.md) | Configure Allure adapter + CLI + history retention + `categories.json` failure classification + severity / epic / feature labels. |
 | Skill | [coverage-diff-reporter](skills/coverage-diff-reporter/SKILL.md) | Build-an-X PR comment with per-file coverage delta vs main; sticky-comment update; new / regressed / improved / deleted classification. |
-| Skill | [wcag-compliance-reporter](skills/wcag-compliance-reporter/SKILL.md) | Build-an-X per-page WCAG 2.2 conformance report; per-SC + per-level rollup; process completeness; "unknown" verdict for SCs no tool covers. |
-| Skill | [visual-diff-summarizer](skills/visual-diff-summarizer/SKILL.md) | Build-an-X per-PR visual-diff summary across Percy / Chromatic / Playwright / Storybook; intent-based aligned / adjacent / unrelated clustering. |
 | Skill | [extentreports](skills/extentreports/SKILL.md) | Configure ExtentReports v5 (`ExtentSparkReporter`) for Java / .NET; log levels, screenshots, hierarchical tests, categories. |
 | Skill | [currents-integration](skills/currents-integration/SKILL.md) | Wire Currents.dev test analytics into Playwright (`@currents/playwright`); record-key + project-id config; trace / video / screenshot streaming. |
 | Skill | [testrail-integration](skills/testrail-integration/SKILL.md) | Sync test runs / results to TestRail via `add_run` + batched `add_results_for_cases`; case-ID-in-test-name mapping; status convention. |

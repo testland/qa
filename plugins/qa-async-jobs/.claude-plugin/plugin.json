@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-async-jobs",
-  "version": "1.2.1",
-  "description": "Background job and queue testing: 7 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, cron-job-test-author, idempotency-test-author).",
+  "version": "1.2.2",
+  "description": "Background job and queue testing: 8 skills (sidekiq-tests, celery-tests, bullmq-tests, sqs-patterns, rabbitmq-patterns, kafka-consumer-tests, cron-job-test-author, idempotency-test-author) and 1 agent (async-job-health-critic).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

@@ -266,6 +266,6 @@ are refused with a recommendation to escalate to
   classification applied to text snapshots.
 - `regression-bisector` agent in `qa-flake-triage` - escalation
   target for unrelated clusters.
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md),
-  [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
+- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md),
+  [`coverage-diff-reporter`](../../../qa-test-reporting/skills/coverage-diff-reporter/SKILL.md) - 
   sibling PR-summary skills.

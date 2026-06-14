@@ -33,3 +33,6 @@ jobs:
 
       - name: Content audit (description / body length + Windows-path hygiene)
         run: python3 scripts/content-audit.py --strict
+
+      - name: Check plugin.json description count drift
+        run: python3 scripts/check-description-drift.py

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-leadership",
-  "version": "1.0.0",
-  "description": "QA leadership & test-management role bundle: one-command install of the QA role org-chart, test process, test management, impact analysis, reporting, hiring, shift-left, defect management, and production-code quality governance.",
+  "version": "1.0.1",
+  "description": "QA leadership & test-management role bundle: one-command install of the QA role org-chart, test process, test management, impact analysis, reporting, hiring, team management, shift-left, defect management, and production-code quality governance.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -25,6 +25,7 @@
     "qa-test-impact-analysis",
     "qa-test-reporting",
     "qa-hiring",
+    "qa-team-management",
     "qa-shift-left",
     "qa-defect-management",
     "qa-code-quality"

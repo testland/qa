@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-auth-flows",
-  "version": "1.2.2",
-  "description": "Auth flow testing: 5 skills (keycloak-tests, auth0-tests, okta-tests, oauth-flow-test-author, session-management-test-author).",
+  "version": "1.2.3",
+  "description": "Auth flow testing: 6 skills (keycloak-tests, auth0-tests, okta-tests, oauth-flow-test-author, mfa-flow-test-author, session-management-test-author) and 1 agent (token-storage-security-critic). Anchored on OAuth 2.0 / RFC 7636 PKCE / RFC 9700 / OWASP ASVS V3.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

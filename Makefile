@@ -1,4 +1,4 @@
-.PHONY: help validate rate compose catalog inventory version-check all clean
+.PHONY: help validate rate compose catalog inventory drift version-check all clean
 
 help:
 	@echo "Targets:"
@@ -7,8 +7,9 @@ help:
 	@echo "  compose     Validate agent -> skill preload references"
 	@echo "  catalog     Regenerate CATALOG.md from marketplace.json"
 	@echo "  inventory   Print marketplace inventory snapshot"
+	@echo "  drift       Flag plugin.json descriptions whose component counts disagree with disk"
 	@echo "  version-check  Flag plugins changed without a plugin.json version bump (run before pushing)"
-	@echo "  all         Run validate + rate + compose + catalog"
+	@echo "  all         Run validate + rate + compose + drift + catalog"
 
 validate:
 	bash scripts/validate.sh .
@@ -25,10 +26,13 @@ catalog:
 inventory:
 	python3 scripts/inventory.py
 
+drift:
+	python3 scripts/check-description-drift.py
+
 version-check:
 	python3 scripts/version-bump-check.py
 
-all: validate rate compose catalog
+all: validate rate compose drift catalog
 	@echo "All checks passed; CATALOG.md regenerated."
 
 clean:

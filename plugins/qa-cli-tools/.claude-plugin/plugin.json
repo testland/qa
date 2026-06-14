@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-cli-tools",
-  "version": "1.1.1",
-  "description": "CLI + TUI testing tools: 3 skills (bats-testing, tui-snapshot-tester, cli-output-conventions).",
+  "version": "1.1.2",
+  "description": "CLI + TUI testing tools: 4 skills (bats-testing, pester-cli-testing, tui-snapshot-tester, cli-output-conventions).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

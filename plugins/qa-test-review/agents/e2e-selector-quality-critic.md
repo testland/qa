@@ -253,7 +253,7 @@ The agent **refuses** to:
   accessibility, not test-side selectors)** → see the
   `qa-accessibility` plugin.
 - **WCAG compliance reporting** → see
-  [`wcag-compliance-reporter`](../../qa-test-reporting/skills/wcag-compliance-reporter/SKILL.md).
+  [`wcag-compliance-reporter`](../../qa-accessibility/skills/wcag-compliance-reporter/SKILL.md).
 - **Test-code structure / naming** → [`test-code-critic`](test-code-critic.md).
 - **Assertion specificity** → [`assertion-quality-reviewer`](assertion-quality-reviewer.md).
 - **Mocking patterns** → [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md).

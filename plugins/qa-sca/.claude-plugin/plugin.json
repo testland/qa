@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-sca",
-  "version": "1.1.1",
-  "description": "SCA (software composition analysis) / dependency scanning: 5 skills (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit) and 1 agent (sca-prioritizer). CVSS + EPSS + CISA KEV + reachability prioritization in the agent.",
+  "version": "1.1.2",
+  "description": "SCA (software composition analysis) / dependency scanning: 8 skills (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit, bundle-audit-ruby, cargo-audit-rust, reachability-analyzer) and 1 agent (sca-prioritizer) with CVSS + EPSS + CISA KEV + reachability prioritization.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

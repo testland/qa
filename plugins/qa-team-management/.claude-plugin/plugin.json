@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-team-management",
-  "version": "1.0.0",
-  "description": "QA people-and-org toolkit for QA managers and heads of quality: 5 skills (skill-matrix-author, career-ladder-author, tester-one-on-one-planner, performance-feedback-author, exec-quality-narrative) plus the team-capability-gap-analyst agent. Covers team capability mapping per ISTQB CTAL-TM v3.0 Managing the Team, IC/management career ladders, GROW-model 1:1s, SBI evidence-based feedback, and Minto-pyramid executive quality narratives.",
+  "version": "1.0.1",
+  "description": "QA people-and-org toolkit for QA managers and heads of quality: 5 skills (skill-matrix-author, career-ladder-author, tester-one-on-one-planner, performance-feedback-author, exec-quality-narrative) and 1 agent (team-capability-gap-analyst). Covers team capability mapping per ISTQB CTAL-TM v3.0 Managing the Team, IC/management career ladders, GROW-model 1:1s, SBI evidence-based feedback, and Minto-pyramid executive quality narratives.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

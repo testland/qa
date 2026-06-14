@@ -1,6 +1,6 @@
 # qa-visual-regression
 
-Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybook visual tests, plus diff classification and baseline curation agents.
+Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybook visual tests, plus diff classification, baseline curation, and per-PR diff summarization.
 
 ## Components
 
@@ -16,6 +16,7 @@ Visual regression testing across Percy, Chromatic, Playwright snapshots, Storybo
 | Agent | [visual-baseline-curator](agents/visual-baseline-curator.md) | Builder: proposes a coverage-optimal initial baseline set, generates engine config files, runs a dry-run to verify the suite compiles. |
 | Skill | [visual-baseline-gate](skills/visual-baseline-gate/SKILL.md) | CI gate: aggregate diff classifications + acceptance log into a single go/no-go verdict; enforce author-cannot-self-approve on baseline updates. |
 | Agent | [visual-ci-gate-orchestrator](agents/visual-ci-gate-orchestrator.md) | Aggregates visual-diff-classifier verdicts via visual-baseline-gate into a single CI BLOCK/REVIEW/OK decision. |
+| Skill | [visual-diff-summarizer](skills/visual-diff-summarizer/SKILL.md) | Build-an-X per-PR visual-diff summary across Percy / Chromatic / Playwright / Storybook; intent-based aligned / adjacent / unrelated clustering. |
 
 ## Install
 

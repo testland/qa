@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-review",
-  "version": "1.4.3",
-  "description": "Test code quality reviewers for test files only — closes the gap surfaced in component-rating analysis (production-code reviewers saturated; test-code reviewers absent). 4 reference skills (test-code-conventions §1-§10 file-level; object-model-patterns / test-isolation-patterns / test-step-design-patterns architecture-tier catalogs) and 6 adversarial agents A3: test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic, framework-architecture-auditor, test-suite-health-auditor (whole-suite cross-tool auditor).",
+  "version": "1.4.4",
+  "description": "Test code reviewers for test files only (production code is out of scope): 5 skills (test-code-conventions, object-model-patterns, test-framework-blueprint, test-isolation-patterns, test-step-design-patterns) and 6 agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic, framework-architecture-auditor, test-suite-health-auditor).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

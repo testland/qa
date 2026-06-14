@@ -20,7 +20,7 @@
     {
       "name": "qa-visual-regression",
       "source": "./plugins/qa-visual-regression",
-      "description": "Visual regression testing: 7 skills (chromatic-visual-regression-testing, percy-visual-regression-testing, playwright-snapshots, responsive-breakpoint-runner, storybook-visual-regression-testing, visual-baseline-conventions, visual-baseline-gate) and 3 agents (visual-baseline-curator, visual-ci-gate-orchestrator, visual-diff-classifier).",
+      "description": "Visual regression testing: 8 skills (chromatic-visual-regression-testing, percy-visual-regression-testing, playwright-snapshots, responsive-breakpoint-runner, storybook-visual-regression-testing, visual-baseline-conventions, visual-baseline-gate, visual-diff-summarizer) and 3 agents (visual-baseline-curator, visual-ci-gate-orchestrator, visual-diff-classifier).",
       "strict": true,
       "category": "quality-engineering"
     },
@@ -76,7 +76,7 @@
     {
       "name": "qa-accessibility",
       "source": "./plugins/qa-accessibility",
-      "description": "Atomic accessibility coverage: 12 skills (a11y-violation-gate, aria-authoring-patterns, axe-a11y, ibm-equal-access-a11y, lighthouse-a11y, pa11y-a11y, screen-reader-test-author, wave-a11y, wcag-checklist-builder, wcag-color-contrast, wcag-focus-trap, wcag-keyboard-navigation) and 2 agents (accessibility-code-critic, screen-reader-test-executor).",
+      "description": "Atomic accessibility coverage: 13 skills (a11y-violation-gate, aria-authoring-patterns, axe-a11y, ibm-equal-access-a11y, lighthouse-a11y, pa11y-a11y, screen-reader-test-author, wave-a11y, wcag-checklist-builder, wcag-color-contrast, wcag-focus-trap, wcag-keyboard-navigation, wcag-compliance-reporter) and 2 agents (accessibility-code-critic, screen-reader-test-executor).",
       "strict": true,
       "category": "quality-engineering"
     },
@@ -90,7 +90,7 @@
     {
       "name": "qa-test-reporting",
       "source": "./plugins/qa-test-reporting",
-      "description": "Test reporting + coverage analytics: 17 skills \u2014 parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, wcag-compliance-reporter, visual-diff-summarizer, test-run-summary-author), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter \u2014 plus 2 agents (daily-test-suite-aggregator, release-quality-report-agent).",
+      "description": "Test reporting + coverage analytics: 15 skills - parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, test-run-summary-author), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter - plus 2 agents (daily-test-suite-aggregator, release-quality-report-agent).",
       "strict": true,
       "category": "foundations"
     },
@@ -211,7 +211,7 @@
       "source": "./plugins/qa-iac",
       "description": "Infrastructure-as-code testing + security policy: 6 skills (checkov-policy, helm-chart-tester, kics-policy, policy-as-code-runner, tfsec-policy, trivy-config) and 2 agents (iac-policy-checker, terraform-plan-reviewer).",
       "strict": true,
-      "category": "tooling"
+      "category": "security-compliance"
     },
     {
       "name": "qa-cli-tools",
@@ -426,14 +426,14 @@
     {
       "name": "qa-team-management",
       "source": "./plugins/qa-team-management",
-      "description": "QA people-and-org toolkit for QA managers and heads of quality: 5 skills (career-ladder-author, exec-quality-narrative, performance-feedback-author, skill-matrix-author, tester-one-on-one-planner) and 1 agent (team-capability-gap-analyst) plus the team-capability-gap-analyst agent. Covers team capability mapping per ISTQB CTAL-TM v3.0 Managing the Team, IC/management career ladders, GROW-model 1:1s, SBI evidence-based feedback, and Minto-pyramid executive quality narratives.",
+      "description": "QA people-and-org toolkit for QA managers and heads of quality: 5 skills (career-ladder-author, exec-quality-narrative, performance-feedback-author, skill-matrix-author, tester-one-on-one-planner) and 1 agent (team-capability-gap-analyst). Covers team capability mapping per ISTQB CTAL-TM v3.0 Managing the Team, IC/management career ladders, GROW-model 1:1s, SBI evidence-based feedback, and Minto-pyramid executive quality narratives.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-data-privacy",
       "source": "./plugins/qa-test-data-privacy",
-      "description": "PII detection, masking, and synthetic data generation for test environments: 8 skills (data-masking-techniques-reference, faker-synthetic-data, k-anonymity-verifier, pii-categories-reference, pii-masking-pipeline-builder, presidio-pii-detection, synthea-healthcare-data, test-data-governance-reference) + 1 build skill (pii-masking-pipeline-builder) and 1 agent (pii-leak-critic).",
+      "description": "PII detection, masking, and synthetic data generation for test environments: 8 skills (data-masking-techniques-reference, faker-synthetic-data, k-anonymity-verifier, pii-categories-reference, pii-masking-pipeline-builder, presidio-pii-detection, synthea-healthcare-data, test-data-governance-reference) and 1 agent (pii-leak-critic).",
       "strict": true,
       "category": "security-compliance"
     },
