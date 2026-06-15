@@ -181,7 +181,7 @@ No other files created or modified.
 - Bach J., "Exploratory testing means performing tests while learning things
   that may influence the testing" - fetched from satisfice.com/exploratory-testing
   (2026-06-04).
-- Bolton M., "HICCUPPS-F" (2012) - developsense.com/blog/2012/07/hiccupps-f-the-heuristic/
+- Bolton M., "HICCUPPS-F" (2012) - developsense.com/blog/2012/07/few-hiccupps
   (403 at fetch time; cited by stable article ID per PLUGIN_AUTHORING.md).
 - Bach J., SFDPOT - satisfice.com/heuristics-of-software-testability.
 - Whittaker J., *Exploratory Software Testing* (Addison-Wesley, 2009).

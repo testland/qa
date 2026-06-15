@@ -218,7 +218,7 @@ jobs:
 - Cloudflare purge API:
   [developers.cloudflare.com/api/operations/zone-purge](https://developers.cloudflare.com/api/operations/zone-purge).
 - Fastly purge docs:
-  [docs.fastly.com/en/guides/purging-api](https://docs.fastly.com/en/guides/purging-api).
+  [fastly.com/documentation/reference/api/purging](https://www.fastly.com/documentation/reference/api/purging/).
 - CloudFront CreateInvalidation:
   [docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateInvalidation.html](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateInvalidation.html).
 - Companion catalogs:

@@ -9,9 +9,9 @@ d6: 4
 
 ## Overview
 
-Per [xunit.net/docs][xn-docs]:
+Per [xunit.net][xn-docs]:
 
-[xn-docs]: https://xunit.net/docs/
+[xn-docs]: https://xunit.net/
 
 xUnit.net is the current .NET test standard (used by .NET Foundation
 projects + Microsoft's own .NET runtime). v3 released 2024;

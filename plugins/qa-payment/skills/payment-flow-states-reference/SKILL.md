@@ -166,7 +166,7 @@ for **every** mutating call.
 - Stripe PaymentIntent lifecycle:
   [docs.stripe.com/payments/payment-intents](https://docs.stripe.com/payments/payment-intents).
 - Adyen payment lifecycle:
-  [docs.adyen.com/online-payments/payment-result-codes](https://docs.adyen.com/online-payments/payment-result-codes).
+  [docs.adyen.com/online-payments/build-your-integration/payment-result-codes](https://docs.adyen.com/online-payments/build-your-integration/payment-result-codes).
 - PayPal Orders API:
   [developer.paypal.com/docs/api/orders/v2/](https://developer.paypal.com/docs/api/orders/v2/).
 - Braintree transaction states:

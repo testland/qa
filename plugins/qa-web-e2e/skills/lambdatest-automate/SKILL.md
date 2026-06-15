@@ -14,7 +14,7 @@ coverage + Visual UI testing add-ons. Like BrowserStack + Sauce
 Labs, it exposes a W3C-compliant endpoint.
 
 Per
-[lambdatest.com/support/docs/automated-web-testing](https://www.lambdatest.com/support/docs/automated-web-testing/)
+[lambdatest.com/support/docs/getting-started-with-lambdatest-automation](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/)
 (Cloudflare-protected; cite by stable URL).
 
 Composes with
@@ -233,7 +233,7 @@ jobs:
 ## References
 
 - LambdaTest automated web testing - 
-  [lambdatest.com/support/docs/automated-web-testing](https://www.lambdatest.com/support/docs/automated-web-testing/).
+  [lambdatest.com/support/docs/getting-started-with-lambdatest-automation](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/).
 - LambdaTest capabilities generator - 
   lambdatest.com/capabilities-generator.
 - LambdaTest Tunnel docs - 

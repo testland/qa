@@ -88,7 +88,7 @@ test('rejects expired timestamp', async () => {
 
 ### Adyen
 
-Per [docs.adyen.com/development-resources/webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures):
+Per [docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures):
 HMAC-SHA256 over the canonical string. Validation is per-event,
 not per-request.
 
@@ -200,7 +200,7 @@ via the REST API.
 
 ### Braintree
 
-Per [developer.paypal.com/braintree/docs/guides/webhooks](https://developer.paypal.com/braintree/docs/guides/webhooks):
+Per [developer.paypal.com/braintree/docs/guides/webhooks/parse/node](https://developer.paypal.com/braintree/docs/guides/webhooks/parse/node):
 use `gateway.webhookTesting.sampleNotification(kind, id)` to
 generate a test signature for any event kind.
 
@@ -305,7 +305,7 @@ tests/payment/webhooks/
 - Stripe events resend:
   [docs.stripe.com/cli/events/resend](https://docs.stripe.com/cli/events/resend).
 - Adyen HMAC validation:
-  [docs.adyen.com/development-resources/webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures).
+  [docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures).
 - PayPal webhook signature:
   [developer.paypal.com/api/rest/webhooks/rest](https://developer.paypal.com/api/rest/webhooks/rest/).
 - Braintree webhook testing:

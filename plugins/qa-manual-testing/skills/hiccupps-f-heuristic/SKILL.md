@@ -12,7 +12,7 @@ d6: 4
 HICCUPPS-F is Michael Bolton's oracle heuristic - a mnemonic for
 the **kinds of references** a tester consults to decide whether
 an observation is a problem. It's published at
-[developsense.com/blog/2012/07/hiccupps-f](https://developsense.com/blog/2012/07/hiccupps-f-the-heuristic/).
+[developsense.com/blog/2012/07/few-hiccupps](https://developsense.com/blog/2012/07/few-hiccupps).
 
 The point: a "bug" is a relationship between an observation and
 some expectation. Different expectations come from different
@@ -209,7 +209,7 @@ high-priority.
 ## References
 
 - Bolton M. *HICCUPPS-F* (2012, refined from earlier HICCUPP) - 
-  [developsense.com/blog/2012/07/hiccupps-f-the-heuristic/](https://developsense.com/blog/2012/07/hiccupps-f-the-heuristic/).
+  [developsense.com/blog/2012/07/few-hiccupps](https://developsense.com/blog/2012/07/few-hiccupps).
 - Bolton M. *Testing oracle* concept - 
   [developsense.com](https://developsense.com/).
 - Sibling references (other heuristic catalogues):

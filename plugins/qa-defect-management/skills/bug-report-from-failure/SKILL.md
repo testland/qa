@@ -51,7 +51,7 @@ The skill accepts these inputs (auto-detected by extension):
 | Allure JSON | Allure framework (any language) | per-test JSON in `allure-results/`; schema at [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/) |
 | pytest `--tb=short` log | pytest stdout/stderr | line-oriented; regex-driven |
 | Playwright HTML report | Playwright trace | `report.json` inside the HTML bundle |
-| TestNG XML | TestNG | similar to JUnit; per [testng.org/doc](https://testng.org/doc/) |
+| TestNG XML | TestNG | similar to JUnit; per [testng.org](https://testng.org/) |
 
 ### JUnit XML parser
 
@@ -346,7 +346,7 @@ for f in failures:
   (community-curated canonical reference).
 - Allure framework results format - 
   [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/).
-- TestNG XML - [testng.org/doc](https://testng.org/doc/).
+- TestNG XML - [testng.org](https://testng.org/).
 - Composed:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md),

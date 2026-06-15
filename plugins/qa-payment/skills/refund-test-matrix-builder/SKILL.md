@@ -238,7 +238,7 @@ Refund-test coverage matrix should be reported per release:
 - PayPal Captures.refund:
   [developer.paypal.com/docs/api/payments/v2/#captures_refund](https://developer.paypal.com/docs/api/payments/v2/#captures_refund).
 - Braintree refunds:
-  [developer.paypal.com/braintree/docs/guides/transactions/refund-void-discard](https://developer.paypal.com/braintree/docs/guides/transactions/refund-void-discard).
+  [developer.paypal.com/braintree/docs/guides/transactions/node](https://developer.paypal.com/braintree/docs/guides/transactions/node).
 - Companion catalogs:
   [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
   [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).

@@ -156,4 +156,4 @@ share governance but are separate packages.
 - [Alibi Explain docs] - explainer categories, interface, install,
   per-method documentation
 
-[Alibi Explain docs]: https://www.alibi.rocks/
+[Alibi Explain docs]: https://docs.seldon.ai/alibi-explain/

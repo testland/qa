@@ -10,9 +10,9 @@ d6: 4
 ## Overview
 
 CycloneDX is one of two mainstream SBOM formats (SPDX is the
-other). Per [cyclonedx.org/specification][cdx-spec]:
+other). Per [cyclonedx.org/specification/overview][cdx-spec]:
 
-[cdx-spec]: https://cyclonedx.org/specification/
+[cdx-spec]: https://cyclonedx.org/specification/overview/
 
 CycloneDX is OWASP-curated and security-focused. Distinguishing
 features vs SPDX:

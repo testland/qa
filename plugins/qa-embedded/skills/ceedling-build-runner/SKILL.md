@@ -52,8 +52,8 @@ Ceedling does not target C++.
 
 ### Scaffolding a new project
 
-Per the Ceedling README and `CeedlingPacket.md` at
-[github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md](https://github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md):
+Per the Ceedling README and the command-line reference at
+[github.com/ThrowTheSwitch/Ceedling/.../getting-started/command-line.md](https://github.com/ThrowTheSwitch/Ceedling/blob/master/docs/mkdocs/getting-started/command-line.md):
 
 ```bash
 gem install ceedling
@@ -382,7 +382,7 @@ Cited inline. Foundational documents:
 
 - Ceedling repository - [github.com/ThrowTheSwitch/Ceedling](https://github.com/ThrowTheSwitch/Ceedling).
 - Ceedling overview - [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
-- CeedlingPacket (project.yml + task reference) - [github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md](https://github.com/ThrowTheSwitch/Ceedling/blob/master/docs/CeedlingPacket.md).
+- Ceedling docs (project.yml + task reference) - [throwtheswitch.github.io/Ceedling/latest](https://throwtheswitch.github.io/Ceedling/latest/).
 - Sibling skills:
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
   [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md),

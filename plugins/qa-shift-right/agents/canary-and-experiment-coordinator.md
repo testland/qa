@@ -24,7 +24,7 @@ this agent sequences both, with a contamination audit gate in between.
 
 [ft]: https://martinfowler.com/articles/feature-toggles.html
 [cr]: https://martinfowler.com/bliki/CanaryRelease.html
-[layers]: https://docs.statsig.com/layers
+[layers]: https://docs.statsig.com/experiments/layers-overview
 
 ## When invoked
 

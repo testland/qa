@@ -49,7 +49,7 @@ const checkout = new CheckoutAPI(client);
 
 ### Test cards
 
-Per [docs.adyen.com/development-resources/testing/test-card-numbers](https://docs.adyen.com/development-resources/testing/test-card-numbers/):
+Per [docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers):
 
 | Card | Behaviour |
 |---|---|
@@ -83,7 +83,7 @@ const paymentResponse = await checkout.payments({
 expect(paymentResponse.resultCode).toBe('Authorised');
 ```
 
-Result codes per [docs.adyen.com/online-payments/payment-result-codes](https://docs.adyen.com/online-payments/payment-result-codes):
+Result codes per [docs.adyen.com/online-payments/build-your-integration/payment-result-codes](https://docs.adyen.com/online-payments/build-your-integration/payment-result-codes):
 
 | resultCode | Meaning |
 |---|---|
@@ -99,7 +99,7 @@ Result codes per [docs.adyen.com/online-payments/payment-result-codes](https://d
 ### Webhook (notification) handling
 
 Adyen sends webhooks ("notifications") for every state change.
-Per [docs.adyen.com/development-resources/webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures):
+Per [docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures):
 validate via HMAC-SHA256 over a canonical-string of the payload.
 
 ```typescript
@@ -188,11 +188,11 @@ jobs:
 - Adyen testing:
   [docs.adyen.com/development-resources/testing](https://docs.adyen.com/development-resources/testing/).
 - Test card numbers:
-  [docs.adyen.com/development-resources/testing/test-card-numbers](https://docs.adyen.com/development-resources/testing/test-card-numbers/).
+  [docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers).
 - Result codes:
-  [docs.adyen.com/online-payments/payment-result-codes](https://docs.adyen.com/online-payments/payment-result-codes).
+  [docs.adyen.com/online-payments/build-your-integration/payment-result-codes](https://docs.adyen.com/online-payments/build-your-integration/payment-result-codes).
 - Webhook HMAC verification:
-  [docs.adyen.com/development-resources/webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures).
+  [docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures).
 - Companion catalogs:
   [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
   [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),

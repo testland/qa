@@ -65,7 +65,7 @@ See [`osv-scanner`](../osv-scanner/SKILL.md) for full setup.
 ### Step 2 - JavaScript / TypeScript: knip (preferred) or depcheck
 
 **knip** is the current recommended tool for unused-dependency detection in JS
-projects. Per [github.com/webpkg/knip](https://github.com/webpkg/knip), it
+projects. Per [github.com/webpro-nl/knip](https://github.com/webpro-nl/knip), it
 detects unused files, exports, and dependencies including dev-only packages.
 
 ```bash

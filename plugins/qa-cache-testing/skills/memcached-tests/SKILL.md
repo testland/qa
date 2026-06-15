@@ -47,7 +47,7 @@ npm install --save-dev memjs testcontainers   # Node (binary protocol)
 
 The Testcontainers Memcached module defaults to `memcached:1` and exposes
 port `11211`
-([testcontainers-python memcached](https://github.com/testcontainers/testcontainers-python/blob/main/modules/memcached/testcontainers/memcached/__init__.py)):
+([testcontainers-python memcached](https://github.com/testcontainers/testcontainers-python/blob/main/src/testcontainers/community/memcached/__init__.py)):
 
 ```python
 from testcontainers.memcached import MemcachedContainer
@@ -390,7 +390,7 @@ For multi-node distribution tests, launch two service containers named
 - Memcached programming guide (key design, `add` for counters, incr/decr):
   [github.com/memcached/memcached/wiki/Programming](https://github.com/memcached/memcached/wiki/Programming).
 - Testcontainers Memcached module:
-  [github.com/testcontainers/testcontainers-python](https://github.com/testcontainers/testcontainers-python/blob/main/modules/memcached/testcontainers/memcached/__init__.py).
+  [github.com/testcontainers/testcontainers-python](https://github.com/testcontainers/testcontainers-python/blob/main/src/testcontainers/community/memcached/__init__.py).
 - pymemcache getting started (Client, PooledClient, HashClient):
   [pymemcache.readthedocs.io/en/latest/getting_started.html](https://pymemcache.readthedocs.io/en/latest/getting_started.html).
 - AWS ElastiCache engine comparison (Memcached vs Valkey/Redis):

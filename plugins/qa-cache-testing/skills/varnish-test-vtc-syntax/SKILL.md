@@ -264,9 +264,9 @@ jobs:
 - Varnish documentation:
   [varnish-cache.org/docs/](https://varnish-cache.org/docs/).
 - varnishtest reference:
-  [varnish-cache.org/docs/latest/reference/varnishtest.html](https://varnish-cache.org/docs/latest/reference/varnishtest.html).
+  [github.com/varnishcache/varnish-cache/.../reference/varnishtest.rst](https://github.com/varnishcache/varnish-cache/blob/master/doc/sphinx/reference/varnishtest.rst).
 - VTC syntax:
-  [varnish-cache.org/docs/latest/reference/vtc.html](https://varnish-cache.org/docs/latest/reference/vtc.html).
+  [github.com/varnishcache/varnish-cache/.../reference/vtc.rst](https://github.com/varnishcache/varnish-cache/blob/master/doc/sphinx/reference/vtc.rst).
 - Companion catalogs:
   [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
   [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md),

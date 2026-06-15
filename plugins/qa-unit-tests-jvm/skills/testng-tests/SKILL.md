@@ -9,9 +9,9 @@ d6: 4
 
 ## Overview
 
-Per [testng.org/doc][tn-docs]:
+Per [testng.org][tn-docs]:
 
-[tn-docs]: https://testng.org/doc/
+[tn-docs]: https://testng.org/
 
 TestNG (Test Next Generation) was the original JUnit-improvement
 project (~2004). Distinguishing features at the time:

@@ -87,7 +87,7 @@ A p-value tells you one bit: is the effect non-zero? A 95% confidence
 interval tells you the plausible range of the true effect.
 
 Per Statsig's documentation on confidence intervals
-(docs.statsig.com/stats-engine/confidence-intervals): "A 95% confidence
+(docs.statsig.com/experiments/statistical-methods/confidence-intervals): "A 95% confidence
 interval should contain the true effect 95% of the time" and the
 interval is "an intuitive way to quantify the uncertainty" that gives
 "both directionality and magnitude of effects simultaneously."
@@ -341,7 +341,7 @@ clean guardrails. Document novelty decay in the ship note.
   [microsoft.com/en-us/research/group/experimentation-platform-exp/articles/deep-dive-into-variance-reduction/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/deep-dive-into-variance-reduction/).
   Confidence interval narrowing and CUPED.
 - Statsig confidence interval docs:
-  [docs.statsig.com/stats-engine/confidence-intervals](https://docs.statsig.com/stats-engine/confidence-intervals).
+  [docs.statsig.com/experiments/statistical-methods/confidence-intervals](https://docs.statsig.com/experiments/statistical-methods/confidence-intervals).
   CI semantics and Fieller vs delta-method nuance.
 - Nielsen Norman Group A/B testing guide:
   [nngroup.com/articles/ab-testing/](https://www.nngroup.com/articles/ab-testing/).

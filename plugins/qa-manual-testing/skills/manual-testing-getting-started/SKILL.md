@@ -84,7 +84,7 @@ vocabulary will be natural.
 - Whittaker J. *Exploratory Software Testing* (Addison-Wesley, 2009) - source of the
   seven canonical tours in `exploratory-tours-reference`.
 - Bolton M. HICCUPPS-F oracle heuristic -
-  [developsense.com](https://developsense.com/blog/2012/07/hiccupps-f-the-heuristic/).
+  [developsense.com](https://developsense.com/blog/2012/07/few-hiccupps).
 - Sibling skills:
   [`sbtm-reference`](../sbtm-reference/SKILL.md),
   [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md),

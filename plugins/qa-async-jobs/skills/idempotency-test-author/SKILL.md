@@ -13,9 +13,9 @@ d6: 4
 produces the same effect as processing it once. Without it, every
 async system silently corrupts data on retry.
 
-Per AWS Prescriptive Guidance ([docs.aws.amazon.com/prescriptive-guidance/latest/build-idempotent-applications][aws-idem]):
+Per the Amazon Builders' Library ([aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs][aws-idem]):
 
-[aws-idem]: https://docs.aws.amazon.com/prescriptive-guidance/latest/build-idempotent-applications
+[aws-idem]: https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
 
 Idempotency is essential for:
 - At-least-once delivery systems (SQS Standard, BullMQ retry,

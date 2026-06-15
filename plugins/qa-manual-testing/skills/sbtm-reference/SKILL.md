@@ -241,9 +241,9 @@ the session sheet is filed.
 ## References
 
 - Bach J., Bach J. *Session-Based Test Management* (2000) - 
-  [satisfice.com/articles/sbtm.pdf](https://www.satisfice.com/articles/sbtm.pdf).
+  [satisfice.com/download/session-based-test-management](https://www.satisfice.com/download/session-based-test-management).
 - Bach J. *Exploratory Testing Explained* - 
-  [satisfice.com/articles/et-article.pdf](https://www.satisfice.com/articles/et-article.pdf).
+  [satisfice.com/exploratory-testing](https://www.satisfice.com/exploratory-testing).
 - Bolton M. *Exploratory testing series* - 
   [developsense.com](https://developsense.com/).
 - Hendrickson E. *Explore It!* (Pragmatic Bookshelf, 2013) - book.

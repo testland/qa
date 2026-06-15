@@ -71,7 +71,7 @@ Per [stripe.com/docs/testing#regulatory-cards](https://docs.stripe.com/testing#r
 
 ### Adyen
 
-Per [docs.adyen.com/development-resources/testing/3d-secure](https://docs.adyen.com/development-resources/testing/3d-secure-test-cards/):
+Per [docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers):
 
 | Card | Behaviour |
 |---|---|
@@ -81,7 +81,7 @@ Per [docs.adyen.com/development-resources/testing/3d-secure](https://docs.adyen.
 
 ### Braintree
 
-Per [developer.paypal.com/braintree/docs/guides/3d-secure/testing-go-live](https://developer.paypal.com/braintree/docs/guides/3d-secure/testing-go-live):
+Per [developer.paypal.com/braintree/docs/guides/3d-secure/testing/node](https://developer.paypal.com/braintree/docs/guides/3d-secure/testing/node):
 
 | Card | Behaviour |
 |---|---|
@@ -171,9 +171,9 @@ test('challenge flow', async () => {
 - Stripe 3DS test cards:
   [docs.stripe.com/testing#regulatory-cards](https://docs.stripe.com/testing#regulatory-cards).
 - Adyen 3DS test cards:
-  [docs.adyen.com/development-resources/testing/3d-secure-test-cards/](https://docs.adyen.com/development-resources/testing/3d-secure-test-cards/).
+  [docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers).
 - Braintree 3DS testing:
-  [developer.paypal.com/braintree/docs/guides/3d-secure/testing-go-live](https://developer.paypal.com/braintree/docs/guides/3d-secure/testing-go-live).
+  [developer.paypal.com/braintree/docs/guides/3d-secure/testing/node](https://developer.paypal.com/braintree/docs/guides/3d-secure/testing/node).
 - EBA RTS on SCA:
   [eba.europa.eu/regulation-and-policy/payment-services-and-electronic-money/regulatory-technical-standards-on-strong-customer-authentication-and-secure-communication-under-psd2](https://www.eba.europa.eu/regulation-and-policy/payment-services-and-electronic-money/regulatory-technical-standards-on-strong-customer-authentication-and-secure-communication-under-psd2).
 - Companion catalogs:

@@ -147,7 +147,7 @@ require an OS test that replays NTP leap-second indication.
 | `time.time() - start` for duration | Wall-clock; affected by leap | Use `time.monotonic()` |
 | Asserting `time.time() < time.time()` adjacent calls | Trips on stalled time_t | Use sequence numbers + monotonic |
 | Treating UNIX time_t as continuous | Historical leap insertions broke this | Per
-  [www.epochconverter.com/leap-seconds](https://www.epochconverter.com/leap-seconds) |
+  [IANA leap-seconds.list](https://data.iana.org/time-zones/data/leap-seconds.list) |
 | No monitoring during announced leap | Latent bugs surface in prod | Pre-leap rehearsal + monitoring |
 | Per-second metrics with stale timestamps | Loss of one second of data | Sub-second granularity |
 | Hardcoding 86400 in "seconds-per-day" | True only sometimes | Calendar arithmetic |

@@ -170,7 +170,7 @@ replaces it.
 - LaunchDarkly SDK docs:
   [launchdarkly.com/docs/sdk](https://launchdarkly.com/docs/sdk).
 - TestData data source guide:
-  [launchdarkly.com/docs/sdk/features/test-data](https://launchdarkly.com/docs/sdk/features/test-data).
+  [launchdarkly.com/docs/sdk/features/test-data-sources](https://launchdarkly.com/docs/sdk/features/test-data-sources).
 - File-based data source:
   [launchdarkly.com/docs/sdk/features/flags-from-files](https://launchdarkly.com/docs/sdk/features/flags-from-files).
 - Companion catalogs:

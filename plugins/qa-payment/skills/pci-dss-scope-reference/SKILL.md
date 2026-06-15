@@ -78,7 +78,7 @@ LIMIT 10;
 ### 1. Hosted fields / Elements
 
 Per [stripe.com/docs/payments/payment-element](https://docs.stripe.com/payments/payment-element),
-[docs.adyen.com/online-payments/web-drop-in](https://docs.adyen.com/online-payments/web-drop-in),
+[docs.adyen.com/payment-methods/cards/web-drop-in](https://docs.adyen.com/payment-methods/cards/web-drop-in),
 [developer.paypal.com/braintree/docs/start/hosted-fields](https://developer.paypal.com/braintree/docs/start/hosted-fields):
 
 ```html
@@ -160,7 +160,7 @@ adversarially. This skill provides the catalog.
 - Stripe Element (scope-reduction):
   [docs.stripe.com/payments/payment-element](https://docs.stripe.com/payments/payment-element).
 - Adyen Drop-in:
-  [docs.adyen.com/online-payments/web-drop-in](https://docs.adyen.com/online-payments/web-drop-in).
+  [docs.adyen.com/payment-methods/cards/web-drop-in](https://docs.adyen.com/payment-methods/cards/web-drop-in).
 - Braintree Hosted Fields:
   [developer.paypal.com/braintree/docs/start/hosted-fields](https://developer.paypal.com/braintree/docs/start/hosted-fields).
 - Companion catalogs:

@@ -139,8 +139,9 @@ postprocess.fit(X, y_true, sensitive_features=sex)
 y_pred_pp = postprocess.predict(X, sensitive_features=sex)
 ```
 
-Cheaper than retraining; trades model output for per-group threshold
-adjustment.
+Per the [Fairlearn postprocessing] guide, Fairlearn currently supports
+one postprocessing technique, `ThresholdOptimizer`. Cheaper than
+retraining; trades model output for per-group threshold adjustment.
 
 ## Step 7 - CI assertion
 
@@ -182,6 +183,8 @@ assert_fairness(y_true, y_pred, sex, max_dpd=0.10)
 ## References
 
 - [Fairlearn quickstart] - MetricFrame, selection_rate,
-  ExponentiatedGradient, ThresholdOptimizer
+  ExponentiatedGradient
+- [Fairlearn postprocessing] - ThresholdOptimizer
 
-[Fairlearn quickstart]: https://fairlearn.org/main/user_guide/quickstart.html
+[Fairlearn quickstart]: https://fairlearn.org/main/quickstart.html
+[Fairlearn postprocessing]: https://fairlearn.org/main/user_guide/mitigation/postprocessing.html

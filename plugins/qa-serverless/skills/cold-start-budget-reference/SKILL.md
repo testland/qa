@@ -154,7 +154,7 @@ runtime choice is a primary lever.
 - Lambda SnapStart:
   [docs.aws.amazon.com/lambda/latest/dg/snapstart.html](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html).
 - Cloudflare Workers isolate model:
-  [developers.cloudflare.com/workers/learning/how-workers-works](https://developers.cloudflare.com/workers/reference/how-the-runtime-works/).
+  [developers.cloudflare.com/workers/reference/how-workers-works](https://developers.cloudflare.com/workers/reference/how-workers-works/).
 - Vercel Edge Runtime:
   [vercel.com/docs/functions/edge-runtime](https://vercel.com/docs/functions/edge-runtime).
 - Companion catalog:

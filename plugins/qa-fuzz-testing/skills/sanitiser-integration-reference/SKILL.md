@@ -234,7 +234,7 @@ itself.
 - LLVM MemorySanitizer - 
   [clang.llvm.org/docs/MemorySanitizer.html](https://clang.llvm.org/docs/MemorySanitizer.html).
 - LLVM ThreadSanitizer - 
-  [clang.llvm.org/docs/ThreadSanitizerCppManual.html](https://clang.llvm.org/docs/ThreadSanitizerCppManual.html).
+  [clang.llvm.org/docs/ThreadSanitizer.html](https://clang.llvm.org/docs/ThreadSanitizer.html).
 - LLVM libFuzzer - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
 - Sibling references:

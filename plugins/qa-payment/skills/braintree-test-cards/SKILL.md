@@ -118,7 +118,7 @@ then settle (testing) then refund.
 
 ### Webhook handling
 
-Per [developer.paypal.com/braintree/docs/guides/webhooks](https://developer.paypal.com/braintree/docs/guides/webhooks):
+Per [developer.paypal.com/braintree/docs/guides/webhooks/parse/node](https://developer.paypal.com/braintree/docs/guides/webhooks/parse/node):
 
 ```typescript
 const webhookNotification = await gateway.webhookNotification.parse(
@@ -204,7 +204,7 @@ jobs:
 - Node SDK testing:
   [developer.paypal.com/braintree/docs/reference/general/testing/node](https://developer.paypal.com/braintree/docs/reference/general/testing/node).
 - Webhook guide:
-  [developer.paypal.com/braintree/docs/guides/webhooks](https://developer.paypal.com/braintree/docs/guides/webhooks).
+  [developer.paypal.com/braintree/docs/guides/webhooks/parse/node](https://developer.paypal.com/braintree/docs/guides/webhooks/parse/node).
 - Companion catalogs:
   [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
   [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),

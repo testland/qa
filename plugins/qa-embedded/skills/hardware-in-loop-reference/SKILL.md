@@ -235,7 +235,7 @@ Cited inline. Foundational documents:
 - Vector CANoe 17 User Manual (gated - cite by stable ID at
   [www.vector.com/int/en/products/products-a-z/software/canoe/](https://www.vector.com/int/en/products/products-a-z/software/canoe/)).
 - NI VeriStand 2024 documentation (gated - cite by stable ID at
-  [www.ni.com/en/shop/labview/labview-test/veristand.html](https://www.ni.com/en/shop/labview/labview-test/veristand.html)).
+  [ni.com/.../what-is-veristand.html](https://www.ni.com/en/shop/data-acquisition-and-control/application-software-for-data-acquisition-and-control-category/what-is-veristand.html)).
 - dSPACE SCALEXIO 2024 / ControlDesk 2024 Help (gated - cite by
   stable ID).
 - ISO 11898-1:2015 (CAN), ISO 17987-1:2016 (LIN),
