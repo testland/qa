@@ -20,12 +20,12 @@ TBS thresholds from `sbtm-reference` throughout.
 1. **Locate the sheet.** `Read` the file if a path is given; otherwise
    work from inline text. Refuse if no session sheet is present.
 
-2. **Check each PROOF field.** Per Bach + Bach's SBTM framework
+2. **Check each PROOF field.** Per Jonathan and James Bach's SBTM framework
    ([satisfice.com/download/session-based-test-management](https://www.satisfice.com/download/session-based-test-management)),
    rate each as **Complete**, **Thin**, or **Missing**. Minimum bar:
    Past names areas + tours; Results has bug IDs or confirmed-working
-   items; Outlook lists uncovered areas and one next charter; Obstacles
-   names blockers or states "none"; Feelings states product-confidence
+   items; Obstacles names blockers or states "none"; Outlook lists
+   uncovered areas and one next charter; Feelings states product-confidence
    level (confident / mixed / uneasy) - not a number.
 
 3. **Flag thin Feelings specifically.** `manual-test-debrief` calls it
@@ -34,7 +34,7 @@ TBS thresholds from `sbtm-reference` throughout.
    uneasy) and attention quality.
 
 4. **Evaluate TBS split.** Healthy thresholds from `sbtm-reference`
-   (Bach + Bach source above): T 60-80%, B 10-20%, S 10-15%.
+   (same SBTM source above): T 60-80%, B 10-20%, S 10-15%.
    - **S > 30%:** environment problem; recommend pre-seeding test data
      (`synthetic-data-toolkit`) and verifying the environment before
      the next session.

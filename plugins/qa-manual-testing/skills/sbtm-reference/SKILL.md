@@ -1,6 +1,6 @@
 ---
 name: sbtm-reference
-description: "Pure-reference catalog of Session-Based Test Management (SBTM) - Bach + Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary that exploratory-charter-author + manual-test-debrief consume."
+description: "Pure-reference catalog of Session-Based Test Management (SBTM) - Jonathan and James Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary that exploratory-charter-author + manual-test-debrief consume."
 rating: 24
 d6: 4
 ---
@@ -44,7 +44,7 @@ session, see
 
 ## The unit: a session
 
-Per Bach + Bach's SBTM paper (satisfice.com):
+Per Jonathan and James Bach's SBTM paper (satisfice.com):
 
 > "A session is an uninterrupted block of reviewable, chartered
 > test effort... A session may be short (around 60 minutes) or

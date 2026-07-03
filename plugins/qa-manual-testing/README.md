@@ -1,6 +1,6 @@
 # qa-manual-testing
 
-Manual scripted + exploratory testing. Covers session-based exploratory testing per Bach + Bach SBTM, tour-based exploration heuristics per Whittaker's seven canonical tours, scripted manual test authoring, UAT scripts in stakeholder format, bug-bash facilitation, and structured PROOF debriefs.
+Manual scripted + exploratory testing. Covers session-based exploratory testing per Jonathan and James Bach's SBTM, tour-based exploration heuristics per Whittaker's seven canonical tours, scripted manual test authoring, UAT scripts in stakeholder format, bug-bash facilitation, and structured PROOF debriefs.
 
 ## Components
 
@@ -11,8 +11,8 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | Skill | [exploratory-tours-reference](skills/exploratory-tours-reference/SKILL.md) | Pure-reference catalog of the seven canonical Whittaker tours: Feature, Money, Landmark, Intellectual, Bad-data, Configuration, Garbage collector. |
 | Skill | [bug-bash-facilitator](skills/bug-bash-facilitator/SKILL.md) | Build-an-X structured multi-tester session: pre-bash kit + cohort charters + real-time triage board + scoring + post-bash cluster debrief. |
 | Skill | [uat-script-author](skills/uat-script-author/SKILL.md) | Build-an-X UAT scripts in stakeholder-readable business language: pre-conditions + journey steps + expected outcomes + AC verification + sign-off. |
-| Skill | [manual-test-debrief](skills/manual-test-debrief/SKILL.md) | Build-an-X session debrief in PROOF format (Past, Results, Outlook, Obstacles, Feelings) + 3-bucket time accounting + cross-session aggregation. |
-| Skill | [sbtm-reference](skills/sbtm-reference/SKILL.md) | Pure-reference catalog of Session-Based Test Management (Bach + Bach): charters, time-boxed sessions, TBS metrics. |
+| Skill | [manual-test-debrief](skills/manual-test-debrief/SKILL.md) | Build-an-X session debrief in PROOF format (Past, Results, Obstacles, Outlook, Feelings) + 3-bucket time accounting + cross-session aggregation. |
+| Skill | [sbtm-reference](skills/sbtm-reference/SKILL.md) | Pure-reference catalog of Session-Based Test Management: charters, time-boxed sessions, TBS metrics. |
 | Skill | [hiccupps-f-heuristic](skills/hiccupps-f-heuristic/SKILL.md) | Pure-reference catalog of Bolton's HICCUPPS-F oracle heuristic for deciding whether something is a problem. |
 | Skill | [sfdpot-heuristic](skills/sfdpot-heuristic/SKILL.md) | Pure-reference catalog of Bach's SFDPOT ("San Francisco Depot") product-element coverage heuristic. |
 | Skill | [fcc-cuts-vids-heuristic](skills/fcc-cuts-vids-heuristic/SKILL.md) | Pure-reference catalog of Bach's FCC CUTS VIDS mnemonic for modelling a system under test. |

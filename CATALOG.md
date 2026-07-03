@@ -16,7 +16,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | [qa-process](plugins/qa-process/) | 1.6.5 | 19 skills + 7 agents | 26 |
 | [qa-test-data](plugins/qa-test-data/) | 1.2.3 | 17 skills + 3 agents | 20 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.3.0 | 15 skills + 2 agents | 17 |
-| [qa-roles](plugins/qa-roles/) | 1.3.5 | 0 skills + 15 agents | 15 |
+| [qa-roles](plugins/qa-roles/) | 1.3.6 | 0 skills + 15 agents | 15 |
 | [qa-test-review](plugins/qa-test-review/) | 1.4.4 | 5 skills + 6 agents | 11 |
 | [qa-test-management](plugins/qa-test-management/) | 1.1.3 | 7 skills + 2 agents | 9 |
 | [qa-hiring](plugins/qa-hiring/) | 1.3.1 | 5 skills + 1 agents | 6 |
@@ -142,7 +142,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.5.4 | 14 skills + 3 agents | 17 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.5.5 | 14 skills + 3 agents | 17 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.1.2 | 5 skills + 1 agents | 6 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.0.0 | 5 skills + 1 agents | 6 |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.4 | 5 skills + 1 agents | 6 |

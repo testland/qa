@@ -10,7 +10,7 @@ keywords: [onboarding, exploratory-testing, sbtm, scripted-testing, heuristics, 
 ## What this plugin covers
 
 This plugin covers two modes of human-driven testing. **Session-based exploratory testing**
-(SBTM - Bach + Bach, 2000) is a framework in which a tester executes a focused, time-boxed
+(SBTM - Jonathan and James Bach, 2000) is a framework in which a tester executes a focused, time-boxed
 session (60-90 minutes) guided by a **charter** - a mission statement of the form
 "Explore \<area\> with \<tools\> to discover \<information\>" - and records findings in a session
 sheet that a lead can review and debrief; the framework turns ad-hoc clicking into a
@@ -41,7 +41,7 @@ If you want to run an exploratory session, follow this sequence:
 
 3. **Debrief with `session-debrief-coach`.**
    After the session, paste your session sheet into session-debrief-coach. It checks every
-   PROOF field (Past, Results, Outlook, Obstacles, Feelings) for completeness, flags a
+   PROOF field (Past, Results, Obstacles, Outlook, Feelings) for completeness, flags a
    thin Feelings entry, detects a skewed TBS time split (setup% > 30% signals an
    environment problem), and recommends the next charter from your Outlook section.
 
