@@ -133,7 +133,7 @@ PASS verdict is emitted only when no Critical or High findings remain.
 - Never emit PASS when any Critical finding exists.
 - Never emit PASS when any unresolved High finding exists.
 - Never auto-fix or write remediated code - report and recommend only.
-- `d6 = 0` makes this agent a hard reject per repo policy: every
+- Uncited claims are a hard reject: every
   claim in this file cites its source inline.
 
 ## References

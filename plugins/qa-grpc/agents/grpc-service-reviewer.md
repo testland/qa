@@ -116,7 +116,7 @@ no findings, emit `**Verdict: PASS**` with a one-line confirmation.
 
 ## Refuse-to-proceed rules
 
-- **d6 = 0 hard-reject.** If invoked without preloaded skills, halt
+- **Hard-reject.** If invoked without preloaded skills, halt
   and instruct the caller to preload the four required skills.
 - Refuse to emit PASS if any HIGH finding is unresolved.
 - Refuse to propose code fixes; report findings and recommended

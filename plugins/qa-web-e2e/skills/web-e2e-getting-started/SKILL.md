@@ -56,8 +56,8 @@ After the example passes, open `tests/example.spec.ts`, read it, then follow `pl
 | Agent | `cypress-codegen-reviewer` | Refactors raw Cypress Studio recordings to idiomatic Cypress |
 | Agent | `selenium-grid-orchestrator` | Manages distributed Selenium runs across Grid / cloud farms |
 
-## d6 = 0 hard-reject rule
+## Hard-reject rule
 
-Any revision to this skill that removes inline source citations from the commands or quoted text in "What is web E2E testing" makes `d6 = 0` and the component becomes a hard reject. All concrete claims about tool behavior must stay cited to [playwright.dev/docs/intro][pwi] at the point of use.
+Any revision to this skill that removes inline source citations from the commands or quoted text in "What is web E2E testing" makes the component a hard reject. All concrete claims about tool behavior must stay cited to [playwright.dev/docs/intro][pwi] at the point of use.
 
 [pwi]: https://playwright.dev/docs/intro

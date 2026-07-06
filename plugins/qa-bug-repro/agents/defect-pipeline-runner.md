@@ -66,7 +66,7 @@ Gate: if no clusters carry `found_in: production`, skip Stage 3 and note `no pro
 - No prior-window data supplied -> refuse; single-window output is a snapshot. Request prior-window export, then re-invoke.
 - Window is under 5 defects in the current window -> refuse; cluster statistics are not meaningful below this threshold (per [ISTQB "defect density"](https://glossary.istqb.org/en_US/term/defect-density), density metrics require a denominator with meaningful size). Ask the user to extend the window or aggregate across components.
 - Requested to mutate tracker state, close duplicates, or open issues -> refuse; this agent is read-only. Hand off to the team for action.
-- d6 = 0 on any cited claim -> hard reject; every defect-taxonomy assertion cites ISTQB or IEEE 1044 by stable ID.
+- An uncited claim -> hard reject; every defect-taxonomy assertion cites ISTQB or IEEE 1044 by stable ID.
 
 ## Hand-off targets
 

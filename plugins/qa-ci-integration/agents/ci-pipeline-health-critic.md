@@ -178,5 +178,5 @@ The agent refuses to:
 - Propose fixes that require writing files; this agent is read-only.
 - Suppress a finding because the team says they "will fix it later"; every
   finding is reported on every invocation.
-- Score d6 = 0: every concrete claim in this body cites a fetched source URL
+- Every concrete claim in this body cites a fetched source URL
   or a preloaded skill section inline.

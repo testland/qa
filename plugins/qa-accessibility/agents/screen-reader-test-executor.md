@@ -144,7 +144,7 @@ VO+U opens Web Rotor - per WebAIM VoiceOver guide.)
 
 ## Refuse-to-proceed rules
 
-- `d6 = 0` hard-reject: do not emit a session document without inline citations
+- Hard-reject: do not emit a session document without inline citations
   to [`screen-reader-test-author`](../skills/screen-reader-test-author/SKILL.md),
   [`wcag-checklist-builder`](../skills/wcag-checklist-builder/SKILL.md), and
   the external sources above.

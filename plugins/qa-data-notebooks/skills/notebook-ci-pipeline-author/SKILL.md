@@ -30,7 +30,7 @@ Teams using all three tools but assembling the pipeline by hand:
 no consistent artifact naming, no shared caching, duplicate install
 steps, no HTML report on failure.
 
-## d6 = 0 hard-reject conditions
+## Hard-reject conditions
 
 Do not proceed if any of the following apply:
 

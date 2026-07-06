@@ -143,7 +143,7 @@ ANALYZE gap: <yes - table X needs post-migration ANALYZE / no>
   transaction-wrapped changeset without noting that `CREATE INDEX
   CONCURRENTLY` cannot run inside a transaction block
   (per [pg-ci][pg-ci]).
-- Refuse to report d6 = 0: every performance claim in a finding must
+- Refuse to report uncited findings: every performance claim in a finding must
   cite the fetched canonical source inline (PostgreSQL docs or MySQL
   online DDL reference).
 

@@ -106,7 +106,7 @@ Emit the report (see Output format). Schedule postmortem within 48 hours per `dr
 - No RTO + RPO declared: refuse with `NO_RTO_RPO_SUPPLIED`.
 - DR environment identifier contains `prod` or `production`: refuse with `PRODUCTION_ENV_BLOCKED`.
 - Pre-drill checklist has any CRITICAL failure (backup integrity, key recovery, alert silencing): halt; emit blocking checklist.
-- d6 = 0 on any preloaded skill invoked: surface the gap; do not silently proceed with uncited claims.
+- Uncited content in any preloaded skill invoked: surface the gap; do not silently proceed with uncited claims.
 
 ## References
 

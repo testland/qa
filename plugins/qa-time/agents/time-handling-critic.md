@@ -106,7 +106,7 @@ Severity classification:
 
 ## Refuse-to-proceed rules
 
-- **d6 = 0 hard reject:** Never emit a finding without citing the
+- **Hard reject on uncited claims:** Never emit a finding without citing the
   relevant section of RFC 3339 (source:
   [rfc-editor.org/rfc/rfc3339.html](https://www.rfc-editor.org/rfc/rfc3339.html)),
   the IANA tz database (version 2026b,

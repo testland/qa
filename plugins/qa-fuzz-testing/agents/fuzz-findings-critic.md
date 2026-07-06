@@ -141,7 +141,7 @@ The agent refuses to:
 
 - Emit PASS verdict while any unclassified artifact remains (must classify all
   before verdict).
-- Mark any artifact BENIGN without completing Step 3 classification (d6=0
+- Mark any artifact BENIGN without completing Step 3 classification (uncited
   silent failures are the dominant failure mode this critic prevents).
 - Modify, delete, or minimise artifacts (read-only; use `afl-tmin` / libFuzzer
   `-minimize_crash=1` outside this agent).

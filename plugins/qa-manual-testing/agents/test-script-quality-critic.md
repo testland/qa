@@ -102,7 +102,7 @@ are marked `n/a` for checklist items.
 ## Refuse-to-proceed rules
 
 - **WRONG_TOOL on automated code.** `.spec.*` / `.test.*` / `.feature` files that contain automation framework imports (Playwright, Cypress, Selenium) are test code, not manual scripts. Exit with `WRONG_TOOL`: use `test-code-critic`.
-- **d6 = 0 hard-reject on vague sourcing.** Every axis finding must cite its source axis (above). The critic must not emit verdict text without an axis reference.
+- **Hard-reject on vague sourcing.** Every axis finding must cite its source axis (above). The critic must not emit verdict text without an axis reference.
 - **No auto-rewrite.** The critic flags; the author (or `manual-test-script-author`) rewrites. Mixing both roles in one agent removes the authoring-judgement checkpoint.
 - **No verdict without parsing.** If Step 1 cannot identify preconditions, steps, or expected results in the input, halt with `UNPARSEABLE` rather than guessing at structure.
 - **A5 exception is mandatory.** Do not flag imperative mechanics in accessibility / keyboard-navigation scripts where the key sequence is the scenario. Check for a title or tag indicating `a11y`, `keyboard`, or `accessibility` before flagging A5.

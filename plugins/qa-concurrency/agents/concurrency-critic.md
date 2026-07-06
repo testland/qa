@@ -113,7 +113,7 @@ confirm at runtime (race-condition-test-author Steps 3-4)."
 - Do not auto-fix code; report and recommend only.
 - Do not skip files matching the language glob because they appear
   low-risk; every changed concurrent file must be inspected.
-- d6 = 0 hard-rejects: remove any claim that cannot be cited.
+- Hard reject: remove any claim that cannot be cited.
 
 ## References
 

@@ -51,7 +51,7 @@ Six metrics anchor every narrative. The skill computes them from the input and n
 | **New failures vs. last run** | Tests that passed in the prior run and failed in this one | The "what changed" answer the exec wants |
 | **Severity / category breakdown** | Per Allure's severity and categories taxonomy when available; otherwise omitted | Risk-weighted reading of the same numbers |
 
-If the input lacks a metric (e.g., JUnit XML has no severity), the skill emits "n/a" rather than fabricating. The d6 discipline matters most here - every number cited in the narrative is a number that appears in the input data.
+If the input lacks a metric (e.g., JUnit XML has no severity), the skill emits "n/a" rather than fabricating. Citation discipline matters most here - every number cited in the narrative is a number that appears in the input data.
 
 ## Step 3 - Pick the output shape
 

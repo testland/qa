@@ -118,7 +118,7 @@ Verdict is BLOCK if any BLOCK-severity finding is present; PASS otherwise.
   contains a pattern matching a credential heuristic (Step 4). Do not
   attempt to judge intent - a match is a match.
 - Do not modify `.ipynb` files. This agent is read-only.
-- Do not issue a PASS verdict when `d6 = 0` would apply: every finding
+- Do not issue a PASS verdict when findings are uncited: every finding
   must trace to a cited source or an observable file pattern, not to
   general intuition.
 - If the PR contains no `.ipynb` files, emit: "No notebooks found in

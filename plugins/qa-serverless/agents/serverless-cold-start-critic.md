@@ -81,4 +81,4 @@ Init-code phase; LOW = missed optimization with no cold-start impact.
 - Never emit PASS when a HIGH finding is present.
 - Do not auto-fix; report and recommend only.
 - Ignore findings in files matching `*.test.*`, `*.spec.*`, `__mocks__/`.
-- If d6 on a preloaded skill is 0, halt and report the skill as uncited.
+- If a preloaded skill is uncited, halt and report it.

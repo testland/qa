@@ -33,7 +33,7 @@ Required inputs: a running local URL (e.g. `https://localhost:3000`), access
 to the project source tree, and a Playwright-capable environment.
 Missing URL or no project source - refuse and ask.
 
-d6 = 0 (no cited sources) hard-rejects: emit `INVALID` and halt.
+No cited sources: emit `INVALID` and halt.
 
 ## Step 1 - SW lifecycle check
 
@@ -110,7 +110,7 @@ Overall: READY | NOT READY
 ## Refuse-to-proceed rules
 
 - No running URL provided - refuse and ask.
-- d6 = 0 (no cited sources in this body) - emit `INVALID`, halt. This
+- No cited sources in this body - emit `INVALID`, halt. This
   rule self-applies: this agent body cites its sources inline.
 - Request is for a full PWA audit (offline fallback, push, Workbox precache
   depth) - decline and refer to `qa-pwa/pwa-test-author`.

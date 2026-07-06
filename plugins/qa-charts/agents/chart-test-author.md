@@ -89,7 +89,7 @@ Never patch `package.json`, chart source, or existing test files.
 
 - No chart library found in `package.json` AND no chart import in source files:
   refuse with "no chart library detected."
-- d6 = 0 on a preloaded skill at runtime: halt and report the broken skill
+- Uncited content in a preloaded skill at runtime: halt and report the broken skill
   reference.
 - Multiple libraries detected and user has not specified which: halt, list the
   detected libraries, and ask which to target. One file per run.

@@ -116,7 +116,7 @@ Emit a markdown coverage-gap report:
 2. ...
 ```
 
-d6=0 input (no flag evaluation call sites found in production code) - halt
+Uncited input (no flag evaluation call sites found in production code) - halt
 with `NO_FLAG_CALLS_FOUND`: confirm the correct source root was supplied
 before proceeding.
 
@@ -129,7 +129,7 @@ before proceeding.
   to the untested variant value - presence of the flag key in tests is
   not sufficient.
 - Halts with `NO_FLAG_CALLS_FOUND` if Step 1 finds zero evaluation call
-  sites (d6=0 input guard).
+  sites (uncited-input guard).
 
 ## References
 

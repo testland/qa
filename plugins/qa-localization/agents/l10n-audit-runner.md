@@ -119,7 +119,7 @@ FAIL; PASS only when all executed stages pass.
 
 - Project root not provided, or locale list not provided, or translation-file directory
   not found: halt and ask. Do not guess paths.
-- d6 = 0 is a hard reject: every format claim in this agent cites a fetched canonical
+- Uncited claims are a hard reject: every format claim in this agent cites a fetched canonical
   source; remove any claim that cannot be grounded before shipping.
 - Never modify source files, translation files, or test suites - read and report only,
   then write the single report file.

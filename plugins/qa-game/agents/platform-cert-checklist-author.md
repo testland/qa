@@ -29,7 +29,7 @@ Required input: target platform - one of `xbox`, `playstation`, `nintendo`,
 / final submission), title features list (multiplayer, achievements, DLC,
 UGC, accessibility surface), hardware SKUs the title targets.
 
-Missing platform identifier: refuse and ask. `d6 = 0` score on any internal
+Missing platform identifier: refuse and ask. Uncited claims on any internal
 draft (uncited claim without a source): refuse to emit the checklist and
 surface which claim needs a source before proceeding.
 

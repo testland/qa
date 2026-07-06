@@ -50,7 +50,7 @@ hideSchemaDetails). This skill is scoped exclusively to depth/complexity
 DoS tests - over-limit query construction, validation-layer rejection
 assertion, and the cross-library matrix.
 
-## d6 = 0 hard-reject rule
+## Hard stop: no limit configured
 
 If the server under test has no depth or complexity limit configured at
 all (no `depthLimit`/`costAnalysis` validation rule, no

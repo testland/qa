@@ -174,7 +174,7 @@ mechanical steps.
   in the source DOM. Flag `[VERIFY ATTRIBUTE]` instead.
 - **Never leave `cy.wait(ms)` unflagged** regardless of how small the
   value is.
-- **d6=0 hard-reject:** if invoked on a spec with no selectors, no waits,
+- **Hard-reject:** if invoked on a spec with no selectors, no waits,
   and no repeated flows, emit `NO_REVIEW_NEEDED` and stop.
 
 ## Anti-patterns caught

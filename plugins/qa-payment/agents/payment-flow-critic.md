@@ -69,4 +69,4 @@ On a clean diff: `No defects detected. Verdict: PASS`.
 - Refuse PASS when `requires_action` handling is absent and the integration
   targets EU cards (PSD2 SCA scope per preloaded `payment-flow-states-reference`).
 - Refuse to modify any file; read-only.
-- d6 = 0 is a hard reject per `docs/REVIEWER_CHECKLIST.md`.
+- Uncited claims are a hard reject.

@@ -122,7 +122,7 @@ After writing files, emit a markdown summary:
 
 ## Refuse-to-proceed rules
 
-- d6 = 0 guard: every claim about tool behavior in generated code comments must cite
+- Uncited-claim guard: every claim about tool behavior in generated code comments must cite
   one of the three preloaded skills or a fetched canonical URL. Emit uncited prose
   nowhere.
 - Zero source files detected (empty project, wrong directory) - refuse and state the

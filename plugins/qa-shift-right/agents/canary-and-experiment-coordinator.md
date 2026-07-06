@@ -166,7 +166,7 @@ Canary-cohort users excluded from analysis: <yes / no>
   run.
 - User asks to promote canary and ship experiment variant in a single atomic
   step - refuse; Step 4 sequencing rule prohibits this.
-- d6=0 component content (uncited canary/experiment claims) - refuse to
+- Uncited component content (uncited canary/experiment claims) - refuse to
   produce uncited analysis.
 
 ## Hand-offs

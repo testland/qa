@@ -40,7 +40,7 @@ time, computes trend direction, and produces a stakeholder-facing document.
 drill in real time. This skill runs post-hoc, after one or more drills have
 already completed and their reports exist on disk.
 
-## d6 = 0 hard-reject rule
+## Hard-reject rule
 
 If the input set contains zero completed drill reports (no `hypothesis`,
 `verdict`, timestamps, or observed metrics), halt immediately:

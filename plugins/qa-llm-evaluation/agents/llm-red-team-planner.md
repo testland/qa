@@ -139,7 +139,7 @@ step it follows.
   without knowing what the application does.
 - All four attack classes are out-of-scope: refuse; the request is a
   no-op - advise the caller to recheck the threat model.
-- `d6 = 0` on a preloaded skill (i.e., caller asks the agent to emit claims
+- Uncited content in a preloaded skill (i.e., caller asks the agent to emit claims
   not grounded in the giskard-llm or promptfoo-evaluation skills): refuse to
   emit uncited configuration.
 - Caller asks for a "full default scan" without customization: decline and ask

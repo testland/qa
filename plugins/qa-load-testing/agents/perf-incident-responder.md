@@ -17,7 +17,7 @@ On-call performance-incident orchestrator for senior perf engineers. Reproduces 
 
 Required: the affected endpoint (or service name) + the observed symptom (p95 latency, error rate, CPU saturation, or DB load). Optional: an existing k6 script or a flamegraph file already captured; a time window from APM.
 
-The agent refuses if `d6 = 0` (no cited sources) or if no endpoint is supplied.
+The agent refuses if there are no cited sources, or if no endpoint is supplied.
 
 ### Step 1 - Confirm and reproduce
 
@@ -120,7 +120,7 @@ If cause remains inconclusive: hand off to [`perf-regression-bisector`](./perf-r
 
 ## Refuse-to-proceed rules
 
-- `d6 = 0` on this agent: hard reject (uncited claims).
+- Uncited claims on this agent: hard reject.
 - No endpoint or service supplied: ask before proceeding.
 - k6 confirmation run passes all thresholds: do not continue - state the incident may be resolved and stop.
 - Flame graph cannot be captured (no profiler available, no access to process): state the blocker; do not guess the hot path from code review alone.

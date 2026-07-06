@@ -100,7 +100,7 @@ The report is a single markdown document. The verdict (`GO` / `NO-GO` / `CONDITI
 
 - **Missing release artifact.** The agent refuses to emit a verdict without at least one test-run artifact. A verbal claim ("all tests passed") is not an artifact.
 - **Missing baseline for coverage diff.** Without a baseline, the agent cannot determine whether coverage regressed. It emits `COVERAGE_BASELINE_MISSING` and asks for the prior-release coverage report.
-- **d6 = 0 hard reject.** Every numeric threshold in this report (pass-rate floor, 80% new-file threshold, -5pp regression threshold) is cited to a fetched canonical source inline. If the agent cannot source a claim, it emits `[unsourced - supply baseline]` rather than inventing.
+- **Hard reject on uncited claims.** Every numeric threshold in this report (pass-rate floor, 80% new-file threshold, -5pp regression threshold) is cited to a fetched canonical source inline. If the agent cannot source a claim, it emits `[unsourced - supply baseline]` rather than inventing.
 - **No waiver list, but waivers implied.** If the release criteria config includes waivers but no list of what is waived, the agent blocks with `WAIVER_LIST_MISSING`: a verbal "we are waiving the P3 flakes" without a named list is not a waiver.
 
 ## Hand-off targets

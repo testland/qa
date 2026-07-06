@@ -167,7 +167,7 @@ List each `GAP` scenario in full, marked ready for new test authoring:
 **Step-usage index built from:** M existing .feature files / JSON report
 ```
 
-## Step 6 - Hard-reject conditions (d6 = 0 rule analog)
+## Step 6 - Hard-reject conditions
 
 Do not emit a coverage map if any of the following conditions hold. Halt
 and report the blocker instead:

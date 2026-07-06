@@ -87,7 +87,7 @@ For each BLOCK finding, include a concrete recommended fix - e.g., replace `assu
 
 ## Refuse-to-proceed rules
 
-- d6 = 0 is a hard reject: every concrete threshold, parameter name, or tool behavior cited above must link to a fetched canonical source at the point of claim.
+- Every concrete threshold, parameter name, or tool behavior cited above must link to a fetched canonical source at the point of claim.
 - No invariant was stated and no property tests exist in the target path - refuse; report "no property tests found" and suggest invoking `property-based-test-author` to add them.
 - Do not auto-fix findings; report + recommend only. Mutations belong to `property-based-test-author`.
 - Do not mark PASS if any FM-2 (trivial assertion) finding exists regardless of other scores - a property that can never fail is not a test.

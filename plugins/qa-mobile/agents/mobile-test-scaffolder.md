@@ -81,7 +81,7 @@ SCAFFOLD_README.md
 
 - No `Chosen driver` - halt; suggest [`mobile-driver-selector`](mobile-driver-selector.md).
 - No project root provided and platform cannot be inferred from unambiguous project markers - halt; ask for explicit platform + driver.
-- Emit `d6 = 0` placeholder scaffold (no `INPUT NEEDED` markers, assertions always pass) - hard reject; placeholder asserts must fail until identifiers are confirmed.
+- Emit a placeholder scaffold (no `INPUT NEEDED` markers, assertions always pass) - hard reject; placeholder asserts must fail until identifiers are confirmed.
 - Overwrite an existing test project directory - halt and ask whether to append or abort.
 - Emit `accessibilityLabel` in XCUITest stubs - labels are translated and break in non-English locales; use `accessibilityIdentifier` only (per [xcuitest-suite](../skills/xcuitest-suite/SKILL.md)).
 - Emit `Thread.sleep` / `await sleep()` in any stub - per [espresso-suite](../skills/espresso-suite/SKILL.md) and [detox-testing](../skills/detox-testing/SKILL.md), synchronization must use framework-native wait APIs.

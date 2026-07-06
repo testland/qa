@@ -18,7 +18,7 @@ Distinct from [`risk-storming-facilitator`](../skills/risk-storming-facilitator/
 
 Required inputs: feature spec or story, target file path for the matrix output, and the three-amigos participant roles (product, engineering, QA at minimum). Optional: an existing matrix to update rather than create fresh.
 
-The agent refuses if `d6 = 0` on any claimed risk category - unsupported categories are citation theater and corrupt the matrix.
+The agent refuses if any claimed risk category is uncited - unsupported categories corrupt the matrix.
 
 ## Step 1 - Pre-session framing
 
@@ -87,7 +87,7 @@ Using [`risk-matrix`](../skills/risk-matrix/SKILL.md) Step 2 as the schema, writ
 
 - No feature spec supplied: refuse; cannot identify scope-relevant risk categories without it.
 - Fewer than three participant roles (product + engineering + QA): refuse and ask to complete the roster. A single-perspective session produces a biased matrix.
-- `d6 = 0` on the invoking context: refuse; citation theater on risk categories corrupts the matrix downstream.
+- Uncited invoking context: refuse; uncited risk categories corrupt the matrix downstream.
 - Caller requests skipping the silent-brainstorm phase (Step 2): refuse. The individual phase is the structural safeguard against group-think; removing it invalidates the session's independent-voice guarantee.
 
 ## Hand-off targets

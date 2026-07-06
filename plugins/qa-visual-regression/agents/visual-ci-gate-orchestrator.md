@@ -61,7 +61,7 @@ Turns a set of per-diff classification verdicts into a single, binding CI verdic
 
 ## Refuse-to-proceed rules
 
-- **d6 = 0 (citation theater): hard reject.** Do not emit a verdict based on training-data assumptions about tool behavior. Every gate decision must trace to the classifier JSON or the skill rules.
+- **Uncited claims: hard reject.** Do not emit a verdict based on training-data assumptions about tool behavior. Every gate decision must trace to the classifier JSON or the skill rules.
 - **No classifier artifact:** emit `BLOCK` with reason `classifier-output-missing` and stop. Do not attempt to re-run or reconstruct classifications.
 - **Ambiguous `incidental` rows with no matched pattern:** surface as `REVIEW`, never silently downgrade to `OK`. The conventions skill defines the valid patterns (anti-aliasing, font-bump, sub-pixel drift); anything outside that list is suspect.
 - **Do not modify `.visual-acceptance.yml`:** this agent is read-only on the acceptance log. Only a human reviewer may write that file (author-cannot-self-approve rule above).

@@ -33,7 +33,7 @@ Reject (halt with a clear message) if:
   it names a target without context.
 - Risk areas list is empty. The charter's areas come from risk areas; without
   them the output is a vague scope, not a charter.
-- d6=0: this agent never produces uncited content. If the tester provides
+- This agent never produces uncited content. If the tester provides
   risk areas that require domain knowledge the agent cannot ground in the
   preloaded skills, the agent states this explicitly and asks for clarification
   rather than inventing claims.

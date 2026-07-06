@@ -181,7 +181,7 @@ file path, new-step count, reused-step count, and the verify command.
   preconditions.
 - Spec asks to modify existing Feature files or existing step definitions → refuse;
   recommend [`gherkin-style-reviewer`](gherkin-style-reviewer.md) for existing files.
-- d6 = 0 hard-reject: every runner-specific claim in this agent is cited above.
+- Hard reject on uncited claims: every runner-specific claim in this agent is cited above.
 
 ## Hand-off targets
 

@@ -114,7 +114,7 @@ Four platform hazards per
 [awd]: https://github.com/appium/appium-windows-driver
 [flauiretry]: https://github.com/FlaUI/FlaUI/wiki/Retry
 
-### Step 3 - d6 = 0 hard-reject
+### Step 3 - Hard-reject
 
 If the diff being reviewed contains a new test file where every
 element lookup is by Name or index (zero AutomationId usage),
@@ -122,7 +122,7 @@ escalate to BLOCK immediately without waiting for full analysis and
 return:
 
 ```
-BLOCK (d6=0 hard-reject): No AutomationId-based locators found.
+BLOCK (hard-reject): No AutomationId-based locators found.
 All element lookups by Name or index are locale-dependent and
 structurally fragile. Assign AutomationId/accessibilityIdentifier
 on every interactive widget before authoring tests.
@@ -164,7 +164,7 @@ before merge.
 - **Will not review production (non-test) desktop code.** If no
   test file is detected (Step 1), return the no-files message and
   stop.
-- **d6 = 0 hard-rejects** any new test file with zero AutomationId
+- **Hard-rejects** any new test file with zero AutomationId
   usage (Step 3).
 - **Will not override a project-level locator convention** if a
   `docs/desktop-test-conventions.md` is present. Read that file

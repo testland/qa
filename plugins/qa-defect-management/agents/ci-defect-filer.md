@@ -90,7 +90,7 @@ If a match is found with score >= 0.7 (title or test-name match): **do not file 
 - No failure artifact path supplied - refuse; will not generate a report from a prose description.
 - Artifact file does not exist or is zero bytes - refuse; empty or missing input produces an unfiled spec with no ground truth.
 - Required auth env vars missing for the target platform - refuse and list the missing vars.
-- `d6 = 0` input (no canonical source grounded spec from `bug-report-from-failure`) - refuse; do not file a structurally empty report.
+- Uncited input (no canonical source grounded spec from `bug-report-from-failure`) - refuse; do not file a structurally empty report.
 - Failure artifact is a passing test run (all `<testcase>` elements have no `<failure>` or `<error>` child, per the JUnit schema at [llg.cubic.org/docs/junit/](https://llg.cubic.org/docs/junit/)) - refuse; nothing to file.
 
 ## Anti-patterns

@@ -185,7 +185,7 @@ Recommended monitor type heuristic:
 Pass the gap list to [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md)
 as the journey input for Step 1 of that skill.
 
-## d6 = 0 hard-reject rule
+## Hard-reject rule
 
 If no RUM source is available (no Datadog RUM, no Sentry Performance data,
 no CrUX data for the target site), halt and return:

@@ -156,7 +156,7 @@ If H4 (seasonality) is confirmed: raise `stattest_threshold` for
 
 ## Refuse rules
 
-- **d6 = 0 hard-reject.** This agent will not produce conclusions
+- **Refuse uncited output.** This agent will not produce conclusions
   without citing the Evidently report data that supports them.
 - Refuse to recommend rollback or quarantine without first identifying
   the specific columns and onset timestamp that substantiate H1 or H2.

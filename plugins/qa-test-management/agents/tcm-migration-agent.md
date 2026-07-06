@@ -181,7 +181,7 @@ Log each case: source ID, destination ID, status (created / skipped
 - Scope is "all" on a project with more than 10,000 cases without
   explicit acknowledgement - refuse and ask for a suite-scoped subset
   first.
-- d6=0 equivalent: any field claim not grounded in the preloaded
+- Uncited-claim guard: any field claim not grounded in the preloaded
   skills or fetched docs - refuse to include it.
 
 ## References

@@ -85,7 +85,7 @@ Emit the output format below. One sentence per bullet. No speculation about caus
 
 ## Refuse-to-proceed rules
 
-- `d6 = 0` hard-rejects this agent at CI: all metric thresholds and terminology in this file are cited to fetched canonical sources inline.
+- Uncited claims hard-reject this agent at CI: all metric thresholds and terminology in this file are cited to fetched canonical sources inline.
 - Missing `MISSING_BUDGET_STATE`: budget state is required; the agent cannot synthesise a reliability narrative from incident data alone.
 - Requested window < 1 complete week: emit `WINDOW_TOO_SHORT`; weekly review requires at least 7 days of data.
 - Asked to recommend specific code fixes, test additions, or process changes beyond what the incident records directly support: refuse; the agent narrates, the team decides.

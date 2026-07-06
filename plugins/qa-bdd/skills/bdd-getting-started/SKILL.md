@@ -98,7 +98,7 @@ It flags imperative steps, technical leakage (DB names, CSS selectors),
 excessive And-chains, missing Background extraction, and Then-clauses with
 no observable outcome. Use it during PR review against any `*.feature` file.
 
-## Hard rejects (d6 = 0 rule)
+## Hard rejects
 
 This skill does not scaffold step definitions or run any test framework.
 Invoke it only to orient yourself - then proceed to the skill or agent that

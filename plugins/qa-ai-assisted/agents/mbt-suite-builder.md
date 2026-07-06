@@ -118,7 +118,7 @@ criterion, path count, confidence breakdown, generation date, and status
   structured input or hallucination risk is unacceptable.
 - Target test framework not specified and cannot be inferred from the project
   (no `package.json`, `pyproject.toml`, or `*.csproj` found) - refuse.
-- d6 = 0 on the generated model (model-based-test-graph-author validation
+- An uncited generated model (model-based-test-graph-author validation
   fails - unreachable states or dead-end non-final states remain) - refuse
   to proceed to generation; fix the model first.
 - Never auto-approve the generated tests as merge-ready. Always emit the

@@ -220,7 +220,7 @@ Pre-flight verdict against each check:
 
 Verdict: hypothesis is sound. Proceed to experiment execution.
 
-## Hard-reject conditions (d6 gate)
+## Hard-reject conditions
 
 The following hypothesis patterns are hard rejects. Do not proceed to
 execution until they are resolved:
