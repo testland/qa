@@ -1,7 +1,12 @@
 name: enforce-version-bump
 
+# A plugin whose shipped files change must bump its plugin.json `version`, or
+# installed users never receive the update (Claude Code caches by version).
+# Runs on PRs AND direct pushes to main — direct-to-main must not bypass it.
 on:
   pull_request:
+  push:
+    branches: [main]
 
 jobs:
   check:
@@ -14,13 +19,29 @@ jobs:
 
       - name: Compare plugin.json versions
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          PUSH_AFTER_SHA: ${{ github.sha }}
         run: |
           set -e
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            BASE_SHA="$PR_BASE_SHA"
+            HEAD_SHA="$PR_HEAD_SHA"
+          else
+            BASE_SHA="$PUSH_BEFORE_SHA"
+            HEAD_SHA="$PUSH_AFTER_SHA"
+            # First push to a new branch (all-zero before) or a base not in
+            # history: nothing to compare against, so skip.
+            if ! git rev-parse --verify --quiet "${BASE_SHA}^{commit}" >/dev/null 2>&1; then
+              echo "No valid base commit ($BASE_SHA); nothing to enforce."
+              exit 0
+            fi
+          fi
           touched=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -oE '^plugins/[^/]+' | sort -u || true)
           if [ -z "$touched" ]; then
-            echo "No plugin files touched in this PR; nothing to enforce."
+            echo "No plugin files touched; nothing to enforce."
             exit 0
           fi
           fail=0

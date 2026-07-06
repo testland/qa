@@ -124,14 +124,52 @@ requirement in full, and [`docs/ROADMAP.md`](docs/ROADMAP.md) for the
 current gap list and which categories the marketplace actively wants
 contributions in.
 
+## Version bumps are mandatory
+
+**Any change to a plugin's shipped files requires bumping that plugin's
+`plugin.json` `version`.** This covers every edit to a `SKILL.md`, an
+`agents/*.md`, a `skills/*/references/*.md`, the plugin `README.md`, or the
+manifest itself. Claude Code caches an installed plugin by its `plugin.json`
+`version` (falling back to the marketplace entry, then the commit SHA). If the
+shipped bytes change but `version` does not, **installed users never receive the
+update** — the "silent no-update" trap.
+
+- **Which bump:** patch (`x.y.Z`) for content / wording / typo fixes; minor
+  (`x.Y.0`) for a new skill/agent or a behavior change; major for a breaking
+  restructure. Role bundles bump when their `dependencies` change.
+- **Also** bump `.claude-plugin/marketplace.json` `metadata.version` for a
+  marketplace-wide release and regenerate `CATALOG.md` — it prints a per-plugin
+  Version column (`python3 scripts/generate-catalog.py`).
+- **Enforced** by `scripts/version-bump-check.py` (local mirror) and
+  `.github/workflows/version-bump.yml`, which runs on **pull requests AND direct
+  pushes to `main`** — a component change without a matching bump fails CI either
+  way. There is no bypass; a direct push to `main` is checked just like a PR.
+
+### Keep testland-web in version parity (required)
+
+`testland-web` (testland.io) publishes this marketplace, and **users must be
+able to install exactly the version shown there.** A marketplace change is not
+complete until testland-web is resynced and shipped in lockstep:
+
+1. In `testland-web/`: `npm run sync:plugins` — regenerates `content/plugins/**`
+   and `public/plugins-index.json` from this repo's sibling checkout.
+2. `npm run build` — runs typecheck, lint, and the `check-plugin-links` gate.
+3. Commit the regenerated content and push, so the site's displayed versions
+   match the installable ones exactly.
+
+Never push a plugin or version change here without the matching testland-web
+resync; the two repos ship together.
+
 ## Local validation flow
 
-Run these three before opening a PR; CI runs the same:
+Run these before opening a PR (or before any direct push to `main`); CI runs the
+same:
 
 ```bash
 bash scripts/validate.sh .             # lint: kebab-case, required fields, no placeholders
 bash scripts/rating-check.sh .         # rating ≥ 21 + d6 ≥ 1
 python3 scripts/composition-graph.py   # agent → skill preload references valid
+python3 scripts/version-bump-check.py  # every touched plugin bumped its plugin.json version
 ```
 
 Or run all checks plus catalog regeneration in one go:
