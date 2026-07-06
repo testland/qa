@@ -2,8 +2,6 @@
 name: solr-relevance-tests
 description: "Tests Apache Solr search relevance by querying a test core, asserting ranking and score expectations, uploading LTR feature stores and models via the `/schema/feature-store` and `/schema/model-store` REST APIs, using `debugQuery` for per-document score explain, tuning eDisMax parameters (`qf`, `pf`, `mm`, `bq`), and computing judgment-driven nDCG checks against pinned corpora. Use when the search stack runs Apache Solr (enterprise, SolrCloud, or embedded) and you need a pre-deploy relevance gate or LTR model verification."
 type: skill
-rating: 23
-d6: 4
 keywords:
   - solr
   - relevance-testing

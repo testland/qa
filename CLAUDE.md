@@ -3,7 +3,7 @@
 This is **testland-qa**, a Pattern B2 multi-plugin Claude Code marketplace.
 89 plugins / 706 components (run `python3 scripts/generate-catalog.py` for the
 current count — `CATALOG.md` is authoritative). Every component is
-rating-gated before merge.
+reviewed against the D1–D6 quality rubric before merge.
 
 If you're using Claude Code to contribute to this repo, this file tells you
 what conventions to follow.
@@ -55,9 +55,10 @@ component shapes and authoring guidance.
 |---|---|---|
 | `name` | yes | kebab-case, matches the directory / filename |
 | `description` | yes | third-person, no "You are…" / "I help…" openers |
-| `rating` | yes | integer 0–30; CI rejects below 21 |
-| `d6` | yes | integer 0–5; CI rejects 0 (citation theater) |
 | `keywords` | optional | array of strings; flows into marketplace search |
+
+Do **not** add `rating` / `d6` fields — the D1–D6 rubric is applied at manual PR
+review (see "The quality bar" below), not stored in component frontmatter.
 | `tools` (agents only) | optional | tool allowlist (`Read`, `Grep`, `Bash(jq *)`, etc.) |
 | `model` (agents only) | optional | `sonnet`, `opus`, `haiku` |
 | `skills` (agents only) | optional | array of skill names this agent preloads |
@@ -76,7 +77,10 @@ reviewer agent has When invoked → Steps 1..N → Verdict → Refuse-to-proceed
 
 ## The quality bar
 
-Every component is scored on six dimensions before merge:
+Every component is reviewed against a six-dimension rubric before merge. This is
+a **manual PR review** — a reviewer applies the rubric to the diff using the
+`.github/PULL_REQUEST_TEMPLATE.md` D1–D6 checklist. It is not a CI gate and not a
+stored frontmatter field:
 
 | Dim | Name | Anchor |
 |---|---|---|
@@ -87,8 +91,12 @@ Every component is scored on six dimensions before merge:
 | **D5** | Body quality | Concrete steps + worked examples |
 | **D6** | Terminology compliance | Concrete claims cited inline at point of use |
 
-CI enforces **total ≥ 21/30 and d6 ≥ 1**. `d6 = 0` is a hard reject — uncited
-"sounds plausible" content is the dominant failure mode the gate prevents.
+**Merge bar (reviewer judgment):** each dimension should clear its anchor, with
+**D6 (citations) as the hard floor** — uncited "sounds plausible" content is the
+dominant failure mode and a hard reject. Components are no longer scored with
+`rating` / `d6` frontmatter; the rubric lives in the reviewer's checklist, so
+there is no automated rating gate — new components are validated by reading the
+PR.
 
 See [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md) for the rubric
 and [`docs/REVIEWER_TRAINING.md`](docs/REVIEWER_TRAINING.md) for A/C/F-grade
@@ -167,7 +175,6 @@ same:
 
 ```bash
 bash scripts/validate.sh .             # lint: kebab-case, required fields, no placeholders
-bash scripts/rating-check.sh .         # rating ≥ 21 + d6 ≥ 1
 python3 scripts/composition-graph.py   # agent → skill preload references valid
 python3 scripts/version-bump-check.py  # every touched plugin bumped its plugin.json version
 ```

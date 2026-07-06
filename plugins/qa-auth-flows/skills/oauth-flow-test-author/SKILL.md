@@ -1,8 +1,6 @@
 ---
 name: oauth-flow-test-author
 description: "Build-an-X for OAuth 2.0 / OIDC flow tests - authorization-code with PKCE per RFC 7636 (canonical for browser/native/mobile clients), client-credentials per RFC 6749 §1.3.4 (M2M), refresh-token rotation per RFC 9700 (token-binding + reuse-detection), state parameter for CSRF defense per RFC 6749 §10.12, nonce parameter for OIDC ID-token replay defense, scope-grant verification, redirect-URI strict matching. Use when authoring tests for any OAuth/OIDC client or resource server, regardless of the underlying IdP (Keycloak / Auth0 / Okta / mock)."
-rating: 24
-d6: 5
 ---
 
 # oauth-flow-test-author

@@ -9,8 +9,6 @@ skills:
   - jqwik-testing
   - proptest-testing
   - quickcheck-testing
-rating: 27
-d6: 4
 ---
 
 A tool-selection agent that picks the right property-based testing library by language. Reads project markers and emits one concrete recommendation per language.

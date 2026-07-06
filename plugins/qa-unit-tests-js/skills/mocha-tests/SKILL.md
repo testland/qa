@@ -1,8 +1,6 @@
 ---
 name: mocha-tests
 description: "Configures and runs Mocha - pluggable JS test runner pairable with Chai assertions, Sinon mocking, and nyc / c8 coverage; supports BDD interface (`describe` / `it`) and TDD interface (`suite` / `test`); async tests via callbacks / promises / async-await; `--parallel` mode (Mocha 8+); `.mocharc.json` config; per-test exclusivity via `.only()` / `.skip()`. Use when the user prefers a minimal pluggable runner (vs Jest's batteries-included) or maintains legacy Mocha codebases."
-rating: 23
-d6: 4
 ---
 
 # mocha-tests

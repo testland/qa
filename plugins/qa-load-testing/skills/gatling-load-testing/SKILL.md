@@ -1,8 +1,6 @@
 ---
 name: gatling-load-testing
 description: "Authors Gatling simulations in Java / Kotlin / Scala (or JS / TS) using the Simulation class plus http() / scenario() / exec() DSL builders, ramps virtual users via injectOpen (arrival rate) or injectClosed (concurrent count), runs via Maven / Gradle / sbt with the Gatling plugin, and gates CI on assertions defined in setUp(). Use when the project is on the JVM and the team prefers code-first load tests over JMeter's XML or k6's JavaScript-only authoring."
-rating: 25
-d6: 4
 ---
 
 # gatling-load-testing

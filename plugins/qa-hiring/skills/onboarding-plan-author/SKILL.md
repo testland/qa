@@ -1,8 +1,6 @@
 ---
 name: onboarding-plan-author
 description: "Build-an-X workflow that produces a 30-60-90 day onboarding plan for a newly hired QA engineer - takes seniority level (junior / mid / senior / lead) plus the team's hiring rubric and emits phase-gated ramp milestones, competency targets mapped to the rubric axes, mentor cadence, and success criteria per phase. Distinct from `calibration-guide-author` (which closes the interview loop before hire) and `hiring-rubric-author` (which scores candidates during the loop); this skill produces the post-hire ramp artifact. Use when a QA engineer has been hired and the hiring manager or team lead needs a structured first-90-days plan before the new hire's start date."
-rating: 22
-d6: 2
 ---
 
 # onboarding-plan-author

@@ -1,8 +1,6 @@
 ---
 name: cdn-cache-purge-tests
 description: "Wraps CDN cache-purge testing patterns for Cloudflare (POST /zones/{zone_id}/purge_cache, single-file / everything / cache-tags / hostname / prefix), Fastly (POST purge-by-key / purge-all, surrogate-keys via Surrogate-Key header), and CloudFront (CreateInvalidation API + paths). Covers end-to-end test patterns (write origin → trigger purge → assert edge serves fresh), purge-propagation delay testing (typically 1-30s globally), surrogate-key + cache-tag patterns for group-purge, and Cache-Status header verification (cf-cache-status: HIT/MISS/BYPASS). Use when designing or auditing CDN cache-invalidation workflows."
-rating: 22
-d6: 4
 ---
 
 # cdn-cache-purge-tests

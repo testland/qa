@@ -1,8 +1,6 @@
 ---
 name: hiccupps-f-heuristic
 description: "Pure-reference catalog of Michael Bolton's HICCUPPS-F oracle heuristic - eight (plus one) reference points for deciding whether something is a problem. Each letter is a kind of oracle the tester consults: History, Image, Comparable products, Claims, Users' desires, Product (internal consistency), Purpose, Standards / statutes, plus Familiar problems. Use as the heuristic vocabulary an exploratory session draws on when asking 'should this behaviour be a bug?'"
-rating: 24
-d6: 4
 ---
 
 # hiccupps-f-heuristic

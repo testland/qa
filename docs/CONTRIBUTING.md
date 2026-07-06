@@ -13,20 +13,21 @@ the gate so contributions land cleanly.
 2. **Read [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)** for the full
    step-by-step authoring guide.
 3. **Read [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md)** for the rubric
-   your PR will be scored against.
+   your PR will be reviewed against.
 
-## Quality gate (CI-enforced)
+## Quality gate
 
-Every component ships with these YAML scoring fields:
+Every component's frontmatter carries these required YAML fields:
 
 ```yaml
 ---
 name: kebab-case-name           # 1-64 chars, no claude/anthropic reserved words
 description: ...                # ≤1024 chars; 3rd-person, action-oriented; no "You are..." / "I help..."
-rating: 28                      # 0-30; the D1-D6 sum; merge bar ≥21
-d6: 4                           # 0-5; D6 Terminology Compliance; d6=0 is a hard reject
 ---
 ```
+
+There is no `rating` / `d6` field. The D1–D6 rubric is applied at manual PR
+review (see "The six review dimensions" below), not stored in frontmatter.
 
 CI runs these checks on every PR:
 
@@ -34,18 +35,22 @@ CI runs these checks on every PR:
 2. **`scripts/validate.sh`** — frontmatter/file lint: kebab-case naming, no
    reserved words (`claude`/`anthropic`), no "You are.../I help..." openers,
    no placeholder strings, no empty command bodies, JSON syntax.
-3. **`scripts/rating-check.sh`** — `rating ∈ [21, 30]` and `d6 ≥ 1`;
-   `d6 = 0` blocks merge regardless of total.
-4. **`scripts/content-audit.py`** — description ≤1024 chars, body within the
+3. **`scripts/content-audit.py`** — description ≤1024 chars, body within the
    type cap (skill 600 / agent 350 lines), Windows-path hygiene.
-5. **`scripts/composition-graph.py`** — every agent `skills:` preload resolves
+4. **`scripts/composition-graph.py`** — every agent `skills:` preload resolves
    to a real skill.
-6. **`scripts/generate-catalog.py`** — `CATALOG.md` is regenerated and current.
+5. **`scripts/generate-catalog.py`** — `CATALOG.md` is regenerated and current.
 
-## The six rating dimensions (D1–D6)
+There is no automated rating gate. The six D1–D6 dimensions are a manual review
+lens a reviewer applies to the PR diff via the
+[`.github/pull_request_template.md`](../.github/pull_request_template.md)
+checklist.
 
-A reviewer scores each dimension 0–5; the sum is the `rating` (0–30, merge
-bar ≥21). `d6` is surfaced as its own field because it carries a hard floor.
+## The six review dimensions (D1–D6)
+
+A reviewer applies each dimension to the PR diff. There is no stored score and
+no rating field; the reviewer's judgment on the checklist decides the merge. D6
+carries a hard floor (see below).
 
 - **D1 — Spec compliance:** frontmatter follows Anthropic's plugin spec
   (name format + name matches parent dir + description ≤1024 chars +
@@ -66,8 +71,8 @@ bar ≥21). `d6` is surfaced as its own field because it carries a hard floor.
 - **D6 — Terminology compliance:** ISTQB-canonical terms cited to canonical
   sources; tool-specific claims grounded in fetched vendor docs;
   practitioner-emergent terms (flaky test, contract test, golden file)
-  attributed to industry-engineering sources, not ISTQB. **D6 = 0 hard
-  rejects.**
+  attributed to industry-engineering sources, not ISTQB. **Uncited claims are
+  a hard reject.**
 
 The full per-dimension rubric and review questions live in
 [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md).
@@ -104,29 +109,28 @@ If any check fails, reshape the scope before authoring.
    Cypress, k6, dbt, Pact, etc.). Cite URLs inline at the point of each
    claim — not as an appended References list.
 
-4. **Self-rate** D1–D6. Add `rating:` (the 0–30 sum) and `d6:` to frontmatter.
+4. **Self-check against D1–D6** — the reviewer applies the rubric to the PR;
+   there is no stored score and no rating field.
 
 5. **Run CI locally:**
 
    ```bash
    bash scripts/test-validate.sh
    bash scripts/validate.sh
-   bash scripts/rating-check.sh
    python3 scripts/content-audit.py --strict
    ```
 
-6. **Commit** with a message that includes the source-fetch date and rating,
-   e.g.:
+6. **Commit** with a message that includes the source-fetch date, e.g.:
 
    ```
-   Add k6-load-testing skill (rated 27/30 [d6=5]; sources fetched 2026-05-25 from grafana.com/docs/k6)
+   Add k6-load-testing skill (sources fetched 2026-05-25 from grafana.com/docs/k6)
    ```
 
 ## Role bundles
 
 A **role bundle** (`qa-starter`, the `qa-role-*` family) is a dependency-only
 plugin that installs a curated set of plugins in one command. A bundle PR is
-**exempt from the D1–D6 rating gate** — it ships no components — but it must
+**exempt from the D1–D6 review** — it ships no components — but it must
 declare its members as **bare plugin-name strings** in `plugin.json`
 `dependencies` (never `{name, version}` or `name@testland-qa`), ship a
 **prose-only** README with no component-table rows, register
@@ -168,8 +172,9 @@ admitted on the strength of three things:
    existing components and explains the axis on which the new one is
    distinguishable (tool, lifecycle stage, output shape, scope of inputs).
    "It's the same idea, but mine" is not an axis.
-3. **The rating bar** — `rating ≥ 21/30` with `d6 ≥ 1` (the lint enforces
-   both; `d6 = 0` is a hard reject). Per the rubric in
+3. **The review bar** — at manual PR review each D1–D6 dimension clears its
+   anchor, with citations (D6) as the hard floor. There is no automated rating
+   gate. Per the rubric in
    [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md).
 
 What this changes vs. earlier policy:

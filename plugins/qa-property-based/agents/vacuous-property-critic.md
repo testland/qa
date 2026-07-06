@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - fast-check-testing
   - hypothesis-testing
-rating: 23
-d6: 3
 ---
 
 Adversarial critic that rejects PBT suites where tests pass vacuously - no counterexample is ever possible because inputs are over-filtered, assertions are trivial, generators are too narrow, or the assertion mirrors the implementation. Read-only; emits findings + BLOCK / PASS verdict.

@@ -1,8 +1,6 @@
 ---
 name: killswitch-test-author
 description: "Workflow-driven skill that authors the four test categories specific to kill-switch (ops-toggle) flags: switch-OFF graceful degradation, fail-static default when the flag service is unreachable, latency budget for the kill decision, and no-data-corruption mid-flight. Distinct from flag-state-coverage-builder (which builds a full coverage matrix across all flag types) and feature-flag-test-matrix-reference (which catalogs patterns without producing tests). Use when a kill-switch flag exists in the codebase and needs dedicated, production-incident-rehearsing tests authored for it."
-rating: 24
-d6: 4
 keywords:
   - kill-switch
   - ops-toggle

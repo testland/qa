@@ -1,8 +1,6 @@
 ---
 name: restassured-testing
 description: "Authors REST Assured (Java) API tests using the given().when().then() BDD-style DSL - status code + JSON/XML path assertions + authentication (Basic, OAuth2, API key). Configures Maven / Gradle dependencies, runs via JUnit 5, and emits Surefire / JaCoCo reports for CI gating. Use when the project is on the JVM and the team wants type-safe API tests in the same language as the application."
-rating: 26
-d6: 4
 ---
 
 # restassured-testing

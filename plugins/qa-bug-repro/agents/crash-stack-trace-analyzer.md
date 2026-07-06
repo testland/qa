@@ -4,8 +4,6 @@ description: "Read-only agent that parses a crash dump or stack trace, identifie
 tools: "Read, Grep, Glob, Bash(git blame *), Bash(git log *), Bash(git show *), Bash(node *)"
 model: sonnet
 skills: '[]'
-rating: 24
-d6: 4
 ---
 
 A trace parser that turns "the app crashed in production" into "this commit on this line is the most likely cause."

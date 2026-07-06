@@ -4,8 +4,6 @@ description: "Read-only agent that takes a time-windowed set of defects (from `d
 tools: "Read, Grep, Glob, Bash(jq *), Bash(grep *), Bash(git log *)"
 model: sonnet
 skills: '[]'
-rating: 24
-d6: 4
 ---
 
 A reader of defect data that turns a tracker export into the prose summary a manager presents at a weekly review. Read-only - proposes no fixes, opens no issues, modifies no state.

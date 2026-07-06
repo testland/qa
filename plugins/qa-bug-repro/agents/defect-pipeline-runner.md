@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git log *)"
 model: sonnet
 skills:
   - bug-report-template
-rating: 23
-d6: 2
 ---
 
 Orchestrates the three-stage weekly defect review pipeline: clustering -> trend narration -> escape analysis. Reads and routes; writes no files and mutates no state.

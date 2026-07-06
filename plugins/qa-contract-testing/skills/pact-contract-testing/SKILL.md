@@ -1,8 +1,6 @@
 ---
 name: pact-contract-testing
 description: "Authors and verifies Pact consumer-driven contract tests across the full Pact lifecycle - consumer tests producing pact files, publishing to the Pact Broker, provider verification, and `can-i-deploy` deployment gates. Use when introducing a new HTTP/JSON API contract between two services, diagnosing breaking changes, or wiring contract verification into CI."
-rating: 25
-d6: 4
 ---
 
 # pact-contract-testing

@@ -1,8 +1,6 @@
 ---
 name: payment-flow-states-reference
 description: "Pure-reference catalog of payment lifecycle state machines across Stripe, Adyen, PayPal, and Braintree. Covers the canonical states (created / requires_action / processing / succeeded / requires_capture / canceled / failed), authorisation vs capture (separate vs combined), the asynchronous webhook states, refund / dispute / chargeback transitions, and the per-platform terminology mapping (Stripe PaymentIntent.status vs Adyen Authorisation/Capture vs PayPal Order). Use when designing tests for payment flows or auditing state-handling code. Composes 3ds-test-flow-reference."
-rating: 23
-d6: 4
 ---
 
 # payment-flow-states-reference

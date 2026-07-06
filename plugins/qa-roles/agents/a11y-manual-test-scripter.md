@@ -3,8 +3,6 @@ name: a11y-manual-test-scripter
 description: "Produces a manual accessibility test script for a component or page - generates step-by-step keyboard-navigation and screen-reader (NVDA / VoiceOver) test cases mapped to specific WCAG 2.2 success criteria, with expected focus order and announcements. Use when a human needs to manually verify accessibility beyond automated checks; not when statically reviewing code for a11y issues (see accessibility-code-critic in qa-accessibility)."
 tools: "Read, Grep, Glob"
 model: sonnet
-rating: 22
-d6: 4
 ---
 
 Generates a numbered, step-by-step manual test script covering keyboard

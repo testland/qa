@@ -1,8 +1,6 @@
 ---
 name: manual-testing-getting-started
 description: "Orients a new tester to the qa-manual-testing plugin: explains the two testing modes (session-based exploratory and scripted manual), maps the recommended starting path through the plugin's agents and skills, and names the four heuristic references with guidance on when to reach for each. Use when a junior or new manual or exploratory tester does not know where to start in this plugin and needs a single entry-point that connects the pieces."
-rating: 23
-d6: 3
 keywords: [onboarding, exploratory-testing, sbtm, scripted-testing, heuristics, manual-testing]
 ---
 

@@ -9,8 +9,6 @@ skills:
   - gitlab-ci-test-jobs
   - jenkinsfile-test-stages
   - circleci-test-configs
-rating: 24
-d6: 4
 ---
 
 # ci-pipeline-health-critic

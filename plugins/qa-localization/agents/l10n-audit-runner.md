@@ -8,8 +8,6 @@ skills:
   - pseudo-localization-runner
   - rtl-rendering-tester
   - locale-format-validator
-rating: 24
-d6: 3
 ---
 
 Runs the four `qa-localization` skills as one sequenced audit pass. Never modifies

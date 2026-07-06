@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - session-management-test-author
   - oauth-flow-test-author
-rating: 23
-d6: 3
 ---
 
 You are an adversarial critic specialising in token-storage and session

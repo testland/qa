@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - error-budget-tests
   - mttr-mtbf-tracker
-rating: 23
-d6: 3
 keywords:
   - reliability
   - slo

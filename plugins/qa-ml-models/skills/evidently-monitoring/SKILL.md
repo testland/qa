@@ -2,8 +2,6 @@
 name: evidently-monitoring
 description: "Use Evidently OSS (100+ evaluation metrics, declarative testing API) to detect data drift, target drift, and model-performance regression, wired into CI as a gate (a Report run with include_tests) and into production monitoring as a continuous check; reports as HTML + JSON for both human review and pipeline assertions. Use when you need a drift or quality gate, or a scheduled monitoring job, for a tabular ML model. Built on the Evidently API specifically: for DeepChecks-based validation suites use deepchecks-tests instead."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - evidently
   - data-drift

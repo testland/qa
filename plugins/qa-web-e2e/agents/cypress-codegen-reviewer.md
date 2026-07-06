@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - cypress-testing
   - test-code-conventions
-rating: 22
-d6: 3
 ---
 
 Adversarial code-improvement agent that turns raw Cypress codegen output into

@@ -1,8 +1,6 @@
 ---
 name: manual-test-debrief
 description: "Session debrief template + tour-coverage tracker - captures the SBTM PROOF format (Past, Results, Obstacles, Outlook, Feelings) plus three-bucket time accounting (test design / setup / bug investigation), the tours applied + areas covered + areas skipped, and the per-session quality-of-attention signal. Output is the artifact a charter delivers into; the team aggregates debriefs across sessions to track what's been explored vs what's still uncharted. Use after every exploratory session - without the debrief, the session's findings disappear."
-rating: 22
-d6: 3
 ---
 
 # manual-test-debrief

@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - introspection-attack-surface-reference
   - persisted-query-strategy-reference
-rating: 22
-d6: 4
 ---
 
 A read-only specialist that detects N+1 GraphQL resolver patterns and proposes the DataLoader fix.

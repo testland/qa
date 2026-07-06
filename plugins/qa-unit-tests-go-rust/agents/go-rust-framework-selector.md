@@ -8,8 +8,6 @@ skills:
   - ginkgo-tests
   - go-test
   - rstest-tests
-rating: 25
-d6: 4
 ---
 
 A framework-selection agent that turns "which Go or Rust test framework?" into one defended recommendation by reading the target project rather than enumerating trade-offs.

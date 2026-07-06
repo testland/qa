@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:
   - qa-okr-author
-rating: 23
-d6: 2
 ---
 
 Reads each team's single-team signals and synthesises them into a portfolio

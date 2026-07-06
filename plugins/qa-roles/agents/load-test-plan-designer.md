@@ -3,8 +3,6 @@ name: load-test-plan-designer
 description: "Designs a load-test plan from a service's SLOs and endpoint inventory - maps each SLO to load scenarios, defines ramp / soak / spike profiles, sets pass/fail threshold expressions, and outputs a tool-agnostic plan ready to implement in k6 or Gatling. Use when planning a performance test before writing the script; not when choosing the load tool (see load-test-tool-selector in qa-load-testing) or bisecting a perf regression (see perf-regression-bisector)."
 tools: "Read, Grep, Glob"
 model: sonnet
-rating: 22
-d6: 3
 ---
 
 Turns a service's SLO targets and endpoint inventory into a structured,

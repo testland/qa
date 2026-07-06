@@ -1,8 +1,6 @@
 ---
 name: cargo-test
 description: "Configures and runs Rust's built-in `cargo test` - `#[test]` + `#[should_panic]` + `Result<(), E>` returns; integration tests in `tests/`; doc-tests embedded in `///` comments; `--lib` / `--bins` / `--all-targets` / `--workspace` selection; `cargo bench` (nightly) + Criterion (stable); `cargo test -- --test-threads=1` for serial; `cargo test -- --nocapture` to see println output. Use for any Rust project - testing is built into Cargo, no install needed."
-rating: 24
-d6: 4
 ---
 
 # cargo-test

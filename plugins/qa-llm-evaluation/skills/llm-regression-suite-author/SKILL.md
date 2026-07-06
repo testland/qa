@@ -1,8 +1,6 @@
 ---
 name: llm-regression-suite-author
 description: "Builds a versioned golden-dataset LLM regression suite for tracking quality across model upgrades: structures a versioned JSONL/CSV golden dataset, configures deterministic eval runs (temperature 0, seed), wires assertion layers (exact, semantic similarity, LLM-as-judge, rubric), enforces a pass-rate threshold with diff reporting vs the baseline model, and gates CI on regression. Use when upgrading an LLM provider model and needing a repeatable before/after quality gate, or when a prompt regression suite must track output quality across model versions over time."
-rating: 24
-d6: 4
 keywords:
   - llm-regression
   - golden-dataset

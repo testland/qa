@@ -1,8 +1,6 @@
 ---
 name: steady-state-hypothesis-validator
 description: "Validates a chaos experiment's steady-state hypothesis before execution: checks that each probe metric is measurable and observable, that a recent baseline exists, that tolerances are numerically meaningful and SLI-backed, that the measurement window is defined, and that the chosen metrics would actually move under the target failure mode. Use when a chaos experiment has been authored (via chaos-experiment-author) and the team needs a pre-flight verdict before running the drill in any environment."
-rating: 24
-d6: 4
 ---
 
 # steady-state-hypothesis-validator

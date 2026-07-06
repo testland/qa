@@ -1,8 +1,6 @@
 ---
 name: cold-start-budget-reference
 description: "Pure-reference catalog of cold-start budgets across serverless runtimes. Covers AWS Lambda's three-phase cold start (Init: download+unzip+runtime-bootstrap; Init code: imports + module load; Invoke: handler execution), Cloudflare Workers' isolate model (sub-millisecond cold starts via V8 isolates per developers.cloudflare.com), Vercel Edge Runtime, Lambda SnapStart for JVM (snapshot-restore for Java), and provisioned-concurrency trade-offs. Includes per-runtime typical cold-start ranges and the testable behaviours each model creates. Use when designing latency budgets, choosing a runtime, or auditing cold-start variance in production."
-rating: 22
-d6: 4
 ---
 
 # cold-start-budget-reference

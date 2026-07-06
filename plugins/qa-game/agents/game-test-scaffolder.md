@@ -7,8 +7,6 @@ skills:
   - unity-test-framework
   - unreal-automation-system
   - godot-gut-tests
-rating: 23
-d6: 3
 ---
 
 Scaffolder that produces a runnable-but-skeletal game test project rooted at one engine - never invents selectors or game-object names, never emits a smoke-passing assertion, always emits a CI workflow stub.

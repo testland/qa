@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - manual-test-debrief
   - sbtm-reference
-rating: 23
-d6: 3
 ---
 
 Reviews a completed SBTM session sheet (per

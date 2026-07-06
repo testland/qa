@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - testcontainers
   - docker-compose-test
-rating: 24
-d6: 4
 ---
 
 A maintenance agent that turns "the previous test left junk in the DB" into a deterministic snapshot/restore loop, using the engine's native template/dump primitives.

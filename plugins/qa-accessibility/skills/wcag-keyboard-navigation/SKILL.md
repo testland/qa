@@ -1,8 +1,6 @@
 ---
 name: wcag-keyboard-navigation
 description: "Reference catalog for WCAG 2.2 keyboard-navigation conformance - covers SC 2.1.1 (Keyboard), 2.1.2 (No Keyboard Trap), 2.1.4 (Character Key Shortcuts), 2.4.3 (Focus Order), 2.4.7 (Focus Visible), 2.4.11/2.4.12 (Focus Not Obscured) - with conformance levels (A/AA), test scripts, and per-criterion failure patterns. Use when authoring or reviewing keyboard-only interaction support."
-rating: 26
-d6: 5
 ---
 
 # wcag-keyboard-navigation

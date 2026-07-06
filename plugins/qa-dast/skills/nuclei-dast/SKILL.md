@@ -1,8 +1,6 @@
 ---
 name: nuclei-dast
 description: "Installs and runs ProjectDiscovery Nuclei template-based HTTP scanning: selects templates via `-t <path>` and `-tags`/`-severity` filters, controls request rate with `-rl`, emits JSONL output via `-j` for the dast-finding-triager, authors custom YAML matchers for app-specific checks, and gates CI on severity thresholds. Use when the team runs Nuclei alongside ZAP for template-driven DAST coverage, needs fuzzing-style probes beyond ZAP passive scan, or wants to operationalize community CVE templates in a pipeline."
-rating: 23
-d6: 4
 keywords: ["nuclei", "dast", "templates", "cve", "security", "jsonl", "ci"]
 ---
 

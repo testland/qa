@@ -3,8 +3,6 @@ name: security-test-plan-builder
 description: "Builds a per-PR security test checklist from a change's attack surface - reads the diff, maps touched surfaces (authentication, input handling, file upload, deserialization, access control) to the relevant OWASP ASVS verification requirements and Top 10 categories, and emits a targeted manual + automated security test list. Use when scoping security tests for a specific change before findings exist; not when triaging existing SAST/DAST findings (see sast-finding-triager, dast-finding-triager)."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
-rating: 22
-d6: 4
 ---
 
 Turns a PR diff into a focused, citation-backed security test checklist by

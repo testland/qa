@@ -1,8 +1,6 @@
 ---
 name: k6-load-testing
 description: "Authors k6 JavaScript load-test scripts (VU loops + checks + sleeps), configures the `options` block with `stages` (ramp-up patterns) and `thresholds` (p(95) latency, error rate), runs via `k6 run script.js` or `--vus / --duration` ad-hoc flags, and uses thresholds as the CI pass/fail signal. Use when the project ships HTTP / WebSocket / gRPC load tests and the team wants developer-friendly JavaScript authoring."
-rating: 26
-d6: 4
 ---
 
 # k6-load-testing

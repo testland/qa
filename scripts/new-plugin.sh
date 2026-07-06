@@ -115,5 +115,5 @@ PYEOF
 echo "Scaffolded plugins/$NAME"
 echo "Next steps:"
 echo "  1. Add components under plugins/$NAME/agents/ or plugins/$NAME/skills/"
-echo "  2. Run: bash scripts/validate.sh && bash scripts/rating-check.sh"
+echo "  2. Run: bash scripts/validate.sh"
 echo "  3. When all components land, bump plugin.json version 0.1.0 -> 1.0.0"

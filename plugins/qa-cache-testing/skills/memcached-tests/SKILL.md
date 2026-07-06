@@ -1,8 +1,6 @@
 ---
 name: memcached-tests
 description: "Wraps Memcached cache testing patterns: text and binary protocol command verification (set/get/add/cas/incr/decr), TTL semantics (0=never-expire, 30-day Unix-timestamp boundary), no-persistence and LRU eviction under memory pressure, consistent-hashing client key distribution across nodes, and AWS ElastiCache Memcached Auto Discovery endpoint testing. Use when writing tests for an application that uses Memcached as its primary cache, when verifying ElastiCache Memcached cluster behaviour, or when contrasting Memcached eviction and distribution semantics against Redis."
-rating: 23
-d6: 4
 ---
 
 # memcached-tests

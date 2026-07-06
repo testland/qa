@@ -7,8 +7,6 @@ skills:
   - gitleaks-scanning
   - trufflehog-scanning
   - kingfisher-scanning
-rating: 24
-d6: 3
 ---
 
 Adversarial unifier of gitleaks + TruffleHog + Kingfisher JSON output. Combines

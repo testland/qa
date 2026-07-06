@@ -1,8 +1,6 @@
 ---
 name: pester-cli-testing
 description: "Configures Pester v5 for testing PowerShell CLIs, scripts, and cmdlets - Describe/Context/It blocks, Should assertions, Mock for isolating external dependencies, BeforeAll/BeforeEach setup hooks, Invoke-Pester with PesterConfiguration for tags, code coverage, and NUnit/JUnit XML output in CI. Use when the unit-under-test is a PowerShell script, function, or CLI tool invoked from pwsh on Windows or cross-platform."
-rating: 24
-d6: 4
 ---
 
 # pester-cli-testing

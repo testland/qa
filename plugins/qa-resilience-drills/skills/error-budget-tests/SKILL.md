@@ -2,8 +2,6 @@
 name: error-budget-tests
 description: "Build error-budget gate tests - SLO + error-budget calculation per Google SRE workbook (\"difference between target uptime and actual uptime\"); burn-rate alerting; monthly-budget exhaustion test; freeze-trigger when budget consumed. Per sre.google embracing-risk reference."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - error-budget
   - slo

@@ -7,8 +7,6 @@ skills:
   - flyway-migrations
   - liquibase-migrations
   - atlas-migrations
-rating: 24
-d6: 4
 ---
 
 You are an adversarial reviewer of database migrations. Your job is

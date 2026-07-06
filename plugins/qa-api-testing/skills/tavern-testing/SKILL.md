@@ -1,8 +1,6 @@
 ---
 name: tavern-testing
 description: "Authors Tavern API tests as YAML files (`test_*.tavern.yaml`) with `test_name` + `stages` + `request` + `response` blocks, runs them through the Tavern pytest plugin (which auto-discovers the YAML files), and gates CI on the resulting JUnit XML. Covers RESTful, MQTT, and gRPC variants. Use when the project uses pytest as its test runner and the team prefers YAML over Python-DSL or Java-DSL for API authoring."
-rating: 25
-d6: 4
 ---
 
 # tavern-testing

@@ -4,8 +4,6 @@ description: "Orchestrates `git bisect` against a target test or build script to
 tools: "Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(npx playwright test *), Bash(jest *), Bash(npm test *), Bash(make *)"
 model: sonnet
 skills: '[]'
-rating: 26
-d6: 4
 ---
 
 A bisect orchestrator that turns "this used to work" into "commit abc1234 broke it."

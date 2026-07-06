@@ -2,8 +2,6 @@
 name: d3-snapshot-tests
 description: "Snapshot-test D3.js charts - D3 generates SVG (not Canvas, per d3js.org getting-started); use `outerHTML` snapshot for static structure, `toHaveScreenshot` for rendered SVG; jsdom for headless render in unit tests; disable transitions for stable snapshots; per-element data-binding correctness tests."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - d3
   - svg-snapshot

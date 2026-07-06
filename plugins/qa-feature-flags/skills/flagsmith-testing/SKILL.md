@@ -1,8 +1,6 @@
 ---
 name: flagsmith-testing
 description: "Wraps Flagsmith server-side SDK testing patterns: local-evaluation mode (no API calls), offline mode with LocalFileHandler + downloaded environment.json, default_flag_handler for per-feature mocked fallbacks, and the get_environment_flags / get_identity_flags evaluation paths. Use when writing tests for code using Flagsmith. Composes feature-flag-test-matrix-reference."
-rating: 22
-d6: 4
 ---
 
 # flagsmith-testing

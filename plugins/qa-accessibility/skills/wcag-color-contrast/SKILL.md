@@ -1,8 +1,6 @@
 ---
 name: wcag-color-contrast
 description: "Reference for WCAG 2.2 color-contrast conformance - covers SC 1.4.3 Contrast (Minimum, AA), 1.4.6 Contrast (Enhanced, AAA), 1.4.11 Non-text Contrast (AA), and 1.4.13 Content on Hover or Focus (AA) - with the canonical contrast ratios (4.5:1 normal text, 3:1 large text and UI components), measurement formula references, and bulk design-token checking patterns. Use when designing a color palette, reviewing a component for accessibility, or auditing existing CSS for contrast violations."
-rating: 26
-d6: 5
 ---
 
 # wcag-color-contrast

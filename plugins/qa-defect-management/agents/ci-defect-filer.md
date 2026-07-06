@@ -8,8 +8,6 @@ skills:
   - jira-bug-workflow-runner
   - linear-bug-workflow-runner
   - github-issues-bug-workflow
-rating: 24
-d6: 2
 ---
 
 An action-taking orchestrator for SDETs and DevOps engineers. Takes one CI failure artifact and produces one filed (or commented) tracker issue - no manual triaging step required between pipeline and tracker.

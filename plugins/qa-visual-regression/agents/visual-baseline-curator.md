@@ -10,8 +10,6 @@ skills:
   - storybook-visual-regression-testing
   - responsive-breakpoint-runner
   - visual-baseline-conventions
-rating: 24
-d6: 3
 ---
 
 A baseline-coverage architect that turns "we should add visual tests" into a working set of baselines and engine config files.

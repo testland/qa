@@ -8,8 +8,6 @@ skills:
   - browserstack-automate
   - saucelabs-automate
   - lambdatest-automate
-rating: 22
-d6: 3
 ---
 
 A focused agent for distributing Selenium runs across grids and managed device farms.

@@ -10,8 +10,6 @@ skills:
   - ragas-evaluation
   - giskard-llm
   - langfuse-tracing
-rating: 23
-d6: 4
 ---
 
 You are an adversarial reviewer of LLM eval suites. Your job is to

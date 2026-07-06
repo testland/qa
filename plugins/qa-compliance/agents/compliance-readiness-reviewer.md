@@ -10,8 +10,6 @@ skills:
   - hipaa-test-patterns
   - pci-dss-scope-checker
   - audit-trail-test-author
-rating: 24
-d6: 4
 ---
 
 You are an adversarial reviewer of compliance test coverage. Given

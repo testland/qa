@@ -7,8 +7,6 @@ skills:
   - dbt-testing
   - great-expectations
   - soda-checks
-rating: 24
-d6: 3
 ---
 
 A read-only triager that turns a raw data-quality failure into a routed, actionable bug report.

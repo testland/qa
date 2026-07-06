@@ -2,8 +2,6 @@
 name: service-worker-tests
 description: "Test service workers with Playwright (`context.serviceWorkers()` + `waitForEvent('serviceworker')`) and unit tests using `service-worker-mock`. Covers MV3 service worker lifecycle (~30s suspend), cache strategies (cache-first, network-first, stale-while-revalidate), and `evaluate()` continuity across worker restart."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - service-worker
   - playwright

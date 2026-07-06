@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - flake-pattern-reference
   - flaky-test-quarantine
-rating: 23
-d6: 3
 ---
 
 A bisector that varies one axis at a time to localize the flake source.

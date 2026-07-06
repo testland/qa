@@ -1,8 +1,6 @@
 ---
 name: osv-scanner
 description: "Configures and runs Google OSV-Scanner - open-source SCA against the OSV.dev vulnerability database; supports `osv-scanner scan -r ./` recursive scan + per-lockfile scan via `-L package-lock.json`; SBOM input (CycloneDX / SPDX) for non-standard package managers; `--format json|sarif|markdown|vertical|html` output; suppressions via `osv-scanner.toml` config. Use when the team needs OSS-native SCA without commercial-license overhead, or wants a second-opinion DB pair with Snyk's commercial DB."
-rating: 23
-d6: 4
 ---
 
 # osv-scanner

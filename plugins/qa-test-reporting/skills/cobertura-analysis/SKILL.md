@@ -1,8 +1,6 @@
 ---
 name: cobertura-analysis
 description: "Parses Cobertura XML coverage reports (the JVM-canonical format originally from the cobertura-cobertura tool, also emitted by JaCoCo `--coverage-xml`, coverage.py `--xml`, Istanbul / Jest `cobertura` reporter, gocover-cobertura, and dotnet's `coverlet`). Walks the coverage-04 DTD structure (coverage → packages → classes → methods → lines + conditions), computes per-file deltas, and emits PR-time gating verdicts. Use when the existing CI emits Cobertura XML - typical for JVM-heavy stacks and tools that ship Cobertura as a default reporter."
-rating: 24
-d6: 4
 ---
 
 # cobertura-analysis

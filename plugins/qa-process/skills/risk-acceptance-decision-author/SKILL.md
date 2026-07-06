@@ -1,8 +1,6 @@
 ---
 name: risk-acceptance-decision-author
 description: "Build-an-X workflow that produces a structured risk-acceptance decision document - for risks the team has decided to accept (rather than mitigate / transfer / avoid). Walks the author through the ISO 31000 risk-acceptance criteria (rationale, sign-off, scope, review trigger, exit conditions), captures stakeholder approval, and links to the originating risk register entry. Output is a Markdown decision artefact that lives alongside the risk register and provides audit-defensible justification for the team's acceptance choice."
-rating: 22
-d6: 4
 ---
 
 # risk-acceptance-decision-author

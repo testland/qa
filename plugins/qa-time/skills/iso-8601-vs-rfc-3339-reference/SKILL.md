@@ -1,8 +1,6 @@
 ---
 name: iso-8601-vs-rfc-3339-reference
 description: "Pure-reference catalog of the ISO 8601 vs RFC 3339 distinction. Covers the relationship (RFC 3339 is a strict subset of ISO 8601 designed for internet protocols), the syntactic differences (RFC 3339 disallows ISO 8601's '+02' offset short-form requires '+02:00'; RFC 3339 mandates a date-time separator T or space; ISO 8601 allows much more), the canonical date-time string format (YYYY-MM-DDTHH:MM:SS[.fff]±HH:MM or Z), per-language parser behaviour (Python isoformat, Java Instant.parse, JS Date.parse non-spec), and serialisation rules for APIs. Use when choosing a wire format, parsing third-party datetimes, or auditing time-string handling."
-rating: 23
-d6: 4
 ---
 
 # iso-8601-vs-rfc-3339-reference

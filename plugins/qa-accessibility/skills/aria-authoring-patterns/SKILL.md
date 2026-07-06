@@ -1,8 +1,6 @@
 ---
 name: aria-authoring-patterns
 description: "Reference for the W3C ARIA Authoring Practices Guide (APG) - covers the 31 canonical interactive-widget patterns (Combobox, Dialog, Menu, Tabs, Tree, etc.), their required ARIA roles and states, the keyboard-interaction model per pattern, and the canonical-violations to watch for. Use when authoring a custom interactive widget that doesn't have a native HTML equivalent, or when reviewing one for ARIA correctness."
-rating: 25
-d6: 5
 ---
 
 # aria-authoring-patterns

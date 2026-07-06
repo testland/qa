@@ -1,8 +1,6 @@
 ---
 name: visual-baseline-gate
 description: "Consumes visual-diff-classifier JSON and a reviewer-signed acceptance log to produce a single go/no-go CI verdict for visual regression. Blocks when intentional baseline changes lack a non-author reviewer sign-off or when regressions are present, and emits a markdown + JSON artifact for the CI step. Use this skill when the gate's input is pre-classified diff data and the enforcement concern is reviewer approval, not when the goal is fanning out to multiple engines (use visual-ci-gate-orchestrator for that)."
-rating: 23
-d6: 3
 ---
 
 # visual-baseline-gate

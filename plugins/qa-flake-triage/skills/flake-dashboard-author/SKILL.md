@@ -1,8 +1,6 @@
 ---
 name: flake-dashboard-author
 description: "Builds a persistent flakiness infrastructure dashboard from JUnit XML or JSON CI run history: defines the flake-rate metric (failures per test over a configurable window), authors the data model, generates a Grafana time-series panel JSON or configures a Datadog CI Visibility view, derives the quarantine-candidate query, and wires trend alerts. Use when a team needs a long-lived observability surface for test reliability that outlasts any single weekly report."
-rating: 24
-d6: 3
 keywords:
   - flakiness
   - dashboard

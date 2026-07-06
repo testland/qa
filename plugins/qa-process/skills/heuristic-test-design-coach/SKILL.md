@@ -1,8 +1,6 @@
 ---
 name: heuristic-test-design-coach
 description: "Reference catalog of the four canonical heuristic test-design models - Bach's Heuristic Test Strategy Model (HTSM) with SFDPOT product elements, Whittaker's 'How to Break Software' attack patterns, Bolton's FEW HICCUPPS consistency oracles, and the ISO/IEC 25010 quality characteristics - for use when the tester has no user story, no acceptance criteria, and no documentation. Distinct from `test-case-ideation-from-story` (which works from a written story) and from `exploratory-charter-author` (which produces session charters, not case sets). Use as the reference layer that `test-case-from-live-feature` and `exploratory-charter-author` cite when generating coverage from zero documented input."
-rating: 25
-d6: 5
 ---
 
 # heuristic-test-design-coach

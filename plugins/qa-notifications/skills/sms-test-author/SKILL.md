@@ -1,8 +1,6 @@
 ---
 name: sms-test-author
 description: "Build-an-X for SMS-flow tests - uses Twilio Magic Numbers (`+15005550006` valid recipient, `+15005550001` invalid number, `+15005550002` cannot route, `+15005550003` international restriction, etc.) and Test Credentials for safe assertion-only Twilio interactions; covers segment-counting (GSM-7 vs UCS-2 encoding); rate-limit + opt-out keyword (STOP / HELP / UNSUBSCRIBE) handling; alphanumeric sender vs short-code vs 10DLC differences. Use when authoring tests for any Twilio-backed SMS flow."
-rating: 23
-d6: 4
 ---
 
 # sms-test-author

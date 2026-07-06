@@ -1,8 +1,6 @@
 ---
 name: data-quality-gate
 description: "Builds a release-readiness gate for a data pipeline by gathering check results from one or more engines (dbt, Great Expectations, Soda), applying severity-aware pass/fail thresholds, and emitting a single go / no-go decision with per-check rationale. Use when authoring a CI step that must fail the build when data quality drops below thresholds."
-rating: 23
-d6: 3
 ---
 
 # data-quality-gate

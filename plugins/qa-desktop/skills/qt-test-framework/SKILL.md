@@ -1,8 +1,6 @@
 ---
 name: qt-test-framework
 description: "Authors and runs Qt Test - the first-party C++ unit + GUI test framework that ships with Qt 6 (`#include <QtTest>`). Covers the `QTEST_MAIN` / `QTEST_APPLESS_MAIN` / `QTEST_GUILESS_MAIN` entry-point macros, the `QObject` private-slot test pattern, `QVERIFY` / `QCOMPARE` / `QFETCH` assertions, GUI event simulation (`QTest::mouseClick`, `QTest::keyClick`, `QTest::touchEvent`), `QSignalSpy` for signal introspection, `QBENCHMARK` for performance regression, and the `-o file,junitxml` CI output. Use for in-process testing of Qt widgets, QObject signal/slot chains, and Qt Quick / QML application logic; for out-of-process Qt-app driving see the OS drivers in this plugin."
-rating: 24
-d6: 4
 keywords:
   - qt
   - qttest

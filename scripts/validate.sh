@@ -3,7 +3,7 @@
 #
 # Thin dispatcher to scripts/validate.py. The actual lint implementation lives
 # in Python for ~10x speedup on Windows MSYS2 and to share frontmatter parsing
-# with rating_check.py and content-audit.py. CI workflows and test-validate.sh
+# with content-audit.py. CI workflows and test-validate.sh
 # continue to invoke this shell entry point unchanged.
 #
 # See scripts/validate.py for the lint rules.

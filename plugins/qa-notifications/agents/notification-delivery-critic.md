@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - webhook-delivery-tester
   - email-flow-test-author
-rating: 23
-d6: 3
 ---
 
 # notification-delivery-critic

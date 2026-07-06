@@ -1,8 +1,6 @@
 ---
 name: sbom-diff
 description: "Compares two CycloneDX or SPDX SBOMs to surface net-new, removed, and version-changed components between image or build versions; uses cyclonedx-cli diff for structured output and syft-based generation for the input SBOMs; gates CI on net-new component introduction; enables supply-chain alerting when unexpected dependencies appear across releases. Use when the team needs to detect dependency drift between container image builds, release candidates, or dependency-update branches."
-rating: 24
-d6: 4
 ---
 
 # sbom-diff

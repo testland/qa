@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - tenant-isolation-models-reference
   - row-level-security-postgres-reference
-rating: 23
-d6: 4
 ---
 
 A read-only specialist that traces tenant_id propagation through one code path and flags hazards.

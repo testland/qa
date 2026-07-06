@@ -1,8 +1,6 @@
 ---
 name: mull-mutation
 description: "Runs Mull, the LLVM-IR mutation testing tool, against C/C++ test binaries built with Clang: covers install (the version-matched mull-NN package), the -fpass-plugin build flags for the Mull IR frontend, mull-runner invocation, the mutator catalog, path filtering, and GitHub Actions CI. Use when a C or C++ project needs mutation-score verification with the tool already chosen. Does not select among mutation tools (use mutation-tool-selector for that) and does not cover other languages (stryker-mutation for JS/TS, stryker-net-mutation for .NET, pitest-mutation for the JVM, mutmut-mutation for Python)."
-rating: 23
-d6: 4
 ---
 
 # mull-mutation

@@ -1,8 +1,6 @@
 ---
 name: amplitude-experiment-test
 description: "Wraps Amplitude Experiment SDK testing patterns: client initialization with API key (or a bootstrapped local flag config for offline tests), the fetch / variant API, exposure-event suppression in tests, and assignment-integrity tests. Use when writing tests for code that uses Amplitude Experiment for A/B testing or flag management. Composes guardrail-metrics-reference + peeking-problem-reference + ab-test-validity-checklist."
-rating: 21
-d6: 4
 ---
 
 # amplitude-experiment-test

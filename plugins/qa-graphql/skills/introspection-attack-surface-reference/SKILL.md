@@ -1,8 +1,6 @@
 ---
 name: introspection-attack-surface-reference
 description: "Pure-reference catalog of GraphQL introspection as an attack surface and the production-deployment controls for it. Covers what introspection exposes (every type, field, directive, deprecation, description via __schema / __type), Apollo Server's default behaviour (introspection: false when NODE_ENV=production), the `hideSchemaDetailsFromClientErrors: true` companion setting (strips 'did you mean' suggestions), Yoga / Mercurius / Hasura equivalents, query-depth + query-cost limits, persisted-query allowlisting as the strongest mitigation, and the testable behaviours each control creates. Use when designing the production-safety posture of a GraphQL server or auditing an existing deployment. Consumed by apollo-server-test, graphql-yoga-test, hasura-test, mercurius-test, pothos-builder-tests, n-plus-one-query-detector."
-rating: 23
-d6: 4
 ---
 
 # introspection-attack-surface-reference

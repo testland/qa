@@ -11,8 +11,6 @@ skills:
   - spock-tests
   - assertj
   - parameterized-test-generator
-rating: 26
-d6: 4
 ---
 
 A per-method test-authoring agent that emits one new JVM unit test file - never modifies existing tests, never asserts on private fields the spec did not name.

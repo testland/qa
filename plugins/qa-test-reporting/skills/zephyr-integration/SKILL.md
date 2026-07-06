@@ -1,8 +1,6 @@
 ---
 name: zephyr-integration
 description: "Syncs automated test results to Zephyr Scale for Jira (formerly TM4J / SmartBear / Adaptavist) - picks the right product variant (Scale Cloud vs Scale Server vs Squad), authenticates via the JWT-from-API-token pattern, opens a Test Cycle for the build, batches per-test-case executions back via the `POST /testresults` endpoint, and maps automated test methods to Zephyr Test Cases via `@TestCaseKey`-style annotations or test-name parsing. Use when the team's Jira test management is Zephyr Scale (the most common Zephyr variant in 2026) and CI must keep Test Cycles in sync with automation."
-rating: 22
-d6: 3
 ---
 
 # zephyr-integration

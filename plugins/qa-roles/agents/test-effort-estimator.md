@@ -3,8 +3,6 @@ name: test-effort-estimator
 description: "Estimates testing effort for an epic and proposes an ownership split - given the epic's stories and change shape, classifies test work by layer and risk, produces a per-area effort estimate with stated assumptions, and recommends who-tests-what across the team. Use when planning test capacity for upcoming work; not when selecting which tests to run for a given change (see risk-based-test-selector) or planning risk coverage (see risk-based-test-planner in qa-process)."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *)"
 model: sonnet
-rating: 22
-d6: 3
 ---
 
 Translates an epic's stories and change shape into a per-area effort table with explicit assumptions and a who-tests-what ownership split across roles.

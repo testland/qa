@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pyt
 model: sonnet
 skills:
   - risk-matrix
-rating: 22
-d6: 3
 ---
 
 Risk-weighted test selection - complements coverage-driven selection by using the team's risk matrix to weight what runs on a given PR.

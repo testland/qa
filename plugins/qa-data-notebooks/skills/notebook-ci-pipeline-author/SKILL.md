@@ -2,8 +2,6 @@
 name: notebook-ci-pipeline-author
 description: "Wires the papermill-tests, nbval-tests, and testbook-tests skills into a single working GitHub Actions CI pipeline: parameterized execution (papermill) -> output regression (nbval) -> function unit tests (testbook) -> artifact upload (executed .ipynb + HTML report). Use when a team has notebook tests spread across the three tools but assembles the pipeline manually and needs a single authoritative workflow file with output stripping (nbstripout), pip caching, and structured failure reporting."
 type: skill
-rating: 24
-d6: 4
 keywords:
   - notebook-ci
   - papermill

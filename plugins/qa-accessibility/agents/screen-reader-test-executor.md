@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - screen-reader-test-author
   - wcag-checklist-builder
-rating: 23
-d6: 2
 ---
 
 Action-taking agent that turns a pre-authored screen-reader script and a

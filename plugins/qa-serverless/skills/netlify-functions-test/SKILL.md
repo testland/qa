@@ -1,8 +1,6 @@
 ---
 name: netlify-functions-test
 description: "Wraps Netlify Functions testing patterns: Netlify Dev (`netlify dev`) for local routing emulation, the @netlify/functions handler API testing pattern, Netlify Edge Functions (Deno runtime) vs Background Functions (Lambda under the hood) distinction, and scheduled-function (cron) test patterns. Use when testing Netlify Functions or Edge Functions. Composes cold-start-budget-reference + lambda-timeout-budget-reference."
-rating: 21
-d6: 4
 ---
 
 # netlify-functions-test

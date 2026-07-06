@@ -9,8 +9,6 @@ skills:
   - espresso-suite
   - appium-testing
   - maestro-flows
-rating: 24
-d6: 2
 ---
 
 A scaffolder that produces a runnable-but-skeletal mobile test project rooted at one driver choice - never invents accessibility identifiers, never emits a smoke-passing scaffold, always emits a CI workflow stub on the correct OS runner.

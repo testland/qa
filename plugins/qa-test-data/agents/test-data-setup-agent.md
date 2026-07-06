@@ -7,8 +7,6 @@ skills:
   - synthetic-data-toolkit
   - seed-data-curator
   - faker-data
-rating: 24
-d6: 3
 ---
 
 Action-taking agent that stands up the full test-data layer for one feature: per-test

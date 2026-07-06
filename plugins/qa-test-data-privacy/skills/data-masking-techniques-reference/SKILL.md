@@ -1,8 +1,6 @@
 ---
 name: data-masking-techniques-reference
 description: "Pure-reference catalog of data-masking techniques and de-identification privacy models. Enumerates the seven canonical masking operators (substitution, shuffling, number/date variance, encryption, hashing, nulling, masking-out / character-scrambling) plus tokenisation, redaction, format-preserving encryption, and Microsoft Presidio's six built-in operators. Distinguishes reversible techniques (pseudonymisation candidates per GDPR Art. 4(5)) from irreversible techniques (anonymisation candidates). Maps techniques to NIST SP 800-188 privacy models - k-anonymity, l-diversity, t-closeness, differential privacy. Cites ISO/IEC 20889:2018 for the standard taxonomy. Use to pick the right masking operator per field type and risk level."
-rating: 25
-d6: 5
 ---
 
 # data-masking-techniques-reference

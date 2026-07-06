@@ -1,8 +1,6 @@
 ---
 name: doctest-tests
 description: "Configures and runs Python''''s stdlib doctest - embeds executable test cases in docstrings using `>>>` Python interactive prompt convention; supports `# doctest: +ELLIPSIS` / `+NORMALIZE_WHITESPACE` / `+SKIP` directives; integrates with pytest via `--doctest-modules` flag; runs as `python -m doctest module.py -v`. Use for self-documenting reference implementations + simple smoke-test coverage embedded in API docs."
-rating: 22
-d6: 4
 ---
 
 # doctest-tests

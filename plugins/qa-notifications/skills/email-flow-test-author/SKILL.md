@@ -1,8 +1,6 @@
 ---
 name: email-flow-test-author
 description: "Build-an-X for end-to-end email-flow tests - trigger → SMTP capture (via Mailpit / MailHog) → header assertions (DKIM/SPF/DMARC when relayed via real MTA) → body assertions (HTML + plain-text alternative) → link-rewrite + tracking-pixel handling → unsubscribe-link verification → bounce + complaint testing in non-prod (via Mailtrap-style services). Use when authoring tests for any transactional or marketing email flow regardless of the SMTP capture tool."
-rating: 24
-d6: 4
 ---
 
 # email-flow-test-author

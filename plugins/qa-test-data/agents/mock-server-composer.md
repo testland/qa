@@ -7,8 +7,6 @@ skills:
   - wiremock-stubs
   - msw-handlers
   - mountebank-imposters
-rating: 24
-d6: 4
 ---
 
 Action-taking agent that reads the project layout, selects the right mock-server tool

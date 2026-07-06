@@ -1,8 +1,6 @@
 ---
 name: gherkin-from-stories
 description: "Build-an-X workflow that converts user stories into Gherkin scenarios - extracts the actor / capability / value triple from \"As a … I want … so that …\", maps acceptance criteria to Scenario blocks, identifies parameterizable axes for Scenario Outlines, and emits a Feature file ready for `bdd-step-library-curator`-curated step definitions. Sister to `acceptance-criteria-extractor` (qa-shift-left) - that one handles the AC layer; this skill operates at the user-story layer and produces Gherkin directly. Emits Gherkin only: no step definition stubs and no runner detection. For a full runnable artifact (Feature file plus scaffolded step definitions), use bdd-scenario-author, which wraps this skill."
-rating: 22
-d6: 3
 ---
 
 # gherkin-from-stories

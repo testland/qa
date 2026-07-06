@@ -1,8 +1,6 @@
 ---
 name: fuzz-toolkit-dispatcher
 description: "Toolkit / dispatcher skill that routes a fuzz-target authoring task to the correct per-language fuzzer skill based on detected language. Decision tree: C/C++ → libfuzzer-cpp + afl-plus-plus; Rust → cargo-fuzz-rust (or libfuzzer-cpp via FFI); Go → go-native-fuzzing; Python → atheris-python-fuzzing; JVM → jazzer-jvm-fuzzing; closed-source binary → afl-plus-plus in QEMU mode; mature open-source project → ossfuzz-integration. Composes with corpus-management-reference + sanitiser-integration-reference. Use as the dispatcher backing fuzz-target-author."
-rating: 22
-d6: 4
 ---
 
 # fuzz-toolkit-dispatcher

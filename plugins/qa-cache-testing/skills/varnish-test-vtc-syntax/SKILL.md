@@ -1,8 +1,6 @@
 ---
 name: varnish-test-vtc-syntax
 description: "Wraps the varnishtest CLI + VTC (Varnish Test Case) syntax for testing VCL configurations. Covers the VTC test-file format (varnishtest scripts with server { ... } + client { ... } + varnish v1 -vcl+backend { ... } blocks), the grace-mode + saint-mode behaviours (stale-while-revalidate + stale-if-error equivalents in VCL), the PURGE method handler pattern (vcl_purge subroutine + ACL guards), and surrogate-key invalidation via xkey vmod. Use when authoring or testing Varnish-based caching layers."
-rating: 22
-d6: 4
 ---
 
 # varnish-test-vtc-syntax

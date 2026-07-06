@@ -1,8 +1,6 @@
 ---
 name: xunit-tests
 description: "Configures and runs xUnit.net (xUnit v2 + v3) - current de facto .NET test framework with `[Fact]` for single tests + `[Theory]` + `[InlineData]`/`[ClassData]`/`[MemberData]` for parametrized; collection fixtures (`[Collection]`) + class fixtures (`IClassFixture<T>`) for shared setup; output via `ITestOutputHelper`; parallel test config via assembly attribute. Use when working with .NET (C# / F# / VB.NET) on the modern test stack."
-rating: 23
-d6: 4
 ---
 
 # xunit-tests

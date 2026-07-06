@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - model-based-test-graph-author
   - ai-test-generator
-rating: 24
-d6: 3
 ---
 
 Action-taking orchestrator for the model-based testing pipeline. Drives

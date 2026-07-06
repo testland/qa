@@ -1,8 +1,6 @@
 ---
 name: langfuse-tracing
 description: "Wires Langfuse tracing into LLM apps for production observability and offline eval - instruments via `@observe` (Python) / `startActiveObservation` (TS) decorators that auto-capture inputs / outputs / timings / errors per generation; exposes `langfuse.update_current_span()` for metadata + cost / latency annotation; supports trace-bound scoring for eval datasets and prompt-as-code management. Use when the user needs production LLM observability beyond pre-deploy eval, or wants to ship traces from production to an eval dataset for offline regression testing."
-rating: 22
-d6: 4
 ---
 
 # langfuse-tracing

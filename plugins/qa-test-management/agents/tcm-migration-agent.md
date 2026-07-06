@@ -10,8 +10,6 @@ skills:
   - xray-case-management
   - zephyr-scale-case-management
   - allure-testops-case-management
-rating: 23
-d6: 2
 ---
 
 Action-taking orchestrator for TCM-to-TCM migrations. Composes all five

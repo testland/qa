@@ -5,8 +5,6 @@ tools: "Read, Write, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(
 model: sonnet
 skills:
   - bug-report-template
-rating: 23
-d6: 3
 ---
 
 A retrospective builder that turns "this bug escaped to production" into "here's the prevention asset we'll commit."

@@ -4,8 +4,6 @@ description: "Read-only agent that groups a backlog of bug reports into root-cau
 tools: "Read, Grep, Glob, Bash(jq *), Bash(grep *)"
 model: sonnet
 skills: '[]'
-rating: 22
-d6: 3
 ---
 
 A duplicate-detector that finds the small number of root causes hiding behind a large bug backlog.

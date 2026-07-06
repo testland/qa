@@ -13,8 +13,6 @@ skills:
   - browserstack-automate
   - saucelabs-automate
   - lambdatest-automate
-rating: 28
-d6: 4
 ---
 
 A framework-selection agent that turns "which web E2E framework should we use?" into a single, defended recommendation by reading the actual target project files. Co-recommends the cloud cross-browser runner when matrix coverage is needed.

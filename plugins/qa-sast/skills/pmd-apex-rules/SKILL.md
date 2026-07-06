@@ -1,8 +1,6 @@
 ---
 name: pmd-apex-rules
 description: "Runs PMD's built-in Apex security ruleset (`category/apex/security.xml`) against Salesforce Apex source to detect injection, privilege-escalation, cryptographic, and XSS vulnerabilities; configures custom rulesets for regulated-industry Apex codebases; emits SARIF for GitHub Code Scanning upload; integrates `pmd check` as a PR-blocking CI gate. Use when the codebase contains Salesforce Apex and the team needs SAST coverage for ApexSOQLInjection, ApexCRUDViolation, ApexSharingViolations, or the full 10-rule security category."
-rating: 24
-d6: 4
 keywords: ["apex", "salesforce", "pmd", "sast", "soql-injection", "security", "sarif"]
 ---
 

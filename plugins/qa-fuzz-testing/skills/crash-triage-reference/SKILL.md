@@ -1,8 +1,6 @@
 ---
 name: crash-triage-reference
 description: "Pure-reference catalog for manually triaging individual fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; and minimizing reproducers with -minimize_crash. Use when you need to understand what a specific crash means, build exploitability intuition, or manually work a small set of findings. For automated bulk triage across a full artifact directory, use fuzz-findings-critic instead."
-rating: 24
-d6: 4
 ---
 
 # crash-triage-reference

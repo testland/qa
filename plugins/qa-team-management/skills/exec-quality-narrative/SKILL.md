@@ -1,8 +1,6 @@
 ---
 name: exec-quality-narrative
 description: "Build-an-X workflow that turns already-computed quality data - weekly digests, KPI roll-ups, DORA delivery metrics, escape-defect trends, OKR grading - into an executive or QBR narrative structured by the Minto Pyramid Principle: governing answer first, MECE-grouped support beneath it, SCQA opening (Barbara Minto, The Pyramid Principle, ISBN 978-0273710516). Distinct from the `qa-manager` agent in qa-roles (which computes the single-team RAG digest from raw CI and tracker signals; this skill consumes such digests and writes the upward story), from the `head-of-quality` agent in qa-roles (which aggregates teams into a portfolio review; this skill is the communication layer either output feeds), and from `qa-okr-author` in qa-process (forward-looking commitments; this skill narrates what happened and what it means). Use before a QBR, board update, or exec review when the data exists but the story does not."
-rating: 23
-d6: 4
 keywords: ["executive-narrative", "qbr", "minto-pyramid", "dora-metrics", "quality-reporting", "scqa", "head-of-quality"]
 ---
 

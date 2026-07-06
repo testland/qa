@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - dst-transition-reference
   - iso-8601-vs-rfc-3339-reference
-rating: 23
-d6: 3
 ---
 
 Adversarial read-only critic for time-handling correctness. Scans diffs

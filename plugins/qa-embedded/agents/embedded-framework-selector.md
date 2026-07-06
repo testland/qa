@@ -9,8 +9,6 @@ skills:
   - unity-test-framework-c
   - qemu-system-test-runner
   - embedded-coverage-strategy-reference
-rating: 24
-d6: 4
 ---
 
 A framework-selection agent that turns "which test framework should we use for this embedded project?" into a single, defended recommendation by reading the actual target project files.

@@ -1,8 +1,6 @@
 ---
 name: flag-state-coverage-builder
 description: "Workflow-driven skill that builds a flag-state coverage matrix from the project's flag inventory and risk register. Walks through: inventorying flags (grep for flag-evaluation calls), classifying each (boolean / multi-variant / kill-switch / experiment), choosing the coverage strategy (per-flag-isolation / pairwise / full / risk-driven per feature-flag-test-matrix-reference), generating the test matrix (PICT for pairwise; manual for risk-driven), and emitting test skeletons. Use when introducing flag-test coverage to a new codebase or when a flag-related incident exposes a coverage gap. Composes feature-flag-test-matrix-reference."
-rating: 22
-d6: 4
 ---
 
 # flag-state-coverage-builder

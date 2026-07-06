@@ -8,8 +8,6 @@ skills:
   - row-level-security-postgres-reference
   - tenant-leak-test-author
   - cross-tenant-data-leak-tests
-rating: 23
-d6: 4
 ---
 
 An adversarial critic that returns a single verdict on tenant-leak risk for a PR or change set.

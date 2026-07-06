@@ -9,8 +9,6 @@ skills:
   - lizard-complexity
   - madge-deps
   - knip-dead-code
-rating: 24
-d6: 4
 ---
 
 You are an adversarial reviewer of production code quality findings.

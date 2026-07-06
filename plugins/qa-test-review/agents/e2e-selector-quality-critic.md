@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - test-code-conventions
-rating: 23
-d6: 4
 ---
 
 A focused critic for E2E selector fragility - moves teams from CSS-class / XPath dependence to user-facing locator queries.

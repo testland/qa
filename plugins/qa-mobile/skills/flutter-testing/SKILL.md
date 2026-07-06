@@ -1,8 +1,6 @@
 ---
 name: flutter-testing
 description: "Authors Flutter tests across the three-layer pyramid - unit (`flutter test` for pure-Dart functions), widget (`testWidgets` + `WidgetTester` for component-level UI), integration (`flutter drive` against simulator/emulator/device for end-to-end). Picks the right layer per change shape, mocks dependencies via `mockito`, runs in CI with the Flutter Action. Use when the app is Flutter and the team wants the framework's first-party testing stack."
-rating: 23
-d6: 4
 ---
 
 # flutter-testing

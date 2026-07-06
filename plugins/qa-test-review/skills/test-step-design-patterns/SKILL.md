@@ -1,8 +1,6 @@
 ---
 name: test-step-design-patterns
 description: "Pure reference catalog of test-step design patterns at the architecture tier - step granularity (one logical action per step), abstraction layers (mechanical → page → business), step extraction rules (when to inline / when to extract to a helper / when to extract to a Page Object method), the declarative-vs-imperative phrasing rule, FIRST principles (Fast / Independent / Repeatable / Self-validating / Timely), and the AAA / Given-When-Then mapping. Distinct from `test-code-conventions` §1 (AAA structure at the file level) and from `manual-step-to-gherkin` (Gherkin-specific translation) - this catalog is the cross-framework architecture-tier reference for what a step IS, when it should exist, and where it should live."
-rating: 24
-d6: 5
 ---
 
 # test-step-design-patterns

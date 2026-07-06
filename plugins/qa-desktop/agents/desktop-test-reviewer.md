@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - desktop-test-strategy-reference
-rating: 23
-d6: 2
 ---
 
 Adversarial read-only reviewer for desktop UI test code. Inspects

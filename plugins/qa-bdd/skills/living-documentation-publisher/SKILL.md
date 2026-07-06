@@ -1,8 +1,6 @@
 ---
 name: living-documentation-publisher
 description: "Converts passing Cucumber JSON output into stakeholder-facing living documentation: generates HTML reports via multiple-cucumber-html-reporter (Node) or Serenity BDD aggregate (JVM), applies Gherkin tags to drive report sections, and publishes to GitHub/GitLab Pages in CI. Use when BDD scenarios are in use and the team needs an always-current, non-test-engineer-readable document showing which acceptance criteria pass."
-rating: 23
-d6: 4
 keywords:
   - living-documentation
   - bdd

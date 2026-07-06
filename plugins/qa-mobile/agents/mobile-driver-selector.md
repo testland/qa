@@ -10,8 +10,6 @@ skills:
   - xcuitest-suite
   - maestro-flows
   - flutter-testing
-rating: 27
-d6: 4
 ---
 
 A driver-selection agent that turns "which mobile test driver should we use?" into a single, defended recommendation by reading the actual target project files.

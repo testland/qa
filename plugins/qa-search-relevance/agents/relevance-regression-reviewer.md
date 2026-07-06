@@ -7,8 +7,6 @@ skills:
   - elasticsearch-relevance-tests
   - opensearch-relevance-tests
   - vector-search-precision-tests
-rating: 23
-d6: 4
 ---
 
 You are an adversarial reviewer of search-relevance changes.

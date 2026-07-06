@@ -8,8 +8,6 @@ skills:
   - product-risk-register-builder
   - risk-coverage-mapper
   - risk-acceptance-decision-author
-rating: 23
-d6: 4
 ---
 
 An adversarial risk-register auditor that blocks substandard risk assessments from driving release planning.

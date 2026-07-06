@@ -1,8 +1,6 @@
 ---
 name: okta-tests
 description: "Authors tests against Okta - uses org-isolation strategy (per-PR org via Okta Developer Edition vs shared org with namespaced data); tests sign-in policy + MFA enforcement; exercises Okta Identity Engine (OIE) workflows including factor enrollment, recovery flows, and SCIM provisioning; tests scoped API tokens for least-privilege automation. Use when the user works with Okta as IdP and needs unit / integration tests for org config, sign-in policies, or OIE workflows."
-rating: 22
-d6: 4
 ---
 
 # okta-tests

@@ -7,8 +7,6 @@ skills:
   - k6-load-testing
   - flame-graph-analyzer
   - db-slow-query-detector
-rating: 24
-d6: 3
 ---
 
 On-call performance-incident orchestrator for senior perf engineers. Reproduces the incident with a targeted k6 run, diagnoses the hot path via flame-graph analysis, checks for slow queries, and localizes the dominant cause - all in one coordinated workflow. Does not bisect commits; hand off to [`perf-regression-bisector`](./perf-regression-bisector.md) if the introducing change is unknown after localization.

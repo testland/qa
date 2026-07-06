@@ -16,8 +16,6 @@ skills:
   - xunit-tests
   - nunit-tests
   - mstest-tests
-rating: 26
-d6: 4
 ---
 
 ## When invoked

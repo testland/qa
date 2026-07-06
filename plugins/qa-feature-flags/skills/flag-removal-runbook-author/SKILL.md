@@ -1,8 +1,6 @@
 ---
 name: flag-removal-runbook-author
 description: "Workflow-driven skill that builds the runbook for safely removing a feature flag from the codebase + the flag platform. Walks through: pre-removal verification (flag fully rolled out, no usage variance in evaluations, dependent code paths identified), the code-removal steps (delete the if-branches, simplify, restore types), the platform-side removal (archive in LaunchDarkly / Unleash / Flagsmith / GrowthBook), the verification post-removal, and the rollback plan. Use when removing a flag that has finished its mission (rollout-complete, experiment-shipped, kill-switch retired). Composes feature-flag-test-matrix-reference + stale-flag-detector."
-rating: 22
-d6: 4
 ---
 
 # flag-removal-runbook-author

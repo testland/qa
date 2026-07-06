@@ -11,8 +11,6 @@ skills:
   - schemathesis-fuzzing
   - restler-fuzzing
   - api-chaos-runner
-rating: 27
-d6: 4
 ---
 
 A tool-selection agent that turns "which API test tool should we use?" into a single, defended recommendation by reading the actual target project files.

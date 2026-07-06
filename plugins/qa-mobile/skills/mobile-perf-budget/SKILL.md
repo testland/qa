@@ -1,8 +1,6 @@
 ---
 name: mobile-perf-budget
 description: "Pure-reference skill for mobile-web performance budgets - Core Web Vitals at the 75th percentile mobile (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1; FID retired March 2024 in favor of INP), Lighthouse mobile profile config, per-route resource budgets (JS bundle, image weight, font load). Use as the team's reference for \"what should the mobile perf gate enforce\" - paired with `lighthouse-perf` (the runner) and `lighthouse-budget-author` (the per-route author)."
-rating: 22
-d6: 4
 ---
 
 # mobile-perf-budget

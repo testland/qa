@@ -1,8 +1,6 @@
 ---
 name: assertj
 description: "Reference for AssertJ - the canonical JVM fluent-assertion library pairable with JUnit 5 / TestNG / Spock; covers the assertThat() entry point, collection matchers (contains, containsExactly, allSatisfy, extracting), exception assertions (assertThatThrownBy, catchThrowable), SoftAssertions for multi-failure collection, recursive comparison (usingRecursiveComparison) for deep equality, and domain-specific custom assertions via AbstractAssert. Use when writing JVM tests that need richer failure messages than built-in assertEquals, or when verifying complex object graphs, exception types, or collections."
-rating: 23
-d6: 4
 ---
 
 # assertj

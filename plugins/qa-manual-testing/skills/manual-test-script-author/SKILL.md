@@ -1,8 +1,6 @@
 ---
 name: manual-test-script-author
 description: "Builds stakeholder-readable scripted manual test cases from a feature spec - emits either a step-table format (preconditions / steps / expected result / actual / pass-fail / notes) for spreadsheet review or a Gherkin Given/When/Then format for BDD-aware teams. Each script is self-contained (no implicit team knowledge), single-scenario (one happy + N edge per script), and includes the data setup the tester needs without being a developer. Use when a feature can't be (or shouldn't be) fully automated and a human tester needs an executable script - UAT, regression baselines, certification testing, exploratory follow-up scripts."
-rating: 22
-d6: 3
 ---
 
 # manual-test-script-author

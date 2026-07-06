@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - test-code-conventions
-rating: 23
-d6: 4
 ---
 
 A specialized critic that walks every test double in a PR's test files and flags the patterns that produce brittle, implementation-coupled tests.

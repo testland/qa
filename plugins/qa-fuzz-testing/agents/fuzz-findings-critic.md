@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - corpus-management-reference
   - sanitiser-integration-reference
-rating: 23
-d6: 4
 ---
 
 Adversarial critic of fuzzer crash-artifact directories. Classifies, deduplicates,

@@ -1,8 +1,6 @@
 ---
 name: sfdpot-heuristic
 description: "Pure-reference catalog of James Bach's SFDPOT heuristic - 'San Francisco Depot' - a 'you are here' framework that catalogues what a tester can vary in a system to find bugs. Six dimensions: Structure, Function, Data, Platform, Operations, Time. Use as a what-to-vary checklist during an exploratory session, complementing HICCUPPS-F (which catalogues what to compare against)."
-rating: 24
-d6: 4
 ---
 
 # sfdpot-heuristic

@@ -1,8 +1,6 @@
 ---
 name: ghz-load
 description: "Wraps ghz, the gRPC load testing tool, for throughput and latency benchmarking. Covers test invocation (--proto + --call + host:port; or --protoset for compiled descriptors), load parameters (-n total requests, -c concurrency, -r RPS rate limit, -z duration), output formats (json/csv/html/influx-summary for CI consumption), the metrics reported (RPS achieved, latency p50/p95/p99, status-code distribution, errors), and CI integration patterns for regression gating. Use when benchmarking a gRPC service's throughput or detecting latency regressions in CI. Composes grpc-status-code-mapping-reference for interpreting non-OK responses."
-rating: 22
-d6: 4
 ---
 
 # ghz-load

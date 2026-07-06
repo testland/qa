@@ -1,8 +1,6 @@
 ---
 name: xcuitest-suite
 description: "Authors XCUIest UI tests for iOS / iPadOS / tvOS - uses the three-class XCUIApplication / XCUIElement / XCUIElementQuery pattern, sets accessibility identifiers on production code, runs via `xcodebuild test` with destination, parses the `xcresult` bundle. Use when an iOS app needs UI tests in Apple's first-party framework (no external runtime; native to Xcode)."
-rating: 23
-d6: 4
 ---
 
 # xcuitest-suite

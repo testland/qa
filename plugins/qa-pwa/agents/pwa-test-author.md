@@ -11,8 +11,6 @@ skills:
   - offline-fallback-test
   - add-to-homescreen-flow-test
   - pwa-install-flow-reference
-rating: 30
-d6: 4
 ---
 
 A per-surface PWA test authoring agent - emits ONE new Playwright spec file targeting one

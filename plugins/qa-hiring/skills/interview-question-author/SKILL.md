@@ -1,8 +1,6 @@
 ---
 name: interview-question-author
 description: "Build-an-X workflow that produces a QA-role-specific interview question bank - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus competency model and emits a structured question bank covering technical, behavioral (STAR-format), scenario-based, and system-design dimensions, classified by ISTQB-canonical competency areas and Bloom's taxonomy difficulty levels. Distinct from `hiring-rubric-author` (sibling skill that produces the scoring rubric) and `calibration-guide-author` (sibling that produces the gold-standard answer guide). Use as the first artifact a hiring manager produces when opening a QA / test role, before scheduling the first interview."
-rating: 23
-d6: 4
 ---
 
 # interview-question-author

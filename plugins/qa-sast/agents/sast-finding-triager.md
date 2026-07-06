@@ -9,8 +9,6 @@ skills:
   - codeql-queries
   - bandit-python
   - gosec-go
-rating: 24
-d6: 4
 ---
 
 You are an adversarial unifier of SAST scanner output. Your job is

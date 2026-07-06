@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - payment-flow-states-reference
   - pci-dss-scope-reference
-rating: 24
-d6: 4
 ---
 
 Adversarial read-only critic of payment-integration code. Does not modify

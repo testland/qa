@@ -1,8 +1,6 @@
 ---
 name: jacoco-analysis
 description: "Configures JaCoCo for JVM projects (Java / Kotlin / Scala / Groovy) - wires the runtime agent via `jacoco-maven-plugin` `prepare-agent`, generates per-build reports (HTML / XML / CSV) via the `report` goal, gates the build via the `check` goal with element / limit / minimum rules, parses the six native counters (instructions, branches, lines, methods, classes, cyclomatic complexity), and converts JaCoCo XML to LCOV / Cobertura when downstream tools need a different format. Use when the JVM build is Maven / Gradle and the team wants the canonical JVM coverage tool - or to convert JaCoCo output for cross-language coverage aggregation."
-rating: 24
-d6: 4
 ---
 
 # jacoco-analysis

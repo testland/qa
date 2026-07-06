@@ -1,8 +1,6 @@
 ---
 name: compliance-evidence-generator
 description: "Build-an-X workflow that produces auditor-facing evidence packages from automated test results: maps control IDs to test outcomes across any compliance framework (SOC 2, ISO 27001, HIPAA, PCI DSS, GDPR, FedRAMP); generates the control-evidence matrix, timestamped evidence bundles (screenshots, log excerpts, CI exports), and chain-of-custody notes per NIST SP 800-72. Distinct from soc2-evidence-collector (SOC2-only raw log harvest) and compliance-readiness-reviewer (coverage gap analysis without artifact production). Use when an audit engagement requires auditor-ready evidence packages built from existing automated test output."
-rating: 24
-d6: 4
 keywords:
   - compliance
   - evidence

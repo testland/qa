@@ -1,8 +1,6 @@
 ---
 name: prod-canary-validator
 description: "Builds a canary-validation workflow that compares a canary deploy's metrics against the baseline (current main) - picks the metric set (error rate, p50/p95/p99 latency, business KPIs like checkout-completion), defines per-metric thresholds (absolute + relative-to-baseline), runs a statistical-comparison check (effect size + significance) over the canary's observation window, and emits a promote/rollback verdict. Use as the gate between canary deploy and full rollout - the deterministic version of \"the on-call eyeballs the dashboard for 30 min."
-rating: 23
-d6: 4
 ---
 
 # prod-canary-validator

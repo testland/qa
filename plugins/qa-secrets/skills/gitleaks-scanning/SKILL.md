@@ -1,8 +1,6 @@
 ---
 name: gitleaks-scanning
 description: "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; baseline file for legacy debt. Use when the team needs OSS secret scanning at commit time + CI gate."
-rating: 23
-d6: 4
 ---
 
 # gitleaks-scanning

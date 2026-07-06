@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - risk-storming-facilitator
   - risk-matrix
-rating: 23
-d6: 2
 ---
 
 Runs a risk-storming session from cold to a populated risk matrix. Consumes a feature spec and an optional existing matrix; emits a new or updated matrix file ready for `risk-based-test-planner` to consume.

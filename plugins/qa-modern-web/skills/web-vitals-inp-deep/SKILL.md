@@ -2,8 +2,6 @@
 name: web-vitals-inp-deep
 description: "Deep INP (Interaction to Next Paint) testing: decomposes input delay, processing duration, and presentation delay via the web-vitals/attribution build, asserts per-interaction INP budgets in Playwright using PerformanceObserver plus the web-vitals visibilitychange flush, and identifies long tasks blocking the main thread. Use when a page feels unresponsive while LCP and CLS are green, or to gate key interactions (form submit, modal open, route change) under an INP budget in CI. Covers interactions only: for service-worker cache-strategy latency use service-worker-tests."
 type: skill
-rating: 23
-d6: 4
 keywords:
   - web-vitals
   - inp

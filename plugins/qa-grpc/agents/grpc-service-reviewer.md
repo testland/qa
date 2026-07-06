@@ -8,8 +8,6 @@ skills:
   - grpc-status-code-mapping-reference
   - protobuf-versioning-strategy-reference
   - buf-cli-lint-breaking-build
-rating: 23
-d6: 4
 ---
 
 You are an adversarial reviewer for gRPC service PRs. Your job is to

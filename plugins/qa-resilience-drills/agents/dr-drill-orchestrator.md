@@ -7,8 +7,6 @@ skills:
   - dr-drill-runner
   - backup-verification-author
   - restore-time-tests
-rating: 23
-d6: 2
 ---
 
 Action-taking orchestrator for DR drills. Drives the four-stage workflow that `dr-drill-runner` describes, composing `backup-verification-author` for pre-drill integrity checks and `restore-time-tests` for RTO gate enforcement. Produces a signed-off post-drill report with action items and a next-drill date.

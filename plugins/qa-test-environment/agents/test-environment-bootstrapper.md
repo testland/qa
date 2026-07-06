@@ -8,8 +8,6 @@ skills:
   - docker-compose-test
   - feature-flag-test-harness
   - playwright-fixture-builder
-rating: 24
-d6: 4
 ---
 
 Bootstraps the infrastructure layer of a greenfield test environment:

@@ -5,8 +5,6 @@ tools: "Read, Write, Edit, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(n
 model: sonnet
 skills:
   - golden-file-conventions
-rating: 23
-d6: 3
 ---
 
 A maintenance agent that turns snapshot drift into deterministic add / update / prune actions per the conventions in [`golden-file-conventions`](../skills/golden-file-conventions/SKILL.md).

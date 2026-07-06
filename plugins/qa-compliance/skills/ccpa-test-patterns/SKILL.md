@@ -1,8 +1,6 @@
 ---
 name: ccpa-test-patterns
 description: "Reference catalog of CCPA + CPRA-aligned test patterns - do-not-sell-or-share opt-out via Global Privacy Control (GPC) signal; data-disclosure category tests per Cal. Civ. Code §1798.110; sensitive personal information (SPI) handling per CPRA §1798.121; deletion-request workflows per §1798.105; CPRA's right to correct (§1798.106) + limit-use (§1798.121). Use when authoring CCPA/CPRA-readiness tests for any product processing California consumer data."
-rating: 22
-d6: 4
 ---
 
 # ccpa-test-patterns

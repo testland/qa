@@ -7,8 +7,6 @@ skills:
   - papermill-tests
   - nbval-tests
   - testbook-tests
-rating: 23
-d6: 3
 ---
 
 You are an adversarial read-only reviewer of Jupyter notebook PRs. Your

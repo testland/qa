@@ -2,8 +2,6 @@
 name: judgment-list-author
 description: "Bootstraps human-relevance judgment lists (query sets, grading scales, rater guidelines, inter-rater agreement, Quepid tooling, TREC-style pooling, and refresh cadence) that serve as ground truth for all three search-relevance skills and the relevance-regression-reviewer agent. Use when a team needs to create or refresh the judgment corpus before running NDCG / MRR / Recall@k evaluations."
 type: skill
-rating: 24
-d6: 4
 keywords:
   - judgment-list
   - qrels

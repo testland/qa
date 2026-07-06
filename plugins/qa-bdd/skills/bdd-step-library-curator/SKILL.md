@@ -1,8 +1,6 @@
 ---
 name: bdd-step-library-curator
 description: "Build-an-X workflow that keeps step definitions DRY across a Cucumber / Behave / Reqnroll project - periodically inventories step definitions, finds duplicates (different patterns matching the same intent), suggests consolidation, organizes by domain, and publishes a step library reference doc the team uses for \"is there already a step for X?\" before authoring new ones. Use as the antidote to step-definition proliferation in long-lived BDD projects."
-rating: 22
-d6: 3
 ---
 
 # bdd-step-library-curator

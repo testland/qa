@@ -7,8 +7,6 @@ skills:
   - jira-bug-workflow-runner
   - linear-bug-workflow-runner
   - github-issues-bug-workflow
-rating: 23
-d6: 4
 ---
 
 A read-only duplicate-defect finder that searches the configured tracker and emits a ranked candidate list before filing.

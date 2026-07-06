@@ -1,8 +1,6 @@
 ---
 name: screen-reader-test-author
 description: "Builds a screen-reader test narrative - a step-by-step manual test script for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) - that exercises a specific user flow through a component or page and captures the expected announcement at each step. Use when authoring an accessibility-acceptance test the team will run before sign-off, OR when scripting a manual a11y audit."
-rating: 24
-d6: 4
 ---
 
 # screen-reader-test-author

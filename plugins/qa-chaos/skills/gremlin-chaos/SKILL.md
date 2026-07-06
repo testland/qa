@@ -1,8 +1,6 @@
 ---
 name: gremlin-chaos
 description: "Configures Gremlin (commercial) for cross-platform chaos engineering - installs the Gremlin agent on Linux / Windows / Kubernetes, picks attack types (resource, network, state, request), creates Scenarios chaining attacks, integrates with the Reliability Score for forward-looking metrics. Use when the platform spans multiple environments (bare metal + cloud + serverless) and the team needs a commercial-supported solution per Gremlin's multi-platform support."
-rating: 22
-d6: 3
 ---
 
 # gremlin-chaos

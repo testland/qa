@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - feature-flag-test-matrix-reference
   - flag-removal-runbook-author
-rating: 22
-d6: 4
 ---
 
 A read-only specialist that ranks stale feature flags for removal.

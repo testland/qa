@@ -7,8 +7,6 @@ skills:
   - test-run-summary-author
   - coverage-diff-reporter
   - unit-test-coverage-targeter
-rating: 23
-d6: 2
 ---
 
 Produces a release-quality go/no-go report by combining three evidence streams - test-run narrative, coverage diff, and coverage target recommendations - into one manager-facing document with an explicit verdict and a traceable rationale.

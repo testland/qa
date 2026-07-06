@@ -8,8 +8,6 @@ skills:
   - server-sent-events-tests
   - mqtt-tests
   - webhook-replay-tests
-rating: 23
-d6: 2
 ---
 
 Adversarial reviewer of real-time protocol handler diffs. Every finding maps

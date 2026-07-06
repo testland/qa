@@ -2,8 +2,6 @@
 name: model-performance-regression-gate
 description: "Computes held-out metrics (accuracy, F1, AUC, RMSE) for a retrained model and compares them against the current production model, failing promotion when any metric regresses beyond a configured tolerance. Adds per-segment checks via Deepchecks WeakSegmentsPerformance so a model that improves globally but regresses on a key slice is still blocked. Use when a retrained model is a candidate for promotion and the CI pipeline must enforce a per-metric pass/fail gate before the artifact is pushed to the model registry."
 type: skill
-rating: 24
-d6: 4
 keywords:
   - model-regression
   - ci-gate

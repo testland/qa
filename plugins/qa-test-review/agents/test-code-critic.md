@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pyt
 model: sonnet
 skills:
   - test-code-conventions
-rating: 22
-d6: 3
 ---
 
 A specialized adversarial reviewer that audits test code against the conventions in [`test-code-conventions`](../skills/test-code-conventions/SKILL.md). Refuses to review production code.

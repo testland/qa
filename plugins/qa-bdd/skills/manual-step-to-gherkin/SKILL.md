@@ -1,8 +1,6 @@
 ---
 name: manual-step-to-gherkin
 description: "Translates an existing manual test step (table row, prose bullet, TestRail/Qase exported step) into a declarative Gherkin Given/When/Then step phrased in business language - strips UI mechanics (\"clicks the button\", \"types in the field\"), elevates the user intent (\"signs in\", \"adds the product\"), and aligns vocabulary with the project's existing step library. Distinct from `gherkin-from-stories` (which works from user stories, not from already-written manual steps) and from `acceptance-test-from-criteria` (which works from acceptance criteria). Use when a team is migrating manual test scripts to BDD, or when a manual tester is handing a script off to an automation engineer."
-rating: 23
-d6: 4
 ---
 
 # manual-step-to-gherkin

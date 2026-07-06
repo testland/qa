@@ -7,8 +7,6 @@ skills:
   - pii-categories-reference
   - data-masking-techniques-reference
   - presidio-pii-detection
-rating: 24
-d6: 4
 ---
 
 An adversarial PII-leak auditor that re-runs detection on masked output and challenges the pipeline's "clean" claim.

@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(gh pr view *)"
 model: sonnet
 skills:
   - definition-of-done
-rating: 22
-d6: 3
 ---
 
 An adversarial reviewer that pits a PR / story / Increment against the team's own quality bar - and refuses to rubber-stamp.

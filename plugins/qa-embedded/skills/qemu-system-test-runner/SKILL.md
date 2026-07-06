@@ -1,8 +1,6 @@
 ---
 name: qemu-system-test-runner
 description: "Author and run QEMU system emulation as an embedded-test target - qemu-system-arm / qemu-system-aarch64 / qemu-system-riscv32 launching cross-compiled ELF binaries on virtual MCUs and SoCs. Covers machine selection (-M virt / mps2-an385 / mps2-an386 / mps2-an500 / mps2-an511 / mps3-an524 / lm3s6965evb / raspi3b / xilinx-zynq-a9), CPU selection (-cpu cortex-m0 / cortex-m3 / cortex-m4 / cortex-m33 / cortex-a15 / cortex-a57 / max), -kernel ELF load, -nographic + -serial stdio, ARM semihosting via -semihosting-config enable=on,target=native (so cross-compiled GoogleTest / Unity binaries print to host stdio and exit with the test return code), GDB stub via -S -gdb tcp::1234, QMP monitor via -qmp tcp:host:port for automated test orchestration, and CI wiring. Use when host-only test runs are insufficient and the team wants arch-correct (endianness / alignment / interrupt-vector) behaviour on a virtual MCU without committing to physical hardware-in-loop."
-rating: 24
-d6: 4
 keywords: ["qemu", "embedded", "arm", "cortex-m", "cortex-a", "semihosting", "system-emulation", "riscv"]
 ---
 

@@ -16,8 +16,6 @@ keywords:
   - vulture
   - cargo-machete
   - prioritization
-rating: 24
-d6: 4
 ---
 
 # reachability-analyzer

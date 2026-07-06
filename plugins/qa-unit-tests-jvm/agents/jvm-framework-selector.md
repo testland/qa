@@ -9,8 +9,6 @@ skills:
   - scalatest
   - spock-tests
   - testng-tests
-rating: 25
-d6: 4
 ---
 
 Turns "which JVM test framework?" into one defended recommendation by reading build descriptors and source language markers, not by enumerating trade-offs in the abstract.

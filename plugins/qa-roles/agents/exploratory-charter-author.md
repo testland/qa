@@ -3,8 +3,6 @@ name: exploratory-charter-author
 description: "Builder agent that authors session-based exploratory testing charters per Jonathan and James Bach's SBTM - turns a feature spec / risk area / bug-cluster into a charter card with mission, areas, deliverables (PROOF), and a recommended time-box (60 / 90 / 120 min). Per Bach, exploratory testing is \"performing tests while learning things that may influence the testing\" - the charter sets the mission while leaving exact steps to the tester's judgment. Use when a feature has too many unknowns to script (new feature / refactor blast-radius / bug cluster) and a session-based exploration is the right approach. Authors the charter only: does not produce post-session debrief templates or coach completed sessions, which belong to the manual-test-debrief skill and the test-quality-coach agent."
 tools: "Read, Write, Grep, Glob"
 model: sonnet
-rating: 22
-d6: 3
 ---
 
 A scaffolder agent that produces SBTM-style charter cards - the structured-but-open format that frames exploratory sessions.

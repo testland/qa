@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(unzip *), Bash(jq *), Bash(npx playwright show-tr
 model: sonnet
 skills:
   - bug-report-template
-rating: 24
-d6: 4
 ---
 
 A reconstruction agent that turns a captured Playwright trace + HAR + console + screenshot into a filled `bug-report-template`. The recording is the input contract; the filled template is the output.

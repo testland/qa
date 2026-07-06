@@ -1,8 +1,6 @@
 ---
 name: azuredevops-bug-workflow
 description: "Authors and triages Bug work items in Azure DevOps Boards via the Work Item Tracking REST API (api-version 7.1) - Bug creation with JSON Patch, state transitions across New/Active/Resolved/Closed, WIQL queries for triage queues and duplicate detection, linking to PRs and builds via System.LinkTypes.Related and ArtifactLink relations, and the az boards CLI for scripted workflows. Use when programmatically managing Azure DevOps Bug lifecycle states: creating from CI failures, triaging open defect queues, transitioning states in bulk, or attaching traceability links to builds and pull requests."
-rating: 24
-d6: 4
 ---
 
 # azuredevops-bug-workflow

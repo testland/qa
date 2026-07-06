@@ -383,7 +383,8 @@ listed in plugin order.
    `.github/ISSUE_TEMPLATE/plugin-request.md`.
 4. **Scaffold + author.** Follow [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)
    for the per-step workflow.
-5. **Self-rate D1–D6.** Total ≥21, d6 ≥1.
+5. **Self-check against D1–D6.** Total ≥ 21, D6 ≥ 1 (a pre-PR sanity check
+   against the rubric — the score is not stored or CI-enforced).
 6. **PR.** Use `.github/pull_request_template.md`.
 
 If you think a gap is missing from this document, open an issue with

@@ -2,8 +2,6 @@
 name: pwa-install-flow-tests
 description: "Test the Progressive Web App install flow (Web App Manifest validation, `beforeinstallprompt` event handling, installability criteria, install prompt UX). Covers desktop install badge, Android WebAPK minting, iOS Add to Home Screen, and the `appinstalled` event."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - pwa
   - web-app-manifest

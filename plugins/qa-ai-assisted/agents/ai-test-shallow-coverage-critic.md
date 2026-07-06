@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - test-code-conventions
-rating: 25
-d6: 5
 ---
 
 A specialized adversarial reviewer that catches the dominant failure mode of LLM-assisted test generation: tests that exercise only one equivalence class. Operates on any test file, regardless of origin (AI-generated or hand-written), but is calibrated against the failure rates measured for LLM-generated tests in real-world benchmarks.

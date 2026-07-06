@@ -1,8 +1,6 @@
 ---
 name: bundle-audit-ruby
 description: "Installs and runs bundler-audit against a Ruby Gemfile.lock, updating the ruby-advisory-db advisory corpus, scanning for vulnerable gem versions and insecure sources, suppressing false positives via .bundler-audit.yml with justification requirements, and gating CI on non-zero exit. Use when a Ruby project needs dedicated Gemfile.lock SCA beyond the single-ecosystem touch bundler-audit receives in npm-pip-maven-audit."
-rating: 23
-d6: 3
 ---
 
 # bundle-audit-ruby

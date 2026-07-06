@@ -1,8 +1,6 @@
 ---
 name: gosec-go
 description: "Configures and runs gosec - Go-specific SAST covering 40+ rule IDs (G101 hardcoded creds, G104 unhandled errors, G304 file path traversal, G401 weak crypto algorithms, G601 implicit memory aliasing, etc.); supports `gosec ./...` recursive scan via Go AST + SSA analysis with taint tracking; per-line `#nosec G404 -- justification` suppression; output formats `--fmt sarif|json|junit-xml|html|text`; integrates with golangci-lint as a linter. Use when the user works with Go and needs a focused SAST integrated with golangci-lint."
-rating: 23
-d6: 4
 ---
 
 # gosec-go

@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:
   - cache-coherence-patterns-reference
-rating: 22
-d6: 4
 ---
 
 A read-only specialist that detects cache-key collision risks and proposes fixes.

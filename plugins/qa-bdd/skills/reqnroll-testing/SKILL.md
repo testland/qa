@@ -1,8 +1,6 @@
 ---
 name: reqnroll-testing
 description: "Configures Reqnroll (the canonical .NET BDD framework) - install via `dotnet add package Reqnroll`, author `.feature` files in Gherkin, write step bindings as `[Given/When/Then]`-decorated methods in any C# class, runs via `dotnet test`. Reqnroll is the SpecFlow successor (originated as a community port off the SpecFlow codebase); new .NET BDD work targets Reqnroll. Use for .NET projects starting BDD or migrating from SpecFlow."
-rating: 22
-d6: 4
 ---
 
 # reqnroll-testing

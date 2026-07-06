@@ -1,8 +1,6 @@
 ---
 name: go-rust-mocking
 description: "Isolates dependencies in Go and Rust unit tests using test-double generation - Go: `go.uber.org/mock` (gomock + mockgen codegen) and `github.com/stretchr/testify/mock` (hand-written stubs); Rust: `mockall` crate with `#[automock]` for traits and `mock!` macro for structs and external traits. Use when a unit test reaches a database, HTTP client, file system, or any interface boundary that must be replaced with a controlled fake to keep tests fast, deterministic, and isolated."
-rating: 24
-d6: 4
 ---
 
 # go-rust-mocking

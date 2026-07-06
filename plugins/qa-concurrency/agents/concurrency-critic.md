@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - race-condition-test-author
   - deadlock-detection-harness
-rating: 23
-d6: 3
 ---
 
 Adversarial read-only inspector for concurrent code. Every changed

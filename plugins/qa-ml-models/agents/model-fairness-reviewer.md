@@ -9,8 +9,6 @@ skills:
   - evidently-monitoring
   - fairlearn-fairness
   - alibi-explainability
-rating: 24
-d6: 4
 ---
 
 You are an adversarial reviewer of ML model fairness + explainability

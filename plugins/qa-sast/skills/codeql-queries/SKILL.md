@@ -1,8 +1,6 @@
 ---
 name: codeql-queries
 description: "Configures and runs GitHub CodeQL - semantic-database SAST with queries written in the CodeQL declarative query language; supports `codeql database create` (per-language) + `codeql database analyze` with --format=sarif; ships query packs (`codeql/javascript-queries`, `codeql/python-queries`, `codeql/java-queries`, `codeql/go-queries`, etc.); integrates with GitHub Code Scanning via SARIF upload; suppression via inline comment + sarif-filter + Security-tab dismissal. Use when the team uses GitHub-hosted repos and needs deep semantic SAST beyond pattern matching (cross-file taint flows, dataflow analysis)."
-rating: 23
-d6: 4
 ---
 
 # codeql-queries

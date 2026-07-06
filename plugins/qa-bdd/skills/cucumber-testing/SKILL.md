@@ -1,8 +1,6 @@
 ---
 name: cucumber-testing
 description: "Configures Cucumber for BDD scenarios - Cucumber-JVM (Java/Kotlin via JUnit 5), Cucumber-JS (Node), Cucumber-Ruby. Authors `.feature` files in Gherkin, writes step definitions in the host language, runs via the framework's runner, integrates with JUnit XML reporting. Use as the canonical Cucumber wrapper for any of the three official implementations."
-rating: 23
-d6: 4
 ---
 
 # cucumber-testing

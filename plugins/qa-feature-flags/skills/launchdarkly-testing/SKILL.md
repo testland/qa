@@ -1,8 +1,6 @@
 ---
 name: launchdarkly-testing
 description: "Wraps LaunchDarkly server-side SDK testing patterns: TestData data source for hermetic tests (no network), file-based data source for fixture-driven tests, flag override patterns (TestData.update for per-test flag values), and assignment-integrity tests. Use when writing tests for code that uses LaunchDarkly flags. Composes feature-flag-test-matrix-reference + qa-experimentation/ab-test-validity-checklist."
-rating: 22
-d6: 4
 ---
 
 # launchdarkly-testing

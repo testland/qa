@@ -1,8 +1,6 @@
 ---
 name: specflow-testing
 description: "Legacy support for SpecFlow (.NET BDD framework that predates Reqnroll) - for projects that haven't migrated yet. Mirrors Reqnroll's API closely (Reqnroll is the SpecFlow fork). Body documents the SpecFlow patterns + the migration path to Reqnroll. Per Reqnroll's own positioning, new .NET BDD work targets Reqnroll, not SpecFlow. Use only for existing SpecFlow projects mid-migration; new projects use `reqnroll-testing` instead."
-rating: 22
-d6: 3
 ---
 
 # specflow-testing

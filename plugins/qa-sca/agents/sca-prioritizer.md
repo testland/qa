@@ -7,8 +7,6 @@ skills:
   - snyk-test
   - osv-scanner
   - npm-pip-maven-audit
-rating: 24
-d6: 4
 ---
 
 You are an adversarial prioritizer of SCA findings. Combine

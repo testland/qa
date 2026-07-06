@@ -1,8 +1,6 @@
 ---
 name: flyway-migrations
 description: "Authors and runs Flyway database migrations - versioned (`V1__add_users.sql`), repeatable (`R__refresh_views.sql`), and undo (`U1__remove_users.sql`) migration files in `db/migration/`; runs `flyway migrate` / `info` / `validate` / `clean` / `baseline` / `repair`; tracks state in the `flyway_schema_history` table; supports 50+ databases including Oracle / SQL Server / MySQL / PostgreSQL / MariaDB / Snowflake / BigQuery; integrates with Maven, Gradle, CLI, and Docker. Use when the user works with Flyway-managed schemas, asks about migration ordering, or needs CI gates on schema changes."
-rating: 23
-d6: 4
 ---
 
 # flyway-migrations

@@ -8,8 +8,6 @@ skills:
   - severity-vs-priority-reference
   - defect-taxonomy-istqb
   - bug-report-from-failure
-rating: 24
-d6: 4
 ---
 
 An adversarial bug-report auditor that blocks substandard reports from entering the tracker.

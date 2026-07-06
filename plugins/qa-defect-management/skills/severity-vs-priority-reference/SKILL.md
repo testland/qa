@@ -1,8 +1,6 @@
 ---
 name: severity-vs-priority-reference
 description: "Pure-reference catalog distinguishing defect severity (impact on the system / user) from defect priority (urgency of fix), each on its own axis. Enumerates the canonical 5-point severity scale (Critical / High / Medium / Low / Trivial) and the 5-point priority scale (Immediate / High / Medium / Low / Deferred), explains why they must be tracked separately (a Critical/Deferred legacy bug exists; a Trivial/Immediate spelling bug on the homepage exists), maps to IEEE 1044-2009 severity classes, and ties to bug-lifecycle-reference state transitions. Use when triaging a defect, configuring a tracker's severity/priority fields, or reviewing whether a bug report assigned them consistently."
-rating: 24
-d6: 4
 ---
 
 # severity-vs-priority-reference

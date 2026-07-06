@@ -2,8 +2,6 @@
 name: codeclimate-config
 description: "Configure Code Climate Quality (now Qlty) for repository-wide quality gates - duplication, complexity, similar-code, exclude_patterns. Covers both legacy `.codeclimate.yml` (Code Climate Velocity / GitHub integration) and the new `.qlty/qlty.toml` per the Qlty platform migration."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - code-climate
   - qlty

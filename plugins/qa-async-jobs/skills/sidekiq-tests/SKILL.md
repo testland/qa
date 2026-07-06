@@ -1,8 +1,6 @@
 ---
 name: sidekiq-tests
 description: "Authors and runs Sidekiq job tests in Ruby - three Sidekiq::Testing modes (`fake!` jobs accumulate in arrays, `inline!` runs jobs immediately, `disable!` enqueues to Redis as normal); RSpec + Minitest helper patterns; clears jobs between tests via `Sidekiq::Worker.clear_all`; assertion patterns on `MyWorker.jobs.size` and `MyWorker.jobs.first[:args]`. Use when the user works with Sidekiq workers and needs unit / integration tests for job enqueueing, scheduling, retry behavior, or unique-job semantics."
-rating: 23
-d6: 4
 ---
 
 # sidekiq-tests

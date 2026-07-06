@@ -1,8 +1,6 @@
 ---
 name: wave-a11y
 description: "Runs WebAIM WAVE accessibility scans via the WAVE API or the browser-extension UI - produces visual overlay of errors / alerts / structural elements directly on the page, plus categorized JSON output for CI use. Use when the team values manual-review-friendly visual feedback (the WAVE overlay) alongside automated CI scans, or when a regulatory audit requires WebAIM-branded reports."
-rating: 23
-d6: 4
 ---
 
 # wave-a11y

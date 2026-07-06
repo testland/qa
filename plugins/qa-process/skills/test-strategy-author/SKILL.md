@@ -1,8 +1,6 @@
 ---
 name: test-strategy-author
 description: "Build-an-X workflow that produces a test strategy document for a project / release / feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based prioritization mapping (per `risk-matrix`), tooling stack, environments, exit criteria, ownership. Use as the artifact stakeholders sign off on before significant test investment, and the reference engineering teams come back to when scope / quality questions arise."
-rating: 22
-d6: 3
 ---
 
 # test-strategy-author

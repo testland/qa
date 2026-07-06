@@ -2,8 +2,6 @@
 name: trace-spec-author
 description: "Build a trace specification document per feature - defines the trace shape (root span + child spans + key attributes per OpenTelemetry semantic conventions) that production code MUST emit. The spec drives both implementation reviews AND trace-assertion tests, so a single declarative document is the source of truth for what observability \"looks like\" for a feature."
 type: skill
-rating: 23
-d6: 4
 keywords:
   - trace-specification
   - observability-spec

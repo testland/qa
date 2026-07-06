@@ -2,8 +2,6 @@
 name: zipkin-trace-tests
 description: "Author integration tests that query Zipkin for trace verification - Zipkin all-in-one Docker for CI, REST API (`/api/v2/traces`, `/api/v2/services`, `/api/v2/dependencies`), B3 propagation header tests (single-header and multi-header X-B3-* form), dependency-graph assertions. Use when the team uses Zipkin (legacy or Spring Cloud Sleuth heritage)."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - zipkin
   - distributed-tracing

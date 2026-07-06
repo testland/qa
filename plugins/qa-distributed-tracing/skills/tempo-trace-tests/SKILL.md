@@ -2,8 +2,6 @@
 name: tempo-trace-tests
 description: "Authors integration tests that query Grafana Tempo for cross-service trace verification - TraceQL `{ }` span selectors targeting `span.`, `resource.`, and intrinsic fields; Tempo HTTP API (`/api/search` with `q=`, `/api/traces/{id}`) for span-set and attribute assertions; local Tempo via Docker single-binary (ports 4317/4318/3200). Use when the production observability stack uses Tempo as the trace backend and tests must verify distributed trace shape, span attributes, or service topology after instrumentation changes."
 type: skill
-rating: 25
-d6: 5
 keywords:
   - tempo
   - traceql

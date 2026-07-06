@@ -1,8 +1,6 @@
 ---
 name: nose2-tests
 description: "Configures and runs nose2 - successor to nose (the original Python test discovery library, end-of-life 2015) and an alternative to pytest's discovery model; supports plugin architecture, layers (per-test-class setUp/tearDown shared across modules), parameterized tests via `nose2.tools.params`, multi-process parallelism via mp plugin. Use when migrating from legacy nose1 codebases or when the team prefers nose2's plugin model over pytest."
-rating: 21
-d6: 4
 ---
 
 # nose2-tests

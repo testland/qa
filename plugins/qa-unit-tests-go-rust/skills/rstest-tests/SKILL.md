@@ -1,8 +1,6 @@
 ---
 name: rstest-tests
 description: "Configures and runs rstest - Rust parametrized + fixture-based testing crate; `#[rstest]` attribute + `#[case(...)]` for parametrize; `#[fixture]` for reusable test setup; matrix tests via multiple `#[case]` × N (cartesian product); async test support via `#[async_std::test]` / `#[tokio::test]` + `#[rstest]`; `#[future]` for async fixtures. Use when working with Rust and needing parametrize/fixture patterns beyond stdlib `#[test]`."
-rating: 21
-d6: 4
 ---
 
 # rstest-tests

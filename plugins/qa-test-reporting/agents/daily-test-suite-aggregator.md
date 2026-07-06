@@ -9,8 +9,6 @@ skills:
   - coverage-diff-reporter
   - currents-integration
   - testrail-integration
-rating: 24
-d6: 4
 ---
 
 A morning roll-up that takes the previous day's CI artifacts across every test suite and every environment and emits one structured summary the team reads in stand-up.

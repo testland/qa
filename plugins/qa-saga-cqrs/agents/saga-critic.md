@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - saga-transaction-tests
   - event-sourcing-tests
-rating: 25
-d6: 3
 ---
 
 Adversarial critic for saga and event-sourcing write paths. Read-only.

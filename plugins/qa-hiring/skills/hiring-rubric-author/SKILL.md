@@ -1,8 +1,6 @@
 ---
 name: hiring-rubric-author
 description: "Build-an-X workflow that produces a per-role QA hiring rubric - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus the question bank from `interview-question-author` and emits a competency-anchored scoring rubric with 4-level behavioral anchors (no-hire / borderline / hire / strong-hire) per competency. Distinct from `interview-question-author` (sibling skill that produces the questions) and from `calibration-guide-author` (sibling that produces the gold-standard answer guide). Use after the question bank exists and before the first interview is scheduled - the rubric is what brings interviewer scoring into agreement."
-rating: 23
-d6: 4
 ---
 
 # hiring-rubric-author

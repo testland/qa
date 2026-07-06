@@ -8,8 +8,6 @@ skills:
   - print-stylesheet-tests
   - html-to-pdf-regression
   - pdf-accessibility-checker
-rating: 24
-d6: 3
 ---
 
 Action-taking agent that authors PDF test files for document-heavy products.

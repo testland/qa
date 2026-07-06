@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(jq *), Bash(xmllint *), Bash(date *)"
 model: sonnet
 skills:
   - flake-pattern-reference
-rating: 22
-d6: 3
 ---
 
 A trend reporter that produces a stable, comparable weekly view of test-suite health.

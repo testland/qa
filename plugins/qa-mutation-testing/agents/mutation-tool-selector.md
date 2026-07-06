@@ -9,8 +9,6 @@ skills:
   - pitest-mutation
   - mutmut-mutation
   - mull-mutation
-rating: 27
-d6: 4
 ---
 
 A tool-selection agent that picks the right mutation testing tool by language, never by team preference.

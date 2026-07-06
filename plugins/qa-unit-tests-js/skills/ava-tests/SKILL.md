@@ -1,8 +1,6 @@
 ---
 name: ava-tests
 description: "Configures and runs AVA - concurrent-by-default JS/TS test framework with isolated test files (each file runs in its own Node process), no globals (explicit `import test from 'ava'`), async-first API, snapshot support, and TypeScript via `@ava/typescript`. Use when AVA is already the chosen framework and the user wants minimal-API parallel-by-default tests, works with libraries (vs apps) where per-file isolation prevents test interference, or is switching from Mocha for per-file process isolation Mocha cannot provide. For choosing between AVA and Mocha, or for Mocha-specific work, use mocha-tests."
-rating: 22
-d6: 4
 ---
 
 # ava-tests

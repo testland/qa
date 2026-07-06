@@ -1,8 +1,6 @@
 ---
 name: traceability-matrix-builder
 description: "Build-an-X workflow that produces a requirements-to-tests traceability matrix from a TCM case repository + a requirements source (Jira / Linear / GitHub Issues). Walks the author through (1) extracting requirements with stable IDs, (2) extracting cases + their refs, (3) computing coverage (which requirements have at least one test, which tests verify which requirements, orphaned cases / orphaned requirements), (4) emitting a CSV / Markdown / HTML matrix, and (5) producing an executive summary (X% requirement coverage, Y orphans, Z over-tested). Use for compliance audits, sprint-end coverage reviews, and traceability defensibility in regulated industries."
-rating: 23
-d6: 4
 ---
 
 # traceability-matrix-builder

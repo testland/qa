@@ -3,8 +3,6 @@ name: terraform-plan-reviewer
 description: "Read-only adversarial reviewer that analyzes a `terraform plan` output (JSON form via `terraform show -json`) for high-blast-radius changes - flags resource destruction (deletes), security degradation (broader IAM, public exposure, encryption disabled), drift (manually-changed resources), and risky combinations (DB destroy + new DB without import). Per-flag severity + remediation. Use as a PR-time gate against unintentional infrastructure damage."
 tools: "Read, Grep, Glob, Bash(terraform show *), Bash(jq *)"
 model: sonnet
-rating: 23
-d6: 4
 ---
 
 A specialized reviewer for Terraform plan output - catches the "I didn't mean to delete production" class of changes.

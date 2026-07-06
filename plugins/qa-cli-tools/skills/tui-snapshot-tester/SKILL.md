@@ -1,8 +1,6 @@
 ---
 name: tui-snapshot-tester
 description: "Snapshot testing for terminal UI apps (TUIs) - captures rendered terminal frames as deterministic SVG / text snapshots, diffs them on every run, surfaces a reviewable HTML report on failure, and supports `--snapshot-update` to accept changes intentionally. Wraps `pytest-textual-snapshot` for Python Textual apps; provides equivalent recipes for Ratatui (Rust) `insta` snapshots, Charm Bracelet (Go) `teatest` golden files, and Ink (Node) `ink-testing-library`. Use for any TUI where layout regressions otherwise reach users via `screenshot looks wrong in terminal`."
-rating: 21
-d6: 3
 ---
 
 # tui-snapshot-tester

@@ -1,8 +1,6 @@
 ---
 name: split-io-test
 description: "Wraps Split.io (Harness FME) SDK testing patterns: hermetic localhost/offline mode with an in-memory features map (JavaScript/browser) or a YAML fixture file (Node.js server-side), getTreatment and getTreatmentWithConfig evaluation, the SDK_READY event and whenReady() promise, impression listener verification, sync.impressionsMode configuration, and CI setup. Use when writing tests for application code instrumented with the Split.io or Harness Feature Management & Experimentation SDK."
-rating: 23
-d6: 5
 ---
 
 # split-io-test

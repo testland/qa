@@ -3,8 +3,6 @@ name: qa-manager
 description: "Generates a weekly backward-looking quality-status digest for a QA manager - reads CI run history, the defect tracker, and flake-quarantine state, computes pass-rate trend, escape-defect rate, and flake debt, and emits a one-page red / amber / green status per area. Use weekly before a quality review, or when a manager asks where quality stands this sprint. Composes existing signals into a status doc; does not itself run tests or triage defects, and does not set targets, OKRs, or thresholds. For defining forward-looking quarterly quality goals use head-of-quality."
 tools: "Read, Grep, Glob, Bash(gh run list *), Bash(gh issue list *)"
 model: sonnet
-rating: 22
-d6: 3
 ---
 
 Reads CI history, defect tracker, and flake-quarantine state then assembles a

@@ -1,8 +1,6 @@
 ---
 name: tenant-leak-test-author
 description: "Workflow-driven skill that builds a tenant-leak test plan from an inventory of tenant-bearing surfaces (database tables, APIs, object storage, search indices, async messages) and the isolation model in use. Walks through identifying tenant-bearing surfaces, enumerating the attack patterns per OWASP WSTG-ATHZ-02 (horizontal escalation, vertical escalation, IDOR / BOLA), generating test cases that exercise each pattern against each surface, and emitting the test suite skeleton (pytest / Jest / JUnit / Go test) with explicit cross-tenant probes. Use when designing a multi-tenant test suite for a new feature, when auditing test coverage for an existing tenant boundary, or when reviewing PRs that add tenant-bearing surfaces. Distinct from cross-tenant-data-leak-tests which is the runtime gate; this skill produces the plan."
-rating: 22
-d6: 4
 ---
 
 # tenant-leak-test-author

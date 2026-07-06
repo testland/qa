@@ -2,8 +2,6 @@
 name: outbox-pattern-test-author
 description: "Authors tests for the transactional outbox pattern: atomic DB-write-plus-event-insert in one transaction, relay/poller publishing with at-least-once delivery and consumer deduplication, insertion-order preservation, idempotent consumers, and relay failure/retry. Use when adding outbox infrastructure, changing the relay or poller, or auditing whether dual-write atomicity and at-least-once delivery guarantees hold under failure."
 type: skill
-rating: 24
-d6: 4
 keywords:
   - outbox
   - transactional-outbox

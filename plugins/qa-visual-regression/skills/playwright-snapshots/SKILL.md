@@ -1,8 +1,6 @@
 ---
 name: playwright-snapshots
 description: "Authors Playwright `expect(page).toHaveScreenshot()` assertions, configures masks / clips / threshold / maxDiffPixels per test, manages the per-OS / per-browser snapshot directory, and runs the update flow with `--update-snapshots`. Use when the project ships self-hosted visual regression coverage in Playwright (no external snapshot service)."
-rating: 26
-d6: 4
 ---
 
 # playwright-snapshots

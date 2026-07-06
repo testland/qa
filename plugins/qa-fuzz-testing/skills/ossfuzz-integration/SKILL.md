@@ -1,8 +1,6 @@
 ---
 name: ossfuzz-integration
 description: "Author and submit a project to Google OSS-Fuzz - the open-source continuous fuzzing service that runs libFuzzer / AFL++ / Honggfuzz campaigns on Google infrastructure 24x7. Covers the project.yaml + Dockerfile + build.sh contract, the $OUT/$WORK conventions, supported languages + sanitisers, seed-corpus + dictionary submission, the OSS-Fuzz Build Status dashboard, and the disclosure SLA (issues filed in Monorail with 90-day deadline). Use to offload long-running fuzz campaigns to dedicated infrastructure rather than self-hosting."
-rating: 23
-d6: 4
 ---
 
 # ossfuzz-integration

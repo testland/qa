@@ -1,8 +1,6 @@
 ---
 name: bdd-getting-started
 description: "Orients an engineer or BA who is new to BDD in the qa-bdd plugin - maps their existing role (manual tester, business analyst, or developer) to the right starting skill, explains Gherkin's Given/When/Then structure with a minimal example, and routes them onward to authoring and review tooling. Use when an engineer or BA new to BDD does not know where to start in this plugin."
-rating: 23
-d6: 2
 keywords: ["bdd", "gherkin", "getting-started", "three-amigos", "onboarding", "manual-tester", "business-analyst"]
 ---
 

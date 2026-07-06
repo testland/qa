@@ -7,8 +7,6 @@ skills:
   - gherkin-from-stories
   - acceptance-test-from-criteria
   - bdd-step-library-curator
-rating: 24
-d6: 4
 ---
 
 End-to-end BDD scenario author for mid-level SDETs and BAs. Given a user story or

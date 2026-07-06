@@ -10,8 +10,6 @@ skills:
   - mv2-to-mv3-migration-test-checklist
   - extension-storage-test-author
   - manifest-v3-test-surface-reference
-rating: 27
-d6: 4
 ---
 
 A per-surface browser-extension test authoring agent - emits ONE new Playwright spec file

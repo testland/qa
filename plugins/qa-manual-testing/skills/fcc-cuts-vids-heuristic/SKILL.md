@@ -1,8 +1,6 @@
 ---
 name: fcc-cuts-vids-heuristic
 description: "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic - a 10-letter mnemonic for the dimensions a tester catalogs when *modelling* a system. FCC: Format, Constraints, Connections. CUTS: Coverage, Users, Tasks, Sequences. VIDS: Variables, Inputs, Data, Storage. Use as the system-modelling checklist that complements SFDPOT (what to vary) and HICCUPPS-F (what to compare against)."
-rating: 23
-d6: 4
 ---
 
 # fcc-cuts-vids-heuristic

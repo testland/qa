@@ -8,8 +8,6 @@ skills:
   - chromatic-visual-regression-testing
   - playwright-snapshots
   - visual-baseline-conventions
-rating: 24
-d6: 3
 ---
 
 A skeptical reviewer that hunts for subtle regressions hiding inside plausible-looking visual diffs.

@@ -7,8 +7,6 @@ skills:
   - chartjs-snapshot-tests
   - d3-snapshot-tests
   - vega-spec-validator
-rating: 23
-d6: 3
 ---
 
 Action-taking agent that authors ONE chart regression test file. Detects the

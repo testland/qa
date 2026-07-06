@@ -6,20 +6,26 @@ exceeds 2 points on any single dimension, calibrate by walking through
 the calibration anchors at the bottom of this file.
 
 > **The D6 rubric** — six dimensions (D1–D6), each scored 0–5; the sum is the
-> `rating` (0–30). Merge bar: `rating ≥ 21` with `d6 ≥ 1` (`d6 = 0` is a hard
-> reject). Mechanical hygiene (description / body length, Windows-path checks)
-> runs separately in `content-audit.py`; this checklist is the human rubric.
+> total (0–30). Merge bar: total ≥ 21 with D6 ≥ 1 (D6 = 0 is a hard reject).
+> Mechanical hygiene (description / body length, Windows-path checks) runs
+> separately in `content-audit.py`; this checklist is the human rubric.
+>
+> **How the rubric is applied:** a reviewer reads the PR diff and scores it
+> against the six dimensions using the D1–D6 checklist in
+> [`.github/pull_request_template.md`](../.github/pull_request_template.md).
+> The per-dimension scores are the reviewer's working judgment — they are
+> **not** stored in component frontmatter (there are no `rating` / `d6`
+> fields) and **not** enforced by CI (there is no automated rating gate).
 
 ## Pre-review smoke checks
 
 Before scoring dimensions, confirm:
 
-- [ ] CI is green (`validate.sh`, `rating-check.sh`, `test-validate.sh` all pass)
-- [ ] Commit message includes source-fetch date and rating breakdown
+- [ ] CI is green (`validate.sh`, `test-validate.sh` all pass)
+- [ ] Commit message includes source-fetch date(s)
 - [ ] Component file is in the correct path
   (`plugins/<plugin>/skills/<name>/SKILL.md` or `plugins/<plugin>/agents/<name>.md`)
 - [ ] Plugin's `README.md` component table updated with new row
-- [ ] Frontmatter has `rating:`, `d6:` fields
 
 If any pre-check fails, request fixes before scoring.
 

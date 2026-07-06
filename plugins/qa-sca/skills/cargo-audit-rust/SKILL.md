@@ -1,8 +1,6 @@
 ---
 name: cargo-audit-rust
 description: "Configures and runs cargo-audit against the RustSec Advisory Database for Rust projects; covers `cargo audit` (vulnerability scan), `cargo audit fix` (automated dependency updates), `--deny unmaintained|unsound|yanked|warnings` exit-code control, `audit.toml` per-advisory suppression with mandatory `expires` + `reason`, SARIF output for GitHub Code Scanning upload, and `rustsec/audit-check` GitHub Actions integration. Use when the codebase has a Cargo.lock and needs Rust-specific SCA beyond what the multi-ecosystem npm-pip-maven-audit wrapper provides."
-rating: 24
-d6: 4
 ---
 
 # cargo-audit-rust

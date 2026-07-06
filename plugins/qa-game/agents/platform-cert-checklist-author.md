@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - platform-cert-overview-reference
   - game-test-categories-reference
-rating: 23
-d6: 3
 ---
 
 Platform-cert checklist author. Receives a target platform and emits a

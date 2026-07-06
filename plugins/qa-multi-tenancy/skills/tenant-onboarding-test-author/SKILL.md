@@ -1,8 +1,6 @@
 ---
 name: tenant-onboarding-test-author
 description: "Workflow-driven skill that authors a test suite for tenant provisioning and offboarding: account creation, isolation at creation (no cross-tenant bleed from a new tenant's first API call), default resource quotas, billing record linkage, seed and default data correctness, idempotent re-provisioning, and teardown with full data deletion. Walks through mapping provisioning surfaces, generating test cases per surface, emitting the test suite skeleton (pytest / Jest / JUnit / Go test), and producing a coverage matrix. Use when a new tenant onboarding flow is introduced or changed, when the offboarding pipeline is modified, or when auditing provisioning coverage before a compliance review. Distinct from tenant-leak-test-author (runtime cross-tenant access) and cross-tenant-data-leak-tests (CI gate): this skill covers the provisioning lifecycle, not steady-state access control."
-rating: 23
-d6: 4
 keywords:
   - tenant-provisioning
   - onboarding

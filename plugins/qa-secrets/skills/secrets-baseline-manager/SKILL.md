@@ -1,8 +1,6 @@
 ---
 name: secrets-baseline-manager
 description: "Builds and maintains a unified secrets baseline/allowlist across gitleaks (.gitleaksignore + --baseline-path), TruffleHog (--results=verified filter + trufflehog:ignore), and Kingfisher (--baseline-file + --exclude/--skip-* flags); adopts legacy findings without blocking PRs; enforces a waiver lifecycle (expires + approved_by + reason) stored in .secrets-waivers.yaml; prevents baseline rot via quarterly audit + expiry enforcement. Use when onboarding secrets scanning onto a repo that already has historical findings, or when per-scanner ignore configs have drifted out of sync and need consolidating into one governed allowlist."
-rating: 24
-d6: 4
 ---
 
 # secrets-baseline-manager

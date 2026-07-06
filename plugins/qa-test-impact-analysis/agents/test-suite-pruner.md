@@ -5,8 +5,6 @@ tools: "Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(npx jes
 model: sonnet
 skills:
   - regression-suite-selector
-rating: 22
-d6: 3
 ---
 
 A maintenance agent that surfaces low-signal tests and proposes removals - never executes deletes without a human's PR review.

@@ -6,7 +6,7 @@ Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
 
 ## Prerequisites
 
-- Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the rating gate, lint rules,
+- Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the review rubric, lint rules,
   and the differentiation requirement.
 - Skim the common component shapes in the next section before drafting any
   component scope.
@@ -19,7 +19,7 @@ Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
 
 Most well-scoped components fall into one of the shapes below. They are a
 **thinking aid for getting scope right, not a required label** — nothing in the
-rating gate or CI keys on them. If a draft matches none of these cleanly, the
+review or CI keys on them. If a draft matches none of these cleanly, the
 scope is probably wrong; reshape before authoring. (D2 scores scope
 *coherence*, not box-fitting.)
 
@@ -64,8 +64,8 @@ not in the agent body.
 A **role bundle** is a distinct plugin type: it ships no skills or agents and
 exists only to install a curated set of other plugins in one command (`qa-starter`
 and the `qa-role-*` family). It is the recommended way for users to adopt a whole
-role. A bundle is exempt from the D1–D6 rating gate (it has no components to
-score), but it has its own rules.
+role. A bundle is exempt from the D1–D6 review (it has no components to
+review), but it has its own rules.
 
 1. **Manifest only.** Create `plugins/<bundle>/.claude-plugin/plugin.json` and
    **nothing else under** `plugins/<bundle>/` except the README — no `skills/`,
@@ -273,9 +273,12 @@ Good:  the agent emits:
 A single long token (a CLI command, a method signature, a test name) is a
 correct inline-code use even when it is long — leave it.
 
-## Step 6 — Self-rate (D1–D6, 0–30 scale)
+## Step 6 — Self-check against D1–D6
 
-Score each of D1–D6 (0–5 per dimension); the sum is the `rating`:
+Read each component against D1–D6. The reviewer applies this rubric to your PR
+diff via the
+[`.github/pull_request_template.md`](../.github/pull_request_template.md)
+checklist; there is no stored score and no rating field. The dimensions:
 
 - **D1 Spec compliance** — frontmatter follows Anthropic's plugin spec.
   Name format, name matches parent dir, description ≤1024 chars, no XML tags,
@@ -296,23 +299,14 @@ Score each of D1–D6 (0–5 per dimension); the sum is the `rating`:
   Windows-style paths in cited examples). For read-only or adversarial-reviewer
   agents ≥120 lines: explicit `## Output format` section.
 - **D6 Terminology compliance** — ISTQB-canonical terms cited to canonical
-  source; tool-specific claims grounded in fetched docs. **D6 = 0 is a
+  source; tool-specific claims grounded in fetched docs. **Uncited claims are a
   hard reject.**
 
-**Merge bar: `rating ≥ 21` of 30, with `d6 ≥ 1`.** Mechanical hygiene
-(description / body length, Windows paths) is checked separately by
-`content-audit.py`.
+**Merge bar (reviewer judgment):** each dimension clears its anchor, with
+citations (D6) as the hard floor. Mechanical hygiene (description / body length,
+Windows paths) is checked separately by `content-audit.py`.
 
-## Step 7 — Stamp frontmatter
-
-Add to component frontmatter:
-
-```yaml
-rating: 24      # D1+D2+D3+D4+D5+D6 sum (script enforces 21..30)
-d6: 4           # D6 sub-score (hard floor ≥1; d6=0 is a hard reject)
-```
-
-## Step 8 — Update plugin README
+## Step 7 — Update plugin README
 
 Add a row to the plugin's component table:
 
@@ -320,32 +314,31 @@ Add a row to the plugin's component table:
 | skill | dbt-testing | Author and run dbt tests with CI gates |
 ```
 
-## Step 9 — Run CI locally
+## Step 8 — Run CI locally
 
 ```bash
 bash scripts/test-validate.sh
 bash scripts/validate.sh
-bash scripts/rating-check.sh
 python3 scripts/content-audit.py --strict
 ```
 
-All four must pass.
+All three must pass.
 
-## Step 10 — Commit
+## Step 9 — Commit
 
-Commit message format includes source-fetch date and rating:
+Commit message format includes the source-fetch date:
 
 ```
-Add <component-name> <type> (rated <rating>/30 [d6=<n>]; sources fetched <YYYY-MM-DD> from <domain>)
+Add <component-name> <type> (sources fetched <YYYY-MM-DD> from <domain>)
 ```
 
 Example:
 
 ```
-Add k6-load-testing skill (rated 27/30 [d6=5]; sources fetched 2026-05-25 from grafana.com/docs/k6)
+Add k6-load-testing skill (sources fetched 2026-05-25 from grafana.com/docs/k6)
 ```
 
-## Step 11 — Release the plugin
+## Step 10 — Release the plugin
 
 When all components in the plugin land:
 

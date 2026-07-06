@@ -2,8 +2,6 @@
 name: mqtt-tests
 description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients - QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter."
 type: skill
-rating: 22
-d6: 4
 keywords:
   - mqtt
   - mqtt-v5

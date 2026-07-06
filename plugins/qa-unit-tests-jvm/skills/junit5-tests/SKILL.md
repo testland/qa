@@ -1,8 +1,6 @@
 ---
 name: junit5-tests
 description: "Configures and runs JUnit 5 (Jupiter) - modern JVM testing platform with annotations (`@Test` / `@ParameterizedTest` / `@RepeatedTest` / `@TestFactory`), lifecycle hooks (`@BeforeAll` / `@BeforeEach` / `@AfterEach` / `@AfterAll`), extension model (`@ExtendWith`), display names (`@DisplayName`), conditional execution (`@EnabledOnOs`, `@EnabledIf`), parallel execution config; integrates with Maven Surefire / Gradle test task / IntelliJ. Use when the user works with Java / Kotlin codebases needing the modern JVM standard."
-rating: 24
-d6: 4
 ---
 
 # junit5-tests

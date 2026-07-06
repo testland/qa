@@ -1,8 +1,6 @@
 ---
 name: mstest-tests
 description: "Configures and runs MSTest (now MSTest.TestFramework v3) - Microsoft's first-party .NET test framework with `[TestClass]` / `[TestMethod]` / `[DataRow]` / `[DynamicData]` attributes; `[ClassInitialize]` / `[ClassCleanup]` / `[TestInitialize]` / `[TestCleanup]` lifecycle; `TestContext` injection; tight Visual Studio + dotnet test integration. Use when working with .NET on a MSTest codebase, or in environments standardized on Microsoft toolchain."
-rating: 21
-d6: 4
 ---
 
 # mstest-tests

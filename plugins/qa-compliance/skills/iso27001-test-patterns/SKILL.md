@@ -1,8 +1,6 @@
 ---
 name: iso27001-test-patterns
 description: "Reference catalog of ISO/IEC 27001:2022 Annex A test patterns - per-control-theme coverage across 93 controls in four themes (organizational A.5, people A.6, physical A.7, technological A.8); testable technical controls with code-level assertions for access control (A.8.2-A.8.5), logging and monitoring (A.8.15-A.8.16), cryptography (A.8.24), and secure development (A.8.25-A.8.31); evidence patterns for Stage 1 and Stage 2 certification audits; Statement of Applicability scoping. Use when authoring ISMS test coverage for an ISO 27001:2022 certification engagement or gap assessment."
-rating: 23
-d6: 4
 ---
 
 # iso27001-test-patterns

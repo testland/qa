@@ -1,8 +1,6 @@
 ---
 name: state-transition-test-design
 description: "Derives human-readable manual test cases from stateful behavior: identify states, events, transitions, and guard conditions, draw the state table including invalid (empty-cell) transitions, choose a coverage level (all states, valid transitions / 0-switch, transition pairs / 1-switch per Chow, all transitions including invalid ones), then derive one test case per coverage item as an event sequence with per-step expected states (ISTQB CTFL v4.0 section 4.2.4). Deep single-technique walkthrough, unlike test-case-ideation-from-story in qa-process (broad multi-lens case matrix); output is manual step/expected cases, unlike boundary-value-generator in qa-test-data (parameterized test code); covers derivation, not case field structure like test-case-anatomy-reference in qa-test-management. Use for lifecycle entities (accounts, orders, subscriptions), workflows, and UI wizards where the response to an event depends on the current state."
-rating: 24
-d6: 4
 keywords: ["state transition", "state machine", "state table", "test design", "istqb", "ctfl", "n-switch", "chow", "manual testing"]
 ---
 

@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - manual-test-script-author
   - test-execution-checklist
-rating: 24
-d6: 4
 ---
 
 Adversarial gatekeeper for scripted manual tests. Reads the script the tester will execute and

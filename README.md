@@ -2,18 +2,18 @@
 
 [![validate](https://github.com/testland/qa/actions/workflows/validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/validate.yml)
 [![plugin-validate](https://github.com/testland/qa/actions/workflows/plugin-validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/plugin-validate.yml)
-[![plugins](https://img.shields.io/badge/plugins-85-blue)](#plugin-catalog)
-[![components](https://img.shields.io/badge/components-695-blue)](#plugin-catalog)
+[![plugins](https://img.shields.io/badge/plugins-89-blue)](#plugin-catalog)
+[![components](https://img.shields.io/badge/components-706-blue)](#plugin-catalog)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![marketplace](https://img.shields.io/badge/marketplace-v4.1.0-orange)](.claude-plugin/marketplace.json)
+[![marketplace](https://img.shields.io/badge/marketplace-v4.1.2-orange)](.claude-plugin/marketplace.json)
 
 > A rigorously curated quality-engineering plugin marketplace for Claude Code.
-> 85 plugins, 695 components, every one rating-gated before merge.
+> 89 plugins, 706 components, every one reviewed against the D1–D6 rubric before merge.
 
 ## Why testland-qa
 
-- **6-dimension quality rubric** (D1–D6) before merge, with a hard-reject for
-  uncited claims (citation theater) via the `d6` floor
+- **6-dimension quality rubric** (D1–D6) applied at manual PR review, with a
+  hard reject for uncited claims (citation theater) as the D6 floor
 - **CI-validated composition**: every agent's preloaded skills are
   reference-checked, no dangling deps
 - **Differentiation required**: every component must articulate how it
@@ -94,8 +94,8 @@ git clone https://github.com/testland/qa ~/.claude/marketplaces/testland-qa
 > **Before you install:** plugins run inside your Claude Code session and ship
 > agent instructions and tool wrappers. Anthropic doesn't vet marketplace
 > contents — review a plugin's components before installing it into a sensitive
-> project. Every component here is rating-gated (see [Quality bar](#quality-bar)),
-> but you remain in control of what runs.
+> project. Every component here is reviewed against the D1–D6 rubric (see
+> [Quality bar](#quality-bar)), but you remain in control of what runs.
 
 ## Start here
 
@@ -204,8 +204,9 @@ table with versions and component counts.
 
 ## Quality bar
 
-Every component is scored on six dimensions before merge (the D6 rubric,
-0-30 scale, merge bar 21):
+Every component is reviewed against six dimensions before merge (the D1–D6
+rubric). This is a **manual PR review** — a reviewer applies the rubric to the
+diff via the D1–D6 checklist in `.github/pull_request_template.md`:
 
 | Dim | Name | Anchor |
 |---|---|---|
@@ -216,11 +217,12 @@ Every component is scored on six dimensions before merge (the D6 rubric,
 | **D5** | Body quality | Concrete steps + worked examples |
 | **D6** | Terminology compliance | Concrete claims cited inline at point of use |
 
-A reviewer scores each dimension; the sum is the `rating` (0-30). CI enforces
-**rating ≥ 21 and d6 ≥ 1** — `d6` surfaces the dominant "citation theater"
-failure mode, so `d6 = 0` is a hard reject. Mechanical lint (naming, JSON,
-description/body length, Windows-path hygiene) runs alongside in `validate.py`
-and `content-audit.py`.
+The merge bar is reviewer judgment: each dimension should clear its anchor, with
+**citations (D6) as the hard floor** — uncited "citation theater" is the dominant
+failure mode and a hard reject. There is no automated rating gate and no
+`rating`/`d6` frontmatter; the rubric lives in the reviewer's checklist.
+Mechanical lint (naming, JSON, description/body length, Windows-path hygiene)
+still runs in CI via `validate.py` and `content-audit.py`.
 
 See [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md) for the rubric
 and [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the framework details.
@@ -232,7 +234,7 @@ testland-qa/
   .claude-plugin/marketplace.json    # required; lists all plugins
   plugins/                           # one folder per plugin
   templates/                         # plugin / skill / agent / command scaffolds
-  scripts/                           # validate, rating-check, scaffolding,
+  scripts/                           # validate, scaffolding,
                                      # composition graph, inventory, catalog
   .github/                           # workflows, issue + PR templates,
                                      # CODE_OF_CONDUCT, SECURITY, CODEOWNERS
@@ -242,7 +244,7 @@ testland-qa/
   CLAUDE.md                          # Claude-native contribution guide
   CHANGELOG.md                       # release notes
   CATALOG.md                         # auto-generated plugin catalog
-  Makefile                           # validate / rate / compose / catalog targets
+  Makefile                           # validate / compose / catalog targets
   LICENSE                            # MIT
 ```
 
@@ -267,14 +269,13 @@ bash scripts/new-plugin.sh <plugin-name> "<one-line-description>" <primary-keywo
 Run validation locally before pushing:
 
 ```bash
-make all   # validate + rate + compose + catalog
+make all   # validate + compose + catalog
 ```
 
 Or, without `make`:
 
 ```bash
 bash scripts/validate.sh .
-bash scripts/rating-check.sh .
 python3 scripts/composition-graph.py
 ```
 

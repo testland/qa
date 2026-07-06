@@ -1,8 +1,6 @@
 ---
 name: k-anonymity-verifier
 description: "Verifies that a masked dataset satisfies k-anonymity, l-diversity, and t-closeness by computing equivalence classes over chosen quasi-identifiers and reporting re-identification risk. Covers quasi-identifier selection heuristics, threshold guidance, pycanon API (k_anonymity / l_diversity / t_closeness / report), ARX Java API and GUI workflow, SmartNoise for differential-privacy comparison, and CI-gate integration. Distinct from data-masking-techniques-reference (which catalogs masking operators but defers k-anonymity measurement to dedicated tooling) and from presidio-pii-detection (which detects PII spans but offers no equivalence-class analysis). Use when you need to confirm whether a masked dataset meets a stated k, l, or t threshold before promoting it to a non-production environment."
-rating: 25
-d6: 5
 keywords:
   - k-anonymity
   - l-diversity

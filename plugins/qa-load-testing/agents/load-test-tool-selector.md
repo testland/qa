@@ -9,8 +9,6 @@ skills:
   - gatling-load-testing
   - locust-load-testing
   - lighthouse-perf
-rating: 27
-d6: 4
 ---
 
 A tool-selection agent that picks one load testing tool from goal + stack signals.

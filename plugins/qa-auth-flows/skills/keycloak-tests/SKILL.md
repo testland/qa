@@ -1,8 +1,6 @@
 ---
 name: keycloak-tests
 description: "Authors and runs integration tests against Keycloak - uses Testcontainers Keycloak module to spin up an isolated server per test class, imports realm JSON for fixtures, exercises OIDC discovery / token endpoint / token introspection / admin REST API; tests password / authorization-code / client-credentials / token-exchange flows; covers UMA (User-Managed Access) permission tickets. Use when the user works with self-hosted Keycloak and needs unit / integration tests for realms, clients, users, or auth flows."
-rating: 23
-d6: 4
 ---
 
 # keycloak-tests

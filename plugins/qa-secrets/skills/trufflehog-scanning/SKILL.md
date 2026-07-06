@@ -1,8 +1,6 @@
 ---
 name: trufflehog-scanning
 description: "Configures and runs TruffleHog v3 - secret scanner with **live verification** (validates discovered secrets against provider APIs to confirm actual exposure vs entropy false positive); supports per-source subcommands (`git`, `github`, `gitlab`, `filesystem`, `s3`, `docker`, `gcs`, `postman`); `--results=verified` filter for high-precision output; `--exclude-detectors=TYPE` for noise reduction; exits 183 on findings via `--fail`. Use when the team needs verified secret findings (low false-positive rate) or scans across cloud + repo + container surfaces."
-rating: 23
-d6: 4
 ---
 
 # trufflehog-scanning

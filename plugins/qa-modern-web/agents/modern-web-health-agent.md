@@ -8,8 +8,6 @@ skills:
   - pwa-install-flow-tests
   - web-vitals-inp-deep
   - sw-cache-strategy-author
-rating: 23
-d6: 2
 ---
 
 Runs one pre-deploy "modern web platform readiness" pass that composes three

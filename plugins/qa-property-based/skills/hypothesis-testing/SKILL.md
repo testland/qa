@@ -1,8 +1,6 @@
 ---
 name: hypothesis-testing
 description: "Authors property-based tests in Python using Hypothesis - wires `@given` with `strategies` (`st.integers`, `st.text`, `st.lists`, `st.from_regex`, `st.composite`), uses `assume()` / `.filter()` for preconditions, configures via `@settings(max_examples=..., deadline=...)`, and exploits Hypothesis's automatic shrinking to find the falsifying example. Integrates with pytest fixtures + parametrize. Use when a Python project needs PBT to catch edge cases the example-based tests miss - bug clusters around input ranges / boundary values / interaction between fields."
-rating: 24
-d6: 4
 ---
 
 # hypothesis-testing

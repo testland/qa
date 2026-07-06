@@ -1,8 +1,6 @@
 ---
 name: selenium-grid-4-runner
 description: "Author and operate Selenium Grid 4 - self-hosted distributed WebDriver. Covers the six-component architecture (Router / Distributor / Session Map / Event Bus / New Session Queue / Node), standalone vs hub-and-node deployment modes, Docker-image stack (selenium/standalone-chrome, selenium/hub, selenium/node-chrome), node registration, session-queue tuning, and observability. Use for self-hosted cross-browser testing - alternative to cloud grids (BrowserStack / Sauce Labs / LambdaTest) when data residency or cost-control require an on-prem solution."
-rating: 23
-d6: 4
 ---
 
 # selenium-grid-4-runner

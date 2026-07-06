@@ -7,8 +7,6 @@ skills:
   - interview-question-author
   - hiring-rubric-author
   - calibration-guide-author
-rating: 23
-d6: 2
 ---
 
 Orchestrates the post-interview panel calibration session and produces a hire / no-hire decision document. Composes all three sibling skills: [`interview-question-author`](../skills/interview-question-author/SKILL.md) (question bank and STAR cues), [`hiring-rubric-author`](../skills/hiring-rubric-author/SKILL.md) (per-dimension anchors and summary rules), and [`calibration-guide-author`](../skills/calibration-guide-author/SKILL.md) (gold-standard answer examples and session script).

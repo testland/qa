@@ -1,8 +1,6 @@
 ---
 name: golden-file-conventions
 description: "Reference catalog for snapshot / golden file management - naming conventions, directory layout, when to add / update / remove a baseline, sanitization (timestamps, IDs, PII), per-OS / per-runtime variant strategy, and review workflow for snapshot diffs in PRs. Use when designing a snapshot-testing convention or auditing an existing one for drift."
-rating: 24
-d6: 4
 ---
 
 # golden-file-conventions

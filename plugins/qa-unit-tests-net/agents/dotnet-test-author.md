@@ -9,8 +9,6 @@ skills:
   - mstest-tests
   - fluentassertions
   - bogus-data
-rating: 26
-d6: 4
 ---
 
 A per-method test-authoring agent that emits one new .NET unit test file - never modifies existing test methods, never asserts on internal flags the spec did not name.

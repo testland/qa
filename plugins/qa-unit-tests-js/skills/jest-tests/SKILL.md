@@ -1,8 +1,6 @@
 ---
 name: jest-tests
 description: "Configures and runs Jest - Meta-built batteries-included JS/TS unit framework with built-in `expect`, snapshot testing, mocking (`jest.mock`, `jest.fn`, `jest.spyOn`, manual `__mocks__/`), test environment selection (`jsdom` / `node`), parallel workers, coverage via Istanbul, watch mode, and CI integration via `--ci` flag. Use when the user works with React (CRA / older Next.js) or Node services and needs the most ecosystem-supported JS test framework."
-rating: 24
-d6: 4
 ---
 
 # jest-tests

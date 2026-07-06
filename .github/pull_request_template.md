@@ -6,37 +6,40 @@
 
 <!-- e.g. plugins/qa-data-quality, plugins/qa-sast -->
 
-## Component checklist
+## D1–D6 review (manual)
 
-For each new or modified component (skill / agent):
+New and changed components are validated by **reading this PR** against the
+six-dimension rubric — there is no automated rating gate and no `rating` / `d6`
+frontmatter. Full anchors: [`docs/REVIEWER_CHECKLIST.md`](../docs/REVIEWER_CHECKLIST.md).
 
-- [ ] Frontmatter complete: `name`, `description`, `rating`, `d6`
-- [ ] `description` follows the single-description test (third-person, no "You are…" / "I help…", distinguishes vs neighbors)
-- [ ] `rating` ≥ 21
-- [ ] `d6` ≥ 1 — every concrete claim cited inline at point of use (no end-of-body References-only blocks)
-- [ ] Body structure matches one of the common component shapes (see [`docs/PLUGIN_AUTHORING.md`](../docs/PLUGIN_AUTHORING.md) "Common component shapes")
-- [ ] Differentiation axis documented vs. 2–3 nearest neighbors (see [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) "Differentiation requirement")
+- [ ] **D1 Spec compliance** — frontmatter valid (kebab-case `name`, third-person `description`); `bash scripts/validate.sh .` passes.
+- [ ] **D2 Scope quality** — one coherent scope, single responsibility, progressive disclosure.
+- [ ] **D3 Description quality** — distinguishes vs the 2–3 nearest neighbors; predicts the body.
+- [ ] **D4 Use-case fit** — explicit "Use when…" trigger, not a persona.
+- [ ] **D5 Body quality** — concrete steps + worked examples.
+- [ ] **D6 Terminology / citations (hard floor)** — every concrete claim, flag, and threshold cited inline to a fetched canonical source (no end-of-body References-only blocks). Uncited "sounds plausible" content is a hard reject.
+- [ ] Differentiation axis documented vs. 2–3 nearest neighbors (see [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) "Differentiation requirement").
 
 ## Plugin manifest
 
-- [ ] If files inside `plugins/<name>/` changed, the plugin's `version` in
-      `plugins/<name>/.claude-plugin/plugin.json` was bumped
-- [ ] If a new plugin was added, it appears in `.claude-plugin/marketplace.json`
+- [ ] If files inside `plugins/<name>/` changed, the plugin's `version` in `plugins/<name>/.claude-plugin/plugin.json` was bumped (required — see [`CLAUDE.md`](../CLAUDE.md) "Version bumps are mandatory").
+- [ ] If a new plugin was added, it appears in `.claude-plugin/marketplace.json`, and `CATALOG.md` was regenerated.
+- [ ] testland-web resynced if a plugin/version changed (version parity).
 
 ## Local validation passed
 
 ```bash
 bash scripts/validate.sh .
-bash scripts/rating-check.sh .
 python3 scripts/composition-graph.py
+python3 scripts/version-bump-check.py
 ```
 
-- [ ] all three exit 0
+- [ ] all exit 0
 
 ## Sources fetched
 
-<!-- For new components, list the canonical URLs you fetched while authoring,
-     and the date you fetched them. This is the d6 grounding evidence. -->
+<!-- For new components, list the canonical URLs you fetched while authoring, and
+     the date — this is the D6 grounding evidence a reviewer checks. -->
 
 ## Reviewer notes
 

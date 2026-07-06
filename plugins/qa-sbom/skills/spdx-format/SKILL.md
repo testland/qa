@@ -1,8 +1,6 @@
 ---
 name: spdx-format
 description: "Reference for the SPDX (Software Package Data Exchange) v2.3 + v3.0 SBOM specification - Linux Foundation-curated, license-focused format covering packages, files, snippets, relationships, license declarations, and (in 3.0) AI / dataset / build / security profiles; supports Tag-Value / JSON / YAML / RDF / Spreadsheet encodings; preferred by US Federal procurement (NIST guidance) and Linux distros. Use when the team's SBOM consumer requires SPDX format (federal procurement, Linux Foundation members, license-compliance focus)."
-rating: 22
-d6: 4
 ---
 
 # spdx-format

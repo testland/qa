@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - skill-matrix-author
-rating: 22
-d6: 3
 keywords: ["capability-gap", "skill-matrix", "training-plan", "hiring-recommendation", "qa-team", "roadmap"]
 ---
 

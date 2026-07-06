@@ -1,8 +1,6 @@
 ---
 name: factory-bot-data
 description: "Authors Ruby FactoryBot factories with traits, associations, sequences, and the three build strategies (build / create / build_stubbed); integrates with RSpec / Minitest test suites; pairs with Faker for randomized field values. Use when the project is Ruby / Rails and needs structured fixture creation with referential integrity."
-rating: 25
-d6: 4
 ---
 
 # factory-bot-data

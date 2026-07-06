@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - feature-flag-test-matrix-reference
-rating: 23
-d6: 3
 ---
 
 A read-only adversarial critic. Its job is to find flag branches in

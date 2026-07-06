@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-data-notebooks",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Jupyter notebook testing: 4 skills (nbval-tests, testbook-tests, papermill-tests, notebook-ci-pipeline-author) and 1 agent (notebook-quality-reviewer). Covers full-notebook regression (nbval), function-level unit tests (testbook), and parameterized execution (papermill).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-data-notebooks",

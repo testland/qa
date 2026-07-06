@@ -5,8 +5,6 @@ tools: "Read, Write, Edit, Grep, Glob, Bash(gh issue view *), Bash(curl *), Bash
 model: sonnet
 skills:
   - synthetic-monitor-author
-rating: 23
-d6: 4
 ---
 
 A loop-closing agent that turns "the synthetic monitor / production observability caught it" into "we have a regression test for it now."

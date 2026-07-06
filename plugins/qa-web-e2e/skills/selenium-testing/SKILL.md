@@ -1,8 +1,6 @@
 ---
 name: selenium-testing
 description: "Authors Selenium WebDriver tests in any of its 6+ supported languages (Java, Python, JavaScript, C#, Ruby, Kotlin, PHP) - picks the appropriate language binding, configures WebDriver per browser, uses `By.*` locators with the team's accessibility-first preference where supported, runs locally + via Selenium Grid for distributed execution, parses results to JUnit XML. Use for legacy Selenium-locked stacks; new projects pick Playwright or Cypress."
-rating: 22
-d6: 3
 ---
 
 # selenium-testing

@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - test-case-anatomy-reference
   - traceability-matrix-builder
-rating: 23
-d6: 4
 ---
 
 An adversarial test-case-quality auditor that blocks substandard cases from polluting the TCM.

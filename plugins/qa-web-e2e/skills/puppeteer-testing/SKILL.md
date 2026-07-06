@@ -1,8 +1,6 @@
 ---
 name: puppeteer-testing
 description: "Authors browser automation scripts using Puppeteer - Chrome / Chromium-only headless / headed automation, Page object via `page.*` API, network interception, PDF generation, screenshot capture, scraping. Distinct from Playwright (Puppeteer's older sibling, Chrome-only) - use Puppeteer for Chrome-only browser automation tasks (scraping, generating PDFs from HTML, screenshot pipelines) where Playwright's multi-browser support is unneeded overhead."
-rating: 22
-d6: 3
 ---
 
 # puppeteer-testing

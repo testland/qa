@@ -1,8 +1,6 @@
 ---
 name: refund-test-matrix-builder
 description: "Workflow-driven skill that builds a refund test matrix from a payment flow inventory. Covers the refund variants (full / partial / multiple-partials / overrefund-attempt / refund-on-disputed / refund-on-already-refunded / refund-on-failed-charge), the per-gateway nuances (Stripe RefundIntent; Adyen Modifications refund; PayPal Captures.refund; Braintree Transaction.refund), the timing variants (immediate / next-day / declined-by-bank), and emits the test cases per cell. Use when designing refund coverage for a new integration. Composes payment-flow-states-reference + stripe-test-cards-and-webhooks + adyen-test-mode + paypal-sandbox + braintree-test-cards."
-rating: 22
-d6: 4
 ---
 
 # refund-test-matrix-builder

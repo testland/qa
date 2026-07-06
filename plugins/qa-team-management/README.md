@@ -22,13 +22,6 @@ The components compose as a management loop: the skill matrix measures today, th
 /plugin install qa-team-management@testland-qa
 ```
 
-## Rating
-
-All components in this plugin pass the quality gate. CI enforces total
->=21/30 with d6 >=1. See
-[`docs/REVIEWER_CHECKLIST.md`](../../docs/REVIEWER_CHECKLIST.md) at the
-repository root for the rubric.
-
 ## Composition with the rest of the marketplace
 
 - A capability gap that resolves to hiring hands off to [`qa-jd-author`](../qa-hiring/skills/qa-jd-author/SKILL.md) and the qa-hiring structured-interview chain; the matrix's competency vocabulary stays consistent with [`hiring-rubric-author`](../qa-hiring/skills/hiring-rubric-author/SKILL.md).

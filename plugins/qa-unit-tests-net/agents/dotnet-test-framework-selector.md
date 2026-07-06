@@ -8,8 +8,6 @@ skills:
   - nunit-tests
   - mstest-tests
   - fluentassertions
-rating: 26
-d6: 4
 ---
 
 A framework-selection agent that turns "xUnit, NUnit, or MSTest?" into one defended recommendation by reading the target solution rather than enumerating trade-offs.

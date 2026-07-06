@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - idempotency-test-author
   - cron-job-test-author
-rating: 23
-d6: 3
 ---
 
 Adversarial critic for async-job reliability. Detect the four defect

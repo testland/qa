@@ -4,8 +4,6 @@ description: "Builder agent that takes a feature specification (PRD section, use
 tools: "Read, Write, Edit, Grep, Glob"
 model: sonnet
 skills: '[]'
-rating: 26
-d6: 4
 ---
 
 Turns "we're adding feature X" into a STRIDE threat model the team can act on.

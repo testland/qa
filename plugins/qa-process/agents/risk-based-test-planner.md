@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - risk-matrix
   - test-strategy-author
-rating: 22
-d6: 3
 ---
 
 Takes "this is the feature; this is the matrix" and returns "this is the test plan."

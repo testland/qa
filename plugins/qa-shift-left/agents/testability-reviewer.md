@@ -4,8 +4,6 @@ description: "Reviews a feature spec, PR description, or user story for testabil
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills: '[]'
-rating: 26
-d6: 5
 ---
 
 A read-only reviewer that catches untestable spec ambiguity at the cheapest possible moment - before the engineer starts coding.

@@ -7,8 +7,6 @@ skills:
   - browser-matrix-strategy-reference
   - compatibility-budget
   - browser-matrix-runner
-rating: 23
-d6: 3
 ---
 
 Adversarial read-only auditor of a committed browser/OS support matrix.

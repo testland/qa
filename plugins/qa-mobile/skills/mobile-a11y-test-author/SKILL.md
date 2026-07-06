@@ -1,8 +1,6 @@
 ---
 name: mobile-a11y-test-author
 description: "Authors native mobile accessibility tests covering iOS (Accessibility Inspector, XCUITest `performAccessibilityAudit()` introduced in iOS 17, VoiceOver label/trait/hint verification) and Android (Espresso `AccessibilityChecks.enable()`, Accessibility Scanner, TalkBack traversal, `contentDescription` labelling) with WCAG-aligned checks for element labels, 44pt/48dp touch targets, contrast ratios, and focus order. Use when an iOS or Android app needs automated and manual accessibility test coverage beyond what `xcuitest-suite` or `espresso-suite` provide."
-rating: 24
-d6: 4
 keywords: ["accessibility", "a11y", "VoiceOver", "TalkBack", "WCAG", "iOS", "Android", "XCUITest", "Espresso", "screen reader"]
 ---
 

@@ -12,8 +12,6 @@ skills:
   - restler-fuzzing
   - api-chaos-runner
   - parameterized-test-generator
-rating: 27
-d6: 4
 ---
 
 A per-endpoint API test authoring agent - emits ONE new test file (or one new collection request) targeting one endpoint + scenario. Never modifies the OpenAPI spec, the existing tests, or the production server code.

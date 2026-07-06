@@ -1,8 +1,6 @@
 ---
 name: sanitiser-integration-reference
 description: "Pure-reference catalog of compiler sanitisers used with fuzz testing - AddressSanitizer (ASan), UndefinedBehaviorSanitizer (UBSan), MemorySanitizer (MSan), ThreadSanitizer (TSan), and LeakSanitizer (LSan). Explains what each detects, compatibility (can ASan + UBSan combine? - yes; ASan + MSan? - no), build flags, runtime options (ASAN_OPTIONS / UBSAN_OPTIONS env vars), and the typical ~2x slowdown per ASan. Use to pick the right sanitiser per fuzz target, configure the build, and interpret crash reports."
-rating: 23
-d6: 4
 ---
 
 # sanitiser-integration-reference

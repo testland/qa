@@ -1,8 +1,6 @@
 ---
 name: ragas-evaluation
 description: "Authors and runs Ragas - RAG-pipeline evaluation framework with metrics organized into RAG (Faithfulness, Response Relevancy, Context Precision/Recall, Context Entities Recall, Noise Sensitivity), Natural Language Comparison (Factual Correctness, Semantic Similarity, BLEU/ROUGE/CHRF/Exact Match), Agents/Tool-Use (Topic Adherence, Tool Call Accuracy/F1, Agent Goal Accuracy), General Purpose (Aspect Critic, Rubrics-based Scoring), Nvidia (Answer Accuracy, Context Relevance, Response Groundedness), and Summarization. Use when the user evaluates a RAG pipeline (retriever + generator) and needs the deepest metric variety in the OSS LLM-eval space."
-rating: 22
-d6: 4
 ---
 
 # ragas-evaluation

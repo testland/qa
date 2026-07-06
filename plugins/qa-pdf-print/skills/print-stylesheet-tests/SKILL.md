@@ -2,8 +2,6 @@
 name: print-stylesheet-tests
 description: "Test CSS print-media output via Playwright `page.emulateMedia({ media: ''''print'''' })` + `page.pdf()` - `@page` rule (size, margin, orphans, widows), `@page :first / :left / :right` pseudo-classes, `break-before/after/inside`, `@media print` selector activation, page-break suppression on headings."
 type: skill
-rating: 23
-d6: 4
 keywords:
   - print-css
   - paged-media

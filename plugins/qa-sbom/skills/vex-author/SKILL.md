@@ -1,8 +1,6 @@
 ---
 name: vex-author
 description: "Authors and validates OpenVEX documents - produces `not_affected`, `affected`, `fixed`, and `under_investigation` statements with justification codes using `vexctl create`; attaches VEX assertions to container images; outputs `.openvex.json` files consumed by `vuln-prioritizer`'s VEX-filter path. Use when a scanner flags a CVE that analysis confirms is not exploitable in your deployment, and a machine-readable `not_affected` assertion is needed to suppress false positives without discarding the finding from the audit trail."
-rating: 24
-d6: 4
 keywords:
   - vex
   - openvex

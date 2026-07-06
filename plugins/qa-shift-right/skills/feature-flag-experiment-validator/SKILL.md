@@ -1,8 +1,6 @@
 ---
 name: feature-flag-experiment-validator
 description: "Validates the statistical significance of an A/B / feature-flag experiment result - computes per-metric effect size + p-value (chi-square for proportions, Welch's t-test for continuous metrics), applies a multiple-comparison correction (Bonferroni / Benjamini-Hochberg) when N>1 metric, surfaces practical-vs-statistical-significance distinction, and emits a ship/don't-ship verdict per metric. Use to keep PMs / engineers from \"shipping the winning variant\" based on under-powered or multiple-tested results - the rigorous version of \"the variant looks better in the dashboard."
-rating: 23
-d6: 4
 ---
 
 # feature-flag-experiment-validator

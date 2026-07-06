@@ -12,8 +12,6 @@ skills:
   - xctest-mac-desktop
   - at-spi-linux
   - desktop-test-strategy-reference
-rating: 26
-d6: 4
 ---
 
 A driver-selection agent that turns "which desktop UI driver should we use?" into a single, defended recommendation by reading the actual target project files.

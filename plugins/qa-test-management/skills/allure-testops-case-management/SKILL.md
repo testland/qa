@@ -1,8 +1,6 @@
 ---
 name: allure-testops-case-management
 description: "Author and manage Allure TestOps test cases via the REST API - create cases, manage projects + suites, attach scenarios with nested steps, link to Jira / GitHub issues, sync with allure-results from CI runs. Covers Bearer-token auth, /api/rs/testcase CRUD endpoints, nested-step `scenario` shape, and the unique Allure TestOps feature of linking automated results back to manual case definitions. Use for pre-execution case authoring in teams using Allure TestOps as the canonical TCM."
-rating: 22
-d6: 4
 ---
 
 # allure-testops-case-management

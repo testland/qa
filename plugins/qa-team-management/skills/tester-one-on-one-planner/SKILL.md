@@ -1,8 +1,6 @@
 ---
 name: tester-one-on-one-planner
 description: "Build-an-X workflow that produces recurring 1:1 agenda structures for a QA manager and each tester - a cadence plan, a per-meeting agenda with an explicit status-versus-growth time split, and a coaching-question bank built on the GROW model (Goal, Reality, Options, Will) with QA-specific prompts seeded from the tester's skill-matrix row. Grounded in the 1:1 meeting styles cataloged in Camille Fournier's The Manager's Path (ISBN 978-1491973899). Distinct from `performance-feedback-author` (sibling skill producing a written evidence-based feedback artifact; this skill plans the recurring conversation where feedback lands), from `career-ladder-author` (the level structure growth conversations point at), and from the `quality-coach` agent in qa-roles (an adversarial Definition-of-Done reviewer of work products, not a people-conversation planner). Use when a QA manager sets up 1:1s with a new team, or when existing 1:1s have degraded into status meetings."
-rating: 23
-d6: 4
 keywords: ["one-on-one", "1-1", "coaching", "grow-model", "qa-manager", "agenda", "people-management"]
 ---
 

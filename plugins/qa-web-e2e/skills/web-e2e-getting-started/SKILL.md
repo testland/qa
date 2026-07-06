@@ -1,8 +1,6 @@
 ---
 name: web-e2e-getting-started
 description: "Orients a junior engineer to web E2E testing in the qa-web-e2e plugin - maps the available skills and agents, routes framework choice through the right agent, and walks the three entry-point skills for first-time setup. Use when a junior engineer is new to web E2E and does not know where to start in this plugin."
-rating: 22
-d6: 2
 ---
 
 # web-e2e-getting-started

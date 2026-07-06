@@ -1,8 +1,6 @@
 ---
 name: kingfisher-scanning
 description: "Configures and runs Kingfisher for secret scanning with access mapping: discovers leaked credentials AND maps them to the IAM identities and cloud resources they expose (S3 buckets, RDS instances, etc.); Intel Hyperscan regex engine makes it the fastest option for large monorepos; 950 built-in rules (largest of the OSS scanners); multi-target (local files / Git history / GitHub / GitLab / AWS S3 / Docker images); live API validation plus offline checksum verification; suppression via `--skip-regex` / `--skip-word` / `--baseline-file` / inline `kingfisher:ignore`. Use when cloud-blast-radius context matters or scan time on a large repo is blocking. Front-loads access-mapping and Hyperscan speed to differentiate from trufflehog-scanning, which also does multi-target scanning and live validation but offers no IAM access mapping."
-rating: 23
-d6: 4
 ---
 
 # kingfisher-scanning

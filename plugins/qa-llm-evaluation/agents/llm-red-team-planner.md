@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - giskard-llm
   - promptfoo-evaluation
-rating: 24
-d6: 4
 ---
 
 Action-taking orchestrator for LLM adversarial campaigns. Composes Giskard

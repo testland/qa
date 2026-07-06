@@ -1,8 +1,6 @@
 ---
 name: row-level-security-postgres-reference
 description: "Pure-reference catalog of Postgres Row-Level Security (RLS) for tenant isolation. Covers enabling RLS (ALTER TABLE ... ENABLE ROW LEVEL SECURITY, default-deny semantics), CREATE POLICY syntax (USING vs WITH CHECK clauses, FOR SELECT/INSERT/UPDATE/DELETE/ALL, permissive vs restrictive, TO role_name), bypassing RLS (superuser / BYPASSRLS / table owner / FORCE ROW LEVEL SECURITY), tenant context patterns (current_user, current_setting, JWT claims via Supabase auth.uid() / auth.jwt()), performance discipline (wrapping auth functions in SELECT, index on policy-referenced columns), and anti-patterns. Use as the RLS-pattern reference for Postgres-backed tenant isolation. Consumed by tenant-leak-test-author, cross-tenant-data-leak-tests, tenant-leak-critic."
-rating: 23
-d6: 4
 ---
 
 # row-level-security-postgres-reference

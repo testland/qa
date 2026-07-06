@@ -5,6 +5,12 @@ reviewers should land within 2 points of each other on the same
 component. This document walks three exemplars (A / C / F) with
 per-dimension scoring rationale so reviewers can self-calibrate.
 
+> The rubric is applied by **manual review of the PR diff** using the D1–D6
+> checklist in [`.github/pull_request_template.md`](../.github/pull_request_template.md).
+> The per-dimension scores below are the reviewer's mental model — they are
+> **not** stored in component frontmatter (there are no `rating` / `d6` fields)
+> and **not** enforced by CI.
+
 ## How to use this document
 
 1. Read the [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md) rubric first.
@@ -60,8 +66,6 @@ against the documented scores below.
 ---
 name: cypress-runner
 description: Helps with Cypress test setup and running. Manages Cypress config and runs tests in CI.
-rating: 18
-d6: 2
 ---
 
 # cypress-runner
@@ -143,8 +147,6 @@ Add this to your CI workflow:
 ---
 name: qa-expert
 description: You are an expert QA engineer. I help with all aspects of quality assurance including test planning, automation, manual testing, performance, security, and process improvement.
-rating: 22
-d6: 0
 ---
 
 # qa-expert
@@ -178,8 +180,8 @@ Just ask me anything QA-related.
 | D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined with "and". Predicts nothing — the body could be literally anything. PR doesn't name nearest neighbors or articulate a differentiation axis. |
 | D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. The differentiation requirement in [`CONTRIBUTING.md`](CONTRIBUTING.md) is not met — contributor cannot say "use this when X but not when Y." |
 | D5 Body quality | 1 | Body has structure (sections), but no steps, no output format, no examples. **1 point for not being empty.** |
-| D6 Terminology | 0 | Zero citations; zero source-grounded claims. **`d6: 0` is a hard reject** regardless of total. |
-| **Total** | **2/30 + d6: 0** | Hard reject. No differentiation axis, no trigger, no source grounding. Don't merge. |
+| D6 Terminology | 0 | Zero citations; zero source-grounded claims. **D6 = 0 is a hard reject** regardless of total. |
+| **Total** | **2/30, D6 = 0** | Hard reject. No differentiation axis, no trigger, no source grounding. Don't merge. |
 
 ### What makes this an F-grade
 
@@ -189,7 +191,7 @@ Just ask me anything QA-related.
 - No documented differentiation axis — the PR can't say which existing
   components this replaces or extends, and the description doesn't
   predict the body.
-- `d6: 0` — hard reject regardless of any other dimension.
+- D6 = 0 — hard reject regardless of any other dimension.
 
 ### How to coach the contributor
 

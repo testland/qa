@@ -3,8 +3,6 @@ name: mutation-survivor-explainer
 description: "Read-only investigator that takes a surviving mutant from any mutation testing tool (Stryker / PIT / mutmut / Mull / Stryker.NET) - reads the mutated line + surrounding context + the existing tests that should have caught it, classifies the survival reason (missing test case / weak assertion / equivalent mutant / unreachable code), and proposes the specific test to write to kill the mutant. Use after a mutation run when 5+ mutants survived and the team wants help triaging which to address first."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git blame *)"
 model: sonnet
-rating: 22
-d6: 3
 ---
 
 A read-only investigator that turns "this mutant survived" into "here's the specific test that would kill it."

@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - visual-baseline-gate
   - visual-baseline-conventions
-rating: 22
-d6: 2
 ---
 
 Turns a set of per-diff classification verdicts into a single, binding CI verdict. The visual-diff-classifier produces advisory judgements; this agent is the enforcement layer that decides whether the pipeline gates the merge.

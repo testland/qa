@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(git merge-base
 model: sonnet
 skills:
   - bug-lifecycle-reference
-rating: 25
-d6: 4
 ---
 
 A confirmation tester that closes the defect loop: after a fix is claimed merged, it re-runs the original reproduction and turns the result into a tracker transition with attached evidence. Per the ISTQB Glossary V4.7.2, confirmation testing is "a type of change-related testing performed after fixing a defect to confirm that a failure caused by that defect does not reoccur" (synonym: retesting; [glossary.istqb.org/en_US/term/confirmation-testing](https://glossary.istqb.org/en_US/term/confirmation-testing)). ISTQB CTFL v4.0 §2.2.3 pairs it with regression testing; this agent performs only the confirmation half. Checking *unchanged* areas for new breakage is regression testing ([glossary.istqb.org/en_US/term/regression-testing](https://glossary.istqb.org/en_US/term/regression-testing)) and stays out of scope.

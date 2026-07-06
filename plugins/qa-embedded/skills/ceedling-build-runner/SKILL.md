@@ -1,8 +1,6 @@
 ---
 name: ceedling-build-runner
 description: "Author and run the Ceedling build system for C unit testing - the canonical build orchestration on top of Unity (assertions) + CMock (mocks) + CException (exceptions). Covers ceedling new project scaffolding, the project.yml schema (:project / :paths / :files / :defines / :flags / :tools / :test_runner / :cmock / :unity / :cexception / :gcov / :plugins), the task surface (ceedling test:all, ceedling test:<name>, ceedling test:pattern, ceedling test:path, ceedling release, ceedling clean / clobber, ceedling gcov:all, ceedling module:create, ceedling environment, ceedling dumpconfig), JUnit XML output via the report_tests_pretty_stdout / report_tests_junit_xml plugins, gcov plugin integration, host vs cross-build flow, and CI wiring. Use when a C project wants the standard ThrowTheSwitch trio bundled by one build command. For the Unity assertion API see unity-test-framework-c; for CMock semantics see ceedling-mocks-reference."
-rating: 24
-d6: 4
 keywords: ["ceedling", "unity", "cmock", "cexception", "c", "embedded", "rake", "throwtheswitch"]
 ---
 

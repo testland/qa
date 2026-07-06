@@ -1,8 +1,6 @@
 ---
 name: fast-check-testing
 description: "Authors property-based tests in JavaScript / TypeScript using fast-check - wires `fc.assert(fc.property(arbitrary, ...))`, picks arbitraries (`fc.integer`, `fc.string`, `fc.array`, `fc.tuple`, `fc.record`), uses `.map()` / `.chain()` / `.filter()` to build domain arbitraries, and integrates with Jest / Vitest / Mocha / Jasmine / AVA / Tape. Use when a JS/TS codebase needs PBT to catch edge cases - fast-check has been used to find bugs in major libraries (`query-string`, etc.) and is trusted by Jest, Jasmine, fp-ts, Ramda."
-rating: 24
-d6: 4
 ---
 
 # fast-check-testing

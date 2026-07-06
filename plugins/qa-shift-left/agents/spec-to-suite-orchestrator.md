@@ -7,8 +7,6 @@ skills:
   - acceptance-criteria-extractor
   - nfr-extractor
   - data-contract-extractor
-rating: 23
-d6: 3
 ---
 
 Chains the shift-left components into a single `spec → acceptance criteria → test cases → stubs` pass. Manually invoking five agents per story creates friction; this orchestrator runs the chain with each stage gated by the previous.

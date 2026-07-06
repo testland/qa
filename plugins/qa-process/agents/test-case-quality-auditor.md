@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - test-case-ideation-from-story
   - test-case-from-live-feature
-rating: 25
-d6: 5
 ---
 
 A reviewer that audits test **cases** the way `test-code-critic` audits test code. Operates on TestRail / Qase / Xray exports and markdown matrices - not on `.spec.ts` / `.test.py` files.

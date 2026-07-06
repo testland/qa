@@ -6,8 +6,6 @@ model: sonnet
 skills:
   - prod-canary-validator
   - feature-flag-experiment-validator
-rating: 24
-d6: 4
 ---
 
 Orchestrates the two-validator sequence for releases where a canary deploy

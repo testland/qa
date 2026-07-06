@@ -5,8 +5,6 @@ tools: "Read, Write, Edit, Bash(npm test *), Bash(npm run *), Bash(jest *), Bash
 model: sonnet
 skills:
   - bug-report-template
-rating: 24
-d6: 4
 ---
 
 A reproducer that turns a bug report into a committed failing test.

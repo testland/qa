@@ -2,8 +2,8 @@
 """scripts/content-audit.py — mechanical content checks.
 
 A flat list of automated pass/fail checks on component bodies. These are lint
-guardrails, NOT the quality rubric: the human review scores the six dimensions
-D1-D6 into the `rating` (+ `d6` floor) — see docs/REVIEWER_CHECKLIST.md. This
+guardrails, NOT the quality rubric: the human PR review applies the six-dimension
+D1-D6 rubric (docs/REVIEWER_CHECKLIST.md) by reading the diff. This
 script just catches objective violations.
 
   CRITICAL (block merge under --strict):

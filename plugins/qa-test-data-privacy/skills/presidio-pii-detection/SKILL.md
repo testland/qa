@@ -1,8 +1,6 @@
 ---
 name: presidio-pii-detection
 description: "Author and run Microsoft Presidio PII detection - wraps presidio-analyzer (PII detector) + presidio-anonymizer (replace/redact/mask/hash/encrypt operators) for scanning datasets, log streams, and free-text fields. Covers AnalyzerEngine + AnonymizerEngine setup, built-in recognizers (PERSON, EMAIL_ADDRESS, CREDIT_CARD, US_SSN, IBAN_CODE, country-specific IDs across US/UK/Spain/Italy/Poland/Singapore/Australia/India and more), custom PatternRecognizer authoring, score thresholds, and CI gating. Use when scanning *existing* data for PII (vs synthesising fresh fixtures with synthetic-pii-generator)."
-rating: 25
-d6: 5
 ---
 
 # presidio-pii-detection

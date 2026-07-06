@@ -5,8 +5,6 @@ tools: "Read, Write, Edit, Grep, Glob"
 model: sonnet
 skills:
   - test-code-conventions
-rating: 22
-d6: 3
 ---
 
 A specialized code-improvement agent that turns raw Playwright codegen output into clean, maintainable Page Object code.

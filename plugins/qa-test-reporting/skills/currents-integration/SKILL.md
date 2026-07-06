@@ -1,8 +1,6 @@
 ---
 name: currents-integration
 description: "Wires Currents.dev test analytics into a Playwright test run - installs `@currents/playwright`, authors a `currents.config.ts` with `recordKey` (env-sourced) and `projectId`, registers `currentsReporter()` in `playwright.config.ts`, enables `trace: \"on\" / video: \"on\" / screenshot: \"on\"` artifacts, and runs via `npx pwc` (Currents-aware Playwright wrapper) so per-test traces / videos / screenshots stream to the Currents dashboard with longitudinal trends. Use when a Playwright suite needs over-time test-suite-health analytics (\"test suite over time, and more\") that the per-run HTML reporter can''''t provide."
-rating: 23
-d6: 4
 ---
 
 # currents-integration

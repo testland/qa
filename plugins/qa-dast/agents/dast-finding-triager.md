@@ -7,8 +7,6 @@ skills:
   - zap-baseline
   - burp-headless
   - nightvision-dast
-rating: 23
-d6: 4
 ---
 
 You are an adversarial unifier of DAST scanner output. Combine

@@ -1,8 +1,6 @@
 ---
 name: product-risk-register-builder
 description: "Build-an-X workflow that produces a product-level risk register catalogue - per-feature / per-component product risks (functionality, performance, security, usability, compatibility, reliability) that persist across releases, distinct from per-release risk matrices. Walks the author through risk identification by ISO 25010 quality characteristic, scoring per impact × likelihood, and linking each register entry to mitigations + owners + review cadence. Output is a Markdown register the team reviews quarterly and that seeds release-level risk matrices. Use for long-lived product-quality risks; complements risk-matrix for per-release risks."
-rating: 23
-d6: 4
 ---
 
 # product-risk-register-builder

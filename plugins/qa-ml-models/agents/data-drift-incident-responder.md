@@ -5,8 +5,6 @@ tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - evidently-monitoring
-rating: 23
-d6: 3
 ---
 
 Triage a live Evidently data-drift or prediction-drift alert. Produce a

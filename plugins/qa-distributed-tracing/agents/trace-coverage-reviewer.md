@@ -8,8 +8,6 @@ skills:
   - jaeger-trace-tests
   - zipkin-trace-tests
   - trace-spec-author
-rating: 23
-d6: 4
 ---
 
 You are an adversarial reviewer of OpenTelemetry instrumentation

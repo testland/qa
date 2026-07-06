@@ -1,8 +1,6 @@
 ---
 name: risk-coverage-mapper
 description: "Build-an-X workflow that produces a risk-to-test-coverage matrix - maps each risk in the product/release register to the tests / cases / monitoring that mitigate it. Walks the author through ingesting risks (from risk-matrix / product-risk-register-builder), inventorying test coverage (test cases via traceability-matrix-builder, automated tests via repo scan, production monitoring via observability dashboards), and computing per-risk coverage depth + identifying orphan risks (no coverage) + orphan tests (not linked to risks). Output is a Markdown matrix + executive summary."
-rating: 23
-d6: 4
 ---
 
 # risk-coverage-mapper

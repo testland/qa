@@ -1,8 +1,6 @@
 ---
 name: nfr-extractor
 description: "Reads a PRD, design doc, or product brief and pulls out the non-functional requirements (performance, accessibility, security, internationalization, reliability, observability) as concrete, threshold-bound, testable assertions. Maps every NFR to its measurement source (Lighthouse, axe, OWASP ASVS, WCAG criterion, etc.) so the test suite knows what to assert against. Use after acceptance-criteria-extractor handles functional requirements."
-rating: 24
-d6: 4
 ---
 
 # nfr-extractor

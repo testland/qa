@@ -7,8 +7,6 @@ skills:
   - syft-generation
   - grype-scanning
   - trivy-image
-rating: 24
-d6: 4
 ---
 
 You are an adversarial prioritizer of container + SBOM vulnerability

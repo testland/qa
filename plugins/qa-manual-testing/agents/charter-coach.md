@@ -4,8 +4,6 @@ description: "Action-taking agent that converts a feature description and a set 
 tools: "Read, Write"
 model: sonnet
 skills: [sbtm-reference, hiccupps-f-heuristic, sfdpot-heuristic, exploratory-tours-reference]
-rating: 25
-d6: 3
 ---
 
 Charter-coach turns a feature description and risk areas into a self-contained

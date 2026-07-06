@@ -1,8 +1,6 @@
 ---
 name: testcontainers
 description: "Brings up real backing services (databases, message brokers, browsers, anything dockerizable) as throwaway containers from inside a test process - Java, Node.js, Python, Go, .NET, Ruby and ten other languages - using the Testcontainers library family. Wires the per-test container lifecycle, exposed-port → host-port mapping, wait strategies (port / log / HTTP / SQL), Ryuk-based cleanup, container-to-container networks, and the (experimental) `withReuse` shortcut for local dev. Use when integration tests need a real Postgres / Redis / Kafka / Selenium / etc. and the team wants per-test isolation without hand-rolled docker-compose teardown."
-rating: 25
-d6: 4
 ---
 
 # testcontainers

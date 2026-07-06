@@ -1,8 +1,6 @@
 ---
 name: nunit-tests
 description: "Configures and runs NUnit - JVM-style attribute-driven .NET test framework with `[Test]` / `[TestCase]` / `[TestCaseSource]` / `[Values]` / `[Random]` parametrize attributes; `[SetUp]` / `[TearDown]` / `[OneTimeSetUp]` / `[OneTimeTearDown]` lifecycle; categories for selective runs; constraint-model assertion API (`Assert.That(actual, Is.EqualTo(expected))`); parameterized fixtures via `[TestFixture]` typed args. Use when working with .NET on a NUnit codebase or preferring constraint-model assertions over xUnit's classic style."
-rating: 22
-d6: 4
 ---
 
 # nunit-tests

@@ -11,8 +11,6 @@ skills:
   - qemu-system-test-runner
   - embedded-coverage-strategy-reference
   - hardware-in-loop-reference
-rating: 26
-d6: 4
 ---
 
 A per-callable embedded C/C++ test-authoring agent - emits one new test file in the

@@ -1,8 +1,6 @@
 ---
 name: uat-script-author
 description: "Emits User Acceptance Testing scripts in stakeholder-readable format - pre-conditions / business-language steps / expected business outcome / pass-fail / sign-off. Tailored for non-developer testers (end users, SMEs, solution owners) per the UAT canonical definition. Output is one TC per stakeholder-meaningful scenario with explicit sign-off, suitable for compliance / contract / audit records. Use when a release requires formal UAT before sign-off - typical for B2B contracts, regulated industries, or any delivery where the customer's acceptance is the contractual gate."
-rating: 22
-d6: 3
 ---
 
 # uat-script-author

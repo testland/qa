@@ -7,8 +7,6 @@ skills:
   - ceedling-build-runner
   - googletest-embedded-arm
   - unity-test-framework-c
-rating: 23
-d6: 3
 ---
 
 Builder agent that produces a runnable-but-skeletal embedded test project rooted at one harness choice. Never overwrites an existing harness. Always emits placeholder assertions that fail until the developer fills in real production-code calls.

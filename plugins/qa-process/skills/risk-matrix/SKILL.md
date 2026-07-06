@@ -1,8 +1,6 @@
 ---
 name: risk-matrix
 description: "Produces the per-feature / per-release risk-matrix artifact (not the facilitation session - see `risk-storming-facilitator` for running the live meeting). Captures risks via a structured intake (feature, category, impact 1-5 by likelihood 1-5, score), tracks mitigations plus owners plus due dates, supports both lightweight (impact by likelihood) and heavyweight (FMEA / Cost of Exposure) methods per RBT canon. Output is a Markdown / spreadsheet artifact the team reviews per sprint and that drives test prioritization, consumed by `risk-based-test-selector` and `risk-based-test-planner`. Does not recommend which methodology to use: for data-driven score calibration against historical defect data use `risk-matrix-recommender`. For a cross-release living register of high-risk areas spanning services, use `product-risk-register-builder`. Use when building the per-release matrix artifact itself."
-rating: 23
-d6: 4
 ---
 
 # risk-matrix
