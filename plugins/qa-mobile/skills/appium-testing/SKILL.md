@@ -113,17 +113,17 @@ authentication tokens / device-pool selection.
 ## Step 5 - Selector strategies (cross-platform)
 
 ```javascript
-// By accessibility ID — the most cross-platform
+// By accessibility ID - the most cross-platform
 await driver.$('~login-button').click();   // ~ prefix in WebdriverIO
 
-// By id — works for both platforms with platform-prefixed IDs
+// By id - works for both platforms with platform-prefixed IDs
 await driver.$('id=add_to_cart_button');     // Android
 await driver.$('id=add-to-cart-button');     // iOS uses accessibility ID
 
-// XPath — works everywhere; brittle (per `e2e-selector-quality-critic`)
+// XPath - works everywhere; brittle (per `e2e-selector-quality-critic`)
 await driver.$('//XCUIElementTypeButton[@name="Submit"]');
 
-// Image-based locator (Appium-specific) — fallback when no IDs
+// Image-based locator (Appium-specific) - fallback when no IDs
 await driver.findElementByImage('./assets/login-button.png');
 ```
 

@@ -86,7 +86,7 @@ reads the result.
 
 **Suite:** `npm run smoke -- --target=staging`
 **Duration:** 4m 32s
-**Result:** PASSED — 0 failures, 22 tests run.
+**Result:** PASSED - 0 failures, 22 tests run.
 
 (Full smoke results uploaded as artifact.)
 ```
@@ -106,7 +106,7 @@ by slowly rolling out the change to a small subset of users":
 
 | Step                                  | Verdict | Evidence |
 |---------------------------------------|---------|----------|
-| Deploy to canary slot                  |   ✅    | `gh workflow run deploy-canary.yml --ref v1.4.5` — finished 14:32 UTC. |
+| Deploy to canary slot                  |   ✅    | `gh workflow run deploy-canary.yml --ref v1.4.5` - finished 14:32 UTC. |
 | Initial health check (30s post-deploy) |   ✅    | `/health` returns 200; readiness probe passing. |
 | 30-minute observation window           |   ⏳    | Started 14:33 UTC; ends 15:03 UTC. |
 ```
@@ -114,7 +114,7 @@ by slowly rolling out the change to a small subset of users":
 The agent watches metrics across the observation window:
 
 ```markdown
-### Canary metrics — observation window 14:33–15:03 UTC
+### Canary metrics - observation window 14:33-15:03 UTC
 
 | Metric                  | Threshold | Observed | Verdict |
 |-------------------------|-----------|----------|---------|
@@ -125,9 +125,9 @@ The agent watches metrics across the observation window:
 
 ⚠ 2 new Sentry events:
 1. `NullPointerException at Cart.addItem:42` (1 occurrence)
-2. `RateLimitExceeded` (1 occurrence — flake; not action-triggering)
+2. `RateLimitExceeded` (1 occurrence - flake; not action-triggering)
 
-**Recommended verdict:** PROCEED with caution — investigate the
+**Recommended verdict:** PROCEED with caution - investigate the
 NPE before full rollout.
 ```
 
@@ -176,7 +176,7 @@ If the human says `continue`:
 The agent continues monitoring; at the end of the window:
 
 ```markdown
-### Post-rollout metrics — 15:08–16:08 UTC
+### Post-rollout metrics - 15:08-16:08 UTC
 
 (metrics table)
 
@@ -197,7 +197,7 @@ Final cleanup:
 | Notify #releases channel           |   ✅    | Slack post: "Released v1.4.5 ..." |
 
 **Release v1.4.5 complete.** Total wall time: 2h 8m.
-**Issues to follow up on:** 1 (NPE at Cart.addItem:42 — investigate
+**Issues to follow up on:** 1 (NPE at Cart.addItem:42 - investigate
 in next sprint).
 ```
 
@@ -207,7 +207,7 @@ The agent emits a per-release artifact at every step. The final
 release report:
 
 ```markdown
-## Release report — v1.4.5
+## Release report - v1.4.5
 
 **Started:** 2026-05-05 14:00 UTC
 **Completed:** 2026-05-05 16:08 UTC

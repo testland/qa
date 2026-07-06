@@ -172,7 +172,7 @@ public void UserCapability(string role, string tier, string feature, string loca
 After generation, the skill emits a coverage report:
 
 ```markdown
-## Coverage report — strength 2
+## Coverage report - strength 2
 
 **Inputs:** 4 (role × 4 values, tier × 4 values, feature × 5 values, locale × 6 values)
 **Cartesian total:** 480 cases
@@ -192,8 +192,8 @@ After generation, the skill emits a coverage report:
 
 ### Gaps (uncovered pairs)
 
-- (role=read_only, tier=free) — suppressed by constraint
-- (tier=starter, feature=audit_log) — increase strength or hand-add
+- (role=read_only, tier=free) - suppressed by constraint
+- (tier=starter, feature=audit_log) - increase strength or hand-add
 ```
 
 The team reviews gaps; either accepts them (constraint-driven

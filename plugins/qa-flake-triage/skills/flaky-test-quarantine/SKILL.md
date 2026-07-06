@@ -57,7 +57,7 @@ broken; do not run past this point" ([pw-test][pw-test]):
 test('checkout flow flaky test', async ({ page }) => {
   test.fixme(
     true,
-    'Quarantined 2026-05-04 (#1234) — fails ~12% of runs on tablet-768; bisect inconclusive. Re-evaluate by 2026-06-04.',
+    'Quarantined 2026-05-04 (#1234) - fails ~12% of runs on tablet-768; bisect inconclusive. Re-evaluate by 2026-06-04.',
   );
   // ... test body, no longer runs
 });
@@ -100,7 +100,7 @@ introduce a project-specific tagging convention parsed by your CI.
 
 ### JUnit / TestNG (JVM)
 
-JUnit 5: `@Disabled("Quarantined 2026-05-04 (#1234) — ...")`.
+JUnit 5: `@Disabled("Quarantined 2026-05-04 (#1234) - ...")`.
 TestNG: `@Test(enabled = false, description = "...")`.
 For per-method retries before quarantine, JUnit 5's `@RetryingTest(N)`
 extension and TestNG's `@Test(retryAnalyzer = ...)`.
@@ -122,7 +122,7 @@ quarantine record carries:
 The format is parseable by the re-evaluation report (Step 4):
 
 ```
-Quarantined 2026-05-04 (#1234) — fails ~12% of runs on tablet-768;
+Quarantined 2026-05-04 (#1234) - fails ~12% of runs on tablet-768;
 bisect inconclusive. Re-evaluate by 2026-06-04. Owner: @web-platform.
 ```
 

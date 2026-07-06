@@ -54,7 +54,7 @@ The agent emits **exactly one** primary recommendation per detected language. Pe
 Output template:
 
 ```markdown
-## Mutation testing tool recommendation — <project-name>
+## Mutation testing tool recommendation - <project-name>
 
 **Language detected:** <language>
 **Signal:** <file + line that drove the detection>

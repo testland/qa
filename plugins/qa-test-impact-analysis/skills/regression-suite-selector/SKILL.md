@@ -225,7 +225,7 @@ jobs:
 PR-comment summary so reviewers know what ran:
 
 ```markdown
-## Test Impact Analysis — `<sha>`
+## Test Impact Analysis - `<sha>`
 
 **Selected:** 47 tests of 1,283 total (3.7%)
 **Strategy:** impacted ∪ previously_failing ∪ newly_added
@@ -242,7 +242,7 @@ PR-comment summary so reviewers know what ran:
 - `src/checkout/promo.ts` → 18 tests
 - `src/api/orders.ts` → 9 tests
 
-**Last full-suite run:** 2026-05-04 22:00 UTC (12 hours ago) — passed.
+**Last full-suite run:** 2026-05-04 22:00 UTC (12 hours ago) - passed.
 ```
 
 ## Step 7 - Configurable overrides

@@ -251,7 +251,7 @@ jobs:
         run: |
           BUG_COUNT=$(find RestlerResults -name 'bug_replay_log.txt' | wc -l)
           if [ "$BUG_COUNT" -gt 0 ]; then
-            echo "::error::RESTler found $BUG_COUNT bug(s) — see artifacts"
+            echo "::error::RESTler found $BUG_COUNT bug(s) - see artifacts"
             exit 1
           fi
 ```

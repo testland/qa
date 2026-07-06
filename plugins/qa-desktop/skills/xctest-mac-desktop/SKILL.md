@@ -65,12 +65,12 @@ import XCTest
 
 final class CheckoutUITests: XCTestCase {
     override func setUpWithError() throws {
-        continueAfterFailure = false   // recommended by Apple — UI steps depend on prior steps
+        continueAfterFailure = false   // recommended by Apple - UI steps depend on prior steps
         XCUIApplication().launch()
     }
 
     func testCheckoutHappyPath() throws {
-        // Test body — see Step 3
+        // Test body - see Step 3
     }
 }
 ```

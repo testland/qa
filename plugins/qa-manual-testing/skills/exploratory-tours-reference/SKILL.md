@@ -44,7 +44,7 @@ Does its primary affordance work?"
 1. Open the dashboard. Pass.
 2. Click "Notifications" → notification panel opens. Pass.
 3. Click "Settings" → settings page loads. Pass.
-4. Click "Reports" → 404. **FAIL** — investigate.
+4. Click "Reports" → 404. **FAIL** - investigate.
 ```
 
 **When to use:** New feature; post-deploy smoke; feature-coverage

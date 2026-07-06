@@ -133,7 +133,7 @@ block. For stricter projects, set `allow_warn=False`.
 Markdown summary suitable for `$GITHUB_STEP_SUMMARY`:
 
 ```markdown
-# Contract Compatibility Gate — verdict: NO-GO
+# Contract Compatibility Gate - verdict: NO-GO
 
 **Blockers: 2**
 
@@ -209,7 +209,7 @@ if Path("oasdiff.json").exists():
 blockers = [r for r in records if r["severity"] == "blocker"]
 verdict = "no-go" if blockers else "go"
 
-print(f"# Contract Compatibility Gate — verdict: {verdict.upper()}")
+print(f"# Contract Compatibility Gate - verdict: {verdict.upper()}")
 for r in blockers:
     print(f"- {r['tool']} :: {r['subject']} :: {r['finding']} ({r['message']})")
 

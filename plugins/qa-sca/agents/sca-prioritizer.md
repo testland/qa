@@ -47,8 +47,8 @@ interface Finding {
   cve: string;                 // CVE-2024-1234 (or GHSA-xxxx if no CVE assigned)
   package: string;             // ecosystem:package@version
   severity: 'critical' | 'high' | 'medium' | 'low';
-  cvss_base?: number;          // 0.0–10.0
-  epss?: number;               // 0.0–1.0 (probability of exploitation in next 30 days)
+  cvss_base?: number;          // 0.0-10.0
+  epss?: number;               // 0.0-1.0 (probability of exploitation in next 30 days)
   in_kev?: boolean;            // CISA Known Exploited Vulnerabilities catalog
   fix_available?: string;       // version that fixes the vuln
   found_by: string[];           // ['snyk', 'osv', 'npm-audit']
@@ -156,14 +156,14 @@ waivers:
 ## Step 7 - Report
 
 ```markdown
-## SCA prioritization — `<sha>`
+## SCA prioritization - `<sha>`
 
 **Scanners run:** Snyk, OSV-Scanner, npm audit (Maven Dependency-Check
 not configured)
 
 **Total findings:** 42 (after deduplication; 23 multi-tool consensus)
 **Waivers applied:** 5
-**Verdict:** ❌ BLOCK — 2 Fix-Now findings
+**Verdict:** ❌ BLOCK - 2 Fix-Now findings
 
 ### Fix-Now (must fix before merge)
 
@@ -198,10 +198,10 @@ not configured)
 
 ### Action items
 
-1. **Fix CVE-2021-44228 (Log4Shell) immediately** — in CISA KEV
+1. **Fix CVE-2021-44228 (Log4Shell) immediately** - in CISA KEV
    catalog; upgrade log4j-core to 2.17.1+. Block all merges until
    resolved.
-2. **Fix CVE-2024-9999 immediately** — high CVSS + 83% EPSS;
+2. **Fix CVE-2024-9999 immediately** - high CVSS + 83% EPSS;
    upgrade to 1.2.5.
 
 After fixes, re-run scanners + this agent.

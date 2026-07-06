@@ -214,7 +214,7 @@ test('warmStrategyCache() warms the declared URL list on install', async ({ cont
   let [sw] = context.serviceWorkers();
   if (!sw) sw = await context.waitForEvent('serviceworker');
 
-  // SW install phase warms a known URL — pin it
+  // SW install phase warms a known URL - pin it
   const warmed = await sw.evaluate(async () => {
     const names = await caches.keys();
     for (const n of names) {

@@ -54,7 +54,7 @@ Path-dependent input (handwriting) is exempt.
 **Test script (Playwright):**
 
 ```typescript
-test('SC 2.1.1 — interactive elements are keyboard-operable', async ({ page }) => {
+test('SC 2.1.1 - interactive elements are keyboard-operable', async ({ page }) => {
   // Tab to the button, activate with Enter
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');

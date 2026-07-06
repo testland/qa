@@ -92,7 +92,7 @@ routes:
     reason: Hashed filenames, immutable
   - pattern: /
     recipe: Network falling back to cache
-    reason: HTML shell — fresh while online, stale offline
+    reason: HTML shell - fresh while online, stale offline
   - pattern: /api/feed
     recipe: Cache then network
     reason: List view; show fast, update behind
@@ -155,7 +155,7 @@ test('Cache, falling back to network: /img/x.png serves from cache when present,
   await page.goto('https://localhost:3000/img/x.png');
   await page.waitForLoadState('networkidle');
 
-  // Now offline — cache hits
+  // Now offline - cache hits
   await context.setOffline(true);
   const offline = await page.evaluate(() =>
     fetch('/img/x.png').then(r => r.status).catch(() => 0)
@@ -194,7 +194,7 @@ test('Network falling back to cache: / serves fresh when online, cached when off
   expect(resp?.status()).toBe(200);
 
   await context.setOffline(false);
-  // When online, network is preferred — track that a request fires
+  // When online, network is preferred - track that a request fires
   let hits = 0;
   page.on('request', req => { if (req.url().endsWith('/')) hits++; });
   await page.reload();

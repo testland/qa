@@ -107,7 +107,7 @@ def test_no_full_track_data_in_storage():
 
 def test_no_cvv_in_logs():
     """Req 3.2.2: CVV2/CVC2/CID must not be retained."""
-    cvv_pattern = re.compile(r'(?<!\d)\d{3,4}(?!\d)')   # naive — context-aware in real life
+    cvv_pattern = re.compile(r'(?<!\d)\d{3,4}(?!\d)')   # naive - context-aware in real life
     log_entries = recent_logs()
     for entry in log_entries:
         # Look for proximity of CVV-like 3-4 digit numbers near "cvv" / "card" tokens

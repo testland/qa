@@ -208,7 +208,7 @@ Scenario 2 has no matching steps.
 **Coverage map output:**
 
 ```markdown
-## Coverage map for `AUTH-42` — 2026-06-04
+## Coverage map for `AUTH-42` - 2026-06-04
 
 **New scenarios evaluated:** 3
 **Exact duplicates:** 1 (skip these)
@@ -228,7 +228,7 @@ Scenario 2 has no matching steps.
 - Recommendation: add 3 step definitions; reuse 2 existing.
 
 ### Gaps (author full scenario)
-- "Reset link expires after 24 hours" — 0 of 3 steps covered
+- "Reset link expires after 24 hours" - 0 of 3 steps covered
 ```
 
 ## References

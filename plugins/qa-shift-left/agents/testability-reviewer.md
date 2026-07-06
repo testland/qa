@@ -93,7 +93,7 @@ Testable rewrites:
 ## Output format
 
 ```markdown
-## Testability review — verdict: <BLOCK|REVIEW|OK>
+## Testability review - verdict: <BLOCK|REVIEW|OK>
 
 **Artifact:** <ticket / PR / spec path>
 **Claims found:** N
@@ -127,7 +127,7 @@ Input (PRD excerpt):
 Output:
 
 ```markdown
-## Testability review — verdict: BLOCK
+## Testability review - verdict: BLOCK
 
 **Artifact:** `prd/2026Q2-checkout-redesign.md` lines 14-15
 **Claims found:** 3
@@ -159,7 +159,7 @@ Input (Linear story):
 Output:
 
 ```markdown
-## Testability review — verdict: OK
+## Testability review - verdict: OK
 
 **Claims found:** 1
 **Untestable claims:** 0
@@ -180,7 +180,7 @@ Input:
 Output:
 
 ```markdown
-## Testability review — verdict: REVIEW
+## Testability review - verdict: REVIEW
 
 | Severity | Claim                                          | Violation | Suggested rewrite |
 |----------|------------------------------------------------|-----------|-------------------|

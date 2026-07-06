@@ -65,7 +65,7 @@ Drill expectations differ:
 ## Step 3 - Pre-drill checklist
 
 ```markdown
-## Pre-Drill Checklist — `<service>` `<date>`
+## Pre-Drill Checklist - `<service>` `<date>`
 
 - [ ] Drill window scheduled (low-traffic; aligned with
       customer-comm window)
@@ -89,7 +89,7 @@ Skipping the pre-drill = drills become incidents.
 
 ### T-0: Announce
 - Post in #drill-channel; confirm all participants ready.
-- Drill commander gives "GO" — record T-0 timestamp.
+- Drill commander gives "GO" - record T-0 timestamp.
 
 ### T+0..N: Fail-over
 - Execute the runbook step-by-step (everyone follows the doc; no
@@ -115,12 +115,12 @@ Skipping the pre-drill = drills become incidents.
 ## Step 5 - Post-drill report
 
 ```markdown
-## Drill Report — `<service>` `<date>`
+## Drill Report - `<service>` `<date>`
 
 **Drill objective:** Verify warm standby fails over within RTO 4hr.
 
 **Timeline:**
-- T-30 min: Replication lag verified (52s — within RPO 1hr) ✓
+- T-30 min: Replication lag verified (52s - within RPO 1hr) ✓
 - T-0: Announced, on-call silenced
 - T+12m: Failover initiated
 - T+47m: Standby took traffic
@@ -139,9 +139,9 @@ Skipping the pre-drill = drills become incidents.
 3. MINOR: One alert wasn't silenced in advance; on-call was paged.
 
 **Action items (with owners + dates):**
-- DNS TTL fix → @platform-team — 2026-05-20
-- Runbook Step 3.4 → @sre — 2026-05-13
-- Alert routing audit → @sre — 2026-05-13
+- DNS TTL fix → @platform-team - 2026-05-20
+- Runbook Step 3.4 → @sre - 2026-05-13
+- Alert routing audit → @sre - 2026-05-13
 
 **Next drill:** 2026-08-06 (quarterly cadence).
 ```

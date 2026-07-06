@@ -38,7 +38,7 @@ matrix execution.
 ```yaml
 # .matrix/devices.yaml
 tier_smoke:
-  description: "Per-PR — every commit. Cheap, fast feedback."
+  description: "Per-PR - every commit. Cheap, fast feedback."
   ios:
     - { device: "iPhone 15", os: "17.4" }
   android:

@@ -90,7 +90,7 @@ registerRoute(
   })
 );
 
-// User data — never cache
+// User data - never cache
 registerRoute(
   ({ url }) => url.pathname.startsWith('/api/user/'),
   new NetworkOnly()
@@ -116,7 +116,7 @@ For each registered route, emit one test asserting the strategy
 behavior. Pattern:
 
 ```ts
-// Tests for sw.js routes — paired with sw-cache-strategy-author Step 2
+// Tests for sw.js routes - paired with sw-cache-strategy-author Step 2
 import { test, expect } from '@playwright/test';
 
 test.describe('SW cache strategies', () => {

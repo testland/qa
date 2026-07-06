@@ -191,7 +191,7 @@ Emit a coverage doc:
 
 | Cell | Reason | Mitigation |
 |---|---|---|
-| flag-x = on AND flag-y = on AND user.segment = `internal` | Low likelihood — internal users only see flag-y in beta | Manual verify on flag-y promotion |
+| flag-x = on AND flag-y = on AND user.segment = `internal` | Low likelihood - internal users only see flag-y in beta | Manual verify on flag-y promotion |
 | theme-tweak all 3 variants × all 5 segments | UI-only; default-on-each is sufficient | None |
 ```
 

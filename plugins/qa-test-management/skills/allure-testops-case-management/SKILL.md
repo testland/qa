@@ -63,7 +63,7 @@ def create_case(project_id, name, description=None, precondition=None,
     scenario_steps: list of {"keyword": "Given|When|Then|And",
                               "name": "...", "expectedResult": "..."}
     status: Active / Outdated / Archived
-    layer_id: testing layer (UI / API / Component / Unit) — discover via
+    layer_id: testing layer (UI / API / Component / Unit) - discover via
               /api/rs/testlayer
     """
     body = {

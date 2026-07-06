@@ -93,10 +93,10 @@ Combine scores; emit ranked top-5:
 
 ## Recommended action
 
-- **#1 (0.92)** — Strong duplicate. Attach this run's reproduction
+- **#1 (0.92)** - Strong duplicate. Attach this run's reproduction
   to ENG-1234 instead of filing new.
-- **#2 (0.71)** — Plausible duplicate. Triager review needed.
-- **#3+** — Unlikely; reference in body but file new.
+- **#2 (0.71)** - Plausible duplicate. Triager review needed.
+- **#3+** - Unlikely; reference in body but file new.
 ```
 
 ## Refuse-to-proceed rules

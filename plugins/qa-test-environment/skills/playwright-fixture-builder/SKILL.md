@@ -178,7 +178,7 @@ export const test = base.extend<DbFixtures>({
   cleanDb: [async ({}, use) => {
     execSync('bash scripts/restore-test-db.sh', { stdio: 'inherit' });
     await use();
-    // No teardown — next test runs `restore` itself.
+    // No teardown - next test runs `restore` itself.
   }, { auto: true }],
 });
 ```
@@ -297,7 +297,7 @@ export const test = base.extend({
 ## Output format
 
 ```markdown
-## Playwright fixtures — `<suite>`
+## Playwright fixtures - `<suite>`
 
 **Fixtures produced:** N
 **File:** `tests/fixtures/index.ts`

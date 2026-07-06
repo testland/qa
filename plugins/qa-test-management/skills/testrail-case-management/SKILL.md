@@ -73,7 +73,7 @@ def create_case(section_id, title, template_id=1, type_id=1, priority_id=2,
                 preconditions=None, steps=None, refs=None):
     """
     template_id: 1=Steps, 2=Text, 3=Exploratory
-    type_id: per project — discover via get_case_types
+    type_id: per project - discover via get_case_types
     priority_id: 1=Low, 2=Medium, 3=High, 4=Critical (default project enum)
     steps: list of {"content": "Action", "expected": "Outcome"}
     refs: comma-separated requirement IDs (e.g., "REQ-123,REQ-124")

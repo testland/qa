@@ -50,7 +50,7 @@ Unit 0.5h · Property-based 2h · Integration / Contract 4h · E2E 8h · Manual 
 ## Step 4 - Plan output
 
 ```markdown
-## Test plan — Feature `Promo banner v2`
+## Test plan - Feature `Promo banner v2`
 
 **Risks implicated:** 6 (of 23) · **Budget:** 2 engineer-weeks · **Estimated:** 1.6 weeks (within budget)
 

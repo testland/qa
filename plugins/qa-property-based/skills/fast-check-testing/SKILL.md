@@ -117,7 +117,7 @@ const evenInteger = fc.integer().map(n => n * 2);
 const stringWithKnownLength = fc.integer({ min: 1, max: 100 })
   .chain(len => fc.string({ minLength: len, maxLength: len }));
 
-// .filter: reject (use sparingly — slow when filter rejects most)
+// .filter: reject (use sparingly - slow when filter rejects most)
 const positiveInteger = fc.integer().filter(n => n > 0);
 // Better:
 const positiveInteger = fc.integer({ min: 1 });

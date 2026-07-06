@@ -190,7 +190,7 @@ to-do list, not a recommendation.
 ## Step 7 - Render
 
 ```markdown
-## Uncovered branches — recommended targets (top 7)
+## Uncovered branches - recommended targets (top 7)
 
 This PR adds 12 uncovered branches in code touched by the PR. The
 prioritized list focuses test budget on high-risk × low-cost
@@ -208,7 +208,7 @@ targets per the [test pyramid][tp].
 
 ### Skipped (low score)
 
-5 candidates skipped — see `coverage-targets.json` for the full
+5 candidates skipped - see `coverage-targets.json` for the full
 list. Highest-risk skipped: UI-layer test that would catch a 0.9
 risk branch but cost 10× a unit test (score 0.09).
 

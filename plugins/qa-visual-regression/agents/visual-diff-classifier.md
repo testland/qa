@@ -60,11 +60,11 @@ through "looks intentional" reviews):
 ## Output format
 
 ```markdown
-## Visual Diff Classification — verdict: <BLOCK|REVIEW|OK>
+## Visual Diff Classification - verdict: <BLOCK|REVIEW|OK>
 
 | Severity | Snapshot                  | Category     | Pattern (if regression)         | Paired code change?                   | Recommended action |
 |----------|---------------------------|--------------|---------------------------------|---------------------------------------|---------------------|
-| Critical | dashboard-mobile-375      | regression   | text truncation                 | None in `<Card>` or `<Heading>`       | Block — investigate the cascade from `Heading.css` token rename. |
+| Critical | dashboard-mobile-375      | regression   | text truncation                 | None in `<Card>` or `<Heading>`       | Block - investigate the cascade from `Heading.css` token rename. |
 | Warning  | pricing-tablet-768        | incidental   | anti-aliasing                   | Font dependency bumped 4.7 → 4.8     | Mask the price callout, or accept once the font drift is verified. |
 | OK       | onboarding-desktop-1280   | intentional  | n/a                              | `Onboarding.tsx` lines 22-45         | Accept baseline. |
 ```
@@ -86,11 +86,11 @@ now truncated with an ellipsis. PR's code change touches
 Output:
 
 ```markdown
-## Visual Diff Classification — verdict: BLOCK
+## Visual Diff Classification - verdict: BLOCK
 
 | Severity | Snapshot                | Category   | Pattern         | Paired code change? | Recommended action |
 |----------|-------------------------|------------|-----------------|---------------------|---------------------|
-| Critical | dashboard-mobile-375    | regression | text truncation | UserMenu.tsx (unrelated) | Block — investigate cascade. UserMenu.tsx changes the user-menu button width which likely shifted the surrounding layout; check whether `flex-shrink: 1` on the sidebar nav was previously offset by a wider grandparent. |
+| Critical | dashboard-mobile-375    | regression | text truncation | UserMenu.tsx (unrelated) | Block - investigate cascade. UserMenu.tsx changes the user-menu button width which likely shifted the surrounding layout; check whether `flex-shrink: 1` on the sidebar nav was previously offset by a wider grandparent. |
 ```
 
 ### Example 2: uniform color shift after token rename
@@ -102,7 +102,7 @@ button background color change from `#0066cc` to `#0052aa`. PR title:
 Output:
 
 ```markdown
-## Visual Diff Classification — verdict: REVIEW
+## Visual Diff Classification - verdict: REVIEW
 
 | Severity | Snapshot                            | Category    | Pattern  | Paired code change?               | Recommended action |
 |----------|-------------------------------------|-------------|----------|-----------------------------------|---------------------|
@@ -124,7 +124,7 @@ change.
 Output:
 
 ```markdown
-## Visual Diff Classification — verdict: REVIEW
+## Visual Diff Classification - verdict: REVIEW
 
 | Severity | Snapshot               | Category   | Pattern              | Paired code change?     | Recommended action |
 |----------|------------------------|------------|----------------------|-------------------------|---------------------|

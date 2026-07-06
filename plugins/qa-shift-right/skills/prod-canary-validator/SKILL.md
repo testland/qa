@@ -177,12 +177,12 @@ sample-size grounds).
 ## Step 6 - Output
 
 ```markdown
-## Canary verdict — `<release>` `<sha>`
+## Canary verdict - `<release>` `<sha>`
 
 **Window:** 30 minutes (14:00-14:30 UTC)
 **Canary traffic share:** 5% (12,400 requests)
 **Baseline:** main `def456` (235,800 requests)
-**Verdict:** ⚠ PAUSE — investigate before promoting
+**Verdict:** ⚠ PAUSE - investigate before promoting
 
 ### Per-metric
 
@@ -197,17 +197,17 @@ sample-size grounds).
 ### Recommendation
 
 PAUSE. The error rate ratio (1.35x baseline) is statistically
-significant (p=0.018) and exceeds the relative threshold (1.5x —
+significant (p=0.018) and exceeds the relative threshold (1.5x - 
 note: 1.35 < 1.5 absolute but the trend warrants investigation).
 Investigate the new error categories before promoting.
 
 ### Investigation hand-off
 
 - Top new error types in the canary window:
-  - `RateLimitExceeded` (12 occurrences; 0 in baseline) — possible
+  - `RateLimitExceeded` (12 occurrences; 0 in baseline) - possible
     new dependency timeout.
   - `NullPointerException at Cart.addItem:42` (3 occurrences; 0 in
-    baseline) — likely real regression.
+    baseline) - likely real regression.
 
 Recommend: investigate the NPE before any promotion decision.
 ```

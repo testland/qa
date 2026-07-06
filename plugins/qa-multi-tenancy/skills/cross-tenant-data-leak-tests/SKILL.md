@@ -66,7 +66,7 @@ def test_get_other_tenant_resource_returns_404(
 ):
     client.force_login(tenant_a_user)
     resp = client.get(f"/api/documents/{tenant_b_resource.id}/")
-    assert resp.status_code == 404  # not 403 — avoid existence disclosure
+    assert resp.status_code == 404  # not 403 - avoid existence disclosure
 ```
 
 Convention: **return 404, not 403**, for resources the requester
@@ -104,7 +104,7 @@ def test_tenant_id_in_body_ignored_or_rejected(
     if resp.status_code == 201:
         created = resp.json()
         assert created["tenant_id"] != str(tenant_b.id), \
-            "Server accepted tenant_id from body — must derive from session"
+            "Server accepted tenant_id from body - must derive from session"
 ```
 
 ### Test 4 - JWT replay across tenants
@@ -223,7 +223,7 @@ def test_async_job_reloads_tenant_from_db_not_payload(
     # Enqueue a job with a payload pointing at tenant B's resource
     job = enqueue_export(
         resource_id=tenant_b_resource.id,
-        # Crafted to spoof — but executor must verify
+        # Crafted to spoof - but executor must verify
         tenant_id_claim=tenant_a.id
     )
     result = run_job(job)

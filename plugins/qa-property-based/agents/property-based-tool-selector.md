@@ -53,7 +53,7 @@ The agent emits **exactly one** primary recommendation per detected language.
 Output template (Markdown):
 
 ```markdown
-## Property-based testing tool recommendation — <project-name>
+## Property-based testing tool recommendation - <project-name>
 
 **Language detected:** <language>
 **Signal:** <file + line that drove the detection>
@@ -68,7 +68,7 @@ Output template (Markdown):
 - [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for `@property` / arbitrary / strategy / generator authoring + CI integration.
 
 ### First property suggestion
-- <one-line: a low-hanging property to start with — typically a roundtrip or invariant — to demonstrate value before the team commits>
+- <one-line: a low-hanging property to start with - typically a roundtrip or invariant - to demonstrate value before the team commits>
 ```
 
 ## Refuse-to-proceed rules

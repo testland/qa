@@ -140,14 +140,14 @@ Storybook or a hand-maintained JSON) to identify hierarchy.
 ## Step 5 - Render the report
 
 ```markdown
-## Visual diff summary — `<sha>`
+## Visual diff summary - `<sha>`
 
 **Total snapshots:** 87 (12 changed, 75 unchanged)
 **Verdict:** REVIEW (1 unrelated cluster suspects regression)
 
 ### ✅ Aligned with PR intent (3 clusters, 7 diffs)
 
-The PR title says **"Refactor Button to use new design tokens"** —
+The PR title says **"Refactor Button to use new design tokens"** - 
 these clusters match.
 
 | Cluster | Diffs | Max diff% | Recommendation |
@@ -156,13 +156,13 @@ these clusters match.
 | ButtonGroup |   2   |   3.1%    | Update baselines |
 | IconButton  |   1   |   1.5%    | Update baseline   |
 
-### ⚠ Adjacent (1 cluster, 3 diffs) — confirm intent
+### ⚠ Adjacent (1 cluster, 3 diffs) - confirm intent
 
 | Cluster | Diffs | Max diff% | Recommendation |
 |---------|------:|----------:|----------------|
-| Modal   |   3   |   2.8%    | Modal contains Button; check that the Button color change inside Modal is intended (it should be — but eyeball one). |
+| Modal   |   3   |   2.8%    | Modal contains Button; check that the Button color change inside Modal is intended (it should be - but eyeball one). |
 
-### ❌ Unrelated (1 cluster, 2 diffs) — DO NOT update without investigation
+### ❌ Unrelated (1 cluster, 2 diffs) - DO NOT update without investigation
 
 | Cluster | Diffs | Max diff% | Recommendation |
 |---------|------:|----------:|----------------|

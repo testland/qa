@@ -68,7 +68,7 @@ likelihood`:
 ## Step 3 - Document the register
 
 ```markdown
-# Product risk register — <product-name>
+# Product risk register - <product-name>
 
 **Last reviewed:** YYYY-MM-DD  **Owner:** <name>  **Next review:** YYYY-MM-DD
 
@@ -115,7 +115,7 @@ quarterly:
   score: 10 (was 15).
 - **PR-003**: Impact unchanged (4); likelihood **raised 4 → 5**
   after Q1 webhook outage at provider. New score: 20 (was 16).
-- **PR-007**: **Retired** — feature deprecated in v3.0.
+- **PR-007**: **Retired** - feature deprecated in v3.0.
 - **New: PR-022**: Locale-related date formatting; impact 3,
   likelihood 3, score 9. Owner: Eve.
 

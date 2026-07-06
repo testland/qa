@@ -132,7 +132,7 @@ Independent (not vendor-published) signal.
 Output is a single markdown document with a per-axis matrix plus an evidence appendix:
 
 ```markdown
-# Vendor evaluation — `<category>` — `<team>` — 2026-07
+# Vendor evaluation - `<category>` - `<team>` - 2026-07
 
 ## Vendors compared
 
@@ -162,23 +162,23 @@ Output is a single markdown document with a per-axis matrix plus an evidence app
 
 ## Per-axis matrix
 
-### A1 — Capability fit
+### A1 - Capability fit
 
-| Vendor | Score (0–1.0) | Strengths | Gaps |
+| Vendor | Score (0-1.0) | Strengths | Gaps |
 |---|---|---|---|
-| TestRail | 0.85 | Mature test-case management, custom fields, bulk import / export | API rate limits documented at 180/min — may bind at scale |
+| TestRail | 0.85 | Mature test-case management, custom fields, bulk import / export | API rate limits documented at 180/min - may bind at scale |
 | Qase | 0.80 | Modern UI, AI-assisted case authoring | Smaller plugin ecosystem |
 | Xray | 0.95 | Deep Jira integration, BDD-native | Heavyweight Jira dependency the team doesn't have |
 
-### A2 — Cost model
+### A2 - Cost model
 
 | Vendor | Year-1 (12 eng) | Year-2 (18 eng) | Hidden costs |
 |---|---|---|---|
 | TestRail | $7,488 (12 × $52/seat/mo × 12) | $11,232 | SSO add-on $480/yr/site; audit log enterprise-tier only |
 | Qase | $4,320 (12 × $30/seat/mo × 12) | $6,480 | None at this tier; SSO included from Business plan |
-| Xray | $6,840 (12 × $5/user/mo × 12) | $11,160 | Requires Jira Software seats — additional ~$8/user/mo if not already licensed |
+| Xray | $6,840 (12 × $5/user/mo × 12) | $11,160 | Requires Jira Software seats - additional ~$8/user/mo if not already licensed |
 
-### A3 — Integration depth
+### A3 - Integration depth
 
 | Vendor | CI (GitHub Actions) | Tracker (Linear) | Observability (Datadog) | Test-framework (Playwright) | SSO |
 |---|---|---|---|---|---|
@@ -186,15 +186,15 @@ Output is a single markdown document with a per-axis matrix plus an evidence app
 | Qase | Native action (1.0) | Native (1.0) | Webhook (0.7) | Native @qase/playwright (1.0) | SAML (Business+) (0.8) |
 | Xray | API only (0.7) | API-buildable (0.7) | None native (0.0) | xray-junit-extensions (0.9) | SAML / OIDC (1.0) |
 
-### A4 — Vendor lock-in risk
+### A4 - Vendor lock-in risk
 
 | Vendor | Format | Export | Lock-in score |
 |---|---|---|---|
-| TestRail | Proprietary case format; bulk CSV export | Documented CSV / XML export, JSON via API | Moderate (0.6) — export possible, but tests need re-authoring on migration |
-| Qase | YAML / JSON case format; native import / export | First-class export to JSON / YAML | Low (0.85) — portable artifacts |
-| Xray | BDD-native (Gherkin), JUnit / Cucumber export | Tied to Jira issue model; export possible but harder to disentangle | Moderate-high (0.5) — Jira coupling is the lock-in axis |
+| TestRail | Proprietary case format; bulk CSV export | Documented CSV / XML export, JSON via API | Moderate (0.6) - export possible, but tests need re-authoring on migration |
+| Qase | YAML / JSON case format; native import / export | First-class export to JSON / YAML | Low (0.85) - portable artifacts |
+| Xray | BDD-native (Gherkin), JUnit / Cucumber export | Tied to Jira issue model; export possible but harder to disentangle | Moderate-high (0.5) - Jira coupling is the lock-in axis |
 
-### A5 — Exit cost (24-month migration scenario)
+### A5 - Exit cost (24-month migration scenario)
 
 | Vendor | Test re-authoring | History portability | Total exit cost (hand-wave) |
 |---|---|---|---|
@@ -202,7 +202,7 @@ Output is a single markdown document with a per-axis matrix plus an evidence app
 | Qase | YAML / Gherkin cases mostly portable; ~10% re-authoring | Native export | ~1 person-month |
 | Xray | Gherkin scenarios portable; Jira-issue history harder to extract | API export; needs custom tooling | ~4 person-months |
 
-### A6 — Contractual posture
+### A6 - Contractual posture
 
 | Vendor | SLA | Support | Security | EU residency |
 |---|---|---|---|---|
@@ -210,7 +210,7 @@ Output is a single markdown document with a per-axis matrix plus an evidence app
 | Qase | 99.9% on Business+ | Email + chat; CSM on Enterprise | SOC 2 Type II (cite) | EU region available on Business |
 | Xray | Bound to Jira's SLA | Email + chat | SOC 2 Type II inherited from Xpand IT | Tied to Jira region |
 
-### A7 — Customer-reference data
+### A7 - Customer-reference data
 
 | Vendor | Gartner Peer Insights | G2 (recency / density) | Practitioner-signal |
 |---|---|---|---|

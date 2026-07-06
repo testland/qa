@@ -161,7 +161,7 @@ removal - not memorized.
 Add to the project's `flag-history.md`:
 
 ```markdown
-## 2026-05-20 — Removed `show-new-ui`
+## 2026-05-20 - Removed `show-new-ui`
 
 - Rolled out 100% on 2026-04-15
 - Stable for 5 weeks at 100%

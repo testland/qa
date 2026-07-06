@@ -95,7 +95,7 @@ def test_phi_overwritten_when_device_decommissioned():
 
 ```python
 def test_phi_access_requires_unique_user_id():
-    """§164.312(a)(2)(i) Unique User Identification — no shared accounts."""
+    """§164.312(a)(2)(i) Unique User Identification - no shared accounts."""
     # System must reject login attempts on generic / shared accounts:
     response = client.post('/login', json={'username': 'admin', 'password': 'secret'})
     assert response.status_code == 403  # generic 'admin' account forbidden

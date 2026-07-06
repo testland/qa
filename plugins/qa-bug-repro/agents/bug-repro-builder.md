@@ -66,7 +66,7 @@ Test was run once after creation. Output:
 
 1. Open the test file; review the assertion.
 2. Once the underlying bug is fixed, the test should pass without
-   modification — that's the regression-prevention contract.
+   modification - that's the regression-prevention contract.
 3. If the fix requires changing the test (the bug was in the spec, not
    the code), document it in the commit message.
 ```

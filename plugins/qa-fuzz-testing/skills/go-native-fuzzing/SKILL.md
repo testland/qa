@@ -206,7 +206,7 @@ fuzzing.
     git config user.email "fuzz-bot@example.com"
     git add testdata/
     git commit -m "Add fuzz failure fixtures"
-    # PR or push — per team convention
+    # PR or push - per team convention
 ```
 
 ## Anti-patterns

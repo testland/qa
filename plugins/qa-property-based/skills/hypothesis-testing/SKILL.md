@@ -116,7 +116,7 @@ returns the constructed value.
 Two ways to constrain inputs:
 
 ```python
-# Filter at strategy level (preferred — Hypothesis can sample efficiently)
+# Filter at strategy level (preferred - Hypothesis can sample efficiently)
 @given(st.integers(0, 100).filter(lambda x: x % 2 == 0))
 def test_even_squares(n):
     assert (n * n) % 2 == 0

@@ -93,7 +93,7 @@ Each session produces a session sheet. Bach's canonical structure
 (satisfice.com):
 
 ```markdown
-# Session sheet — YYYY-MM-DD — <tester>
+# Session sheet - YYYY-MM-DD - <tester>
 
 ## Charter
 
@@ -138,7 +138,7 @@ tours applied, heuristics applied, hypotheses formed)
   reproduces 3/3. Captured at 14:35.
 - B-002: Empty cart + apply promo → page error, not graceful message.
 
-## Issues (meta — testing-process problems)
+## Issues (meta - testing-process problems)
 
 - Cannot get to step 4 in flow without a paid customer account;
   test data unavailable. Blocking 40% of charter scope.

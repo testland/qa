@@ -163,7 +163,7 @@ Common scenarios:
 Each scenario produces a per-resilience-pattern verdict:
 
 ```markdown
-## Failure injection results — `<sha>`
+## Failure injection results - `<sha>`
 
 | Scenario              | SUT behavior                            | Verdict |
 |-----------------------|-----------------------------------------|---------|
@@ -172,7 +172,7 @@ Each scenario produces a per-resilience-pattern verdict:
 | Slow body              | Read timeout at 5s; aborted               |   ✅    |
 | Malformed JSON          | ParseError thrown; defaulted to empty    |   ✅    |
 | Cascade: timeout + 503 | Circuit breaker opened after 3 timeouts  |   ✅    |
-| Network partition       | Fell back to cached value                 |   ⚠ partial — fallback returned stale > 1h |
+| Network partition       | Fell back to cached value                 |   ⚠ partial - fallback returned stale > 1h |
 ```
 
 ## Step 7 - CI integration

@@ -59,13 +59,13 @@ for.
 For a hypothetical SaaS B2B web app:
 
 ```markdown
-# Browser test matrix — Q2 2026
+# Browser test matrix - Q2 2026
 
 **Owner:** QA lead
 **Reviewed:** YYYY-MM-DD
 **Next review:** Q3 2026
 
-## Tier 1 — must pass every PR (3 combos)
+## Tier 1 - must pass every PR (3 combos)
 
 | Browser | Version | OS | Why T1 | Where tested |
 |---|---|---|---|---|
@@ -73,7 +73,7 @@ For a hypothetical SaaS B2B web app:
 | Chrome | latest-1 (N-1) | Linux | Lag-behind users (Group Policy) | qa-web-e2e/playwright-testing on CI |
 | Firefox | latest stable | Linux | 12% of traffic | qa-compatibility/browser-matrix-runner (bundled) |
 
-## Tier 2 — nightly + pre-release (5 combos)
+## Tier 2 - nightly + pre-release (5 combos)
 
 | Browser | Version | OS | Why T2 | Where tested |
 |---|---|---|---|---|
@@ -83,7 +83,7 @@ For a hypothetical SaaS B2B web app:
 | Chrome | latest | Android 14 | 5% mobile traffic | BrowserStack Automate (real device) |
 | Firefox | ESR | Linux | Enterprise users on long-support track | qa-compatibility/browser-matrix-runner |
 
-## Tier 3 — quarterly / on-demand (4 combos)
+## Tier 3 - quarterly / on-demand (4 combos)
 
 | Browser | Version | OS | Why T3 | Where tested |
 |---|---|---|---|---|
@@ -103,7 +103,7 @@ For a hypothetical SaaS B2B web app:
 
 - 2026-Q1 → Q2: Safari iOS 15 retired (0.4% traffic, below
   threshold); Safari iOS 17 added.
-- 2026-Q1 → Q2: Edge promoted to T2 (was T3) — traffic grew 3 →
+- 2026-Q1 → Q2: Edge promoted to T2 (was T3) - traffic grew 3 →
   5%.
 ```
 

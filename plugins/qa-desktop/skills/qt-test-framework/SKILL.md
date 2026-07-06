@@ -249,7 +249,7 @@ command-line options:
 # List all test functions
 ./test_calculator -functions
 
-# Extended verbose — shows each QCOMPARE / QVERIFY
+# Extended verbose - shows each QCOMPARE / QVERIFY
 ./test_calculator -v2
 
 # Run a specific test function

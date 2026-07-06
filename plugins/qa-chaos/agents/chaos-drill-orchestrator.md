@@ -82,7 +82,7 @@ After the experiment ends (whether by completion or abort):
 ## Output format
 
 ```markdown
-## Chaos drill report — <experiment-id>
+## Chaos drill report - <experiment-id>
 
 **Target:** <namespace>/<service>
 **Experiment:** <type> (e.g., pod-kill, network-partition-50ms-latency, etc.)

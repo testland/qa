@@ -141,18 +141,18 @@ Charter: "Explore the checkout flow to discover bugs."
 ```markdown
 Apply SFDPOT to plan the session:
 
-- **S — Structure:** Toggle the `feature-new-checkout=true` flag
+- **S - Structure:** Toggle the `feature-new-checkout=true` flag
   in middle of the session to compare old vs new code paths.
-- **F — Function:** Stack multiple promos; combine with gift card;
+- **F - Function:** Stack multiple promos; combine with gift card;
   combine with store credit. Trigger refund mid-checkout.
-- **D — Data:** Cart with 0 items, 1, 100, 1000 items. Cart with
+- **D - Data:** Cart with 0 items, 1, 100, 1000 items. Cart with
   free items only. Cart with $0.01 total. Cart with $9999.99
   total. Invalid product IDs.
-- **P — Platform:** Safari iOS (autofill / Apple Pay), Chrome
+- **P - Platform:** Safari iOS (autofill / Apple Pay), Chrome
   desktop, low-bandwidth Android.
-- **O — Operations:** Add → remove → re-add an item. Navigate
+- **O - Operations:** Add → remove → re-add an item. Navigate
   away and return. Refresh during payment processing.
-- **T — Time:** Apply a promo that expires in 1 minute, then
+- **T - Time:** Apply a promo that expires in 1 minute, then
   delay 70 seconds. Open two tabs simultaneously and check out
   from each.
 ```

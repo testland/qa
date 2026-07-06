@@ -134,7 +134,7 @@ matters.
 ## Output format
 
 ```markdown
-## N+1 detection — `<resolver_path>`
+## N+1 detection - `<resolver_path>`
 
 **Scope:** <file>:<lines> or PR <#>
 
@@ -157,7 +157,7 @@ Post: {
 When `Query.posts` returns 50 posts, this resolver fires 50 times
 → 50 `findOne` calls.
 
-**Recommended fix:** DataLoader (Fix A) — `author` is also used by
+**Recommended fix:** DataLoader (Fix A) - `author` is also used by
 `Comment.author` and `Like.author` resolvers (cross-cutting).
 
 ```typescript
@@ -235,7 +235,7 @@ Output:
 
 **Location:** `resolvers/user.ts:34`
 
-This is **worse** than DB N+1 — each call has network latency.
+This is **worse** than DB N+1 - each call has network latency.
 At N=20 users, this is 20 × 30ms = 600ms.
 
 **Fix:** Add a batched fetch to the payment client:

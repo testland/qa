@@ -122,7 +122,7 @@ warning.
 Markdown summary:
 
 ```markdown
-# Perf Budget Gate — verdict: NO-GO
+# Perf Budget Gate - verdict: NO-GO
 
 **Blockers: 2**
 
@@ -201,7 +201,7 @@ for lhr in Path(".lighthouseci/").glob("lhr-*.json"):
 blockers = [r for r in records if r["status"] == "fail" and r["severity"] == "blocker"]
 verdict = "no-go" if blockers else "go"
 
-print(f"# Perf Budget Gate — verdict: {verdict.upper()}")
+print(f"# Perf Budget Gate - verdict: {verdict.upper()}")
 for r in blockers:
     print(f"- {r['runner']} :: {r['subject']} :: {r['metric']} = {r['value']} (budget {r['budget']})")
 

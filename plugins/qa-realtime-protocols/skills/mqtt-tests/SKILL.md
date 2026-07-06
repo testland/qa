@@ -129,7 +129,7 @@ def test_retained_message_delivered_to_late_subscriber():
     pub.publish("device/status", "online", qos=1, retain=True).wait_for_publish()
     pub.disconnect()
 
-    # New subscriber connects 5s later — still receives retained msg
+    # New subscriber connects 5s later - still receives retained msg
     time.sleep(5)
     received = []
     sub = mqtt.Client(client_id="sub-late", protocol=mqtt.MQTTv5,

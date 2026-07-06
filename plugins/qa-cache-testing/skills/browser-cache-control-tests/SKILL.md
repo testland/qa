@@ -110,7 +110,7 @@ test('ETag triggers 304 on revalidation', async ({ page }) => {
 
   // First load
   await page.goto('https://example.com/dashboard');
-  // Reload after TTL — browser should send If-None-Match
+  // Reload after TTL - browser should send If-None-Match
   await page.waitForTimeout(2000);
   await page.reload();
 });
@@ -147,7 +147,7 @@ test('offline page uses cache-first strategy', async ({ context, page }) => {
   await page.goto('https://example.com');
   // Go offline
   await context.setOffline(true);
-  // Reload — should still work
+  // Reload - should still work
   await page.reload();
   await expect(page.locator('h1')).toHaveText('Example');
 });

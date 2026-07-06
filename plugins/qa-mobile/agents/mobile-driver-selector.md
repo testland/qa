@@ -60,7 +60,7 @@ The agent emits **exactly one** primary recommendation. A secondary fallback may
 Output template (Markdown, copyable to a decision record):
 
 ```markdown
-## Mobile driver recommendation — <project-name>
+## Mobile driver recommendation - <project-name>
 
 **Platform detected:** <ios-native | android-native | react-native | flutter | cross-platform>
 **Signal:** <file path + line excerpt that drove the detection>

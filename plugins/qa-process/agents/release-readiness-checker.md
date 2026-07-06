@@ -84,10 +84,10 @@ Custom gate types via `type: shell` + a script path.
 ## Step 3 - Aggregate + verdict
 
 ```markdown
-## Release readiness — v1.4.5
+## Release readiness - v1.4.5
 
 **Target date:** 2026-05-08
-**Verdict:** ❌ NOT READY — 1 required gate failed; 2 recommended unmet
+**Verdict:** ❌ NOT READY - 1 required gate failed; 2 recommended unmet
 
 ### Required gates (must all pass)
 
@@ -114,13 +114,13 @@ Custom gate types via `type: shell` + a script path.
 
 ### Action items (must address)
 
-1. **Resolve BUG-1234 and BUG-1235** — both `sev:critical`, must
+1. **Resolve BUG-1234 and BUG-1235** - both `sev:critical`, must
    be closed or downgraded before release.
 
 ### Action items (recommended)
 
 2. **Get threat-model approval** on PR #4567 from security-team.
-3. **Verify CDN warming** — manifest 404 may indicate the warm
+3. **Verify CDN warming** - manifest 404 may indicate the warm
    process hasn't completed.
 
 ### Recommended retry time

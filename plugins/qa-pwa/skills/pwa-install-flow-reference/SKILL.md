@@ -137,7 +137,7 @@ sequence is:
 4. Manifest gate passes.                        (Stage 1)
 5. browser fires beforeinstallprompt.           (Stage 2)
 6. App calls event.preventDefault() + stashes.  (Stage 2)
-7. User clicks the app's "Install" button.      (Stage 2 — user gesture)
+7. User clicks the app's "Install" button.      (Stage 2 - user gesture)
 8. App calls stashedEvent.prompt().             (Stage 2)
 9. User accepts → userChoice resolves accepted. (Stage 2)
 10. Browser installs (WebAPK / shortcut / desktop bundle).  (Stage 3)

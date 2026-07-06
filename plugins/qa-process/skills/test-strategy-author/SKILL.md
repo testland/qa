@@ -30,7 +30,7 @@ larger horizons.
 ## Step 1 - Document structure
 
 ```markdown
-# Test Strategy — `<product / release>`
+# Test Strategy - `<product / release>`
 
 **Author:** _______________   **Date:** YYYY-MM-DD
 **Status:** Draft | Review | Approved
@@ -78,18 +78,18 @@ Per the test pyramid ([`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.m
 
 ## 5. Environments
 
-- **Local dev** — per-engineer; Testcontainers backing services.
-- **Staging** — shared; smoke + UAT.
-- **Canary** — 5% prod traffic; 30-min observation per
+- **Local dev** - per-engineer; Testcontainers backing services.
+- **Staging** - shared; smoke + UAT.
+- **Canary** - 5% prod traffic; 30-min observation per
   [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md).
-- **Prod** — synthetic monitors per
+- **Prod** - synthetic monitors per
   [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md).
 
 ## 6. Test data
 
-- **Synthetic accounts** — per [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md).
-- **PII handling** — per [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md).
-- **Database state** — per [`db-snapshot-restore`](../../qa-test-environment/agents/db-snapshot-restore.md).
+- **Synthetic accounts** - per [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md).
+- **PII handling** - per [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md).
+- **Database state** - per [`db-snapshot-restore`](../../qa-test-environment/agents/db-snapshot-restore.md).
 
 ## 7. Exit criteria
 

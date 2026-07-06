@@ -166,9 +166,9 @@ The skill produces two outputs:
 ### Markdown checklist (for spec / PR review)
 
 ```markdown
-## A11y Checklist — `<ComponentName>`
+## A11y Checklist - `<ComponentName>`
 
-**Archetype:** Interactive — overlay (modal)
+**Archetype:** Interactive - overlay (modal)
 
 ### Required (must pass before merge)
 

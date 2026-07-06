@@ -112,7 +112,7 @@ the correctness of concurrency support in the JVM."
 @Outcome(id = "0, 0", expect = ACCEPTABLE, desc = "Initial values")
 @Outcome(id = "1, 1", expect = ACCEPTABLE, desc = "Both writes seen")
 @Outcome(id = "0, 1", expect = ACCEPTABLE, desc = "Saw partial")
-@Outcome(id = "1, 0", expect = FORBIDDEN, desc = "Reordered — bug")
+@Outcome(id = "1, 0", expect = FORBIDDEN, desc = "Reordered - bug")
 @State
 public class CounterTest {
     int x, y;

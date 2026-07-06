@@ -47,8 +47,8 @@ interface ContainerFinding {
   package: string;                   // ecosystem:name@version
   package_path?: string;             // image layer path
   severity: 'critical' | 'high' | 'medium' | 'low' | 'unknown';
-  cvss_base?: number;                // 0.0–10.0
-  epss?: number;                     // 0.0–1.0
+  cvss_base?: number;                // 0.0-10.0
+  epss?: number;                     // 0.0-1.0
   in_kev?: boolean;
   fix_version?: string;              // upgrade to this
   is_unfixed?: boolean;              // no fix available yet
@@ -167,7 +167,7 @@ waivers:
 ## Step 7 - Report
 
 ```markdown
-## Vuln prioritization (container + SBOM) — `<sha>`
+## Vuln prioritization (container + SBOM) - `<sha>`
 
 **Image:** my-app:abc123 (built 2026-05-06T12:00:00Z)
 **SBOM:** sbom.cyclonedx.json (Syft 1.16.0)
@@ -177,13 +177,13 @@ waivers:
 **Total findings:** 23 (after deduplication; 12 multi-tool consensus)
 **Waivers applied:** 3
 **VEX-filtered:** 8
-**Verdict:** ❌ BLOCK — 1 Fix-Now finding
+**Verdict:** ❌ BLOCK - 1 Fix-Now finding
 
 ### Fix-Now (must fix before merge / deploy)
 
 | Priority | CVE | Package | CVSS | EPSS | KEV | VEX | Found by | Fix |
 |---|---|---|---|---|---|---|---|---|
-| 🔥 KEV | CVE-2021-44228 | log4j-core@2.14.1 | 10.0 | 0.97 | YES | — | grype, trivy | upgrade to 2.17.1+ |
+| 🔥 KEV | CVE-2021-44228 | log4j-core@2.14.1 | 10.0 | 0.97 | YES | - | grype, trivy | upgrade to 2.17.1+ |
 
 ### Fix-This-Sprint
 
@@ -217,10 +217,10 @@ waivers:
 
 ### Action items
 
-1. **Fix CVE-2021-44228 (Log4Shell) immediately** — in CISA KEV;
+1. **Fix CVE-2021-44228 (Log4Shell) immediately** - in CISA KEV;
    upgrade log4j-core to 2.17.1+. Block all merges until resolved.
-2. **Upgrade openssl to 3.0.10** — addresses CVE-2024-7777.
-3. **Upgrade curl to 7.86.0** — addresses CVE-2024-5555.
+2. **Upgrade openssl to 3.0.10** - addresses CVE-2024-7777.
+3. **Upgrade curl to 7.86.0** - addresses CVE-2024-5555.
 
 After fixes, rebuild image + re-run scanners + this agent.
 ```

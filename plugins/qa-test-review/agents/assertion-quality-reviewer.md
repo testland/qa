@@ -30,7 +30,7 @@ files and rates each as:
 ## Step 1 - Walk the assertions
 
 ```python
-# Pseudocode — per-language adapter parses the AST
+# Pseudocode - per-language adapter parses the AST
 def walk_assertions(test_file):
     for node in parse(test_file).body:
         if not is_assertion(node):
@@ -102,7 +102,7 @@ context):
 // Original (line 12)
 expect(response.status).toBeGreaterThan(199);
 
-// Recommendation — read the surrounding context to find the expected value
+// Recommendation - read the surrounding context to find the expected value
 // If the test name says "returns 201", use:
 expect(response.status).toBe(201);
 ```
@@ -114,7 +114,7 @@ expectation explicit in the test name OR pin the assertion.
 ## Output format
 
 ```markdown
-## Assertion quality review — `<PR>`
+## Assertion quality review - `<PR>`
 
 **Files reviewed:** N
 **Assertions walked:** M

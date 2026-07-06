@@ -167,14 +167,14 @@ Default fail-on: `critical` (any unwaived critical → BLOCK).
 ## Step 7 - Report
 
 ```markdown
-## DAST policy review — `<sha>`
+## DAST policy review - `<sha>`
 
 **Scanners run:** ZAP 2.15 (baseline), NightVision 0.4.0
 (Burp Enterprise not configured in this repo)
 
 **Total findings:** 23 (after deduplication; 8 multi-scanner consensus)
 **Waivers applied:** 3
-**Verdict:** ❌ BLOCK — 1 unwaived critical finding
+**Verdict:** ❌ BLOCK - 1 unwaived critical finding
 
 ### Critical (must fix before merge)
 
@@ -204,7 +204,7 @@ Default fail-on: `critical` (any unwaived critical → BLOCK).
 
 1. **Fix the SQL injection at `/api/users/{id}`.** Use parameterized
    queries (`db.query('SELECT * FROM users WHERE id = $1', [id])`).
-   Two scanners caught this — high-confidence.
+   Two scanners caught this - high-confidence.
 2. **Sanitize the `bio` parameter on `/profile/edit`.** Pass
    through HTML escaper or DOMPurify (depending on render context).
 

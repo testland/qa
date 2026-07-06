@@ -166,12 +166,12 @@ Return `block` if any finding meets the severity threshold.
 ## Step 6 - Report
 
 ```markdown
-## IaC policy review — `<sha>`
+## IaC policy review - `<sha>`
 
 **Scanners:** Checkov 3.2.500, tfsec 1.28.13, KICS 2.0.10
 **Total findings:** 47 (after deduplication)
 **Waivers applied:** 3
-**Verdict:** ❌ BLOCK — 4 high-severity findings
+**Verdict:** ❌ BLOCK - 4 high-severity findings
 
 ### High-severity (must fix)
 

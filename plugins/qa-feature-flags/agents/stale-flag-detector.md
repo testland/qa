@@ -96,13 +96,13 @@ Score → sorted list.
 ## Step 5 - Emit removal-candidate list
 
 ```markdown
-## Stale-flag audit — `<date>`
+## Stale-flag audit - `<date>`
 
 ### Top removal candidates
 
 | Rank | Flag | Type | Last touched | Rollout state | Usage | Score | Removal plan |
 |---|---|---|---|---|---|---|---|
-| 1 | `show-new-ui` | boolean | 2026-02-15 | 100% for 12wk | 2 files | 12 | per [`flag-removal-runbook-author`](../skills/flag-removal-runbook-author/SKILL.md) — straightforward |
+| 1 | `show-new-ui` | boolean | 2026-02-15 | 100% for 12wk | 2 files | 12 | per [`flag-removal-runbook-author`](../skills/flag-removal-runbook-author/SKILL.md) - straightforward |
 | 2 | `checkout-experiment-v2` | multi-variant | 2026-03-01 | treatment-a shipped (90 days) | 1 file | 11 | inline treatment-a logic |
 | 3 | `legacy-import-killswitch` | kill-switch | 2025-08-15 | Off (unused) | 3 files | 9 | confirm with ops; then archive |
 

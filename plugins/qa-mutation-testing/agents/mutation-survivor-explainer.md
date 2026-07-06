@@ -112,16 +112,16 @@ the constant.
 Per surviving mutant, emit:
 
 ```markdown
-**Surviving mutant:** `src/cart.ts:42` — ConditionalBoundary
+**Surviving mutant:** `src/cart.ts:42` - ConditionalBoundary
 
 **Original:** `if (qty < maxQty) throw new Error('Cap exceeded');`
 **Mutated:** `if (qty <= maxQty) throw new Error('Cap exceeded');`
 **Class:** missing-case (boundary)
 
 **Tests that ran but didn't kill it:**
-- `cart.spec.ts > addItem qty=1` — `1 < 100` and `1 <= 100`; both throw nothing.
-- `cart.spec.ts > addItem qty=100` — `100 < 100` is false (no throw); `100 <= 100` is true (throws).
-  Wait — the second test SHOULD distinguish. Why didn't it?
+- `cart.spec.ts > addItem qty=1` - `1 < 100` and `1 <= 100`; both throw nothing.
+- `cart.spec.ts > addItem qty=100` - `100 < 100` is false (no throw); `100 <= 100` is true (throws).
+  Wait - the second test SHOULD distinguish. Why didn't it?
 
 **Recommendation:** check the test assertion. If it asserts only
 `expect(() => cart.addItem({ qty: 100 })).not.toThrow()`, the
@@ -138,7 +138,7 @@ spec; either:
 - The mutated `<=` reveals the original was off-by-one: the test
   is correct; the production code is wrong.
 
-Either way, the surviving mutant is signal — investigate.
+Either way, the surviving mutant is signal - investigate.
 ```
 
 ## Step 5 - Refuse-to-proceed rules
@@ -155,7 +155,7 @@ The agent refuses to:
 ## Output format
 
 ```markdown
-## Mutation survivor analysis — `<run-id>`
+## Mutation survivor analysis - `<run-id>`
 
 **Tool:** stryker | pit | mutmut | mull | stryker-net
 **Survivors analyzed:** N

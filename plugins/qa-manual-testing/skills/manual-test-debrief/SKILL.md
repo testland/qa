@@ -46,7 +46,7 @@ metric captures.
 ## Step 1 - Template
 
 ```markdown
-# Session debrief — `<session-id>`
+# Session debrief - `<session-id>`
 
 **Charter:** [link to charter]
 **Tester:** _______________
@@ -54,24 +54,24 @@ metric captures.
 **Time-box:** 90 min   **Actual:** ___ min
 **Build / Environment:** _______________
 
-## Past — what was tested
+## Past - what was tested
 
 **Tours applied:**
 - [x] Money tour (per [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md))
 - [x] Bad-data tour
-- [ ] Configuration tour (skipped — out of time)
+- [ ] Configuration tour (skipped - out of time)
 
 **Areas covered:**
-- Promo code input field — full coverage including SQL/XSS payloads
-- Promo discount math — 10% / 50% / 100% / fractional cent edge cases
-- Promo + tax interaction — covered for US tax states only
+- Promo code input field - full coverage including SQL/XSS payloads
+- Promo discount math - 10% / 50% / 100% / fractional cent edge cases
+- Promo + tax interaction - covered for US tax states only
 
 **Paths walked (notable ones):**
 - Apply WELCOME10 to $24.99 cart → $22.49 ✓
 - Apply two stackable promos → second silently overrides first (BUG-987)
 - Apply expired promo → graceful error message ✓
 
-## Results — what was learned
+## Results - what was learned
 
 **Confirmed working:**
 - Single-promo apply
@@ -79,7 +79,7 @@ metric captures.
 - Free-shipping promo
 
 **Bugs found:** (with bug IDs)
-- BUG-987: Stacking two promos doesn't combine — second silently overrides first.
+- BUG-987: Stacking two promos doesn't combine - second silently overrides first.
 - BUG-988: SQL injection in promo input field returns 500 instead of 400.
 - BUG-989: $0.01 cart with 50% off rounds to $0.00 instead of $0.01.
 
@@ -92,7 +92,7 @@ metric captures.
 **Confirmed-fixed (vs prior session):**
 - Previous BUG-832 (promo input losing focus) is fixed. ✓
 
-## Outlook — what's left
+## Outlook - what's left
 
 **Areas not covered (out of time / scope):**
 - EU tax cases (covered separately by next session's charter).
@@ -111,7 +111,7 @@ metric captures.
 ## Obstacles
 
 **Setup pain:**
-- Stripe test card kept timing out at checkout — added 5 min to
+- Stripe test card kept timing out at checkout - added 5 min to
   the session.
 - Required test promo codes weren't pre-seeded; had to create them
   manually.
@@ -150,7 +150,7 @@ BUG-989 (rounding) is low impact; can ship with known-issue note.
 | Bug investigation |      30 |
 | **Total actual**  |      90 |
 
-(Per SBTM convention; useful for calibrating future sessions —
+(Per SBTM convention; useful for calibrating future sessions - 
 high setup % suggests test-data or environment investment is
 worth it.)
 ```
@@ -160,7 +160,7 @@ worth it.)
 Individual debriefs are useful; aggregating them surfaces patterns:
 
 ```markdown
-## Quarterly debrief rollup — Q2 2026
+## Quarterly debrief rollup - Q2 2026
 
 **Sessions completed:** 47
 **Bugs raised:** 138
@@ -170,19 +170,19 @@ Individual debriefs are useful; aggregating them surfaces patterns:
 
 | Area                       | Sessions | Bugs found | Last covered |
 |----------------------------|---------:|-----------:|--------------|
-| Checkout — promo flow       |    8    |    34     | 2026-04-28  |
-| Checkout — payment          |    6    |    19     | 2026-05-02  |
-| Account — subscription       |    4    |    12     | 2026-05-05  |
-| Account — profile            |    3    |     8     | 2026-04-15  |
+| Checkout - promo flow       |    8    |    34     | 2026-04-28  |
+| Checkout - payment          |    6    |    19     | 2026-05-02  |
+| Account - subscription       |    4    |    12     | 2026-05-05  |
+| Account - profile            |    3    |     8     | 2026-04-15  |
 | Admin panel                  |    1    |     2     | 2026-03-20  |  ← stale
 | Reports                      |    0    |     0     | (never)      |  ← uncovered
 
 ### Action items from rollup
 
 - Schedule sessions for Admin panel + Reports areas (under-covered).
-- Subscription area surfaced 12 bugs — investigate root-cause
+- Subscription area surfaced 12 bugs - investigate root-cause
   pattern.
-- Average setup time (28 min) is high — invest in fixture tooling.
+- Average setup time (28 min) is high - invest in fixture tooling.
 ```
 
 The rollup shows what's been explored vs what's stale vs what's

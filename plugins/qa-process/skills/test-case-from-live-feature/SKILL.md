@@ -40,12 +40,12 @@ Capture concrete observations from the running surface. Sources, in order of pre
 Output of Step 1 is an **observation log**:
 
 ```markdown
-## Observation log — checkout flow @ staging.example.com (2026-05-11 14:00 UTC)
+## Observation log - checkout flow @ staging.example.com (2026-05-11 14:00 UTC)
 
 ### URLs probed
-- `/cart` — cart view; lists line items.
-- `/cart/checkout` — multi-step flow: address → shipping → payment → review → confirm.
-- `/cart/confirm/:order_id` — confirmation page.
+- `/cart` - cart view; lists line items.
+- `/cart/checkout` - multi-step flow: address → shipping → payment → review → confirm.
+- `/cart/confirm/:order_id` - confirmation page.
 
 ### Network calls observed
 - `POST /api/cart/items` (add to cart) → 201, body `{ sku, qty, addedAt }`.
@@ -54,7 +54,7 @@ Output of Step 1 is an **observation log**:
 
 ### UI affordances observed
 - Coupon field accepts up to 32 chars; case-insensitive in client validation (DOM `text-transform: uppercase`).
-- "Place order" button disabled on submit (good — prevents double-click).
+- "Place order" button disabled on submit (good - prevents double-click).
 - No client-side qty boundary; server returns 422 above qty=99.
 
 ### Accessibility tree (axe-core)
@@ -123,7 +123,7 @@ Same shape as [`test-case-ideation-from-story`](../test-case-ideation-from-story
 | **ID** | `<feature>-LIVE-<n>`, e.g. `CHECKOUT-LIVE-03`. The `LIVE` infix marks it as heuristically-derived. |
 | **Title** | Imperative single sentence. |
 | **Tier** | `smoke` / `regression` / `edge` / `negative` / `a11y` / `perf` / `sec`. |
-| **Precondition** | Observed (or `[unverified — confirm with PM]`). |
+| **Precondition** | Observed (or `[unverified - confirm with PM]`). |
 | **Steps** | Numbered, declarative (per [Cucumber better-Gherkin](https://cucumber.io/docs/bdd/better-gherkin/)). |
 | **Expected** | Observed behaviour or the FEW HICCUPPS-derived expectation. |
 | **Source claim** | Observation log line + heuristic that surfaced the case (e.g., `obs:cart.qty boundary @ DevTools; Whittaker input-attack`). |

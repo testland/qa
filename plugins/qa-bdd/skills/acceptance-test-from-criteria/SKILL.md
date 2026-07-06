@@ -113,9 +113,9 @@ Scenario: Valid promo reduces subtotal
   Given promo code "WELCOME10" is active                    # PASS (admin seeding works)
   When I enter "WELCOME10" in the promo input               # PASS (input field exists)
   And I click "Apply"                                        # PASS (button exists)
-  Then the subtotal updates to $22.49                       # FAIL — promo logic not implemented
+  Then the subtotal updates to $22.49                       # FAIL - promo logic not implemented
 
-5 of 5 scenarios FAILED (as expected — implementation pending).
+5 of 5 scenarios FAILED (as expected - implementation pending).
 ```
 
 The failing tests are the work backlog.
@@ -183,7 +183,7 @@ The implementations land in PRs alongside the production code.
 ## Step 6 - Traceability artifact
 
 ```markdown
-## AC-to-test mapping — `<story>` (auto-generated)
+## AC-to-test mapping - `<story>` (auto-generated)
 
 | AC ID    | Test                                               | Status   | Last run |
 |----------|----------------------------------------------------|----------|----------|

@@ -64,7 +64,7 @@ For each cell of the (suite × environment) matrix, compute:
 The output is a fixed-shape markdown block:
 
 ```markdown
-# Daily test-suite roll-up — 2026-05-09 (window: last-24h, UTC)
+# Daily test-suite roll-up - 2026-05-09 (window: last-24h, UTC)
 
 ## Headline
 
@@ -76,8 +76,8 @@ The output is a fixed-shape markdown block:
 |---|---|---|---|
 | unit-js | ✅ 3,121 / 3,121 (100.00%) | n/a (not configured) | n/a |
 | unit-python | ✅ 1,492 / 1,492 (100.00%) | n/a | n/a |
-| contract | ✅ 87 / 87 (100.00%) | ✅ 87 / 87 | ⚠️ 85 / 87 (97.7%) — 2 schema-drift |
-| e2e-playwright | ✅ 412 / 412 (100.00%) | ⚠️ 410 / 412 (99.5%) — 1 new flake | ❌ 401 / 412 (97.3%) — 11 fail |
+| contract | ✅ 87 / 87 (100.00%) | ✅ 87 / 87 | ⚠️ 85 / 87 (97.7%) - 2 schema-drift |
+| e2e-playwright | ✅ 412 / 412 (100.00%) | ⚠️ 410 / 412 (99.5%) - 1 new flake | ❌ 401 / 412 (97.3%) - 11 fail |
 | perf-k6 | ⚠️ p95 = 312 ms (SLO 300 ms) | ✅ p95 = 287 ms | not-run |
 | a11y-axe | ✅ 0 violations | ✅ 0 violations | not-run |
 
@@ -85,10 +85,10 @@ Cells marked `not-run` did not produce an artifact in the window. Investigate wh
 
 ## Cells of concern
 
-- **`e2e-playwright × prod-canary` — FAIL** — 11/412 failed (97.3%; SLO 98.0%); 4 new since yesterday. Top-3: `cart.checkout.spec → submits coupon` (assertion); `auth.sso.spec → samlv2 round-trip` (30s timeout); `payments.refund.spec → partial refund` (precision). Hand off to [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md).
-- **`e2e-playwright × staging` — WARN** — 1 new flake. Hand off to [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md).
-- **`contract × prod-canary` — WARN** — 2 schema-drift fails. Hand off to [`contract-drift-investigator`](../../qa-contract-testing/agents/contract-drift-investigator.md).
-- **`perf-k6 × dev` — WARN** — p95 312ms > 300ms SLO; staging clean. Investigate dev-environment perf delta.
+- **`e2e-playwright × prod-canary` - FAIL** - 11/412 failed (97.3%; SLO 98.0%); 4 new since yesterday. Top-3: `cart.checkout.spec → submits coupon` (assertion); `auth.sso.spec → samlv2 round-trip` (30s timeout); `payments.refund.spec → partial refund` (precision). Hand off to [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md).
+- **`e2e-playwright × staging` - WARN** - 1 new flake. Hand off to [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md).
+- **`contract × prod-canary` - WARN** - 2 schema-drift fails. Hand off to [`contract-drift-investigator`](../../qa-contract-testing/agents/contract-drift-investigator.md).
+- **`perf-k6 × dev` - WARN** - p95 312ms > 300ms SLO; staging clean. Investigate dev-environment perf delta.
 
 ## Comparison to yesterday
 
@@ -104,7 +104,7 @@ Cells marked `not-run` did not produce an artifact in the window. Investigate wh
 
 - Classify any individual failure (defer to `failure-classifier`).
 - Open issues (out of scope; A2 produces the report, the team triages).
-- Drop / dismiss any `not-run` cell — they appear in the output to be investigated.
+- Drop / dismiss any `not-run` cell - they appear in the output to be investigated.
 ```
 
 ## Refuse-to-proceed rules

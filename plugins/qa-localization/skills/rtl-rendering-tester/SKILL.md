@@ -186,7 +186,7 @@ information when needed:
 ```typescript
 test('comment form sends direction with submission', async ({ page }) => {
   await page.goto('/post/123?lng=ar');
-  await page.getByLabel(/comment/i).fill('مرحبا — hello');
+  await page.getByLabel(/comment/i).fill('مرحبا - hello');
   // Listen for the form submission
   const responsePromise = page.waitForResponse('/api/comments');
   await page.getByRole('button', { name: /submit/i }).click();

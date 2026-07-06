@@ -127,7 +127,7 @@ The gate produces a markdown summary suitable for both `$GITHUB_STEP_SUMMARY`
 and Soda Cloud / Slack pipelines:
 
 ```markdown
-# Data Quality Gate — verdict: NO-GO
+# Data Quality Gate - verdict: NO-GO
 
 **Blockers: 2**
 
@@ -218,7 +218,7 @@ if soda_path.exists():
 blockers = [r for r in records if r["status"] == "fail" and r["severity"] == "error"]
 verdict = "no-go" if blockers else "go"
 
-print(f"# Data Quality Gate — verdict: {verdict.upper()}")
+print(f"# Data Quality Gate - verdict: {verdict.upper()}")
 print(f"\nBlockers: {len(blockers)}\n")
 for r in blockers:
     print(f"- {r['engine']} :: {r['subject']} :: {r['check_id']} ({r['failures']} failures)")
@@ -230,7 +230,7 @@ Wire into CI **after** every engine step has produced its artifact:
 
 ```yaml
 # .github/workflows/quality-gate.yml (excerpt)
-- run: dbt build || true                  # don't fail yet — let gate decide
+- run: dbt build || true                  # don't fail yet - let gate decide
 - run: python scripts/run_gx_gate.py || true
 - run: soda scan -d warehouse -c configuration.yml checks.yml > scan.log || true
 - run: python scripts/run_quality_gate.py

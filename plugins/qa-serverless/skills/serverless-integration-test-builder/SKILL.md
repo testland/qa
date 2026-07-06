@@ -208,7 +208,7 @@ Two-tier: local-fast tests on every PR; deploy + smoke on main.
 
 ## Gaps
 
-- `legacy-export` — no integration tests; on backlog.
+- `legacy-export` - no integration tests; on backlog.
 - Cold-start tests not feasible locally for any function (per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md)).
 
 ## How to add a new function

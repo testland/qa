@@ -196,7 +196,7 @@ A consumer module that calls a parser; the test verifies the
 expected call shape:
 
 ```c
-// consumer.h — under test
+// consumer.h - under test
 int consume(const char *raw);
 
 // consumer.c

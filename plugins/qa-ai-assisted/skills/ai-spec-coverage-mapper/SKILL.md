@@ -87,7 +87,7 @@ print(response.choices[0].message.content)
 | AC-1.1    | Valid promo applies discount               |   ✅ full | `promo.spec.ts > "applies WELCOME10"`              |
 | AC-1.2    | Expired promo shows error                   |   ✅ full | `promo.spec.ts > "shows error for EXPIRED50"`      |
 | AC-1.3    | Invalid format shows "Code not found"        |   ✅ full | `promo.spec.ts > "rejects NOTREAL"`                  |
-| AC-1.4    | Already-applied promo shows "Already applied" |   ⚠ partial | `promo.spec.ts > "rejects duplicate"`. ⚠ Test asserts "Already used" — message drift from AC. |
+| AC-1.4    | Already-applied promo shows "Already applied" |   ⚠ partial | `promo.spec.ts > "rejects duplicate"`. ⚠ Test asserts "Already used" - message drift from AC. |
 | AC-1.5    | Promo applies before tax                    |   ❌ none |                                                       |
 | AC-2.1    | Stripe webhook delivery retried              |   ✅ full | `webhook.spec.ts > "retries on 500"`               |
 | AC-2.2    | Stripe webhook delivery DLQ after 3 fails    |   ❌ none |                                                       |
@@ -126,7 +126,7 @@ jobs:
       - run: python scripts/ai-coverage.py
       - uses: peter-evans/create-issue-from-file@v5
         with:
-          title: 'Spec coverage report — week of ${{ github.event.repository.updated_at }}'
+          title: 'Spec coverage report - week of ${{ github.event.repository.updated_at }}'
           content-filepath: spec-coverage-report.md
 ```
 

@@ -121,7 +121,7 @@ def compute_diff(current, baseline):
             'line_now': line_now,    'line_delta':   delta(line_now, line_then),
             'branch_now': branch_now,'branch_delta': delta(branch_now, branch_then),
         })
-    # Also catch deletions — files in baseline but not current.
+    # Also catch deletions - files in baseline but not current.
     for path, b in base_idx.items():
         if path not in {f['path'] for f in current}:
             rows.append({'path': path, 'is_deleted': True, 'line_now': None, 'line_then': pct(b.get('lh', 0), b.get('lf', 0))})
@@ -150,7 +150,7 @@ per repo.
 ## Step 5 - Render the report
 
 ```markdown
-## Coverage diff — `<sha>` vs `main` `<base-sha>`
+## Coverage diff - `<sha>` vs `main` `<base-sha>`
 
 **Overall:** line 84.2% (-0.3pp) | branch 71.5% (-0.1pp)
 **Files changed:** 7 (3 regressed, 1 new, 2 improved, 1 deleted)
@@ -191,13 +191,13 @@ PR comment APIs render long markdown by default; the summary line
 sits at the top so the reviewer doesn't have to scroll:
 
 ```
-📉 Coverage 84.2% (-0.3pp) — 3 files regressed, 1 new file below threshold. See full report below.
+📉 Coverage 84.2% (-0.3pp) - 3 files regressed, 1 new file below threshold. See full report below.
 ```
 
 Or if all-clear:
 
 ```
-✅ Coverage 84.5% (+0.2pp) — no regressions, 2 files improved.
+✅ Coverage 84.5% (+0.2pp) - no regressions, 2 files improved.
 ```
 
 ## Step 7 - Post to the PR

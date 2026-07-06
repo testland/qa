@@ -136,7 +136,7 @@ Triage with `jq`:
 
 ```bash
 # Top violations by impact
-jq -r '.violations[] | "\(.impact): \(.id) — \(.description)"' axe-results.json
+jq -r '.violations[] | "\(.impact): \(.id) - \(.description)"' axe-results.json
 
 # Just the failing selectors per rule
 jq -r '.violations[] | "\(.id):", (.nodes[].target | tostring)' axe-results.json

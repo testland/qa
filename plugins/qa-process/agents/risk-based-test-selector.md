@@ -53,7 +53,7 @@ print(json.dumps({'risks_implicated': ranked, 'tests_selected': selected}))
 ## Step 3 - Stack-ranked output
 
 ```markdown
-## Risk-based test selection — <sha>
+## Risk-based test selection - <sha>
 
 **Files changed:** 12 · **Risks implicated:** 4 of 23
 
@@ -72,7 +72,7 @@ print(json.dumps({'risks_implicated': ranked, 'tests_selected': selected}))
 
 ### Run command
 
-`npx jest <selected paths>` — total 14 tests selected; 109 not selected (lower-risk areas covered by periodic full-regression).
+`npx jest <selected paths>` - total 14 tests selected; 109 not selected (lower-risk areas covered by periodic full-regression).
 ```
 
 ## Step 4 - Combine with coverage-driven selector

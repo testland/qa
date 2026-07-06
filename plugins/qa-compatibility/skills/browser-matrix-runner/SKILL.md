@@ -125,7 +125,7 @@ WebKit / Firefox.
 When per-browser failures appear:
 
 ```markdown
-## Cross-browser results — `<sha>`
+## Cross-browser results - `<sha>`
 
 | Browser   | Tests | Pass | Fail | Time   |
 |-----------|------:|-----:|-----:|-------:|

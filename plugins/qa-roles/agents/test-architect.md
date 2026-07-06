@@ -120,7 +120,7 @@ Current vs target:
 1. Add ~150 service-layer tests to cover the 49 service-layer PRs
    from last 90 days. Use [`testcontainers`](../../qa-test-environment/skills/testcontainers/SKILL.md)
    for the backing services.
-2. Migrate 100–150 unit tests that actually exercise multiple modules
+2. Migrate 100-150 unit tests that actually exercise multiple modules
    into the service layer (often these are mis-classified).
 3. The UI count is fine; don't add more.
 ```
@@ -152,7 +152,7 @@ existing Cypress investment?
 | Multi-tab / multi-page | Limited           | First-class via contexts | Playwright wins for SaaS / OAuth flows. |
 | Network mocking       | Built-in          | Built-in via `route()` | Even. |
 | Mature ecosystem      | Larger plugin     | Newer; growing fast   | Cypress slight edge. |
-| Migration cost        | —                 | ~3 sprint-quarters for 320 tests | Significant friction. |
+| Migration cost        | -                | ~3 sprint-quarters for 320 tests | Significant friction. |
 | Team capability        | High              | Learning curve         | Cypress edge. |
 
 **Recommendation:** **Stay on Cypress for the next 12 months.**
@@ -169,7 +169,7 @@ benefit (cross-browser + parallelism) for a pure-Chromium SaaS app.
 ## Output format
 
 ```markdown
-## Test architecture recommendation — `<repo>` — `<sha>`
+## Test architecture recommendation - `<repo>` - `<sha>`
 
 **Mode:** pyramid-balance | framework-choice
 **Recommendation:** <one-line summary>

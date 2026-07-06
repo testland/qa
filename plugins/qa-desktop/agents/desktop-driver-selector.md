@@ -82,7 +82,7 @@ Signals: `<requestedExecutionLevel level="requireAdministrator" />` in `app.mani
 Output template (Markdown, copyable to a decision record):
 
 ```markdown
-## Desktop driver recommendation — <project-name>
+## Desktop driver recommendation - <project-name>
 
 **App type detected:** <wpf | winforms | electron | qt | ...>
 **Signal:** <file path + line excerpt that drove the detection>

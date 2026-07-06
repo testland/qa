@@ -184,7 +184,7 @@ proptest! {
     }
 }
 
-// Invariant — sort produces sorted output
+// Invariant - sort produces sorted output
 proptest! {
     #[test]
     fn sorted_is_sorted(mut v in prop::collection::vec(any::<i32>(), 0..1000)) {
@@ -195,7 +195,7 @@ proptest! {
     }
 }
 
-// Equivalence — new impl matches old
+// Equivalence - new impl matches old
 proptest! {
     #[test]
     fn new_matches_old(input in any::<Input>()) {

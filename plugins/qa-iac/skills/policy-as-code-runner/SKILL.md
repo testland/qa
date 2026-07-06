@@ -132,7 +132,7 @@ deny[msg] {
     input[i].Cmd == "run"
     val := input[i].Value[0]
     contains(val, "apt-get upgrade")
-    msg := sprintf("Avoid 'apt-get upgrade' (line %d) — pin specific package versions", [i])
+    msg := sprintf("Avoid 'apt-get upgrade' (line %d) - pin specific package versions", [i])
 }
 ```
 

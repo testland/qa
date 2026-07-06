@@ -126,7 +126,7 @@ possible:
 Given I am a logged-in customer
 
 # vs (avoid):
-Given I have authenticated to the system   # NEW STEP — duplicates "I am a logged-in customer"
+Given I have authenticated to the system   # NEW STEP - duplicates "I am a logged-in customer"
 ```
 
 Before authoring a new step, search the library README.

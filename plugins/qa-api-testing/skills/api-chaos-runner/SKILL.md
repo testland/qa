@@ -173,7 +173,7 @@ the report stage.
 A successful chaos run produces a **resilience matrix** report:
 
 ```markdown
-## API Chaos Matrix — verdict: REVIEW
+## API Chaos Matrix - verdict: REVIEW
 
 | Scenario         | Control | Latency 1s | Bandwidth 10k | Timeout 5s | Reset peer |
 |------------------|:-------:|:----------:|:-------------:|:----------:|:----------:|

@@ -92,11 +92,11 @@ repeated `'a'`, or a Faker call seeded with `42`).
 For `username` with `min=3, max=30`:
 
 ```
-""           # length 0 — well below
-"a"          # length 1 — well below
-"aa"         # length 2 — min-1
-"aaa"        # length 3 — min
-"aaaa"       # length 4 — min+1
+""           # length 0 - well below
+"a"          # length 1 - well below
+"aa"         # length 2 - min-1
+"aaa"        # length 3 - min
+"aaaa"       # length 4 - min+1
 ... (string of length 29)    # max-1
 ... (string of length 30)    # max
 ... (string of length 31)    # max+1
@@ -114,12 +114,12 @@ Same six boundary points applied to count. For `items` with
 `min=1, max=50`:
 
 ```
-[]                                   # count 0 — below
-[item_1]                              # count 1 — min
-[item_1, item_2]                       # count 2 — min+1
-[... 49 items]                        # count 49 — max-1
-[... 50 items]                        # count 50 — max
-[... 51 items]                        # count 51 — above
+[]                                   # count 0 - below
+[item_1]                              # count 1 - min
+[item_1, item_2]                       # count 2 - min+1
+[... 49 items]                        # count 49 - max-1
+[... 50 items]                        # count 50 - max
+[... 51 items]                        # count 51 - above
 ```
 
 Item shape comes from the matching factory (Faker / mimesis /

@@ -135,9 +135,9 @@ We officially support:
 - Samsung Internet
 
 ## Unsupported
-- Internet Explorer 11 — last supported v1.4.0 (EOL 2025-12-31).
-- Chrome < version 100 — security vulnerabilities; not supported.
-- Older mobile OSes — see mobile platform support table.
+- Internet Explorer 11 - last supported v1.4.0 (EOL 2025-12-31).
+- Chrome < version 100 - security vulnerabilities; not supported.
+- Older mobile OSes - see mobile platform support table.
 
 If you experience an issue on a Tier 3 or unsupported configuration,
 please open an issue but understand the priority is lower.

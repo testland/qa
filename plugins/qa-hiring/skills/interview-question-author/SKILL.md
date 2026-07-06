@@ -56,9 +56,9 @@ The mix is configurable; the table is the default. Behavioral count grows with s
 For each slot, the skill emits one question with the metadata reviewers need:
 
 ```markdown
-### Q3 — Behavioral (STAR) | Senior | Bloom: K3 (Apply)
+### Q3 - Behavioral (STAR) | Senior | Bloom: K3 (Apply)
 
-**Question:** Tell me about a release where you caught a critical defect late — after the test cycle but before production. Walk me through the situation, what your role was, what you did, and what the team learned.
+**Question:** Tell me about a release where you caught a critical defect late - after the test cycle but before production. Walk me through the situation, what your role was, what you did, and what the team learned.
 
 **ISTQB competency:** Defect management (defect → failure distinction, escape-defect lifecycle).
 **STAR cues:** Listen for: (S) the release context, (T) the candidate's specific responsibility, (A) the diagnostic and communication actions taken, (R) measurable outcomes + retro learnings.
@@ -101,7 +101,7 @@ The output is a single markdown document with:
 4. **Hand-off block**:
 
 ```markdown
-## HAND-OFF — required next steps
+## HAND-OFF - required next steps
 
 1. Pair with `hiring-rubric-author` to produce the per-question scoring rubric. The rubric and the questions must travel together; otherwise the loop reverts to unstructured.
 2. Pair with `calibration-guide-author` after the rubric exists; the calibration guide is what brings interviewer scoring into agreement.

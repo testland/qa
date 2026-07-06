@@ -85,9 +85,9 @@ mull-runner-19 build/tests/MyTests
 Output:
 
 ```
-[killed]   src/cart.cpp:42 — Conditional Boundary
-[survived] src/cart.cpp:78 — Arithmetic Operator Replacement
-[survived] src/cart.cpp:103 — Statement Removal
+[killed]   src/cart.cpp:42 - Conditional Boundary
+[survived] src/cart.cpp:78 - Arithmetic Operator Replacement
+[survived] src/cart.cpp:103 - Statement Removal
 
 Mutants killed: 87 (74.4%)
 Mutants survived: 30

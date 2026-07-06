@@ -15,7 +15,7 @@ Inputs (the agent halts if a required input is missing):
 
 | Input | Required | Notes |
 |---|---|---|
-| Failing test name | yes | Fully qualified (`tests/checkout.spec.ts:42 — totals match`). |
+| Failing test name | yes | Fully qualified (`tests/checkout.spec.ts:42 - totals match`). |
 | stderr / test-output capture | yes | The runner's captured stdout+stderr for this failing run. If absent: refuse and ask the user to run `npm test` / `pytest` / `go test` / `dotnet test` and paste the output. |
 | Path to the failing test source | yes | So the agent can read the assertion / setup. |
 | Last-known-good ref | preferred | A git ref (commit / tag / branch) where this same test last passed. Without it, Step 2 falls back to `git log <test-file>` over the last 14 days. |
@@ -68,11 +68,11 @@ Emit a single markdown block:
 
 <one paragraph naming the test, the production change observed in the diff, and how that change causes the failure mode in Step 1. Quote the assertion or stderr line verbatim.>
 
-## Proposed fix (read-only — apply manually)
+## Proposed fix (read-only - apply manually)
 
 **File:** `<path>:<line>`
 **Change:** <one-line diff suggestion, e.g., "guard `order.items?.[0]?.amount ?? 0`" or "update selector from `data-test` to `data-testid`">
-**Why minimal:** <one line — why this change is the smallest that restores green without rewriting the test>
+**Why minimal:** <one line - why this change is the smallest that restores green without rewriting the test>
 
 ## Verification step
 

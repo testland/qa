@@ -68,7 +68,7 @@ as **tooling gap** with an observability recommendation, not a new test.
 ## Output format
 
 Generate `docs/escape-defects/<YYYY-MM-DD>-<slug>.md` with these
-required sections: `# Escape defect — <summary>`; a header block
+required sections: `# Escape defect - <summary>`; a header block
 (**Bug ID**, **First production observation**, **Days in production
 before fix**, **Customers affected (estimated)**, **Fix commit**,
 **Escape category**, **Sub-pattern**); `## What happened` (2-3

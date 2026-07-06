@@ -54,7 +54,7 @@ A feature that appears prominently in the defect tracker is **not in the matrix 
 The output is a fixed-shape markdown report. Every recommendation cites the underlying data - practitioner-trust deficit at the decision-support layer means recommendations without traceable evidence are worse than no recommendations:
 
 ```markdown
-# Risk-matrix calibration — 2026-Q2 (window: 2026-02-01..2026-04-30)
+# Risk-matrix calibration - 2026-Q2 (window: 2026-02-01..2026-04-30)
 
 ## Summary
 
@@ -65,7 +65,7 @@ The output is a fixed-shape markdown report. Every recommendation cites the unde
 
 ## Divergences
 
-### `inventory-cache` — under-stated (recommend raise: 2×3 → 4×4, score 6 → 16)
+### `inventory-cache` - under-stated (recommend raise: 2×3 → 4×4, score 6 → 16)
 
 | Dimension | Matrix | Observed | Source |
 |---|---|---|---|
@@ -78,7 +78,7 @@ The output is a fixed-shape markdown report. Every recommendation cites the unde
 
 **What this agent did NOT do:** modify the matrix; trigger any test-selection re-run; open issues against the feature. Those are decisions for the risk-matrix owner.
 
-### `payments-provider-fallback` — over-stated (recommend lower: 4×5 → 1×4, score 20 → 4)
+### `payments-provider-fallback` - over-stated (recommend lower: 4×5 → 1×4, score 20 → 4)
 
 (table)
 
@@ -86,7 +86,7 @@ The output is a fixed-shape markdown report. Every recommendation cites the unde
 
 ## Candidate new matrix entries
 
-### `notifications-webhook-retry` — not in matrix
+### `notifications-webhook-retry` - not in matrix
 
 | Signal | Value | Source |
 |---|---|---|
@@ -95,7 +95,7 @@ The output is a fixed-shape markdown report. Every recommendation cites the unde
 | Severity distribution | 3 P1, 2 P2, 3 P3 | tracker |
 | Code churn | 23 commits | `git log services/notifications/webhook/` |
 
-**Recommended starting score:** likelihood 3, impact 4 (12). The matrix owner should validate the impact-4 — escape rate is high but the user-visible impact of a missed webhook depends on subscriber retry policies that are out of this agent's scope.
+**Recommended starting score:** likelihood 3, impact 4 (12). The matrix owner should validate the impact-4 - escape rate is high but the user-visible impact of a missed webhook depends on subscriber retry policies that are out of this agent's scope.
 
 ## What this agent did NOT do
 

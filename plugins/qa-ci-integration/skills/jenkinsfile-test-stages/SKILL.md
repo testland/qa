@@ -163,7 +163,7 @@ pipeline {
 
     post {
         always {
-            // Always run — even on failure
+            // Always run - even on failure
             junit 'reports/junit/*.xml'
             archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
         }

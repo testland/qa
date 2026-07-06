@@ -14,8 +14,10 @@ Lint rules (anti-pattern guard):
   - Command files must have a non-empty body
   - All plugin.json + marketplace.json files parse as valid JSON
 
+Blocking:
+  - No em/en dashes in prose (outside code); use a spaced hyphen ' - '
+
 Advisory (WARN only, never changes the exit code):
-  - No em/en dashes in prose (outside code) — use a spaced hyphen ' - '
   - Inline code holds literal tokens, not whole prose sentences
 
 Note: persona-shaped scopes (qa-expert-style names without a trigger
@@ -87,7 +89,7 @@ def warn(file: str, reason: str, warn_holder: list[int]) -> None:
     warn_holder[0] += 1
 
 
-def check_prose_style(file: str, warn_holder: list[int]) -> None:
+def check_prose_style(file: str, exit_holder: list[int], warn_holder: list[int]) -> None:
     """Advisory style guard for the conventions in docs/PLUGIN_AUTHORING.md:
 
       - No em/en dashes in prose (use a spaced hyphen ' - ' or rewrite).
@@ -126,11 +128,11 @@ def check_prose_style(file: str, warn_holder: list[int]) -> None:
                 sentence_spans.append((lineno, inner[:48]))
 
     if dash_count:
-        warn(
+        fail(
             file,
             f"{dash_count} em/en dash(es) in prose (first at line {dash_first}); "
-            "use a spaced hyphen ' - ' or rewrite (docs/PLUGIN_AUTHORING.md §Prose style)",
-            warn_holder,
+            "use a spaced hyphen ' - ' or rewrite (docs/PLUGIN_AUTHORING.md Prose style)",
+            exit_holder,
         )
     for lineno, snippet in sentence_spans:
         warn(
@@ -264,7 +266,7 @@ def main() -> int:
     for f in iter_components(root):
         check_yaml_frontmatter(f, exit_holder)
         check_no_placeholders(f, exit_holder)
-        check_prose_style(f, warn_holder)
+        check_prose_style(f, exit_holder, warn_holder)
 
     for f in iter_commands(root):
         check_empty_command_body(f, exit_holder)

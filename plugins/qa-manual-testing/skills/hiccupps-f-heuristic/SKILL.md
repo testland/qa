@@ -172,7 +172,7 @@ Walk HICCUPPS-F:
   **Internal consistency broken.**
 - Purpose: Promo feature exists to encourage purchase; mismatched
   totals erode trust. **Purpose undermined.**
-- S (Standards): Statutory? Possibly — depends on locale (some
+- S (Standards): Statutory? Possibly - depends on locale (some
   jurisdictions require receipts to match displayed totals).
 - F (Familiar problems): Rounding-order bug; classic off-by-cent
   pattern. **Known bug class.**

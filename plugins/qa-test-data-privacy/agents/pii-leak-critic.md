@@ -46,7 +46,7 @@ analyzer = AnalyzerEngine()
 hits = analyzer.analyze(
     text=row_text,
     language="en",
-    score_threshold=0.4,  # aggressive — lower threshold than pipeline default
+    score_threshold=0.4,  # aggressive - lower threshold than pipeline default
 )
 ```
 
@@ -103,13 +103,13 @@ PASS if:
 ## Step 6 - Report
 
 ```markdown
-## PII leak audit — `<pipeline-spec-version>` on `<sample-id>`
+## PII leak audit - `<pipeline-spec-version>` on `<sample-id>`
 
 **Sample size:** 1 000 rows
 **Detector:** Presidio analyzer v2.2, threshold 0.4
 **Pipeline output classification:** pseudonymised (GDPR scope)
 
-**Verdict:** ❌ BLOCK — 3 critical, 7 high
+**Verdict:** ❌ BLOCK - 3 critical, 7 high
 
 ### Critical (CPRA SPI / GDPR Art. 9 / HIPAA Safe Harbor)
 
@@ -120,7 +120,7 @@ PASS if:
 | 901 | `notes` (passthrough) | EMAIL_ADDRESS | `a***@a***.com` | GDPR / CPRA / HIPAA #6 |
 
 **Root cause:** `notes` and `support_message` were not declared as
-free-text columns in the pipeline spec — Presidio detector wasn't
+free-text columns in the pipeline spec - Presidio detector wasn't
 applied.
 
 ### High (direct identifiers in mismatched columns)
@@ -130,7 +130,7 @@ applied.
 ### Pipeline-spec gaps
 
 - Columns `notes`, `support_message` lack `free_text_columns:`
-  entries — fix:
+  entries - fix:
 
   ```yaml
   free_text_columns: [notes, support_message]

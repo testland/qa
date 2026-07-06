@@ -118,7 +118,7 @@ def main() -> int:
     lines.append("# Catalog")
     lines.append("")
     lines.append("Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.")
-    lines.append("Do not edit by hand — run `make catalog` (or `python3 scripts/generate-catalog.py`).")
+    lines.append("Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).")
     lines.append("")
     total_plugins = len(plugins)
     total_components = sum(p["skill_count"] + p["agent_count"]

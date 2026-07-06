@@ -85,7 +85,7 @@ this by omitting any `expect` call.
 import { type Page } from "@playwright/test";
 
 export abstract class BasePage {
-  // Raw page is protected, not public — callers use typed action methods.
+  // Raw page is protected, not public - callers use typed action methods.
   // Per [fowler-po]: hide UI mechanics behind an app-specific API.
   protected constructor(protected readonly page: Page) {}
 
@@ -109,7 +109,7 @@ export class HomePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    // Locators captured once in constructor — single place to update selectors
+    // Locators captured once in constructor - single place to update selectors
     this.heading = page.locator("h1").first();
   }
 
@@ -248,7 +248,7 @@ describe("home page", () => {
 CI uses the official [cypress-io/github-action][cya] (installs deps + runs Cypress):
 
 ```yaml
-# .github/workflows/e2e.yml — runner: cypress
+# .github/workflows/e2e.yml - runner: cypress
 on: [push, pull_request]
 jobs:
   test:
@@ -266,15 +266,15 @@ jobs:
 The agent emits a summary of every file written:
 
 ```markdown
-## Harness scaffold — <repo> — <stack> + <runner>
+## Harness scaffold - <repo> - <stack> + <runner>
 
 ### Files written
-- `playwright.config.ts` — runner config with CI flags and webServer
-- `tests/pages/BasePage.ts` — abstract page-object base
-- `tests/pages/HomePage.ts` — example concrete page object
-- `tests/fixtures/base.ts` — extended fixture wiring page objects
-- `tests/e2e/smoke/home.spec.ts` — smoke test (1 test)
-- `.github/workflows/e2e.yml` — CI job
+- `playwright.config.ts` - runner config with CI flags and webServer
+- `tests/pages/BasePage.ts` - abstract page-object base
+- `tests/pages/HomePage.ts` - example concrete page object
+- `tests/fixtures/base.ts` - extended fixture wiring page objects
+- `tests/e2e/smoke/home.spec.ts` - smoke test (1 test)
+- `.github/workflows/e2e.yml` - CI job
 
 ### Next step
 Run `npx playwright install --with-deps chromium` then `npx playwright test`.

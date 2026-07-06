@@ -34,7 +34,7 @@ directly. Bug bashes are the multi-tester / scaled version.
 ## Step 1 - Pre-bash kit (1 week before)
 
 ```markdown
-# Bug bash — `<release / feature / area>`
+# Bug bash - `<release / feature / area>`
 
 **Date:** YYYY-MM-DD
 **Time:** 14:00-15:30 (90 min)
@@ -51,15 +51,15 @@ checkout flow before the release on YYYY-MM-DD.
 
 Per cohort, 1-2 testers + 1 facilitator-roving:
 
-- **Cohort A — Money:** Apply the [Money tour](../exploratory-tours-reference/SKILL.md)
+- **Cohort A - Money:** Apply the [Money tour](../exploratory-tours-reference/SKILL.md)
   across the new checkout discount + tax flow.
-- **Cohort B — Bad data:** Apply the [Bad-data tour](../exploratory-tours-reference/SKILL.md)
+- **Cohort B - Bad data:** Apply the [Bad-data tour](../exploratory-tours-reference/SKILL.md)
   across promo code input, address fields, payment fields.
-- **Cohort C — Configuration:** Vary user state (new vs existing
+- **Cohort C - Configuration:** Vary user state (new vs existing
   account, EU vs US user, mobile vs desktop) and re-run hero flows.
-- **Cohort D — Landmark:** Walk the canonical hero flow (search →
+- **Cohort D - Landmark:** Walk the canonical hero flow (search →
   add to cart → checkout → confirmation) under various conditions.
-- **Cohort E — Garbage collector:** Visit every page in the
+- **Cohort E - Garbage collector:** Visit every page in the
   checkout funnel; flag 404s, broken images, stale strings.
 
 ## Test data prep (do BEFORE the bash)
@@ -148,7 +148,7 @@ testers to go beyond the obvious.
 Within 24 hours, the facilitator + note-taker produce:
 
 ```markdown
-## Bug bash debrief — `<release>`
+## Bug bash debrief - `<release>`
 
 **Date:** YYYY-MM-DD
 **Participants:** N (across 5 cohorts)
@@ -177,7 +177,7 @@ Within 24 hours, the facilitator + note-taker produce:
 | Cohort | Findings | Points | Top finder |
 |--------|---------:|-------:|------------|
 | A      |       12 |     34 | Alice (BUG-987 high + 2 cluster lead bonuses) |
-| B      |        9 |     27 | Bob (SQL injection — high + novelty) |
+| B      |        9 |     27 | Bob (SQL injection - high + novelty) |
 | ...    |          |        |            |
 
 ### Process retrospective
@@ -200,7 +200,7 @@ Team members who can't attend live get a **mini-charter** to run
 solo within the same week:
 
 ```markdown
-# Async bug bash mini-charter — `<release>` (cohort: pick one)
+# Async bug bash mini-charter - `<release>` (cohort: pick one)
 
 You missed the live bash; here's the 30-min version. Pick a
 cohort that wasn't done yet (or revisit one with a new lens).

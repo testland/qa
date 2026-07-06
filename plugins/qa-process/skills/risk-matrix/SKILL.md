@@ -45,7 +45,7 @@ specialized expertise.
 ## Step 2 - Lightweight matrix structure
 
 ```markdown
-# Risk matrix — `<feature/release>`
+# Risk matrix - `<feature/release>`
 
 **Date:** YYYY-MM-DD   **Owner:** _______________   **Reviewers:** _______________
 

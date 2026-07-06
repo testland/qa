@@ -15,7 +15,7 @@ Inputs (the agent halts if a required input is missing):
 
 | Input | Source | Required |
 |---|---|---|
-| **Test identity** | Fully qualified test name (`tests/cart.spec.ts:42 — adds an item`) | yes |
+| **Test identity** | Fully qualified test name (`tests/cart.spec.ts:42 - adds an item`) | yes |
 | **Failure log** | The test runner's output for this run (stdout + stderr) | yes |
 | **Stack trace** | If captured (Playwright trace.stacks, Jest fail output, pytest traceback) | preferred |
 | **7-day pass/fail history** | JUnit XML / vendor JSON / Buildkite-Datadog-CircleCI-GitHub-Actions API export | yes |
@@ -89,7 +89,7 @@ If none of R1 - R5 match, classify as `flake-of-unknown-cause`. The agent emits 
 Output is a fixed-shape markdown block:
 
 ```markdown
-## Failure classification — `<test-id>`
+## Failure classification - `<test-id>`
 
 **Verdict:** defect
 
@@ -98,7 +98,7 @@ Output is a fixed-shape markdown block:
 **Evidence:**
 - Test was green for the last 12 consecutive runs before this failure (R2: clean prior history). 
 - Files in the test's call graph changed in `e3a91f4..HEAD`: `src/cart/addItem.ts` (modified `validateQty()`).
-- Failure mode: `expect(cart.count).toBe(1)` — assertion-fail, not timeout, not network.
+- Failure mode: `expect(cart.count).toBe(1)` - assertion-fail, not timeout, not network.
 - Re-run of the failing commit (`e3a91f4`) reproduced the failure.
 
 **Recommended next step:**
@@ -108,9 +108,9 @@ Output is a fixed-shape markdown block:
 4. File against the team that owns `src/cart/`.
 
 **Not classified as:**
-- `flaky-known` — test is not in the quarantine list.
-- `environment-drift` — runner image and container tag unchanged in the failure window.
-- `timeout` / `flaky-pre-incident` — failure mode is assertion-fail, not timing-edge or intermittent.
+- `flaky-known` - test is not in the quarantine list.
+- `environment-drift` - runner image and container tag unchanged in the failure window.
+- `timeout` / `flaky-pre-incident` - failure mode is assertion-fail, not timing-edge or intermittent.
 
 **What this agent did NOT do:**
 - Open the issue (out of scope; read-only by design).
@@ -121,7 +121,7 @@ Output is a fixed-shape markdown block:
 Or, for a flaky verdict:
 
 ```markdown
-## Failure classification — `<test-id>`
+## Failure classification - `<test-id>`
 
 **Verdict:** flaky-pre-incident
 
@@ -130,7 +130,7 @@ Or, for a flaky verdict:
 **Evidence:**
 - This test failed 3 of the last 50 runs (6%). No prior runs with this failure mode in the 30 days before that.
 - No code changed in the test's call graph in 14 days.
-- Failure mode is `expect(...).toBeVisible()` async wait timing out at 5s — async-wait pattern.
+- Failure mode is `expect(...).toBeVisible()` async wait timing out at 5s - async-wait pattern.
 
 **Recommended next step:**
 1. Hand to `ai-flake-detector` (qa-flake-triage) for full pattern attribution.

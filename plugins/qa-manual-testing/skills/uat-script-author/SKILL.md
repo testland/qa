@@ -70,7 +70,7 @@ tasks users will perform" - UAT depth, not breadth.
 ## Step 2 - Format
 
 ```markdown
-# UAT-001 — New customer first-order flow
+# UAT-001 - New customer first-order flow
 
 **Customer / Stakeholder:** ____________________
 **Tester:** ____________________   **Date:** ____________________

@@ -106,12 +106,12 @@ For native menus, file dialogs, and system tray, recommend the [`electron-playwr
 ### Step 5 - Emit the change summary
 
 ```markdown
-## desktop-test-author — change summary
+## desktop-test-author - change summary
 **Spec:** <one-line summary> **Driver:** <flaui | ...> **Framework:** <xunit | ...>
 ### Files
 - **New:** tests/<App>.UiTests/Tests/LoginTests.cs (1 test method)
 - **Modified:** tests/<App>.UiTests/Screens/LoginScreen.cs (+N properties)
-### CONFIRM markers added (provisional AutomationIds — verify via FlaUInspect)
+### CONFIRM markers added (provisional AutomationIds - verify via FlaUInspect)
 ### Next steps: confirm AutomationIds; run `dotnet test --filter "LoginTests.Logs_in_with_valid_credentials"`; remove CONFIRM markers if green.
 ```
 

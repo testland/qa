@@ -148,7 +148,7 @@ so reviewers know the basis.
 Emit a single markdown file: `docs/quality-digest/<YYYY-MM-DD>.md`.
 
 ```markdown
-# Quality digest — <YYYY-MM-DD> — <repo>
+# Quality digest - <YYYY-MM-DD> - <repo>
 
 **Window:** <start> to <end>  |  **Threshold basis:** <file or "defaults">
 
@@ -157,7 +157,7 @@ Emit a single markdown file: `docs/quality-digest/<YYYY-MM-DD>.md`.
 | Area | Status | Metric | Trend |
 |---|---|---|---|
 | CI pass rate | 🟢 GREEN | 94% | +2 pp vs prior week |
-| Escape defects | 🟡 AMBER | 1 escape | — |
+| Escape defects | 🟡 AMBER | 1 escape | - |
 | Flake debt | 🔴 RED | 5 stale + 2 new flakes | +3 entries |
 
 ## CI pass rate
@@ -192,7 +192,7 @@ _(Partial - full DORA computation requires commit-timestamp + incident data)_
 
 ## Top risks
 
-1. <risk> — area: <area> — owner: <team>
+1. <risk> - area: <area> - owner: <team>
 2. ...
 
 ## Open items

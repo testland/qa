@@ -180,39 +180,39 @@ differ across these layers.
 ```markdown
 **System:** Checkout flow (cart → payment → confirmation)
 
-**F — Format:** Cart JSON; payment-intent JSON (Stripe); webhook
+**F - Format:** Cart JSON; payment-intent JSON (Stripe); webhook
 HTTP/JSON; receipt PDF; order email HTML.
 
-**C — Constraints:** Cart total > $0.01; max 100 items; promo
+**C - Constraints:** Cart total > $0.01; max 100 items; promo
 expiry; tax-jurisdiction rules per locale; PCI scope for card
 data.
 
-**C — Connections:** Stripe (payment intent + webhook); SendGrid
+**C - Connections:** Stripe (payment intent + webhook); SendGrid
 (receipt email); inventory service (stock-lock); tax service
 (Avalara); identity service (auth).
 
-**C — Coverage:** Standard checkout; gift-card checkout; subscription
+**C - Coverage:** Standard checkout; gift-card checkout; subscription
 checkout; bulk-B2B checkout. NOT covered: split-tender, multi-currency
 within one cart.
 
-**U — Users:** Anonymous, free, paid, B2B admin, partner-integration.
+**U - Users:** Anonymous, free, paid, B2B admin, partner-integration.
 
-**T — Tasks:** "Buy this item", "Apply my promo", "Use my saved
+**T - Tasks:** "Buy this item", "Apply my promo", "Use my saved
 card", "Get a receipt for expenses".
 
-**S — Sequences:** Add → cart → checkout → pay → confirm; resume
+**S - Sequences:** Add → cart → checkout → pay → confirm; resume
 abandoned cart; refund flow.
 
-**V — Variables:** `feature-new-checkout`, `max-cart-items`, `tax-fallback-rate`,
+**V - Variables:** `feature-new-checkout`, `max-cart-items`, `tax-fallback-rate`,
 `stripe-timeout-ms`.
 
-**I — Inputs:** Cart contents (user input); promo code (user input);
+**I - Inputs:** Cart contents (user input); promo code (user input);
 payment method (user input); shipping address (user input).
 
-**D — Data:** Order record; payment record; tax record; promo-usage
+**D - Data:** Order record; payment record; tax record; promo-usage
 record; inventory deduction.
 
-**S — Storage:** Orders in Postgres; payments in Stripe (external);
+**S - Storage:** Orders in Postgres; payments in Stripe (external);
 cart in Redis (TTL 24h); receipts in S3 (immutable).
 ```
 

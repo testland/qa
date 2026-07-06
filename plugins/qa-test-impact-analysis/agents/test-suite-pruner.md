@@ -180,7 +180,7 @@ test that imported it broken or skipped.
 ## Output format
 
 ```markdown
-## Test suite pruning report — `<repo>`
+## Test suite pruning report - `<repo>`
 
 **Tests inspected:** N
 **Candidates flagged:** M

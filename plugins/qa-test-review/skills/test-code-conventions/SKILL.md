@@ -68,7 +68,7 @@ contents[0].sku = '...') are one logical assertion.
 Splitting:
 
 ```typescript
-// Bad — three logical assertions
+// Bad - three logical assertions
 test('addItem updates cart', () => {
   cart.addItem(...);
   expect(cart.itemCount).toBe(1);          // assertion 1
@@ -76,7 +76,7 @@ test('addItem updates cart', () => {
   expect(cart.lastUpdated).toBeGreaterThan(t0);  // assertion 3 (different property)
 });
 
-// Good — three tests, each assertion isolated
+// Good - three tests, each assertion isolated
 test('addItem increments count', () => { /* ... */ });
 test('addItem updates totalPrice', () => { /* ... */ });
 test('addItem updates lastUpdated', () => { /* ... */ });
@@ -252,10 +252,10 @@ rather than web-first assertions like `toBeVisible()` that wait for
 conditions to be met."
 
 ```typescript
-// Bad — race condition
+// Bad - race condition
 expect(page.locator('.toast').isVisible()).toBe(true);
 
-// Good — auto-waits
+// Good - auto-waits
 await expect(page.locator('.toast')).toBeVisible();
 ```
 

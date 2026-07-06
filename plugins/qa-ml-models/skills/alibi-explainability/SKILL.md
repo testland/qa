@@ -51,7 +51,7 @@ Per the [Alibi Explain docs]:
 Every Alibi explainer follows the same pattern:
 
 ```python
-explainer.fit(X_train)        # Some explainers — preparation phase
+explainer.fit(X_train)        # Some explainers - preparation phase
 explanation = explainer.explain(instance)
 print(explanation.data)       # Per-explainer schema
 ```

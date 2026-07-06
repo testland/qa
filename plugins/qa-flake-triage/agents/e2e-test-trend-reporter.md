@@ -36,7 +36,7 @@ A trend reporter that produces a stable, comparable weekly view of test-suite he
 ## Output format
 
 ```markdown
-# Test Suite Trend Report — week of <YYYY-MM-DD>
+# Test Suite Trend Report - week of <YYYY-MM-DD>
 
 **Reporting window:** YYYY-MM-DD to YYYY-MM-DD · **Comparison window:** prior 7 days
 
@@ -60,12 +60,12 @@ A trend reporter that produces a stable, comparable weekly view of test-suite he
 
 ## Notes
 
-- **Flakiness up 0.7 pp** — `checkout.spec.ts:42` started flaking on tablet-768 viewport.
-- **Suite duration up 6.7%** — accounted for by 3 new `dashboard.spec.ts` tests.
+- **Flakiness up 0.7 pp** - `checkout.spec.ts:42` started flaking on tablet-768 viewport.
+- **Suite duration up 6.7%** - accounted for by 3 new `dashboard.spec.ts` tests.
 
 ## Suggested follow-ups
 
-1. Hand `tests/checkout.spec.ts:42` to [`e2e-flake-bisector`](./e2e-flake-bisector.md) — flakiness trend (↑↑) is the strongest signal of the week.
+1. Hand `tests/checkout.spec.ts:42` to [`e2e-flake-bisector`](./e2e-flake-bisector.md) - flakiness trend (↑↑) is the strongest signal of the week.
 2. Review the 14 quarantined tests against the two-renewal cap from [`flaky-test-quarantine`](../skills/flaky-test-quarantine/SKILL.md).
 ```
 

@@ -83,8 +83,8 @@ WARN findings: T1_OVERSIZE, MISSING_REAL_DEVICE.
 ### Verdict line
 
 ```
-BLOCK  — N blocking finding(s). Fix before relying on this matrix.
-PASS   — 0 blocking findings. N warning(s) noted for team review.
+BLOCK - N blocking finding(s). Fix before relying on this matrix.
+PASS  - 0 blocking findings. N warning(s) noted for team review.
 ```
 
 ## Refuse-to-proceed rules

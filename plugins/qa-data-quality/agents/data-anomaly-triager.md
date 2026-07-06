@@ -45,7 +45,7 @@ distribution.
 ## Output format
 
 ```markdown
-## Data Anomaly — `<check_id>` (verdict: <category>)
+## Data Anomaly - `<check_id>` (verdict: <category>)
 
 - **Engine:** dbt | gx | soda
 - **Subject:** <dataset>.<column>
@@ -86,7 +86,7 @@ Input - failing entry from `target/run_results.json`:
 Output:
 
 ```markdown
-## Data Anomaly — `test.shop.not_null_customers_email` (verdict: missing)
+## Data Anomaly - `test.shop.not_null_customers_email` (verdict: missing)
 
 - **Engine:** dbt
 - **Subject:** customers.email
@@ -102,7 +102,7 @@ ingestion gap rather than systemic drift.
 
 ### Recommended next step
 
-1. Inspect the upstream extractor for the customers source — likely a
+1. Inspect the upstream extractor for the customers source - likely a
    schema change at the source dropped the `email` column for a subset
    of records.
 2. Optionally: relax the dbt test to `severity: warn` for one cycle
@@ -134,7 +134,7 @@ Input - failing GX result:
 Output:
 
 ```markdown
-## Data Anomaly — `gx.expect_column_values_to_be_between::discount_pct` (verdict: drift)
+## Data Anomaly - `gx.expect_column_values_to_be_between::discount_pct` (verdict: drift)
 
 - **Engine:** gx
 - **Subject:** orders.discount_pct
@@ -145,12 +145,12 @@ Output:
 
 ### Why this category
 
-`expect_column_values_to_be_between` violated on >10% of rows — the scale
+`expect_column_values_to_be_between` violated on >10% of rows - the scale
 indicates a systemic shift, not a single bad record.
 
 ### Recommended next step
 
-1. Loop in the data-product owner for `orders` — the discount business
+1. Loop in the data-product owner for `orders` - the discount business
    rule may have changed (e.g. promotional 110% discount campaign).
 2. Inspect the unexpected-values list (set `result_format: COMPLETE` per
    GX docs) to confirm the new distribution before relaxing the check.

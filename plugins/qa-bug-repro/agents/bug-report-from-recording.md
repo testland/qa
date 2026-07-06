@@ -59,7 +59,7 @@ The agent fills the eight fields the [`bug-report-template`](../skills/bug-repor
 ## Step 4 - Emit the report
 
 ```markdown
-## Bug report — `<test-or-session-id>`
+## Bug report - `<test-or-session-id>`
 
 **Summary:** Add-to-cart fails with 409 conflict for in-stock SKU `SKU-001` on `cart.example.com`.
 
@@ -89,9 +89,9 @@ The agent fills the eight fields the [`bug-report-template`](../skills/bug-repor
 **Reproducibility:** Once (per this recording). Trace recorded with retries=2; both attempts failed identically.
 
 **Evidence attached:**
-- `trace.zip` — the original Playwright trace.
-- `screenshot.jpeg` — frame at `t=2147ms`, last successful state before the failing action.
-- `network.har` — extracted from the trace; filtered to the `/api/cart/items` request and its dependencies.
+- `trace.zip` - the original Playwright trace.
+- `screenshot.jpeg` - frame at `t=2147ms`, last successful state before the failing action.
+- `network.har` - extracted from the trace; filtered to the `/api/cart/items` request and its dependencies.
 
 **Hypothesis (optional, [tester-supplied]):** Stock cache may be stale relative to the inventory service. Worth checking the cache TTL on the product-page endpoint.
 ```

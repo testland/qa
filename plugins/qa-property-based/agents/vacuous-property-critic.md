@@ -59,7 +59,7 @@ Verdict is BLOCK if any BLOCK-severity finding exists; otherwise PASS.
 ## Output format
 
 ```
-## Vacuous-property audit — <file or glob>
+## Vacuous-property audit - <file or glob>
 
 **Verdict:** BLOCK | PASS
 **Files scanned:** N

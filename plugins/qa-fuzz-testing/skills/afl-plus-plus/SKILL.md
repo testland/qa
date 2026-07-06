@@ -103,10 +103,10 @@ Per AFL++ README:
 ### Parallel fuzzing
 
 ```bash
-# Terminal 1 — master
+# Terminal 1 - master
 afl-fuzz -i seeds/ -o output/ -M main -- ./target @@
 
-# Terminals 2..N — slaves
+# Terminals 2..N - slaves
 afl-fuzz -i seeds/ -o output/ -S slave1 -- ./target @@
 afl-fuzz -i seeds/ -o output/ -S slave2 -- ./target @@
 ```

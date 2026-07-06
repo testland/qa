@@ -141,7 +141,7 @@ braintree.dropin.create({
 }, (err, instance) => {
   // ...
   instance.requestPaymentMethod((err, payload) => {
-    // payload.nonce — send to server
+    // payload.nonce - send to server
     fetch('/api/checkout', { method: 'POST', body: JSON.stringify({ nonce: payload.nonce }) });
   });
 });

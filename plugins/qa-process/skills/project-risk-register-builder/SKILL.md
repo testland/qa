@@ -86,7 +86,7 @@ Document the chosen strategy per risk.
 ## Step 4 - Document the register
 
 ```markdown
-# Project risk register — <project / quarter>
+# Project risk register - <project / quarter>
 
 **Last reviewed:** YYYY-MM-DD  **Owner:** <PM>  **Next review:** YYYY-MM-DD
 
@@ -97,7 +97,7 @@ Document the chosen strategy per risk.
 | PJ-001 | Schedule | Q2 launch depends on Stripe migration; Stripe rate-limits doc work | 4 | 3 | 12 | Mitigate | Run migration in parallel with team-2 work | Alice | Active |
 | PJ-002 | People | Senior payments engineer on parental leave Q2 | 4 | 5 | 20 | Mitigate | Knowledge-transfer sessions Q1; pair-coding | Bob | Active |
 | PJ-003 | Vendor | Auth0 deprecating legacy SDK Q3 | 3 | 5 | 15 | Mitigate | Migrate to new SDK Q2 (1 sprint allocated) | Carol | Active |
-| PJ-004 | Compliance | SOC 2 Type II audit Q3 — controls evidence collection backlog | 5 | 3 | 15 | Mitigate | Hire compliance contractor; start collection Q1 | Dan | Active |
+| PJ-004 | Compliance | SOC 2 Type II audit Q3 - controls evidence collection backlog | 5 | 3 | 15 | Mitigate | Hire compliance contractor; start collection Q1 | Dan | Active |
 | PJ-005 | Environment | Staging cluster autoscale unreliable | 3 | 4 | 12 | Mitigate | Migrate staging to k8s-autopilot Q2 | Eve | Active |
 | PJ-006 | Scope | "AI feature" spec drifting in stakeholder reviews | 3 | 4 | 12 | Mitigate | Lock spec by end Q1; weekly stakeholder review | Fran | Active |
 | PJ-007 | Schedule | Cyber-week launch window non-negotiable | 5 | 2 | 10 | Mitigate + Accept | Buffer + war-room ready | Alice | Active |
@@ -108,7 +108,7 @@ Document the chosen strategy per risk.
 | ID | Risk | Outcome | Lessons |
 |---|---|---|---|
 | PJ-R-001 | DB migration vendor delay | Triggered Q1; mitigated by parallel path | Two-vendor strategy works |
-| PJ-R-002 | Staffing — onboarding lag | Not triggered | Mitigation (early hire) effective |
+| PJ-R-002 | Staffing - onboarding lag | Not triggered | Mitigation (early hire) effective |
 ```
 
 ## Step 5 - Weekly review cadence

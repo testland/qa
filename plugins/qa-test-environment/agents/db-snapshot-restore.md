@@ -106,10 +106,10 @@ Slower than template clone but portable.
 ## Output format
 
 ```markdown
-## DB snapshot/restore — `<app>` (`<engine>`)
+## DB snapshot/restore - `<app>` (`<engine>`)
 **Mode:** snapshot | restore | wrap | list
 **Strategy:** template-db | pg_dump | mysqldump | mongodump | begin/rollback
-**Duration:** <N>ms  **Result:** OK | FAIL — <reason>
+**Duration:** <N>ms  **Result:** OK | FAIL - <reason>
 ### Steps executed
 1. ...
 ### Next steps
@@ -123,7 +123,7 @@ Slower than template clone but portable.
 - **pytest + SQLAlchemy** (~300 tests, stable schema) → `wrap`
   fixture with BEGIN/ROLLBACK at <5ms/test (~1.5s total).
 - **Refused `wrap`**: tests with non-transactional DDL (`CREATE
-  INDEX CONCURRENTLY`) — cite the files; recommend `restore`.
+  INDEX CONCURRENTLY`) - cite the files; recommend `restore`.
 
 ## Refuse-to-proceed rules
 

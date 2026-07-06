@@ -70,17 +70,17 @@ For each tier, compute `failures-without-code-change / total runs` over the last
 Thresholds:
 
 - `< 2%` per layer → axis `Healthy`.
-- `2% – 5%` → `Minor` (track, do not block).
-- `5% – 15%` → `Important` (one quarantine sprint owed).
+- `2% - 5%` → `Minor` (track, do not block).
+- `5% - 15%` → `Important` (one quarantine sprint owed).
 - `> 15%` → `Critical` (the layer is the dominant signal-poison; see [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) for the dominant patterns).
 
-If CI data is not provided, this axis emits `n/a — CI flake data not supplied` and the auditor proceeds with the remaining axes.
+If CI data is not provided, this axis emits `n/a - CI flake data not supplied` and the auditor proceeds with the remaining axes.
 
 ## Step 5 - ROI heuristic per tier
 
 For each layer, compute `defects-caught / total-run-minutes` over the audit window (defects-caught proxy: count of `git log --grep='fix'` / `revert` commits in last 90 days that reference a test in the layer). Per the testing-trophy framing, integration tests typically score highest on this ratio because they "strike the optimal balance between confidence and efficiency" ([kentcdodds.com/blog/write-tests](https://kentcdodds.com/blog/write-tests)).
 
-Flag layers where ROI is below 10% of the best layer (likely candidates to prune or refactor). If `git log` lacks defect-fix markers, this axis emits `n/a — defect-fix history unavailable`.
+Flag layers where ROI is below 10% of the best layer (likely candidates to prune or refactor). If `git log` lacks defect-fix markers, this axis emits `n/a - defect-fix history unavailable`.
 
 ## Step 6 - Selector quality scan (E2E layer)
 
@@ -138,7 +138,7 @@ Emit a single markdown block:
 
 ## What was NOT assessed
 
-- <list missing inputs that would have unlocked deeper analysis, e.g., "CI flake data not supplied — Step 4 emitted n/a">
+- <list missing inputs that would have unlocked deeper analysis, e.g., "CI flake data not supplied - Step 4 emitted n/a">
 - <any axis that returned `n/a`>
 - <any tier whose classification fell below 80% confidence>
 ```

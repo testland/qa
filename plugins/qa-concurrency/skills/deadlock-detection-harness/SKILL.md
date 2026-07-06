@@ -150,7 +150,7 @@ def test_lock_acquired_within_timeout():
     time.sleep(0.1)
 
     acquired = lock.acquire(timeout=2.0)
-    assert acquired, "Lock not acquired within 2s — possible deadlock"
+    assert acquired, "Lock not acquired within 2s - possible deadlock"
     holder_done.set()
 ```
 
@@ -209,7 +209,7 @@ def test_lock_acquired_from_few_sites():
 
     # Each lock should be acquired from a small fingerprint set
     for lock, fps in acquire_fingerprints.items():
-        assert len(fps) <= 5, f"Lock {lock} acquired from {len(fps)} sites — refactor"
+        assert len(fps) <= 5, f"Lock {lock} acquired from {len(fps)} sites - refactor"
 ```
 
 Fewer acquire sites = easier to reason about lock order.

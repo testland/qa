@@ -99,7 +99,7 @@ def test_eastern_time():
 import pytest
 from zoneinfo import ZoneInfo
 
-@freeze_time("2026-03-08T07:30:00")  # 02:30 EST OR 03:30 EDT — depends on resolution
+@freeze_time("2026-03-08T07:30:00")  # 02:30 EST OR 03:30 EDT - depends on resolution
 def test_spring_forward_handling():
     ny = datetime.now(ZoneInfo("America/New_York"))
     # Asserts against expected library behaviour per dst-transition-reference

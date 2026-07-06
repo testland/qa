@@ -177,7 +177,7 @@ onView(withId(R.id.cart_list))
 # Unit + UI tests on connected device / emulator
 ./gradlew connectedAndroidTest
 
-# With test orchestrator (each test in fresh process — preferred for isolation):
+# With test orchestrator (each test in fresh process - preferred for isolation):
 android {
     defaultConfig {
         testInstrumentationRunnerArguments clearPackageData: 'true'

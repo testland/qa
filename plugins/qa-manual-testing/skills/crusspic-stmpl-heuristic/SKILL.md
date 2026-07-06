@@ -226,27 +226,27 @@ Pre-release review:
 ```markdown
 ## Release v3.0 quality-criteria walkthrough
 
-- **C — Capability:** Functional acceptance tests 98% pass. ✓
-- **R — Reliability:** Last 30 days uptime 99.94% (SLA: 99.9%). ✓
-- **U — Usability:** User research session N=8; 7/8 completed
+- **C - Capability:** Functional acceptance tests 98% pass. ✓
+- **R - Reliability:** Last 30 days uptime 99.94% (SLA: 99.9%). ✓
+- **U - Usability:** User research session N=8; 7/8 completed
   signup without help (target: 6/8). ✓
-- **S — Security:** Last pen-test 2026-03; all critical findings
+- **S - Security:** Last pen-test 2026-03; all critical findings
   fixed; SAST + DAST clean. ✓
-- **S — Scalability:** k6 load test at 10x expected peak passed
+- **S - Scalability:** k6 load test at 10x expected peak passed
   with p99 < 800ms. ✓
-- **P — Performance:** p95 latency 220ms (target 300ms). ✓
-- **I — Installability:** New install flow 5 steps; user testing
+- **P - Performance:** p95 latency 220ms (target 300ms). ✓
+- **I - Installability:** New install flow 5 steps; user testing
   4/5 completed. ✓
-- **C — Compatibility:** Browser matrix Chrome / Firefox / Safari
+- **C - Compatibility:** Browser matrix Chrome / Firefox / Safari
   all current + N-1 tested. ✓
-- **S — Supportability:** All log lines structured; trace IDs
+- **S - Supportability:** All log lines structured; trace IDs
   end-to-end. ✓
-- **T — Testability:** E2E suite runs in 18 min; deterministic
+- **T - Testability:** E2E suite runs in 18 min; deterministic
   mode available. ✓
-- **M — Maintainability:** Sonar tech-debt rating A. ✓
-- **P — Portability:** Cloud-portable (Terraform); no AWS-specific
+- **M - Maintainability:** Sonar tech-debt rating A. ✓
+- **P - Portability:** Cloud-portable (Terraform); no AWS-specific
   primitives. ✓
-- **L — Localizability:** All UI strings extracted to ICU
+- **L - Localizability:** All UI strings extracted to ICU
   messages; 7 locales supported. ✓
 
 Verdict: cleared for release.

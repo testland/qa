@@ -102,10 +102,10 @@ For each line, emit one of:
 ## Output format
 
 ```markdown
-## Quality coach — DoD review for `<PR / story>`
+## Quality coach - DoD review for `<PR / story>`
 
 **DoD source:** `docs/definition-of-done.md` (8 lines)
-**Overall verdict:** ❌ NOT READY — 2 lines not met, 1 unverifiable
+**Overall verdict:** ❌ NOT READY - 2 lines not met, 1 unverifiable
 
 | # | DoD line                                          | Verdict        | Evidence / gap |
 |---|---------------------------------------------------|----------------|----------------|
@@ -120,20 +120,20 @@ For each line, emit one of:
 
 ### Unmet items
 
-**Line 2 — Unit test coverage:**
+**Line 2 - Unit test coverage:**
 - File `src/checkout/promo.ts` is at 65% (target: 80%).
 - Suggested next steps: see
   [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
   to identify which uncovered branches to test first.
 
-**Line 5 — Staging deploy + smoke:**
+**Line 5 - Staging deploy + smoke:**
 - No deploy-to-staging job found in this PR's CI run.
 - The team's standard pattern is the `deploy-staging` workflow
-  triggered on `pr_label:ready-for-review` — was that label applied?
+  triggered on `pr_label:ready-for-review` - was that label applied?
 
 ### Unverifiable items
 
-**Line 4 — Acceptance criteria:**
+**Line 4 - Acceptance criteria:**
 - Story `LIN-1234` lists AC-1, AC-2, AC-3.
 - Agent searched for tests with names matching the AC IDs; none
   found.

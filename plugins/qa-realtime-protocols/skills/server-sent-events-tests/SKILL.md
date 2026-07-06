@@ -133,7 +133,7 @@ Test (raw HTTP client, simulates reconnect):
 import requests
 
 def test_replay_via_last_event_id():
-    # First connection — read 5 events, then close
+    # First connection - read 5 events, then close
     with requests.get("http://localhost:8080/stream", stream=True) as r:
         events = parse_until_count(r, 5)
         last_id = events[-1]["id"]

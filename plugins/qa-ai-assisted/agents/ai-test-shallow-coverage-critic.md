@@ -63,7 +63,7 @@ Compute the negative-assertion ratio. Flag if `negative_assertions / total_asser
 Per entry point, emit **PASS** / **SHALLOW** / **N/A**:
 
 ```markdown
-## Shallow-coverage critic — `<PR>`
+## Shallow-coverage critic - `<PR>`
 
 **Entry points reviewed:** N
 **SHALLOW verdicts:** M
@@ -72,7 +72,7 @@ Per entry point, emit **PASS** / **SHALLOW** / **N/A**:
 
 | Axis | Result | Evidence |
 |---|---|---|
-| §EP equivalence classes | SHALLOW | All 4 tests pass `productId` as a 24-char hex string and `qty` as a positive small integer (1–3). No invalid `productId`, no `qty=0`, no negative `qty`, no `null`. |
+| §EP equivalence classes | SHALLOW | All 4 tests pass `productId` as a 24-char hex string and `qty` as a positive small integer (1-3). No invalid `productId`, no `qty=0`, no negative `qty`, no `null`. |
 | §BVA boundaries | SHALLOW | Schema declares `qty: { min: 1, max: 99 }`. No test at `qty=1`, `qty=0`, `qty=99`, or `qty=100`. |
 | §NEG error paths | SHALLOW | 11 of 11 assertions are positive (`.toEqual`, `.toBe`). Function `throws InvalidQtyError`; no test asserts the throw. |
 
@@ -100,7 +100,7 @@ The agent **refuses** to:
 
 - Clear a test file where any entry point scores SHALLOW on all three applicable axes.
 - Auto-generate the missing tests. Generation is the job of [`negative-test-generator`](../../qa-test-data/skills/negative-test-generator/SKILL.md) and [`boundary-value-generator`](../../qa-test-data/skills/boundary-value-generator/SKILL.md); this agent flags only.
-- Operate on integration / E2E suites where coverage is measured at the system level, not the unit level. If `Step 1` finds only Playwright / Cypress / Selenium files, the agent emits `not applicable — use e2e-selector-quality-critic for E2E coverage review` and exits.
+- Operate on integration / E2E suites where coverage is measured at the system level, not the unit level. If `Step 1` finds only Playwright / Cypress / Selenium files, the agent emits `not applicable - use e2e-selector-quality-critic for E2E coverage review` and exits.
 - Apply when a project's `docs/test-conventions.md` declares an explicit "happy-path-only on this entry point" exception (rare, but valid for stub / placeholder code).
 
 ## Anti-patterns

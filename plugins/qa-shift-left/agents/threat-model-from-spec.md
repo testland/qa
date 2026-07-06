@@ -37,11 +37,11 @@ Apply STRIDE to every asset named or implied by the spec - data stores, services
 ## Output format
 
 ```markdown
-# Threat model — <feature name>
+# Threat model - <feature name>
 
 **Spec source:** <path or URL>
 **Date:** YYYY-MM-DD
-**Spec authors should review every row** — agent-produced threat models are a starting point, not a sign-off.
+**Spec authors should review every row** - agent-produced threat models are a starting point, not a sign-off.
 
 ## Assets identified
 

@@ -76,10 +76,10 @@ Emit the report (see Output format). Schedule postmortem within 48 hours per `dr
 - Rollback trigger documented: <pass/fail>
 
 ### Failover timeline
-- T-0: <timestamp> — drill announced
-- T+Xm: <step> — <timestamp>
-- T+Ym: Failover complete — <timestamp>
-- T+Zm: Fail-back complete — <timestamp>
+- T-0: <timestamp> - drill announced
+- T+Xm: <step> - <timestamp>
+- T+Ym: Failover complete - <timestamp>
+- T+Zm: Fail-back complete - <timestamp>
 
 ### RTO/RPO observed
 - Time-to-functional (restore + verify): <duration> (budget: <50% of RTO>)

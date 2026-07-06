@@ -103,7 +103,7 @@ Worked test (Vitest):
 import manifest from '../dist/manifest.json';
 import { describe, it, expect } from 'vitest';
 
-describe('MV3 manifest — Section 1', () => {
+describe('MV3 manifest - Section 1', () => {
   it('manifest_version is 3', () => {
     expect(manifest.manifest_version).toBe(3);
   });
@@ -275,17 +275,17 @@ publication.
 Write the per-extension checklist to `tests/migration-mv3-checklist.md`:
 
 ```markdown
-# MV3 Migration Checklist — <extension-name>
+# MV3 Migration Checklist - <extension-name>
 
 Generated: <YYYY-MM-DD>
 Source MV2 inventory: tests/mv2-inventory.json
 
-## Section 1 — Update the manifest
+## Section 1 - Update the manifest
 - [ ] `manifest_version === 3` (test: manifest.spec.ts > "manifest_version is 3")
 - [ ] No host patterns in `permissions[]` (test: manifest.spec.ts > "no host patterns left")
 - [ ] `web_accessible_resources` object-array shape (test: manifest.spec.ts > "WAR object-array shape")
 
-## Section 2 — Migrate to a service worker
+## Section 2 - Migrate to a service worker
 - [ ] `background.service_worker` single string; no `scripts`, no `persistent`
 - [ ] No `document.` / `window.` / `XMLHttpRequest` in SW source
 - [ ] No `localStorage` in SW source
@@ -295,22 +295,22 @@ Source MV2 inventory: tests/mv2-inventory.json
 - [ ] No `setTimeout` / `setInterval` in SW source
 - [ ] Keep-alive (if present) gated on managed policy
 
-## Section 3 — Update API calls
+## Section 3 - Update API calls
 - [ ] No `tabs.executeScript` / `tabs.insertCSS` / `tabs.removeCSS`
 - [ ] No `browser_action` / `page_action` (Chromium); `action` present
 - [ ] No `chrome.extension.getBackgroundPage()`
 - [ ] `web-ext lint` clean
 
-## Section 4 — Replace blocking web request listeners
+## Section 4 - Replace blocking web request listeners
 - [ ] No `webRequestBlocking` in `permissions[]`
 - [ ] DNR `rule_resources[]` valid shape (if blocking needed)
 
-## Section 5 — Improve extension security
+## Section 5 - Improve extension security
 - [ ] No `eval` / `new Function` / string-form setTimeout
 - [ ] No remote `<script src=>` in extension HTML
 - [ ] CSP is object shape, no `unsafe-eval`, no remote hosts
 
-## Section 6 — Firefox divergences (skip if Chromium-only)
+## Section 6 - Firefox divergences (skip if Chromium-only)
 - [ ] `browser_specific_settings.gecko.id` present
 - [ ] No `applications` key (renamed to `browser_specific_settings`)
 - [ ] No `web_accessible_resources[].use_dynamic_url` (Chromium-only)
@@ -352,7 +352,7 @@ For an extension with MV2 manifest:
 The emitted checklist excerpt:
 
 ```markdown
-# MV3 Migration Checklist — example-extension
+# MV3 Migration Checklist - example-extension
 
 ## Section 1
 - [ ] manifest_version: 2 → 3

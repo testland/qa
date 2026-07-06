@@ -132,7 +132,7 @@ def test_zero_downtime_swap():
 
     # Subscribe new to live event stream
     subscribe(new_proj)
-    # Switch reads to new — verify no read returns stale state
+    # Switch reads to new - verify no read returns stale state
     swap_query_target(old_proj, new_proj)
 ```
 

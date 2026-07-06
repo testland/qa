@@ -47,7 +47,7 @@ Score ≥40 → watchlist; ≥70 → priority.
 ## Output format
 
 ```markdown
-## Pre-flake watchlist — generated <date>
+## Pre-flake watchlist - generated <date>
 
 **Suite scanned:** N tests · **Watchlist size:** M (score >= 40)
 

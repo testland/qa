@@ -80,7 +80,7 @@ A scenario with 4+ consecutive `And` lines often hides poor
 modeling:
 
 ```gherkin
-# Flag — 5-And chain
+# Flag - 5-And chain
 Scenario: Complete checkout
   Given I am a logged-in customer
   And my cart contains 3 items
@@ -110,7 +110,7 @@ the step definition does the work.
 Scenarios that share the same opening Givens should extract them:
 
 ```gherkin
-# Flag — 3 scenarios share 2 Givens
+# Flag - 3 scenarios share 2 Givens
 Scenario: Apply valid promo
   Given a logged-in customer
   And the cart contains 1 of "BOOK-001"
@@ -123,7 +123,7 @@ Scenario: Apply expired promo
   When I enter "EXPIRED50" in the promo input
   ...
 
-# Better — Background block
+# Better - Background block
 Background:
   Given a logged-in customer
   And the cart contains 1 of "BOOK-001"
@@ -162,7 +162,7 @@ Every Then must specify the **observable** target.
 ## Step 7 - Output
 
 ```markdown
-## Gherkin style review — `<PR>`
+## Gherkin style review - `<PR>`
 
 **Feature files reviewed:** 3
 **Issues flagged:** M (across K files)

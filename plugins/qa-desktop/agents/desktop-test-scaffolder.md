@@ -76,7 +76,7 @@ public class MainScreen {                                 // Screen Object patte
 ```
 
 ```yaml
-# .github/workflows/desktop-tests.yml — Step 1b bootstrap inserts BEFORE the test run
+# .github/workflows/desktop-tests.yml - Step 1b bootstrap inserts BEFORE the test run
 jobs:
   ui:
     runs-on: windows-latest

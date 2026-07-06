@@ -150,7 +150,7 @@ Pipe to `jq` for triage:
 
 ```bash
 buf breaking --against '.git#branch=main' --error-format json | \
-  jq -r '"\(.type) \(.path):\(.start_line) — \(.message)"'
+  jq -r '"\(.type) \(.path):\(.start_line) - \(.message)"'
 ```
 
 ## CI integration

@@ -114,13 +114,13 @@ def detect_risky_combos(changes):
     creates = [c for c in changes if 'create' in c['change']['actions']]
 
     risky = []
-    # DB destroy + new DB without import — likely data loss
+    # DB destroy + new DB without import - likely data loss
     db_deletes = [d for d in deletes if d['type'] in ('aws_db_instance', 'aws_rds_cluster')]
     db_creates = [c for c in creates if c['type'] in ('aws_db_instance', 'aws_rds_cluster')]
     if db_deletes and db_creates:
-        risky.append(('critical', 'Destroying + recreating a database — data loss likely. Use moved/import block.'))
+        risky.append(('critical', 'Destroying + recreating a database - data loss likely. Use moved/import block.'))
 
-    # IAM role destroy + new role without import — broken permissions
+    # IAM role destroy + new role without import - broken permissions
     # ... etc.
     return risky
 ```
@@ -128,10 +128,10 @@ def detect_risky_combos(changes):
 ## Step 6 - Output
 
 ```markdown
-## Terraform plan review — `<sha>`
+## Terraform plan review - `<sha>`
 
 **Resources affected:** 12
-**Verdict:** ⚠ REVIEW REQUIRED — 3 high-severity flags
+**Verdict:** ⚠ REVIEW REQUIRED - 3 high-severity flags
 
 ### High-severity (must address)
 
@@ -139,7 +139,7 @@ def detect_risky_combos(changes):
 |----------|---------------------------------------|-----------------------------------------------|
 | critical | `aws_s3_bucket.public-data`            | ACL changing private → public-read             |
 | critical | `aws_db_instance.orders-prod`          | Destroy + recreate detected (data loss likely) |
-| high     | `aws_iam_policy.deploy`                 | Adding "Action": "*" — overly broad             |
+| high     | `aws_iam_policy.deploy`                 | Adding "Action": "*" - overly broad             |
 
 ### Medium-severity (review)
 

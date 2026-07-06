@@ -73,29 +73,29 @@ Output scaffold (`tests/cart/CART-142-TC-01.spec.ts`):
 ```typescript
 import { test, expect } from '@playwright/test';
 
-test.describe('CART-142 — Add to cart', () => {
-  test('CART-142-TC-01 — adds an in-stock product to an empty cart', async ({ page }) => {
-    // Arrange — anonymous session is the default; SKU-001 stock state is a fixture concern.
+test.describe('CART-142 - Add to cart', () => {
+  test('CART-142-TC-01 - adds an in-stock product to an empty cart', async ({ page }) => {
+    // Arrange - anonymous session is the default; SKU-001 stock state is a fixture concern.
     // TODO: confirm fixture `SKU-001-in-stock` is loaded in the test environment.
 
-    // Act — Step 1: Open product page for SKU-001.
+    // Act - Step 1: Open product page for SKU-001.
     await page.goto('/product/SKU-001');
 
-    // Act — Step 2: Add to cart with default qty.
+    // Act - Step 2: Add to cart with default qty.
     await page
       .getByRole('button', { name: 'Add to cart' }) /* TODO: confirm accessible name with live UI */
       .click();
 
-    // Assert — these data-testid values are placeholders the agent did NOT
+    // Assert - these data-testid values are placeholders the agent did NOT
     // derive from the spec; confirm each against the live DOM before running.
     await expect(page.getByTestId('cart-count') /* TODO: confirm data-testid */).toHaveText('1');
     await expect(page.getByTestId('cart-line-SKU-001') /* TODO: confirm data-testid */).toBeVisible();
   });
 });
 
-// HAND-OFF — run once, then pair with assertion-quality-reviewer,
+// HAND-OFF - run once, then pair with assertion-quality-reviewer,
 // e2e-selector-quality-critic, and (once the suite grows)
-// ai-test-shallow-coverage-critic — same block as Step 3.
+// ai-test-shallow-coverage-critic - same block as Step 3.
 ```
 
 ## Step 4 - Compose with codegen for selector resolution

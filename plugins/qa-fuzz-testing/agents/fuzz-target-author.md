@@ -36,7 +36,7 @@ C/C++  → libFuzzer harness (LLVMFuzzerTestOneInput); AFL++ standalone if file-
 Per-language entry points (all use `FuzzedDataProvider` / Go fuzz typed parameters / Arbitrary for multi-arg targets):
 
 ```cpp
-// fuzz/fuzz_<function>.cc — C/C++ libFuzzer
+// fuzz/fuzz_<function>.cc - C/C++ libFuzzer
 #include <fuzzer/FuzzedDataProvider.h>
 #include "../include/<header>.h"
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
@@ -47,7 +47,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 ```
 
 ```go
-// <package>_fuzz_test.go — Go native
+// <package>_fuzz_test.go - Go native
 func Fuzz<FunctionName>(f *testing.F) {
     f.Add(<seed-input>)
     f.Fuzz(func(t *testing.T, <typed-param>) {
@@ -58,7 +58,7 @@ func Fuzz<FunctionName>(f *testing.F) {
 ```
 
 ```rust
-// fuzz/fuzz_targets/<function>.rs — Rust cargo-fuzz
+// fuzz/fuzz_targets/<function>.rs - Rust cargo-fuzz
 #![no_main]
 use libfuzzer_sys::fuzz_target;
 use my_crate::<function>;
@@ -66,7 +66,7 @@ fuzz_target!(|data: &[u8]| { let _ = <function>(data); });
 ```
 
 ```python
-# fuzz/fuzz_<function>.py — Python atheris
+# fuzz/fuzz_<function>.py - Python atheris
 import sys, atheris
 with atheris.instrument_imports():
     from <module> import <function>
@@ -75,7 +75,7 @@ atheris.Setup(sys.argv, TestOneInput); atheris.Fuzz()
 ```
 
 ```java
-// src/test/java/<package>/Fuzz<FunctionName>Test.java — JVM Jazzer
+// src/test/java/<package>/Fuzz<FunctionName>Test.java - JVM Jazzer
 import com.code_intelligence.jazzer.junit.FuzzTest;
 class Fuzz<FunctionName>Test {
     @FuzzTest void fuzz<FunctionName>(byte[] input) { <ClassName>.<function>(input); }

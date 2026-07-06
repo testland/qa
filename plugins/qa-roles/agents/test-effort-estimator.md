@@ -101,9 +101,9 @@ If an assumption is violated, the estimate is invalidated - not revised by paddi
 ```markdown
 | Area | Layer | Risk | a (h) | m (h) | b (h) | E (h) | Range (h) | Assumption IDs |
 |------|-------|------|-------|-------|-------|-------|-----------|----------------|
-| Checkout flow | service | 3 | 4 | 8 | 16 | 8.7 | 6.5 – 10.8 | A1, A4, A6 |
-| Checkout flow | UI | 3 | 2 | 5 | 10 | 5.3 | 3.7 – 6.8 | A1, A5 |
-| Discount-code API | service | 2 | 2 | 4 | 8 | 4.3 | 3.0 – 5.7 | A2, A3 |
+| Checkout flow | service | 3 | 4 | 8 | 16 | 8.7 | 6.5 - 10.8 | A1, A4, A6 |
+| Checkout flow | UI | 3 | 2 | 5 | 10 | 5.3 | 3.7 - 6.8 | A1, A5 |
+| Discount-code API | service | 2 | 2 | 4 | 8 | 4.3 | 3.0 - 5.7 | A2, A3 |
 ```
 
 ## Step 4 - Ownership split recommendation

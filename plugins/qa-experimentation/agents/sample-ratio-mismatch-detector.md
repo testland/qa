@@ -76,7 +76,7 @@ Per the KDD 2019 SRM taxonomy:
 ## Step 3 - Output format
 
 ```markdown
-## SRM Detection — Experiment `<id>`
+## SRM Detection - Experiment `<id>`
 
 **Intended allocation:** A=50%, B=50%
 **Observed exposure:** A=1,003,000 / B=997,000 (total=2,000,000)
@@ -93,7 +93,7 @@ it is."
 
 ### Likely root causes (KDD 2019 taxonomy)
 
-1. **Telemetry drops in arm B** — 3000 fewer events suggests
+1. **Telemetry drops in arm B** - 3000 fewer events suggests
    logging gap, NOT a real allocation imbalance. Check:
    - Per-variant exposure-event success rate in the
      telemetry pipeline
@@ -101,13 +101,13 @@ it is."
    - JS error rates: if variant B includes a slow / failing
      bundle, fewer exposures fire
 
-2. **Bot filtering applied after assignment** — Bots may be
+2. **Bot filtering applied after assignment** - Bots may be
    distributed equally but filtered differently. Check:
-   - Bot-filter logic — does it inspect the variant before
+  - Bot-filter logic - does it inspect the variant before
      filtering?
    - Per-arm bot-filter pass rate
 
-3. **Randomisation bug** — Hash collision or weight-config
+3. **Randomisation bug** - Hash collision or weight-config
    error. Check:
    - The randomization-unit hash function for the experiment ID
    - The configured allocation weights vs intended

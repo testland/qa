@@ -121,11 +121,11 @@ register is stale.
 ## Step 7 - Verdict + report
 
 ```markdown
-# Risk-register audit — Q2 2026 release matrix — YYYY-MM-DD
+# Risk-register audit - Q2 2026 release matrix - YYYY-MM-DD
 
 **Risks audited:** 27 active + 4 retired
 **Findings:** 6 critical, 9 warnings
-**Verdict:** ❌ BLOCK — 3 critical findings require fix before release
+**Verdict:** ❌ BLOCK - 3 critical findings require fix before release
 
 ## Critical (must fix before release planning)
 
@@ -139,7 +139,7 @@ register is stale.
 
 | Risk ID | Finding |
 |---|---|
-| R-08 | impact 3 = likelihood 3 = score 9; pattern repeats for 19/27 entries — likely auto-equated |
+| R-08 | impact 3 = likelihood 3 = score 9; pattern repeats for 19/27 entries - likely auto-equated |
 | PR-003 | Strategy "Transfer" but recipient not named |
 | R-11 | Owner field empty |
 | ... | ... |
@@ -147,13 +147,13 @@ register is stale.
 ## Coverage-mapper integration
 
 - 4 of 27 risks are orphan (no coverage). Of these:
-  - 2 critical (score ≥15) — BLOCK above
-  - 2 low (score <10) — info
+ - 2 critical (score ≥15) - BLOCK above
+ - 2 low (score <10) - info
 
 ## Acceptance decisions integration
 
 - 3 Accept decisions found. 2 have linked documents (R-08, R-12);
-  1 missing (R-14 — BLOCK above)
+  1 missing (R-14 - BLOCK above)
 
 ## Review cadence
 

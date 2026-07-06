@@ -28,7 +28,7 @@ authors the verification harness.
 ## Step 1 - Catalog backup types
 
 ```markdown
-## Backup Catalog — `<service>`
+## Backup Catalog - `<service>`
 
 | Type | Source | Frequency | Retention | Tool |
 |---|---|---|---|---|

@@ -80,10 +80,10 @@ combinations.
 ### Path separators
 
 ```javascript
-// Bad — hardcoded /
+// Bad - hardcoded /
 const configPath = projectRoot + '/config/app.json';
 
-// Good — path.join
+// Good - path.join
 const path = require('node:path');
 const configPath = path.join(projectRoot, 'config', 'app.json');
 ```
@@ -142,7 +142,7 @@ When OS-specific setup is needed:
 ## Step 5 - Aggregate per-OS results
 
 ```markdown
-## OS / runtime matrix results — `<sha>`
+## OS / runtime matrix results - `<sha>`
 
 | OS        | Runtime  | Tests | Pass | Fail | Time |
 |-----------|----------|------:|-----:|-----:|-----:|

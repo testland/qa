@@ -102,7 +102,7 @@ def flatten(d, prefix=''):
 ## Step 4 - Report
 
 ```markdown
-## i18n coverage report — `<sha>`
+## i18n coverage report - `<sha>`
 
 **Locales:** 5 (en source + 4 targets)
 **Total keys (en):** 542
@@ -126,7 +126,7 @@ def flatten(d, prefix=''):
 
 ### Orphan keys (in locale file but not in source)
 
-These keys exist in `de.json` but no longer in source — likely
+These keys exist in `de.json` but no longer in source - likely
 deprecated. Recommend deletion:
 
 - `legacy.old_promo_text`

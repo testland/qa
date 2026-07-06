@@ -94,7 +94,7 @@ for n, group in normalized.items():
     if len(group) > 1:
         print(f"Likely duplicates ({len(group)}):")
         for s in group:
-            print(f"  {s['pattern']} — {s['file']}:{s['line']}")
+            print(f"  {s['pattern']} - {s['file']}:{s['line']}")
 ```
 
 ## Step 3 - Recommend consolidation
@@ -147,24 +147,24 @@ The README is the discoverability artifact:
 ## Shared (cross-domain)
 
 ### Auth
-- `Given a logged-in user` (auth_steps.py:12) — creates and logs in a generic test user.
-- `Given a logged-in admin` (auth_steps.py:25) — logged-in user with admin role.
-- `Given an unauthenticated visitor` (auth_steps.py:38) — no session.
+- `Given a logged-in user` (auth_steps.py:12) - creates and logs in a generic test user.
+- `Given a logged-in admin` (auth_steps.py:25) - logged-in user with admin role.
+- `Given an unauthenticated visitor` (auth_steps.py:38) - no session.
 
 ### Navigation
-- `When I navigate to {path}` — go to URL.
-- `When I click {label}` — click any element with this label.
+- `When I navigate to {path}` - go to URL.
+- `When I click {label}` - click any element with this label.
 
 ## Checkout
 
 ### Cart
-- `Given the cart contains {qty} of {sku} at ${price}` — seed a cart.
-- `Given the cart is empty` — empty cart.
+- `Given the cart contains {qty} of {sku} at ${price}` - seed a cart.
+- `Given the cart is empty` - empty cart.
 
 ### Promo codes
-- `Given promo code {code} is active` — pre-seed a promo in the admin.
-- `When I enter {code} in the promo input` — type the code.
-- `When I click {label}` — (uses shared step).
+- `Given promo code {code} is active` - pre-seed a promo in the admin.
+- `When I enter {code} in the promo input` - type the code.
+- `When I click {label}` - (uses shared step).
 
 (...)
 ```

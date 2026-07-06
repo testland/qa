@@ -109,12 +109,12 @@ import { LoginPage } from './page-objects/LoginPage';
 import { ProductPage } from './page-objects/ProductPage';
 
 test('logged-in user can add an item to cart', async ({ page }) => {
-  // Arrange — sign in
+  // Arrange - sign in
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.signIn('user@example.com', 'test-password');
 
-  // Act — add to cart
+  // Act - add to cart
   const productPage = new ProductPage(page);
   await productPage.goto('BOOK-001');
   await productPage.addToCart();
@@ -138,7 +138,7 @@ The refactor:
 ## Step 5 - Output
 
 ```markdown
-## Playwright codegen refactor — `<file>`
+## Playwright codegen refactor - `<file>`
 
 **Source:** `tests/checkout.spec.ts` (raw codegen output)
 

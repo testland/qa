@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-code-quality",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Production code quality: 5 skills (sonarqube-quality-perspective, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) and 1 agent (code-quality-critic). Production-only scope; test-code hygiene is owned by qa-test-review.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-code-quality",

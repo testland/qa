@@ -151,7 +151,7 @@ public class TestClockConfig {
 @Test
 void springForwardLocalTime() {
     Clock fixed = Clock.fixed(
-        Instant.parse("2026-03-08T07:30:00Z"),  // 02:30 EDT — invalid local
+        Instant.parse("2026-03-08T07:30:00Z"),  // 02:30 EDT - invalid local
         ZoneId.of("America/New_York")
     );
 

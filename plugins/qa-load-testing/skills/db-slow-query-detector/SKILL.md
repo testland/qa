@@ -122,16 +122,16 @@ Per [pg-explain][pg-explain] index-creation conventions:
 -- Single-column index on a high-selectivity column
 CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 
--- Composite index — order matters; leading column is the most selective
+-- Composite index - order matters; leading column is the most selective
 CREATE INDEX idx_orders_customer_created ON orders(customer_id, created_at DESC);
 
--- Partial index — covers only the rows the query touches
+-- Partial index - covers only the rows the query touches
 CREATE INDEX idx_orders_active ON orders(created_at DESC) WHERE status = 'active';
 
--- Functional index — for predicates with a function on the column
+-- Functional index - for predicates with a function on the column
 CREATE INDEX idx_users_email_lower ON users(LOWER(email));
 
--- Covering index (PostgreSQL 11+) — avoids a heap fetch
+-- Covering index (PostgreSQL 11+) - avoids a heap fetch
 CREATE INDEX idx_orders_summary ON orders(customer_id) INCLUDE (status, total);
 ```
 
@@ -148,7 +148,7 @@ Index choice principles:
 ## Output format
 
 ```markdown
-## Slow query analysis — `<query-id-or-snippet>`
+## Slow query analysis - `<query-id-or-snippet>`
 
 **Database:** postgresql 17 | mysql 8.0 | sqlite
 **Query:** (excerpt)
@@ -163,13 +163,13 @@ ORDER BY o.created_at DESC LIMIT 50;
 
 | Node                         | Actual time | Rows  | Cost driver |
 |------------------------------|------------:|------:|-------------|
-| Seq Scan on orders (filter)   |       2.3s | 1.2M  | **DOMINANT** — no index on (customer_id, created_at) |
+| Seq Scan on orders (filter)   |       2.3s | 1.2M  | **DOMINANT** - no index on (customer_id, created_at) |
 | Index Scan on customers (email) |     1ms |    1   | (covered)    |
 
 ### Diagnosis
 
 The query joins `orders` to `customers` on `customer_id`, but
-`orders` has no index on `customer_id` — the planner falls back to a
+`orders` has no index on `customer_id` - the planner falls back to a
 sequential scan over 1.2M rows, then post-filters by date.
 
 ### Recommended fix
@@ -179,7 +179,7 @@ CREATE INDEX idx_orders_customer_created ON orders(customer_id, created_at DESC)
 ```
 
 Composite index ordered by `customer_id` first (the join predicate),
-then `created_at` descending — satisfies both the filter and the
+then `created_at` descending - satisfies both the filter and the
 ORDER BY without a separate sort.
 
 ### Expected impact

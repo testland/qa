@@ -44,7 +44,7 @@ A read-only investigator that finds the shared state two parallel workers are st
 ## Output format
 
 ```markdown
-## Parallel isolation check — `<suite-id>`
+## Parallel isolation check - `<suite-id>`
 
 **Workers tested:** 1, 4
 **Tests instrumented:** N

@@ -164,7 +164,7 @@ A small post-build step that surfaces failing tests in the run summary:
 jq -r '
   .results[]
   | select(.status == "fail")
-  | "FAIL: \(.unique_id) — \(.failures) failing rows — \(.message)"
+  | "FAIL: \(.unique_id) - \(.failures) failing rows - \(.message)"
 ' target/run_results.json
 ```
 

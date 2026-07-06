@@ -87,7 +87,7 @@ The agent emits one test file at `<TestProjectName>/Tests/<ClassNameUnderTest>Te
 ### Step 5 - Emit the change summary
 
 ```markdown
-## dotnet-test-author — change summary
+## dotnet-test-author - change summary
 **Spec:** <one-line summary> **Framework:** <xunit | nunit | mstest> **FluentAssertions:** <yes | no>
 ### Files
 - **New:** tests/<App>.Tests/Tests/<Class>Tests.cs (1 test method)

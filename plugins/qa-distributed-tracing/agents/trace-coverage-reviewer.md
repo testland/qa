@@ -120,7 +120,7 @@ or spans are debug noise).
 ## Step 7 - Emit verdict
 
 ```markdown
-## Trace coverage review — `<service>` @ `<sha>`
+## Trace coverage review - `<service>` @ `<sha>`
 
 **Auto-instrumentation libs detected:** requests, psycopg2
 **Manual instrumentation surfaces:** 4 (3 OK, 1 cardinality risk)
@@ -128,20 +128,20 @@ or spans are debug noise).
 
 ### Critical findings (block merge)
 
-1. **`auth/session.py:42`** — `requests.post(...)` to identity
+1. **`auth/session.py:42`** - `requests.post(...)` to identity
    service has NO surrounding span; auto-instrumentation library
    not installed.
    _Fix:_ `pip install opentelemetry-instrumentation-requests` +
    re-run.
 
-2. **`orders/process.py:87`** — `span.set_attribute("user.email",
+2. **`orders/process.py:87`** - `span.set_attribute("user.email",
    user.email)` is a cardinality risk + PII leak.
    _Fix:_ `span.set_attribute("user.id_hash", hash_user(user.id))`
    per [trace-spec-author cardinality rules](../skills/trace-spec-author/SKILL.md#step-4--anti-cardinality-rules-mandatory).
 
 ### Major findings
 
-3. **`payments/charge.py:51`** — emits deprecated `http.method`
+3. **`payments/charge.py:51`** - emits deprecated `http.method`
    instead of `http.request.method` per [HTTP semantic conventions].
 
 ### Spec drift
@@ -151,7 +151,7 @@ or spans are debug noise).
 
 ### Verdict
 
-❌ **BLOCK** — 2 Critical findings. Address before merge.
+❌ **BLOCK** - 2 Critical findings. Address before merge.
 ```
 
 ## Step 8 - Refuse-to-proceed rules

@@ -57,13 +57,13 @@ The agent emits **exactly one** primary recommendation. When two frameworks are 
 Output template (Markdown, copyable to a decision record):
 
 ```markdown
-## .NET test framework recommendation — <project-name>
+## .NET test framework recommendation - <project-name>
 
 **Existing convention detected:** <xUnit | NUnit | MSTest | none>
 **Signal:** <file path + the `<PackageReference Include="..."/>` line that drove the detection>
 
 **Recommended framework:** <xUnit | NUnit | MSTest>
-**FluentAssertions:** <retain | not present — pair with built-in assertions>
+**FluentAssertions:** <retain | not present - pair with built-in assertions>
 
 ### Rationale
 - <one-line: why this framework fits the project's target framework + tooling>

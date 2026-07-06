@@ -148,7 +148,7 @@ Refuse promotion if missing for high-risk class.
 ## Step 8 - Emit verdict
 
 ```markdown
-## Model fairness review — `<model_id>` v`<version>`
+## Model fairness review - `<model_id>` v`<version>`
 
 **Risk class:** High (per model card)
 **Sensitive features declared:** sex, race, age_band
@@ -159,7 +159,7 @@ Refuse promotion if missing for high-risk class.
 | Dimension | Status | Notes |
 |---|---|---|
 | Performance | ✅ | accuracy 0.86, F1 0.83, AUC 0.89 |
-| Group fairness (sex) | 🟡 | DPD = 0.087 — within needs-work band; mitigation plan in `evidence/mitigation.md` |
+| Group fairness (sex) | 🟡 | DPD = 0.087 - within needs-work band; mitigation plan in `evidence/mitigation.md` |
 | Group fairness (race) | ✅ | DPD = 0.04 |
 | Intersectional (sex × race) | 🟡 | Black women DPD = 0.12 vs reference; needs mitigation |
 | Vulnerability scan | ✅ | 0 critical, 2 minor (underconfidence on rare classes) |
@@ -170,7 +170,7 @@ Refuse promotion if missing for high-risk class.
 
 ### Verdict
 
-❌ **BLOCK** — intersectional disparity (sex × race) DPD = 0.12 exceeds
+❌ **BLOCK** - intersectional disparity (sex × race) DPD = 0.12 exceeds
 0.10 budget without documented waiver. Promote after mitigation OR
 attach waiver per template (`Reason:` + `Approved-by:` + `Re-review-date:` + `expires:`).
 
@@ -212,7 +212,7 @@ Refuse ✅ promote when:
 ```
 Risk: Low (internal product recommendations)
 Evidence: performance metrics + Giskard scan
-Verdict: ✅ promote — risk class doesn't require fairness/explanation evidence
+Verdict: ✅ promote - risk class doesn't require fairness/explanation evidence
 ```
 
 ### Example 2 - Credit decisioning model (❌ block)
@@ -220,7 +220,7 @@ Verdict: ✅ promote — risk class doesn't require fairness/explanation evidenc
 ```
 Risk: High (consumer credit decisions, ECOA-regulated)
 Evidence: Fairlearn shows DPD=0.18 on race; no intersectional; no explanation logs
-Verdict: ❌ BLOCK — multiple high-risk gaps
+Verdict: ❌ BLOCK - multiple high-risk gaps
 Action: mitigate disparity + add intersectional + add Alibi logging before resubmission
 ```
 

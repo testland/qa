@@ -160,7 +160,7 @@ Per [customize-install], the canonical lifecycle is
 test('beforeinstallprompt: deferred prompt + click → userChoice resolves', async ({ page }) => {
   await page.goto('https://localhost:3000/');
 
-  // Simulate engagement gate — per install-criteria, "Users must click/tap the page
+  // Simulate engagement gate - per install-criteria, "Users must click/tap the page
   // at least once and spend minimum 30 seconds viewing it"
   await page.click('body');
   await page.waitForTimeout(31_000);

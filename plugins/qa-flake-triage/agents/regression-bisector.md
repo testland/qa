@@ -67,7 +67,7 @@ expect ~10 iterations and ~5 - 20 minutes of CI time per iteration.
 ## Output format
 
 ```markdown
-## Regression bisect — `<test-id>`
+## Regression bisect - `<test-id>`
 
 - **Bad commit:** `<HEAD-sha>` (current)
 - **Good commit:** `<known-good-sha>`
@@ -76,7 +76,7 @@ expect ~10 iterations and ~5 - 20 minutes of CI time per iteration.
 
 ### Culprit
 
-**Commit:** `<sha>` — *<commit subject>*
+**Commit:** `<sha>` - *<commit subject>*
 **Author:** <author> on <date>
 **Files changed:** <list>
 

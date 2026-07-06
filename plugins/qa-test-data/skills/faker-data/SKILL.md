@@ -135,11 +135,11 @@ failure can be reproduced.
 ```python
 from faker import Faker
 
-# Class-level — sets the default RNG for all subsequent Faker() calls
+# Class-level - sets the default RNG for all subsequent Faker() calls
 Faker.seed(4321)
 fake = Faker()
 
-# Instance-level — useful when multiple Faker instances need different seeds
+# Instance-level - useful when multiple Faker instances need different seeds
 fake.seed_instance(4321)
 ```
 

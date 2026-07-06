@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "QA essentials role bundle: one-command install of the cross-cutting plugins every tester needs regardless of stack - test process, test data, environments, test-code review, reporting, flake triage, bug repro, defect management, CI integration, and manual/exploratory testing. Start here.",
   "author": {
     "name": "testland",

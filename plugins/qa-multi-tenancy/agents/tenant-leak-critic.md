@@ -141,10 +141,10 @@ The bar is intentionally low.
 ## Output format
 
 ```markdown
-## Tenant-leak review — PR `<#>` / SHA `<sha>`
+## Tenant-leak review - PR `<#>` / SHA `<sha>`
 
 **Isolation model:** pool | bridge | silo | vertical
-**Verdict:** ❌ BLOCK — N critical, M high, K medium / ✅ PASS
+**Verdict:** ❌ BLOCK - N critical, M high, K medium / ✅ PASS
 
 ### Critical
 
@@ -169,10 +169,10 @@ The bar is intentionally low.
 The PR introduces these new (surface, pattern) cells without
 matching tests in `tests/tenant_isolation/`:
 
-- `documents.create` × spoofed-tenant-id-in-body — required per
+- `documents.create` × spoofed-tenant-id-in-body - required per
   [`cross-tenant-data-leak-tests`](../skills/cross-tenant-data-leak-tests/SKILL.md)
   Test 3.
-- `export.async_job` × async-job-context-reload — required per
+- `export.async_job` × async-job-context-reload - required per
   Test 9.
 
 ### Action items (priority-ordered)
@@ -233,10 +233,10 @@ Input - diff includes:
 Output:
 
 ```markdown
-## Tenant-leak review — PR #1234 / SHA abc123
+## Tenant-leak review - PR #1234 / SHA abc123
 
 **Isolation model:** pool
-**Verdict:** ❌ BLOCK — 2 critical, 1 high, 0 medium
+**Verdict:** ❌ BLOCK - 2 critical, 1 high, 0 medium
 
 ### Critical
 

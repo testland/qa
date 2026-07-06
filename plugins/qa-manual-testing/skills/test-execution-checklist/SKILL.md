@@ -81,7 +81,7 @@ checklist isn't the right artifact for that step.
 A 30-item flat list is hard to scan. Group:
 
 ```markdown
-## Production smoke — release `v1.4.5`
+## Production smoke - release `v1.4.5`
 
 **Tester:** ___________________  **Date:** ___________________  **Time:** ___________________
 **Environment:** prod | staging   **Build SHA:** ___________________
@@ -165,9 +165,9 @@ on incidents that the smoke missed.
 ## Output format
 
 ```markdown
-## Test execution checklists — `<feature/area>`
+## Test execution checklists - `<feature/area>`
 
-**Generated from:** `<source — TC suite / test plan / story>`
+**Generated from:** `<source - TC suite / test plan / story>`
 **Total items:** N
 **Total wall-time budget:** M minutes
 **Scope:** smoke | first-pass | full sweep | compliance

@@ -72,9 +72,9 @@ Cloud runners are recommended in addition to the chosen framework, never as a su
 Output template (Markdown, copyable to a decision record):
 
 ```markdown
-## Web E2E framework recommendation — <project-name>
+## Web E2E framework recommendation - <project-name>
 
-**Existing convention:** <detected framework | "none — greenfield">
+**Existing convention:** <detected framework | "none - greenfield">
 **Signal:** <package.json entry / config file / existing E2E dir>
 
 **Recommended framework:** <Playwright / Cypress / Selenium / Puppeteer / TestCafe / WebdriverIO>

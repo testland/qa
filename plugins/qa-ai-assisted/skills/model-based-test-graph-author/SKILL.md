@@ -197,7 +197,7 @@ For each path, generate a test:
 
 ```typescript
 // e2e/checkout/path-1.spec.ts (auto-generated from model)
-test('Path 1 — happy path', async ({ page }) => {
+test('Path 1 - happy path', async ({ page }) => {
   // empty_cart → cart_with_items
   await page.goto('/products/BOOK-001');
   await page.getByRole('button', { name: /add to cart/i }).click();

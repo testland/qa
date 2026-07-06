@@ -143,7 +143,7 @@ where they catch the same bugs faster.
 Output a stack-ranked list of layer-changes:
 
 ```markdown
-## Test pyramid analysis — `<repo>`
+## Test pyramid analysis - `<repo>`
 
 **Date:** YYYY-MM-DD   **Last 90 days commits classified:** 142
 
@@ -155,7 +155,7 @@ Output a stack-ranked list of layer-changes:
 | Integration   |    98 |        7%  |      1.4 s  |       3×    |
 | E2E          |   485 |       34%  |      8.2 s  |      10×    |
 
-**Verdict:** ICE-CREAM CONE — E2E % (34) far exceeds target (5).
+**Verdict:** ICE-CREAM CONE - E2E % (34) far exceeds target (5).
 
 ### Recommended (per change shape: 70% service-layer, 30% pure-logic)
 

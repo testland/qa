@@ -69,7 +69,7 @@ module.exports = {
         'http://localhost:3000/dashboard',
         'http://localhost:3000/pricing',
       ],
-      // How many runs per URL — median report wins; 3 is canonical for stability
+      // How many runs per URL - median report wins; 3 is canonical for stability
       numberOfRuns: 3,
       // Lighthouse settings
       settings: {

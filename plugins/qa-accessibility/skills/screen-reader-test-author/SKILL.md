@@ -78,44 +78,44 @@ For each intent, the script lists:
 ### NVDA on Firefox (Windows)
 
 ```markdown
-## NVDA + Firefox (Windows) — User edits their profile email
+## NVDA + Firefox (Windows) - User edits their profile email
 
 ### Pre-conditions
 - NVDA is running.
 - Firefox is on https://app.example.com/profile.
 - Virtual cursor mode is on (NVDA default for browsers).
 
-### Step 1 — Navigate to the profile-edit form
+### Step 1 - Navigate to the profile-edit form
 
 | Keystroke | Expected announcement                                          |
 |-----------|----------------------------------------------------------------|
-| H         | "Edit profile, heading level 2" — moves to next heading.       |
-| H         | "Profile information, heading level 3" — moves further.        |
-| F         | "Email, edit, blank" — jumps to first form field.              |
+| H         | "Edit profile, heading level 2" - moves to next heading.       |
+| H         | "Profile information, heading level 3" - moves further.        |
+| F         | "Email, edit, blank" - jumps to first form field.              |
 
 NVDA's `H` quick-key navigates by heading; `F` by form field.
 The announcements should match the visible heading text and field
 labels (per WCAG SC 2.4.6 Headings and Labels).
 
-### Step 2 — Edit the email value
+### Step 2 - Edit the email value
 
 | Keystroke         | Expected announcement                                  |
 |-------------------|--------------------------------------------------------|
-| Enter (focus mode) | "Email, edit, has autocomplete" — enters focus mode.  |
+| Enter (focus mode) | "Email, edit, has autocomplete" - enters focus mode.  |
 | (type new email)  | (each character spoken if `say characters` is on)     |
 
-### Step 3 — Submit the form
+### Step 3 - Submit the form
 
 | Keystroke | Expected announcement                                          |
 |-----------|----------------------------------------------------------------|
-| Tab       | "Save changes, button" — moves to submit.                       |
+| Tab       | "Save changes, button" - moves to submit.                       |
 | Enter     | (no announcement immediately; wait for live region)             |
 
-### Step 4 — Success confirmation
+### Step 4 - Success confirmation
 
 | Behavior          | Expected announcement                                          |
 |-------------------|----------------------------------------------------------------|
-| (page response)   | "Profile saved" — announced via `aria-live="polite"` region.   |
+| (page response)   | "Profile saved" - announced via `aria-live="polite"` region.   |
 
 If no announcement: the success region is missing `aria-live`
 attribute, OR the region is added to the DOM with content already
@@ -139,9 +139,9 @@ quick-key patterns:
 Re-author the same flow per VoiceOver:
 
 ```markdown
-## VoiceOver + Safari (macOS) — User edits their profile email
+## VoiceOver + Safari (macOS) - User edits their profile email
 
-### Step 1 — Navigate to the profile-edit form
+### Step 1 - Navigate to the profile-edit form
 
 | Keystroke    | Expected announcement                                       |
 |--------------|-------------------------------------------------------------|
@@ -185,7 +185,7 @@ Common formats:
 ### Markdown checklist (lightweight)
 
 ```markdown
-## A11y Acceptance — User edits profile email
+## A11y Acceptance - User edits profile email
 
 ### NVDA + Firefox (Windows)
 

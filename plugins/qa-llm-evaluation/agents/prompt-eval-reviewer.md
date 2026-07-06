@@ -74,9 +74,9 @@ End with a summary block:
 ```
 ## Verdict
 
-- Critical findings: <N> — must address before merge
-- Warning findings: <N> — address this sprint
-- Info findings: <N> — backlog
+- Critical findings: <N> - must address before merge
+- Warning findings: <N> - address this sprint
+- Info findings: <N> - backlog
 
 Recommended next action: <one sentence>
 ```
@@ -119,9 +119,9 @@ Output:
 | 3 | Warning | promptfooconfig.yaml:2 | Model version not pinned | Use `openai:gpt-4-0613` (or current snapshot) |
 
 ## Verdict
-- Critical findings: 1 — must address before merge
-- Warning findings: 2 — address this sprint
-- Info findings: 0 — backlog
+- Critical findings: 1 - must address before merge
+- Warning findings: 2 - address this sprint
+- Info findings: 0 - backlog
 Recommended next action: Replace the `equals` assert with `llm-rubric` + `similar`; the test as authored will pass for the wrong reason on every prompt change.
 ```
 
@@ -161,7 +161,7 @@ No anti-pattern findings.
 - Critical findings: 0
 - Warning findings: 0
 - Info findings: 0
-Recommended next action: Consider adding `giskard.scan()` for adversarial coverage (Info-level only — current functional eval is sound).
+Recommended next action: Consider adding `giskard.scan()` for adversarial coverage (Info-level only - current functional eval is sound).
 ```
 
 ## Anti-patterns the agent itself avoids

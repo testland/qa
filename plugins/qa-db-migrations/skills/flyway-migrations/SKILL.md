@@ -123,7 +123,7 @@ flyway.user=myuser
 flyway.password=mypass
 flyway.locations=filesystem:db/migration,classpath:db/migration
 flyway.baselineOnMigrate=true        # auto-baseline empty schemas
-flyway.cleanDisabled=true            # CRITICAL for prod — disable destructive `clean`
+flyway.cleanDisabled=true            # CRITICAL for prod - disable destructive `clean`
 flyway.outOfOrder=false              # reject migrations with versions lower than max applied
 flyway.validateOnMigrate=true        # checksum-validate before applying
 ```

@@ -117,7 +117,7 @@ These apply to every component:
 ## Output format
 
 ```markdown
-## Accessibility code review — `<ComponentName>` (`<file>`)
+## Accessibility code review - `<ComponentName>` (`<file>`)
 
 **Archetype:** <e.g. overlay-modal>
 **Verdict:** BLOCK | REVIEW | OK
@@ -130,8 +130,8 @@ These apply to every component:
 | Critical | Modal.tsx:75       | Tab escapes; no inert on outside                            | 2.1.2 / 2.4.3    | Add `inert` to `<main>` while modal open OR implement focus-cycle Tab handler. |
 | Serious  | Modal.tsx:88       | Close button missing accessible name                        | 4.1.2            | `<button aria-label="Close">×</button>`. |
 | Serious  | Modal.css:12       | Focus ring `outline: none` without `:focus-visible`         | 2.4.7            | Replace with `:focus-visible { outline: 2px solid var(--focus-ring); }`. |
-| Moderate | Modal.tsx:95       | Confirm button text "OK" — vague                            | 2.4.6 (Headings and Labels) | Use action-specific text: "Delete order" or "Save changes". |
-| Info     | Modal.css:35       | Backdrop opacity 0.4 — text behind backdrop barely visible   | (UX, not WCAG)   | Increase to 0.6+ for clarity. |
+| Moderate | Modal.tsx:95       | Confirm button text "OK" - vague                            | 2.4.6 (Headings and Labels) | Use action-specific text: "Delete order" or "Save changes". |
+| Info     | Modal.css:35       | Backdrop opacity 0.4 - text behind backdrop barely visible   | (UX, not WCAG)   | Increase to 0.6+ for clarity. |
 
 ### Verdict
 
@@ -159,7 +159,7 @@ Output:
 ```markdown
 | Severity | Line | Issue                                          | WCAG SC | Fix |
 |----------|------|------------------------------------------------|---------|-----|
-| Critical | 42   | `<div onClick>` — not keyboard-operable;       | 2.1.1 / 4.1.2 | Replace with `<button type="button" onClick={handleClick}>Submit</button>`. The native button is keyboard-operable and announces as "button" by default. |
+| Critical | 42   | `<div onClick>` - not keyboard-operable;       | 2.1.1 / 4.1.2 | Replace with `<button type="button" onClick={handleClick}>Submit</button>`. The native button is keyboard-operable and announces as "button" by default. |
 ```
 
 ### Example 2: Missing label

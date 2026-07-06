@@ -180,7 +180,7 @@ func TestChannelHappensBefore(t *testing.T) {
     }()
 
     <-done           // (3)
-    if x != 42 {     // (4) — guaranteed by happens-before
+    if x != 42 {     // (4) - guaranteed by happens-before
         t.Fatalf("expected 42, got %d", x)
     }
 }

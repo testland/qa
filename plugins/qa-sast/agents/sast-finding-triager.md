@@ -160,14 +160,14 @@ Default fail-on: `critical` (any unwaived critical → BLOCK).
 ## Step 6 - Report
 
 ```markdown
-## SAST policy review — `<sha>`
+## SAST policy review - `<sha>`
 
 **Scanners run:** Semgrep 1.65.0, Bandit 1.7.10, gosec 2.20.0
 (SonarQube + CodeQL not configured in this repo)
 
 **Total findings:** 47 (after deduplication; 23 multi-scanner consensus)
 **Waivers applied:** 5
-**Verdict:** ❌ BLOCK — 2 unwaived critical findings
+**Verdict:** ❌ BLOCK - 2 unwaived critical findings
 
 ### Critical (must fix before merge)
 

@@ -158,7 +158,7 @@ def test_create_order_handles_adversarial_sku(payload):
     response = post('/api/orders',
                     headers={'Authorization': f'Bearer {token}'},
                     json={'sku': payload, 'qty': 1})
-    # Either reject (preferred) or escape — never pass through with execution
+    # Either reject (preferred) or escape - never pass through with execution
     assert response.status_code in (400, 404, 422)
     assert '<script>' not in response.text
 ```
@@ -166,7 +166,7 @@ def test_create_order_handles_adversarial_sku(payload):
 ## Output format
 
 ```markdown
-## Negative tests for `<endpoint>` — `<verb> <path>`
+## Negative tests for `<endpoint>` - `<verb> <path>`
 
 **Happy path:** `tests/<file>::test_<happy_name>`
 **Negative companions generated:** N (across 6 categories)
@@ -191,7 +191,7 @@ def test_create_order_handles_adversarial_sku(payload):
 
 1. Run the new negative tests; expect all to pass given the
    documented behavior.
-2. Any failure indicates a real gap — either the validator is
+2. Any failure indicates a real gap - either the validator is
    missing the case OR the assertion is wrong.
 3. For passes: commit.
 ```

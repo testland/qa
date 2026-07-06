@@ -122,7 +122,7 @@ Per the [FlaUI wiki - Searching page][flauisearch]:
 [flauisearch]: https://github.com/FlaUI/FlaUI/wiki/Searching
 
 ```csharp
-// Lambda form — preferred for readability
+// Lambda form - preferred for readability
 var loginButton = window.FindFirstDescendant(cf => cf.ByAutomationId("LoginButton"));
 
 // ConditionFactory form
@@ -302,15 +302,15 @@ UIA calls in UIA3 (COM interop) require an STA thread per
 configure STA via the test runner attribute:
 
 ```csharp
-// xUnit — install Xunit.StaFact and use [StaFact]
+// xUnit - install Xunit.StaFact and use [StaFact]
 [StaFact]
 public void Fact_running_on_sta_thread() { /* ... */ }
 
-// NUnit — use [Apartment]
+// NUnit - use [Apartment]
 [Test, Apartment(ApartmentState.STA)]
 public void Test_running_on_sta_thread() { /* ... */ }
 
-// MSTest — STA is default; no attribute needed for sync tests
+// MSTest - STA is default; no attribute needed for sync tests
 ```
 
 UIA2 (managed) is more permissive on threading, but mixed-threading

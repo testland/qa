@@ -85,7 +85,7 @@ for tid, s in stats.items():
     score = (rc * vt) / (rt * (1 + fr) * (1 + mn))
     scores[tid] = score
 
-# Sort ascending — lowest ROI first
+# Sort ascending - lowest ROI first
 ranked = sorted(scores.items(), key=lambda x: x[1])
 print(json.dumps(ranked))
 ```
@@ -93,7 +93,7 @@ print(json.dumps(ranked))
 ## Step 4 - Output: bottom decile
 
 ```markdown
-## E2E suite budget — `<repo>` — Q2 2026
+## E2E suite budget - `<repo>` - Q2 2026
 
 **Total E2E tests:** 142
 **Total runtime:** 38 min (per CI run)
@@ -102,9 +102,9 @@ print(json.dumps(ranked))
 
 | Test                                              | ROI | Runtime | Flake | Regressions caught | Value tier | Recommendation |
 |---------------------------------------------------|----:|--------:|------:|-------------------:|-----------:|----------------|
-| `archive-flow.spec.ts > old-orders`                | 0.0 |   2.1m  |  18%  |        0           |     2      | Retire — high flake, no signal in 6mo. |
-| `legacy-checkout.spec.ts > deprecated-promo`       | 0.1 |   3.2m  |   8%  |        0           |     1      | Retire — feature deprecated. |
-| `cart.spec.ts > add 1000 items`                    | 0.2 |   4.5m  |   2%  |        0           |     2      | Move to perf suite — not E2E concern. |
+| `archive-flow.spec.ts > old-orders`                | 0.0 |   2.1m  |  18%  |        0           |     2      | Retire - high flake, no signal in 6mo. |
+| `legacy-checkout.spec.ts > deprecated-promo`       | 0.1 |   3.2m  |   8%  |        0           |     1      | Retire - feature deprecated. |
+| `cart.spec.ts > add 1000 items`                    | 0.2 |   4.5m  |   2%  |        0           |     2      | Move to perf suite - not E2E concern. |
 | `e2e-utils.spec.ts > date-formatting`              | 0.5 |   0.8m  |   1%  |        0           |     2      | Move to unit layer. |
 | ... (10 more)                                       |     |         |       |                    |            |                |
 

@@ -143,7 +143,7 @@ team has confidence and abort procedures.
 ## Step 7 - Verdict + report
 
 ```markdown
-## Chaos experiment verdict — `checkout-network-latency`
+## Chaos experiment verdict - `checkout-network-latency`
 
 **Date:** YYYY-MM-DD   **Duration:** 5 minutes
 **Steady-state hypothesis:** checkout_completion_rate >= 95%
@@ -159,7 +159,7 @@ team has confidence and abort procedures.
 - Retry logic worked: ~200 retries observed; no user-visible failures.
 
 ### Action items
-- (none — system behaved as expected)
+- (none - system behaved as expected)
 
 ### Next iteration
 - Increase blast radius from 1% to 5% in next month's run.

@@ -71,7 +71,7 @@ You generate tests in {framework} for the given AC spec.
 Constraints:
 - One test per AC.
 - Use the project's test code conventions (see test-code-conventions reference).
-- Specific assertions only — no .toBeTruthy() / .toBeDefined() style.
+- Specific assertions only - no .toBeTruthy() / .toBeDefined() style.
 - Use {test_runner}'s standard primitives.
 - If you can't satisfy an AC with the given inputs, mark with
   CONFIDENCE: low and explain why.
@@ -126,7 +126,7 @@ def score(test_code, ac):
 ## Step 4 - Output structure
 
 ```markdown
-## AI-generated tests — `<spec>`
+## AI-generated tests - `<spec>`
 
 **Generated:** N tests
 **High-confidence:** M (review: spot-check 2-3)

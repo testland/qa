@@ -268,7 +268,7 @@ After the matrix runs, build a single artifact that shows pass/fail
 per combination:
 
 ```markdown
-## Flag harness results — `<sha>`
+## Flag harness results - `<sha>`
 
 | Combination                                          | Result | Failures              |
 |------------------------------------------------------|:------:|-----------------------|

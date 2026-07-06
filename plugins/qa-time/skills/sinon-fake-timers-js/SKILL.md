@@ -96,7 +96,7 @@ Jumps the clock without ticking any in-flight timers.
 // behaviour, combine with process.env.TZ
 process.env.TZ = 'America/New_York';
 const clock = FakeTimers.install({
-  now: new Date('2026-03-08T06:30:00Z').getTime(),  // 02:30 EDT — invalid local
+  now: new Date('2026-03-08T06:30:00Z').getTime(),  // 02:30 EDT - invalid local
 });
 // ... test that scheduling at 02:30 local degrades gracefully
 ```

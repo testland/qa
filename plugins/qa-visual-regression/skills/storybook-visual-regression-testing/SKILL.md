@@ -145,7 +145,7 @@ Two-step: start Storybook, then run the test-runner against it
 ([storybook-test-runner][st-tr]):
 
 ```bash
-# Terminal A — long-running
+# Terminal A - long-running
 npm run storybook
 
 # Terminal B

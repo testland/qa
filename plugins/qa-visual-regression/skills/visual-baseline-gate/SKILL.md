@@ -64,7 +64,7 @@ The gate consumes two inputs:
    each intentional baseline change for the current PR:
 
    ```yaml
-   # .visual-acceptance.yml — committed by reviewers in the PR's review pass
+   # .visual-acceptance.yml - committed by reviewers in the PR's review pass
    pr: 1234
    accepted_by: reviewer-handle
    accepted_at: 2026-05-04T12:00:00Z
@@ -87,10 +87,10 @@ def visual_gate(classifications, acceptance_log, *,
     blockers = []
     for c in classifications:
         if c["category"] == "regression":
-            blockers.append((c, "regression — blocks unconditionally"))
+            blockers.append((c, "regression - blocks unconditionally"))
         elif c["category"] == "intentional" and require_reviewer_acceptance:
             if c["snapshot"] not in accepted:
-                blockers.append((c, "intentional — missing reviewer acceptance"))
+                blockers.append((c, "intentional - missing reviewer acceptance"))
         elif c["category"] == "incidental":
             # incidental requires investigation but does NOT block by default
             pass
@@ -139,7 +139,7 @@ Markdown summary (matches the
 shape for cross-domain consistency):
 
 ```markdown
-# Visual Baseline Gate — verdict: NO-GO
+# Visual Baseline Gate - verdict: NO-GO
 
 **Blockers: 2**
 
@@ -183,7 +183,7 @@ CLASS_PATH = Path("visual-classifications.json")  # output of visual-diff-classi
 ACCEPT_PATH = Path(".visual-acceptance.yml")
 
 if not CLASS_PATH.exists():
-    print("No visual classifications produced — fail closed.")
+    print("No visual classifications produced - fail closed.")
     sys.exit(1)
 
 classifications = json.loads(CLASS_PATH.read_text())
@@ -198,7 +198,7 @@ for c in classifications:
         blockers.append((c, "missing reviewer acceptance"))
 
 verdict = "no-go" if blockers else "go"
-print(f"# Visual Baseline Gate — verdict: {verdict.upper()}")
+print(f"# Visual Baseline Gate - verdict: {verdict.upper()}")
 for c, reason in blockers:
     print(f"- {c['engine']} :: {c['snapshot']} :: {reason}")
 

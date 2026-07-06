@@ -77,9 +77,9 @@ End with a summary block:
 ```
 ## Verdict
 
-- Critical findings: <N> — must address before merge
-- Warning findings: <N> — schedule mitigation before deploy
-- Info findings: <N> — surfaced for completeness
+- Critical findings: <N> - must address before merge
+- Warning findings: <N> - schedule mitigation before deploy
+- Info findings: <N> - surfaced for completeness
 
 Recommended action: <one sentence>
 
@@ -132,12 +132,12 @@ Output:
 | 3 | Warning | V42__cleanup.sql:4 | ADD CONSTRAINT FK without supporting index on products.category_id | Future joins on this FK do full table scans on products | Add CREATE INDEX CONCURRENTLY ix_products_category_id BEFORE the FK constraint |
 
 ## Verdict
-- Critical findings: 2 — must address before merge
-- Warning findings: 1 — address this sprint
-- Info findings: 0 — surfaced for completeness
+- Critical findings: 2 - must address before merge
+- Warning findings: 1 - address this sprint
+- Info findings: 0 - surfaced for completeness
 Recommended action: Split V42 into V42a (deprecate) + V42b (drop after deprecation deploy); add the index in this PR; use two-step pattern for NOT NULL add.
-Rollback verified: NO — V42 has no U42 sibling
-Downstream consumers checked: yes — checked app/views.py, dashboards/users.json, etl/users.sql via git grep
+Rollback verified: NO - V42 has no U42 sibling
+Downstream consumers checked: yes - checked app/views.py, dashboards/users.json, etl/users.sql via git grep
 ```
 
 ### Example 2 - Liquibase changeset, additive only

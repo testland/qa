@@ -193,7 +193,7 @@ the pattern. Verify they do all 6 steps:
 ### Test 1 - Focus moves on open
 
 ```typescript
-test('SC 2.4.3 — focus enters dialog on open', async ({ page }) => {
+test('SC 2.4.3 - focus enters dialog on open', async ({ page }) => {
   await page.locator('[data-testid="open-dialog"]').click();
   await expect(page.locator('[role="dialog"] button').first()).toBeFocused();
 });
@@ -202,7 +202,7 @@ test('SC 2.4.3 — focus enters dialog on open', async ({ page }) => {
 ### Test 2 - Tab cycles within dialog
 
 ```typescript
-test('SC 2.1.2 — Tab cycles within dialog', async ({ page }) => {
+test('SC 2.1.2 - Tab cycles within dialog', async ({ page }) => {
   await page.locator('[data-testid="open-dialog"]').click();
   // Tab to last
   for (let i = 0; i < 5; i++) await page.keyboard.press('Tab');
@@ -215,7 +215,7 @@ test('SC 2.1.2 — Tab cycles within dialog', async ({ page }) => {
 ### Test 3 - Escape closes; focus returns to trigger
 
 ```typescript
-test('SC 2.1.2 + 2.4.3 — Escape closes; focus restored', async ({ page }) => {
+test('SC 2.1.2 + 2.4.3 - Escape closes; focus restored', async ({ page }) => {
   const trigger = page.locator('[data-testid="open-dialog"]');
   await trigger.click();
   await page.keyboard.press('Escape');

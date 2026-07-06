@@ -120,7 +120,7 @@ The team's `docs/test-conventions.md` claims one thing; the codebase does anothe
 - "Page Objects are mandatory for E2E" → POM coverage rate per §A1.
 - "Fixtures must be per-describe" → fixture-scope distribution per §A3.
 
-If `docs/test-conventions.md` does not exist, this axis emits `n/a — no conventions doc; baseline against [`test-code-conventions`](../skills/test-code-conventions/SKILL.md) instead`.
+If `docs/test-conventions.md` does not exist, this axis emits `n/a - no conventions doc; baseline against [`test-code-conventions`](../skills/test-code-conventions/SKILL.md) instead`.
 
 ### §A8 - CI integration health
 
@@ -138,7 +138,7 @@ Flag missing patterns and explicit anti-patterns (`retries: 5` masks bugs; `cy.w
 ## Step 3 - Emit the audit verdict
 
 ```markdown
-# Test framework architecture audit — `<repo>@<sha>`
+# Test framework architecture audit - `<repo>@<sha>`
 
 **Framework:** Playwright 1.49 (TypeScript)
 **Test files:** 312    **POMs:** 38    **Fixtures:** 14    **Helpers:** 47
@@ -151,13 +151,13 @@ Flag missing patterns and explicit anti-patterns (`retries: 5` masks bugs; `cy.w
 | §A1 POM consistency | 76% | WARN | 76% POM coverage; 24% of tests inline selectors. `tests/e2e/cart/checkout.spec.ts` is the largest offender. |
 | §A2 Base-class hierarchy depth | 4 | FAIL | `CheckoutPage` → `CartFlowPage` → `EcommercePage` → `BasePage` (depth 4). Refactor to depth ≤2. |
 | §A3 Fixture coupling | OK | PASS | All fixtures per-test or per-describe; no global fixture hubs. |
-| §A4 Helper sprawl | 47 helpers / 312 tests | WARN | Ratio 1:6.6 — over the 1:10 floor. 11 helpers called from <2 files in 90d (candidate dead). |
+| §A4 Helper sprawl | 47 helpers / 312 tests | WARN | Ratio 1:6.6 - over the 1:10 floor. 11 helpers called from <2 files in 90d (candidate dead). |
 | §A5 Naming drift | 3 conventions detected | WARN | `*.spec.ts` (78%) + `*.test.ts` (15%) + `*_test.ts` (7%). Pick one. |
 | §A6 Retry / wait | 18 hardcoded sleeps | FAIL | 18 instances of `page.waitForTimeout` / `cy.wait(N)`. Each is a [flake candidate](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md). |
-| §A7 Convention drift | 4 of 7 rules drifted | WARN | docs/test-conventions.md says "always getByRole" — measured: 61%. |
+| §A7 Convention drift | 4 of 7 rules drifted | WARN | docs/test-conventions.md says "always getByRole" - measured: 61%. |
 | §A8 CI integration | OK | PASS | Parallel sharded 4-way; traces on first retry; retries: 1; secrets via GitHub Actions. |
 
-## §A2 — Deep hierarchy detail
+## §A2 - Deep hierarchy detail
 
 ```
 BasePage (tests/pages/BasePage.ts)
@@ -173,7 +173,7 @@ Risk: any BasePage change cascades through 3 classes; tests at the leaf break fo
 Fix: collapse EcommercePage and CartFlowPage into shared composition (mixins / interfaces) at the BasePage tier, or hoist EcommercePage's concerns into BasePage if they're universal.
 ```
 
-## §A6 — Hardcoded sleep detail
+## §A6 - Hardcoded sleep detail
 
 | File | Line | Pattern | Recommended fix |
 |---|---|---|---|
@@ -186,19 +186,19 @@ Refer to [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-
 
 ## Recommendations (prioritised)
 
-1. **§A6 (FAIL)** — eliminate the 18 hardcoded sleeps. Highest-impact: each is a measured flake candidate. Estimated effort: 2 days. Owner: SDET on flake rotation.
-2. **§A2 (FAIL)** — collapse the depth-4 POM hierarchy. Estimated effort: 1 week (touches 38 POMs, 312 tests indirectly). Owner: test-framework owner.
-3. **§A1 (WARN)** — bring POM coverage to >90%. Migrate inline-selector tests in `tests/e2e/cart/`. Effort: 1 day. Owner: any SDET.
-4. **§A5 (WARN)** — pick one filename convention. Trivial to enforce via ESLint rule. Owner: any.
-5. **§A4 (WARN)** — delete 11 dead helpers, audit the remaining 36 for consolidation. Effort: 0.5 day. Owner: any.
-6. **§A7 (WARN)** — `getByRole` migration. Tracked separately; not blocking.
+1. **§A6 (FAIL)** - eliminate the 18 hardcoded sleeps. Highest-impact: each is a measured flake candidate. Estimated effort: 2 days. Owner: SDET on flake rotation.
+2. **§A2 (FAIL)** - collapse the depth-4 POM hierarchy. Estimated effort: 1 week (touches 38 POMs, 312 tests indirectly). Owner: test-framework owner.
+3. **§A1 (WARN)** - bring POM coverage to >90%. Migrate inline-selector tests in `tests/e2e/cart/`. Effort: 1 day. Owner: any SDET.
+4. **§A5 (WARN)** - pick one filename convention. Trivial to enforce via ESLint rule. Owner: any.
+5. **§A4 (WARN)** - delete 11 dead helpers, audit the remaining 36 for consolidation. Effort: 0.5 day. Owner: any.
+6. **§A7 (WARN)** - `getByRole` migration. Tracked separately; not blocking.
 
 ## What this agent did NOT do
 
-- Audit individual test files for AAA / naming / magic numbers — that's [`test-code-critic`](test-code-critic.md). Run it in parallel for per-file findings.
-- Audit individual assertion specificity — that's [`assertion-quality-reviewer`](assertion-quality-reviewer.md).
-- Audit individual selector quality — that's [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md).
-- Audit individual mocking patterns — that's [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md).
+- Audit individual test files for AAA / naming / magic numbers - that's [`test-code-critic`](test-code-critic.md). Run it in parallel for per-file findings.
+- Audit individual assertion specificity - that's [`assertion-quality-reviewer`](assertion-quality-reviewer.md).
+- Audit individual selector quality - that's [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md).
+- Audit individual mocking patterns - that's [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md).
 - Refactor the framework. Architecture changes need design review; the agent surfaces the debt, the team decides.
 - Modify any file. Read-only.
 ```

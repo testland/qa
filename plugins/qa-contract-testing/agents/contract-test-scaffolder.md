@@ -52,7 +52,7 @@ describe('CartService consumer contract', () => {
   afterAll(() => provider.finalize());
   afterEach(() => provider.verify());
 
-  test('POST /api/cart/items — adds an item (201)', async () => {
+  test('POST /api/cart/items - adds an item (201)', async () => {
     await provider.addInteraction({
       state: 'cart is empty',                  // INPUT-NEEDED: align with provider state file
       uponReceiving: 'a request to add SKU-001',

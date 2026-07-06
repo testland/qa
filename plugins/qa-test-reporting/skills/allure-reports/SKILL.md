@@ -70,7 +70,7 @@ Install the Allure CLI ([allure-docs][allure] linked from
 ```bash
 # Node-based (cross-platform):
 npm install -g allure-commandline
-# Or via Scoop / Homebrew / apt — see allurereport.org/docs/ install pages.
+# Or via Scoop / Homebrew / apt - see allurereport.org/docs/ install pages.
 ```
 
 Generate from the results directory:

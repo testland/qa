@@ -61,9 +61,9 @@ The default format. Reads top-to-bottom; each row is one step the
 tester executes:
 
 ```markdown
-## TC-1234 — Apply promo code at checkout
+## TC-1234 - Apply promo code at checkout
 
-**Feature:** Checkout — promo codes
+**Feature:** Checkout - promo codes
 **Tester:** ____________________   **Date:** ____________________
 **Build:** ____________________   **Environment:** staging | prod
 
@@ -142,11 +142,11 @@ cases) is unmaintainable. The pattern:
 - Edge cases are sibling TCs, not appended steps.
 
 ```
-TC-1234 — Apply valid promo
-TC-1235 — Apply expired promo
-TC-1236 — Apply invalid-format promo
-TC-1237 — Apply already-used promo
-TC-1238 — Apply promo to empty cart
+TC-1234 - Apply valid promo
+TC-1235 - Apply expired promo
+TC-1236 - Apply invalid-format promo
+TC-1237 - Apply already-used promo
+TC-1238 - Apply promo to empty cart
 ```
 
 The cost is more TCs; the benefit is per-TC pass/fail clarity. A
@@ -192,7 +192,7 @@ for the structured bug-reproduction package.
 ## Output format
 
 ```markdown
-## Manual test scripts — `<feature>`
+## Manual test scripts - `<feature>`
 
 **Source spec:** `<story / PRD / charter>`
 **Format:** step-table | gherkin
@@ -216,7 +216,7 @@ for the structured bug-reproduction package.
 
 ### Author notes
 
-- Each TC is self-contained — no implicit cross-TC dependencies.
+- Each TC is self-contained - no implicit cross-TC dependencies.
 - Sign-off block is per-TC; aggregate sign-off via release runbook.
 ```
 

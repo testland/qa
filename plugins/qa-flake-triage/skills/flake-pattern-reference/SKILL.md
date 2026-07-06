@@ -190,7 +190,7 @@ Tests use random data without a controlled seed.
 ```
 Test fails ~50% of runs?
 ├── Yes → likely "shared parallel state" or "test ordering"
-└── No → fails ~5–20% of runs?
+└── No → fails ~5-20% of runs?
     ├── Yes → likely "async/timing" or "network"
     └── No → fails only on specific OS / runner?
         ├── Yes → "environment variance"

@@ -144,7 +144,7 @@ Map category → typical fix:
 ## Output format
 
 ```markdown
-## Flame graph analysis — `<profile-source>`
+## Flame graph analysis - `<profile-source>`
 
 **Runtime:** python | jvm | go | node | native
 **Profile duration:** Ns (or per-request)
@@ -162,14 +162,14 @@ Map category → typical fix:
 
 The top hot path (`JSON.stringify` at 38% sample share) is the
 load-bearing cost. The serialization path also dominates rank 5
-(`Buffer.from` at 3%) — the serialize step accounts for ~41% of
+(`Buffer.from` at 3%) - the serialize step accounts for ~41% of
 sampled time combined.
 
 ### Recommended next step
 
 1. **Switch to a streaming JSON serializer** (e.g. `fast-json-stringify`
    in Node, `orjson` in Python, Jackson's `JsonGenerator` in JVM)
-   — eliminates intermediate string allocation and runs ~2-5x faster
+  - eliminates intermediate string allocation and runs ~2-5x faster
    on benchmark-typical payloads.
 2. Re-profile after the change; expect rank 1 to drop below 10%.
 3. Hand off to [`perf-budget-gate`](../perf-budget-gate/SKILL.md)

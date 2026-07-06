@@ -94,7 +94,7 @@ require 'active_support/time'
 
 Time.zone = 'America/New_York'
 Timecop.freeze(Time.zone.local(2026, 3, 8, 2, 30, 0)) do
-  # Behaviour depends on Time.zone library — Rails ActiveSupport
+  # Behaviour depends on Time.zone library - Rails ActiveSupport
   # has known DST-handling
   expect(...).to ...
 end

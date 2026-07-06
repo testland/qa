@@ -152,7 +152,7 @@ Pick by stack:
 import pytest
 
 class TestDocumentsTenantIsolation:
-    """Per OWASP WSTG-ATHZ-02 — horizontal escalation battery."""
+    """Per OWASP WSTG-ATHZ-02 - horizontal escalation battery."""
 
     def test_tenant_a_cannot_read_tenant_b_document(
         self, client, tenant_a_user, tenant_b_resource

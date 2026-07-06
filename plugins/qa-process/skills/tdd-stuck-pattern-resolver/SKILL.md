@@ -32,7 +32,7 @@ the second-order problem: the code resists TDD.
 ## Pattern 1 - Singleton / static dependency
 
 ```javascript
-// Stuck — depends on a global database client
+// Stuck - depends on a global database client
 function processOrder(orderId) {
   const order = Database.getInstance().findOrder(orderId);   // singleton
   // ...
@@ -64,7 +64,7 @@ single composition root.
 ## Pattern 2 - Network in constructor
 
 ```javascript
-// Stuck — constructor side-effects
+// Stuck - constructor side-effects
 class OrderService {
   constructor() {
     this.config = await fetch('/config').then(r => r.json());   // 😱
@@ -97,7 +97,7 @@ Construction = pure assignment. Side effects happen at composition.
 ## Pattern 3 - Time / random as hidden input
 
 ```javascript
-// Stuck — uses Date.now() and Math.random() directly
+// Stuck - uses Date.now() and Math.random() directly
 function generateInvoice(items) {
   return {
     id: `INV-${Date.now()}-${Math.random()}`,
@@ -133,7 +133,7 @@ for a similar pattern with database connections).
 ## Pattern 4 - Untestable boundaries (file system, OS calls)
 
 ```python
-# Stuck — direct file system access
+# Stuck - direct file system access
 def load_config():
     with open('/etc/myapp/config.json') as f:
         return json.load(f)
@@ -175,7 +175,7 @@ Tests inject `FakeConfigSource({...})`; production injects
 ## Pattern 5 - Deeply nested construction
 
 ```typescript
-// Stuck — chain of constructions
+// Stuck - chain of constructions
 function processOrder(orderId: string) {
   const repo = new OrderRepo(new DbConnection(new ConfigLoader(new FileReader('/etc/...'))));
   return new OrderService(repo).process(orderId);
@@ -211,7 +211,7 @@ Production composes once at startup; tests skip the entire chain.
 ## Pattern 6 - Untestable private methods
 
 ```kotlin
-// Stuck — wants to test a private helper
+// Stuck - wants to test a private helper
 class OrderProcessor {
     fun process(order: Order) { /* ... */ }
     private fun calculateTotal(items: List<Item>): Double { /* ... */ }
@@ -258,7 +258,7 @@ with a fake.
 ## Pattern 7 - Async / Promise-heavy code
 
 ```javascript
-// Stuck — sequential async operations
+// Stuck - sequential async operations
 async function checkout(cart) {
   const tax = await taxService.calculate(cart);
   const charge = await stripe.charge(cart.total + tax);
@@ -291,7 +291,7 @@ pattern - testable as state transitions, not sequential awaits.
 ## Pattern 8 - Code that calls third-party SDKs
 
 ```typescript
-// Stuck — direct Stripe SDK call
+// Stuck - direct Stripe SDK call
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_KEY);
 

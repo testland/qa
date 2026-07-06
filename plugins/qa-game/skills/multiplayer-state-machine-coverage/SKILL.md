@@ -186,7 +186,7 @@ For Unity NGO, the fixture is a UTF `[UnityTest]` PlayMode test
 [UnityTest]
 public IEnumerator HostMigration_TransfersAuthority_OnHostDisconnect()
 {
-    // Arrange — host + 2 clients
+    // Arrange - host + 2 clients
     var host = StartHost();
     yield return new WaitForSeconds(1f);
     var c1 = StartClient(); yield return new WaitForSeconds(0.5f);
@@ -197,10 +197,10 @@ public IEnumerator HostMigration_TransfersAuthority_OnHostDisconnect()
     yield return new WaitForSeconds(0.5f);
     Assert.AreEqual(host.LocalClientId, npc.OwnerClientId);
 
-    // Act — kill the host
+    // Act - kill the host
     host.Shutdown();
 
-    // Assert — surviving client becomes new host within
+    // Assert - surviving client becomes new host within
     // <= 5 s and reassigns NPC authority.
     yield return new WaitForSeconds(5f);
     Assert.IsTrue(c1.IsHost || c2.IsHost);
@@ -245,7 +245,7 @@ and tag the fixture with the partner-portal clause number.
 Aggregate the matrix into a coverage report:
 
 ```
-Multiplayer state-machine coverage — MyGame v1.4.2
+Multiplayer state-machine coverage - MyGame v1.4.2
 ====================================================
 Connection states enumerated:          7 / 7 ✓
 Ownership transitions enumerated:      5 / 5 ✓

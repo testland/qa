@@ -87,7 +87,7 @@ risks (no trigger) are anti-patterns.
 ## Step 5 - Author the decision document
 
 ```markdown
-# Risk acceptance decision — PR-008
+# Risk acceptance decision - PR-008
 
 **Risk:** Legacy CSV import endpoint accepts files up to 500MB
 without streaming
@@ -119,7 +119,7 @@ alert within 30 seconds; rerun + fix process takes <15 minutes.
 
 ## Scope
 
-This acceptance covers releases v3.0 through v3.6 (Q2 2026 — Q4
+This acceptance covers releases v3.0 through v3.6 (Q2 2026 - Q4
 2026) inclusive. Re-review trigger conditions below.
 
 ## Sign-off
@@ -132,7 +132,7 @@ This acceptance covers releases v3.0 through v3.6 (Q2 2026 — Q4
 Reopen this decision if ANY of:
 
 1. **Time:** End of Q4 2026 (default review).
-2. **Score change:** If likelihood rises to 4+ for any reason —
+2. **Score change:** If likelihood rises to 4+ for any reason - 
    e.g., increased CSV-import customer volume.
 3. **Incident:** Any production OOM event traced to this
    endpoint.
@@ -144,7 +144,7 @@ Reopen this decision if ANY of:
 ## Compensating controls
 
 - Kubernetes memory limit: 1Gi per pod (auto-OOM-kill at limit)
-- Datadog monitor: `csv-import-oom-rate` — alert on any OOM
+- Datadog monitor: `csv-import-oom-rate` - alert on any OOM
 - Runbook: [`csv-import-oom-runbook`](runbooks/csv-import-oom.md)
 - On-call SLA: 30s detection, 15min remediation
 
@@ -165,7 +165,7 @@ Update the risk register entry:
 And add to the decisions index:
 
 ```markdown
-# Risk acceptance decisions — index
+# Risk acceptance decisions - index
 
 | Decision | Risk | Score | Decided | Next review |
 |---|---|---:|---|---|
@@ -192,7 +192,7 @@ Some risks score high (≥15) but acceptance is still legitimate.
 Example: a known-exploitable but rate-limited internal endpoint.
 
 ```markdown
-# Risk acceptance decision — R-99 (Security)
+# Risk acceptance decision - R-99 (Security)
 
 **Risk:** Internal admin endpoint vulnerable to CSRF (low-likelihood
 because authenticated session required, network-segmented)

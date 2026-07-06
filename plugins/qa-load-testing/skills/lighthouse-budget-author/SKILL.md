@@ -112,7 +112,7 @@ module.exports = {
     },
     assert: {
       assertMatrix: [
-        // Cached marketing pages — strict
+        // Cached marketing pages - strict
         {
           matchingUrlPattern: '^http://[^/]+/(pricing)?$',
           assertions: {
@@ -121,7 +121,7 @@ module.exports = {
             'cumulative-layout-shift':   ['error', { maxNumericValue: 0.1 }],
           },
         },
-        // Dynamic logged-in pages — defaults
+        // Dynamic logged-in pages - defaults
         {
           matchingUrlPattern: '/dashboard',
           assertions: {
@@ -130,7 +130,7 @@ module.exports = {
             'cumulative-layout-shift':   ['error', { maxNumericValue: 0.1 }],
           },
         },
-        // Form-heavy pages — strict CLS
+        // Form-heavy pages - strict CLS
         {
           matchingUrlPattern: '/orders/new',
           assertions: {

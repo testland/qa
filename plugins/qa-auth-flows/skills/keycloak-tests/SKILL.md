@@ -191,7 +191,7 @@ def test_create_user_via_admin_api(keycloak):
 
 ```yaml
 services:
-  # No service container needed — Testcontainers manages Keycloak per test
+  # No service container needed - Testcontainers manages Keycloak per test
 steps:
   - run: pytest tests/integration/auth/ -v
 ```

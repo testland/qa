@@ -59,11 +59,11 @@ The agent emits **exactly one** primary recommendation. A secondary fallback may
 Output template:
 
 ```markdown
-## Load testing tool recommendation — <project-name>
+## Load testing tool recommendation - <project-name>
 
 **Goal:** <api-rps-soak | api-spike | browser-side-perf | gui-authored | mixed-protocols>
 **Team stack:** <JS | Python | Java/Scala | mixed>
-**Existing convention:** <detected tool | "none — greenfield">
+**Existing convention:** <detected tool | "none - greenfield">
 **Signal:** <file or CI script that drove the detection>
 
 **Recommended tool:** <k6 / JMeter / Gatling / Locust / Lighthouse>

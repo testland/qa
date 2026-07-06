@@ -46,31 +46,31 @@ If the team is launching a new role with no prior transcripts, use **synthesised
 For each question in the bank, the calibration guide emits **four worked answers** demonstrating each rubric level (1 = no hire, 2 = borderline, 3 = hire, 4 = strong hire):
 
 ```markdown
-### Q3 — Behavioral (STAR): late-defect catch — gold standards
+### Q3 - Behavioral (STAR): late-defect catch - gold standards
 
-#### Score 1 — no hire
+#### Score 1 - no hire
 
 > "Yeah, last release we caught a really bad bug right before launch. The whole team was upset. We were lucky we caught it. After that I'm just always more careful."
 
-**Why score 1:** No technique named; no STAR structure (S/T/A/R undifferentiated); attributes the catch to luck and emotional response rather than process. Anchor: "Cannot articulate a partition / boundary / decision-table technique" — matches.
+**Why score 1:** No technique named; no STAR structure (S/T/A/R undifferentiated); attributes the catch to luck and emotional response rather than process. Anchor: "Cannot articulate a partition / boundary / decision-table technique" - matches.
 
-#### Score 2 — borderline
+#### Score 2 - borderline
 
 > "Last release I caught a defect where the cart total wrapped around at $99.99 to a negative number. I added a boundary test for the max-price limit. It was fine after that."
 
-**Why score 2:** Names a technique (boundary value analysis, implicitly); STAR is partial — Situation and Action are clear; Task is implicit ("I was the QA lead"); Result is "it was fine after that" — no measurable outcome, no retrospective learning. Probe for the Task and Result; if the candidate fills both, score moves to 3.
+**Why score 2:** Names a technique (boundary value analysis, implicitly); STAR is partial - Situation and Action are clear; Task is implicit ("I was the QA lead"); Result is "it was fine after that" - no measurable outcome, no retrospective learning. Probe for the Task and Result; if the candidate fills both, score moves to 3.
 
 **Probe to use:** "What was your specific role at that point? And how did the team know the fix worked beyond that one test?"
 
-#### Score 3 — hire
+#### Score 3 - hire
 
-> "On the v3.4.0 release we caught a defect where the cart total wrapped around at $99.99 to a negative number. As the QA lead for the release, I was running the standard regression suite when I noticed our test cases all used round-dollar amounts — $50, $100. I added boundary-value tests at the upper limit (one cent under, exactly at, one cent over) and the bug reproduced at exactly $99.99. We fixed the cents-precision rounding in the price-display component, added the boundary tests to the regression suite, and updated our test-data conventions to use Faker's `randomFloat({ precision: 0.01 })` rather than round numbers."
+> "On the v3.4.0 release we caught a defect where the cart total wrapped around at $99.99 to a negative number. As the QA lead for the release, I was running the standard regression suite when I noticed our test cases all used round-dollar amounts - $50, $100. I added boundary-value tests at the upper limit (one cent under, exactly at, one cent over) and the bug reproduced at exactly $99.99. We fixed the cents-precision rounding in the price-display component, added the boundary tests to the regression suite, and updated our test-data conventions to use Faker's `randomFloat({ precision: 0.01 })` rather than round numbers."
 
 **Why score 3:** Specific technique (boundary value analysis) named **and** applied. STAR complete: situation (v3.4.0), task (QA lead, running regression), specific action (noticed pattern, added boundary tests), measurable result + retro learning (fix shipped, regression added, conventions updated). Matches the anchor: "Identifies the specific technique that caught the defect... STAR complete... measurable result + retro learning."
 
-#### Score 4 — strong hire
+#### Score 4 - strong hire
 
-> "[Same situation as score 3, plus:] After we shipped the fix, I noticed our test-data conventions had no rule against round-number-only test data. I authored a one-page conventions update that mandated Faker boundary inputs for any numeric field with a documented constraint, and got the rest of the QA team to sign off. Over the following two releases, we caught two more rounding-precision bugs at the same boundary class — proving the convention change was load-bearing, not just paperwork."
+> "[Same situation as score 3, plus:] After we shipped the fix, I noticed our test-data conventions had no rule against round-number-only test data. I authored a one-page conventions update that mandated Faker boundary inputs for any numeric field with a documented constraint, and got the rest of the QA team to sign off. Over the following two releases, we caught two more rounding-precision bugs at the same boundary class - proving the convention change was load-bearing, not just paperwork."
 
 **Why score 4:** Generalises beyond the specific defect to a systemic process change, ties the change to a measurable downstream outcome (two more bugs caught), and documents organisational influence (got the team to sign off). Matches the anchor: "Identifies a systemic gap... and ties the change to a measurable downstream improvement."
 ```
@@ -82,7 +82,7 @@ The four-level demonstration is the load-bearing artifact. An interviewer who re
 For each question, the guide emits a "common pitfalls" section - the typical mistakes interviewers make scoring this question:
 
 ```markdown
-### Q3 — common interviewer pitfalls
+### Q3 - common interviewer pitfalls
 
 | Pitfall | Why it produces noise | Correction |
 |---|---|---|
@@ -116,11 +116,11 @@ The output is a single markdown document with:
 6. **Hand-off block**:
 
 ```markdown
-## HAND-OFF — required next steps
+## HAND-OFF - required next steps
 
 1. Run the calibration session per Step 4. Do **not** schedule real candidates before this session is complete.
 2. After the first 5 real candidates, run a retro: which questions discriminated, which scored everyone at 3, which had inter-rater disagreement above the team's tolerance. Update the rubric and / or this guide accordingly.
-3. Replace any synthesised transcripts in this guide with real anonymised transcripts from the first 5 candidates — synthesised transcripts are starter-material only.
+3. Replace any synthesised transcripts in this guide with real anonymised transcripts from the first 5 candidates - synthesised transcripts are starter-material only.
 4. Re-author this guide whenever the role description, seniority, or rubric change.
 ```
 

@@ -114,7 +114,7 @@ This is a "ratcheting up" of existing debt. Block merge unless:
 ## Step 6 - Emit verdict block
 
 ```markdown
-## Code quality review — `<sha>` vs `main`
+## Code quality review - `<sha>` vs `main`
 
 **Tools cited:** SonarQube + Lizard + Madge + Knip
 **Scope:** production code only (verified via Step 1)
@@ -129,14 +129,14 @@ This is a "ratcheting up" of existing debt. Block merge unless:
 
 ### Net-new findings (block merge)
 
-1. **Critical** — `src/auth/session.ts:42` `validateSession()` CCN = 32
+1. **Critical** - `src/auth/session.ts:42` `validateSession()` CCN = 32
    _Sources:_ Lizard (`-C 10` exceeded), SonarQube (cognitive complexity rule `S3776`)
    _Fix:_ Extract token-refresh path to `refreshExpiredToken()` helper. Drops CCN to ~12.
 
 ### Modified-line findings (require ratchet ticket OR fix)
 
-2. **Critical** — `src/orders/process.ts:processOrder()` CCN raised 18 → 24
-3. **Major** — Knip: `src/utils/legacy-helper.ts` is now orphan (last consumer removed in this PR)
+2. **Critical** - `src/orders/process.ts:processOrder()` CCN raised 18 → 24
+3. **Major** - Knip: `src/utils/legacy-helper.ts` is now orphan (last consumer removed in this PR)
 
 ### Inherited findings (informational; not blocking)
 
@@ -144,7 +144,7 @@ This is a "ratcheting up" of existing debt. Block merge unless:
 
 ### Verdict
 
-❌ **BLOCK** — 1 net-new Critical (Step 4 rule). Address before merge.
+❌ **BLOCK** - 1 net-new Critical (Step 4 rule). Address before merge.
 
 ### Recommended actions
 
@@ -183,7 +183,7 @@ Net new: 0 findings
 Modified: 2 Major (CCN reduced 22 → 14 on 2 functions)
 Inherited: unchanged
 
-Verdict: ✅ READY — net debt reduced by 2 Major findings.
+Verdict: ✅ READY - net debt reduced by 2 Major findings.
 ```
 
 ### Example 2 - Feature PR (block case)
@@ -193,18 +193,18 @@ Net new: 1 Critical (new circular dep), 2 Major (high CCN)
 Modified: 0
 Inherited: unchanged
 
-Verdict: ❌ BLOCK — 1 net-new Critical.
+Verdict: ❌ BLOCK - 1 net-new Critical.
 Action: break the circular dep via interface extraction; resubmit.
 ```
 
 ### Example 3 - Tactical hot-fix (ratchet case)
 
 ```
-Net new: 1 Major (CCN 14 in new function — under threshold but worth tracking)
+Net new: 1 Major (CCN 14 in new function - under threshold but worth tracking)
 Modified: 1 Major (touched function CCN raised 12 → 18)
 Inherited: unchanged
 
-Verdict: 🟡 NEEDS-WORK — modified-line ratchet ticket required for CCN 18.
+Verdict: 🟡 NEEDS-WORK - modified-line ratchet ticket required for CCN 18.
 PR description must cite ticket ID + approver before merge.
 ```
 

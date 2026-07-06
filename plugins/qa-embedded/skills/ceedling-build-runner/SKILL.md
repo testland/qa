@@ -97,7 +97,7 @@ Per `CeedlingPacket.md`, the canonical top-level sections:
   :libraries: []
 
 :files:
-  # .c, .h, .o extension mappings — usually default values
+  # .c, .h, .o extension mappings - usually default values
 
 :defines:
   :test:

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-shift-left",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Shift-left QA: 4 skills (acceptance-criteria-extractor, nfr-extractor, data-contract-extractor, bdd-suite-to-test-map) and 4 agents (testability-reviewer, definition-of-done-checker, threat-model-from-spec, spec-to-suite-orchestrator).",
   "author": {
     "name": "testland",

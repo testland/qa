@@ -100,22 +100,22 @@ Inconsistencies = caveat (proposed value shown but flagged).
 ## Step 6 - Verdict + report
 
 ```markdown
-## Bug report audit — <bug-spec-id>
+## Bug report audit - <bug-spec-id>
 
-**Verdict:** ❌ BLOCK — 2 critical, 1 warning
+**Verdict:** ❌ BLOCK - 2 critical, 1 warning
 
 ### Critical (must fix before file)
 
 | Finding | Required field | Detail |
 |---|---|---|
-| Missing reproduction commit | Reproduction | "Step 1 says 'check out main' — no commit SHA pinned" |
+| Missing reproduction commit | Reproduction | "Step 1 says 'check out main' - no commit SHA pinned" |
 | Severity = Priority = High; no justification | Severity-priority independence | Likely auto-equated; require explicit priority rationale |
 
 ### Warning (file with caveat)
 
 | Finding | Detail |
 |---|---|
-| Title "Checkout broken" | Too generic — fails single-description test; suggest "Checkout drops stacked promo when applied in reverse order" |
+| Title "Checkout broken" | Too generic - fails single-description test; suggest "Checkout drops stacked promo when applied in reverse order" |
 
 ### Pass
 

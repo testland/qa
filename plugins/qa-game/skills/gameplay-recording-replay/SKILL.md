@@ -243,7 +243,7 @@ func save_to(path: String) -> void:
 ```
 
 ```gdscript
-# player.gd — replay
+# player.gd - replay
 extends Node
 
 var _events: Array

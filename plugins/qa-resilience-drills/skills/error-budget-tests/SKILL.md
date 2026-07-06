@@ -44,7 +44,7 @@ def test_sli_excludes_planned_maintenance():
         # Normal traffic
         Request(success=True, ts=t1, was_maintenance=False),
         Request(success=False, ts=t2, was_maintenance=False),
-        # Planned maintenance — should NOT count against SLO
+        # Planned maintenance - should NOT count against SLO
         Request(success=False, ts=t3, was_maintenance=True),
     ]
     sli = compute_sli(requests)

@@ -100,7 +100,7 @@ test('pushManager.subscribe returns a PushSubscription with VAPID-bound keys', a
   expect(sub.endpoint).toMatch(/^https?:\/\//);
   expect(sub.keys?.p256dh).toBeTruthy();
   expect(sub.keys?.auth).toBeTruthy();
-  // expirationTime is optional per w3c-push — null is allowed
+  // expirationTime is optional per w3c-push - null is allowed
   expect(sub.expirationTime === null || typeof sub.expirationTime === 'number').toBe(true);
 });
 ```
@@ -159,7 +159,7 @@ test('SW push event triggers showNotification', async ({ context, page }) => {
     }) as any;
   });
 
-  // Dispatch a synthetic PushEvent — Note: real Chromium dispatches via the push service.
+  // Dispatch a synthetic PushEvent - Note: real Chromium dispatches via the push service.
   // For isolated SW unit tests, use the `push` event listener manually.
   await sw.evaluate(() => {
     const e: any = new Event('push');
@@ -212,7 +212,7 @@ test('pushsubscriptionchange triggers re-subscription', async ({ context, page }
     });
   });
 
-  // Synthetic dispatch — real fires when the push service expires the endpoint
+  // Synthetic dispatch - real fires when the push service expires the endpoint
   await sw.evaluate(() => {
     const e: any = new Event('pushsubscriptionchange');
     e.oldSubscription = { endpoint: 'https://push.example/old' };

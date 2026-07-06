@@ -137,7 +137,7 @@ test('SW install with slow precache stays in installing until waitUntil resolves
     navigator.serviceWorker.register('/sw-slow-install.js').then(reg => {
       const w = reg.installing;
       if (!w) { resolve('no installing'); return; }
-      // Sample state at ~500ms — the slow install should still be 'installing'
+      // Sample state at ~500ms - the slow install should still be 'installing'
       setTimeout(() => resolve(w.state), 500);
     });
   }));

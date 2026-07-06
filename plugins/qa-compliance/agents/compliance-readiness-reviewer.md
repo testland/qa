@@ -108,7 +108,7 @@ expected test patterns.)
 ## Step 5 - Emit coverage matrix
 
 ```markdown
-## Compliance readiness review — HIPAA Security Rule — `<sha>`
+## Compliance readiness review - HIPAA Security Rule - `<sha>`
 
 **Target framework:** HIPAA Security Rule (45 CFR §164 Subpart C)
 **Scope:** Business Associate handling ePHI for clinical-trial vendor
@@ -118,14 +118,14 @@ expected test patterns.)
 
 | Section | Criterion | Status | Tests / Evidence | Action |
 |---|---|---|---|---|
-| §164.308(a)(3) | Workforce access management | ✅ Covered | tests/test_role_access.py:45 + evidence/cc6_1.json (last 90 days) | — |
-| §164.308(a)(5) | Workforce training | ✅ Covered | tests/test_training_required.py | — |
+| §164.308(a)(3) | Workforce access management | ✅ Covered | tests/test_role_access.py:45 + evidence/cc6_1.json (last 90 days) | - |
+| §164.308(a)(5) | Workforce training | ✅ Covered | tests/test_training_required.py | - |
 | §164.310(d)(2) | Device disposal | 🟡 Partial | tests/test_device_wipe.py present BUT NIST 800-88 method assertion missing | Add `assert device.wipe_method in ['NIST 800-88 Clear', 'NIST 800-88 Purge']` |
-| §164.312(a)(1) | Access control | ✅ Covered | tests/test_unique_user_id.py + tests/test_mfa_required.py | — |
-| §164.312(b) | Audit logging | ❌ Missing | — | Add tests per `audit-trail-test-author` Step 1 (required-events catalog) |
-| §164.312(c)(1) | Integrity | ✅ Covered | tests/test_phi_modify_audited.py | — |
+| §164.312(a)(1) | Access control | ✅ Covered | tests/test_unique_user_id.py + tests/test_mfa_required.py | - |
+| §164.312(b) | Audit logging | ❌ Missing | - | Add tests per `audit-trail-test-author` Step 1 (required-events catalog) |
+| §164.312(c)(1) | Integrity | ✅ Covered | tests/test_phi_modify_audited.py | - |
 | §164.312(e)(1) | Transmission security | 🟡 Partial | tests/test_https_required.py covers redirect; cipher strength test missing | Add `assert tls_info.cipher_strength >= 256` |
-| §164.504(e) | BAA scope | ➖ N/A | Scope exclusion: this BA service is single-purpose; full BAA scope test redundant. Approved-by: compliance@example.com (2026-04-15). Re-review: 2026-10-15. | — |
+| §164.504(e) | BAA scope | ➖ N/A | Scope exclusion: this BA service is single-purpose; full BAA scope test redundant. Approved-by: compliance@example.com (2026-04-15). Re-review: 2026-10-15. | - |
 
 ### Summary
 
@@ -136,14 +136,14 @@ expected test patterns.)
 
 ### Verdict
 
-❌ **NOT READY** — 1 missing critical control (§164.312(b) audit logging)
+❌ **NOT READY** - 1 missing critical control (§164.312(b) audit logging)
 + 2 partial controls require completion before audit.
 
 ### Action items
 
-1. **§164.312(b) audit logging** — implement audit log emission for PHI access events; cross-ref `audit-trail-test-author` Step 1 catalog
-2. **§164.310(d)(2) device disposal** — add NIST 800-88 method assertion to existing test
-3. **§164.312(e)(1) transmission security** — add cipher-strength assertion to existing TLS test
+1. **§164.312(b) audit logging** - implement audit log emission for PHI access events; cross-ref `audit-trail-test-author` Step 1 catalog
+2. **§164.310(d)(2) device disposal** - add NIST 800-88 method assertion to existing test
+3. **§164.312(e)(1) transmission security** - add cipher-strength assertion to existing TLS test
 ```
 
 ## Step 6 - Refuse-to-proceed rules
@@ -197,9 +197,9 @@ Agent runs at 2026-05-15 (pre-period):
               CC7.4 incident response; CC8.1 change management evidence intermittent)
 ❌ Missing: 2 (CC2.3 communication of objectives; CC9.1 risk
               identification process)
-➖ N/A: 1 (CC1.2 board structure — sole-prop S-corp; no board)
+➖ N/A: 1 (CC1.2 board structure - sole-prop S-corp; no board)
 
-Verdict: ❌ NOT READY — 2 missing required criteria + 4 partial.
+Verdict: ❌ NOT READY - 2 missing required criteria + 4 partial.
 Recommended action: address all 6 in next sprint; re-run before
 2026-06-01 observation start.
 ```
@@ -214,10 +214,10 @@ Input: GDPR scope; DPA inquiry expected 2026-07-01.
               flow; Art. 33 breach notification timing test exists
               but doesn't cover weekend-detection edge case)
 ❌ Missing: 0
-➖ N/A: 2 (Art. 27 EU representative — already designated;
-            Art. 37 DPO appointment — exempt per company size)
+➖ N/A: 2 (Art. 27 EU representative - already designated;
+            Art. 37 DPO appointment - exempt per company size)
 
-Verdict: 🟡 NEEDS-WORK — no missing criteria, but 2 partial controls
+Verdict: 🟡 NEEDS-WORK - no missing criteria, but 2 partial controls
 should be completed before DPA inquiry.
 ```
 

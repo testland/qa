@@ -65,7 +65,7 @@ entry; delete the file if empty; commit per orphan or batched.
 ## Output format
 
 ```markdown
-## Golden-file maintenance — `<project>`
+## Golden-file maintenance - `<project>`
 
 **Mode:** add | update | prune
 **Files inspected:** N
@@ -82,7 +82,7 @@ entry; delete the file if empty; commit per orphan or batched.
 
 | File                                  | Reason |
 |---------------------------------------|--------|
-| `src/components/Footer.test.tsx.snap` | Diff in `Footer` component but the PR description says "Refactor Modal" — Footer was not mentioned. Suspected unintended cascade. |
+| `src/components/Footer.test.tsx.snap` | Diff in `Footer` component but the PR description says "Refactor Modal" - Footer was not mentioned. Suspected unintended cascade. |
 
 **Recommended next step:** investigate Footer cascade with
 [`regression-bisector`](../../qa-flake-triage/agents/regression-bisector.md);

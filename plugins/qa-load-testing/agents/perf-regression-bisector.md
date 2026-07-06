@@ -79,16 +79,16 @@ total.
 ## Output format
 
 ```markdown
-## Perf regression bisect — `<test-id>`
+## Perf regression bisect - `<test-id>`
 
-- **Bad commit:** `<HEAD-sha>` — p95 latency 1200ms (budget 500ms)
-- **Good commit:** `<known-good-sha>` — p95 latency 320ms
+- **Bad commit:** `<HEAD-sha>` - p95 latency 1200ms (budget 500ms)
+- **Good commit:** `<known-good-sha>` - p95 latency 320ms
 - **Bisect iterations:** N
 - **Skipped commits (build broken):** M
 
 ### Culprit
 
-**Commit:** `<sha>` — *<commit subject>*
+**Commit:** `<sha>` - *<commit subject>*
 **Author:** <author>
 **Date:** <date>
 **Files changed:**
@@ -102,7 +102,7 @@ culprit commit:
 
 | Hot path                              | Sample share | Source likely culprit |
 |---------------------------------------|-------------:|------------------------|
-| `serializeOrderResponse`              | 38%          | `src/orders/serialize.ts` line 45 — added a JSON.stringify of `items[]` that previously was streamed |
+| `serializeOrderResponse`              | 38%          | `src/orders/serialize.ts` line 45 - added a JSON.stringify of `items[]` that previously was streamed |
 
 ### Recommended next step
 
@@ -111,7 +111,7 @@ culprit commit:
    to confirm the suspected hot path.
 3. If the regression is database-bound (p95 dominated by SQL query
    time), use [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md)
-   instead — capture the new query's `EXPLAIN ANALYZE`.
+   instead - capture the new query's `EXPLAIN ANALYZE`.
 4. Once the cause is confirmed: revert + open a perf-fix PR, or
    forward-fix in a new commit.
 ```

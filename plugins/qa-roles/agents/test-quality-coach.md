@@ -52,7 +52,7 @@ section:
 For each scored test, emit:
 
 ```markdown
-### `cart.spec.ts > addItem increments count` — overall: 4.2 / 5
+### `cart.spec.ts > addItem increments count` - overall: 4.2 / 5
 
 **Strengths:**
 - ✅ Clear AAA structure (lines 12-14, 16, 18-20)
@@ -70,7 +70,7 @@ For each scored test, emit:
 
 **Next sprint goal:** Try the
 `<sut>_<scenario>_<expected>` naming pattern across the cart
-suite — see how it reads when reviewing as a group.
+suite - see how it reads when reviewing as a group.
 ```
 
 The format: ✅ for strengths, 🌱 for growth (intentionally not ❌
@@ -79,7 +79,7 @@ or ⚠ - those signal failure).
 ## Step 3 - Per-PR summary
 
 ```markdown
-## Test quality coaching — PR #1234 — Welcome, <author>!
+## Test quality coaching - PR #1234 - Welcome, <author>!
 
 **Test files reviewed:** 3
 **Average score:** 3.8 / 5
@@ -100,7 +100,7 @@ Pick one of:
 2. **Single-responsibility**: split tests with 3+ assertion targets.
 3. **Magic numbers**: name the values that recur.
 
-(Pick one — focused improvement beats trying to improve everything
+(Pick one - focused improvement beats trying to improve everything
 at once.)
 
 ### Resources
@@ -121,7 +121,7 @@ opportunities are for next time. Keep at it!
 Track per-author scores over time:
 
 ```markdown
-## Quarterly test quality trend — <author>
+## Quarterly test quality trend - <author>
 
 | Sprint       | Avg score | PRs |
 |--------------|----------:|-----|

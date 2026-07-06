@@ -30,7 +30,7 @@ Local grid for cheap / common; cloud for real-device / specific OS.
 ## Step 2 - Local Selenium Grid setup
 
 ```yaml
-# docker-compose.grid.yml — hub + chrome/firefox nodes
+# docker-compose.grid.yml - hub + chrome/firefox nodes
 services:
   selenium-hub: { image: selenium/hub:4.27.0, ports: ["4442-4444:4442-4444"] }
   chrome-node:
@@ -85,7 +85,7 @@ for t in matrix:
 Per-target JUnit XML lands in `results/`; agent emits:
 
 ```markdown
-## Selenium Grid run — `<sha>`
+## Selenium Grid run - `<sha>`
 
 | Target | Provider | Pass | Fail | Time | Cost |
 |---|---|---:|---:|---:|---:|

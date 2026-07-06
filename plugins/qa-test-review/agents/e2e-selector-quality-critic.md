@@ -150,7 +150,7 @@ recommendation is to add a `data-testid` to the production code
 ## Output format
 
 ```markdown
-## E2E selector quality critic — `<PR>`
+## E2E selector quality critic - `<PR>`
 
 **E2E test files reviewed:** N
 **Selectors walked:** M
@@ -160,7 +160,7 @@ recommendation is to add a `data-testid` to the production code
 |--------------------|------:|--------|
 | `accessibility`    |   142 | (no action) |
 | `semantic-ok`      |    34 | (no action) |
-| `testid`           |    18 | (no action — acceptable last-resort) |
+| `testid`           |    18 | (no action - acceptable last-resort) |
 | `css-class`        |    24 | Replace with role / label query. |
 | `nth-position`     |     8 | Replace with role + filter. |
 | `xpath`            |     3 | Replace; xpath is most brittle. |
@@ -169,7 +169,7 @@ recommendation is to add a `data-testid` to the production code
 
 ### Per-finding detail
 
-#### `tests/checkout.spec.ts:42` — CSS class
+#### `tests/checkout.spec.ts:42` - CSS class
 
 **Original:** `await page.locator('.button-primary').click();`
 
@@ -179,7 +179,7 @@ The button has visible text "Submit" per the production HTML.
 Per [pw-best-practices][pwb], CSS classes are brittle. Per
 [tl-queries][tl] §priority 1, `getByRole` is the preferred query.
 
-#### `tests/cart.spec.ts:18` — XPath
+#### `tests/cart.spec.ts:18` - XPath
 
 **Original:** `cy.get('xpath=//div[@class="cart"]//button[1]').click();`
 
@@ -189,7 +189,7 @@ XPath is the most brittle selector class per [pw-best-practices][pwb].
 The button has visible text "Add to Cart"; use the accessible-name
 query.
 
-#### `tests/profile.spec.ts:7` — Non-web-first assertion
+#### `tests/profile.spec.ts:7` - Non-web-first assertion
 
 **Original:**
 ```typescript

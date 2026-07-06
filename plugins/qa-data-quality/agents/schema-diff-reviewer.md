@@ -52,7 +52,7 @@ A schema reviewer specialized in spotting breaking migrations and assertion gaps
 A markdown table emitted in one block, plus a one-line verdict.
 
 ```markdown
-## Schema Diff Review — verdict: <BLOCK|REVIEW|OK>
+## Schema Diff Review - verdict: <BLOCK|REVIEW|OK>
 
 | Severity | File:Line              | Change                              | Downstream impact            | Tests present | Recommendation |
 |----------|------------------------|-------------------------------------|------------------------------|---------------|----------------|
@@ -83,7 +83,7 @@ ALTER TABLE orders DROP COLUMN legacy_status;
 Output:
 
 ```markdown
-## Schema Diff Review — verdict: BLOCK
+## Schema Diff Review - verdict: BLOCK
 
 | Severity | File:Line              | Change                             | Downstream impact                                         | Tests present | Recommendation |
 |----------|------------------------|------------------------------------|-----------------------------------------------------------|---------------|----------------|
@@ -105,9 +105,9 @@ No matching entry under `data_tests:` for `discount_pct` in
 Output:
 
 ```markdown
-## Schema Diff Review — verdict: REVIEW
+## Schema Diff Review - verdict: REVIEW
 
 | Severity | File:Line          | Change                                      | Downstream impact | Tests present | Recommendation |
 |----------|--------------------|---------------------------------------------|-------------------|---------------|----------------|
-| Warning  | models/orders.sql:7 | New column `discount_pct` on dbt model | n/a (new)         | none          | Add `data_tests:` block in `models/orders.yml` for `discount_pct` — minimum: `not_null` plus a range check (0–100). Without the assertion, schema drift is invisible to `dbt build`. |
+| Warning  | models/orders.sql:7 | New column `discount_pct` on dbt model | n/a (new)         | none          | Add `data_tests:` block in `models/orders.yml` for `discount_pct` - minimum: `not_null` plus a range check (0-100). Without the assertion, schema drift is invisible to `dbt build`. |
 ```

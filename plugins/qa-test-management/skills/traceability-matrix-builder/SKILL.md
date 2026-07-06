@@ -144,7 +144,7 @@ def write_matrix_csv(reqs_to_cases, requirements, path):
 ### Markdown format
 
 ```markdown
-# Traceability matrix — <project> — <date>
+# Traceability matrix - <project> - <date>
 
 **Requirement coverage:** 87 / 92 (94.6%)
 **Orphan cases:** 14
@@ -156,19 +156,19 @@ def write_matrix_csv(reqs_to_cases, requirements, path):
 |---|---|---|---|
 | REQ-AUTH-001 | User logs in with valid credentials | C1234, C1235, C1240 | 3 |
 | REQ-AUTH-002 | Password reset flow | C1241 | 1 |
-| REQ-AUTH-003 | OAuth login (Google) | — | **0 (UNCOVERED)** |
+| REQ-AUTH-003 | OAuth login (Google) | - | **0 (UNCOVERED)** |
 | REQ-CHECKOUT-001 | Apply promo code | C2001, C2002, C2003, C2004, C2005, C2006 | **6 (OVER-TESTED)** |
 
 ## Uncovered requirements
 
-- REQ-AUTH-003 — OAuth login (Google)
-- REQ-AUTH-005 — Magic-link login
+- REQ-AUTH-003 - OAuth login (Google)
+- REQ-AUTH-005 - Magic-link login
 - ...
 
 ## Orphan cases
 
-- C9999 — "Exploratory: cart edge cases"
-- C9888 — "Smoke check — homepage renders"
+- C9999 - "Exploratory: cart edge cases"
+- C9888 - "Smoke check - homepage renders"
 - ...
 ```
 
@@ -181,11 +181,11 @@ for this skill but composable with downstream rendering.
 ## Step 5 - Produce executive summary
 
 ```markdown
-## Traceability summary — <project> — <YYYY-MM-DD>
+## Traceability summary - <project> - <YYYY-MM-DD>
 
 ### Headline
 
-**87 of 92 requirements covered (94.6%)** — 5 gaps require action
+**87 of 92 requirements covered (94.6%)** - 5 gaps require action
 before the v1.4 release.
 
 ### Gaps requiring action
@@ -194,8 +194,8 @@ before the v1.4 release.
 |---|---|---|
 | REQ-AUTH-003 OAuth login (Google) | Uncovered | Add manual + automated case before sprint end |
 | REQ-AUTH-005 Magic-link login | Uncovered | Add automated case |
-| REQ-AUTH-006 SAML login | Uncovered | Defer to v1.5 — feature behind flag |
-| REQ-CHECKOUT-008 Refund flow | Uncovered | Manual test exists in Confluence — migrate to TCM |
+| REQ-AUTH-006 SAML login | Uncovered | Defer to v1.5 - feature behind flag |
+| REQ-CHECKOUT-008 Refund flow | Uncovered | Manual test exists in Confluence - migrate to TCM |
 | REQ-API-014 Rate limit response | Uncovered | Add API test |
 
 ### Possible bloat (over-tested)
@@ -236,7 +236,7 @@ jobs:
       - uses: actions/checkout@v5
       - run: python scripts/build-matrix.py > matrix.md
       - run: |
-          gh issue create --title "Traceability matrix — $(date +%Y-%m-%d)" \
+          gh issue create --title "Traceability matrix - $(date +%Y-%m-%d)" \
                           --body-file matrix.md \
                           --label coverage-report
 ```

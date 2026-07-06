@@ -47,7 +47,7 @@ the suite.
 ## Output format
 
 ```markdown
-## Flake bisect — `<test-id>`
+## Flake bisect - `<test-id>`
 
 **Baseline failure rate:** N/20 (X%)
 
@@ -68,7 +68,7 @@ the suite.
 ### Classification
 
 **Probable root cause:** shared parallel state + test ordering
-**Confidence:** high — axis sweep shows a >5x rate increase under
+**Confidence:** high - axis sweep shows a >5x rate increase under
 parallel execution AND under randomized order.
 **Pattern:** Pattern 3 (shared parallel state) per
 [`flake-pattern-reference`](../skills/flake-pattern-reference/SKILL.md).

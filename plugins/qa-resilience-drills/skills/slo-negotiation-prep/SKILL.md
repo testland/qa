@@ -45,7 +45,7 @@ The skill halts with `NO_DECISION_FRAMED` if no specific question is offered, or
 The manager walks into the meeting with the data already structured. The pack:
 
 ```markdown
-## Current state — `<service>` — 2026-07-15 (budget window: 2026-Q3 to date)
+## Current state - `<service>` - 2026-07-15 (budget window: 2026-Q3 to date)
 
 ### SLO
 99.9% successful_requests / total_requests, 30-day rolling window
@@ -58,12 +58,12 @@ The manager walks into the meeting with the data already structured. The pack:
 ### MTTR / MTBF trend (2026-Q3 to date)
 - MTTR (mean time to recover): 22 minutes (vs 18 min Q2 trailing average)
 - MTBF (mean time between failures): 4.1 days (vs 9.2 days Q2 trailing average)
-- Trend: **MTBF degrading sharply, MTTR slightly degrading** — frequency is the bigger problem than recovery time
+- Trend: **MTBF degrading sharply, MTTR slightly degrading** - frequency is the bigger problem than recovery time
 
 ### Top contributing incidents (cited)
-- 2026-07-08 — payment-service 5xx surge, 28-min consumption — root cause: third-party provider degradation. Per `mttr-mtbf-tracker` incident #INC-2026-1834.
-- 2026-07-12 — cart-service deploy regression, 32-min consumption — root cause: missing migration assertion in canary. Per incident #INC-2026-1851.
-- 2026-07-14 — inventory-cache cold-start latency, 13-min consumption — root cause: capacity planning miss. Per incident #INC-2026-1862.
+- 2026-07-08 - payment-service 5xx surge, 28-min consumption - root cause: third-party provider degradation. Per `mttr-mtbf-tracker` incident #INC-2026-1834.
+- 2026-07-12 - cart-service deploy regression, 32-min consumption - root cause: missing migration assertion in canary. Per incident #INC-2026-1851.
+- 2026-07-14 - inventory-cache cold-start latency, 13-min consumption - root cause: capacity planning miss. Per incident #INC-2026-1862.
 
 ### Source citations
 - `error-budget-tests` config: `slo-config.yaml` (commit `e3a91f4`)
@@ -99,11 +99,11 @@ The skill emits the option matrix with **explicit scoring** on three axes - impa
 
 | # | Option | Impact (user-facing) | Reversibility | Stakeholder cost |
 |---|---|---|---|---|
-| O1 | **Ship Feature X on the original timeline, accept the burn** | Possible further budget consumption; user-facing if budget exhausts before quarter-end | High — reversible at next budget window | Low product cost; **high SRE cost** (more incidents to triage); medium QA cost |
-| O2 | **Defer Feature X by 2 weeks; spend the budget on reliability fixes first** | Lower budget burn; user-facing delay on Feature X | High — defer is reversible; Feature X re-scheduled | High product cost; low SRE cost; low QA cost |
-| O3 | **Freeze releases for 1 week, then ship Feature X** (per [Google SRE Workbook](https://sre.google/workbook/implementing-slos/) standard response #3) | One week of zero deploys; reliability investment | High — freeze is by definition temporary | Medium product cost (only 1 week delay); medium SRE cost (compresses fix window) |
-| O4 | **Extend the quarterly budget by 30 min** (temporary SLO relaxation) | Allows Feature X to ship without freeze, but sends a signal that SLOs are negotiable under pressure | **Low** — budget extensions tend to become permanent if not reversed at quarter-end | Low product cost short-term; **high SRE cost long-term** (erodes the SLO discipline) |
-| O5 | **Lower the SLO to 99.5% permanently** (renegotiate) | Reflects current reality if the 99.9% target was never matched. User-visible if the SLO was published. | **Low** — SLO changes are sticky | High SRE cost (signals defeat); medium product cost (may damage customer commitments); medium QA cost |
+| O1 | **Ship Feature X on the original timeline, accept the burn** | Possible further budget consumption; user-facing if budget exhausts before quarter-end | High - reversible at next budget window | Low product cost; **high SRE cost** (more incidents to triage); medium QA cost |
+| O2 | **Defer Feature X by 2 weeks; spend the budget on reliability fixes first** | Lower budget burn; user-facing delay on Feature X | High - defer is reversible; Feature X re-scheduled | High product cost; low SRE cost; low QA cost |
+| O3 | **Freeze releases for 1 week, then ship Feature X** (per [Google SRE Workbook](https://sre.google/workbook/implementing-slos/) standard response #3) | One week of zero deploys; reliability investment | High - freeze is by definition temporary | Medium product cost (only 1 week delay); medium SRE cost (compresses fix window) |
+| O4 | **Extend the quarterly budget by 30 min** (temporary SLO relaxation) | Allows Feature X to ship without freeze, but sends a signal that SLOs are negotiable under pressure | **Low** - budget extensions tend to become permanent if not reversed at quarter-end | Low product cost short-term; **high SRE cost long-term** (erodes the SLO discipline) |
+| O5 | **Lower the SLO to 99.5% permanently** (renegotiate) | Reflects current reality if the 99.9% target was never matched. User-visible if the SLO was published. | **Low** - SLO changes are sticky | High SRE cost (signals defeat); medium product cost (may damage customer commitments); medium QA cost |
 
 **Scoring rubric:**
 - **Impact**: how much does this option affect end users? Lower = better.
@@ -123,7 +123,7 @@ The skill *does* recommend a posture, but always with at least one fallback alte
 **Primary recommendation: O3 (1-week freeze + ship Feature X)**
 
 **Why:** 
-- Current burn rate (56% in 16% of quarter) projects to ~350% of budget by quarter-end if unmitigated — per `error-budget-tests` projection.
+- Current burn rate (56% in 16% of quarter) projects to ~350% of budget by quarter-end if unmitigated - per `error-budget-tests` projection.
 - 2 of the 3 top incidents have known reliability fixes in flight (incidents INC-2026-1851 cart-deploy and INC-2026-1862 inventory-cache); a 1-week focused fix window addresses them.
 - Per [Google SRE Workbook](https://sre.google/workbook/implementing-slos/), production freeze is the canonical response: "halts certain changes to the system until there is sufficient error budget to resume changes."
 - O3 preserves reversibility (a 1-week freeze is short, easy to extend or shorten).
@@ -158,11 +158,11 @@ Every numeric and every citation in Steps 2-4 traces to a source artifact:
 | Claim | Source |
 |---|---|
 | 56% budget consumed by 2026-07-15 | `error-budget-tests` daily snapshot 2026-07-15 |
-| 350% projected burn at current rate | Linear extrapolation: 56% × (90/15 days) ≈ 336% — cited to `error-budget-tests` projection function |
+| 350% projected burn at current rate | Linear extrapolation: 56% × (90/15 days) ≈ 336% - cited to `error-budget-tests` projection function |
 | Top incidents | `mttr-mtbf-tracker` incident log 2026-Q3, filter(severity=SEV2, contributed_to_budget=true) |
 | Standard responses per SRE Workbook | https://sre.google/workbook/implementing-slos/ §error-budget-policy |
 | Reversibility scoring (Step 3) | Heuristic per skill body §Step 3; team can adjust |
-| Stakeholder cost (Step 3) | Heuristic; team's actual stakeholder dynamics may differ — flag for confirmation |
+| Stakeholder cost (Step 3) | Heuristic; team's actual stakeholder dynamics may differ - flag for confirmation |
 | Recommended posture (Step 4) | Cited inline; manager confirms before walking into the meeting |
 ```
 

@@ -148,7 +148,7 @@ specific numbers.
 The output of this skill: a markdown checklist + sign-off form.
 
 ```markdown
-# Experiment <id> — Validity Checklist
+# Experiment <id> - Validity Checklist
 
 ## Pre-registration (signed by: <owner>, date: <YYYY-MM-DD>)
 
@@ -172,8 +172,8 @@ The output of this skill: a markdown checklist + sign-off form.
 - [ ] SRM final check: p > 0.0001 ([result])
 - [ ] OEC significant (p=<X>; method: <Pocock>)
 - [ ] All guardrails within thresholds:
-    - api_p95_latency: +<X>% / +<Y>ms — <status>
-    - dau: <X>% — <status>
+   - api_p95_latency: +<X>% / +<Y>ms - <status>
+   - dau: <X>% - <status>
 - [ ] Multiple-comparison adjusted (method: <Bonferroni / BH>)
 - [ ] Novelty assessment: effect persists week 2+? <yes / no>
 - [ ] Segment stability: direction consistent? <yes / no>

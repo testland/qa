@@ -268,7 +268,7 @@ Output:
 ```markdown
 ## ⚠ Implicit-precondition flags (3)
 
-1. **Code source.** Where do codes come from — user-entered? auto-applied? Both?
+1. **Code source.** Where do codes come from - user-entered? auto-applied? Both?
 2. **Eligibility.** Are codes user-tier specific (e.g. only new users)?
    Time-limited? Per-user limited?
 3. **Subtotal definition.** Subtotal *before* tax / shipping, or *after*?

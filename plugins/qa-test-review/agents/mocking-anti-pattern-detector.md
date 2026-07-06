@@ -92,7 +92,7 @@ Per §5 anti-pattern: nested `when()` / `thenReturn()` / `thenAnswer()`
 chains where the test sets up a deep tree of mock responses.
 
 ```java
-// Mock chain — flag
+// Mock chain - flag
 when(orderRepo.findById(1)).thenReturn(
     new Order(when(productRepo.findById(2)).thenReturn(
         new Product(when(stockRepo.check(2)).thenReturn(true))
@@ -164,7 +164,7 @@ candidate.
 ## Output format
 
 ```markdown
-## Mocking anti-pattern detector — `<PR>`
+## Mocking anti-pattern detector - `<PR>`
 
 **Files reviewed:** N
 **Test doubles found:** M
@@ -180,7 +180,7 @@ candidate.
 
 ### Per-finding detail
 
-#### Over-mock — `cart.spec.ts:12`
+#### Over-mock - `cart.spec.ts:12`
 
 **Issue:** `mockLogger` is created but no assertion verifies its
 calls. The SUT's behavior is assertable on state alone.
@@ -189,15 +189,15 @@ calls. The SUT's behavior is assertable on state alone.
 `{ log: () => {}, warn: () => {} }`. Saves one indirection per
 test.
 
-#### Behavior-verification leakage — `checkout.spec.ts:34`
+#### Behavior-verification leakage - `checkout.spec.ts:34`
 
 **Issue:** Test asserts on `mockGateway.send` / `mockGateway.format`
 / `mockGateway.parse` call counts; these are dispatch internals.
 
-**Recommendation:** Assert on what the user / caller observes —
+**Recommendation:** Assert on what the user / caller observes - 
 the response from the SUT, the persisted state, the emitted event.
 
-#### Mock chain — `payment.spec.ts:56`
+#### Mock chain - `payment.spec.ts:56`
 
 **Issue:** 4-level nested `when().thenReturn()` chain. Coupled to
 the dispatch path through 4 collaborators.
@@ -207,7 +207,7 @@ the dispatch path through 4 collaborators.
 [`testcontainers`](../../qa-test-environment/skills/testcontainers/SKILL.md),
 or (b) write a contract test for the boundary the chain crosses.
 
-#### Mock-what-you-don't-own — `email.spec.ts:78`
+#### Mock-what-you-don't-own - `email.spec.ts:78`
 
 **Issue:** Mocks `@aws-sdk/client-ses` directly. The team doesn't
 own this; AWS SDK updates can drift the mock.
@@ -215,14 +215,14 @@ own this; AWS SDK updates can drift the mock.
 **Recommendation:** Wrap in `EmailGateway` adapter (team-owned);
 mock the adapter.
 
-#### Fake-candidate — `repos/cart-repo` mocked in 5 tests
+#### Fake-candidate - `repos/cart-repo` mocked in 5 tests
 
 **Issue:** Same module re-mocked across `cart.spec.ts:12`,
 `checkout.spec.ts:5`, `promo.spec.ts:18`,
 `order.spec.ts:30`, `archive.spec.ts:42`. Each mock has the same
 shape.
 
-**Recommendation:** Author `tests/fakes/cart-repo.ts` — an in-memory
+**Recommendation:** Author `tests/fakes/cart-repo.ts` - an in-memory
 implementation of the `CartRepo` interface. Tests import it instead
 of re-mocking.
 ```

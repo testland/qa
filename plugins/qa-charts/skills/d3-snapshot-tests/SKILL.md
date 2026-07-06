@@ -151,12 +151,12 @@ test('update join handles insert + remove + reorder', async ({ page }) => {
   await page.evaluate(() => (window as any).updateChart(['A', 'B', 'C']));
   expect(await page.locator('rect[data-key="A"]').count()).toBe(1);
 
-  // After: [A, B, D] — remove C, add D
+  // After: [A, B, D] - remove C, add D
   await page.evaluate(() => (window as any).updateChart(['A', 'B', 'D']));
   expect(await page.locator('rect[data-key="C"]').count()).toBe(0);
   expect(await page.locator('rect[data-key="D"]').count()).toBe(1);
 
-  // After: [B, D, A] — reorder; element identity preserved
+  // After: [B, D, A] - reorder; element identity preserved
   await page.evaluate(() => (window as any).updateChart(['B', 'D', 'A']));
   // 'A' should be the same DOM node (just repositioned)
   // Verify via attribute or event listener attached pre-reorder

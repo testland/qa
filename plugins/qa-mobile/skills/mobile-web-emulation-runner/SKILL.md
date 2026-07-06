@@ -112,7 +112,7 @@ Tests should distinguish desktop-only from mobile-aware behavior:
 ```typescript
 import { test, expect, devices } from '@playwright/test';
 
-test.describe('Cart page — mobile layout', () => {
+test.describe('Cart page - mobile layout', () => {
   test.use(devices['iPhone 15']);
 
   test('shows mobile drawer, not sidebar', async ({ page }) => {

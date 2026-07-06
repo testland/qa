@@ -37,7 +37,7 @@ varies per PM / per developer / per sprint.
 Most teams converge on something like:
 
 ```markdown
-# Definition of Done — `<team>`
+# Definition of Done - `<team>`
 
 A story / PR is "Done" only when ALL of the following are true:
 
@@ -59,7 +59,7 @@ A story / PR is "Done" only when ALL of the following are true:
 7. **Telemetry / observability** wired for new features (per
    [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md)).
 8. **Security review** for changes that touch auth / payments /
-   PII — threat-model entry per
+   PII - threat-model entry per
    [`threat-model-from-spec`](../../qa-shift-left/agents/threat-model-from-spec.md).
 9. **No new tech debt** introduced without an issue logged.
 10. **Build green** on the target branch (CI check required).
@@ -119,7 +119,7 @@ The DoD becomes a PR template:
 
 ## Notes
 
-(any DoD line marked N/A — explain)
+(any DoD line marked N/A - explain)
 ```
 
 [`quality-coach`](../../../qa-roles/agents/quality-coach.md) reads

@@ -86,7 +86,7 @@ Typical items:
 ## Output format
 
 ```markdown
-## Definition-of-Done check — verdict: <ACCEPT|REJECT>
+## Definition-of-Done check - verdict: <ACCEPT|REJECT>
 
 **Stage:** ready-for-dev | ready-for-merge | ready-for-release
 **Artifact:** <ticket / PR / tag>
@@ -98,8 +98,8 @@ Typical items:
 
 | # | DoD item                                         | Evidence sought                                       | Status / blocker |
 |---|--------------------------------------------------|-------------------------------------------------------|------------------|
-| 3 | "All AC scenarios have tests"                    | New / modified test file references AC IDs in commit messages | NOT FOUND — no test file changed in this PR; AC-1 and AC-3 lack coverage. |
-| 7 | "Visual regression baselines updated with reviewer acceptance" | `.visual-acceptance.yml` change OR the PR description contains "no UI changes" | NEITHER — the PR includes CSS changes but no acceptance log. |
+| 3 | "All AC scenarios have tests"                    | New / modified test file references AC IDs in commit messages | NOT FOUND - no test file changed in this PR; AC-1 and AC-3 lack coverage. |
+| 7 | "Visual regression baselines updated with reviewer acceptance" | `.visual-acceptance.yml` change OR the PR description contains "no UI changes" | NEITHER - the PR includes CSS changes but no acceptance log. |
 
 ### Passing items
 
@@ -137,7 +137,7 @@ Agent finds:
 Output:
 
 ```markdown
-## DoD check — verdict: REJECT
+## DoD check - verdict: REJECT
 
 **Stage:** ready-for-merge
 **Items unmet:** 2
@@ -159,7 +159,7 @@ estimate. DoD ready-for-dev list satisfied.
 Output:
 
 ```markdown
-## DoD check — verdict: ACCEPT
+## DoD check - verdict: ACCEPT
 
 **Stage:** ready-for-dev
 **Items checked:** 7
@@ -170,8 +170,8 @@ Every DoD item has positive evidence; story is ready for development.
 ### Notes
 
 - The threat model (link in story description) is current as of
-  yesterday — confirm with security if more than 14 days have passed.
-- Effort estimate is "8 points" — large; consider whether to split.
+  yesterday - confirm with security if more than 14 days have passed.
+- Effort estimate is "8 points" - large; consider whether to split.
 ```
 
 The agent is adversarial but not unreasonable - when every item is
@@ -185,7 +185,7 @@ find it; no inline DoD provided.
 Output:
 
 ```markdown
-## DoD check — INCONCLUSIVE (no DoD source)
+## DoD check - INCONCLUSIVE (no DoD source)
 
 The agent could not locate the team's Definition of Done. Searched:
 
@@ -201,7 +201,7 @@ a DoD, every PR's "done" claim is undefined per Scrum.
 
 [scrum-guide]: https://scrumguides.org/scrum-guide.html
 
-**Refusing to ACCEPT or REJECT** — neither verdict is well-formed
+**Refusing to ACCEPT or REJECT** - neither verdict is well-formed
 without a DoD to check against.
 ```
 

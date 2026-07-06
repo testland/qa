@@ -61,7 +61,7 @@ qualitative judgment is signal no automated report captures.
 ## Step 4 - Charter card output
 
 ```markdown
-# Charter — `<session-id>`
+# Charter - `<session-id>`
 
 **Mission:** Explore the new promo code apply flow at checkout to
 discover usability issues, edge cases, and integration risks.

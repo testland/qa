@@ -44,7 +44,7 @@ sev-1.
 ## Step 1 - Document structure
 
 ```markdown
-# Post-mortem — `INC-1234` — Stripe webhook delivery failure
+# Post-mortem - `INC-1234` - Stripe webhook delivery failure
 
 **Status:** Draft | Review | Approved | Action items closed
 **Severity:** SEV-2
@@ -84,7 +84,7 @@ sev-1.
 | 14:58      | Rollback complete; error rate returning to baseline                | Datadog            |
 | 15:15      | Incident closed; metrics normal                                    | #incidents        |
 
-**Total user-visible duration:** 23 minutes (14:35–14:58).
+**Total user-visible duration:** 23 minutes (14:35-14:58).
 
 ## Root cause
 
@@ -92,7 +92,7 @@ sev-1.
 
 The WebhookHandler in v1.4.5 introduced a new code path for
 handling Stripe's `payment_intent.partially_funded` event type.
-The path called `payment.metadata.get("internal_id")` — but for a
+The path called `payment.metadata.get("internal_id")` - but for a
 small subset of events (~3%), `metadata` was null. The
 NullPointerException was uncaught; the handler returned 500;
 Stripe retried up to 3 times then marked the webhook as failed;
@@ -118,13 +118,13 @@ proceeded.
 ## What went well
 
 (Per [google-sre-postmortem][gsp]: post-mortems should also call
-out positives — what mitigated faster than expected.)
+out positives - what mitigated faster than expected.)
 
-1. Sentry caught the regression at 14:23 — well before the
+1. Sentry caught the regression at 14:23 - well before the
    PagerDuty alert at 14:42.
 2. Rollback completed in 7 minutes; well within RTO.
 3. Bob identified the root cause from the Sentry stack trace
-   alone — no production debugging needed.
+   alone - no production debugging needed.
 
 ## Action items
 
@@ -217,7 +217,7 @@ Markdown + git. Quarterly rollup identifies patterns:
 **SEV-3:** 5
 
 **Patterns:**
-- 4 of 12 (33%) were "test gap" — the failing condition wasn't
+- 4 of 12 (33%) were "test gap" - the failing condition wasn't
   in the test suite. Action: invest in
   [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
   + property-based testing.

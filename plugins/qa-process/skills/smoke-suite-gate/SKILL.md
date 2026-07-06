@@ -60,7 +60,7 @@ Smoke tests must run in **<5 minutes total**. Constraints:
 // e2e/smoke/checkout.smoke.spec.ts
 import { test, expect } from '@playwright/test';
 
-test.describe('Smoke — checkout', () => {
+test.describe('Smoke - checkout', () => {
   test('sign in → add to cart → checkout', async ({ page }) => {
     // 1. Sign in
     await page.goto('/login');
@@ -114,7 +114,7 @@ Pattern:
   if: steps.smoke.outcome == 'failure'
   run: |
     if [ "${{ steps.smoke.conclusion }}" == "failure" ]; then
-      # Real failure (failed twice with retries) — block deploy
+      # Real failure (failed twice with retries) - block deploy
       exit 1
     fi
 ```
@@ -154,7 +154,7 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 10   # hard cap — smoke must finish in 10 min
+    timeout-minutes: 10   # hard cap - smoke must finish in 10 min
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v4

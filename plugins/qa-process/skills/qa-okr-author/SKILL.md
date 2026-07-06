@@ -100,10 +100,10 @@ Per the [canonical framework](https://en.wikipedia.org/wiki/Objectives_and_key_r
 The skill flags each KR explicitly:
 
 ```markdown
-## Objective 2 — Reduce escape-defect rate
+## Objective 2 - Reduce escape-defect rate
 
-**Quarter:** 2026-Q3 (Jul–Sep)
-**Rationale:** Current quarterly P1 escape rate is 4 (per `defect-trend-narrator` 2026-Q2 report — citing `tracker-export-2026-Q2.json` lines `filter(severity=P1, found_in=production)`). Industry context: PractiTest 2026 finds 19.9% of teams use AI for risk identification — the team is below this. Reducing escape rate is the team's primary tied-to-revenue quality metric.
+**Quarter:** 2026-Q3 (Jul-Sep)
+**Rationale:** Current quarterly P1 escape rate is 4 (per `defect-trend-narrator` 2026-Q2 report - citing `tracker-export-2026-Q2.json` lines `filter(severity=P1, found_in=production)`). Industry context: PractiTest 2026 finds 19.9% of teams use AI for risk identification - the team is below this. Reducing escape rate is the team's primary tied-to-revenue quality metric.
 
 ### Key Results
 
@@ -116,8 +116,8 @@ The skill flags each KR explicitly:
 
 ### Scoring (per Doerr / Grove canon)
 
-- Committed KRs (2.1, 2.2): grading target 1.0 — anything <1.0 is a miss.
-- Aspirational KRs (2.3, 2.4): grading target 0.7 — 70% achievement is success.
+- Committed KRs (2.1, 2.2): grading target 1.0 - anything <1.0 is a miss.
+- Aspirational KRs (2.3, 2.4): grading target 0.7 - 70% achievement is success.
 
 ### Risk if all KRs are committed
 
@@ -178,9 +178,9 @@ Input:
 Output:
 
 ```markdown
-# QA OKRs — 2026-Q3 (Jul–Sep)
+# QA OKRs - 2026-Q3 (Jul-Sep)
 
-## Objective 1 — Reduce escape-defect rate
+## Objective 1 - Reduce escape-defect rate
 
 **Why:** Q2 P1 escapes (4) caused ~$X revenue impact per the customer-success retro. Q1 was 6; the trend is improving. Q3 target accelerates the trend.
 
@@ -191,7 +191,7 @@ Output:
 | KR1.3 | Aspirational | MTTD P1 ≤ 4h median | 11h (Q2) | `mttr-mtbf-tracker` |
 | KR1.4 | Aspirational | Regression-class escapes -50% | 18 → 9 | `defect-clusterer` |
 
-## Objective 2 — Cut regression cycle time
+## Objective 2 - Cut regression cycle time
 
 **Why:** Engineering's "release weekly" OKR depends on regression < 60 min/shard. Q2 was 67 min.
 

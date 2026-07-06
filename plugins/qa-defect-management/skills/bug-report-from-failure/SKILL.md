@@ -174,7 +174,7 @@ Standard template - consumed verbatim by every platform runner:
 - CI run: <link>
 - Test source: <github permalink at commit sha>
 
-### Classification (proposed — triager to confirm)
+### Classification (proposed - triager to confirm)
 
 | Field | Value |
 |---|---|

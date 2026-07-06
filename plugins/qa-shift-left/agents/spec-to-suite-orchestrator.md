@@ -70,7 +70,7 @@ Write `docs/specs/<story-id>/` containing: `spec.md`, `testability-review.md`, `
 ## Output format
 
 ```markdown
-## Spec-to-suite orchestration — <story-id>
+## Spec-to-suite orchestration - <story-id>
 
 **Spec source:** <path-or-URL>
 **Output bundle:** docs/specs/<story-id>/

@@ -101,7 +101,7 @@ The agent will EXCLUDE:
 
 ### Next steps
 
-1. Review the coverage table — drop variants that don't match a real
+1. Review the coverage table - drop variants that don't match a real
    business-relevant state.
 2. Run the engine **without** `--dry-run` once to capture the first
    baselines.

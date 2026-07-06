@@ -196,7 +196,7 @@ catch it next time.
 
 ### Expected
 
-<one sentence — what should have happened>
+<one sentence - what should have happened>
 
 ### Actual
 
@@ -204,7 +204,7 @@ catch it next time.
 
 ### Notes
 
-<optional: any context the reporter mentioned that doesn't fit elsewhere — recent changes, why they were doing this, what they tried>
+<optional: any context the reporter mentioned that doesn't fit elsewhere - recent changes, why they were doing this, what they tried>
 ```
 
 ## Examples
@@ -227,15 +227,15 @@ flags** for the missing data:
 
 ### Environment
 
-- **App / Build:** [GAP — confirm the build / version]
-- **OS:** [GAP — "my phone" — confirm iOS or Android + version]
+- **App / Build:** [GAP - confirm the build / version]
+- **OS:** [GAP - "my phone" - confirm iOS or Android + version]
 - **Browser:** Firefox (mobile)
-- **Locale / Timezone:** [GAP — only if business-logic-relevant]
-- **Device:** [GAP — confirm phone model]
+- **Locale / Timezone:** [GAP - only if business-logic-relevant]
+- **Device:** [GAP - confirm phone model]
 
 ### Steps to reproduce
 
-1. [GAP — confirm starting URL or screen]
+1. [GAP - confirm starting URL or screen]
 2. Add a product to the cart.
 3. Navigate to checkout.
 4. Tap "Place order".
@@ -264,7 +264,7 @@ the engineer triaging on incomplete data.
 Input: an automated alert with the full stack trace from production.
 
 The skill drafts the report with **Steps to Reproduce** marked
-`Unable — production crash (no manual repro yet)`, the **Actual** field
+`Unable - production crash (no manual repro yet)`, the **Actual** field
 populated with the verbatim trace, and a recommended hand-off to the
 [`crash-stack-trace-analyzer`](../../agents/crash-stack-trace-analyzer.md)
 agent to extract a hypothesis.

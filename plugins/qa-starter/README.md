@@ -18,7 +18,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 - **qa-process** - Test process + methodology
 - **qa-test-data** - Test data engineering
 - **qa-test-environment** - Test environment management
-- **qa-test-review** - Test code quality reviewers for test files only — closes the gap surfaced in
+- **qa-test-review** - Test code quality reviewers for test files only - closes the gap surfaced in
 - **qa-test-reporting** - Test reporting + coverage analytics
 - **qa-flake-triage** - Flake triage
 - **qa-bug-repro** - Bug reproduction workflow

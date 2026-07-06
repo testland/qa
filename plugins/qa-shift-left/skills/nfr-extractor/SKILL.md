@@ -193,7 +193,7 @@ back-references the standard.
 | "fast checkout"                    | line 12               | LCP ≤1.5s (typical for cached transactional flow)?            |
 | "supports global users"            | line 28               | Locale list? RTL support? Timezone handling? Unicode in fields? |
 
-The agent does NOT pick the answers — author must confirm.
+The agent does NOT pick the answers - author must confirm.
 ```
 
 ## Examples
@@ -244,7 +244,7 @@ Output:
 |-------|------------------------------------------------------------|-----------|-------------|----------------|
 | A11Y-1| Color contrast ratio for normal text                       | ≥4.5:1    | WCAG 2.2 SC 1.4.3 | every page |
 
-**Threshold gaps:** 0 — all NFRs are threshold-bound and measurement-cited.
+**Threshold gaps:** 0 - all NFRs are threshold-bound and measurement-cited.
 ```
 
 ## Anti-patterns

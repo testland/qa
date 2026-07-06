@@ -202,8 +202,8 @@ explicit question:
 
 | Section       | Field                  | Question                                                                 |
 |---------------|------------------------|--------------------------------------------------------------------------|
-| schema        | `customer_phone.pii`   | Direct PII (yes — phone numbers are PII per most jurisdictions). Confirm. |
-| freshness     | `cadence`              | PRD says "fresh data" — daily? hourly? real-time? Each implies a different gate. |
+| schema        | `customer_phone.pii`   | Direct PII (yes - phone numbers are PII per most jurisdictions). Confirm. |
+| freshness     | `cadence`              | PRD says "fresh data" - daily? hourly? real-time? Each implies a different gate. |
 | volume        | `max_per_day`          | Not specified; required to set a `row_count between` assertion.          |
 | distribution  | `payment_method`       | What's the accepted-value set? PRD lists four; are there more (e.g. "apple_pay" added recently)? |
 ```

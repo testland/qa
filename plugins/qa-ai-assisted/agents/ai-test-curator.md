@@ -132,7 +132,7 @@ def check_third_party_mocks(test_file):
 ## Step 6 - Output
 
 ```markdown
-## AI test curator — `<PR>`
+## AI test curator - `<PR>`
 
 **Generated tests reviewed:** N
 **Issues flagged:**
@@ -148,7 +148,7 @@ def check_third_party_mocks(test_file):
 
 ### Per-finding detail
 
-#### Hallucinated API — `cart.spec.ts:12`
+#### Hallucinated API - `cart.spec.ts:12`
 
 ```javascript
 import { calculatePromoDiscount } from '@/checkout/promo';
@@ -162,7 +162,7 @@ name.
 **Recommendation:** Replace with `applyPromo` or rewrite the test
 against the actual API.
 
-#### Weak assertion — `cart.spec.ts:34`
+#### Weak assertion - `cart.spec.ts:34`
 
 ```javascript
 expect(result).toBeTruthy();
@@ -179,7 +179,7 @@ checking boolean).
 
 ### Verdict
 
-❌ **Not ready to merge** — 3 high-severity issues require fix.
+❌ **Not ready to merge** - 3 high-severity issues require fix.
 
 After fixes, re-run the curator.
 ```

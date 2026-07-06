@@ -161,12 +161,12 @@ aggregate may still look fine because the file is small.
 ## Step 5 - Render the ledger
 
 ```markdown
-## Coverage debt ledger — `<branch>`, last 30 main runs (~30 days)
+## Coverage debt ledger - `<branch>`, last 30 main runs (~30 days)
 
 **Total flagged:** 12 files
 **Backlog priority:** orphan → falling (>10pp) → falling (5-10pp) → stale
 
-### 🔴 Orphans (3) — currently 0% coverage; lost all covering tests
+### 🔴 Orphans (3) - currently 0% coverage; lost all covering tests
 
 | File                                        | Lost tests                                                  | Path              |
 |---------------------------------------------|-------------------------------------------------------------|-------------------|
@@ -201,7 +201,7 @@ covered, the file may be unreachable / dead code).
 For each falling file: pair with [`unit-test-coverage-targeter`](../../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
 to identify the specific uncovered branches.
 
-For each stale file: review with the file owner — is the new code
+For each stale file: review with the file owner - is the new code
 actually being tested? Often the test suite covers happy paths but
 not the edge cases the recent commits added.
 ```
@@ -238,7 +238,7 @@ jobs:
       - name: Open / update GitHub issue
         uses: peter-evans/create-issue-from-file@v5
         with:
-          title: 'Coverage debt ledger — week of ${{ github.event.repository.updated_at }}'
+          title: 'Coverage debt ledger - week of ${{ github.event.repository.updated_at }}'
           content-filepath: LEDGER.md
           labels: tech-debt, coverage
 ```

@@ -99,7 +99,7 @@ Vary: Authorization, Accept-Language, X-Tenant-Id
 ## Output format
 
 ```markdown
-## Cache-key collision review — `<scope>`
+## Cache-key collision review - `<scope>`
 
 **Scope:** <file>:<lines> or PR <#>
 
@@ -119,7 +119,7 @@ def get_user_profile(user_id: str) -> dict:
     return db.users.find_one({"id": user_id})
 ```
 
-**Risk:** `lru_cache` on a free function — but the response
+**Risk:** `lru_cache` on a free function - but the response
 includes tenant-scoped fields. If user_id is unique across
 tenants this is OK; if user_id is **per-tenant** (e.g., Linear),
 two tenants' user-1 share the same cache slot → cross-tenant
@@ -194,7 +194,7 @@ Output:
 
 ```markdown
 **Severity:** critical
-**Risk:** `userLoader` is **module-level** — shared across all requests of all tenants. Tenant A's `loader.load("u1")` and tenant B's `loader.load("u1")` collide if user_id isn't globally unique.
+**Risk:** `userLoader` is **module-level** - shared across all requests of all tenants. Tenant A's `loader.load("u1")` and tenant B's `loader.load("u1")` collide if user_id isn't globally unique.
 
 **Fix:** Per-request DataLoader instance:
 

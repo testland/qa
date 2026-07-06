@@ -78,7 +78,7 @@ introspection: process.env.NODE_ENV !== 'production'
 ### Hide "did you mean" suggestions
 
 Apollo Server also recommends `hideSchemaDetailsFromClientErrors:
-true` — without it, a typo (`{ usre { id } }`) returns
+true` - without it, a typo (`{ usre { id } }`) returns
 `"Did you mean 'user'?"`, leaking field names even with
 introspection disabled.
 

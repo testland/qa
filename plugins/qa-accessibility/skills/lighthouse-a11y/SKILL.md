@@ -74,16 +74,16 @@ module.exports = {
         'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
         'cumulative-layout-shift':   ['error', { maxNumericValue: 0.1 }],
 
-        // Accessibility — category score (0–1)
+        // Accessibility - category score (0-1)
         'categories:accessibility':  ['error', { minScore: 0.95 }],
 
-        // Per-audit overrides — error on critical-impact a11y rules
+        // Per-audit overrides - error on critical-impact a11y rules
         'aria-required-attr':         ['error', { minScore: 1 }],
         'button-name':                ['error', { minScore: 1 }],
         'label':                      ['error', { minScore: 1 }],
         'meta-viewport':              ['error', { minScore: 1 }],
 
-        // Lower-impact a11y rules — warn but don't block
+        // Lower-impact a11y rules - warn but don't block
         'color-contrast':             ['warn',  { minScore: 1 }],
         'image-alt':                  ['warn',  { minScore: 1 }],
       },
@@ -107,7 +107,7 @@ exclusive at the `assert` level, and the first matching pattern wins, so order
 specific patterns before the catch-all:
 
 ```js
-// .lighthouserc.js — different a11y bars per URL
+// .lighthouserc.js - different a11y bars per URL
 module.exports = {
   ci: {
     assert: {

@@ -77,7 +77,7 @@ Driver\`.
 Per [wad][wad]:
 
 ```cmd
-:: Default — 127.0.0.1:4723
+:: Default - 127.0.0.1:4723
 "C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe"
 
 :: Custom port (admin shell)

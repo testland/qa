@@ -136,7 +136,7 @@ API is the closest mirror to the underlying AT-SPI tree:
 from dogtail.procedural import run, focus, click, type, keyCombo
 from dogtail.utils import screenshot
 
-# Launch the app — dogtail starts it and attaches to the AT-SPI tree
+# Launch the app - dogtail starts it and attaches to the AT-SPI tree
 run('gnome-calculator')
 
 # Resolve via the accessibility tree (focus + click are role-based)
@@ -221,7 +221,7 @@ This uses the AT-SPI event-listener pattern documented in
 ## Step 7 - Run
 
 ```bash
-# Standalone — assumes accessibility is enabled + an X / Wayland session
+# Standalone - assumes accessibility is enabled + an X / Wayland session
 python3 tests/test_calculator.py
 
 # Under pytest with JUnit output

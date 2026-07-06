@@ -31,7 +31,7 @@ list` and `gh pr list` to surface open blocking items per service.
 Output of this step:
 
 ```markdown
-## Team inventory — 2026-Q2-platform-cutover
+## Team inventory - 2026-Q2-platform-cutover
 
 | Team      | Service(s)           | Owner          | Blocking issues |
 |-----------|----------------------|----------------|-----------------|
@@ -71,7 +71,7 @@ happen simultaneously.
 Sequenced gate table:
 
 ```markdown
-## Cutover sequence — 2026-Q2-platform-cutover
+## Cutover sequence - 2026-Q2-platform-cutover
 
 | Gate | Step                              | Depends on | Owner    | Timebox  |
 |------|-----------------------------------|------------|----------|----------|
@@ -149,9 +149,9 @@ evidence and states the decision explicitly.
 The agent produces a single cutover runbook document:
 
 ```markdown
-# Release cutover runbook — {release_name}
+# Release cutover runbook - {release_name}
 
-**Window:** {start_utc} – {hard_stop_utc}
+**Window:** {start_utc} - {hard_stop_utc}
 **Release authority:** {name}
 
 ## Team inventory

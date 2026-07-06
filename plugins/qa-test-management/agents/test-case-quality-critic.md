@@ -59,7 +59,7 @@ def check_steps(case):
         if step.action.strip().lower().startswith(("test", "verify", "check")):
             issues.append(f"Step {i}: vague verb; use concrete action verb")
     if len(case.steps) > 15:
-        issues.append(f"Case has {len(case.steps)} steps — split into multiple")
+        issues.append(f"Case has {len(case.steps)} steps - split into multiple")
     return issues
 ```
 
@@ -106,11 +106,11 @@ Per
 ## Step 7 - Verdict + report
 
 ```markdown
-## Test-case quality audit — <project> — <date>
+## Test-case quality audit - <project> - <date>
 
 **Cases audited:** 287
 **Findings:** 41 critical, 78 warnings
-**Verdict:** ❌ BLOCK — repository fails 14 % of cases
+**Verdict:** ❌ BLOCK - repository fails 14 % of cases
 
 ### Critical (must fix before next release)
 
@@ -118,7 +118,7 @@ Per
 |---|---|
 | C1001 | Missing steps (declared as Steps template) |
 | C1023 | Step 4 combined "log in and add to cart"; split |
-| C1056 | Title "Test checkout" — vague; behavioural rewrite required |
+| C1056 | Title "Test checkout" - vague; behavioural rewrite required |
 | C1099 | Stale ref REQ-AUTH-099 (requirement deleted 2026-04-12) |
 | ... | ... |
 

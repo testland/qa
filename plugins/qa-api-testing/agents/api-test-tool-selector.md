@@ -63,7 +63,7 @@ The agent emits **exactly one** primary recommendation. A secondary fallback may
 Output template (Markdown, copyable to a decision record):
 
 ```markdown
-## API test tool recommendation — <project-name>
+## API test tool recommendation - <project-name>
 
 **API style detected:** <rest-openapi | rest-no-spec | graphql | grpc | mixed>
 **Goal:** <functional | fuzzing | chaos>

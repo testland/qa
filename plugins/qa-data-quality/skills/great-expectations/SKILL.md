@@ -91,7 +91,7 @@ validation_definition = context.validation_definitions.get("orders_validation")
 
 # batch_parameters maps to the underlying BatchDefinition's keys
 result = validation_definition.run(batch_parameters={"year": "2026"})
-print(result.success)       # bool — True only if every expectation passed
+print(result.success)       # bool - True only if every expectation passed
 ```
 
 `batch_parameters` keys depend on how the BatchDefinition was authored:

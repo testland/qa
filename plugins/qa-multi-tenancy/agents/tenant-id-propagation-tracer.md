@@ -55,18 +55,18 @@ and emitted async messages; (4) logs tenant-scoped lines. Use
 ## Output format
 
 ```markdown
-## Tenant-id propagation trace — `<entry_point>`
+## Tenant-id propagation trace - `<entry_point>`
 
 **Entry:** `<file>:<line> <function_signature>`
 **Source of tenant_id:** session/JWT (trusted) | request.body (UNTRUSTED) | ...
 **Isolation model:** pool | bridge | silo (per tenant-isolation-models-reference)
 
 ### Propagation trace
-1. `<file>:<line>` — `<function>` receives `tenant_id` via `<arg|context>`.
-2. `<file>:<line>` — DB query `<sql>` with `<tenant_id_binding>`.
+1. `<file>:<line>` - `<function>` receives `tenant_id` via `<arg|context>`.
+2. `<file>:<line>` - DB query `<sql>` with `<tenant_id_binding>`.
 
 ### Hazards (severity-ordered)
-1. **[critical]** `<file>:<line>` — `<description>`. **Fix:** `<fix>`.
+1. **[critical]** `<file>:<line>` - `<description>`. **Fix:** `<fix>`.
 
 ### Coverage gap
 The [`cross-tenant-data-leak-tests`](../skills/cross-tenant-data-leak-tests/SKILL.md)

@@ -60,7 +60,7 @@ class WebsiteUser(HttpUser):
     def index_page(self):
         self.client.get("/")
 
-    @task(3)   # weighted — runs 3x as often as unweighted tasks
+    @task(3)   # weighted - runs 3x as often as unweighted tasks
     def view_item(self):
         self.client.get("/items/42")
 ```

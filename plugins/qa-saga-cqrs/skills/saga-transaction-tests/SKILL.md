@@ -104,7 +104,7 @@ because retries happen during partial failure. Test:
 def test_compensation_idempotent():
     inventory.reserve(item)
     inventory.release("res-001")
-    inventory.release("res-001")  # second call — should be no-op
+    inventory.release("res-001")  # second call - should be no-op
     assert inventory.reservation_count == 0  # not -1
     assert inventory.release_invocations == 2  # both recorded
 ```

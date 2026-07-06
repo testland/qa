@@ -116,16 +116,16 @@ for branch coverage but slower.
 ```javascript
 import { vi, expect, test } from 'vitest';
 
-// vi.fn() — standalone mock
+// vi.fn() - standalone mock
 const myMock = vi.fn();
 myMock.mockReturnValue(42);
 
-// vi.mock() — module mock (hoisted to top of file)
+// vi.mock() - module mock (hoisted to top of file)
 vi.mock('./api-client', () => ({
   fetchUser: vi.fn().mockResolvedValue({ id: 1 }),
 }));
 
-// vi.spyOn() — wrap existing method
+// vi.spyOn() - wrap existing method
 const spy = vi.spyOn(myObject, 'someMethod');
 ```
 

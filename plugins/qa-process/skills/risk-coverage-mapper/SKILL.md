@@ -121,11 +121,11 @@ def build_coverage_matrix(risks, tests, cases, monitors):
 ## Step 4 - Emit the matrix
 
 ```markdown
-# Risk coverage matrix — <release / quarter> — YYYY-MM-DD
+# Risk coverage matrix - <release / quarter> - YYYY-MM-DD
 
 **Total risks (score ≥ 5):** 27
 **Covered:** 23 (85 %)
-**Orphan risks (no coverage):** 4 — 2 critical, 2 low
+**Orphan risks (no coverage):** 4 - 2 critical, 2 low
 **Average coverage depth:** 2.4
 
 ## Risks by coverage
@@ -133,9 +133,9 @@ def build_coverage_matrix(risks, tests, cases, monitors):
 | Risk ID | Risk | Score | Automated tests | Manual cases | Monitors | Depth |
 |---|---|---:|---|---|---|---:|
 | PR-001 | Pricing engine off-by-cent EU | 15 | tests/billing/test_promo_stacking_eu.py · tests/billing/test_rounding_properties.py | C1234 (TestRail) | datadog://pricing-anomaly | 4 |
-| PR-002 | OAuth refresh-token leak via logs | 10 | tests/auth/test_log_redaction.py | C1241 | — | 2 |
+| PR-002 | OAuth refresh-token leak via logs | 10 | tests/auth/test_log_redaction.py | C1241 | - | 2 |
 | PR-003 | Stripe webhook delivery failure not retried | 16 | tests/billing/test_webhook_retry.py | C1256 + C1257 | datadog://stripe-webhook-failure-rate · pingdom://stripe-endpoint | 5 |
-| **PR-007** | **Locale-specific date parsing on /reports** | **12** | **— (ORPHAN)** | — | — | **0** |
+| **PR-007** | **Locale-specific date parsing on /reports** | **12** | ** - (ORPHAN)** | - | - | **0** |
 | ... | ... | ... | ... | ... | ... | ... |
 
 ## Orphan risks (critical action)
@@ -169,7 +169,7 @@ was retired, the feature deprecated). Audit for deletion.
 ## Step 6 - Executive summary
 
 ```markdown
-## Risk-coverage executive summary — Q2 2026
+## Risk-coverage executive summary - Q2 2026
 
 ### Headline
 

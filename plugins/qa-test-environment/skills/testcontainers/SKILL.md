@@ -320,7 +320,7 @@ GenericContainer container = new GenericContainer("redis:6-alpine")
     .withExposedPorts(6379)
     .withReuse(true);
 container.start();
-// Do NOT call stop() — the container persists for the next run
+// Do NOT call stop() - the container persists for the next run
 ```
 
 > "Reusable containers are not suited for CI usage and as an
@@ -351,7 +351,7 @@ jobs:
   it:
     runs-on: ubuntu-latest
     services:
-      # No need to declare DB here — Testcontainers manages it from inside the test process.
+      # No need to declare DB here - Testcontainers manages it from inside the test process.
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v4

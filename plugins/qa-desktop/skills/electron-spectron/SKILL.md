@@ -89,7 +89,7 @@ For pattern-recognition during a migration audit, Spectron tests
 followed this shape:
 
 ```js
-// Legacy Spectron — DO NOT use for new code
+// Legacy Spectron - DO NOT use for new code
 const Application = require('spectron').Application;
 const app = new Application({
   path: '/path/to/electron/MyApp.app/Contents/MacOS/MyApp',

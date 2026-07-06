@@ -290,7 +290,7 @@ XML for the JUnit ecosystem.
 ```bash
 ./ringbuffer_test --gtest_output=xml:results.xml
 xmlstarlet sel -t -v "count(//testcase[failure])" results.xml
-# Number of failing testcases — gate on this
+# Number of failing testcases - gate on this
 ```
 
 ## CI integration

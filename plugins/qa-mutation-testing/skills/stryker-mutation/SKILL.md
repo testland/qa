@@ -83,7 +83,7 @@ Per-mutant output:
 src/cart.ts:42:5
 - if (item.qty < 0) throw new Error(...);
 + if (item.qty <= 0) throw new Error(...);
-Tests run: 12 (all passed — mutant survived).
+Tests run: 12 (all passed - mutant survived).
 ```
 
 **Survived mutant = tests passed despite the introduced bug** =

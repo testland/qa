@@ -112,7 +112,7 @@ etc.) - see the [Knip plugins page].
 ## Step 5 - Limit output during cleanup
 
 ```bash
-# Show only top 5 of each issue type — useful when first adopting
+# Show only top 5 of each issue type - useful when first adopting
 npx knip --max-show-issues 5
 ```
 

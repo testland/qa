@@ -89,7 +89,7 @@ def test_write_then_purge_serves_fresh():
     )
     assert origin_response.status_code == 200
 
-    # 2. Verify edge has the *old* value (might or might not — cache hit)
+    # 2. Verify edge has the *old* value (might or might not - cache hit)
     edge_before = requests.get("https://example.com/api/users/1")
     cache_status_before = edge_before.headers.get("cf-cache-status")
 

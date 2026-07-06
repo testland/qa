@@ -77,7 +77,7 @@ In the output format below.
 | order_id       | unique, not_null            | PK candidate                    |
 | status         | accepted_values [...]       | Low-cardinality enum            |
 | customer_id    | relationships → customers.id | Documented FK                  |
-| discount_pct   | range 0–100                 | Business rule (discount caps)   |
+| discount_pct   | range 0-100                 | Business rule (discount caps)   |
 | updated_at     | freshness < 1d              | Daily-cadence pipeline          |
 
 ### Sample run
@@ -87,7 +87,7 @@ In the output format below.
 
 ### Next steps
 
-1. Review the coverage table — drop checks that don't match a real
+1. Review the coverage table - drop checks that don't match a real
    business invariant.
 2. Wire the suite into CI per the engine's "CI integration" section
    in the matching SKILL.md.

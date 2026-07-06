@@ -83,7 +83,7 @@ For browser checks, Playwright-style is the de-facto standard
 // monitors/checkout-journey.spec.ts (Checkly-style)
 import { test, expect } from '@playwright/test';
 
-test('checkout journey — happy path', async ({ page }) => {
+test('checkout journey - happy path', async ({ page }) => {
   // 1. Land on home page
   await page.goto('https://example.com/');
   await expect(page.getByRole('heading', { name: 'Welcome' })).toBeVisible();

@@ -141,7 +141,7 @@ Surface this as a positive metric: "5 fixed / 47 remaining."
 Markdown summary suitable for `$GITHUB_STEP_SUMMARY` or PR comment:
 
 ```markdown
-# A11y Gate — verdict: NO-GO
+# A11y Gate - verdict: NO-GO
 
 **Blockers (NEW violations): 2**
 
@@ -213,7 +213,7 @@ if axe_path.exists():
             })
 
 # Source: pa11y JSON
-# ... (same shape, different fields — normalize to the same record)
+# ... (same shape, different fields - normalize to the same record)
 
 # Load baseline
 baseline_path = Path("a11y-baseline.json")
@@ -226,7 +226,7 @@ new_violations = [r for r in records if r['fingerprint'] not in baseline]
 blockers = [r for r in new_violations if r['severity'] in ('critical', 'serious')]
 
 verdict = 'no-go' if blockers else 'go'
-print(f"# A11y Gate — verdict: {verdict.upper()}")
+print(f"# A11y Gate - verdict: {verdict.upper()}")
 for r in blockers:
     print(f"- {r['scanner']} :: {r['rule_id']} on {r['page_url']} ({r['selector']})")
 

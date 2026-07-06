@@ -51,7 +51,7 @@ A read-only investigator that turns "the contract gate failed, why?" into a cate
 ## Output format
 
 ```markdown
-## Contract Drift Investigation — surface: <openapi|graphql|protobuf|pact>
+## Contract Drift Investigation - surface: <openapi|graphql|protobuf|pact>
 
 - **Last-known-green:** commit `<sha>` (<date>)
 - **Current:** commit `<sha>` (PR branch)
@@ -82,7 +82,7 @@ shows commit `abc1234` "Rename customer_email to customer.email
 Output:
 
 ```markdown
-## Contract Drift Investigation — surface: openapi
+## Contract Drift Investigation - surface: openapi
 
 - **Last-known-green:** commit `def5678` (2026-04-30)
 - **Current:** commit `abc1234` (PR #42)
@@ -111,7 +111,7 @@ on `provider/state-handlers.ts` shows no recent change.
 Output:
 
 ```markdown
-## Contract Drift Investigation — surface: pact
+## Contract Drift Investigation - surface: pact
 
 - **Last-known-green:** consumer version `pre-PR-sha`, provider version `prod-deploy-sha`
 - **Current:** consumer version `PR-sha`, provider version `prod-deploy-sha`
@@ -121,7 +121,7 @@ Output:
 
 | Category      | Subject                                    | Tool finding                               | Introduced in                | Recommendation                                |
 |---------------|--------------------------------------------|--------------------------------------------|------------------------------|------------------------------------------------|
-| data-fixture  | "request for all dogs" (state seeding)      | provider-state hook returned empty list    | provider commit `xyz789` (3w ago) — `db.dogs.bulkInsert([])` was made conditional on env-var | Restore unconditional seeding in the state handler, OR set the env-var in the verification CI. |
+| data-fixture  | "request for all dogs" (state seeding)      | provider-state hook returned empty list    | provider commit `xyz789` (3w ago) - `db.dogs.bulkInsert([])` was made conditional on env-var | Restore unconditional seeding in the state handler, OR set the env-var in the verification CI. |
 
 ### Suggested next step
 
@@ -141,7 +141,7 @@ commit `def0011` deleted the enum value.
 Output:
 
 ```markdown
-## Contract Drift Investigation — surface: protobuf
+## Contract Drift Investigation - surface: protobuf
 
 - **Last-known-green:** commit `prev-tag-sha` (2026-04-25, tag v1.4.2)
 - **Current:** commit `def0011` (PR #88)

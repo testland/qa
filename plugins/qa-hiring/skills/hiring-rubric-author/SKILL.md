@@ -81,14 +81,14 @@ The skill emits the dimensions selected for the role; the team can add or remove
 For each (competency × question) cell, the rubric needs four behavioural anchors. The anchor describes **what the candidate said or did**, not **what the interviewer felt** - this is the load-bearing principle that reduces interviewer noise.
 
 ```markdown
-### Test analysis & design — Q3 (Behavioral, STAR: late-defect catch)
+### Test analysis & design - Q3 (Behavioral, STAR: late-defect catch)
 
 | Score | Anchor (what the candidate said / did) |
 |---|---|
-| **1 — no hire** | Cannot articulate a partition / boundary / decision-table technique. Describes the catch as "I just got lucky." Or attributes the catch to a tool ("the linter caught it"). |
-| **2 — borderline** | Names one ISTQB technique correctly but cannot apply it to the catch they describe. STAR is partial: missing Result or missing the candidate's specific Action (says "we" throughout). |
-| **3 — hire** | Identifies the specific technique that caught the defect (e.g., "we had no negative test for the empty-cart case — equivalence partitioning would have flagged it"). STAR complete: situation, task, the candidate's specific action, measurable result + retro learning. |
-| **4 — strong hire** | Generalises beyond the specific defect: identifies a systemic gap (e.g., "we had no convention requiring a negative test per public method; I added that to our `test-code-conventions` doc"), and ties the change to a measurable downstream improvement. |
+| **1 - no hire** | Cannot articulate a partition / boundary / decision-table technique. Describes the catch as "I just got lucky." Or attributes the catch to a tool ("the linter caught it"). |
+| **2 - borderline** | Names one ISTQB technique correctly but cannot apply it to the catch they describe. STAR is partial: missing Result or missing the candidate's specific Action (says "we" throughout). |
+| **3 - hire** | Identifies the specific technique that caught the defect (e.g., "we had no negative test for the empty-cart case - equivalence partitioning would have flagged it"). STAR complete: situation, task, the candidate's specific action, measurable result + retro learning. |
+| **4 - strong hire** | Generalises beyond the specific defect: identifies a systemic gap (e.g., "we had no convention requiring a negative test per public method; I added that to our `test-code-conventions` doc"), and ties the change to a measurable downstream improvement. |
 
 **Probe-trigger:** If the candidate scores 2 on STAR completeness, probe for the missing component; do not deduct further on the second pass.
 **Time-budget impact:** A score of 4 typically takes 2 extra minutes; budget accordingly.
@@ -120,9 +120,9 @@ The output is a single markdown document with:
 4. **Hand-off block**:
 
 ```markdown
-## HAND-OFF — required next steps
+## HAND-OFF - required next steps
 
-1. Pair with `calibration-guide-author` to produce gold-standard model answers and common pitfalls per question — without those, the anchors here are aspirational.
+1. Pair with `calibration-guide-author` to produce gold-standard model answers and common pitfalls per question - without those, the anchors here are aspirational.
 2. Run a calibration interview (one panel scores the same recorded interview together) before the first real candidate. Per the structured-interview research, calibration is the dominant variable in inter-rater agreement.
 3. Lock the rubric at the start of the hiring round; mid-round changes invalidate prior candidates' scores.
 4. After the round, run `defect-trend-narrator`-style retro on the rubric: which competencies discriminated; which were noise; which scored everyone at 3 (a sign the anchor is too generous).

@@ -66,39 +66,39 @@ Beyond per-case axes, the agent walks the **whole set** for cross-case issues:
 Fixed-shape markdown:
 
 ```markdown
-## Test-case audit — `<set-identifier>`
+## Test-case audit - `<set-identifier>`
 
 **Cases audited:** 47
-**PASS:** 31 — **WEAK:** 12 — **FAIL:** 4
+**PASS:** 31 - **WEAK:** 12 - **FAIL:** 4
 
 ### Set-level findings
 
 | Check | Result | Evidence |
 |---|---|---|
-| Tier distribution | WARN | 38 smoke / 5 regression / 4 negative — over-weighted smoke; under-cover negative paths. |
+| Tier distribution | WARN | 38 smoke / 5 regression / 4 negative - over-weighted smoke; under-cover negative paths. |
 | Heuristic coverage (live-feature matrix) | WARN | SFDPOT-T (Time) absent; no cart-expiry or coupon-expiry case. |
 | Identifier consistency | PASS | All cases follow `CHECKOUT-LIVE-NN` pattern. |
 | Source-claim provenance | PASS | 100% of cases trace to observation-log lines or story sentences. |
 
 ### Per-case findings (FAIL + WEAK only)
 
-#### `CHECKOUT-LIVE-12 — Verify checkout works`
+#### `CHECKOUT-LIVE-12 - Verify checkout works`
 
 | § | Axis | Verdict | Evidence |
 |---|---|---|---|
 | §1 | Title clarity | FAIL | "Verify checkout works" is the case-version of `it('it works')`. Rewrite as `Places order with a valid card on the happy path`. |
 | §4 | Expected-result testability | FAIL | Expected: "checkout works correctly". Not testable. Rewrite to name the observable post-condition. |
 
-**Verdict: FAIL — rewrite required.**
+**Verdict: FAIL - rewrite required.**
 
-#### `CHECKOUT-LIVE-07 — Rejects coupon when length exceeds 32 chars`
+#### `CHECKOUT-LIVE-07 - Rejects coupon when length exceeds 32 chars`
 
 | § | Axis | Verdict | Evidence |
 |---|---|---|---|
 | §4 | Expected-result testability | WEAK | Expected: "Either client validation blocks at 32; or server returns 422." Disjunction is fine for an `inferred` case but the team must collapse to one after first run. |
 | §5 | Equivalence partitioning | WEAK | Case covers only one invalid-length class (33 chars). Missing: empty coupon, 256-char coupon, whitespace-only. See [`negative-test-generator`](../../qa-test-data/skills/negative-test-generator/SKILL.md). |
 
-**Verdict: WEAK — runnable as-is, expand after first run.**
+**Verdict: WEAK - runnable as-is, expand after first run.**
 
 ### Hand-off recommendations
 
@@ -109,10 +109,10 @@ Fixed-shape markdown:
 
 ### What this agent did NOT do
 
-- Rewrite cases automatically — case-level rewrites need authoring judgement; the auditor flags, the human (or `test-case-ideation-from-story`) rewrites.
-- Review test code — that's [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md) and siblings.
-- Score the test suite's pyramid balance — that's [`test-pyramid-balancer`](../skills/test-pyramid-balancer/SKILL.md).
-- Open / update tracker tickets — read-only against the case set.
+- Rewrite cases automatically - case-level rewrites need authoring judgement; the auditor flags, the human (or `test-case-ideation-from-story`) rewrites.
+- Review test code - that's [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md) and siblings.
+- Score the test suite's pyramid balance - that's [`test-pyramid-balancer`](../skills/test-pyramid-balancer/SKILL.md).
+- Open / update tracker tickets - read-only against the case set.
 ```
 
 ## Refuse-to-proceed rules
@@ -122,7 +122,7 @@ The agent **refuses** to:
 - Operate on test code files. Step 1 fails-closed with `WRONG_TOOL` if `.spec.*` / `.test.*` / `.feature` files are supplied.
 - Auto-rewrite cases. Case-level rewrites need authoring judgement; the auditor flags.
 - Audit a set without identifying the input format. If Step 1 cannot parse the input, halt with `UNPARSEABLE`: supply TestRail CSV / Qase JSON / Xray export / markdown matrix in the expected shape.
-- Issue verdicts on §5 / §6 without parameter information. If the case set doesn't expose parameter axes (the cases describe flows without input parameters), §5 and §6 emit `n/a — no parameterised cases detected` rather than fabricate findings.
+- Issue verdicts on §5 / §6 without parameter information. If the case set doesn't expose parameter axes (the cases describe flows without input parameters), §5 and §6 emit `n/a - no parameterised cases detected` rather than fabricate findings.
 - Apply project-default conventions when the project has its own. If `docs/test-case-conventions.md` exists, the agent reads it and applies project conventions instead of the defaults documented here.
 
 ## Anti-patterns

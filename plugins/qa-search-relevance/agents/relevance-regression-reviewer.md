@@ -95,7 +95,7 @@ for q_id, detail in after["details"].items():
     unrated = len(detail.get("unrated_docs", []))
     total_in_top_k = 10  # or your k
     if unrated / total_in_top_k > 0.5:
-        print(f"⚠️ {q_id}: {unrated}/{total_in_top_k} unrated — judgment list stale")
+        print(f"⚠️ {q_id}: {unrated}/{total_in_top_k} unrated - judgment list stale")
 ```
 
 If > 30% of queries have > 50% unrated, refuse: judgments must be
@@ -134,7 +134,7 @@ For changes to filter logic:
 ## Step 8 - Emit verdict
 
 ```markdown
-## Search relevance review — `<sha>`
+## Search relevance review - `<sha>`
 
 **Change:** Synonym dict expanded (running → +jogging, sprint, marathon)
 **Judgment coverage:** 247 queries, 1,892 judgments, 5% unrated avg
@@ -162,7 +162,7 @@ For changes to filter logic:
 
 ### Verdict
 
-🟡 **NEEDS-WORK** — aggregate flat, but 2 head queries regressed
+🟡 **NEEDS-WORK** - aggregate flat, but 2 head queries regressed
 > 0.10. The synonym expansion for "running → marathon/sprint" hurts
 queries where the user wants accessories ("running socks", "cross country
 running") not race-distance filters.

@@ -97,7 +97,7 @@ The agent emits a Scenario Outline / parameterized table and
 recommends the team accept the fold:
 
 ```markdown
-**Fold candidate:** `cart.spec.ts > addItem` — 4 tests can become 1
+**Fold candidate:** `cart.spec.ts > addItem` - 4 tests can become 1
 parameterized test:
 
 ```typescript
@@ -156,11 +156,11 @@ def delete_candidates(tests, signal_history, coverage_map):
 ## Output format
 
 ```markdown
-## Regression suite curation — Q2 2026 review
+## Regression suite curation - Q2 2026 review
 
 **Suite size before:** 4,127 tests
 **Suite size after recommended changes:** 3,840 tests (-287)
-**Coverage delta:** 0.0pp (verified — no source path loses coverage)
+**Coverage delta:** 0.0pp (verified - no source path loses coverage)
 **Estimated CI time saved per run:** ~4.5 min (12% of current 38 min)
 
 | Decision       | Count | LOC delta |
@@ -181,7 +181,7 @@ def delete_candidates(tests, signal_history, coverage_map):
 
 (table with test ID + 4-condition checklist + redundancy evidence)
 
-### Keep — for context
+### Keep - for context
 
 | Test                                         | Reason                                          |
 |----------------------------------------------|-------------------------------------------------|

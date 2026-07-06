@@ -83,8 +83,8 @@ sends email will spam real recipients.
 ```python
 from faker import Faker
 fake = Faker()
-fake.email()                       # 'roccelline1878@example.com' — safe
-fake.email(domain='gmail.com')     # NEVER — could spam real users
+fake.email()                       # 'roccelline1878@example.com' - safe
+fake.email(domain='gmail.com')     # NEVER - could spam real users
 ```
 
 ### Phone numbers - region-specific test ranges

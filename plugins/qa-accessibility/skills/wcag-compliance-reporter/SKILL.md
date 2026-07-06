@@ -202,7 +202,7 @@ report.
 | Process   | Pages spec | Pages scanned | Missing                         |
 |-----------|-----------:|--------------:|---------------------------------|
 | checkout  | 6          | 5             | `/checkout/confirm` not scanned |
-| account   | 3          | 3             | —                               |
+| account   | 3          | 3             | -                              |
 
 ⚠ Until `/checkout/confirm` is scanned, the **checkout process**
 cannot claim conformance regardless of per-page results
@@ -222,7 +222,7 @@ cannot claim conformance regardless of per-page results
 
 ## Per-page detail (top failing pages)
 
-### `/checkout/payment` — 12 violations across 5 SC
+### `/checkout/payment` - 12 violations across 5 SC
 
 | SC    | Tool    | Selector                          | Message |
 |-------|---------|-----------------------------------|---------|
@@ -232,7 +232,7 @@ cannot claim conformance regardless of per-page results
 
 (Full per-page tables follow.)
 
-## Coverage gaps — automated tools don't cover everything
+## Coverage gaps - automated tools don't cover everything
 
 | SC level | Total SCs | Covered by ≥1 tool | Manual review required |
 |----------|----------:|-------------------:|------------------------|

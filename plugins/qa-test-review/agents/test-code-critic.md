@@ -73,12 +73,12 @@ Detection:
   treat as different properties.
 
 ```typescript
-// Flag — three different properties
+// Flag - three different properties
 expect(cart.count).toBe(1);
 expect(cart.totalPrice).toBe(10);
 expect(cart.status).toBe('active');
 
-// OK — same property, different facets
+// OK - same property, different facets
 expect(cart.items).toHaveLength(1);
 expect(cart.items[0].sku).toBe('BOOK-001');
 ```
@@ -113,7 +113,7 @@ configurable budget (default 1000ms).
 ## Output format
 
 ```markdown
-## Test code critic — `<PR>`
+## Test code critic - `<PR>`
 
 **Test files reviewed:** N
 **Issues flagged:** M (across K files)
@@ -126,7 +126,7 @@ configurable budget (default 1000ms).
 |---|-----------|------|-------|
 | §1 | AAA structure | 14-32 | Test body is 19 lines with no clear Arrange / Act / Assert separation. Suggested: split into 3 visually distinct phases. |
 | §2 | Single-responsibility | 32 | Three different observable properties asserted (`count`, `totalPrice`, `status`). Suggested: split into 3 tests. |
-| §3 | Naming | 8 | `it('it works')` — convention §3 prefers `<sut>_<scenario>_<expected>` or nested-describe + verb-led `it(...)`. |
+| §3 | Naming | 8 | `it('it works')` - convention §3 prefers `<sut>_<scenario>_<expected>` or nested-describe + verb-led `it(...)`. |
 | §7 | Magic numbers | 18, 24, 31 | `42` appears 3 times in this file; promote to a named constant. |
 
 #### `tests/checkout.spec.ts`
@@ -137,7 +137,7 @@ configurable budget (default 1000ms).
 
 | File | Issue |
 |------|-------|
-| `tests/checkout.spec.ts` | Imports 7 fixtures from `../helpers/global` — file-level fixture hub. Suggested: move per-test fixtures inline; keep `globalFixtures` to ≤3 truly cross-cutting items. |
+| `tests/checkout.spec.ts` | Imports 7 fixtures from `../helpers/global` - file-level fixture hub. Suggested: move per-test fixtures inline; keep `globalFixtures` to ≤3 truly cross-cutting items. |
 
 ### What this agent did NOT check
 - Assertion specificity (see [`assertion-quality-reviewer`](assertion-quality-reviewer.md)).
