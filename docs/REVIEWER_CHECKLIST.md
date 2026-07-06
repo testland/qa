@@ -1,19 +1,19 @@
 # Reviewer Checklist
 
 Two-evaluator rubric for component PRs. Two independent reviewers should
-land within 2 points of each other on the rating total — if divergence
+land within 2 points of each other on the rating total - if divergence
 exceeds 2 points on any single dimension, calibrate by walking through
 the calibration anchors at the bottom of this file.
 
-> **The D6 rubric** — six dimensions (D1–D6), each scored 0–5; the sum is the
-> total (0–30). Merge bar: total ≥ 21 with D6 ≥ 1 (D6 = 0 is a hard reject).
+> **The D6 rubric** - six dimensions (D1-D6), each scored 0-5; the sum is the
+> total (0-30). Merge bar: total ≥ 21 with D6 ≥ 1 (D6 = 0 is a hard reject).
 > Mechanical hygiene (description / body length, Windows-path checks) runs
 > separately in `content-audit.py`; this checklist is the human rubric.
 >
 > **How the rubric is applied:** a reviewer reads the PR diff and scores it
-> against the six dimensions using the D1–D6 checklist in
+> against the six dimensions using the D1-D6 checklist in
 > [`.github/pull_request_template.md`](../.github/pull_request_template.md).
-> The per-dimension scores are the reviewer's working judgment — they are
+> The per-dimension scores are the reviewer's working judgment - they are
 > **not** stored in component frontmatter (there are no `rating` / `d6`
 > fields) and **not** enforced by CI (there is no automated rating gate).
 
@@ -29,7 +29,7 @@ Before scoring dimensions, confirm:
 
 If any pre-check fails, request fixes before scoring.
 
-## D1 — Spec compliance (0-5)
+## D1 - Spec compliance (0-5)
 
 Ground: Anthropic's official Claude Code plugin spec.
 
@@ -44,30 +44,30 @@ Ground: Anthropic's official Claude Code plugin spec.
 
 Score: __/5
 
-## D2 — Scope quality (0-5)
+## D2 - Scope quality (0-5)
 
 A component must have ONE coherent scope that its description predicts, sized
 with progressive disclosure.
 
-- [ ] Single responsibility — the body does one thing, not two stapled
+- [ ] Single responsibility - the body does one thing, not two stapled
       together (e.g., an agent that both reports read-only AND mutates files
       mixes scopes)
-- [ ] Body matches the description — no capability in the body the description
+- [ ] Body matches the description - no capability in the body the description
       doesn't predict, and nothing the description promises that the body omits
-- [ ] Progressive disclosure — deep detail lives in `references/` (skills) or a
+- [ ] Progressive disclosure - deep detail lives in `references/` (skills) or a
       preloaded skill (agents), not inline
-- [ ] Body length proportionate — skill body under ~500 lines (Anthropic's
+- [ ] Body length proportionate - skill body under ~500 lines (Anthropic's
       SKILL.md guidance); agent body stays brief (move depth to preloaded skills)
 
 **Common shapes (optional authoring aid, not a required label):** a skill is
 usually a tool/format wrapper, a pure reference, a build-an-X workflow, or a
 dispatcher; an agent is usually a read-only specialist, an action-taker, an
 adversarial critic, or a builder. If a draft matches none of these cleanly, the
-scope is probably wrong — but the score is for coherence, not for fitting a box.
+scope is probably wrong - but the score is for coherence, not for fitting a box.
 
 Score: __/5
 
-## D3 — Description quality (0-5)
+## D3 - Description quality (0-5)
 
 Single-description test:
 
@@ -82,7 +82,7 @@ Single-description test:
 
 Score: __/5
 
-## D4 — Use-case fit (0-5)
+## D4 - Use-case fit (0-5)
 
 - [ ] Explicit trigger condition in the description (matches Anthropic's
       official guidance: descriptions should "describe what the skill
@@ -97,11 +97,11 @@ Score: __/5
 
 Score: __/5
 
-## D5 — Body quality (0-5)
+## D5 - Body quality (0-5)
 
 For skills:
 
-- [ ] Progressive disclosure — main body short; details linked to `references/`
+- [ ] Progressive disclosure - main body short; details linked to `references/`
 - [ ] Concrete steps with example commands/code
 - [ ] Output format documented for downstream consumers
 - [ ] CI-integration section (where applicable)
@@ -115,24 +115,24 @@ For agents:
 
 Score: __/5
 
-## D6 — Terminology compliance (0-5) — HARD REJECT IF 0
+## D6 - Terminology compliance (0-5) - HARD REJECT IF 0
 
 - [ ] ISTQB-canonical terms (verification, validation, defect, bug, fault,
       error, regression, smoke, sanity, acceptance, etc.) cited to
       [glossary.istqb.org](https://glossary.istqb.org/)
 - [ ] Practitioner-emergent terms (flaky test, contract test, golden file,
       etc.) attributed to industry-engineering sources (Google Testing
-      Blog, Pact docs, etc.) — never to ISTQB
+      Blog, Pact docs, etc.) - never to ISTQB
 - [ ] Tool-specific claims (commands, flags, config fields) grounded in
       fetched canonical source
 - [ ] Source URL cited inline at point of claim, not as a "References:" appendix
-- [ ] Reviewer spot-checks 2-3 claims against the cited URL — no contradiction
+- [ ] Reviewer spot-checks 2-3 claims against the cited URL - no contradiction
 
-Score: __/5 — **0 = hard reject regardless of total**
+Score: __/5 - **0 = hard reject regardless of total**
 
 ## Total
 
-Sum: __/30 — must be >= 21 to merge.
+Sum: __/30 - must be >= 21 to merge.
 
 ## Two-evaluator rule
 
@@ -153,7 +153,7 @@ If you see any of these, request changes (don't merge):
 - Skill body without progressive disclosure (everything inline)
 - Description that is a marketing tagline rather than a behavioral spec
 - Persona-shaped scope with no trigger condition (D4 ≤ 1). The PR doesn't
-  name nearest neighbors or articulate a differentiation axis — see the
+  name nearest neighbors or articulate a differentiation axis - see the
   Differentiation requirement in [`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 ## Calibration
@@ -167,9 +167,9 @@ When in doubt, walk through these calibration anchors:
   one worked example. Anthropic's official `webapp-testing` skill is the
   reference shape.
 - **C-grade exemplar (16-20/30):** a skill that scaffolds tooling but
-  doesn't actually walk the user through running, parsing, or gating —
+  doesn't actually walk the user through running, parsing, or gating - 
   weak D5. The body reads like a setup README rather than a workflow.
-- **F-grade exemplar (<16/30):** a persona-shaped agent — vague
+- **F-grade exemplar (<16/30):** a persona-shaped agent - vague
   description ("expert in all aspects of X"), no clear scope, no
   trigger condition, no concrete output shape. Reject and ask the
   contributor to reshape into a sharp, task-scoped component with a

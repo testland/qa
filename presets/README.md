@@ -1,6 +1,6 @@
-# Team config (settings.json) — the secondary path
+# Team config (settings.json) - the secondary path
 
-The recommended way to adopt a role is a **[role bundle](../README.md#install)** —
+The recommended way to adopt a role is a **[role bundle](../README.md#install)** - 
 one command installs the whole set:
 
 ```
@@ -12,7 +12,7 @@ committed `.claude/settings.json` instead of installing interactively. Reach for
 it only when you need to:
 
 - share an enabled set with a whole team through version control (project scope), or
-- enable a set non-interactively — in CI, or on Claude Code older than v2.1.143,
+- enable a set non-interactively - in CI, or on Claude Code older than v2.1.143,
   where installing a bundle pulls in its members but may not enable them in one step.
 
 ## How
@@ -20,7 +20,7 @@ it only when you need to:
 Add the marketplace and the member plugins of the role you want to
 `.claude/settings.json` (or `~/.claude/settings.json` for user scope). The member
 list for each role is the `dependencies` array in that bundle's manifest
-(`plugins/<bundle>/.claude-plugin/plugin.json`) — that manifest is the single
+(`plugins/<bundle>/.claude-plugin/plugin.json`) - that manifest is the single
 source of truth, so this path never drifts from the bundles. Example for the
 security role:
 

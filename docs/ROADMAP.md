@@ -1,4 +1,4 @@
-# Roadmap — gap analysis
+# Roadmap - gap analysis
 
 This document inventories the QA disciplines and tools that **the
 marketplace does not yet cover** (or covers thinly). It is the public
@@ -23,7 +23,7 @@ roadmap of what we want to land next.
 > a fresh gap list derived from a June 2026 review of the catalog
 > against ISTQB role definitions (CTFL v4.0, CTAL-TM v3.0, CTAL-TAE
 > v2.0) and practitioner surveys.
-> **`CATALOG.md` is the source of truth for what currently ships** —
+> **`CATALOG.md` is the source of truth for what currently ships** - 
 > check it before picking a slot.
 
 ## How to use this document
@@ -32,7 +32,7 @@ roadmap of what we want to land next.
   or an **extension** (skills / agents to add inside an existing
   plugin).
 - Each gap lists the **canonical sources** an author would need to fetch
-  to satisfy D6 — these are not exhaustive; they are the starting points.
+  to satisfy D6 - these are not exhaustive; they are the starting points.
 - Each gap names the **closest existing components** so contributors can
   state their differentiation axis in the PR.
 - Tiers reflect priority for testland-qa, not absolute importance in the
@@ -52,7 +52,7 @@ mobile-desktop, security, performance, ai) and career roles
 
 See [`CATALOG.md`](../CATALOG.md) for the authoritative list.
 
-## Tier 1 — High-frequency gaps
+## Tier 1 - High-frequency gaps
 
 Widely practised in real QA teams, expected by ISTQB-aligned managers
 or visible in practitioner surveys, and absent from the catalog.
@@ -61,8 +61,8 @@ or visible in practitioner surveys, and absent from the catalog.
 
 **Why missing matters:** `qa-team-management` now covers skill matrices,
 career ladders, 1:1s, feedback, and exec narratives, but a QA manager's
-resourcing work — headcount-vs-roadmap modeling, budget lines for tools
-and device clouds, build-vs-buy framing — still has no component.
+resourcing work - headcount-vs-roadmap modeling, budget lines for tools
+and device clouds, build-vs-buy framing - still has no component.
 `qa-vendor-evaluator` (in `qa-process`) covers single-procurement
 decisions only.
 
@@ -148,7 +148,7 @@ documentation).
 build is a daily manual-tester activity (ISTQB CTFL v4.0 static
 testing), but the catalog only touches it indirectly:
 `acceptance-criteria-extractor` converts a story into AC, and
-`test-case-ideation-from-story` designs cases from one — neither
+`test-case-ideation-from-story` designs cases from one - neither
 *reviews* requirements for testability-blocking ambiguity.
 
 **Nearest existing components:** `acceptance-criteria-extractor`,
@@ -170,7 +170,7 @@ review types), INVEST criteria (original Wake article), ISO/IEC/IEEE
 **Why missing matters:** `testability-reviewer` flags
 Observable/Decidable/Bounded failures and `tdd-stuck-pattern-resolver`
 names blockers (singletons, statics), but nothing teaches the
-remediation patterns — dependency injection, seams, ports-and-adapters
+remediation patterns - dependency injection, seams, ports-and-adapters
 boundaries, observability hooks for tests.
 
 **Nearest existing components:** `testability-reviewer`,
@@ -184,7 +184,7 @@ pattern catalog for fixing it.
 **Canonical sources to fetch:** Michael Feathers, *Working Effectively
 with Legacy Code* (ISBN 978-0131177055) for seams; framework DI docs.
 
-## Tier 2 — Common gaps
+## Tier 2 - Common gaps
 
 ### Framework migration toolkits (extensions: `qa-web-e2e`, `qa-unit-tests-js`)
 
@@ -205,7 +205,7 @@ documents (TMMi specification is freely downloadable).
 
 ### QA org-topology decision support (extension: `qa-team-management`)
 
-Embedded vs centralized QA, squad assignment, reporting lines — a
+Embedded vs centralized QA, squad assignment, reporting lines - a
 head-of-quality decision with no component.
 Nearest: `head-of-quality` (reads embedded-vs-silo staffing as input),
 `career-ladder-author`. Sources: Skelton & Pais, *Team Topologies*
@@ -232,11 +232,11 @@ testcontainers isolation docs.
 ### Mass test-code refactoring support (extension: `qa-test-review`)
 
 Bulk selector updates and page-object extraction across a large suite
-have no component — `e2e-selector-quality-critic` flags one file at a
+have no component - `e2e-selector-quality-critic` flags one file at a
 time. Suggested: agent `selector-mass-refactorer`. Sources:
 playwright.dev locators docs, testing-library query priority docs.
 
-## Tier 3 — Niche and polish
+## Tier 3 - Niche and polish
 
 - **Org-chart seats (`qa-roles`):** a Tier-1 agent for *scripted*
   manual execution (companion to `exploratory-charter-author`;
@@ -246,7 +246,7 @@ playwright.dev locators docs, testing-library query priority docs.
   `release-manager-cutover-checklist` (note:
   `release-cutover-coordinator` partially covers the latter).
 - **Load-generator wrappers (`qa-load-testing`):** `vegeta-load`,
-  `wrk2-load`, `bombardier-load`, `artillery-load` — per-tool skills
+  `wrk2-load`, `bombardier-load`, `artillery-load` - per-tool skills
   alongside the shipped k6/JMeter/Gatling/Locust set.
 - **CI providers (`qa-ci-integration`):** `buildkite-test-author`,
   `azure-pipelines-test-author`.
@@ -260,23 +260,23 @@ These were excluded as "saturated" cells. They are open again if a
 contribution adds a documented differentiation axis vs. the existing
 ecosystem clones.
 
-- **code-reviewer** family — *open* iff scoped to a specific
+- **code-reviewer** family - *open* iff scoped to a specific
   language / framework / change class (e.g., "Reviews React PRs for
   hook-rule violations", not "reviews code").
-- **security-auditor** / OWASP-Top-10 wrappers — *open* iff scoped to
+- **security-auditor** / OWASP-Top-10 wrappers - *open* iff scoped to
   a specific OWASP category (e.g., "Audits a PR for A03-2021 Injection
   patterns").
-- **debugger** family — *open* iff scoped to a specific runtime /
+- **debugger** family - *open* iff scoped to a specific runtime /
   failure class (e.g., "Reproduces a hung Node.js process from a heap
   dump", not "debug things").
-- **test-automator** family — *open* iff scoped to a specific
+- **test-automator** family - *open* iff scoped to a specific
   conversion target (e.g., "Converts manual Postman runs into k6
   scripts", not "automates tests").
 - **generic security tool wrappers** (zap, burp, snyk, trivy,
-  semgrep, gitleaks) — atomic skills under the relevant security
+  semgrep, gitleaks) - atomic skills under the relevant security
   plugin (`qa-dast` / `qa-sca` / `qa-secrets`) are admissible if they
   cover a specific workflow the existing skills don't.
-- **WCAG umbrella skills** — atomic accessibility skills (keyboard,
+- **WCAG umbrella skills** - atomic accessibility skills (keyboard,
   focus-trap, colour-contrast, ARIA-roles, axe-rules) are admissible
   under `qa-accessibility`. "Audit my app for WCAG" as a
   single skill is still bad scope but no longer name-blocked.
@@ -289,93 +289,93 @@ listed in plugin order.
 
 ### qa-test-data
 
-- `factory-boy-django` — Django factory pattern (sibling of shipped
+- `factory-boy-django` - Django factory pattern (sibling of shipped
   factory-bot-data / bogus-data / mimesis-data).
-- `synthetic-event-stream-builder` — generate Kafka / Kinesis
+- `synthetic-event-stream-builder` - generate Kafka / Kinesis
   test streams.
 
 ### qa-test-environment
 
-- `devcontainers-test-env` — VS Code devcontainer.json for QA-ready environments.
-- `nix-shell-test-env` — reproducible test environments via Nix.
+- `devcontainers-test-env` - VS Code devcontainer.json for QA-ready environments.
+- `nix-shell-test-env` - reproducible test environments via Nix.
 
 ### qa-test-reporting
 
-- `xunit-net-reporter` — xUnit.net reporter integration.
-- `allure-3-reporter` — Allure 3 if/when it ships.
+- `xunit-net-reporter` - xUnit.net reporter integration.
+- `allure-3-reporter` - Allure 3 if/when it ships.
 
 ### qa-test-impact-analysis
 
-- `nx-affected-test-runner` — Nx monorepo affected-test selection.
-- `bazel-test-affected-selection` — Bazel `--affected` selection.
+- `nx-affected-test-runner` - Nx monorepo affected-test selection.
+- `bazel-test-affected-selection` - Bazel `--affected` selection.
 
 ### qa-test-review
 
-- `review-comment-conventions-reference` — review comment
+- `review-comment-conventions-reference` - review comment
   taxonomy (blocking / non-blocking / nit / question / praise).
-- `pr-test-coverage-critic` — agent that rejects PRs lacking
+- `pr-test-coverage-critic` - agent that rejects PRs lacking
   meaningful new test coverage on changed code paths.
 
 ### qa-api-testing
 
-- `oas-spec-validation` — OpenAPI spec lint + validate.
-- `prism-mock-server` — OpenAPI mock from spec.
-- `mockoon-builder` — local mock GUI / CLI.
-- `dredd-contract-runner` — Dredd API/spec testing.
+- `oas-spec-validation` - OpenAPI spec lint + validate.
+- `prism-mock-server` - OpenAPI mock from spec.
+- `mockoon-builder` - local mock GUI / CLI.
+- `dredd-contract-runner` - Dredd API/spec testing.
 
 ### qa-bdd
 
-- `cucumber-rules-runner` — Rules-style Gherkin (Cucumber 7+).
-- `gauge-framework` — Gauge as Cucumber alternative.
+- `cucumber-rules-runner` - Rules-style Gherkin (Cucumber 7+).
+- `gauge-framework` - Gauge as Cucumber alternative.
 
 ### qa-contract-testing
 
-- `pact-broker-self-hosting` — Pact Broker setup.
-- `pactflow-integration` — managed Pact (Pactflow).
-- `spring-cloud-contract` — JVM contract testing.
+- `pact-broker-self-hosting` - Pact Broker setup.
+- `pactflow-integration` - managed Pact (Pactflow).
+- `spring-cloud-contract` - JVM contract testing.
 
 ### qa-mobile
 
-- `firebase-test-lab-runner` — Firebase Test Lab device farm.
+- `firebase-test-lab-runner` - Firebase Test Lab device farm.
 
 ### qa-mutation-testing
 
-- `infection-php` — Infection for PHP.
+- `infection-php` - Infection for PHP.
 
 ### qa-property-based
 
-- `gopter-go` — gopter for Go.
+- `gopter-go` - gopter for Go.
 
 ### qa-web-e2e
 
-- `playwright-component-testing` — Playwright component-test mode.
+- `playwright-component-testing` - Playwright component-test mode.
 
 ### qa-visual-regression
 
-- `loki-storybook` — Loki visual diff for Storybook.
+- `loki-storybook` - Loki visual diff for Storybook.
 
 ### qa-localization
 
-- `icu-messageformat-validator` — ICU MessageFormat plural/select validation.
+- `icu-messageformat-validator` - ICU MessageFormat plural/select validation.
 
 ### qa-dast
 
-- `caido-proxy` — Caido as Burp Suite alternative.
+- `caido-proxy` - Caido as Burp Suite alternative.
 
 ### qa-secrets
 
-- `detect-secrets-yelp` — Yelp detect-secrets.
+- `detect-secrets-yelp` - Yelp detect-secrets.
 
 ### qa-flake-triage
 
-- `flake-bug-template-author` — file a flake bug with classification.
+- `flake-bug-template-author` - file a flake bug with classification.
 
 ## How to contribute against this roadmap
 
 1. **Pick a gap.** Higher tier = more urgent, but lower-tier
    contributions are welcome.
 2. **Read the differentiation requirement** in
-   [`CONTRIBUTING.md`](CONTRIBUTING.md). Identify your 2–3 nearest
+   [`CONTRIBUTING.md`](CONTRIBUTING.md). Identify your 2-3 nearest
    neighbours in the catalog (or the broader ecosystem) and write down
    your differentiation axis.
 3. **Open a plugin-request or component-request issue** so we can
@@ -383,8 +383,8 @@ listed in plugin order.
    `.github/ISSUE_TEMPLATE/plugin-request.md`.
 4. **Scaffold + author.** Follow [`PLUGIN_AUTHORING.md`](PLUGIN_AUTHORING.md)
    for the per-step workflow.
-5. **Self-check against D1–D6.** Total ≥ 21, D6 ≥ 1 (a pre-PR sanity check
-   against the rubric — the score is not stored or CI-enforced).
+5. **Self-check against D1-D6.** Total ≥ 21, D6 ≥ 1 (a pre-PR sanity check
+   against the rubric - the score is not stored or CI-enforced).
 6. **PR.** Use `.github/pull_request_template.md`.
 
 If you think a gap is missing from this document, open an issue with

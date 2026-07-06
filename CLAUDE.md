@@ -1,9 +1,9 @@
-# Claude Code instructions — testland-qa
+# Claude Code instructions - testland-qa
 
 This is **testland-qa**, a Pattern B2 multi-plugin Claude Code marketplace.
 89 plugins / 706 components (run `python3 scripts/generate-catalog.py` for the
-current count — `CATALOG.md` is authoritative). Every component is
-reviewed against the D1–D6 quality rubric before merge.
+current count - `CATALOG.md` is authoritative). Every component is
+reviewed against the D1-D6 quality rubric before merge.
 
 If you're using Claude Code to contribute to this repo, this file tells you
 what conventions to follow.
@@ -25,12 +25,12 @@ plugin's `plugin.json` `version` from `0.1.0` to `1.0.0` and run validation
 ### Role-bundle plugins (one-command role installs)
 
 A **role bundle** (`qa-starter` and the `qa-role-*` family) is a special plugin
-that owns **no components** — it exists only to install a curated set of plugins
+that owns **no components** - it exists only to install a curated set of plugins
 together, so a user adopts a whole role with one `/plugin install`. To author one:
 
-- `plugins/<bundle>/.claude-plugin/plugin.json` **only** — no `skills/`, `agents/`,
+- `plugins/<bundle>/.claude-plugin/plugin.json` **only** - no `skills/`, `agents/`,
   `commands/`, or `hooks/` dirs. Set `"dependencies"` to an array of **bare member
-  plugin-name strings** (e.g. `["qa-sast", "qa-dast"]`) — never `{name, version}`
+  plugin-name strings** (e.g. `["qa-sast", "qa-dast"]`) - never `{name, version}`
   objects and never `name@testland-qa`. Bare same-marketplace names resolve with no
   git tag; a version-pinned dep looks for a `{plugin}--v{version}` tag this repo
   doesn't publish and would disable the bundle.
@@ -40,9 +40,9 @@ together, so a user adopts a whole role with one `/plugin install`. To author on
   `content-audit.py --strict` fails `readme_count_mismatch`.
 - Register it in `marketplace.json` with `"category": "role-bundles"`, then
   regenerate + commit `CATALOG.md`.
-- Bundles carry no `rating`/`d6` frontmatter and are exempt from the D1–D6 gate
-  (no components to score). Bump the bundle's `plugin.json` `version` whenever you
-  change its `dependencies`, or the update never reaches installed users.
+- Bundles own no components, so the D1-D6 review does not apply. Bump the
+  bundle's `plugin.json` `version` whenever you change its `dependencies`, or the
+  update never reaches installed users.
 
 ## Authoring a skill or agent
 
@@ -56,12 +56,12 @@ component shapes and authoring guidance.
 | `name` | yes | kebab-case, matches the directory / filename |
 | `description` | yes | third-person, no "You are…" / "I help…" openers |
 | `keywords` | optional | array of strings; flows into marketplace search |
-
-Do **not** add `rating` / `d6` fields — the D1–D6 rubric is applied at manual PR
-review (see "The quality bar" below), not stored in component frontmatter.
 | `tools` (agents only) | optional | tool allowlist (`Read`, `Grep`, `Bash(jq *)`, etc.) |
 | `model` (agents only) | optional | `sonnet`, `opus`, `haiku` |
 | `skills` (agents only) | optional | array of skill names this agent preloads |
+
+Do **not** add `rating` / `d6` fields - the D1-D6 rubric is applied at manual PR
+review (see "The quality bar" below), not stored in component frontmatter.
 
 **Naming**: lowercase/numbers/hyphens, ≤64 chars, no `anthropic`/`claude` in
 skill names (Anthropic hard constraints); bare names unique across the WHOLE
@@ -78,8 +78,8 @@ reviewer agent has When invoked → Steps 1..N → Verdict → Refuse-to-proceed
 ## The quality bar
 
 Every component is reviewed against a six-dimension rubric before merge. This is
-a **manual PR review** — a reviewer applies the rubric to the diff using the
-`.github/PULL_REQUEST_TEMPLATE.md` D1–D6 checklist. It is not a CI gate and not a
+a **manual PR review** - a reviewer applies the rubric to the diff using the
+`.github/PULL_REQUEST_TEMPLATE.md` D1-D6 checklist. It is not a CI gate and not a
 stored frontmatter field:
 
 | Dim | Name | Anchor |
@@ -92,10 +92,10 @@ stored frontmatter field:
 | **D6** | Terminology compliance | Concrete claims cited inline at point of use |
 
 **Merge bar (reviewer judgment):** each dimension should clear its anchor, with
-**D6 (citations) as the hard floor** — uncited "sounds plausible" content is the
+**D6 (citations) as the hard floor** - uncited "sounds plausible" content is the
 dominant failure mode and a hard reject. Components are no longer scored with
 `rating` / `d6` frontmatter; the rubric lives in the reviewer's checklist, so
-there is no automated rating gate — new components are validated by reading the
+there is no automated rating gate - new components are validated by reading the
 PR.
 
 See [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md) for the rubric
@@ -105,10 +105,11 @@ exemplars.
 ## Differentiation requirement
 
 Components are admitted on three things: a sharp trigger condition, a
-documented differentiation axis vs. the 2–3 nearest neighbors, and the
-rating bar (≥21/30, d6 ≥1). No category is banned by name. The lint
+documented differentiation axis vs. the 2-3 nearest neighbors, and the
+review bar (each D1-D6 dimension clears its anchor, citations as the hard
+floor). No category is banned by name. The lint
 rejects persona-style openers ("You are…" / "I help…"), but persona-shaped
-*scopes* are caught by reviewer judgment in D3/D4 — not by a denylist.
+*scopes* are caught by reviewer judgment in D3/D4 - not by a denylist.
 
 What still fails the bar today:
 
@@ -140,17 +141,17 @@ contributions in.
 manifest itself. Claude Code caches an installed plugin by its `plugin.json`
 `version` (falling back to the marketplace entry, then the commit SHA). If the
 shipped bytes change but `version` does not, **installed users never receive the
-update** — the "silent no-update" trap.
+update** - the "silent no-update" trap.
 
 - **Which bump:** patch (`x.y.Z`) for content / wording / typo fixes; minor
   (`x.Y.0`) for a new skill/agent or a behavior change; major for a breaking
   restructure. Role bundles bump when their `dependencies` change.
 - **Also** bump `.claude-plugin/marketplace.json` `metadata.version` for a
-  marketplace-wide release and regenerate `CATALOG.md` — it prints a per-plugin
+  marketplace-wide release and regenerate `CATALOG.md` - it prints a per-plugin
   Version column (`python3 scripts/generate-catalog.py`).
 - **Enforced** by `scripts/version-bump-check.py` (local mirror) and
   `.github/workflows/version-bump.yml`, which runs on **pull requests AND direct
-  pushes to `main`** — a component change without a matching bump fails CI either
+  pushes to `main`** - a component change without a matching bump fails CI either
   way. There is no bypass; a direct push to `main` is checked just like a PR.
 
 ### Keep testland-web in version parity (required)
@@ -159,9 +160,9 @@ update** — the "silent no-update" trap.
 able to install exactly the version shown there.** A marketplace change is not
 complete until testland-web is resynced and shipped in lockstep:
 
-1. In `testland-web/`: `npm run sync:plugins` — regenerates `content/plugins/**`
+1. In `testland-web/`: `npm run sync:plugins` - regenerates `content/plugins/**`
    and `public/plugins-index.json` from this repo's sibling checkout.
-2. `npm run build` — runs typecheck, lint, and the `check-plugin-links` gate.
+2. `npm run build` - runs typecheck, lint, and the `check-plugin-links` gate.
 3. Commit the regenerated content and push, so the site's displayed versions
    match the installable ones exactly.
 
@@ -202,9 +203,9 @@ make all
 - **Missing `.gitkeep`**: empty directories (`commands/`, `hooks/`) need a
   `.gitkeep` so git tracks them; the scaffolder adds these but manual edits
   can lose them.
-- **Uncited claims (d6 = 0)**: every concrete fact about how a tool works,
+- **Uncited claims**: every concrete fact about how a tool works,
   every command, every flag, every threshold value must cite a fetched
-  canonical source inline at the point of use — not in a trailing
+  canonical source inline at the point of use - not in a trailing
   "References" block.
 - **Description starts with "You are…" or "I help…"**: linted out by
   `validate.sh`. Use third-person action verbs.

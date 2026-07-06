@@ -1,4 +1,4 @@
-# Composition graph — agent → skill preloads
+# Composition graph - agent → skill preloads
 
 This document maps every agent's `skills:` preload list. It is
 regenerated from the source files via `scripts/composition-graph.py`.
@@ -30,7 +30,7 @@ skills:
 
 When the agent is dispatched, the bodies of `skill-a` and `skill-b`
 are loaded into the agent's context before the agent body runs.
-This lets agents stay short (~30–60 lines) while reusing reference
+This lets agents stay short (~30-60 lines) while reusing reference
 material that lives in skills.
 
 ## Per-plugin preload map
@@ -51,7 +51,7 @@ material that lives in skills.
 
 | Agent | Preloads |
 |---|---|
-| `gherkin-style-reviewer` | (none — agent is fully self-contained) |
+| `gherkin-style-reviewer` | (none - agent is fully self-contained) |
 
 ### qa-bug-repro
 
@@ -199,8 +199,8 @@ Most agents preload skills from their own plugin. The 20 documented cross-plugin
 | `qa-web-e2e/playwright-codegen-reviewer` | `qa-test-review` | `test-code-conventions` | Codegen output is reviewed against the same selector / assertion hygiene rules. |
 | `qa-desktop/desktop-test-author` (Tier 4 / Wave 1) | `qa-unit-tests-net` | `xunit-tests`, `nunit-tests`, `mstest-tests` | Desktop tests for .NET stacks compose into one of the three NET framework idioms. |
 | `qa-unit-tests-net/dotnet-test-author` (Tier 4 / Wave 1) | `qa-test-data` | `bogus-data` | .NET Bogus library is the canonical typed test-data factory for .NET. |
-| `qa-unit-tests-js/js-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `faker-data`, `msw-handlers` | Faker.js for fake data; MSW for HTTP mocking — both load-bearing for JS unit tests. |
-| `qa-unit-tests-jvm/jvm-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `parameterized-test-generator` | JUnit5 `@ParameterizedTest`, TestNG `@DataProvider`, Spock `where:` — language-agnostic generator. |
+| `qa-unit-tests-js/js-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `faker-data`, `msw-handlers` | Faker.js for fake data; MSW for HTTP mocking - both load-bearing for JS unit tests. |
+| `qa-unit-tests-jvm/jvm-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `parameterized-test-generator` | JUnit5 `@ParameterizedTest`, TestNG `@DataProvider`, Spock `where:` - language-agnostic generator. |
 | `qa-unit-tests-python/python-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `mimesis-data`, `parameterized-test-generator` | Mimesis is the Python-native data factory; `@pytest.mark.parametrize` is first-class. |
 | `qa-unit-tests-go-rust/go-rust-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `parameterized-test-generator` | Go `t.Run` table tests + Rust `#[rstest]` `#[case]` both use the generator's matrix output. |
 | `qa-test-review/test-suite-health-auditor` (Tier 4 / Wave 3) | `qa-flake-triage` | `flake-pattern-reference` | Per-layer flake-rate axis of the audit references the canonical flake-pattern catalog. |
@@ -242,7 +242,7 @@ After any agent's `skills:` field changes:
 
 ## References
 
-- `docs/PLUGIN_AUTHORING.md` — agent body authoring guide
+- `docs/PLUGIN_AUTHORING.md` - agent body authoring guide
   (preload semantics).
-- `docs/REVIEWER_CHECKLIST.md` — reviewer rubric (preload
+- `docs/REVIEWER_CHECKLIST.md` - reviewer rubric (preload
   alignment is part of D5 Composability).

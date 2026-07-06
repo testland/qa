@@ -10,7 +10,7 @@ Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
   and the differentiation requirement.
 - Skim the common component shapes in the next section before drafting any
   component scope.
-- Identify the 2–3 nearest existing components (in this marketplace or
+- Identify the 2-3 nearest existing components (in this marketplace or
   the broader ecosystem) and write down the differentiation axis on which
   the new component is distinguishable. Reviewers will check this against
   the description.
@@ -18,7 +18,7 @@ Pairs with [`CONTRIBUTING.md`](CONTRIBUTING.md) (gate definition) and
 ## Common component shapes (optional)
 
 Most well-scoped components fall into one of the shapes below. They are a
-**thinking aid for getting scope right, not a required label** — nothing in the
+**thinking aid for getting scope right, not a required label** - nothing in the
 review or CI keys on them. If a draft matches none of these cleanly, the
 scope is probably wrong; reshape before authoring. (D2 scores scope
 *coherence*, not box-fitting.)
@@ -64,11 +64,11 @@ not in the agent body.
 A **role bundle** is a distinct plugin type: it ships no skills or agents and
 exists only to install a curated set of other plugins in one command (`qa-starter`
 and the `qa-role-*` family). It is the recommended way for users to adopt a whole
-role. A bundle is exempt from the D1–D6 review (it has no components to
+role. A bundle is exempt from the D1-D6 review (it has no components to
 review), but it has its own rules.
 
 1. **Manifest only.** Create `plugins/<bundle>/.claude-plugin/plugin.json` and
-   **nothing else under** `plugins/<bundle>/` except the README — no `skills/`,
+   **nothing else under** `plugins/<bundle>/` except the README - no `skills/`,
    `agents/`, `commands/`, or `hooks/` directories. House-style fields
    (`name`, `version`, `description`, `author`, `homepage`, `repository`,
    `license`, `keywords`) match every other plugin.
@@ -85,8 +85,8 @@ review), but it has its own rules.
 3. **Prose-only README.** `plugins/<bundle>/README.md` has a title, a one-line
    purpose, an Install fenced block (`/plugin install <bundle>@testland-qa`), and
    a "What this installs" list written as **plain text** (e.g. `- **qa-sast** -
-   static analysis`). It must contain **no component-table row** — nothing whose
-   first cell is `Skill`/`Agent`, and no `](skills/…)` / `](agents/…)` links — or
+   static analysis`). It must contain **no component-table row** - nothing whose
+   first cell is `Skill`/`Agent`, and no `](skills/…)` / `](agents/…)` links - or
    `content-audit.py --strict` fails `readme_count_mismatch` (rows on disk = 0).
    Do not start from the scaffolder's component-table README.
 4. **Register + categorize.** Add a `marketplace.json` entry with
@@ -96,11 +96,11 @@ review), but it has its own rules.
    `version` whenever you add or remove a member, or the change never reaches
    users who already installed it.
 
-Keep bundles **flat** — list member plugins, not other bundles. A bundle that
+Keep bundles **flat** - list member plugins, not other bundles. A bundle that
 depends on another bundle works but obscures what installs and complicates the
 disable chain.
 
-## Step 1 — Scaffold the plugin
+## Step 1 - Scaffold the plugin
 
 ```bash
 bash scripts/new-plugin.sh <plugin-name> "<one-line-description>" <primary-keyword>
@@ -115,7 +115,7 @@ The scaffolder:
 
 Verify: `bash scripts/validate.sh` must pass after scaffolding.
 
-## Step 2 — Plan components
+## Step 2 - Plan components
 
 For each component you intend to ship, write a one-line draft of:
 
@@ -124,11 +124,11 @@ For each component you intend to ship, write a one-line draft of:
 - Shape: which common shape it matches (or note that it fits none, and reshape).
 - Draft description (the single-description test goes here).
 
-If a draft matches no common shape cleanly, the scope is probably wrong — reshape before authoring.
+If a draft matches no common shape cleanly, the scope is probably wrong - reshape before authoring.
 
 ### Naming rules
 
-Hard constraints (Anthropic validation — see the
+Hard constraints (Anthropic validation - see the
 [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 and [subagents](https://code.claude.com/docs/en/sub-agents) docs):
 
@@ -141,14 +141,14 @@ Marketplace conventions (stricter than Anthropic's namespace-only rule):
 
 - **Unique bare names across the whole marketplace**, not just within your
   plugin. Plugin skills are namespaced (`qa-bdd:bdd-getting-started`), so
-  Claude Code tolerates duplicates — but agent `skills:` preloads and
+  Claude Code tolerates duplicates - but agent `skills:` preloads and
   cross-plugin body links resolve by **bare name**, and duplicates make them
   ambiguous. Check the alphabetical index in `CATALOG.md` before naming.
 - **Name the behavior or the tool, never the reader's state or the artifact
   kind.** `bdd-getting-started` not `getting-started`; `payment-webhook-replay`
   not `payment-webhook-replay-skill`. Anthropic's docs recommend gerund-form
   names (`processing-pdfs`) and explicitly accept noun phrases
-  (`pdf-processing`) — this marketplace's tool-wrapper (`jest-tests`),
+  (`pdf-processing`) - this marketplace's tool-wrapper (`jest-tests`),
   build-an-X (`*-author`, `*-builder`), reference (`*-reference`), and
   adversarial-agent (`*-critic`, `*-reviewer`) conventions all qualify.
 - **No filler words.** Anthropic's avoid-list names `helper`, `utils`,
@@ -156,11 +156,11 @@ Marketplace conventions (stricter than Anthropic's namespace-only rule):
   suffixes that restate the component type instead of the behavior.
 - **Onramp skills are domain-prefixed**: `<domain>-getting-started`
   (`web-e2e-getting-started`), one per plugin at most.
-- Descriptions should end with an explicit trigger sentence — "Use when …"
+- Descriptions should end with an explicit trigger sentence - "Use when …"
   (skills) or a delegation cue like "Use proactively when …" (agents). The
   description, not the name, is what makes Claude invoke the component.
 
-## Step 3 — Run the single-description test
+## Step 3 - Run the single-description test
 
 For each draft description, check:
 
@@ -175,46 +175,46 @@ For each draft description, check:
 
 If any check fails, redraft.
 
-## Step 4 — Fetch canonical sources
+## Step 4 - Fetch canonical sources
 
 1. **WebFetch each canonical URL** for the tool/concept. Do not rely on
-   training data — versions drift, commands change.
+   training data - versions drift, commands change.
 2. **Read end-to-end** before drafting any body content.
 3. **Cross-reference the [ISTQB glossary](https://glossary.istqb.org/)
    first** for terminology; use vendor docs only for tool-specific behavior
    (commands, flags, config).
 4. **Standard anchors:**
-   - **Terminology:** ISTQB glossary V4.7.1 at
+  - **Terminology:** ISTQB glossary V4.7.1 at
      https://glossary.istqb.org/en_US/term/<slug>.
-   - **Standards:** ISO/IEC 25010, ISO/IEC/IEEE 29119, IEEE 829.
-   - **Accessibility:** W3C WCAG 2.x.
-   - **Security:** OWASP Top 10 / ASVS / Cheat Sheet Series.
-   - **Vendor docs:** the official documentation site for each wrapped
+  - **Standards:** ISO/IEC 25010, ISO/IEC/IEEE 29119, IEEE 829.
+  - **Accessibility:** W3C WCAG 2.x.
+  - **Security:** OWASP Top 10 / ASVS / Cheat Sheet Series.
+  - **Vendor docs:** the official documentation site for each wrapped
      tool (Playwright, Cypress, k6, dbt, Pact, Great Expectations, Soda,
      etc.).
 5. **Fallbacks** for non-WebFetchable sources:
-   - **JS-rendered SPAs** (ISTQB glossary is the primary example): WebFetch
+  - **JS-rendered SPAs** (ISTQB glossary is the primary example): WebFetch
      returns only the SPA shell. Use Playwright via
      `mcp__playwright__browser_navigate` + `browser_evaluate` to extract
      content.
-   - **Cloudflare Turnstile** (ISO standards pages, GraphQL spec, some
+  - **Cloudflare Turnstile** (ISO standards pages, GraphQL spec, some
      blogs): the challenge does not clear in headless Playwright. Cite by
      stable ID (e.g., "ISO/IEC 25010:2023", "GraphQL October 2021 spec")
      and let readers navigate manually. Document the limitation in the
      body.
-   - **404'd / hijacked sources:** if a primary source has been hijacked or
+  - **404'd / hijacked sources:** if a primary source has been hijacked or
      removed, fall back to the project's GitHub README and flag the change
      in your PR description so the canonical-source list stays accurate.
 
-## Step 5 — Draft body content from fetched sources
+## Step 5 - Draft body content from fetched sources
 
 - **Body structure** uses progressive disclosure: a short main body that
   links to deeper material under `references/`. The main body covers the
   sections its shape needs (e.g. Authoring/Running/Parsing/CI for a tool
   wrapper) with concrete steps and at least one worked example.
-- **Body content** — every concrete claim about how a tool works, every
+- **Body content** - every concrete claim about how a tool works, every
   command syntax, every config field, every threshold value, every
-  assertion API — comes from the fetched canonical source.
+  assertion API - comes from the fetched canonical source.
 - **Inline cite the source URL** at the point each claim is made. A reader
   should be able to verify any claim by clicking through. Sprinkled
   `References:` lists at the bottom without inline citations are an
@@ -227,7 +227,7 @@ If any check fails, redraft.
 
 These conventions keep component content (skills, agents, READMEs) readable
 both in the terminal and on the published marketplace site. `validate.sh`
-emits **advisory `WARN` lines** for the two rules below — they never block a
+emits **advisory `WARN` lines** for the two rules below - they never block a
 merge, but reviewers should resolve them.
 
 ### No em / en dashes in prose
@@ -271,34 +271,34 @@ Good:  the agent emits:
 ```
 
 A single long token (a CLI command, a method signature, a test name) is a
-correct inline-code use even when it is long — leave it.
+correct inline-code use even when it is long - leave it.
 
-## Step 6 — Self-check against D1–D6
+## Step 6 - Self-check against D1-D6
 
-Read each component against D1–D6. The reviewer applies this rubric to your PR
+Read each component against D1-D6. The reviewer applies this rubric to your PR
 diff via the
 [`.github/pull_request_template.md`](../.github/pull_request_template.md)
 checklist; there is no stored score and no rating field. The dimensions:
 
-- **D1 Spec compliance** — frontmatter follows Anthropic's plugin spec.
+- **D1 Spec compliance** - frontmatter follows Anthropic's plugin spec.
   Name format, name matches parent dir, description ≤1024 chars, no XML tags,
   folder + body placement correct.
-- **D2 Scope quality** — one coherent scope the description predicts; single
+- **D2 Scope quality** - one coherent scope the description predicts; single
   responsibility (no two-things-stapled-together); progressive disclosure;
   skill body under ~500 lines (Anthropic's SKILL.md guidance), agent body kept
   brief. The common shapes above are an optional aid, not a scored label.
-- **D3 Description quality** — single-description test passes; for agents,
+- **D3 Description quality** - single-description test passes; for agents,
   description includes a "Use when…" / "Use proactively" / "Use immediately
   after…" trigger clause; skill names prefer gerund form.
-- **D4 Use-case fit** — real triggers; differentiated from neighbors
+- **D4 Use-case fit** - real triggers; differentiated from neighbors
   (Anthropic-bundled patterns set the bar, not aggregator-clone saturation).
-- **D5 Body quality** — actionable instructions (credit checklist patterns
+- **D5 Body quality** - actionable instructions (credit checklist patterns
   + feedback loops); examples or expected output; progressive-disclosure
   layout; body length proportionate to type (skill <~500 lines); body hygiene
   (no broken refs, contradictions, marketing filler, time-sensitive language,
   Windows-style paths in cited examples). For read-only or adversarial-reviewer
   agents ≥120 lines: explicit `## Output format` section.
-- **D6 Terminology compliance** — ISTQB-canonical terms cited to canonical
+- **D6 Terminology compliance** - ISTQB-canonical terms cited to canonical
   source; tool-specific claims grounded in fetched docs. **Uncited claims are a
   hard reject.**
 
@@ -306,7 +306,7 @@ checklist; there is no stored score and no rating field. The dimensions:
 citations (D6) as the hard floor. Mechanical hygiene (description / body length,
 Windows paths) is checked separately by `content-audit.py`.
 
-## Step 7 — Update plugin README
+## Step 7 - Update plugin README
 
 Add a row to the plugin's component table:
 
@@ -314,7 +314,7 @@ Add a row to the plugin's component table:
 | skill | dbt-testing | Author and run dbt tests with CI gates |
 ```
 
-## Step 8 — Run CI locally
+## Step 8 - Run CI locally
 
 ```bash
 bash scripts/test-validate.sh
@@ -324,7 +324,7 @@ python3 scripts/content-audit.py --strict
 
 All three must pass.
 
-## Step 9 — Commit
+## Step 9 - Commit
 
 Commit message format includes the source-fetch date:
 
@@ -338,7 +338,7 @@ Example:
 Add k6-load-testing skill (sources fetched 2026-05-25 from grafana.com/docs/k6)
 ```
 
-## Step 10 — Release the plugin
+## Step 10 - Release the plugin
 
 When all components in the plugin land:
 
