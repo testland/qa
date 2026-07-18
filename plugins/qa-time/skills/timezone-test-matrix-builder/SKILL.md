@@ -225,4 +225,4 @@ This skill produces:
   [`timecop-ruby`](../timecop-ruby/SKILL.md),
   [`mockclock-jvm`](../mockclock-jvm/SKILL.md).
 - Cross-plugin (cron):
-  [`qa-async-jobs/cron-job-test-author`](../../../qa-async-jobs/skills/cron-job-test-author/SKILL.md).
+  `cron-job-test-author` (qa-async-jobs).

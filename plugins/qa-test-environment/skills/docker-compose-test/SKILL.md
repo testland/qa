@@ -325,8 +325,7 @@ profiles via repeating `--profile` or comma-separated
   images often don't ship `curl` / `pg_isready` - either switch to a
   slim variant or use a TCP probe via `nc` / `wget`.
 - **Per-test reset is coarse.** The Compose stack is per-suite; for
-  per-test DB reset, layer
-  [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) on
+  per-test DB reset, layer a snapshot/restore step on
   top.
 
 ## References
@@ -342,5 +341,3 @@ profiles via repeating `--profile` or comma-separated
   `service_completed_successfully`).
 - [`testcontainers`](../testcontainers/SKILL.md) - alternative when
   the topology is one container per test, expressed in test code.
-- [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) - 
-  per-test isolation layered on top of a Compose-managed database.

@@ -214,7 +214,7 @@ Refund-test coverage matrix should be reported per release:
 | Skip async webhook for Adyen | Refund status undetermined | Wait for [REFUND] notification |
 | Hardcoded refund amounts | Cents vs dollars confusion | Per-currency tests |
 | Test in one currency only | Cross-currency refund quirks | Test in EUR, GBP, JPY |
-| Skip cross-tenant refund tests | Per [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md), tenant A can't refund tenant B's charge | Cross-tenant probe |
+| Skip cross-tenant refund tests | Per `cross-tenant-data-leak-tests` (in the qa-multi-tenancy plugin), tenant A can't refund tenant B's charge | Cross-tenant probe |
 
 ## Limitations
 

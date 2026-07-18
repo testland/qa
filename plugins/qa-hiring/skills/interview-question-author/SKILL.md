@@ -126,7 +126,7 @@ The output is a single markdown document with:
 - **STAR cues are heuristics, not auto-scoring.** The interviewer still has to listen and score. The cue list reduces variance but does not eliminate it.
 - **Bloom's levels are the ISTQB-canonical proxy, not a perfect difficulty measure.** A K3 question can be more or less difficult than another K3 depending on the topic. Use the level as a coarse mix knob, not a fine-grained difficulty score.
 - **Locale / language localisation is the team's responsibility.** Behavioral questions translated literally can lose nuance; the skill emits English-language defaults.
-- **Legal compliance varies by jurisdiction.** Some questions (age, family, health) are illegal in some jurisdictions and merely poor practice in others. The skill includes a default forbidden-topics list (age, family status, religion, sexual orientation, disability, national origin, citizenship except where role-required) but the hiring team is responsible for jurisdiction-specific compliance - see [`legal-compliance-checker`](../../qa-compliance/) ecosystem.
+- **Legal compliance varies by jurisdiction.** Some questions (age, family, health) are illegal in some jurisdictions and merely poor practice in others. The skill includes a default forbidden-topics list (age, family status, religion, sexual orientation, disability, national origin, citizenship except where role-required) but the hiring team is responsible for jurisdiction-specific compliance - see `legal-compliance-checker` ecosystem.
 
 ## Hand-off targets
 

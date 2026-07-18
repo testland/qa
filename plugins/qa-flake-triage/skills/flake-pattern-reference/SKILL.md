@@ -18,9 +18,7 @@ A flake is rarely random - it almost always falls into one of eight
 recurring patterns. Identifying the pattern early shrinks the bisect
 search space dramatically. This catalog is a reference, not a
 workflow; the matching workflow is in
-[`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md), and the
-agent that drives a structured bisect is
-[`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md).
+[`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md).
 
 The Google Testing Blog observed a near-linear correlation between
 test size and flakiness rate across ~4.2M tests
@@ -80,8 +78,8 @@ Tests pass sequentially, fail when run in parallel workers.
 
 **Remediation:**
 
-- Use the [`parallel-isolation-checker`](../../agents/parallel-isolation-checker.md)
-  agent to find shared state.
+- Find the shared state two workers collide on - DB rows, files, ports,
+  or global module state.
 - Per-worker isolation: per-worker DB schemas (`PG_SCHEMA=test_${WORKER}`),
   per-worker temp dirs (`TMPDIR=/tmp/test-${WORKER}`), per-worker port
   ranges.
@@ -145,8 +143,8 @@ UI tests pass when the page looks one way, fail when it shifts.
 - For Playwright: enable `strict: true` so any ambiguous selector
   fails immediately rather than silently picking the first match.
 - For viewport-specific UIs: snapshot at every breakpoint via
-  [`responsive-breakpoint-runner`](../../../qa-visual-regression/skills/responsive-breakpoint-runner/SKILL.md);
-  visual signal exposes layout-shift flakes faster than text checks.
+  `responsive-breakpoint-runner`; visual signal exposes layout-shift
+  flakes faster than text checks.
 
 ## Pattern 7: environment variance
 
@@ -155,14 +153,14 @@ Tests pass on Linux CI, fail on macOS dev machines (or vice versa).
 | Signal                                                         | What's happening                                            |
 |----------------------------------------------------------------|-------------------------------------------------------------|
 | Fails only on a specific CI runner / OS                         | OS-specific path separator, line ending, or filesystem case sensitivity. |
-| Snapshot tests fail with sub-pixel diffs across OS              | OS font / anti-aliasing differences (see [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)). |
+| Snapshot tests fail with sub-pixel diffs across OS              | OS font / anti-aliasing differences (see `playwright-snapshots`). |
 | Fails in `tz` configurations not set to `UTC`                   | Timezone-sensitive assertion.                               |
 
 **Remediation:**
 
 - Pin CI to one OS / one timezone (`TZ=UTC`) for deterministic runs.
 - Run snapshot updates only in CI, never from a developer laptop
-  (per [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)).
+  (per `playwright-snapshots`).
 - For path-sensitive code, normalize with `path.posix.join()` /
   `node:path`.
 
@@ -181,7 +179,7 @@ Tests use random data without a controlled seed.
 - Seed every random source: `Math.random` via `seedrandom`, faker via
   `faker.seed(N)`, property-based testing via `fc.assert(prop, { seed })`.
 - For property-based failures, **don't** mark them as flake - copy the
-  failing seed into a regression test ([`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md)).
+  failing seed into a regression test.
 - Persist the seed used in each CI run as a build artifact so a flake
   can be replayed.
 
@@ -200,12 +198,11 @@ Test fails ~50% of runs?
                 ├── Yes → "locator drift"
                 └── No → does the test use random data?
                     ├── Yes → "randomness"
-                    └── No → bisect with `e2e-flake-bisector`
+                    └── No → run a structured bisect
 ```
 
-For systematic bisection, hand the test off to the
-[`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md) agent,
-which varies one axis at a time per the patterns above.
+For systematic bisection, run a structured bisect that varies one axis
+at a time per the patterns above.
 
 ## References
 
@@ -214,7 +211,3 @@ which varies one axis at a time per the patterns above.
   ~4.2M tests; "test size correlates with flakiness rate."
 - [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) - 
   workflow that uses this catalog during triage.
-- [`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md),
-  [`parallel-isolation-checker`](../../agents/parallel-isolation-checker.md),
-  [`regression-bisector`](../../agents/regression-bisector.md) - 
-  agents that implement the per-pattern detection.

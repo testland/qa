@@ -36,8 +36,8 @@ in this plugin consume it.
   it into a non-production environment.
 - Scoping the recogniser set for a PII detector
   ([`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)).
-- Onboarding a tester to the vocabulary used by
-  ([`pii-leak-critic`](../../agents/pii-leak-critic.md)).
+- Onboarding a tester to the vocabulary used by leak-detection
+  reviews.
 
 ## GDPR - personal data (Article 4(1))
 
@@ -319,9 +319,8 @@ fields it does (NIST §2.2).
   Standard. HHS guidance:
   [hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification](https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/index.html)
 - Consumer-side neighbour:
-  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - generates fake PII for test fixtures (different scope; this
+  `synthetic-pii-generator` (in the qa-test-data plugin) - generates fake PII for test fixtures (different scope; this
   reference defines what to mask in **existing** data).
 - Downstream consumers:
   [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md),
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md),
-  [`pii-leak-critic`](../../agents/pii-leak-critic.md).
+  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md).

@@ -28,7 +28,7 @@ This skill wraps `web-ext` for test runs. Composes with:
   for migration-time lint rules.
 
 For Playwright-driven MV3 popup / content-script fixtures see
-[`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
+`qa-modern-web/browser-extension-tests`.
 That skill is Chromium-only and assumes the extension is built;
 `web-ext` is the lint+run+build+sign tool that produces the
 artifact and validates it pre-flight on either browser.

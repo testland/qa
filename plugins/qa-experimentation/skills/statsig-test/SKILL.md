@@ -175,5 +175,3 @@ jobs:
   [`optimizely-test`](../optimizely-test/SKILL.md),
   [`vwo-test`](../vwo-test/SKILL.md),
   [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).
-- Detector:
-  [`sample-ratio-mismatch-detector`](../../agents/sample-ratio-mismatch-detector.md).

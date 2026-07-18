@@ -213,5 +213,4 @@ catch the few that slip through.
 - Consumed by:
   [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
   [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
-  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md),
-  [`cache-key-collision-detector`](../../agents/cache-key-collision-detector.md).
+  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md).

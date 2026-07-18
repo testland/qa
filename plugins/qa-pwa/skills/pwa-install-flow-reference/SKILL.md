@@ -195,7 +195,7 @@ A test plan covers each step with an assertion or a documented gap
   [`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md),
   [`web-push-test`](../web-push-test/SKILL.md),
   [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md).
-- Differentiation: [`qa-modern-web/pwa-install-flow-tests`](../../../qa-modern-web/skills/pwa-install-flow-tests/SKILL.md)
-  authors the install-flow *Playwright tests*; this skill is the
+- Differentiation: `pwa-install-flow-tests` (in the qa-modern-web
+  plugin) authors the install-flow *Playwright tests*; this skill is the
   reference shape those tests consume. Read this first when
   triaging a flaky install assertion.

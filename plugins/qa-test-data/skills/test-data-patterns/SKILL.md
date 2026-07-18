@@ -1,13 +1,13 @@
 ---
 name: test-data-patterns
-description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers in this plugin (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Preloaded by `framework-architecture-auditor` as the data-construction-tier reference."
+description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers in this plugin (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Preloaded as the data-construction-tier reference for framework-architecture review."
 ---
 
 # test-data-patterns
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) cites when it audits a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
+This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
 
 ## When to use
 
@@ -157,7 +157,7 @@ admin_user = create(:user, :admin, :with_org)
 | Shared Fixture that some tests quietly mutate | Cross-test coupling; failures depend on test order |
 | Fresh Fixture for a 30-minute E2E seed | Test suite time becomes infeasible; team starts skipping tests |
 | Multiple fixture flavours in the same suite without explicit convention | Engineers can't tell what to write; bugs creep in |
-| Fixture inheritance hierarchies >2 levels deep | Per [`framework-architecture-auditor §A2`](../../../qa-test-review/agents/framework-architecture-auditor.md), depth-3+ chains break unpredictably |
+| Fixture inheritance hierarchies >2 levels deep | Depth-3+ chains break unpredictably |
 
 ## Pattern 5 - Snapshot / golden-file
 
@@ -229,14 +229,13 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Hand-off targets
 
-- **Audit a framework's data-construction approach** → [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) (preloads this skill).
 - **Configure a specific per-language tool** → [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET).
 - **Build an E2E seed dataset** → [`seed-data-curator`](../seed-data-curator/SKILL.md).
 - **Generate PII (anonymised) test data** → [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md).
 - **Snapshot / golden-file operational details** → [`golden-file-conventions`](../golden-file-conventions/SKILL.md).
 - **Generate negative / boundary / malicious test data** → [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md).
-- **Cross-test isolation / fixture scope rules** → [`test-isolation-patterns`](../../../qa-test-review/skills/test-isolation-patterns/SKILL.md) (sister catalog).
-- **Object-model architecture patterns** → [`object-model-patterns`](../../../qa-test-review/skills/object-model-patterns/SKILL.md) (sister catalog).
+- **Cross-test isolation / fixture scope rules** → `test-isolation-patterns` (sister catalog, in the qa-test-review plugin).
+- **Object-model architecture patterns** → `object-model-patterns` (sister catalog).
 
 ## References
 
@@ -256,4 +255,4 @@ admin_user = create(:user, :admin, :with_org)
 - ISTQB glossary - fixture: https://glossary.istqb.org/en_US/term/test-fixture
 - ISO/IEC 25024 - data quality model (cited for anonymisation requirements).
 - [`factory-bot-data`](../factory-bot-data/SKILL.md), [`faker-data`](../faker-data/SKILL.md), [`mimesis-data`](../mimesis-data/SKILL.md), [`bogus-data`](../bogus-data/SKILL.md), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md), [`golden-file-conventions`](../golden-file-conventions/SKILL.md), [`seed-data-curator`](../seed-data-curator/SKILL.md) - the per-tool and operational siblings in this plugin.
-- [`object-model-patterns`](../../../qa-test-review/skills/object-model-patterns/SKILL.md), [`test-isolation-patterns`](../../../qa-test-review/skills/test-isolation-patterns/SKILL.md), [`test-step-design-patterns`](../../../qa-test-review/skills/test-step-design-patterns/SKILL.md) - sister architecture-tier pattern catalogs.
+- `object-model-patterns`, `test-isolation-patterns`, `test-step-design-patterns` - sister architecture-tier pattern catalogs.

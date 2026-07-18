@@ -1,6 +1,6 @@
 ---
 name: ai-test-generator
-description: "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) - outputs tests with confidence scoring per case (LLM's own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team's existing test framework. Critical: AI-generated tests are unreliable without curation; pairs with `ai-test-curator` (the adversarial reviewer). Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement."
+description: "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) - outputs tests with confidence scoring per case (LLM's own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team's existing test framework. Critical: AI-generated tests are unreliable without curation; pair every generated test with adversarial review before merge. Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement."
 ---
 
 # ai-test-generator
@@ -14,8 +14,8 @@ unreliable: hallucinated APIs, weak assertions
 implementations.
 
 This skill provides the **augmentation framework**: AI generates,
-the team curates. Per [`ai-test-curator`](../../agents/ai-test-curator.md),
-generated tests are reviewed adversarially before merge.
+the team curates. Generated tests are reviewed adversarially before
+merge.
 
 ## When to use
 
@@ -147,10 +147,9 @@ def score(test_code, ac):
 
 ### Hand-off
 
-Per [`ai-test-curator`](../../agents/ai-test-curator.md), review
-each generated test for:
+Review each generated test for:
 - Hallucinated APIs / functions / constants
-- Weak assertions (per [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md))
+- Weak assertions (assert on specific expected values, not just truthiness)
 - Missing setup / teardown
 - Redundancy with existing tests
 
@@ -195,15 +194,12 @@ LLM calls have cost and rate limits. Pattern:
   per-team experimentation needed.
 - **Hallucinated APIs are a constant risk.** Even with examples,
   the LLM may invent `cart.applyDiscount()` when the real method
-  is `cart.applyPromo()`. Curator catches.
+  is `cart.applyPromo()`. Review catches this.
 - **Cost.** Per-AC generation costs add up at scale.
 - **Confidence scoring is heuristic.** A high-confidence test can
   still be wrong; never skip review.
 
 ## References
 
-- [`ai-test-curator`](../../agents/ai-test-curator.md) - required
-  downstream review.
 - [`ai-spec-coverage-mapper`](../ai-spec-coverage-mapper/SKILL.md) - sister: maps existing tests to spec sections.
-- [`acceptance-test-from-criteria`](../../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - non-AI alternative for AC-to-test conversion.
-- [`assertion-quality-reviewer`](../../../qa-test-review/agents/assertion-quality-reviewer.md) - runs alongside curator on generated tests.
+- `acceptance-test-from-criteria` (in the qa-bdd plugin) - non-AI alternative for AC-to-test conversion.

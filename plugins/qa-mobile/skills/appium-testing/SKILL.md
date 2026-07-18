@@ -120,7 +120,7 @@ await driver.$('~login-button').click();   // ~ prefix in WebdriverIO
 await driver.$('id=add_to_cart_button');     // Android
 await driver.$('id=add-to-cart-button');     // iOS uses accessibility ID
 
-// XPath - works everywhere; brittle (per `e2e-selector-quality-critic`)
+// XPath - works everywhere; brittle (selector-quality anti-pattern)
 await driver.$('//XCUIElementTypeButton[@name="Submit"]');
 
 // Image-based locator (Appium-specific) - fallback when no IDs

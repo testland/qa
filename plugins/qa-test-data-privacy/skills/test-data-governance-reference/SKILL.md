@@ -185,7 +185,7 @@ Deletion is required when any of these conditions is met:
   right to erasure propagates to derived test copies).
 - Environment is decommissioned or reassigned.
 - Masking audit reveals that an unmasked field slipped through
-  ([`pii-leak-critic`](../../agents/pii-leak-critic.md) raises this flag).
+  (a leak-detection audit raises this flag).
 
 ### Deletion standard
 
@@ -332,5 +332,3 @@ documented, not implied by job title.
   [`pii-categories-reference`](../pii-categories-reference/SKILL.md)
 - Sibling skill (masking pipeline):
   [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md)
-- Sibling agent (leak detection):
-  [`pii-leak-critic`](../../agents/pii-leak-critic.md)

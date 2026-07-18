@@ -1,6 +1,6 @@
 ---
 name: browser-matrix-strategy-reference
-description: "Pure-reference for designing and reviewing a browser / OS / device test matrix from traffic data. Covers the T1/T2/T3 tier-membership heuristics (T1 currently >=5% of traffic, T2 1-5% or statutory, T3 <1% but with customer demand), the traffic-share data sources (own analytics, StatCounter, MDN browser-compat-data), a worked B2B SaaS matrix template with a tier-change log for audit trails, the cost-tier infrastructure mapping (bundled engine vs cloud grid vs real device), and how to justify dropping a legacy browser (IE11, old Safari iOS). Use when designing an initial browser matrix, running a quarterly re-tier review, or building the case to drop a browser. Distinct from compatibility-budget (multi-product-type budgets and the external 'what we support' statement) and compatibility-matrix-auditor (audits a committed matrix for violations)."
+description: "Pure-reference for designing and reviewing a browser / OS / device test matrix from traffic data. Covers the T1/T2/T3 tier-membership heuristics (T1 currently >=5% of traffic, T2 1-5% or statutory, T3 <1% but with customer demand), the traffic-share data sources (own analytics, StatCounter, MDN browser-compat-data), a worked B2B SaaS matrix template with a tier-change log for audit trails, the cost-tier infrastructure mapping (bundled engine vs cloud grid vs real device), and how to justify dropping a legacy browser (IE11, old Safari iOS). Use when designing an initial browser matrix, running a quarterly re-tier review, or building the case to drop a browser. Distinct from compatibility-budget (multi-product-type budgets and the external 'what we support' statement) and from a committed-matrix violation audit."
 ---
 
 # browser-matrix-strategy-reference
@@ -13,9 +13,9 @@ then runs different tiers at different cadences.
 
 This skill is a **pure reference** consumed by the cloud-grid
 skills
-([`browserstack-automate`](../../../qa-web-e2e/skills/browserstack-automate/SKILL.md),
-[`saucelabs-automate`](../../../qa-web-e2e/skills/saucelabs-automate/SKILL.md),
-[`lambdatest-automate`](../../../qa-web-e2e/skills/lambdatest-automate/SKILL.md))
+(`browserstack-automate`,
+`saucelabs-automate`,
+`lambdatest-automate`)
 + the self-hosted [`selenium-grid-4-runner`](../selenium-grid-4-runner/SKILL.md)
 + existing
 [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md)
@@ -204,6 +204,6 @@ matters (some bugs are real-Chrome-only).
   [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md)
   (existing - bundled engines),
   [`selenium-grid-4-runner`](../selenium-grid-4-runner/SKILL.md),
-  [`browserstack-automate`](../../../qa-web-e2e/skills/browserstack-automate/SKILL.md),
-  [`saucelabs-automate`](../../../qa-web-e2e/skills/saucelabs-automate/SKILL.md),
-  [`lambdatest-automate`](../../../qa-web-e2e/skills/lambdatest-automate/SKILL.md).
+  `browserstack-automate`,
+  `saucelabs-automate`,
+  `lambdatest-automate`.

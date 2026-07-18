@@ -41,8 +41,7 @@ they want to keep application code decoupled from a specific provider.
   flag evaluation.
 - Teams migrating between flag providers who want tests that survive the
   swap.
-- Assignment-integrity tests per
-  [`qa-experimentation/ab-test-validity-checklist`](../../../qa-experimentation/skills/ab-test-validity-checklist/SKILL.md).
+- Assignment-integrity tests per `ab-test-validity-checklist`.
 
 ## How to use
 
@@ -377,5 +376,5 @@ the entire test run without asserting each flag individually.
   [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
   [`growthbook-testing`](../growthbook-testing/SKILL.md)
 - Cross-plugin:
-  [`qa-test-environment/feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md),
-  [`qa-experimentation/ab-test-validity-checklist`](../../../qa-experimentation/skills/ab-test-validity-checklist/SKILL.md)
+  `feature-flag-test-harness`,
+  `ab-test-validity-checklist`

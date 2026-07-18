@@ -19,8 +19,6 @@ The checklist pairs with:
   for manual verification.
 - [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) for
   automated scans.
-- [`accessibility-code-critic`](../../agents/accessibility-code-critic.md)
-  for adversarial code review.
 
 ## When to use
 
@@ -191,7 +189,7 @@ The skill produces two outputs:
 
 - Automated: axe-core scan with `dialog` rule enabled.
 - Manual: NVDA + Firefox per [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md).
-- Code review: [`accessibility-code-critic`](../../agents/accessibility-code-critic.md) agent.
+- Code review: against the checklist above.
 ```
 
 ### YAML test plan (for test-management tools)
@@ -242,4 +240,3 @@ checks:
   [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md),
   [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md),
   [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md).
-- [`accessibility-code-critic`](../../agents/accessibility-code-critic.md) - adversarial agent that consumes this skill's output.

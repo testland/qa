@@ -7,7 +7,7 @@ description: "Pure reference catalog of test-step design patterns at the archite
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps. It is the catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`test-code-critic`](../../agents/test-code-critic.md), and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite when auditing step granularity at the architecture tier - within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
+This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing step granularity at the architecture tier - within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
 
 ## When to use
 
@@ -46,7 +46,7 @@ A "step" is the minimal unit a test reader can name in business terms. **One log
 
 ### Step count per test
 
-Aim for **3-8 steps per test body** (counting Arrange / Act / Assert phases as steps). >15 is the threshold the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) flags as a smell - the test is doing too much or operating at the wrong abstraction.
+Aim for **3-8 steps per test body** (counting Arrange / Act / Assert phases as steps). >15 is the threshold flagged as a smell - the test is doing too much or operating at the wrong abstraction.
 
 ### Anti-patterns
 
@@ -55,7 +55,7 @@ Aim for **3-8 steps per test body** (counting Arrange / Act / Assert phases as s
 | One step that does everything: `await fullCheckoutFlow();` | Single line of action; the test reads as "did the helper work?" not as "did the SUT work?" |
 | 30 mechanical clicks comprising one logical flow | Brittle to UI changes; the test reads as a script, not a specification |
 | Mixed Act + Assert in one line (`expect(await page.click(...)).toBeTruthy()`) | Cannot distinguish "the action failed" from "the assertion failed" in the diagnostic |
-| One step with two unrelated assertions (`expect(cart.total).toBe(10); expect(user.role).toBe('admin');`) | Test fails on the first assert; the second is never evaluated. Split per [`test-code-critic`](../../agents/test-code-critic.md) §2 single-responsibility |
+| One step with two unrelated assertions (`expect(cart.total).toBe(10); expect(user.role).toBe('admin');`) | Test fails on the first assert; the second is never evaluated. Split into single-responsibility tests |
 
 ## Pattern 3 - Abstraction layers
 
@@ -194,7 +194,7 @@ test('places an order', async () => {
 });
 ```
 
-Either works; lacking either fails [`test-code-critic`](../../agents/test-code-critic.md) §1 AAA review.
+Either works; lacking either fails the §1 AAA review.
 
 ## Pattern 6 - Declarative vs imperative step phrasing
 
@@ -258,7 +258,7 @@ If reading aloud doesn't produce a specification - if it produces "click, type, 
 
 | Anti-pattern | Why it fails |
 |---|---|
-| Tests with 30+ steps (one logical thing per "step" but the whole test does 10 logical things) | Per [`test-code-critic`](../../agents/test-code-critic.md) §2, single-responsibility violation; split into multiple tests |
+| Tests with 30+ steps (one logical thing per "step" but the whole test does 10 logical things) | Single-responsibility violation; split into multiple tests |
 | Helpers that wrap one framework call (`async function click(sel) { await page.click(sel); }`) | Wrapping for the sake of wrapping; adds no abstraction |
 | Step extracted into a helper but the helper takes a `boolean` flag that branches behavior | Two helpers masquerading as one |
 | Step that does retry / wait / fallback inside | Hides flakiness; the test passes when it should fail |
@@ -267,13 +267,10 @@ If reading aloud doesn't produce a specification - if it produces "click, type, 
 
 ## Hand-off targets
 
-- **Audit a framework's test-step quality at the codebase level** → [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) (preloads this skill).
-- **Per-file AAA / naming review** → [`test-code-critic`](../../agents/test-code-critic.md).
-- **Codegen → business-layer refactor** → [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md).
-- **Translate manual test steps to Gherkin** → [`manual-step-to-gherkin`](../../../qa-bdd/skills/manual-step-to-gherkin/SKILL.md).
+- **Translate manual test steps to Gherkin** → `manual-step-to-gherkin` (qa-bdd).
 - **Object-model architecture patterns (where extracted steps live)** → [`object-model-patterns`](../object-model-patterns/SKILL.md) (sister catalog).
 - **Test isolation / fixture lifecycle** → [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) (sister catalog).
-- **Test data construction patterns** → [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md) (sister catalog).
+- **Test data construction patterns** → `test-data-patterns` (qa-test-data, sister catalog).
 - **Cross-file file-level conventions** → [`test-code-conventions`](../test-code-conventions/SKILL.md).
 
 ## References
@@ -287,5 +284,5 @@ If reading aloud doesn't produce a specification - if it produces "click, type, 
 - Gerard Meszaros - *xUnit Test Patterns* (2007) - the named-pattern catalog for `Test Method`, `Assertion Method`, `Custom Assertion`, `Inline Resource`: ISBN 978-0131495050.
 - ISTQB glossary - test step: https://glossary.istqb.org/en_US/term/test-step
 - ISTQB glossary - test procedure (the imperative form, by ISTQB convention): https://glossary.istqb.org/en_US/term/test-procedure-1
-- [`test-code-conventions`](../test-code-conventions/SKILL.md), [`test-code-critic`](../../agents/test-code-critic.md), [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md), [`manual-step-to-gherkin`](../../../qa-bdd/skills/manual-step-to-gherkin/SKILL.md) - the related-tier components.
-- [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md), [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md) - sister architecture-tier pattern catalogs.
+- [`test-code-conventions`](../test-code-conventions/SKILL.md), `manual-step-to-gherkin` (qa-bdd) - the related-tier components.
+- [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md), `test-data-patterns` (qa-test-data) - sister architecture-tier pattern catalogs.

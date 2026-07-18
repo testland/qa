@@ -186,14 +186,13 @@ comments + the Security tab.
 ## Step 9 - Combine with other scanners
 
 Checkov + tfsec + KICS catch overlapping but non-identical issues.
-Per [`iac-policy-checker`](../../agents/iac-policy-checker.md):
-combine results to a unified verdict.
+Combine results to a unified verdict.
 
 ```bash
 checkov -d . -o json > checkov.json
 tfsec . -f json > tfsec.json
 kics scan -p . --report-formats json -o ./kics-results
-# Combined report via the iac-policy-checker agent
+# Combine the three reports into a unified verdict
 ```
 
 ## Anti-patterns
@@ -226,5 +225,3 @@ kics scan -p . --report-formats json -o ./kics-results
 - [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   custom policies via OPA / Conftest (Checkov for built-in; OPA
   for custom).
-- [`iac-policy-checker`](../../agents/iac-policy-checker.md) - 
-  combines Checkov + tfsec + KICS results.

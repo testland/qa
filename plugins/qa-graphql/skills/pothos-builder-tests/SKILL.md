@@ -226,7 +226,7 @@ mismatch.
   multiple build configurations can drift; manage carefully.
 - **Doesn't replace contract testing.** Internal schema stability
   isn't external compatibility - pair with
-  [`qa-contract-testing/graphql-schema-regression`](../../../qa-contract-testing/skills/graphql-schema-regression/SKILL.md).
+  `graphql-schema-regression` (in the qa-contract-testing plugin).
 
 ## References
 
@@ -242,4 +242,4 @@ mismatch.
   [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md),
   [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
 - Contract drift:
-  [`qa-contract-testing/graphql-schema-regression`](../../../qa-contract-testing/skills/graphql-schema-regression/SKILL.md).
+  `graphql-schema-regression`.

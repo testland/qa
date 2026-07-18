@@ -33,9 +33,6 @@ narrative test:
   Cypress, etc.) - write the intents once, regenerate.
 - A PRD describes a user journey and the team wants the matching
   E2E test before implementation.
-- Pairs with [`spec-to-suite-orchestrator`](../../../qa-shift-left/agents/spec-to-suite-orchestrator.md)
-  in the shift-left chain - that orchestrator hands off intent
-  lists to this skill.
 
 ## Step 1 - Capture the intent list
 
@@ -183,7 +180,7 @@ Feature: New user onboards and completes first task
     # ... more steps
 ```
 
-(Per [`karate-testing`](../../../qa-api-testing/skills/karate-testing/SKILL.md).)
+(Per `karate-testing`.)
 
 ## Step 4 - Wire fixtures
 
@@ -259,5 +256,4 @@ imports them at the top.
   [`msw-handlers`](../msw-handlers/SKILL.md),
   [`mountebank-imposters`](../mountebank-imposters/SKILL.md) - 
   fixture sources.
-- [`karate-testing`](../../../qa-api-testing/skills/karate-testing/SKILL.md) - Karate output format.
-- [`spec-to-suite-orchestrator`](../../../qa-shift-left/agents/spec-to-suite-orchestrator.md) - upstream agent that hands off intent lists to this skill.
+- `karate-testing` (in the qa-api-testing plugin) - Karate output format.

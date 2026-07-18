@@ -366,7 +366,7 @@ catches this with `FILE` or `PACKAGE` category.
   skip H2 framing; flow-control bugs need real transports.
 - **Doesn't test contract compliance.** Mocks reflect what *this
   test* expects. Real-server contract tests are separate; see
-  [`qa-contract-testing/protobuf-compat-checking`](../../../qa-contract-testing/skills/protobuf-compat-checking/SKILL.md).
+  `protobuf-compat-checking` (in the qa-contract-testing plugin).
 - **Concurrent-client stress tests not in scope.** For that see
   [`ghz-load`](../ghz-load/SKILL.md) (unary load) or hand-rolled
   multi-client streaming harnesses.
@@ -384,4 +384,4 @@ catches this with `FILE` or `PACKAGE` category.
 - Breaking-change detection:
   [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
 - Sibling wire-level streaming patterns:
-  [`qa-realtime-protocols/grpc-streaming-tests`](../../../qa-realtime-protocols/skills/grpc-streaming-tests/SKILL.md).
+  `grpc-streaming-tests`.

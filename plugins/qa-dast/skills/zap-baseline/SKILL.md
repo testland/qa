@@ -71,7 +71,7 @@ Per [zap-base][zap-base]:
 | `-r FILE` | HTML report output |
 | `-w FILE` | Markdown report |
 | `-x FILE` | XML report |
-| `-J FILE` | JSON report (for `dast-finding-triager`) |
+| `-J FILE` | JSON report (for finding triage) |
 | `-c FILE` | Config file: rule INFO/IGNORE/FAIL behavior |
 | `-P PORT` | Specify ZAP listen port |
 | `-j` | Use Ajax spider in addition to traditional spider (JS-heavy apps) |
@@ -149,14 +149,14 @@ Cadence: every quarter, audit the config TSV - every IGNORE entry
 should have an Re-review-date. Past-due entries are removed +
 re-evaluated.
 
-## Step 7 - Output formats for `dast-finding-triager`
+## Step 7 - Output formats for cross-tool triage
 
 ```bash
 docker run -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable \
   zap-baseline.py -t https://app.example.com -J zap-report.json
 ```
 
-The JSON report feeds [`dast-finding-triager`](../../agents/dast-finding-triager.md).
+The JSON report feeds cross-tool aggregation.
 For SARIF output (GitHub Code Scanning), use a converter (zap-sarif
 container action).
 
@@ -188,7 +188,7 @@ invocation. Auto-creates a GitHub Issue on failure.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Run `zap-full-scan.py` against production | Active payloads pollute / damage data | Staging-only (Step 5) |
-| Skip `-J` JSON output | Can't feed `dast-finding-triager`; report is HTML-only | Always pass `-J` (Step 7) |
+| Skip `-J` JSON output | Can't feed finding triage; report is HTML-only | Always pass `-J` (Step 7) |
 | Ignore Ajax spider for SPAs | Missing routes; coverage gap | Add `-j` flag (Step 3) |
 | Hardcode credentials in context file | Secrets leak in repo | Reference env vars (Step 4) |
 | Suppress without `# Re-review-date` | Permanent debt | Required template (Step 6) |
@@ -200,7 +200,7 @@ invocation. Auto-creates a GitHub Issue on failure.
 - Spider duration default 1 min may miss deep-routes apps;
   increase via `-m` (Step 3).
 - ZAP scans single-target only; for multi-app fleet, run per-app
-  + aggregate via `dast-finding-triager`.
+  + aggregate via cross-tool triage.
 - Authentication setup via context file is fragile - 
   apps with complex login flows often need custom ZAP scripts.
 
@@ -213,5 +213,3 @@ invocation. Auto-creates a GitHub Issue on failure.
   [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister DAST tools
 - [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
   build-an-X for layered DAST (baseline → full → optional Burp deep)
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - 
-  unifier agent

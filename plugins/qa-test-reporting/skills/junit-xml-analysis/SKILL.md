@@ -1,6 +1,6 @@
 ---
 name: junit-xml-analysis
-description: "Parses JUnit-format XML reports (the de-facto interchange format every CI ingests - Jenkins, GitHub Actions, GitLab, Buildkite, CircleCI) into structured, machine-readable per-suite and per-case metrics tables (passed / failed / errored / skipped, time, classname, message, stack), groups failures by classname for trend analysis, and distinguishes \"new failures vs flakes\" by cross-referencing rerun elements (`<flakyFailure>`, `<rerunFailure>`). Use when the downstream consumer is a dashboard, script, or aggregator - not when the goal is a human-readable prose summary (use test-run-summary-author for that). Single-run, in-XML aggregation only; for cross-run cross-environment roll-ups, use daily-test-suite-aggregator."
+description: "Parses JUnit-format XML reports (the de-facto interchange format every CI ingests - Jenkins, GitHub Actions, GitLab, Buildkite, CircleCI) into structured, machine-readable per-suite and per-case metrics tables (passed / failed / errored / skipped, time, classname, message, stack), groups failures by classname for trend analysis, and distinguishes \"new failures vs flakes\" by cross-referencing rerun elements (`<flakyFailure>`, `<rerunFailure>`). Use when the downstream consumer is a dashboard, script, or aggregator - not when the goal is a human-readable prose summary (use test-run-summary-author for that). Single-run, in-XML aggregation only; for cross-run cross-environment roll-ups, use a cross-run test-suite aggregator."
 ---
 
 # junit-xml-analysis

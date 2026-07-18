@@ -357,9 +357,8 @@ When a leak test fails:
   unit-test reliably. Constant-time response or rate-limit
   layers are the prod defence.
 - **Cannot test all routes.** New routes added without
-  isolation tests are still vulnerable. Pair with the
-  [`tenant-id-propagation-tracer`](../../agents/tenant-id-propagation-tracer.md)
-  agent to enforce coverage on PR.
+  isolation tests are still vulnerable. Trace tenant_id
+  propagation through new routes to enforce coverage on PR.
 - **Cannot detect log leaks.** Tests verify response payloads,
   not log lines. Add log-grep tests separately.
 - **Test database must mirror prod RLS setup.** If test DB uses
@@ -374,7 +373,3 @@ When a leak test fails:
   [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md).
 - Plan / inventory:
   [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md).
-- Trace agent:
-  [`tenant-id-propagation-tracer`](../../agents/tenant-id-propagation-tracer.md).
-- Adversarial reviewer:
-  [`tenant-leak-critic`](../../agents/tenant-leak-critic.md).

@@ -164,8 +164,8 @@ adversarially. This skill provides the catalog.
 - Companion catalogs:
   [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),
   [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md).
-- Adversarial validator (sibling plugin):
-  [`qa-compliance/pci-dss-scope-checker`](../../../qa-compliance/skills/pci-dss-scope-checker/SKILL.md).
+- Adversarial validator:
+  `pci-dss-scope-checker` (in the qa-compliance plugin).
 - Consumed by:
   [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
   [`adyen-test-mode`](../adyen-test-mode/SKILL.md),

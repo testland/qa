@@ -8,10 +8,7 @@ description: "Reference catalog for WCAG 2.2 keyboard-navigation conformance - c
 > Reference catalog for **how** to verify keyboard-navigation
 > conformance. Pairs with the runner skills
 > ([`axe-a11y`](../axe-a11y/SKILL.md), [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-> [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md)) and the
-> adversarial agent
-> [`accessibility-code-critic`](../../agents/accessibility-code-critic.md)
-> that reads this catalog when reviewing components.
+> [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md)).
 
 ## Overview
 

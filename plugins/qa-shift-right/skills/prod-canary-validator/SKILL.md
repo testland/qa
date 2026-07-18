@@ -17,10 +17,8 @@ This skill builds the **deterministic** canary verdict: a
 machine-checkable comparison of canary metrics vs baseline that
 emits promote / pause / rollback.
 
-It composes with [`release-engineer`](../../../qa-roles/agents/release-engineer.md)'s
-canary observation step and per
-[`canary-release`][cr] runs the analytical layer underneath the
-human review.
+It runs the analytical layer underneath the human review of the
+canary observation step, per [`canary-release`][cr].
 
 [cr]: https://martinfowler.com/bliki/CanaryRelease.html
 
@@ -149,7 +147,7 @@ Default: **30 minutes**. Pattern:
 | 15 min  | Low-traffic services where 30 min wouldn't add sample size.        |
 | 30 min  | Default for most services.                                          |
 | 1 hour  | High-variance metrics (sparse business KPIs).                       |
-| 2 hour  | Pre-major-release; matches the team's release-engineer runbook.     |
+| 2 hour  | Pre-major-release; matches the team's release-engineering runbook.  |
 
 Per [canary-release][cr]: the observation window is "early warning
 for potential problems before impacting your entire production
@@ -285,8 +283,6 @@ ambiguous case); rollback is automatic on clear failure.
   monitoring + rollback, "early warning for potential problems
   before impacting your entire production infrastructure or user
   base."
-- [`release-engineer`](../../../qa-roles/agents/release-engineer.md) - orchestrating role agent that calls this skill at the canary
-  observation step.
 - [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) - sibling: continuous-in-production verification (different
   cadence, different goal).
 - [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md) - sibling: A/B test analysis (different statistical framework

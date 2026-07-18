@@ -255,4 +255,3 @@ Tests verify scope-reduction is actually reducing scope (Step 1).
   sister compliance pattern catalogs
 - [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
   Req 10 audit log requirements
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

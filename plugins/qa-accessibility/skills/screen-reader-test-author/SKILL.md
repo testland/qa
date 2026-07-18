@@ -207,7 +207,7 @@ Sign-off: ___________________ Date: __________
 For teams using TestRail / Xray / Zephyr - encode the flow as a
 manual test case with one step per row, expected result per row.
 The skill emits the matching format; per
-[`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md)
+`testrail-integration`
 (when shipped) the test case can be uploaded automatically.
 
 ## Anti-patterns
@@ -238,5 +238,3 @@ The skill emits the matching format; per
 - VoiceOver Getting Started - https://www.apple.com/accessibility/mac/vision/ + Apple developer docs
 - [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md),
   [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md) - patterns this skill references for the "Why" column.
-- [`accessibility-code-critic`](../../agents/accessibility-code-critic.md) - adversarial agent that finds the issues this script later
-  verifies were fixed.

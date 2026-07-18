@@ -17,8 +17,7 @@ satisfy.
 
 This skill is the **pure reference** that the pipeline builder
 ([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
-and the leak critic
-([`pii-leak-critic`](../../agents/pii-leak-critic.md)) draw from to
+and leak-detection audits draw from to
 choose operators per field.
 
 ## When to use

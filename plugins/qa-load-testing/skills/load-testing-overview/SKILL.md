@@ -1,6 +1,6 @@
 ---
-name: load-testing-getting-started
-description: "Orients an engineer who is new to performance and load testing through the qa-load-testing plugin: explains the core metrics (throughput, latency percentiles, error rate), selects the right tool via the load-test-tool-selector agent, walks the first k6 script through to a passing threshold, adds a perf-budget-gate CI step, and routes failing results to latency-percentile-analyzer or perf-incident-responder. Use when an engineer new to performance or load testing does not know where to start in this plugin."
+name: load-testing-overview
+description: "Overview of performance and load testing for engineers new to it: explains the core metrics (throughput, latency percentiles, error rate), helps select a tool for the stack, walks a first k6 script through to a passing threshold, and adds a performance-budget CI gate. Use when getting started with performance or load testing."
 keywords:
   - getting-started
   - load-testing
@@ -9,7 +9,7 @@ keywords:
   - onboarding
 ---
 
-# load-testing-getting-started
+# load-testing-overview
 [running]: https://grafana.com/docs/k6/latest/get-started/running-k6/
 [thresholds]: https://grafana.com/docs/k6/latest/using-k6/thresholds/
 
@@ -18,10 +18,9 @@ metrics that matter first are **throughput** (requests per second the system
 handles), **latency percentiles** (p95 and p99 measure tail response time - the
 experience of your slowest users, not the average), and **error rate** (the
 fraction of requests that fail). A passing average can hide a broken p99; always
-gate on all three. If you are unsure which tool to use for your stack, invoke the
-[`load-test-tool-selector`](../../agents/load-test-tool-selector.md) agent with
-your language, infrastructure, and load profile - it returns a reasoned
-recommendation before you write a single line.
+gate on all three. If you are unsure which tool to use for your stack, weigh your
+language, infrastructure, and load profile to pick one before you write a single
+line.
 
 ## Step 1 - Write your first k6 script
 
@@ -94,9 +93,8 @@ If a threshold fails or the system feels slow despite passing thresholds:
   [`latency-percentile-analyzer`](../latency-percentile-analyzer/SKILL.md) to
   detect bimodal distributions, compute the tail ratio (p99/p50), and check for
   coordinated omission effects that make naive p99 values optimistic.
-- **Active production incident or post-deploy regression:** use
-  [`perf-incident-responder`](../../agents/perf-incident-responder.md) to
-  confirm with k6, flame-graph the hot path, and check slow queries in one
+- **Active production incident or post-deploy regression:** confirm
+  with k6, flame-graph the hot path, and check slow queries in one
   orchestrated flow.
 
 ## References
@@ -109,7 +107,3 @@ If a threshold fails or the system feels slow despite passing thresholds:
 - [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - multi-runner CI gate.
 - [`latency-percentile-analyzer`](../latency-percentile-analyzer/SKILL.md) -
   tail-latency diagnosis when thresholds pass but perf is suspect.
-- [`load-test-tool-selector`](../../agents/load-test-tool-selector.md) -
-  tool recommendation for your specific stack.
-- [`perf-incident-responder`](../../agents/perf-incident-responder.md) -
-  on-call orchestrator for active perf incidents.

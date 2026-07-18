@@ -7,7 +7,7 @@ description: "Build-an-X workflow that uses an LLM to map existing tests to spec
 
 ## Overview
 
-Coverage tools (per [`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md))
+Coverage tools (per `lcov-analysis` in the qa-test-reporting plugin)
 report which **lines** are tested. They don't report which **spec
 sections** are tested.
 
@@ -135,7 +135,7 @@ jobs:
 LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 - Spot-check the highest-priority ACs manually.
-- Cross-reference with [`acceptance-test-from-criteria`](../../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md)
+- Cross-reference with `acceptance-test-from-criteria` (in the qa-bdd plugin)
   if the team uses `@AC-X.Y` tags - those are the ground truth.
 - Compare LLM's claim vs. test code via human review.
 
@@ -164,5 +164,5 @@ LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 - [`ai-test-generator`](../ai-test-generator/SKILL.md) - sister
   skill: generates tests for the gaps this skill identifies.
-- [`acceptance-test-from-criteria`](../../../qa-bdd/skills/acceptance-test-from-criteria/SKILL.md) - for tag-based AC traceability without LLM.
-- [`coverage-debt-tracker`](../../../qa-test-impact-analysis/skills/coverage-debt-tracker/SKILL.md) - line-coverage debt; complementary to spec coverage.
+- `acceptance-test-from-criteria` (in the qa-bdd plugin) - for tag-based AC traceability without LLM.
+- `coverage-debt-tracker` (in the qa-test-impact-analysis plugin) - line-coverage debt; complementary to spec coverage.

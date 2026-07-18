@@ -144,7 +144,7 @@ Cadence: every quarter, grep for `# nosec` patterns lacking
 
 ```bash
 bandit -r . -f txt                      # default human-readable
-bandit -r . -f json -o bandit.json      # JSON for sast-finding-triager
+bandit -r . -f json -o bandit.json      # JSON for finding triage
 bandit -r . -f sarif -o bandit.sarif    # SARIF for GitHub Code Scanning
 bandit -r . -f xml -o bandit.xml        # JUnit XML
 bandit -r . -f html -o bandit.html      # standalone HTML report
@@ -217,5 +217,3 @@ noise.
   [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
   [`codeql-queries`](../codeql-queries/SKILL.md),
   [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
-  unifier agent

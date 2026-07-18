@@ -30,7 +30,7 @@ Do **not** use this skill to:
 |---|---|
 | **Role + seniority** | Same axis the sibling skills use: manual QA / automation / SDET / test lead / quality manager × junior / mid / senior / staff+ |
 | **Role balance** | Where this role sits between CTFL's testing role and test management role; a senior SDET is nearly all testing role, a test lead carries a documented share of the management role ([CTFL §1.4.5](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf)) |
-| **Team context** | Stack and toolchain, domain, test levels in scope, why the role is open (a capability-gap report from `team-capability-gap-analyst` in qa-team-management is the ideal version of this input) |
+| **Team context** | Stack and toolchain, domain, test levels in scope, why the role is open (a team capability-gap report is the ideal version of this input) |
 | **Constraints** | Location/remote, compensation-disclosure rules in the posting jurisdictions, non-negotiables |
 
 ## Step 2 - Derive responsibilities from the role's test activities
@@ -119,7 +119,7 @@ hands-on engineering, ~20% strategy input for your area.
 
 - **Next step in the chain** → [`interview-question-author`](../interview-question-author/SKILL.md) (question bank), then [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) (scoring rubric), then [`calibration-guide-author`](../calibration-guide-author/SKILL.md) - the structured-interview triple this JD feeds.
 - **After the hire** → [`onboarding-plan-author`](../onboarding-plan-author/SKILL.md).
-- **If the role came from a capability gap** → the gap report from `team-capability-gap-analyst` (qa-team-management) supplies the "why this role is open" paragraph.
+- **If the role came from a capability gap** → a team capability-gap report supplies the "why this role is open" paragraph.
 
 ## References
 

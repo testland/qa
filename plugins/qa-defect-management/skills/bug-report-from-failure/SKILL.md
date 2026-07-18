@@ -1,6 +1,6 @@
 ---
 name: bug-report-from-failure
-description: "On-demand builder that converts a SINGLE test failure record (JUnit XML, Allure JSON, pytest --tb=short, Playwright HTML, Cypress mocha-junit) into a structured, tracker-agnostic bug SPEC: extracts test name, assertion, stack trace, environment, and artefacts, and proposes severity, defect type (IEEE 1044), and a root-cause hypothesis (ISTQB CTAL-TA), then hands the JSON spec to a jira/linear/github-issues-bug-workflow runner to file. Use when you already hold a failure artefact and want one classified, ready-to-file report. Distinct from ci-defect-filer (the event-driven CI orchestrator that triggers automatically on a pipeline failure and files in bulk) and from qa-bug-repro/bug-report-from-recording (screen-recording-driven); this is the on-demand, single-record spec builder."
+description: "On-demand builder that converts a SINGLE test failure record (JUnit XML, Allure JSON, pytest --tb=short, Playwright HTML, Cypress mocha-junit) into a structured, tracker-agnostic bug SPEC: extracts test name, assertion, stack trace, environment, and artefacts, and proposes severity, defect type (IEEE 1044), and a root-cause hypothesis (ISTQB CTAL-TA), then hands the JSON spec to a jira/linear/github-issues-bug-workflow runner to file. Use when you already hold a failure artefact and want one classified, ready-to-file report. Distinct from the event-driven CI orchestrator that triggers automatically on a pipeline failure and files in bulk, and from screen-recording-driven bug reporting; this is the on-demand, single-record spec builder."
 ---
 
 # bug-report-from-failure
@@ -27,9 +27,8 @@ It composes:
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md)
   as the filing backend.
 
-**Distinct from sibling-plugin
-[`bug-report-from-recording`](../../../qa-bug-repro/agents/bug-report-from-recording.md)**:
-that's A4 (screen-recording-driven); this is S3 (failure-record-driven).
+**Distinct from screen-recording-driven bug reporting** (A4):
+this is S3 (failure-record-driven).
 
 ## When to use
 
@@ -217,9 +216,7 @@ def find_dupes(platform, test_name):
 ```
 
 If duplicates exist, the workflow attaches a comment instead of
-creating a new bug. See
-[`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md)
-for the dedicated agent that handles complex dedup logic.
+creating a new bug.
 
 ## Step 5 - File the bug
 
@@ -353,5 +350,3 @@ for f in failures:
   [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
   [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
-- Sibling-plugin neighbour:
-  [`bug-report-from-recording`](../../../qa-bug-repro/agents/bug-report-from-recording.md) - screen-recording-driven; this is failure-record-driven.

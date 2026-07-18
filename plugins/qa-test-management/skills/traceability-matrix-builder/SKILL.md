@@ -26,9 +26,7 @@ For canonical case fields see
 - Pre-release coverage audit ("which requirements lack tests?").
 - Compliance documentation in regulated industries.
 - Sprint-end coverage review.
-- Backing the
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md)
-  when it audits requirement-coverage gaps.
+- Auditing requirement-coverage gaps.
 
 ## Step 1 - Extract requirements
 
@@ -52,9 +50,9 @@ def get_requirements_jira(project_key):
 ```
 
 For Linear / GitHub Issues use the corresponding bug-workflow skill
-([`linear-bug-workflow-runner`](../../../qa-defect-management/skills/linear-bug-workflow-runner/SKILL.md),
-[`github-issues-bug-workflow`](../../../qa-defect-management/skills/github-issues-bug-workflow/SKILL.md))
-adapted for requirement-type issues rather than bugs.
+(`linear-bug-workflow-runner`, `github-issues-bug-workflow` in the
+qa-defect-management plugin) adapted for requirement-type issues rather
+than bugs.
 
 ## Step 2 - Extract cases + refs
 
@@ -286,14 +284,13 @@ Orphans: 14
   cases in TestRail, the join is by free-text key. Discipline
   required.
 - **Doesn't measure test quality.** Coverage % can be 100% with
-  weak tests; pair with
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md).
+  weak tests; pair with a test-case quality review.
 - **Risk-weighting absent.** All requirements weighted equally;
   high-risk requirements may deserve deeper coverage. Pair with
   qa-process risk-matrix output to weight.
 - **No mutation-testing input.** True coverage measurement combines
   requirement coverage with mutation testing
-  ([`qa-mutation-testing`](../../../qa-mutation-testing/)); both
+  (`qa-mutation-testing`); both
   needed.
 
 ## References
@@ -307,5 +304,3 @@ Orphans: 14
 - Composes:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md),
   case-management skills for each platform.
-- Audits via:
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md).

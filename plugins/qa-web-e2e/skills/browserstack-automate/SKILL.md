@@ -17,9 +17,8 @@ This skill wraps BrowserStack for **Selenium**-style invocation;
 Playwright + Cypress integrations follow a different (but
 similar) pattern documented separately by BrowserStack.
 
-Composes with
-[`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md)
-for matrix planning.
+Composes with `browser-matrix-strategy-reference` (in the
+qa-compatibility plugin) for matrix planning.
 
 ## When to use
 
@@ -31,10 +30,9 @@ for matrix planning.
   BrowserStackLocal.
 
 For **bundled-engine** matrix (Chromium / Firefox / WebKit on the
-runner machine), use
-[`browser-matrix-runner`](../../../qa-compatibility/skills/browser-matrix-runner/SKILL.md).
-For the orchestration agent that routes between local + cloud,
-use [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md).
+runner machine), use `browser-matrix-runner`.
+For orchestration across local + cloud grids, use a dedicated
+grid-orchestration layer.
 
 ## Authoring
 
@@ -205,9 +203,8 @@ curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
   "https://api.browserstack.com/automate/sessions/<session-id>.json"
 ```
 
-Feed failure videos + HAR to
-[`bug-report-from-failure`](../../../qa-defect-management/skills/bug-report-from-failure/SKILL.md)
-for triage.
+Feed failure videos + HAR to `bug-report-from-failure` (in the
+qa-defect-management plugin) for triage.
 
 ## CI integration
 
@@ -243,7 +240,7 @@ jobs:
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Credentials in code | Token leak | Env vars / secret store |
-| All tests on every browser combo | Slow + expensive (plan-limited) | Tier the matrix - see [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md) |
+| All tests on every browser combo | Slow + expensive (plan-limited) | Tier the matrix - see `browser-matrix-strategy-reference` |
 | Missing buildName | Sessions un-grouped in dashboard | Always set `buildName` to CI run / PR identifier |
 | No session-status update | Dashboard pass/fail rate inaccurate | Always set session status before quit |
 | BrowserStackLocal not stopped | Stale tunnels accumulate | Always `daemon stop` after test |
@@ -275,11 +272,8 @@ jobs:
 - W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Composes:
-  [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).
+  `browser-matrix-strategy-reference`.
 - Sibling skills:
   [`saucelabs-automate`](../saucelabs-automate/SKILL.md),
   [`lambdatest-automate`](../lambdatest-automate/SKILL.md),
-  [`selenium-grid-4-runner`](../../../qa-compatibility/skills/selenium-grid-4-runner/SKILL.md).
-- Existing orchestrator:
-  [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md) - routes between local Selenium Grid + BrowserStack + Sauce
-  Labs + LambdaTest.
+  `selenium-grid-4-runner`.

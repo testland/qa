@@ -42,7 +42,7 @@ If behavior is stateless rule logic (same input always gives the same
 output), use
 [`decision-table-test-design`](../decision-table-test-design/SKILL.md)
 instead. For a broad multi-lens first pass over a story, use
-[`test-case-ideation-from-story`](../../../qa-process/skills/test-case-ideation-from-story/SKILL.md);
+`test-case-ideation-from-story` (in the qa-process plugin);
 this skill is the deep walkthrough of one technique.
 
 ## Worked example spec (used in every step)
@@ -275,6 +275,6 @@ rejected, account remains **Active** (counter restarted at 0, not 3).
   [`manual-test-script-author`](../manual-test-script-author/SKILL.md)
   (expands derived cases into runnable scripts).
 - Neighbors this skill is distinct from:
-  [`test-case-ideation-from-story`](../../../qa-process/skills/test-case-ideation-from-story/SKILL.md),
-  [`boundary-value-generator`](../../../qa-test-data/skills/boundary-value-generator/SKILL.md),
-  [`test-case-anatomy-reference`](../../../qa-test-management/skills/test-case-anatomy-reference/SKILL.md).
+  `test-case-ideation-from-story`,
+  `boundary-value-generator`,
+  `test-case-anatomy-reference`.

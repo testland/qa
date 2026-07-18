@@ -31,8 +31,7 @@ contract by emitting verification cells.
 [learn-pwa]: https://web.dev/learn/pwa/installation
 [customize-install]: https://web.dev/articles/customize-install
 
-Distinct from
-[`qa-modern-web/pwa-install-flow-tests`](../../../qa-modern-web/skills/pwa-install-flow-tests/SKILL.md):
+Distinct from `pwa-install-flow-tests` (in the qa-modern-web plugin):
 that skill authors install-flow tests as a generic wrapper.
 This builder generates the *per-PWA* suite from the project's
 actual manifest + SW + page handler - the artifact you check into
@@ -447,9 +446,8 @@ the four classes of install regression most teams hit:
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
   [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md),
   [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md).
-- Differentiation:
-  [`qa-modern-web/pwa-install-flow-tests`](../../../qa-modern-web/skills/pwa-install-flow-tests/SKILL.md)
-  is the generic pattern wrapper. This builder emits the
+- Differentiation: `pwa-install-flow-tests` is the generic pattern
+  wrapper. This builder emits the
   *per-PWA* suite tied to the project's actual manifest /
   handlers - the checked-in artifact, not the pattern reference.
 - Sibling builders:

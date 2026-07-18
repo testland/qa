@@ -443,7 +443,7 @@ fails before `dispose()` or `close()` is called.
   headers for the SSE endpoint need separate HTTP-layer tests (e.g.,
   `supertest`).
 - **Does not cover schema-contract drift.** Pair with
-  [`qa-contract-testing/graphql-schema-regression`](../../../qa-contract-testing/skills/graphql-schema-regression/SKILL.md)
+  `graphql-schema-regression` (in the qa-contract-testing plugin)
   to catch subscription field renames between provider and consumer.
 
 ## References
@@ -465,4 +465,4 @@ fails before `dispose()` or `close()` is called.
 - Sibling skill (Yoga transport, including SSE via Yoga):
   [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md).
 - Contract-drift cross-plugin:
-  [`qa-contract-testing/graphql-schema-regression`](../../../qa-contract-testing/skills/graphql-schema-regression/SKILL.md).
+  `graphql-schema-regression`.

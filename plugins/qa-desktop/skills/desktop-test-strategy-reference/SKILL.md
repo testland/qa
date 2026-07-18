@@ -195,7 +195,7 @@ Cross-references to per-tool SKILLs:
 ## Locator strategy across backends
 
 The portable lesson from web E2E (per
-[`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)) - **accessibility-first locators** - carries directly over: every
+`playwright-testing` in the qa-web-e2e plugin) - **accessibility-first locators** - carries directly over: every
 desktop backend resolves elements through the same accessibility
 tree assistive technology uses.
 
@@ -230,7 +230,7 @@ Cross-references for the upstream + downstream slots:
 
 - Unit testing - see the per-language `qa-unit-tests-*` plugins.
 - Visual regression - see
-  [`qa-visual-regression`](../../../qa-visual-regression/) for
+  `qa-visual-regression` for
   desktop screenshot comparison patterns.
 - CI integration - desktop runners cost more than web runners;
   see the `winappdriver` and `xctest-mac-desktop` SKILLs for
@@ -475,8 +475,8 @@ scaling lands in GNOME 47+ but is still maturing.
   `at-spi-linux`, `qt-test-framework`, `electron-playwright`,
   `electron-spectron`.
 - Web-side neighbour:
-  [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md) - DOM-driving for browser apps (the contrast surface for
+  `playwright-testing` - DOM-driving for browser apps (the contrast surface for
   desktop drivers).
 - Architecture-pattern sibling:
-  [`object-model-patterns`](../../../qa-test-review/skills/object-model-patterns/SKILL.md) - Pattern 7 (Screen Object) is the desktop analog of POM and
+  `object-model-patterns` (in the qa-test-review plugin) - Pattern 7 (Screen Object) is the desktop analog of POM and
   cites this skill for the backend substrate.

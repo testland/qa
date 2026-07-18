@@ -204,7 +204,7 @@ test cases.
 
 - If verdict is OK → [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md) for Gherkin output.
 - If verdict is BLOCK and the claim is a non-functional requirement
-  (perf, a11y, security) → [`nfr-extractor`](../skills/nfr-extractor/SKILL.md) to formalize.
+  (perf, a11y, security) → [`non-functional-requirement-extractor`](../skills/non-functional-requirement-extractor/SKILL.md) to formalize.
 - If verdict is BLOCK on data-pipeline claims → [`data-contract-extractor`](../skills/data-contract-extractor/SKILL.md) to formalize the schema.
 
 ## References

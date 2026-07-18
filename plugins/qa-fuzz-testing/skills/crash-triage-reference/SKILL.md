@@ -1,6 +1,6 @@
 ---
 name: crash-triage-reference
-description: "Pure-reference catalog for manually triaging individual fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; and minimizing reproducers with -minimize_crash. Use when you need to understand what a specific crash means, build exploitability intuition, or manually work a small set of findings. For automated bulk triage across a full artifact directory, use fuzz-findings-critic instead."
+description: "Pure-reference catalog for manually triaging individual fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; and minimizing reproducers with -minimize_crash. Use when you need to understand what a specific crash means, build exploitability intuition, or manually work a small set of findings. For automated bulk triage across a full artifact directory, run automated findings triage instead."
 ---
 
 # crash-triage-reference
@@ -11,9 +11,8 @@ Pure-reference catalog for working with fuzzer crash artifacts produced by
 libFuzzer, AFL++, or cargo-fuzz campaigns using clang sanitisers. Covers
 reading crash output from ASan, UBSan, and MSan; distinguishing
 LIKELY-EXPLOITABLE from BENIGN findings; collapsing duplicates by stack-hash;
-and minimizing reproducers. Consumed by the
-[`fuzz-findings-critic`](../../agents/fuzz-findings-critic.md) agent, which
-automates these steps across a full artifact directory. For sanitiser build
+and minimizing reproducers. These steps can be automated across a full
+artifact directory for bulk triage. For sanitiser build
 flags and compatibility, see
 [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
 
@@ -288,5 +287,3 @@ in the filename.
   (build flags, sanitiser compatibility),
   [`corpus-management-reference`](../corpus-management-reference/SKILL.md)
   (corpus discipline, seed selection)
-- Consumed by:
-  [`fuzz-findings-critic`](../../agents/fuzz-findings-critic.md)

@@ -1,6 +1,6 @@
 ---
 name: visual-baseline-gate
-description: "Consumes visual-diff-classifier JSON and a reviewer-signed acceptance log to produce a single go/no-go CI verdict for visual regression. Blocks when intentional baseline changes lack a non-author reviewer sign-off or when regressions are present, and emits a markdown + JSON artifact for the CI step. Use this skill when the gate's input is pre-classified diff data and the enforcement concern is reviewer approval, not when the goal is fanning out to multiple engines (use visual-ci-gate-orchestrator for that)."
+description: "Consumes pre-classified visual-diff JSON and a reviewer-signed acceptance log to produce a single go/no-go CI verdict for visual regression. Blocks when intentional baseline changes lack a non-author reviewer sign-off or when regressions are present, and emits a markdown + JSON artifact for the CI step. Use this skill when the gate's input is pre-classified diff data and the enforcement concern is reviewer approval, not when the goal is fanning out to multiple engines (use a multi-engine CI orchestrator for that)."
 ---
 
 # visual-baseline-gate
@@ -26,14 +26,13 @@ go/no-go verdict.
 ## When to use
 
 - The team uses two or more visual engines and wants one CI gate
-  (similar in motivation to
-  [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md)
-  for data quality).
+  (similar in motivation to `data-quality-gate` in the
+  qa-data-quality plugin, for data quality).
 - The team wants to enforce a "reviewer approval" rule on baseline
   updates - i.e. a `--update-snapshots` commit by the PR author cannot
   self-approve a baseline change to a critical component.
-- The team wants the [`visual-diff-classifier`](../../agents/visual-diff-classifier.md)
-  output to become CI-blocking rather than advisory.
+- The team wants the classified visual-diff output to become
+  CI-blocking rather than advisory.
 
 If the project uses one engine only and trusts engine-native review
 (e.g. all changes go through Chromatic UI approval), prefer the
@@ -44,9 +43,8 @@ engine's native CI integration - see the matching engine's
 
 The gate consumes two inputs:
 
-1. **Classification artifact** - JSON output from the
-   [`visual-diff-classifier`](../../agents/visual-diff-classifier.md)
-   agent, one record per snapshot:
+1. **Classification artifact** - the pre-classified diff JSON, one
+   record per snapshot:
 
    ```json
    {
@@ -134,9 +132,8 @@ from someone other than the last committer" branch protection.
 
 ## Step 4 - Emit the artifact
 
-Markdown summary (matches the
-[`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md)
-shape for cross-domain consistency):
+Markdown summary (matches the `data-quality-gate` shape for
+cross-domain consistency):
 
 ```markdown
 # Visual Baseline Gate - verdict: NO-GO
@@ -179,7 +176,7 @@ A no-go verdict exits non-zero so CI halts.
 import json, os, sys, yaml
 from pathlib import Path
 
-CLASS_PATH = Path("visual-classifications.json")  # output of visual-diff-classifier
+CLASS_PATH = Path("visual-classifications.json")  # output of the visual-diff classification step
 ACCEPT_PATH = Path(".visual-acceptance.yml")
 
 if not CLASS_PATH.exists():
@@ -206,10 +203,10 @@ sys.exit(0 if verdict == "go" else 1)
 ```
 
 CI wiring (after each engine has produced its diff manifest, and after
-the visual-diff-classifier has produced `visual-classifications.json`):
+the visual-diff classification step has produced `visual-classifications.json`):
 
 ```yaml
-- name: Run visual-diff-classifier (advisory)
+- name: Run visual-diff classification (advisory)
   run: |
     # produces visual-classifications.json
     ...
@@ -231,10 +228,9 @@ the visual-diff-classifier has produced `visual-classifications.json`):
 
 ## References
 
-- [`visual-diff-classifier`](../../agents/visual-diff-classifier.md) - produces the classification input.
 - [`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md)
 - [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
 - [`playwright-snapshots`](../playwright-snapshots/SKILL.md)
 - [`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)
 - [`visual-baseline-conventions`](../visual-baseline-conventions/SKILL.md) - the conventions this gate enforces.
-- [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md) - sibling gate skill for data-quality results, same artifact shape.
+- `data-quality-gate` - sibling gate skill for data-quality results, same artifact shape.

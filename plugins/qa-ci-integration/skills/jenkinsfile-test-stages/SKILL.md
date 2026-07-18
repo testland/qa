@@ -271,7 +271,7 @@ stage('Test') {
 ```
 
 Use sparingly - retries hide flake. Prefer
-[`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
+`flaky-test-quarantine` (in the qa-flake-triage plugin).
 
 ## Anti-patterns
 
@@ -301,4 +301,4 @@ Use sparingly - retries hide flake. Prefer
   [`gitlab-ci-test-jobs`](../gitlab-ci-test-jobs/SKILL.md),
   [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
   alternatives.
-- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - JUnit XML parser.
+- `junit-xml-analysis` - JUnit XML parser.

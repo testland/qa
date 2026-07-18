@@ -201,7 +201,5 @@ Or restart the container between test workflows.
   in-process unit pattern
 - [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister
   skill for Zipkin-using teams
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) - 
-  adversarial reviewer
 
 [Jaeger getting-started docs]: https://www.jaegertracing.io/docs/latest/getting-started/

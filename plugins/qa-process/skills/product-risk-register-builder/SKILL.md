@@ -12,9 +12,8 @@ risks** - risks tied to the product's architecture, domain, and
 user base that persist across releases. Distinct from the
 per-release risk matrix
 ([`risk-matrix`](../risk-matrix/SKILL.md)) which captures
-release-scoped risks. Both feed
-[`risk-based-test-selector`](../../agents/risk-based-test-selector.md)
-and [`risk-based-test-planner`](../../agents/risk-based-test-planner.md).
+release-scoped risks. Both feed risk-based test selection and
+planning.
 
 Per ISTQB CTAL-TM syllabus chapter 5 on risk-based testing and
 ISO 31000:2018 (risk management) - cite by stable ID; ISO behind
@@ -192,9 +191,5 @@ top areas to invest in.
 - Composes:
   [`risk-matrix`](../risk-matrix/SKILL.md) (release-scoped),
   [`risk-coverage-mapper`](../risk-coverage-mapper/SKILL.md).
-- Consumed by:
-  [`risk-based-test-selector`](../../agents/risk-based-test-selector.md),
-  [`risk-based-test-planner`](../../agents/risk-based-test-planner.md),
-  [`risk-assessment-critic`](../../agents/risk-assessment-critic.md).
 - Sibling skill:
   [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md) - different scope (project-level: schedule, env, people).

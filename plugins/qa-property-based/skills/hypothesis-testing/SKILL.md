@@ -280,5 +280,5 @@ permanently.
   [`jqwik-testing`](../jqwik-testing/SKILL.md),
   [`quickcheck-testing`](../quickcheck-testing/SKILL.md) - 
   per-language siblings with similar shape.
-- [`schemathesis-fuzzing`](../../../qa-api-testing/skills/schemathesis-fuzzing/SKILL.md) - applies PBT to API schemas (different layer; same conceptual
+- `schemathesis-fuzzing` - applies PBT to API schemas (different layer; same conceptual
   framework).

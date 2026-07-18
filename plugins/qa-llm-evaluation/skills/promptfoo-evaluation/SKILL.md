@@ -278,4 +278,3 @@ branch. Caching reuses LLM responses for unchanged tests (per
 - [pf-cache][pf-cache] - caching mechanics
 - [pf-gh][pf-gh] - install commands
 - [`openai-evals`](../openai-evals/SKILL.md), [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md), [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - sister tools (different framework styles)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - adversarial reviewer for any of the above

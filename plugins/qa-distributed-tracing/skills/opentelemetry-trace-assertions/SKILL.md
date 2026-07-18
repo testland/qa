@@ -201,8 +201,6 @@ silently changing meaning between releases.
 - [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md),
   [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister
   query-based skills for end-to-end verification
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) - 
-  adversarial reviewer
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/
 [Python SDK trace docs]: https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.export.html

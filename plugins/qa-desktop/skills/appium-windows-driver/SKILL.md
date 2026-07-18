@@ -213,7 +213,7 @@ pytest tests/windows --junitxml=reports/windows-junit.xml
 ```
 
 JUnit XML output feeds
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+`junit-xml-analysis` (in the qa-test-reporting plugin)
 for the cross-runner aggregation pipeline.
 
 ## Step 9 - CI integration
@@ -297,4 +297,4 @@ work without extra display setup.
 - Sibling skill (direct service): [`winappdriver`](../winappdriver/SKILL.md).
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
-- Downstream: [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+- Downstream: `junit-xml-analysis`.

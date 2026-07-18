@@ -20,8 +20,7 @@ Complementary skills:
 [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md),
 [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md),
 [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md).
-After adopting a baseline, the
-[`secrets-finding-triager`](../../agents/secrets-finding-triager.md) agent
+After adopting a baseline, the finding-triage step
 applies `.secrets-waivers.yaml` at verdict time.
 
 ---
@@ -177,7 +176,7 @@ waivers:
     created: "2026-06-04"
 ```
 
-The `secrets-finding-triager` agent validates all three mandatory fields
+The finding-triage step validates all three mandatory fields
 (`expires`, `approved_by`, `reason`) at verdict time and rejects malformed
 or expired waivers, keeping the finding active.
 
@@ -259,7 +258,7 @@ kingfisher scan . --confidence low \
 ## Step 4 - Waiver lifecycle
 
 Each waiver entry in `.secrets-waivers.yaml` has a defined life. The
-`secrets-finding-triager` agent enforces expiry at scan time; this step
+triage step enforces expiry at scan time; this step
 defines the human process.
 
 ### Approval authority
@@ -286,7 +285,7 @@ Before `expires:` lapses, the waiver owner must:
 2. Update `expires:` to a new date and `approved_by:` to current approver.
 3. Open a PR so the update is reviewed before the old date passes.
 
-An expired waiver is treated by the triager as if it does not exist - the
+An expired waiver is treated by the triage step as if it does not exist - the
 underlying finding becomes active and blocks the next scan verdict.
 
 ---
@@ -380,8 +379,8 @@ gitleaks git --report-format json \
 - Kingfisher baseline fingerprints use the secret value + normalized path
   (per [kf][kf]); a renamed file retains its suppression, but a changed
   secret value creates a new fingerprint and re-fires.
-- `.secrets-waivers.yaml` is a governance layer only; the `secrets-finding-
-  triager` agent reads it at verdict time - it does not automatically
+- `.secrets-waivers.yaml` is a governance layer only; the finding-triage
+  step reads it at verdict time - it does not automatically
   update per-scanner config files. Sync per-scanner config (Step 3) and
   the waiver file together.
 
@@ -399,5 +398,3 @@ gitleaks git --report-format json \
   TruffleHog workflow
 - [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) - per-scanner
   Kingfisher workflow
-- [`secrets-finding-triager`](../../agents/secrets-finding-triager.md) -
-  multi-scanner verdict agent; reads `.secrets-waivers.yaml` at gate time

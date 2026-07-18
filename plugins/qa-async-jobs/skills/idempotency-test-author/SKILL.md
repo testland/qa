@@ -224,7 +224,7 @@ For each at-least-once handler:
   one-time SMS"); document and accept the risk, or design a
   delivery-receipt protocol.
 - Distributed-transaction idempotency is out of scope; see
-  [`saga-transaction-tests`](../../../qa-saga-cqrs/skills/saga-transaction-tests/SKILL.md)
+  `saga-transaction-tests`
   in qa-saga-cqrs.
 
 ## References
@@ -239,4 +239,4 @@ For each at-least-once handler:
   redelivery semantics need idempotent consumers
 - [`cron-job-test-author`](../cron-job-test-author/SKILL.md) - cron
   jobs need idempotency for safe overlap recovery
-- [`webhook-delivery-tester`](../../../qa-notifications/skills/webhook-delivery-tester/SKILL.md) - cross-plugin: webhook receivers need idempotency
+- `webhook-delivery-tester` (in the qa-notifications plugin) - webhook receivers need idempotency

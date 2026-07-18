@@ -1,11 +1,11 @@
 ---
 name: spec-to-suite-orchestrator
-description: "Action-taking orchestrator that chains the qa-shift-left components - testability-reviewer → acceptance-criteria-extractor → nfr-extractor → threat-model-from-spec (when applicable) → data-contract-extractor (when applicable) → bug-repro-builder for initial stubs - to turn a single feature spec into a complete planning-and-test artifact set in one pass. Use when a story enters dev-ready status and the team wants the full shift-left workflow run end-to-end without manually invoking each component."
+description: "Action-taking orchestrator that chains the qa-shift-left components - testability-reviewer → acceptance-criteria-extractor → non-functional-requirement-extractor → threat-model-from-spec (when applicable) → data-contract-extractor (when applicable) → bug-repro-builder for initial stubs - to turn a single feature spec into a complete planning-and-test artifact set in one pass. Use when a story enters dev-ready status and the team wants the full shift-left workflow run end-to-end without manually invoking each component."
 tools: "Read, Write, Edit, Grep, Glob, Bash(npm test *), Bash(npx playwright test *)"
 model: sonnet
 skills:
   - acceptance-criteria-extractor
-  - nfr-extractor
+  - non-functional-requirement-extractor
   - data-contract-extractor
 ---
 
@@ -17,7 +17,7 @@ The orchestrator runs five stages, each gated by the previous:
 
 ```
 Stage 1: testability-reviewer         → OK / REVIEW / BLOCK
-Stage 2: AC + NFR extraction (parallel) → acceptance-criteria-extractor + nfr-extractor
+Stage 2: AC + NFR extraction (parallel) → acceptance-criteria-extractor + non-functional-requirement-extractor
 Stage 3: optional sub-extractors       → threat-model-from-spec, data-contract-extractor
 Stage 4: test stubs                    → bug-repro-builder (failing stubs) + gate skills
 Stage 5: artifact bundle               → docs/specs/<story-id>/
@@ -35,7 +35,7 @@ Run [`testability-reviewer`](./testability-reviewer.md). Per its verdict:
 
 ## Stage 2 - AC + NFR extraction
 
-Run in parallel: [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md) (Gherkin or plain-list AC) and [`nfr-extractor`](../skills/nfr-extractor/SKILL.md) (threshold-bound NFRs).
+Run in parallel: [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md) (Gherkin or plain-list AC) and [`non-functional-requirement-extractor`](../skills/non-functional-requirement-extractor/SKILL.md) (threshold-bound NFRs).
 
 If either extractor flags gaps (implicit preconditions, missing thresholds), collate them into a single "questions for the author" section and stop short of Stages 3-5 until resolved.
 
@@ -79,7 +79,7 @@ Write `docs/specs/<story-id>/` containing: `spec.md`, `testability-review.md`, `
 |---|---|---|
 | 1 | testability-reviewer | OK / REVIEW / BLOCK |
 | 2a | acceptance-criteria-extractor | N scenarios; M flags |
-| 2b | nfr-extractor | K NFRs; J threshold gaps |
+| 2b | non-functional-requirement-extractor | K NFRs; J threshold gaps |
 | 3a | threat-model-from-spec | (run / skipped); P threats |
 | 3b | data-contract-extractor | (run / skipped); Q gaps |
 | 4 | bug-repro-builder + gates | R stubs; S gates referenced |
@@ -108,6 +108,6 @@ Gap flagged → return to author with combined questions; re-run after answers l
 
 ## References
 
-- Sibling components: [`testability-reviewer`](./testability-reviewer.md), [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md), [`nfr-extractor`](../skills/nfr-extractor/SKILL.md), [`threat-model-from-spec`](./threat-model-from-spec.md), [`data-contract-extractor`](../skills/data-contract-extractor/SKILL.md), [`definition-of-done-checker`](./definition-of-done-checker.md).
+- Sibling components: [`testability-reviewer`](./testability-reviewer.md), [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md), [`non-functional-requirement-extractor`](../skills/non-functional-requirement-extractor/SKILL.md), [`threat-model-from-spec`](./threat-model-from-spec.md), [`data-contract-extractor`](../skills/data-contract-extractor/SKILL.md), [`definition-of-done-checker`](./definition-of-done-checker.md).
 - Stage 4 stub generator: [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md).
 - Downstream consumer of data contracts: [`data-quality-engineer`](../../qa-roles/agents/data-quality-engineer.md).

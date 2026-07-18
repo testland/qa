@@ -87,7 +87,7 @@ Mitigation:
 - Use UTC cron expressions when possible.
 - For local-time business hours, accept the irregularity or
   schedule outside transition hours (04:00 is safe everywhere).
-- Per [`qa-async-jobs/cron-job-test-author`](../../../qa-async-jobs/skills/cron-job-test-author/SKILL.md):
+- Per `cron-job-test-author` (in the qa-async-jobs plugin):
   always test DST + leap-day edge cases.
 
 ### Billing periods
@@ -190,7 +190,7 @@ fixture and refresh annually.
   [`leap-second-reference`](../leap-second-reference/SKILL.md),
   [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
 - Cross-plugin:
-  [`qa-async-jobs/cron-job-test-author`](../../../qa-async-jobs/skills/cron-job-test-author/SKILL.md).
+  `cron-job-test-author` (qa-async-jobs).
 - Consumed by:
   [`libfaketime-c`](../libfaketime-c/SKILL.md),
   [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),

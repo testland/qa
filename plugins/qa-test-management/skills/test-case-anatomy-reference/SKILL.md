@@ -14,8 +14,7 @@ list comes from ISO/IEC/IEEE 29119-3:2021 §6, augmented by ISTQB
 CTAL-TM's specification-based-testing additions.
 
 This skill is a **pure reference** consumed by
-[`test-case-quality-critic`](../../agents/test-case-quality-critic.md),
-[`traceability-matrix-builder`](../traceability-matrix-builder/SKILL.md),
+[`traceability-matrix-builder`](../traceability-matrix-builder/SKILL.md)
 and the five platform-specific case-management skills.
 
 ## When to use
@@ -223,5 +222,3 @@ one-to-one and which are one-to-many:
   [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
   [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
-- Consumed by:
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md).

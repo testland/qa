@@ -223,5 +223,3 @@ assert result["answer_relevancy"] >= 0.80
 - [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
   [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md) - 
   sister tools (different framework styles)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
-  adversarial reviewer

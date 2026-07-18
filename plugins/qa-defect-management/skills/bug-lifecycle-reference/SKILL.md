@@ -1,6 +1,6 @@
 ---
 name: bug-lifecycle-reference
-description: "Pure-reference catalog of defect lifecycle states and transitions. Defines the ISTQB-canonical states (new / open / assigned / in-progress / fixed / verified / closed / reopened / deferred / rejected / duplicate) and the transitions between them, distinguishes the ISTQB terms (error → fault / defect → failure), maps the lifecycle to the standard Jira / Linear / GitHub Issues workflows, and cites IEEE 1044-2009 and ISO/IEC/IEEE 29119-3 for the canonical anchors. Use as the lifecycle vocabulary for the bug-report-critic, duplicate-defect-finder, and the platform-workflow skills."
+description: "Pure-reference catalog of defect lifecycle states and transitions. Defines the ISTQB-canonical states (new / open / assigned / in-progress / fixed / verified / closed / reopened / deferred / rejected / duplicate) and the transitions between them, distinguishes the ISTQB terms (error → fault / defect → failure), maps the lifecycle to the standard Jira / Linear / GitHub Issues workflows, and cites IEEE 1044-2009 and ISO/IEC/IEEE 29119-3 for the canonical anchors. Use as the lifecycle vocabulary for bug-report review, duplicate detection, and the platform-workflow skills."
 ---
 
 # bug-lifecycle-reference
@@ -19,8 +19,7 @@ for state-transition logic.
   vocabulary.
 - Reviewing a bug report's current state against expected
   transitions (e.g., is "Closed" appropriate before verification?).
-- Onboarding a tester to the vocabulary used by
-  [`bug-report-critic`](../../agents/bug-report-critic.md).
+- Onboarding a tester to the canonical defect vocabulary.
 
 ## ISTQB terms - error, fault, defect, failure, anomaly
 
@@ -219,10 +218,8 @@ The platform-workflow skills enforce these:
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md),
   [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).
 - Consumed by:
-  [`bug-report-critic`](../../agents/bug-report-critic.md),
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md),
+  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)
   and platform-workflow skills.
-- Sibling-plugin neighbour:
-  [`bug-report-template`](../../../qa-bug-repro/skills/bug-report-template/SKILL.md)
+- Sibling-plugin neighbour: `bug-report-template`
   (qa-bug-repro is reproduction-focused; this plugin is workflow /
   lifecycle / taxonomy-focused).

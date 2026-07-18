@@ -20,7 +20,7 @@ quotas; Chrome does not. This skill tests the browser side
 `pushsubscriptionchange`, `unsubscribe`) plus the server-side push
 protocol per [rfc8030] and VAPID auth per [rfc8292]. Cross-channel
 push including native APNs / FCM is
-[`qa-notifications/push-notification-test-author`](../../../qa-notifications/skills/push-notification-test-author/SKILL.md)
+`push-notification-test-author` (in the qa-notifications plugin)
 territory.
 
 [w3c-push]: https://www.w3.org/TR/push-api/
@@ -448,8 +448,8 @@ service.
   re-subscribe defensively.
 - **Cross-channel push (mobile APNs / FCM, native iOS / Android
   SDKs)** is not in scope here. See
-  [`qa-notifications/push-notification-test-author`](../../../qa-notifications/skills/push-notification-test-author/SKILL.md)
-  for those flows. This skill is browser-only.
+  `push-notification-test-author` for those flows. This skill is
+  browser-only.
 
 ## References
 
@@ -463,8 +463,7 @@ service.
   claims, Authorization header format) - [rfc8292].
 - web.dev - Notifications (the showNotification options reference
   Step 4 paired with) - [web-dev-notifications].
-- Differentiation:
-  [`qa-notifications/push-notification-test-author`](../../../qa-notifications/skills/push-notification-test-author/SKILL.md)
+- Differentiation: `push-notification-test-author`
   covers cross-channel push (Web Push + APNs + FCM in one suite).
   This skill covers *only* browser web-push subscription
   lifecycle: the four-call subscribe / push-event / change /

@@ -1,6 +1,6 @@
 ---
 name: gherkin-from-stories
-description: "Build-an-X workflow that converts user stories into Gherkin scenarios - extracts the actor / capability / value triple from \"As a … I want … so that …\", maps acceptance criteria to Scenario blocks, identifies parameterizable axes for Scenario Outlines, and emits a Feature file ready for `bdd-step-library-curator`-curated step definitions. Sister to `acceptance-criteria-extractor` (qa-shift-left) - that one handles the AC layer; this skill operates at the user-story layer and produces Gherkin directly. Emits Gherkin only: no step definition stubs and no runner detection. For a full runnable artifact (Feature file plus scaffolded step definitions), use bdd-scenario-author, which wraps this skill."
+description: "Build-an-X workflow that converts user stories into Gherkin scenarios - extracts the actor / capability / value triple from \"As a … I want … so that …\", maps acceptance criteria to Scenario blocks, identifies parameterizable axes for Scenario Outlines, and emits a Feature file ready for `bdd-step-library-curator`-curated step definitions. Sister to `acceptance-criteria-extractor` (qa-shift-left) - that one handles the AC layer; this skill operates at the user-story layer and produces Gherkin directly. Emits Gherkin only: no step definition stubs and no runner detection. For a full runnable artifact (Feature file plus scaffolded step definitions), follow this skill with step-definition scaffolding for the detected runner."
 ---
 
 # gherkin-from-stories
@@ -13,7 +13,7 @@ The shift-left flow:
 User story → Acceptance Criteria → Gherkin Feature → Step definitions → Tests
 ```
 
-[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+`acceptance-criteria-extractor` (in the qa-shift-left plugin)
 covers the AC layer (it can emit Gherkin too). This skill is a
 **direct user-story → Gherkin** path for teams that author
 Gherkin features as the primary artifact (skipping the
@@ -29,7 +29,7 @@ intermediate AC step).
   stories into Gherkin in bulk.
 
 If the team uses AC docs as primary, use
-[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md);
+`acceptance-criteria-extractor` (in the qa-shift-left plugin);
 this skill is the user-story-first variant.
 
 ## Step 1 - Extract the user-story triple
@@ -110,7 +110,7 @@ Outline:
       | WELCOME10*2  | Already applied       |
 ```
 
-Per [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+Per `acceptance-criteria-extractor` (in the qa-shift-left plugin)
 Step 2: "Use Scenario Outline whenever the underlying logic is
 identical and only the data varies."
 
@@ -160,14 +160,12 @@ The Gherkin Feature can't be authored without these answers.
 ```
 
 Same flag-and-ask pattern as
-[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+`acceptance-criteria-extractor` (in the qa-shift-left plugin)
 Step 6.
 
 ## Step 6 - Validate Gherkin style
 
-The output should pass
-[`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md)
-checks:
+The output should pass these style checks:
 
 - Declarative steps ("I apply a promo") not imperative ("I click
   the button with id #apply-promo-btn").
@@ -229,7 +227,6 @@ conventions. Pair with the framework's runner per the team's stack
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - sibling: AC-first variant.
+- `acceptance-criteria-extractor` (in the qa-shift-left plugin) - sibling: AC-first variant.
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - output-quality check.
 - [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md) - sibling: ATDD-flavored variant.

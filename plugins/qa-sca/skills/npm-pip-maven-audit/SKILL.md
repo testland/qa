@@ -222,7 +222,7 @@ in the repo.
 
 ## Step 8 - Output aggregation
 
-For [`sca-prioritizer`](../../agents/sca-prioritizer.md), output
+For downstream aggregation, output
 each tool's JSON to a stable filename:
 
 ```bash
@@ -232,7 +232,7 @@ mvn dependency-check:check -Dformats=JSON
 cargo audit --json > sca-cargo.json || true
 ```
 
-The triager normalizes each tool's schema + dedupes cross-tool
+The aggregation step normalizes each tool's schema + dedupes cross-tool
 findings.
 
 ## Anti-patterns
@@ -273,4 +273,3 @@ findings.
   [`osv-scanner`](../osv-scanner/SKILL.md),
   [`dependabot-config`](../dependabot-config/SKILL.md),
   [`renovate-config`](../renovate-config/SKILL.md) - sister tools
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

@@ -225,8 +225,6 @@ Maintain `docs/observability/INDEX.md`:
 - [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md),
   [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skills
   that enforce spec conformance
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) - agent that
-  audits spec ↔ implementation drift
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/
 [OpenTelemetry HTTP semantic conventions]: https://opentelemetry.io/docs/specs/semconv/http/http-spans/

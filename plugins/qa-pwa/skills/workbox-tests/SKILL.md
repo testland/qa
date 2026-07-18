@@ -14,7 +14,7 @@ keywords:
 ## Overview
 
 This skill tests Workbox-built service workers - distinct from
-[`sw-cache-strategy-author`](../../../qa-modern-web/skills/sw-cache-strategy-author/SKILL.md)
+`sw-cache-strategy-author` (in the qa-modern-web plugin)
 which *authors* the strategies. Here we assert that an
 already-shipped Workbox SW behaves the way its recipes claim, using
 the `workbox-precaching` / `workbox-routing` / `workbox-strategies`
@@ -401,10 +401,9 @@ without test coverage.
   `googleFontsCache`, `offlineFallback`, `warmStrategyCache` with
   defaults) - [wb-recipes].
 - Workbox repo (v7.4.1 release, May 2026) - [wb-gh].
-- Differentiation:
-  [`qa-modern-web/service-worker-tests`](../../../qa-modern-web/skills/service-worker-tests/SKILL.md)
+- Differentiation: `service-worker-tests`
   covers generic `context.serviceWorkers()` Playwright patterns;
-  [`qa-modern-web/sw-cache-strategy-author`](../../../qa-modern-web/skills/sw-cache-strategy-author/SKILL.md)
+  `sw-cache-strategy-author`
   authors strategies. This skill assumes Workbox was already used
   and tests its specific recipe behavior.
 - Sibling skills:

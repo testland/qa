@@ -216,7 +216,7 @@ ubuntu-latest has it pre-installed.
 - Custom auth-flow tests require browser automation (Playwright /
   Selenium) for full coverage.
 - Performance tests of Keycloak (token-issuance throughput) are out
-  of scope; use [`k6-load-testing`](../../../qa-load-testing/skills/k6-load-testing/SKILL.md).
+  of scope; use `k6-load-testing` (in the qa-load-testing plugin).
 - Per [kc-admin][kc-admin], CLI / Admin REST API command examples
   evolve per release; cite the version in test setup.
 

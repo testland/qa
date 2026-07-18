@@ -156,5 +156,3 @@ and post via gh CLI (no built-in action).
 - [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
   [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) - 
   lower-friction alternatives for new projects
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
-  adversarial reviewer

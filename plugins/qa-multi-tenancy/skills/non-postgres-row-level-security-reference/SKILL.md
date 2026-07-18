@@ -1,5 +1,5 @@
 ---
-name: non-postgres-rls-reference
+name: non-postgres-row-level-security-reference
 description: "Pure-reference catalog of row/tenant isolation mechanisms for non-Postgres engines: MySQL and MariaDB (no native RLS - views with SQL SECURITY INVOKER plus app-layer enforcement), CockroachDB (native RLS via ALTER TABLE ENABLE ROW LEVEL SECURITY and CREATE POLICY, matching Postgres semantics), Vitess (keyspace sharding + vindexes route tenant writes to dedicated shards without a policy layer), and SQL Server (CREATE SECURITY POLICY with inline table-valued function filter/block predicates). Covers the isolation mechanism, tenant-context pattern, bypass risks, and test patterns for each engine. Use when designing or auditing tenant isolation on any of these four engines, or when the Postgres RLS reference does not apply."
 keywords:
   - row-level-security
@@ -12,7 +12,7 @@ keywords:
   - tenant-isolation
 ---
 
-# non-postgres-rls-reference
+# non-postgres-row-level-security-reference
 
 ## Overview
 

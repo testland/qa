@@ -230,8 +230,8 @@ input:
   page_objects: src/page-objects/
 ```
 
-The LLM generates test code per path; [`ai-test-curator`](../../agents/ai-test-curator.md)
-reviews. The model provides structure that constrains the LLM - 
+The LLM generates test code per path; review each generated test
+before merge. The model provides structure that constrains the LLM - 
 better than free-form generation.
 
 ## Step 7 - Per [mbt-wiki][mbt] caveats
@@ -279,5 +279,3 @@ paths.
   framing.
 - [`ai-test-generator`](../ai-test-generator/SKILL.md) - 
   downstream consumer of the generated paths.
-- [`ai-test-curator`](../../agents/ai-test-curator.md) - review
-  the AI-generated tests.

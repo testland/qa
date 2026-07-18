@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-manual-testing",
-  "version": "1.5.8",
-  "description": "Manual scripted + exploratory testing: 14 skills (manual-test-script-author, manual-testing-getting-started, test-execution-checklist, decision-table-test-design, state-transition-test-design, exploratory-tours-reference, bug-bash-facilitator, uat-script-author, manual-test-debrief, sbtm-reference, hiccupps-f-heuristic, sfdpot-heuristic, fcc-cuts-vids-heuristic, crusspic-stmpl-heuristic) and 3 agents (charter-coach, session-debrief-coach, test-script-quality-critic). Covers SBTM, Whittaker's seven tours, Bach + Bolton's heuristic catalogues, UAT, bug bashes, and PROOF debriefs.",
+  "version": "1.6.0",
+  "description": "Manual scripted + exploratory testing: 14 skills (manual-test-script-author, manual-testing-overview, test-execution-checklist, decision-table-test-design, state-transition-test-design, exploratory-tours-reference, bug-bash-facilitator, uat-script-author, manual-test-debrief, session-based-test-management-reference, hiccupps-f-heuristic, sfdpot-exploratory-heuristic, fcc-cuts-vids-heuristic, crusspic-stmpl-heuristic) and 3 agents (charter-coach, session-debrief-coach, test-script-quality-critic). Covers SBTM, Whittaker's seven tours, Bach + Bolton's heuristic catalogues, UAT, bug bashes, and PROOF debriefs.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

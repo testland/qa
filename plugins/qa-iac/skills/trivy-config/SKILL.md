@@ -297,7 +297,7 @@ comma-separated list from: `azure-arm`, `cloudformation`, `dockerfile`,
 |---|---|---|
 | `--exit-code 0` in CI | Misconfigs are logged but never block | Use `--exit-code 1` with `--severity HIGH,CRITICAL` (Step 3) |
 | `.trivyignore` entries without a `statement` | Invisible to reviewers; silent security debt | Use `.trivyignore.yaml` with `statement` + `expired_at` (Step 5) |
-| Running `trivy config` and `tfsec` in parallel without a unifier | Duplicate findings flood CI output | Route through [`iac-policy-checker`](../../agents/iac-policy-checker.md) |
+| Running `trivy config` and `tfsec` in parallel without a unifier | Duplicate findings flood CI output | Route both through a single unifying reporter |
 | Custom policies missing METADATA block | No severity, no title in report output | Always include METADATA with `id`, `severity`, `schemas` (Step 6) |
 | Skipping bundle updates (`--skip-check-update`) permanently | Stale checks miss new misconfig rules | Use for caching in CI; re-enable updates on a scheduled run |
 
@@ -338,5 +338,3 @@ comma-separated list from: `azure-arm`, `cloudformation`, `dockerfile`,
   to Trivy; this skill is the forward path.
 - [`checkov-policy`](../checkov-policy/SKILL.md) - Sister scanner;
   broader Python-check framework, different rule coverage.
-- [`iac-policy-checker`](../../agents/iac-policy-checker.md) - Unifies
-  Trivy + Checkov + KICS results into a single verdict.

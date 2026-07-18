@@ -259,4 +259,3 @@ jobs:
   [`grype-scanning`](../grype-scanning/SKILL.md),
   [`spdx-format`](../spdx-format/SKILL.md),
   [`trivy-image`](../trivy-image/SKILL.md) - sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent

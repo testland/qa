@@ -163,8 +163,7 @@ buf lint --error-format=json
 buf breaking --against ".git#branch=main" --error-format=json
 ```
 
-For consumption by a unified reporter (sibling to
-qa-iac/iac-policy-checker).
+For consumption by a unified reporter.
 
 ## CI integration
 
@@ -239,7 +238,7 @@ calls above work without them.
   ("field now means net price, not gross") are undetectable.
 - **No cross-service compatibility.** This is single-service
   schema lint. For service-to-service contract testing see
-  [`qa-contract-testing/protobuf-compat-checking`](../../../qa-contract-testing/skills/protobuf-compat-checking/SKILL.md).
+  `protobuf-compat-checking` (in the qa-contract-testing plugin).
 - **BSR features require auth.** Remote plugins, registry pushes,
   and `buf.build/...` baselines need a BSR account.
 - **JSON-name detection** is in WIRE_JSON only. Services that
@@ -262,4 +261,4 @@ calls above work without them.
   [`grpcurl-cli`](../grpcurl-cli/SKILL.md),
   [`grpc-mock`](../grpc-mock/SKILL.md).
 - Cross-service contract testing:
-  [`qa-contract-testing/protobuf-compat-checking`](../../../qa-contract-testing/skills/protobuf-compat-checking/SKILL.md).
+  `protobuf-compat-checking`.

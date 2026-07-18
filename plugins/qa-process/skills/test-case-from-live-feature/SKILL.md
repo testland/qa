@@ -1,6 +1,6 @@
 ---
 name: test-case-from-live-feature
-description: "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the heuristic models in `heuristic-test-design-coach` (SFDPOT, Whittaker attacks, FEW HICCUPPS, ISO 25010). Distinct from `test-case-ideation-from-story` (which requires a written story / AC) and from `exploratory-charter-author` (which produces a session charter, not a structured matrix). Use when there is no story, no AC, and no documentation - only a live feature."
+description: "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the heuristic models in `heuristic-test-design-coach` (SFDPOT, Whittaker attacks, FEW HICCUPPS, ISO 25010). Distinct from `test-case-ideation-from-story` (which requires a written story / AC) and from session-charter authoring (which produces a session charter, not a structured matrix). Use when there is no story, no AC, and no documentation - only a live feature."
 ---
 
 # test-case-from-live-feature
@@ -23,7 +23,7 @@ Do **not** use this skill when:
 
 - A written story / AC exists - use [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) (faster and more traceable to source).
 - The feature is not yet deployed (no running surface to probe) - escalate the documentation gap; heuristic test design without **any** observable surface is divination, not testing.
-- The task is open-ended exploration / learning - use [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) for a session charter instead.
+- The task is open-ended exploration / learning - produce a session charter instead.
 
 ## Step 1 - Probe the live feature
 
@@ -144,10 +144,10 @@ Confidence-tagged rows give the team an explicit gradient: `observed` cases can 
 
 The matrix is the input to the same downstream chain as [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md):
 
-1. Cases the team wants to **execute manually** → [`manual-test-script-author`](../../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).
-2. Cases the team wants to **convert to Gherkin** → [`manual-step-to-gherkin`](../../../qa-bdd/skills/manual-step-to-gherkin/SKILL.md).
-3. Cases the team wants to **automate as E2E** → [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md).
-4. Cases the team wants to **audit before committing to the suite** → [`test-case-quality-auditor`](../../agents/test-case-quality-auditor.md).
+1. Cases the team wants to **execute manually** → `manual-test-script-author`.
+2. Cases the team wants to **convert to Gherkin** → `manual-step-to-gherkin`.
+3. Cases the team wants to **automate as E2E** → author E2E test scaffolds.
+4. Cases the team wants to **audit before committing to the suite** → run a quality audit of the matrix.
 
 The matrix should also be filed with the team's PM / engineer as a **documentation byproduct** - the heuristic walk often surfaces things the team didn't realise were unspecified, and the matrix becomes the de facto spec for the feature going forward.
 
@@ -176,11 +176,9 @@ Per the same conventions as [`test-case-ideation-from-story`](../test-case-ideat
 
 ## Hand-off targets
 
-- **Manual execution script** → [`manual-test-script-author`](../../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).
-- **Gherkin scenarios** → [`manual-step-to-gherkin`](../../../qa-bdd/skills/manual-step-to-gherkin/SKILL.md) or [`gherkin-from-stories`](../../../qa-bdd/skills/gherkin-from-stories/SKILL.md).
-- **E2E test scaffolds** → [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md).
-- **Quality audit of the matrix before committing** → [`test-case-quality-auditor`](../../agents/test-case-quality-auditor.md).
-- **Negative / boundary expansion of the cases** → [`negative-test-generator`](../../../qa-test-data/skills/negative-test-generator/SKILL.md), [`boundary-value-generator`](../../../qa-test-data/skills/boundary-value-generator/SKILL.md).
+- **Manual execution script** → `manual-test-script-author`.
+- **Gherkin scenarios** → `manual-step-to-gherkin` or `gherkin-from-stories`.
+- **Negative / boundary expansion of the cases** → `negative-test-generator`, `boundary-value-generator`.
 - **When a written spec arrives mid-flow** → switch upstream to [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) and merge the two matrices.
 
 ## References

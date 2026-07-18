@@ -213,7 +213,7 @@ The secret IS exposed. Workflow:
 2. **Audit usage** - check provider audit logs for unauthorized
    use during the exposure window
 3. **Document the incident** - track in postmortem (cross-ref
-   [`post-mortem-author`](../../../qa-process/skills/post-mortem-author/SKILL.md))
+   `post-mortem-author` in the qa-process plugin)
 4. **Add the leaked-pattern to gitleaks** so future similar leaks
    are detected
 5. **Optional: rewrite git history** (BFG Repo-Cleaner / git filter-repo) - but assume the secret IS exposed regardless

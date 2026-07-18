@@ -18,8 +18,8 @@ Per [github.com/snyk/snyk][sn-gh], companion subcommands cover adjacent surfaces
 | `snyk monitor` | Continuous monitoring with new-vuln alerts |
 
 This skill focuses on `snyk test` for SCA. For SAST coverage,
-prefer the OSS-first patterns in [`semgrep-rules`](../../../qa-sast/skills/semgrep-rules/SKILL.md);
-for container scanning, see [`trivy-image`](../../../qa-sbom/skills/trivy-image/SKILL.md).
+prefer the OSS-first patterns in `semgrep-rules` (in the qa-sast plugin);
+for container scanning, see `trivy-image` (in the qa-sbom plugin).
 
 ## When to use
 
@@ -71,7 +71,7 @@ snyk test --json-file-output=snyk.json             # JSON to file
 snyk test --sarif-file-output=snyk.sarif           # SARIF for GHA
 ```
 
-The JSON / SARIF output feeds [`sca-prioritizer`](../../agents/sca-prioritizer.md)
+The JSON / SARIF output feeds downstream aggregation
 for cross-tool deduplication + prioritization.
 
 ## Step 3 - `snyk monitor` for continuous tracking
@@ -206,4 +206,3 @@ verify against current docs).
   [`renovate-config`](../renovate-config/SKILL.md),
   [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
   sister tools
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

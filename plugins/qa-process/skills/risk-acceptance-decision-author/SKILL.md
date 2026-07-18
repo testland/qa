@@ -270,5 +270,3 @@ Accepting because:
   [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),
   [`risk-matrix`](../risk-matrix/SKILL.md),
   [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md).
-- Consumed by:
-  [`risk-assessment-critic`](../../agents/risk-assessment-critic.md).

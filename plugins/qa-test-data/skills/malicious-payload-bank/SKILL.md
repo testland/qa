@@ -253,5 +253,3 @@ For each class, the canonical mitigation:
 - Unicode confusables - https://www.unicode.org/Public/security/latest/confusables.txt
 - [`negative-test-generator`](../negative-test-generator/SKILL.md) - sibling skill that generates rejection-path tests; consumes
   this catalog as input.
-- [`threat-model-from-spec`](../../../qa-shift-left/agents/threat-model-from-spec.md) - upstream agent that identifies which payload classes apply to
-  a given feature.

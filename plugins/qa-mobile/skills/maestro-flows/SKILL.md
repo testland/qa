@@ -1,6 +1,6 @@
 ---
 name: maestro-flows
-description: "Authors Maestro YAML flow files (`.maestro/*.yaml`) for mobile + web UI automation: declarative `tapOn`, `inputText`, `assertVisible`, `swipe`, supported targets (iOS, Android, Flutter, React Native, web), nested flow imports, JavaScript hooks for complex conditions. Use when the team has already chosen Maestro, is coming from an existing `.maestro/` directory, or explicitly wants YAML-declarative tests readable by non-engineers without a compile step. For framework selection or authoring tests in XCUITest / Espresso / Detox / Appium / Flutter, use mobile-driver-selector or mobile-test-author instead."
+description: "Authors Maestro YAML flow files (`.maestro/*.yaml`) for mobile + web UI automation: declarative `tapOn`, `inputText`, `assertVisible`, `swipe`, supported targets (iOS, Android, Flutter, React Native, web), nested flow imports, JavaScript hooks for complex conditions. Use when the team has already chosen Maestro, is coming from an existing `.maestro/` directory, or explicitly wants YAML-declarative tests readable by non-engineers without a compile step. For framework selection or authoring tests in XCUITest / Espresso / Detox / Appium / Flutter, use a mobile driver-selection or per-flow mobile test-authoring step instead."
 ---
 
 # maestro-flows

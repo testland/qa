@@ -151,19 +151,14 @@ migrations + run tests against the migrated schema.
   run: mvn test
 ```
 
-For full integration with [`testcontainers`](../../../qa-test-environment/skills/testcontainers/SKILL.md):
-spin up the DB via Testcontainers, then call `Flyway.configure()`
-in JUnit `@BeforeAll`.
+For full integration with `testcontainers` (in the qa-test-environment
+plugin): spin up the DB via Testcontainers, then call
+`Flyway.configure()` in JUnit `@BeforeAll`.
 
 ## Step 7 - Composition with sister tools
 
-Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-for adversarial review of new migrations before merge - classifies
-each migration as additive / breaking / data-loss / locking.
-
-For schema-diff review (compare two migration sets), see
-[`schema-diff-reviewer`](../../../qa-data-quality/agents/schema-diff-reviewer.md)
-in qa-data-quality.
+Before merge, apply adversarial review of new migrations -
+classify each as additive / breaking / data-loss / locking.
 
 ## Anti-patterns
 
@@ -198,4 +193,3 @@ in qa-data-quality.
   [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
   tools (Liquibase = changelog-driven; Atlas = declarative HCL;
   SQLMesh = data-pipeline + schema)
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer

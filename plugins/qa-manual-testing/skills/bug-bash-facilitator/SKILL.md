@@ -27,9 +27,9 @@ This skill builds the kit + structure + scoring + debrief.
 - New-tester onboarding: bug-bash as the team's first introduction
   for new joiners.
 
-If the goal is a single tester running a charter, use
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
-directly. Bug bashes are the multi-tester / scaled version.
+If the goal is a single tester running a charter, author a single
+exploratory charter directly. Bug bashes are the multi-tester /
+scaled version.
 
 ## Step 1 - Pre-bash kit (1 week before)
 
@@ -65,7 +65,7 @@ Per cohort, 1-2 testers + 1 facilitator-roving:
 ## Test data prep (do BEFORE the bash)
 
 - [ ] Create 5 test accounts with varying states (per
-      [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md)):
+      `synthetic-data-toolkit`):
       `qa-bash-A`, `qa-bash-B`, ..., `qa-bash-E`.
 - [ ] Seed promo codes: `WELCOME10`, `EXPIRED50`, `MIN100`,
       `STACKABLE5`.
@@ -241,9 +241,7 @@ triage) but it broadens coverage.
 
 ## References
 
-- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - provides the per-cohort charters this bash composes.
 - [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md) - the heuristics menu the cohorts pick from.
 - [`manual-test-debrief`](../manual-test-debrief/SKILL.md) - the
   PROOF debrief format the bug-bash debrief inherits from.
-- [`synthetic-data-toolkit`](../../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md) - used in the test-data-prep step.
-- [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md) - downstream: turn each bash-found bug into a structured repro.
+- `synthetic-data-toolkit` - used in the test-data-prep step.

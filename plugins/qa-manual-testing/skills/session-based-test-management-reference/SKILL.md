@@ -1,9 +1,9 @@
 ---
-name: sbtm-reference
-description: "Pure-reference catalog of Session-Based Test Management (SBTM) - Jonathan and James Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary that exploratory-charter-author + manual-test-debrief consume."
+name: session-based-test-management-reference
+description: "Pure-reference catalog of Session-Based Test Management (SBTM) - Jonathan and James Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary for authoring charters and running manual-test debriefs."
 ---
 
-# sbtm-reference
+# session-based-test-management-reference
 
 ## Overview
 
@@ -20,15 +20,14 @@ what happened in a structured-enough format for management to
 aggregate, while leaving room for the tester to learn freely.
 
 This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
-[`manual-test-debrief`](../manual-test-debrief/SKILL.md), and the
+[`manual-test-debrief`](../manual-test-debrief/SKILL.md) and the
 tour-catalogues
 ([`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md)).
 
 For the canonical heuristic catalogs the tester applies during a
 session, see
 [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-[`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
+[`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
 [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
 [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md).
 
@@ -82,10 +81,8 @@ Charters are not test cases. They state *what to investigate* and
 leave the *how* to the tester's judgment in the session.
 
 A backlog of charters drives multi-session campaigns. The lead
-prioritises charters per the test strategy
-([`test-strategy-author`](../../../qa-process/skills/test-strategy-author/SKILL.md))
-and the risk register
-([`risk-matrix`](../../../qa-process/skills/risk-matrix/SKILL.md)).
+prioritises charters per the test strategy (`test-strategy-author`)
+and the risk register (`risk-matrix`).
 
 ## The session sheet
 
@@ -247,10 +244,8 @@ the session sheet is filed.
 - Hendrickson E. *Explore It!* (Pragmatic Bookshelf, 2013) - book.
 - Sibling references (heuristic catalogues the session applies):
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-  [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
+  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
   [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md).
-- Consumed by:
-  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
-  [`manual-test-debrief`](../manual-test-debrief/SKILL.md).
+- Consumed by: [`manual-test-debrief`](../manual-test-debrief/SKILL.md).

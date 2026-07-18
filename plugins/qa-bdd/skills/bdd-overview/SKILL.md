@@ -1,10 +1,10 @@
 ---
-name: bdd-getting-started
-description: "Orients an engineer or BA who is new to BDD in the qa-bdd plugin - maps their existing role (manual tester, business analyst, or developer) to the right starting skill, explains Gherkin's Given/When/Then structure with a minimal example, and routes them onward to authoring and review tooling. Use when an engineer or BA new to BDD does not know where to start in this plugin."
+name: bdd-overview
+description: "Overview of behavior-driven development for engineers and BAs new to it: maps each role (manual tester, business analyst, developer) to a starting point, explains Gherkin's Given/When/Then structure with a minimal example, and points onward to scenario authoring and review. Use when getting started with BDD."
 keywords: ["bdd", "gherkin", "getting-started", "three-amigos", "onboarding", "manual-tester", "business-analyst"]
 ---
 
-# bdd-getting-started
+# bdd-overview
 ## What is BDD and why does it matter?
 
 Behavior Driven Development (BDD) is "a way for software teams to work that
@@ -54,7 +54,7 @@ Per the Gherkin reference ([cucumber.io/docs/gherkin/reference][gherkin-ref]):
   the actual outcome to the expected outcome."
 
 Steps should stay in business language. Avoid UI mechanics
-("clicks button #submit") - `gherkin-style-reviewer` will flag those.
+("clicks button #submit") - a Gherkin style review will flag those.
 
 ## Which skill to start with?
 
@@ -80,21 +80,20 @@ to generate executable tests that map back to individual ACs.
 
 ### You have Gherkin and need step definitions wired to your runner
 
-Use the [`bdd-scenario-author`](../../agents/bdd-scenario-author.md) agent.
-It takes a story or acceptance criteria, produces Gherkin, and scaffolds
-step definitions for whichever runner is detected in your project:
-Cucumber (JVM/JS/Ruby), Behave (Python), or Reqnroll (.NET). Once you know
-your runner, the dedicated skill provides full install and run guidance:
+Scaffold step definitions for whichever runner is detected in your
+project: Cucumber (JVM/JS/Ruby), Behave (Python), or Reqnroll (.NET).
+Once you know your runner, the dedicated skill provides full install
+and run guidance:
 [`cucumber-testing`](../cucumber-testing/SKILL.md),
 [`behave-testing`](../behave-testing/SKILL.md), or
 [`reqnroll-testing`](../reqnroll-testing/SKILL.md).
 
 ### You have written Feature files and want a quality check
 
-Run [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md).
-It flags imperative steps, technical leakage (DB names, CSS selectors),
-excessive And-chains, missing Background extraction, and Then-clauses with
-no observable outcome. Use it during PR review against any `*.feature` file.
+Review your Feature files for imperative steps, technical leakage
+(DB names, CSS selectors), excessive And-chains, missing Background
+extraction, and Then-clauses with no observable outcome. Do this
+during PR review against any `*.feature` file.
 
 ## Hard rejects
 

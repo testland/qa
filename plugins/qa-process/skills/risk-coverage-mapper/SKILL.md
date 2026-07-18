@@ -11,8 +11,8 @@ A risk-coverage matrix proves "every meaningful risk has at least
 one mitigation, and every mitigation traces to a test or monitor
 that exercises it." It's the natural complement to the
 requirements-to-tests traceability matrix
-([`traceability-matrix-builder`](../../../qa-test-management/skills/traceability-matrix-builder/SKILL.md)) - 
-which proves "every requirement has a test." Where requirements
+(`traceability-matrix-builder`, in the qa-test-management
+plugin) - which proves "every requirement has a test." Where requirements
 say *what to build*, risks say *what could go wrong*, and each
 needs its own coverage view.
 
@@ -68,7 +68,7 @@ def test_stacked_promo_rounding_eu():
 ### Manual test cases (via TCM)
 
 For each risk, query the TCM
-([`testrail-case-management`](../../../qa-test-management/skills/testrail-case-management/SKILL.md)
+(`testrail-case-management`
 or sibling) for cases linked via the refs field:
 
 ```python
@@ -233,8 +233,8 @@ becomes uncovered:
 - **Tag discipline required.** If tests aren't tagged, the matrix
   under-reports coverage.
 - **Doesn't measure *test quality*.** A risk with 5 weak tests
-  vs 1 strong test reads the same in the matrix; pair with
-  [`test-case-quality-critic`](../../../qa-test-management/agents/test-case-quality-critic.md).
+  vs 1 strong test reads the same in the matrix; assess test
+  strength separately.
 - **Risk score is upstream judgement.** If the score is wrong
   (under- or over-stated), the coverage requirement is wrong.
 - **Monitor coverage is hard to validate.** A Datadog monitor
@@ -253,8 +253,4 @@ becomes uncovered:
 - Composes:
   [`risk-matrix`](../risk-matrix/SKILL.md),
   [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),
-  [`traceability-matrix-builder`](../../../qa-test-management/skills/traceability-matrix-builder/SKILL.md).
-- Consumed by:
-  [`risk-assessment-critic`](../../agents/risk-assessment-critic.md),
-  [`risk-based-test-selector`](../../agents/risk-based-test-selector.md),
-  [`risk-based-test-planner`](../../agents/risk-based-test-planner.md).
+  `traceability-matrix-builder`.

@@ -1,6 +1,6 @@
 ---
 name: compliance-evidence-generator
-description: "Build-an-X workflow that produces auditor-facing evidence packages from automated test results: maps control IDs to test outcomes across any compliance framework (SOC 2, ISO 27001, HIPAA, PCI DSS, GDPR, FedRAMP); generates the control-evidence matrix, timestamped evidence bundles (screenshots, log excerpts, CI exports), and chain-of-custody notes per NIST SP 800-72. Distinct from soc2-evidence-collector (SOC2-only raw log harvest) and compliance-readiness-reviewer (coverage gap analysis without artifact production). Use when an audit engagement requires auditor-ready evidence packages built from existing automated test output."
+description: "Build-an-X workflow that produces auditor-facing evidence packages from automated test results: maps control IDs to test outcomes across any compliance framework (SOC 2, ISO 27001, HIPAA, PCI DSS, GDPR, FedRAMP); generates the control-evidence matrix, timestamped evidence bundles (screenshots, log excerpts, CI exports), and chain-of-custody notes per NIST SP 800-72. Distinct from soc2-evidence-collector (SOC2-only raw log harvest) and from read-only coverage gap analysis that produces no artifacts. Use when an audit engagement requires auditor-ready evidence packages built from existing automated test output."
 keywords:
   - compliance
   - evidence
@@ -40,7 +40,7 @@ This skill differs from its sibling skills:
 |---|---|
 | `soc2-evidence-collector` | SOC 2 TSC-specific: harvests raw Okta/IDP/CI logs per TSC criterion |
 | `audit-trail-test-author` | Authors tamper-evident audit-log tests per framework |
-| `compliance-readiness-reviewer` | Read-only gap analysis: reviews coverage without producing artifacts |
+| read-only compliance-readiness review | Read-only gap analysis: reviews coverage without producing artifacts |
 | **`compliance-evidence-generator`** | Cross-framework: assembles auditor-ready packages from any test output |
 
 ## When to use
@@ -400,4 +400,3 @@ by automated means.
 - PCI DSS v4.0.1 Requirement 10 - 12-month retention requirement; source: pcisecuritystandards.org
 - [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) - SOC 2-specific raw log collection
 - [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - authoring tamper-evident audit log tests
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - coverage gap analysis agent

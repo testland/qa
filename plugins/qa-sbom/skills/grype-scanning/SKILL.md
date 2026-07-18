@@ -38,8 +38,8 @@ Per [gr-gh][gr-gh] coverage:
   scanning.
 - Container-image vuln scanning where Trivy isn't already in
   place.
-- Language-package vuln coverage layered with [`osv-scanner`](../../../qa-sca/skills/osv-scanner/SKILL.md)
-  + [`snyk-test`](../../../qa-sca/skills/snyk-test/SKILL.md) for
+- Language-package vuln coverage layered with `osv-scanner`
+  + `snyk-test` (in the qa-sca plugin) for
   cross-DB consensus.
 - OpenVEX-based finding filtering (status assertions like "not
   affected" / "fixed" / "under-investigation" filter scan output).
@@ -85,7 +85,7 @@ Verify exact CLI flag against current Grype release; typical:
 
 ```bash
 grype my-image:1.0 -o table          # default human-readable
-grype my-image:1.0 -o json           # JSON for vuln-prioritizer
+grype my-image:1.0 -o json           # JSON for vuln prioritization
 grype my-image:1.0 -o sarif          # SARIF for GitHub Code Scanning
 grype my-image:1.0 -o cyclonedx-json # CycloneDX with vuln annotations
 grype my-image:1.0 -o template -t my-template.tmpl   # custom Go template
@@ -93,8 +93,7 @@ grype my-image:1.0 -o template -t my-template.tmpl   # custom Go template
 
 Per [gr-gh][gr-gh]: includes "threat prioritization with EPSS,
 KEV, and risk scoring" - the JSON output annotates each finding
-with these signals for downstream prioritization (see
-[`vuln-prioritizer`](../../agents/vuln-prioritizer.md)).
+with these signals for downstream prioritization.
 
 ## Step 4 - Severity filtering + fail-on
 
@@ -225,8 +224,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 |---|---|
 | [`syft-generation`](../syft-generation/SKILL.md) | Generates the SBOM Grype scans |
 | [`trivy-image`](../trivy-image/SKILL.md) | Alternative all-in-one (SBOM gen + scan) |
-| [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) | Unifies Grype + Trivy + Snyk findings |
-| [`osv-scanner`](../../../qa-sca/skills/osv-scanner/SKILL.md) | Cross-plugin alternative for OSV.dev DB |
+| `osv-scanner` | Cross-plugin alternative for OSV.dev DB |
 
 ## Anti-patterns
 
@@ -243,7 +241,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 - Grype's DB is Anchore-curated; coverage differs from OSV.dev,
   Snyk, NVD; pair with another scanner for consensus.
 - Container-only secret scanning is limited; use [`trivy-image`](../trivy-image/SKILL.md)
-  + [`gitleaks-scanning`](../../../qa-secrets/skills/gitleaks-scanning/SKILL.md)
+  + `gitleaks-scanning` (in the qa-secrets plugin)
   for that.
 - License-detection support is basic; for compliance, pair with
   ScanCode / FOSSology.
@@ -260,7 +258,3 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
   [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
   [`spdx-format`](../spdx-format/SKILL.md),
   [`trivy-image`](../trivy-image/SKILL.md) - sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent
-- [`sca-prioritizer`](../../../qa-sca/agents/sca-prioritizer.md) - 
-  cross-plugin sibling for SCA findings (similar prioritization
-  logic)

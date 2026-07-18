@@ -19,11 +19,9 @@ them into a single go / no-go verdict with per-metric deltas vs.
 main, and emits a markdown summary suitable for `$GITHUB_STEP_SUMMARY`
 or PR comment.
 
-This is the perf counterpart to
-[`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md),
-[`visual-baseline-gate`](../../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md),
-and
-[`contract-compatibility-gate`](../../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md) - same artifact shape, different domain.
+This is the perf counterpart to `data-quality-gate`,
+`visual-baseline-gate`, and `contract-compatibility-gate` - same
+artifact shape, different domain.
 
 ## When to use
 
@@ -221,8 +219,7 @@ sys.exit(0 if verdict == "go" else 1)
 ## References
 
 - All sibling perf runners listed in Step 1.
-- [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md),
-  [`visual-baseline-gate`](../../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md),
-  [`contract-compatibility-gate`](../../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md) - sibling gates with the same artifact shape.
-- [`nfr-extractor`](../../../qa-shift-left/skills/nfr-extractor/SKILL.md) - upstream skill that produces the threshold-bound budgets this
+- `data-quality-gate`, `visual-baseline-gate`,
+  `contract-compatibility-gate` - sibling gates with the same artifact shape.
+- `non-functional-requirement-extractor` - upstream skill that produces the threshold-bound budgets this
   gate enforces.

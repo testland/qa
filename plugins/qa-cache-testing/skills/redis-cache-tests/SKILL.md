@@ -178,7 +178,7 @@ def test_lock_prevents_stampede(r):
 ### Tenant-namespacing tests
 
 Per
-[`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md)
+`qa-multi-tenancy/cross-tenant-data-leak-tests`
 Test 10:
 
 ```python
@@ -286,11 +286,9 @@ jobs:
   [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
   [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
 - Cross-plugin (tenant cache leaks):
-  [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md)
+  `qa-multi-tenancy/cross-tenant-data-leak-tests`
   Test 10.
 - Sibling tools:
   [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
   [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md),
   [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).
-- Detector:
-  [`cache-key-collision-detector`](../../agents/cache-key-collision-detector.md).

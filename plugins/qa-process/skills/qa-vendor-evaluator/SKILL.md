@@ -280,9 +280,9 @@ The matrix is the **input** to the decision, not the decision itself. Downstream
 ## Hand-off targets
 
 - **Open-source framework selection (different decision)** → [`framework-choice-advisor`](../framework-choice-advisor/SKILL.md).
-- **Per-vendor integration playbooks after the vendor is picked** → [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md), [`xray-integration`](../../../qa-test-reporting/skills/xray-integration/SKILL.md), [`zephyr-integration`](../../../qa-test-reporting/skills/zephyr-integration/SKILL.md), [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md).
+- **Per-vendor integration playbooks after the vendor is picked** → `testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration`.
 - **Vendor evaluation feeding a quarterly OKR (e.g., "adopt vendor X by Q3")** → [`qa-okr-author`](../qa-okr-author/SKILL.md).
-- **Compliance vendor evaluation (regulated industries)** → augment the matrix with the [`qa-compliance`](../../../qa-compliance/) plugin's per-framework reference skills.
+- **Compliance vendor evaluation (regulated industries)** → augment the matrix with the `qa-compliance` plugin's per-framework reference skills.
 
 ## References
 
@@ -293,5 +293,5 @@ The matrix is the **input** to the decision, not the decision itself. Downstream
 - ISTQB glossary - supplier (the procurement-side term for vendor): https://glossary.istqb.org/en_US/term/supplier
 - ISO/IEC 25010 - quality model for non-functional requirements (used in A1 capability scoring): https://en.wikipedia.org/wiki/ISO/IEC_25010
 - [`framework-choice-advisor`](../framework-choice-advisor/SKILL.md) - sibling reference for open-source framework selection; this skill is its commercial-procurement complement.
-- [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md), [`xray-integration`](../../../qa-test-reporting/skills/xray-integration/SKILL.md), [`zephyr-integration`](../../../qa-test-reporting/skills/zephyr-integration/SKILL.md), [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md) - per-vendor integration baselines that feed A3.
+- `testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration` - per-vendor integration baselines that feed A3.
 - [`qa-okr-author`](../qa-okr-author/SKILL.md) - when the procurement outcome ladders into a quarterly OKR.

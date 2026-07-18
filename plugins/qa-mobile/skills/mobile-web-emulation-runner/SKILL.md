@@ -145,7 +145,7 @@ test('home page mobile layout snapshot', async ({ page }) => {
 
 Per-device screenshots produce per-device baselines; layout
 regressions on iPhone size catch issues that desktop-only tests
-miss. Pair with [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md).
+miss. Pair with `playwright-snapshots` (in the qa-visual-regression plugin).
 
 ## Step 5 - Cypress equivalent
 
@@ -248,4 +248,4 @@ aggregator (Step 4) to produce a per-device summary:
   performance testing under mobile profile.
 - [`touch-gesture-tester`](../touch-gesture-tester/SKILL.md) - 
   detailed touch-gesture verification.
-- [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md) - per-device visual regression.
+- `playwright-snapshots` - per-device visual regression.

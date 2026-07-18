@@ -45,7 +45,7 @@ Two primary renderers are covered:
   red-run document.
 
 If only engineers read the results, the JUnit XML feed to
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+`junit-xml-analysis` (in the qa-test-reporting plugin)
 is sufficient.
 
 ## Step 1 - Produce Cucumber JSON output
@@ -303,7 +303,7 @@ pages:
     - main
 ```
 
-See [`github-actions-test-jobs`](../../../qa-ci-integration/skills/github-actions-test-jobs/SKILL.md)
+See `github-actions-test-jobs` (in the qa-ci-integration plugin)
 for general CI test-job conventions.
 
 ## Anti-patterns
@@ -349,9 +349,9 @@ for general CI test-job conventions.
   `customStyle`, `overrideStyle` full option table.
 - [`cucumber-testing`](../cucumber-testing/SKILL.md) - upstream skill: produce Cucumber JSON
   with `--format json:`.
-- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) -
+- `junit-xml-analysis` (in the qa-test-reporting plugin) -
   engineer-facing test result analysis (separate concern from stakeholder docs).
-- [`github-actions-test-jobs`](../../../qa-ci-integration/skills/github-actions-test-jobs/SKILL.md) -
+- `github-actions-test-jobs` (in the qa-ci-integration plugin) -
   CI job conventions for the publish step.
 
 [ld]: https://raw.githubusercontent.com/serenity-bdd/the-serenity-book/master/modules/ROOT/pages/living-documentation.adoc

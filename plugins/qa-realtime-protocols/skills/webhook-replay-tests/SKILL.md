@@ -233,7 +233,7 @@ def sanitize_capture(payload: dict) -> dict:
 
 - [Standard Webhooks spec] - signature scheme, replay window,
   idempotency
-- [`qa-notifications/webhook-delivery-tester`](../../../qa-notifications/skills/webhook-delivery-tester/SKILL.md) - 
+- `webhook-delivery-tester` (in the qa-notifications plugin) - 
   sister skill for delivery + retry on the sender side
 - [`mqtt-tests`](../mqtt-tests/SKILL.md),
   [`websocket-tests`](../websocket-tests/SKILL.md) - alternative

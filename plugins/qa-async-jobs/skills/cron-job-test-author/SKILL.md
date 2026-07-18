@@ -238,4 +238,4 @@ For each cron job in scope:
 - [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
   critical companion (idempotency is the only safe answer to
   duplicate runs)
-- [`synthetic-monitor-author`](../../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - cross-plugin: heartbeat-based missed-run alerting
+- `synthetic-monitor-author` (in the qa-shift-right plugin) - heartbeat-based missed-run alerting

@@ -180,7 +180,7 @@ don't.
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| KICS as only IaC scanner                                              | Misses Checkov / tfsec-specific findings.                                | Use multiple (Step 7 + iac-policy-checker). |
+| KICS as only IaC scanner                                              | Misses Checkov / tfsec-specific findings.                                | Use multiple scanners; combine results (Step 7). |
 | `kics-scan ignore-line` without comment justifying                    | Skips invisible.                                                          | Always include reason. |
 | Skipping `--fail-on` severity in CI                                    | All findings (including LOW) fail; team disables.                       | Start `--fail-on high,critical` (Step 4). |
 | Running on every PR with full output                                   | Output overwhelming; team ignores.                                      | Severity threshold + JSON/SARIF for triage. |
@@ -204,5 +204,3 @@ don't.
   [`tfsec-policy`](../tfsec-policy/SKILL.md) - sister scanners.
 - [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   custom OPA / Rego.
-- [`iac-policy-checker`](../../agents/iac-policy-checker.md) - 
-  combines results.

@@ -143,7 +143,7 @@ Before handing the Gherkin to the automation engineer:
 - **Audit the project's step library for vocabulary drift** → [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md).
 - **If the source is a user story, not a manual step** → [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md).
 - **If the source is an AC list, not a manual step** → [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md).
-- **If the team is generating a test-case matrix from a story (upstream of this skill)** → [`test-case-ideation-from-story`](../../../qa-process/skills/test-case-ideation-from-story/SKILL.md).
+- **If the team is generating a test-case matrix from a story (upstream of this skill)** → `test-case-ideation-from-story` (in the qa-process plugin).
 
 ## References
 

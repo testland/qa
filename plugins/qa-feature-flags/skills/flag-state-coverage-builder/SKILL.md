@@ -99,7 +99,7 @@ PICT emits a pairwise-covering matrix (≤ 12 tests instead of 24
 for full).
 
 For risk-driven: combine with risk register from
-[`qa-process/risk-matrix`](../../../qa-process/skills/risk-matrix/SKILL.md).
+`risk-matrix` (in the qa-process plugin).
 Cells with high impact + high likelihood become required tests.
 
 ## Step 5 - Emit per-cell test skeleton
@@ -225,13 +225,11 @@ This skill produces:
 - PICT (Microsoft pairwise tool):
   [github.com/microsoft/pict](https://github.com/microsoft/pict).
 - Risk-driven coupling:
-  [`qa-process/risk-matrix`](../../../qa-process/skills/risk-matrix/SKILL.md).
+  `risk-matrix`.
 - Per-platform implementation:
   [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
   [`unleash-testing`](../unleash-testing/SKILL.md),
   [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
   [`growthbook-testing`](../growthbook-testing/SKILL.md).
-- Stale-flag detection:
-  [`stale-flag-detector`](../../agents/stale-flag-detector.md).
 - Lifecycle:
   [`flag-removal-runbook-author`](../flag-removal-runbook-author/SKILL.md).

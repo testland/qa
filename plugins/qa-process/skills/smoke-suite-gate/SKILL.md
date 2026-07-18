@@ -21,7 +21,7 @@ release.
 - A new release process needs the "first-line defense" check.
 
 For broader coverage, see the team's full E2E suite (per
-[`qa-web-e2e`](../../qa-web-e2e/) plugin) - smoke is the
+`qa-web-e2e` plugin) - smoke is the
 narrow, fast subset.
 
 ## Step 1 - Identify the critical paths
@@ -124,7 +124,7 @@ test is either:
 
 1. A real regression - block the deploy.
 2. A genuinely flaky test - quarantine + investigate via
-   [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md).
+   `flaky-test-quarantine` (in the qa-flake-triage plugin).
 
 Don't suppress failures by raising the retry count.
 
@@ -203,12 +203,11 @@ longer, something's wrong (the suite has bloated; deploy is slow).
   ~95% like prod; some prod-only edge cases need separate
   verification.
 - **Mobile smoke is different.** Mobile uses
-  [`mobile-device-matrix-toolkit`](../../../qa-mobile/skills/mobile-device-matrix-toolkit/SKILL.md)
+  `mobile-device-matrix-toolkit` (in the qa-mobile plugin)
   smoke tier; same principle, different platform.
 
 ## References
 
-- [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - handles repeat-failing smoke tests.
-- [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - downstream gate after smoke passes.
-- [`release-readiness-checker`](../../agents/release-readiness-checker.md) - orchestrates smoke as one gate among many.
-- [`synthetic-monitor-author`](../../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - same critical journeys, but continuous-in-prod (not per-deploy).
+- `flaky-test-quarantine` - handles repeat-failing smoke tests.
+- `prod-canary-validator` - downstream gate after smoke passes.
+- `synthetic-monitor-author` - same critical journeys, but continuous-in-prod (not per-deploy).

@@ -35,10 +35,9 @@ git diff, and a fallback policy.
   bottleneck.
 - A nightly / pre-release full run exists and can serve as the safety
   net for selection misses.
-- The team has coverage instrumentation (per
-  [`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md),
-  [`jest-coverage-analysis`](../../../qa-test-reporting/skills/jest-coverage-analysis/SKILL.md),
-  etc.) - the per-test → source map is computable from it.
+- The team has coverage instrumentation (`lcov-analysis`,
+  `jest-coverage-analysis`, etc., in the qa-test-reporting
+  plugin) - the per-test → source map is computable from it.
 
 If the build is a Bazel / Pants / Buck monorepo, the selection
 already comes from the build graph (Step 5) and this skill is
@@ -288,7 +287,7 @@ Implement:
   applies here unless the test/SUT topology is captured in the map.
 - **Doesn't fix slow tests.** Selection cuts the count; per-test
   speed is still on the team. Pair with
-  [`unit-test-coverage-targeter`](../../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
+  `unit-test-coverage-targeter`
   for the "what to add next" side.
 
 ## References
@@ -304,5 +303,3 @@ Implement:
   dependency query, declared-vs-actual dependency principle.
 - [`coverage-debt-tracker`](../coverage-debt-tracker/SKILL.md) - 
   sibling skill: tracks files that lost coverage / went stale.
-- [`test-suite-pruner`](../../agents/test-suite-pruner.md) and
-  [`regression-suite-curator`](../../agents/regression-suite-curator.md) - agents that prune the suite this selector runs against.

@@ -184,5 +184,3 @@ Confident-AI is the company behind DeepEval (per [de-gh][de-gh]).
 - [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
   [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - sister tools
   (Promptfoo for YAML-config; Ragas for deeper RAG metric variety)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
-  adversarial reviewer

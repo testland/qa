@@ -1,9 +1,9 @@
 ---
-name: sfdpot-heuristic
+name: sfdpot-exploratory-heuristic
 description: "Pure-reference catalog of James Bach's SFDPOT heuristic - 'San Francisco Depot' - a 'you are here' framework that catalogues what a tester can vary in a system to find bugs. Six dimensions: Structure, Function, Data, Platform, Operations, Time. Use as a what-to-vary checklist during an exploratory session, complementing HICCUPPS-F (which catalogues what to compare against)."
 ---
 
-# sfdpot-heuristic
+# sfdpot-exploratory-heuristic
 
 ## Overview
 
@@ -18,9 +18,7 @@ catalogues *what to compare against* (oracles), SFDPOT catalogues
 *what to change* during exploration. Together they form a complete
 "how to think about a session" pair.
 
-This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
-and by testers mid-session.
+This skill is a **pure reference** consumed by testers mid-session.
 
 ## When to use
 
@@ -78,8 +76,7 @@ The input + state space. Includes:
 - Special values (null, undefined, NaN, Infinity)
 
 A "Data" exploration feeds pathological inputs - see
-[`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md)
-for canonical payloads.
+`malicious-payload-bank` for canonical payloads.
 
 ### P - Platform
 
@@ -95,7 +92,7 @@ The deployment platform. Includes:
 - Locale (language, region, timezone, calendar)
 
 A "Platform" exploration tests across the matrix. Compose with
-[`qa-compatibility`](../../../qa-compatibility/) for systematic
+`qa-compatibility` for systematic
 matrix testing.
 
 ### O - Operations
@@ -130,7 +127,7 @@ Temporal dimensions. Includes:
 
 A "Time" exploration is the hardest to plan - many time-related
 bugs require deliberate clock manipulation. See
-[`qa-time`](../../../qa-time/) for
+`qa-time` for
 clock-mocking tooling (Tier 2 ROADMAP - not yet shipped at this
 writing).
 
@@ -209,7 +206,5 @@ toolkit.
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`sbtm-reference`](../sbtm-reference/SKILL.md),
+  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md),
   [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md).
-- Consumed by:
-  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).

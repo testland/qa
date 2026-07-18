@@ -17,20 +17,18 @@ It overlaps with **ISO/IEC 25010:2023** (the formal software-
 quality model) but offers a more practitioner-friendly mnemonic
 form that fits in an exploratory tester's working memory.
 
-This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
-when shaping a session's evaluation lens, and by the
-[`product-risk-register-builder`](../../../qa-process/skills/product-risk-register-builder/SKILL.md)
-when categorising risks (see its "Quality characteristic" step).
+This skill is a **pure reference** used when shaping a session's
+evaluation lens, and by `product-risk-register-builder` when
+categorising risks (see its "Quality characteristic" step).
 
 ## When to use
 
 - Authoring a charter - pick which quality criteria the session
   will evaluate.
 - Categorising risks in the product register
-  ([`product-risk-register-builder`](../../../qa-process/skills/product-risk-register-builder/SKILL.md)).
+  (`product-risk-register-builder`).
 - Evaluating a vendor / framework
-  ([`qa-vendor-evaluator`](../../../qa-process/skills/qa-vendor-evaluator/SKILL.md)).
+  (`qa-vendor-evaluator`).
 - Reviewing a release candidate - walk CRUSSPIC STMPL to confirm
   each criterion is addressed.
 
@@ -82,10 +80,10 @@ Per Nielsen's usability heuristics.
 - Auditability
 
 Maps to ISO 25010 "Security." Composes with
-[`qa-sast`](../../../qa-sast/),
-[`qa-dast`](../../../qa-dast/),
-[`qa-secrets`](../../../qa-secrets/),
-[`qa-test-data-privacy`](../../../qa-test-data-privacy/).
+`qa-sast`,
+`qa-dast`,
+`qa-secrets`,
+`qa-test-data-privacy`.
 
 #### S - Scalability
 
@@ -96,7 +94,7 @@ Maps to ISO 25010 "Security." Composes with
 - Data-volume scaling (more rows, bigger blobs)
 - User-count scaling (more concurrent users)
 
-Composes with [`qa-load-testing`](../../../qa-load-testing/).
+Composes with `qa-load-testing`.
 
 #### P - Performance
 
@@ -109,7 +107,7 @@ Composes with [`qa-load-testing`](../../../qa-load-testing/).
 
 Distinct from Scalability - performance is "fast for the user";
 scalability is "still fast when load grows." Composes with
-[`qa-load-testing`](../../../qa-load-testing/).
+`qa-load-testing`.
 
 #### I - Installability
 
@@ -134,7 +132,7 @@ Maps to ISO 25010 "Portability - Installability."
 - Interoperability (API consumers)
 
 Maps to ISO 25010 "Compatibility." Composes with
-[`qa-compatibility`](../../../qa-compatibility/).
+`qa-compatibility`.
 
 ### STMPL - secondary (operational) criteria
 
@@ -198,7 +196,7 @@ Maps to ISO 25010 "Portability."
 - Cultural appropriateness (icons, colours, idioms)
 - ICU MessageFormat / plural rules
 
-Composes with [`qa-localization`](../../../qa-localization/).
+Composes with `qa-localization`.
 
 ## Mapping to ISO/IEC 25010
 
@@ -287,9 +285,7 @@ Verdict: cleared for release.
 - Nielsen J. Usability heuristics - nngroup.com/articles/ten-usability-heuristics.
 - Sibling references:
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-  [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
+  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
-  [`sbtm-reference`](../sbtm-reference/SKILL.md).
-- Consumed by:
-  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md),
-  [`product-risk-register-builder`](../../../qa-process/skills/product-risk-register-builder/SKILL.md).
+  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md).
+- Consumed by: `product-risk-register-builder`.

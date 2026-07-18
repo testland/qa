@@ -25,7 +25,7 @@ catalog.
   testing.
 - A team is migrating from "test only what works" to "test every
   documented response code."
-- Pairs with [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+- Pairs with `acceptance-criteria-extractor` (in the qa-shift-left plugin)
   output: every Then-clause's positive assertion gets a negative
   sibling.
 
@@ -94,7 +94,7 @@ Pull from [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md):
 
 | Pattern                            | Test                                              |
 |------------------------------------|---------------------------------------------------|
-| Upstream dependency unavailable    | Mock the dependency to fail (per [`api-chaos-runner`](../../../qa-api-testing/skills/api-chaos-runner/SKILL.md)); expect 502 / 503 with retry hint. |
+| Upstream dependency unavailable    | Mock the dependency to fail (per `api-chaos-runner`); expect 502 / 503 with retry hint. |
 | Timeout                            | Mock slow upstream; expect 504 / circuit-breaker fallback. |
 
 ## Worked example
@@ -210,12 +210,11 @@ def test_create_order_handles_adversarial_sku(payload):
 
 - **Doesn't auto-detect input domain.** The team must declare
   required fields, types, ranges, and enum values for the skill
-  to generate the matching cases. Use
-  [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-  + [`nfr-extractor`](../../../qa-shift-left/skills/nfr-extractor/SKILL.md)
+  to generate the matching cases. Use `acceptance-criteria-extractor`
+  + `non-functional-requirement-extractor`
   upstream.
 - **Server-error simulation requires mocking.** Categories 5 and 7
-  need [`api-chaos-runner`](../../../qa-api-testing/skills/api-chaos-runner/SKILL.md)
+  need `api-chaos-runner`
   or [`wiremock-stubs`](../wiremock-stubs/SKILL.md) /
   [`msw-handlers`](../msw-handlers/SKILL.md) for the upstream
   failure simulation.
@@ -225,7 +224,7 @@ def test_create_order_handles_adversarial_sku(payload):
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream skill producing the happy-path AC.
+- `acceptance-criteria-extractor` - upstream skill producing the happy-path AC.
 - [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md) - adversarial payload catalog (category 6).
 - [`boundary-value-generator`](../boundary-value-generator/SKILL.md) - sibling skill for boundary cases.
 - [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) - for any test data that includes PII.

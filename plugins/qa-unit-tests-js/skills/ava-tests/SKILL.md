@@ -233,4 +233,4 @@ similar.
   [`vitest-tests`](../vitest-tests/SKILL.md),
   [`mocha-tests`](../mocha-tests/SKILL.md),
   [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene
+- `test-code-conventions` (qa-test-review) - test code hygiene

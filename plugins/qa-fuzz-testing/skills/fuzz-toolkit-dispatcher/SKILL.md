@@ -1,6 +1,6 @@
 ---
 name: fuzz-toolkit-dispatcher
-description: "Toolkit / dispatcher skill that routes a fuzz-target authoring task to the correct per-language fuzzer skill based on detected language. Decision tree: C/C++ → libfuzzer-cpp + afl-plus-plus; Rust → cargo-fuzz-rust (or libfuzzer-cpp via FFI); Go → go-native-fuzzing; Python → atheris-python-fuzzing; JVM → jazzer-jvm-fuzzing; closed-source binary → afl-plus-plus in QEMU mode; mature open-source project → ossfuzz-integration. Composes with corpus-management-reference + sanitiser-integration-reference. Use as the dispatcher backing fuzz-target-author."
+description: "Toolkit / dispatcher skill that routes a fuzz-target authoring task to the correct per-language fuzzer skill based on detected language. Decision tree: C/C++ → libfuzzer-cpp + afl-plus-plus; Rust → cargo-fuzz-rust (or libfuzzer-cpp via FFI); Go → go-native-fuzzing; Python → atheris-python-fuzzing; JVM → jazzer-jvm-fuzzing; closed-source binary → afl-plus-plus in QEMU mode; mature open-source project → ossfuzz-integration. Composes with corpus-management-reference + sanitiser-integration-reference. Use when routing a fuzz-target authoring task to the right per-language fuzzer."
 ---
 
 # fuzz-toolkit-dispatcher
@@ -18,9 +18,6 @@ target language, source-availability, and OSS-Fuzz eligibility.
   the harness.
 - Reviewing an existing fuzz target - verify the right fuzzer was
   selected.
-- Backing the
-  [`fuzz-target-author`](../../agents/fuzz-target-author.md)
-  agent's per-language routing.
 
 ## Decision tree
 
@@ -107,9 +104,8 @@ Use **Atheris** - Google's libFuzzer-backed Python fuzzer.
 Supports both pure-Python and CPython native extensions.
 
 For pure property-based testing in Python (without coverage
-guidance), consider Hypothesis in
-[`qa-property-based`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md) - 
-complementary, not competing.
+guidance), consider Hypothesis in the `hypothesis-testing` skill
+(qa-property-based plugin) - complementary, not competing.
 
 ### JVM
 
@@ -167,5 +163,3 @@ on Google infrastructure with automatic crash reports.
 - Composes references:
   [`corpus-management-reference`](../corpus-management-reference/SKILL.md),
   [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
-- Consumed by:
-  [`fuzz-target-author`](../../agents/fuzz-target-author.md).

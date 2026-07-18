@@ -206,6 +206,4 @@ go-live authorization, vendor approval).
   contractual artifact), format (user journeys, not technical
   click-steps), three-most-common-or-difficult-tasks rule.
 - [`manual-test-script-author`](../manual-test-script-author/SKILL.md) - sibling: developer-facing format.
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits the ACs this skill turns into UAT scripts.
-- [`definition-of-done-checker`](../../../qa-shift-left/agents/definition-of-done-checker.md) - sibling check: a story may not be "done" without UAT sign-off
-  if the team's DoD requires it.
+- `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream: emits the ACs this skill turns into UAT scripts.

@@ -277,8 +277,6 @@ catch in test.
 - [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md),
   [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) - 
   classic IR-metrics relevance tests for term-based retrieval
-- [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md) - 
-  reviewer that synthesizes findings across all 3 search skills
 
 [ANN-Benchmarks docs]: https://ann-benchmarks.com/
 [Qdrant search docs]: https://qdrant.tech/documentation/concepts/search/

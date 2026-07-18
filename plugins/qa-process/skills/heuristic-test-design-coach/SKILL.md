@@ -1,13 +1,13 @@
 ---
 name: heuristic-test-design-coach
-description: "Reference catalog of the four canonical heuristic test-design models - Bach's Heuristic Test Strategy Model (HTSM) with SFDPOT product elements, Whittaker's 'How to Break Software' attack patterns, Bolton's FEW HICCUPPS consistency oracles, and the ISO/IEC 25010 quality characteristics - for use when the tester has no user story, no acceptance criteria, and no documentation. Distinct from `test-case-ideation-from-story` (which works from a written story) and from `exploratory-charter-author` (which produces session charters, not case sets). Use as the reference layer that `test-case-from-live-feature` and `exploratory-charter-author` cite when generating coverage from zero documented input."
+description: "Reference catalog of the four canonical heuristic test-design models - Bach's Heuristic Test Strategy Model (HTSM) with SFDPOT product elements, Whittaker's 'How to Break Software' attack patterns, Bolton's FEW HICCUPPS consistency oracles, and the ISO/IEC 25010 quality characteristics - for use when the tester has no user story, no acceptance criteria, and no documentation. Distinct from `test-case-ideation-from-story` (which works from a written story) and from session-charter authoring (which produces session charters, not case sets). Use as the reference layer that `test-case-from-live-feature` and session-charter authoring cite when generating coverage from zero documented input."
 ---
 
 # heuristic-test-design-coach
 
 ## Overview
 
-The exploratory-testing literature converged on four canonical heuristic test-design models, each cited inline at point of use below. This skill is a **pure reference** - no execution steps; it is the catalog `test-case-from-live-feature` and `exploratory-charter-author` consume to generate coverage when no documented input exists.
+The exploratory-testing literature converged on four canonical heuristic test-design models, each cited inline at point of use below. This skill is a **pure reference** - no execution steps; it is the catalog `test-case-from-live-feature` and exploratory-charter authoring consume to generate coverage when no documented input exists.
 
 ## When to use
 
@@ -15,9 +15,9 @@ The exploratory-testing literature converged on four canonical heuristic test-de
 - A legacy / brownfield codebase has no test coverage and you are onboarding cold.
 - A competitor or reverse-engineered product is under review (security audit, market intel).
 - A spec exists but is so thin that heuristic supplementation is needed alongside it.
-- A team's exploratory charter (per [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)) needs a structured prompt set instead of pure intuition.
+- A team's exploratory charter needs a structured prompt set instead of pure intuition.
 
-Do **not** use this skill alone to produce a deliverable. It is the **input** to a downstream authoring skill (`test-case-from-live-feature`, `exploratory-charter-author`, `manual-test-script-author`). The catalog tells you *what to look at*; the downstream skill turns observations into a matrix or charter.
+Do **not** use this skill alone to produce a deliverable. It is the **input** to a downstream authoring skill (`test-case-from-live-feature`, `manual-test-script-author`). The catalog tells you *what to look at*; the downstream skill turns observations into a matrix or charter.
 
 ## Model 1 - HTSM / SFDPOT product elements (Bach)
 
@@ -146,20 +146,19 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 
 ## Limitations
 
-- **Coverage breadth, not depth.** The four models surface *what to look at*; they don't tell you how deep to go on each. Risk-based prioritisation (per [`risk-matrix`](../risk-matrix/SKILL.md) and [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md)) is the depth selector.
+- **Coverage breadth, not depth.** The four models surface *what to look at*; they don't tell you how deep to go on each. Risk-based prioritisation (per [`risk-matrix`](../risk-matrix/SKILL.md)) is the depth selector.
 - **Domain knowledge is still required.** Applying SFDPOT to "checkout" without knowing what checkout is produces shallow output. The models are scaffolding for domain reasoning, not a replacement for it.
 - **Citation-grade only where canonical.** HTSM is Bach; FEW HICCUPPS is Bolton; ISO 25010 is the standard; Whittaker is the book. Other heuristic frameworks exist (Crispin/Gregory's testing quadrants, Heusser's "test ideas") and are also valid - this skill names the four most-cited; the team can extend.
-- **No automation.** This skill produces prompts; the downstream skills (`test-case-from-live-feature`, `exploratory-charter-author`, `manual-test-script-author`) turn prompts into deliverables.
+- **No automation.** This skill produces prompts; the downstream skills (`test-case-from-live-feature`, `manual-test-script-author`) turn prompts into deliverables.
 - **Not a substitute for product / requirements work.** Heuristic test design surfaces the coverage gap; the documentation gap is a separate problem the team should escalate.
 
 ## Hand-off targets
 
 - **Turn the heuristic walk into a test-case matrix** → [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md).
-- **Turn the heuristic walk into an exploratory charter** → [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
-- **Turn the heuristic walk into a manual execution script** → [`manual-test-script-author`](../../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).
+- **Turn the heuristic walk into a manual execution script** → `manual-test-script-author` (in the qa-manual-testing plugin).
 - **When a written spec exists, prefer the spec-driven path** → [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md).
-- **Risk-based prioritisation of which guidewords matter most** → [`risk-matrix`](../risk-matrix/SKILL.md), [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md).
-- **Domain-specific test-data generation for the attack patterns** → [`negative-test-generator`](../../../qa-test-data/skills/negative-test-generator/SKILL.md), [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md), [`boundary-value-generator`](../../../qa-test-data/skills/boundary-value-generator/SKILL.md).
+- **Risk-based prioritisation of which guidewords matter most** → [`risk-matrix`](../risk-matrix/SKILL.md).
+- **Domain-specific test-data generation for the attack patterns** → `negative-test-generator`, `malicious-payload-bank`, `boundary-value-generator`.
 
 ## References
 
@@ -170,4 +169,4 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 - Exploratory testing - Kaner's 1984 definition ("simultaneous learning, test design and test execution"); Whittaker "How to Break Software" attack patterns; session-based test management: https://en.wikipedia.org/wiki/Exploratory_testing
 - ISTQB glossary - exploratory testing: https://glossary.istqb.org/en_US/term/exploratory-testing
 - ISTQB glossary - heuristic evaluation: https://glossary.istqb.org/en_US/term/heuristic-evaluation
-- [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md), [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - downstream skills that consume this catalog.
+- [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md) - downstream skill that consumes this catalog.

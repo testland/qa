@@ -143,8 +143,8 @@ sqlmesh audit
 
 Returns failures if the audit query returns any rows.
 
-Compare with [`great-expectations`](../../../qa-data-quality/skills/great-expectations/SKILL.md)
-and [`soda-checks`](../../../qa-data-quality/skills/soda-checks/SKILL.md):
+Compare with `great-expectations` and `soda-checks` (in the
+qa-data-quality plugin):
 SQLMesh audits are tightly coupled to SQLMesh models; GE/Soda are
 standalone data-quality frameworks. Choose audits when you're
 already in SQLMesh; GE/Soda for cross-framework data quality.
@@ -189,11 +189,10 @@ PR data, and merge-then-promote is the production path.
 
 ## Step 9 - Composition with sister tools
 
-Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-for adversarial review of breaking changes - `sqlmesh plan` already
-classifies, but the reviewer adds estimation of downstream consumer
-impact (BI dashboards, downstream services) that SQLMesh's model
-graph alone doesn't capture.
+Beyond `sqlmesh plan`'s built-in breaking/non-breaking
+classification, apply adversarial review of breaking changes that
+estimates downstream consumer impact (BI dashboards, downstream
+services) that SQLMesh's model graph alone doesn't capture.
 
 For underlying schema migrations (DDL on the warehouse, separate
 from SQLMesh model changes), use [`flyway-migrations`](../flyway-migrations/SKILL.md)
@@ -229,7 +228,4 @@ or [`atlas-migrations`](../atlas-migrations/SKILL.md).
   [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
   [`atlas-migrations`](../atlas-migrations/SKILL.md) - sister tools
   (DDL-focused; SQLMesh complements them at the data-model layer)
-- [`dbt-testing`](../../../qa-data-quality/skills/dbt-testing/SKILL.md),
-  [`great-expectations`](../../../qa-data-quality/skills/great-expectations/SKILL.md),
-  [`soda-checks`](../../../qa-data-quality/skills/soda-checks/SKILL.md) - sister data-quality frameworks
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer
+- `dbt-testing`, `great-expectations`, `soda-checks` - sister data-quality frameworks

@@ -11,13 +11,13 @@ Lighthouse CI ships five audit categories: Performance, Accessibility,
 Best Practices, SEO, and Progressive Web App. The **Accessibility**
 category runs a curated subset of axe-core rules
 ([lhci][lhci]). Configuring it via the same `lighthouserc.js` that
-[`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md)
+`lighthouse-perf`
 uses keeps the audit pipeline unified.
 
 [lhci]: https://github.com/GoogleChrome/lighthouse-ci
 
 This skill is **the a11y slice** of Lighthouse CI;
-[`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md)
+`lighthouse-perf`
 is the Web Vitals slice. Both consume the same config; one CI run
 produces both reports.
 
@@ -38,7 +38,7 @@ layer.
 
 ## Install
 
-(Same as [`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md).)
+(Same as `lighthouse-perf`.)
 
 ```bash
 npm install --save-dev @lhci/cli
@@ -185,7 +185,7 @@ for both perf and a11y assertions.
 ## CI integration
 
 (See the same workflow in
-[`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md) - one workflow runs both.)
+`lighthouse-perf` - one workflow runs both.)
 
 ```yaml
 # .github/workflows/lighthouse.yml
@@ -241,7 +241,7 @@ jobs:
 
 - [lhci][lhci] - Lighthouse CI install, `lhci autorun`,
   configuration shape, assertion levels.
-- [`lighthouse-perf`](../../../qa-load-testing/skills/lighthouse-perf/SKILL.md) - sibling skill for the Performance / Web Vitals category in
+- `lighthouse-perf` - sibling skill for the Performance / Web Vitals category in
   the same Lighthouse run.
 - [`axe-a11y`](../axe-a11y/SKILL.md) - direct axe-core usage for
   component-level coverage.

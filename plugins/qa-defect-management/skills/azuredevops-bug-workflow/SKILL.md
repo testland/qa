@@ -24,9 +24,7 @@ JSON Patch body, per
 - Building a triage script that pulls New defects and applies priority
   or assigns to the on-call engineer.
 - Bulk-transitioning Resolved bugs to Closed after a release.
-- Backing the
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md)
-  search backend for ADO-using teams.
+- Backing a duplicate-detection search backend for ADO-using teams.
 
 ## Authoring
 
@@ -433,5 +431,4 @@ the first failure, deduplicates against open Bugs, and calls `create_or_comment`
   [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md),
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md).
+  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).

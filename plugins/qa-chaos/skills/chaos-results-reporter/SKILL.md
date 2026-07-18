@@ -25,18 +25,17 @@ A trend report answers the harder question: is the system getting more
 resilient over time, or are the same blast-radius categories failing on
 every run?
 
-This skill walks the workflow for aggregating drill results emitted by
-[`chaos-drill-orchestrator`](../../agents/chaos-drill-orchestrator.md) or
-[`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) Step 7 into
-a structured trend report with per-experiment metrics, cross-run trend lines,
-action items, and a stakeholder summary.
+This skill walks the workflow for aggregating drill results - from a completed
+chaos drill, or from [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
+Step 7 - into a structured trend report with per-experiment metrics, cross-run
+trend lines, action items, and a stakeholder summary.
 
 **Differentiation axis vs. `chaos-experiment-author` Step 7:** that step
 produces a single-drill verdict. This skill aggregates multiple verdicts over
 time, computes trend direction, and produces a stakeholder-facing document.
-**Differentiation axis vs. `chaos-drill-orchestrator`:** that agent runs a
-drill in real time. This skill runs post-hoc, after one or more drills have
-already completed and their reports exist on disk.
+**Differentiation axis vs. running a drill live:** a real-time drill run
+produces reports as it executes. This skill runs post-hoc, after one or more
+drills have already completed and their reports exist on disk.
 
 ## Hard-reject rule
 
@@ -54,8 +53,8 @@ Do not fabricate metrics or assume a prior run exists.
 
 Locate completed drill reports. Supported input forms:
 
-- Markdown files emitted by `chaos-drill-orchestrator` (the `## Chaos drill
-  report - <experiment-id>` format).
+- Markdown files in the `## Chaos drill report - <experiment-id>` format
+  (as emitted by a completed chaos drill).
 - YAML verdict files emitted by `chaos-experiment-author` Step 7.
 - A directory glob passed by the user (e.g., `results/chaos/*.md`).
 
@@ -248,9 +247,6 @@ date is today's date) unless the user specifies a different output path.
 - [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - authors
   the per-experiment YAML and single-drill verdict (Step 7) that this skill
   aggregates.
-- [`chaos-drill-orchestrator`](../../agents/chaos-drill-orchestrator.md) -
-  action-taking agent that runs the four-stage drill and emits the drill
-  report consumed by Step 1 of this skill.
 
 [cp]: https://principlesofchaos.org/
 [iso25010]: https://www.iso.org/standard/78176.html

@@ -241,6 +241,4 @@ final gate is the single source of CI truth.
 - [oasdiff-breaking][oasdiff] - oasdiff severity tiers.
 - [gqi-diff][gqi] - GraphQL Inspector breaking classification.
 - [buf-breaking][buf] - buf breaking-change category model.
-- [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md)
-  and
-  [`visual-baseline-gate`](../../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md) - sibling gate skills with the same artifact shape.
+- `data-quality-gate` and `visual-baseline-gate` - sibling gate skills with the same artifact shape.

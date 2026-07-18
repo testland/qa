@@ -21,10 +21,10 @@ keywords:
 
 [gtb-flaky]: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 
-The `e2e-test-trend-reporter` agent produces a comparable weekly markdown
-snapshot. This skill builds the persistent infrastructure layer: a live
-dashboard that accumulates run history and surfaces the flake-rate metric
-continuously, rather than on demand.
+A weekly markdown snapshot report gives a comparable point-in-time view. This
+skill builds the persistent infrastructure layer: a live dashboard that
+accumulates run history and surfaces the flake-rate metric continuously,
+rather than on demand.
 
 ## Step 1 - Define the flake-rate metric
 
@@ -329,7 +329,5 @@ evaluating on the next 1-minute evaluation cycle.
   source for the "flaky test" term used throughout this skill.
 - [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) - downstream
   consumer of the quarantine-candidate query in Step 5.
-- [`e2e-test-trend-reporter`](../../agents/e2e-test-trend-reporter.md) - the
-  weekly narrative complement to this persistent dashboard.
 - [`flake-pattern-reference`](../flake-pattern-reference/SKILL.md) - pattern
   catalog used to interpret spikes surfaced by this dashboard.

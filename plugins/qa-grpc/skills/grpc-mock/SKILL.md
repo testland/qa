@@ -340,7 +340,7 @@ server goroutines often surface races.
 - **Doesn't replace contract tests.** Mocks reflect what *this
   test* expects; they don't enforce that the real server actually
   produces those responses. Pair with
-  [`qa-contract-testing/protobuf-compat-checking`](../../../qa-contract-testing/skills/protobuf-compat-checking/SKILL.md).
+  `protobuf-compat-checking` (in the qa-contract-testing plugin).
 
 ## References
 

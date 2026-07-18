@@ -13,9 +13,8 @@ description: "Reference catalog for snapshot / golden file management - naming c
 > thing in the rest of the body.
 
 A reference catalog for **how** to manage snapshot / golden files.
-Pairs with [`golden-file-manager`](../../agents/golden-file-manager.md)
-which is the **active management** agent that updates / prunes
-golden files based on these conventions.
+It supplies the conventions that active snapshot-management
+workflows follow when updating / pruning golden files.
 
 ## When to use
 
@@ -62,8 +61,7 @@ split the test.
 ### Per-OS / per-browser variants (visual snapshots)
 
 For visual / screenshot-based snapshots, the name carries the
-platform suffix (per
-[`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)):
+platform suffix (per `playwright-snapshots`, in the qa-visual-regression plugin):
 
 ```
 Button-primary-1-chromium-linux.png
@@ -147,9 +145,8 @@ Is the diff explained by code changes in the same PR?
 
 The most common review failure is **rubber-stamping snapshot
 updates** - accepting a 47-component diff because the PR title says
-"Refactor Button". The diff classifier in
-[`golden-file-manager`](../../agents/golden-file-manager.md)
-implements this decision tree.
+"Refactor Button". A snapshot-diff classifier can implement this
+decision tree.
 
 ## Severity tiering
 
@@ -173,8 +170,7 @@ Remove a snapshot when:
 - The snapshot has produced more false positives than real
   regressions over a 3-month window - it's noise, not signal.
 
-The [`golden-file-manager`](../../agents/golden-file-manager.md)
-agent automates the "test deleted but snapshot remained" cleanup.
+The "test deleted but snapshot remained" cleanup can be automated.
 
 ## Anti-patterns
 
@@ -205,8 +201,6 @@ agent automates the "test deleted but snapshot remained" cleanup.
 
 - ISO/IEC/IEEE 29119 series - formal test-document conventions
   (cite by stable ID).
-- [`golden-file-manager`](../../agents/golden-file-manager.md) - 
-  active-management agent that uses this catalog.
-- [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md) - visual-snapshot-specific naming and per-OS suffix conventions.
-- [`visual-baseline-conventions`](../../../qa-visual-regression/skills/visual-baseline-conventions/SKILL.md) - broader visual-coverage conventions; this skill is the
+- `playwright-snapshots` - visual-snapshot-specific naming and per-OS suffix conventions.
+- `visual-baseline-conventions` - broader visual-coverage conventions; this skill is the
   text/object-snapshot equivalent.

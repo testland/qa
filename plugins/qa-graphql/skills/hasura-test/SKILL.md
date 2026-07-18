@@ -26,7 +26,7 @@ The testable concerns are different from Apollo / Yoga:
 
 - Testing a Hasura-backed API where row-level isolation is the
   primary concern (composes with
-  [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md)).
+  `cross-tenant-data-leak-tests` in the qa-multi-tenancy plugin).
 - Verifying a new role's permission rules.
 - PR review of `hasura/metadata/` changes.
 - Regression-testing role transitions (user becomes admin, etc.).
@@ -251,8 +251,8 @@ jobs:
 - Introspection control:
   [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md).
 - Cross-plugin (tenant isolation):
-  [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md),
-  [`qa-multi-tenancy/row-level-security-postgres-reference`](../../../qa-multi-tenancy/skills/row-level-security-postgres-reference/SKILL.md).
+  `cross-tenant-data-leak-tests`,
+  `row-level-security-postgres-reference`.
 - Sibling frameworks:
   [`apollo-server-test`](../apollo-server-test/SKILL.md),
   [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md),

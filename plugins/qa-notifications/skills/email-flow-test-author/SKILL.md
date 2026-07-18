@@ -223,7 +223,7 @@ For each email flow in scope:
 - Per-ESP webhook payloads vary; test fixtures must come from each
   ESP's official docs.
 - Email rendering across clients (Outlook, Gmail, Apple Mail)
-  isn't covered here - that's a [`pdf-print-render`](../../../qa-pdf-print/README.md)-adjacent
+  isn't covered here - that's a `pdf-print-render`-adjacent
   domain (visual regression for email).
 
 ## References

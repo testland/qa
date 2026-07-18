@@ -225,5 +225,3 @@ API token via `User → My Account → Security → Generate Tokens`.
   [`codeql-queries`](../codeql-queries/SKILL.md),
   [`bandit-python`](../bandit-python/SKILL.md),
   [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
-  unifier agent

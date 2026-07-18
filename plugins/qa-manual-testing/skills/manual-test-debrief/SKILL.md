@@ -20,8 +20,7 @@ This skill provides the template and the aggregation conventions.
 
 ## When to use
 
-- After every charter session per
-  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
+- After every charter session.
 - After a bug bash cohort completes its 90-min slot per
   [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md).
 - After a free-form tester exploration (even without a formal
@@ -120,8 +119,7 @@ metric captures.
 - Staging was down for ~10 min mid-session; lost momentum.
 
 **Recommendations for next session:**
-- Pre-seed promo codes via a fixture per
-  [`synthetic-data-toolkit`](../../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md).
+- Pre-seed promo codes via a fixture per `synthetic-data-toolkit`.
 - Verify staging is up before session start.
 
 ## Feelings
@@ -233,7 +231,6 @@ different scope.
 - Bach, J. & Bach, J., *Session-Based Test Management* (HP, 2000;
   PDF at `satisfice.com/download/session-based-test-management`) - 
   PROOF debrief format origin, three-bucket time accounting.
-- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - upstream: charters this debrief delivers into.
 - [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md) - the tours catalogued in the Past section.
 - [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md) - 
   multi-cohort bug bash inherits this debrief format.

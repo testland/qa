@@ -33,7 +33,7 @@ This skill covers the three most-used official implementations:
 - Cross-stakeholder collaboration is the value (Gherkin scenarios
   read by non-engineers).
 - Acceptance criteria authored as Gherkin scenarios per
-  [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
+  `acceptance-criteria-extractor` (in the qa-shift-left plugin).
 
 If only engineers will read the tests, BDD's collaboration value
 is wasted - plain xUnit-style tests are simpler.
@@ -205,7 +205,7 @@ npx cucumber-js features/ \
   --format junit:reports/cucumber.xml
 ```
 
-The JUnit XML feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+The JUnit XML feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
 
 ## Step 8 - Tags + filtering
 
@@ -227,7 +227,7 @@ npx cucumber-js features/ --tags 'not @wip'
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Imperative steps ("I click button id=#submit")                        | Couples to implementation; scenarios become fragile.                     | Declarative steps ("I submit the form") (see [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md)). |
+| Imperative steps ("I click button id=#submit")                        | Couples to implementation; scenarios become fragile.                     | Declarative steps ("I submit the form"). |
 | 100 unique step definitions                                            | Drift; inconsistency.                                                     | Step library curation (see [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)). |
 | BDD without business stakeholder involvement                            | Defeats the point; expensive xUnit tests.                                | If non-engineers don't read the features, switch to plain unit tests. |
 | Mixing Cucumber + plain JUnit assertions                                | Two test runners; double maintenance.                                    | Cucumber's runner only; plain JUnit for non-BDD tests in separate suite. |
@@ -252,5 +252,4 @@ npx cucumber-js features/ --tags 'not @wip'
 - [`behave-testing`](../behave-testing/SKILL.md) - Python sibling.
 - [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - .NET sibling.
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - addresses step proliferation.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - adversarial reviewer for declarative-vs-imperative.
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream skill that generates Gherkin from stories.
+- `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream skill that generates Gherkin from stories.

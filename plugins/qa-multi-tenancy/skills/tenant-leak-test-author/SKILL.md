@@ -261,9 +261,7 @@ This skill produces:
   to add a surface.
 
 The runtime gate is
-[`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md);
-the adversarial review is
-[`tenant-leak-critic`](../../agents/tenant-leak-critic.md).
+[`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
 
 ## References
 
@@ -275,5 +273,3 @@ the adversarial review is
   [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md).
 - Runtime gate:
   [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
-- Adversarial review:
-  [`tenant-leak-critic`](../../agents/tenant-leak-critic.md).

@@ -1,6 +1,6 @@
 ---
 name: test-code-conventions
-description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, mocking rationale (state vs behavior verification, fake vs mock preference), fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. The agents in this plugin (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic) load this as their shared rule book. Use when you need the underlying rationale for any verdict one of those agents issues, as a team's onboarding reference for \"what makes a test code-reviewable,\" or as the source-of-truth the critics' verdicts cite back to."
+description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, mocking rationale (state vs behavior verification, fake vs mock preference), fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. The critic agents in this plugin load this as their shared rule book. Use when you need the underlying rationale for any verdict one of those agents issues, as a team's onboarding reference for \"what makes a test code-reviewable,\" or as the source-of-truth the critics' verdicts cite back to."
 ---
 
 # test-code-conventions
@@ -16,9 +16,7 @@ reference for the reviewer to learn the underlying rule.
 
 - A new team member is onboarding to the codebase and needs to
   understand "what we mean by a good test."
-- A critic from this plugin (`test-code-critic`,
-  `assertion-quality-reviewer`, `mocking-anti-pattern-detector`,
-  `e2e-selector-quality-critic`) flagged an issue and the reviewer
+- A critic from this plugin flagged an issue and the reviewer
   needs the underlying rule's rationale.
 - The team is authoring its own per-team test conventions document
   and wants a starting point.
@@ -269,8 +267,8 @@ A test that takes >1s in setup (creating fixtures, seeding DB,
 warming caches) has a coupling problem. The remedies:
 
 - Move fixture creation to a per-suite `beforeAll` if shared.
-- Use [`db-snapshot-restore`](../../../qa-test-environment/agents/db-snapshot-restore.md)
-  template-DB pattern for DB tests instead of `db:reset`.
+- Use a template-DB snapshot/restore pattern for DB tests instead of
+  `db:reset`.
 - Move the unit test to an integration layer if it really needs the
   full stack - don't run integration tests under the unit-test
   budget.
@@ -289,7 +287,3 @@ The whole-suite cost of slow setup compounds: 10 tests × 2s =
 - [pw-best-practices][pwb] - Playwright best practices: user-facing
   locators, web-first assertions, "automated tests should verify
   that the application code works for the end users."
-- [`test-code-critic`](../../agents/test-code-critic.md),
-  [`assertion-quality-reviewer`](../../agents/assertion-quality-reviewer.md),
-  [`mocking-anti-pattern-detector`](../../agents/mocking-anti-pattern-detector.md),
-  [`e2e-selector-quality-critic`](../../agents/e2e-selector-quality-critic.md) - the four agents that consume this reference.

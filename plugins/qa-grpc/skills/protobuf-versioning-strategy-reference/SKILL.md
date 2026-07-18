@@ -331,4 +331,4 @@ later in a separate proto file/package.
   breaking and why**. For detection of changes in CI, use
   [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
   For protobuf-schema contract-testing across services see
-  [`qa-contract-testing/protobuf-compat-checking`](../../../qa-contract-testing/skills/protobuf-compat-checking/SKILL.md).
+  `protobuf-compat-checking` (in the qa-contract-testing plugin).

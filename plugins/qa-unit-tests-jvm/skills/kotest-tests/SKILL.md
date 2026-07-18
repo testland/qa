@@ -16,7 +16,7 @@ JUnit 5 (which works fine with Kotlin too) by:
 
 - **Multiple specification styles** - DSL choice per team preference
 - **Rich matchers** - `shouldBe`, `shouldContain`, `shouldThrow`, etc.
-- **Built-in property-based testing** - alternative to [`jqwik-testing`](../../../qa-property-based/skills/jqwik-testing/SKILL.md)
+- **Built-in property-based testing** - alternative to `jqwik-testing`
 - **Coroutines-first** - `runTest`/`runBlocking` integrated cleanly
 - **Spec-level isolation modes** - per-test fresh instances vs single
 
@@ -137,7 +137,7 @@ class PropertyTest : StringSpec({
 })
 ```
 
-For deeper property-based work see [`jqwik-testing`](../../../qa-property-based/skills/jqwik-testing/SKILL.md)
+For deeper property-based work see `jqwik-testing`
 or the dedicated qa-property-based plugin.
 
 ## Step 5 - Coroutines
@@ -235,5 +235,5 @@ JaCoCo coverage works identically.
   [`spock-tests`](../spock-tests/SKILL.md),
   [`testng-tests`](../testng-tests/SKILL.md),
   [`scalatest`](../scalatest/SKILL.md) - sister tools
-- [`jqwik-testing`](../../../qa-property-based/skills/jqwik-testing/SKILL.md) - JVM property-based
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- `jqwik-testing` - JVM property-based
+- `test-code-conventions`

@@ -200,4 +200,4 @@ team has confidence and abort procedures.
   [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) - per-tool
   runners.
 - [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md) - sibling: combines chaos with test suites.
-- [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - provides the steady-state metrics that verdict the experiment.
+- `prod-canary-validator` (in the qa-shift-right plugin) - provides the steady-state metrics that verdict the experiment.

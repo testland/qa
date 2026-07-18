@@ -41,7 +41,7 @@ Composes with:
   during checklist walk.
 
 For Playwright-driven MV3 popup / content-script fixtures see
-[`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
+`qa-modern-web/browser-extension-tests`.
 That skill assumes the MV3 manifest is *already valid*; this
 builder is what proves it before assertion-level tests run.
 

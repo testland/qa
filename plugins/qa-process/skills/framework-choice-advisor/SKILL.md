@@ -20,9 +20,9 @@ This skill is a **pure reference**: a decision tree + tradeoff matrix the team u
 
 Do **not** use this skill when:
 
-- The framework is already chosen and the team needs configuration / API help - use the per-framework skill ([`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), etc.).
+- The framework is already chosen and the team needs configuration / API help - use the per-framework skill (`playwright-testing`, `cypress-testing`, etc.).
 - The team's question is "should we add E2E vs unit vs contract tests" - that's [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
-- Mobile-native vs hybrid app selection - use the [`qa-mobile`](../../../qa-mobile/) plugin's documentation directly.
+- Mobile-native vs hybrid app selection - use the `qa-mobile` plugin's documentation directly.
 
 ## Step 1 - Frame the decision against the project's NFRs
 
@@ -71,8 +71,8 @@ Decision: if the team is single-platform native (iOS only or Android only), use 
 |---|---|---|---|
 | **RestAssured** | REST API integration tests | Java / Kotlin | The JVM-default; mature, deeply integrated with JUnit / TestNG. |
 | **Karate** | REST + SOAP + GraphQL + gRPC | Karate DSL (Cucumber-like) | DSL-first; lowers barrier for non-Java testers. |
-| **schemathesis** | OpenAPI / GraphQL property-based fuzzing | Python | Generative; complements example-based tests. See [`contract-test-scaffolder`](../../../qa-contract-testing/agents/contract-test-scaffolder.md). |
-| **Pact** | Consumer-driven contract tests | JS / JVM / Python / Go / Ruby / .NET | Different category - contract, not integration. See [`pact-contract-testing`](../../../qa-contract-testing/skills/pact-contract-testing/SKILL.md). |
+| **schemathesis** | OpenAPI / GraphQL property-based fuzzing | Python | Generative; complements example-based tests. |
+| **Pact** | Consumer-driven contract tests | JS / JVM / Python / Go / Ruby / .NET | Different category - contract, not integration. See `pact-contract-testing`. |
 | **Postman / Newman** | Collection-driven API tests | Postman DSL | UI-driven authoring; not code-first. Often used by non-engineers. |
 
 ### Performance
@@ -115,7 +115,7 @@ tests/
 
 Conventions:
 - One `*.spec.ts` per feature flow; one Page Object per page or major component.
-- Fixtures scoped to `describe` blocks; global fixtures are an anti-pattern (see [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) §6).
+- Fixtures scoped to `describe` blocks; global fixtures are an anti-pattern (see `test-code-conventions` §6).
 - Page Objects per [Martin Fowler's definition](https://martinfowler.com/bliki/PageObject.html): "a page object wraps an HTML page... with an application-specific API." Page Objects do **not** make assertions; they return state or the next Page Object on navigation.
 
 ### Cypress + Mocha (TypeScript)
@@ -160,7 +160,7 @@ Universal across frameworks:
 | Concern | Convention |
 |---|---|
 | **Parallelisation** | Shard by file (Playwright `--shard=X/Y`, Cypress Cloud, WDIO `maxInstances`). Aim for 5 - 10 minute wall-clock for the full suite per shard. |
-| **Retries** | Retry once on first failure; never retry locally (only CI). Tests retried >1× are flake candidates - feed to [`failure-classifier`](../../../qa-bug-repro/agents/failure-classifier.md). |
+| **Retries** | Retry once on first failure; never retry locally (only CI). Tests retried >1× are flake candidates - triage them. |
 | **Trace / video** | Capture on-first-retry (off for green runs to save storage). Playwright `trace: 'on-first-retry'` is the default; Cypress + `cypress-video-trim` similar. |
 | **Reporting** | JUnit XML output for the CI's test-result panel; Allure for human reporting; both via plugin. |
 | **Secrets** | Load from CI secret store (GitHub Actions Secrets, GitLab CI Variables); never commit. |
@@ -199,10 +199,8 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 
 ## Hand-off targets
 
-- **After the framework is chosen, configure it** → per-framework skill ([`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), [`selenium-testing`](../../../qa-web-e2e/skills/selenium-testing/SKILL.md), [`webdriverio-testing`](../../../qa-web-e2e/skills/webdriverio-testing/SKILL.md)).
+- **After the framework is chosen, configure it** → per-framework skill (`playwright-testing`, `cypress-testing`, `selenium-testing`, `webdriverio-testing`).
 - **Tune the layer balance after the framework is in place** → [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
-- **Author the first scaffold** → [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md).
-- **Audit the framework after it's grown for 6+ months** → [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) (sibling, in `qa-test-review`).
 - **Convert Selenium suite → Playwright (the most common 2026 migration)** → migration is a project, not an agent; this skill provides the decision input, the per-framework skills provide the target configuration.
 
 ## References
@@ -217,6 +215,5 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 - ISTQB glossary - test automation framework: https://glossary.istqb.org/en_US/term/test-automation-framework
 - ISTQB glossary - keyword-driven testing (relevant to Karate / Postman DSL choice): https://glossary.istqb.org/en_US/term/keyword-driven-testing
 - ISO/IEC 25010 - quality characteristics (used in Step 1 NFR scoring): https://en.wikipedia.org/wiki/ISO/IEC_25010
-- [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md), [`cypress-testing`](../../../qa-web-e2e/skills/cypress-testing/SKILL.md), [`selenium-testing`](../../../qa-web-e2e/skills/selenium-testing/SKILL.md), [`webdriverio-testing`](../../../qa-web-e2e/skills/webdriverio-testing/SKILL.md) - downstream per-framework configuration skills.
+- `playwright-testing`, `cypress-testing`, `selenium-testing`, `webdriverio-testing` - downstream per-framework configuration skills.
 - [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) - layer-mix tuning after the framework is in place.
-- [`framework-architecture-auditor`](../../../qa-test-review/agents/framework-architecture-auditor.md) - sibling agent for auditing an existing framework's architecture.

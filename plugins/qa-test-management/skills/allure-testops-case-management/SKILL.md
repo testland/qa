@@ -26,9 +26,7 @@ For canonical anatomy, see
   automated reporting.
 - Linking automated test results to manual case definitions.
 - Migrating from a legacy TCM to Allure TestOps.
-- Backing the
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md)
-  scans for Allure TestOps-using teams.
+- Backing test-case quality scans for Allure TestOps-using teams.
 
 ## Authoring
 
@@ -296,4 +294,4 @@ and links to manual cases by ID:
   [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`allure-reports`](../../../qa-test-reporting/skills/allure-reports/SKILL.md) - different scope (allure-results parser; not case repository).
+  `allure-reports` (in the qa-test-reporting plugin) - different scope (allure-results parser; not case repository).

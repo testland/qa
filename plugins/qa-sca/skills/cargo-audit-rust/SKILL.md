@@ -126,7 +126,7 @@ Per [cargo-audit source][rustsec-readme], `--format` supports three values:
 | Value | Use |
 |---|---|
 | `terminal` | Default human-readable output |
-| `json` | Machine-readable; pipe to [`sca-prioritizer`](../../agents/sca-prioritizer.md) |
+| `json` | Machine-readable; pipe to multi-tool SCA triage |
 | `sarif` | SARIF 2.1; upload to GitHub Code Scanning |
 
 ```bash
@@ -310,5 +310,3 @@ For SARIF upload alongside the action:
   native audit wrapper (mentions cargo-audit as one of eight tools)
 - [`osv-scanner`](../osv-scanner/SKILL.md) - cross-DB pair; OSV.dev receives
   RustSec exports in real time
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent for
-  multi-tool SCA findings

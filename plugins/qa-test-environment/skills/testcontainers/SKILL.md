@@ -411,6 +411,3 @@ static `@Container` fields.
 - [`docker-compose-test`](../docker-compose-test/SKILL.md) - 
   alternative when the topology is multi-service and best expressed
   declaratively.
-- [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) - 
-  composes with Testcontainers-managed databases for per-test
-  isolation.

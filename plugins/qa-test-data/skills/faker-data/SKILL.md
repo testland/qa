@@ -167,8 +167,7 @@ Faker::Config.random = Random.new(42)
 For test frameworks: place the seed in `beforeEach` / `setup` so
 each test starts with the same baseline; for paired runs, persist
 the seed used per failing test (similar to the
-[`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md)
-Pattern 8 randomness guidance).
+`flake-pattern-reference` Pattern 8 randomness guidance).
 
 ## Locale support
 

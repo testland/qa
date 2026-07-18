@@ -245,7 +245,7 @@ Scenario 2 has no matching steps.
   `rerun`); JSON report as the canonical executed-step record.
 - [`acceptance-criteria-extractor`](../acceptance-criteria-extractor/SKILL.md) -
   upstream skill that produces the `.feature` files this skill consumes.
-- [`nfr-extractor`](../nfr-extractor/SKILL.md) - sibling for non-functional
+- [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md) - sibling for non-functional
   requirements; scenarios it produces are out of scope for BDD-suite coverage
   mapping.
 

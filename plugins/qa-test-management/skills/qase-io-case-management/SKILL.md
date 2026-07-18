@@ -23,9 +23,7 @@ For canonical anatomy, see
 - Bulk-importing from CSV / legacy TCM into Qase.
 - Programmatic case management (mass-edit, tagging, status
   transitions).
-- Backing the
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md)
-  scans for Qase-using teams.
+- Backing test-case quality scans for Qase-using teams.
 
 ## Authoring
 
@@ -100,7 +98,7 @@ Per developers.qase.io schema definitions:
 | `status` | 0=Actual, 1=Draft, 2=Deprecated |
 
 Map per
-[`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md);
+`severity-vs-priority-reference` (in the qa-defect-management plugin);
 note Qase priority is reversed from defect-management convention
 (1=High here vs 1=Critical in IEEE 1044).
 
@@ -291,7 +289,7 @@ management API).
 - qase-python SDK - github.com/qase-tms/qase-python.
 - Sibling references:
   [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md),
-  [`severity-vs-priority-reference`](../../../qa-defect-management/skills/severity-vs-priority-reference/SKILL.md).
+  `severity-vs-priority-reference`.
 - Sibling skills:
   [`testrail-case-management`](../testrail-case-management/SKILL.md),
   [`xray-case-management`](../xray-case-management/SKILL.md),

@@ -21,8 +21,8 @@ literature.
 
 This skill formalizes the prose of a data PRD into a contract that
 the QA test suite can mechanically assert against - typically via
-`dbt-tests`, `great-expectations`, or `soda-checks` (see
-[`qa-data-quality`](../../../qa-data-quality/) plugin).
+`dbt-tests`, `great-expectations`, or `soda-checks` (see the
+`qa-data-quality` plugin).
 
 ## When to use
 
@@ -32,9 +32,7 @@ the QA test suite can mechanically assert against - typically via
   on; the team is documenting them ahead of a refactor.
 - A PRD or design doc references a dataset and the team needs the
   schema / SLA pulled out into structured form.
-- A data-quality engineer (per
-  [`data-quality-engineer`](../../../qa-roles/agents/data-quality-engineer.md))
-  needs the contract as input to suite generation.
+- A data-quality engineer needs the contract as input to suite generation.
 
 ## What goes in a data contract
 
@@ -53,7 +51,7 @@ For each column:
 | Unique        | yes      | `true` for candidate keys (separate from PK).        |
 | FK            | optional | If foreign key, the `<table>.<column>` reference.    |
 | PII           | required | Tag values: `none`, `direct` (email/name), `indirect` (zip, dob alone), `sensitive` (SSN, payment). |
-| Constraint    | optional | Range / enum / regex (per the [`qa-data-quality`](../../../qa-data-quality/) `data-quality-conventions` skill). |
+| Constraint    | optional | Range / enum / regex (per the qa-data-quality plugin's `data-quality-conventions` skill). |
 | Description   | yes      | One-sentence semantic meaning; not just the type.    |
 
 ### 2. Freshness SLA
@@ -61,7 +59,7 @@ For each column:
 | Field             | Notes |
 |-------------------|-------|
 | Update cadence    | `daily / hourly / continuous / weekly`.                        |
-| Max staleness     | The point past which downstream consumers should treat the data as broken (per [`data-quality-conventions`](../../../qa-data-quality/skills/data-quality-conventions/SKILL.md): typically 2× cadence). |
+| Max staleness     | The point past which downstream consumers should treat the data as broken (per `data-quality-conventions` in the qa-data-quality plugin: typically 2× cadence). |
 | Source-of-truth column | The timestamp column the freshness check reads (e.g. `updated_at`, `loaded_at`, `event_time`). |
 
 ### 3. Volume bounds
@@ -280,13 +278,11 @@ the consumer's tests, NOT a binding agreement.
 ## References
 
 - ISTQB Glossary V4.7.1 - testability + non-functional testing
-  (cited in [`testability-reviewer`](../../agents/testability-reviewer.md)
-  and [`nfr-extractor`](../nfr-extractor/SKILL.md)) - for the
+  (cited in [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md)) - for the
   underlying observability heuristic.
 - ISO/IEC 25012:2008 - data-quality model (cite by stable ID;
   paywalled at iso.org).
-- [`qa-data-quality`](../../../qa-data-quality/README.md) plugin - 
-  the downstream consumer of this skill's output. The
-  [`data-quality-engineer`](../../../qa-roles/agents/data-quality-engineer.md)
-  agent reads contracts produced by this skill.
-- [`data-quality-conventions`](../../../qa-data-quality/skills/data-quality-conventions/SKILL.md) - naming and threshold conventions referenced from the contract.
+- The `qa-data-quality` plugin - 
+  the downstream consumer of this skill's output. A data-quality engineer
+  reads contracts produced by this skill.
+- `data-quality-conventions` (in the qa-data-quality plugin) - naming and threshold conventions referenced from the contract.

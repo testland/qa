@@ -31,7 +31,7 @@ surface (`chrome.runtime.sendMessage`, `chrome.runtime.connect`,
 `externally_connectable`) every extension test exercises.
 
 For Playwright-driven MV3 popup / content-script fixtures see
-[`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
+`qa-modern-web/browser-extension-tests`.
 That skill is a Playwright wrapper for fixture-style testing - this
 skill is the lower-level developer flow + the messaging API surface
 itself.

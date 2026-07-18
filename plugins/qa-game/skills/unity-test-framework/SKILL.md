@@ -22,8 +22,7 @@ at [throwtheswitch.org/unity](https://www.throwtheswitch.org/unity)**
 (a single-C-file unit-test framework for bare-metal MCUs). The
 two tools share only a name; they have unrelated origins, APIs,
 and consumers. **For the C unit-test library, see the sibling
-skill [`qa-embedded/unity-test-framework-c`](../../../qa-embedded/skills/unity-test-framework-c/SKILL.md)**
-in this same marketplace.
+skill `unity-test-framework-c`** in the qa-embedded plugin.
 
 Per the
 [package overview](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html),
@@ -56,8 +55,7 @@ Composes with:
   tests that exercise scene lifecycle (PlayMode) in one harness.
 
 For C unit tests on the firmware side of a hybrid game build,
-use [`qa-embedded/unity-test-framework-c`](../../../qa-embedded/skills/unity-test-framework-c/SKILL.md)
-instead.
+use `unity-test-framework-c` instead.
 
 ## Authoring
 
@@ -351,7 +349,7 @@ assets without it, adding 5 - 15 min per CI run.
 | Not cleaning up `GameObject`s between EditMode tests | Cross-test contamination | `[TearDown]` `Object.DestroyImmediate(go)` on every fixture |
 | Trusting Unity process exit code in CI | Per [command-line reference](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/reference-command-line.html), "no common definition for exit codes" | Parse `-testResults` XML in CI |
 | Skipping the `Library/` cache | 5 - 15 min asset reimport per CI run | `actions/cache@v4` with the `Library/` path |
-| Confusing this skill with ThrowTheSwitch Unity (C) | Different tool with the same name | See [`qa-embedded/unity-test-framework-c`](../../../qa-embedded/skills/unity-test-framework-c/SKILL.md) |
+| Confusing this skill with ThrowTheSwitch Unity (C) | Different tool with the same name | See `unity-test-framework-c` |
 
 ## Limitations
 

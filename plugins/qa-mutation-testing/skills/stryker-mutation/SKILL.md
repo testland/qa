@@ -177,4 +177,3 @@ main (catches drift in unchanged code).
 - [`pitest-mutation`](../pitest-mutation/SKILL.md) - Java sibling.
 - [`mutmut-mutation`](../mutmut-mutation/SKILL.md) - Python sibling.
 - [`mull-mutation`](../mull-mutation/SKILL.md) - C/C++ sibling.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent that suggests the missing test for a survivor.

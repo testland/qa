@@ -41,7 +41,7 @@ Composes with:
   through this skill's output.
 
 For Playwright-driven MV3 popup / content-script fixtures see
-[`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
+`qa-modern-web/browser-extension-tests`.
 That skill covers the `chrome.storage` *usage* assertions; this
 builder covers the *suite* design - area selection, quota gates,
 event-payload conformance, multi-area isolation.

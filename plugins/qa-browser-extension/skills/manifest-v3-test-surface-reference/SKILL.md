@@ -29,7 +29,7 @@ the two builders (`mv2-to-mv3-migration-test-checklist`,
 `extension-storage-test-author`).
 
 For Playwright-driven MV3 popup / content-script fixtures see
-[`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md).
+`qa-modern-web/browser-extension-tests`.
 That skill is a Chromium-only, popup + content-script + service-
 worker-fixture skill. This reference is browser-agnostic, manifest-
 field-keyed, and covers the Firefox column explicitly.

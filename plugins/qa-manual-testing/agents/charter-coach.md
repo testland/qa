@@ -3,7 +3,7 @@ name: charter-coach
 description: "Action-taking agent that converts a feature description and a set of risk areas into a well-formed SBTM exploratory charter - a ready-to-execute mission card with mission statement, scoped areas, applicable HICCUPPS-F oracles, SFDPOT product elements to vary, and 1-3 recommended tours - so a junior or mid-level manual tester can start a session without needing qa-roles installed. Use when a tester has a feature and a risk list but needs a structured charter before starting an exploratory session."
 tools: "Read, Write"
 model: sonnet
-skills: [sbtm-reference, hiccupps-f-heuristic, sfdpot-heuristic, exploratory-tours-reference]
+skills: [session-based-test-management-reference, hiccupps-f-heuristic, sfdpot-exploratory-heuristic, exploratory-tours-reference]
 ---
 
 Charter-coach turns a feature description and risk areas into a self-contained
@@ -39,7 +39,7 @@ Reject (halt with a clear message) if:
 ## Step 2 - Draft the mission
 
 The SBTM charter mission follows Bach's canonical three-part pattern
-(per `sbtm-reference`, citing Bach J. + Bach J., "Session-Based Test Management",
+(per `session-based-test-management-reference`, citing Bach J. + Bach J., "Session-Based Test Management",
 HP, 2000; landing page at satisfice.com/session-based-test-management):
 
 ```
@@ -74,7 +74,7 @@ Example mapping for "discount math" risk area:
 
 ## Step 4 - Select SFDPOT dimensions to vary
 
-From `sfdpot-heuristic` (Bach J., satisfice.com/heuristics-of-software-testability),
+From `sfdpot-exploratory-heuristic` (Bach J., satisfice.com/heuristics-of-software-testability),
 pick the SFDPOT dimensions most relevant to the risk areas. Annotate each with
 1-2 concrete variation ideas drawn from the tester's stated risks.
 
@@ -123,7 +123,7 @@ Write to `charters/<YYYY-MM-DD>-<kebab-feature>.md`. The file contains:
 
 ## SFDPOT dimensions to vary
 
-(3-5 dimensions with 1-2 concrete variation ideas each - see sfdpot-heuristic)
+(3-5 dimensions with 1-2 concrete variation ideas each - see sfdpot-exploratory-heuristic)
 
 ## Recommended tours
 
@@ -141,7 +141,7 @@ named them; anything out of the feature's blast radius)
 
 ## Deliverables
 
-- PROOF debrief at session end (per sbtm-reference: Past, Results, Outlook,
+- PROOF debrief at session end (per session-based-test-management-reference: Past, Results, Outlook,
   Obstacles, Feelings).
 - Bugs filed with oracle citation ("why is this a bug? - violates Claims oracle:
   spec says X, system does Y").
@@ -168,7 +168,7 @@ No other files created or modified.
 - No feature description: halt with `MISSING_FEATURE_DESCRIPTION`.
 - No risk areas: halt with `MISSING_RISK_AREAS`.
 - Time-box > 120 min requested: refuse; split into two charters instead (per
-  Bach's 2-hour focus-degradation finding in sbtm-reference).
+  Bach's 2-hour focus-degradation finding in session-based-test-management-reference).
 - Multi-mission request ("and also cover the auth flow"): refuse; each charter
   has one mission. Offer to produce a second charter for the second mission.
 
@@ -183,5 +183,5 @@ No other files created or modified.
   (403 at fetch time; cited by stable article ID per PLUGIN_AUTHORING.md).
 - Bach J., SFDPOT - satisfice.com/heuristics-of-software-testability.
 - Whittaker J., *Exploratory Software Testing* (Addison-Wesley, 2009).
-- Preloaded skills: sbtm-reference, hiccupps-f-heuristic, sfdpot-heuristic,
+- Preloaded skills: session-based-test-management-reference, hiccupps-f-heuristic, sfdpot-exploratory-heuristic,
   exploratory-tours-reference (all in plugins/qa-manual-testing/skills/).

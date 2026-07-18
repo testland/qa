@@ -152,7 +152,7 @@ Audit verifies:
 
 ## Step 5 - Post-rotation: incident documentation
 
-Cross-ref [`post-mortem-author`](../../../qa-process/skills/post-mortem-author/SKILL.md):
+Cross-ref `post-mortem-author` (in the qa-process plugin):
 
 - Detection mechanism + time
 - Exposure window estimate (commit timestamp → rotation timestamp)
@@ -255,5 +255,5 @@ After every rotation:
 - GitHub PAT management: docs.github.com/en/authentication/keeping-your-account-and-data-secure
 - HashiCorp Vault: developer.hashicorp.com/vault
 - AWS Secrets Manager rotation: docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html
-- [`post-mortem-author`](../../../qa-process/skills/post-mortem-author/SKILL.md) - 
+- `post-mortem-author` - 
   cross-plugin: post-rotation incident documentation

@@ -1,6 +1,6 @@
 ---
 name: judgment-list-author
-description: "Bootstraps human-relevance judgment lists (query sets, grading scales, rater guidelines, inter-rater agreement, Quepid tooling, TREC-style pooling, and refresh cadence) that serve as ground truth for all three search-relevance skills and the relevance-regression-reviewer agent. Use when a team needs to create or refresh the judgment corpus before running NDCG / MRR / Recall@k evaluations."
+description: "Bootstraps human-relevance judgment lists (query sets, grading scales, rater guidelines, inter-rater agreement, Quepid tooling, TREC-style pooling, and refresh cadence) that serve as ground truth for all three search-relevance skills. Use when a team needs to create or refresh the judgment corpus before running NDCG / MRR / Recall@k evaluations."
 type: skill
 keywords:
   - judgment-list
@@ -15,10 +15,10 @@ keywords:
 # judgment-list-author
 
 The other skills in this plugin (`elasticsearch-relevance-tests`,
-`opensearch-relevance-tests`, `vector-search-precision-tests`) and the
-`relevance-regression-reviewer` agent all require a judgment list - a set of
-`(query, document_id, grade)` triples that define what "relevant" means for
-your product. Nothing else in this plugin creates that corpus. This skill does.
+`opensearch-relevance-tests`, `vector-search-precision-tests`) all require a
+judgment list - a set of `(query, document_id, grade)` triples that define what
+"relevant" means for your product. Nothing else in this plugin creates that
+corpus. This skill does.
 
 Per [TREC's pooling methodology], "NIST pools the individual results, judges
 the retrieved documents for correctness, and evaluates the results" - the
@@ -30,7 +30,7 @@ judgment list is the non-automated step that all automated metrics depend on.
   list means no metrics.
 - After a major schema or corpus change: existing judgments cover documents
   that may no longer exist or new documents that are entirely unjudged.
-- When `relevance-regression-reviewer` reports > 30% unrated docs across
+- When a relevance-regression check reports > 30% unrated docs across
   queries: the judgment pool is stale.
 - When adding a new query segment (new product category, new language) with
   no coverage in the existing set.
@@ -224,7 +224,7 @@ Define explicit refresh triggers:
 | Index schema change (new field, new analyzer) | Full re-pool + partial re-judge (re-rate 20% overlap) |
 | Embedding model upgrade | Full re-pool for all affected query tiers |
 | Corpus grows > 20% | Re-pool; re-judge new documents only |
-| `relevance-regression-reviewer` flags > 30% unrated | Partial re-judge: new docs in the unrated set |
+| A relevance-regression check flags > 30% unrated | Partial re-judge: new docs in the unrated set |
 | New product category / language added | Add new query stratum; judge from scratch for that stratum |
 
 As a minimum, run a lightweight staleness check monthly: for each query,
@@ -233,9 +233,8 @@ exceeds 20%, schedule a re-judging session.
 
 ## Output format
 
-The judgment list consumed by `elasticsearch-relevance-tests`,
-`opensearch-relevance-tests`, and `relevance-regression-reviewer` is a
-JSON array:
+The judgment list consumed by `elasticsearch-relevance-tests` and
+`opensearch-relevance-tests` is a JSON array:
 
 ```json
 [
@@ -302,5 +301,3 @@ after mapping `doc_id` to the index's `_id` field.
   consumes judgment lists for OpenSearch rank eval
 - [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) -
   consumes judgment lists for recall@k evaluation
-- [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md) -
-  reviewer that requires a judgment list as input

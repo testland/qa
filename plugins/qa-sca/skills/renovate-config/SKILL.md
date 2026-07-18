@@ -268,4 +268,3 @@ renovate:
   [`dependabot-config`](../dependabot-config/SKILL.md),
   [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
   sister tools
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

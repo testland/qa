@@ -100,9 +100,9 @@ order fulfillment didn't trigger.
 
 The canary stage caught the increased error rate (0.4% vs 0.3%
 baseline) but did not exceed the rollback threshold (1.5×
-baseline). Per [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md),
-the verdict was PROCEED with WARNING; the human ack at the gate
-proceeded.
+baseline). Per `prod-canary-validator` (in the qa-shift-right
+plugin), the verdict was PROCEED with WARNING; the human ack at
+the gate proceeded.
 
 ## Contributing factors
 
@@ -219,7 +219,7 @@ Markdown + git. Quarterly rollup identifies patterns:
 **Patterns:**
 - 4 of 12 (33%) were "test gap" - the failing condition wasn't
   in the test suite. Action: invest in
-  [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
+  unit-test-coverage-targeter
   + property-based testing.
 - 3 of 12 (25%) involved canary metrics; 2 of those proceeded
   through canary gate. Action: review thresholds (per AI-2 from
@@ -253,8 +253,5 @@ Markdown + git. Quarterly rollup identifies patterns:
 
 - [gsp][gsp] - Google SRE blameless post-mortem definition,
   triggers, blamelessness principle, learning-opportunity framing.
-- [`release-readiness-checker`](../../agents/release-readiness-checker.md) - sibling: pre-release gate; post-mortems feed back to update
-  the gate criteria.
-- [`prod-canary-validator`](../../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - sibling: canary verdict; post-mortems often surface threshold
+- `prod-canary-validator` - sibling: canary verdict; post-mortems often surface threshold
   tuning needs.
-- [`observability-to-test`](../../../qa-shift-right/agents/observability-to-test.md) - agent that turns post-mortem action items into regression tests.

@@ -75,7 +75,6 @@ boundary** (the chi-square is super-sensitive at large N; this
 threshold prevents false-positive SRM alarms).
 
 If SRM is detected: **stop ship discussion; root-cause first**.
-Use [`sample-ratio-mismatch-detector`](../../agents/sample-ratio-mismatch-detector.md).
 
 ## Step 3 - Assignment integrity
 
@@ -224,5 +223,4 @@ Sign-off: <name>, <date>
   [`statsig-test`](../statsig-test/SKILL.md),
   [`optimizely-test`](../optimizely-test/SKILL.md),
   [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md),
-  [`sample-ratio-mismatch-detector`](../../agents/sample-ratio-mismatch-detector.md).
+  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).

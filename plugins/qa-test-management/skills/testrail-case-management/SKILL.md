@@ -28,9 +28,7 @@ on the *case repository* - create, update, organise, traceability - a strictly u
 - Bulk-importing legacy cases from CSV / Excel.
 - Migrating between TestRail instances or to/from another TCM.
 - Programmatic case updates (mass-edit type, priority, tags).
-- Backing the
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md)
-  agent's case-repository scans.
+- Case-repository quality scans.
 
 ## Authoring
 
@@ -288,4 +286,4 @@ merge, post updates back:
   [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md) - different scope (result sync; not case authoring).
+  `testrail-integration` (in the qa-test-reporting plugin) - different scope (result sync; not case authoring).

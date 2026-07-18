@@ -279,4 +279,3 @@ For each system handling regulated data:
 - [`pci-dss-scope-checker`](../pci-dss-scope-checker/SKILL.md) - Req 10
 - [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) - CC7.3
 - [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) - Art. 5(1)(f)
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

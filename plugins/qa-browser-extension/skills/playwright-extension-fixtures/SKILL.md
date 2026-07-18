@@ -21,7 +21,7 @@ contract the assertion-level skills depend on - it's the
 foundation, not the test logic.
 
 This skill is **distinct from
-[`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md)**
+`qa-modern-web/browser-extension-tests`**
 (MV3 popup + content-script assertions); this is the lower-level
 Playwright fixture pattern (`launchPersistentContext` +
 `--disable-extensions-except` + `--load-extension`) shared by all
@@ -294,5 +294,5 @@ Key choices:
   [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md),
   [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md).
 - Distinct neighbour:
-  [`qa-modern-web/browser-extension-tests`](../../../qa-modern-web/skills/browser-extension-tests/SKILL.md) - the popup / content-script / messaging assertion playbook this
+  `qa-modern-web/browser-extension-tests` - the popup / content-script / messaging assertion playbook this
   fixture feeds.

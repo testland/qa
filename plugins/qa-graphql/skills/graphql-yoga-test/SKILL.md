@@ -258,5 +258,3 @@ jobs:
   [`apollo-server-test`](../apollo-server-test/SKILL.md),
   [`mercurius-test`](../mercurius-test/SKILL.md),
   [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
-- N+1 detection:
-  [`n-plus-one-query-detector`](../../agents/n-plus-one-query-detector.md).

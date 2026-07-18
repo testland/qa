@@ -1,6 +1,6 @@
 ---
 name: cache-coherence-patterns-reference
-description: "Pure-reference catalog of cache-coherence patterns across the request path. Covers the canonical RFC 9111 directives (Cache-Control: max-age, s-maxage, no-cache, no-store, must-revalidate, private/public, immutable; Vary for key derivation; ETag + If-None-Match revalidation), the layered-cache discipline (browser → CDN → reverse-proxy → application → data store), per-tier coherence patterns (write-through, write-back, write-around, cache-aside), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged keys). Use for pattern selection, Cache-Control header design, and coherence audits; use cache-key-collision-detector when the question is whether two requests in an existing system collide on a concrete key scheme. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, cache-key-collision-detector."
+description: "Pure-reference catalog of cache-coherence patterns across the request path. Covers the canonical RFC 9111 directives (Cache-Control: max-age, s-maxage, no-cache, no-store, must-revalidate, private/public, immutable; Vary for key derivation; ETag + If-None-Match revalidation), the layered-cache discipline (browser → CDN → reverse-proxy → application → data store), per-tier coherence patterns (write-through, write-back, write-around, cache-aside), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged keys). Use for pattern selection, Cache-Control header design, and coherence audits; use a cache-key-collision check when the question is whether two requests in an existing system collide on a concrete key scheme. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, and the cache-key-collision check."
 ---
 
 # cache-coherence-patterns-reference
@@ -77,7 +77,7 @@ Practical: `Vary: Accept-Encoding, Authorization` means
 "separate cache entries per (Accept-Encoding, Authorization)
 combination." Missing `Vary: Authorization` is the canonical
 cross-tenant cache leak per
-[`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md)
+`qa-multi-tenancy/cross-tenant-data-leak-tests`
 Test 10.
 
 ### ETag + If-None-Match revalidation
@@ -122,7 +122,7 @@ For application-tier caches (Redis):
 | **Different Vary at browser vs CDN** | CDN strips headers; cache keys diverge | Header-comparison test |
 | **Layered TTL inversion** | `s-maxage < max-age` → CDN refreshes more often than browser; browser eventually outpaces CDN | Audit the TTL stack |
 | **`Vary: Cookie` without normalised cookies** | Tracker cookies fragment cache; near-zero hit rate | Inspect Vary; normalise |
-| **Tenant-scoped data with shared Vary** | Cross-tenant leak per [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md) | Add `Authorization` to Vary or use private |
+| **Tenant-scoped data with shared Vary** | Cross-tenant leak per `qa-multi-tenancy/cross-tenant-data-leak-tests` | Add `Authorization` to Vary or use private |
 
 ## Testable behaviours by tier
 
@@ -131,7 +131,7 @@ For application-tier caches (Redis):
 | Browser | Cache-Control respected (`max-age`, `no-cache`, `must-revalidate`); ETag round-trip; `Vary` honoured |
 | CDN | Edge hit/miss vs origin; purge API works end-to-end; `s-maxage` overrides `max-age` |
 | Reverse proxy | VCL purge ([`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md)); grace-mode behaviour |
-| Application | Cache-aside write-then-invalidate; key collisions per [`cache-key-collision-detector`](../../agents/cache-key-collision-detector.md) |
+| Application | Cache-aside write-then-invalidate; key collisions |
 | Data store | Replication lag (separate concern; out of scope here) |
 
 ## Anti-patterns
@@ -172,10 +172,9 @@ For application-tier caches (Redis):
 - Companion catalog:
   [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
 - Cross-plugin (cross-tenant leaks via cache):
-  [`qa-multi-tenancy/cross-tenant-data-leak-tests`](../../../qa-multi-tenancy/skills/cross-tenant-data-leak-tests/SKILL.md).
+  `qa-multi-tenancy/cross-tenant-data-leak-tests`.
 - Consumed by:
   [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
   [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
   [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md),
-  [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md),
-  [`cache-key-collision-detector`](../../agents/cache-key-collision-detector.md).
+  [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).

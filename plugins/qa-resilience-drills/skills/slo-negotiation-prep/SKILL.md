@@ -203,11 +203,9 @@ The manager walks in with structured evidence. The meeting decides. The retro ca
 
 - **Compute / configure the underlying SLI / SLO / budget** → [`error-budget-tests`](../error-budget-tests/SKILL.md).
 - **Maintain the per-incident MTTR / MTBF log** → [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md).
-- **Ladder the SLO conversation outcome into the quarterly OKR set** → [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md).
-- **Author the underlying test strategy that the SLO references** → [`test-strategy-author`](../../../qa-process/skills/test-strategy-author/SKILL.md).
-- **Gate release readiness on the SLO outcome** → [`release-readiness-checker`](../../../qa-process/agents/release-readiness-checker.md).
-- **Defect-trend evidence for incidents contributing to budget burn** → [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md).
-- **Post-meeting retro on the chosen option's outcome** → [`post-mortem-author`](../../../qa-process/skills/post-mortem-author/SKILL.md) when the decision turned out badly; quarterly OKR retro (deferred candidate component) when it played out across the quarter.
+- **Ladder the SLO conversation outcome into the quarterly OKR set** → `qa-okr-author` (in the qa-process plugin).
+- **Author the underlying test strategy that the SLO references** → `test-strategy-author`.
+- **Post-meeting retro on the chosen option's outcome** → `post-mortem-author` when the decision turned out badly; quarterly OKR retro (deferred candidate component) when it played out across the quarter.
 
 ## References
 
@@ -219,4 +217,4 @@ The manager walks in with structured evidence. The meeting decides. The retro ca
 - ISTQB glossary - non-functional testing (the layer SLOs anchor on): https://glossary.istqb.org/en_US/term/non-functional-testing
 - ISO/IEC 25010 - reliability and performance-efficiency characteristics (the underlying quality dimensions): https://en.wikipedia.org/wiki/ISO/IEC_25010
 - [`error-budget-tests`](../error-budget-tests/SKILL.md), [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - sibling skills that produce the input data this skill consumes.
-- [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md), [`release-readiness-checker`](../../../qa-process/agents/release-readiness-checker.md), [`post-mortem-author`](../../../qa-process/skills/post-mortem-author/SKILL.md), [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md) - downstream skills that consume the conversation outcome.
+- `qa-okr-author`, `post-mortem-author` - downstream skills that consume the conversation outcome.

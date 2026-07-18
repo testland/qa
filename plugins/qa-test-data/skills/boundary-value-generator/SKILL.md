@@ -22,8 +22,7 @@ inputs ready to paste into the project's test runner.
   systematic boundary coverage in the same PR.
 - An existing test suite has happy-path coverage but no boundary
   cases; the team is filling the gap.
-- The
-  [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
+- The `acceptance-criteria-extractor` (in the qa-shift-left plugin)
   produced AC with numeric thresholds; this skill turns each
   threshold into matching test cases.
 

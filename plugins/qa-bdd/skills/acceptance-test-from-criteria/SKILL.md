@@ -1,6 +1,6 @@
 ---
 name: acceptance-test-from-criteria
-description: "ATDD (Acceptance Test-Driven Development) workflow that generates @AC-N-tagged Gherkin scenarios from a signed-off acceptance-criteria list, scaffolds NotImplementedError step stubs, and produces an AC-to-test traceability table, all before implementation begins, in the team's BDD framework (Cucumber / Behave / Reqnroll). Use when devs are gated on green acceptance tests and failures must map back to a specific criterion. For story-narrative-to-Gherkin without prior ACs, use gherkin-from-stories. For BDD scenario authoring without the ATDD test-first gate, use bdd-scenario-author."
+description: "ATDD (Acceptance Test-Driven Development) workflow that generates @AC-N-tagged Gherkin scenarios from a signed-off acceptance-criteria list, scaffolds NotImplementedError step stubs, and produces an AC-to-test traceability table, all before implementation begins, in the team's BDD framework (Cucumber / Behave / Reqnroll). Use when devs are gated on green acceptance tests and failures must map back to a specific criterion. For story-narrative-to-Gherkin without prior ACs, use gherkin-from-stories. For BDD scenario authoring without the ATDD test-first gate, use a general BDD scenario-authoring workflow."
 ---
 
 # acceptance-test-from-criteria
@@ -33,7 +33,7 @@ test is the executable formalization.
 For Gherkin generation from prose stories, see
 [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md). For
 upstream AC extraction, see
-[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
+`acceptance-criteria-extractor` (in the qa-shift-left plugin).
 
 ## Step 1 - Read the AC list
 
@@ -141,7 +141,7 @@ After implementing all paths:
 ```
 
 Story is "done" only when all AC tests pass - per the team's DoD
-([`definition-of-done`](../../../qa-process/skills/definition-of-done/SKILL.md)).
+(`definition-of-done` in the qa-process plugin).
 
 ## Step 5 - Scaffold new step definitions
 
@@ -237,13 +237,13 @@ dotnet test --filter "Category=AC-1.1|Category=AC-1.2|..."
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits the AC this skill consumes.
+- `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream: emits the AC this skill consumes.
 - [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md) - 
   sibling: story-first variant.
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from + adds to.
 - [`cucumber-testing`](../cucumber-testing/SKILL.md),
   [`behave-testing`](../behave-testing/SKILL.md),
   [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - runners.
-- [`definition-of-done`](../../../qa-process/skills/definition-of-done/SKILL.md) - DoD that requires AC tests to pass.
+- `definition-of-done` (in the qa-process plugin) - DoD that requires AC tests to pass.
 - ISTQB Glossary V4.7.1 - `https://glossary.istqb.org/en_US/term/acceptance-test-driven-development`
   defines ATDD as "a collaboration-based test-first approach."

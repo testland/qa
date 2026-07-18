@@ -216,6 +216,6 @@ on incidents that the smoke missed.
   consumes a checklist as the bug-bash kickoff template.
 - [`uat-script-author`](../uat-script-author/SKILL.md) - full UAT
   scripts when sign-off requires more than a checklist.
-- [`smoke-suite-gate`](../../../qa-process/skills/smoke-suite-gate/SKILL.md)
+- `smoke-suite-gate`
   (planned, qa-process Plugin 16) - automated equivalent for
   CI-runnable smoke.

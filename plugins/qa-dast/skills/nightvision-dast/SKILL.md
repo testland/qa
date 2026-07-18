@@ -140,7 +140,7 @@ expired rules removed; persistent ones reviewed.
 
 `nightvision scan results <id> --output FORMAT`:
 
-- `json` - for [`dast-finding-triager`](../../agents/dast-finding-triager.md)
+- `json` - for cross-tool finding aggregation
 - `sarif` - for GitHub Code Scanning
 - `csv` - for spreadsheet review
 - `pdf` - for compliance reports
@@ -203,5 +203,3 @@ jobs:
   [`burp-headless`](../burp-headless/SKILL.md) - sister DAST tools
 - [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
   build-an-X for layered DAST
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - 
-  unifier agent

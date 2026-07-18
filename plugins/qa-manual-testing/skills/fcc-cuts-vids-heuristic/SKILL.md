@@ -9,7 +9,7 @@ description: "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic - a
 
 FCC CUTS VIDS is one of James Bach's lesser-known but powerful
 exploratory-testing heuristics. Where SFDPOT (
-[`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md)) catalogues what
+[`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md)) catalogues what
 to *vary*, FCC CUTS VIDS catalogues what to *model*. The
 distinction: variation drives the session; modelling is what the
 tester learns *about* the system as exploration progresses.
@@ -18,9 +18,8 @@ Published in the Rapid Software Testing curriculum (
 [satisfice.com/rapid-software-testing](https://www.satisfice.com/rapid-software-testing))
 and referenced widely in Bach + Bolton teaching material.
 
-This skill is a **pure reference** consumed by
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
-and senior testers building system models.
+This skill is a **pure reference** consumed by senior testers
+building system models.
 
 ## When to use
 
@@ -89,7 +88,7 @@ prime exploration territory.
 
 Where in the feature space does the system claim to operate? Not
 *what tests cover the code* (that's
-[`qa-test-impact-analysis`](../../../qa-test-impact-analysis/)) - 
+`qa-test-impact-analysis`) - 
 this is *what the product claims to do*.
 
 #### U - Users
@@ -251,8 +250,6 @@ on edge cases where Postgres + Stripe + Redis disagree about state."
   testing heuristics.
 - Sibling references:
   [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-  [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
+  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`sbtm-reference`](../sbtm-reference/SKILL.md).
-- Consumed by:
-  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
+  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md).

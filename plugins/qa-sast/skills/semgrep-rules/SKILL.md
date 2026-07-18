@@ -145,7 +145,7 @@ escalation.
 
 | Flag | Purpose |
 |---|---|
-| `--json` | Semgrep JSON format (for sast-finding-triager) |
+| `--json` | Semgrep JSON format (for multi-scanner triage) |
 | `--sarif` | SARIF format (GitHub Code Scanning upload) |
 | `--gitlab-sast` | GitLab SAST format (GitLab Security Dashboard) |
 | `--junit-xml` | JUnit XML (test reporters) |
@@ -221,5 +221,3 @@ jobs:
   [`codeql-queries`](../codeql-queries/SKILL.md),
   [`bandit-python`](../bandit-python/SKILL.md),
   [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
-  unifier agent across all 5 SAST tools

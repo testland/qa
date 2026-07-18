@@ -281,5 +281,5 @@ recommended for CI (requires nightly toolchain).
 - [`go-test`](../go-test/SKILL.md),
   [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
   [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
-- [`proptest-testing`](../../../qa-property-based/skills/proptest-testing/SKILL.md) - Rust property-based
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- `proptest-testing` (qa-property-based) - Rust property-based
+- `test-code-conventions` (qa-test-review)

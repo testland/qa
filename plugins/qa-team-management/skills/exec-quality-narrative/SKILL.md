@@ -1,7 +1,7 @@
 ---
 name: exec-quality-narrative
-description: "Build-an-X workflow that turns already-computed quality data - weekly digests, KPI roll-ups, DORA delivery metrics, escape-defect trends, OKR grading - into an executive or QBR narrative structured by the Minto Pyramid Principle: governing answer first, MECE-grouped support beneath it, SCQA opening (Barbara Minto, The Pyramid Principle, ISBN 978-0273710516). Distinct from the `qa-manager` agent in qa-roles (which computes the single-team RAG digest from raw CI and tracker signals; this skill consumes such digests and writes the upward story), from the `head-of-quality` agent in qa-roles (which aggregates teams into a portfolio review; this skill is the communication layer either output feeds), and from `qa-okr-author` in qa-process (forward-looking commitments; this skill narrates what happened and what it means). Use before a QBR, board update, or exec review when the data exists but the story does not."
-keywords: ["executive-narrative", "qbr", "minto-pyramid", "dora-metrics", "quality-reporting", "scqa", "head-of-quality"]
+description: "Build-an-X workflow that turns already-computed quality data - weekly digests, KPI roll-ups, DORA delivery metrics, escape-defect trends, OKR grading - into an executive or QBR narrative structured by the Minto Pyramid Principle: governing answer first, MECE-grouped support beneath it, SCQA opening (Barbara Minto, The Pyramid Principle, ISBN 978-0273710516). Distinct from single-team digest computation in qa-roles (which computes the RAG digest from raw CI and tracker signals; this skill consumes such digests and writes the upward story), from portfolio-review aggregation in qa-roles (which aggregates teams into a portfolio review; this skill is the communication layer either output feeds), and from `qa-okr-author` in qa-process (forward-looking commitments; this skill narrates what happened and what it means). Use before a QBR, board update, or exec review when the data exists but the story does not."
+keywords: ["executive-narrative", "qbr", "minto-pyramid", "dora-metrics", "quality-reporting", "scqa"]
 ---
 
 # exec-quality-narrative
@@ -20,19 +20,19 @@ This skill applies that structure to quality data the marketplace already produc
 
 Do **not** use this skill to:
 
-- Compute the underlying metrics - the `qa-manager` agent (qa-roles) computes single-team digests from CI and tracker data; the `head-of-quality` agent (qa-roles) rolls teams into a portfolio review. This skill starts where they end.
-- Draft next quarter's commitments - that is [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md); the narrative may end by pointing at the OKR set, not by inventing one.
+- Compute the underlying metrics - upstream roles in qa-roles compute single-team digests from CI and tracker data and roll teams into a portfolio review. This skill starts where they end.
+- Draft next quarter's commitments - that is `qa-okr-author` (in qa-process); the narrative may end by pointing at the OKR set, not by inventing one.
 - Report to engineering peers. The audience here holds budget, not backlogs; a sprint-level test report is a different artifact.
 
 ## Step 1 - Capture the inputs
 
 | Input | Source | Role in the narrative |
 |---|---|---|
-| **Quality digests** | `qa-manager` agent output per team, or equivalent | Pass-rate trend, escape counts, flake debt with citations already attached |
-| **Portfolio roll-up** | `head-of-quality` agent output, if multi-team | Cross-team table, risk heatmap, capacity view |
+| **Quality digests** | Per-team quality digest output, or equivalent | Pass-rate trend, escape counts, flake debt with citations already attached |
+| **Portfolio roll-up** | Portfolio roll-up output, if multi-team | Cross-team table, risk heatmap, capacity view |
 | **DORA delivery metrics** | CI / deploy data per [dora.dev](https://dora.dev/guides/dora-metrics-four-keys/) | Delivery context executives often already know from engineering reporting |
-| **OKR grading** | [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md) set + end-of-quarter grades | Commitment-vs-delivery evidence |
-| **Escape trend** | Defect-tracker trend (e.g., `defect-trend-narrator` in qa-bug-repro) | The quality outcome line executives care about most |
+| **OKR grading** | `qa-okr-author` (qa-process) set + end-of-quarter grades | Commitment-vs-delivery evidence |
+| **Escape trend** | Defect-tracker trend (e.g., a defect-trend narrative) | The quality outcome line executives care about most |
 | **Audience + ask** | Who reads this, and what decision (if any) is being requested | Determines the Answer sentence and whether the narrative is informational or an investment case |
 
 Halt with `UNCITED_INPUTS` if the supplied numbers carry no source artifacts: a narrative built on unattributed figures collapses at the first follow-up question.
@@ -44,7 +44,7 @@ Executives increasingly hear DORA terms from engineering leadership, so use them
 - Throughput: **change lead time** ("the amount of time it takes for a change to go from committed to version control to deployed in production"), **deployment frequency** ("the number of deployments over a given period or the time between deployments"), **failed deployment recovery time** ("the time it takes to recover from a deployment that fails and requires immediate intervention").
 - Instability: **change fail rate** ("the ratio of deployments that require immediate intervention following a deployment"), **deployment rework rate** ("the ratio of deployments that are unplanned but happen as a result of an incident in production").
 
-Two precision rules for the narrative: (1) escape-defect rate is a defect-leakage metric, **not** a DORA metric - DORA measures delivery; do not blend them under one label (the `qa-manager` agent in qa-roles draws the same line); (2) if the org still says "the four keys", note the recovery-time rename rather than silently mixing old and new names.
+Two precision rules for the narrative: (1) escape-defect rate is a defect-leakage metric, **not** a DORA metric - DORA measures delivery; do not blend them under one label (single-team digest reporting draws the same line); (2) if the org still says "the four keys", note the recovery-time rename rather than silently mixing old and new names.
 
 ## Step 3 - Write the pyramid top: SCQA + the Answer sentence
 
@@ -119,14 +119,14 @@ Everything below this layer in the real document is appendix: per-team tables, t
 
 ## Hand-off targets
 
-- **Single-team digest inputs** → `qa-manager` agent (qa-roles).
-- **Multi-team portfolio inputs** → `head-of-quality` agent (qa-roles).
-- **Next quarter's commitments the narrative points at** → [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md).
-- **Capability asks surfaced in the narrative** → [`team-capability-gap-analyst`](../../agents/team-capability-gap-analyst.md) for the train-vs-hire grounding.
+- **Single-team digest inputs** → per-team quality digest reporting (qa-roles).
+- **Multi-team portfolio inputs** → portfolio roll-up reporting (qa-roles).
+- **Next quarter's commitments the narrative points at** → `qa-okr-author` (in qa-process).
+- **Capability asks surfaced in the narrative** → capability gap analysis for the train-vs-hire grounding.
 
 ## References
 
 - Barbara Minto, *The Pyramid Principle: Logic in Writing and Thinking*, ISBN 978-0273710516 - pyramid structure, SCQA opening, answer-first discipline.
 - Barbara Minto (Wikipedia) - pyramid format "organized top-down, starting with a main idea"; MECE; the logical-grouping quote: https://en.wikipedia.org/wiki/Barbara_Minto (fetched 2026-06-10).
 - DORA software delivery metrics - five-metric model and verbatim definitions used in Step 2: https://dora.dev/guides/dora-metrics-four-keys/ (fetched 2026-06-10).
-- `qa-manager` and `head-of-quality` agents (qa-roles), [`qa-okr-author`](../../../qa-process/skills/qa-okr-author/SKILL.md) (qa-process) - the upstream producers of this skill's inputs.
+- Per-team digest and portfolio roll-up reporting (qa-roles), and `qa-okr-author` (qa-process) - the upstream producers of this skill's inputs.

@@ -97,8 +97,8 @@ Conventions:
   is not.
 - **Every test has an owner.** dbt: a `meta:` block under the column or
   model with `owner: @team-handle`. GX: suite-level metadata. SodaCL:
-  the dataset's `meta:` block. The [`data-anomaly-triager`](../../agents/data-anomaly-triager.md)
-  agent reads these to route failures.
+  the dataset's `meta:` block. Failure routing uses these to send
+  each failure to its owner.
 
 ## Common anti-patterns
 

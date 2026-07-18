@@ -25,7 +25,7 @@ Do **not** use this skill to:
 
 - Decide one specific person's promotion - the ladder is the standard; the case is built from evidence via [`performance-feedback-author`](../performance-feedback-author/SKILL.md).
 - Map what the team can do today - that is [`skill-matrix-author`](../skill-matrix-author/SKILL.md).
-- Define a single role for hiring - that is [`qa-jd-author`](../../../qa-hiring/skills/qa-jd-author/SKILL.md) in qa-hiring.
+- Define a single role for hiring - that is `qa-jd-author` in qa-hiring.
 
 ## Step 1 - Capture the inputs
 
@@ -113,7 +113,7 @@ Ship the ladder with its failure modes named, so calibration meetings can cite t
 - **Measure today's capability against the new levels** → [`skill-matrix-author`](../skill-matrix-author/SKILL.md).
 - **Run the growth conversations the ladder enables** → [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md).
 - **Build a promotion case from evidence** → [`performance-feedback-author`](../performance-feedback-author/SKILL.md).
-- **Hire into a level** → [`qa-jd-author`](../../../qa-hiring/skills/qa-jd-author/SKILL.md) and the qa-hiring structured-interview chain.
+- **Hire into a level** → `qa-jd-author` and the qa-hiring structured-interview chain.
 
 ## References
 

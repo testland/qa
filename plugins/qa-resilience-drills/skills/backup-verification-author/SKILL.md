@@ -231,7 +231,7 @@ restore on demand. Author the workflow:
   workflow that consumes verified backups
 - [`restore-time-tests`](../restore-time-tests/SKILL.md) - RTO
   verification of the restore process
-- [`qa-secrets/secrets-rotation-runner`](../../../qa-secrets/skills/secrets-rotation-runner/SKILL.md) - 
+- `secrets-rotation-runner` (in the qa-secrets plugin) - 
   related rotation workflow
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide

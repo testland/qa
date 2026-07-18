@@ -14,9 +14,7 @@ providers. Per
 
 Composes with
 [`browser-matrix-strategy-reference`](../browser-matrix-strategy-reference/SKILL.md)
-for matrix planning. Routed by
-[`selenium-grid-orchestrator`](../../../qa-web-e2e/agents/selenium-grid-orchestrator.md)
-for cross-grid workflows.
+for matrix planning.
 
 ## When to use
 
@@ -29,9 +27,7 @@ for cross-grid workflows.
   don't support.
 
 For cloud-hosted alternatives see
-[`browserstack-automate`](../../../qa-web-e2e/skills/browserstack-automate/SKILL.md),
-[`saucelabs-automate`](../../../qa-web-e2e/skills/saucelabs-automate/SKILL.md),
-[`lambdatest-automate`](../../../qa-web-e2e/skills/lambdatest-automate/SKILL.md).
+`browserstack-automate`, `saucelabs-automate`, `lambdatest-automate`.
 
 ## Authoring
 
@@ -289,8 +285,4 @@ jobs:
 - Composes:
   [`browser-matrix-strategy-reference`](../browser-matrix-strategy-reference/SKILL.md).
 - Cloud-grid alternatives:
-  [`browserstack-automate`](../../../qa-web-e2e/skills/browserstack-automate/SKILL.md),
-  [`saucelabs-automate`](../../../qa-web-e2e/skills/saucelabs-automate/SKILL.md),
-  [`lambdatest-automate`](../../../qa-web-e2e/skills/lambdatest-automate/SKILL.md).
-- Routed by:
-  [`selenium-grid-orchestrator`](../../../qa-web-e2e/agents/selenium-grid-orchestrator.md).
+  `browserstack-automate`, `saucelabs-automate`, `lambdatest-automate`.

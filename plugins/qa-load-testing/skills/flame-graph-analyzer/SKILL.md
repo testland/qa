@@ -27,10 +27,9 @@ hypothesis the engineer can act on.
 
 ## When to use
 
-- A perf regression has been bisected (via
-  [`perf-regression-bisector`](../../agents/perf-regression-bisector.md))
-  but the introducing commit touches multiple functions; the team
-  needs to know which function is the actual hot path.
+- A perf regression has been bisected but the introducing commit
+  touches multiple functions; the team needs to know which function
+  is the actual hot path.
 - A load test under [`k6-load-testing`](../k6-load-testing/SKILL.md)
   or sibling shows latency growth, but the API code hasn't visibly
   changed - flame graph reveals the runtime cause.
@@ -249,7 +248,5 @@ the JVM, `__slots__` in Python, generated SQL in Go.
 - async-profiler - https://github.com/async-profiler/async-profiler
 - Go pprof - https://pkg.go.dev/net/http/pprof
 - Clinic.js - https://clinicjs.org/
-- [`perf-regression-bisector`](../../agents/perf-regression-bisector.md) - upstream agent that bisects to a commit; this skill picks up
-  inside the commit.
 - [`k6-load-testing`](../k6-load-testing/SKILL.md) - runner that
   produces the load under which the profile is captured.

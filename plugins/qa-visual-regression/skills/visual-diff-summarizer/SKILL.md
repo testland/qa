@@ -26,7 +26,7 @@ intended; 1 component changed unexpectedly - focus here":
    cluster.
 
 The intent-vs-diff classification mirrors the same logic used by
-`golden-file-manager` and `visual-diff-classifier` - **a wrong-but-consistent
+snapshot golden-file management and visual-diff classification - **a wrong-but-consistent
 visual baseline is worse than no baseline at all.**
 
 ## When to use
@@ -152,7 +152,7 @@ these clusters match.
 
 | Cluster | Diffs | Max diff% | Recommendation |
 |---------|------:|----------:|----------------|
-| Button  |   4   |   8.2%    | Update baselines (`golden-file-manager update`) |
+| Button  |   4   |   8.2%    | Update baselines (accept new snapshots) |
 | ButtonGroup |   2   |   3.1%    | Update baselines |
 | IconButton  |   1   |   1.5%    | Update baseline   |
 
@@ -166,7 +166,7 @@ these clusters match.
 
 | Cluster | Diffs | Max diff% | Recommendation |
 |---------|------:|----------:|----------------|
-| Footer  |   2   |   12.0%   | The Footer component isn't mentioned in the PR. Suspected unintended cascade. **Open the diffs:** [link][f1] [link][f2]. Recommend running `regression-bisector` if no obvious cause. |
+| Footer  |   2   |   12.0%   | The Footer component isn't mentioned in the PR. Suspected unintended cascade. **Open the diffs:** [link][f1] [link][f2]. Recommend running a regression bisect if no obvious cause. |
 
 ### Quick actions
 
@@ -198,10 +198,9 @@ The summary report includes the safe-to-run command for the aligned
 cluster only. Adjacent and unrelated clusters never get an
 auto-update suggestion - those need eyes.
 
-This matches the `visual-diff-classifier` agent's adversarial logic
-in `qa-visual-regression`: aligned diffs go through; unrelated diffs
-are refused with a recommendation to escalate to
-`regression-bisector` in `qa-flake-triage`.
+This matches the adversarial logic of per-snapshot visual-diff
+classification: aligned diffs go through; unrelated diffs
+are refused with a recommendation to escalate to a regression bisect.
 
 ## Step 8 - CI integration (sticky comment)
 
@@ -257,13 +256,12 @@ are refused with a recommendation to escalate to
   `chromatic-visual-regression-testing`, `playwright-snapshots`,
   `storybook-visual-regression-testing`) - the producers of the
   upstream diff data this skill consumes.
-- `visual-diff-classifier` and `visual-baseline-curator` agents in
-  `qa-visual-regression` - the per-snapshot adversarial logic that
-  this skill summarizes at the cluster level.
-- `golden-file-manager` agent in `qa-test-data` - same intent-vs-diff
+- Per-snapshot visual-diff classification and baseline curation -
+  the per-snapshot adversarial logic that this skill summarizes at
+  the cluster level.
+- Text-snapshot golden-file management - same intent-vs-diff
   classification applied to text snapshots.
-- `regression-bisector` agent in `qa-flake-triage` - escalation
-  target for unrelated clusters.
-- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md),
-  [`coverage-diff-reporter`](../../../qa-test-reporting/skills/coverage-diff-reporter/SKILL.md) - 
+- Regression bisection - escalation target for unrelated clusters.
+- `junit-xml-analysis`,
+  `coverage-diff-reporter` - 
   sibling PR-summary skills.

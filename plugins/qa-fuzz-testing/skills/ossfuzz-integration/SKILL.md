@@ -199,8 +199,7 @@ issue includes:
 - **Sanitiser output**: the report stack + alloc / free sites
 - **Coverage info**: which lines were hit by the input
 
-Feed this to
-[`bug-report-from-failure`](../../../qa-defect-management/skills/bug-report-from-failure/SKILL.md)
+Feed this to `bug-report-from-failure`
 for downstream bug-tracker filing.
 
 ## Anti-patterns

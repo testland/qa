@@ -98,7 +98,7 @@ Per [tv-img][tv-img]:
 
 | Format | Use |
 |---|---|
-| `json` | For [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) |
+| `json` | For multi-scanner finding prioritization |
 | `sarif` | GitHub Code Scanning upload |
 | `cyclonedx` | CycloneDX SBOM with vuln annotations |
 | `spdx-json` | SPDX SBOM (vuln-only metadata) |
@@ -142,8 +142,8 @@ Per [tv-img][tv-img]:
 > variables."
 
 Secret findings appear alongside vuln findings in the same report.
-For deeper secret-scanning patterns, see [`gitleaks-scanning`](../../../qa-secrets/skills/gitleaks-scanning/SKILL.md)
-+ [`trufflehog-scanning`](../../../qa-secrets/skills/trufflehog-scanning/SKILL.md)
+For deeper secret-scanning patterns, see `gitleaks-scanning`
++ `trufflehog-scanning`
 in the qa-secrets plugin.
 
 ## Step 7 - Misconfiguration scanning
@@ -159,8 +159,8 @@ Detects Docker / Kubernetes config patterns matching CIS Benchmarks
 HEALTHCHECK, exposed sensitive ports).
 
 For comprehensive IaC scanning (not just image-internal config),
-use [`checkov-policy`](../../../qa-iac/skills/checkov-policy/SKILL.md)
-+ [`tfsec-policy`](../../../qa-iac/skills/tfsec-policy/SKILL.md)
+use `checkov-policy`
++ `tfsec-policy`
 from the qa-iac plugin.
 
 ## Step 8 - False-positive triage (MANDATORY)
@@ -241,8 +241,7 @@ The `aquasecurity/trivy-action` GHA wraps the CLI + SARIF upload.
 | [`syft-generation`](../syft-generation/SKILL.md) | Generates standalone SBOM (Trivy embeds SBOM gen but exposes it less) |
 | [`grype-scanning`](../grype-scanning/SKILL.md) | Alternative scanner; cross-DB consensus on findings |
 | [`cyclonedx-format`](../cyclonedx-format/SKILL.md), [`spdx-format`](../spdx-format/SKILL.md) | Reference for the SBOM formats Trivy outputs |
-| [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) | Unifies Trivy + Grype + Snyk findings |
-| [`checkov-policy`](../../../qa-iac/skills/checkov-policy/SKILL.md) | Cross-plugin: deeper IaC scanning vs Trivy's image-internal misconfig |
+| `checkov-policy` | Cross-plugin: deeper IaC scanning vs Trivy's image-internal misconfig |
 
 ## Anti-patterns
 
@@ -278,4 +277,3 @@ The `aquasecurity/trivy-action` GHA wraps the CLI + SARIF upload.
   [`grype-scanning`](../grype-scanning/SKILL.md),
   [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
   [`spdx-format`](../spdx-format/SKILL.md) - sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent

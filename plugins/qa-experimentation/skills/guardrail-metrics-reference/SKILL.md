@@ -173,5 +173,4 @@ Hochberg correction:
   [`statsig-test`](../statsig-test/SKILL.md),
   [`optimizely-test`](../optimizely-test/SKILL.md),
   [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md),
-  [`sample-ratio-mismatch-detector`](../../agents/sample-ratio-mismatch-detector.md).
+  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).

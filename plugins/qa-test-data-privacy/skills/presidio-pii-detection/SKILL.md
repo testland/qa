@@ -33,7 +33,7 @@ for the **operator** chosen per field see
   fixture).
 
 For **generating** fake PII fixtures, use
-[`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md).
+`synthetic-pii-generator` (in the qa-test-data plugin).
 Presidio detects; this is the orthogonal axis.
 
 ## Authoring
@@ -354,7 +354,6 @@ these reserved values.
   [`pii-categories-reference`](../pii-categories-reference/SKILL.md),
   [`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md).
 - Downstream consumers:
-  [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md),
-  [`pii-leak-critic`](../../agents/pii-leak-critic.md).
+  [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md).
 - Orthogonal sibling:
-  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - fixture generation (distinct from detection of existing data).
+  `synthetic-pii-generator` - fixture generation (distinct from detection of existing data).

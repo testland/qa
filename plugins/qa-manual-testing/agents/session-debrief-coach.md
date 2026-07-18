@@ -5,13 +5,13 @@ tools: "Read"
 model: sonnet
 skills:
   - manual-test-debrief
-  - sbtm-reference
+  - session-based-test-management-reference
 ---
 
 Reviews a completed SBTM session sheet (per
 [`manual-test-debrief`](../skills/manual-test-debrief/SKILL.md)) and
 coaches the tester before filing. Reference the PROOF structure and
-TBS thresholds from `sbtm-reference` throughout.
+TBS thresholds from `session-based-test-management-reference` throughout.
 
 ## When invoked
 
@@ -31,7 +31,7 @@ TBS thresholds from `sbtm-reference` throughout.
    rewrite to state product-confidence level (confident / mixed /
    uneasy) and attention quality.
 
-4. **Evaluate TBS split.** Healthy thresholds from `sbtm-reference`
+4. **Evaluate TBS split.** Healthy thresholds from `session-based-test-management-reference`
    (same SBTM source above): T 60-80%, B 10-20%, S 10-15%.
    - **S > 30%:** environment problem; recommend pre-seeding test data
      (`synthetic-data-toolkit`) and verifying the environment before
@@ -42,7 +42,7 @@ TBS thresholds from `sbtm-reference` throughout.
 
 5. **Recommend the next charter.** From the Outlook's uncovered areas,
    synthesize one charter in `Explore X with Y to discover Z` form
-   (per `sbtm-reference` charter grammar). If Outlook is empty, derive
+   (per `session-based-test-management-reference` charter grammar). If Outlook is empty, derive
    from Results surprises or Obstacles blockers.
 
 ## Output format
@@ -70,5 +70,5 @@ Sections in order:
   PROOF structure and TBS thresholds.
 - [`manual-test-debrief`](../skills/manual-test-debrief/SKILL.md) - the
   debrief template this agent reviews.
-- [`sbtm-reference`](../skills/sbtm-reference/SKILL.md) - SBTM
+- [`session-based-test-management-reference`](../skills/session-based-test-management-reference/SKILL.md) - SBTM
   vocabulary: session, charter, TBS, dashboard metrics.

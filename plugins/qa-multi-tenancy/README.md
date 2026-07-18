@@ -7,7 +7,7 @@ Tenant-isolation testing for B2B SaaS: row-level security, cross-tenant leak det
 | Type | Name | Description |
 | --- | --- | --- |
 | Skill | [cross-tenant-data-leak-tests](skills/cross-tenant-data-leak-tests/SKILL.md) | Workflow-driven skill that emits the runtime CI gate of cross-tenant leak tests - the actual battery a multi-tenant codebase must pass on... |
-| Skill | [non-postgres-rls-reference](skills/non-postgres-rls-reference/SKILL.md) | Pure-reference catalog of row/tenant isolation mechanisms for non-Postgres engines: MySQL and MariaDB (no native RLS - views with SQL SEC... |
+| Skill | [non-postgres-row-level-security-reference](skills/non-postgres-row-level-security-reference/SKILL.md) | Pure-reference catalog of row/tenant isolation mechanisms for non-Postgres engines: MySQL and MariaDB (no native RLS - views with SQL SEC... |
 | Skill | [row-level-security-postgres-reference](skills/row-level-security-postgres-reference/SKILL.md) | Pure-reference catalog of Postgres Row-Level Security (RLS) for tenant isolation. |
 | Skill | [tenant-isolation-models-reference](skills/tenant-isolation-models-reference/SKILL.md) | Pure-reference catalog of tenant-isolation models for B2B SaaS. |
 | Skill | [tenant-leak-test-author](skills/tenant-leak-test-author/SKILL.md) | Workflow-driven skill that builds a tenant-leak test plan from an inventory of tenant-bearing surfaces (database tables, APIs, object sto... |

@@ -40,9 +40,8 @@ This skill defines a quarantine workflow with five required parts:
   that's unrelated to the change.
 
 If the test fails 100% of the time after a code change, it's a
-regression - use
-[`regression-bisector`](../../agents/regression-bisector.md) and fix,
-do not quarantine.
+regression - bisect to the introducing commit and fix, do not
+quarantine.
 
 ## Step 1 - Mark the test
 
@@ -221,5 +220,3 @@ jobs:
   status reporting.
 - [`flake-pattern-reference`](../flake-pattern-reference/SKILL.md) - 
   catalog of flake patterns to consult during bisect.
-- [`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md) - agent
-  that produces the bisect output referenced in the annotation.

@@ -209,7 +209,6 @@ Same pattern as Jaeger; Zipkin in-memory storage is bounded.
 - [B3 propagation spec] - header formats, sampling values
 - [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md),
   [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skills
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md)
 
 [Zipkin quickstart docs]: https://zipkin.io/pages/quickstart.html
 [Zipkin API spec]: https://zipkin.io/zipkin-api/

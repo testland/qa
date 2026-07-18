@@ -223,7 +223,7 @@ def test_order_push_deep_links_to_order_screen():
 ```
 
 End-to-end click-action tests require device automation (Espresso /
-XCUITest); cross-ref [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md).
+XCUITest); cross-ref `appium-testing` (in the qa-mobile plugin).
 
 ## Step 7 - Topic vs targeted routing
 
@@ -288,6 +288,6 @@ For each push channel:
 - pypi.org/project/apns2 - Python APNs HTTP/2 library
 - [`email-flow-test-author`](../email-flow-test-author/SKILL.md),
   [`sms-test-author`](../sms-test-author/SKILL.md) - sister channels
-- [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md),
-  [`xcuitest-suite`](../../../qa-mobile/skills/xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../../../qa-mobile/skills/espresso-suite/SKILL.md) - device-side click-action verification
+- `appium-testing`,
+  `xcuitest-suite`,
+  `espresso-suite` - device-side click-action verification

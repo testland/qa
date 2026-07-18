@@ -233,4 +233,4 @@ For those, use [`pytest-tests`](../pytest-tests/SKILL.md).
 - [`pytest-tests`](../pytest-tests/SKILL.md),
   [`unittest-tests`](../unittest-tests/SKILL.md),
   [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene
+- `test-code-conventions` - test code hygiene

@@ -217,4 +217,3 @@ For each in-scope criterion:
   [`hipaa-test-patterns`](../hipaa-test-patterns/SKILL.md),
   [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
   sister test-pattern catalogs
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent

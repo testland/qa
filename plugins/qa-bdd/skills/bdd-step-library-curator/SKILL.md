@@ -218,8 +218,8 @@ the new step.
 - **Consolidation cost.** Each refactor touches Gherkin + step
   definitions; not free.
 - **Doesn't fix Gherkin quality.** A clean step library doesn't
-  prevent imperative-style Gherkin scenarios. Pair with
-  [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md).
+  prevent imperative-style Gherkin scenarios. Pair with a Gherkin
+  style review.
 
 ## References
 
@@ -227,5 +227,3 @@ the new step.
   [`behave-testing`](../behave-testing/SKILL.md),
   [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - per-language
   runners this curator works alongside.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - sibling: addresses Gherkin quality, this addresses step
-  library quality.

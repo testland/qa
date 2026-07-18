@@ -241,5 +241,5 @@ Secrets configured in **Project Settings → CI/CD → Variables**
   [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
   alternatives.
 - [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md) - cross-CI conventions.
-- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - JUnit XML parser.
-- [`cobertura-analysis`](../../../qa-test-reporting/skills/cobertura-analysis/SKILL.md) - Cobertura parser (GitLab's native coverage format).
+- `junit-xml-analysis` - JUnit XML parser.
+- `cobertura-analysis` - Cobertura parser (GitLab's native coverage format).

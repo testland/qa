@@ -215,7 +215,7 @@ patterns.
   Canvas-based alternative
 - [`vega-spec-validator`](../vega-spec-validator/SKILL.md) - 
   declarative-spec testing alternative
-- [`qa-accessibility`](../../qa-accessibility/) - 
+- `qa-accessibility` - 
   cross-cutting a11y plugin
 
 [D3 getting-started docs]: https://d3js.org/getting-started

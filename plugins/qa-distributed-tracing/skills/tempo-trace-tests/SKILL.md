@@ -359,4 +359,3 @@ container or use `start`/`end` time bounds in search calls.
 - [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skill for Jaeger-using teams
 - [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister skill for Zipkin-using teams
 - [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md) - in-process unit-level trace assertions
-- [`trace-coverage-reviewer`](../../agents/trace-coverage-reviewer.md) - adversarial reviewer for trace coverage gaps

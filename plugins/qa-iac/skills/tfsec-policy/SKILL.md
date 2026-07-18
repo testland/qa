@@ -171,8 +171,7 @@ The migration is mostly mechanical - Trivy ingests the same
 
 ## Step 9 - Combine with Checkov + KICS
 
-Per [`iac-policy-checker`](../../agents/iac-policy-checker.md):
-multiple scanners catch overlapping but non-identical issues.
+Multiple scanners catch overlapping but non-identical issues.
 tfsec is faster and Terraform-specific; Checkov is broader; KICS
 adds different rule classes.
 
@@ -180,7 +179,7 @@ adds different rule classes.
 tfsec . -f json > tfsec.json
 checkov -d . -o json > checkov.json
 kics scan -p . --report-formats json
-# iac-policy-checker agent unifies results
+# unify results across the three scanners
 ```
 
 ## Anti-patterns
@@ -215,5 +214,3 @@ kics scan -p . --report-formats json
 - [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
   custom OPA / Rego policies (for unsupported clouds or custom
   rules).
-- [`iac-policy-checker`](../../agents/iac-policy-checker.md) - 
-  combines results.

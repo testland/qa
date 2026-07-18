@@ -189,7 +189,7 @@ Given(/^I am logged in as "(.+)"$/, async (email) => {
 // ... etc.
 ```
 
-Pairs with [`cucumber-testing`](../../../qa-bdd/skills/cucumber-testing/SKILL.md)
+Pairs with `cucumber-testing` (in the qa-bdd plugin)
 conventions for the Gherkin layer.
 
 ## Step 7 - CI integration
@@ -212,7 +212,7 @@ jobs:
 ```
 
 JUnit XML in `reports/junit/` feeds
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+`junit-xml-analysis` (in the qa-test-reporting plugin).
 
 ## Anti-patterns
 
@@ -238,5 +238,5 @@ JUnit XML in `reports/junit/` feeds
 - [`playwright-testing`](../playwright-testing/SKILL.md),
   [`cypress-testing`](../cypress-testing/SKILL.md),
   [`selenium-testing`](../selenium-testing/SKILL.md) - alternatives.
-- [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md) - wdio's appium service uses Appium underneath.
-- [`cucumber-testing`](../../../qa-bdd/skills/cucumber-testing/SKILL.md) - wdio's cucumber framework integration.
+- `appium-testing` - wdio's appium service uses Appium underneath.
+- `cucumber-testing` - wdio's cucumber framework integration.

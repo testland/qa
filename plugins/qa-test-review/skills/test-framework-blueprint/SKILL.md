@@ -1,6 +1,6 @@
 ---
 name: test-framework-blueprint
-description: "Build-an-X workflow that takes an SDET from no test suite to a complete framework design in seven steps - inventory the SUT, choose runner + language, directory layout + fixture architecture, object-model decision, test data + mocking wiring, reporting + CI integration, conventions doc + review gates - producing a written framework blueprint (directory tree, fixture list, chosen patterns, CI matrix) plus an implementation order. Distinct from `framework-choice-advisor` (qa-process; the deeper reference for the Step 2 runner decision alone), from `object-model-patterns` (the Step 4 pattern catalog this workflow defers to), and from `automation-harness-bootstrapper` (qa-roles; scaffolds the harness skeleton AFTER this blueprint exists). Use when designing a test automation framework from scratch or re-architecting one that grew organically."
+description: "Build-an-X workflow that takes an SDET from no test suite to a complete framework design in seven steps - inventory the SUT, choose runner + language, directory layout + fixture architecture, object-model decision, test data + mocking wiring, reporting + CI integration, conventions doc + review gates - producing a written framework blueprint (directory tree, fixture list, chosen patterns, CI matrix) plus an implementation order. Distinct from `framework-choice-advisor` (qa-process; the deeper reference for the Step 2 runner decision alone), from `object-model-patterns` (the Step 4 pattern catalog this workflow defers to), and from a harness scaffolder (qa-roles; scaffolds the harness skeleton AFTER this blueprint exists). Use when designing a test automation framework from scratch or re-architecting one that grew organically."
 keywords:
   - test-framework
   - framework-design
@@ -28,11 +28,9 @@ It is the connective tissue between the pattern catalogs and the scaffolder.
 The catalogs ([`object-model-patterns`](../object-model-patterns/SKILL.md),
 [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md),
 [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md),
-[`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md))
-say what each pattern IS; the scaffolder
-([`automation-harness-bootstrapper`](../../../qa-roles/agents/automation-harness-bootstrapper.md))
-emits a skeleton once decisions are made. Neither walks the decisions in order.
-This skill does.
+`test-data-patterns` in qa-test-data)
+say what each pattern IS; the scaffolder emits a skeleton once decisions
+are made. Neither walks the decisions in order. This skill does.
 
 ## When to use
 
@@ -41,25 +39,21 @@ This skill does.
   writing harness code.
 - Re-architecting a framework that grew organically: helpers sprawled, nobody
   remembers why the fixtures look the way they do, and a
-  [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md)
-  run came back with structural findings.
+  framework-architecture audit run came back with structural findings.
 - A new SDET joins a team with no written test architecture and needs to
   produce one.
 
 Do **not** use this skill to:
 
-- Pick only the runner. That single decision has two deeper tools: the
-  [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md)
-  reference catalog (NFR scoring + side-by-side trade-off matrices in prose)
-  and the
-  [`web-e2e-framework-selector`](../../../qa-web-e2e/agents/web-e2e-framework-selector.md)
-  agent (reads the actual project files and returns one defended
-  recommendation). Step 2 below summarizes the criteria and hands off.
-- Scaffold the skeleton. That is
-  [`automation-harness-bootstrapper`](../../../qa-roles/agents/automation-harness-bootstrapper.md),
-  which consumes this blueprint's decisions as its inputs.
-- Audit an existing framework against its own conventions. That is
-  [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md).
+- Pick only the runner. That single decision has a deeper reference: the
+  `framework-choice-advisor` catalog (in the qa-process plugin) - NFR scoring
+  + side-by-side trade-off matrices in prose. When a repo already has an E2E
+  convention in `package.json`, prefer continuing with it unless there is a
+  reason to switch. Step 2 below summarizes the criteria and hands off.
+- Scaffold the skeleton. That is a separate harness-scaffolding step, which
+  consumes this blueprint's decisions as its inputs.
+- Audit an existing framework against its own conventions. That is a separate
+  framework-architecture audit.
 
 ## Step 1 - Inventory the system under test
 
@@ -71,7 +65,7 @@ decision keys off them.
 | **App stack** | Languages, frameworks, persistence (e.g. Node + React + Postgres). Which external services does it call (payments, email, auth provider)? |
 | **Deployment shape** | Monolith / services / serverless? Can a full stack run locally (compose file, dev server) or only in a shared environment? |
 | **Change shape** | Where do PRs land - one monorepo, or per-service repos? Do most changes touch the API, the UI, or both? The layer that changes most needs the fastest feedback. |
-| **Team skills** | What languages do the engineers writing and maintaining tests already know? Per [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md) Step 1, the framework-language mismatch is the #1 maintenance cost. |
+| **Team skills** | What languages do the engineers writing and maintaining tests already know? Per `framework-choice-advisor` Step 1, the framework-language mismatch is the #1 maintenance cost. |
 
 **Decision output:** a coverage-layers table stating which layers get
 automated coverage in this framework and which are explicitly out of scope
@@ -97,12 +91,9 @@ Two criteria dominate; everything else is tie-breaking:
    the team maintains one config, one reporter, one CI job family.
 
 For the full trade-off matrices (cross-browser, mobile, parallelization,
-ecosystem, hire-ability) use
-[`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md);
-to have the decision made from the actual repo contents, dispatch
-[`web-e2e-framework-selector`](../../../qa-web-e2e/agents/web-e2e-framework-selector.md),
-which detects an existing convention from `package.json` and recommends
-continuing with it unless there is a reason to switch.
+ecosystem, hire-ability) use `framework-choice-advisor`; when a repo already
+has an E2E convention in `package.json`, prefer continuing with it unless
+there is a reason to switch.
 
 **Decision output:** one runner + one language, with the rejected
 alternatives and the reason recorded in the blueprint (the rejection
@@ -204,21 +195,20 @@ Three sub-decisions, each deferring to its own deeper tool:
 
 1. **Seed strategy.** What state exists before any test runs? Decide between
    empty-database + per-test creation, a curated seed set (author it with
-   [`seed-data-curator`](../../../qa-test-data/skills/seed-data-curator/SKILL.md)),
+   `seed-data-curator` in qa-test-data),
    or template-database cloning. The isolation mechanics
    (transaction-rollback vs database-per-worker vs template clone) come from
    [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) Pattern 4.
 2. **Construction pattern.** Builder vs Factory vs Object Mother:
-   [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md)
+   `test-data-patterns` (qa-test-data)
    is the catalog. Default for a new framework: Test Data Builder for the 2-3
    core domain objects, nothing else until duplication appears.
 3. **Mock-server placement.** Which external dependencies get stubbed, and
    where the stub runs (in-process interception vs a standalone stub the
-   whole stack points at). The tool choice per stack is exactly what
-   [`mock-server-composer`](../../../qa-test-data/agents/mock-server-composer.md)
-   automates (it composes WireMock / MSW / Mountebank by detected runtime);
-   the blueprint records only the boundary: which services are real, which
-   are stubbed, and in which layer.
+   whole stack points at). The per-stack tool choice (WireMock / MSW /
+   Mountebank, by detected runtime) is a separate concern; the blueprint
+   records only the boundary: which services are real, which are stubbed,
+   and in which layer.
 
 **Decision output:** a one-line entry per external dependency (real / stubbed
 / contract-tested) and the seed + builder choices.
@@ -232,7 +222,7 @@ Three sub-decisions, each deferring to its own deeper tool:
   JUnit-style XML report CI systems ingest.
 - **Sharding.** Do not design for shards on day one. Adopt the
   suite-runtime thresholds from
-  [`ci-test-job-conventions`](../../../qa-ci-integration/skills/ci-test-job-conventions/SKILL.md)
+  `ci-test-job-conventions` (in the qa-ci-integration plugin)
   §1 (no sharding under 2 minutes; 2-4 shards for a 10-30 minute suite) and
   record the trigger runtime in the blueprint. When sharding lands, the
   mechanics for the worked stack are `npx playwright test --shard=1/4` plus
@@ -240,7 +230,7 @@ Three sub-decisions, each deferring to its own deeper tool:
   per the [Playwright sharding docs](https://playwright.dev/docs/test-sharding).
 - **Retry policy and per-trigger filtering** (what runs per-PR vs per-merge
   vs nightly) follow the cross-platform conventions in
-  [`ci-test-job-conventions`](../../../qa-ci-integration/skills/ci-test-job-conventions/SKILL.md);
+  `ci-test-job-conventions`;
   the blueprint records the chosen matrix, not the rationale prose.
 
 **Decision output:** the CI matrix table (trigger × suite × shards × retry).
@@ -256,13 +246,11 @@ real/stubbed dependency list (Step 5), and the CI matrix (Step 6).
 A conventions doc nobody enforces drifts. Wire the enforcement loop from this
 plugin:
 
-- [`test-code-critic`](../../agents/test-code-critic.md) runs per-PR on test
-  file paths and flags per-file violations (structure, naming, magic numbers,
-  slow setup).
-- [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md)
-  runs quarterly (or pre-release) and checks the cross-file tier, including
-  documented-vs-actual convention drift: it reads this very conventions doc
-  and flags where the codebase diverged from it.
+- A per-PR check on test file paths flags per-file violations (structure,
+  naming, magic numbers, slow setup).
+- A quarterly (or pre-release) framework-architecture audit checks the
+  cross-file tier, including documented-vs-actual convention drift: it reads
+  this very conventions doc and flags where the codebase diverged from it.
 
 ## Worked example - "Ledgerly", a B2B invoicing web app
 
@@ -330,13 +318,12 @@ the implementation order until ~10 specs exist.
 
 **Step 5 - Data + mocking.** Seed: empty DB + per-test creation through one
 `invoiceBuilder` and one `accountBuilder` (Test Data Builder per
-[`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md));
+`test-data-patterns` in qa-test-data);
 no shared seed set yet. Isolation: database-per-worker
 ([`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) Pattern 4b)
 because invoice tests are mutation-heavy. Dependencies: Postgres real (in
 compose), Stripe stubbed by a stub container in `docker-compose.test.yml`
-(tool choice delegated to
-[`mock-server-composer`](../../../qa-test-data/agents/mock-server-composer.md)),
+(stub tooling chosen per the detected runtime),
 email captured by a local SMTP sink.
 
 **Step 6 - CI matrix.** Reporters per the
@@ -346,20 +333,17 @@ email captured by a local SMTP sink.
 | Trigger | Suite | Shards | Retry |
 |---|---|---|---|
 | Per-PR | `tests/api` + `tests/e2e/invoicing` (smoke) | none (est. < 5 min) | 0 |
-| Merge to main | full `tests/` | none until runtime > 10 min, then 2-4 per [`ci-test-job-conventions`](../../../qa-ci-integration/skills/ci-test-job-conventions/SKILL.md) §1 | 1 on runner failure only |
+| Merge to main | full `tests/` | none until runtime > 10 min, then 2-4 per `ci-test-job-conventions` §1 | 1 on runner failure only |
 | Nightly | full `tests/` against staging | as merge | 1, failures auto-filed |
 
 **Step 7 - Conventions + gates.** `docs/test-conventions.md` holds all six
-decision outputs above. [`test-code-critic`](../../agents/test-code-critic.md)
-wired as a PR check on `tests/**`;
-[`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md)
-scheduled quarterly.
+decision outputs above. A test-code critic wired as a PR check on `tests/**`;
+a framework-architecture audit scheduled quarterly.
 
 **Implementation order** (each step waits on the previous):
 
-1. Scaffold the harness from the blueprint via
-   [`automation-harness-bootstrapper`](../../../qa-roles/agents/automation-harness-bootstrapper.md)
-   (stack `react+vite`, runner `playwright`).
+1. Scaffold the harness from the blueprint (stack `react+vite`, runner
+   `playwright`).
 2. `db.ts` worker fixtures + migrations + one API smoke test.
 3. `auth.ts` + `stripe-stub.ts` fixtures; first E2E journey, raw locators.
 4. CI: per-PR job with junit output.
@@ -374,18 +358,17 @@ scheduled quarterly.
 |---|---|
 | Copying the framework from a previous job regardless of change shape | The old framework encoded the old SUT's inventory (Step 1); a UI-heavy framework on an API-heavy product tests the wrong layer slowly |
 | Building abstraction layers before ~10 tests exist | Abstractions extracted from zero usage guess wrong; extract from observed duplication (the rule-of-three framing in [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md)) |
-| One mega base-class every test inherits | Depth-3+ hierarchies break unpredictably on root changes, per [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) §A2; compose fixtures instead |
-| Choosing the runner before the team-skills inventory | Framework-language mismatch is the #1 maintenance cost per [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md) |
-| Designing the CI matrix for scale on day one (8 shards, 3 retries) | Retries hide flake in a young suite; shards add cost below the [`ci-test-job-conventions`](../../../qa-ci-integration/skills/ci-test-job-conventions/SKILL.md) §1 runtime thresholds |
-| Skipping the written blueprint ("the code is the doc") | Documented-vs-actual drift becomes undetectable; the auditor's drift check needs a documented side to compare against |
+| One mega base-class every test inherits | Depth-3+ hierarchies break unpredictably on root changes (§A2); compose fixtures instead |
+| Choosing the runner before the team-skills inventory | Framework-language mismatch is the #1 maintenance cost per `framework-choice-advisor` |
+| Designing the CI matrix for scale on day one (8 shards, 3 retries) | Retries hide flake in a young suite; shards add cost below the `ci-test-job-conventions` §1 runtime thresholds |
+| Skipping the written blueprint ("the code is the doc") | Documented-vs-actual drift becomes undetectable; the drift check needs a documented side to compare against |
 
 ## Limitations
 
-- This skill **designs** the framework; it writes no code.
-  [`automation-harness-bootstrapper`](../../../qa-roles/agents/automation-harness-bootstrapper.md)
-  (qa-roles) scaffolds the skeleton from the blueprint, and the per-framework
-  skills in qa-web-e2e (`playwright-testing`, `cypress-testing`, etc.)
-  implement the actual tests.
+- This skill **designs** the framework; it writes no code. A separate harness
+  scaffolder (qa-roles) scaffolds the skeleton from the blueprint, and the
+  per-framework skills in qa-web-e2e (`playwright-testing`, `cypress-testing`,
+  etc.) implement the actual tests.
 - The worked stack is Playwright + TypeScript; the pytest mapping in Step 3
   is noted with citations but not carried through the worked example.
 - Layer-mix sizing (how many tests per tier) is out of scope: that is
@@ -406,14 +389,8 @@ scheduled quarterly.
 - [`object-model-patterns`](../object-model-patterns/SKILL.md),
   [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md),
   [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md),
-  [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md) -
+  `test-data-patterns` (qa-test-data) -
   the sister pattern catalogs Steps 3-5 defer to.
-- [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md),
-  [`web-e2e-framework-selector`](../../../qa-web-e2e/agents/web-e2e-framework-selector.md) -
-  the Step 2 deep tools.
-- [`ci-test-job-conventions`](../../../qa-ci-integration/skills/ci-test-job-conventions/SKILL.md) -
+- `framework-choice-advisor` (qa-process) - the Step 2 deep tool.
+- `ci-test-job-conventions` (qa-ci-integration) -
   the Step 6 conventions reference.
-- [`automation-harness-bootstrapper`](../../../qa-roles/agents/automation-harness-bootstrapper.md),
-  [`test-code-critic`](../../agents/test-code-critic.md),
-  [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) -
-  downstream scaffolder and enforcement loop.

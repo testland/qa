@@ -203,9 +203,9 @@ liquibase update is the standard pattern.
 
 ## Step 8 - Composition with sister tools
 
-Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-for adversarial review of new changesets - classifies as
-additive / breaking / data-loss / locking; estimates downtime.
+Before merge, apply adversarial review of new changesets -
+classify as additive / breaking / data-loss / locking; estimate
+downtime.
 
 ## Anti-patterns
 
@@ -242,4 +242,3 @@ additive / breaking / data-loss / locking; estimates downtime.
   [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
   tools (Flyway = SQL-first versioned; Atlas = declarative HCL;
   SQLMesh = data-pipeline + schema)
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer

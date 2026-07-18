@@ -326,5 +326,5 @@ This finds methods registered in reflection but returning
   [`grpc-mock`](../grpc-mock/SKILL.md),
   [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
 - Sibling protocol-test plugin:
-  [`qa-realtime-protocols/grpc-streaming-tests`](../../../qa-realtime-protocols/skills/grpc-streaming-tests/SKILL.md)
-  (wire-level streaming semantics).
+  `grpc-streaming-tests` (in the qa-realtime-protocols plugin;
+  wire-level streaming semantics).

@@ -225,4 +225,4 @@ test('comment form sends direction with submission', async ({ page }) => {
   variant.
 - [`i18n-string-coverage`](../i18n-string-coverage/SKILL.md) - 
   source-scan complement.
-- [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md) - visual regression for catching RTL layout issues.
+- `playwright-snapshots` - visual regression for catching RTL layout issues.

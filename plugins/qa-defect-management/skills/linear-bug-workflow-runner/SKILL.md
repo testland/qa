@@ -22,9 +22,7 @@ for create / update / transition / search.
 - Filing a bug from a CI test failure (consumed by
   [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)).
 - Transitioning bugs in bulk after a release.
-- Backing the
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md)
-  search backend for Linear-using teams.
+- Backing duplicate-defect search for Linear-using teams.
 
 ## Authoring
 
@@ -289,5 +287,4 @@ The `type` enum is stable; the `name` is team-customisable.
   [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md),
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md).
+  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).

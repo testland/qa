@@ -80,7 +80,7 @@ financial / regulatory paths.
 ### 5. Risk-driven
 
 Custom matrix targeting (flag, segment) cells with known risk
-(per a risk register per [`qa-process/risk-matrix`](../../../qa-process/skills/risk-matrix/SKILL.md)).
+(per a risk register per `risk-matrix` in the qa-process plugin).
 
 **Use when:** any non-trivial codebase. Best in practice.
 
@@ -113,8 +113,7 @@ Tests should run at multiple layers:
 
 ## Flag-experiment distinction
 
-Per
-[`qa-experimentation/ab-test-validity-checklist`](../../../qa-experimentation/skills/ab-test-validity-checklist/SKILL.md):
+Per `ab-test-validity-checklist` (in the qa-experimentation plugin):
 
 | Flag | Experiment |
 |---|---|
@@ -136,7 +135,7 @@ assignment + analytics.
 | Mock the SDK to return constant | Misses targeting / rollout logic | Local-eval mode or fixture-based SDK |
 | Same test for every flag combination | Slow; flaky; opaque failures | Per-combination assertion logs |
 | No kill-switch test | Production incident has no rehearsed response | Test deactivation latency |
-| Don't test percentage-rollout sticky-assignment | Rollout produces non-deterministic UX | Per [`qa-experimentation/ab-test-validity-checklist`](../../../qa-experimentation/skills/ab-test-validity-checklist/SKILL.md) |
+| Don't test percentage-rollout sticky-assignment | Rollout produces non-deterministic UX | Per `ab-test-validity-checklist` |
 | Tests assume flag-on default | Real default-off behaviour untested in CI | Test both paths |
 | No cleanup test for removed flags | Stale-flag accumulates per [`flag-removal-runbook-author`](../flag-removal-runbook-author/SKILL.md) | Periodic stale-flag audit |
 | Pairwise without flag-interaction discovery | Some pairs spuriously interact | Couple with risk-register input |
@@ -168,8 +167,7 @@ assignment + analytics.
   [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
   [`unleash-testing`](../unleash-testing/SKILL.md),
   [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md),
-  [`stale-flag-detector`](../../agents/stale-flag-detector.md).
+  [`growthbook-testing`](../growthbook-testing/SKILL.md).
 - Cross-plugin:
-  [`qa-experimentation/ab-test-validity-checklist`](../../../qa-experimentation/skills/ab-test-validity-checklist/SKILL.md),
-  [`qa-test-environment/feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md).
+  `ab-test-validity-checklist`,
+  `feature-flag-test-harness`.

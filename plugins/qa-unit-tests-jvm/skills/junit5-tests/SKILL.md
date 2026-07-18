@@ -244,7 +244,7 @@ Maven:
   with: { files: ./build/reports/jacoco/test/jacocoTestReport.xml }
 ```
 
-Surefire (Maven) emits JUnit XML for [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+Surefire (Maven) emits JUnit XML for `junit-xml-analysis` (in the qa-test-reporting plugin).
 
 ## Anti-patterns
 
@@ -274,4 +274,4 @@ Surefire (Maven) emits JUnit XML for [`junit-xml-analysis`](../../../qa-test-rep
   [`spock-tests`](../spock-tests/SKILL.md),
   [`testng-tests`](../testng-tests/SKILL.md),
   [`scalatest`](../scalatest/SKILL.md) - sister tools
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - test code hygiene
+- `test-code-conventions` - test code hygiene

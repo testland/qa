@@ -231,7 +231,7 @@ pytest tests/ --junitxml=reports/atspi-junit.xml
 ## Step 8 - Parsing results
 
 JUnit XML from pytest feeds
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+`junit-xml-analysis` (in the qa-test-reporting plugin)
 for the cross-runner aggregation pipeline.
 
 For dogtail-specific diagnostics, every failing run captures a
@@ -336,4 +336,4 @@ anti-patterns table.
   [`qt-test-framework`](../qt-test-framework/SKILL.md),
   [`electron-playwright`](../electron-playwright/SKILL.md).
 - Downstream:
-  [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+  `junit-xml-analysis`.

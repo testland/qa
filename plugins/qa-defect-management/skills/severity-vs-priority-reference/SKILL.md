@@ -18,10 +18,9 @@ scheduling, escalation, and SLA enforcement.
   business context (customer commitments, regulatory deadlines,
   release timing).
 
-This skill is a **pure reference** consumed by
-[`bug-report-critic`](../../agents/bug-report-critic.md) (which
-rejects reports that conflate the two), the platform-workflow
-skills, and downstream triage tooling.
+This skill is a **pure reference** consumed by defect-report
+review (which rejects reports that conflate the two), the
+platform-workflow skills, and downstream triage tooling.
 
 ## When to use
 
@@ -186,5 +185,3 @@ each cover the platform-specific configuration.
 - Sibling references:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
   [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).
-- Consumed by:
-  [`bug-report-critic`](../../agents/bug-report-critic.md).

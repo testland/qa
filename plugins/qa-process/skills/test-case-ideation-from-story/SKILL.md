@@ -91,7 +91,7 @@ The matrix is the authoring artifact. The next steps in the workflow are:
 
 1. Hand the matrix to a manual tester for execution (TestRail / Qase / Xray import).
 2. Hand the same matrix to `gherkin-from-stories` (in `qa-bdd`) which converts the rows the team wants to automate into Gherkin scenarios.
-3. After implementation, run `ai-test-shallow-coverage-critic` (in `qa-ai-assisted`) over the resulting test code to confirm the matrix's negative / boundary cases actually made it into executable tests.
+3. After implementation, run a shallow-coverage critique over the resulting test code to confirm the matrix's negative / boundary cases actually made it into executable tests.
 
 ## Step 4 - CI / tracker integration
 
@@ -122,11 +122,11 @@ The matrix is plain markdown. Common integrations:
 
 ## Hand-off targets
 
-- **Convert matrix rows to Gherkin** → [`gherkin-from-stories`](../../../qa-bdd/skills/gherkin-from-stories/SKILL.md).
-- **Convert matrix rows to a manual execution script** → [`manual-test-script-author`](../../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).
-- **Generate test code from matrix rows** → [`ai-test-generator`](../../../qa-ai-assisted/skills/ai-test-generator/SKILL.md). Always pair with [`ai-test-curator`](../../../qa-ai-assisted/agents/ai-test-curator.md) and [`ai-test-shallow-coverage-critic`](../../../qa-ai-assisted/agents/ai-test-shallow-coverage-critic.md) downstream.
-- **Generate negative-path companions for an already-written happy-path test** → [`negative-test-generator`](../../../qa-test-data/skills/negative-test-generator/SKILL.md).
-- **Generate boundary cases** → [`boundary-value-generator`](../../../qa-test-data/skills/boundary-value-generator/SKILL.md).
+- **Convert matrix rows to Gherkin** → `gherkin-from-stories`.
+- **Convert matrix rows to a manual execution script** → `manual-test-script-author`.
+- **Generate test code from matrix rows** → `ai-test-generator`. Always pair with a curation and shallow-coverage-review pass downstream.
+- **Generate negative-path companions for an already-written happy-path test** → `negative-test-generator`.
+- **Generate boundary cases** → `boundary-value-generator`.
 
 ## References
 

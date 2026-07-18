@@ -275,7 +275,7 @@ runs the per-test executables and aggregates outcomes.
 ```
 
 The JUnit XML output feeds
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+`junit-xml-analysis` (in the qa-test-reporting plugin)
 for cross-platform aggregation alongside other JUnit-emitting test
 runners.
 
@@ -363,4 +363,4 @@ runners that don't have an X / Wayland session.
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - Downstream:
-  [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+  `junit-xml-analysis`.

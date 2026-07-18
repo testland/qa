@@ -109,7 +109,7 @@ gosec -fmt text -out results.txt ./...
 gosec -fmt yaml -out results.yaml ./...
 ```
 
-For `sast-finding-triager` integration, use JSON.
+For multi-scanner triage integration, use JSON.
 
 ## Step 5 - False-positive triage (MANDATORY)
 
@@ -242,5 +242,3 @@ contributing upstream OR forking. For most teams, leverage the
   [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
   [`codeql-queries`](../codeql-queries/SKILL.md),
   [`bandit-python`](../bandit-python/SKILL.md) - sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
-  unifier agent

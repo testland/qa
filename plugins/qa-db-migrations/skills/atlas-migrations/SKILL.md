@@ -172,10 +172,9 @@ diff visualization.
 
 ## Step 9 - Composition with sister tools
 
-Pair with [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-for adversarial review beyond `atlas migrate lint` (e.g., reviewer
-applies team-specific risk policies that Atlas's built-in lint
-doesn't capture).
+Beyond `atlas migrate lint`, apply adversarial review with
+team-specific risk policies that Atlas's built-in lint doesn't
+capture (e.g., "no `DROP TABLE` without DBA approval").
 
 ## Anti-patterns
 
@@ -193,8 +192,7 @@ doesn't capture).
   PostgreSQL extension management) have limited HCL support - fall
   back to SQL schema for those.
 - Lint rules are general-purpose; team-specific policies (e.g., "no
-  `DROP TABLE` without DBA approval") need [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md)
-  on top.
+  `DROP TABLE` without DBA approval") need adversarial review on top.
 - `--dev-url` requires a real DBMS instance (or Docker) - Atlas
   cannot diff schemas without one.
 - Atlas Cloud (managed plan visualization) is paid; OSS covers
@@ -211,5 +209,3 @@ doesn't capture).
   [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
   tools (Flyway / Liquibase = imperative versioned; SQLMesh =
   data-pipeline + schema)
-- [`migration-blast-radius-reviewer`](../../agents/migration-blast-radius-reviewer.md) - adversarial reviewer (extends `atlas migrate lint` with
-  team-specific policies)

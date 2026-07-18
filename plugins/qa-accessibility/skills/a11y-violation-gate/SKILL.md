@@ -28,10 +28,8 @@ combination of:
 - [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md)
 
 Sibling gates with the same architecture:
-[`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md),
-[`visual-baseline-gate`](../../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md),
-[`contract-compatibility-gate`](../../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md),
-[`perf-budget-gate`](../../../qa-load-testing/skills/perf-budget-gate/SKILL.md).
+`data-quality-gate`, `visual-baseline-gate`,
+`contract-compatibility-gate`, `perf-budget-gate`.
 
 ## When to use
 
@@ -253,7 +251,5 @@ sys.exit(0 if verdict == 'go' else 1)
   [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md).
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - Sibling gate skills (same architecture):
-  [`data-quality-gate`](../../../qa-data-quality/skills/data-quality-gate/SKILL.md),
-  [`visual-baseline-gate`](../../../qa-visual-regression/skills/visual-baseline-gate/SKILL.md),
-  [`contract-compatibility-gate`](../../../qa-contract-testing/skills/contract-compatibility-gate/SKILL.md),
-  [`perf-budget-gate`](../../../qa-load-testing/skills/perf-budget-gate/SKILL.md).
+  `data-quality-gate`, `visual-baseline-gate`,
+  `contract-compatibility-gate`, `perf-budget-gate`.

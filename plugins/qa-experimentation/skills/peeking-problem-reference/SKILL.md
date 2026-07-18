@@ -20,7 +20,7 @@ significance testing is one of the most common mistakes in
 practical A/B testing."
 
 This skill is a **pure reference** consumed by the AB-test
-validity checklist and the SRM detector agent.
+validity checklist and SRM detection.
 
 ## When to use
 
@@ -167,7 +167,6 @@ formal multi-comparison correction across guardrails.
   [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
   [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md).
 - Consumed by:
-  [`sample-ratio-mismatch-detector`](../../agents/sample-ratio-mismatch-detector.md),
   [`statsig-test`](../statsig-test/SKILL.md),
   [`optimizely-test`](../optimizely-test/SKILL.md),
   [`vwo-test`](../vwo-test/SKILL.md),

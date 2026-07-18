@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-llm-evaluation",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "LLM and prompt evaluation: 7 skills (promptfoo-evaluation, openai-evals, deepeval-evaluation, ragas-evaluation, giskard-llm, langfuse-tracing, llm-regression-suite-author) and 2 agents (prompt-eval-reviewer, llm-red-team-planner).",
   "author": {
     "name": "testland",

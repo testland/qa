@@ -205,6 +205,3 @@ Datadog), not CI-pipeline assertions.
   [`ragas-evaluation`](../ragas-evaluation/SKILL.md),
   [`giskard-llm`](../giskard-llm/SKILL.md) - pre-deploy eval sister
   tools
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
-  adversarial reviewer that flags eval suites without observability
-  feedback loop

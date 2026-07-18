@@ -16,10 +16,9 @@ Catalogs the three load-bearing defect taxonomies:
    eight-attribute framework for in-process defect classification.
 
 Consumers:
-[`bug-report-critic`](../../agents/bug-report-critic.md)
-(rejects unclassified defects) and
 [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)
-(populates classification fields).
+populates classification fields; defect-report review rejects
+unclassified defects.
 
 ## When to use
 
@@ -198,5 +197,4 @@ Once defects are classified, useful metrics emerge:
   [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
 - Consumed by:
-  [`bug-report-critic`](../../agents/bug-report-critic.md),
   [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).

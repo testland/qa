@@ -21,9 +21,7 @@ For canonical anatomy, see
 - Authoring tests in Jira-anchored teams using Zephyr Scale.
 - Bulk-importing legacy cases from CSV / another TCM.
 - Organising the case repository (folders, labels, components).
-- Backing the
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md)
-  case-quality scans for Zephyr-using teams.
+- Case-quality scans for Zephyr-using teams.
 
 ## Authoring
 
@@ -267,4 +265,4 @@ Sync per-spec front-matter to Zephyr Scale:
   [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`zephyr-integration`](../../../qa-test-reporting/skills/zephyr-integration/SKILL.md) - different scope (result sync via test cycles).
+  `zephyr-integration` (in the qa-test-reporting plugin) - different scope (result sync via test cycles).

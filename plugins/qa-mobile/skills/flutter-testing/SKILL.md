@@ -80,7 +80,7 @@ flutter test                       # all tests
 flutter test --coverage            # produces coverage/lcov.info
 ```
 
-The LCOV output feeds [`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md).
+The LCOV output feeds `lcov-analysis` (in the qa-test-reporting plugin).
 
 ## Step 3 - Widget tests
 
@@ -199,7 +199,7 @@ genhtml coverage/lcov.info -o coverage/html   # human report
 ```
 
 The LCOV file feeds the same parser other plugins use
-([`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md))
+(`lcov-analysis`)
 for cross-language coverage aggregation.
 
 ## Step 7 - CI integration
@@ -268,4 +268,4 @@ Patrol (for native platform interactions)."
   [`espresso-suite`](../espresso-suite/SKILL.md),
   [`detox-testing`](../detox-testing/SKILL.md) - alternative
   framework wrappers when the app isn't Flutter.
-- [`lcov-analysis`](../../../qa-test-reporting/skills/lcov-analysis/SKILL.md) - downstream consumer of `flutter test --coverage`.
+- `lcov-analysis` - downstream consumer of `flutter test --coverage`.

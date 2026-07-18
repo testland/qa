@@ -167,7 +167,7 @@ The corpus syncs to `gs://<project>-corpus.clusterfuzz-external.appspot.com/`.
 |---|---|---|
 | **From spec keywords** | New target, no inputs exist | Extract JSON keywords from a JSON parser spec, write each as a tiny file |
 | **From test fixtures** | Existing unit-test inputs cover paths | Copy fixtures from `tests/fixtures/*.json` to `seeds/` |
-| **From production data** | Mature target, prod logs available | Sample 1000 prod requests, strip PII per [`pii-categories-reference`](../../../qa-test-data-privacy/skills/pii-categories-reference/SKILL.md), seed |
+| **From production data** | Mature target, prod logs available | Sample 1000 prod requests, strip PII per `pii-categories-reference`, seed |
 | **From corpus minimisation** | Reduce a large corpus to its coverage-equivalent core | Run `afl-cmin` or `libFuzzer -merge=1` |
 | **From OSS-Fuzz cousin** | Same format, different target | Reuse `<format>_seed_corpus.zip` from a related OSS-Fuzz project |
 
@@ -227,8 +227,7 @@ When the fuzzer finds a crash:
    ```
 2. **Minimise the crash input** (see above) so the bug report is
    small.
-3. **File the bug** via
-   [`bug-report-from-failure`](../../../qa-defect-management/skills/bug-report-from-failure/SKILL.md)
+3. **File the bug** via `bug-report-from-failure`
    with the minimised crash as an attachment.
 4. **Add the original (non-minimised) crash to the seed corpus**
    as a regression test - re-runs will catch reintroduction.
@@ -300,5 +299,4 @@ across runs:
   [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
   [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
   [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md),
-  [`fuzz-toolkit-dispatcher`](../fuzz-toolkit-dispatcher/SKILL.md),
-  [`fuzz-target-author`](../../agents/fuzz-target-author.md).
+  [`fuzz-toolkit-dispatcher`](../fuzz-toolkit-dispatcher/SKILL.md).

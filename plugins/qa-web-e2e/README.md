@@ -8,7 +8,7 @@ Web E2E framework wrappers (per-framework skills). Full lifecycle per framework:
 | --- | --- | --- |
 | Skill | [browserstack-automate](skills/browserstack-automate/SKILL.md) | Author and run E2E tests on BrowserStack Automate - cloud grid covering 3000+ real device + browser combinations. |
 | Skill | [cypress-testing](skills/cypress-testing/SKILL.md) | Authors Cypress E2E tests - `npm install cypress`, `cypress.config.ts` setup, `cy.*` command chains, automatic-waiting commands, time-tra... |
-| Skill | [web-e2e-getting-started](skills/web-e2e-getting-started/SKILL.md) | Orients a junior engineer to web E2E testing in the qa-web-e2e plugin - maps the available skills and agents, routes framework choice thr... |
+| Skill | [web-e2e-overview](skills/web-e2e-overview/SKILL.md) | Orients a junior engineer to web E2E testing in the qa-web-e2e plugin - maps the available skills and agents, routes framework choice thr... |
 | Skill | [lambdatest-automate](skills/lambdatest-automate/SKILL.md) | Author and run E2E tests on LambdaTest - cloud grid for cross-browser + real-device testing with W3C WebDriver, Cypress, Playwright, and... |
 | Skill | [playwright-testing](skills/playwright-testing/SKILL.md) | Authors Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` projects... |
 | Skill | [puppeteer-testing](skills/puppeteer-testing/SKILL.md) | Authors browser automation scripts using Puppeteer - Chrome / Chromium-only headless / headed automation, Page object via `page.*` API, n... |

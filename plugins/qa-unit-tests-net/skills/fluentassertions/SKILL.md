@@ -246,4 +246,4 @@ failure messages + chainable assertions.
 - [`xunit-tests`](../xunit-tests/SKILL.md),
   [`nunit-tests`](../nunit-tests/SKILL.md),
   [`mstest-tests`](../mstest-tests/SKILL.md) - sister tools (test runners)
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- `test-code-conventions`

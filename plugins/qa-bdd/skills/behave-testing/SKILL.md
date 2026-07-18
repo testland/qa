@@ -27,7 +27,7 @@ components but maintained outside the main org).
 
 - The codebase is Python and the team uses BDD.
 - Acceptance criteria are authored in Gherkin (per
-  [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)).
+  `acceptance-criteria-extractor` in the qa-shift-left plugin).
 - pytest with parametrize isn't sufficient - non-engineers read
   the tests.
 
@@ -191,7 +191,7 @@ behave --junit --junit-directory reports/junit/
 behave --format=plain --no-color > test-results.txt
 ```
 
-The JUnit XML feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+The JUnit XML feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
 
 ## Step 8 - Run
 
@@ -243,4 +243,3 @@ into pytest. Choose:
   [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - sibling
   language wrappers.
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - keeps step proliferation in check.
-- [`gherkin-style-reviewer`](../../agents/gherkin-style-reviewer.md) - adversarial Gherkin reviewer.

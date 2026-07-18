@@ -231,4 +231,4 @@ Same pattern as xUnit:
 - [`xunit-tests`](../xunit-tests/SKILL.md),
   [`mstest-tests`](../mstest-tests/SKILL.md),
   [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- `test-code-conventions`

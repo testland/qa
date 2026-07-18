@@ -32,9 +32,8 @@ Per-E2E-test, the agent / skill needs:
 
 - **Runtime:** average per-test duration (from CI).
 - **Flake rate:** % of CI runs where the test failed then passed
-  on retry (from CI history per
-  [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
-  Step 3).
+  on retry (from CI history per `junit-xml-analysis` in the
+  qa-test-reporting plugin, Step 3).
 - **Regression-catch count:** how many real bugs this test caught
   in the last N months (from incident postmortems referencing the
   test, or git-blame on the failing-then-fixed pattern).
@@ -122,7 +121,7 @@ print(json.dumps(ranked))
 |----------------------|--------------------------------------------------------|
 | `retire`              | Delete; covered by other tests OR feature deprecated. |
 | `lower-layer`         | Rewrite at unit / integration; cheaper.                |
-| `fix-flake`           | Tests catches bugs but flakes; investigate per [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). |
+| `fix-flake`           | Tests catches bugs but flakes; investigate per `flaky-test-quarantine` (in the qa-flake-triage plugin). |
 | `consolidate`         | Merge with sibling test that overlaps.                 |
 | `keep-but-monitor`     | Low ROI but catches important regressions; tag for next-quarter review. |
 
@@ -182,7 +181,7 @@ trade-off.
 - [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) - 
   sibling: identifies the layer-balance issue this skill
   addresses tactically.
-- [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md) - sibling: handles the flake side of low-ROI tests.
-- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - upstream: provides per-test runtime + flake stats.
-- [`unit-test-coverage-targeter`](../../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md) - complementary: identifies what to add at the unit layer when
+- `flaky-test-quarantine` - sibling: handles the flake side of low-ROI tests.
+- `junit-xml-analysis` - upstream: provides per-test runtime + flake stats.
+- `unit-test-coverage-targeter` - complementary: identifies what to add at the unit layer when
   E2E tests get retired.

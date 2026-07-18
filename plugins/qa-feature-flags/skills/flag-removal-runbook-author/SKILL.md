@@ -1,6 +1,6 @@
 ---
 name: flag-removal-runbook-author
-description: "Workflow-driven skill that builds the runbook for safely removing a feature flag from the codebase + the flag platform. Walks through: pre-removal verification (flag fully rolled out, no usage variance in evaluations, dependent code paths identified), the code-removal steps (delete the if-branches, simplify, restore types), the platform-side removal (archive in LaunchDarkly / Unleash / Flagsmith / GrowthBook), the verification post-removal, and the rollback plan. Use when removing a flag that has finished its mission (rollout-complete, experiment-shipped, kill-switch retired). Composes feature-flag-test-matrix-reference + stale-flag-detector."
+description: "Workflow-driven skill that builds the runbook for safely removing a feature flag from the codebase + the flag platform. Walks through: pre-removal verification (flag fully rolled out, no usage variance in evaluations, dependent code paths identified), the code-removal steps (delete the if-branches, simplify, restore types), the platform-side removal (archive in LaunchDarkly / Unleash / Flagsmith / GrowthBook), the verification post-removal, and the rollback plan. Use when removing a flag that has finished its mission (rollout-complete, experiment-shipped, kill-switch retired). Composes feature-flag-test-matrix-reference + stale-flag detection."
 ---
 
 # flag-removal-runbook-author
@@ -21,9 +21,7 @@ This skill produces the **runbook** for safely removing a flag.
 - An experiment has shipped; the variant code paths need
   consolidation.
 - A kill-switch hasn't been activated for ≥ 6 months.
-- Stale-flag audit (per
-  [`stale-flag-detector`](../../agents/stale-flag-detector.md))
-  surfaced the flag.
+- Stale-flag audit surfaced the flag.
 
 ## Step 1 - Pre-removal verification
 
@@ -174,8 +172,7 @@ Add to the project's `flag-history.md`:
 ## Multi-flag removal batching
 
 For stale-flag audits surfacing multiple removals: batch is
-faster but riskier. Per
-[`stale-flag-detector`](../../agents/stale-flag-detector.md):
+faster but riskier:
 
 | Batch size | When |
 |---|---|
@@ -214,8 +211,6 @@ This skill produces:
 - Companion catalogs:
   [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md),
   [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md).
-- Detector:
-  [`stale-flag-detector`](../../agents/stale-flag-detector.md).
 - Sibling SDKs (for platform-specific archive steps):
   [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
   [`unleash-testing`](../unleash-testing/SKILL.md),

@@ -131,8 +131,7 @@ Expose this as a single command (`make seed`, `npm run seed`,
 
 Reset between test suites - never share state across suites unless
 the team explicitly designed for it (and accepted the flake risk;
-see [`flake-pattern-reference`](../../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md)
-Pattern 2).
+see `flake-pattern-reference` Pattern 2).
 
 ### Ephemeral env (Docker Compose)
 

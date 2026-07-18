@@ -21,9 +21,8 @@ This skill is the Apex-specific companion to
 [`semgrep-rules`](../semgrep-rules/SKILL.md) and
 [`sonarqube-rules`](../sonarqube-rules/SKILL.md). Those tools cover general
 multi-language patterns; this one covers the Salesforce Apex security category
-absent from both. The `sast-finding-triager` agent in
-[`../../agents/sast-finding-triager.md`](../../agents/sast-finding-triager.md)
-can unify findings across all five SAST tools.
+absent from both. Findings from all five SAST tools can be unified in a
+multi-scanner triage step.
 
 ## When to use
 
@@ -297,6 +296,5 @@ are flagged in code review.
 - [`semgrep-rules`](../semgrep-rules/SKILL.md) - multi-language pattern SAST
 - [`codeql-queries`](../codeql-queries/SKILL.md) - interprocedural / data-flow SAST
 - [`sonarqube-rules`](../sonarqube-rules/SKILL.md) - semantic-DB SAST
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - unifier across all SAST tools
 
 [pmd-formats]: https://pmd.github.io/pmd/pmd_userdocs_report_formats.html

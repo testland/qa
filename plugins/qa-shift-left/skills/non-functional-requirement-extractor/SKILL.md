@@ -1,9 +1,9 @@
 ---
-name: nfr-extractor
+name: non-functional-requirement-extractor
 description: "Reads a PRD, design doc, or product brief and pulls out the non-functional requirements (performance, accessibility, security, internationalization, reliability, observability) as concrete, threshold-bound, testable assertions. Maps every NFR to its measurement source (Lighthouse, axe, OWASP ASVS, WCAG criterion, etc.) so the test suite knows what to assert against. Use after acceptance-criteria-extractor handles functional requirements."
 ---
 
-# nfr-extractor
+# non-functional-requirement-extractor
 
 ## Overview
 
@@ -41,9 +41,7 @@ threshold-and-measurement requirements that don't fit Gherkin's shape.
 ## When to use
 
 - A PRD mentions "performance," "fast," "accessible," "secure," or
-  similar - words the
-  [`testability-reviewer`](../../agents/testability-reviewer.md) would
-  flag for failing the Observable heuristic.
+  similar - words that fail the Observable testability heuristic.
 - A team is shifting from informal to formal NFRs in tickets.
 - A non-functional regression is being added to a release plan and
   needs a measurable baseline.
@@ -67,9 +65,8 @@ as authored. Run each through Step 2.
 
 ## Step 2 - Make every NFR threshold-bound
 
-Per ISTQB testability ([istqb-testability]) and the
-[`testability-reviewer`](../../agents/testability-reviewer.md)
-heuristics, an NFR is testable only when it has:
+Per ISTQB testability ([istqb-testability]), an NFR is testable only when it
+has:
 
 [istqb-testability]: https://glossary.istqb.org/en_US/term/testability
 
@@ -266,6 +263,4 @@ Output:
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - OWASP ASVS - https://owasp.org/www-project-application-security-verification-standard/
 - Web Vitals - https://web.dev/articles/vitals (LCP / INP / CLS).
-- [`testability-reviewer`](../../agents/testability-reviewer.md) - the
-  upstream agent that flags vague phrases for this skill to formalize.
 - [`acceptance-criteria-extractor`](../acceptance-criteria-extractor/SKILL.md) - sibling skill for **functional** requirements.

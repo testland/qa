@@ -146,4 +146,3 @@ original behavior from the mutated one.
   [`mutmut-mutation`](../mutmut-mutation/SKILL.md),
   [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
   alternatives.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent for surviving-mutant analysis.

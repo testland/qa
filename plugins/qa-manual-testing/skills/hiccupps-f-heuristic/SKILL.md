@@ -18,10 +18,8 @@ oracles. HICCUPPS-F gives the tester a checklist of oracle types
 to consult before deciding "no oracle ⇒ probably not a bug" or
 "oracle says X ⇒ behaviour Y is wrong."
 
-This skill is a **pure reference** consumed by the
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
-and by individual testers during sessions
-([`sbtm-reference`](../sbtm-reference/SKILL.md)).
+This skill is a **pure reference** consumed by individual testers
+during sessions ([`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md)).
 
 ## When to use
 
@@ -47,7 +45,7 @@ Behaviour regressed from a known prior version = bug. Sources:
 - Git blame on the relevant code path
 - Previous release notes / changelog
 - Old screenshots / videos in user-acceptance archives
-- The release-1.2 regression suite ([`qa-test-impact-analysis`](../../../qa-test-impact-analysis/))
+- The release-1.2 regression suite (`qa-test-impact-analysis`)
 
 ### I - Image
 
@@ -145,7 +143,7 @@ Pattern-matching against known bug classes:
 
 Sources:
 
-- The team's bug history ([`qa-defect-management`](../../../qa-defect-management/))
+- The team's bug history (`qa-defect-management`)
 - OWASP Top 10 / CWE Top 25
 - Industry bug catalogs (Beizer, Kaner, Myers)
 
@@ -211,10 +209,8 @@ high-priority.
 - Bolton M. *Testing oracle* concept - 
   [developsense.com](https://developsense.com/).
 - Sibling references (other heuristic catalogues):
-  [`sfdpot-heuristic`](../sfdpot-heuristic/SKILL.md),
+  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
   [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
   [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
   [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md),
-  [`sbtm-reference`](../sbtm-reference/SKILL.md).
-- Consumed by:
-  [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
+  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md).

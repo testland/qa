@@ -218,7 +218,7 @@ For each target above, the recommended test shape:
 
 - **Unit (5)**: Add a per-branch test in the existing `*.spec.ts`;
   use `expect.fail` if no path triggers the branch yet.
-- **Service (2)**: Use [`testcontainers`](../../qa-test-environment/skills/testcontainers/SKILL.md)
+- **Service (2)**: Use `testcontainers`
   to bring up a real Postgres + the Stripe sandbox; assert the
   branch outcome.
 ```

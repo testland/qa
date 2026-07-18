@@ -8,7 +8,7 @@ description: "Author and run Faker libraries (Python `Faker`, JavaScript `@faker
 ## Overview
 
 Faker is the building block beneath both fresh-fixture generation
-([`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md))
+(`synthetic-pii-generator`, in the qa-test-data plugin)
 and PII masking pipelines
 ([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
 that need to replace detected PII with a plausible substitute.
@@ -33,13 +33,12 @@ skill covers Python + JavaScript primarily (most widely used).
   Presidio's `custom` operator wrapping a Faker call.
 - Seed staging databases with realistic synthetic profiles.
 - Generate property-based test inputs that need realistic shape
-  (use in conjunction with
-  [`hypothesis-testing`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md)
+  (use in conjunction with `hypothesis-testing`
   or `fast-check`).
 
 For complete *fresh-fixture* generation with PCI-DSS / Luhn /
 region-format constraints baked in, use
-[`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - it's the higher-level skill that composes Faker calls into
+`synthetic-pii-generator` - it's the higher-level skill that composes Faker calls into
 fixture-bundle workflows.
 
 ## Authoring
@@ -287,7 +286,7 @@ with open("users.csv", "w") as f:
 | Faker.credit_card without Luhn awareness | Faker IS Luhn-valid; over-validation is wasted work | Trust Faker for cards; validate other formats |
 | Using Faker output as "real" test card | Faker cards are Luhn-valid but not Stripe / Adyen test cards | Use `synthetic-pii-generator` for PCI-DSS-safe test cards (Stripe / Visa reserved ranges) |
 | Unpinned Faker version in CI | Output drifts on upgrade; snapshot diffs break unexpectedly | Pin `faker==X.Y.Z` in lockfile |
-| Using `fake.text()` for malicious-input testing | Faker text is benign; doesn't cover XSS / SQLi payloads | Use [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md) |
+| Using `fake.text()` for malicious-input testing | Faker text is benign; doesn't cover XSS / SQLi payloads | Use `malicious-payload-bank` |
 
 ## Limitations
 
@@ -307,7 +306,7 @@ with open("users.csv", "w") as f:
   format of an SSN / SIN / NHS number; it doesn't claim
   jurisdictional safety. For reserved-for-testing ranges (Visa
   test cards, IRS test SSNs) use
-  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md).
+  `synthetic-pii-generator`.
 
 ## References
 
@@ -318,7 +317,7 @@ with open("users.csv", "w") as f:
 - JavaFaker - `com.github.javafaker:javafaker` on Maven Central.
 - Bogus (.NET) - `Bogus` NuGet package.
 - Sibling generator (higher-level, regime-aware):
-  [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md).
+  `synthetic-pii-generator`.
 - Composes with:
   [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md),
   [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md).

@@ -26,11 +26,11 @@ Static vulnerability scanners report a CVE for every declared dependency that
 matches a vulnerable version, regardless of whether the vulnerable code is ever
 executed. A critical-severity finding in a test-only helper that your production
 build tree never reaches is a different risk level than the same CVE in a
-hot-path dependency. This skill operationalizes the reachability heuristic
-described in `sca-prioritizer` Step 4: run an ecosystem-native dead-dependency
-tool, produce an `unused-deps.txt` artifact, and feed that list back to
-`sca-prioritizer` so it can assign `reachable: false` and route affected
-findings to Fix-Backlog instead of Fix-Now.
+hot-path dependency. This skill operationalizes a reachability heuristic:
+run an ecosystem-native dead-dependency tool, produce an `unused-deps.txt`
+artifact, and feed that list into your SCA prioritization step so it can
+assign `reachable: false` and route affected findings to Fix-Backlog instead
+of Fix-Now.
 
 The approach is static-analysis heuristic only. A dependency flagged unused by
 these tools is a strong signal to deprioritize its CVEs, not a guarantee that
@@ -40,7 +40,7 @@ the vulnerable code is unreachable at runtime. Treat it accordingly.
 
 - After any SCA scan produces more findings than the team can triage in one
   sprint and you need a principled filter.
-- Before feeding findings to `sca-prioritizer` so the `reachable` field is
+- Before feeding findings into SCA prioritization so the `reachable` field is
   populated.
 - During dependency cleanup: the same tooling surfaces dead weight (unused
   packages that add attack surface and install time with no benefit).
@@ -54,7 +54,7 @@ Collect scanner output before running reachability analysis. The output of
 this skill annotates existing findings; it does not replace them.
 
 ```bash
-# Example: OSV-Scanner JSON output to feed sca-prioritizer
+# Example: OSV-Scanner JSON output to feed SCA prioritization
 osv-scanner scan -r . --format json --output osv.json
 ```
 
@@ -206,7 +206,7 @@ cargo machete 2>&1 | grep "unused dependency" | awk '{print $NF}' > unused-deps.
 ### Step 5 - Cross-reference unused deps with SCA findings
 
 Once you have an `unused-deps.txt` for your ecosystem, annotate the SCA JSON
-output before passing it to `sca-prioritizer`:
+output before passing it to your SCA prioritization step:
 
 ```python
 import json
@@ -225,9 +225,9 @@ with open("osv-annotated.json", "w") as f:
     json.dump(findings, f, indent=2)
 ```
 
-Pass `osv-annotated.json` to `sca-prioritizer`. Per the `sca-prioritizer` Step
-5 priority logic, findings with `reachable: false` route to Fix-Backlog
-regardless of severity, unless they are in the CISA KEV catalog.
+Pass `osv-annotated.json` to your SCA prioritization step. Per the priority
+logic, findings with `reachable: false` route to Fix-Backlog regardless of
+severity, unless they are in the CISA KEV catalog.
 
 ### Step 6 - CI integration
 
@@ -247,13 +247,13 @@ jobs:
           path: osv-annotated.json
 ```
 
-The annotated artifact is then consumed by the `sca-prioritizer` job.
+The annotated artifact is then consumed by the prioritization job.
 
 ## Example
 
 Running knip on a Next.js project with 80 declared dependencies surfaces
 12 as unused, including `moment` (which carries CVE-2022-31129, CVSS 7.5).
-After cross-reference, `sca-prioritizer` routes the moment CVE to Fix-Backlog
+After cross-reference, prioritization routes the moment CVE to Fix-Backlog
 instead of Fix-This-Sprint. The team removes the package in the next dependency
 cleanup PR, eliminating both the CVE and the unused weight.
 
@@ -293,8 +293,6 @@ cleanup PR, eliminating both the CVE and the unused weight.
   vulture CLI reference, confidence values, whitelist generation
 - [github.com/bnjbvr/cargo-machete](https://github.com/bnjbvr/cargo-machete) -
   cargo-machete CLI reference, exit codes, Cargo.toml metadata
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - consuming agent;
-  Step 4 describes the reachability heuristic this skill operationalizes
 - [`osv-scanner`](../osv-scanner/SKILL.md),
   [`snyk-test`](../snyk-test/SKILL.md),
   [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - SCA tools whose

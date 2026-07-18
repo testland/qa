@@ -306,4 +306,4 @@ bug in the real implementation.
   testing, framework-agnostic positioning.
 - [`hypothesis-testing`](../hypothesis-testing/SKILL.md) - Python
   sibling.
-- [`schemathesis-fuzzing`](../../../qa-api-testing/skills/schemathesis-fuzzing/SKILL.md) - applies fast-check-shaped PBT to API schemas.
+- `schemathesis-fuzzing` - applies fast-check-shaped PBT to API schemas.

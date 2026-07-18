@@ -1,10 +1,10 @@
 ---
-name: api-testing-getting-started
-description: "Orients a junior engineer who is new to API testing in the qa-api-testing plugin: explains what API testing is, maps each tool in the plugin to its stack, and walks through the literal first steps to write and run a minimal request with a status and schema assertion. Use when a junior engineer is new to API testing and does not know where to start in this plugin."
+name: api-testing-overview
+description: "Overview of API testing for engineers new to it: explains what API testing is, maps each common tool (Postman, REST Assured, Karate, Tavern, Schemathesis) to its stack, and walks the first steps to write and run a minimal request with status and schema assertions. Use when getting started with API testing and choosing a tool."
 keywords: [api-testing, onboarding, getting-started, postman, rest-assured, tavern]
 ---
 
-# api-testing-getting-started
+# api-testing-overview
 ## What is API testing?
 
 API testing verifies that the HTTP interfaces between components behave
@@ -18,12 +18,11 @@ over the network rather than invoking code in-process.
 
 ## Which tool should I start with?
 
-If you are unsure which of the seven skills in this plugin fits your project,
-run the `api-test-tool-selector` agent first. It reads project markers
-(`*.openapi.yaml`, language stack, testing goal) and recommends one tool with
-rationale.
+If you are unsure which tool fits your project, match your stack against the
+table below, or check project markers (`*.openapi.yaml`, language stack,
+testing goal) to narrow the choice.
 
-If you already know your stack, the first skill to read is:
+The first skill to read for your stack:
 
 | Stack | First skill to read |
 |---|---|
@@ -31,8 +30,8 @@ If you already know your stack, the first skill to read is:
 | Java / Maven or Gradle project | [`restassured-testing`](../restassured-testing/SKILL.md) |
 | Python / pytest project | [`tavern-testing`](../tavern-testing/SKILL.md) |
 
-Once you have chosen a tool, use the `api-test-author` agent to generate your
-first test artifact for an endpoint and scenario.
+Once you have chosen a tool, follow that tool's skill to write your first test
+for one endpoint and scenario.
 
 ## First steps - writing a minimal test
 

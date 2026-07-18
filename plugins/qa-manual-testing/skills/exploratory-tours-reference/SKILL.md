@@ -16,9 +16,8 @@ Software Testing* (2009, Addison-Wesley). They've been widely cited
 in the testing community as the practitioner-emergent vocabulary for
 exploration.
 
-This skill is a **pure reference** - the charter author
-([`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md))
-and the tester pick which tours to apply per session.
+This skill is a **pure reference** - the charter author and the
+tester pick which tours to apply per session.
 
 ## When to use
 
@@ -151,8 +150,8 @@ vulnerabilities, locale parsing issues.
 9. Null byte: `foo\0bar`. Verify handling.
 ```
 
-Pair with [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md)
-for the canonical payloads (OWASP Top 10 + CWE Top 25).
+Pair with `malicious-payload-bank` for the canonical payloads
+(OWASP Top 10 + CWE Top 25).
 
 **When to use:** Any input field (search, forms, URL params, file
 upload).
@@ -180,8 +179,8 @@ mode vs light, locale variations, browser variations).
 **When to use:** Multi-tenant / multi-config products; before
 toggling a major feature flag.
 
-Pair with [`feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md)
-for the matrix-shard approach to flag-combination testing.
+Pair with `feature-flag-test-harness` for the matrix-shard approach
+to flag-combination testing.
 
 ## Tour 7 - Garbage collector's tour
 
@@ -227,9 +226,7 @@ time to apply any of them well.
 
 ## Capturing tour findings
 
-Per the PROOF debrief in
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md)
-Step 5, each tour produces:
+Per the PROOF debrief format, each tour produces:
 
 - **Past:** which paths the tour covered.
 - **Results:** what the tour surfaced (per-finding).
@@ -247,7 +244,7 @@ Step 5, each tour produces:
 | Money tour without monetary fields                                    | The tour wastes time on "verify nothing changed."                        | Pick tours per the feature; not all features need every tour. |
 | Garbage collector's tour without a sitemap                             | Tester misses pages; coverage gaps invisible.                            | Use the team's sitemap / docs as the seed list. |
 | Treating a tour as a checklist                                        | Tour is a heuristic; rigid stepwise application defeats the exploration. | Tester adapts mid-tour as they learn (per the exploratory definition). |
-| Bad-data tour with random inputs                                       | Random isn't useful; structured pathological inputs are.                  | Use canonical payloads ([`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md)). |
+| Bad-data tour with random inputs                                       | Random isn't useful; structured pathological inputs are.                  | Use canonical payloads (`malicious-payload-bank`). |
 | Intellectual tour without a domain expert pair                         | Tester misses the actual complexity; tour is shallow.                    | Pair with someone who knows the domain. |
 | One tour run per release without rotation                              | The same tour by the same tester catches the same bugs (or none).         | Rotate which tours run, which testers, what scope (Picking section). |
 
@@ -271,6 +268,5 @@ Step 5, each tour produces:
   source-fetch convention, the book is the primary reference;
   community summaries (developsense.com tour-and-testing post) are
   secondary.
-- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - consumer of this reference.
-- [`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md) - canonical payloads for the Bad-data tour.
-- [`feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md) - automated complement for the Configuration tour.
+- `malicious-payload-bank` - canonical payloads for the Bad-data tour.
+- `feature-flag-test-harness` - automated complement for the Configuration tour.

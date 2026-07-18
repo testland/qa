@@ -202,7 +202,7 @@ Fully offline; no GrowthBook key needed.
 - Companion:
   [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
 - Cross-plugin (experiment-validity):
-  [`qa-experimentation/ab-test-validity-checklist`](../../../qa-experimentation/skills/ab-test-validity-checklist/SKILL.md).
+  `ab-test-validity-checklist`.
 - Sibling SDKs:
   [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
   [`unleash-testing`](../unleash-testing/SKILL.md),

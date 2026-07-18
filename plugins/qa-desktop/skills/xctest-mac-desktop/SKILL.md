@@ -244,7 +244,7 @@ xcrun xcresulttool get --path build/result.xcresult \
 
 For CI dashboards that expect JUnit XML, the open-source `xcresultparser`
 project converts `.xcresult` → JUnit XML; pair downstream with
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+`junit-xml-analysis` (in the qa-test-reporting plugin).
 
 ## Step 9 - CI integration
 
@@ -336,4 +336,4 @@ XCTest UI cannot run under launchd alone.
   [`at-spi-linux`](../at-spi-linux/SKILL.md) (Linux AT-SPI),
   [`qt-test-framework`](../qt-test-framework/SKILL.md) (Qt in-process).
 - Downstream:
-  [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+  `junit-xml-analysis`.

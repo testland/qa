@@ -81,15 +81,15 @@ Per the test pyramid ([`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.m
 - **Local dev** - per-engineer; Testcontainers backing services.
 - **Staging** - shared; smoke + UAT.
 - **Canary** - 5% prod traffic; 30-min observation per
-  [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md).
+  prod-canary-validator.
 - **Prod** - synthetic monitors per
-  [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md).
+  synthetic-monitor-author.
 
 ## 6. Test data
 
-- **Synthetic accounts** - per [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md).
-- **PII handling** - per [`synthetic-pii-generator`](../../qa-test-data/skills/synthetic-pii-generator/SKILL.md).
-- **Database state** - per [`db-snapshot-restore`](../../qa-test-environment/agents/db-snapshot-restore.md).
+- **Synthetic accounts** - per synthetic-data-toolkit.
+- **PII handling** - per synthetic-pii-generator.
+- **Database state** - per database snapshot / restore.
 
 ## 7. Exit criteria
 
@@ -195,4 +195,3 @@ Common strategy patterns by product type:
   feeds Section 3.
 - [`definition-of-done`](../definition-of-done/SKILL.md) - feeds
   Section 7.
-- [`release-readiness-checker`](../../agents/release-readiness-checker.md) - automates the pre-release exit-criteria check.

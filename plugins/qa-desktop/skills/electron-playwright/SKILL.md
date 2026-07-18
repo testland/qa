@@ -31,7 +31,7 @@ projects.
 [electrontest]: https://www.electronjs.org/docs/latest/tutorial/automated-testing
 
 **Differentiation:** this skill is **distinct from**
-[`qa-web-e2e/playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md),
+`playwright-testing` (in the qa-web-e2e plugin),
 which drives a running Chromium / Firefox / WebKit browser via the
 `browser`, `context`, and `page` namespaces. `electron-playwright`
 wraps the separate `_electron` namespace ([pwelectron][pwelectron]) - 
@@ -113,7 +113,7 @@ What's going on:
 - `electronApp.firstWindow()` "waits for the first application
   window to be opened" ([pwelectronapp][pwelectronapp]) and returns
   a Playwright `Page` - every standard
-  [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)
+  `playwright-testing`
   locator (`getByRole`, `getByLabel`) works on it.
 
 ## Step 3 - Launching a packaged binary
@@ -244,7 +244,7 @@ launch spawns an Electron process with its own GPU/IPC stack; full
 parallel launches collide on the user-data directory and on
 GPU-shared-memory regions. (Web-only Playwright defaults to parallel
 per
-[`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md).)
+`playwright-testing`.)
 
 ## Step 8 - Running
 
@@ -266,12 +266,12 @@ The trace viewer shows DOM snapshots of the renderer windows and the
 `evaluate` calls into the main process side-by-side - debug parity
 with normal Playwright traces (the trace viewer surface is part of
 the shared Playwright toolchain per
-[`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md)).
+`playwright-testing`).
 
 ## Step 9 - Parsing results
 
 JUnit XML output (`reports/electron-junit.xml` from Step 7) feeds
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+`junit-xml-analysis` (in the qa-test-reporting plugin)
 for aggregation. The HTML reporter is identical to web-Playwright
 ([pwelectron][pwelectron]).
 
@@ -321,7 +321,7 @@ out of the box.
 | Forgetting `xvfb-run` on hosted Linux CI | "Failed to initialize display" launch failure | `xvfb-run --auto-servernum` wrapper (Step 10) |
 | Probing main-process modules from `window.evaluate()` | `window.evaluate()` runs in the renderer; doesn't see main-process globals | Use `electronApp.evaluate()` ([pwelectronapp][pwelectronapp]) |
 | Mixing Spectron and Playwright assertions in the same suite | Two driver lifecycles compete for the same Electron process | Migrate file-by-file per [`electron-spectron`](../electron-spectron/SKILL.md) |
-| Asserting on Electron internal IDs (`__electron_id`) for locators | Internal; changes between Electron versions | Use accessibility-first locators (`getByRole` / `getByLabel`) per [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md) |
+| Asserting on Electron internal IDs (`__electron_id`) for locators | Internal; changes between Electron versions | Use accessibility-first locators (`getByRole` / `getByLabel`) per `playwright-testing` |
 
 ## Limitations
 
@@ -354,4 +354,4 @@ out of the box.
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - Web-side neighbour:
-  [`playwright-testing`](../../../qa-web-e2e/skills/playwright-testing/SKILL.md) - page-automation patterns that carry over to the renderer surface.
+  `playwright-testing` - page-automation patterns that carry over to the renderer surface.

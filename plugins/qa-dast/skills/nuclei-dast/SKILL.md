@@ -1,6 +1,6 @@
 ---
 name: nuclei-dast
-description: "Installs and runs ProjectDiscovery Nuclei template-based HTTP scanning: selects templates via `-t <path>` and `-tags`/`-severity` filters, controls request rate with `-rl`, emits JSONL output via `-j` for the dast-finding-triager, authors custom YAML matchers for app-specific checks, and gates CI on severity thresholds. Use when the team runs Nuclei alongside ZAP for template-driven DAST coverage, needs fuzzing-style probes beyond ZAP passive scan, or wants to operationalize community CVE templates in a pipeline."
+description: "Installs and runs ProjectDiscovery Nuclei template-based HTTP scanning: selects templates via `-t <path>` and `-tags`/`-severity` filters, controls request rate with `-rl`, emits JSONL output via `-j` for cross-tool finding aggregation, authors custom YAML matchers for app-specific checks, and gates CI on severity thresholds. Use when the team runs Nuclei alongside ZAP for template-driven DAST coverage, needs fuzzing-style probes beyond ZAP passive scan, or wants to operationalize community CVE templates in a pipeline."
 keywords: ["nuclei", "dast", "templates", "cve", "security", "jsonl", "ci"]
 ---
 
@@ -23,8 +23,8 @@ the tool itself.
 
 Nuclei complements ZAP: ZAP's spider + passive analysis gives broad HTTP
 coverage; Nuclei's template corpus gives deep, targeted CVE and misconfiguration
-coverage from a structured community library. Both output feeds the
-[`dast-finding-triager`](../../agents/dast-finding-triager.md).
+coverage from a structured community library. Both outputs feed a
+unified cross-tool triage.
 
 ## When to use
 
@@ -32,7 +32,7 @@ coverage from a structured community library. Both output feeds the
 - A CI pipeline should gate on `critical`/`high` template matches without active
   spider coverage.
 - The team maintains custom YAML templates for proprietary endpoints.
-- Nuclei output must be unified with ZAP findings in `dast-finding-triager`.
+- Nuclei output must be unified with ZAP findings via cross-tool aggregation.
 
 ## Step 1 - Install
 
@@ -81,7 +81,7 @@ nuclei -u https://staging.example.com -j -o nuclei-report.jsonl
 ```
 
 `-j` writes JSONL output; `-o` names the file. Each line is one finding, ready
-for `dast-finding-triager`. The default template set is applied; DOS-capable
+for cross-tool aggregation. The default template set is applied; DOS-capable
 templates are excluded from the default run (see Step 6).
 
 ## Step 3 - Common flags
@@ -227,7 +227,7 @@ Validate before running:
 nuclei -t ./custom-templates/custom-debug-endpoint.yaml -validate
 ```
 
-## Step 7 - JSONL output for dast-finding-triager
+## Step 7 - JSONL output for cross-tool triage
 
 Each JSONL line represents one match. Key fields:
 
@@ -241,11 +241,11 @@ Each JSONL line represents one match. Key fields:
 }
 ```
 
-Pass to [`dast-finding-triager`](../../agents/dast-finding-triager.md):
+Feed the JSONL to cross-tool aggregation:
 
 ```bash
 nuclei -u https://staging.example.com -j -o nuclei-report.jsonl
-# feed nuclei-report.jsonl to dast-finding-triager alongside zap-report.json
+# aggregate nuclei-report.jsonl alongside zap-report.json
 ```
 
 For SARIF output (GitHub Code Scanning):
@@ -329,11 +329,11 @@ surface findings inline in pull request diffs.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Run all templates against production | Active probes may trigger WAF blocks, corrupt data, or run DOS-tagged templates | Staging only; use `-etags dos` on shared envs |
-| Skip `-j` / `-jsonl` output | Findings are stdout-only; can't feed `dast-finding-triager` | Always pass `-j -o <file>` (Step 7) |
+| Skip `-j` / `-jsonl` output | Findings are stdout-only; can't feed the finding-triage step | Always pass `-j -o <file>` (Step 7) |
 | Skip `-rl` in CI on shared infra | Default 150 req/s spikes load on shared staging | Set `-rl 30` or lower (Step 8) |
 | Run `-validate` only, skip a real scan | Syntax passes but matchers may produce no output | Always run a real scan against a known-vulnerable target to confirm match |
 | Suppress findings without a tracked justification | Invisible risk debt | Use an IGNORE list with date + ticket, same pattern as ZAP config TSV (see [`zap-baseline`](../zap-baseline/SKILL.md) Step 6) |
-| Treat `info` severity as noise | `info` templates surface exposed panels, paths, and tech stack - useful for reconnaissance hardening | Route `info` findings to `dast-finding-triager` for triage, not direct suppression |
+| Treat `info` severity as noise | `info` templates surface exposed panels, paths, and tech stack - useful for reconnaissance hardening | Route `info` findings to finding triage, not direct suppression |
 
 ## Limitations
 
@@ -359,5 +359,4 @@ surface findings inline in pull request diffs.
 - [nuclei-faq][nuclei-faq] - validation and responsible use guidance
 - github.com/projectdiscovery/nuclei-templates - community template library
 - [`zap-baseline`](../zap-baseline/SKILL.md) - companion passive DAST scanner
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - unifier agent for Nuclei + ZAP output
 - [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - layered DAST workflow (baseline + full + optional Nuclei)

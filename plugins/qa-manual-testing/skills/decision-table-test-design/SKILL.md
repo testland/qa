@@ -39,11 +39,9 @@ single input's *range* drives the behavior (e.g. "age must be 18-120"):
 EP/BVA exercises the edges of one partition; a decision table exercises
 the cross-product of several conditions. The two compose: derive the rule
 columns here, then hand each numeric threshold (like the $50 below) to
-[`boundary-value-generator`](../../../qa-test-data/skills/boundary-value-generator/SKILL.md)
-for edge values. For a broad first-pass case matrix across many lenses,
-use
-[`test-case-ideation-from-story`](../../../qa-process/skills/test-case-ideation-from-story/SKILL.md)
-instead; this skill is the deep walkthrough of one technique.
+`boundary-value-generator` for edge values. For a broad first-pass case
+matrix across many lenses, use `test-case-ideation-from-story` instead;
+this skill is the deep walkthrough of one technique.
 
 ## Worked example spec (used in every step)
 
@@ -227,8 +225,7 @@ in one row, which avoids manufacturing infeasible columns like
   [`state-transition-test-design`](../state-transition-test-design/SKILL.md).
 - **Combination coverage, not boundary coverage.** A column says
   "total >= $50 is true"; it does not test $49.99 vs $50.00. Pair each
-  threshold with
-  [`boundary-value-generator`](../../../qa-test-data/skills/boundary-value-generator/SKILL.md).
+  threshold with `boundary-value-generator`.
 - **Minimization is informal here.** Formal minimization algorithms are
   out of CTFL scope per §4.2.3; for large tables expect to lean on
   risk-based selection rather than perfect minimal form.
@@ -248,6 +245,6 @@ in one row, which avoids manufacturing infeasible columns like
   [`manual-test-script-author`](../manual-test-script-author/SKILL.md)
   (expands derived cases into runnable scripts).
 - Neighbors this skill is distinct from:
-  [`test-case-ideation-from-story`](../../../qa-process/skills/test-case-ideation-from-story/SKILL.md),
-  [`boundary-value-generator`](../../../qa-test-data/skills/boundary-value-generator/SKILL.md),
-  [`test-case-anatomy-reference`](../../../qa-test-management/skills/test-case-anatomy-reference/SKILL.md).
+  `test-case-ideation-from-story`,
+  `boundary-value-generator`,
+  `test-case-anatomy-reference`.

@@ -231,7 +231,7 @@ that violate the policy at admission time.
   "purpose-built" but takes time to master.
 - **Per-tool integration varies.** Conftest wraps OPA cleanly;
   some tools have native OPA integration, others don't.
-- **Policy proliferation.** Like step libraries (per [`bdd-step-library-curator`](../../../qa-bdd/skills/bdd-step-library-curator/SKILL.md)),
+- **Policy proliferation.** Like step libraries (per `bdd-step-library-curator` in the qa-bdd plugin),
   policies can multiply; periodic review needed.
 
 ## References

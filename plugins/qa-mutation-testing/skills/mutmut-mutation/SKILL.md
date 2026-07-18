@@ -202,4 +202,3 @@ mutmut run --paths-to-mutate "$CHANGED"
   [`pitest-mutation`](../pitest-mutation/SKILL.md),
   [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
   siblings.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - agent that suggests the missing test for survivors.

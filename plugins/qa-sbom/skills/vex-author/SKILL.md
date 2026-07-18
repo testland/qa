@@ -1,13 +1,12 @@
 ---
 name: vex-author
-description: "Authors and validates OpenVEX documents - produces `not_affected`, `affected`, `fixed`, and `under_investigation` statements with justification codes using `vexctl create`; attaches VEX assertions to container images; outputs `.openvex.json` files consumed by `vuln-prioritizer`'s VEX-filter path. Use when a scanner flags a CVE that analysis confirms is not exploitable in your deployment, and a machine-readable `not_affected` assertion is needed to suppress false positives without discarding the finding from the audit trail."
+description: "Authors and validates OpenVEX documents - produces `not_affected`, `affected`, `fixed`, and `under_investigation` statements with justification codes using `vexctl create`; attaches VEX assertions to container images; outputs `.openvex.json` files consumed on a downstream VEX-filter / vulnerability-prioritization path. Use when a scanner flags a CVE that analysis confirms is not exploitable in your deployment, and a machine-readable `not_affected` assertion is needed to suppress false positives without discarding the finding from the audit trail."
 keywords:
   - vex
   - openvex
   - vulnerability-exception
   - not-affected
   - sbom
-  - vuln-prioritizer
 ---
 
 # vex-author
@@ -23,10 +22,11 @@ while preserving the audit trail.
 [vex-spec]: https://github.com/openvex/spec
 [vexctl]: https://github.com/openvex/vexctl
 
-The `vuln-prioritizer` agent reads a `.openvex.json` file and moves findings
-with `vex_status: not_affected` to the `Filtered-VEX` bucket: not blocking
-the build, but still surfaced in the report. A `not_affected` assertion without
-a populated `justification` is rejected by `vuln-prioritizer` as unverified.
+A downstream vulnerability-prioritization step reads a `.openvex.json` file
+and moves findings with `vex_status: not_affected` to the `Filtered-VEX`
+bucket: not blocking the build, but still surfaced in the report. A
+`not_affected` assertion without a populated `justification` is rejected as
+unverified.
 
 ## When to use
 
@@ -38,10 +38,11 @@ a populated `justification` is rejected by `vuln-prioritizer` as unverified.
 - You need to attach a machine-readable exploitability assertion to a container
   image for downstream consumers (SBOM attestation pipeline, compliance audit).
 - You are accumulating VEX statements from multiple sub-teams into a single
-  document to pass to `vuln-prioritizer`.
+  document to pass to a vulnerability-prioritization step.
 
-Do not use VEX as a waiver mechanism for CVEs in CISA KEV; `vuln-prioritizer`
-refuses `not_affected` on KEV entries regardless of justification.
+Do not use VEX as a waiver mechanism for CVEs in CISA KEV; a conformant
+prioritization step refuses `not_affected` on KEV entries regardless of
+justification.
 
 ## Step 1 - Install vexctl
 
@@ -96,7 +97,7 @@ Per [vex-spec-md][vex-spec-md], the five justification codes for `not_affected`:
 
 If none of the five codes accurately describes the determination, omit
 `justification` and supply `impact_statement` with a precise technical
-explanation instead. `vuln-prioritizer` accepts either field as evidence
+explanation instead. The prioritization step accepts either field as evidence
 of analysis.
 
 ## Step 4 - Author a `not_affected` assertion
@@ -133,8 +134,8 @@ The generated document looks like:
 }
 ```
 
-Use a precise purl that matches the `package` value in `vuln-prioritizer`'s
-`ContainerFinding` records; a mismatch on version or arch will cause the
+Use a precise purl that matches the `package` value in the prioritization
+step's `ContainerFinding` records; a mismatch on version or arch will cause the
 `affect.ref.endsWith(f['package'])` check to miss.
 
 ## Step 5 - Add statements to an existing document
@@ -173,10 +174,10 @@ vexctl attest --attach --sign sbom.openvex.json \
 ```
 
 Downstream consumers retrieve the attestation without a separate file transfer.
-`vuln-prioritizer` can also read the VEX file directly from disk; image
+The prioritization step can also read the VEX file directly from disk; image
 attachment is optional for local CI use.
 
-## Step 7 - Validate the document before passing to vuln-prioritizer
+## Step 7 - Validate the document before passing to prioritization
 
 Validation checklist:
 
@@ -185,7 +186,7 @@ Validation checklist:
 - [ ] `products[].@id` purl matches the scanner's package identifier exactly
 - [ ] `vulnerability.name` is the canonical CVE-ID (not a GHSA alias) to match scanner output
 - [ ] `version` integer has been incremented if the file was edited after initial generation
-- [ ] No statement carries `not_affected` for a CVE in CISA KEV (will be rejected by `vuln-prioritizer`)
+- [ ] No statement carries `not_affected` for a CVE in CISA KEV (will be rejected by the prioritization step)
 
 Quick structural check with `jq`:
 
@@ -231,8 +232,8 @@ jobs:
             ${{ env.IMAGE_REF }}
 ```
 
-Pass `sbom.openvex.json` to `vuln-prioritizer` via the `vex_file` input;
-the agent's Step 3 VEX-filter path reads `statements[].analysis.state` mapped
+Pass `sbom.openvex.json` to the prioritization step via its `vex_file` input;
+its VEX-filter path reads `statements[].analysis.state` mapped
 from `status`.
 
 ## Example
@@ -251,7 +252,7 @@ vexctl create \
   > sbom.openvex.json
 ```
 
-`vuln-prioritizer` report section after ingestion:
+Prioritization-step report section after ingestion:
 
 ```
 ### VEX-Filtered (surface for audit, not for action)
@@ -268,9 +269,9 @@ block the build. It remains visible in the report for the audit trail.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| `not_affected` without `justification` or `impact_statement` | `vuln-prioritizer` rejects unverified claims (Trust unverified VEX claims anti-pattern) | Add one of the five justification codes or write a precise `impact_statement` |
-| Asserting `not_affected` on a CISA KEV entry | `vuln-prioritizer` hard-refuses; active exploitation cannot be hand-waved | Fix the vulnerability or apply a waiver per the waiver rules in `vuln-prioritizer` |
-| Using a mismatched purl version | The `affect.ref.endsWith()` check in `vuln-prioritizer` will not match; finding stays in the fail bucket | Copy the exact `package` string from the scanner's `ContainerFinding` output |
+| `not_affected` without `justification` or `impact_statement` | The prioritization step rejects unverified claims (Trust unverified VEX claims anti-pattern) | Add one of the five justification codes or write a precise `impact_statement` |
+| Asserting `not_affected` on a CISA KEV entry | The prioritization step hard-refuses; active exploitation cannot be hand-waved | Fix the vulnerability or apply a waiver per the step's waiver rules |
+| Using a mismatched purl version | The `affect.ref.endsWith()` check will not match; finding stays in the fail bucket | Copy the exact `package` string from the scanner's `ContainerFinding` output |
 | Authoring VEX in a text editor without `vexctl` | Field names, timestamp format, and `@context` URL are easy to get wrong | Always generate with `vexctl create` and validate with `jq` (Step 7) |
 | One monolithic VEX file maintained by one person | Merge conflicts; no ownership | Author per-team files, merge with `vexctl merge` before passing to CI |
 
@@ -279,7 +280,7 @@ block the build. It remains visible in the report for the audit trail.
 - VEX assertions are only as accurate as the analysis behind them. A wrong
   `not_affected` claim is harder to detect than a false positive. Require
   evidence (code path trace, test proof) before asserting, per the
-  `vuln-prioritizer` documentation's own warning.
+  prioritization step's own warning.
 - `vexctl create` does not validate that the purl resolves to a real package;
   typos in the `--product` flag produce silent mismatches. Cross-check against
   Syft SBOM output.
@@ -287,7 +288,7 @@ block the build. It remains visible in the report for the audit trail.
   evolve. Pin `vexctl` to a specific release in CI to avoid breaking changes.
 - `vexctl filter` accepts SARIF and CSAF inputs; raw Grype JSON or Trivy JSON
   require conversion before `vexctl filter` can process them. Use
-  `vuln-prioritizer`'s Step 3 Python path for non-SARIF formats.
+  the prioritization step's non-SARIF Python path for those formats.
 
 ## References
 
@@ -295,8 +296,6 @@ block the build. It remains visible in the report for the audit trail.
 - [vex-spec-md][vex-spec-md] - OpenVEX spec: document schema, statement model,
   status values, justification codes
 - [vexctl][vexctl] - vexctl CLI: install, create, merge, attest, filter commands
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - consuming agent: VEX
-  filter path (Step 3), `not_affected` handling, KEV refusal rule
 - [`syft-generation`](../syft-generation/SKILL.md) - upstream SBOM generation
   (produces the purl identifiers used in `--product` flags)
 - openvex.dev - OpenVEX landing page

@@ -305,7 +305,7 @@ tests.
 - [feature-toggles][toggles] - experiment toggles: per-cohort
   routing; "highly dynamic ... requires sufficient runtime to
   generate statistically valid results."
-- [`feature-flag-test-harness`](../../../qa-test-environment/skills/feature-flag-test-harness/SKILL.md) - sibling: harness that runs the experiment IN test (this skill
+- `feature-flag-test-harness` (in the qa-test-environment plugin) - harness that runs the experiment IN test (this skill
   validates the experiment IN production).
 - [`prod-canary-validator`](../prod-canary-validator/SKILL.md) - 
   sibling: same statistical framework, different application

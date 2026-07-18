@@ -152,9 +152,8 @@ periodically; review for staleness. Pro requires manual notes audit.
 Burp Pro export: Issue → Right-click → Report selected issues →
 HTML / XML / CSV / Burp's own JSON.
 
-Burp Enterprise REST API returns issues as JSON natively; ingest
-into [`dast-finding-triager`](../../agents/dast-finding-triager.md)
-for combined Burp + ZAP + NightVision verdict.
+Burp Enterprise REST API returns issues as JSON natively; aggregate
+it with ZAP + NightVision output for a combined verdict.
 
 For SARIF (GitHub Code Scanning): use the `BurpToSarif` community
 converter (BApp Store).
@@ -221,5 +220,3 @@ jobs:
   (use ZAP first; Burp adds layered paid coverage)
 - [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
   build-an-X for layered DAST
-- [`dast-finding-triager`](../../agents/dast-finding-triager.md) - 
-  unifier agent

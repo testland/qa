@@ -1,6 +1,6 @@
 ---
 name: test-run-summary-author
-description: "Build-an-X workflow that takes a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr API export) plus optional release context (version, build URL, deploy target) and emits a narrative markdown summary suitable for release notes, exec status updates, or stand-up Slack posts. Distinct from the per-framework parsers in `qa-test-reporting` (junit-xml-analysis / allure-reports / coverage-diff-reporter) which produce structured tabular reports - this skill takes the same data and produces the **narrative draft** practitioners use today by pasting raw results into ChatGPT. Distinct from `e2e-test-trend-reporter` (qa-flake-triage) which reports longitudinal suite health. Use when a manager needs a draft release note or a stand-up summary from a single test run."
+description: "Build-an-X workflow that takes a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr API export) plus optional release context (version, build URL, deploy target) and emits a narrative markdown summary suitable for release notes, exec status updates, or stand-up Slack posts. Distinct from the per-framework parsers in `qa-test-reporting` (junit-xml-analysis / allure-reports / coverage-diff-reporter) which produce structured tabular reports - this skill takes the same data and produces the **narrative draft** practitioners use today by pasting raw results into ChatGPT. Distinct from longitudinal suite-health trend reporting (in qa-flake-triage) which reports suite health over time. Use when a manager needs a draft release note or a stand-up summary from a single test run."
 ---
 
 # test-run-summary-author
@@ -21,8 +21,8 @@ The skill is the manager-layer equivalent of the structured-parser skills alread
 Do **not** use this skill to:
 
 - Produce a full tabular report - that is the job of [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), or [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md).
-- Surface flake patterns over time - that is [`e2e-test-trend-reporter`](../../../qa-flake-triage/agents/e2e-test-trend-reporter.md).
-- Roll up multiple suites across multiple environments in one report - that is [`daily-test-suite-aggregator`](../../agents/daily-test-suite-aggregator.md), the sister agent in this plugin.
+- Surface flake patterns over time - that is longitudinal suite-health trend reporting, not this skill.
+- Roll up multiple suites across multiple environments in one report - that is a separate cross-suite roll-up, not this skill's single-run scope.
 
 ## Step 1 - Ingest the structured run data
 
@@ -71,7 +71,7 @@ The single-line lead is the load-bearing claim; the second and third lines are d
 ## QA - v3.4.0
 
 - **Test results:** 1,247 / 1,268 tests passed (98.3%), 18 failures, 3 skipped. Full report: <build-url>.
-- **New failures vs v3.3.0:** 5 (3 in cart, 2 in auth). All 5 have open issues filed; severity classified per Allure. None are blocking per the team's [release-readiness gates](../../../qa-process/agents/release-readiness-checker.md).
+- **New failures vs v3.3.0:** 5 (3 in cart, 2 in auth). All 5 have open issues filed; severity classified per Allure. None are blocking per the team's release-readiness gates.
 - **Coverage:** 87.4% line, 78.1% branch (+0.6 / +0.4 vs v3.3.0). See [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) for per-file delta.
 - **Performance:** smoke + regression duration 1h 12m, no SLO regressions.
 - **Known issues being shipped:** 3 P3 cosmetic flakes (tracked in [JIRA-1234, JIRA-1235, JIRA-1236]), waivers attached.
@@ -92,7 +92,7 @@ The v3.4.0 release went through nightly regression with a 98.3% pass rate, margi
 
 ### 3.4 - `cross-run-trend` (multi-run window, narrative)
 
-A narrative form covering a time window (last N runs, last N days). The skill computes per-run metrics, identifies the run-over-run direction, and writes the trend in prose. This is the manager-layer complement to the tabular [`e2e-test-trend-reporter`](../../../qa-flake-triage/agents/e2e-test-trend-reporter.md) - the trend reporter answers "what is the suite health"; this shape answers "tell me the story over the last sprint."
+A narrative form covering a time window (last N runs, last N days). The skill computes per-run metrics, identifies the run-over-run direction, and writes the trend in prose. This is the manager-layer complement to a tabular suite-health trend reporter - that answers "what is the suite health"; this shape answers "tell me the story over the last sprint."
 
 ## Step 4 - Verify the narrative against the source
 
@@ -128,15 +128,12 @@ If any claim cannot be sourced (e.g., the SLO baseline isn't in the input), the 
 
 - **Tone is templated.** The four shapes have fixed sentence patterns. Teams that want a more conversational style edit the output; the skill does not vary tone per audience.
 - **Severity / categories require Allure or a test-management tool.** JUnit XML alone does not carry severity; the skill cannot infer it from naming patterns.
-- **No flake-vs-defect classification.** A failure here is just "failed"; whether it is a flake, an environment-drift issue, or a real defect is the job of [`failure-classifier`](../../../qa-bug-repro/agents/failure-classifier.md). Compose the two when narrative + classification is needed.
+- **No flake-vs-defect classification.** A failure here is just "failed"; whether it is a flake, an environment-drift issue, or a real defect is the job of a separate failure-classification step. Compose the two when narrative + classification is needed.
 - **No project-glossary substitution.** The skill emits `cart.checkout.spec` verbatim; if the team's exec audience prefers human-readable suite names, an upstream alias map is required (out of scope for this skill).
 - **Coverage data is optional.** If the input does not include coverage, the `release-notes` shape omits the coverage bullet rather than fabricating numbers.
 
 ## Hand-off targets
 
-- **Cross-suite cross-environment daily roll-up** → [`daily-test-suite-aggregator`](../../agents/daily-test-suite-aggregator.md) (sister agent in this plugin).
-- **Per-test failure classification** → [`failure-classifier`](../../../qa-bug-repro/agents/failure-classifier.md).
-- **Defect trend narrative over a longer window** → [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md).
 - **Coverage delta detail** → [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md).
 - **Per-tool tabular report** → [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md).
 

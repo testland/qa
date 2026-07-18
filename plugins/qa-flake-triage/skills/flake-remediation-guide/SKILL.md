@@ -1,6 +1,6 @@
 ---
 name: flake-remediation-guide
-description: "Provides concrete code-level fixes for each of the eight recurring flake patterns cataloged in flake-pattern-reference: replacing fixed sleeps with framework auto-waits, isolating state in beforeEach fixtures, adopting stable role-based locators, mocking network and clock, seeding RNG, closing leaked resources, and the Pattern 3 shared-parallel-state fix (per-worker DB schema via workerIndex). Use when a flake has already been classified by pattern and the engineer needs the specific code change to apply. Distinct from parallel-isolation-checker, which detects shared-parallel-state problems rather than applying the fix."
+description: "Provides concrete code-level fixes for each of the eight recurring flake patterns cataloged in flake-pattern-reference: replacing fixed sleeps with framework auto-waits, isolating state in beforeEach fixtures, adopting stable role-based locators, mocking network and clock, seeding RNG, closing leaked resources, and the Pattern 3 shared-parallel-state fix (per-worker DB schema via workerIndex). Use when a flake has already been classified by pattern and the engineer needs the specific code change to apply. Distinct from shared-parallel-state detection, which finds the problem rather than applying the fix."
 ---
 
 # flake-remediation-guide
@@ -415,8 +415,7 @@ await expect(page.getByTestId('last-seen')).toHaveText('Jan 15, 2026');
 For pixel-level snapshot tests, regenerate baselines only in CI (never
 from a developer laptop). OS font rendering and anti-aliasing differ
 between macOS and Linux - a baseline captured locally will produce
-false positives on the CI runner. See
-[`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)
+false positives on the CI runner. See `playwright-snapshots`
 for the full update workflow.
 
 ---
@@ -479,8 +478,7 @@ Pass `TEST_SEED=<failing-seed>` to reproduce the exact failure.
 
 When a property-based test (fast-check, jqwik) fails, it has found a
 real edge case. Copy the failing seed into a regression test and fix
-the production bug. See
-[`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md).
+the production bug.
 
 ---
 
@@ -506,7 +504,3 @@ the production bug. See
   pattern applies before applying a fix from this skill.
 - [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) -
   workflow to quarantine a flake while this fix is in progress.
-- [`e2e-flake-bisector`](../../agents/e2e-flake-bisector.md) -
-  agent that bisects when pattern identification is inconclusive.
-- [`parallel-isolation-checker`](../../agents/parallel-isolation-checker.md) -
-  agent for Pattern 3 (shared parallel state) detection.

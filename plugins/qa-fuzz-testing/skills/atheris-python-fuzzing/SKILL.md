@@ -170,8 +170,8 @@ Traceback (most recent call last):
   ...
 ```
 
-Map the traceback to a bug spec via
-[`bug-report-from-failure`](../../../qa-defect-management/skills/bug-report-from-failure/SKILL.md).
+Map the traceback to a bug spec via `bug-report-from-failure`
+(in the qa-defect-management plugin).
 
 ## CI integration
 
@@ -212,9 +212,8 @@ Map the traceback to a bug spec via
   versions.
 - **No structured-input mutation beyond FuzzedDataProvider.** For
   structured-aware mutation (typed records, custom grammars), pair
-  with Hypothesis (in
-  [`qa-property-based`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md))
-  for property-based-style structured input.
+  with Hypothesis (the `hypothesis-testing` skill in the
+  qa-property-based plugin) for property-based-style structured input.
 
 ## References
 
@@ -233,6 +232,6 @@ Map the traceback to a bug spec via
   [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
   [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
 - Sibling-plugin overlap:
-  [`hypothesis-testing`](../../../qa-property-based/skills/hypothesis-testing/SKILL.md) - different methodology (hypothesis-driven vs coverage-guided).
+  `hypothesis-testing` - different methodology (hypothesis-driven vs coverage-guided).
 - Dispatcher:
   [`fuzz-toolkit-dispatcher`](../fuzz-toolkit-dispatcher/SKILL.md).

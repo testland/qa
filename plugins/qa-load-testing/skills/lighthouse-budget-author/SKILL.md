@@ -27,9 +27,8 @@ thresholds via guesswork. Either ends with a gate the team disables.
 
 - The project just installed `@lhci/cli` and needs an initial
   config.
-- An NFR review (per
-  [`nfr-extractor`](../../../qa-shift-left/skills/nfr-extractor/SKILL.md))
-  produced perf NFRs that need to translate into Lighthouse syntax.
+- An NFR review (per `non-functional-requirement-extractor`) produced perf NFRs that need
+  to translate into Lighthouse syntax.
 - Existing budgets are uniform across routes (same threshold for
   every URL); the team wants per-route tightening.
 - The team wants resource-size budgets (JS bundle ≤ 300kb, etc.)
@@ -219,7 +218,7 @@ a regression.
 
 - [`lighthouse-perf`](../lighthouse-perf/SKILL.md) - the runner that
   consumes this skill's output.
-- [`nfr-extractor`](../../../qa-shift-left/skills/nfr-extractor/SKILL.md) - upstream skill that produces threshold-bound NFRs translated by
+- `non-functional-requirement-extractor` - upstream skill that produces threshold-bound NFRs translated by
   this skill into Lighthouse syntax.
 - [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
   unified gate that consumes Lighthouse + load-runner verdicts.

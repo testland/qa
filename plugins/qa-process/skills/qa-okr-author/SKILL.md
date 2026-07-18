@@ -1,6 +1,6 @@
 ---
 name: qa-okr-author
-description: "Build-an-X workflow that drafts a QA team's quarterly OKR set - one to three Objectives, each with 3 - 5 measurable Key Results - from the team's current state (risk matrix, defect-trend narrative, test-run history, test-pyramid balance, compliance coverage). Every numeric target cites its source artifact (e.g., `defect-trend-narrator` 2026-Q1 escape rate). QA-specific by design - generic OKR generators (Tability, Asana, ClickUp) don't know test metrics; the differentiation is the domain. Distinct from `test-strategy-author` (which authors the strategy doc) and from `risk-matrix-recommender` (which calibrates risk inputs). Use at the start of each quarter to draft the OKR set the manager edits and the team commits to."
+description: "Build-an-X workflow that drafts a QA team's quarterly OKR set - one to three Objectives, each with 3 - 5 measurable Key Results - from the team's current state (risk matrix, defect-trend narrative, test-run history, test-pyramid balance, compliance coverage). Every numeric target cites its source artifact (e.g., a defect-trend baseline's 2026-Q1 escape rate). QA-specific by design - generic OKR generators (Tability, Asana, ClickUp) don't know test metrics; the differentiation is the domain. Distinct from `test-strategy-author` (which authors the strategy doc) and from risk-matrix calibration (which calibrates risk inputs). Use at the start of each quarter to draft the OKR set the manager edits and the team commits to."
 ---
 
 # qa-okr-author
@@ -31,7 +31,7 @@ Required:
 | Input | Source | Why load-bearing |
 |---|---|---|
 | **Quarterly objective(s)** | Manager-provided; aligned with engineering / product OKRs | The skill drafts KRs *under* objectives the team owns; it won't invent strategic direction |
-| **Current-state metrics** | At least one of: [`risk-matrix`](../risk-matrix/SKILL.md) output, [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md) recent report, [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md) cross-run-trend, [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) audit | Every KR needs a baseline - without it, the target is unanchored |
+| **Current-state metrics** | At least one of: [`risk-matrix`](../risk-matrix/SKILL.md) output, a recent defect-trend report, `test-run-summary-author` cross-run-trend, [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) audit | Every KR needs a baseline - without it, the target is unanchored |
 | **Time horizon** | Quarterly (default) or other (semi-annual) | OKR cadence; per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results), quarterly is the canonical rhythm |
 | **Prior OKR set** | If exists; the prior quarter's KRs + their grading | Continuity: drift from prior commitments is itself a signal |
 
@@ -53,42 +53,42 @@ Anchored on [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md). Used w
 
 ### Shape 2 - Reduce escape-defect rate
 
-Anchored on [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md). Used when production defects are above the team's tolerance.
+Anchored on the defect-trend baseline. Used when production defects are above the team's tolerance.
 
 | KR axis | Example KR | Baseline source |
 |---|---|---|
-| Volume | P1 escapes < 2/quarter; P2 escapes < 10/quarter | current per `defect-trend-narrator` quarterly report |
-| Time-to-detect | MTTD on P1 < 4 hours | per [`mttr-mtbf-tracker`](../../../qa-resilience-drills/skills/mttr-mtbf-tracker/SKILL.md) |
-| Category-specific | regression-class escapes -50% WoW | per [`defect-clusterer`](../../../qa-bug-repro/agents/defect-clusterer.md) + `defect-trend-narrator` |
+| Volume | P1 escapes < 2/quarter; P2 escapes < 10/quarter | current per the defect-trend quarterly report |
+| Time-to-detect | MTTD on P1 < 4 hours | per `mttr-mtbf-tracker` |
+| Category-specific | regression-class escapes -50% WoW | per defect clustering + the defect-trend report |
 
 ### Shape 3 - Cut regression cycle time
 
-Anchored on [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md). Used when CI is the bottleneck.
+Anchored on `test-run-summary-author`. Used when CI is the bottleneck.
 
 | KR axis | Example KR | Baseline source |
 |---|---|---|
 | Wall-clock | regression suite < 60 min per shard, 4× parallel | `test-run-summary-author` |
 | Parallelisation | sharding factor ≥ 8 with no shard >90 min | CI config + `test-run-summary-author` |
-| CI cost | per-PR CI cost -30% via TIA | [`regression-suite-selector`](../../../qa-test-impact-analysis/skills/regression-suite-selector/SKILL.md) |
+| CI cost | per-PR CI cost -30% via TIA | `regression-suite-selector` |
 
 ### Shape 4 - Reduce flake-budget consumption
 
-Anchored on [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md) + [`flaky-test-quarantine`](../../../qa-flake-triage/skills/flaky-test-quarantine/SKILL.md). Used when flake rate is above the team's tolerance (flakiness is widespread and well-documented: about 16% of tests at Google show some flakiness per the [Google Testing Blog](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html); for KR targets, below 5% is aspirational and under 10% is a reasonable committed bar).
+Anchored on flake-detection + `flaky-test-quarantine`. Used when flake rate is above the team's tolerance (flakiness is widespread and well-documented: about 16% of tests at Google show some flakiness per the [Google Testing Blog](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html); for KR targets, below 5% is aspirational and under 10% is a reasonable committed bar).
 
 | KR axis | Example KR | Baseline source |
 |---|---|---|
 | Quarantine ceiling | quarantine list ≤ 5 at any point | current per `flaky-test-quarantine` |
-| Flake rate | flake rate < 3% of CI runs (vs 8% current baseline) | per `ai-flake-detector` weekly history |
+| Flake rate | flake rate < 3% of CI runs (vs 8% current baseline) | per the flake-detection weekly history |
 | Repair velocity | mean time-to-repair on quarantined test < 5 days | per `flaky-test-quarantine` |
 
 ### Shape 5 - Close compliance evidence gaps
 
-Anchored on [`compliance-readiness-reviewer`](../../../qa-compliance/agents/compliance-readiness-reviewer.md). Used in regulated industries (healthcare, finance, automotive).
+Anchored on compliance-readiness review. Used in regulated industries (healthcare, finance, automotive).
 
 | KR axis | Example KR | Baseline source |
 |---|---|---|
-| Per-control coverage | SOC 2 Trust Service Criteria coverage ≥ 95% | `compliance-readiness-reviewer` |
-| Evidence freshness | every control's evidence ≤ 90 days old | [`soc2-evidence-collector`](../../../qa-compliance/skills/soc2-evidence-collector/SKILL.md) |
+| Per-control coverage | SOC 2 Trust Service Criteria coverage ≥ 95% | the compliance-readiness review |
+| Evidence freshness | every control's evidence ≤ 90 days old | `soc2-evidence-collector` |
 | Audit pass-rate | external audit findings ≤ 3, no high-severity | prior audit history |
 
 Other Objective shapes are valid; these are the most-cited in QA-manager-facing literature.
@@ -103,16 +103,16 @@ The skill flags each KR explicitly:
 ## Objective 2 - Reduce escape-defect rate
 
 **Quarter:** 2026-Q3 (Jul-Sep)
-**Rationale:** Current quarterly P1 escape rate is 4 (per `defect-trend-narrator` 2026-Q2 report - citing `tracker-export-2026-Q2.json` lines `filter(severity=P1, found_in=production)`). Industry context: PractiTest 2026 finds 19.9% of teams use AI for risk identification - the team is below this. Reducing escape rate is the team's primary tied-to-revenue quality metric.
+**Rationale:** Current quarterly P1 escape rate is 4 (per the defect-trend 2026-Q2 report - citing `tracker-export-2026-Q2.json` lines `filter(severity=P1, found_in=production)`). Industry context: PractiTest 2026 finds 19.9% of teams use AI for risk identification - the team is below this. Reducing escape rate is the team's primary tied-to-revenue quality metric.
 
 ### Key Results
 
 | # | Type | KR | Baseline | Source |
 |---|---|---|---|---|
-| KR2.1 | **Committed** | P1 escapes reach ≤ 2/quarter | 4/quarter (2026-Q2) | `defect-trend-narrator` |
-| KR2.2 | **Committed** | P2 escapes reach ≤ 8/quarter | 13/quarter (2026-Q2) | `defect-trend-narrator` |
+| KR2.1 | **Committed** | P1 escapes reach ≤ 2/quarter | 4/quarter (2026-Q2) | the defect-trend report |
+| KR2.2 | **Committed** | P2 escapes reach ≤ 8/quarter | 13/quarter (2026-Q2) | the defect-trend report |
 | KR2.3 | **Aspirational** | MTTD on P1 reaches ≤ 4h (median) | 11h (2026-Q2) | `mttr-mtbf-tracker` |
-| KR2.4 | **Aspirational** | Regression-class escapes reach -50% vs Q2 | 18 → 9 | `defect-clusterer` + `defect-trend-narrator` |
+| KR2.4 | **Aspirational** | Regression-class escapes reach -50% vs Q2 | 18 → 9 | the defect-clustering export + the defect-trend report |
 
 ### Scoring (per Doerr / Grove canon)
 
@@ -135,9 +135,9 @@ The skill refuses to emit a KR target without citing the baseline. The output's 
 |---|---|---|---|
 | KR1.1 | unit:integration:E2E = 70:20:10 | 41:14:45 | `test-pyramid-balancer` 2026-Q2 output |
 | KR1.2 | regression duration < 45 min/shard | 67 min/shard | `test-run-summary-author cross-run-trend` 2026-Q2 |
-| KR2.1 | P1 escapes ≤ 2/quarter | 4/quarter | `defect-trend-narrator` filter(severity=P1, found_in=production, window=2026-Q2) |
+| KR2.1 | P1 escapes ≤ 2/quarter | 4/quarter | the defect-trend report filter(severity=P1, found_in=production, window=2026-Q2) |
 | KR2.3 | MTTD P1 ≤ 4h median | 11h median | `mttr-mtbf-tracker` per-incident log, 2026-Q2 |
-| KR3.1 | flake rate < 3% of runs | 8% | `ai-flake-detector` weekly export 2026-Q2 |
+| KR3.1 | flake rate < 3% of runs | 8% | the flake-detection weekly export 2026-Q2 |
 | KR3.2 | quarantine list ≤ 5 | 11 | `flaky-test-quarantine` snapshot 2026-06-30 |
 ```
 
@@ -166,7 +166,7 @@ The OKR set is the start of the loop, not the end. Hand-offs at quarter-end:
 
 - **Quarterly OKR retro**: did we hit the KRs? Aspirational KRs at 0.7+ are wins; committed KRs at <1.0 are misses requiring action.
 - **Drift analysis**: if multiple quarters show the same Objective without progress, the Objective is wrong (too vague, too ambitious, or not under the team's control).
-- **Source-artifact regeneration**: the same baseline-source skills (`defect-trend-narrator`, `test-run-summary-author`, etc.) emit the end-of-quarter metrics; the comparison is mechanical.
+- **Source-artifact regeneration**: the same baseline sources (the defect-trend report, `test-run-summary-author`, etc.) emit the end-of-quarter metrics; the comparison is mechanical.
 
 ## Worked example - quarter-start draft for a 6-engineer QA team
 
@@ -186,10 +186,10 @@ Output:
 
 | # | Type | KR | Baseline | Source |
 |---|---|---|---|---|
-| KR1.1 | Committed | P1 escapes ≤ 2 | 4 (Q2) | `defect-trend-narrator` |
-| KR1.2 | Committed | P2 escapes ≤ 8 | 13 (Q2) | `defect-trend-narrator` |
+| KR1.1 | Committed | P1 escapes ≤ 2 | 4 (Q2) | the defect-trend report |
+| KR1.2 | Committed | P2 escapes ≤ 8 | 13 (Q2) | the defect-trend report |
 | KR1.3 | Aspirational | MTTD P1 ≤ 4h median | 11h (Q2) | `mttr-mtbf-tracker` |
-| KR1.4 | Aspirational | Regression-class escapes -50% | 18 → 9 | `defect-clusterer` |
+| KR1.4 | Aspirational | Regression-class escapes -50% | 18 → 9 | the defect-clustering export |
 
 ## Objective 2 - Cut regression cycle time
 
@@ -213,10 +213,10 @@ Output:
 
 | KR | Target | Baseline | Source |
 |---|---|---|---|
-| KR1.1 | ≤2 | 4 | `defect-trend-narrator` filter(severity=P1, found_in=production, window=2026-Q2) |
+| KR1.1 | ≤2 | 4 | the defect-trend report filter(severity=P1, found_in=production, window=2026-Q2) |
 | KR1.2 | ≤8 | 13 | same filter, severity=P2 |
 | KR1.3 | ≤4h median | 11h median | `mttr-mtbf-tracker` log 2026-Q2 |
-| KR1.4 | 9 | 18 | `defect-clusterer` category=regression, 2026-Q2 |
+| KR1.4 | 9 | 18 | the defect-clustering export, category=regression, 2026-Q2 |
 | KR2.1 | <60 min/shard | 67 min/shard | `test-run-summary-author` cross-run-trend 2026-Q2 |
 | KR2.2 | shard≥8 | shard=6 | `playwright.config.ts` workers + `test-run-summary-author` |
 | KR2.3 | -30% per-PR | $0.42/PR | CI billing export + `regression-suite-selector` adoption rate |
@@ -247,11 +247,8 @@ Output:
 ## Hand-off targets
 
 - **Author the strategy doc the OKRs sit inside** → [`test-strategy-author`](../test-strategy-author/SKILL.md).
-- **Calibrate the risk matrix that feeds Shape 5** → [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md).
-- **Generate the per-quarter defect-trend baseline for Shape 2** → [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md).
-- **Generate the cross-run trend for Shape 3** → [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md) (cross-run-trend output shape).
+- **Generate the cross-run trend for Shape 3** → `test-run-summary-author` (cross-run-trend output shape).
 - **Audit the pyramid baseline for Shape 1** → [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
-- **Audit the compliance baseline for Shape 5** → [`compliance-readiness-reviewer`](../../../qa-compliance/agents/compliance-readiness-reviewer.md).
 - **Quarterly OKR retro / drift review** → deferred (candidate `qa-okr-retro-reviewer` agent, Phase 7+).
 
 ## References
@@ -263,5 +260,5 @@ Output:
 - ISTQB glossary - escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
 - Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - flake-prevalence baseline for Shape 4 KRs (about 16% of tests show some flakiness): https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 - PractiTest 2026 State of Testing Report - manager-tier survey; 19.9% of teams use AI for risk identification (cited in Shape 2 rationale): https://www.practitest.com/state-of-testing/
-- [`test-strategy-author`](../test-strategy-author/SKILL.md), [`risk-matrix`](../risk-matrix/SKILL.md), [`risk-matrix-recommender`](../../agents/risk-matrix-recommender.md), [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md), [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling skills in the same plugin that feed inputs.
-- [`defect-trend-narrator`](../../../qa-bug-repro/agents/defect-trend-narrator.md), [`test-run-summary-author`](../../../qa-test-reporting/skills/test-run-summary-author/SKILL.md), [`ai-flake-detector`](../../../qa-flake-triage/agents/ai-flake-detector.md), [`compliance-readiness-reviewer`](../../../qa-compliance/agents/compliance-readiness-reviewer.md), [`mttr-mtbf-tracker`](../../../qa-resilience-drills/skills/mttr-mtbf-tracker/SKILL.md) - cross-plugin baseline-source skills.
+- [`test-strategy-author`](../test-strategy-author/SKILL.md), [`risk-matrix`](../risk-matrix/SKILL.md), [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md), [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling skills in the same plugin that feed inputs.
+- `test-run-summary-author`, `mttr-mtbf-tracker` - cross-plugin baseline-source skills.

@@ -262,5 +262,4 @@ These tests prove the chosen mode is actually in effect.
   [`apollo-server-test`](../apollo-server-test/SKILL.md),
   [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md),
   [`mercurius-test`](../mercurius-test/SKILL.md),
-  [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md),
-  [`n-plus-one-query-detector`](../../agents/n-plus-one-query-detector.md).
+  [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).

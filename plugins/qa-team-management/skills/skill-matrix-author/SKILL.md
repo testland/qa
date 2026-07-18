@@ -1,6 +1,6 @@
 ---
 name: skill-matrix-author
-description: "Build-an-X workflow that produces a QA team skill matrix - team members crossed with competency dimensions at explicit proficiency levels, each cell backed by observable evidence - then derives a gap analysis comparing the matrix against the team's required testing skills. Competency dimensions follow ISTQB CTAL-TM v3.0 chapter 3 (Managing the Team): professional, methodological, social, and personal competence. Distinct from `hiring-rubric-author` in qa-hiring (point-in-time scoring of external candidates; this skill maps the existing team on an ongoing basis), from the sibling `team-capability-gap-analyst` agent (which consumes a completed matrix plus a roadmap and prioritizes the gaps), and from `onboarding-plan-author` (one new hire's ramp, not whole-team capability). Use when a QA manager needs to know what the team can do today versus what its projects demand - before planning training, hiring, or work allocation."
+description: "Build-an-X workflow that produces a QA team skill matrix - team members crossed with competency dimensions at explicit proficiency levels, each cell backed by observable evidence - then derives a gap analysis comparing the matrix against the team's required testing skills. Competency dimensions follow ISTQB CTAL-TM v3.0 chapter 3 (Managing the Team): professional, methodological, social, and personal competence. Distinct from `hiring-rubric-author` in qa-hiring (point-in-time scoring of external candidates; this skill maps the existing team on an ongoing basis), from a downstream gap-prioritization step (which consumes a completed matrix plus a roadmap and prioritizes the gaps), and from `onboarding-plan-author` (one new hire's ramp, not whole-team capability). Use when a QA manager needs to know what the team can do today versus what its projects demand - before planning training, hiring, or work allocation."
 keywords: ["skill-matrix", "competency", "qa-team", "gap-analysis", "ctal-tm", "test-management", "capability"]
 ---
 
@@ -17,12 +17,12 @@ The output is two artifacts: the **matrix** (current state) and the **gap analys
 - A QA manager inherits or builds a team and needs a current-state capability map.
 - The team's work is changing (new tech stack, new test level, new domain) and the manager must know whether the team can cover it.
 - Before quarterly planning: the matrix plus gap analysis feeds the training budget and the hiring case.
-- As the required input for the [`team-capability-gap-analyst`](../../agents/team-capability-gap-analyst.md) agent, which prioritizes gaps against a concrete roadmap.
+- As the required input for downstream gap prioritization against a concrete roadmap.
 
 Do **not** use this skill to:
 
-- Score job candidates - that is [`hiring-rubric-author`](../../../qa-hiring/skills/hiring-rubric-author/SKILL.md) (point-in-time, per-candidate, anchored to interview questions).
-- Plan one new hire's first 90 days - that is [`onboarding-plan-author`](../../../qa-hiring/skills/onboarding-plan-author/SKILL.md).
+- Score job candidates - that is `hiring-rubric-author` (in qa-hiring; point-in-time, per-candidate, anchored to interview questions).
+- Plan one new hire's first 90 days - that is `onboarding-plan-author` (in qa-hiring).
 - Write individual performance feedback - that is [`performance-feedback-author`](../performance-feedback-author/SKILL.md). The matrix describes capability, not performance; conflating them poisons the data (see Anti-patterns).
 
 ## Step 1 - Capture the inputs
@@ -109,7 +109,7 @@ In the worked example: performance testing is a **bus-factor gap** (Dana alone a
 
 For each gap, list candidate development approaches. CTAL-TM 3.1.4 enumerates five: training and education, self-study, peer learning, mentoring or coaching, and training on the job - and notes they are not equally effective per competence area: "self-study and training, for example, are well suited for developing professional and methodological competence", while for social and personal competence "it is recommended to use approaches such as training and coaching, which are often more promising than self-study" ([§3.1.4](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf)).
 
-Do not pick the response in this skill. Prioritizing gaps against the roadmap and recommending train-vs-hire is the [`team-capability-gap-analyst`](../../agents/team-capability-gap-analyst.md) agent's job; this skill ends by handing it a complete, evidence-backed matrix.
+Do not pick the response in this skill. Prioritizing gaps against the roadmap and recommending train-vs-hire is a separate downstream step; this skill ends by handing it a complete, evidence-backed matrix.
 
 ## Anti-patterns
 
@@ -131,8 +131,8 @@ Do not pick the response in this skill. Prioritizing gaps against the roadmap an
 
 ## Hand-off targets
 
-- **Prioritize the gaps against the roadmap, recommend train vs hire** → [`team-capability-gap-analyst`](../../agents/team-capability-gap-analyst.md) (preloads this skill).
-- **A capability gap becomes a hiring case** → [`qa-jd-author`](../../../qa-hiring/skills/qa-jd-author/SKILL.md) then the qa-hiring structured-interview chain.
+- **Prioritize the gaps against the roadmap, recommend train vs hire** → a downstream gap-prioritization step that consumes this matrix.
+- **A capability gap becomes a hiring case** → `qa-jd-author` then the qa-hiring structured-interview chain.
 - **A growth conversation per member** → [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md); the member's matrix row seeds the growth half of the agenda.
 - **Level expectations over time** → [`career-ladder-author`](../career-ladder-author/SKILL.md); the ladder defines progression, the matrix measures today.
 
@@ -140,5 +140,4 @@ Do not pick the response in this skill. Prioritizing gaps against the roadmap an
 
 - ISTQB Certified Tester Advanced Level Test Management Syllabus v3.0 (2024-05-03), chapter 3 "Managing the Team", sections 3.1.1 - 3.1.6 - four areas of competence, required-skill analysis, skills-matrix assessment, development approaches: https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf (fetched 2026-06-10).
 - ISTQB glossary - skills management terminology: https://glossary.istqb.org/
-- [`hiring-rubric-author`](../../../qa-hiring/skills/hiring-rubric-author/SKILL.md) - the point-in-time candidate-scoring counterpart in qa-hiring.
-- [`team-capability-gap-analyst`](../../agents/team-capability-gap-analyst.md) - the sibling agent that consumes this skill's output.
+- `hiring-rubric-author` (in qa-hiring) - the point-in-time candidate-scoring counterpart.

@@ -9,8 +9,7 @@ description: "Wraps Unleash (Open Source / SaaS) SDK testing patterns: bootstrap
 
 - Tests for code that calls `unleash.isEnabled(flagName, context)`.
 - Tests for custom Unleash strategies (the extensibility point).
-- Assignment-integrity tests per
-  [`qa-experimentation/ab-test-validity-checklist`](../../../qa-experimentation/skills/ab-test-validity-checklist/SKILL.md).
+- Assignment-integrity tests per `ab-test-validity-checklist`.
 
 ## Authoring
 

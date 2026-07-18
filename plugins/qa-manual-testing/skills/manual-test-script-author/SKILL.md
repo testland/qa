@@ -21,8 +21,7 @@ This skill builds those scripts in two interchangeable formats: a
 step-table for spreadsheet review or Gherkin for BDD-aware teams.
 
 For session-based exploratory tests (where the script doesn't
-predetermine steps), see
-[`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
+predetermine steps), use a charter-driven exploratory session instead.
 
 ## When to use
 
@@ -35,9 +34,8 @@ predetermine steps), see
   the runner can't reach.
 
 If the feature is fully automatable and the team has the budget,
-write an automated test - see
-[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-for the upstream Gherkin generation.
+write an automated test - see `acceptance-criteria-extractor` for
+the upstream Gherkin generation.
 
 ## Step 1 - Read the input
 
@@ -49,8 +47,7 @@ The skill takes one of:
 - An acceptance criterion line item (for UAT scripts).
 
 Extract the **actor**, **trigger**, and **observable outcomes** - 
-the same Gherkin structure as
-[`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
+the same Gherkin structure as `acceptance-criteria-extractor`.
 A manual script is the same logical shape as a Gherkin scenario;
 the difference is the level of detail + the inclusion of setup
 data.
@@ -186,8 +183,7 @@ raised** section captures:
 | BUG-9876  |   2   | Subtotal updates to `$22.49`       | Subtotal stays at `$24.99`; toast says "Invalid code" | high    |
 ```
 
-Pair with [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md)
-for the structured bug-reproduction package.
+Turn each failure into a structured bug-reproduction package.
 
 ## Output format
 
@@ -242,18 +238,14 @@ for the structured bug-reproduction package.
   animation looked broken").
 - **Coverage of edge cases.** Manual scripts cover what the author
   imagined; exploratory testing catches what the author didn't - 
-  pair with [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md).
+  pair with charter-driven exploratory testing.
 
 ## References
 
 - [exp][exp] - Exploratory vs scripted testing distinction;
   "most real-world testing combines both approaches with emphasis
   depending on project context."
-- [`acceptance-criteria-extractor`](../../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits Gherkin from a story; this skill turns Gherkin
+- `acceptance-criteria-extractor` - upstream: emits Gherkin from a story; this skill turns Gherkin
   into a tester-runnable script.
-- [`exploratory-charter-author`](../../../qa-roles/agents/exploratory-charter-author.md) - sibling: when the test is **not** scripted; charter-driven
-  exploration instead.
 - [`uat-script-author`](../uat-script-author/SKILL.md) - sibling:
   same shape, scoped to UAT.
-- [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md) - downstream: package the manual-test failures into structured
-  bug reports.

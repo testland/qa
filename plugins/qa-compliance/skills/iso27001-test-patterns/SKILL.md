@@ -30,8 +30,7 @@ from isms.online/iso-27001/annex-a/ (fetched 2026-06-04).
 
 This is a **pure-reference skill** - defines the test-pattern catalog
 by control. Tests use the team's existing test framework; this skill
-is the per-control test recipe. The `compliance-readiness-reviewer`
-agent preloads this skill and uses it as its ISO 27001 criteria source.
+is the per-control test recipe.
 
 ## When to use
 
@@ -446,8 +445,7 @@ A control marked "not applicable" must include:
 3. Approver (CISO / DPO / compliance officer)
 4. Re-review date
 
-The SoA feeds the `compliance-readiness-reviewer` agent's
-not-applicable verdict logic: it refuses to accept scope exclusions
+The not-applicable verdict logic refuses to accept scope exclusions
 without all four required fields.
 
 ## Key compliance gaps tests should catch
@@ -500,8 +498,6 @@ without all four required fields.
   (fetched 2026-06-04)
 - iso.org/standard/27001 - canonical ISO/IEC 27001:2022 standard text
   (paywalled; cite by stable ID "ISO/IEC 27001:2022")
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) -
-  agent that preloads this skill as its ISO 27001 criteria source
 - [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) -
   sister: SOC 2 Type II evidence collection (AICPA TSC)
 - [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) -

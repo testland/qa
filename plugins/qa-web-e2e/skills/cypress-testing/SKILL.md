@@ -1,6 +1,6 @@
 ---
 name: cypress-testing
-description: "Authors and improves Cypress E2E tests - installs Cypress, configures `cypress.config.ts`, authors `cy.*` command chains, refactors existing specs (`cy.wait(ms)` sleeps into assertions, repeated flows into `cy.session` custom commands), and debugs with the time-travel GUI; Cypress Cloud for parallel runs and recording. Use for both greenfield test authoring and improving hand-written specs already in the codebase. For automated refactor of raw Cypress Studio recordings specifically, see cypress-codegen-reviewer."
+description: "Authors and improves Cypress E2E tests - installs Cypress, configures `cypress.config.ts`, authors `cy.*` command chains, refactors existing specs (`cy.wait(ms)` sleeps into assertions, repeated flows into `cy.session` custom commands), and debugs with the time-travel GUI; Cypress Cloud for parallel runs and recording. Use for both greenfield test authoring and improving hand-written specs already in the codebase. For automated refactor of raw Cypress Studio recordings specifically, use a dedicated codegen-review pass."
 ---
 
 # cypress-testing
@@ -103,9 +103,7 @@ needed.
 
 ## Step 4 - Use cypress-testing-library
 
-For accessibility-first selectors (per the team's
-[`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md)
-convention):
+For accessibility-first selectors:
 
 ```bash
 npm install --save-dev @testing-library/cypress
@@ -203,8 +201,8 @@ Cloud provides:
 - Per-test analytics.
 - Flaky-test detection.
 
-OSS alternative: [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md)
-covers similar analytics for both Cypress + Playwright.
+OSS alternative: `currents-integration` (in the qa-test-reporting
+plugin) covers similar analytics for both Cypress + Playwright.
 
 ## Step 9 - CI integration
 
@@ -247,9 +245,9 @@ jobs:
 - **Same-tab restriction.** Originally Cypress only tested
   same-tab; multi-tab support added later but with caveats.
 - **No native mobile.** Mobile via emulation only; for native, see
-  [`appium-testing`](../../../qa-mobile/skills/appium-testing/SKILL.md).
+  `appium-testing` (in the qa-mobile plugin).
 - **Cypress Cloud is paid.** OSS-budget teams use
-  [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md).
+  `currents-integration`.
 
 ## References
 
@@ -260,5 +258,4 @@ jobs:
   [`selenium-testing`](../selenium-testing/SKILL.md),
   [`webdriverio-testing`](../webdriverio-testing/SKILL.md) - 
   alternative E2E frameworks.
-- [`currents-integration`](../../../qa-test-reporting/skills/currents-integration/SKILL.md) - OSS analytics alternative to Cypress Cloud.
-- [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.
+- `currents-integration` - OSS analytics alternative to Cypress Cloud.

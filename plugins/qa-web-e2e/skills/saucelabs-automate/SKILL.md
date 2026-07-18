@@ -15,11 +15,8 @@ strong Cypress / Playwright / Appium support.
 Per
 [docs.saucelabs.com/dev/test-configuration-options](https://docs.saucelabs.com/dev/test-configuration-options/).
 
-Composes with
-[`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md)
-for matrix planning. Routed by
-[`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md)
-for cross-cloud workflows.
+Composes with `browser-matrix-strategy-reference` (in the
+qa-compatibility plugin) for matrix planning.
 
 ## When to use
 
@@ -250,12 +247,10 @@ jobs:
 - [Selenium options] - Selenium 4 browser-options classes;
   `set_capability` for vendor-prefixed caps before driver creation.
 - Composes:
-  [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).
+  `browser-matrix-strategy-reference`.
 - Sibling skills:
   [`browserstack-automate`](../browserstack-automate/SKILL.md),
   [`lambdatest-automate`](../lambdatest-automate/SKILL.md),
-  [`selenium-grid-4-runner`](../../../qa-compatibility/skills/selenium-grid-4-runner/SKILL.md).
-- Routed by:
-  [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md).
+  `selenium-grid-4-runner`.
 
 [Selenium options]: https://www.selenium.dev/documentation/webdriver/drivers/options/

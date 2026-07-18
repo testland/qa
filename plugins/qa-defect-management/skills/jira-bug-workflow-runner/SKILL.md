@@ -1,6 +1,6 @@
 ---
 name: jira-bug-workflow-runner
-description: "Jira Cloud bug workflow runner using the REST API v3: issue creation with an ADF description, runtime transition lookup and apply, JQL search for triage queues and duplicate detection, severity/priority field updates, label-based classification (severity/priority/regression), and idempotent CI-driven filing from JUnit XML test failures. Use when the target tracker is Jira Cloud and the task involves Jira lifecycle states (create, triage, transition, close). Distinct from ci-defect-filer, the platform-agnostic event-driven CI orchestrator, and from linear-bug-workflow-runner / github-issues-bug-workflow for other trackers."
+description: "Jira Cloud bug workflow runner using the REST API v3: issue creation with an ADF description, runtime transition lookup and apply, JQL search for triage queues and duplicate detection, severity/priority field updates, label-based classification (severity/priority/regression), and idempotent CI-driven filing from JUnit XML test failures. Use when the target tracker is Jira Cloud and the task involves Jira lifecycle states (create, triage, transition, close). Distinct from a platform-agnostic event-driven CI defect filer, and from linear-bug-workflow-runner / github-issues-bug-workflow for other trackers."
 ---
 
 # jira-bug-workflow-runner
@@ -26,9 +26,7 @@ search.
   `Verified` → `Closed` after deployment).
 - Building a triage script that pulls New defects and applies
   severity / priority based on labels.
-- Backing the
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md)
-  agent's search backend.
+- Backing a duplicate-defect search backend.
 
 ## Authoring
 
@@ -184,7 +182,7 @@ dupes = search_jql(
 ### Idempotent bug creation
 
 CI bug filing must not duplicate if the same failure recurs. Pair
-with `duplicate-defect-finder` upstream, but also defensively
+with upstream duplicate detection, but also defensively
 search before creating:
 
 ```python
@@ -291,7 +289,6 @@ above.
   [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md),
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md).
+  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).
 - Sibling-plugin neighbour:
-  [`testrail-integration`](../../../qa-test-reporting/skills/testrail-integration/SKILL.md) - different scope (test-result posting; not bug workflow).
+  `testrail-integration` (in the qa-test-reporting plugin) - different scope (test-result posting; not bug workflow).

@@ -26,9 +26,7 @@ Projects v2 GraphQL augmentation when richer state is needed.
   [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)).
 - Maintaining bug label / status discipline in an open-source
   project where GitHub Issues is the canonical tracker.
-- Backing the
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md)
-  search for GitHub-using teams.
+- Backing duplicate-defect search for GitHub-using teams.
 
 ## Authoring
 
@@ -98,8 +96,7 @@ adopt label prefixes:
 | Defect type | `type:regression`, `type:performance`, `type:security` |
 | Component | `component:auth`, `component:payments`, `component:ui` |
 
-Adopt them consistently - the
-[`bug-report-critic`](../../agents/bug-report-critic.md) checks
+Adopt them consistently - defect-report review checks
 that severity + priority labels are both present.
 
 ### State transitions via PATCH
@@ -303,5 +300,4 @@ cross-repo, use a fine-grained PAT.
   [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
   [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md).
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md),
-  [`duplicate-defect-finder`](../../agents/duplicate-defect-finder.md).
+  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).

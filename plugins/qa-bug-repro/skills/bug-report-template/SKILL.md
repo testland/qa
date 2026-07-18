@@ -105,9 +105,8 @@ Good:
 ```
 
 If the bug is **intermittent**, document the reproduction rate ("8 out
-of 20 attempts on macOS Sonoma 14.4 / Firefox 128"). The
-[`e2e-flake-bisector`](../../../qa-flake-triage/agents/e2e-flake-bisector.md)
-agent works the same way - quantify the rate, don't guess.
+of 20 attempts on macOS Sonoma 14.4 / Firefox 128") - quantify the
+rate, don't guess.
 
 ## Step 4 - Separate Expected from Actual
 
@@ -125,9 +124,7 @@ instead of the reporter.
 
 For UI bugs, attach a screenshot as the **Actual** body. For backend
 bugs, paste the exact error message + status code. If a stack trace
-is available, the
-[`crash-stack-trace-analyzer`](../../agents/crash-stack-trace-analyzer.md)
-takes the trace as input.
+is available, capture it verbatim as input for hypothesis extraction.
 
 ## Step 5 - Pick Severity (intrinsic) and Priority (extrinsic)
 
@@ -265,9 +262,7 @@ Input: an automated alert with the full stack trace from production.
 
 The skill drafts the report with **Steps to Reproduce** marked
 `Unable - production crash (no manual repro yet)`, the **Actual** field
-populated with the verbatim trace, and a recommended hand-off to the
-[`crash-stack-trace-analyzer`](../../agents/crash-stack-trace-analyzer.md)
-agent to extract a hypothesis.
+populated with the verbatim trace, flagged for hypothesis extraction.
 
 ## Anti-patterns
 
@@ -285,6 +280,3 @@ agent to extract a hypothesis.
   actual structure.
 - ISO/IEC/IEEE 29119-3:2021 - incident-report content (cite by
   stable standard ID; spec is paywalled at iso.org).
-- [`bug-repro-builder`](../../agents/bug-repro-builder.md) - agent
-  that turns a filled template into a minimal failing test.
-- [`crash-stack-trace-analyzer`](../../agents/crash-stack-trace-analyzer.md) - agent that extracts hypothesis from a stack-trace-only input.

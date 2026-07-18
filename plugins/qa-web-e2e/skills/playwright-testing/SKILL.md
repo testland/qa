@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, and CI setup; for reviewing codegen output specifically, see playwright-codegen-reviewer."
+description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, and CI setup; for reviewing codegen output specifically, use a dedicated codegen-review pass."
 ---
 
 # playwright-testing
@@ -21,8 +21,8 @@ Per [pw-intro][pwi]:
 ## When to use
 
 - New web E2E project; pick Playwright as the modern default.
-- Cross-browser coverage matters (per
-  [`browser-matrix-runner`](../../../qa-compatibility/skills/browser-matrix-runner/SKILL.md)) - Playwright's three-engine support is the differentiator.
+- Cross-browser coverage matters (see `browser-matrix-runner` in the
+  qa-compatibility plugin) - Playwright's three-engine support is the differentiator.
 - Migration from Selenium / WebDriver-based stacks (see
   [`selenium-testing`](../selenium-testing/SKILL.md)).
 
@@ -62,8 +62,7 @@ test('checkout flow happy path', async ({ page }) => {
 });
 ```
 
-Per [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md):
-prefer `getByRole` / `getByLabelText` / `getByText` over CSS class
+Prefer `getByRole` / `getByLabelText` / `getByText` over CSS class
 / XPath. Web-first assertions (`await expect(...)`) auto-wait
 within the test timeout.
 
@@ -232,13 +231,13 @@ npx playwright show-report
 ```
 
 For programmatic / CI consumption, the JUnit reporter (Step 4)
-feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md).
+feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
 
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| CSS-class / XPath selectors                                           | Brittle to DOM changes.                                                   | `getByRole` / `getByLabelText` per [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md). |
+| CSS-class / XPath selectors                                           | Brittle to DOM changes.                                                   | `getByRole` / `getByLabelText`. |
 | `page.waitForTimeout(2000)`                                            | Flaky on slow CI; slow on fast.                                           | Web-first assertions (auto-wait). |
 | One mega-test that spans multiple flows                                | Failure mid-test obscures cause.                                          | Per-flow tests; share setup via Page Objects. |
 | Skipping `--with-deps` in CI                                           | Linux runner missing browser deps.                                       | Always `--with-deps` (Step 8). |
@@ -246,10 +245,10 @@ feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysi
 
 ## Limitations
 
-- **No real Safari.** WebKit ≠ Safari (per [`browser-matrix-runner`](../../../qa-compatibility/skills/browser-matrix-runner/SKILL.md));
+- **No real Safari.** WebKit ≠ Safari (per `browser-matrix-runner`);
   iOS Safari needs real-device testing.
 - **Per-test runtime ~2-30s.** E2E expensive vs unit tests; use
-  pyramid balance per [`test-pyramid-balancer`](../../../qa-process/skills/test-pyramid-balancer/SKILL.md).
+  pyramid balance per `test-pyramid-balancer` (in the qa-process plugin).
 - **Browser version drift.** Playwright N+1 ahead of stable; some
   tests pass in Playwright but fail in shipped Chrome.
 
@@ -258,7 +257,5 @@ feeds [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysi
 - [pwi][pwi] - Playwright overview, install via `npm init
   playwright@latest`, three-engine support, CLI flags, HTML
   Reporter.
-- [`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md) - selector convention.
-- [`playwright-codegen-reviewer`](../../agents/playwright-codegen-reviewer.md) - sibling agent for codegen output review.
-- [`browser-matrix-runner`](../../../qa-compatibility/skills/browser-matrix-runner/SKILL.md) - cross-browser matrix.
-- [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md) - downstream JUnit XML parsing.
+- `browser-matrix-runner` - cross-browser matrix.
+- `junit-xml-analysis` - downstream JUnit XML parsing.

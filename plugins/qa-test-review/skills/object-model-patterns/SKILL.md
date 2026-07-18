@@ -1,13 +1,13 @@
 ---
 name: object-model-patterns
-description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework skills (`playwright-testing` etc., tool-specific configuration). Preloaded by `framework-architecture-auditor` and `playwright-codegen-reviewer` as the architecture-tier reference for what each pattern actually is."
+description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework skills (`playwright-testing` etc., tool-specific configuration). Preloaded by this plugin's framework-review agents as the architecture-tier reference for what each pattern actually is."
 ---
 
 # object-model-patterns
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps; it is the canonical catalog the [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) and [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md) cite to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
+This skill is a **pure reference** - no execution steps; it is the canonical catalog cited to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
 
 ## When to use
 
@@ -19,8 +19,8 @@ This skill is a **pure reference** - no execution steps; it is the canonical cat
 Do **not** use this skill to:
 
 - Author per-framework tool configuration - that's the per-framework skill (`playwright-testing`, `cypress-testing`, etc.).
-- Pick the framework itself - that's [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md).
-- Audit a running codebase against the chosen pattern - that's [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md), which preloads this skill.
+- Pick the framework itself - that's `framework-choice-advisor` (in the qa-process plugin).
+- Audit a running codebase against the chosen pattern - that's a separate framework-architecture audit (this catalog is the reference it cites).
 
 ## Pattern 1 - Page Object Model (POM)
 
@@ -183,7 +183,7 @@ The mobile sibling is documented inside Google's Android testing guidance as **S
 
 ### When to use Screen Object
 
-- Desktop / mobile SUT routed through any accessibility-tree backend per [`desktop-test-strategy-reference`](../../../qa-desktop/skills/desktop-test-strategy-reference/SKILL.md): Windows UIA (FlaUI, WinAppDriver, Appium-Windows), macOS XCTest (XCUIApplication / XCUIElementQuery per [Apple's *Testing with Xcode* UI Testing chapter](https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html)), Linux AT-SPI (dogtail / pyatspi).
+- Desktop / mobile SUT routed through any accessibility-tree backend per `desktop-test-strategy-reference` (in the qa-desktop plugin): Windows UIA (FlaUI, WinAppDriver, Appium-Windows), macOS XCTest (XCUIApplication / XCUIElementQuery per [Apple's *Testing with Xcode* UI Testing chapter](https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html)), Linux AT-SPI (dogtail / pyatspi).
 - Mobile-native SUT (Appium, Espresso, XCUITest on iOS) - same encapsulation, sometimes branded "Screen Robot" per the Wharton citation above.
 - Cross-platform desktop frameworks (Avalonia, .NET MAUI) where the same screen exists across OSes but the accessibility backend differs per host.
 
@@ -245,7 +245,7 @@ The patterns are not equally good for every project. The matrix:
 | Anti-pattern | Why it fails |
 |---|---|
 | Mixing two object-model patterns in the same codebase | Engineers can't tell which to write; vocabulary drift accelerates |
-| Inheritance hierarchies >2 levels deep (BasePage → AppPage → DomainPage → SpecificPage) | Per [`framework-architecture-auditor §A2`](../../agents/framework-architecture-auditor.md), depth-3+ chains break unpredictably on root-level changes |
+| Inheritance hierarchies >2 levels deep (BasePage → AppPage → DomainPage → SpecificPage) | Depth-3+ chains break unpredictably on root-level changes (§A2) |
 | Page / Component / Task / Service Objects holding mutable test data | Cross-test coupling; parallel-execution breakage |
 | Public getter-style methods that expose locators (`get loginButton()`) | Defeats encapsulation; locators leak into test code |
 | Object-model methods that wait, retry, or handle SUT errors | Hides flakiness; tests pass when they should fail loudly |
@@ -253,11 +253,8 @@ The patterns are not equally good for every project. The matrix:
 
 ## Hand-off targets
 
-- **Audit an existing framework against these patterns** → [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) (preloads this skill).
-- **Per-file convention review** → [`test-code-critic`](../../agents/test-code-critic.md) (different scope: file-level §1-§10).
-- **Refactor raw codegen into POMs** → [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md).
-- **Pick the framework itself before applying these patterns** → [`framework-choice-advisor`](../../../qa-process/skills/framework-choice-advisor/SKILL.md).
-- **Test-data construction patterns (Builder / Factory / Fixture)** → [`test-data-patterns`](../../../qa-test-data/skills/test-data-patterns/SKILL.md) (sister catalog).
+- **Pick the framework itself before applying these patterns** → `framework-choice-advisor` (in the qa-process plugin).
+- **Test-data construction patterns (Builder / Factory / Fixture)** → `test-data-patterns` (in the qa-test-data plugin, sister catalog).
 - **Test isolation / fixture lifecycle / parallel safety** → [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) (sister catalog).
 - **Test step granularity and abstraction** → [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md) (sister catalog).
 - **Cross-file convention reference** → [`test-code-conventions`](../test-code-conventions/SKILL.md) (file-level companion).
@@ -267,7 +264,7 @@ The patterns are not equally good for every project. The matrix:
 - Martin Fowler - *PageObject* (canonical cross-language definition, the load-bearing reference for all POM rules; the earlier *WindowDriver* name covered desktop GUI before the term migrated to web): https://martinfowler.com/bliki/PageObject.html
 - Jake Wharton - *Instrumentation Testing Robots* (2016) - the canonical "Screen Robot" reference for the mobile sibling of the Screen Object pattern, also applicable to desktop: https://jakewharton.com/testing-robots/
 - Apple - *Testing with Xcode* - UI Testing chapter, the XCUIApplication / XCUIElementQuery / XCUIElement reference for macOS Screen Objects: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
-- [`desktop-test-strategy-reference`](../../../qa-desktop/skills/desktop-test-strategy-reference/SKILL.md) - the OS-backend reference for Screen Object's accessibility-tree substrate (UIA / XCTest / AT-SPI).
+- `desktop-test-strategy-reference` (qa-desktop) - the OS-backend reference for Screen Object's accessibility-tree substrate (UIA / XCTest / AT-SPI).
 - Selenium HQ - *Page Object Models* (official Selenium documentation; quotes the no-assertions and navigation-return-shape rules verbatim): https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
 - Antony Marcano, Andy Palmer, Jan Molak - *Screenplay Fundamentals* (Serenity BDD documentation; the canonical Actor/Ability/Task/Interaction/Question vocabulary): https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals
 - Marcano & Hill (2007) - *Page Objects Refactored: SOLID Steps to the Screenplay Pattern* (the origin paper for the Screenplay name and SOLID rationale; cited via Serenity BDD): https://serenity-bdd.github.io/docs/screenplay/
@@ -276,5 +273,3 @@ The patterns are not equally good for every project. The matrix:
 - ISTQB glossary - Page Object (the canonical ISTQB entry confirming the pattern is industry-standard): https://glossary.istqb.org/en_US/term/page-object
 - ISTQB glossary - Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization
 - [`test-code-conventions`](../test-code-conventions/SKILL.md) - file-level companion (§1-§10).
-- [`framework-architecture-auditor`](../../agents/framework-architecture-auditor.md) - the reviewer that audits codebases against these patterns; preloads this skill.
-- [`playwright-codegen-reviewer`](../../../qa-web-e2e/agents/playwright-codegen-reviewer.md), [`spec-to-e2e-test-scaffolder`](../../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md) - agents that apply these patterns.

@@ -24,9 +24,7 @@ For canonical anatomy this skill operates on, see
 - Bulk-importing Cucumber `.feature` files as tests.
 - Programmatic management of test types (Manual / Cucumber /
   Generic) and preconditions.
-- Backing
-  [`test-case-quality-critic`](../../agents/test-case-quality-critic.md)
-  case-repository scans for Xray-using teams.
+- Case-repository quality scans for Xray-using teams.
 
 ## Authoring
 
@@ -107,7 +105,7 @@ Per Xray docs, the three canonical types:
 | testType | Steps storage | When to use |
 |---|---|---|
 | `Manual` | Structured step list with action / data / result | Default; hand-executed cases |
-| `Cucumber` | Gherkin scenario text | BDD-driven tests (composes with [`qa-bdd`](../../../qa-bdd/)) |
+| `Cucumber` | Gherkin scenario text | BDD-driven tests (composes with `qa-bdd`) |
 | `Generic` | Single free-text definition | Automated tests where the script is the spec |
 
 ### Bulk import (REST)
@@ -292,6 +290,6 @@ Sync Cucumber `.feature` files on every PR merge:
   [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
   [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
 - Sibling-plugin neighbour:
-  [`xray-integration`](../../../qa-test-reporting/skills/xray-integration/SKILL.md) - different scope (result sync).
-- Composes with [`qa-bdd`](../../../qa-bdd/) when importing
+  `xray-integration` (in the qa-test-reporting plugin) - different scope (result sync).
+- Composes with `qa-bdd` when importing
   Cucumber features.

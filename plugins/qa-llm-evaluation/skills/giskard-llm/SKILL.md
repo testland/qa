@@ -180,6 +180,3 @@ if critical:
   [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
   [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - functional
   eval sister tools (use Giskard for adversarial coverage on top)
-- [`prompt-eval-reviewer`](../../agents/prompt-eval-reviewer.md) - 
-  adversarial reviewer that flags eval suites without adversarial
-  coverage

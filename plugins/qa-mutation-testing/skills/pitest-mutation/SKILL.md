@@ -199,4 +199,3 @@ support, evaluate ArcMutate (commercial).
   [`mutmut-mutation`](../mutmut-mutation/SKILL.md),
   [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
   siblings.
-- [`mutation-survivor-explainer`](../../agents/mutation-survivor-explainer.md) - surviving-mutant analysis agent.

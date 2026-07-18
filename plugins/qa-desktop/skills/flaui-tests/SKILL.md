@@ -290,10 +290,8 @@ For per-test app launch (slower but isolates state), put `Launch` /
 `Close` in the test method itself; for per-class launch (faster but
 shared state), use `IClassFixture` (xUnit) / `[OneTimeSetUp]` (NUnit)
 / `[ClassInitialize]` (MSTest). Pair authoring conventions with
-[`xunit-tests`](../../../qa-unit-tests-net/skills/xunit-tests/SKILL.md),
-[`nunit-tests`](../../../qa-unit-tests-net/skills/nunit-tests/SKILL.md),
-or [`mstest-tests`](../../../qa-unit-tests-net/skills/mstest-tests/SKILL.md)
-for the matching harness idioms.
+`xunit-tests`, `nunit-tests`, or `mstest-tests`
+(in the qa-unit-tests-net plugin) for the matching harness idioms.
 
 ### STA threading
 
@@ -330,7 +328,7 @@ dotnet test --filter "Category=Smoke" --logger "trx;LogFileName=smoke.trx"
 
 xUnit / NUnit / MSTest emit standard TRX / JUnit XML output via the
 test logger flag. Pair with
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+`junit-xml-analysis` (in the qa-test-reporting plugin)
 for cross-runner aggregation.
 
 For interactive selector discovery during authoring, use
@@ -441,6 +439,4 @@ qa-llm-evaluation / qa-ai-assisted plugins first.
   [`appium-windows-driver`](../appium-windows-driver/SKILL.md),
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
 - Composing harnesses:
-  [`xunit-tests`](../../../qa-unit-tests-net/skills/xunit-tests/SKILL.md),
-  [`nunit-tests`](../../../qa-unit-tests-net/skills/nunit-tests/SKILL.md),
-  [`mstest-tests`](../../../qa-unit-tests-net/skills/mstest-tests/SKILL.md).
+  `xunit-tests`, `nunit-tests`, `mstest-tests`.

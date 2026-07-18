@@ -26,10 +26,10 @@ sink operations that are the primary source of DOM-based XSS - an
 attack class that Semgrep pattern rules can miss when the taint path
 crosses async call boundaries.
 
-Together they fill the JS/TS gap the `sast-finding-triager` agent
-exposes when only Semgrep/SonarQube/CodeQL are configured: inline
-rules that fire at `eslint` invocation time, producing JSON or SARIF
-output the triager can consume.
+Together they fill the JS/TS security-lint gap when only
+Semgrep/SonarQube/CodeQL are configured: inline rules that fire at
+`eslint` invocation time, producing JSON or SARIF output a
+multi-scanner triage step can consume.
 
 ## When to use
 
@@ -245,14 +245,14 @@ The JSON pass uses `|| true` so SARIF upload still runs on failure;
 the SARIF pass propagates the real exit code so the job fails on
 errors.
 
-## Step 7 - Passing JSON output to sast-finding-triager
+## Step 7 - JSON output for multi-scanner triage
 
 Per [eslint-cli][eslint-cli], `--format json` produces an array of
 file result objects, each with a `messages` array containing `ruleId`,
-`severity`, `line`, `column`, and `message`. Pass `eslint-security.json`
-to the [`sast-finding-triager`](../../agents/sast-finding-triager.md)
-as an additional input alongside `semgrep.json` and other scanner
-outputs. The triager normalizes `ruleId` to CWE for deduplication.
+`severity`, `line`, `column`, and `message`. Feed `eslint-security.json`
+into a multi-scanner triage step alongside `semgrep.json` and other
+scanner outputs; normalize `ruleId` to CWE for deduplication across
+scanners.
 
 ## Example
 
@@ -309,4 +309,3 @@ const file = fs.readFileSync(req.query.path);
 - [`semgrep-rules`](../semgrep-rules/SKILL.md),
   [`codeql-queries`](../codeql-queries/SKILL.md),
   [`sonarqube-rules`](../sonarqube-rules/SKILL.md) - complementary scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - multi-scanner unifier that consumes this skill's JSON output

@@ -255,5 +255,5 @@ This skill produces:
   [`netlify-functions-test`](../netlify-functions-test/SKILL.md),
   [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md).
 - Cross-plugin:
-  [`qa-test-environment/testcontainers`](../../../qa-test-environment/skills/testcontainers/SKILL.md)
-  (LocalStack alternative for AWS-service emulation).
+  `testcontainers` (in the qa-test-environment plugin)
+  - LocalStack alternative for AWS-service emulation.

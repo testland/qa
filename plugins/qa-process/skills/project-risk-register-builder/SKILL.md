@@ -194,5 +194,3 @@ mitigations need most attention.
 - Sibling skill (different scope):
   [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),
   [`risk-matrix`](../risk-matrix/SKILL.md).
-- Consumed by:
-  [`risk-assessment-critic`](../../agents/risk-assessment-critic.md).

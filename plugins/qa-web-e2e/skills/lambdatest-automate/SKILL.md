@@ -15,17 +15,15 @@ Per
 [lambdatest.com/support/docs/getting-started-with-lambdatest-automation](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/)
 (Cloudflare-protected; cite by stable URL).
 
-Composes with
-[`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md);
-routed via
-[`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md).
+Composes with `browser-matrix-strategy-reference` (in the
+qa-compatibility plugin).
 
 ## When to use
 
 - Cross-browser regression with LambdaTest as the chosen grid.
 - Visual regression via LambdaTest's SmartUI (alternative to
   Percy / Chromatic in
-  [`qa-visual-regression`](../../../qa-visual-regression/)).
+  `qa-visual-regression`).
 - Internal-network apps via LambdaTest Tunnel.
 - Cost-comparison against BrowserStack / Sauce.
 
@@ -158,7 +156,7 @@ driver.execute_script("smartui.takeScreenshot=login-page")
 
 Smart screenshots compare against a baseline; differences flagged
 in the SmartUI dashboard. See
-[`qa-visual-regression`](../../../qa-visual-regression/) for
+`qa-visual-regression` for
 visual-regression discipline.
 
 ## Parsing results
@@ -241,12 +239,10 @@ jobs:
 - [Selenium options] - Selenium 4 browser-options classes;
   `set_capability` for vendor-prefixed caps before driver creation.
 - Composes:
-  [`browser-matrix-strategy-reference`](../../../qa-compatibility/skills/browser-matrix-strategy-reference/SKILL.md).
+  `browser-matrix-strategy-reference`.
 - Sibling skills:
   [`browserstack-automate`](../browserstack-automate/SKILL.md),
   [`saucelabs-automate`](../saucelabs-automate/SKILL.md),
-  [`selenium-grid-4-runner`](../../../qa-compatibility/skills/selenium-grid-4-runner/SKILL.md).
-- Routed by:
-  [`selenium-grid-orchestrator`](../../agents/selenium-grid-orchestrator.md).
+  `selenium-grid-4-runner`.
 
 [Selenium options]: https://www.selenium.dev/documentation/webdriver/drivers/options/

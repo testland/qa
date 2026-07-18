@@ -82,7 +82,7 @@ Per [github.com/rubysec/bundler-audit][ba-readme]:
 | Flag | Output |
 |---|---|
 | (none) | Default human-readable text |
-| `--format json` | JSON; suitable for [`sca-prioritizer`](../../agents/sca-prioritizer.md) |
+| `--format json` | JSON; suitable for multi-tool SCA triage |
 | `--output FILE` | Write output to file instead of stdout |
 
 JSON + file example, useful as a CI artifact:
@@ -227,5 +227,3 @@ audit step fails, enabling triage without re-running the workflow.
 - [`osv-scanner`](../osv-scanner/SKILL.md) - OSV.dev cross-DB scanner;
   pairs for cross-ecosystem consensus
 - [`snyk-test`](../snyk-test/SKILL.md) - commercial SCA with Snyk DB
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent;
-  references bundle-audit in its detection table

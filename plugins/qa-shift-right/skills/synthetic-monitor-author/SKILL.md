@@ -112,8 +112,7 @@ test('checkout journey - happy path', async ({ page }) => {
 });
 ```
 
-Use accessibility-first locators per
-[`e2e-selector-quality-critic`](../../../qa-test-review/agents/e2e-selector-quality-critic.md);
+Use accessibility-first locators (not CSS classes);
 synthetic monitors that depend on CSS classes break on every UI
 refactor.
 
@@ -306,10 +305,6 @@ for why a monitor was added / removed.
   defines shift right as "A test approach to test a system
   continuously in production." (Per workspace memory: ISTQB glossary
   is JS-rendered; navigate via Playwright or real browser.)
-- [`production-tester`](../../../qa-roles/agents/production-tester.md) - agent
-  variant: authors a single monitor for one critical journey.
-- [`observability-to-test`](../../agents/observability-to-test.md) - sibling: closes the loop from "monitor failed" back to
-  "regression test added."
 - [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md) - sibling skill: validates A/B experiments running behind flags.
 - [`prod-canary-validator`](../prod-canary-validator/SKILL.md) - 
   sibling: catches regressions in canary stage before full rollout.

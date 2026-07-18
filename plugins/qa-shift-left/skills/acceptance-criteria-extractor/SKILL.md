@@ -20,14 +20,12 @@ criteria in two interchangeable shapes:
   that automate via Cucumber, Behat, SpecFlow, pytest-bdd, or any
   Gherkin-aware runner.
 - **Plain numbered list** - for projects that prefer human review over
-  runner integration; consumable by
-  [`spec-to-suite-orchestrator`](../../agents/spec-to-suite-orchestrator.md).
+  runner integration; consumable by a downstream test-generation step.
 
 ## When to use
 
-- A story has passed the
-  [`testability-reviewer`](../../agents/testability-reviewer.md)'s
-  Observable / Decidable / Bounded heuristics.
+- A story has passed the Observable / Decidable / Bounded testability
+  heuristics.
 - The team uses behavior-driven development (BDD) and needs
   Gherkin-formatted features.
 - A PRD section needs to be decomposed into per-scenario test cases
@@ -36,7 +34,7 @@ criteria in two interchangeable shapes:
   acceptance-criteria template.
 
 If the input is a **non-functional** requirement (perf / a11y /
-security / i18n), use [`nfr-extractor`](../nfr-extractor/SKILL.md)
+security / i18n), use [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md)
 instead - those have a different shape (thresholds, not Given/When/Then).
 
 ## Step 1 - Identify the actor and the trigger
@@ -105,8 +103,7 @@ seed data, navigation). Scenario-specific setup stays in the Given.
 
 ## Step 4 - Validate observability of every Then
 
-Per [`testability-reviewer`](../../agents/testability-reviewer.md), every
-Then must be observable from outside the system. Reject Thens like:
+Every Then must be observable from outside the system. Reject Thens like:
 
 - "Then the user feels confident." → Not observable.
 - "Then the system is secure." → No threshold or test condition.
@@ -206,7 +203,7 @@ the author to make the call.
 
 ### Coverage notes
 
-- All scenarios pass the testability-reviewer's Observable / Decidable / Bounded heuristics.
+- All scenarios pass the Observable / Decidable / Bounded testability heuristics.
 - Per-Then assertion targets are concrete (`data-testid` / status code / DOM state).
 - Examples table covers <N> data variants for the Outline scenario.
 ```
@@ -320,9 +317,5 @@ Feature: Login authorization
   of acceptance criteria.
 - [gherkin-ref][gherkin] - Cucumber Gherkin reference: keywords,
   Feature structure, Scenario Outline + Examples, Background rules.
-- [`testability-reviewer`](../../agents/testability-reviewer.md) - the
-  upstream review that should pass before this skill is invoked.
-- [`nfr-extractor`](../nfr-extractor/SKILL.md) - sibling for
+- [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md) - sibling for
   non-functional requirements (different shape).
-- [`spec-to-suite-orchestrator`](../../agents/spec-to-suite-orchestrator.md) - downstream agent that takes plain-list AC and chains to
-  test-case generation.

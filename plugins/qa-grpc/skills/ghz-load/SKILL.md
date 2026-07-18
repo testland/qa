@@ -303,5 +303,5 @@ review of distribution shape (long tail, bimodal, etc.).
 - Streaming load (sibling):
   [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
 - Other load tools (cross-plugin, HTTP-focused; ghz is gRPC-specific):
-  [`qa-load-testing/k6-load-testing`](../../../qa-load-testing/skills/k6-load-testing/SKILL.md),
-  [`qa-load-testing/jmeter-load-testing`](../../../qa-load-testing/skills/jmeter-load-testing/SKILL.md).
+  `k6-load-testing`,
+  `jmeter-load-testing`.

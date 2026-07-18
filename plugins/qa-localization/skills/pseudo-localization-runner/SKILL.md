@@ -93,7 +93,7 @@ the UI looking for issues.
 
 ## Step 5 - Visual regression with pseudo-locale
 
-Combine with [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md)
+Combine with `playwright-snapshots` (in the qa-visual-regression plugin)
 for automated detection:
 
 ```typescript
@@ -174,4 +174,4 @@ The transform is a one-time pass over the source locale file.
   static-scan complement.
 - [`rtl-rendering-tester`](../rtl-rendering-tester/SKILL.md) - 
   RTL-specific tests.
-- [`playwright-snapshots`](../../../qa-visual-regression/skills/playwright-snapshots/SKILL.md) - visual regression for catching pseudo-loc regressions.
+- `playwright-snapshots` - visual regression for catching pseudo-loc regressions.

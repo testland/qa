@@ -1,6 +1,6 @@
 ---
 name: risk-storming-facilitator
-description: "Reference guide for planning and facilitating a risk-storming session yourself - covers meeting structure, participant roster, per-category brainstorm prompts (categories drawn from `risk-matrix`), affinity grouping, impact by likelihood scoring, and mitigation assignment. Static reference only, not an active runner: distinct from `risk-storming-session-runner` (an agent that interactively runs the session and writes the matrix file), and distinct from `risk-matrix` (the artifact itself). Use when you want to understand or teach the facilitation pattern, or run the session at feature-kickoff time without agent assistance."
+description: "Reference guide for planning and facilitating a risk-storming session yourself - covers meeting structure, participant roster, per-category brainstorm prompts (categories drawn from `risk-matrix`), affinity grouping, impact by likelihood scoring, and mitigation assignment. Static reference only, not an active runner: distinct from an interactive session runner that runs the session and writes the matrix file, and distinct from `risk-matrix` (the artifact itself). Use when you want to understand or teach the facilitation pattern, or run the session at feature-kickoff time without agent assistance."
 ---
 
 # risk-storming-facilitator
@@ -207,5 +207,3 @@ A risk-storming session without follow-up is wasted.
   foundational for the structured prompt approach.
 - [`risk-matrix`](../risk-matrix/SKILL.md) - the artifact this
   session produces.
-- [`risk-based-test-selector`](../../agents/risk-based-test-selector.md),
-  [`risk-based-test-planner`](../../agents/risk-based-test-planner.md) - agents that consume the matrix to drive test scope decisions.

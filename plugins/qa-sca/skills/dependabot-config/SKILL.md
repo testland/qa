@@ -281,4 +281,3 @@ Auto-merge only after CI passes; gates auto-merge to patch updates
   [`renovate-config`](../renovate-config/SKILL.md),
   [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
   sister tools
-- [`sca-prioritizer`](../../agents/sca-prioritizer.md) - unifier agent

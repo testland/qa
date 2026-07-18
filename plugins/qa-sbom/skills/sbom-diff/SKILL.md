@@ -293,4 +293,3 @@ If unexplained, the release is blocked pending investigation.
 - [`cyclonedx-format`](../cyclonedx-format/SKILL.md) - CycloneDX schema reference
 - [`grype-scanning`](../grype-scanning/SKILL.md) - vuln-scan net-new components
   after the diff gate passes
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent

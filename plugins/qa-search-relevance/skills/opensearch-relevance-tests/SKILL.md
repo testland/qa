@@ -222,6 +222,5 @@ should match. Differences point to subtle config drift.
   sister skill (compatible Rank Eval API + judgment format)
 - [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) - 
   vector search precision/recall tooling
-- [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md)
 
 [OpenSearch search-relevance docs]: https://docs.opensearch.org/latest/search-plugins/search-relevance/

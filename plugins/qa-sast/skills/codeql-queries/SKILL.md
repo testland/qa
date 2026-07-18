@@ -243,5 +243,3 @@ GitHub).
   [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
   [`bandit-python`](../bandit-python/SKILL.md),
   [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
-- [`sast-finding-triager`](../../agents/sast-finding-triager.md) - 
-  unifier agent

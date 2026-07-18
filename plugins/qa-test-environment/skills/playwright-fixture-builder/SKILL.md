@@ -163,7 +163,7 @@ const test = base.extend<{ todoPage: TodoPage }>({
 The `use()` call demarcates setup vs teardown: code before is setup,
 code after is teardown. The teardown runs even if the test fails.
 
-## Step 4 - DB fixture (composes with `db-snapshot-restore`)
+## Step 4 - DB fixture (per-test snapshot/restore)
 
 ```typescript
 // fixtures/db.ts
@@ -187,8 +187,8 @@ Per [pw-fix][pw-fix], `{ auto: true }` makes a fixture run for every
 test even if the test doesn't list it in its parameters - the right
 choice for cross-cutting state like DB reset.
 
-The shell script delegates to the db-snapshot-restore agent's
-restore mode (see [`db-snapshot-restore`](../../agents/db-snapshot-restore.md)).
+The shell script delegates to a database snapshot/restore in
+restore mode.
 
 ## Step 5 - Feature-flag fixture (composes with feature-flag-test-harness)
 
@@ -365,8 +365,6 @@ Wire `playwright.config.ts` to use the `authenticated` project per
 - [pw-auth][pw-auth] - `storageState` pattern, per-worker
   authentication via `parallelIndex`, role-based auth files,
   security note on `.gitignore`.
-- [`db-snapshot-restore`](../../agents/db-snapshot-restore.md) - the
-  shell script the `cleanDb` fixture wraps.
 - [`feature-flag-test-harness`](../feature-flag-test-harness/SKILL.md) - the matrix-shard pattern that complements per-test `flags`
   fixture overrides.
 - [`testcontainers`](../testcontainers/SKILL.md),

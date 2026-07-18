@@ -1,6 +1,6 @@
 ---
 name: definition-of-done
-description: "Pure-reference + checklist-generator for the team's Definition of Done (DoD) - explains the Scrum Guide's DoD definition (\"a formal description of the state of the Increment when it meets the quality measures required for the product\"), proposes a starter DoD with the 7-10 lines most teams need (code reviewed, unit tests, docs, AC met, deployed to staging, smoke passed, no a11y regressions, telemetry wired, observability in place), and emits a per-PR checklist `quality-coach` enforces. Use when the team doesn't have a DoD or wants to revise theirs."
+description: "Pure-reference + checklist-generator for the team's Definition of Done (DoD) - explains the Scrum Guide's DoD definition (\"a formal description of the state of the Increment when it meets the quality measures required for the product\"), proposes a starter DoD with the 7-10 lines most teams need (code reviewed, unit tests, docs, AC met, deployed to staging, smoke passed, no a11y regressions, telemetry wired, observability in place), and emits a per-PR checklist a reviewer enforces. Use when the team doesn't have a DoD or wants to revise theirs."
 ---
 
 # definition-of-done
@@ -57,10 +57,9 @@ A story / PR is "Done" only when ALL of the following are true:
 6. **No new accessibility regressions** (axe / pa11y / Lighthouse
    a11y category green vs main).
 7. **Telemetry / observability** wired for new features (per
-   [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md)).
+   `synthetic-monitor-author` in the qa-shift-right plugin).
 8. **Security review** for changes that touch auth / payments /
-   PII - threat-model entry per
-   [`threat-model-from-spec`](../../qa-shift-left/agents/threat-model-from-spec.md).
+   PII - threat-model entry recorded.
 9. **No new tech debt** introduced without an issue logged.
 10. **Build green** on the target branch (CI check required).
 ```
@@ -122,8 +121,8 @@ The DoD becomes a PR template:
 (any DoD line marked N/A - explain)
 ```
 
-[`quality-coach`](../../../qa-roles/agents/quality-coach.md) reads
-this template + the actual PR state and verifies each line.
+A reviewer reads this template + the actual PR state and
+verifies each line.
 
 ## DoD evolution
 
@@ -152,7 +151,7 @@ better tooling, not a lower bar.
 |--------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | No DoD                                                              | Per [scrum-guide][sg], the team must define one if not org-mandated.     | Adopt the starter (above). |
 | 30-line DoD that nobody can satisfy per-PR                          | Team marks everything "N/A"; defeats the purpose.                        | Trim to 7-10 lines covering the highest-value gates. |
-| DoD as aspirational, not enforced                                   | "We have a DoD but PRs ship without meeting it."                         | [`quality-coach`](../../../qa-roles/agents/quality-coach.md) enforces; PRs blocked on unmet lines. |
+| DoD as aspirational, not enforced                                   | "We have a DoD but PRs ship without meeting it."                         | Enforce it; PRs blocked on unmet lines. |
 | Per-PR DoD different from team's "done"                              | Drift; team can't tell what's done.                                      | One DoD; one PR template referencing it. |
 | Lowering the DoD when it gets in the way                            | Quality bar erodes silently.                                             | Discuss in retro before lowering; document the reason. |
 | DoD never updated after an incident                                  | Same incident class recurs.                                              | Post-incident DoD review (above cadence). |
@@ -164,8 +163,8 @@ better tooling, not a lower bar.
 - **Coverage thresholds are arbitrary.** "≥80%" is convention; the
   right number depends on the codebase.
 - **Some lines are unverifiable automatically** ("docs updated" needs
-  human review). The DoD acknowledges these - `quality-coach`
-  marks them "unverifiable" rather than auto-passing.
+  human review). The DoD acknowledges these - mark them
+  "unverifiable" rather than auto-passing.
 
 ## References
 
@@ -173,8 +172,5 @@ better tooling, not a lower bar.
   of the Increment when it meets the quality measures required for
   the product"; team owns it (or follows org-mandated minimum);
   items not Done return to the Product Backlog.
-- [`quality-coach`](../../../qa-roles/agents/quality-coach.md) - agent
-  that enforces the DoD per-PR.
-- [`definition-of-done-checker`](../../../qa-shift-left/agents/definition-of-done-checker.md) - sibling adversarial agent for the same purpose.
 - [`smoke-suite-gate`](../smoke-suite-gate/SKILL.md) - CI gate
   that satisfies the "staging deploy + smoke passed" line.

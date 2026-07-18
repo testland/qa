@@ -198,7 +198,7 @@ already, then dispose at `TearDown`.
 
 The C# Selenium client emits standard NUnit / MSTest / xUnit results
 (TRX, XML, or JUnit depending on logger choice). Pair with
-[`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)
+`junit-xml-analysis` (in the qa-test-reporting plugin)
 for the cross-runner aggregation pipeline.
 
 ## Step 9 - CI integration

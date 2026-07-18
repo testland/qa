@@ -11,7 +11,7 @@ Pure-reference catalog of the five clang sanitisers (ASan, UBSan,
 MSan, TSan, LSan) used with coverage-guided fuzz targets - what
 each detects, build flags, runtime options, compatibility matrix,
 performance overhead. Consumed by the per-language fuzzer skills
-and the fuzz-target authoring agent. For corpus discipline see
+and fuzz-target authoring. For corpus discipline see
 [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
 
 ## When to use
@@ -176,7 +176,7 @@ Key fields:
 - **Allocation site:** Where the corrupted memory was allocated
 - **Freed site (UAF):** Where the memory was freed
 
-Parse this for [`bug-report-from-failure`](../../../qa-defect-management/skills/bug-report-from-failure/SKILL.md)
+Parse this for `bug-report-from-failure`
 to extract the failure assertion.
 
 ## Per-language sanitiser support
@@ -243,5 +243,4 @@ itself.
   [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
   [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
   [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md),
-  [`fuzz-target-author`](../../agents/fuzz-target-author.md).
+  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).

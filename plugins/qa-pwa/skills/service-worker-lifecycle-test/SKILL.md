@@ -25,7 +25,7 @@ mid-fetch.
 This skill produces the per-extension lifecycle spec - a Playwright
 file with one test per transition cell plus a worked v1 → v2
 upgrade-path test. It is **distinct from**
-[`qa-modern-web/service-worker-tests`](../../../qa-modern-web/skills/service-worker-tests/SKILL.md),
+`service-worker-tests` (in the qa-modern-web plugin),
 which covers general `context.serviceWorkers()` Playwright patterns
 and per-cache-strategy assertions. This builder is laser-focused on
 the state machine.
@@ -430,8 +430,7 @@ Steps 2 - 8 for the full lifecycle surface.
   [mdn-sw].
 - MDN `ServiceWorkerGlobalScope.skipWaiting()` - [mdn-skipwaiting].
 - MDN `Clients.claim()` - [mdn-claim].
-- Differentiation:
-  [`qa-modern-web/service-worker-tests`](../../../qa-modern-web/skills/service-worker-tests/SKILL.md)
+- Differentiation: `service-worker-tests`
   covers general `context.serviceWorkers()` + cache-strategy
   patterns; this skill is the dedicated state-machine spec
   generator.

@@ -190,7 +190,7 @@ dependency-graph submission automatically when `format: github-json`.
 | [`cyclonedx-format`](../cyclonedx-format/SKILL.md) | Reference for CycloneDX schema + spec compliance |
 | [`spdx-format`](../spdx-format/SKILL.md) | Reference for SPDX schema + spec compliance |
 | [`trivy-image`](../trivy-image/SKILL.md) | Alternative scanner (built-in SBOM gen + scan in one pass) |
-| [`osv-scanner`](../../../qa-sca/skills/osv-scanner/SKILL.md) | Cross-plugin: also accepts SBOM input |
+| `osv-scanner` | Cross-plugin: also accepts SBOM input |
 
 ## Anti-patterns
 
@@ -222,4 +222,3 @@ dependency-graph submission automatically when `format: github-json`.
   [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
   [`spdx-format`](../spdx-format/SKILL.md),
   [`trivy-image`](../trivy-image/SKILL.md) - sister tools
-- [`vuln-prioritizer`](../../agents/vuln-prioritizer.md) - unifier agent

@@ -1,6 +1,6 @@
 ---
 name: tenant-isolation-models-reference
-description: "Pure-reference catalog of tenant-isolation models for B2B SaaS. Defines the isolation continuum from full-isolation (separate compute + data + network per tenant) to fully-shared (one deployment, tenant_id discriminator), names the canonical models (Microsoft's automated-single-tenant / fully-multitenant / vertically-partitioned / horizontally-partitioned; AWS Well-Architected's silo / pool / bridge framing; deployment-stamps / supertenants terminology), enumerates the trade-offs (cost, blast radius, noisy neighbor, compliance, scale limits), and lists the test surfaces each model creates (cross-tenant data leak, tenant-id propagation, deployment-routing). Use as the model-selection reference when designing or auditing tenant isolation. Consumed by tenant-leak-test-author, cross-tenant-data-leak-tests, tenant-leak-critic, tenant-id-propagation-tracer."
+description: "Pure-reference catalog of tenant-isolation models for B2B SaaS. Defines the isolation continuum from full-isolation (separate compute + data + network per tenant) to fully-shared (one deployment, tenant_id discriminator), names the canonical models (Microsoft's automated-single-tenant / fully-multitenant / vertically-partitioned / horizontally-partitioned; AWS Well-Architected's silo / pool / bridge framing; deployment-stamps / supertenants terminology), enumerates the trade-offs (cost, blast radius, noisy neighbor, compliance, scale limits), and lists the test surfaces each model creates (cross-tenant data leak, tenant-id propagation, deployment-routing). Use as the model-selection reference when designing or auditing tenant isolation. Consumed by tenant-leak-test-author, cross-tenant-data-leak-tests."
 ---
 
 # tenant-isolation-models-reference
@@ -245,6 +245,4 @@ billing, identity providers) where pool-like leaks are possible.
   [supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security).
 - Consumed by:
   [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md),
-  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md),
-  [`tenant-id-propagation-tracer`](../../agents/tenant-id-propagation-tracer.md),
-  [`tenant-leak-critic`](../../agents/tenant-leak-critic.md).
+  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).

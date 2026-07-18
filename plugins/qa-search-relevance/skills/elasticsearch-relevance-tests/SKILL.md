@@ -246,6 +246,5 @@ results.
   sister skill (compatible API)
 - [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) - 
   vector search analogue
-- [`relevance-regression-reviewer`](../../agents/relevance-regression-reviewer.md)
 
 [Elasticsearch Rank Eval API]: https://www.elastic.co/docs/api/doc/elasticsearch/operation/operation-rank-eval

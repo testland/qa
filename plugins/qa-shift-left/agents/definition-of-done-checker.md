@@ -56,7 +56,7 @@ Typical items:
 - [ ] Testability passes
       [`testability-reviewer`](./testability-reviewer.md).
 - [ ] NFRs identified for the story's scope (if applicable; via
-      [`nfr-extractor`](../skills/nfr-extractor/SKILL.md)).
+      [`non-functional-requirement-extractor`](../skills/non-functional-requirement-extractor/SKILL.md)).
 - [ ] Threat model exists for any user-data or auth-touching change
       (via [`threat-model-from-spec`](./threat-model-from-spec.md)).
 - [ ] Effort estimated (story points or t-shirt size).
@@ -239,7 +239,7 @@ without a DoD to check against.
 - [`testability-reviewer`](./testability-reviewer.md) - common DoD
   precondition: every claim is testable.
 - [`acceptance-criteria-extractor`](../skills/acceptance-criteria-extractor/SKILL.md) - common DoD precondition: AC in Gherkin or plain list.
-- [`nfr-extractor`](../skills/nfr-extractor/SKILL.md) - common DoD
+- [`non-functional-requirement-extractor`](../skills/non-functional-requirement-extractor/SKILL.md) - common DoD
   precondition: NFRs identified.
 - [`threat-model-from-spec`](./threat-model-from-spec.md) - common
   DoD precondition for security-touching stories.

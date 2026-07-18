@@ -17,8 +17,7 @@ a **deployable YAML spec** that downstream tools execute:
 - [`faker-synthetic-data`](../faker-synthetic-data/SKILL.md) /
   [`synthea-healthcare-data`](../synthea-healthcare-data/SKILL.md)
   supply substitute values.
-- [`pii-leak-critic`](../../agents/pii-leak-critic.md) audits the
-  output.
+- A leak-detection audit checks the output.
 
 ## When to use
 
@@ -132,8 +131,8 @@ A standard order:
    [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)
    to catch embedded PII (e.g., a user-typed comment that contains
    an email).
-3. **Audit hook** - sample N rows of output and run
-   [`pii-leak-critic`](../../agents/pii-leak-critic.md) before
+3. **Audit hook** - sample N rows of output and run a
+   leak-detection audit before
    declaring the run complete.
 4. **Manifest** - emit a per-run manifest recording: pipeline
    version, source snapshot ID, row count in / out, operator
@@ -243,7 +242,7 @@ accepts that this output remains in GDPR scope.
 | Per-column operator without referential check | Joins break after masking | Group columns that share keys; apply deterministic operators consistently |
 | Free-text columns skipped | Embedded PII (user-typed emails) leaks | Always run Presidio on any string column > ~50 chars |
 | Claiming "anonymised" when any reversible op is in the pipeline | False GDPR compliance claim | Audit the pipeline; pseudonymised if any operator is reversible |
-| No audit step | Operator failure or recogniser drift goes unnoticed | Always sample output and run [`pii-leak-critic`](../../agents/pii-leak-critic.md) |
+| No audit step | Operator failure or recogniser drift goes unnoticed | Always sample output and run a leak-detection audit |
 | Salt vault key shared across pipelines | Salt-rotation breaks every downstream pipeline at once | Per-pipeline salt; rotate independently |
 | No manifest | Cannot reproduce a past run; auditors can't trace lineage | Always emit manifest with version IDs |
 | Pipeline runs on prod-write connection | Risk of writing masked data back over prod | Strict source = read-only DSN; output = staging-write DSN |
@@ -271,8 +270,6 @@ accepts that this output remains in GDPR scope.
   [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md),
   [`faker-synthetic-data`](../faker-synthetic-data/SKILL.md),
   [`synthea-healthcare-data`](../synthea-healthcare-data/SKILL.md).
-- Audited by:
-  [`pii-leak-critic`](../../agents/pii-leak-critic.md).
 - GDPR Art. 4(5) pseudonymisation - 
   [gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/).
 - NIST SP 800-188 privacy models - 

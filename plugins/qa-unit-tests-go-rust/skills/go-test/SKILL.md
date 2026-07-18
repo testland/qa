@@ -260,7 +260,7 @@ test-scoped resources).
 `-race` enables the race detector (catches data races at test
 time). Standard practice for any Go project with concurrency.
 
-For JUnit XML output (consumable by [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)):
+For JUnit XML output (consumable by `junit-xml-analysis` in qa-test-reporting):
 
 ```bash
 go install github.com/jstemmer/go-junit-report/v2@latest
@@ -296,4 +296,4 @@ go test -v ./... | go-junit-report > junit.xml
 - [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
   [`cargo-test`](../cargo-test/SKILL.md),
   [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)
+- `test-code-conventions` (qa-test-review)

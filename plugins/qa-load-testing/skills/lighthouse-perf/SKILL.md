@@ -33,8 +33,7 @@ asserting against budgets ([lhci][lhci]).
 
 - The project ships a web frontend (Next.js, Vite, Remix, plain
   static, etc.).
-- The team has documented Web Vitals NFRs (per
-  [`nfr-extractor`](../../../qa-shift-left/skills/nfr-extractor/SKILL.md))
+- The team has documented Web Vitals NFRs (per `non-functional-requirement-extractor`)
   and needs CI enforcement.
 - A PR's perf delta vs. main needs to be visible (regression-block
   or just-warn).
@@ -238,4 +237,4 @@ one for the other.
   is the **runner**).
 - [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
   unified gate aggregating Lighthouse + load-runner verdicts.
-- [`nfr-extractor`](../../../qa-shift-left/skills/nfr-extractor/SKILL.md) - upstream skill that surfaces Web Vitals NFRs from PRDs.
+- `non-functional-requirement-extractor` - upstream skill that surfaces Web Vitals NFRs from PRDs.

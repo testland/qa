@@ -20,7 +20,7 @@ type-checking).
 This skill targets **per-framework lifecycle** (configure / run /
 mock / coverage / CI) - NOT test code hygiene patterns. For
 hygiene (assertion quality / AAA structure / mocking anti-patterns),
-see [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md)
+see `test-code-conventions` (in qa-test-review)
 and the qa-test-review agents.
 
 ## When to use
@@ -235,7 +235,7 @@ Per Jest CLI, `--ci` flag is critical for CI runs:
 `--maxWorkers=2` is typical for GitHub-hosted runners (2 CPUs); tune
 per runner specs.
 
-For JUnit XML output (consumable by [`junit-xml-analysis`](../../../qa-test-reporting/skills/junit-xml-analysis/SKILL.md)):
+For JUnit XML output (consumable by `junit-xml-analysis` in qa-test-reporting):
 
 ```bash
 npm install --save-dev jest-junit
@@ -310,5 +310,5 @@ npm install --save-dev eslint-plugin-jest
   [`mocha-tests`](../mocha-tests/SKILL.md),
   [`ava-tests`](../ava-tests/SKILL.md),
   [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
-- [`test-code-conventions`](../../../qa-test-review/skills/test-code-conventions/SKILL.md) - cross-plugin: test code hygiene (separate from per-framework
+- `test-code-conventions` (qa-test-review) - test code hygiene (separate from per-framework
   lifecycle)

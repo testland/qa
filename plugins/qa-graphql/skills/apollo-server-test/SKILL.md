@@ -239,8 +239,8 @@ exercised.
   behaviour, not the type definitions. Compile-time errors are
   separate.
 - **Doesn't replace contract tests.** Mocked context can drift
-  from prod; pair with
-  [`qa-contract-testing/graphql-schema-regression`](../../../qa-contract-testing/skills/graphql-schema-regression/SKILL.md).
+  from prod; pair with `graphql-schema-regression`
+  (in the qa-contract-testing plugin).
 
 ## References
 
@@ -256,7 +256,5 @@ exercised.
   [`hasura-test`](../hasura-test/SKILL.md),
   [`mercurius-test`](../mercurius-test/SKILL.md),
   [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
-- N+1 detection (consumer):
-  [`n-plus-one-query-detector`](../../agents/n-plus-one-query-detector.md).
 - Contract-drift cross-plugin:
-  [`qa-contract-testing/graphql-schema-regression`](../../../qa-contract-testing/skills/graphql-schema-regression/SKILL.md).
+  `graphql-schema-regression`.

@@ -329,8 +329,6 @@ This skill produces:
 
 The runtime isolation gate is
 [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
-The adversarial review for both provisioning and isolation test suites is
-[`tenant-leak-critic`](../../agents/tenant-leak-critic.md).
 
 ## References
 
@@ -348,5 +346,3 @@ The adversarial review for both provisioning and isolation test suites is
   [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
 - Isolation models reference:
   [`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md).
-- Adversarial review:
-  [`tenant-leak-critic`](../../agents/tenant-leak-critic.md).

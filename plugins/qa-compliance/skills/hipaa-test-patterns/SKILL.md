@@ -49,8 +49,8 @@ created/received/maintained/transmitted by a covered entity. The
 ```
 
 Test fixtures for HIPAA-scope systems MUST avoid these 18
-identifiers (or use the [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md)
-to generate safe substitutes).
+identifiers (or use `synthetic-pii-generator` in the qa-test-data
+plugin to generate safe substitutes).
 
 ## Test patterns by Security Rule section
 
@@ -201,7 +201,7 @@ def test_phi_only_processed_for_baa_purposes():
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Real PHI in test fixtures | HIPAA violation in tests | [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) + de-identified data |
+| Real PHI in test fixtures | HIPAA violation in tests | `synthetic-pii-generator` + de-identified data |
 | Audit log without tamper-evidence | Logs can be modified post-incident | Hash-chain or signed-batch log integrity (§164.312(b)) |
 | Role-based access without minimum-necessary check | Over-broad access; minimum-necessary violation | Per-PHI-type test (Step §164.502(b)) |
 | Skip BAA scope tests | Vendor accesses PHI outside agreement | Step §164.504(e) scope test |
@@ -232,6 +232,4 @@ def test_phi_only_processed_for_baa_purposes():
   privacy-pattern catalogs
 - [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
   §164.312(b) audit log requirements
-- [`synthetic-pii-generator`](../../../qa-test-data/skills/synthetic-pii-generator/SKILL.md) - 
-  cross-plugin: safe PHI fixture generation
-- [`compliance-readiness-reviewer`](../../agents/compliance-readiness-reviewer.md) - agent
+- `synthetic-pii-generator` - cross-plugin: safe PHI fixture generation

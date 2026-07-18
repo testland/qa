@@ -222,7 +222,7 @@ def test_saga_times_out_when_step_hangs():
   with sagas for event-sourced systems
 - [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) - 
   isolation-window assertions
-- [`mvcc-isolation-tests`](../../../qa-concurrency/skills/mvcc-isolation-tests/SKILL.md) - 
+- `mvcc-isolation-tests` (in the qa-concurrency plugin) - 
   per-DB isolation when sagas overlap
 
 [microservices.io/saga]: https://microservices.io/patterns/data/saga.html
