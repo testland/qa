@@ -150,7 +150,7 @@ The agent **refuses** to:
 - [Allure Report docs](https://allurereport.org/docs/) - status taxonomy (passed/failed/broken/skipped/unknown), severity.
 - [JUnit XML community reference](https://github.com/testmoapp/junitxml).
 - ISO/IEC/IEEE 29119-3:2021 - test reporting (canonical ISO page behind Cloudflare; cite by stable ID).
-- ISTQB glossary - [test-report](https://glossary.istqb.org/en_US/term/test-report), [test-environment](https://glossary.istqb.org/en_US/term/test-environment-1).
+- ISTQB glossary - [test-report](https://glossary.istqb.org/en_US/term/test-report), [test-environment](https://glossary.istqb.org/en_US/term/test-environment).
 - [Grafana k6 end-of-test summary](https://grafana.com/docs/k6/latest/results-output/end-of-test/) - `metrics` shape, threshold-breach signal.
 - [axe-core API](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) - violation list, impact taxonomy (`minor`/`moderate`/`serious`/`critical`).
 - [PractiTest 2026 State of Testing](https://www.practitest.com/state-of-testing/) - 19.9% of teams use AI for risk identification.

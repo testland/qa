@@ -5,6 +5,7 @@ tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(npx jest --lis
 model: sonnet
 skills:
   - regression-suite-selector
+  - code-change-shape-classifier
 ---
 
 A read-and-recommend agent that turns "should we adopt Cypress vs Playwright?" or "is our pyramid upside-down?" into a per-repo, evidence-backed decision document.
@@ -60,17 +61,11 @@ Per [test-pyramid][tp]: "you should have many more low-level
 UnitTests than high level BroadStackTests running through a GUI."
 But the right ratio depends on what the team builds.
 
-Read the last 90 days of `git log`. Classify each PR's
-"shape":
-
-| Shape          | Signal                                                       |
-|----------------|--------------------------------------------------------------|
-| `pure-logic`   | Changes confined to `src/` (no UI / API touches).             |
-| `service-layer`| Changes in `routes/` / `controllers/` / `repos/` / `services/`. |
-| `ui-heavy`     | Changes in `components/` / `views/` / `pages/` (UI tree).     |
-| `data-heavy`   | Changes in DB migrations, schemas, ETL.                        |
-
-Compute the change-set distribution:
+Run `code-change-shape-classifier` over the last 90 days of history.
+It owns the four shapes (`pure-logic`, `service-layer`, `ui-heavy`,
+`data-heavy`), their path and content signals, the git-history
+method, and the relative per-layer cost weights. Consume its
+distribution table as the input to Step 3:
 
 ```markdown
 **Change-set shape (last 90 days):**
@@ -212,8 +207,9 @@ final verdict.
   in `__tests__/cart.test.ts` that imports a real DB is actually a
   service test. The agent flags ambiguity but doesn't reclassify
   automatically.
-- **Cost model is relative.** Layer cost factors (1× / 3× / 10×)
-  are illustrative; per-team CI runner cost varies.
+- **Cost model is relative.** The 1× / 3× / 10× layer weights come
+  from `code-change-shape-classifier`; they are illustrative, and
+  per-team CI runner cost varies.
 - **No vendor-pricing intelligence.** The agent flags "Cypress
   Cloud parallelism cost crosses $30k/year" as a re-evaluation
   trigger but doesn't track actual prices.

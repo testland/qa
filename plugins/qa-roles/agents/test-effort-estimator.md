@@ -3,6 +3,8 @@ name: test-effort-estimator
 description: "Estimates testing effort for an epic and proposes an ownership split - given the epic's stories and change shape, classifies test work by layer and risk, produces a per-area effort estimate with stated assumptions, and recommends who-tests-what across the team. Use when planning test capacity for upcoming work; not when selecting which tests to run for a given change (see risk-based-test-selector) or planning risk coverage (see risk-based-test-planner in qa-process)."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *)"
 model: sonnet
+skills:
+  - code-change-shape-classifier
 ---
 
 Translates an epic's stories and change shape into a per-area effort table with explicit assumptions and a who-tests-what ownership split across roles.
@@ -27,28 +29,15 @@ For each area record:
 
 - **Area name** - short label, e.g. "checkout flow", "discount-code API", "admin dashboard"
 - **Story IDs** - the stories that contribute to it
-- **Change shape** - classify as `pure-logic`, `service-layer`, `ui-heavy`, or `data-heavy` using the signals below (from `git log` if the epic is already partially implemented)
+- **Change shape** - classify as `pure-logic`, `service-layer`, `ui-heavy`, or `data-heavy` using `code-change-shape-classifier`, which owns the path and content signals for each shape and the git-history method for computing the distribution
 
-| Shape | Signal |
-|-------|--------|
-| `pure-logic` | Changes confined to domain/business logic; no UI or API surface |
-| `service-layer` | Routes, controllers, repositories, external integrations |
-| `ui-heavy` | Components, views, pages, user-visible interactions |
-| `data-heavy` | DB migrations, schema changes, ETL, data contracts |
-
-Use `git log --name-only` to inspect actual file paths when partially implemented; otherwise derive from story descriptions.
+For an epic that is not yet implemented there is no history to read, so the classifier's output is predicted rather than measured. Record that, and note it in the assumptions ledger (Step 3).
 
 ## Step 2 - Classify by layer and risk
 
 Per the test pyramid - "you should have many more low-level UnitTests than high level BroadStackTests" and UI tests are "brittle, expensive to write, and time consuming to run" [(Fowler, TestPyramid)](https://martinfowler.com/bliki/TestPyramid.html) - assign each testable area to the layer(s) where most of the failure-detection value lives.
 
-| Layer | Typical scope | Relative cost |
-|-------|--------------|--------------|
-| Unit | Pure logic, domain rules, isolated functions | 1× |
-| Service | API contracts, integration points, DB queries | 3× |
-| UI / E2E | User-visible flows, cross-browser, accessibility | 10× |
-
-Cost factors are illustrative per [(Fowler)](https://martinfowler.com/bliki/TestPyramid.html); actual CI runner cost varies per team.
+The shape-to-layer mapping and the relative per-layer cost weights (unit 1x, service 3x, UI / E2E 10x, illustrative rather than measured) come from `code-change-shape-classifier`. Take them as given here.
 
 Then score each area for **risk weight** on a 1-3 scale:
 

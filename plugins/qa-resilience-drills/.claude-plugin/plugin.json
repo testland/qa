@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-resilience-drills",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "Resilience drills: 6 skills (dr-drill-runner, backup-verification-author, restore-time-tests, error-budget-tests, mttr-mtbf-tracker, slo-negotiation-prep) and 2 agents (dr-drill-orchestrator, reliability-review-agent). Production-grade DR drills + backup verification + RTO + error-budget gating + incident metrics + SLO-conversation prep.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-resilience-drills",

@@ -23,6 +23,7 @@ shelf-ware (the team disables it, then forgets).
 | Agent | [sast-finding-triager](agents/sast-finding-triager.md) | Adversarial unifier across all 5 sister scanners; deduplicates by `(file, line, normalized_cwe)`; waiver enforcement (`expires:` + `approved_by:` + `reason:` mandatory); refuses pass with unwaived critical findings |
 | Skill | [eslint-security-rules](skills/eslint-security-rules/SKILL.md) | ESLint security plugins (eslint-plugin-security + no-unsanitized) as the JS/TS first-party SAST layer. |
 | Skill | [pmd-apex-rules](skills/pmd-apex-rules/SKILL.md) | PMD Apex security ruleset for Salesforce Apex SAST. |
+| Skill | [multi-tool-finding-triage](skills/multi-tool-finding-triage/SKILL.md) | Merges two or more scanner reports into one gate: canonical Finding normalization, dedupe with `caught_by` consensus, waiver validation (`expires:` + `approved_by:` + `reason:`), `fail_on` verdict, severity-bucketed PR comment. |
 
 ## Install
 

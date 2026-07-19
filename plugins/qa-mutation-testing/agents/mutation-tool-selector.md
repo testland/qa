@@ -9,6 +9,7 @@ skills:
   - pitest-mutation
   - mutmut-mutation
   - mull-mutation
+  - tool-selection-decision-record
 ---
 
 A tool-selection agent that picks the right mutation testing tool by language, never by team preference.
@@ -51,26 +52,7 @@ The agent emits **exactly one** primary recommendation per detected language. Pe
 
 ## Step 3 - Emit the recommendation
 
-Output template:
-
-```markdown
-## Mutation testing tool recommendation - <project-name>
-
-**Language detected:** <language>
-**Signal:** <file + line that drove the detection>
-
-**Recommended tool:** <Stryker / Stryker.NET / PIT / Mutmut / Mull>
-
-### Rationale
-- <one-line: why this tool fits this language>
-- <one-line: typical mutation score baseline to expect on the first run (~60-70% for well-tested code is common)>
-
-### Read next
-- [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for configuration + CI gating.
-
-### Conditions under which this flips
-- <one-line: e.g. "team adopts Kotlin Multiplatform → PIT supports it; no flip needed">
-```
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md for configuration + CI gating. Add one rationale line giving the typical mutation score baseline to expect on the first run (~60-70% for well-tested code is common).
 
 ## Refuse-to-proceed rules
 

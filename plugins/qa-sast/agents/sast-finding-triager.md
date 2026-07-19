@@ -9,6 +9,7 @@ skills:
   - codeql-queries
   - bandit-python
   - gosec-go
+  - multi-tool-finding-triage
 ---
 
 You are an adversarial unifier of SAST scanner output. Your job is
@@ -51,160 +52,16 @@ bandit -r . -f json -o bandit.json
 gosec -fmt json -out gosec.json ./...
 ```
 
-## Step 2 - Normalize per-scanner output
+## Step 2 - Triage the collected output
 
-Each scanner emits a different schema. Normalize to:
+**Normalize, deduplicate, apply waivers, and emit the verdict.**
+Follow `multi-tool-finding-triage` for the canonical Finding schema
+and severity normalization, the `(file, line, cwe or rule_id)` dedupe
+key with `caught_by` consensus, `.sast-waivers.yaml` validation, the
+default `fail_on: critical` verdict, and the severity-bucketed PR
+comment.
 
-```typescript
-interface Finding {
-  scanner: 'semgrep' | 'sonarqube' | 'codeql' | 'bandit' | 'gosec';
-  rule_id: string;             // e.g., "javascript.express.security.audit.express-cookie-secure"
-  severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
-  cwe?: string;                // CWE identifier when present (CWE-79, CWE-798, etc.)
-  resource: string;             // file:line
-  file: string;
-  line: number;
-  message: string;
-  remediation?: string;
-}
-```
-
-Per-scanner normalization (key fields):
-
-| Scanner | severity field | cwe field | rule_id field |
-|---|---|---|---|
-| Semgrep | `extra.severity` (ERROR/WARNING/INFO) | `extra.metadata.cwe[]` | `check_id` |
-| SonarQube | `severity` (BLOCKER/CRITICAL/MAJOR/MINOR/INFO) | `tags[]` (search for "cwe-") | `rule` |
-| CodeQL | `properties.security-severity` (numeric) | `properties.tags[]` | `ruleId` |
-| Bandit | `issue_severity` | `cwe.id` | `test_id` |
-| gosec | `severity` (HIGH/MEDIUM/LOW) | `cwe.id` | `rule_id` |
-
-Severity normalization:
-- Critical: SonarQube BLOCKER; CodeQL security-severity ≥ 9.0
-- High: Semgrep ERROR; SonarQube CRITICAL; CodeQL 7.0 - 8.9; Bandit/gosec HIGH
-- Medium: SonarQube MAJOR; CodeQL 4.0 - 6.9; Bandit/gosec MEDIUM; Semgrep WARNING
-- Low: SonarQube MINOR; CodeQL <4.0; Bandit/gosec LOW
-- Info: Semgrep INFO; SonarQube INFO
-
-## Step 3 - Deduplicate
-
-Multiple scanners may catch the same underlying issue. Dedupe by
-`(file, line, normalized_cwe)`:
-
-```python
-def dedupe(findings):
-    seen = {}
-    for f in findings:
-        key = (f['file'], f['line'], f.get('cwe', f['rule_id']))
-        if key not in seen or severity_rank(f['severity']) > severity_rank(seen[key]['severity']):
-            seen[key] = {**f, 'caught_by': []}
-        seen[key]['caught_by'].append(f['scanner'])
-    return list(seen.values())
-```
-
-The deduped finding records all scanners that caught it
-(multi-scanner consensus = high confidence, surface this in the
-report).
-
-## Step 4 - Apply waivers
-
-```yaml
-# .sast-waivers.yaml
-waivers:
-  - scanner: semgrep
-    rule_id: javascript.express.security.audit.express-cookie-secure
-    file: src/dev-only-server.js
-    line: 42
-    reason: "Dev-only server; runs on localhost without HTTPS by design"
-    expires: 2026-12-31
-    approved_by: alice@example.com
-
-  - scanner_pattern: "*"          # all scanners
-    rule_id_pattern: "G104"        # all G104 findings
-    file_pattern: "internal/legacy/**"
-    reason: "Legacy module; rewrite scheduled in Q4"
-    expires: 2026-09-30
-    approved_by: platform-team
-```
-
-```python
-def apply_waivers(findings, waivers):
-    out = []
-    for f in findings:
-        if not is_waived(f, waivers):
-            out.append(f)
-        else:
-            print(f"Waived: {f['rule_id']} at {f['file']}:{f['line']}")
-    return out
-```
-
-**Waiver validation rules (refuse-to-proceed):**
-
-- Reject any waiver without `expires:` field
-- Reject any waiver without `approved_by:` field
-- Reject any waiver without `reason:` field
-- Reject any waiver with `expires:` in the past
-
-## Step 5 - Verdict
-
-```python
-def verdict(findings, fail_on='critical'):
-    rank = {'critical': 5, 'high': 4, 'medium': 3, 'low': 2, 'info': 1}
-    threshold = rank.get(fail_on, 5)
-    blocking = [f for f in findings if rank.get(f['severity'], 0) >= threshold]
-    return ('BLOCK', blocking) if blocking else ('PASS', [])
-```
-
-Default fail-on: `critical` (any unwaived critical → BLOCK).
-
-## Step 6 - Report
-
-```markdown
-## SAST policy review - `<sha>`
-
-**Scanners run:** Semgrep 1.65.0, Bandit 1.7.10, gosec 2.20.0
-(SonarQube + CodeQL not configured in this repo)
-
-**Total findings:** 47 (after deduplication; 23 multi-scanner consensus)
-**Waivers applied:** 5
-**Verdict:** ❌ BLOCK - 2 unwaived critical findings
-
-### Critical (must fix before merge)
-
-| Severity | Resource | Finding | Caught by |
-|---|---|---|---|
-| critical | `src/auth/login.js:42` | SQL injection via string concat (CWE-89) | Semgrep, CodeQL |
-| critical | `internal/crypto/sign.go:18` | Hardcoded private key (CWE-798) | gosec, Semgrep |
-
-### High (must address before next release)
-
-| Severity | Resource | Finding | Caught by |
-|---|---|---|---|
-| high | `app/views/admin.py:55` | XSS via Jinja2 autoescape false (CWE-79) | Bandit |
-| high | `services/api/handler.go:12` | Predictable temp-file name (CWE-377) | gosec |
-
-### Medium (review)
-
-(table)
-
-### Waived (5)
-
-| Resource | Rule | Reason | Expires | Approved by |
-|---|---|---|---|---|
-| `src/dev-only-server.js:42` | express-cookie-secure | Dev-only server; runs on localhost | 2026-12-31 | alice@example.com |
-| `internal/legacy/*` | G104 | Legacy module; rewrite scheduled Q4 | 2026-09-30 | platform-team |
-
-### Action items
-
-1. **Fix the SQL injection in login.js.** Replace string concat with
-   parameterized query (`db.query('SELECT * FROM users WHERE id = $1', [id])`).
-2. **Remove the hardcoded private key in sign.go.** Move to
-   environment variable + secrets-management; rotate the leaked key.
-
-After fixes, re-run the scanners + this agent.
-```
-
-## Step 7 - CI integration
+## Step 3 - CI integration
 
 ```yaml
 jobs:
@@ -245,10 +102,10 @@ The agent **refuses** to:
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | One scanner only | Tool-specific gaps (Semgrep misses cross-file flows; Bandit Python-only) | Always combine 2+ scanners (Step 1) |
-| Waivers without expiration | Permanent exceptions; debt accumulates | Required `expires:` field (Step 4) |
+| Waivers without expiration | Permanent exceptions; debt accumulates | Required `expires:` field (Step 2) |
 | Auto-waive low-severity | Low becomes background noise; medium ignored | All severities surface in the report |
-| Single PR comment for 50+ findings | Decision fatigue; reviewer skips | Group by severity (Step 6); critical highlighted |
-| Per-tool reports as primary | Reviewer reads 5 reports; misses dedupe + consensus signal | Unified report only (Step 6) |
+| Single PR comment for 50+ findings | Decision fatigue; reviewer skips | Group by severity (Step 2); critical highlighted |
+| Per-tool reports as primary | Reviewer reads 5 reports; misses dedupe + consensus signal | Unified report only (Step 2) |
 
 ## Limitations
 

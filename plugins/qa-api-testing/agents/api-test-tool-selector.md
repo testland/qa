@@ -11,6 +11,7 @@ skills:
   - schemathesis-fuzzing
   - restler-fuzzing
   - api-chaos-runner
+  - tool-selection-decision-record
 ---
 
 A tool-selection agent that turns "which API test tool should we use?" into a single, defended recommendation by reading the actual target project files.
@@ -60,27 +61,7 @@ The agent emits **exactly one** primary recommendation. A secondary fallback may
 
 ## Step 3 - Emit the recommendation
 
-Output template (Markdown, copyable to a decision record):
-
-```markdown
-## API test tool recommendation - <project-name>
-
-**API style detected:** <rest-openapi | rest-no-spec | graphql | grpc | mixed>
-**Goal:** <functional | fuzzing | chaos>
-**Signal:** <file path + excerpt that drove the detection>
-
-**Recommended tool:** <Postman / REST Assured / Karate / Tavern / Schemathesis / RESTler / API Chaos Runner>
-
-### Rationale
-- <one-line: why this tool fits this style + goal + team stack>
-- <one-line: why not the alternative considered>
-
-### Read next
-- [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for authoring + CI setup.
-
-### Conditions under which this flips
-- <one-line: e.g. "team adopts OpenAPI spec → re-evaluate for Schemathesis">
-```
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md.
 
 ## Refuse-to-proceed rules
 

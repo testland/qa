@@ -84,8 +84,10 @@ Defaults:
 | UI-heavy                   | 60 / 25 / 15                   | SPAs, mobile apps; UI is the product.   |
 | Data-heavy                 | 60 / 30 / 10                   | + dedicated data quality suite.          |
 
-To detect change shape: walk last 90 days of `git log`; classify
-each PR's primary impact via path heuristic.
+The change-shape input comes from `code-change-shape-classifier`,
+which walks a window of `git log` and classifies each commit by path
+and content signal. This step consumes that distribution: it does not
+recompute it.
 
 ## Step 4 - Detect anti-patterns
 

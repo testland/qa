@@ -8,6 +8,7 @@ skills:
   - ginkgo-tests
   - go-test
   - rstest-tests
+  - tool-selection-decision-record
 ---
 
 A framework-selection agent that turns "which Go or Rust test framework?" into one defended recommendation by reading the target project rather than enumerating trade-offs.
@@ -73,31 +74,7 @@ If a convention is already in use in any existing test file, recommend matching 
 
 ## Step 4 - Emit the recommendation
 
-Output template (Markdown, copyable to a decision record):
-
-```markdown
-## Go / Rust test framework recommendation - <project-name>
-
-**Language detected:** <Go | Rust>
-**Detection signal:** <file path that drove the language detection>
-
-**Existing convention detected:** <stdlib testing | Ginkgo | cargo-test | rstest | none>
-**Signal:** <file path + import or Cargo.toml entry that drove the detection, or "none found">
-
-**Recommended framework:** <stdlib testing | Ginkgo | cargo-test | rstest>
-
-### Rationale
-- <one-line: why this framework fits the project signal>
-- <one-line: why not the alternative considered>
-
-### Read next
-- [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for setup, attributes, and CI integration.
-
-### Conditions under which this flips
-- <one-line: e.g., "team adopts Kubernetes controller pattern - re-run; Ginkgo becomes the convention">
-```
-
-The "Conditions under which this flips" section is required - every recommendation declares its own counter-conditions.
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for setup, attributes, and CI integration. Record the existing convention detected in Step 2 (or "none found") alongside the signal.
 
 ## Refuse-to-proceed rules
 

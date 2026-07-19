@@ -270,6 +270,5 @@ The patterns are not equally good for every project. The matrix:
 - Marcano & Hill (2007) - *Page Objects Refactored: SOLID Steps to the Screenplay Pattern* (the origin paper for the Screenplay name and SOLID rationale; cited via Serenity BDD): https://serenity-bdd.github.io/docs/screenplay/
 - Kent C. Dodds + Cypress team - *Stop using Page Objects and Start using App Actions* (Cypress blog, the canonical App Actions reference): https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/
 - Martin Fowler - *Repository pattern* (originally domain-driven design; cited for test-data Repository adaptation): https://martinfowler.com/eaaCatalog/repository.html
-- ISTQB glossary - Page Object (the canonical ISTQB entry confirming the pattern is industry-standard): https://glossary.istqb.org/en_US/term/page-object
 - ISTQB glossary - Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization
 - [`test-code-conventions`](../test-code-conventions/SKILL.md) - file-level companion (§1-§10).

@@ -150,5 +150,5 @@ Before handing the Gherkin to the automation engineer:
 - Cucumber documentation - Better Gherkin (declarative vs imperative; "scenarios should describe the intended behaviour of the system, not the implementation"): https://cucumber.io/docs/bdd/better-gherkin/
 - Cucumber documentation - Gherkin reference (keyword semantics: `Given` / `When` / `Then` / `And` / `But`): https://cucumber.io/docs/gherkin/reference/
 - ISTQB glossary - behavior-driven development: https://glossary.istqb.org/en_US/term/behavior-driven-development
-- ISTQB glossary - test procedure (the imperative form this skill abstracts away from): https://glossary.istqb.org/en_US/term/test-procedure-1
+- ISTQB glossary - test procedure (the imperative form this skill abstracts away from): https://glossary.istqb.org/en_US/term/test-procedure
 - [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - the canonical-vocabulary skill.

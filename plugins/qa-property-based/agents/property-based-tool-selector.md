@@ -9,6 +9,7 @@ skills:
   - jqwik-testing
   - proptest-testing
   - quickcheck-testing
+  - tool-selection-decision-record
 ---
 
 A tool-selection agent that picks the right property-based testing library by language. Reads project markers and emits one concrete recommendation per language.
@@ -50,26 +51,7 @@ The agent emits **exactly one** primary recommendation per detected language.
 
 ## Step 3 - Emit the recommendation
 
-Output template (Markdown):
-
-```markdown
-## Property-based testing tool recommendation - <project-name>
-
-**Language detected:** <language>
-**Signal:** <file + line that drove the detection>
-
-**Recommended tool:** <fast-check / Hypothesis / jqwik / proptest / QuickCheck>
-
-### Rationale
-- <one-line: why this tool fits this language>
-- <one-line: how it integrates with the project's existing unit-test framework>
-
-### Read next
-- [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for `@property` / arbitrary / strategy / generator authoring + CI integration.
-
-### First property suggestion
-- <one-line: a low-hanging property to start with - typically a roundtrip or invariant - to demonstrate value before the team commits>
-```
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md for arbitrary / strategy / generator authoring + CI integration. Close with a **first property suggestion**: one low-hanging property to start with, typically a roundtrip or invariant, to demonstrate value before the team commits.
 
 ## Refuse-to-proceed rules
 

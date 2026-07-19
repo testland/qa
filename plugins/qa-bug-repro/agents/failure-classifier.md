@@ -184,6 +184,6 @@ The agent **refuses** to:
 - Luo et al., "An Empirical Analysis of Flaky Tests" (FSE 2014) - root-cause breakdown (45% async-wait, 20% concurrency, 12% test-order-dependency) from 201 flaky-test fixes across 51 projects: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
 - Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - about 16% of tests show some flakiness and 84% of pass-to-fail transitions involve a flaky test: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 - Playwright Tracing API - produces the trace artifact the defect path consumes: https://playwright.dev/docs/api/class-tracing
-- ISTQB glossary - defect (fault, bug) vs failure (the deviation observed in the test): https://glossary.istqb.org/en_US/term/defect-3
-- ISTQB glossary - flaky test: https://glossary.istqb.org/en_US/term/flaky-test
+- ISTQB glossary - defect (fault, bug) vs failure (the deviation observed in the test): https://glossary.istqb.org/en_US/term/defect
+- Martin Fowler, "Eradicating Non-Determinism in Tests" - the canonical definition of the flaky (non-deterministic) test: "sometimes they pass, sometimes they fail", plus the quarantine response: https://martinfowler.com/articles/nonDeterminism.html
 - [`bug-report-template`](../skills/bug-report-template/SKILL.md) - preloaded skill; the eight-field schema the defect-path downstream fills.

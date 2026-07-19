@@ -9,6 +9,7 @@ skills:
   - gatling-load-testing
   - locust-load-testing
   - lighthouse-perf
+  - tool-selection-decision-record
 ---
 
 A tool-selection agent that picks one load testing tool from goal + stack signals.
@@ -56,31 +57,14 @@ The agent emits **exactly one** primary recommendation. A secondary fallback may
 
 ## Step 3 - Emit the recommendation
 
-Output template:
-
-```markdown
-## Load testing tool recommendation - <project-name>
-
-**Goal:** <api-rps-soak | api-spike | browser-side-perf | gui-authored | mixed-protocols>
-**Team stack:** <JS | Python | Java/Scala | mixed>
-**Existing convention:** <detected tool | "none - greenfield">
-**Signal:** <file or CI script that drove the detection>
-
-**Recommended tool:** <k6 / JMeter / Gatling / Locust / Lighthouse>
-
-### Rationale
-- <one-line: why this tool fits this goal + stack>
-- <one-line: why not the alternative considered>
-
-### Read next
-- [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for scenario authoring + CI integration.
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md for scenario authoring + CI integration. Record the detected existing convention (or "none - greenfield") alongside the signal.
 
 ### Plug into the rest of the plugin
+
 - **Author a performance budget gate** → [`perf-budget-gate`](../skills/perf-budget-gate/SKILL.md).
 - **Analyze flame graphs from the run** → [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md).
 - **DB-side slow queries during load** → [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md).
 - **Bisect regressions across runs** → [`perf-regression-bisector`](perf-regression-bisector.md).
-```
 
 ## Refuse-to-proceed rules
 

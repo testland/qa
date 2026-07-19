@@ -46,7 +46,7 @@ Check each script against five axes drawn from the documented anti-patterns in
 |---|---|---|
 | **A1 - Precondition specificity** | Preconditions that omit the concrete data the tester needs: "user is set up", "system is ready", "test account exists". Flag any precondition that a different tester would resolve differently. Per ISO/IEC/IEEE 29119-3 (test case documentation), preconditions must identify the specific initial state required. | `manual-test-script-author` anti-pattern "Vague preconditions"; ISO/IEC/IEEE 29119-3:2021 |
 | **A2 - Single-scenario discipline** | Any script that bundles more than one logical scenario in its step sequence (happy path then an edge-case branch, or two independent flows concatenated). Per `manual-test-script-author` Step 4: one TC per logical scenario; edge cases are sibling TCs, not appended steps. | `manual-test-script-author` Step 4 and anti-pattern "One TC bundling 5 scenarios" |
-| **A3 - Expected-result completeness** | Steps with no expected result column, a blank expected result, or a vague assertion ("it works", "page loads"). Per ISTQB test case definition, each test step must specify the expected result ([glossary.istqb.org/en_US/term/test-case-1](https://glossary.istqb.org/en_US/term/test-case-1)). | ISTQB glossary - test case; `manual-test-script-author` Step 2 |
+| **A3 - Expected-result completeness** | Steps with no expected result column, a blank expected result, or a vague assertion ("it works", "page loads"). Per ISTQB test case definition, each test step must specify the expected result ([glossary.istqb.org/en_US/term/test-case](https://glossary.istqb.org/en_US/term/test-case)). | ISTQB glossary - test case; `manual-test-script-author` Step 2 |
 | **A4 - Self-contained test data** | References to implicit data: "the test card", "QA's account", "whatever SKU is available". Per `manual-test-script-author` Step 5, the script must specify every credential, record ID, and input value the tester needs. | `manual-test-script-author` Step 5 anti-pattern "Relying on the tester's experience to fill gaps" |
 | **A5 - Declarative step phrasing** | Imperative UI mechanics where a declarative outcome step belongs: "click the blue Submit button at the bottom of the form" instead of "submit the order". Declarative phrasing survives UI reskins and reads closer to the business intent (per the Cucumber Better Gherkin guide at [cucumber.io/docs/bdd/better-gherkin](https://cucumber.io/docs/bdd/better-gherkin/)). Exception: accessibility or keyboard-navigation scripts where the exact control and key sequence is the scenario. | Cucumber Better Gherkin; `test-case-quality-auditor` §3 (Steps reproducibility) |
 
@@ -114,7 +114,7 @@ are marked `n/a` for checklist items.
 
 ## References
 
-- ISTQB glossary - test case (preconditions, steps, expected result): https://glossary.istqb.org/en_US/term/test-case-1
+- ISTQB glossary - test case (preconditions, steps, expected result): https://glossary.istqb.org/en_US/term/test-case
 - ISO/IEC/IEEE 29119-3:2021 - test script documentation structure (cite by stable ID; ISO pages are behind Cloudflare).
 - Cucumber - Better Gherkin (declarative vs. imperative step phrasing): https://cucumber.io/docs/bdd/better-gherkin/
 - [`manual-test-script-author`](../skills/manual-test-script-author/SKILL.md) - the upstream authoring skill whose output this critic reviews; anti-pattern table is the primary axis source.

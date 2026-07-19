@@ -10,6 +10,7 @@ skills:
   - xcuitest-suite
   - maestro-flows
   - flutter-testing
+  - tool-selection-decision-record
 ---
 
 A driver-selection agent that turns "which mobile test driver should we use?" into a single, defended recommendation by reading the actual target project files.
@@ -57,26 +58,7 @@ The agent emits **exactly one** primary recommendation. A secondary fallback may
 
 ## Step 3 - Emit the recommendation
 
-Output template (Markdown, copyable to a decision record):
-
-```markdown
-## Mobile driver recommendation - <project-name>
-
-**Platform detected:** <ios-native | android-native | react-native | flutter | cross-platform>
-**Signal:** <file path + line excerpt that drove the detection>
-
-**Recommended driver:** <XCUITest | Espresso | Detox | Flutter | Appium | Maestro>
-
-### Rationale
-- <one-line: why this driver fits this platform>
-- <one-line: why not the alternative considered>
-
-### Read next
-- [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for authoring + CI setup.
-
-### Conditions under which this flips
-- <one-line: e.g. "team adds a second OS target → re-evaluate for Appium">
-```
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen driver's preloaded SKILL.md.
 
 ## Refuse-to-proceed rules
 

@@ -11,7 +11,7 @@ A specialized adversarial reviewer that catches the dominant failure mode of LLM
 
 ## When invoked
 
-The agent runs on test files in a PR diff or against a single file path. For each public entry point exercised by the test suite, it scores **input-domain coverage** against three axes drawn from ISTQB's [equivalence partitioning](https://glossary.istqb.org/en_US/term/equivalence-partitioning-1) and [boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis-1) techniques:
+The agent runs on test files in a PR diff or against a single file path. For each public entry point exercised by the test suite, it scores **input-domain coverage** against three axes drawn from ISTQB's [equivalence partitioning](https://glossary.istqb.org/en_US/term/equivalence-partitioning) and [boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis) techniques:
 
 | Axis | What this agent checks |
 |---|---|
@@ -129,8 +129,8 @@ The agent **refuses** to:
 
 ## References
 
-- ISTQB glossary - equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning-1
-- ISTQB glossary - boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis-1
+- ISTQB glossary - equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning
+- ISTQB glossary - boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis
 - arXiv 2508.00408 - *Benchmarking LLMs for Unit Test Generation from Real-World Functions* (ULT) - measured LLM unit tests at 30.22% branch coverage / 40.21% mutation score on real-world Python: https://arxiv.org/abs/2508.00408
 - arXiv 2506.06821 - *Can LLMs Generate Reliable Test Case Generators?* (TCGBench) - even o3-mini-generated test cases "fall significantly short of human performance" for bug detection: https://arxiv.org/abs/2506.06821
 - PractiTest 2026 State of Testing Report - 70% use AI for test-case creation, 19.9% for risk identification, only 40.7% achieve "more diverse and complex test cases": https://www.practitest.com/state-of-testing/

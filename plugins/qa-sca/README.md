@@ -25,6 +25,7 @@ third-party dependency security.
 | Skill | [cargo-audit-rust](skills/cargo-audit-rust/SKILL.md) | cargo-audit (RustSec advisory DB) for scanning Rust Cargo.lock dependencies. |
 | Skill | [bundle-audit-ruby](skills/bundle-audit-ruby/SKILL.md) | bundler-audit (ruby-advisory-db) for scanning Ruby Gemfile.lock dependencies. |
 | Skill | [reachability-analyzer](skills/reachability-analyzer/SKILL.md) | Dead-dependency / reachability analysis (depcheck, vulture, cargo-machete) to downrank unreachable vuln dependencies. |
+| Skill | [cve-exploitability-triage](skills/cve-exploitability-triage/SKILL.md) | Ranks CVEs by exploitability rather than severity alone: EPSS probability, CISA KEV membership, OpenVEX status, reachability, then a four-bucket priority assignment; a KEV listing is never waivable. |
 
 ## Install
 

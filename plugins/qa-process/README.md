@@ -6,6 +6,7 @@ Test process + methodology - risk-based testing matrix + storming, Definition of
 
 | Type | Name | Description |
 | --- | --- | --- |
+| Skill | [code-change-shape-classifier](skills/code-change-shape-classifier/SKILL.md) | Classifies a change set into pure-logic / service-layer / ui-heavy / data-heavy from path and content signals; computes the shape distribution over a history window and attaches the relative per-layer test cost model. |
 | Skill | [definition-of-done](skills/definition-of-done/SKILL.md) | Pure-reference + checklist-generator for the team's Definition of Done (DoD) - explains the Scrum Guide's DoD definition (\"a formal desc... |
 | Skill | [e2e-suite-budget](skills/e2e-suite-budget/SKILL.md) | Build-an-X workflow that caps the E2E suite size by computing flakiness ROI per test - for each E2E test, computes (regressions caught ×... |
 | Skill | [framework-choice-advisor](skills/framework-choice-advisor/SKILL.md) | Pure reference catalog for picking a test automation framework - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso... |
@@ -25,6 +26,7 @@ Test process + methodology - risk-based testing matrix + storming, Definition of
 | Skill | [test-case-ideation-from-story](skills/test-case-ideation-from-story/SKILL.md) | Takes a user story or feature spec and emits a markdown test-case matrix - one row per case (id, title, precondition, steps, expected, ti... |
 | Skill | [test-pyramid-balancer](skills/test-pyramid-balancer/SKILL.md) | Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward Cohn's... |
 | Skill | [test-strategy-author](skills/test-strategy-author/SKILL.md) | Build-an-X workflow that produces a test strategy document for a project / release / feature - covers scope, in/out, test types per layer... |
+| Skill | [tool-selection-decision-record](skills/tool-selection-decision-record/SKILL.md) | Output contract for recording a chosen tool: observed signal, one primary recommendation, rationale naming the rejected alternative, and the mandatory conditions that would flip the choice. |
 | Agent | [release-readiness-checker](agents/release-readiness-checker.md) | Builder/scaffolder agent that runs a configurable gate suite before a release - reads `release-readiness.yml` (which defines the gates: s... |
 | Agent | [risk-assessment-critic](agents/risk-assessment-critic.md) | Adversarial agent that audits a risk register (product or release) for assessment quality. |
 | Agent | [risk-based-test-planner](agents/risk-based-test-planner.md) | Action-taking strategic planner - given a feature scope or change initiative + the risk matrix, applies risk-based prioritization to choo... |

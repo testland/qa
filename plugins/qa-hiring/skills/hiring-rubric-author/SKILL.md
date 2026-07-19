@@ -159,7 +159,7 @@ The output is a single markdown document with:
 ## References
 
 - ISTQB Certified Tester Foundation Level v4.0 syllabus - the competency model adapted into the default dimensions per role: https://www.istqb.org/certifications/certified-tester-foundation-level
-- ISTQB glossary - defect / failure distinction (load-bearing for the `defect lifecycle` dimension): https://glossary.istqb.org/en_US/term/defect-3
+- ISTQB glossary - defect / failure distinction (load-bearing for the `defect lifecycle` dimension): https://glossary.istqb.org/en_US/term/defect
 - Structured interview research - Levashina et al. 2014 ([*Personnel Psychology*](https://en.wikipedia.org/wiki/Structured_interview)) on the validity uplift from structured rubrics + same questions / same order.
 - STAR behavioral interviewing method - Situation / Task / Action / Result framework, used in the behavioural-question anchors: https://en.wikipedia.org/wiki/Situation,_task,_action,_result
 - Bloom's taxonomy - K1 - K4 cognitive levels used to align the rubric's anchor depth with the question's intended difficulty: https://en.wikipedia.org/wiki/Bloom%27s_taxonomy

@@ -283,6 +283,6 @@ If reading aloud doesn't produce a specification - if it produces "click, type, 
 - Cucumber documentation - *Better Gherkin* (declarative vs imperative phrasing rule, Pattern 6): https://cucumber.io/docs/bdd/better-gherkin/
 - Gerard Meszaros - *xUnit Test Patterns* (2007) - the named-pattern catalog for `Test Method`, `Assertion Method`, `Custom Assertion`, `Inline Resource`: ISBN 978-0131495050.
 - ISTQB glossary - test step: https://glossary.istqb.org/en_US/term/test-step
-- ISTQB glossary - test procedure (the imperative form, by ISTQB convention): https://glossary.istqb.org/en_US/term/test-procedure-1
+- ISTQB glossary - test procedure (the imperative form, by ISTQB convention): https://glossary.istqb.org/en_US/term/test-procedure
 - [`test-code-conventions`](../test-code-conventions/SKILL.md), `manual-step-to-gherkin` (qa-bdd) - the related-tier components.
 - [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md), `test-data-patterns` (qa-test-data) - sister architecture-tier pattern catalogs.

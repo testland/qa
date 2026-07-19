@@ -133,7 +133,7 @@ material that lives in skills.
 | Agent | Preloads |
 |---|---|
 | `definition-of-done-checker` | (none) |
-| `spec-to-suite-orchestrator` | `acceptance-criteria-extractor`, `nfr-extractor`, `data-contract-extractor` |
+| `spec-to-suite-orchestrator` | `acceptance-criteria-extractor`, `non-functional-requirement-extractor`, `data-contract-extractor` |
 | `testability-reviewer` | (none) |
 | `threat-model-from-spec` | (none) |
 

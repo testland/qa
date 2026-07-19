@@ -17,7 +17,7 @@ the primary OAuth/OIDC token flow;
 [`session-management-test-author`](../session-management-test-author/SKILL.md)
 covers the post-authentication session lifecycle.
 
-Per [ISTQB Glossary v4](https://glossary.istqb.org/en_US/term/authentication-1):
+Per [ISTQB Glossary v4](https://glossary.istqb.org/en_US/term/authentication):
 **authentication** is "the process of confirming that someone or something is
 who or what they claim to be." MFA adds a second or third factor (TOTP, OTP,
 biometric/hardware key) on top of the first factor (password, SSO).

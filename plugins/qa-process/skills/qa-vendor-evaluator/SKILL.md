@@ -290,7 +290,6 @@ The matrix is the **input** to the decision, not the decision itself. Downstream
 - Gartner Peer Insights - AI-augmented software testing category: https://www.gartner.com/reviews/market/ai-augmented-software-testing-tools
 - G2 / Capterra - methodology disclosure for review-density and recency scoring (general SaaS evaluation context; not QA-specific): https://www.g2.com/about
 - ISTQB glossary - test automation framework (the open-source / commercial boundary): https://glossary.istqb.org/en_US/term/test-automation-framework
-- ISTQB glossary - supplier (the procurement-side term for vendor): https://glossary.istqb.org/en_US/term/supplier
 - ISO/IEC 25010 - quality model for non-functional requirements (used in A1 capability scoring): https://en.wikipedia.org/wiki/ISO/IEC_25010
 - [`framework-choice-advisor`](../framework-choice-advisor/SKILL.md) - sibling reference for open-source framework selection; this skill is its commercial-procurement complement.
 - `testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration` - per-vendor integration baselines that feed A3.

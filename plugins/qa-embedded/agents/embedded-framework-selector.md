@@ -9,6 +9,7 @@ skills:
   - unity-test-framework-c
   - qemu-system-test-runner
   - embedded-coverage-strategy-reference
+  - tool-selection-decision-record
 ---
 
 A framework-selection agent that turns "which test framework should we use for this embedded project?" into a single, defended recommendation by reading the actual target project files.
@@ -68,30 +69,7 @@ If the user mentions a safety standard (DO-178C, ISO 26262, IEC 62304, MISRA-C),
 
 ## Output format
 
-```markdown
-## Embedded framework recommendation - <project-name>
-
-**Language detected:** <c | c++ | mixed>
-**Signal:** <file path + line excerpt or glob result that drove the detection>
-**Cross-compile toolchain detected:** <arm-none-eabi-gcc | none detected>
-
-**Recommended framework:** <Unity+Ceedling | GoogleTest | Unity standalone>
-**Execution path:** <host | host + QEMU | host + QEMU + on-target>
-
-### Rationale
-- <one-line: why this framework fits this language>
-- <one-line: why not the alternative considered>
-
-### Read next
-- [`<primary-skill>`](../skills/<primary-skill>/SKILL.md) for authoring + CI setup.
-- [`qemu-system-test-runner`](../skills/qemu-system-test-runner/SKILL.md) if QEMU path applies.
-- [`embedded-coverage-strategy-reference`](../skills/embedded-coverage-strategy-reference/SKILL.md) if a safety standard applies.
-
-### Conditions under which this flips
-- <one-line: e.g. "C++ added to the project - switch to googletest-embedded-arm">
-```
-
-The "Conditions under which this flips" section is required - every recommendation declares its own counter-conditions so the team can re-run the agent when those conditions appear.
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section. Two additions specific to this agent: state the selected execution path (host / host + QEMU / host + QEMU + on-target) alongside the framework, and let "Read next" carry [`qemu-system-test-runner`](../skills/qemu-system-test-runner/SKILL.md) when the QEMU path applies and [`embedded-coverage-strategy-reference`](../skills/embedded-coverage-strategy-reference/SKILL.md) when a safety standard applies.
 
 ## Worked examples
 

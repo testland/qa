@@ -13,6 +13,7 @@ Test case management discipline (pre-execution authoring + lifecycle + traceabil
 | skill | [allure-testops-case-management](skills/allure-testops-case-management/SKILL.md) | Allure TestOps REST: cases + nested scenarios + automation linking |
 | skill | [qase-io-case-management](skills/qase-io-case-management/SKILL.md) | Qase Public API v1: cases + suites + shared steps |
 | skill | [traceability-matrix-builder](skills/traceability-matrix-builder/SKILL.md) | Build requirements-to-tests matrix from any TCM + requirements source |
+| skill | [test-case-review-rubric](skills/test-case-review-rubric/SKILL.md) | Scores a written test case on six per-case and six set-level quality axes, derives PASS / WEAK / FAIL without averaging, and marks each threshold as standard-backed or practitioner convention. |
 | agent | [test-case-quality-critic](agents/test-case-quality-critic.md) | Audit a TCM case repository for anatomy + traceability + step quality |
 | Agent | [tcm-migration-agent](agents/tcm-migration-agent.md) | Operationalizes a test-case-management tool migration: field mapping, export/transform/import, dry-run. |
 

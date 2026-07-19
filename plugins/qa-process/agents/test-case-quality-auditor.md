@@ -6,6 +6,7 @@ model: sonnet
 skills:
   - test-case-ideation-from-story
   - test-case-from-live-feature
+  - test-case-review-rubric
 ---
 
 A reviewer that audits test **cases** the way `test-code-critic` audits test code. Operates on TestRail / Qase / Xray exports and markdown matrices - not on `.spec.ts` / `.test.py` files.
@@ -34,36 +35,33 @@ For markdown matrices, the column headers from `test-case-ideation-from-story` (
 
 ## Step 2 - Per-case audit walk
 
-The agent scores each case against eight quality axes, each grounded in a canonical source:
+Score each case against the axes in `test-case-review-rubric`, running its Gate 0 scorability check first. The rubric owns the PASS bars, the FAIL triggers, and the PASS / WEAK / FAIL derivation. This agent's section numbers map onto the rubric axes:
 
-| Axis | What this agent checks | Source |
-|---|---|---|
-| **§1 - Title clarity** | No "test 1", "should work", "verify"-only, no ambiguous abbreviations. Imperative single sentence. | Mirrors `test-code-critic` §3 naming convention. |
-| **§2 - Precondition completeness** | The precondition names the fixture / state required, identifiable, and reproducible. "User is logged in" is OK; "system is ready" is not. | ISTQB [test case definition](https://glossary.istqb.org/en_US/term/test-case-1) - preconditions identified. |
-| **§3 - Steps reproducibility** | Numbered, copy-pasteable, deterministic. Declarative phrasing preferred (per [Cucumber better-Gherkin](https://cucumber.io/docs/bdd/better-gherkin/)) - "the customer adds the product to their cart" rather than "click button #add-to-cart". Mechanical UI clicks in case steps are an anti-pattern unless the case is explicitly UI-mechanical (a11y keyboard tests, etc.). | Cucumber better-Gherkin + ISTQB. |
-| **§4 - Expected-result testability** | The expected result is verifiable by observation. "Cart shows 1 item" is testable; "system performs well" is not. Flag claims that require human judgement without a documented bar. | Mozilla [bug-writing guide](https://bugzilla.mozilla.org/page.cgi?id=bug-writing.html) - failures must be observable. |
-| **§5 - Equivalence partitioning coverage** | For parameters used in the case, are equivalence classes documented across the case set? A suite that uses only one valid class is shallow (the same failure mode `ai-test-shallow-coverage-critic` catches in code). | ISTQB [equivalence partitioning](https://glossary.istqb.org/en_US/term/equivalence-partitioning-1). |
-| **§6 - Boundary coverage** | For numeric / length-bounded parameters with declared bounds, are min / min-1 / max / max+1 represented in the case set? | ISTQB [boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis-1). |
-| **§7 - Duplication across cases** | Case-set-wide dedupe - multiple cases asserting the same observable post-condition under the same precondition with cosmetic variation. | `test-suite-pruner` analogue at case-tier. |
-| **§8 - Traceability** | The case's `source claim` column points at a concrete source (story sentence, AC bullet, observation, requirement id). Empty / "Story" / "TBD" fails. | ISTQB [traceability](https://glossary.istqb.org/en_US/term/traceability). |
+| This agent | Rubric axis |
+|---|---|
+| **§1 - Title clarity** | A1 objective specificity |
+| **§2 - Precondition completeness** | A2 precondition executability |
+| **§3 - Steps reproducibility** | A3 step granularity + A4 step abstraction match |
+| **§4 - Expected-result testability** | A5 expected-result observability |
+| **§5 - Equivalence partitioning coverage** | S1 equivalence-partition coverage |
+| **§6 - Boundary coverage** | S2 boundary coverage |
+| **§7 - Duplication across cases** | S3 duplication |
+| **§8 - Traceability** | A6 traceability validity + S4 orphans and uncovered requirements |
 
 For cases tagged with `heuristic` (per `test-case-from-live-feature` output), §8 maps the traceability target to the named heuristic (`SFDPOT-F` → "function-element coverage"; `Whittaker-input` → "input-attack derivation") - the heuristic is the source.
 
 ## Step 3 - Set-level audit
 
-Beyond per-case axes, the agent walks the **whole set** for cross-case issues:
+Beyond per-case axes, the agent walks the **whole set** for cross-case issues. Set-level axes S1 to S6 (partition coverage, boundary coverage, duplication, orphans and uncovered requirements, tier shape, identifier consistency), their thresholds, and the set verdict all come from `test-case-review-rubric`. Two set-level checks are this agent's own, because they only exist on matrices produced by the upstream authoring skills:
 
 | Set-level check | Detection |
 |---|---|
-| **Tier distribution** | Healthy: smoke 10-20% / regression 50-70% / negative 15-25% / edge 5-15%. Sets at 95% smoke or zero negative are flagged. |
 | **Heuristic coverage gaps** (matrices from `test-case-from-live-feature`) | All SFDPOT guidewords represented? Whittaker-input attacks present? FEW HICCUPPS oracle cited at least once? ISO 25010 cross-check covered? |
 | **Confidence gradient** (matrices with `confidence` column) | `inferred` cases dominate? Flag - the team should probe first-run before automating. |
-| **Identifier consistency** | `CART-142-TC-01` mixed with `cart-tc-2` mixed with `Test Case 03` - fix the convention. |
-| **Source-claim provenance** | If >30% of source-claims point at "TBD" / "Story" / empty, the set is upstream-broken - escalate to upstream authoring. |
 
 ## Step 4 - Emit the audit verdict
 
-Fixed-shape markdown:
+Derive the per-case and set verdicts per `test-case-review-rubric` (never averaged, and always with the failing identifiers named), then assemble this fixed shape:
 
 ```markdown
 ## Test-case audit - `<set-identifier>`
@@ -156,9 +154,9 @@ The agent **refuses** to:
 
 ## References
 
-- ISTQB glossary - test case (preconditions, steps, expected result, post-conditions): https://glossary.istqb.org/en_US/term/test-case-1
-- ISTQB glossary - equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning-1
-- ISTQB glossary - boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis-1
+- ISTQB glossary - test case (preconditions, steps, expected result, post-conditions): https://glossary.istqb.org/en_US/term/test-case
+- ISTQB glossary - equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning
+- ISTQB glossary - boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis
 - ISTQB glossary - traceability: https://glossary.istqb.org/en_US/term/traceability
 - Mozilla bug-writing guide - observable / reproducible failure principle that grounds §4 testability: https://bugzilla.mozilla.org/page.cgi?id=bug-writing.html
 - Cucumber documentation - Better Gherkin (declarative-vs-imperative; grounds §3): https://cucumber.io/docs/bdd/better-gherkin/

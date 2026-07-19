@@ -213,7 +213,7 @@ The manager walks in with structured evidence. The meeting decides. The retro ca
 - Google SRE Workbook - *Implementing SLOs* (SLI / SLO definitions, error-budget policy structure, the bidirectional stakeholder agreement, the canonical three standard responses): https://sre.google/workbook/implementing-slos/
 - CTO Craft - *Data-Driven Negotiation with SLIs, SLOs, and Error Budgets* (Part One framing the negotiation; Part Two on the conversation structure this skill mirrors): https://ctocraft.com/blog/data-driven-negotiation-with-slis-slos-and-error-budgets-part-one/
 - MIT Sloan Executive Education - *AI Meets Negotiation: Seven Lessons from MIT* (chain-of-thought prompting for option-matrix construction, the methodology underlying Step 3): https://executive.mit.edu/blog/ai-meets-negotiation.html
-- ISTQB glossary - service level agreement (the contract layer SLOs operationalise): https://glossary.istqb.org/en_US/term/service-level-agreement
+- Google SRE Book - *Service Level Objectives* chapter (the contract layer SLOs operationalise: an SLA is "an explicit or implicit contract with your users that includes consequences of meeting (or missing) the SLOs they contain"): https://sre.google/sre-book/service-level-objectives/
 - ISTQB glossary - non-functional testing (the layer SLOs anchor on): https://glossary.istqb.org/en_US/term/non-functional-testing
 - ISO/IEC 25010 - reliability and performance-efficiency characteristics (the underlying quality dimensions): https://en.wikipedia.org/wiki/ISO/IEC_25010
 - [`error-budget-tests`](../error-budget-tests/SKILL.md), [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - sibling skills that produce the input data this skill consumes.

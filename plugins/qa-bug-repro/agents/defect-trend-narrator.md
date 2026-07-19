@@ -68,7 +68,7 @@ The agent **refuses** to:
 ## References
 
 - Juran's Pareto principle ("vital few and useful many"): https://en.wikipedia.org/wiki/Pareto_analysis
-- ISTQB - defect: https://glossary.istqb.org/en_US/term/defect-3
+- ISTQB - defect: https://glossary.istqb.org/en_US/term/defect
 - ISTQB - defect density: https://glossary.istqb.org/en_US/term/defect-density
 - ISTQB - escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
 - PractiTest 2026 State of Testing (19.9% of teams use AI for risk identification): https://www.practitest.com/state-of-testing/

@@ -16,10 +16,11 @@ misses interaction bugs.
 The fix is **all-pairs (pairwise) testing** - pick a smaller test
 set that covers every **pair** of input values across the full
 matrix. Empirically, 2-wise coverage finds the majority of
-interaction bugs at a fraction of the test count. ISTQB defines
+interaction bugs at a fraction of the test count. ISTQB catalogues
 this technique as
-[**all-pairs testing**](https://glossary.istqb.org/en_US/term/all-pairs-testing)
-(also called **pairwise testing**).
+[**pairwise testing**](https://glossary.istqb.org/en_US/term/pairwise-testing),
+"a black-box test technique in which test conditions are pairs of
+parameter-value pairs" (commonly also called **all-pairs testing**).
 
 This skill takes a multi-input spec and emits a reduced test set
 covering 1-wise / 2-wise / N-wise combinations.
@@ -223,7 +224,7 @@ gap = OK) or escalates to 3-wise.
 
 ## References
 
-- [ISTQB all-pairs testing](https://glossary.istqb.org/en_US/term/all-pairs-testing) - canonical pairwise definition.
+- [ISTQB pairwise testing](https://glossary.istqb.org/en_US/term/pairwise-testing) - canonical definition of the technique this skill applies.
 - PICT - https://github.com/microsoft/pict
 - AllPairs (Python) - https://pypi.org/project/allpairspy/
 - [`boundary-value-generator`](../boundary-value-generator/SKILL.md) - sibling skill for single-input boundary cases.

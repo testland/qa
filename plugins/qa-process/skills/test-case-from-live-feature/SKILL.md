@@ -189,5 +189,5 @@ Per the same conventions as [`test-case-ideation-from-story`](../test-case-ideat
 - Exploratory testing - Kaner's 1984 definition; Whittaker "How to Break Software" attack catalog: https://en.wikipedia.org/wiki/Exploratory_testing
 - ISO/IEC 25010 - quality characteristics: https://en.wikipedia.org/wiki/ISO/IEC_25010
 - Cucumber documentation - Better Gherkin (declarative phrasing for the `Steps` column): https://cucumber.io/docs/bdd/better-gherkin/
-- ISTQB glossary - test case: https://glossary.istqb.org/en_US/term/test-case-1
+- ISTQB glossary - test case: https://glossary.istqb.org/en_US/term/test-case
 - ISTQB glossary - exploratory testing: https://glossary.istqb.org/en_US/term/exploratory-testing

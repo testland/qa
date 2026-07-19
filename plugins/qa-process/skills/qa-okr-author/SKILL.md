@@ -255,7 +255,7 @@ Output:
 
 - *Measure What Matters* (John Doerr, 2018) - canonical modern OKR reference; covers committed vs aspirational, 0.7 sweet spot, 1 - 3 objectives per cadence. Origin: Andy Grove at Intel in the 1970s, documented in *High Output Management* (1983), introduced to Google by Doerr in 1999: https://en.wikipedia.org/wiki/Objectives_and_key_results
 - ISTQB glossary - test management (the discipline OKRs sit under): https://glossary.istqb.org/en_US/term/test-management
-- ISTQB glossary - quality goal: https://glossary.istqb.org/en_US/term/quality-goal
+- ISTQB glossary - S.M.A.R.T. goal methodology (specific / measurable / attainable / relevant / timely - the framing each KR must satisfy): https://glossary.istqb.org/en_US/term/smart-goal-methodology
 - ISTQB glossary - defect density (canonical metric for Shape 2 KRs): https://glossary.istqb.org/en_US/term/defect-density
 - ISTQB glossary - escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
 - Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - flake-prevalence baseline for Shape 4 KRs (about 16% of tests show some flakiness): https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html

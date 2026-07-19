@@ -36,11 +36,11 @@ Read the user story (and any attached AC, mockups, or rejection notes) and extra
 5. **Postconditions** - observable outcomes (cart shows item, email sent, audit log written, redirect occurred).
 6. **Constraints** - bounded values, rate limits, role permissions.
 
-If any of (1) - (5) is missing from the story, **stop and request clarification**. A matrix derived from incomplete input will mask the gap rather than surface it. ISTQB's [test analysis](https://glossary.istqb.org/en_US/term/test-analysis-2) step is explicit that test conditions must trace to identified test bases; an unclear story is not a test basis.
+If any of (1) - (5) is missing from the story, **stop and request clarification**. A matrix derived from incomplete input will mask the gap rather than surface it. ISTQB's [test analysis](https://glossary.istqb.org/en_US/term/test-analysis) step is explicit that test conditions must trace to identified test bases; an unclear story is not a test basis.
 
 ## Step 2 - Enumerate cases per ISTQB test design technique
 
-For each (action, object) pair, generate cases by walking three lenses ([equivalence partitioning](https://glossary.istqb.org/en_US/term/equivalence-partitioning-1), [boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis-1), [decision table testing](https://glossary.istqb.org/en_US/term/decision-table-testing)):
+For each (action, object) pair, generate cases by walking three lenses ([equivalence partitioning](https://glossary.istqb.org/en_US/term/equivalence-partitioning), [boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis), [decision table testing](https://glossary.istqb.org/en_US/term/decision-table-testing)):
 
 ### Lens 1 - Equivalence classes (one row per class)
 
@@ -130,9 +130,9 @@ The matrix is plain markdown. Common integrations:
 
 ## References
 
-- ISTQB glossary - test analysis: https://glossary.istqb.org/en_US/term/test-analysis-2
-- ISTQB glossary - equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning-1
-- ISTQB glossary - boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis-1
+- ISTQB glossary - test analysis: https://glossary.istqb.org/en_US/term/test-analysis
+- ISTQB glossary - equivalence partitioning: https://glossary.istqb.org/en_US/term/equivalence-partitioning
+- ISTQB glossary - boundary value analysis: https://glossary.istqb.org/en_US/term/boundary-value-analysis
 - ISTQB glossary - decision table testing: https://glossary.istqb.org/en_US/term/decision-table-testing
 - Cucumber documentation - Better Gherkin (declarative vs imperative): https://cucumber.io/docs/bdd/better-gherkin/
 - PractiTest 2026 State of Testing Report - 70% use AI for test-case creation, 40.7% achieve "more diverse and complex test cases": https://www.practitest.com/state-of-testing/

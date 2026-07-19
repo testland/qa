@@ -143,6 +143,6 @@ If any claim cannot be sourced (e.g., the SLO baseline isn't in the input), the 
 - JUnit XML schema reference - testsuite / testcase / failure / error / skipped element shape (the de facto interchange format used by surefire, jest-junit, pytest --junitxml): https://github.com/testmoapp/junitxml
 - ISO/IEC/IEEE 29119-3:2021 - test reporting structures (cite by stable ID; the canonical ISO page sits behind Cloudflare Turnstile).
 - ISTQB glossary - test report: https://glossary.istqb.org/en_US/term/test-report
-- ISTQB glossary - release readiness: https://glossary.istqb.org/en_US/term/release
+- ISTQB glossary - quality gate (the release-readiness milestone the summary reports against): https://glossary.istqb.org/en_US/term/quality-gate
 - PractiTest 2026 State of Testing Report - 70% use AI for test-case creation, "test factory" framing, narrative drafting as the dominant manager-layer use case: https://www.practitest.com/state-of-testing/
 - [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - the per-tool parsers this skill consumes.

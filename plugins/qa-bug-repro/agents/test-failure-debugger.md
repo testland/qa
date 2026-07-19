@@ -81,7 +81,7 @@ Emit a single markdown block:
 ## Hand-off targets
 
 - If hypothesis is confirmed, hand to [`bug-repro-builder`](bug-repro-builder.md) to lock a regression test before applying the fix.
-- If the fix is non-trivial (touches >1 file): use [`bug-report-template`](../skills/bug-report-template/SKILL.md) to file the underlying defect first ([glossary.istqb.org/en_US/term/defect-1](https://glossary.istqb.org/en_US/term/defect-1)).
+- If the fix is non-trivial (touches >1 file): use [`bug-report-template`](../skills/bug-report-template/SKILL.md) to file the underlying defect first ([glossary.istqb.org/en_US/term/defect](https://glossary.istqb.org/en_US/term/defect)).
 ```
 
 ## Refuse-to-proceed rules
@@ -102,4 +102,4 @@ Emit a single markdown block:
 
 - Reads what the user pastes - does not run tests, fetch CI logs, or query a tracker. Insufficient capture = `INSUFFICIENT_SIGNAL`.
 - `git blame` / `git log` are line-based; a refactor commit that didn't change behavior can mask the true regression - fall back to `git log -L` or `git log -S<token>`.
-- Single-failure scope; for batch triage of an overnight CI run, invoke once per failure. Routes to siblings: defect repro → [`bug-repro-builder`](bug-repro-builder.md); crash → [`crash-stack-trace-analyzer`](crash-stack-trace-analyzer.md); flake → [`failure-classifier`](failure-classifier.md); defect filing → [`bug-report-template`](../skills/bug-report-template/SKILL.md) per ISTQB defect ([glossary.istqb.org/en_US/term/defect-1](https://glossary.istqb.org/en_US/term/defect-1)).
+- Single-failure scope; for batch triage of an overnight CI run, invoke once per failure. Routes to siblings: defect repro → [`bug-repro-builder`](bug-repro-builder.md); crash → [`crash-stack-trace-analyzer`](crash-stack-trace-analyzer.md); flake → [`failure-classifier`](failure-classifier.md); defect filing → [`bug-report-template`](../skills/bug-report-template/SKILL.md) per ISTQB defect ([glossary.istqb.org/en_US/term/defect](https://glossary.istqb.org/en_US/term/defect)).

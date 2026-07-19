@@ -13,7 +13,7 @@ according to their specification - checking that every endpoint returns the
 correct status code, response shape, and data under both normal and abnormal
 inputs. Per the ISTQB Glossary (v4.0, "component integration testing"),
 integration testing validates interactions between integrated components or
-systems ([glossary.istqb.org](https://glossary.istqb.org/en_US/term/component-integration-testing-1-1)).
+systems ([glossary.istqb.org](https://glossary.istqb.org/en_US/term/component-integration-testing)).
 API tests sit at the integration layer: they call a live (or stubbed) service
 over the network rather than invoking code in-process.
 

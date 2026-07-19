@@ -231,8 +231,7 @@ Tests should not depend on external services they don't control. Three patterns:
 - Luo et al. (FSE 2014) - *An Empirical Analysis of Flaky Tests* (the original academic taxonomy of flake categories: 45% async-wait, 20% concurrency, 12% test-order-dependency, from 201 fixes across 51 projects) which this catalog's patterns prevent: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
 - Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - flake prevalence (about 16% of tests show some flakiness): https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 - Testcontainers - https://testcontainers.com/ (the canonical containerised-DB-per-test reference)
-- ISTQB glossary - test isolation: https://glossary.istqb.org/en_US/term/independent-testing
+- Gerard Meszaros - *Principles of Test Automation* ("Principle: Keep Tests Independent", also known as Independent Test - the canonical statement of the test-isolation principle this catalog implements): http://xunitpatterns.com/Principles%20of%20Test%20Automation.html
 - ISTQB glossary - test fixture: https://glossary.istqb.org/en_US/term/test-fixture
-- ISTQB glossary - flaky test: https://glossary.istqb.org/en_US/term/flaky-test
 - [`test-code-conventions §6`](../test-code-conventions/SKILL.md), `flake-pattern-reference` (qa-flake-triage) - companion file-level and symptom-level references.
 - [`object-model-patterns`](../object-model-patterns/SKILL.md), `test-data-patterns` (qa-test-data), [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md) - sister architecture-tier pattern catalogs.

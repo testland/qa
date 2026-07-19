@@ -140,12 +140,14 @@ and [subagents](https://code.claude.com/docs/en/sub-agents) docs):
 Marketplace conventions (stricter than Anthropic's namespace-only rule):
 
 - **Unique bare names across the whole marketplace**, not just within your
-  plugin. Plugin skills are namespaced (`qa-bdd:bdd-getting-started`), so
+  plugin. Plugin skills are namespaced (`qa-bdd:bdd-overview`), so
   Claude Code tolerates duplicates - but agent `skills:` preloads and
   cross-plugin body links resolve by **bare name**, and duplicates make them
-  ambiguous. Check the alphabetical index in `CATALOG.md` before naming.
+  ambiguous. `CATALOG.md` lists per-plugin counts, not component names, so
+  check for a collision with `ls plugins/*/skills/ plugins/*/agents/` before
+  naming.
 - **Name the behavior or the tool, never the reader's state or the artifact
-  kind.** `bdd-getting-started` not `getting-started`; `payment-webhook-replay`
+  kind.** `bdd-overview` not `getting-started`; `payment-webhook-replay`
   not `payment-webhook-replay-skill`. Anthropic's docs recommend gerund-form
   names (`processing-pdfs`) and explicitly accept noun phrases
   (`pdf-processing`) - this marketplace's tool-wrapper (`jest-tests`),
@@ -154,8 +156,10 @@ Marketplace conventions (stricter than Anthropic's namespace-only rule):
 - **No filler words.** Anthropic's avoid-list names `helper`, `utils`,
   `tools`; this marketplace also rejects `-skill`, `-prompt`, and other
   suffixes that restate the component type instead of the behavior.
-- **Onramp skills are domain-prefixed**: `<domain>-getting-started`
-  (`web-e2e-getting-started`), one per plugin at most.
+- **Onramp skills are domain-prefixed**: `<domain>-overview`
+  (`web-e2e-overview`), one per plugin at most. Do not name them for the
+  reader's state (`getting-started`); a skill installed on its own has no
+  plugin context to be new to.
 - Descriptions should end with an explicit trigger sentence - "Use when …"
   (skills) or a delegation cue like "Use proactively when …" (agents). The
   description, not the name, is what makes Claude invoke the component.

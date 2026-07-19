@@ -6,6 +6,7 @@ model: sonnet
 skills:
   - test-case-anatomy-reference
   - traceability-matrix-builder
+  - test-case-review-rubric
 ---
 
 An adversarial test-case-quality auditor that blocks substandard cases from polluting the TCM.
@@ -24,56 +25,29 @@ Output: per-case findings + a single repository-level verdict.
 
 ## Step 1 - Required-field check
 
-Per
-[`test-case-anatomy-reference`](../skills/test-case-anatomy-reference/SKILL.md),
-every case must have:
-
-| Field | Required? | BLOCK if missing? |
-|---|:---:|:---:|
-| Identifier | ✓ | ✓ |
-| Title (Objective) | ✓ | ✓ |
-| Preconditions | ✓ | ✓ |
-| Steps | ✓ | ✓ |
-| Expected results per step | ✓ | ✓ |
-| Environment | ✓ | ✗ (warning if missing) |
-| Traceability (refs) | proposed | ✗ (warning) |
-| Severity / priority / type | proposed | ✗ (warning) |
+Run Gate 0 from `test-case-review-rubric` before scoring anything: it
+names which missing fields make a case unscorable and which are
+warnings only. The canonical field list and cardinality come from
+[`test-case-anatomy-reference`](../skills/test-case-anatomy-reference/SKILL.md).
 
 ## Step 2 - Step granularity check
 
-For each case's steps:
-
-- One action per step (reject "log in **and** click checkout")
-- Each step has a paired expected result
-- Action verbs concrete ("Click Submit" - yes; "Test the button" - no)
-- Step count between 1 and ~15 (more than 15 = case too broad)
-
-```
-def check_steps(case):
-    issues = []
-    for i, step in enumerate(case.steps, 1):
-        if " and " in step.action.lower() and len(step.action) > 30:
-            issues.append(f"Step {i}: combined action; split")
-        if not step.expected_result:
-            issues.append(f"Step {i}: missing expected result")
-        if step.action.strip().lower().startswith(("test", "verify", "check")):
-            issues.append(f"Step {i}: vague verb; use concrete action verb")
-    if len(case.steps) > 15:
-        issues.append(f"Case has {len(case.steps)} steps - split into multiple")
-    return issues
-```
+Score each case's steps against axes A3 (step granularity) and A4
+(step abstraction match) in `test-case-review-rubric`, plus its
+step-count-ceiling convention.
 
 ## Step 3 - Title quality
 
-- Behavioural (states what's verified, not "test X")
-- Single-clause (no `and` joining two unrelated verifications)
-- Concrete (no vague verbs)
-- Single-description test per
-  [`docs/CONTRIBUTING.md`](../../../docs/CONTRIBUTING.md)
+Score the title against axis A1 (objective specificity) in
+`test-case-review-rubric`. Where the project publishes its own
+convention, prefer it: single-description test per
+[`docs/CONTRIBUTING.md`](../../../docs/CONTRIBUTING.md).
 
 ## Step 4 - Traceability validity
 
-For each case's `refs` (or platform equivalent):
+Axis A6 in `test-case-review-rubric` owns the stale-versus-missing
+asymmetry; this step resolves the refs that feed it. For each case's
+`refs` (or platform equivalent):
 
 ```python
 def check_refs(case, requirements_set):
@@ -104,6 +78,10 @@ Per
   flow should not be Severity = Trivial)?
 
 ## Step 7 - Verdict + report
+
+Derive the per-case and repository verdicts per
+`test-case-review-rubric` (never averaged, and always with the failing
+case identifiers named), then assemble the report:
 
 ```markdown
 ## Test-case quality audit - <project> - <date>

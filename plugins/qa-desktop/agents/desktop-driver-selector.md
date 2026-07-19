@@ -12,6 +12,7 @@ skills:
   - xctest-mac-desktop
   - at-spi-linux
   - desktop-test-strategy-reference
+  - tool-selection-decision-record
 ---
 
 A driver-selection agent that turns "which desktop UI driver should we use?" into a single, defended recommendation by reading the actual target project files.
@@ -79,30 +80,7 @@ Signals: `<requestedExecutionLevel level="requireAdministrator" />` in `app.mani
 
 ## Step 3 - Emit the recommendation
 
-Output template (Markdown, copyable to a decision record):
-
-```markdown
-## Desktop driver recommendation - <project-name>
-
-**App type detected:** <wpf | winforms | electron | qt | ...>
-**Signal:** <file path + line excerpt that drove the detection>
-
-**Recommended driver:** <FlaUI / WinAppDriver / electron-playwright / ...>
-
-### Rationale
-- <one-line: why this driver fits this app type>
-- <one-line: why not the alternative considered>
-
-### Read next
-- [`<preloaded-skill>`](../skills/<preloaded-skill>/SKILL.md) for authoring + CI setup.
-
-### Conditions under which this flips
-- <one-line: e.g. "team needs non-.NET test clients → switch to winappdriver">
-```
-
-The "Conditions under which this flips" section is required - every
-recommendation declares its own counter-conditions so the team can
-re-run the agent when those conditions appear.
+Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen driver's preloaded SKILL.md. Any elevation flag from Step 2b goes in the flip conditions.
 
 ## Worked example
 

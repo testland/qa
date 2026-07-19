@@ -12,7 +12,7 @@ that replaces a real dependency during testing so the subject under test
 can be exercised in isolation. This skill covers the two dominant
 double-generation approaches in the Go and Rust ecosystems.
 
-[istqb-double]: https://glossary.istqb.org/en_US/term/test-double-2
+[istqb-double]: https://glossary.istqb.org/en_US/term/test-double
 
 | Ecosystem | Tool | Approach |
 |---|---|---|

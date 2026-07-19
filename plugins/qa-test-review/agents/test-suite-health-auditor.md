@@ -200,7 +200,7 @@ A repo with 3 test files total in a flat `tests/` dir:
 - **Flake remediation patterns** → [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) for the canonical replacements; [`e2e-flake-bisector`](../../qa-flake-triage/agents/e2e-flake-bisector.md) for narrowing to the offending commit.
 - **Framework choice re-evaluation** (when audit reveals the framework itself is the bottleneck) → [`framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md).
 - **Strategy prescription before authoring** (the auditor's upstream sibling) → [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md).
-- **Defect filing for any Critical finding** → [`bug-report-template`](../../qa-bug-repro/skills/bug-report-template/SKILL.md) - file the underlying defect ([glossary.istqb.org/en_US/term/defect-1](https://glossary.istqb.org/en_US/term/defect-1)).
+- **Defect filing for any Critical finding** → [`bug-report-template`](../../qa-bug-repro/skills/bug-report-template/SKILL.md) - file the underlying defect ([glossary.istqb.org/en_US/term/defect](https://glossary.istqb.org/en_US/term/defect)).
 
 ## Limitations
 
@@ -216,6 +216,6 @@ A repo with 3 test files total in a flat `tests/` dir:
 - Martin Fowler - Eradicating Non-Determinism in Tests (flake framing; five root causes; against retry-as-fix): [martinfowler.com/articles/nonDeterminism.html](https://martinfowler.com/articles/nonDeterminism.html)
 - Kent C. Dodds - Write tests. Not too many. Mostly integration (testing-trophy counterpoint): [kentcdodds.com/blog/write-tests](https://kentcdodds.com/blog/write-tests)
 - ISTQB glossary - test pyramid (canonical terminology; URL is JS-rendered and may not load directly, cite by stable URL ID): [glossary.istqb.org/en_US/term/test-pyramid](https://glossary.istqb.org/en_US/term/test-pyramid)
-- ISTQB glossary - defect (for defect-filing terminology): [glossary.istqb.org/en_US/term/defect-1](https://glossary.istqb.org/en_US/term/defect-1)
+- ISTQB glossary - defect (for defect-filing terminology): [glossary.istqb.org/en_US/term/defect](https://glossary.istqb.org/en_US/term/defect)
 - Sibling critics - per-file scope; do not duplicate: [`test-code-critic`](test-code-critic.md), [`assertion-quality-reviewer`](assertion-quality-reviewer.md), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md), [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md), [`framework-architecture-auditor`](framework-architecture-auditor.md).
 - Upstream sibling - [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md) prescribes test strategy before authoring; this auditor reads the suite that resulted.
