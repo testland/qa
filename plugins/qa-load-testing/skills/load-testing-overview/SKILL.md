@@ -1,12 +1,8 @@
 ---
 name: load-testing-overview
 description: "Overview of performance and load testing for engineers new to it: explains the core metrics (throughput, latency percentiles, error rate), helps select a tool for the stack, walks a first k6 script through to a passing threshold, and adds a performance-budget CI gate. Use when getting started with performance or load testing."
-keywords:
-  - getting-started
-  - load-testing
-  - k6
-  - performance
-  - onboarding
+metadata:
+  keywords: "getting-started, load-testing, k6, performance, onboarding"
 ---
 
 # load-testing-overview

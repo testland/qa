@@ -1,14 +1,8 @@
 ---
 name: madge-deps
 description: "Run Madge against a JS/TS production source tree to detect circular dependencies, find orphan modules, and visualize the module graph. Scoped to production code via `excludeRegExp` for test files."
-type: skill
-keywords:
-  - madge
-  - circular-dependency
-  - module-graph
-  - dependency-analysis
-  - javascript
-  - typescript
+metadata:
+  keywords: "madge, circular-dependency, module-graph, dependency-analysis, javascript, typescript"
 ---
 
 # madge-deps

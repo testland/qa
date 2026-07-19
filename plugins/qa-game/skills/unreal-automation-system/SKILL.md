@@ -1,7 +1,8 @@
 ---
 name: unreal-automation-system
 description: "Author and run Unreal Engine's Automation Test Framework - Epic's C++ test framework for UE 4.x / 5.x, documented at dev.epicgames.com/documentation/en-us/unreal-engine. Covers the five test categories Epic defines (Unit / Feature / Smoke / Content Stress / Screenshot Comparison), the IMPLEMENT_SIMPLE_AUTOMATION_TEST and IMPLEMENT_COMPLEX_AUTOMATION_TEST macros, the BDD-style Automation Spec API (DEFINE_SPEC / BEGIN_DEFINE_SPEC / Describe / It / BeforeEach / LatentIt / xIt), latent commands (ADD_LATENT_AUTOMATION_COMMAND), the Automation Driver for UI input simulation (IAutomationDriverModule::Get().CreateDriver(), By::Id / By::Path locators), running via Session Frontend (Window > Test Automation) and command line (-ExecCmds=\"Automation RunTests …\"), and CI integration. Use when the unit under test is C++ Unreal code that needs the UE runtime, editor, or UMG UI surface."
-keywords: ["unreal", "ue4", "ue5", "automation", "automation-spec", "automation-driver", "session-frontend", "gauntlet", "cpp", "game-engine"]
+metadata:
+  keywords: "unreal, ue4, ue5, automation, automation-spec, automation-driver, session-frontend, gauntlet, cpp, game-engine"
 ---
 
 # unreal-automation-system

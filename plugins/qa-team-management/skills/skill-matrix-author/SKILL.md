@@ -1,7 +1,8 @@
 ---
 name: skill-matrix-author
 description: "Build-an-X workflow that produces a QA team skill matrix - team members crossed with competency dimensions at explicit proficiency levels, each cell backed by observable evidence - then derives a gap analysis comparing the matrix against the team's required testing skills. Competency dimensions follow ISTQB CTAL-TM v3.0 chapter 3 (Managing the Team): professional, methodological, social, and personal competence. Distinct from `hiring-rubric-author` in qa-hiring (point-in-time scoring of external candidates; this skill maps the existing team on an ongoing basis), from a downstream gap-prioritization step (which consumes a completed matrix plus a roadmap and prioritizes the gaps), and from `onboarding-plan-author` (one new hire's ramp, not whole-team capability). Use when a QA manager needs to know what the team can do today versus what its projects demand - before planning training, hiring, or work allocation."
-keywords: ["skill-matrix", "competency", "qa-team", "gap-analysis", "ctal-tm", "test-management", "capability"]
+metadata:
+  keywords: "skill-matrix, competency, qa-team, gap-analysis, ctal-tm, test-management, capability"
 ---
 
 # skill-matrix-author

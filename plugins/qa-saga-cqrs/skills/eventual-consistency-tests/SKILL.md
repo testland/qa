@@ -1,13 +1,8 @@
 ---
 name: eventual-consistency-tests
 description: "Build eventual-consistency tests for distributed infrastructure: multi-region replication convergence windows (\"within 5s\"), monotonic-read guarantees, anti-entropy self-healing, and CRDT merge semantics (OR-Set, G-Counter, LWW, vector clocks). Distinguishes \"eventually\" from \"never\" by asserting bounded convergence. Use when the consistency boundary is a cache cluster, replication topology, or CRDT store, not a CQRS command/query split (use cqrs-projection-tests for read-model lag after a command)."
-type: skill
-keywords:
-  - eventual-consistency
-  - convergence
-  - monotonic-reads
-  - crdt
-  - vector-clocks
+metadata:
+  keywords: "eventual-consistency, convergence, monotonic-reads, crdt, vector-clocks"
 ---
 
 # eventual-consistency-tests

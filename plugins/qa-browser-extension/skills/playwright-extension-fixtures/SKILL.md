@@ -1,12 +1,8 @@
 ---
 name: playwright-extension-fixtures
 description: "Author the lower-level Playwright fixture pattern that every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe. Distinct from `qa-modern-web/browser-extension-tests` (MV3 popup + content-script assertions); this is the lower-level Playwright fixture pattern (`launchPersistentContext` + `--disable-extensions-except` + `--load-extension`) shared by all extension tests. For Playwright-driven MV3 popup / content-script fixtures see `qa-modern-web/browser-extension-tests`. This plugin covers Firefox + Chrome extension lifecycle, MV2 → MV3 migration, host-permission prompts, and `storage.sync` vs `storage.local` semantics."
-keywords:
-  - playwright
-  - chromium
-  - launchpersistentcontext
-  - test-fixtures
-  - browser-extension
+metadata:
+  keywords: "playwright, chromium, launchpersistentcontext, test-fixtures, browser-extension"
 ---
 
 # playwright-extension-fixtures

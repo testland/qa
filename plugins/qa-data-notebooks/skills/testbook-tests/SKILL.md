@@ -1,13 +1,8 @@
 ---
 name: testbook-tests
 description: "Use the `@testbook` decorator to write conventional pytest unit tests against functions defined in Jupyter notebooks, without copy-pasting the function into a `.py` file. Pairs with `tb.ref()` (notebook object access) and `tb.inject()` (insert code into kernel) for hermetic per-test setup."
-type: skill
-keywords:
-  - testbook
-  - jupyter
-  - notebook-testing
-  - pytest
-  - unit-testing
+metadata:
+  keywords: "testbook, jupyter, notebook-testing, pytest, unit-testing"
 ---
 
 # testbook-tests

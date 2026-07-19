@@ -1,7 +1,8 @@
 ---
 name: ceedling-mocks-reference
 description: "Pure-reference catalog of CMock and Ceedling mocking semantics for C. Defines what CMock generates from a C header (the full Expect / ExpectAndReturn / ExpectAnyArgs / ExpectWithArray / Ignore / IgnoreAndReturn / IgnoreArg_<param> / ReturnThruPtr_<param> / AddCallback / Stub / ExpectAndThrow naming family), the cmock.yml :plugins list (ignore, ignore_stateless, ignore_arg, expect_any_args, array, callback, cexception, return_thru_ptr) and what each enables, mock-suffix and mock-prefix conventions, how Unity teardown validates expectations, the resetTest mid-test verification, strict vs ignore argument-matching modes, and the trade-offs between mock / stub / spy / fake. Use as the CMock semantics reference when authoring Ceedling tests with mocks or when reading an unfamiliar mock-driven test suite."
-keywords: ["cmock", "ceedling", "unity", "mocks", "stubs", "c", "embedded", "throwtheswitch"]
+metadata:
+  keywords: "cmock, ceedling, unity, mocks, stubs, c, embedded, throwtheswitch"
 ---
 
 # ceedling-mocks-reference

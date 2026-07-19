@@ -1,7 +1,8 @@
 ---
 name: api-testing-overview
 description: "Overview of API testing for engineers new to it: explains what API testing is, maps each common tool (Postman, REST Assured, Karate, Tavern, Schemathesis) to its stack, and walks the first steps to write and run a minimal request with status and schema assertions. Use when getting started with API testing and choosing a tool."
-keywords: [api-testing, onboarding, getting-started, postman, rest-assured, tavern]
+metadata:
+  keywords: "api-testing, onboarding, getting-started, postman, rest-assured, tavern"
 ---
 
 # api-testing-overview

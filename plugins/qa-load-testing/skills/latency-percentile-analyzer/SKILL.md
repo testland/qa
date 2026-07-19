@@ -1,16 +1,8 @@
 ---
 name: latency-percentile-analyzer
 description: "Interprets latency distributions from k6 load tests beyond the p95/p99 gate: reads percentile summaries and JSON exports to identify tail shape, computes the tail ratio (p99/p50) as a distribution-spread signal, detects bimodal distributions, explains coordinated omission and why naive p99 values are optimistic under sustained load, and distinguishes request-rate from concurrency models. Use when a k6 threshold passes but the system still feels slow, when p99 is suspiciously low during ramp-up, or when the team needs to explain why tail latency is high rather than just observing that it is."
-keywords:
-  - latency
-  - percentile
-  - tail-latency
-  - p99
-  - coordinated-omission
-  - hdrhistogram
-  - bimodal
-  - load-testing
-  - k6
+metadata:
+  keywords: "latency, percentile, tail-latency, p99, coordinated-omission, hdrhistogram, bimodal, load-testing, k6"
 ---
 
 # latency-percentile-analyzer

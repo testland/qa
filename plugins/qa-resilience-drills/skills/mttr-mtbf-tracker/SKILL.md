@@ -1,14 +1,8 @@
 ---
 name: mttr-mtbf-tracker
 description: "Reference for tracking MTTR (Mean Time To Recovery) / MTBF (Mean Time Between Failures) / MTTD (Mean Time To Detection) / MTTA (Mean Time To Acknowledge) - incident-record schema, calculation formulae, dashboards-as-code, target-vs-actual alerting. Aligns with ITIL incident management + ISO 20000 + Google SRE incident response chapter."
-type: skill
-keywords:
-  - mttr
-  - mtbf
-  - mttd
-  - mtta
-  - incident-metrics
-  - sre
+metadata:
+  keywords: "mttr, mtbf, mttd, mtta, incident-metrics, sre"
 ---
 
 # mttr-mtbf-tracker

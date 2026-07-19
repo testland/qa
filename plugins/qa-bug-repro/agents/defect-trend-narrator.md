@@ -3,7 +3,6 @@ name: defect-trend-narrator
 description: "Read-only agent that takes a time-windowed set of defects (from `defect-clusterer` output, a tracker export, or a directory of bug reports) and emits a manager-facing trend narrative - Pareto breakdown of root-cause categories, week-over-week deltas in defect count and escape rate, top-3 movers (categories trending up / down), and a paragraph of prose suitable for a weekly review or QBR. Distinct from `defect-clusterer` (clusters by fingerprint at a single point in time) and from `escape-defect-analyzer` (classifies one defect as test-gap vs process-gap). Use as the weekly / monthly defect-review brief that turns a defect tracker into a managerial story."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(grep *), Bash(git log *)"
 model: sonnet
-skills: '[]'
 ---
 
 A reader of defect data that turns a tracker export into the prose summary a manager presents at a weekly review. Read-only - proposes no fixes, opens no issues, modifies no state.

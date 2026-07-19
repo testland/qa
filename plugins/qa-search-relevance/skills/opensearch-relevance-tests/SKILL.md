@@ -1,13 +1,8 @@
 ---
 name: opensearch-relevance-tests
 description: "Author OpenSearch relevance tests with Search Relevance Workbench (judgment lists, query sets, experiments), `_rank_eval` API (Elasticsearch-fork-compatible), and hybrid BM25 + neural ranking eval. Reuse Elasticsearch judgment list format; document the differences (neural search query DSL, hybrid weighting via `neural_query_enricher`)."
-type: skill
-keywords:
-  - opensearch
-  - search-relevance
-  - rank-eval
-  - neural-search
-  - hybrid-search
+metadata:
+  keywords: "opensearch, search-relevance, rank-eval, neural-search, hybrid-search"
 ---
 
 # opensearch-relevance-tests

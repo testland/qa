@@ -1,13 +1,8 @@
 ---
 name: saga-transaction-tests
 description: "Build saga transaction tests - orchestration vs choreography variants, per-step compensating-action verification, partial-failure scenarios (Step 3 fails → Steps 1+2 must compensate), idempotency of compensations, outbox pattern for atomic DB-update + message-publish. Per microservices.io/saga; tests guard against ACD-without-Isolation anomalies."
-type: skill
-keywords:
-  - saga
-  - distributed-transaction
-  - compensating-transaction
-  - orchestration
-  - choreography
+metadata:
+  keywords: "saga, distributed-transaction, compensating-transaction, orchestration, choreography"
 ---
 
 # saga-transaction-tests

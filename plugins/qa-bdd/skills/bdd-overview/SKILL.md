@@ -1,7 +1,8 @@
 ---
 name: bdd-overview
 description: "Overview of behavior-driven development for engineers and BAs new to it: maps each role (manual tester, business analyst, developer) to a starting point, explains Gherkin's Given/When/Then structure with a minimal example, and points onward to scenario authoring and review. Use when getting started with BDD."
-keywords: ["bdd", "gherkin", "getting-started", "three-amigos", "onboarding", "manual-tester", "business-analyst"]
+metadata:
+  keywords: "bdd, gherkin, getting-started, three-amigos, onboarding, manual-tester, business-analyst"
 ---
 
 # bdd-overview

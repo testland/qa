@@ -1,7 +1,8 @@
 ---
 name: mfa-flow-test-author
 description: "Build-an-X workflow for authoring automated tests covering multi-factor authentication flows: TOTP (RFC 6238, deterministic codes from a known secret + fixed time), HOTP (RFC 4226, counter-based), SMS/email OTP, WebAuthn/passkey registration and authentication via Chrome DevTools Protocol virtual authenticator (WebAuthn L2 §11), recovery codes, MFA enrollment, and step-up authentication challenges. Use when the team needs end-to-end MFA test coverage beyond what oauth-flow-test-author covers, or when introducing a new second factor to an existing auth surface."
-keywords: [mfa, totp, hotp, webauthn, passkey, otp, sms, recovery-codes, step-up, enrollment, rfc6238, rfc4226]
+metadata:
+  keywords: "mfa, totp, hotp, webauthn, passkey, otp, sms, recovery-codes, step-up, enrollment, rfc6238, rfc4226"
 ---
 
 # mfa-flow-test-author

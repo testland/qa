@@ -1,13 +1,8 @@
 ---
 name: elasticsearch-relevance-tests
 description: "Author Elasticsearch relevance regression tests using the Ranking Evaluation API (`POST <index>/_rank_eval`) - judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring."
-type: skill
-keywords:
-  - elasticsearch
-  - rank-eval
-  - relevance-testing
-  - judgment-list
-  - search-quality
+metadata:
+  keywords: "elasticsearch, rank-eval, relevance-testing, judgment-list, search-quality"
 ---
 
 # elasticsearch-relevance-tests

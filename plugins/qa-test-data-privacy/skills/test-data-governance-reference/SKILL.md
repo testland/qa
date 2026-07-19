@@ -1,15 +1,8 @@
 ---
 name: test-data-governance-reference
 description: "Pure-reference catalog of test-data lifecycle governance: retention schedules for test datasets, cross-environment data-sharing agreements, deletion of test data containing real PII, refresh cadence, access controls, and the legal basis for each policy under GDPR Art. 5 storage limitation and NIST SP 800-122. Use when defining a data-steward role for test environments, authoring a retention policy for a test database, scoping a data-sharing agreement before promoting a dataset from production to staging, or determining the deletion timeline for any test fixture that contains live personal data."
-keywords:
-  - test data
-  - data governance
-  - retention policy
-  - GDPR
-  - NIST
-  - data steward
-  - PII
-  - data lifecycle
+metadata:
+  keywords: "test data, data governance, retention policy, GDPR, NIST, data steward, PII, data lifecycle"
 ---
 
 # test-data-governance-reference

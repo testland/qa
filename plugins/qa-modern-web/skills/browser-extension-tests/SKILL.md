@@ -1,13 +1,8 @@
 ---
 name: browser-extension-tests
 description: "Test Chromium browser extensions (MV3) with Playwright via `launchPersistentContext` + `--load-extension` / `--disable-extensions-except` flags. Cover service worker, popup pages, content scripts, message passing, and `chrome.runtime` API mocking. Service worker auto-suspends ~30s; Playwright keeps the Worker object alive across restarts."
-type: skill
-keywords:
-  - browser-extension
-  - chrome-extension
-  - manifest-v3
-  - playwright
-  - service-worker
+metadata:
+  keywords: "browser-extension, chrome-extension, manifest-v3, playwright, service-worker"
 ---
 
 # browser-extension-tests

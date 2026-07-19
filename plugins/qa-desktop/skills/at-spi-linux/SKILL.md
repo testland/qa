@@ -1,13 +1,8 @@
 ---
 name: at-spi-linux
 description: "Authors Linux desktop UI tests via AT-SPI - the DBus-based Assistive Technology Service Provider Interface implemented by `at-spi2-core` (registry daemon + `libatspi` C library + ATK GTK bridge). Covers enabling toolkit accessibility (`gsettings set org.gnome.desktop.interface toolkit-accessibility true`), driving GTK + Qt apps through Python `dogtail` (object-oriented + procedural APIs), inspecting the tree with Accerciser, scripting via `pyatspi`, and CI integration on headless Linux runners with `Xvfb` + `dbus-launch`. Use for Linux-side desktop tests of GTK applications, Qt apps with QAccessible enabled, and Electron apps on Linux."
-keywords:
-  - linux
-  - at-spi
-  - dogtail
-  - gtk
-  - accessibility
-  - dbus
+metadata:
+  keywords: "linux, at-spi, dogtail, gtk, accessibility, dbus"
 ---
 
 # at-spi-linux

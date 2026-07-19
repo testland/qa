@@ -1,13 +1,8 @@
 ---
 name: jepsen-patterns
 description: "Reference for Jepsen-style distributed-systems testing - consistency models hierarchy (linearizability vs sequential vs causal vs monotonic-reads vs eventual), nemesis primitives (network partitions, clock skew, kill nodes), workload generators, Knossos + Elle linearizability checkers. Reference-only because Jepsen tests are typically Clojure-bespoke per system; use this skill to evaluate vendor claims and structure your own test."
-type: skill
-keywords:
-  - jepsen
-  - linearizability
-  - consistency-models
-  - distributed-systems
-  - nemesis
+metadata:
+  keywords: "jepsen, linearizability, consistency-models, distributed-systems, nemesis"
 ---
 
 # jepsen-patterns

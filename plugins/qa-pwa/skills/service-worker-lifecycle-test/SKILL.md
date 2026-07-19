@@ -1,12 +1,8 @@
 ---
 name: service-worker-lifecycle-test
 description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). Distinct from `qa-modern-web/service-worker-tests` (general SW assertion patterns); this is the install → waiting → activating → activated → redundant lifecycle and `skipWaiting` / `clients.claim` upgrade-path test builder."
-keywords:
-  - service-worker
-  - lifecycle
-  - skip-waiting
-  - clients-claim
-  - statechange
+metadata:
+  keywords: "service-worker, lifecycle, skip-waiting, clients-claim, statechange"
 ---
 
 # service-worker-lifecycle-test

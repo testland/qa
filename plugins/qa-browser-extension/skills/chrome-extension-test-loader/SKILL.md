@@ -1,12 +1,8 @@
 ---
 name: chrome-extension-test-loader
 description: "Load an unpacked Chrome / Chromium extension for testing via the `chrome://extensions` Developer-mode flow, then exercise the message-passing surface (chrome.runtime.sendMessage one-shot + return-true async pattern, chrome.tabs.sendMessage, chrome.runtime.connect long-lived ports, externally_connectable from web pages, native messaging). Covers reload semantics (manifest / service worker / content scripts require explicit reload; popup + options page reload on next open), the 64 MiB message size cap, and the JSON-serialization-not-structured-clone payload constraint. Use when scripting a from-scratch developer load of an unpacked Chromium extension and asserting messaging behaviour outside of Playwright. For Playwright-driven MV3 popup / content-script fixtures see `qa-modern-web/browser-extension-tests`. This plugin covers Firefox + Chrome extension lifecycle, MV2 → MV3 migration, host-permission prompts, and `storage.sync` vs `storage.local` semantics."
-keywords:
-  - chrome-extension
-  - load-unpacked
-  - chrome-runtime-sendmessage
-  - chrome-runtime-connect
-  - externally-connectable
+metadata:
+  keywords: "chrome-extension, load-unpacked, chrome-runtime-sendmessage, chrome-runtime-connect, externally-connectable"
 ---
 
 # chrome-extension-test-loader

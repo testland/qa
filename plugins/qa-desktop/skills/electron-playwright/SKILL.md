@@ -1,12 +1,8 @@
 ---
 name: electron-playwright
 description: "Authors Playwright `_electron` tests for packaged Electron desktop apps - launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from `qa-web-e2e/playwright-testing` (page automation against running browsers); this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite."
-keywords:
-  - electron
-  - playwright
-  - desktop
-  - main-process
-  - renderer
+metadata:
+  keywords: "electron, playwright, desktop, main-process, renderer"
 ---
 
 # electron-playwright

@@ -1,13 +1,8 @@
 ---
 name: vega-spec-validator
 description: "Validate Vega + Vega-Lite specifications against the JSON Schema (vega.github.io/schema), test cross-engine compatibility (Vega-Lite compiles to Vega per the canonical compiler), and verify data-binding correctness. Pair with d3-snapshot-tests when Vega specs render to SVG; pair with chartjs-snapshot-tests when rendered to Canvas."
-type: skill
-keywords:
-  - vega
-  - vega-lite
-  - declarative-charts
-  - json-schema
-  - spec-validation
+metadata:
+  keywords: "vega, vega-lite, declarative-charts, json-schema, spec-validation"
 ---
 
 # vega-spec-validator

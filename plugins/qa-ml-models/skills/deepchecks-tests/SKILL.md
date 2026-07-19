@@ -1,13 +1,8 @@
 ---
 name: deepchecks-tests
 description: "Run Deepchecks suites (data integrity, train-test validation, model evaluation) on tabular / NLP / vision data + models. Pass `result.passed_conditions()` to CI to gate on regressions; the same checks run during research, CI, and production monitoring per the Deepchecks lifecycle posture."
-type: skill
-keywords:
-  - deepchecks
-  - ml-testing
-  - data-validation
-  - train-test-split
-  - model-evaluation
+metadata:
+  keywords: "deepchecks, ml-testing, data-validation, train-test-split, model-evaluation"
 ---
 
 # deepchecks-tests

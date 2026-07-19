@@ -1,15 +1,8 @@
 ---
 name: sse-load-test
 description: "Load-tests SSE endpoints at scale with k6 - measures concurrent-stream capacity, connection churn, and server memory pressure. Covers the HTTP/1.1 6-connection-per-origin browser ceiling vs HTTP/2 multiplexing, a custom k6 SSE client built on ReadableStream, and threshold gates for TTFB and data throughput. Use when validating whether a server can sustain N concurrent EventSource connections without connection starvation or memory growth."
-type: skill
-keywords:
-  - sse
-  - server-sent-events
-  - load-testing
-  - k6
-  - http2
-  - connection-ceiling
-  - realtime-protocols
+metadata:
+  keywords: "sse, server-sent-events, load-testing, k6, http2, connection-ceiling, realtime-protocols"
 ---
 
 # sse-load-test

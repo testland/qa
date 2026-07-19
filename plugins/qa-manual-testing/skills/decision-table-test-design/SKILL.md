@@ -1,7 +1,8 @@
 ---
 name: decision-table-test-design
 description: "Derives human-readable manual test cases from a business-rule spec via a decision table: identify conditions and actions, build the full 2^n-column matrix, collapse columns with irrelevant entries, strike infeasible combinations, then emit one test case per remaining column (each feasible column is one coverage item per ISTQB CTFL v4.0 section 4.2.3). Deep single-technique walkthrough, unlike test-case-ideation-from-story in qa-process (broad multi-lens case matrix from a story); output is manual step/expected cases, unlike boundary-value-generator in qa-test-data (parameterized test code); covers derivation, not case field structure like test-case-anatomy-reference in qa-test-management. Use when a spec's outcome depends on interacting conditions (pricing, eligibility, discounts, routing rules) rather than the boundaries of a single input."
-keywords: ["decision table", "test design", "istqb", "ctfl", "business rules", "combinations", "black-box", "manual testing"]
+metadata:
+  keywords: "decision table, test design, istqb, ctfl, business rules, combinations, black-box, manual testing"
 ---
 
 # decision-table-test-design

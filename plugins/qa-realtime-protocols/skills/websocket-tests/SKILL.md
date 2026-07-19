@@ -1,13 +1,8 @@
 ---
 name: websocket-tests
 description: "Test WebSocket protocol behavior - opening handshake (HTTP Upgrade with Sec-WebSocket-Key + Sec-WebSocket-Version: 13), control frames (ping 0x9 / pong 0xA / close 0x8), close-frame status codes (1000 normal, 1001 going-away, 1006 abnormal, 1011 server error), subprotocol negotiation, backpressure, and reconnect with jitter. Use ws (Node), websockets (Python), or Playwright frame inspection per language."
-type: skill
-keywords:
-  - websocket
-  - rfc6455
-  - realtime-protocols
-  - frame-testing
-  - reconnection
+metadata:
+  keywords: "websocket, rfc6455, realtime-protocols, frame-testing, reconnection"
 ---
 
 # websocket-tests

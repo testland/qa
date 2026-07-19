@@ -1,13 +1,8 @@
 ---
 name: fairlearn-fairness
 description: "Compute group fairness metrics (selection rate, demographic parity, equalized odds) per sensitive feature with `MetricFrame`, then mitigate disparities using Reductions algorithms (`ExponentiatedGradient` with constraint = `DemographicParity`/`EqualizedOdds`). Wire group-disaggregated assertions into the model-evaluation gate."
-type: skill
-keywords:
-  - fairlearn
-  - fairness
-  - demographic-parity
-  - equalized-odds
-  - bias-mitigation
+metadata:
+  keywords: "fairlearn, fairness, demographic-parity, equalized-odds, bias-mitigation"
 ---
 
 # fairlearn-fairness

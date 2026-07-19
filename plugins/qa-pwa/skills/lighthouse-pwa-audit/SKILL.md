@@ -1,12 +1,8 @@
 ---
 name: lighthouse-pwa-audit
 description: "Run and interpret Lighthouse PWA audits - even after the PWA *category* was deprecated per [developer.chrome.com/docs/lighthouse/pwa][lh-pwa], the individual audits (`installable-manifest`, `service-worker`, `splash-screen`, `themed-omnibox`, `viewport`, `content-width`, `apple-touch-icon`, `maskable-icon`) still run and report under a custom Lighthouse config or via direct audit invocation. Covers CLI flags (`--only-categories`, `--output`, `--form-factor`, `--throttling-method`), programmatic Node.js invocation, Lighthouse CI assertions (`categories:<id>`, `audit-id` thresholds), and LHR JSON parsing."
-keywords:
-  - lighthouse
-  - lighthouse-ci
-  - pwa-audit
-  - installable-manifest
-  - maskable-icon
+metadata:
+  keywords: "lighthouse, lighthouse-ci, pwa-audit, installable-manifest, maskable-icon"
 ---
 
 # lighthouse-pwa-audit

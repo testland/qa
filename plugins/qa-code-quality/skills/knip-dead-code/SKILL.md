@@ -1,13 +1,8 @@
 ---
 name: knip-dead-code
 description: "Run Knip against a JS/TS project to detect unused files, unused dependencies, unused exports, and unused class/enum members. Scoped to production code; tests are entry-point-aware via Knip's framework plugins."
-type: skill
-keywords:
-  - knip
-  - dead-code
-  - unused-exports
-  - unused-dependencies
-  - typescript
+metadata:
+  keywords: "knip, dead-code, unused-exports, unused-dependencies, typescript"
 ---
 
 # knip-dead-code

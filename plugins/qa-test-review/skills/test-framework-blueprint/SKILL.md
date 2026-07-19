@@ -1,14 +1,8 @@
 ---
 name: test-framework-blueprint
 description: "Build-an-X workflow that takes an SDET from no test suite to a complete framework design in seven steps - inventory the SUT, choose runner + language, directory layout + fixture architecture, object-model decision, test data + mocking wiring, reporting + CI integration, conventions doc + review gates - producing a written framework blueprint (directory tree, fixture list, chosen patterns, CI matrix) plus an implementation order. Distinct from `framework-choice-advisor` (qa-process; the deeper reference for the Step 2 runner decision alone), from `object-model-patterns` (the Step 4 pattern catalog this workflow defers to), and from a harness scaffolder (qa-roles; scaffolds the harness skeleton AFTER this blueprint exists). Use when designing a test automation framework from scratch or re-architecting one that grew organically."
-keywords:
-  - test-framework
-  - framework-design
-  - blueprint
-  - fixtures
-  - sdet
-  - playwright
-  - test-architecture
+metadata:
+  keywords: "test-framework, framework-design, blueprint, fixtures, sdet, playwright, test-architecture"
 ---
 
 # test-framework-blueprint

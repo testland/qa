@@ -1,13 +1,8 @@
 ---
 name: vector-search-precision-tests
 description: "Vector search benchmarking - recall@k vs latency tradeoffs, ground-truth construction via brute-force, HNSW tuning (M / ef_construct / ef per Qdrant docs), embedding-model-upgrade drift detection. Use ANN-Benchmarks framework for cross-engine comparison; per-engine clients (Qdrant, Weaviate, pgvector, Pinecone, Elasticsearch k-NN, Milvus) for in-product tests."
-type: skill
-keywords:
-  - vector-search
-  - ann-benchmarks
-  - hnsw
-  - recall-at-k
-  - embedding-drift
+metadata:
+  keywords: "vector-search, ann-benchmarks, hnsw, recall-at-k, embedding-drift"
 ---
 
 # vector-search-precision-tests

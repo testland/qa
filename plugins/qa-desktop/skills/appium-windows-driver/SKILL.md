@@ -1,12 +1,8 @@
 ---
 name: appium-windows-driver
 description: "Authors and runs Appium 2.x tests against the Windows driver - the actively-maintained Node.js proxy in front of Microsoft's WinAppDriver server. Covers `appium driver install windows`, capability declaration (`platformName: windows`, `appium:automationName: windows`, `appium:app`, `appium:appTopLevelWindow`, `appium:appArguments`), Windows-specific gestures (`windows: scroll`, `windows: clickAndDrag`, `windows: keys`), PowerShell prerun/postrun hooks, and CI integration. Use when the test stack already uses Appium for other platforms (iOS, Android, Mac2) and Windows support fits the existing Appium client + capability model."
-keywords:
-  - appium
-  - windows
-  - automation
-  - uia
-  - desktop
+metadata:
+  keywords: "appium, windows, automation, uia, desktop"
 ---
 
 # appium-windows-driver

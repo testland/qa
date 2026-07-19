@@ -1,13 +1,8 @@
 ---
 name: giskard-tests
 description: "Test ML models with Giskard's scan() vulnerability detector + test catalog (performance, robustness, fairness, data leakage, ethical issues) for tabular and NLP models. Wrap a prediction function in giskard.Model + a DataFrame in giskard.Dataset; emit test suites that pass/fail in CI."
-type: skill
-keywords:
-  - giskard
-  - ml-testing
-  - model-vulnerabilities
-  - fairness-testing
-  - tabular-models
+metadata:
+  keywords: "giskard, ml-testing, model-vulnerabilities, fairness-testing, tabular-models"
 ---
 
 # giskard-tests

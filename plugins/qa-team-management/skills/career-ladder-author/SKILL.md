@@ -1,7 +1,8 @@
 ---
 name: career-ladder-author
 description: "Build-an-X workflow that designs a QA career ladder - parallel individual-contributor and management tracks, per-level criteria across consistent axes, and observable promotion evidence per level - modeled on public engineering career frameworks (the Dropbox Engineering Career Framework, which includes Quality Engineer and SDET roles) and the career-development guidance in Camille Fournier's The Manager's Path (ISBN 978-1491973899). Distinct from `skill-matrix-author` (a sibling that maps the team's capability today; the ladder defines what each level looks like over a career), from `hiring-rubric-author` in qa-hiring (scores external candidates against one role, not progression across levels), and from `performance-feedback-author` (a sibling producing feedback on one person's recent work; the ladder is the structure that feedback points at). Use when a QA org needs leveling criteria - before promotion season, during compensation banding, or when senior testers ask what comes next besides management."
-keywords: ["career-ladder", "career-framework", "qa-levels", "promotion", "ic-track", "management-track", "leveling"]
+metadata:
+  keywords: "career-ladder, career-framework, qa-levels, promotion, ic-track, management-track, leveling"
 ---
 
 # career-ladder-author

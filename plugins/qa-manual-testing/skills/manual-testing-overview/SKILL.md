@@ -1,7 +1,8 @@
 ---
 name: manual-testing-overview
 description: "Overview of manual testing for testers new to it: explains the two modes (session-based exploratory and scripted manual), lays out a recommended starting path, and names the four heuristic references (SFDPOT, HICCUPPS-F, FCC CUTS VIDS, CRUSSPIC STMPL) with guidance on when to reach for each. Use as a single entry point when getting started with manual or exploratory testing."
-keywords: [onboarding, exploratory-testing, sbtm, scripted-testing, heuristics, manual-testing]
+metadata:
+  keywords: "onboarding, exploratory-testing, sbtm, scripted-testing, heuristics, manual-testing"
 ---
 
 # manual-testing-overview

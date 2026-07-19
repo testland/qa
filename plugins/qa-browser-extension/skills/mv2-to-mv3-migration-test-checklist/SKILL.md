@@ -1,12 +1,8 @@
 ---
 name: mv2-to-mv3-migration-test-checklist
 description: "Build-an-X workflow that emits a per-extension MV2 → MV3 migration test checklist. Walks the six canonical migration sections (manifest, service worker, API calls, declarative net request, security, publication) per the Chrome migration checklist, then for each one inventories the source MV2 manifest, names the MV3 replacement field / API, and emits the verification test cases. Covers the Firefox-Chrome divergence cells (page_action retained in Firefox, event pages allowed in Firefox 106+, host-permission install-prompt behavior changed in Firefox 127, web_accessible_resources `use_dynamic_url` Chromium-only). Output: a checklist artifact with per-section test cases the migrating extension must pass before publishing the MV3 build. For Playwright-driven MV3 popup / content-script fixtures see `qa-modern-web/browser-extension-tests`. This plugin covers Firefox + Chrome extension lifecycle, MV2 → MV3 migration, host-permission prompts, and `storage.sync` vs `storage.local` semantics."
-keywords:
-  - manifest-v3
-  - mv2-to-mv3
-  - migration-checklist
-  - service-worker
-  - host-permissions
+metadata:
+  keywords: "manifest-v3, mv2-to-mv3, migration-checklist, service-worker, host-permissions"
 ---
 
 # mv2-to-mv3-migration-test-checklist

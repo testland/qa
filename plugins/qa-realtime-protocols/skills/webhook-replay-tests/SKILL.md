@@ -1,13 +1,8 @@
 ---
 name: webhook-replay-tests
 description: "Tests inbound webhook receivers for replay-attack resistance: capture incoming webhook payloads + headers, replay against the receiver under test, validate the Standard Webhooks signature scheme (svix-id + svix-timestamp + svix-signature, HMAC-SHA256 over `{id}.{timestamp}.{payload}`), svix-id idempotency dedup, and 5-minute timestamp-window enforcement by signing fixtures at runtime. Does NOT cover outbound delivery, retry-on-5xx, or failure-event exhaustion (see qa-notifications/webhook-delivery-tester for those). Use when testing the receiving side of a webhook integration."
-type: skill
-keywords:
-  - webhooks
-  - standard-webhooks
-  - replay-testing
-  - signature-verification
-  - idempotency
+metadata:
+  keywords: "webhooks, standard-webhooks, replay-testing, signature-verification, idempotency"
 ---
 
 # webhook-replay-tests

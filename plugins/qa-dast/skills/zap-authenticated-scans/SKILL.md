@@ -1,16 +1,8 @@
 ---
 name: zap-authenticated-scans
 description: "Configures authenticated DAST sessions in ZAP - ZAP Context + Authentication Method (form, JSON, script, browser-based, HTTP/NTLM), Session Management strategy (cookie, header, script), Verification Strategy (regex indicators, poll-URL), CSRF token handling, OAuth/bearer header injection, logged-in/logged-out indicator calibration, and context XML export for use with `-n` in baseline and full scans. Use when the team needs DAST coverage of authenticated routes - the most common DAST gap and the hardest DAST setup to get right."
-keywords:
-  - zap
-  - authentication
-  - dast
-  - context
-  - oauth
-  - bearer
-  - csrf
-  - session
-  - login
+metadata:
+  keywords: "zap, authentication, dast, context, oauth, bearer, csrf, session, login"
 ---
 
 # zap-authenticated-scans

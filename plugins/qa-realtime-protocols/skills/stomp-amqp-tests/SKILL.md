@@ -1,15 +1,8 @@
 ---
 name: stomp-amqp-tests
 description: "Tests STOMP over WebSocket (Spring, ActiveMQ, RabbitMQ Web STOMP) and AMQP 0-9-1 (RabbitMQ Java client) - frame connect/subscribe/send/ack sequences, ack modes (auto/client/client-individual), exchange and queue declarations, binding routing, Testcontainers RabbitMQ broker, and delivery assertion. Use when validating enterprise Spring or RabbitMQ messaging stacks before deploy."
-type: skill
-keywords:
-  - stomp
-  - amqp
-  - rabbitmq
-  - spring-messaging
-  - activemq
-  - testcontainers
-  - realtime-protocols
+metadata:
+  keywords: "stomp, amqp, rabbitmq, spring-messaging, activemq, testcontainers, realtime-protocols"
 ---
 
 # stomp-amqp-tests

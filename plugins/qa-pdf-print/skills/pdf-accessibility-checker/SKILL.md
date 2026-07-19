@@ -1,13 +1,8 @@
 ---
 name: pdf-accessibility-checker
 description: "Test PDF accessibility (PDF/UA conformance) - tagged-PDF structure (StructTreeRoot), alternative text on images (Alt), reading-order, language metadata (Lang), document title, heading hierarchy. Use veraPDF / PAC (PDF Accessibility Checker) / pdfix / Adobe Acrobat Pro headless; map each finding back to WCAG 2.1 PDF Techniques (PDF1 - PDF23)."
-type: skill
-keywords:
-  - pdf-accessibility
-  - pdf-ua
-  - tagged-pdf
-  - wcag
-  - verapdf
+metadata:
+  keywords: "pdf-accessibility, pdf-ua, tagged-pdf, wcag, verapdf"
 ---
 
 # pdf-accessibility-checker

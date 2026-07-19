@@ -3,7 +3,6 @@ name: regression-bisector
 description: "Orchestrates `git bisect` against a target test or build script to identify the introducing commit of a regression. Wraps the bad/good marking, the `git bisect run` script, the 125 exit code for unbuildable revisions, and the final culprit report. Use when a test that previously passed has started failing 100% of the time on the trunk."
 tools: "Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(npx playwright test *), Bash(jest *), Bash(npm test *), Bash(make *)"
 model: sonnet
-skills: '[]'
 ---
 
 A bisect orchestrator that turns "this used to work" into "commit abc1234 broke it."

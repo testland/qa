@@ -1,12 +1,8 @@
 ---
 name: web-push-test
 description: "Test the browser web-push subscription lifecycle - `pushManager.subscribe({ userVisibleOnly, applicationServerKey })` per [W3C Push API][w3c-push] returning a `PushSubscription` with `endpoint` + `keys.p256dh` + `keys.auth` + optional `expirationTime`; the `pushsubscriptionchange` service-worker event on refresh / revoke / expiry; the `push` event delivery with `PushMessageData`; VAPID auth per RFC 8292 (ES256 JWT, `aud` / `exp` ≤ 24h / `sub`); RFC 8030 push-service responses (201 Created, 410 Gone for expired endpoints, 413 Payload Too Large, 429); and `unsubscribe()` cleanup. Distinct from `qa-notifications/push-notification-test-author` (cross-channel push including mobile + native APNs/FCM); this is browser web-push subscription lifecycle (`pushManager.subscribe`, VAPID, endpoint expiry)."
-keywords:
-  - web-push
-  - vapid
-  - push-api
-  - rfc-8030
-  - pushsubscriptionchange
+metadata:
+  keywords: "web-push, vapid, push-api, rfc-8030, pushsubscriptionchange"
 ---
 
 # web-push-test

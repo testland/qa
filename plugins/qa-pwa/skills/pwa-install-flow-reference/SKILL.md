@@ -1,12 +1,8 @@
 ---
 name: pwa-install-flow-reference
 description: "Pure reference for the PWA install flow as a test surface - the installability gate (manifest required fields per [web.dev/articles/install-criteria][install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` event handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), the per-platform divergences (Chromium desktop install badge, Android WebAPK minting, iOS manual Share → Add to Home Screen), and the `display-mode` media-query post-install signal. For generic service-worker tests, install-flow tests, and SW cache-strategy authoring see `qa-modern-web/service-worker-tests`, `pwa-install-flow-tests`, and `sw-cache-strategy-author`. For channel-agnostic push-notification harness see `qa-notifications/push-notification-test-author`. This plugin covers Workbox recipes, offline-fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle."
-keywords:
-  - pwa
-  - install-criteria
-  - beforeinstallprompt
-  - web-app-manifest
-  - webapk
+metadata:
+  keywords: "pwa, install-criteria, beforeinstallprompt, web-app-manifest, webapk"
 ---
 
 # pwa-install-flow-reference

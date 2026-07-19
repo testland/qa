@@ -1,7 +1,8 @@
 ---
 name: bdd-suite-to-test-map
 description: "Parses new Gherkin scenarios produced by acceptance-criteria-extractor, fingerprints each scenario by its Given/When/Then step sequence, diffs the fingerprints against existing step-definition usage in the live suite, and emits a coverage/duplicate map showing which new scenarios are already covered, which overlap partially, and which are genuine gaps. Use when acceptance criteria have been converted to .feature files and before any new automated tests are authored."
-keywords: ["bdd", "gherkin", "cucumber", "coverage", "duplicate-detection", "shift-left"]
+metadata:
+  keywords: "bdd, gherkin, cucumber, coverage, duplicate-detection, shift-left"
 ---
 
 # bdd-suite-to-test-map

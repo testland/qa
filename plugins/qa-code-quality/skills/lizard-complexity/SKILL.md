@@ -1,13 +1,8 @@
 ---
 name: lizard-complexity
 description: "Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds - language-agnostic (30+ languages). Scoped to production code via `-x\"./tests/*\"`; test complexity is owned by qa-test-review."
-type: skill
-keywords:
-  - lizard
-  - cyclomatic-complexity
-  - ccn
-  - code-metrics
-  - quality-gate
+metadata:
+  keywords: "lizard, cyclomatic-complexity, ccn, code-metrics, quality-gate"
 ---
 
 # lizard-complexity

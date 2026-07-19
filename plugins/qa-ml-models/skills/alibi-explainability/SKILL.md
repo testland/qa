@@ -1,14 +1,8 @@
 ---
 name: alibi-explainability
 description: "Use Alibi Explain to generate model explanations - Anchors, Integrated Gradients, Kernel/Tree SHAP, ALE, Counterfactual Instances. Wires explainer.fit + explainer.explain into model-evaluation pipelines so that every flagged prediction ships with a \"why\" record auditors can reason about."
-type: skill
-keywords:
-  - alibi
-  - explainability
-  - interpretability
-  - counterfactual
-  - shap
-  - integrated-gradients
+metadata:
+  keywords: "alibi, explainability, interpretability, counterfactual, shap, integrated-gradients"
 ---
 
 # alibi-explainability

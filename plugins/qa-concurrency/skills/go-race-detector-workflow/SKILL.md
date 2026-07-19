@@ -1,15 +1,8 @@
 ---
 name: go-race-detector-workflow
 description: "Runs the Go race detector and goroutine-leak checker end-to-end: instrument with `go test -race`, read race reports, configure GORACE options, stress with `-count`/`-cpu`, detect goroutine leaks with go.uber.org/goleak, and gate both checks in CI. Use when a Go service has shared state accessed by concurrent goroutines, when a race-related incident needs a regression harness, or when adding `-race` to a CI matrix for a Go module. Does not cover barrier-based deterministic interleaving or forced goroutine scheduling; use race-condition-test-author for that."
-type: skill
-keywords:
-  - go
-  - race-detector
-  - goroutine-leak
-  - goleak
-  - concurrency
-  - data-race
-  - GOMAXPROCS
+metadata:
+  keywords: "go, race-detector, goroutine-leak, goleak, concurrency, data-race, GOMAXPROCS"
 ---
 
 # go-race-detector-workflow

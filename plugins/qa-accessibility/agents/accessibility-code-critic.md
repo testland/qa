@@ -8,6 +8,7 @@ skills:
   - wcag-focus-trap
   - wcag-color-contrast
   - aria-authoring-patterns
+  - wcag-checklist-builder
 ---
 
 A skeptical accessibility reviewer that finds the WCAG 2.2 violations a hand-rolled component is most likely to ship.

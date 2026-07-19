@@ -1,13 +1,8 @@
 ---
 name: chaos-results-reporter
 description: "Aggregates chaos drill verdicts over time into a resilience trend report - per-experiment hypothesis-held / blast-radius / time-to-detect / time-to-recover, degradation trends across runs, action items, and a stakeholder summary. Use when a team has completed one or more chaos drills and needs a structured trend report showing whether resilience is improving, degrading, or stable across iterations."
-keywords:
-  - chaos
-  - resilience
-  - trend
-  - reporting
-  - post-drill
-  - blast-radius
+metadata:
+  keywords: "chaos, resilience, trend, reporting, post-drill, blast-radius"
 ---
 
 # chaos-results-reporter

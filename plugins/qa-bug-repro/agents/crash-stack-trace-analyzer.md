@@ -3,7 +3,6 @@ name: crash-stack-trace-analyzer
 description: "Read-only agent that parses a crash dump or stack trace, identifies the top application frame, runs `git blame` on the implicated source lines to attribute the failure to a specific commit, and emits a root-cause hypothesis (clear regression / latent fault / inconclusive). Output is a blame table plus hypothesis, not a bug report: use bug-report-template when the goal is a structured report with Steps to Reproduce. Handles JS/TS V8 traces, Python tracebacks, Java/JVM stack traces, Go panics, native (gdb/addr2line) traces, and minified production stacks (with sourcemap support). Use when the only input is an error log or crash report and you need to attribute the crash to a commit."
 tools: "Read, Grep, Glob, Bash(git blame *), Bash(git log *), Bash(git show *), Bash(node *)"
 model: sonnet
-skills: '[]'
 ---
 
 A trace parser that turns "the app crashed in production" into "this commit on this line is the most likely cause."

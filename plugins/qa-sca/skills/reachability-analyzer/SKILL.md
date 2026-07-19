@@ -7,15 +7,8 @@ description: "Runs dead-dependency analysis across JS, Python, and Rust projects
   Use when SCA output (from `osv-scanner`, `snyk-test`, or `npm-pip-maven-audit`)
   is too noisy to triage and the team needs to separate unreachable CVEs from
   exploitable ones before sprint planning."
-keywords:
-  - reachability
-  - dead-dependencies
-  - sca
-  - depcheck
-  - knip
-  - vulture
-  - cargo-machete
-  - prioritization
+metadata:
+  keywords: "reachability, dead-dependencies, sca, depcheck, knip, vulture, cargo-machete, prioritization"
 ---
 
 # reachability-analyzer
