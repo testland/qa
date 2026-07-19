@@ -19,6 +19,7 @@ Test code quality reviewers - agents specialized for **test files only**, not pr
 | Agent | [test-suite-health-auditor](agents/test-suite-health-auditor.md) | Whole-suite cross-tool audit: file inventory, tier classification (unit / integration / E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, assertion quality. Emits categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with top-3 prune/expand/refactor recommendations. Distinct from framework-architecture-auditor (single-framework, narrow) and qa-roles/test-architect (A2, prescribes strategy). |
 | Skill | [test-design-scorecard](skills/test-design-scorecard/SKILL.md) | Scores test files 1 to 5 on six design axes with explicit per-level anchors, then turns the scores into growth-framed feedback and a per-author trend. Produces a score, not a merge verdict. |
 | Skill | [test-suite-health-audit](skills/test-suite-health-audit/SKILL.md) | Measures a suite on tier mix, pyramid distance, per-layer flake rate and ROI per tier, then reduces to one verdict. Reports against a target without prescribing one. |
+| Skill | [test-framework-architecture-audit](skills/test-framework-architecture-audit/SKILL.md) | Audits the framework itself across eight axes (page objects, base-class depth, fixtures, helpers, naming, waits, convention drift, CI) and labels which numeric cuts are conventions rather than standards. |
 
 ## Install
 

@@ -15,6 +15,7 @@ Chaos engineering + fault injection per the Principles of Chaos Engineering. Lit
 | Agent | [chaos-drill-orchestrator](agents/chaos-drill-orchestrator.md) | Action-taking orchestrator that runs a full chaos drill end-to-end - pre-flight checks → experiment injection (via chaos-experiment-author + chosen runner: Chaos Mesh / Litmus / Gremlin / Toxiproxy) → blast-radius monitoring → automatic abort if blast radius exceeds bounds → recovery validation. Distinct from `qa-chaos/chaos-experiment-author` (S1 - authors ONE experiment file). This agent orchestrates the four-stage drill workflow, not a single experiment. Use when running a planned chaos drill against a non-prod environment and the team wants the full pre-flight → inject → monitor → recover loop executed as one workflow. |
 | Skill | [chaos-results-reporter](skills/chaos-results-reporter/SKILL.md) | Aggregate chaos-drill verdicts over time into a resilience trend report. |
 | Skill | [steady-state-hypothesis-validator](skills/steady-state-hypothesis-validator/SKILL.md) | Pre-flight validate a chaos experiment's steady-state hypothesis (measurable, baselined, meaningful). |
+| Skill | [chaos-drill-protocol](skills/chaos-drill-protocol/SKILL.md) | The run protocol for an already-designed experiment: four pre-flight gates, a derived blast-radius bound, abort criteria fixed before injection, and recovery validation with tolerance and timeout. |
 
 ## Install
 

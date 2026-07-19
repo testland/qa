@@ -22,6 +22,7 @@ operations, federal contractors).
 | Agent | [compliance-readiness-reviewer](agents/compliance-readiness-reviewer.md) | Adversarial readiness reviewer per framework; per-criterion coverage matrix (covered/partial/missing/N/A); refuses "ready" if missing required criterion; refuses N/A without justification + approver + re-review-date |
 | Skill | [iso27001-test-patterns](skills/iso27001-test-patterns/SKILL.md) | Pure reference: ISO/IEC 27001:2022 Annex A control themes and testable technical controls. |
 | Skill | [compliance-evidence-generator](skills/compliance-evidence-generator/SKILL.md) | Build auditor-facing evidence packages: control-to-test mapping, evidence matrix, chain of custody. |
+| Skill | [compliance-coverage-scoring](skills/compliance-coverage-scoring/SKILL.md) | Scores evidence against a named framework version criterion by criterion, records every scope exclusion with approver and re-review date, and states plainly that the output is a readiness self-assessment, not certification. |
 
 ## Install
 

@@ -10,6 +10,7 @@ skills:
   - litmus-chaos
   - gremlin-chaos
   - toxiproxy-chaos
+  - chaos-drill-protocol
 ---
 
 A workflow-orchestrator agent - drives a full chaos drill across four stages (pre-flight → experiment → blast-radius monitor → recovery validation). Composes the chosen chaos-runner skill (Chaos Mesh / Litmus / Gremlin / Toxiproxy) for the injection step and the experiment-author skill for the YAML / scenario emission.
@@ -26,12 +27,12 @@ The agent **refuses if no blast-radius bound is supplied** - unbounded chaos is 
 
 ## Stage 1 - Pre-flight checks
 
-Before injecting any failure, the agent verifies:
-
-1. **Environment is non-prod.** Read the cluster context (`kubectl config current-context` for K8s; `gremlin env` for Gremlin). Refuse if the context name contains `prod` or `production`.
-2. **Target service is healthy.** Hit the health endpoint (or check pod readiness). Refuse if baseline shows < 99% healthy - chaos on an unhealthy baseline produces uninterpretable results.
-3. **Observability is live.** Confirm metrics / logs / traces are flowing (recent samples within the last 60 seconds). Refuse if observability is offline - without it the blast-radius monitor can't decide to abort.
-4. **Rollback path exists.** For Chaos Mesh / Litmus: experiments have a built-in TTL - verify it's set. For Gremlin: confirm the team has a kill-switch (Gremlin's "halt" command). For Toxiproxy: confirm the toxic can be removed via `toxiproxy-cli toxic delete`.
+1. Run the four pre-flight gates from `chaos-drill-protocol`, reading the
+   environment identity from the tooling itself (`kubectl config current-context`
+   for K8s; `gremlin env` for Gremlin), taking the baseline measurement from the
+   health endpoint or pod readiness, and exercising the rollback action for the
+   chosen runner (`kubectl delete -f <experiment>.yaml`, `litmusctl chaos abort`,
+   `gremlin halt`, `toxiproxy-cli toxic delete`).
 
 If any pre-flight fails → halt; emit a report listing what's wrong and what would unblock the drill.
 
@@ -49,71 +50,23 @@ If any pre-flight fails → halt; emit a report listing what's wrong and what wo
 
 While the experiment runs:
 
-1. **Sample observability every 10 seconds** - error rate, latency p95/p99, pod readiness count, downstream cascade signals.
-2. **Compare against the declared blast-radius bound.** Abort criteria:
-   - Error rate exceeds the budget (e.g., > 5% if budget was 1%)
-   - More than the bounded % of replicas affected (cascade beyond the target)
-   - Latency p99 > 10x baseline for > 60 seconds
-   - Any downstream service health deteriorates beyond its own SLO
-3. **Abort the experiment** if any criterion is breached:
+1. Sample every abort-criterion signal on the contract's interval and compare
+   against the written abort criteria, per `chaos-drill-protocol`.
+2. **Abort the experiment** if any criterion is breached:
    - Chaos Mesh: `kubectl delete -f <experiment>.yaml`
    - Litmus: `litmusctl chaos abort <experiment-id>`
    - Gremlin: `gremlin halt <attack-id>`
    - Toxiproxy: `toxiproxy-cli toxic delete --toxicName <name> <proxy>`
-4. **Always log the abort decision.** The drill's value is the data, including aborts - never silently swallow.
 
 ## Stage 4 - Recovery validation
 
-After the experiment ends (whether by completion or abort):
-
-1. **Wait for steady-state recovery** - at most the recovery-criterion timeout supplied (default: 5 minutes).
-2. **Verify recovery criteria**:
-   - Pod readiness returns to baseline replica count.
-   - Error rate returns to baseline (or within recovery tolerance: typically baseline + 10%).
-   - Latency p95/p99 returns to baseline.
-   - Downstream service health returns to baseline.
-3. **Emit the drill report** with:
-   - Pre-flight verdict (passed / failed, per check)
-   - Injection start + end timestamps + abort reason (if aborted)
-   - Blast-radius observed (max error rate, max affected replicas, max latency)
-   - Recovery time + recovery verdict
-   - Recommendations: did the system meet its declared resilience target? what would harden it?
+After the experiment ends (whether by completion or abort), run the recovery
+checks, tolerance, timeout, and verdict per `chaos-drill-protocol`.
 
 ## Output format
 
-```markdown
-## Chaos drill report - <experiment-id>
-
-**Target:** <namespace>/<service>
-**Experiment:** <type> (e.g., pod-kill, network-partition-50ms-latency, etc.)
-**Runner:** <Chaos Mesh / Litmus / Gremlin / Toxiproxy>
-**Blast-radius bound:** <as declared>
-**Verdict:** <PASSED / ABORTED / FAILED>
-
-### Pre-flight
-- Environment non-prod: <pass/fail>
-- Baseline health: <pass/fail>
-- Observability live: <pass/fail>
-- Rollback path: <pass/fail>
-
-### Injection
-- Start: <timestamp>, End: <timestamp or aborted>
-- Abort reason (if aborted): <one-line>
-
-### Blast radius observed
-- Peak error rate: <%> (budget: <%>)
-- Peak affected replicas: <n / N> (bound: <%>)
-- Peak latency p99: <ms> (baseline: <ms>)
-- Downstream impact: <list services + their SLO state>
-
-### Recovery
-- Recovery time: <duration>
-- Verdict: <recovered within criterion / partial / no recovery>
-
-### Recommendations
-- <one-line: did the system meet its resilience target?>
-- <one-line: hardening suggestion if applicable>
-```
+Emit the drill record defined by `chaos-drill-protocol`, one per drill,
+aborted runs included.
 
 ## Refuse-to-proceed rules
 
@@ -121,17 +74,14 @@ After the experiment ends (whether by completion or abort):
 - Cluster context contains `prod` / `production` → refuse; drills run in non-prod only.
 - Baseline service unhealthy at pre-flight → refuse; chaos on a broken baseline is uninterpretable.
 - Observability offline → refuse; the blast-radius monitor needs live signals.
-- No rollback / TTL / kill-switch verified → refuse; without it the agent can't abort.
+- Rollback not exercised against the target before injection: refuse. A configured TTL is a backstop, not a verified rollback.
 - Spec asks for "test the system end-to-end" without a specific experiment type → refuse and ask for one (latency / pod-kill / partition / disk / cpu / dns).
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Skipping pre-flight to "save time" | The drill's blast-radius monitor can't decide to abort if observability isn't live; the drill becomes incident-shaped instead of data-shaped | Always run all 4 pre-flight checks |
-| Setting blast-radius bound at 100% of replicas | This is "kill the service"; not a drill, an outage | Pick a bound that lets recovery validation be meaningful - typically 25-50% of replicas, 5-10% error budget |
-| Aborting silently without logging | Loses the data of the abort (the most interesting part of a drill that didn't complete) | Always log abort reason + timestamp + observed metrics at the moment of abort |
-| Running back-to-back drills without verifying recovery | Second drill starts from a partially-degraded state - results are meaningless | Always wait for full recovery (stage 4) before the next drill |
+The run-time anti-patterns this orchestrator must avoid (skipped gates,
+over-wide blast radius, silent aborts, back-to-back drills before recovery
+validates) are owned by `chaos-drill-protocol`.
 
 ## Hand-off targets
 
