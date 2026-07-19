@@ -15,6 +15,7 @@ Flake triage workflow: bisector, parallel-isolation checker, regression bisector
 | Agent | [e2e-test-trend-reporter](agents/e2e-test-trend-reporter.md) | Weekly / monthly suite health report with week-over-week deltas (pass rate, flakiness rate, top failures, time-to-green, quarantine count). |
 | Skill | [flake-dashboard-author](skills/flake-dashboard-author/SKILL.md) | Build a persistent flakiness dashboard from run history (Grafana / Datadog CI Visibility). |
 | Skill | [flake-remediation-guide](skills/flake-remediation-guide/SKILL.md) | Per-pattern code fixes for each flake class cataloged in flake-pattern-reference. |
+| Skill | [flake-axis-bisection](skills/flake-axis-bisection/SKILL.md) | Finds which condition a flaky test depends on by varying one axis at a time, with confidence intervals on the measured rate and a rule for when a difference exceeds sampling noise. |
 
 ## Install
 

@@ -17,6 +17,7 @@ Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skill
 | agent | [bug-report-critic](agents/bug-report-critic.md) | Audit a bug report against required fields, severity-priority independence, reproduction quality |
 | Agent | [ci-defect-filer](agents/ci-defect-filer.md) | One-step CI auto-filer: turns a test failure into a deduped bug filed in Jira / Linear / GitHub Issues. |
 | Skill | [azuredevops-bug-workflow](skills/azuredevops-bug-workflow/SKILL.md) | Author/triage/link bugs in Azure DevOps Boards via the Work Item Tracking REST API + WIQL. |
+| Skill | [confirmation-testing-workflow](skills/confirmation-testing-workflow/SKILL.md) | Proves a claimed fix reached the build under test via merge-base ancestry rather than a version label, then re-runs the reproduction. Any ambiguous result resolves to BLOCKED. |
 | Agent | [defect-fix-verifier](agents/defect-fix-verifier.md) | Confirmation testing: re-runs a defect's reproduction after the fix merges, verdicts VERIFIED / NOT FIXED / BLOCKED, and transitions the tracker with evidence. |
 
 ## Differentiation

@@ -20,6 +20,7 @@ across any of these frameworks.
 | Agent | [prompt-eval-reviewer](agents/prompt-eval-reviewer.md) | Adversarial reviewer flagging 8 anti-patterns across all 6 sister tools; preloads all 6 |
 | Agent | [llm-red-team-planner](agents/llm-red-team-planner.md) | Plans an LLM red-team campaign across an attack taxonomy, composing Giskard scans + promptfoo red-team configs. |
 | Skill | [llm-regression-suite-author](skills/llm-regression-suite-author/SKILL.md) | Versioned golden-dataset LLM regression suite across model upgrades with CI gating. |
+| Skill | [llm-eval-anti-patterns](skills/llm-eval-anti-patterns/SKILL.md) | Audits an eval suite for eight methodology errors that make its numbers untrustworthy, including treating an LLM judge as an oracle without validating it against human labels. |
 
 ## Install
 
