@@ -1,6 +1,6 @@
 ---
 name: electron-spectron
-description: "Legacy reference for Spectron - Electron's original ChromeDriver-based testing framework, officially deprecated 2022-02-01 at v19.0.0. Documents what Spectron was, the architectural reason it became unmaintainable, the migration path to Playwright `_electron`, and the residual support contract for projects still on Spectron. Use only when auditing a legacy suite or planning a migration off Spectron - for new work use `electron-playwright` in this plugin."
+description: "Legacy reference for Spectron - Electron's original ChromeDriver-based testing framework, officially deprecated 2022-02-01 at v19.0.0. Documents what Spectron was, the architectural reason it became unmaintainable, the migration path to Playwright `_electron`, and the residual support contract for projects still on Spectron. Use only when auditing a legacy suite or planning a migration off Spectron - for new work use Playwright's `_electron` API."
 metadata:
   keywords: "electron, spectron, legacy, migration, playwright"
 ---
@@ -37,8 +37,8 @@ commands" steps because no new project should start on Spectron.
 - Writing a deprecation-debt ticket - quoting the cited deprecation
   notice for stakeholder context.
 
-For new projects: stop here and read `electron-playwright` in this
-plugin instead.
+For new projects: stop here and read `electron-playwright`
+instead.
 
 ## Why Spectron was deprecated
 
@@ -76,7 +76,7 @@ recommendations are:
 | **Selenium** | WebDriver API bindings; lower-level than the above |
 
 Playwright is the de-facto replacement most projects migrate to - 
-see `electron-playwright` in this plugin for the implementation
+see `electron-playwright` for the implementation
 SKILL.
 
 ## What Spectron looked like
@@ -128,7 +128,7 @@ test('opens a window', async () => {
 });
 ```
 
-See `electron-playwright` in this plugin for the full Playwright
+See `electron-playwright` for the full Playwright
 `_electron` authoring + running + CI workflow.
 
 ## Migration shopping list
@@ -196,8 +196,8 @@ If a project must remain on Spectron in the short term:
 
 - Spectron repository (archived) - [spectronrepo][spectronrepo].
 - Electron Automated Testing tutorial - [electrontest][electrontest].
-- Successor SKILL in this plugin: `electron-playwright`.
-- Strategic context: `desktop-test-strategy-reference` (this plugin)
+- Successor SKILL: `electron-playwright`.
+- Strategic context: `desktop-test-strategy-reference`
   describes the Electron-renderer + Electron-main two-surface
   architecture that made ChromeDriver-only drivers like Spectron
   structurally insufficient.

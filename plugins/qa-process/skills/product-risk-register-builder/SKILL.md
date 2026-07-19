@@ -78,7 +78,7 @@ likelihood`:
 | PR-001 | Functional suitability | Pricing engine off-by-cent in EU markets | 5 | 3 | 15 | Property-based testing on rounding; nightly compliance test suite | Alice | 2026-05-01 |
 | PR-002 | Security | OAuth refresh-token leak via logs | 5 | 2 | 10 | Log redaction middleware; quarterly secret-scan; presidio-pii-detection in CI | Bob | 2026-04-15 |
 | PR-003 | Reliability | Stripe webhook delivery failure not retried | 4 | 4 | 16 | DLQ + retry; chaos test in staging weekly | Carol | 2026-05-10 |
-| PR-004 | Performance | Catalog search slows under >10k SKUs | 4 | 3 | 12 | Elasticsearch tuning; load test gate in qa-load-testing/k6 | Dan | 2026-03-20 |
+| PR-004 | Performance | Catalog search slows under >10k SKUs | 4 | 3 | 12 | Elasticsearch tuning; k6 load test gate | Dan | 2026-03-20 |
 | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
 ## Retired risks (n=5)
@@ -95,7 +95,7 @@ For each active risk, name at least one **mitigation** and link
 it to existing test coverage (or flag a gap):
 
 ```markdown
-| PR-001 | Pricing engine off-by-cent | 15 | Tests: tests/billing/test_promo_stacking.py + nightly compliance suite (qa-test-management/PROJ-T123 + 124) | Alice |
+| PR-001 | Pricing engine off-by-cent | 15 | Tests: tests/billing/test_promo_stacking.py + nightly compliance suite (PROJ-T123 + 124) | Alice |
 ```
 
 Use [`risk-coverage-mapper`](../risk-coverage-mapper/SKILL.md) to

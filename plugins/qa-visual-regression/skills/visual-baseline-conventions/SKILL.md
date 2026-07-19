@@ -6,7 +6,7 @@ description: "Reference catalog for visual regression coverage decisions - which
 # visual-baseline-conventions
 
 Reference catalog for **how** to design visual coverage. Pairs with the
-engine-specific skills in this plugin
+engine-specific skills
 ([`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md),
 [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md),
 [`playwright-snapshots`](../playwright-snapshots/SKILL.md),

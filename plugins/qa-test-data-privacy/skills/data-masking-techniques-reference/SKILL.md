@@ -330,6 +330,6 @@ record is added/removed. ε (epsilon) is the privacy budget - lower
   [en.wikipedia.org/wiki/Data_masking](https://en.wikipedia.org/wiki/Data_masking).
 - GDPR Article 4(5) pseudonymisation definition - 
   [gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/).
-- Sibling references in this plugin:
+- Related references:
   [`pii-categories-reference`](../pii-categories-reference/SKILL.md),
   [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md).

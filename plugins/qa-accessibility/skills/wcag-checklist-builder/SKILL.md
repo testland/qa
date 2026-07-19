@@ -161,6 +161,27 @@ Beyond the archetype defaults, the spec may declare:
 
 The skill produces two outputs:
 
+Manual-verification items must be emitted as **concrete keystrokes
+and expected announcements** - never as a bare skill name. The
+artifact ships into the user's repo and has to be runnable by a
+tester holding only that file. Baseline commands (per the [NVDA
+user guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)
+and [Apple VoiceOver](https://www.apple.com/accessibility/mac/vision/);
+same set as [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md)):
+
+| Action | NVDA + Firefox (Windows) | VoiceOver + Safari (macOS) |
+|---|---|---|
+| Next heading | `H` | `VO` (Ctrl+Option) + `Cmd` + `H` |
+| Next form field | `F` | `VO` + `Cmd` + `J` |
+| Read next / previous item | `Down` / `Up` arrow | `VO` + `Right` / `Left` arrow |
+| Enter focus mode on a field | `Enter` | (automatic) |
+| Activate the focused control | `Enter` | `VO` + `Space` |
+| Element list overlay | - | `VO` + `U` (web rotor) |
+
+A step passes when the announcement identifies the element type,
+reads the visible label verbatim, and conveys state and
+position-in-set where applicable.
+
 ### Markdown checklist (for spec / PR review)
 
 ```markdown
@@ -188,7 +209,13 @@ The skill produces two outputs:
 ### Verification
 
 - Automated: axe-core scan with `dialog` rule enabled.
-- Manual: NVDA + Firefox per [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md).
+- Manual (NVDA + Firefox, Windows): press `Enter` on the trigger -
+  NVDA announces "Confirm delete, dialog"; `Tab` cycles inside the
+  dialog and never reaches page content; `Escape` closes and focus
+  returns to the trigger, announced as "Delete, button".
+- Manual (VoiceOver + Safari, macOS): `VO`+`Space` on the trigger,
+  `VO`+`Right arrow` to walk the dialog contents, `Escape` to
+  close - same expected announcements.
 - Code review: against the checklist above.
 ```
 
@@ -217,7 +244,11 @@ checks:
     severity: blocker
     method: manual
     tester_role: a11y-specialist
-    instructions: NVDA + Firefox per screen-reader-test-author
+    instructions: >-
+      NVDA + Firefox (Windows): Tab to "Delete", press Enter.
+      NVDA must speak "Deleted" from the aria-live="polite" region
+      without focus moving. VoiceOver + Safari (macOS): VO+Space on
+      "Delete"; same announcement expected.
 ```
 
 ## Anti-patterns
@@ -233,7 +264,7 @@ checks:
 
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - W3C ARIA Authoring Practices - [apg][apg].
-- All sibling skills in this plugin:
+- Related skills:
   [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md),
   [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md),
   [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md),

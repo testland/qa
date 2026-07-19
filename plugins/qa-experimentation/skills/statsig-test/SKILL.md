@@ -1,6 +1,6 @@
 ---
 name: statsig-test
-description: "Wraps Statsig SDK testing patterns: server-side initialization (statsig.initialize with API key), gate / experiment / dynamic-config evaluation (checkGate, getExperiment, getConfig), local-evaluation mode for offline tests, override patterns for forcing a specific user into a specific arm (statsig.overrideGate, overrideConfig), and assignment-integrity tests. Use when writing tests for Statsig-instrumented application code. Composes guardrail-metrics-reference + peeking-problem-reference + ab-test-validity-checklist."
+description: "Wraps Statsig SDK testing patterns: server-side initialization (statsig.initialize with API key), gate / experiment / dynamic-config evaluation (checkGate, getExperiment, getConfig), local-evaluation mode for offline tests, override patterns for forcing a specific user into a specific arm (statsig.overrideGate, overrideConfig), and assignment-integrity tests. Use when writing tests for Statsig-instrumented application code."
 ---
 
 # statsig-test

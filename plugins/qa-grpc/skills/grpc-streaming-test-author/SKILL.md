@@ -1,6 +1,6 @@
 ---
 name: grpc-streaming-test-author
-description: "Workflow-driven skill that builds gRPC streaming-RPC test suites from a proto definition. Classifies each RPC by streaming pattern (unary, server-streaming, client-streaming, bidi), then for each streaming pattern emits the required test categories - ordering preservation, completion semantics (server closes after stream end, client closes by half-close), cancellation behaviour, deadline handling, and partial-stream-failure scenarios. Produces test skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end). Composes grpc-status-code-mapping-reference (for error-path assertions), grpc-mock (for in-process test harness), and protobuf-versioning-strategy-reference (for evolving streaming RPCs safely)."
+description: "Workflow-driven skill that builds gRPC streaming-RPC test suites from a proto definition. Classifies each RPC by streaming pattern (unary, server-streaming, client-streaming, bidi), then for each streaming pattern emits the required test categories - ordering preservation, completion semantics (server closes after stream end, client closes by half-close), cancellation behaviour, deadline handling, and partial-stream-failure scenarios. Produces test skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end). Use when adding tests for a new streaming RPC, or auditing an existing streaming-RPC suite for uncovered categories."
 ---
 
 # grpc-streaming-test-author

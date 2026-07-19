@@ -20,8 +20,7 @@ type-checking).
 This skill targets **per-framework lifecycle** (configure / run /
 mock / coverage / CI) - NOT test code hygiene patterns. For
 hygiene (assertion quality / AAA structure / mocking anti-patterns),
-see `test-code-conventions` (in qa-test-review)
-and the qa-test-review agents.
+see `test-code-conventions`; test code is reviewed separately.
 
 ## When to use
 

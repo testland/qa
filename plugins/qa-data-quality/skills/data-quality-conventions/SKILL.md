@@ -6,7 +6,7 @@ description: "Reference catalog of data-quality conventions - when to choose dbt
 # data-quality-conventions
 
 A reference catalog for **how** to design data-quality coverage. Pairs
-with the engine-specific skills in this plugin
+with the engine-specific skills
 ([`dbt-testing`](../dbt-testing/SKILL.md),
 [`great-expectations`](../great-expectations/SKILL.md),
 [`soda-checks`](../soda-checks/SKILL.md)) - those tell you the **how**

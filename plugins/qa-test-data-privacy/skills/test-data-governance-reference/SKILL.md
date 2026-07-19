@@ -19,7 +19,7 @@ test data - see
 those workflows.
 
 This is a **pure reference** - no execution steps. Governance decisions depend
-on it; detection and masking workflows in this plugin enforce it.
+on it; detection and masking workflows enforce it.
 
 ## Legal basis
 

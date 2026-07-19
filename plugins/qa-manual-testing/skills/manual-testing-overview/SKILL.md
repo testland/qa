@@ -6,9 +6,9 @@ metadata:
 ---
 
 # manual-testing-overview
-## What this plugin covers
+## Overview
 
-This plugin covers two modes of human-driven testing. **Session-based exploratory testing**
+There are two modes of human-driven testing. **Session-based exploratory testing**
 (SBTM - Jonathan and James Bach, 2000) is a framework in which a tester executes a focused, time-boxed
 session (60-90 minutes) guided by a **charter** - a mission statement of the form
 "Explore \<area\> with \<tools\> to discover \<information\>" - and records findings in a session

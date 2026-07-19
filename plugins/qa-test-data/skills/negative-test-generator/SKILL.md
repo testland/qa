@@ -90,6 +90,23 @@ Pull from [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md):
 | File upload name              | Path traversal                                   |
 | Search field                  | ReDoS, SQLi                                      |
 
+Starter payloads per class (aligned with the [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+and [CWE Top 25](https://cwe.mitre.org/top25/); the full catalog with
+encoded variants and per-context selection lives in
+[`malicious-payload-bank`](../malicious-payload-bank/SKILL.md)):
+
+| Class | Starter payloads |
+|---|---|
+| SQLi (CWE-89) | `' OR '1'='1' --` · `'; DROP TABLE users; --` · `admin'--` |
+| XSS (CWE-79) | `<script>alert(1)</script>` · `<img src=x onerror=alert(1)>` · `javascript:alert(1)` |
+| SSRF (CWE-918) | `http://169.254.169.254/latest/meta-data/` · `http://localhost:6379/` · `file:///etc/passwd` |
+| Path traversal (CWE-22) | `../etc/passwd` · `..%2fetc%2fpasswd` · `....//etc/passwd` |
+| ReDoS (CWE-1333) | `aaaaaaaaaaaaaaaaaaaaaaaa!` (vs `/^(a+)+$/`) · `aaaaaaaaaaaaaaaaaaaaaaaa@aaaaaa` (vs typical email regexes) |
+| Unicode confusables | `аdmin` (Cyrillic `а` U+0430) · `gооgle.com` · `ﬀ` (ff ligature) |
+
+Assert **reject (4xx) or escaped output** - never that the payload
+merely "didn't crash".
+
 ### 7. Server errors (where applicable)
 
 | Pattern                            | Test                                              |

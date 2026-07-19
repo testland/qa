@@ -1,6 +1,6 @@
 ---
 name: giskard-tests
-description: "Test ML models with Giskard's scan() vulnerability detector + test catalog (performance, robustness, fairness, data leakage, ethical issues) for tabular and NLP models. Wrap a prediction function in giskard.Model + a DataFrame in giskard.Dataset; emit test suites that pass/fail in CI."
+description: "Test ML models with Giskard's scan() vulnerability detector + test catalog (performance, robustness, fairness, data leakage, ethical issues) for tabular and NLP models. Wrap a prediction function in giskard.Model + a DataFrame in giskard.Dataset; emit test suites that pass/fail in CI. Use when a trained tabular or NLP model is about to ship with no test suite of its own, or when a feature-engineering or hyperparameter change needs a pre-merge scan for newly introduced vulnerabilities."
 metadata:
   keywords: "giskard, ml-testing, model-vulnerabilities, fairness-testing, tabular-models"
 ---

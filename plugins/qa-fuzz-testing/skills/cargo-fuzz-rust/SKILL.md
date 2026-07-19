@@ -1,6 +1,6 @@
 ---
 name: cargo-fuzz-rust
-description: "Author and run cargo-fuzz - Rust fuzzing via libFuzzer with cargo integration. Covers `cargo install cargo-fuzz`, `cargo fuzz init` + `cargo fuzz add <target>` for harness scaffolding, the `fuzz_target!` macro for entry-point declaration, the `Arbitrary` trait for structured input mutation, and `cargo fuzz run` invocation. Requires Rust nightly. Use for fuzz testing Rust libraries - cargo-fuzz wraps libFuzzer with native Rust ergonomics. Composes with sanitiser-integration-reference + corpus-management-reference."
+description: "Author and run cargo-fuzz - Rust fuzzing via libFuzzer with cargo integration. Covers `cargo install cargo-fuzz`, `cargo fuzz init` + `cargo fuzz add <target>` for harness scaffolding, the `fuzz_target!` macro for entry-point declaration, the `Arbitrary` trait for structured input mutation, and `cargo fuzz run` invocation. Requires Rust nightly. Use for fuzz testing Rust libraries - cargo-fuzz wraps libFuzzer with native Rust ergonomics."
 ---
 
 # cargo-fuzz-rust
@@ -179,7 +179,26 @@ fuzz/
 
 Sanitiser report format is identical to libFuzzer / ASan - see
 [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)
-"Reading a sanitiser report."
+"Reading a sanitiser report." Report anatomy (per
+[clang.llvm.org/docs/AddressSanitizer.html](https://clang.llvm.org/docs/AddressSanitizer.html)):
+
+```
+==1234==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x7f...
+READ of size 4 at 0x7f... thread T0
+    #0 0x4015a3 in process_input src/parser.rs:42:5
+    #1 0x4012f0 in rust_fuzzer_test_input parse_query.rs:8:5
+0x7f... is located 0 bytes to the right of 16-byte region [0x7f..., 0x7f...)
+allocated by thread T0 here:
+    #0 0x40e7c0 in __interceptor_malloc
+```
+
+- **Bug class:** `heap-buffer-overflow`, `stack-use-after-return`,
+  `use-after-free`, `double-free`, `memory-leak`.
+- **Access:** READ or WRITE, plus size.
+- **Stack:** top frame is the crash site; frames below are the call
+  chain down to the fuzz target entry point.
+- **Allocation site:** where the corrupted memory was allocated.
+- **Freed site:** on use-after-free, where it was freed.
 
 `cargo fuzz fmt` decodes binary inputs into a Rust-readable form
 (useful when using `Arbitrary` - recovers the struct).

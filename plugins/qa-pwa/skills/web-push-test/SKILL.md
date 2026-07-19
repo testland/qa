@@ -1,6 +1,6 @@
 ---
 name: web-push-test
-description: "Test the browser web-push subscription lifecycle - `pushManager.subscribe({ userVisibleOnly, applicationServerKey })` per [W3C Push API][w3c-push] returning a `PushSubscription` with `endpoint` + `keys.p256dh` + `keys.auth` + optional `expirationTime`; the `pushsubscriptionchange` service-worker event on refresh / revoke / expiry; the `push` event delivery with `PushMessageData`; VAPID auth per RFC 8292 (ES256 JWT, `aud` / `exp` ≤ 24h / `sub`); RFC 8030 push-service responses (201 Created, 410 Gone for expired endpoints, 413 Payload Too Large, 429); and `unsubscribe()` cleanup. Distinct from `qa-notifications/push-notification-test-author` (cross-channel push including mobile + native APNs/FCM); this is browser web-push subscription lifecycle (`pushManager.subscribe`, VAPID, endpoint expiry)."
+description: "Test the browser web-push subscription lifecycle - `pushManager.subscribe({ userVisibleOnly, applicationServerKey })` per [W3C Push API][w3c-push] returning a `PushSubscription` with `endpoint` + `keys.p256dh` + `keys.auth` + optional `expirationTime`; the `pushsubscriptionchange` service-worker event on refresh / revoke / expiry; the `push` event delivery with `PushMessageData`; VAPID auth per RFC 8292 (ES256 JWT, `aud` / `exp` ≤ 24h / `sub`); RFC 8030 push-service responses (201 Created, 410 Gone for expired endpoints, 413 Payload Too Large, 429); and `unsubscribe()` cleanup. Use when a PWA ships web-push and the subscription lifecycle needs release-gate coverage - scoped to the browser Push API, not to cross-channel delivery over native APNs / FCM."
 metadata:
   keywords: "web-push, vapid, push-api, rfc-8030, pushsubscriptionchange"
 ---
@@ -16,8 +16,7 @@ quotas; Chrome does not. This skill tests the browser side
 `pushsubscriptionchange`, `unsubscribe`) plus the server-side push
 protocol per [rfc8030] and VAPID auth per [rfc8292]. Cross-channel
 push including native APNs / FCM is
-`push-notification-test-author` (in the qa-notifications plugin)
-territory.
+`push-notification-test-author` territory.
 
 [w3c-push]: https://www.w3.org/TR/push-api/
 [mdn-push]: https://developer.mozilla.org/en-US/docs/Web/API/Push_API

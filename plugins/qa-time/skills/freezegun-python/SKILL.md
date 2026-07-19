@@ -1,6 +1,6 @@
 ---
 name: freezegun-python
-description: "Wraps freezegun (github.com/spulec/freezegun), the Python time-mocking library: @freeze_time decorator / context manager, freeze_time(...).start() + stop(), tick / move_to / tz_offset, and integration with datetime.now / time.time / time.localtime. Use when testing Python code that calls datetime / time. Composes dst-transition-reference + iso-8601-vs-rfc-3339-reference."
+description: "Wraps freezegun (github.com/spulec/freezegun), the Python time-mocking library: @freeze_time decorator / context manager, freeze_time(...).start() + stop(), tick / move_to / tz_offset, and integration with datetime.now / time.time / time.localtime. Use when testing Python code that calls datetime / time."
 ---
 
 # freezegun-python

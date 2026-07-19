@@ -1,6 +1,6 @@
 ---
 name: service-worker-tests
-description: "Test service workers with Playwright (`context.serviceWorkers()` + `waitForEvent('serviceworker')`) and unit tests using `service-worker-mock`. Covers MV3 service worker lifecycle (~30s suspend), cache strategies (cache-first, network-first, stale-while-revalidate), and `evaluate()` continuity across worker restart."
+description: "Test service workers with Playwright (`context.serviceWorkers()` + `waitForEvent('serviceworker')`) and unit tests using `service-worker-mock`. Covers MV3 service worker lifecycle (~30s suspend), cache strategies (cache-first, network-first, stale-while-revalidate), and `evaluate()` continuity across worker restart. Use when a site registers a service worker and its caching or offline behavior has no coverage, or when users report stale content surviving a deploy."
 metadata:
   keywords: "service-worker, playwright, pwa, offline-testing, cache-strategy"
 ---
@@ -171,8 +171,8 @@ test('push subscription created on registration', async ({ page, context }) => {
 });
 ```
 
-Pair with the testland-qa `qa-notifications/push-notification-test-author`
-skill for downstream send/receive assertions.
+Pair with `push-notification-test-author` for downstream
+send/receive assertions.
 
 ## Anti-patterns
 

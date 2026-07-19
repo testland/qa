@@ -212,7 +212,7 @@ For each cron job in scope:
 | Schedule in local time without documenting TZ | DST + cross-region deployments cause silent shifts | UTC where possible (Step 2) |
 | No overlap protection on long-running jobs | Concurrent runs corrupt state | Lock pattern + concurrency policy (Step 4) |
 | Locks without staleness recovery | Crashed job blocks all future runs forever | Time-based stale check (Step 5) |
-| No alerting on missed runs | Job silently stops; discovered weeks later | Synthetic-monitor + heartbeat (cross-ref qa-shift-right/synthetic-monitor-author) |
+| No alerting on missed runs | Job silently stops; discovered weeks later | Synthetic-monitor + heartbeat (cross-ref `synthetic-monitor-author`) |
 
 ## Limitations
 
@@ -238,4 +238,4 @@ For each cron job in scope:
 - [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
   critical companion (idempotency is the only safe answer to
   duplicate runs)
-- `synthetic-monitor-author` (in the qa-shift-right plugin) - heartbeat-based missed-run alerting
+- `synthetic-monitor-author` - heartbeat-based missed-run alerting

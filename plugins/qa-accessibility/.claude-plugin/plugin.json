@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-accessibility",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Atomic accessibility coverage: 13 skills (wcag-keyboard-navigation, wcag-focus-trap, wcag-color-contrast, aria-authoring-patterns, screen-reader-test-author, a11y-violation-gate, wcag-checklist-builder, axe-a11y, pa11y-a11y, lighthouse-a11y, wave-a11y, ibm-equal-access-a11y, wcag-compliance-reporter) and 2 agents (accessibility-code-critic, screen-reader-test-executor).",
   "author": {
     "name": "testland",

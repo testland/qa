@@ -1,6 +1,6 @@
 ---
 name: openfeature-sdk-testing
-description: "Wraps OpenFeature (CNCF vendor-neutral SDK abstraction) testing patterns: the InMemoryProvider for hermetic tests without network calls, provider registration via OpenFeature.setProvider, the getBooleanValue/getBooleanDetails evaluation API with EvaluationDetails (value, variant, reason, errorCode), hooks for evaluation side-effects, and evaluation context for targeting-rule tests. Covers TypeScript, Java, and Python SDKs. Use when writing tests for code that resolves feature flags through the OpenFeature SDK regardless of the underlying flag management platform. Composes feature-flag-test-matrix-reference."
+description: "Wraps OpenFeature (CNCF vendor-neutral SDK abstraction) testing patterns: the InMemoryProvider for hermetic tests without network calls, provider registration via OpenFeature.setProvider, the getBooleanValue/getBooleanDetails evaluation API with EvaluationDetails (value, variant, reason, errorCode), hooks for evaluation side-effects, and evaluation context for targeting-rule tests. Covers TypeScript, Java, and Python SDKs. Use when writing tests for code that resolves feature flags through the OpenFeature SDK regardless of the underlying flag management platform."
 metadata:
   keywords: "openfeature, feature-flags, cncf, hermetic-tests, in-memory-provider"
 ---

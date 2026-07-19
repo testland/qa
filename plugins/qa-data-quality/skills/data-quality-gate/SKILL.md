@@ -7,7 +7,7 @@ description: "Builds a release-readiness gate for a data pipeline by gathering c
 
 ## Overview
 
-The skills in this plugin (`dbt-testing`, `great-expectations`,
+The three engines (`dbt-testing`, `great-expectations`,
 `soda-checks`) each produce their own per-check output: dbt writes
 `run_results.json` ([dbt-run-results][1]), Great Expectations returns a
 JSON result with a `success` flag and a `results` list

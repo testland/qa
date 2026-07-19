@@ -1,6 +1,6 @@
 ---
 name: print-stylesheet-tests
-description: "Test CSS print-media output via Playwright `page.emulateMedia({ media: ''''print'''' })` + `page.pdf()` - `@page` rule (size, margin, orphans, widows), `@page :first / :left / :right` pseudo-classes, `break-before/after/inside`, `@media print` selector activation, page-break suppression on headings."
+description: "Test CSS print-media output via Playwright `page.emulateMedia({ media: ''''print'''' })` + `page.pdf()` - `@page` rule (size, margin, orphans, widows), `@page :first / :left / :right` pseudo-classes, `break-before/after/inside`, `@media print` selector activation, page-break suppression on headings. Use when an app exposes a Print button or a print stylesheet exists but is untested, and users report the printed or PDF copy breaking in the wrong places while the on-screen page looks fine."
 metadata:
   keywords: "print-css, paged-media, playwright, emulateMedia, page-rule"
 ---

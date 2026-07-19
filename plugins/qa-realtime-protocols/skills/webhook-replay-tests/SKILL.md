@@ -1,6 +1,6 @@
 ---
 name: webhook-replay-tests
-description: "Tests inbound webhook receivers for replay-attack resistance: capture incoming webhook payloads + headers, replay against the receiver under test, validate the Standard Webhooks signature scheme (svix-id + svix-timestamp + svix-signature, HMAC-SHA256 over `{id}.{timestamp}.{payload}`), svix-id idempotency dedup, and 5-minute timestamp-window enforcement by signing fixtures at runtime. Does NOT cover outbound delivery, retry-on-5xx, or failure-event exhaustion (see qa-notifications/webhook-delivery-tester for those). Use when testing the receiving side of a webhook integration."
+description: "Tests inbound webhook receivers for replay-attack resistance: capture incoming webhook payloads + headers, replay against the receiver under test, validate the Standard Webhooks signature scheme (svix-id + svix-timestamp + svix-signature, HMAC-SHA256 over `{id}.{timestamp}.{payload}`), svix-id idempotency dedup, and 5-minute timestamp-window enforcement by signing fixtures at runtime. Does NOT cover outbound delivery, retry-on-5xx, or failure-event exhaustion - those belong to an outbound webhook delivery harness. Use when testing the receiving side of a webhook integration."
 metadata:
   keywords: "webhooks, standard-webhooks, replay-testing, signature-verification, idempotency"
 ---
@@ -221,7 +221,7 @@ def sanitize_capture(payload: dict) -> dict:
 - 5-minute window is the convention; some receivers tighten or
   widen - verify against the spec your sender publishes.
 - Replay tests don't catch live-network issues (TLS errors, DNS).
-  Pair with `qa-notifications/webhook-delivery-tester` for delivery
+  Pair with `webhook-delivery-tester` for delivery
   + retry policy tests.
 
 ## References

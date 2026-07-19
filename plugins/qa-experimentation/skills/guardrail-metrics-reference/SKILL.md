@@ -1,6 +1,6 @@
 ---
 name: guardrail-metrics-reference
-description: "Pure-reference catalog of guardrail-metric methodology for online controlled experiments. Defines guardrail metrics (metrics that must NOT degrade for an experiment to ship, even if the primary metric improves), the standard guardrail set (latency / errors / engagement / opt-out), the relationship to OEC (Overall Evaluation Criterion) per Kohavi et al., and the trustworthy-experiments framework (Microsoft Experimentation Platform). Use when designing the metric set for a new experiment, auditing existing experiment configs, or reviewing experiment results before ship-decisions. Composes peeking-problem-reference + ab-test-validity-checklist."
+description: "Pure-reference catalog of guardrail-metric methodology for online controlled experiments. Defines guardrail metrics (metrics that must NOT degrade for an experiment to ship, even if the primary metric improves), the standard guardrail set (latency / errors / engagement / opt-out), the relationship to OEC (Overall Evaluation Criterion) per Kohavi et al., and the trustworthy-experiments framework (Microsoft Experimentation Platform). Use when designing the metric set for a new experiment, auditing existing experiment configs, or reviewing experiment results before ship-decisions."
 ---
 
 # guardrail-metrics-reference

@@ -1,6 +1,6 @@
 ---
 name: playwright-extension-fixtures
-description: "Author the lower-level Playwright fixture pattern that every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe. Distinct from `qa-modern-web/browser-extension-tests` (MV3 popup + content-script assertions); this is the lower-level Playwright fixture pattern (`launchPersistentContext` + `--disable-extensions-except` + `--load-extension`) shared by all extension tests. For Playwright-driven MV3 popup / content-script fixtures see `qa-modern-web/browser-extension-tests`. This plugin covers Firefox + Chrome extension lifecycle, MV2 → MV3 migration, host-permission prompts, and `storage.sync` vs `storage.local` semantics."
+description: "Author the lower-level Playwright fixture pattern that every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe. This is the launch-and-load layer shared by every extension test, not the assertions run on top of it. Use when authoring or debugging the fixture a Chromium extension test imports - popup, content script, service worker, options page, or side panel."
 metadata:
   keywords: "playwright, chromium, launchpersistentcontext, test-fixtures, browser-extension"
 ---
@@ -17,7 +17,7 @@ contract the assertion-level skills depend on - it's the
 foundation, not the test logic.
 
 This skill is **distinct from
-`qa-modern-web/browser-extension-tests`**
+`browser-extension-tests`**
 (MV3 popup + content-script assertions); this is the lower-level
 Playwright fixture pattern (`launchPersistentContext` +
 `--disable-extensions-except` + `--load-extension`) shared by all
@@ -290,5 +290,5 @@ Key choices:
   [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md),
   [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md).
 - Distinct neighbour:
-  `qa-modern-web/browser-extension-tests` - the popup / content-script / messaging assertion playbook this
+  `browser-extension-tests` - the popup / content-script / messaging assertion playbook this
   fixture feeds.

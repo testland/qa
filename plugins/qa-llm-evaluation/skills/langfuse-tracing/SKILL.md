@@ -174,7 +174,7 @@ Datadog), not CI-pipeline assertions.
 |---|---|---|
 | Trace everything in production with no sampling | Cost explodes at scale | Use `level=DEBUG` + UI-side sampling (Step 3) |
 | Score traces only via UI (no automated path) | Can't catch silent regressions | Automated `langfuse.score()` per trace (Step 4) |
-| Pull production trace inputs without privacy review | PII leakage into eval datasets | Cross-ref `qa-test-data/synthetic-pii-generator` for fixture sanitization before promotion |
+| Pull production trace inputs without privacy review | PII leakage into eval datasets | Cross-ref `synthetic-pii-generator` for fixture sanitization before promotion |
 | Skip prompt versioning | Prompt drift breaks attribution | `langfuse.get_prompt()` with version pin (Step 6) |
 | Conflate Langfuse with pre-deploy eval | Tries to be both; wins neither | Pair Langfuse (post-deploy) with Promptfoo/DeepEval/Ragas (pre-deploy) |
 

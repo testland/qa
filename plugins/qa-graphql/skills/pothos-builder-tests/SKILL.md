@@ -1,6 +1,6 @@
 ---
 name: pothos-builder-tests
-description: "Wraps Pothos GraphQL schema-builder testing patterns: testing the SchemaBuilder output (lexicographicSortSchema + printSchema for snapshot tests), testing resolvers via the standard `graphql()` function from graphql-js (no server needed), integration with Apollo Server / GraphQL Yoga (Pothos emits standard graphql-js schemas), and code-first builder unit tests. Covers the SchemaBuilder API surface (queryType, mutationType, objectType, t.field, t.arg). Use when testing a Pothos-built schema before / alongside the server-runtime tests (apollo-server-test / graphql-yoga-test). Pairs with introspection-attack-surface-reference for production-config assertions via the underlying server."
+description: "Wraps Pothos GraphQL schema-builder testing patterns: testing the SchemaBuilder output (lexicographicSortSchema + printSchema for snapshot tests), testing resolvers via the standard `graphql()` function from graphql-js (no server needed), integration with Apollo Server / GraphQL Yoga (Pothos emits standard graphql-js schemas), and code-first builder unit tests. Covers the SchemaBuilder API surface (queryType, mutationType, objectType, t.field, t.arg). Use when testing a Pothos-built schema before or alongside the server-runtime tests."
 ---
 
 # pothos-builder-tests

@@ -241,4 +241,4 @@ For each email flow in scope:
   companion: bounce/complaint webhook handlers receive vendor
   webhooks; same patterns
 - [`sms-test-author`](../sms-test-author/SKILL.md),
-  [`push-notification-test-author`](../push-notification-test-author/SKILL.md) - sister channels in this plugin
+  [`push-notification-test-author`](../push-notification-test-author/SKILL.md) - sister channels

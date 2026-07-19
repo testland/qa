@@ -1,6 +1,6 @@
 ---
 name: test-data-patterns
-description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers in this plugin (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Preloaded as the data-construction-tier reference for framework-architecture review."
+description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Use when choosing a test-data construction pattern for a new suite, or auditing an existing suite whose fixtures have drifted into shared mutable state."
 ---
 
 # test-data-patterns
@@ -18,7 +18,7 @@ This skill is a **pure reference** - no execution steps. It is the catalog cited
 
 Do **not** use this skill to:
 
-- Configure a specific tool - that's the per-language skill in this plugin.
+- Configure a specific tool - that's the per-language skill for that tool.
 - Generate negative / boundary / parameterized test data - that's [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md).
 - Author an E2E seed fixture for the whole suite - that's [`seed-data-curator`](../seed-data-curator/SKILL.md).
 
@@ -181,7 +181,7 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Pattern 6 - Production-Data Anonymisation
 
-**Canonical source:** Per ISO/IEC 25024 (data quality) and GDPR/CCPA legal requirements; practitioner adoption documented across [Tonic.ai](https://www.tonic.ai/), [Gretel.ai](https://gretel.ai/), [K2view](https://www.k2view.com/), and [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (the marketplace's existing skill for synthesizing PII).
+**Canonical source:** Per ISO/IEC 25024 (data quality) and GDPR/CCPA legal requirements; practitioner adoption documented across [Tonic.ai](https://www.tonic.ai/), [Gretel.ai](https://gretel.ai/), [K2view](https://www.k2view.com/), and [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (a companion skill for synthesizing PII).
 
 **Definition:** Anonymisation is the technique of using production data (or production-shaped data) for testing **after** removing or masking personally-identifiable information (PII), commercially-sensitive data, and any field that would breach privacy / compliance if leaked to a test environment.
 
@@ -254,5 +254,5 @@ admin_user = create(:user, :admin, :with_org)
 - ISTQB glossary - test data: https://glossary.istqb.org/en_US/term/test-data
 - ISTQB glossary - fixture: https://glossary.istqb.org/en_US/term/test-fixture
 - ISO/IEC 25024 - data quality model (cited for anonymisation requirements).
-- [`factory-bot-data`](../factory-bot-data/SKILL.md), [`faker-data`](../faker-data/SKILL.md), [`mimesis-data`](../mimesis-data/SKILL.md), [`bogus-data`](../bogus-data/SKILL.md), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md), [`golden-file-conventions`](../golden-file-conventions/SKILL.md), [`seed-data-curator`](../seed-data-curator/SKILL.md) - the per-tool and operational siblings in this plugin.
+- [`factory-bot-data`](../factory-bot-data/SKILL.md), [`faker-data`](../faker-data/SKILL.md), [`mimesis-data`](../mimesis-data/SKILL.md), [`bogus-data`](../bogus-data/SKILL.md), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md), [`golden-file-conventions`](../golden-file-conventions/SKILL.md), [`seed-data-curator`](../seed-data-curator/SKILL.md) - the per-tool and operational siblings.
 - `object-model-patterns`, `test-isolation-patterns`, `test-step-design-patterns` - sister architecture-tier pattern catalogs.

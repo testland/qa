@@ -1,6 +1,6 @@
 ---
 name: backup-verification-author
-description: "Author backup-verification harness - per-backup-type integrity (SHA-256 / encrypted-payload signature), restore-to-test-env spot-check cadence, partial-restore (single-table / single-object) verification, cross-region replication validation, retention-policy assertions. \"An untested backup is not a backup."
+description: "Author backup-verification harness - per-backup-type integrity (SHA-256 / encrypted-payload signature), restore-to-test-env spot-check cadence, partial-restore (single-table / single-object) verification, cross-region replication validation, retention-policy assertions. \"An untested backup is not a backup.\" Use when a service's backups have never been restore-tested, when the backup tool is being swapped, or when an audit needs proof that backups are integrity-checked and restorable."
 metadata:
   keywords: "backup-verification, integrity-check, restore-spot-check, retention, cross-region-replication"
 ---

@@ -1,6 +1,6 @@
 ---
 name: synthetic-data-toolkit
-description: "Dispatcher across the four synthetic-data generators in this plugin (Faker / FactoryBot / mimesis / Bogus) - picks the right tool by language and use case (raw value generation vs. typed factory orchestration), shows side-by-side equivalents for the same fixture across all four, and emits the language-appropriate code. Use when starting test-data work on a project and the team wants the \"which tool should I use\" decision documented."
+description: "Chooses between the four mainstream synthetic test-data generators - Faker (JavaScript), FactoryBot (Ruby), mimesis (Python), Bogus (.NET) - picks the right tool by language and use case (raw value generation vs. typed factory orchestration), shows side-by-side equivalents for the same fixture across all four, and emits the language-appropriate code. Use when starting test-data work on a project and the team wants the \"which tool should I use\" decision documented."
 ---
 
 # synthetic-data-toolkit
@@ -52,7 +52,7 @@ Project language?
 ├── .NET (C# / F# / VB.NET)
 │   └── bogus-data (only canonical option in the ecosystem)
 └── JVM (Java / Kotlin / Scala)
-    └── Multiple options (datafaker, easy-random, instancio); not in this plugin's current scope.
+    └── Multiple options (datafaker, easy-random, instancio); not covered here.
 ```
 
 ## Dispatch by job
@@ -211,7 +211,7 @@ public void Test()
 | Persistent E2E seed sets                        | [`seed-data-curator`](../seed-data-curator/SKILL.md). |
 
 Faker / FactoryBot / mimesis / Bogus generate **realistic-looking
-positive-path** data. The rest of this plugin handles the
+positive-path** data. The related skills above handle the
 adversarial, boundary, narrative, and persistent cases.
 
 ## References

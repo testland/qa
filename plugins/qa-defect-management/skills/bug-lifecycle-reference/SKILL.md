@@ -214,12 +214,12 @@ The platform-workflow skills enforce these:
 - Linear documentation "Workflow states" - fixed enum + per-team
   subdivision.
 - GitHub Issues docs - Open / Closed + labels + Projects.
-- Sibling references in this plugin:
+- Related references:
   [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md),
   [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).
 - Consumed by:
   [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)
   and platform-workflow skills.
-- Sibling-plugin neighbour: `bug-report-template`
-  (qa-bug-repro is reproduction-focused; this plugin is workflow /
+- Related neighbour: `bug-report-template`
+  (reproduction-focused; this reference is workflow /
   lifecycle / taxonomy-focused).

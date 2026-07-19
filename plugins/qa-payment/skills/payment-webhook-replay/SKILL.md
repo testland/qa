@@ -1,6 +1,6 @@
 ---
 name: payment-webhook-replay
-description: "Workflow-driven skill that builds payment webhook replay + recovery tests. Covers the idempotency contract (every webhook handler must handle redelivery without side effects), the replay simulators (Stripe CLI `stripe trigger`, Adyen Customer Area resend, PayPal Webhook Simulator, Braintree webhook test), the signature-verification gauntlet (HMAC-SHA256 per gateway, expired-timestamps rejection), and the partial-failure recovery scenarios. Use when designing webhook robustness tests. Composes payment-flow-states-reference + per-platform S1s."
+description: "Workflow-driven skill that builds payment webhook replay + recovery tests. Covers the idempotency contract (every webhook handler must handle redelivery without side effects), the replay simulators (Stripe CLI `stripe trigger`, Adyen Customer Area resend, PayPal Webhook Simulator, Braintree webhook test), the signature-verification gauntlet (HMAC-SHA256 per gateway, expired-timestamps rejection), and the partial-failure recovery scenarios. Use when designing webhook robustness tests."
 ---
 
 # payment-webhook-replay

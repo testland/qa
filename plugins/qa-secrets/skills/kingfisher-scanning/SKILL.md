@@ -200,7 +200,7 @@ jobs:
 
 ## Step 7 - Cross-tool layering
 
-Three secret scanners in this plugin overlap deliberately:
+Three secret scanners overlap deliberately:
 
 | Tool | Sweet spot |
 |---|---|

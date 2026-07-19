@@ -1,6 +1,6 @@
 ---
 name: mercurius-test
-description: "Wraps Mercurius (Fastify GraphQL plugin) testing patterns: `app.inject()` for HTTP-layer simulation without spinning up a network listener, plugin-registration setup (await app.register(mercurius, { schema, resolvers, graphiql: false })), production-config gates (graphiql: false; jit threshold; query depth limits via fastify-rate-limit + complexity), and the per-test app lifecycle (app.close() in afterEach). Use when writing tests for a Fastify + Mercurius GraphQL server. Composes introspection-attack-surface-reference for the production-safety gates."
+description: "Wraps Mercurius (Fastify GraphQL plugin) testing patterns: `app.inject()` for HTTP-layer simulation without spinning up a network listener, plugin-registration setup (await app.register(mercurius, { schema, resolvers, graphiql: false })), production-config gates (graphiql: false; jit threshold; query depth limits via fastify-rate-limit + complexity), and the per-test app lifecycle (app.close() in afterEach). Use when writing tests for a Fastify + Mercurius GraphQL server."
 ---
 
 # mercurius-test

@@ -1,6 +1,6 @@
 ---
 name: pci-dss-scope-reference
-description: "Pure-reference catalog of PCI DSS v4.0 scope reduction techniques + the testable scope boundaries. Covers the SAQ levels (A through D, picked by how cardholder data flows), the PAN-storage prohibitions (only first-6 + last-4 retained; nothing else cleartext), the tokenization + hosted-fields scope-reduction patterns (Stripe Elements / Adyen Drop-in / Braintree Hosted Fields keep PAN off your servers), Network-Segmentation as PCI scope-reduction, and the testable behaviours the scope boundary creates. Distinct from qa-compliance/pci-dss-scope-checker (the compliance / scope-verification skill); this is the catalog of WHY the boundary matters. Use when designing or auditing the PCI scope of a payment integration."
+description: "Pure-reference catalog of PCI DSS v4.0 scope reduction techniques + the testable scope boundaries. Covers the SAQ levels (A through D, picked by how cardholder data flows), the PAN-storage prohibitions (only first-6 + last-4 retained; nothing else cleartext), the tokenization + hosted-fields scope-reduction patterns (Stripe Elements / Adyen Drop-in / Braintree Hosted Fields keep PAN off your servers), Network-Segmentation as PCI scope-reduction, and the testable behaviours the scope boundary creates. This is the catalog of WHY the boundary matters and what it makes testable - not a checker that verifies a given integration against the standard. Use when designing or auditing the PCI scope of a payment integration."
 ---
 
 # pci-dss-scope-reference
@@ -16,8 +16,7 @@ PCI DSS v4.0 is the current spec (replaced v3.2.1 in 2024).
 your systems entirely, so PCI compliance becomes minimal SAQ A
 instead of full SAQ D.
 
-This skill is **distinct from**
-`qa-compliance/pci-dss-scope-checker` which verifies the
+This skill is **distinct from** a scope checker that verifies the
 boundary holds in code. This skill explains what the boundary
 IS and the test surface it creates.
 
@@ -124,8 +123,7 @@ broader IT environment.
 | Backup snapshots PAN-free | Same regex against backup files |
 | Egress firewall blocks card-network IPs | Network test |
 
-The
-`qa-compliance/pci-dss-scope-checker` skill runs these
+A `pci-dss-scope-checker` runs these
 adversarially. This skill provides the catalog.
 
 ## Anti-patterns

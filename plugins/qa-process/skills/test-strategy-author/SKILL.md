@@ -74,7 +74,7 @@ Per the test pyramid ([`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.m
 
 ## 4. Tooling
 
-(Stack inventory per layer; references to specific skills in this marketplace)
+(Stack inventory per layer; references to specific skills)
 
 ## 5. Environments
 

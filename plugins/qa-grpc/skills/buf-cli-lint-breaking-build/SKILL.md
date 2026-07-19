@@ -1,6 +1,6 @@
 ---
 name: buf-cli-lint-breaking-build
-description: "Wraps the buf CLI for protobuf workflow gating: `buf build` (compile / validate .proto files), `buf lint` (STANDARD rule set: snake_case field names, Service-suffixed service names), `buf breaking --against <ref>` (detect breaking changes vs a git baseline or registry image), and `buf format`. Use as the proto-lint + breaking-change gate in CI for any gRPC service, to debug a buf breaking failure by rule ID (e.g. FIELD_NO_DELETE_UNLESS_NUMBER_RESERVED), and to select the FILE vs WIRE_JSON breaking ruleset for binary-only vs JSON consumers. Composes protobuf-versioning-strategy-reference for the catalog of what is and isn't breaking. Distinct from qa-contract-testing/protobuf-compat-checking which performs cross-service contract testing; this skill is single-service schema lint + breaking-build."
+description: "Wraps the buf CLI for protobuf workflow gating: `buf build` (compile / validate .proto files), `buf lint` (STANDARD rule set: snake_case field names, Service-suffixed service names), `buf breaking --against <ref>` (detect breaking changes vs a git baseline or registry image), and `buf format`. Use as the proto-lint + breaking-change gate in CI for any gRPC service, to debug a buf breaking failure by rule ID (e.g. FIELD_NO_DELETE_UNLESS_NUMBER_RESERVED), and to select the FILE vs WIRE_JSON breaking ruleset for binary-only vs JSON consumers. Scoped to single-service schema lint + breaking-build, not cross-service contract testing."
 ---
 
 # buf-cli-lint-breaking-build
@@ -238,7 +238,7 @@ calls above work without them.
   ("field now means net price, not gross") are undetectable.
 - **No cross-service compatibility.** This is single-service
   schema lint. For service-to-service contract testing see
-  `protobuf-compat-checking` (in the qa-contract-testing plugin).
+  `protobuf-compat-checking`.
 - **BSR features require auth.** Remote plugins, registry pushes,
   and `buf.build/...` baselines need a BSR account.
 - **JSON-name detection** is in WIRE_JSON only. Services that

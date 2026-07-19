@@ -1,6 +1,6 @@
 ---
 name: codeclimate-config
-description: "Configure Code Climate Quality (now Qlty) for repository-wide quality gates - duplication, complexity, similar-code, exclude_patterns. Covers both legacy `.codeclimate.yml` (Code Climate Velocity / GitHub integration) and the new `.qlty/qlty.toml` per the Qlty platform migration."
+description: "Configure Code Climate Quality (now Qlty) for repository-wide quality gates - duplication, complexity, similar-code, exclude_patterns. Covers both legacy `.codeclimate.yml` (Code Climate Velocity / GitHub integration) and the new `.qlty/qlty.toml` per the Qlty platform migration. Use when a repo needs duplication and complexity thresholds enforced on PRs, or when an existing `.codeclimate.yml` must be migrated to Qlty without losing its plugin and exclude settings."
 metadata:
   keywords: "code-climate, qlty, duplication, complexity, quality-gate"
 ---

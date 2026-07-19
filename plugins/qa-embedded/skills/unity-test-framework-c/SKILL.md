@@ -20,7 +20,7 @@ origins, APIs, and consumers. If you reached this skill looking
 for the Unity-the-game-engine test framework, the canonical
 package is `com.unity.test-framework` documented at
 [docs.unity3d.com](https://docs.unity3d.com/Packages/com.unity.test-framework@latest)
-and covered by `qa-game/unity-test-framework`.
+and covered by `unity-test-framework`.
 
 Unity is, per [throwtheswitch.org/unity](https://www.throwtheswitch.org/unity),
 "a Unit-Testing framework written in 100% pure ANSI C" that is
@@ -332,7 +332,7 @@ the canonical `ceedling test:all` + JUnit XML flow.
 | `TEST_ASSERT_TRUE(strcmp(a,b) == 0)` | Failure message reports "Expected true, got false" - useless | Use `TEST_ASSERT_EQUAL_STRING(a,b)` |
 | `TEST_ASSERT_EQUAL_MEMORY` with `len=sizeof(*p)` on a struct with padding | Padding bytes vary; intermittent failures | Initialise structs with `memset(.., 0, sizeof)` before fill, or compare fields individually |
 | Calling `RUN_TEST` outside `UNITY_BEGIN`/`UNITY_END` | Asserts work but the summary is wrong | Always bracket runs with `UNITY_BEGIN` / `UNITY_END` |
-| Mixing the C library with the game-engine Test Framework | Build sees two `unity.h` headers; one wins randomly | Don't co-locate. Use `qa-game/unity-test-framework` only for game engine projects; this skill for embedded C |
+| Mixing the C library with the game-engine Test Framework | Build sees two `unity.h` headers; one wins randomly | Don't co-locate. Use `unity-test-framework` only for game engine projects; this skill for embedded C |
 | Float comparison with `TEST_ASSERT_EQUAL_FLOAT` and exact values | Floating-point equality is fragile | Use `TEST_ASSERT_FLOAT_WITHIN(epsilon, a, b)` |
 | `UNITY_EXCLUDE_SETJMP` on a target that has setjmp | Loses early-abort on fatal assert; tests run on after corruption | Only exclude when the toolchain genuinely lacks setjmp |
 
@@ -370,7 +370,7 @@ Cited inline. Foundational documents:
   [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 - **Distinct from**: Unity game-engine Test Framework - 
   [docs.unity3d.com/Packages/com.unity.test-framework@latest](https://docs.unity3d.com/Packages/com.unity.test-framework@latest)
-  (covered by `qa-game/unity-test-framework`).
+  (covered by `unity-test-framework`).
 - Sibling skills:
   [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
   [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md),

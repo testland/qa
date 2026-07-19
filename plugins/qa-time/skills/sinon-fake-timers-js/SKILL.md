@@ -1,6 +1,6 @@
 ---
 name: sinon-fake-timers-js
-description: "Wraps Sinon's @sinonjs/fake-timers library for JS/TS testing: install(), tick() / tickAsync(), setSystemTime(), restore(); covers timers (setTimeout / setInterval / requestAnimationFrame), Date / performance.now() / hrtime, and the toFake option for selective override. Use when testing JS/TS code with deterministic timer + clock behaviour. Composes dst-transition-reference + iso-8601-vs-rfc-3339-reference."
+description: "Wraps Sinon's @sinonjs/fake-timers library for JS/TS testing: install(), tick() / tickAsync(), setSystemTime(), restore(); covers timers (setTimeout / setInterval / requestAnimationFrame), Date / performance.now() / hrtime, and the toFake option for selective override. Use when testing JS/TS code with deterministic timer + clock behaviour."
 ---
 
 # sinon-fake-timers-js

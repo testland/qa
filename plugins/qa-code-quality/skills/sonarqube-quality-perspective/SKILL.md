@@ -1,6 +1,6 @@
 ---
 name: sonarqube-quality-perspective
-description: "Run SonarQube/SonarCloud against production code to surface Code Smells, Bugs, and Maintainability ratings - the quality lens (cross-ref qa-sast for the Vulnerability/Hotspot lens). Production-only scope via sonar.exclusions; test code is owned by qa-test-review."
+description: "Run SonarQube/SonarCloud against production code to surface Code Smells, Bugs, and Maintainability ratings - the maintainability lens rather than the security lens. Production-only scope via sonar.exclusions; test code is reviewed separately. Use when a team wants maintainability and technical-debt ratings gating PRs, or when an existing SonarQube project reports numbers nobody has tied to a quality gate."
 metadata:
   keywords: "sonarqube, sonarcloud, code-smell, maintainability, quality-gate"
 ---
@@ -50,8 +50,7 @@ sonar.coverage.exclusions=**/*.generated.*,**/main.ts
 **Why separate `sonar.tests` vs `sonar.sources`:** test code has different
 quality expectations (long names, deliberate duplication for clarity,
 Arrange-Act-Assert patterns). Lumping them into one scope produces
-noise. Test code is reviewed by `qa-test-review` skills/agents
-instead.
+noise. Test code is reviewed separately.
 
 ## Step 3 - Run scan
 
@@ -108,7 +107,7 @@ and fails the build if it's RED.
 |---|---|---|
 | Scan whole repo without `sonar.tests` separation | Test conventions flagged as smells; team disables Sonar | Split `sonar.sources` / `sonar.tests` (Step 2) |
 | Apply gate to overall code, not new code | Legacy debt blocks all PRs forever | Use new-code-period gate (Sonar Way default) |
-| Mix this with qa-sast's `sonarqube-rules` settings | Two skills mutating same `sonar-project.properties` | This skill owns Reliability+Maintainability; qa-sast/sonarqube-rules owns Security profile |
+| Mix this with the `sonarqube-rules` security settings | Two skills mutating same `sonar-project.properties` | This skill owns Reliability+Maintainability; `sonarqube-rules` owns the Security profile |
 | Lower gate to merge pre-existing failures | Gate becomes meaningless | Use "Wont Fix" / "Accepted" issue resolution + scope-exclusion comment instead |
 | Run after merge only | No PR decoration; hard to review | Run on PR with `sonar.pullrequest.*` flags (Step 3) |
 

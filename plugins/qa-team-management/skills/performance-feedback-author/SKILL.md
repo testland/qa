@@ -1,6 +1,6 @@
 ---
 name: performance-feedback-author
-description: "Build-an-X workflow that drafts evidence-based performance feedback and review input for testers using the Center for Creative Leadership's SBI model (Situation - Behavior - Impact, extended to SBII with Intent) - pulling every Behavior statement from verifiable work artifacts (bug reports authored, test cases and automation merged, review comments, charter session logs) rather than impressions or adjectives. Distinct from `tester-one-on-one-planner` (sibling skill that plans the recurring conversation where this feedback is delivered), from `skill-matrix-author` (team capability map kept deliberately separate from performance data), and from `hiring-rubric-author` in qa-hiring (scores external candidates, not current team members). Use when a QA manager owes someone specific feedback this week, or when writing review input or a promotion case for review season."
+description: "Build-an-X workflow that drafts evidence-based performance feedback and review input for testers using the Center for Creative Leadership's SBI model (Situation - Behavior - Impact, extended to SBII with Intent) - pulling every Behavior statement from verifiable work artifacts (bug reports authored, test cases and automation merged, review comments, charter session logs) rather than impressions or adjectives. Produces the written feedback artifact itself - not the agenda for the recurring conversation where it is delivered, not a team capability map (kept deliberately separate from performance data), and not a scorecard for external candidates. Use when a QA manager owes someone specific feedback this week, or when writing review input or a promotion case for review season."
 metadata:
   keywords: "performance-feedback, sbi, performance-review, evidence-based, promotion-case, feedback"
 ---
@@ -24,7 +24,7 @@ Do **not** use this skill to:
 
 - Plan the meeting where feedback is delivered - that is [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md).
 - Update the team capability map - that is [`skill-matrix-author`](../skill-matrix-author/SKILL.md); mixing performance judgments into the matrix corrupts it as a planning tool.
-- Run disciplinary or termination processes - those are HR-owned with legal constraints outside this marketplace's scope.
+- Run disciplinary or termination processes - those are HR-owned and carry legal constraints beyond the scope of this skill.
 
 ## Step 1 - Capture the inputs
 

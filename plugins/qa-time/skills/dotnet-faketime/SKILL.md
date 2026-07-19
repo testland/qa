@@ -1,6 +1,6 @@
 ---
 name: dotnet-faketime
-description: "Wraps .NET's TimeProvider abstraction (System.TimeProvider, introduced .NET 8) and FakeTimeProvider from Microsoft.Extensions.TimeProvider.Testing: SetUtcNow, Advance, AutoAdvanceAmount, CreateTimer, Delay, and the pre-.NET-8 ISystemClock migration path. Use when testing C# or F# code that reads the current time, uses timers, or awaits Task.Delay. Composes dst-transition-reference + iso-8601-vs-rfc-3339-reference."
+description: "Wraps .NET's TimeProvider abstraction (System.TimeProvider, introduced .NET 8) and FakeTimeProvider from Microsoft.Extensions.TimeProvider.Testing: SetUtcNow, Advance, AutoAdvanceAmount, CreateTimer, Delay, and the pre-.NET-8 ISystemClock migration path. Use when testing C# or F# code that reads the current time, uses timers, or awaits Task.Delay."
 ---
 
 # dotnet-faketime

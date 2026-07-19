@@ -325,7 +325,7 @@ anti-patterns table.
 - dogtail README - [dogtailraw][dogtailraw].
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
-- Sibling skills in this plugin:
+- Related skills:
   [`winappdriver`](../winappdriver/SKILL.md),
   [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md),
   [`qt-test-framework`](../qt-test-framework/SKILL.md),

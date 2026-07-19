@@ -1,6 +1,6 @@
 ---
 name: browserstack-automate
-description: "Author and run E2E tests on BrowserStack Automate - cloud grid covering 3000+ real device + browser combinations. Covers BROWSERSTACK_USERNAME + ACCESS_KEY auth, hub URL https://hub-cloud.browserstack.com/wd/hub, W3C capabilities + bstack:options (projectName, buildName, sessionName), BrowserStackLocal for testing against localhost / internal environments, parallel session limits, and CI integration. Use for cross-browser regression on real devices + browsers - distinct from qa-web-e2e/playwright-testing (single-runner) and qa-compatibility/browser-matrix-runner (bundled engines only)."
+description: "Author and run E2E tests on BrowserStack Automate - cloud grid covering 3000+ real device + browser combinations. Covers BROWSERSTACK_USERNAME + ACCESS_KEY auth, hub URL https://hub-cloud.browserstack.com/wd/hub, W3C capabilities + bstack:options (projectName, buildName, sessionName), BrowserStackLocal for testing against localhost / internal environments, parallel session limits, and CI integration. Use for cross-browser regression on real devices + browsers - distinct from running a single test framework locally, and from a matrix runner limited to the browser engines bundled on the local machine."
 ---
 
 # browserstack-automate

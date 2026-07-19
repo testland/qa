@@ -1,6 +1,6 @@
 ---
 name: linear-bug-workflow-runner
-description: "Author and run Linear bug workflows via the GraphQL API: issue creation, state transitions (workflowState assignment), priority assignment (0 No priority / 1 Urgent / 2 High / 3 Medium / 4 Low), label-based classification, search by team and content. Covers the issueCreate mutation, issueUpdate for state transitions, the workflowStates query for per-team state IDs, and Linear's API-key vs OAuth Bearer auth modes. Use when the target tracker is Linear specifically; for tool-agnostic CI gates name the tracker, and for other trackers use jira-bug-workflow-runner (Jira) or github-issues-bug-workflow (GitHub Issues). Distinct from qa-bug-repro, which is reproduction-focused."
+description: "Author and run Linear bug workflows via the GraphQL API: issue creation, state transitions (workflowState assignment), priority assignment (0 No priority / 1 Urgent / 2 High / 3 Medium / 4 Low), label-based classification, search by team and content. Covers the issueCreate mutation, issueUpdate for state transitions, the workflowStates query for per-team state IDs, and Linear's API-key vs OAuth Bearer auth modes. Use when the target tracker is Linear specifically; for tool-agnostic CI gates name the tracker, and for other trackers use jira-bug-workflow-runner (Jira) or github-issues-bug-workflow (GitHub Issues). Files and transitions the issue; reproducing the defect is a separate concern."
 ---
 
 # linear-bug-workflow-runner

@@ -1,6 +1,6 @@
 ---
 name: timezone-test-matrix-builder
-description: "Workflow-driven skill that builds a timezone + DST + leap-related test matrix from a code-base's time-touchpoint inventory. Walks through: inventorying time-related code (grep for datetime / Date / Instant / time.time / current_user_tz), categorizing each touchpoint (storage, business-logic, display, cron, billing), picking the relevant test categories (DST spring/fall, ambiguous local time, leap day Feb 29, leap second, ISO/RFC 3339 round-trip, zone-database update tolerance), and emitting per-touchpoint test stubs using the language-native fake-clock skill. Composes dst-transition-reference + leap-second-reference + iso-8601-vs-rfc-3339-reference."
+description: "Workflow-driven skill that builds a timezone + DST + leap-related test matrix from a code-base's time-touchpoint inventory. Walks through: inventorying time-related code (grep for datetime / Date / Instant / time.time / current_user_tz), categorizing each touchpoint (storage, business-logic, display, cron, billing), picking the relevant test categories (DST spring/fall, ambiguous local time, leap day Feb 29, leap second, ISO/RFC 3339 round-trip, zone-database update tolerance), and emitting per-touchpoint test stubs using the language-native fake-clock skill. Use when a code base needs a timezone, DST, and leap-related test matrix derived from its own time touchpoints."
 ---
 
 # timezone-test-matrix-builder

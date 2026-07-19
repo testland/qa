@@ -1,6 +1,6 @@
 ---
 name: graphql-yoga-test
-description: "Wraps GraphQL Yoga testing patterns: `yoga.fetch()` for in-process HTTP-conformant request simulation (no network), `@graphql-tools/executor-http` for subscription + incremental-delivery testing, and the request-builder pattern for queries/mutations/subscriptions. Includes Yoga-specific config gates - `@graphql-yoga/plugin-disable-introspection`, `@graphql-yoga/plugin-persisted-operations` - testable through this skill. Use when writing tests for a GraphQL Yoga server (the-guild.dev's runtime, common in non-Apollo deployments). Composes introspection-attack-surface-reference + persisted-query-strategy-reference."
+description: "Wraps GraphQL Yoga testing patterns: `yoga.fetch()` for in-process HTTP-conformant request simulation (no network), `@graphql-tools/executor-http` for subscription + incremental-delivery testing, and the request-builder pattern for queries/mutations/subscriptions. Includes Yoga-specific config gates - `@graphql-yoga/plugin-disable-introspection`, `@graphql-yoga/plugin-persisted-operations` - testable through this skill. Use when writing tests for a GraphQL Yoga server (the-guild.dev's runtime, common in non-Apollo deployments)."
 ---
 
 # graphql-yoga-test

@@ -1,6 +1,6 @@
 ---
 name: service-worker-lifecycle-test
-description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). Distinct from `qa-modern-web/service-worker-tests` (general SW assertion patterns); this is the install → waiting → activating → activated → redundant lifecycle and `skipWaiting` / `clients.claim` upgrade-path test builder."
+description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). Use when authoring the baseline lifecycle spec, or when a deploy leaves users stuck on the old service worker - scoped to the state machine and the `skipWaiting` / `clients.claim` upgrade path, not to general service-worker assertion or cache-strategy patterns."
 metadata:
   keywords: "service-worker, lifecycle, skip-waiting, clients-claim, statechange"
 ---
@@ -21,7 +21,7 @@ mid-fetch.
 This skill produces the per-extension lifecycle spec - a Playwright
 file with one test per transition cell plus a worked v1 → v2
 upgrade-path test. It is **distinct from**
-`service-worker-tests` (in the qa-modern-web plugin),
+`service-worker-tests`,
 which covers general `context.serviceWorkers()` Playwright patterns
 and per-cache-strategy assertions. This builder is laser-focused on
 the state machine.
@@ -410,7 +410,7 @@ Steps 2 - 8 for the full lifecycle surface.
 - **The push and fetch events** that `waitUntil` gates aren't
   tested here directly; pair with
   [`web-push-test`](../web-push-test/SKILL.md) (push side) and
-  the `qa-modern-web/service-worker-tests` cache-strategy tests
+  the `service-worker-tests` cache-strategy tests
   (fetch side).
 - **Browser variance.** Firefox and WebKit implement the state
   machine but report `statechange` with slightly different

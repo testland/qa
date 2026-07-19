@@ -8,8 +8,8 @@ description: "Produces a single breakpoint-matrix report (rows = pages/stories, 
 ## Overview
 
 Most teams need to assert a UI across multiple breakpoints (mobile,
-tablet, desktop, sometimes wide-desktop). The four engines covered in
-this plugin each have their own way to express a viewport list:
+tablet, desktop, sometimes wide-desktop). The four engines covered
+here each have their own way to express a viewport list:
 
 - **Percy** - widths array in `.percy.yml` / `.percy.config.js`.
 - **Chromatic** - `parameters.chromatic.viewports` per story.

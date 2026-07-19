@@ -1,6 +1,6 @@
 ---
 name: qt-test-framework
-description: "Authors and runs Qt Test - the first-party C++ unit + GUI test framework that ships with Qt 6 (`#include <QtTest>`). Covers the `QTEST_MAIN` / `QTEST_APPLESS_MAIN` / `QTEST_GUILESS_MAIN` entry-point macros, the `QObject` private-slot test pattern, `QVERIFY` / `QCOMPARE` / `QFETCH` assertions, GUI event simulation (`QTest::mouseClick`, `QTest::keyClick`, `QTest::touchEvent`), `QSignalSpy` for signal introspection, `QBENCHMARK` for performance regression, and the `-o file,junitxml` CI output. Use for in-process testing of Qt widgets, QObject signal/slot chains, and Qt Quick / QML application logic; for out-of-process Qt-app driving see the OS drivers in this plugin."
+description: "Authors and runs Qt Test - the first-party C++ unit + GUI test framework that ships with Qt 6 (`#include <QtTest>`). Covers the `QTEST_MAIN` / `QTEST_APPLESS_MAIN` / `QTEST_GUILESS_MAIN` entry-point macros, the `QObject` private-slot test pattern, `QVERIFY` / `QCOMPARE` / `QFETCH` assertions, GUI event simulation (`QTest::mouseClick`, `QTest::keyClick`, `QTest::touchEvent`), `QSignalSpy` for signal introspection, `QBENCHMARK` for performance regression, and the `-o file,junitxml` CI output. Use for in-process testing of Qt widgets, QObject signal/slot chains, and Qt Quick / QML application logic; for out-of-process Qt-app driving, use an OS-native accessibility driver instead."
 metadata:
   keywords: "qt, qttest, c++, qsignalspy, qbenchmark, widget-testing"
 ---
@@ -270,7 +270,7 @@ runs the per-test executables and aggregates outcomes.
 ```
 
 The JUnit XML output feeds
-`junit-xml-analysis` (in the qa-test-reporting plugin)
+`junit-xml-analysis`
 for cross-platform aggregation alongside other JUnit-emitting test
 runners.
 
@@ -329,7 +329,7 @@ runners that don't have an X / Wayland session.
 
 - **In-process only.** Qt Test links the application code into the
   test binary; it cannot drive a separately-packaged Qt app - for
-  that, see the OS-native drivers in this plugin.
+  that, use an OS-native accessibility driver.
 - **No binary compatibility guarantee.** Per [qtidx][qtidx], "no
   binary compatibility guarantee" is offered for Qt Test;
   recompile when the Qt version changes.
@@ -351,7 +351,7 @@ runners that don't have an X / Wayland session.
 - Qt Test overview - [qtover][qtover].
 - QTest namespace reference - [qtns][qtns].
 - Qt Test module index - [qtidx][qtidx].
-- Sibling out-of-process Qt drivers in this plugin:
+- Sibling out-of-process Qt drivers:
   [`winappdriver`](../winappdriver/SKILL.md),
   [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md),
   [`at-spi-linux`](../at-spi-linux/SKILL.md).

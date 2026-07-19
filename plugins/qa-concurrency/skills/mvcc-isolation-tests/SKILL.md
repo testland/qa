@@ -1,6 +1,6 @@
 ---
 name: mvcc-isolation-tests
-description: "Build per-database MVCC isolation-level tests - Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB."
+description: "Build per-database MVCC isolation-level tests - Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB. Use when two concurrent transactions can touch the same rows (balance debit, seat booking, stock decrement), or before changing a service's default isolation level."
 metadata:
   keywords: "mvcc, transaction-isolation, serializable, phantom-read, write-skew"
 ---

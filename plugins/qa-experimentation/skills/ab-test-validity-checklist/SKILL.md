@@ -1,6 +1,6 @@
 ---
 name: ab-test-validity-checklist
-description: "Workflow-driven skill that builds an A/B test validity checklist from an experiment proposal. Walks through the canonical validity gates (pre-registration of OEC + power calc + guardrails, randomization unit + SRM check, assignment integrity, telemetry correctness, peeking discipline per peeking-problem-reference, novelty/primacy assessment, post-experiment SRM re-check, results-interpretation guardrails per Kohavi et al.) and emits a per-experiment checklist + a sign-off form. Use when launching a new experiment, auditing an existing one, or building experimentation governance. Composes guardrail-metrics-reference + peeking-problem-reference."
+description: "Workflow-driven skill that builds an A/B test validity checklist from an experiment proposal. Walks through the canonical validity gates (pre-registration of OEC + power calc + guardrails, randomization unit + SRM check, assignment integrity, telemetry correctness, peeking discipline per peeking-problem-reference, novelty/primacy assessment, post-experiment SRM re-check, results-interpretation guardrails per Kohavi et al.) and emits a per-experiment checklist + a sign-off form. Use when launching a new experiment, auditing an existing one, or building experimentation governance."
 ---
 
 # ab-test-validity-checklist
@@ -39,6 +39,28 @@ Document **before launch**:
 | Look schedule | Pre-declared days; per [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md) |
 | Sequential method | Fixed / Pocock / O'Brien-Fleming / always-valid |
 | Stop-early rules | What signals stop (loss on OEC, blocking guardrail) |
+
+Candidate guardrail set to pick from, with typical block
+thresholds (per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md);
+Kohavi et al. *Trustworthy Online Controlled Experiments*, ISBN
+978-1108724265):
+
+| Class | Guardrail | Direction | Typical block threshold |
+|---|---|---|---|
+| Quality (web) | TTFB, LCP, INP | not-increase | > 10% or > 50ms, whichever is greater |
+| Quality (API) | p95 / p99 latency | not-increase | > 10% or > 50ms, whichever is greater |
+| Quality (API) | error rate, 5xx rate | not-increase | +0.1pp absolute |
+| Quality (mobile) | crash rate, ANR rate, app start time | not-increase | any statistically significant increase |
+| Engagement | DAU, sessions / user, retention day 7 | not-decrease | -1% |
+| Revenue | gross revenue, AOV, conversion | not-decrease | any statistically significant decrease |
+| Trust | opt-out, complaint, refund rate | not-increase | any statistically significant increase |
+
+Each guardrail carries two levels: **alert** (statistically
+significant degradation - investigate before ship) and **block**
+(past the pre-declared limit - ship-decision flips to "no"). Per
+Kohavi et al., always include a quality guardrail (latency /
+error); it is the most-missed category. Percentage-only thresholds
+on fast endpoints are a trap - use `max(%, absolute)`.
 
 Commit this to the repo as `experiments/<id>/proposal.yml`.
 Any post-launch change requires explicit team approval.
@@ -133,7 +155,7 @@ Before ship:
 | Pre-registration honoured | OEC / guardrails / unit / schedule unchanged since launch |
 | SRM clean | p > 0.0001 on the chi-square (Step 2) |
 | OEC significant under the declared method | Sequential / always-valid / fixed-horizon p-value |
-| All guardrails within thresholds | Per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md) |
+| All guardrails within thresholds | Each Step 1 guardrail below its block threshold; per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md) |
 | Multiple-comparison corrected | Bonferroni / BH if many metrics |
 | Novelty assessment | Effect persisting in week 2+ |
 | Segment-stability | Effect direction consistent across major segments (no Simpson's paradox) |

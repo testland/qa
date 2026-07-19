@@ -1,6 +1,6 @@
 ---
 name: cqrs-projection-tests
-description: "Build CQRS read-model projection tests - write-model + read-model consistency tests, projection-replay determinism, projection-versioning + zero-downtime swap, eventual-consistency-window assertions. Per martinfowler.com CQRS reference."
+description: "Build CQRS read-model projection tests - write-model + read-model consistency tests, projection-replay determinism, projection-versioning + zero-downtime swap, eventual-consistency-window assertions. Per martinfowler.com CQRS reference. Use when a read model is derived from a write-model event stream - adding a projection, migrating a projection schema, or chasing a \"I changed it but the UI shows the old value\" report."
 metadata:
   keywords: "cqrs, projection, read-model, eventual-consistency, command-query-segregation"
 ---

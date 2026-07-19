@@ -1,6 +1,6 @@
 ---
 name: timecop-ruby
-description: "Wraps timecop (github.com/travisjeffery/timecop), the Ruby time-mocking gem: Timecop.freeze, Timecop.travel, Timecop.scale (time-speedup), Timecop.return (cleanup), and RSpec-friendly helpers. Use when testing Ruby/Rails code that calls Time / Date / DateTime. Composes dst-transition-reference + iso-8601-vs-rfc-3339-reference."
+description: "Wraps timecop (github.com/travisjeffery/timecop), the Ruby time-mocking gem: Timecop.freeze, Timecop.travel, Timecop.scale (time-speedup), Timecop.return (cleanup), and RSpec-friendly helpers. Use when testing Ruby/Rails code that calls Time / Date / DateTime."
 ---
 
 # timecop-ruby

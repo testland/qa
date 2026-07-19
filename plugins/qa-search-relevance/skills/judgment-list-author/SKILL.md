@@ -1,16 +1,16 @@
 ---
 name: judgment-list-author
-description: "Bootstraps human-relevance judgment lists (query sets, grading scales, rater guidelines, inter-rater agreement, Quepid tooling, TREC-style pooling, and refresh cadence) that serve as ground truth for all three search-relevance skills. Use when a team needs to create or refresh the judgment corpus before running NDCG / MRR / Recall@k evaluations."
+description: "Bootstraps human-relevance judgment lists (query sets, grading scales, rater guidelines, inter-rater agreement, Quepid tooling, TREC-style pooling, and refresh cadence) that serve as ground truth for search-relevance test suites. Use when a team needs to create or refresh the judgment corpus before running NDCG / MRR / Recall@k evaluations."
 metadata:
   keywords: "judgment-list, qrels, relevance-ground-truth, quepid, trec, inter-rater-agreement, ndcg"
 ---
 
 # judgment-list-author
 
-The other skills in this plugin (`elasticsearch-relevance-tests`,
+Related skills (`elasticsearch-relevance-tests`,
 `opensearch-relevance-tests`, `vector-search-precision-tests`) all require a
 judgment list - a set of `(query, document_id, grade)` triples that define what
-"relevant" means for your product. Nothing else in this plugin creates that
+"relevant" means for your product. No automated metric creates that
 corpus. This skill does.
 
 Per [TREC's pooling methodology], "NIST pools the individual results, judges

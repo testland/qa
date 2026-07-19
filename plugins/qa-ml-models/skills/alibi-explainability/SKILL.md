@@ -1,6 +1,6 @@
 ---
 name: alibi-explainability
-description: "Use Alibi Explain to generate model explanations - Anchors, Integrated Gradients, Kernel/Tree SHAP, ALE, Counterfactual Instances. Wires explainer.fit + explainer.explain into model-evaluation pipelines so that every flagged prediction ships with a \"why\" record auditors can reason about."
+description: "Generates model explanations with Alibi Explain - Anchors, Integrated Gradients, Kernel/Tree SHAP, ALE, Counterfactual Instances. Wires explainer.fit + explainer.explain into model-evaluation pipelines so that every flagged prediction ships with a \"why\" record auditors can reason about. Use when a model decision must be explainable to an auditor, regulator, or affected user, or when a support team cannot answer why a specific prediction was made."
 metadata:
   keywords: "alibi, explainability, interpretability, counterfactual, shap, integrated-gradients"
 ---
@@ -116,8 +116,8 @@ def explain_and_log(instance_id, instance, explainer, log_dir="explanations"):
 ```
 
 For high-risk systems, store every explanation alongside the
-prediction (immutable audit log). Pair with `qa-compliance/audit-trail-test-author`
-in the testland-qa marketplace for storage assertions.
+prediction (immutable audit log). Pair with an audit-trail test skill
+for storage assertions.
 
 ## Step 7 - Don't confuse with alibi-detect
 

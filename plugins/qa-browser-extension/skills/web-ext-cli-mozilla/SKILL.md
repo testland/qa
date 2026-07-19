@@ -1,6 +1,6 @@
 ---
 name: web-ext-cli-mozilla
-description: "Author, lint, run, build, and sign a Firefox / Chromium WebExtension using Mozilla's `web-ext` CLI v8. Covers `web-ext lint` (addons-linter wrapper, JSON output for CI), `web-ext run` (temporary install in firefox-desktop / firefox-android / chromium targets with hot-reload), `web-ext build` (deterministic zip), and `web-ext sign` (AMO submission API, listed vs unlisted channels, JWT credentials). Use when the extension targets Firefox (signing is mandatory for distribution) or when cross-browser test runs need a single CLI that drives both Firefox and Chromium against the same source tree. For Playwright-driven MV3 popup / content-script fixtures see `qa-modern-web/browser-extension-tests`. This plugin covers Firefox + Chrome extension lifecycle, MV2 → MV3 migration, host-permission prompts, and `storage.sync` vs `storage.local` semantics."
+description: "Author, lint, run, build, and sign a Firefox / Chromium WebExtension using Mozilla's `web-ext` CLI v8. Covers `web-ext lint` (addons-linter wrapper, JSON output for CI), `web-ext run` (temporary install in firefox-desktop / firefox-android / chromium targets with hot-reload), `web-ext build` (deterministic zip), and `web-ext sign` (AMO submission API, listed vs unlisted channels, JWT credentials). Use when the extension targets Firefox (signing is mandatory for distribution) or when cross-browser test runs need a single CLI that drives both Firefox and Chromium against the same source tree."
 metadata:
   keywords: "web-ext, firefox, amo, addons-linter, browser-extension"
 ---
@@ -24,7 +24,7 @@ This skill wraps `web-ext` for test runs. Composes with:
   for migration-time lint rules.
 
 For Playwright-driven MV3 popup / content-script fixtures see
-`qa-modern-web/browser-extension-tests`.
+`browser-extension-tests`.
 That skill is Chromium-only and assumes the extension is built;
 `web-ext` is the lint+run+build+sign tool that produces the
 artifact and validates it pre-flight on either browser.

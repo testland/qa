@@ -69,9 +69,9 @@ For a hypothetical SaaS B2B web app:
 
 | Browser | Version | OS | Why T1 | Where tested |
 |---|---|---|---|---|
-| Chrome | latest stable | Linux | 68% of traffic | qa-web-e2e/playwright-testing on CI |
-| Chrome | latest-1 (N-1) | Linux | Lag-behind users (Group Policy) | qa-web-e2e/playwright-testing on CI |
-| Firefox | latest stable | Linux | 12% of traffic | qa-compatibility/browser-matrix-runner (bundled) |
+| Chrome | latest stable | Linux | 68% of traffic | `playwright-testing` on CI |
+| Chrome | latest-1 (N-1) | Linux | Lag-behind users (Group Policy) | `playwright-testing` on CI |
+| Firefox | latest stable | Linux | 12% of traffic | `browser-matrix-runner` (bundled) |
 
 ## Tier 2 - nightly + pre-release (5 combos)
 
@@ -81,7 +81,7 @@ For a hypothetical SaaS B2B web app:
 | Safari iOS | 17 | iOS 17 | Mobile Safari = 9% mobile traffic | BrowserStack Automate (real device) |
 | Edge | latest | Windows 11 | 5% traffic | BrowserStack Automate |
 | Chrome | latest | Android 14 | 5% mobile traffic | BrowserStack Automate (real device) |
-| Firefox | ESR | Linux | Enterprise users on long-support track | qa-compatibility/browser-matrix-runner |
+| Firefox | ESR | Linux | Enterprise users on long-support track | `browser-matrix-runner` |
 
 ## Tier 3 - quarterly / on-demand (4 combos)
 

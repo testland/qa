@@ -1,6 +1,6 @@
 ---
 name: electron-playwright
-description: "Authors Playwright `_electron` tests for packaged Electron desktop apps - launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from `qa-web-e2e/playwright-testing` (page automation against running browsers); this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite."
+description: "Authors Playwright `_electron` tests for packaged Electron desktop apps - launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from ordinary browser page automation: this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite."
 metadata:
   keywords: "electron, playwright, desktop, main-process, renderer"
 ---
@@ -27,7 +27,7 @@ projects.
 [electrontest]: https://www.electronjs.org/docs/latest/tutorial/automated-testing
 
 **Differentiation:** this skill is **distinct from**
-`playwright-testing` (in the qa-web-e2e plugin),
+`playwright-testing`,
 which drives a running Chromium / Firefox / WebKit browser via the
 `browser`, `context`, and `page` namespaces. `electron-playwright`
 wraps the separate `_electron` namespace ([pwelectron][pwelectron]) - 
@@ -267,7 +267,7 @@ the shared Playwright toolchain per
 ## Step 9 - Parsing results
 
 JUnit XML output (`reports/electron-junit.xml` from Step 7) feeds
-`junit-xml-analysis` (in the qa-test-reporting plugin)
+`junit-xml-analysis`
 for aggregation. The HTML reporter is identical to web-Playwright
 ([pwelectron][pwelectron]).
 

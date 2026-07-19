@@ -1,6 +1,6 @@
 ---
 name: jaeger-trace-tests
-description: "Author integration tests that query Jaeger for cross-service trace verification - Jaeger all-in-one Docker for CI (OTLP gRPC :4317 + HTTP :4318 ingest, query API on :16686), `/api/traces?service=X&operation=Y` query patterns, span set + parent-child + duration assertions. Pairs with `opentelemetry-trace-assertions` for in-process unit-level tests."
+description: "Author integration tests that query Jaeger for cross-service trace verification - Jaeger all-in-one Docker for CI (OTLP gRPC :4317 + HTTP :4318 ingest, query API on :16686), `/api/traces?service=X&operation=Y` query patterns, span set + parent-child + duration assertions. Use when verifying that a request produces the expected spans across service boundaries in a running Jaeger backend."
 metadata:
   keywords: "jaeger, distributed-tracing, integration-testing, opentelemetry, trace-query"
 ---

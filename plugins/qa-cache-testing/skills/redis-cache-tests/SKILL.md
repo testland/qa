@@ -1,6 +1,6 @@
 ---
 name: redis-cache-tests
-description: "Wraps Redis cache testing patterns: EXPIRE / PEXPIRE / TTL command verification (with the Redis 7+ NX/XX/GT/LT flags), the cache-aside write-then-invalidate test pattern (write to source → DEL key → assert next read fetches fresh), eviction-policy testing under memory pressure (maxmemory + allkeys-lru), Redis-side pub/sub invalidation across cache nodes, and key-namespacing tests for tenant scope. Use when writing tests for an application using Redis as its primary cache. Composes cache-coherence-patterns-reference + cache-stampede-reference + qa-multi-tenancy/cross-tenant-data-leak-tests (cache-key collision Test 10)."
+description: "Wraps Redis cache testing patterns: EXPIRE / PEXPIRE / TTL command verification (with the Redis 7+ NX/XX/GT/LT flags), the cache-aside write-then-invalidate test pattern (write to source → DEL key → assert next read fetches fresh), eviction-policy testing under memory pressure (maxmemory + allkeys-lru), Redis-side pub/sub invalidation across cache nodes, and key-namespacing tests for tenant scope. Use when writing tests for an application using Redis as its primary cache."
 ---
 
 # redis-cache-tests
@@ -178,7 +178,7 @@ def test_lock_prevents_stampede(r):
 ### Tenant-namespacing tests
 
 Per
-`qa-multi-tenancy/cross-tenant-data-leak-tests`
+`cross-tenant-data-leak-tests`
 Test 10:
 
 ```python
@@ -285,8 +285,8 @@ jobs:
 - Companion catalogs:
   [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
   [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
-- Cross-plugin (tenant cache leaks):
-  `qa-multi-tenancy/cross-tenant-data-leak-tests`
+- Tenant cache leaks:
+  `cross-tenant-data-leak-tests`
   Test 10.
 - Sibling tools:
   [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),

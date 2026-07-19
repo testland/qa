@@ -1,6 +1,6 @@
 ---
 name: onboarding-plan-author
-description: "Build-an-X workflow that produces a 30-60-90 day onboarding plan for a newly hired QA engineer - takes seniority level (junior / mid / senior / lead) plus the team's hiring rubric and emits phase-gated ramp milestones, competency targets mapped to the rubric axes, mentor cadence, and success criteria per phase. Distinct from `calibration-guide-author` (which closes the interview loop before hire) and `hiring-rubric-author` (which scores candidates during the loop); this skill produces the post-hire ramp artifact. Use when a QA engineer has been hired and the hiring manager or team lead needs a structured first-90-days plan before the new hire's start date."
+description: "Build-an-X workflow that produces a 30-60-90 day onboarding plan for a newly hired QA engineer - takes seniority level (junior / mid / senior / lead) plus the team's hiring rubric and emits phase-gated ramp milestones, competency targets mapped to the rubric axes, mentor cadence, and success criteria per phase. This is the post-hire ramp artifact - it starts at offer acceptance, not during the interview loop. Use when a QA engineer has been hired and the hiring manager or team lead needs a structured first-90-days plan before the new hire's start date."
 ---
 
 # onboarding-plan-author
@@ -189,14 +189,14 @@ The output is a single markdown document with:
 - **Domain-specific ramp times vary.** In regulated industries (healthcare, finance), environment access and compliance training can extend phase 1 by 2-4 weeks. Flag this assumption and adjust milestones accordingly.
 - **Mentor availability is a hard dependency.** The phase-1 daily check-in and phase-2 PR review cadence require a named mentor. If no dedicated QA mentor is available, the plan should substitute a senior engineer and flag the capability gap.
 - **The ISTQB self-study milestones are optional enrichment.** The CTFL Foundation Level syllabus (https://astqb.org/certifications/foundation-level-certification/) covers test fundamentals, static testing, test analysis and design, test activities, and test tools. For hires who are already certified, replace these milestones with domain-specific reading or toolchain deep-dives.
-- **No fairness review.** The plan does not audit its success criteria for differential treatment across protected classes - that is the team's HR review (out of marketplace scope).
+- **No fairness review.** The plan does not audit its success criteria for differential treatment across protected classes - that is the team's HR review.
 
 ## Hand-off targets
 
 - **Author the upstream question bank** - [`interview-question-author`](../interview-question-author/SKILL.md).
 - **Author the upstream rubric** - [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
 - **Calibrate interviewers** - [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
-- **Ongoing career development beyond day 90** - team's career ladder and performance management process (out of marketplace scope).
+- **Ongoing career development beyond day 90** - team's career ladder and performance management process.
 
 ## References
 

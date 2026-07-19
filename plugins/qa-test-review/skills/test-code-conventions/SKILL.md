@@ -1,6 +1,6 @@
 ---
 name: test-code-conventions
-description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, mocking rationale (state vs behavior verification, fake vs mock preference), fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. The critic agents in this plugin load this as their shared rule book. Use when you need the underlying rationale for any verdict one of those agents issues, as a team's onboarding reference for \"what makes a test code-reviewable,\" or as the source-of-truth the critics' verdicts cite back to."
+description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`<system_under_test>_<scenario>_<expected>` vs nested describe), assertion specificity, mocking rationale (state vs behavior verification, fake vs mock preference), fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. Use as the shared rule book behind a test-code review, as a team's onboarding reference for \"what makes a test code-reviewable,\" or as the source of truth a review verdict cites back to."
 ---
 
 # test-code-conventions
@@ -8,15 +8,15 @@ description: "Pure-reference catalog of test code conventions - AAA structure (A
 ## Overview
 
 This skill is a **pure reference** - no actions, no workflows. It
-catalogs the test-code conventions that the rest of `qa-test-review`'s
-critics enforce. When a critic flags an issue, it cites this
-reference for the reviewer to learn the underlying rule.
+catalogs the test-code conventions a test-code review enforces.
+When a review flags an issue, this reference gives the reviewer
+the underlying rule.
 
 ## When to use
 
 - A new team member is onboarding to the codebase and needs to
   understand "what we mean by a good test."
-- A critic from this plugin flagged an issue and the reviewer
+- A review flagged an issue and the reviewer
   needs the underlying rule's rationale.
 - The team is authoring its own per-team test conventions document
   and wants a starting point.

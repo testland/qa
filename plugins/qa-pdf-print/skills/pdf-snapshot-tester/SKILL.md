@@ -1,6 +1,6 @@
 ---
 name: pdf-snapshot-tester
-description: "Test PDF outputs by converting per-page to images (`pdftocairo` / pdf2image / Poppler) and running pixel-diff (pixelmatch / Resemble.js / Pillow `ImageChops`) against approved baselines. Per-page-range targeting, threshold tuning, font-substitution warnings, byte-stable PDF metadata stripping (CreationDate, /ID)."
+description: "Test PDF outputs by converting per-page to images (`pdftocairo` / pdf2image / Poppler) and running pixel-diff (pixelmatch / Resemble.js / Pillow `ImageChops`) against approved baselines. Per-page-range targeting, threshold tuning, font-substitution warnings, byte-stable PDF metadata stripping (CreationDate, /ID). Use when a product generates invoices, contracts, or regulatory filings whose layout must not shift, and a PDF template, font pack, or generation library is about to change."
 metadata:
   keywords: "pdf-snapshot, visual-regression, pdftocairo, poppler, pixel-diff"
 ---

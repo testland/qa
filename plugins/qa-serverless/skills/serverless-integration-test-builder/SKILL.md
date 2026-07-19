@@ -1,6 +1,6 @@
 ---
 name: serverless-integration-test-builder
-description: "Workflow-driven skill that builds the integration-test suite for a serverless application from its IaC definition (SAM template / serverless.yml / Wrangler config / Vercel functions / Netlify functions). Walks through: identifying the function inventory + event sources, picking the right local-emulator per function (sam local / Miniflare / netlify dev / vercel dev / serverless-offline), generating test events per event source, asserting on cold-start + timeout budgets, and emitting the test directory + CI config. Use when introducing integration tests to a serverless project. Composes cold-start-budget-reference + lambda-timeout-budget-reference + per-platform S1s."
+description: "Workflow-driven skill that builds the integration-test suite for a serverless application from its IaC definition (SAM template / serverless.yml / Wrangler config / Vercel functions / Netlify functions). Walks through: identifying the function inventory + event sources, picking the right local-emulator per function (sam local / Miniflare / netlify dev / vercel dev / serverless-offline), generating test events per event source, asserting on cold-start + timeout budgets, and emitting the test directory + CI config. Use when introducing integration tests to a serverless project."
 ---
 
 # serverless-integration-test-builder
@@ -147,7 +147,44 @@ describe('get-user', () => {
 
 For each function, derive a budget from
 [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md)
-+ [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md):
++ [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+
+Typical cold starts per runtime (per AWS / Cloudflare / Vercel
+docs; bigger packages and memory classes skew higher):
+
+| Runtime | Typical cold start |
+|---|---|
+| AWS Lambda Node.js (256MB) | 200-700ms |
+| AWS Lambda Python (256MB) | 250-800ms |
+| AWS Lambda Java 11 (512MB, no SnapStart) | 1.5-6s |
+| AWS Lambda Java 11 (512MB, [SnapStart](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)) | 100-300ms |
+| AWS Lambda .NET (1GB) | 1-3s |
+| AWS Lambda Go (256MB) | 100-300ms |
+| AWS Lambda Rust (256MB) | 50-200ms |
+| [Cloudflare Workers](https://developers.cloudflare.com/workers/) | 0-5ms (V8 isolate spawn) |
+| Vercel Edge Runtime | 5-30ms |
+| Vercel Node.js Functions | 200-500ms (small) to 2-3s (large) |
+| Netlify Functions | 300ms-2s |
+
+The upstream integration - not the function's own `timeout` - is
+usually the operational ceiling (per
+[docs.aws.amazon.com/lambda](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-common.html);
+Lambda's hard maximum is 900s):
+
+| Integration | Timeout ceiling |
+|---|---|
+| API Gateway (REST + HTTP API) | **29s hard** - function timeout must be < 29s |
+| Application Load Balancer | 4s default; configurable to 4000s |
+| CloudFront Lambda@Edge | 5s viewer functions; 30s origin functions |
+| SQS event source | Per-queue visibility timeout (default 30s); function timeout must be below it |
+| DynamoDB Streams | 6-hour batch window; per-batch function limit |
+| EventBridge (async) | Async with retry on timeout - requires idempotency |
+| Step Functions | Per-task timeout, default 60s |
+| Cloudflare Workers | 10ms CPU (free) / 50ms CPU (paid); 30s wall-clock |
+| Vercel Edge Functions | 30s wall-clock max |
+
+Set the assertion threshold at roughly 50% of the binding ceiling
+so a regression trips the test before it trips production:
 
 ```yaml
 budgets:

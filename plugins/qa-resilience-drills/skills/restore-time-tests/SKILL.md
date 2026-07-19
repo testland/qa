@@ -1,6 +1,6 @@
 ---
 name: restore-time-tests
-description: "Build restore-time SLA tests - per-database + per-object-store baseline measurement, RTO objective verification, parallel-restore optimization tests, point-in-time-recovery (PITR) latency. Bound `time-to-functional` (TTF) ≤ documented RTO; flag silent regressions when restore time grows over months."
+description: "Build restore-time SLA tests - per-database + per-object-store baseline measurement, RTO objective verification, parallel-restore optimization tests, point-in-time-recovery (PITR) latency. Bound `time-to-functional` (TTF) ≤ documented RTO; flag silent regressions when restore time grows over months. Use when a service documents an RTO nobody has actually timed, when the backup has grown by an order of magnitude, or right after a backup-tool change."
 metadata:
   keywords: "restore-time, rto, point-in-time-recovery, parallel-restore, dr-readiness"
 ---

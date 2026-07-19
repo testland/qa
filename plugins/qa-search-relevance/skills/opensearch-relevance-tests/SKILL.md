@@ -1,6 +1,6 @@
 ---
 name: opensearch-relevance-tests
-description: "Author OpenSearch relevance tests with Search Relevance Workbench (judgment lists, query sets, experiments), `_rank_eval` API (Elasticsearch-fork-compatible), and hybrid BM25 + neural ranking eval. Reuse Elasticsearch judgment list format; document the differences (neural search query DSL, hybrid weighting via `neural_query_enricher`)."
+description: "Author OpenSearch relevance tests with Search Relevance Workbench (judgment lists, query sets, experiments), `_rank_eval` API (Elasticsearch-fork-compatible), and hybrid BM25 + neural ranking eval. Reuse Elasticsearch judgment list format; document the differences (neural search query DSL, hybrid weighting via `neural_query_enricher`). Use when an OpenSearch index turns on neural or hybrid search, or when a move off Elasticsearch has to prove relevance parity between the two clusters."
 metadata:
   keywords: "opensearch, search-relevance, rank-eval, neural-search, hybrid-search"
 ---
@@ -26,6 +26,30 @@ OpenSearch's `_rank_eval` accepts the same JSON as Elasticsearch's.
 See [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md)
 Step 1 for judgment list format + sourcing patterns. The CSV
 `(query, doc_id, rating)` schema is reusable.
+
+A judgment is `(query, doc_id, rating)` on a 4-point scale:
+0 = irrelevant, 1 = somewhat, 2 = relevant, 3 = highly relevant.
+
+```csv
+query,doc_id,rating
+"running shoes",sku-1234,3
+"running shoes",sku-5678,2
+"running shoes",sku-9999,0
+"red dress",sku-2222,3
+```
+
+Sourcing patterns:
+
+| Source | Method |
+|---|---|
+| Query logs + click data | Click model (clicked = ≥1, multi-click = ≥2) |
+| Search Relevance Workbench | Pairwise judgment UI + bulk import (Step 3) |
+| Quepid (open source) | Interactive UI for judges to rate per-query results |
+| Splainer | Diagnose why a doc ranked where it did |
+| Domain SMEs | High-stakes queries; manual rating |
+
+Each CSV row becomes one entry in the per-query `ratings` array of
+the `_rank_eval` request body in Step 2.
 
 ## Step 2 - Submit `_rank_eval` request
 

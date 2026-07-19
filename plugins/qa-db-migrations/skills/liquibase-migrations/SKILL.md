@@ -198,7 +198,7 @@ The `includeAll` orders files alphabetically; use prefixes
 - run: mvn test
 ```
 
-Per `qa-test-environment/testcontainers` skill, ephemeral DB +
+Per the `testcontainers` skill, ephemeral DB +
 liquibase update is the standard pattern.
 
 ## Step 8 - Composition with sister tools

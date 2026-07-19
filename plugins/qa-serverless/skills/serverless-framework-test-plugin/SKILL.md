@@ -1,6 +1,6 @@
 ---
 name: serverless-framework-test-plugin
-description: "Wraps the Serverless Framework (serverless.com) test ecosystem: serverless-offline (local HTTP emulator), serverless-jest-plugin / serverless-mocha-plugin (per-runtime test runners), and the `serverless invoke local` CLI for one-off invocations. Use when testing Lambda functions deployed via the Serverless Framework. Composes cold-start-budget-reference + lambda-timeout-budget-reference."
+description: "Wraps the Serverless Framework (serverless.com) test ecosystem: serverless-offline (local HTTP emulator), serverless-jest-plugin / serverless-mocha-plugin (per-runtime test runners), and the `serverless invoke local` CLI for one-off invocations. Use when testing Lambda functions deployed via the Serverless Framework."
 ---
 
 # serverless-framework-test-plugin

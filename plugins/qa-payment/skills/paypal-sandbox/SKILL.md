@@ -1,6 +1,6 @@
 ---
 name: paypal-sandbox
-description: "Wraps PayPal Sandbox testing patterns: sandbox account creation (Business + Personal accounts in developer.paypal.com), the Orders v2 API (create / capture / refund), webhook event simulator (developer.paypal.com webhook simulator), sandbox-account-specific test cards, and the OAuth2 client-credentials flow for sandbox. Use when testing PayPal-integrated code. Composes payment-flow-states-reference."
+description: "Wraps PayPal Sandbox testing patterns: sandbox account creation (Business + Personal accounts in developer.paypal.com), the Orders v2 API (create / capture / refund), webhook event simulator (developer.paypal.com webhook simulator), sandbox-account-specific test cards, and the OAuth2 client-credentials flow for sandbox. Use when testing PayPal-integrated code."
 ---
 
 # paypal-sandbox

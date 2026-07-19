@@ -1,6 +1,6 @@
 ---
 name: desktop-test-strategy-reference
-description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, a per-OS decision matrix, the per-OS asynchronous-wait hierarchies (XCTest waitForExistence/XCTestExpectation/XCTWaiter, FlaUI Retry primitives, AT-SPI manual polling), per-OS parallel-test policy, foreground-lock and UAC / TCC / AT-SPI elevation hazards, and the Microsoft-blessed high-DPI / per-monitor test matrix. Use as the strategic reference before picking a desktop test stack - the per-tool skills in this plugin are the implementation arms."
+description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, a per-OS decision matrix, the per-OS asynchronous-wait hierarchies (XCTest waitForExistence/XCTestExpectation/XCTWaiter, FlaUI Retry primitives, AT-SPI manual polling), per-OS parallel-test policy, foreground-lock and UAC / TCC / AT-SPI elevation hazards, and the Microsoft-blessed high-DPI / per-monitor test matrix. Use as the strategic reference before picking a desktop test stack, ahead of the per-tool implementation skills."
 metadata:
   keywords: "desktop, ui-automation, xctest, at-spi, electron, qt"
 ---
@@ -40,7 +40,7 @@ Per the [at-spi2-core project][atspi2core]:
 > registry daemon, and atspi library."
 
 This skill is a **pure reference** consumed by the per-tool
-skills in this plugin and by anyone choosing a desktop test stack.
+skills below and by anyone choosing a desktop test stack.
 
 ## When to use
 
@@ -78,7 +78,7 @@ Per [msuia][msuia]:
 Higher-level language bindings (C#, PowerShell, Python via `pywinauto`)
 sit on top. **For test-automation purposes**, the WinAppDriver and
 Appium-Windows projects expose UIA as a W3C WebDriver endpoint - 
-which is what most QA toolchains in this plugin actually drive.
+which is what most QA toolchains actually drive.
 
 ### macOS - Apple Accessibility + XCTest
 
@@ -465,7 +465,7 @@ scaling lands in GNOME 47+ but is still maturing.
 - at-spi2-core - [atspi2core][atspi2core].
 - dogtail (Python AT-SPI client) - [dogtail][dogtail].
 - Ubuntu DogtailTutorial - [ubuntudogtail][ubuntudogtail].
-- Per-tool implementation SKILLs in this plugin:
+- Per-tool implementation SKILLs:
   `winappdriver`, `appium-windows-driver`, `xctest-mac-desktop`,
   `at-spi-linux`, `qt-test-framework`, `electron-playwright`,
   `electron-spectron`.

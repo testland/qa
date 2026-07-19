@@ -1,13 +1,13 @@
 ---
 name: interview-question-author
-description: "Build-an-X workflow that produces a QA-role-specific interview question bank - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus competency model and emits a structured question bank covering technical, behavioral (STAR-format), scenario-based, and system-design dimensions, classified by ISTQB-canonical competency areas and Bloom's taxonomy difficulty levels. Distinct from `hiring-rubric-author` (sibling skill that produces the scoring rubric) and `calibration-guide-author` (sibling that produces the gold-standard answer guide). Use as the first artifact a hiring manager produces when opening a QA / test role, before scheduling the first interview."
+description: "Build-an-X workflow that produces a QA-role-specific interview question bank - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus competency model and emits a structured question bank covering technical, behavioral (STAR-format), scenario-based, and system-design dimensions, classified by ISTQB-canonical competency areas and Bloom's taxonomy difficulty levels. This produces the questions only - not the scoring rubric and not the gold-standard answer guide. Use as the first artifact a hiring manager produces when opening a QA / test role, before scheduling the first interview."
 ---
 
 # interview-question-author
 
 ## Overview
 
-Hiring for QA roles is calibration-heavy: the same question scored by two interviewers without a rubric produces high noise (well-documented in [structured-interview research](https://en.wikipedia.org/wiki/Structured_interview)). The remedy is a **structured interview** - same questions, same order, same scoring rubric across candidates. This skill produces the *questions* half of that pair; the rubric and calibration guide are sibling skills in this plugin.
+Hiring for QA roles is calibration-heavy: the same question scored by two interviewers without a rubric produces high noise (well-documented in [structured-interview research](https://en.wikipedia.org/wiki/Structured_interview)). The remedy is a **structured interview** - same questions, same order, same scoring rubric across candidates. This skill produces the *questions* half of that pair; the scoring rubric and the calibration guide are separate artifacts.
 
 The skill is QA-specific by design. Generic interview-question generators exist in the wider AI tooling space; the differentiation here is (a) ISTQB-aligned competency framing, (b) role-specific question depth (manual QA vs SDET vs test lead require different technical / behavioral mixes), (c) STAR-format anchoring on behavioral questions per the canonical [STAR method](https://en.wikipedia.org/wiki/Situation,_task,_action,_result), and (d) a structured output ready to drop into a hiring loop.
 
@@ -132,7 +132,7 @@ The output is a single markdown document with:
 
 - **Score the questions consistently** → [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
 - **Calibrate interviewers** → [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
-- **Compliance review of the question set** → the team's legal / HR review (out of marketplace scope; flagged here so the hiring manager remembers).
+- **Compliance review of the question set** → the team's legal / HR review (flagged here so the hiring manager remembers).
 
 ## References
 

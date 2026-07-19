@@ -1,6 +1,6 @@
 ---
 name: vercel-edge-runtime-testing
-description: "Wraps Vercel Edge Runtime testing patterns: the @edge-runtime/jest-environment + edge-runtime CLI for executing Web-Standard APIs (Request / Response / fetch) in jest tests, the `vercel dev` local emulator for full route testing, and the Edge vs Node Function divergence (no fs, no Buffer; Request / Response only). Covers the 30s Edge function timeout per vercel.com/docs. Use when testing Vercel Edge Functions or middleware. Composes cold-start-budget-reference + lambda-timeout-budget-reference."
+description: "Wraps Vercel Edge Runtime testing patterns: the @edge-runtime/jest-environment + edge-runtime CLI for executing Web-Standard APIs (Request / Response / fetch) in jest tests, the `vercel dev` local emulator for full route testing, and the Edge vs Node Function divergence (no fs, no Buffer; Request / Response only). Covers the 30s Edge function timeout per vercel.com/docs. Use when testing Vercel Edge Functions or middleware."
 ---
 
 # vercel-edge-runtime-testing

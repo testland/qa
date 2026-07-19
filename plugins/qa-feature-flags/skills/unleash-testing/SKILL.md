@@ -1,6 +1,6 @@
 ---
 name: unleash-testing
-description: "Wraps Unleash (Open Source / SaaS) SDK testing patterns: bootstrap with a static toggles array (no network), the test mode (disableMetrics + disablePolling), the custom strategy testing pattern (implement a Strategy class + assert isEnabled), and assignment-integrity tests. Use when writing tests for code that uses Unleash for feature flags. Composes feature-flag-test-matrix-reference."
+description: "Wraps Unleash (Open Source / SaaS) SDK testing patterns: bootstrap with a static toggles array (no network), the test mode (disableMetrics + disablePolling), the custom strategy testing pattern (implement a Strategy class + assert isEnabled), and assignment-integrity tests. Use when writing tests for code that uses Unleash for feature flags."
 ---
 
 # unleash-testing

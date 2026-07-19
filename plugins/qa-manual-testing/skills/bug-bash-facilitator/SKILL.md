@@ -52,9 +52,16 @@ checkout flow before the release on YYYY-MM-DD.
 Per cohort, 1-2 testers + 1 facilitator-roving:
 
 - **Cohort A - Money:** Apply the [Money tour](../exploratory-tours-reference/SKILL.md)
-  across the new checkout discount + tax flow.
+  across the new checkout discount + tax flow - visit every place
+  money / pricing / currency / discount appears and verify each;
+  hunts rounding errors, currency-conversion drift, discount
+  stacking, free-shipping edges, locale formatting (€1.234,56 vs
+  $1,234.56).
 - **Cohort B - Bad data:** Apply the [Bad-data tour](../exploratory-tours-reference/SKILL.md)
-  across promo code input, address fields, payment fields.
+  across promo code input, address fields, payment fields - feed
+  pathological inputs (empty, single space, 5000 chars, SQL
+  injection, XSS, unicode bidi override, RTL text, emoji ZWJ
+  sequences, null byte) and observe validation + error handling.
 - **Cohort C - Configuration:** Vary user state (new vs existing
   account, EU vs US user, mobile vs desktop) and re-run hero flows.
 - **Cohort D - Landmark:** Walk the canonical hero flow (search →

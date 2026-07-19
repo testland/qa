@@ -1,6 +1,6 @@
 ---
 name: object-model-patterns
-description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. Distinct from `test-code-conventions` (file-level §1-§10) and from per-framework skills (`playwright-testing` etc., tool-specific configuration). Preloaded by this plugin's framework-review agents as the architecture-tier reference for what each pattern actually is."
+description: "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. This is the architecture-tier reference - what each pattern *is* - not file-level style rules and not tool-specific configuration. Use when designing, reviewing, or migrating a test framework's object-model architecture."
 ---
 
 # object-model-patterns
@@ -19,7 +19,7 @@ This skill is a **pure reference** - no execution steps; it is the canonical cat
 Do **not** use this skill to:
 
 - Author per-framework tool configuration - that's the per-framework skill (`playwright-testing`, `cypress-testing`, etc.).
-- Pick the framework itself - that's `framework-choice-advisor` (in the qa-process plugin).
+- Pick the framework itself - that's `framework-choice-advisor`.
 - Audit a running codebase against the chosen pattern - that's a separate framework-architecture audit (this catalog is the reference it cites).
 
 ## Pattern 1 - Page Object Model (POM)

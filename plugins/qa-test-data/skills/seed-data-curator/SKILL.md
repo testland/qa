@@ -173,7 +173,7 @@ Refresh process:
 
 ## Output format
 
-When this skill runs (e.g. via the agent / orchestrator chain), it
+When this skill runs, it
 emits:
 
 ```markdown

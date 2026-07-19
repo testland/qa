@@ -1,6 +1,6 @@
 ---
 name: workbox-tests
-description: "Test Workbox-built service workers - pin behavior of the named recipes (`pageCache`, `staticResourceCache`, `imageCache`, `googleFontsCache`, `offlineFallback`, `warmStrategyCache`) per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes]; validate `workbox-precaching` manifest injection (`__WB_MANIFEST` revisioning); assert `workbox-routing` route handler matches; assert `workbox-expiration` and `workbox-cacheable-response` plugin gates; and verify the `workbox-window` registration helper events (`installed`, `waiting`, `controlling`, `activated`). For generic service-worker tests, install-flow tests, and SW cache-strategy authoring see `qa-modern-web/service-worker-tests`, `pwa-install-flow-tests`, and `sw-cache-strategy-author`. For channel-agnostic push-notification harness see `qa-notifications/push-notification-test-author`. This plugin covers Workbox recipes, offline-fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle."
+description: "Test Workbox-built service workers - pin behavior of the named recipes (`pageCache`, `staticResourceCache`, `imageCache`, `googleFontsCache`, `offlineFallback`, `warmStrategyCache`) per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes]; validate `workbox-precaching` manifest injection (`__WB_MANIFEST` revisioning); assert `workbox-routing` route handler matches; assert `workbox-expiration` and `workbox-cacheable-response` plugin gates; and verify the `workbox-window` registration helper events (`installed`, `waiting`, `controlling`, `activated`). Use when a project already ships a Workbox-built service worker and its recipe behavior needs pinning against refactors or a version upgrade."
 metadata:
   keywords: "workbox, workbox-recipes, workbox-window, precaching, service-worker"
 ---
@@ -10,7 +10,7 @@ metadata:
 ## Overview
 
 This skill tests Workbox-built service workers - distinct from
-`sw-cache-strategy-author` (in the qa-modern-web plugin)
+`sw-cache-strategy-author`,
 which *authors* the strategies. Here we assert that an
 already-shipped Workbox SW behaves the way its recipes claim, using
 the `workbox-precaching` / `workbox-routing` / `workbox-strategies`

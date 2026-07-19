@@ -1,6 +1,6 @@
 ---
 name: pwa-install-flow-reference
-description: "Pure reference for the PWA install flow as a test surface - the installability gate (manifest required fields per [web.dev/articles/install-criteria][install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` event handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), the per-platform divergences (Chromium desktop install badge, Android WebAPK minting, iOS manual Share → Add to Home Screen), and the `display-mode` media-query post-install signal. For generic service-worker tests, install-flow tests, and SW cache-strategy authoring see `qa-modern-web/service-worker-tests`, `pwa-install-flow-tests`, and `sw-cache-strategy-author`. For channel-agnostic push-notification harness see `qa-notifications/push-notification-test-author`. This plugin covers Workbox recipes, offline-fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle."
+description: "Pure reference for the PWA install flow as a test surface - the installability gate (manifest required fields per [web.dev/articles/install-criteria][install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` event handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), the per-platform divergences (Chromium desktop install badge, Android WebAPK minting, iOS manual Share → Add to Home Screen), and the `display-mode` media-query post-install signal. Use when authoring or triaging install-flow assertions and you need the gate fields, the event contract, and the per-platform expectations in one place instead of re-reading three vendor docs."
 metadata:
   keywords: "pwa, install-criteria, beforeinstallprompt, web-app-manifest, webapk"
 ---
@@ -191,7 +191,7 @@ A test plan covers each step with an assertion or a documented gap
   [`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md),
   [`web-push-test`](../web-push-test/SKILL.md),
   [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md).
-- Differentiation: `pwa-install-flow-tests` (in the qa-modern-web
-  plugin) authors the install-flow *Playwright tests*; this skill is the
+- Differentiation: `pwa-install-flow-tests` authors the install-flow
+  *Playwright tests*; this skill is the
   reference shape those tests consume. Read this first when
   triaging a flaky install assertion.

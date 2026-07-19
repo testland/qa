@@ -1,6 +1,6 @@
 ---
 name: test-run-summary-author
-description: "Build-an-X workflow that takes a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr API export) plus optional release context (version, build URL, deploy target) and emits a narrative markdown summary suitable for release notes, exec status updates, or stand-up Slack posts. Distinct from the per-framework parsers in `qa-test-reporting` (junit-xml-analysis / allure-reports / coverage-diff-reporter) which produce structured tabular reports - this skill takes the same data and produces the **narrative draft** practitioners use today by pasting raw results into ChatGPT. Distinct from longitudinal suite-health trend reporting (in qa-flake-triage) which reports suite health over time. Use when a manager needs a draft release note or a stand-up summary from a single test run."
+description: "Build-an-X workflow that takes a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr API export) plus optional release context (version, build URL, deploy target) and emits a narrative markdown summary suitable for release notes, exec status updates, or stand-up Slack posts. Distinct from per-framework parsers (junit-xml-analysis / allure-reports / coverage-diff-reporter) which produce structured tabular reports - this skill takes the same data and produces the **narrative draft** practitioners use today by pasting raw results into ChatGPT. Distinct from longitudinal suite-health trend reporting, which reports suite health over time. Use when a manager needs a draft release note or a stand-up summary from a single test run."
 ---
 
 # test-run-summary-author
@@ -9,7 +9,7 @@ description: "Build-an-X workflow that takes a structured test-run artifact (JUn
 
 A test run produces structured data (pass / fail counts, duration, failures with stack traces, coverage). A status update needs *narrative* (one-paragraph summary, top-3 highlights, single-line status banner). Closing the gap is what 70% of practitioners already do with chat models per [PractiTest's 2026 State of Testing Report](https://www.practitest.com/state-of-testing/), but with two known failure modes: hallucinated numbers and inconsistent tone across runs. This skill constrains the output shape so the same input always produces the same structure, removing the variance.
 
-The skill is the manager-layer equivalent of the structured-parser skills already in this plugin. Where `junit-xml-analysis` produces a parsed report, this skill produces the *prose draft* a manager edits before pasting into Slack / a release-notes PR / an exec-summary email.
+The skill is the manager-layer equivalent of the structured-parser skills. Where `junit-xml-analysis` produces a parsed report, this skill produces the *prose draft* a manager edits before pasting into Slack / a release-notes PR / an exec-summary email.
 
 ## When to use
 
@@ -32,7 +32,7 @@ Accept one of three input shapes:
 |---|---|---|
 | **JUnit XML** | One or more `*.xml` files conforming to the JUnit XML schema (testsuite + testcase + failure / error / skipped child elements) | CI runners, surefire, gradle, pytest --junitxml, jest-junit |
 | **Allure results** | Directory of `*-result.json` + `*-container.json` per https://allurereport.org/docs/ - Allure organises results by test status (passed / failed / broken / skipped / unknown), categories, and severity levels | allure-pytest, allure-jest, allure-junit5, allure-cucumber, etc. |
-| **Test-management API export** | TestRail run export, Xray run export, Zephyr cycle export | The integration skills in this plugin |
+| **Test-management API export** | TestRail run export, Xray run export, Zephyr cycle export | Test-management integration skills |
 
 If multiple inputs are supplied, merge by run-id (or by test-name + start-time if no id) before summarisation. Conflicts in pass/fail status (same test reported as passing in one source and failing in another) are flagged in the output, not silently resolved.
 

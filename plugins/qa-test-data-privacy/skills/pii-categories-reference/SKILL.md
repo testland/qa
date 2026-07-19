@@ -26,7 +26,7 @@ reference for scope. It enumerates four regimes:
   de-identification of protected health information (PHI).
 
 This is a **pure reference** - no execution steps. Workflow skills
-in this plugin consume it.
+consume it.
 
 ## When to use
 

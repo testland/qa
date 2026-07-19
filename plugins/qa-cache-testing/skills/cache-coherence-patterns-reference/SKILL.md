@@ -77,7 +77,7 @@ Practical: `Vary: Accept-Encoding, Authorization` means
 "separate cache entries per (Accept-Encoding, Authorization)
 combination." Missing `Vary: Authorization` is the canonical
 cross-tenant cache leak per
-`qa-multi-tenancy/cross-tenant-data-leak-tests`
+`cross-tenant-data-leak-tests`
 Test 10.
 
 ### ETag + If-None-Match revalidation
@@ -122,7 +122,7 @@ For application-tier caches (Redis):
 | **Different Vary at browser vs CDN** | CDN strips headers; cache keys diverge | Header-comparison test |
 | **Layered TTL inversion** | `s-maxage < max-age` → CDN refreshes more often than browser; browser eventually outpaces CDN | Audit the TTL stack |
 | **`Vary: Cookie` without normalised cookies** | Tracker cookies fragment cache; near-zero hit rate | Inspect Vary; normalise |
-| **Tenant-scoped data with shared Vary** | Cross-tenant leak per `qa-multi-tenancy/cross-tenant-data-leak-tests` | Add `Authorization` to Vary or use private |
+| **Tenant-scoped data with shared Vary** | Cross-tenant leak per `cross-tenant-data-leak-tests` | Add `Authorization` to Vary or use private |
 
 ## Testable behaviours by tier
 
@@ -171,8 +171,8 @@ For application-tier caches (Redis):
   [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md).
 - Companion catalog:
   [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
-- Cross-plugin (cross-tenant leaks via cache):
-  `qa-multi-tenancy/cross-tenant-data-leak-tests`.
+- Cross-tenant leaks via cache:
+  `cross-tenant-data-leak-tests`.
 - Consumed by:
   [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
   [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),

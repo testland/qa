@@ -1,6 +1,6 @@
 ---
 name: fairlearn-fairness
-description: "Compute group fairness metrics (selection rate, demographic parity, equalized odds) per sensitive feature with `MetricFrame`, then mitigate disparities using Reductions algorithms (`ExponentiatedGradient` with constraint = `DemographicParity`/`EqualizedOdds`). Wire group-disaggregated assertions into the model-evaluation gate."
+description: "Compute group fairness metrics (selection rate, demographic parity, equalized odds) per sensitive feature with `MetricFrame`, then mitigate disparities using Reductions algorithms (`ExponentiatedGradient` with constraint = `DemographicParity`/`EqualizedOdds`). Wire group-disaggregated assertions into the model-evaluation gate. Use when a model's decisions affect people and a stakeholder, auditor, or regulation (ECOA, GDPR Art. 22, EU AI Act high-risk) requires evidence of per-group outcomes, or when someone reports the model treats a specific group worse."
 metadata:
   keywords: "fairlearn, fairness, demographic-parity, equalized-odds, bias-mitigation"
 ---

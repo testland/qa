@@ -347,7 +347,7 @@ Map findings to risk tiers:
   [csrc.nist.gov/pubs/sp/800/188/final](https://csrc.nist.gov/pubs/sp/800/188/final).
 - SmartNoise SDK (differential privacy, not k-anonymity):
   [github.com/opendp/smartnoise-sdk](https://github.com/opendp/smartnoise-sdk).
-- Sibling skills in this plugin:
+- Related skills:
   [`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md),
   [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md),
   [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md).

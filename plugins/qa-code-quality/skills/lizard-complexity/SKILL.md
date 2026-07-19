@@ -1,6 +1,6 @@
 ---
 name: lizard-complexity
-description: "Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds - language-agnostic (30+ languages). Scoped to production code via `-x\"./tests/*\"`; test complexity is owned by qa-test-review."
+description: "Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds - language-agnostic (30+ languages). Scoped to production code via `-x\"./tests/*\"`; test complexity is reviewed separately. Use when a codebase spans several languages and needs one complexity gate across all of them, or when a function has grown unreviewable and the team wants a numeric threshold in CI."
 metadata:
   keywords: "lizard, cyclomatic-complexity, ccn, code-metrics, quality-gate"
 ---
@@ -116,7 +116,7 @@ Python tolerates higher CCN than C).
 
 - Lizard's CCN counts decision points (if/else/case/&&/\|\|/?:); doesn't
   reflect cognitive complexity (nesting depth weight). Use SonarQube /
-  `qa-code-quality/sonarqube-quality-perspective` for cognitive
+  `sonarqube-quality-perspective` for cognitive
   complexity if needed.
 - No per-class metrics for OO code beyond per-method.
 

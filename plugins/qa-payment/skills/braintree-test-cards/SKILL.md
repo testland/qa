@@ -1,6 +1,6 @@
 ---
 name: braintree-test-cards
-description: "Wraps Braintree (PayPal-owned) sandbox testing patterns: sandbox merchant credentials, Drop-in / Hosted Fields client-side patterns, the Transaction lifecycle (submitted_for_settlement → settled), Braintree's distinctive test-card behaviours (specific PANs trigger specific errors), and the webhook verification (Braintree Webhook Parser). Use when testing Braintree-integrated code. Composes payment-flow-states-reference + 3ds-test-flow-reference."
+description: "Wraps Braintree (PayPal-owned) sandbox testing patterns: sandbox merchant credentials, Drop-in / Hosted Fields client-side patterns, the Transaction lifecycle (submitted_for_settlement → settled), Braintree's distinctive test-card behaviours (specific PANs trigger specific errors), and the webhook verification (Braintree Webhook Parser). Use when testing Braintree-integrated code."
 ---
 
 # braintree-test-cards

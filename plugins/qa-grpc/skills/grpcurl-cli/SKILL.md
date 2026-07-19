@@ -1,6 +1,6 @@
 ---
 name: grpcurl-cli
-description: "Wraps grpcurl, the curl-equivalent CLI for gRPC. Covers descriptor sources (server reflection default, --import-path + --proto for proto files, --protoset for compiled descriptor sets), service discovery (`list`, `describe`), invoking unary RPCs (`-d '{...}'`, `-d @file.json`, `-d @` for stdin), streaming RPCs (newline-delimited JSON via stdin), TLS configuration (--cacert, --cert, --key, --insecure, --plaintext), header injection (-H 'Authorization: Bearer ...'), and exit codes. Use for ad-hoc gRPC debugging, smoke testing, scriptable PR-time gates, and CLI-based interaction with reflective gRPC services. Composes grpc-status-code-mapping-reference for interpreting non-OK responses."
+description: "Wraps grpcurl, the curl-equivalent CLI for gRPC. Covers descriptor sources (server reflection default, --import-path + --proto for proto files, --protoset for compiled descriptor sets), service discovery (`list`, `describe`), invoking unary RPCs (`-d '{...}'`, `-d @file.json`, `-d @` for stdin), streaming RPCs (newline-delimited JSON via stdin), TLS configuration (--cacert, --cert, --key, --insecure, --plaintext), header injection (-H 'Authorization: Bearer ...'), and exit codes. Use for ad-hoc gRPC debugging, smoke testing, scriptable PR-time gates, and CLI-based interaction with reflective gRPC services."
 ---
 
 # grpcurl-cli

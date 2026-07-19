@@ -1,6 +1,6 @@
 ---
 name: grpc-streaming-tests
-description: "Test gRPC streaming RPCs - Server-streaming (server returns sequence), Client-streaming (client sends sequence), Bidirectional (both sides stream independently). Cover deadline + cancellation + flow control + status codes (CANCELLED, DEADLINE_EXCEEDED) + metadata. Use ghz for load, grpcurl for ad-hoc, language-native test stubs for unit/integration."
+description: "Test gRPC streaming RPCs - Server-streaming (server returns sequence), Client-streaming (client sends sequence), Bidirectional (both sides stream independently). Cover deadline + cancellation + flow control + status codes (CANCELLED, DEADLINE_EXCEEDED) + metadata. Use ghz for load, grpcurl for ad-hoc, language-native test stubs for unit/integration. Use when a service exposes server-, client-, or bidirectional-streaming RPCs and deadline, cancellation, or partial-stream status-code behavior is unverified."
 metadata:
   keywords: "grpc, streaming, rpc-testing, protobuf, realtime-protocols"
 ---

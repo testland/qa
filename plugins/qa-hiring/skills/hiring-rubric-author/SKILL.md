@@ -1,6 +1,6 @@
 ---
 name: hiring-rubric-author
-description: "Build-an-X workflow that produces a per-role QA hiring rubric - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus the question bank from `interview-question-author` and emits a competency-anchored scoring rubric with 4-level behavioral anchors (no-hire / borderline / hire / strong-hire) per competency. Distinct from `interview-question-author` (sibling skill that produces the questions) and from `calibration-guide-author` (sibling that produces the gold-standard answer guide). Use after the question bank exists and before the first interview is scheduled - the rubric is what brings interviewer scoring into agreement."
+description: "Build-an-X workflow that produces a per-role QA hiring rubric - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus the question bank from `interview-question-author` and emits a competency-anchored scoring rubric with 4-level behavioral anchors (no-hire / borderline / hire / strong-hire) per competency. This produces the scoring scaffold only - not the questions themselves, and not the gold-standard model answers that demonstrate each score level. Use after the question bank exists and before the first interview is scheduled - the rubric is what brings interviewer scoring into agreement."
 ---
 
 # hiring-rubric-author
@@ -32,6 +32,8 @@ Required:
 | **Role + seniority** | Same as the upstream question bank - manual QA / SDET / automation / test lead / quality manager × junior / mid / senior / staff+ |
 | **Question bank** | The output of [`interview-question-author`](../interview-question-author/SKILL.md). Each question's competency tag drives the rubric's competency-by-question matrix. |
 | **Team's competency model** | Optional. If absent, defaults to the ISTQB-aligned default model in Step 2. |
+
+If a question bank is not available (e.g., an ad-hoc loop, or an existing interview set that was never written down), the rubric defaults to authoring one anchor set per competency dimension rather than per (competency × question) cell, marks itself **provisional** in the header, and flags this assumption explicitly in the output. A provisional rubric must be re-run against the bank once it exists - competency-general anchors drift from the questions actually asked, which is the failure the Step 1 requirement exists to prevent.
 
 ## Step 2 - Pick the competency dimensions
 
@@ -145,14 +147,14 @@ The output is a single markdown document with:
 - **The rubric is only as good as its anchors.** Vague anchors produce inter-rater drift; concrete behavioural anchors take time to author and refine.
 - **Anchor-validation requires real candidate data.** Until the rubric has been used through 5 - 10 interviews, its anchors are theoretical. Plan a calibration interview before the first real candidate.
 - **Rubrics drift over time.** A rubric authored in 2024 may anchor on tools that are no longer the team's default. Re-author per hiring round, or at least review.
-- **No fairness audit.** The skill does not check the rubric for bias against protected classes - that is the team's HR / legal review (out of marketplace scope).
+- **No fairness audit.** The skill does not check the rubric for bias against protected classes - that is the team's HR / legal review.
 - **Weighting is uniform per dimension.** Some teams want to weight `tooling depth` higher than `communication`; the skill emits unweighted scores and leaves weighting to the hiring manager. Custom weights can be applied post hoc to the per-dimension scores.
 
 ## Hand-off targets
 
 - **Calibrate interviewers (gold-standard answers, common pitfalls)** → [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
 - **Author the question bank (upstream)** → [`interview-question-author`](../interview-question-author/SKILL.md).
-- **Compliance review of the rubric** → team's legal / HR review (out of marketplace scope).
+- **Compliance review of the rubric** → team's legal / HR review.
 
 ## References
 

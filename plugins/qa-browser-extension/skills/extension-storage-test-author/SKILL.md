@@ -1,6 +1,6 @@
 ---
 name: extension-storage-test-author
-description: "Build-an-X workflow that emits a `chrome.storage` test suite. Picks the right area (`storage.local` 10 MB / `storage.sync` 100 KB total + 8 KB per item + 512 items + 1,800 writes/hour / `storage.session` 10 MB in-memory MV3-only / `storage.managed` read-only enterprise-policy) per access pattern, then generates tests for quota-exceeded behavior (`runtime.lastError` callback path + rejected promise async path), `storage.sync` per-item + total quotas, `storage.onChanged` event payload shape, multi-area write isolation, and Firefox-Chrome divergences (Firefox `storage.sync` quotas align with Chrome per MDN; Firefox `storage.managed` available; Firefox `storage.session` MV3-only). Output: a per-extension storage test file + matrix asserting the right area was chosen."
+description: "Build-an-X workflow that emits a `chrome.storage` test suite. Picks the right area (`storage.local` 10 MB / `storage.sync` 100 KB total + 8 KB per item + 512 items + 1,800 writes/hour / `storage.session` 10 MB in-memory MV3-only / `storage.managed` read-only enterprise-policy) per access pattern, then generates tests for quota-exceeded behavior (`runtime.lastError` callback path + rejected promise async path), `storage.sync` per-item + total quotas, `storage.onChanged` event payload shape, multi-area write isolation, and Firefox-Chrome divergences (Firefox `storage.sync` quotas align with Chrome per MDN; Firefox `storage.managed` available; Firefox `storage.session` MV3-only). Output: a per-extension storage test file + matrix asserting the right area was chosen. Use when an extension persists state across sessions or devices and no test proves the chosen storage area survives its quota limits."
 metadata:
   keywords: "chrome-storage, storage-sync, storage-local, storage-session, quota-bytes"
 ---
@@ -37,7 +37,7 @@ Composes with:
   through this skill's output.
 
 For Playwright-driven MV3 popup / content-script fixtures see
-`qa-modern-web/browser-extension-tests`.
+`browser-extension-tests`.
 That skill covers the `chrome.storage` *usage* assertions; this
 builder covers the *suite* design - area selection, quota gates,
 event-payload conformance, multi-area isolation.

@@ -1,6 +1,6 @@
 ---
 name: deadlock-detection-harness
-description: "Build deadlock-detection harnesses - extract lock-acquire-order graph via instrumentation, run cycle detection (DFS) to spot inconsistent ordering, use lock-acquire timeouts to surface rather than hang, JVM `jstack` / `gdb thread apply all bt` for postmortem analysis. Pair with ThreadSanitizer's `detect_deadlocks=1` for runtime detection."
+description: "Build deadlock-detection harnesses - extract lock-acquire-order graph via instrumentation, run cycle detection (DFS) to spot inconsistent ordering, use lock-acquire timeouts to surface rather than hang, JVM `jstack` / `gdb thread apply all bt` for postmortem analysis. Pair with ThreadSanitizer's `detect_deadlocks=1` for runtime detection. Use when a service that holds two or more locks hangs in production with no crash or error, or before release when lock acquisition order across code paths has never been proven consistent."
 metadata:
   keywords: "deadlock, lock-order, thread-sanitizer, jstack, cycle-detection"
 ---

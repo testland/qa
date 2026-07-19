@@ -9,7 +9,7 @@ description: "Build-an-X workflow that produces an interviewer calibration guide
 
 A rubric describes how to score; a calibration guide demonstrates *what* a score looks like. The structured-interview research is consistent that anchor descriptions reduce inter-rater noise but do not eliminate it - interviewers still drift on edge cases without **worked examples** of the same question scored across the whole 1-4 range. This skill produces those worked examples.
 
-The calibration guide is the third leg of the structured-interview tripod that this plugin's three skills compose:
+The calibration guide is the third leg of the structured-interview tripod:
 - [`interview-question-author`](../interview-question-author/SKILL.md) - *what we ask*
 - [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) - *how to score*
 - this skill - *what each score looks like in practice*
@@ -141,14 +141,14 @@ The output is a single markdown document with:
 - **Calibration is bounded by panel discipline.** A panel that nods through the script without genuinely scoring transcripts together will not achieve inter-rater agreement.
 - **The guide is panel-internal and should not leave the hiring loop.** Storing it in the team's wiki is fine; sending it to candidates is not.
 - **Anchor refinement is a living artifact.** The rubric and this guide co-evolve; the team's wiki should hold the latest version, and prior versions should be archived per hiring round.
-- **No fairness / bias audit.** The skill does not check the gold-standard answers for class bias - that is the team's HR / legal review (out of marketplace scope).
+- **No fairness / bias audit.** The skill does not check the gold-standard answers for class bias - that is the team's HR / legal review.
 
 ## Hand-off targets
 
 - **Author the upstream questions** → [`interview-question-author`](../interview-question-author/SKILL.md).
 - **Author the upstream rubric** → [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
-- **Bias / fairness audit of the gold-standard answers** → team's HR / legal review (out of marketplace scope).
-- **Track the inter-rater agreement over the hiring round** → custom analytics; not in the marketplace's scope.
+- **Bias / fairness audit of the gold-standard answers** → team's HR / legal review.
+- **Track the inter-rater agreement over the hiring round** → custom analytics; not covered here.
 
 ## References
 

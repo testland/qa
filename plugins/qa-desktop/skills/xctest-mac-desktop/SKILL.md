@@ -27,7 +27,7 @@ tests - UI testing is layered on top via three classes
 
 This skill wraps XCTest for **macOS desktop** apps. For iOS / iPadOS
 the same APIs apply with different launch + simulator semantics - 
-that path is intentionally out of scope; this plugin covers desktop
+that path is intentionally out of scope; the coverage here is desktop
 only.
 
 **Strategic frame:** see
@@ -240,7 +240,7 @@ xcrun xcresulttool get --path build/result.xcresult \
 
 For CI dashboards that expect JUnit XML, the open-source `xcresultparser`
 project converts `.xcresult` → JUnit XML; pair downstream with
-`junit-xml-analysis` (in the qa-test-reporting plugin).
+`junit-xml-analysis`.
 
 ## Step 9 - CI integration
 
@@ -289,7 +289,7 @@ XCTest UI cannot run under launchd alone.
 ## Limitations
 
 - **macOS-only.** Tests run only on macOS hosts; cross-OS suites
-  pair with Windows / Linux drivers in this plugin (per the
+  pair with Windows / Linux drivers (per the
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
   matrix).
 - **Apple modern docs are Cloudflare-gated.** The canonical
@@ -327,7 +327,7 @@ XCTest UI cannot run under launchd alone.
   name.
 - Strategic frame:
   [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
-- Sibling skills in this plugin:
+- Sibling skills:
   [`winappdriver`](../winappdriver/SKILL.md) (Windows UIA),
   [`at-spi-linux`](../at-spi-linux/SKILL.md) (Linux AT-SPI),
   [`qt-test-framework`](../qt-test-framework/SKILL.md) (Qt in-process).

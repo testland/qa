@@ -1,6 +1,6 @@
 ---
 name: mqtt-tests
-description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients - QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter."
+description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients - QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter. Use when a product speaks MQTT on the wire and QoS 1 / 2 redelivery, retained-message state, or LWT behavior needs a broker-backed test - including smoke-testing a new broker auth / ACL / persistence config."
 metadata:
   keywords: "mqtt, mqtt-v5, iot, mosquitto, paho-mqtt, realtime-protocols"
 ---

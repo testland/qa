@@ -1,6 +1,6 @@
 ---
 name: chaos-mesh
-description: "Configures Chaos Mesh for Kubernetes-native chaos engineering - picks fault types (PodChaos, NetworkChaos, StressChaos, IOChaos, TimeChaos, DNSChaos, KernelChaos, HTTPChaos), targets via label selectors, controls blast radius via namespace whitelists + selector filters, schedules via CronJobs, observes via dashboard. Distinct from Litmus by architecture (Chaos Mesh has its own dashboard + workflow orchestration; Litmus uses ChaosCenter UI)."
+description: "Configures Chaos Mesh for Kubernetes-native chaos engineering - picks fault types (PodChaos, NetworkChaos, StressChaos, IOChaos, TimeChaos, DNSChaos, KernelChaos, HTTPChaos), targets via label selectors, controls blast radius via namespace whitelists + selector filters, schedules via CronJobs, observes via dashboard. Distinct from Litmus by architecture (Chaos Mesh has its own dashboard + workflow orchestration; Litmus uses ChaosCenter UI). Use when the target system runs on Kubernetes and fault experiments should be declared as CRDs in the cluster alongside the workloads they target."
 ---
 
 # chaos-mesh

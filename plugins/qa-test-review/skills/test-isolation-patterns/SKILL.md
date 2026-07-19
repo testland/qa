@@ -1,6 +1,6 @@
 ---
 name: test-isolation-patterns
-description: "Pure reference catalog of test-isolation and fixture-lifecycle patterns - fixture scope (per-test / per-describe / shared / global), Meszaros's four-phase test pattern, Fowler's Fresh-Fixture-vs-Shared-Fixture trade-off, database isolation (transaction-rollback / database-per-worker / template-database), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup). Distinct from `test-code-conventions` §6 (file-level fixture coupling rule) - this catalog is the architecture-tier reference. Preloaded by this plugin's framework-architecture audit to anchor the §A3 fixture-coupling and §A6 retry/wait audits."
+description: "Pure reference catalog of test-isolation and fixture-lifecycle patterns - fixture scope (per-test / per-describe / shared / global), Meszaros's four-phase test pattern, Fowler's Fresh-Fixture-vs-Shared-Fixture trade-off, database isolation (transaction-rollback / database-per-worker / template-database), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup). This is the architecture-tier reference, not a file-level fixture-coupling style rule. Use when designing fixture scope and isolation strategy, auditing fixture coupling or retry/wait policy, or moving a suite to parallel execution."
 ---
 
 # test-isolation-patterns
@@ -9,7 +9,7 @@ description: "Pure reference catalog of test-isolation and fixture-lifecycle pat
 
 A test that fails sometimes for non-obvious reasons is non-deterministic. Per [Martin Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html): "A test is non-deterministic when it passes sometimes and fails sometimes, without any noticeable change in the code, tests, or environment… Once you start ignoring a regression test failure, then that test is useless and you might as well throw it away." The dominant cause is **broken isolation** - one test affecting another, the environment leaking, fixtures sharing state. This catalog is the canonical reference for the isolation patterns that prevent it.
 
-This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing fixture coupling (§A3), retry/wait policy consistency (§A6), and CI integration health (§A8). It complements [`test-code-conventions §6`](../test-code-conventions/SKILL.md) (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements `flake-pattern-reference` (in the qa-flake-triage plugin) which catalogs flake symptoms; this skill catalogs the prevention patterns.
+This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing fixture coupling, retry/wait policy consistency, and CI integration health. It complements [`test-code-conventions §6`](../test-code-conventions/SKILL.md) (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements `flake-pattern-reference`, which catalogs flake symptoms; this skill catalogs the prevention patterns.
 
 ## When to use
 

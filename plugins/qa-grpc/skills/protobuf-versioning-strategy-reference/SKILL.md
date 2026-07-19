@@ -1,6 +1,6 @@
 ---
 name: protobuf-versioning-strategy-reference
-description: "Pure-reference catalog of protobuf3 versioning rules and breaking-change categories. Covers field-number reservation (must reserve on delete, 1..536870911 range, 19000-19999 reserved), wire-safe vs wire-incompatible changes (adding/removing fields safe with reservation; changing field numbers always breaking), compatible type conversions (int32/uint32/int64/uint64/bool; sint32/sint64; string/bytes for UTF-8; enum/integer), oneof + map constraints, and buf-CLI's four-category breaking-change taxonomy (FILE, PACKAGE, WIRE_JSON, WIRE) with specific rule IDs. Use as the proto-evolution reference when designing schema changes or configuring buf breaking. Distinct from qa-contract-testing/protobuf-compat-checking which is the detection skill; this is the catalog of what is and isn't breaking and why."
+description: "Pure-reference catalog of protobuf3 versioning rules and breaking-change categories. Covers field-number reservation (must reserve on delete, 1..536870911 range, 19000-19999 reserved), wire-safe vs wire-incompatible changes (adding/removing fields safe with reservation; changing field numbers always breaking), compatible type conversions (int32/uint32/int64/uint64/bool; sint32/sint64; string/bytes for UTF-8; enum/integer), oneof + map constraints, and buf-CLI's four-category breaking-change taxonomy (FILE, PACKAGE, WIRE_JSON, WIRE) with specific rule IDs. Use as the proto-evolution reference when designing schema changes or configuring buf breaking. This is the catalog of what is and isn't breaking and why, not a detection tool that scans a schema for you."
 ---
 
 # protobuf-versioning-strategy-reference
@@ -331,4 +331,4 @@ later in a separate proto file/package.
   breaking and why**. For detection of changes in CI, use
   [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
   For protobuf-schema contract-testing across services see
-  `protobuf-compat-checking` (in the qa-contract-testing plugin).
+  `protobuf-compat-checking`.

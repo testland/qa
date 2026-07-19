@@ -27,8 +27,8 @@ It composes:
   [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md)
   as the filing backend.
 
-**Distinct from screen-recording-driven bug reporting** (A4):
-this is S3 (failure-record-driven).
+**Distinct from screen-recording-driven bug reporting**: this one
+starts from a CI failure record.
 
 ## When to use
 
