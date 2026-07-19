@@ -7,6 +7,7 @@ Bug reproduction workflow: extracts bug reports from Playwright traces / HARs, b
 | Type | Name | Description |
 | --- | --- | --- |
 | Skill | [bug-report-template](skills/bug-report-template/SKILL.md) | Build a triageable bug report from raw notes; flag gaps in environment / steps / expected / actual / severity / priority / reproducibility. |
+| Skill | [ci-failure-triage](skills/ci-failure-triage/SKILL.md) | Decides what kind of failure a red test is before anyone fixes it: seven signals, an ordered first-match-wins rule set, and a verdict that records which alternatives were rejected and why. |
 | Agent | [bug-report-from-recording](agents/bug-report-from-recording.md) | Action-taking: read a Playwright `trace.zip` (or HAR + console + screenshot) and emit a filled `bug-report-template` with verbatim error messages, reconstructed repro steps, and trace-derived environment block. |
 | Agent | [bug-repro-builder](agents/bug-repro-builder.md) | Action-taking: turn a bug report into a minimal failing test (unit / integration / component / e2e) or a minimal-repro repository. |
 | Agent | [failure-classifier](agents/failure-classifier.md) | Read-only triager: take one failed test result + 7-day history + environment metadata; classify as `defect` / `flaky-pre-incident` / `flaky-known` / `environment-drift` / `timeout` / `flake-of-unknown-cause`; recommend the next agent. |

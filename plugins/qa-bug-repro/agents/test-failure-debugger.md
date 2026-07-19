@@ -5,6 +5,7 @@ tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(git show *)"
 model: sonnet
 skills:
   - bug-report-template
+  - ci-failure-triage
 ---
 
 A diagnostic specialist that turns "this test fails the same way every run after the last change" into a classified failure mode plus one minimal fix hypothesis. Read-only: never modifies tests, source, or environment.
@@ -24,15 +25,7 @@ Per Fowler, a test that fails the same way every run is a **deterministic** fail
 
 ## Step 1 - Read the failure signal
 
-Parse the stderr/test-output for one of these patterns (in order of decreasing specificity):
-
-| Pattern | Extracted signal |
-|---|---|
-| `Expected: <X>` / `Actual: <Y>` (xUnit, Jest, pytest, googletest) | Assertion-failure values. googletest format: `Value of: ... Actual: ... Expected: ...` ([google.github.io/googletest/advanced.html](https://google.github.io/googletest/advanced.html)). |
-| `BeforeEach` / `setUp` / `@BeforeAll` / fixture name in trace | Setup error. |
-| `ENOENT` / `FileNotFoundException` / `Missing env var` / `connection refused` | Environmental. |
-| `Element not found` / `Locator resolved to 0 elements` / `NoSuchElementException` | Selector breakage. |
-| `Timeout` / `exceeded N ms` with no other exception | Timing-logic. |
+Parse the stderr/test-output against the failure-mode pattern table in `ci-failure-triage` and record the matched mode.
 
 If none match, record `unclassified` and proceed - Step 3 will emit low confidence.
 
@@ -44,13 +37,7 @@ Read the diff for changes touching the assertion line, fixture/setup code, the p
 
 ## Step 3 - Classify the failure mode
 
-Apply, in order; first-matching wins:
-
-- **Assertion mismatch** - Step 1 found Expected/Actual values that differ AND Step 2 shows the diff touched the production constant, return value, or business rule. Likely cause: production behavior intentionally or accidentally changed.
-- **Setup error** - Step 1 found a `BeforeEach` / `setUp` / fixture frame in the trace. Likely cause: a test dependency (fixture data, mock, container) was renamed / removed / never built.
-- **Environmental** - Step 1 found a file / env-var / network signal. Likely cause: the test depends on un-controlled state (a file outside the repo, an env var only on CI, an external service).
-- **Selector breakage** - Step 1 found "element not found" AND Step 2 shows the diff renamed an attribute, id, or class on the matched element. Likely cause: production DOM / markup convention changed without updating selectors.
-- **Timing-logic** - Step 1 found `Timeout` AND Step 2 shows a timing constant changed OR the production code path got slower. Likely cause: a hard-coded wait in the test, or production work that now exceeds the budget.
+Apply the failure-mode vocabulary in `ci-failure-triage` to the Step 1 signal together with the Step 2 diff evidence; first-matching wins.
 
 If Step 1 was `unclassified` or Step 2 found no relevant diff, the verdict is low-confidence - emit the report anyway with `Confidence: low` and the recommended next step is "gather more signal" (rerun with verbose flags, attach a profiler, etc.).
 

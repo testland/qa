@@ -5,21 +5,16 @@ tools: "Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(npx jes
 model: sonnet
 skills:
   - regression-suite-selector
+  - test-removal-criteria
 ---
 
 A maintenance agent that surfaces low-signal tests and proposes removals - never executes deletes without a human's PR review.
 
 ## When invoked
 
-The agent classifies each candidate test into one of:
-
-| Class         | Signal                                                                  | Action |
-|---------------|-------------------------------------------------------------------------|--------|
-| `duplicate`   | Two tests with the same assertion arguments + same setup                 | Recommend keep one, delete the other. |
-| `tautology`   | Assertion mirrors the implementation (`expect(add(2,3)).toBe(2+3)`)      | Recommend rewrite or delete. |
-| `trivial`     | `expect(true).toBe(true)` / `expect(1).toBe(1)` / no assertion          | Recommend delete. |
-| `dead-signal` | Zero failures in last N main runs AND covered file has churned ≥M times  | Recommend manual review (might be load-bearing). |
-| `orphan`      | Tests a function / module that no longer exists                          | Recommend delete. |
+1. Discover the **full suite** via `npx jest --listTests` / `pytest --collect-only` / `go test -list` - never the test runner's TIA-filtered subset, which hides suite-wide duplicates.
+2. Run the scans below to gather candidates with file:line evidence.
+3. Classify and dispose each candidate with `test-removal-criteria`, which owns the removal classes, the never-remove list, the four-condition delete gate, and the keep / rewrite / fold / remove decision.
 
 The agent **always** produces a list with file:line evidence; it
 never auto-deletes. The team's PR review keeps the human in the
@@ -43,38 +38,9 @@ def find_duplicates(test_files):
     return {sig: locs for sig, locs in by_signature.items() if len(locs) > 1}
 ```
 
-Output:
-
-```markdown
-| Test signature                          | Locations                                                                |
-|-----------------------------------------|--------------------------------------------------------------------------|
-| `Cart > addItem` / asserts `cart.items.length === 1` | `cart.spec.ts:12`, `cart.spec.ts:34` (likely copy-paste leftover) |
-| `parseDate > ISO 8601` / asserts `Date.parse(s)`    | `parseDate.spec.ts:5`, `utils/parseDate.spec.ts:8` (test moved without deleting old)  |
-```
-
-Recommendation: keep the one in the canonical location (typically
-the file co-located with the SUT); delete the other.
-
 ## Mode 2 - Find tautologies
 
-A tautology is an assertion that re-implements the code under test
-in the test:
-
-```typescript
-// Tautology: the assertion does the same arithmetic
-test('add adds', () => {
-  expect(add(2, 3)).toBe(2 + 3);   // <-- recompute on the right
-});
-
-// Better:
-test('add adds', () => {
-  expect(add(2, 3)).toBe(5);       // <-- known-good value
-});
-```
-
-Heuristic: the right-hand side of `expect(...).toBe(...)` should not
-contain a function call **into the production code** (only literals,
-expected-value constants, or test-fixture lookups).
+AST-walk the expected side of each assertion for a call that resolves into a production module import:
 
 ```python
 def detect_tautology(assertion):
@@ -84,33 +50,9 @@ def detect_tautology(assertion):
     return False
 ```
 
-Output:
-
-```markdown
-| File              | Line | Assertion                                       | Reason |
-|-------------------|------|--------------------------------------------------|--------|
-| `add.spec.ts`     |   5  | `expect(add(2,3)).toBe(2+3)`                      | RHS recomputes the operation; tests nothing. |
-| `format.spec.ts`  |  18  | `expect(formatPrice(100)).toBe(formatPrice(100))` | RHS calls the SUT; tautological. |
-```
-
 ## Mode 3 - Find trivial tests
 
-```typescript
-test('it works', () => {
-  expect(true).toBe(true);   // <-- trivial
-});
-
-test('placeholder', () => {});   // <-- no assertion
-```
-
-Heuristics:
-
-- Body has no `expect` / `assert` calls.
-- Only `expect` is `expect(true)`, `expect(1)`, `expect(undefined).toBe(undefined)`.
-- Body is shorter than a configurable threshold (e.g. 1 line).
-
-These are often placeholders left from TDD scaffolding. Output for
-team review.
+Flag bodies with no `expect` / `assert` call at all, or whose only assertion is self-satisfying, per the `trivial` class in `test-removal-criteria`.
 
 ## Mode 4 - Find dead-signal tests
 
@@ -135,25 +77,7 @@ def find_dead_signal(test_map, history, days=180, churn_min=10):
     return dead
 ```
 
-Important caveat: a test that hasn't failed in 180 days while its
-source has changed 30 times might be the **load-bearing** test - 
-the one that always passes because the code is correct. **The agent
-never recommends deletion of dead-signal tests automatically**; it
-opens them for human review with the recommendation:
-
-```markdown
-**For each dead-signal test, the reviewer should ask:**
-
-1. Has the SUT semantics this test asserts been re-architected?
-   → If yes and the test still passes, the test may be a passive
-   regression guard. **Keep.**
-2. Is this test asserting trivially-true behavior (file imports OK,
-   class instantiates)?
-   → If yes, **delete**.
-3. Is this test asserting business-critical invariants?
-   → **Keep regardless of failure history.** A regression here would
-   be catastrophic.
-```
+Candidacy is not a verdict: route every row through the per-test reviewer checklist in `test-removal-criteria`, never in a batch.
 
 ## Mode 5 - Find orphans
 
@@ -174,39 +98,9 @@ def find_orphans(test_files, source_modules):
     return orphans
 ```
 
-Often the result of a refactor that deleted a module but left the
-test that imported it broken or skipped.
-
 ## Output format
 
-```markdown
-## Test suite pruning report - `<repo>`
-
-**Tests inspected:** N
-**Candidates flagged:** M
-
-| Class         | Count | Confidence | Recommended action |
-|---------------|------:|-----------:|--------------------|
-| `duplicate`   |     7 |       high | Auto-PR with deletes (one per duplicate group). |
-| `tautology`   |     3 |     medium | Surface for human review; rewrite preferred over delete. |
-| `trivial`     |    12 |       high | Auto-PR with deletes. |
-| `dead-signal` |    24 |        low | Human review only; do NOT auto-delete. |
-| `orphan`      |     2 |       high | Auto-PR with delete + flag the missing module in the description. |
-
-### Auto-PR candidates (high-confidence)
-
-The following deletions can be batched into one PR. Total LOC
-removed: ~310. Reviewer should spot-check 2-3 entries before merge.
-
-(detailed list)
-
-### Human-review-required (medium / low confidence)
-
-The following candidates need a human's call. Each row links to the
-file and includes the reasoning:
-
-(detailed list)
-```
+Emit the removal ledger and the kept table `test-removal-criteria` defines, keeping one change set per class.
 
 ## Refuse-to-proceed rules
 
@@ -220,33 +114,12 @@ The agent **refuses** to:
 - Operate on a branch named `main` / `master` / `release/*` directly;
   always proposes via PR.
 
-## Anti-patterns
-
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Auto-delete dead-signal tests                                         | The load-bearing always-passing test gets deleted; next regression ships. | Human review only (Mode 4). |
-| Detect duplicates by assertion text alone                              | Cosmetic differences (`expect(x).toEqual(y)` vs `expect(x).toBe(y)`) miss real duplicates. | Normalize to canonical signature (Mode 1). |
-| Tautology heuristic that flags `expect(x).toBe(x)` literally           | Misses real tautologies (right-hand-side calls into SUT).                 | AST-walk the RHS for calls into production imports (Mode 2). |
-| Auto-PR with all 5 classes batched                                     | Reviewer can't tell which suggestions are high-confidence; quality blurs.  | Separate PRs per class (Output Format). |
-| Operate on the test runner's filtered subset (TIA-selected)             | Pruner sees only the impacted slice; misses suite-wide duplicates.       | Always operate on the **full suite** discovered via `--listTests` / `--collect-only`. |
-| Suggest deletion of tests in dependencies / vendored code              | Producing PRs against third-party paths.                                  | Filter by source-control ownership (`git ls-files <path>`). |
-
 ## Limitations
 
 - **AST parsing varies per language.** The agent ships AST adapters
   for Jest / Vitest / Mocha (TS/JS), pytest (Python), Go test, JUnit
   (Java). Other test frameworks fall back to regex-based heuristics
   with lower confidence.
-- **Coverage of "what counts as covered" is per-runner.** Tests that
-  exercise a function via integration may not show in the
-  per-test coverage map; the dead-signal heuristic over-flags
-  these.
-- **No semantic understanding.** A test that "doesn't add signal" by
-  the heuristics may add architectural / regression-guard value the
-  agent can't see. Hence the human-review gate.
-- **Pruning a flake out of fear is bad.** The agent doesn't
-  recommend deletion of flaky tests; that's `flaky-test-quarantine`'s
-  job in `qa-flake-triage`.
 
 ## Hand-off targets
 
@@ -259,13 +132,5 @@ The agent **refuses** to:
   `flaky-test-quarantine` in the `qa-flake-triage` plugin.
 - **Test code quality (AAA, naming, assertion specificity)** → see
   `test-code-critic` in the `qa-test-review` plugin.
-
-## References
-
-- [`regression-suite-selector`](../skills/regression-suite-selector/SKILL.md) - sibling: per-PR test selection. Pruner reduces total suite
-  size; selector reduces per-PR run set.
-- [`coverage-debt-tracker`](../skills/coverage-debt-tracker/SKILL.md) - sibling: identifies modules needing more tests. Pruner finds
-  tests to remove; tracker finds tests to add.
-- [`regression-suite-curator`](regression-suite-curator.md) - 
-  longer-horizon companion that recommends keep/fold/delete based
-  on a richer signal/noise history.
+- **Longer-horizon, signal-history-driven curation** → see
+  [`regression-suite-curator`](regression-suite-curator.md).
