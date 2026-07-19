@@ -12,6 +12,8 @@ Production-side QA per ISTQB-canonical shift right ("a test approach to test a s
 | Agent | [observability-to-test](agents/observability-to-test.md) | Closes the loop: production-signal → regression test (cheapest catching layer per test pyramid) + fix PR + postmortem update. |
 | Agent | [canary-and-experiment-coordinator](agents/canary-and-experiment-coordinator.md) | Coordinates a simultaneous canary deploy + A/B experiment, catching cohort contamination and sequencing the validators. |
 | Skill | [rum-to-synthetic-gap-analyzer](skills/rum-to-synthetic-gap-analyzer/SKILL.md) | Finds high-traffic user journeys with no synthetic monitor by analyzing RUM / CrUX data. |
+| Skill | [release-runbook-author](skills/release-runbook-author/SKILL.md) | Writes one service's six-phase release runbook (pre-flight, smoke gate, canary observation, human promote gate, rollout, post-release) with each phase gated on a delta against a recorded baseline. |
+| Skill | [cutover-sequence-author](skills/cutover-sequence-author/SKILL.md) | Sequences a multi-team cutover into dependency-ordered gates, each with one named owner, a hard timebox, a written rollback trigger, and a reverse-order rollback path. |
 
 ## Install
 

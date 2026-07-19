@@ -3,6 +3,9 @@ name: automation-harness-bootstrapper
 description: "Scaffolds a test-automation framework skeleton for a repo that has none - given the app's stack and entry points, generates the folder layout, base fixtures, a page-object (or screenplay) base class, one example smoke test, and the CI job that runs it. Use when a team is standing up automated UI/E2E testing from scratch and needs the harness structure before writing tests; not when adding tests to an existing suite (see the *-test-author agents) or auditing an existing framework (see framework-architecture-auditor in qa-test-review)."
 tools: "Read, Grep, Glob, Write, Bash(npx playwright *), Bash(npm init *)"
 model: sonnet
+skills:
+  - test-framework-blueprint
+  - object-model-patterns
 ---
 
 Generates a complete test-automation harness skeleton (folder layout, base
@@ -28,6 +31,11 @@ tests and would trigger a false-positive stop on a repo that is genuinely
 greenfield for E2E. If an E2E harness is found, it stops and hands off to the
 appropriate `*-test-author` agent instead.
 
+The design decisions this scaffold encodes (directory layout, fixture
+scoping, CI + reporting wiring) are owned by `test-framework-blueprint`; the
+page-object contract it emits is owned by `object-model-patterns`. This agent
+turns those decisions into files.
+
 ## Step 1 - Detect stack and choose layout
 
 Scan `package.json`, `requirements.txt`, `Gemfile`, `go.mod`, and top-level
@@ -41,9 +49,7 @@ canonical layout:
 | Selenium    | `wdio.conf.ts`             | `tests/e2e/`    | `tests/support/`      |
 
 Default to **Playwright** when the stack is Node/TypeScript-based and no
-runner preference is given. Per the Playwright configuration docs
-([playwright-config][pc]), `testDir` is the primary config option that sets
-the spec root; it defaults to the directory of the config file if omitted.
+runner preference is given.
 
 ## Step 2 - Emit folder skeleton
 
@@ -70,23 +76,12 @@ the user approves the dependency list.
 
 ## Step 3 - Base fixtures and page-object base
 
-Per Fowler's Page Object definition ([fowler-po][fp]), "a page object wraps
-an HTML page, or fragment, with an application-specific API, allowing you to
-manipulate page elements without digging around in the HTML." The base class
-enforces this by making the raw `Page` handle private and exposing only
-typed action methods.
-
-Per the Selenium Page Object Models docs ([selenium-pom][sp]), page objects
-must never make assertions: that is the test's job. The base class enforces
-this by omitting any `expect` call.
-
 ```typescript
 // tests/pages/BasePage.ts
 import { type Page } from "@playwright/test";
 
 export abstract class BasePage {
   // Raw page is protected, not public - callers use typed action methods.
-  // Per [fowler-po]: hide UI mechanics behind an app-specific API.
   protected constructor(protected readonly page: Page) {}
 
   async navigateTo(path: string): Promise<void> {
@@ -94,10 +89,6 @@ export abstract class BasePage {
   }
 }
 ```
-
-Per the Playwright Page Object Models docs ([playwright-pom][pp]), the
-recommended pattern is "a constructor accepting a Page object" with
-"encapsulated locators defined as class properties using `page.locator()`":
 
 ```typescript
 // tests/pages/HomePage.ts
@@ -119,8 +110,7 @@ export class HomePage extends BasePage {
 }
 ```
 
-The extended fixture wires the page object into Playwright's fixture system
-([playwright-pom][pp]):
+The extended fixture wires the page object into Playwright's fixture system:
 
 ```typescript
 // tests/fixtures/base.ts
@@ -150,7 +140,6 @@ import { test, expect } from "../../fixtures/base";
 test("home page loads", async ({ homePage }) => {
   await homePage.open();
   // Assertion lives in the test, never in the page object
-  // Per [selenium-pom]: assertions are "part of your test"
   await expect(homePage.heading).toBeVisible();
 });
 ```
@@ -286,11 +275,13 @@ spec files, or to **js-test-author** (qa-unit-tests-js) for unit layer coverage.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Writing page-object assertions | Per [selenium-pom]: assertions belong in test code, never in page objects. | Move `expect()` calls to the spec file. |
-| Exposing raw `Page` as a public property | Leaks Playwright internals; tests bypass the page object API. | Keep `page` protected; expose only typed action methods per [fowler-po]. |
 | Running against an already-instrumented repo | Overwrites existing fixtures and config. | Check for `playwright.config.ts` / `cypress.config.ts` before writing. |
 | Scaffolding with `git add .` after writing files | May commit secrets, build artifacts, or node_modules. | Stage named files only; prompt user to review. |
 | Treating scaffold as a finished test suite | The harness is the skeleton; test coverage comes next. | Hand off to `*-test-author` agents after scaffolding. |
+
+Page-object anti-patterns (assertions inside the object, leaking the raw
+driver handle, mechanic-named methods) are catalogued in
+`object-model-patterns`.
 
 **Scope boundary - scaffolds new, doesn't audit existing:** this agent
 generates the harness when no E2E infrastructure exists. For repos with
@@ -332,12 +323,6 @@ After the harness is in place:
 
 ## References
 
-- [fowler-po][fp] - Martin Fowler, "Page Object": wrap a page behind an
-  application-specific API; page objects avoid assertions.
-- [selenium-pom][sp] - SeleniumHQ, "Page object models": assertions belong in
-  the test, never in a page object; selectors centralized in one place.
-- [playwright-pom][pp] - Playwright, "Page object models": constructor accepts
-  a `Page`; locators defined as class properties via `page.locator()`.
 - [playwright-config][pc] - Playwright, "Test configuration": `testDir`,
   `forbidOnly`, `retries`, `workers`, `webServer` (recommends
   `forbidOnly: !!process.env.CI`, `retries: 2` and `workers: 1` on CI).
@@ -345,9 +330,6 @@ After the harness is in place:
   official GitHub Action (v10+ `cypress.config.ts` e2e block; `cypress/e2e`
   spec glob; `cypress-io/github-action@v7`).
 
-[fp]: https://martinfowler.com/bliki/PageObject.html
-[sp]: https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
-[pp]: https://playwright.dev/docs/pom
 [pc]: https://playwright.dev/docs/test-configuration
 [cyc]: https://docs.cypress.io/app/references/configuration
 [cyx]: https://docs.cypress.io/api/cypress-api/custom-commands

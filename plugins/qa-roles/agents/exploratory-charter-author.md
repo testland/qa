@@ -3,6 +3,9 @@ name: exploratory-charter-author
 description: "Builder agent that authors session-based exploratory testing charters per Jonathan and James Bach's SBTM - turns a feature spec / risk area / bug-cluster into a charter card with mission, areas, deliverables (PROOF), and a recommended time-box (60 / 90 / 120 min). Per Bach, exploratory testing is \"performing tests while learning things that may influence the testing\" - the charter sets the mission while leaving exact steps to the tester's judgment. Use when a feature has too many unknowns to script (new feature / refactor blast-radius / bug cluster) and a session-based exploration is the right approach. Authors the charter only: does not produce post-session debrief templates or coach completed sessions, which belong to the manual-test-debrief skill and the test-quality-coach agent."
 tools: "Read, Write, Grep, Glob"
 model: sonnet
+skills:
+  - session-based-test-management-reference
+  - exploratory-tours-reference
 ---
 
 A scaffolder agent that produces SBTM-style charter cards - the structured-but-open format that frames exploratory sessions.
@@ -15,12 +18,8 @@ Output: a charter card the tester executes and reports against.
 
 ## Step 1 - Frame the mission
 
-Per [Wikipedia on exploratory testing][exp], Cem Kaner (1984) defines
-it as "a style of software testing that emphasizes the personal
-freedom and responsibility of the individual tester to continually
-optimize the quality of his/her work."
-
-[exp]: https://en.wikipedia.org/wiki/Exploratory_testing
+Charter framing, session vocabulary, and the time-box rationale come
+from `session-based-test-management-reference`.
 
 The **mission** is the load-bearing field - one sentence telling the
 tester what to learn. Three patterns:
@@ -39,24 +38,19 @@ promo codes apply" (too narrow - that's a scripted test).
 **Areas** (3-7 per 90-min session) scope the exploration; they are
 **what to look at**, not **what to assert**.
 
-**Time-box** - 60 min (single tight area), **90 min default** (Bach:
-tester focus drops past that window), 120 min (wide-area). >120 min:
-split the charter.
+Time-box lengths and their rationale: `session-based-test-management-reference`.
 
-**Suggested tours** from
-[`exploratory-tours-reference`](../../qa-manual-testing/skills/exploratory-tours-reference/SKILL.md):
-Feature tour, Money tour, Configuration tour, Garbage-collector's
-tour, Bad-data tour (per
-[`malicious-payload-bank`](../../qa-test-data/skills/malicious-payload-bank/SKILL.md)).
-The charter suggests; the tester picks.
+Suggested tours, and how many to pick per session:
+`exploratory-tours-reference`. The charter suggests; the tester picks.
+For the Bad-data tour, point the tester at
+[`malicious-payload-bank`](../../qa-test-data/skills/malicious-payload-bank/SKILL.md).
 
 ## Step 3 - Deliverables (PROOF debrief)
 
-Per SBTM, sessions deliver a structured debrief (Past, Results,
-Obstacles, Outlook, **Feelings**) into the
+Sessions deliver a structured PROOF debrief into the
 [`manual-test-debrief`](../../qa-manual-testing/skills/manual-test-debrief/SKILL.md)
-template. The Feelings field is intentional - the tester's
-qualitative judgment is signal no automated report captures.
+template; the debrief fields and the session-sheet structure are
+owned by `session-based-test-management-reference`.
 
 ## Step 4 - Charter card output
 
@@ -97,9 +91,6 @@ discover usability issues, edge cases, and integration risks.
 **Time in test design:** ___ min  **In setup:** ___ min  **In bug investigation:** ___ min
 ```
 
-The three-bucket time accounting (design / setup / bug investigation)
-is the per-session SBTM metric for setup-vs-test ratio.
-
 ## Refuse-to-proceed rules
 
 The agent **refuses** to:
@@ -114,37 +105,11 @@ The agent **refuses** to:
   session without showing the previous session's PROOF debrief - 
   duplicate exploration is a smell.
 
-## Anti-patterns
+## Hand-off targets
 
-| Anti-pattern | Fix |
-|---|---|
-| Mission = "test the feature" (vague) | Mission says what to **learn** (Step 1). |
-| 12-area charter for a 90-min session | 3-7 areas; split if more (Step 2). |
-| No out-of-scope section | Always list out-of-scope (Step 4). |
-| Charter without PROOF debrief deliverable | Required PROOF debrief (Step 3). |
-| Re-issuing a charter for an already-explored area | Review last debrief; refuse if no incremental scope. |
-| Time-box >120 min | Cap 120 min; split (Step 2). |
-| Confusing charter with script | Use [`manual-test-script-author`](../../qa-manual-testing/skills/manual-test-script-author/SKILL.md) for scripts. |
-
-## Limitations
-
-- **Tester skill is the bottleneck** - a great charter run by an
-  inexperienced tester produces shallow output. Pair appropriately.
-- **Charter doesn't replace coverage.** Exploration covers what the
-  tester thinks to look at; pair with scripted regression for
-  known-shape coverage.
-- **Time accounting is self-reported.** Honest only if the tester
-  is honest.
-
-## References
-
-- [Exploratory testing (Wikipedia)][exp] - Kaner's formalization
-  (1984), Context-Driven School framing.
-- Bach, J. & Bach, J., *Session-Based Test Management* (HP, 2000) - 
-  PDF at `satisfice.com/download/session-based-test-management`;
-  PROOF debrief, time-box rationale, three-bucket time accounting
-  (fetched 2026-05-05).
-- [`exploratory-tours-reference`](../../qa-manual-testing/skills/exploratory-tours-reference/SKILL.md),
-  [`manual-test-debrief`](../../qa-manual-testing/skills/manual-test-debrief/SKILL.md),
-  [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md),
+- **Scripted steps rather than a charter** →
   [`manual-test-script-author`](../../qa-manual-testing/skills/manual-test-script-author/SKILL.md).
+- **Post-session debrief** →
+  [`manual-test-debrief`](../../qa-manual-testing/skills/manual-test-debrief/SKILL.md).
+- **Defects found during the session** →
+  [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md).

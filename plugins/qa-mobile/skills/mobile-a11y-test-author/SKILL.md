@@ -41,8 +41,9 @@ Nearest neighbors and differentiation:
 Per the WWDC 2023 session "Perform accessibility audits for your app"
 ([developer.apple.com/videos/play/wwdc2023/10035][wwdc23]):
 
-> "Enables automated accessibility audits in UI tests... performs the same
-> checks as Xcode's Accessibility Inspector tool."
+> "Calling performAccessibilityAudit on your XCUIApplication will audit the
+> current view for accessibility issues just as the Inspector does. There's no
+> need for assertions: if any issues are found, your test automatically fails."
 
 Available from iOS 17. The test fails automatically if any audit issue is found
 (no explicit assertions needed).
@@ -116,7 +117,7 @@ func testCheckoutFlowAudit() throws {
 
 ## iOS - VoiceOver label, trait, and hint checks
 
-Per [UIAccessibility][uia] (Apple Developer Documentation):
+Per [UIAccessibilityElement][uia] (Apple Developer Documentation):
 
 - `accessibilityLabel` - localized string read by VoiceOver to identify the element.
 - `accessibilityHint` - additional context describing the action result.
@@ -144,9 +145,8 @@ func testSubmitButtonLabel() {
 
 ### Touch target size (iOS 44pt minimum)
 
-Per [UIAccessibility][uia]:
-
-> "Minimum recommended size: 44pt x 44pt."
+Per [Human Interface Guidelines: Accessibility][hig], the minimum control size
+on iOS and iPadOS is 44x44 pt.
 
 Assert via `XCUIElement.frame`:
 
@@ -375,7 +375,8 @@ jobs:
 ## References
 
 - [wwdc23] https://developer.apple.com/videos/play/wwdc2023/10035 - "Perform accessibility audits for your app": `performAccessibilityAudit()`, `XCUIAccessibilityAuditType`, audit-per-screen guidance, `continueAfterFailure = true` recommendation, suppression closure pattern.
-- [uia] https://developer.apple.com/documentation/uikit/uiaccessibility - `accessibilityLabel`, `accessibilityHint`, `accessibilityTraits` (`.button`, `.link`, `.header`, `.image`), 44pt touch-target minimum.
+- [uia] https://developer.apple.com/documentation/uikit/uiaccessibilityelement - `accessibilityLabel`, `accessibilityHint`, `accessibilityTraits` (`.button`, `.link`, `.header`, `.image`).
+- [hig] https://developer.apple.com/design/human-interface-guidelines/accessibility - minimum control size table: 44x44 pt on iOS and iPadOS.
 - [atf] https://developer.android.com/training/testing/espresso/accessibility-checking - `AccessibilityChecks.enable()`, `setRunChecksFromRootView(true)`, `setSuppressingResultMatcher()`, per-action firing behavior.
 - [atgt] https://developer.android.com/guide/topics/ui/accessibility/apps#large-controls - 48dp x 48dp minimum touch target requirement.
 - [contrast] https://developer.android.com/guide/topics/ui/accessibility/apps#text-visibility - 4.5:1 contrast for text <18sp or bold <14sp; 3:1 for all other text.
@@ -383,3 +384,12 @@ jobs:
 - [at] https://developer.android.com/guide/topics/ui/accessibility/testing - TalkBack enable, linear navigation (swipe right/left), explore-by-touch, manual checklist.
 - [`xcuitest-suite`](../xcuitest-suite/SKILL.md) - iOS UI automation (functional); not accessibility-focused.
 - [`espresso-suite`](../espresso-suite/SKILL.md) - Android UI automation (functional); not accessibility-focused.
+
+[wwdc23]: https://developer.apple.com/videos/play/wwdc2023/10035
+[uia]: https://developer.apple.com/documentation/uikit/uiaccessibilityelement
+[hig]: https://developer.apple.com/design/human-interface-guidelines/accessibility
+[atf]: https://developer.android.com/training/testing/espresso/accessibility-checking
+[atgt]: https://developer.android.com/guide/topics/ui/accessibility/apps#large-controls
+[contrast]: https://developer.android.com/guide/topics/ui/accessibility/apps#text-visibility
+[cd]: https://developer.android.com/guide/topics/ui/accessibility/apps#describe-ui-element
+[at]: https://developer.android.com/guide/topics/ui/accessibility/testing

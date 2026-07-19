@@ -1,6 +1,6 @@
 ---
 name: checkov-policy
-description: "Configures Checkov for IaC security scanning across Terraform, CloudFormation, Kubernetes, Helm, ARM, Serverless, AWS CDK - installs `pip install checkov`, runs against per-framework directories, customizes rules via skip / override / custom Python checks, integrates SARIF / JUnit output for CI dashboards. Per Checkov: \"scans cloud infrastructure configurations to find misconfigurations before they''''re deployed.\" Use when adopting IaC security scanning against existing or legacy code: Checkov's --create-baseline / --baseline flags let CI gate only on new findings without requiring all legacy issues fixed first. Prefer over trivy-config when JUnit dashboard output or Python-based custom checks are needed."
+description: "Configures Checkov for IaC security scanning across Terraform, CloudFormation, Kubernetes, Helm, ARM, Serverless, AWS CDK - installs `pip install checkov`, runs against per-framework directories, customizes rules via skip / override / custom Python checks, integrates SARIF / JUnit output for CI dashboards. Per Checkov: \"scans cloud infrastructure configurations to find misconfigurations before they're deployed.\" Use when adopting IaC security scanning against existing or legacy code: Checkov's --create-baseline / --baseline flags let CI gate only on new findings without requiring all legacy issues fixed first. Prefer over trivy-config when JUnit dashboard output or Python-based custom checks are needed."
 ---
 
 # checkov-policy

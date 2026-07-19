@@ -215,7 +215,7 @@ the in-file `name:` per CI job.
 Per [compose-up][up], two flags pair for "block until everything is
 healthy":
 
-[compose-up]: https://docs.docker.com/reference/cli/docker/compose/up/
+[up]: https://docs.docker.com/reference/cli/docker/compose/up/
 
 | Flag                             | Effect                                                           |
 |----------------------------------|------------------------------------------------------------------|

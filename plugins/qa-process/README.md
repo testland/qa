@@ -6,8 +6,10 @@ Test process + methodology - risk-based testing matrix + storming, Definition of
 
 | Type | Name | Description |
 | --- | --- | --- |
+| Skill | [attack-surface-test-checklist](skills/attack-surface-test-checklist/SKILL.md) | Maps a diff to the attack surfaces it touches, then to OWASP ASVS requirements, Top 10 2021 categories, and WSTG sections, emitting per-surface manual and automated test items. |
 | Skill | [code-change-shape-classifier](skills/code-change-shape-classifier/SKILL.md) | Classifies a change set into pure-logic / service-layer / ui-heavy / data-heavy from path and content signals; computes the shape distribution over a history window and attaches the relative per-layer test cost model. |
 | Skill | [definition-of-done](skills/definition-of-done/SKILL.md) | Pure-reference + checklist-generator for the team's Definition of Done (DoD) - explains the Scrum Guide's DoD definition (\"a formal desc... |
+| Skill | [dod-adherence-review](skills/dod-adherence-review/SKILL.md) | Verifies an existing Definition of Done line by line against evidence: pattern-to-verification mapping, a met / not met / unverifiable classification, and the two-stage ready-versus-done model. |
 | Skill | [e2e-suite-budget](skills/e2e-suite-budget/SKILL.md) | Build-an-X workflow that caps the E2E suite size by computing flakiness ROI per test - for each E2E test, computes (regressions caught ×... |
 | Skill | [framework-choice-advisor](skills/framework-choice-advisor/SKILL.md) | Pure reference catalog for picking a test automation framework - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso... |
 | Skill | [heuristic-test-design-coach](skills/heuristic-test-design-coach/SKILL.md) | Reference catalog of the four canonical heuristic test-design models - Bach's Heuristic Test Strategy Model (HTSM) with SFDPOT product el... |
@@ -24,6 +26,7 @@ Test process + methodology - risk-based testing matrix + storming, Definition of
 | Skill | [tdd-stuck-pattern-resolver](skills/tdd-stuck-pattern-resolver/SKILL.md) | Pattern catalog for \"I can't write the test first\" moments - recognizes the common testability blockers (singletons / static dependenci... |
 | Skill | [test-case-from-live-feature](skills/test-case-from-live-feature/SKILL.md) | Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, scre... |
 | Skill | [test-case-ideation-from-story](skills/test-case-ideation-from-story/SKILL.md) | Takes a user story or feature spec and emits a markdown test-case matrix - one row per case (id, title, precondition, steps, expected, ti... |
+| Skill | [test-effort-estimation](skills/test-effort-estimation/SKILL.md) | PERT three-point test effort estimation reported as a range, with a mandatory assumptions ledger and a per-layer ownership split. Consumes a change-shape distribution rather than producing one. |
 | Skill | [test-pyramid-balancer](skills/test-pyramid-balancer/SKILL.md) | Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward Cohn's... |
 | Skill | [test-strategy-author](skills/test-strategy-author/SKILL.md) | Build-an-X workflow that produces a test strategy document for a project / release / feature - covers scope, in/out, test types per layer... |
 | Skill | [tool-selection-decision-record](skills/tool-selection-decision-record/SKILL.md) | Output contract for recording a chosen tool: observed signal, one primary recommendation, rationale naming the rejected alternative, and the mandatory conditions that would flip the choice. |

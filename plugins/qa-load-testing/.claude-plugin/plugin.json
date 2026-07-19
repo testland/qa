@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-load-testing",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "Load and performance testing: 12 skills (k6-load-testing, jmeter-load-testing, gatling-load-testing, locust-load-testing, lighthouse-perf, lighthouse-budget-author, perf-budget-gate, latency-percentile-analyzer, flame-graph-analyzer, jvm-gc-tuning, db-slow-query-detector, load-testing-overview) and 3 agents (load-test-tool-selector, perf-regression-bisector, perf-incident-responder).",
   "author": {
     "name": "testland",

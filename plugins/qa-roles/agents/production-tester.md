@@ -35,42 +35,14 @@ AWS CloudWatch Synthetics. No signal → suggest Checkly
 
 ## Step 2 - Generate the script
 
-Apply per-platform conventions per the preloaded
-[`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md). Critical:
-
-- **Accessibility-first locators** (per
-  [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md)):
-  `getByRole`, `getByLabelText`, `getByText` - never CSS classes /
-  nth-child / xpath.
-- **Synthetic test account credentials** from env vars (never
-  hard-coded).
-- **Test-mode payment** if applicable (Stripe test card 4242…).
-- **Per-step assertions** - each step has an observable outcome
-  the assertion verifies.
-
-Checkout journey example shape (sign-in leg shown; remaining legs
-follow the same action+assertion pattern):
-
-```typescript
-// monitors/checkout-journey.spec.ts
-import { test, expect } from '@playwright/test';
-const BASE_URL = process.env.SYNTHETIC_BASE_URL || 'https://example.com';
-
-test('checkout journey @synthetic @critical', async ({ page }) => {
-  await page.goto(BASE_URL);
-  await page.getByRole('link', { name: /sign in/i }).click();
-  await page.getByLabel('Email').fill(process.env.SYNTHETIC_USER_EMAIL!);
-  await page.getByLabel('Password').fill(process.env.SYNTHETIC_USER_PASSWORD!);
-  await page.getByRole('button', { name: /sign in/i }).click();
-  await expect(page.getByRole('heading', { name: /welcome/i })).toBeVisible();
-  // Add to cart → checkout → Stripe test card 4242 4242 4242 4242 →
-  // assert order-confirmed heading + non-empty data-testid="order-id".
-});
-```
+Script conventions (accessibility-first locators, synthetic test
+accounts from env vars, test-mode payment, per-step assertions) come
+from the preloaded `synthetic-monitor-author`. Write the journey's
+script under `monitors/<journey>.spec.ts` following them.
 
 ## Step 3 - Generate the config
 
-Checkly example:
+Checkly config-as-code, with the fields this agent always sets:
 
 ```typescript
 // monitors/checkout-journey.config.ts
@@ -88,8 +60,9 @@ new BrowserCheck('checkout-journey', {
 });
 ```
 
-3+ regions; `doubleCheck` to suppress single-blip pages; explicit
-`alertChannels`.
+`retries`, `doubleCheck`, and explicit `alertChannels` are required
+on every check this agent emits; a config missing any of them is
+incomplete.
 
 ## Step 4 - Generate the PR
 
@@ -110,21 +83,8 @@ CSS-class / xpath selectors, per-step assertions are missing
 ("completes without error" is too weak), or the input says
 production but no BASE_URL is provided (won't default to staging).
 
-## Anti-patterns
-
-- Real customer account (Refuse - synthetic only).
-- "Page loaded" as the only assertion (per-step required, Step 2).
-- Single-region monitoring (3+ regions, Step 3).
-- 1-min cadence for non-critical journey (5-min default; 1-min only
-  for SLA-critical).
-- Hard-coded credentials (env vars, Step 2).
-- Missing `retries` / `doubleCheck` (both required, Step 3).
-- No on-call routing (`alertChannels` required, Step 3).
-
 ## Limitations + hand-offs
 
-- **Per-platform script differences** - Checkly's Playwright maps
-  closest to the example; Datadog wraps differently.
 - **Production data dependencies** - needs predictable test data
   (a SKU that always exists, an account that always works).
 - **Test-account / test-data setup** →
@@ -135,10 +95,3 @@ production but no BASE_URL is provided (won't default to staging).
   [`observability-to-test`](../../qa-shift-right/agents/observability-to-test.md).
 - **Broader synthetic-monitor strategy** →
   [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md).
-
-## References
-
-- ISTQB Glossary V4.7.1 - `shift-right`
-  (`https://glossary.istqb.org/en_US/term/shift-right`): "a test
-  approach to test a system continuously in production."
-- [`synthetic-monitor-author`](../../qa-shift-right/skills/synthetic-monitor-author/SKILL.md) - preloaded skill with platform / cadence / threshold conventions.

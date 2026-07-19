@@ -17,6 +17,7 @@ Test code quality reviewers - agents specialized for **test files only**, not pr
 | Agent | [e2e-selector-quality-critic](agents/e2e-selector-quality-critic.md) | Flags brittle CSS class / nth-child / XPath selectors and non-web-first assertions; recommends `getByRole` / accessibility-first equivalents (§8, §9). |
 | Agent | [framework-architecture-auditor](agents/framework-architecture-auditor.md) | Cross-file framework audit: POM consistency, base-class hierarchy depth, fixture coupling, helper sprawl, naming-convention drift, retry / wait consistency, documented-vs-actual convention drift, CI integration health. Sister-tier above the per-file critics. |
 | Agent | [test-suite-health-auditor](agents/test-suite-health-auditor.md) | Whole-suite cross-tool audit: file inventory, tier classification (unit / integration / E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, assertion quality. Emits categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with top-3 prune/expand/refactor recommendations. Distinct from framework-architecture-auditor (single-framework, narrow) and qa-roles/test-architect (A2, prescribes strategy). |
+| Skill | [test-design-scorecard](skills/test-design-scorecard/SKILL.md) | Scores test files 1 to 5 on six design axes with explicit per-level anchors, then turns the scores into growth-framed feedback and a per-author trend. Produces a score, not a merge verdict. |
 
 ## Install
 

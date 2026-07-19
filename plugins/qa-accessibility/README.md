@@ -21,6 +21,7 @@ Atomic accessibility coverage: 4 WCAG 2.2 conventions (keyboard, focus-trap, con
 | Skill | [wave-a11y](skills/wave-a11y/SKILL.md) | WebAIM WAVE - visual overlay extension + WAVE API; WebAIM-branded reports for Section 508 / public-sector audits. |
 | Skill | [ibm-equal-access-a11y](skills/ibm-equal-access-a11y/SKILL.md) | IBM Equal Access accessibility-checker; WCAG 2.0/2.1/2.2 + IBM superset + Section 508; integrates with Playwright/Selenium/Cypress. |
 | Skill | [wcag-compliance-reporter](skills/wcag-compliance-reporter/SKILL.md) | Build-an-X per-page WCAG 2.2 conformance report aggregating axe / pa11y / Lighthouse / WAVE / IBM output; per-SC + per-level rollup; "unknown" verdict for SCs no tool covers. |
+| Skill | [widget-a11y-test-matrix](skills/widget-a11y-test-matrix/SKILL.md) | Per-widget manual test matrices pairing each keystroke with expected focus behavior, the expected NVDA and VoiceOver announcements, and the WCAG 2.2 success criterion that row verifies. |
 
 ## Install
 

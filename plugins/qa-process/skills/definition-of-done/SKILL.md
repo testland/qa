@@ -15,8 +15,9 @@ Per [scrum-guide][sg]:
 > the Increment when it meets the quality measures required for
 > the product."
 
-> "If your organization has established standards, all teams must
-> follow them as the minimum requirement. Otherwise, the Scrum
+> "If the Definition of Done for an increment is part of the
+> standards of the organization, all Scrum Teams must follow it as
+> a minimum. If it is not an organizational standard, the Scrum
 > Team must create a Definition of Done appropriate for the
 > product." ([scrum-guide][sg])
 
@@ -70,8 +71,9 @@ Customize per team - not all 10 apply to every project.
 
 Per [scrum-guide][sg]:
 
-> "If your organization has established standards, all teams must
-> follow them as the minimum requirement."
+> "If the Definition of Done for an increment is part of the
+> standards of the organization, all Scrum Teams must follow it as
+> a minimum."
 
 If the org has a security review requirement, every team's DoD
 includes it. The team's DoD can add stricter team-specific lines

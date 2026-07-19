@@ -147,10 +147,11 @@ ANALYZE gap: <yes - table X needs post-migration ANALYZE / no>
 
 ## References
 
-- [pg-ci]: https://www.postgresql.org/docs/current/sql-createindex.html
-- [pg-lock]: https://www.postgresql.org/docs/current/explicit-locking.html
-- [pg-at]: https://www.postgresql.org/docs/current/sql-altertable.html
-- [my-ddl]: https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html
+[pg-ci]: https://www.postgresql.org/docs/current/sql-createindex.html
+[pg-lock]: https://www.postgresql.org/docs/current/explicit-locking.html
+[pg-at]: https://www.postgresql.org/docs/current/sql-altertable.html
+[my-ddl]: https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html
+
 - [`flyway-migrations`](../skills/flyway-migrations/SKILL.md) Step 7 (composition)
 - [`liquibase-migrations`](../skills/liquibase-migrations/SKILL.md) Step 4 (preconditions)
 - [`atlas-migrations`](../skills/atlas-migrations/SKILL.md) Step 6 (`atlas migrate lint`)

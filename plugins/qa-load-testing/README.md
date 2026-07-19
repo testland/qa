@@ -21,6 +21,7 @@ Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI
 | Skill | [latency-percentile-analyzer](skills/latency-percentile-analyzer/SKILL.md) | Interpret latency distributions beyond p95/p99: tail ratio, bimodal detection, coordinated omission. |
 | Skill | [jvm-gc-tuning](skills/jvm-gc-tuning/SKILL.md) | Diagnose JVM GC under load: GC logs, collector selection, the GC-pause to latency-tail link. |
 | Skill | [load-testing-overview](skills/load-testing-overview/SKILL.md) | Junior on-ramp: load-testing metrics, which tool to pick, and a first k6 run + threshold. |
+| Skill | [slo-load-test-plan](skills/slo-load-test-plan/SKILL.md) | Turns SLOs and an endpoint traffic mix into a named scenario matrix: a load profile and injection model per scenario, SLO-derived threshold expressions, and an error-budget-sized soak allowance. |
 
 ## Install
 
