@@ -40,7 +40,7 @@ Presidio detects; this is the orthogonal axis.
 
 ### Install
 
-Per [microsoft.github.io/presidio/analyzer](https://microsoft.github.io/presidio/analyzer/):
+Per [presidio.dataprivacystack.org/analyzer](https://presidio.dataprivacystack.org/analyzer/):
 
 ```bash
 pip install presidio-analyzer presidio-anonymizer
@@ -70,7 +70,7 @@ for r in results:
 
 `AnalyzerEngine()` loads the default NLP model and all built-in
 recognisers. Per
-[microsoft.github.io/presidio/analyzer](https://microsoft.github.io/presidio/analyzer/),
+[presidio.dataprivacystack.org/analyzer](https://presidio.dataprivacystack.org/analyzer/),
 `analyze()` returns a list of `RecognizerResult` with fields
 `start`, `end`, `score` (0 - 1 confidence), and `entity_type`.
 
@@ -91,7 +91,7 @@ for noisy text (logs) where partial matches inflate false positives.
 
 ### Built-in entity catalog
 
-Per [microsoft.github.io/presidio/supported_entities](https://microsoft.github.io/presidio/supported_entities/),
+Per [presidio.dataprivacystack.org/supported_entities](https://presidio.dataprivacystack.org/supported_entities/),
 the global entities are:
 
 | Entity | Detects |
@@ -128,7 +128,7 @@ Country-specific entities (subset):
 | Thailand | `TH_TNIN` |
 
 For the full list and entity descriptions see
-[microsoft.github.io/presidio/supported_entities](https://microsoft.github.io/presidio/supported_entities/).
+[presidio.dataprivacystack.org/supported_entities](https://presidio.dataprivacystack.org/supported_entities/).
 
 ### Custom PatternRecognizer
 
@@ -184,7 +184,7 @@ anonymized = anonymizer.anonymize(
 print(anonymized.text)
 ```
 
-Per [microsoft.github.io/presidio/anonymizer](https://microsoft.github.io/presidio/anonymizer/),
+Per [presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack.org/anonymizer/),
 `OperatorConfig(operator_name, params={})` is the constructor; the
 default operator is `replace` with `<entity_type>` placeholder when
 no operator is configured.
@@ -345,11 +345,11 @@ these reserved values.
 ## References
 
 - Presidio Analyzer docs - 
-  [microsoft.github.io/presidio/analyzer](https://microsoft.github.io/presidio/analyzer/).
+  [presidio.dataprivacystack.org/analyzer](https://presidio.dataprivacystack.org/analyzer/).
 - Presidio Anonymizer docs - 
-  [microsoft.github.io/presidio/anonymizer](https://microsoft.github.io/presidio/anonymizer/).
+  [presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack.org/anonymizer/).
 - Supported entities - 
-  [microsoft.github.io/presidio/supported_entities](https://microsoft.github.io/presidio/supported_entities/).
+  [presidio.dataprivacystack.org/supported_entities](https://presidio.dataprivacystack.org/supported_entities/).
 - Sibling references:
   [`pii-categories-reference`](../pii-categories-reference/SKILL.md),
   [`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md).

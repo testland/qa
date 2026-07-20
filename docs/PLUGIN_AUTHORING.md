@@ -200,7 +200,11 @@ If any check fails, redraft.
   - **JS-rendered SPAs** (ISTQB glossary is the primary example): WebFetch
      returns only the SPA shell. Use Playwright via
      `mcp__playwright__browser_navigate` + `browser_evaluate` to extract
-     content.
+     content. **A 200 on a glossary term URL proves nothing** - every path
+     returns the same empty shell, including invented slugs, so a
+     status-code check cannot detect a dead term. Verify the slug against
+     `https://api.glossary.istqb.org/v1/terms/<slug>`, which returns the
+     definition as JSON and 404s on a slug that does not exist.
   - **Cloudflare Turnstile** (ISO standards pages, GraphQL spec, some
      blogs): the challenge does not clear in headless Playwright. Cite by
      stable ID (e.g., "ISO/IEC 25010:2023", "GraphQL October 2021 spec")

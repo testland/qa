@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 739 components**
+**89 plugins · 740 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -14,7 +14,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.10.0 | 25 skills + 7 agents | 32 |
-| [qa-test-data](plugins/qa-test-data/) | 1.3.0 | 17 skills + 3 agents | 20 |
+| [qa-test-data](plugins/qa-test-data/) | 1.3.1 | 17 skills + 3 agents | 20 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.0 | 15 skills + 2 agents | 17 |
 | [qa-roles](plugins/qa-roles/) | 1.3.11 | 0 skills + 15 agents | 15 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.0 | 8 skills + 6 agents | 14 |
@@ -37,7 +37,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-game](plugins/qa-game/) | 1.4.6 | 8 skills + 3 agents | 11 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.5.0 | 8 skills + 2 agents | 10 |
 | [qa-embedded](plugins/qa-embedded/) | 1.3.0 | 7 skills + 3 agents | 10 |
-| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.2.1 | 6 skills + 2 agents | 8 |
+| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.2.2 | 6 skills + 2 agents | 8 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.8 | 5 skills + 3 agents | 8 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.2.8 | 6 skills + 2 agents | 8 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.4 | 5 skills + 2 agents | 7 |
@@ -54,8 +54,8 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 |---|---|---|---:|
 | [qa-accessibility](plugins/qa-accessibility/) | 1.3.0 | 14 skills + 2 agents | 16 |
 | [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.5 | 8 skills + 3 agents | 11 |
-| [qa-pwa](plugins/qa-pwa/) | 1.1.4 | 7 skills + 1 agents | 8 |
-| [qa-browser-extension](plugins/qa-browser-extension/) | 1.1.4 | 6 skills + 1 agents | 7 |
+| [qa-browser-extension](plugins/qa-browser-extension/) | 1.2.0 | 7 skills + 1 agents | 8 |
+| [qa-pwa](plugins/qa-pwa/) | 1.1.5 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.4 | 5 skills + 2 agents | 7 |
 | [qa-modern-web](plugins/qa-modern-web/) | 1.1.7 | 5 skills + 1 agents | 6 |
 | [qa-localization](plugins/qa-localization/) | 1.1.6 | 4 skills + 1 agents | 5 |
@@ -72,7 +72,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 | [qa-compliance](plugins/qa-compliance/) | 1.3.0 | 9 skills + 1 agents | 10 |
 | [qa-sca](plugins/qa-sca/) | 1.2.0 | 9 skills + 1 agents | 10 |
 | [qa-sast](plugins/qa-sast/) | 1.2.0 | 8 skills + 1 agents | 9 |
-| [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.1.5 | 8 skills + 1 agents | 9 |
+| [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.2.0 | 8 skills + 1 agents | 9 |
 | [qa-iac](plugins/qa-iac/) | 1.1.9 | 6 skills + 2 agents | 8 |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.0 | 6 skills + 2 agents | 8 |
 | [qa-sbom](plugins/qa-sbom/) | 1.1.9 | 7 skills + 1 agents | 8 |
@@ -92,7 +92,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.2.0 | 5 skills + 5 agents | 10 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.4.0 | 6 skills + 4 agents | 10 |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.2.10 | 6 skills + 2 agents | 8 |
-| [qa-shift-right](plugins/qa-shift-right/) | 1.3.1 | 6 skills + 2 agents | 8 |
+| [qa-shift-right](plugins/qa-shift-right/) | 1.3.2 | 6 skills + 2 agents | 8 |
 
 ## Backend & distributed systems
 

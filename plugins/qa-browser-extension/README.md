@@ -8,7 +8,8 @@ Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prom
 | --- | --- | --- |
 | skill | manifest-v3-test-surface-reference | MV2/MV3 manifest field map + Firefox/Chrome key matrix + SW runtime restrictions |
 | skill | web-ext-cli-mozilla | Mozilla `web-ext` v8 CLI: lint + run + build + sign for Firefox and Chromium |
-| skill | chrome-extension-test-loader | Unpacked-extension dev load + chrome.runtime/tabs/connect messaging API surface |
+| skill | chrome-extension-test-loader | Unpacked-extension dev load + the reload matrix for what a code edit re-evaluates |
+| skill | chrome-extension-messaging-tests | Assert chrome.runtime/tabs/connect messaging, externally_connectable, native messaging, payload limits |
 | skill | playwright-extension-fixtures | Playwright `launchPersistentContext` + load-extension args + service-worker race fixture |
 | skill | mv2-to-mv3-migration-test-checklist | Build a per-extension MV2 to MV3 migration checklist artifact with section-by-section verification tests |
 | skill | extension-storage-test-author | Build a chrome.storage area-selection + quota-exceeded + onChanged + managed-readonly test suite |

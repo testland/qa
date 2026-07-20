@@ -50,7 +50,7 @@ lookup table - "John Smith" → "Maria Garcia."
 - **Use for:** Names, addresses, employee IDs that must remain
   joinable across tables.
 - **Tooling:** Presidio `replace` operator
-  ([microsoft.github.io/presidio/anonymizer](https://microsoft.github.io/presidio/anonymizer/)),
+  ([presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack.org/anonymizer/)),
   Faker library generators
   ([`faker-synthetic-data`](../faker-synthetic-data/SKILL.md)).
 
@@ -170,7 +170,7 @@ for health records).
 
 ## Microsoft Presidio anonymizer operators
 
-Per [microsoft.github.io/presidio/anonymizer](https://microsoft.github.io/presidio/anonymizer/),
+Per [presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack.org/anonymizer/),
 the Presidio Anonymizer engine supports six built-in operators:
 
 | Operator | Parameters | Reversible | Maps to canonical technique |
@@ -325,7 +325,7 @@ record is added/removed. ε (epsilon) is the privacy budget - lower
   Operation: Methods for Format-Preserving Encryption" - FF1 /
   FF3 specs.
 - Microsoft Presidio Anonymizer - 
-  [microsoft.github.io/presidio/anonymizer](https://microsoft.github.io/presidio/anonymizer/).
+  [presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack.org/anonymizer/).
 - Wikipedia, "Data masking" - 
   [en.wikipedia.org/wiki/Data_masking](https://en.wikipedia.org/wiki/Data_masking).
 - GDPR Article 4(5) pseudonymisation definition - 

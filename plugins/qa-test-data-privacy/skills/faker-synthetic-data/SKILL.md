@@ -1,323 +1,257 @@
 ---
 name: faker-synthetic-data
-description: "Author and run Faker libraries (Python `Faker`, JavaScript `@faker-js/faker`, Java `JavaFaker`, .NET `Bogus`) for generating synthetic substitute data when masking pipelines remove real PII. Covers locale-aware generators, deterministic seeding for test reproducibility, the common provider methods (name / email / address / phone / SSN / credit card / IBAN / date / UUID / text), pytest fixture integration, and the trade-off between random vs deterministic substitution for referential integrity. Use after a PII detector flags fields that need synthetic replacement (distinct from synthetic-pii-generator which assembles fixtures from scratch - this is the underlying library skill those build skills compose)."
+description: "Substitutes realistic replacement values for PII that a masking or de-identification step removed, nulled, or redacted, so a non-production dataset stays usable. Covers building an injective substitution map that keeps a shared identifier consistent everywhere it appears so joins survive; choosing deterministic (seeded) over random substitution, and the re-identification risk a shared or committed seed reintroduces, since a generator seed is a reproducibility control and not a cryptographic key; preserving field shape where a downstream system validates it, including check-digit values such as payment-card and national-ID numbers plus phone and postal formats; and why a value that merely looks realistic is not yet safe, leaving a residual re-identification measurement over the remaining quasi-identifiers. Use when a masking pipeline has nulled or dropped PII columns and the dataset now needs replacement values that keep cross-table joins intact."
 ---
 
 # faker-synthetic-data
 
-## Overview
+## The axis this skill owns
 
-Faker is the building block beneath both fresh-fixture generation
-(`synthetic-pii-generator`, in the qa-test-data plugin)
-and PII masking pipelines
-([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
-that need to replace detected PII with a plausible substitute.
+A de-identification step has already run: direct identifiers are nulled,
+redacted, or replaced with a placeholder. The dataset is private but
+broken, because joins fail and validators reject empty fields. This
+skill covers putting usable values back and the privacy decisions that
+forces: keeping a shared identifier consistent so joins survive,
+deterministic versus random substitution, preserving a validated field
+shape, and proving the result is safe rather than merely realistic.
 
-Same library family across languages:
+It deliberately does **not** cover the generic mechanics of a fake-data
+library: installation, the provider catalogue, per-locale tours, or
+factory patterns for building fixtures from nothing. Nor does it cover
+detecting PII or choosing between masking operators such as hashing,
+tokenisation, and nulling. Both happen before this step.
 
-- **Python** - `Faker` ([faker.readthedocs.io](https://faker.readthedocs.io/en/master/))
-- **JavaScript / TypeScript** - `@faker-js/faker` ([fakerjs.dev](https://fakerjs.dev/guide/))
-- **Java** - JavaFaker (`com.github.javafaker:javafaker`)
-- **.NET** - Bogus (`Bogus` NuGet package)
-- **Ruby** - `faker` gem
-- **PHP** - `fakerphp/faker`
+## Minimum library surface
 
-Methodology and provider names are similar across languages; this
-skill covers Python + JavaScript primarily (most widely used).
+| Mechanic | Behaviour | Source |
+|---|---|---|
+| `Faker.seed(n)` | Class method; seeds the shared `random.Random` across all internal generators. Calling `.seed()` on an instance raises `TypeError` | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html) |
+| `fake.seed_instance(n)` | Creates and seeds a unique `random.Random` for one instance | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html) |
+| `fake.unique.<method>()` | Tracks values already returned; raises `UniquenessException` after repeated failures to find a new one | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/) |
+| Multiple-locale mode | The proxy "randomly select[s] a generator using a distribution defined by the provided weights", so locale varies per call | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html) |
+| `faker.seed(123)` (JS) | Fixes the sequence; setting the seed again resets it. Date helpers also need `refDate` or `faker.setDefaultRefDate()` | [fakerjs.dev](https://fakerjs.dev/guide/usage.html) |
 
-## When to use
+To drive substitution from an anonymiser, Microsoft Presidio exposes a
+`custom` operator taking a "lambda to execute on the PII data. The
+lambda return type must be a string", passed as
+`OperatorConfig("replace", {"new_value": "BIP"})`-style entries in the
+`operators` dict
+([presidio.dataprivacystack.org](https://presidio.dataprivacystack.org/anonymizer/)).
 
-- After
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)
-  flags PII spans in real data, replace them with Faker output via
-  Presidio's `custom` operator wrapping a Faker call.
-- Seed staging databases with realistic synthetic profiles.
-- Generate property-based test inputs that need realistic shape
-  (use in conjunction with `hypothesis-testing`
-  or `fast-check`).
+## Step 1 - Build the substitution map before substituting anything
 
-For complete *fresh-fixture* generation with PCI-DSS / Luhn /
-region-format constraints baked in, use
-`synthetic-pii-generator` - it's the higher-level skill that composes Faker calls into
-fixture-bundle workflows.
+The requirement is stated directly in the masking literature: "The
+masked values may be required to be consistent across multiple
+databases within an organization when the databases each contain the
+specific data element being masked", and masking must be "repeatable
+(the same input value to the masking algorithm always yields the same
+output value) but not able to be reverse engineered to get back to the
+original value"
+([en.wikipedia.org/wiki/Data_masking](https://en.wikipedia.org/wiki/Data_masking)).
 
-## Authoring
+So do not substitute row by row while streaming. Collect the distinct
+real values first, build one map, apply it everywhere. Two properties
+must hold:
 
-### Python - Faker
+- **Injective.** Two real people must never collapse onto one
+  substitute, or a join over-matches and row counts silently inflate.
+  `fake.unique` enforces this until the provider's value space runs out
+  ([faker.readthedocs.io](https://faker.readthedocs.io/en/master/)).
+- **Complete.** Cover every place the identifier appears: denormalised
+  copies, free-text mentions in comment fields, filenames, exports
+  already in the bundle. A column missed here is a column where the
+  real value survives.
 
-Per [faker.readthedocs.io](https://faker.readthedocs.io/en/master/):
+The map is the sensitive artifact. Retaining it where the recipient can
+reach it makes the output pseudonymised, not anonymised. GDPR Article
+4(5) defines pseudonymisation as processing "in such a manner that the
+personal data can no longer be attributed to a specific data subject
+without the use of additional information, provided that such
+additional information is kept separately"
+([gdpr-info.eu](https://gdpr-info.eu/art-4-gdpr/)); Recital 26 adds that
+data "which could be attributed to a natural person by the use of
+additional information should be considered to be information on an
+identifiable natural person"
+([gdpr-info.eu](https://gdpr-info.eu/recitals/no-26/)). Keeping the map
+is a legitimate choice. Calling the result anonymous afterwards is not.
 
-```bash
-pip install Faker
-```
+## Step 2 - What a seed guarantees, and what it does not
 
-```python
-from faker import Faker
+**Does.** Reproduce the same generator sequence on a later run, for the
+same library version. Faker warns that "as we keep updating datasets,
+results are not guaranteed to be consistent across patch versions"
+([faker.readthedocs.io](https://faker.readthedocs.io/en/master/)); the
+JavaScript port warns "you may get different values for the same seed"
+after an upgrade
+([fakerjs.dev](https://fakerjs.dev/guide/usage.html)).
 
-fake = Faker()  # defaults to en_US
-print(fake.name())            # "Allison Hill"
-print(fake.email())           # "ndavis@example.org"
-print(fake.address())         # "778 Brown Plaza\nSouth Christine, MA..."
-print(fake.phone_number())    # "001-543-810-3357x96334"
-print(fake.ssn())             # "498-52-4970"
-print(fake.credit_card_number(card_type="visa"))  # Luhn-valid
-print(fake.iban())            # "GB95...30CG"
-print(fake.date_of_birth())   # datetime.date(1962, 1, 17)
-print(fake.uuid4())
-print(fake.paragraph(nb_sentences=3))
-```
+**Does not.** Act as a key. Python Faker draws from a `random.Random`
+([faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html)),
+and the standard library warns that "the pseudo-random generators of
+this module should not be used for security purposes. For security or
+cryptographic uses, see the `secrets` module"
+([docs.python.org](https://docs.python.org/3/library/random.html)). A
+seed offers no resistance to anyone holding it.
 
-### Locale-aware generation
+| Mechanism | Joins survive | Re-identification exposure |
+|---|---|---|
+| Seed derived per value, reseeding from the real value before each call | Yes | **High.** Anyone with the code, the library version, and a candidate list of real values re-runs the derivation and rebuilds the map. The seed reproduces the substitute; it does not conceal the input |
+| One global seed plus a stored map | Yes | Equal to the exposure of the map. Control access to the map, not the seed |
+| One global seed, map discarded after the run | Yes, within the run | Low from the seed alone: the substitute follows call order, not the input value, so the seed reconstructs nothing without the source data |
+| Unseeded, random per occurrence | **No** | Low, but the dataset is unusable for anything relational |
 
-A US fixture and a JP fixture need different name distributions,
-phone formats, and address patterns:
+The per-value derived seed is the pattern to avoid. It needs no stored
+map, and it fails for the reason unsalted hashing of a low-entropy
+field fails: the input space is enumerable, so the mapping is
+rebuildable. If a stored map is unacceptable, the answer is a keyed
+transform, not a derived seed.
 
-```python
-fake_us = Faker("en_US")
-fake_jp = Faker("ja_JP")
+## Step 3 - Preserve the shape the downstream system validates
 
-print(fake_us.name())   # "John Smith"
-print(fake_jp.name())   # "山田 太郎"
-print(fake_jp.address())
-# 北海道札幌市中央区...
-```
-
-For datasets with multi-locale users, sample per row:
-
-```python
-fake = Faker(["en_US", "ja_JP", "es_ES", "de_DE", "fr_FR"])
-for _ in range(10):
-    print(fake.name())  # mixed locales
-```
-
-### Deterministic seeding
-
-For reproducible test fixtures (golden-file comparison, snapshot
-testing):
-
-```python
-Faker.seed(4321)
-fake = Faker()
-print(fake.name())  # always the same with the same seed + Faker version
-```
-
-Per Faker docs: "A Seed produces the same result when the same
-methods with the same version of faker are called." **Pin the
-Faker version in `requirements.txt`** - across versions the seeded
-output drifts.
-
-### pytest plugin
-
-Faker ships a pytest fixture:
-
-```python
-def test_user_creation(faker):
-    user = User.create(name=faker.name(), email=faker.email())
-    assert user.id is not None
-```
-
-The `faker` fixture is auto-seeded per test (configurable via
-`faker_seed` marker).
-
-### JavaScript / TypeScript - @faker-js/faker
-
-Per [fakerjs.dev/guide](https://fakerjs.dev/guide/):
-
-```bash
-npm install -D @faker-js/faker
-```
-
-```typescript
-import { faker } from "@faker-js/faker";
-
-console.log(faker.person.firstName());
-console.log(faker.person.lastName());
-console.log(faker.internet.email());
-console.log(faker.phone.number());
-console.log(faker.location.streetAddress());
-console.log(faker.location.city());
-console.log(faker.location.country());
-console.log(faker.finance.creditCardNumber());
-console.log(faker.finance.iban());
-console.log(faker.string.uuid());
-console.log(faker.date.past());
-```
-
-Locale-specific import:
-
-```typescript
-import { faker as fakerJP } from "@faker-js/faker/locale/ja";
-import { faker as fakerDE } from "@faker-js/faker/locale/de";
-```
-
-Deterministic seed:
-
-```typescript
-faker.seed(123);
-console.log(faker.person.firstName()); // always the same
-```
-
-### Template syntax via helpers.fake
-
-```typescript
-const greeting = faker.helpers.fake(
-  "Hello {{person.firstName}} {{person.lastName}}!"
-);
-```
-
-Useful for templated content (notification fixtures, email bodies).
-
-## Running
-
-### As a Presidio anonymiser operator
-
-The classic masking-pipeline integration: detect PII with Presidio,
-replace with Faker. Wrap Faker in a Presidio `custom` operator:
+**Check-digit values.** Payment card numbers, and national identifiers
+including Canadian social insurance numbers, Israeli and South African
+ID numbers, and Swedish personal identity numbers, carry a Luhn ("mod
+10") check digit specified in ISO/IEC 7812-1
+([en.wikipedia.org/wiki/Luhn_algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm)).
+Faker exposes `credit_card_number(card_type=...)` accepting `'amex'`,
+`'visa'`, `'mastercard'`, `'discover'`, `'diners'`, `'jcb'`, and
+`'maestro'` among others, but does not state whether the output carries
+a valid check digit
+([faker.readthedocs.io](https://faker.readthedocs.io/en/master/providers/faker.providers.credit_card.html)),
+so assert it rather than assume it:
 
 ```python
-from faker import Faker
-from presidio_anonymizer.entities import OperatorConfig
+def luhn_ok(number: str) -> bool:
+    digits = [int(d) for d in number if d.isdigit()][::-1]
+    return sum(d if i % 2 == 0 else sum(divmod(d * 2, 10))
+               for i, d in enumerate(digits)) % 10 == 0
 
-fake = Faker()
-Faker.seed(2026)
-
-def fake_person(text, params=None):
-    return fake.name()
-
-def fake_email(text, params=None):
-    return fake.email()
-
-operators = {
-    "PERSON": OperatorConfig("custom", {"lambda": fake_person}),
-    "EMAIL_ADDRESS": OperatorConfig("custom", {"lambda": fake_email}),
-    "PHONE_NUMBER": OperatorConfig("custom",
-        {"lambda": lambda text, params=None: fake.phone_number()}),
-}
+assert luhn_ok(fake.credit_card_number(card_type="visa"))
 ```
 
-This produces locale-coherent replacements (a flagged Spanish email
-gets a Spanish-style replacement if Faker is locale-configured).
+Luhn "was designed to protect against accidental errors, not malicious
+attacks"
+([en.wikipedia.org/wiki/Luhn_algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm)),
+so passing it proves the field parses, not that the value is safe.
 
-### Deterministic substitution for referential integrity
+**Locale-bound formats.** Phone numbers and postal codes are validated
+against the row's country, so pin one locale per row from that country
+column instead of relying on multiple-locale mode's weighted random
+draw.
 
-If the same email appears across multiple tables, random
-substitution breaks joins. Use a deterministic seed per original
-value:
+**Format plus reversibility.** If the receiving system needs the
+original back later and the shape must survive, substitution is the
+wrong operator: NIST SP 800-38G, "Recommendation for Block Cipher Modes
+of Operation: Methods for Format-Preserving Encryption", specifies FF1
+and FF3 for that case
+([csrc.nist.gov](https://csrc.nist.gov/pubs/sp/800/38/g/upd1/final)).
 
-```python
-def fake_email_deterministic(text, params=None):
-    Faker.seed(hash(text) & 0xFFFFFFFF)
-    return Faker().email()
-```
+## Step 4 - Realistic is not safe, so measure the result
 
-Now `alice@acme.com` → `random-but-fixed@example.org` consistently
-across every appearance.
+**Residual quasi-identifiers.** Substitution removes only the direct
+identifiers actually substituted. Birth date, postal code, sex, and
+admission date usually stay because they carry the analytical value,
+and in combination they still identify people. NIST SP 800-188,
+"De-Identifying Government Datasets: Techniques and Governance"
+(September 2023), treats transforming quasi-identifiers and running
+re-identification studies as part of de-identification, not optional
+extras
+([csrc.nist.gov](https://csrc.nist.gov/pubs/sp/800/188/final)). The
+exit criterion is therefore a measurement over the remaining
+quasi-identifier columns (smallest equivalence-class size, count of
+unique rows), against Recital 26's test of whether means are
+"reasonably likely to be used", accounting for "the costs of and the
+amount of time required for identification"
+([gdpr-info.eu](https://gdpr-info.eu/recitals/no-26/)).
 
-For the broader pseudonymisation discussion see
-[`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md)
-on deterministic substitution.
+**Accidental collisions.** Generators draw from fixed data, described in
+the JavaScript port's guide as "lists of names, words etc"
+([fakerjs.dev](https://fakerjs.dev/guide/usage.html)), so a generated
+value can coincide with a real person's, including one in the source
+file. Diff substitutes against source values and fail on any
+intersection.
 
-## Parsing results
+## Worked example - two joined files
 
-Faker output is plain strings (or library-specific types like
-`datetime.date`, `decimal.Decimal`). Validate per downstream
-contract:
-
-```python
-import re
-
-email = fake.email()
-assert re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email)
-
-card = fake.credit_card_number()
-# Faker generates Luhn-valid numbers; verify if downstream requires
-def luhn(n):
-    digits = [int(d) for d in n if d.isdigit()][::-1]
-    total = sum(d if i%2==0 else sum(divmod(d*2, 10)) for i, d in enumerate(digits))
-    return total % 10 == 0
-
-assert luhn(card)
-```
-
-## CI integration
-
-For projects that maintain fixture sets, regenerate on every CI run
-with a pinned seed so fixtures stay deterministic across runs but
-change when explicitly requested:
-
-```yaml
-- run: python -m faker --seed 42 -r 100 -- 'name,email,phone_number' > fixtures.csv
-```
-
-Faker's CLI (`python -m faker`) supports CSV / JSON / YAML output.
-
-## Example - synthesising a user table
+`customers.csv` holds `email`; `orders.csv` holds `billing_email` and
+joins on it. A masking step already dropped `ssn` and `full_name`.
 
 ```python
 import csv
 from faker import Faker
 
-Faker.seed(2026)
-fake = Faker(["en_US", "es_ES", "ja_JP"])
+fake = Faker("en_US")
+Faker.seed(0)  # run reproducibility only: not a secret, not derived from the data
 
-with open("users.csv", "w") as f:
-    writer = csv.writer(f)
-    writer.writerow(["id", "name", "email", "phone", "country", "dob"])
-    for i in range(1000):
-        writer.writerow([
-            i,
-            fake.name(),
-            fake.email(),
-            fake.phone_number(),
-            fake.country(),
-            fake.date_of_birth(minimum_age=18, maximum_age=80),
-        ])
+def load(path):
+    with open(path, newline="") as f:
+        return list(csv.DictReader(f))
+
+customers, orders = load("customers.csv"), load("orders.csv")
+real = {c["email"] for c in customers} | {o["billing_email"] for o in orders}
+email_map = {v: fake.unique.email() for v in sorted(real)}
+
+assert len(set(email_map.values())) == len(email_map)   # injective
+assert not (set(email_map.values()) & real)             # no collision with source
+
+before = len({c["email"] for c in customers} & {o["billing_email"] for o in orders})
+for c in customers:
+    c["email"] = email_map[c["email"]]
+for o in orders:
+    o["billing_email"] = email_map[o["billing_email"]]
+after = len({c["email"] for c in customers} & {o["billing_email"] for o in orders})
+
+assert before == after, f"join key cardinality changed: {before} -> {after}"
+print(f"substituted {len(email_map)} identifiers, join keys preserved: {after}")
 ```
 
-1000 synthetic users, locale-mixed, deterministic given the seed.
+Discard `email_map`, or store it under separate access control. Never
+ship it beside the substituted files.
+
+## Expected output shape
+
+| File | Column | Before | After |
+|---|---|---|---|
+| customers.csv | email | `alice.tan@acme.example` | `xrogers@example.org` |
+| orders.csv | billing_email | `alice.tan@acme.example` | `xrogers@example.org` |
+| customers.csv | postcode | `SW1A 1AA` | `SW1A 1AA` (quasi-identifier, unchanged) |
+
+```text
+substituted 12480 identifiers, join keys preserved: 9317
+collision check vs source values: 0
+residual quasi-identifiers not substituted: postcode, birth_date, sex
+```
+
+The third line is a handoff to a re-identification measurement: an open
+item, not a pass.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Unseeded fakes in a test | Test passes today, fails tomorrow (different fake values) | `Faker.seed(N)` per test or use the pytest fixture |
-| Random substitution where referential integrity matters | Joins break across masked tables | Deterministic seed per source value (see Running section) |
-| Single locale on a multi-locale dataset | Spanish emails get US replacements; layout / format drift in fixtures | Pass list of locales to `Faker([...])` |
-| Faker.credit_card without Luhn awareness | Faker IS Luhn-valid; over-validation is wasted work | Trust Faker for cards; validate other formats |
-| Using Faker output as "real" test card | Faker cards are Luhn-valid but not Stripe / Adyen test cards | Use `synthetic-pii-generator` for PCI-DSS-safe test cards (Stripe / Visa reserved ranges) |
-| Unpinned Faker version in CI | Output drifts on upgrade; snapshot diffs break unexpectedly | Pin `faker==X.Y.Z` in lockfile |
-| Using `fake.text()` for malicious-input testing | Faker text is benign; doesn't cover XSS / SQLi payloads | Use `malicious-payload-bank` |
+| Seeding the generator from the real value before each call | The mapping is rebuildable by anyone with the code and a candidate value list | One global seed plus an access-controlled map, or a keyed transform |
+| Substituting row by row while streaming, with no map | The same person gets a different substitute per occurrence and every join breaks | Collect distinct values, build the map once, then apply |
+| Calling the extract anonymous while retaining the map | The map is the "additional information" of GDPR Article 4(5); the output is still personal data | Destroy the map, or label the output pseudonymised |
+| Substituting a checksum-bearing field without asserting the check digit | Downstream validators reject rows, so the environment looks broken rather than masked | Assert Luhn or the field's own check rule before writing |
+| Multiple-locale mode on a dataset with a country column | Locale is a weighted random draw per call, so a French row gets a Japanese postcode | Instantiate one locale per row from that row's country |
+| Declaring done once the direct identifiers look fake | Birth date plus postcode plus sex still identify people | Measure equivalence-class sizes over the remaining quasi-identifiers before release |
+| Never diffing substitutes against source values | Fixed name lists mean a substitute can be a real person in the same file | Fail the run on any intersection |
 
 ## Limitations
 
-- **Output is statistically random, not behaviourally realistic.**
-  Faker won't generate users whose addresses match their phone
-  area codes; for that level of coherence use
-  [`synthea-healthcare-data`](../synthea-healthcare-data/SKILL.md)
-  (which simulates patient lifecycles) or a domain-specific
-  generator.
-- **No deep semantic constraints.** Faker generates a credit card
-  and an unrelated billing address - joining them won't match a
-  real cardholder validation.
-- **Locale coverage varies.** Some locales (en_US, en_GB, ja_JP,
-  es_ES, de_DE, fr_FR) are well-supported; others have partial
-  providers.
-- **No regime-completeness guarantee.** Faker can generate the
-  format of an SSN / SIN / NHS number; it doesn't claim
-  jurisdictional safety. For reserved-for-testing ranges (Visa
-  test cards, IRS test SSNs) use
-  `synthetic-pii-generator`.
-
-## References
-
-- Python Faker - 
-  [faker.readthedocs.io](https://faker.readthedocs.io/en/master/).
-- @faker-js/faker (JavaScript) - 
-  [fakerjs.dev/guide](https://fakerjs.dev/guide/).
-- JavaFaker - `com.github.javafaker:javafaker` on Maven Central.
-- Bogus (.NET) - `Bogus` NuGet package.
-- Sibling generator (higher-level, regime-aware):
-  `synthetic-pii-generator`.
-- Composes with:
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md),
-  [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md).
+- **A seed is version-bound.** Results are "not guaranteed to be
+  consistent across patch versions"
+  ([faker.readthedocs.io](https://faker.readthedocs.io/en/master/)), so
+  a rerun after an upgrade produces a different map and breaks joins
+  against extracts already delivered. Pin the version beside the seed.
+- **Substitution alone never reaches anonymity.** Quasi-identifier
+  transformation and the re-identification study are separate work
+  ([csrc.nist.gov](https://csrc.nist.gov/pubs/sp/800/188/final)).
+- **Injectivity has a ceiling.** `fake.unique` raises
+  `UniquenessException` once the value space is exhausted
+  ([faker.readthedocs.io](https://faker.readthedocs.io/en/master/)), so
+  high-cardinality columns need a composed value (prefix plus counter).
+- **No semantic coherence between substituted fields.** A substituted
+  address and phone number are drawn independently, so area code and
+  region will not agree. Derive a dependent field from the substituted
+  one instead.

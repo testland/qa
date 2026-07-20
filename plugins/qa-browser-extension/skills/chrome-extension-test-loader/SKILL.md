@@ -1,61 +1,58 @@
 ---
 name: chrome-extension-test-loader
-description: "Load an unpacked Chrome / Chromium extension for testing via the `chrome://extensions` Developer-mode flow, then exercise the message-passing surface (chrome.runtime.sendMessage one-shot + return-true async pattern, chrome.tabs.sendMessage, chrome.runtime.connect long-lived ports, externally_connectable from web pages, native messaging). Covers reload semantics (manifest / service worker / content scripts require explicit reload; popup + options page reload on next open), the 64 MiB message size cap, and the JSON-serialization-not-structured-clone payload constraint. Use when scripting a from-scratch developer load of an unpacked Chromium extension and asserting messaging behaviour outside of Playwright."
+description: "Loads an unpacked Chrome / Chromium extension for testing through the `chrome://extensions` Developer-mode flow: the minimum loadable `manifest.json`, the Load-unpacked directory-not-file selection, toolbar pinning, and the reload matrix deciding what a code edit actually re-evaluates (`manifest.json`, the background service worker, and content scripts need an explicit card refresh, content scripts additionally need a host-page refresh, while popup / options / other extension HTML pages re-evaluate on next open). Also covers reading the red Errors card, where service-worker and content-script logs surface, and the `--load-extension` and `web-ext --target chromium` equivalents that move the same load into CI. Scope is getting a build directory loaded and reloaded, not the runtime behaviour asserted afterwards. Use when a freshly built extension directory has to go into Chrome for the first time, or when an edit appears to have no effect and you need to know which surface requires an explicit reload."
 metadata:
-  keywords: "chrome-extension, load-unpacked, chrome-runtime-sendmessage, chrome-runtime-connect, externally-connectable"
+  keywords: "chrome-extension, load-unpacked, extension-reload, chrome-extensions-page, web-ext-chromium"
 ---
 
 # chrome-extension-test-loader
 
 ## Overview
 
-The unpacked-extension flow is the canonical Chromium developer
-test loop per the [Chrome Extensions "Hello World" tutorial][cr-hello]:
+The unpacked-extension flow is the canonical Chromium developer test
+loop per the [Chrome Extensions "Hello World" tutorial][cr-hello]:
 toggle Developer mode in `chrome://extensions`, click **Load
-unpacked**, point at the source directory containing
-`manifest.json`. This is the contract every other test rig
-(Playwright fixtures, Puppeteer launchers, CI smoke tests) wraps - 
-knowing it directly is what lets you reason about why a fixture
-fails, which surface a regression hit, and what a "service-worker
-reload" actually re-evaluates.
+unpacked**, point at the source directory containing `manifest.json`.
+
+Automated launchers reproduce this same load through browser launch
+flags rather than the UI (see CI integration below). Knowing the
+manual flow directly is what lets you reason about why a launcher
+fails to see the extension, which surface a regression hit, and what a
+"service worker reload" actually re-evaluates.
 
 [cr-hello]: https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world
 
-This skill covers (a) the manual developer load that mirrors what
-`--load-extension` flags automate, and (b) the runtime messaging
-surface (`chrome.runtime.sendMessage`, `chrome.runtime.connect`,
-`externally_connectable`) every extension test exercises.
+## Scope boundary
 
-For Playwright-driven MV3 popup / content-script fixtures see
-`browser-extension-tests`.
-That skill is a Playwright wrapper for fixture-style testing - this
-skill is the lower-level developer flow + the messaging API surface
-itself.
+This skill owns **installation and re-installation of the extension
+build output**: manifest shape sufficient to load, the developer load
+gesture, the reload matrix, the log and error surfaces that tell you
+the load succeeded, and the CI equivalents of the manual gesture.
 
-Composes with:
-
-- [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
-  for the manifest fields the loader validates.
-- [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md)
-  for the Playwright fixture pattern that automates this load.
+It deliberately does **not** cover what the extension does once it is
+running. Assertions about `chrome.runtime` / `chrome.tabs` messaging,
+storage quotas, permission prompts, or DOM effects of content scripts
+are a separate job with a separate failure mode: those tests fail with
+a live extension, whereas everything here fails before the extension
+is live at all. If the extension appears on `chrome://extensions` with
+no error card, this skill's job is done.
 
 ## When to use
 
-- Validating that an extension build directory loads cleanly into
-  Chrome before wiring a Playwright fixture.
-- Asserting message-passing behaviour (one-shot + long-lived port)
-  end-to-end against a real browser.
-- Diagnosing a "popup works but content script doesn't" bug - the
-  reload table below shows which component reloads on what trigger.
-- Exercising the `externally_connectable` allow-list before
-  publishing.
-- Smoke-testing a cross-extension or native-messaging integration.
+- A build directory has just been produced and nobody has confirmed
+  Chrome will accept it.
+- An edit to source appears to have no effect and you need to know
+  which component requires an explicit reload.
+- A CI job needs to fail fast on a manifest regression before the
+  slower behavioural test job runs.
+- A test rig reports "extension not found" and you need to confirm the
+  load path itself, independent of the test code.
 
 ## Authoring
 
-### Minimum manifest
+### Minimum loadable manifest
 
-Per [cr-hello], the minimum loadable manifest is:
+Per [cr-hello], the minimum manifest that loads is:
 
 ```json
 {
@@ -70,17 +67,22 @@ Per [cr-hello], the minimum loadable manifest is:
 }
 ```
 
-Required fields: `name`, `version`, `manifest_version` (3 for MV3
-per
-[`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)).
+`manifest_version: 3` is the value carried by the tutorial's minimum
+manifest per [cr-hello]. `version` is validated at load time: Chrome
+rejects a bad one with `Required value version is
+missing or invalid. It must be between 1-4 dot-separated integers each
+between 0 and 65536.` per the
+[Debug your extension tutorial][cr-debug].
+
+[cr-debug]: https://developer.chrome.com/docs/extensions/get-started/tutorial/debug
 
 ### Project layout
 
 ```
 my-extension/
   manifest.json       # MUST live at root
-  background.js       # service worker (referenced by manifest.background.service_worker)
-  content.js          # content script (referenced by manifest.content_scripts[].js)
+  background.js       # service worker (manifest.background.service_worker)
+  content.js          # content script (manifest.content_scripts[].js)
   popup/
     popup.html
     popup.js
@@ -92,288 +94,218 @@ my-extension/
     128.png
 ```
 
-Per [cr-hello]: *"the only prerequisite is to place the
-manifest.json file in the extension's root directory."*
+Per [cr-hello]: *"The only prerequisite is to place the manifest.json
+file in the extension's root directory."* The directory you select in
+the next step is `my-extension/`, not `my-extension/manifest.json`.
 
 ## Running
 
 ### Step 1 - Open `chrome://extensions`
 
-Per [cr-hello]: *"By design `chrome://` URLs are not linkable."*
-Three routes to the page:
+Per [cr-hello]: *"By design `chrome://` URLs are not linkable."* Three
+routes to the page:
 
 | Route | Steps |
 |---|---|
-| Direct | New tab → type `chrome://extensions` → Enter |
-| Toolbar | Click the **Extensions** puzzle icon → **Manage Extensions** |
-| Menu | Chrome menu → **More Tools** → **Extensions** |
+| Direct | New tab, type `chrome://extensions`, press Enter |
+| Toolbar | Click the **Extensions** puzzle icon, then **Manage Extensions** |
+| Menu | Chrome menu, **More Tools**, **Extensions** |
 
 ### Step 2 - Toggle Developer mode on
 
-Per [cr-hello], toggle the switch labeled **Developer mode** at the
-top-right of the Extensions page. Three buttons appear:
-**Load unpacked**, **Pack extension**, **Update**.
+Per [cr-hello], click the toggle switch labelled **Developer mode** at
+the top-right of the Extensions page. Three buttons appear: **Load
+unpacked**, **Pack extension**, **Update**.
 
 ### Step 3 - Load unpacked
 
 Per [cr-hello], click **Load unpacked**, then select the extension's
-source directory (the one containing `manifest.json`). Chrome
-parses the manifest immediately; a malformed manifest produces an
-on-page error card.
+source directory. If the manifest or the service worker is rejected,
+a red **Errors** button appears on the resulting card per [cr-debug]
+(see Parsing results).
 
 ### Step 4 - Pin the extension to the toolbar
 
-Per [cr-hello]: *"Pin your extension to the toolbar to quickly
-access your extension during development."* Click the puzzle-icon
-**Extensions** menu, find the row, click the pin icon. The popup
-becomes a single-click target.
+Per [cr-hello]: *"Pin your extension to the toolbar to quickly access
+your extension during development."* Open the puzzle-icon
+**Extensions** menu, find the row, click the pin icon. The popup then
+becomes a single-click target instead of a two-click one.
 
 ### Step 5 - Reload after edits
 
-Per [cr-hello], the reload semantics are:
+The reload requirements per [cr-hello]:
 
 | Component edited | Reload action required |
 |---|---|
 | `manifest.json` | Click refresh on the extension card |
 | Service worker (`background.service_worker`) | Click refresh on the extension card |
-| Content scripts | Click refresh on the extension card **plus refresh the host page** |
-| Popup HTML/JS | None - next open re-evaluates |
-| Options page | None - next open re-evaluates |
+| Content scripts | Click refresh on the extension card **plus** refresh the host page |
+| Popup HTML / JS | None, next open re-evaluates |
+| Options page | None, next open re-evaluates |
 | Other extension HTML pages | None |
 
-The "click refresh on the card" gesture is what every test harness
-automates via `chrome.management.setEnabled(false)` →
-`setEnabled(true)` or by closing and re-launching the persistent
-context.
+The "click refresh on the card" gesture is what an automated harness
+reproduces either by toggling
+`chrome.management.setEnabled(id, false)` then
+`setEnabled(id, true)` (which requires the `"management"` permission
+per the [chrome.management reference][cr-mgmt]), or by closing and
+re-launching the persistent browser context.
 
-## Exercising the messaging surface
+[cr-mgmt]: https://developer.chrome.com/docs/extensions/reference/api/management
 
-The Chrome messaging API has four shapes per the
-[Message passing concepts page][cr-msg]:
+### Worked example: confirming a fresh build loads
 
-[cr-msg]: https://developer.chrome.com/docs/extensions/develop/concepts/messaging
-
-1. One-shot **runtime** messages (extension internal).
-2. One-shot **tabs** messages (extension → content script).
-3. Long-lived **ports** (`chrome.runtime.connect`).
-4. **Cross-extension** + **external-page** messages
-   (`externally_connectable`).
-5. **Native messaging** (`chrome.runtime.connectNative`).
-
-### One-shot runtime messages
-
-Per [cr-msg]:
-
-```js
-// Sender (content script)
-const response = await chrome.runtime.sendMessage({ greeting: "hello" });
-
-// Listener (service worker)
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message !== 'get-status') return;
-  fetch('https://example.com')
-    .then(r => sendResponse({ statusCode: r.status }));
-  return true;  // keep channel open for async sendResponse
-});
+```text
+1. npm run build                  -> produces dist/
+2. chrome://extensions            -> Developer mode ON
+3. Load unpacked                  -> select dist/  (the folder, not the file)
+4. Expect: a card titled with manifest.name, an ID string,
+   a "Service worker" link, and NO red "Errors" button.
+5. Edit src/content.js, rebuild.
+6. Click the card's refresh icon, then reload the host tab.
+7. Re-check the card: still no Errors button.
 ```
 
-The `return true` pattern is load-bearing per [cr-msg]:
+Expected output shape of a healthy card:
 
-> "returning `true` will keep the message channel open to the other
-> end until `sendResponse` is called."
-
-Chrome 148+ also accepts a returned `Promise` (per [cr-msg]); its
-resolved value becomes the response, rejection propagates as a
-rejected `sendMessage()` promise on the sender side.
-
-**Gotcha per [cr-msg]:** an `async` listener implicitly returns a
-promise. If the body returns no value, the promise resolves
-`undefined` and the sender receives `null` - interfering with other
-listeners that meant to respond. Author either a non-async listener
-with `return true`, or an async one that returns a value.
-
-### One-shot tabs messages
-
-Per [cr-msg]:
-
-```js
-chrome.tabs.sendMessage(tab.id, { greeting: "hello" }, response => {
-  document.getElementById("resp").innerText = response.farewell;
-});
+```text
+[icon]  Hello Extensions            1.0        [toggle ON]
+        Base Level Extension
+        ID: abcdefghijklmnopabcdefghijklmnop
+        Inspect views: service worker
+        [Details] [Remove] [Refresh]
 ```
 
-Use this from popup / service worker to drive a specific tab's
-content script.
-
-### Long-lived ports
-
-Per [cr-msg]:
-
-```js
-// Content script
-const port = chrome.runtime.connect({ name: "knockknock" });
-port.onMessage.addListener(msg => {
-  if (msg.question === "Who's there?") port.postMessage({ answer: "Madame" });
-});
-port.postMessage({ joke: "Knock knock" });
-
-// Service worker
-chrome.runtime.onConnect.addListener(port => {
-  if (port.name !== "knockknock") return;
-  port.onMessage.addListener(msg => {
-    if (msg.joke === "Knock knock") port.postMessage({ question: "Who's there?" });
-  });
-});
-```
-
-Test assertion targets:
-
-- `port.onDisconnect` fires on tab unload, frame unload, missing
-  `onConnect` listener, or explicit `disconnect()` (per [cr-msg]).
-- "A port may have multiple receivers" per [cr-msg] - disconnect
-  can fire more than once. Tests must accumulate, not assume one.
-
-### Cross-extension / external-page messaging
-
-Per [cr-msg], a web page can send to an extension only if the
-extension declares the page's origin in `externally_connectable`:
-
-```json
-"externally_connectable": {
-  "matches": ["https://*.example.com/*"]
-}
-```
-
-```js
-// Web page → extension
-chrome.runtime.sendMessage(editorExtensionId, { openUrlInEditor: url },
-  response => { if (!response.success) handleError(url); });
-
-// Extension receives
-chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-  if (sender.id !== allowlistedExtension) return;
-  if (request.getTargetData) sendResponse({ targetData });
-});
-```
-
-Per [cr-msg]: *"It is not possible to send a message from an
-extension to a web page."* Tests asserting the reverse direction
-will be looking at custom DOM events or content-script injection.
-
-**Firefox parity note:** per the
-[`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
-key matrix, `externally_connectable` is **not supported in
-Firefox** - cross-extension flows must be gated on browser
-detection.
-
-### Native messaging
-
-Per [cr-msg], extensions can swap messages with a native host
-registered as a "native messaging host" via
-`chrome.runtime.connectNative(hostName)`. Native messaging requires
-a host manifest installed under a per-OS registry path; details
-live on the dedicated Native Messaging guide.
+A failed load replaces that with a red **Errors** button.
 
 ## Parsing results
 
-### Manifest load errors
+### Manifest error cards
 
-A malformed manifest yields an error card on `chrome://extensions`
-with a "Errors" button. Common shapes:
+Per [cr-debug], when the extension fails to load or register, an
+**Errors** button appears in red on the extension's card on
+`chrome://extensions`. Clicking it lists the messages. Two exact
+strings worth recognising, both quoted in [cr-debug]:
 
-- `Manifest file is missing or unreadable.` - wrong directory selected.
-- `Could not load manifest.` - JSON parse error.
-- `Required value 'name' is missing or invalid.` - bad shape.
-- `Permission 'X' is unknown or URL pattern is malformed.` - invalid
-  permission string (often a leftover MV2 host pattern in
-  `permissions[]` instead of `host_permissions[]` per
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)).
+- `Required value version is missing or invalid. It must be between
+  1-4 dot-separated integers each between 0 and 65536.` The `version`
+  field is absent or malformed.
+- `Service worker registration failed. Status code: 15.` The
+  background service worker threw during registration. [cr-debug]
+  notes the underlying error is listed underneath this line, so read
+  the second line, not the status code.
 
 ### Service-worker logs
 
-Inspect via the **Service worker** link on the extension card →
-opens a DevTools window scoped to the worker. `console.log`,
-network panel, and breakpoints all work.
+Per [cr-debug], click the blue **Inspect views** link next to the
+extension to open DevTools scoped to the service worker. `console`
+output, the network panel, and breakpoints all work there.
 
 ### Content-script logs
 
-Inspect from the host page's DevTools - content scripts log into
-the page's console, not the extension's.
+Per [cr-debug], content scripts run inside the web page, so their
+errors surface in the **host page's** DevTools, not the extension's.
+Use the context dropdown next to `top` in the console to switch from
+the page's context to the extension's.
 
-### Message-passing payload constraints
+### Popup logs
 
-Per [cr-msg]:
-
-> "Messages use **JSON serialization** in Chrome (not structured
-> clone). Maximum message size is **64 MiB**."
-
-> "If multiple `onMessage` listeners are registered, only the first
-> to respond/reject/throw affects the sender."
-
-Tests asserting message payloads must avoid `Map`, `Set`, typed
-arrays, `Date` round-tripping with type preserved, and any object
-≥ 64 MiB.
+Per [cr-debug], popup errors also appear behind the Errors button, and
+the popup itself can be inspected by right-clicking it and choosing
+inspect, which opens a DevTools window for that popup instance.
 
 ## CI integration
 
-Manual `chrome://extensions` loading isn't CI-friendly - automate via
-either:
+The manual `chrome://extensions` gesture is not automatable (see
+Limitations). Two supported ways to perform the same load
+unattended:
 
-1. **Chrome flags** (the
-   [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md)
-   pattern): `--disable-extensions-except=$DIR --load-extension=$DIR`
-   on a `launchPersistentContext`.
-2. **`web-ext` chromium target** (per
-   [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md)):
-   `web-ext run --target chromium --chromium-binary ...`.
+**1. Chrome launch flags on a persistent context.** Per the
+[Playwright Chrome extensions guide][pw-ext]:
 
-A minimal CI smoke verifies the build directory loads without a
-manifest error before the fixture-driven test job runs.
+```js
+const browserContext = await chromium.launchPersistentContext(userDataDir, {
+  channel: 'chromium',
+  args: [
+    `--disable-extensions-except=${pathToExtension}`,
+    `--load-extension=${pathToExtension}`
+  ]
+});
+```
+
+[pw-ext] states `channel: 'chromium'` is what "allows to run
+extensions in headless mode", because Chrome and Edge removed the
+command-line flags needed for side-loading.
+
+[pw-ext]: https://playwright.dev/docs/chrome-extensions
+
+**2. `web-ext` against a Chromium binary.** Per the
+[web-ext command reference][web-ext], `--target chromium` runs the
+extension in a Chromium-based browser, and `--chromium-binary` takes a
+"Path or alias to a Chromium executable such as google-chrome,
+google-chrome.exe, or opera.exe. If not specified, the default Google
+Chrome is used."
+
+```bash
+web-ext run --target chromium --source-dir ./dist
+```
+
+[web-ext]: https://extensionworkshop.com/documentation/develop/web-ext-command-reference/
+
+A minimal CI smoke job launches the context, waits for the extension's
+service worker to appear, and exits non-zero if it never does. That
+gates the slower behavioural jobs on "the build directory is loadable"
+rather than letting a manifest typo present itself as fifty failing
+tests.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Picking the manifest *file* in Load unpacked | Chrome expects the *directory* | Select the parent dir of `manifest.json` per [cr-hello] |
-| Editing content script and expecting next page-load to pick it up | Reload required on extension card **and** host page per [cr-hello] | Refresh both |
-| Async listener returning no value | Returns `undefined` promise; sender gets `null` per [cr-msg] | Return a value or use `return true` + `sendResponse` |
-| Forgetting `return true` for async `sendResponse` | Channel closes; response lost per [cr-msg] | Return `true` synchronously |
-| Sending `Map` / `Set` / `Date` via `sendMessage` | JSON-serialized, not structured-clone per [cr-msg] | Convert to plain objects |
-| Targeting Firefox with `externally_connectable` | Key not supported in Firefox (see manifest reference) | Use postMessage + content-script bridge instead |
-| Assuming pinned-extension state persists across builds | Pin state is profile-local | Re-pin after every fresh-profile launch |
+| Selecting `manifest.json` itself in Load unpacked | Chrome expects the extension's root *directory* per [cr-hello] | Select the parent folder of `manifest.json` |
+| Editing a content script and expecting the next page load to pick it up | Content scripts need a card refresh **and** a host-page refresh per [cr-hello] | Refresh both |
+| Reloading the card after a popup-only edit | Popup re-evaluates on next open per [cr-hello]; the reload is wasted time and resets service-worker state | Just reopen the popup |
+| Assuming pinned-toolbar state survives a fresh profile | Pinning is per-profile UI state, set through the Extensions menu per [cr-hello] | Re-pin after every fresh-profile launch, or drive the popup through the puzzle menu |
+| Loading via `channel: 'chrome'` in headless CI | Chrome and Edge removed the side-loading flags; only `channel: 'chromium'` runs extensions headless per [pw-ext] | Set `channel: 'chromium'` |
+| Leaving service-worker DevTools open while testing idle behaviour | Per [cr-debug], an open DevTools window keeps the service worker active | Close DevTools before exercising termination |
+| Treating `Service worker registration failed. Status code: 15.` as the root cause | It is a wrapper; the real error is printed under it per [cr-debug] | Read the following line |
 
 ## Limitations
 
-- **Manual UI flow is not scriptable.** The `chrome://extensions`
-  page is unautomatable from page-context JavaScript per [cr-hello]
-  (`chrome://` URLs aren't linkable / framable). Automation hooks
-  into the load via Chrome launch flags, not by clicking the UI.
-- **Pinning is profile-state.** A fresh launch loses the pin - 
-  tests asserting toolbar interaction must drive the pin or use the
-  fallback puzzle-menu route.
-- **Service-worker auto-suspend complicates assertions.** Per
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
-  MV3 service workers terminate idle; long-lived port assertions
-  must keep traffic flowing or use `chrome.alarms`.
-- **Cross-extension messaging requires both extensions loaded.**
-  Tests for `chrome.runtime.sendMessage(otherExtId, ...)` must load
-  the recipient extension first.
-- **Native messaging needs host install.** The native host registry
-  entry must exist on the test machine - CI images need a setup
-  step.
+- **The UI flow itself is not scriptable.** `chrome://` URLs are not
+  linkable per [cr-hello], so page-context JavaScript cannot drive the
+  Extensions page. Automation hooks in at browser launch instead, via
+  the flags above.
+- **Pinning is profile state.** A fresh user-data directory starts
+  unpinned, so a test that clicks the toolbar icon must either pin
+  first or go through the puzzle menu.
+- **Programmatic reload costs a permission.** `management.setEnabled`
+  requires the `"management"` permission per [cr-mgmt], which changes
+  the extension under test. `management.getSelf` is the exception,
+  usable without the permission per [cr-mgmt].
+- **Loading proves nothing about behaviour.** A clean card means the
+  manifest parsed and the service worker registered. It does not mean
+  content scripts matched, permissions were granted, or any runtime
+  API works.
+- **Cross-browser gestures differ.** This is the Chromium developer
+  flow; Firefox uses its own temporary-add-on flow, and `web-ext`
+  targets it separately per [web-ext].
 
 ## References
 
-- Chrome Extensions - Hello World tutorial (load unpacked, reload
-  semantics, pinning) - [cr-hello].
-- Chrome Extensions - Get started overview - 
-  [developer.chrome.com/docs/extensions/get-started](https://developer.chrome.com/docs/extensions/get-started).
-- Chrome Extensions - Message passing concepts - 
-  [cr-msg].
-- Composes:
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md).
-- Sibling:
-  [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md)
-  (automates this loader via Playwright fixtures),
-  [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md)
-  (chromium-target runner).
+- Chrome Extensions, Hello World tutorial (minimum manifest, root
+  directory rule, `chrome://extensions` routes, Developer mode, Load
+  unpacked, pinning, reload matrix):
+  https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world
+- Chrome Extensions, Debug your extension (Errors button, exact error
+  strings, Inspect views, content-script and popup log locations):
+  https://developer.chrome.com/docs/extensions/get-started/tutorial/debug
+- `chrome.management` API reference (`setEnabled`, permission,
+  `getSelf` exception):
+  https://developer.chrome.com/docs/extensions/reference/api/management
+- Playwright, Chrome extensions (`launchPersistentContext`,
+  `--disable-extensions-except`, `--load-extension`,
+  `channel: 'chromium'`): https://playwright.dev/docs/chrome-extensions
+- `web-ext` command reference (`--target chromium`,
+  `--chromium-binary`, `--source-dir`):
+  https://extensionworkshop.com/documentation/develop/web-ext-command-reference/
