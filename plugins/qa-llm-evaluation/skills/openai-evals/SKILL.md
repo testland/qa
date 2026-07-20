@@ -1,6 +1,6 @@
 ---
 name: openai-evals
-description: "Authors and runs OpenAI Evals - Python framework + registry for evaluating LLMs and LLM-backed systems with `oaieval <model> <eval-name>` CLI; supports template-based evals (Match / Includes / FuzzyMatch / ModelBasedClassify) defined in `evals/registry/evals/*.yaml` against JSONL data files in `evals/registry/data/`, plus custom Python eval classes implementing the Eval interface. Use when the user works with the openai/evals repo, needs the OpenAI-curated eval registry, or contributes new evals via PR to the registry."
+description: "Authors and runs OpenAI Evals - Python framework + registry for evaluating LLMs and LLM-backed systems with `oaieval {model} {eval-name}` CLI; supports template-based evals (Match / Includes / FuzzyMatch / ModelBasedClassify) defined in `evals/registry/evals/*.yaml` against JSONL data files in `evals/registry/data/`, plus custom Python eval classes implementing the Eval interface. Use when the user works with the openai/evals repo, needs the OpenAI-curated eval registry, or contributes new evals via PR to the registry."
 ---
 
 # openai-evals

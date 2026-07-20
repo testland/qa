@@ -1,6 +1,6 @@
 ---
 name: mutmut-mutation
-description: "Configures mutmut for Python mutation testing - `pip install mutmut`, runs via `mutmut run`, browses results via `mutmut browse` or `mutmut results`, applies surviving mutants to disk via `mutmut apply <id>`, suppresses with `# pragma: no mutate` annotations. Configures via `setup.cfg` / `pyproject.toml` with `source_paths` + per-test selection. Use for Python codebases needing mutation-quality verification of pytest / unittest suites."
+description: "Configures mutmut for Python mutation testing - `pip install mutmut`, runs via `mutmut run`, browses results via `mutmut browse` or `mutmut results`, applies surviving mutants to disk via `mutmut apply {id}`, suppresses with `# pragma: no mutate` annotations. Configures via `setup.cfg` / `pyproject.toml` with `source_paths` + per-test selection. Use for Python codebases needing mutation-quality verification of pytest / unittest suites."
 ---
 
 # mutmut-mutation

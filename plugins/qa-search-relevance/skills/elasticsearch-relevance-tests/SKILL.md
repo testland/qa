@@ -1,6 +1,6 @@
 ---
 name: elasticsearch-relevance-tests
-description: "Author Elasticsearch relevance regression tests using the Ranking Evaluation API (`POST <index>/_rank_eval`) - judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring. Use before changing analyzers, synonyms, boosts, or query templates on an Elasticsearch index that serves user-facing search, so the NDCG / MRR baseline is captured first."
+description: "Author Elasticsearch relevance regression tests using the Ranking Evaluation API (`POST {index}/_rank_eval`) - judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring. Use before changing analyzers, synonyms, boosts, or query templates on an Elasticsearch index that serves user-facing search, so the NDCG / MRR baseline is captured first."
 metadata:
   keywords: "elasticsearch, rank-eval, relevance-testing, judgment-list, search-quality"
 ---

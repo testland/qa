@@ -1,6 +1,6 @@
 ---
 name: grype-scanning
-description: "Scans for vulnerabilities using Anchore Grype: `grype sbom:./sbom.json` / `grype <image>` / `grype dir:./` across OS-package + language-package ecosystems (Alpine / Debian / Ubuntu / RHEL / Amazon Linux / Ruby / Java / JavaScript / Python / .NET / Go / PHP / Rust). `.grype.yaml` per-CVE and per-package ignore rules with mandatory `expires:` dates and reachability justification (the Grype-native suppression path, distinct from standalone VEX document authoring in vex-author); EPSS + KEV + risk-score prioritization; OpenVEX assertion filtering; `--fail-on high/critical` CI gate. Use when the team wants Grype-native vuln scanning, or pairs with Syft (syft-generation) for an SBOM-driven workflow."
+description: "Scans for vulnerabilities using Anchore Grype: `grype sbom:./sbom.json` / `grype {image}` / `grype dir:./` across OS-package + language-package ecosystems (Alpine / Debian / Ubuntu / RHEL / Amazon Linux / Ruby / Java / JavaScript / Python / .NET / Go / PHP / Rust). `.grype.yaml` per-CVE and per-package ignore rules with mandatory `expires:` dates and reachability justification (the Grype-native suppression path, distinct from standalone VEX document authoring in vex-author); EPSS + KEV + risk-score prioritization; OpenVEX assertion filtering; `--fail-on high/critical` CI gate. Use when the team wants Grype-native vuln scanning, or pairs with Syft (syft-generation) for an SBOM-driven workflow."
 ---
 
 # grype-scanning

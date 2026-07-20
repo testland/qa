@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Quality engineering plugin marketplace for modern software teams: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, security testing (SAST/DAST/SCA/SBOM/secrets/compliance), LLM evaluation, ML model testing, distributed tracing, real-time protocols, PDF/print, search relevance, concurrency, saga/CQRS, charts, resilience drills, and more. Every component is rating-gated before merge.",
-    "version": "4.8.2"
+    "version": "4.8.3"
   },
   "plugins": [
     {

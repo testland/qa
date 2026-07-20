@@ -1,6 +1,6 @@
 ---
 name: cargo-fuzz-rust
-description: "Author and run cargo-fuzz - Rust fuzzing via libFuzzer with cargo integration. Covers `cargo install cargo-fuzz`, `cargo fuzz init` + `cargo fuzz add <target>` for harness scaffolding, the `fuzz_target!` macro for entry-point declaration, the `Arbitrary` trait for structured input mutation, and `cargo fuzz run` invocation. Requires Rust nightly. Use for fuzz testing Rust libraries - cargo-fuzz wraps libFuzzer with native Rust ergonomics."
+description: "Author and run cargo-fuzz - Rust fuzzing via libFuzzer with cargo integration. Covers `cargo install cargo-fuzz`, `cargo fuzz init` + `cargo fuzz add {target}` for harness scaffolding, the `fuzz_target!` macro for entry-point declaration, the `Arbitrary` trait for structured input mutation, and `cargo fuzz run` invocation. Requires Rust nightly. Use for fuzz testing Rust libraries - cargo-fuzz wraps libFuzzer with native Rust ergonomics."
 ---
 
 # cargo-fuzz-rust

@@ -1,6 +1,6 @@
 ---
 name: pa11y-a11y
-description: "Authors and runs pa11y accessibility scans - a CLI / Node.js tool that wraps HTML CodeSniffer (htmlcs) and / or axe-core engines - with `pa11y <url>` invocation, reporter selection (cli / csv / json / html / tsv), WCAG standard selection (WCAG2A / WCAG2AA / WCAG2AAA), and rule ignoring. Use when the project needs scriptable a11y scans without a full test framework, or when a Node-stack project wants an alternative to direct axe-core use."
+description: "Authors and runs pa11y accessibility scans - a CLI / Node.js tool that wraps HTML CodeSniffer (htmlcs) and / or axe-core engines - with `pa11y {url}` invocation, reporter selection (cli / csv / json / html / tsv), WCAG standard selection (WCAG2A / WCAG2AA / WCAG2AAA), and rule ignoring. Use when the project needs scriptable a11y scans without a full test framework, or when a Node-stack project wants an alternative to direct axe-core use."
 ---
 
 # pa11y-a11y

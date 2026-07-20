@@ -1,6 +1,6 @@
 ---
 name: proptest-testing
-description: "Authors property-based tests in Rust using proptest - wires the `proptest!` macro, defines strategies (`prop::collection::vec`, `any::<T>()`, regex-based string strategies), uses the strategy-per-value model (vs QuickCheck's per-type) for flexible composition, and exploits proptest's automatic shrinking + persistence of failed cases (regression test artifact). Use when a Rust codebase needs PBT - pairs especially well with parsers, serializers, and any function with a structured input domain."
+description: "Authors property-based tests in Rust using proptest - wires the `proptest!` macro, defines strategies (`prop::collection::vec`, type-driven `any` strategies, regex-based string strategies), uses the strategy-per-value model (vs QuickCheck's per-type) for flexible composition, and exploits proptest's automatic shrinking + persistence of failed cases (regression test artifact). Use when a Rust codebase needs PBT - pairs especially well with parsers, serializers, and any function with a structured input domain."
 ---
 
 # proptest-testing
