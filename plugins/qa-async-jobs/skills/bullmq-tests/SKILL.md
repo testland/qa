@@ -251,8 +251,8 @@ producer logic, ioredis-mock is faster.
 - docs.bullmq.io - full documentation
 - [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
   [`celery-tests`](../celery-tests/SKILL.md),
-  [`sqs-patterns`](../sqs-patterns/SKILL.md),
-  [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) - sister tools
+  [`sqs-tests`](../sqs-tests/SKILL.md),
+  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md) - sister tools
 - [`cron-job-test-author`](../cron-job-test-author/SKILL.md),
   [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
   build-an-X authors

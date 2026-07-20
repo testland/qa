@@ -10,7 +10,7 @@ skills:
   - scalatest
   - spock-tests
   - assertj
-  - parameterized-test-generator
+  - pairwise-test-case-generator
 ---
 
 A per-method test-authoring agent that emits one new JVM unit test file - never modifies existing tests, never asserts on private fields the spec did not name.
@@ -112,5 +112,5 @@ One markdown block: spec one-liner, detected language + build tool + framework, 
 ## Hand-off targets
 
 - **Framework skills** → [`junit5-tests`](../skills/junit5-tests/SKILL.md), [`testng-tests`](../skills/testng-tests/SKILL.md), [`kotest-tests`](../skills/kotest-tests/SKILL.md), [`spock-tests`](../skills/spock-tests/SKILL.md), [`scalatest`](../skills/scalatest/SKILL.md).
-- **Multi-input parameterized cases** → [`qa-test-data/parameterized-test-generator`](../../qa-test-data/skills/parameterized-test-generator/SKILL.md).
+- **Multi-input parameterized cases** → [`qa-test-data/pairwise-test-case-generator`](../../qa-test-data/skills/pairwise-test-case-generator/SKILL.md).
 - **Assertion-quality review** → `test-code-conventions` (qa-test-review).

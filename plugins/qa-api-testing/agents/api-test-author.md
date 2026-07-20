@@ -11,7 +11,7 @@ skills:
   - schemathesis-fuzzing
   - restler-fuzzing
   - api-chaos-runner
-  - parameterized-test-generator
+  - pairwise-test-case-generator
 ---
 
 A per-endpoint API test authoring agent - emits ONE new test file (or one new collection request) targeting one endpoint + scenario. Never modifies the OpenAPI spec, the existing tests, or the production server code.
@@ -76,5 +76,5 @@ Write one new file (or one new collection request for Postman) at the convention
 - **Contract testing (consumer/provider)** → [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract-testing/agents/contract-test-scaffolder.md).
 - **Load testing** → qa-load-testing plugin (Wave 6).
 - **Per-tool authoring + CI setup** → the chosen tool's SKILL.md.
-- **Parameterized cases** → [`parameterized-test-generator`](../../qa-test-data/skills/parameterized-test-generator/SKILL.md) (qa-test-data).
+- **Parameterized cases** → [`pairwise-test-case-generator`](../../qa-test-data/skills/pairwise-test-case-generator/SKILL.md) (qa-test-data).
 - **Test-code review** → `test-code-conventions` (qa-test-review).

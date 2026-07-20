@@ -8,7 +8,7 @@ metadata:
 # judgment-list-author
 
 Related skills (`elasticsearch-relevance-tests`,
-`opensearch-relevance-tests`, `vector-search-precision-tests`) all require a
+`opensearch-relevance-tests`, `vector-search-recall-tests`) all require a
 judgment list - a set of `(query, document_id, grade)` triples that define what
 "relevant" means for your product. No automated metric creates that
 corpus. This skill does.
@@ -292,5 +292,5 @@ after mapping `doc_id` to the index's `_id` field.
   consumes judgment lists for `_rank_eval`
 - [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) -
   consumes judgment lists for OpenSearch rank eval
-- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) -
+- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) -
   consumes judgment lists for recall@k evaluation

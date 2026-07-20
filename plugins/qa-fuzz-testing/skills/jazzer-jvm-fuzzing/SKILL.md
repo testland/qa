@@ -264,4 +264,4 @@ the test fixtures - commit it for regression coverage.
   [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
   [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
 - Dispatcher:
-  [`fuzz-toolkit-dispatcher`](../fuzz-toolkit-dispatcher/SKILL.md).
+  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).

@@ -219,7 +219,7 @@ Markdown + git. Quarterly rollup identifies patterns:
 **Patterns:**
 - 4 of 12 (33%) were "test gap" - the failing condition wasn't
   in the test suite. Action: invest in
-  unit-test-coverage-targeter
+  test-coverage-targeter
   + property-based testing.
 - 3 of 12 (25%) involved canary metrics; 2 of those proceeded
   through canary gate. Action: review thresholds (per AI-2 from

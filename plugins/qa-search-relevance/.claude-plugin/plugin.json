@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-search-relevance",
-  "version": "1.1.6",
-  "description": "Search relevance testing: 6 skills (elasticsearch-relevance-tests, opensearch-relevance-tests, solr-relevance-tests, vector-search-precision-tests, hybrid-search-eval-author, judgment-list-author) and 1 agent (relevance-regression-reviewer). IR-metrics-driven term + vector + hybrid relevance regression detection.",
+  "version": "1.2.0",
+  "description": "Search relevance testing: 6 skills (elasticsearch-relevance-tests, opensearch-relevance-tests, solr-relevance-tests, vector-search-recall-tests, hybrid-search-eval-author, judgment-list-author) and 1 agent (relevance-regression-reviewer). IR-metrics-driven term + vector + hybrid relevance regression detection.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-search-relevance",
   "repository": "https://github.com/testland/qa",

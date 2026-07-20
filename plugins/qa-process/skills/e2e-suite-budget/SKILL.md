@@ -183,5 +183,5 @@ trade-off.
   addresses tactically.
 - `flaky-test-quarantine` - sibling: handles the flake side of low-ROI tests.
 - `junit-xml-analysis` - upstream: provides per-test runtime + flake stats.
-- `unit-test-coverage-targeter` - complementary: identifies what to add at the unit layer when
+- `test-coverage-targeter` - complementary: identifies what to add at the unit layer when
   E2E tests get retired.

@@ -314,5 +314,5 @@ that are typically untested boilerplate.
 - [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   PR-comment formatter built on top of the parsed coverage.py
   output.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - picks which uncovered branches to target next, given the
+- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - picks which uncovered branches to target next, given the
   coverage.py output.

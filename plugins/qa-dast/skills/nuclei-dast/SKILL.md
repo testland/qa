@@ -360,4 +360,4 @@ surface findings inline in pull request diffs.
 - [nuclei-faq][nuclei-faq] - validation and responsible use guidance
 - github.com/projectdiscovery/nuclei-templates - community template library
 - [`zap-baseline`](../zap-baseline/SKILL.md) - companion passive DAST scanner
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - layered DAST workflow (baseline + full + optional Nuclei)
+- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - layered DAST workflow (baseline + full + optional Nuclei)

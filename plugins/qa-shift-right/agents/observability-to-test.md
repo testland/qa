@@ -124,7 +124,7 @@ The agent **refuses** to:
   flagged as "monitoring + run-book entry instead" rather than a
   new test.
 - **Production data dependencies** go in `tests/integration/` with
-  a fixture per [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md).
+  a fixture per [`synthetic-data-tool-selector`](../../qa-test-data/skills/synthetic-data-tool-selector/SKILL.md).
 - **Bug repro structuring** →
   [`bug-repro-builder`](../../qa-bug-repro/agents/bug-repro-builder.md).
 - **Production monitor creation** →

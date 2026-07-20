@@ -123,7 +123,7 @@ broader IT environment.
 | Backup snapshots PAN-free | Same regex against backup files |
 | Egress firewall blocks card-network IPs | Network test |
 
-A `pci-dss-scope-checker` runs these
+A `pci-dss-control-test-author` runs these
 adversarially. This skill provides the catalog.
 
 ## Anti-patterns
@@ -163,7 +163,7 @@ adversarially. This skill provides the catalog.
   [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),
   [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md).
 - Adversarial validator:
-  `pci-dss-scope-checker` (in the qa-compliance plugin).
+  `pci-dss-control-test-author` (in the qa-compliance plugin).
 - Consumed by:
   [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
   [`adyen-test-mode`](../adyen-test-mode/SKILL.md),

@@ -252,5 +252,5 @@ factory library handles that.
 - [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby factory
   library that uses Faker as engine.
 - [`bogus-data`](../bogus-data/SKILL.md) - .NET counterpart.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
+- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
   dispatcher that picks the right Faker port per language.

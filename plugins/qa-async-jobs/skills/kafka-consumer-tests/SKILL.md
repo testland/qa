@@ -495,8 +495,8 @@ For Java, replace the Node steps with `actions/setup-java` and
 - [docs.spring.io/spring-kafka/reference/testing.html][sk-test] -
   `@EmbeddedKafka`, `KafkaTestUtils`, `MockConsumer`, `MockProducer`,
   Spring Kafka 4.x / KRaft broker
-- [`sqs-patterns`](../sqs-patterns/SKILL.md),
-  [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md),
+- [`sqs-tests`](../sqs-tests/SKILL.md),
+  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md),
   [`bullmq-tests`](../bullmq-tests/SKILL.md) - sibling broker skills
 - [`idempotency-test-author`](../idempotency-test-author/SKILL.md) -
   application-level idempotency patterns (complements Step 6)

@@ -32,7 +32,7 @@ restore the coverage health of the highest-risk modules.
   history.
 
 This skill is **read-only and informational** - it doesn't gate.
-Pair with `unit-test-coverage-targeter` (in the qa-test-reporting plugin)
+Pair with `test-coverage-targeter` (in the qa-test-reporting plugin)
 to convert backlog items into specific test-target recommendations.
 
 ## Step 1 - Persist coverage history
@@ -198,7 +198,7 @@ For each orphan: write 1 test that re-covers the file (run with the
 file's name in the search; if the test runner doesn't show it as
 covered, the file may be unreachable / dead code).
 
-For each falling file: pair with `unit-test-coverage-targeter`
+For each falling file: pair with `test-coverage-targeter`
 to identify the specific uncovered branches.
 
 For each stale file: review with the file owner - is the new code
@@ -272,14 +272,14 @@ of debt visible across weeks.
   [`regression-suite-selector`](../regression-suite-selector/SKILL.md)
   Step 2 path.
 - **Doesn't recommend specific tests.** This skill flags WHICH
-  files; `unit-test-coverage-targeter`
+  files; `test-coverage-targeter`
   recommends WHAT to test inside them.
 
 ## References
 
 - [`regression-suite-selector`](../regression-suite-selector/SKILL.md) - sibling: builds the per-test → source map this skill consumes
   for orphan detection.
-- `unit-test-coverage-targeter` - downstream: converts a debt-ledger entry into specific
+- `test-coverage-targeter` - downstream: converts a debt-ledger entry into specific
   test-target recommendations.
 - `coverage-diff-reporter` - sibling: per-PR coverage comment (different cadence; same data).
 - `lcov-analysis`,

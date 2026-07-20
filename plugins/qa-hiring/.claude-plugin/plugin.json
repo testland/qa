@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-hiring",
-  "version": "1.3.6",
-  "description": "QA hiring toolkit: 5 skills (qa-jd-author, interview-question-author, hiring-rubric-author, calibration-guide-author, onboarding-plan-author) and 1 agent (interview-debrief-facilitator), covering the full hiring chain for QA / SDET / test-lead / quality-manager roles: job descriptions, ISTQB-aligned question banks, role-specific scoring rubrics, interviewer calibration per Levashina 2014 et al., post-interview debriefs, and 30-60-90 onboarding plans.",
+  "version": "1.4.0",
+  "description": "QA hiring toolkit: 5 skills (qa-jd-author, interview-question-author, hiring-rubric-author, interviewer-calibration-guide-author, onboarding-plan-author) and 1 agent (interview-debrief-facilitator), covering the full hiring chain for QA / SDET / test-lead / quality-manager roles: job descriptions, ISTQB-aligned question banks, role-specific scoring rubrics, interviewer calibration per Levashina 2014 et al., post-interview debriefs, and 30-60-90 onboarding plans.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

@@ -378,4 +378,4 @@ documentation lists JaCoCo conversion as a supported path.
 - [`lcov-analysis`](../lcov-analysis/SKILL.md) - sister parser; JaCoCo
   can convert to LCOV for cross-language aggregation.
 - [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md),
-  [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - downstream skills consuming the parsed JaCoCo output.
+  [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - downstream skills consuming the parsed JaCoCo output.

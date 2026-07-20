@@ -1,15 +1,15 @@
 ---
 name: fuzz-target-author
-description: "Builder agent that scaffolds a coverage-guided fuzz target from a target function signature. Routes via fuzz-toolkit-dispatcher to the right per-language fuzzer (libFuzzer / AFL++ / cargo-fuzz / Go native / Atheris / Jazzer), generates a harness file with proper input handling (FuzzedDataProvider where applicable), creates seed corpus + dictionary scaffolds, and produces a build command + CI integration snippet. Use when adding fuzz coverage to a project that has none - produces a working harness + first run in under 5 minutes."
+description: "Builder agent that scaffolds a coverage-guided fuzz target from a target function signature. Routes via fuzz-tool-selector to the right per-language fuzzer (libFuzzer / AFL++ / cargo-fuzz / Go native / Atheris / Jazzer), generates a harness file with proper input handling (FuzzedDataProvider where applicable), creates seed corpus + dictionary scaffolds, and produces a build command + CI integration snippet. Use when adding fuzz coverage to a project that has none - produces a working harness + first run in under 5 minutes."
 tools: "Read, Grep, Glob, Write, Edit, Bash(git *), Bash(clang *), Bash(go *), Bash(cargo *)"
 model: sonnet
 skills:
-  - fuzz-toolkit-dispatcher
+  - fuzz-tool-selector
   - corpus-management-reference
   - sanitiser-integration-reference
 ---
 
-A builder agent that scaffolds a coverage-guided fuzz target from a function signature, routed via fuzz-toolkit-dispatcher.
+A builder agent that scaffolds a coverage-guided fuzz target from a function signature, routed via fuzz-tool-selector.
 
 ## When invoked
 
@@ -21,7 +21,7 @@ Inspect the project layout: `Cargo.toml` → Rust, `go.mod` → Go, `pyproject.t
 
 ## Step 2 - Route via dispatcher
 
-Apply [`fuzz-toolkit-dispatcher`](../skills/fuzz-toolkit-dispatcher/SKILL.md):
+Apply [`fuzz-tool-selector`](../skills/fuzz-tool-selector/SKILL.md):
 
 ```
 Rust   → cargo-fuzz harness
@@ -142,5 +142,5 @@ Refuses to: scaffold for a non-pure function (global state / I/O / randomness) w
 
 ## References
 
-- Preloaded skills: [`fuzz-toolkit-dispatcher`](../skills/fuzz-toolkit-dispatcher/SKILL.md), [`corpus-management-reference`](../skills/corpus-management-reference/SKILL.md), [`sanitiser-integration-reference`](../skills/sanitiser-integration-reference/SKILL.md).
+- Preloaded skills: [`fuzz-tool-selector`](../skills/fuzz-tool-selector/SKILL.md), [`corpus-management-reference`](../skills/corpus-management-reference/SKILL.md), [`sanitiser-integration-reference`](../skills/sanitiser-integration-reference/SKILL.md).
 - Per-language fuzzers (via dispatcher): [`libfuzzer-cpp`](../skills/libfuzzer-cpp/SKILL.md), [`afl-plus-plus`](../skills/afl-plus-plus/SKILL.md), [`go-native-fuzzing`](../skills/go-native-fuzzing/SKILL.md), [`cargo-fuzz-rust`](../skills/cargo-fuzz-rust/SKILL.md), [`atheris-python-fuzzing`](../skills/atheris-python-fuzzing/SKILL.md), [`jazzer-jvm-fuzzing`](../skills/jazzer-jvm-fuzzing/SKILL.md), [`ossfuzz-integration`](../skills/ossfuzz-integration/SKILL.md).

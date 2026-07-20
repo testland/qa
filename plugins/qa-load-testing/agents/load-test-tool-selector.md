@@ -63,7 +63,7 @@ Use the record format in `tool-selection-decision-record`, including the mandato
 
 - **Author a performance budget gate** → [`perf-budget-gate`](../skills/perf-budget-gate/SKILL.md).
 - **Analyze flame graphs from the run** → [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md).
-- **DB-side slow queries during load** → [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md).
+- **DB-side slow queries during load** → [`db-query-plan-analyzer`](../skills/db-query-plan-analyzer/SKILL.md).
 - **Bisect regressions across runs** → [`perf-regression-bisector`](perf-regression-bisector.md).
 
 ## Refuse-to-proceed rules

@@ -45,5 +45,5 @@ Emit the per-survivor blocks and the summary report in the shape `mutant-surviva
 
 - Weak-assertion survivors → [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md).
 - Flaky-killer survivors → [`parallel-isolation-checker`](../../qa-flake-triage/agents/parallel-isolation-checker.md).
-- Where to add tests rather than what to test → [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md).
+- Where to add tests rather than what to test → [`test-coverage-targeter`](../../qa-test-reporting/skills/test-coverage-targeter/SKILL.md).
 - Upstream tools producing the survivors this agent analyzes → [`stryker-mutation`](../skills/stryker-mutation/SKILL.md), [`stryker-net-mutation`](../skills/stryker-net-mutation/SKILL.md), [`pitest-mutation`](../skills/pitest-mutation/SKILL.md), [`mutmut-mutation`](../skills/mutmut-mutation/SKILL.md), [`mull-mutation`](../skills/mull-mutation/SKILL.md).

@@ -8,7 +8,7 @@ skills:
   - ccpa-test-patterns
   - soc2-evidence-collector
   - hipaa-test-patterns
-  - pci-dss-scope-checker
+  - pci-dss-control-test-author
   - audit-trail-test-author
   - compliance-coverage-scoring
 ---
@@ -72,7 +72,7 @@ discovered_tests = scan_for_tests(pattern=r'test.*audit.*phi')
 covered = set(expected_tests) <= set(discovered_tests)
 ```
 
-Per [`pci-dss-scope-checker`](../skills/pci-dss-scope-checker/SKILL.md):
+Per [`pci-dss-control-test-author`](../skills/pci-dss-control-test-author/SKILL.md):
 
 ```python
 # Expected tests for PCI Req 3.2 (no SAD post-authorization)

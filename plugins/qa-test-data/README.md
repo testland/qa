@@ -1,6 +1,6 @@
 # qa-test-data
 
-Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock / MSW / Mountebank mock servers; synthetic-data-toolkit dispatcher; golden-file conventions + manager; seed-data curator; parameterized / boundary / negative test case generators; synthetic PII; malicious payload bank.
+Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock / MSW / Mountebank mock servers; synthetic-data-tool-selector dispatcher; golden-file conventions + manager; seed-data curator; parameterized / boundary / negative test case generators; synthetic PII; malicious payload bank.
 
 ## Components
 
@@ -13,10 +13,10 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 | Skill | [wiremock-stubs](skills/wiremock-stubs/SKILL.md) | JVM HTTP mock server: `stubFor` matchers + `willReturn` + `verify()` + dynamic ports + scenarios. |
 | Skill | [msw-handlers](skills/msw-handlers/SKILL.md) | JS / TS HTTP mocking via Mock Service Worker: `http.get` / `HttpResponse.json` handlers; browser + Node setup. |
 | Skill | [mountebank-imposters](skills/mountebank-imposters/SKILL.md) | Multi-protocol mocking (HTTP, TCP, SMTP, gRPC, more) via `POST /imposters`; predicates + responses; record-playback. |
-| Skill | [synthetic-data-toolkit](skills/synthetic-data-toolkit/SKILL.md) | Dispatcher across Faker / FactoryBot / mimesis / Bogus by language and use case; side-by-side patterns. |
+| Skill | [synthetic-data-tool-selector](skills/synthetic-data-tool-selector/SKILL.md) | Dispatcher across Faker / FactoryBot / mimesis / Bogus by language and use case; side-by-side patterns. |
 | Skill | [golden-file-conventions](skills/golden-file-conventions/SKILL.md) | Reference: snapshot/golden file naming, layout, sanitization, severity tiering, update-vs-fix decision tree. |
 | Skill | [seed-data-curator](skills/seed-data-curator/SKILL.md) | Build a reproducible E2E seed dataset; coverage matrix; persistence formats; intentional refresh cadence. |
-| Skill | [parameterized-test-generator](skills/parameterized-test-generator/SKILL.md) | All-pairs / pairwise combinatorial generation from a multi-input spec; constraints; coverage report. |
+| Skill | [pairwise-test-case-generator](skills/pairwise-test-case-generator/SKILL.md) | All-pairs / pairwise combinatorial generation from a multi-input spec; constraints; coverage report. |
 | Skill | [boundary-value-generator](skills/boundary-value-generator/SKILL.md) | Six-point boundary cases per typed input field (numeric / string-length / collection-count / enum / nullable). |
 | Skill | [e2e-test-narrative-builder](skills/e2e-test-narrative-builder/SKILL.md) | Assemble multi-step E2E tests from intent lists; per-framework code emission. |
 | Skill | [synthetic-pii-generator](skills/synthetic-pii-generator/SKILL.md) | Realistic-but-fake PII using safe-by-construction values (RFC 2606 domains, IRS test SSN range, Stripe test cards). |

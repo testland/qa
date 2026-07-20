@@ -87,7 +87,7 @@ Per the test pyramid ([`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.m
 
 ## 6. Test data
 
-- **Synthetic accounts** - per synthetic-data-toolkit.
+- **Synthetic accounts** - per synthetic-data-tool-selector.
 - **PII handling** - per synthetic-pii-generator.
 - **Database state** - per database snapshot / restore.
 

@@ -6,7 +6,7 @@ model: sonnet
 skills:
   - introspection-attack-surface-reference
   - persisted-query-strategy-reference
-  - n-plus-one-remediation
+  - graphql-n-plus-one-remediation
 ---
 
 A read-only specialist that detects N+1 GraphQL resolver patterns and proposes the DataLoader fix.
@@ -37,18 +37,18 @@ every field-resolver on the types in those lists.
 
 ## Step 2 - Classify each child field-resolver
 
-Apply `n-plus-one-remediation` to every parent/child pair found in Step 1.
+Apply `graphql-n-plus-one-remediation` to every parent/child pair found in Step 1.
 
 ## Step 3 - Propose the fix
 
 Pick the fix (DataLoader batching, projection in the parent resolver, or a
-selection-set-aware prefetch) per `n-plus-one-remediation`.
+selection-set-aware prefetch) per `graphql-n-plus-one-remediation`.
 
 ## Output format
 
 Emit the per-finding report and summary table defined by
-`n-plus-one-remediation`. Returns a markdown report; does not modify files.
+`graphql-n-plus-one-remediation`. Returns a markdown report; does not modify files.
 
 ## Hand-off targets
 
-- **SQL-level fan-out beneath the ORM** goes to `db-slow-query-detector`.
+- **SQL-level fan-out beneath the ORM** goes to `db-query-plan-analyzer`.

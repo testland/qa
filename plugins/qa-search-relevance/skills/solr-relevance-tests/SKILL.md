@@ -353,7 +353,7 @@ jobs:
 - [Solr CLI reference]: https://solr.apache.org/guide/solr/latest/deployment-guide/solr-control-script-reference.html
 - [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) - sister skill (built-in `_rank_eval`)
 - [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) - ES-fork with neural search
-- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) - vector/dense retrieval analogue
+- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) - vector/dense retrieval analogue
 - [Quepid](https://github.com/o19s/quepid) - judgment authoring UI with Solr support
 
 [Solr LTR reference]: https://solr.apache.org/guide/solr/latest/query-guide/learning-to-rank.html

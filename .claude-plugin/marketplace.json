@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Quality engineering plugin marketplace for modern software teams: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, security testing (SAST/DAST/SCA/SBOM/secrets/compliance), LLM evaluation, ML model testing, distributed tracing, real-time protocols, PDF/print, search relevance, concurrency, saga/CQRS, charts, resilience drills, and more. Every component is rating-gated before merge.",
-    "version": "4.6.0"
+    "version": "4.7.0"
   },
   "plugins": [
     {
@@ -48,7 +48,7 @@
     {
       "name": "qa-shift-left",
       "source": "./plugins/qa-shift-left",
-      "description": "Shift-left QA: 4 skills (acceptance-criteria-extractor, bdd-suite-to-test-map, data-contract-extractor, nfr-extractor) and 4 agents (definition-of-done-checker, spec-to-suite-orchestrator, testability-reviewer, threat-model-from-spec).",
+      "description": "Shift-left QA: 4 skills (acceptance-criteria-extractor, gherkin-scenario-coverage-map, data-contract-extractor, nfr-extractor) and 4 agents (definition-of-done-checker, spec-to-suite-orchestrator, testability-reviewer, threat-model-from-spec).",
       "strict": true,
       "category": "operations-resilience"
     },
@@ -62,14 +62,14 @@
     {
       "name": "qa-load-testing",
       "source": "./plugins/qa-load-testing",
-      "description": "Load and performance testing: 12 skills (db-slow-query-detector, flame-graph-analyzer, gatling-load-testing, jmeter-load-testing, jvm-gc-tuning, k6-load-testing, latency-percentile-analyzer, lighthouse-budget-author, lighthouse-perf, load-testing-getting-started, locust-load-testing, perf-budget-gate) and 3 agents (load-test-tool-selector, perf-incident-responder, perf-regression-bisector).",
+      "description": "Load and performance testing: 12 skills (db-query-plan-analyzer, flame-graph-analyzer, gatling-load-testing, jmeter-load-testing, jvm-gc-tuning, k6-load-testing, latency-percentile-analyzer, lighthouse-budget-author, lighthouse-perf, load-testing-getting-started, locust-load-testing, perf-budget-gate) and 3 agents (load-test-tool-selector, perf-incident-responder, perf-regression-bisector).",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-test-data",
       "source": "./plugins/qa-test-data",
-      "description": "Test data engineering: 17 skills (bogus-data, boundary-value-generator, e2e-test-narrative-builder, factory-bot-data, faker-data, golden-file-conventions, malicious-payload-bank, mimesis-data, mountebank-imposters, msw-handlers, negative-test-generator, parameterized-test-generator, seed-data-curator, synthetic-data-toolkit, synthetic-pii-generator, test-data-patterns, wiremock-stubs) and 3 agents (golden-file-manager, mock-server-composer, test-data-setup-agent).",
+      "description": "Test data engineering: 17 skills (bogus-data, boundary-value-generator, e2e-test-narrative-builder, factory-bot-data, faker-data, golden-file-conventions, malicious-payload-bank, mimesis-data, mountebank-imposters, msw-handlers, negative-test-generator, pairwise-test-case-generator, seed-data-curator, synthetic-data-tool-selector, synthetic-pii-generator, test-data-patterns, wiremock-stubs) and 3 agents (golden-file-manager, mock-server-composer, test-data-setup-agent).",
       "strict": true,
       "category": "foundations"
     },
@@ -90,7 +90,7 @@
     {
       "name": "qa-test-reporting",
       "source": "./plugins/qa-test-reporting",
-      "description": "Test reporting + coverage analytics: 15 skills - parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, test-run-summary-author), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and unit-test-coverage-targeter - plus 2 agents (daily-test-suite-aggregator, release-quality-report-agent).",
+      "description": "Test reporting + coverage analytics: 15 skills - parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, test-run-summary-author), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and test-coverage-targeter - plus 2 agents (daily-test-suite-aggregator, release-quality-report-agent).",
       "strict": true,
       "category": "foundations"
     },
@@ -139,7 +139,7 @@
     {
       "name": "qa-mobile",
       "source": "./plugins/qa-mobile",
-      "description": "Mobile + mobile-web E2E testing: 11 skills covering xcuitest-suite, espresso-suite, appium-testing, detox-testing, maestro-flows, flutter-testing, mobile-device-matrix-toolkit, mobile-web-emulation-runner, touch-gesture-tester, mobile-perf-budget, mobile-a11y-test-author - plus 3 agents (mobile-driver-selector, mobile-test-author, mobile-test-scaffolder).",
+      "description": "Mobile + mobile-web E2E testing: 11 skills covering xcuitest-suite, espresso-suite, appium-testing, detox-testing, maestro-flows, flutter-testing, mobile-device-matrix-toolkit, mobile-web-emulation-runner, touch-gesture-tester, mobile-web-perf-budget, mobile-a11y-test-author - plus 3 agents (mobile-driver-selector, mobile-test-author, mobile-test-scaffolder).",
       "strict": true,
       "category": "functional-testing"
     },
@@ -237,7 +237,7 @@
     {
       "name": "qa-async-jobs",
       "source": "./plugins/qa-async-jobs",
-      "description": "Background job and queue testing: 8 skills (bullmq-tests, celery-tests, cron-job-test-author, idempotency-test-author, kafka-consumer-tests, rabbitmq-patterns, sidekiq-tests, sqs-patterns) and 1 agent (async-job-health-critic). Covers async job runners, queue patterns, scheduled jobs, and idempotency guarantees.",
+      "description": "Background job and queue testing: 8 skills (bullmq-tests, celery-tests, cron-job-test-author, idempotency-test-author, kafka-consumer-tests, rabbitmq-tests, sidekiq-tests, sqs-tests) and 1 agent (async-job-health-critic). Covers async job runners, queue patterns, scheduled jobs, and idempotency guarantees.",
       "strict": true,
       "category": "backend-distributed"
     },
@@ -265,7 +265,7 @@
     {
       "name": "qa-dast",
       "source": "./plugins/qa-dast",
-      "description": "DAST (dynamic application security testing): 6 skills (burp-headless, dast-baseline-runner, nightvision-dast, nuclei-dast, zap-authenticated-scans, zap-baseline) and 1 agent (dast-finding-triager). Sister to qa-sast for runtime vulnerabilities. Every scanner skill includes a mandatory False-positive triage section.",
+      "description": "DAST (dynamic application security testing): 6 skills (burp-headless, dast-scan-cadence-author, nightvision-dast, nuclei-dast, zap-authenticated-scans, zap-baseline) and 1 agent (dast-finding-triager). Sister to qa-sast for runtime vulnerabilities. Every scanner skill includes a mandatory False-positive triage section.",
       "strict": true,
       "category": "security-compliance"
     },
@@ -293,7 +293,7 @@
     {
       "name": "qa-compliance",
       "source": "./plugins/qa-compliance",
-      "description": "Compliance test patterns + readiness review: 8 skills (audit-trail-test-author, ccpa-test-patterns, compliance-evidence-generator, gdpr-test-patterns, hipaa-test-patterns, iso27001-test-patterns, pci-dss-scope-checker, soc2-evidence-collector) and 1 agent (compliance-readiness-reviewer). Covers regulated-industry test pattern catalogs.",
+      "description": "Compliance test patterns + readiness review: 8 skills (audit-trail-test-author, ccpa-test-patterns, compliance-evidence-generator, gdpr-test-patterns, hipaa-test-patterns, iso27001-test-patterns, pci-dss-control-test-author, soc2-evidence-collector) and 1 agent (compliance-readiness-reviewer). Covers regulated-industry test pattern catalogs.",
       "strict": true,
       "category": "security-compliance"
     },
@@ -335,7 +335,7 @@
     {
       "name": "qa-code-quality",
       "source": "./plugins/qa-code-quality",
-      "description": "Production code quality: 5 skills (sonarqube-quality-perspective, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) and 1 agent (code-quality-critic). Production-only scope; test-code hygiene is owned by qa-test-review.",
+      "description": "Production code quality: 5 skills (sonarqube-maintainability-gate, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) and 1 agent (code-quality-critic). Production-only scope; test-code hygiene is owned by qa-test-review.",
       "strict": true,
       "category": "tooling"
     },
@@ -384,7 +384,7 @@
     {
       "name": "qa-search-relevance",
       "source": "./plugins/qa-search-relevance",
-      "description": "Search relevance testing: 6 skills (elasticsearch-relevance-tests, hybrid-search-eval-author, judgment-list-author, opensearch-relevance-tests, solr-relevance-tests, vector-search-precision-tests) and 1 agent (relevance-regression-reviewer). IR-metrics-driven NDCG / MRR / Recall@k regression detection.",
+      "description": "Search relevance testing: 6 skills (elasticsearch-relevance-tests, hybrid-search-eval-author, judgment-list-author, opensearch-relevance-tests, solr-relevance-tests, vector-search-recall-tests) and 1 agent (relevance-regression-reviewer). IR-metrics-driven NDCG / MRR / Recall@k regression detection.",
       "strict": true,
       "category": "ai-ml"
     },
@@ -419,7 +419,7 @@
     {
       "name": "qa-hiring",
       "source": "./plugins/qa-hiring",
-      "description": "QA hiring toolkit: 5 skills (qa-jd-author, interview-question-author, hiring-rubric-author, calibration-guide-author, onboarding-plan-author) and 1 agent (interview-debrief-facilitator) covering the full hiring chain for QA / SDET / test-lead / quality-manager roles - job descriptions, ISTQB-aligned question banks, role-specific scoring rubrics, interviewer calibration per Levashina 2014 et al., post-interview debriefs, and 30-60-90 onboarding plans.",
+      "description": "QA hiring toolkit: 5 skills (qa-jd-author, interview-question-author, hiring-rubric-author, interviewer-calibration-guide-author, onboarding-plan-author) and 1 agent (interview-debrief-facilitator) covering the full hiring chain for QA / SDET / test-lead / quality-manager roles - job descriptions, ISTQB-aligned question banks, role-specific scoring rubrics, interviewer calibration per Levashina 2014 et al., post-interview debriefs, and 30-60-90 onboarding plans.",
       "strict": true,
       "category": "foundations"
     },
@@ -454,7 +454,7 @@
     {
       "name": "qa-fuzz-testing",
       "source": "./plugins/qa-fuzz-testing",
-      "description": "Structure-aware coverage-guided fuzzing: 3 reference skills (corpus-management-reference, sanitiser-integration-reference, crash-triage-reference) + 7 per-language fuzzer skills (libfuzzer-cpp, afl-plus-plus, go-native-fuzzing, cargo-fuzz-rust, atheris-python-fuzzing, jazzer-jvm-fuzzing, ossfuzz-integration) + 1 dispatcher skill (fuzz-toolkit-dispatcher) + 2 agents (fuzz-target-author, fuzz-findings-critic). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.",
+      "description": "Structure-aware coverage-guided fuzzing: 3 reference skills (corpus-management-reference, sanitiser-integration-reference, crash-triage-reference) + 7 per-language fuzzer skills (libfuzzer-cpp, afl-plus-plus, go-native-fuzzing, cargo-fuzz-rust, atheris-python-fuzzing, jazzer-jvm-fuzzing, ossfuzz-integration) + 1 dispatcher skill (fuzz-tool-selector) + 2 agents (fuzz-target-author, fuzz-findings-critic). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.",
       "strict": true,
       "category": "security-compliance"
     },
@@ -517,7 +517,7 @@
     {
       "name": "qa-payment",
       "source": "./plugins/qa-payment",
-      "description": "Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-scope-checker (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.",
+      "description": "Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-control-test-author (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.",
       "strict": true,
       "category": "integrations-protocols"
     },

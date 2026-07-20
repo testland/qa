@@ -132,7 +132,7 @@ The agent **refuses** to:
   [`burp-headless`](../skills/burp-headless/SKILL.md),
   [`nightvision-dast`](../skills/nightvision-dast/SKILL.md) - 
   preloaded sister skills
-- [`dast-baseline-runner`](../skills/dast-baseline-runner/SKILL.md) - 
+- [`dast-scan-cadence-author`](../skills/dast-scan-cadence-author/SKILL.md) - 
   build-an-X for cadence
 - [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md) - 
   cross-plugin sibling: same pattern for SAST

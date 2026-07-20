@@ -1,6 +1,6 @@
 # qa-fuzz-testing
 
-Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-reference, sanitiser-integration-reference) + 7 per-language fuzzer skills (libfuzzer-cpp, afl-plus-plus, go-native-fuzzing, cargo-fuzz-rust, atheris-python-fuzzing, jazzer-jvm-fuzzing, ossfuzz-integration) + 1 dispatcher skill (fuzz-toolkit-dispatcher) + 1 agent (fuzz-target-author). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.
+Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-reference, sanitiser-integration-reference) + 7 per-language fuzzer skills (libfuzzer-cpp, afl-plus-plus, go-native-fuzzing, cargo-fuzz-rust, atheris-python-fuzzing, jazzer-jvm-fuzzing, ossfuzz-integration) + 1 dispatcher skill (fuzz-tool-selector) + 1 agent (fuzz-target-author). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.
 
 ## Components
 
@@ -15,7 +15,7 @@ Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-r
 | skill | [atheris-python-fuzzing](skills/atheris-python-fuzzing/SKILL.md) | Google Atheris (libFuzzer for Python + CPython extensions) |
 | skill | [jazzer-jvm-fuzzing](skills/jazzer-jvm-fuzzing/SKILL.md) | Code Intelligence Jazzer (JVM + JUnit 5 + JVM sanitisers) |
 | skill | [ossfuzz-integration](skills/ossfuzz-integration/SKILL.md) | Onboard to Google OSS-Fuzz continuous fuzzing service |
-| skill | [fuzz-toolkit-dispatcher](skills/fuzz-toolkit-dispatcher/SKILL.md) | Decision tree routing fuzz-target authoring per language |
+| skill | [fuzz-tool-selector](skills/fuzz-tool-selector/SKILL.md) | Decision tree routing fuzz-target authoring per language |
 | agent | [fuzz-target-author](agents/fuzz-target-author.md) | Scaffold a fuzz target from a function signature (routed via dispatcher) |
 | agent | [fuzz-findings-critic](agents/fuzz-findings-critic.md) | Classify, deduplicate, and verdict crash artifacts from a fuzz campaign (ASan / UBSan / timeout / OOM) |
 | Skill | [crash-triage-reference](skills/crash-triage-reference/SKILL.md) | Pure reference: triaging fuzzer crashes (exploitability classification, stack-hash dedup, minimization). |

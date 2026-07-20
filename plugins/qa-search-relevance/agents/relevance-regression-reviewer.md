@@ -6,7 +6,7 @@ model: sonnet
 skills:
   - elasticsearch-relevance-tests
   - opensearch-relevance-tests
-  - vector-search-precision-tests
+  - vector-search-recall-tests
 ---
 
 You are an adversarial reviewer of search-relevance changes.
@@ -120,7 +120,7 @@ For embedding-model upgrades, the ground truth changed. Verify:
 
 - New ground truth was computed (not reused from old model).
 - Recall vs new ground truth ≥ baseline (per
-  `vector-search-precision-tests` Step 5).
+  `vector-search-recall-tests` Step 5).
 - Production data was sampled (not synthetic GloVe / SIFT).
 
 ## Step 7 - Filter-change correctness
@@ -202,7 +202,7 @@ Refuse ✅ when:
 
 - [`elasticsearch-relevance-tests`](../skills/elasticsearch-relevance-tests/SKILL.md),
   [`opensearch-relevance-tests`](../skills/opensearch-relevance-tests/SKILL.md),
-  [`vector-search-precision-tests`](../skills/vector-search-precision-tests/SKILL.md) - 
+  [`vector-search-recall-tests`](../skills/vector-search-recall-tests/SKILL.md) - 
   preloaded sister skills providing per-engine eval format
 - Splainer (per-doc rank explanation) - github.com/o19s/splainer-search
 - Quepid (judgment authoring) - github.com/o19s/quepid

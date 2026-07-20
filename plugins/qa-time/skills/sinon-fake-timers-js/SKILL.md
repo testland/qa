@@ -1,6 +1,6 @@
 ---
 name: sinon-fake-timers-js
-description: "Wraps Sinon's @sinonjs/fake-timers library for JS/TS testing: install(), tick() / tickAsync(), setSystemTime(), restore(); covers timers (setTimeout / setInterval / requestAnimationFrame), Date / performance.now() / hrtime, and the toFake option for selective override. Use when testing JS/TS code with deterministic timer + clock behaviour."
+description: "Wraps Sinon's standalone @sinonjs/fake-timers library for JS/TS testing: install(), tick() / tickAsync(), setSystemTime(), restore(); covers timers (setTimeout / setInterval / requestAnimationFrame), Date / performance.now() / hrtime, and the toFake option for selective override. Runner-agnostic - drives the clock directly in Mocha, AVA, Jasmine, node:test, or the browser. Use when JS/TS code needs deterministic timer or clock control and the test runner does not already expose this library behind its own built-in fake-timer API."
 ---
 
 # sinon-fake-timers-js

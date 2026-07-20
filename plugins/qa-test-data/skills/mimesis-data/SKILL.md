@@ -200,5 +200,5 @@ shared one.
   46 locales.
 - mimesis docs - https://mimesis.name/
 - [`faker-data`](../faker-data/SKILL.md) - Python Faker alternative.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
+- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
   dispatcher selecting between mimesis / Faker / FactoryBot / Bogus.

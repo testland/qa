@@ -266,5 +266,5 @@ target.
 - [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   build-an-X workflow that consumes parsed coverage and emits a PR
   comment with file-level deltas.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - picks which uncovered branches to target first using the parsed
+- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - picks which uncovered branches to target first using the parsed
   output.

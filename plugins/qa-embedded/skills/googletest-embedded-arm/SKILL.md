@@ -1,6 +1,6 @@
 ---
 name: googletest-embedded-arm
-description: "Author and run GoogleTest 1.17+ for embedded C++ on ARM targets - TEST() / TEST_F() / TEST_P() / TYPED_TEST(), EXPECT_* vs ASSERT_* assertions, fixtures with SetUp() / TearDown(), value-parameterised tests, GoogleMock when paired, cross-compile with arm-none-eabi-g++, run on host or under QEMU via the qemu-system-test-runner skill, --gtest_filter / --gtest_output=xml:results.xml / --gtest_shuffle / --gtest_repeat command-line flags, and XML / JSON output parsing for CI. Use when the unit-under-test is C++ (modern C++17+) and the team wants the de-facto C++ test framework instead of the C-only Unity. For C use unity-test-framework-c; for pure mocks use ceedling-mocks-reference."
+description: "Author and run GoogleTest 1.17+ for embedded C++ on ARM targets - TEST() / TEST_F() / TEST_P() / TYPED_TEST(), EXPECT_* vs ASSERT_* assertions, fixtures with SetUp() / TearDown(), value-parameterised tests, GoogleMock when paired, cross-compile with arm-none-eabi-g++, run on host or under QEMU via the qemu-system-test-runner skill, --gtest_filter / --gtest_output=xml:results.xml / --gtest_shuffle / --gtest_repeat command-line flags, and XML / JSON output parsing for CI. Use when the unit-under-test is C++ (modern C++17+) and the team wants the de-facto C++ test framework instead of the C-only Unity. For C use unity-test-framework-c; for pure mocks use cmock-reference."
 metadata:
   keywords: "googletest, gtest, gmock, embedded, arm, c++, cortex-m, cortex-a"
 ---
@@ -29,7 +29,7 @@ with:
 - For pure-C suites, prefer
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md);
   for mock-heavy suites prefer the Ceedling stack via
-  [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md).
+  [`cmock-reference`](../cmock-reference/SKILL.md).
 
 ## When to use
 
@@ -343,7 +343,7 @@ the gtest return value through QEMU).
 | Test order dependence | `--gtest_shuffle` reveals; CI breaks intermittently | Each `TEST_F` must work in any order; reset state in `SetUp` |
 | Optimised coverage build | `-O2` collapses branches gcov can't see | `-O0 -g` for the coverage build per coverage-reference skill |
 | `TEST_P` without `INSTANTIATE_TEST_SUITE_P` | Compiles but never runs | Always pair |
-| Mocking everything | Tests measure mocks not behaviour | Mock at the I/O boundary only - see `ceedling-mocks-reference` |
+| Mocking everything | Tests measure mocks not behaviour | Mock at the I/O boundary only - see `cmock-reference` |
 
 ## Limitations
 
@@ -378,7 +378,7 @@ Cited inline. Foundational documents:
 - Sibling skills:
   [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
   [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
-  [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md),
+  [`cmock-reference`](../cmock-reference/SKILL.md),
   [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md),
   [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md),
   [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md).

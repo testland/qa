@@ -206,5 +206,5 @@ NUnit and MSTest wire identically - Bogus is framework-agnostic.
   [`mimesis-data`](../mimesis-data/SKILL.md) - Python alternatives.
 - [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby
   alternative.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
+- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
   dispatcher.

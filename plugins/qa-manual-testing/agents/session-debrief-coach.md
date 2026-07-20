@@ -34,7 +34,7 @@ TBS thresholds from `session-based-test-management-reference` throughout.
 4. **Evaluate TBS split.** Healthy thresholds from `session-based-test-management-reference`
    (same SBTM source above): T 60-80%, B 10-20%, S 10-15%.
    - **S > 30%:** environment problem; recommend pre-seeding test data
-     (`synthetic-data-toolkit`) and verifying the environment before
+     (`synthetic-data-tool-selector`) and verifying the environment before
      the next session.
    - **T < 50%:** charter too broad, or environment collapsed; split
      the charter or fix the environment before the next session.

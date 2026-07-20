@@ -116,7 +116,7 @@ Python tolerates higher CCN than C).
 
 - Lizard's CCN counts decision points (if/else/case/&&/\|\|/?:); doesn't
   reflect cognitive complexity (nesting depth weight). Use SonarQube /
-  `sonarqube-quality-perspective` for cognitive
+  `sonarqube-maintainability-gate` for cognitive
   complexity if needed.
 - No per-class metrics for OO code beyond per-method.
 

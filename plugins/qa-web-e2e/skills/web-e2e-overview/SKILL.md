@@ -1,55 +1,222 @@
 ---
 name: web-e2e-overview
-description: "Overview of web end-to-end testing for engineers new to it: compares the main frameworks (Playwright, Cypress, Selenium, WebdriverIO), helps choose one for the stack, and walks the first-time setup steps. Use when getting started with web E2E testing and choosing a framework."
+description: "Teaches web end-to-end testing from first principles: what browser-driven E2E covers and how it differs from unit and integration tests, a decision table for choosing between Playwright, Cypress, Selenium WebDriver, WebdriverIO, Puppeteer, TestCafe and the BrowserStack / Sauce Labs / LambdaTest cloud grids based on files already present in the repo, install and first-run commands for each, and the flakiness traps (fixed sleeps, CSS and XPath selectors, state shared between tests) that sink new suites. Use when a web application has no E2E coverage yet, when picking or replacing an E2E framework, or when a first browser test needs to go green end to end."
 ---
 
 # web-e2e-overview
-## What is web E2E testing
 
-Web end-to-end (E2E) testing exercises a web application the way a real user would: a browser is launched, pages are loaded, interactions are performed (clicks, form fills, navigations), and outcomes are asserted against what the user should see. Per [playwright.dev/docs/intro][pwi]: "Playwright Test is an end-to-end test framework for modern web apps. It bundles test runner, assertions, isolation, parallelization and rich tooling." E2E tests sit at the top of the testing pyramid - they are the most realistic but also the slowest and most resource-intensive layer, so they complement, rather than replace, unit and integration tests.
+## What web E2E testing is
 
-## Step 1 - Decide on a framework
+Web end-to-end (E2E) testing drives a real browser the way a user would: a page is
+loaded, interactions are performed (clicks, form fills, navigations), and outcomes are
+asserted against what the user should see. Per [playwright.dev/docs/intro][pwi]:
+"Playwright Test is an end-to-end test framework for modern web apps. It bundles test
+runner, assertions, isolation, parallelization and rich tooling." That bundle is what
+distinguishes an E2E framework from a bare browser-automation library: a runner, an
+assertion library with retry, per-test isolation, and parallelism.
 
-If you are not sure which tool to use, pick based on your stack: Playwright is the modern default for new projects; stay with Cypress, Selenium, Puppeteer, TestCafe, or WebdriverIO if the team already uses one. Check your project (`package.json`, any existing config files) for a framework already in place before adding another.
+E2E sits above unit and integration tests, not instead of them. Unit tests call a
+function; integration tests call a module against a real dependency; E2E boots the
+whole stack (browser, app, API, database) and checks a user journey. It is the only
+layer that catches "the button is wired to the wrong handler", and the most expensive
+layer to own: per [martinfowler.com/articles/practical-test-pyramid][ptp], E2E tests
+"are notoriously flaky and often fail for unexpected and unforeseeable reasons"
+(browser quirks, timing, animations, popups), so "you should aim to reduce the number
+of end-to-end tests to a bare minimum" and spend them on core journeys only: search a
+product, add to basket, check out.
 
-## Step 2 - Three skills to start with
+Practical starting budget (a convention among practitioners, not a documented
+standard): five to fifteen E2E specs covering signup, login, the primary create /
+read / update path, checkout or submit, and one permissions case. Everything else
+belongs a layer down.
 
-| Goal | Skill | When to reach for it |
-|------|-----------|---------------------|
-| Scaffold and author your first tests | [`playwright-testing`](../playwright-testing/SKILL.md) | Greenfield project or no existing E2E suite. Playwright is the modern default for new web projects. |
-| Make the test code team-ready | `test-code-conventions` | After authoring: enforce selector, naming, and structure conventions before the PR lands. |
+## Choosing a framework
 
-Start with `playwright-testing` unless your stack points elsewhere (see Step 1).
-
-## Step 3 - Your first commands
-
-Per [playwright.dev/docs/intro][pwi]:
+Read the repo first, then the table. Every row is keyed on something you can observe
+without asking anyone. Take the **first** row that matches, top to bottom.
 
 ```bash
-# 1. Scaffold - prompts for TypeScript/JS, tests folder, CI workflow, browser binaries
+# Run at the repo root before choosing anything.
+ls playwright.config.* cypress.config.* wdio.conf.* .testcaferc.* 2>/dev/null
+ls -d cypress e2e tests/e2e 2>/dev/null
+grep -iE '"(@playwright/test|cypress|webdriverio|puppeteer|testcafe|selenium-webdriver)"' package.json
+grep -riE 'selenium-(java|webdriver)|Selenium\.WebDriver' pom.xml build.gradle* requirements.txt *.csproj Gemfile 2>/dev/null
+```
+
+| What you observe | Use | Why |
+|---|---|---|
+| `playwright.config.ts` / `.js`, or `@playwright/test` in `package.json` | **Playwright** | Already chosen. Add specs, do not add a second runner. |
+| `cypress.config.ts` / `.js`, or a `cypress/` directory | **Cypress** | Already chosen. Extend it; a migration is a separate project with its own budget. |
+| `wdio.conf.ts` / `.js` | **WebdriverIO** | Already chosen. |
+| `.testcaferc.json` / `.testcaferc.js` | **TestCafe** | Already chosen. |
+| `selenium-java`, `selenium-webdriver`, or `Selenium.WebDriver` in a build file | **Selenium WebDriver** | Already chosen, usually with years of page objects behind it. |
+| No E2E config anywhere, and the repo has a `package.json` | **Playwright** | Default for greenfield. One install covers Chromium, Firefox and WebKit [[pwi]]. |
+| No E2E config, and the team will not add Node (pure Java / C# / Ruby / Python shop) | **Selenium WebDriver** | The only option with first-class bindings in Java, Python, C#, Ruby, JavaScript and Kotlin [[sellib]]. |
+| Safari / WebKit coverage is a stated requirement | **Playwright** | Ships WebKit in the default install [[pwi]]. Cypress lists WebKit as experimental and opt-in [[cybr]]. |
+| The same suite must also drive a native mobile or Electron app | **WebdriverIO** | Automates web, hybrid and native mobile via Appium, and native desktop such as Electron [[wdiowhy]]. |
+| The task is scraping, screenshotting or HTML-to-PDF, with no assertions | **Puppeteer** | A library, not a test framework: "a JavaScript library which provides a high-level API to control Chrome or Firefox" [[ppt]]. No runner, no isolation, no parallelism. |
+| A no-WebDriver architecture is a hard constraint and its wait model appeals | **TestCafe** | Runs on Node.js and waits automatically for selectors, actions, assertions, XHR and redirects [[tcwait]]. |
+| Real iOS / Android devices, old browser versions, or a large OS matrix are required | **Keep the runner above, add a cloud grid** | See "Real devices and browser matrices" below. This is an execution target, not a framework choice. |
+
+Tie-break when two rows both look true: whatever is already in the repo wins. A second
+E2E framework doubles the CI cost, the selector conventions and the flake surface, and
+buys coverage you could get by adding one grid config to the framework you have.
+
+## First runnable path: Playwright
+
+For the default choice, per [playwright.dev/docs/intro][pwi]:
+
+```bash
+# 1. Scaffold: prompts for TS/JS, tests folder, CI workflow, browser binaries.
 npm init playwright@latest
 
-# 2. Run the generated example to confirm the install is healthy
+# 2. Run the generated example to confirm the install is healthy.
 npx playwright test
 ```
 
-The init wizard creates `playwright.config.ts`, updates `package.json`, and writes `tests/example.spec.ts`. Running `npx playwright test` immediately after install runs the bundled example spec across Chromium, Firefox, and WebKit - all three should pass on a clean machine ([playwright.dev/docs/intro][pwi]).
+The wizard writes `playwright.config.ts` and `tests/example.spec.ts`, and updates
+`package.json` [[pwi]]. `npx playwright test` runs headless and in parallel by default
+across Chromium, Firefox and WebKit [[pwi]]. **Success looks like:** every example
+spec passes on a clean machine, with no browser window appearing. If it fails here,
+the problem is the install, not your app.
 
-After the example passes, open `tests/example.spec.ts`, read it, then follow `playwright-testing` for authoring your real tests.
+Then open `tests/example.spec.ts`, delete it, and write your first real spec in that
+shape:
 
-## Web E2E testing skills
+```ts
+import { test, expect } from '@playwright/test';
 
-| Name | Purpose |
-|------|---------|
-| `playwright-testing` | Author + run Playwright tests (Chromium, Firefox, WebKit) |
-| `cypress-testing` | Author + run Cypress tests |
-| `selenium-testing` | Author + run Selenium WebDriver tests |
-| `webdriverio-testing` | Author + run WebdriverIO tests |
-| `puppeteer-testing` | Chrome/Chromium browser automation with Puppeteer |
-| `testcafe-testing` | Author + run TestCafe tests (no WebDriver) |
+test('user can reach the pricing page', async ({ page }) => {
+  await page.goto('https://example.com/');
+  await page.getByRole('link', { name: 'Pricing' }).click();
+  await expect(page.getByRole('heading', { name: 'Pricing' })).toBeVisible();
+});
+```
 
-## Hard-reject rule
+Two things in that snippet are the whole discipline: locators named after what the
+user sees, and an `await expect(...)` assertion that retries. Both are covered below.
 
-Any revision to this skill that removes inline source citations from the commands or quoted text in "What is web E2E testing" makes the component a hard reject. All concrete claims about tool behavior must stay cited to [playwright.dev/docs/intro][pwi] at the point of use.
+## First runnable path for the other tools
+
+| Tool | Install | First run |
+|---|---|---|
+| Cypress | `npm install cypress --save-dev` [[cyins]] | `npx cypress open`, then pick end-to-end or component mode [[cyins]] |
+| Selenium (Python) | `pip install selenium` [[sellib]] | run your test file with the project's runner (pytest, JUnit, NUnit) |
+| Selenium (Java/Maven) | add the `org.seleniumhq.selenium:selenium-java` dependency to `pom.xml` [[sellib]] | `mvn test` |
+| WebdriverIO | `npm init wdio@latest .` [[wdio]] | `npx wdio run ./wdio.conf.js` [[wdio]] |
+| Puppeteer | `npm i puppeteer` (downloads a compatible browser) [[ppt]] | `node your-script.js` |
+| TestCafe | `npm install -g testcafe` [[tcgs]] | `testcafe chrome getting-started.js` [[tcgs]] |
+
+Selenium drives "a browser natively, as a user would, either locally or on a remote
+machine using the Selenium server" [[selwd]], which is why it has no bundled runner:
+you bring JUnit, pytest, NUnit or RSpec yourself.
+
+## Real devices and browser matrices
+
+A local runner covers the engines installed on the machine. When the requirement is
+real hardware, legacy browser versions, or dozens of OS/browser pairs, point the same
+suite at a hosted grid instead of rewriting it.
+
+| Provider | Credentials | Note |
+|---|---|---|
+| BrowserStack Automate | username + access key from the account profile, set in `browserstack.yml` [[bs]] | advertises "3000+ real devices and desktop browsers" [[bs]] |
+| Sauce Labs | username + access key from User Settings [[sl]] | region-specific hubs, e.g. `https://ondemand.us-west-1.saucelabs.com/wd/hub`, `https://ondemand.eu-central-1.saucelabs.com/wd/hub` [[sl]] |
+| LambdaTest | `LT_USERNAME` and `LT_ACCESS_KEY` environment variables [[lt]] | grid endpoint and capabilities are generated from the dashboard [[lt]] |
+
+Decide the matrix from analytics, not from anxiety. Grid minutes are billed, and a
+matrix of twenty combinations turns a two-minute suite into a twenty-minute one.
+
+## The traps that bite first
+
+**1. Fixed sleeps instead of retrying assertions.** This is the single largest source
+of flake. A hard-coded pause is either too short (fails on a slow CI box) or too long
+(a suite that takes an hour). Cypress states plainly that "waiting for arbitrary time
+periods using `cy.wait(Number)` is an anti-pattern" and directs you to "use route
+aliases or assertions to guard Cypress from proceeding until an explicit condition is
+met" [[cybp]]. Playwright's equivalent: "By using web first assertions Playwright will
+wait until the expected condition is met" [[pwbp]], and before every action it runs
+actionability checks for visibility, stability, event reception and enabled state
+[[pwact]].
+
+```ts
+// Wrong: guesses at timing, fails on a slow runner.
+await page.waitForTimeout(3000);
+expect(await page.locator('.toast').isVisible()).toBe(true);
+
+// Right: retries until the condition holds or the timeout expires.
+await expect(page.getByRole('status')).toHaveText('Saved');
+```
+
+Corollary: `isVisible()` and friends return a boolean once, immediately, with no
+waiting [[pwbp]]. If you find yourself adding a sleep to make one pass, you wanted a
+retrying assertion instead.
+
+**2. CSS and XPath selectors instead of role and label locators.** Selectors bound to
+class names, `nth-child` positions or generated IDs break on the next CSS refactor
+even though nothing a user can perceive has changed. Playwright's guidance is to
+"prefer user-facing attributes to XPath or CSS selectors" and reach for
+`page.getByRole('button', { name: 'submit' })` [[pwbp]]. Cypress, which has no role
+locator by default, instead tells you to "add `data-*` attributes to make it easier to
+target elements" and use `[data-cy="submit"]` selectors, "isolated from styling or
+behavioral changes" [[cybp]].
+
+Preference order that works in every framework: accessible role plus accessible name,
+then label or placeholder text, then visible text, then a dedicated test attribute
+(`data-testid` / `data-cy`), and only then CSS. Never XPath positions. The bonus is
+real: a test that can only find the button by its role is a test that fails when the
+button loses its accessible name.
+
+**3. State shared between tests.** Order-dependent tests pass locally in one order and
+fail in CI in another, and they fail catastrophically under parallelism. Playwright:
+"Each test should be completely isolated from another test and should run
+independently with its own local storage, session storage, data, cookies etc."
+[[pwbp]]. Cypress: "Tests should always be able to be run independently from one
+another and still pass" [[cybp]]. Both recommend `beforeEach` for setup rather than
+letting test N depend on test N-1 [[pwbp]] [[cybp]].
+
+This matters more than it sounds because parallelism is on by default. Playwright runs
+tests in worker processes that are "OS processes, running independently", each with
+its own browser, and "you can't communicate between the workers" [[pwpar]]. A shared
+login, a shared seeded record, or a fixed username will collide the moment two workers
+touch it. Create per-test data with a unique suffix, and set up auth state
+programmatically rather than by driving the login form in every spec.
+
+**4. Treating E2E as the coverage strategy.** Every validation rule pushed into a
+browser test costs a browser boot. When a case can be checked one layer down, check it
+one layer down [[ptp]].
+
+## Going deeper
+
+Optional. Each tool above has a dedicated in-depth component if the full set is
+installed alongside this one; nothing here depends on them.
+
+| Tool | Deeper reference |
+|---|---|
+| Playwright | [`playwright-testing`](../playwright-testing/SKILL.md) |
+| Cypress | [`cypress-testing`](../cypress-testing/SKILL.md) |
+| Selenium WebDriver | [`selenium-testing`](../selenium-testing/SKILL.md) |
+| WebdriverIO | [`webdriverio-testing`](../webdriverio-testing/SKILL.md) |
+| Puppeteer | [`puppeteer-testing`](../puppeteer-testing/SKILL.md) |
+| TestCafe | [`testcafe-testing`](../testcafe-testing/SKILL.md) |
+| BrowserStack | [`browserstack-automate`](../browserstack-automate/SKILL.md) |
+| Sauce Labs | [`saucelabs-automate`](../saucelabs-automate/SKILL.md) |
+| LambdaTest | [`lambdatest-automate`](../lambdatest-automate/SKILL.md) |
 
 [pwi]: https://playwright.dev/docs/intro
+[pwbp]: https://playwright.dev/docs/best-practices
+[pwact]: https://playwright.dev/docs/actionability
+[pwpar]: https://playwright.dev/docs/test-parallel
+[cyins]: https://docs.cypress.io/app/get-started/install-cypress
+[cybp]: https://docs.cypress.io/app/core-concepts/best-practices
+[cybr]: https://docs.cypress.io/app/references/launching-browsers
+[selwd]: https://www.selenium.dev/documentation/webdriver/
+[sellib]: https://www.selenium.dev/documentation/webdriver/getting_started/install_library/
+[wdio]: https://webdriver.io/docs/gettingstarted/
+[wdiowhy]: https://webdriver.io/docs/why-webdriverio/
+[ppt]: https://pptr.dev/
+[tcgs]: https://testcafe.io/documentation/402635/guides/overview/getting-started
+[tcwait]: https://testcafe.io/documentation/402827/guides/advanced-guides/built-in-wait-mechanisms
+[bs]: https://www.browserstack.com/docs/automate/selenium/getting-started/nodejs
+[sl]: https://docs.saucelabs.com/basics/data-center-endpoints/
+[lt]: https://www.lambdatest.com/support/docs/python-with-selenium-running-python-automation-scripts-on-lambdatest-selenium-grid/
+[ptp]: https://martinfowler.com/articles/practical-test-pyramid.html

@@ -39,7 +39,7 @@ Composes with:
 - [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) - 
   the build orchestration that calls `generate_test_runner.rb`
   and stitches Unity + CMock + the test binary.
-- [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md) - 
+- [`cmock-reference`](../cmock-reference/SKILL.md) - 
   the CMock-generated mocks Unity asserts against.
 - [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md) - 
   for running the cross-built binary on a virtual Cortex-M.
@@ -348,7 +348,7 @@ the canonical `ceedling test:all` + JUnit XML flow.
   tests should run tests serially on the test thread.
 - **No GoogleMock-style matchers.** Mocks live in CMock; matcher
   expressivity is per
-  [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md).
+  [`cmock-reference`](../cmock-reference/SKILL.md).
 - **`TEST_ASSERT_EQUAL_FLOAT` precision is configurable but
   global.** `UNITY_FLOAT_PRECISION` applies to every float
   compare in the suite; per-test precision needs `_WITHIN`.
@@ -373,7 +373,7 @@ Cited inline. Foundational documents:
   (covered by `unity-test-framework`).
 - Sibling skills:
   [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
-  [`ceedling-mocks-reference`](../ceedling-mocks-reference/SKILL.md),
+  [`cmock-reference`](../cmock-reference/SKILL.md),
   [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
   [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md),
   [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md).

@@ -20,7 +20,7 @@ Anchored rubrics outperform free-form scoring because the **anchor descriptions*
 Do **not** use this skill to:
 
 - Author the questions - that is [`interview-question-author`](../interview-question-author/SKILL.md).
-- Author the gold-standard model answers and common pitfalls - that is [`calibration-guide-author`](../calibration-guide-author/SKILL.md). The rubric scores; the calibration guide demonstrates.
+- Author the gold-standard model answers and common pitfalls - that is [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md). The rubric scores; the calibration guide demonstrates.
 - Score generic engineering / non-QA roles. The competency model is QA-specific.
 
 ## Step 1 - Capture the inputs
@@ -124,7 +124,7 @@ The output is a single markdown document with:
 ```markdown
 ## HAND-OFF - required next steps
 
-1. Pair with `calibration-guide-author` to produce gold-standard model answers and common pitfalls per question - without those, the anchors here are aspirational.
+1. Pair with `interviewer-calibration-guide-author` to produce gold-standard model answers and common pitfalls per question - without those, the anchors here are aspirational.
 2. Run a calibration interview (one panel scores the same recorded interview together) before the first real candidate. Per the structured-interview research, calibration is the dominant variable in inter-rater agreement.
 3. Lock the rubric at the start of the hiring round; mid-round changes invalidate prior candidates' scores.
 4. After the round, run a defect-trend-narrative-style retro on the rubric: which competencies discriminated; which were noise; which scored everyone at 3 (a sign the anchor is too generous).
@@ -152,7 +152,7 @@ The output is a single markdown document with:
 
 ## Hand-off targets
 
-- **Calibrate interviewers (gold-standard answers, common pitfalls)** → [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
+- **Calibrate interviewers (gold-standard answers, common pitfalls)** → [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
 - **Author the question bank (upstream)** → [`interview-question-author`](../interview-question-author/SKILL.md).
 - **Compliance review of the rubric** → team's legal / HR review.
 
@@ -164,4 +164,4 @@ The output is a single markdown document with:
 - STAR behavioral interviewing method - Situation / Task / Action / Result framework, used in the behavioural-question anchors: https://en.wikipedia.org/wiki/Situation,_task,_action,_result
 - Bloom's taxonomy - K1 - K4 cognitive levels used to align the rubric's anchor depth with the question's intended difficulty: https://en.wikipedia.org/wiki/Bloom%27s_taxonomy
 - PractiTest 2026 State of Testing Report - hiring rubric authoring named as a high-adoption, low-risk AI use case for QA managers: https://www.practitest.com/state-of-testing/
-- [`interview-question-author`](../interview-question-author/SKILL.md), [`calibration-guide-author`](../calibration-guide-author/SKILL.md) - sibling skills that complete the structured-interview triple.
+- [`interview-question-author`](../interview-question-author/SKILL.md), [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md) - sibling skills that complete the structured-interview triple.

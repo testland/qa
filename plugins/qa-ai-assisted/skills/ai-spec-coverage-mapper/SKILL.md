@@ -1,6 +1,6 @@
 ---
 name: ai-spec-coverage-mapper
-description: "Build-an-X workflow that uses an LLM to map existing tests to spec sections - given a spec doc + the test suite, the LLM identifies which tests cover which sections, surfaces uncovered sections (gap), and recommends specific tests to add. Output is a coverage matrix per spec ID. Use as a follow-up to `ai-test-generator` (which generates tests for new ACs) - this maps the existing landscape and finds what's missing."
+description: "Build-an-X workflow that uses an LLM to map existing tests to spec sections - given a spec doc + the test suite, the LLM identifies which tests cover which sections, surfaces uncovered sections (gap), and recommends specific tests to add. Output is a coverage matrix per spec ID. Scope is mapping tests that already exist and naming the gaps, not authoring tests for new acceptance criteria. Use when a spec doc and a test suite both exist but nobody can say which requirements are actually covered - before a release sign-off, an audit, or a decision about where to spend the next round of test effort."
 ---
 
 # ai-spec-coverage-mapper

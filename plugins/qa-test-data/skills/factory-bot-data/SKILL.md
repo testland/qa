@@ -239,7 +239,7 @@ DSL - only the test-framework hookup differs.
   build_stubbed strategies.
 - [`faker-data`](../faker-data/SKILL.md) - Ruby Faker (the value
   engine for FactoryBot fields).
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - 
+- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
   dispatcher selecting the right factory library per language.
 - [`seed-data-curator`](../seed-data-curator/SKILL.md) - downstream
   workflow consuming FactoryBot for E2E suite seeds.

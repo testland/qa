@@ -1,6 +1,6 @@
 ---
 name: fluentassertions
-description: "Reference for FluentAssertions - the canonical .NET fluent-assertion library pairable with xUnit / NUnit / MSTest; provides `.Should()` extension API (`.Should().Be()`, `.Should().BeOfType<T>()`, `.Should().Throw<T>()`, `.Should().BeEquivalentTo()` for deep equality, `.Should().Satisfy()` for predicates, `.Should().BeApproximately()` for floats); rich failure messages with object structure visualization. Body MUST include the 2024 license change note: v8+ commercial license required for new use; v7 is the last fully OSS version. Use when a .NET test project needs deep object comparison or better failure output than `Assert.X` gives, when assertions must survive a move between xUnit / NUnit / MSTest, or when picking between v7 and v8+ on license grounds."
+description: "Reference for FluentAssertions - the canonical .NET fluent-assertion library pairable with xUnit / NUnit / MSTest; provides `.Should()` extension API (`.Should().Be()`, `.Should().BeOfType<T>()`, `.Should().Throw<T>()`, `.Should().BeEquivalentTo()` for deep equality, `.Should().Satisfy()` for predicates, `.Should().BeApproximately()` for floats); rich failure messages with object structure visualization. Covers the v8 license change: v8+ is free for open-source and non-commercial use but requires a paid license for commercial use, while v7 remains fully open-source. Use when a .NET test project needs deep object comparison or better failure output than `Assert.X` gives, when assertions must survive a move between xUnit / NUnit / MSTest, or when picking between v7 and v8+ on license grounds."
 ---
 
 # fluentassertions
@@ -15,10 +15,12 @@ FluentAssertions is the de facto fluent-assertion library for .NET.
 Works with any of [`xunit-tests`](../xunit-tests/SKILL.md),
 [`nunit-tests`](../nunit-tests/SKILL.md), [`mstest-tests`](../mstest-tests/SKILL.md).
 
-**Important license change note (2024):** FluentAssertions changed
-license to commercial starting v8. v7 (and earlier) remain OSS-licensed.
-For new commercial use, either pay for v8+ or pin to v7. For OSS
-projects, v7 may be sufficient indefinitely.
+**Important license change note:** from v8, "commercial use requires a
+paid license", while v8+ stays "free for open-source projects and
+non-commercial use"; v7 "will remain fully open-source indefinitely"
+(per [fluentassertions.com/releases](https://fluentassertions.com/releases/)).
+Commercial projects either buy a v8+ license or pin to v7; open-source
+and non-commercial projects can use v8+ free.
 
 This skill is a **reference** - defines the matcher
 catalog; doesn't run tests. Pair with one of the test frameworks.
@@ -34,11 +36,11 @@ catalog; doesn't run tests. Pair with one of the test frameworks.
 ## Step 1 - Install
 
 ```bash
-# Pin to v7 for OSS-license safety
+# Pin to v7 to avoid the v8+ paid license in a commercial project
 dotnet add package FluentAssertions --version 7.0.0
 ```
 
-Or current (commercial license):
+Or current (free for OSS / non-commercial, paid for commercial):
 
 ```bash
 dotnet add package FluentAssertions
@@ -223,13 +225,14 @@ failure messages + chainable assertions.
 |---|---|---|
 | Mix `Assert.X` and `.Should()` styles in same suite | Reader confusion | Pick one + lint enforcement |
 | Long `BeEquivalentTo` chains without options | Compares fields you don't care about; brittle | Use `Excluding` to scope (Step 6) |
-| Pin v8+ in OSS project without paying | License violation | Pin v7 (Step 1) |
+| Ship v8+ in a commercial project without a paid license | License violation | Buy a v8+ license or pin v7 (Step 1) |
 | `value.Should().Be(true)` instead of `BeTrue()` | Loses semantic clarity | Use `BeTrue()` (Step 3) |
 | Skip `WithMessage` on exception assertions | Pass for wrong exception type | Always specify expected message (Step 3) |
 
 ## Limitations
 
-- License change v8+: commercial-only. Pin v7 for OSS.
+- License change v8+: paid for commercial use, free for OSS /
+  non-commercial. Pin v7 to stay fully OSS-licensed.
 - Some edge cases in `BeEquivalentTo` (cyclic refs, polymorphism)
   need explicit options.
 - `.Should()` extension can clash with other libraries' extensions

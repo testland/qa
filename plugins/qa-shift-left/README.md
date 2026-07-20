@@ -13,7 +13,7 @@ Shift-left QA: testability review, acceptance-criteria + NFR extraction from pro
 | Agent | [threat-model-from-spec](agents/threat-model-from-spec.md) | Builder: produce a STRIDE threat model from a feature spec; one row per (asset × category); likelihood × impact scoring; OWASP ASVS-anchored mitigations. |
 | Skill | [data-contract-extractor](skills/data-contract-extractor/SKILL.md) | Extract data contracts (schema + freshness + volume + distribution + ownership) from data PRDs; flag gaps; emit YAML for dbt/GX/Soda consumption. |
 | Agent | [spec-to-suite-orchestrator](agents/spec-to-suite-orchestrator.md) | W3 workflow: chain testability → AC + NFR → threat model + data contract → test stubs → artifact bundle. |
-| Skill | [bdd-suite-to-test-map](skills/bdd-suite-to-test-map/SKILL.md) | Map new Gherkin scenarios against the existing suite to prevent duplicate tests. |
+| Skill | [gherkin-scenario-coverage-map](skills/gherkin-scenario-coverage-map/SKILL.md) | Map new Gherkin scenarios against the existing suite to prevent duplicate tests. |
 | Skill | [stride-threat-modeling](skills/stride-threat-modeling/SKILL.md) | Enumerates threats against a design using Microsoft STRIDE, each category paired with the security property it violates, plus a triage score labelled as convention rather than standard. |
 | Skill | [spec-testability-heuristics](skills/spec-testability-heuristics/SKILL.md) | Judges whether a written requirement can be tested at all: Observable, Decidable, Bounded, with untestable-to-testable rewrite pairs and a BLOCK / REVIEW / OK verdict. |
 

@@ -1,6 +1,6 @@
 ---
 name: github-issues-bug-workflow
-description: "Author and run GitHub Issues bug workflows via REST API v2022-11-28 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, comment attachment, and Projects v2 status-column updates via GraphQL. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), label conventions for the impoverished GitHub state model, and the gh CLI for scripted workflows. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline."
+description: "Author and run GitHub Issues bug workflows via REST API v2026-03-10 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, comment attachment, and Projects v2 status-column updates via GraphQL. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), label conventions for the impoverished GitHub state model, and the gh CLI for scripted workflows. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline."
 ---
 
 # github-issues-bug-workflow
@@ -14,7 +14,7 @@ lifecycle
 teams supplement Issues with **labels** (severity, priority,
 status) and optionally **Projects v2** (status columns).
 
-This skill wraps the GitHub Issues REST API v2022-11-28 (per
+This skill wraps the GitHub Issues REST API v2026-03-10 (per
 [docs.github.com/en/rest/issues/issues](https://docs.github.com/en/rest/issues/issues))
 for create / update / close / reopen / search, and notes the
 Projects v2 GraphQL augmentation when richer state is needed.
@@ -51,7 +51,9 @@ BASE = f"https://api.github.com/repos/{os.environ['GITHUB_REPO']}"
 ```
 
 The `X-GitHub-Api-Version` header is recommended per the API
-docs to lock the response shape.
+docs to lock the response shape. Omitting it defaults to
+`2022-11-28`, the older of the two supported versions (per
+[docs.github.com/en/rest/about-the-rest-api/api-versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions)).
 
 Alternative: the `gh` CLI handles auth via the user's stored
 credentials:

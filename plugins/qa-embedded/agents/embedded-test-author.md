@@ -7,7 +7,7 @@ skills:
   - unity-test-framework-c
   - googletest-embedded-arm
   - ceedling-build-runner
-  - ceedling-mocks-reference
+  - cmock-reference
   - qemu-system-test-runner
   - embedded-coverage-strategy-reference
   - hardware-in-loop-reference
@@ -60,7 +60,7 @@ Otherwise treat as **host-side** unit test.
 |---|---|---|---|
 | **Unity (C)** | `void test_<name>(void)` - Unity tests are "just a C function that takes no arguments and returns nothing" per [throwtheswitch.org/unity][unity]; `void setUp(void)` / `void tearDown(void)` run around each test | `TEST_ASSERT_EQUAL_INT` / `_STRING` / `_NULL` / `_TRUE` / `_EQUAL_HEX8` ([unity][unity]) | `test/test_<module>.c` per the `TestModule.c` pairing rule ([unity][unity]) |
 | **GoogleTest (C++)** | `TEST(SuiteName, TestName) { ... }` - both args must be "valid C++ identifiers without underscores" per [google.github.io/googletest/primer][gt]; `TEST_F(Fixture, Name)` for `testing::Test` fixtures | `EXPECT_EQ` / `_TRUE` / `_NE` / `_STREQ`; GoogleTest "recommends preferring `EXPECT_*` ... reserving `ASSERT_*` for cases where continuing after failure creates logical problems" per [primer][gt] | `tests/<module>_test.cpp` |
-| **Ceedling-Unity** | identical Unity surface, plus CMock mocks via `#include "mock_<header>.h"` per [ceedling][ceedling]; see [`ceedling-mocks-reference`](../skills/ceedling-mocks-reference/SKILL.md) | same Unity macros | `test/test_<module>.c` (Ceedling auto-discovers `test_*.c` per [ceedling][ceedling]) |
+| **Ceedling-Unity** | identical Unity surface, plus CMock mocks via `#include "mock_<header>.h"` per [ceedling][ceedling]; see [`cmock-reference`](../skills/cmock-reference/SKILL.md) | same Unity macros | `test/test_<module>.c` (Ceedling auto-discovers `test_*.c` per [ceedling][ceedling]) |
 
 [gt]: https://google.github.io/googletest/primer.html
 
@@ -108,7 +108,7 @@ mode, new file path, verify command (`ceedling test:all` / `make test` /
   function parameters - couples tests to internal storage and blocks mocking.
 - Hand-rolled mock structs shadowing real peripheral headers - Ceedling generates
   these via the `mock_<header>.h` convention per [ceedling][ceedling]; see
-  [`ceedling-mocks-reference`](../skills/ceedling-mocks-reference/SKILL.md).
+  [`cmock-reference`](../skills/cmock-reference/SKILL.md).
 - Running tests on physical hardware when a host-side compile suffices - slow
   feedback loop; reserve hardware for HIL.
 - `ASSERT_EQ` in GoogleTest when `EXPECT_EQ` would do - `ASSERT_*` aborts on
@@ -119,7 +119,7 @@ mode, new file path, verify command (`ceedling test:all` / `make test` /
 - **Framework skills** → [`unity-test-framework-c`](../skills/unity-test-framework-c/SKILL.md),
   [`googletest-embedded-arm`](../skills/googletest-embedded-arm/SKILL.md),
   [`ceedling-build-runner`](../skills/ceedling-build-runner/SKILL.md).
-- **Mocks** → [`ceedling-mocks-reference`](../skills/ceedling-mocks-reference/SKILL.md).
+- **Mocks** → [`cmock-reference`](../skills/cmock-reference/SKILL.md).
 - **Cross-compiled run** → [`qemu-system-test-runner`](../skills/qemu-system-test-runner/SKILL.md).
 - **Coverage** → [`embedded-coverage-strategy-reference`](../skills/embedded-coverage-strategy-reference/SKILL.md);
   **HIL (refused above)** → [`hardware-in-loop-reference`](../skills/hardware-in-loop-reference/SKILL.md).

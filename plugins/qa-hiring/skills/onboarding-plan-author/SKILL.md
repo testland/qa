@@ -22,7 +22,7 @@ The PractiTest 2026 State of Testing Report found that nearly 40% of individual 
 Do **not** use this skill to:
 
 - Score candidates - that is [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
-- Produce interviewer calibration material - that is [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
+- Produce interviewer calibration material - that is [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
 - Create a career development or performance-review plan beyond the 90-day window. This skill covers the ramp to independent contribution; ongoing career laddering is out of scope.
 
 ## Step 1 - Capture the inputs
@@ -195,7 +195,7 @@ The output is a single markdown document with:
 
 - **Author the upstream question bank** - [`interview-question-author`](../interview-question-author/SKILL.md).
 - **Author the upstream rubric** - [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
-- **Calibrate interviewers** - [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
+- **Calibrate interviewers** - [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
 - **Ongoing career development beyond day 90** - team's career ladder and performance management process.
 
 ## References
@@ -206,4 +206,4 @@ The output is a single markdown document with:
 - ISTQB Certified Tester Foundation Level v4.0 syllabus (ASTQB mirror) - competency chapters cited for self-study milestones (Ch. 1: Fundamentals; Ch. 2: Test Activities and Roles; Ch. 3: Static Testing; Ch. 4: Test Analysis and Design; Ch. 5: Managing Test Activities; Ch. 6: Test Tools): https://astqb.org/certifications/foundation-level-certification/
 - PractiTest 2026 State of Testing Report - test strategy underdevelopment (40% gap) and the strategy-vs-execution income premium (+10.6%) that motivates the phase-3 strategy-ownership milestones: https://www.practitest.com/state-of-testing/
 - [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) - the upstream skill whose six competency axes (test analysis and design, defect lifecycle, test code conventions, tooling depth, communication, domain reasoning) are the target axes for this plan's per-phase competency tables.
-- [`calibration-guide-author`](../calibration-guide-author/SKILL.md) - the calibration guide that closes the interview loop; the onboarding plan picks up where the calibration guide ends (post-offer-acceptance).
+- [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md) - the calibration guide that closes the interview loop; the onboarding plan picks up where the calibration guide ends (post-offer-acceptance).

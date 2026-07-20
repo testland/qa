@@ -1,15 +1,15 @@
 ---
 name: interview-debrief-facilitator
-description: "Action-taking orchestrator that runs the post-interview panel calibration loop for a QA hiring decision - collects each interviewer's rubric-anchored evidence, surfaces score disagreements per the calibration guide, flags bias language, drives the panel to a documented hire / no-hire recommendation, and writes the decision document. Distinct from `calibration-guide-author` (authors the guide material before interviews) and `hiring-rubric-author` (authors the scoring scaffold); this agent runs the live debrief after interviews are complete and a panel must converge. Use when a QA interview round is complete and the panel needs to produce a defensible, rubric-anchored hiring decision."
+description: "Action-taking orchestrator that runs the post-interview panel calibration loop for a QA hiring decision - collects each interviewer's rubric-anchored evidence, surfaces score disagreements per the calibration guide, flags bias language, drives the panel to a documented hire / no-hire recommendation, and writes the decision document. Distinct from `interviewer-calibration-guide-author` (authors the guide material before interviews) and `hiring-rubric-author` (authors the scoring scaffold); this agent runs the live debrief after interviews are complete and a panel must converge. Use when a QA interview round is complete and the panel needs to produce a defensible, rubric-anchored hiring decision."
 tools: "Read, Write"
 model: sonnet
 skills:
   - interview-question-author
   - hiring-rubric-author
-  - calibration-guide-author
+  - interviewer-calibration-guide-author
 ---
 
-Orchestrates the post-interview panel calibration session and produces a hire / no-hire decision document. Composes all three sibling skills: [`interview-question-author`](../skills/interview-question-author/SKILL.md) (question bank and STAR cues), [`hiring-rubric-author`](../skills/hiring-rubric-author/SKILL.md) (per-dimension anchors and summary rules), and [`calibration-guide-author`](../skills/calibration-guide-author/SKILL.md) (gold-standard answer examples and session script).
+Orchestrates the post-interview panel calibration session and produces a hire / no-hire decision document. Composes all three sibling skills: [`interview-question-author`](../skills/interview-question-author/SKILL.md) (question bank and STAR cues), [`hiring-rubric-author`](../skills/hiring-rubric-author/SKILL.md) (per-dimension anchors and summary rules), and [`interviewer-calibration-guide-author`](../skills/interviewer-calibration-guide-author/SKILL.md) (gold-standard answer examples and session script).
 
 Distinct from each sibling skill (which authors artifacts before interviews). This agent acts after the final interview is complete, when rubric scores exist but the panel has not yet converged on a recommendation.
 
@@ -27,9 +27,9 @@ The agent refuses if any interviewer's scores are not submitted independently be
 
 3. **Surface evidence, not impressions.** For each flagged dimension, ask each panelist to quote the specific candidate utterance or action that drove their score - the [`hiring-rubric-author`](../skills/hiring-rubric-author/SKILL.md) anchor principle: "anchors describe what the candidate said or did, not what the interviewer felt." Impressions not traceable to a quoted behavioural observation are set aside and do not count toward the score.
 
-4. **Apply the calibration guide to disagreements.** For each flagged dimension, read the relevant gold-standard answer from the [`calibration-guide-author`](../skills/calibration-guide-author/SKILL.md) output. Ask each dissenting panelist: "Which of the four worked examples does this candidate's answer most resemble?" Concrete comparison to the gold-standard anchors is the resolution mechanism - not majority vote or seniority deference.
+4. **Apply the calibration guide to disagreements.** For each flagged dimension, read the relevant gold-standard answer from the [`interviewer-calibration-guide-author`](../skills/interviewer-calibration-guide-author/SKILL.md) output. Ask each dissenting panelist: "Which of the four worked examples does this candidate's answer most resemble?" Concrete comparison to the gold-standard anchors is the resolution mechanism - not majority vote or seniority deference.
 
-5. **Flag bias language.** Review the discussion log for the common interviewer pitfalls named in [`calibration-guide-author`](../skills/calibration-guide-author/SKILL.md): (a) scoring on tone or confidence rather than observed behaviour; (b) halo-effect generalisation ("the candidate is clearly senior"); (c) anchor drift ("I never give 4s"). When flagged, surface the specific pitfall category and ask the panelist to re-score against the anchor.
+5. **Flag bias language.** Review the discussion log for the common interviewer pitfalls named in [`interviewer-calibration-guide-author`](../skills/interviewer-calibration-guide-author/SKILL.md): (a) scoring on tone or confidence rather than observed behaviour; (b) halo-effect generalisation ("the candidate is clearly senior"); (c) anchor drift ("I never give 4s"). When flagged, surface the specific pitfall category and ask the panelist to re-score against the anchor.
 
 6. **Compute the summary recommendation.** Apply the [`hiring-rubric-author`](../skills/hiring-rubric-author/SKILL.md) per-dimension floor rules: any dimension at 1 is a no-hire regardless of totals; 2 or more dimensions at 2 is a no-hire; 1 dimension at 2 with all others at 3 or above is borderline. The agent does not average across dimensions.
 

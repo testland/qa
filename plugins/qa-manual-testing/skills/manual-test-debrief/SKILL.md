@@ -119,7 +119,7 @@ metric captures.
 - Staging was down for ~10 min mid-session; lost momentum.
 
 **Recommendations for next session:**
-- Pre-seed promo codes via a fixture per `synthetic-data-toolkit`.
+- Pre-seed promo codes via a fixture per `synthetic-data-tool-selector`.
 - Verify staging is up before session start.
 
 ## Feelings

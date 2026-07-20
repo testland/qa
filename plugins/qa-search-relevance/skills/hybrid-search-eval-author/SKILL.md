@@ -9,7 +9,7 @@ metadata:
 
 Hybrid retrieval (BM25 + dense vector + optional reranker) is now the
 dominant production pattern for semantic search and RAG pipelines. The
-sibling skill `vector-search-precision-tests` covers recall@k for the
+sibling skill `vector-search-recall-tests` covers recall@k for the
 vector stage in isolation. This skill covers the fused result: does RRF
 outperform a weighted sum? Does the reranker improve nDCG@10 enough to
 justify the added latency?
@@ -388,7 +388,7 @@ index rebuild, fusion-weight update, reranker version bump).
 
 ## Related skills
 
-- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) -
+- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) -
   recall@k and HNSW tuning for the vector stage in isolation
 - [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) -
   term-based relevance metrics for BM25-only pipelines

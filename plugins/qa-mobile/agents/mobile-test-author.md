@@ -10,7 +10,7 @@ skills:
   - xcuitest-suite
   - maestro-flows
   - flutter-testing
-  - parameterized-test-generator
+  - pairwise-test-case-generator
 ---
 
 A per-screen / per-flow mobile test authoring agent - emits ONE new test file targeting one mobile screen, flow, or behavior. Never modifies existing tests or app source.
@@ -52,7 +52,7 @@ Write one new file at the conventional path. Emit a markdown summary with: detec
 
 - No driver supplied AND `mobile-driver-selector` cannot determine one → refuse (cascade the selector's refuse-reason to the user).
 - Target screen / element not identifiable from the spec → refuse and ask for an accessibility identifier or stable selector.
-- Spec asks for performance / load measurement on the mobile suite → refuse; recommend [`mobile-perf-budget`](../skills/mobile-perf-budget/SKILL.md) (a separate concern).
+- Spec asks for performance / load measurement on the mobile suite → refuse; recommend [`mobile-web-perf-budget`](../skills/mobile-web-perf-budget/SKILL.md) (a separate concern).
 - Spec asks for device-matrix selection → refuse; recommend [`mobile-device-matrix-toolkit`](../skills/mobile-device-matrix-toolkit/SKILL.md).
 - Never modify production app source or existing tests.
 
@@ -70,6 +70,6 @@ Write one new file at the conventional path. Emit a markdown summary with: detec
 
 - **Driver pick if not yet decided** → [`mobile-driver-selector`](mobile-driver-selector.md).
 - **Device matrix to run the suite against** → [`mobile-device-matrix-toolkit`](../skills/mobile-device-matrix-toolkit/SKILL.md).
-- **Performance budgets for mobile** → [`mobile-perf-budget`](../skills/mobile-perf-budget/SKILL.md).
+- **Performance budgets for mobile** → [`mobile-web-perf-budget`](../skills/mobile-web-perf-budget/SKILL.md).
 - **Test-code review** → `test-code-conventions` (qa-test-review).
-- **Parameterized cases** → [`parameterized-test-generator`](../../qa-test-data/skills/parameterized-test-generator/SKILL.md) (cross-plugin, qa-test-data).
+- **Parameterized cases** → [`pairwise-test-case-generator`](../../qa-test-data/skills/pairwise-test-case-generator/SKILL.md) (cross-plugin, qa-test-data).

@@ -1,13 +1,13 @@
 ---
 name: perf-regression-bisector
-description: "Action-taking agent that bisects a performance regression across commits - drives `git bisect run` with a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-slow-query-detector for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear."
+description: "Action-taking agent that bisects a performance regression across commits - drives `git bisect run` with a per-commit perf measurement script (typically a k6 / Lighthouse run with a single budget assertion), identifies the introducing commit, and hands off the in-commit hot path to flame-graph-analyzer or db-query-plan-analyzer for application-level diagnosis. Use when load testing or Lighthouse CI shows a perf regression but the introducing commit is unclear."
 tools: "Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(k6 run *), Bash(npx lhci *), Bash(jq *)"
 model: sonnet
 skills:
   - k6-load-testing
   - lighthouse-perf
   - flame-graph-analyzer
-  - db-slow-query-detector
+  - db-query-plan-analyzer
 ---
 
 A bisector that turns "p95 latency went up 3x sometime in the last 50 commits" into "this commit is the culprit, here's the suspected hot path."
@@ -28,7 +28,7 @@ A bisector that turns "p95 latency went up 3x sometime in the last 50 commits" i
 5. **Hand off the introducing commit** to
    [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md)
    for app-side hot paths or
-   [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md)
+   [`db-query-plan-analyzer`](../skills/db-query-plan-analyzer/SKILL.md)
    for DB-side. Bisector finds the **commit**; downstream finds the
    **why**.
 
@@ -110,7 +110,7 @@ culprit commit:
 2. Hand off to [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md)
    to confirm the suspected hot path.
 3. If the regression is database-bound (p95 dominated by SQL query
-   time), use [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md)
+   time), use [`db-query-plan-analyzer`](../skills/db-query-plan-analyzer/SKILL.md)
    instead - capture the new query's `EXPLAIN ANALYZE`.
 4. Once the cause is confirmed: revert + open a perf-fix PR, or
    forward-fix in a new commit.
@@ -123,7 +123,7 @@ Bisect over 30 commits identifies `abc1234` ("Refactor order
 serializer to JSON.stringify in one pass") as the culprit. Hand off
 to flame-graph-analyzer; flame graph shows `JSON.stringify` at 41%
 sample share. Match. If the flame graph shows DB-bound time
-(e.g. `pg_send_query_blocking`), hand off to db-slow-query-detector
+(e.g. `pg_send_query_blocking`), hand off to db-query-plan-analyzer
 for `EXPLAIN ANALYZE`. If bisect variance exceeds the budget margin
 (e.g. control p95 280ms ±80ms vs budget 500ms), the result is
 INCONCLUSIVE - increase load-test duration / iterations and re-run
@@ -151,6 +151,6 @@ rather than pretending a noisy result is a clear culprit.
   [`lighthouse-perf`](../skills/lighthouse-perf/SKILL.md) - runners
   consumed by the per-commit measurement script.
 - [`flame-graph-analyzer`](../skills/flame-graph-analyzer/SKILL.md),
-  [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md) - downstream skills for in-commit analysis.
+  [`db-query-plan-analyzer`](../skills/db-query-plan-analyzer/SKILL.md) - downstream skills for in-commit analysis.
 - [`perf-budget-gate`](../skills/perf-budget-gate/SKILL.md) - the
   gate that produces the regression alert this agent acts on.

@@ -122,7 +122,7 @@ Same six boundary points applied to count. For `items` with
 ```
 
 Item shape comes from the matching factory (Faker / mimesis /
-FactoryBot - see [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md)).
+FactoryBot - see [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md)).
 
 ### Enum
 
@@ -246,7 +246,7 @@ one representative per class.
 - **Single-input boundaries.** This skill covers per-field
   boundaries; for multi-field interactions (e.g. `start_date <
   end_date`), use the broader
-  [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md)
+  [`pairwise-test-case-generator`](../pairwise-test-case-generator/SKILL.md)
   with pairwise-combinatorial logic.
 - **Domain-specific boundaries.** A "valid US ZIP code" is
   5 digits - boundary analysis won't surface that 99999 is valid
@@ -261,7 +261,7 @@ one representative per class.
 - [ISTQB boundary value analysis](https://glossary.istqb.org/en_US/term/boundary-value-analysis) - canonical definition.
 - [ISTQB equivalence partitioning][istqb-eq] - the complementary
   technique.
-- [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md) - broader skill including pairwise combinatorial cases.
+- [`pairwise-test-case-generator`](../pairwise-test-case-generator/SKILL.md) - broader skill including pairwise combinatorial cases.
 - [`negative-test-generator`](../negative-test-generator/SKILL.md) - sibling skill for rejection-path coverage.
-- [`synthetic-data-toolkit`](../synthetic-data-toolkit/SKILL.md) - for value generation when the boundary string requires a
+- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - for value generation when the boundary string requires a
   realistic-looking string.

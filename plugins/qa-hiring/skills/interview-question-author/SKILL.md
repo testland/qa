@@ -20,7 +20,7 @@ The skill is QA-specific by design. Generic interview-question generators exist 
 Do **not** use this skill to:
 
 - Produce the scoring rubric - that is [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
-- Produce the calibration guide / gold-standard answers - that is [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
+- Produce the calibration guide / gold-standard answers - that is [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
 - Author non-QA-role questions (general engineering, product, design). The skill is QA-scoped.
 
 ## Step 1 - Capture the role inputs
@@ -104,7 +104,7 @@ The output is a single markdown document with:
 ## HAND-OFF - required next steps
 
 1. Pair with `hiring-rubric-author` to produce the per-question scoring rubric. The rubric and the questions must travel together; otherwise the loop reverts to unstructured.
-2. Pair with `calibration-guide-author` after the rubric exists; the calibration guide is what brings interviewer scoring into agreement.
+2. Pair with `interviewer-calibration-guide-author` after the rubric exists; the calibration guide is what brings interviewer scoring into agreement.
 3. Lock the question bank at the start of the hiring round; if the bank changes mid-round, every prior candidate's score is no longer comparable.
 ```
 
@@ -131,7 +131,7 @@ The output is a single markdown document with:
 ## Hand-off targets
 
 - **Score the questions consistently** → [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
-- **Calibrate interviewers** → [`calibration-guide-author`](../calibration-guide-author/SKILL.md).
+- **Calibrate interviewers** → [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
 - **Compliance review of the question set** → the team's legal / HR review (flagged here so the hiring manager remembers).
 
 ## References
@@ -142,4 +142,4 @@ The output is a single markdown document with:
 - Structured interview research - Levashina et al. 2014 ([*Personnel Psychology*](https://en.wikipedia.org/wiki/Structured_interview)) on the validity uplift from structured employment interviews; the methodological basis for this skill's "same questions, same order, same scoring" defaults.
 - Bloom's taxonomy - K1 remember / K2 understand / K3 apply / K4 analyse - ISTQB-adopted cognitive-difficulty levels: https://en.wikipedia.org/wiki/Bloom%27s_taxonomy
 - PractiTest 2026 State of Testing Report - hiring rubric / interview question generation cited as a high-adoption, low-risk AI use case for QA managers: https://www.practitest.com/state-of-testing/
-- [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md), [`calibration-guide-author`](../calibration-guide-author/SKILL.md) - sibling skills that complete the structured-interview triple.
+- [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md), [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md) - sibling skills that complete the structured-interview triple.

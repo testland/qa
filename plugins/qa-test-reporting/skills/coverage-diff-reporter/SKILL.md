@@ -255,5 +255,5 @@ report as the PR evolves.
   [`coverage-py-analysis`](../coverage-py-analysis/SKILL.md) - 
   language-specific parsers; convert to LCOV / Cobertura before
   feeding this skill.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - downstream skill that reads the same data to suggest which
+- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - downstream skill that reads the same data to suggest which
   uncovered branches to target next.

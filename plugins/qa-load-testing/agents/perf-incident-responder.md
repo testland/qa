@@ -6,7 +6,7 @@ model: sonnet
 skills:
   - k6-load-testing
   - flame-graph-analyzer
-  - db-slow-query-detector
+  - db-query-plan-analyzer
 ---
 
 On-call performance-incident orchestrator for senior perf engineers. Reproduces the incident with a targeted k6 run, diagnoses the hot path via flame-graph analysis, checks for slow queries, and localizes the dominant cause - all in one coordinated workflow. Does not bisect commits; hand off to [`perf-regression-bisector`](./perf-regression-bisector.md) if the introducing change is unknown after localization.
@@ -57,7 +57,7 @@ If the flame graph shows DB-bound frames (e.g. `pg_send_query_blocking`, `mysql_
 
 ### Step 3 - Detect slow queries
 
-If Step 2 points to DB-bound cost (or is inconclusive), invoke [`db-slow-query-detector`](../skills/db-slow-query-detector/SKILL.md) to:
+If Step 2 points to DB-bound cost (or is inconclusive), invoke [`db-query-plan-analyzer`](../skills/db-query-plan-analyzer/SKILL.md) to:
 
 - Capture `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON, SETTINGS)` for the suspect query (PostgreSQL) or `EXPLAIN ANALYZE` (MySQL 8.0+) per [pg-explain docs](https://www.postgresql.org/docs/current/using-explain.html).
 - Identify the dominant plan node (Seq Scan, Sort spill, Nested Loop with high inner-side row count).

@@ -9,7 +9,7 @@ QA hiring toolkit: a structured-interview triple - questions, rubric, calibratio
 | Skill | [qa-jd-author](skills/qa-jd-author/SKILL.md) | Build a QA job description for a role + seniority - ISTQB CTFL v4.0 testing-role vs test-management-role responsibilities, must-have / nice-to-have skills split, and recruiter screening signals - the upstream-most artifact of the hiring chain. |
 | Skill | [interview-question-author](skills/interview-question-author/SKILL.md) | Build a role + seniority-specific question bank - technical, behavioural (STAR-format), scenario-based, system-design - classified by ISTQB competency and Bloom's-taxonomy difficulty. |
 | Skill | [hiring-rubric-author](skills/hiring-rubric-author/SKILL.md) | Build a competency-anchored 4-level scoring rubric (no-hire / borderline / hire / strong-hire) with concrete behavioural anchors per competency dimension. |
-| Skill | [calibration-guide-author](skills/calibration-guide-author/SKILL.md) | Build an interviewer calibration guide - gold-standard model answers per question per score level, common interviewer pitfalls, and a panel-calibration session script. |
+| Skill | [interviewer-calibration-guide-author](skills/interviewer-calibration-guide-author/SKILL.md) | Build an interviewer calibration guide - gold-standard model answers per question per score level, common interviewer pitfalls, and a panel-calibration session script. |
 | Agent | [interview-debrief-facilitator](agents/interview-debrief-facilitator.md) | Facilitates the post-interview calibration loop and produces a rubric-anchored hire/no-hire decision document. |
 | Skill | [onboarding-plan-author](skills/onboarding-plan-author/SKILL.md) | Build a 30-60-90 day QA-hire onboarding plan by seniority, mapped to the hiring rubric. |
 

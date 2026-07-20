@@ -88,7 +88,7 @@ production but no BASE_URL is provided (won't default to staging).
 - **Production data dependencies** - needs predictable test data
   (a SKU that always exists, an account that always works).
 - **Test-account / test-data setup** →
-  [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md).
+  [`synthetic-data-tool-selector`](../../qa-test-data/skills/synthetic-data-tool-selector/SKILL.md).
 - **Selector quality review** →
   [`e2e-selector-quality-critic`](../../qa-test-review/agents/e2e-selector-quality-critic.md).
 - **Closing the loop monitor → regression test** →

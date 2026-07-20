@@ -292,5 +292,5 @@ overrides config-side reporter selection.
   also emits Cobertura XML when configured; this parser consumes it.
 - [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
   PR-comment formatter built on top of the parsed Jest output.
-- [`unit-test-coverage-targeter`](../unit-test-coverage-targeter/SKILL.md) - picks which uncovered branches to target, given the Jest
+- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - picks which uncovered branches to target, given the Jest
   output.

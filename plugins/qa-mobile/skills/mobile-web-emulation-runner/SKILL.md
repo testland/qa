@@ -234,7 +234,7 @@ aggregator (Step 4) to produce a per-device summary:
 - **No native APIs.** Emulation can't test camera / push
   notifications / geolocation accuracy / biometrics.
 - **Performance under emulation is the runner's CPU.** For mobile
-  perf testing, see [`mobile-perf-budget`](../mobile-perf-budget/SKILL.md)
+  perf testing, see [`mobile-web-perf-budget`](../mobile-web-perf-budget/SKILL.md)
   + Lighthouse mobile profile.
 - **Cypress feature gap.** Playwright's `devices` catalog is
   richer; Cypress requires more manual setup.
@@ -244,7 +244,7 @@ aggregator (Step 4) to produce a per-device summary:
 - Playwright devices catalog (in the `@playwright/test` package);
   per-device viewport / DPR / UA / touch synthesis.
 - [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md) - sibling: orchestrates per-target dispatch and aggregation.
-- [`mobile-perf-budget`](../mobile-perf-budget/SKILL.md) - 
+- [`mobile-web-perf-budget`](../mobile-web-perf-budget/SKILL.md) - 
   performance testing under mobile profile.
 - [`touch-gesture-tester`](../touch-gesture-tester/SKILL.md) - 
   detailed touch-gesture verification.

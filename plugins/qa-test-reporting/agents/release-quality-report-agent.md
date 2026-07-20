@@ -6,7 +6,7 @@ model: sonnet
 skills:
   - test-run-summary-author
   - coverage-diff-reporter
-  - unit-test-coverage-targeter
+  - test-coverage-targeter
 ---
 
 Produces a release-quality go/no-go report by combining three evidence streams - test-run narrative, coverage diff, and coverage target recommendations - into one manager-facing document with an explicit verdict and a traceable rationale.
@@ -41,9 +41,9 @@ Per [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md) Step 4
 
 ## Step 3 - Produce coverage targets for open risk
 
-Invoke `unit-test-coverage-targeter` against the coverage report and the release diff. Capture the top 5 risk-ranked uncovered branches. This output is advisory - it does not affect the verdict. It surfaces the residual coverage risk the manager accepts if the release proceeds.
+Invoke `test-coverage-targeter` against the coverage report and the release diff. Capture the top 5 risk-ranked uncovered branches. This output is advisory - it does not affect the verdict. It surfaces the residual coverage risk the manager accepts if the release proceeds.
 
-Per [`unit-test-coverage-targeter`](../skills/unit-test-coverage-targeter/SKILL.md) Step 8: the targets are advisory; they are not a gate. Include them so the manager has a concrete "what we are shipping untested" list, not just an aggregate number.
+Per [`test-coverage-targeter`](../skills/test-coverage-targeter/SKILL.md) Step 8: the targets are advisory; they are not a gate. Include them so the manager has a concrete "what we are shipping untested" list, not just an aggregate number.
 
 ## Step 4 - Compute the verdict
 
@@ -79,7 +79,7 @@ Per Martin Fowler's CI definition: "the product should always be in a state wher
 
 ## Residual coverage risk (advisory)
 
-<top 5 targets from unit-test-coverage-targeter; not a gate>
+<top 5 targets from test-coverage-targeter; not a gate>
 
 ## Evidence audit
 
@@ -106,13 +106,13 @@ The report is a single markdown document. The verdict (`GO` / `NO-GO` / `CONDITI
 - **Per-failure classification for NO-GO failures** - [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md).
 - **Cross-suite daily health for context** - [`daily-test-suite-aggregator`](./daily-test-suite-aggregator.md).
 - **Coverage per-file drill-down** - [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md) full report.
-- **Coverage improvement plan post-release** - [`unit-test-coverage-targeter`](../skills/unit-test-coverage-targeter/SKILL.md) advisory list.
+- **Coverage improvement plan post-release** - [`test-coverage-targeter`](../skills/test-coverage-targeter/SKILL.md) advisory list.
 
 ## References
 
 - [`test-run-summary-author`](../skills/test-run-summary-author/SKILL.md) - release-notes narrative shape and load-bearing metric definitions preloaded into this agent.
 - [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md) - per-file coverage delta, 80% new-file threshold, -5pp regression threshold preloaded into this agent.
-- [`unit-test-coverage-targeter`](../skills/unit-test-coverage-targeter/SKILL.md) - risk-ranked uncovered branches preloaded into this agent.
+- [`test-coverage-targeter`](../skills/test-coverage-targeter/SKILL.md) - risk-ranked uncovered branches preloaded into this agent.
 - [Google Testing Blog - Code coverage goal: 80% and no less](https://testing.googleblog.com/2010/07/code-coverage-goal-80-and-no-less.html) - the 80% new-file floor used in Step 2 / Step 4.
 - [Martin Fowler - Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html) - "the product should always be in a state where we can release the latest build"; release-readiness framing in Step 4.
 - ISO/IEC/IEEE 29119-3:2021 - test reporting structures (cite by stable ID; the canonical ISO page is behind Cloudflare Turnstile and cannot be fetched directly).

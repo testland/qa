@@ -299,4 +299,4 @@ across runs:
   [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
   [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
   [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md),
-  [`fuzz-toolkit-dispatcher`](../fuzz-toolkit-dispatcher/SKILL.md).
+  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).

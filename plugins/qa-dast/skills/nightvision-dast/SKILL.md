@@ -201,5 +201,5 @@ jobs:
 - nightvision.net - product page
 - [`zap-baseline`](../zap-baseline/SKILL.md),
   [`burp-headless`](../burp-headless/SKILL.md) - sister DAST tools
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
+- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - 
   build-an-X for layered DAST

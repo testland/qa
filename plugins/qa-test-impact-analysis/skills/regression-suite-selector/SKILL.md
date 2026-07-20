@@ -287,7 +287,7 @@ Implement:
   applies here unless the test/SUT topology is captured in the map.
 - **Doesn't fix slow tests.** Selection cuts the count; per-test
   speed is still on the team. Pair with
-  `unit-test-coverage-targeter`
+  `test-coverage-targeter`
   for the "what to add next" side.
 
 ## References

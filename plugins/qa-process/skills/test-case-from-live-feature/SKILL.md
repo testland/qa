@@ -1,13 +1,13 @@
 ---
 name: test-case-from-live-feature
-description: "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the heuristic models in `heuristic-test-design-coach` (SFDPOT, Whittaker attacks, FEW HICCUPPS, ISO 25010). Output is a structured case matrix, not an exploratory session charter. Use when there is no story, no AC, and no documentation - only a live feature."
+description: "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the heuristic models in `heuristic-test-design-reference` (SFDPOT, Whittaker attacks, FEW HICCUPPS, ISO 25010). Output is a structured case matrix, not an exploratory session charter. Use when there is no story, no AC, and no documentation - only a live feature."
 ---
 
 # test-case-from-live-feature
 
 ## Overview
 
-A tester is told "test the new checkout flow" with no story, no AC, no design doc. The feature is deployed to staging. The right path is not to halt; it is to **reverse-engineer a test-case matrix from the live feature itself**, anchored on the four heuristic models in [`heuristic-test-design-coach`](../heuristic-test-design-coach/SKILL.md). This skill is the workflow that runs that reverse-engineering and emits a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
+A tester is told "test the new checkout flow" with no story, no AC, no design doc. The feature is deployed to staging. The right path is not to halt; it is to **reverse-engineer a test-case matrix from the live feature itself**, anchored on the four heuristic models in [`heuristic-test-design-reference`](../heuristic-test-design-reference/SKILL.md). This skill is the workflow that runs that reverse-engineering and emits a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
 
 The output is the same shape as [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) - one row per case with `id / title / tier / precondition / steps / expected / source claim` - but the `source claim` column points at *observed behaviour* rather than *story sentence*, and rows are tagged with the heuristic that surfaced them so the team can audit the coverage logic later.
 
@@ -68,7 +68,7 @@ Inputs that **cannot** be confirmed by direct observation are tagged `[verbal, u
 
 ## Step 2 - Walk the heuristic models
 
-For each heuristic in [`heuristic-test-design-coach`](../heuristic-test-design-coach/SKILL.md), apply it to the observation log:
+For each heuristic in [`heuristic-test-design-reference`](../heuristic-test-design-reference/SKILL.md), apply it to the observation log:
 
 ### 2a - SFDPOT coverage walk
 
@@ -87,7 +87,7 @@ Each non-empty cell becomes one or more test-case rows.
 
 ### 2b - Whittaker attack overlay
 
-For each function, enumerate the attacks from the [Whittaker catalog](https://en.wikipedia.org/wiki/Exploratory_testing) (in `heuristic-test-design-coach`):
+For each function, enumerate the attacks from the [Whittaker catalog](https://en.wikipedia.org/wiki/Exploratory_testing) (in `heuristic-test-design-reference`):
 
 - **Input attack on coupon**: empty, 33+ chars (one over the observed UI limit), special characters, SQL-keyword string, leading whitespace, expired (already covered by 422), case mismatch.
 - **UI attack on place-order**: double-click (button disable already observed - verify it actually prevents the second POST), browser-back after charge, refresh during payment redirect.
@@ -183,7 +183,7 @@ Per the same conventions as [`test-case-ideation-from-story`](../test-case-ideat
 
 ## References
 
-- [`heuristic-test-design-coach`](../heuristic-test-design-coach/SKILL.md) - the reference catalog of HTSM / SFDPOT / Whittaker / FEW HICCUPPS / ISO 25010 this skill consumes.
+- [`heuristic-test-design-reference`](../heuristic-test-design-reference/SKILL.md) - the reference catalog of HTSM / SFDPOT / Whittaker / FEW HICCUPPS / ISO 25010 this skill consumes.
 - James Bach - Heuristic Test Strategy Model: https://www.satisfice.com/download/heuristic-test-strategy-model
 - Michael Bolton - DevelopSense (FEW HICCUPPS, exploratory testing): https://developsense.com/
 - Exploratory testing - Kaner's 1984 definition; Whittaker "How to Break Software" attack catalog: https://en.wikipedia.org/wiki/Exploratory_testing

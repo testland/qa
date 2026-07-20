@@ -211,5 +211,5 @@ invocation. Auto-creates a GitHub Issue on failure.
 - github.com/zaproxy/action-baseline - official GHA action
 - [`burp-headless`](../burp-headless/SKILL.md),
   [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister DAST tools
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
+- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - 
   build-an-X for layered DAST (baseline → full → optional Burp deep)

@@ -19,7 +19,7 @@ This skill is a **pure reference** - no execution steps. It is the catalog cited
 Do **not** use this skill to:
 
 - Configure a specific tool - that's the per-language skill for that tool.
-- Generate negative / boundary / parameterized test data - that's [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`parameterized-test-generator`](../parameterized-test-generator/SKILL.md).
+- Generate negative / boundary / parameterized test data - that's [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`pairwise-test-case-generator`](../pairwise-test-case-generator/SKILL.md).
 - Author an E2E seed fixture for the whole suite - that's [`seed-data-curator`](../seed-data-curator/SKILL.md).
 
 ## Pattern 1 - Test Data Builder

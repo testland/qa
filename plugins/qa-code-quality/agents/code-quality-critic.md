@@ -4,7 +4,7 @@ description: "Adversarial reviewer of production code quality findings across So
 tools: "Read, Grep, Glob, Bash(jq *), Bash(git *)"
 model: sonnet
 skills:
-  - sonarqube-quality-perspective
+  - sonarqube-maintainability-gate
   - codeclimate-config
   - lizard-complexity
   - madge-deps
@@ -210,7 +210,7 @@ PR description must cite ticket ID + approver before merge.
 
 ## References
 
-- [`sonarqube-quality-perspective`](../skills/sonarqube-quality-perspective/SKILL.md),
+- [`sonarqube-maintainability-gate`](../skills/sonarqube-maintainability-gate/SKILL.md),
   [`codeclimate-config`](../skills/codeclimate-config/SKILL.md),
   [`lizard-complexity`](../skills/lizard-complexity/SKILL.md),
   [`madge-deps`](../skills/madge-deps/SKILL.md),

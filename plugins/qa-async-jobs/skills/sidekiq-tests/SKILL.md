@@ -191,8 +191,8 @@ services:
 - github.com/sidekiq/sidekiq - repository
 - [`celery-tests`](../celery-tests/SKILL.md),
   [`bullmq-tests`](../bullmq-tests/SKILL.md),
-  [`sqs-patterns`](../sqs-patterns/SKILL.md),
-  [`rabbitmq-patterns`](../rabbitmq-patterns/SKILL.md) - sister tools
+  [`sqs-tests`](../sqs-tests/SKILL.md),
+  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md) - sister tools
 - [`idempotency-test-author`](../idempotency-test-author/SKILL.md),
   [`cron-job-test-author`](../cron-job-test-author/SKILL.md) - 
   build-an-X authors for cross-tool patterns

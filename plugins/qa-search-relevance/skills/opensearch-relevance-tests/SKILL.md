@@ -138,7 +138,7 @@ def test_neural_recall_at_10():
         assert recall >= 0.85, f"Recall {recall:.2f} below 0.85 for query: {query['text']}"
 ```
 
-Pair with `vector-search-precision-tests` for HNSW parameter tuning.
+Pair with `vector-search-recall-tests` for HNSW parameter tuning.
 
 ## Step 5 - Hybrid (BM25 + neural)
 
@@ -239,7 +239,7 @@ should match. Differences point to subtle config drift.
 - [OpenSearch search-relevance docs] - workbench, neural, hybrid
 - [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) - 
   sister skill (compatible Rank Eval API + judgment format)
-- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) - 
+- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) - 
   vector search precision/recall tooling
 
 [OpenSearch search-relevance docs]: https://docs.opensearch.org/latest/search-plugins/search-relevance/

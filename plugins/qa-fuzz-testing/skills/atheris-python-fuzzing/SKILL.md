@@ -234,4 +234,4 @@ Map the traceback to a bug spec via `bug-report-from-failure`
 - Sibling-plugin overlap:
   `hypothesis-testing` - different methodology (hypothesis-driven vs coverage-guided).
 - Dispatcher:
-  [`fuzz-toolkit-dispatcher`](../fuzz-toolkit-dispatcher/SKILL.md).
+  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).

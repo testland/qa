@@ -8,7 +8,7 @@ skills:
   - ginkgo-tests
   - cargo-test
   - rstest-tests
-  - parameterized-test-generator
+  - pairwise-test-case-generator
 ---
 
 A per-callable test-authoring agent that emits one new Go or Rust unit test file - never modifies existing tests, never fabricates symbols the spec did not name. Handles a language-bifurcation step (Go vs Rust) before the per-framework detection that the other Wave 2 siblings start with.
@@ -116,6 +116,6 @@ One markdown block: spec one-liner, detected language + framework, the new file 
 ## Hand-off targets
 
 - **Framework skills** → [`go-test`](../skills/go-test/SKILL.md), [`ginkgo-tests`](../skills/ginkgo-tests/SKILL.md), [`cargo-test`](../skills/cargo-test/SKILL.md), [`rstest-tests`](../skills/rstest-tests/SKILL.md).
-- **Multi-input parameterized cases** → [`qa-test-data/parameterized-test-generator`](../../qa-test-data/skills/parameterized-test-generator/SKILL.md) - maps cleanly to Go's `t.Run` table cases AND Rust's `#[rstest] #[case]` macro.
+- **Multi-input parameterized cases** → [`qa-test-data/pairwise-test-case-generator`](../../qa-test-data/skills/pairwise-test-case-generator/SKILL.md) - maps cleanly to Go's `t.Run` table cases AND Rust's `#[rstest] #[case]` macro.
 - **Property-based scope** (refused above) → deferred to the `qa-property-based` plugin's authoring agent (Wave 6 of Tier 4).
 - **Assertion-quality review** → `test-code-conventions` (qa-test-review).

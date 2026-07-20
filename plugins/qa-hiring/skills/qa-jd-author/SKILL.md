@@ -118,7 +118,7 @@ hands-on engineering, ~20% strategy input for your area.
 
 ## Hand-off targets
 
-- **Next step in the chain** → [`interview-question-author`](../interview-question-author/SKILL.md) (question bank), then [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) (scoring rubric), then [`calibration-guide-author`](../calibration-guide-author/SKILL.md) - the structured-interview triple this JD feeds.
+- **Next step in the chain** → [`interview-question-author`](../interview-question-author/SKILL.md) (question bank), then [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) (scoring rubric), then [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md) - the structured-interview triple this JD feeds.
 - **After the hire** → [`onboarding-plan-author`](../onboarding-plan-author/SKILL.md).
 - **If the role came from a capability gap** → a team capability-gap report supplies the "why this role is open" paragraph.
 
@@ -126,4 +126,4 @@ hands-on engineering, ~20% strategy input for your area.
 
 - ISTQB CTFL Syllabus v4.0, section 1.4.5 "Roles in Testing" (testing role vs test management role definitions quoted in the Overview) and 1.5.1 "Generic Skills Required for Testing": https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf - syllabus text verified 2026-06-10 from the published v4.0 PDF (ISTQB resource CDN copy at https://d288qud2qgn4l3.cloudfront.net/media/resources/ISTQB_CTFL_Syllabus-v4.0.pdf).
 - Workable, "How to write a good job description" - title guidance, 300 - 660 word target, bulleted typical-workday duties, must-have vs nice-to-have split: https://resources.workable.com/tutorial/how-to-write-a-good-job-description (fetched 2026-06-10).
-- [`interview-question-author`](../interview-question-author/SKILL.md), [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md), [`calibration-guide-author`](../calibration-guide-author/SKILL.md), [`onboarding-plan-author`](../onboarding-plan-author/SKILL.md) - the downstream hiring chain.
+- [`interview-question-author`](../interview-question-author/SKILL.md), [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md), [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md), [`onboarding-plan-author`](../onboarding-plan-author/SKILL.md) - the downstream hiring chain.

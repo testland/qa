@@ -239,7 +239,7 @@ results.
 - Splainer (debug per-doc ranking) - github.com/o19s/splainer-search
 - [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) - 
   sister skill (compatible API)
-- [`vector-search-precision-tests`](../vector-search-precision-tests/SKILL.md) - 
+- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) - 
   vector search analogue
 
 [Elasticsearch Rank Eval API]: https://www.elastic.co/docs/api/doc/elasticsearch/operation/operation-rank-eval

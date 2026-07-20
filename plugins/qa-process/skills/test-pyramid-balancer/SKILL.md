@@ -219,7 +219,7 @@ Output a stack-ranked list of layer-changes:
 - [tp][tp] - Mike Cohn's pyramid: unit / service / UI; "many more
   low-level UnitTests than high level BroadStackTests"; UI tests
   "brittle, expensive to write, and time consuming to run."
-- `unit-test-coverage-targeter` - risk-weighted "what to add at unit layer" once the team decides
+- `test-coverage-targeter` - risk-weighted "what to add at unit layer" once the team decides
   to layer-down.
 - [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling
   skill for capping E2E suite size.

@@ -157,7 +157,7 @@ The agent **refuses** to:
 ## Hand-off targets
 
 - **Concrete test additions** → see
-  [`unit-test-coverage-targeter`](../../qa-test-reporting/skills/unit-test-coverage-targeter/SKILL.md)
+  [`test-coverage-targeter`](../../qa-test-reporting/skills/test-coverage-targeter/SKILL.md)
   for "what tests to write where, given a coverage report."
 - **Service-layer test stack** → see
   [`testcontainers`](../../qa-test-environment/skills/testcontainers/SKILL.md)

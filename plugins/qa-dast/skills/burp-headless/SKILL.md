@@ -218,5 +218,5 @@ jobs:
 - [`zap-baseline`](../zap-baseline/SKILL.md),
   [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister DAST tools
   (use ZAP first; Burp adds layered paid coverage)
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - 
+- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - 
   build-an-X for layered DAST

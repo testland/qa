@@ -21,7 +21,7 @@ Nearest neighbors and differentiation axes:
 
 - [`zap-baseline`](../zap-baseline/SKILL.md) covers the `-n context_file`
   flag but not how to build that file.
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) covers cadence
+- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) covers cadence
   (PR-blocking vs. nightly vs. release), not auth wiring.
 - Neither neighbor covers CSRF handling, bearer injection, OAuth flows,
   verification-strategy calibration, or context XML export.
@@ -359,4 +359,4 @@ re-configuring login from scratch in each tool.
 - [zaproxy.org/docs/desktop/start/features/users/][zap-users] - user configuration
 - [zaproxy.org/docs/desktop/addons/authentication-helper/][zap-helper] - browser-based auth + auth tester
 - [`zap-baseline`](../zap-baseline/SKILL.md) - baseline scan using the context file produced here
-- [`dast-baseline-runner`](../dast-baseline-runner/SKILL.md) - layered DAST cadence (baseline, full, Burp deep)
+- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - layered DAST cadence (baseline, full, Burp deep)

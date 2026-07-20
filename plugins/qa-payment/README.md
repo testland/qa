@@ -1,6 +1,6 @@
 # qa-payment
 
-Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-scope-checker (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.
+Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-control-test-author (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.
 
 ## Components
 
@@ -17,7 +17,7 @@ Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode,
 | Skill | [chargeback-flow-test-author](skills/chargeback-flow-test-author/SKILL.md) | Build-an-X chargeback / dispute test suite (Visa reason codes). |
 | Skill | [payment-webhook-replay](skills/payment-webhook-replay/SKILL.md) | Build-an-X webhook replay + recovery tests (idempotency contract). |
 | Agent | [payment-flow-critic](agents/payment-flow-critic.md) | Adversarial read-only reviewer: flags missing idempotency keys, unverified webhook signatures, PAN/CVV in logs, unhandled requires_action/3DS states, and double-charge race risk. Emits per-finding severity + BLOCK/PASS verdict. |
-| Skill | [subscription-billing-test-author](skills/subscription-billing-test-author/SKILL.md) | Tests recurring-billing flows: trials, proration, dunning, cancel/reactivate, via Stripe Billing test clocks. |
+| Skill | [stripe-subscription-billing-test-author](skills/stripe-subscription-billing-test-author/SKILL.md) | Tests recurring-billing flows: trials, proration, dunning, cancel/reactivate, via Stripe Billing test clocks. |
 
 ## Install
 

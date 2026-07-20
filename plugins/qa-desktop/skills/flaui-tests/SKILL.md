@@ -412,16 +412,6 @@ itself ships both packages.
   every other UIA-backed driver). Add UIA support in the application
   or fall back to image matching for those screens.
 
-## Evals
-
-Eval authoring for this skill is **deferred** per the v3.0 framework
-§10 backfill priority order: per-tool wrappers rank lowest for eval
-investment because "the tool itself is the oracle; 'the test runs as
-documented' is the pass condition." This skill ships with `d7: 1`
-(no evals authored yet) - that satisfies the v3.0 hard floor on D7
-without expending eval budget that better targets critics and the
-qa-llm-evaluation / qa-ai-assisted plugins first.
-
 ## References
 
 - FlaUI repository (README) - [flaui][flaui].
