@@ -1,17 +1,22 @@
 ---
 name: crusspic-stmpl-heuristic
-description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - twelve quality criteria a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use as the quality-criteria checklist for evaluating a product holistically; complementary to ISO/IEC 25010 quality model."
+description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - thirteen quality criteria a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use as the quality-criteria checklist for evaluating a product holistically; complementary to ISO/IEC 25010 quality model."
 ---
 
 # crusspic-stmpl-heuristic
 
 ## Overview
 
-CRUSSPIC STMPL is James Bach's quality-criteria mnemonic - twelve
-categories of "what does it mean for this system to be good?"
-Published in James Bach's testing-curriculum materials
-([satisfice.com](https://www.satisfice.com/rapid-software-testing))
-and widely taught.
+CRUSSPIC STMPL is James Bach's quality-criteria mnemonic - a
+category list for judging what it means for a system to be good.
+The thirteen criteria are enumerated under "Quality Criteria
+Categories" in Bach's *Heuristic Test Strategy Model* (HTSM v6.3,
+2024-11-05), which defines a quality criterion as "some requirement
+that defines what the product should be"
+([HTSM](https://www.satisfice.com/download/heuristic-test-strategy-model)).
+The HTSM prints the criteria as named categories; the CRUSSPIC
+STMPL letters are the memory aid taught over them, not an acronym
+the HTSM itself spells out.
 
 It overlaps with **ISO/IEC 25010:2023** (the formal software-
 quality model) but offers a more practitioner-friendly mnemonic
@@ -32,7 +37,7 @@ categorising risks (see its "Quality characteristic" step).
 - Reviewing a release candidate - walk CRUSSPIC STMPL to confirm
   each criterion is addressed.
 
-## The twelve criteria
+## The thirteen criteria
 
 ### CRUSSPIC - primary criteria
 
@@ -258,7 +263,7 @@ Verdict: cleared for release.
 | Confusing Performance with Scalability | "Fast" doesn't mean "stays fast under load" | Test both independently |
 | Treating Maintainability + Testability as "developer concerns" | They're quality criteria the tester evaluates | Include in release walkthrough |
 | Skipping Supportability | Released system unmaintainable in production | Always walk S |
-| One person evaluates all 12 | Inter-criterion expertise differs | Distribute walkthrough across team |
+| One person evaluates all 13 | Inter-criterion expertise differs | Distribute walkthrough across team |
 | Walkthrough at release time only | Quality criteria degrade silently between releases | Continuous monitoring per criterion |
 
 ## Limitations
@@ -267,7 +272,7 @@ Verdict: cleared for release.
   product / domain / regulatory context.
 - **Some criteria are evaluatable only in production.** Reliability
   + Supportability need real usage data.
-- **Mnemonic overload.** Twelve letters is at the edge of working
+- **Mnemonic overload.** Thirteen letters is at the edge of working
   memory; testers often print the catalog.
 - **Doesn't replace ISO 25010 formal model.** For regulated /
   compliance contexts use ISO 25010 + cite formally; use
@@ -275,8 +280,10 @@ Verdict: cleared for release.
 
 ## References
 
-- Bach J. *Quality criteria* and the CRUSSPIC STMPL mnemonic - 
-  [satisfice.com](https://www.satisfice.com/rapid-software-testing).
+- Bach J. *Heuristic Test Strategy Model* v6.3 (PDF), "Quality
+  Criteria Categories" - the source enumerating the thirteen
+  criteria this mnemonic indexes - 
+  [satisfice.com/download/heuristic-test-strategy-model](https://www.satisfice.com/download/heuristic-test-strategy-model).
 - Bach J. *Heuristics of Software Testability* - 
   [satisfice.com/heuristics-of-software-testability](https://www.satisfice.com/heuristics-of-software-testability).
 - ISO/IEC 25010:2023 "Systems and software Quality Requirements

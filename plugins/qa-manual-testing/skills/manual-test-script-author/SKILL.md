@@ -156,8 +156,9 @@ Per [exploratory-wiki][exp]:
 
 [exp]: https://en.wikipedia.org/wiki/Exploratory_testing
 
-> "Most real-world testing combines both approaches" (scripted +
-> exploratory) "with emphasis depending on project context."
+> "In reality, testing almost always is a combination of exploratory
+> and scripted testing, but with a tendency towards either one,
+> depending on context."
 
 Manual scripts that depend on "the test data the team uses" or
 "whatever account QA has" fail when the next tester runs them. The

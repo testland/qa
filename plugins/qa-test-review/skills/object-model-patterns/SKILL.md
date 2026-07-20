@@ -106,7 +106,7 @@ Do **not** use this skill to:
 
 ## Pattern 4 - App Actions (Cypress idiom)
 
-**Canonical source:** [Kent C. Dodds and the Cypress team - "Stop using Page Objects and Start using App Actions" (Cypress blog)](https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/).
+**Canonical source:** [Gleb Bahmutov - "Application Actions: Use Them Instead of Page Objects" (Cypress blog, 2019)](https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/).
 
 **Definition:** App Actions bypass the UI for setup steps by exposing application functions (Redux dispatches, store mutations, API calls) directly via `cy.window().its('app')` or equivalent. The test still asserts via the UI; only the Arrange phase is short-circuited.
 
@@ -171,7 +171,7 @@ Do **not** use this skill to:
 
 ## Pattern 7 - Screen Object (desktop / mobile sibling of Page Object)
 
-**Canonical source:** Martin Fowler's PageObject article - the [current bliki entry](https://martinfowler.com/bliki/PageObject.html) opens with the note that "An object that wraps an HTML page, or fragment, with an application-specific API." The earlier name **WindowDriver** (Fowler, 2004) covered desktop GUI windows under the same encapsulation principle before the term migrated to web. The desktop / mobile community reuses the structurally-identical pattern under the name **Screen Object** (one class per logical screen, locators + actions encapsulated, no assertions inside). No single owner formally documents the rename - `screen object` is community-canonical across FlaUI, XCUITest, Appium / Espresso practitioner literature.
+**Canonical source:** Martin Fowler's PageObject article - the [current bliki entry](https://martinfowler.com/bliki/PageObject.html) defines it as an object that "wraps an HTML page, or fragment, with an application-specific API". The earlier name **WindowDriver** (Fowler, 2004) covered desktop GUI windows under the same encapsulation principle before the term migrated to web. The desktop / mobile community reuses the structurally-identical pattern under the name **Screen Object** (one class per logical screen, locators + actions encapsulated, no assertions inside). No single owner formally documents the rename - `screen object` is community-canonical across FlaUI, XCUITest, Appium / Espresso practitioner literature.
 
 The mobile sibling is documented inside Google's Android testing guidance as **Screen Robot** ([Jake Wharton - *Instrumentation Testing Robots* (2016)](https://jakewharton.com/testing-robots/)) and inside Square's mobile literature as well; both reproduce the same encapsulation contract.
 

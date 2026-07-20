@@ -26,7 +26,7 @@ Inputs:
 Default release criteria (all configurable):
 
 - Pass rate: >= 98% (per team's threshold; 99% for smoke-only runs per [`test-run-summary-author`](../skills/test-run-summary-author/SKILL.md) Step 3.1 notes on suite-kind thresholds)
-- Line coverage: no regression vs. baseline; new files >= 80% (per Google Testing Blog: ["Code coverage goal: 80% and no less"](https://testing.googleblog.com/2010/07/code-coverage-goal-80-and-no-less.html))
+- Line coverage: no regression vs. baseline; new files >= 80% (the [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md) Step 4 default, not a universal target - see the References note on coverage goals)
 - New failures vs. prior release: 0 blocking, <= 3 P3/cosmetic with waivers attached
 
 ## Step 1 - Build the test-run narrative
@@ -58,7 +58,7 @@ Apply the release criteria to the evidence from Steps 1-3:
 
 Verdict logic: if any NO-GO row is triggered, verdict is NO-GO. If any CONDITIONAL row is triggered and no NO-GO, verdict is CONDITIONAL (release allowed with noted residual risk). Otherwise, verdict is GO.
 
-Per Martin Fowler's CI definition: "the product should always be in a state where we can release the latest build" ([Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html)) - the role of this report is to confirm that state holds for the candidate, or surface the specific evidence that it does not.
+Per Martin Fowler, "The aim of Continuous Delivery is that the product should always be in a state where we can release the latest build" ([Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html)) - the role of this report is to confirm that state holds for the candidate, or surface the specific evidence that it does not.
 
 ## Step 5 - Assemble the report
 
@@ -113,8 +113,8 @@ The report is a single markdown document. The verdict (`GO` / `NO-GO` / `CONDITI
 - [`test-run-summary-author`](../skills/test-run-summary-author/SKILL.md) - release-notes narrative shape and load-bearing metric definitions preloaded into this agent.
 - [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md) - per-file coverage delta, 80% new-file threshold, -5pp regression threshold preloaded into this agent.
 - [`test-coverage-targeter`](../skills/test-coverage-targeter/SKILL.md) - risk-ranked uncovered branches preloaded into this agent.
-- [Google Testing Blog - Code coverage goal: 80% and no less](https://testing.googleblog.com/2010/07/code-coverage-goal-80-and-no-less.html) - the 80% new-file floor used in Step 2 / Step 4.
-- [Martin Fowler - Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html) - "the product should always be in a state where we can release the latest build"; release-readiness framing in Step 4.
+- [Google Testing Blog - Code coverage goal: 80% and no less!](https://testing.googleblog.com/2010/07/code-coverage-goal-80-and-no-less.html) - a Testivus parable, not an endorsement: "eighty percent and no less" is the answer the master gives the programmer who wants a simple number. Read it before defending the 80% new-file floor used in Step 2 / Step 4 as universal.
+- [Martin Fowler - Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html) - "The aim of Continuous Delivery is that the product should always be in a state where we can release the latest build"; release-readiness framing in Step 4.
 - ISO/IEC/IEEE 29119-3:2021 - test reporting structures (cite by stable ID; the canonical ISO page is behind Cloudflare Turnstile and cannot be fetched directly).
 - ISTQB glossary - exit criteria: https://glossary.istqb.org/en_US/term/exit-criteria (JS-rendered SPA; cite by stable slug; see PLUGIN_AUTHORING.md fallback note).
 - PractiTest 2026 State of Testing Report - 56.4% of teams measure test coverage as a primary QA metric; outcome-oriented release gates remain underused: https://www.practitest.com/state-of-testing/

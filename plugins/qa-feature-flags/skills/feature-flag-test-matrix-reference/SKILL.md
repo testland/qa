@@ -11,10 +11,8 @@ A codebase with N feature flags, each having M variants, and
 users in K segments, has N × M × K possible flag-state-segment
 combinations. At realistic numbers (50 flags, 2 variants each,
 5 segments) that's 500 - and at 50 flags with 3 variants and 10
-segments, it's 1500. Testing every combination is infeasible.
-
-Per [launchdarkly.com/blog](https://launchdarkly.com/blog/):
-"The matrix grows exponentially; pick coverage smartly."
+segments, it's 1500. Testing every combination is infeasible, so the
+matrix has to be sampled deliberately rather than enumerated.
 
 This skill is a **pure reference** consumed by the SDK-test +
 coverage-builder skills.

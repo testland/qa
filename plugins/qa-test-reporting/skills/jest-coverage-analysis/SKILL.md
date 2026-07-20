@@ -7,11 +7,13 @@ description: "Configures Jest's built-in coverage (Istanbul-instrumented `babel`
 
 ## Overview
 
-Jest ships with built-in coverage. Per [jest-config][jest]:
+Jest ships with built-in coverage. Per [jest-config][jest], on
+`coverageProvider`:
 
 [jest]: https://jestjs.io/docs/configuration
 
-> "Jest ships with two coverage providers: `babel` (default), `v8`."
+> "Indicates which provider should be used to instrument code for
+> coverage. Allowed values are `babel` (default) or `v8`."
 
 The `babel` provider runs the project through Istanbul-style
 instrumentation; `v8` uses the Node V8 engine's native coverage

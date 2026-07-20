@@ -9,7 +9,7 @@ description: "Build-an-X workflow that drafts a QA team's quarterly OKR set - on
 
 The QA manager opens a blank document at quarter-start to draft OKRs. Generic OKR templates (Tability, Asana, ClickUp) all share the same flaw: they don't know what to measure for a QA team. "Improve quality" is not an Objective; "achieve 95% pass rate" is not a Key Result without a baseline and a documented method. This skill produces a draft anchored on the team's actual current-state data, with every numeric target citing the artifact it came from.
 
-Per the canonical OKR framework ([Doerr 2018, *Measure What Matters*; Grove's original formulation at Intel](https://en.wikipedia.org/wiki/Objectives_and_key_results)), each Objective is "a significant, concrete, clearly defined goal that is inspirational," and each Key Result is "measurable success criteria using 0 - 100% scales or numerical values with no ambiguity." Doerr recommends organizations target a **70% success rate** - consistently hitting 100% means the OKRs need to be more aspirational. This skill emits both Committed KRs (target: 1.0 grading, binary outcomes) and Aspirational KRs (target: 0.7 grading, stretch).
+Per the canonical OKR framework ([Doerr 2018, *Measure What Matters*; Grove's original formulation at Intel](https://en.wikipedia.org/wiki/Objectives_and_key_results)), each Objective is "a significant, concrete, clearly defined goal" that should "also be inspirational for the individual, team, or organization that is working towards them", and each Key Result is "measurable success criteria used to track the achievement of that goal", measurable "either on a 0-100% scale or with any numerical value" with "no opportunity for 'grey area'". Doerr recommends organizations target a **70% success rate** - consistently hitting 100% means the OKRs need to be more aspirational. This skill emits both Committed KRs (target: 1.0 grading, binary outcomes) and Aspirational KRs (target: 0.7 grading, stretch).
 
 ## When to use
 
@@ -227,7 +227,7 @@ Output:
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Setting KRs without baselines | "Reach 99% pass rate" - from what? The KR is unanchored; success can't be measured | Step 4 enforces baseline citation; flag `[BASELINE_NEEDED]` if missing |
-| 100% committed KRs, no aspirational | Per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results): "Consistently meeting 100% indicates OKRs need re-evaluation" | At least one aspirational KR per Objective |
+| 100% committed KRs, no aspirational | Per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results): "If 100% of the key results are consistently being met, the key results should be reevaluated" | At least one aspirational KR per Objective |
 | KRs that aren't team-controllable | "Customer churn -50%" - QA can't move that lever alone | KRs are scoped to outcomes QA can directly cause |
 | Six or more Objectives | Loss of focus; per the canonical framework, 1 - 3 Objectives is the recommended ceiling | Step 1 caps Objectives at 3 |
 | KR with no measurable axis ("improve quality") | Not gradeable; the team cannot tell if it succeeded | Step 3 rejects un-measurable KRs |

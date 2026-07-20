@@ -11,7 +11,7 @@ The exploratory-testing literature converged on four canonical heuristic test-de
 
 ## When to use
 
-- A feature is being tested with no story, no AC, no documentation (the dominant real-world starting point per [Cem Kaner's 1984 definition of exploratory testing](https://en.wikipedia.org/wiki/Exploratory_testing) - "simultaneous learning, test design and test execution").
+- A feature is being tested with no story, no AC, no documentation (the dominant real-world starting point for [exploratory testing](https://en.wikipedia.org/wiki/Exploratory_testing), an approach "concisely described as simultaneous learning, test design and test execution"; Cem Kaner coined the term in 1984).
 - A legacy / brownfield codebase has no test coverage and you are onboarding cold.
 - A competitor or reverse-engineered product is under review (security audit, market intel).
 - A spec exists but is so thin that heuristic supplementation is needed alongside it.
@@ -166,7 +166,7 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 - James Bach blog - heuristics category (SFDPOT, CRUSSPIC STMPL, consistency heuristics): https://www.satisfice.com/blog/archives/category/heuristics
 - Michael Bolton - DevelopSense (FEW HICCUPPS oracle heuristic, exploratory testing methodology): https://developsense.com/
 - ISO/IEC 25010 - system / software product quality model (eight characteristics; 2023 revision adds Safety + Interaction Capability): https://en.wikipedia.org/wiki/ISO/IEC_25010
-- Exploratory testing - Kaner's 1984 definition ("simultaneous learning, test design and test execution"); Whittaker "How to Break Software" attack patterns; session-based test management: https://en.wikipedia.org/wiki/Exploratory_testing
+- Exploratory testing - "concisely described as simultaneous learning, test design and test execution", term coined by Kaner in 1984; Whittaker "How to Break Software" attack patterns; session-based test management: https://en.wikipedia.org/wiki/Exploratory_testing
 - ISTQB glossary - exploratory testing: https://glossary.istqb.org/en_US/term/exploratory-testing
 - ISTQB glossary - heuristic evaluation: https://glossary.istqb.org/en_US/term/heuristic-evaluation
 - [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md) - downstream skill that consumes this catalog.

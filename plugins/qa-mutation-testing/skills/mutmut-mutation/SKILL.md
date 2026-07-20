@@ -11,15 +11,16 @@ Per [mutmut-docs][md]:
 
 [md]: https://mutmut.readthedocs.io/en/latest/
 
-> "**Mutmut** is a Python mutation testing system" with "a strong
+> "Mutmut is a mutation testing system for Python, with a strong
 > focus on ease of use." ([mutmut-docs][md])
 
 Key features per [mutmut-docs][md]:
 
-- "Apply found mutants to disk with simple commands"
-- "Incremental work via remembered progress"
-- "Intelligent test selection for faster execution"
-- "Interactive terminal-based UI"
+- "Found mutants can be applied on disk with a simple command making
+  it very easy to work with the results"
+- "Remembers work that has been done, so you can work incrementally"
+- "Knows which tests to execute, speeding up mutation testing"
+- "Interactive terminal based UI"
 - "Parallel and fast execution"
 
 ## When to use

@@ -183,7 +183,7 @@ disabled.
 - Node SDK:
   [docs.getunleash.io/sdks/node](https://docs.getunleash.io/sdks/node).
 - Custom strategies:
-  [docs.getunleash.io/reference/custom-activation-strategies](https://docs.getunleash.io/reference/custom-activation-strategies).
+  [docs.getunleash.io/concepts/activation-strategies](https://docs.getunleash.io/concepts/activation-strategies).
 - Companion:
   [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
 - Sibling SDKs:

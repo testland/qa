@@ -127,8 +127,8 @@ catch different classes of failures"
 
 A checklist is the right instrument here rather than judgment: "Checklists are
 used to reduce failure and ensure consistency and completeness across a variety
-of disciplines", and each entry should be earned, since "every question should
-be qualified by its importance to a successful launch"
+of disciplines", and each entry should be earned: "Every question's importance
+must be substantiated, ideally by a previous launch disaster"
 ([Google SRE Book, Reliable Product Launches at Scale](https://sre.google/sre-book/reliable-product-launches/)).
 A pre-flight row that has never once caught anything is a row to delete.
 

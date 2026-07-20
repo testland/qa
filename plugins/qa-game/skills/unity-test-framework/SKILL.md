@@ -76,8 +76,8 @@ The Test Runner window is at **Window → General → Test Runner**
 
 Per the
 [Edit Mode vs Play Mode tests page](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/edit-mode-vs-play-mode-tests.html):
-"Edit Mode tests … run in the Unity Editor without playing the
-game" and "can access both editor and game code".
+Edit Mode tests "are only run in the Unity Editor and have access to
+the Editor code in addition to the game code".
 
 Layout (two options):
 

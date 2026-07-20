@@ -37,9 +37,12 @@ Four classes:
 | **Revenue** | Gross revenue, conversion rate, ARPU | Direct business impact |
 | **Trust** | Opt-out rate, unsubscribe rate, complaint rate | Long-term churn signal |
 
-Per Microsoft Experimentation Platform research
-([microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/)):
-"Be vigilant when running A/B tests" because "tiny SRMs" (per
+Microsoft's Experimentation Platform team writes that "we're always
+warning our customers to be vigilant when running A/B tests" and that
+"we warn them about the pitfalls of even tiny SRMs (sample ratio
+mismatches)"
+([A/B Interactions: A Call to Relax](https://www.microsoft.com/en-us/research/articles/a-b-interactions-a-call-to-relax/)).
+Tiny SRMs (per
 [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md)
 sibling concept) and degraded guardrails are the canonical
 ship-and-regret sources.

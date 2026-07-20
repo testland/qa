@@ -9,10 +9,12 @@ description: "Wraps Vercel Edge Runtime testing patterns: the @edge-runtime/jest
 
 Vercel Edge Runtime is V8-isolate-based (sub-30ms cold starts
 per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md))
-with a constrained API surface - Web Platform standards only
-(no Node `fs`, `Buffer`, `child_process`). Per
-[vercel.com/docs/functions/edge-runtime](https://vercel.com/docs/functions/edge-runtime):
-"The Edge Runtime is a strict subset of Web standard APIs."
+with a constrained API surface: no filesystem access, so no Node
+`fs` or `child_process` ("you can't read or write to the
+filesystem"). `Buffer` is an exception, being "globally exposed to
+maximize compatibility with existing Node.js modules". Per
+[vercel.com/docs/functions/edge-runtime](https://vercel.com/docs/functions/edge-runtime),
+"The Edge runtime provides a subset of Web APIs such as `fetch`, `Request`, and `Response`."
 
 Tests need the same constraints. Vercel ships
 `@edge-runtime/jest-environment` (and standalone `edge-runtime`

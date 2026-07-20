@@ -135,7 +135,7 @@ manifest):
 | "Move DOM and window calls to an offscreen document" | Static-grep service worker source for `document.`, `window.`, `XMLHttpRequest` - non-zero matches = test fail |
 | "Convert `localStorage` to `chrome.storage.local`" | Static-grep for `localStorage.` in SW source - non-zero matches = test fail |
 | "Register listeners synchronously" | Static-grep for `(async)?\s*[^.]\.addListener` inside non-top-level scopes - flag any `addListener` inside an async function body |
-| "Replace `XMLHttpRequest()` with global `fetch()`" | Static-grep for `XMLHttpRequest` in extension source - fail if any |
+| "Replace calls to `XMLHttpRequest()` with global `fetch()`" | Static-grep for `XMLHttpRequest` in extension source - fail if any |
 | "Persist states" | Smoke test: after 35s of idle, re-read state from `chrome.storage.local`; assert it survives SW restart |
 | "Convert timers to alarms" | Static-grep for `setTimeout`/`setInterval` in SW source; fail if found |
 | "Keep the service worker alive (in exceptional cases)" | If a keep-alive ping is present, assert it's gated on managed-policy detection per [Keep the service worker alive][cr-sw-alive] |

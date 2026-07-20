@@ -9,8 +9,10 @@ description: "Pure-reference catalog of AWS Lambda timeout + billing semantics. 
 
 AWS Lambda's wall-clock limit is **15 minutes (900 seconds)** per
 invocation. Per
-[docs.aws.amazon.com/lambda](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-common.html):
-"The maximum value for timeout is 900 seconds."
+[docs.aws.amazon.com/lambda](https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html):
+"The default value for this setting is 3 seconds, but you can adjust
+this in increments of 1 second up to a maximum value of 900 seconds
+(15 minutes)."
 
 ## When to use
 

@@ -35,7 +35,7 @@ Refusing to overwrite. Run embedded-test-author to add tests to the existing har
 
 ### Ceedling path (C / Unity / CMock)
 
-Per the Ceedling README at [github.com/ThrowTheSwitch/Ceedling](https://github.com/ThrowTheSwitch/Ceedling), `ceedling new <name> --local --gitsupport` "creates a directory with that name and fills it with a default subdirectory structure and configuration file" and `--local` installs Unity + CMock + CException + Ceedling itself into `vendor/` so the build needs no network at compile time.
+Per the Ceedling README at [github.com/ThrowTheSwitch/Ceedling](https://github.com/ThrowTheSwitch/Ceedling), `ceedling new <name> --local --gitsupport` "creates a directory with that name and fills it with a default subdirectory structure and configuration file" and `--local` installs "all of Unity, CMock, and Ceedling itself into a new folder `vendor/`" so the build needs no network at compile time.
 
 Emit three artefacts:
 

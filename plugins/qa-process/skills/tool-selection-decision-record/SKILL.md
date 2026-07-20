@@ -54,7 +54,7 @@ co-equal rule below.
 | Field | Required | Contents |
 |---|---|---|
 | Title | yes | Short noun phrase naming the decision, prefixed with a sequence number. Nygard specifies "short noun phrases" for ADR titles ([source](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)). |
-| Status | yes | One of proposed, accepted, or superseded by a named later record. Records "begin as proposed and become accepted once stakeholders agree" ([source](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)). |
+| Status | yes | One of proposed, accepted, or superseded by a named later record. Per Nygard, "a decision may be 'proposed' if the project stakeholders haven't agreed with it yet, or 'accepted' once it is agreed" ([source](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)). |
 | Signal | yes | The observed project evidence, quoted: file path plus the line or block that drove the detection. This is the ADR Context field, restricted to observable forces. |
 | Decision | yes | Exactly one tool, written in active voice. Nygard's Decision field uses "full sentences, with active voice. 'We will ...'" ([source](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)). |
 | Rationale | yes | Two clauses minimum: why the chosen tool fits the signal, and why not the strongest alternative that was considered. |

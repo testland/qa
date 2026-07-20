@@ -38,7 +38,7 @@ If `playwright.config.ts` declares `testIdAttribute: 'data-qa'`, use `getByTestI
 
 ## Step 2 - Map the test case to the framework's idioms
 
-The scaffolder selects the **correct test-layer construct** per framework and the **recommended locator pattern** per https://playwright.dev/docs/locators (Playwright's official priority: `getByRole` > `getByText` > `getByLabel` > `getByPlaceholder` > `getByTestId` > CSS / XPath; CSS and XPath flagged as a "bad practice that leads to unstable tests"):
+The scaffolder selects the **correct test-layer construct** per framework and the **recommended locator pattern** per https://playwright.dev/docs/locators (Playwright's official priority: `getByRole` > `getByText` > `getByLabel` > `getByPlaceholder` > `getByTestId` > CSS / XPath; long CSS or XPath chains flagged as "an example of a bad practice that leads to unstable tests"):
 
 | Framework | Test wrapper | Recommended locator | Assertion style |
 |---|---|---|---|

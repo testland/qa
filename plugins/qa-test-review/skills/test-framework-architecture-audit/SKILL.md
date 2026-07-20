@@ -60,7 +60,9 @@ code and page-specific code, such as locators"
 A test file holding raw locator strings has no such separation.
 
 **Purity.** Object-model classes that assert are flagged. This one is grounded,
-not conventional: page objects "should not make assertions themselves"
+not conventional: Fowler records "differences of opinion on whether page objects
+should include assertions themselves" and concludes "I favor having no assertions
+in page objects"
 ([Fowler, PageObject](https://martinfowler.com/bliki/PageObject.html)), and
 Selenium states it without hedging: "Page objects themselves should never make
 verifications or assertions. This is part of your test and should always be

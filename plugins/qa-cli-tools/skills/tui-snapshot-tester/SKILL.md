@@ -11,8 +11,10 @@ Per [textual-testing][txt]:
 
 [txt]: https://textual.textualize.io/guide/testing/
 
-> "Snapshot testing for TUI apps with pytest-textual-snapshot" - 
-> the plugin generates "SVG _screenshot_" files from your app.
+> "Snapshot testing is the process of recording the output of a test, and
+> comparing it against the output from previous runs." Textual's
+> `pytest-textual-snapshot` plugin does this by saving an SVG screenshot of
+> the running app to disk.
 
 A TUI snapshot test:
 1. Renders the TUI to a deterministic frame (SVG / text).

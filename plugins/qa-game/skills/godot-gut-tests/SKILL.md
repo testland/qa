@@ -218,8 +218,8 @@ report.
 
 ### Doubles, stubs, and spies
 
-Per the [GUT README](https://github.com/bitwes/Gut), GUT supports
-"full / partial doubles, stubbing, spies". Typical pattern:
+Per the [GUT README](https://github.com/bitwes/Gut), GUT lists
+"Doubling: Full and Partial, Stubbing, Spies". Typical pattern:
 
 ```gdscript
 extends GutTest
@@ -243,7 +243,7 @@ assertion.
 ### Async / coroutine tests
 
 Per [gut.readthedocs.io](https://gut.readthedocs.io/), GUT
-supports "coroutines and async test support" - a `test_*` method
+supports "Coroutines and await in tests" - a `test_*` method
 can `await` signals or timers and the runner waits before moving
 on:
 

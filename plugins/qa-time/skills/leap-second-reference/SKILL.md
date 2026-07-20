@@ -1,6 +1,6 @@
 ---
 name: leap-second-reference
-description: "Pure-reference catalog of leap-second mechanics + their bug surface. Defines leap seconds (occasional 23:59:60 UTC second insertions announced by IERS to keep UTC within 0.9s of UT1), the history (added irregularly since 1972 by IERS Bulletin C; 27 added by 2024; will be ABOLISHED by 2035 per CGPM resolution), the leap-smear alternative (Google's linear 24-hour smear; AWS uses similar), and the testable behaviors (POSIX time_t conventions, NTP behaviour, distributed-systems clock-skew during a leap event). Use when designing time-sensitive systems or auditing assumptions about second-by-second progress."
+description: "Pure-reference catalog of leap-second mechanics + their bug surface. Defines leap seconds (occasional 23:59:60 UTC second insertions announced by IERS to keep UTC within 0.9s of UT1), the history (added irregularly since 1972 by IERS Bulletin C; 27 added by 2026; will be ABOLISHED by 2035 per CGPM resolution), the leap-smear alternative (Google's linear 24-hour smear; AWS uses similar), and the testable behaviors (POSIX time_t conventions, NTP behaviour, distributed-systems clock-skew during a leap event). Use when designing time-sensitive systems or auditing assumptions about second-by-second progress."
 ---
 
 # leap-second-reference
@@ -19,7 +19,7 @@ notice.
 **Important - 2035 abolition:** Per the 27th CGPM resolution
 (2022), leap seconds will be **abolished** by 2035, with the
 gap between UTC and UT1 allowed to grow. Existing leap seconds
-(27 inserted between 1972 and 2024) remain in the historical
+(27 inserted between 1972 and 2026) remain in the historical
 record.
 
 ## When to use
@@ -43,10 +43,12 @@ record.
 ## Leap-smear
 
 Per Google's "Time, technology and leaping seconds":
-[cloud.google.com/blog/products/gcp/leap-second](https://cloud.google.com/blog/products/gcp/leap-second-2016-smear),
-Google "smears" the leap second across the 24 hours
-surrounding it - adding a small fraction to each second so the
-total adds up to 1 second of slowdown, with no actual 23:59:60.
+[googleblog.blogspot.com/2011/09/time-technology-and-leaping-seconds.html](https://googleblog.blogspot.com/2011/09/time-technology-and-leaping-seconds.html),
+Google "smears" the leap second rather than stepping the clock. The
+published standard is a "24-hour linear smear from noon to noon UTC"
+([Google Public NTP: Leap Smear](https://developers.google.com/time/smear)),
+adding a small fraction to each second so the total adds up to
+1 second of slowdown, with no actual 23:59:60.
 
 ```
 Leap second strategy comparison:
@@ -65,8 +67,12 @@ exposes the discontinuity.
 
 ## Historical leap seconds
 
-Per IERS, 27 leap seconds were inserted between 1972 and 2024.
-Most recent: 2016-12-31 23:59:60 UTC. None added 2017-2024.
+Per IERS, 27 leap seconds were inserted between 1972 and 2026.
+Most recent: 2016-12-31 23:59:60 UTC. None have been added since:
+IERS Bulletin C 72 (6 July 2026) states "from 2017 January 1, 0h
+UTC, until further notice : UTC-TAI = -37 s" and that "NO leap
+second will be introduced at the end of December 2026"
+([datacenter.iers.org, Bulletin C](https://datacenter.iers.org/data/latestVersion/bulletinC.txt)).
 None expected before 2035 abolition.
 
 ## Bug classes
@@ -161,7 +167,7 @@ require an OS test that replays NTP leap-second indication.
   historical-data leap seconds.
 - **OS / runtime behaviour varies.** Tests can't perfectly
   simulate without OS cooperation.
-- **27 leap seconds happened over 52 years.** Real-world test
+- **27 leap seconds happened over 54 years.** Real-world test
   data is rare; rely on standard reference data.
 - **Some clock libraries smooth past leap events.** Library
   documentation may not state behaviour explicitly.
@@ -175,7 +181,8 @@ require an OS test that replays NTP leap-second indication.
 - Wikipedia leap second:
   [en.wikipedia.org/wiki/Leap_second](https://en.wikipedia.org/wiki/Leap_second).
 - Google leap-smear:
-  [cloud.google.com/blog/products/gcp/leap-second-2016-smear](https://cloud.google.com/blog/products/gcp/leap-second-2016-smear).
+  [googleblog.blogspot.com/2011/09/time-technology-and-leaping-seconds.html](https://googleblog.blogspot.com/2011/09/time-technology-and-leaping-seconds.html),
+  [developers.google.com/time/smear](https://developers.google.com/time/smear).
 - AWS leap-smear:
   [aws.amazon.com/blogs/aws/look-before-you-leap-the-coming-leap-second-and-aws](https://aws.amazon.com/blogs/aws/look-before-you-leap-the-coming-leap-second-and-aws).
 - Companion catalog:

@@ -34,7 +34,7 @@ surface → refuses.
 
 ### Step 1 - Detect Manifest version and target browser
 
-Parse the project's `manifest.json`. Read `"manifest_version"` - value `3` means MV3 (service worker), value `2` means MV2 (background page). Per [Chrome MV3 migration docs][cr-mv3], MV3 *"replaces the background page with a service worker"* - this fundamentally changes how background scripts are tested. Detect Firefox-specific targets via the `applications.gecko` block; absence implies Chromium-only.
+Parse the project's `manifest.json`. Read `"manifest_version"` - value `3` means MV3 (service worker), value `2` means MV2 (background page). Per [Chrome MV3 migration docs][cr-mv3], in MV3 *"a service worker replaces the extension's background or event page"* - this fundamentally changes how background scripts are tested. Detect Firefox-specific targets via the `applications.gecko` block; absence implies Chromium-only.
 
 [cr-mv3]: https://developer.chrome.com/docs/extensions/develop/migrate/to-service-workers
 

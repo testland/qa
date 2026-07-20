@@ -125,7 +125,7 @@ death" bugs live. Per the engine docs:
 |---|---|
 | Unity NGO | `OwnerClientId` (per `NetworkObject`); `IsOwner`, `IsServer`, `IsHost` flags |
 | Unreal | `ROLE_Authority` (server), `ROLE_AutonomousProxy` (owning client), `ROLE_SimulatedProxy` (other clients), `ROLE_None` |
-| Mirror | `isServer`, `isClient`, `isLocalPlayer`, `isOwned` per [Mirror NetworkBehaviour docs](https://mirror-networking.gitbook.io/docs/manual/components/networkbehaviour) - "isOwned - client has authority over this object" |
+| Mirror | `isServer`, `isClient`, `isLocalPlayer`, `isOwned` per [Mirror NetworkBehaviour docs](https://mirror-networking.gitbook.io/docs/manual/components/networkbehaviour) - `isOwned` "Returns true on the client if this client has authority over this game object" |
 
 Authority transitions to cover:
 
@@ -233,7 +233,7 @@ from the
 | Privilege check before joining MP session | XR-045: `XPRIVILEGE_MULTIPLAYER_SESSIONS` (ID 254) per the [XR-045 privilege table](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements) |
 | Player communication respects privacy settings | XR-015: `CommunicateUsingText` / `CommunicateUsingVoice` privilege checks per the [XR-015 permissions table](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements) |
 | Save roams across console types within a generation | XR-130: "Ensure that saved games work across console types within the generation" |
-| Cross-network play visual identification | XR-007: "Games must visually identify Xbox network users when playing with off-network players" |
+| Cross-network play visual identification | XR-007: "Titles must visually identify Xbox network users when they're playing with players from non-Xbox gaming networks" |
 | Controller disconnect mid-multiplayer | XR-115: re-establish active controller; see [XR-115](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements) |
 
 For Sony TRC and Nintendo Lotcheck, the analogous clauses are

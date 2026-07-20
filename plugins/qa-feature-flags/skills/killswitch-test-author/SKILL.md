@@ -321,7 +321,7 @@ describe('checkout-kill-switch', () => {
 
 ## References
 
-- Kill-switch / ops-toggle definition and taxonomy: Martin Fowler,
+- Kill-switch / ops-toggle definition and taxonomy: Pete Hodgson,
   "Feature Toggles (aka Feature Flags)":
   [martinfowler.com/articles/feature-toggles.html](https://martinfowler.com/articles/feature-toggles.html).
 - Fail-static default value behavior (OpenFeature):
