@@ -129,7 +129,7 @@ needs 20 test accounts, a populated demo org, or a data reset between
 test cycles gets no workflow that doesn't assume programming.
 
 **Nearest existing components:** `seed-data-curator`,
-`test-data-setup-agent`, `synthetic-data-toolkit`.
+`test-data-setup-agent`, `synthetic-data-tool-selector`.
 
 **Differentiation axis:** existing components generate data *in code*
 for automated suites; this covers UI/API-driven preparation an analyst

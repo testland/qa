@@ -96,7 +96,7 @@ material that lives in skills.
 
 | Agent | Preloads |
 |---|---|
-| `perf-regression-bisector` | `k6-load-testing`, `lighthouse-perf`, `flame-graph-analyzer`, `db-slow-query-detector` |
+| `perf-regression-bisector` | `k6-load-testing`, `lighthouse-perf`, `flame-graph-analyzer`, `db-query-plan-analyzer` |
 
 ### qa-manual-testing
 
@@ -200,13 +200,13 @@ Most agents preload skills from their own plugin. The 20 documented cross-plugin
 | `qa-desktop/desktop-test-author` (Tier 4 / Wave 1) | `qa-unit-tests-net` | `xunit-tests`, `nunit-tests`, `mstest-tests` | Desktop tests for .NET stacks compose into one of the three NET framework idioms. |
 | `qa-unit-tests-net/dotnet-test-author` (Tier 4 / Wave 1) | `qa-test-data` | `bogus-data` | .NET Bogus library is the canonical typed test-data factory for .NET. |
 | `qa-unit-tests-js/js-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `faker-data`, `msw-handlers` | Faker.js for fake data; MSW for HTTP mocking - both load-bearing for JS unit tests. |
-| `qa-unit-tests-jvm/jvm-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `parameterized-test-generator` | JUnit5 `@ParameterizedTest`, TestNG `@DataProvider`, Spock `where:` - language-agnostic generator. |
-| `qa-unit-tests-python/python-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `mimesis-data`, `parameterized-test-generator` | Mimesis is the Python-native data factory; `@pytest.mark.parametrize` is first-class. |
-| `qa-unit-tests-go-rust/go-rust-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `parameterized-test-generator` | Go `t.Run` table tests + Rust `#[rstest]` `#[case]` both use the generator's matrix output. |
+| `qa-unit-tests-jvm/jvm-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `pairwise-test-case-generator` | JUnit5 `@ParameterizedTest`, TestNG `@DataProvider`, Spock `where:` - language-agnostic generator. |
+| `qa-unit-tests-python/python-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `mimesis-data`, `pairwise-test-case-generator` | Mimesis is the Python-native data factory; `@pytest.mark.parametrize` is first-class. |
+| `qa-unit-tests-go-rust/go-rust-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `pairwise-test-case-generator` | Go `t.Run` table tests + Rust `#[rstest]` `#[case]` both use the generator's matrix output. |
 | `qa-test-review/test-suite-health-auditor` (Tier 4 / Wave 3) | `qa-flake-triage` | `flake-pattern-reference` | Per-layer flake-rate axis of the audit references the canonical flake-pattern catalog. |
 | `qa-test-review/test-suite-health-auditor` (Tier 4 / Wave 3) | `qa-process` | `framework-choice-advisor` | Framework-misuse pattern detection consults the framework reference catalog. |
-| `qa-mobile/mobile-test-author` (Tier 4 / Wave 5) | `qa-test-data` | `parameterized-test-generator` | Mobile parameterized-input scenarios use the language-agnostic generator. |
-| `qa-api-testing/api-test-author` (Tier 4 / Wave 5) | `qa-test-data` | `parameterized-test-generator` | Multi-input endpoint cases use the parameterized generator. |
+| `qa-mobile/mobile-test-author` (Tier 4 / Wave 5) | `qa-test-data` | `pairwise-test-case-generator` | Mobile parameterized-input scenarios use the language-agnostic generator. |
+| `qa-api-testing/api-test-author` (Tier 4 / Wave 5) | `qa-test-data` | `pairwise-test-case-generator` | Multi-input endpoint cases use the parameterized generator. |
 
 When a user installs a consumer plugin (e.g., `qa-process`), they
 should also install the producer plugin (`qa-test-review`) for the
