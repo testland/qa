@@ -183,9 +183,9 @@ matches the "new issues only" workflow Qlty's PR feedback uses
 
 - [Qlty docs] - platform overview, plugin catalog, exclusion patterns
 - [Qlty quickstart] - install, init, check, smells commands
-- Legacy Code Climate v2 schema - at
-  `https://docs.qlty.sh/migrate-from-code-climate` (consult Qlty
-  docs for current migration mapping)
+- [Qlty migration guide] - `.codeclimate.yml` to `qlty.toml` mapping,
+  performed by `qlty config migrate`
 
 [Qlty docs]: https://docs.qlty.sh/
 [Qlty quickstart]: https://docs.qlty.sh/cli/quickstart
+[Qlty migration guide]: https://docs.qlty.sh/migration/guide

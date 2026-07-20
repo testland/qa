@@ -65,7 +65,7 @@ across the codebase.
 
 ## Step 2 - Choose `coverageReporters`
 
-Per [jest-config][jest], "Any [istanbul reporter] can be used."
+Per [jest-config][jest], "Any [istanbul reporter](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-reports/lib) can be used."
 The useful ones:
 
 | Reporter           | Output                                | Use for                                    |

@@ -138,7 +138,7 @@ PASS verdict is emitted only when no Critical or High findings remain.
 
 - [OWASP Session Management Cheat Sheet][smcs] - cookie attribute requirements
 - [OWASP Logging Cheat Sheet][lcs] - access tokens must not appear in logs
-- [OWASP JSON Web Token for Java Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html) - token storage options and expiry guidance
+- [OWASP JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html) - browser token-storage options and short-expiry guidance
 - [`session-management-test-author`](../skills/session-management-test-author/SKILL.md) - ASVS V3 cookie + timeout tests (preloaded)
 - [`oauth-flow-test-author`](../skills/oauth-flow-test-author/SKILL.md) - RFC 9700 rotation + reuse-detection tests (preloaded)
 - [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md) - cross-plugin sibling: scanner-based SAST triage for deeper static analysis

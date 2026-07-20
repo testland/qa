@@ -54,7 +54,7 @@ Do **not** use this skill to:
 
 ## Pattern 2 - Screenplay
 
-**Canonical source:** [Antony Marcano, Andy Palmer, and Jan Molak - Serenity BDD documentation on Screenplay](https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals); origin paper Marcano & Hill 2007 "Page Objects Refactored: SOLID Steps to the Screenplay Pattern."
+**Canonical source:** [Antony Marcano, Andy Palmer, and Jan Molak - Serenity BDD documentation on Screenplay](https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals); origin article Marcano, Palmer, Molak and Smart, "Page Objects Refactored: SOLID Steps to the Screenplay/Journey Pattern," which traces the approach to Marcano's 2007 conception.
 
 **The Screenplay vocabulary** ([Serenity BDD docs](https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals)):
 
@@ -267,7 +267,7 @@ The patterns are not equally good for every project. The matrix:
 - `desktop-test-strategy-reference` (qa-desktop) - the OS-backend reference for Screen Object's accessibility-tree substrate (UIA / XCTest / AT-SPI).
 - Selenium HQ - *Page Object Models* (official Selenium documentation; quotes the no-assertions and navigation-return-shape rules verbatim): https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
 - Antony Marcano, Andy Palmer, Jan Molak - *Screenplay Fundamentals* (Serenity BDD documentation; the canonical Actor/Ability/Task/Interaction/Question vocabulary): https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals
-- Marcano & Hill (2007) - *Page Objects Refactored: SOLID Steps to the Screenplay Pattern* (the origin paper for the Screenplay name and SOLID rationale; cited via Serenity BDD): https://serenity-bdd.github.io/docs/screenplay/
+- Antony Marcano, Andy Palmer, Jan Molak, John Ferguson Smart - *Page Objects Refactored: SOLID Steps to the Screenplay/Journey Pattern* (the article that names the pattern and sets out its SOLID rationale; it dates the approach to Marcano's 2007 conception): https://dzone.com/articles/page-objects-refactored-solid-steps-to-the-screenp
 - Kent C. Dodds + Cypress team - *Stop using Page Objects and Start using App Actions* (Cypress blog, the canonical App Actions reference): https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/
 - Martin Fowler - *Repository pattern* (originally domain-driven design; cited for test-data Repository adaptation): https://martinfowler.com/eaaCatalog/repository.html
 - ISTQB glossary - Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization

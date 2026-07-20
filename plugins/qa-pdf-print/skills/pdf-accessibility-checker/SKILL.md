@@ -37,12 +37,19 @@ For CI, **veraPDF** is the default open-source choice.
 
 ```bash
 # Download installer
-curl -L -o verapdf.zip https://software.verapdf.org/releases/1.27/verapdf-greenfield-1.27.0-installer.zip
+curl -L -o verapdf.zip https://software.verapdf.org/releases/1.30/verapdf-greenfield-1.30.2-installer.zip
 unzip verapdf.zip
-verapdf-greenfield/verapdf --version
+
+# The zip ships an IzPack installer, not a ready-to-run binary
+verapdf-greenfield-1.30.2/verapdf-install ./auto-install.xml
+<install-dir>/bin/verapdf --version
 ```
 
-(Verify current release at https://verapdf.org for the URL above.)
+Current release index (1.30.2 as of this writing):
+[software.verapdf.org/releases](https://software.verapdf.org/releases/).
+The headless `verapdf-install ./auto-install.xml` form and the
+`bin/` layout are per
+[docs.verapdf.org/install](https://docs.verapdf.org/install/).
 
 ## Step 3 - Run conformance check
 

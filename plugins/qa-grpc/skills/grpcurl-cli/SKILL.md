@@ -242,7 +242,8 @@ jobs:
       - uses: actions/checkout@v5
       - name: Install grpcurl
         run: |
-          curl -L https://github.com/fullstorydev/grpcurl/releases/latest/download/grpcurl_linux_x86_64.tar.gz | tar xz
+          # release assets are version-stamped; bump the tag on upgrade
+          curl -L https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_x86_64.tar.gz | tar xz
           sudo mv grpcurl /usr/local/bin/
       - name: Verify health endpoint
         run: |

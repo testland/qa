@@ -181,7 +181,7 @@ disabled.
 - Unleash docs:
   [docs.getunleash.io](https://docs.getunleash.io/).
 - Node SDK:
-  [docs.getunleash.io/sdks/node-sdk](https://docs.getunleash.io/reference/sdks/node-sdk).
+  [docs.getunleash.io/sdks/node](https://docs.getunleash.io/sdks/node).
 - Custom strategies:
   [docs.getunleash.io/reference/custom-activation-strategies](https://docs.getunleash.io/reference/custom-activation-strategies).
 - Companion:

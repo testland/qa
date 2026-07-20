@@ -10,8 +10,11 @@ description: "Pure-reference catalog of leap-second mechanics + their bug surfac
 A **leap second** is an extra second (23:59:60 UTC) inserted
 into the day to keep UTC within 0.9 seconds of UT1 (astronomical
 time). Per IERS Bulletin C
-([iers.org](https://www.iers.org/IERS/EN/Publications/Bulletins/bulletins.html)),
-leap seconds are announced ~6 months in advance.
+([datacenter.iers.org/data/latestVersion/bulletinC.txt](https://datacenter.iers.org/data/latestVersion/bulletinC.txt)),
+Bulletin C is issued every six months, either to announce a time
+step in UTC or to confirm that there will be no step at the next
+possible date - so a leap second gets roughly six months of
+notice.
 
 **Important - 2035 abolition:** Per the 27th CGPM resolution
 (2022), leap seconds will be **abolished** by 2035, with the
@@ -165,8 +168,10 @@ require an OS test that replays NTP leap-second indication.
 
 ## References
 
-- IERS Bulletin C (leap-second announcements):
-  [iers.org/IERS/EN/Publications/Bulletins/bulletins.html](https://www.iers.org/IERS/EN/Publications/Bulletins/bulletins.html).
+- IERS Bulletin C (leap-second announcements), latest issue:
+  [datacenter.iers.org/data/latestVersion/bulletinC.txt](https://datacenter.iers.org/data/latestVersion/bulletinC.txt);
+  full archive of every issue:
+  [datacenter.iers.org/availableVersions.php?id=16](https://datacenter.iers.org/availableVersions.php?id=16).
 - Wikipedia leap second:
   [en.wikipedia.org/wiki/Leap_second](https://en.wikipedia.org/wiki/Leap_second).
 - Google leap-smear:

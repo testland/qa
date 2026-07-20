@@ -17,7 +17,7 @@ Distinct from [`reliability-review-agent`](./reliability-review-agent.md) (read-
 
 Required inputs: target service + tier (1 / 2 / 3), declared RTO and RPO, DR pattern (cold / warm / hot), DR environment identifier. Optional: drill commander name, skip-failback flag (dry-run mode), custom smoke-suite path.
 
-**Refuses if no RTO + RPO supplied.** Per the [Google Cloud DR planning guide], RTO is "the maximum acceptable length of time that your application can be offline" and RPO is "the maximum acceptable length of time during which data might be lost" - without them there is no pass/fail criterion.
+**Refuses if no RTO + RPO supplied.** Per the [Google Cloud DR planning guide](https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide), RTO is "the maximum acceptable length of time that your application can be offline" and RPO is "the maximum acceptable length of time during which data might be lost" - without them there is no pass/fail criterion.
 
 Also refuses if the DR environment identifier matches `prod` or `production`.
 
@@ -26,14 +26,14 @@ Also refuses if the DR environment identifier matches `prod` or `production`.
 1. Invoke `backup-verification-author` to confirm: SHA-256 integrity passes, cross-region replication lag is within RPO at T-30 min, encryption key is recoverable in the DR region.
 2. Verify monitoring alerts are silenced for expected failure indicators (route to drill channel, not on-call pager).
 3. Confirm drill commander is assigned and rollback trigger is documented.
-4. Verify DR environment configuration drift is within bounds - per the [AWS DR testing whitepaper], "manage configuration drift at the DR Region: ensure that your infrastructure, data, and configuration are as needed."
+4. Verify DR environment configuration drift is within bounds - per the [AWS DR testing whitepaper](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/testing-disaster-recovery.html), "Manage configuration drift at the DR Region. Ensure that your infrastructure, data, and configuration are as needed at the DR Region."
 5. Halt and emit a blocking checklist if any item fails - do not proceed to Stage 2.
 
 ## Stage 2 - Failover execution
 
 1. Record T-0 timestamp; post "DRILL START" to the drill channel.
 2. Execute the runbook step by step per `dr-drill-runner` Stage 4 (Drill Workflow: Announce -> Fail-over -> Verify).
-3. Capture a timestamp at each runbook step. Per the [AWS DR testing whitepaper]: "the only error recovery that works is the path you test frequently" - deviations from the written runbook are findings, not fixes.
+3. Capture a timestamp at each runbook step. Per the [AWS DR testing whitepaper](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/testing-disaster-recovery.html): "Our experience has shown that the only error recovery that works is the path you test frequently" - deviations from the written runbook are findings, not fixes.
 4. If the runbook step requires improvisation, log it as a MAJOR finding immediately; do not silently adapt.
 
 ## Stage 3 - RTO/RPO monitor

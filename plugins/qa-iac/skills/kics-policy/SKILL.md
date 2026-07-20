@@ -26,12 +26,20 @@ KICS's specific strengths:
 
 ## Step 1 - Install
 
+Per the [KICS getting-started docs][kgs], Docker is the primary install
+path; there is no install script, so binary users download a
+version-stamped release archive:
+
+[kgs]: https://docs.kics.io/latest/getting-started/
+
 ```bash
 # Docker (recommended)
 docker pull checkmarx/kics:latest
 
-# Or binary
-curl -sfL https://raw.githubusercontent.com/Checkmarx/kics/master/install.sh | sh
+# Or binary (v2.1.20 is the latest release as of 2026-07-20)
+curl -sfL -o kics.tar.gz \
+  https://github.com/Checkmarx/kics/releases/download/v2.1.20/kics_2.1.20_linux_amd64.tar.gz
+tar -xzf kics.tar.gz && sudo mv kics /usr/local/bin/
 ```
 
 ## Step 2 - Run

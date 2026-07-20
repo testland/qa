@@ -13,8 +13,9 @@ judgment list - a set of `(query, document_id, grade)` triples that define what
 "relevant" means for your product. No automated metric creates that
 corpus. This skill does.
 
-Per [TREC's pooling methodology], "NIST pools the individual results, judges
-the retrieved documents for correctness, and evaluates the results" - the
+Per [TREC's pooling methodology](https://trec.nist.gov/overview.html), "NIST
+pools the individual results, judges the retrieved documents for correctness,
+and evaluates the results" - the
 judgment list is the non-automated step that all automated metrics depend on.
 
 ## When to use
@@ -43,9 +44,10 @@ avoid seasonal skew. Keep the raw log row for each sampled query - you will
 need it to assign traffic weight when computing weighted NDCG.
 
 A starting corpus of roughly 200-400 queries across tiers gives sufficient
-coverage for NDCG-based gates. Per [Quepid docs], "100 judgments (10 pages
-of 10 search results) serves as a solid foundation" for initial evaluation
-projects.
+coverage for NDCG-based gates. Per
+[Quepid docs](https://quepid-docs.dev.o19s.com/2/quepid), "100 judgments
+(10 pages of 10 search results) is a good starting point and likely
+sufficient for most cases".
 
 ## Step 2 - Choose the grading scale
 
@@ -53,12 +55,14 @@ Two options are widely used:
 
 ### Binary (TREC standard)
 
-Per [TREC qrels format], the classic qrels file uses two values:
+Per [TREC qrels format](https://trec.nist.gov/data/qrels_eng/), the classic
+qrels file uses two values:
 `0` (not relevant) and `1` (relevant). Simple to collect; sufficient for
 Precision@k and Recall@k. Use binary when raters have low domain expertise
 or when the query intent is unambiguous (navigational queries).
 
-Qrels file format (4 columns, per [TREC qrels format]):
+Qrels file format (4 columns, per
+[TREC qrels format](https://trec.nist.gov/data/qrels_eng/)):
 
 ```text
 <topic_id> <iteration> <doc_id> <relevance>
@@ -71,14 +75,16 @@ Unjudged documents are assumed irrelevant in evaluation.
 
 ### Graded 0-3 (Quepid default)
 
-Per [Quepid judgment rating best practices], the 0-3 scale maps to:
+Per [Quepid judgment rating best practices](https://github.com/o19s/quepid/wiki/Judgement-Rating-Best-Practices),
+the 0-3 scale maps to these grades and customer-feeling cues (the source
+frames them for e-commerce; restate them in your own domain's terms):
 
 | Grade | Label | Rater cue |
 |---|---|---|
-| 3 | Perfect | "This is exactly what I am looking for." |
-| 2 | Good | "Relevant - I want these results, but haven't found the exact one yet." |
-| 1 | Fair | "I see the connection, but these are not what I am looking for." |
-| 0 | Poor | "These are terrible - I would search elsewhere." |
+| 3 | Perfect | "This is what I am looking for! I'm going to buy one." |
+| 2 | Good | "I like these! Now I can look more and decide which one to buy." |
+| 1 | Fair | "These results aren't what I'm looking for." |
+| 0 | Poor | "These results are terrible! Maybe I'll look somewhere else." |
 
 Use graded when you need NDCG or DCG (metrics that reward highly relevant
 results at higher ranks). Required by `elasticsearch-relevance-tests` Step 1
@@ -99,7 +105,9 @@ minimal guidelines document covers:
    docs search (older versions, deprecated APIs), support search
    (resolved vs open tickets).
 4. **What to do with unrateable documents:** Quepid supports an `unrateable`
-   flag per [Quepid API] (`unrateable: boolean`). Use it for documents where
+   flag per [Quepid API](https://github.com/o19s/quepid/blob/main/app/controllers/api/v1/judgements_controller.rb)
+   (permitted judgement params: `rating`, `unrateable`, `judge_later`,
+   `query_doc_pair_id`, `user_id`, `explanation`). Use it for documents where
    the rater cannot determine relevance (e.g. page behind a login wall).
 
 Store the guidelines in version control alongside the judgment file. When
@@ -108,7 +116,7 @@ are not comparable.
 
 ## Step 4 - Set up Quepid for rater workflow
 
-[Quepid] (github.com/o19s/quepid) is the standard open-source tool for
+[Quepid](https://github.com/o19s/quepid) is the standard open-source tool for
 collaborative judgment authoring. It runs as a self-hosted Rails app and
 connects to Elasticsearch, OpenSearch, Solr, Algolia, and other backends.
 
@@ -119,14 +127,17 @@ Setup flow:
    endpoint + query set.
 3. Import queries (CSV or manual entry). Each query gets a displayed
    information-need description shown to the rater.
-4. Assign raters. Quepid tracks `user_id` per judgment per [Quepid API],
+4. Assign raters. Quepid tracks `user_id` per judgment per
+   [Quepid API](https://github.com/o19s/quepid/blob/main/app/controllers/api/v1/judgements_controller.rb),
    enabling per-rater analysis.
 5. Raters work through the **Human Rating Interface**: query + information
    need + rendered document + grade selector.
-6. Export when done. Per [Quepid API], the export is a CSV with headers
-   `query_text, doc_id, <judge_1_name>, <judge_2_name>, ...` and filename
+6. Export when done. Per
+   [Quepid API](https://github.com/o19s/quepid/blob/main/app/controllers/api/v1/judgements_controller.rb),
+   the export is a CSV whose header row starts `query, docid` and then
+   appends one column per judge name, with filename
    `book_{id}_judgements.csv`. JSON and Learning-to-Rank formats are also
-   supported per [Quepid docs].
+   supported per [Quepid docs](https://quepid-docs.dev.o19s.com/2/quepid).
 
 For teams without Quepid, a spreadsheet works for small sets (under 500
 judgments): columns `query_id, query_text, doc_id, grade, rater_id, notes`.
@@ -137,7 +148,7 @@ Convert to qrels format before feeding `_rank_eval`.
 Have at least two independent raters judge the same 10-20% overlap set.
 Compute Cohen's kappa to verify the scale is being applied consistently.
 
-Formula per [Cohen's kappa, Wikipedia]:
+Formula per [Cohen's kappa, Wikipedia](https://en.wikipedia.org/wiki/Cohen%27s_kappa):
 
 ```
 kappa = (p_o - p_e) / (1 - p_e)
@@ -145,8 +156,8 @@ kappa = (p_o - p_e) / (1 - p_e)
 
 where `p_o` is observed agreement and `p_e` is expected chance agreement.
 
-Interpretation thresholds (Landis and Koch, 1977, as cited in [Cohen's
-kappa, Wikipedia]):
+Interpretation thresholds (Landis and Koch, 1977, as cited in
+[Cohen's kappa, Wikipedia](https://en.wikipedia.org/wiki/Cohen%27s_kappa)):
 
 | Kappa | Agreement |
 |---|---|
@@ -181,9 +192,9 @@ When you have results from more than one system (e.g. current BM25 +
 candidate neural re-ranker), use TREC-style depth-k pooling to maximize
 judgment coverage.
 
-Per [TREC pooling, Wikipedia], the method "aggregates the top-ranked n
-documents from each participating system's results, creating a manageable
-subset for comprehensive judgment."
+Per [TREC pooling, Wikipedia](https://en.wikipedia.org/wiki/Text_Retrieval_Conference),
+in pooling "the top-ranked n documents from each contributing run are
+aggregated, and the resulting document set is judged completely."
 
 Practical pooling:
 
@@ -203,8 +214,10 @@ Pool depth = 10 is standard for small collections (< 100k docs). Increase
 to 20-50 when you have > 3 candidate systems to avoid missing relevant
 documents that only appear in one system's lower ranks.
 
-Documents outside the pool are unjudged. Per [TREC qrels format], unjudged
-documents are treated as irrelevant in metric computation. This is
+Documents outside the pool are unjudged. Per
+[TREC qrels format](https://trec.nist.gov/data/qrels_eng/), documents "not
+occurring in the qrels file were not judged by the human assessor and are
+assumed to be irrelevant in the evaluations used in TREC." This is
 conservative but consistent across systems.
 
 ## Step 7 - Establish refresh cadence
@@ -265,7 +278,9 @@ after mapping `doc_id` to the index's `_id` field.
 - Graded 0-3 scale requires domain-expert raters. Binary scale is
   appropriate when domain expertise is scarce.
 - Cohen's kappa understates agreement on rare categories (e.g. grade 3
-  "perfect" is rare for tail queries). Per [Cohen's kappa, Wikipedia],
+  "perfect" is rare for tail queries). Per
+  [Cohen's kappa, Wikipedia](https://en.wikipedia.org/wiki/Cohen%27s_kappa),
+  kappa "tends to underestimate the agreement on the rare category" -
   supplement with per-grade agreement counts when the kappa is borderline.
 - Judgment effort scales with query count and pool depth. A 400-query set
   at depth 20 = 8,000 documents to judge; plan rater time accordingly.
@@ -273,7 +288,7 @@ after mapping `doc_id` to the index's `_id` field.
 ## References
 
 - [TREC qrels format] - 4-column qrels file format, binary relevance scale,
-  pooling convention: https://trec.nist.gov/data/qrels_eng.html
+  pooling convention: https://trec.nist.gov/data/qrels_eng/
 - [TREC pooling, Wikipedia] - depth-k pooling methodology:
   https://en.wikipedia.org/wiki/Text_Retrieval_Conference
 - [Quepid] - open-source judgment authoring tool (Rails, supports ES /

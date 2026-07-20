@@ -29,16 +29,18 @@ Output: ranked hypotheses + remediation checklist (see Output format).
 
 ## Step 1 - Parse the alert envelope
 
-Read the JSON report. Per [Evidently customization docs], the report
-dict carries per-column drift scores with the stat test used and
-whether the score crossed its threshold. Defaults: PSI and
-Jensen-Shannon divergence use threshold 0.1; KS/chi-square use
-p-value 0.05 ([Evidently customization docs]). Note which columns
-drifted and which stat test fired.
+Read the JSON report - `report.dict()` returns the run as a Python
+dictionary per [Evidently output formats](https://docs.evidentlyai.com/docs/library/output_formats).
+Each column is scored by a drift method against a threshold and flagged
+when the score crosses it; defaults are PSI and Jensen-Shannon
+divergence at threshold 0.1, KS and chi-square at p-value 0.05, per
+[Evidently customization docs](https://docs.evidentlyai.com/metrics/customize_data_drift).
+Note which columns drifted and which stat test fired.
 
 Dataset-level drift triggers when the share of drifted columns reaches
-the `drift_share` setting, which defaults to 0.5 (50 %) per
-[Evidently drift preset docs].
+the `drift_share` setting: "By default, Dataset Drift is detected if at
+least 50% of columns drift" per
+[Evidently drift preset docs](https://docs.evidentlyai.com/metrics/preset_data_drift).
 
 ## Step 2 - Classify the drift signal
 
@@ -103,9 +105,11 @@ Per ranked hypothesis, attach concrete actions:
       feature-store migration.
 
 **H4 - Seasonality**
-- [ ] Widen the `stattest_threshold` for the affected columns (or switch
-      to a seasonal reference window) per [Evidently customization docs]:
-      pass `per_column_stattest_threshold` in the preset config.
+- [ ] Widen the drift threshold for the affected columns (or switch
+      to a seasonal reference window) per
+      [Evidently customization docs](https://docs.evidentlyai.com/metrics/customize_data_drift):
+      pass `per_column_threshold` (and `per_column_method` if the test
+      itself is wrong) in the preset config.
 - [ ] Document the seasonal pattern as a known-good deviation so future
       alerts self-classify.
 
@@ -148,7 +152,7 @@ Per ranked hypothesis, attach concrete actions:
 
 ### Alert tuning recommendation
 
-If H4 (seasonality) is confirmed: raise `stattest_threshold` for
+If H4 (seasonality) is confirmed: raise `per_column_threshold` for
 <column_list> from 0.1 to <value> to reduce false-positive page rate.
 ```
 

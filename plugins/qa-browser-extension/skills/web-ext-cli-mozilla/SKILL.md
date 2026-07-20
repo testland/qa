@@ -245,7 +245,7 @@ Channel semantics (quoted from [we-cmd]):
 | `--upload-source-code` | path to source archive (v8 addition) |
 | `--timeout` | default 300000 ms |
 | `--approval-timeout` | default 900000 ms (v8 addition) |
-| `--amo-base-url` | default `https://addons.mozilla.org/api/v5/` |
+| `--amo-base-url` | default `https://addons.mozilla.org/api/v5/` per [we-cmd]; an API base path, not a browsable page |
 
 To submit updates, per [we-cmd] the manifest **must include an
 extension ID** (`browser_specific_settings.gecko.id` for Firefox).

@@ -51,9 +51,14 @@ coverage, then mutates and re-tests.
 
 ## Step 3 - Configure via `stryker-config.json`
 
+Per [stryker-net-config][snc], every option nests under a single
+`stryker-config` root object; Stryker.NET publishes no JSON schema, so
+there is no `$schema` key to reference.
+
+[snc]: https://stryker-mutator.io/docs/stryker-net/configuration/
+
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker-net/master/src/Stryker.Core/Stryker.Core/stryker-config-schema.json",
   "stryker-config": {
     "project": "../MyApp/MyApp.csproj",
     "test-projects": ["MyApp.Tests.csproj"],
@@ -140,6 +145,8 @@ original behavior from the mutated one.
 
 - [sni][sni] - Stryker.NET overview, NuGet distribution, .NET
   Core + .NET Framework support, history.
+- [snc][snc] - `stryker-config.json` / `.yaml` file format and the
+  full option list.
 - [`stryker-mutation`](../stryker-mutation/SKILL.md) - JS sibling
   with the same Stryker model.
 - [`pitest-mutation`](../pitest-mutation/SKILL.md),

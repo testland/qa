@@ -9,9 +9,9 @@ description: "Wraps Sinon's standalone @sinonjs/fake-timers library for JS/TS te
 
 Sinon's `@sinonjs/fake-timers` is the canonical fake-timer + fake-
 clock library for JavaScript / TypeScript. Per
-[sinonjs.org/releases/latest/fake-timers](https://sinonjs.org/releases/latest/fake-timers/),
-it replaces the global timer functions and the Date constructor
-with controllable fakes.
+[github.com/sinonjs/fake-timers](https://github.com/sinonjs/fake-timers),
+`install` replaces the native timer functions and FakeTimers
+supplies a `Date` implementation that reads from the clock.
 
 This skill is for tests outside Jest (Jest has its own per
 [`jest-fake-timers`](../jest-fake-timers/SKILL.md)).
@@ -158,7 +158,7 @@ jobs:
 ## References
 
 - @sinonjs/fake-timers:
-  [sinonjs.org/releases/latest/fake-timers](https://sinonjs.org/releases/latest/fake-timers/).
+  [github.com/sinonjs/fake-timers](https://github.com/sinonjs/fake-timers).
 - Companion catalogs:
   [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
   [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).

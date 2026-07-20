@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-process",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "Test process + methodology: 19 skills (risk-matrix, product-risk-register-builder, project-risk-register-builder, risk-coverage-mapper, risk-acceptance-decision-author, definition-of-done, test-strategy-author, post-mortem-author, smoke-suite-gate, test-pyramid-balancer, tdd-stuck-pattern-resolver, risk-storming-facilitator, e2e-suite-budget, test-case-ideation-from-story, heuristic-test-design-reference, test-case-from-live-feature, framework-choice-advisor, qa-okr-author, qa-vendor-evaluator) and 7 agents (release-readiness-checker, risk-based-test-selector, risk-based-test-planner, risk-matrix-recommender, risk-assessment-critic, risk-storming-session-runner, test-case-quality-auditor).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-process",

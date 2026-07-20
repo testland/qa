@@ -103,6 +103,13 @@ Two important nuances:
 </coverage>
 ```
 
+The `SYSTEM` DOCTYPE URL above no longer resolves, but emitters
+still write that exact literal - see the hardcoded string in
+[istanbul-reports' cobertura reporter](https://github.com/istanbuljs/istanbuljs/blob/main/packages/istanbul-reports/lib/cobertura/index.js) - 
+so keep it in fixtures and disable external-entity resolution when
+parsing. A live copy of the DTD text is at
+[raw.githubusercontent.com/cobertura/web](https://raw.githubusercontent.com/cobertura/web/master/htdocs/xml/coverage-04.dtd).
+
 The `condition-coverage` attribute on a branch line ("50% (1/2)")
 means one of two branch arms was hit. Parse it as
 `/(\d+(?:\.\d+)?)% \((\d+)\/(\d+)\)/` to extract `(pct, hit, total)`.

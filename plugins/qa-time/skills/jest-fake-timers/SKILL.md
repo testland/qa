@@ -191,7 +191,7 @@ jobs:
 - Jest timer mocks:
   [jestjs.io/docs/timer-mocks](https://jestjs.io/docs/timer-mocks).
 - @sinonjs/fake-timers (underlying):
-  [sinonjs.org/releases/latest/fake-timers](https://sinonjs.org/releases/latest/fake-timers/).
+  [github.com/sinonjs/fake-timers](https://github.com/sinonjs/fake-timers).
 - Companion catalog:
   [`dst-transition-reference`](../dst-transition-reference/SKILL.md).
 - Sibling library (non-Jest test runners):

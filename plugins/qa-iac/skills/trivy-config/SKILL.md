@@ -10,6 +10,7 @@ metadata:
 ## Overview
 
 [mc]: https://trivy.dev/latest/docs/scanner/misconfiguration/
+[inst]: https://trivy.dev/docs/latest/getting-started/installation/
 [cli]: https://trivy.dev/latest/docs/references/configuration/cli/trivy_config/
 [custom]: https://trivy.dev/latest/docs/scanner/misconfiguration/custom/
 [filter]: https://trivy.dev/latest/docs/configuration/filtering/
@@ -30,7 +31,9 @@ under `trivy config`.
 
 ## Step 1 - Install
 
-Per [trivy.dev][mc] (v0.71.0 is the latest release as of 2026-06-04):
+Per [trivy.dev installation docs][inst] (v0.72.0 is the latest release
+as of 2026-06-30; GitHub release assets are version-stamped, so the RPM
+URL pins a tag rather than using `latest/download`):
 
 ```bash
 # macOS
@@ -46,7 +49,7 @@ echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] \
 sudo apt-get update && sudo apt-get install trivy
 
 # RPM (RHEL / Fedora)
-sudo rpm -ivh https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.rpm
+sudo rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.72.0/trivy_0.72.0_Linux-64bit.rpm
 
 # Docker (no local install)
 docker run --rm -v $(pwd):/workspace aquasec/trivy config /workspace
@@ -320,6 +323,8 @@ comma-separated list from: `azure-arm`, `cloudformation`, `dockerfile`,
 
 - [mc][mc] - Trivy misconfiguration scanner overview, supported IaC
   types, auto-detection behavior, air-gap fallback, network requirements.
+- [inst][inst] - Official install methods: Homebrew, the apt repository,
+  direct `.rpm` release package, container image.
 - [cli][cli] - `trivy config` CLI reference: `--exit-code`,
   `--severity`, `--format`, `--output`, `--ignorefile`,
   `--config-check`, `--namespaces`, `--misconfig-scanners`,

@@ -107,7 +107,9 @@ diversity without extra code.
 
 ## Step 5 - Check loop-variable capture with `go vet`
 
-Per the [Go vet documentation at go.dev/cmd/vet], `go vet` flags the
+Per the [Go vet documentation at go.dev/cmd/vet](https://pkg.go.dev/cmd/vet)
+(`loopclosure`: "check references to loop variables from within nested
+functions"), `go vet` flags the
 classic loop-variable-capture anti-pattern that frequently causes races
 when goroutines close over a range variable:
 

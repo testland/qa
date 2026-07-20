@@ -139,8 +139,8 @@ Output is a single markdown document with a per-axis matrix plus an evidence app
 | Code | Vendor | Pricing page | Cited integration doc |
 |---|---|---|---|
 | V1 | TestRail (Gurock / Idera) | https://www.testrail.com/pricing/ | https://support.testrail.com/hc/en-us/articles/7077873061908 |
-| V2 | Qase | https://qase.io/pricing/ | https://help.qase.io/en/articles/5563000 |
-| V3 | Xray (Xpand IT, for Jira) | https://www.getxray.app/pricing | https://docs.getxray.app/display/XRAYCLOUD/REST+API |
+| V2 | Qase | https://www.qase.io/pricing/ | https://docs.qase.io/en/articles/6417206-github |
+| V3 | Xray (Xpand IT, for Jira) | https://marketplace.atlassian.com/apps/1211769/xray-test-management-for-jira | https://docs.getxray.app/display/XRAYCLOUD/REST+API |
 
 ## Team profile
 
@@ -174,9 +174,9 @@ Output is a single markdown document with a per-axis matrix plus an evidence app
 
 | Vendor | Year-1 (12 eng) | Year-2 (18 eng) | Hidden costs |
 |---|---|---|---|
-| TestRail | $7,488 (12 × $52/seat/mo × 12) | $11,232 | SSO add-on $480/yr/site; audit log enterprise-tier only |
-| Qase | $4,320 (12 × $30/seat/mo × 12) | $6,480 | None at this tier; SSO included from Business plan |
-| Xray | $6,840 (12 × $5/user/mo × 12) | $11,160 | Requires Jira Software seats - additional ~$8/user/mo if not already licensed |
+| TestRail | $5,328 (12 × $37/seat/mo Professional × 12) | $7,992 | SSO, automated backups, priority support are Enterprise-tier only |
+| Qase | $4,320 (12 × $30/seat/mo Business × 12) | $6,480 | None at this tier; SSO included from Business plan |
+| Xray | Quote from the Marketplace listing - Xray licenses by total Jira user tier, not by tester seat | Same tier rule at 18 engineers; re-quote if the Jira tier changes | Requires Jira Software seats if not already licensed |
 
 ### A3 - Integration depth
 

@@ -26,9 +26,9 @@ API, and a lightweight visual interface"* per [Evidently docs].
 pip install evidently
 ```
 
-See the canonical install snippet at
-https://docs.evidentlyai.com/snippets/install_evidently_oss for the
-current pinned version constraints.
+See the canonical install page at
+https://docs.evidentlyai.com/docs/setup/installation for the current
+install options (`pip install evidently`, plus the `evidently[llm]` extra).
 
 ## Step 2 - Reference + current datasets
 
