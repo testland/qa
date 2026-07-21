@@ -153,7 +153,7 @@ material that lives in skills.
 
 | Agent | Preloads |
 |---|---|
-| `db-snapshot-restore` | `testcontainers`, `docker-compose-test` |
+| `db-snapshot-restore` | `testcontainers`, `docker-compose-tests` |
 
 ### qa-test-impact-analysis
 
