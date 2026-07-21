@@ -188,8 +188,8 @@ test config differs from prod.
 - Persisted-query mitigation:
   [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
 - Consumed by:
-  [`apollo-server-test`](../apollo-server-test/SKILL.md),
-  [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md),
-  [`hasura-test`](../hasura-test/SKILL.md),
-  [`mercurius-test`](../mercurius-test/SKILL.md),
+  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
+  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
+  [`hasura-tests`](../hasura-tests/SKILL.md),
+  [`mercurius-tests`](../mercurius-tests/SKILL.md),
   [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).

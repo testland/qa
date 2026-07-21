@@ -344,5 +344,5 @@ coverage every 24h.
 - [feature-toggles][toggles] - Hodgson's taxonomy: release /
   experiment / ops / permissioning; longevity vs dynamism.
 - [`testcontainers`](../testcontainers/SKILL.md),
-  [`docker-compose-test`](../docker-compose-test/SKILL.md) - the
+  [`docker-compose-tests`](../docker-compose-tests/SKILL.md) - the
   surrounding stack the harness drives per combination.

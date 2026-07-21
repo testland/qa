@@ -1,9 +1,9 @@
 ---
-name: apollo-server-test
+name: apollo-server-tests
 description: "Wraps Apollo Server testing patterns: `server.executeOperation()` (in-process, no HTTP), `supertest` against an ephemeral-port HTTP server (port 0), context injection via the `contextValue` second-argument, and assertion patterns for response shape + errors. Includes the production-config gates testable through this skill - introspection-disabled, persisted-query mode, hideSchemaDetailsFromClientErrors. Use when writing tests for an Apollo Server v4+ GraphQL service."
 ---
 
-# apollo-server-test
+# apollo-server-tests
 
 ## Overview
 
@@ -252,9 +252,9 @@ exercised.
   [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md),
   [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
 - Sibling frameworks:
-  [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md),
-  [`hasura-test`](../hasura-test/SKILL.md),
-  [`mercurius-test`](../mercurius-test/SKILL.md),
+  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
+  [`hasura-tests`](../hasura-tests/SKILL.md),
+  [`mercurius-tests`](../mercurius-tests/SKILL.md),
   [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
 - Contract-drift cross-plugin:
   `graphql-schema-regression`.

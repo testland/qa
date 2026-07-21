@@ -6,10 +6,10 @@ model: inherit
 skills:
   - workbox-tests
   - lighthouse-pwa-audit
-  - web-push-test
-  - service-worker-lifecycle-test
-  - offline-fallback-test
-  - add-to-homescreen-flow-test
+  - web-push-tests
+  - service-worker-lifecycle-tests
+  - offline-fallback-tests
+  - add-to-homescreen-flow-tests
   - pwa-install-flow-reference
 ---
 
@@ -97,7 +97,7 @@ Write one new file at `tests/pwa-<surface>.spec.ts` (Playwright convention). Emi
 
 ## Hand-off targets
 
-- **Per-surface skill** → [`workbox-tests`](../skills/workbox-tests/SKILL.md), [`service-worker-lifecycle-test`](../skills/service-worker-lifecycle-test/SKILL.md), [`offline-fallback-test`](../skills/offline-fallback-test/SKILL.md), [`web-push-test`](../skills/web-push-test/SKILL.md), [`add-to-homescreen-flow-test`](../skills/add-to-homescreen-flow-test/SKILL.md).
+- **Per-surface skill** → [`workbox-tests`](../skills/workbox-tests/SKILL.md), [`service-worker-lifecycle-tests`](../skills/service-worker-lifecycle-tests/SKILL.md), [`offline-fallback-tests`](../skills/offline-fallback-tests/SKILL.md), [`web-push-tests`](../skills/web-push-tests/SKILL.md), [`add-to-homescreen-flow-tests`](../skills/add-to-homescreen-flow-tests/SKILL.md).
 - **Reference** → [`pwa-install-flow-reference`](../skills/pwa-install-flow-reference/SKILL.md).
 - **CI-side PWA score gate** → [`lighthouse-pwa-audit`](../skills/lighthouse-pwa-audit/SKILL.md).
 - **Test-code review** → `test-code-conventions` (qa-test-review).

@@ -5,7 +5,7 @@ tools: "Read, Write, Edit, Grep, Glob, Bash(psql *), Bash(createdb *), Bash(drop
 model: sonnet
 skills:
   - testcontainers
-  - docker-compose-test
+  - docker-compose-tests
 ---
 
 A maintenance agent that turns "the previous test left junk in the DB" into a deterministic snapshot/restore loop, using the engine's native template/dump primitives.
@@ -148,9 +148,9 @@ Slower than template clone but portable.
 ## Hand-off targets
 
 - **Container-managed DBs** → [`testcontainers`](../skills/testcontainers/SKILL.md) (containers ~5 - 30s vs template restore ~50 - 500ms).
-- **Compose stacks** → [`docker-compose-test`](../skills/docker-compose-test/SKILL.md) (its `migrate` service produces the template state).
+- **Compose stacks** → [`docker-compose-tests`](../skills/docker-compose-tests/SKILL.md) (its `migrate` service produces the template state).
 - **Parallel-isolation symptoms** under `-j N` → `parallel-isolation-checker` in `qa-flake-triage`.
 
 ## References
 
-- [pg-templates][pg-tpl], [pg-begin][pg-begin], [pg-dump][pg-dump] (Postgres template DBs; `BEGIN` / `ROLLBACK`; `pg_dump -Fc/-Fd`); [`docker-compose-test`](../skills/docker-compose-test/SKILL.md) (migrate-service pattern producing the template state).
+- [pg-templates][pg-tpl], [pg-begin][pg-begin], [pg-dump][pg-dump] (Postgres template DBs; `BEGIN` / `ROLLBACK`; `pg_dump -Fc/-Fd`); [`docker-compose-tests`](../skills/docker-compose-tests/SKILL.md) (migrate-service pattern producing the template state).

@@ -1,9 +1,9 @@
 ---
-name: hasura-test
+name: hasura-tests
 description: "Wraps Hasura GraphQL Engine testing patterns: docker-compose for a controllable test instance, metadata API for declarative schema/permissions setup (apply / clear / export metadata), x-hasura-role and x-hasura-user-id session headers for role-based permission tests, the v1/graphql endpoint with HTTPie / curl / language-native HTTP clients for query execution, and the recommended permission-matrix testing pattern (one role × N rows × M columns). Use when testing Hasura-backed APIs where permissions and row-level filtering are the dominant correctness concern. Also covers the HASURA_GRAPHQL_DISABLE_INTROSPECTION_PUBLIC_API env var that locks down public introspection."
 ---
 
-# hasura-test
+# hasura-tests
 
 ## Overview
 
@@ -254,7 +254,7 @@ jobs:
   `cross-tenant-data-leak-tests`,
   `row-level-security-postgres-reference`.
 - Sibling frameworks:
-  [`apollo-server-test`](../apollo-server-test/SKILL.md),
-  [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md),
-  [`mercurius-test`](../mercurius-test/SKILL.md),
+  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
+  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
+  [`mercurius-tests`](../mercurius-tests/SKILL.md),
   [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).

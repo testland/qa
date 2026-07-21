@@ -162,6 +162,6 @@ runtime choice is a primary lever.
   [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
   [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md),
   [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md),
-  [`netlify-functions-test`](../netlify-functions-test/SKILL.md),
+  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md),
   [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md),
   [`serverless-integration-test-builder`](../serverless-integration-test-builder/SKILL.md).

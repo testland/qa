@@ -8,7 +8,7 @@ Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare W
 | --- | --- | --- |
 | Skill | [aws-sam-local-testing](skills/aws-sam-local-testing/SKILL.md) | AWS SAM Local CLI: `sam local invoke` / `start-api` for Lambda. |
 | Skill | [cloudflare-workers-miniflare](skills/cloudflare-workers-miniflare/SKILL.md) | Miniflare 3 + Wrangler dev for testing Cloudflare Workers locally. |
-| Skill | [netlify-functions-test](skills/netlify-functions-test/SKILL.md) | Netlify Dev + `@netlify/functions` handler testing. |
+| Skill | [netlify-functions-tests](skills/netlify-functions-tests/SKILL.md) | Netlify Dev + `@netlify/functions` handler testing. |
 | Skill | [vercel-edge-runtime-testing](skills/vercel-edge-runtime-testing/SKILL.md) | Vercel Edge Runtime via `@edge-runtime/jest-environment`. |
 | Skill | [lambda-test-tools-net](skills/lambda-test-tools-net/SKILL.md) | `Amazon.Lambda.TestTool` for invoking .NET Lambda handlers locally. |
 | Skill | [serverless-framework-test-plugin](skills/serverless-framework-test-plugin/SKILL.md) | serverless-offline + jest / mocha plugins for the Serverless Framework. |
@@ -16,7 +16,7 @@ Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare W
 | Skill | [lambda-timeout-budget-reference](skills/lambda-timeout-budget-reference/SKILL.md) | Pure reference: AWS Lambda timeout and billing semantics. |
 | Skill | [serverless-integration-test-builder](skills/serverless-integration-test-builder/SKILL.md) | Build-an-X integration suite from a SAM / serverless.yml / Wrangler definition. |
 | Agent | [serverless-cold-start-critic](agents/serverless-cold-start-critic.md) | Adversarial critic: detects cold-start anti-patterns (client init inside handler, heavy top-level imports, missing /tmp cache, missing SnapStart on JVM, oversized bundles) and emits BLOCK or PASS. |
-| Skill | [azure-functions-test](skills/azure-functions-test/SKILL.md) | Test Azure Functions locally: Core Tools func start, Azurite, isolated worker, triggers/bindings. |
+| Skill | [azure-functions-tests](skills/azure-functions-tests/SKILL.md) | Test Azure Functions locally: Core Tools func start, Azurite, isolated worker, triggers/bindings. |
 
 ## Install
 

@@ -47,7 +47,7 @@ when the test process exits abnormally (e.g. sending a SIGKILL)"
 
 If the team needs **multiple** related containers wired with their own
 network and lifecycle (e.g. app + db + cache), evaluate
-[`docker-compose-test`](../docker-compose-test/SKILL.md) first - it
+[`docker-compose-tests`](../docker-compose-tests/SKILL.md) first - it
 expresses the topology in declarative YAML rather than imperative
 test code.
 
@@ -408,6 +408,6 @@ static `@Container` fields.
   wait-strategy catalog.
 - [tc-net][tc-net] - `Network`, `withNetwork`, `withNetworkAliases`,
   `host.testcontainers.internal`.
-- [`docker-compose-test`](../docker-compose-test/SKILL.md) - 
+- [`docker-compose-tests`](../docker-compose-tests/SKILL.md) - 
   alternative when the topology is multi-service and best expressed
   declaratively.

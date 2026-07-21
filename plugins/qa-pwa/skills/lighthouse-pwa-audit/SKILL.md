@@ -365,5 +365,5 @@ gives engineers the LHR JSON to triage offline.
   inspect.
 - Sibling skills:
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
-  [`web-push-test`](../web-push-test/SKILL.md),
-  [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md).
+  [`web-push-tests`](../web-push-tests/SKILL.md),
+  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).

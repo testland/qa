@@ -1,6 +1,6 @@
 ---
 name: persisted-query-strategy-reference
-description: "Pure-reference catalog of GraphQL Persisted Query strategies. Covers Apollo Automatic Persisted Queries (APQ) - the SHA-256 hash protocol, PersistedQueryNotFoundError flow (client retries with full query + hash; server caches), the `extensions.persistedQuery` payload shape, GET-vs-POST + CDN-cache implications, and the strict-allowlist mode (no auto-registration; only pre-registered hashes execute). Differentiates the three operation modes: APQ auto-register (default; permissive), persisted-query-only (allowlist; rejects unknown hashes), and hybrid (allowlist for prod, auto for dev). Use when designing the request layer for a GraphQL server's prod deployment, choosing between size-optimisation and allowlist-enforcement, or auditing an existing persisted-query configuration. Consumed by apollo-server-test, graphql-yoga-test, mercurius-test, pothos-builder-tests."
+description: "Pure-reference catalog of GraphQL Persisted Query strategies. Covers Apollo Automatic Persisted Queries (APQ) - the SHA-256 hash protocol, PersistedQueryNotFoundError flow (client retries with full query + hash; server caches), the `extensions.persistedQuery` payload shape, GET-vs-POST + CDN-cache implications, and the strict-allowlist mode (no auto-registration; only pre-registered hashes execute). Differentiates the three operation modes: APQ auto-register (default; permissive), persisted-query-only (allowlist; rejects unknown hashes), and hybrid (allowlist for prod, auto for dev). Use when designing the request layer for a GraphQL server's prod deployment, choosing between size-optimisation and allowlist-enforcement, or auditing an existing persisted-query configuration. Consumed by apollo-server-tests, graphql-yoga-tests, mercurius-tests, pothos-builder-tests."
 ---
 
 # persisted-query-strategy-reference
@@ -259,7 +259,7 @@ These tests prove the chosen mode is actually in effect.
 - Companion catalog:
   [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md).
 - Consumed by:
-  [`apollo-server-test`](../apollo-server-test/SKILL.md),
-  [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md),
-  [`mercurius-test`](../mercurius-test/SKILL.md),
+  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
+  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
+  [`mercurius-tests`](../mercurius-tests/SKILL.md),
   [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).

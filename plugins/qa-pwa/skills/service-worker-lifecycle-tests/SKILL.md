@@ -1,11 +1,11 @@
 ---
-name: service-worker-lifecycle-test
+name: service-worker-lifecycle-tests
 description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). Use when authoring the baseline lifecycle spec, or when a deploy leaves users stuck on the old service worker - scoped to the state machine and the `skipWaiting` / `clients.claim` upgrade path, not to general service-worker assertion or cache-strategy patterns."
 metadata:
   keywords: "service-worker, lifecycle, skip-waiting, clients-claim, statechange"
 ---
 
-# service-worker-lifecycle-test
+# service-worker-lifecycle-tests
 
 ## Overview
 
@@ -409,7 +409,7 @@ Steps 2 - 8 for the full lifecycle surface.
   Manual smoke covers this cell.
 - **The push and fetch events** that `waitUntil` gates aren't
   tested here directly; pair with
-  [`web-push-test`](../web-push-test/SKILL.md) (push side) and
+  [`web-push-tests`](../web-push-tests/SKILL.md) (push side) and
   the `service-worker-tests` cache-strategy tests
   (fetch side).
 - **Browser variance.** Firefox and WebKit implement the state
@@ -434,5 +434,5 @@ Steps 2 - 8 for the full lifecycle surface.
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
   [`workbox-tests`](../workbox-tests/SKILL.md).
 - Sibling builders:
-  [`offline-fallback-test`](../offline-fallback-test/SKILL.md),
-  [`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md).
+  [`offline-fallback-tests`](../offline-fallback-tests/SKILL.md),
+  [`add-to-homescreen-flow-tests`](../add-to-homescreen-flow-tests/SKILL.md).

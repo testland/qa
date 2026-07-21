@@ -203,4 +203,4 @@ locally via workerd.
   [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md).
 - Other serverless tools:
   [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`netlify-functions-test`](../netlify-functions-test/SKILL.md).
+  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md).

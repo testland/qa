@@ -1,6 +1,6 @@
 ---
 name: graphql-subscription-test-author
-description: "Authors test suites for GraphQL subscription resolvers over graphql-ws (WebSocket) and graphql-sse (Server-Sent Events) transports: subscribe to event streams with the async-iterator API, assert emitted data shape and sequence, verify connection lifecycle (connect, auth rejection, graceful close, protocol close codes), validate auth-on-connect via connectionParams / authenticate callback, and test resolver-level pubsub trigger logic in isolation. Use when writing tests for subscription operations - as distinct from query/mutation tests covered by apollo-server-test, graphql-yoga-test, or mercurius-test."
+description: "Authors test suites for GraphQL subscription resolvers over graphql-ws (WebSocket) and graphql-sse (Server-Sent Events) transports: subscribe to event streams with the async-iterator API, assert emitted data shape and sequence, verify connection lifecycle (connect, auth rejection, graceful close, protocol close codes), validate auth-on-connect via connectionParams / authenticate callback, and test resolver-level pubsub trigger logic in isolation. Use when writing tests for subscription operations - as distinct from query/mutation tests covered by apollo-server-tests, graphql-yoga-tests, or mercurius-tests."
 ---
 
 # graphql-subscription-test-author
@@ -34,13 +34,13 @@ making the same test patterns portable across transports.
 
 Distinct scope vs. sibling skills:
 
-- `apollo-server-test` covers queries/mutations via `executeOperation`;
+- `apollo-server-tests` covers queries/mutations via `executeOperation`;
   its Limitations section explicitly notes "Doesn't test subscriptions
   over WS."
-- `graphql-yoga-test` covers Yoga's `yoga.fetch()` path; subscription
+- `graphql-yoga-tests` covers Yoga's `yoga.fetch()` path; subscription
   tests there go through Yoga's own plugin hooks, not graphql-ws/sse
   directly.
-- `mercurius-test` and `hasura-test` target those specific runtimes.
+- `mercurius-tests` and `hasura-tests` target those specific runtimes.
 
 ## Authoring
 
@@ -461,8 +461,8 @@ fails before `dispose()` or `close()` is called.
   cite by stable ID): subscription execution model, single-root-field
   constraint, per-event independent execution.
 - Sibling skill (queries/mutations, in-process):
-  [`apollo-server-test`](../apollo-server-test/SKILL.md).
+  [`apollo-server-tests`](../apollo-server-tests/SKILL.md).
 - Sibling skill (Yoga transport, including SSE via Yoga):
-  [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md).
+  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md).
 - Contract-drift cross-plugin:
   `graphql-schema-regression`.

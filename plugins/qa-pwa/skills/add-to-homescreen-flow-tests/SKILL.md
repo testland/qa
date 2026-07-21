@@ -1,11 +1,11 @@
 ---
-name: add-to-homescreen-flow-test
+name: add-to-homescreen-flow-tests
 description: "Build-an-X workflow that emits the Add-to-Home-Screen / install-flow test suite. Walks the four-stage install timeline (gate → `beforeinstallprompt` handshake → per-platform path → `display-mode` MQ), emits one test per gate cell per [web.dev/articles/install-criteria][install-criteria], the deferred-prompt → `prompt()` → `userChoice` chain per [web.dev/articles/customize-install][customize-install], the iOS Safari manual-metadata branch (`apple-touch-icon`, `apple-mobile-web-app-capable`) per [web.dev/learn/pwa/installation][learn-pwa], and the post-install `(display-mode: standalone)` MQ assertion. Output: a Playwright spec file with per-stage cells plus the iOS metadata spec, plus a coverage matrix mapping each install criterion to its assertion. Use when a PWA's manifest, icons, or install handler change, or when install conversion drops and it is unclear which install stage users fall out at."
 metadata:
   keywords: "add-to-homescreen, beforeinstallprompt, appinstalled, display-mode, apple-touch-icon"
 ---
 
-# add-to-homescreen-flow-test
+# add-to-homescreen-flow-tests
 
 ## Overview
 
@@ -39,7 +39,7 @@ Composes with:
 - [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md) - the
   `installable-manifest` and `apple-touch-icon` audits are the
   Lighthouse counterpart of the Step 2 + Step 5 cells here.
-- [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md) - Stage 1 of the install gate requires an active SW; pair this
+- [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md) - Stage 1 of the install gate requires an active SW; pair this
   builder's output with the lifecycle spec for full coverage.
 
 ## When to use
@@ -441,11 +441,11 @@ the four classes of install regression most teams hit:
 - Composes:
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
   [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md),
-  [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md).
+  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).
 - Differentiation: `pwa-install-flow-tests` is the generic pattern
   wrapper. This builder emits the
   *per-PWA* suite tied to the project's actual manifest /
   handlers - the checked-in artifact, not the pattern reference.
 - Sibling builders:
-  [`offline-fallback-test`](../offline-fallback-test/SKILL.md),
-  [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md).
+  [`offline-fallback-tests`](../offline-fallback-tests/SKILL.md),
+  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).

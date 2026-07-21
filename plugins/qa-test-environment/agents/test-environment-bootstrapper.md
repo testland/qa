@@ -5,7 +5,7 @@ tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:
   - testcontainers
-  - docker-compose-test
+  - docker-compose-tests
   - feature-flag-test-harness
   - playwright-fixture-builder
 ---
@@ -28,7 +28,7 @@ Missing any required input: halt and ask.
 ### Step 1 - Choose container strategy
 
 Read the repo root for existing `compose*.yaml`. Two or more backing services
-or an existing Compose file: use [`docker-compose-test`](../skills/docker-compose-test/SKILL.md)
+or an existing Compose file: use [`docker-compose-tests`](../skills/docker-compose-tests/SKILL.md)
 to emit `compose.test.yaml` with a `migrate` one-shot service gated on
 `condition: service_completed_successfully` and the app on
 `condition: service_healthy` per [Docker Compose services][compose-svc].

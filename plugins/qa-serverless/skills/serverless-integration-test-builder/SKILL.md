@@ -81,7 +81,7 @@ multiple emulators only when the project mixes platforms (e.g., Vercel app
 | AWS Lambda (.NET) | Amazon.Lambda.TestUtilities | [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md) |
 | Cloudflare Workers | vitest-pool-workers / Miniflare | [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md) |
 | Vercel Edge | @edge-runtime/jest-environment | [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md) |
-| Netlify Functions | netlify dev + direct handler | [`netlify-functions-test`](../netlify-functions-test/SKILL.md) |
+| Netlify Functions | netlify dev + direct handler | [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md) |
 | Serverless Framework | serverless-offline / direct | [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md) |
 
 ## Step 3 - Generate test events per event source
@@ -289,7 +289,7 @@ This skill produces:
   [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
   [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md),
   [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md),
-  [`netlify-functions-test`](../netlify-functions-test/SKILL.md),
+  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md),
   [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md).
 - Cross-plugin:
   `testcontainers` (in the qa-test-environment plugin)

@@ -1,11 +1,11 @@
 ---
-name: azure-functions-test
+name: azure-functions-tests
 description: "Runs Azure Functions locally using Azure Functions Core Tools v4 (`func start`), Azurite storage emulation, and framework-native unit tests for handler code (.NET isolated worker model, Node.js v4, Python v2). Covers HTTP, queue, and timer trigger testing, admin-endpoint invocation for non-HTTP triggers, and binding verification via local.settings.json. Use when testing Azure Functions before deployment, reproducing trigger behaviour without live Azure services, or gating function handler logic in CI."
 metadata:
   keywords: "azure-functions, func-start, azurite, isolated-worker, http-trigger, queue-trigger, timer-trigger, serverless, local-testing"
 ---
 
-# azure-functions-test
+# azure-functions-tests
 
 ## Overview
 
@@ -281,7 +281,7 @@ def test_http_example():
 
 ```yaml
 jobs:
-  azure-functions-test:
+  azure-functions-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -345,6 +345,6 @@ jobs:
   [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
   [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
   [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`netlify-functions-test`](../netlify-functions-test/SKILL.md),
+  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md),
   [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md),
   [`serverless-integration-test-builder`](../serverless-integration-test-builder/SKILL.md)

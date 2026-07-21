@@ -1,11 +1,11 @@
 ---
-name: offline-fallback-test
+name: offline-fallback-tests
 description: "Build-an-X workflow that emits the offline-fallback test suite. Walks the eight Jake Archibald offline recipes per [web.dev/articles/offline-cookbook][off-cookbook] (`Cache only`, `Network only`, `Cache, falling back to network`, `Cache and network race`, `Network falling back to cache`, `Cache then network`, `Generic fallback`, `Service Worker side templating`), maps each recipe to its assertion shape, layers the Workbox `offlineFallback()` recipe per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes], and pins the offline storage strategy (Cache Storage vs IndexedDB vs Storage Manager `persist()`/`estimate()`) per [web.dev/learn/pwa/offline-data][off-data]. Output: a Playwright spec file with one test per route's chosen recipe + a coverage matrix mapping recipes to URL patterns. Use when a route's SW caching behavior is being chosen or changed, or when a \"doesn't work offline\" report needs the failing route's recipe localized."
 metadata:
   keywords: "offline-fallback, offline-cookbook, workbox-recipes, cache-storage, storage-manager"
 ---
 
-# offline-fallback-test
+# offline-fallback-tests
 
 ## Overview
 
@@ -35,7 +35,7 @@ Composes with:
   Workbox's `offlineFallback()` recipe, the workbox-tests spec
   covers the recipe's runtime; this builder covers the per-route
   decision and the page-side assertion.
-- [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md) - every recipe assumes an active SW; the lifecycle spec is the
+- [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md) - every recipe assumes an active SW; the lifecycle spec is the
   prerequisite for this one.
 - [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md) - Stage 1's service-worker prerequisite cell is the same SW
   this builder tests offline behavior of.
@@ -451,7 +451,7 @@ catches the four most common offline regressions:
   `offline.html`) - [wb-recipes].
 - Composes:
   [`workbox-tests`](../workbox-tests/SKILL.md),
-  [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md),
+  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md),
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md).
 - Differentiation: `sw-cache-strategy-author` authors the strategy;
   this builder generates the verification
@@ -459,5 +459,5 @@ catches the four most common offline regressions:
   authoring side writes the SW code, this side writes the spec
   that locks it.
 - Sibling builders:
-  [`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md),
-  [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md).
+  [`add-to-homescreen-flow-tests`](../add-to-homescreen-flow-tests/SKILL.md),
+  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).

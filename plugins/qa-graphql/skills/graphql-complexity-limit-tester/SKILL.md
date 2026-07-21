@@ -36,7 +36,7 @@ Three library families are covered:
   - `max-tokens` plugin: default `n = 1000` (per
     [escape.tech/graphql-armor/docs/plugins/max-tokens](https://escape.tech/graphql-armor/docs/plugins/max-tokens))
 
-Differentiation vs. `apollo-server-test`: that skill covers resolver
+Differentiation vs. `apollo-server-tests`: that skill covers resolver
 correctness + production-config gates (introspection, APQ,
 hideSchemaDetails). This skill is scoped exclusively to depth/complexity
 DoS tests - over-limit query construction, validation-layer rejection
@@ -161,7 +161,7 @@ query TokenBust {
 
 ### graphql-depth-limit with Apollo Server
 
-Per the `apollo-server-test` skill, use `executeOperation` for
+Per the `apollo-server-tests` skill, use `executeOperation` for
 in-process validation. The `depthLimit(n)` rule is passed as a
 `validationRules` option (per npm registry description of
 `graphql-depth-limit`).
@@ -316,7 +316,7 @@ const getEnveloped = envelop({
 ```
 
 Test via the Yoga HTTP layer using supertest (same pattern as
-`apollo-server-test`).
+`apollo-server-tests`).
 
 ## Step 5 - Assert rejection happens before execution
 
@@ -360,7 +360,7 @@ npx jest --testPathPattern complexity -t "limit"
 
 Run against the production configuration. Tests that pass in
 `NODE_ENV=test` but fail in `NODE_ENV=production` (or vice versa) signal
-a configuration drift problem. See the CI note in `apollo-server-test`.
+a configuration drift problem. See the CI note in `apollo-server-tests`.
 
 ## Anti-patterns
 
@@ -406,4 +406,4 @@ a configuration drift problem. See the CI note in `apollo-server-test`.
 - Attack surface context:
   [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md)
 - Apollo testing patterns:
-  [`apollo-server-test`](../apollo-server-test/SKILL.md)
+  [`apollo-server-tests`](../apollo-server-tests/SKILL.md)

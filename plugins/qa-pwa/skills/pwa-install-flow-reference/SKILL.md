@@ -13,8 +13,8 @@ The PWA install flow is a four-stage test surface: **installability
 gate → install prompt handshake → platform-specific install path →
 post-install runtime signal**. Each stage has a documented contract
 the test suite can assert against. This skill is the reference the
-per-stage builders ([`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md),
-[`web-push-test`](../web-push-test/SKILL.md)) and the audit reader
+per-stage builders ([`add-to-homescreen-flow-tests`](../add-to-homescreen-flow-tests/SKILL.md),
+[`web-push-tests`](../web-push-tests/SKILL.md)) and the audit reader
 ([`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md)) consult.
 
 This is a **pure reference** - no execution steps. The body is
@@ -115,7 +115,7 @@ Tests use this signal to:
   PWA-launch session.
 - Assert that a `--app=` launched Chromium instance reports
   `standalone` (a common test pattern; see
-  [`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md)).
+  [`add-to-homescreen-flow-tests`](../add-to-homescreen-flow-tests/SKILL.md)).
 
 The signal can be polled (`matchMedia('(display-mode: standalone)').matches`)
 or observed (`mql.addEventListener('change', ...)`); both are
@@ -188,8 +188,8 @@ A test plan covers each step with an assertion or a documented gap
   `preventDefault` / `prompt()` / `userChoice` / `appinstalled`) - 
   [customize-install].
 - Consumed by:
-  [`add-to-homescreen-flow-test`](../add-to-homescreen-flow-test/SKILL.md),
-  [`web-push-test`](../web-push-test/SKILL.md),
+  [`add-to-homescreen-flow-tests`](../add-to-homescreen-flow-tests/SKILL.md),
+  [`web-push-tests`](../web-push-tests/SKILL.md),
   [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md).
 - Differentiation: `pwa-install-flow-tests` authors the install-flow
   *Playwright tests*; this skill is the

@@ -368,5 +368,5 @@ Wire `playwright.config.ts` to use the `authenticated` project per
 - [`feature-flag-test-harness`](../feature-flag-test-harness/SKILL.md) - the matrix-shard pattern that complements per-test `flags`
   fixture overrides.
 - [`testcontainers`](../testcontainers/SKILL.md),
-  [`docker-compose-test`](../docker-compose-test/SKILL.md) - the
+  [`docker-compose-tests`](../docker-compose-tests/SKILL.md) - the
   underlying stack the fixtures point at.

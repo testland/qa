@@ -1,9 +1,9 @@
 ---
-name: mercurius-test
+name: mercurius-tests
 description: "Wraps Mercurius (Fastify GraphQL plugin) testing patterns: `app.inject()` for HTTP-layer simulation without spinning up a network listener, plugin-registration setup (await app.register(mercurius, { schema, resolvers, graphiql: false })), production-config gates (graphiql: false; jit threshold; query depth limits via fastify-rate-limit + complexity), and the per-test app lifecycle (app.close() in afterEach). Use when writing tests for a Fastify + Mercurius GraphQL server."
 ---
 
-# mercurius-test
+# mercurius-tests
 
 ## Overview
 
@@ -241,7 +241,7 @@ for those cases.
 - Companion catalog:
   [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md).
 - Sibling frameworks:
-  [`apollo-server-test`](../apollo-server-test/SKILL.md),
-  [`graphql-yoga-test`](../graphql-yoga-test/SKILL.md),
-  [`hasura-test`](../hasura-test/SKILL.md),
+  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
+  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
+  [`hasura-tests`](../hasura-tests/SKILL.md),
   [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).

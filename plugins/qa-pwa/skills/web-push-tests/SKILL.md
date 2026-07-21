@@ -1,11 +1,11 @@
 ---
-name: web-push-test
+name: web-push-tests
 description: "Test the browser web-push subscription lifecycle - `pushManager.subscribe({ userVisibleOnly, applicationServerKey })` per [W3C Push API][w3c-push] returning a `PushSubscription` with `endpoint` + `keys.p256dh` + `keys.auth` + optional `expirationTime`; the `pushsubscriptionchange` service-worker event on refresh / revoke / expiry; the `push` event delivery with `PushMessageData`; VAPID auth per RFC 8292 (ES256 JWT, `aud` / `exp` ≤ 24h / `sub`); RFC 8030 push-service responses (201 Created, 410 Gone for expired endpoints, 413 Payload Too Large, 429); and `unsubscribe()` cleanup. Use when a PWA ships web-push and the subscription lifecycle needs release-gate coverage - scoped to the browser Push API, not to cross-channel delivery over native APNs / FCM."
 metadata:
   keywords: "web-push, vapid, push-api, rfc-8030, pushsubscriptionchange"
 ---
 
-# web-push-test
+# web-push-tests
 
 ## Overview
 
@@ -424,7 +424,7 @@ service.
 - **Synthetic `pushsubscriptionchange` and `push` event dispatch**
   is an approximation. The real path runs through the push service
   per [w3c-push]; tests that need full fidelity must spin up a
-  push-service-compatible mock (e.g. a `web-push-testing-service`
+  push-service-compatible mock (e.g. a `web-push-testsing-service`
   local instance).
 - **Firefox push quota** per [mdn-push]: *"Limited quota per app
   (except notifications); refreshes on site visit"* - tests
@@ -466,5 +466,5 @@ service.
 - Sibling skills:
   [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
   (notification permission gates parallel to install gates),
-  [`service-worker-lifecycle-test`](../service-worker-lifecycle-test/SKILL.md)
+  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md)
   (the SW must be active for push events).

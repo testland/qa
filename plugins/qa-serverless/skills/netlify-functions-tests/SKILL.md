@@ -1,9 +1,9 @@
 ---
-name: netlify-functions-test
+name: netlify-functions-tests
 description: "Wraps Netlify Functions testing patterns: Netlify Dev (`netlify dev`) for local routing emulation, the @netlify/functions handler API testing pattern, Netlify Edge Functions (Deno runtime) vs Background Functions (Lambda under the hood) distinction, and scheduled-function (cron) test patterns. Use when testing Netlify Functions or Edge Functions."
 ---
 
-# netlify-functions-test
+# netlify-functions-tests
 
 ## Overview
 

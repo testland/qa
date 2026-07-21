@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-chaos",
-  "version": "1.3.0",
-  "description": "Chaos engineering + fault injection: 8 skills (chaos-experiment-author, litmus-chaos, chaos-mesh, gremlin-chaos, toxiproxy-chaos, failure-injection-test-author, steady-state-hypothesis-validator, chaos-results-reporter) and 1 agent (chaos-drill-orchestrator) that runs the full 4-stage drill workflow with auto-abort on blast-radius breach.",
+  "version": "1.3.1",
+  "description": "Chaos engineering + fault injection: 9 skills (chaos-experiment-author, litmus-chaos, chaos-mesh, gremlin-chaos, toxiproxy-chaos, failure-injection-test-author, steady-state-hypothesis-validator, chaos-results-reporter, chaos-drill-protocol) and 1 agent (chaos-drill-orchestrator) that runs the full 4-stage drill workflow with auto-abort on blast-radius breach.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-chaos",
   "repository": "https://github.com/testland/qa",
