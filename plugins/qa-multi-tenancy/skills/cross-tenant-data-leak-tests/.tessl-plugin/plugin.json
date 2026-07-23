@@ -1,0 +1,9 @@
+{
+  "name": "testland/cross-tenant-data-leak-tests",
+  "description": "Workflow-driven skill that emits the runtime CI gate of cross-tenant leak tests - the actual battery a multi-tenant codebase must pass on every PR. Defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the expected response codes per pattern (404 vs 403 disclosure trade-off), the Postgres-RLS-direct test patterns, and the CI integration (run with non-superuser non-BYPASSRLS role, fail the build on any leak). Use when implementing the actual leak-test suite (after tenant-leak-test-author produces the plan), when adding the CI gate to an existing project, or when investigating a leak finding.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/github-issues-bug-workflow",
+  "description": "Author and run GitHub Issues bug workflows via REST API v2026-03-10 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, comment attachment, and Projects v2 status-column updates via GraphQL. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), label conventions for the impoverished GitHub state model, and the gh CLI for scripted workflows. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

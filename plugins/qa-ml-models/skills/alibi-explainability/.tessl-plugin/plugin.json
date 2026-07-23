@@ -1,0 +1,9 @@
+{
+  "name": "testland/alibi-explainability",
+  "description": "Generates model explanations with Alibi Explain - Anchors, Integrated Gradients, Kernel/Tree SHAP, ALE, Counterfactual Instances. Wires explainer.fit + explainer.explain into model-evaluation pipelines so that every flagged prediction ships with a \"why\" record auditors can reason about. Use when a model decision must be explainable to an auditor, regulator, or affected user, or when a support team cannot answer why a specific prediction was made.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

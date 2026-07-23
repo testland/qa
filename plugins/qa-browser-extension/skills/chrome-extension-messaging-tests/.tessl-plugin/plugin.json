@@ -1,0 +1,9 @@
+{
+  "name": "testland/chrome-extension-messaging-tests",
+  "description": "Asserts Chrome extension message-passing behaviour against a running extension: one-shot `chrome.runtime.sendMessage` plus the literal `return true` that holds the response channel open for an async `sendResponse`, `chrome.tabs.sendMessage` into one tab's content script, long-lived `chrome.runtime.connect` ports and their `onDisconnect` triggers, web-page messages gated by `externally_connectable`, and `chrome.runtime.connectNative` native-messaging hosts. Covers the payload rules a test must respect (Chrome uses JSON serialization rather than structured clone, so `Map` / `Set` / `Date` do not round-trip; maximum message size is 64 MiB) and the first-listener-wins rule when several `onMessage` listeners are registered. Scope is messaging behaviour on an already-running extension, not the install or reload step. Use when a message reaches no listener, a `sendResponse` callback never fires, a port disconnects mid-test, or a page origin has to be proven allowed before publishing.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

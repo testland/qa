@@ -1,0 +1,9 @@
+{
+  "name": "testland/dotnet-faketime",
+  "description": "Wraps .NET's TimeProvider abstraction (System.TimeProvider, introduced .NET 8) and FakeTimeProvider from Microsoft.Extensions.TimeProvider.Testing: SetUtcNow, Advance, AutoAdvanceAmount, CreateTimer, Delay, and the pre-.NET-8 ISystemClock migration path. Use when testing C# or F# code that reads the current time, uses timers, or awaits Task.Delay.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

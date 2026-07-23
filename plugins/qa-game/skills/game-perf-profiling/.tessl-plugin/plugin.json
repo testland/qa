@@ -1,0 +1,9 @@
+{
+  "name": "testland/game-perf-profiling",
+  "description": "Profiles game builds against frame-time, memory, GPU draw-call, and GC-spike budgets using Unity Profiler + Profile Analyzer + Performance Testing package and Unreal Insights + stat commands. Establishes pass/fail thresholds (16.6 ms at 60 fps, 33.3 ms at 30 fps), writes automated performance regression tests that run in CI, and emits a structured budget report per SKU. Use when a title must hit a declared frame-time or memory budget before a milestone gate or platform-cert submission, or when a recent change needs a performance regression check.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

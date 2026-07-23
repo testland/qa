@@ -1,0 +1,9 @@
+{
+  "name": "testland/jira-bug-workflow-runner",
+  "description": "Jira Cloud bug workflow runner using the REST API v3: issue creation with an ADF description, runtime transition lookup and apply, JQL search for triage queues and duplicate detection, severity/priority field updates, label-based classification (severity/priority/regression), and idempotent CI-driven filing from JUnit XML test failures. Use when the target tracker is Jira Cloud and the task involves Jira lifecycle states (create, triage, transition, close). Distinct from a platform-agnostic event-driven CI defect filer, and from linear-bug-workflow-runner / github-issues-bug-workflow for other trackers.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

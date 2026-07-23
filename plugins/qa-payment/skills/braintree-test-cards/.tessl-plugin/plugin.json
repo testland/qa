@@ -1,0 +1,9 @@
+{
+  "name": "testland/braintree-test-cards",
+  "description": "Wraps Braintree (PayPal-owned) sandbox testing patterns: sandbox merchant credentials, Drop-in / Hosted Fields client-side patterns, the Transaction lifecycle (submitted_for_settlement → settled), Braintree's distinctive test-card behaviours (specific PANs trigger specific errors), and the webhook verification (Braintree Webhook Parser). Use when testing Braintree-integrated code.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

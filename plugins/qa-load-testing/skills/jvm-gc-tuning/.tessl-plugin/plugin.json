@@ -1,0 +1,9 @@
+{
+  "name": "testland/jvm-gc-tuning",
+  "description": "Diagnoses JVM garbage-collection behaviour under load: reads and interprets unified GC logs (-Xlog:gc*), selects the right collector (G1 vs ZGC vs Parallel vs Serial), tunes heap sizing and pause-time targets, quantifies allocation rate, and traces the GC-pause-to-latency-tail link using GCViewer and Java Flight Recorder (JFR). Use when a load test reveals p99/p999 latency spikes that correlate with GC activity, or when heap sizing and collector selection need justification before a performance baseline is locked.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

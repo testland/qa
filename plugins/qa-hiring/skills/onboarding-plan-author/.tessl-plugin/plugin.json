@@ -1,0 +1,9 @@
+{
+  "name": "testland/onboarding-plan-author",
+  "description": "Build-an-X workflow that produces a 30-60-90 day onboarding plan for a newly hired QA engineer - takes seniority level (junior / mid / senior / lead) plus the team's hiring rubric and emits phase-gated ramp milestones, competency targets mapped to the rubric axes, mentor cadence, and success criteria per phase. This is the post-hire ramp artifact - it starts at offer acceptance, not during the interview loop. Use when a QA engineer has been hired and the hiring manager or team lead needs a structured first-90-days plan before the new hire's start date.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

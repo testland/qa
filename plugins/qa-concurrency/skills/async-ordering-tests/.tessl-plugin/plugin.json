@@ -1,0 +1,9 @@
+{
+  "name": "testland/async-ordering-tests",
+  "description": "Test async ordering - event-loop / queue / channel ordering assertions, JS Promise microtask vs macrotask ordering, Python `asyncio.gather` vs `asyncio.wait_for` semantics, Go goroutine + channel happens-before relationships, async/await re-entrancy. Use deterministic schedulers (sinon fake timers, asyncio test mode) to remove run-to-run variance. Use when a callback fires twice, a later response overwrites an earlier one, or a cancelled parent task leaves a child still running - bugs where completion order, not shared memory, is the defect.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

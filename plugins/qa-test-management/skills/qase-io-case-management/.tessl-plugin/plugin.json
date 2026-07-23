@@ -1,0 +1,9 @@
+{
+  "name": "testland/qase-io-case-management",
+  "description": "Author and manage Qase.io test cases via the Public API v1 - create cases, organise into suites, attach structured steps, link to Jira/Linear/GitHub, manage shared steps, and bulk-import via JSON. Covers Token header auth, /case/{project_code} CRUD endpoints, the steps array with action / expected_result / data shape, and shared-step reuse. Use for pre-execution case authoring in teams using Qase as a modern lightweight TCM.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/load-testing-overview",
+  "description": "Teaches load and performance testing from zero: how to choose between k6, JMeter, Gatling, Locust, and Artillery based on observable project facts (team language, tests-as-code vs GUI authoring, protocols beyond HTTP, CI gating needs); the six load profiles (smoke, average-load, stress, spike, soak, breakpoint) and the question each one answers; the difference between open workload models that hold arrival rate constant and closed models that hold concurrent users constant; why percentiles rather than averages are the unit of measurement; and how to turn a run into a pass/fail CI gate, with a first runnable k6 script. Use when a service needs performance coverage and the tool, the load profile, or the pass/fail threshold has not been decided yet.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

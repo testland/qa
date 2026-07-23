@@ -1,0 +1,9 @@
+{
+  "name": "testland/grpc-interceptor-test-author",
+  "description": "Authors unit tests for gRPC interceptor logic: Go grpc.UnaryServerInterceptor/grpc.UnaryClientInterceptor, Java ServerInterceptor/ClientInterceptor, and grpc-js client interceptors. Covers auth interceptors (Unauthenticated on bad token), retry interceptors (exponential backoff on Unavailable), logging/tracing interceptors (metadata extraction and propagation), error-mapping interceptors (status code translation), and chained interceptor ordering. Use when a gRPC interceptor is written or modified and you need tests that verify the interceptor fires correctly, rejects bad input, propagates metadata, and chains in the right order without a live backend.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/junit-xml-analysis",
+  "description": "Parses JUnit-format XML reports (the de-facto interchange format every CI ingests - Jenkins, GitHub Actions, GitLab, Buildkite, CircleCI) into structured, machine-readable per-suite and per-case metrics tables (passed / failed / errored / skipped, time, classname, message, stack), groups failures by classname for trend analysis, and distinguishes \"new failures vs flakes\" by cross-referencing the `flakyFailure` and `rerunFailure` rerun elements. Use when the downstream consumer is a dashboard, script, or aggregator - not when the goal is a human-readable prose summary (use test-run-summary-author for that). Single-run, in-XML aggregation only; for cross-run cross-environment roll-ups, use a cross-run test-suite aggregator.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

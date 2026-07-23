@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-net",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": ".NET unit testing per-framework wrappers + orchestrator agents: 4 skills (xunit-tests, nunit-tests, mstest-tests, fluentassertions) plus 2 agents (dotnet-test-framework-selector, dotnet-test-author). Per-framework lifecycle + assertion catalog, with selector + author orchestration.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-net",

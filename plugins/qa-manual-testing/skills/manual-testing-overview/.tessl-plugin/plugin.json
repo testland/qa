@@ -1,0 +1,9 @@
+{
+  "name": "testland/manual-testing-overview",
+  "description": "Teaches human-driven testing end to end: when a predefined scripted test case is the right instrument versus a time-boxed exploratory session, how session-based test management works (charter with a stated mission, time box, session notes, debrief) with a worked charter and a filled-in session sheet, a decision rule for what to automate versus what to keep human, and what makes a manual bug report actionable (exact reproduction steps, observed versus expected, build and environment, evidence). Use when planning or running testing a person performs by hand, writing a charter for an exploratory session, deciding whether a check belongs in an automated suite or in a human session, or fixing bug reports that developers keep returning as not reproducible.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/soda-checks",
+  "description": "Authors and runs SodaCL (Soda Checks Language) checks against SQL warehouses (Snowflake, BigQuery, Postgres, Redshift, etc.) via `soda scan`, configures scan profiles in configuration.yml, and gates CI on scan exit code. Use when the user works with Soda Core / Soda Cloud or needs YAML-driven warehouse data quality.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

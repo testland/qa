@@ -1,0 +1,9 @@
+{
+  "name": "testland/visual-baseline-conventions",
+  "description": "Reference catalog for visual regression coverage decisions - which Storybook stories or pages get baselines, how to choose breakpoints, when to mask vs adjust threshold, when to add or remove a baseline, and a decision matrix for picking among Percy / Chromatic / Playwright / Storybook test-runner. Use when designing visual coverage for a new project or auditing an existing baseline set.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

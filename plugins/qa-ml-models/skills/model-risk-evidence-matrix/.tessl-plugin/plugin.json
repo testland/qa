@@ -1,0 +1,9 @@
+{
+  "name": "testland/model-risk-evidence-matrix",
+  "description": "Assigns a machine learning model to a low, medium, or high risk tier from what its predictions decide about people, then derives the fairness and explainability evidence that tier must produce: group metrics per declared sensitive feature, intersectional breakdowns with per-cell counts, vulnerability scan categories, a drift monitoring plan, and per-prediction explanation logs. Supplies conventional demographic parity difference bands, a per-vulnerability-category blocking table, and evidence rules that mark a bundle incomplete or self-contradicting. Use when a model release candidate is up for promotion and someone must decide which fairness artifacts are mandatory rather than nice to have, or when a model card declares a risk tier and the attached evidence bundle has to be checked against what that tier demands.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

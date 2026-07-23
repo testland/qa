@@ -1,0 +1,9 @@
+{
+  "name": "testland/stale-while-revalidate-reference",
+  "description": "Pure-reference catalog of RFC 5861's stale-while-revalidate + stale-if-error Cache-Control extensions. Defines stale-while-revalidate=N (caches MAY serve a stale response while asynchronously revalidating, up to N seconds after expiry) and stale-if-error=N (caches MAY serve stale on 5xx upstream errors). Distinguishes from RFC 9111's must-revalidate (forbids serving stale) and from manual cache-aside refresh (synchronous). Covers the interaction with the freshness lifetime (max-age) and the cache-stampede-mitigation properties. Use when designing the cache-refresh boundary or auditing existing Cache-Control headers.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

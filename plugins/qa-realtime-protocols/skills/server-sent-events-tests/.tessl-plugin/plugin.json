@@ -1,0 +1,9 @@
+{
+  "name": "testland/server-sent-events-tests",
+  "description": "Test Server-Sent Events (SSE) flows, one-way server-to-client push only (not bidirectional, use websocket-tests for client-to-server messaging): `EventSource` API on the browser side (`onmessage`, `onerror`, `readyState` 0/1/2), event stream format (`data:`, `event:`, `id:`, `retry:`), `Last-Event-ID` reconnect-with-replay header, content-type `text/event-stream`, and HTTP/1.1 connection-pool limits. Use Playwright for browser-side, raw HTTP client for server-side stream tests. Use when a feature pushes updates over `text/event-stream` and the reconnect interval, `Last-Event-ID` replay, or per-origin connection ceiling has no coverage.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

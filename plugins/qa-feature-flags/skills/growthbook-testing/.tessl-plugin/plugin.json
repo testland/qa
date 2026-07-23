@@ -1,0 +1,9 @@
+{
+  "name": "testland/growthbook-testing",
+  "description": "Wraps GrowthBook Node SDK testing patterns: GrowthBookClient initialization with direct payload (initSync; no network), isOn / getFeatureValue / evalFeature, scoped instances (createScopedInstance) for per-request user context, inline experiment (runInlineExperiment) tests, and tracking-callback assertion patterns. Use when writing tests for code using GrowthBook for flags + experiments.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

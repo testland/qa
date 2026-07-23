@@ -1,0 +1,9 @@
+{
+  "name": "testland/project-risk-register-builder",
+  "description": "Build-an-X workflow that produces a project-level risk register - risks tied to the project execution (schedule slippage, environment instability, people / staffing, vendor / dependency, scope creep) rather than the product itself. Walks the author through ISO 31000-aligned identification, impact × likelihood scoring, mitigation strategies (avoid / mitigate / transfer / accept), and ownership. Output is a register the project manager reviews weekly. Use for project / release execution risks; complements product-risk-register-builder (product-quality risks) and risk-matrix (per-release product risks).",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

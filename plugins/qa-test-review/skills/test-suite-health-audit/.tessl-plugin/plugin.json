@@ -1,0 +1,9 @@
+{
+  "name": "testland/test-suite-health-audit",
+  "description": "Measures an existing test suite's current state on four axes: per-file tier classification (unit / integration / E2E, first match wins), pyramid ratio against whatever target the team already committed to, per-layer flake rate, and defects-caught-per-run-minute ROI per tier, then reduces them to one categorical verdict (Healthy, Needs pruning, Needs refactor, Cannot assess). Reports severity against a target ratio but never prescribes one: choosing the target unit:integration:E2E mix and the rebalancing plan belongs to a pyramid-balancing capability such as `test-pyramid-balancer`. Use when a suite has grown for a year or more without review and someone needs a defensible read on whether it is healthy, over-grown, or structurally inverted before deciding what to delete or rewrite.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

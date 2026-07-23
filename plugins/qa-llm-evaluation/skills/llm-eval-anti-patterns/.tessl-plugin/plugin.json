@@ -1,0 +1,9 @@
+{
+  "name": "testland/llm-eval-anti-patterns",
+  "description": "Audits an existing LLM evaluation suite for eight methodology errors that make its numbers untrustworthy: too few cases per capability, single-provider lock-in, exact-match assertions on open-ended output, no semantic-similarity check on paraphrase-tolerant output, no baseline comparison in CI, no cost or latency ceiling, unpinned model identifiers, and no adversarial coverage. Supplies harness-neutral detection cues, the reason each error invalidates the result, a concrete fix, a Critical/Warning/Info severity scheme, and a findings-table output shape. Covers validating an LLM judge against human labels before its verdicts count as evidence. Use when an eval suite already exists and its pass rate is about to gate a release, a model swap, or a prompt change, and nobody has audited how the suite itself was built.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

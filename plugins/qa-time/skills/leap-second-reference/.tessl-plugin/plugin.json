@@ -1,0 +1,9 @@
+{
+  "name": "testland/leap-second-reference",
+  "description": "Pure-reference catalog of leap-second mechanics + their bug surface. Defines leap seconds (occasional 23:59:60 UTC second insertions announced by IERS to keep UTC within 0.9s of UT1), the history (added irregularly since 1972 by IERS Bulletin C; 27 added by 2026; will be ABOLISHED by 2035 per CGPM resolution), the leap-smear alternative (Google's linear 24-hour smear; AWS uses similar), and the testable behaviors (POSIX time_t conventions, NTP behaviour, distributed-systems clock-skew during a leap event). Use when designing time-sensitive systems or auditing assumptions about second-by-second progress.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

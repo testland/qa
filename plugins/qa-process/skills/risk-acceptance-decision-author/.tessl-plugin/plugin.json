@@ -1,0 +1,9 @@
+{
+  "name": "testland/risk-acceptance-decision-author",
+  "description": "Build-an-X workflow that produces a structured risk-acceptance decision document - for risks the team has decided to accept (rather than mitigate / transfer / avoid). Walks the author through the ISO 31000 risk-acceptance criteria (rationale, sign-off, scope, review trigger, exit conditions), captures stakeholder approval, and links to the originating risk register entry. Output is a Markdown decision artefact that lives alongside the risk register and provides audit-defensible justification for the team's acceptance choice. Use when a risk register entry's Strategy column is set to Accept, or an already-accepted risk comes up for its scheduled re-review, an audit, or a post-incident look-back.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/soc2-evidence-collector",
+  "description": "Build-an-X for SOC 2 Type II evidence collection - per-Trust-Services-Criterion test artifacts (Common Criteria CC1.1 - CC9.2; plus Availability A1, Confidentiality C1, Processing Integrity PI1, Privacy P1 - P9 if in scope); auto-collection from CI logs + audit trails + access logs + change-management records; alignment with Vanta / Drata / Secureframe evidence shapes; observation-period sampling. Use when the team is preparing for SOC 2 Type II audit and needs continuous evidence collection automation.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

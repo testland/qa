@@ -1,0 +1,9 @@
+{
+  "name": "testland/test-framework-architecture-audit",
+  "description": "Audits an existing test automation framework across eight architecture-tier axes and bands each one PASS, WARN, or FAIL: page-object coverage and purity, base-class inheritance depth, fixture scope and coupling, helper sprawl, naming-convention drift, retry and wait consistency, documented-versus-actual convention drift, and CI integration health. Carries the numeric cut behind every band and labels which cuts are practitioner conventions rather than published standards. Measures the framework's own structure (page objects, base classes, fixtures, helpers, conventions), not the suite's tier mix or flake rate, and not the design of a framework that does not exist yet. Use when a test framework has grown for a release or more without structural review, before a major refactor, or when a team suspects its written test conventions no longer match what the code actually does.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

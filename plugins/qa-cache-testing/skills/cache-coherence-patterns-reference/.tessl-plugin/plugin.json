@@ -1,0 +1,9 @@
+{
+  "name": "testland/cache-coherence-patterns-reference",
+  "description": "Pure-reference catalog of cache-coherence patterns across the request path. Covers the canonical RFC 9111 directives (Cache-Control: max-age, s-maxage, no-cache, no-store, must-revalidate, private/public, immutable; Vary for key derivation; ETag + If-None-Match revalidation), the layered-cache discipline (browser → CDN → reverse-proxy → application → data store), per-tier coherence patterns (write-through, write-back, write-around, cache-aside), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged keys). Use for pattern selection, Cache-Control header design, and coherence audits; use a cache-key-collision check when the question is whether two requests in an existing system collide on a concrete key scheme. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, and the cache-key-collision check.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

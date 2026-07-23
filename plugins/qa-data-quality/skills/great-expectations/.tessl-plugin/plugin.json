@@ -1,0 +1,9 @@
+{
+  "name": "testland/great-expectations",
+  "description": "Authors Great Expectations (GX Core) ExpectationSuites, builds ValidationDefinitions and Checkpoints, runs validation against tabular batches, and parses the JSON result for CI gating. Use when the user works with Great Expectations on Pandas, SQL, or Spark data.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/attack-surface-test-checklist",
+  "description": "Maps a code change to the security tests worth running against it. Classifies changed paths and file contents into nine attack surfaces (authentication, session management, input handling, file upload, deserialization, access control, API and web service, cryptography, data protection), attaches the matching OWASP ASVS 4.0.3 verification requirements, OWASP Top 10 2021 category IDs, and OWASP WSTG section numbers to each active surface, then emits a per-surface manual and automated test checklist bounded by what actually changed. Surfaces with no changed lines are excluded rather than carried as filler. Use when a pull request, release branch, or feature is about to be security tested and the team needs a targeted test list instead of a generic application-wide checklist.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

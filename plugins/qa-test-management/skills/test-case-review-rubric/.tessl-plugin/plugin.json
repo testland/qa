@@ -1,0 +1,9 @@
+{
+  "name": "testland/test-case-review-rubric",
+  "description": "Scores an already-written test case against six per-case quality axes (objective specificity, precondition executability, step granularity, step abstraction level, expected-result observability, traceability validity) and six set-level axes (partition coverage, boundary coverage, duplication, orphan and uncovered requirements, tier shape, identifier consistency). Derives a per-case PASS / WEAK / FAIL verdict and a set verdict from it without averaging, and marks every threshold as either standard-backed (ISTQB glossary, ISTQB CTFL v4.0, ISO/IEC/IEEE 29119-3:2021) or practitioner convention (step-count ceiling, tier bands, provenance threshold). Assumes the case field list and field cardinality are already defined by a test-case anatomy reference and judges content quality only. Use when reviewing a batch of hand-written test cases before promoting them to a release suite or handing them to an automation engineer.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

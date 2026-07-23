@@ -1,0 +1,9 @@
+{
+  "name": "testland/mstest-tests",
+  "description": "Configures and runs MSTest (now MSTest.TestFramework v3) - Microsoft's first-party .NET test framework with `[TestClass]` / `[TestMethod]` / `[DataRow]` / `[DynamicData]` attributes; `[ClassInitialize]` / `[ClassCleanup]` / `[TestInitialize]` / `[TestCleanup]` lifecycle; `TestContext` injection; tight Visual Studio + dotnet test integration. Use when working with .NET on a MSTest codebase, or in environments standardized on Microsoft toolchain.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

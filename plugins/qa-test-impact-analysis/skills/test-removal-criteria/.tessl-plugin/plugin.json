@@ -1,0 +1,9 @@
+{
+  "name": "testland/test-removal-criteria",
+  "description": "Decides which existing tests should stop existing, using five removal classes (duplicate, tautology, trivial, dead-signal, orphan) and a four-condition delete gate where every condition must hold or the verdict reverts to keep. Puts the burden of proof on removal: each proposed deletion carries a written reason, redundant-coverage evidence from a per-test source map, and a named reviewer, and a test that has simply never failed is treated as possibly load-bearing rather than worthless. Covers removal only, not per-change test selection. Use when a suite has grown faster than its signal value and someone is about to open a pruning or suite-curation change set that deletes test files.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/optimizely-test",
+  "description": "Wraps Optimizely Feature Experimentation SDK testing patterns: client initialization with a datafile (offline-friendly), the decide / decideAll API (Optimizely Feature Experimentation, the v5 API), forced-decisions for per-test arm pinning, OptimizelyUserContext + activate / track events, and assignment-integrity tests. Use when writing tests for Optimizely-instrumented application code.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/electron-spectron",
+  "description": "Legacy reference for Spectron - Electron's original ChromeDriver-based testing framework, officially deprecated 2022-02-01 at v19.0.0. Documents what Spectron was, the architectural reason it became unmaintainable, the migration path to Playwright `_electron`, and the residual support contract for projects still on Spectron. Use only when auditing a legacy suite or planning a migration off Spectron - for new work use Playwright's `_electron` API.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

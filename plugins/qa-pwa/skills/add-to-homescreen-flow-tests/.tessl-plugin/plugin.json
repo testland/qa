@@ -1,0 +1,9 @@
+{
+  "name": "testland/add-to-homescreen-flow-tests",
+  "description": "Build-an-X workflow that emits the Add-to-Home-Screen / install-flow test suite. Walks the four-stage install timeline (gate → `beforeinstallprompt` handshake → per-platform path → `display-mode` MQ), emits one test per gate cell per [web.dev/articles/install-criteria][install-criteria], the deferred-prompt → `prompt()` → `userChoice` chain per [web.dev/articles/customize-install][customize-install], the iOS Safari manual-metadata branch (`apple-touch-icon`, `apple-mobile-web-app-capable`) per [web.dev/learn/pwa/installation][learn-pwa], and the post-install `(display-mode: standalone)` MQ assertion. Output: a Playwright spec file with per-stage cells plus the iOS metadata spec, plus a coverage matrix mapping each install criterion to its assertion. Use when a PWA's manifest, icons, or install handler change, or when install conversion drops and it is unclear which install stage users fall out at.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

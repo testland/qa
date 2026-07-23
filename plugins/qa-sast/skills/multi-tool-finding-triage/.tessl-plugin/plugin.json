@@ -1,0 +1,9 @@
+{
+  "name": "testland/multi-tool-finding-triage",
+  "description": "Merges the output of two or more security scanners (static analysis, dynamic scanning, secret detection, dependency and container CVE scanning, infrastructure-as-code policy scanning) into one merge decision: normalizes every report into a canonical Finding record, deduplicates on a per-domain key while recording `caught_by` multi-scanner consensus, validates a waiver file and rejects any waiver missing `expires:` / `approved_by:` / `reason:` or already expired, enriches CVE findings with EPSS and CISA KEV signals, then applies a `fail_on` severity-rank threshold to emit BLOCK or PASS plus a severity-bucketed pull-request comment. This is the cross-scanner normalization and gate method, distinct from the per-tool documentation of any individual scanner. Use when several scanners run in the same pipeline and their separate reports have to become a single pass/fail verdict.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/unittest-tests",
+  "description": "Configures and runs Python's stdlib unittest - TestCase + setUp/tearDown lifecycle hooks, assertion catalog (assertEqual / assertRaises / assertIn / assertAlmostEqual), unittest.mock module (Mock / MagicMock / patch / patch.object / patch.dict), test discovery via `python -m unittest discover`, subTest for parametrized cases, expectedFailure decorator. Use when constrained to stdlib-only (no pip install) or migrating legacy unittest codebases.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}
