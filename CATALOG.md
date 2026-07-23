@@ -30,7 +30,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.9.1 | 10 skills + 5 agents | 15 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.9.2 | 10 skills + 5 agents | 15 |
 | [qa-mobile](plugins/qa-mobile/) | 1.4.0 | 11 skills + 3 agents | 14 |
 | [qa-desktop](plugins/qa-desktop/) | 1.2.9 | 9 skills + 4 agents | 13 |
 | [qa-bdd](plugins/qa-bdd/) | 1.7.0 | 10 skills + 2 agents | 12 |
