@@ -1,0 +1,39 @@
+name: tessl-publish
+
+# Claims + publishes every skill that has a .tessl-plugin/plugin.json to the
+# Tessl registry. The GitHub Action links this repo so previously-indexed
+# copies are hidden/redirected instead of duplicated.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'plugins/**/.tessl-plugin/plugin.json'
+      - 'plugins/**/SKILL.md'
+      - '.github/workflows/tessl-publish.yml'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: tesslio/setup-tessl@v2
+        with:
+          token: ${{ secrets.TESSL_TOKEN }}
+
+      - name: Publish claimed skills
+        run: |
+          set -euo pipefail
+          count=0
+          while IFS= read -r manifest; do
+            dir="$(dirname "$(dirname "$manifest")")"
+            echo "::group::Publishing $dir"
+            tessl skill publish "$dir" --workspace testland --public --bump patch
+            echo "::endgroup::"
+            count=$((count + 1))
+          done < <(find plugins -type f -path '*/.tessl-plugin/plugin.json' | sort)
+          echo "Published $count skill(s)"
