@@ -1,0 +1,9 @@
+{
+  "name": "testland/faker-data",
+  "description": "Authors test-data factories using Faker: the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem. Owns the library mechanics end to end: install per language, the provider catalogue (person / internet / location / date / finance / lorem), locale selection and multi-locale mode, and seed-based determinism for reproducible runs. Scope is generating fresh values for tests that start from nothing, not replacing values inside an existing dataset that already holds real records, which raises referential-integrity and re-identification concerns this skill does not address. Prefer this skill when the codebase already uses the Faker family or when cross-language consistency across Python, JS, and Ruby matters; use mimesis-data only when deeper Python locale coverage is the primary requirement. Use when authoring fixtures or factories that need realistic-looking field values.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/dod-adherence-review",
+  "description": "Audits an existing Definition of Done checklist line by line against repository evidence (review records, diffs, CI runs, coverage reports, scan output) and tags every line met, not met, or unverifiable, refusing to pass a line on self-attestation or on a claim with no matching diff. Covers the line-pattern-to-evidence mapping for the common checklist shapes (code reviewed, coverage threshold, docs updated, acceptance criteria covered, staging deploy plus smoke, no new accessibility regressions, telemetry wired), the entry-stage versus exit-stage split many teams run, the roll-up verdict rules, and the audit table that gets emitted. Does not author, revise, or soften the checklist. Use when a story or pull request is about to be marked done and a committed Definition of Done exists that nobody has actually checked the work against.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

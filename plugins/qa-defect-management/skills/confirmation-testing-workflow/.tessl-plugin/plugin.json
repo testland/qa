@@ -1,0 +1,9 @@
+{
+  "name": "testland/confirmation-testing-workflow",
+  "description": "Procedure for proving that a claimed defect fix actually reached the build under test and actually works. Covers the merge-base ancestry check that proves the running build contains the fix commit rather than trusting a version label, the priority order for choosing which reproduction to re-run, and the VERIFIED / NOT FIXED / BLOCKED verdict table whose governing rule is that any ambiguous, flaky, or unreproducible result resolves to BLOCKED and is never guessed. Scoped to ISTQB confirmation testing (does this specific fix work?), not regression testing (did the fix break something else?), and not triage or severity assignment. Use when a developer has marked a defect Fixed and someone must decide whether it moves to Verified or back to Reopened.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

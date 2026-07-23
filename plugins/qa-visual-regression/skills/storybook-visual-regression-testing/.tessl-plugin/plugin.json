@@ -1,0 +1,9 @@
+{
+  "name": "testland/storybook-visual-regression-testing",
+  "description": "Sets up visual regression coverage for a Storybook project - either via the official @chromatic-com/storybook addon (hosted) or via @storybook/test-runner with a postVisit hook that calls Playwright's toHaveScreenshot (self-hosted). Covers test-runner install, lifecycle hooks (setup / preVisit / postVisit), and CI integration. Use when a repo already has a working `.storybook/` config and the team wants per-story visual coverage rather than page-level snapshots.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

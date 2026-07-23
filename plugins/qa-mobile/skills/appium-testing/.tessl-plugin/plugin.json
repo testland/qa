@@ -1,0 +1,9 @@
+{
+  "name": "testland/appium-testing",
+  "description": "Wires Appium for cross-platform mobile UI automation - uses the WebDriver protocol, picks a driver per platform (XCUITest for iOS, UiAutomator2 / Espresso for Android, Mac2 for macOS, Windows for desktop), authors tests in JS / Python / Java / Ruby / .NET, configures `desiredCapabilities`, runs against simulators / emulators / device farms. Use when a single test suite must cover both iOS and Android, or when the team's stack is multi-platform (iOS + Android + Mac + Windows).",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/mv2-to-mv3-migration-test-checklist",
+  "description": "Build-an-X workflow that emits a per-extension MV2 → MV3 migration test checklist. Walks the six canonical migration sections (manifest, service worker, API calls, declarative net request, security, publication) per the Chrome migration checklist, then for each one inventories the source MV2 manifest, names the MV3 replacement field / API, and emits the verification test cases. Covers the Firefox-Chrome divergence cells (page_action retained in Firefox, event pages allowed in Firefox 106+, host-permission install-prompt behavior changed in Firefox 127, web_accessible_resources `use_dynamic_url` Chromium-only). Output: a checklist artifact with per-section test cases the migrating extension must pass before publishing the MV3 build. Use when migrating an MV2 extension to Manifest V3 and the team needs section-by-section evidence the migration is complete.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

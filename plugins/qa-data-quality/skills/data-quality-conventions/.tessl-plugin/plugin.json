@@ -1,0 +1,9 @@
+{
+  "name": "testland/data-quality-conventions",
+  "description": "Reference catalog of data-quality conventions - when to choose dbt-tests vs Great Expectations vs Soda, column-level vs table-level coverage, severity tiering, SLA and freshness conventions, and common anti-patterns to avoid. Use when designing coverage for a new data product or auditing an existing one.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

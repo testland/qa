@@ -1,0 +1,9 @@
+{
+  "name": "testland/test-effort-estimation",
+  "description": "Turns a list of testable areas plus a change-shape distribution into a PERT three-point test effort estimate, reporting every row as a range around the expected value rather than a single number, requiring a named assumptions ledger across six mandatory categories, and recommending a per-layer ownership split across developer, automation, and exploratory roles. Owns the hours and the ownership recommendation only: it consumes a change-shape distribution rather than producing one, and it does not choose which tests to run or how deep coverage should go. Use when an epic or release has been broken into testable areas and someone is about to commit test capacity for a sprint.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

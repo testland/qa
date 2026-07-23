@@ -1,0 +1,9 @@
+{
+  "name": "testland/compatibility-budget",
+  "description": "Pure-reference for deciding how large a compatibility matrix a team can afford, and for publishing that commitment - defines tier-1 (must work; covered per-PR) vs tier-2 (must work; covered nightly) vs tier-3 (should work; covered pre-release) vs unsupported (explicitly out of scope). Includes example budgets per product type (web / desktop / mobile / library), the matrix-size cost / coverage trade-off, and templates for documenting \"what we support\" externally. Scope is the budget and the external support statement, not the traffic-share analysis that decides which specific browsers belong in each tier. Use when a team must cap how many browser / OS / runtime combinations it commits to, or must publish a support policy to its users.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

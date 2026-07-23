@@ -1,0 +1,9 @@
+{
+  "name": "testland/jenkinsfile-test-stages",
+  "description": "Configures Jenkins declarative pipeline test stages - `Jenkinsfile` with stages, parallel + per-agent execution, post-actions (always / failure / success), pipeline-junit-plugin for test reports, lockable resources for shared infra. Use for Jenkins-based CI (common in enterprise / regulated environments).",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

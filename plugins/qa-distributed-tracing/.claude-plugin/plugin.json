@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-distributed-tracing",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Distributed tracing assertion testing: 6 skills (opentelemetry-trace-assertions, jaeger-trace-tests, zipkin-trace-tests, tempo-trace-tests, otel-collector-config-tester, trace-spec-author) and 1 agent (trace-coverage-reviewer). Asserts on production trace shape (spans, attributes, parent links, status), not just on aggregate metrics.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-distributed-tracing",

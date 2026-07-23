@@ -1,0 +1,9 @@
+{
+  "name": "testland/ci-test-job-conventions",
+  "description": "Pure-reference for cross-CI test workflow conventions - when to shard (and how many shards), retry policy (which failures are safe to retry), flake quarantine integration, artifact lifecycle (retention / structure), per-trigger filtering (per-PR vs per-merge vs nightly), concurrency control patterns, JUnit reporting standards. Use as the team's reference doc for CI test workflow design across GitHub Actions / GitLab CI / Jenkins / CircleCI.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

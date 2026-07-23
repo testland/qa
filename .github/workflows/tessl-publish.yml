@@ -27,13 +27,19 @@ jobs:
 
       - name: Publish claimed skills
         run: |
-          set -euo pipefail
-          count=0
+          set -uo pipefail
+          count=0; failed=0
+          : > /tmp/tessl-failures.txt
           while IFS= read -r manifest; do
             dir="$(dirname "$(dirname "$manifest")")"
             echo "::group::Publishing $dir"
-            tessl skill publish "$dir" --workspace testland --public --bump patch
+            if tessl skill publish "$dir" --workspace testland --public --bump patch; then
+              count=$((count + 1))
+            else
+              failed=$((failed + 1)); echo "$dir" >> /tmp/tessl-failures.txt
+              echo "::warning::publish failed for $dir"
+            fi
             echo "::endgroup::"
-            count=$((count + 1))
           done < <(find plugins -type f -path '*/.tessl-plugin/plugin.json' | sort)
-          echo "Published $count skill(s)"
+          echo "Published $count skill(s); $failed failed"
+          if [ "$failed" -gt 0 ]; then echo "::error::$failed skill(s) failed:"; cat /tmp/tessl-failures.txt; exit 1; fi

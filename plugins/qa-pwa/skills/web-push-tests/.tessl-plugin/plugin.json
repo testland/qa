@@ -1,0 +1,9 @@
+{
+  "name": "testland/web-push-tests",
+  "description": "Test the browser web-push subscription lifecycle - `pushManager.subscribe({ userVisibleOnly, applicationServerKey })` per [W3C Push API][w3c-push] returning a `PushSubscription` with `endpoint` + `keys.p256dh` + `keys.auth` + optional `expirationTime`; the `pushsubscriptionchange` service-worker event on refresh / revoke / expiry; the `push` event delivery with `PushMessageData`; VAPID auth per RFC 8292 (ES256 JWT, `aud` / `exp` ≤ 24h / `sub`); RFC 8030 push-service responses (201 Created, 410 Gone for expired endpoints, 413 Payload Too Large, 429); and `unsubscribe()` cleanup. Use when a PWA ships web-push and the subscription lifecycle needs release-gate coverage - scoped to the browser Push API, not to cross-channel delivery over native APNs / FCM.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

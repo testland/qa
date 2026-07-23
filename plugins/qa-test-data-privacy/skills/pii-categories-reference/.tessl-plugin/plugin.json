@@ -1,0 +1,9 @@
+{
+  "name": "testland/pii-categories-reference",
+  "description": "Pure-reference catalog of personally identifiable information (PII) categories across GDPR, CCPA/CPRA, NIST SP 800-122, and HIPAA. Defines what counts as personal data under each regime, enumerates the explicit identifiers each regulator lists (GDPR Art. 4(1) and Art. 9 special categories; CPRA sensitive personal information; NIST direct-identifier vs linkable distinction; HIPAA Safe Harbor 18 identifiers), and maps overlapping fields across jurisdictions so a masking pipeline knows which regulator's rules apply. Use as the authoritative source when authoring or reviewing masking rules, classifying a dataset's risk level, or scoping which fields a PII detector must catch.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

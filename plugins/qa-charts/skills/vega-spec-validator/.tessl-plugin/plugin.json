@@ -1,0 +1,9 @@
+{
+  "name": "testland/vega-spec-validator",
+  "description": "Validate Vega + Vega-Lite specifications against the JSON Schema (vega.github.io/schema), test cross-engine compatibility (Vega-Lite compiles to Vega per the canonical compiler), and verify data-binding correctness. Pair with d3-snapshot-tests when Vega specs render to SVG; pair with chartjs-snapshot-tests when rendered to Canvas. Use when application code generates Vega/Vega-Lite JSON specs at runtime (BI builders, spec templating) and those specs must be proven valid and correctly encoded before render, or before a Vega major-version upgrade.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

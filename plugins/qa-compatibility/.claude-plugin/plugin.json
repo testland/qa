@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-compatibility",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "Browser + OS compatibility testing + self-hosted grid: 5 skills (browser-matrix-runner, os-matrix-runner, compatibility-budget, selenium-grid-4-runner, browser-matrix-strategy-reference) and 1 agent (compatibility-matrix-auditor).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-compatibility",

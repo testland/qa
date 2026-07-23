@@ -1,0 +1,9 @@
+{
+  "name": "testland/quality-status-digest",
+  "description": "Computes a recurring quality status digest from metrics that already exist: CI pass rate with an explicit denominator rule, escape-defect count, and a flake-debt score, assigns red / amber / green per area against stated thresholds, then rolls the same per-team rows into a portfolio view with a severity-by-blast-radius heatmap, STABLE / WATCH / INVEST tags, and a capacity flag. Keeps DORA delivery metrics separate from defect-leakage and flake measures instead of blending them under one label. Produces the status artifact only: it does not instrument anything, does not define SLOs or targets, and does not decide what gets fixed first. Use when a weekly quality review, sprint check-in, or quarterly portfolio review is due and the CI history, defect tracker, and quarantine list already hold the numbers but nobody has assembled them into one page.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

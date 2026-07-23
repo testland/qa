@@ -1,0 +1,9 @@
+{
+  "name": "testland/serverless-framework-test-plugin",
+  "description": "Wraps the Serverless Framework (serverless.com) test ecosystem: serverless-offline (local HTTP emulator), serverless-jest-plugin / serverless-mocha-plugin (per-runtime test runners), and the `serverless invoke local` CLI for one-off invocations. Use when testing Lambda functions deployed via the Serverless Framework.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

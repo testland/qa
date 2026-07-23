@@ -1,0 +1,9 @@
+{
+  "name": "testland/code-change-shape-classifier",
+  "description": "Classifies a code change set into four shapes (pure-logic, service-layer, ui-heavy, data-heavy) from file-path and file-content signals, computes the shape distribution over a window of git history, and attaches a relative per-layer test cost model (unit 1x, service 3x, UI 10x) so downstream planning works from one shared input. Produces the classification only: it does not prescribe a target unit:service:UI ratio, does not estimate hours, and does not select which tests to run. Use when a pull request, release branch, or epic needs its change shape labelled before test effort, pyramid balance, or coverage depth is decided.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

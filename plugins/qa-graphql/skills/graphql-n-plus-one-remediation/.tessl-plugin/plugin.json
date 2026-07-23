@@ -1,0 +1,9 @@
+{
+  "name": "testland/graphql-n-plus-one-remediation",
+  "description": "Traces a GraphQL resolver tree to locate the N+1 pattern (one parent query returns N rows, then a child field resolver fires once per row), classifies every child field resolver as safe or N+1 risk, and applies one of three fixes: per-request DataLoader batching, eager projection in the parent resolver, or selection-set-aware prefetch. Use when a list-returning resolver is added or changed in review, when a connection-pool exhaustion or slow-query alert traces back to GraphQL traffic, or when a resolver trace shows a child field resolved once per parent row.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

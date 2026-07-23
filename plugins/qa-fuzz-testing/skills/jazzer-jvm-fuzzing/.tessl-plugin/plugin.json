@@ -1,0 +1,9 @@
+{
+  "name": "testland/jazzer-jvm-fuzzing",
+  "description": "Author and run Jazzer - Code Intelligence's JVM coverage-guided fuzzer built on libFuzzer. Covers Maven / Gradle / standalone JAR installation, the @FuzzTest annotation (JUnit 5 integration), typed parameter mutation (String, primitives, byte[]), built-in JVM sanitisers (SSRF / path traversal / OS command injection / deserialization gadget / ReDoS), and the JAZZER_FUZZ=1 env var to switch between regression and fuzzing modes. Use for fuzz testing Java / Kotlin libraries - particularly effective against parsing, deserialization, and HTTP-handling code.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/godot-gut-tests",
+  "description": "Author and run GUT (Godot Unit Test) - the community-canonical GDScript test framework at github.com/bitwes/Gut and gut.readthedocs.io. Covers install (Godot Asset Library or manual `addons/gut/` copy + plugin enable), GUT panel inside the editor, writing tests that extend GutTest with `test_` prefix methods, the assertion family (assert_eq / assert_almost_eq / assert_true / assert_signal_emitted), lifecycle hooks (before_each / after_each / before_all / after_all), inner classes for grouping, parameterized tests via `params=[...]`, doubles / stubs / spies, async / coroutine tests, the command-line runner (`-d -s addons/gut/gut_cmdln.gd -gdir=res://test -gjunit_xml_file=... -gexit`), JUnit XML export, and CI integration. Godot 4.x uses GUT 9.x (current main branch supports 4.6.x; godot_4_7 branch for 4.7.x); Godot 3.x uses GUT 7.x. Use when the unit under test is GDScript code in a Godot project.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

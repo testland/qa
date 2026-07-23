@@ -1,0 +1,9 @@
+{
+  "name": "testland/race-condition-test-author",
+  "description": "Build deterministic race-condition tests - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++/Go data race detection; use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing. Use when a defect only reproduces under load on shared in-process state (cache, counter, connection pool, lazy-init singleton), or when writing the regression test for a race-condition incident before the fix lands.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

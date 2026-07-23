@@ -1,0 +1,9 @@
+{
+  "name": "testland/ibm-equal-access-a11y",
+  "description": "Authors and runs IBM Equal Access accessibility-checker scans - IBM's open-source a11y engine with WCAG 2.0 / 2.1 / 2.2 + US Section 508 rule sets, integrating with Node / Selenium / Puppeteer / Playwright / Karma / Cypress test runners. Distinguished by IBM's enterprise-tier rule coverage and Section 508 specificity. Use when the project ships to US federal / public-sector customers (Section 508 mandate) or when the team values IBM-branded a11y reporting.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

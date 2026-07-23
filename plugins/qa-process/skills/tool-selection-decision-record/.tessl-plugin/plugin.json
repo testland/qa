@@ -1,0 +1,9 @@
+{
+  "name": "testland/tool-selection-decision-record",
+  "description": "Defines the output contract for writing down a chosen developer tool as a portable decision record: the observed project signal, exactly one primary recommendation, rationale that names the rejected alternative, what to read next, and a mandatory list of the conditions that would flip the choice. Adapts Architecture Decision Record conventions (context, decision, consequences, status, supersede rather than edit) to tool selection, and refuses any recommendation inferred from a README or a folder name instead of a manifest, lockfile, config file, or existing test directory. Distinct from a catalog or advisor that compares candidate tools on their merits: this owns the shape of the written record, not the comparison. Use when a tool has just been chosen (test framework, build tool, linter, package manager, migration tool) and the choice needs to be recorded so a later reader can see the signal, the rejected alternative, and what would reverse it.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

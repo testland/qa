@@ -1,0 +1,9 @@
+{
+  "name": "testland/object-model-patterns",
+  "description": "Pure reference catalog of the canonical object-model architecture patterns for test automation frameworks - Page Object Model (Fowler), Screenplay (Marcano/Palmer/Hill), Component Object, App Actions (Cypress idiom), Service Object, Repository, and Screen Object (the desktop/mobile sibling of Page Object covering Windows UIA, macOS XCTest, Linux AT-SPI, Appium / Espresso) - each with its canonical citation, when-to-use rules, refuse-to-mix anti-patterns, and a worked example. This is the architecture-tier reference - what each pattern *is* - not file-level style rules and not tool-specific configuration. Use when designing, reviewing, or migrating a test framework's object-model architecture.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

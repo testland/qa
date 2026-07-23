@@ -1,0 +1,9 @@
+{
+  "name": "testland/bdd-overview",
+  "description": "Teaches behaviour-driven development end to end for a newcomer: what BDD is and how discovery, formulation and automation fit together; a decision table that picks the runner from the project's language and build files (Cucumber-JVM, Cucumber-JS, Cucumber-Ruby, Behave for Python, Reqnroll for .NET, and why SpecFlow is end-of-life); install and first-run commands for each; the declarative-versus-imperative Gherkin discipline with a worked bad-versus-good pair; Background, Scenario Outline and domain-organised step libraries; the traps that make BDD collapse into an expensive UI-automation wrapper; and an honest account of when BDD is not worth adopting. Use when a team is adopting BDD, choosing a Gherkin runner, or a *.feature file needs writing and nobody has settled the conventions.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

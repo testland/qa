@@ -1,0 +1,9 @@
+{
+  "name": "testland/hiring-rubric-author",
+  "description": "Build-an-X workflow that produces a per-role QA hiring rubric - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus the question bank from `interview-question-author` and emits a competency-anchored scoring rubric with 4-level behavioral anchors (no-hire / borderline / hire / strong-hire) per competency. This produces the scoring scaffold only - not the questions themselves, and not the gold-standard model answers that demonstrate each score level. Use after the question bank exists and before the first interview is scheduled - the rubric is what brings interviewer scoring into agreement.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

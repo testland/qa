@@ -1,0 +1,9 @@
+{
+  "name": "testland/go-native-fuzzing",
+  "description": "Author and run Go's native fuzzing (Go 1.18+) - coverage-guided fuzzing built into the standard testing package via FuzzXxx functions. Covers f.Add seed-corpus declaration, f.Fuzz callback signature with typed parameters, testdata/fuzz/{FuzzXxx}/ directory layout for seeds + regression cases, the -fuzz flag for `go test`, and CI integration via short smoke runs. Use for fuzz testing Go libraries - Go's native approach integrates seamlessly with standard `go test` rather than requiring a separate toolchain like AFL++.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

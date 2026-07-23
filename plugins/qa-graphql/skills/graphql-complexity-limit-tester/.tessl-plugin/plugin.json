@@ -1,0 +1,9 @@
+{
+  "name": "testland/graphql-complexity-limit-tester",
+  "description": "Crafts over-limit depth and complexity queries then asserts rejection before execution, verifying that graphql-depth-limit, graphql-cost-analysis, and graphql-armor (max-depth / cost-limit / max-tokens plugins) are actually enforced and not just configured. Use when auditing a GraphQL service for DoS exposure after depth or cost limits have been added as mitigations, or when adding tests that prove the limits in CI before a production deployment.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

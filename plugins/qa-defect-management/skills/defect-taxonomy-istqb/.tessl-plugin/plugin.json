@@ -1,0 +1,9 @@
+{
+  "name": "testland/defect-taxonomy-istqb",
+  "description": "Pure-reference catalog of defect categorisation taxonomies. Covers the IEEE 1044-2009 anomaly classification (anomaly class, anomaly type, anomaly severity, root cause category), the ISTQB CTAL-TA root-cause taxonomy (requirements / design / implementation / interface / test-data / build-environment), and the Orthogonal Defect Classification (ODC) eight-attribute framework. Maps each taxonomy to a worked example showing how the same defect classifies under each. Use to categorise defects consistently across a team, drive root-cause analysis, and inform process-improvement decisions (where in the SDLC do we leak the most defects?).",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}

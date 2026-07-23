@@ -1,0 +1,9 @@
+{
+  "name": "testland/mutant-survival-triage",
+  "description": "Normalizes a surviving-mutant record across StrykerJS, PIT, mutmut, and Mull into one shape, classifies why it survived (missing case, weak assertion, equivalent mutant, unreachable code, flaky killer), applies per-mutator heuristics for conditional-boundary, arithmetic-operator, statement-removal, and constant mutations, and drafts the specific test that would kill it. Treats equivalence as a judgment call, because deciding whether a mutant is equivalent to the original is undecidable in general, so a residual survivor rate is expected rather than a defect. Use when a mutation run has finished and the report lists surviving mutants that nobody has yet explained or turned into concrete test cases.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "0.1.0"
+}
