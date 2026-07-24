@@ -28,7 +28,7 @@ or via CI artifact uploads).
   in PR diffs) over a hosted UI.
 - Coverage is page-driven (full pages, full viewports) rather than
   story-driven (in which case
-  [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
+  `chromatic-visual-regression-testing`
   may be a better fit).
 - Snapshot determinism is high enough that pixel diffs are signal, not
   noise. If the page has chronic instability (animated SVGs, ads, A/B

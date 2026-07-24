@@ -127,7 +127,7 @@ for **every** mutating call.
 | Surface | Test |
 |---|---|
 | Created → succeeded (happy path) | Standard test-card; assert each state observed |
-| Requires-action (3DS) | Initiate with a challenge test card ([Stripe](https://docs.stripe.com/testing#regulatory-cards) `4000 0027 6000 3184`, [Adyen](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers) `4917 6100 0000 0000`); assert `requires_action` / `RedirectShopper` with `next_action.type = redirect_to_url`; complete the issuer-hosted challenge; confirm and assert `succeeded`. Repeat with a frictionless card (Stripe `4000 0000 0000 3055`) - must reach `succeeded` with no challenge. Per [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md) |
+| Requires-action (3DS) | Initiate with a challenge test card ([Stripe](https://docs.stripe.com/testing#regulatory-cards) `4000 0027 6000 3184`, [Adyen](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers) `4917 6100 0000 0000`); assert `requires_action` / `RedirectShopper` with `next_action.type = redirect_to_url`; complete the issuer-hosted challenge; confirm and assert `succeeded`. Repeat with a frictionless card (Stripe `4000 0000 0000 3055`) - must reach `succeeded` with no challenge. Per `3ds-test-flow-reference` |
 | Failed (insufficient funds) | Use insufficient-funds test card; assert state |
 | Cancelled before capture | Manual-capture + cancel; assert state |
 | Webhook idempotency | Replay webhook twice; assert idempotent handling |
@@ -170,13 +170,13 @@ for **every** mutating call.
 - Braintree transaction states:
   [developer.paypal.com/braintree/docs/reference/general/statuses](https://developer.paypal.com/braintree/docs/reference/general/statuses).
 - Companion catalogs:
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),
-  [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).
+  `3ds-test-flow-reference`,
+  `pci-dss-scope-reference`.
 - Consumed by:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md),
-  [`refund-test-matrix-builder`](../refund-test-matrix-builder/SKILL.md),
-  [`chargeback-flow-test-author`](../chargeback-flow-test-author/SKILL.md),
-  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `paypal-sandbox`,
+  `braintree-test-cards`,
+  `refund-test-matrix-builder`,
+  `chargeback-flow-test-author`,
+  `payment-webhook-replay`.

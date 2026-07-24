@@ -22,8 +22,8 @@ This skill adds the QA-specific half: in a testing team, the Behavior component 
 
 Do **not** use this skill to:
 
-- Plan the meeting where feedback is delivered - that is [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md).
-- Update the team capability map - that is [`skill-matrix-author`](../skill-matrix-author/SKILL.md); mixing performance judgments into the matrix corrupts it as a planning tool.
+- Plan the meeting where feedback is delivered - that is `tester-one-on-one-planner`.
+- Update the team capability map - that is `skill-matrix-author`; mixing performance judgments into the matrix corrupts it as a planning tool.
 - Run disciplinary or termination processes - those are HR-owned and carry legal constraints beyond the scope of this skill.
 
 ## Step 1 - Capture the inputs
@@ -33,7 +33,7 @@ Do **not** use this skill to:
 | **Subject + window** | Tester, and the period the feedback covers (a single event, a sprint, a review half-year) |
 | **Artifact access** | Bug tracker (reports authored, triage quality), test management tool or repo (test cases, charters), code review system (comments given and received), CI history |
 | **Purpose** | One of: immediate feedback / review input / promotion case - the same evidence, three different output shapes (Step 4) |
-| **Ladder criteria** | For review input and promotion cases: the level's evidence list from [`career-ladder-author`](../career-ladder-author/SKILL.md) |
+| **Ladder criteria** | For review input and promotion cases: the level's evidence list from `career-ladder-author` |
 
 ## Step 2 - Mine the artifacts for Behavior candidates
 
@@ -91,9 +91,9 @@ The positive example follows the identical Situation/Behavior/Impact discipline 
 
 ## Step 4 - Assemble into the purpose-shaped output
 
-- **Immediate feedback:** one SBI(I) item, delivered in the next 1:1's feedback segment (the [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md) agenda reserves 5 minutes). Feedback delivered within a week of the event beats a stockpile at review time; *The Manager's Path* (Camille Fournier, O'Reilly 2017, ISBN 978-1491973899) frames this as building a culture of continuous feedback, with the written review as a summary of conversations already had, never a surprise.
+- **Immediate feedback:** one SBI(I) item, delivered in the next 1:1's feedback segment (the `tester-one-on-one-planner` agenda reserves 5 minutes). Feedback delivered within a week of the event beats a stockpile at review time; *The Manager's Path* (Camille Fournier, O'Reilly 2017, ISBN 978-1491973899) frames this as building a culture of continuous feedback, with the written review as a summary of conversations already had, never a surprise.
 - **Review input:** 4 - 8 SBI items spanning the window, grouped by the ladder axes, each citing its artifact, plus a one-paragraph synthesis. Strengths and growth areas both artifact-backed.
-- **Promotion case:** the level's observable-evidence list from [`career-ladder-author`](../career-ladder-author/SKILL.md), with one artifact-cited SBI item per evidence line, and explicit gaps marked `[NO EVIDENCE YET]` rather than papered over.
+- **Promotion case:** the level's observable-evidence list from `career-ladder-author`, with one artifact-cited SBI item per evidence line, and explicit gaps marked `[NO EVIDENCE YET]` rather than papered over.
 
 ## Anti-patterns
 
@@ -116,12 +116,12 @@ The positive example follows the identical Situation/Behavior/Impact discipline 
 
 ## Hand-off targets
 
-- **Deliver it** → [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md) (the feedback segment of the next 1:1).
-- **Promotion case against level criteria** → [`career-ladder-author`](../career-ladder-author/SKILL.md).
-- **Theme is a skill gap, not a performance issue** → [`skill-matrix-author`](../skill-matrix-author/SKILL.md) and a growth thread instead of corrective feedback.
+- **Deliver it** → `tester-one-on-one-planner` (the feedback segment of the next 1:1).
+- **Promotion case against level criteria** → `career-ladder-author`.
+- **Theme is a skill gap, not a performance issue** → `skill-matrix-author` and a growth thread instead of corrective feedback.
 
 ## References
 
 - Center for Creative Leadership, "Use Situation-Behavior-Impact (SBI) To Understand Intent" - the Situation / Behavior / Impact model, the Intent extension, precision guidance and the anxiety/defensiveness claims used throughout: https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/ (fetched 2026-06-10).
 - Camille Fournier, *The Manager's Path*, O'Reilly 2017, ISBN 978-1491973899 - continuous-feedback culture, writing and delivering performance reviews ("Managing People" chapter).
-- [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md), [`career-ladder-author`](../career-ladder-author/SKILL.md), [`skill-matrix-author`](../skill-matrix-author/SKILL.md) - sibling skills in the delivery, promotion, and capability paths.
+- `tester-one-on-one-planner`, `career-ladder-author`, `skill-matrix-author` - sibling skills in the delivery, promotion, and capability paths.

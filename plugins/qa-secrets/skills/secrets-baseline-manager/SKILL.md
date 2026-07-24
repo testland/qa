@@ -17,9 +17,9 @@ This skill builds a unified baseline strategy: one human-facing waiver file
 lifecycle, and a quarterly audit cadence to prevent baseline rot.
 
 Complementary skills:
-[`gitleaks-scanning`](../gitleaks-scanning/SKILL.md),
-[`trufflehog-scanning`](../trufflehog-scanning/SKILL.md),
-[`kingfisher-scanning`](../kingfisher-scanning/SKILL.md).
+`gitleaks-scanning`,
+`trufflehog-scanning`,
+`kingfisher-scanning`.
 After adopting a baseline, the finding-triage step
 applies `.secrets-waivers.yaml` at verdict time.
 
@@ -392,9 +392,9 @@ gitleaks git --report-format json \
   `--exclude-detectors`
 - [kf][kf] - Kingfisher: `--baseline-file`, `--manage-baseline`,
   `--exclude`, `--skip-regex`, `--skip-word`, `docs/BASELINE.md`
-- [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md) - per-scanner
+- `gitleaks-scanning` - per-scanner
   gitleaks workflow
-- [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md) - per-scanner
+- `trufflehog-scanning` - per-scanner
   TruffleHog workflow
-- [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) - per-scanner
+- `kingfisher-scanning` - per-scanner
   Kingfisher workflow

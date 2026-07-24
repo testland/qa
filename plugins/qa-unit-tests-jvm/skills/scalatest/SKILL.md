@@ -14,8 +14,8 @@ Per [scalatest.org][st]:
 ScalaTest is the de facto Scala testing framework. Like Kotest, it
 offers multiple specification styles to match team preference.
 
-For Java/Kotlin projects, [`junit5-tests`](../junit5-tests/SKILL.md)
-or [`kotest-tests`](../kotest-tests/SKILL.md) are more idiomatic.
+For Java/Kotlin projects, `junit5-tests`
+or `kotest-tests` are more idiomatic.
 ScalaTest is the right pick for Scala-primary or Scala-only projects.
 
 ## When to use
@@ -256,9 +256,9 @@ Coverage via `sbt-scoverage` plugin (Scala-native; not JaCoCo).
 - [st-styles][st-styles] - selecting a style
 - [st-matchers][st-matchers] - Matchers reference
 - scalacheck.org - ScalaCheck (property-based)
-- [`junit5-tests`](../junit5-tests/SKILL.md),
-  [`kotest-tests`](../kotest-tests/SKILL.md),
-  [`spock-tests`](../spock-tests/SKILL.md),
-  [`testng-tests`](../testng-tests/SKILL.md) - sister tools
+- `junit5-tests`,
+  `kotest-tests`,
+  `spock-tests`,
+  `testng-tests` - sister tools
 - `quickcheck-testing` - Haskell + Scala property-based
 - `test-code-conventions`

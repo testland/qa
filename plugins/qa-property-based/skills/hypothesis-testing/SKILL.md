@@ -275,10 +275,10 @@ permanently.
 
 - [hyp-quickstart][hq] - Hypothesis quickstart: `@given`,
   strategies, shrinking, composite, `assume()`, settings.
-- [`fast-check-testing`](../fast-check-testing/SKILL.md),
-  [`proptest-testing`](../proptest-testing/SKILL.md),
-  [`jqwik-testing`](../jqwik-testing/SKILL.md),
-  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) - 
+- `fast-check-testing`,
+  `proptest-testing`,
+  `jqwik-testing`,
+  `quickcheck-testing` - 
   per-language siblings with similar shape.
 - `schemathesis-fuzzing` - applies PBT to API schemas (different layer; same conceptual
   framework).

@@ -12,8 +12,8 @@ Per [fluentassertions.com][fa]:
 [fa]: https://fluentassertions.com/
 
 FluentAssertions is the de facto fluent-assertion library for .NET.
-Works with any of [`xunit-tests`](../xunit-tests/SKILL.md),
-[`nunit-tests`](../nunit-tests/SKILL.md), [`mstest-tests`](../mstest-tests/SKILL.md).
+Works with any of `xunit-tests`,
+`nunit-tests`, `mstest-tests`.
 
 **Important license change note:** from v8, "commercial use requires a
 paid license", while v8+ stays "free for open-source projects and
@@ -246,7 +246,7 @@ failure messages + chainable assertions.
 - fluentassertions.com/objectgraphs - BeEquivalentTo deep dive
 - github.com/fluentassertions/fluentassertions - repository
 - v7 license note: github.com/fluentassertions/fluentassertions/discussions
-- [`xunit-tests`](../xunit-tests/SKILL.md),
-  [`nunit-tests`](../nunit-tests/SKILL.md),
-  [`mstest-tests`](../mstest-tests/SKILL.md) - sister tools (test runners)
+- `xunit-tests`,
+  `nunit-tests`,
+  `mstest-tests` - sister tools (test runners)
 - `test-code-conventions`

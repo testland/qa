@@ -241,11 +241,11 @@ final gate is the single source of CI truth.
 
 ## References
 
-- [`dbt-testing/SKILL.md`](../dbt-testing/SKILL.md) - dbt
+- `dbt-testing/SKILL.md` - dbt
   `run_results.json` schema and field meanings.
-- [`great-expectations/SKILL.md`](../great-expectations/SKILL.md) - GX
+- `great-expectations/SKILL.md` - GX
   result object shape and `result_format` levels.
-- [`soda-checks/SKILL.md`](../soda-checks/SKILL.md) - Soda CLI invocation
+- `soda-checks/SKILL.md` - Soda CLI invocation
   and stdout summary format.
 - [dbt-run-results][1] - canonical run_results.json schema.
 - [gx-run-validation-definition][2] - GX `validation_definition.run()`

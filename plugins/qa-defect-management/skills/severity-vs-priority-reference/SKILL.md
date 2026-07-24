@@ -117,7 +117,7 @@ However:
   business day, P3 = 1 week. SLAs are tracker config, not
   severity-derived.
 
-See [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md)
+See `bug-lifecycle-reference`
 for the state transitions; this skill defines the orthogonal
 severity / priority fields.
 
@@ -142,9 +142,9 @@ severity / priority fields.
 | Bugzilla | Built-in `Severity` + `Priority` | Same |
 
 The platform-workflow skills
-([`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
-[`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
-[`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md))
+(`jira-bug-workflow-runner`,
+`linear-bug-workflow-runner`,
+`github-issues-bug-workflow`)
 each cover the platform-specific configuration.
 
 ## Anti-patterns
@@ -183,5 +183,5 @@ each cover the platform-specific configuration.
 - Linear "Priority levels" - Linear priority docs.
 - GitHub Issues - labels + Projects status documentation.
 - Sibling references:
-  [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
-  [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).
+  `bug-lifecycle-reference`,
+  `defect-taxonomy-istqb`.

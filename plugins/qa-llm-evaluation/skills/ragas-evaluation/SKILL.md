@@ -24,9 +24,9 @@ scores (per [rg-gh][rg-gh]).
 - Agents-style eval (tool-call accuracy, agent goal accuracy, topic
   adherence) is in scope.
 
-For non-RAG prompt evals, prefer [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md).
+For non-RAG prompt evals, prefer `promptfoo-evaluation`.
 For pytest-native LLM evals with a managed dashboard, prefer
-[`deepeval-evaluation`](../deepeval-evaluation/SKILL.md).
+`deepeval-evaluation`.
 
 ## Step 1 - Install
 
@@ -220,6 +220,6 @@ assert result["answer_relevancy"] >= 0.80
 - [rg-metrics][rg-metrics] - full metric catalog
 - [rg-docs][rg-docs] - full documentation including per-metric pages,
   integration guides
-- [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
-  [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md) - 
+- `deepeval-evaluation`,
+  `promptfoo-evaluation` - 
   sister tools (different framework styles)

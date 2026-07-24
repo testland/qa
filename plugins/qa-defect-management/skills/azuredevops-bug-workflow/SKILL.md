@@ -8,7 +8,7 @@ description: "Authors and triages Bug work items in Azure DevOps Boards via the 
 ## Overview
 
 Azure DevOps Boards models defects as Bug work items with a fixed set of built-in
-states ([`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md)).
+states (`bug-lifecycle-reference`).
 The canonical state sequence for the Agile process template is
 New -> Active -> Resolved -> Closed, per
 [learn.microsoft.com/en-us/azure/devops/boards/work-items/guidance/agile-process-workflow](https://learn.microsoft.com/en-us/azure/devops/boards/work-items/guidance/agile-process-workflow).
@@ -20,7 +20,7 @@ JSON Patch body, per
 ## When to use
 
 - Filing a Bug from a CI test failure (consumed by
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)).
+  `bug-report-from-failure`).
 - Building a triage script that pulls New defects and applies priority
   or assigns to the on-call engineer.
 - Bulk-transitioning Resolved bugs to Closed after a release.
@@ -275,7 +275,7 @@ type names for the current organisation, per
 
 Search before creating to prevent duplicate defects (per the
 canonical defect lifecycle guidance in
-[`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md)):
+`bug-lifecycle-reference`):
 
 ```python
 def create_or_comment(title, body_html, priority="2", severity="2 - High"):
@@ -424,11 +424,11 @@ the first failure, deduplicates against open Bugs, and calls `create_or_comment`
 - Agile process workflow (Bug state model):
   [learn.microsoft.com/en-us/azure/devops/boards/work-items/guidance/agile-process-workflow](https://learn.microsoft.com/en-us/azure/devops/boards/work-items/guidance/agile-process-workflow).
 - Sibling references:
-  [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
+  `bug-lifecycle-reference`,
+  `severity-vs-priority-reference`.
 - Sibling skills:
-  [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
-  [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
-  [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
+  `jira-bug-workflow-runner`,
+  `linear-bug-workflow-runner`,
+  `github-issues-bug-workflow`.
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).
+  `bug-report-from-failure`.

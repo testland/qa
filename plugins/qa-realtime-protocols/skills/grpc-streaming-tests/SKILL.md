@@ -245,9 +245,9 @@ Reports RPS, p50/p95/p99 latency. For streaming RPCs use
 
 - [gRPC core concepts docs] - RPC patterns, deadlines, cancellation,
   status codes, metadata
-- [`websocket-tests`](../websocket-tests/SKILL.md) - WebSocket
+- `websocket-tests` - WebSocket
   alternative for non-gRPC stacks
-- [`server-sent-events-tests`](../server-sent-events-tests/SKILL.md) - 
+- `server-sent-events-tests` - 
   one-way HTTP streaming alternative
 
 [gRPC core concepts docs]: https://grpc.io/docs/what-is-grpc/core-concepts/

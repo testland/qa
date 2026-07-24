@@ -212,9 +212,9 @@ false.
 - [MDN Paged Media] - `@page`, page pseudo-classes, break properties
 - [Playwright page.pdf docs] - options, default print media,
   preferCSSPageSize, printBackground
-- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) - sister
+- `pdf-snapshot-tester` - sister
   skill for pixel-diff assertions on rendered PDF pages
-- [`html-to-pdf-regression`](../html-to-pdf-regression/SKILL.md) - 
+- `html-to-pdf-regression` - 
   cross-engine HTML→PDF comparison
 
 [MDN Paged Media]: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Paged_media

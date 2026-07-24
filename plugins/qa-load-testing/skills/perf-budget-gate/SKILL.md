@@ -11,8 +11,8 @@ Modern teams measure perf at multiple layers:
 
 | Layer        | Runner                                                                                |
 |--------------|---------------------------------------------------------------------------------------|
-| Backend load | [`k6-load-testing`](../k6-load-testing/SKILL.md), [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md), [`gatling-load-testing`](../gatling-load-testing/SKILL.md), [`locust-load-testing`](../locust-load-testing/SKILL.md) |
-| Frontend     | [`lighthouse-perf`](../lighthouse-perf/SKILL.md) - Web Vitals via Lighthouse CI       |
+| Backend load | `k6-load-testing`, `jmeter-load-testing`, `gatling-load-testing`, `locust-load-testing` |
+| Frontend     | `lighthouse-perf` - Web Vitals via Lighthouse CI       |
 
 Each runner has its own pass/fail criterion. This gate **unifies**
 them into a single go / no-go verdict with per-metric deltas vs.

@@ -228,9 +228,9 @@ the visual-diff classification step has produced `visual-classifications.json`):
 
 ## References
 
-- [`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md)
-- [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
-- [`playwright-snapshots`](../playwright-snapshots/SKILL.md)
-- [`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)
-- [`visual-baseline-conventions`](../visual-baseline-conventions/SKILL.md) - the conventions this gate enforces.
+- `percy-visual-regression-testing`
+- `chromatic-visual-regression-testing`
+- `playwright-snapshots`
+- `storybook-visual-regression-testing`
+- `visual-baseline-conventions` - the conventions this gate enforces.
 - `data-quality-gate` - sibling gate skill for data-quality results, same artifact shape.

@@ -24,7 +24,7 @@ This skill produces the document.
 - A new team forming around a product needs onboarding context.
 
 For per-feature test plans (smaller scope), use the lighter-weight
-[`risk-matrix`](../risk-matrix/SKILL.md) - strategy is for
+`risk-matrix` - strategy is for
 larger horizons.
 
 ## Step 1 - Document structure
@@ -49,7 +49,7 @@ larger horizons.
 
 ## 2. Risk basis
 
-(Reference the risk matrix per [`risk-matrix`](../risk-matrix/SKILL.md))
+(Reference the risk matrix per `risk-matrix`)
 
 | Risk class | Top risks (from matrix) | Test investment |
 |------------|-------------------------|-----------------|
@@ -60,7 +60,7 @@ larger horizons.
 
 ## 3. Test types per layer (the pyramid)
 
-Per the test pyramid ([`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md)):
+Per the test pyramid (`test-pyramid-balancer`):
 
 | Layer       | Coverage target | Tools | Owner |
 |-------------|----------------:|-------|-------|
@@ -175,7 +175,7 @@ Common strategy patterns by product type:
 | Generic strategy template not tailored to product                     | Reads like boilerplate; nobody references.                               | Tailor per Section 1 (scope) and Section 4 (tooling). |
 | Strategy authored once; never reviewed                                | Becomes obsolete; team distrusts.                                        | Quarterly cadence (Step 3). |
 | No exit criteria                                                       | "Done" is subjective; release decisions arbitrary.                       | Section 7 - explicit + measurable. |
-| Strategy = test plan                                                   | Strategy is high-level; per-feature plans are detailed (different artifact). | Use [`risk-matrix`](../risk-matrix/SKILL.md) for per-feature. |
+| Strategy = test plan                                                   | Strategy is high-level; per-feature plans are detailed (different artifact). | Use `risk-matrix` for per-feature. |
 | Owner column missing                                                   | Activities slip; "everyone owns it = nobody."                            | Section 8 explicit owners. |
 | Strategy in slides, not version-controlled                             | History lost; updates invisible.                                          | Markdown + git. |
 
@@ -190,8 +190,8 @@ Common strategy patterns by product type:
 
 ## References
 
-- [`risk-matrix`](../risk-matrix/SKILL.md) - feeds Section 2.
-- [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) - 
+- `risk-matrix` - feeds Section 2.
+- `test-pyramid-balancer` - 
   feeds Section 3.
-- [`definition-of-done`](../definition-of-done/SKILL.md) - feeds
+- `definition-of-done` - feeds
   Section 7.

@@ -167,7 +167,7 @@ list.Should().HaveCount(3).And.Contain("alice");
 result.Should().BeOfType<Success>().Which.Value.Should().Be(42);
 ```
 
-See [`fluentassertions`](../fluentassertions/SKILL.md). **Note:**
+See `fluentassertions`. **Note:**
 FluentAssertions changed license in 2024 (paid commercial; free for
 OSS); v6 is the last fully-free version.
 
@@ -201,7 +201,7 @@ OSS); v6 is the last fully-free version.
 - [xn-docs][xn-docs] - xUnit.net documentation
 - xunit.net - landing
 - learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test - dotnet test
-- [`nunit-tests`](../nunit-tests/SKILL.md),
-  [`mstest-tests`](../mstest-tests/SKILL.md),
-  [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
+- `nunit-tests`,
+  `mstest-tests`,
+  `fluentassertions` - sister tools
 - `test-code-conventions`

@@ -53,10 +53,10 @@ artifact (always with `if: always()` on the upload):
 
 | Tool         | Skill                                                                                        | Artifact                            |
 |--------------|----------------------------------------------------------------------------------------------|-------------------------------------|
-| Pact         | [`pact-contract-testing`](../pact-contract-testing/SKILL.md)                                | `can-i-deploy` exit code + matrix   |
-| oasdiff      | [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md)                                | `--format json` array               |
-| GraphQL      | [`graphql-schema-regression`](../graphql-schema-regression/SKILL.md)                        | grep-parsed text or JSON action     |
-| Protobuf     | [`protobuf-compat-checking`](../protobuf-compat-checking/SKILL.md)                          | `--error-format json` array         |
+| Pact         | `pact-contract-testing`                                | `can-i-deploy` exit code + matrix   |
+| oasdiff      | `openapi-contract-diff`                                | `--format json` array               |
+| GraphQL      | `graphql-schema-regression`                        | grep-parsed text or JSON action     |
+| Protobuf     | `protobuf-compat-checking`                          | `--error-format json` array         |
 
 ## Step 2 - Define the unified record
 
@@ -102,7 +102,7 @@ Flatten every tool's per-finding output into one shape:
 `buf breaking` doesn't classify by severity - every violation is
 treated as a blocker. To downgrade, exclude rules in `buf.yaml` rather
 than at the gate level (see
-[`protobuf-compat-checking`](../protobuf-compat-checking/SKILL.md)).
+`protobuf-compat-checking`).
 
 ## Step 3 - Apply the gate decision rule
 
@@ -233,10 +233,10 @@ final gate is the single source of CI truth.
 
 ## References
 
-- [`pact-contract-testing`](../pact-contract-testing/SKILL.md)
-- [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md)
-- [`graphql-schema-regression`](../graphql-schema-regression/SKILL.md)
-- [`protobuf-compat-checking`](../protobuf-compat-checking/SKILL.md)
+- `pact-contract-testing`
+- `openapi-contract-diff`
+- `graphql-schema-regression`
+- `protobuf-compat-checking`
 - [can-i-deploy][cid] - Pact deployment gate exit codes.
 - [oasdiff-breaking][oasdiff] - oasdiff severity tiers.
 - [gqi-diff][gqi] - GraphQL Inspector breaking classification.

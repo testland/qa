@@ -89,7 +89,7 @@ stored frontmatter field:
 | **D3** | Description quality | Distinguishes vs neighbors; predicts the body |
 | **D4** | Use-case fit | Explicit trigger ("Use when…"), not a persona |
 | **D5** | Body quality | Concrete steps + worked examples |
-| **D6** | Terminology compliance | Concrete claims cited inline at point of use |
+| **D6** | Terminology compliance | Concrete claims verified against a canonical source (inline or in a checked References section) |
 
 **Merge bar (reviewer judgment):** each dimension should clear its anchor, with
 **D6 (citations) as the hard floor** - uncited "sounds plausible" content is the
@@ -204,9 +204,9 @@ make all
   `.gitkeep` so git tracks them; the scaffolder adds these but manual edits
   can lose them.
 - **Uncited claims**: every concrete fact about how a tool works,
-  every command, every flag, every threshold value must cite a fetched
-  canonical source inline at the point of use - not in a trailing
-  "References" block.
+  every command, every flag, every threshold value must be verifiable
+  against a fetched canonical source - inline or listed in a checked
+  "References" section. Facts with no source anywhere are the hard reject.
 - **Description starts with "You are…" or "I help…"**: linted out by
   `validate.sh`. Use third-person action verbs.
 - **Persona-as-scope agents**: agents must have a specific task scope, not

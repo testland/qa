@@ -28,7 +28,7 @@ false-negative tradeoff per project.
   + standard CI.
 - Quick triage of low-effort security wins (hardcoded passwords,
   shell=True in subprocess, weak crypto).
-- Pair with [`semgrep-rules`](../semgrep-rules/SKILL.md) (broader,
+- Pair with `semgrep-rules` (broader,
   cross-language) for layered coverage.
 
 ## Step 1 - Install
@@ -198,11 +198,11 @@ noise.
 
 ## Limitations
 
-- Python-only; for Go use [`gosec-go`](../gosec-go/SKILL.md), for
+- Python-only; for Go use `gosec-go`, for
   JS use Semgrep.
 - Plugin-based detection misses some patterns that Semgrep custom
   rules can catch.
-- No native cross-file taint analysis (use [`codeql-queries`](../codeql-queries/SKILL.md)
+- No native cross-file taint analysis (use `codeql-queries`
   for that).
 - Rule depth varies - well-maintained for OpenStack-era patterns;
   newer Python ecosystem (FastAPI, async patterns) coverage thinner.
@@ -213,7 +213,7 @@ noise.
 - bandit.readthedocs.io - full documentation
 - bandit.readthedocs.io/en/latest/plugins/ - rule catalog
 - github.com/PyCQA/bandit - repository
-- [`semgrep-rules`](../semgrep-rules/SKILL.md),
-  [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
-  [`codeql-queries`](../codeql-queries/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- `semgrep-rules`,
+  `sonarqube-rules`,
+  `codeql-queries`,
+  `gosec-go` - sister scanners

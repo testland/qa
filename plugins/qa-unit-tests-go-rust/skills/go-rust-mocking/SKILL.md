@@ -339,6 +339,6 @@ Common predicates (`mockall::predicate::*`): `eq(v)`, `ne(v)`, `lt(v)`,
 - [testify-mock-pkg][testify-mock-pkg] - `testify/mock` package documentation
 - [mockall-docs][mockall-docs] - `mockall` crate documentation on docs.rs
 - [istqb-double][istqb-double] - ISTQB definition of test double
-- [`go-test`](../go-test/SKILL.md) - Go stdlib testing (prerequisite)
-- [`cargo-test`](../cargo-test/SKILL.md) - Rust cargo testing (prerequisite)
-- [`rstest-tests`](../rstest-tests/SKILL.md) - Rust parametrized tests
+- `go-test` - Go stdlib testing (prerequisite)
+- `cargo-test` - Rust cargo testing (prerequisite)
+- `rstest-tests` - Rust parametrized tests

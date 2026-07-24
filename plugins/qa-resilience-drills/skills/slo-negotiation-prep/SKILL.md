@@ -21,7 +21,7 @@ This skill produces that prep pack. Per the [Google SRE Workbook](https://sre.go
 
 Do **not** use this skill when:
 
-- No SLO is in place - the team needs to *define* SLOs first; use [`error-budget-tests`](../error-budget-tests/SKILL.md) to author the SLI / SLO / budget structure.
+- No SLO is in place - the team needs to *define* SLOs first; use `error-budget-tests` to author the SLI / SLO / budget structure.
 - No decision question is framed - without a specific question ("ship Feature X in 2 weeks?" / "extend budget?" / "lower SLO?"), the prep pack has no shape. The skill halts.
 - The team's culture rejects structured negotiation - some shops prefer "the loudest voice wins"; this skill's value is structured evidence; if the meeting doesn't reward that, the skill is wasted effort.
 
@@ -31,9 +31,9 @@ Required:
 
 | Input | Source | Why load-bearing |
 |---|---|---|
-| **Current SLO + SLI** | [`error-budget-tests`](../error-budget-tests/SKILL.md) configured SLO; cited per the team's runbook | The anchor for everything else |
+| **Current SLO + SLI** | `error-budget-tests` configured SLO; cited per the team's runbook | The anchor for everything else |
 | **Error-budget consumption to date** | Computed per the [Google SRE Embracing Risk](https://sre.google/sre-book/embracing-risk/) formula: `(target_uptime - actual_uptime)` over the budget window | The starting position |
-| **Recent incident history** | [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) per-incident log; MTTR / MTBF trend over the budget window | Drives the burn-rate narrative and the "what's contributing" detail |
+| **Recent incident history** | `mttr-mtbf-tracker` per-incident log; MTTR / MTBF trend over the budget window | Drives the burn-rate narrative and the "what's contributing" detail |
 | **The decision question** | Single sentence, manager-supplied (e.g., "Can we ship Feature X in 2 weeks given current SLO posture?") | The skill won't manufacture stakes |
 | **Stakeholders** | Who will be in the room (product PM, SRE lead, eng manager, the team's manager, anyone else with veto) | Drives the "stakeholder cost" axis in Step 3 |
 | **Time horizon** | When the decision must be made by; how long the consequence lasts (quarter? two quarters? indefinite SLO change?) | Drives reversibility scoring |
@@ -201,8 +201,8 @@ The manager walks in with structured evidence. The meeting decides. The retro ca
 
 ## Hand-off targets
 
-- **Compute / configure the underlying SLI / SLO / budget** → [`error-budget-tests`](../error-budget-tests/SKILL.md).
-- **Maintain the per-incident MTTR / MTBF log** → [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md).
+- **Compute / configure the underlying SLI / SLO / budget** → `error-budget-tests`.
+- **Maintain the per-incident MTTR / MTBF log** → `mttr-mtbf-tracker`.
 - **Ladder the SLO conversation outcome into the quarterly OKR set** → `qa-okr-author` (in the qa-process plugin).
 - **Author the underlying test strategy that the SLO references** → `test-strategy-author`.
 - **Post-meeting retro on the chosen option's outcome** → `post-mortem-author` when the decision turned out badly; quarterly OKR retro (deferred candidate component) when it played out across the quarter.
@@ -216,5 +216,5 @@ The manager walks in with structured evidence. The meeting decides. The retro ca
 - Google SRE Book - *Service Level Objectives* chapter (the contract layer SLOs operationalise: an SLA is "an explicit or implicit contract with your users that includes consequences of meeting (or missing) the SLOs they contain"): https://sre.google/sre-book/service-level-objectives/
 - ISTQB glossary - non-functional testing (the layer SLOs anchor on): https://glossary.istqb.org/en_US/term/non-functional-testing
 - ISO/IEC 25010 - reliability and performance-efficiency characteristics (the underlying quality dimensions): https://en.wikipedia.org/wiki/ISO/IEC_25010
-- [`error-budget-tests`](../error-budget-tests/SKILL.md), [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - sibling skills that produce the input data this skill consumes.
+- `error-budget-tests`, `mttr-mtbf-tracker` - sibling skills that produce the input data this skill consumes.
 - `qa-okr-author`, `post-mortem-author` - downstream skills that consume the conversation outcome.

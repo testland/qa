@@ -12,12 +12,12 @@ metadata:
 Game performance QA verifies that a build meets its declared budgets across
 every target SKU before milestone sign-off or platform-cert submission.
 The performance category (category 4 in the
-[game-test-categories-reference](../game-test-categories-reference/SKILL.md))
+game-test-categories-reference)
 covers frame-time, memory, GPU, thermal, and battery axes. This skill covers
 the two dominant engine stacks: Unity and Unreal Engine.
 
 **Frame-time budget anchors** (from
-[game-test-categories-reference](../game-test-categories-reference/SKILL.md)):
+game-test-categories-reference):
 
 | Target frame rate | Frame-time budget |
 |---|---|
@@ -257,7 +257,7 @@ Quality level, and disable hardware reporting in Player Settings
 ### Unreal
 
 Unreal Automation System (see
-[unreal-automation-system](../unreal-automation-system/SKILL.md)) exposes a
+unreal-automation-system) exposes a
 `PerformanceCapture` test type. Combine with a CI step that launches Insights
 in server mode, runs the target map for N frames, exports the trace, and
 compares the exported GPU/CPU frame time histogram against stored baselines.
@@ -301,5 +301,5 @@ A FAIL on p99 triggers a regression investigation before milestone sign-off.
   Cited by stable ID "Sony TRC" and "Nintendo Lotcheck" per
   `docs/PLUGIN_AUTHORING.md` Step 4 fallback.
 - Godot engine performance tooling is out of scope; see
-  [godot-gut-tests](../godot-gut-tests/SKILL.md) for that engine's test
+  godot-gut-tests for that engine's test
   framework.

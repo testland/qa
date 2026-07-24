@@ -16,10 +16,10 @@ while the collector scans live objects. This skill walks the full diagnostic
 workflow from log capture through collector selection to heap sizing and tool
 analysis.
 
-**Upstream:** pair with [`flame-graph-analyzer`](../flame-graph-analyzer/SKILL.md)
+**Upstream:** pair with `flame-graph-analyzer`
 when GC frames appear as wide leaves in the async-profiler output.
 **Downstream:** hand tuned JVM flags to the load runner
-([`k6-load-testing`](../k6-load-testing/SKILL.md), [`gatling-load-testing`](../gatling-load-testing/SKILL.md))
+(`k6-load-testing`, `gatling-load-testing`)
 to re-run the baseline after changes.
 
 ## Step 1 - Enable unified GC logging
@@ -268,7 +268,7 @@ correlate GC pauses with HTTP latency spikes:
 4. If the spikes co-occur with `Pause Full` or `Pause Young (Concurrent Start)`,
    the collector is failing to keep up with allocation rate; see Steps 4-6.
 5. If spikes occur without matching GC pauses, GC is not the cause; escalate to
-   [`flame-graph-analyzer`](../flame-graph-analyzer/SKILL.md) for CPU profiling.
+   `flame-graph-analyzer` for CPU profiling.
 
 ## Output format
 
@@ -347,4 +347,4 @@ throughput % improves. Feed results to perf-budget-gate.
 - GCViewer open-source GC log analyser:
   https://github.com/chewiebug/GCViewer
 - Upstream skill for CPU hot-path analysis:
-  [`flame-graph-analyzer`](../flame-graph-analyzer/SKILL.md)
+  `flame-graph-analyzer`

@@ -256,9 +256,9 @@ env:
 - [pt][pt] - proptest README: strategy-based approach,
   regex-string generation, failure persistence, comparison vs
   QuickCheck, MSRV, license.
-- [`hypothesis-testing`](../hypothesis-testing/SKILL.md) - Python
+- `hypothesis-testing` - Python
   sibling proptest is inspired by.
-- [`fast-check-testing`](../fast-check-testing/SKILL.md),
-  [`jqwik-testing`](../jqwik-testing/SKILL.md),
-  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) - 
+- `fast-check-testing`,
+  `jqwik-testing`,
+  `quickcheck-testing` - 
   per-language siblings.

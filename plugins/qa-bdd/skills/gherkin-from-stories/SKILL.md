@@ -117,7 +117,7 @@ identical and only the data varies."
 ## Step 4 - Use existing steps from the library
 
 Per
-[`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md),
+`bdd-step-library-curator`,
 the team has a curated step library. Use existing steps where
 possible:
 
@@ -201,7 +201,7 @@ The output should pass these style checks:
 
 After PM clarifies the implicit Givens (per flags above), author
 the new step definitions per
-[`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)
+`bdd-step-library-curator`
 conventions. Pair with the framework's runner per the team's stack
 (`cucumber-testing` / `behave-testing` / `reqnroll-testing`).
 ```
@@ -228,5 +228,5 @@ conventions. Pair with the framework's runner per the team's stack
 ## References
 
 - `acceptance-criteria-extractor` (in the qa-shift-left plugin) - sibling: AC-first variant.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from.
-- [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md) - sibling: ATDD-flavored variant.
+- `bdd-step-library-curator` - step library this skill draws from.
+- `acceptance-test-from-criteria` - sibling: ATDD-flavored variant.

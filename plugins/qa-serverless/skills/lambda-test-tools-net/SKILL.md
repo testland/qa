@@ -96,7 +96,7 @@ public class FunctionsTests
 
 ### Testing remaining-time behaviour
 
-Per [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md),
+Per `lambda-timeout-budget-reference`,
 handlers that check `Context.RemainingTime`:
 
 ```csharp
@@ -192,7 +192,7 @@ jobs:
 - **Doesn't test the runtime API.** The Lambda runtime API
   (responsible for `next` / `response` polling) isn't invoked;
   bugs in handler-vs-runtime contract slip through.
-- **Doesn't test cold-start budget per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).**
+- **Doesn't test cold-start budget per `cold-start-budget-reference`.**
   In-process tests are warm; AOT cold-start savings invisible.
 - **Custom serializer paths.** If your handler uses a
   non-default JSON serializer, set up the assembly attribute
@@ -209,8 +209,8 @@ jobs:
 - dotnet-lambda CLI:
   [github.com/aws/aws-extensions-for-dotnet-cli](https://github.com/aws/aws-extensions-for-dotnet-cli).
 - Companion catalogs:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+  `cold-start-budget-reference`,
+  `lambda-timeout-budget-reference`.
 - Sibling tools:
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md)
+  `aws-sam-local-testing`
   (Node/Python/Java equivalent).

@@ -33,7 +33,7 @@ reality.
 
 For pure HTTP fault stubs, see
 `wiremock-stubs` (in the qa-test-data plugin).
-For pure TCP chaos, see [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md).
+For pure TCP chaos, see `toxiproxy-chaos`.
 
 ## Step 1 - Topology
 
@@ -203,12 +203,12 @@ Each scenario produces a per-resilience-pattern verdict:
   (binary protocol corruption) need custom tooling.
 - **Doesn't replace production chaos.** This is integration-test
   chaos; production chaos engineering is separate (per
-  [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)).
+  `chaos-experiment-author`).
 
 ## References
 
 - `wiremock-stubs` - HTTP fault stub primitive this skill orchestrates.
-- [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) - TCP-level
+- `toxiproxy-chaos` - TCP-level
   fault primitive this skill orchestrates.
 - `api-chaos-runner` (in the qa-api-testing plugin) - sister: pure Toxiproxy + test-suite matrix.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology for the chaos-experiment shape.
+- `chaos-experiment-author` - methodology for the chaos-experiment shape.

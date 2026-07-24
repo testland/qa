@@ -15,7 +15,7 @@ model than its competitors.
 Per developers.qase.io (Cloudflare-protected; cite by stable URL).
 
 For canonical anatomy, see
-[`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+`test-case-anatomy-reference`.
 
 ## When to use
 
@@ -288,10 +288,10 @@ management API).
 - Qase API reference (Swagger / OpenAPI) - developers.qase.io.
 - qase-python SDK - github.com/qase-tms/qase-python.
 - Sibling references:
-  [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md),
+  `test-case-anatomy-reference`,
   `severity-vs-priority-reference`.
 - Sibling skills:
-  [`testrail-case-management`](../testrail-case-management/SKILL.md),
-  [`xray-case-management`](../xray-case-management/SKILL.md),
-  [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
-  [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md).
+  `testrail-case-management`,
+  `xray-case-management`,
+  `zephyr-scale-case-management`,
+  `allure-testops-case-management`.

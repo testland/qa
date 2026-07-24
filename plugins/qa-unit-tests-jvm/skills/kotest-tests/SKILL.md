@@ -231,9 +231,9 @@ JaCoCo coverage works identically.
 - kotest.io - landing
 - [kt-matchers][kt-matchers] - matcher catalog
 - [kt-iso][kt-iso] - isolation modes
-- [`junit5-tests`](../junit5-tests/SKILL.md),
-  [`spock-tests`](../spock-tests/SKILL.md),
-  [`testng-tests`](../testng-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) - sister tools
+- `junit5-tests`,
+  `spock-tests`,
+  `testng-tests`,
+  `scalatest` - sister tools
 - `jqwik-testing` - JVM property-based
 - `test-code-conventions`

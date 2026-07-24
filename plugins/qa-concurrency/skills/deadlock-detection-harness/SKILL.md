@@ -233,9 +233,9 @@ Fewer acquire sites = easier to reason about lock order.
 
 - [TSan docs] - `detect_deadlocks=1` runtime option
 - jstack - included with JDK; `man jstack`
-- [`race-condition-test-author`](../race-condition-test-author/SKILL.md) - 
+- `race-condition-test-author` - 
   data-race detection (different problem class)
-- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) - 
+- `async-ordering-tests` - 
   async-equivalent of deadlock detection
 
 [TSan docs]: https://clang.llvm.org/docs/ThreadSanitizer.html

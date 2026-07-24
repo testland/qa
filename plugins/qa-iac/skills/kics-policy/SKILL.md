@@ -208,7 +208,7 @@ don't.
 ## References
 
 - KICS at `kics.io` and `github.com/Checkmarx/kics`.
-- [`checkov-policy`](../checkov-policy/SKILL.md),
-  [`tfsec-policy`](../tfsec-policy/SKILL.md) - sister scanners.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
+- `checkov-policy`,
+  `tfsec-policy` - sister scanners.
+- `policy-as-code-runner` - 
   custom OPA / Rego.

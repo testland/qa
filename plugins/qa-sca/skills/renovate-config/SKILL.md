@@ -29,7 +29,7 @@ automating the upgrade PR.
 - Authoring a new `renovate.json` from scratch.
 - Reviewing a `renovate.json` PR for completeness + hygiene.
 
-For GitHub-native simpler workflows, [`dependabot-config`](../dependabot-config/SKILL.md)
+For GitHub-native simpler workflows, `dependabot-config`
 is lower-friction.
 
 ## Step 1 - Top-level keys
@@ -263,8 +263,8 @@ renovate:
 - docs.renovatebot.com/presets-config - built-in preset list
 - mend.io/renovate - Mend Renovate (SaaS)
 - github.com/renovatebot/renovate - repository
-- [`snyk-test`](../snyk-test/SKILL.md),
-  [`osv-scanner`](../osv-scanner/SKILL.md),
-  [`dependabot-config`](../dependabot-config/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
+- `snyk-test`,
+  `osv-scanner`,
+  `dependabot-config`,
+  `npm-pip-maven-audit` - 
   sister tools

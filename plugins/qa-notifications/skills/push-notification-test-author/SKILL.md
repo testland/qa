@@ -286,8 +286,8 @@ For each push channel:
 - web.dev/explore/notifications - Push API + Notifications API
 - npmjs.com/package/web-push - Node.js web-push library
 - pypi.org/project/apns2 - Python APNs HTTP/2 library
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md),
-  [`sms-test-author`](../sms-test-author/SKILL.md) - sister channels
+- `email-flow-test-author`,
+  `sms-test-author` - sister channels
 - `appium-testing`,
   `xcuitest-suite`,
   `espresso-suite` - device-side click-action verification

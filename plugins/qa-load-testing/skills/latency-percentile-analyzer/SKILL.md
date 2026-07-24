@@ -268,6 +268,6 @@ time waiting for a free socket at the client, not at the server.
   for JSON export.
 - [HdrHistogram README][hdrhistogram-readme] - coordinated omission
   explanation and `recordValueWithExpectedInterval` correction method.
-- [`k6-load-testing`](../k6-load-testing/SKILL.md) - authoring k6 scripts,
+- `k6-load-testing` - authoring k6 scripts,
   stages, and the basic threshold CI gate. This skill reads the output that
   one produces.

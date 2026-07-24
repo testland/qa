@@ -31,7 +31,7 @@ that path is intentionally out of scope; the coverage here is desktop
 only.
 
 **Strategic frame:** see
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+`desktop-test-strategy-reference`
 for how macOS sits in the three-OS landscape (UIA on Windows, XCTest
 on macOS, AT-SPI on Linux). The locator strategy across all three
 backends converges on accessibility identifiers.
@@ -93,7 +93,7 @@ Lifecycle order ([applewt][applewt]):
 ## Step 3 - Author UI tests with accessibility identifiers
 
 The portable lesson per
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md):
+`desktop-test-strategy-reference`:
 prefer `accessibilityIdentifier` over visible labels. Set the
 identifier in app code:
 
@@ -190,7 +190,7 @@ test code from interactive use:
 Treat recordings as a **starting point** - the generated locator
 chain tends to rely on label paths rather than
 `accessibilityIdentifier`. Refactor to identifier-based queries (per
-the [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+the `desktop-test-strategy-reference`
 locator table) before checking in.
 
 ## Step 7 - Run
@@ -277,7 +277,7 @@ XCTest UI cannot run under launchd alone.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Querying by visible label (`app.buttons["Sign In"]`) | Localisation collapses the locator (Spanish, Japanese builds break) | `accessibilityIdentifier` per Step 3 (per [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)) |
+| Querying by visible label (`app.buttons["Sign In"]`) | Localisation collapses the locator (Spanish, Japanese builds break) | `accessibilityIdentifier` per Step 3 (per `desktop-test-strategy-reference`) |
 | `XCUIApplication().launch()` inside every test method | Per-method app launch is slow + redundant | Launch in `setUp` ([appleuit][appleuit]) |
 | `Thread.sleep(2.0)` between actions | Flaky on slow CI, slow on fast | `waitForExistence(timeout:)` predicate polling (Step 3) |
 | `continueAfterFailure = true` for UI tests | First failure cascades into confusing follow-on failures | `continueAfterFailure = false` per [appleuit][appleuit] |
@@ -290,7 +290,7 @@ XCTest UI cannot run under launchd alone.
 
 - **macOS-only.** Tests run only on macOS hosts; cross-OS suites
   pair with Windows / Linux drivers (per the
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+  `desktop-test-strategy-reference`
   matrix).
 - **Apple modern docs are Cloudflare-gated.** The canonical
   `developer.apple.com/documentation/xctest` SPA shell returns
@@ -310,7 +310,7 @@ XCTest UI cannot run under launchd alone.
   Windows / Linux test sources.
 - **GPU-rendered content** (Metal, CALayer-only views) does not
   publish accessibility children - same caveat as
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - **Sandbox restrictions** for App-Store apps under test prevent
   some test-time file-system writes; use `XCTestObservationCenter`
   for in-process observation rather than out-of-process file diffs.
@@ -326,10 +326,10 @@ XCTest UI cannot run under launchd alone.
   identifiers in the Apple developer documentation; cite by class
   name.
 - Strategic frame:
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - Sibling skills:
-  [`winappdriver`](../winappdriver/SKILL.md) (Windows UIA),
-  [`at-spi-linux`](../at-spi-linux/SKILL.md) (Linux AT-SPI),
-  [`qt-test-framework`](../qt-test-framework/SKILL.md) (Qt in-process).
+  `winappdriver` (Windows UIA),
+  `at-spi-linux` (Linux AT-SPI),
+  `qt-test-framework` (Qt in-process).
 - Downstream:
   `junit-xml-analysis`.

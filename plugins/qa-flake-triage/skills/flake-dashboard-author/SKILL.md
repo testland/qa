@@ -227,7 +227,7 @@ from appearing as 100% flaky. Adjust the minimum run count per your window
 size using the table in Step 1.
 
 Hand quarantine candidates to the
-[`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) skill, which
+`flaky-test-quarantine` skill, which
 enforces the two-week TTL and renewal cap.
 
 ## Step 6 - Wire trend alerting in Grafana
@@ -321,7 +321,7 @@ evaluating on the next 1-minute evaluation cycle.
   `Total Flaky Tests` widget; baseline for the Timeboard formula in Step 4.
 - [Google Testing Blog - flaky tests][gtb-flaky] - industry-engineering
   source for the "flaky test" term used throughout this skill.
-- [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) - downstream
+- `flaky-test-quarantine` - downstream
   consumer of the quarantine-candidate query in Step 5.
-- [`flake-pattern-reference`](../flake-pattern-reference/SKILL.md) - pattern
+- `flake-pattern-reference` - pattern
   catalog used to interpret spikes surfaced by this dashboard.

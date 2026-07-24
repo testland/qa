@@ -27,13 +27,13 @@ produces both reports.
 - The team wants a single tool reporting both perf and a11y.
 - Coverage at the **page level** is sufficient (Lighthouse runs
   against full URLs; for component-level coverage, use
-  [`axe-a11y`](../axe-a11y/SKILL.md) in unit/integration tests).
+  `axe-a11y` in unit/integration tests).
 - The team wants the Lighthouse score-style summary
   (e.g. "Accessibility: 92 / 100") rather than per-rule violation
   counts.
 
 If the project doesn't already use Lighthouse CI, prefer
-[`axe-a11y`](../axe-a11y/SKILL.md) directly - Lighthouse adds a
+`axe-a11y` directly - Lighthouse adds a
 layer.
 
 ## Install
@@ -138,7 +138,7 @@ Lighthouse's accessibility category runs a curated set of axe-core
 rules. The category score (0 - 1) reflects rule pass rate weighted
 by severity. **A score of 1.0 doesn't mean perfect a11y** - manual
 testing per
-[`screen-reader-test-author`](../screen-reader-test-author/SKILL.md)
+`screen-reader-test-author`
 remains essential.
 
 Common per-audit IDs (used in `assertions:`):
@@ -221,17 +221,17 @@ jobs:
 | Asserting only the category score                              | A score of 1.0 hides per-rule details; can't pinpoint regressions. | Assert specific audit IDs in addition to the category score. |
 | Setting `categories:accessibility minScore: 1`                  | Strict; a single moderate-severity rule failure blocks every PR.   | Start with `minScore: 0.95`; tighten over time. |
 | Running only on the homepage                                   | Most a11y bugs live on form-heavy / dynamic pages.                  | Audit a representative URL set. |
-| Disabling the a11y category to "fix later"                      | "Later" never arrives.                                              | Use [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) ratchet pattern. |
-| Treating Lighthouse score as the gold standard                  | Lighthouse covers ~50-60% of WCAG; doesn't catch ARIA misuse, screen-reader issues, keyboard-only flow bugs. | Pair with manual testing + dedicated [`axe-a11y`](../axe-a11y/SKILL.md) component scans. |
+| Disabling the a11y category to "fix later"                      | "Later" never arrives.                                              | Use `a11y-violation-gate` ratchet pattern. |
+| Treating Lighthouse score as the gold standard                  | Lighthouse covers ~50-60% of WCAG; doesn't catch ARIA misuse, screen-reader issues, keyboard-only flow bugs. | Pair with manual testing + dedicated `axe-a11y` component scans. |
 
 ## Limitations
 
 - **Page-level only.** Lighthouse audits whole pages; per-component
-  coverage isn't supported. Use [`axe-a11y`](../axe-a11y/SKILL.md)
+  coverage isn't supported. Use `axe-a11y`
   in unit/integration tests for component-level.
 - **Subset of axe rules.** Lighthouse's accessibility category
   doesn't run every axe rule; for complete axe coverage, use
-  [`axe-a11y`](../axe-a11y/SKILL.md) directly.
+  `axe-a11y` directly.
 - **Throttled environment.** Lighthouse simulates throttled
   network/CPU; some a11y issues only manifest at production
   speeds (rare but real). Confirm with a non-throttled scan if
@@ -243,8 +243,8 @@ jobs:
   configuration shape, assertion levels.
 - `lighthouse-perf` - sibling skill for the Performance / Web Vitals category in
   the same Lighthouse run.
-- [`axe-a11y`](../axe-a11y/SKILL.md) - direct axe-core usage for
+- `axe-a11y` - direct axe-core usage for
   component-level coverage.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
+- `a11y-violation-gate` - CI
   gate consuming Lighthouse a11y output.
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/

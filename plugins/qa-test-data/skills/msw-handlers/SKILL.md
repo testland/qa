@@ -28,9 +28,9 @@ Cypress browser test.
 - The team wants per-test handler overrides (`server.use(...)`)
   layered on top of project-wide defaults.
 
-If the project is JVM, use [`wiremock-stubs`](../wiremock-stubs/SKILL.md).
+If the project is JVM, use `wiremock-stubs`.
 For multi-protocol mocking, see
-[`mountebank-imposters`](../mountebank-imposters/SKILL.md).
+`mountebank-imposters`.
 
 ## Install
 
@@ -212,6 +212,6 @@ service worker script is in `public/`.
 - [msw-getting-started][gs] - install, handler authoring, browser
   vs node setup, lifecycle hooks, `server.use()` per-test overrides.
 - MSW Docs - https://mswjs.io/docs/
-- [`wiremock-stubs`](../wiremock-stubs/SKILL.md) - JVM counterpart.
-- [`mountebank-imposters`](../mountebank-imposters/SKILL.md) - 
+- `wiremock-stubs` - JVM counterpart.
+- `mountebank-imposters` - 
   multi-protocol alternative.

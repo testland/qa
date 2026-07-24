@@ -239,7 +239,7 @@ assert title, "PDF18: Document title required (WCAG 2.1)"
 - [pikepdf objects] - how pikepdf maps PDF scalars to Python types
 - [WCAG PDF1] - applying /Alt text to /Figure structure elements
 - [jq manual] - the `-e` / `--exit-status` flag for CI gating
-- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) - sister
+- `pdf-snapshot-tester` - sister
   skill for visual-regression on the same PDFs
 
 [WCAG 2.1 spec]: https://www.w3.org/TR/WCAG21/

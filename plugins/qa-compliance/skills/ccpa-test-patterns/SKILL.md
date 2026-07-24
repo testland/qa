@@ -25,7 +25,7 @@ violation + $2,500 per non-intentional violation; private right of
 action for data breaches.
 
 This is a **reference skill** - defines the test-pattern
-catalog by Cal. Civ. Code section. Pair with [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md)
+catalog by Cal. Civ. Code section. Pair with `gdpr-test-patterns`
 for international compliance footprint.
 
 ## When to use
@@ -186,6 +186,6 @@ Test patterns above (§1798.121) protect these categories specifically.
 - leginfo.legislature.ca.gov - California Civil Code §1798.100 - .199
 - globalprivacycontrol.org - GPC technical specification
 - iapp.org/resources/article/state-comparison/ - state-law comparison
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) - sister: EU analogue
+- `gdpr-test-patterns` - sister: EU analogue
 - `synthetic-pii-generator` - safe test data generation
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - audit log requirements
+- `audit-trail-test-author` - audit log requirements

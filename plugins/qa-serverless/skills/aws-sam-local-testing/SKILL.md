@@ -151,7 +151,7 @@ jobs:
 |---|---|---|
 | Skip `sam build` between code changes | Stale package; old code runs | `sam build` (or watch mode) |
 | `sam local invoke` for full-suite | Spawn cost per invocation; slow | `sam local start-lambda` once, invoke many |
-| Compare local timing to prod | Docker overhead; cold-start model differs per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md) | Test correctness locally; latency in prod |
+| Compare local timing to prod | Docker overhead; cold-start model differs per `cold-start-budget-reference` | Test correctness locally; latency in prod |
 | No event-payload generation | Hand-rolled events miss fields | `sam local generate-event` |
 | Mock AWS SDK calls locally | Tests pass but prod IAM / endpoints fail | Use LocalStack or test against real low-cost AWS account |
 | Skip API Gateway routing test | Lambda alone passes; API GW integration breaks | `sam local start-api` |
@@ -161,7 +161,7 @@ jobs:
 
 - **Docker overhead.** Cold starts in SAM Local are 5-15s
   (Docker container spin-up); not representative of prod
-  cold-start budgets per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).
+  cold-start budgets per `cold-start-budget-reference`.
 - **Doesn't test IAM.** Local invocations run with your AWS
   CLI credentials, not the Lambda's role.
 - **Doesn't test event-source mapping.** SQS / DynamoDB Streams /
@@ -180,13 +180,13 @@ jobs:
 - `sam local generate-event`:
   [docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html).
 - Companion catalogs:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+  `cold-start-budget-reference`,
+  `lambda-timeout-budget-reference`.
 - Sibling tools:
-  [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
-  [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md),
-  [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md),
-  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md),
-  [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md).
+  `lambda-test-tools-net`,
+  `cloudflare-workers-miniflare`,
+  `vercel-edge-runtime-testing`,
+  `netlify-functions-tests`,
+  `serverless-framework-test-plugin`.
 - Builder:
-  [`serverless-integration-test-builder`](../serverless-integration-test-builder/SKILL.md).
+  `serverless-integration-test-builder`.

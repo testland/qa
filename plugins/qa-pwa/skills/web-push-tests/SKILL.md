@@ -464,7 +464,7 @@ service.
   lifecycle: the four-call subscribe / push-event / change /
   unsubscribe contract per [w3c-push].
 - Sibling skills:
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
+  `pwa-install-flow-reference`
   (notification permission gates parallel to install gates),
-  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md)
+  `service-worker-lifecycle-tests`
   (the SW must be active for push events).

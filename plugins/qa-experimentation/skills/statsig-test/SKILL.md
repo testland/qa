@@ -16,7 +16,7 @@ experiments, dynamic configs.
 
 - Tests for code that reads a Statsig gate / experiment.
 - Verifying assignment integrity per
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+  `ab-test-validity-checklist`
   Step 3.
 - Local-evaluation tests when network access is restricted.
 
@@ -78,7 +78,7 @@ test('user in arm B sees increased font size', async () => {
 
 ### Assignment integrity tests
 
-Per [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+Per `ab-test-validity-checklist`
 Step 3:
 
 ```typescript
@@ -168,10 +168,10 @@ jobs:
 - Statsig SDK reference (per language):
   [docs.statsig.com/server-core/](https://docs.statsig.com/server-core/).
 - Companion catalogs:
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md),
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md).
+  `guardrail-metrics-reference`,
+  `peeking-problem-reference`,
+  `ab-test-validity-checklist`.
 - Sibling SDKs:
-  [`optimizely-test`](../optimizely-test/SKILL.md),
-  [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).
+  `optimizely-test`,
+  `vwo-test`,
+  `amplitude-experiment-test`.

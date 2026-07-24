@@ -23,7 +23,7 @@ validation, not for unauthorized testing of others' systems.
 ## When to use
 
 - Writing negative-test cases for an input validator
-  (per [`negative-test-generator`](../negative-test-generator/SKILL.md)).
+  (per `negative-test-generator`).
 - Authoring a security-focused test suite.
 - Generating inputs for a fuzz target (Schemathesis, RESTler,
   AFL).
@@ -224,7 +224,7 @@ def test_search_does_not_execute_sql(payload):
 |-------------------------------------------------------------|---------------------------------------------------------------------|-----|
 | Treating XSS payloads as "stored examples" without checking response shape | A test that just sends and ignores response misses the actual vulnerability. | Always assert: payload is rejected OR rendered escaped. |
 | Running these against production                             | Even synthetic-looking payloads may trip WAFs / alerts; risk to oncall. | Always against staging / local; document with the security team if production fuzzing is required. |
-| Shipping these payloads in production seed data              | Real users see the strings; possible inadvertent execution.       | Synthetic-PII fixtures (per [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md)) for prod-shape; this catalog only for tests. |
+| Shipping these payloads in production seed data              | Real users see the strings; possible inadvertent execution.       | Synthetic-PII fixtures (per `synthetic-pii-generator`) for prod-shape; this catalog only for tests. |
 | Skipping Unicode confusables                                 | Most-overlooked class; a `аdmin` (Cyrillic а) may bypass an admin-name allowlist. | Include confusables in any test against an identity allowlist. |
 | Hand-rolling new payloads from blogs                         | Stale; misses encoded variants; misses platform-specific cases.  | Maintain this catalog; review against the OWASP Cheat Sheet Series quarterly. |
 
@@ -251,5 +251,5 @@ For each class, the canonical mitigation:
 - [cwe-top-25][cwe] - CWE Top 25 most-dangerous weaknesses.
 - OWASP Cheat Sheet Series - https://cheatsheetseries.owasp.org/
 - Unicode confusables - https://www.unicode.org/Public/security/latest/confusables.txt
-- [`negative-test-generator`](../negative-test-generator/SKILL.md) - sibling skill that generates rejection-path tests; consumes
+- `negative-test-generator` - sibling skill that generates rejection-path tests; consumes
   this catalog as input.

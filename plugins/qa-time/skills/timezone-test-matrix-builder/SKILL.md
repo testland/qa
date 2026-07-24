@@ -36,10 +36,10 @@ Categorise each match:
 
 | Category | Examples | Test needs |
 |---|---|---|
-| **Storage** | DB columns; serialised dates | RFC 3339 round-trip per [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md) |
+| **Storage** | DB columns; serialised dates | RFC 3339 round-trip per `iso-8601-vs-rfc-3339-reference` |
 | **Business logic** | Age calculation; duration; expiry | DST, leap-day, monotonic |
 | **Display** | User-facing dates | Per-user-tz formatting |
-| **Cron / scheduled** | Periodic jobs | DST transition behaviour per [`dst-transition-reference`](../dst-transition-reference/SKILL.md) |
+| **Cron / scheduled** | Periodic jobs | DST transition behaviour per `dst-transition-reference` |
 | **Billing** | Period boundaries | DST + month-end + leap year |
 | **Audit / logging** | Timestamp emission | Monotonic; leap-second tolerance |
 | **External API** | Third-party datetime strings | Tolerant parsing |
@@ -65,7 +65,7 @@ Categorise each match:
 | Year-end rollover | "Tomorrow" on Dec 31 |
 | Month-end | Jan 31 + 1 month = Feb 28 / 29 (per library) |
 | Negative durations | Operations on "5 minutes ago" |
-| Leap second tolerance | Code uses monotonic time per [`leap-second-reference`](../leap-second-reference/SKILL.md) |
+| Leap second tolerance | Code uses monotonic time per `leap-second-reference` |
 
 ### Cron tests
 
@@ -98,12 +98,12 @@ Categorise each match:
 
 | Language | Fake-clock skill |
 |---|---|
-| Python | [`freezegun-python`](../freezegun-python/SKILL.md) |
-| JS (general) | [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md) |
-| JS (Jest) | [`jest-fake-timers`](../jest-fake-timers/SKILL.md) |
-| Ruby | [`timecop-ruby`](../timecop-ruby/SKILL.md) |
-| JVM (Java / Kotlin) | [`mockclock-jvm`](../mockclock-jvm/SKILL.md) |
-| C / native binary | [`libfaketime-c`](../libfaketime-c/SKILL.md) |
+| Python | `freezegun-python` |
+| JS (general) | `sinon-fake-timers-js` |
+| JS (Jest) | `jest-fake-timers` |
+| Ruby | `timecop-ruby` |
+| JVM (Java / Kotlin) | `mockclock-jvm` |
+| C / native binary | `libfaketime-c` |
 
 ## Step 4 - Build the matrix
 
@@ -214,15 +214,15 @@ This skill produces:
 - IANA Time Zone Database:
   [www.iana.org/time-zones](https://www.iana.org/time-zones).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`leap-second-reference`](../leap-second-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `dst-transition-reference`,
+  `leap-second-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Per-language harnesses:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md).
+  `libfaketime-c`,
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `freezegun-python`,
+  `timecop-ruby`,
+  `mockclock-jvm`.
 - Cross-plugin (cron):
   `cron-job-test-author` (qa-async-jobs).

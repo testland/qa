@@ -17,7 +17,7 @@ Per [github.com/mailhog/MailHog][mh-gh]:
 > API."
 
 MailHog is **legacy** as of the mid-2020s - Mailpit (per
-[`mailpit-testing`](../mailpit-testing/SKILL.md)) succeeded it with
+`mailpit-testing`) succeeded it with
 richer API + active maintenance. This skill covers MailHog for
 existing deployments + provides migration guidance to Mailpit.
 
@@ -30,7 +30,7 @@ existing deployments + provides migration guidance to Mailpit.
 - Tests already wired against MailHog's APIv2 + the team needs to
   document what the tests do before migration.
 
-For new projects, use [`mailpit-testing`](../mailpit-testing/SKILL.md).
+For new projects, use `mailpit-testing`.
 
 ## Step 1 - Install
 
@@ -118,7 +118,7 @@ Configuration flags are documented in `mailhog -h`; the README
 references "Introduction to Jim" for details.
 
 For new test work needing chaos, prefer Mailpit's Chaos mode
-(per [`mailpit-testing`](../mailpit-testing/SKILL.md) Step 5) - it
+(per `mailpit-testing` Step 5) - it
 has richer per-recipient configuration.
 
 ## Step 6 - CI integration
@@ -177,8 +177,8 @@ Migration steps:
 
 - [mh-gh][mh-gh] - repository
 - mailhog/MailHog APIv2 docs - github.com/mailhog/MailHog/blob/master/docs/APIv2.md
-- [`mailpit-testing`](../mailpit-testing/SKILL.md) - successor;
+- `mailpit-testing` - successor;
   preferred for new projects
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) - 
+- `email-flow-test-author` - 
   build-an-X for the full email-sending workflow (works with either
   Mailpit or MailHog)

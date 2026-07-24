@@ -192,15 +192,15 @@ installed alongside this one; nothing here depends on them.
 
 | Tool | Deeper reference |
 |---|---|
-| Playwright | [`playwright-testing`](../playwright-testing/SKILL.md) |
-| Cypress | [`cypress-testing`](../cypress-testing/SKILL.md) |
-| Selenium WebDriver | [`selenium-testing`](../selenium-testing/SKILL.md) |
-| WebdriverIO | [`webdriverio-testing`](../webdriverio-testing/SKILL.md) |
-| Puppeteer | [`puppeteer-testing`](../puppeteer-testing/SKILL.md) |
-| TestCafe | [`testcafe-testing`](../testcafe-testing/SKILL.md) |
-| BrowserStack | [`browserstack-automate`](../browserstack-automate/SKILL.md) |
-| Sauce Labs | [`saucelabs-automate`](../saucelabs-automate/SKILL.md) |
-| LambdaTest | [`lambdatest-automate`](../lambdatest-automate/SKILL.md) |
+| Playwright | `playwright-testing` |
+| Cypress | `cypress-testing` |
+| Selenium WebDriver | `selenium-testing` |
+| WebdriverIO | `webdriverio-testing` |
+| Puppeteer | `puppeteer-testing` |
+| TestCafe | `testcafe-testing` |
+| BrowserStack | `browserstack-automate` |
+| Sauce Labs | `saucelabs-automate` |
+| LambdaTest | `lambdatest-automate` |
 
 [pwi]: https://playwright.dev/docs/intro
 [pwbp]: https://playwright.dev/docs/best-practices

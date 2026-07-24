@@ -24,8 +24,8 @@ headless for CI.
   pattern is straightforward.
 
 If the team isn't on Python and just needs HTTP perf testing,
-[`k6-load-testing`](../k6-load-testing/SKILL.md) is lower-friction.
-For JVM, prefer [`gatling-load-testing`](../gatling-load-testing/SKILL.md).
+`k6-load-testing` is lower-friction.
+For JVM, prefer `gatling-load-testing`.
 
 ## Install
 
@@ -262,7 +262,7 @@ the post-run check.
   high-concurrency-per-VU patterns, use `FastHttpUser` (async) - 
   faster per request but slightly different semantics.
 - **No native browser execution.** Locust is HTTP-only; for Web Vitals
-  perf testing use [`lighthouse-perf`](../lighthouse-perf/SKILL.md).
+  perf testing use `lighthouse-perf`.
 - **Python-only authoring.** Same constraint applies as for
   `tavern-testing` (in the qa-api-testing plugin): Python team or bust.
 
@@ -270,9 +270,9 @@ the post-run check.
 
 - [locust-quickstart][quickstart] - canonical install, locustfile
   structure, headless flags, distributed mode.
-- [`k6-load-testing`](../k6-load-testing/SKILL.md),
-  [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md),
-  [`gatling-load-testing`](../gatling-load-testing/SKILL.md) - 
+- `k6-load-testing`,
+  `jmeter-load-testing`,
+  `gatling-load-testing` - 
   alternatives by stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
+- `perf-budget-gate` - downstream
   gate that consumes Locust's CSV output for unified verdicts.

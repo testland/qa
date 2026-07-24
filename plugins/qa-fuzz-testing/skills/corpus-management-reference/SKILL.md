@@ -290,13 +290,13 @@ across runs:
 - cargo-fuzz - [github.com/rust-fuzz/cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz).
 - OSS-Fuzz - [google.github.io/oss-fuzz](https://google.github.io/oss-fuzz/).
 - Sibling references:
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
+  `sanitiser-integration-reference`.
 - Consumed by:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md),
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `go-native-fuzzing`,
+  `cargo-fuzz-rust`,
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `ossfuzz-integration`,
+  `fuzz-tool-selector`.

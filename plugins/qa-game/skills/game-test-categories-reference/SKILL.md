@@ -25,14 +25,14 @@ six buckets with minor wording differences.
 This skill is the **pure-reference taxonomy** consumed by:
 
 - the engine-specific skills
-  ([`unity-test-framework`](../unity-test-framework/SKILL.md),
-  [`unreal-automation-system`](../unreal-automation-system/SKILL.md),
-  [`godot-gut-tests`](../godot-gut-tests/SKILL.md)),
+  (`unity-test-framework`,
+  `unreal-automation-system`,
+  `godot-gut-tests`),
 - the builders
-  ([`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md),
-  [`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md)),
+  (`multiplayer-state-machine-coverage`,
+  `gameplay-recording-replay`),
 - and the platform submission reference
-  ([`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)),
+  (`platform-cert-overview-reference`),
   which maps each category onto the four platform holders.
 
 ## When to use
@@ -58,7 +58,7 @@ This skill is the **pure-reference taxonomy** consumed by:
 | 6 | **Accessibility** | Does the title meet the accessibility guidelines the platform requires or recommends (Microsoft XAG, AbleGamers, CVAA where applicable)? | Accessibility QA + design |
 
 These six categories are referenced throughout
-[`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
+`platform-cert-overview-reference`
 when describing each platform's submission gates.
 
 ## Category detail
@@ -83,11 +83,11 @@ specification.
   triggers, anti-grief.
 
 **Typical tooling.** Engine-native test framework
-([`unity-test-framework`](../unity-test-framework/SKILL.md),
-[`unreal-automation-system`](../unreal-automation-system/SKILL.md),
-[`godot-gut-tests`](../godot-gut-tests/SKILL.md)) for unit + play-mode
+(`unity-test-framework`,
+`unreal-automation-system`,
+`godot-gut-tests`) for unit + play-mode
 tests; recorded-input replay (per
-[`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md))
+`gameplay-recording-replay`)
 for scripted scenario coverage.
 
 **Where it shows up in cert.** Microsoft's
@@ -130,7 +130,7 @@ Sony TRC and Nintendo Lotcheck use comparable severity tiers
 internally (NDA - cite by stable ID).
 
 **See also.**
-[`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
+`platform-cert-overview-reference`
 for the submission workflow per platform.
 
 ### 3. Compatibility
@@ -256,7 +256,7 @@ multiplayer-specific test surface is:
 
 - **State-machine correctness** under packet loss / latency /
   disconnect - see
-  [`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md).
+  `multiplayer-state-machine-coverage`.
 - **Matchmaking + session lifecycle** - joins, drop-ins, host
   migration.
 - **Anti-cheat compatibility** with platform integrity systems
@@ -307,7 +307,7 @@ urgency:
 | Performance averaged over the level | Spikes cause CFRs; averages hide them | Frame-time histograms, p99, sustained-window measurements |
 | Localization screenshot review | Misses runtime overflow, missing VO, lip-sync drift | Playthrough every locale; not a glanced screenshot |
 | Accessibility as a launch checklist | Architectural changes (rebindable input) can't be retrofitted | XAG scoping questions at design milestone, not at submission |
-| Multiplayer tested only in low-latency LAN | Drops, NAT, host migration fail in the wild | Inject loss / jitter; see [`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md) |
+| Multiplayer tested only in low-latency LAN | Drops, NAT, host migration fail in the wild | Inject loss / jitter; see `multiplayer-state-machine-coverage` |
 
 ## Limitations
 

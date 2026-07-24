@@ -13,14 +13,14 @@ Anchored rubrics outperform free-form scoring because the **anchor descriptions*
 
 ## When to use
 
-- The team has authored a question bank via [`interview-question-author`](../interview-question-author/SKILL.md) and needs the matching rubric.
+- The team has authored a question bank via `interview-question-author` and needs the matching rubric.
 - An existing rubric is being recalibrated after a hiring round (the team's gold-standard answers have shifted as the role evolved).
 - A team is adding a new competency dimension to an existing loop (e.g., adding "test data engineering" to an existing automation rubric).
 
 Do **not** use this skill to:
 
-- Author the questions - that is [`interview-question-author`](../interview-question-author/SKILL.md).
-- Author the gold-standard model answers and common pitfalls - that is [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md). The rubric scores; the calibration guide demonstrates.
+- Author the questions - that is `interview-question-author`.
+- Author the gold-standard model answers and common pitfalls - that is `interviewer-calibration-guide-author`. The rubric scores; the calibration guide demonstrates.
 - Score generic engineering / non-QA roles. The competency model is QA-specific.
 
 ## Step 1 - Capture the inputs
@@ -30,7 +30,7 @@ Required:
 | Input | Notes |
 |---|---|
 | **Role + seniority** | Same as the upstream question bank - manual QA / SDET / automation / test lead / quality manager × junior / mid / senior / staff+ |
-| **Question bank** | The output of [`interview-question-author`](../interview-question-author/SKILL.md). Each question's competency tag drives the rubric's competency-by-question matrix. |
+| **Question bank** | The output of `interview-question-author`. Each question's competency tag drives the rubric's competency-by-question matrix. |
 | **Team's competency model** | Optional. If absent, defaults to the ISTQB-aligned default model in Step 2. |
 
 If a question bank is not available (e.g., an ad-hoc loop, or an existing interview set that was never written down), the rubric defaults to authoring one anchor set per competency dimension rather than per (competency × question) cell, marks itself **provisional** in the header, and flags this assumption explicitly in the output. A provisional rubric must be re-run against the bank once it exists - competency-general anchors drift from the questions actually asked, which is the failure the Step 1 requirement exists to prevent.
@@ -152,8 +152,8 @@ The output is a single markdown document with:
 
 ## Hand-off targets
 
-- **Calibrate interviewers (gold-standard answers, common pitfalls)** → [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
-- **Author the question bank (upstream)** → [`interview-question-author`](../interview-question-author/SKILL.md).
+- **Calibrate interviewers (gold-standard answers, common pitfalls)** → `interviewer-calibration-guide-author`.
+- **Author the question bank (upstream)** → `interview-question-author`.
 - **Compliance review of the rubric** → team's legal / HR review.
 
 ## References
@@ -164,4 +164,4 @@ The output is a single markdown document with:
 - STAR behavioral interviewing method - Situation / Task / Action / Result framework, used in the behavioural-question anchors: https://en.wikipedia.org/wiki/Situation,_task,_action,_result
 - Bloom's taxonomy - K1 - K4 cognitive levels used to align the rubric's anchor depth with the question's intended difficulty: https://en.wikipedia.org/wiki/Bloom%27s_taxonomy
 - PractiTest 2026 State of Testing Report - hiring rubric authoring named as a high-adoption, low-risk AI use case for QA managers: https://www.practitest.com/state-of-testing/
-- [`interview-question-author`](../interview-question-author/SKILL.md), [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md) - sibling skills that complete the structured-interview triple.
+- `interview-question-author`, `interviewer-calibration-guide-author` - sibling skills that complete the structured-interview triple.

@@ -236,5 +236,5 @@ The skill emits the matching format; per
 - WebAIM Screen Reader Survey - https://webaim.org/projects/screenreadersurvey/
 - NVDA documentation - https://www.nvaccess.org/files/nvda/documentation/userGuide.html
 - VoiceOver Getting Started - https://www.apple.com/accessibility/mac/vision/ + Apple developer docs
-- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md),
-  [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md) - patterns this skill references for the "Why" column.
+- `wcag-keyboard-navigation`,
+  `aria-authoring-patterns` - patterns this skill references for the "Why" column.

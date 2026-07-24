@@ -300,7 +300,7 @@ const producer = kafka.producer({ idempotent: true });
 This is sufficient to prevent duplicate records from network-level
 retries. It does not deduplicate across producer restarts - use
 the transactional API (Step 5) or application-level idempotency
-(see [`idempotency-test-author`](../idempotency-test-author/SKILL.md))
+(see `idempotency-test-author`)
 for cross-restart deduplication.
 
 ## Step 7 - Dead-letter topic (DLT)
@@ -495,8 +495,8 @@ For Java, replace the Node steps with `actions/setup-java` and
 - [docs.spring.io/spring-kafka/reference/testing.html][sk-test] -
   `@EmbeddedKafka`, `KafkaTestUtils`, `MockConsumer`, `MockProducer`,
   Spring Kafka 4.x / KRaft broker
-- [`sqs-tests`](../sqs-tests/SKILL.md),
-  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md),
-  [`bullmq-tests`](../bullmq-tests/SKILL.md) - sibling broker skills
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) -
+- `sqs-tests`,
+  `rabbitmq-tests`,
+  `bullmq-tests` - sibling broker skills
+- `idempotency-test-author` -
   application-level idempotency patterns (complements Step 6)

@@ -186,7 +186,7 @@ something wrong with me."
 
 ## Tests should assert these codes
 
-In client tests (per [`grpcurl-cli`](../grpcurl-cli/SKILL.md) and
+In client tests (per `grpcurl-cli` and
 language-specific clients):
 
 ```python
@@ -272,8 +272,8 @@ Tests should assert on detail messages where richer signal exists.
 - grpc-gateway HTTP mapping source:
   [github.com/grpc-ecosystem/grpc-gateway/blob/main/runtime/errors.go](https://github.com/grpc-ecosystem/grpc-gateway/blob/main/runtime/errors.go).
 - Consumed by:
-  [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md),
-  [`ghz-load`](../ghz-load/SKILL.md),
-  [`grpcurl-cli`](../grpcurl-cli/SKILL.md),
-  [`grpc-mock`](../grpc-mock/SKILL.md),
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `buf-cli-lint-breaking-build`,
+  `ghz-load`,
+  `grpcurl-cli`,
+  `grpc-mock`,
+  `grpc-streaming-test-author`.

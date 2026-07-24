@@ -34,7 +34,7 @@ criteria in two interchangeable shapes:
   acceptance-criteria template.
 
 If the input is a **non-functional** requirement (perf / a11y /
-security / i18n), use [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md)
+security / i18n), use `non-functional-requirement-extractor`
 instead - those have a different shape (thresholds, not Given/When/Then).
 
 ## Step 1 - Identify the actor and the trigger
@@ -317,5 +317,5 @@ Feature: Login authorization
   of acceptance criteria.
 - [gherkin-ref][gherkin] - Cucumber Gherkin reference: keywords,
   Feature structure, Scenario Outline + Examples, Background rules.
-- [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md) - sibling for
+- `non-functional-requirement-extractor` - sibling for
   non-functional requirements (different shape).

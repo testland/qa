@@ -270,7 +270,7 @@ recommended for CI (requires nightly toolchain).
 - No mocking library in stdlib - `mockall` is the community standard
   for trait mocking.
 - No parametrize beyond hand-rolled loops or `rstest` (see
-  [`rstest-tests`](../rstest-tests/SKILL.md)).
+  `rstest-tests`).
 
 ## References
 
@@ -278,8 +278,8 @@ recommended for CI (requires nightly toolchain).
 - doc.rust-lang.org/cargo/commands/cargo-test.html - `cargo test` reference
 - bheisler.github.io/criterion.rs - Criterion docs
 - crates.io/crates/cargo-llvm-cov - coverage tool
-- [`go-test`](../go-test/SKILL.md),
-  [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
-  [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
+- `go-test`,
+  `ginkgo-tests`,
+  `rstest-tests` - sister tools
 - `proptest-testing` (qa-property-based) - Rust property-based
 - `test-code-conventions` (qa-test-review)

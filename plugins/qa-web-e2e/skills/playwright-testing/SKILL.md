@@ -24,7 +24,7 @@ Per [pw-intro][pwi]:
 - Cross-browser coverage matters (see `browser-matrix-runner` in the
   qa-compatibility plugin) - Playwright's three-engine support is the differentiator.
 - Migration from Selenium / WebDriver-based stacks (see
-  [`selenium-testing`](../selenium-testing/SKILL.md)).
+  `selenium-testing`).
 
 ## Step 1 - Scaffold
 

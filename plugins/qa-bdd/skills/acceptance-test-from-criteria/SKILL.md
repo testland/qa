@@ -31,7 +31,7 @@ test is the executable formalization.
 - The team wants AC-to-test traceability for compliance / audit.
 
 For Gherkin generation from prose stories, see
-[`gherkin-from-stories`](../gherkin-from-stories/SKILL.md). For
+`gherkin-from-stories`. For
 upstream AC extraction, see
 `acceptance-criteria-extractor` (in the qa-shift-left plugin).
 
@@ -231,19 +231,19 @@ dotnet test --filter "Category=AC-1.1|Category=AC-1.2|..."
   without explicit AC artifacts.
 - **AC quality drives test quality.** Vague AC → vague test (or
   many implicit-precondition flags per
-  [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md) Step 5).
+  `gherkin-from-stories` Step 5).
 - **Doesn't replace lower-layer tests.** ATDD covers the AC layer;
   unit / integration coverage still needed for non-AC logic.
 
 ## References
 
 - `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream: emits the AC this skill consumes.
-- [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md) - 
+- `gherkin-from-stories` - 
   sibling: story-first variant.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - step library this skill draws from + adds to.
-- [`cucumber-testing`](../cucumber-testing/SKILL.md),
-  [`behave-testing`](../behave-testing/SKILL.md),
-  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - runners.
+- `bdd-step-library-curator` - step library this skill draws from + adds to.
+- `cucumber-testing`,
+  `behave-testing`,
+  `reqnroll-testing` - runners.
 - `definition-of-done` (in the qa-process plugin) - DoD that requires AC tests to pass.
 - ISTQB Glossary V4.7.1 - `https://glossary.istqb.org/en_US/term/acceptance-test-driven-development`
   defines ATDD as "a collaboration-based test-first approach."

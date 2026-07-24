@@ -20,7 +20,7 @@ Spock is a Groovy-based JVM test framework. Distinguishing properties:
 - **Interaction-based testing**: verify method-call sequences in
   the then: block declaratively
 
-For Kotlin-only projects, [`kotest-tests`](../kotest-tests/SKILL.md)
+For Kotlin-only projects, `kotest-tests`
 covers similar BDD territory natively. Spock's Groovy syntax is the
 strongest argument; modern JVM projects often prefer Kotlin DSLs.
 
@@ -232,8 +232,8 @@ Same as JUnit (Spock runs on JUnit Platform):
 
 - [sp-docs][sp-docs] - Spock documentation
 - spockframework.org - landing
-- [`junit5-tests`](../junit5-tests/SKILL.md),
-  [`kotest-tests`](../kotest-tests/SKILL.md),
-  [`testng-tests`](../testng-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) - sister tools
+- `junit5-tests`,
+  `kotest-tests`,
+  `testng-tests`,
+  `scalatest` - sister tools
 - `test-code-conventions`

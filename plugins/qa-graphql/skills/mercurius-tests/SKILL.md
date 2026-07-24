@@ -100,7 +100,7 @@ npm test
 ### Production-config tests
 
 Per
-[`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md):
+`introspection-attack-surface-reference`:
 
 ```typescript
 test('graphiql disabled in production config', async () => {
@@ -212,7 +212,7 @@ for those cases.
 | Skipping `await app.close()` | Fastify keep-alive timers leak; CI hangs | Always close |
 | `app.inject` with `body` field | Should be `payload`; Fastify ignores `body` here | Use `payload` |
 | Asserting on `response.payload` for non-JSON content | Buffer / stream responses need different handling | Inspect `headers['content-type']` first |
-| No depth / complexity validation | Mercurius doesn't add these by default | Add `validationRules` per [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md) |
+| No depth / complexity validation | Mercurius doesn't add these by default | Add `validationRules` per `introspection-attack-surface-reference` |
 | Testing on real listening port | Slower; flaky parallel CI | `app.inject` is purpose-built |
 | Mocking the schema instead of using it | Tests pass against a fake schema, not the real one | Always test the real schema |
 
@@ -239,9 +239,9 @@ for those cases.
 - Fastify inject (Light My Request):
   [fastify.dev/docs/latest/Guides/Testing/](https://fastify.dev/docs/latest/Guides/Testing/).
 - Companion catalog:
-  [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md).
+  `introspection-attack-surface-reference`.
 - Sibling frameworks:
-  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
-  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
-  [`hasura-tests`](../hasura-tests/SKILL.md),
-  [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
+  `apollo-server-tests`,
+  `graphql-yoga-tests`,
+  `hasura-tests`,
+  `pothos-builder-tests`.

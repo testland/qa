@@ -16,7 +16,7 @@ Per docs.getxray.app/display/XRAYCLOUD/REST+API (Cloudflare-
 protected; cite by stable URL).
 
 For canonical anatomy this skill operates on, see
-[`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+`test-case-anatomy-reference`.
 
 ## When to use
 
@@ -283,12 +283,12 @@ Sync Cucumber `.feature` files on every PR merge:
 - Xray Cloud Authentication - 
   docs.getxray.app/display/XRAYCLOUD/Authentication+-+REST.
 - Sibling references:
-  [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+  `test-case-anatomy-reference`.
 - Sibling skills:
-  [`testrail-case-management`](../testrail-case-management/SKILL.md),
-  [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
-  [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
-  [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
+  `testrail-case-management`,
+  `zephyr-scale-case-management`,
+  `allure-testops-case-management`,
+  `qase-io-case-management`.
 - Sibling-plugin neighbour:
   `xray-integration` (in the qa-test-reporting plugin) - different scope (result sync).
 - Composes with `qa-bdd` when importing

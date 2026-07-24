@@ -249,12 +249,12 @@ jobs:
 - Hasura metadata API:
   [hasura.io/docs/2.0/api-reference/metadata-api/index/](https://hasura.io/docs/2.0/api-reference/metadata-api/index/).
 - Introspection control:
-  [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md).
+  `introspection-attack-surface-reference`.
 - Cross-plugin (tenant isolation):
   `cross-tenant-data-leak-tests`,
   `row-level-security-postgres-reference`.
 - Sibling frameworks:
-  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
-  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
-  [`mercurius-tests`](../mercurius-tests/SKILL.md),
-  [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
+  `apollo-server-tests`,
+  `graphql-yoga-tests`,
+  `mercurius-tests`,
+  `pothos-builder-tests`.

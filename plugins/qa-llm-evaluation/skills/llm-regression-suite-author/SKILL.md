@@ -372,5 +372,5 @@ returns a non-zero exit code when any `assert_test()` call fails
 - [de-gh][de-gh] - DeepEval install, quickstart, metric list, CI exit codes
 - [de-start][de-start] - DeepEval getting started, `GEval` threshold semantics
 - [de-datasets][de-datasets] - `EvaluationDataset` load methods (CSV/JSONL/JSON/pull)
-- [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md) - promptfoo tool mechanics
-- [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) - DeepEval tool mechanics
+- `promptfoo-evaluation` - promptfoo tool mechanics
+- `deepeval-evaluation` - DeepEval tool mechanics

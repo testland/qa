@@ -15,7 +15,7 @@ standalone Ruby gem that scans `Gemfile.lock` against the
 [ruby-advisory-db][ruby-advisory-db]: a community-maintained YAML corpus
 of CVE, GHSA, and OSVDB advisories for RubyGems and Ruby runtimes.
 
-Differentiation vs. [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md):
+Differentiation vs. `npm-pip-maven-audit`:
 that skill treats `bundle audit` (the Bundler subcommand) as one line in a
 multi-ecosystem dispatcher; this skill covers the full bundler-audit workflow:
 advisory-db lifecycle, per-project suppression with justification, Rake task
@@ -29,7 +29,7 @@ integration, and JSON output for downstream tooling.
 - Team needs per-project advisory suppression with auditable justification
   in source control.
 - Layering SCA: run bundler-audit for the Ruby-specific feed, pair with
-  [`osv-scanner`](../osv-scanner/SKILL.md) for OSV.dev cross-DB consensus.
+  `osv-scanner` for OSV.dev cross-DB consensus.
 
 ## Step 1 - Install
 
@@ -202,7 +202,7 @@ audit step fails, enabling triage without re-running the workflow.
 | `--ignore` flags hardcoded in CI YAML | Not auditable in git; no justification attached | Move to `.bundler-audit.yml` with inline comments |
 | Scan with no `Gemfile.lock` committed | bundler-audit reads only the lockfile; no lockfile means no scan | Commit `Gemfile.lock`; failing to do so is an anti-pattern per [ba-readme][ba-readme] |
 | Suppress an advisory indefinitely | No expiry signal; suppressions rot silently | Add re-review date in comment; enforce via quarterly review |
-| Run bundler-audit only; skip cross-DB scanner | ruby-advisory-db covers Ruby ecosystem; OSV.dev may surface additional findings | Pair with [`osv-scanner`](../osv-scanner/SKILL.md) for cross-DB coverage |
+| Run bundler-audit only; skip cross-DB scanner | ruby-advisory-db covers Ruby ecosystem; OSV.dev may surface additional findings | Pair with `osv-scanner` for cross-DB coverage |
 
 ## Limitations
 
@@ -222,8 +222,8 @@ audit step fails, enabling triage without re-running the workflow.
   config, Rake integration, exit codes
 - [github.com/rubysec/ruby-advisory-db][ruby-advisory-db] - advisory corpus
   structure (gems/ + rubies/ YAML files), CVE/GHSA/OSVDB coverage
-- [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - multi-ecosystem
+- `npm-pip-maven-audit` - multi-ecosystem
   native audit dispatcher; covers `bundle audit` as one ecosystem among many
-- [`osv-scanner`](../osv-scanner/SKILL.md) - OSV.dev cross-DB scanner;
+- `osv-scanner` - OSV.dev cross-DB scanner;
   pairs for cross-ecosystem consensus
-- [`snyk-test`](../snyk-test/SKILL.md) - commercial SCA with Snyk DB
+- `snyk-test` - commercial SCA with Snyk DB

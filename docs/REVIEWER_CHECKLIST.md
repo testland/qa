@@ -125,7 +125,7 @@ Score: __/5
       Blog, Pact docs, etc.) - never to ISTQB
 - [ ] Tool-specific claims (commands, flags, config fields) grounded in
       fetched canonical source
-- [ ] Source URL cited inline at point of claim, not as a "References:" appendix
+- [ ] Every fact's source is present (inline or in a checked References/Sources section); inline preferred only for surprising/critical facts
 - [ ] Reviewer spot-checks 2-3 claims against the cited URL - no contradiction
 
 Score: __/5 - **0 = hard reject regardless of total**
@@ -148,7 +148,7 @@ If you see any of these, request changes (don't merge):
 
 - Generic best-practices prose not grounded in any cited source
 - Tool commands reproduced from training data that drift vs. current docs
-- `References:` list at bottom without inline citations
+- Facts with no canonical source anywhere - neither inline nor in a References section
 - Agent body > 80 lines (move details to a preloaded skill)
 - Skill body without progressive disclosure (everything inline)
 - Description that is a marketing tagline rather than a behavioral spec

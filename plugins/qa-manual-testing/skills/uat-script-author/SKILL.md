@@ -42,7 +42,7 @@ This skill emits those scripts.
   is what we wanted" before old system shutdown.
 
 If the test is technical (verify HTTP 200, validate schema), see
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md) - that's the developer-facing format.
+`manual-test-script-author` - that's the developer-facing format.
 
 ## Step 1 - Identify the user journey
 
@@ -205,5 +205,5 @@ go-live authorization, vendor approval).
   it (end user / SME / solution owner), purpose (sign-off as
   contractual artifact), format (user journeys, not technical
   click-steps), three-most-common-or-difficult-tasks rule.
-- [`manual-test-script-author`](../manual-test-script-author/SKILL.md) - sibling: developer-facing format.
+- `manual-test-script-author` - sibling: developer-facing format.
 - `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream: emits the ACs this skill turns into UAT scripts.

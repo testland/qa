@@ -152,7 +152,7 @@ Per [tfsec-home][tfs]:
 > DigitalOcean, and CloudStack environments."
 
 For unsupported clouds, fall back to OPA / Conftest with custom
-Rego per [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md).
+Rego per `policy-as-code-runner`.
 
 ## Step 8 - Migration to Trivy
 
@@ -209,8 +209,8 @@ kics scan -p . --report-formats json
   developer-friendly output, AWS / Azure / GCP / Kubernetes /
   OpenStack / Oracle / DigitalOcean / CloudStack support, JSON /
   SARIF output.
-- [`checkov-policy`](../checkov-policy/SKILL.md),
-  [`kics-policy`](../kics-policy/SKILL.md) - sister scanners.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
+- `checkov-policy`,
+  `kics-policy` - sister scanners.
+- `policy-as-code-runner` - 
   custom OPA / Rego policies (for unsupported clouds or custom
   rules).

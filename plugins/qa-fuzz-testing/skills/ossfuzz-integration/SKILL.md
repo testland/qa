@@ -15,9 +15,9 @@ MSan), auto-files bug reports with crash reproducers, and tracks
 fix status with a 90-day disclosure SLA.
 
 For corpus discipline see
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md);
+`corpus-management-reference`;
 for sanitiser pairing see
-[`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
+`sanitiser-integration-reference`.
 
 ## When to use
 
@@ -238,14 +238,14 @@ for downstream bug-tracker filing.
   [google.github.io/clusterfuzz](https://google.github.io/clusterfuzz/).
 - Monorail (issue tracker) - issues.oss-fuzz.com.
 - Composes:
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md),
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
+  `corpus-management-reference`,
+  `sanitiser-integration-reference`.
 - Sibling fuzzers:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `cargo-fuzz-rust`,
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `go-native-fuzzing`.
 - Dispatcher:
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `fuzz-tool-selector`.

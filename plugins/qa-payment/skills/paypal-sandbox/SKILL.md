@@ -191,9 +191,9 @@ jobs:
 - Webhook signature verification:
   [developer.paypal.com/api/rest/webhooks/rest](https://developer.paypal.com/api/rest/webhooks/rest/).
 - Companion catalogs:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
-  [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).
+  `payment-flow-states-reference`,
+  `pci-dss-scope-reference`.
 - Sibling SDKs:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `braintree-test-cards`.

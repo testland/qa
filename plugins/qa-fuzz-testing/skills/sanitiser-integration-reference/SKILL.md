@@ -12,7 +12,7 @@ MSan, TSan, LSan) used with coverage-guided fuzz targets - what
 each detects, build flags, runtime options, compatibility matrix,
 performance overhead. Consumed by the per-language fuzzer skills
 and fuzz-target authoring. For corpus discipline see
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+`corpus-management-reference`.
 
 ## When to use
 
@@ -162,7 +162,7 @@ READ of size 4 at 0x7f... thread T0
     #0 0x4015a3 in process_input src/parser.c:42:5
     #1 0x4012f0 in LLVMFuzzerTestOneInput fuzz_target.cc:10:3
     ...
-0x7f... is located 0 bytes to the right of 16-byte region [0x7f..., 0x7f...)
+0x7f... is located 0 bytes to the right of 16-byte region 0x7f..., 0x7f...)
 allocated by thread T0 here:
     #0 0x40e7c0 in __interceptor_malloc
     #1 0x4015a3 in process_input src/parser.c:39:9
@@ -191,7 +191,7 @@ to extract the failure assertion.
 
 Java / Kotlin (Jazzer) uses **JVM-level sanitisers** (sanitisers
 for unsafe-API misuse, deserialisation gadgets, ReDoS) rather than
-clang's; see [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md).
+clang's; see [`jazzer-jvm-fuzzing`.
 
 Python (Atheris) uses **per-module instrumentation** + the host
 process's libFuzzer; you can attach ASan to the Python interpreter
@@ -236,11 +236,11 @@ itself.
 - LLVM libFuzzer - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
 - Sibling references:
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+  `corpus-management-reference`.
 - Consumed by:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `cargo-fuzz-rust`,
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `ossfuzz-integration`.

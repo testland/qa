@@ -22,19 +22,19 @@ stub is the bridge.
 This skill wraps GoogleTest for embedded C++ work. Composes
 with:
 
-- [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md)
+- `embedded-coverage-strategy-reference`
   for gcov / llvm-cov instrumentation.
-- [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md)
+- `qemu-system-test-runner`
   for running the binary on a virtual Cortex-M / Cortex-A.
 - For pure-C suites, prefer
-  [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md);
+  `unity-test-framework-c`;
   for mock-heavy suites prefer the Ceedling stack via
-  [`cmock-reference`](../cmock-reference/SKILL.md).
+  `cmock-reference`.
 
 ## When to use
 
 - Unit-under-test is **C++** (not C). For C, use
-  [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md).
+  `unity-test-framework-c`.
 - Target is **Cortex-A running Linux** or **Cortex-M with semihosting** - anything with enough RAM for the gtest binary (~300 KB stripped).
 - Team wants the **de-facto C++ framework** with rich matchers
   (GoogleMock, value-parameterised tests, typed tests).
@@ -208,7 +208,7 @@ For Cortex-A Linux targets, use the standard
 
 | Invariant | Why |
 |---|---|
-| `-O0 -g` for coverage builds | gcov / llvm-cov measure post-optimisation flow; see [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md) |
+| `-O0 -g` for coverage builds | gcov / llvm-cov measure post-optimisation flow; see `embedded-coverage-strategy-reference` |
 | `-Wno-psabi` on ARM | Suppresses noisy ABI warnings on cross-compile |
 | `-fno-exceptions -fno-rtti` if MCU build does | Match the production firmware's flags so virtual dispatch matches |
 | Link with `-Wl,--gc-sections` + compile with `-ffunction-sections -fdata-sections` | Keeps the .elf small enough for low-RAM Cortex-M0 simulation |
@@ -226,7 +226,7 @@ For Cortex-A Linux targets, use the standard
 
 ### Under QEMU
 
-Detailed in [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md):
+Detailed in `qemu-system-test-runner`:
 
 ```bash
 qemu-system-arm -M mps2-an385 -cpu cortex-m3 \
@@ -348,7 +348,7 @@ the gtest return value through QEMU).
 ## Limitations
 
 - **C++ only.** For pure C suites use
-  [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md).
+  `unity-test-framework-c`.
 - **Heap required.** GoogleTest allocates internally; ultra-low-
   RAM Cortex-M0 (8 - 16 KB) may not have headroom. Use Unity for
   those targets.
@@ -376,9 +376,9 @@ Cited inline. Foundational documents:
 - GoogleTest Advanced Guide - [google.github.io/googletest/advanced.html](https://google.github.io/googletest/advanced.html).
 - ARM GNU Toolchain - [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 - Sibling skills:
-  [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
-  [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
-  [`cmock-reference`](../cmock-reference/SKILL.md),
-  [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md),
-  [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md),
-  [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md).
+  `unity-test-framework-c`,
+  `ceedling-build-runner`,
+  `cmock-reference`,
+  `qemu-system-test-runner`,
+  `embedded-coverage-strategy-reference`,
+  `hardware-in-loop-reference`.

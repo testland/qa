@@ -221,9 +221,9 @@ test('app sends auth frame on open', async ({ page }) => {
 ## References
 
 - [RFC 6455] - WebSocket protocol (handshake, frames, close codes)
-- [`server-sent-events-tests`](../server-sent-events-tests/SKILL.md) - 
+- `server-sent-events-tests` - 
   one-way push alternative
-- [`grpc-streaming-tests`](../grpc-streaming-tests/SKILL.md) - typed
+- `grpc-streaming-tests` - typed
   RPC streaming alternative
 
 [RFC 6455]: https://datatracker.ietf.org/doc/html/rfc6455

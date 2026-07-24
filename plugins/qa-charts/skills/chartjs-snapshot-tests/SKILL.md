@@ -194,9 +194,9 @@ use: {
 ## References
 
 - [Chart.js docs] - install, basic config, options
-- [`d3-snapshot-tests`](../d3-snapshot-tests/SKILL.md) - sister
+- `d3-snapshot-tests` - sister
   skill for SVG-based charts
-- [`vega-spec-validator`](../vega-spec-validator/SKILL.md) - sister
+- `vega-spec-validator` - sister
   skill for declarative-spec validation
 - node-canvas - github.com/Automattic/node-canvas (Node-native
   Canvas implementation for unit tests)

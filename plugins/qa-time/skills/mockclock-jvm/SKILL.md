@@ -203,7 +203,7 @@ jobs:
   sleep; use a `ScheduledExecutorService` with a controllable
   executor for that.
 - **No leap-second simulation** per
-  [`leap-second-reference`](../leap-second-reference/SKILL.md).
+  `leap-second-reference`.
 
 ## References
 
@@ -214,14 +214,14 @@ jobs:
 - Baeldung Clock guide:
   [baeldung.com/java-clock](https://www.baeldung.com/java-clock).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`leap-second-reference`](../leap-second-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `dst-transition-reference`,
+  `leap-second-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Cross-language:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md).
+  `libfaketime-c`,
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `freezegun-python`,
+  `timecop-ruby`.
 - Test matrix:
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `timezone-test-matrix-builder`.

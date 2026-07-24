@@ -45,8 +45,8 @@ specifically).
   presentation issues.
 
 If the goal is purely automated CI gating without visual review,
-[`axe-a11y`](../axe-a11y/SKILL.md) and
-[`pa11y-a11y`](../pa11y-a11y/SKILL.md) are simpler and free.
+`axe-a11y` and
+`pa11y-a11y` are simpler and free.
 
 ## Install / access
 
@@ -164,7 +164,7 @@ jobs:
         run: python scripts/run_a11y_gate.py wave-*.json
 ```
 
-The gate logic lives in [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md);
+The gate logic lives in `a11y-violation-gate`;
 this CI workflow's job is to capture the WAVE outputs.
 
 ## Anti-patterns
@@ -174,7 +174,7 @@ this CI workflow's job is to capture the WAVE outputs.
 | Treating "alerts" as errors                                       | Alerts are flagged for human review, not auto-fail.                 | Block on errors; route alerts to the review process. |
 | Storing WAVE API key in committed config                          | Key leak; quota theft.                                              | Always in CI secrets. |
 | Running WAVE against production                                    | API hits load production; possible PII leakage in scan data.        | Always staging or pre-prod. |
-| Using WAVE alone without axe / pa11y                              | WAVE has different rule coverage; misses some structural / ARIA issues. | Pair with [`axe-a11y`](../axe-a11y/SKILL.md) for full coverage. |
+| Using WAVE alone without axe / pa11y                              | WAVE has different rule coverage; misses some structural / ARIA issues. | Pair with `axe-a11y` for full coverage. |
 | Ignoring "contrast errors" because they're "not real bugs"        | Contrast errors are SC 1.4.3 violations - definite WCAG failures.  | Treat as errors; aggregate via gate. |
 
 ## Limitations
@@ -197,9 +197,9 @@ this CI workflow's job is to capture the WAVE outputs.
 - WAVE API documentation - https://wave.webaim.org/api/
 - WebAIM (the organization behind WAVE) - https://webaim.org/
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
-- [`axe-a11y`](../axe-a11y/SKILL.md),
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md) - 
+- `axe-a11y`,
+  `pa11y-a11y`,
+  `lighthouse-a11y` - 
   alternative scanners.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
+- `a11y-violation-gate` - CI
   gate aggregating WAVE + sibling-scanner results.

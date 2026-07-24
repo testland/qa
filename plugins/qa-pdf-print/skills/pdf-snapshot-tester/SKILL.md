@@ -203,7 +203,7 @@ changes; commit the new baseline images.
   per-OS; consult system package docs for current version
 - pdf2image Python wrapper - github.com/Belval/pdf2image
 - pixelmatch (Node reference impl) - github.com/mapbox/pixelmatch
-- [`html-to-pdf-regression`](../html-to-pdf-regression/SKILL.md) - 
+- `html-to-pdf-regression` - 
   sister skill for the HTML→PDF generation step
-- [`print-stylesheet-tests`](../print-stylesheet-tests/SKILL.md) - 
+- `print-stylesheet-tests` - 
   sister skill for pre-PDF CSS verification

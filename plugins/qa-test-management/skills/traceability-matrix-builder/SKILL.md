@@ -19,7 +19,7 @@ CTAL-TM syllabus on test conditions and coverage items (cite by
 stable ID; texts behind iso.org / istqb.org paywall).
 
 For canonical case fields see
-[`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+`test-case-anatomy-reference`.
 
 ## When to use
 
@@ -302,5 +302,5 @@ Orphans: 14
   stable ID.
 - DO-178C §6.5 (avionics traceability) - cite by stable ID.
 - Composes:
-  [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md),
+  `test-case-anatomy-reference`,
   case-management skills for each platform.

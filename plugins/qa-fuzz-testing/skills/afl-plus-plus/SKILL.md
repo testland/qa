@@ -14,9 +14,9 @@ and tools that process inputs end-to-end (parsers reading files,
 decoders reading stdin).
 
 For sanitiser pairing see
-[`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md);
+`sanitiser-integration-reference`;
 for corpus discipline see
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+`corpus-management-reference`.
 
 ## When to use
 
@@ -238,14 +238,14 @@ afl-cmin -i output/default/queue/ -o minimised_queue/ -- ./target @@
 - Original AFL paper - lcamtuf.coredump.cx/afl/ (Michał Zalewski's
   original AFL post; AFL++ extends).
 - Composes:
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+  `sanitiser-integration-reference`,
+  `corpus-management-reference`.
 - Sibling fuzzers:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `libfuzzer-cpp`,
+  `cargo-fuzz-rust`,
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `go-native-fuzzing`,
+  `ossfuzz-integration`.
 - Dispatcher:
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `fuzz-tool-selector`.

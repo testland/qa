@@ -19,8 +19,8 @@ Email is the most underspecified surface in modern web apps. A
 - Does the app handle bounces + complaints?
 
 This skill is a **build-an-X workflow** - a checklist and per-stage
-test recipes, not a single tool. Pair with [`mailpit-testing`](../mailpit-testing/SKILL.md)
-or [`mailhog-testing`](../mailhog-testing/SKILL.md) for SMTP
+test recipes, not a single tool. Pair with `mailpit-testing`
+or `mailhog-testing` for SMTP
 capture.
 
 ## When to use
@@ -34,7 +34,7 @@ capture.
 
 ## Step 1 - Stage your capture environment
 
-Per [`mailpit-testing`](../mailpit-testing/SKILL.md):
+Per `mailpit-testing`:
 
 ```yaml
 # CI config
@@ -61,7 +61,7 @@ def test_password_reset_email_complete():
 ```
 
 (`capture_one_email` is the helper from
-[`mailpit-testing`](../mailpit-testing/SKILL.md) Step 4.)
+`mailpit-testing` Step 4.)
 
 ## Step 3 - Header assertions
 
@@ -216,8 +216,8 @@ For each email flow in scope:
 ## Limitations
 
 - This is a build-an-X workflow. Tests use the application's HTTP
-  client + an SMTP capture tool ([`mailpit-testing`](../mailpit-testing/SKILL.md)
-  or [`mailhog-testing`](../mailhog-testing/SKILL.md)).
+  client + an SMTP capture tool (`mailpit-testing`
+  or `mailhog-testing`).
 - DKIM / SPF / DMARC validation requires a real MTA; CI tests
   cover content + handler logic, not authentication-on-the-wire.
 - Per-ESP webhook payloads vary; test fixtures must come from each
@@ -234,11 +234,11 @@ For each email flow in scope:
 - IETF RFC 5322 - Internet Message Format
 - mail-tester.com - pre-prod deliverability scoring
 - dmarcian.com - DMARC monitoring
-- [`mailpit-testing`](../mailpit-testing/SKILL.md),
-  [`mailhog-testing`](../mailhog-testing/SKILL.md) - SMTP capture
+- `mailpit-testing`,
+  `mailhog-testing` - SMTP capture
   partners
-- [`webhook-delivery-tester`](../webhook-delivery-tester/SKILL.md) - 
+- `webhook-delivery-tester` - 
   companion: bounce/complaint webhook handlers receive vendor
   webhooks; same patterns
-- [`sms-test-author`](../sms-test-author/SKILL.md),
-  [`push-notification-test-author`](../push-notification-test-author/SKILL.md) - sister channels
+- `sms-test-author`,
+  `push-notification-test-author` - sister channels

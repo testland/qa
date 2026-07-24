@@ -161,8 +161,8 @@ No env vars needed in offline mode.
 - Offline-mode guide:
   [docs.flagsmith.com/clients/server-side#offline-mode](https://docs.flagsmith.com/clients/server-side).
 - Companion:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
+  `feature-flag-test-matrix-reference`.
 - Sibling SDKs:
-  [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
-  [`unleash-testing`](../unleash-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md).
+  `launchdarkly-testing`,
+  `unleash-testing`,
+  `growthbook-testing`.

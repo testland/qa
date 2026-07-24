@@ -283,7 +283,7 @@ ambiguous case); rollback is automatic on clear failure.
   monitoring + rollback, "early warning for potential problems
   before impacting your entire production infrastructure or user
   base."
-- [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) - sibling: continuous-in-production verification (different
+- `synthetic-monitor-author` - sibling: continuous-in-production verification (different
   cadence, different goal).
-- [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md) - sibling: A/B test analysis (different statistical framework
+- `feature-flag-experiment-validator` - sibling: A/B test analysis (different statistical framework
   but related).

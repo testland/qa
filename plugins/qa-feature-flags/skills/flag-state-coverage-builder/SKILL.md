@@ -71,7 +71,7 @@ flags:
 ## Step 3 - Choose coverage strategy per category
 
 Per
-[`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md):
+`feature-flag-test-matrix-reference`:
 
 | Strategy | Apply to |
 |---|---|
@@ -133,7 +133,7 @@ describe('auth flag matrix', () => {
 ```
 
 The platform-specific SDK setup comes from
-[`launchdarkly-testing`](../launchdarkly-testing/SKILL.md) etc.
+`launchdarkly-testing` etc.
 
 ## Step 6 - Special category tests
 
@@ -221,15 +221,15 @@ This skill produces:
 ## References
 
 - Flag test matrix concepts:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
+  `feature-flag-test-matrix-reference`.
 - PICT (Microsoft pairwise tool):
   [github.com/microsoft/pict](https://github.com/microsoft/pict).
 - Risk-driven coupling:
   `risk-matrix`.
 - Per-platform implementation:
-  [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
-  [`unleash-testing`](../unleash-testing/SKILL.md),
-  [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md).
+  `launchdarkly-testing`,
+  `unleash-testing`,
+  `flagsmith-testing`,
+  `growthbook-testing`.
 - Lifecycle:
-  [`flag-removal-runbook-author`](../flag-removal-runbook-author/SKILL.md).
+  `flag-removal-runbook-author`.

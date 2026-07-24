@@ -198,8 +198,8 @@ mutmut run --paths-to-mutate "$CHANGED"
   intelligent test selection, parallel execution, configuration via
   `setup.cfg` / `pyproject.toml`, mutator examples (integer
   literals, comparison flipping, break/continue).
-- [`stryker-mutation`](../stryker-mutation/SKILL.md),
-  [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md),
-  [`pitest-mutation`](../pitest-mutation/SKILL.md),
-  [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
+- `stryker-mutation`,
+  `stryker-net-mutation`,
+  `pitest-mutation`,
+  `mull-mutation` - per-language
   siblings.

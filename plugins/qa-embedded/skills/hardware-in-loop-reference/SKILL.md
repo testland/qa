@@ -21,9 +21,9 @@ real-time simulator that emulates the rest of the vehicle / aircraft
 ECU sees in the field.
 
 This skill is a **pure reference** consumed by the per-tool
-skills ([`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
-[`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
-[`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md))
+skills (`googletest-embedded-arm`,
+`unity-test-framework-c`,
+`qemu-system-test-runner`)
 when teams need to decide what slips into HIL versus what stays in
 host / QEMU.
 
@@ -36,7 +36,7 @@ host / QEMU.
 - Negotiating the V-model split (MIL / SIL / PIL / HIL) with safety
   engineering.
 - Pairing HIL coverage with structural coverage from
-  [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md).
+  `embedded-coverage-strategy-reference`.
 - Specifying fault-injection scenarios for a safety case.
 
 ## The HIL pattern
@@ -157,7 +157,7 @@ see - contains:
 4. **Pass / fail verdict** - each scenario asserts on expected
    signal values, expected DTCs, expected timing.
 5. **Coverage artefact** - pair with
-   [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md);
+   `embedded-coverage-strategy-reference`;
    on-target structural coverage is captured via semihosting or a
    debug probe write-back.
 6. **Traceability** - each scenario links back to a requirement ID
@@ -249,4 +249,4 @@ Cited inline. Foundational documents:
   ISO 26262-5 §10, IEC 61508-3 Table A.5, IEC 62304 - gated
   standards, cite by stable ID.
 - Sibling reference:
-  [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md).
+  `embedded-coverage-strategy-reference`.

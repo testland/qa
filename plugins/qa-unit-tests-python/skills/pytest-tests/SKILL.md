@@ -260,7 +260,7 @@ pytest -n auto   # uses CPU count
 - pypi.org/project/pytest-mock - pytest-mock plugin
 - pypi.org/project/pytest-asyncio - async support
 - pypi.org/project/pytest-xdist - parallel execution
-- [`unittest-tests`](../unittest-tests/SKILL.md),
-  [`doctest-tests`](../doctest-tests/SKILL.md),
-  [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
+- `unittest-tests`,
+  `doctest-tests`,
+  `nose2-tests` - sister tools
 - `test-code-conventions` - test code hygiene

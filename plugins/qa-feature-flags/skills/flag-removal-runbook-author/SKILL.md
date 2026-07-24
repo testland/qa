@@ -9,7 +9,7 @@ description: "Workflow-driven skill that builds the runbook for safely removing 
 
 Stale feature flags are technical debt: they bloat the codebase,
 expand the flag-state matrix per
-[`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md),
+`feature-flag-test-matrix-reference`,
 and confuse readers. But removing a flag wrong - deleting code
 that's actually still gated for some users - is a regression.
 
@@ -94,7 +94,7 @@ others.
 
 ## Step 4 - Update tests
 
-Per [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md):
+Per `flag-state-coverage-builder`:
 
 - Remove the per-flag isolation tests for this flag.
 - Update any matrix that included this flag.
@@ -209,10 +209,10 @@ This skill produces:
 - LaunchDarkly archive doc:
   [launchdarkly.com/docs](https://launchdarkly.com/docs/).
 - Companion catalogs:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md),
-  [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md).
+  `feature-flag-test-matrix-reference`,
+  `flag-state-coverage-builder`.
 - Sibling SDKs (for platform-specific archive steps):
-  [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
-  [`unleash-testing`](../unleash-testing/SKILL.md),
-  [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md).
+  `launchdarkly-testing`,
+  `unleash-testing`,
+  `flagsmith-testing`,
+  `growthbook-testing`.

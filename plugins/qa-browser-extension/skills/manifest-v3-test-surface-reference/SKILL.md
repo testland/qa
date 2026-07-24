@@ -310,8 +310,8 @@ and read live, as dates have shifted multiple times.
 - MDN WebExtensions manifest.json keys reference (Firefox key
   matrix, `browser_specific_settings`) - [mdn-manifest].
 - Consumed by:
-  [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md),
-  [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md),
-  [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md),
-  [`mv2-to-mv3-migration-test-checklist`](../mv2-to-mv3-migration-test-checklist/SKILL.md),
-  [`extension-storage-test-author`](../extension-storage-test-author/SKILL.md).
+  `web-ext-cli-mozilla`,
+  `chrome-extension-test-loader`,
+  `playwright-extension-fixtures`,
+  `mv2-to-mv3-migration-test-checklist`,
+  `extension-storage-test-author`.

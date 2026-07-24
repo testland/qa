@@ -36,7 +36,7 @@ covering 1-wise / 2-wise / N-wise combinations.
   team wants systematic coverage.
 
 If only one input has multiple values, use
-[`boundary-value-generator`](../boundary-value-generator/SKILL.md)
+`boundary-value-generator`
 instead - boundary analysis is the right tool for single-input
 testing.
 
@@ -227,5 +227,5 @@ gap = OK) or escalates to 3-wise.
 - [ISTQB pairwise testing](https://glossary.istqb.org/en_US/term/pairwise-testing) - canonical definition of the technique this skill applies.
 - PICT - https://github.com/microsoft/pict
 - AllPairs (Python) - https://pypi.org/project/allpairspy/
-- [`boundary-value-generator`](../boundary-value-generator/SKILL.md) - sibling skill for single-input boundary cases.
-- [`negative-test-generator`](../negative-test-generator/SKILL.md) - sibling skill for rejection-path coverage.
+- `boundary-value-generator` - sibling skill for single-input boundary cases.
+- `negative-test-generator` - sibling skill for rejection-path coverage.

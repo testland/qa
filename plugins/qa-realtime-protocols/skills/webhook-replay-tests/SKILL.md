@@ -230,8 +230,8 @@ def sanitize_capture(payload: dict) -> dict:
   idempotency
 - `webhook-delivery-tester` (in the qa-notifications plugin) - 
   sister skill for delivery + retry on the sender side
-- [`mqtt-tests`](../mqtt-tests/SKILL.md),
-  [`websocket-tests`](../websocket-tests/SKILL.md) - alternative
+- `mqtt-tests`,
+  `websocket-tests` - alternative
   realtime transports
 
 [Standard Webhooks spec]: https://www.standardwebhooks.com/

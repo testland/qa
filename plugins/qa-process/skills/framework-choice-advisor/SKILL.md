@@ -21,7 +21,7 @@ This skill is a **pure reference**: a decision tree + tradeoff matrix the team u
 Do **not** use this skill when:
 
 - The framework is already chosen and the team needs configuration / API help - use the per-framework skill (`playwright-testing`, `cypress-testing`, etc.).
-- The team's question is "should we add E2E vs unit vs contract tests" - that's [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
+- The team's question is "should we add E2E vs unit vs contract tests" - that's `test-pyramid-balancer`.
 - Mobile-native vs hybrid app selection - use the `qa-mobile` plugin's documentation directly.
 
 ## Step 1 - Frame the decision against the project's NFRs
@@ -200,7 +200,7 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 ## Hand-off targets
 
 - **After the framework is chosen, configure it** → per-framework skill (`playwright-testing`, `cypress-testing`, `selenium-testing`, `webdriverio-testing`).
-- **Tune the layer balance after the framework is in place** → [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
+- **Tune the layer balance after the framework is in place** → `test-pyramid-balancer`.
 - **Convert Selenium suite → Playwright (the most common 2026 migration)** → migration is a project, not an agent; this skill provides the decision input, the per-framework skills provide the target configuration.
 
 ## References
@@ -216,4 +216,4 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 - ISTQB glossary - keyword-driven testing (relevant to Karate / Postman DSL choice): https://glossary.istqb.org/en_US/term/keyword-driven-testing
 - ISO/IEC 25010 - quality characteristics (used in Step 1 NFR scoring): https://en.wikipedia.org/wiki/ISO/IEC_25010
 - `playwright-testing`, `cypress-testing`, `selenium-testing`, `webdriverio-testing` - downstream per-framework configuration skills.
-- [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) - layer-mix tuning after the framework is in place.
+- `test-pyramid-balancer` - layer-mix tuning after the framework is in place.

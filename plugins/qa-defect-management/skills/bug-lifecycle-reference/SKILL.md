@@ -8,9 +8,9 @@ description: "Pure-reference catalog of defect lifecycle states and transitions.
 Catalogs the ISTQB-canonical defect lifecycle and maps it to Jira,
 Linear, and GitHub Issues workflows. Consumed by the
 platform-workflow skills
-([`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
-[`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
-[`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md))
+(`jira-bug-workflow-runner`,
+`linear-bug-workflow-runner`,
+`github-issues-bug-workflow`)
 for state-transition logic.
 
 ## When to use
@@ -199,7 +199,7 @@ The platform-workflow skills enforce these:
   use - but don't mix midstream.
 - **Severity / priority are separate axes.** State doesn't
   capture how bad / how urgent. See
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
+  `severity-vs-priority-reference`.
 
 ## References
 
@@ -215,10 +215,10 @@ The platform-workflow skills enforce these:
   subdivision.
 - GitHub Issues docs - Open / Closed + labels + Projects.
 - Related references:
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md),
-  [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).
+  `severity-vs-priority-reference`,
+  `defect-taxonomy-istqb`.
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)
+  `bug-report-from-failure`
   and platform-workflow skills.
 - Related neighbour: `bug-report-template`
   (reproduction-focused; this reference is workflow /

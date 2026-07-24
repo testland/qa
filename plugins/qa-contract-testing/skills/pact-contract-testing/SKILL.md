@@ -47,7 +47,7 @@ The full lifecycle has five steps ([pact-how-it-works][how]):
 
 If the API has no consumers under your control (public APIs, third-party
 integrations), prefer
-[`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) - schema-
+`openapi-contract-diff` - schema-
 based diffs need no provider/consumer coordination.
 
 ## Authoring (consumer side)

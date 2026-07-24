@@ -252,10 +252,10 @@ Secrets configured in repo settings; never committed.
 
 - [gha][gha] - GitHub Actions workflow basics: events + jobs +
   steps; YAML in `.github/workflows/`.
-- [`gitlab-ci-test-jobs`](../gitlab-ci-test-jobs/SKILL.md),
-  [`jenkinsfile-test-stages`](../jenkinsfile-test-stages/SKILL.md),
-  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
+- `gitlab-ci-test-jobs`,
+  `jenkinsfile-test-stages`,
+  `circleci-test-configs` - 
   per-platform alternatives.
-- [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md) - cross-CI conventions.
+- `ci-test-job-conventions` - cross-CI conventions.
 - `junit-xml-analysis` - downstream JUnit XML parser.
 - `flaky-test-quarantine` - preferred over retries.

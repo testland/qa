@@ -297,8 +297,8 @@ Use sparingly - retries hide flake. Prefer
 ## References
 
 - Jenkins Declarative Pipeline at `jenkins.io/doc/book/pipeline/`.
-- [`github-actions-test-jobs`](../github-actions-test-jobs/SKILL.md),
-  [`gitlab-ci-test-jobs`](../gitlab-ci-test-jobs/SKILL.md),
-  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
+- `github-actions-test-jobs`,
+  `gitlab-ci-test-jobs`,
+  `circleci-test-configs` - 
   alternatives.
 - `junit-xml-analysis` - JUnit XML parser.

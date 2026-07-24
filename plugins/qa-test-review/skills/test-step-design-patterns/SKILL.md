@@ -7,7 +7,7 @@ description: "Pure reference catalog of test-step design patterns at the archite
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing step granularity at the architecture tier - within an "Act" phase, *what is one step?* It complements [`test-code-conventions §1`](../test-code-conventions/SKILL.md) (AAA structure at the file level).
+This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing step granularity at the architecture tier - within an "Act" phase, *what is one step?* It complements `test-code-conventions §1` (AAA structure at the file level).
 
 ## When to use
 
@@ -167,7 +167,7 @@ Both express the same three phases. The team picks one and uses it consistently.
 
 ### The phase-separation rule
 
-Whatever vocabulary the team uses, the phases must be **visually separable**. The pattern from [`test-code-conventions §1`](../test-code-conventions/SKILL.md):
+Whatever vocabulary the team uses, the phases must be **visually separable**. The pattern from `test-code-conventions §1`:
 
 ```typescript
 test('places an order', async () => {
@@ -263,20 +263,20 @@ If reading aloud doesn't produce a specification - if it produces "click, type, 
 | Step extracted into a helper but the helper takes a `boolean` flag that branches behavior | Two helpers masquerading as one |
 | Step that does retry / wait / fallback inside | Hides flakiness; the test passes when it should fail |
 | Tests that read top-down look fine but the helpers contain hidden assertions | The test seems to assert one thing; actually asserts more (or different things) |
-| Tests where the assertion is inside the Page Object method | Violates [`object-model-patterns`](../object-model-patterns/SKILL.md) no-assertion rule |
+| Tests where the assertion is inside the Page Object method | Violates `object-model-patterns` no-assertion rule |
 
 ## Hand-off targets
 
 - **Translate manual test steps to Gherkin** → `manual-step-to-gherkin` (qa-bdd).
-- **Object-model architecture patterns (where extracted steps live)** → [`object-model-patterns`](../object-model-patterns/SKILL.md) (sister catalog).
-- **Test isolation / fixture lifecycle** → [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) (sister catalog).
+- **Object-model architecture patterns (where extracted steps live)** → `object-model-patterns` (sister catalog).
+- **Test isolation / fixture lifecycle** → `test-isolation-patterns` (sister catalog).
 - **Test data construction patterns** → `test-data-patterns` (qa-test-data, sister catalog).
-- **Cross-file file-level conventions** → [`test-code-conventions`](../test-code-conventions/SKILL.md).
+- **Cross-file file-level conventions** → `test-code-conventions`.
 
 ## References
 
 - Robert C. Martin - *Clean Code: A Handbook of Agile Software Craftsmanship* (2008), chapter 9 "Unit Tests" (the FIRST principles): ISBN 978-0132350884. The canonical reference for the FIRST mnemonic. https://www.oreilly.com/library/view/clean-code-a/9780136083238/
-- Roy Osherove - *The Art of Unit Testing* (2nd ed. 2013) (the `<sut>_<scenario>_<expected>` naming pattern cited in [`test-code-conventions §3`](../test-code-conventions/SKILL.md)): ISBN 978-1617290893.
+- Roy Osherove - *The Art of Unit Testing* (2nd ed. 2013) (the `<sut>_<scenario>_<expected>` naming pattern cited in `test-code-conventions §3`): ISBN 978-1617290893.
 - Kent Beck - *Test-Driven Development by Example* (2002) - the canonical TDD reference for step / test design rhythm: ISBN 978-0321146533.
 - Martin Fowler - *Refactoring: Improving the Design of Existing Code* (2nd ed. 2018) - the "rule of three" for extraction (Pattern 4): https://martinfowler.com/books/refactoring.html
 - Martin Fowler - *Eradicating Non-Determinism in Tests* (cited for the Independent principle): https://martinfowler.com/articles/nonDeterminism.html
@@ -284,5 +284,5 @@ If reading aloud doesn't produce a specification - if it produces "click, type, 
 - Gerard Meszaros - *xUnit Test Patterns* (2007) - the named-pattern catalog for `Test Method`, `Assertion Method`, `Custom Assertion`, `Inline Resource`: ISBN 978-0131495050.
 - ISTQB glossary - test step: https://glossary.istqb.org/en_US/term/test-step
 - ISTQB glossary - test procedure (the imperative form, by ISTQB convention): https://glossary.istqb.org/en_US/term/test-procedure
-- [`test-code-conventions`](../test-code-conventions/SKILL.md), `manual-step-to-gherkin` (qa-bdd) - the related-tier components.
-- [`object-model-patterns`](../object-model-patterns/SKILL.md), [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md), `test-data-patterns` (qa-test-data) - sister architecture-tier pattern catalogs.
+- `test-code-conventions`, `manual-step-to-gherkin` (qa-bdd) - the related-tier components.
+- `object-model-patterns`, `test-isolation-patterns`, `test-data-patterns` (qa-test-data) - sister architecture-tier pattern catalogs.

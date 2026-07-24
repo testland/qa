@@ -349,6 +349,6 @@ container or use `start`/`end` time bounds in search calls.
 - [Tempo HTTP API docs](https://grafana.com/docs/tempo/latest/api_docs/) - `/api/search`, `/api/traces/{id}`, `/ready`, `/api/echo` endpoints
 - [Tempo configuration reference](https://grafana.com/docs/tempo/latest/configuration/) - `server`, `distributor`, `storage` sections
 - [Tempo docker-compose single-binary example](https://github.com/grafana/tempo/tree/main/example/docker-compose/single-binary) - image, ports, volume mounts
-- [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skill for Jaeger-using teams
-- [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister skill for Zipkin-using teams
-- [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md) - in-process unit-level trace assertions
+- `jaeger-trace-tests` - sister skill for Jaeger-using teams
+- `zipkin-trace-tests` - sister skill for Zipkin-using teams
+- `opentelemetry-trace-assertions` - in-process unit-level trace assertions

@@ -24,7 +24,7 @@ behaviours that real bugs hide in.
 - Verifying eviction policy under memory pressure.
 - Tenant-namespace tests for cache-key isolation.
 - Stampede-mitigation tests per
-  [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
+  `cache-stampede-reference`.
 
 ## Authoring
 
@@ -96,7 +96,7 @@ def test_expire_gt_only_extends(r):
 
 ### Cache-aside write-then-invalidate
 
-Per [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md)
+Per `cache-coherence-patterns-reference`
 cache-aside pattern:
 
 ```python
@@ -139,7 +139,7 @@ def test_lru_evicts_oldest_under_pressure(r):
 
 ### Cache stampede mitigation
 
-Per [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md):
+Per `cache-stampede-reference`:
 
 ```python
 import concurrent.futures, threading
@@ -283,12 +283,12 @@ jobs:
 - testcontainers Redis module:
   [testcontainers-python.readthedocs.io](https://testcontainers-python.readthedocs.io/).
 - Companion catalogs:
-  [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
-  [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
+  `cache-coherence-patterns-reference`,
+  `cache-stampede-reference`.
 - Tenant cache leaks:
   `cross-tenant-data-leak-tests`
   Test 10.
 - Sibling tools:
-  [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
-  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md),
-  [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).
+  `cdn-cache-purge-tests`,
+  `varnish-test-vtc-syntax`,
+  `browser-cache-control-tests`.

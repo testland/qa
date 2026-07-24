@@ -302,7 +302,7 @@ coverage UI, convert JaCoCo XML to a sibling format:
 python cover2cover.py target/site/jacoco/jacoco.xml src/main/java > target/cobertura.xml
 ```
 
-Then feed [`cobertura-analysis`](../cobertura-analysis/SKILL.md).
+Then feed `cobertura-analysis`.
 
 ### To LCOV
 
@@ -311,7 +311,7 @@ Then feed [`cobertura-analysis`](../cobertura-analysis/SKILL.md).
 xml2lcov target/site/jacoco/jacoco.xml > target/jacoco.info
 ```
 
-Then feed [`lcov-analysis`](../lcov-analysis/SKILL.md).
+Then feed `lcov-analysis`.
 
 LCOV is the language-agnostic interchange format; LCOV's own
 documentation lists JaCoCo conversion as a supported path.
@@ -363,7 +363,7 @@ documentation lists JaCoCo conversion as a supported path.
   `forkCount=0` (run-in-Maven-JVM mode) bypasses the agent; coverage
   data is empty. Use the default fork mode.
 - **No PR-context awareness.** Pair with
-  [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) for
+  `coverage-diff-reporter` for
   the diff vs main.
 
 ## References
@@ -373,9 +373,9 @@ documentation lists JaCoCo conversion as a supported path.
   measurement, formula for cyclomatic complexity.
 - [jacoco-maven][jmvn] - `prepare-agent` / `report` / `check`
   goals; Maven + JVM version requirements; HTML report output path.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - sister
+- `cobertura-analysis` - sister
   parser; JaCoCo XML can convert to Cobertura XML for sibling tooling.
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) - sister parser; JaCoCo
+- `lcov-analysis` - sister parser; JaCoCo
   can convert to LCOV for cross-language aggregation.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md),
-  [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - downstream skills consuming the parsed JaCoCo output.
+- `coverage-diff-reporter`,
+  `test-coverage-targeter` - downstream skills consuming the parsed JaCoCo output.

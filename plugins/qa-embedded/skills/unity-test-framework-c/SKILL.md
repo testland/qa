@@ -36,20 +36,20 @@ auto-generated `main`, no C++ requirement.
 
 Composes with:
 
-- [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) - 
+- `ceedling-build-runner` - 
   the build orchestration that calls `generate_test_runner.rb`
   and stitches Unity + CMock + the test binary.
-- [`cmock-reference`](../cmock-reference/SKILL.md) - 
+- `cmock-reference` - 
   the CMock-generated mocks Unity asserts against.
-- [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md) - 
+- `qemu-system-test-runner` - 
   for running the cross-built binary on a virtual Cortex-M.
-- [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md) - 
+- `embedded-coverage-strategy-reference` - 
   for the gcov / llvm-cov instrumentation.
 
 ## When to use
 
 - Unit-under-test is **pure C** (not C++). For C++ use
-  [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md).
+  `googletest-embedded-arm`.
 - Target may be tiny - Unity works on 8-bit AVR / PIC, 16-bit
   MSP430, and 32-bit Cortex-M0/M3/M4/M7/M33. Per the throwtheswitch
   page above, it runs "efficiently on tiny 8-bit microcontrollers".
@@ -155,7 +155,7 @@ ruby /path/to/Unity/auto/generate_test_runner.rb \
 
 Then compile `test_ringbuffer.c` + `test_ringbuffer_Runner.c` +
 `unity.c` and link. Ceedling does this implicitly - see
-[`ceedling-build-runner`](../ceedling-build-runner/SKILL.md).
+`ceedling-build-runner`.
 
 ## Building
 
@@ -262,7 +262,7 @@ fails=$(grep -c ':FAIL:' results.txt || true)
 
 Ceedling wraps Unity and emits a JUnit XML report at
 `build/artifacts/test/report.xml` - see
-[`ceedling-build-runner`](../ceedling-build-runner/SKILL.md). The
+`ceedling-build-runner`. The
 schema matches GoogleTest's, so the same JUnit pipeline works
 for both.
 
@@ -320,7 +320,7 @@ jobs:
 ```
 
 For Ceedling-driven projects, see
-[`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) for
+`ceedling-build-runner` for
 the canonical `ceedling test:all` + JUnit XML flow.
 
 ## Anti-patterns
@@ -348,7 +348,7 @@ the canonical `ceedling test:all` + JUnit XML flow.
   tests should run tests serially on the test thread.
 - **No GoogleMock-style matchers.** Mocks live in CMock; matcher
   expressivity is per
-  [`cmock-reference`](../cmock-reference/SKILL.md).
+  `cmock-reference`.
 - **`TEST_ASSERT_EQUAL_FLOAT` precision is configurable but
   global.** `UNITY_FLOAT_PRECISION` applies to every float
   compare in the suite; per-test precision needs `_WITHIN`.
@@ -372,8 +372,8 @@ Cited inline. Foundational documents:
   [docs.unity3d.com/Packages/com.unity.test-framework@latest](https://docs.unity3d.com/Packages/com.unity.test-framework@latest)
   (covered by `unity-test-framework`).
 - Sibling skills:
-  [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
-  [`cmock-reference`](../cmock-reference/SKILL.md),
-  [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
-  [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md),
-  [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md).
+  `ceedling-build-runner`,
+  `cmock-reference`,
+  `googletest-embedded-arm`,
+  `qemu-system-test-runner`,
+  `embedded-coverage-strategy-reference`.

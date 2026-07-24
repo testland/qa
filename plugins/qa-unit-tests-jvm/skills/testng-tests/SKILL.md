@@ -32,7 +32,7 @@ preferring its specific patterns.
 - Selenium-tradition projects (TestNG is common in Selenium
   ecosystem).
 
-For new code, prefer [`junit5-tests`](../junit5-tests/SKILL.md).
+For new code, prefer `junit5-tests`.
 
 ## Step 1 - Install
 
@@ -258,8 +258,8 @@ JaCoCo coverage works identically to JUnit setups.
 
 - [tn-docs][tn-docs] - TestNG documentation
 - testng.org - landing
-- [`junit5-tests`](../junit5-tests/SKILL.md),
-  [`kotest-tests`](../kotest-tests/SKILL.md),
-  [`spock-tests`](../spock-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) - sister tools
+- `junit5-tests`,
+  `kotest-tests`,
+  `spock-tests`,
+  `scalatest` - sister tools
 - `test-code-conventions`

@@ -30,8 +30,8 @@ page, side panel - needs to import first.
 
 Composes with:
 
-- [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md) - the manual `chrome://extensions` flow this fixture automates.
-- [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md) - the manifest fields the fixture is testing against.
+- `chrome-extension-test-loader` - the manual `chrome://extensions` flow this fixture automates.
+- `manifest-v3-test-surface-reference` - the manifest fields the fixture is testing against.
 
 ## When to use
 
@@ -211,7 +211,7 @@ typical causes:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `waitForEvent('serviceworker')` times out | Manifest invalid or `background.service_worker` field missing | Check `chrome://extensions` manually first via [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md) |
+| `waitForEvent('serviceworker')` times out | Manifest invalid or `background.service_worker` field missing | Check `chrome://extensions` manually first via `chrome-extension-test-loader` |
 | Extension loads in headed but not headless | Channel set to `chrome` / `msedge` instead of `chromium` | Use `channel: 'chromium'` per [pw-ext] |
 | `extensionId` extracts an empty string | URL not `chrome-extension://...` shape (e.g., `about:blank` listener fired) | Filter on `serviceWorker.url().startsWith('chrome-extension://')` before split |
 
@@ -265,12 +265,12 @@ Key choices:
 - **Chromium-only.** Per [pw-ext], the fixture covers
   Chromium-family extensions only. Firefox WebExtensions test
   differently - see
-  [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md) for the
+  `web-ext-cli-mozilla` for the
   Mozilla-side runner.
 - **MV3 SW lifecycle is asynchronous.** The 30s auto-suspend is
   non-deterministic; tests timing-sensitive to it should use
   `chrome.alarms` (see
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)).
+  `manifest-v3-test-surface-reference`).
 - **Custom args at own risk.** Per [pw-ext]: *"Use custom browser
   args at your own risk, as some of them may break Playwright
   functionality."*
@@ -287,8 +287,8 @@ Key choices:
 - `chromium.launchPersistentContext` API - 
   [playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context](https://playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context).
 - Composes:
-  [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md),
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md).
+  `chrome-extension-test-loader`,
+  `manifest-v3-test-surface-reference`.
 - Distinct neighbour:
   `browser-extension-tests` - the popup / content-script / messaging assertion playbook this
   fixture feeds.

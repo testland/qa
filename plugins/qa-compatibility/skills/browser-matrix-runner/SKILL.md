@@ -184,8 +184,8 @@ manual / spot-check.
 - [pwb][pwb] - Playwright supported browsers (Chromium / Firefox /
   WebKit + branded channels), install commands, disk-space
   estimates.
-- [`os-matrix-runner`](../os-matrix-runner/SKILL.md) - sibling for
+- `os-matrix-runner` - sibling for
   OS / runtime matrices.
-- [`compatibility-budget`](../compatibility-budget/SKILL.md) - 
+- `compatibility-budget` - 
   conventions for choosing the matrix.
 - `mobile-web-emulation-runner` (in the qa-mobile plugin) - sibling: mobile viewport variants of the same browsers.

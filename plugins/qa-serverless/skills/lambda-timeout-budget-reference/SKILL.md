@@ -147,7 +147,7 @@ because API Gateway gives up first.
 - **Per-region pricing varies.** Above examples are us-east-1;
   ap-northeast-1 / eu-* differ.
 - **Cold-start latency adds to budget.** Per
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
+  `cold-start-budget-reference`,
   cold start time is **billed compute time** as Init phase
   (currently free, but counted in Init Duration).
 - **Workers / Edge / Vercel have different timeout models.**
@@ -163,9 +163,9 @@ because API Gateway gives up first.
 - AWS Lambda Powertools:
   [docs.powertools.aws.dev/lambda/](https://docs.powertools.aws.dev/lambda/).
 - Companion catalog:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).
+  `cold-start-budget-reference`.
 - Consumed by:
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
-  [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md),
-  [`serverless-integration-test-builder`](../serverless-integration-test-builder/SKILL.md).
+  `aws-sam-local-testing`,
+  `lambda-test-tools-net`,
+  `serverless-framework-test-plugin`,
+  `serverless-integration-test-builder`.

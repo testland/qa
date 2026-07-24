@@ -193,8 +193,8 @@ silently changing meaning between releases.
 - [Python SDK trace docs] - SimpleSpanProcessor vs BatchSpanProcessor
 - [HTTP semantic conventions docs] - required attributes, span name
   format, deprecation history
-- [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md),
-  [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister
+- `jaeger-trace-tests`,
+  `zipkin-trace-tests` - sister
   query-based skills for end-to-end verification
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/

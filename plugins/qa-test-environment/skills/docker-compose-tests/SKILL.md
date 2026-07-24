@@ -25,7 +25,7 @@ For tests, Compose is the right choice when:
   ports / databases.
 
 When the test process only needs **one** dependency wired into a
-single test, [`testcontainers`](../testcontainers/SKILL.md) is the
+single test, `testcontainers` is the
 lighter option - it lives inside the test process and doesn't need
 a separate `docker compose up` step.
 
@@ -339,5 +339,5 @@ profiles via repeating `--profile` or comma-separated
 - [compose-svc][compose-svc] - `services` schema: `healthcheck`,
   `depends_on` conditions (`service_started` / `service_healthy` /
   `service_completed_successfully`).
-- [`testcontainers`](../testcontainers/SKILL.md) - alternative when
+- `testcontainers` - alternative when
   the topology is one container per test, expressed in test code.

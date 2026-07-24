@@ -41,16 +41,16 @@ new surface this skill adds.
 [pwelectronapp]: https://playwright.dev/docs/api/class-electronapplication
 
 For legacy Spectron-based suites being migrated, see
-[`electron-spectron`](../electron-spectron/SKILL.md) (the legacy
+`electron-spectron` (the legacy
 reference) and the strategic frame in
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+`desktop-test-strategy-reference`.
 
 ## When to use
 
 - New Electron desktop app - pick Playwright `_electron` as the
   modern default per [electrontest][electrontest].
 - Existing Electron suite still on Spectron - see migration shopping
-  list in [`electron-spectron`](../electron-spectron/SKILL.md).
+  list in `electron-spectron`.
 - Tests need to assert **main-process** state (e.g.,
   `app.isPackaged`, `BrowserWindow` count, IPC channel payloads) in
   addition to renderer DOM.
@@ -316,7 +316,7 @@ out of the box.
 | Running Electron tests with default `workers > 1` | GPU / user-data directory collisions; flaky launches | `workers: 1` (Step 7) |
 | Forgetting `xvfb-run` on hosted Linux CI | "Failed to initialize display" launch failure | `xvfb-run --auto-servernum` wrapper (Step 10) |
 | Probing main-process modules from `window.evaluate()` | `window.evaluate()` runs in the renderer; doesn't see main-process globals | Use `electronApp.evaluate()` ([pwelectronapp][pwelectronapp]) |
-| Mixing Spectron and Playwright assertions in the same suite | Two driver lifecycles compete for the same Electron process | Migrate file-by-file per [`electron-spectron`](../electron-spectron/SKILL.md) |
+| Mixing Spectron and Playwright assertions in the same suite | Two driver lifecycles compete for the same Electron process | Migrate file-by-file per `electron-spectron` |
 | Asserting on Electron internal IDs (`__electron_id`) for locators | Internal; changes between Electron versions | Use accessibility-first locators (`getByRole` / `getByLabel`) per `playwright-testing` |
 
 ## Limitations
@@ -330,7 +330,7 @@ out of the box.
   etc.); pin Electron in `package.json` and update intentionally.
 - **GPU-rendered content** (WebGL, `<canvas>`, accelerated video) is
   opaque to renderer-side accessibility queries - same caveat as in
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - **Multi-instance apps** with single-instance-lock need a custom
   `userData` per-test (via `app.setPath('userData', …)` in test
   fixture) - otherwise a second launch races the first.
@@ -345,9 +345,9 @@ out of the box.
 - Playwright `_electron` API - [pwelectron][pwelectron].
 - Playwright `ElectronApplication` API - [pwelectronapp][pwelectronapp].
 - Electron Automated Testing tutorial - [electrontest][electrontest].
-- Sibling skill: [`electron-spectron`](../electron-spectron/SKILL.md) - 
+- Sibling skill: `electron-spectron` - 
   legacy migration reference.
 - Strategic frame:
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - Web-side neighbour:
   `playwright-testing` - page-automation patterns that carry over to the renderer surface.

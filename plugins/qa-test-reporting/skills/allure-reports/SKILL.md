@@ -37,7 +37,7 @@ runner-emitted; the report is a static deliverable.
   HTML output (vs SaaS test-management).
 
 If the team only needs JUnit pass/fail and the CI already surfaces
-that, see [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - 
+that, see `junit-xml-analysis` - 
 that's a much lighter dependency.
 
 ## Step 1 - Install the framework adapter
@@ -332,9 +332,9 @@ selling point.
 - [allure-categories][cats] - `categories.json` schema (`name`,
   `messageRegex`, `traceRegex`, `matchedStatuses`, `flaky`),
   matching order, sample.
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - leaner
+- `junit-xml-analysis` - leaner
   alternative when only pass/fail + flake detection is needed.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md),
-  [`lcov-analysis`](../lcov-analysis/SKILL.md),
-  [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - coverage
+- `coverage-diff-reporter`,
+  `lcov-analysis`,
+  `cobertura-analysis` - coverage
   side of the same PR review.

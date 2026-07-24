@@ -364,13 +364,13 @@ the entire test run without asserting each flag individually.
 - Python SDK:
   [github.com/open-feature/python-sdk](https://github.com/open-feature/python-sdk/blob/main/README.md)
 - Companion catalogs:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md),
-  [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md)
+  `feature-flag-test-matrix-reference`,
+  `flag-state-coverage-builder`
 - Vendor-specific skills:
-  [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
-  [`unleash-testing`](../unleash-testing/SKILL.md),
-  [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md)
+  `launchdarkly-testing`,
+  `unleash-testing`,
+  `flagsmith-testing`,
+  `growthbook-testing`
 - Cross-plugin:
   `feature-flag-test-harness`,
   `ab-test-validity-checklist`

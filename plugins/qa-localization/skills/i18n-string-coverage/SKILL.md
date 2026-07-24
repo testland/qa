@@ -188,7 +188,7 @@ render correctly without bidi guidance.
 ## References
 
 - [w3rtl][w3rtl] - W3C on `dir` attribute + RTL languages.
-- [`pseudo-localization-runner`](../pseudo-localization-runner/SKILL.md) - sibling: layout-level i18n testing.
-- [`rtl-rendering-tester`](../rtl-rendering-tester/SKILL.md) - 
+- `pseudo-localization-runner` - sibling: layout-level i18n testing.
+- `rtl-rendering-tester` - 
   RTL-specific rendering verification.
-- [`locale-format-validator`](../locale-format-validator/SKILL.md) - date / number / currency format verification.
+- `locale-format-validator` - date / number / currency format verification.

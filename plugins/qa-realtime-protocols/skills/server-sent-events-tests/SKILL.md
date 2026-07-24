@@ -250,9 +250,9 @@ end-to-end.
 ## References
 
 - [WHATWG SSE spec] - EventSource API, stream format, replay, retry
-- [`websocket-tests`](../websocket-tests/SKILL.md) - bidirectional
+- `websocket-tests` - bidirectional
   alternative
-- [`grpc-streaming-tests`](../grpc-streaming-tests/SKILL.md) - typed
+- `grpc-streaming-tests` - typed
   RPC streaming alternative
 
 [WHATWG SSE spec]: https://html.spec.whatwg.org/multipage/server-sent-events.html

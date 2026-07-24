@@ -17,8 +17,8 @@ generated code.
 [buf-yaml]: https://buf.build/docs/configuration/v2/buf-yaml
 
 This is the Protobuf-specific counterpart to
-[`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) (REST) and
-[`graphql-schema-regression`](../graphql-schema-regression/SKILL.md)
+`openapi-contract-diff` (REST) and
+`graphql-schema-regression`
 (GraphQL).
 
 ## When to use
@@ -217,7 +217,7 @@ HEAD - useful when `main` itself contains in-progress un-released work.
   baseline reference formats.
 - [buf-yaml][buf-yaml] - v2 `buf.yaml` configuration; `breaking.use`,
   `except`, `ignore`, `ignore_only`, `ignore_unstable_packages`.
-- [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) - REST
+- `openapi-contract-diff` - REST
   counterpart.
-- [`graphql-schema-regression`](../graphql-schema-regression/SKILL.md) - GraphQL counterpart.
-- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md) - gate skill aggregating breaking-change verdicts across protocols.
+- `graphql-schema-regression` - GraphQL counterpart.
+- `contract-compatibility-gate` - gate skill aggregating breaking-change verdicts across protocols.

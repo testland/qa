@@ -15,16 +15,16 @@ ready-to-file bug spec.
 
 It composes:
 
-- [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md)
+- `bug-lifecycle-reference`
   for initial state (`New`).
-- [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md)
+- `severity-vs-priority-reference`
   for severity proposal (heuristic; reviewer confirms).
-- [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md)
+- `defect-taxonomy-istqb`
   for type / root-cause hypothesis fields.
 - One of
-  [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
-  [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
-  [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md)
+  `jira-bug-workflow-runner`,
+  `linear-bug-workflow-runner`,
+  `github-issues-bug-workflow`
   as the filing backend.
 
 **Distinct from screen-recording-driven bug reporting**: this one
@@ -343,10 +343,10 @@ for f in failures:
   [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/).
 - TestNG XML - [testng.org](https://testng.org/).
 - Composed:
-  [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md),
-  [`defect-taxonomy-istqb`](../defect-taxonomy-istqb/SKILL.md).
+  `bug-lifecycle-reference`,
+  `severity-vs-priority-reference`,
+  `defect-taxonomy-istqb`.
 - Backend skills:
-  [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
-  [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
-  [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
+  `jira-bug-workflow-runner`,
+  `linear-bug-workflow-runner`,
+  `github-issues-bug-workflow`.

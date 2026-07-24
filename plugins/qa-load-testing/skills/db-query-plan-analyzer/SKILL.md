@@ -232,8 +232,8 @@ actual time is below the budget.
 - SQLite Query Plan - https://www.sqlite.org/eqp.html
 - "Use the Index, Luke" - https://use-the-index-luke.com/ - a
   practitioner reference for index design.
-- [`flame-graph-analyzer`](../flame-graph-analyzer/SKILL.md) - 
+- `flame-graph-analyzer` - 
   sibling skill for the application-side bottleneck (vs. this
   skill's database-side focus).
-- [`k6-load-testing`](../k6-load-testing/SKILL.md) and siblings - 
+- `k6-load-testing` and siblings - 
   load runners that surface DB-bound regressions.

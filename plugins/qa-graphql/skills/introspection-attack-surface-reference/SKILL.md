@@ -132,7 +132,7 @@ Belt-and-suspenders with disabling.
 The strongest mitigation. Only pre-registered query hashes
 execute; ad-hoc queries (including introspection probes) are
 rejected at the request layer. See
-[`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
+`persisted-query-strategy-reference`.
 
 ## Testable behaviours
 
@@ -144,7 +144,7 @@ Each control creates a test:
 | `hideSchemaDetailsFromClientErrors` | Typo query → no "did you mean" in response |
 | Query-depth limit | Construct depth-N+1 query → error "exceeds maximum operation depth" |
 | Query-cost limit | Construct high-cost query → error "exceeds maximum operation cost" |
-| Persisted-query allowlist | Submit non-allowlisted hash → `PERSISTED_QUERY_NOT_FOUND` (per [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md)) |
+| Persisted-query allowlist | Submit non-allowlisted hash → `PERSISTED_QUERY_NOT_FOUND` (per `persisted-query-strategy-reference`) |
 
 These tests **must** run against the production configuration - 
 running them against `NODE_ENV=test` may give false positives if
@@ -160,7 +160,7 @@ test config differs from prod.
 | Disable introspection without testing | Config drift; deploys re-enable silently | Production smoke test asserts 400 on `__schema` query |
 | Field-level auth on Query but not Mutation | Mutations often the more sensitive | Audit every field, both directions |
 | No depth / cost limit, introspection disabled | Brute-force fuzzing still works | Layer the mitigations |
-| Persisted queries enabled but `PERSISTED_QUERY_NOT_FOUND` retries succeed | Effectively no allowlist | See [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md) Mode 3 |
+| Persisted queries enabled but `PERSISTED_QUERY_NOT_FOUND` retries succeed | Effectively no allowlist | See `persisted-query-strategy-reference` Mode 3 |
 | Production schema includes `description` with internal context | Schema disclosure even via partial introspection | Sanitise descriptions; treat as user-visible |
 
 ## Limitations
@@ -186,10 +186,10 @@ test config differs from prod.
 - GraphQL Yoga disable-introspection plugin:
   [the-guild.dev/graphql/yoga-server/docs](https://the-guild.dev/graphql/yoga-server/docs).
 - Persisted-query mitigation:
-  [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
+  `persisted-query-strategy-reference`.
 - Consumed by:
-  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
-  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
-  [`hasura-tests`](../hasura-tests/SKILL.md),
-  [`mercurius-tests`](../mercurius-tests/SKILL.md),
-  [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
+  `apollo-server-tests`,
+  `graphql-yoga-tests`,
+  `hasura-tests`,
+  `mercurius-tests`,
+  `pothos-builder-tests`.

@@ -39,7 +39,7 @@ The platform ships three pieces ([maestro-docs][mae]):
   count (5-30 critical flows).
 
 If the team needs deep gray-box hooks (per-component intercepts),
-[`detox-testing`](../detox-testing/SKILL.md) (RN) or framework-specific
+`detox-testing` (RN) or framework-specific
 unit/widget tests cover that better.
 
 ## Step 1 - Install Maestro CLI
@@ -212,7 +212,7 @@ local emulator orchestration.
 
 - **No deep state inspection.** Maestro is UI-level; for assertions
   on app internals (Redux state, network calls), gray-box frameworks
-  ([`detox-testing`](../detox-testing/SKILL.md)) fit better.
+  (`detox-testing`) fit better.
 - **Per-platform UI quirks.** Same YAML may behave differently
   iOS vs Android (toast positioning, keyboard interaction);
   per-platform branching via `evalScript` may be needed.
@@ -226,9 +226,9 @@ local emulator orchestration.
 
 - [mae][mae] - Maestro overview: YAML flows, three-component model
   (CLI / Studio / Cloud), modular learning path.
-- [`detox-testing`](../detox-testing/SKILL.md),
-  [`appium-testing`](../appium-testing/SKILL.md) - alternative
+- `detox-testing`,
+  `appium-testing` - alternative
   cross-platform frameworks with deeper hooks.
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md) - native
+- `xcuitest-suite`,
+  `espresso-suite` - native
   alternatives for single-platform.

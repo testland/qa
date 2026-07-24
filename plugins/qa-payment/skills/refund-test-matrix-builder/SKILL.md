@@ -116,7 +116,7 @@ expect(result.transaction.type).toBe('credit');
 ```
 
 Braintree requires settlement first per
-[`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+`braintree-test-cards`.
 
 ## Step 4 - Timing variants
 
@@ -238,13 +238,13 @@ Refund-test coverage matrix should be reported per release:
 - Braintree refunds:
   [developer.paypal.com/braintree/docs/guides/transactions/node](https://developer.paypal.com/braintree/docs/guides/transactions/node).
 - Companion catalogs:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
-  [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).
+  `payment-flow-states-reference`,
+  `pci-dss-scope-reference`.
 - Per-platform SDKs:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `paypal-sandbox`,
+  `braintree-test-cards`.
 - Sibling builders:
-  [`chargeback-flow-test-author`](../chargeback-flow-test-author/SKILL.md),
-  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).
+  `chargeback-flow-test-author`,
+  `payment-webhook-replay`.

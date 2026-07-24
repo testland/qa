@@ -18,7 +18,7 @@ Per the [FlaUI repository README][flaui]:
 
 FlaUI wraps Microsoft UI Automation (UIA) - the Windows accessibility
 tree described in
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md) - behind an idiomatic C# API. Per [flaui][flaui], the library supports
+`desktop-test-strategy-reference` - behind an idiomatic C# API. Per [flaui][flaui], the library supports
 "Win32, WinForms, WPF, and Store Apps" via two UIA bindings:
 **UIA2** (managed `System.Windows.Automation`, per
 [Microsoft Learn - UI Automation Overview][msuia2]) and **UIA3** (COM
@@ -32,11 +32,11 @@ project is MIT-licensed and remains actively maintained.
 FlaUI is a **.NET library** that links into the test process and
 calls UIA directly. By contrast:
 
-- [`winappdriver`](../winappdriver/SKILL.md) is a Microsoft-maintained
+- `winappdriver` is a Microsoft-maintained
   **HTTP/JSON service** that exposes a W3C-WebDriver endpoint on
   `127.0.0.1:4723`; tests speak Selenium-style protocol over the wire
   and the driver is language-agnostic.
-- [`appium-windows-driver`](../appium-windows-driver/SKILL.md) is an
+- `appium-windows-driver` is an
   Appium 2.x proxy that sits in front of `WinAppDriver.exe` and adds
   gestures / multi-window helpers.
 
@@ -58,7 +58,7 @@ top of WinAppDriver.
   (in-process testing minimises a moving part).
 
 For cross-language test stacks (Java / Python / Ruby clients), use
-[`winappdriver`](../winappdriver/SKILL.md) instead.
+`winappdriver` instead.
 
 ## Authoring
 
@@ -392,8 +392,8 @@ itself ships both packages.
 
 - **Windows-only.** UIA is a Windows-specific API per [msuia2][msuia2].
   No macOS / Linux equivalent - see
-  [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md) and
-  [`at-spi-linux`](../at-spi-linux/SKILL.md).
+  `xctest-mac-desktop` and
+  `at-spi-linux`.
 - **Requires an interactive desktop session.** UIA cannot drive
   Session-0 / headless Windows containers. `windows-latest` GitHub
   runners are interactive by default; self-hosted containers need
@@ -420,8 +420,8 @@ itself ships both packages.
 - FlaUInspect inspector tool - [flauinspect][flauinspect].
 - Microsoft Learn - UI Automation Overview - [msuia2][msuia2].
 - Sibling skills:
-  [`winappdriver`](../winappdriver/SKILL.md),
-  [`appium-windows-driver`](../appium-windows-driver/SKILL.md),
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `winappdriver`,
+  `appium-windows-driver`,
+  `desktop-test-strategy-reference`.
 - Composing harnesses:
   `xunit-tests`, `nunit-tests`, `mstest-tests`.

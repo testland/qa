@@ -193,7 +193,7 @@ ERROR:
 ```
 
 Per
-[`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md),
+`grpc-status-code-mapping-reference`,
 `NotFound` (code 5) maps to HTTP 404 and indicates the resource
 isn't present. Exit code is non-zero.
 
@@ -282,7 +282,7 @@ done
 
 This finds methods registered in reflection but returning
 `Unimplemented` (per
-[`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md)).
+`grpc-status-code-mapping-reference`).
 
 ## Anti-patterns
 
@@ -307,9 +307,9 @@ This finds methods registered in reflection but returning
 - **No replay mode.** Can't replay a captured trace; one
   invocation per call.
 - **No throughput testing.** For load see
-  [`ghz-load`](../ghz-load/SKILL.md).
+  `ghz-load`.
 - **No mock server mode.** For mocking see
-  [`grpc-mock`](../grpc-mock/SKILL.md).
+  `grpc-mock`.
 - **Streaming feedback is line-buffered.** Server-streaming
   responses print as they arrive but stdin flushing can delay
   client-side messages.
@@ -319,13 +319,13 @@ This finds methods registered in reflection but returning
 - grpcurl README:
   [github.com/fullstorydev/grpcurl](https://github.com/fullstorydev/grpcurl/blob/master/README.md).
 - Companion catalogs:
-  [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md),
-  [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
+  `protobuf-versioning-strategy-reference`,
+  `grpc-status-code-mapping-reference`.
 - Sibling tools:
-  [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md),
-  [`ghz-load`](../ghz-load/SKILL.md),
-  [`grpc-mock`](../grpc-mock/SKILL.md),
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `buf-cli-lint-breaking-build`,
+  `ghz-load`,
+  `grpc-mock`,
+  `grpc-streaming-test-author`.
 - Sibling protocol-test plugin:
   `grpc-streaming-tests` (in the qa-realtime-protocols plugin;
   wire-level streaming semantics).

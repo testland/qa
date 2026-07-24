@@ -400,8 +400,8 @@ Per [pr][pr], after running Pester with `NUnitXml` output, add a
   path scoping.
 - [pr][pr] - `TestResult.Enabled`, `OutputFormat`, `OutputPath`, Azure
   DevOps / AppVeyor CI notes.
-- [`bats-testing`](../bats-testing/SKILL.md) - use for shell script /
+- `bats-testing` - use for shell script /
   Unix binary testing; Pester is the correct choice when the subject or
   test is PowerShell.
-- [`cli-output-conventions`](../cli-output-conventions/SKILL.md) - what
+- `cli-output-conventions` - what
   to assert on (stable formats, exit codes, stderr vs stdout contracts).

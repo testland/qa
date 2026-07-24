@@ -455,8 +455,8 @@ For each in-app notification transport in the codebase:
 - `websocket-tests`,
   `server-sent-events-tests`
   in `qa-realtime-protocols` - transport-layer protocol tests
-- [`push-notification-test-author`](../push-notification-test-author/SKILL.md),
-  [`email-flow-test-author`](../email-flow-test-author/SKILL.md),
-  [`sms-test-author`](../sms-test-author/SKILL.md),
-  [`webhook-delivery-tester`](../webhook-delivery-tester/SKILL.md)
+- `push-notification-test-author`,
+  `email-flow-test-author`,
+  `sms-test-author`,
+  `webhook-delivery-tester`
   - sibling channels this skill does not cover

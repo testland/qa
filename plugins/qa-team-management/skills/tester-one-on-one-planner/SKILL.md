@@ -21,7 +21,7 @@ For the growth segment, the question structure is the **GROW model**: **G**oal, 
 
 Do **not** use this skill to:
 
-- Write performance feedback or review input - that is [`performance-feedback-author`](../performance-feedback-author/SKILL.md); this skill reserves the slot where that feedback is delivered.
+- Write performance feedback or review input - that is `performance-feedback-author`; this skill reserves the slot where that feedback is delivered.
 - Review a story or PR against the Definition of Done - that is an adversarial Definition-of-Done reviewer's job; it coaches work products, not people.
 - Replace skip-levels, retros, or team meetings; the 1:1 is one instrument with one scope: this manager, this tester.
 
@@ -29,7 +29,7 @@ Do **not** use this skill to:
 
 | Input | Notes |
 |---|---|
-| **Roster with context** | Per tester: role, seniority, tenure, remote/colocated, current skill-matrix row if [`skill-matrix-author`](../skill-matrix-author/SKILL.md) has run |
+| **Roster with context** | Per tester: role, seniority, tenure, remote/colocated, current skill-matrix row if `skill-matrix-author` has run |
 | **Manager's span** | Number of reports bounds the cadence (weekly at <=6 reports; biweekly above that with a written async status channel replacing the lost slot) |
 | **Existing 1:1 notes** | If any; one month of notes is enough to diagnose the status-meeting failure mode |
 | **Active growth threads** | Promotion candidates, performance concerns, ladder goals per tester |
@@ -98,7 +98,7 @@ One page per tester:
 
 ## Step 5 - Schedule the periodic style rotation
 
-A weekly structure goes stale. Borrowing the style catalog from *The Manager's Path* (ISBN 978-1491973899), rotate deliberately instead of drifting: quarterly, replace one regular slot with a career-focused meeting (ladder progress against [`career-ladder-author`](../career-ladder-author/SKILL.md) criteria); after a hire's first month, run a getting-to-know-you style meeting; before review season, run a feedback-heavy meeting that previews the written review so nothing in it is a surprise. The progress-report style stays banned except where a tester runs an independent project the manager genuinely has no other window into.
+A weekly structure goes stale. Borrowing the style catalog from *The Manager's Path* (ISBN 978-1491973899), rotate deliberately instead of drifting: quarterly, replace one regular slot with a career-focused meeting (ladder progress against `career-ladder-author` criteria); after a hire's first month, run a getting-to-know-you style meeting; before review season, run a feedback-heavy meeting that previews the written review so nothing in it is a surprise. The progress-report style stays banned except where a tester runs an independent project the manager genuinely has no other window into.
 
 ## Anti-patterns
 
@@ -120,12 +120,12 @@ A weekly structure goes stale. Borrowing the style catalog from *The Manager's P
 
 ## Hand-off targets
 
-- **Written, evidence-based feedback to deliver in the slot** → [`performance-feedback-author`](../performance-feedback-author/SKILL.md).
-- **Ladder criteria for career-focused meetings** → [`career-ladder-author`](../career-ladder-author/SKILL.md).
-- **Skill-matrix row that seeds each growth thread** → [`skill-matrix-author`](../skill-matrix-author/SKILL.md).
+- **Written, evidence-based feedback to deliver in the slot** → `performance-feedback-author`.
+- **Ladder criteria for career-focused meetings** → `career-ladder-author`.
+- **Skill-matrix row that seeds each growth thread** → `skill-matrix-author`.
 
 ## References
 
 - GROW model - Goal / Reality / Options / Will, Sir John Whitmore and colleagues, late 1980s; *Coaching for Performance*; "any dictator can use GROW" caution: https://www.performanceconsultants.com/grow-model (fetched 2026-06-10).
 - Camille Fournier, *The Manager's Path*, O'Reilly 2017, ISBN 978-1491973899 - 1:1 meeting styles (to-do list, catch-up, feedback, progress report, getting-to-know-you) and continuous-feedback culture, "Managing People" chapter.
-- [`performance-feedback-author`](../performance-feedback-author/SKILL.md), [`career-ladder-author`](../career-ladder-author/SKILL.md), [`skill-matrix-author`](../skill-matrix-author/SKILL.md) - sibling skills this planner composes with.
+- `performance-feedback-author`, `career-ladder-author`, `skill-matrix-author` - sibling skills this planner composes with.

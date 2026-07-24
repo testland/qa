@@ -28,7 +28,7 @@ over pure-black-box DAST tools (ZAP / Burp).
   as the scan target.
 - Team wants spec-driven coverage (NightVision derives request
   surface from API specs vs crawling).
-- Layered with [`zap-baseline`](../zap-baseline/SKILL.md) for
+- Layered with `zap-baseline` for
   combined coverage.
 
 ## Step 1 - Install
@@ -188,7 +188,7 @@ jobs:
   for codebases NightVision can analyze (consult docs for
   language coverage).
 - For pure black-box DAST without commercial cost, use
-  [`zap-baseline`](../zap-baseline/SKILL.md) + [`burp-headless`](../burp-headless/SKILL.md)
+  `zap-baseline` + `burp-headless`
   combination instead.
 - Per [nv-docs][nv-docs] CLI / API / dashboard surface evolves;
   pin a CLI version in CI.
@@ -199,7 +199,7 @@ jobs:
 
 - [nv-docs][nv-docs] - official documentation
 - nightvision.net - product page
-- [`zap-baseline`](../zap-baseline/SKILL.md),
-  [`burp-headless`](../burp-headless/SKILL.md) - sister DAST tools
-- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - 
+- `zap-baseline`,
+  `burp-headless` - sister DAST tools
+- `dast-scan-cadence-author` - 
   build-an-X for layered DAST

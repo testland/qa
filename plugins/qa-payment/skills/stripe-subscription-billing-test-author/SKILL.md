@@ -349,5 +349,5 @@ tests do need `STRIPE_WEBHOOK_SECRET`.
 - Stripe CLI:
   [docs.stripe.com/stripe-cli](https://docs.stripe.com/stripe-cli).
 - Sibling skills:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `payment-webhook-replay`.

@@ -20,8 +20,8 @@ This skill is the rules-based translator that takes a manual step and emits the 
 
 Do **not** use this skill when:
 
-- The starting point is a user story, not an existing manual step - go to [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md).
-- The starting point is acceptance criteria - go to [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md).
+- The starting point is a user story, not an existing manual step - go to `gherkin-from-stories`.
+- The starting point is acceptance criteria - go to `acceptance-test-from-criteria`.
 - The team has explicitly chosen imperative Gherkin (rare; some legacy teams). The skill defaults to declarative per Cucumber's guidance.
 
 ## Step 1 - Classify the manual step
@@ -87,7 +87,7 @@ Cucumber's docs are explicit that `And` and `But` inherit the type of the previo
 
 ### Rule R5 - Preserve the project's existing vocabulary
 
-Before emitting the rewrite, scan the project's existing Gherkin features for the same business action. If "the customer signs in" is already used, do not introduce "the user logs in" - vocabulary drift fragments the step library and forces step-definition duplication. The [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) skill audits and consolidates that vocabulary.
+Before emitting the rewrite, scan the project's existing Gherkin features for the same business action. If "the customer signs in" is already used, do not introduce "the user logs in" - vocabulary drift fragments the step library and forces step-definition duplication. The `bdd-step-library-curator` skill audits and consolidates that vocabulary.
 
 ## Step 3 - Emit the rewrite
 
@@ -114,7 +114,7 @@ Scenario: Customer adds an in-stock product to their cart
 
 Before handing the Gherkin to the automation engineer:
 
-1. **Check the project step library** for matching existing steps. If `the customer adds <SKU> to their cart` already exists with parameter capture, the rewrite reuses it; if not, flag the new step for [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) review.
+1. **Check the project step library** for matching existing steps. If `the customer adds <SKU> to their cart` already exists with parameter capture, the rewrite reuses it; if not, flag the new step for `bdd-step-library-curator` review.
 2. **Confirm the scenario has at most one `When`.** Multiple `When`s in one scenario indicate two scenarios were collapsed; split them.
 3. **Lint with the project's Gherkin linter** (gherkin-lint, picklesdoc, or the IDE's built-in). Most teams pin a small ruleset (no-multiple-when, no-empty-feature, file-name-convention).
 4. **Diff the rewrite against the manual step's expected outcome** - semantic equivalence is the bar, not literal-translation fidelity. If the manual step asserts "cart count is 1" but the rewrite asserts "cart is non-empty", that is a regression in specificity, not a successful abstraction.
@@ -132,17 +132,17 @@ Before handing the Gherkin to the automation engineer:
 
 ## Limitations
 
-- **Vocabulary alignment is the bottleneck, not translation.** The mechanics of declarativization are rules-based; aligning with the project's existing step library requires reading that library. For large projects, run [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) first to canonicalize the vocabulary.
+- **Vocabulary alignment is the bottleneck, not translation.** The mechanics of declarativization are rules-based; aligning with the project's existing step library requires reading that library. For large projects, run `bdd-step-library-curator` first to canonicalize the vocabulary.
 - **Some manual steps are inherently UI-mechanical.** Accessibility tests that assert "the *Skip to main* link is the first focusable element" are not rewriteable into business language without losing the spec. Pass these through with R1 disabled and flag them in the Scenario as `@a11y` for the team to decide.
 - **Numerical specificity is preserved, not abstracted.** "Cart count is 1" stays "cart contains one item" - not "cart is non-empty". Specificity is the load-bearing part of the assertion.
 - **Output is a draft.** A human reviews the side-by-side before merging into the feature file; the skill does not auto-merge.
 
 ## Hand-off targets
 
-- **Convert the resulting Gherkin into runnable step definitions** → [`cucumber-testing`](../cucumber-testing/SKILL.md), [`specflow-testing`](../specflow-testing/SKILL.md), [`reqnroll-testing`](../reqnroll-testing/SKILL.md), [`behave-testing`](../behave-testing/SKILL.md).
-- **Audit the project's step library for vocabulary drift** → [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md).
-- **If the source is a user story, not a manual step** → [`gherkin-from-stories`](../gherkin-from-stories/SKILL.md).
-- **If the source is an AC list, not a manual step** → [`acceptance-test-from-criteria`](../acceptance-test-from-criteria/SKILL.md).
+- **Convert the resulting Gherkin into runnable step definitions** → `cucumber-testing`, `specflow-testing`, `reqnroll-testing`, `behave-testing`.
+- **Audit the project's step library for vocabulary drift** → `bdd-step-library-curator`.
+- **If the source is a user story, not a manual step** → `gherkin-from-stories`.
+- **If the source is an AC list, not a manual step** → `acceptance-test-from-criteria`.
 - **If the team is generating a test-case matrix from a story (upstream of this skill)** → `test-case-ideation-from-story` (in the qa-process plugin).
 
 ## References
@@ -151,4 +151,4 @@ Before handing the Gherkin to the automation engineer:
 - Cucumber documentation - Gherkin reference (keyword semantics: `Given` / `When` / `Then` / `And` / `But`): https://cucumber.io/docs/gherkin/reference/
 - ISTQB glossary - behavior-driven development: https://glossary.istqb.org/en_US/term/behavior-driven-development
 - ISTQB glossary - test procedure (the imperative form this skill abstracts away from): https://glossary.istqb.org/en_US/term/test-procedure
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - the canonical-vocabulary skill.
+- `bdd-step-library-curator` - the canonical-vocabulary skill.

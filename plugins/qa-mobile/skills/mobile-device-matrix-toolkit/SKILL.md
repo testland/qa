@@ -16,11 +16,11 @@ Running every test on every config = CI cost / time disaster.
 
 This skill is a **dispatcher** that picks the right
 subset per cadence. It wraps the per-platform test runners
-([`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-[`espresso-suite`](../espresso-suite/SKILL.md),
-[`appium-testing`](../appium-testing/SKILL.md),
-[`detox-testing`](../detox-testing/SKILL.md),
-[`maestro-flows`](../maestro-flows/SKILL.md)) and orchestrates
+(`xcuitest-suite`,
+`espresso-suite`,
+`appium-testing`,
+`detox-testing`,
+`maestro-flows`) and orchestrates
 matrix execution.
 
 ## When to use
@@ -269,11 +269,11 @@ Per-farm wiring:
 
 ## References
 
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md),
-  [`appium-testing`](../appium-testing/SKILL.md),
-  [`detox-testing`](../detox-testing/SKILL.md),
-  [`maestro-flows`](../maestro-flows/SKILL.md) - per-platform
+- `xcuitest-suite`,
+  `espresso-suite`,
+  `appium-testing`,
+  `detox-testing`,
+  `maestro-flows` - per-platform
   runners this dispatcher orchestrates.
 - `junit-xml-analysis` (in the qa-test-reporting plugin) - parser for the per-target JUnit XML aggregation.
 - Per Mike Cohn's test pyramid (cited in

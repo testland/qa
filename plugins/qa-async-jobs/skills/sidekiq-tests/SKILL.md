@@ -189,10 +189,10 @@ services:
 - [sk-test][sk-test] - testing modes, RSpec + Minitest examples,
   helper patterns
 - github.com/sidekiq/sidekiq - repository
-- [`celery-tests`](../celery-tests/SKILL.md),
-  [`bullmq-tests`](../bullmq-tests/SKILL.md),
-  [`sqs-tests`](../sqs-tests/SKILL.md),
-  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md) - sister tools
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md),
-  [`cron-job-test-author`](../cron-job-test-author/SKILL.md) - 
+- `celery-tests`,
+  `bullmq-tests`,
+  `sqs-tests`,
+  `rabbitmq-tests` - sister tools
+- `idempotency-test-author`,
+  `cron-job-test-author` - 
   build-an-X authors for cross-tool patterns

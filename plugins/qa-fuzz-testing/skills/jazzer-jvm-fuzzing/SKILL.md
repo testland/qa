@@ -15,7 +15,7 @@ that detect security-sensitive misuse of standard APIs
 (the JVM handles those).
 
 For corpus discipline see
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+`corpus-management-reference`.
 
 ## When to use
 
@@ -255,13 +255,13 @@ the test fixtures - commit it for regression coverage.
 - LLVM libFuzzer (underlying) - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
 - Composes:
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+  `corpus-management-reference`.
 - Sibling fuzzers:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `cargo-fuzz-rust`,
+  `go-native-fuzzing`,
+  `atheris-python-fuzzing`,
+  `ossfuzz-integration`.
 - Dispatcher:
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `fuzz-tool-selector`.

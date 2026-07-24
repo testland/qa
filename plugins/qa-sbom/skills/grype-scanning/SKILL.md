@@ -11,7 +11,7 @@ Per [github.com/anchore/grype][gr-gh]:
 
 [gr-gh]: https://github.com/anchore/grype
 
-Grype is the Anchore vuln scanner that pairs with [`syft-generation`](../syft-generation/SKILL.md).
+Grype is the Anchore vuln scanner that pairs with `syft-generation`.
 Three input modes:
 
 | Input mode | Use |
@@ -222,8 +222,8 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 
 | Sister tool | Use |
 |---|---|
-| [`syft-generation`](../syft-generation/SKILL.md) | Generates the SBOM Grype scans |
-| [`trivy-image`](../trivy-image/SKILL.md) | Alternative all-in-one (SBOM gen + scan) |
+| `syft-generation` | Generates the SBOM Grype scans |
+| `trivy-image` | Alternative all-in-one (SBOM gen + scan) |
 | `osv-scanner` | Cross-plugin alternative for OSV.dev DB |
 
 ## Anti-patterns
@@ -240,7 +240,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 
 - Grype's DB is Anchore-curated; coverage differs from OSV.dev,
   Snyk, NVD; pair with another scanner for consensus.
-- Container-only secret scanning is limited; use [`trivy-image`](../trivy-image/SKILL.md)
+- Container-only secret scanning is limited; use `trivy-image`
   + `gitleaks-scanning` (in the qa-secrets plugin)
   for that.
 - License-detection support is basic; for compliance, pair with
@@ -254,7 +254,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 - oss.anchore.com/docs/reference/grype/cli/ - full CLI reference
 - openvex.dev - OpenVEX specification
 - first.org/epss - EPSS data source for prioritization
-- [`syft-generation`](../syft-generation/SKILL.md),
-  [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
-  [`spdx-format`](../spdx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- `syft-generation`,
+  `cyclonedx-format`,
+  `spdx-format`,
+  `trivy-image` - sister tools

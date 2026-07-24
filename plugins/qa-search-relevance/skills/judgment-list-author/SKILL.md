@@ -303,9 +303,9 @@ after mapping `doc_id` to the index's `_id` field.
   https://github.com/o19s/quepid/blob/main/app/controllers/api/v1/judgements_controller.rb
 - [Cohen's kappa, Wikipedia] - kappa formula, Landis and Koch (1977)
   thresholds: https://en.wikipedia.org/wiki/Cohen%27s_kappa
-- [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) -
+- `elasticsearch-relevance-tests` -
   consumes judgment lists for `_rank_eval`
-- [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) -
+- `opensearch-relevance-tests` -
   consumes judgment lists for OpenSearch rank eval
-- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) -
+- `vector-search-recall-tests` -
   consumes judgment lists for recall@k evaluation

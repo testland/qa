@@ -12,7 +12,7 @@ description: "Configures a CI matrix that runs tests across operating systems (L
 - The team supports multiple runtime versions.
 - A bug report says "works on Linux, broken on Windows."
 
-For browsers specifically, see [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md).
+For browsers specifically, see `browser-matrix-runner`.
 
 ## Step 1 - Define the OS matrix
 
@@ -214,7 +214,7 @@ less frequently.
 ## References
 
 - GitHub Actions runners docs at `docs.github.com/en/actions/using-github-hosted-runners`.
-- [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md) - 
+- `browser-matrix-runner` - 
   sibling: browser-specific.
-- [`compatibility-budget`](../compatibility-budget/SKILL.md) - 
+- `compatibility-budget` - 
   conventions for matrix sizing.

@@ -188,8 +188,8 @@ classify each as additive / breaking / data-loss / locking.
 - [fw-how][fw-how] - conceptual model: schema_history table,
   pending-migration semantics, ordering
 - github.com/flyway/flyway - repository
-- [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
-  [`atlas-migrations`](../atlas-migrations/SKILL.md),
-  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
+- `liquibase-migrations`,
+  `atlas-migrations`,
+  `sqlmesh-migrations` - sister
   tools (Liquibase = changelog-driven; Atlas = declarative HCL;
   SQLMesh = data-pipeline + schema)

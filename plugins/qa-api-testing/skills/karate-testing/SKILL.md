@@ -32,9 +32,9 @@ and UI-automation modes are out of scope here.
   one keyword (`match`).
 
 If the team is already deep in REST Assured fluency, evaluate
-[`restassured-testing`](../restassured-testing/SKILL.md). For
-non-JVM stacks, use [`postman-collections`](../postman-collections/SKILL.md)
-or [`tavern-testing`](../tavern-testing/SKILL.md).
+`restassured-testing`. For
+non-JVM stacks, use `postman-collections`
+or `tavern-testing`.
 
 ## Install
 
@@ -267,8 +267,8 @@ jobs:
 ## Limitations
 
 - **JVM only.** Karate runs on the JVM; non-JVM teams should look at
-  [`tavern-testing`](../tavern-testing/SKILL.md) (Python) or
-  [`postman-collections`](../postman-collections/SKILL.md) (Node).
+  `tavern-testing` (Python) or
+  `postman-collections` (Node).
 - **DSL learning curve for non-Gherkin users.** The `match` keyword's
   modifier vocabulary takes a session to internalize.
 - **`.feature` files under `src/test/java`.** Maven convention is
@@ -285,7 +285,7 @@ jobs:
 - [karate-docs][docs] - canonical DSL reference: feature-file syntax,
   match keyword, scenario / background / scenario outline, JUnit 5
   runner pattern.
-- [`postman-collections`](../postman-collections/SKILL.md) - JSON-driven
+- `postman-collections` - JSON-driven
   alternative.
-- [`restassured-testing`](../restassured-testing/SKILL.md) - Java
+- `restassured-testing` - Java
   fluent-DSL alternative on the same JVM stack.

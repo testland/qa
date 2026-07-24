@@ -32,7 +32,7 @@ PR-gating.
   native runtime tooling.
 
 If the CI already emits LCOV, see
-[`lcov-analysis`](../lcov-analysis/SKILL.md) - Cobertura and LCOV
+`lcov-analysis` - Cobertura and LCOV
 are sibling formats; pick whichever the existing reporter produces
 to avoid running two coverage tools.
 
@@ -163,7 +163,7 @@ def parse_cobertura(path):
 
 ## Step 4 - Diff vs baseline + gate
 
-The same shape as [`lcov-analysis`](../lcov-analysis/SKILL.md)
+The same shape as `lcov-analysis`
 Step 4 / Step 5 - pivot on `filename`, compute deltas, apply
 per-file + whole-repo gates.
 
@@ -263,10 +263,10 @@ language-agnostic.
   attribute declarations: `coverage`, `sources`, `packages`,
   `package`, `classes`, `class`, `methods`, `method`, `lines`,
   `line` with required attributes.
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) - sibling parser for
+- `lcov-analysis` - sibling parser for
   the LCOV `.info` format with the same gating shape.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
+- `coverage-diff-reporter` - 
   build-an-X workflow that consumes the parsed Cobertura output
   for a PR comment.
-- [`jacoco-analysis`](../jacoco-analysis/SKILL.md) - JVM-specific
+- `jacoco-analysis` - JVM-specific
   JaCoCo native XML (when Cobertura conversion isn't desired).

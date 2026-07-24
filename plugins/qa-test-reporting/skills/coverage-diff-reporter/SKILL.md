@@ -33,8 +33,8 @@ This skill **builds a coverage diff report** that solves the
   wants a self-hosted equivalent.
 
 This skill **does not** decide pass/fail - that's the gate's job
-(see [`lcov-analysis`](../lcov-analysis/SKILL.md) or
-[`cobertura-analysis`](../cobertura-analysis/SKILL.md) Step 5). This
+(see `lcov-analysis` or
+`cobertura-analysis` Step 5). This
 skill just makes the diff legible.
 
 ## Step 1 - Pick the parser
@@ -43,10 +43,10 @@ Match the existing CI's reporter:
 
 | Existing reporter           | Use                                                      |
 |-----------------------------|----------------------------------------------------------|
-| LCOV `.info`                | [`lcov-analysis`](../lcov-analysis/SKILL.md) parser      |
-| Cobertura XML               | [`cobertura-analysis`](../cobertura-analysis/SKILL.md) parser |
+| LCOV `.info`                | `lcov-analysis` parser      |
+| Cobertura XML               | `cobertura-analysis` parser |
 | Jest JSON / V8 coverage     | Convert to LCOV first (`jest --coverageReporters=lcov`)  |
-| JaCoCo XML                  | Use [`jacoco-analysis`](../jacoco-analysis/SKILL.md), or convert to Cobertura |
+| JaCoCo XML                  | Use `jacoco-analysis`, or convert to Cobertura |
 | coverage.py                 | `coverage xml` → Cobertura, OR `py2lcov` → LCOV          |
 
 The reporter writes to `current.json` (parsed). The same parser
@@ -246,14 +246,14 @@ report as the PR evolves.
 
 ## References
 
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) - LCOV parser this
+- `lcov-analysis` - LCOV parser this
   skill consumes.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - Cobertura
+- `cobertura-analysis` - Cobertura
   parser this skill consumes.
-- [`jest-coverage-analysis`](../jest-coverage-analysis/SKILL.md),
-  [`jacoco-analysis`](../jacoco-analysis/SKILL.md),
-  [`coverage-py-analysis`](../coverage-py-analysis/SKILL.md) - 
+- `jest-coverage-analysis`,
+  `jacoco-analysis`,
+  `coverage-py-analysis` - 
   language-specific parsers; convert to LCOV / Cobertura before
   feeding this skill.
-- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - downstream skill that reads the same data to suggest which
+- `test-coverage-targeter` - downstream skill that reads the same data to suggest which
   uncovered branches to target next.

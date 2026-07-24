@@ -221,8 +221,8 @@ test('comment form sends direction with submission', async ({ page }) => {
 
 - [w3rtl][w3rtl] - W3C on `dir` attribute, RTL effects, semantic
   vs CSS direction, `dirname` attribute.
-- [`pseudo-localization-runner`](../pseudo-localization-runner/SKILL.md) - sibling: layout-level i18n testing including RTL pseudo-loc
+- `pseudo-localization-runner` - sibling: layout-level i18n testing including RTL pseudo-loc
   variant.
-- [`i18n-string-coverage`](../i18n-string-coverage/SKILL.md) - 
+- `i18n-string-coverage` - 
   source-scan complement.
 - `playwright-snapshots` - visual regression for catching RTL layout issues.

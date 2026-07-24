@@ -9,9 +9,9 @@ description: "Pure-reference catalog of personally identifiable information (PII
 
 This skill is the **canonical category catalog** that downstream
 masking workflows
-([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
+(`pii-masking-pipeline-builder`)
 and detectors
-([`presidio-pii-detection`](../presidio-pii-detection/SKILL.md))
+(`presidio-pii-detection`)
 reference for scope. It enumerates four regimes:
 
 - **GDPR** (EU General Data Protection Regulation, Regulation
@@ -35,7 +35,7 @@ consume it.
 - Reviewing a dataset to classify its PII risk level before allowing
   it into a non-production environment.
 - Scoping the recogniser set for a PII detector
-  ([`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)).
+  (`presidio-pii-detection`).
 - Onboarding a tester to the vocabulary used by leak-detection
   reviews.
 
@@ -93,7 +93,7 @@ data is **still personal data** under GDPR - it remains in scope.
 Anonymised data (no longer linkable to a subject under any
 reasonably likely method, per Recital 26) falls **out** of GDPR
 scope. The masking pipeline must mark which output is which
-([`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md)
+(`data-masking-techniques-reference`
 explains the techniques).
 
 ## CCPA / CPRA - personal information
@@ -297,7 +297,7 @@ fields it does (NIST §2.2).
   CO CPA, etc.) add fields. When a dataset crosses sectors,
   consult the sector-specific list.
 - **PII detection is heuristic.** A detector
-  ([`presidio-pii-detection`](../presidio-pii-detection/SKILL.md))
+  (`presidio-pii-detection`)
   finds **patterns** that look like PII; it cannot guarantee
   category-completeness. Reviewer must spot-check.
 
@@ -322,5 +322,5 @@ fields it does (NIST §2.2).
   `synthetic-pii-generator` (in the qa-test-data plugin) - generates fake PII for test fixtures (different scope; this
   reference defines what to mask in **existing** data).
 - Downstream consumers:
-  [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md),
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md).
+  `pii-masking-pipeline-builder`,
+  `presidio-pii-detection`.

@@ -147,9 +147,9 @@ original behavior from the mutated one.
   Core + .NET Framework support, history.
 - [snc][snc] - `stryker-config.json` / `.yaml` file format and the
   full option list.
-- [`stryker-mutation`](../stryker-mutation/SKILL.md) - JS sibling
+- `stryker-mutation` - JS sibling
   with the same Stryker model.
-- [`pitest-mutation`](../pitest-mutation/SKILL.md),
-  [`mutmut-mutation`](../mutmut-mutation/SKILL.md),
-  [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
+- `pitest-mutation`,
+  `mutmut-mutation`,
+  `mull-mutation` - per-language
   alternatives.

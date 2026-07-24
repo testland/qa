@@ -17,10 +17,10 @@ generator that produces hundreds of targeted variations per run.
 [readme]: https://github.com/schemathesis/schemathesis
 
 This is **complementary** to example-based API testing
-([`postman-collections`](../postman-collections/SKILL.md),
-[`tavern-testing`](../tavern-testing/SKILL.md),
-[`restassured-testing`](../restassured-testing/SKILL.md),
-[`karate-testing`](../karate-testing/SKILL.md)) - example-based tests
+(`postman-collections`,
+`tavern-testing`,
+`restassured-testing`,
+`karate-testing`) - example-based tests
 verify happy paths; Schemathesis attacks the boundaries the team
 forgot.
 
@@ -244,13 +244,13 @@ ones.
 
 - **Authentication state.** Schemathesis can attach a token but
   doesn't model multi-step auth flows (login → token → use).
-  Combine with [`tavern-testing`](../tavern-testing/SKILL.md) or
-  [`restassured-testing`](../restassured-testing/SKILL.md) for the
+  Combine with `tavern-testing` or
+  `restassured-testing` for the
   auth chain.
 - **Stateful sequences.** Out of the box, every Schemathesis case is
   independent. For stateful API fuzzing (POST → GET created
   resource → DELETE), use
-  [`restler-fuzzing`](../restler-fuzzing/SKILL.md), which is built
+  `restler-fuzzing`, which is built
   for stateful sequences.
 - **Schema drift.** If the schema doesn't match the implementation,
   every case fails for the wrong reason. Run a Schemathesis baseline
@@ -265,10 +265,10 @@ ones.
   built-in checks, pytest integration with `@schema.parametrize()`.
 - [schemathesis-docs][docs] - full docs (CLI reference, hooks,
   authentication strategies).
-- [`restler-fuzzing`](../restler-fuzzing/SKILL.md) - stateful
+- `restler-fuzzing` - stateful
   fuzzing complement.
-- [`postman-collections`](../postman-collections/SKILL.md),
-  [`tavern-testing`](../tavern-testing/SKILL.md),
-  [`restassured-testing`](../restassured-testing/SKILL.md),
-  [`karate-testing`](../karate-testing/SKILL.md) - example-based
+- `postman-collections`,
+  `tavern-testing`,
+  `restassured-testing`,
+  `karate-testing` - example-based
   authoring; use alongside Schemathesis for happy-path coverage.

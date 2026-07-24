@@ -33,15 +33,15 @@ Document **before launch**:
 |---|---|
 | OEC | The single metric (or weighted combination) to improve |
 | Power | Expected effect size, sample size, alpha, beta |
-| Guardrails | Per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md) - list each + threshold |
+| Guardrails | Per `guardrail-metrics-reference` - list each + threshold |
 | Randomization unit | User / session / device / cookie / IP / tenant |
 | Allocation | Percentages per arm; rules for ramp-up |
-| Look schedule | Pre-declared days; per [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md) |
+| Look schedule | Pre-declared days; per `peeking-problem-reference` |
 | Sequential method | Fixed / Pocock / O'Brien-Fleming / always-valid |
 | Stop-early rules | What signals stop (loss on OEC, blocking guardrail) |
 
 Candidate guardrail set to pick from, with typical block
-thresholds (per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md);
+thresholds (per `guardrail-metrics-reference`;
 Kohavi et al. *Trustworthy Online Controlled Experiments*, ISBN
 978-1108724265):
 
@@ -111,8 +111,8 @@ Tests for the assignment SDK / service:
 | Latency | Assignment SDK adds < 5ms to request path |
 
 These tests live in the SDK-specific test skills per
-[`statsig-test`](../statsig-test/SKILL.md),
-[`optimizely-test`](../optimizely-test/SKILL.md), etc.
+`statsig-test`,
+`optimizely-test`, etc.
 
 ## Step 4 - Telemetry correctness
 
@@ -128,7 +128,7 @@ Verify the **event firing** matches the proposal:
 
 ## Step 5 - Peeking discipline
 
-Per [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md):
+Per `peeking-problem-reference`:
 
 | Rule | Test |
 |---|---|
@@ -155,7 +155,7 @@ Before ship:
 | Pre-registration honoured | OEC / guardrails / unit / schedule unchanged since launch |
 | SRM clean | p > 0.0001 on the chi-square (Step 2) |
 | OEC significant under the declared method | Sequential / always-valid / fixed-horizon p-value |
-| All guardrails within thresholds | Each Step 1 guardrail below its block threshold; per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md) |
+| All guardrails within thresholds | Each Step 1 guardrail below its block threshold; per `guardrail-metrics-reference` |
 | Multiple-comparison corrected | Bonferroni / BH if many metrics |
 | Novelty assessment | Effect persisting in week 2+ |
 | Segment-stability | Effect direction consistent across major segments (no Simpson's paradox) |
@@ -239,10 +239,10 @@ Sign-off: <name>, <date>
 - Microsoft Experimentation Platform articles:
   [microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/).
 - Companion catalogs:
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md).
+  `guardrail-metrics-reference`,
+  `peeking-problem-reference`.
 - Operationalised:
-  [`statsig-test`](../statsig-test/SKILL.md),
-  [`optimizely-test`](../optimizely-test/SKILL.md),
-  [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).
+  `statsig-test`,
+  `optimizely-test`,
+  `vwo-test`,
+  `amplitude-experiment-test`.

@@ -18,7 +18,7 @@ deterministically produce success / decline / 3DS challenge.
 - Tests for code that integrates Stripe.
 - Verifying webhook handling.
 - 3DS challenge flow tests per
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md).
+  `3ds-test-flow-reference`.
 
 ## Authoring
 
@@ -168,7 +168,7 @@ jobs:
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Mocking Stripe SDK directly | Loses signature verification, error mapping | Test against real test-mode API |
-| Hardcoded test cards in many tests | Update breakage when Stripe changes | Per [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md), use named constants |
+| Hardcoded test cards in many tests | Update breakage when Stripe changes | Per `3ds-test-flow-reference`, use named constants |
 | Skip webhook signature verification | Webhook replay attack | Always verify |
 | Tests without idempotency key | Retried tests duplicate-create | Always set idempotency |
 | Mix prod + test keys | Real money risk | Strict per-env key separation |
@@ -198,14 +198,14 @@ jobs:
 - Stripe CLI:
   [docs.stripe.com/stripe-cli](https://docs.stripe.com/stripe-cli).
 - Companion catalogs:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),
-  [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).
+  `payment-flow-states-reference`,
+  `3ds-test-flow-reference`,
+  `pci-dss-scope-reference`.
 - Sibling SDKs:
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `adyen-test-mode`,
+  `paypal-sandbox`,
+  `braintree-test-cards`.
 - Builders:
-  [`refund-test-matrix-builder`](../refund-test-matrix-builder/SKILL.md),
-  [`chargeback-flow-test-author`](../chargeback-flow-test-author/SKILL.md),
-  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).
+  `refund-test-matrix-builder`,
+  `chargeback-flow-test-author`,
+  `payment-webhook-replay`.

@@ -16,7 +16,7 @@ keyed by request match) plus request recording / verification
 
 This skill covers the JVM Java API. WireMock also has standalone
 JAR + Docker modes for non-JVM consumers - the matching skill for
-JS / TS is [`msw-handlers`](../msw-handlers/SKILL.md).
+JS / TS is `msw-handlers`.
 
 ## When to use
 
@@ -229,7 +229,7 @@ locally, failed on CI" puzzles).
 - [wiremock-quickstart][quickstart] - install, JUnit 4 / 5 setup,
   stub-mapping DSL, dynamic ports, request matching.
 - WireMock Docs - https://wiremock.org/docs/
-- [`msw-handlers`](../msw-handlers/SKILL.md) - JS / TS counterpart
+- `msw-handlers` - JS / TS counterpart
   (for browser + Node).
-- [`mountebank-imposters`](../mountebank-imposters/SKILL.md) - 
+- `mountebank-imposters` - 
   multi-protocol alternative (HTTP + TCP + SMTP).

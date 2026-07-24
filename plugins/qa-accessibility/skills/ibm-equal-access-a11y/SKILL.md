@@ -28,7 +28,7 @@ and IBM-branded enterprise rule sets.
   are required.
 
 For most projects without Section 508 / enterprise-IBM constraints,
-[`axe-a11y`](../axe-a11y/SKILL.md) is the standard recommendation - 
+`axe-a11y` is the standard recommendation - 
 larger ecosystem, simpler integration. IBM Equal Access becomes
 the right choice when the constraints above apply.
 
@@ -230,13 +230,13 @@ jobs:
 
 For the ratchet pattern (block only on net-new violations), pipe
 the JSON output to
-[`a11y-violation-gate`](../a11y-violation-gate/SKILL.md).
+`a11y-violation-gate`.
 
 ## Anti-patterns
 
 | Anti-pattern                                                | Why it fails                                                       | Fix |
 |-------------------------------------------------------------|---------------------------------------------------------------------|-----|
-| Asserting only `violation` count is 0                        | Existing legacy debt blocks every PR.                              | Use [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) ratchet. |
+| Asserting only `violation` count is 0                        | Existing legacy debt blocks every PR.                              | Use `a11y-violation-gate` ratchet. |
 | Mixing IBM Equal Access with axe-core in the same gate       | Same issue can be flagged twice with different rule IDs; noise.   | Run IBM separately; cross-check at audit time, not at gate time. |
 | Using `IBM_Accessibility` policy without justification       | Adds rules beyond WCAG; CI fails on issues that aren't actual conformance failures. | Default to `WCAG_2_2`; add `IBM_Accessibility` only when the team has explicit IBM-branded compliance requirements. |
 | Skipping the `manual` level                                  | Items needing human review go unreviewed.                          | Track `manual` count; require sign-off from a human reviewer at release time. |
@@ -257,9 +257,9 @@ the JSON output to
   frameworks, rule archives.
 - IBM Equal Access Toolkit - https://www.ibm.com/able/toolkit/
 - US Section 508 - https://www.section508.gov/
-- [`axe-a11y`](../axe-a11y/SKILL.md),
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md),
-  [`wave-a11y`](../wave-a11y/SKILL.md) - alternative scanners.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
+- `axe-a11y`,
+  `pa11y-a11y`,
+  `lighthouse-a11y`,
+  `wave-a11y` - alternative scanners.
+- `a11y-violation-gate` - CI
   gate for ratchet-pattern blocking.

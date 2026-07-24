@@ -171,13 +171,13 @@ jobs:
 - ActiveSupport Time:
   [api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html](https://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `dst-transition-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Cross-language:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md).
+  `libfaketime-c`,
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `freezegun-python`,
+  `mockclock-jvm`.
 - Test matrix:
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `timezone-test-matrix-builder`.

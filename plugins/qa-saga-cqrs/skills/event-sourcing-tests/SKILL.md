@@ -238,9 +238,9 @@ def test_concurrent_append_rejected():
 
 - [Fowler - Event Sourcing] - pattern overview, replay, snapshots,
   retroactive corrections, gateway considerations
-- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md) - 
+- `saga-transaction-tests` - 
   cross-aggregate transactions
-- [`cqrs-projection-tests`](../cqrs-projection-tests/SKILL.md) - 
+- `cqrs-projection-tests` - 
   projection-from-event-log testing
 
 [Fowler - Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html

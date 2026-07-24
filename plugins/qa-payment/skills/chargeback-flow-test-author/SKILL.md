@@ -249,12 +249,12 @@ test('lost dispute reverses funds in ledger', async () => {
 - Visa Chargeback Reason Codes (cite by stable ID: Visa Chargeback Management Guidelines).
 - Mastercard Chargeback Guide (cite by stable ID).
 - Companion catalog:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md).
+  `payment-flow-states-reference`.
 - Per-platform SDKs:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `paypal-sandbox`,
+  `braintree-test-cards`.
 - Sibling builders:
-  [`refund-test-matrix-builder`](../refund-test-matrix-builder/SKILL.md),
-  [`payment-webhook-replay`](../payment-webhook-replay/SKILL.md).
+  `refund-test-matrix-builder`,
+  `payment-webhook-replay`.

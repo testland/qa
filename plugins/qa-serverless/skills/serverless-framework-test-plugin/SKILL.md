@@ -160,7 +160,7 @@ For deployed-Lambda smoke tests:
 | Tests use `serverless invoke local` per test | Subprocess startup cost; slow | Direct handler invocation |
 | Skip `serverless offline` for routing tests | API Gateway routing untested | Use `serverless offline` for HTTP tests |
 | Hardcoded env vars in test code | Drift from serverless.yml | Load via dotenv from .env.test |
-| Mocking `event` object incompletely | Handler reads `event.headers` → undefined | Use [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md) `generate-event` |
+| Mocking `event` object incompletely | Handler reads `event.headers` → undefined | Use `aws-sam-local-testing` `generate-event` |
 | Serverless plugin pinned to old version | Behaviour drift vs prod Lambda runtime | Match Lambda runtime version |
 | No deployed smoke tests | Local-pass + prod-fail gap | Always include staging smoke |
 | Treating serverless-jest as replacement for direct test | Adds plugin complexity for no gain | Use plain Jest |
@@ -172,7 +172,7 @@ For deployed-Lambda smoke tests:
   Serverless-specific.
 - **serverless-offline mirrors API Gateway but isn't identical.**
   Subtle differences in CORS, multi-value headers.
-- **Cold-start budget per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).**
+- **Cold-start budget per `cold-start-budget-reference`.**
   Local invocation doesn't simulate Lambda cold start.
 - **Plugin ecosystem maintenance varies.** serverless-jest is
   community-maintained; serverless-offline is well-maintained.
@@ -186,10 +186,10 @@ For deployed-Lambda smoke tests:
 - serverless-jest-plugin:
   [npmjs.com/package/serverless-jest-plugin](https://www.npmjs.com/package/serverless-jest-plugin).
 - Companion catalogs:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+  `cold-start-budget-reference`,
+  `lambda-timeout-budget-reference`.
 - Sibling tools (equivalent for other frameworks):
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md).
+  `aws-sam-local-testing`,
+  `lambda-test-tools-net`.
 - Builder:
-  [`serverless-integration-test-builder`](../serverless-integration-test-builder/SKILL.md).
+  `serverless-integration-test-builder`.

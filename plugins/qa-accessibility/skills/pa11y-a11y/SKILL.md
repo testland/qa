@@ -24,7 +24,7 @@ programmatic API ([pa11y][readme]). It can use HTML CodeSniffer
   multi-URL runner).
 
 If the project already runs Playwright / Cypress with axe-core,
-prefer [`axe-a11y`](../axe-a11y/SKILL.md) - pa11y adds a layer.
+prefer `axe-a11y` - pa11y adds a layer.
 
 ## Install
 
@@ -157,7 +157,7 @@ console.log(results.issues);
 Note the **same issue from two engines** - htmlcs flags as
 `WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail` (WCAG-SC-coded);
 axe flags as `color-contrast` (rule-coded). Pipe through
-[`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) to
+`a11y-violation-gate` to
 deduplicate via the unified-record `fingerprint` field.
 
 ## CI integration
@@ -202,7 +202,7 @@ jobs:
 | Anti-pattern                                                | Why it fails                                                       | Fix |
 |-------------------------------------------------------------|---------------------------------------------------------------------|-----|
 | Default standard `WCAG2AA` without WCAG 2.2 specifics       | pa11y's `WCAG2AA` standard is 2.0/2.1; WCAG 2.2 SCs (2.4.11, etc.) need axe-runner. | Always include `--runner axe` for 2.2 coverage. |
-| Threshold 0 on a project with debt                           | Every PR fails until the entire backlog is fixed.                | Use [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) for ratchet OR raise threshold incrementally. |
+| Threshold 0 on a project with debt                           | Every PR fails until the entire backlog is fixed.                | Use `a11y-violation-gate` for ratchet OR raise threshold incrementally. |
 | Running only htmlcs                                         | Different rule coverage than axe; misses some issues.            | Run both runners; deduplicate at the gate. |
 | Ignoring rules without code comments                         | Lost institutional knowledge.                                     | Inline justification + quarterly review of ignore lists. |
 
@@ -215,7 +215,7 @@ jobs:
   for `load` event; SPAs may need `--wait-for-selector` to delay
   scanning until the app is ready.
 - **No native test-framework integration.** For Playwright /
-  Cypress, prefer [`axe-a11y`](../axe-a11y/SKILL.md).
+  Cypress, prefer `axe-a11y`.
 
 ## References
 
@@ -223,7 +223,7 @@ jobs:
   reporter formats.
 - pa11y-ci - https://github.com/pa11y/pa11y-ci (multi-URL).
 - HTML CodeSniffer (the htmlcs runner) - https://github.com/squizlabs/HTML_CodeSniffer
-- [`axe-a11y`](../axe-a11y/SKILL.md) - direct axe usage (pa11y's
+- `axe-a11y` - direct axe usage (pa11y's
   alternative engine).
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - CI
+- `a11y-violation-gate` - CI
   gate consuming pa11y / axe results.

@@ -307,7 +307,7 @@ tests.
   generate statistically valid results."
 - `feature-flag-test-harness` (in the qa-test-environment plugin) - harness that runs the experiment IN test (this skill
   validates the experiment IN production).
-- [`prod-canary-validator`](../prod-canary-validator/SKILL.md) - 
+- `prod-canary-validator` - 
   sibling: same statistical framework, different application
   (canary verdict vs experiment verdict).
-- [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) - sibling: production-side verification, different role.
+- `synthetic-monitor-author` - sibling: production-side verification, different role.

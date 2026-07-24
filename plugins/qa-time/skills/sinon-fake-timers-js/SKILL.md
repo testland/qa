@@ -14,7 +14,7 @@ clock library for JavaScript / TypeScript. Per
 supplies a `Date` implementation that reads from the clock.
 
 This skill is for tests outside Jest (Jest has its own per
-[`jest-fake-timers`](../jest-fake-timers/SKILL.md)).
+`jest-fake-timers`).
 
 ## When to use
 
@@ -101,7 +101,7 @@ const clock = FakeTimers.install({
 // ... test that scheduling at 02:30 local degrades gracefully
 ```
 
-Per [`dst-transition-reference`](../dst-transition-reference/SKILL.md):
+Per `dst-transition-reference`:
 the test verifies behaviour at the transition; the fake clock
 makes it reproducible.
 
@@ -151,7 +151,7 @@ jobs:
 - **DST handling depends on the JS runtime's tz library.** Node
   uses ICU; browsers vary.
 - **No leap-second simulation.** See
-  [`leap-second-reference`](../leap-second-reference/SKILL.md).
+  `leap-second-reference`.
 - **Tests must isolate `process.env.TZ` per test.** Setting it
   globally affects all subsequent tests.
 
@@ -160,15 +160,15 @@ jobs:
 - @sinonjs/fake-timers:
   [github.com/sinonjs/fake-timers](https://github.com/sinonjs/fake-timers).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `dst-transition-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Sibling libraries:
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md)
+  `jest-fake-timers`
   (Sinon's pattern used by Jest's built-in).
 - Cross-language:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md).
+  `libfaketime-c`,
+  `freezegun-python`,
+  `timecop-ruby`,
+  `mockclock-jvm`.
 - Test matrix:
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `timezone-test-matrix-builder`.

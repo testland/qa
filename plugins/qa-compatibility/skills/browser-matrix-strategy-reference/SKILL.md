@@ -16,9 +16,9 @@ skills
 (`browserstack-automate`,
 `saucelabs-automate`,
 `lambdatest-automate`)
-+ the self-hosted [`selenium-grid-4-runner`](../selenium-grid-4-runner/SKILL.md)
++ the self-hosted `selenium-grid-4-runner`
 + existing
-[`browser-matrix-runner`](../browser-matrix-runner/SKILL.md)
+`browser-matrix-runner`
 (bundled engines).
 
 ## When to use
@@ -201,9 +201,9 @@ matters (some bugs are real-Chrome-only).
 - W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Sibling skills:
-  [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md)
+  `browser-matrix-runner`
   (existing - bundled engines),
-  [`selenium-grid-4-runner`](../selenium-grid-4-runner/SKILL.md),
+  `selenium-grid-4-runner`,
   `browserstack-automate`,
   `saucelabs-automate`,
   `lambdatest-automate`.

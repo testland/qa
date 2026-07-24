@@ -285,7 +285,7 @@ For each app's session layer:
 
 - This is a build-an-X workflow targeting cookie-based sessions
   primarily. JWT-based stateless sessions have a different
-  attack-surface model - see [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md).
+  attack-surface model - see `oauth-flow-test-author`.
 - ASVS V3 evolves per major version (current: v5.0.0); cite the
   pinned version in your test assertions.
 - Some defenses (TLS binding, device fingerprinting) require server
@@ -302,9 +302,9 @@ For each app's session layer:
 - IETF RFC 6265 - HTTP State Management Mechanism (cookies)
 - IETF RFC 8473 - Token Binding over HTTP
 - developer.mozilla.org/en-US/docs/Web/HTTP/Cookies - MDN cookie reference
-- [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md) - 
+- `oauth-flow-test-author` - 
   companion: pre-session auth flow
-- [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) - IdP-specific session
+- `keycloak-tests`,
+  `auth0-tests`,
+  `okta-tests` - IdP-specific session
   patterns (federated SSO)

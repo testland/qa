@@ -207,7 +207,7 @@ jobs:
   at slightly different times. Cross-edge tests need tolerance.
 - **Doesn't test the origin's behaviour.** If origin sends
   uncacheable responses, purge does nothing. Pair with origin
-  Cache-Control tests via [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).
+  Cache-Control tests via `browser-cache-control-tests`.
 
 ## References
 
@@ -220,9 +220,9 @@ jobs:
 - CloudFront CreateInvalidation:
   [docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateInvalidation.html](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateInvalidation.html).
 - Companion catalogs:
-  [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
-  [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md).
+  `cache-coherence-patterns-reference`,
+  `stale-while-revalidate-reference`.
 - Sibling tools:
-  [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
-  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md),
-  [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).
+  `redis-cache-tests`,
+  `varnish-test-vtc-syntax`,
+  `browser-cache-control-tests`.

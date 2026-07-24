@@ -262,9 +262,9 @@ each publish slightly different metrics.
 ## References
 
 - [MQTT v5.0 spec] - QoS, retained, LWT, shared subscriptions, $SYS
-- [`websocket-tests`](../websocket-tests/SKILL.md) - alternative
+- `websocket-tests` - alternative
   for browser-side bidirectional
-- [`webhook-replay-tests`](../webhook-replay-tests/SKILL.md) - HTTP
+- `webhook-replay-tests` - HTTP
   alternative for at-least-once delivery
 
 [MQTT v5.0 spec]: https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html

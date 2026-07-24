@@ -82,7 +82,7 @@ variable `KEYCLOAK_IMPORT` (Python testcontainers).
 
 ## Step 3 - Test the OIDC token endpoint
 
-Per RFC 6749 (cited in [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
+Per RFC 6749 (cited in `oauth-flow-test-author`)
 the token endpoint accepts `grant_type` plus flow-specific params.
 Keycloak's token endpoint:
 
@@ -225,10 +225,10 @@ ubuntu-latest has it pre-installed.
 - [kc-admin][kc-admin] - Keycloak Server Admin Guide: realms,
   clients, custom flows
 - testcontainers.com/modules/keycloak - Testcontainers module
-- IETF RFC 6749 - OAuth 2.0 (cross-ref [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
-- IETF RFC 7636 - PKCE (cross-ref [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md))
+- IETF RFC 6749 - OAuth 2.0 (cross-ref `oauth-flow-test-author`)
+- IETF RFC 7636 - PKCE (cross-ref `oauth-flow-test-author`)
 - IETF RFC 9700 - OAuth 2.0 Security Best Current Practice
-- [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) - sister IdP tools
-- [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md),
-  [`session-management-test-author`](../session-management-test-author/SKILL.md) - build-an-X authors
+- `auth0-tests`,
+  `okta-tests` - sister IdP tools
+- `oauth-flow-test-author`,
+  `session-management-test-author` - build-an-X authors

@@ -292,8 +292,8 @@ const file = fs.readFileSync(req.query.path);
   Pair with a code review step rather than blocking CI on it alone.
 - Neither plugin performs cross-file taint tracking; for taint flow
   across module boundaries, pair with
-  [`semgrep-rules`](../semgrep-rules/SKILL.md) or
-  [`codeql-queries`](../codeql-queries/SKILL.md).
+  `semgrep-rules` or
+  `codeql-queries`.
 - `eslint-plugin-security` does not cover server-side template
   injection or SQL injection natively; use Semgrep `p/owasp-top-ten`
   for those patterns.
@@ -306,6 +306,6 @@ const file = fs.readFileSync(req.query.path);
 - [esp-xss][esp-xss] - method and property rules, safe DOM alternatives
 - [sarif-sdk][sarif-sdk] - `@microsoft/eslint-formatter-sarif`, scoped `-f` usage, `SARIF_ESLINT_EMBED`
 - [eslint-cli][eslint-cli] - `--format`, `--output-file`, exit codes
-- [`semgrep-rules`](../semgrep-rules/SKILL.md),
-  [`codeql-queries`](../codeql-queries/SKILL.md),
-  [`sonarqube-rules`](../sonarqube-rules/SKILL.md) - complementary scanners
+- `semgrep-rules`,
+  `codeql-queries`,
+  `sonarqube-rules` - complementary scanners

@@ -239,7 +239,7 @@ into pytest. Choose:
 - [bd][bd] - Behave overview: BDD Python-style; step
   implementations + environment.py + tags; cross-stakeholder
   collaboration framing.
-- [`cucumber-testing`](../cucumber-testing/SKILL.md),
-  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - sibling
+- `cucumber-testing`,
+  `reqnroll-testing` - sibling
   language wrappers.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - keeps step proliferation in check.
+- `bdd-step-library-curator` - keeps step proliferation in check.

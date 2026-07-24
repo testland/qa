@@ -7,18 +7,18 @@ description: "Reference catalog for visual regression coverage decisions - which
 
 Reference catalog for **how** to design visual coverage. Pairs with the
 engine-specific skills
-([`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md),
-[`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md),
-[`playwright-snapshots`](../playwright-snapshots/SKILL.md),
-[`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)) - those tell you the **how** of running baselines; this tells you
+(`percy-visual-regression-testing`,
+`chromatic-visual-regression-testing`,
+`playwright-snapshots`,
+`storybook-visual-regression-testing`) - those tell you the **how** of running baselines; this tells you
 **which** baselines and **where**.
 
 ## Engine selection
 
 Pick before authoring any baseline. Mixing engines is fine in a large
 project - see
-[`responsive-breakpoint-runner`](../responsive-breakpoint-runner/SKILL.md)
-and [`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) for the
+`responsive-breakpoint-runner`
+and `visual-baseline-gate` for the
 mechanics of running and gating multiple engines together.
 
 | Use case                                                     | Preferred engine | Why |

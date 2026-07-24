@@ -28,9 +28,9 @@ Two stronger models layer on top:
 
 This skill verifies all three after masking. For choosing which
 masking operator to apply per field, see
-[`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md).
+`data-masking-techniques-reference`.
 For detecting PII spans before masking, see
-[`presidio-pii-detection`](../presidio-pii-detection/SKILL.md).
+`presidio-pii-detection`.
 
 ## Step 1 - Select quasi-identifiers
 
@@ -319,7 +319,7 @@ Map findings to risk tiers:
 - **pycanon measures; it does not suppress or generalise.** Use ARX
   or a masking pipeline when the dataset fails the gate and must be
   re-masked.
-  ([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
+  (`pii-masking-pipeline-builder`)
 - **t-closeness is computationally expensive** on large datasets with
   many QI combinations. Benchmark with pycanon before gating in CI;
   consider sampling on datasets > 1 M rows.
@@ -348,6 +348,6 @@ Map findings to risk tiers:
 - SmartNoise SDK (differential privacy, not k-anonymity):
   [github.com/opendp/smartnoise-sdk](https://github.com/opendp/smartnoise-sdk).
 - Related skills:
-  [`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md),
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md),
-  [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md).
+  `data-masking-techniques-reference`,
+  `presidio-pii-detection`,
+  `pii-masking-pipeline-builder`.

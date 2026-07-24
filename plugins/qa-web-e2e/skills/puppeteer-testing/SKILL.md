@@ -221,7 +221,7 @@ codegen - net win unless Chrome-only is intentional.
 ## References
 
 - Puppeteer docs at `pptr.dev`.
-- [`playwright-testing`](../playwright-testing/SKILL.md) - 
+- `playwright-testing` - 
   recommended successor.
-- [`testcafe-testing`](../testcafe-testing/SKILL.md) - alternative
+- `testcafe-testing` - alternative
   Chrome-friendly E2E.

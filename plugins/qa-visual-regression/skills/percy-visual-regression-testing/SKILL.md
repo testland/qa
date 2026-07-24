@@ -34,8 +34,8 @@ in the Percy UI for baseline review.
   provides on top of raw pixel diffs.
 
 If the project does not already use BrowserStack, evaluate
-[`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
-(Storybook-first) or [`playwright-snapshots`](../playwright-snapshots/SKILL.md)
+`chromatic-visual-regression-testing`
+(Storybook-first) or `playwright-snapshots`
 (self-hosted) before adopting Percy.
 
 ## Authoring snapshots

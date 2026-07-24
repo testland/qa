@@ -36,8 +36,8 @@ Three differentiating capabilities:
 - Modern Rust-toolchain shop where adopting Kingfisher fits stack
   preference.
 
-For battle-tested defaults, [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md)
-or [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md) are
+For battle-tested defaults, `gitleaks-scanning`
+or `trufflehog-scanning` are
 lower-risk picks.
 
 ## Step 1 - Install
@@ -237,8 +237,8 @@ trufflehog (CI verified-only) is the conservative pick.
 
 - [kf-gh][kf-gh] - repository, install, scan commands, key features
 - mongodb.com/blog (search "kingfisher") - release announcements
-- [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md),
-  [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md) - 
+- `gitleaks-scanning`,
+  `trufflehog-scanning` - 
   sister scanners
-- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) - 
+- `secrets-rotation-runner` - 
   rotation workflow after detection

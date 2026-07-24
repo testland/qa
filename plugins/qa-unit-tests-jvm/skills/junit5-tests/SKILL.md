@@ -19,7 +19,7 @@ Three components (released 2017, replacing JUnit 4):
   frameworks)
 
 This skill targets JUnit Jupiter (the modern API). For Kotlin-native
-tests with similar power but DSL-style, see [`kotest-tests`](../kotest-tests/SKILL.md).
+tests with similar power but DSL-style, see `kotest-tests`.
 
 ## Step 1 - Install (Maven / Gradle)
 
@@ -270,8 +270,8 @@ Surefire (Maven) emits JUnit XML for `junit-xml-analysis` (in the qa-test-report
 - junit.org/junit5 - landing
 - maven.apache.org/surefire - Maven Surefire (test runner)
 - jacoco.org - coverage tool
-- [`kotest-tests`](../kotest-tests/SKILL.md),
-  [`spock-tests`](../spock-tests/SKILL.md),
-  [`testng-tests`](../testng-tests/SKILL.md),
-  [`scalatest`](../scalatest/SKILL.md) - sister tools
+- `kotest-tests`,
+  `spock-tests`,
+  `testng-tests`,
+  `scalatest` - sister tools
 - `test-code-conventions` - test code hygiene

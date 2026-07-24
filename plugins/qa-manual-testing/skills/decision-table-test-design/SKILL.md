@@ -180,7 +180,7 @@ with BVA would add $49.99/$50.00 around the threshold).
 
 Each row expands into a full runnable script (preconditions, per-step
 expected results, sign-off) via
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md);
+`manual-test-script-author`;
 this skill's output is the derivation plus the case table above.
 
 ## Limited-entry vs extended-entry tables
@@ -223,7 +223,7 @@ in one row, which avoids manufacturing infeasible columns like
 - **Stateless rules only.** Decision tables model input-combination
   logic. If the outcome depends on history (what happened before this
   event), use
-  [`state-transition-test-design`](../state-transition-test-design/SKILL.md).
+  `state-transition-test-design`.
 - **Combination coverage, not boundary coverage.** A column says
   "total >= $50 is true"; it does not test $49.99 vs $50.00. Pair each
   threshold with `boundary-value-generator`.
@@ -241,9 +241,9 @@ in one row, which avoids manufacturing infeasible columns like
   glossary.istqb.org but the site blocks non-browser fetches; cite the
   syllabus section above as the stable source.
 - Siblings:
-  [`state-transition-test-design`](../state-transition-test-design/SKILL.md)
+  `state-transition-test-design`
   (stateful behavior),
-  [`manual-test-script-author`](../manual-test-script-author/SKILL.md)
+  `manual-test-script-author`
   (expands derived cases into runnable scripts).
 - Neighbors this skill is distinct from:
   `test-case-ideation-from-story`,

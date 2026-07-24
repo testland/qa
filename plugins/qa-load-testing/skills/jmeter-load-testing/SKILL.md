@@ -32,9 +32,9 @@ HTTP Sampler / Assertion authoring flow.
   weaker for niche protocols.
 
 If the team is starting fresh, evaluate
-[`k6-load-testing`](../k6-load-testing/SKILL.md) (developer-friendly
-JS), [`gatling-load-testing`](../gatling-load-testing/SKILL.md) (JVM
-DSL), or [`locust-load-testing`](../locust-load-testing/SKILL.md)
+`k6-load-testing` (developer-friendly
+JS), `gatling-load-testing` (JVM
+DSL), or `locust-load-testing`
 (Python) before adopting JMeter - XML authoring has a steep learning
 curve.
 
@@ -205,9 +205,9 @@ JMeter install on the runner.
 - [jmeter-getstarted][getstarted] - canonical CLI flags, GUI-vs-CLI
   guidance, dashboard generation.
 - Apache JMeter user manual - https://jmeter.apache.org/usermanual/
-- [`k6-load-testing`](../k6-load-testing/SKILL.md),
-  [`gatling-load-testing`](../gatling-load-testing/SKILL.md),
-  [`locust-load-testing`](../locust-load-testing/SKILL.md) - 
+- `k6-load-testing`,
+  `gatling-load-testing`,
+  `locust-load-testing` - 
   alternatives by stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
+- `perf-budget-gate` - downstream
   gate aggregating multiple runner verdicts.

@@ -10,7 +10,7 @@ description: "Configures and runs Google OSV-Scanner - open-source SCA against t
 ## When to use
 
 - Team prefers OSS tooling over commercial Snyk.
-- Layered SCA strategy - pair with [`snyk-test`](../snyk-test/SKILL.md)
+- Layered SCA strategy - pair with `snyk-test`
   for cross-DB consensus signal.
 - Custom package manager produces SBOMs not natively supported;
   feed SBOM directly to OSV-Scanner.
@@ -216,10 +216,10 @@ For full license-compliance + scanning, pair with `spdx-format`
 - github.com/google/osv-scanner - repository
 - osv.dev - OSV vulnerability database
 - ossf.github.io/osv-schema/ - OSV schema
-- [`snyk-test`](../snyk-test/SKILL.md),
-  [`dependabot-config`](../dependabot-config/SKILL.md),
-  [`renovate-config`](../renovate-config/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
+- `snyk-test`,
+  `dependabot-config`,
+  `renovate-config`,
+  `npm-pip-maven-audit` - 
   sister tools
 - `syft-generation` - 
   cross-plugin SBOM source

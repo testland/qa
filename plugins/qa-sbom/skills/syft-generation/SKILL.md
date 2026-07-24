@@ -14,7 +14,7 @@ Per [github.com/anchore/syft][sf-gh]:
 Syft generates SBOMs from "container images, filesystems, archives"
 with multi-container-standard support (OCI, Docker, Singularity).
 The generated SBOM is the input artifact for vuln scanning
-([`grype-scanning`](../grype-scanning/SKILL.md)) and compliance
+(`grype-scanning`) and compliance
 delivery (SPDX or CycloneDX format per consumer requirement).
 
 **Why generate SBOMs:**
@@ -89,7 +89,7 @@ Per [sf-gh][sf-gh] format support:
 | `table` | Human-readable terminal table (default) |
 | `github-json` | GitHub dependency-graph submission format |
 
-For [`grype-scanning`](../grype-scanning/SKILL.md) input, use
+For `grype-scanning` input, use
 `syft-json` (richest metadata) or `cyclonedx-json` (broader compat).
 
 For compliance delivery, the consumer's requirement dictates - 
@@ -186,10 +186,10 @@ dependency-graph submission automatically when `format: github-json`.
 
 | Sister tool | Use |
 |---|---|
-| [`grype-scanning`](../grype-scanning/SKILL.md) | SBOM-driven vuln scanning (`grype sbom:./sbom.json`) |
-| [`cyclonedx-format`](../cyclonedx-format/SKILL.md) | Reference for CycloneDX schema + spec compliance |
-| [`spdx-format`](../spdx-format/SKILL.md) | Reference for SPDX schema + spec compliance |
-| [`trivy-image`](../trivy-image/SKILL.md) | Alternative scanner (built-in SBOM gen + scan in one pass) |
+| `grype-scanning` | SBOM-driven vuln scanning (`grype sbom:./sbom.json`) |
+| `cyclonedx-format` | Reference for CycloneDX schema + spec compliance |
+| `spdx-format` | Reference for SPDX schema + spec compliance |
+| `trivy-image` | Alternative scanner (built-in SBOM gen + scan in one pass) |
 | `osv-scanner` | Cross-plugin: also accepts SBOM input |
 
 ## Anti-patterns
@@ -208,7 +208,7 @@ dependency-graph submission automatically when `format: github-json`.
   package formats may produce incomplete SBOMs.
 - Some language-specific catalogers have edge cases (e.g., npm
   workspaces, Python wheel quirks); validate against known deps.
-- SBOM generation alone doesn't prove the deps are vulnerability-free - pair with [`grype-scanning`](../grype-scanning/SKILL.md).
+- SBOM generation alone doesn't prove the deps are vulnerability-free - pair with `grype-scanning`.
 - Multi-arch container scanning is per-platform; combine SBOMs
   manually or via tooling for unified view.
 
@@ -218,7 +218,7 @@ dependency-graph submission automatically when `format: github-json`.
 - anchore.com/syft - landing
 - ntia.gov/SBOM - NTIA SBOM minimum elements
 - whitehouse.gov/briefing-room/presidential-actions/2021/05/12/executive-order-on-improving-the-nations-cybersecurity/ - US EO 14028
-- [`grype-scanning`](../grype-scanning/SKILL.md),
-  [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
-  [`spdx-format`](../spdx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- `grype-scanning`,
+  `cyclonedx-format`,
+  `spdx-format`,
+  `trivy-image` - sister tools

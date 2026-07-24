@@ -21,9 +21,9 @@ This skill covers both layers on iOS and Android.
 
 Nearest neighbors and differentiation:
 
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md) - general XCUITest UI automation;
+- `xcuitest-suite` - general XCUITest UI automation;
   does not cover `performAccessibilityAudit`, VoiceOver traits, or touch-target checks.
-- [`espresso-suite`](../espresso-suite/SKILL.md) - general Espresso UI automation;
+- `espresso-suite` - general Espresso UI automation;
   does not wire `AccessibilityChecks`, Accessibility Scanner, or TalkBack workflows.
 
 ## When to use
@@ -382,8 +382,8 @@ jobs:
 - [contrast] https://developer.android.com/guide/topics/ui/accessibility/apps#text-visibility - 4.5:1 contrast for text <18sp or bold <14sp; 3:1 for all other text.
 - [cd] https://developer.android.com/guide/topics/ui/accessibility/apps#describe-ui-element - `contentDescription` guidance: purpose not visual detail, null for decorative elements, unique labels in lists.
 - [at] https://developer.android.com/guide/topics/ui/accessibility/testing - TalkBack enable, linear navigation (swipe right/left), explore-by-touch, manual checklist.
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md) - iOS UI automation (functional); not accessibility-focused.
-- [`espresso-suite`](../espresso-suite/SKILL.md) - Android UI automation (functional); not accessibility-focused.
+- `xcuitest-suite` - iOS UI automation (functional); not accessibility-focused.
+- `espresso-suite` - Android UI automation (functional); not accessibility-focused.
 
 [wwdc23]: https://developer.apple.com/videos/play/wwdc2023/10035
 [uia]: https://developer.apple.com/documentation/uikit/uiaccessibilityelement

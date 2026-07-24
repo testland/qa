@@ -8,7 +8,7 @@ description: "Wraps Vercel Edge Runtime testing patterns: the @edge-runtime/jest
 ## Overview
 
 Vercel Edge Runtime is V8-isolate-based (sub-30ms cold starts
-per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md))
+per `cold-start-budget-reference`)
 with a constrained API surface: no filesystem access, so no Node
 `fs` or `child_process` ("you can't read or write to the
 filesystem"). `Buffer` is an exception, being "globally exposed to
@@ -157,7 +157,7 @@ jobs:
 | Importing `fs` / `Buffer` in handler | Tests fail (good); but production fails too | Use Web Platform APIs (Uint8Array, TextEncoder) |
 | Hardcoded path in test | OS-specific | Use Request URL |
 | Skipping middleware tests | Auth bypass slips through | Always test middleware separately |
-| No 30s timeout test | Edge functions have 30s wall-clock max per [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md) | Test with artificial slowness; assert proper response |
+| No 30s timeout test | Edge functions have 30s wall-clock max per `lambda-timeout-budget-reference` | Test with artificial slowness; assert proper response |
 | Mocking `Request` / `Response` | Loses standard-compliance | Use real Request / Response (Edge env provides them) |
 | Skip `vercel dev` for route-tests | Misses routing layer | Run e2e against `vercel dev` |
 
@@ -169,7 +169,7 @@ jobs:
 - **Streaming responses can extend** beyond 30s for the body
   but headers must commit early.
 - **Cold-start budget different** per
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).
+  `cold-start-budget-reference`.
 - **No Node-specific dependencies.** Edge can't run Node-only
   packages. Pair with Node Functions for those.
 - **Doesn't test the Vercel CDN layer.** Caching / rewrites /
@@ -186,7 +186,7 @@ jobs:
 - Next.js middleware:
   [nextjs.org/docs/app/building-your-application/routing/middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware).
 - Companion catalogs:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+  `cold-start-budget-reference`,
+  `lambda-timeout-budget-reference`.
 - Sibling Edge runtime:
-  [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md).
+  `cloudflare-workers-miniflare`.

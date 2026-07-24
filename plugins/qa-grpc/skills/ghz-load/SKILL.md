@@ -128,7 +128,7 @@ ends after N minutes regardless of throughput.
 
 Streaming RPCs aren't natively load-tested by ghz; it sends one
 unary call per worker per request. For streaming load see
-[`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+`grpc-streaming-test-author`.
 
 ## Parsing results
 
@@ -153,7 +153,7 @@ Status code distribution:
 ```
 
 Per
-[`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md),
+`grpc-status-code-mapping-reference`,
 any non-`OK` is a flag for investigation.
 
 ### JSON output for CI consumption
@@ -281,7 +281,7 @@ review of distribution shape (long tail, bimodal, etc.).
 
 - **No streaming load.** ghz issues unary calls per worker. For
   server-streaming or bidi load, write a bespoke harness or use
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `grpc-streaming-test-author`.
 - **No real-world workload mix.** All workers call the same
   method. For realistic load, run multiple ghz processes in
   parallel with different `--call` per process.
@@ -299,9 +299,9 @@ review of distribution shape (long tail, bimodal, etc.).
 - ghz install:
   [ghz.sh/docs/install](https://ghz.sh/docs/install).
 - Status code interpretation:
-  [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
+  `grpc-status-code-mapping-reference`.
 - Streaming load (sibling):
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `grpc-streaming-test-author`.
 - Other load tools (cross-plugin, HTTP-focused; ghz is gRPC-specific):
   `k6-load-testing`,
   `jmeter-load-testing`.

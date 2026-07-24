@@ -218,5 +218,5 @@ jobs:
   `test.fail()` API.
 - [pw-retries][pw-retries] - Playwright retries config + `flaky`
   status reporting.
-- [`flake-pattern-reference`](../flake-pattern-reference/SKILL.md) - 
+- `flake-pattern-reference` - 
   catalog of flake patterns to consult during bisect.

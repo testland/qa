@@ -10,7 +10,7 @@ metadata:
 ## Overview
 
 The PWA install flow is a four-stage test surface per
-[`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md):
+`pwa-install-flow-reference`:
 installability gate → `beforeinstallprompt` handshake → per-platform
 install path → post-install `display-mode` signal. Every team's
 install regression looks slightly different - a missing `start_url`,
@@ -35,11 +35,11 @@ the repo, not the pattern reference.
 
 Composes with:
 
-- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md) - the four-stage timeline this builder follows step-by-step.
-- [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md) - the
+- `pwa-install-flow-reference` - the four-stage timeline this builder follows step-by-step.
+- `lighthouse-pwa-audit` - the
   `installable-manifest` and `apple-touch-icon` audits are the
   Lighthouse counterpart of the Step 2 + Step 5 cells here.
-- [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md) - Stage 1 of the install gate requires an active SW; pair this
+- `service-worker-lifecycle-tests` - Stage 1 of the install gate requires an active SW; pair this
   builder's output with the lifecycle spec for full coverage.
 
 ## When to use
@@ -411,7 +411,7 @@ the four classes of install regression most teams hit:
 - **Headless WebAPK minting can't be asserted.** Step 4's
   `appinstalled` test verifies the event fires; the actual Android
   WebAPK creation is opaque per
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
+  `pwa-install-flow-reference`
   Stage 3.
 - **iOS install is fully manual.** Step 5's tests cover the
   metadata; the actual Share → Add to Home Screen flow needs a
@@ -439,13 +439,13 @@ the four classes of install regression most teams hit:
   handshake, `prompt()` once-only, `appinstalled` firing
   conditions) - [customize-install].
 - Composes:
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
-  [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md),
-  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).
+  `pwa-install-flow-reference`,
+  `lighthouse-pwa-audit`,
+  `service-worker-lifecycle-tests`.
 - Differentiation: `pwa-install-flow-tests` is the generic pattern
   wrapper. This builder emits the
   *per-PWA* suite tied to the project's actual manifest /
   handlers - the checked-in artifact, not the pattern reference.
 - Sibling builders:
-  [`offline-fallback-tests`](../offline-fallback-tests/SKILL.md),
-  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).
+  `offline-fallback-tests`,
+  `service-worker-lifecycle-tests`.

@@ -11,7 +11,7 @@ RESTler is "the first stateful REST API fuzzing tool for
 automatically testing cloud services through their REST APIs and
 finding security and reliability bugs" ([restler-readme][readme]).
 The differentiator vs. stateless fuzzers like
-[`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) is that
+`schemathesis-fuzzing` is that
 RESTler **infers producer-consumer dependencies** from the OpenAPI
 spec - if `POST /resources` returns a body that contains an `id`
 field, and `GET /resources/{id}` accepts that `id`, RESTler will
@@ -267,7 +267,7 @@ jobs:
 ## Limitations
 
 - **OpenAPI-driven only.** No GraphQL support; for GraphQL fuzzing,
-  use [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md).
+  use `schemathesis-fuzzing`.
 - **Heavy infra.** Python 3.12 + .NET 8 prereqs are non-trivial;
   Docker is the practical install path.
 - **Run-time cost.** Deep fuzz is hours-to-days; budget accordingly.
@@ -283,6 +283,6 @@ jobs:
 
 - [restler-readme][readme] - main repo: install, 4-stage workflow,
   bug categories, authentication patterns.
-- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
+- `schemathesis-fuzzing` - 
   stateless complement; lower setup cost; cover happy / boundary on
   PRs.

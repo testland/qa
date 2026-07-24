@@ -115,7 +115,7 @@ client c1 {
 ### Grace mode (stale-while-revalidate equivalent)
 
 Per Varnish docs and per
-[`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md):
+`stale-while-revalidate-reference`:
 
 ```vcl
 sub vcl_backend_response {
@@ -254,7 +254,7 @@ jobs:
 - **xkey vmod requires Varnish Plus or self-compile.** Open-source
   Varnish has `purge.soft` but not surrogate keys natively.
 - **Doesn't test CDN-edge behaviour.** Varnish is one tier; full
-  multi-tier tests need [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md)
+  multi-tier tests need `cdn-cache-purge-tests`
   patterns.
 
 ## References
@@ -266,10 +266,10 @@ jobs:
 - VTC syntax:
   [github.com/varnishcache/varnish-cache/.../reference/vtc.rst](https://github.com/varnishcache/varnish-cache/blob/master/doc/sphinx/reference/vtc.rst).
 - Companion catalogs:
-  [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
-  [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md),
-  [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
+  `cache-coherence-patterns-reference`,
+  `stale-while-revalidate-reference`,
+  `cache-stampede-reference`.
 - Sibling tools:
-  [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
-  [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
-  [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).
+  `redis-cache-tests`,
+  `cdn-cache-purge-tests`,
+  `browser-cache-control-tests`.

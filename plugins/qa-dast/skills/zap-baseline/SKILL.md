@@ -28,7 +28,7 @@ production; reserve for staging.
   a deployed staging environment.
 - The team uses OWASP ZAP (de facto OSS DAST) over commercial
   alternatives.
-- Pair with [`burp-headless`](../burp-headless/SKILL.md) for
+- Pair with `burp-headless` for
   deeper paid-tool coverage on critical flows.
 
 ## Step 1 - Install
@@ -209,7 +209,7 @@ invocation. Auto-creates a GitHub Issue on failure.
 - [zap-base][zap-base] - official baseline scan documentation
 - zaproxy.org/docs/docker - full Docker docs
 - github.com/zaproxy/action-baseline - official GHA action
-- [`burp-headless`](../burp-headless/SKILL.md),
-  [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister DAST tools
-- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - 
+- `burp-headless`,
+  `nightvision-dast` - sister DAST tools
+- `dast-scan-cadence-author` - 
   build-an-X for layered DAST (baseline → full → optional Burp deep)

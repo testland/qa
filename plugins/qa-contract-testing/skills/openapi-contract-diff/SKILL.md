@@ -22,7 +22,7 @@ of three severity tiers ([oasdiff-breaking][breaking]):
 [breaking]: https://github.com/oasdiff/oasdiff/blob/main/docs/BREAKING-CHANGES.md
 
 This is the schema-driven counterpart to
-[`pact-contract-testing`](../pact-contract-testing/SKILL.md): use
+`pact-contract-testing`: use
 oasdiff when **you don't control the consumers** (public APIs, third-
 party integrations) and need to gate breaking-change shipment based on
 the spec alone.
@@ -224,7 +224,7 @@ clickable per-finding rationale.
   flags.
 - [oasdiff-breaking][breaking] - `breaking` subcommand, severity tiers,
   `--fail-on` semantics, breaking-change categories.
-- [`pact-contract-testing`](../pact-contract-testing/SKILL.md) - the
+- `pact-contract-testing` - the
   consumer-driven counterpart for cases where you control consumers.
-- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md) - the gate skill that aggregates oasdiff output with Pact and
+- `contract-compatibility-gate` - the gate skill that aggregates oasdiff output with Pact and
   Protobuf verdicts.

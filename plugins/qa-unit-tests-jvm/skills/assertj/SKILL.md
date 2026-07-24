@@ -13,7 +13,7 @@ Per [assertj.github.io/doc][aj]:
 
 AssertJ is "a Java library that provides a rich set of assertions and truly helpful error messages, improves test code readability, and is designed to be super easy to use within your favorite IDE." It ships modules for JDK core types, Guava, Joda-Time, and databases; this skill covers **assertj-core** (JDK types).
 
-Works alongside [`junit5-tests`](../junit5-tests/SKILL.md), [`testng-tests`](../testng-tests/SKILL.md), or [`spock-tests`](../spock-tests/SKILL.md). AssertJ handles the assertion layer; those skills handle the test runner.
+Works alongside `junit5-tests`, `testng-tests`, or `spock-tests`. AssertJ handles the assertion layer; those skills handle the test runner.
 
 This skill is a **reference** - defines the matcher catalog and patterns; does not run tests.
 
@@ -378,4 +378,4 @@ void order_summary_fields_all_valid() {
 - [aj-custom][aj-custom] - Custom assertions
 - github.com/assertj/assertj - repository and issue tracker
 - github.com/assertj/assertj-examples - worked examples including soft assertions
-- [`junit5-tests`](../junit5-tests/SKILL.md), [`testng-tests`](../testng-tests/SKILL.md), [`spock-tests`](../spock-tests/SKILL.md) - sister skills (test runners)
+- `junit5-tests`, `testng-tests`, `spock-tests` - sister skills (test runners)

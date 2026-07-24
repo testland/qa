@@ -25,8 +25,8 @@ gRPC defines four streaming patterns:
 
 This skill walks through producing a comprehensive test suite
 from the proto file. It composes
-[`grpc-mock`](../grpc-mock/SKILL.md) for the test harness and
-[`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md)
+`grpc-mock` for the test harness and
+`grpc-status-code-mapping-reference`
 for status-code assertions.
 
 ## When to use
@@ -37,7 +37,7 @@ for status-code assertions.
 - Investigating a streaming-RPC bug - minimal repro from the
   test matrix.
 - PR review of changes to streaming RPCs (the
-  [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md)
+  `protobuf-versioning-strategy-reference`
   rules on `stream` changes are subtle).
 
 ## Step 1 - Classify each RPC
@@ -55,7 +55,7 @@ service Chat {
 
 | RPC | Pattern | Required test categories |
 |---|---|---|
-| `Send` | unary | success, every status code per [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md) |
+| `Send` | unary | success, every status code per `grpc-status-code-mapping-reference` |
 | `Subscribe` | server-stream | success, ordering, server-side close after N messages, server-side mid-stream error, client-side cancel mid-stream, deadline-exceeded mid-stream |
 | `Upload` | client-stream | success, server completes before client finishes, server-side error mid-upload, client-side cancel before send, empty stream |
 | `Conversation` | bidi | success, ordering per direction, client closes send while still receiving, server closes send while still receiving, both close, deadline mid-conversation, error mid-conversation |
@@ -291,7 +291,7 @@ or add a test.
 
 ## Step 4 - Pick the test harness
 
-Per [`grpc-mock`](../grpc-mock/SKILL.md):
+Per `grpc-mock`:
 
 | Language | Harness |
 |---|---|
@@ -324,7 +324,7 @@ isn't covered.
 ## Streaming evolution - version-safety reminder
 
 Per
-[`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md),
+`protobuf-versioning-strategy-reference`,
 changing an RPC's streaming pattern is **always breaking**:
 
 ```diff
@@ -337,7 +337,7 @@ service Chat {
 The wire format differs: streaming uses HTTP/2's length-delimited
 frames per message; unary uses one. Old clients won't parse the
 new response. Verify breaking-change detection via
-[`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md)
+`buf-cli-lint-breaking-build`
 catches this with `FILE` or `PACKAGE` category.
 
 ## Anti-patterns
@@ -348,7 +348,7 @@ catches this with `FILE` or `PACKAGE` category.
 | Test asserts on the last message only | Misses ordering bugs in earlier messages | Collect entire stream, assert on the full sequence |
 | `time.sleep` to wait for server messages | Race-prone; flakes in CI | Use channel close / iterator exhaustion as completion signal |
 | Cancellation test sleeps then cancels | Race: server may finish before cancel | Inject a controllable blocker in the fake server |
-| No deadline-exceeded test | Production deadlines surface in mid-stream | Always include - per [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md), `DEADLINE_EXCEEDED` is its own code |
+| No deadline-exceeded test | Production deadlines surface in mid-stream | Always include - per `grpc-status-code-mapping-reference`, `DEADLINE_EXCEEDED` is its own code |
 | Mock at interface level for streaming | Skips marshalling + ordering | In-process server only for streaming |
 | Bidi test where client and server are deterministic-interleaved | Misses race conditions inherent in "operate independently" | One test per direction + one test with concurrent send/recv |
 | Don't `CloseSend()` in client-streaming tests | Server waits forever | Always close the send side explicitly |
@@ -368,7 +368,7 @@ catches this with `FILE` or `PACKAGE` category.
   test* expects. Real-server contract tests are separate; see
   `protobuf-compat-checking` (in the qa-contract-testing plugin).
 - **Concurrent-client stress tests not in scope.** For that see
-  [`ghz-load`](../ghz-load/SKILL.md) (unary load) or hand-rolled
+  `ghz-load` (unary load) or hand-rolled
   multi-client streaming harnesses.
 
 ## References
@@ -376,12 +376,12 @@ catches this with `FILE` or `PACKAGE` category.
 - gRPC core concepts (four streaming patterns):
   [grpc.io/docs/what-is-grpc/core-concepts/](https://grpc.io/docs/what-is-grpc/core-concepts/).
 - Status-code assertions:
-  [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
+  `grpc-status-code-mapping-reference`.
 - Test harness:
-  [`grpc-mock`](../grpc-mock/SKILL.md).
+  `grpc-mock`.
 - Proto evolution rules:
-  [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md).
+  `protobuf-versioning-strategy-reference`.
 - Breaking-change detection:
-  [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
+  `buf-cli-lint-breaking-build`.
 - Sibling wire-level streaming patterns:
   `grpc-streaming-tests`.

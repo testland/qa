@@ -229,11 +229,11 @@ Run via `npx cypress-cloud run` (the Cypress equivalent of `pwc`).
   `currents.config.ts` shape (`recordKey` + `projectId`),
   reporter registration, artifact config (`trace` / `video` /
   `screenshot`), `npx pwc` run command.
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - pair
+- `junit-xml-analysis` - pair
   with Currents to keep CI gating self-hosted (JUnit) while
   Currents handles longitudinal analytics.
-- [`testrail-integration`](../testrail-integration/SKILL.md),
-  [`xray-integration`](../xray-integration/SKILL.md),
-  [`zephyr-integration`](../zephyr-integration/SKILL.md) - sibling
+- `testrail-integration`,
+  `xray-integration`,
+  `zephyr-integration` - sibling
   test-management integrations (different role: test management
   vs analytics).

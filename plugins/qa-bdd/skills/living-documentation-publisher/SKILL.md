@@ -32,7 +32,7 @@ Two primary renderers are covered:
 ## When to use
 
 - The team already has Cucumber scenarios (see
-  [`cucumber-testing`](../cucumber-testing/SKILL.md)) and stakeholders need to
+  `cucumber-testing`) and stakeholders need to
   read acceptance-criteria status without opening a test runner.
 - The living-documentation page must track only *passing* scenarios (not every
   scenario authored, including pending or skipped ones).
@@ -342,7 +342,7 @@ for general CI test-job conventions.
 - [mchr-opts][mchr-opts] - multiple-cucumber-html-reporter options: `jsonDir`, `reportPath`,
   `reportName`, `pageTitle`, `displayDuration`, `durationInMS`, `saveCollectedJSON`,
   `customStyle`, `overrideStyle` full option table.
-- [`cucumber-testing`](../cucumber-testing/SKILL.md) - upstream skill: produce Cucumber JSON
+- `cucumber-testing` - upstream skill: produce Cucumber JSON
   with `--format json:`.
 - `junit-xml-analysis` (in the qa-test-reporting plugin) -
   engineer-facing test result analysis (separate concern from stakeholder docs).

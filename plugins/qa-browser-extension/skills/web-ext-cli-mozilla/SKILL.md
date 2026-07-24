@@ -18,9 +18,9 @@ to use the AMO submission API by default (per the
 
 This skill wraps `web-ext` for test runs. Composes with:
 
-- [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
+- `manifest-v3-test-surface-reference`
   for the manifest fields `web-ext lint` enforces.
-- [`mv2-to-mv3-migration-test-checklist`](../mv2-to-mv3-migration-test-checklist/SKILL.md)
+- `mv2-to-mv3-migration-test-checklist`
   for migration-time lint rules.
 
 For Playwright-driven MV3 popup / content-script fixtures see
@@ -183,9 +183,9 @@ web-ext run \
 This is the lowest-effort way to verify a Firefox-developed
 extension at least loads on Chromium without a full Playwright
 fixture. Deep Chromium-specific test surface lives in
-[`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md)
+`chrome-extension-test-loader`
 and
-[`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md).
+`playwright-extension-fixtures`.
 
 ### Run on Firefox Android
 
@@ -383,7 +383,7 @@ jobs:
 - **No Firefox MV3 parity check.** `web-ext lint` does not warn
   when a manifest uses a key that's MV3-supported in Chrome but
   not Firefox (or vice versa); cross-reference the
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
+  `manifest-v3-test-surface-reference`
   matrix manually.
 - **Approval timeout caps signing throughput.** `--approval-timeout`
   defaults to 900000 ms (15 min) per [we-cmd]; AMO can take longer
@@ -401,7 +401,7 @@ jobs:
 - Mozilla `addons-linter` (what `web-ext lint` wraps) - 
   github.com/mozilla/addons-linter.
 - Composes:
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md).
+  `manifest-v3-test-surface-reference`.
 - Siblings:
-  [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md),
-  [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md).
+  `chrome-extension-test-loader`,
+  `playwright-extension-fixtures`.

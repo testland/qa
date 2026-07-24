@@ -9,7 +9,7 @@ description: "Pure reference catalog of test-isolation and fixture-lifecycle pat
 
 A test that fails sometimes for non-obvious reasons is non-deterministic. Per [Martin Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html): "A test is non-deterministic when it passes sometimes and fails sometimes, without any noticeable change in the code, tests, or environment… Once you start ignoring a regression test failure, then that test is useless and you might as well throw it away." The dominant cause is **broken isolation** - one test affecting another, the environment leaking, fixtures sharing state. This catalog is the canonical reference for the isolation patterns that prevent it.
 
-This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing fixture coupling, retry/wait policy consistency, and CI integration health. It complements [`test-code-conventions §6`](../test-code-conventions/SKILL.md) (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements `flake-pattern-reference`, which catalogs flake symptoms; this skill catalogs the prevention patterns.
+This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing fixture coupling, retry/wait policy consistency, and CI integration health. It complements `test-code-conventions §6` (which is the file-level rule against global-fixture hubs) with the cross-cutting architecture patterns. It also complements `flake-pattern-reference`, which catalogs flake symptoms; this skill catalogs the prevention patterns.
 
 ## When to use
 
@@ -214,13 +214,13 @@ Tests should not depend on external services they don't control. Three patterns:
 
 ## Hand-off targets
 
-- **Per-file fixture coupling rule** → [`test-code-conventions §6`](../test-code-conventions/SKILL.md).
+- **Per-file fixture coupling rule** → `test-code-conventions §6`.
 - **Flake symptoms / pattern catalog** → `flake-pattern-reference` (qa-flake-triage) - symptoms; this skill is the prevention reference.
 - **Quarantine a chronically flaky test** → `flaky-test-quarantine` (qa-flake-triage).
 - **Stub / mock external services** → `msw-handlers`, `wiremock-stubs`, `mountebank-imposters` (qa-test-data).
 - **Test data construction patterns** → `test-data-patterns` (qa-test-data, sister catalog).
-- **Object-model architecture patterns** → [`object-model-patterns`](../object-model-patterns/SKILL.md) (sister catalog).
-- **Test step granularity** → [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md) (sister catalog).
+- **Object-model architecture patterns** → `object-model-patterns` (sister catalog).
+- **Test step granularity** → `test-step-design-patterns` (sister catalog).
 
 ## References
 
@@ -233,5 +233,5 @@ Tests should not depend on external services they don't control. Three patterns:
 - Testcontainers - https://testcontainers.com/ (the canonical containerised-DB-per-test reference)
 - Gerard Meszaros - *Principles of Test Automation* ("Principle: Keep Tests Independent", also known as Independent Test - the canonical statement of the test-isolation principle this catalog implements): http://xunitpatterns.com/Principles%20of%20Test%20Automation.html
 - ISTQB glossary - test fixture: https://glossary.istqb.org/en_US/term/test-fixture
-- [`test-code-conventions §6`](../test-code-conventions/SKILL.md), `flake-pattern-reference` (qa-flake-triage) - companion file-level and symptom-level references.
-- [`object-model-patterns`](../object-model-patterns/SKILL.md), `test-data-patterns` (qa-test-data), [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md) - sister architecture-tier pattern catalogs.
+- `test-code-conventions §6`, `flake-pattern-reference` (qa-flake-triage) - companion file-level and symptom-level references.
+- `object-model-patterns`, `test-data-patterns` (qa-test-data), `test-step-design-patterns` - sister architecture-tier pattern catalogs.

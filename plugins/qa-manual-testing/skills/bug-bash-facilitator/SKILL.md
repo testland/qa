@@ -51,13 +51,13 @@ checkout flow before the release on YYYY-MM-DD.
 
 Per cohort, 1-2 testers + 1 facilitator-roving:
 
-- **Cohort A - Money:** Apply the [Money tour](../exploratory-tours-reference/SKILL.md)
+- **Cohort A - Money:** Apply the Money tour
   across the new checkout discount + tax flow - visit every place
   money / pricing / currency / discount appears and verify each;
   hunts rounding errors, currency-conversion drift, discount
   stacking, free-shipping edges, locale formatting (€1.234,56 vs
   $1,234.56).
-- **Cohort B - Bad data:** Apply the [Bad-data tour](../exploratory-tours-reference/SKILL.md)
+- **Cohort B - Bad data:** Apply the Bad-data tour
   across promo code input, address fields, payment fields - feed
   pathological inputs (empty, single space, 5000 chars, SQL
   injection, XSS, unicode bidi override, RTL text, emoji ZWJ
@@ -248,7 +248,7 @@ triage) but it broadens coverage.
 
 ## References
 
-- [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md) - the heuristics menu the cohorts pick from.
-- [`manual-test-debrief`](../manual-test-debrief/SKILL.md) - the
+- `exploratory-tours-reference` - the heuristics menu the cohorts pick from.
+- `manual-test-debrief` - the
   PROOF debrief format the bug-bash debrief inherits from.
 - `synthetic-data-tool-selector` - used in the test-data-prep step.

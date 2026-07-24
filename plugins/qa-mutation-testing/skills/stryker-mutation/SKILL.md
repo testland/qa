@@ -172,8 +172,8 @@ main (catches drift in unchanged code).
 
 - [si][si] - StrykerJS overview, supported test runners, supported
   frameworks (TS / React / Angular / Vue / Svelte / Node).
-- [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md) - 
+- `stryker-net-mutation` - 
   .NET sibling.
-- [`pitest-mutation`](../pitest-mutation/SKILL.md) - Java sibling.
-- [`mutmut-mutation`](../mutmut-mutation/SKILL.md) - Python sibling.
-- [`mull-mutation`](../mull-mutation/SKILL.md) - C/C++ sibling.
+- `pitest-mutation` - Java sibling.
+- `mutmut-mutation` - Python sibling.
+- `mull-mutation` - C/C++ sibling.

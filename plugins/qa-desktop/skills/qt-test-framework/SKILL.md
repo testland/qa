@@ -32,13 +32,13 @@ Per the [QTest namespace reference][qtns]:
 Qt Test is **in-process** - the test executable links the Qt
 application code and emits events directly into the `QObject` event
 queue. It does **not** go through the OS accessibility tree (per
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)),
+`desktop-test-strategy-reference`),
 which means it cannot drive a Qt app from a *separate* process. For
 out-of-process Qt driving see
-[`winappdriver`](../winappdriver/SKILL.md) (Windows via UIA after
+`winappdriver` (Windows via UIA after
 `QAccessible` is enabled),
-[`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md) (macOS), and
-[`at-spi-linux`](../at-spi-linux/SKILL.md) (Linux).
+`xctest-mac-desktop` (macOS), and
+`at-spi-linux` (Linux).
 
 ## When to use
 
@@ -352,10 +352,10 @@ runners that don't have an X / Wayland session.
 - QTest namespace reference - [qtns][qtns].
 - Qt Test module index - [qtidx][qtidx].
 - Sibling out-of-process Qt drivers:
-  [`winappdriver`](../winappdriver/SKILL.md),
-  [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md),
-  [`at-spi-linux`](../at-spi-linux/SKILL.md).
+  `winappdriver`,
+  `xctest-mac-desktop`,
+  `at-spi-linux`.
 - Strategic frame:
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - Downstream:
   `junit-xml-analysis`.

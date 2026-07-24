@@ -36,15 +36,15 @@ The three engine surfaces differ:
 
 Composes with:
 
-- [`unity-test-framework`](../unity-test-framework/SKILL.md),
-  [`unreal-automation-system`](../unreal-automation-system/SKILL.md),
-  [`godot-gut-tests`](../godot-gut-tests/SKILL.md) - the host test
+- `unity-test-framework`,
+  `unreal-automation-system`,
+  `godot-gut-tests` - the host test
   framework the replay runs inside.
-- [`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md) - 
+- `multiplayer-state-machine-coverage` - 
   Unreal's Replay system shares `NetworkReplayStreamer` with its
   multiplayer stack; multiplayer fixtures can replay captured
   sessions.
-- [`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md) - 
+- `platform-cert-overview-reference` - 
   replays are evidence artefacts for cert (Xbox **XR-003** title
   quality, attaching a repro to a CFR).
 
@@ -270,7 +270,7 @@ this gives equivalent determinism to Unity's InputEventTrace
 pattern.
 
 Test harness in
-[`godot-gut-tests`](../godot-gut-tests/SKILL.md):
+`godot-gut-tests`:
 
 ```gdscript
 extends GutTest
@@ -318,7 +318,7 @@ public IEnumerator Level1_Speedrun_Replay_MatchesBaseline()
 ```
 
 Unreal example (in an
-[`unreal-automation-system`](../unreal-automation-system/SKILL.md)
+`unreal-automation-system`
 test):
 
 ```cpp

@@ -221,5 +221,5 @@ Output a stack-ranked list of layer-changes:
   "brittle, expensive to write, and time consuming to run."
 - `test-coverage-targeter` - risk-weighted "what to add at unit layer" once the team decides
   to layer-down.
-- [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling
+- `e2e-suite-budget` - sibling
   skill for capping E2E suite size.

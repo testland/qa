@@ -8,7 +8,7 @@ description: "Jira Cloud bug workflow runner using the REST API v3: issue creati
 ## Overview
 
 Jira's workflow engine maps cleanly to the canonical defect lifecycle
-([`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md))
+(`bug-lifecycle-reference`)
 but every project's actual workflow is configurable, so the
 runner has to look up transition IDs at runtime rather than
 hard-code them.
@@ -21,7 +21,7 @@ search.
 ## When to use
 
 - Filing a bug from a CI test failure (consumed by
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)).
+  `bug-report-from-failure`).
 - Bulk-transitioning bugs after a release (e.g., move all
   `Verified` → `Closed` after deployment).
 - Building a triage script that pulls New defects and applies
@@ -256,7 +256,7 @@ above.
 | Hard-coding transition IDs | Workflow updates break the runner silently | Look up transitions per call via `GET /transitions` |
 | Plain-text `description` | API returns 400 - Jira v3 requires ADF | Wrap as `{"type": "doc", "version": 1, "content": [...]}` |
 | No deduplication before create | Each retry of a flaky test creates a new bug | Search by summary first; comment on existing |
-| Severity as built-in `priority` | Conflates two axes ([`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md)) | Use custom Severity field or `severity-*` labels |
+| Severity as built-in `priority` | Conflates two axes (`severity-vs-priority-reference`) | Use custom Severity field or `severity-*` labels |
 | Storing the API token in code | Token leak | Use environment variables / secret stores |
 | Polling `/transitions` on every call | Rate-limited | Cache per workflow scheme, refresh on 4xx |
 | Bulk transitions without dry-run | Cannot easily reverse if wrong state | Always run in dry-run mode first; log all changes |
@@ -283,12 +283,12 @@ above.
 - ADF spec - developer.atlassian.com/cloud/jira/platform/apis/document/structure.
 - JQL syntax - confluence.atlassian.com/jiracoreserver/advanced-searching.
 - Sibling references:
-  [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
+  `bug-lifecycle-reference`,
+  `severity-vs-priority-reference`.
 - Sibling skills:
-  [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md),
-  [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
+  `linear-bug-workflow-runner`,
+  `github-issues-bug-workflow`.
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).
+  `bug-report-from-failure`.
 - Sibling-plugin neighbour:
   `testrail-integration` (in the qa-test-reporting plugin) - different scope (test-result posting; not bug workflow).

@@ -17,7 +17,7 @@ exercises.
 
 This skill produces a test suite for that lifecycle. The output is committed to
 the project repo alongside the runtime suite from
-[`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md).
+`tenant-leak-test-author`.
 
 The workflow is:
 
@@ -32,8 +32,8 @@ The workflow is:
 | Skill | What it tests |
 |---|---|
 | `tenant-onboarding-test-author` (this skill) | Provisioning lifecycle: creation, quota, billing, seed data, idempotency, teardown |
-| [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md) | Steady-state runtime: cross-tenant access attempts, IDOR, horizontal escalation |
-| [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md) | CI gate: confirms isolation invariants pass before merge |
+| `tenant-leak-test-author` | Steady-state runtime: cross-tenant access attempts, IDOR, horizontal escalation |
+| `cross-tenant-data-leak-tests` | CI gate: confirms isolation invariants pass before merge |
 
 ## Step 1 - Map provisioning pipeline surfaces
 
@@ -152,7 +152,7 @@ that window. Test cases:
 ## Step 3 - Generate test cases
 
 Naming convention matches
-[`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md):
+`tenant-leak-test-author`:
 
 ```
 test_<surface>_<scenario>_<expected>()
@@ -184,7 +184,7 @@ test_offboarding_application_data_deleted_after_retention_period()
 ## Step 4 - Pick the test framework and emit skeleton
 
 Same framework selection table as
-[`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md):
+`tenant-leak-test-author`:
 
 | Stack | Framework |
 |---|---|
@@ -320,7 +320,7 @@ This skill produces:
 - A coverage matrix (Step 5).
 
 The runtime isolation gate is
-[`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
+`cross-tenant-data-leak-tests`.
 
 ## References
 
@@ -335,6 +335,6 @@ The runtime isolation gate is
 - Microsoft Multitenant Architecture Center, Resource Organisation:
   [learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/resource-organization](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/resource-organization).
 - Tenant isolation (runtime gate):
-  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
+  `cross-tenant-data-leak-tests`.
 - Isolation models reference:
-  [`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md).
+  `tenant-isolation-models-reference`.

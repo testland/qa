@@ -268,5 +268,5 @@ test('outside content is unreachable by Tab', async ({ page }) => {
   Dialog (Modal) Pattern.
 - HTML Living Standard `<dialog>` element - https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
 - `inert` attribute - https://html.spec.whatwg.org/multipage/interaction.html#the-inert-attribute
-- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md) - broader keyboard-conformance skill.
-- [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md) - pattern reference for other widgets.
+- `wcag-keyboard-navigation` - broader keyboard-conformance skill.
+- `aria-authoring-patterns` - pattern reference for other widgets.

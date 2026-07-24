@@ -244,9 +244,9 @@ steps:
 - localstack.cloud - LocalStack SQS emulator
 - pypi.org/project/moto - Python AWS mock
 - npmjs.com/package/aws-sdk-client-mock - TypeScript AWS mock
-- [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
-  [`celery-tests`](../celery-tests/SKILL.md),
-  [`bullmq-tests`](../bullmq-tests/SKILL.md),
-  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md) - sister tools
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
+- `sidekiq-tests`,
+  `celery-tests`,
+  `bullmq-tests`,
+  `rabbitmq-tests` - sister tools
+- `idempotency-test-author` - 
   critical companion for at-least-once SQS Standard queues

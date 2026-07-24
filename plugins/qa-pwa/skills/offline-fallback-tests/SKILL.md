@@ -31,13 +31,13 @@ verification.
 
 Composes with:
 
-- [`workbox-tests`](../workbox-tests/SKILL.md) - when the SW uses
+- `workbox-tests` - when the SW uses
   Workbox's `offlineFallback()` recipe, the workbox-tests spec
   covers the recipe's runtime; this builder covers the per-route
   decision and the page-side assertion.
-- [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md) - every recipe assumes an active SW; the lifecycle spec is the
+- `service-worker-lifecycle-tests` - every recipe assumes an active SW; the lifecycle spec is the
   prerequisite for this one.
-- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md) - Stage 1's service-worker prerequisite cell is the same SW
+- `pwa-install-flow-reference` - Stage 1's service-worker prerequisite cell is the same SW
   this builder tests offline behavior of.
 
 ## When to use
@@ -412,7 +412,7 @@ catches the four most common offline regressions:
 | Pin `caches.match('/offline.html')` to a hard URL | Workbox `pageFallback` option overrides; tests false-fail on custom configs | Match by suffix (Step 4) |
 | Test only Chromium | Firefox cache behavior + quota differ | Run cross-browser; Firefox `storage.persist()` UX differs |
 | Hand-build storage assertions instead of `navigator.storage.estimate()` | Misses quota-pressure | Step 3 uses the API |
-| Assume cached HTML stays fresh forever | TTL plugin (or its absence) gates this; per [wb-recipes] `imageCache()` defaults to 30 days | Assert TTL via `imageCache`-style entry expiration in [`workbox-tests`](../workbox-tests/SKILL.md) |
+| Assume cached HTML stays fresh forever | TTL plugin (or its absence) gates this; per [wb-recipes] `imageCache()` defaults to 30 days | Assert TTL via `imageCache`-style entry expiration in `workbox-tests` |
 | Mix recipes without documenting per route | New routes inherit wrong default | The matrix YAML (Step 1) is the source of truth |
 
 ## Limitations
@@ -434,7 +434,7 @@ catches the four most common offline regressions:
   upfront.
 - **`offline.html` precache** depends on the SW's
   `precacheAndRoute(self.__WB_MANIFEST)` including the offline
-  page; [`workbox-tests`](../workbox-tests/SKILL.md) Step 3
+  page; `workbox-tests` Step 3
   asserts the manifest contents, which is the upstream gate.
 - **No IndexedDB-specific recipe** in [off-cookbook]; this builder
   documents IDB usage in the storage matrix (Step 3) but does not
@@ -450,14 +450,14 @@ catches the four most common offline regressions:
 - Chrome - Workbox recipes (`offlineFallback()` recipe defaults to
   `offline.html`) - [wb-recipes].
 - Composes:
-  [`workbox-tests`](../workbox-tests/SKILL.md),
-  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md),
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md).
+  `workbox-tests`,
+  `service-worker-lifecycle-tests`,
+  `pwa-install-flow-reference`.
 - Differentiation: `sw-cache-strategy-author` authors the strategy;
   this builder generates the verification
   suite. Both consume the cookbook recipe vocabulary; the
   authoring side writes the SW code, this side writes the spec
   that locks it.
 - Sibling builders:
-  [`add-to-homescreen-flow-tests`](../add-to-homescreen-flow-tests/SKILL.md),
-  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).
+  `add-to-homescreen-flow-tests`,
+  `service-worker-lifecycle-tests`.

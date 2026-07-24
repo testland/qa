@@ -32,16 +32,16 @@ UTF is built on **NUnit 3.5** and supports both **Edit Mode** and
 
 Composes with:
 
-- [`game-test-categories-reference`](../game-test-categories-reference/SKILL.md)
+- `game-test-categories-reference`
   for what category of test each Unity test belongs to (functional
   /  performance / etc.).
-- [`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
+- `platform-cert-overview-reference`
   for cert-gated requirements UTF tests should cover (XR-001
   Title Stability, XR-074 Service Loss, XR-115 Controller add /
   remove).
-- [`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md)
+- `multiplayer-state-machine-coverage`
   and
-  [`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md)
+  `gameplay-recording-replay`
   for state-machine and replay-driven test patterns inside UTF
   PlayMode tests.
 

@@ -37,7 +37,7 @@ The platform's distinguishing features vs Semgrep / CodeQL:
 - New-code-period gating fits the team's deploy cadence.
 
 For new projects without a SonarQube investment, evaluate
-[`semgrep-rules`](../semgrep-rules/SKILL.md) (lower friction; no
+`semgrep-rules` (lower friction; no
 server) first.
 
 ## Step 1 - Install (server side)
@@ -221,7 +221,7 @@ API token via `User → My Account → Security → Generate Tokens`.
 - [sq-docs][sq-docs] - official SonarQube documentation root
 - docs.sonarsource.com/sonarqube-server/latest/user-guide/quality-gates - Quality Gates user guide
 - docs.sonarsource.com/sonarqube-server/latest/user-guide/issues - Issue workflow + transitions
-- [`semgrep-rules`](../semgrep-rules/SKILL.md),
-  [`codeql-queries`](../codeql-queries/SKILL.md),
-  [`bandit-python`](../bandit-python/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- `semgrep-rules`,
+  `codeql-queries`,
+  `bandit-python`,
+  `gosec-go` - sister scanners

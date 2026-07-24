@@ -30,7 +30,7 @@ hypothesis the engineer can act on.
 - A perf regression has been bisected but the introducing commit
   touches multiple functions; the team needs to know which function
   is the actual hot path.
-- A load test under [`k6-load-testing`](../k6-load-testing/SKILL.md)
+- A load test under `k6-load-testing`
   or sibling shows latency growth, but the API code hasn't visibly
   changed - flame graph reveals the runtime cause.
 - A production incident showed CPU saturation; the team has captured
@@ -171,7 +171,7 @@ sampled time combined.
   - eliminates intermediate string allocation and runs ~2-5x faster
    on benchmark-typical payloads.
 2. Re-profile after the change; expect rank 1 to drop below 10%.
-3. Hand off to [`perf-budget-gate`](../perf-budget-gate/SKILL.md)
+3. Hand off to `perf-budget-gate`
    to confirm the regression delta closes.
 ```
 
@@ -223,7 +223,7 @@ the JVM, `__slots__` in Python, generated SQL in Go.
 | Anti-pattern                                              | Why it fails                                                    | Fix |
 |-----------------------------------------------------------|------------------------------------------------------------------|-----|
 | Reading the SVG visually only, no quantitative data        | Easy to mis-judge widths; biases toward dramatic-looking deep stacks. | Always work from folded stacks; sort by sample count. |
-| Profiling under-load is too low                            | One request / second can't expose contention or allocator pressure. | Profile under realistic load - pair with [`k6-load-testing`](../k6-load-testing/SKILL.md). |
+| Profiling under-load is too low                            | One request / second can't expose contention or allocator pressure. | Profile under realistic load - pair with `k6-load-testing`. |
 | Optimizing rank 5 first because rank 1 looks "structural"  | Premature optimization; misses the dominant cost.                | Always start with rank 1; only descend if rank 1 is genuinely framework-bound (e.g. `event_loop`). |
 | On-CPU profiler for an I/O-bound workload                  | I/O wait doesn't appear; flame graph shows what's running, not what's waiting. | Use wall-clock / off-CPU profiling for I/O-bound workloads. |
 | Single 30-second capture under highly variable load         | Sample is unrepresentative.                                       | Capture multiple samples across the load-test duration; merge. |
@@ -248,5 +248,5 @@ the JVM, `__slots__` in Python, generated SQL in Go.
 - async-profiler - https://github.com/async-profiler/async-profiler
 - Go pprof - https://pkg.go.dev/net/http/pprof
 - Clinic.js - https://clinicjs.org/
-- [`k6-load-testing`](../k6-load-testing/SKILL.md) - runner that
+- `k6-load-testing` - runner that
   produces the load under which the profile is captured.

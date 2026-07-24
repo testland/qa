@@ -19,7 +19,7 @@ use** because it identifies the field in the message wire format."
 This skill is a **pure reference** consumed by buf-CLI lint, the
 breaking-build CI integration, and the gRPC service authors. For
 the detection workflow see
-[`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
+`buf-cli-lint-breaking-build`.
 
 ## When to use
 
@@ -325,10 +325,10 @@ later in a separate proto file/package.
 - buf breaking-change rules:
   [buf.build/docs/breaking/rules](https://buf.build/docs/breaking/rules).
 - Consumed by:
-  [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md),
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `buf-cli-lint-breaking-build`,
+  `grpc-streaming-test-author`.
 - Differentiation: this is the **catalog of what is and isn't
   breaking and why**. For detection of changes in CI, use
-  [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
+  `buf-cli-lint-breaking-build`.
   For protobuf-schema contract-testing across services see
   `protobuf-compat-checking`.

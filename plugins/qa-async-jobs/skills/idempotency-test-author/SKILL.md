@@ -233,10 +233,10 @@ For each at-least-once handler:
   idempotent applications
 - stripe.com/docs/api/idempotent_requests - Stripe's idempotency-key
   pattern (the de facto industry standard)
-- [`sqs-tests`](../sqs-tests/SKILL.md) - Standard SQS is
+- `sqs-tests` - Standard SQS is
   at-least-once; idempotency tests are mandatory
-- [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md) - requeue +
+- `rabbitmq-tests` - requeue +
   redelivery semantics need idempotent consumers
-- [`cron-job-test-author`](../cron-job-test-author/SKILL.md) - cron
+- `cron-job-test-author` - cron
   jobs need idempotency for safe overlap recovery
 - `webhook-delivery-tester` (in the qa-notifications plugin) - webhook receivers need idempotency

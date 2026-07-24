@@ -20,7 +20,7 @@ supports multiple languages with a common API: `activate`,
 - Tests for code that reads a VWO feature variable / experiment.
 - Force-bucketing for per-test assignment pinning.
 - Assignment-integrity tests per
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+  `ab-test-validity-checklist`
   Step 3.
 
 ## Authoring
@@ -103,7 +103,7 @@ def test_bucketing_is_uniform():
 ```
 
 The bucketing-uniformity test is **also a unit-level SRM check**
-per [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+per `ab-test-validity-checklist`
 Step 2.
 
 ### Event tracking
@@ -163,10 +163,10 @@ jobs:
 - VWO developer docs:
   [developers.vwo.com](https://developers.vwo.com/).
 - Companion catalogs:
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md),
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md).
+  `guardrail-metrics-reference`,
+  `peeking-problem-reference`,
+  `ab-test-validity-checklist`.
 - Sibling SDKs:
-  [`statsig-test`](../statsig-test/SKILL.md),
-  [`optimizely-test`](../optimizely-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).
+  `statsig-test`,
+  `optimizely-test`,
+  `amplitude-experiment-test`.

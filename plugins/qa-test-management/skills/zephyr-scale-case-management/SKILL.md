@@ -14,7 +14,7 @@ Per smartbear.com/test-management/zephyr-scale (Cloudflare-
 protected; cite by stable URL).
 
 For canonical anatomy, see
-[`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+`test-case-anatomy-reference`.
 
 ## When to use
 
@@ -258,11 +258,11 @@ Sync per-spec front-matter to Zephyr Scale:
   protected; cite by stable URL).
 - Atlassian Marketplace - Zephyr Scale (formerly TM4J) listing.
 - Sibling references:
-  [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+  `test-case-anatomy-reference`.
 - Sibling skills:
-  [`testrail-case-management`](../testrail-case-management/SKILL.md),
-  [`xray-case-management`](../xray-case-management/SKILL.md),
-  [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
-  [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
+  `testrail-case-management`,
+  `xray-case-management`,
+  `allure-testops-case-management`,
+  `qase-io-case-management`.
 - Sibling-plugin neighbour:
   `zephyr-integration` (in the qa-test-reporting plugin) - different scope (result sync via test cycles).

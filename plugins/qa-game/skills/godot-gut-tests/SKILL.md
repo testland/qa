@@ -25,12 +25,12 @@ Per the [GUT README](https://github.com/bitwes/Gut):
 
 Composes with:
 
-- [`game-test-categories-reference`](../game-test-categories-reference/SKILL.md)
+- `game-test-categories-reference`
   for the canonical six categories GUT tests map to.
-- [`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
+- `platform-cert-overview-reference`
   for cert-gated requirements GUT tests should cover where the
   title ships to Xbox / PlayStation / Switch via Godot exports.
-- [`gameplay-recording-replay`](../gameplay-recording-replay/SKILL.md)
+- `gameplay-recording-replay`
   for replay-driven coverage authored on top of GUT.
 
 ## When to use

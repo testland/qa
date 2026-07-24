@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-pwa",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, web-push subscription lifecycle testing, and a per-surface pwa-test-author agent that emits one Playwright spec per PWA surface, distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
   "author": {
     "name": "testland",

@@ -21,7 +21,7 @@ This is **decision-support, not recommendation**. The skill refuses to pick a wi
 
 Do **not** use this skill when:
 
-- The decision is between **open-source code-first frameworks** (Playwright vs Cypress vs Selenium) - use [`framework-choice-advisor`](../framework-choice-advisor/SKILL.md). Different axis entirely (architecture, not procurement; no contract, lock-in, or exit-cost dimensions).
+- The decision is between **open-source code-first frameworks** (Playwright vs Cypress vs Selenium) - use `framework-choice-advisor`. Different axis entirely (architecture, not procurement; no contract, lock-in, or exit-cost dimensions).
 - Only one vendor is being evaluated - comparison requires ≥2 candidates. (For a single-vendor go/no-go, use the team's standard procurement checklist; this skill needs comparison anchors.)
 - The team has no defined NFR priorities - the matrix cannot score "capability fit" without knowing what the team needs the tool to do.
 
@@ -279,9 +279,9 @@ The matrix is the **input** to the decision, not the decision itself. Downstream
 
 ## Hand-off targets
 
-- **Open-source framework selection (different decision)** → [`framework-choice-advisor`](../framework-choice-advisor/SKILL.md).
+- **Open-source framework selection (different decision)** → `framework-choice-advisor`.
 - **Per-vendor integration playbooks after the vendor is picked** → `testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration`.
-- **Vendor evaluation feeding a quarterly OKR (e.g., "adopt vendor X by Q3")** → [`qa-okr-author`](../qa-okr-author/SKILL.md).
+- **Vendor evaluation feeding a quarterly OKR (e.g., "adopt vendor X by Q3")** → `qa-okr-author`.
 - **Compliance vendor evaluation (regulated industries)** → augment the matrix with the `qa-compliance` plugin's per-framework reference skills.
 
 ## References
@@ -291,6 +291,6 @@ The matrix is the **input** to the decision, not the decision itself. Downstream
 - G2 / Capterra - methodology disclosure for review-density and recency scoring (general SaaS evaluation context; not QA-specific): https://www.g2.com/about
 - ISTQB glossary - test automation framework (the open-source / commercial boundary): https://glossary.istqb.org/en_US/term/test-automation-framework
 - ISO/IEC 25010 - quality model for non-functional requirements (used in A1 capability scoring): https://en.wikipedia.org/wiki/ISO/IEC_25010
-- [`framework-choice-advisor`](../framework-choice-advisor/SKILL.md) - sibling reference for open-source framework selection; this skill is its commercial-procurement complement.
+- `framework-choice-advisor` - sibling reference for open-source framework selection; this skill is its commercial-procurement complement.
 - `testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration` - per-vendor integration baselines that feed A3.
-- [`qa-okr-author`](../qa-okr-author/SKILL.md) - when the procurement outcome ladders into a quarterly OKR.
+- `qa-okr-author` - when the procurement outcome ladders into a quarterly OKR.

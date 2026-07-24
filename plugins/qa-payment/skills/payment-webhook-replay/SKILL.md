@@ -309,12 +309,12 @@ tests/payment/webhooks/
 - Braintree webhook testing:
   [developer.paypal.com/braintree/docs/guides/webhooks/testing-go-live](https://developer.paypal.com/braintree/docs/guides/webhooks/testing-go-live).
 - Companion catalog:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md).
+  `payment-flow-states-reference`.
 - Per-platform SDKs:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `paypal-sandbox`,
+  `braintree-test-cards`.
 - Sibling builders:
-  [`refund-test-matrix-builder`](../refund-test-matrix-builder/SKILL.md),
-  [`chargeback-flow-test-author`](../chargeback-flow-test-author/SKILL.md).
+  `refund-test-matrix-builder`,
+  `chargeback-flow-test-author`.

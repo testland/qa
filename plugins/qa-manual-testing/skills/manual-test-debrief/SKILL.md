@@ -22,7 +22,7 @@ This skill provides the template and the aggregation conventions.
 
 - After every charter session.
 - After a bug bash cohort completes its 90-min slot per
-  [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md).
+  `bug-bash-facilitator`.
 - After a free-form tester exploration (even without a formal
   charter, the PROOF structure converts the session to an artifact).
 
@@ -56,7 +56,7 @@ metric captures.
 ## Past - what was tested
 
 **Tours applied:**
-- [x] Money tour (per [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md))
+- [x] Money tour (per `exploratory-tours-reference`)
 - [x] Bad-data tour
 - [ ] Configuration tour (skipped - out of time)
 
@@ -231,6 +231,6 @@ different scope.
 - Bach, J. & Bach, J., *Session-Based Test Management* (HP, 2000;
   PDF at `satisfice.com/download/session-based-test-management`) - 
   PROOF debrief format origin, three-bucket time accounting.
-- [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md) - the tours catalogued in the Past section.
-- [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md) - 
+- `exploratory-tours-reference` - the tours catalogued in the Past section.
+- `bug-bash-facilitator` - 
   multi-cohort bug bash inherits this debrief format.

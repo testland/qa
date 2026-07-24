@@ -37,7 +37,7 @@ AT-SPI surface on Linux. **Either** path lets a test client walk the
 tree.
 
 Strategic frame:
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+`desktop-test-strategy-reference`
 places AT-SPI alongside Windows UIA and macOS XCTest as the three OS-
 native accessibility-tree backends.
 
@@ -45,7 +45,7 @@ native accessibility-tree backends.
 
 - Linux GTK app under test (GNOME apps, GTK4 + GTK3 apps).
 - Qt application on Linux where in-process
-  [`qt-test-framework`](../qt-test-framework/SKILL.md) doesn't fit
+  `qt-test-framework` doesn't fit
   (test must drive a separately-packaged binary).
 - Electron / Chromium app on Linux that needs out-of-process
   driving and Playwright `_electron` isn't acceptable (e.g.,
@@ -106,7 +106,7 @@ X-style event injection isn't available.
 Before writing tests, walk the live tree with **Accerciser** (the
 GNOME accessibility inspector). It's the AT-SPI analogue of
 Inspect.exe (Windows) and Accessibility Inspector (macOS, per
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)).
+`desktop-test-strategy-reference`).
 
 ```bash
 # Most distros:
@@ -274,7 +274,7 @@ jobs:
 spawns the session DBus bus (`at-spi2-registryd` requires the session
 bus per [atspi2coreraw][atspi2coreraw] - without it the registry
 daemon refuses to start). This matches the CI guidance in the
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+`desktop-test-strategy-reference`
 anti-patterns table.
 
 ## Anti-patterns
@@ -294,8 +294,8 @@ anti-patterns table.
 
 - **Linux-only.** AT-SPI runs only on Linux desktops; cross-OS
   parity lives in
-  [`winappdriver`](../winappdriver/SKILL.md) (Windows) and
-  [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md) (macOS).
+  `winappdriver` (Windows) and
+  `xctest-mac-desktop` (macOS).
 - **Session-bus requirement.** `at-spi2-registryd` requires a
   session DBus bus per [atspi2coreraw][atspi2coreraw]; bare Docker
   containers (no session bus) need `dbus-launch`. GitHub-hosted
@@ -313,7 +313,7 @@ anti-patterns table.
   bypass GTK/Qt/Chromium accessibility (e.g., raw OpenGL canvases,
   custom-painted Cairo surfaces) are opaque to AT-SPI - same
   caveat as
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - **dogtail API docs incomplete.** Per [dogtailraw][dogtailraw],
   "API docs (incomplete for both versions, in progress for 2.x)" - 
   some method signatures need source-spelunking.
@@ -324,11 +324,11 @@ anti-patterns table.
 - libatspi (AT-SPI 2.0) reference - [atspi2docs][atspi2docs].
 - dogtail README - [dogtailraw][dogtailraw].
 - Strategic frame:
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - Related skills:
-  [`winappdriver`](../winappdriver/SKILL.md),
-  [`xctest-mac-desktop`](../xctest-mac-desktop/SKILL.md),
-  [`qt-test-framework`](../qt-test-framework/SKILL.md),
-  [`electron-playwright`](../electron-playwright/SKILL.md).
+  `winappdriver`,
+  `xctest-mac-desktop`,
+  `qt-test-framework`,
+  `electron-playwright`.
 - Downstream:
   `junit-xml-analysis`.

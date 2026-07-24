@@ -461,8 +461,8 @@ fails before `dispose()` or `close()` is called.
   cite by stable ID): subscription execution model, single-root-field
   constraint, per-event independent execution.
 - Sibling skill (queries/mutations, in-process):
-  [`apollo-server-tests`](../apollo-server-tests/SKILL.md).
+  `apollo-server-tests`.
 - Sibling skill (Yoga transport, including SSE via Yoga):
-  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md).
+  `graphql-yoga-tests`.
 - Contract-drift cross-plugin:
   `graphql-schema-regression`.

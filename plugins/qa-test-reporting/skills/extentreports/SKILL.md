@@ -36,7 +36,7 @@ This skill covers the v5 API as documented in the official wiki.
 If the team is starting fresh, evaluate **ChainTest** (the announced
 successor per [extent-readme][readme]) before adopting ExtentReports.
 For framework-agnostic richer reporting,
-[`allure-reports`](../allure-reports/SKILL.md) covers similar ground
+`allure-reports` covers similar ground
 with broader language support.
 
 ## Step 1 - Install
@@ -280,8 +280,8 @@ class.
   sunset notice (replacing with ChainTest).
 - [extent-wiki][wiki] - wiki home with the "complete example" code
   cited throughout this skill.
-- [`allure-reports`](../allure-reports/SKILL.md) - framework-agnostic
+- `allure-reports` - framework-agnostic
   alternative with broader language support (and not sunset).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - pair with
+- `junit-xml-analysis` - pair with
   ExtentReports for CI gating; the JUnit XML is the gate, the
   Spark HTML is the human-readable artifact.

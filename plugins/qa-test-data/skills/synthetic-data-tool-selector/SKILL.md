@@ -26,13 +26,13 @@ patterns regardless of which language the codebase uses.
 If the project is already standardized on one library, defer this
 skill - go directly to the matching per-tool skill:
 
-- [`faker-data`](../faker-data/SKILL.md) - Python / JS / Ruby
+- `faker-data` - Python / JS / Ruby
   Faker.
-- [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby
+- `factory-bot-data` - Ruby
   FactoryBot.
-- [`mimesis-data`](../mimesis-data/SKILL.md) - Python mimesis
+- `mimesis-data` - Python mimesis
   (alternative to Faker).
-- [`bogus-data`](../bogus-data/SKILL.md) - .NET Bogus.
+- `bogus-data` - .NET Bogus.
 
 ## Dispatch by language
 
@@ -64,8 +64,8 @@ Project language?
 | Locale-aware data (Japanese names, German addresses)                  | mimesis (Python; 46 locales) or Faker (any; 70+ locales).     |
 | Bulk generation (10k+ rows for DB seeding)                            | mimesis Schema/Field (Python) or Bogus `GenerateLazy` (.NET). |
 | Realistic but deterministic (seed-driven for repro)                   | All four - every library supports a seed; pin the version.    |
-| Adversarial / security payloads                                       | None of these - use [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md). |
-| Realistic-but-fake PII for non-prod                                   | [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (sibling skill that wraps Faker / mimesis). |
+| Adversarial / security payloads                                       | None of these - use `malicious-payload-bank`. |
+| Realistic-but-fake PII for non-prod                                   | `synthetic-pii-generator` (sibling skill that wraps Faker / mimesis). |
 
 ## Side-by-side: same fixture in four languages
 
@@ -203,12 +203,12 @@ public void Test()
 
 | Scenario                                        | Use this instead                                                |
 |-------------------------------------------------|-----------------------------------------------------------------|
-| Security testing (SQL injection / XSS)          | [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md). |
-| Production-shaped PII (real-looking SSN, credit card) | [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md). |
-| Boundary cases (off-by-one, type-min/max)       | [`boundary-value-generator`](../boundary-value-generator/SKILL.md). |
-| Negative-path coverage (error responses, malformed input) | [`negative-test-generator`](../negative-test-generator/SKILL.md). |
-| Multi-step user-journey scripts                 | [`e2e-test-narrative-builder`](../e2e-test-narrative-builder/SKILL.md). |
-| Persistent E2E seed sets                        | [`seed-data-curator`](../seed-data-curator/SKILL.md). |
+| Security testing (SQL injection / XSS)          | `malicious-payload-bank`. |
+| Production-shaped PII (real-looking SSN, credit card) | `synthetic-pii-generator`. |
+| Boundary cases (off-by-one, type-min/max)       | `boundary-value-generator`. |
+| Negative-path coverage (error responses, malformed input) | `negative-test-generator`. |
+| Multi-step user-journey scripts                 | `e2e-test-narrative-builder`. |
+| Persistent E2E seed sets                        | `seed-data-curator`. |
 
 Faker / FactoryBot / mimesis / Bogus generate **realistic-looking
 positive-path** data. The related skills above handle the
@@ -216,13 +216,13 @@ adversarial, boundary, narrative, and persistent cases.
 
 ## References
 
-- [`faker-data`](../faker-data/SKILL.md)
-- [`factory-bot-data`](../factory-bot-data/SKILL.md)
-- [`mimesis-data`](../mimesis-data/SKILL.md)
-- [`bogus-data`](../bogus-data/SKILL.md)
-- [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md),
-  [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md),
-  [`boundary-value-generator`](../boundary-value-generator/SKILL.md),
-  [`negative-test-generator`](../negative-test-generator/SKILL.md),
-  [`seed-data-curator`](../seed-data-curator/SKILL.md) - sibling
+- `faker-data`
+- `factory-bot-data`
+- `mimesis-data`
+- `bogus-data`
+- `malicious-payload-bank`,
+  `synthetic-pii-generator`,
+  `boundary-value-generator`,
+  `negative-test-generator`,
+  `seed-data-curator` - sibling
   skills for the cases this dispatcher does NOT cover.

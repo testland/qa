@@ -21,7 +21,7 @@ resilient over time, or are the same blast-radius categories failing on
 every run?
 
 This skill walks the workflow for aggregating drill results - from a completed
-chaos drill, or from [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
+chaos drill, or from `chaos-experiment-author`
 Step 7 - into a structured trend report with per-experiment metrics, cross-run
 trend lines, action items, and a stakeholder summary.
 
@@ -158,7 +158,7 @@ For each HIGH or MEDIUM finding, emit a concrete action item with:
   - Shrink blast-radius scope (fewer replicas, shorter duration) per
     [chaos-principles][cp] principle "Minimize Blast Radius".
   - Author a new experiment targeting the newly discovered failure mode via
-    [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md).
+    `chaos-experiment-author`.
 
 ## Step 6 - Emit the stakeholder summary
 
@@ -239,7 +239,7 @@ date is today's date) unless the user specifies a different output path.
   Inline citations at each principle invocation above.
 - [iso25010] - ISO/IEC 25010:2023 Quality Model: Reliability > Recoverability.
   Cited at TTR definition in Step 2.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - authors
+- `chaos-experiment-author` - authors
   the per-experiment YAML and single-drill verdict (Step 7) that this skill
   aggregates.
 

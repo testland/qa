@@ -34,8 +34,8 @@ classes that Jest/Mocha allow.
 - Team prefers explicit imports over global injection.
 - Migration from Mocha where parallelism matters.
 
-For React component testing, prefer [`vitest-tests`](../vitest-tests/SKILL.md)
-or [`jest-tests`](../jest-tests/SKILL.md) (ecosystem density).
+For React component testing, prefer `vitest-tests`
+or `jest-tests` (ecosystem density).
 
 ## Step 1 - Install
 
@@ -229,8 +229,8 @@ similar.
 - github.com/avajs/ava/tree/main/docs - full documentation
 - github.com/avajs/ava/blob/main/docs/03-assertions.md - assertion API
 - github.com/avajs/typescript - @ava/typescript adapter
-- [`jest-tests`](../jest-tests/SKILL.md),
-  [`vitest-tests`](../vitest-tests/SKILL.md),
-  [`mocha-tests`](../mocha-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- `jest-tests`,
+  `vitest-tests`,
+  `mocha-tests`,
+  `jasmine-tests` - sister tools
 - `test-code-conventions` (qa-test-review) - test code hygiene

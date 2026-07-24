@@ -249,8 +249,8 @@ jobs:
 - Composes:
   `browser-matrix-strategy-reference`.
 - Sibling skills:
-  [`browserstack-automate`](../browserstack-automate/SKILL.md),
-  [`lambdatest-automate`](../lambdatest-automate/SKILL.md),
+  `browserstack-automate`,
+  `lambdatest-automate`,
   `selenium-grid-4-runner`.
 
 [Selenium options]: https://www.selenium.dev/documentation/webdriver/drivers/options/

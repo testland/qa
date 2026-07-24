@@ -13,9 +13,9 @@ supports both pure-Python and native-extension targets (CPython
 C extensions).
 
 For sanitiser pairing on native extensions, see
-[`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md);
+`sanitiser-integration-reference`;
 for corpus discipline see
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+`corpus-management-reference`.
 
 ## When to use
 
@@ -222,16 +222,16 @@ Map the traceback to a bug spec via `bug-report-from-failure`
 - LLVM libFuzzer (underlying) - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
 - Composes:
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+  `sanitiser-integration-reference`,
+  `corpus-management-reference`.
 - Sibling fuzzers:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `cargo-fuzz-rust`,
+  `go-native-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `ossfuzz-integration`.
 - Sibling-plugin overlap:
   `hypothesis-testing` - different methodology (hypothesis-driven vs coverage-guided).
 - Dispatcher:
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `fuzz-tool-selector`.

@@ -18,7 +18,7 @@ For sanitiser pairing: Go uses the **race detector** (`-race`) as
 its TSan-equivalent; ASan-equivalent comes via `gcflags` (limited).
 
 For corpus discipline see
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+`corpus-management-reference`.
 
 ## When to use
 
@@ -243,13 +243,13 @@ fuzzing.
 - Go testing package - 
   [pkg.go.dev/testing#F](https://pkg.go.dev/testing#F).
 - Composes:
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+  `corpus-management-reference`.
 - Sibling fuzzers:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `cargo-fuzz-rust`,
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `ossfuzz-integration`.
 - Dispatcher:
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `fuzz-tool-selector`.

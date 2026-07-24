@@ -20,7 +20,7 @@ for create / update / transition / search.
 ## When to use
 
 - Filing a bug from a CI test failure (consumed by
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)).
+  `bug-report-from-failure`).
 - Transitioning bugs in bulk after a release.
 - Backing duplicate-defect search for Linear-using teams.
 
@@ -281,10 +281,10 @@ The `type` enum is stable; the `name` is team-customisable.
 - Linear GraphQL schema (Apollo Studio) - referenced from the
   developer docs.
 - Sibling references:
-  [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
+  `bug-lifecycle-reference`,
+  `severity-vs-priority-reference`.
 - Sibling skills:
-  [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
-  [`github-issues-bug-workflow`](../github-issues-bug-workflow/SKILL.md).
+  `jira-bug-workflow-runner`,
+  `github-issues-bug-workflow`.
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).
+  `bug-report-from-failure`.

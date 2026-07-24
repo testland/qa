@@ -13,7 +13,7 @@ catalogue of **what can be varied** during testing. Published at
 and in James Bach's testing-curriculum materials.
 
 If HICCUPPS-F
-([`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md))
+(`hiccupps-f-heuristic`)
 catalogues *what to compare against* (oracles), SFDPOT catalogues
 *what to change* during exploration. Together they form a complete
 "how to think about a session" pair.
@@ -203,8 +203,8 @@ toolkit.
 - Bolton M. *San Francisco Depot* - 
   [developsense.com](https://developsense.com/).
 - Sibling references:
-  [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-  [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
-  [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md),
-  [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md).
+  `hiccupps-f-heuristic`,
+  `fcc-cuts-vids-heuristic`,
+  `crusspic-stmpl-heuristic`,
+  `session-based-test-management-reference`,
+  `exploratory-tours-reference`.

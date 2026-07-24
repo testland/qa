@@ -13,7 +13,7 @@ consistent with their source of truth across multiple tiers
 the "C" in "two hard things in computer science" - wrong
 coherence shows as stale data, wrong invalidation shows as
 cache stampedes per
-[`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
+`cache-stampede-reference`.
 
 This skill is a **pure reference** consumed by per-tier test
 skills.
@@ -62,7 +62,7 @@ Per RFC 9111 §4.2.4: "A cache MUST NOT generate a stale
 response unless it is disconnected or doing so is explicitly
 permitted by the client or origin server." This is the formal
 basis for stale-while-revalidate per
-[`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md).
+`stale-while-revalidate-reference`.
 
 ### Vary - the cache key
 
@@ -111,7 +111,7 @@ For application-tier caches (Redis):
 | **Event-driven purge** | Source-of-truth update fires a delete | Coupling; firehose at high write rate |
 | **Surrogate keys** (Fastly, Varnish) | Tag responses; purge by tag | Group-invalidation; coordination cost |
 | **Version-tagged URLs** | `/api/users?_v=42`; new version = new key | Immutable cache; full deploy per change |
-| **Soft purge** | Mark stale, keep serving until refresh | Used by stale-while-revalidate per [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md) |
+| **Soft purge** | Mark stale, keep serving until refresh | Used by stale-while-revalidate per `stale-while-revalidate-reference` |
 
 ## Cross-tier coherence problems
 
@@ -130,7 +130,7 @@ For application-tier caches (Redis):
 |---|---|
 | Browser | Cache-Control respected (`max-age`, `no-cache`, `must-revalidate`); ETag round-trip; `Vary` honoured |
 | CDN | Edge hit/miss vs origin; purge API works end-to-end; `s-maxage` overrides `max-age` |
-| Reverse proxy | VCL purge ([`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md)); grace-mode behaviour |
+| Reverse proxy | VCL purge (`varnish-test-vtc-syntax`); grace-mode behaviour |
 | Application | Cache-aside write-then-invalidate; key collisions |
 | Data store | Replication lag (separate concern; out of scope here) |
 
@@ -168,13 +168,13 @@ For application-tier caches (Redis):
 - RFC 8246 `immutable`:
   [www.rfc-editor.org/rfc/rfc8246.html](https://www.rfc-editor.org/rfc/rfc8246.html).
 - RFC 5861 stale-while-revalidate / stale-if-error (companion):
-  [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md).
+  `stale-while-revalidate-reference`.
 - Companion catalog:
-  [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
+  `cache-stampede-reference`.
 - Cross-tenant leaks via cache:
   `cross-tenant-data-leak-tests`.
 - Consumed by:
-  [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
-  [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
-  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md),
-  [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).
+  `redis-cache-tests`,
+  `cdn-cache-purge-tests`,
+  `varnish-test-vtc-syntax`,
+  `browser-cache-control-tests`.

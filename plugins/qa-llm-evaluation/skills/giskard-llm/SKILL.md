@@ -176,7 +176,7 @@ if critical:
 
 - [gk-gh][gk-gh] - repository, install, quickstart, detector list
 - [gk-docs][gk-docs] - full documentation
-- [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
-  [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
-  [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - functional
+- `promptfoo-evaluation`,
+  `deepeval-evaluation`,
+  `ragas-evaluation` - functional
   eval sister tools (use Giskard for adversarial coverage on top)

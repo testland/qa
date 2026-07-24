@@ -16,7 +16,7 @@ Catalogs the three load-bearing defect taxonomies:
    eight-attribute framework for in-process defect classification.
 
 Consumers:
-[`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)
+`bug-report-from-failure`
 populates classification fields; defect-report review rejects
 unclassified defects.
 
@@ -64,7 +64,7 @@ Where in the lifecycle the defect originated.
 
 ### 3. Anomaly severity
 
-Per [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
+Per `severity-vs-priority-reference`.
 
 ### 4. Cause classification
 
@@ -194,7 +194,7 @@ Once defects are classified, useful metrics emerge:
   Cite by stable DOI when available.
 - IBM Research ODC FAQ - chillarege.com/odc resources.
 - Sibling references:
-  [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
+  `bug-lifecycle-reference`,
+  `severity-vs-priority-reference`.
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).
+  `bug-report-from-failure`.

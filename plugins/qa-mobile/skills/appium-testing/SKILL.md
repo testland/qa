@@ -23,9 +23,9 @@ JavaScript, Python, Java, Ruby, and .NET (per [appium-docs][app]).
 - Device-farm integration matters (BrowserStack / Sauce Labs / AWS
   Device Farm all support Appium natively).
 
-If the app is iOS-only, [`xcuitest-suite`](../xcuitest-suite/SKILL.md)
+If the app is iOS-only, `xcuitest-suite`
 is lighter (no external server). For React Native specifically,
-[`detox-testing`](../detox-testing/SKILL.md) is faster.
+`detox-testing` is faster.
 
 ## Step 1 - Install Appium server + driver
 
@@ -209,11 +209,11 @@ jobs:
   architecture, supported platforms (iOS, Android, Tizen, browser,
   desktop, TV), client libraries (JS / Python / Java / Ruby /
   .NET).
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md) - per-platform
+- `xcuitest-suite`,
+  `espresso-suite` - per-platform
   native alternatives.
-- [`detox-testing`](../detox-testing/SKILL.md),
-  [`maestro-flows`](../maestro-flows/SKILL.md) - cross-platform
+- `detox-testing`,
+  `maestro-flows` - cross-platform
   alternatives with different trade-offs.
-- [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md) - orchestrates Appium-driven matrix runs across simulators /
+- `mobile-device-matrix-toolkit` - orchestrates Appium-driven matrix runs across simulators /
   emulators / farms.

@@ -188,7 +188,7 @@ def test_cde_access_requires_mfa():
 
 ## Step 6 - Logging (Req 10)
 
-Cross-ref [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md):
+Cross-ref `audit-trail-test-author`:
 
 ```python
 def test_pan_access_creates_audit_record():
@@ -248,10 +248,10 @@ Tests verify scope-reduction is actually reducing scope (Step 1).
 - [pci][pci] - PCI Security Standards Council
 - pcisecuritystandards.org/document_library/ - PCI DSS v4.0 docs
 - pcisecuritystandards.org/glossary/ - PCI terminology
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md),
-  [`hipaa-test-patterns`](../hipaa-test-patterns/SKILL.md),
-  [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md),
-  [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) - 
+- `gdpr-test-patterns`,
+  `hipaa-test-patterns`,
+  `ccpa-test-patterns`,
+  `soc2-evidence-collector` - 
   sister compliance pattern catalogs
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
+- `audit-trail-test-author` - 
   Req 10 audit log requirements

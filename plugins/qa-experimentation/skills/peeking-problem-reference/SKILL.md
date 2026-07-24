@@ -112,7 +112,7 @@ Tests for an experimentation platform must verify:
 
 ## Combining with guardrails
 
-Per [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md):
+Per `guardrail-metrics-reference`:
 the guardrail-correction (Bonferroni / FDR) **stacks** with the
 peeking correction. Don't apply only one if both are needed.
 
@@ -164,10 +164,10 @@ formal multi-comparison correction across guardrails.
 - Microsoft Experimentation Platform:
   [microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/).
 - Companion catalogs:
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md).
+  `guardrail-metrics-reference`,
+  `ab-test-validity-checklist`.
 - Consumed by:
-  [`statsig-test`](../statsig-test/SKILL.md),
-  [`optimizely-test`](../optimizely-test/SKILL.md),
-  [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).
+  `statsig-test`,
+  `optimizely-test`,
+  `vwo-test`,
+  `amplitude-experiment-test`.

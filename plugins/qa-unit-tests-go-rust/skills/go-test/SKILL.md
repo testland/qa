@@ -293,7 +293,7 @@ go test -v ./... | go-junit-report > junit.xml
 - pkg.go.dev/cmd/go#hdr-Testing_flags - `go test` flags
 - pkg.go.dev/testing#hdr-Fuzzing - fuzz testing
 - github.com/jstemmer/go-junit-report - JUnit XML reporter
-- [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
-  [`cargo-test`](../cargo-test/SKILL.md),
-  [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
+- `ginkgo-tests`,
+  `cargo-test`,
+  `rstest-tests` - sister tools
 - `test-code-conventions` (qa-test-review)

@@ -278,7 +278,7 @@ the consumer's tests, NOT a binding agreement.
 ## References
 
 - ISTQB Glossary V4.7.1 - testability + non-functional testing
-  (cited in [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md)) - for the
+  (cited in `non-functional-requirement-extractor`) - for the
   underlying observability heuristic.
 - ISO/IEC 25012:2008 - data-quality model (cite by stable ID;
   paywalled at iso.org).

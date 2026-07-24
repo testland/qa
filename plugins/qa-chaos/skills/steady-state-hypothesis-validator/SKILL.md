@@ -298,7 +298,7 @@ Verdict: SOUND / UNSOUND
 - [chaostoolkit.org/reference/concepts/][ctk-concepts] - Experiment lifecycle:
   pre-method vs. post-method hypothesis check, bail-out behavior when
   pre-check fails, deviation detection after method.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - upstream
+- `chaos-experiment-author` - upstream
   skill that authors the experiment (Step 1 defines the hypothesis this skill
   validates).
 - `prod-canary-validator` (in the qa-shift-right plugin) -

@@ -244,11 +244,11 @@ queries before declaring "functional").
 - [PostgreSQL PITR docs] - continuous archiving + point-in-time
   recovery (base backup + WAL archive, `restore_command`,
   `recovery_target_time`, `recovery.signal`)
-- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drill-level
+- `dr-drill-runner` - drill-level
   end-to-end timing
-- [`backup-verification-author`](../backup-verification-author/SKILL.md) - 
+- `backup-verification-author` - 
   verifies backup integrity before restore
-- [`error-budget-tests`](../error-budget-tests/SKILL.md) - restore
+- `error-budget-tests` - restore
   failures consume error budget
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide

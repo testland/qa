@@ -194,8 +194,8 @@ Wire to Grafana for dashboards.
 
 - [lh][lh] - LitmusChaos overview, CNCF-hosted, ChaosExperiments
   + ChaosEngine + ChaosHub + probes, Prometheus metrics export.
-- [`chaos-mesh`](../chaos-mesh/SKILL.md) - sibling K8s-native
+- `chaos-mesh` - sibling K8s-native
   alternative.
-- [`gremlin-chaos`](../gremlin-chaos/SKILL.md) - commercial
+- `gremlin-chaos` - commercial
   multi-platform alternative.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology this tool implements.
+- `chaos-experiment-author` - methodology this tool implements.

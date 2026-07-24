@@ -192,9 +192,9 @@ Or restart the container between test workflows.
 ## References
 
 - [Jaeger getting-started docs] - Docker run, ports, OTLP ingest
-- [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md) - 
+- `opentelemetry-trace-assertions` - 
   in-process unit pattern
-- [`zipkin-trace-tests`](../zipkin-trace-tests/SKILL.md) - sister
+- `zipkin-trace-tests` - sister
   skill for Zipkin-using teams
 
 [Jaeger getting-started docs]: https://www.jaegertracing.io/docs/latest/getting-started/

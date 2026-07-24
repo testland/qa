@@ -240,7 +240,7 @@ that violate the policy at admission time.
   CNCF graduated status.
 - Conftest at `conftest.dev`.
 - OPA Gatekeeper at `open-policy-agent.github.io/gatekeeper/`.
-- [`checkov-policy`](../checkov-policy/SKILL.md),
-  [`tfsec-policy`](../tfsec-policy/SKILL.md),
-  [`kics-policy`](../kics-policy/SKILL.md) - sister scanners with
+- `checkov-policy`,
+  `tfsec-policy`,
+  `kics-policy` - sister scanners with
   built-in checks (use these first; OPA for custom).

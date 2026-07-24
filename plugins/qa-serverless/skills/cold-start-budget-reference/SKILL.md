@@ -156,12 +156,12 @@ runtime choice is a primary lever.
 - Vercel Edge Runtime:
   [vercel.com/docs/functions/edge-runtime](https://vercel.com/docs/functions/edge-runtime).
 - Companion catalog:
-  [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+  `lambda-timeout-budget-reference`.
 - Consumed by:
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
-  [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md),
-  [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md),
-  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md),
-  [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md),
-  [`serverless-integration-test-builder`](../serverless-integration-test-builder/SKILL.md).
+  `aws-sam-local-testing`,
+  `lambda-test-tools-net`,
+  `cloudflare-workers-miniflare`,
+  `vercel-edge-runtime-testing`,
+  `netlify-functions-tests`,
+  `serverless-framework-test-plugin`,
+  `serverless-integration-test-builder`.

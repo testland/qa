@@ -396,6 +396,6 @@ For multi-node distribution tests, launch two service containers named
 - AWS ElastiCache Auto Discovery:
   [docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/AutoDiscovery.html](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/AutoDiscovery.html).
 - Sibling skills:
-  [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
-  [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
-  [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
+  `redis-cache-tests`,
+  `cache-coherence-patterns-reference`,
+  `cache-stampede-reference`.

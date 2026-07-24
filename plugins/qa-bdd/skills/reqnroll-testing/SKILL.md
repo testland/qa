@@ -33,7 +33,7 @@ active development.
   Rule blocks").
 
 For SpecFlow-locked legacy projects mid-migration, see
-[`specflow-testing`](../specflow-testing/SKILL.md).
+`specflow-testing`.
 
 ## Step 1 - Install
 
@@ -271,9 +271,9 @@ Most SpecFlow projects migrate in <1 day for typical scope.
 - [rh][rh] - Reqnroll overview: SpecFlow reboot, Gherkin Rule
   blocks, SpecFlow-compatible migration, async hooks, IDE support
   (VS / VS Code / Rider).
-- [`specflow-testing`](../specflow-testing/SKILL.md) - legacy
+- `specflow-testing` - legacy
   SpecFlow support skill.
-- [`cucumber-testing`](../cucumber-testing/SKILL.md),
-  [`behave-testing`](../behave-testing/SKILL.md) - sibling language
+- `cucumber-testing`,
+  `behave-testing` - sibling language
   wrappers.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - addresses step proliferation.
+- `bdd-step-library-curator` - addresses step proliferation.

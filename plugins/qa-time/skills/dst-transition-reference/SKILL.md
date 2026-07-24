@@ -137,7 +137,7 @@ across DST. Always store UTC + zone identifier.
 | Storage uses UTC + zone | Parse stored value; expect ISO format with offset or `Z` |
 
 Per
-[`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md),
+`timezone-test-matrix-builder`,
 the test matrix combines (zone, transition-type, library-version).
 
 ## Test data fixtures
@@ -176,7 +176,7 @@ fixture and refresh annually.
 - **Polar regions, antimeridian, and historic timezones.**
   Special cases not covered here.
 - **Doesn't address leap seconds.** See
-  [`leap-second-reference`](../leap-second-reference/SKILL.md).
+  `leap-second-reference`.
 
 ## References
 
@@ -187,15 +187,15 @@ fixture and refresh annually.
 - Python zoneinfo:
   [docs.python.org/3/library/zoneinfo.html](https://docs.python.org/3/library/zoneinfo.html).
 - Companion catalogs:
-  [`leap-second-reference`](../leap-second-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `leap-second-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Cross-plugin:
   `cron-job-test-author` (qa-async-jobs).
 - Consumed by:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md),
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `libfaketime-c`,
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `freezegun-python`,
+  `timecop-ruby`,
+  `mockclock-jvm`,
+  `timezone-test-matrix-builder`.

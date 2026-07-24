@@ -10,7 +10,7 @@ description: "Reference guide for planning and facilitating a risk-storming sess
 Risk-storming is a collaborative exercise where the team
 brainstorms what could go wrong with a feature or release. The
 output feeds directly into the risk matrix (per
-[`risk-matrix`](../risk-matrix/SKILL.md)).
+`risk-matrix`).
 
 The format originates from threat modeling exercises (notably
 Adam Shostack's *Threat Modeling: Designing for Security*) and
@@ -159,7 +159,7 @@ immediate mitigations.
 ## Step 7 - Output to the risk matrix
 
 The session output flows directly into the matrix per
-[`risk-matrix`](../risk-matrix/SKILL.md). The matrix file becomes
+`risk-matrix`. The matrix file becomes
 the canonical record; the session notes (silent brainstorm
 results, discussion points) get attached as appendix.
 
@@ -205,5 +205,5 @@ A risk-storming session without follow-up is wasted.
   `gojko.net`.
 - Shostack, A., *Threat Modeling: Designing for Security* (2014) - 
   foundational for the structured prompt approach.
-- [`risk-matrix`](../risk-matrix/SKILL.md) - the artifact this
+- `risk-matrix` - the artifact this
   session produces.

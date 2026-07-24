@@ -341,6 +341,6 @@ clean guardrails. Document novelty decay in the ship note.
   [en.wikipedia.org/wiki/Novelty_effect](https://en.wikipedia.org/wiki/Novelty_effect).
   Definition and mitigation strategies.
 - Companion catalogs:
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md),
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md).
+  `ab-test-validity-checklist`,
+  `guardrail-metrics-reference`,
+  `peeking-problem-reference`.

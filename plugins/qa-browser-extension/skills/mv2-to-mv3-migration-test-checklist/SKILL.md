@@ -28,12 +28,12 @@ migrating team checks off before submitting MV3 to the store.
 
 Composes with:
 
-- [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md) - the field-level rename + key-matrix reference this builder
+- `manifest-v3-test-surface-reference` - the field-level rename + key-matrix reference this builder
   consults at every step.
-- [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md) - the
+- `web-ext-cli-mozilla` - the
   Firefox-side validator (`web-ext lint`) used to verify each MV3
   cell against AMO.
-- [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md) - the manual Chrome dev-load that surfaces section-level errors
+- `chrome-extension-test-loader` - the manual Chrome dev-load that surfaces section-level errors
   during checklist walk.
 
 For Playwright-driven MV3 popup / content-script fixtures see
@@ -162,7 +162,7 @@ test('chrome.storage.local survives SW restart (35s idle)', async ({ context, ex
 ```
 
 The 35-second figure is from
-[`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md)
+`manifest-v3-test-surface-reference`
 (Chrome auto-suspends idle SWs after ~30s per [cr-mig-sw]).
 
 [cr-mig-sw]: https://developer.chrome.com/docs/extensions/develop/migrate/to-service-workers
@@ -178,7 +178,7 @@ Per [cr-checklist], the API-update section has six items:
 | "Replace Browser Actions and Page Actions with Actions" | Assert no `manifest.browser_action` or `manifest.page_action`; assert `manifest.action` present (Chromium) - see Step 7 Firefox divergence |
 | "Replace functions that expect a Manifest V2 background context" | Manual review item - assert source has no `chrome.extension.getBackgroundPage()` |
 | "Replace callbacks with promises" | Style item - `chrome.*` API calls in MV3 source should use `await` form |
-| "Replace unsupported APIs" | Run `web-ext lint` from [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md); any `MV3_UNSUPPORTED_API` warnings = fail |
+| "Replace unsupported APIs" | Run `web-ext lint` from `web-ext-cli-mozilla`; any `MV3_UNSUPPORTED_API` warnings = fail |
 
 The `scripting` namespace requires the `"scripting"` permission per
 [Chrome scripting API][cr-scripting]; verify the inventory included
@@ -324,7 +324,7 @@ Per [cr-checklist] section 6 (publish):
 
 | Checklist item | Verification gate |
 |---|---|
-| "Publish a beta testing version" | Chrome Web Store beta channel populated; AMO listed channel via `web-ext sign --channel listed` per [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md) |
+| "Publish a beta testing version" | Chrome Web Store beta channel populated; AMO listed channel via `web-ext sign --channel listed` per `web-ext-cli-mozilla` |
 | "Gradually roll out your release" | Chrome Web Store percentage rollout configured (10% → 50% → 100% over ≥3 days) |
 | "Plan for review times" | Calendar block: Chrome review p50 ~24h, p95 ~7d (cite the [Chrome Web Store review timeline][cws-review] live; figures move) |
 | "Additional tips" | Track crash reports via the developer dashboard for 7d post-rollout |
@@ -423,8 +423,8 @@ specs in Steps 5 - 6 for the full verification surface.
   (divergence cells, host-permission install-prompt behavior,
   `browser_specific_settings` rename) - [ff-mig].
 - Composes:
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md),
-  [`web-ext-cli-mozilla`](../web-ext-cli-mozilla/SKILL.md),
-  [`chrome-extension-test-loader`](../chrome-extension-test-loader/SKILL.md).
+  `manifest-v3-test-surface-reference`,
+  `web-ext-cli-mozilla`,
+  `chrome-extension-test-loader`.
 - Sibling builder:
-  [`extension-storage-test-author`](../extension-storage-test-author/SKILL.md).
+  `extension-storage-test-author`.

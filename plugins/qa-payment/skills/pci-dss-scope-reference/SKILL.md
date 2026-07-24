@@ -160,12 +160,12 @@ adversarially. This skill provides the catalog.
 - Braintree Hosted Fields:
   [developer.paypal.com/braintree/docs/start/hosted-fields](https://developer.paypal.com/braintree/docs/start/hosted-fields).
 - Companion catalogs:
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md).
+  `3ds-test-flow-reference`,
+  `payment-flow-states-reference`.
 - Adversarial validator:
   `pci-dss-control-test-author` (in the qa-compliance plugin).
 - Consumed by:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `paypal-sandbox`,
+  `braintree-test-cards`.

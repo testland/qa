@@ -12,10 +12,10 @@ field (regulatory regime, operator, reversibility) and one global
 decision (pipeline ordering + audit hooks). This workflow produces
 a **deployable YAML spec** that downstream tools execute:
 
-- [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)
+- `presidio-pii-detection`
   runs the detector.
-- [`faker-synthetic-data`](../faker-synthetic-data/SKILL.md) /
-  [`synthea-healthcare-data`](../synthea-healthcare-data/SKILL.md)
+- `faker-synthetic-data` /
+  `synthea-healthcare-data`
   supply substitute values.
 - A leak-detection audit checks the output.
 
@@ -44,7 +44,7 @@ and join graph need a quick analytical pass.
 ## Step 2 - Classify each field
 
 Look up each column in
-[`pii-categories-reference`](../pii-categories-reference/SKILL.md)
+`pii-categories-reference`
 and record which regulatory regime(s) apply. Include linkable
 fields explicitly (NIST 800-122 §2.2).
 
@@ -59,12 +59,12 @@ fields explicitly (NIST 800-122 §2.2).
 Any field marked direct OR linkable enters the masking scope. A
 field marked only "linkable" still gets masked because it
 identifies in combination with others (Sweeney 87% rule, see
-[`pii-categories-reference`](../pii-categories-reference/SKILL.md)).
+`pii-categories-reference`).
 
 ## Step 3 - Pick an operator per field
 
 Match each field to a technique in
-[`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md).
+`data-masking-techniques-reference`.
 Decision tree:
 
 1. **Must round-trip for authorised consumer?** (e.g., payments)
@@ -128,7 +128,7 @@ A standard order:
    (deterministic, fast, no NER needed).
 2. **Free-text detect + mask** - for any string column wider than
    ~50 characters, run
-   [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)
+   `presidio-pii-detection`
    to catch embedded PII (e.g., a user-typed comment that contains
    an email).
 3. **Audit hook** - sample N rows of output and run a
@@ -256,7 +256,7 @@ accepts that this output remains in GDPR scope.
   tool) to execute it.
 - **Free-text detection is heuristic.** False positives + negatives
   are real (see
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md)
+  `presidio-pii-detection`
   limitations).
 - **Doesn't cover application-layer PII generation.** A pipeline
   masks data at rest; the application might still write fresh PII
@@ -265,11 +265,11 @@ accepts that this output remains in GDPR scope.
 ## References
 
 - Composes:
-  [`pii-categories-reference`](../pii-categories-reference/SKILL.md),
-  [`data-masking-techniques-reference`](../data-masking-techniques-reference/SKILL.md),
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md),
-  [`faker-synthetic-data`](../faker-synthetic-data/SKILL.md),
-  [`synthea-healthcare-data`](../synthea-healthcare-data/SKILL.md).
+  `pii-categories-reference`,
+  `data-masking-techniques-reference`,
+  `presidio-pii-detection`,
+  `faker-synthetic-data`,
+  `synthea-healthcare-data`.
 - GDPR Art. 4(5) pseudonymisation - 
   [gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/).
 - NIST SP 800-188 privacy models - 

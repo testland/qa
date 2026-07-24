@@ -131,7 +131,7 @@ Input: "We're shipping a new checkout next week. Test it." That's it.
 - Place-order button stays clickable while request is in flight. Comparable products: every other site disables. Product purpose: prevents double-charge. Bug.
 - Coupon `SUMMER2026` works but `summer2026` doesn't. User expectations: case-insensitive coupons are the norm. Probably bug - file with the FEW HICCUPPS evidence and let product decide.
 
-The output is the input to [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md) which turns the SFDPOT + Whittaker walk into a structured test-case matrix.
+The output is the input to `test-case-from-live-feature` which turns the SFDPOT + Whittaker walk into a structured test-case matrix.
 
 ## Anti-patterns
 
@@ -146,7 +146,7 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 
 ## Limitations
 
-- **Coverage breadth, not depth.** The four models surface *what to look at*; they don't tell you how deep to go on each. Risk-based prioritisation (per [`risk-matrix`](../risk-matrix/SKILL.md)) is the depth selector.
+- **Coverage breadth, not depth.** The four models surface *what to look at*; they don't tell you how deep to go on each. Risk-based prioritisation (per `risk-matrix`) is the depth selector.
 - **Domain knowledge is still required.** Applying SFDPOT to "checkout" without knowing what checkout is produces shallow output. The models are scaffolding for domain reasoning, not a replacement for it.
 - **Citation-grade only where canonical.** HTSM is Bach; FEW HICCUPPS is Bolton; ISO 25010 is the standard; Whittaker is the book. Other heuristic frameworks exist (Crispin/Gregory's testing quadrants, Heusser's "test ideas") and are also valid - this skill names the four most-cited; the team can extend.
 - **No automation.** This skill produces prompts; the downstream skills (`test-case-from-live-feature`, `manual-test-script-author`) turn prompts into deliverables.
@@ -154,10 +154,10 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 
 ## Hand-off targets
 
-- **Turn the heuristic walk into a test-case matrix** → [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md).
+- **Turn the heuristic walk into a test-case matrix** → `test-case-from-live-feature`.
 - **Turn the heuristic walk into a manual execution script** → `manual-test-script-author` (in the qa-manual-testing plugin).
-- **When a written spec exists, prefer the spec-driven path** → [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md).
-- **Risk-based prioritisation of which guidewords matter most** → [`risk-matrix`](../risk-matrix/SKILL.md).
+- **When a written spec exists, prefer the spec-driven path** → `test-case-ideation-from-story`.
+- **Risk-based prioritisation of which guidewords matter most** → `risk-matrix`.
 - **Domain-specific test-data generation for the attack patterns** → `negative-test-generator`, `malicious-payload-bank`, `boundary-value-generator`.
 
 ## References
@@ -169,4 +169,4 @@ The output is the input to [`test-case-from-live-feature`](../test-case-from-liv
 - Exploratory testing - "concisely described as simultaneous learning, test design and test execution", term coined by Kaner in 1984; Whittaker "How to Break Software" attack patterns; session-based test management: https://en.wikipedia.org/wiki/Exploratory_testing
 - ISTQB glossary - exploratory testing: https://glossary.istqb.org/en_US/term/exploratory-testing
 - ISTQB glossary - heuristic evaluation: https://glossary.istqb.org/en_US/term/heuristic-evaluation
-- [`test-case-from-live-feature`](../test-case-from-live-feature/SKILL.md) - downstream skill that consumes this catalog.
+- `test-case-from-live-feature` - downstream skill that consumes this catalog.

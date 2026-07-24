@@ -27,11 +27,11 @@ or SPDX SBOMs that feed the diff step; the two tools compose naturally in CI.
 
 **Differentiation vs sibling skills:**
 
-- [`syft-generation`](../syft-generation/SKILL.md) generates SBOMs from a
+- `syft-generation` generates SBOMs from a
   single image; it does not compare across versions.
-- [`cyclonedx-format`](../cyclonedx-format/SKILL.md) documents the schema;
+- `cyclonedx-format` documents the schema;
   it does not run diffs.
-- [`grype-scanning`](../grype-scanning/SKILL.md) scans for vulnerabilities
+- `grype-scanning` scans for vulnerabilities
   against a single SBOM; it does not detect drift between builds.
 
 This skill covers the SBOM-to-SBOM comparison workflow end to end.
@@ -273,12 +273,12 @@ If unexplained, the release is blocked pending investigation.
   per [cdx-cli-gh][cdx-cli-gh]; SPDX-format SBOMs require conversion first
   via `cyclonedx convert` before diffing.
 - The diff output reflects component-level inventory changes, not
-  vulnerability changes. Pair with [`grype-scanning`](../grype-scanning/SKILL.md)
+  vulnerability changes. Pair with `grype-scanning`
   to assess whether net-new components carry known CVEs.
 - Syft inventory accuracy affects diff signal quality: if Syft misses a
   component in one scan but not the other, the diff will misattribute the
   delta. See the accuracy-validation section in
-  [`syft-generation`](../syft-generation/SKILL.md).
+  `syft-generation`.
 - For multi-arch images, diff each platform separately using
   `--platform=linux/amd64` on both Syft runs; a combined diff of mixed-arch
   SBOMs will conflate platform-specific inventory as change.
@@ -289,7 +289,7 @@ If unexplained, the release is blocked pending investigation.
   reference, diff flags, output format documentation
 - [sf-gh][sf-gh] - Syft repository: SBOM generation, output formats,
   source types
-- [`syft-generation`](../syft-generation/SKILL.md) - generate the input SBOMs
-- [`cyclonedx-format`](../cyclonedx-format/SKILL.md) - CycloneDX schema reference
-- [`grype-scanning`](../grype-scanning/SKILL.md) - vuln-scan net-new components
+- `syft-generation` - generate the input SBOMs
+- `cyclonedx-format` - CycloneDX schema reference
+- `grype-scanning` - vuln-scan net-new components
   after the diff gate passes

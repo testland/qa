@@ -30,9 +30,9 @@ schema-based generator for typed-dict shapes.
   pattern produces typed dicts directly.
 
 If the team is already standardized on Faker, switching is rarely
-worth it - see [`faker-data`](../faker-data/SKILL.md). If the team
+worth it - see `faker-data`. If the team
 needs factory orchestration with referential integrity, pair mimesis
-with factory_boy (or use [`factory-bot-data`](../factory-bot-data/SKILL.md)
+with factory_boy (or use `factory-bot-data`
 in Ruby projects).
 
 ## Install
@@ -149,7 +149,7 @@ g.person.full_name()    # deterministic based on seed
 ```
 
 Pass `seed=` at provider construction; subsequent calls are
-deterministic. Same as [`faker-data`](../faker-data/SKILL.md), seed
+deterministic. Same as `faker-data`, seed
 in tests so failures reproduce locally.
 
 ## Pairing with factory_boy
@@ -181,7 +181,7 @@ shared one.
 |---------------------------------------------------------------|---------------------------------------------------------------------|-----|
 | Constructing one provider per attribute                        | `Person()` per field is N times the constructor cost; slows bulk generation. | Use `Generic` once; access providers as attributes. |
 | Hardcoding `seed=` literally to a value the test depends on    | Brittle: a mimesis update changes the PRNG sequence; the test fails next upgrade. | Pin mimesis version; OR assert *patterns* (matches a regex), not literal values. |
-| Using mimesis for **security** payloads                         | Mimesis generates realistic-looking data; SQL injection / XSS won't appear. | Use [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md). |
+| Using mimesis for **security** payloads                         | Mimesis generates realistic-looking data; SQL injection / XSS won't appear. | Use `malicious-payload-bank`. |
 | Schema with 100k iterations in pytest                          | Memory-bound; slow.                                                  | Generate to disk (`Schema.to_csv`, `Schema.to_json`) and seed the DB outside the test. |
 | Mixing mimesis + Faker in the same project                     | Two PRNGs to seed; two doc surfaces; two upgrade cadences.           | Pick one; if migrating, do it in a single PR. |
 
@@ -199,6 +199,6 @@ shared one.
 - [mimesis-readme][readme] - install, providers, Generic, Schema/Field,
   46 locales.
 - mimesis docs - https://mimesis.name/
-- [`faker-data`](../faker-data/SKILL.md) - Python Faker alternative.
-- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
+- `faker-data` - Python Faker alternative.
+- `synthetic-data-tool-selector` - 
   dispatcher selecting between mimesis / Faker / FactoryBot / Bogus.

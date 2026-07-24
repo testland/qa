@@ -290,7 +290,7 @@ using the official `bats/bats:latest` image:
   `@test` / `run` / `setup` / `teardown` / `load` / `skip`,
   parallel execution, Docker.
 - [bgh][bgh] - example test file, install one-liners.
-- [`tui-snapshot-tester`](../tui-snapshot-tester/SKILL.md) - 
+- `tui-snapshot-tester` - 
   TUI snapshot tests (visual layer; bats covers exit code +
   text output).
-- [`cli-output-conventions`](../cli-output-conventions/SKILL.md) - what to assert on (stable formats, exit codes, stderr).
+- `cli-output-conventions` - what to assert on (stable formats, exit codes, stderr).

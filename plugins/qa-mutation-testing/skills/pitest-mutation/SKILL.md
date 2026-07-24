@@ -194,8 +194,8 @@ support, evaluate ArcMutate (commercial).
 - [pit][pit] - PIT overview: mutation testing definition, JVM-only,
   speed claim ("minutes rather than days"), Maven/Gradle/Ant
   integration, ArcMutate Pro extension.
-- [`stryker-mutation`](../stryker-mutation/SKILL.md),
-  [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md),
-  [`mutmut-mutation`](../mutmut-mutation/SKILL.md),
-  [`mull-mutation`](../mull-mutation/SKILL.md) - per-language
+- `stryker-mutation`,
+  `stryker-net-mutation`,
+  `mutmut-mutation`,
+  `mull-mutation` - per-language
   siblings.

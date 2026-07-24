@@ -278,7 +278,7 @@ JUnit XML lands at `target/surefire-reports/`; feeds
 
 - Selenium project at `selenium.dev`.
 - W3C WebDriver spec.
-- [`playwright-testing`](../playwright-testing/SKILL.md),
-  [`cypress-testing`](../cypress-testing/SKILL.md) - modern
+- `playwright-testing`,
+  `cypress-testing` - modern
   alternatives.
 - `appium-testing` - mobile via WebDriver protocol.

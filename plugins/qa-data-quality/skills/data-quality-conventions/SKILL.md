@@ -7,15 +7,15 @@ description: "Reference catalog of data-quality conventions - when to choose dbt
 
 A reference catalog for **how** to design data-quality coverage. Pairs
 with the engine-specific skills
-([`dbt-testing`](../dbt-testing/SKILL.md),
-[`great-expectations`](../great-expectations/SKILL.md),
-[`soda-checks`](../soda-checks/SKILL.md)) - those tell you the **how**
+(`dbt-testing`,
+`great-expectations`,
+`soda-checks`) - those tell you the **how**
 of running checks; this tells you **which** checks and **where**.
 
 ## Engine selection
 
 Use this matrix to pick an engine before authoring any checks. Mixing
-engines is fine in a large platform - the [`data-quality-gate`](../data-quality-gate/SKILL.md)
+engines is fine in a large platform - the `data-quality-gate`
 skill exists precisely to reconcile their outputs.
 
 | Use case                                              | Preferred engine | Why |
@@ -106,7 +106,7 @@ Conventions:
 |--------------------------------------------------|-----------------------------------------------------|-----|
 | Hard-coded distributions ("revenue between $X and $Y") | Drifts with seasonality; ages out within months | Bound with a moving window or replace with a separate distribution-monitoring tool. |
 | `not_null` on every column                       | Some columns are legitimately nullable; floods the failure list with non-actionable noise | Annotate nullable columns explicitly in `schema.yml` and skip the test. |
-| One mega-check that asserts an entire row at once | Hard to triage; a single failure does not tell you which field broke | Split into one check per invariant; aggregate at the gate level via the [`data-quality-gate`](../data-quality-gate/SKILL.md). |
+| One mega-check that asserts an entire row at once | Hard to triage; a single failure does not tell you which field broke | Split into one check per invariant; aggregate at the gate level via the `data-quality-gate`. |
 | Reaching into upstream raw data inside a check    | Couples the assertion to source schema; breaks on every upstream rename | Test the curated model output, not the raw source. |
 | Same check authored in dbt **and** GX **and** Soda | Three failure signals for one root cause; triage cost triples | Pick one engine per check; use the gate skill to unify cross-engine coverage. |
 | Severity `error` on a freshly added check         | First false positive disables the gate by social convention | Land new checks at `warn` for two cycles, then promote once they're seen to be stable. |

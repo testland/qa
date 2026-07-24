@@ -195,11 +195,11 @@ noting any issues." Without cadence, runbooks rot.
 
 - [Google Cloud DR planning guide] - RTO / RPO / cold-warm-hot
   tiers / testing requirements
-- [`backup-verification-author`](../backup-verification-author/SKILL.md),
-  [`restore-time-tests`](../restore-time-tests/SKILL.md) - sister
+- `backup-verification-author`,
+  `restore-time-tests` - sister
   skills for drill prerequisites
-- [`error-budget-tests`](../error-budget-tests/SKILL.md),
-  [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - incident
+- `error-budget-tests`,
+  `mttr-mtbf-tracker` - incident
   metrics fed by drills
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide
