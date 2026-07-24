@@ -44,7 +44,7 @@ match the Clang you compile with (plugin / ABI compatibility), per
 ```bash
 # Linux (Ubuntu/Debian): add the Mull apt repo, then install a version-matched
 # package alongside the matching clang.
-curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' | sudo -E bash
+curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' -o setup-mull.sh && sudo -E bash setup-mull.sh
 sudo apt-get update && sudo apt-get install -y mull-19 clang-19
 
 # macOS
@@ -144,7 +144,7 @@ uploads to a code-scanning dashboard. Other reporters per [mull-cli]:
 
 ```yaml
 - run: |
-    curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' | sudo -E bash
+    curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' -o setup-mull.sh && sudo -E bash setup-mull.sh
     sudo apt-get update && sudo apt-get install -y mull-19 clang-19
     cmake -B build/ -DCMAKE_BUILD_TYPE=Debug \
       -DCMAKE_C_COMPILER=clang-19 -DCMAKE_CXX_COMPILER=clang-19 \

@@ -29,7 +29,8 @@ configures both:
 
 ```bash
 # macOS / Linux
-curl https://qlty.sh | sh
+curl https://qlty.sh -o install-qlty.sh
+sh install-qlty.sh
 
 # Windows (PowerShell)
 powershell -c "iwr https://qlty.sh | iex"
@@ -149,7 +150,7 @@ qlty metrics --all --max-depth=2 --sort complexity --limit 10
 ```yaml
 # GitHub Actions
 - name: Qlty install
-  run: curl https://qlty.sh | sh
+  run: curl https://qlty.sh -o install-qlty.sh && sh install-qlty.sh
 
 - name: Qlty check
   run: qlty check --upstream main

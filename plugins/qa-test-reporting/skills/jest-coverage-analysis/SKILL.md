@@ -244,7 +244,7 @@ downstream parser works against either.
 
 - name: Upload to dashboard
   if: always()
-  run: bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info
+  run: curl -s https://codecov.io/bash -o codecov.sh && bash codecov.sh -f coverage/lcov.info
 
 - name: Per-file delta vs main
   if: github.event_name == 'pull_request'
