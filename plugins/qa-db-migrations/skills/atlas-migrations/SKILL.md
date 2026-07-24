@@ -45,8 +45,9 @@ loops often use declarative mode for fast iteration.
 Per [at-start][at-start]:
 
 ```bash
-# curl install script
-curl -sSf https://atlasgo.sh | sh
+# download the install script, then run it
+curl -sSf https://atlasgo.sh -o install-atlas.sh
+sh install-atlas.sh
 
 # Homebrew
 brew install ariga/tap/atlas

@@ -1,8 +1,8 @@
 name: tessl-publish
 
-# Claims + publishes every skill that has a .tessl-plugin/plugin.json to the
-# Tessl registry. The GitHub Action links this repo so previously-indexed
-# copies are hidden/redirected instead of duplicated.
+# Publishes skills to the Tessl registry. On push, only skills whose SKILL.md or
+# .tessl-plugin manifest changed are (re)published, at their manifest version, so
+# unchanged skills keep their aligned versions. workflow_dispatch republishes all.
 on:
   push:
     branches: [main]
@@ -20,26 +20,43 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: tesslio/setup-tessl@v2
         with:
           token: ${{ secrets.TESSL_TOKEN }}
 
-      - name: Publish claimed skills
+      - name: Publish changed skills
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
         run: |
           set -uo pipefail
-          count=0; failed=0
+          if [ -n "${BEFORE:-}" ] && git rev-parse --verify --quiet "${BEFORE}^{commit}" >/dev/null 2>&1; then
+            mapfile -t dirs < <(git diff --name-only "$BEFORE" "$AFTER" \
+              | grep -E '^plugins/[^/]+/skills/[^/]+/(SKILL\.md|\.tessl-plugin/plugin\.json)$' \
+              | sed -E 's#^(plugins/[^/]+/skills/[^/]+)/.*#\1#' | sort -u)
+            echo "Changed skill dirs: ${#dirs[@]}"
+          else
+            mapfile -t dirs < <(find plugins -type f -path '*/.tessl-plugin/plugin.json' \
+              | sed -E 's#/\.tessl-plugin/plugin\.json$##' | sort -u)
+            echo "Full publish: ${#dirs[@]} skills"
+          fi
+          count=0; skipped=0; failed=0
           : > /tmp/tessl-failures.txt
-          while IFS= read -r manifest; do
-            dir="$(dirname "$(dirname "$manifest")")"
+          for dir in "${dirs[@]}"; do
+            { [ -n "$dir" ] && [ -f "$dir/.tessl-plugin/plugin.json" ]; } || continue
             echo "::group::Publishing $dir"
-            if tessl skill publish "$dir" --workspace testland --public --bump patch; then
-              count=$((count + 1))
+            if out=$(tessl skill publish "$dir" --workspace testland --public 2>&1); then
+              echo "$out"; count=$((count + 1))
+            elif printf '%s' "$out" | grep -qiE 'not available|already exists|already published'; then
+              echo "$out"; echo "skip: version already published"; skipped=$((skipped + 1))
             else
-              failed=$((failed + 1)); echo "$dir" >> /tmp/tessl-failures.txt
+              echo "$out"; failed=$((failed + 1)); echo "$dir" >> /tmp/tessl-failures.txt
               echo "::warning::publish failed for $dir"
             fi
             echo "::endgroup::"
-          done < <(find plugins -type f -path '*/.tessl-plugin/plugin.json' | sort)
-          echo "Published $count skill(s); $failed failed"
+          done
+          echo "Published $count; skipped $skipped; failed $failed"
           if [ "$failed" -gt 0 ]; then echo "::error::$failed skill(s) failed:"; cat /tmp/tessl-failures.txt; exit 1; fi
