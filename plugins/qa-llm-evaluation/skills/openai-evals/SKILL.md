@@ -27,8 +27,8 @@ team.
   Promptfoo / DeepEval emerged.
 
 For new projects without a registry-contribution motive, evaluate
-[`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md) or
-[`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) first - 
+`promptfoo-evaluation` or
+`deepeval-evaluation` first - 
 both have lower friction for non-OpenAI workflows.
 
 ## Step 1 - Install
@@ -138,7 +138,7 @@ and post via gh CLI (no built-in action).
 
 - OpenAI-first design - non-OpenAI providers via the
   CompletionFn protocol work but require shim code; for
-  multi-provider evals start with [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md).
+  multi-provider evals start with `promptfoo-evaluation`.
 - The registry is large but dated - many evals target older OpenAI
   models; check eval-spec freshness before contributing.
 - No first-party CI integration - assemble pass-rate gates
@@ -153,6 +153,6 @@ and post via gh CLI (no built-in action).
 - `docs/build-eval.md`, `docs/custom-eval.md`, `docs/eval-templates.md`
   in [oa-gh][oa-gh] - authoring details (load from repo when
   building a new eval)
-- [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
-  [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md) - 
+- `promptfoo-evaluation`,
+  `deepeval-evaluation` - 
   lower-friction alternatives for new projects

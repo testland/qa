@@ -7,7 +7,7 @@ description: "Drafts a `lighthouserc.js` (or `budget.json`) at design time - pic
 
 ## Overview
 
-[`lighthouse-perf`](../lighthouse-perf/SKILL.md) is the runner - it
+`lighthouse-perf` is the runner - it
 takes a `.lighthouserc.js` and runs Lighthouse against it. **This
 skill writes the config**, picking thresholds per route at design
 time so the runner has something meaningful to assert against.
@@ -216,11 +216,11 @@ a regression.
 
 ## References
 
-- [`lighthouse-perf`](../lighthouse-perf/SKILL.md) - the runner that
+- `lighthouse-perf` - the runner that
   consumes this skill's output.
 - `non-functional-requirement-extractor` - upstream skill that produces threshold-bound NFRs translated by
   this skill into Lighthouse syntax.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
+- `perf-budget-gate` - downstream
   unified gate that consumes Lighthouse + load-runner verdicts.
 - web.dev/articles/vitals - canonical LCP / INP / CLS thresholds at
   the 75th percentile.

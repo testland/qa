@@ -25,9 +25,9 @@ Use this when:
   dataset.
 
 For non-health-domain synthetic data use
-[`faker-synthetic-data`](../faker-synthetic-data/SKILL.md). For
+`faker-synthetic-data`. For
 the **categories** of PHI that Synthea avoids exposing see
-[`pii-categories-reference`](../pii-categories-reference/SKILL.md)
+`pii-categories-reference`
 (HIPAA Safe Harbor 18 identifiers).
 
 ## When to use
@@ -213,7 +213,7 @@ synthea.properties).
 | Running without a pinned seed in CI | Output drifts across runs; test fixtures unstable | `-s <seed>` per CI run; pin Synthea version |
 | Faking demographics with `faker-synthetic-data` for a health context | Faker generates uncorrelated values; ICD codes, medications, encounters don't link | Use Synthea for any health-domain dataset |
 | Loading Synthea output into a "real" FHIR server without isolation | If a misconfigured environment crosses into production, fake patients land in real EHR | Strict env separation; namespace Synthea patient IDs (prefix with `synth-`) |
-| Treating Synthea SSNs as truly safe in all jurisdictions | Synthea uses reserved SSN ranges but format is still HIPAA-flagged | Pair with [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md) on logs to confirm no SSN leakage |
+| Treating Synthea SSNs as truly safe in all jurisdictions | Synthea uses reserved SSN ranges but format is still HIPAA-flagged | Pair with `presidio-pii-detection` on logs to confirm no SSN leakage |
 | Custom module without validation | Malformed module silently runs (or doesn't); fixtures look right but cover nothing | Validate JSON modules against Synthea's schema before running large populations |
 | Single-state generation for a national rollout test | Demographic skew (e.g., MA is not Texas) | Generate per state and merge |
 
@@ -244,8 +244,8 @@ synthea.properties).
   project home; documentation, downloads, community).
 - HIPAA Safe Harbor (45 CFR § 164.514(b)(2)) - the de-identification
   standard Synthea output is engineered against. See
-  [`pii-categories-reference`](../pii-categories-reference/SKILL.md).
+  `pii-categories-reference`.
 - Sibling generator (generic):
-  [`faker-synthetic-data`](../faker-synthetic-data/SKILL.md).
+  `faker-synthetic-data`.
 - Composes with:
-  [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md).
+  `pii-masking-pipeline-builder`.

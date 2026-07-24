@@ -8,7 +8,7 @@ description: "Converts a regression suite (or test plan) into an executable manu
 ## Overview
 
 A full step-table manual script (per
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md))
+`manual-test-script-author`)
 is overkill for some situations:
 
 - A 5-minute production smoke after every deploy.
@@ -35,7 +35,7 @@ suite (or a test plan).
 - A compliance review needs a periodic verification record.
 
 If the use case is "test a feature thoroughly before release," use
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md)
+`manual-test-script-author`
 instead - full step-table format with expected results per step.
 
 ## Step 1 - Pick scope
@@ -54,7 +54,7 @@ Wider scope = lower run frequency = less repeated value.
 ## Step 2 - Convert each test case to one-line form
 
 Source TCs from
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md)
+`manual-test-script-author`
 or the existing regression suite. Compress each to a single line
 with three slots:
 
@@ -134,7 +134,7 @@ too long; trim to the highest-signal items.
 ## Step 5 - Pair with a defect-raising flow
 
 Same as
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md)
+`manual-test-script-author`
 Step 6 - checklist failures need a path to a logged defect:
 
 ```markdown
@@ -211,10 +211,10 @@ on incidents that the smoke missed.
 
 ## References
 
-- [`manual-test-script-author`](../manual-test-script-author/SKILL.md) - sibling: full step-table when more detail is needed.
-- [`bug-bash-facilitator`](../bug-bash-facilitator/SKILL.md) - 
+- `manual-test-script-author` - sibling: full step-table when more detail is needed.
+- `bug-bash-facilitator` - 
   consumes a checklist as the bug-bash kickoff template.
-- [`uat-script-author`](../uat-script-author/SKILL.md) - full UAT
+- `uat-script-author` - full UAT
   scripts when sign-off requires more than a checklist.
 - `smoke-suite-gate`
   (planned, qa-process Plugin 16) - automated equivalent for

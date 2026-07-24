@@ -237,8 +237,8 @@ downtime.
 - [lb-gh][lb-gh] - repository, install, supported databases
 - [lb-cl][lb-cl] - changelog concept page
 - [lb-docs][lb-docs] - full documentation
-- [`flyway-migrations`](../flyway-migrations/SKILL.md),
-  [`atlas-migrations`](../atlas-migrations/SKILL.md),
-  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
+- `flyway-migrations`,
+  `atlas-migrations`,
+  `sqlmesh-migrations` - sister
   tools (Flyway = SQL-first versioned; Atlas = declarative HCL;
   SQLMesh = data-pipeline + schema)

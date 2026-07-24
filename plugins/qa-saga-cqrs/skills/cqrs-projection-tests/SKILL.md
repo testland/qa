@@ -215,11 +215,11 @@ def test_post_command_returns_pending_until_projection_catches_up():
 
 - [Fowler - CQRS] - pattern overview, command vs query model,
   cautions
-- [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md) - pairs
+- `event-sourcing-tests` - pairs
   with CQRS for event-sourced write models
-- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md) - 
+- `saga-transaction-tests` - 
   cross-aggregate writes feeding the same projection
-- [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) - 
+- `eventual-consistency-tests` - 
   window assertions across aggregates
 
 [Fowler - CQRS]: https://martinfowler.com/bliki/CQRS.html

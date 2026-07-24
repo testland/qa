@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-web-e2e",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "Web E2E framework wrappers + cloud-grid integrations: 10 skills (playwright-testing, cypress-testing, selenium-testing, webdriverio-testing, puppeteer-testing, testcafe-testing, browserstack-automate, saucelabs-automate, lambdatest-automate, web-e2e-overview) and 5 agents (playwright-codegen-reviewer, cypress-codegen-reviewer, selenium-grid-orchestrator, spec-to-e2e-test-scaffolder, web-e2e-framework-selector).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-web-e2e",

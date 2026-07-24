@@ -235,7 +235,7 @@ test('shows new checkout when flag is on', async ({ page, flags }) => {
 ```
 
 For the matrix harness pattern (one shard per combo), see
-[`feature-flag-test-harness`](../feature-flag-test-harness/SKILL.md).
+`feature-flag-test-harness`.
 
 ## Step 6 - Compose into one `test` export
 
@@ -365,8 +365,8 @@ Wire `playwright.config.ts` to use the `authenticated` project per
 - [pw-auth][pw-auth] - `storageState` pattern, per-worker
   authentication via `parallelIndex`, role-based auth files,
   security note on `.gitignore`.
-- [`feature-flag-test-harness`](../feature-flag-test-harness/SKILL.md) - the matrix-shard pattern that complements per-test `flags`
+- `feature-flag-test-harness` - the matrix-shard pattern that complements per-test `flags`
   fixture overrides.
-- [`testcontainers`](../testcontainers/SKILL.md),
-  [`docker-compose-tests`](../docker-compose-tests/SKILL.md) - the
+- `testcontainers`,
+  `docker-compose-tests` - the
   underlying stack the fixtures point at.

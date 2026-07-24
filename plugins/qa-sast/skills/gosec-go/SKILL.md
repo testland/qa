@@ -25,7 +25,7 @@ patterns linters miss.
 - Repo has Go source (gosec is Go-only).
 - The team needs Go-focused SAST integrated with golangci-lint.
 - A CI workflow needs PR-blocking security gates for Go services.
-- Layered with [`semgrep-rules`](../semgrep-rules/SKILL.md) for
+- Layered with `semgrep-rules` for
   cross-language coverage.
 
 ## Step 1 - Install
@@ -228,7 +228,7 @@ contributing upstream OR forking. For most teams, leverage the
 - Custom-rule authoring requires Go programming + upstream PR (vs
   YAML rule authoring in Semgrep).
 - Some patterns (cross-package taint flow) miss what
-  [`codeql-queries`](../codeql-queries/SKILL.md) catches.
+  `codeql-queries` catches.
 - Rule depth varies - newer Go patterns (generics, structured
   concurrency) coverage thinner.
 
@@ -238,7 +238,7 @@ contributing upstream OR forking. For most teams, leverage the
 - gosec subcommand `gosec -list-rules` - current rule catalog
 - golangci-lint.run - golangci-lint integration
 - securego/gosec GitHub Action - github.com/securego/gosec
-- [`semgrep-rules`](../semgrep-rules/SKILL.md),
-  [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
-  [`codeql-queries`](../codeql-queries/SKILL.md),
-  [`bandit-python`](../bandit-python/SKILL.md) - sister scanners
+- `semgrep-rules`,
+  `sonarqube-rules`,
+  `codeql-queries`,
+  `bandit-python` - sister scanners

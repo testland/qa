@@ -9,7 +9,7 @@ description: "Authors Ruby FactoryBot factories with traits, associations, seque
 
 FactoryBot (formerly factory_girl) is the canonical Ruby fixture-
 factory library - it builds object graphs with referential integrity
-that raw [`faker-data`](../faker-data/SKILL.md) cannot
+that raw `faker-data` cannot
 ([factory_bot-readme][readme]).
 
 [readme]: https://github.com/thoughtbot/factory_bot
@@ -237,9 +237,9 @@ DSL - only the test-framework hookup differs.
 - [factory_bot-readme][readme] - canonical: install, factory
   definition, traits, associations, sequences, build / create /
   build_stubbed strategies.
-- [`faker-data`](../faker-data/SKILL.md) - Ruby Faker (the value
+- `faker-data` - Ruby Faker (the value
   engine for FactoryBot fields).
-- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
+- `synthetic-data-tool-selector` - 
   dispatcher selecting the right factory library per language.
-- [`seed-data-curator`](../seed-data-curator/SKILL.md) - downstream
+- `seed-data-curator` - downstream
   workflow consuming FactoryBot for E2E suite seeds.

@@ -162,7 +162,7 @@ For Auth0 Hooks, similar pattern with the hook-specific event shape.
 ## Step 6 - Test session management
 
 Auth0-managed sessions (refresh tokens, silent auth) - see
-[`session-management-test-author`](../session-management-test-author/SKILL.md)
+`session-management-test-author`
 for the cross-tool pattern. Auth0-specific: refresh-token rotation
 is configurable per-application; tests should verify the rotation
 behaves as configured.
@@ -248,7 +248,7 @@ Tests run against the mock; per-PR Auth0 tenant unnecessary.
 - auth0.com/docs/deploy-monitor/deploy-cli-tool - Deploy CLI
 - ghcr.io/navikt/mock-oauth2-server - mock OIDC server
 - IETF RFC 6749 / 7636 / 9700 - OAuth 2.0 + PKCE + Security BCP
-- [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) - sister IdP tools
-- [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md),
-  [`session-management-test-author`](../session-management-test-author/SKILL.md) - build-an-X authors
+- `keycloak-tests`,
+  `okta-tests` - sister IdP tools
+- `oauth-flow-test-author`,
+  `session-management-test-author` - build-an-X authors

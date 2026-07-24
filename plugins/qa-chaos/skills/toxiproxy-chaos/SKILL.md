@@ -181,8 +181,8 @@ control API.
 
 - **TCP only.** UDP, QUIC, raw IP - out of scope.
 - **Not for K8s pod chaos.** For pod-level / node-level chaos, use
-  [`chaos-mesh`](../chaos-mesh/SKILL.md) or
-  [`litmus-chaos`](../litmus-chaos/SKILL.md).
+  `chaos-mesh` or
+  `litmus-chaos`.
 - **Single-node deployment.** No clustering; for distributed chaos,
   use a chaos-platform tool.
 - **Application must point at Toxiproxy.** Requires config change
@@ -195,4 +195,4 @@ control API.
   reset_peer), control API on port 8474, language SDKs.
 - `api-chaos-runner` - sister skill: same Toxiproxy primitive, test-suite-driven
   matrix workflow.
-- [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md) - composes Toxiproxy + WireMock for richer failure scenarios.
+- `failure-injection-test-author` - composes Toxiproxy + WireMock for richer failure scenarios.

@@ -11,9 +11,9 @@ This skill wraps LLVM's libFuzzer (per
 [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html))
 for C/C++ targets. Composes with:
 
-- [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)
+- `sanitiser-integration-reference`
   for ASan + UBSan integration
-- [`corpus-management-reference`](../corpus-management-reference/SKILL.md)
+- `corpus-management-reference`
   for seed / evolved-corpus / crash artefact discipline
 
 ## When to use
@@ -71,7 +71,7 @@ clang -g -O1 \
   fuzz_target.cc your_library.cc -o fuzz_target
 ```
 
-Per [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md):
+Per `sanitiser-integration-reference`:
 ASan + UBSan is the default pair; add MSan in a separate binary if
 needed.
 
@@ -112,7 +112,7 @@ mkdir corpus/ seeds/
 
 The first directory is writable (evolved corpus); subsequent are
 read-only seeds (per
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md)).
+`corpus-management-reference`).
 
 ### Common flags
 
@@ -234,7 +234,7 @@ jobs:
             oom-*
 ```
 
-For long-running campaigns, [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md)
+For long-running campaigns, `ossfuzz-integration`
 is the canonical infrastructure.
 
 ## Anti-patterns
@@ -271,16 +271,16 @@ is the canonical infrastructure.
 - `FuzzedDataProvider.h` - 
   github.com/llvm/llvm-project/blob/main/compiler-rt/include/fuzzer/FuzzedDataProvider.h.
 - Composes:
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+  `sanitiser-integration-reference`,
+  `corpus-management-reference`.
 - Sibling fuzzers:
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md) (out-of-process,
+  `afl-plus-plus` (out-of-process,
   multi-language),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md) (Rust wrapper
+  `cargo-fuzz-rust` (Rust wrapper
   around libFuzzer),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `go-native-fuzzing`,
+  `ossfuzz-integration`.
 - Dispatcher:
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `fuzz-tool-selector`.

@@ -285,10 +285,10 @@ survives the run.
   `VerifyTestMain`, and filter option docs
 - [pkg.go.dev/go.uber.org/goleak] - full API reference for
   `IgnoreTopFunction`, `IgnoreAnyFunction`, `IgnoreCurrent`, `Cleanup`
-- [`race-condition-test-author`](../race-condition-test-author/SKILL.md) -
+- `race-condition-test-author` -
   multi-language deterministic interleaving (barriers, jcstress, TSan for
   C/C++); this skill is the Go-specific complement
-- [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) -
+- `deadlock-detection-harness` -
   deadlock patterns; separate from data races
 
 [go.dev/doc/articles/race_detector]: https://go.dev/doc/articles/race_detector

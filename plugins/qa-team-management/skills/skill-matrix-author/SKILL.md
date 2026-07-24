@@ -24,7 +24,7 @@ Do **not** use this skill to:
 
 - Score job candidates - that is `hiring-rubric-author` (in qa-hiring; point-in-time, per-candidate, anchored to interview questions).
 - Plan one new hire's first 90 days - that is `onboarding-plan-author` (in qa-hiring).
-- Write individual performance feedback - that is [`performance-feedback-author`](../performance-feedback-author/SKILL.md). The matrix describes capability, not performance; conflating them poisons the data (see Anti-patterns).
+- Write individual performance feedback - that is `performance-feedback-author`. The matrix describes capability, not performance; conflating them poisons the data (see Anti-patterns).
 
 ## Step 1 - Capture the inputs
 
@@ -117,7 +117,7 @@ Do not pick the response in this skill. Prioritizing gaps against the roadmap an
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Self-assessment-only matrix | Unanchored ratings drift toward the middle; the gap analysis inherits fiction | Step 3 evidence rule: nothing above level 1 without an artifact |
-| Using the matrix in performance reviews | Members learn to inflate cells; the instrument dies as a planning tool | Keep capability (this skill) and performance ([`performance-feedback-author`](../performance-feedback-author/SKILL.md)) as separate artifacts |
+| Using the matrix in performance reviews | Members learn to inflate cells; the instrument dies as a planning tool | Keep capability (this skill) and performance (`performance-feedback-author`) as separate artifacts |
 | 20+ columns | Nobody maintains it; cells go stale within a quarter | 8 - 12 columns; fold detail into evidence footnotes |
 | Matrix without required levels | Pure inventory; cannot say whether the team is in trouble | Step 5 requires a `req.` row per column |
 | Copying another team's columns | Required skills come from this team's context analysis (CTAL-TM 3.1.2), not a template | Derive columns from the team's own strategy and stack in Step 2 |
@@ -134,8 +134,8 @@ Do not pick the response in this skill. Prioritizing gaps against the roadmap an
 
 - **Prioritize the gaps against the roadmap, recommend train vs hire** → a downstream gap-prioritization step that consumes this matrix.
 - **A capability gap becomes a hiring case** → `qa-jd-author` then the qa-hiring structured-interview chain.
-- **A growth conversation per member** → [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md); the member's matrix row seeds the growth half of the agenda.
-- **Level expectations over time** → [`career-ladder-author`](../career-ladder-author/SKILL.md); the ladder defines progression, the matrix measures today.
+- **A growth conversation per member** → `tester-one-on-one-planner`; the member's matrix row seeds the growth half of the agenda.
+- **Level expectations over time** → `career-ladder-author`; the ladder defines progression, the matrix measures today.
 
 ## References
 

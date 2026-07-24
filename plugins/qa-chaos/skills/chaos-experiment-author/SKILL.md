@@ -96,7 +96,7 @@ Start small; expand as confidence grows.
 
 ## Step 4 - Pick the chaos tool
 
-**Default: [`chaos-mesh`](../chaos-mesh/SKILL.md) for Kubernetes stacks** - CNCF-graduated, broadest fault catalog (network / pod / IO / time / stress), declarative CRDs that compose with the experiment YAML in Step 1. Use [`litmus-chaos`](../litmus-chaos/SKILL.md) when the team already runs Litmus workflows; [`gremlin-chaos`](../gremlin-chaos/SKILL.md) for commercial multi-platform support outside Kubernetes; [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) when the failure surface is purely TCP-level.
+**Default: `chaos-mesh` for Kubernetes stacks** - CNCF-graduated, broadest fault catalog (network / pod / IO / time / stress), declarative CRDs that compose with the experiment YAML in Step 1. Use `litmus-chaos` when the team already runs Litmus workflows; `gremlin-chaos` for commercial multi-platform support outside Kubernetes; `toxiproxy-chaos` when the failure surface is purely TCP-level.
 
 The tool's syntax (CRD, attack config, etc.) goes alongside the
 experiment YAML.
@@ -194,10 +194,10 @@ team has confidence and abort procedures.
 - [cp][cp] - Principles of Chaos Engineering: 5 advanced
   principles (steady-state, real-world events, production,
   automation, blast radius).
-- [`litmus-chaos`](../litmus-chaos/SKILL.md),
-  [`chaos-mesh`](../chaos-mesh/SKILL.md),
-  [`gremlin-chaos`](../gremlin-chaos/SKILL.md),
-  [`toxiproxy-chaos`](../toxiproxy-chaos/SKILL.md) - per-tool
+- `litmus-chaos`,
+  `chaos-mesh`,
+  `gremlin-chaos`,
+  `toxiproxy-chaos` - per-tool
   runners.
-- [`failure-injection-test-author`](../failure-injection-test-author/SKILL.md) - sibling: combines chaos with test suites.
+- `failure-injection-test-author` - sibling: combines chaos with test suites.
 - `prod-canary-validator` (in the qa-shift-right plugin) - provides the steady-state metrics that verdict the experiment.

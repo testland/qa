@@ -199,10 +199,10 @@ mull-runner-19 build/tests/MyTests --include-path "$(echo $CHANGED | tr ' ' ',')
 - [mull-install] - apt repo + version-matched `mull-NN` package.
 - [mull-tutorial] - `-fpass-plugin` build instrumentation.
 - [mull-cli] - `mull-runner` flags and reporter names.
-- [`stryker-mutation`](../stryker-mutation/SKILL.md),
-  [`stryker-net-mutation`](../stryker-net-mutation/SKILL.md),
-  [`pitest-mutation`](../pitest-mutation/SKILL.md),
-  [`mutmut-mutation`](../mutmut-mutation/SKILL.md) - 
+- `stryker-mutation`,
+  `stryker-net-mutation`,
+  `pitest-mutation`,
+  `mutmut-mutation` - 
   per-language siblings.
 
 [mull-changelog]: https://github.com/mull-project/mull/blob/main/CHANGELOG.md

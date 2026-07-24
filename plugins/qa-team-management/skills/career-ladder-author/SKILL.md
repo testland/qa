@@ -24,8 +24,8 @@ For the management track and the dual-ladder split, the canonical practitioner r
 
 Do **not** use this skill to:
 
-- Decide one specific person's promotion - the ladder is the standard; the case is built from evidence via [`performance-feedback-author`](../performance-feedback-author/SKILL.md).
-- Map what the team can do today - that is [`skill-matrix-author`](../skill-matrix-author/SKILL.md).
+- Decide one specific person's promotion - the ladder is the standard; the case is built from evidence via `performance-feedback-author`.
+- Map what the team can do today - that is `skill-matrix-author`.
 - Define a single role for hiring - that is `qa-jd-author` in qa-hiring.
 
 ## Step 1 - Capture the inputs
@@ -79,7 +79,7 @@ The "not evidence" block per level is what keeps the ladder honest at promotion 
 
 ## Step 4 - Write the management track as a role change
 
-Management levels (QA-M1 lead, QA-M2 manager, QA-M3 head/director or per the org's grid) get the same axis treatment, with Craft partially replaced by people and process responsibilities: hiring (hand off to the qa-hiring chain), 1:1s and growth ([`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md)), feedback and reviews ([`performance-feedback-author`](../performance-feedback-author/SKILL.md)), capability planning ([`skill-matrix-author`](../skill-matrix-author/SKILL.md)). *The Manager's Path* (ISBN 978-1491973899) sequences these duties chapter by chapter (mentoring, then tech lead, then managing people, then managing a team) and is the calibration reference for what each management level actually does day to day.
+Management levels (QA-M1 lead, QA-M2 manager, QA-M3 head/director or per the org's grid) get the same axis treatment, with Craft partially replaced by people and process responsibilities: hiring (hand off to the qa-hiring chain), 1:1s and growth (`tester-one-on-one-planner`), feedback and reviews (`performance-feedback-author`), capability planning (`skill-matrix-author`). *The Manager's Path* (ISBN 978-1491973899) sequences these duties chapter by chapter (mentoring, then tech lead, then managing people, then managing a team) and is the calibration reference for what each management level actually does day to day.
 
 State the transfer rule explicitly: moving IC->M or M->IC at equivalent level is a lateral move, not a promotion or demotion. Frameworks that omit this quietly re-create the management-only ceiling.
 
@@ -111,9 +111,9 @@ Ship the ladder with its failure modes named, so calibration meetings can cite t
 
 ## Hand-off targets
 
-- **Measure today's capability against the new levels** → [`skill-matrix-author`](../skill-matrix-author/SKILL.md).
-- **Run the growth conversations the ladder enables** → [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md).
-- **Build a promotion case from evidence** → [`performance-feedback-author`](../performance-feedback-author/SKILL.md).
+- **Measure today's capability against the new levels** → `skill-matrix-author`.
+- **Run the growth conversations the ladder enables** → `tester-one-on-one-planner`.
+- **Build a promotion case from evidence** → `performance-feedback-author`.
 - **Hire into a level** → `qa-jd-author` and the qa-hiring structured-interview chain.
 
 ## References
@@ -121,4 +121,4 @@ Ship the ladder with its failure modes named, so calibration meetings can cite t
 - Dropbox Engineering Career Framework - IC1 - IC7 and M3 - M7 tracks, Results/Direction/Talent/Culture/Craft pillars, Quality Engineer and SDET role coverage: https://dropbox.github.io/dbx-career-framework/ (fetched 2026-06-10).
 - progression.fyi - index of 75 public and open-source career frameworks (GitLab, Spotify, Square, Etsy, and others) for Step 1 reference selection: https://progression.fyi/ (fetched 2026-06-10).
 - Camille Fournier, *The Manager's Path: A Guide for Tech Leaders Navigating Growth and Change*, O'Reilly 2017, ISBN 978-1491973899 - management-track duties, dual-ladder rationale, "Cultivating Careers".
-- [`skill-matrix-author`](../skill-matrix-author/SKILL.md), [`tester-one-on-one-planner`](../tester-one-on-one-planner/SKILL.md), [`performance-feedback-author`](../performance-feedback-author/SKILL.md) - sibling skills this ladder composes with.
+- `skill-matrix-author`, `tester-one-on-one-planner`, `performance-feedback-author` - sibling skills this ladder composes with.

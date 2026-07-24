@@ -206,9 +206,9 @@ patterns.
 
 - [D3 getting-started docs] - install, ESM imports, SVG output,
   framework integration
-- [`chartjs-snapshot-tests`](../chartjs-snapshot-tests/SKILL.md) - 
+- `chartjs-snapshot-tests` - 
   Canvas-based alternative
-- [`vega-spec-validator`](../vega-spec-validator/SKILL.md) - 
+- `vega-spec-validator` - 
   declarative-spec testing alternative
 - `qa-accessibility` - 
   cross-cutting a11y plugin

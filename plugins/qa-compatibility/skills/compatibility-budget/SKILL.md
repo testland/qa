@@ -211,9 +211,9 @@ accessibility experience. The two budgets compose.
 
 ## References
 
-- [`browser-matrix-runner`](../browser-matrix-runner/SKILL.md) - 
+- `browser-matrix-runner` - 
   the runner this budget configures.
-- [`os-matrix-runner`](../os-matrix-runner/SKILL.md) - sibling for
+- `os-matrix-runner` - sibling for
   OS matrix.
 - `mobile-device-matrix-toolkit` (in the qa-mobile plugin) - mobile-specific equivalent.
 - `wcag-compliance-reporter` - accessibility compliance complement to the compatibility budget.

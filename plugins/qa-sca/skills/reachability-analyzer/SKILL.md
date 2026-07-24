@@ -51,7 +51,7 @@ this skill annotates existing findings; it does not replace them.
 osv-scanner scan -r . --format json --output osv.json
 ```
 
-See [`osv-scanner`](../osv-scanner/SKILL.md) for full setup.
+See `osv-scanner` for full setup.
 
 ### Step 2 - JavaScript / TypeScript: knip (preferred) or depcheck
 
@@ -286,7 +286,7 @@ cleanup PR, eliminating both the CVE and the unused weight.
   vulture CLI reference, confidence values, whitelist generation
 - [github.com/bnjbvr/cargo-machete](https://github.com/bnjbvr/cargo-machete) -
   cargo-machete CLI reference, exit codes, Cargo.toml metadata
-- [`osv-scanner`](../osv-scanner/SKILL.md),
-  [`snyk-test`](../snyk-test/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - SCA tools whose
+- `osv-scanner`,
+  `snyk-test`,
+  `npm-pip-maven-audit` - SCA tools whose
   output this skill annotates

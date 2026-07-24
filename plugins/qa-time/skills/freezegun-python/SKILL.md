@@ -18,7 +18,7 @@ it patches `datetime.datetime`, `datetime.date`, `time.time`,
 - pytest / unittest tests for Python code using datetime / time.
 - Date-based fixtures (e.g., "today is 2026-05-20").
 - DST + timezone tests per
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md).
+  `dst-transition-reference`.
 
 ## Authoring
 
@@ -151,9 +151,9 @@ jobs:
 
 - **C extensions bypass freezegun.** A library calling
   `clock_gettime()` from C sees the real clock. Use
-  [`libfaketime-c`](../libfaketime-c/SKILL.md) for those.
+  `libfaketime-c` for those.
 - **No leap-second simulation.** See
-  [`leap-second-reference`](../leap-second-reference/SKILL.md).
+  `leap-second-reference`.
 - **`tz_offset` doesn't know about DST.** For accurate local-zone
   behaviour, use `datetime.now(tz=zoneinfo.ZoneInfo("..."))`.
 - **Importing `datetime` before freezing.** If a module imports
@@ -167,14 +167,14 @@ jobs:
 - Python zoneinfo:
   [docs.python.org/3/library/zoneinfo.html](https://docs.python.org/3/library/zoneinfo.html).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`leap-second-reference`](../leap-second-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `dst-transition-reference`,
+  `leap-second-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Cross-language:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md).
+  `libfaketime-c`,
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `timecop-ruby`,
+  `mockclock-jvm`.
 - Test matrix:
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `timezone-test-matrix-builder`.

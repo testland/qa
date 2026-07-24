@@ -151,7 +151,7 @@ LLMs may claim a test "covers" an AC when it doesn't. Verification:
 ## Limitations
 
 - **LLM quality varies.** Same caveats as
-  [`ai-test-generator`](../ai-test-generator/SKILL.md).
+  `ai-test-generator`.
 - **Spec format matters.** Well-structured ACs (numbered, clearly
   scoped) map cleanly; vague specs produce vague mappings.
 - **No code-execution verification.** The LLM reads code; doesn't
@@ -162,7 +162,7 @@ LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 ## References
 
-- [`ai-test-generator`](../ai-test-generator/SKILL.md) - sister
+- `ai-test-generator` - sister
   skill: generates tests for the gaps this skill identifies.
 - `acceptance-test-from-criteria` (in the qa-bdd plugin) - for tag-based AC traceability without LLM.
 - `coverage-debt-tracker` (in the qa-test-impact-analysis plugin) - line-coverage debt; complementary to spec coverage.

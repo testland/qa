@@ -498,9 +498,9 @@ without all four required fields.
   (fetched 2026-06-04)
 - iso.org/standard/27001 - canonical ISO/IEC 27001:2022 standard text
   (paywalled; cite by stable ID "ISO/IEC 27001:2022")
-- [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) -
+- `soc2-evidence-collector` -
   sister: SOC 2 Type II evidence collection (AICPA TSC)
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) -
+- `gdpr-test-patterns` -
   sister: GDPR per-Article test catalog
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) -
+- `audit-trail-test-author` -
   companion: audit log emission tests (feeds A.8.15 evidence)

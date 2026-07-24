@@ -31,8 +31,8 @@ The APG documents 31 patterns; each one specifies:
   correctness.
 - Adding ARIA to an existing widget that was hand-rolled without
   it.
-- Configuring assertions in [`axe-a11y`](../axe-a11y/SKILL.md) /
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md) to enforce per-pattern
+- Configuring assertions in `axe-a11y` /
+  `pa11y-a11y` to enforce per-pattern
   conventions.
 
 ## The first rule of ARIA
@@ -84,7 +84,7 @@ The 31 patterns documented per [apg-patterns][apg]:
 | Accordion         | Vertically-stacked list of headers; each expands.    |
 | Breadcrumb        | Hierarchical-location indicator.                      |
 | Carousel          | Cycle through groups of equivalent content.          |
-| Dialog (Modal)    | Overlay requiring user interaction. (See [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md).) |
+| Dialog (Modal)    | Overlay requiring user interaction. (See `wcag-focus-trap`.) |
 | Alert Dialog      | Modal that interrupts to convey urgency.             |
 | Tabs              | Switch between sibling content sections.             |
 | Toolbar           | Group of controls (buttons, dropdowns).             |
@@ -184,7 +184,7 @@ form.
 | Hoverable - user can move pointer to tooltip text.         |
 | Persistent until pointer / focus leaves OR Esc dismisses.  |
 
-(See [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md) SC
+(See `wcag-color-contrast` SC
 1.4.13 for the three conditions.)
 
 ## ARIA states reference
@@ -205,7 +205,7 @@ The most-used `aria-*` states across patterns:
 | `aria-invalid`          | Form field validation state.                            |
 | `aria-required`         | Form field required (with native `required` for forms). |
 | `aria-disabled`         | Functionally disabled but in tab order (vs. `disabled` attribute which removes from tab order). |
-| `aria-modal`            | Dialog modal flag; see [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md). |
+| `aria-modal`            | Dialog modal flag; see `wcag-focus-trap`. |
 
 ## Common ARIA failures
 
@@ -232,9 +232,9 @@ The most-used `aria-*` states across patterns:
 - [apg-patterns][apg] - W3C ARIA Authoring Practices Guide
   (canonical patterns).
 - WAI-ARIA 1.2 Spec - https://www.w3.org/TR/wai-aria-1.2/
-- [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) - Dialog
+- `wcag-focus-trap` - Dialog
   pattern's focus-management deep dive.
-- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md) - Keyboard-interaction conformance underlying every APG pattern.
-- [`axe-a11y`](../axe-a11y/SKILL.md),
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md) - runners that detect
+- `wcag-keyboard-navigation` - Keyboard-interaction conformance underlying every APG pattern.
+- `axe-a11y`,
+  `pa11y-a11y` - runners that detect
   ARIA misuse programmatically.

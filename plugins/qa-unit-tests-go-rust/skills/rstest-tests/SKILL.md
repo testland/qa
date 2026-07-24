@@ -12,7 +12,7 @@ Per [github.com/la10736/rstest][rs-gh]:
 [rs-gh]: https://github.com/la10736/rstest
 
 rstest is a Rust crate for parametrize + fixture testing - features
-that Rust's stdlib `#[test]` lacks. Pairs with [`cargo-test`](../cargo-test/SKILL.md)
+that Rust's stdlib `#[test]` lacks. Pairs with `cargo-test`
 (rstest tests are still discovered by `cargo test`).
 
 ## When to use
@@ -212,8 +212,8 @@ separate runner.
 - [rs-gh][rs-gh] - rstest repository + docs
 - crates.io/crates/rstest - published crate
 - docs.rs/rstest - API reference
-- [`go-test`](../go-test/SKILL.md),
-  [`ginkgo-tests`](../ginkgo-tests/SKILL.md),
-  [`cargo-test`](../cargo-test/SKILL.md) - sister tools
+- `go-test`,
+  `ginkgo-tests`,
+  `cargo-test` - sister tools
 - `proptest-testing` (qa-property-based) - Rust property-based
 - `test-code-conventions` (qa-test-review)

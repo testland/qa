@@ -170,8 +170,8 @@ The transform is a one-time pass over the source locale file.
 ## References
 
 - W3C i18n documentation at `w3.org/International/`.
-- [`i18n-string-coverage`](../i18n-string-coverage/SKILL.md) - 
+- `i18n-string-coverage` - 
   static-scan complement.
-- [`rtl-rendering-tester`](../rtl-rendering-tester/SKILL.md) - 
+- `rtl-rendering-tester` - 
   RTL-specific tests.
 - `playwright-snapshots` - visual regression for catching pseudo-loc regressions.

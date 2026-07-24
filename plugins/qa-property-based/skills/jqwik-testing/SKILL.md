@@ -256,8 +256,8 @@ No additional config beyond JUnit 5 platform.
 
 - [jh][jh] - jqwik overview: `@Property`, `@ForAll`, `@Provide`,
   Arbitraries API, JUnit 5 integration, version 1.9.3.
-- [`hypothesis-testing`](../hypothesis-testing/SKILL.md),
-  [`fast-check-testing`](../fast-check-testing/SKILL.md),
-  [`proptest-testing`](../proptest-testing/SKILL.md),
-  [`quickcheck-testing`](../quickcheck-testing/SKILL.md) - 
+- `hypothesis-testing`,
+  `fast-check-testing`,
+  `proptest-testing`,
+  `quickcheck-testing` - 
   per-language siblings.

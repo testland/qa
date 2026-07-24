@@ -9,8 +9,8 @@ description: "Builds a workflow to run web E2E tests under mobile viewports + DP
 
 Many web apps support mobile via responsive design - but the
 desktop test suite never exercises mobile breakpoints. Real-device
-testing ([`appium-testing`](../appium-testing/SKILL.md),
-[`xcuitest-suite`](../xcuitest-suite/SKILL.md)) is heavy; viewport
+testing (`appium-testing`,
+`xcuitest-suite`) is heavy; viewport
 emulation in browser-based testing is light.
 
 Playwright + Cypress + Selenium all support mobile emulation:
@@ -202,7 +202,7 @@ ensures a failure on iPhone doesn't cancel Pixel.
 
 ## Step 7 - Aggregating per-device results
 
-Use the [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md)
+Use the `mobile-device-matrix-toolkit`
 aggregator (Step 4) to produce a per-device summary:
 
 ```markdown
@@ -234,7 +234,7 @@ aggregator (Step 4) to produce a per-device summary:
 - **No native APIs.** Emulation can't test camera / push
   notifications / geolocation accuracy / biometrics.
 - **Performance under emulation is the runner's CPU.** For mobile
-  perf testing, see [`mobile-web-perf-budget`](../mobile-web-perf-budget/SKILL.md)
+  perf testing, see `mobile-web-perf-budget`
   + Lighthouse mobile profile.
 - **Cypress feature gap.** Playwright's `devices` catalog is
   richer; Cypress requires more manual setup.
@@ -243,9 +243,9 @@ aggregator (Step 4) to produce a per-device summary:
 
 - Playwright devices catalog (in the `@playwright/test` package);
   per-device viewport / DPR / UA / touch synthesis.
-- [`mobile-device-matrix-toolkit`](../mobile-device-matrix-toolkit/SKILL.md) - sibling: orchestrates per-target dispatch and aggregation.
-- [`mobile-web-perf-budget`](../mobile-web-perf-budget/SKILL.md) - 
+- `mobile-device-matrix-toolkit` - sibling: orchestrates per-target dispatch and aggregation.
+- `mobile-web-perf-budget` - 
   performance testing under mobile profile.
-- [`touch-gesture-tester`](../touch-gesture-tester/SKILL.md) - 
+- `touch-gesture-tester` - 
   detailed touch-gesture verification.
 - `playwright-snapshots` - per-device visual regression.

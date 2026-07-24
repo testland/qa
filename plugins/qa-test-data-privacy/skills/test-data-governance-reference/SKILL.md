@@ -14,8 +14,8 @@ or originates from personal data. It covers the full data lifecycle inside
 non-production environments: collection/intake, retention, cross-environment
 promotion, refresh, access control, and deletion. It does not generate or mask
 test data - see
-[`synthetic-data`](../faker-synthetic-data/SKILL.md) and
-[`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md) for
+`synthetic-data` and
+`pii-masking-pipeline-builder` for
 those workflows.
 
 This is a **pure reference** - no execution steps. Governance decisions depend
@@ -109,7 +109,7 @@ Retention tier is driven by the dataset's PII confidentiality impact level
 
 T4 datasets should not exist in test environments as a matter of policy. Their
 presence means the masking gate
-([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
+(`pii-masking-pipeline-builder`)
 was bypassed. The data steward must approve any T4 exception in writing and set
 a hard deletion timestamp at intake.
 
@@ -121,7 +121,7 @@ Each dataset admitted to a test environment must carry a metadata record:
 - Source type: synthetic / pseudonymised / partially masked / production copy
 - Tier (T1-T4)
 - PII categories present (from
-  [`pii-categories-reference`](../pii-categories-reference/SKILL.md))
+  `pii-categories-reference`)
 - Date admitted
 - Retention expiry date (calculated from tier)
 - Data steward name and contact
@@ -142,7 +142,7 @@ be in place before the transfer. The DSA governs:
    name the sprint, the feature, or the compliance audit.
 
 2. **Data categories transferred.** Enumerated from the cross-jurisdiction map
-   in [`pii-categories-reference`](../pii-categories-reference/SKILL.md) so
+   in `pii-categories-reference` so
    all applicable regimes are in scope.
 
 3. **Receiving environment classification.** Documents whether the target
@@ -289,7 +289,7 @@ documented, not implied by job title.
 - **Sector-specific overlays not covered.** HIPAA (45 CFR § 164.514) requires
   de-identification to Safe Harbor standards before PHI may be used in test
   environments; the 18-identifier list in
-  [`pii-categories-reference`](../pii-categories-reference/SKILL.md) applies.
+  `pii-categories-reference` applies.
   FERPA, GLBA, COPPA add analogous requirements for their sectors.
 - **Retention schedules are organisation-specific.** The tier table above
   provides baseline defaults; legal counsel must approve the final schedule
@@ -322,6 +322,6 @@ documented, not implied by job title.
 - GDPR Article 17 - right to erasure:
   [gdpr-info.eu/art-17-gdpr/](https://gdpr-info.eu/art-17-gdpr/)
 - Sibling skill (PII category catalog):
-  [`pii-categories-reference`](../pii-categories-reference/SKILL.md)
+  `pii-categories-reference`
 - Sibling skill (masking pipeline):
-  [`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md)
+  `pii-masking-pipeline-builder`

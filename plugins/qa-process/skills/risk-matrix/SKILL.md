@@ -195,6 +195,6 @@ tracked over time.
 - [rbt][rbt] - Risk-based testing definition, lightweight vs
   heavyweight methods (FMEA, Cost of Exposure, QFD, FTA), risk
   categories (business / technical / external / e-business).
-- [`risk-storming-facilitator`](../risk-storming-facilitator/SKILL.md) - sibling: facilitates the session that fills the matrix.
-- [`test-strategy-author`](../test-strategy-author/SKILL.md) - 
+- `risk-storming-facilitator` - sibling: facilitates the session that fills the matrix.
+- `test-strategy-author` - 
   test strategy doc that references the matrix.

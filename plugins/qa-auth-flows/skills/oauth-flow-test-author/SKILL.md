@@ -301,9 +301,9 @@ For each OAuth/OIDC client in scope:
   client + browser automation library; this skill is the per-flow
   checklist.
 - IdP-specific quirks (audience, custom auth servers, sign-in
-  policies) layer on top - see [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) for IdP-specific patterns.
+  policies) layer on top - see `keycloak-tests`,
+  `auth0-tests`,
+  `okta-tests` for IdP-specific patterns.
 - RFC 9700 supersedes earlier security BCPs; pin to the latest
   version when authoring tests.
 - OAuth 2.1 (in-progress) consolidates the deprecations from RFC
@@ -316,7 +316,7 @@ For each OAuth/OIDC client in scope:
 - IETF RFC 9700 - OAuth 2.0 Security Best Current Practice (March 2025)
 - IETF RFC 7009 - OAuth 2.0 Token Revocation
 - openid.net/specs/openid-connect-core-1_0.html - OIDC Core spec
-- [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md) - IdP-specific patterns
-- [`session-management-test-author`](../session-management-test-author/SKILL.md) - companion: post-auth session lifecycle
+- `keycloak-tests`,
+  `auth0-tests`,
+  `okta-tests` - IdP-specific patterns
+- `session-management-test-author` - companion: post-auth session lifecycle

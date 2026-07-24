@@ -264,8 +264,8 @@ Patrol (for native platform interactions)."
 - [ft][ft] - Flutter testing pyramid: unit / widget / integration;
   trade-off matrix (confidence, maintenance, deps, speed); CI
   integration list; `flutter test` / `flutter drive` commands.
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md),
-  [`detox-testing`](../detox-testing/SKILL.md) - alternative
+- `xcuitest-suite`,
+  `espresso-suite`,
+  `detox-testing` - alternative
   framework wrappers when the app isn't Flutter.
 - `lcov-analysis` - downstream consumer of `flutter test --coverage`.

@@ -109,7 +109,7 @@ Test surface per step:
 | 3 | Redirect URL is built with the gateway-provided client secret / token |
 | 4 | Issuer-hosted page is reachable (manual + Playwright e2e) |
 | 5 | Return URL handler parses the response correctly |
-| 6 | Confirm call is idempotent (per [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md)) |
+| 6 | Confirm call is idempotent (per `payment-flow-states-reference`) |
 | 7 | Final state matches expected per test card |
 
 ## Frictionless vs challenge - testable assertions
@@ -175,9 +175,9 @@ test('challenge flow', async () => {
 - EBA RTS on SCA:
   [eba.europa.eu/regulation-and-policy/payment-services-and-electronic-money/regulatory-technical-standards-on-strong-customer-authentication-and-secure-communication-under-psd2](https://www.eba.europa.eu/regulation-and-policy/payment-services-and-electronic-money/regulatory-technical-standards-on-strong-customer-authentication-and-secure-communication-under-psd2).
 - Companion catalogs:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
-  [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).
+  `payment-flow-states-reference`,
+  `pci-dss-scope-reference`.
 - Consumed by:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `braintree-test-cards`.

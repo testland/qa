@@ -301,5 +301,5 @@ Implement:
   all in sequence" comparison pattern.
 - [bazel-deps][bz] - Bazel target dependency model, `rdeps` reverse
   dependency query, declared-vs-actual dependency principle.
-- [`coverage-debt-tracker`](../coverage-debt-tracker/SKILL.md) - 
+- `coverage-debt-tracker` - 
   sibling skill: tracks files that lost coverage / went stale.

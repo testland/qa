@@ -33,8 +33,8 @@ metal, on-prem, multi-cloud, and serverless."
   the compliance posture.
 
 If the team is K8s-only and OSS-preferred, see
-[`litmus-chaos`](../litmus-chaos/SKILL.md) or
-[`chaos-mesh`](../chaos-mesh/SKILL.md).
+`litmus-chaos` or
+`chaos-mesh`.
 
 ## Step 1 - Install Gremlin agent
 
@@ -115,7 +115,7 @@ scenario:
     - "Manual abort"
 ```
 
-Scenarios match per the [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md)
+Scenarios match per the `chaos-experiment-author`
 "vary real-world events" principle - combinations approximate real
 incidents.
 
@@ -182,7 +182,7 @@ Important for regulated industries where audit is non-negotiable.
 | Skipping abort conditions                                              | Attack runs past safety threshold.                                       | Define abort signals (Step 4). |
 | Treating Reliability Score as the only signal                          | Score is service-level; per-attack verdicts matter too.                  | Both Score (trend) + per-attack verdicts (detail). |
 | One-shot installation; team forgets                                    | License paid; not used.                                                  | Schedule attacks; build into release process. |
-| Production attacks without playbook                                    | Real incident if attack escalates.                                       | Per [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md): blast radius + abort. |
+| Production attacks without playbook                                    | Real incident if attack escalates.                                       | Per `chaos-experiment-author`: blast radius + abort. |
 
 ## Limitations
 
@@ -201,7 +201,7 @@ Important for regulated industries where audit is non-negotiable.
   forward-looking reliability scores, multi-platform (bare metal /
   on-prem / multi-cloud / serverless), fault injection +
   reliability scoring + dependency discovery.
-- [`litmus-chaos`](../litmus-chaos/SKILL.md),
-  [`chaos-mesh`](../chaos-mesh/SKILL.md) - open-source K8s-only
+- `litmus-chaos`,
+  `chaos-mesh` - open-source K8s-only
   alternatives.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology Gremlin Scenarios implement.
+- `chaos-experiment-author` - methodology Gremlin Scenarios implement.

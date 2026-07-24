@@ -183,7 +183,7 @@ helm template myrelease charts/mychart/ -f values.yaml | conftest test -
 
 The Conftest step catches policy violations the unit tests don't
 cover (e.g., "all containers must have resource limits"). See
-[`policy-as-code-runner`](../policy-as-code-runner/SKILL.md).
+`policy-as-code-runner`.
 
 ## Anti-patterns
 
@@ -209,6 +209,6 @@ cover (e.g., "all containers must have resource limits"). See
 
 - helm-unittest at `github.com/helm-unittest/helm-unittest`.
 - Helm docs at `helm.sh/docs/`.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
+- `policy-as-code-runner` - 
   policy-level testing of rendered manifests.
 - `golden-file-conventions` - for snapshot sanitization patterns.

@@ -261,8 +261,8 @@ val params = Test.Parameters.default.withInitialSeed(rng.Seed(42L))
   modules, current version 2.18.0.0.
 - ScalaCheck official site (`scalacheck.org`) - Scala port; same
   conceptual model, JVM ecosystem.
-- [`hypothesis-testing`](../hypothesis-testing/SKILL.md),
-  [`fast-check-testing`](../fast-check-testing/SKILL.md),
-  [`proptest-testing`](../proptest-testing/SKILL.md),
-  [`jqwik-testing`](../jqwik-testing/SKILL.md) - all inspired by
+- `hypothesis-testing`,
+  `fast-check-testing`,
+  `proptest-testing`,
+  `jqwik-testing` - all inspired by
   QuickCheck; per-language siblings.

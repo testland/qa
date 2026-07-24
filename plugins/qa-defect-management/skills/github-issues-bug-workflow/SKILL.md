@@ -10,7 +10,7 @@ description: "Author and run GitHub Issues bug workflows via REST API v2026-03-1
 GitHub Issues has only **two states**: open and closed. This is
 intentionally minimalist. To express the canonical defect
 lifecycle
-([`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md))
+(`bug-lifecycle-reference`)
 teams supplement Issues with **labels** (severity, priority,
 status) and optionally **Projects v2** (status columns).
 
@@ -23,7 +23,7 @@ Projects v2 GraphQL augmentation when richer state is needed.
 
 - Filing a bug from a CI test failure on a GitHub-hosted project
   (consumed by
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md)).
+  `bug-report-from-failure`).
 - Maintaining bug label / status discipline in an open-source
   project where GitHub Issues is the canonical tracker.
 - Backing duplicate-defect search for GitHub-using teams.
@@ -296,10 +296,10 @@ cross-repo, use a fine-grained PAT.
 - `gh` CLI manual - 
   cli.github.com/manual/gh_issue.
 - Sibling references:
-  [`bug-lifecycle-reference`](../bug-lifecycle-reference/SKILL.md),
-  [`severity-vs-priority-reference`](../severity-vs-priority-reference/SKILL.md).
+  `bug-lifecycle-reference`,
+  `severity-vs-priority-reference`.
 - Sibling skills:
-  [`jira-bug-workflow-runner`](../jira-bug-workflow-runner/SKILL.md),
-  [`linear-bug-workflow-runner`](../linear-bug-workflow-runner/SKILL.md).
+  `jira-bug-workflow-runner`,
+  `linear-bug-workflow-runner`.
 - Consumed by:
-  [`bug-report-from-failure`](../bug-report-from-failure/SKILL.md).
+  `bug-report-from-failure`.

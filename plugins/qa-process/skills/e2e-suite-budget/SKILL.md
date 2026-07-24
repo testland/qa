@@ -178,7 +178,7 @@ trade-off.
 
 - [tp][tp] - Cohn's pyramid: UI tests "brittle, expensive to
   write, and time consuming to run."
-- [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) - 
+- `test-pyramid-balancer` - 
   sibling: identifies the layer-balance issue this skill
   addresses tactically.
 - `flaky-test-quarantine` - sibling: handles the flake side of low-ROI tests.

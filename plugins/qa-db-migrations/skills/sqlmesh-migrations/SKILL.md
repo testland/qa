@@ -195,8 +195,8 @@ estimates downstream consumer impact (BI dashboards, downstream
 services) that SQLMesh's model graph alone doesn't capture.
 
 For underlying schema migrations (DDL on the warehouse, separate
-from SQLMesh model changes), use [`flyway-migrations`](../flyway-migrations/SKILL.md)
-or [`atlas-migrations`](../atlas-migrations/SKILL.md).
+from SQLMesh model changes), use `flyway-migrations`
+or `atlas-migrations`.
 
 ## Anti-patterns
 
@@ -224,8 +224,8 @@ or [`atlas-migrations`](../atlas-migrations/SKILL.md).
 - [sm-cli][sm-cli] - quickstart CLI walkthrough
 - sqlmesh.readthedocs.io - full documentation
 - github.com/TobikoData/sqlmesh - repository
-- [`flyway-migrations`](../flyway-migrations/SKILL.md),
-  [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
-  [`atlas-migrations`](../atlas-migrations/SKILL.md) - sister tools
+- `flyway-migrations`,
+  `liquibase-migrations`,
+  `atlas-migrations` - sister tools
   (DDL-focused; SQLMesh complements them at the data-model layer)
 - `dbt-testing`, `great-expectations`, `soda-checks` - sister data-quality frameworks

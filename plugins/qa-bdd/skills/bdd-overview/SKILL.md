@@ -260,12 +260,12 @@ edited a `.feature` file in the last month.
 ## Related skills
 
 These go deeper on individual pieces, where also installed:
-[`cucumber-testing`](../cucumber-testing/SKILL.md),
-[`behave-testing`](../behave-testing/SKILL.md),
-[`reqnroll-testing`](../reqnroll-testing/SKILL.md),
-[`gherkin-from-stories`](../gherkin-from-stories/SKILL.md),
-[`manual-step-to-gherkin`](../manual-step-to-gherkin/SKILL.md),
-[`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md).
+`cucumber-testing`,
+`behave-testing`,
+`reqnroll-testing`,
+`gherkin-from-stories`,
+`manual-step-to-gherkin`,
+`bdd-step-library-curator`.
 
 [bdd-what]: https://cucumber.io/docs/bdd/
 [gherkin-ref]: https://cucumber.io/docs/gherkin/reference/

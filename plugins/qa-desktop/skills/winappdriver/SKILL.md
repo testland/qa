@@ -18,7 +18,7 @@ Per the [WinAppDriver repository][wad]:
 
 WinAppDriver exposes Microsoft UI Automation (UIA) - the Windows
 accessibility tree described in
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md) - behind a W3C-WebDriver-compatible HTTP endpoint. Per
+`desktop-test-strategy-reference` - behind a W3C-WebDriver-compatible HTTP endpoint. Per
 [wad][wad], it supports four application classes on Windows 10:
 "Universal Windows Platform (UWP)", "Windows Forms (WinForms)",
 "Windows Presentation Foundation (WPF)", and "Classic Windows (Win32)
@@ -26,7 +26,7 @@ apps".
 
 The driver is a **Microsoft-maintained service**, distinct from the
 Appium ecosystem's wrapper around it - see
-[`appium-windows-driver`](../appium-windows-driver/SKILL.md) for the
+`appium-windows-driver` for the
 Appium proxy that sits in front of `WinAppDriver.exe` and adds
 gestures, multi-window helpers, and PowerShell hooks. Pick this skill
 when you want to talk to `WinAppDriver.exe` directly from a Selenium
@@ -47,7 +47,7 @@ surface.
 
 For Qt-on-Windows out-of-process tests, this is the recommended
 driver per
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md);
+`desktop-test-strategy-reference`;
 the Qt application must publish a usable `QAccessible` tree.
 
 ## Step 1 - Install + enable
@@ -136,7 +136,7 @@ session.Quit();
 
 The `AccessibilityId` locator maps to the UIA `AutomationId` property - 
 the stable locator per the
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+`desktop-test-strategy-reference`
 locator table.
 
 ## Step 5 - Element-locator strategies
@@ -247,7 +247,7 @@ to start under Session 0).
 | One mega-session that drives multiple apps | UIA tree gets stale between app switches | One session per app; close + recreate on app change |
 | Forgetting `session.Quit()` | Orphaned WinAppDriver child processes accumulate | `try/finally` around session lifecycle |
 | Driving Edge / Chrome via WinAppDriver | Browser apps need a real WebDriver (Selenium / Playwright) | Use a browser driver, not WinAppDriver |
-| Pixel-image matching for primary assertions | Brittle to font / theme / DPI changes | Accessibility tree first; image matching only for canvas-rendered content (per [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)) |
+| Pixel-image matching for primary assertions | Brittle to font / theme / DPI changes | Accessibility tree first; image matching only for canvas-rendered content (per `desktop-test-strategy-reference`) |
 
 ## Limitations
 
@@ -257,14 +257,14 @@ to start under Session 0).
   upstream "has not been maintained since 2022"). The latest
   official release per [wad][wad] is v1.2.1 (2020-11-05). For new
   projects on actively-maintained tooling, see
-  [`appium-windows-driver`](../appium-windows-driver/SKILL.md).
+  `appium-windows-driver`.
 
 [appiumdrivers]: https://appium.io/docs/en/latest/ecosystem/drivers/
 
 - **Windows-only.** The service runs only on Windows 10/11. No
   cross-OS test sharing without re-authoring against XCTest / AT-SPI.
 - **No first-party Linux / macOS analogue.** Per the
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+  `desktop-test-strategy-reference`
   matrix, each OS has its own driver.
 - **No headless mode.** UIA requires an interactive desktop session;
   CI on `windows-latest` works because GitHub-hosted runners are
@@ -283,7 +283,7 @@ to start under Session 0).
 - Appium ecosystem drivers page (maintenance status note) - 
   [appiumdrivers][appiumdrivers].
 - Sibling skill:
-  [`appium-windows-driver`](../appium-windows-driver/SKILL.md) - the
+  `appium-windows-driver` - the
   Appium proxy in front of WinAppDriver.
 - Strategic frame:
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.

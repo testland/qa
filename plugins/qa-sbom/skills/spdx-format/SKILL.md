@@ -20,7 +20,7 @@ Two active major versions:
 | SPDX 3.0 | Recent (2024); growing tooling | Profile-based: core + software + AI + dataset + build + security; JSON-LD primary |
 
 This is a **reference skill** - defines the schema +
-tooling landscape; doesn't run scans. Pair with [`syft-generation`](../syft-generation/SKILL.md)
+tooling landscape; doesn't run scans. Pair with `syft-generation`
 to generate SPDX-format SBOMs.
 
 ## When to use
@@ -33,7 +33,7 @@ to generate SPDX-format SBOMs.
 - A consumer (regulator, customer) requires SPDX format
   specifically.
 
-For security-focused use cases, [`cyclonedx-format`](../cyclonedx-format/SKILL.md)
+For security-focused use cases, `cyclonedx-format`
 has richer first-class vuln support.
 
 ## Step 1 - SPDX 2.3 top-level structure (JSON)
@@ -261,7 +261,7 @@ jobs:
   ISO publication)
 - tools.spdx.org - online validator
 - github.com/spdx/tools-python - Python reference impl
-- [`syft-generation`](../syft-generation/SKILL.md),
-  [`grype-scanning`](../grype-scanning/SKILL.md),
-  [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- `syft-generation`,
+  `grype-scanning`,
+  `cyclonedx-format`,
+  `trivy-image` - sister tools

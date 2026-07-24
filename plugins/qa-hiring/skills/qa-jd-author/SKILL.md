@@ -9,7 +9,7 @@ metadata:
 
 ## Overview
 
-The JD is the first scoring instrument in the hiring chain, applied by candidates to themselves: a vague posting screens nobody, and an everything-list screens out exactly the people the team wants. This skill produces a JD whose responsibilities come from the role's actual test activities and whose skills section uses the same competency vocabulary the downstream [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) rubric will score - so the role a candidate applies to is the role the panel evaluates.
+The JD is the first scoring instrument in the hiring chain, applied by candidates to themselves: a vague posting screens nobody, and an everything-list screens out exactly the people the team wants. This skill produces a JD whose responsibilities come from the role's actual test activities and whose skills section uses the same competency vocabulary the downstream `hiring-rubric-author` rubric will score - so the role a candidate applies to is the role the panel evaluates.
 
 Two grounding sources. For **what the role does**: ISTQB CTFL v4.0 section 1.4.5 defines two principal roles in testing - the **testing role**, which "takes overall responsibility for the engineering (technical) aspect of testing" and is "mainly focused on the activities of test analysis, test design, test implementation and test execution", and the **test management role**, which "takes overall responsibility for the test process, test team and leadership of the test activities" and is "mainly focused on the activities of test planning, test monitoring and control and test completion". The same section notes one person may take on both roles at the same time ([ISTQB CTFL Syllabus v4.0, §1.4.5](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf); syllabus text verified 2026-06-10 from the published PDF). For **how the document reads**: Workable's JD guidance - clear, standard job titles (creative titles like "Rockstar Engineer" read as "unrealistic and potentially discriminatory"), 300 - 660 words total, bulleted duties that show a typical workday, and requirements split into must-have versus nice-to-have ([Workable, "How to write a good job description"](https://resources.workable.com/tutorial/how-to-write-a-good-job-description), fetched 2026-06-10).
 
@@ -21,8 +21,8 @@ Two grounding sources. For **what the role does**: ISTQB CTFL v4.0 section 1.4.5
 
 Do **not** use this skill to:
 
-- Author interview questions - that is [`interview-question-author`](../interview-question-author/SKILL.md), the next artifact in the chain once the JD is posted.
-- Score candidates - that is [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md); this skill feeds it the competency list.
+- Author interview questions - that is `interview-question-author`, the next artifact in the chain once the JD is posted.
+- Score candidates - that is `hiring-rubric-author`; this skill feeds it the competency list.
 - Define internal level criteria - that is `career-ladder-author` in qa-team-management; the JD describes one role externally, the ladder describes progression internally. Where both exist they must agree.
 
 ## Step 1 - Capture the inputs
@@ -47,7 +47,7 @@ A role that is 100% one kind needs no bullets from the other; a mixed role state
 
 The split is the JD's main screening mechanism (Workable: be upfront about non-negotiables; separate must-have from nice-to-have so candidates self-assess accurately). Rules:
 
-- **Must-haves: 4 - 6 items maximum**, each one the team would genuinely reject an otherwise-strong candidate for lacking. Use the competency dimensions from [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) Step 2 for the role (e.g., for automation: test analysis and design, test code conventions, tooling depth, communication) so JD and rubric stay one vocabulary.
+- **Must-haves: 4 - 6 items maximum**, each one the team would genuinely reject an otherwise-strong candidate for lacking. Use the competency dimensions from `hiring-rubric-author` Step 2 for the role (e.g., for automation: test analysis and design, test code conventions, tooling depth, communication) so JD and rubric stay one vocabulary.
 - **Nice-to-haves: 3 - 5 items**, explicitly labeled as such.
 - Include the generic tester skills only when they will be screened for: CTFL 1.5.1 lists testing knowledge, thoroughness, curiosity, attention to detail, being methodical, and communication among skills particularly relevant for testers - but as JD boilerplate they screen nothing; tie them to an observable ("bug reports that developers can reproduce first try") or leave them out.
 - Certifications (ISTQB included) are nice-to-have evidence of knowledge, not must-have proxies for skill, unless a client or regulator mandates them.
@@ -118,12 +118,12 @@ hands-on engineering, ~20% strategy input for your area.
 
 ## Hand-off targets
 
-- **Next step in the chain** → [`interview-question-author`](../interview-question-author/SKILL.md) (question bank), then [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) (scoring rubric), then [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md) - the structured-interview triple this JD feeds.
-- **After the hire** → [`onboarding-plan-author`](../onboarding-plan-author/SKILL.md).
+- **Next step in the chain** → `interview-question-author` (question bank), then `hiring-rubric-author` (scoring rubric), then `interviewer-calibration-guide-author` - the structured-interview triple this JD feeds.
+- **After the hire** → `onboarding-plan-author`.
 - **If the role came from a capability gap** → a team capability-gap report supplies the "why this role is open" paragraph.
 
 ## References
 
 - ISTQB CTFL Syllabus v4.0, section 1.4.5 "Roles in Testing" (testing role vs test management role definitions quoted in the Overview) and 1.5.1 "Generic Skills Required for Testing": https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf - syllabus text verified 2026-06-10 from the published v4.0 PDF (ISTQB resource CDN copy at https://d288qud2qgn4l3.cloudfront.net/media/resources/ISTQB_CTFL_Syllabus-v4.0.pdf).
 - Workable, "How to write a good job description" - title guidance, 300 - 660 word target, bulleted typical-workday duties, must-have vs nice-to-have split: https://resources.workable.com/tutorial/how-to-write-a-good-job-description (fetched 2026-06-10).
-- [`interview-question-author`](../interview-question-author/SKILL.md), [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md), [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md), [`onboarding-plan-author`](../onboarding-plan-author/SKILL.md) - the downstream hiring chain.
+- `interview-question-author`, `hiring-rubric-author`, `interviewer-calibration-guide-author`, `onboarding-plan-author` - the downstream hiring chain.

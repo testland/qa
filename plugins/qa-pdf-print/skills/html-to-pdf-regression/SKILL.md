@@ -210,9 +210,9 @@ baseline updates in same PR.
 - [WeasyPrint docs] - Python API, CLI, CSS support
 - [MDN Paged Media] - cross-browser @page support notes
 - [Playwright page.pdf docs] - Chromium PDF API
-- [`pdf-snapshot-tester`](../pdf-snapshot-tester/SKILL.md) - sister
+- `pdf-snapshot-tester` - sister
   skill for per-engine pixel-diff assertions
-- [`print-stylesheet-tests`](../print-stylesheet-tests/SKILL.md) - 
+- `print-stylesheet-tests` - 
   CSS print-media verification (pre-PDF)
 
 [WeasyPrint docs]: https://doc.courtbouillon.org/weasyprint/stable/

@@ -54,7 +54,7 @@ Is the project using Chromatic + Storybook?
 If the project uses **two** engines (e.g. Chromatic for stories +
 Playwright snapshots for full pages), apply the matching pattern to
 each independently and use the
-[`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) skill to
+`visual-baseline-gate` skill to
 aggregate verdicts.
 
 ## Chromatic dispatch
@@ -80,7 +80,7 @@ export default {
 
 A story with multiple viewports produces one snapshot per viewport in
 the same Chromatic build. Pair with TurboSnap (`--only-changed`, see
-[`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md))
+`chromatic-visual-regression-testing`)
 so a per-PR breakpoint matrix doesn't blow up snapshot quota.
 
 ## Percy dispatch
@@ -88,7 +88,7 @@ so a per-PR breakpoint matrix doesn't blow up snapshot quota.
 Per [Percy CLI][percy-cli], project-wide widths are set in the Percy
 config file (`.percy.yml`, `percy.config.js`, etc., resolved per the
 order documented in
-[`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md)):
+`percy-visual-regression-testing`):
 
 [percy-cli]: https://github.com/percy/cli
 
@@ -140,7 +140,7 @@ npx playwright test                                    # runs all projects in pa
 
 Each project produces its own snapshot suffix
 (`-chromium-linux-mobile-375.png` etc.) so baselines are isolated. See
-[`playwright-snapshots`](../playwright-snapshots/SKILL.md) for the
+`playwright-snapshots` for the
 naming convention.
 
 ## Storybook test-runner dispatch
@@ -210,7 +210,7 @@ which is the entire reason this skill exists. Pipe the matrix into
 clickable PR-side summary.
 
 For a hard CI gate that fails on any cell, use
-[`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) - it accepts
+`visual-baseline-gate` - it accepts
 this row shape directly.
 
 ## CI integration
@@ -236,11 +236,11 @@ URL) so a reviewer can see the diff for a specific cell:
 
 ## References
 
-- [`percy-visual-regression-testing`](../percy-visual-regression-testing/SKILL.md)
-- [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
-- [`playwright-snapshots`](../playwright-snapshots/SKILL.md)
-- [`storybook-visual-regression-testing`](../storybook-visual-regression-testing/SKILL.md)
-- [`visual-baseline-gate`](../visual-baseline-gate/SKILL.md) - the
+- `percy-visual-regression-testing`
+- `chromatic-visual-regression-testing`
+- `playwright-snapshots`
+- `storybook-visual-regression-testing`
+- `visual-baseline-gate` - the
   matching gate skill that consumes the unified row shape.
 - [chrom-vp][chrom-vp] - Chromatic per-story viewport syntax.
 - [pw-snap][pw-snap] - Playwright snapshot framework.

@@ -215,10 +215,10 @@ The goal: `.github/workflows/test.yml`, `.gitlab-ci.yml`, and
 
 ## References
 
-- [`github-actions-test-jobs`](../github-actions-test-jobs/SKILL.md),
-  [`gitlab-ci-test-jobs`](../gitlab-ci-test-jobs/SKILL.md),
-  [`jenkinsfile-test-stages`](../jenkinsfile-test-stages/SKILL.md),
-  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
+- `github-actions-test-jobs`,
+  `gitlab-ci-test-jobs`,
+  `jenkinsfile-test-stages`,
+  `circleci-test-configs` - 
   per-CI implementation skills.
 - `flaky-test-quarantine` - flake handling.
 - `junit-xml-analysis` - JUnit XML parser.

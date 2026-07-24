@@ -20,7 +20,7 @@ Per [docs.python.org/3/library/unittest.html][ut-docs]:
 - **Mock module bundled**: `unittest.mock` is the canonical Python
   mocking library (used even by pytest projects).
 
-For new projects, [`pytest-tests`](../pytest-tests/SKILL.md) is
+For new projects, `pytest-tests` is
 generally preferred. unittest persists in stdlib-only contexts +
 legacy maintenance.
 
@@ -242,7 +242,7 @@ python -m unittest tests.test_user.TestUser.test_creation
 
 - [ut-docs][ut-docs] - unittest reference
 - [mock-docs][mock-docs] - unittest.mock reference
-- [`pytest-tests`](../pytest-tests/SKILL.md),
-  [`doctest-tests`](../doctest-tests/SKILL.md),
-  [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
+- `pytest-tests`,
+  `doctest-tests`,
+  `nose2-tests` - sister tools
 - `test-code-conventions` - test code hygiene

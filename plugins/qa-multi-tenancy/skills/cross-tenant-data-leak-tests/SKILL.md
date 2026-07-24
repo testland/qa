@@ -8,7 +8,7 @@ description: "Workflow-driven skill that emits the runtime CI gate of cross-tena
 ## Overview
 
 The runtime CI gate. While
-[`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md)
+`tenant-leak-test-author`
 produces the *plan* (which surfaces, which patterns), this skill
 produces the *executing tests* - the actual code that fails the
 build when isolation breaks.
@@ -24,7 +24,7 @@ The contract:
 ## When to use
 
 - Implementing the leak-test suite after planning with
-  [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md).
+  `tenant-leak-test-author`.
 - Adding the CI gate to an existing multi-tenant project.
 - Investigating a leak finding - reproduce with a minimal test.
 - Adding coverage for a newly-introduced tenant-bearing surface.
@@ -40,7 +40,7 @@ For Postgres-backed apps, this is the most-common-bug step:
 | Role that **owns** the tenant table (and table not `FORCE`d) | Bypasses RLS. **Do not use** unless `FORCE ROW LEVEL SECURITY` is set. |
 | Plain application role (no BYPASSRLS, not owner) | **Correct** - same role prod uses. |
 
-Per [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md),
+Per `row-level-security-postgres-reference`,
 verify with:
 
 ```sql
@@ -143,7 +143,7 @@ def test_cannot_create_fk_referencing_other_tenant(
 
 This tests FK-based leak via reference: the FK constraint
 **bypasses RLS** per
-[`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md),
+`row-level-security-postgres-reference`,
 so the FK must be validated at application layer too.
 
 ### Test 6 - Unique-collision side channel
@@ -166,7 +166,7 @@ def test_unique_violation_does_not_disclose_other_tenant_existence(
 ```
 
 Per
-[`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md):
+`row-level-security-postgres-reference`:
 "Foreign key constraint checks, Unique constraint checks,
 TRUNCATE, and REFERENCES privilege checks bypass RLS." Solution:
 make `slug` unique per tenant: `UNIQUE (tenant_id, slug)`.
@@ -264,7 +264,7 @@ ROLLBACK;
 ```
 
 Per
-[`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md):
+`row-level-security-postgres-reference`:
 test fails if either assertion fails (count != 0, or INSERT
 succeeds).
 
@@ -367,9 +367,9 @@ When a leak test fails:
 ## References
 
 - OWASP WSTG-ATHZ-02 (consumed via
-  [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md)):
+  `tenant-leak-test-author`):
   [owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema).
 - Postgres RLS bypass rules:
-  [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md).
+  `row-level-security-postgres-reference`.
 - Plan / inventory:
-  [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md).
+  `tenant-leak-test-author`.

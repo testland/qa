@@ -185,8 +185,8 @@ disabled.
 - Custom strategies:
   [docs.getunleash.io/concepts/activation-strategies](https://docs.getunleash.io/concepts/activation-strategies).
 - Companion:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
+  `feature-flag-test-matrix-reference`.
 - Sibling SDKs:
-  [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
-  [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md).
+  `launchdarkly-testing`,
+  `flagsmith-testing`,
+  `growthbook-testing`.

@@ -247,12 +247,12 @@ debugging in CI logs.
 - rabbitmq.com/docs - full RabbitMQ documentation
 - testcontainers.com/modules/rabbitmq - Testcontainers RabbitMQ
   module
-- [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
-  [`celery-tests`](../celery-tests/SKILL.md),
-  [`bullmq-tests`](../bullmq-tests/SKILL.md),
-  [`sqs-tests`](../sqs-tests/SKILL.md) - sister tools (Celery
+- `sidekiq-tests`,
+  `celery-tests`,
+  `bullmq-tests`,
+  `sqs-tests` - sister tools (Celery
   often runs on RabbitMQ; the celery-tests skill complements this
   for Python-Celery deployments)
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
+- `idempotency-test-author` - 
   critical companion: requeue + redelivery semantics need
   idempotent consumers

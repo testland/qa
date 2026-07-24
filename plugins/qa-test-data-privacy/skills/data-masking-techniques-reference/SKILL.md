@@ -16,14 +16,14 @@ shared across tables, and what privacy model the dataset must
 satisfy.
 
 This skill is the **pure reference** that the pipeline builder
-([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md))
+(`pii-masking-pipeline-builder`)
 and leak-detection audits draw from to
 choose operators per field.
 
 ## When to use
 
 - Picking the right masking operator for a field
-  ([`pii-categories-reference`](../pii-categories-reference/SKILL.md)
+  (`pii-categories-reference`
   classified as PII).
 - Deciding whether output is pseudonymised (still in GDPR scope) or
   anonymised (out of GDPR scope).
@@ -52,7 +52,7 @@ lookup table - "John Smith" → "Maria Garcia."
 - **Tooling:** Presidio `replace` operator
   ([presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack.org/anonymizer/)),
   Faker library generators
-  ([`faker-synthetic-data`](../faker-synthetic-data/SKILL.md)).
+  (`faker-synthetic-data`).
 
 ### 2. Shuffling
 
@@ -160,8 +160,8 @@ Remove the value entirely (no placeholder, no length signal).
 
 Replace with a synthetically generated value preserving
 distribution / format
-([`faker-synthetic-data`](../faker-synthetic-data/SKILL.md);
-[`synthea-healthcare-data`](../synthea-healthcare-data/SKILL.md)
+(`faker-synthetic-data`;
+`synthea-healthcare-data`
 for health records).
 
 - **Reversibility:** Irreversible.
@@ -300,7 +300,7 @@ record is added/removed. ε (epsilon) is the privacy budget - lower
 
 - **No single technique fits every field.** Pipeline must apply
   per-field policy
-  ([`pii-masking-pipeline-builder`](../pii-masking-pipeline-builder/SKILL.md)).
+  (`pii-masking-pipeline-builder`).
 - **Re-identification research evolves.** NIST 800-188 Annex
   documents known attacks; the techniques above are sound under
   2024 attack models, not future ones.
@@ -331,5 +331,5 @@ record is added/removed. ε (epsilon) is the privacy budget - lower
 - GDPR Article 4(5) pseudonymisation definition - 
   [gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/).
 - Related references:
-  [`pii-categories-reference`](../pii-categories-reference/SKILL.md),
-  [`presidio-pii-detection`](../presidio-pii-detection/SKILL.md).
+  `pii-categories-reference`,
+  `presidio-pii-detection`.

@@ -210,5 +210,5 @@ revalidation for users with stale tabs. Pair with:
 - [Workbox docs](https://developer.chrome.com/docs/workbox) - 
   authoritative API + plugin reference (consult for current
   ExpirationPlugin / CacheableResponsePlugin signatures)
-- [`service-worker-tests`](../service-worker-tests/SKILL.md) - 
+- `service-worker-tests` - 
   sister skill providing Playwright SW lifecycle test patterns

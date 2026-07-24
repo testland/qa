@@ -30,9 +30,9 @@ The general pattern: **Query → Synthesize → Assert**.
 - The app is iOS-only and there's no need for cross-platform reuse.
 
 If the app is React Native, see
-[`detox-testing`](../detox-testing/SKILL.md). For cross-platform
+`detox-testing`. For cross-platform
 Appium-style coverage, see
-[`appium-testing`](../appium-testing/SKILL.md).
+`appium-testing`.
 
 ## Step 1 - Add a UI test target
 
@@ -216,7 +216,7 @@ GitHub Actions provides `macos-15` runners with Xcode pre-installed.
 - [xcui][xcui] - Apple's XCUITest fundamentals: three-class
   pattern (XCUIApplication / XCUIElement / XCUIElementQuery),
   Query→Synthesize→Assert, `continueAfterFailure = NO` default.
-- [`espresso-suite`](../espresso-suite/SKILL.md) - Android sibling.
-- [`appium-testing`](../appium-testing/SKILL.md) - cross-platform
+- `espresso-suite` - Android sibling.
+- `appium-testing` - cross-platform
   alternative when iOS + Android share tests.
 - `junit-xml-analysis` - downstream parser for JUnit-converted xcresult.

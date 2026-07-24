@@ -43,7 +43,7 @@ warning our customers to be vigilant when running A/B tests" and that
 mismatches)"
 ([A/B Interactions: A Call to Relax](https://www.microsoft.com/en-us/research/articles/a-b-interactions-a-call-to-relax/)).
 Tiny SRMs (per
-[`peeking-problem-reference`](../peeking-problem-reference/SKILL.md)
+`peeking-problem-reference`
 sibling concept) and degraded guardrails are the canonical
 ship-and-regret sources.
 
@@ -170,10 +170,10 @@ Hochberg correction:
 - Microsoft Experimentation Platform:
   [microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/).
 - Companion catalogs:
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md),
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md).
+  `peeking-problem-reference`,
+  `ab-test-validity-checklist`.
 - Consumed by:
-  [`statsig-test`](../statsig-test/SKILL.md),
-  [`optimizely-test`](../optimizely-test/SKILL.md),
-  [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).
+  `statsig-test`,
+  `optimizely-test`,
+  `vwo-test`,
+  `amplitude-experiment-test`.

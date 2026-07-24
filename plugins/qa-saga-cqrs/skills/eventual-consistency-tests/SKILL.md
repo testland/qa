@@ -227,9 +227,9 @@ def test_bounded_staleness_under_2_seconds():
 
 - [Fowler - Event Sourcing] - replay determinism foundation
 - [Fowler - CQRS] - read-model eventual-consistency framing
-- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md),
-  [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md),
-  [`cqrs-projection-tests`](../cqrs-projection-tests/SKILL.md) - 
+- `saga-transaction-tests`,
+  `event-sourcing-tests`,
+  `cqrs-projection-tests` - 
   sister skills
 - CRDT theory - Shapiro et al., "A comprehensive study of
   Convergent and Commutative Replicated Data Types" (INRIA report)

@@ -14,9 +14,9 @@ thing (passes the same format validators) but **never matches** a
 real person.
 
 This skill wraps the synthetic-data libraries
-([`faker-data`](../faker-data/SKILL.md),
-[`mimesis-data`](../mimesis-data/SKILL.md),
-[`bogus-data`](../bogus-data/SKILL.md)) with PII-specific
+(`faker-data`,
+`mimesis-data`,
+`bogus-data`) with PII-specific
 constraints to produce format-valid but identity-safe values.
 
 **Default: Faker (Python)** - broadest locale coverage and the most
@@ -40,7 +40,7 @@ ship it.
 - Replacing real PII in a database dump being moved to lower
   environments.
 - Generating fixture rows for the
-  [`seed-data-curator`](../seed-data-curator/SKILL.md) workflow.
+  `seed-data-curator` workflow.
 
 ## Step 1 - Identify the PII fields
 
@@ -242,8 +242,8 @@ jq -r '.users[].ssn' fixtures/users-test.yaml | grep -v '^9[0-9]{2}-' && echo 'W
   cards.
 - Adyen testing - https://docs.adyen.com/development-resources/testing - alternative test card set.
 - NIST SP 800-122 - Guide to Protecting the Confidentiality of PII.
-- [`faker-data`](../faker-data/SKILL.md),
-  [`mimesis-data`](../mimesis-data/SKILL.md),
-  [`bogus-data`](../bogus-data/SKILL.md) - value-engine skills.
-- [`seed-data-curator`](../seed-data-curator/SKILL.md) - downstream
+- `faker-data`,
+  `mimesis-data`,
+  `bogus-data` - value-engine skills.
+- `seed-data-curator` - downstream
   skill that uses this for E2E seed PII fields.

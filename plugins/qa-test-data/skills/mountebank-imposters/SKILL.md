@@ -46,9 +46,9 @@ Per [mountebank-readme][readme], supported protocols include:
 - The team needs **JavaScript injection** for dynamic response
   computation per request.
 
-If the team is HTTP-only on the JVM, [`wiremock-stubs`](../wiremock-stubs/SKILL.md)
+If the team is HTTP-only on the JVM, `wiremock-stubs`
 is the lighter fit. For Node / browser HTTP-only, use
-[`msw-handlers`](../msw-handlers/SKILL.md). Mountebank's strength
+`msw-handlers`. Mountebank's strength
 is multi-protocol breadth; pay the operational cost (a separate
 process, port 2525) only when you need it.
 
@@ -253,7 +253,7 @@ cleaner.
   protocols, key features.
 - mbtest.dev - alternate documentation domain (verify before
   linking; project's stewardship situation evolved during 2025-2026).
-- [`wiremock-stubs`](../wiremock-stubs/SKILL.md) - HTTP-only
+- `wiremock-stubs` - HTTP-only
   alternative on the JVM.
-- [`msw-handlers`](../msw-handlers/SKILL.md) - HTTP-only
+- `msw-handlers` - HTTP-only
   alternative for browser + Node.

@@ -19,8 +19,8 @@ bypass, sharing-model evasion, hard-coded credentials, insecure endpoints,
 XSS through Visualforce, and open redirect.
 
 This skill is the Apex-specific companion to
-[`semgrep-rules`](../semgrep-rules/SKILL.md) and
-[`sonarqube-rules`](../sonarqube-rules/SKILL.md). Those tools cover general
+`semgrep-rules` and
+`sonarqube-rules`. Those tools cover general
 multi-language patterns; this one covers the Salesforce Apex security category
 absent from both. Findings from all five SAST tools can be unified in a
 multi-scanner triage step.
@@ -279,11 +279,11 @@ are flagged in code review.
 
 - PMD Apex analysis is syntactic, not data-flow-based; it can miss taint
   paths that cross method boundaries. For deep interprocedural analysis pair
-  with [`codeql-queries`](../codeql-queries/SKILL.md).
+  with `codeql-queries`.
 - `ApexCRUDViolation` generates false positives on Visualforce getter methods
   where FLS is enforced automatically; suppress with justification per Step 7.
 - PMD does not parse Lightning Web Components (`.js`); client-side XSS is out
-  of scope. Use [`semgrep-rules`](../semgrep-rules/SKILL.md) with the
+  of scope. Use `semgrep-rules` with the
   `p/owasp-top-ten` ruleset for LWC JavaScript.
 
 ## References
@@ -294,8 +294,8 @@ are flagged in code review.
 - [pmd-rulesets][pmd-rulesets] - custom ruleset XML format, exclude patterns
 - [pmd-cache][pmd-cache] - incremental analysis
 - [pmd.github.io - Report Formats][pmd-formats] - all `-f` format options including sarif
-- [`semgrep-rules`](../semgrep-rules/SKILL.md) - multi-language pattern SAST
-- [`codeql-queries`](../codeql-queries/SKILL.md) - interprocedural / data-flow SAST
-- [`sonarqube-rules`](../sonarqube-rules/SKILL.md) - semantic-DB SAST
+- `semgrep-rules` - multi-language pattern SAST
+- `codeql-queries` - interprocedural / data-flow SAST
+- `sonarqube-rules` - semantic-DB SAST
 
 [pmd-formats]: https://pmd.github.io/pmd/pmd_userdocs_report_formats.html

@@ -267,6 +267,6 @@ Common bug: parent cancelled, child task leaks (continues running).
 - ECMAScript spec - runtime job semantics; consult tc39.es/ecma262
 - Python asyncio docs - docs.python.org/3/library/asyncio.html
 - Go memory model - go.dev/ref/mem
-- [`race-condition-test-author`](../race-condition-test-author/SKILL.md),
-  [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) - 
+- `race-condition-test-author`,
+  `deadlock-detection-harness` - 
   sister concurrency skills

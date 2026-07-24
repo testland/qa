@@ -24,7 +24,7 @@ plan a cert calendar without re-learning each portal.
 | Steam | Steam Direct | App Review Process | [partner.steamgames.com](https://partner.steamgames.com/doc/store/review_process) (public) |
 
 This skill **pairs with**
-[`game-test-categories-reference`](../game-test-categories-reference/SKILL.md)
+`game-test-categories-reference`
 which defines the six canonical test categories (functional /
 compliance / compatibility / performance / localization /
 accessibility) that map across all four regimes.
@@ -134,7 +134,7 @@ because of:
 - "Multiplayer does not work as expected."
 
 (Multiplayer issues are a particularly common cert blocker - see
-[`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md)
+`multiplayer-state-machine-coverage`
 for the test patterns that catch them pre-submission.)
 
 ### Bench layout (compatibility matrix)

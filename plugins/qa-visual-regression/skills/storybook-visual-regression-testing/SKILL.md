@@ -24,9 +24,9 @@ testing:
 
 This skill covers both. For full Chromatic CLI behavior (TurboSnap,
 exit codes, config file), pair with
-[`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md);
+`chromatic-visual-regression-testing`;
 for `toHaveScreenshot` option syntax, pair with
-[`playwright-snapshots`](../playwright-snapshots/SKILL.md).
+`playwright-snapshots`.
 
 ## When to use
 
@@ -59,7 +59,7 @@ code.
 ### CI integration
 
 Chromatic CI invocation is identical to running it standalone - see
-[`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md)
+`chromatic-visual-regression-testing`
 for the `npx chromatic` CLI flag set, exit codes, TurboSnap, and
 `chromatic.config.json` schema.
 
@@ -137,7 +137,7 @@ opt-out via a story `parameters.visualRegression.disable = true`.
 
 For the full `toHaveScreenshot` option set (mask, threshold,
 maxDiffPixels, etc.) and the per-OS / per-browser baseline structure,
-see [`playwright-snapshots`](../playwright-snapshots/SKILL.md).
+see `playwright-snapshots`.
 
 ### Running
 
@@ -240,6 +240,6 @@ process exits - without `-k`, the workflow hangs.
   for visual coverage.
 - [storybook-test-runner][st-tr] - `@storybook/test-runner` install,
   lifecycle hooks, integration with Jest + Playwright.
-- [`chromatic-visual-regression-testing`](../chromatic-visual-regression-testing/SKILL.md) - Chromatic CLI behavior, exit codes, TurboSnap.
-- [`playwright-snapshots`](../playwright-snapshots/SKILL.md) - full
+- `chromatic-visual-regression-testing` - Chromatic CLI behavior, exit codes, TurboSnap.
+- `playwright-snapshots` - full
   `toHaveScreenshot` options for Path 2.

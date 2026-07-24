@@ -339,5 +339,5 @@ on the STOMP layer alone would not reveal.
 - [RabbitMQ STOMP plugin](https://www.rabbitmq.com/docs/stomp) - destination prefixes, TCP port 61613
 - [RabbitMQ Java client API guide](https://www.rabbitmq.com/client-libraries/java-api-guide) - ConnectionFactory, Channel, basicPublish, basicConsume
 - [Testcontainers RabbitMQ module](https://java.testcontainers.org/modules/rabbitmq/) - RabbitMQContainer, dependency coordinates
-- [`mqtt-tests`](../mqtt-tests/SKILL.md) - QoS 0/1/2 for IoT/M2M MQTT stacks
-- [`websocket-tests`](../websocket-tests/SKILL.md) - raw WebSocket frame testing
+- `mqtt-tests` - QoS 0/1/2 for IoT/M2M MQTT stacks
+- `websocket-tests` - raw WebSocket frame testing

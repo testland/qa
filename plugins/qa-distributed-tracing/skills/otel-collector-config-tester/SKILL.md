@@ -284,7 +284,7 @@ between releases.
   waiting on large batches.
 - This skill covers pipeline correctness testing. For sampling-ratio
   verification or tail-sampling behavior, pair with
-  [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md)
+  `opentelemetry-trace-assertions`
   which uses in-process SDK exporters for finer-grained span-count control.
 
 ## References
@@ -299,7 +299,7 @@ between releases.
 - [debug exporter README] - verbosity levels (basic/normal/detailed),
   `sampling_initial`, `sampling_thereafter`
 - [file exporter README] - JSON-lines output format, `path`, `flush_interval`
-- [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md) -
+- `opentelemetry-trace-assertions` -
   in-process SDK in-memory exporter for unit-level span assertions
 
 [OTel Collector overview]: https://opentelemetry.io/docs/collector/

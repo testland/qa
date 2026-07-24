@@ -188,9 +188,9 @@ services:
   patterns, eager-mode warning
 - docs.celeryq.dev - full Celery documentation
 - pypi.org/project/pytest-celery - pytest-celery package
-- [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
-  [`bullmq-tests`](../bullmq-tests/SKILL.md),
-  [`sqs-tests`](../sqs-tests/SKILL.md),
-  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md) - sister tools
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md),
-  [`cron-job-test-author`](../cron-job-test-author/SKILL.md) - build-an-X authors
+- `sidekiq-tests`,
+  `bullmq-tests`,
+  `sqs-tests`,
+  `rabbitmq-tests` - sister tools
+- `idempotency-test-author`,
+  `cron-job-test-author` - build-an-X authors

@@ -181,9 +181,9 @@ def test_weekly_budget_report_format():
   enforcement, freeze trigger
 - Google SRE Workbook - Implementing SLOs (consult sre.google for
   the full workbook chapter)
-- [`mttr-mtbf-tracker`](../mttr-mtbf-tracker/SKILL.md) - incident
+- `mttr-mtbf-tracker` - incident
   metrics that consume budget
-- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drills that
+- `dr-drill-runner` - drills that
   intentionally affect SLI
 
 [Google SRE - Embracing Risk]: https://sre.google/sre-book/embracing-risk/

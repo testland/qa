@@ -28,7 +28,7 @@ unverified hits in CI gating.
   Docker images, Postman workspaces.
 - Verified-only output for CI gating (block only confirmed-real
   secrets; track unverified separately).
-- Layered with [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md)
+- Layered with `gitleaks-scanning`
   for cross-tool consensus.
 
 ## Step 1 - Install
@@ -112,7 +112,7 @@ Per [th-gh][th-gh]:
 | `--github-actions` | GitHub Actions annotation format |
 | (default) | Human-readable text |
 
-For [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md)
+For `secrets-rotation-runner`
 integration, use `--json --results=verified`:
 
 ```bash
@@ -221,7 +221,7 @@ jobs:
 
 ## Step 8 - Cross-tool layering
 
-Pair with [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md):
+Pair with `gitleaks-scanning`:
 - gitleaks: faster, regex-based, runs in pre-commit
 - trufflehog: slower (verification calls), high-precision, runs in
   CI
@@ -256,8 +256,8 @@ formats not yet in gitleaks' rule library).
 
 - [th-gh][th-gh] - repository, install, commands, exit codes
 - trufflesecurity.com - company site
-- [`gitleaks-scanning`](../gitleaks-scanning/SKILL.md),
-  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) - 
+- `gitleaks-scanning`,
+  `kingfisher-scanning` - 
   sister scanners
-- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) - 
+- `secrets-rotation-runner` - 
   rotation workflow after detection

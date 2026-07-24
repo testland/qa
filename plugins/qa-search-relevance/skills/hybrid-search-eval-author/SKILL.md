@@ -388,11 +388,11 @@ index rebuild, fusion-weight update, reranker version bump).
 
 ## Related skills
 
-- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) -
+- `vector-search-recall-tests` -
   recall@k and HNSW tuning for the vector stage in isolation
-- [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) -
+- `elasticsearch-relevance-tests` -
   term-based relevance metrics for BM25-only pipelines
-- [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) -
+- `opensearch-relevance-tests` -
   term-based relevance metrics for OpenSearch BM25-only pipelines
 
 ## References

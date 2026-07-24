@@ -18,7 +18,7 @@ Per docs.qameta.io/allure-testops (Cloudflare-protected; cite by
 stable URL).
 
 For canonical anatomy, see
-[`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+`test-case-anatomy-reference`.
 
 ## When to use
 
@@ -287,11 +287,11 @@ and links to manual cases by ID:
 - allurectl CLI - 
   github.com/allure-framework/allurectl.
 - Sibling references:
-  [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+  `test-case-anatomy-reference`.
 - Sibling skills:
-  [`testrail-case-management`](../testrail-case-management/SKILL.md),
-  [`xray-case-management`](../xray-case-management/SKILL.md),
-  [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
-  [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
+  `testrail-case-management`,
+  `xray-case-management`,
+  `zephyr-scale-case-management`,
+  `qase-io-case-management`.
 - Sibling-plugin neighbour:
   `allure-reports` (in the qa-test-reporting plugin) - different scope (allure-results parser; not case repository).

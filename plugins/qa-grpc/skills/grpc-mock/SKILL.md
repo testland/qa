@@ -9,7 +9,7 @@ description: "Wraps gRPC server-mocking patterns for client-side tests: Go bufco
 
 Mocking a gRPC server lets client-side tests exercise success
 paths, every `grpc.StatusCode` per
-[`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md),
+`grpc-status-code-mapping-reference`,
 timeouts, and streaming sequences without a real backend.
 
 Three approaches dominate, picked by language:
@@ -106,7 +106,7 @@ func TestGetUser_NotFound(t *testing.T) {
 ```
 
 Per
-[`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md):
+`grpc-status-code-mapping-reference`:
 assert on `status.Code()`, not on error message strings.
 
 ### Go: gomock / mockgen (interface mock)
@@ -289,9 +289,9 @@ Test failures point to:
 
 - **Wrong status code** - fix server-side error mapping or
   test expectation per
-  [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
+  `grpc-status-code-mapping-reference`.
 - **Marshalling errors** - proto definition / generated code
-  drift; regenerate via [`buf-cli-lint-breaking-build`](../buf-cli-lint-breaking-build/SKILL.md).
+  drift; regenerate via `buf-cli-lint-breaking-build`.
 - **Timeout** - server not responding; fake handler hung;
   check `context.WithTimeout` usage.
 
@@ -333,7 +333,7 @@ server goroutines often surface races.
 - **Streaming-test ergonomics differ per language.** Bidi
   streaming with deterministic interleavings is fiddly
   everywhere; see
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `grpc-streaming-test-author`.
 - **Mock-stub approach loses error-mapping fidelity.** A real
   `status.Errorf` wraps differently than a hand-constructed
   Go error.
@@ -353,8 +353,8 @@ server goroutines often surface races.
 - @grpc/grpc-js:
   [github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js).
 - Status-code assertions:
-  [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
+  `grpc-status-code-mapping-reference`.
 - Sibling tools:
-  [`grpcurl-cli`](../grpcurl-cli/SKILL.md),
-  [`ghz-load`](../ghz-load/SKILL.md),
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `grpcurl-cli`,
+  `ghz-load`,
+  `grpc-streaming-test-author`.

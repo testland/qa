@@ -186,9 +186,9 @@ require an OS test that replays NTP leap-second indication.
 - AWS leap-smear:
   [aws.amazon.com/blogs/aws/look-before-you-leap-the-coming-leap-second-and-aws](https://aws.amazon.com/blogs/aws/look-before-you-leap-the-coming-leap-second-and-aws).
 - Companion catalog:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md).
+  `dst-transition-reference`.
 - Consumed by:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md),
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `libfaketime-c`,
+  `freezegun-python`,
+  `mockclock-jvm`,
+  `timezone-test-matrix-builder`.

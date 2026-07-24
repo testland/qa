@@ -23,7 +23,7 @@ Each engine section covers:
 - the test pattern to prove isolation.
 
 For the broader model-selection context see
-[`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md).
+`tenant-isolation-models-reference`.
 
 ## When to use
 
@@ -31,7 +31,7 @@ For the broader model-selection context see
   or SQL Server backed service.
 - Auditing an existing isolation scheme for bypass risks.
 - Writing cross-tenant leak tests for any of these engines (companion to
-  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md)).
+  `cross-tenant-data-leak-tests`).
 - Translating a Postgres RLS design to one of these engines.
 
 ---
@@ -491,6 +491,6 @@ ALTER SECURITY POLICY Security.TenantFilter WITH (STATE = ON);
 - Vitess Keyspaces: [vitess.io/docs/21.0/concepts/keyspace/](https://vitess.io/docs/21.0/concepts/keyspace/).
 - SQL Server RLS: [learn.microsoft.com/en-us/sql/relational-databases/security/row-level-security](https://learn.microsoft.com/en-us/sql/relational-databases/security/row-level-security).
 - SQL Server `CREATE SECURITY POLICY`: [learn.microsoft.com/en-us/sql/t-sql/statements/create-security-policy-transact-sql](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-security-policy-transact-sql).
-- Postgres counterpart: [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md).
-- Model context: [`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md).
-- Consumed by: [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md), [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
+- Postgres counterpart: `row-level-security-postgres-reference`.
+- Model context: `tenant-isolation-models-reference`.
+- Consumed by: `tenant-leak-test-author`, `cross-tenant-data-leak-tests`.

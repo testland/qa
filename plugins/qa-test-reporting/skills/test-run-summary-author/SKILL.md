@@ -20,7 +20,7 @@ The skill is the manager-layer equivalent of the structured-parser skills. Where
 
 Do **not** use this skill to:
 
-- Produce a full tabular report - that is the job of [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), or [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md).
+- Produce a full tabular report - that is the job of `junit-xml-analysis`, `allure-reports`, or `coverage-diff-reporter`.
 - Surface flake patterns over time - that is longitudinal suite-health trend reporting, not this skill.
 - Roll up multiple suites across multiple environments in one report - that is a separate cross-suite roll-up, not this skill's single-run scope.
 
@@ -72,7 +72,7 @@ The single-line lead is the load-bearing claim; the second and third lines are d
 
 - **Test results:** 1,247 / 1,268 tests passed (98.3%), 18 failures, 3 skipped. Full report: <build-url>.
 - **New failures vs v3.3.0:** 5 (3 in cart, 2 in auth). All 5 have open issues filed; severity classified per Allure. None are blocking per the team's release-readiness gates.
-- **Coverage:** 87.4% line, 78.1% branch (+0.6 / +0.4 vs v3.3.0). See [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) for per-file delta.
+- **Coverage:** 87.4% line, 78.1% branch (+0.6 / +0.4 vs v3.3.0). See `coverage-diff-reporter` for per-file delta.
 - **Performance:** smoke + regression duration 1h 12m, no SLO regressions.
 - **Known issues being shipped:** 3 P3 cosmetic flakes (tracked in [JIRA-1234, JIRA-1235, JIRA-1236]), waivers attached.
 ```
@@ -134,8 +134,8 @@ If any claim cannot be sourced (e.g., the SLO baseline isn't in the input), the 
 
 ## Hand-off targets
 
-- **Coverage delta detail** → [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md).
-- **Per-tool tabular report** → [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md).
+- **Coverage delta detail** → `coverage-diff-reporter`.
+- **Per-tool tabular report** → `junit-xml-analysis`, `allure-reports`.
 
 ## References
 
@@ -145,4 +145,4 @@ If any claim cannot be sourced (e.g., the SLO baseline isn't in the input), the 
 - ISTQB glossary - test report: https://glossary.istqb.org/en_US/term/test-report
 - ISTQB glossary - quality gate (the release-readiness milestone the summary reports against): https://glossary.istqb.org/en_US/term/quality-gate
 - PractiTest 2026 State of Testing Report - 70% use AI for test-case creation, "test factory" framing, narrative drafting as the dominant manager-layer use case: https://www.practitest.com/state-of-testing/
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md), [`allure-reports`](../allure-reports/SKILL.md), [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - the per-tool parsers this skill consumes.
+- `junit-xml-analysis`, `allure-reports`, `coverage-diff-reporter` - the per-tool parsers this skill consumes.

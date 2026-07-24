@@ -37,7 +37,7 @@ Differentiators ([cy-overview][cy]):
   Edge supported but secondary).
 
 For cross-browser including WebKit, see
-[`playwright-testing`](../playwright-testing/SKILL.md).
+`playwright-testing`.
 
 ## Step 1 - Install
 
@@ -254,8 +254,8 @@ jobs:
 - [cy][cy] - Cypress overview, key features (time-travel,
   automatic waiting, native browser access), three test types
   (E2E, component, accessibility).
-- [`playwright-testing`](../playwright-testing/SKILL.md),
-  [`selenium-testing`](../selenium-testing/SKILL.md),
-  [`webdriverio-testing`](../webdriverio-testing/SKILL.md) - 
+- `playwright-testing`,
+  `selenium-testing`,
+  `webdriverio-testing` - 
   alternative E2E frameworks.
 - `currents-integration` - OSS analytics alternative to Cypress Cloud.

@@ -290,8 +290,8 @@ Then the same Step 6 import endpoint consumes the output.
   Playwright reporter for Xray-compatible JUnit XML.
 - `https://docs.getxray.app/` - canonical doc portal (auth/region-gated;
   consult in a real browser).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - same
+- `junit-xml-analysis` - same
   upstream as the JUnit-flavored Xray import.
-- [`testrail-integration`](../testrail-integration/SKILL.md),
-  [`zephyr-integration`](../zephyr-integration/SKILL.md) - sibling
+- `testrail-integration`,
+  `zephyr-integration` - sibling
   test-management integrations.

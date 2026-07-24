@@ -378,7 +378,7 @@ without test coverage.
   `vitest run` against `src/sw.js` will fail to find the array.
 - **Cache Storage quota is browser-internal.** Workbox's
   `ExpirationPlugin` `maxEntries` is asserted here; the browser's
-  own quota (Step 4 of [`offline-fallback-tests`](../offline-fallback-tests/SKILL.md))
+  own quota (Step 4 of `offline-fallback-tests`)
   is a separate ceiling not testable from `workbox-*` alone.
 - **`workbox-window`'s `waiting` event only fires on update.** A
   test that asserts `waiting` on first install will fail by design - see [wb-modules] for the per-event firing conditions.
@@ -403,6 +403,6 @@ without test coverage.
   authors strategies. This skill assumes Workbox was already used
   and tests its specific recipe behavior.
 - Sibling skills:
-  [`offline-fallback-tests`](../offline-fallback-tests/SKILL.md),
-  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md),
-  [`lighthouse-pwa-audit`](../lighthouse-pwa-audit/SKILL.md).
+  `offline-fallback-tests`,
+  `service-worker-lifecycle-tests`,
+  `lighthouse-pwa-audit`.

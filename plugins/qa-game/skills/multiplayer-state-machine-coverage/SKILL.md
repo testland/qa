@@ -24,16 +24,16 @@ emits a fixture list + a go / no-go gate.
 
 Composes with:
 
-- [`game-test-categories-reference`](../game-test-categories-reference/SKILL.md) - multiplayer testing is a cross-axis over functional /
+- `game-test-categories-reference` - multiplayer testing is a cross-axis over functional /
   compliance / compatibility / performance.
-- [`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md) - the matrix maps onto Xbox **XR-067 (MPSD session state)**,
+- `platform-cert-overview-reference` - the matrix maps onto Xbox **XR-067 (MPSD session state)**,
   **XR-064 (joinable sessions)**, **XR-115 (controller / user
   add and remove)**, and **XR-074 (loss of connectivity)**, all
   cited inline below from the
   [Xbox Requirements page](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements).
-- [`unity-test-framework`](../unity-test-framework/SKILL.md),
-  [`unreal-automation-system`](../unreal-automation-system/SKILL.md),
-  [`godot-gut-tests`](../godot-gut-tests/SKILL.md) - the per-engine
+- `unity-test-framework`,
+  `unreal-automation-system`,
+  `godot-gut-tests` - the per-engine
   test frameworks the fixtures run in.
 
 ## When to use
@@ -181,7 +181,7 @@ buckets**:
 ### Step 5 - Encode each combination as a fixture
 
 For Unity NGO, the fixture is a UTF `[UnityTest]` PlayMode test
-(see [`unity-test-framework`](../unity-test-framework/SKILL.md)):
+(see `unity-test-framework`):
 
 ```csharp
 [UnityTest]
@@ -210,7 +210,7 @@ public IEnumerator HostMigration_TransfersAuthority_OnHostDisconnect()
 ```
 
 For Unreal, a
-[`unreal-automation-system`](../unreal-automation-system/SKILL.md)
+`unreal-automation-system`
 spec wrapping `IAutomationDriverModule` doesn't drive netcode
 directly - instead, drive a multi-process test harness (UE 5.x's
 "Multi-User Editor" / Multi-Process PIE) and use specs to
@@ -238,7 +238,7 @@ from the
 
 For Sony TRC and Nintendo Lotcheck, the analogous clauses are
 NDA - cite by stable ID per
-[`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
+`platform-cert-overview-reference`
 and tag the fixture with the partner-portal clause number.
 
 ### Step 7 - Emit the go / no-go gate

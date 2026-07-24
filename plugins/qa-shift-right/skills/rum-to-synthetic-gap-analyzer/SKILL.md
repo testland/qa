@@ -16,7 +16,7 @@ paged.
 This skill closes that gap. It reads RUM journey data, scores each journey by
 traffic volume times business value, diffs the result against the team's existing
 synthetic monitor inventory, and emits a ranked gap list that
-[`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) can consume
+`synthetic-monitor-author` can consume
 directly.
 
 ## Step 1 - Collect the RUM journey inventory
@@ -128,7 +128,7 @@ platforms expose this via API or config file:
 - **Checkly:** `checkly tests list --output json` or read `monitors/*.spec.ts`
   and `monitors/*.yml` in the repo.
 - **New Relic:** `GET /v2/monitors.json` via NR REST API.
-- **Checkly as-code layout** (per [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md)):
+- **Checkly as-code layout** (per `synthetic-monitor-author`):
   `monitors/` directory contains `.spec.ts` (browser) and `.yml` (API) files.
 
 Normalize each monitor to a canonical URL path pattern (strip query strings,
@@ -180,7 +180,7 @@ Recommended monitor type heuristic:
 - Score 10-19: browser check if it has a UI; API check otherwise.
 - Score < 10: flag for deferred coverage; do not generate a monitor yet.
 
-Pass the gap list to [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md)
+Pass the gap list to `synthetic-monitor-author`
 as the journey input for Step 1 of that skill.
 
 ## Hard-reject rule
@@ -225,7 +225,7 @@ developer assumptions rather than actual user behavior.
   the first run and document the agreed values in the gap report header.
 - **This skill produces a gap list, not monitors.** Authoring the actual
   monitor configs - script, cadence, assertions, alert thresholds - is the
-  responsibility of [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md).
+  responsibility of `synthetic-monitor-author`.
 
 ## References
 
@@ -236,5 +236,5 @@ developer assumptions rather than actual user behavior.
 - [CrUX docs][crux-docs] - dataset overview, access methods (API, BigQuery, PageSpeed Insights).
 - [CrUX methodology][crux-method] - eligibility criteria, public discoverability requirement.
 - [web.dev Core Web Vitals][cwv] - LCP/INP/CLS definitions, good/needs-improvement/poor thresholds, 75th percentile assessment standard.
-- [`synthetic-monitor-author`](../synthetic-monitor-author/SKILL.md) - downstream skill: authors the monitor config for each gap identified here.
+- `synthetic-monitor-author` - downstream skill: authors the monitor config for each gap identified here.
 - ISTQB Glossary V4.7.1 `https://glossary.istqb.org/en_US/term/shift-right` - defines shift right as "A test approach to test a system continuously in production"; this skill feeds that approach by ensuring synthetic coverage reflects real production usage patterns.

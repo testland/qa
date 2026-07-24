@@ -254,8 +254,8 @@ Vitest enters watch mode and hangs the runner.
 - vitest.dev/api/vi - vi.* API reference
 - vitest.dev/guide/in-source - in-source testing
 - vitest.dev/guide/browser - browser mode
-- [`jest-tests`](../jest-tests/SKILL.md),
-  [`mocha-tests`](../mocha-tests/SKILL.md),
-  [`ava-tests`](../ava-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- `jest-tests`,
+  `mocha-tests`,
+  `ava-tests`,
+  `jasmine-tests` - sister tools
 - `test-code-conventions` (qa-test-review) - test code hygiene

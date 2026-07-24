@@ -184,7 +184,7 @@ hand-coded.
 
 - W3C i18n at `w3.org/International/`.
 - CLDR at `cldr.unicode.org/`.
-- [`i18n-string-coverage`](../i18n-string-coverage/SKILL.md),
-  [`pseudo-localization-runner`](../pseudo-localization-runner/SKILL.md),
-  [`rtl-rendering-tester`](../rtl-rendering-tester/SKILL.md) - 
+- `i18n-string-coverage`,
+  `pseudo-localization-runner`,
+  `rtl-rendering-tester` - 
   sibling skills for the broader l10n test surface.

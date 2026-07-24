@@ -323,7 +323,7 @@ jobs:
   by `func start`. Test with connection strings locally; verify RBAC
   in a staging environment.
 - Cold-start behaviour differs from production. For cold-start budgets see
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).
+  `cold-start-budget-reference`.
 
 ## References
 
@@ -342,9 +342,9 @@ jobs:
 - Manually run non-HTTP triggers:
   [learn.microsoft.com/azure/azure-functions/functions-manually-run-non-http](https://learn.microsoft.com/en-us/azure/azure-functions/functions-manually-run-non-http)
 - Sibling skills:
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md),
-  [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md),
-  [`serverless-integration-test-builder`](../serverless-integration-test-builder/SKILL.md)
+  `aws-sam-local-testing`,
+  `lambda-test-tools-net`,
+  `cold-start-budget-reference`,
+  `netlify-functions-tests`,
+  `vercel-edge-runtime-testing`,
+  `serverless-integration-test-builder`

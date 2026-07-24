@@ -224,7 +224,7 @@ jobs:
 - **Service Worker registration is async.** Tests must wait for
   `navigator.serviceWorker.ready` before assertions.
 - **Doesn't test the CDN tier.** Pair with
-  [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md).
+  `cdn-cache-purge-tests`.
 
 ## References
 
@@ -239,9 +239,9 @@ jobs:
 - Playwright Network API:
   [playwright.dev/docs/network](https://playwright.dev/docs/network).
 - Companion catalogs:
-  [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
-  [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md).
+  `cache-coherence-patterns-reference`,
+  `stale-while-revalidate-reference`.
 - Sibling tools:
-  [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
-  [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
-  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md).
+  `redis-cache-tests`,
+  `cdn-cache-purge-tests`,
+  `varnish-test-vtc-syntax`.

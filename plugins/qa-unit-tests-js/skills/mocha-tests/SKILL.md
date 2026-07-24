@@ -35,8 +35,8 @@ codebases.
   `expect`.
 - Need TDD-style interface (`suite`/`test`) over BDD.
 
-For new browser-side projects, prefer [`vitest-tests`](../vitest-tests/SKILL.md)
-or [`jest-tests`](../jest-tests/SKILL.md).
+For new browser-side projects, prefer `vitest-tests`
+or `jest-tests`.
 
 ## Step 1 - Install
 
@@ -274,8 +274,8 @@ The `mocha-junit-reporter` package emits JUnit XML for
 - sinonjs.org - Sinon mocking (typical pairing)
 - istanbul.js.org / github.com/bcoe/c8 - coverage tools
 - github.com/michaelleeallen/mocha-junit-reporter - JUnit XML reporter
-- [`jest-tests`](../jest-tests/SKILL.md),
-  [`vitest-tests`](../vitest-tests/SKILL.md),
-  [`ava-tests`](../ava-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- `jest-tests`,
+  `vitest-tests`,
+  `ava-tests`,
+  `jasmine-tests` - sister tools
 - `test-code-conventions` (qa-test-review) - test code hygiene

@@ -19,7 +19,7 @@ to consult before deciding "no oracle ⇒ probably not a bug" or
 "oracle says X ⇒ behaviour Y is wrong."
 
 This skill is a **pure reference** consumed by individual testers
-during sessions ([`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md)).
+during sessions (`session-based-test-management-reference`).
 
 ## When to use
 
@@ -209,8 +209,8 @@ high-priority.
 - Bolton M. *Testing oracle* concept - 
   [developsense.com](https://developsense.com/).
 - Sibling references (other heuristic catalogues):
-  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
-  [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
-  [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md),
-  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md).
+  `sfdpot-exploratory-heuristic`,
+  `fcc-cuts-vids-heuristic`,
+  `crusspic-stmpl-heuristic`,
+  `exploratory-tours-reference`,
+  `session-based-test-management-reference`.

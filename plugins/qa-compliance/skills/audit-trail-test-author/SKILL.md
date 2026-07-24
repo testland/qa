@@ -275,7 +275,7 @@ For each system handling regulated data:
 
 - owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures - OWASP Top 10 2021 audit logging
 - nist.gov/publications/sp-800-92-guide-computer-security-log-management - NIST SP 800-92 log management guide
-- [`hipaa-test-patterns`](../hipaa-test-patterns/SKILL.md) - §164.312(b)
-- [`pci-dss-control-test-author`](../pci-dss-control-test-author/SKILL.md) - Req 10
-- [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) - CC7.3
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md) - Art. 5(1)(f)
+- `hipaa-test-patterns` - §164.312(b)
+- `pci-dss-control-test-author` - Req 10
+- `soc2-evidence-collector` - CC7.3
+- `gdpr-test-patterns` - Art. 5(1)(f)

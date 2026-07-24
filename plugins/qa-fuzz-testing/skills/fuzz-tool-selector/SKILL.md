@@ -51,16 +51,16 @@ Step 3: Is this a mature open-source project?
 
 | Target characteristic | Route to |
 |---|---|
-| C / C++ library with callable function API | [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md) |
-| C / C++ binary processing files | [`afl-plus-plus`](../afl-plus-plus/SKILL.md) |
-| C / C++ source unavailable | [`afl-plus-plus`](../afl-plus-plus/SKILL.md) (`-Q` QEMU) |
-| Rust crate | [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md) |
-| Rust binary processing files | [`afl-plus-plus`](../afl-plus-plus/SKILL.md) |
-| Go package | [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md) |
-| Pure Python or CPython native extension | [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md) |
-| Java / Kotlin / Scala / Groovy library | [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md) |
-| Swift library | [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md) (Swift wraps libFuzzer natively) |
-| Mature open-source project (any of the above languages) | Also: [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md) (continuous 24x7 campaign) |
+| C / C++ library with callable function API | `libfuzzer-cpp` |
+| C / C++ binary processing files | `afl-plus-plus` |
+| C / C++ source unavailable | `afl-plus-plus` (`-Q` QEMU) |
+| Rust crate | `cargo-fuzz-rust` |
+| Rust binary processing files | `afl-plus-plus` |
+| Go package | `go-native-fuzzing` |
+| Pure Python or CPython native extension | `atheris-python-fuzzing` |
+| Java / Kotlin / Scala / Groovy library | `jazzer-jvm-fuzzing` |
+| Swift library | `libfuzzer-cpp` (Swift wraps libFuzzer natively) |
+| Mature open-source project (any of the above languages) | Also: `ossfuzz-integration` (continuous 24x7 campaign) |
 
 ## Routing rationale
 
@@ -68,7 +68,7 @@ Step 3: Is this a mature open-source project?
 
 Prefer **libFuzzer** for callable APIs (parsers, validators,
 decoders). In-process iteration is fastest. Pair with ASan + UBSan
-per [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
+per `sanitiser-integration-reference`.
 
 Switch to **AFL++** when:
 
@@ -126,7 +126,7 @@ test via AFL++ on the compiled binary.
 
 Independent of the per-language choice: if the project is
 open-source, mature, and security-relevant, also onboard to
-[`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+`ossfuzz-integration`.
 OSS-Fuzz runs the existing libFuzzer / AFL++ / Jazzer harness 24x7
 on Google infrastructure with automatic crash reports.
 
@@ -153,13 +153,13 @@ on Google infrastructure with automatic crash reports.
 ## References
 
 - Composes per-language skills:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
-  [`cargo-fuzz-rust`](../cargo-fuzz-rust/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `go-native-fuzzing`,
+  `cargo-fuzz-rust`,
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `ossfuzz-integration`.
 - Composes references:
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md),
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
+  `corpus-management-reference`,
+  `sanitiser-integration-reference`.

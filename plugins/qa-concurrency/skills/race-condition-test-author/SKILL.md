@@ -236,11 +236,11 @@ mode ~minutes per test class.
   options, adaptive delay
 - [jcstress docs] - `@JCStressTest`, `@Actor`, `@Outcome` outcomes
 - ThreadSanitizer C++ Manual - github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
-- [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) - 
+- `deadlock-detection-harness` - 
   sister skill for deadlock-specific patterns
-- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) - 
+- `async-ordering-tests` - 
   sister skill for async/await ordering
-- [`jepsen-patterns`](../jepsen-patterns/SKILL.md) - distributed
+- `jepsen-patterns` - distributed
   consistency testing alternative
 
 [ThreadSanitizer docs]: https://clang.llvm.org/docs/ThreadSanitizer.html

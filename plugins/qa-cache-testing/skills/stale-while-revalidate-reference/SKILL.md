@@ -27,7 +27,7 @@ in different ways:
 - Designing the cache-refresh model for an endpoint that values
   availability + latency over freshness.
 - Mitigating cache stampedes per
-  [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md):
+  `cache-stampede-reference`:
   background revalidation = no thundering herd.
 - Improving availability under partial origin outage.
 - PR review of Cache-Control changes.
@@ -119,7 +119,7 @@ For SWR / SIE to work, **don't add must-revalidate**.
 | Cloudflare | Yes (since 2018) | Yes | Honours both response and request directives |
 | Fastly | Yes (via `Surrogate-Control` or `Cache-Control`) | Yes | Stale-on-error more aggressive |
 | CloudFront | Yes (since 2022) | Yes | Stale-on-error needs origin error caching policy |
-| Varnish | Yes (`grace` keyword in VCL) | Yes (`stale-if-error`) | See [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md) |
+| Varnish | Yes (`grace` keyword in VCL) | Yes (`stale-if-error`) | See `varnish-test-vtc-syntax` |
 | nginx | Yes (`proxy_cache_use_stale updating`) | Yes (`proxy_cache_use_stale error timeout`) | Different config keyword |
 | Chrome/Firefox | Yes (browser cache honours SWR/SIE) | Yes | Per-tab behaviour may surprise; test |
 | Service Workers | Manual implementation in code | n/a | Workbox provides a SWR strategy |
@@ -173,9 +173,9 @@ For SWR / SIE to work, **don't add must-revalidate**.
 - nginx `proxy_cache_use_stale`:
   [nginx.org/en/docs/http/ngx_http_proxy_module.html](https://nginx.org/en/docs/http/ngx_http_proxy_module.html).
 - Companion catalogs:
-  [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
-  [`cache-stampede-reference`](../cache-stampede-reference/SKILL.md).
+  `cache-coherence-patterns-reference`,
+  `cache-stampede-reference`.
 - Consumed by:
-  [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
-  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md),
-  [`browser-cache-control-tests`](../browser-cache-control-tests/SKILL.md).
+  `cdn-cache-purge-tests`,
+  `varnish-test-vtc-syntax`,
+  `browser-cache-control-tests`.

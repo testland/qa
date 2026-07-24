@@ -54,7 +54,7 @@ A story / PR is "Done" only when ALL of the following are true:
 4. **Acceptance criteria** from the story all pass (manual or
    automated; per AC ID).
 5. **Deployed to staging** and smoke test passed (per
-   [`smoke-suite-gate`](../smoke-suite-gate/SKILL.md)).
+   `smoke-suite-gate`).
 6. **No new accessibility regressions** (axe / pa11y / Lighthouse
    a11y category green vs main).
 7. **Telemetry / observability** wired for new features (per
@@ -174,5 +174,5 @@ better tooling, not a lower bar.
   of the Increment when it meets the quality measures required for
   the product"; team owns it (or follows org-mandated minimum);
   items not Done return to the Product Backlog.
-- [`smoke-suite-gate`](../smoke-suite-gate/SKILL.md) - CI gate
+- `smoke-suite-gate` - CI gate
   that satisfies the "staging deploy + smoke passed" line.

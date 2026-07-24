@@ -27,7 +27,7 @@ for non-git (e.g., extracted CI artifact); `stdin` for diff-piping.
   ever committed; not just current state).
 - Custom rule library for org-internal secret formats (internal
   API key prefixes, etc.).
-- Layered with [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md)
+- Layered with `trufflehog-scanning`
   for live-validation cross-check.
 
 ## Step 1 - Install
@@ -218,7 +218,7 @@ The secret IS exposed. Workflow:
    are detected
 5. **Optional: rewrite git history** (BFG Repo-Cleaner / git filter-repo) - but assume the secret IS exposed regardless
 
-For automated rotation workflow, see [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md).
+For automated rotation workflow, see `secrets-rotation-runner`.
 
 ## Anti-patterns
 
@@ -233,22 +233,22 @@ For automated rotation workflow, see [`secrets-rotation-runner`](../secrets-rota
 ## Limitations
 
 - Regex + entropy can't catch all secret formats; pair with
-  [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md)
+  `trufflehog-scanning`
   (live-validation) for higher precision.
 - Rewriting git history is destructive + only effective if all
   copies are scrubbed (forks / clones / mirrors typically aren't).
 - Custom rules require regex skill; complex secret formats
   (multi-line, base64-encoded) need careful authoring.
 - `gitleaks` itself doesn't rotate secrets; that's the
-  [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md)
+  `secrets-rotation-runner`
   workflow.
 
 ## References
 
 - [gl-gh][gl-gh] - repository, install, commands, config
 - gitleaks.io - landing page
-- [`trufflehog-scanning`](../trufflehog-scanning/SKILL.md),
-  [`kingfisher-scanning`](../kingfisher-scanning/SKILL.md) - 
+- `trufflehog-scanning`,
+  `kingfisher-scanning` - 
   sister scanners
-- [`secrets-rotation-runner`](../secrets-rotation-runner/SKILL.md) - 
+- `secrets-rotation-runner` - 
   build-an-X for rotation workflow after detection

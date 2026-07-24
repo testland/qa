@@ -10,12 +10,12 @@ metadata:
 ## Overview
 
 This skill is a **pure reference** consumed by the per-tool
-skills ([`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
-[`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
-[`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
-[`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md))
+skills (`googletest-embedded-arm`,
+`unity-test-framework-c`,
+`ceedling-build-runner`,
+`qemu-system-test-runner`)
 and by the HIL reference
-([`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md)).
+(`hardware-in-loop-reference`).
 
 ## When to use
 
@@ -186,7 +186,7 @@ A practical trade-off for embedded teams:
 | Approach | Coverage accuracy | Cost | Notes |
 |---|---|---|---|
 | **Host build** (same source, x86_64 toolchain, no MCU) | Misses MCU-specific paths | Lowest | Default for Ceedling per [throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling); use when business logic dominates |
-| **QEMU system emulation** | Catches arch-specific paths (endianness, alignment) | Medium | See [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md); reports written to host filesystem via virtio / semihosting |
+| **QEMU system emulation** | Catches arch-specific paths (endianness, alignment) | Medium | See `qemu-system-test-runner`; reports written to host filesystem via virtio / semihosting |
 | **On-target with semihosting** | Highest fidelity | Highest (flash space, RAM for counters) | `.gcda` files written back via semihosting; needs ARM `--specs=rdimon.specs` (`librdimon` is the gcc-arm-none-eabi semihosting library - see [developer.arm.com toolchain docs](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)) |
 | **On-target with file-system shim** | High | High | Counters streamed over UART / SWO; host re-assembles `.gcda` |
 

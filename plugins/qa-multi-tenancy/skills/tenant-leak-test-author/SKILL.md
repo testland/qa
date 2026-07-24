@@ -16,7 +16,7 @@ The workflow is:
 
 1. Enumerate tenant-bearing surfaces (where tenant_id appears).
 2. Identify the isolation model per surface (per
-   [`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md)).
+   `tenant-isolation-models-reference`).
 3. Enumerate the attack patterns per surface
    (per OWASP WSTG-ATHZ-02).
 4. Generate test cases (pairs of tenants A/B, attempted cross-
@@ -24,7 +24,7 @@ The workflow is:
 5. Emit the test suite skeleton.
 
 The output is committed to the project repo; the
-[`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md)
+`cross-tenant-data-leak-tests`
 skill describes the runtime contract those tests must satisfy.
 
 ## When to use
@@ -56,7 +56,7 @@ tenant-scoped. Categorise:
 | Webhooks / outbound | tenant-routed external calls | webhook configuration |
 
 Per
-[`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md):
+`tenant-isolation-models-reference`:
 "The test surface depends on the **lowest** isolation level in
 the stack." A fully-isolated UI on a shared database still needs
 the full DB-leak battery.
@@ -201,7 +201,7 @@ class TestDocumentsTenantIsolation:
 ### Example skeleton (Postgres RLS-direct, language-agnostic)
 
 For surfaces relying on RLS per
-[`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md),
+`row-level-security-postgres-reference`,
 also test at the DB layer:
 
 ```sql
@@ -241,7 +241,7 @@ pattern list. Empty cells are coverage gaps the PR must justify.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Tests run as superuser/BYPASSRLS role | Tests pass; prod leaks per [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md) | Run with prod-equivalent role |
+| Tests run as superuser/BYPASSRLS role | Tests pass; prod leaks per `row-level-security-postgres-reference` | Run with prod-equivalent role |
 | Single tenant in test fixtures | Can't test cross-tenant - that's the whole point | Always fixture two disjoint tenants |
 | 403 instead of 404 | Existence disclosure: tenant A learns B's resource exists | Return 404 for unauthorised resources (debatable; document the choice) |
 | Coverage by route only | Misses object storage, queues, search, caches | Inventory all surfaces (Step 1) |
@@ -261,15 +261,15 @@ This skill produces:
   to add a surface.
 
 The runtime gate is
-[`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
+`cross-tenant-data-leak-tests`.
 
 ## References
 
 - OWASP WSTG-ATHZ-02 Testing for Bypassing Authorization Schema:
   [owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema).
 - Tenant isolation models:
-  [`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md).
+  `tenant-isolation-models-reference`.
 - Postgres RLS:
-  [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md).
+  `row-level-security-postgres-reference`.
 - Runtime gate:
-  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
+  `cross-tenant-data-leak-tests`.

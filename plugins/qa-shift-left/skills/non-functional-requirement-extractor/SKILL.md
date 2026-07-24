@@ -263,4 +263,4 @@ Output:
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - OWASP ASVS - https://owasp.org/www-project-application-security-verification-standard/
 - Web Vitals - https://web.dev/articles/vitals (LCP / INP / CLS).
-- [`acceptance-criteria-extractor`](../acceptance-criteria-extractor/SKILL.md) - sibling skill for **functional** requirements.
+- `acceptance-criteria-extractor` - sibling skill for **functional** requirements.

@@ -33,10 +33,10 @@ the state machine.
 
 Composes with:
 
-- [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md) - the Stage 1 service-worker-registered prerequisite, which
+- `pwa-install-flow-reference` - the Stage 1 service-worker-registered prerequisite, which
   *this* builder takes as input (assumes registration already
   works).
-- [`workbox-tests`](../workbox-tests/SKILL.md) - the
+- `workbox-tests` - the
   `workbox-window` event vocabulary (`installed`, `waiting`,
   `controlling`, `activated`, `redundant`) is the page-side
   observable for the same state machine asserted here from the SW
@@ -409,7 +409,7 @@ Steps 2 - 8 for the full lifecycle surface.
   Manual smoke covers this cell.
 - **The push and fetch events** that `waitUntil` gates aren't
   tested here directly; pair with
-  [`web-push-tests`](../web-push-tests/SKILL.md) (push side) and
+  `web-push-tests` (push side) and
   the `service-worker-tests` cache-strategy tests
   (fetch side).
 - **Browser variance.** Firefox and WebKit implement the state
@@ -431,8 +431,8 @@ Steps 2 - 8 for the full lifecycle surface.
   patterns; this skill is the dedicated state-machine spec
   generator.
 - Composes:
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
-  [`workbox-tests`](../workbox-tests/SKILL.md).
+  `pwa-install-flow-reference`,
+  `workbox-tests`.
 - Sibling builders:
-  [`offline-fallback-tests`](../offline-fallback-tests/SKILL.md),
-  [`add-to-homescreen-flow-tests`](../add-to-homescreen-flow-tests/SKILL.md).
+  `offline-fallback-tests`,
+  `add-to-homescreen-flow-tests`.

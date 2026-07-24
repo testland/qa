@@ -229,8 +229,8 @@ When intentionally changing spec generation, regenerate snapshots:
 
 - [Vega-Lite docs] - grammar, mark + encoding + data, compilation
   to Vega, multi-view composition, transforms, interactions
-- [`chartjs-snapshot-tests`](../chartjs-snapshot-tests/SKILL.md),
-  [`d3-snapshot-tests`](../d3-snapshot-tests/SKILL.md) - sister
+- `chartjs-snapshot-tests`,
+  `d3-snapshot-tests` - sister
   skills for rendered-output testing
 
 [Vega-Lite docs]: https://vega.github.io/vega-lite/docs/

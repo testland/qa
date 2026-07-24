@@ -12,9 +12,9 @@ metadata:
 This skill is the per-flow test recipe for multi-factor authentication.
 It covers the six second-factor mechanisms most commonly found in production
 systems. Neighbour skills handle the first-factor and session layers:
-[`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md) covers
+`oauth-flow-test-author` covers
 the primary OAuth/OIDC token flow;
-[`session-management-test-author`](../session-management-test-author/SKILL.md)
+`session-management-test-author`
 covers the post-authentication session lifecycle.
 
 Per [ISTQB Glossary v4](https://glossary.istqb.org/en_US/term/authentication):
@@ -425,9 +425,9 @@ For each second factor in scope:
   prompt rendering with a separate visual-regression test.
 - This skill is the per-flow recipe. IdP-specific enrollment UIs (Keycloak OTP
   policies, Auth0 Actions, Okta Factors API) are in
-  [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`auth0-tests`](../auth0-tests/SKILL.md),
-  [`okta-tests`](../okta-tests/SKILL.md).
+  `keycloak-tests`,
+  `auth0-tests`,
+  `okta-tests`.
 - `pyotp` requires a base32-encoded secret per [pyauth.github.io/pyotp][pyotp];
   the raw ASCII secrets used in RFC 6238 Appendix B test vectors must be
   base32-encoded before passing to `pyotp.TOTP`.
@@ -450,9 +450,9 @@ For each second factor in scope:
   https://simplewebauthn.dev/docs/packages/server
 - [pyotp] PyOTP - Python One-Time Password library
   https://pyauth.github.io/pyotp/
-- [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md) - companion: first-factor OAuth/OIDC flows
-- [`session-management-test-author`](../session-management-test-author/SKILL.md) - companion: post-auth session lifecycle
-- [`keycloak-tests`](../keycloak-tests/SKILL.md), [`auth0-tests`](../auth0-tests/SKILL.md), [`okta-tests`](../okta-tests/SKILL.md) - IdP-specific enrollment patterns
+- `oauth-flow-test-author` - companion: first-factor OAuth/OIDC flows
+- `session-management-test-author` - companion: post-auth session lifecycle
+- `keycloak-tests`, `auth0-tests`, `okta-tests` - IdP-specific enrollment patterns
 
 [rfc6238]: https://datatracker.ietf.org/doc/html/rfc6238
 [rfc6238-b]: https://datatracker.ietf.org/doc/html/rfc6238#appendix-B

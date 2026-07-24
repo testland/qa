@@ -26,10 +26,10 @@ when timers fire - without explicit IdlingResource-style hooks.
 - The team uses Jest (Detox's default runner; built-in integration).
 
 If the app is native iOS/Android (not RN), use
-[`xcuitest-suite`](../xcuitest-suite/SKILL.md) or
-[`espresso-suite`](../espresso-suite/SKILL.md). For
+`xcuitest-suite` or
+`espresso-suite`. For
 non-RN-specific cross-platform, see
-[`appium-testing`](../appium-testing/SKILL.md).
+`appium-testing`.
 
 ## Step 1 - Install
 
@@ -228,8 +228,8 @@ jobs:
 ## Limitations
 
 - **React Native only.** Native non-RN apps need
-  [`xcuitest-suite`](../xcuitest-suite/SKILL.md) or
-  [`appium-testing`](../appium-testing/SKILL.md).
+  `xcuitest-suite` or
+  `appium-testing`.
 - **iOS support depends on RN version.** Per [detox-docs][det],
   some iOS features may have caveats per RN version.
 - **Test runner choice.** Detox works with any runner; Jest is
@@ -244,7 +244,7 @@ jobs:
   async monitoring, JS test syntax, CI-ready, RN-specific.
 - [dm][dm] - Detox matchers: `by.id`, `by.text`, `by.label`,
   `by.type`, `by.traits`, regex support, combinators.
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md),
-  [`appium-testing`](../appium-testing/SKILL.md),
-  [`maestro-flows`](../maestro-flows/SKILL.md) - alternatives.
+- `xcuitest-suite`,
+  `espresso-suite`,
+  `appium-testing`,
+  `maestro-flows` - alternatives.

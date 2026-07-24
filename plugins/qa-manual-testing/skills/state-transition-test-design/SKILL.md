@@ -41,7 +41,7 @@ In web/product QA that means:
 
 If behavior is stateless rule logic (same input always gives the same
 output), use
-[`decision-table-test-design`](../decision-table-test-design/SKILL.md)
+`decision-table-test-design`
 instead. For a broad multi-lens first pass over a story, use
 `test-case-ideation-from-story` (in the qa-process plugin);
 this skill is the deep walkthrough of one technique.
@@ -187,7 +187,7 @@ account, failure counter 0, valid + invalid passwords known.
 Every step asserts the resulting **observable state** (admin-panel
 status, login response, email), never just "action accepted". Expand
 each into a full runnable script via
-[`manual-test-script-author`](../manual-test-script-author/SKILL.md).
+`manual-test-script-author`.
 
 ## Step 5 - Add invalid-transition tests
 
@@ -254,7 +254,7 @@ rejected, account remains **Active** (counter restarted at 0, not 3).
   grows exponentially with N; reserve 2-switch+ for high-risk machines.
 - **Stateless logic does not belong here.** Pure input-combination rules
   go to
-  [`decision-table-test-design`](../decision-table-test-design/SKILL.md).
+  `decision-table-test-design`.
 
 ## References
 
@@ -271,9 +271,9 @@ rejected, account remains **Active** (counter restarted at 0, not 3).
   coverage" exist at glossary.istqb.org but the site blocks non-browser
   fetches; cite the syllabus sections above as the stable sources.
 - Siblings:
-  [`decision-table-test-design`](../decision-table-test-design/SKILL.md)
+  `decision-table-test-design`
   (stateless rule logic),
-  [`manual-test-script-author`](../manual-test-script-author/SKILL.md)
+  `manual-test-script-author`
   (expands derived cases into runnable scripts).
 - Neighbors this skill is distinct from:
   `test-case-ideation-from-story`,

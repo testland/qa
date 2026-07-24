@@ -17,7 +17,7 @@ vulnerability DB for Rust crates covering memory safety, cryptographic flaws,
 logic errors, malicious packages, and unmaintained crates
 ([rustsec.org/advisories][rustsec-advisories]).
 
-Differentiation from [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md):
+Differentiation from `npm-pip-maven-audit`:
 that skill lists `cargo audit` as one of eight native audit commands in a
 single wrapper. This skill covers the Rust-specific depth: `--deny` flag
 semantics, `audit.toml` suppression schema, `cargo audit fix`, SARIF output,
@@ -31,7 +31,7 @@ Action - none of which the multi-ecosystem skill documents.
 - Team wants automated fix PRs for vulnerable transitive dependencies.
 - Unmaintained or unsound crates must surface as hard failures, not just
   informational warnings.
-- Layered SCA: pair with [`osv-scanner`](../osv-scanner/SKILL.md) (OSV.dev
+- Layered SCA: pair with `osv-scanner` (OSV.dev
   DB) for cross-DB consensus - OSV exports RustSec advisories in real time
   ([rustsec.org][rustsec-advisories]), so both tools often agree; divergence
   flags an advisory in one DB but not the other.
@@ -306,7 +306,7 @@ For SARIF upload alongside the action:
 - [rustsec-advisories][rustsec-advisories] - RustSec advisory database browser
 - rustsec.org - RustSec project home; ecosystem tools (cargo-deny, cargo-auditable)
 - github.com/rustsec/rustsec - monorepo: cargo-audit, rustsec crate, advisory-db
-- [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - multi-ecosystem
+- `npm-pip-maven-audit` - multi-ecosystem
   native audit wrapper (mentions cargo-audit as one of eight tools)
-- [`osv-scanner`](../osv-scanner/SKILL.md) - cross-DB pair; OSV.dev receives
+- `osv-scanner` - cross-DB pair; OSV.dev receives
   RustSec exports in real time

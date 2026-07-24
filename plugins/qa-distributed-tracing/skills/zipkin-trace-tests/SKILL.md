@@ -202,8 +202,8 @@ Same pattern as Jaeger; Zipkin in-memory storage is bounded.
 - [Zipkin quickstart docs] - Docker run, port 9411
 - [Zipkin API spec] - REST endpoints
 - [B3 propagation spec] - header formats, sampling values
-- [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md),
-  [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skills
+- `opentelemetry-trace-assertions`,
+  `jaeger-trace-tests` - sister skills
 
 [Zipkin quickstart docs]: https://zipkin.io/pages/quickstart.html
 [Zipkin API spec]: https://zipkin.io/zipkin-api/

@@ -291,8 +291,8 @@ Verdict: cleared for release.
   stable ID; iso.org paywall.
 - Nielsen J. Usability heuristics - nngroup.com/articles/ten-usability-heuristics.
 - Sibling references:
-  [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
-  [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
-  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md).
+  `hiccupps-f-heuristic`,
+  `sfdpot-exploratory-heuristic`,
+  `fcc-cuts-vids-heuristic`,
+  `session-based-test-management-reference`.
 - Consumed by: `product-risk-register-builder`.

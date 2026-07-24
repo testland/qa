@@ -227,7 +227,7 @@ consumable by `junit-xml-analysis` (in the qa-test-reporting plugin).
 - **In-process only.** Espresso runs in the app's process; no cross-app
   flows. Use UIAutomator for system-UI / multi-app interactions.
 - **No iOS / web.** Single-platform; for cross-platform see
-  [`appium-testing`](../appium-testing/SKILL.md).
+  `appium-testing`.
 - **Async opacity.** Custom executors / coroutines need explicit
   IdlingResource integration.
 - **Emulator slowness.** Real devices ~2× faster than emulators
@@ -240,7 +240,7 @@ consumable by `junit-xml-analysis` (in the qa-test-reporting plugin).
   synchronization (message queue / AsyncTask / IdlingResource),
   package list (`-core`, `-web`, `-contrib`, `-idling-resource`,
   `-intents`, `-remote`).
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md) - iOS sibling.
-- [`appium-testing`](../appium-testing/SKILL.md) - cross-platform
+- `xcuitest-suite` - iOS sibling.
+- `appium-testing` - cross-platform
   alternative.
 - `junit-xml-analysis` - downstream parser.

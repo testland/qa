@@ -254,8 +254,8 @@ Useful for opt-in expensive tests (cross-browser, full regression).
 ## References
 
 - CircleCI docs at `circleci.com/docs/`.
-- [`github-actions-test-jobs`](../github-actions-test-jobs/SKILL.md),
-  [`gitlab-ci-test-jobs`](../gitlab-ci-test-jobs/SKILL.md),
-  [`jenkinsfile-test-stages`](../jenkinsfile-test-stages/SKILL.md) - 
+- `github-actions-test-jobs`,
+  `gitlab-ci-test-jobs`,
+  `jenkinsfile-test-stages` - 
   alternatives.
-- [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md) - cross-CI conventions.
+- `ci-test-job-conventions` - cross-CI conventions.

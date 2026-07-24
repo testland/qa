@@ -15,7 +15,7 @@ is HTTP Basic with email + API key per the TestRail support docs
 Cloudflare-protected, cite by stable URL).
 
 For the canonical anatomy this skill operates on, see
-[`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+`test-case-anatomy-reference`.
 
 **Differentiation vs `testrail-integration`:** that skill posts
 *test-run results* via `add_results_for_cases`. This one operates
@@ -278,11 +278,11 @@ merge, post updates back:
 - TestRail API v2 Suites + Sections + Custom Fields docs - 
   support.testrail.com/hc/en-us/categories/7076541806228.
 - Sibling references:
-  [`test-case-anatomy-reference`](../test-case-anatomy-reference/SKILL.md).
+  `test-case-anatomy-reference`.
 - Sibling skills (other platforms):
-  [`xray-case-management`](../xray-case-management/SKILL.md),
-  [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
-  [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
-  [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
+  `xray-case-management`,
+  `zephyr-scale-case-management`,
+  `allure-testops-case-management`,
+  `qase-io-case-management`.
 - Sibling-plugin neighbour:
   `testrail-integration` (in the qa-test-reporting plugin) - different scope (result sync; not case authoring).

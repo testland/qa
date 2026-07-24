@@ -27,7 +27,7 @@ just delivery mechanisms. Four test categories are required:
    operation.
 
 The sibling skill
-[`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md)
+`flag-state-coverage-builder`
 handles the full flag-type inventory and pairwise matrix. This skill focuses
 exclusively on kill-switch test authoring.
 
@@ -339,6 +339,6 @@ describe('checkout-kill-switch', () => {
 - Circuit breaker as automated kill-switch pattern: Martin Fowler, "CircuitBreaker":
   [martinfowler.com/bliki/CircuitBreaker.html](https://martinfowler.com/bliki/CircuitBreaker.html).
 - Kill-switch row in flag-test matrix:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
+  `feature-flag-test-matrix-reference`.
 - Full flag-type coverage matrix authoring:
-  [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md).
+  `flag-state-coverage-builder`.

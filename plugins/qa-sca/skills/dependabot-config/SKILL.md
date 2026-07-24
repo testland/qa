@@ -17,8 +17,8 @@ available for a declared dependency. Configuration via
 `.github/dependabot.yml` at repo root.
 
 This is a **reference skill** - defines the config
-surface; doesn't run scans (that's [`snyk-test`](../snyk-test/SKILL.md)
-or [`osv-scanner`](../osv-scanner/SKILL.md)). Dependabot complements
+surface; doesn't run scans (that's `snyk-test`
+or `osv-scanner`). Dependabot complements
 SCA tools by automating the upgrade PR.
 
 ## When to use
@@ -29,7 +29,7 @@ SCA tools by automating the upgrade PR.
   hygiene.
 - Migrating from manual update sweeps to automated orchestration.
 
-For non-GitHub repos, see [`renovate-config`](../renovate-config/SKILL.md).
+For non-GitHub repos, see `renovate-config`.
 
 ## Step 1 - Top-level structure
 
@@ -262,7 +262,7 @@ Auto-merge only after CI passes; gates auto-merge to patch updates
 ## Limitations
 
 - GitHub-only - for GitLab / Bitbucket / non-GitHub, use
-  [`renovate-config`](../renovate-config/SKILL.md).
+  `renovate-config`.
 - No support for non-language manifests (Helm Chart.yaml,
   pre-commit hook updates, etc.) without workarounds.
 - Grouped PRs introduce coupling - one breaking change blocks the
@@ -276,8 +276,8 @@ Auto-merge only after CI passes; gates auto-merge to patch updates
 - docs.github.com/en/code-security/dependabot - full Dependabot docs
 - docs.github.com/en/code-security/dependabot/dependabot-security-updates - security updates feature
 - github.com/dependabot/fetch-metadata - auto-merge helper
-- [`snyk-test`](../snyk-test/SKILL.md),
-  [`osv-scanner`](../osv-scanner/SKILL.md),
-  [`renovate-config`](../renovate-config/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
+- `snyk-test`,
+  `osv-scanner`,
+  `renovate-config`,
+  `npm-pip-maven-audit` - 
   sister tools

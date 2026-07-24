@@ -200,8 +200,8 @@ Datadog), not CI-pipeline assertions.
 - [lf-scores][lf-scores] - score API
 - [lf-ds][lf-ds] - datasets
 - [lf-docs][lf-docs] - full documentation
-- [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
-  [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md),
-  [`ragas-evaluation`](../ragas-evaluation/SKILL.md),
-  [`giskard-llm`](../giskard-llm/SKILL.md) - pre-deploy eval sister
+- `promptfoo-evaluation`,
+  `deepeval-evaluation`,
+  `ragas-evaluation`,
+  `giskard-llm` - pre-deploy eval sister
   tools

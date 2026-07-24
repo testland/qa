@@ -184,7 +184,7 @@ plans) for typical run sizes.
 
 The script:
 
-1. Parses `junit.xml` ([`junit-xml-analysis`](../junit-xml-analysis/SKILL.md)).
+1. Parses `junit.xml` (`junit-xml-analysis`).
 2. Extracts Test Case keys (Step 2).
 3. Opens a Test Cycle (Step 3).
 4. Posts executions (Step 4) with bounded concurrency (Step 5).
@@ -258,9 +258,9 @@ matters; Pattern B (this step) is the lightweight default.
   REST API reference for Scale Cloud.
 - `https://support.smartbear.com/zephyr-squad-cloud/` - Squad Cloud
   reference (different product, different API).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - upstream
+- `junit-xml-analysis` - upstream
   parser for the input the sync script consumes.
-- [`xray-integration`](../xray-integration/SKILL.md),
-  [`testrail-integration`](../testrail-integration/SKILL.md) - 
+- `xray-integration`,
+  `testrail-integration` - 
   sibling test-management integrations with the same architecture
   but different APIs.

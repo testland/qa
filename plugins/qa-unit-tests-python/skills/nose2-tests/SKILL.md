@@ -16,7 +16,7 @@ test discovery library; reached end-of-life in 2015 - do NOT use
 nose1 in new projects). nose2 inherits nose's discovery model
 plus a plugin architecture.
 
-Modern recommendation: prefer [`pytest-tests`](../pytest-tests/SKILL.md)
+Modern recommendation: prefer `pytest-tests`
 for new work. nose2 fits two cases:
 
 - Maintaining a project already on nose1 (migration path is mostly
@@ -205,7 +205,7 @@ coverage report --fail-under=80
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Start new project with nose2 | Pytest is the mainstream; nose2 community smaller | Use [`pytest-tests`](../pytest-tests/SKILL.md) |
+| Start new project with nose2 | Pytest is the mainstream; nose2 community smaller | Use `pytest-tests` |
 | Use nose1 (`nose` package) | Unmaintained since 2015 | Migrate to nose2 (Step 8) or pytest |
 | Layers for stateful resources | State leaks across test classes | Per-class setUp or pytest function-scope fixtures |
 | Skip plugin enable in config | Features (layers, attrib, etc.) unavailable | Enable in unittest.cfg (Step 3) |
@@ -224,7 +224,7 @@ coverage report --fail-under=80
 - nose2.io - landing
 - github.com/nose-devs/nose2 - repository
 - (NB: `nose` package itself is unmaintained; do not use)
-- [`pytest-tests`](../pytest-tests/SKILL.md),
-  [`unittest-tests`](../unittest-tests/SKILL.md),
-  [`doctest-tests`](../doctest-tests/SKILL.md) - sister tools
+- `pytest-tests`,
+  `unittest-tests`,
+  `doctest-tests` - sister tools
 - `test-code-conventions` - test code hygiene

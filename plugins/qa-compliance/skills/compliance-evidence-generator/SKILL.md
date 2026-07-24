@@ -388,5 +388,5 @@ by automated means.
 - gdpr-info.eu/art-5-gdpr, gdpr-info.eu/art-24-gdpr, gdpr-info.eu/art-30-gdpr - GDPR accountability obligations (fetched 2026-06-04)
 - AICPA Trust Services Criteria 2017 (rev. 2022 points of focus) - available at aicpa-cima.com (paywalled; registration required)
 - PCI DSS v4.0.1 Requirement 10 - 12-month retention requirement; source: pcisecuritystandards.org
-- [`soc2-evidence-collector`](../soc2-evidence-collector/SKILL.md) - SOC 2-specific raw log collection
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - authoring tamper-evident audit log tests
+- `soc2-evidence-collector` - SOC 2-specific raw log collection
+- `audit-trail-test-author` - authoring tamper-evident audit log tests

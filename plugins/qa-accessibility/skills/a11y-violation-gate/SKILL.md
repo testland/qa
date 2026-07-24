@@ -21,11 +21,11 @@ shrinking the baseline.
 This skill builds that gate, aggregating outputs from any
 combination of:
 
-- [`axe-a11y`](../axe-a11y/SKILL.md)
-- [`pa11y-a11y`](../pa11y-a11y/SKILL.md)
-- [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md)
-- [`wave-a11y`](../wave-a11y/SKILL.md)
-- [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md)
+- `axe-a11y`
+- `pa11y-a11y`
+- `lighthouse-a11y`
+- `wave-a11y`
+- `ibm-equal-access-a11y`
 
 Sibling gates with the same architecture:
 `data-quality-gate`, `visual-baseline-gate`,
@@ -244,11 +244,11 @@ sys.exit(0 if verdict == 'go' else 1)
 ## References
 
 - All five scanner skills:
-  [`axe-a11y`](../axe-a11y/SKILL.md),
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md),
-  [`wave-a11y`](../wave-a11y/SKILL.md),
-  [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md).
+  `axe-a11y`,
+  `pa11y-a11y`,
+  `lighthouse-a11y`,
+  `wave-a11y`,
+  `ibm-equal-access-a11y`.
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - Sibling gate skills (same architecture):
   `data-quality-gate`, `visual-baseline-gate`,

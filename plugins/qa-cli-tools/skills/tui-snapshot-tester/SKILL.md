@@ -36,8 +36,8 @@ widths, broken borders) that exit-code / output assertions miss.
   them in user feedback).
 
 For headless CLIs that emit text only, prefer
-[`bats-testing`](../bats-testing/SKILL.md) +
-[`cli-output-conventions`](../cli-output-conventions/SKILL.md);
+`bats-testing` +
+`cli-output-conventions`;
 TUI snapshots are only needed for layout-rich UIs.
 
 ## Step 1 - Install (Python / Textual)
@@ -246,6 +246,6 @@ the qa-visual-regression sister plugin).
 - `insta` (Rust): `https://insta.rs/`.
 - `teatest` (Go Bubble Tea): `https://github.com/charmbracelet/x/tree/main/exp/teatest`.
 - `ink-testing-library` (Node Ink): `https://github.com/vadimdemedes/ink-testing-library`.
-- [`bats-testing`](../bats-testing/SKILL.md) - exit-code + text
+- `bats-testing` - exit-code + text
   output testing (text CLIs); pair with TUI snapshots for
   layout regression.

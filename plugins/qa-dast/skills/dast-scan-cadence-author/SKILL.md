@@ -231,8 +231,8 @@ For each app's DAST coverage:
 ## Limitations
 
 - This is a build-an-X workflow. Tests use specific DAST tools
-  per [`zap-baseline`](../zap-baseline/SKILL.md), [`burp-headless`](../burp-headless/SKILL.md),
-  [`nightvision-dast`](../nightvision-dast/SKILL.md).
+  per `zap-baseline`, `burp-headless`,
+  `nightvision-dast`.
 - Active scans are inherently destructive on staging data; pair
   with staging-data refresh cadence.
 - DAST coverage is bounded by spider + spec discovery; SPA-heavy
@@ -242,8 +242,8 @@ For each app's DAST coverage:
 
 ## References
 
-- [`zap-baseline`](../zap-baseline/SKILL.md),
-  [`burp-headless`](../burp-headless/SKILL.md),
-  [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister tools
+- `zap-baseline`,
+  `burp-headless`,
+  `nightvision-dast` - sister tools
 - OWASP WSTG - owasp.org/www-project-web-security-testing-guide
 - OWASP DSOMM (DevSecOps Maturity Model) for cadence guidance

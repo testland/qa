@@ -27,13 +27,13 @@ code; CI gates on it.
 
 Composes with:
 
-- [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md) - 
+- `googletest-embedded-arm` - 
   cross-compiled C++ test binary.
-- [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md) - 
+- `unity-test-framework-c` - 
   cross-compiled C test binary.
-- [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) - 
+- `ceedling-build-runner` - 
   Ceedling project configured for ARM cross-compile.
-- [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md) - 
+- `hardware-in-loop-reference` - 
   the next rung up the V-cycle (PIL / HIL).
 
 ## When to use
@@ -51,7 +51,7 @@ Composes with:
 QEMU does **not** emulate analog I/O, sensor wiring, or
 real-time timing precisely - for that, escalate to a real HIL
 rig per
-[`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md).
+`hardware-in-loop-reference`.
 
 ## Authoring
 
@@ -124,9 +124,9 @@ gates on `$?`.
 ## Building (the test binary side)
 
 The test side is covered in
-[`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md)
+`googletest-embedded-arm`
 and
-[`unity-test-framework-c`](../unity-test-framework-c/SKILL.md);
+`unity-test-framework-c`;
 the canonical Cortex-M4 build:
 
 ```bash
@@ -217,7 +217,7 @@ qemu-system-arm -M mps2-an386 -cpu cortex-m4 -nographic \
 A test harness then connects to `localhost:4444` and issues
 `{"execute":"query-status"}`, `{"execute":"stop"}`,
 `{"execute":"cont"}` - useful for staged fault injection that
-mirrors the [HIL fault-injection patterns](../hardware-in-loop-reference/SKILL.md#fault-injection-patterns).
+mirrors the HIL fault-injection patterns.
 
 ## Parsing results
 
@@ -242,9 +242,9 @@ the failure count. CI gates on the exit code directly.
 For Unity / GoogleTest, the canonical line format reaches host
 stdout via semihosting → QEMU stdio. Grep / tee / pipe-to-JUnit
 the same way as a host run - see
-[`unity-test-framework-c`](../unity-test-framework-c/SKILL.md#parsing-results)
+`unity-test-framework-c`
 and
-[`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md#parsing-results).
+`googletest-embedded-arm`.
 
 ### Timing the run
 
@@ -252,7 +252,7 @@ QEMU emulation is not real-time. For a test that asserts on
 wall-clock latency, the result is **wrong** - QEMU executes
 faster than physical hardware for compute-bound code and slower
 for I/O-heavy code. For real-time-sensitive tests, escalate to
-[`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md).
+`hardware-in-loop-reference`.
 
 ## CI integration
 
@@ -345,8 +345,8 @@ Cited inline. Foundational documents:
 - QEMU ARM CPU features (`max`, named CPUs) - [www.qemu.org/docs/master/system/arm/cpu-features.html](https://www.qemu.org/docs/master/system/arm/cpu-features.html).
 - ARM GNU Toolchain (`--specs=rdimon.specs`, semihosting) - [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 - Sibling skills:
-  [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md),
-  [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
-  [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
-  [`hardware-in-loop-reference`](../hardware-in-loop-reference/SKILL.md),
-  [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md).
+  `googletest-embedded-arm`,
+  `unity-test-framework-c`,
+  `ceedling-build-runner`,
+  `hardware-in-loop-reference`,
+  `embedded-coverage-strategy-reference`.

@@ -14,7 +14,7 @@ LIKELY-EXPLOITABLE from BENIGN findings; collapsing duplicates by stack-hash;
 and minimizing reproducers. These steps can be automated across a full
 artifact directory for bulk triage. For sanitiser build
 flags and compatibility, see
-[`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md).
+`sanitiser-integration-reference`.
 
 ## When to use
 
@@ -94,7 +94,7 @@ UBSan's runtime is "not expected to produce false positives" (per
 but its production use needs care: recovery modes that continue execution
 instead of aborting can mask bugs from the fuzzer. Always build with
 `-fno-sanitize-recover=all` for fuzzing (see
-[`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)).
+`sanitiser-integration-reference`).
 
 ## Reading MSan crash output
 
@@ -283,7 +283,7 @@ in the filename.
   `-artifact_prefix`, `-rss_limit_mb`):
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html)
 - Sibling skills:
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)
+  `sanitiser-integration-reference`
   (build flags, sanitiser compatibility),
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md)
+  `corpus-management-reference`
   (corpus discipline, seed selection)

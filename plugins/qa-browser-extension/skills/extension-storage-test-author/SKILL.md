@@ -29,11 +29,11 @@ ships in its test suite.
 
 Composes with:
 
-- [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md) - for the SW-runtime restriction that bans `localStorage` and
+- `manifest-v3-test-surface-reference` - for the SW-runtime restriction that bans `localStorage` and
   forces all persistent state into `chrome.storage.*`.
-- [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md) - the fixture that loads the extension so the spec can call into
+- `playwright-extension-fixtures` - the fixture that loads the extension so the spec can call into
   `chrome.storage.*` from a service-worker context.
-- [`mv2-to-mv3-migration-test-checklist`](../mv2-to-mv3-migration-test-checklist/SKILL.md) - Section 2 of that checklist forces every `localStorage` call
+- `mv2-to-mv3-migration-test-checklist` - Section 2 of that checklist forces every `localStorage` call
   through this skill's output.
 
 For Playwright-driven MV3 popup / content-script fixtures see
@@ -428,8 +428,8 @@ encryption-at-rest test (out of scope for this storage-API skill).
 - MDN - WebExtensions storage API (Firefox semantics, managed-area
   read-only quote, encryption caveat) - [mdn-storage].
 - Composes:
-  [`manifest-v3-test-surface-reference`](../manifest-v3-test-surface-reference/SKILL.md),
-  [`playwright-extension-fixtures`](../playwright-extension-fixtures/SKILL.md),
-  [`mv2-to-mv3-migration-test-checklist`](../mv2-to-mv3-migration-test-checklist/SKILL.md).
+  `manifest-v3-test-surface-reference`,
+  `playwright-extension-fixtures`,
+  `mv2-to-mv3-migration-test-checklist`.
 - Sibling builder:
-  [`mv2-to-mv3-migration-test-checklist`](../mv2-to-mv3-migration-test-checklist/SKILL.md).
+  `mv2-to-mv3-migration-test-checklist`.

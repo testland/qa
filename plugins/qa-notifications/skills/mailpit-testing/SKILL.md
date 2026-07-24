@@ -220,7 +220,7 @@ steps:
 - [mp-docs][mp-docs] - official documentation
 - [mp-gh][mp-gh] - repository, install commands, ports
 - mailpit.axllent.org/docs/api-v1/ - REST API reference
-- [`mailhog-testing`](../mailhog-testing/SKILL.md) - predecessor; use
+- `mailhog-testing` - predecessor; use
   Mailpit for new work
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) - 
+- `email-flow-test-author` - 
   build-an-X for the full email-sending workflow

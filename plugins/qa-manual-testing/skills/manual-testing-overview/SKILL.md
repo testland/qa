@@ -273,9 +273,9 @@ itself, its purpose, or standards each gives you a concrete reason to argue the 
 ## Further reading
 
 If they are installed alongside this one, these go deeper on individual pieces above:
-[`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md)
-(session sheet and metrics in full), [`manual-test-debrief`](../manual-test-debrief/SKILL.md),
-[`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md) (steering a
-drifting session), [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md) (oracles),
-and [`manual-test-script-author`](../manual-test-script-author/SKILL.md) plus
-[`uat-script-author`](../uat-script-author/SKILL.md) for the scripted side.
+`session-based-test-management-reference`
+(session sheet and metrics in full), `manual-test-debrief`,
+`exploratory-tours-reference` (steering a
+drifting session), `hiccupps-f-heuristic` (oracles),
+and `manual-test-script-author` plus
+`uat-script-author` for the scripted side.

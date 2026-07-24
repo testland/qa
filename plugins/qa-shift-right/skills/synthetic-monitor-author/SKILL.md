@@ -305,6 +305,6 @@ for why a monitor was added / removed.
   defines shift right as "A test approach to test a system
   continuously in production." (Per workspace memory: ISTQB glossary
   is JS-rendered; navigate via Playwright or real browser.)
-- [`feature-flag-experiment-validator`](../feature-flag-experiment-validator/SKILL.md) - sibling skill: validates A/B experiments running behind flags.
-- [`prod-canary-validator`](../prod-canary-validator/SKILL.md) - 
+- `feature-flag-experiment-validator` - sibling skill: validates A/B experiments running behind flags.
+- `prod-canary-validator` - 
   sibling: catches regressions in canary stage before full rollout.

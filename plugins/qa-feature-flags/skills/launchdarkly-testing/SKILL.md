@@ -171,11 +171,11 @@ replaces it.
 - File-based data source:
   [launchdarkly.com/docs/sdk/features/flags-from-files](https://launchdarkly.com/docs/sdk/features/flags-from-files).
 - Companion catalogs:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
+  `feature-flag-test-matrix-reference`.
 - Sibling SDKs:
-  [`unleash-testing`](../unleash-testing/SKILL.md),
-  [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md).
+  `unleash-testing`,
+  `flagsmith-testing`,
+  `growthbook-testing`.
 - Cross-plugin:
   `feature-flag-test-harness`,
   `ab-test-validity-checklist`.

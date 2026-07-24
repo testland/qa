@@ -20,8 +20,8 @@ Per [clig][clig]:
 
 Tests can only assert on output that is **stable, separated, and
 documented**. This skill defines those conventions; sister skills
-([`bats-testing`](../bats-testing/SKILL.md),
-[`tui-snapshot-tester`](../tui-snapshot-tester/SKILL.md)) test
+(`bats-testing`,
+`tui-snapshot-tester`) test
 against them.
 
 ## When to use
@@ -304,7 +304,7 @@ the document and the tests update in the same PR.
   `--verbose`, `--help` / `--version`.
 - `https://no-color.org/` - `NO_COLOR` informal standard.
 - ISO 8601 - date / time format for `--json` output.
-- [`bats-testing`](../bats-testing/SKILL.md) - Bash-based
+- `bats-testing` - Bash-based
   assertion runner that consumes this contract.
-- [`tui-snapshot-tester`](../tui-snapshot-tester/SKILL.md) - 
+- `tui-snapshot-tester` - 
   layout-level snapshots; this skill covers text-level contract.

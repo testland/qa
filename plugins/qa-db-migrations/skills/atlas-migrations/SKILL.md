@@ -204,8 +204,8 @@ capture (e.g., "no `DROP TABLE` without DBA approval").
   example schema, all `atlas` commands, supported databases
 - atlasgo.io/docs - full documentation
 - github.com/ariga/atlas - repository
-- [`flyway-migrations`](../flyway-migrations/SKILL.md),
-  [`liquibase-migrations`](../liquibase-migrations/SKILL.md),
-  [`sqlmesh-migrations`](../sqlmesh-migrations/SKILL.md) - sister
+- `flyway-migrations`,
+  `liquibase-migrations`,
+  `sqlmesh-migrations` - sister
   tools (Flyway / Liquibase = imperative versioned; SQLMesh =
   data-pipeline + schema)

@@ -304,6 +304,6 @@ bug in the real implementation.
 - [fast-check-overview][fco] - arbitraries catalog, `.map` /
   `.chain` combinators, race-condition detection, model-based
   testing, framework-agnostic positioning.
-- [`hypothesis-testing`](../hypothesis-testing/SKILL.md) - Python
+- `hypothesis-testing` - Python
   sibling.
 - `schemathesis-fuzzing` - applies fast-check-shaped PBT to API schemas.

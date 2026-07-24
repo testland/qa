@@ -19,9 +19,9 @@ act on:
    piece waits on.
 
 It is the connective tissue between the pattern catalogs and the scaffolder.
-The catalogs ([`object-model-patterns`](../object-model-patterns/SKILL.md),
-[`test-isolation-patterns`](../test-isolation-patterns/SKILL.md),
-[`test-step-design-patterns`](../test-step-design-patterns/SKILL.md),
+The catalogs (`object-model-patterns`,
+`test-isolation-patterns`,
+`test-step-design-patterns`,
 `test-data-patterns` in qa-test-data)
 say what each pattern IS; the scaffolder emits a skeleton once decisions
 are made. Neither walks the decisions in order. This skill does.
@@ -132,7 +132,7 @@ else." Playwright offers exactly two scopes
 
 The blueprint records, per fixture: name, scope, what it provides, and
 whether tests mutate it. The single rule from
-[`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) Pattern 2
+`test-isolation-patterns` Pattern 2
 applies verbatim: never share mutable fixtures across tests.
 
 Mechanics to standardize in the conventions doc (all per the
@@ -167,7 +167,7 @@ id) fills the same database-per-worker role.
 
 Pick exactly **one** object-model pattern; mixing two in one codebase is the
 top cross-cutting anti-pattern in
-[`object-model-patterns`](../object-model-patterns/SKILL.md). The short
+`object-model-patterns`. The short
 decision rule (full when-to-use rules, canonical citations, and per-pattern
 anti-patterns live in that catalog - defer to it, do not restate it):
 
@@ -192,7 +192,7 @@ Three sub-decisions, each deferring to its own deeper tool:
    `seed-data-curator` in qa-test-data),
    or template-database cloning. The isolation mechanics
    (transaction-rollback vs database-per-worker vs template clone) come from
-   [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) Pattern 4.
+   `test-isolation-patterns` Pattern 4.
 2. **Construction pattern.** Builder vs Factory vs Object Mother:
    `test-data-patterns` (qa-test-data)
    is the catalog. Default for a new framework: Test Data Builder for the 2-3
@@ -306,7 +306,7 @@ combined with `mergeTests()` into `fixtures/index.ts`, per the
 **Step 4 - Object model.** POM + Component Objects: the SUT is a React SPA
 with page-shaped flows and a shared nav/sidebar, suite projected well under
 200 tests, so Screenplay overhead is not justified per the selection matrix
-in [`object-model-patterns`](../object-model-patterns/SKILL.md). App Actions
+in `object-model-patterns`. App Actions
 rejected (not Cypress; no exposed store API). POM construction is deferred in
 the implementation order until ~10 specs exist.
 
@@ -314,7 +314,7 @@ the implementation order until ~10 specs exist.
 `invoiceBuilder` and one `accountBuilder` (Test Data Builder per
 `test-data-patterns` in qa-test-data);
 no shared seed set yet. Isolation: database-per-worker
-([`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) Pattern 4b)
+(`test-isolation-patterns` Pattern 4b)
 because invoice tests are mutation-heavy. Dependencies: Postgres real (in
 compose), Stripe stubbed by a stub container in `docker-compose.test.yml`
 (stub tooling chosen per the detected runtime),
@@ -351,7 +351,7 @@ a framework-architecture audit scheduled quarterly.
 | Anti-pattern | Why it fails |
 |---|---|
 | Copying the framework from a previous job regardless of change shape | The old framework encoded the old SUT's inventory (Step 1); a UI-heavy framework on an API-heavy product tests the wrong layer slowly |
-| Building abstraction layers before ~10 tests exist | Abstractions extracted from zero usage guess wrong; extract from observed duplication (the rule-of-three framing in [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md)) |
+| Building abstraction layers before ~10 tests exist | Abstractions extracted from zero usage guess wrong; extract from observed duplication (the rule-of-three framing in `test-step-design-patterns`) |
 | One mega base-class every test inherits | Depth-3+ hierarchies break unpredictably on root changes (§A2); compose fixtures instead |
 | Choosing the runner before the team-skills inventory | Framework-language mismatch is the #1 maintenance cost per `framework-choice-advisor` |
 | Designing the CI matrix for scale on day one (8 shards, 3 retries) | Retries hide flake in a young suite; shards add cost below the `ci-test-job-conventions` §1 runtime thresholds |
@@ -380,9 +380,9 @@ a framework-architecture audit scheduled quarterly.
 - pytest - *How to use fixtures* (five scopes, `conftest.py`, `yield`
   teardown, `autouse`):
   https://docs.pytest.org/en/stable/how-to/fixtures.html
-- [`object-model-patterns`](../object-model-patterns/SKILL.md),
-  [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md),
-  [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md),
+- `object-model-patterns`,
+  `test-isolation-patterns`,
+  `test-step-design-patterns`,
   `test-data-patterns` (qa-test-data) -
   the sister pattern catalogs Steps 3-5 defer to.
 - `framework-choice-advisor` (qa-process) - the Step 2 deep tool.

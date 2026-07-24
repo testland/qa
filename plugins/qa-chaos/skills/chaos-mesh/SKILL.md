@@ -249,8 +249,8 @@ triggers it.
 - [cm][cm] - Chaos Mesh overview: K8s-native, fault types,
   selector-based blast-radius control, workflow orchestration,
   dashboard with RBAC, Chaosd for physical machines.
-- [`litmus-chaos`](../litmus-chaos/SKILL.md) - sibling K8s
+- `litmus-chaos` - sibling K8s
   alternative.
-- [`gremlin-chaos`](../gremlin-chaos/SKILL.md) - multi-platform
+- `gremlin-chaos` - multi-platform
   commercial alternative.
-- [`chaos-experiment-author`](../chaos-experiment-author/SKILL.md) - methodology this tool implements.
+- `chaos-experiment-author` - methodology this tool implements.

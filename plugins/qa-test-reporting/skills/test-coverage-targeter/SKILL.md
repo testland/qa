@@ -36,7 +36,7 @@ one PR - not a 200-line "everything uncovered" dump.
   know which uncovered branches actually matter.
 - A test-debt sprint is upcoming and the team needs a 10-test
   budget allocated to the right places.
-- Pair with [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md)
+- Pair with `coverage-diff-reporter`
   for the "what regressed" + "what to add" combo.
 
 ## Step 1 - Inputs
@@ -69,14 +69,14 @@ The shape (after parsing per upstream parser):
 Per language tool:
 
 - LCOV: parse `BRDA:<line>,<block>,<branch>,<taken>` records;
-  `taken == '-'` is uncovered. Use [`lcov-analysis`](../lcov-analysis/SKILL.md).
+  `taken == '-'` is uncovered. Use `lcov-analysis`.
 - Cobertura: parse `<line branch="true" condition-coverage="50% (1/2)"/>`;
-  use [`cobertura-analysis`](../cobertura-analysis/SKILL.md).
+  use `cobertura-analysis`.
 - Jest JSON `b` field: arrays of arm hit counts; uncovered = 0.
-  Use [`jest-coverage-analysis`](../jest-coverage-analysis/SKILL.md).
+  Use `jest-coverage-analysis`.
 - JaCoCo XML: parse `<counter type="BRANCH" missed="N" covered="M"/>`
   per method, then read source lines for context.
-  Use [`jacoco-analysis`](../jacoco-analysis/SKILL.md).
+  Use `jacoco-analysis`.
 
 ## Step 3 - Compute the risk weight
 
@@ -227,7 +227,7 @@ For each target above, the recommended test shape:
 
 This skill is **advisory, not gating**. Post the recommendation as
 a PR comment via `coverage-diff-reporter`'s sticky-comment mechanism
-(see [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md)
+(see `coverage-diff-reporter`
 Step 7) but don't fail the build on it:
 
 ```yaml
@@ -288,12 +288,12 @@ Step 7) but don't fail the build on it:
   `M = E - N + 2`, threshold convention (1 - 10 / 11 - 20 / 21 - 50 /
   >50), the warning that "reducing the cyclomatic complexity of
   code is not proven to reduce the number of errors or bugs".
-- [`lcov-analysis`](../lcov-analysis/SKILL.md),
-  [`cobertura-analysis`](../cobertura-analysis/SKILL.md),
-  [`jest-coverage-analysis`](../jest-coverage-analysis/SKILL.md),
-  [`jacoco-analysis`](../jacoco-analysis/SKILL.md),
-  [`coverage-py-analysis`](../coverage-py-analysis/SKILL.md) - 
+- `lcov-analysis`,
+  `cobertura-analysis`,
+  `jest-coverage-analysis`,
+  `jacoco-analysis`,
+  `coverage-py-analysis` - 
   upstream parsers this skill consumes.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
+- `coverage-diff-reporter` - 
   sibling reporter; the diff identifies what regressed, the
   targeter identifies what to add next.

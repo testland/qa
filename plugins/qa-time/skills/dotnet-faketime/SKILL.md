@@ -216,7 +216,7 @@ Per
 [learn.microsoft.com/dotnet/api/system.timeprovider.getlocalnow](https://learn.microsoft.com/en-us/dotnet/api/system.timeprovider.getlocalnow):
 `GetLocalNow()` returns the UTC instant converted to the provider's
 `LocalTimeZone`. Use the companion
-[`dst-transition-reference`](../dst-transition-reference/SKILL.md) for
+`dst-transition-reference` for
 expected offset values around spring/fall transitions.
 
 ## Pre-.NET-8 pattern: ISystemClock
@@ -294,7 +294,7 @@ jobs:
   not affected by `FakeTimeProvider`; only code that accepts
   `TimeProvider` by injection can be controlled this way.
 - No leap-second simulation; see
-  [`leap-second-reference`](../leap-second-reference/SKILL.md).
+  `leap-second-reference`.
 
 ## References
 
@@ -307,15 +307,15 @@ jobs:
 - `TimeProviderTaskExtensions` (`Delay`, `WaitAsync`):
   [learn.microsoft.com/dotnet/api/system.threading.tasks.timeprovidertaskextensions](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.timeprovidertaskextensions).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`leap-second-reference`](../leap-second-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `dst-transition-reference`,
+  `leap-second-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Cross-language:
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`libfaketime-c`](../libfaketime-c/SKILL.md).
+  `mockclock-jvm`,
+  `freezegun-python`,
+  `timecop-ruby`,
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `libfaketime-c`.
 - Test matrix:
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `timezone-test-matrix-builder`.

@@ -22,7 +22,7 @@ suppression in tests is important to avoid polluting analytics.
 - Tests for code that reads an Amplitude Experiment variant.
 - Suppressing exposure events in non-production test runs.
 - Assignment-integrity tests per
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+  `ab-test-validity-checklist`
   Step 3.
 
 ## Authoring
@@ -174,10 +174,10 @@ checked-in flag config JSON.
 - Local evaluation:
   [amplitude.com/docs/experiment/general/evaluation/local-evaluation](https://amplitude.com/docs/experiment/general/evaluation/local-evaluation).
 - Companion catalogs:
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md),
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md).
+  `guardrail-metrics-reference`,
+  `peeking-problem-reference`,
+  `ab-test-validity-checklist`.
 - Sibling SDKs:
-  [`statsig-test`](../statsig-test/SKILL.md),
-  [`optimizely-test`](../optimizely-test/SKILL.md),
-  [`vwo-test`](../vwo-test/SKILL.md).
+  `statsig-test`,
+  `optimizely-test`,
+  `vwo-test`.

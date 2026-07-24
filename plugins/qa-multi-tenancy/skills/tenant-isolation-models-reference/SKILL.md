@@ -178,7 +178,7 @@ Tenant isolation is implemented by combining:
   or AWS Cognito ID token; the source of truth for "who is this
   request for".
 - **Authorisation policy** - Postgres Row-Level Security per
-  [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md),
+  `row-level-security-postgres-reference`,
   AWS IAM dynamic policies generated per tenant, application-
   level authorisation middleware.
 - **Resource ABAC tags** - tag each tenant resource with
@@ -197,7 +197,7 @@ Tenant isolation is implemented by combining:
 | Trust the JWT `raw_user_meta_data` for tenant claims | User-modifiable per Supabase docs | Use `raw_app_meta_data` (server-set) or a server-side claim store |
 | Single connection pool for all tenants | One slow tenant query blocks all | Per-tenant pools, or quota-aware pools |
 | Shared object-storage bucket without prefix isolation | Object enumeration leaks across tenants | Per-tenant prefix + IAM condition on the prefix |
-| No isolation tests in CI | Models drift over time | Cross-tenant leak tests in every PR per [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md) |
+| No isolation tests in CI | Models drift over time | Cross-tenant leak tests in every PR per `cross-tenant-data-leak-tests` |
 | Migration scripts run without tenant context | Schema changes touch all tenants at once; high blast radius | Stamp pattern with progressive rollout |
 
 ## Test surface by model
@@ -241,8 +241,8 @@ billing, identity providers) where pool-like leaks are possible.
 - Microsoft Deployment Stamps pattern (related):
   [learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp](https://learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp).
 - Supabase RLS guide (consumed in
-  [`row-level-security-postgres-reference`](../row-level-security-postgres-reference/SKILL.md)):
+  `row-level-security-postgres-reference`):
   [supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security).
 - Consumed by:
-  [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md),
-  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
+  `tenant-leak-test-author`,
+  `cross-tenant-data-leak-tests`.

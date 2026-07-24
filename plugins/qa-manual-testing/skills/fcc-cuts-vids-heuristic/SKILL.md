@@ -9,7 +9,7 @@ description: "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic - a
 
 FCC CUTS VIDS is one of James Bach's lesser-known but powerful
 exploratory-testing heuristics. Where SFDPOT (
-[`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md)) catalogues what
+`sfdpot-exploratory-heuristic`) catalogues what
 to *vary*, FCC CUTS VIDS catalogues what to *model*. The
 distinction: variation drives the session; modelling is what the
 tester learns *about* the system as exploration progresses.
@@ -249,7 +249,7 @@ on edge cases where Postgres + Stripe + Redis disagree about state."
 - Bolton M. - [developsense.com](https://developsense.com/) on
   testing heuristics.
 - Sibling references:
-  [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
-  [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`session-based-test-management-reference`](../session-based-test-management-reference/SKILL.md).
+  `hiccupps-f-heuristic`,
+  `sfdpot-exploratory-heuristic`,
+  `crusspic-stmpl-heuristic`,
+  `session-based-test-management-reference`.

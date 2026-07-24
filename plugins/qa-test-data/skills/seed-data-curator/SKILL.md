@@ -100,7 +100,7 @@ email. The factory still uses Faker for non-identifying fields
 (name, address, phone).
 
 For Python equivalent with factory_boy + mimesis, see the
-[`mimesis-data`](../mimesis-data/SKILL.md) examples; the same
+`mimesis-data` examples; the same
 deterministic-seed-plus-predictable-email pattern applies.
 
 ## Step 4 - Wire into test bootstrap
@@ -230,11 +230,11 @@ emits:
 ## References
 
 - All four factory libraries:
-  [`faker-data`](../faker-data/SKILL.md),
-  [`factory-bot-data`](../factory-bot-data/SKILL.md),
-  [`mimesis-data`](../mimesis-data/SKILL.md),
-  [`bogus-data`](../bogus-data/SKILL.md).
-- [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) - for PII fields in the seed; ensures the seed never carries
+  `faker-data`,
+  `factory-bot-data`,
+  `mimesis-data`,
+  `bogus-data`.
+- `synthetic-pii-generator` - for PII fields in the seed; ensures the seed never carries
   real-looking PII.
-- [`golden-file-conventions`](../golden-file-conventions/SKILL.md) - sibling reference for snapshot fixtures (similar
+- `golden-file-conventions` - sibling reference for snapshot fixtures (similar
   long-lived-fixture concerns).

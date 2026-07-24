@@ -131,7 +131,7 @@ var faker = new Faker<Order>()
 
 `UseSeed(int)` makes generation reproducible across runs - same
 seed produces same data. Mirror the
-[`faker-data`](../faker-data/SKILL.md) seeding guidance: seed in
+`faker-data` seeding guidance: seed in
 test setup so failures reproduce.
 
 For globally seeding the underlying randomizer (affecting any
@@ -189,9 +189,9 @@ NUnit and MSTest wire identically - Bogus is framework-agnostic.
 ## Limitations
 
 - **.NET-only.** For other languages, use the matching skill:
-  [`faker-data`](../faker-data/SKILL.md) (Python/JS/Ruby),
-  [`mimesis-data`](../mimesis-data/SKILL.md) (Python),
-  [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby).
+  `faker-data` (Python/JS/Ruby),
+  `mimesis-data` (Python),
+  `factory-bot-data` (Ruby).
 - **PRNG sequence varies across major versions.** Pin the package
   version for deterministic tests.
 - **No native factory orchestration for graphs.** Composing a User
@@ -202,9 +202,9 @@ NUnit and MSTest wire identically - Bogus is framework-agnostic.
 
 - [bogus-readme][readme] - canonical: install, `Faker<T>`, `RuleFor`,
   `Generate` / `GenerateBetween` / `GenerateLazy`, `UseSeed`.
-- [`faker-data`](../faker-data/SKILL.md),
-  [`mimesis-data`](../mimesis-data/SKILL.md) - Python alternatives.
-- [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby
+- `faker-data`,
+  `mimesis-data` - Python alternatives.
+- `factory-bot-data` - Ruby
   alternative.
-- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
+- `synthetic-data-tool-selector` - 
   dispatcher.

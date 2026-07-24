@@ -41,7 +41,7 @@ asserting against budgets ([lhci][lhci]).
   audits beyond perf.
 
 If the project is a backend API or a CLI tool, this skill doesn't
-apply - use [`k6-load-testing`](../k6-load-testing/SKILL.md) or a
+apply - use `k6-load-testing` or a
 sibling load runner for backend perf.
 
 ## Install
@@ -232,9 +232,9 @@ one for the other.
   measurement; INP-replaces-FID in 2024).
 - [lhci][lhci] - Lighthouse CI canonical install, `lhci autorun`,
   configuration shape, assertion levels.
-- [`lighthouse-budget-author`](../lighthouse-budget-author/SKILL.md) - 
+- `lighthouse-budget-author` - 
   sibling skill for **drafting** budgets at design time (this skill
   is the **runner**).
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
+- `perf-budget-gate` - downstream
   unified gate aggregating Lighthouse + load-runner verdicts.
 - `non-functional-requirement-extractor` - upstream skill that surfaces Web Vitals NFRs from PRDs.

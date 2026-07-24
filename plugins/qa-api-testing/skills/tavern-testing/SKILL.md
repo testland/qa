@@ -33,7 +33,7 @@ Python ecosystem.
 
 If the team is already deep in REST Assured or Karate, switching to
 Tavern is rarely worthwhile. If the team is on Node, use
-[`postman-collections`](../postman-collections/SKILL.md) instead.
+`postman-collections` instead.
 
 ## Install
 
@@ -305,10 +305,10 @@ jobs:
 - [tavern-docs][docs] - canonical reference: install, file shape,
   request / response / save / matchers, pytest integration, global
   config.
-- [`postman-collections`](../postman-collections/SKILL.md) - 
+- `postman-collections` - 
   Node-stack alternative.
-- [`restassured-testing`](../restassured-testing/SKILL.md) - Java
+- `restassured-testing` - Java
   fluent-DSL alternative.
-- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
+- `schemathesis-fuzzing` - 
   Python-stack property-based fuzzing complement to Tavern's
   example-based tests.

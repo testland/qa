@@ -22,7 +22,7 @@ modification** per role.
 
 This skill is a **pure reference** consumed by the tenant-leak
 test authors and reviewers. For the broader model context see
-[`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md).
+`tenant-isolation-models-reference`.
 
 ## When to use
 
@@ -30,7 +30,7 @@ test authors and reviewers. For the broader model context see
   model.
 - Auditing existing RLS policies for correctness.
 - Writing tests that verify RLS denies cross-tenant access (per
-  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md)).
+  `cross-tenant-data-leak-tests`).
 - Onboarding a new table to the tenant_id discriminator pattern.
 
 ## Enabling RLS
@@ -278,7 +278,7 @@ or via foreign-key reference patterns. Compensating controls:
 - Use **UUID** primary keys (not sequential ints) to avoid
   enumeration via FK
 - Treat unique-constraint timing differences as a side channel
-  worth testing per [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md)
+  worth testing per `cross-tenant-data-leak-tests`
 
 ## Common policy patterns for tenant isolation
 
@@ -372,7 +372,7 @@ VALUES ('22222222-2222-2222-2222-222222222222', 'leak');
 Run the existing test suite under a non-superuser, non-BYPASSRLS,
 non-table-owner role. If passing tests rely on RLS bypass, the
 suite is silently invalid for production. Per
-[`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md)
+`cross-tenant-data-leak-tests`
 the gate test must use a tenant-A session to attempt access to
 tenant-B-owned rows and assert 0 rows returned.
 
@@ -402,7 +402,7 @@ tenant-B-owned rows and assert 0 rows returned.
 - Supabase RLS guide:
   [supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security).
 - Tenant isolation context:
-  [`tenant-isolation-models-reference`](../tenant-isolation-models-reference/SKILL.md).
+  `tenant-isolation-models-reference`.
 - Consumed by:
-  [`tenant-leak-test-author`](../tenant-leak-test-author/SKILL.md),
-  [`cross-tenant-data-leak-tests`](../cross-tenant-data-leak-tests/SKILL.md).
+  `tenant-leak-test-author`,
+  `cross-tenant-data-leak-tests`.

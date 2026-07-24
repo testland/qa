@@ -13,9 +13,9 @@ product-quality risks. Per ISTQB CTAL-TM, the distinction is:
 - **Product risk** - "the possibility that the system or software
   might fail to satisfy or fulfil some reasonable expectation of
   the customer, user, or stakeholder." → captured in
-  [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md)
+  `product-risk-register-builder`
   and per-release in
-  [`risk-matrix`](../risk-matrix/SKILL.md).
+  `risk-matrix`.
 - **Project risk** - "any risk that affects project success."
   Schedule, resources, etc.
 
@@ -162,7 +162,7 @@ mitigations need most attention.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Mixing project + product risks in one register | Confuses risk-response strategies | Separate registers; this for project, [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md) for product |
+| Mixing project + product risks in one register | Confuses risk-response strategies | Separate registers; this for project, `product-risk-register-builder` for product |
 | "Mitigate" is the only strategy | "Accept" is legitimate; not every risk needs an action | Use all 4 strategies (Avoid / Mitigate / Transfer / Accept) |
 | Weekly review skipped during crunch | Risks compound when ignored | Hold review even briefly; stale register is worse than no register |
 | No retired-risks log | Lose lessons learned | Always keep retired list |
@@ -192,5 +192,5 @@ mitigations need most attention.
   [glossary.istqb.org](https://glossary.istqb.org/) - "project
   risk" entry.
 - Sibling skill (different scope):
-  [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),
-  [`risk-matrix`](../risk-matrix/SKILL.md).
+  `product-risk-register-builder`,
+  `risk-matrix`.

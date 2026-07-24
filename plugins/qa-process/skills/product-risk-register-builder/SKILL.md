@@ -11,7 +11,7 @@ The product risk register catalogs **long-lived product-quality
 risks** - risks tied to the product's architecture, domain, and
 user base that persist across releases. Distinct from the
 per-release risk matrix
-([`risk-matrix`](../risk-matrix/SKILL.md)) which captures
+(`risk-matrix`) which captures
 release-scoped risks. Both feed risk-based test selection and
 planning.
 
@@ -27,7 +27,7 @@ paywall.
 - Compliance audit - document long-lived product risks beyond the
   current release.
 - Seeding a new release's
-  [`risk-matrix`](../risk-matrix/SKILL.md) - copy persistent risks
+  `risk-matrix` - copy persistent risks
   forward, add release-specific ones.
 
 ## Step 1 - Identify risks by quality characteristic
@@ -54,7 +54,7 @@ more than 50 = mix with per-release risks.
 ## Step 2 - Score per impact × likelihood
 
 Use the same 1-5 scale as
-[`risk-matrix`](../risk-matrix/SKILL.md). Score is `impact ×
+`risk-matrix`. Score is `impact ×
 likelihood`:
 
 | Score | Tier | Action |
@@ -98,7 +98,7 @@ it to existing test coverage (or flag a gap):
 | PR-001 | Pricing engine off-by-cent | 15 | Tests: tests/billing/test_promo_stacking.py + nightly compliance suite (PROJ-T123 + 124) | Alice |
 ```
 
-Use [`risk-coverage-mapper`](../risk-coverage-mapper/SKILL.md) to
+Use `risk-coverage-mapper` to
 generate the test↔risk map.
 
 ## Step 5 - Quarterly review
@@ -130,7 +130,7 @@ When a release matrix starts:
 2. Identify release-specific risks beyond the persistent ones
    (per the release's feature set).
 3. Per
-   [`risk-matrix`](../risk-matrix/SKILL.md), assign the
+   `risk-matrix`, assign the
    release-specific testing strategy.
 
 ## Worked example - e-commerce product
@@ -155,7 +155,7 @@ top areas to invest in.
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | One-time creation, never reviewed | Register becomes stale | Quarterly review cadence |
-| Mixing per-release risks into the product register | Confuses long-lived from transient | Per-release risks in [`risk-matrix`](../risk-matrix/SKILL.md); product-level here |
+| Mixing per-release risks into the product register | Confuses long-lived from transient | Per-release risks in `risk-matrix`; product-level here |
 | No retired-risks section | History lost; "why did we stop testing X?" unanswered | Always keep a retired-risks log |
 | Score without recent re-review | Stale scores misinform planning | "Last review" date column; auto-flag stale entries |
 | Mitigation missing test coverage link | Mitigation is theoretical; no evidence it works | Always link mitigation → test (or flag as gap) |
@@ -166,7 +166,7 @@ top areas to invest in.
 
 - **Subjective scoring.** Impact × likelihood depends on judgment;
   inter-rater agreement is moderate. Use the rubric anchors in
-  [`risk-matrix`](../risk-matrix/SKILL.md) Step 2.
+  `risk-matrix` Step 2.
 - **Quarterly cadence is a floor.** Volatile products may need
   monthly; mature products may extend to annual.
 - **Doesn't replace per-feature analysis.** Product risks are
@@ -189,7 +189,7 @@ top areas to invest in.
   [glossary.istqb.org](https://glossary.istqb.org/) - "product
   risk", "project risk", "risk identification".
 - Composes:
-  [`risk-matrix`](../risk-matrix/SKILL.md) (release-scoped),
-  [`risk-coverage-mapper`](../risk-coverage-mapper/SKILL.md).
+  `risk-matrix` (release-scoped),
+  `risk-coverage-mapper`.
 - Sibling skill:
-  [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md) - different scope (project-level: schedule, env, people).
+  `project-risk-register-builder` - different scope (project-level: schedule, env, people).

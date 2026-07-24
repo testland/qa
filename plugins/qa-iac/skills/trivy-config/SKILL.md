@@ -342,5 +342,5 @@ comma-separated list from: `azure-arm`, `cloudformation`, `dockerfile`,
   OPA bundle for all built-in checks.
 - [`tfsec-policy`][tfsec] - Migration context: tfsec is transitioning
   to Trivy; this skill is the forward path.
-- [`checkov-policy`](../checkov-policy/SKILL.md) - Sister scanner;
+- `checkov-policy` - Sister scanner;
   broader Python-check framework, different rule coverage.

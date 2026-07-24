@@ -71,8 +71,9 @@ carries a hard floor (see below).
 - **D6 - Terminology compliance:** ISTQB-canonical terms cited to canonical
   sources; tool-specific claims grounded in fetched vendor docs;
   practitioner-emergent terms (flaky test, contract test, golden file)
-  attributed to industry-engineering sources, not ISTQB. **Uncited claims are
-  a hard reject.**
+  attributed to industry-engineering sources, not ISTQB. Sources may sit
+  inline or in a checked References/Sources section. **Facts with no canonical
+  source anywhere are a hard reject.**
 
 The full per-dimension rubric and review questions live in
 [`REVIEWER_CHECKLIST.md`](REVIEWER_CHECKLIST.md).
@@ -106,8 +107,8 @@ If any check fails, reshape the scope before authoring.
    terminology; ISO 25010 / 29119 / IEEE 829 for standards-level concepts;
    the W3C WCAG 2.x specs for accessibility; OWASP for security; and the
    official vendor docs for any tool wrapped in a skill (Playwright,
-   Cypress, k6, dbt, Pact, etc.). Cite URLs inline at the point of each
-   claim - not as an appended References list.
+   Cypress, k6, dbt, Pact, etc.). Cite each claim's source inline or in a
+   checked References/Sources section - every claim must be verifiable.
 
 4. **Self-check against D1-D6** - the reviewer applies the rubric to the PR;
    there is no stored score and no rating field.
@@ -146,8 +147,8 @@ for the full recipe.
 - Generic best-practices prose not grounded in any cited source.
 - Tool-specific commands/flags reproduced from training data that have
   drifted vs. current docs.
-- `References:` lists at the bottom without inline citations at the point
-  of use.
+- Facts with no canonical source anywhere - neither inline nor in a
+  References/Sources section.
 - Persona-shaped scopes that can't name a trigger condition (descriptions
   like "expert in X" with no "Use when…" or no concrete output). The lint
   catches "You are…" / "I help…" openers, but reviewers also reject scopes

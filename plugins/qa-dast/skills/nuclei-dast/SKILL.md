@@ -333,7 +333,7 @@ surface findings inline in pull request diffs.
 | Skip `-j` / `-jsonl` output | Findings are stdout-only; can't feed the finding-triage step | Always pass `-j -o <file>` (Step 7) |
 | Skip `-rl` in CI on shared infra | Default 150 req/s spikes load on shared staging | Set `-rl 30` or lower (Step 8) |
 | Run `-validate` only, skip a real scan | Syntax passes but matchers may produce no output | Always run a real scan against a known-vulnerable target to confirm match |
-| Suppress findings without a tracked justification | Invisible risk debt | Use an IGNORE list with date + ticket, same pattern as ZAP config TSV (see [`zap-baseline`](../zap-baseline/SKILL.md) Step 6) |
+| Suppress findings without a tracked justification | Invisible risk debt | Use an IGNORE list with date + ticket, same pattern as ZAP config TSV (see `zap-baseline` Step 6) |
 | Treat `info` severity as noise | `info` templates surface exposed panels, paths, and tech stack - useful for reconnaissance hardening | Route `info` findings to finding triage, not direct suppression |
 
 ## Limitations
@@ -359,5 +359,5 @@ surface findings inline in pull request diffs.
 - [template-struct][template-struct] - YAML template structure and info block fields
 - [nuclei-faq][nuclei-faq] - validation and responsible use guidance
 - github.com/projectdiscovery/nuclei-templates - community template library
-- [`zap-baseline`](../zap-baseline/SKILL.md) - companion passive DAST scanner
-- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - layered DAST workflow (baseline + full + optional Nuclei)
+- `zap-baseline` - companion passive DAST scanner
+- `dast-scan-cadence-author` - layered DAST workflow (baseline + full + optional Nuclei)

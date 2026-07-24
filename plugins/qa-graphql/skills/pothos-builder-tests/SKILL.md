@@ -216,8 +216,8 @@ mismatch.
 ## Limitations
 
 - **No HTTP behaviour.** `graphql()` skips transport; for header
-  / middleware testing use [`apollo-server-tests`](../apollo-server-tests/SKILL.md)
-  or [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md).
+  / middleware testing use `apollo-server-tests`
+  or `graphql-yoga-tests`.
 - **Plugin combination explodes.** Each Pothos plugin changes
   the output; test the actual combination used in prod.
 - **TypeScript strict mode required.** Per Pothos docs: "strict
@@ -235,11 +235,11 @@ mismatch.
 - graphql-js `graphql()` function:
   [graphql.org/graphql-js/graphql/](https://graphql.org/graphql-js/graphql/).
 - Sibling frameworks (where Pothos schemas plug in):
-  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
-  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
-  [`mercurius-tests`](../mercurius-tests/SKILL.md).
+  `apollo-server-tests`,
+  `graphql-yoga-tests`,
+  `mercurius-tests`.
 - Companion catalogs:
-  [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md),
-  [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
+  `introspection-attack-surface-reference`,
+  `persisted-query-strategy-reference`.
 - Contract drift:
   `graphql-schema-regression`.

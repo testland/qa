@@ -20,16 +20,16 @@ what happened in a structured-enough format for management to
 aggregate, while leaving room for the tester to learn freely.
 
 This skill is a **pure reference** consumed by
-[`manual-test-debrief`](../manual-test-debrief/SKILL.md) and the
+`manual-test-debrief` and the
 tour-catalogues
-([`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md)).
+(`exploratory-tours-reference`).
 
 For the canonical heuristic catalogs the tester applies during a
 session, see
-[`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-[`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
-[`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
-[`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md).
+`hiccupps-f-heuristic`,
+`sfdpot-exploratory-heuristic`,
+`fcc-cuts-vids-heuristic`,
+`crusspic-stmpl-heuristic`.
 
 ## When to use
 
@@ -181,7 +181,7 @@ These feed the testing-strategy review at sprint planning.
 ## PROOF debrief
 
 Per
-[`manual-test-debrief`](../manual-test-debrief/SKILL.md) - the
+`manual-test-debrief` - the
 post-session debrief structure:
 
 | Letter | Stands for |
@@ -243,9 +243,9 @@ the session sheet is filed.
   [developsense.com](https://developsense.com/).
 - Hendrickson E. *Explore It!* (Pragmatic Bookshelf, 2013) - book.
 - Sibling references (heuristic catalogues the session applies):
-  [`hiccupps-f-heuristic`](../hiccupps-f-heuristic/SKILL.md),
-  [`sfdpot-exploratory-heuristic`](../sfdpot-exploratory-heuristic/SKILL.md),
-  [`fcc-cuts-vids-heuristic`](../fcc-cuts-vids-heuristic/SKILL.md),
-  [`crusspic-stmpl-heuristic`](../crusspic-stmpl-heuristic/SKILL.md),
-  [`exploratory-tours-reference`](../exploratory-tours-reference/SKILL.md).
-- Consumed by: [`manual-test-debrief`](../manual-test-debrief/SKILL.md).
+  `hiccupps-f-heuristic`,
+  `sfdpot-exploratory-heuristic`,
+  `fcc-cuts-vids-heuristic`,
+  `crusspic-stmpl-heuristic`,
+  `exploratory-tours-reference`.
+- Consumed by: `manual-test-debrief`.

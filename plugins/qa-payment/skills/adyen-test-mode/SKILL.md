@@ -22,7 +22,7 @@ webhook** more explicitly. Both surfaces need tests.
   API.
 - Webhook handling tests.
 - 3DS flow tests per
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md).
+  `3ds-test-flow-reference`.
 
 ## Authoring
 
@@ -192,10 +192,10 @@ jobs:
 - Webhook HMAC verification:
   [docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures).
 - Companion catalogs:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),
-  [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).
+  `payment-flow-states-reference`,
+  `3ds-test-flow-reference`,
+  `pci-dss-scope-reference`.
 - Sibling SDKs:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md),
-  [`braintree-test-cards`](../braintree-test-cards/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `paypal-sandbox`,
+  `braintree-test-cards`.

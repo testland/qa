@@ -27,10 +27,10 @@ out of scope here.
   self-hosted CLI-only flow.
 
 If the team is already deep in JMeter, the migration cost is non-
-trivial - evaluate [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md)
+trivial - evaluate `jmeter-load-testing`
 in place. For Python / Locust shops, see
-[`locust-load-testing`](../locust-load-testing/SKILL.md). For JVM /
-Gatling, see [`gatling-load-testing`](../gatling-load-testing/SKILL.md).
+`locust-load-testing`. For JVM /
+Gatling, see `gatling-load-testing`.
 
 ## Install
 
@@ -265,7 +265,7 @@ job; the summary artifact is uploaded regardless via `if: always()`.
   Operator on Kubernetes.
 - **No native browser execution.** The `k6/browser` module covers it
   but adds Chromium overhead; for browser-driven perf testing,
-  consider [`lighthouse-perf`](../lighthouse-perf/SKILL.md) instead.
+  consider `lighthouse-perf` instead.
 - **JS sandbox limits.** k6 uses goja (Go-based ES5+/some-ES6),
   not Node.js. npm packages with native deps don't work; pure-JS
   packages do. Use `k6 archive` to bundle.
@@ -277,9 +277,9 @@ job; the summary artifact is uploaded regardless via `if: always()`.
   flags.
 - [k6-thresholds][thresholds] - threshold syntax, aggregation methods,
   abortOnFail / delayAbortEval.
-- [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md),
-  [`gatling-load-testing`](../gatling-load-testing/SKILL.md),
-  [`locust-load-testing`](../locust-load-testing/SKILL.md) - 
+- `jmeter-load-testing`,
+  `gatling-load-testing`,
+  `locust-load-testing` - 
   alternatives by language stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
+- `perf-budget-gate` - downstream
   gate that aggregates k6 / lighthouse / load-runner verdicts.

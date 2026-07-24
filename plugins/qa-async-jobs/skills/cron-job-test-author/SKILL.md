@@ -18,7 +18,7 @@ not a single tool.
 - Authoring or reviewing tests for any time-scheduled job:
   - Unix cron (crontab)
   - Kubernetes CronJobs (`apiVersion: batch/v1`)
-  - BullMQ `repeat` jobs (Step 6 of [`bullmq-tests`](../bullmq-tests/SKILL.md))
+  - BullMQ `repeat` jobs (Step 6 of `bullmq-tests`)
   - Sidekiq schedulers (sidekiq-cron, sidekiq-scheduler gems)
   - APScheduler (Python)
   - Quartz (Java)
@@ -201,7 +201,7 @@ For each cron job in scope:
 4. ✅ Overlap protection is documented + tested (Step 4)
 5. ✅ Stale-lock recovery exists (Step 5)
 6. ✅ Timezone is explicit, not implicit (Step 6)
-7. ✅ Job idempotency is verified (cross-ref [`idempotency-test-author`](../idempotency-test-author/SKILL.md))
+7. ✅ Job idempotency is verified (cross-ref `idempotency-test-author`)
 8. ✅ Job logs include cron-expression context for debugging
 
 ## Anti-patterns
@@ -232,10 +232,10 @@ For each cron job in scope:
 - en.wikipedia.org/wiki/Cron - cron format spec
 - Kubernetes CronJob: kubernetes.io/docs/concepts/workloads/controllers/cron-jobs
 - IANA TZ database: iana.org/time-zones
-- [`bullmq-tests`](../bullmq-tests/SKILL.md) Step 6 - BullMQ
+- `bullmq-tests` Step 6 - BullMQ
   repeat-job pattern
-- [`sidekiq-tests`](../sidekiq-tests/SKILL.md) - Sidekiq scheduling
-- [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
+- `sidekiq-tests` - Sidekiq scheduling
+- `idempotency-test-author` - 
   critical companion (idempotency is the only safe answer to
   duplicate runs)
 - `synthetic-monitor-author` - heartbeat-based missed-run alerting

@@ -161,10 +161,10 @@ Datafile lives in the repo; no SDK key needed for tests.
 - Forced decisions:
   [docs.developers.optimizely.com/feature-experimentation/docs/forced-decision-methods](https://docs.developers.optimizely.com/feature-experimentation/docs/forced-decision-methods).
 - Companion catalogs:
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md),
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md).
+  `guardrail-metrics-reference`,
+  `peeking-problem-reference`,
+  `ab-test-validity-checklist`.
 - Sibling SDKs:
-  [`statsig-test`](../statsig-test/SKILL.md),
-  [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md).
+  `statsig-test`,
+  `vwo-test`,
+  `amplitude-experiment-test`.

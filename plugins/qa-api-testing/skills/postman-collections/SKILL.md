@@ -34,8 +34,8 @@ scope for an automated agent.
 
 If the team uses TypeScript / JavaScript and prefers code-first
 authoring, evaluate
-[`tavern-testing`](../tavern-testing/SKILL.md) (YAML) or
-[`karate-testing`](../karate-testing/SKILL.md) (Karate DSL) before
+`tavern-testing` (YAML) or
+`karate-testing` (Karate DSL) before
 adopting Postman/Newman - those keep tests next to source code rather
 than in a separate JSON artifact.
 
@@ -221,8 +221,8 @@ collection fails, the reports are exactly when you need them.
 
 - **No code-first authoring.** Postman's authoring story is the GUI;
   the JSON file is the artifact. Teams that prefer code-first DSLs
-  should evaluate [`karate-testing`](../karate-testing/SKILL.md) or
-  [`tavern-testing`](../tavern-testing/SKILL.md).
+  should evaluate `karate-testing` or
+  `tavern-testing`.
 - **Sandboxed JS only.** Tests can't import npm packages - the `pm.*`
   sandbox provides chai / lodash / cheerio pre-loaded; for richer
   logic, consider Karate or Tavern.
@@ -233,8 +233,8 @@ collection fails, the reports are exactly when you need them.
 
 - [newman-readme][readme] - install, `newman run` syntax, flags,
   reporters, example invocation.
-- [`tavern-testing`](../tavern-testing/SKILL.md) - YAML alternative.
-- [`karate-testing`](../karate-testing/SKILL.md) - DSL alternative.
-- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
+- `tavern-testing` - YAML alternative.
+- `karate-testing` - DSL alternative.
+- `schemathesis-fuzzing` - 
   property-based fuzzing as a complement (not replacement) for
   example-based collections.

@@ -236,10 +236,10 @@ Secrets configured in **Project Settings → CI/CD → Variables**
 ## References
 
 - GitLab CI/CD docs at `docs.gitlab.com/ee/ci/`.
-- [`github-actions-test-jobs`](../github-actions-test-jobs/SKILL.md),
-  [`jenkinsfile-test-stages`](../jenkinsfile-test-stages/SKILL.md),
-  [`circleci-test-configs`](../circleci-test-configs/SKILL.md) - 
+- `github-actions-test-jobs`,
+  `jenkinsfile-test-stages`,
+  `circleci-test-configs` - 
   alternatives.
-- [`ci-test-job-conventions`](../ci-test-job-conventions/SKILL.md) - cross-CI conventions.
+- `ci-test-job-conventions` - cross-CI conventions.
 - `junit-xml-analysis` - JUnit XML parser.
 - `cobertura-analysis` - Cobertura parser (GitLab's native coverage format).

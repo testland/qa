@@ -220,7 +220,7 @@ test('Path 1 - happy path', async ({ page }) => {
 
 ## Step 6 - Pair with AI test generator
 
-The model + paths can feed [`ai-test-generator`](../ai-test-generator/SKILL.md):
+The model + paths can feed `ai-test-generator`:
 
 ```yaml
 input:
@@ -277,5 +277,5 @@ paths.
 - [mbt][mbt] - Model-based testing definition; finite-state automata;
   abstract vs executable test suites; coverage criteria; black-box
   framing.
-- [`ai-test-generator`](../ai-test-generator/SKILL.md) - 
+- `ai-test-generator` - 
   downstream consumer of the generated paths.

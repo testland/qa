@@ -260,8 +260,8 @@ breakpoint on a schedule against a dedicated environment.
 ## Related skills
 
 Optional deeper dives, if you have them installed:
-[`k6-load-testing`](../k6-load-testing/SKILL.md),
-[`gatling-load-testing`](../gatling-load-testing/SKILL.md),
-[`jmeter-load-testing`](../jmeter-load-testing/SKILL.md),
-[`locust-load-testing`](../locust-load-testing/SKILL.md),
-[`latency-percentile-analyzer`](../latency-percentile-analyzer/SKILL.md).
+`k6-load-testing`,
+`gatling-load-testing`,
+`jmeter-load-testing`,
+`locust-load-testing`,
+`latency-percentile-analyzer`.

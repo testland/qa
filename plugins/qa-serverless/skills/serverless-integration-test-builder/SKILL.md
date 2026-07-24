@@ -77,12 +77,12 @@ multiple emulators only when the project mixes platforms (e.g., Vercel app
 
 | Platform | Test path | Skill |
 |---|---|---|
-| AWS Lambda (Node/Python/etc.) | `sam local invoke` or direct handler | [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md) |
-| AWS Lambda (.NET) | Amazon.Lambda.TestUtilities | [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md) |
-| Cloudflare Workers | vitest-pool-workers / Miniflare | [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md) |
-| Vercel Edge | @edge-runtime/jest-environment | [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md) |
-| Netlify Functions | netlify dev + direct handler | [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md) |
-| Serverless Framework | serverless-offline / direct | [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md) |
+| AWS Lambda (Node/Python/etc.) | `sam local invoke` or direct handler | `aws-sam-local-testing` |
+| AWS Lambda (.NET) | Amazon.Lambda.TestUtilities | `lambda-test-tools-net` |
+| Cloudflare Workers | vitest-pool-workers / Miniflare | `cloudflare-workers-miniflare` |
+| Vercel Edge | @edge-runtime/jest-environment | `vercel-edge-runtime-testing` |
+| Netlify Functions | netlify dev + direct handler | `netlify-functions-tests` |
+| Serverless Framework | serverless-offline / direct | `serverless-framework-test-plugin` |
 
 ## Step 3 - Generate test events per event source
 
@@ -146,8 +146,8 @@ describe('get-user', () => {
 ## Step 5 - Cold-start + timeout budget assertions
 
 For each function, derive a budget from
-[`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md)
-+ [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+`cold-start-budget-reference`
++ `lambda-timeout-budget-reference`.
 
 Typical cold starts per runtime (per AWS / Cloudflare / Vercel
 docs; bigger packages and memory classes skew higher):
@@ -246,7 +246,7 @@ Two-tier: local-fast tests on every PR; deploy + smoke on main.
 ## Gaps
 
 - `legacy-export` - no integration tests; on backlog.
-- Cold-start tests not feasible locally for any function (per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md)).
+- Cold-start tests not feasible locally for any function (per `cold-start-budget-reference`).
 
 ## How to add a new function
 
@@ -282,15 +282,15 @@ This skill produces:
 ## References
 
 - Companion catalogs:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+  `cold-start-budget-reference`,
+  `lambda-timeout-budget-reference`.
 - Per-platform tools:
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`lambda-test-tools-net`](../lambda-test-tools-net/SKILL.md),
-  [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md),
-  [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md),
-  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md),
-  [`serverless-framework-test-plugin`](../serverless-framework-test-plugin/SKILL.md).
+  `aws-sam-local-testing`,
+  `lambda-test-tools-net`,
+  `cloudflare-workers-miniflare`,
+  `vercel-edge-runtime-testing`,
+  `netlify-functions-tests`,
+  `serverless-framework-test-plugin`.
 - Cross-plugin:
   `testcontainers` (in the qa-test-environment plugin)
   - LocalStack alternative for AWS-service emulation.

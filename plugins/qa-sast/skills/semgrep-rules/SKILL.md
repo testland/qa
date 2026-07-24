@@ -206,7 +206,7 @@ jobs:
 ## Limitations
 
 - Pattern matching can miss cross-file taint flows; for those,
-  pair with [`codeql-queries`](../codeql-queries/SKILL.md).
+  pair with `codeql-queries`.
 - Registry rulesets evolve; pin specific versions for production.
 - Semgrep AppSec Platform features (org policies, supply-chain
   scanning) are paid; the OSS engine covers the patterns above.
@@ -217,7 +217,7 @@ jobs:
 - [sg-cli][sg-cli] - full CLI reference, exit codes, all flags
 - semgrep.dev/docs/writing-rules/rule-syntax - custom rules
 - semgrep.dev/docs/semgrep-ci/overview - CI integration
-- [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
-  [`codeql-queries`](../codeql-queries/SKILL.md),
-  [`bandit-python`](../bandit-python/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- `sonarqube-rules`,
+  `codeql-queries`,
+  `bandit-python`,
+  `gosec-go` - sister scanners

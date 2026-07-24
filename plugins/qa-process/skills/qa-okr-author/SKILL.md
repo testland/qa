@@ -31,7 +31,7 @@ Required:
 | Input | Source | Why load-bearing |
 |---|---|---|
 | **Quarterly objective(s)** | Manager-provided; aligned with engineering / product OKRs | The skill drafts KRs *under* objectives the team owns; it won't invent strategic direction |
-| **Current-state metrics** | At least one of: [`risk-matrix`](../risk-matrix/SKILL.md) output, a recent defect-trend report, `test-run-summary-author` cross-run-trend, [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md) audit | Every KR needs a baseline - without it, the target is unanchored |
+| **Current-state metrics** | At least one of: `risk-matrix` output, a recent defect-trend report, `test-run-summary-author` cross-run-trend, `test-pyramid-balancer` audit | Every KR needs a baseline - without it, the target is unanchored |
 | **Time horizon** | Quarterly (default) or other (semi-annual) | OKR cadence; per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results), quarterly is the canonical rhythm |
 | **Prior OKR set** | If exists; the prior quarter's KRs + their grading | Continuity: drift from prior commitments is itself a signal |
 
@@ -43,13 +43,13 @@ Five canonical QA Objective shapes the skill recognises (catalog, not prescripti
 
 ### Shape 1 - Strengthen the test pyramid
 
-Anchored on [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md). Used when the suite is E2E-heavy and shifting weight downward improves cycle time + maintainability.
+Anchored on `test-pyramid-balancer`. Used when the suite is E2E-heavy and shifting weight downward improves cycle time + maintainability.
 
 | KR axis | Example KR | Baseline source |
 |---|---|---|
 | Layer ratio | unit:integration:E2E reaches 70:20:10 | current ratio per `test-pyramid-balancer` |
 | Cycle time | regression suite duration < 45 min per shard | current per `test-run-summary-author` |
-| E2E suite budget | E2E test count ≤ 200, growth rate ≤ 5/quarter | [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) |
+| E2E suite budget | E2E test count ≤ 200, growth rate ≤ 5/quarter | `e2e-suite-budget` |
 
 ### Shape 2 - Reduce escape-defect rate
 
@@ -246,9 +246,9 @@ Output:
 
 ## Hand-off targets
 
-- **Author the strategy doc the OKRs sit inside** → [`test-strategy-author`](../test-strategy-author/SKILL.md).
+- **Author the strategy doc the OKRs sit inside** → `test-strategy-author`.
 - **Generate the cross-run trend for Shape 3** → `test-run-summary-author` (cross-run-trend output shape).
-- **Audit the pyramid baseline for Shape 1** → [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md).
+- **Audit the pyramid baseline for Shape 1** → `test-pyramid-balancer`.
 - **Quarterly OKR retro / drift review** → deferred (candidate `qa-okr-retro-reviewer` agent, Phase 7+).
 
 ## References
@@ -260,5 +260,5 @@ Output:
 - ISTQB glossary - escaped defect: https://glossary.istqb.org/en_US/term/escaped-defect
 - Google Testing Blog, "Flaky Tests at Google and How We Mitigate Them" - flake-prevalence baseline for Shape 4 KRs (about 16% of tests show some flakiness): https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 - PractiTest 2026 State of Testing Report - manager-tier survey; 19.9% of teams use AI for risk identification (cited in Shape 2 rationale): https://www.practitest.com/state-of-testing/
-- [`test-strategy-author`](../test-strategy-author/SKILL.md), [`risk-matrix`](../risk-matrix/SKILL.md), [`test-pyramid-balancer`](../test-pyramid-balancer/SKILL.md), [`e2e-suite-budget`](../e2e-suite-budget/SKILL.md) - sibling skills in the same plugin that feed inputs.
+- `test-strategy-author`, `risk-matrix`, `test-pyramid-balancer`, `e2e-suite-budget` - sibling skills in the same plugin that feed inputs.
 - `test-run-summary-author`, `mttr-mtbf-tracker` - cross-plugin baseline-source skills.

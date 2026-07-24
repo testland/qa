@@ -7,8 +7,8 @@ description: "Reference catalog for WCAG 2.2 keyboard-navigation conformance - c
 
 > Reference catalog for **how** to verify keyboard-navigation
 > conformance. Pairs with the runner skills
-> ([`axe-a11y`](../axe-a11y/SKILL.md), [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-> [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md)).
+> (`axe-a11y`, `pa11y-a11y`,
+> `lighthouse-a11y`).
 
 ## Overview
 
@@ -30,8 +30,8 @@ focus management, and focus visibility.
 - Triaging an accessibility audit finding tagged with one of the
   SCs below.
 - Configuring per-rule severities for
-  [`axe-a11y`](../axe-a11y/SKILL.md) /
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md).
+  `axe-a11y` /
+  `pa11y-a11y`.
 
 ## Success Criteria
 
@@ -76,7 +76,7 @@ standard keys are required."
 | Embedded `<iframe>` (e.g. third-party widget) traps Tab   | Set `tabindex="-1"` on the iframe OR document the exit (Esc + Tab) in surrounding label. |
 | Custom date picker locks focus inside on first focus      | Provide Tab to exit the calendar and continue to the next field. |
 
-See [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) for the
+See `wcag-focus-trap` for the
 **intentional**-trap convention (modal focus management) which is
 distinct from a violation.
 
@@ -157,7 +157,7 @@ obscured. Stricter; relevant for high-stakes forms.
 3. Shift+Tab from first → last interactive element (cycle).
 4. Escape closes the dialog and returns focus to the trigger.
 
-(See [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) for the full
+(See `wcag-focus-trap` for the full
 modal pattern.)
 
 ### Menu / dropdown
@@ -169,7 +169,7 @@ modal pattern.)
 5. Escape closes the menu and returns focus to the trigger.
 
 This matches the [ARIA Menu pattern][aria-menu] (referenced from
-[`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md)).
+`aria-authoring-patterns`).
 
 [aria-menu]: https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
 
@@ -184,9 +184,9 @@ This matches the [ARIA Menu pattern][aria-menu] (referenced from
 ## CI integration
 
 The patterns above translate to per-test assertions in
-[`axe-a11y`](../axe-a11y/SKILL.md) /
-[`pa11y-a11y`](../pa11y-a11y/SKILL.md) configurations. The
-[`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) skill
+`axe-a11y` /
+`pa11y-a11y` configurations. The
+`a11y-violation-gate` skill
 gates the build on new violations of these SCs.
 
 ## Anti-patterns
@@ -202,12 +202,12 @@ gates the build on new violations of these SCs.
 ## References
 
 - [wcag22][wcag22] - WCAG 2.2 specification.
-- [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) - focus
+- `wcag-focus-trap` - focus
   management for modals (the intentional-trap pattern).
-- [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md) - 
+- `wcag-color-contrast` - 
   for SC 1.4.11 focus-indicator contrast.
-- [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md) - for canonical interactive-widget patterns.
-- [`axe-a11y`](../axe-a11y/SKILL.md),
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md) - runners that
+- `aria-authoring-patterns` - for canonical interactive-widget patterns.
+- `axe-a11y`,
+  `pa11y-a11y`,
+  `lighthouse-a11y` - runners that
   detect SC violations programmatically.

@@ -237,9 +237,9 @@ results.
 - [Elasticsearch Rank Eval API] - request/response schema, metrics
 - Quepid (judgment authoring UI) - github.com/o19s/quepid
 - Splainer (debug per-doc ranking) - github.com/o19s/splainer-search
-- [`opensearch-relevance-tests`](../opensearch-relevance-tests/SKILL.md) - 
+- `opensearch-relevance-tests` - 
   sister skill (compatible API)
-- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) - 
+- `vector-search-recall-tests` - 
   vector search analogue
 
 [Elasticsearch Rank Eval API]: https://www.elastic.co/docs/api/doc/elasticsearch/operation/operation-rank-eval

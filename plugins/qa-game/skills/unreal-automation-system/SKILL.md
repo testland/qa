@@ -25,11 +25,11 @@ Python / Blueprint).
 
 Composes with:
 
-- [`game-test-categories-reference`](../game-test-categories-reference/SKILL.md)
+- `game-test-categories-reference`
   for the canonical six categories Unreal's five categories map to.
-- [`platform-cert-overview-reference`](../platform-cert-overview-reference/SKILL.md)
+- `platform-cert-overview-reference`
   for cert-gated requirements automation tests should cover.
-- [`multiplayer-state-machine-coverage`](../multiplayer-state-machine-coverage/SKILL.md)
+- `multiplayer-state-machine-coverage`
   for replication / dedicated-server state coverage authored as
   automation tests.
 
@@ -429,7 +429,7 @@ CI pipelines typically split the test run into:
 
 For a sketch of how internal QA categories
 (`game-test-categories-reference`) map to Unreal's flags, see the
-[category reference](../game-test-categories-reference/SKILL.md).
+category reference.
 
 ## Anti-patterns
 

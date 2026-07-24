@@ -15,7 +15,7 @@ Ginkgo is a Go BDD framework. The Kubernetes ecosystem standardized
 on Ginkgo + Gomega for its test suites; it's the most-used Go BDD
 framework in 2026.
 
-For non-BDD Go projects, [`go-test`](../go-test/SKILL.md) (stdlib)
+For non-BDD Go projects, `go-test` (stdlib)
 is the idiomatic choice. Ginkgo fits when:
 
 - The team has a BDD culture (rspec / mocha background).
@@ -204,7 +204,7 @@ ginkgo --junit-report=junit.xml -r
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Use Ginkgo for non-BDD codebase | Verbose vs stdlib `testing` | Use [`go-test`](../go-test/SKILL.md) for non-BDD |
+| Use Ginkgo for non-BDD codebase | Verbose vs stdlib `testing` | Use `go-test` for non-BDD |
 | Commit `FDescribe` / `FIt` accidentally | Suite runs only focused specs | `--no-focus` flag (Step 9) |
 | Skip `Eventually` for async assertions | Sleep-based polls are flaky | Use `Eventually`/`Consistently` (Step 5) |
 | Heavy nesting (5+ levels) | Test setup hard to reason about | Flatten with `Describe`+`It` |
@@ -226,7 +226,7 @@ ginkgo --junit-report=junit.xml -r
 - [go-gomega][go-gomega] - Gomega matchers reference
 - onsi.github.io - landing
 - github.com/onsi/ginkgo - repository
-- [`go-test`](../go-test/SKILL.md),
-  [`cargo-test`](../cargo-test/SKILL.md),
-  [`rstest-tests`](../rstest-tests/SKILL.md) - sister tools
+- `go-test`,
+  `cargo-test`,
+  `rstest-tests` - sister tools
 - `test-code-conventions` (qa-test-review)

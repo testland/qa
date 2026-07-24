@@ -33,8 +33,8 @@ intended CI fit. Verify your license before authoring CI workflows.
 - Enterprise edition's scheduled scan + dashboard model fits the
   team's scale.
 
-For most teams, [`zap-baseline`](../zap-baseline/SKILL.md) +
-[`nightvision-dast`](../nightvision-dast/SKILL.md) cover the same
+For most teams, `zap-baseline` +
+`nightvision-dast` cover the same
 surface without Burp's licensing friction.
 
 ## Step 1 - License + install
@@ -215,8 +215,8 @@ jobs:
 - portswigger.net/burp/documentation - Pro + Enterprise docs
 - portswigger.net/burp/documentation/enterprise - Enterprise CI
 - portswigger.net/bappstore - BApp Store
-- [`zap-baseline`](../zap-baseline/SKILL.md),
-  [`nightvision-dast`](../nightvision-dast/SKILL.md) - sister DAST tools
+- `zap-baseline`,
+  `nightvision-dast` - sister DAST tools
   (use ZAP first; Burp adds layered paid coverage)
-- [`dast-scan-cadence-author`](../dast-scan-cadence-author/SKILL.md) - 
+- `dast-scan-cadence-author` - 
   build-an-X for layered DAST

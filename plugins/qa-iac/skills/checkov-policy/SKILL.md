@@ -220,8 +220,8 @@ kics scan -p . --report-formats json -o ./kics-results
 
 - [ch][ch] - Checkov overview, supported IaC frameworks, common
   CLI usage, Palo Alto Networks maintainer.
-- [`tfsec-policy`](../tfsec-policy/SKILL.md),
-  [`kics-policy`](../kics-policy/SKILL.md) - sister scanners.
-- [`policy-as-code-runner`](../policy-as-code-runner/SKILL.md) - 
+- `tfsec-policy`,
+  `kics-policy` - sister scanners.
+- `policy-as-code-runner` - 
   custom policies via OPA / Conftest (Checkov for built-in; OPA
   for custom).

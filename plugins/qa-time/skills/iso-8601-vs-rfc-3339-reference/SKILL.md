@@ -171,13 +171,13 @@ If you need date-only, document explicitly and test parsing.
 - Go time package:
   [pkg.go.dev/time](https://pkg.go.dev/time).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`leap-second-reference`](../leap-second-reference/SKILL.md).
+  `dst-transition-reference`,
+  `leap-second-reference`.
 - Consumed by:
-  [`libfaketime-c`](../libfaketime-c/SKILL.md),
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md),
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `libfaketime-c`,
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `freezegun-python`,
+  `timecop-ruby`,
+  `mockclock-jvm`,
+  `timezone-test-matrix-builder`.

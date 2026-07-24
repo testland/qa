@@ -21,8 +21,8 @@ Modern usage:
 - **Migration cases** from Jasmine to Jest (mostly mechanical).
 - **Minimal-deps** projects that want no external matcher libraries.
 
-For new browser-side projects, prefer [`vitest-tests`](../vitest-tests/SKILL.md)
-or [`jest-tests`](../jest-tests/SKILL.md). This skill covers the
+For new browser-side projects, prefer `vitest-tests`
+or `jest-tests`. This skill covers the
 maintenance use case + the migration path.
 
 ## When to use
@@ -248,8 +248,8 @@ the syntax transformations.
 - jasmine.github.io/api/edge/matchers.html - matcher list
 - karma-runner.github.io - Karma (legacy)
 - github.com/skovhus/jest-codemods - Jasmine→Jest migration codemods
-- [`jest-tests`](../jest-tests/SKILL.md),
-  [`vitest-tests`](../vitest-tests/SKILL.md),
-  [`mocha-tests`](../mocha-tests/SKILL.md),
-  [`ava-tests`](../ava-tests/SKILL.md) - sister tools
+- `jest-tests`,
+  `vitest-tests`,
+  `mocha-tests`,
+  `ava-tests` - sister tools
 - `test-code-conventions` (qa-test-review) - test code hygiene

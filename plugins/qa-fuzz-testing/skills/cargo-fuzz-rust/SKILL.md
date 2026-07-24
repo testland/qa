@@ -14,9 +14,9 @@ unstable compiler features.
 
 For sanitiser pairing: cargo-fuzz auto-enables ASan by default
 (per the cargo-fuzz README). See
-[`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)
+`sanitiser-integration-reference`
 for ASan + UBSan composition. For corpus discipline see
-[`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+`corpus-management-reference`.
 
 ## When to use
 
@@ -26,7 +26,7 @@ for ASan + UBSan composition. For corpus discipline see
 - CI smoke fuzz alongside `cargo test`.
 
 For raw libFuzzer in C/C++ with Rust FFI see
-[`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md).
+`libfuzzer-cpp`.
 
 ## Authoring
 
@@ -178,7 +178,7 @@ fuzz/
 ## Parsing results
 
 Sanitiser report format is identical to libFuzzer / ASan - see
-[`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md)
+`sanitiser-integration-reference`
 "Reading a sanitiser report." Report anatomy (per
 [clang.llvm.org/docs/AddressSanitizer.html](https://clang.llvm.org/docs/AddressSanitizer.html)):
 
@@ -270,14 +270,14 @@ jobs:
 - `libfuzzer-sys` crate - 
   [docs.rs/libfuzzer-sys](https://docs.rs/libfuzzer-sys/).
 - Composes:
-  [`sanitiser-integration-reference`](../sanitiser-integration-reference/SKILL.md),
-  [`corpus-management-reference`](../corpus-management-reference/SKILL.md).
+  `sanitiser-integration-reference`,
+  `corpus-management-reference`.
 - Sibling fuzzers:
-  [`libfuzzer-cpp`](../libfuzzer-cpp/SKILL.md),
-  [`afl-plus-plus`](../afl-plus-plus/SKILL.md),
-  [`go-native-fuzzing`](../go-native-fuzzing/SKILL.md),
-  [`atheris-python-fuzzing`](../atheris-python-fuzzing/SKILL.md),
-  [`jazzer-jvm-fuzzing`](../jazzer-jvm-fuzzing/SKILL.md),
-  [`ossfuzz-integration`](../ossfuzz-integration/SKILL.md).
+  `libfuzzer-cpp`,
+  `afl-plus-plus`,
+  `go-native-fuzzing`,
+  `atheris-python-fuzzing`,
+  `jazzer-jvm-fuzzing`,
+  `ossfuzz-integration`.
 - Dispatcher:
-  [`fuzz-tool-selector`](../fuzz-tool-selector/SKILL.md).
+  `fuzz-tool-selector`.

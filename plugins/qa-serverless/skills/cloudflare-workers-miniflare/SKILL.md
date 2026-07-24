@@ -170,7 +170,7 @@ locally via workerd.
 | Local-mode time differs from prod | Cron / scheduled triggers won't fire | Test via deployed Worker + Cloudflare Cron Trigger |
 | Hardcoded API key in worker | Exposed in source map / fetch | Use Workers Secrets (wrangler secret) |
 | No assertion on response headers | Cache-Control / CORS bugs | Inspect response.headers |
-| Cold-start tests against local Worker | Local cold start ~0ms; not representative | Per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md), test cold-start budget on deployed Worker |
+| Cold-start tests against local Worker | Local cold start ~0ms; not representative | Per `cold-start-budget-reference`, test cold-start budget on deployed Worker |
 
 ## Limitations
 
@@ -198,9 +198,9 @@ locally via workerd.
 - Cloudflare Workers runtime overview:
   [developers.cloudflare.com/workers](https://developers.cloudflare.com/workers/).
 - Companion catalog:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).
+  `cold-start-budget-reference`.
 - Sibling Edge runtime:
-  [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md).
+  `vercel-edge-runtime-testing`.
 - Other serverless tools:
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`netlify-functions-tests`](../netlify-functions-tests/SKILL.md).
+  `aws-sam-local-testing`,
+  `netlify-functions-tests`.

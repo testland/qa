@@ -213,7 +213,7 @@ For each in-scope criterion:
 - vanta.com/solutions/soc-2 - Vanta SOC 2 product
 - drata.com/grc-central/soc-2 - Drata SOC 2 reference
 - secureframe.com/hub/soc-2 - Secureframe SOC 2 hub
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md),
-  [`hipaa-test-patterns`](../hipaa-test-patterns/SKILL.md),
-  [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
+- `gdpr-test-patterns`,
+  `hipaa-test-patterns`,
+  `audit-trail-test-author` - 
   sister test-pattern catalogs

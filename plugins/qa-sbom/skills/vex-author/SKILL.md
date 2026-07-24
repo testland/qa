@@ -292,6 +292,6 @@ block the build. It remains visible in the report for the audit trail.
 - [vex-spec-md][vex-spec-md] - OpenVEX spec: document schema, statement model,
   status values, justification codes
 - [vexctl][vexctl] - vexctl CLI: install, create, merge, attest, filter commands
-- [`syft-generation`](../syft-generation/SKILL.md) - upstream SBOM generation
+- `syft-generation` - upstream SBOM generation
   (produces the purl identifiers used in `--product` flags)
 - openvex.dev - OpenVEX landing page

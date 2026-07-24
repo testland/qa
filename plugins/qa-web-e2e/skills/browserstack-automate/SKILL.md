@@ -274,6 +274,6 @@ jobs:
 - Composes:
   `browser-matrix-strategy-reference`.
 - Sibling skills:
-  [`saucelabs-automate`](../saucelabs-automate/SKILL.md),
-  [`lambdatest-automate`](../lambdatest-automate/SKILL.md),
+  `saucelabs-automate`,
+  `lambdatest-automate`,
   `selenium-grid-4-runner`.

@@ -404,6 +404,6 @@ a configuration drift problem. See the CI note in `apollo-server-tests`.
 - Apollo Server `executeOperation` and `validationRules`:
   [apollographql.com/docs/apollo-server/testing/testing](https://www.apollographql.com/docs/apollo-server/testing/testing)
 - Attack surface context:
-  [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md)
+  `introspection-attack-surface-reference`
 - Apollo testing patterns:
-  [`apollo-server-tests`](../apollo-server-tests/SKILL.md)
+  `apollo-server-tests`

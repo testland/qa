@@ -222,9 +222,9 @@ restore on demand. Author the workflow:
 ## References
 
 - [Google Cloud DR planning guide] - DR planning context
-- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drill-level
+- `dr-drill-runner` - drill-level
   workflow that consumes verified backups
-- [`restore-time-tests`](../restore-time-tests/SKILL.md) - RTO
+- `restore-time-tests` - RTO
   verification of the restore process
 - `secrets-rotation-runner` (in the qa-secrets plugin) - 
   related rotation workflow

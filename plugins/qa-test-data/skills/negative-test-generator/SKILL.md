@@ -40,7 +40,7 @@ fields `<f1, f2, ...>`, the negative-test set covers:
 |----------------------------------------|-----------------------------------------------------|
 | Missing required field                  | Send the request without `<f1>`; expect 400 with `<f1>` named. |
 | Wrong type                              | Send `<f1>` as wrong type (string where int expected); expect 400. |
-| Out-of-range value                      | Send `<f1>` outside `[min, max]` per [`boundary-value-generator`](../boundary-value-generator/SKILL.md); expect 400. |
+| Out-of-range value                      | Send `<f1>` outside `[min, max]` per `boundary-value-generator`; expect 400. |
 | Wrong enum value                        | Send `<f1>` with a value not in `enum_values`; expect 400. |
 | Wrong format                            | String that fails the regex / format constraint; expect 400. |
 | Extra unknown field                     | Send field not in the schema; behavior depends on policy (strict reject vs. ignore). |
@@ -81,7 +81,7 @@ fields `<f1, f2, ...>`, the negative-test set covers:
 
 ### 6. Adversarial inputs
 
-Pull from [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md):
+Pull from `malicious-payload-bank`:
 
 | Field type                   | Payload classes                                  |
 |------------------------------|--------------------------------------------------|
@@ -93,7 +93,7 @@ Pull from [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md):
 Starter payloads per class (aligned with the [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 and [CWE Top 25](https://cwe.mitre.org/top25/); the full catalog with
 encoded variants and per-context selection lives in
-[`malicious-payload-bank`](../malicious-payload-bank/SKILL.md)):
+`malicious-payload-bank`):
 
 | Class | Starter payloads |
 |---|---|
@@ -220,7 +220,7 @@ def test_create_order_handles_adversarial_sku(payload):
 | Negative tests that assert vague status codes ("not 200")    | The test passes if the server returns 500 (a bug); should fail.    | Always assert specific status: 400 for validation, 401 for auth, 403 for authz, 429 for rate, etc. |
 | Skipping the "wrong type" cases                              | The most common validator bug class.                                | Always include type-mismatch cases for every field. |
 | One mega-test that covers all negatives                     | Failure attribution unclear; one failure cascades.                 | Parameterize per category; one test function per category. |
-| Negative-path coverage but no `_synthetic` data             | Real-looking PII flows through; compliance issue if logs leak.     | Use [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) for any field that could be PII. |
+| Negative-path coverage but no `_synthetic` data             | Real-looking PII flows through; compliance issue if logs leak.     | Use `synthetic-pii-generator` for any field that could be PII. |
 | Asserting `'error' in response.body`                         | Brittle; error-message text changes; locale-specific bugs.         | Assert structured field: `response.json()['errors']['<field>']` or `response.headers['X-Error-Code']`. |
 
 ## Limitations
@@ -232,8 +232,8 @@ def test_create_order_handles_adversarial_sku(payload):
   upstream.
 - **Server-error simulation requires mocking.** Categories 5 and 7
   need `api-chaos-runner`
-  or [`wiremock-stubs`](../wiremock-stubs/SKILL.md) /
-  [`msw-handlers`](../msw-handlers/SKILL.md) for the upstream
+  or `wiremock-stubs` /
+  `msw-handlers` for the upstream
   failure simulation.
 - **Per-language output styling.** Test scaffolding adapts to
   pytest / Jest / xUnit / JUnit; the skill emits the project's
@@ -242,6 +242,6 @@ def test_create_order_handles_adversarial_sku(payload):
 ## References
 
 - `acceptance-criteria-extractor` - upstream skill producing the happy-path AC.
-- [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md) - adversarial payload catalog (category 6).
-- [`boundary-value-generator`](../boundary-value-generator/SKILL.md) - sibling skill for boundary cases.
-- [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) - for any test data that includes PII.
+- `malicious-payload-bank` - adversarial payload catalog (category 6).
+- `boundary-value-generator` - sibling skill for boundary cases.
+- `synthetic-pii-generator` - for any test data that includes PII.

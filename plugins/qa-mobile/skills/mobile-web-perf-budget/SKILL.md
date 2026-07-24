@@ -206,5 +206,5 @@ team has competitive / SEO motivation.
   as INP proxy.
 - `lighthouse-perf` - the runner this skill's budgets feed.
 - `lighthouse-budget-author` - sibling: per-route budget authoring.
-- [`mobile-web-emulation-runner`](../mobile-web-emulation-runner/SKILL.md) - exercises the mobile profile in E2E tests.
+- `mobile-web-emulation-runner` - exercises the mobile profile in E2E tests.
 - `prod-canary-validator` (in the qa-shift-right plugin) - uses Web Vitals metrics in canary verdicts.

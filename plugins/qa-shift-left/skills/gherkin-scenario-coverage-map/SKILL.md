@@ -27,7 +27,7 @@ for fingerprinting.
 ## When to use
 
 - A story has been processed by
-  [`acceptance-criteria-extractor`](../acceptance-criteria-extractor/SKILL.md)
+  `acceptance-criteria-extractor`
   and one or more `.feature` files exist in a working branch.
 - The team is about to write new step definitions or wire up existing ones.
 - A sprint review finds test counts rising faster than feature count, and
@@ -244,9 +244,9 @@ Scenario 2 has no matching steps.
 - [cucumber-reporting][cucumber-reporting] - Cucumber reporting reference:
   built-in reporter plugins (`json`, `html`, `junit`, `message`, `progress`,
   `rerun`); JSON report as the canonical executed-step record.
-- [`acceptance-criteria-extractor`](../acceptance-criteria-extractor/SKILL.md) -
+- `acceptance-criteria-extractor` -
   upstream skill that produces the `.feature` files this skill consumes.
-- [`non-functional-requirement-extractor`](../non-functional-requirement-extractor/SKILL.md) - sibling for non-functional
+- `non-functional-requirement-extractor` - sibling for non-functional
   requirements; scenarios it produces are out of scope for BDD-suite coverage
   mapping.
 

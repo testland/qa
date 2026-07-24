@@ -10,8 +10,8 @@ description: "Build-an-X workflow that produces an interviewer calibration guide
 A rubric describes how to score; a calibration guide demonstrates *what* a score looks like. The structured-interview research is consistent that anchor descriptions reduce inter-rater noise but do not eliminate it - interviewers still drift on edge cases without **worked examples** of the same question scored across the whole 1-4 range. This skill produces those worked examples.
 
 The calibration guide is the third leg of the structured-interview tripod:
-- [`interview-question-author`](../interview-question-author/SKILL.md) - *what we ask*
-- [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) - *how to score*
+- `interview-question-author` - *what we ask*
+- `hiring-rubric-author` - *how to score*
 - this skill - *what each score looks like in practice*
 
 Without all three, an interview loop is structurally incomplete - the team will produce an inconsistent signal regardless of how good the questions and rubric are individually.
@@ -145,8 +145,8 @@ The output is a single markdown document with:
 
 ## Hand-off targets
 
-- **Author the upstream questions** → [`interview-question-author`](../interview-question-author/SKILL.md).
-- **Author the upstream rubric** → [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
+- **Author the upstream questions** → `interview-question-author`.
+- **Author the upstream rubric** → `hiring-rubric-author`.
 - **Bias / fairness audit of the gold-standard answers** → team's HR / legal review.
 - **Track the inter-rater agreement over the hiring round** → custom analytics; not covered here.
 
@@ -157,4 +157,4 @@ The output is a single markdown document with:
 - ISTQB glossary - the canonical QA vocabulary the gold-standard answers reference (defect, defect-density, escaped-defect, test-design-technique, etc.): https://glossary.istqb.org/
 - Bloom's taxonomy - the K1 - K4 cognitive-difficulty levels used to ensure gold-standard answers match the question's intended depth: https://en.wikipedia.org/wiki/Bloom%27s_taxonomy
 - PractiTest 2026 State of Testing Report - hiring rubric / interviewer calibration cited as a high-adoption, low-risk AI use case for QA managers: https://www.practitest.com/state-of-testing/
-- [`interview-question-author`](../interview-question-author/SKILL.md), [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) - the two upstream sibling skills that produce the questions and the rubric this guide demonstrates.
+- `interview-question-author`, `hiring-rubric-author` - the two upstream sibling skills that produce the questions and the rubric this guide demonstrates.

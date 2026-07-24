@@ -22,9 +22,9 @@ ports in this skill's scope:
 [js]: https://github.com/faker-js/faker
 [rb]: https://github.com/faker-ruby/faker
 
-For .NET, see [`bogus-data`](../bogus-data/SKILL.md). For
+For .NET, see `bogus-data`. For
 Python-specifically with stronger locale coverage, also see
-[`mimesis-data`](../mimesis-data/SKILL.md).
+`mimesis-data`.
 
 ## When to use
 
@@ -210,10 +210,10 @@ library that wraps Faker:
 
 | Language | Factory library | Skill                                              |
 |----------|-----------------|----------------------------------------------------|
-| Python   | `factory_boy`   | (consider [`mimesis-data`](../mimesis-data/SKILL.md) for locale-rich pure mimesis pattern) |
+| Python   | `factory_boy`   | (consider `mimesis-data` for locale-rich pure mimesis pattern) |
 | JS / TS  | `fishery` / `factory.ts` | hand-rolled with Faker as engine               |
-| Ruby     | FactoryBot      | [`factory-bot-data`](../factory-bot-data/SKILL.md) |
-| .NET     | Bogus           | [`bogus-data`](../bogus-data/SKILL.md)             |
+| Ruby     | FactoryBot      | `factory-bot-data` |
+| .NET     | Bogus           | `bogus-data`             |
 
 Faker alone won't enforce that `order.user_id == user.id`; the
 factory library handles that.
@@ -226,7 +226,7 @@ factory library handles that.
 | Using `fake.email()` with a real domain (`example.com` is shared) | Spam concerns; some validators reject `example.com`.              | Faker's defaults use safe RFC-2606 domains; never override to a real domain in tests. |
 | Hardcoding generated values into snapshots                      | Snapshot bound to a Faker version's PRNG sequence; library bump breaks the snapshot. | Snapshot the *shape* of the data; assert types and patterns rather than literal values. |
 | Generating names with the wrong locale                          | A test asserting "name has at least one space" fails on `:ja` (Japanese) where names use `・`. | Match the locale to the assertion; or relax the assertion to be locale-aware. |
-| Using Faker for **security testing** payloads                    | Faker generates "realistic" data, not malicious. SQL injection / XSS won't happen by chance. | Use [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md) for adversarial input. |
+| Using Faker for **security testing** payloads                    | Faker generates "realistic" data, not malicious. SQL injection / XSS won't happen by chance. | Use `malicious-payload-bank` for adversarial input. |
 
 ## Limitations
 
@@ -247,10 +247,10 @@ factory library handles that.
   providers).
 - [faker-js][js] - `@faker-js/faker` (modules, seed, 70+ locales).
 - [faker-rb][rb] - `faker-ruby/faker` (modules, seed, locale).
-- [`mimesis-data`](../mimesis-data/SKILL.md) - Python alternative
+- `mimesis-data` - Python alternative
   with stronger locale coverage.
-- [`factory-bot-data`](../factory-bot-data/SKILL.md) - Ruby factory
+- `factory-bot-data` - Ruby factory
   library that uses Faker as engine.
-- [`bogus-data`](../bogus-data/SKILL.md) - .NET counterpart.
-- [`synthetic-data-tool-selector`](../synthetic-data-tool-selector/SKILL.md) - 
+- `bogus-data` - .NET counterpart.
+- `synthetic-data-tool-selector` - 
   dispatcher that picks the right Faker port per language.

@@ -23,13 +23,13 @@ and summarizing test and release builds".
 This skill wraps the Ceedling build orchestration - the
 `ceedling` command-line tool, `project.yml` schema, and rake
 tasks. For the Unity assertion API see
-[`unity-test-framework-c`](../unity-test-framework-c/SKILL.md);
+`unity-test-framework-c`;
 for CMock's generated mock API see
-[`cmock-reference`](../cmock-reference/SKILL.md);
+`cmock-reference`;
 for cross-target run see
-[`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md);
+`qemu-system-test-runner`;
 for coverage see
-[`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md).
+`embedded-coverage-strategy-reference`.
 
 ## When to use
 
@@ -37,14 +37,14 @@ for coverage see
   ThrowTheSwitch stack.
 - Host-build-driven test loop (most embedded teams test on the
   host first, then cross-compile under
-  [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md)) - Ceedling handles the host pipeline natively.
+  `qemu-system-test-runner`) - Ceedling handles the host pipeline natively.
 - Coverage required - the bundled gcov plugin produces LCOV /
   HTML / Cobertura without external glue.
 - Mock-heavy module - CMock is integrated; no separate generator
   invocation needed.
 
 If the unit-under-test is C++ instead of C, prefer
-[`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md);
+`googletest-embedded-arm`;
 Ceedling does not target C++.
 
 ## Authoring
@@ -176,7 +176,7 @@ Per `CeedlingPacket.md`, the canonical top-level sections:
 | `:tools` | Override toolchain binaries - set the compiler to `arm-none-eabi-gcc` here for a cross-build |
 | `:test_runner` | Controls the `generate_test_runner.rb` invocation; e.g. extra includes |
 | `:unity` | Unity build-time defines (e.g. `UNITY_INT_WIDTH=16` for 16-bit MCUs) |
-| `:cmock` | CMock plugin list (see [`cmock-reference`](../cmock-reference/SKILL.md)) |
+| `:cmock` | CMock plugin list (see `cmock-reference`) |
 | `:cexception` | CException type override (default `int`; some MCUs prefer `signed char`) |
 | `:gcov` | Coverage reports - `HtmlDetailed`, `Cobertura`, `SonarQube` formats per the plugin docs |
 | `:plugins` | Enable optional functionality; common ones below |
@@ -255,7 +255,7 @@ ceedling gcov:all
 # or build/artifacts/gcov/GcovCoverageCobertura.xml (Cobertura)
 ```
 
-See [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md)
+See `embedded-coverage-strategy-reference`
 for the gcov toolchain details and the report-format trade-offs.
 
 ### Compound tasks
@@ -360,7 +360,7 @@ results route through `qemu-system-test-runner`.
 - **Ruby dependency.** Ceedling runs on Ruby; embedded teams
   without a Ruby toolchain have an adoption cost.
 - **C only.** No C++ support - for C++ pair
-  [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md)
+  `googletest-embedded-arm`
   with CMake.
 - **Per-file flag overrides are verbose.** The `:flags` schema's
   glob keys are powerful but error-prone - `dumpconfig` is the
@@ -383,8 +383,8 @@ Cited inline. Foundational documents:
 - Ceedling overview - [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
 - Ceedling docs (project.yml + task reference) - [throwtheswitch.github.io/Ceedling/latest](https://throwtheswitch.github.io/Ceedling/latest/).
 - Sibling skills:
-  [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md),
-  [`cmock-reference`](../cmock-reference/SKILL.md),
-  [`embedded-coverage-strategy-reference`](../embedded-coverage-strategy-reference/SKILL.md),
-  [`qemu-system-test-runner`](../qemu-system-test-runner/SKILL.md),
-  [`googletest-embedded-arm`](../googletest-embedded-arm/SKILL.md).
+  `unity-test-framework-c`,
+  `cmock-reference`,
+  `embedded-coverage-strategy-reference`,
+  `qemu-system-test-runner`,
+  `googletest-embedded-arm`.

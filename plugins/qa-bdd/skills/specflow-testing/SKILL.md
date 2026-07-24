@@ -15,7 +15,7 @@ open-source Cucumber-style BDD test automation framework for
 .NET. It has been created as a reboot of the SpecFlow project."
 
 This skill exists to **support existing SpecFlow projects**.
-For new .NET BDD work, use [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - Reqnroll is API-compatible and actively maintained.
+For new .NET BDD work, use `reqnroll-testing` - Reqnroll is API-compatible and actively maintained.
 
 ## When to use
 
@@ -123,7 +123,7 @@ NUnit / MsTest).
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Starting new .NET BDD with SpecFlow                                   | Reqnroll is the actively-maintained successor.                           | Use [`reqnroll-testing`](../reqnroll-testing/SKILL.md). |
+| Starting new .NET BDD with SpecFlow                                   | Reqnroll is the actively-maintained successor.                           | Use `reqnroll-testing`. |
 | Postponing migration indefinitely                                      | SpecFlow falls further behind .NET / IDE support.                        | Migrate now (Step 4); the cost grows over time. |
 | Mixing SpecFlow + Reqnroll in one solution                            | Two runners; conflicts.                                                   | All-or-nothing migration. |
 
@@ -140,8 +140,8 @@ NUnit / MsTest).
 
 - [`reqnroll-home`](https://reqnroll.net/) - Reqnroll's own
   description of itself as "a reboot of the SpecFlow project."
-- [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - the
+- `reqnroll-testing` - the
   recommended skill for new .NET BDD projects.
-- [`cucumber-testing`](../cucumber-testing/SKILL.md),
-  [`behave-testing`](../behave-testing/SKILL.md) - non-.NET
+- `cucumber-testing`,
+  `behave-testing` - non-.NET
   alternatives if rewriting.

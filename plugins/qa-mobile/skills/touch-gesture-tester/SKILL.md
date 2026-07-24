@@ -230,9 +230,9 @@ jobs:
 ```
 
 For native tests, see per-platform CI in
-[`xcuitest-suite`](../xcuitest-suite/SKILL.md) /
-[`espresso-suite`](../espresso-suite/SKILL.md) /
-[`detox-testing`](../detox-testing/SKILL.md).
+`xcuitest-suite` /
+`espresso-suite` /
+`detox-testing`.
 
 ## Anti-patterns
 
@@ -262,8 +262,8 @@ For native tests, see per-platform CI in
 
 - Playwright touchscreen API (in the Playwright docs at
   `playwright.dev/docs/api/class-touchscreen`).
-- [`xcuitest-suite`](../xcuitest-suite/SKILL.md),
-  [`detox-testing`](../detox-testing/SKILL.md),
-  [`espresso-suite`](../espresso-suite/SKILL.md) - native
+- `xcuitest-suite`,
+  `detox-testing`,
+  `espresso-suite` - native
   alternatives with deeper gesture support.
-- [`mobile-web-emulation-runner`](../mobile-web-emulation-runner/SKILL.md) - the mobile-profile config this skill builds gesture tests on.
+- `mobile-web-emulation-runner` - the mobile-profile config this skill builds gesture tests on.

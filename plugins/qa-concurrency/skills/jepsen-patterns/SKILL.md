@@ -156,9 +156,9 @@ Out-of-the-box Jepsen test rigs exist for many systems
   dependencies
 - jepsen-io/jepsen on GitHub - DSL, nemesis primitives, ready-made
   test rigs
-- [`race-condition-test-author`](../race-condition-test-author/SKILL.md) - 
+- `race-condition-test-author` - 
   in-process race detection (Jepsen is for distributed)
-- [`async-ordering-tests`](../async-ordering-tests/SKILL.md) - async
+- `async-ordering-tests` - async
   ordering within a single process
 
 [Jepsen consistency docs]: https://jepsen.io/consistency

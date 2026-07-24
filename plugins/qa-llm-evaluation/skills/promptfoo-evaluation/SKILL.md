@@ -277,4 +277,4 @@ branch. Caching reuses LLM responses for unchanged tests (per
 - [pf-gha][pf-gha] - GitHub Action
 - [pf-cache][pf-cache] - caching mechanics
 - [pf-gh][pf-gh] - install commands
-- [`openai-evals`](../openai-evals/SKILL.md), [`deepeval-evaluation`](../deepeval-evaluation/SKILL.md), [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - sister tools (different framework styles)
+- `openai-evals`, `deepeval-evaluation`, `ragas-evaluation` - sister tools (different framework styles)

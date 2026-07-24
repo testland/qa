@@ -27,7 +27,7 @@ features vs SPDX:
   artifacts
 
 This is a **reference skill** - defines the schema +
-tooling landscape; doesn't run scans. Pair with [`syft-generation`](../syft-generation/SKILL.md)
+tooling landscape; doesn't run scans. Pair with `syft-generation`
 to generate CycloneDX-format SBOMs from real codebases.
 
 ## When to use
@@ -40,7 +40,7 @@ to generate CycloneDX-format SBOMs from real codebases.
 - Per-language CycloneDX-native tooling is preferred over
   Syft+convert.
 
-For licensing-focused / Linux Foundation contexts, [`spdx-format`](../spdx-format/SKILL.md)
+For licensing-focused / Linux Foundation contexts, `spdx-format`
 is more idiomatic.
 
 ## Step 1 - Top-level structure
@@ -255,7 +255,7 @@ jobs:
 - github.com/package-url/purl-spec - Package URL spec
 - openvex.dev - OpenVEX standalone spec (compatible with CycloneDX
   1.4+ embedded VEX)
-- [`syft-generation`](../syft-generation/SKILL.md),
-  [`grype-scanning`](../grype-scanning/SKILL.md),
-  [`spdx-format`](../spdx-format/SKILL.md),
-  [`trivy-image`](../trivy-image/SKILL.md) - sister tools
+- `syft-generation`,
+  `grype-scanning`,
+  `spdx-format`,
+  `trivy-image` - sister tools

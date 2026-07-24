@@ -17,7 +17,7 @@ content types via path expressions backed by Hamcrest matchers
 [usage]: https://github.com/rest-assured/rest-assured/wiki/Usage
 
 This is the JVM-native counterpart to
-[`postman-collections`](../postman-collections/SKILL.md). Use REST
+`postman-collections`. Use REST
 Assured when the team's primary stack is Java / Kotlin / Scala and
 type-safe authoring + same-language refactoring matter.
 
@@ -31,9 +31,9 @@ type-safe authoring + same-language refactoring matter.
   (bearer token), API key in header - all first-class.
 
 If the team is non-JVM, evaluate
-[`postman-collections`](../postman-collections/SKILL.md) (JSON-driven),
-[`tavern-testing`](../tavern-testing/SKILL.md) (Python YAML), or
-[`karate-testing`](../karate-testing/SKILL.md) (cross-platform DSL).
+`postman-collections` (JSON-driven),
+`tavern-testing` (Python YAML), or
+`karate-testing` (cross-platform DSL).
 
 ## Install
 
@@ -294,7 +294,7 @@ format as Newman's `--reporter-junit-export`.
 - [restassured-usage][usage] - full DSL reference: Maven dep XML,
   imports, status code, JSON/XML path, OAuth2, preemptive Basic,
   API-key header.
-- [`postman-collections`](../postman-collections/SKILL.md) - 
+- `postman-collections` - 
   JSON-driven counterpart for non-JVM teams.
-- [`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md) - 
+- `schemathesis-fuzzing` - 
   property-based fuzzing complement (different approach to coverage).

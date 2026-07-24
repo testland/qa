@@ -235,8 +235,8 @@ JUnit XML in `reports/junit/` feeds
 ## References
 
 - WebdriverIO at `webdriver.io`.
-- [`playwright-testing`](../playwright-testing/SKILL.md),
-  [`cypress-testing`](../cypress-testing/SKILL.md),
-  [`selenium-testing`](../selenium-testing/SKILL.md) - alternatives.
+- `playwright-testing`,
+  `cypress-testing`,
+  `selenium-testing` - alternatives.
 - `appium-testing` - wdio's appium service uses Appium underneath.
 - `cucumber-testing` - wdio's cucumber framework integration.

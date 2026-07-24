@@ -29,7 +29,7 @@ Distinguishing properties vs xUnit:
 - Test patterns benefiting from `[Random]`/`[Range]` (light
   property-based without ScalaCheck-equivalent).
 
-For new code, [`xunit-tests`](../xunit-tests/SKILL.md) is more
+For new code, `xunit-tests` is more
 mainstream in 2026.
 
 ## Step 1 - Install
@@ -228,7 +228,7 @@ Same pattern as xUnit:
 
 - [nu-docs][nu-docs] - NUnit documentation
 - nunit.org - landing
-- [`xunit-tests`](../xunit-tests/SKILL.md),
-  [`mstest-tests`](../mstest-tests/SKILL.md),
-  [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
+- `xunit-tests`,
+  `mstest-tests`,
+  `fluentassertions` - sister tools
 - `test-code-conventions`

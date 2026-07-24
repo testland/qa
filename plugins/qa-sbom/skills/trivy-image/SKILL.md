@@ -13,8 +13,8 @@ Per [trivy.dev/latest/docs/target/container_image/][tv-img]:
 
 Trivy is Aqua Security's open-source scanner. Distinguishing
 feature: **all-in-one** - one CLI invocation covers vuln + secret +
-misconfig + license scanning. By contrast, [`syft-generation`](../syft-generation/SKILL.md)
-+ [`grype-scanning`](../grype-scanning/SKILL.md) is a two-step
+misconfig + license scanning. By contrast, `syft-generation`
++ `grype-scanning` is a two-step
 SBOM-then-scan pattern.
 
 Per [tv-img][tv-img] the scanner toggles:
@@ -33,7 +33,7 @@ Per [tv-img][tv-img] the scanner toggles:
 - The team uses Aqua Security stack (Trivy is the OSS center of
   it).
 - Pre-prod or registry-side scanning (Trivy's image-by-tag mode).
-- Layered with [`grype-scanning`](../grype-scanning/SKILL.md) for
+- Layered with `grype-scanning` for
   cross-DB consensus on vuln findings.
 
 ## Step 1 - Install
@@ -238,9 +238,9 @@ The `aquasecurity/trivy-action` GHA wraps the CLI + SARIF upload.
 
 | Sister tool | Use |
 |---|---|
-| [`syft-generation`](../syft-generation/SKILL.md) | Generates standalone SBOM (Trivy embeds SBOM gen but exposes it less) |
-| [`grype-scanning`](../grype-scanning/SKILL.md) | Alternative scanner; cross-DB consensus on findings |
-| [`cyclonedx-format`](../cyclonedx-format/SKILL.md), [`spdx-format`](../spdx-format/SKILL.md) | Reference for the SBOM formats Trivy outputs |
+| `syft-generation` | Generates standalone SBOM (Trivy embeds SBOM gen but exposes it less) |
+| `grype-scanning` | Alternative scanner; cross-DB consensus on findings |
+| `cyclonedx-format`, `spdx-format` | Reference for the SBOM formats Trivy outputs |
 | `checkov-policy` | Cross-plugin: deeper IaC scanning vs Trivy's image-internal misconfig |
 
 ## Anti-patterns
@@ -261,7 +261,7 @@ The `aquasecurity/trivy-action` GHA wraps the CLI + SARIF upload.
   dedicated tools (use Trivy as first-line; layer dedicated tools
   for depth).
 - Trivy's vuln DB has its own coverage profile; pair with
-  [`grype-scanning`](../grype-scanning/SKILL.md) for cross-DB
+  `grype-scanning` for cross-DB
   consensus.
 - License detection is basic; for compliance-grade analysis, use
   ScanCode / FOSSology.
@@ -273,7 +273,7 @@ The `aquasecurity/trivy-action` GHA wraps the CLI + SARIF upload.
 - aquasecurity.github.io/trivy - full documentation
 - github.com/aquasecurity/trivy - repository
 - openvex.dev - OpenVEX specification (used by `--vex` flag)
-- [`syft-generation`](../syft-generation/SKILL.md),
-  [`grype-scanning`](../grype-scanning/SKILL.md),
-  [`cyclonedx-format`](../cyclonedx-format/SKILL.md),
-  [`spdx-format`](../spdx-format/SKILL.md) - sister tools
+- `syft-generation`,
+  `grype-scanning`,
+  `cyclonedx-format`,
+  `spdx-format` - sister tools

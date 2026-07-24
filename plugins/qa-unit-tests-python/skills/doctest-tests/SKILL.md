@@ -33,7 +33,7 @@ Distinguishing properties:
   to work.
 - Simple modules where the doctest IS the test suite.
 
-For non-trivial test suites, prefer [`pytest-tests`](../pytest-tests/SKILL.md).
+For non-trivial test suites, prefer `pytest-tests`.
 Use doctest as a complement (smoke + docs), not replacement.
 
 ## Step 1 - Basic doctest
@@ -195,7 +195,7 @@ doctest is **not** for:
 - Coverage measurement (works with `coverage run -m doctest` but
   rougher than pytest-cov)
 
-For those, use [`pytest-tests`](../pytest-tests/SKILL.md).
+For those, use `pytest-tests`.
 
 ## Step 8 - CI integration
 
@@ -230,7 +230,7 @@ For those, use [`pytest-tests`](../pytest-tests/SKILL.md).
 - [dt-docs][dt-docs] - official doctest reference
 - docs.pytest.org/en/stable/how-to/doctest.html - pytest --doctest-modules
 - sphinx-doc.org/en/master/usage/extensions/doctest.html - Sphinx integration
-- [`pytest-tests`](../pytest-tests/SKILL.md),
-  [`unittest-tests`](../unittest-tests/SKILL.md),
-  [`nose2-tests`](../nose2-tests/SKILL.md) - sister tools
+- `pytest-tests`,
+  `unittest-tests`,
+  `nose2-tests` - sister tools
 - `test-code-conventions` - test code hygiene

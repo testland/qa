@@ -14,7 +14,7 @@ list comes from ISO/IEC/IEEE 29119-3:2021 §6, augmented by ISTQB
 CTAL-TM's specification-based-testing additions.
 
 This skill is a **pure reference** consumed by
-[`traceability-matrix-builder`](../traceability-matrix-builder/SKILL.md)
+`traceability-matrix-builder`
 and the five platform-specific case-management skills.
 
 ## When to use
@@ -216,9 +216,9 @@ one-to-one and which are one-to-many:
   docs.qameta.io/allure-testops/integrations/rest-api/.
 - Qase Public API - developers.qase.io.
 - Sibling skills:
-  [`traceability-matrix-builder`](../traceability-matrix-builder/SKILL.md),
-  [`testrail-case-management`](../testrail-case-management/SKILL.md),
-  [`xray-case-management`](../xray-case-management/SKILL.md),
-  [`zephyr-scale-case-management`](../zephyr-scale-case-management/SKILL.md),
-  [`allure-testops-case-management`](../allure-testops-case-management/SKILL.md),
-  [`qase-io-case-management`](../qase-io-case-management/SKILL.md).
+  `traceability-matrix-builder`,
+  `testrail-case-management`,
+  `xray-case-management`,
+  `zephyr-scale-case-management`,
+  `allure-testops-case-management`,
+  `qase-io-case-management`.

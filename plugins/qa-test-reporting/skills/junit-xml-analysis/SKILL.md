@@ -255,9 +255,9 @@ than refactoring a hundred tests that already run in <100ms.
   reference (used by Jenkins's parser): root element variants,
   required vs optional attributes, child element catalog including
   modern `<flakyFailure>` / `<rerunFailure>`.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
+- `coverage-diff-reporter` - 
   parallel skill for coverage report diffs (different format,
   same PR-time analytics shape).
-- [`allure-reports`](../allure-reports/SKILL.md) - richer reporting
+- `allure-reports` - richer reporting
   built on top of `allure-results`; consumes JUnit XML via per-runner
   adapters when needed.

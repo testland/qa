@@ -174,13 +174,13 @@ Confident-AI is the company behind DeepEval (per [de-gh][de-gh]).
 - Test cases live in Python files - not as discoverable as YAML
   configs for non-Python teammates (vs Promptfoo).
 - Faithfulness / Contextual-* metrics need RAG-shaped data; for
-  pure prompt evals, [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md)
+  pure prompt evals, `promptfoo-evaluation`
   is lower-friction.
 
 ## References
 
 - [de-gh][de-gh] - repository, install, quickstart, metric list
 - [de-start][de-start] - getting-started overview
-- [`promptfoo-evaluation`](../promptfoo-evaluation/SKILL.md),
-  [`ragas-evaluation`](../ragas-evaluation/SKILL.md) - sister tools
+- `promptfoo-evaluation`,
+  `ragas-evaluation` - sister tools
   (Promptfoo for YAML-config; Ragas for deeper RAG metric variety)

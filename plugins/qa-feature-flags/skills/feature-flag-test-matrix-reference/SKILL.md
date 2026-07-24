@@ -135,7 +135,7 @@ assignment + analytics.
 | No kill-switch test | Production incident has no rehearsed response | Test deactivation latency |
 | Don't test percentage-rollout sticky-assignment | Rollout produces non-deterministic UX | Per `ab-test-validity-checklist` |
 | Tests assume flag-on default | Real default-off behaviour untested in CI | Test both paths |
-| No cleanup test for removed flags | Stale-flag accumulates per [`flag-removal-runbook-author`](../flag-removal-runbook-author/SKILL.md) | Periodic stale-flag audit |
+| No cleanup test for removed flags | Stale-flag accumulates per `flag-removal-runbook-author` | Periodic stale-flag audit |
 | Pairwise without flag-interaction discovery | Some pairs spuriously interact | Couple with risk-register input |
 
 ## Limitations
@@ -148,7 +148,7 @@ assignment + analytics.
 - **Coverage tooling lags.** PICT / ACTS exist but integration
   with flag platforms is bespoke.
 - **Stale flags pollute the matrix.** Cleanup pairs with
-  [`flag-removal-runbook-author`](../flag-removal-runbook-author/SKILL.md).
+  `flag-removal-runbook-author`.
 
 ## References
 
@@ -159,13 +159,13 @@ assignment + analytics.
 - GrowthBook test docs:
   [docs.growthbook.io/lib/node](https://docs.growthbook.io/lib/node).
 - Sibling catalogs:
-  [`flag-state-coverage-builder`](../flag-state-coverage-builder/SKILL.md),
-  [`flag-removal-runbook-author`](../flag-removal-runbook-author/SKILL.md).
+  `flag-state-coverage-builder`,
+  `flag-removal-runbook-author`.
 - Consumed by:
-  [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
-  [`unleash-testing`](../unleash-testing/SKILL.md),
-  [`flagsmith-testing`](../flagsmith-testing/SKILL.md),
-  [`growthbook-testing`](../growthbook-testing/SKILL.md).
+  `launchdarkly-testing`,
+  `unleash-testing`,
+  `flagsmith-testing`,
+  `growthbook-testing`.
 - Cross-plugin:
   `ab-test-validity-checklist`,
   `feature-flag-test-harness`.

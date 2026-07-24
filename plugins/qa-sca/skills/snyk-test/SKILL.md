@@ -29,7 +29,7 @@ for container scanning, see `trivy-image` (in the qa-sbom plugin).
   commands.
 - Continuous-monitoring requirement (vuln alerts on
   newly-disclosed CVEs against pinned dependencies).
-- Layered with [`osv-scanner`](../osv-scanner/SKILL.md) for
+- Layered with `osv-scanner` for
   cross-DB consensus signal.
 
 ## Step 1 - Install + authenticate
@@ -188,11 +188,11 @@ verify against current docs).
 - Commercial license required - pricing scales with project count
   + scanned manifests.
 - Snyk's vuln database has its own coverage profile; pair with
-  [`osv-scanner`](../osv-scanner/SKILL.md) for OSV.dev consensus.
+  `osv-scanner` for OSV.dev consensus.
 - Container scanning is a separate product line; this skill targets
   SCA only.
-- For pure-OSS workflows without Snyk, [`osv-scanner`](../osv-scanner/SKILL.md)
-  + [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) cover
+- For pure-OSS workflows without Snyk, `osv-scanner`
+  + `npm-pip-maven-audit` cover
   similar ground.
 
 ## References
@@ -201,8 +201,8 @@ verify against current docs).
 - docs.snyk.io - full documentation
 - docs.snyk.io/snyk-cli/commands/test - `snyk test` reference (when not 404'd)
 - snyk.io/security-rules - vuln database
-- [`osv-scanner`](../osv-scanner/SKILL.md),
-  [`dependabot-config`](../dependabot-config/SKILL.md),
-  [`renovate-config`](../renovate-config/SKILL.md),
-  [`npm-pip-maven-audit`](../npm-pip-maven-audit/SKILL.md) - 
+- `osv-scanner`,
+  `dependabot-config`,
+  `renovate-config`,
+  `npm-pip-maven-audit` - 
   sister tools

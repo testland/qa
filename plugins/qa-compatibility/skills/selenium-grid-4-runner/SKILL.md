@@ -13,7 +13,7 @@ providers. Per
 [selenium.dev/documentation/grid](https://www.selenium.dev/documentation/grid/).
 
 Composes with
-[`browser-matrix-strategy-reference`](../browser-matrix-strategy-reference/SKILL.md)
+`browser-matrix-strategy-reference`
 for matrix planning.
 
 ## When to use
@@ -283,6 +283,6 @@ jobs:
 - W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - Composes:
-  [`browser-matrix-strategy-reference`](../browser-matrix-strategy-reference/SKILL.md).
+  `browser-matrix-strategy-reference`.
 - Cloud-grid alternatives:
   `browserstack-automate`, `saucelabs-automate`, `lambdatest-automate`.

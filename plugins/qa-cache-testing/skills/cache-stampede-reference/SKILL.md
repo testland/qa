@@ -156,7 +156,7 @@ The strongest setups combine:
 
 | Layer | Strategy |
 |---|---|
-| Cache backend | TTL + stale-while-revalidate per [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md) |
+| Cache backend | TTL + stale-while-revalidate per `stale-while-revalidate-reference` |
 | App logic | XFetch on read for hot keys |
 | Operations | External recompute for known-hot keys |
 | Safety net | Distributed lock (Redis SET NX EX) as a backstop |
@@ -183,7 +183,7 @@ catch the few that slip through.
 | Lock without TTL | Lock holder crash → deadlock | TTL on locks; refresh while recomputing |
 | XFetch with `beta` very high (10+) | All requesters refresh constantly | beta=1; tune via load test |
 | External recompute without monitoring | Cron job fails silently; stampedes return | Alarm on cache-miss rate spike |
-| Cache TTL = stale-while-revalidate window | RFC 5861 SWR window depends on `Cache-Control: stale-while-revalidate=N` being separate | See [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md) |
+| Cache TTL = stale-while-revalidate window | RFC 5861 SWR window depends on `Cache-Control: stale-while-revalidate=N` being separate | See `stale-while-revalidate-reference` |
 | Stampede-mitigation tested only under low load | Pass at 10 RPS; fail at 1000 | Test at production-equivalent concurrency |
 | Hot key with `must-revalidate` | Forced re-validation = forced stampede on TTL | Use SWR or grace mode |
 | Logging the stampede instead of measuring it | Logs swamped during incident; no recovery signal | Metric on cache-miss rate; alarm |
@@ -208,9 +208,9 @@ catch the few that slip through.
 - Cache stampede definition + XFetch formula:
   [en.wikipedia.org/wiki/Cache_stampede](https://en.wikipedia.org/wiki/Cache_stampede).
 - Companion catalogs:
-  [`cache-coherence-patterns-reference`](../cache-coherence-patterns-reference/SKILL.md),
-  [`stale-while-revalidate-reference`](../stale-while-revalidate-reference/SKILL.md).
+  `cache-coherence-patterns-reference`,
+  `stale-while-revalidate-reference`.
 - Consumed by:
-  [`redis-cache-tests`](../redis-cache-tests/SKILL.md),
-  [`cdn-cache-purge-tests`](../cdn-cache-purge-tests/SKILL.md),
-  [`varnish-test-vtc-syntax`](../varnish-test-vtc-syntax/SKILL.md).
+  `redis-cache-tests`,
+  `cdn-cache-purge-tests`,
+  `varnish-test-vtc-syntax`.

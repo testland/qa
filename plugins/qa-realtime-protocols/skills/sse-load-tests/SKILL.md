@@ -365,7 +365,7 @@ thresholds:
   https://grafana.com/docs/k6/latest/using-k6/thresholds/
 - [k6-scenarios] k6 scenarios and executor types:
   https://grafana.com/docs/k6/latest/using-k6/scenarios/
-- [`server-sent-events-tests`](../server-sent-events-tests/SKILL.md) - correctness
+- `server-sent-events-tests` - correctness
   tests (event format, `Last-Event-ID`, `readyState`) that precede load testing
 
 [sse-authoring]: https://html.spec.whatwg.org/multipage/server-sent-events.html#authoring-notes

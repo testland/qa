@@ -200,10 +200,10 @@ Fully offline; no GrowthBook key needed.
 - Inline experiments:
   [docs.growthbook.io/lib/node#inline-experiments](https://docs.growthbook.io/lib/node).
 - Companion:
-  [`feature-flag-test-matrix-reference`](../feature-flag-test-matrix-reference/SKILL.md).
+  `feature-flag-test-matrix-reference`.
 - Cross-plugin (experiment-validity):
   `ab-test-validity-checklist`.
 - Sibling SDKs:
-  [`launchdarkly-testing`](../launchdarkly-testing/SKILL.md),
-  [`unleash-testing`](../unleash-testing/SKILL.md),
-  [`flagsmith-testing`](../flagsmith-testing/SKILL.md).
+  `launchdarkly-testing`,
+  `unleash-testing`,
+  `flagsmith-testing`.

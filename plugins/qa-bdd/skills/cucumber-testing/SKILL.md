@@ -24,8 +24,8 @@ Cucumber implementations split into tiers ([cucumber-install][ci]):
 This skill covers the three most-used official implementations:
 **Cucumber-JVM** (Java + Kotlin), **Cucumber-JS** (Node), and
 **Cucumber-Ruby**. For Python, see
-[`behave-testing`](../behave-testing/SKILL.md). For .NET, see
-[`reqnroll-testing`](../reqnroll-testing/SKILL.md).
+`behave-testing`. For .NET, see
+`reqnroll-testing`.
 
 ## When to use
 
@@ -228,7 +228,7 @@ npx cucumber-js features/ --tags 'not @wip'
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | Imperative steps ("I click button id=#submit")                        | Couples to implementation; scenarios become fragile.                     | Declarative steps ("I submit the form"). |
-| 100 unique step definitions                                            | Drift; inconsistency.                                                     | Step library curation (see [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md)). |
+| 100 unique step definitions                                            | Drift; inconsistency.                                                     | Step library curation (see `bdd-step-library-curator`). |
 | BDD without business stakeholder involvement                            | Defeats the point; expensive xUnit tests.                                | If non-engineers don't read the features, switch to plain unit tests. |
 | Mixing Cucumber + plain JUnit assertions                                | Two test runners; double maintenance.                                    | Cucumber's runner only; plain JUnit for non-BDD tests in separate suite. |
 | Skipping `Background` for shared setup                                  | Repeated Given lines clutter scenarios.                                  | Background block (Step 4 example). |
@@ -249,7 +249,7 @@ npx cucumber-js features/ --tags 'not @wip'
 
 - [ci][ci] - Cucumber installation: official + semi-official + unofficial
   implementation tiers; recommendation to match production language.
-- [`behave-testing`](../behave-testing/SKILL.md) - Python sibling.
-- [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - .NET sibling.
-- [`bdd-step-library-curator`](../bdd-step-library-curator/SKILL.md) - addresses step proliferation.
+- `behave-testing` - Python sibling.
+- `reqnroll-testing` - .NET sibling.
+- `bdd-step-library-curator` - addresses step proliferation.
 - `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream skill that generates Gherkin from stories.

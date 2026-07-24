@@ -175,7 +175,7 @@ expect(repeatJobs).toHaveLength(1);
 expect(repeatJobs[0].pattern).toBe('0 * * * *');
 ```
 
-Cross-ref [`cron-job-test-author`](../cron-job-test-author/SKILL.md)
+Cross-ref `cron-job-test-author`
 for cron-expression validation patterns.
 
 ## Step 7 - FlowProducer for parent-child jobs
@@ -249,10 +249,10 @@ producer logic, ioredis-mock is faster.
 - [bm-gh][bm-gh] - repo, install, basic Queue/Worker pattern,
   FlowProducer
 - docs.bullmq.io - full documentation
-- [`sidekiq-tests`](../sidekiq-tests/SKILL.md),
-  [`celery-tests`](../celery-tests/SKILL.md),
-  [`sqs-tests`](../sqs-tests/SKILL.md),
-  [`rabbitmq-tests`](../rabbitmq-tests/SKILL.md) - sister tools
-- [`cron-job-test-author`](../cron-job-test-author/SKILL.md),
-  [`idempotency-test-author`](../idempotency-test-author/SKILL.md) - 
+- `sidekiq-tests`,
+  `celery-tests`,
+  `sqs-tests`,
+  `rabbitmq-tests` - sister tools
+- `cron-job-test-author`,
+  `idempotency-test-author` - 
   build-an-X authors

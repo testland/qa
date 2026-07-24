@@ -18,7 +18,7 @@ A flake is rarely random - it almost always falls into one of eight
 recurring patterns. Identifying the pattern early shrinks the bisect
 search space dramatically. This catalog is a reference, not a
 workflow; the matching workflow is in
-[`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md).
+`flaky-test-quarantine`.
 
 The Google Testing Blog observed a near-linear correlation between
 test size and flakiness rate across ~4.2M tests
@@ -209,5 +209,5 @@ at a time per the patterns above.
 - [google-flaky][gtb-flaky] - Google Testing Blog overview.
 - [google-causes][gtb-causes] - Google's correlation analysis on
   ~4.2M tests; "test size correlates with flakiness rate."
-- [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) - 
+- `flaky-test-quarantine` - 
   workflow that uses this catalog during triage.

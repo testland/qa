@@ -42,7 +42,7 @@ a per-scenario chaos matrix.
 
 If the team is just starting API testing and has no resilience
 patterns to verify, this skill is overkill - start with happy-path
-coverage via [`postman-collections`](../postman-collections/SKILL.md)
+coverage via `postman-collections`
 or the language-native equivalents first.
 
 ## Step 1 - Pick the chaos primitive
@@ -238,8 +238,8 @@ every toxic against every endpoint is noise.
 - Pumba - https://github.com/alexei-led/pumba
 - LitmusChaos - https://litmuschaos.io/
 - Principles of Chaos Engineering - https://principlesofchaos.org/
-- [`postman-collections`](../postman-collections/SKILL.md),
-  [`tavern-testing`](../tavern-testing/SKILL.md),
-  [`karate-testing`](../karate-testing/SKILL.md),
-  [`restassured-testing`](../restassured-testing/SKILL.md) - 
+- `postman-collections`,
+  `tavern-testing`,
+  `karate-testing`,
+  `restassured-testing` - 
   example-based test suites that this skill drives through chaos.

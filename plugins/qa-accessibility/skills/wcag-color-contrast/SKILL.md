@@ -28,10 +28,10 @@ WCAG 2.2 specifies four color-contrast Success Criteria
 - Reviewing a component's CSS for contrast violations.
 - Setting up bulk-checking of design tokens via tooling.
 - Authoring per-component a11y checklists (paired with
-  [`wcag-checklist-builder`](../wcag-checklist-builder/SKILL.md)).
+  `wcag-checklist-builder`).
 - Configuring per-rule severity in
-  [`axe-a11y`](../axe-a11y/SKILL.md) /
-  [`pa11y-a11y`](../pa11y-a11y/SKILL.md).
+  `axe-a11y` /
+  `pa11y-a11y`.
 
 ## Contrast ratios
 
@@ -64,7 +64,7 @@ have **3:1** contrast against adjacent colors. This applies to:
 
 - Form input borders.
 - Focus indicators (per
-  [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md)
+  `wcag-keyboard-navigation`
   SC 2.4.7).
 - Icon buttons that don't have text labels.
 - Visual state indicators (toggle switches, checkboxes).
@@ -105,7 +105,7 @@ You don't compute it manually - use a tool:
 | Chrome DevTools                   | Element panel → Styles → color swatch → Contrast.  |
 | Figma plugins (Stark, Able)       | Inline check during design.                        |
 | `polished` (npm) `getContrast()`  | Programmatic check in tests / lint rules.          |
-| `axe-core`                        | Reports all on-screen contrast violations during a scan ([axe-a11y](../axe-a11y/SKILL.md)). |
+| `axe-core`                        | Reports all on-screen contrast violations during a scan (axe-a11y). |
 
 ## Common ratios for canonical color pairings
 
@@ -155,7 +155,7 @@ if (violations.length > 0) {
 }
 ```
 
-Wire into CI per [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md).
+Wire into CI per `a11y-violation-gate`.
 
 ## Common failures
 
@@ -182,7 +182,7 @@ Wire into CI per [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md).
 - [wcag22][wcag22] - WCAG 2.2 SCs 1.4.3, 1.4.6, 1.4.11, 1.4.13.
 - WebAIM Contrast Checker - https://webaim.org/resources/contrastchecker/
 - WCAG contrast formula (luminance) - https://www.w3.org/TR/WCAG22/#dfn-relative-luminance
-- [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md) - for SC 2.4.7 focus-indicator contrast.
-- [`axe-a11y`](../axe-a11y/SKILL.md) - runtime contrast checker.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - 
+- `wcag-keyboard-navigation` - for SC 2.4.7 focus-indicator contrast.
+- `axe-a11y` - runtime contrast checker.
+- `a11y-violation-gate` - 
   CI gate for contrast (and other) violations.

@@ -181,5 +181,5 @@ def test_signup_fixtures_contain_only_required_pii():
 - edpb.europa.eu - European Data Protection Board guidelines
 - ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/ - UK ICO guide
 - `synthetic-pii-generator` - cross-plugin: safe test fixture generation
-- [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md) - sister: California analogue
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - companion: GDPR audit logs
+- `ccpa-test-patterns` - sister: California analogue
+- `audit-trail-test-author` - companion: GDPR audit logs

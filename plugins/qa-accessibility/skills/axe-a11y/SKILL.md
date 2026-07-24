@@ -26,15 +26,15 @@ fixture, browser extension, or framework adapter), call
 - Automated a11y coverage on every PR is a goal.
 - The team values **WCAG SC tagging** - axe rules map cleanly to
   WCAG 2.0 / 2.1 / 2.2 SCs.
-- Pair with [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md)
+- Pair with `a11y-violation-gate`
   for the ratchet pattern over baseline.
 
 If the team is on a non-JS stack, evaluate
-[`pa11y-a11y`](../pa11y-a11y/SKILL.md) (CLI; uses axe-core
+`pa11y-a11y` (CLI; uses axe-core
 under the hood),
-[`lighthouse-a11y`](../lighthouse-a11y/SKILL.md) (CI-friendly,
+`lighthouse-a11y` (CI-friendly,
 broader perf + a11y), or
-[`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md).
+`ibm-equal-access-a11y`.
 
 ## Install
 
@@ -179,7 +179,7 @@ new AxeBuilder({ page })
 
 For per-rule severity in CI gating (e.g. block on `critical` /
 `serious` only): handle in
-[`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) using
+`a11y-violation-gate` using
 the `impact` field.
 
 ## CI integration
@@ -220,13 +220,13 @@ jobs:
 
 For richer reporting, persist the raw `accessibilityScanResults`
 JSON as a build artifact and pipe to
-[`a11y-violation-gate`](../a11y-violation-gate/SKILL.md).
+`a11y-violation-gate`.
 
 ## Anti-patterns
 
 | Anti-pattern                                                  | Why it fails                                                       | Fix |
 |---------------------------------------------------------------|---------------------------------------------------------------------|-----|
-| Asserting `violations.length === 0`                            | Existing legacy debt blocks every PR.                              | Use the ratchet pattern via [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md). |
+| Asserting `violations.length === 0`                            | Existing legacy debt blocks every PR.                              | Use the ratchet pattern via `a11y-violation-gate`. |
 | Disabling rules without comment in code                         | Reviewer can't tell which rules are intentionally off vs. forgotten. | Inline comment explaining why; quarterly review. |
 | Scanning only the homepage                                      | Most a11y bugs hide in less-traveled flows.                       | Scan a representative URL set: home + 1 logged-in dashboard + 1 form-heavy + 1 long-content. |
 | Running axe in production                                       | Performance overhead; possible info leak via verbose error logging. | CI / staging only. |
@@ -237,7 +237,7 @@ JSON as a build artifact and pipe to
 
 - **Catches ~57% of WCAG issues** ([axe-core][readme]) - the rest
   require manual screen-reader testing
-  (per [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md)).
+  (per `screen-reader-test-author`).
 - **Rule false positives.** Rare but real; `disableRules` /
   `exclude` are escape hatches with documented rationale.
 - **Doesn't cover dynamic state changes well.** A modal that
@@ -251,10 +251,10 @@ JSON as a build artifact and pipe to
 - Deque rule documentation - https://dequeuniversity.com/rules/axe/
 - @axe-core/playwright - https://github.com/dequelabs/axe-core-npm/tree/master/packages/playwright
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) - 
+- `a11y-violation-gate` - 
   CI gate using axe results.
-- [`pa11y-a11y`](../pa11y-a11y/SKILL.md),
-  [`lighthouse-a11y`](../lighthouse-a11y/SKILL.md),
-  [`wave-a11y`](../wave-a11y/SKILL.md),
-  [`ibm-equal-access-a11y`](../ibm-equal-access-a11y/SKILL.md) - 
+- `pa11y-a11y`,
+  `lighthouse-a11y`,
+  `wave-a11y`,
+  `ibm-equal-access-a11y` - 
   alternative scanners.

@@ -288,7 +288,7 @@ that are typically untested boilerplate.
 ## Limitations
 
 - **No native PR-context awareness.** Pair with
-  [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) for
+  `coverage-diff-reporter` for
   the diff vs main.
 - **`# pragma: no cover` is repo-local.** No way to enforce that
   pragmas are reviewed in PRs from the coverage tool itself; pair
@@ -307,12 +307,12 @@ that are typically untested boilerplate.
   `combine` workflow, branch coverage, `.coveragerc` config
   (`source`, `omit`, `branch`, `fail_under`), output formats
   (text, HTML, XML, LCOV, JSON), supported Python versions.
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) - coverage.py
+- `lcov-analysis` - coverage.py
   `coverage lcov` produces the LCOV file this parser consumes.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - coverage.py
+- `cobertura-analysis` - coverage.py
   `coverage xml` produces the Cobertura file this parser consumes.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
+- `coverage-diff-reporter` - 
   PR-comment formatter built on top of the parsed coverage.py
   output.
-- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - picks which uncovered branches to target next, given the
+- `test-coverage-targeter` - picks which uncovered branches to target next, given the
   coverage.py output.

@@ -248,5 +248,5 @@ Turn each failure into a structured bug-reproduction package.
   depending on project context."
 - `acceptance-criteria-extractor` - upstream: emits Gherkin from a story; this skill turns Gherkin
   into a tester-runnable script.
-- [`uat-script-author`](../uat-script-author/SKILL.md) - sibling:
+- `uat-script-author` - sibling:
   same shape, scoped to UAT.

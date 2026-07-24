@@ -234,10 +234,10 @@ produces a duplicate delivery that the consumer must absorb.
   ordering guarantee
 - [microservices.io/polling-publisher][poll-pub] - relay query mechanics,
   SQL compatibility, ordering caveat
-- [`saga-transaction-tests`](../saga-transaction-tests/SKILL.md) - saga
+- `saga-transaction-tests` - saga
   orchestration and choreography; pairs with this skill when sagas use the
   outbox for step-event publishing
-- [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) -
+- `eventual-consistency-tests` -
   assertion of the consistency window between outbox publish and consumer
   processing
 

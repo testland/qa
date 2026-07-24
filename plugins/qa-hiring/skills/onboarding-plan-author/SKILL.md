@@ -9,7 +9,7 @@ description: "Build-an-X workflow that produces a 30-60-90 day onboarding plan f
 
 Hiring ends at offer acceptance; onboarding is where the competency signal from the rubric is converted into a development plan. The 30-60-90 day framework - originally popularized by Michael Watkins' *The First 90 Days* (2003, Harvard Business Review Press) as the canonical structured-transition framework for new organizational members - divides the ramp into three equal phases: learn (days 1-30), integrate (days 31-60), and contribute independently (days 61-90). Each phase has a distinct focus, observable exit criteria, and a handoff to the next. (Notion blog on the 30-60-90 day plan framework: https://www.notion.com/blog/30-60-90-day-plan; Wikipedia, "Onboarding": https://en.wikipedia.org/wiki/Onboarding.)
 
-The plan this skill produces anchors each phase's competency targets to the six rubric axes from [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md): test analysis and design, defect lifecycle, test code conventions (automation roles), tooling depth, communication, and domain reasoning. Rather than treating onboarding as a generic HR checklist, the plan treats it as a continuation of the structured-interview signal - a hire scored 2 on "test code conventions" during the loop gets targeted development investment in exactly that axis during phase 2.
+The plan this skill produces anchors each phase's competency targets to the six rubric axes from `hiring-rubric-author`: test analysis and design, defect lifecycle, test code conventions (automation roles), tooling depth, communication, and domain reasoning. Rather than treating onboarding as a generic HR checklist, the plan treats it as a continuation of the structured-interview signal - a hire scored 2 on "test code conventions" during the loop gets targeted development investment in exactly that axis during phase 2.
 
 The PractiTest 2026 State of Testing Report found that nearly 40% of individual contributors feel "test strategy" is underdeveloped in their teams, and that practitioners who pivot toward strategy earn a +10.6% income premium versus those who remain in pure technical execution (https://www.practitest.com/state-of-testing/). The plan's day-61-90 phase directly addresses this gap by pushing the hire toward strategy ownership proportional to seniority.
 
@@ -21,8 +21,8 @@ The PractiTest 2026 State of Testing Report found that nearly 40% of individual 
 
 Do **not** use this skill to:
 
-- Score candidates - that is [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
-- Produce interviewer calibration material - that is [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
+- Score candidates - that is `hiring-rubric-author`.
+- Produce interviewer calibration material - that is `interviewer-calibration-guide-author`.
 - Create a career development or performance-review plan beyond the 90-day window. This skill covers the ramp to independent contribution; ongoing career laddering is out of scope.
 
 ## Step 1 - Capture the inputs
@@ -33,7 +33,7 @@ Required:
 |---|---|
 | **Seniority** | `junior` / `mid` / `senior` / `lead` - the same axis used in the hiring rubric |
 | **Role variant** | `manual-qa-engineer` / `qa-automation-engineer` / `sdet` / `test-lead` - determines which rubric axes are load-bearing |
-| **Rubric scores** | The per-dimension hire scores from [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) - axes scored 2 ("borderline") get targeted phase-2 development plans, not just the default milestones |
+| **Rubric scores** | The per-dimension hire scores from `hiring-rubric-author` - axes scored 2 ("borderline") get targeted phase-2 development plans, not just the default milestones |
 | **Team context** | Stack, CI toolchain, domain (fintech / consumer / B2B SaaS / etc.) - informs phase-1 environment setup and phase-2 tooling targets |
 | **Mentor availability** | Whether a dedicated senior QA mentor is available, or whether the new hire will pair with an engineering team member |
 
@@ -193,9 +193,9 @@ The output is a single markdown document with:
 
 ## Hand-off targets
 
-- **Author the upstream question bank** - [`interview-question-author`](../interview-question-author/SKILL.md).
-- **Author the upstream rubric** - [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md).
-- **Calibrate interviewers** - [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md).
+- **Author the upstream question bank** - `interview-question-author`.
+- **Author the upstream rubric** - `hiring-rubric-author`.
+- **Calibrate interviewers** - `interviewer-calibration-guide-author`.
 - **Ongoing career development beyond day 90** - team's career ladder and performance management process.
 
 ## References
@@ -205,5 +205,5 @@ The output is a single markdown document with:
 - Wikipedia, "Onboarding" - organizational socialization definition and four adjustment dimensions (role clarity, self-efficacy, social acceptance, organizational culture knowledge): https://en.wikipedia.org/wiki/Onboarding
 - ISTQB Certified Tester Foundation Level v4.0 syllabus (ASTQB mirror) - competency chapters cited for self-study milestones (Ch. 1: Fundamentals; Ch. 2: Test Activities and Roles; Ch. 3: Static Testing; Ch. 4: Test Analysis and Design; Ch. 5: Managing Test Activities; Ch. 6: Test Tools): https://astqb.org/certifications/foundation-level-certification/
 - PractiTest 2026 State of Testing Report - test strategy underdevelopment (40% gap) and the strategy-vs-execution income premium (+10.6%) that motivates the phase-3 strategy-ownership milestones: https://www.practitest.com/state-of-testing/
-- [`hiring-rubric-author`](../hiring-rubric-author/SKILL.md) - the upstream skill whose six competency axes (test analysis and design, defect lifecycle, test code conventions, tooling depth, communication, domain reasoning) are the target axes for this plan's per-phase competency tables.
-- [`interviewer-calibration-guide-author`](../interviewer-calibration-guide-author/SKILL.md) - the calibration guide that closes the interview loop; the onboarding plan picks up where the calibration guide ends (post-offer-acceptance).
+- `hiring-rubric-author` - the upstream skill whose six competency axes (test analysis and design, defect lifecycle, test code conventions, tooling depth, communication, domain reasoning) are the target axes for this plan's per-phase competency tables.
+- `interviewer-calibration-guide-author` - the calibration guide that closes the interview loop; the onboarding plan picks up where the calibration guide ends (post-offer-acceptance).

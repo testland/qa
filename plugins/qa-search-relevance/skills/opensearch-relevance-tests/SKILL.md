@@ -23,7 +23,7 @@ Relevance Workbench UI.
 ## Step 1 - Reuse judgment list format
 
 OpenSearch's `_rank_eval` accepts the same JSON as Elasticsearch's.
-See [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md)
+See `elasticsearch-relevance-tests`
 Step 1 for judgment list format + sourcing patterns. The CSV
 `(query, doc_id, rating)` schema is reusable.
 
@@ -237,9 +237,9 @@ should match. Differences point to subtle config drift.
 ## References
 
 - [OpenSearch search-relevance docs] - workbench, neural, hybrid
-- [`elasticsearch-relevance-tests`](../elasticsearch-relevance-tests/SKILL.md) - 
+- `elasticsearch-relevance-tests` - 
   sister skill (compatible Rank Eval API + judgment format)
-- [`vector-search-recall-tests`](../vector-search-recall-tests/SKILL.md) - 
+- `vector-search-recall-tests` - 
   vector search precision/recall tooling
 
 [OpenSearch search-relevance docs]: https://docs.opensearch.org/latest/search-plugins/search-relevance/

@@ -175,7 +175,7 @@ preview URL.
   Callers must poll a status endpoint or webhook.
 - **`netlify dev` may differ from prod** in subtle areas
   (geo headers, IP-based context).
-- **Cold-start budget per [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md).**
+- **Cold-start budget per `cold-start-budget-reference`.**
   Standard Functions: ~300ms-2s (Lambda-equivalent).
 - **No A/B-testing primitives.** Use other tools (LD / Statsig /
   GrowthBook).
@@ -191,9 +191,9 @@ preview URL.
 - Background Functions:
   [docs.netlify.com/functions/background-functions/](https://docs.netlify.com/functions/background-functions/).
 - Companion catalogs:
-  [`cold-start-budget-reference`](../cold-start-budget-reference/SKILL.md),
-  [`lambda-timeout-budget-reference`](../lambda-timeout-budget-reference/SKILL.md).
+  `cold-start-budget-reference`,
+  `lambda-timeout-budget-reference`.
 - Sibling tools:
-  [`aws-sam-local-testing`](../aws-sam-local-testing/SKILL.md),
-  [`cloudflare-workers-miniflare`](../cloudflare-workers-miniflare/SKILL.md),
-  [`vercel-edge-runtime-testing`](../vercel-edge-runtime-testing/SKILL.md).
+  `aws-sam-local-testing`,
+  `cloudflare-workers-miniflare`,
+  `vercel-edge-runtime-testing`.

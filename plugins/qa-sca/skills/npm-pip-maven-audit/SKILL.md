@@ -13,7 +13,7 @@ RubySec, Cargo advisory DB, etc.). They're the **fastest first-line
 defense** - already installed where the package manager is, no extra
 tooling, runs in seconds.
 
-Tradeoffs vs [`snyk-test`](../snyk-test/SKILL.md) / [`osv-scanner`](../osv-scanner/SKILL.md):
+Tradeoffs vs `snyk-test` / `osv-scanner`:
 
 | Property | Native audit | Snyk / OSV |
 |---|---|---|
@@ -34,8 +34,8 @@ and waivers.
 - Single-ecosystem repo where one native audit is sufficient.
 - Local dev loop: `npm audit` after `npm install` is faster than
   setting up Snyk locally.
-- Layered with [`snyk-test`](../snyk-test/SKILL.md) +
-  [`osv-scanner`](../osv-scanner/SKILL.md) for full coverage.
+- Layered with `snyk-test` +
+  `osv-scanner` for full coverage.
 
 ## Step 1 - npm / Yarn / pnpm
 
@@ -269,7 +269,7 @@ findings.
 - jeremylong.github.io/DependencyCheck/ - OWASP Dependency-Check
 - rustsec.org / github.com/rustsec/rustsec - cargo-audit
 - github.com/rubysec/bundler-audit - bundler-audit
-- [`snyk-test`](../snyk-test/SKILL.md),
-  [`osv-scanner`](../osv-scanner/SKILL.md),
-  [`dependabot-config`](../dependabot-config/SKILL.md),
-  [`renovate-config`](../renovate-config/SKILL.md) - sister tools
+- `snyk-test`,
+  `osv-scanner`,
+  `dependabot-config`,
+  `renovate-config` - sister tools

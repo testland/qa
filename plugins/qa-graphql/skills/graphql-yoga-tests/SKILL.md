@@ -114,7 +114,7 @@ npm test
 ### Production-config tests
 
 Per
-[`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md):
+`introspection-attack-surface-reference`:
 
 ```typescript
 import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection';
@@ -138,7 +138,7 @@ test('introspection disabled', async () => {
 ### Persisted-operations test
 
 Per
-[`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md)
+`persisted-query-strategy-reference`
 Mode 2:
 
 ```typescript
@@ -252,9 +252,9 @@ jobs:
 - Disable-introspection plugin:
   [the-guild.dev/graphql/yoga-server/docs](https://the-guild.dev/graphql/yoga-server/docs).
 - Companion catalogs:
-  [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md),
-  [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
+  `introspection-attack-surface-reference`,
+  `persisted-query-strategy-reference`.
 - Sibling frameworks:
-  [`apollo-server-tests`](../apollo-server-tests/SKILL.md),
-  [`mercurius-tests`](../mercurius-tests/SKILL.md),
-  [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
+  `apollo-server-tests`,
+  `mercurius-tests`,
+  `pothos-builder-tests`.

@@ -202,7 +202,7 @@ for release-stamp runs; skip for runs that get re-run.
 
 The sync script:
 
-1. Parses `junit.xml` (see [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md)).
+1. Parses `junit.xml` (see `junit-xml-analysis`).
 2. Extracts case IDs from test names (Step 2).
 3. Opens a run named `<branch> · <sha-short>` (Step 3).
 4. Batches results (Step 4).
@@ -265,10 +265,10 @@ new TestRail cases or naming-pattern fixes.
   stable shapes documented across multiple TestRail versions and
   the per-language client libraries (`testrail` Python,
   `testrail-api` JS).
-- [`junit-xml-analysis`](../junit-xml-analysis/SKILL.md) - 
+- `junit-xml-analysis` - 
   upstream parser for the input the sync script consumes.
-- [`xray-integration`](../xray-integration/SKILL.md),
-  [`zephyr-integration`](../zephyr-integration/SKILL.md) - sibling
+- `xray-integration`,
+  `zephyr-integration` - sibling
   Jira-native alternatives.
-- [`currents-integration`](../currents-integration/SKILL.md) - 
+- `currents-integration` - 
   different role: test analytics over time, not test management.

@@ -30,9 +30,9 @@ by stable ID).
 
 From the relevant register(s):
 
-- [`risk-matrix`](../risk-matrix/SKILL.md) (per-release)
-- [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md) (long-lived product)
-- [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md) (project execution - typically excluded from this matrix; only product / release risks map to *test* coverage)
+- `risk-matrix` (per-release)
+- `product-risk-register-builder` (long-lived product)
+- `project-risk-register-builder` (project execution - typically excluded from this matrix; only product / release risks map to *test* coverage)
 
 ```python
 def load_risks():
@@ -220,7 +220,7 @@ becomes uncovered:
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Map only release-scope risks | Long-lived product risks invisible | Include [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md) entries |
+| Map only release-scope risks | Long-lived product risks invisible | Include `product-risk-register-builder` entries |
 | Treat depth 1 = "covered" universally | Critical risks need depth ≥ 2 | Tier the verdict by risk score |
 | Untagged tests | Risk linkage manual; drifts | Adopt the `risk:<ID>` convention; lint for it |
 | No orphan-tests audit | Test suite bloats with risks-since-retired | Run Step 5 each cycle |
@@ -251,6 +251,6 @@ becomes uncovered:
   item", "test condition".
 - ISO/IEC/IEEE 29119-3:2021 §6.3 - traceability.
 - Composes:
-  [`risk-matrix`](../risk-matrix/SKILL.md),
-  [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),
+  `risk-matrix`,
+  `product-risk-register-builder`,
   `traceability-matrix-builder`.

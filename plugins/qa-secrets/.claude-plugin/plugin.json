@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-secrets",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Secrets scanning + rotation: 5 skills (gitleaks-scanning, trufflehog-scanning, kingfisher-scanning, secrets-baseline-manager, secrets-rotation-runner) and 1 agent (secrets-finding-triager). Covers detection AND rotation workflow (git-history scrub doesn't fix the leak).",
   "author": {
     "name": "testland",

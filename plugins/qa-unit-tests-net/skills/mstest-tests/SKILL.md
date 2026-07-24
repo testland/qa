@@ -11,8 +11,8 @@ Per [learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest][ms-
 
 [ms-doc]: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest
 
-For new code, [`xunit-tests`](../xunit-tests/SKILL.md) or
-[`nunit-tests`](../nunit-tests/SKILL.md) are more mainstream.
+For new code, `xunit-tests` or
+`nunit-tests` are more mainstream.
 MSTest is the right pick for Microsoft-mandated environments + legacy.
 
 ## When to use
@@ -208,7 +208,7 @@ public void ConditionalTest()
 - [ms-doc][ms-doc] - Microsoft MSTest tutorial
 - learn.microsoft.com/en-us/visualstudio/test - Visual Studio test docs
 - github.com/microsoft/testfx - MSTest source
-- [`xunit-tests`](../xunit-tests/SKILL.md),
-  [`nunit-tests`](../nunit-tests/SKILL.md),
-  [`fluentassertions`](../fluentassertions/SKILL.md) - sister tools
+- `xunit-tests`,
+  `nunit-tests`,
+  `fluentassertions` - sister tools
 - `test-code-conventions`

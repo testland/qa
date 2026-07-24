@@ -213,9 +213,9 @@ def test_saga_times_out_when_step_hangs():
 
 - [microservices.io/saga] - orchestration vs choreography, ACD, outbox,
   countermeasures
-- [`event-sourcing-tests`](../event-sourcing-tests/SKILL.md) - pairs
+- `event-sourcing-tests` - pairs
   with sagas for event-sourced systems
-- [`eventual-consistency-tests`](../eventual-consistency-tests/SKILL.md) - 
+- `eventual-consistency-tests` - 
   isolation-window assertions
 - `mvcc-isolation-tests` (in the qa-concurrency plugin) - 
   per-DB isolation when sagas overlap

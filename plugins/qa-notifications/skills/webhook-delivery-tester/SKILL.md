@@ -293,7 +293,7 @@ For receiver:
 - stripe.com/docs/webhooks - Stripe webhooks reference (de-facto standard for many patterns)
 - docs.github.com/en/webhooks - GitHub webhooks reference
 - `idempotency-test-author` - companion: receivers must be idempotent (cross-plugin)
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md),
-  [`sms-test-author`](../sms-test-author/SKILL.md) - sister channels
+- `email-flow-test-author`,
+  `sms-test-author` - sister channels
   (bounce/complaint webhooks + STOP-keyword webhooks reuse these
   patterns)

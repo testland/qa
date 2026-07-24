@@ -27,8 +27,8 @@ WebSocket, Server-Sent Events, JMS, gRPC, and MQTT
   integrates cleanly.
 
 For pure HTTP load testing on a non-JVM stack, prefer
-[`k6-load-testing`](../k6-load-testing/SKILL.md) (JavaScript) or
-[`locust-load-testing`](../locust-load-testing/SKILL.md) (Python).
+`k6-load-testing` (JavaScript) or
+`locust-load-testing` (Python).
 
 ## Install
 
@@ -265,10 +265,10 @@ uploaded regardless via `if: always()`.
 - [gatling-tutorial][tutorial] - DSL primitives: Simulation class,
   http() / scenario() / exec(), injectOpen vs injectClosed,
   setUp().assertions().
-- [`k6-load-testing`](../k6-load-testing/SKILL.md),
-  [`jmeter-load-testing`](../jmeter-load-testing/SKILL.md),
-  [`locust-load-testing`](../locust-load-testing/SKILL.md) - 
+- `k6-load-testing`,
+  `jmeter-load-testing`,
+  `locust-load-testing` - 
   alternatives by stack.
-- [`perf-budget-gate`](../perf-budget-gate/SKILL.md) - downstream
+- `perf-budget-gate` - downstream
   gate that aggregates load-runner verdicts with frontend perf
   metrics.

@@ -32,9 +32,9 @@ stable ID).
 
 Pull the entry from the relevant register:
 
-- [`risk-matrix`](../risk-matrix/SKILL.md) per-release
-- [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md) product-level
-- [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md) project-level
+- `risk-matrix` per-release
+- `product-risk-register-builder` product-level
+- `project-risk-register-builder` project-level
 
 Cross-reference: risk ID, score, category, current mitigations
 already in place.
@@ -267,6 +267,6 @@ Accepting because:
   alternate authority for security-domain acceptance decisions;
   cite by stable ID.
 - Sibling skills:
-  [`product-risk-register-builder`](../product-risk-register-builder/SKILL.md),
-  [`risk-matrix`](../risk-matrix/SKILL.md),
-  [`project-risk-register-builder`](../project-risk-register-builder/SKILL.md).
+  `product-risk-register-builder`,
+  `risk-matrix`,
+  `project-risk-register-builder`.

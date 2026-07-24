@@ -13,7 +13,7 @@ Per
 covers `buf config init`, `build`, `generate`, `lint`, `breaking`,
 and `curl`. This skill wraps three of them - `build`, `lint`,
 `breaking` - as the proto-PR gate. Pairs with
-[`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md)
+`protobuf-versioning-strategy-reference`
 for the catalog of what counts as breaking and why.
 
 ## When to use
@@ -59,7 +59,7 @@ conventions like "Field name should be lower_snake_case" and
 
 The choice of `breaking.use` (FILE / PACKAGE / WIRE_JSON / WIRE)
 follows the per-deployment-model logic in
-[`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md).
+`protobuf-versioning-strategy-reference`.
 
 ### Configure `buf.gen.yaml` (codegen)
 
@@ -212,7 +212,7 @@ calls above work without them.
             ${{ steps.breaking.outputs.stdout }}
             ```
             Consult
-            [protobuf-versioning-strategy-reference](../protobuf-versioning-strategy-reference/SKILL.md)
+            protobuf-versioning-strategy-reference
             for whether this change is genuinely required and how
             to do it safely (reserve, add new, deprecate old).
 ```
@@ -233,7 +233,7 @@ calls above work without them.
 ## Limitations
 
 - **Semantic vs wire breakage.** Per
-  [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md),
+  `protobuf-versioning-strategy-reference`,
   buf detects binary/codegen breakage. Semantic meaning changes
   ("field now means net price, not gross") are undetectable.
 - **No cross-service compatibility.** This is single-service
@@ -253,12 +253,12 @@ calls above work without them.
 - buf breaking rules:
   [buf.build/docs/breaking/rules](https://buf.build/docs/breaking/rules).
 - Companion catalog:
-  [`protobuf-versioning-strategy-reference`](../protobuf-versioning-strategy-reference/SKILL.md).
+  `protobuf-versioning-strategy-reference`.
 - Status code vocabulary:
-  [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
+  `grpc-status-code-mapping-reference`.
 - Sibling tools:
-  [`ghz-load`](../ghz-load/SKILL.md),
-  [`grpcurl-cli`](../grpcurl-cli/SKILL.md),
-  [`grpc-mock`](../grpc-mock/SKILL.md).
+  `ghz-load`,
+  `grpcurl-cli`,
+  `grpc-mock`.
 - Cross-service contract testing:
   `protobuf-compat-checking`.

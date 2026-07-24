@@ -28,12 +28,12 @@ install-wad`) to pin a known-good WinAppDriver version.
 [appiumdrivers]: https://appium.io/docs/en/latest/ecosystem/drivers/
 
 **Sibling differentiation:**
-[`winappdriver`](../winappdriver/SKILL.md) drives the same UIA
+`winappdriver` drives the same UIA
 surface directly via the Microsoft service - pick that skill if the
 project does not already use Appium or wants no Node.js dependency
 on the test host. Pick `appium-windows-driver` when the project
 already runs Appium for iOS / Android / Mac2 (per
-[`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md)
+`desktop-test-strategy-reference`
 for the Mac2 sibling) and Windows is the next platform to add.
 
 ## When to use
@@ -46,7 +46,7 @@ for the Mac2 sibling) and Windows is the next platform to add.
   prerun` / `appium:postrun`).
 - A consistent capability schema across platforms is more valuable
   than the no-Node-dependency simplicity of
-  [`winappdriver`](../winappdriver/SKILL.md).
+  `winappdriver`.
 
 ## Step 1 - Install Appium + the Windows driver
 
@@ -69,7 +69,7 @@ appium driver run windows install-wad 1.2.1
 The helper downloads the pinned WinAppDriver installer to
 `C:\Program Files (x86)\Windows Application Driver\` - the standard
 Microsoft install path described in
-[`winappdriver`](../winappdriver/SKILL.md).
+`winappdriver`.
 
 ## Step 2 - Launch the Appium server
 
@@ -128,7 +128,7 @@ driver.quit()
 ```
 
 Locators (`AccessibilityId`, `Name`, `ClassName`, etc.) carry the
-same UIA semantics as in [`winappdriver`](../winappdriver/SKILL.md) - 
+same UIA semantics as in `winappdriver` - 
 the driver proxies them through to WinAppDriver unchanged.
 
 ## Step 5 - Windows-specific gestures
@@ -244,7 +244,7 @@ jobs:
 ```
 
 Same hosted-vs-self-hosted runner caveats as
-[`winappdriver`](../winappdriver/SKILL.md) - UIA requires an
+`winappdriver` - UIA requires an
 interactive desktop session, so Session-0 Windows containers won't
 work without extra display setup.
 
@@ -275,7 +275,7 @@ work without extra display setup.
   use.
 - **Appium server overhead.** Adds a Node.js process layer in
   front of WinAppDriver - slightly slower session start than direct
-  [`winappdriver`](../winappdriver/SKILL.md). For tests where session
+  `winappdriver`. For tests where session
   startup time dominates (very short tests, large suites), direct
   WinAppDriver is faster.
 - **PowerShell hooks run as the test user.** They cannot bypass UAC
@@ -283,14 +283,14 @@ work without extra display setup.
   user's permissions.
 - **Same UIA constraints as direct WinAppDriver.** GPU-rendered
   surfaces, DirectComposition, and apps that don't publish UIA are
-  uncovered (see [`winappdriver`](../winappdriver/SKILL.md)
+  uncovered (see `winappdriver`
   limitations).
 
 ## References
 
 - appium-windows-driver README - [awd][awd].
 - Appium ecosystem drivers page - [appiumdrivers][appiumdrivers].
-- Sibling skill (direct service): [`winappdriver`](../winappdriver/SKILL.md).
+- Sibling skill (direct service): `winappdriver`.
 - Strategic frame:
-  [`desktop-test-strategy-reference`](../desktop-test-strategy-reference/SKILL.md).
+  `desktop-test-strategy-reference`.
 - Downstream: `junit-xml-analysis`.

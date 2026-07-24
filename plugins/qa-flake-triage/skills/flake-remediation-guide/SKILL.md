@@ -499,8 +499,8 @@ the production bug.
 
 ## Related components
 
-- [`flake-pattern-reference`](../flake-pattern-reference/SKILL.md) -
+- `flake-pattern-reference` -
   detection heuristics and triage decision tree for identifying which
   pattern applies before applying a fix from this skill.
-- [`flaky-test-quarantine`](../flaky-test-quarantine/SKILL.md) -
+- `flaky-test-quarantine` -
   workflow to quarantine a flake while this fix is in progress.

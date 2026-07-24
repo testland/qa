@@ -7,7 +7,7 @@ description: "Pure reference catalog of the cross-language object-construction p
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing a test framework's data-construction approach. It complements [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (cross-language), and [`golden-file-conventions`](../golden-file-conventions/SKILL.md) (snapshot pattern). Those skills document the tools; this skill documents the patterns.
+This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing a test framework's data-construction approach. It complements `factory-bot-data` (Ruby), `faker-data` (JS), `mimesis-data` (Python), `bogus-data` (.NET), `synthetic-pii-generator` (cross-language), and `golden-file-conventions` (snapshot pattern). Those skills document the tools; this skill documents the patterns.
 
 ## When to use
 
@@ -19,8 +19,8 @@ This skill is a **pure reference** - no execution steps. It is the catalog cited
 Do **not** use this skill to:
 
 - Configure a specific tool - that's the per-language skill for that tool.
-- Generate negative / boundary / parameterized test data - that's [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`pairwise-test-case-generator`](../pairwise-test-case-generator/SKILL.md).
-- Author an E2E seed fixture for the whole suite - that's [`seed-data-curator`](../seed-data-curator/SKILL.md).
+- Generate negative / boundary / parameterized test data - that's `negative-test-generator`, `boundary-value-generator`, `pairwise-test-case-generator`.
+- Author an E2E seed fixture for the whole suite - that's `seed-data-curator`.
 
 ## Pattern 1 - Test Data Builder
 
@@ -98,7 +98,7 @@ admin_user = create(:user, :admin, :with_org)
 |---|---|
 | Factory definitions that hard-code IDs (`id: 1`) | Tests collide in parallel; factories must let the DB / Faker assign |
 | Traits that overlap silently (`:admin` and `:premium` both set `role`) | Order-dependent behaviour; trait composition becomes unpredictable |
-| Factories that persist by default (`create` is the only mode) | Slow tests, unnecessary DB writes. Builders should expose `build` / `attributes` / `create` strategies (see [`factory-bot-data`](../factory-bot-data/SKILL.md)) |
+| Factories that persist by default (`create` is the only mode) | Slow tests, unnecessary DB writes. Builders should expose `build` / `attributes` / `create` strategies (see `factory-bot-data`) |
 | One mega-factory for the entire domain | Becomes a god-object; every test pulls a fully-populated graph |
 
 ## Pattern 3 - Object Mother
@@ -165,7 +165,7 @@ admin_user = create(:user, :admin, :with_org)
 
 **Definition:** A snapshot test compares the current output of code under test to a previously-saved canonical output ("the golden file"). When the test runs, it serialises the output, compares against the file, fails if they differ. Engineers explicitly approve a new golden file when the change is intentional.
 
-**This skill's role:** Snapshot is a recurring concept in test-data conversation, but the operational details (file naming, sanitisation of timestamps / IDs / PII, per-OS variants, review workflow) are documented in detail by [`golden-file-conventions`](../golden-file-conventions/SKILL.md). Reach for that skill for the operational catalog; this section is the pattern's catalog entry only.
+**This skill's role:** Snapshot is a recurring concept in test-data conversation, but the operational details (file naming, sanitisation of timestamps / IDs / PII, per-OS variants, review workflow) are documented in detail by `golden-file-conventions`. Reach for that skill for the operational catalog; this section is the pattern's catalog entry only.
 
 ### When to use Snapshot
 
@@ -181,7 +181,7 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Pattern 6 - Production-Data Anonymisation
 
-**Canonical source:** Per ISO/IEC 25024 (data quality) and GDPR/CCPA legal requirements; practitioner adoption documented across [Tonic.ai](https://www.tonic.ai/), [Gretel.ai](https://gretel.ai/), [K2view](https://www.k2view.com/), and [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) (a companion skill for synthesizing PII).
+**Canonical source:** Per ISO/IEC 25024 (data quality) and GDPR/CCPA legal requirements; practitioner adoption documented across [Tonic.ai](https://www.tonic.ai/), [Gretel.ai](https://gretel.ai/), [K2view](https://www.k2view.com/), and `synthetic-pii-generator` (a companion skill for synthesizing PII).
 
 **Definition:** Anonymisation is the technique of using production data (or production-shaped data) for testing **after** removing or masking personally-identifiable information (PII), commercially-sensitive data, and any field that would breach privacy / compliance if leaked to a test environment.
 
@@ -213,8 +213,8 @@ admin_user = create(:user, :admin, :with_org)
 | Small stable set of canonical objects | Object Mother | Generally legacy; consider migrating to Builder + Factory |
 | Per-test independence | Fresh Fixture | Always the default; reach for Shared only when measured slow |
 | Read-only shared state | Shared Fixture | Document immutability; one mutation kills the contract |
-| Large structured output | Snapshot / golden-file | See [`golden-file-conventions`](../golden-file-conventions/SKILL.md) for operational details |
-| Production-shaped privacy-safe data | Anonymisation | Always for production-sourced data; pair with [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md) |
+| Large structured output | Snapshot / golden-file | See `golden-file-conventions` for operational details |
+| Production-shaped privacy-safe data | Anonymisation | Always for production-sourced data; pair with `synthetic-pii-generator` |
 
 ## Cross-cutting anti-patterns
 
@@ -229,11 +229,11 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Hand-off targets
 
-- **Configure a specific per-language tool** → [`factory-bot-data`](../factory-bot-data/SKILL.md) (Ruby), [`faker-data`](../faker-data/SKILL.md) (JS), [`mimesis-data`](../mimesis-data/SKILL.md) (Python), [`bogus-data`](../bogus-data/SKILL.md) (.NET).
-- **Build an E2E seed dataset** → [`seed-data-curator`](../seed-data-curator/SKILL.md).
-- **Generate PII (anonymised) test data** → [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md).
-- **Snapshot / golden-file operational details** → [`golden-file-conventions`](../golden-file-conventions/SKILL.md).
-- **Generate negative / boundary / malicious test data** → [`negative-test-generator`](../negative-test-generator/SKILL.md), [`boundary-value-generator`](../boundary-value-generator/SKILL.md), [`malicious-payload-bank`](../malicious-payload-bank/SKILL.md).
+- **Configure a specific per-language tool** → `factory-bot-data` (Ruby), `faker-data` (JS), `mimesis-data` (Python), `bogus-data` (.NET).
+- **Build an E2E seed dataset** → `seed-data-curator`.
+- **Generate PII (anonymised) test data** → `synthetic-pii-generator`.
+- **Snapshot / golden-file operational details** → `golden-file-conventions`.
+- **Generate negative / boundary / malicious test data** → `negative-test-generator`, `boundary-value-generator`, `malicious-payload-bank`.
 - **Cross-test isolation / fixture scope rules** → `test-isolation-patterns` (sister catalog, in the qa-test-review plugin).
 - **Object-model architecture patterns** → `object-model-patterns` (sister catalog).
 
@@ -254,5 +254,5 @@ admin_user = create(:user, :admin, :with_org)
 - ISTQB glossary - test data: https://glossary.istqb.org/en_US/term/test-data
 - ISTQB glossary - fixture: https://glossary.istqb.org/en_US/term/test-fixture
 - ISO/IEC 25024 - data quality model (cited for anonymisation requirements).
-- [`factory-bot-data`](../factory-bot-data/SKILL.md), [`faker-data`](../faker-data/SKILL.md), [`mimesis-data`](../mimesis-data/SKILL.md), [`bogus-data`](../bogus-data/SKILL.md), [`synthetic-pii-generator`](../synthetic-pii-generator/SKILL.md), [`golden-file-conventions`](../golden-file-conventions/SKILL.md), [`seed-data-curator`](../seed-data-curator/SKILL.md) - the per-tool and operational siblings.
+- `factory-bot-data`, `faker-data`, `mimesis-data`, `bogus-data`, `synthetic-pii-generator`, `golden-file-conventions`, `seed-data-curator` - the per-tool and operational siblings.
 - `object-model-patterns`, `test-isolation-patterns`, `test-step-design-patterns` - sister architecture-tier pattern catalogs.

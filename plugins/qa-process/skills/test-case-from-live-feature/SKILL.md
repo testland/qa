@@ -7,9 +7,9 @@ description: "Build-an-X workflow that produces a test-case matrix from a **live
 
 ## Overview
 
-A tester is told "test the new checkout flow" with no story, no AC, no design doc. The feature is deployed to staging. The right path is not to halt; it is to **reverse-engineer a test-case matrix from the live feature itself**, anchored on the four heuristic models in [`heuristic-test-design-reference`](../heuristic-test-design-reference/SKILL.md). This skill is the workflow that runs that reverse-engineering and emits a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
+A tester is told "test the new checkout flow" with no story, no AC, no design doc. The feature is deployed to staging. The right path is not to halt; it is to **reverse-engineer a test-case matrix from the live feature itself**, anchored on the four heuristic models in `heuristic-test-design-reference`. This skill is the workflow that runs that reverse-engineering and emits a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
 
-The output is the same shape as [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) - one row per case with `id / title / tier / precondition / steps / expected / source claim` - but the `source claim` column points at *observed behaviour* rather than *story sentence*, and rows are tagged with the heuristic that surfaced them so the team can audit the coverage logic later.
+The output is the same shape as `test-case-ideation-from-story` - one row per case with `id / title / tier / precondition / steps / expected / source claim` - but the `source claim` column points at *observed behaviour* rather than *story sentence*, and rows are tagged with the heuristic that surfaced them so the team can audit the coverage logic later.
 
 ## When to use
 
@@ -21,7 +21,7 @@ The output is the same shape as [`test-case-ideation-from-story`](../test-case-i
 
 Do **not** use this skill when:
 
-- A written story / AC exists - use [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) (faster and more traceable to source).
+- A written story / AC exists - use `test-case-ideation-from-story` (faster and more traceable to source).
 - The feature is not yet deployed (no running surface to probe) - escalate the documentation gap; heuristic test design without **any** observable surface is divination, not testing.
 - The task is open-ended exploration / learning - produce a session charter instead.
 
@@ -68,7 +68,7 @@ Inputs that **cannot** be confirmed by direct observation are tagged `[verbal, u
 
 ## Step 2 - Walk the heuristic models
 
-For each heuristic in [`heuristic-test-design-reference`](../heuristic-test-design-reference/SKILL.md), apply it to the observation log:
+For each heuristic in `heuristic-test-design-reference`, apply it to the observation log:
 
 ### 2a - SFDPOT coverage walk
 
@@ -116,7 +116,7 @@ Walk the eight (+2) [ISO/IEC 25010](https://en.wikipedia.org/wiki/ISO/IEC_25010)
 
 ## Step 3 - Emit the matrix
 
-Same shape as [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) output, with two added columns:
+Same shape as `test-case-ideation-from-story` output, with two added columns:
 
 | Column | Notes |
 |---|---|
@@ -142,7 +142,7 @@ Confidence-tagged rows give the team an explicit gradient: `observed` cases can 
 
 ## Step 4 - Reconcile with downstream skills
 
-The matrix is the input to the same downstream chain as [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md):
+The matrix is the input to the same downstream chain as `test-case-ideation-from-story`:
 
 1. Cases the team wants to **execute manually** → `manual-test-script-author`.
 2. Cases the team wants to **convert to Gherkin** → `manual-step-to-gherkin`.
@@ -153,7 +153,7 @@ The matrix should also be filed with the team's PM / engineer as a **documentati
 
 ## Step 5 - Tracker / test-management integration
 
-Per the same conventions as [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md): import as CSV into TestRail / Qase / Xray; preserve the `Heuristic` and `Confidence` columns as tags so the team can filter "all SFDPOT-F-derived smoke cases" or "all `inferred` cases awaiting first-run confirmation."
+Per the same conventions as `test-case-ideation-from-story`: import as CSV into TestRail / Qase / Xray; preserve the `Heuristic` and `Confidence` columns as tags so the team can filter "all SFDPOT-F-derived smoke cases" or "all `inferred` cases awaiting first-run confirmation."
 
 ## Anti-patterns
 
@@ -179,11 +179,11 @@ Per the same conventions as [`test-case-ideation-from-story`](../test-case-ideat
 - **Manual execution script** → `manual-test-script-author`.
 - **Gherkin scenarios** → `manual-step-to-gherkin` or `gherkin-from-stories`.
 - **Negative / boundary expansion of the cases** → `negative-test-generator`, `boundary-value-generator`.
-- **When a written spec arrives mid-flow** → switch upstream to [`test-case-ideation-from-story`](../test-case-ideation-from-story/SKILL.md) and merge the two matrices.
+- **When a written spec arrives mid-flow** → switch upstream to `test-case-ideation-from-story` and merge the two matrices.
 
 ## References
 
-- [`heuristic-test-design-reference`](../heuristic-test-design-reference/SKILL.md) - the reference catalog of HTSM / SFDPOT / Whittaker / FEW HICCUPPS / ISO 25010 this skill consumes.
+- `heuristic-test-design-reference` - the reference catalog of HTSM / SFDPOT / Whittaker / FEW HICCUPPS / ISO 25010 this skill consumes.
 - James Bach - Heuristic Test Strategy Model: https://www.satisfice.com/download/heuristic-test-strategy-model
 - Michael Bolton - DevelopSense (FEW HICCUPPS, exploratory testing): https://developsense.com/
 - Exploratory testing - Kaner's 1984 definition; Whittaker "How to Break Software" attack catalog: https://en.wikipedia.org/wiki/Exploratory_testing

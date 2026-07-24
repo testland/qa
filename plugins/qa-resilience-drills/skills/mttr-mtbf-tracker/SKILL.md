@@ -178,9 +178,9 @@ Document which definition your reports use; both are legitimate.
 - [Google SRE - Embracing Risk] - incident-metrics framing
 - ITIL 4 incident management - ITSM standard
 - ISO/IEC 20000 service management - high-level governance
-- [`error-budget-tests`](../error-budget-tests/SKILL.md) - per-incident
+- `error-budget-tests` - per-incident
   budget consumption
-- [`dr-drill-runner`](../dr-drill-runner/SKILL.md) - drills produce
+- `dr-drill-runner` - drills produce
   incidents with `is_planned_maintenance: true`
 
 [Google SRE - Embracing Risk]: https://sre.google/sre-book/embracing-risk/

@@ -25,7 +25,7 @@ The tool exits non-zero when breaking changes exist, exits zero
 otherwise - the gate is the exit code.
 
 This is the GraphQL-specific counterpart to
-[`openapi-contract-diff`](../openapi-contract-diff/SKILL.md). Use it
+`openapi-contract-diff`. Use it
 when the API surface is GraphQL (single schema or Apollo Federation
 supergraph) instead of REST.
 
@@ -191,6 +191,6 @@ self-hosted, vendor-neutral default.
   command.
 - [gqi-diff][diff] - `diff` CLI semantics, change classifications,
   rule flags.
-- [`openapi-contract-diff`](../openapi-contract-diff/SKILL.md) - REST
+- `openapi-contract-diff` - REST
   counterpart for OpenAPI.
-- [`contract-compatibility-gate`](../contract-compatibility-gate/SKILL.md) - gate skill that aggregates this output with Pact / oasdiff verdicts.
+- `contract-compatibility-gate` - gate skill that aggregates this output with Pact / oasdiff verdicts.

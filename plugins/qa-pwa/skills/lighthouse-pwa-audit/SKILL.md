@@ -341,7 +341,7 @@ gives engineers the LHR JSON to triage offline.
 - **Headless CI cannot test iOS install criteria.** Lighthouse
   drives Chromium only; the `apple-touch-icon` audit checks the
   link tag presence, not the resulting iOS install behavior. See
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
+  `pwa-install-flow-reference`
   Stage 3 for the iOS-specific path.
 - **Authenticated routes** require the auth recipe from [lh-gh]
   docs - programmatic invocation with a logged-in Chrome user
@@ -358,12 +358,12 @@ gives engineers the LHR JSON to triage offline.
 - Lighthouse CI config (`.lighthouserc.json` shape, preset values,
   category vs audit assertions, aggregation methods) - [lhci-config].
 - Differentiation: this skill is the *audit reader*. The
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md)
+  `pwa-install-flow-reference`
   is the *contract* the `installable-manifest` audit checks
-  against; the [`workbox-tests`](../workbox-tests/SKILL.md) skill
+  against; the `workbox-tests` skill
   covers the runtime cache behavior Lighthouse can't fully
   inspect.
 - Sibling skills:
-  [`pwa-install-flow-reference`](../pwa-install-flow-reference/SKILL.md),
-  [`web-push-tests`](../web-push-tests/SKILL.md),
-  [`service-worker-lifecycle-tests`](../service-worker-lifecycle-tests/SKILL.md).
+  `pwa-install-flow-reference`,
+  `web-push-tests`,
+  `service-worker-lifecycle-tests`.

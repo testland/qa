@@ -38,7 +38,7 @@ rather than `decide`, `variant`, or `checkGate`.
 - Verifying that impression listeners fire correctly per SDK
   evaluation.
 - Assignment-integrity tests per
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+  `ab-test-validity-checklist`
   Step 3.
 - CI pipelines where network access to Split.io / Harness is
   unavailable or undesirable.
@@ -228,7 +228,7 @@ const factory = SplitFactory({
 
 ### Assignment integrity tests
 
-Per [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+Per `ab-test-validity-checklist`
 Step 3, verify that the same key always receives the same treatment
 and that different keys can receive different treatments:
 
@@ -365,11 +365,11 @@ describe('checkout page feature flags', () => {
 - JavaScript SDK docs (Harness FME):
   [developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk](https://developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk)
 - Companion catalogs:
-  [`guardrail-metrics-reference`](../guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../peeking-problem-reference/SKILL.md),
-  [`ab-test-validity-checklist`](../ab-test-validity-checklist/SKILL.md)
+  `guardrail-metrics-reference`,
+  `peeking-problem-reference`,
+  `ab-test-validity-checklist`
 - Sibling SDKs:
-  [`statsig-test`](../statsig-test/SKILL.md),
-  [`optimizely-test`](../optimizely-test/SKILL.md),
-  [`vwo-test`](../vwo-test/SKILL.md),
-  [`amplitude-experiment-test`](../amplitude-experiment-test/SKILL.md)
+  `statsig-test`,
+  `optimizely-test`,
+  `vwo-test`,
+  `amplitude-experiment-test`

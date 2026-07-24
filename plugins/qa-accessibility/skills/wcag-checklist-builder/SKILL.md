@@ -15,9 +15,9 @@ matching WCAG 2.2 checklist.
 
 The checklist pairs with:
 
-- [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md)
+- `screen-reader-test-author`
   for manual verification.
-- [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md) for
+- `a11y-violation-gate` for
   automated scans.
 
 ## When to use
@@ -52,7 +52,7 @@ For each archetype, the matching checklist sections are below.
 
 - [ ] Heading levels are sequential (h1 → h2 → h3; no skips).
 - [ ] Color contrast ≥4.5:1 (or 3:1 for large text per
-      [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md)).
+      `wcag-color-contrast`).
 - [ ] Decorative-only images have empty `alt=""`; meaningful
       images have descriptive `alt`.
 - [ ] Information conveyed by color alone is also conveyed in
@@ -99,7 +99,7 @@ For each archetype, the matching checklist sections are below.
 
 ### Interactive - overlay (modal / drawer / popover)
 
-(See [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md) for the
+(See `wcag-focus-trap` for the
 6-step pattern.)
 
 - [ ] `role="dialog"` (modal) OR `role="alertdialog"` (interrupt).
@@ -113,7 +113,7 @@ For each archetype, the matching checklist sections are below.
 
 ### Composite (combobox, date picker, multi-select)
 
-(See [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md).)
+(See `aria-authoring-patterns`.)
 
 - [ ] Match the matching APG pattern's full keyboard model.
 - [ ] `aria-expanded` on the trigger.
@@ -167,7 +167,7 @@ artifact ships into the user's repo and has to be runnable by a
 tester holding only that file. Baseline commands (per the [NVDA
 user guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)
 and [Apple VoiceOver](https://www.apple.com/accessibility/mac/vision/);
-same set as [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md)):
+same set as `screen-reader-test-author`):
 
 | Action | NVDA + Firefox (Windows) | VoiceOver + Safari (macOS) |
 |---|---|---|
@@ -265,9 +265,9 @@ checks:
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - W3C ARIA Authoring Practices - [apg][apg].
 - Related skills:
-  [`wcag-keyboard-navigation`](../wcag-keyboard-navigation/SKILL.md),
-  [`wcag-focus-trap`](../wcag-focus-trap/SKILL.md),
-  [`wcag-color-contrast`](../wcag-color-contrast/SKILL.md),
-  [`aria-authoring-patterns`](../aria-authoring-patterns/SKILL.md),
-  [`screen-reader-test-author`](../screen-reader-test-author/SKILL.md),
-  [`a11y-violation-gate`](../a11y-violation-gate/SKILL.md).
+  `wcag-keyboard-navigation`,
+  `wcag-focus-trap`,
+  `wcag-color-contrast`,
+  `aria-authoring-patterns`,
+  `screen-reader-test-author`,
+  `a11y-violation-gate`.

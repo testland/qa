@@ -190,9 +190,9 @@ Maintain `docs/observability/INDEX.md`:
 ```markdown
 | Feature | Spec | Owner | Status |
 |---|---|---|---|
-| Order create | [order-create.md](./order-create.md) | @team-checkout | active |
-| User signup | [user-signup.md](./user-signup.md) | @team-identity | active |
-| Refund flow | [refund.md](./refund.md) | @team-payments | draft |
+| Order create | order-create.md | @team-checkout | active |
+| User signup | user-signup.md | @team-identity | active |
+| Refund flow | refund.md | @team-payments | draft |
 ```
 
 ## Anti-patterns
@@ -217,8 +217,8 @@ Maintain `docs/observability/INDEX.md`:
 - [OpenTelemetry traces concept docs] - span model, kind, status
 - [OpenTelemetry HTTP semantic conventions] - required HTTP attrs
 - [OpenTelemetry DB semantic conventions] - required DB attrs (consult docs site for current page)
-- [`opentelemetry-trace-assertions`](../opentelemetry-trace-assertions/SKILL.md),
-  [`jaeger-trace-tests`](../jaeger-trace-tests/SKILL.md) - sister skills
+- `opentelemetry-trace-assertions`,
+  `jaeger-trace-tests` - sister skills
   that enforce spec conformance
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/

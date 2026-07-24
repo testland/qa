@@ -521,7 +521,7 @@ silently skipped on re-runs.
 - **Streaming interceptors need fake `ServerStream` / `ClientStream`
   implementations.** Minimal fakes satisfy most tests; complex
   multi-message sequences belong in
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `grpc-streaming-test-author`.
 - **grpc-js server interceptors are not in scope.** The `@grpc/grpc-js`
   server does not expose a `ServerInterceptor` extension point in the
   same way the Java or Go servers do.
@@ -550,8 +550,8 @@ silently skipped on re-runs.
 - grpc-js client interceptors (supported feature listing):
   [github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js).
 - Status code assertions:
-  [`grpc-status-code-mapping-reference`](../grpc-status-code-mapping-reference/SKILL.md).
+  `grpc-status-code-mapping-reference`.
 - In-process server setup (when testing interceptor + handler together):
-  [`grpc-mock`](../grpc-mock/SKILL.md).
+  `grpc-mock`.
 - Streaming handler tests:
-  [`grpc-streaming-test-author`](../grpc-streaming-test-author/SKILL.md).
+  `grpc-streaming-test-author`.

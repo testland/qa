@@ -247,8 +247,8 @@ For each SMS flow:
 - twilio.com/docs/iam/test-credentials - Test Credentials + Magic Numbers
 - twilio.com/docs/messaging - Messaging API reference
 - ctia.org/the-wireless-industry/industry-commitments/messaging-interoperability - CTIA SMS-keyword guidelines
-- [`email-flow-test-author`](../email-flow-test-author/SKILL.md) - 
+- `email-flow-test-author` - 
   sister channel: opt-out + bounce patterns rhyme
-- [`webhook-delivery-tester`](../webhook-delivery-tester/SKILL.md) - 
+- `webhook-delivery-tester` - 
   companion: STOP-keyword webhook is a webhook that needs verification
-- [`push-notification-test-author`](../push-notification-test-author/SKILL.md) - sister channel
+- `push-notification-test-author` - sister channel

@@ -31,7 +31,7 @@ see `test-code-conventions`; test code is reviewed separately.
 - Need built-in mocking + snapshot testing without external libs.
 - Migrating from a fragmented Mocha + Chai + Sinon + nyc setup.
 
-For Vite-based projects, prefer [`vitest-tests`](../vitest-tests/SKILL.md)
+For Vite-based projects, prefer `vitest-tests`
 (Vite-native; faster transform-pipeline reuse).
 
 ## Step 1 - Install
@@ -289,7 +289,7 @@ npm install --save-dev eslint-plugin-jest
 
 ## Limitations
 
-- Slower than [`vitest-tests`](../vitest-tests/SKILL.md) on
+- Slower than `vitest-tests` on
   Vite-based projects (Jest doesn't share dev-server transform).
 - Snapshot testing brittle at scale; pair with `jest-image-snapshot`
   for visual snapshots.
@@ -305,9 +305,9 @@ npm install --save-dev eslint-plugin-jest
 - jestjs.io/docs/cli - CLI reference incl. `--ci`
 - jestjs.io/docs/mock-functions - mocking deep dive
 - jestjs.io/docs/configuration#coverageThreshold-object - coverage gating
-- [`vitest-tests`](../vitest-tests/SKILL.md),
-  [`mocha-tests`](../mocha-tests/SKILL.md),
-  [`ava-tests`](../ava-tests/SKILL.md),
-  [`jasmine-tests`](../jasmine-tests/SKILL.md) - sister tools
+- `vitest-tests`,
+  `mocha-tests`,
+  `ava-tests`,
+  `jasmine-tests` - sister tools
 - `test-code-conventions` (qa-test-review) - test code hygiene (separate from per-framework
   lifecycle)

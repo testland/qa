@@ -7,20 +7,17 @@ description: "Wraps Apollo Server testing patterns: `server.executeOperation()` 
 
 ## Overview
 
-Per
-[apollographql.com/docs/apollo-server/testing/testing](https://www.apollographql.com/docs/apollo-server/testing/testing),
-`executeOperation` "initializes automatically" - no startup
-needed for unit-style tests against the schema in-process. For
-HTTP-layer tests (CORS, middleware, response headers), use
-`supertest` against an ephemeral-port server.
+`executeOperation` initializes automatically - no startup needed for
+unit-style tests against the schema in-process. For HTTP-layer tests
+(CORS, middleware, response headers), use `supertest` against an
+ephemeral-port server.
 
 ## When to use
 
 - Unit tests for resolvers using `executeOperation`.
 - Integration tests for HTTP-layer behaviour using `supertest`.
 - Production-config gates: assert introspection / APQ /
-  hideSchemaDetails configurations per
-  [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md).
+  hideSchemaDetails settings match your production config.
 
 ## Authoring
 
@@ -31,8 +28,6 @@ npm install --save-dev @apollo/server supertest @types/supertest
 ```
 
 ### In-process tests with `executeOperation`
-
-Per Apollo docs:
 
 ```typescript
 import { ApolloServer } from '@apollo/server';
@@ -46,9 +41,7 @@ test('returns greeting', async () => {
     variables: { name: 'world' },
   });
 
-  // Per Apollo docs: "Any errors in parsing, validating, and
-  // executing your GraphQL operation are returned in the nested
-  // `errors` field" rather than being thrown
+  // Parse/validation/execution errors surface in `errors`, not thrown
   if (response.body.kind !== 'single') throw new Error('expected single');
   expect(response.body.singleResult.errors).toBeUndefined();
   expect(response.body.singleResult.data?.hello).toBe('Hello world!');
@@ -69,12 +62,9 @@ const res = await testServer.executeOperation(
 );
 ```
 
-Pass `contextValue` to bypass the production
-context-initialisation function (which usually parses headers).
+`contextValue` bypasses the production context function (which parses headers).
 
 ### HTTP-layer tests with supertest
-
-Per Apollo docs:
 
 ```typescript
 import { startStandaloneServer } from '@apollo/server/standalone';
@@ -114,8 +104,7 @@ npx jest schema.test.ts -t "introspection"
 
 ### Production-config tests (most important)
 
-Per
-[`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md):
+Assert prod-time security defaults under `NODE_ENV=production`:
 
 ```typescript
 import { ApolloServer } from '@apollo/server';
@@ -149,9 +138,7 @@ test('hideSchemaDetailsFromClientErrors strips did-you-mean', async () => {
 
 ### Persisted-query mode test
 
-Per
-[`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md)
-Mode 2:
+Strict allowlist (APQ) mode:
 
 ```typescript
 test('strict APQ rejects unregistered hash', async () => {
@@ -171,8 +158,7 @@ test('strict APQ rejects unregistered hash', async () => {
 
 ## Parsing results
 
-Per Apollo docs, the `executeOperation` response shape is
-discriminated:
+The `executeOperation` response shape is discriminated:
 
 ```typescript
 type ExecuteOperationResult =
@@ -180,9 +166,9 @@ type ExecuteOperationResult =
   | { body: { kind: 'incremental'; ... } };
 ```
 
-Always check `kind === 'single'` first. The errors array
-contains `GraphQLError` objects with `message`, `path`,
-`extensions.code` (e.g., `'BAD_USER_INPUT'`, `'UNAUTHENTICATED'`,
+Always check `kind === 'single'` first. The errors array contains
+`GraphQLError` objects with `message`, `path`, `extensions.code`
+(e.g., `'BAD_USER_INPUT'`, `'UNAUTHENTICATED'`,
 `'PERSISTED_QUERY_NOT_FOUND'`).
 
 For supertest: standard HTTP response; `response.body.errors` if
@@ -211,9 +197,8 @@ jobs:
         run: npx jest tests/production-config/ --forceExit
 ```
 
-The production-config jobs run **separately** with
-`NODE_ENV=production` so the actual prod-time defaults are
-exercised.
+The production-config jobs run **separately** with `NODE_ENV=production`
+so the actual prod-time defaults are exercised.
 
 ## Anti-patterns
 
@@ -222,7 +207,7 @@ exercised.
 | Tests in `NODE_ENV=test` only | Production defaults differ; introspection-disabled gate untested | Separate prod-config test job |
 | `executeOperation` for HTTP-layer concerns | Skips middleware, CORS, headers | Use supertest for HTTP-layer |
 | Hardcoded port `4000` in tests | Parallel CI conflicts | `port: 0` |
-| Forgetting `server.stop()` in `afterAll` | Goroutine / connection leak across tests | Always stop |
+| Forgetting `server.stop()` in `afterAll` | Connection leak across tests | Always stop |
 | Asserting `errors[0].message` string | Brittle to wording / i18n | Assert `extensions.code` |
 | Skipping `contextValue` injection | Tests use real auth headers; flaky | Inject mocked context per test |
 | One mega-test for the whole schema | Failures hard to diagnose | One test per resolver / operation |
@@ -231,30 +216,17 @@ exercised.
 ## Limitations
 
 - **`executeOperation` skips HTTP.** Auth via headers, CORS,
-  rate-limiting middleware are not exercised. Use supertest for
-  those.
+  rate-limiting middleware are not exercised. Use supertest for those.
 - **Doesn't test subscriptions over WS.** Subscriptions need a
   WebSocket server; use `graphql-ws` test patterns.
 - **Doesn't catch type-level bugs at runtime.** Test the runtime
-  behaviour, not the type definitions. Compile-time errors are
-  separate.
-- **Doesn't replace contract tests.** Mocked context can drift
-  from prod; pair with `graphql-schema-regression`
-  (in the qa-contract-testing plugin).
+  behaviour, not the type definitions.
+- **Doesn't replace contract tests.** Mocked context can drift from
+  prod; pair with schema-regression contract tests.
 
 ## References
 
-- Apollo Server testing docs:
-  [apollographql.com/docs/apollo-server/testing/testing](https://www.apollographql.com/docs/apollo-server/testing/testing).
-- Apollo Server API reference:
-  [apollographql.com/docs/apollo-server/api/apollo-server](https://www.apollographql.com/docs/apollo-server/api/apollo-server).
-- Companion catalogs:
-  [`introspection-attack-surface-reference`](../introspection-attack-surface-reference/SKILL.md),
-  [`persisted-query-strategy-reference`](../persisted-query-strategy-reference/SKILL.md).
-- Sibling frameworks:
-  [`graphql-yoga-tests`](../graphql-yoga-tests/SKILL.md),
-  [`hasura-tests`](../hasura-tests/SKILL.md),
-  [`mercurius-tests`](../mercurius-tests/SKILL.md),
-  [`pothos-builder-tests`](../pothos-builder-tests/SKILL.md).
-- Contract-drift cross-plugin:
-  `graphql-schema-regression`.
+- Apollo Server testing:
+  [apollographql.com/docs/apollo-server/testing/testing](https://www.apollographql.com/docs/apollo-server/testing/testing)
+- Apollo Server API - introspection, persisted queries, error config:
+  [apollographql.com/docs/apollo-server/api/apollo-server](https://www.apollographql.com/docs/apollo-server/api/apollo-server)

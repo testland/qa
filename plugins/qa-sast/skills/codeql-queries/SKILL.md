@@ -33,8 +33,8 @@ sanitization") that pattern matchers can't express.
   regimes prefer it).
 - The team writes custom queries for org-specific patterns.
 
-For multi-platform CI without GitHub, use [`semgrep-rules`](../semgrep-rules/SKILL.md)
-or [`sonarqube-rules`](../sonarqube-rules/SKILL.md).
+For multi-platform CI without GitHub, use `semgrep-rules`
+or `sonarqube-rules`.
 
 ## Step 1 - Install
 
@@ -239,7 +239,7 @@ GitHub).
 - codeql.github.com/codeql-standard-libraries/ - per-language stdlibs
 - github.com/github/codeql - query packs source
 - learningqltest.github.io/learningql/ - CodeQL University training
-- [`semgrep-rules`](../semgrep-rules/SKILL.md),
-  [`sonarqube-rules`](../sonarqube-rules/SKILL.md),
-  [`bandit-python`](../bandit-python/SKILL.md),
-  [`gosec-go`](../gosec-go/SKILL.md) - sister scanners
+- `semgrep-rules`,
+  `sonarqube-rules`,
+  `bandit-python`,
+  `gosec-go` - sister scanners

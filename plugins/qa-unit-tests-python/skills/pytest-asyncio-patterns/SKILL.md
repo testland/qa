@@ -383,4 +383,4 @@ present, set only one to auto.
 - [fastapi.tiangolo.com async tests](https://fastapi.tiangolo.com/advanced/async-tests/) - ASGITransport + AsyncClient pattern
 - [docs.aiohttp.org testing](https://docs.aiohttp.org/en/stable/testing.html) - aiohttp_client fixture
 - [anyio.readthedocs.io testing](https://anyio.readthedocs.io/en/stable/testing.html) - anyio backend parametrization
-- [`pytest-tests`](../pytest-tests/SKILL.md) - full pytest framework (fixtures, parametrize, coverage, CI)
+- `pytest-tests` - full pytest framework (fixtures, parametrize, coverage, CI)

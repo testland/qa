@@ -20,7 +20,7 @@ transition with **simulated settlement** in sandbox.
 - Tests for code using Braintree.
 - Drop-in / Hosted Fields client-side flow tests.
 - 3DS tests per
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md).
+  `3ds-test-flow-reference`.
 
 ## Authoring
 
@@ -204,10 +204,10 @@ jobs:
 - Webhook guide:
   [developer.paypal.com/braintree/docs/guides/webhooks/parse/node](https://developer.paypal.com/braintree/docs/guides/webhooks/parse/node).
 - Companion catalogs:
-  [`payment-flow-states-reference`](../payment-flow-states-reference/SKILL.md),
-  [`3ds-test-flow-reference`](../3ds-test-flow-reference/SKILL.md),
-  [`pci-dss-scope-reference`](../pci-dss-scope-reference/SKILL.md).
+  `payment-flow-states-reference`,
+  `3ds-test-flow-reference`,
+  `pci-dss-scope-reference`.
 - Sibling SDKs:
-  [`stripe-test-cards-and-webhooks`](../stripe-test-cards-and-webhooks/SKILL.md),
-  [`adyen-test-mode`](../adyen-test-mode/SKILL.md),
-  [`paypal-sandbox`](../paypal-sandbox/SKILL.md).
+  `stripe-test-cards-and-webhooks`,
+  `adyen-test-mode`,
+  `paypal-sandbox`.

@@ -298,10 +298,10 @@ Target a local instance or staging.
 ## Going deeper
 
 Companion material, if it is available alongside this file:
-[`postman-collections`](../postman-collections/SKILL.md),
-[`restassured-testing`](../restassured-testing/SKILL.md),
-[`karate-testing`](../karate-testing/SKILL.md),
-[`tavern-testing`](../tavern-testing/SKILL.md),
-[`schemathesis-fuzzing`](../schemathesis-fuzzing/SKILL.md),
-[`restler-fuzzing`](../restler-fuzzing/SKILL.md),
-[`api-chaos-runner`](../api-chaos-runner/SKILL.md).
+`postman-collections`,
+`restassured-testing`,
+`karate-testing`,
+`tavern-testing`,
+`schemathesis-fuzzing`,
+`restler-fuzzing`,
+`api-chaos-runner`.

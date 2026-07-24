@@ -210,6 +210,6 @@ The JUnit XML feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
 ## References
 
 - TestCafe at `testcafe.io`.
-- [`playwright-testing`](../playwright-testing/SKILL.md),
-  [`cypress-testing`](../cypress-testing/SKILL.md),
-  [`selenium-testing`](../selenium-testing/SKILL.md) - alternatives.
+- `playwright-testing`,
+  `cypress-testing`,
+  `selenium-testing` - alternatives.

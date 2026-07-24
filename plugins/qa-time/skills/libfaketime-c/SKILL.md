@@ -149,7 +149,7 @@ jobs:
 | Time-skip too fast | Tests can't see intermediate states | Tune `x<rate>` to test needs |
 | Spring-forward test forgets `TZ` | UTC-only fake time; DST tests need local zone | `TZ='America/New_York' faketime ...` |
 | Forget `FAKETIME_NO_CACHE=1` for fast-polling tests | Time stalls between cache refreshes | Set explicitly |
-| Use against the JVM | Some JVM time methods bypass libc | Use [`mockclock-jvm`](../mockclock-jvm/SKILL.md) |
+| Use against the JVM | Some JVM time methods bypass libc | Use `mockclock-jvm` |
 | Use against Workers / Edge / browser | LD_PRELOAD not applicable | Use language-native fakes |
 
 ## Limitations
@@ -158,25 +158,25 @@ jobs:
 - **Statically linked binaries unaffected.** Go binaries compiled
   with `CGO_ENABLED=0` don't see libfaketime.
 - **JVM bypasses libc for some time calls** (Instant from
-  monotonic system clock). Use [`mockclock-jvm`](../mockclock-jvm/SKILL.md).
+  monotonic system clock). Use `mockclock-jvm`.
 - **Doesn't fake monotonic clocks** by default; some clock_gettime
   flags pass through.
 - **No leap-second simulation.** See
-  [`leap-second-reference`](../leap-second-reference/SKILL.md).
+  `leap-second-reference`.
 
 ## References
 
 - libfaketime:
   [github.com/wolfcw/libfaketime](https://github.com/wolfcw/libfaketime).
 - Companion catalogs:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md),
-  [`leap-second-reference`](../leap-second-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../iso-8601-vs-rfc-3339-reference/SKILL.md).
+  `dst-transition-reference`,
+  `leap-second-reference`,
+  `iso-8601-vs-rfc-3339-reference`.
 - Language-native siblings:
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md),
-  [`jest-fake-timers`](../jest-fake-timers/SKILL.md),
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md).
+  `sinon-fake-timers-js`,
+  `jest-fake-timers`,
+  `freezegun-python`,
+  `timecop-ruby`,
+  `mockclock-jvm`.
 - Test matrix:
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `timezone-test-matrix-builder`.

@@ -260,11 +260,11 @@ target.
 
 - [lcov-readme][lcov] - LCOV toolchain (geninfo / lcov / genhtml),
   `.info` format keywords, language-agnostic converters.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - sibling
+- `cobertura-analysis` - sibling
   for the Cobertura XML format (same PR-gating shape, different
   parser).
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
+- `coverage-diff-reporter` - 
   build-an-X workflow that consumes parsed coverage and emits a PR
   comment with file-level deltas.
-- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - picks which uncovered branches to target first using the parsed
+- `test-coverage-targeter` - picks which uncovered branches to target first using the parsed
   output.

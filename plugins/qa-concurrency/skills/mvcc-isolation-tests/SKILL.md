@@ -285,10 +285,10 @@ def test_serializable_retry_completes():
 - MySQL InnoDB isolation - dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html
 - A Critique of ANSI SQL Isolation Levels (Berenson 1995) - seminal
   paper on isolation levels
-- [`race-condition-test-author`](../race-condition-test-author/SKILL.md),
-  [`deadlock-detection-harness`](../deadlock-detection-harness/SKILL.md) - 
+- `race-condition-test-author`,
+  `deadlock-detection-harness` - 
   in-process concurrency siblings
-- [`jepsen-patterns`](../jepsen-patterns/SKILL.md) - distributed
+- `jepsen-patterns` - distributed
   consistency analogue
 
 [PostgreSQL transaction isolation docs]: https://www.postgresql.org/docs/current/transaction-iso.html

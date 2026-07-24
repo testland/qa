@@ -23,7 +23,7 @@ Coverage output goes to `coverageDirectory` (default `coverage/`)
 in the formats listed in `coverageReporters`. The defaults are
 `["clover", "json", "lcov", "text"]` ([jest-config][jest]) - `lcov`
 is the most useful for cross-tool consumption (see
-[`lcov-analysis`](../lcov-analysis/SKILL.md)).
+`lcov-analysis`).
 
 ## When to use
 
@@ -36,7 +36,7 @@ is the most useful for cross-tool consumption (see
 - A Jenkins pipeline expects Cobertura XML.
 
 If the project is multi-language (Jest + Java + Python), see
-[`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) for
+`coverage-diff-reporter` for
 the cross-tool aggregation pattern; this skill is the Jest-specific
 piece.
 
@@ -288,11 +288,11 @@ overrides config-side reporter selection.
   (`babel` vs `v8`), `coverageReporters` (defaults
   `["clover","json","lcov","text"]`), `coverageThreshold` (global +
   glob + path), `collectCoverageFrom`, `coveragePathIgnorePatterns`.
-- [`lcov-analysis`](../lcov-analysis/SKILL.md) - the LCOV file Jest
+- `lcov-analysis` - the LCOV file Jest
   emits feeds this parser for cross-tool diffing.
-- [`cobertura-analysis`](../cobertura-analysis/SKILL.md) - Jest
+- `cobertura-analysis` - Jest
   also emits Cobertura XML when configured; this parser consumes it.
-- [`coverage-diff-reporter`](../coverage-diff-reporter/SKILL.md) - 
+- `coverage-diff-reporter` - 
   PR-comment formatter built on top of the parsed Jest output.
-- [`test-coverage-targeter`](../test-coverage-targeter/SKILL.md) - picks which uncovered branches to target, given the Jest
+- `test-coverage-targeter` - picks which uncovered branches to target, given the Jest
   output.

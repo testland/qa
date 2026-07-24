@@ -136,7 +136,7 @@ Either way, it's a flag for human review.
 ## Step 4 - Detect `orphan` files (lost last covering test)
 
 Requires the per-test → source map (see
-[`regression-suite-selector`](../regression-suite-selector/SKILL.md)
+`regression-suite-selector`
 Step 2):
 
 ```python
@@ -269,7 +269,7 @@ of debt visible across weeks.
   show. Pair with branch% trend.
 - **Orphan detection requires per-test maps.** Without them,
   orphans are invisible. Build the map per the
-  [`regression-suite-selector`](../regression-suite-selector/SKILL.md)
+  `regression-suite-selector`
   Step 2 path.
 - **Doesn't recommend specific tests.** This skill flags WHICH
   files; `test-coverage-targeter`
@@ -277,7 +277,7 @@ of debt visible across weeks.
 
 ## References
 
-- [`regression-suite-selector`](../regression-suite-selector/SKILL.md) - sibling: builds the per-test → source map this skill consumes
+- `regression-suite-selector` - sibling: builds the per-test → source map this skill consumes
   for orphan detection.
 - `test-coverage-targeter` - downstream: converts a debt-ledger entry into specific
   test-target recommendations.

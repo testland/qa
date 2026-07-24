@@ -7,7 +7,7 @@ description: "Pure reference catalog of the canonical object-model architecture 
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps; it is the canonical catalog cited to determine "what good looks like" per pattern. The catalog complements [`test-code-conventions`](../test-code-conventions/SKILL.md) (which is file-level §1-§10) with the architecture-tier vocabulary.
+This skill is a **pure reference** - no execution steps; it is the canonical catalog cited to determine "what good looks like" per pattern. The catalog complements `test-code-conventions` (which is file-level §1-§10) with the architecture-tier vocabulary.
 
 ## When to use
 
@@ -255,9 +255,9 @@ The patterns are not equally good for every project. The matrix:
 
 - **Pick the framework itself before applying these patterns** → `framework-choice-advisor` (in the qa-process plugin).
 - **Test-data construction patterns (Builder / Factory / Fixture)** → `test-data-patterns` (in the qa-test-data plugin, sister catalog).
-- **Test isolation / fixture lifecycle / parallel safety** → [`test-isolation-patterns`](../test-isolation-patterns/SKILL.md) (sister catalog).
-- **Test step granularity and abstraction** → [`test-step-design-patterns`](../test-step-design-patterns/SKILL.md) (sister catalog).
-- **Cross-file convention reference** → [`test-code-conventions`](../test-code-conventions/SKILL.md) (file-level companion).
+- **Test isolation / fixture lifecycle / parallel safety** → `test-isolation-patterns` (sister catalog).
+- **Test step granularity and abstraction** → `test-step-design-patterns` (sister catalog).
+- **Cross-file convention reference** → `test-code-conventions` (file-level companion).
 
 ## References
 
@@ -271,4 +271,4 @@ The patterns are not equally good for every project. The matrix:
 - Kent C. Dodds + Cypress team - *Stop using Page Objects and Start using App Actions* (Cypress blog, the canonical App Actions reference): https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/
 - Martin Fowler - *Repository pattern* (originally domain-driven design; cited for test-data Repository adaptation): https://martinfowler.com/eaaCatalog/repository.html
 - ISTQB glossary - Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization
-- [`test-code-conventions`](../test-code-conventions/SKILL.md) - file-level companion (§1-§10).
+- `test-code-conventions` - file-level companion (§1-§10).

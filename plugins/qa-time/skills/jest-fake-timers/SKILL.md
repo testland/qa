@@ -193,13 +193,13 @@ jobs:
 - @sinonjs/fake-timers (underlying):
   [github.com/sinonjs/fake-timers](https://github.com/sinonjs/fake-timers).
 - Companion catalog:
-  [`dst-transition-reference`](../dst-transition-reference/SKILL.md).
+  `dst-transition-reference`.
 - Sibling library (non-Jest test runners):
-  [`sinon-fake-timers-js`](../sinon-fake-timers-js/SKILL.md).
+  `sinon-fake-timers-js`.
 - Cross-language:
-  [`freezegun-python`](../freezegun-python/SKILL.md),
-  [`timecop-ruby`](../timecop-ruby/SKILL.md),
-  [`mockclock-jvm`](../mockclock-jvm/SKILL.md),
-  [`libfaketime-c`](../libfaketime-c/SKILL.md).
+  `freezegun-python`,
+  `timecop-ruby`,
+  `mockclock-jvm`,
+  `libfaketime-c`.
 - Test matrix:
-  [`timezone-test-matrix-builder`](../timezone-test-matrix-builder/SKILL.md).
+  `timezone-test-matrix-builder`.

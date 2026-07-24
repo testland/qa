@@ -23,9 +23,9 @@ summarizing test and release builds".
 This skill is a **pure reference** for CMock's generated API
 surface and the cmock.yml plugin model. The per-tool
 counterparts are
-[`ceedling-build-runner`](../ceedling-build-runner/SKILL.md) (the
+`ceedling-build-runner` (the
 build orchestration) and
-[`unity-test-framework-c`](../unity-test-framework-c/SKILL.md)
+`unity-test-framework-c`
 (the assertion API).
 
 ## When to use
@@ -278,7 +278,7 @@ Cited inline. Foundational documents:
   [github.com/ThrowTheSwitch/CMock](https://github.com/ThrowTheSwitch/CMock).
 - Ceedling overview - [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
 - Sibling skills:
-  [`ceedling-build-runner`](../ceedling-build-runner/SKILL.md),
-  [`unity-test-framework-c`](../unity-test-framework-c/SKILL.md).
+  `ceedling-build-runner`,
+  `unity-test-framework-c`.
 - Pattern taxonomy: Gerard Meszaros, *xUnit Test Patterns*
   (book, cite by ISBN 978-0131495050).

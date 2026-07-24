@@ -209,7 +209,7 @@ access; most teams use shared dev orgs (Step 1).
 - developer.okta.com/standards/SCIM/ - SCIM 2.0 reference + tester
 - registry.terraform.io/providers/okta/okta - Terraform Okta provider
 - IETF RFC 6749 / 7636 / 9700 - OAuth 2.0 + PKCE + Security BCP
-- [`keycloak-tests`](../keycloak-tests/SKILL.md),
-  [`auth0-tests`](../auth0-tests/SKILL.md) - sister IdP tools
-- [`oauth-flow-test-author`](../oauth-flow-test-author/SKILL.md),
-  [`session-management-test-author`](../session-management-test-author/SKILL.md) - build-an-X authors
+- `keycloak-tests`,
+  `auth0-tests` - sister IdP tools
+- `oauth-flow-test-author`,
+  `session-management-test-author` - build-an-X authors

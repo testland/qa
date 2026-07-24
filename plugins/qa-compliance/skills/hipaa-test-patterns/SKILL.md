@@ -8,7 +8,7 @@ description: "Reference catalog of HIPAA Security Rule-aligned test patterns - a
 [hipaa-hhs]: https://www.hhs.gov/hipaa/
 
 Reference catalog of test patterns by HIPAA Security Rule section
-(45 CFR §164). Pair with [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md)
+(45 CFR §164). Pair with `audit-trail-test-author`
 for §164.312(b) audit-log requirements. Anchors:
 [hhs.gov/hipaa][hipaa-hhs] and NIST SP 800-66.
 
@@ -103,7 +103,7 @@ def test_phi_access_requires_unique_user_id():
 
 ### §164.312(b) - Audit controls
 
-Cross-ref [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md):
+Cross-ref `audit-trail-test-author`:
 
 ```python
 def test_phi_access_creates_audit_record():
@@ -227,9 +227,9 @@ def test_phi_only_processed_for_baa_purposes():
   HIPAA regulations text (45 CFR §164)
 - nist.gov/publications/sp-800-66-revision-1-introductory-resource-guide-implementing-hipaa-security - NIST SP 800-66 implementation guidance
 - nist.gov/publications/sp-800-88-revision-1-guidelines-media-sanitization - NIST SP 800-88 device sanitization
-- [`gdpr-test-patterns`](../gdpr-test-patterns/SKILL.md),
-  [`ccpa-test-patterns`](../ccpa-test-patterns/SKILL.md) - sister
+- `gdpr-test-patterns`,
+  `ccpa-test-patterns` - sister
   privacy-pattern catalogs
-- [`audit-trail-test-author`](../audit-trail-test-author/SKILL.md) - 
+- `audit-trail-test-author` - 
   §164.312(b) audit log requirements
 - `synthetic-pii-generator` - cross-plugin: safe PHI fixture generation

@@ -223,7 +223,7 @@ the new step.
 
 ## References
 
-- [`cucumber-testing`](../cucumber-testing/SKILL.md),
-  [`behave-testing`](../behave-testing/SKILL.md),
-  [`reqnroll-testing`](../reqnroll-testing/SKILL.md) - per-language
+- `cucumber-testing`,
+  `behave-testing`,
+  `reqnroll-testing` - per-language
   runners this curator works alongside.
