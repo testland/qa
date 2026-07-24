@@ -9,16 +9,10 @@ metadata:
 
 ## Overview
 
-Ceedling is, per the README at
-[github.com/ThrowTheSwitch/Ceedling](https://github.com/ThrowTheSwitch/Ceedling),
-"a handy-dandy build system for C projects" that is "the glue for
-bringing together two other awesome open-source projects":
-**Unity** (xUnit-style assertions) and **CMock** (function mocking
-via code generation). Per
-[throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling)
-it "starts with the Unity test framework and CMock mock and stub
-generation, then adds a build system for coordinating, executing,
-and summarizing test and release builds".
+Ceedling is a build system for C projects that wraps **Unity**
+(xUnit-style assertions) and **CMock** (function mocking via code
+generation), per
+[throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
 
 This skill wraps the Ceedling build orchestration - the
 `ceedling` command-line tool, `project.yml` schema, and rake

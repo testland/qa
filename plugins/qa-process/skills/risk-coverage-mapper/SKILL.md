@@ -7,14 +7,10 @@ description: "Build-an-X workflow that produces a risk-to-test-coverage matrix -
 
 ## Overview
 
-A risk-coverage matrix proves "every meaningful risk has at least
-one mitigation, and every mitigation traces to a test or monitor
-that exercises it." It's the natural complement to the
-requirements-to-tests traceability matrix
-(`traceability-matrix-builder`, in the qa-test-management
-plugin) - which proves "every requirement has a test." Where requirements
-say *what to build*, risks say *what could go wrong*, and each
-needs its own coverage view.
+A risk-coverage matrix proves every meaningful risk has a mitigation
+that traces to a test or monitor - the risk-side complement to the
+requirements traceability matrix (`traceability-matrix-builder`, in
+the qa-test-management plugin).
 
 Per ISTQB CTAL-TM ch. 5 on risk-based test prioritisation (cite
 by stable ID).

@@ -7,10 +7,9 @@ metadata:
 
 # event-sourcing-tests
 
-Per [Fowler - Event Sourcing], "all changes to application state are
-stored as a sequence of events." Tests verify replay determinism,
-snapshot equivalence, and version-evolution correctness - without
-these, the event log silently drifts from the rebuilt state.
+Tests for an event-sourced system verify replay determinism, snapshot
+equivalence, and version-evolution correctness - without them, the
+event log silently drifts from the rebuilt state.
 
 ## When to use
 

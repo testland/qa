@@ -1,35 +1,13 @@
 ---
 name: ai-test-generator
-description: "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) - outputs tests with confidence scoring per case (LLM's own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team's existing test framework. Critical: AI-generated tests are unreliable without curation; pair every generated test with adversarial review before merge. Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement."
+description: "Generates tests from natural-language specs (acceptance criteria, user stories, requirements) using an LLM, with confidence scoring per test case (LLM self-assessment plus heuristics: assertion quality, naming, completeness), batching uncertain cases for human review, and integration with the team's existing test framework. Use when the user asks to generate unit tests from acceptance criteria, convert user stories to test cases, automate test creation from requirements, or augment a spec-driven test suite with AI-generated stubs that are then curated before merge."
 ---
 
 # ai-test-generator
 
 ## Overview
 
-LLMs can generate test code from natural-language specs. They're
-fast - turn 10 ACs into 10 test stubs in seconds. They're also
-unreliable: hallucinated APIs, weak assertions
-(`expect(x).toBeTruthy()`), missed edge cases, plausible-but-wrong
-implementations.
-
-This skill provides the **augmentation framework**: AI generates,
-the team curates. Generated tests are reviewed adversarially before
-merge.
-
-## When to use
-
-- The team has 20+ ACs to convert into tests; manual authoring is
-  slow.
-- A spec-driven test suite is needed and the team accepts the
-  curate-after-generate workflow.
-- AI test generation is part of the team's "augmentation"
-  strategy, not "replacement."
-
-If the team treats AI output as production-ready without review,
-**do not use this skill**. AI test code without curation produces
-the worst-of-both-worlds: tests exist (false confidence) but
-verify the wrong things or nothing.
+This skill provides an **augmentation framework** for converting acceptance criteria (ACs) into test code: AI generates, the team curates. Generated tests are scored for confidence and reviewed adversarially before merge.
 
 ## Step 1 - Define the input
 
@@ -56,15 +34,12 @@ acceptance_criteria:
       error: "This code has expired"
 ```
 
-The structured input is critical - vague natural-language input
-produces hallucinated tests. Concrete inputs/expected outputs
-constrain the LLM.
-
 ## Step 2 - Run the generator
 
 ```bash
 # scripts/ai-gen.py
 import openai
+import os
 
 system_prompt = """
 You generate tests in {framework} for the given AC spec.
@@ -77,22 +52,90 @@ Constraints:
   CONFIDENCE: low and explain why.
 """
 
+def format_ac_prompt(ac):
+    """Format a single AC dict into a prompt string for the LLM."""
+    return (
+        f"AC ID: {ac['id']}\n"
+        f"Description: {ac['description']}\n"
+        f"Inputs: {ac['inputs']}\n"
+        f"Expected: {ac['expected']}"
+    )
+
+def save_test(ac_id, test_code, output_dir='tests/generated'):
+    """Write generated test code to tests/generated/<ac_id>.test.js (or .py)."""
+    os.makedirs(output_dir, exist_ok=True)
+    # Detect language from shebang or content; default to .js
+    ext = '.py' if test_code.lstrip().startswith('def ') or 'import pytest' in test_code else '.js'
+    path = os.path.join(output_dir, f"{ac_id.replace('-', '_').lower()}{ext}")
+    with open(path, 'w') as f:
+        f.write(test_code)
+    return path
+
 for ac in input_yaml['acceptance_criteria']:
     response = openai.chat.completions.create(
         model='gpt-4',
         messages=[
-            {'role': 'system', 'content': system_prompt.format(...)},
+            {'role': 'system', 'content': system_prompt.format(
+                framework='jest',       # replace with team's framework
+                test_runner='jest',     # replace with team's test runner
+            )},
             {'role': 'user', 'content': format_ac_prompt(ac)},
         ],
     )
     save_test(ac['id'], response.choices[0].message.content)
 ```
 
-## Step 3 - Confidence scoring
+The `test-code-conventions` reference in the system prompt should be a project-specific file (e.g. `docs/test-code-conventions.md`) injected into the prompt at runtime.
+
+## Step 3 - Validate before scoring
+
+Before scoring, verify that generated test files parse and compile. Failing tests caught here should be flagged as `CONFIDENCE: low` automatically.
+
+```bash
+# For TypeScript projects
+npx tsc --noEmit
+
+# For Python projects
+python -m py_compile path/to/generated_test.py
+
+# For JavaScript projects (syntax check)
+node --check path/to/generated_test.js
+```
+
+Any file that fails compilation is immediately downgraded: subtract 50 from its score before applying the heuristics in Step 4.
+
+## Step 4 - Confidence scoring
 
 Per generated test, compute a confidence score:
 
 ```python
+import importlib.util
+import ast
+import re
+
+def extract_imports(test_code: str) -> list[str]:
+    """Return a list of top-level module names imported in the code."""
+    try:
+        tree = ast.parse(test_code)
+    except SyntaxError:
+        return []
+    imports = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imports.extend(alias.name.split('.')[0] for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imports.append(node.module.split('.')[0])
+    return imports
+
+def module_exists(module_name: str) -> bool:
+    """Return True if the module can be found in the current environment."""
+    return importlib.util.find_spec(module_name) is not None
+
+def extract_test_name(test_code: str) -> str:
+    """Return the first test/it/def test_ name found in the code."""
+    match = re.search(r'(?:it|test|def test_)\s*\(?["\']?([^"\'(),]+)', test_code)
+    return match.group(1) if match else ''
+
 def score(test_code, ac):
     score = 100
 
@@ -123,7 +166,7 @@ def score(test_code, ac):
 | 50-79      | Medium - careful review required.                    |
 | <50         | Low - likely needs rewrite or rejection.             |
 
-## Step 4 - Output structure
+## Step 5 - Output structure
 
 ```markdown
 ## AI-generated tests - `<spec>`
@@ -156,19 +199,19 @@ Review each generated test for:
 After curation: merge.
 ```
 
-## Step 5 - Iteration loop
+## Step 6 - Iteration loop
 
 ```
-Spec → Generate → Score → Review → (rewrite | merge | reject)
-                                       ↓
-                                   Lessons fed back into prompt
+Spec → Generate → Validate → Score → Review → (rewrite | merge | reject)
+                                                    ↓
+                                        Lessons fed back into prompt
 ```
 
 The team's prompt evolves: when the LLM keeps producing
 `.toBeTruthy()`, add an explicit prohibition. When it hallucinates
 an API, add an example of the real API.
 
-## Step 6 - Cost + rate management
+## Step 7 - Cost + rate management
 
 LLM calls have cost and rate limits. Pattern:
 
@@ -180,18 +223,17 @@ LLM calls have cost and rate limits. Pattern:
 
 ## Anti-patterns
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Treating AI output as production-ready                                | Hallucinations + weak assertions ship; false confidence.                 | Always curate (Step 4 hand-off). |
-| Vague spec input ("Apply a promo")                                     | LLM fills in details; hallucinations.                                    | Structured input with concrete inputs/expected (Step 1). |
-| Skipping confidence scoring                                            | All tests treated equally; high-priority review gets diluted.            | Tier by confidence (Step 3). |
-| Using generic LLM without project context                             | LLM doesn't know the team's test conventions; outputs idiomatic-but-wrong code. | Inject conventions into the prompt. |
-| One-shot generation without iteration                                  | Prompt isn't refined; quality plateaus.                                  | Lessons-feedback loop (Step 5). |
+| Anti-pattern                                                          | Fix |
+|-----------------------------------------------------------------------|-----|
+| Treating AI output as production-ready                                | Always curate (Step 5 hand-off). |
+| Vague spec input ("Apply a promo")                                     | Structured input with concrete inputs/expected (Step 1). |
+| Skipping compilation validation                                        | Run compile check (Step 3) before scoring. |
+| Skipping confidence scoring                                            | Tier by confidence (Step 4). |
+| Using generic LLM without project context                             | Inject conventions into the prompt. |
+| One-shot generation without iteration                                  | Lessons-feedback loop (Step 6). |
 
 ## Limitations
 
-- **LLM quality varies.** GPT-4 / Claude / Gemini differ;
-  per-team experimentation needed.
 - **Hallucinated APIs are a constant risk.** Even with examples,
   the LLM may invent `cart.applyDiscount()` when the real method
   is `cart.applyPromo()`. Review catches this.
@@ -201,5 +243,5 @@ LLM calls have cost and rate limits. Pattern:
 
 ## References
 
-- `ai-spec-coverage-mapper` - sister: maps existing tests to spec sections.
+- `ai-spec-coverage-mapper` - sister skill: maps existing tests to spec sections.
 - `acceptance-test-from-criteria` (in the qa-bdd plugin) - non-AI alternative for AC-to-test conversion.

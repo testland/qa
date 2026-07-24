@@ -7,15 +7,10 @@ description: "Pure-reference catalog of Daylight Saving Time (DST) transition pa
 
 ## Overview
 
-DST transitions are responsible for a large share of
-production time-bugs. They happen twice yearly in many
-jurisdictions, on dates that vary by region, and create
-**non-existent local times** (spring-forward) and **duplicate
-local times** (fall-back).
-
-The IANA Time Zone Database
-([iana.org/time-zones](https://www.iana.org/time-zones)) - also
-known as the tz database or the Olson database - is the
+DST transitions cause a large share of production time-bugs:
+spring-forward creates **non-existent local times**, fall-back
+creates **duplicate local times**. The IANA Time Zone Database
+([iana.org/time-zones](https://www.iana.org/time-zones)) is the
 canonical source of historical and current DST rules.
 
 ## When to use

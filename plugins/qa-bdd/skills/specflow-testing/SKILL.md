@@ -7,15 +7,11 @@ description: "Legacy support for SpecFlow (.NET BDD framework that predates Reqn
 
 ## Overview
 
-SpecFlow is the historical .NET BDD framework that originated the
-Cucumber-for-.NET ecosystem. Reqnroll forked from it in 2023 due
-to slowing SpecFlow maintenance; per
-[`reqnroll-home`](https://reqnroll.net/), Reqnroll is "an
-open-source Cucumber-style BDD test automation framework for
-.NET. It has been created as a reboot of the SpecFlow project."
-
-This skill exists to **support existing SpecFlow projects**.
-For new .NET BDD work, use `reqnroll-testing` - Reqnroll is API-compatible and actively maintained.
+SpecFlow is the legacy .NET BDD framework; Reqnroll forked from it
+in 2023 as its actively-maintained successor
+([`reqnroll-home`](https://reqnroll.net/)). This skill supports
+**existing SpecFlow projects** - for new .NET BDD work use
+`reqnroll-testing` (API-compatible).
 
 ## When to use
 

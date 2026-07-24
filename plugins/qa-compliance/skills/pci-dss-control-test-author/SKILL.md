@@ -5,67 +5,44 @@ description: "Build-an-X for PCI DSS v4.0 scope verification - cardholder data e
 
 # pci-dss-control-test-author
 
-## Overview
+This is a **build-an-X workflow** for verifying CDE scope is correctly bounded and prohibited-data assertions are captured in fixtures, targeting PCI DSS v4.0 (fully required March 2025).
 
-PCI DSS (Payment Card Industry Data Security Standard) v4.0 (in
-force March 2024, fully required March 2025) applies to any system
-that "stores, processes, or transmits cardholder data" or impacts
-the security of such systems.
+## Helper stubs
 
-Per [pcisecuritystandards.org][pci]:
+Full stub signatures live in `STUBS.md`. Key interfaces used across steps:
 
-[pci]: https://www.pcisecuritystandards.org/
+```python
+# network / infra
+def network_policy.get_allowed_connections(src: str, dst: str) -> list[str]: ...
 
-The 12 high-level requirements:
+# data-access
+def export_database() -> DatabaseDump: ...
+def recent_logs() -> list[LogEntry]: ...
+def scan_repo_files() -> list[str]: ...
+def read_file(path: str) -> str: ...
 
-1. Install + maintain network security controls
-2. Apply secure configurations to all system components
-3. Protect stored account data
-4. Protect cardholder data with strong cryptography during transmission
-5. Protect all systems + networks from malicious software
-6. Develop + maintain secure systems + software
-7. Restrict access to system components by business need to know
-8. Identify users + authenticate access
-9. Restrict physical access
-10. Log + monitor all access
-11. Test security of systems + networks regularly
-12. Support information security with org policies + programs
+# TLS inspection - TLSInfo has: .protocol (str e.g. 'TLSv1.2'), .cipher_strength (int), .cipher (str)
+def inspect_tls(endpoint: str) -> TLSInfo: ...
 
-This is a **build-an-X workflow** - the workflow for verifying
-your CDE scope is correctly bounded + the prohibited-data
-assertions in fixtures.
+# crypto / format
+def is_encrypted_aes_256(value: str) -> bool: ...
+def is_truncated_last_4(value: str) -> bool: ...
+def is_hashed_with_salt(value: str) -> bool: ...
+def is_tokenized(value: str) -> bool: ...
+def redact(value: str) -> str: ...
 
-## When to use
+# constants
+CDE_API_ENDPOINTS: list[str] = [...]   # All API endpoints inside the CDE
+DEPRECATED_CIPHERS: list[str] = [...]  # e.g. ['RC4', 'DES', '3DES', 'NULL']
+```
 
-- The product processes payment cards (subject to PCI DSS).
-- Scope-reduction effort underway: confirming which systems are
-  in/out of CDE.
-- BAU verification: prohibited data storage doesn't slip in via
-  schema changes / log additions.
-- Pre-QSA-audit: dry run of evidence collection.
-
-## Cardholder Data (CHD) vs Sensitive Authentication Data (SAD)
-
-Per PCI DSS v4.0:
-
-| Category | Examples | Storage allowed? |
-|---|---|---|
-| **CHD - Account Data** | Primary Account Number (PAN) | Yes, but encrypted |
-| **CHD - Account Data** | Cardholder name | Yes |
-| **CHD - Account Data** | Service code | Yes |
-| **CHD - Account Data** | Expiration date | Yes |
-| **SAD - Sensitive Auth Data** | Full track data (Track 1 + Track 2) | **NEVER store post-authorization** |
-| **SAD** | CVV2 / CVC2 / CID (3-4 digit security codes) | **NEVER store post-authorization** |
-| **SAD** | PIN / PIN block | **NEVER store post-authorization** |
-
-The "post-authorization" rule is critical: SAD may transit during
-the auth flow, but storage after auth completes (logs, DB, audit
-trails, backup) is forbidden.
+---
 
 ## Step 1 - Define + assert CDE boundary
 
 ```python
 # pci_scope.py
+# Anti-pattern: CDE/non-CDE network policy not tested → policy drift, segmentation breach
 CDE_SYSTEMS = {
     'payment-service',
     'tokenization-service',
@@ -91,46 +68,68 @@ Segmentation testing per PCI DSS Req 11.4.1 must be performed at
 least every 6 months by a qualified internal resource OR external
 penetration tester.
 
+> **Checkpoint:** If any CDE/non-CDE boundary assertion fails, halt and remediate the
+> network policy before proceeding. A segmentation failure means downstream steps may
+> be testing a mis-scoped environment.
+
+---
+
 ## Step 2 - Assert no SAD storage post-authorization (Req 3.2)
+
+SAD may transit during auth but **storage after auth completes** (logs, DB, audit trails, backup) is **forbidden** - full track data, CVV2/CVC2/CID, and PIN/PIN block, all never post-authorization.
 
 ```python
 import re
 
+# Anti-pattern: trusting developers to never log PAN → eventually slipped into log line
+TRACK1_PATTERN = re.compile(r'%[A-Z]\d{12,19}\^[^\?]*\?\d*\?')   # Track 1
+CVV_PATTERN    = re.compile(r'(?<!\d)\d{3,4}(?!\d)')               # naive; pair with DLP
+
 def test_no_full_track_data_in_storage():
     """Req 3.2.1: track data must not be retained post-authorization."""
-    track_pattern = re.compile(r'%[A-Z]\d{12,19}\^[^\?]*\?\d*\?')   # Track 1
     db_dump = export_database()
     for table in db_dump.tables:
         for row in table:
             for value in row.values():
-                assert not track_pattern.search(str(value)), f"Full track data in {table.name}"
+                assert not TRACK1_PATTERN.search(str(value)), \
+                    f"Full track data in {table.name}"
 
 def test_no_cvv_in_logs():
     """Req 3.2.2: CVV2/CVC2/CID must not be retained."""
-    cvv_pattern = re.compile(r'(?<!\d)\d{3,4}(?!\d)')   # naive - context-aware in real life
     log_entries = recent_logs()
     for entry in log_entries:
         # Look for proximity of CVV-like 3-4 digit numbers near "cvv" / "card" tokens
         if 'cvv' in entry.text.lower() or 'card' in entry.text.lower():
-            matches = cvv_pattern.findall(entry.text)
+            matches = CVV_PATTERN.findall(entry.text)
             for m in matches:
-                assert m == '***' or m == '----', f"Possible CVV in log: {entry.id}"
+                assert m == '***' or m == '----', \
+                    f"Possible CVV in log: {entry.id}"
 ```
 
-## Step 3 - Assert PAN encryption at rest (Req 3.4)
+> **Checkpoint:** If SAD is found in storage or logs, **halt and remediate** before
+> proceeding to Step 3. Continuing to test encryption-at-rest while SAD is present
+> misrepresents compliance posture. File a severity-1 finding and trigger your incident
+> response process before re-running.
+
+---
+
+## Step 3 - Assert PAN encryption at rest (Req 3.4) + key management (Req 3.6)
 
 ```python
+# Anti-pattern: hardcoded encryption keys in repo → Req 3.6 violation, PAN exposure
+
 def test_pan_stored_encrypted():
-    """Req 3.4: PAN unreadable wherever stored (encryption / truncation / hashing / tokenization)."""
-    # Pull a sample card record
+    """Req 3.4: PAN unreadable wherever stored (encryption / truncation / hashing / tokenization).
+    Prefer tokenization for new paths; treat the others as escape hatches for pre-existing systems.
+    """
     card_record = CardVault.objects.first()
     raw_pan = card_record._raw_pan_field    # accessor for storage-format field
 
     # Format MUST be one of:
-    #  - encrypted (AES-256 or stronger)
+    #  - encrypted (AES-256 or stronger)         <- preferred for new paths
     #  - truncated (e.g., last 4 only)
     #  - hashed (with salt; one-way)
-    #  - tokenized (replaced with non-sensitive token)
+    #  - tokenized (replaced with non-sensitive token)  <- default for new systems
     valid_format = (
         is_encrypted_aes_256(raw_pan)
         or is_truncated_last_4(raw_pan)
@@ -141,34 +140,47 @@ def test_pan_stored_encrypted():
 
 def test_decryption_keys_not_in_app_repo():
     """Req 3.6: cryptographic keys protected against unauthorized access."""
-    # Search repo for accidental key inclusion
     repo_files = scan_repo_files()
     for f in repo_files:
         content = read_file(f)
         # No hardcoded AES keys (high entropy + length 256+ bits)
-        assert not re.search(r'AES_KEY\s*=\s*["\'][A-Za-z0-9+/=]{40,}', content)
+        assert not re.search(r'AES_KEY\s*=\s*["\'][A-Za-z0-9+/=]{40,}', content), \
+            f"Possible hardcoded AES key in {f}"
         # No KMS key file references
-        assert 'kms-private-key.pem' not in f
+        assert 'kms-private-key.pem' not in f, \
+            f"KMS private key file referenced in repo: {f}"
 ```
+
+> **Checkpoint:** If PANs are stored unprotected or keys are found in the repo, halt.
+> Key-in-repo findings require immediate secret rotation before continuing.
+
+---
 
 ## Step 4 - Encryption of transmissions (Req 4)
 
 ```python
+# Anti-pattern: TLS 1.0 / 1.1 still enabled → Req 4 violation
 def test_pan_only_transmitted_via_strong_crypto():
     """Req 4.2.1: strong crypto for transmission of cardholder data over open networks."""
-    # All endpoints handling PAN must require TLS 1.2+
     for endpoint in CDE_API_ENDPOINTS:
         tls_info = inspect_tls(endpoint)
-        assert tls_info.protocol >= 'TLSv1.2'
-        # Reject weak ciphers
-        assert tls_info.cipher_strength >= 256
-        # Reject deprecated suites
-        assert tls_info.cipher not in DEPRECATED_CIPHERS
+        assert tls_info.protocol >= 'TLSv1.2', \
+            f"Weak TLS protocol on {endpoint}: {tls_info.protocol}"
+        assert tls_info.cipher_strength >= 256, \
+            f"Cipher strength too low on {endpoint}: {tls_info.cipher_strength}"
+        assert tls_info.cipher not in DEPRECATED_CIPHERS, \
+            f"Deprecated cipher on {endpoint}: {tls_info.cipher}"
 ```
+
+> **Checkpoint:** TLS failures on any CDE endpoint are blocking. Deprecated protocols
+> (TLS 1.0 / 1.1) must be disabled before proceeding to access-control testing.
+
+---
 
 ## Step 5 - Access control (Req 7 + 8)
 
 ```python
+# Anti-pattern: generic shared accounts (e.g., 'admin' / 'svc-account') → Req 8.2.1 violation
 def test_cde_access_requires_unique_id():
     """Req 8.2.1: assign all users a unique ID before access to system components."""
     # No shared / generic accounts
@@ -186,6 +198,11 @@ def test_cde_access_requires_mfa():
     assert response.json()['error'] == 'mfa_required'
 ```
 
+> **Checkpoint:** Shared-account or MFA bypass failures are blocking. Do not proceed
+> to logging tests while unauthorized access paths remain open.
+
+---
+
 ## Step 6 - Logging (Req 10)
 
 Cross-ref `audit-trail-test-author`:
@@ -202,50 +219,36 @@ def test_pan_access_creates_audit_record():
     assert audit is not None
     assert audit.timestamp is not None
     # Audit log itself MUST not contain the PAN:
-    assert not re.search(r'\d{13,19}', audit.full_event_text)
+    assert not re.search(r'\d{13,19}', audit.full_event_text), \
+        "PAN found in audit log text - log masking is broken"
 ```
+
+---
 
 ## Step 7 - Scope reduction strategies
 
-PCI DSS scope reduction is the highest-leverage cost-saving.
+PCI DSS scope reduction is the highest-leverage cost-saving. Full strategy guidance lives in `STRATEGIES.md`; defaults are:
 
-**Default: tokenization** - replace PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only. This shrinks the CDE the most for the least integration churn in a typical SaaS architecture. Use the alternatives when tokenization doesn't fit:
-
-| Strategy | Use when |
-|---|---|
-| Tokenization (default) | SaaS architecture; need to retain PAN reference for refunds / chargebacks |
-| Hosted payment page (iframe) | Pre-tokenization not feasible; card data must never touch your servers |
-| P2PE (point-to-point encryption) | Physical POS / card-present flows; encrypted at swipe with only decryption point in CDE |
-| Network segmentation | Layered defense on top of one of the above; never the sole scope-reduction strategy |
-
-Tests verify scope-reduction is actually reducing scope (Step 1).
+- **Tokenization (default):** replace PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only. Shrinks CDE the most for the least integration churn in a typical SaaS architecture.
+- **Hosted payment page (iframe):** when pre-tokenization isn't feasible and card data must never touch your servers.
+- **P2PE:** physical POS / card-present flows; encrypted at swipe with only decryption point in CDE.
+- **Network segmentation:** layered defense on top of one of the above; never the sole scope-reduction strategy.
 
 **PAN-storage format default (Req 3.4):** prefer **tokenization** at the storage boundary; the four `is_*` checks in Step 3's `test_pan_stored_encrypted` are an OR because pre-existing systems may already use any of them, but for new storage paths pick tokenization and treat encryption / truncation / hashing as escape hatches when tokenization isn't feasible.
 
-## Anti-patterns
-
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Trust developers to never log PAN | Eventually slipped into log line | Pattern-based assertion (Step 2) |
-| CDE / non-CDE network policy not tested | Policy drift; segmentation breach | Per-system connectivity assertion (Step 1) |
-| TLS 1.0 / 1.1 still enabled | Req 4 violation | Step 4 protocol check |
-| Hardcoded encryption keys in repo | Req 3.6 violation; PAN exposure | Repo scan (Step 3) |
-| Generic shared accounts (e.g., 'admin' / 'svc-account') | Req 8.2.1 violation | Step 5 unique-ID test |
-
 ## Limitations
 
-- This skill targets PCI DSS v4.0 (current; replaces v3.2.1 March
-  2025). Older v3.2.1 has subtle differences.
-- QSA (Qualified Security Assessor) audit-style validation requires
-  a credentialed assessor; tests verify implementation only.
-- Some patterns (CVV regex) are inherently approximate; pair with
-  QSA-validated DLP tooling.
-- Scope-reduction strategies require organizational + technical
-  changes beyond this skill.
+- Targets PCI DSS v4.0; v3.2.1 has subtle differences.
+- QSA audit-style validation requires a credentialed assessor; tests verify implementation only.
+- CVV regex patterns are approximate; pair with QSA-validated DLP tooling.
+- Scope-reduction strategies require organizational and technical changes beyond this skill.
 
 ## References
 
 - [pci][pci] - PCI Security Standards Council
+
+[pci]: https://www.pcisecuritystandards.org/
+
 - pcisecuritystandards.org/document_library/ - PCI DSS v4.0 docs
 - pcisecuritystandards.org/glossary/ - PCI terminology
 - `gdpr-test-patterns`,
