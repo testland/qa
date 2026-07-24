@@ -69,7 +69,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.3.3 | 11 skills + 2 agents | 13 |
-| [qa-compliance](plugins/qa-compliance/) | 1.3.4 | 9 skills + 1 agents | 10 |
+| [qa-compliance](plugins/qa-compliance/) | 1.3.5 | 9 skills + 1 agents | 10 |
 | [qa-sca](plugins/qa-sca/) | 1.2.3 | 9 skills + 1 agents | 10 |
 | [qa-sast](plugins/qa-sast/) | 1.2.3 | 8 skills + 1 agents | 9 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.2.2 | 8 skills + 1 agents | 9 |
@@ -89,7 +89,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | [qa-defect-management](plugins/qa-defect-management/) | 1.4.3 | 9 skills + 4 agents | 13 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.6.3 | 3 skills + 9 agents | 12 |
 | [qa-chaos](plugins/qa-chaos/) | 1.3.3 | 9 skills + 1 agents | 10 |
-| [qa-flake-triage](plugins/qa-flake-triage/) | 1.2.3 | 5 skills + 5 agents | 10 |
+| [qa-flake-triage](plugins/qa-flake-triage/) | 1.2.4 | 5 skills + 5 agents | 10 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.4.3 | 6 skills + 4 agents | 10 |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.2.13 | 6 skills + 2 agents | 8 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.3.6 | 6 skills + 2 agents | 8 |

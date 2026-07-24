@@ -22,9 +22,8 @@ identifies the pattern; this one gives the code fix.
 
 ### Replace fixed sleeps with auto-waiting assertions
 
-Playwright performs actionability checks (visible, stable, enabled,
-editable, receives-events) before every action and retries them within
-the configured timeout ([pw-actionability][pw-action]). You never need
+Playwright auto-retries actionability checks before every action within
+the configured timeout ([pw-actionability][pw-action]) - you never need
 `setTimeout` to wait for an element.
 
 [pw-action]: https://playwright.dev/docs/actionability
@@ -218,8 +217,8 @@ test.afterAll(async ({ browser }) => {
 });
 ```
 
-The `try/finally` wrapper guarantees that the browser process is
-released whether or not the preceding cleanup step succeeds.
+`try/finally` releases the browser process even if the preceding
+cleanup step throws.
 
 ### Per-test timeouts
 
