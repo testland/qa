@@ -23,10 +23,9 @@ threat intelligence, secure coding, and monitoring. The four themes are:
 | A.8 Technological | A.8.1 - A.8.34 | 34 |
 
 **Note on the standard text:** ISO/IEC 27001:2022 is paywalled at
-iso.org. Per PLUGIN_AUTHORING Step 4 (Cloudflare Turnstile fallback):
-cite by stable ID "ISO/IEC 27001:2022" and let readers navigate
-manually. All control IDs, names, and counts in this skill are sourced
-from isms.online/iso-27001/annex-a/ (fetched 2026-06-04).
+iso.org, so it is cited by stable ID "ISO/IEC 27001:2022". All control
+IDs, names, and counts here are sourced from
+isms.online/iso-27001/annex-a/ (fetched 2026-06-04).
 
 This is a **pure-reference skill** - defines the test-pattern catalog
 by control. Tests use the team's existing test framework; this skill
