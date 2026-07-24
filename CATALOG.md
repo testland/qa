@@ -15,7 +15,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.10.5 | 25 skills + 7 agents | 32 |
 | [qa-test-data](plugins/qa-test-data/) | 1.3.4 | 17 skills + 3 agents | 20 |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.6 | 15 skills + 2 agents | 17 |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.7 | 15 skills + 2 agents | 17 |
 | [qa-roles](plugins/qa-roles/) | 1.3.11 | 0 skills + 15 agents | 15 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.6 | 8 skills + 6 agents | 14 |
 | [qa-test-management](plugins/qa-test-management/) | 1.2.2 | 8 skills + 2 agents | 10 |
@@ -37,7 +37,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-game](plugins/qa-game/) | 1.4.10 | 8 skills + 3 agents | 11 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.5.2 | 8 skills + 2 agents | 10 |
 | [qa-embedded](plugins/qa-embedded/) | 1.3.4 | 7 skills + 3 agents | 10 |
-| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.2.9 | 6 skills + 2 agents | 8 |
+| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.2.10 | 6 skills + 2 agents | 8 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.12 | 5 skills + 3 agents | 8 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.2.10 | 6 skills + 2 agents | 8 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.6 | 5 skills + 2 agents | 7 |
@@ -105,7 +105,7 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS
 | [qa-cache-testing](plugins/qa-cache-testing/) | 1.2.2 | 9 skills + 1 agents | 10 |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.2 | 8 skills + 1 agents | 9 |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.2.11 | 6 skills + 1 agents | 7 |
-| [qa-db-migrations](plugins/qa-db-migrations/) | 1.2.5 | 5 skills + 2 agents | 7 |
+| [qa-db-migrations](plugins/qa-db-migrations/) | 1.2.6 | 5 skills + 2 agents | 7 |
 | [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.1.7 | 6 skills + 1 agents | 7 |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.2.9 | 5 skills + 1 agents | 6 |
 

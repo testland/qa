@@ -42,13 +42,11 @@ match the Clang you compile with (plugin / ABI compatibility), per
 [mull-install].
 
 ```bash
-# Linux (Ubuntu/Debian): add the Mull apt repo, then install a version-matched
-# package alongside the matching clang.
-curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' -o setup-mull.sh && sudo -E bash setup-mull.sh
-sudo apt-get update && sudo apt-get install -y mull-19 clang-19
-
-# macOS
+# macOS / Linuxbrew
 brew install mull-project/mull/mull
+
+# Linux (Ubuntu/Debian): install the version-matched mull + clang packages
+# from the Mull apt repo per the official guide: https://mull.readthedocs.io
 ```
 
 ## Step 2 - Build the project for mutation
@@ -144,8 +142,7 @@ uploads to a code-scanning dashboard. Other reporters per [mull-cli]:
 
 ```yaml
 - run: |
-    curl -1sLf 'https://dl.cloudsmith.io/public/mull-project/mull-stable/setup.deb.sh' -o setup-mull.sh && sudo -E bash setup-mull.sh
-    sudo apt-get update && sudo apt-get install -y mull-19 clang-19
+    # install mull-19 + clang-19 per the official guide (Step 1) before this step
     cmake -B build/ -DCMAKE_BUILD_TYPE=Debug \
       -DCMAKE_C_COMPILER=clang-19 -DCMAKE_CXX_COMPILER=clang-19 \
       -DCMAKE_C_FLAGS="-O0 -g -fpass-plugin=/usr/lib/mull-ir-frontend-19" \
