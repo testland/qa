@@ -5,13 +5,6 @@ description: "Pure-reference catalog of PCI DSS v4.0 scope reduction techniques 
 
 # pci-dss-scope-reference
 
-## Overview
-
-PCI DSS (Payment Card Industry Data Security Standard) governs
-the handling of cardholder data. Per
-[pcisecuritystandards.org](https://www.pcisecuritystandards.org/document_library/),
-PCI DSS v4.0 is the current spec (replaced v3.2.1 in 2024).
-
 **Scope reduction** is the dominant strategy: keep card data off
 your systems entirely, so PCI compliance becomes minimal SAQ A
 instead of full SAQ D.
@@ -20,12 +13,11 @@ This skill is **distinct from** a scope checker that verifies the
 boundary holds in code. This skill explains what the boundary
 IS and the test surface it creates.
 
-## When to use
+## How to use this catalog
 
-- Designing a new payment integration.
-- Auditing existing scope (PAN flowing through your servers?).
-- Choosing a gateway / tokenization strategy.
-- PR review of payment-related changes.
+1. **Identify your integration pattern** - Review the scope-reduction patterns below (hosted fields, redirect, tokenization, network segmentation) and match the one your payment integration uses.
+2. **Determine your SAQ level** - Use the SAQ table to confirm which Self-Assessment Questionnaire level applies given how cardholder data flows through your system.
+3. **Verify testable behaviours** - Cross-reference the Testable behaviours table and anti-patterns to confirm the scope boundary is preserved and hand off specific tests to `pci-dss-control-test-author`.
 
 ## SAQ levels (Self-Assessment Questionnaire)
 
@@ -35,13 +27,10 @@ Per [pcisecuritystandards.org](https://www.pcisecuritystandards.org/document_lib
 |---|---|---|
 | **A** | Card-not-present, fully outsourced (hosted gateway pages, iFrame redirects, Stripe Elements) | Smallest - your servers never see PAN |
 | **A-EP** | Hosted-form-with-merchant-customisation (e.g., your domain shows the form but iframe is the gateway's) | Slightly larger; some elements visible to your server |
-| **B** | Payment terminals only (POS) | N/A for web-only |
-| **C** | Web-based merchants with stored cardholder data | Mostly POS-related |
 | **D** | All merchants not covered by A-C; full PCI DSS | Largest - for cases where you must handle PAN |
 
-Choose **A** when feasible. The architecture difference: A
-requires that PAN never touches your servers - the customer
-inputs it directly into a gateway-hosted iframe / element.
+Choose **A** when feasible: PAN never touches your servers because
+the customer inputs it directly into a gateway-hosted iframe / element.
 
 ## PAN storage rules
 
@@ -60,12 +49,14 @@ Allowed:
 - Encrypted PAN with strong key management (if you must store
   full PAN)
 
-Tests for storage:
+Tests for storage (PostgreSQL `~` regex operator):
 
 ```sql
--- Detect prohibited PAN patterns
+-- Detect prohibited PAN patterns in any string column
 SELECT * FROM <any_table>
-WHERE column ~ '^[0-9]{16}$' OR column ~ '^4[0-9]{15}$'
+WHERE  column ~ '^[0-9]{13,19}$'
+    OR column ~ '^4[0-9]{15}$'
+    OR column ~ '^5[1-5][0-9]{14}$'
 LIMIT 10;
 -- Expect: 0 rows
 ```

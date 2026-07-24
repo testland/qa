@@ -1,35 +1,9 @@
 ---
 name: test-pyramid-balancer
-description: "Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward Cohn's pyramid ratios per the change-set shape - pure-logic-heavy repo wants ~80/15/5; UI-heavy repo wants ~60/25/15. Detects \"ice-cream cone\" (E2E-heavy) and \"hourglass\" (integration-thin) anti-patterns. Use quarterly to keep the test mix calibrated to the codebase reality."
+description: "Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward the test pyramid ratios per the change-set shape - pure-logic-heavy repo wants ~80/15/5; UI-heavy repo wants ~60/25/15. Detects 'ice-cream cone' (E2E-heavy) and 'hourglass' (integration-thin) anti-patterns. Use when the user asks about test distribution, test strategy, test balance, too many E2E tests, slow CI caused by tests, testing best practices, or rebalancing their test suite; also suitable for quarterly calibration of the test mix to codebase reality."
 ---
 
 # test-pyramid-balancer
-
-## Overview
-
-Per [test-pyramid][tp]:
-
-[tp]: https://martinfowler.com/bliki/TestPyramid.html
-
-> "you should have many more low-level **UnitTests** than high
-> level **BroadStackTests** running through a GUI."
-
-The pyramid model has three layers (unit / service / UI); the
-ratio between them depends on the codebase. A repo with mostly
-pure-logic changes wants more unit tests; a repo with mostly UI
-changes legitimately needs more E2E.
-
-The anti-patterns ("ice-cream cone" - heavy E2E + thin unit, or
-"hourglass" - heavy unit + heavy E2E + thin integration) accumulate
-silently. This skill makes them visible.
-
-## When to use
-
-- Quarterly: scheduled test-mix review.
-- After a sprint that added many E2E tests: are we tilting toward
-  the ice-cream cone?
-- New team owner: understand the inherited test-mix.
-- Refactor planning: where's the highest-leverage test-debt?
 
 ## Step 1 - Inventory current test mix
 
@@ -37,30 +11,36 @@ Per-language adapters classify by path heuristic:
 
 ```python
 # scripts/test-mix-inventory.py
-import os, re, glob
+import re
+from pathlib import Path
 
-def classify(path, content):
-    if any(s in path for s in ['/playwright/', '/cypress/', '/selenium/', '/e2e/']):
+EXTENSIONS = {'.js', '.ts', '.py', '.kt', '.java', '.rb', '.go'}
+
+def classify(path_str, content):
+    if any(s in path_str for s in ['/playwright/', '/cypress/', '/selenium/', '/e2e/']):
         return 'e2e'
     if any(s in content for s in ['playwright', 'cypress', 'selenium-webdriver']):
         return 'e2e'
-    if any(s in path for s in ['/integration/', '/it/']):
+    if any(s in path_str for s in ['/integration/', '/it/']):
         return 'integration'
     if 'testcontainers' in content or 'WebApplicationFactory' in content:
         return 'integration'
     return 'unit'   # default
 
 mix = {'unit': 0, 'integration': 0, 'e2e': 0}
-for path in glob.glob('**/*.{js,ts,py,kt,java,rb,go}', recursive=True):
-    if not re.search(r'(test|spec)\.|test_|_test\.', path):
+for path in Path('.').rglob('*'):
+    if path.suffix not in EXTENSIONS:
         continue
-    with open(path) as f:
-        content = f.read()
-    layer = classify(path, content)
+    if not re.search(r'(test|spec)\.|test_|_test\.', path.name):
+        continue
+    content = path.read_text(errors='ignore')
+    layer = classify(str(path), content)
     mix[layer] += content.count('test(') + content.count('it(') + content.count('def test_')
 
 print(mix)
 ```
+
+**Validation checkpoint (Step 1):** Before proceeding, sample 5 - 10 tests from each classified bucket and confirm the layer assignment looks correct. If a "unit" test hits a real database, reclassify it as integration. Adjust the `classify()` heuristics for any systematic misclassification before continuing.
 
 ## Step 2 - Inventory current runtime
 
@@ -74,8 +54,7 @@ time npx playwright test         # E2E
 
 ## Step 3 - Compare to ideal ratios
 
-Per [test-pyramid][tp]: the right ratio depends on the codebase.
-Defaults:
+Per [test-pyramid][tp]: the right ratio depends on the codebase. Defaults:
 
 | Predominant change shape | Recommended (unit / int / e2e) | Notes                                    |
 |--------------------------|--------------------------------|------------------------------------------|
@@ -84,59 +63,43 @@ Defaults:
 | UI-heavy                   | 60 / 25 / 15                   | SPAs, mobile apps; UI is the product.   |
 | Data-heavy                 | 60 / 30 / 10                   | + dedicated data quality suite.          |
 
-The change-shape input comes from `code-change-shape-classifier`,
-which walks a window of `git log` and classifies each commit by path
-and content signal. This step consumes that distribution: it does not
-recompute it.
+The change-shape input comes from `code-change-shape-classifier`, which walks a window of `git log` and classifies each commit by path and content signal. This step consumes that distribution: it does not recompute it.
+
+[tp]: https://martinfowler.com/bliki/TestPyramid.html
 
 ## Step 4 - Detect anti-patterns
+
+**Validation checkpoint (Step 4):** Present the diagnosed anti-pattern to the user and ask them to confirm the diagnosis before generating migration recommendations. Large-scale test moves are multi-sprint work; confirm the direction is correct first.
 
 ### Ice-cream cone (E2E-heavy)
 
 ```
-Current: 30 unit / 10 integration / 60 E2E
-Recommended: 70 / 25 / 5
-Verdict: ICE-CREAM CONE (60% E2E vs target 5%)
+Current: 30 unit / 10 integration / 60 E2E  →  Verdict: ICE-CREAM CONE (60% E2E vs target 5%)
 ```
 
-Symptoms:
-- E2E count > unit count.
-- Total runtime dominated by E2E.
-- Per-PR feedback time >15 min.
+Symptoms: E2E count > unit count; total runtime dominated by E2E; per-PR feedback time >15 min.
 
-Fix: identify E2E tests that test pure logic; rewrite at the unit
-layer.
+Fix: identify E2E tests that test pure logic; rewrite at the unit layer. Keep a hero-flow floor of 5 - 15 E2E tests for critical journeys. Tune target ratios per change shape (Step 3) rather than applying a single universal ratio.
 
 ### Hourglass (integration-thin)
 
 ```
-Current: 200 unit / 8 integration / 30 E2E
-Recommended: 75 / 20 / 5
-Verdict: HOURGLASS (3% integration vs target 20%)
+Current: 200 unit / 8 integration / 30 E2E  →  Verdict: HOURGLASS (3% integration vs target 20%)
 ```
 
-Symptoms:
-- Many unit + many E2E; very few integration.
-- Multi-module bugs slip through (units pass; E2E catches but
-  late).
+Symptoms: many unit + many E2E; very few integration; multi-module bugs slip through (units pass; E2E catches but late).
 
-Fix: add integration tests covering the cross-module seams that
-unit tests can't reach and E2E tests catch too late.
+Fix: add integration tests covering the cross-module seams that unit tests can't reach and E2E tests catch too late. Note that path-based classification can mislead - read file content for hint signals (`testcontainers`, `WebApplicationFactory`) to catch unit tests that secretly hit a real DB.
 
 ### Inverted pyramid
 
 ```
-Current: 50 unit / 100 integration / 80 E2E
-Recommended: 75 / 20 / 5
-Verdict: INVERTED PYRAMID (heaviest at the top; UI tests dominate)
+Current: 50 unit / 100 integration / 80 E2E  →  Verdict: INVERTED PYRAMID (heaviest at the top; UI tests dominate)
 ```
 
-Symptoms:
-- Same as ice-cream cone but with integration-heavy variant.
-- CI is slow; flake is high.
+Symptoms: same as ice-cream cone but with integration-heavy variant; CI is slow; flake is high.
 
-Fix: aggressive layer-down - move tests to lower layers
-where they catch the same bugs faster.
+Fix: aggressive layer-down - move tests to lower layers where they catch the same bugs faster. Evaluate using layer ratio + runtime + flake rate together, not runtime alone.
 
 ## Step 5 - Recommend specific changes
 
@@ -181,7 +144,11 @@ Output a stack-ranked list of layer-changes:
 - Per-PR feedback: <5 min for unit + integration (vs current 15 min).
 ```
 
-## Step 6 - Cadence
+## Step 6 - Confirm improvement
+
+After migrations are complete, re-run `scripts/test-mix-inventory.py` and compare the new ratios against the targets from Step 3. If any layer is still outside its target band, return to Step 4 to diagnose residual anti-patterns before closing the work.
+
+## Step 7 - Cadence
 
 | Cadence    | Trigger                                       |
 |------------|-----------------------------------------------|
@@ -189,17 +156,6 @@ Output a stack-ranked list of layer-changes:
 | After major refactor | Re-inventory; ratios may have shifted. |
 | New team owner | Inherit the test-mix; understand it.       |
 | Sprint with E2E-heavy ship | Spot-check; don't tilt the pyramid. |
-
-## Anti-patterns
-
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| One-size-fits-all pyramid recommendation                              | Per [test-pyramid][tp]: ratios depend on the codebase.                    | Tune per change shape (Step 3). |
-| Path-based-only classification                                         | A "unit" test that hits a real DB is actually integration; misclassified. | Read content for hint signals (Step 1 example). |
-| Recommending E2E count = 0                                            | Some critical journeys need E2E; eliminating misses them.                 | Hero-flow E2E (5-15) is the floor (Step 5 example). |
-| One-shot recommendation with no migration plan                         | Team doesn't know where to start.                                         | Stack-ranked list with specific candidates (Step 5). |
-| Quarterly review without follow-up                                     | Recommendations don't ship.                                              | Track action items in tracker; review next quarter. |
-| Treating runtime as the only signal                                    | A 0.5-sec E2E test is fine; a 0.5-sec unit test that ran 1000× isn't.   | Layer ratio + runtime + flake rate together. |
 
 ## Limitations
 
@@ -209,10 +165,6 @@ Output a stack-ranked list of layer-changes:
 - **Doesn't measure test value.** Two unit tests of equal runtime
   can have very different bug-catching power. Pair with mutation
   testing for value signal.
-- **Migration cost is real.** Moving 100 E2E tests to unit layer
-  is multi-sprint work.
-- **Per-team conventions.** What counts as "integration" varies by
-  team's vocabulary; document the local definitions.
 
 ## References
 

@@ -7,16 +7,10 @@ description: "Authors browser automation scripts using Puppeteer - Chrome / Chro
 
 ## Overview
 
-Puppeteer is Google's Node library for controlling Chrome /
-Chromium via the DevTools Protocol. It predates Playwright;
-Playwright's authors are former Puppeteer maintainers who left
-Google to build a multi-browser successor.
-
-Puppeteer is still maintained and useful when:
-- Chrome-only is fine.
-- Browser-automation use cases beyond E2E testing dominate
-  (scraping, PDF generation, screenshot pipelines, web crawling).
-- Lightweight footprint matters (no test runner bundled).
+Puppeteer controls Chrome / Chromium via the DevTools Protocol - a
+lightweight fit (no bundled test runner) for Chrome-only browser
+automation beyond E2E testing: scraping, PDF generation, screenshot
+pipelines, web crawling.
 
 ## When to use
 

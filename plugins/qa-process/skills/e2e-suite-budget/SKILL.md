@@ -1,20 +1,11 @@
 ---
 name: e2e-suite-budget
-description: "Build-an-X workflow that caps the E2E suite size by computing flakiness ROI per test - for each E2E test, computes (regressions caught × value) ÷ (runtime × flake rate × maintenance cost), ranks all tests by ROI, identifies the bottom decile (low ROI = high cost / low signal), and recommends specific tests to retire / move to lower layer / fix flake. Use quarterly to keep E2E count from growing past the team's maintenance capacity."
+description: "Caps E2E test suite size by computing flakiness ROI per test - for each end-to-end test, computes (regressions caught × value) ÷ (runtime × flake rate × maintenance cost), ranks all tests by ROI, identifies the bottom decile (low ROI = high cost / low signal), and recommends specific tests to retire / move to lower layer / fix flake. Use when: the test suite is too large to maintain, CI pipeline is slow or dominated by end-to-end tests, flaky test failures are increasing, the team wants to reduce test maintenance burden, or when deciding which tests to remove or prune. Also use quarterly to keep E2E count from growing past the team's maintenance capacity."
 ---
 
 # e2e-suite-budget
 
 ## Overview
-
-E2E tests are expensive: per
-[`test-pyramid`][tp] (Cohn), they're "brittle, expensive to write,
-and time consuming to run." Without active management, the E2E
-suite grows: a new feature adds 5 tests per sprint; flake rate
-creeps up; CI time balloons; team disables flaky tests; coverage
-illusory.
-
-[tp]: https://martinfowler.com/bliki/TestPyramid.html
 
 This skill computes per-test ROI and recommends which tests to
 retire / move to a lower layer / fix.
@@ -22,8 +13,9 @@ retire / move to a lower layer / fix.
 ## When to use
 
 - E2E suite has grown past 50-100 tests.
-- CI time is dominated by E2E.
+- CI time is dominated by E2E (slow CI pipeline).
 - Flake rate >5%; team is fatigued.
+- Team wants to reduce test maintenance burden or decide which tests to remove.
 - Quarterly: scheduled budget review.
 
 ## Step 1 - Inputs
@@ -40,6 +32,15 @@ Per-E2E-test, the agent / skill needs:
 - **Maintenance cost:** PR count modifying the test in last N
   months (proxy for fragility).
 - **Value tier:** 1-5; assigned by team (5 = critical journey).
+
+## Step 1a - Validate inputs
+
+Before scoring, verify data completeness:
+
+- Every test ID present in `stats` must have a `runtime_min` value; flag any missing as **SKIP - no runtime data**.
+- Flag any test with a missing or null `flake_rate` as **NEEDS MANUAL REVIEW** and exclude from automated scoring until resolved.
+- Confirm `maintenance` and `regressions` files share the same set of test IDs as `stats`; log any mismatches.
+- Sanity-check the ROI distribution after scoring (Step 3): if >50% of tests score 0.0, the `regressions` data is likely missing or incomplete - warn before generating recommendations.
 
 ## Step 2 - ROI formula
 
@@ -151,28 +152,9 @@ trade-off.
 | Per-major-feature | New tests added; verify suite stays under budget.  |
 | After flake spike | Reactive review; flake source likely a low-ROI test. |
 
-## Anti-patterns
+## Anti-patterns and Limitations
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| ROI formula without "regressions caught" data                         | All tests look equal; no basis for prioritization.                       | Track real-bug catches over time (Step 1). |
-| Treating value_tier as binary (critical / not)                        | Misses tier-2 / tier-3 nuance.                                           | 1-5 scale (Step 1). |
-| Auto-retiring bottom-decile without review                            | False positives - important tests retired.                               | Recommendation only; team confirms (Step 5). |
-| Adding E2E tests without budget enforcement                           | Suite grows; no constraint forcing trade-offs.                           | Per-quarter cap (Step 6). |
-| Recommending "retire" without alternative                             | Tests that catch important bugs may have low ROI due to runtime; deletion regrets. | Per-test categorization (Step 5). |
-| Cherry-picking tests to retire (favorites stay)                       | Bias.                                                                     | Apply ranking uniformly; document overrides. |
-
-## Limitations
-
-- **Regressions-caught data is hard to gather.** Without
-  postmortem cross-references, defaults to 0 for all tests;
-  ranking gets degraded.
-- **ROI formula is heuristic.** Tune weights per team's priorities.
-- **Doesn't account for "test of last resort"** - some tests have
-  low historical catch rate but exist because regression there
-  would be catastrophic (auth, payment).
-- **Migration cost.** Moving an E2E test to a unit test isn't
-  free; budget the engineering time.
+See [ANTI-PATTERNS.md](ANTI-PATTERNS.md) for common failure modes (e.g., missing regression data, auto-retiring without review, cherry-picking) and [LIMITATIONS.md](LIMITATIONS.md) for known constraints (e.g., difficulty gathering regression-catch data, heuristic formula tuning, "test of last resort" cases, migration cost).
 
 ## References
 
@@ -185,3 +167,5 @@ trade-off.
 - `junit-xml-analysis` - upstream: provides per-test runtime + flake stats.
 - `test-coverage-targeter` - complementary: identifies what to add at the unit layer when
   E2E tests get retired.
+
+[tp]: https://martinfowler.com/bliki/TestPyramid.html

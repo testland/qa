@@ -7,12 +7,10 @@ description: "Builds a per-PR visual-diff summary that clusters intentional vs i
 
 ## Overview
 
-A 50-diff visual review is a recipe for **diff blindness**. The
-reviewer either rubber-stamps everything or starts skipping. Both
-fail.
-
-This skill turns "50 diffs" into "3 components changed as the PR
-intended; 1 component changed unexpectedly - focus here":
+A 50-diff visual review causes **diff blindness** - reviewers
+rubber-stamp or skip. This skill turns "50 diffs" into "3 components
+changed as the PR intended; 1 component changed unexpectedly - focus
+here":
 
 1. Read each visual tool's per-snapshot diff output (Percy /
    Chromatic / Playwright snapshots / Storybook).

@@ -7,16 +7,11 @@ description: "Pure-reference catalog of cache-coherence patterns across the requ
 
 ## Overview
 
-Cache coherence is the discipline of keeping cached values
-consistent with their source of truth across multiple tiers
-(browser, CDN, reverse-proxy, application, data store). It is
-the "C" in "two hard things in computer science" - wrong
-coherence shows as stale data, wrong invalidation shows as
-cache stampedes per
-`cache-stampede-reference`.
-
-This skill is a **pure reference** consumed by per-tier test
-skills.
+Keeping cached values consistent with their source of truth
+across tiers (browser, CDN, reverse-proxy, application, data
+store). Wrong coherence shows as stale data; wrong invalidation
+shows as cache stampedes per `cache-stampede-reference`. A
+**pure reference** consumed by per-tier test skills.
 
 ## When to use
 

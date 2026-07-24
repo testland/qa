@@ -7,11 +7,9 @@ metadata:
 
 # vega-spec-validator
 
-Per the [Vega-Lite docs], Vega-Lite is "a declarative JSON-based
-grammar" with three primary specification elements: **Mark**,
-**Encoding**, **Data**. Vega-Lite compiles to Vega; Vega renders to
-SVG/Canvas. Tests validate the spec is well-formed AND produces the
-expected rendered output.
+Vega-Lite specs (**Mark**, **Encoding**, **Data**) compile to Vega,
+which renders to SVG/Canvas, per the [Vega-Lite docs]. Tests validate
+a spec is well-formed AND produces the expected rendered output.
 
 ## When to use
 
