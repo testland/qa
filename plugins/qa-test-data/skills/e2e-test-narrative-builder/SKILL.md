@@ -197,7 +197,7 @@ imports them at the top.
 
 ## Output format
 
-```markdown
+````markdown
 ## E2E Narrative Generated - `<test-name>`
 
 **Framework:** Playwright | Cypress | Selenium | Karate
@@ -224,7 +224,7 @@ imports them at the top.
 
 - `user_completes_payment_with_apple_pay` - not yet in the intent
   mapping. Add to `e2e/intents/index.ts` before this test will run.
-```
+````
 
 ## Anti-patterns
 

@@ -131,7 +131,7 @@ def check_third_party_mocks(test_file):
 
 ## Step 6 - Output
 
-```markdown
+````markdown
 ## AI test curator - `<PR>`
 
 **Generated tests reviewed:** N
@@ -182,7 +182,7 @@ checking boolean).
 ❌ **Not ready to merge** - 3 high-severity issues require fix.
 
 After fixes, re-run the curator.
-```
+````
 
 ## Refuse-to-proceed rules
 

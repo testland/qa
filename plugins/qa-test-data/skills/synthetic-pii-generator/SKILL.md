@@ -180,7 +180,7 @@ real production data).
 
 ## Output format
 
-```markdown
+````markdown
 ## Synthetic PII generated for `<dataset-name>`
 
 **Source factory library:** Faker (Python) | mimesis | Bogus | etc.
@@ -207,7 +207,7 @@ jq -r '.users[].email' fixtures/users-test.yaml | grep -v '@example\.\(com\|org\
 # Confirm SSN range
 jq -r '.users[].ssn' fixtures/users-test.yaml | grep -v '^9[0-9]{2}-' && echo 'WARNING: SSN outside IRS test range'
 ```
-```
+````
 
 ## Anti-patterns
 
