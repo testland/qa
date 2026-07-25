@@ -92,10 +92,9 @@ Two mechanical habits enforce this in the text:
    chain that gets created after the fact by virtue of hindsight", which is
    precisely the artifact a blameful escape report ships.
 
-Related work in the same tradition is worth reading for facilitation
-technique: the Google SRE Workbook's postmortem chapter
+For facilitation technique, the Google SRE Workbook's postmortem chapter
 ([Postmortem Culture: Learning from Failure](https://sre.google/workbook/postmortem-culture/))
-extends the SRE Book material with organizational adoption patterns.
+extends this material with organizational adoption patterns.
 
 ## The classification rule
 
@@ -241,51 +240,13 @@ is a property of a person.
 
 ## Expected output shape
 
-One markdown document per escaped defect. Store them together under a
-stable directory (for example `docs/escape-defects/`) with a
-date-prefixed, slugified filename, so the set can be read as a trend.
-
-```markdown
-# Escape defect: <one-line summary of the failure>
-
-| Field | Value |
-|---|---|
-| Defect ID | #1234 |
-| First production observation | 2026-05-02T09:14Z |
-| Days in production before fix | 2 |
-| Users affected (estimated) | ~340 |
-| Fix commit | def5678 |
-| Introducing commit | abc1234 |
-| Escape category | test gap |
-| Sub-pattern | edge case not exercised |
-
-## What happened
-Two or three paragraphs. Behavior of the system, in order. No attribution.
-
-## Why it escaped
-The checking activity that was supposed to catch this, and the standing
-state of that activity. Systems as grammatical subjects throughout.
-
-## Prevention asset
-### Proposed test or gate
-<actual code or config diff>
-
-### Where it lives
-<repository path>
-
-### What it verifies
-Names the introducing commit and states when this check would have failed
-against it.
-
-## Process changes
-Process-gap findings only. Omit the section otherwise.
-
-## Open questions
-Anything the available evidence does not settle, stated as a question.
-```
-
-The **Prevention asset** section is load-bearing. If it is empty or
-generic, the document is not finished.
+One markdown document per escaped defect, stored together under a stable
+directory (for example `docs/escape-defects/`) with a date-prefixed,
+slugified filename so the set reads as a trend. The full per-defect
+template - fields table, section skeleton, and the load-bearing
+**Prevention asset** section (empty or generic means the document is not
+finished) - is in
+[references/escape-defect-document-template.md](references/escape-defect-document-template.md).
 
 ## Worked example: test gap
 

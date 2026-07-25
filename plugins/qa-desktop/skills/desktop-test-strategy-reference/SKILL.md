@@ -1,6 +1,6 @@
 ---
 name: desktop-test-strategy-reference
-description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, a per-OS decision matrix, the per-OS asynchronous-wait hierarchies (XCTest waitForExistence/XCTestExpectation/XCTWaiter, FlaUI Retry primitives, AT-SPI manual polling), per-OS parallel-test policy, foreground-lock and UAC / TCC / AT-SPI elevation hazards, and the Microsoft-blessed high-DPI / per-monitor test matrix. Use when choosing how to test or automate a desktop GUI application (desktop app testing, GUI automation, automate desktop UI) on Windows, macOS, or Linux - the strategic reference before picking a desktop test stack, ahead of the per-tool implementation skills."
+description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, and a per-OS decision matrix with accessibility-first locator strategy. Deep operational detail (per-OS asynchronous-wait hierarchies, parallel-test policy, foreground-lock / UAC / TCC / AT-SPI elevation hazards, and the high-DPI / per-monitor test matrix) lives in references/. Use when choosing how to test or automate a desktop GUI application (desktop app testing, GUI automation, automate desktop UI) on Windows, macOS, or Linux - the strategic reference before picking a desktop test stack, ahead of the per-tool implementation skills."
 metadata:
   keywords: "desktop, ui-automation, xctest, at-spi, electron, qt"
 ---
@@ -46,8 +46,8 @@ skills below and by anyone choosing a desktop test stack.
 
 1. **Pick OS + toolkit** from the per-OS / per-toolkit decision matrix.
 2. **Choose stable locators** for that backend from the locator-strategy table.
-3. **Apply the matching async-wait primitive** for the OS (XCTest waiters / FlaUI Retry / AT-SPI polling).
-4. **Pre-handle the OS elevation hazard** (UAC / TCC / AT-SPI) before it blocks the run.
+3. **Apply the matching async-wait primitive** for the OS (XCTest waiters / FlaUI Retry / AT-SPI polling) - see [references/async-waits-and-concurrency.md](references/async-waits-and-concurrency.md).
+4. **Pre-handle the OS elevation hazard** (UAC / TCC / AT-SPI) before it blocks the run - see [references/platform-hazards-and-dpi.md](references/platform-hazards-and-dpi.md).
 
 ## When to use
 
@@ -84,7 +84,7 @@ Per [msuia][msuia]:
 
 Higher-level language bindings (C#, PowerShell, Python via `pywinauto`)
 sit on top. **For test-automation purposes**, the WinAppDriver and
-Appium-Windows projects expose UIA as a W3C WebDriver endpoint - 
+Appium-Windows projects expose UIA as a W3C WebDriver endpoint -
 which is what most QA toolchains actually drive.
 
 ### macOS - Apple Accessibility + XCTest
@@ -238,184 +238,17 @@ Cross-references for the upstream + downstream slots:
   see the `winappdriver` and `xctest-mac-desktop` SKILLs for
   GitHub-hosted vs self-hosted considerations.
 
-## Asynchronous waits per OS
+## Operating the tests - deep references
 
-Every reliable desktop test routes UI polls through the driver's
-retry primitive, never raw `Thread.Sleep` / `Task.Delay`. The three
-backends ship distinct mechanisms.
+Once the stack is chosen, the operational depth lives in two
+companion references:
 
-**macOS - three-tier XCTest hierarchy** ([XCUIElement.waitForExistence][appwait1],
-[Asynchronous Tests and Expectations][appwait2]):
-
-[appwait1]: https://developer.apple.com/documentation/xctest/xcuielement/2879412-waitforexistence
-[appwait2]: https://developer.apple.com/documentation/xctest/asynchronous-tests-and-expectations
-
-| Mechanism | Use when |
-|---|---|
-| `waitForExistence(timeout:)` - boolean, fastest | Single existence check |
-| `XCTestExpectation` + `waitForExpectations(timeout:)` | Custom predicate |
-| `XCTWaiter` - multi-expectation, returns enum | Composing several conditions |
-
-Predicate-based waits expose no polling-interval setting - prefer
-`waitForExistence` for simple existence checks, escalate only when
-the wait is on a custom predicate.
-
-**Windows - FlaUI `Retry` primitives** ([FlaUI Retry wiki][flauiretry]) parameterise any UI
-poll with explicit `timeout` and `interval` `TimeSpan` values.
-Defaults are not documented - pass them explicitly. Typical
-interval: 100 to 200ms (10ms hammers UIA; 1s hides 100ms races).
-
-[flauiretry]: https://github.com/FlaUI/FlaUI/wiki/Retry
-
-| Primitive | Use when |
-|---|---|
-| `Retry.WhileNull(func, timeout, interval)` | Element fetch |
-| `Retry.WhileFalse(func, timeout, interval)` | Boolean state |
-| `Retry.WhileException(func, timeout, interval)` | Transient throws during element creation |
-
-**Linux - AT-SPI manual polling.** No built-in retry primitive; the
-dogtail / pyatspi community pattern is an explicit `time.time()`
-polling loop with `timeout` + `interval` (100 to 250ms balances
-responsiveness against `at-spi2-registryd` D-Bus traffic).
-
-## Concurrency: per-OS parallel-test policy
-
-**macOS** - per [Apple - Running tests serially or in parallel][appleparallel],
-parallelisation is opt-in. The cited page is under Apple's modern
-`documentation/testing/` (Swift Testing) namespace; the same opt-in
-design applies to XCTest test plans, which are configured in Xcode
-(Edit Scheme → Test → Options → Execute in parallel on Simulator).
-Tests sharing mutable state must opt out; performance bundles must
-disable parallelisation (parallel introduces timing noise). On
-macOS the Simulator clones spin per worker - real disk + RAM cost.
-
-[appleparallel]: https://developer.apple.com/documentation/testing/parallelization
-
-**Windows** - UIA is per-session: one AutomationElement tree per
-interactive Windows session. Two workers in the same session race
-for foreground (see below). Scaling: one runner per VM, or one
-RDP / per-user session per worker.
-
-**Linux** - `at-spi2-registryd` is bound to one D-Bus session.
-Workers writing events into the same session race for focus.
-Scaling: one Xvfb + dbus-launch per worker, or one container per
-worker with its own session bus.
-
-## Platform foreground + elevation hazards
-
-The two failure classes most often misdiagnosed as "flaky tests"
-on desktop are actually documented platform behaviours.
-
-### Windows foreground-lock
-
-Per [Microsoft - SetForegroundWindow][winsetfg] and
-[Microsoft - LockSetForegroundWindow][winlockfg]:
-
-[winsetfg]: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow
-[winlockfg]: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow
-
-`SetForegroundWindow` can be refused by Windows. The foreground
-process can also call `LockSetForegroundWindow` to suppress
-foreground transfer entirely. The system re-enables the transfer
-when the user presses ALT or interacts with a background window - 
-neither of which happens in CI. Modal dialogs and active menus
-also suppress it. Symptoms in test logs: a click "succeeds" but
-the next action observes the previous window.
-
-Mitigations:
-
-- Activate the app explicitly (`app.Activate()` in FlaUI,
-  `app.activate()` in XCUITest, `pyatspi` window-activation event
-  on Linux) before every Act that depends on focus.
-- On CI Windows runners, disable foreground-lock for the test session:
-  `HKEY_CURRENT_USER\Control Panel\Desktop\ForegroundLockTimeout = 0`.
-- Avoid running other apps in the same session during the test.
-
-### Windows UAC: the secure desktop is unreachable
-
-Per the WinAppDriver maintainers
-([issue #306][wad306], [issue #2033][wad2033]):
-
-[wad306]: https://github.com/microsoft/WinAppDriver/issues/306
-[wad2033]: https://github.com/microsoft/WinAppDriver/issues/2033
-
-The UAC consent prompt renders on a **secure desktop** that lives
-outside the standard accessibility tree. WinAppDriver / UIA cannot
-interact with the consent button - by Windows design, not driver
-bug. Three supported workarounds:
-
-- Run the test session itself elevated (the simplest, the prevailing
-  CI pattern); the UAC prompt then never appears for in-session
-  privileged actions.
-- Pre-disable UAC in the CI VM image (`EnableLUA=0` in the registry - locks the VM to test use only).
-- Send `Alt+Y` / `Alt+N` keystrokes hoping the secure desktop has
-  focus (unreliable and version-dependent; not recommended).
-
-### macOS TCC privacy prompts
-
-Per [Jamf - *Resetting Transparency, Consent, and Control Prompts
-on macOS*][jamftcc]:
-
-[jamftcc]: https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html
-
-TCC-gated prompts (Automation, Accessibility, Screen Recording,
-Files & Folders) render out of the AUT process and cannot be
-reliably driven by XCUITest. The supported pattern is to bring the
-prompt back to a known state before the test:
-
-```bash
-tccutil reset Automation com.example.MyApp
-tccutil reset Accessibility com.example.MyApp
-tccutil reset ScreenCapture com.example.MyApp
-```
-
-Or, on managed CI fleets, pre-grant via an MDM PPPC (Privacy
-Preferences Policy Control) profile so the prompt never appears.
-
-### Linux: AT-SPI requires session-wide accessibility on
-
-Per [dogtail on GitLab][dogtail] and the [Ubuntu DogtailTutorial][ubuntudogtail]:
-
-[ubuntudogtail]: https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial
-
-On modern GNOME (X11 or Wayland), AT-SPI is off by default. Enable
-it session-wide **before** launching the AUT:
-
-```bash
-gsettings set org.gnome.desktop.interface toolkit-accessibility true
-```
-
-This only takes effect for newly-spawned processes - start the AUT
-after the gsettings call, not before. Accerciser is the GNOME
-inspector and the canonical pre-write verification tool: walk the
-tree in Accerciser before writing the first locator.
-
-## High-DPI / per-monitor test matrix
-
-Per [Microsoft - *High DPI Desktop Application Development on
-Windows*][msdpi]:
-
-[msdpi]: https://learn.microsoft.com/en-us/windows/win32/hidpi/high-dpi-desktop-application-development-on-windows
-
-> "Common scenarios where display scale factors change include:
-> multiple-monitor setups where each display has a different
-> scale factor..."
-
-Microsoft enumerates concrete test scenarios that desktop apps
-must cover and that test matrices routinely miss:
-
-| Scenario | What can break |
-|---|---|
-| Multi-display with different scale factors | Window placement, image asset selection (1x vs 2x), font hinting |
-| Dock / undock with mixed DPI | Live scale-factor change events; window jumps to wrong monitor |
-| Remote Desktop from high-DPI client to low-DPI host | Mouse hit-test coordinates, font rendering, accessibility-tree positions |
-| Live scale-factor change (drag between monitors) | Per-monitor V2 awareness needed; otherwise app is bitmap-stretched |
-
-The recommended awareness level for the AUT is **per-monitor V2**.
-CI matrix: at minimum one mixed-DPI lane (2-monitor: 100% + 200%)
-in addition to a single-monitor 100% lane. macOS Retina has
-analogous behaviour (1x vs 2x asset selection); Linux per-monitor
-scaling lands in GNOME 47+ but is still maturing.
+- **Asynchronous waits + concurrency** - per-OS retry primitives
+  (XCTest waiters, FlaUI `Retry`, AT-SPI polling) and the per-OS
+  parallel-test policy: [references/async-waits-and-concurrency.md](references/async-waits-and-concurrency.md).
+- **Platform hazards + high-DPI** - foreground-lock, UAC secure
+  desktop, macOS TCC prompts, AT-SPI session enablement, and the
+  per-monitor DPI test matrix: [references/platform-hazards-and-dpi.md](references/platform-hazards-and-dpi.md).
 
 ## Anti-patterns
 
@@ -458,20 +291,12 @@ scaling lands in GNOME 47+ but is still maturing.
 - Microsoft UI Automation overview - [msuia][msuia].
 - Apple *Testing with Xcode* - UI Testing chapter
   ([appleuit][appleuit]).
-- Apple - XCUIElement.waitForExistence ([appwait1][appwait1])
-  and Asynchronous Tests and Expectations ([appwait2][appwait2]).
-- Apple - Running tests serially or in parallel
-  ([appleparallel][appleparallel]).
-- Microsoft - SetForegroundWindow ([winsetfg][winsetfg]),
-  LockSetForegroundWindow ([winlockfg][winlockfg]),
-  High-DPI Desktop Application Development on Windows
-  ([msdpi][msdpi]).
-- WinAppDriver UAC issue threads ([wad306][wad306], [wad2033][wad2033]).
-- FlaUI Retry wiki ([flauiretry][flauiretry]).
-- Jamf - Resetting TCC prompts on macOS ([jamftcc][jamftcc]).
 - at-spi2-core - [atspi2core][atspi2core].
 - dogtail (Python AT-SPI client) - [dogtail][dogtail].
-- Ubuntu DogtailTutorial - [ubuntudogtail][ubuntudogtail].
+- Operational depth (with their own citations): async waits +
+  concurrency in [references/async-waits-and-concurrency.md](references/async-waits-and-concurrency.md);
+  foreground / elevation hazards + high-DPI matrix in
+  [references/platform-hazards-and-dpi.md](references/platform-hazards-and-dpi.md).
 - Per-tool implementation SKILLs:
   `winappdriver`, `appium-windows-driver`, `xctest-mac-desktop`,
   `at-spi-linux`, `qt-test-framework`, `electron-playwright`,

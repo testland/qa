@@ -1,6 +1,6 @@
 ---
 name: data-masking-techniques-reference
-description: "Pure-reference catalog of data-masking techniques and de-identification privacy models. Enumerates the seven canonical masking operators (substitution, shuffling, number/date variance, encryption, hashing, nulling, masking-out / character-scrambling) plus tokenisation, redaction, format-preserving encryption, and Microsoft Presidio's six built-in operators. Distinguishes reversible techniques (pseudonymisation candidates per GDPR Art. 4(5)) from irreversible techniques (anonymisation candidates). Maps techniques to NIST SP 800-188 privacy models - k-anonymity, l-diversity, t-closeness, differential privacy. Cites ISO/IEC 20889:2018 for the standard taxonomy. Use to pick the right masking operator per field type and risk level."
+description: "Pure-reference catalog of data-masking techniques and de-identification privacy models. Enumerates the seven canonical masking operators (substitution, shuffling, number/date variance, encryption, hashing, nulling, masking-out / character-scrambling) plus tokenisation, redaction, format-preserving encryption, and Microsoft Presidio's six built-in operators. Distinguishes reversible techniques (pseudonymisation candidates per GDPR Art. 4(5)) from irreversible techniques (anonymisation candidates), and maps them to NIST SP 800-188 privacy models - k-anonymity, l-diversity, t-closeness, differential privacy (deep model definitions in references/). Cites ISO/IEC 20889:2018 for the standard taxonomy. Use to pick the right masking operator per field type and risk level."
 ---
 
 # data-masking-techniques-reference
@@ -29,6 +29,24 @@ choose operators per field.
   anonymised (out of GDPR scope).
 - Sizing a privacy model (k-anonymity / differential privacy)
   against utility loss.
+
+## How to use this reference
+
+1. **Classify the field** as direct identifier, quasi-identifier, or
+   sensitive attribute (`pii-categories-reference`).
+2. **Decide the reversibility need** - must an authorised consumer recover
+   the real value? If yes, pick a reversible operator (encryption, FPE,
+   tokenisation, deterministic substitution); if no, pick an irreversible
+   one from the seven-techniques catalog below.
+3. **Preserve what the test needs** - format, distribution, or referential
+   integrity across tables narrows the operator (deterministic substitution
+   / salted hashing keep joins; shuffling keeps a column's distribution).
+4. **Confirm the scope outcome** in the pseudonymisation-vs-anonymisation
+   table - reversible output is still personal data under GDPR.
+5. **Layer a dataset privacy model** when quasi-identifiers survive per-field
+   masking - k-anonymity through differential privacy, in
+   [references/privacy-models.md](references/privacy-models.md).
+6. **Cross-check the anti-patterns** before shipping the pipeline.
 
 ## The seven canonical masking techniques
 
@@ -218,58 +236,22 @@ Recital 26.
 
 ## Privacy models - NIST SP 800-188
 
-NIST SP 800-188:2023 ("De-Identifying Government Datasets",
-[csrc.nist.gov/pubs/sp/800/188/final](https://csrc.nist.gov/pubs/sp/800/188/final))
-formalises three statistical privacy models layered above the
-techniques above:
+NIST SP 800-188:2023 formalises statistical privacy models that sit
+*above* the per-field operators - pick one for the whole dataset's
+disclosure risk once quasi-identifiers remain after masking:
 
-### k-anonymity
+- **k-anonymity** - every record indistinguishable from k-1 others on
+  the quasi-identifiers (generalise / suppress / aggregate).
+- **l-diversity** - k-anonymity plus l well-represented sensitive
+  values per equivalence class.
+- **t-closeness** - l-diversity plus a sensitive-attribute distribution
+  within t of the overall distribution.
+- **Differential privacy** - a formal guarantee bounded by the privacy
+  budget ε, achieved by noise injection on query outputs.
 
-A dataset is **k-anonymous** if every record is indistinguishable
-from at least *k − 1* other records when projected on the
-quasi-identifiers (Sweeney 2002, cited in NIST 800-188).
-
-- **Achieve via:** Generalisation (age 47 → "40 - 50"), suppression
-  (drop the row), and aggregation.
-- **Picks `k`:** Typical values are k = 5, k = 10, k = 100
-  depending on dataset size + risk tolerance.
-- **Weakness:** Vulnerable to homogeneity attack - if all k records
-  share the same sensitive value, k-anonymity doesn't protect it.
-
-### l-diversity
-
-Strengthens k-anonymity by requiring **at least l well-represented
-values** of the sensitive attribute within each equivalence class
-(Machanavajjhala et al. 2007).
-
-- **Achieve via:** Suppression of records that would break l, or
-  perturbation of sensitive values.
-- **Weakness:** Vulnerable to skewness / similarity attack - the l
-  values may be semantically similar.
-
-### t-closeness
-
-Strengthens l-diversity by requiring the distribution of the
-sensitive attribute in each equivalence class be **close** (within
-t, by Earth Mover's Distance) to the distribution in the overall
-dataset (Li et al. 2007).
-
-- **Trade-off:** Higher t = better utility, lower t = stronger
-  privacy.
-
-### Differential privacy
-
-A formal mathematical guarantee: the probability of any output
-changes by at most a multiplicative factor (e^ε) when a single
-record is added/removed. ε (epsilon) is the privacy budget - lower
-ε = stronger privacy.
-
-- **Achieve via:** Noise injection (Laplace / Gaussian
-  mechanism) on query outputs, not on the raw dataset.
-- **Trade-off:** Utility-vs-budget. Apple, Google, US Census 2020
-  use differential privacy.
-- **Cite:** NIST SP 800-188:2023 §6; original Dwork 2006 "Calibrating
-  noise to sensitivity."
+Full definitions, achievement methods, weaknesses, and ε / k guidance
+(with NIST + primary-source citations):
+[references/privacy-models.md](references/privacy-models.md).
 
 ## Picking a technique per field
 
@@ -282,6 +264,28 @@ record is added/removed. ε (epsilon) is the privacy budget - lower
 | Categorical demographic (race, etc.) for analytics | Generalisation + l-diversity | l-diversity |
 | Statistical query release | Differential privacy mechanism | DP |
 | Demo / training, no analytics utility needed | Synthetic substitution (Faker / Synthea) | n/a (no real data) |
+
+## Worked example - masking a non-prod `customers` table
+
+An analytics team needs a non-prod copy of a `customers` table. Walk each
+field through the steps in "How to use this reference":
+
+| Field | Need | Operator | Scope outcome |
+|---|---|---|---|
+| `customer_id` (FK, joined across tables) | Opaque but joinable | Deterministic substitution / salted hashing (#1 / #5) | Pseudonymised - reversible via key |
+| `full_name` | No analytics value | Random substitution (Faker) | Anonymised |
+| `email` | Support must recognise own value | Masking-out `j***@example.com` (#7) | Partial - depends on revealed chars |
+| `national_id` (SSN) | No analytics value; enumerable format | Nulling out (#6) - never unsalted hashing | Anonymised |
+| `date_of_birth` | Age band useful | Generalise to a band (age 47 → "40 - 50") | Anonymised (k-anonymity input) |
+| `salary` | Distribution useful | Number variance ± 10 % (#3) | Anonymised - t-closeness if sensitive |
+| `auth_token` | No analytics value | Nulling out / deletion (#6) | Anonymised |
+
+**Resulting scope:** because `customer_id` uses a reversible deterministic
+map, the output is **pseudonymised** - still personal data under GDPR
+Recital 26. To move the dataset out of scope, destroy the substitution key
+so `customer_id` can no longer be re-linked. The remaining quasi-identifiers
+(`date_of_birth` band, `salary` bracket) then need a dataset privacy model -
+see [references/privacy-models.md](references/privacy-models.md).
 
 ## Anti-patterns
 
@@ -319,8 +323,9 @@ record is added/removed. ε (epsilon) is the privacy budget - lower
   ID; statutory text via iso.org.
 - NIST SP 800-188:2023 "De-Identifying Government Datasets" - 
   [csrc.nist.gov/pubs/sp/800/188/final](https://csrc.nist.gov/pubs/sp/800/188/final).
-  Definitions of k-anonymity, l-diversity, t-closeness,
-  differential privacy.
+  Full k-anonymity / l-diversity / t-closeness / differential-privacy
+  definitions (with primary-source citations) live in
+  [references/privacy-models.md](references/privacy-models.md).
 - NIST SP 800-38G "Recommendation for Block Cipher Modes of
   Operation: Methods for Format-Preserving Encryption" - FF1 /
   FF3 specs.

@@ -1,9 +1,9 @@
 {
   "name": "testland/test-isolation-patterns",
-  "description": "Pure reference catalog of test-isolation and fixture-lifecycle patterns - fixture scope (per-test / per-describe / shared / global), Meszaros's four-phase test pattern, Fowler's Fresh-Fixture-vs-Shared-Fixture trade-off, database isolation (transaction-rollback / database-per-worker / template-database), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup). This is the architecture-tier reference, not a file-level fixture-coupling style rule. Use when designing fixture scope and isolation strategy, auditing fixture coupling or retry/wait policy, or moving a suite to parallel execution.",
+  "description": "Pure reference catalog of test-isolation and fixture-lifecycle patterns - the four-phase test pattern (Meszaros), fixture scope (per-test / per-describe / shared / global), the Fresh-Fixture vs Shared-Fixture trade-off (Fowler), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup), plus a pattern-selection guide and a worked leaking-state diagnosis. The database-isolation strategies (transaction-rollback / database-per-worker / template-database) and network / external-service stubbing live in references/. This is the architecture-tier reference, not a file-level fixture-coupling style rule. Use when designing fixture scope and isolation strategy, auditing fixture coupling or retry/wait policy, or moving a suite to parallel execution.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.6.7"
+  "version": "1.6.8"
 }

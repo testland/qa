@@ -1,6 +1,6 @@
 ---
 name: leap-second-reference
-description: "Pure-reference catalog of leap-second mechanics + their bug surface. Defines leap seconds (occasional 23:59:60 UTC second insertions announced by IERS to keep UTC within 0.9s of UT1), the history (added irregularly since 1972 by IERS Bulletin C; 27 added by 2026; will be ABOLISHED by 2035 per CGPM resolution), the leap-smear alternative (Google's linear 24-hour smear; AWS uses similar), and the testable behaviors (POSIX time_t conventions, NTP behaviour, distributed-systems clock-skew during a leap event). Use when designing time-sensitive systems or auditing assumptions about second-by-second progress."
+description: "Pure-reference catalog of leap-second mechanics + their bug surface. Defines leap seconds (occasional 23:59:60 UTC second insertions announced by IERS to keep UTC within 0.9s of UT1), the history (added irregularly since 1972 by IERS Bulletin C; 27 added by 2026; will be ABOLISHED by 2035 per CGPM resolution), the leap-smear alternative (Google's linear 24-hour smear; AWS uses similar), and the testable behaviors (POSIX time_t conventions, NTP behaviour, distributed-systems clock-skew during a leap event). Leap-smear strategy comparison and the historical leap-second record live in references/. Use when designing time-sensitive systems or auditing assumptions about second-by-second progress."
 ---
 
 # leap-second-reference
@@ -22,6 +22,23 @@ gap between UTC and UT1 allowed to grow. Existing leap seconds
 (27 inserted between 1972 and 2026) remain in the historical
 record.
 
+## How to use this reference
+
+1. **Decide whether second-granular progress matters** to the code
+   (financial timestamping, distributed logs, NTP-sensitive paths).
+   If not, this surface is mostly irrelevant.
+2. **Locate the exposed bug class** below (`time_t`
+   non-monotonicity, negative durations, NTP cascading, distributed
+   clock skew).
+3. **Apply the fix and assert it** - monotonic clocks for durations,
+   sub-second ordering keys for sortable timestamps - against the
+   matching row in the testable-behaviours table (see the simulating
+   example).
+4. **Confirm the host absorption strategy** (real insertion vs
+   leap-smear) from
+   [references/smear-strategies-and-history.md](references/smear-strategies-and-history.md)
+   before assuming any two nodes agree during a leap event.
+
 ## When to use
 
 - Designing systems where second-by-second progress matters
@@ -40,40 +57,15 @@ record.
 | POSIX time_t | **Does not include** leap seconds; time_t jumps backward by 1 or stalls |
 | NTP | NTP messages signal upcoming leap; clients handle it differently |
 
-## Leap-smear
+## Absorption strategy and history
 
-Per Google's "Time, technology and leaping seconds":
-[googleblog.blogspot.com/2011/09/time-technology-and-leaping-seconds.html](https://googleblog.blogspot.com/2011/09/time-technology-and-leaping-seconds.html),
-Google "smears" the leap second rather than stepping the clock. The
-published standard is a "24-hour linear smear from noon to noon UTC"
-([Google Public NTP: Leap Smear](https://developers.google.com/time/smear)),
-adding a small fraction to each second so the total adds up to
-1 second of slowdown, with no actual 23:59:60.
-
-```
-Leap second strategy comparison:
-
-| Approach              | What happens                       |
-|-----------------------|------------------------------------|
-| IERS spec             | 23:59:60 UTC inserted (real second)|
-| Linux kernel default  | Real insertion; time_t stalls 1s  |
-| Google leap-smear     | Distributed over 24h               |
-| AWS leap-smear        | Linear over 24h                    |
-| NTP "step"            | Jump 1s; subsequent time_t differs |
-```
-
-The smear is operationally invisible to applications; the spec
-exposes the discontinuity.
-
-## Historical leap seconds
-
-Per IERS, 27 leap seconds were inserted between 1972 and 2026.
-Most recent: 2016-12-31 23:59:60 UTC. None have been added since:
-IERS Bulletin C 72 (6 July 2026) states "from 2017 January 1, 0h
-UTC, until further notice : UTC-TAI = -37 s" and that "NO leap
-second will be introduced at the end of December 2026"
-([datacenter.iers.org, Bulletin C](https://datacenter.iers.org/data/latestVersion/bulletinC.txt)).
-None expected before 2035 abolition.
+Whether a host inserts a real 23:59:60 or **smears** the second over
+24 hours (Google / AWS), plus the full record of the 27 leap seconds
+inserted between 1972 and 2026 (most recent 2016-12-31), lives in
+[references/smear-strategies-and-history.md](references/smear-strategies-and-history.md).
+The smear is operationally invisible to applications; a real
+insertion exposes the discontinuity that the bug classes below
+exploit.
 
 ## Bug classes
 
@@ -185,6 +177,8 @@ require an OS test that replays NTP leap-second indication.
   [developers.google.com/time/smear](https://developers.google.com/time/smear).
 - AWS leap-smear:
   [aws.amazon.com/blogs/aws/look-before-you-leap-the-coming-leap-second-and-aws](https://aws.amazon.com/blogs/aws/look-before-you-leap-the-coming-leap-second-and-aws).
+- Deep reference (with its own citations): leap-smear strategies +
+  historical record in [references/smear-strategies-and-history.md](references/smear-strategies-and-history.md).
 - Companion catalog:
   `dst-transition-reference`.
 - Consumed by:

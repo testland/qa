@@ -1,6 +1,6 @@
 ---
 name: guardrail-metrics-reference
-description: "Pure-reference catalog of guardrail-metric methodology for online controlled experiments. Defines guardrail metrics (metrics that must NOT degrade for an experiment to ship, even if the primary metric improves), the standard guardrail set (latency / errors / engagement / opt-out), the relationship to OEC (Overall Evaluation Criterion) per Kohavi et al., and the trustworthy-experiments framework (Microsoft Experimentation Platform). Use when designing the metric set for a new experiment, auditing existing experiment configs, or reviewing experiment results before ship-decisions."
+description: "Pure-reference catalog of guardrail-metric methodology for online controlled experiments. Defines guardrail metrics (metrics that must NOT degrade for an experiment to ship, even if the primary metric improves), the standard guardrail set (latency / errors / engagement / opt-out), the relationship to OEC (Overall Evaluation Criterion) per Kohavi et al., and pre-commitment of the metric set. The quantitative evaluation mechanics (per-metric alert/block thresholds, Bonferroni / Benjamini-Hochberg multiple-comparison correction) live in references/. Use when designing the metric set for a new experiment, auditing existing experiment configs, or reviewing experiment results before ship-decisions."
 ---
 
 # guardrail-metrics-reference
@@ -18,6 +18,22 @@ of metrics after the OEC."
 
 This skill is a **pure reference** consumed by the AB-test
 validity checklist and the SDK-test skills.
+
+## How to use this reference
+
+1. **Pick the guardrail set** for the experiment's surface (web /
+   API / mobile / revenue / trust) from the canonical-set table.
+2. **Declare each guardrail** - metric, direction, block threshold -
+   in the experiment config *before* launch (see the pre-commitment
+   worked example below).
+3. **Set two-tier levels** per metric (alert + block), using
+   `max(%, absolute)` on fast endpoints - see
+   [references/thresholds-and-corrections.md](references/thresholds-and-corrections.md).
+4. **Correct for multiple comparisons** across the OEC + N guardrails
+   (Bonferroni / FDR) - see
+   [references/thresholds-and-corrections.md](references/thresholds-and-corrections.md).
+5. **Gate the ship**: block if any guardrail crosses its pre-declared
+   block threshold, even when the OEC wins.
 
 ## When to use
 
@@ -62,25 +78,6 @@ guardrails are the **rest of the dashboard** - short-term loss is
 acceptable if within bounds, but a significant degradation
 **blocks ship**.
 
-## Setting guardrail thresholds
-
-A guardrail typically has two levels:
-
-| Threshold | What |
-|---|---|
-| **Alert** | A statistically significant degradation; investigate before ship |
-| **Block** | A degradation past a pre-declared limit; ship-decision flips to "no" |
-
-Example for API latency p95:
-
-| Level | Threshold |
-|---|---|
-| Alert | Any statistically significant increase |
-| Block | > 10% increase OR > 50ms absolute increase, whichever is greater |
-
-The "whichever is greater" handles fast endpoints where 10% is
-trivially small in absolute terms.
-
 ## Standard guardrails - the canonical set
 
 | Domain | Guardrail | Direction |
@@ -102,7 +99,8 @@ Guardrails must be **declared before** the experiment starts.
 Per Kohavi et al.: post-hoc guardrails are p-hacking - if you
 look at 50 metrics, some will spuriously fail.
 
-Document declarations in the experiment config:
+**Worked example** - declare every guardrail in the experiment
+config before the experiment starts:
 
 ```yaml
 experiment: feed-ranking-v3
@@ -124,17 +122,9 @@ guardrails:
     block_threshold: +0.1pp absolute
 ```
 
-## Multiple-comparison correction
-
-With one OEC + N guardrails (typically 10-20), a fixed-alpha
-significance test means you'll see N×0.05 false positives on
-average. Per Kohavi et al., apply Bonferroni or Benjamini-
-Hochberg correction:
-
-| Method | When |
-|---|---|
-| Bonferroni | Strict; alpha / N. Use when missing a true regression is catastrophic |
-| Benjamini-Hochberg (FDR) | False discovery rate; less strict | Use for general guardrail dashboards |
+The `block_threshold` on `api_p95_latency` uses the
+`max(%, absolute)` rule so a fast endpoint can't ship a small
+absolute regression that a percentage alone would miss.
 
 ## Anti-patterns
 
@@ -163,12 +153,26 @@ Hochberg correction:
 - **Guardrail-only dashboards miss the bigger picture.** Pair
   with a counterfactual analysis dashboard.
 
+## Setting thresholds and correcting alpha - deep reference
+
+Once the guardrail set is declared, the quantitative evaluation
+rules live in one companion reference:
+
+- **Thresholds + multiple-comparison correction** - per-metric
+  alert/block levels (with the `max(%, absolute)` rule) and
+  Bonferroni / Benjamini-Hochberg correction across the OEC + N
+  guardrails:
+  [references/thresholds-and-corrections.md](references/thresholds-and-corrections.md).
+
 ## References
 
 - Kohavi, Tang, Xu. *Trustworthy Online Controlled Experiments*
   (Cambridge University Press, 2020). ISBN 978-1108724265.
 - Microsoft Experimentation Platform:
   [microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/).
+- Quantitative evaluation mechanics (with their citation):
+  thresholds + multiple-comparison correction in
+  [references/thresholds-and-corrections.md](references/thresholds-and-corrections.md).
 - Companion catalogs:
   `peeking-problem-reference`,
   `ab-test-validity-checklist`.

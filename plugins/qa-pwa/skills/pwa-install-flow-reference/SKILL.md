@@ -1,6 +1,6 @@
 ---
 name: pwa-install-flow-reference
-description: "Pure reference for the PWA install flow as a test surface - the installability gate (manifest required fields per [web.dev/articles/install-criteria][install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` event handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), the per-platform divergences (Chromium desktop install badge, Android WebAPK minting, iOS manual Share → Add to Home Screen), and the `display-mode` media-query post-install signal. Use when authoring or triaging install-flow assertions and you need the gate fields, the event contract, and the per-platform expectations in one place instead of re-reading three vendor docs."
+description: "Pure reference for the PWA install flow as a test surface - the installability gate (manifest required fields per [install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), and the `display-mode` post-install signal, with a how-to-use walkthrough and a worked Chromium install-flow assertion; per-platform paths (Android WebAPK, iOS Share menu, Firefox no-op) live in references/. Use when authoring or triaging install-flow assertions and you need the gate fields, the event contract, and the per-platform expectations in one place instead of re-reading three vendor docs."
 metadata:
   keywords: "pwa, install-criteria, beforeinstallprompt, web-app-manifest, webapk"
 ---
@@ -17,9 +17,10 @@ per-stage builders (`add-to-homescreen-flow-tests`,
 `web-push-tests`) and the audit reader
 (`lighthouse-pwa-audit`) consult.
 
-This is a **pure reference** - no execution steps. The body is
-tables + verbatim spec quotes. Builders consume it to emit tests
-without re-fetching the source pages.
+The body is tables + verbatim spec quotes, a how-to-use walkthrough,
+and one worked Chromium assertion. Builders consume it to emit tests
+without re-fetching the source pages. Per-platform divergences live in
+[references/per-platform-install-paths.md](references/per-platform-install-paths.md).
 
 [install-criteria]: https://web.dev/articles/install-criteria
 [learn-pwa]: https://web.dev/learn/pwa/installation
@@ -35,6 +36,26 @@ without re-fetching the source pages.
   Android Chrome vs Edge) without re-reading three vendor docs.
 - An auditor (PR reviewer, accessibility reviewer) needs a
   one-screen summary of what "installable" actually means.
+
+## How to use this reference
+
+1. **Assert the Stage 1 gate cell-by-cell.** Walk the installability-gate
+   table (manifest `name` / `icons` / `start_url` / `display`, HTTPS,
+   registered service worker, ~30s engagement). A single failing cell
+   means `beforeinstallprompt` never fires, so localize the failure here
+   before touching anything downstream.
+2. **Capture `beforeinstallprompt` and stash it.** Bind the listener at
+   page load, call `event.preventDefault()`, and save the deferred event
+   for the app's own "Install" button (Stage 2).
+3. **Drive `prompt()` from a real user gesture** and assert
+   `userChoice.outcome` (`accepted` / `dismissed`), then assert the
+   `appinstalled` event fired (Stage 2).
+4. **Assert the installed runtime state** via the `display-mode` media
+   query (`matchMedia('(display-mode: standalone)')`) - the post-install
+   signal (Stage 4).
+5. **Branch per platform only when needed.** Chromium desktop follows
+   steps 2-4; Android Chrome, iOS Safari, and Firefox diverge - see
+   [references/per-platform-install-paths.md](references/per-platform-install-paths.md).
 
 ## Stage 1 - Installability gate
 
@@ -63,7 +84,8 @@ most browsers that support it use the Web App Manifest file and
 certain properties such as the name of the app, and configuration
 of the installed experience."* Edge, Samsung Internet, and Opera
 follow the Chromium criteria; Firefox desktop does not implement
-`beforeinstallprompt`; Safari uses a manual flow (Stage 3 below).
+`beforeinstallprompt`; Safari uses a manual flow (see the
+per-platform reference).
 
 ## Stage 2 - The `beforeinstallprompt` handshake
 
@@ -84,21 +106,13 @@ this to detect WebView vs full Chromium environments.
 
 ## Stage 3 - Per-platform install path
 
-The install path itself diverges by platform. Tests must branch:
-
-| Platform | Path | Trigger | Test posture |
-|---|---|---|---|
-| Chromium desktop (Chrome, Edge, Brave) | Install badge in URL bar; "Install" item in overflow menu | `beforeinstallprompt` fires when Stage 1 passes | Drive `prompt()` from a user-gesture click; assert `userChoice.outcome` and `appinstalled` |
-| Android Chrome | WebAPK minting (a real APK signed by Google Play services and registered with the launcher) per [learn-pwa] | `beforeinstallprompt` fires; user accepts via mini-infobar or app-driven prompt | Smoke on a real device farm; Playwright on Android Chrome works for the prompt itself but cannot assert WebAPK minting completion |
-| Android Chrome (alternate) | Shortcuts or QuickApp formats per [learn-pwa] | Same as WebAPK path | WebAPK is the canonical path; shortcut path is a fallback |
-| iOS / iPadOS Safari | "Open the Share menu... Click Add to Home Screen... Confirm the name of the app... Click Add" per [learn-pwa] | Manual user gesture only; no `beforeinstallprompt` event | Test the metadata (`apple-touch-icon`, `apple-mobile-web-app-capable` meta) statically; assert installed runtime via `display-mode` MQ (Stage 4); the actual install step is manual smoke |
-| Desktop Safari | App-driven install on macOS Sonoma+ via the "Add to Dock" Share menu | Manual user gesture only | Same posture as iOS - static metadata + post-install MQ |
-| Firefox desktop | Install UI not exposed | n/a | No `beforeinstallprompt`; no install assertion path |
-
-Per [learn-pwa]: iOS install "requires `apple-touch-icon` tag" - a
-test that omits this assertion misses a class of icon-missing
-install regressions that are otherwise invisible until a user
-files a bug.
+The install path diverges by platform: Chromium desktop and Android
+Chrome fire `beforeinstallprompt`; iOS / iPadOS Safari and desktop
+Safari use a manual Share-menu flow with no event; Firefox desktop
+exposes no install UI. The full per-platform table, WebAPK / Share-menu
+specifics, the `apple-touch-icon` requirement, and their testing
+caveats live in
+[references/per-platform-install-paths.md](references/per-platform-install-paths.md).
 
 ## Stage 4 - Post-install runtime signal
 
@@ -144,6 +158,50 @@ sequence is:
 A test plan covers each step with an assertion or a documented gap
 ("step 10 not assertable in headless").
 
+## Worked example - a Chromium install-flow assertion
+
+A Chromium-desktop smoke that walks steps 5-12 of the timeline above -
+capture the deferred event, drive `prompt()` from a gesture, assert the
+`userChoice` outcome and `appinstalled`, then the Stage 4 `standalone`
+signal. It uses only the event names the stages above define:
+
+```js
+test('installs and reports standalone', async ({ page }) => {
+  // Stage 2: stash the deferred prompt the moment beforeinstallprompt fires.
+  await page.addInitScript(() => {
+    window.__deferred = null;
+    window.__installed = false;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();          // suppress the mini-infobar
+      window.__deferred = e;       // save for the app's Install button
+    });
+    window.addEventListener('appinstalled', () => { window.__installed = true; });
+  });
+
+  await page.goto('https://app.example.com');
+
+  // Stage 1: simulate engagement; the wait only resolves once the gate passes.
+  await page.mouse.click(200, 200);
+  await page.waitForFunction(() => window.__deferred !== null);
+
+  // Stage 2: drive prompt() from the gesture and assert the userChoice outcome.
+  const outcome = await page.evaluate(async () => {
+    await window.__deferred.prompt();          // callable once per event
+    return (await window.__deferred.userChoice).outcome;
+  });
+  expect(outcome).toBe('accepted');            // 'accepted' | 'dismissed'
+
+  // Stage 2: the browser fired appinstalled.
+  await page.waitForFunction(() => window.__installed === true);
+
+  // Stage 4: the running PWA now reports installed state.
+  const standalone = await page.evaluate(
+    () => matchMedia('(display-mode: standalone)').matches
+  );
+  expect(standalone).toBe(true);
+});
+```
+
 ## Common test-setup anti-patterns
 
 | Anti-pattern | Why it fails | Pointer to better posture |
@@ -161,13 +219,6 @@ A test plan covers each step with an assertion or a documented gap
   cannot directly query the timer; they can only assert that
   `beforeinstallprompt` *did* fire after sufficient engagement,
   not the precise threshold.
-- **WebAPK minting completion is opaque.** Per [learn-pwa] Android
-  Chrome mints a WebAPK on install, but the test surface ends at
-  `appinstalled` - the minting is a background-service-worker
-  operation, not a DOM-observable event.
-- **iOS Safari has no programmatic install API.** Stage 3 iOS
-  cells must be tested with manual smoke or device-farm Appium
-  drivers; no headless path exists.
 - **`prefer_related_applications: true` suppresses install entirely.**
   Per [install-criteria], it gates Stage 1; tests that miss this
   field on a manifest that *also* defines a native counterpart
@@ -176,6 +227,9 @@ A test plan covers each step with an assertion or a documented gap
   browsers.** Some launchers open the URL in the system browser
   rather than the installed PWA; the MQ then reports `browser`,
   which is correct but easy to misread as "install regressed."
+- Per-platform limitations (WebAPK minting opacity, iOS Safari's
+  lack of a programmatic install API) live in
+  [references/per-platform-install-paths.md](references/per-platform-install-paths.md).
 
 ## References
 
@@ -187,6 +241,9 @@ A test plan covers each step with an assertion or a documented gap
 - web.dev - Customize the install experience (Stage 2 handshake:
   `preventDefault` / `prompt()` / `userChoice` / `appinstalled`) - 
   [customize-install].
+- Per-platform depth (with its own citations): Android WebAPK, iOS
+  Share-menu flow, desktop Safari, Firefox no-op -
+  [references/per-platform-install-paths.md](references/per-platform-install-paths.md).
 - Consumed by:
   `add-to-homescreen-flow-tests`,
   `web-push-tests`,
