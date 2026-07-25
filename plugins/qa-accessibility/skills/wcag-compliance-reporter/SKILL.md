@@ -47,6 +47,22 @@ If only one tool is in use, the tool's native HTML report may
 suffice; this skill is for **aggregation** across multiple tools or
 multiple pages.
 
+## How to use
+
+1. **Gather scan output** from one or more scanners (axe-core, pa11y,
+   Lighthouse, WAVE, IBM Equal Access) across every page in scope.
+2. **Normalize per tool** into one SC-keyed `Violation` shape, mapping each
+   tool's rule ID to the WCAG Success Criterion it covers (Step 1).
+3. **Aggregate** the normalized violations by SC and by page (Step 2).
+4. **Compute the conformance verdict per level** (A / AA / AAA): `conformant`,
+   `non-conformant`, or `unknown` - where `unknown` means the scan never
+   covered the SCs a claim at that level needs (Step 3).
+5. **Check page coverage** against the `pages-to-scan.yaml` process spec and
+   flag any page that wasn't scanned (Step 4).
+6. **Render the report** - the executive verdict plus per-SC and per-page
+   markdown (Step 5), then emit the machine-readable `compliance.json` and the
+   CI job that produces it (Machine output and CI, below).
+
 ## Step 1 - Author normalizers per upstream tool
 
 Each scanner has its own JSON shape. The first step is normalizing
@@ -245,47 +261,13 @@ cannot claim conformance regardless of per-page results
 `docs/manual-checklist.md` for the per-SC checklist.
 ```
 
-## Step 6 - Emit machine-readable output too
+## Machine output and CI
 
-In addition to the markdown, emit `compliance.json` for downstream
-consumption (dashboards, ASR, programmatic gates):
-
-```json
-{
-  "generatedAt": "2026-05-05T14:00:00Z",
-  "site": "example.com",
-  "verdict": { "A": "non-conformant", "AA": "non-conformant", "AAA": "unknown" },
-  "processes": [
-    { "name": "checkout", "pagesSpec": [...], "pagesScanned": [...], "complete": false },
-    { "name": "account", "pagesSpec": [...], "pagesScanned": [...], "complete": true }
-  ],
-  "violations": [...]
-}
-```
-
-## Step 7 - CI integration
-
-```yaml
-- name: Run scanners
-  run: |
-    npx pa11y-ci   --json > pa11y.json
-    npx @axe-core/cli https://staging.example.com > axe.json
-    npx lighthouse-batch -s https://staging.example.com -o reports/
-
-- name: Aggregate + report
-  run: python scripts/wcag_compliance.py \
-        --pa11y pa11y.json \
-        --axe axe.json \
-        --lighthouse reports/ \
-        --pages-spec pages-to-scan.yaml \
-        --out compliance/
-
-- name: Upload
-  uses: actions/upload-artifact@v4
-  with:
-    name: wcag-compliance
-    path: compliance/
-```
+Once the markdown report renders, two operational blocks finish the pipeline: a
+machine-readable `compliance.json` for downstream dashboards / ACR gates, and
+the CI job that runs the scanners and aggregator on every push. Both templates
+live in
+[references/machine-output-and-ci.md](references/machine-output-and-ci.md).
 
 ## Anti-patterns
 
@@ -330,3 +312,5 @@ consumption (dashboards, ASR, programmatic gates):
   (`axe-a11y`, `pa11y-a11y`, `lighthouse-a11y`, `wave-a11y`,
   `ibm-equal-access-a11y`) - produce the upstream input this skill
   consumes.
+- Machine-readable `compliance.json` output + the CI aggregation job:
+  [references/machine-output-and-ci.md](references/machine-output-and-ci.md).
