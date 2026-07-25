@@ -75,7 +75,7 @@ Per the KDD 2019 SRM taxonomy:
 
 ## Step 3 - Output format
 
-```markdown
+````markdown
 ## SRM Detection - Experiment `<id>`
 
 **Intended allocation:** A=50%, B=50%
@@ -142,7 +142,7 @@ sql> SELECT user_id, COUNT(DISTINCT variant) AS variants_assigned
 2. Investigate per the SQL queries above.
 3. Re-run SRM after root cause fixed.
 4. If SRM persists post-fix, re-run the experiment.
-```
+````
 
 ## Examples
 

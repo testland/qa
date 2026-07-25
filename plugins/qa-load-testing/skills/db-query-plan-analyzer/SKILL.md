@@ -147,7 +147,7 @@ Index choice principles:
 
 ## Output format
 
-```markdown
+````markdown
 ## Slow query analysis - `<query-id-or-snippet>`
 
 **Database:** postgresql 17 | mysql 8.0 | sqlite
@@ -200,7 +200,7 @@ EXPLAIN (ANALYZE, BUFFERS) SELECT ...;
 
 Confirm the new plan uses `idx_orders_customer_created` and the
 actual time is below the budget.
-```
+````
 
 ## Anti-patterns
 

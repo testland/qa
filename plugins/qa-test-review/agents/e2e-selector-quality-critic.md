@@ -149,7 +149,7 @@ recommendation is to add a `data-testid` to the production code
 
 ## Output format
 
-```markdown
+````markdown
 ## E2E selector quality critic - `<PR>`
 
 **E2E test files reviewed:** N
@@ -206,7 +206,7 @@ the test timeout; the non-web-first form races and produces flaky
 tests on slow runners.
 
 (...)
-```
+````
 
 ## Refuse-to-proceed rules
 

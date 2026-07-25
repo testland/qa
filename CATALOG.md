@@ -14,10 +14,10 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.10.6 | 25 skills + 7 agents | 32 |
-| [qa-test-data](plugins/qa-test-data/) | 1.3.4 | 17 skills + 3 agents | 20 |
+| [qa-test-data](plugins/qa-test-data/) | 1.3.5 | 17 skills + 3 agents | 20 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.7 | 15 skills + 2 agents | 17 |
 | [qa-roles](plugins/qa-roles/) | 1.3.11 | 0 skills + 15 agents | 15 |
-| [qa-test-review](plugins/qa-test-review/) | 1.6.6 | 8 skills + 6 agents | 14 |
+| [qa-test-review](plugins/qa-test-review/) | 1.6.7 | 8 skills + 6 agents | 14 |
 | [qa-test-management](plugins/qa-test-management/) | 1.2.3 | 8 skills + 2 agents | 10 |
 | [qa-team-management](plugins/qa-team-management/) | 1.1.4 | 6 skills + 1 agents | 7 |
 | [qa-hiring](plugins/qa-hiring/) | 1.4.2 | 5 skills + 1 agents | 6 |
@@ -85,7 +85,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-load-testing](plugins/qa-load-testing/) | 1.8.3 | 13 skills + 3 agents | 16 |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.8.4 | 13 skills + 3 agents | 16 |
 | [qa-defect-management](plugins/qa-defect-management/) | 1.4.3 | 9 skills + 4 agents | 13 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.6.3 | 3 skills + 9 agents | 12 |
 | [qa-chaos](plugins/qa-chaos/) | 1.3.3 | 9 skills + 1 agents | 10 |
@@ -118,7 +118,7 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature
 | [qa-payment](plugins/qa-payment/) | 1.4.3 | 11 skills + 1 agents | 12 |
 | [qa-feature-flags](plugins/qa-feature-flags/) | 1.3.10 | 9 skills + 2 agents | 11 |
 | [qa-graphql](plugins/qa-graphql/) | 1.4.2 | 10 skills + 1 agents | 11 |
-| [qa-experimentation](plugins/qa-experimentation/) | 1.1.10 | 9 skills + 1 agents | 10 |
+| [qa-experimentation](plugins/qa-experimentation/) | 1.1.11 | 9 skills + 1 agents | 10 |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.10 | 8 skills + 1 agents | 9 |
 | [qa-notifications](plugins/qa-notifications/) | 1.2.9 | 7 skills + 1 agents | 8 |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.3.2 | 7 skills + 1 agents | 8 |
@@ -132,7 +132,7 @@ _LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, 
 |---|---|---|---:|
 | [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.3.5 | 8 skills + 2 agents | 10 |
 | [qa-ml-models](plugins/qa-ml-models/) | 1.3.4 | 7 skills + 2 agents | 9 |
-| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.3.5 | 4 skills + 3 agents | 7 |
+| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.3.6 | 4 skills + 3 agents | 7 |
 | [qa-search-relevance](plugins/qa-search-relevance/) | 1.2.4 | 6 skills + 1 agents | 7 |
 | [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.2.6 | 4 skills + 1 agents | 5 |
 
