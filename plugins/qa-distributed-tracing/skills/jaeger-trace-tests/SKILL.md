@@ -23,6 +23,14 @@ for CI.
 - Smoke test after instrumentation changes - confirm spans actually
   reach Jaeger (not just the SDK exporter).
 
+## How to use
+
+1. Start Jaeger all-in-one in CI as a Docker service (Step 1) - it exposes OTLP ingest on `:4317`/`:4318` and the query API on `:16686`.
+2. Point the app's OpenTelemetry SDK at the collector's OTLP endpoint (Step 2).
+3. Exercise the flow, `force_flush()` the span processor, and let the ingest pipeline settle before querying (Worked example).
+4. Query `GET /api/traces?service=X&operation=Y` and assert on the returned span set and tags (Worked example); parent-child + duration assertions and the full query API live in [references/query-api-and-ci-wiring.md](references/query-api-and-ci-wiring.md).
+5. Scope each test to a unique `service.name` so shared-CI trace data does not cross-contaminate (see references).
+
 ## Step 1 - Run Jaeger all-in-one in CI
 
 Per the [Jaeger getting-started docs]:
@@ -42,20 +50,10 @@ docker run --rm --name jaeger \
 | 16686 | Jaeger UI + query HTTP API |
 | 4317 | OTLP/gRPC ingest |
 | 4318 | OTLP/HTTP ingest |
-| 5778 | Sampling config |
-| 9411 | Zipkin compatibility (B3 ingest) |
 
-GitHub Actions service:
-
-```yaml
-services:
-  jaeger:
-    image: cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
-    ports:
-      - 16686:16686
-      - 4317:4317
-      - 4318:4318
-```
+The full port map (sampling `:5778`, Zipkin `:9411`) and the GitHub
+Actions service block are in
+[references/query-api-and-ci-wiring.md](references/query-api-and-ci-wiring.md).
 
 ## Step 2 - Configure SDK to ship to Jaeger
 
@@ -72,47 +70,20 @@ provider.add_span_processor(
 trace.set_tracer_provider(provider)
 ```
 
-For tests use `BatchSpanProcessor` + manual flush - Step 4 covers
-flushing before query.
+`BatchSpanProcessor` defers shipping, so the Worked example flushes
+manually before querying.
 
-## Step 3 - Query API patterns
+## Worked example
 
-Jaeger query API endpoints:
-
-| Endpoint | Returns |
-|---|---|
-| `GET /api/services` | List of service names |
-| `GET /api/services/{service}/operations` | Operations for a service |
-| `GET /api/traces?service=X&operation=Y&lookback=5m&limit=10` | Trace JSON |
-| `GET /api/traces/{traceId}` | Single trace by ID |
-
-Trace JSON response shape (selected fields):
-
-```json
-{
-  "data": [{
-    "traceID": "abc...",
-    "spans": [
-      {
-        "spanID": "def...",
-        "operationName": "order.create",
-        "duration": 12345,
-        "tags": [{"key": "order.item_count", "type": "int64", "value": 1}],
-        "references": [{"refType": "CHILD_OF", "spanID": "parent..."}]
-      }
-    ]
-  }]
-}
-```
-
-## Step 4 - Force span flush before query
+Exercise the flow, force a flush, then query Jaeger and assert the span
+set plus a tag value end to end:
 
 ```python
 def test_order_trace_visible_in_jaeger():
     with use_tracer():
         create_order(items=[item])
 
-    # Ensure all spans are flushed to Jaeger before query
+    # Flush all spans to Jaeger before query
     trace.get_tracer_provider().force_flush(timeout_millis=5000)
 
     # Allow Jaeger ingest pipeline a moment
@@ -129,56 +100,20 @@ def test_order_trace_visible_in_jaeger():
     assert tag["value"] == 1
 ```
 
-## Step 5 - Parent-child via `references`
-
-Jaeger encodes parent links as `references` with `refType: "CHILD_OF"`.
-
-```python
-def parent_id(span):
-    refs = span.get("references", [])
-    child_of = [r for r in refs if r["refType"] == "CHILD_OF"]
-    return child_of[0]["spanID"] if child_of else None
-
-assert parent_id(db_span) == order_span["spanID"]
-```
-
-## Step 6 - Per-test trace isolation
-
-CI runs many tests against shared Jaeger. Use unique
-`service.name` per test or unique trace tag to scope queries:
-
-```python
-service_name = f"orders-test-{uuid4()}"
-# ... configure SDK with this service name ...
-# ... query Jaeger filtered by this service ...
-```
-
-In-memory storage is bounded by Jaeger's eviction; long test runs
-should restart the container or accept eviction.
-
-## Step 7 - Cleanup + retention
-
-All-in-one uses transient memory storage per the [Jaeger
-getting-started docs]. For longer test runs, mount a config:
-
-```bash
-docker run ... \
-  -v /path/to/config.yaml:/jaeger/config.yaml \
-  cr.jaegertracing.io/jaegertracing/jaeger:2.17.0 \
-  --config /jaeger/config.yaml
-```
-
-Or restart the container between test workflows.
+The `force_flush` + brief sleep is mandatory: `BatchSpanProcessor`
+batches exports, so an immediate query races the ingest pipeline and
+misses the span. For parent-child links and duration ceilings, see
+[references/query-api-and-ci-wiring.md](references/query-api-and-ci-wiring.md).
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Query Jaeger immediately after exercise | Spans may not have shipped yet | `force_flush()` + brief sleep (Step 4) |
+| Query Jaeger immediately after exercise | Spans may not have shipped yet | `force_flush()` + brief sleep (Worked example) |
 | Use prod Jaeger from CI | Test traces pollute prod data | Always Docker all-in-one (Step 1) |
-| Hard-code service name across tests | Cross-test contamination on shared CI | Unique service.name per test (Step 6) |
+| Hard-code service name across tests | Cross-test contamination on shared CI | Unique service.name per test (references) |
 | Assume long retention | All-in-one is in-memory; old traces evicted | Restart container or shorten test runs |
-| Skip flushing pipeline | `BatchSpanProcessor` defers ship; queries miss spans | Always flush before query (Step 4) |
+| Skip flushing pipeline | `BatchSpanProcessor` defers ship; queries miss spans | Always flush before query (Worked example) |
 
 ## Limitations
 
@@ -192,7 +127,8 @@ Or restart the container between test workflows.
 ## References
 
 - [Jaeger getting-started docs] - Docker run, ports, OTLP ingest
-- `opentelemetry-trace-assertions` - 
+- [references/query-api-and-ci-wiring.md](references/query-api-and-ci-wiring.md) - full query API endpoints + trace JSON shape, parent-child + duration assertions, GitHub Actions service, per-test isolation, retention
+- `opentelemetry-trace-assertions` -
   in-process unit pattern
 - `zipkin-trace-tests` - sister
   skill for Zipkin-using teams

@@ -20,6 +20,21 @@ a spec is well-formed AND produces the expected rendered output.
 - Custom encoding rules in spec generation - assert the produced
   spec matches the expected mark+encoding shape.
 
+## How to use
+
+1. Install a JSON Schema validator (Ajv) plus the bundled Vega-Lite
+   schema; compile the validator **once** and cache it (Step 1).
+2. Assert schema validity of every generated spec before anything
+   else - compiler errors on an invalid spec are cryptic (Step 1).
+3. Add structural assertions that the mark + encoding match the
+   intended chart shape, beyond bare schema validity (Step 2).
+4. Compile Vega-Lite to Vega to catch semantically-broken specs that
+   pass the schema but reference missing fields (Step 3).
+5. Confirm the three gates in one end-to-end test (**Worked example**).
+6. For render-time, composition, transform, interaction, and
+   spec-snapshot coverage, see
+   [references/advanced-spec-tests.md](references/advanced-spec-tests.md).
+
 ## Step 1 - JSON Schema validation
 
 Per the [Vega-Lite docs], the spec is JSON; it has a published
@@ -84,134 +99,54 @@ Failed compilation indicates the Vega-Lite spec is well-formed
 schema-wise but semantically broken (e.g., references a non-existent
 field).
 
-## Step 4 - Render-to-SVG test
+## Worked example
+
+One test that proves a BI builder's bar-spec generator produces a
+spec that is schema-valid, correctly encoded, AND compiles - the
+three core gates in a single first run:
 
 ```js
-import { Vega } from 'react-vega';
-import { create } from 'jsdom';
+import Ajv from 'ajv';
+import vlSchema from 'vega-lite/build/vega-lite-schema.json';
+import * as vl from 'vega-lite';
 
-test('renders SVG with expected mark count', async () => {
-  const dom = create('<div id="vis"></div>');
-  global.document = dom.window.document;
+const validate = new Ajv({ strict: false }).compile(vlSchema);
 
-  const view = new vega.View(vega.parse(vegaSpec))
-    .renderer('svg')
-    .initialize(dom.window.document.querySelector('#vis'))
-    .run();
+test('generated bar spec is valid, correctly encoded, and compiles', () => {
+  const spec = generateBarSpec({ x: 'quarter', y: 'revenue' });
 
-  const svg = await view.toSVG();
-  // Use a parser to count <path>/<rect> elements
-  const rectCount = (svg.match(/<rect/g) || []).length;
-  expect(rectCount).toBe(4);  // 4 quarters
-});
-```
-
-## Step 5 - Multi-view composition test
-
-Per the [Vega-Lite docs], Vega-Lite supports faceting, layering,
-concatenation, repeating. Test each composition:
-
-```js
-test('layered spec has 2 layers', () => {
-  const spec = {
-    layer: [
-      { mark: 'line', encoding: {...} },
-      { mark: 'point', encoding: {...} },
-    ],
-  };
-
+  // Gate 1 - schema-valid
   expect(validate(spec)).toBe(true);
-  expect(spec.layer).toHaveLength(2);
-});
 
-test('faceted spec creates one view per category', async () => {
-  const spec = {
-    facet: { field: 'category', type: 'nominal' },
-    spec: { mark: 'bar', encoding: {...} },
-  };
+  // Gate 2 - correct mark + encoding
+  expect(spec.mark.type).toBe('bar');
+  expect(spec.encoding.x.field).toBe('quarter');
+  expect(spec.encoding.y.type).toBe('quantitative');
 
-  const compiled = vl.compile(spec).spec;
-  const view = new vega.View(vega.parse(compiled)).renderer('svg').initialize(...).run();
-  // Inspect view's data tables to verify N facets emerged
+  // Gate 3 - compiles to Vega without throwing
+  expect(() => vl.compile(spec)).not.toThrow();
 });
 ```
 
-## Step 6 - Data transform test
+That single test is the minimum a runtime-generated spec must pass
+before render. Render-time and semantic verification build on it -
+see the advanced reference below.
 
-Per the [Vega-Lite docs], transforms include "Aggregate, filter,
-bin, calculate, fold, pivot." Test transform output:
+## Advanced tests
 
-```js
-test('aggregate transform produces correct sum', () => {
-  const spec = {
-    data: { values: [
-      { region: 'NA', revenue: 100 },
-      { region: 'NA', revenue: 200 },
-      { region: 'EU', revenue: 150 },
-    ]},
-    transform: [
-      { aggregate: [{ op: 'sum', field: 'revenue', as: 'total' }],
-        groupby: ['region'] },
-    ],
-    mark: 'bar',
-    encoding: { x: { field: 'region' }, y: { field: 'total', type: 'quantitative' } },
-  };
-
-  const view = new vega.View(vega.parse(vl.compile(spec).spec));
-  await view.runAsync();
-  const data = view.data('source_0');
-  expect(data.find(d => d.region === 'NA').total).toBe(300);
-  expect(data.find(d => d.region === 'EU').total).toBe(150);
-});
-```
-
-## Step 7 - Interaction (parameters / selections)
-
-Per the [Vega-Lite docs], "Interactive parameters - Selections and
-value bindings" enable interaction. Test parameters resolve:
-
-```js
-test('selection parameter filters data', async () => {
-  const spec = {
-    params: [{ name: 'brush', select: 'interval' }],
-    data: {...},
-    mark: 'point',
-    encoding: {...},
-    transform: [{ filter: { param: 'brush' } }],
-  };
-
-  // Compile, render, inject brush event, verify filtered data
-  ...
-});
-```
-
-## Step 8 - Spec-snapshot regression
-
-For complex spec-generation logic, snapshot the spec output:
-
-```js
-test('quarterly-revenue spec snapshot stable', () => {
-  const spec = generateBarSpec({
-    x: 'quarter',
-    y: 'revenue',
-    title: 'Quarterly Revenue',
-  });
-
-  expect(spec).toMatchSnapshot('quarterly-revenue.spec.json');
-});
-```
-
-When intentionally changing spec generation, regenerate snapshots:
-`UPDATE_SNAPSHOTS=1 npm test`.
+Render-to-SVG assertions, multi-view composition (facet / layer /
+concat / repeat), data-transform verification, interaction
+parameters, and spec-snapshot regression each get a full worked test
+in [references/advanced-spec-tests.md](references/advanced-spec-tests.md).
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Skip JSON Schema validation; compile direct | Compiler errors are cryptic | Step 1 first |
-| Test only the rendered output, not the spec | Spec gen bugs hide behind correct render | Step 2 + Step 8 |
+| Test only the rendered output, not the spec | Spec gen bugs hide behind correct render | Step 2 + spec snapshot (references) |
 | Hardcoded Vega-Lite v4 schema | Schema upgrades change validity | Pin AND track |
-| Skip transform tests | Aggregate / filter bugs ship silently | Step 6 |
+| Skip transform tests | Aggregate / filter bugs ship silently | Transform test (references) |
 | Use `mark: 'bar'` shorthand mixed with object form | Schema accepts both; downstream code may not | Pick one form per project |
 
 ## Limitations
@@ -227,6 +162,8 @@ When intentionally changing spec generation, regenerate snapshots:
 
 - [Vega-Lite docs] - grammar, mark + encoding + data, compilation
   to Vega, multi-view composition, transforms, interactions
+- Advanced render / composition / transform / interaction / snapshot
+  tests: [references/advanced-spec-tests.md](references/advanced-spec-tests.md)
 - `chartjs-snapshot-tests`,
   `d3-snapshot-tests` - sister
   skills for rendered-output testing

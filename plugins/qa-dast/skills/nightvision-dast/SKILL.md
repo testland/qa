@@ -28,10 +28,21 @@ over pure-black-box DAST tools (ZAP / Burp).
   as the scan target.
 - Team wants spec-driven coverage (NightVision derives request
   surface from API specs vs crawling).
-- Layered with `zap-baseline` for
-  combined coverage.
+- Layered with `zap-baseline` for combined coverage.
 
-## Step 1 - Install
+## How to use
+
+1. Install the `nightvision` CLI and authenticate (`nightvision login`).
+2. Pick the target: prefer an OpenAPI / Postman / GraphQL spec over a
+   crawl URL so the scanner knows the full request surface (see Target types).
+3. Create and run a scan against **staging** with the right auth mode, wait
+   for it to finish, and pull findings (see Worked example).
+4. Triage findings, suppress false positives via Alert Rules with a
+   re-review date (see False-positive triage), then wire the scan into CI as
+   a SARIF gate - full workflow and scope tuning in
+   [references/ci-and-scan-operations.md](references/ci-and-scan-operations.md).
+
+## Install
 
 Per [nv-docs][nv-docs] the CLI is documented in "Installing the
 CLI"; consult the live docs for current install commands per
@@ -48,7 +59,7 @@ nightvision --version
 nightvision login
 ```
 
-## Step 2 - Target type support
+## Target types
 
 Per [nv-docs][nv-docs] the platform supports:
 
@@ -58,7 +69,7 @@ Per [nv-docs][nv-docs] the platform supports:
 | Postman collection | Upload via CLI / dashboard |
 | GraphQL endpoint | Configure via API Discovery framework |
 | Public web app URL | Standard URL target |
-| Authenticated web app | + auth recorder configuration (Step 4) |
+| Authenticated web app | + auth recorder configuration (see Authentication) |
 | Public REST API | Standard URL target |
 | Authenticated REST API | + Header / Cookie / TOTP auth |
 
@@ -66,25 +77,7 @@ Spec-driven targets give the scanner full request-shape knowledge
 (query params, body schemas, content types); crawl-based targets
 only see what the spider discovers.
 
-## Step 3 - Basic scan
-
-```bash
-# Scan an OpenAPI-described API
-nightvision scan create \
-  --name "my-api-staging" \
-  --target-url https://api.example.com \
-  --spec ./openapi.yaml \
-  --auth header \
-  --auth-header "Authorization: Bearer $TOKEN"
-
-# Wait for completion + retrieve findings
-nightvision scan get <scan-id> --wait
-nightvision scan results <scan-id> --output json > findings.json
-```
-
-(Exact CLI verb names per [nv-docs][nv-docs] current release.)
-
-## Step 4 - Authentication
+## Authentication
 
 Per [nv-docs][nv-docs] the platform supports:
 
@@ -96,23 +89,36 @@ Per [nv-docs][nv-docs] the platform supports:
 | TOTP authentication | Time-based OTP for 2FA-protected apps |
 
 For interactive logins, the auth recorder captures the login flow
-in the dashboard UI; the recording is saved + referenced by name
+in the dashboard UI; the recording is saved and referenced by name
 in subsequent scans.
 
-## Step 5 - Scope control
+## Worked example
 
-Per [nv-docs][nv-docs] "Scope Control" defines:
+Scan an OpenAPI-described API on staging with a bearer token, wait for the
+run to finish, then export findings as JSON for triage and SARIF for GitHub
+Code Scanning:
 
-- Include patterns (URL globs in scope)
-- Exclude patterns (URL globs out of scope; e.g., `/admin/*` for
-  admin-protected zones, `/static/*` for non-app assets)
-- Per-method exclude (e.g., skip DELETE on `/users/*`)
-- Per-finding-type include/exclude
+```bash
+# Create a spec-driven scan with header auth
+SCAN_ID=$(nightvision scan create \
+  --name "my-api-staging" \
+  --target-url https://staging.example.com \
+  --spec ./openapi.yaml \
+  --auth header \
+  --auth-header "Authorization: Bearer $TOKEN" \
+  --output json | jq -r '.id')
 
-Tightening scope is essential - un-scoped scans hit unintended
-endpoints + waste scan budget.
+# Block until the scan finishes
+nightvision scan get "$SCAN_ID" --wait
 
-## Step 6 - False-positive triage (MANDATORY)
+# Export findings: json for cross-tool triage, sarif for Code Scanning
+nightvision scan results "$SCAN_ID" --output json > findings.json
+nightvision scan results "$SCAN_ID" --output sarif > nightvision.sarif
+```
+
+(Exact CLI verb names per [nv-docs][nv-docs] current release.)
+
+## False-positive triage (MANDATORY)
 
 Per [nv-docs][nv-docs] "Alert Rules" govern per-finding suppression:
 
@@ -136,48 +142,23 @@ Re-review-date: 2026-12-15
 Cadence: every quarter, audit Alert Rules in the dashboard;
 expired rules removed; persistent ones reviewed.
 
-## Step 7 - Output formats + integration
+## Operating in CI
 
-`nightvision scan results <id> --output FORMAT`:
-
-- `json` - for cross-tool finding aggregation
-- `sarif` - for GitHub Code Scanning
-- `csv` - for spreadsheet review
-- `pdf` - for compliance reports
-
-## Step 8 - CI integration
-
-```yaml
-jobs:
-  nightvision:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: |
-          curl -fsSL https://install.nightvision.net | sh
-          nightvision login --token ${{ secrets.NV_TOKEN }}
-          SCAN_ID=$(nightvision scan create \
-            --name "ci-${{ github.run_id }}" \
-            --target-url https://staging.example.com \
-            --spec ./openapi.yaml \
-            --auth header \
-            --auth-header "Authorization: Bearer ${{ secrets.STAGING_TOKEN }}" \
-            --output json | jq -r '.id')
-          nightvision scan get $SCAN_ID --wait
-          nightvision scan results $SCAN_ID --output sarif > nightvision.sarif
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with: { sarif_file: nightvision.sarif }
-```
+Run the scan against **staging** on push, export `--output sarif`, and upload
+it via `github/codeql-action/upload-sarif` so findings land inline on the PR.
+Pin a CLI version in CI, and tighten scope control first so scans stay focused
+and within budget. The full GitHub Actions workflow, the scope-control
+patterns, and the output-format matrix live in
+[references/ci-and-scan-operations.md](references/ci-and-scan-operations.md).
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Crawl-based scan when OpenAPI spec exists | Misses unspidered endpoints | Always use `--spec` if available (Step 3) |
+| Crawl-based scan when OpenAPI spec exists | Misses unspidered endpoints | Always use `--spec` if available (see Worked example) |
 | Scan production | Active probes risk data corruption | Staging only |
-| Skip scope exclusion | Tests waste budget on out-of-scope URLs | Configure scope (Step 5) |
-| Suppress without `Re-review-date` | Permanent FP debt | Required template (Step 6) |
+| Skip scope exclusion | Tests waste budget on out-of-scope URLs | Configure scope (see Operating in CI) |
+| Suppress without `Re-review-date` | Permanent FP debt | Required template (see False-positive triage) |
 | Hardcode auth tokens in CI logs | Token leak | Use CI secret + redact (`::add-mask::` in GHA) |
 
 ## Limitations
@@ -201,5 +182,7 @@ jobs:
 - nightvision.net - product page
 - `zap-baseline`,
   `burp-headless` - sister DAST tools
-- `dast-scan-cadence-author` - 
+- `dast-scan-cadence-author` -
   build-an-X for layered DAST
+- CI wiring, scope control, and output formats (with their own
+  citations): [references/ci-and-scan-operations.md](references/ci-and-scan-operations.md)

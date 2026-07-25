@@ -28,7 +28,15 @@ typically validate: queue add → worker processor → completion event.
 - A test verifies retry / backoff / FlowProducer parent-child
   semantics.
 
-## Step 1 - Install
+## How to use
+
+1. Install `bullmq` (add `ioredis-mock` for stricter unit isolation) - see Install.
+2. Point tests at a shared connection: a real Redis (Docker / Testcontainers) for integration, or `ioredis-mock` for pure unit tests of producer logic.
+3. Test the producer - enqueue, then assert on `queue.getJobs(['waiting'])`; `drain()` between tests and `close()` in `afterAll` (see Worked example).
+4. Test the worker - call the processor function directly for unit tests, or run a real `Worker` + `QueueEvents` for integration (see Worked example).
+5. For retry / backoff, repeat-job, FlowProducer flows, and CI wiring, see [references/advanced-patterns-and-ci.md](references/advanced-patterns-and-ci.md).
+
+## Install
 
 Per [bm-gh][bm-gh]:
 
@@ -44,7 +52,7 @@ For tests, add `ioredis-mock` for in-memory Redis simulation:
 npm install --save-dev ioredis-mock
 ```
 
-## Step 2 - Basic Queue + Worker pattern
+## Basic Queue + Worker pattern
 
 Per [bm-gh][bm-gh] (verbatim):
 
@@ -68,7 +76,12 @@ const worker = new Worker('Paint', async job => {
 The `Queue` produces; the `Worker` consumes. Tests typically import
 and invoke both within the test process.
 
-## Step 3 - Test producer (assert job added to queue)
+## Worked example
+
+An order flow: assert that placing an order enqueues a job, then that
+the processor ships it.
+
+First, test the producer - enqueue, then read the queue by state:
 
 ```typescript
 import { Queue } from 'bullmq';
@@ -94,10 +107,8 @@ describe('order producer', () => {
 Other states: `'active'`, `'completed'`, `'failed'`, `'delayed'`,
 `'paused'`.
 
-## Step 4 - Test worker processor
-
-Test the processor function directly (avoid spinning up a real
-Worker for unit tests):
+Then test the processor. For unit tests, call the processor function
+directly (avoid spinning up a real Worker):
 
 ```typescript
 const processOrder = async (job: Job<OrderData>) => {
@@ -136,106 +147,19 @@ it('processes via real worker', async () => {
 });
 ```
 
-## Step 5 - Test retry + backoff
-
-```typescript
-await queue.add('flaky', { id: 1 }, {
-  attempts: 3,
-  backoff: { type: 'exponential', delay: 1000 },
-});
-```
-
-To test that a worker actually retries:
-
-```typescript
-let attempts = 0;
-const flakyProcessor = async (job: Job) => {
-  attempts++;
-  if (attempts < 3) throw new Error('transient');
-  return 'success';
-};
-
-const worker = new Worker('flaky', flakyProcessor, { connection: redisConfig });
-// ... await events.completed → assert attempts === 3
-```
-
-## Step 6 - Test repeat-job (cron / interval)
-
-```typescript
-await queue.add('hourly-cleanup', {}, {
-  repeat: { pattern: '0 * * * *' },  // cron syntax
-});
-```
-
-For tests, assert the repeat job is registered:
-
-```typescript
-const repeatJobs = await queue.getRepeatableJobs();
-expect(repeatJobs).toHaveLength(1);
-expect(repeatJobs[0].pattern).toBe('0 * * * *');
-```
-
-Cross-ref `cron-job-test-author`
-for cron-expression validation patterns.
-
-## Step 7 - FlowProducer for parent-child jobs
-
-Per [bm-gh][bm-gh] the README references parent-child relationships
-via FlowProducer:
-
-```typescript
-import { FlowProducer } from 'bullmq';
-
-const flow = new FlowProducer({ connection: redisConfig });
-const tree = await flow.add({
-  name: 'parent-job',
-  queueName: 'parents',
-  data: {},
-  children: [
-    { name: 'child-1', queueName: 'children', data: { idx: 1 } },
-    { name: 'child-2', queueName: 'children', data: { idx: 2 } },
-  ],
-});
-
-// Test: parent only completes after all children complete
-```
-
-## Step 8 - CI integration
-
-For tests that need real Redis:
-
-```yaml
-services:
-  redis:
-    image: redis:7
-    ports: [6379:6379]
-```
-
-For tests using `ioredis-mock` only, no service needed:
-
-```typescript
-import IORedisMock from 'ioredis-mock';
-const connection = new IORedisMock();
-const queue = new Queue('test', { connection });
-```
-
-`ioredis-mock` doesn't perfectly emulate every Redis command BullMQ
-uses - for full integration, use real Redis. For pure unit tests of
-producer logic, ioredis-mock is faster.
-
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Skip `await queue.drain()` between tests | Stale jobs leak across tests; flaky | Drain in beforeEach (Step 3) |
-| Spin up Worker for every unit test | Slow + Redis-coupled | Test processor function directly (Step 4) |
+| Skip `await queue.drain()` between tests | Stale jobs leak across tests; flaky | Drain in beforeEach (Worked example) |
+| Spin up Worker for every unit test | Slow + Redis-coupled | Test processor function directly (Worked example) |
 | `queue.add()` without `await` | Race: test exits before job is enqueued | Always `await` queue ops |
-| Skip `worker.close()` / `queue.close()` in afterAll | Hangs CI; Redis connections leaked | Close in afterAll (Step 4) |
+| Skip `worker.close()` / `queue.close()` in afterAll | Hangs CI; Redis connections leaked | Close in afterAll (Worked example) |
 | `ioredis-mock` for QueueEvents tests | Mock has gaps in pub/sub command emulation | Use real Redis for events |
 
 ## Limitations
 
-- BullMQ has no first-party "fake mode" like Sidekiq - 
+- BullMQ has no first-party "fake mode" like Sidekiq -
   test-vs-production parity comes from real Redis.
 - `ioredis-mock` covers 90% of BullMQ usage but can produce
   false-passing tests on edge-case Redis commands.
@@ -249,10 +173,12 @@ producer logic, ioredis-mock is faster.
 - [bm-gh][bm-gh] - repo, install, basic Queue/Worker pattern,
   FlowProducer
 - docs.bullmq.io - full documentation
+- [references/advanced-patterns-and-ci.md](references/advanced-patterns-and-ci.md) -
+  retry/backoff, repeat-job, FlowProducer, and CI wiring
 - `sidekiq-tests`,
   `celery-tests`,
   `sqs-tests`,
   `rabbitmq-tests` - sister tools
 - `cron-job-test-author`,
-  `idempotency-test-author` - 
+  `idempotency-test-author` -
   build-an-X authors

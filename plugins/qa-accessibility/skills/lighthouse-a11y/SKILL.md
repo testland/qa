@@ -36,6 +36,14 @@ If the project doesn't already use Lighthouse CI, prefer
 `axe-a11y` directly - Lighthouse adds a
 layer.
 
+## How to use
+
+1. Confirm the project already runs Lighthouse CI (see When to use); if not, prefer `axe-a11y` directly.
+2. Install the CLI (`npm install --save-dev @lhci/cli`).
+3. Add the accessibility assertions to `.lighthouserc.js` alongside any perf assertions - the `categories:accessibility` category score plus per-audit overrides on critical rules (Worked example).
+4. Run `npx lhci autorun` to collect, assert, and upload in one pass.
+5. Gate CI on the assertions and tighten `minScore` over time - per-URL thresholds, the full audit-ID reference, and the GitHub Actions workflow live in [references/advanced-config-and-ci.md](references/advanced-config-and-ci.md).
+
 ## Install
 
 (Same as `lighthouse-perf`.)
@@ -46,9 +54,11 @@ npm install --save-dev @lhci/cli
 
 (Per [lhci][lhci].)
 
-## Authoring assertions
+## Worked example
 
-Add the a11y assertions to `.lighthouserc.js`:
+Add the a11y assertions to the same `.lighthouserc.js` that
+`lighthouse-perf`
+uses for Web Vitals, so one config drives both categories:
 
 ```js
 // .lighthouserc.js
@@ -96,123 +106,21 @@ module.exports = {
 Per [lhci][lhci], assertion levels are `'error'` (CI fails),
 `'warn'` (surfaced but doesn't fail), and `'off'` (disabled).
 
-### Per-URL thresholds with `assertMatrix`
-
-`assert.assertions` applies one threshold set to every collected URL. When
-pages need different bars (a marketing homepage at 0.90, a checkout at 0.98),
-use `assertMatrix` instead: an array where each entry pairs a
-`matchingUrlPattern` (a regex matched against the audited URL) with its own
-`assertions` block ([lhci]). `assertMatrix` and `assertions` are mutually
-exclusive at the `assert` level, and the first matching pattern wins, so order
-specific patterns before the catch-all:
-
-```js
-// .lighthouserc.js - different a11y bars per URL
-module.exports = {
-  ci: {
-    assert: {
-      assertMatrix: [
-        {
-          matchingUrlPattern: '.*/checkout.*',
-          assertions: {
-            'categories:accessibility': ['error', { minScore: 0.98 }],
-            'color-contrast':           ['warn'],
-          },
-        },
-        {
-          matchingUrlPattern: '.*',
-          assertions: {
-            'categories:accessibility': ['error', { minScore: 0.90 }],
-            'color-contrast':           ['warn'],
-          },
-        },
-      ],
-    },
-  },
-};
-```
-
-## What Lighthouse a11y measures
-
-Lighthouse's accessibility category runs a curated set of axe-core
-rules. The category score (0 - 1) reflects rule pass rate weighted
-by severity. **A score of 1.0 doesn't mean perfect a11y** - manual
-testing per
-`screen-reader-test-author`
-remains essential.
-
-Common per-audit IDs (used in `assertions:`):
-
-| Audit ID                 | What it checks                                      |
-|--------------------------|-----------------------------------------------------|
-| `aria-allowed-attr`      | ARIA attributes are valid for the element's role.  |
-| `aria-hidden-body`       | `aria-hidden` not on `<body>`.                       |
-| `aria-required-attr`     | Required ARIA attributes for the role are present.  |
-| `aria-required-children` | Required ARIA children are present.                  |
-| `aria-roles`             | Valid ARIA roles only.                               |
-| `aria-valid-attr`        | ARIA attribute names are valid.                      |
-| `aria-valid-attr-value`  | ARIA attribute values are valid.                     |
-| `button-name`            | Buttons have accessible names.                       |
-| `bypass`                 | Skip-link or landmark for bypassing repeated content. |
-| `color-contrast`         | Foreground / background contrast ≥ 4.5:1 (or 3:1 large). |
-| `document-title`         | `<title>` is set.                                    |
-| `duplicate-id-active`    | No duplicate `id` on focusable elements.            |
-| `form-field-multiple-labels` | Form fields don't have multiple labels.        |
-| `frame-title`            | `<iframe>` has a `title` attribute.                  |
-| `html-has-lang`          | `<html>` has `lang`.                                  |
-| `image-alt`              | `<img>` has `alt`.                                    |
-| `label`                  | Form fields have associated labels.                   |
-| `link-name`              | Links have accessible names.                          |
-| `list`                   | `<ul>` / `<ol>` only contain `<li>`.                  |
-| `listitem`               | `<li>` is inside a `<ul>` / `<ol>`.                  |
-| `meta-viewport`          | `<meta name="viewport">` doesn't disable zoom.        |
-| `tabindex`               | No `tabindex > 0`.                                    |
-| `valid-lang`             | `lang` attribute is valid.                            |
-
-(Per [lhci][lhci]; full list in Lighthouse's accessibility audit
-documentation.)
-
-## Running
+Then run all three phases (collect / assert / upload) in one pass:
 
 ```bash
 npx lhci autorun
 ```
 
-Per [lhci][lhci]; the same command runs all three phases (collect /
-assert / upload) and the same flags (`--collect.url`, etc.) work
-for both perf and a11y assertions.
-
-## CI integration
-
-(See the same workflow in
-`lighthouse-perf` - one workflow runs both.)
-
-```yaml
-# .github/workflows/lighthouse.yml
-name: lighthouse
-
-on:
-  pull_request:
-    paths:
-      - 'src/**'
-      - 'package.json'
-
-jobs:
-  lighthouse:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm' }
-      - run: npm ci
-      - run: npm run build
-      - run: npx lhci autorun
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with: { name: lighthouse-reports, path: .lighthouseci/ }
-```
+Per [lhci][lhci], the same command and flags (`--collect.url`, etc.) serve both
+perf and a11y assertions. The **Accessibility** category score (0 - 1) reflects
+axe-rule pass rate weighted by severity. **A score of 1.0 doesn't mean perfect
+a11y** - manual testing per
+`screen-reader-test-author`
+remains essential, so assert specific audit IDs (`button-name`, `label`, ...) in
+addition to the category score. The full audit-ID reference, per-URL thresholds
+via `assertMatrix`, and the CI workflow live in
+[references/advanced-config-and-ci.md](references/advanced-config-and-ci.md).
 
 ## Anti-patterns
 
@@ -241,6 +149,9 @@ jobs:
 
 - [lhci][lhci] - Lighthouse CI install, `lhci autorun`,
   configuration shape, assertion levels.
+- Per-URL `assertMatrix` thresholds, the full accessibility audit-ID table, and
+  the GitHub Actions workflow:
+  [references/advanced-config-and-ci.md](references/advanced-config-and-ci.md).
 - `lighthouse-perf` - sibling skill for the Performance / Web Vitals category in
   the same Lighthouse run.
 - `axe-a11y` - direct axe-core usage for

@@ -1,6 +1,6 @@
 ---
 name: mailhog-testing
-description: "Configures and runs MailHog - legacy dev mailbox preceding Mailpit; SMTP `1025` + HTTP UI `8025`; Go-based single binary or Docker; APIv2 (`/api/v2/messages`, `/api/v2/search`); Jim chaos-monkey toggle for failure injection. Use when the user maintains an existing MailHog setup; for new projects prefer Mailpit (richer API, active maintenance). Migration path documented in body."
+description: "Captures and asserts SMTP email in tests with MailHog, the Go-based dev mailbox (SMTP sink on `1025`, web UI + JSON API on `8025`, single Go binary or Docker), reading captured mail via APIv2 (`/api/v2/messages`, `/api/v2/search`) and injecting failures with the Jim chaos monkey. Use when a project already runs MailHog to test password-reset, verification, or notification emails; for new projects prefer Mailpit (richer API, active maintenance) - migration path in references."
 ---
 
 # mailhog-testing
@@ -32,7 +32,15 @@ existing deployments + provides migration guidance to Mailpit.
 
 For new projects, use `mailpit-testing`.
 
-## Step 1 - Install
+## How to use
+
+1. Install MailHog via Go or Docker and start it - SMTP on `1025`, web UI + JSON API on `8025`.
+2. Point the app under test at `localhost:1025` with SMTP auth disabled.
+3. In each test, clear the mailbox (`DELETE /api/v1/messages`), trigger the action that sends mail, then poll APIv2 (`/api/v2/messages` or `/api/v2/search`) until the message lands.
+4. Assert on the captured message, walking MailHog's nested `Content.Headers.Subject` array - see the Worked example.
+5. Add failure-injection coverage with the Jim chaos monkey (`mailhog -invite-jim`); when leaving MailHog, follow Migrating to Mailpit.
+
+## Install
 
 Per [mh-gh][mh-gh]:
 
@@ -51,7 +59,7 @@ docker run -d \
   mailhog/mailhog
 ```
 
-## Step 2 - Default ports
+## Default ports
 
 Per [mh-gh][mh-gh]:
 
@@ -60,7 +68,7 @@ Per [mh-gh][mh-gh]:
 | 1025 | SMTP server |
 | 8025 | HTTP server (UI + APIv1 + APIv2) |
 
-## Step 3 - Configure your app's SMTP
+## Configure your app's SMTP
 
 Same pattern as Mailpit (since both expose unauthenticated SMTP on
 1025 by default):
@@ -72,7 +80,7 @@ smtp:
   auth: none
 ```
 
-## Step 4 - Assert via APIv2
+## Assert via APIv2
 
 Per [mh-gh][mh-gh] MailHog has both APIv1 + APIv2; APIv2 is the
 modern one. Endpoints:
@@ -84,7 +92,17 @@ modern one. Endpoints:
 | `GET /api/v2/search?kind=to&query=alice@x.com` | Search by recipient / subject / containing |
 | `DELETE /api/v1/messages` | Clear all messages (uses APIv1; APIv2 has no delete) |
 
-Test pattern:
+The MailHog message structure is more nested than Mailpit's:
+`Content.Headers.Subject` is an **array**, not the flat `Subject`
+field Mailpit exposes. Walk the nested path or the assertion
+silently fails.
+
+## Worked example
+
+Capture and assert a single password-reset email end to end. Clear
+the mailbox first so a stale message can't satisfy the assertion,
+trigger the app action, poll APIv2 until the message lands, then
+assert on its subject and body:
 
 ```python
 import requests
@@ -92,18 +110,19 @@ import requests
 BASE = "http://localhost:8025"
 
 def test_password_reset_via_mailhog():
-    requests.delete(f"{BASE}/api/v1/messages")
-    trigger_password_reset("alice@example.com")
-    msg = poll_for_message(BASE, to="alice@example.com")
+    requests.delete(f"{BASE}/api/v1/messages")            # clear (APIv1 - no APIv2 delete)
+    trigger_password_reset("alice@example.com")           # app under test sends the email
+    msg = poll_for_message(BASE, to="alice@example.com")  # GET /api/v2/search?kind=to&query=...
 
     assert msg["Content"]["Headers"]["Subject"][0] == "Reset your password"
     assert "/reset?token=" in msg["Content"]["Body"]
 ```
 
-The MailHog message structure is more nested than Mailpit's
-(`Content.Headers.Subject` array vs Mailpit's flat `Subject` field).
+`poll_for_message` retries `GET /api/v2/search?kind=to&query=alice@example.com`
+until a message appears, then returns it. Sub-second SMTP delivery
+isn't guaranteed, so never assert immediately after triggering.
 
-## Step 5 - Jim chaos monkey
+## Jim chaos monkey
 
 Per [mh-gh][mh-gh]: "Chaos Monkey for failure testing" via the Jim
 component. Jim is configurable via CLI flags or environment:
@@ -121,7 +140,7 @@ For new test work needing chaos, prefer Mailpit's Chaos mode
 (per `mailpit-testing` Step 5) - it
 has richer per-recipient configuration.
 
-## Step 6 - CI integration
+## CI integration
 
 ```yaml
 services:
@@ -133,32 +152,22 @@ steps:
   - run: pytest tests/integration/email/ -v
 ```
 
-## Step 7 - Migration to Mailpit
+## Migrating to Mailpit
 
-Side-by-side feature mapping:
-
-| MailHog | Mailpit equivalent |
-|---|---|
-| SMTP on `1025` | SMTP on `1025` (same) |
-| HTTP UI on `8025` | Web UI on `8025` (same) |
-| `GET /api/v2/messages` | `GET /api/v1/messages` (path differs; flat schema) |
-| `GET /api/v2/search?kind=to&query=...` | `GET /api/v1/search?query=to:...` (Lucene-ish syntax) |
-| `mailhog -invite-jim` | Chaos mode (richer per-recipient config) |
-
-Migration steps:
-
-1. Stand up Mailpit alongside MailHog (different ports temporarily).
-2. Update test code to hit Mailpit's endpoints + flatter schema.
-3. Run both in CI parallel for one PR cycle.
-4. Cut over.
+For new projects, and for teams ready to leave MailHog, migrate to
+Mailpit (`mailpit-testing`) - the
+actively maintained successor with a flatter API and richer chaos
+configuration. The feature-mapping table, the schema-rewrite notes,
+and the step-by-step cutover live in
+[references/migrating-to-mailpit.md](references/migrating-to-mailpit.md).
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Start new project on MailHog | Legacy; loses richer Mailpit features | Use Mailpit (Step 7 + cross-skill) |
-| Use APIv1 for new test code | Deprecated by APIv2 (within MailHog) | APIv2 endpoints (Step 4) |
-| Assume MailHog flat schema | MailHog's `Content.Headers.Subject` is an array | Walk the nested structure (Step 4) |
+| Start new project on MailHog | Legacy; loses richer Mailpit features | Use Mailpit (Migrating to Mailpit + cross-skill) |
+| Use APIv1 for new test code | Deprecated by APIv2 (within MailHog) | APIv2 endpoints (Assert via APIv2) |
+| Assume MailHog flat schema | MailHog's `Content.Headers.Subject` is an array | Walk the nested structure (Worked example) |
 | Skip per-test message clear | Same problem as Mailpit Step 4; stale messages | DELETE /api/v1/messages in setup |
 | Skip Jim coverage | Same as Mailpit Step 5; misses resilience | Enable Jim or migrate to Mailpit Chaos |
 
@@ -177,6 +186,7 @@ Migration steps:
 
 - [mh-gh][mh-gh] - repository
 - mailhog/MailHog APIv2 docs - github.com/mailhog/MailHog/blob/master/docs/APIv2.md
+- [references/migrating-to-mailpit.md](references/migrating-to-mailpit.md) - feature mapping + cutover steps
 - `mailpit-testing` - successor;
   preferred for new projects
 - `email-flow-test-author` - 

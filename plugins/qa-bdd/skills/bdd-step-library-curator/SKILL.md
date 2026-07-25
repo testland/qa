@@ -1,6 +1,6 @@
 ---
 name: bdd-step-library-curator
-description: "Build-an-X workflow that keeps step definitions DRY across a Cucumber / Behave / Reqnroll project - periodically inventories step definitions, finds duplicates (different patterns matching the same intent), suggests consolidation, organizes by domain, and publishes a step library reference doc the team uses for \"is there already a step for X?\" before authoring new ones. Use as the antidote to step-definition proliferation in long-lived BDD projects."
+description: "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, and publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones. Use on a cadence as the antidote to step-definition proliferation in long-lived BDD projects, or when a new engineer reports they cannot find an existing step."
 ---
 
 # bdd-step-library-curator
@@ -30,25 +30,28 @@ This skill builds a curation workflow.
 - Before adopting BDD across multiple teams (proactively design
   the step library shape).
 
+## How to use
+
+1. **Inventory** every step definition across the project - extract
+   patterns per runner (the per-runner commands are in
+   [references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md)).
+2. **Detect** duplicate / overlapping patterns by normalizing wording
+   and grouping - the overlap script lives in the same reference.
+3. **Recommend** one canonical step per duplicate group; deprecate the rest.
+4. **Reorganize** step files by domain and **publish** the step-library
+   README - the team's "is there a step for X?" index.
+5. **Gate** new steps at pre-merge so every added definition is acknowledged.
+6. **Repeat** on a cadence (quarterly plus threshold-triggered reviews).
+
 ## Step 1 - Inventory step definitions
 
-Per-language extraction:
+Extract every declared step pattern across the project. Each runner
+uses its own annotation syntax (`@Given` in Cucumber-JVM, `@given`
+in Behave, `[Given]` in Reqnroll / SpecFlow) - the per-runner
+extraction commands are in
+[references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md).
 
-```bash
-# Cucumber-JVM
-grep -rE '@(Given|When|Then|And|But)\(' src/test/java/ | \
-  sed -E 's/.*@(Given|When|Then|And|But)\("([^"]*)".*/\2/'
-
-# Behave
-grep -rE '^@(given|when|then|step)\(' features/steps/ | \
-  sed -E 's/.*@(given|when|then|step)\("([^"]*)".*/\2/'
-
-# Reqnroll / SpecFlow
-grep -rE '\[(Given|When|Then|And|But)\(' Tests/Steps/ | \
-  sed -E 's/.*\[(Given|When|Then|And|But)\("([^"]*)".*/\2/'
-```
-
-Output: a list of step patterns. The audit:
+The inventory produces a step audit:
 
 ```
 Total step definitions: 142
@@ -71,31 +74,11 @@ Two patterns are likely duplicates when:
 - Same fixture, different shape: `Given a cart with {n} items` vs
   `Given a cart containing {n} items`.
 
-```python
-# scripts/step-overlap.py
-import re
-
-def normalize(pattern):
-    """Lower; strip articles; remove parameter type hints."""
-    p = pattern.lower()
-    p = re.sub(r'\b(a|an|the)\b', '', p)
-    p = re.sub(r'\{[^}]+\}', '{var}', p)
-    p = re.sub(r'\s+', ' ', p).strip()
-    return p
-
-steps = [...]   # from Step 1
-
-normalized = {}
-for s in steps:
-    n = normalize(s['pattern'])
-    normalized.setdefault(n, []).append(s)
-
-for n, group in normalized.items():
-    if len(group) > 1:
-        print(f"Likely duplicates ({len(group)}):")
-        for s in group:
-            print(f"  {s['pattern']} - {s['file']}:{s['line']}")
-```
+Normalize each pattern (lowercase, drop articles, collapse
+parameters) and group by the normalized form; any group of size
+greater than one is a candidate cluster. The overlap script that
+does this is in
+[references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md).
 
 ## Step 3 - Recommend consolidation
 
@@ -173,22 +156,11 @@ The README + grep is the team's "is there a step for X?" tool.
 
 ## Step 5 - Pre-merge step gate
 
-Add a CI check that flags new step definitions:
-
-```bash
-# scripts/check-new-steps.sh
-NEW_STEPS=$(git diff --diff-filter=A origin/main...HEAD -- '**/steps/*.py' '**/Steps/*.cs' '**/steps/*.java' \
-  | grep -E '^\+' | grep -E '@(Given|When|Then)' | wc -l)
-
-if [ $NEW_STEPS -gt 0 ]; then
-  echo "::warning::This PR adds $NEW_STEPS new step definitions."
-  echo "Before merging, verify these aren't duplicates of existing steps."
-  echo "Run: bash scripts/step-overlap.py"
-fi
-```
-
-The check warns; doesn't block. Forces the author to acknowledge
-the new step.
+Add a CI check that flags new step definitions so no engineer adds a
+duplicate unknowingly. The check warns (doesn't block), forcing the
+author to acknowledge the new step and grep the README first. The
+`check-new-steps.sh` script is in
+[references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md).
 
 ## Step 6 - Quarterly cadence
 
@@ -198,6 +170,52 @@ the new step.
 | New team member     | Onboarding: walk the README.                      |
 | Step count exceeds threshold | Triggered review.                         |
 | New domain area     | Add steps; update README.                          |
+
+## Worked example
+
+Curating a 142-step library in a mixed Behave project, end to end.
+
+**1. Inventory.** Running the Behave extraction over `features/steps/`
+yields 142 step definitions and 138 unique patterns - so 4 are
+already ambiguous duplicates the runner would flag at match time:
+
+```
+Total step definitions: 142
+Unique patterns: 138
+Given: 58   When: 34   Then: 47   And: 3
+```
+
+**2. Detect.** The overlap script normalizes patterns and surfaces
+one cluster:
+
+```
+Likely duplicates (4): normalized "user is logged in"
+  Given a user is logged in    - auth_steps.py:12
+  Given the user is logged in   - cart_steps.py:8
+  Given an authenticated user   - checkout_steps.py:5
+  Given a logged-in user        - profile_steps.py:14
+```
+
+**3. Consolidate.** Pick `Given a logged-in user` as canonical
+(clearest wording, most-used in current Gherkin). Move it into
+`features/steps/shared/auth_steps.py`, delete the other three
+definitions, and rewrite the `.feature` files that used the
+deprecated phrasings - edit the Gherkin first so no scenario is
+left orphaned.
+
+**4. Reorganize + publish.** Split the flat `features/steps/` into
+`shared/`, `checkout/`, and `account/`, then regenerate the README
+index. The library now advertises
+`Given a logged-in user (auth_steps.py) - creates and logs in a generic test user`
+under Shared → Auth.
+
+**5. Gate.** Add the pre-merge new-step check. The next PR that adds
+`Given the customer is signed in` trips the warning; the author greps
+the README, finds `Given a logged-in user`, and reuses it instead of
+adding a fifth variant.
+
+Result: 142 → 139 step definitions, zero ambiguous duplicates, one
+discoverable index the whole team searches before writing a step.
 
 ## Anti-patterns
 
@@ -223,6 +241,9 @@ the new step.
 
 ## References
 
+- Step extraction commands, the overlap-detection script, and the
+  pre-merge gate:
+  [references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md).
 - `cucumber-testing`,
   `behave-testing`,
   `reqnroll-testing` - per-language

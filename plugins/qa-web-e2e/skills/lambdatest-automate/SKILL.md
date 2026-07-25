@@ -27,22 +27,31 @@ qa-compatibility plugin).
 - Internal-network apps via LambdaTest Tunnel.
 - Cost-comparison against BrowserStack / Sauce.
 
-## Authoring
+## How to use
 
-### Authentication
+1. Export `LT_USERNAME` + `LT_ACCESS_KEY`.
+2. Point the WebDriver client at the hub URL `https://hub.lambdatest.com/wd/hub`.
+3. Set vendor caps in an `LT:Options` dict on the Options object **before** creating the driver (`build`, `name`, `project`), then run one suite end to end - see Worked example.
+4. Report each session's pass / fail with the `lambda-status` JS-executor before `driver.quit()`.
+5. For internal apps, run LambdaTest Tunnel (below). For the full CI matrix workflow, the exhaustive `LT:Options` table, SmartUI visual regression, and REST session retrieval, see [references/ci-and-capabilities.md](references/ci-and-capabilities.md).
+
+## Authentication
 
 ```bash
 export LT_USERNAME="your-username"
 export LT_ACCESS_KEY="<access-key>"
 ```
 
-### Hub URL
+## Hub URL
 
 ```
 https://hub.lambdatest.com/wd/hub
 ```
 
-### Capabilities (W3C)
+## Capabilities (W3C)
+
+Standard W3C fields plus an `LT:Options` block for
+LambdaTest-specific settings:
 
 ```json
 {
@@ -54,38 +63,20 @@ https://hub.lambdatest.com/wd/hub
     "accessKey": "$LT_ACCESS_KEY",
     "build": "PR-1234",
     "name": "Login flow on Chrome Windows",
-    "project": "my-app",
-    "selenium_version": "4.21.0",
-    "w3c": true,
-    "console": "info",
-    "network": true,
-    "video": true,
-    "visual": true,
-    "tunnel": false,
-    "tunnelName": "my-tunnel",
-    "smartUI.project": "my-smartui-project"
+    "project": "my-app"
   }
 }
 ```
 
-`LT:Options` carries LambdaTest-specific:
+The exhaustive `LT:Options` table (`console`, `network`, `video`,
+`visual`, `tunnel` / `tunnelName`, `smartUI.project`, ...) is in
+[references/ci-and-capabilities.md](references/ci-and-capabilities.md).
 
-| Option | Purpose |
-|---|---|
-| `user` / `accessKey` | Credentials (alternative to env vars) |
-| `build` | CI build / PR identifier |
-| `name` | Session label |
-| `project` | Group sessions by project (dashboard) |
-| `selenium_version` | Pin Selenium version |
-| `w3c` | Enable W3C mode (default true) |
-| `console` | Console-log level: "errors" / "warnings" / "info" / "verbose" |
-| `network` | Capture HAR file |
-| `video` | Session recording |
-| `visual` | Per-step screenshots |
-| `tunnel` / `tunnelName` | LambdaTest Tunnel for internal apps |
-| `smartUI.project` | Link to SmartUI visual-regression project |
+## Worked example
 
-### Python example
+Run one suite on the grid end to end - set vendor caps on the
+Options object, create the remote driver, drive the test, report
+status, quit:
 
 ```python
 import os
@@ -119,87 +110,21 @@ driver = webdriver.Remote(
 
 driver.get("https://example.com")
 # test...
+
+# report pass / fail; LambdaTest's JS-executor pattern is "lambda-<command>=..."
+failed = False
+driver.execute_script("lambda-status=" + ("failed" if failed else "passed"))
 driver.quit()
 ```
 
-## Running
+## LambdaTest Tunnel
 
-### Report session status
-
-```python
-driver.execute_script(
-    "lambda-status=" + ("passed" if not failed else "failed")
-)
-```
-
-LambdaTest's JS executor pattern is `"lambda-<command>=..."`.
-
-### LambdaTest Tunnel
-
-For internal-network apps:
+For internal-network apps, start the tunnel, then set
+`LT:Options.tunnel: true` and `tunnelName: "my-tunnel"`:
 
 ```bash
 # Download from lambdatest.com/support/docs/lambda-tunnel
 ./LT --user $LT_USERNAME --key $LT_ACCESS_KEY --tunnelName "my-tunnel"
-```
-
-Then set `LT:Options.tunnel: true` and `tunnelName: "my-tunnel"`.
-
-### SmartUI integration
-
-LambdaTest SmartUI handles visual regression alongside the
-functional test:
-
-```python
-driver.execute_script("smartui.takeScreenshot=login-page")
-```
-
-Smart screenshots compare against a baseline; differences flagged
-in the SmartUI dashboard. See
-`qa-visual-regression` for
-visual-regression discipline.
-
-## Parsing results
-
-LambdaTest session reports:
-
-- Session video (`video: true`)
-- Network HAR (`network: true`)
-- Browser console logs (`console: "verbose"`)
-- Per-step screenshots (`visual: true`)
-- SmartUI diffs (if SmartUI configured)
-
-REST API:
-
-```bash
-curl -u "$LT_USERNAME:$LT_ACCESS_KEY" \
-  "https://api.lambdatest.com/automation/api/v1/sessions/<session-id>"
-```
-
-## CI integration
-
-```yaml
-on: pull_request
-jobs:
-  lambdatest:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        browser:
-          - { name: Chrome, version: latest, platform: "Windows 11" }
-          - { name: Firefox, version: latest, platform: "Windows 11" }
-          - { name: Safari, version: "17", platform: "macOS Sonoma" }
-    steps:
-      - uses: actions/checkout@v6
-      - name: Run on LambdaTest
-        env:
-          LT_USERNAME: ${{ secrets.LT_USERNAME }}
-          LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
-          LT_BROWSER: ${{ matrix.browser.name }}
-          LT_VERSION: ${{ matrix.browser.version }}
-          LT_PLATFORM: ${{ matrix.browser.platform }}
-          BUILD_TAG: pr-${{ github.event.pull_request.number }}
-        run: pytest tests/e2e/ --lambdatest
 ```
 
 ## Anti-patterns

@@ -34,7 +34,10 @@ OAuth 2.0 (RFC 6749) defines four grant types per [datatracker.ietf.org/doc/html
 
 [rfc7636]: https://datatracker.ietf.org/doc/html/rfc7636
 
-This skill is the per-flow test recipe.
+This skill is the per-flow test recipe. The canonical authorization-code +
+PKCE flow is authored end to end in the Worked example below; the
+less-common grants and negative cases live in
+[references/per-flow-test-recipes.md](references/per-flow-test-recipes.md).
 
 ## When to use
 
@@ -44,7 +47,24 @@ This skill is the per-flow test recipe.
 - The team needs flow-coverage independent of the IdP choice
   (Keycloak / Auth0 / Okta / mock).
 
-## Step 1 - Authorization-code flow with PKCE (canonical)
+## How to use
+
+1. Identify the grant(s) the client uses from the flow-selection table below.
+2. Author the authorization-code + PKCE happy path (the Worked example) - the canonical flow for browser / native / mobile clients.
+3. Add the negative and secondary-grant tests each client needs (state CSRF, client-credentials, refresh-token rotation, OIDC nonce, scope-downgrade, redirect-URI) from [references/per-flow-test-recipes.md](references/per-flow-test-recipes.md).
+4. Run the end-to-end coverage checklist for every OAuth/OIDC client in scope.
+
+## Flow-selection decision surface
+
+| Client type | Grant to test | Required tests | Recipe |
+|---|---|---|---|
+| Browser / SPA / native / mobile | Authorization Code + PKCE (S256) | Happy path + state CSRF + redirect-URI + (OIDC nonce if `openid`) | Worked example + references |
+| Machine-to-machine (M2M) | Client Credentials | Happy path; assert no `refresh_token` | references |
+| Any client holding a refresh token | Refresh Token | Rotation + reuse-detection | references |
+| Any OIDC client | Authorization Code + ID Token | Nonce match + scope-downgrade | Worked example + references |
+| Legacy Implicit / RO-Password | (none - deprecated per RFC 9700) | Migrate to Auth Code + PKCE | - |
+
+## Worked example - authorization-code + PKCE (canonical)
 
 Per RFC 6749 §4.1 (per [rfc6749][rfc6749]) the flow:
 
@@ -124,175 +144,33 @@ def test_authz_code_pkce_flow(idp_url, client_id, redirect_uri, browser):
     assert body["token_type"] == "Bearer"
 ```
 
-## Step 2 - State parameter CSRF defense
+The happy path asserts the returned `state` matches; the negative
+state-mismatch test, plus the client-credentials, refresh-rotation,
+OIDC-nonce, scope-downgrade, and redirect-URI recipes, are in
+[references/per-flow-test-recipes.md](references/per-flow-test-recipes.md).
 
-Per RFC 6749 §4.1.1 ([rfc6749][rfc6749]):
-
-> "An opaque value used by the client to maintain state between the
-> request and callback...should be used for preventing cross-site
-> request forgery as described in Section 10.12."
-
-**Test the negative case:**
-
-```python
-def test_state_mismatch_rejected(client):
-    state = "expected-state"
-    # ... initiate flow with state=expected-state ...
-    # Simulate IdP redirect with WRONG state:
-    callback_response = client.get(f"{redirect_uri}?code=valid-code&state=wrong-state")
-    assert callback_response.status_code in [400, 403]
-```
-
-If the client accepts the redirect without state validation, mark
-**critical** finding (CSRF vulnerable).
-
-## Step 3 - Client-credentials grant (M2M)
-
-Per RFC 6749 §4.4. Test pattern:
-
-```python
-def test_client_credentials_grant(idp_url, client_id, client_secret, audience):
-    response = requests.post(
-        f"{idp_url}/token",
-        auth=(client_id, client_secret),   # HTTP Basic per §2.3.1
-        data={
-            "grant_type": "client_credentials",
-            "audience": audience,    # required by some IdPs (Auth0, Okta)
-            "scope": "api:read",
-        },
-    )
-    assert response.status_code == 200
-    body = response.json()
-    assert body["token_type"] == "Bearer"
-    assert "access_token" in body
-    # No refresh_token for client_credentials per §4.4.3
-    assert "refresh_token" not in body
-```
-
-## Step 4 - Refresh-token rotation
-
-Per RFC 9700: refresh tokens for public clients (browser/native)
-should rotate on use - each refresh issues a new refresh token,
-invalidating the old.
-
-**Test pattern:**
-
-```python
-def test_refresh_token_rotates(idp_url, client_id, refresh_token):
-    # First refresh
-    r1 = requests.post(
-        f"{idp_url}/token",
-        data={
-            "grant_type": "refresh_token",
-            "refresh_token": refresh_token,
-            "client_id": client_id,
-        },
-    )
-    assert r1.status_code == 200
-    new_refresh = r1.json()["refresh_token"]
-    assert new_refresh != refresh_token   # rotated
-
-    # Second refresh with NEW token works
-    r2 = requests.post(
-        f"{idp_url}/token",
-        data={
-            "grant_type": "refresh_token",
-            "refresh_token": new_refresh,
-            "client_id": client_id,
-        },
-    )
-    assert r2.status_code == 200
-
-    # Re-using the OLD refresh token fails (reuse detection)
-    r3 = requests.post(
-        f"{idp_url}/token",
-        data={
-            "grant_type": "refresh_token",
-            "refresh_token": refresh_token,    # the original (now invalid)
-            "client_id": client_id,
-        },
-    )
-    assert r3.status_code == 400
-```
-
-If reuse-detection isn't enabled, mark **critical** - old tokens
-remaining valid after rotation defeats the purpose.
-
-## Step 5 - OIDC nonce + ID-token validation
-
-For OIDC (Authorization Code + ID Token), validate the nonce in the
-ID token matches what was sent in the authorize request. Defends
-against ID-token replay.
-
-```python
-def test_id_token_nonce_matches(client, idp_url):
-    nonce = secrets.token_urlsafe(32)
-    # ... full code flow with nonce param ...
-    id_token = token_response.json()["id_token"]
-    decoded = jwt.decode(id_token, ...)   # verify signature too
-    assert decoded["nonce"] == nonce
-```
-
-## Step 6 - Scope-grant verification
-
-If client requests `openid profile email` but user only consents to
-`openid profile`, the issued token must reflect the actual grant:
-
-```python
-def test_scope_downgrade(client):
-    # Request 3 scopes, user grants 2:
-    response = ... # access_token with consented scopes only
-    assert response.json()["scope"] == "openid profile"   # email omitted
-    # Resource server should reject email-scoped requests:
-    api_response = requests.get(
-        f"{api_url}/me/email",
-        headers={"Authorization": f"Bearer {access_token}"},
-    )
-    assert api_response.status_code == 403
-```
-
-## Step 7 - Redirect-URI strict matching
-
-Per RFC 9700: redirect URIs MUST match exactly, not by substring or
-regex. Tests:
-
-```python
-def test_redirect_uri_mismatch_rejected(idp_url, client_id):
-    response = requests.get(
-        f"{idp_url}/authorize",
-        params={
-            "client_id": client_id,
-            "redirect_uri": "https://evil.example.com/callback",  # NOT registered
-            "response_type": "code",
-        },
-    )
-    # IdP should reject; the response renders an error page, NOT a redirect:
-    assert "evil.example.com" not in response.url
-    assert response.status_code in [400, 403]
-```
-
-## Step 8 - End-to-end test recipe
+## End-to-end coverage checklist
 
 For each OAuth/OIDC client in scope:
 
-1. ✅ Auth-code + PKCE happy path (Step 1)
-2. ✅ State parameter validation (Step 2)
-3. ✅ Client-credentials happy path (if M2M; Step 3)
-4. ✅ Refresh-token rotation + reuse detection (Step 4)
-5. ✅ OIDC nonce validation (if OIDC; Step 5)
-6. ✅ Scope-downgrade handling (Step 6)
-7. ✅ Redirect-URI strict matching (Step 7)
-8. ✅ Token expiration handling (use-after-expiry returns 401)
-9. ✅ Token revocation (RFC 7009) if endpoint supports it
+1. Auth-code + PKCE happy path (Worked example)
+2. State parameter validation (references)
+3. Client-credentials happy path (if M2M; references)
+4. Refresh-token rotation + reuse detection (references)
+5. OIDC nonce validation (if OIDC; references)
+6. Scope-downgrade handling (references)
+7. Redirect-URI strict matching (references)
+8. Token expiration handling (use-after-expiry returns 401)
+9. Token revocation (RFC 7009) if endpoint supports it
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Use PKCE `plain` method | Defeats PKCE; RFC 7636 §4.2 specifies S256 as recommended | Always S256 (Step 1) |
-| Skip state validation in the callback handler | CSRF vulnerable | Step 2 negative test |
-| Hardcode redirect_uri prefix matching | Substring match accepts evil URIs | Strict equality (Step 7) |
-| Test only the happy path | Negative cases (mismatched state, invalid PKCE, expired token) untested | Steps 2 - 7 negative tests |
+| Use PKCE `plain` method | Defeats PKCE; RFC 7636 §4.2 specifies S256 as recommended | Always S256 (Worked example) |
+| Skip state validation in the callback handler | CSRF vulnerable | State CSRF negative test (references) |
+| Hardcode redirect_uri prefix matching | Substring match accepts evil URIs | Strict equality (references) |
+| Test only the happy path | Negative cases (mismatched state, invalid PKCE, expired token) untested | Negative tests (references) |
 | Use Implicit or RO-Password grants in new code | Deprecated per RFC 9700 | Auth Code + PKCE |
 
 ## Limitations
@@ -316,6 +194,7 @@ For each OAuth/OIDC client in scope:
 - IETF RFC 9700 - OAuth 2.0 Security Best Current Practice (March 2025)
 - IETF RFC 7009 - OAuth 2.0 Token Revocation
 - openid.net/specs/openid-connect-core-1_0.html - OIDC Core spec
+- [references/per-flow-test-recipes.md](references/per-flow-test-recipes.md) - state CSRF, client-credentials, refresh-token rotation, OIDC nonce, scope-downgrade, and redirect-URI recipes.
 - `keycloak-tests`,
   `auth0-tests`,
   `okta-tests` - IdP-specific patterns

@@ -21,7 +21,8 @@ PR-level deltas). It's commonly paired with **Playwright** and
 **Cypress**.
 
 This skill covers the **Playwright** integration; the Cypress
-integration follows the same shape with `@currents/cypress` instead.
+integration follows the same shape with `@currents/cypress` (see
+[references/ci-and-cypress-integration.md](references/ci-and-cypress-integration.md)).
 
 ## When to use
 
@@ -37,7 +38,22 @@ If the suite is small (<50 tests) and the team only needs the
 per-run report, Playwright's built-in HTML reporter is enough - no
 SaaS dependency.
 
-## Step 1 - Install
+## How to use
+
+1. Confirm the suite is large enough to need over-time analytics (see
+   When to use); a small suite is fine on Playwright's HTML reporter.
+2. Install `@currents/playwright`.
+3. Author `currents.config.ts` (`recordKey` from env, `projectId`
+   inline) and register `currentsReporter()` in `playwright.config.ts`.
+4. Enable `trace` / `video` / `screenshot` artifacts so Currents has
+   per-test data to analyze.
+5. Run `npx pwc`; open the dashboard URL it prints.
+6. Wire the same run into CI, recording both main (baseline) and PR
+   runs - the full workflow, per-PR-vs-main rationale, and the Cypress
+   sister integration are in
+   [references/ci-and-cypress-integration.md](references/ci-and-cypress-integration.md).
+
+## Install
 
 Per [currents-pw-quickstart][cqs]:
 
@@ -48,7 +64,7 @@ npm i -D @currents/playwright
 # Equivalent for pnpm / yarn / bun.
 ```
 
-## Step 2 - Author `currents.config.ts`
+## Configure `currents.config.ts`
 
 Place next to `playwright.config.ts`. Per [currents-pw-quickstart][cqs]:
 
@@ -67,9 +83,9 @@ The `recordKey` is the project's record-write secret - **never check
 it into the repo**. The `projectId` is non-secret (visible in the
 Currents dashboard URL); it's safe to inline.
 
-## Step 3 - Register the reporter in `playwright.config.ts`
+## Register the reporter
 
-Per [currents-pw-quickstart][cqs]:
+In `playwright.config.ts`, per [currents-pw-quickstart][cqs]:
 
 ```typescript
 import { defineConfig } from "@playwright/test";
@@ -84,7 +100,7 @@ export default defineConfig({
 The reporter forwards every test event (start, finish, attachments)
 to the Currents API.
 
-## Step 4 - Enable artifacts
+## Enable artifacts
 
 Per [currents-pw-quickstart][cqs], the `use` section should enable
 the three artifact types Currents consumes:
@@ -102,7 +118,7 @@ the artifact volume; Currents wants every test's trace to drive
 its analytics. For a high-volume suite, consider `trace: "retain-on-failure"`
 as a middle ground.
 
-## Step 5 - Run
+## Run
 
 Per [currents-pw-quickstart][cqs]:
 
@@ -118,91 +134,62 @@ npx pwc --key XXX --project-id YYY
 with the Currents reporter active and streams results in real-time;
 on completion, it prints a dashboard URL.
 
-## Step 6 - CI integration
+## Worked example
 
-```yaml
-# .github/workflows/e2e.yml
-name: e2e
-on:
-  pull_request:
-  push:
-    branches: [main]
+A 120-test Playwright suite, first Currents run:
 
-jobs:
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm ci
-      - run: npx playwright install --with-deps
-
-      - name: Run tests with Currents
-        env:
-          CURRENTS_RECORD_KEY: ${{ secrets.CURRENTS_RECORD_KEY }}
-        run: npx pwc
-
-      - name: Upload Playwright HTML report (fallback)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
-```
-
-`if: always()` on the artifact upload preserves the local report
-even when the Currents stream succeeds - useful when the
-dashboard is unreachable.
-
-## Step 7 - Per-PR vs main runs
-
-The Currents dashboard separates main runs (baseline) from PR runs
-(comparison). For the analytics to make sense:
-
-- **Main**: every push to main records a run. This becomes the
-  baseline for trend graphs.
-- **PR**: every PR push records a run; the dashboard cross-references
-  by test name to identify "this PR introduced the flake on
-  `cart.spec.ts:42`".
-
-Set the CI workflow's branch + PR triggers (Step 6 example) to
-record both.
-
-## Step 8 - Cypress shape (sister skill, same pattern)
-
-For completeness - the Cypress integration follows the same shape:
-
-```bash
-npm i -D @currents/cypress
-```
-
-Then in `cypress.config.ts`:
+1. `npm i -D @currents/playwright`.
+2. `currents.config.ts` alongside `playwright.config.ts`:
 
 ```typescript
-import { defineConfig } from 'cypress';
-import { currentsConfig } from '@currents/cypress';
+import { CurrentsConfig } from "@currents/playwright";
 
-export default defineConfig({
-  ...currentsConfig({
-    recordKey: process.env.CURRENTS_RECORD_KEY!,
-    projectId: 'your-project-id',
-  }),
-});
+const config: CurrentsConfig = {
+  recordKey: process.env.CURRENTS_RECORD_KEY!,
+  projectId: "abc123def",
+};
+
+export default config;
 ```
 
-Run via `npx cypress-cloud run` (the Cypress equivalent of `pwc`).
+3. In `playwright.config.ts`, add the reporter and turn artifacts on:
+
+```typescript
+reporter: [currentsReporter()],
+use: { trace: "on", video: "on", screenshot: "on" },
+```
+
+4. Export the secret and run:
+
+```bash
+export CURRENTS_RECORD_KEY=...     # from the Currents dashboard
+npx pwc
+```
+
+`pwc` streams each test event to Currents and prints a dashboard URL
+on completion. After the second run on `main`, the dashboard's trend
+graphs start showing flake rate and slowest-test movement across runs.
+
+## Operating in CI
+
+Run `npx pwc` from the CI job with `CURRENTS_RECORD_KEY` supplied as a
+secret, and trigger on both `push` to `main` and `pull_request` so the
+dashboard has a baseline (main) to compare each PR run against. Keep
+Playwright's HTML report as an `if: always()` artifact fallback for
+when the dashboard is unreachable. The full GitHub Actions workflow,
+the per-PR-vs-main baseline rationale, and the Cypress sister
+integration are in
+[references/ci-and-cypress-integration.md](references/ci-and-cypress-integration.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                       | Why it fails                                                              | Fix |
 |--------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Hardcoding `recordKey` in `currents.config.ts`                     | Secret leaks into git; bad actors can pollute the dashboard.              | Read from env (Step 2). |
-| Running both Playwright's default HTML reporter and `currentsReporter` without artifact handling | Doubled artifact size; CI runner disk pressure. | Keep both reporters; rely on `if: always()` upload (Step 6). |
+| Hardcoding `recordKey` in `currents.config.ts`                     | Secret leaks into git; bad actors can pollute the dashboard.              | Read from env (see Configure `currents.config.ts`). |
+| Running both Playwright's default HTML reporter and `currentsReporter` without artifact handling | Doubled artifact size; CI runner disk pressure. | Keep both reporters; rely on the `if: always()` upload (see Operating in CI). |
 | Sending production / staging real-user CI runs to Currents          | Mixes test signal with monitoring signal; analytics pollute.              | Send only test runs; production observability lives elsewhere. |
-| Disabling `trace: "on"` to "save space"                              | Currents's value is per-test trace inspection; disabled traces gut the analytics. | Use `retain-on-failure` as a middle ground (Step 4). |
-| Recording PR runs without recording main runs                        | No baseline; per-PR diff is meaningless.                                   | Record main on every push too (Step 6). |
+| Disabling `trace: "on"` to "save space"                              | Currents's value is per-test trace inspection; disabled traces gut the analytics. | Use `retain-on-failure` as a middle ground (see Enable artifacts). |
+| Recording PR runs without recording main runs                        | No baseline; per-PR diff is meaningless.                                   | Record main on every push too (see Operating in CI). |
 | Treating `pwc`'s exit code as gate-only                              | The dashboard surfaces flake / regression context the CI exit code hides. | Read both: pass/fail from CI; flake / regression from the dashboard or its API. |
 
 ## Limitations
@@ -224,11 +211,14 @@ Run via `npx cypress-cloud run` (the Cypress equivalent of `pwc`).
 
 - [currents-docs][currents] - Currents.dev overview, "test suite
   over time, and more" positioning, supported runners
-  (Playwright explicit; Cypress per Step 8).
+  (Playwright explicit; Cypress in the references file).
 - [currents-pw-quickstart][cqs] - Playwright integration: install,
   `currents.config.ts` shape (`recordKey` + `projectId`),
   reporter registration, artifact config (`trace` / `video` /
   `screenshot`), `npx pwc` run command.
+- [references/ci-and-cypress-integration.md](references/ci-and-cypress-integration.md) -
+  full GitHub Actions workflow, per-PR-vs-main baselines, and the
+  Cypress sister integration.
 - `junit-xml-analysis` - pair
   with Currents to keep CI gating self-hosted (JUnit) while
   Currents handles longitudinal analytics.

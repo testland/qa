@@ -39,7 +39,23 @@ For framework-agnostic richer reporting,
 `allure-reports` covers similar ground
 with broader language support.
 
-## Step 1 - Install
+## How to use
+
+1. Add the `extentreports` dependency (or `extentreports-dotnet` for
+   .NET) and pin the version.
+2. Create an `ExtentReports`, attach an `ExtentSparkReporter("<path>")`,
+   and call `extent.flush()` at the end of the run - without `flush()`
+   no file is written.
+3. Per test, `createTest(name)` then chain log levels
+   (`info` / `pass` / `warning` / `skip` / `fail`); attach failure
+   screenshots via `MediaEntityBuilder`.
+4. Wire the reporter into your JUnit 5 / TestNG lifecycle and upload
+   the HTML as a CI artifact - the lifecycle extension, the richer
+   report API (hierarchical tests, category / author / device labels,
+   exception capture, code blocks), and CI upload are in
+   [references/api-and-ci-wiring.md](references/api-and-ci-wiring.md).
+
+## Install
 
 Maven:
 
@@ -55,7 +71,7 @@ Per [extent-readme][readme], v5.1.2 is the latest release as of
 2024-06-26. Pin a version explicitly; the project is in maintenance
 mode pending ChainTest.
 
-## Step 2 - The canonical init pattern
+## Initialize the report
 
 Per the [extent-wiki][wiki] complete example:
 
@@ -89,7 +105,7 @@ Three load-bearing pieces:
 **Without `flush()`, no file is written** - the most common new-user
 mistake.
 
-## Step 3 - Create tests + log levels
+## Create tests and log levels
 
 Per [extent-wiki][wiki]:
 
@@ -110,21 +126,7 @@ Each `createTest` returns an `ExtentTest`; calls on it accumulate
 log entries. Multiple `createTest` calls on the same `extent`
 produce multiple test entries in the report.
 
-## Step 4 - Hierarchical tests (parent / child)
-
-Per [extent-wiki][wiki]:
-
-```java
-extent.createTest("ParentWithChild")
-        .createNode("Child")
-        .pass("This test is created as a toggle as part of a child test of 'ParentWithChild'");
-```
-
-The parent appears as a collapsible toggle in the report; children
-nest underneath. Useful for grouping per-suite tests under a
-suite-level node, or per-step interactions under a per-test node.
-
-## Step 5 - Screenshots + media
+## Screenshots and media
 
 Per [extent-wiki][wiki]:
 
@@ -147,114 +149,53 @@ screenshot inside the test framework's `@AfterEach` failure hook
 and pass it to `.fail(...)` so the failure log includes the visual
 evidence inline.
 
-## Step 6 - Categories / authors / devices
+## Worked example
 
-Per [extent-wiki][wiki]:
-
-```java
-extent.createTest("Tags").assignCategory("MyTag")
-        .pass("The test 'Tags' was assigned by the tag MyTag");
-
-extent.createTest("Authors").assignAuthor("TheAuthor")
-        .pass("This test 'Authors' was assigned by a special kind of author tag.");
-
-extent.createTest("Devices").assignDevice("TheDevice")
-        .pass("This test 'Devices' was assigned by a special kind of devices tag.");
-```
-
-These metadata fields drive the report's filter sidebar - by tag,
-author, device - making the report navigable when there are
-hundreds of tests. Use:
-
-- **Category** for feature / module / epic.
-- **Author** for the test owner (auto-populated via custom code that
-  reads `git blame`).
-- **Device** for environment / browser / OS combinations.
-
-## Step 7 - Exception capture
-
-Per [extent-wiki][wiki]:
+A minimal runnable report with one passing test, the log-level chain,
+and a screenshot inlined on the `pass` entry:
 
 ```java
-extent.createTest("Exception")
-        .fail(new RuntimeException("A runtime exception occurred!"));
-```
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
-Passing an exception to `.fail(...)` captures the message + full
-stack trace in the report. Wire this into the test framework's
-failure hook so every failed test gets the trace inline.
-
-## Step 8 - Code blocks
-
-Per [extent-wiki][wiki]:
-
-```java
-extent.createTest("CodeBlock").generateLog(
-        Status.PASS,
-        MarkupHelper.createCodeBlock(CODE1, CODE2));
-```
-
-`MarkupHelper.createCodeBlock(...)` produces syntax-highlighted
-JSON / SQL / code blocks in the report - useful for capturing the
-request body that triggered a failure.
-
-## Step 9 - Wire into a JUnit 5 / TestNG run
-
-JUnit 5 with a per-test extension:
-
-```java
-public class ExtentTestWatcher implements TestWatcher, BeforeAllCallback, AfterAllCallback {
-    private static ExtentReports extent;
-
-    @Override
-    public void beforeAll(ExtensionContext ctx) {
-        extent = new ExtentReports();
+public class Demo {
+    public static void main(String[] args) {
+        ExtentReports extent = new ExtentReports();
         extent.attachReporter(new ExtentSparkReporter("target/Spark/Spark.html"));
-    }
 
-    @Override
-    public void testSuccessful(ExtensionContext ctx) {
-        extent.createTest(ctx.getDisplayName()).pass("OK");
-    }
+        extent.createTest("checkout adds item")
+              .info("navigated to cart")
+              .pass("item added",
+                    MediaEntityBuilder.createScreenCaptureFromPath("cart.png").build());
 
-    @Override
-    public void testFailed(ExtensionContext ctx, Throwable cause) {
-        extent.createTest(ctx.getDisplayName()).fail(cause);
-    }
-
-    @Override
-    public void afterAll(ExtensionContext ctx) {
-        extent.flush();   // critical
+        extent.flush();   // writes target/Spark/Spark.html - omit it and nothing is written
     }
 }
 ```
 
-Register via `@ExtendWith(ExtentTestWatcher.class)` on the test
-class.
+Open `target/Spark/Spark.html` in a browser: the test shows the
+`info` and `pass` log lines top-to-bottom with the screenshot inlined
+on the `pass` entry.
 
-## Step 10 - CI artifact upload
+## Operating in CI
 
-```yaml
-- run: ./mvnw -B verify
-
-- name: Upload Extent report
-  if: always()
-  uses: actions/upload-artifact@v4
-  with:
-    name: extent-report
-    path: target/Spark/
-    retention-days: 30
-```
-
-`if: always()` is critical - Extent matters most on failure runs.
+ExtentReports HTML is a human artifact, not a CI gate - keep emitting
+JUnit XML for the gate and upload the Spark HTML alongside it.
+Register the reporter through a JUnit 5 `TestWatcher` (or TestNG
+listener) so every pass/fail is logged and `flush()` runs in the
+suite teardown, then upload `target/Spark/` with `if: always()`
+(Extent matters most on failure runs). The lifecycle extension and
+the artifact-upload step are in
+[references/api-and-ci-wiring.md](references/api-and-ci-wiring.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                      | Why it fails                                                              | Fix |
 |-------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Skipping `extent.flush()`                                         | No HTML file written; CI artifact step uploads an empty directory.        | Always call `flush()` in the suite-level teardown (Step 9). |
-| One ExtentReports instance per test class (separate HTML files)    | Reports fragment across the run; reviewer has to open N files.            | One per run; use Categories to navigate (Step 6). |
-| Logging assertion details without screenshots on UI tests          | Failure context is missing the visual; debugging requires reproducing.   | `MediaEntityBuilder` on every `.fail(...)` (Step 5). |
+| Skipping `extent.flush()`                                         | No HTML file written; CI artifact step uploads an empty directory.        | Always call `flush()` in the suite-level teardown (see Operating in CI). |
+| One ExtentReports instance per test class (separate HTML files)    | Reports fragment across the run; reviewer has to open N files.            | One per run; use Categories to navigate (see the richer-API reference). |
+| Logging assertion details without screenshots on UI tests          | Failure context is missing the visual; debugging requires reproducing.   | `MediaEntityBuilder` on every `.fail(...)` (see Screenshots and media). |
 | ExtentReports as a substitute for JUnit XML in CI gating           | The HTML is for humans; CI gates need machine-readable XML.              | Emit both; gate on JUnit XML; surface Extent as artifact. |
 | Hard-coded category / author strings                                | Drift; renames don't propagate; filter list grows polluted.              | Author a small enum / constants class; reference centrally. |
 | Adopting ExtentReports for a new project in 2026+                  | Project is sunset per [extent-readme][readme]; you'll migrate later.    | Evaluate ChainTest (announced successor) or `allure-reports`. |
@@ -280,6 +221,9 @@ class.
   sunset notice (replacing with ChainTest).
 - [extent-wiki][wiki] - wiki home with the "complete example" code
   cited throughout this skill.
+- [references/api-and-ci-wiring.md](references/api-and-ci-wiring.md) -
+  hierarchical tests, category / author / device labels, exception
+  capture, code blocks, and the JUnit 5 / TestNG + CI wiring.
 - `allure-reports` - framework-agnostic
   alternative with broader language support (and not sunset).
 - `junit-xml-analysis` - pair with

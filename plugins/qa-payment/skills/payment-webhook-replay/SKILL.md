@@ -7,51 +7,49 @@ description: "Workflow-driven skill that builds payment webhook replay + recover
 
 ## Overview
 
-Payment webhooks are the **source of truth** for asynchronous
-state transitions (settlement, refund completion, dispute
-state). Every webhook handler must be:
+Payment webhooks are the **source of truth** for asynchronous state
+transitions (settlement, refund completion, dispute state). Every webhook
+handler must be:
 
 1. **Signature-verified** - reject spoofed payloads.
 2. **Idempotent** - redelivery doesn't double-charge.
 3. **Order-tolerant** - out-of-order delivery is normal.
 4. **Replay-safe** - months-old replay doesn't break.
 
-This skill walks through producing the test suite for these
-properties.
+This skill produces the test suite for these properties.
 
 ## When to use
 
 - New webhook handler for any payment gateway.
-- After a webhook-related incident (missed events, double
-  processing).
+- After a webhook-related incident (missed events, double processing).
 - Migrating between gateways or webhook formats.
 
-## Step 1 - Signature verification tests
+## How to use
 
-### Stripe
+1. Confirm the handler reads the **raw request body**, not a parsed-then-restringified copy - signature verification fails on the restringified bytes otherwise.
+2. Write the signature-verification gauntlet for the gateway (Step 1): reject unsigned, reject wrong-secret, accept valid, reject expired-timestamp.
+3. Add the idempotency dedup test plus the event-ID handler (Step 2).
+4. Wire a replay simulator for the gateway (Step 3), then run the **Worked example** end to end against staging.
+5. Add the harder recovery scenarios - out-of-order delivery, mid-handler crash, archive replay, per-gateway suite layout - from [references/advanced-recovery-scenarios.md](references/advanced-recovery-scenarios.md).
 
-Per [docs.stripe.com/webhooks/signatures](https://docs.stripe.com/webhooks/signatures):
+## Step 1 - Signature-verification gauntlet
+
+Per [docs.stripe.com/webhooks/signatures](https://docs.stripe.com/webhooks/signatures),
+the Stripe gauntlet is four cases - unsigned, wrong-secret, valid, and
+expired-timestamp:
 
 ```typescript
+const payload = JSON.stringify({ type: 'payment_intent.succeeded' });
+
 test('rejects unsigned payload', async () => {
-  const payload = JSON.stringify({ type: 'payment_intent.succeeded' });
-  const res = await fetch('/webhooks/stripe', {
-    method: 'POST',
-    body: payload,
-    // No Stripe-Signature header
-  });
-  expect(res.status).toBe(401);
+  const res = await fetch('/webhooks/stripe', { method: 'POST', body: payload });
+  expect(res.status).toBe(401);  // No Stripe-Signature header
 });
 
 test('rejects wrong-secret signature', async () => {
-  const payload = JSON.stringify({...});
-  const wrongSig = stripe.webhooks.generateTestHeaderString({
-    payload, secret: 'wrong-secret',
-  });
+  const wrongSig = stripe.webhooks.generateTestHeaderString({ payload, secret: 'wrong-secret' });
   const res = await fetch('/webhooks/stripe', {
-    method: 'POST',
-    body: payload,
-    headers: { 'stripe-signature': wrongSig },
+    method: 'POST', body: payload, headers: { 'stripe-signature': wrongSig },
   });
   expect(res.status).toBe(401);
 });
@@ -61,46 +59,37 @@ test('accepts valid signature', async () => {
     payload, secret: process.env.STRIPE_WEBHOOK_SECRET!,
   });
   const res = await fetch('/webhooks/stripe', {
-    method: 'POST',
-    body: payload,
-    headers: { 'stripe-signature': sig },
+    method: 'POST', body: payload, headers: { 'stripe-signature': sig },
   });
   expect(res.status).toBe(200);
 });
 
 test('rejects expired timestamp', async () => {
-  // Stripe signatures include a timestamp; old timestamps reject
   const oldSig = stripe.webhooks.generateTestHeaderString({
     payload,
     secret: process.env.STRIPE_WEBHOOK_SECRET!,
     timestamp: Math.floor(Date.now()/1000) - 3600,  // 1 hour ago
   });
   const res = await fetch('/webhooks/stripe', {
-    method: 'POST',
-    body: payload,
-    headers: { 'stripe-signature': oldSig },
+    method: 'POST', body: payload, headers: { 'stripe-signature': oldSig },
   });
   expect(res.status).toBe(401);
 });
 ```
 
-### Adyen
+The signature scheme differs per gateway; run the same four-case gauntlet
+against each:
 
-Per [docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures):
-HMAC-SHA256 over the canonical string. Validation is per-event,
-not per-request.
+| Gateway | Signature scheme | Reference |
+|---|---|---|
+| Stripe | HMAC-SHA256 over the payload; the signature carries a timestamp, so old timestamps reject | [webhooks/signatures](https://docs.stripe.com/webhooks/signatures) |
+| Adyen | HMAC-SHA256 over the canonical string; validated per-event, not per-request | [verify-hmac-signatures](https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures) |
+| PayPal | SHA256-with-RSA; verify via the PayPal verification endpoint or SDK helper | [webhooks/rest](https://developer.paypal.com/api/rest/webhooks/rest/) |
+| Braintree | parser validates `bt_signature` against the merchant's public key | Braintree webhook parser |
 
-### PayPal
+## Step 2 - Idempotency
 
-Per [developer.paypal.com/api/rest/webhooks/rest](https://developer.paypal.com/api/rest/webhooks/rest/):
-verify via PayPal verification endpoint or SDK helper.
-
-### Braintree
-
-Webhook parser validates `bt_signature` against the merchant's
-public key.
-
-## Step 2 - Idempotency tests
+Redelivery must not double-process. Dedup on the gateway-issued event ID:
 
 ```typescript
 test('redelivered webhook handled idempotently', async () => {
@@ -118,10 +107,7 @@ test('redelivered webhook handled idempotently', async () => {
 });
 ```
 
-The handler should:
-
-- Look up by event ID (gateway-issued, unique).
-- If already processed, return 200 without re-doing the work.
+The handler looks up by event ID and acks duplicates without re-doing the work:
 
 ```typescript
 async function handleEvent(event) {
@@ -135,141 +121,54 @@ async function handleEvent(event) {
 }
 ```
 
-## Step 3 - Order-tolerance tests
+## Step 3 - Replay simulators
 
-Webhooks can arrive out of order:
+Each gateway ships a way to (re)send a real event at the handler:
 
-```typescript
-test('out-of-order event delivery handled', async () => {
-  const completedEvent = makeEvent({ type: 'payment_intent.succeeded' });
-  const creatingEvent = makeEvent({ type: 'payment_intent.created' });
+| Gateway | Replay | Notes |
+|---|---|---|
+| Stripe | `stripe trigger payment_intent.succeeded`; `stripe events resend evt_test_12345` | CLI ([stripe-cli](https://docs.stripe.com/stripe-cli)) |
+| Adyen | Customer Area transaction "Resend webhook" | Re-sends with the original signature - useful for idempotency tests |
+| PayPal | Dashboard simulator; REST equivalent via the API | [simulate-event](https://developer.paypal.com/api/rest/webhooks/event-names/) |
+| Braintree | `gateway.webhookTesting.sampleNotification(kind, id)` | Generates a test signature for any event kind ([parse/node](https://developer.paypal.com/braintree/docs/guides/webhooks/parse/node)) |
 
-  // Deliver completed BEFORE created
-  await postWebhook(completedEvent);
-  await postWebhook(creatingEvent);
+## Worked example
 
-  // Final state should still be correct
-  const record = await db.payments.findOne({ intent_id: completedEvent.data.id });
-  expect(record.status).toBe('succeeded');
-});
-```
+Replay one gateway's event (Stripe) end to end and assert both core
+properties - the signature is accepted and a redelivery is idempotent.
 
-The handler must use **versioned events** or **state-machine
-gates** to handle this:
-
-```python
-# Don't blindly overwrite state
-def handle_event(event):
-    record = db.payments.get(event.intent_id)
-    new_state = event.data.status
-    if state_transition_allowed(record.status, new_state):
-        record.status = new_state
-        record.save()
-    # else: stale event, ignore
-```
-
-## Step 4 - Replay simulators
-
-### Stripe CLI
+Drive a real event at the handler with the CLI:
 
 ```bash
-stripe trigger payment_intent.succeeded
-# Sends a synthetic event to the configured forward URL
+stripe trigger payment_intent.succeeded    # synthetic event to the forward URL
+stripe events resend evt_test_12345        # replay a captured event (30-day window)
 ```
 
-Per [docs.stripe.com/stripe-cli](https://docs.stripe.com/stripe-cli):
-the CLI also captures and replays from the event-log:
-
-```bash
-stripe events resend evt_test_12345
-```
-
-### Adyen Customer Area
-
-In the Adyen Customer Area, navigate to a transaction →
-"Resend webhook." This re-sends with the original signature
-(useful for testing idempotency).
-
-### PayPal Webhook Simulator
-
-Per [developer.paypal.com/api/rest/webhooks/simulate-event](https://developer.paypal.com/api/rest/webhooks/event-names/):
-the dashboard exposes a simulator. CLI equivalent available
-via the REST API.
-
-### Braintree
-
-Per [developer.paypal.com/braintree/docs/guides/webhooks/parse/node](https://developer.paypal.com/braintree/docs/guides/webhooks/parse/node):
-use `gateway.webhookTesting.sampleNotification(kind, id)` to
-generate a test signature for any event kind.
-
-## Step 5 - Partial-failure scenarios
-
-What happens when the handler crashes mid-processing?
+Then assert the guarantees in-process:
 
 ```typescript
-test('crash mid-processing → retry succeeds', async () => {
-  let crashOnce = true;
-  const handler = makeHandler({
-    onProcessEvent: () => {
-      if (crashOnce) {
-        crashOnce = false;
-        throw new Error('simulated crash');
-      }
-    },
+test('replayed Stripe event: signature accepted, idempotent on resend', async () => {
+  const payload = makeWebhookPayload({ type: 'payment_intent.succeeded' });
+  const sig = stripe.webhooks.generateTestHeaderString({
+    payload: JSON.stringify(payload),
+    secret: process.env.STRIPE_WEBHOOK_SECRET!,
   });
 
-  await expect(handler.process(event)).rejects.toThrow();  // First attempt crashes
-  await handler.process(event);  // Retry succeeds; idempotent
+  const first = await postWebhook(payload, sig);
+  expect(first.status).toBe(200);                   // valid signature accepted
 
-  const record = await db.payments.findOne({ event_id: event.id });
-  expect(record).toBeTruthy();
+  const resend = await postWebhook(payload, sig);   // same event redelivered
+  expect(resend.status).toBe(200);
+
+  const rows = await db.payment_records.count({ event_id: payload.id });
+  expect(rows).toBe(1);                             // processed exactly once
 });
 ```
 
-Handlers should commit state changes atomically - either the
-processing succeeds and the event is marked handled, or both
-roll back.
-
-## Step 6 - Replay-from-archive
-
-Production sometimes loses webhooks (network outage, deploy
-issue). Per gateway docs, all support some form of replay:
-
-| Gateway | Replay window | Method |
-|---|---|---|
-| Stripe | 30 days | `stripe events resend <event_id>` |
-| Adyen | Unlimited (Customer Area) | Manual or `notification-resend` API |
-| PayPal | 30 days | Webhook resend endpoint |
-| Braintree | Unlimited (Control Panel) | Manual or `webhookTesting.sampleNotification` |
-
-Test:
-
-```typescript
-test('handler accepts replay from 7-day-old event', async () => {
-  const oldEvent = makeEvent({ created: Math.floor(Date.now()/1000) - 7*86400 });
-  const result = await handler.process(oldEvent);
-  expect(result).toBe(200);
-});
-```
-
-## Step 7 - Emit the test suite
-
-```
-tests/payment/webhooks/
-  stripe/
-    signature.test.ts
-    idempotency.test.ts
-    order-tolerance.test.ts
-    replay.test.ts
-  adyen/
-    ... (same structure)
-  paypal/
-    ...
-  braintree/
-    ...
-  fixtures/
-    payloads/
-```
+That is the minimum end-to-end proof for one gateway: a real replayed event
+passes signature verification and processes exactly once. Extend it to
+out-of-order, crash-recovery, and archive-replay scenarios in
+[references/advanced-recovery-scenarios.md](references/advanced-recovery-scenarios.md).
 
 ## Anti-patterns
 
@@ -288,13 +187,11 @@ tests/payment/webhooks/
 
 - **Replay simulator availability varies.** Stripe CLI is most
   developer-friendly; others require dashboard or API.
-- **Real production replay is slower** than test mode; SLA
-  windows differ.
+- **Real production replay is slower** than test mode; SLA windows differ.
 - **Bank-initiated webhooks (chargebacks)** aren't always
   test-mode-triggerable.
-- **Signature algorithms differ per gateway.** Stripe HMAC-SHA256
-  with timestamp; Adyen HMAC-SHA256 with canonical string;
-  PayPal SHA256-with-RSA.
+- **Signature algorithms differ per gateway.** Stripe HMAC-SHA256 with
+  timestamp; Adyen HMAC-SHA256 with canonical string; PayPal SHA256-with-RSA.
 
 ## References
 
@@ -308,6 +205,8 @@ tests/payment/webhooks/
   [developer.paypal.com/api/rest/webhooks/rest](https://developer.paypal.com/api/rest/webhooks/rest/).
 - Braintree webhook testing:
   [developer.paypal.com/braintree/docs/guides/webhooks/testing-go-live](https://developer.paypal.com/braintree/docs/guides/webhooks/testing-go-live).
+- Advanced recovery scenarios (order-tolerance, partial-failure, archive-replay, suite layout):
+  [references/advanced-recovery-scenarios.md](references/advanced-recovery-scenarios.md).
 - Companion catalog:
   `payment-flow-states-reference`.
 - Per-platform SDKs:

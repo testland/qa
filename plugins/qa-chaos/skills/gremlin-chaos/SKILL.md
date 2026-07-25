@@ -36,7 +36,14 @@ If the team is K8s-only and OSS-preferred, see
 `litmus-chaos` or
 `chaos-mesh`.
 
-## Step 1 - Install Gremlin agent
+## How to use
+
+1. Install the Gremlin agent on the target host or cluster (see Install) and register it with the Gremlin Control Plane.
+2. Pick an attack type from the four classes (resource, network, state, request) - the exhaustive per-attack table is in [references/advanced-operations.md](references/advanced-operations.md).
+3. Run one scoped experiment end to end against staging - define steady state, inject a single fault with a tight blast radius, observe, and abort on breach (see Worked example).
+4. Promote passing experiments into a Scenario (chained attacks + abort conditions), wire it into CI via the API, and track each service's Reliability Score - all covered in [references/advanced-operations.md](references/advanced-operations.md).
+
+## Install
 
 Linux:
 
@@ -60,81 +67,32 @@ helm install gremlin gremlin/gremlin \
 The agent connects to the Gremlin Control Plane (cloud); attacks
 trigger via web UI or API.
 
-## Step 2 - Attack types
+## Attack types
 
-Per [gremlin-home][gh] and the broader Gremlin docs:
+Gremlin groups fault injections into four classes (per
+[gremlin-home][gh] and the Gremlin docs):
 
-| Class       | Attack             | Effect                                   |
-|-------------|--------------------|------------------------------------------|
-| Resource     | CPU                | Spike CPU usage                          |
-| Resource     | Memory             | Spike memory                              |
-| Resource     | Disk I/O           | Spike disk I/O                            |
-| Resource     | Disk space         | Fill disk                                  |
-| Network      | Latency             | Inject latency                             |
-| Network      | Packet loss         | Drop packets                                |
-| Network      | DNS                 | DNS resolution failure                      |
-| Network      | Blackhole          | Drop all packets to/from a target           |
-| State        | Shutdown            | Reboot the host                             |
-| State        | Process killer      | Kill a specific process                     |
-| State        | Time travel         | Skew the system clock                       |
-| Request     | Request injection    | Modify HTTP requests in flight             |
+| Class    | Representative attacks             | Effect                          |
+|----------|------------------------------------|---------------------------------|
+| Resource | CPU, Memory, Disk I/O, Disk space  | Starve or saturate a host resource |
+| Network  | Latency, Packet loss, DNS, Blackhole | Degrade or sever connectivity  |
+| State    | Shutdown, Process killer, Time travel | Disrupt host / process state  |
+| Request  | Request injection                  | Modify HTTP requests in flight  |
 
-## Step 3 - Run an attack via UI
+The full per-attack table (all twelve attacks with their exact effect)
+lives in [references/advanced-operations.md](references/advanced-operations.md).
 
-Web UI workflow:
+## Worked example
 
-1. Select target (host / container / service / Lambda).
-2. Pick attack type.
-3. Configure (e.g., latency 500ms; duration 5min).
-4. Optionally schedule.
-5. Click "Unleash."
+A single end-to-end experiment: inject 500ms latency into the
+`checkout` service, scoped to one container for five minutes.
 
-The UI provides safety: blast-radius scoping, abort button,
-notifications.
-
-## Step 4 - Author a Scenario
-
-A Scenario chains multiple attacks:
-
-```yaml
-# Pseudo-Scenario config (Gremlin's UI exports JSON; this approximates)
-scenario:
-  name: "Checkout resilience test"
-  attacks:
-    - type: latency
-      target: { service: checkout }
-      length: 5min
-      latency: 500ms
-    - type: packet-loss
-      target: { service: payment }
-      length: 5min
-      loss-percent: 10
-      delay-after-previous: 1min
-  abort_conditions:
-    - "Sentry error rate > 2%"
-    - "Manual abort"
-```
-
-Scenarios match per the `chaos-experiment-author`
-"vary real-world events" principle - combinations approximate real
-incidents.
-
-## Step 5 - Reliability score
-
-Per [gremlin-home][gh], Gremlin's differentiator is the
-"Reliability Score" - "individual services" get scores "based on
-dependency mapping, risk detection, and failure testing."
-
-Score components (per Gremlin docs):
-
-- **Resilience tests** passed: % of attacks the service survived
-- **Dependency map**: service-to-service relationships
-- **Detected risks**: configuration drift, hidden dependencies
-
-A service moving from "untested" to "score 80" via passing
-attacks creates an objective improvement signal.
-
-## Step 6 - API + automation
+1. **Steady state.** Confirm from monitoring that checkout error rate
+   is under 1% and p95 latency is healthy.
+2. **Hypothesis.** A 500ms upstream latency injection keeps the
+   error rate under 2% (retries + timeouts absorb it).
+3. **Inject the fault** via the API, scoped tight (one container, capped
+   at 5 minutes):
 
 ```bash
 curl -X POST "https://api.gremlin.com/v1/attacks/new" \
@@ -143,43 +101,34 @@ curl -X POST "https://api.gremlin.com/v1/attacks/new" \
   -d '{
     "command": {
       "type": "latency",
-      "args": ["-l", "300", "-m", "500", "-c", "5", "-h", "^api\\.example\\.com$"]
+      "args": ["-l", "300", "-m", "500", "-c", "1", "-h", "^checkout\\..*$"]
     },
     "target": {
       "type": "Random",
+      "percent": 10,
       "containers": { "labels": { "app": "checkout" } }
     }
   }'
 ```
 
-API enables CI integration:
+4. **Observe + abort.** Watch the error rate for the five-minute
+   window; the UI halt button (or a monitored abort condition) stops
+   the attack the moment error rate crosses 2%.
+5. **Verdict.** Error rate held at 1.2% - checkout tolerates 500ms
+   upstream latency. Record the pass against the service's Reliability
+   Score, then widen the blast radius on the next run.
 
-```yaml
-- name: Trigger Gremlin scenario
-  run: |
-    curl -X POST "https://api.gremlin.com/v1/scenarios/${{ vars.SCENARIO_ID }}/runs" \
-      -H "Authorization: Key ${{ secrets.GREMLIN_API_KEY }}"
-- name: Wait + verdict
-  run: sleep 600 && ./scripts/datadog-verdict.sh
-```
-
-## Step 7 - Compliance + audit
-
-Gremlin's enterprise tier (per [gremlin-home][gh]'s positioning)
-provides:
-
-- Audit logs (who triggered what, when).
-- RBAC at organization / team / role level.
-- SOC 2 / FedRAMP / etc. compliance posture.
-
-Important for regulated industries where audit is non-negotiable.
+Scenarios (chaining this latency attack with a downstream packet-loss
+attack), the Reliability Score model, the full CI workflow, and the
+compliance / audit posture are in
+[references/advanced-operations.md](references/advanced-operations.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Manual UI-only attacks                                                 | Doesn't scale; per chaos principle 4 must automate.                      | API-driven scenarios (Step 6). |
-| Skipping abort conditions                                              | Attack runs past safety threshold.                                       | Define abort signals (Step 4). |
+| Manual UI-only attacks                                                 | Doesn't scale; per chaos principle 4 must automate.                      | API-driven Scenarios (references/advanced-operations.md). |
+| Skipping abort conditions                                              | Attack runs past safety threshold.                                       | Define abort signals on every Scenario (references/advanced-operations.md). |
 | Treating Reliability Score as the only signal                          | Score is service-level; per-attack verdicts matter too.                  | Both Score (trend) + per-attack verdicts (detail). |
 | One-shot installation; team forgets                                    | License paid; not used.                                                  | Schedule attacks; build into release process. |
 | Production attacks without playbook                                    | Real incident if attack escalates.                                       | Per `chaos-experiment-author`: blast radius + abort. |
@@ -201,6 +150,10 @@ Important for regulated industries where audit is non-negotiable.
   forward-looking reliability scores, multi-platform (bare metal /
   on-prem / multi-cloud / serverless), fault injection +
   reliability scoring + dependency discovery.
+- [references/advanced-operations.md](references/advanced-operations.md) -
+  exhaustive attack table, UI attack workflow, Scenario authoring,
+  Reliability Score model, the API + CI automation workflow, and the
+  compliance / audit posture.
 - `litmus-chaos`,
   `chaos-mesh` - open-source K8s-only
   alternatives.
