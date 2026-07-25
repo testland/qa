@@ -22,6 +22,22 @@ practical A/B testing."
 This skill is a **pure reference** consumed by the AB-test
 validity checklist and SRM detection.
 
+## How to use this reference
+
+1. **Choose the analysis regime up front**: fixed-horizon (no
+   peeking) or a peek-protected method (sequential alpha-spending
+   or always-valid / mSPRT) - see the three corrections below.
+2. **If you must stop early**, pick a sequential schedule (Pocock
+   vs O'Brien-Fleming) or mSPRT, and pre-declare it before launch.
+3. **Lock the look schedule**: hourly dashboards and "where are we
+   now?" checks are not decision looks - only the pre-declared
+   schedule is.
+4. **Read the peek-protected p-value at the gate**, never the naive
+   mid-experiment p-value.
+5. **Stack corrections**: if the experiment also has guardrails,
+   combine the peeking correction with the guardrail (Bonferroni /
+   FDR) correction - see the worked example below.
+
 ## When to use
 
 - Designing the stop-early policy for an experiment platform.
@@ -110,7 +126,7 @@ Tests for an experimentation platform must verify:
 | Always-valid p-value never decreases below declared alpha | Simulate; check never-exceeds-alpha |
 | Ship-decision gate enforces the peek-protected p-value | Mock low-p naive p, observe gate rejection |
 
-## Combining with guardrails
+## Worked example - stacking peeking + guardrail corrections
 
 Per `guardrail-metrics-reference`:
 the guardrail-correction (Bonferroni / FDR) **stacks** with the
