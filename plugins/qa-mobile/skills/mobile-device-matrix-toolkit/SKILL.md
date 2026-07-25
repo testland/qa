@@ -1,6 +1,6 @@
 ---
 name: mobile-device-matrix-toolkit
-description: "Dispatches mobile UI test runs across a 3-tier device matrix (smoke per-PR, regression per-merge, full farm at release) to control CI cost: generates per-target Appium capability configs from a central YAML, parallelises via GitHub Actions matrix strategy, and aggregates JUnit XML into a cross-device pass/fail table. Use when the question is about which devices to run and when, not about how to configure a specific test framework (for that, use xcuitest-suite, espresso-suite, etc.)."
+description: "Dispatches mobile UI test runs across a 3-tier device matrix (smoke per-PR, regression per-merge, full farm at release) to control CI cost: generates per-target Appium capability configs from a central YAML, parallelises via GitHub Actions matrix strategy, and aggregates JUnit XML into a cross-device pass/fail table. Use when deciding which iOS / Android devices and OS versions to run tests on and at which stage (smoke / regression / full farm), not how to configure a specific test framework (for that, use xcuitest-suite, espresso-suite, etc.)."
 ---
 
 # mobile-device-matrix-toolkit
@@ -178,7 +178,7 @@ jobs:
 
 ## Step 4 - Aggregate per-target results
 
-Each matrix shard uploads its JUnit XML; an aggregator job combines:
+**Before trusting the roll-up:** a shard that fails to upload its JUnit XML (device timeout, farm hiccup) reads as *0 tests*, not *failure* - detect shards with a missing or empty report, re-run only those shards, then re-aggregate. Each matrix shard uploads its JUnit XML; an aggregator job combines:
 
 ```bash
 # scripts/aggregate-matrix.py

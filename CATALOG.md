@@ -18,7 +18,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.7 | 15 skills + 2 agents | 17 |
 | [qa-roles](plugins/qa-roles/) | 1.3.11 | 0 skills + 15 agents | 15 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.6 | 8 skills + 6 agents | 14 |
-| [qa-test-management](plugins/qa-test-management/) | 1.2.2 | 8 skills + 2 agents | 10 |
+| [qa-test-management](plugins/qa-test-management/) | 1.2.3 | 8 skills + 2 agents | 10 |
 | [qa-team-management](plugins/qa-team-management/) | 1.1.4 | 6 skills + 1 agents | 7 |
 | [qa-hiring](plugins/qa-hiring/) | 1.4.2 | 5 skills + 1 agents | 6 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.2.2 | 4 skills + 2 agents | 6 |
@@ -31,8 +31,8 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.9.4 | 10 skills + 5 agents | 15 |
-| [qa-mobile](plugins/qa-mobile/) | 1.4.2 | 11 skills + 3 agents | 14 |
-| [qa-desktop](plugins/qa-desktop/) | 1.2.11 | 9 skills + 4 agents | 13 |
+| [qa-mobile](plugins/qa-mobile/) | 1.4.3 | 11 skills + 3 agents | 14 |
+| [qa-desktop](plugins/qa-desktop/) | 1.2.12 | 9 skills + 4 agents | 13 |
 | [qa-bdd](plugins/qa-bdd/) | 1.7.3 | 10 skills + 2 agents | 12 |
 | [qa-game](plugins/qa-game/) | 1.4.12 | 8 skills + 3 agents | 11 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.5.2 | 8 skills + 2 agents | 10 |
