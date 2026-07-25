@@ -24,7 +24,10 @@ replays:
    in-product.
 
 This is a **workflow** that produces, per engine, a working
-record/replay setup plus a CI regression test that runs it.
+record/replay setup plus a CI regression test that runs it. The
+full per-engine record, replay, and CI code lives in
+[references/engine-record-replay-apis.md](references/engine-record-replay-apis.md);
+this file is the cross-engine decision surface.
 
 The three engine surfaces differ:
 
@@ -58,6 +61,24 @@ Composes with:
 - Investigating a determinism regression - "this build diverges
   from the previous build's replay at frame 4823."
 
+## How to use
+
+1. **Lock determinism first** for the capture level you need -
+   fix the Step 1 sources of non-determinism (fixed timestep,
+   seeded RNG, synchronous loads) before recording anything.
+2. **Pick the capture level** from the Step 2 per-engine contract
+   table - Unity and Godot capture input (which needs determinism);
+   Unreal captures the replication stream (which does not).
+3. **Record and replay** with the engine's API - full working
+   code in
+   [references/engine-record-replay-apis.md](references/engine-record-replay-apis.md).
+4. **Choose the assertion model** (final-state hash, per-checkpoint,
+   or per-frame) and wire the replay into a CI regression test
+   (Step 3).
+5. **Embed a build hash + replay-format version** in the replay
+   header so CI can tell a real regression from a stale replay
+   (Step 4).
+
 ## Inputs
 
 Gather before walking the workflow:
@@ -89,206 +110,27 @@ any recording work, lock down:
 If you can't lock determinism, replay can still be useful as a
 **visual debug** artefact, but it won't drive regression assertions.
 
-### Step 2 - Unity path - InputEventTrace
+### Step 2 - Record and replay per engine
 
-Per the
-[InputEventTrace API page](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.8/api/UnityEngine.InputSystem.LowLevel.InputEventTrace.html),
-`InputEventTrace` "captures input events into an unmanaged memory
-buffer". Critically: traces "must be disposed of (by calling
-`Dispose()`) after use or they will leak memory on the unmanaged
-(C++) memory heap".
+Each engine captures at a different level, with a different
+determinism contract. Pick the row that matches your engine, then
+lift the working record + replay code from
+[references/engine-record-replay-apis.md](references/engine-record-replay-apis.md).
 
-**Recording:**
+| Engine | Capture level | Default storage | Determinism contract |
+|---|---|---|---|
+| Unity | Input events (`InputEventTrace`, buffer-sized) | `Application.persistentDataPath` / repo `test/` | Needs Step 1 - replay reproduces input; state matches only if the sim is a pure function of state + input |
+| Unreal | Replication stream (`DemoNetDriver` + `NetworkReplayStreamer`) | `%LOCALAPPDATA%/<Project>/Saved/Demos` | Reconstructs the server's streamed view - does **not** require local determinism |
+| Godot | Input events + RNG seed (community pattern) | `FileAccess` path of choice | Same contract as Unity - needs Step 1 |
 
-```csharp
-using UnityEngine.InputSystem.LowLevel;
+The key split: **input-level replay (Unity, Godot) depends on
+determinism; replication-stream replay (Unreal) does not**, because
+the Unreal simulation already ran on the server and the replay just
+re-streams its output. This is why Unreal replays handle full
+multiplayer matches while Unity/Godot replays are for pinned
+single-player.
 
-public class SessionRecorder : MonoBehaviour
-{
-    private InputEventTrace _trace;
-
-    void Start()
-    {
-        // 4 MB buffer; grow up to 64 MB; default device = all
-        _trace = new InputEventTrace(bufferSizeInBytes: 4 * 1024 * 1024,
-                                     growBuffer: true,
-                                     maxBufferSizeInBytes: 64 * 1024 * 1024);
-        _trace.recordFrameMarkers = true;   // per the API page
-        _trace.Enable();
-    }
-
-    public void StopAndSave(string path)
-    {
-        _trace.Disable();
-        _trace.WriteTo(path);  // binary on-disk format
-    }
-
-    void OnDestroy()
-    {
-        _trace?.Dispose();  // required per the API page
-    }
-}
-```
-
-Per the same API page: "Enable `recordFrameMarkers` to insert
-boundary events between frames, allowing proper temporal spacing
-during playback" - without it, the replay will reissue events
-back-to-back rather than respecting original frame timing.
-
-**Replay:**
-
-```csharp
-public void Replay(string path)
-{
-    var trace = new InputEventTrace();
-    trace.ReadFrom(path);                  // per the API page
-    var controller = trace.Replay();       // returns ReplayController
-    controller.PlayAllEventsAccordingToTimestamps();
-    // or controller.PlayAllFramesOneByOne() for headless step
-}
-```
-
-Per the API page, `Replay()` "begins event reconstruction,
-returning a `ReplayController` object" - the controller exposes
-play / pause / scrub / step methods.
-
-**Determinism caveat.** InputEventTrace captures the *input* but
-**not the game state**. A replay reproduces the same input events
-in the same order - if the game's per-frame output is a pure
-function of state + input + fixed delta + seeded RNG (Step 1),
-the resulting state matches. If not, the replay diverges.
-
-### Step 3 - Unreal path - Replay System
-
-Per
-[Replays in Unreal Engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/replays-in-unreal-engine),
-Unreal's replay system captures the **replicated state stream**
-via the `DemoNetDriver` and persists via `NetworkReplayStreamer`.
-Default storage per the
-[Recording Replays page](https://dev.epicgames.com/documentation/en-us/unreal-engine/recording-replays-in-unreal-engine):
-`%LOCALAPPDATA%/<Project>/Saved/Demos`.
-
-**Console commands** (per the same page):
-
-| Command | Effect |
-|---|---|
-| `DemoRec <FriendlyName>` | "Initiate replay recording" - emits a `.replay` file under `Saved/Demos` |
-| `DemoStop` | Stop recording / playback |
-| `DemoPlay <FriendlyName>` | Play back a previously recorded replay |
-
-The `<FriendlyName>` argument is the replay's identifier - per
-the same page "helps distinguish between multiple recording
-sessions".
-
-**Programmatic recording** (per the
-[Recording Replays page](https://dev.epicgames.com/documentation/en-us/unreal-engine/recording-replays-in-unreal-engine)):
-
-```cpp
-// In-game: start recording
-GEngine->Exec(GetWorld(), TEXT("DemoRec MyMatch_v1"));
-
-// Stop
-GEngine->Exec(GetWorld(), TEXT("DemoStop"));
-
-// Play back
-GEngine->Exec(GetWorld(), TEXT("DemoPlay MyMatch_v1"));
-```
-
-For lower-level control, use `FNetworkReplayStreamer` directly
-(per the same page) - the streamer exposes start / stop / pause /
-goto-time methods and is the abstraction `DemoNetDriver` wraps.
-
-**Time-shifting and scrubbing** are supported per the
-[Playing Back Replays page](https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-back-replays-in-unreal-engine) - playback isn't strictly forward-only; replays can be scrubbed
-to arbitrary timestamps.
-
-**Determinism semantics differ from Unity.** Unreal records the
-**output of the network replication layer**, not raw input. The
-replay reconstructs the *server's* view as it was streamed to
-clients - it does **not** require the local game simulation to
-be deterministic (the simulation already happened on the server).
-This is why Unreal replays are practical for full multiplayer
-matches whereas Unity InputEventTrace replays require pinning
-deterministic single-player.
-
-### Step 4 - Godot path - community deterministic pattern
-
-Godot has no first-party replay subsystem comparable to
-InputEventTrace or `DemoNetDriver` [author opinion, per the
-[Godot documentation home](https://docs.godotengine.org/en/stable/)
-which does not surface a testing/replay section]. The community
-pattern is **deterministic RNG seed + recorded `InputEvent`
-script**:
-
-```gdscript
-# recorder.gd
-extends Node
-
-var _events: Array = []
-var _rng_seed: int
-
-func _ready():
-    _rng_seed = randi()
-    seed(_rng_seed)
-
-func _input(event: InputEvent):
-    _events.append({
-        "tick": Engine.get_physics_frames(),
-        "event": event.duplicate(),
-    })
-
-func save_to(path: String) -> void:
-    var f := FileAccess.open(path, FileAccess.WRITE)
-    f.store_var({"seed": _rng_seed, "events": _events})
-    f.close()
-```
-
-```gdscript
-# player.gd - replay
-extends Node
-
-var _events: Array
-var _cursor := 0
-
-func load_from(path: String) -> void:
-    var f := FileAccess.open(path, FileAccess.READ)
-    var data = f.get_var()
-    seed(data["seed"])
-    _events = data["events"]
-
-func _physics_process(_dt):
-    while _cursor < _events.size() \
-            and _events[_cursor]["tick"] <= Engine.get_physics_frames():
-        Input.parse_input_event(_events[_cursor]["event"])
-        _cursor += 1
-```
-
-Replay reissues `InputEvent`s on the same `Engine.get_physics_frames()`
-tick they were captured. Combined with `seed(...)` re-applied
-from the header and fixed `physics/common/physics_ticks_per_second`,
-this gives equivalent determinism to Unity's InputEventTrace
-pattern.
-
-Test harness in
-`godot-gut-tests`:
-
-```gdscript
-extends GutTest
-
-func test_level_1_speedrun_replay_matches_baseline():
-    var player := preload("res://src/replay_player.gd").new()
-    player.load_from("res://test/fixtures/level1_baseline.replay")
-    add_child(player)
-
-    await get_tree().create_timer(10.0).timeout
-
-    var final_state := %Game.get_state_hash()
-    assert_eq(final_state,
-              "abc123…baseline-hash…",
-              "Replay produced same final state hash as baseline")
-```
-
-### Step 5 - Wire replays as CI regression assertions
+### Step 3 - Wire replays as CI regression assertions
 
 Per engine, the CI loop is:
 
@@ -298,43 +140,11 @@ Per engine, the CI loop is:
 3. Compare the hash against the baseline (also in repo).
 4. Mismatch → CI fails the build.
 
-Unity example (in a UTF `[UnityTest]` PlayMode fixture):
+The per-engine harness code (Unity `[UnityTest]` PlayMode fixture,
+Unreal `LatentIt` latent command, Godot GUT fixture) is in
+[references/engine-record-replay-apis.md](references/engine-record-replay-apis.md).
 
-```csharp
-[UnityTest]
-public IEnumerator Level1_Speedrun_Replay_MatchesBaseline()
-{
-    var trace = new InputEventTrace();
-    trace.ReadFrom("Assets/Tests/Replays/level1.trace");
-    var ctl = trace.Replay();
-    ctl.PlayAllEventsAccordingToTimestamps();
-
-    yield return new WaitForSeconds(60f);  // length of replay
-
-    var hash = GameStateHasher.Compute(GameStateRoot);
-    Assert.AreEqual("baseline-hash-here", hash);
-    trace.Dispose();   // per the API page
-}
-```
-
-Unreal example (in an
-`unreal-automation-system`
-test):
-
-```cpp
-LatentIt("Level1 replay reaches baseline checkpoint",
-         [this](const FDoneDelegate& Done)
-{
-    GEngine->Exec(GetWorld(), TEXT("DemoPlay Level1_Baseline"));
-    // poll for replay end via DemoNetDriver state, then
-    // hash GameState and compare to baseline
-    StartReplayWatchdog(Done);
-});
-```
-
-Godot example - see Step 4 GUT fixture above.
-
-### Step 6 - Define a fail-safe for replay drift
+### Step 4 - Define a fail-safe for replay drift
 
 Real-world replays drift when:
 
@@ -373,11 +183,11 @@ async loads forced synchronous in headless mode.
 Step 2 - recorder MonoBehaviour creates `InputEventTrace`, enables
 on level start, writes to `level1.trace` on first level completion.
 
-Step 5 - CI fixture (UTF `[UnityTest]`) reads the trace, replays
+Step 3 - CI fixture (UTF `[UnityTest]`) reads the trace, replays
 it, hashes the final `GameStateRoot`, compares to the baseline
 hash committed in `Assets/Tests/Baselines/level1.hash`.
 
-Step 6 - replay header includes `replay_format = 2` and
+Step 4 - replay header includes `replay_format = 2` and
 `build_hash = <git-sha>`. CI fails the build with a clear "replay
 stale" message when format < 2 rather than silently passing.
 
@@ -404,7 +214,7 @@ stale" message when format < 2 rather than silently passing.
   do not. Don't conflate them in a multi-engine team.
 - **Godot has no first-party replay system** per the
   [Godot documentation home](https://docs.godotengine.org/en/stable/);
-  the community pattern in Step 4 is sufficient for deterministic
+  the community pattern in Step 2 is sufficient for deterministic
   single-player but doesn't generalise to multiplayer.
 - **Unreal replays bloat with high-bandwidth replication.** The
   `.replay` file under
@@ -429,3 +239,29 @@ stale" message when format < 2 rather than silently passing.
   modern-gamertag display rules), and inventory data can land
   inside replay attachments - strip before sharing with
   cert / publisher.
+
+## References
+
+- Unity Input System `InputEventTrace` API -
+  [com.unity.inputsystem@1.8](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.8/api/UnityEngine.InputSystem.LowLevel.InputEventTrace.html).
+- Replays in Unreal Engine -
+  [dev.epicgames.com](https://dev.epicgames.com/documentation/en-us/unreal-engine/replays-in-unreal-engine);
+  recording + storage in
+  [Recording Replays](https://dev.epicgames.com/documentation/en-us/unreal-engine/recording-replays-in-unreal-engine),
+  scrubbing in
+  [Playing Back Replays](https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-back-replays-in-unreal-engine).
+- Godot documentation home (no first-party replay subsystem) -
+  [docs.godotengine.org](https://docs.godotengine.org/en/stable/).
+- Microsoft gamertag display / cert rules -
+  [certification-requirements](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements).
+- Full per-engine record, replay, and CI-assertion code (with
+  their citations):
+  [references/engine-record-replay-apis.md](references/engine-record-replay-apis.md).
+- Host test frameworks:
+  `unity-test-framework`,
+  `unreal-automation-system`,
+  `godot-gut-tests`.
+- Netcode neighbour:
+  `multiplayer-state-machine-coverage`.
+- Cert evidence:
+  `platform-cert-overview-reference`.

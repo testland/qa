@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Quality engineering plugin marketplace for modern software teams: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, security testing (SAST/DAST/SCA/SBOM/secrets/compliance), LLM evaluation, ML model testing, distributed tracing, real-time protocols, PDF/print, search relevance, concurrency, saga/CQRS, charts, resilience drills, and more. Every component is rating-gated before merge.",
-    "version": "4.11.1"
+    "version": "4.11.2"
   },
   "plugins": [
     {
@@ -111,7 +111,7 @@
     {
       "name": "qa-test-review",
       "source": "./plugins/qa-test-review",
-      "description": "Test code reviewers for test files only \u2014 production code is out of scope. 5 skills (object-model-patterns, test-code-conventions, test-framework-blueprint, test-isolation-patterns, test-step-design-patterns) and 6 agents (assertion-quality-reviewer, e2e-selector-quality-critic, framework-architecture-auditor, mocking-anti-pattern-detector, test-code-critic, test-suite-health-auditor).",
+      "description": "Test code reviewers for test files only — production code is out of scope. 5 skills (object-model-patterns, test-code-conventions, test-framework-blueprint, test-isolation-patterns, test-step-design-patterns) and 6 agents (assertion-quality-reviewer, e2e-selector-quality-critic, framework-architecture-auditor, mocking-anti-pattern-detector, test-code-critic, test-suite-health-auditor).",
       "strict": true,
       "category": "foundations"
     },
@@ -545,7 +545,7 @@
     {
       "name": "qa-pwa",
       "source": "./plugins/qa-pwa",
-      "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle testing \u2014 distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
+      "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle testing — distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
       "strict": true,
       "category": "quality-engineering"
     },

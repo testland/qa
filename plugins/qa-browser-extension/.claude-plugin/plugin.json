@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-browser-extension",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prompts, and storage.sync vs storage.local test patterns. Includes extension-test-author, which composes the 7 per-surface skills to author one Playwright spec per behavior spec.",
   "author": {
     "name": "testland",

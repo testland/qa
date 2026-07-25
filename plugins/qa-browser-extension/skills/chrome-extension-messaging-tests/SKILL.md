@@ -62,6 +62,26 @@ anything below.
 - A native helper application is part of the product and CI has to
   prove the host is reachable.
 
+## How to use
+
+1. **Identify the shape.** Map the failing (or new) path to one of the
+   five messaging shapes in the Overview - one-shot runtime, one-shot
+   tabs, long-lived port, external / web-page, or native.
+2. **Confirm the extension is running.** Install / reload is out of
+   scope (see Scope boundary); assume the extension is loaded and its ID
+   is known before writing an assertion.
+3. **Write the sender / listener pair** for that shape. The two one-shot
+   forms are in Authoring below; ports and the cross-boundary surfaces
+   are in the linked references.
+4. **Assert the full response object** with an equality matcher, never
+   `toBeDefined()` - the failure this API produces most often is an
+   `undefined`-shaped response that `toBeDefined()` passes on.
+5. **Apply the payload guardrails.** Build fixtures from
+   JSON-representable values only, and route on a message-type field so
+   exactly one `onMessage` listener owns each type.
+6. **Re-check the draft** against the Anti-patterns table before
+   committing.
+
 ## Authoring
 
 ### 1. One-shot runtime messages
@@ -143,160 +163,21 @@ Test targets:
 - Frame targeting: with an iframe present, `frameId` limits delivery
   to that frame per [cr-tabs].
 
-### 3. Long-lived ports
+## Long-lived ports, external, and native surfaces
 
-Per [cr-msg]:
+The three remaining shapes carry more incidental depth - port lifecycle
+tied to the service worker, the `externally_connectable` allow-list, and
+machine-level native-host registration - so their code recipes live in
+two companion references:
 
-```js
-// Content script
-const port = chrome.runtime.connect({ name: 'knockknock' });
-port.onMessage.addListener(msg => {
-  if (msg.question === "Who's there?") port.postMessage({ answer: 'Madame' });
-});
-port.postMessage({ joke: 'Knock knock' });
-
-// Service worker
-chrome.runtime.onConnect.addListener(port => {
-  if (port.name !== 'knockknock') return;
-  port.onMessage.addListener(msg => {
-    if (msg.joke === 'Knock knock') port.postMessage({ question: "Who's there?" });
-  });
-});
-```
-
-The [chrome.runtime reference][cr-runtime] gives
-`chrome.runtime.connect(extensionId?, connectInfo?)` returning a
-`Port`, where `connectInfo.name` *"will be passed into onConnect for
-processes that are listening for the connection event"*. That name is
-what the `port.name !== 'knockknock'` guard above filters on, so a
-test that connects with the wrong name should observe no reply.
-
-[cr-runtime]: https://developer.chrome.com/docs/extensions/reference/api/runtime
-
-Per [cr-msg], `onDisconnect` fires when: no listeners exist for
-`onConnect`, the tab unloads, the originating frame unloads, all
-receiving frames unload, or `disconnect()` is called. A port test
-should cover at least the first and last of those, because they are
-the two a bug produces:
-
-```js
-test('connecting with an unknown port name disconnects immediately', async () => {
-  const events = [];
-  const port = chrome.runtime.connect({ name: 'no-such-listener' });
-  port.onDisconnect.addListener(() => events.push('disconnect'));
-  await settle();
-  expect(events).toEqual(['disconnect']);
-});
-```
-
-Accumulate disconnect events into an array rather than setting a
-boolean. A port can have multiple receiving frames per [cr-msg], so
-"exactly one disconnect" is an assertion you should make explicitly
-rather than assume.
-
-**Service-worker suspension interacts with ports.** Per the
-[extension service worker lifecycle page][cr-sw], the service worker
-terminates after 30 seconds of inactivity, and *"Opening a port no
-longer resets the timers"* as of Chrome 114. What keeps it alive is
-traffic: [cr-sw] states *"Sending a message with long-lived messaging
-keeps the service worker alive"*. A port test that idles longer than
-30 seconds without exchanging a message is asserting against a
-terminated worker, and the disconnect it observes is the platform, not
-a bug.
-
-[cr-sw]: https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle
-
-### 4. Web-page and cross-extension messages
-
-Per [cr-msg], a web page can send to an extension only if the
-extension declares the page's origin in `externally_connectable`:
-
-```json
-"externally_connectable": {
-  "matches": ["https://*.example.com/*"]
-}
-```
-
-```js
-// On the allow-listed web page
-chrome.runtime.sendMessage(editorExtensionId, { openUrlInEditor: url },
-  response => { if (!response.success) handleError(url); });
-```
-
-```js
-// In the extension
-chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-  if (sender.id !== allowlistedExtension) return;
-  if (request.getTargetData) sendResponse({ targetData });
-});
-```
-
-The [externally_connectable reference][cr-extconn] defines the
-defaults that produce the two most common surprises, both worth a
-regression test:
-
-- Without the key declared, *"all extensions can connect, but no web
-  pages can connect."*
-- Adding the key **without** `"ids": ["*"]` means other extensions
-  lose the ability to connect, per [cr-extconn]. A manifest change
-  that adds a `matches` list for a web page silently breaks a
-  previously working extension-to-extension flow unless `ids` is set
-  too.
-
-[cr-extconn]: https://developer.chrome.com/docs/extensions/reference/manifest/externally-connectable
-
-Per [cr-runtime], `chrome.runtime.onMessageExternal` fires *"when a
-message is sent from another extension (by runtime.sendMessage)"* and
-cannot be used in content scripts, so the listener belongs in the
-service worker or an extension page.
-
-Direction matters. Per [cr-msg]: *"It is not possible to send a
-message from an extension to a web page."* A test expecting the
-reverse direction is testing the wrong mechanism and should be
-rewritten against custom DOM events or content-script injection.
-
-Test targets:
-
-- An origin inside `matches` gets a response.
-- An origin outside `matches` gets no response at all (not an error
-  response).
-- A sender extension ID not on the allow-list is rejected by the
-  `sender.id` guard.
-- After adding a `matches` list, a previously working cross-extension
-  send still works (the `ids` regression above).
-
-### 5. Native messaging
-
-Per [cr-msg], native messaging works like cross-extension messaging
-with one substitution: *"runtime.connectNative() is used instead of
-runtime.connect()"*. The
-[native messaging guide][cr-native] adds that the `nativeMessaging`
-permission must be declared and that these methods are unavailable in
-content scripts, and [cr-runtime] gives the signature as
-`chrome.runtime.connectNative(application)` returning a `Port`.
-
-[cr-native]: https://developer.chrome.com/docs/extensions/develop/concepts/native-messaging
-
-The host must be registered on the machine before any test can pass.
-Per [cr-native], the host manifest lives at:
-
-| OS | Location |
-|---|---|
-| Windows | Registry key `HKEY_LOCAL_MACHINE\SOFTWARE\Google\Chrome\NativeMessagingHosts\[host-name]` or the `HKEY_CURRENT_USER` equivalent |
-| macOS | `/Library/Google/Chrome/NativeMessagingHosts/` system-wide, `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/` per user |
-| Linux | `/etc/opt/chrome/native-messaging-hosts/` system-wide, `~/.config/google-chrome/NativeMessagingHosts/` per user |
-
-Per [cr-native], the manifest's `allowed_origins` is the *"List of
-extensions that should have access to the native messaging host"*, and
-those values *"can't contain wildcards"* - so the extension ID under
-test must be listed literally, which means a fresh unpacked-load ID
-will not match a manifest written for the published ID.
-
-Native messaging has its own size limits, tighter than the general
-ones. Per [cr-native]: *"The maximum size of a single message from the
-native messaging host is 1 MB"* while *"The maximum size of the
-message sent to the native messaging host is 64 MiB."* Assert the
-inbound 1 MB ceiling explicitly if the host returns bulk data.
+- **Long-lived ports + service-worker lifecycle** - `connect` /
+  `onConnect`, the `onDisconnect` conditions, the wrong-port-name
+  disconnect test, and the 30-second idle-termination interaction:
+  [references/long-lived-ports.md](references/long-lived-ports.md).
+- **Cross-boundary messages (web-page, cross-extension, native)** -
+  `externally_connectable` defaults, `onMessageExternal`,
+  `connectNative`, and the per-OS native-host manifest table:
+  [references/cross-boundary-messaging.md](references/cross-boundary-messaging.md).
 
 ## Payload constraints every test must respect
 
@@ -390,9 +271,10 @@ payload
   meaningless unless the recipient extension is also installed in the
   same profile.
 - **Native messaging needs a machine-level install.** The host
-  manifest must exist at the per-OS path listed above per
-  [cr-native], so CI images need an explicit setup step; this cannot
-  be arranged from inside the extension.
+  manifest must exist at the per-OS path listed in
+  [references/cross-boundary-messaging.md](references/cross-boundary-messaging.md)
+  per [cr-native], so CI images need an explicit setup step; this
+  cannot be arranged from inside the extension.
 - **Service-worker lifetime bounds long-running assertions.** Per
   [cr-sw] the worker terminates after 30 seconds of inactivity, so
   "wait a minute then assert" is not a valid test shape.
@@ -427,3 +309,12 @@ payload
 - Extension service worker lifecycle (30-second idle termination,
   long-lived messaging keeping the worker alive):
   https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle
+- Deep reference - long-lived ports + service-worker lifecycle:
+  [references/long-lived-ports.md](references/long-lived-ports.md).
+- Deep reference - cross-boundary messaging (web-page, cross-extension,
+  native): [references/cross-boundary-messaging.md](references/cross-boundary-messaging.md).
+
+[cr-runtime]: https://developer.chrome.com/docs/extensions/reference/api/runtime
+[cr-sw]: https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle
+[cr-extconn]: https://developer.chrome.com/docs/extensions/reference/manifest/externally-connectable
+[cr-native]: https://developer.chrome.com/docs/extensions/develop/concepts/native-messaging

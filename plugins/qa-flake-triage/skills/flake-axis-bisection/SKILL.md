@@ -76,30 +76,17 @@ already implicated.
 
 ## Step 2: choose N before you run anything
 
-N is not a taste question. It follows from the smallest failure rate
-you need to be able to see.
-
-**The arithmetic.** If a test truly fails with probability `p` on each
-run, and runs are independent, the chance that N runs produce zero
-failures is `(1 - p)^N` (the binomial zero-event probability, the same
-starting point used to derive the rule of three, [Rule of three
-(statistics)](<https://en.wikipedia.org/wiki/Rule_of_three_(statistics)>)).
-Solving `(1 - p)^N = 0.05` gives the N at which you have a 95% chance of
-seeing at least one failure:
-
-| True rate p | Chance of zero failures at N=20 | N for a 95% chance of at least one failure |
-|---|---|---|
-| 10% | `0.90^20` = 12% | 29 |
-| 5% | `0.95^20` = 36% | 59 |
-| 2% | `0.98^20` = 67% | 149 |
-| 1% | `0.99^20` = 82% | 299 |
-
-Read the middle column before committing to N=20. A test that really
-fails 5% of the time shows a clean 0/20 more than a third of the time.
-N=20 is a *screening* depth, adequate to separate a roughly 40% flake
-from a roughly 5% flake, and not adequate to separate 5% from 10%: at
-N=20 those two rates predict 1 and 2 failures respectively, and both are
-routinely observed as 0, 1, 2, or 3.
+N is not a taste question. It follows from the smallest failure rate you
+need to be able to see. If a test truly fails with probability `p` on
+independent runs, the chance that N runs produce zero failures is
+`(1 - p)^N`; solving `(1 - p)^N = 0.05` gives the N at which you have a 95%
+chance of seeing at least one failure. The full p-to-N table and its
+derivation are in
+[references/reproduction-rate-statistics.md](references/reproduction-rate-statistics.md).
+The one number to remember: a test that really fails 5% of the time still
+shows a clean 0/20 more than a third of the time. N=20 is a *screening*
+depth - enough to separate a roughly 40% flake from a roughly 5% flake, not
+enough to separate 5% from 10%.
 
 **Cost.** Total executions are `axes x variations x N`. The sweep below
 has 8 axes with 2 to 4 variations each, so N=20 costs roughly 320 to 640
@@ -113,7 +100,7 @@ across a suite. Runners support the repetition directly: Playwright's
 axes at N=20, then re-measure only the baseline and the one or two
 implicated variations at N=60 or higher before acting. Nothing in the
 statistics endorses N=20; it is a budget choice, and its consequences
-are the ones tabulated above.
+are the ones tabulated in the reference.
 
 ## Step 3: measure the baseline
 
@@ -175,59 +162,35 @@ question is whether they differ by more than sampling noise.
 
 ### 5a. Report an interval, not just a rate
 
-`k/N` is a point estimate of a proportion. Attach a confidence interval
-to it. The Wilson interval, recommended "for virtually all combinations
-of n and p", is the standard choice ([NIST/SEMATECH e-Handbook, Confidence
+`k/N` is a point estimate of a proportion; attach a confidence interval to
+it. The Wilson interval, recommended "for virtually all combinations of n
+and p", is the standard choice ([NIST/SEMATECH e-Handbook, Confidence
 intervals for a
 proportion](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm)).
-Computed 95% Wilson intervals for the counts that come up most often:
-
-| Observed | Point estimate | 95% Wilson interval |
-|---|---|---|
-| 0/20 | 0% | 0% to 16.1% |
-| 1/20 | 5% | 0.9% to 23.6% |
-| 2/20 | 10% | 2.8% to 30.1% |
-| 4/20 | 20% | 8.1% to 41.6% |
-| 10/20 | 50% | 29.9% to 70.1% |
-| 0/50 | 0% | 0% to 7.1% |
-| 2/50 | 4% | 1.1% to 13.5% |
-| 10/50 | 20% | 11.2% to 33.0% |
-| 0/100 | 0% | 0% to 3.7% |
-| 2/100 | 2% | 0.6% to 7.0% |
-| 10/100 | 10% | 5.5% to 17.4% |
-
-The 1/20 and 2/20 rows are the whole warning in two lines. Their
-intervals overlap across almost their entire width. A sweep that
-reports "5% baseline, 10% under randomized order" has measured nothing.
+The lookup table of computed 95% Wilson intervals for the counts that come
+up most often is in
+[references/reproduction-rate-statistics.md](references/reproduction-rate-statistics.md).
+The two rows that matter most: 1/20 and 2/20 have intervals that overlap
+across almost their entire width, so a sweep reporting "5% baseline, 10%
+under randomized order" has measured nothing.
 
 ### 5b. Compare two variations with a stated rule
 
-For baseline `x1/n1` against a variation `x2/n2`, the two-proportion
-test statistic with a pooled proportion is
-`z = (p1 - p2) / sqrt(p(1-p)(1/n1 + 1/n2))` where `p = (x1+x2)/(n1+n2)`,
-and a two-sided decision compares `|z|` against the normal table value
+For baseline `x1/n1` against a variation `x2/n2`, compute the pooled
+two-proportion statistic `z = (p1 - p2) / sqrt(p(1-p)(1/n1 + 1/n2))` where
+`p = (x1+x2)/(n1+n2)`, and compare `|z|` against the normal table value
 `z(1-alpha/2)` ([NIST/SEMATECH e-Handbook, Comparing two
 proportions](https://www.itl.nist.gov/div898/handbook/prc/section3/prc33.htm)).
-At alpha = 0.05 that threshold is 1.96. The handbook notes Fisher's
-exact test as the alternative when samples are small.
-
-Worked comparisons, all against a 3/20 baseline unless stated:
-
-| Variation result | z | Verdict at 1.96 |
-|---|---|---|
-| 17/20 (network constrained) | 4.43 | Implicated. Strong. |
-| 14/20 versus a 0/20 alone-run | 4.64 | Implicated. Strong. |
-| 8/20 (4 workers), versus 2/20 at 1 worker | 2.19 | Implicated. Marginal: re-measure deeper. |
-| 6/20 (narrow viewport) | 1.14 | Not distinguishable from noise. |
-| 4/20 (animations enabled) | 0.42 | Noise. |
-| 2/20 (network constrained) | -0.48 | Noise. |
-
-Look hard at the 6/20 row. That is a doubling of the observed rate, 15%
-to 30%, and it does not clear the threshold at N=20. Any screening rule
-phrased as "a relative change above 2x implicates the axis" is a
-practitioner convention for deciding *which axis to re-measure*, not a
-finding. Treat a 2x screening hit as a shortlist entry, re-run that
-axis and the baseline at higher N, and only then apply the z rule.
+At alpha = 0.05 that threshold is 1.96; the handbook notes Fisher's exact
+test as the small-sample alternative. Worked comparisons against a 3/20
+baseline are tabulated in
+[references/reproduction-rate-statistics.md](references/reproduction-rate-statistics.md).
+The load-bearing case: a 6/20 result is a doubling of the observed rate
+(15% to 30%) and still does not clear 1.96 at N=20. A screening rule phrased
+as "a relative change above 2x implicates the axis" is a convention for
+deciding *which axis to re-measure*, not a finding: treat a 2x hit as a
+shortlist entry, re-run that axis and the baseline at higher N, then apply
+the z rule.
 
 ### 5c. Two caveats that bound everything above
 
@@ -246,31 +209,18 @@ second, deeper measurement before anyone edits code.
 ## Step 6: when parallelism is implicated, walk the collision classes
 
 If the worker-count axis moved the rate, the next question is narrower:
-which resource are two workers stepping on? Fowler's isolation rule is
-the target state: "Keep your tests isolated from each other, so that
-execution of one test will not affect any others"
-([Fowler](https://martinfowler.com/articles/nonDeterminism.html)).
-
-Walk the classes in order. Each row names the discriminating
-observation and the fix that makes the resource per-worker.
-
-| Class | Signal | Discriminating probe | Typical fix |
-|---|---|---|---|
-| DB row | Two workers insert the same key. Duplicate-key errors. | Log every statement with the originating test name, then look for the same key from two workers in one overlapping window. | Namespace inserted IDs per worker, or generate UUIDs, instead of fixture-hardcoded integers. |
-| DB schema | Workers run migrations against one shared schema mid-suite. | Snapshot the table list before and after; a table appearing mid-run is a migration racing a query. | Give each worker its own schema. PostgreSQL resolves unqualified names through `search_path`, so `SET search_path TO myschema;` makes a per-worker schema current ([PostgreSQL, Schemas](https://www.postgresql.org/docs/current/ddl-schemas.html)). |
-| File path | Two workers write the same path. | Record `(test name, path)` pairs for writes; group by path and look for two test names. | Per-worker temp directory. |
-| Port | Two workers bind the same port. `EADDRINUSE` at worker startup. | Snapshot listening sockets at each test boundary. | Derive the port from the worker index. Playwright exposes the index as `process.env.TEST_WORKER_INDEX` and `process.env.TEST_PARALLEL_INDEX`, or `testInfo.workerIndex` and `testInfo.parallelIndex` ([Playwright, Parallelism](https://playwright.dev/docs/test-parallel)). |
-| Env var | One worker sets a process env value, another reads a stale one. | Diff the environment before and after the suite; anything that changed is shared mutable state. | Pass the value explicitly rather than through process-global state. |
-| Module state | A cached singleton (connection pool, client) is shared across tests. | Assert object identity across two tests; if it is the same instance, the module registry is being reused. | Reset the module registry between tests. `jest.resetModules()` "resets the module registry", which the docs describe as useful "to isolate modules where local state might conflict between tests" ([Jest object API](https://jestjs.io/docs/jest-object)). Otherwise construct one instance per worker. |
-| Filesystem inode | Two workers rename or unlink the same path. | Same write log as the file-path row, filtered to rename and unlink. | Per-worker directory. Confirm on the same OS image as CI: the observable failure differs by platform, which entangles this with the environment axis. |
-| Cookie or storage jar | Browser state leaks between tests. | Assert that storage is empty at test start. | One fresh browser context per test. Playwright "uses browser contexts to achieve Test Isolation", so that "each test has its own local storage, session storage, cookies etc." ([Playwright, Isolation](https://playwright.dev/docs/browser-contexts)). |
-
-Two collision sources this walk cannot reach: kernel-level socket state
-(sockets held in `TIME_WAIT`), which needs per-worker network
-namespaces, and external-service state such as a third-party rate limit
-applied across all workers, which needs per-worker credentials. If
-every row above comes back clean and the worker-count axis still
-reproduces, those two are what is left.
+which resource are two workers stepping on? Fowler's isolation rule is the
+target state - "Keep your tests isolated from each other, so that execution
+of one test will not affect any others"
+([Fowler](https://martinfowler.com/articles/nonDeterminism.html)). Walk the
+eight collision classes (DB row, DB schema, file path, port, env var,
+module state, filesystem inode, cookie or storage jar) in order, each with
+its discriminating probe and the fix that makes the resource per-worker:
+[references/parallel-collision-classes.md](references/parallel-collision-classes.md).
+Two sources that walk cannot reach - kernel socket state held in
+`TIME_WAIT`, and cross-worker external-service state such as a shared
+third-party rate limit - are what remains if every class comes back clean
+and the axis still reproduces.
 
 ## Report shape
 
@@ -369,3 +319,14 @@ The practical consequence for this protocol: the tests that justify a
 also the slowest to run. Budget the sweep against the test's own
 runtime, and reach for the shallower N=20 screen plus one deep
 confirmation rather than a uniformly deep sweep.
+
+## Deep references
+
+- **Reproduction-rate statistics** - the p-to-N sizing table, the Wilson
+  confidence-interval lookup, and the two-proportion worked comparisons
+  behind Steps 2 and 5:
+  [references/reproduction-rate-statistics.md](references/reproduction-rate-statistics.md).
+- **Parallel-execution collision classes** - the eight-resource walk (DB
+  row, schema, file path, port, env var, module state, inode, storage jar)
+  for Step 6:
+  [references/parallel-collision-classes.md](references/parallel-collision-classes.md).
