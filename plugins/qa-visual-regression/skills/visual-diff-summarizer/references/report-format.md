@@ -29,9 +29,10 @@ The PR title says **"Refactor Button to use new design tokens"** - these cluster
 
 | Cluster | Diffs | Max diff% | Recommendation |
 |---------|------:|----------:|----------------|
-| Footer  |   2   |   12.0%   | The Footer component isn't mentioned in the PR. Suspected unintended cascade. **Open the diffs:** [link][f1] [link][f2]. Recommend running a regression bisect if no obvious cause. |
+| Footer  |   2   |   12.0%   | The Footer component isn't mentioned in the PR. Suspected unintended cascade. Open the diffs and run a regression bisect if no obvious cause. |
+```
 
-### Quick actions
+The report ends with a **Quick actions** block that auto-approves only the aligned cluster - adjacent and unrelated clusters are left for manual review:
 
 ```bash
 # Update aligned baselines after eyeballing 1 sample per cluster:
@@ -39,5 +40,4 @@ chromatic --auto-accept-changes --only-changed --components Button,ButtonGroup,I
 # OR for Percy:
 percy approve <build-id> --snapshots Button,ButtonGroup,IconButton
 # Refused - Footer cluster needs investigation; do NOT auto-approve.
-```
 ```
