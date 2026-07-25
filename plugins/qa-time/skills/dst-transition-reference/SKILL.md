@@ -1,6 +1,6 @@
 ---
 name: dst-transition-reference
-description: "Pure-reference catalog of Daylight Saving Time (DST) transition patterns and their canonical bug classes. Covers the spring-forward (skipped hour: 02:00 → 03:00 local) and fall-back (repeated hour: 02:00 → 01:00 local) transitions, the historical irregularity of DST (different jurisdictions, transitions on different dates, some regions abolish DST or never adopted it), the IANA timezone database (tz / Olson DB) as the canonical source, and the testable behaviors DST creates (duplicate / missing local timestamps, cron jobs that fire 0 or 2 times, billing periods that miss / double-count, recurring meetings on transition days). Use when designing or auditing time-handling code or test cases."
+description: "Pure-reference catalog of Daylight Saving Time (DST) transition patterns and their canonical bug classes. Covers the spring-forward (skipped hour: 02:00 → 03:00 local) and fall-back (repeated hour: 02:00 → 01:00 local) transitions, the historical irregularity of DST (different jurisdictions, transitions on different dates, some regions abolish DST or never adopted it), the IANA timezone database (tz / Olson DB) as the canonical source, and the testable behaviors DST creates (duplicate / missing local timestamps, cron jobs that fire 0 or 2 times, billing periods that miss / double-count, recurring meetings on transition days). Per-jurisdiction DST-rule tables and refreshable per-region test-data fixtures live in references/. Use when designing or auditing time-handling code or test cases."
 ---
 
 # dst-transition-reference
@@ -12,6 +12,21 @@ spring-forward creates **non-existent local times**, fall-back
 creates **duplicate local times**. The IANA Time Zone Database
 ([iana.org/time-zones](https://www.iana.org/time-zones)) is the
 canonical source of historical and current DST rules.
+
+## How to use this reference
+
+1. **Identify the transition** the code crosses - spring-forward
+   (skipped hour) or fall-back (repeated hour) - from the DST
+   mechanics section below.
+2. **Match the bug class** the code is exposed to (cron, billing,
+   duration arithmetic, recurring meeting, storage) and apply its
+   mitigation.
+3. **Turn it into an assertion** using the testable-behaviours table -
+   construct the transition timestamp and assert the library's
+   documented result (see the worked example).
+4. **Pick zones + fixture timestamps** from
+   [references/jurisdictions-and-fixtures.md](references/jurisdictions-and-fixtures.md),
+   then refresh them against IANA before each release.
 
 ## When to use
 
@@ -52,22 +67,34 @@ either:
 - Raise an error
 - Take an `is_dst` / `fold` flag (Python 3.6+ has `fold=0|1`)
 
+## Worked example - a spring-forward assertion
+
+Goal: prove the code under test handles a **non-existent** local time
+deterministically.
+
+1. Pick the transition: America/New_York spring-forward on
+   2026-03-08 - 02:00 local jumps to 03:00, so 02:00-02:59 does not
+   exist.
+2. Construct `2026-03-08 02:30 America/New_York` in the code path.
+3. Assert against the library's documented behaviour (from the table
+   above):
+   - Python `zoneinfo` normalises to 03:30 EDT - assert the
+     normalised value, never 02:30.
+   - Python `pytz` raises `NonExistentTimeError` - assert the raise.
+   - Java `ZonedDateTime` applies its resolver - assert per the
+     chosen STRICT / SMART_FORWARD rule.
+4. Repeat for fall-back: `2026-11-01 01:30 America/New_York` occurs
+   twice; assert the `fold` / `is_dst` selection picks the intended
+   offset.
+
 ## Per-jurisdiction differences
 
-| Region | DST behaviour |
-|---|---|
-| US (most) | Spring-forward 2nd Sun March; fall-back 1st Sun November |
-| EU | Last Sun March; last Sun October (one hour earlier) |
-| Australia (most of NSW/VIC) | First Sun October; first Sun April (Southern hemisphere - reversed) |
-| Australia (QLD, NT, WA, NT) | No DST |
-| Japan, China, India | No DST |
-| Russia | Abolished DST in 2011 |
-| Iran | Abolished DST in 2022 |
-| Mexico | Abolished mainland DST in 2022 |
-| Brazil | Abolished DST in 2019 |
-
-Per IANA: rules change frequently. Test against current
-zoneinfo, not assumptions.
+Per-region DST rules (US, EU, Australia, and the growing list of
+regions that abolished DST) and refreshable 2026 fixture timestamps
+live in
+[references/jurisdictions-and-fixtures.md](references/jurisdictions-and-fixtures.md).
+Per IANA, rules change frequently - test against current zoneinfo,
+not assumptions.
 
 ## Common bug classes
 
@@ -135,19 +162,6 @@ Per
 `timezone-test-matrix-builder`,
 the test matrix combines (zone, transition-type, library-version).
 
-## Test data fixtures
-
-Useful canonical timestamps per region (refresh against IANA):
-
-| Region | Spring-forward 2026 | Fall-back 2026 |
-|---|---|---|
-| America/New_York | 2026-03-08 02:00 → 03:00 EDT | 2026-11-01 02:00 → 01:00 EST |
-| Europe/London | 2026-03-29 01:00 → 02:00 BST | 2026-10-25 02:00 → 01:00 GMT |
-| Australia/Sydney | 2026-10-04 02:00 → 03:00 AEDT | 2026-04-05 03:00 → 02:00 AEST |
-
-These dates **change** year to year (some); commit a current
-fixture and refresh annually.
-
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -181,6 +195,8 @@ fixture and refresh annually.
   [en.wikipedia.org/wiki/Daylight_saving_time](https://en.wikipedia.org/wiki/Daylight_saving_time).
 - Python zoneinfo:
   [docs.python.org/3/library/zoneinfo.html](https://docs.python.org/3/library/zoneinfo.html).
+- Deep reference (with its own citations): per-jurisdiction rules +
+  fixtures in [references/jurisdictions-and-fixtures.md](references/jurisdictions-and-fixtures.md).
 - Companion catalogs:
   `leap-second-reference`,
   `iso-8601-vs-rfc-3339-reference`.

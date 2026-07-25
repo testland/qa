@@ -1,6 +1,6 @@
 ---
 name: cache-coherence-patterns-reference
-description: "Pure-reference catalog of cache-coherence patterns across the request path. Covers the canonical RFC 9111 directives (Cache-Control: max-age, s-maxage, no-cache, no-store, must-revalidate, private/public, immutable; Vary for key derivation; ETag + If-None-Match revalidation), the layered-cache discipline (browser → CDN → reverse-proxy → application → data store), per-tier coherence patterns (write-through, write-back, write-around, cache-aside), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged keys). Use for pattern selection, Cache-Control header design, and coherence audits; use a cache-key-collision check when the question is whether two requests in an existing system collide on a concrete key scheme. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, and the cache-key-collision check."
+description: "Pure-reference catalog of cache-coherence patterns across the request path. Defines the five-tier cache stack (browser → CDN → reverse-proxy → application → data store), the per-tier cache-writing patterns (cache-aside, write-through, write-back, write-around, refresh-ahead), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged URLs, soft purge), plus an anti-pattern table and a worked multi-tenant coherence-test example. Deep detail - the RFC 9111 Cache-Control / Vary / ETag directive tables and the cross-tier coherence + per-tier test surface - lives in references/. Use for pattern selection, Cache-Control header design, and coherence audits; use a cache-key-collision check when the question is whether two requests in an existing system collide on a concrete key scheme. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, and the cache-key-collision check."
 ---
 
 # cache-coherence-patterns-reference
@@ -23,6 +23,26 @@ shows as cache stampedes per `cache-stampede-reference`. A
   triggers.
 - Investigating "users see stale data" reports.
 
+## How to use this reference
+
+1. **Locate the tier(s)** the value lives in from the five-tier stack -
+   each tier (browser, CDN, reverse proxy, application, data store) has
+   its own TTL and invalidation mechanism.
+2. **Choose the write pattern** for the application tier from the
+   cache-writing patterns table (cache-aside, write-through, write-back,
+   write-around, refresh-ahead) based on the read/write mix and how much
+   consistency you need.
+3. **Choose the invalidation strategy** from the invalidation strategies
+   table (TTL-only, event-driven purge, surrogate keys, version-tagged
+   URLs, soft purge) based on the staleness window you can tolerate.
+4. **Set the contract** - design the `Cache-Control` directives, `Vary`
+   key, and ETag validators per
+   [references/rfc-9111-http-caching-directives.md](references/rfc-9111-http-caching-directives.md).
+5. **Write the per-tier coherence test** from the cross-tier problems and
+   test-surface catalog in
+   [references/cross-tier-coherence-and-test-surface.md](references/cross-tier-coherence-and-test-surface.md),
+   then re-check the design against the Anti-patterns table below.
+
 ## The five-tier stack
 
 | Tier | Where | Common TTL | Invalidation |
@@ -35,56 +55,6 @@ shows as cache stampedes per `cache-stampede-reference`. A
 
 A coherence bug at any tier surfaces at the user. The test
 surface is layered; each tier needs its own coherence tests.
-
-## RFC 9111 directives - the contract layer
-
-Per [www.rfc-editor.org/rfc/rfc9111.html](https://www.rfc-editor.org/rfc/rfc9111.html):
-
-### Response directives (server → cache)
-
-| Directive | RFC ref | Meaning |
-|---|---|---|
-| `max-age=N` | §5.2.2.1 | "The response is to be considered stale after its age is greater than the specified number of seconds." |
-| `s-maxage=N` | §5.2.2.10 | "For a shared cache, the maximum age specified by this directive overrides... max-age." |
-| `no-cache` | §5.2.2.4 | "The response MUST NOT be used to satisfy any other request without forwarding it for validation." |
-| `no-store` | §5.2.2.5 | "A cache MUST NOT store any part of either the immediate request or the response." |
-| `must-revalidate` | §5.2.2.2 | "Once the response has become stale, a cache MUST NOT reuse that response... until it has been successfully validated." |
-| `private` | §5.2.2.7 | "A shared cache MUST NOT store the response (intended for a single user)." |
-| `public` | §5.2.2.9 | "A cache MAY store the response even if it would otherwise be prohibited." |
-| `immutable` | RFC 8246 | Response body will not change for the lifetime of the URL. Browsers skip revalidation. |
-
-Per RFC 9111 §4.2.4: "A cache MUST NOT generate a stale
-response unless it is disconnected or doing so is explicitly
-permitted by the client or origin server." This is the formal
-basis for stale-while-revalidate per
-`stale-while-revalidate-reference`.
-
-### Vary - the cache key
-
-Per RFC 9111 §4.1: "When a cache receives a request that can be
-satisfied by a stored response and that stored response contains
-a Vary header field, the cache MUST NOT use that stored response
-without revalidation unless all the presented request header
-fields nominated by that Vary field value match those fields in
-the original request."
-
-Practical: `Vary: Accept-Encoding, Authorization` means
-"separate cache entries per (Accept-Encoding, Authorization)
-combination." Missing `Vary: Authorization` is the canonical
-cross-tenant cache leak per
-`cross-tenant-data-leak-tests`
-Test 10.
-
-### ETag + If-None-Match revalidation
-
-Per RFC 9111 §4.3.1: "Another validator is the entity tag given
-in an ETag field. One or more entity tags can be used in an
-If-None-Match header field for response validation."
-
-Pattern: server returns `ETag: "abc123"`; client sends
-`If-None-Match: "abc123"`; server returns `304 Not Modified` or
-`200 OK` with new ETag. Bandwidth-efficient but doesn't help
-latency (still a round-trip).
 
 ## Cache-writing patterns
 
@@ -108,26 +78,41 @@ For application-tier caches (Redis):
 | **Version-tagged URLs** | `/api/users?_v=42`; new version = new key | Immutable cache; full deploy per change |
 | **Soft purge** | Mark stale, keep serving until refresh | Used by stale-while-revalidate per `stale-while-revalidate-reference` |
 
-## Cross-tier coherence problems
+## Worked example: a multi-tenant dashboard endpoint
 
-| Problem | Where | Detection |
-|---|---|---|
-| **Browser caches stale page after server purge** | Browser ignores `must-revalidate`, or no `must-revalidate` | E2E test: write → reload → see old |
-| **CDN serves stale after origin update** | Purge didn't propagate or `s-maxage` too long | E2E: write → purge → read at CDN edge |
-| **Different Vary at browser vs CDN** | CDN strips headers; cache keys diverge | Header-comparison test |
-| **Layered TTL inversion** | `s-maxage < max-age` → CDN refreshes more often than browser; browser eventually outpaces CDN | Audit the TTL stack |
-| **`Vary: Cookie` without normalised cookies** | Tracker cookies fragment cache; near-zero hit rate | Inspect Vary; normalise |
-| **Tenant-scoped data with shared Vary** | Cross-tenant leak per `cross-tenant-data-leak-tests` | Add `Authorization` to Vary or use private |
+Scenario: `/api/users` serves per-tenant dashboard data, is read-heavy,
+and must never leak one tenant's rows to another. Walk the four decisions
+from **How to use this reference**, then the test.
 
-## Testable behaviours by tier
+1. **Tiers.** The response flows browser → CDN → application (Redis) →
+   data store. Because the payload is per-user, it must not sit in a
+   shared cache: the browser tier gets `Cache-Control: private` and the
+   CDN is bypassed for this route (or keyed per tenant), not left on the
+   shared edge.
+2. **Write pattern.** Reads dominate and eventual consistency after a
+   profile edit is acceptable, so the application tier uses **cache-aside**:
+   a read miss loads from the data store and populates Redis; a write
+   invalidates the tenant's Redis key.
+3. **Invalidation.** A profile edit is an urgent update, so TTL-only is
+   not enough - pair the TTL with **event-driven purge** so the write
+   fires a delete of the tenant's cache key immediately.
+4. **Contract.** Set `Vary: Authorization` so each tenant gets a separate
+   cache entry (the fix for the cross-tenant leak in the Anti-patterns
+   table), and add a content-hash `ETag` so an unchanged reload returns
+   `304 Not Modified` instead of the full body.
 
-| Tier | Test categories |
-|---|---|
-| Browser | Cache-Control respected (`max-age`, `no-cache`, `must-revalidate`); ETag round-trip; `Vary` honoured |
-| CDN | Edge hit/miss vs origin; purge API works end-to-end; `s-maxage` overrides `max-age` |
-| Reverse proxy | VCL purge (`varnish-test-vtc-syntax`); grace-mode behaviour |
-| Application | Cache-aside write-then-invalidate; key collisions |
-| Data store | Replication lag (separate concern; out of scope here) |
+Coherence test (the browser-tier "write → reload → see old" case):
+
+- **Arrange:** tenant A loads `/api/users`; the response is cached.
+- **Act:** tenant A edits a user - which must fire the Redis purge - then
+  reloads the page.
+- **Assert (staleness):** the reload shows the edited value, not the
+  pre-write state. A failure here means the write path skipped the
+  invalidate - the "cache-aside without write-then-invalidate"
+  anti-pattern.
+- **Assert (isolation):** a request from tenant B with a different
+  `Authorization` header never returns tenant A's cached rows, proving the
+  `Vary: Authorization` split holds.
 
 ## Anti-patterns
 
@@ -144,6 +129,18 @@ For application-tier caches (Redis):
 | `Vary: *` | Disables shared cache entirely | Use specific headers |
 | Single Cache-Control for HTML + JSON + assets | One-size doesn't fit; HTML often short, assets long | Per-route directives |
 
+## Deep references
+
+The contract layer and the audit-and-test surface live in two companion
+references so this file stays a decision surface:
+
+- **RFC 9111 directive tables** - `Cache-Control` response directives,
+  `Vary` key derivation, and `ETag` / `If-None-Match` revalidation:
+  [references/rfc-9111-http-caching-directives.md](references/rfc-9111-http-caching-directives.md).
+- **Cross-tier coherence problems + per-tier test surface** - the seam
+  bugs to audit for and what to test at each tier:
+  [references/cross-tier-coherence-and-test-surface.md](references/cross-tier-coherence-and-test-surface.md).
+
 ## Limitations
 
 - **RFC 9111 governs HTTP caches only.** Application-tier caches
@@ -159,9 +156,14 @@ For application-tier caches (Redis):
 ## References
 
 - RFC 9111 HTTP Caching:
-  [www.rfc-editor.org/rfc/rfc9111.html](https://www.rfc-editor.org/rfc/rfc9111.html).
+  [www.rfc-editor.org/rfc/rfc9111.html](https://www.rfc-editor.org/rfc/rfc9111.html);
+  full directive tables in
+  [references/rfc-9111-http-caching-directives.md](references/rfc-9111-http-caching-directives.md).
 - RFC 8246 `immutable`:
   [www.rfc-editor.org/rfc/rfc8246.html](https://www.rfc-editor.org/rfc/rfc8246.html).
+- Cross-tier coherence problems + per-tier test surface (with their
+  cross-references):
+  [references/cross-tier-coherence-and-test-surface.md](references/cross-tier-coherence-and-test-surface.md).
 - RFC 5861 stale-while-revalidate / stale-if-error (companion):
   `stale-while-revalidate-reference`.
 - Companion catalog:

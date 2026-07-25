@@ -1,6 +1,6 @@
 ---
 name: test-isolation-patterns
-description: "Pure reference catalog of test-isolation and fixture-lifecycle patterns - fixture scope (per-test / per-describe / shared / global), Meszaros's four-phase test pattern, Fowler's Fresh-Fixture-vs-Shared-Fixture trade-off, database isolation (transaction-rollback / database-per-worker / template-database), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup). This is the architecture-tier reference, not a file-level fixture-coupling style rule. Use when designing fixture scope and isolation strategy, auditing fixture coupling or retry/wait policy, or moving a suite to parallel execution."
+description: "Pure reference catalog of test-isolation and fixture-lifecycle patterns - the four-phase test pattern (Meszaros), fixture scope (per-test / per-describe / shared / global), the Fresh-Fixture vs Shared-Fixture trade-off (Fowler), parallel-safety patterns, and cleanup discipline (afterEach / afterAll / tagged-cleanup), plus a pattern-selection guide and a worked leaking-state diagnosis. The database-isolation strategies (transaction-rollback / database-per-worker / template-database) and network / external-service stubbing live in references/. This is the architecture-tier reference, not a file-level fixture-coupling style rule. Use when designing fixture scope and isolation strategy, auditing fixture coupling or retry/wait policy, or moving a suite to parallel execution."
 ---
 
 # test-isolation-patterns
@@ -18,6 +18,16 @@ This skill is a **pure reference** - no execution steps. It is the catalog cited
 - Migrating from sequential to parallel execution - the parallel-safety patterns become load-bearing.
 - Refactoring fixture inheritance chains - apply the cleanup-discipline patterns.
 
+## How to use
+
+1. **Frame each test in the four phases** (Pattern 1). Be explicit about where Setup and Teardown live, because Phases 1 and 4 are where isolation breaks.
+2. **Pick the tightest fixture scope that holds** (Pattern 2). Default to per-test; escalate to per-describe or shared only when setup is measurably expensive **and** the group never mutates the fixture.
+3. **Choose Fresh Fixture** (Pattern 3), or a Persistent Fresh Fixture (transaction-rollback) when a fresh rebuild is measured too slow.
+4. **For DB-backed or network-backed tests, pick an external-dependency strategy** from [references/database-store-isolation.md](references/database-store-isolation.md) and [references/network-service-isolation.md](references/network-service-isolation.md).
+5. **Before enabling parallel execution, apply the parallel-safety patterns** (Pattern 4): worker-scoped state, unique IDs, ephemeral paths, no global singletons.
+6. **Wire teardown through the runner's `afterEach` by default** (Pattern 5, cleanup discipline).
+7. **Cross-check against the pattern-selection guide and the cross-cutting anti-patterns** before sign-off.
+
 ## Pattern 1 - The four-phase test pattern
 
 **Canonical source:** [Gerard Meszaros - *xUnit Test Patterns: Refactoring Test Code* (2007)](https://www.amazon.com/xUnit-Test-Patterns-Refactoring-Code/dp/0131495054). Referenced in the [Wikipedia entry on test fixture](https://en.wikipedia.org/wiki/Test_fixture).
@@ -31,7 +41,7 @@ Every test has four phases:
 | **3. Verify** | Determine whether the expected outcome was obtained |
 | **4. Teardown** | Return to a clean state |
 
-Phases 1 and 4 together are **fixture management**. Patterns 2-6 below cover how to do them safely.
+Phases 1 and 4 together are **fixture management**. Patterns 2 through 5 below cover how to do them safely; isolating external stores and services is covered in the deep references.
 
 ## Pattern 2 - Fixture scope
 
@@ -76,7 +86,7 @@ Fowler's framing: "I prefer the former [Fresh Fixture], as it's often easier - a
 | **Cleanup strategy** (preserve the fixture, undo changes at teardown) | Low | Strong if cleanup is comprehensive | When Fresh Fixture's cost is prohibitive |
 | **Persistent Fresh Fixture** (fresh per test, persisted via transaction-rollback) | Low | Maximum | The pragmatic middle for DB-backed tests |
 
-**The transaction-rollback pattern (Persistent Fresh Fixture):** Begin a transaction at test start; do all the test's DB work inside it; rollback at test end. The database is materially unchanged across tests. The pattern works for any DB that supports transactions; integration-test frameworks like `DatabaseCleaner` (Ruby), `pytest-django`'s `db` fixture, `Spring`'s `@Transactional` test annotation all implement it.
+**The transaction-rollback pattern (Persistent Fresh Fixture):** Begin a transaction at test start; do all the test's DB work inside it; rollback at test end. The database is materially unchanged across tests. The pattern works for any DB that supports transactions; integration-test frameworks like `DatabaseCleaner` (Ruby), `pytest-django`'s `db` fixture, `Spring`'s `@Transactional` test annotation all implement it. The five DB-level strategies are catalogued in [references/database-store-isolation.md](references/database-store-isolation.md).
 
 ### Anti-patterns
 
@@ -87,41 +97,7 @@ Fowler's framing: "I prefer the former [Fresh Fixture], as it's often easier - a
 | Transaction-rollback that doesn't actually rollback (autocommit, DDL changes) | Silent state leakage |
 | Shared Fixture documented as "immutable" but tests mutate it anyway | The documentation is unverified; flake follows |
 
-## Pattern 4 - Database / external-store isolation
-
-The dominant source of test flake at scale. Five canonical strategies, each with trade-offs.
-
-### 4a - Transaction-rollback (the default)
-
-Each test runs in a transaction; teardown rollbacks. Works for: relational DBs with full transaction support. Doesn't work for: DDL changes, multiple DB connections, queues, caches.
-
-### 4b - Database-per-test-worker
-
-Each parallel worker gets its own database (named `app_test_worker_1`, `app_test_worker_2`, etc.). Created once at startup; reused across tests within the worker; dropped at suite end. Works for: parallel execution with mutation-heavy tests. Cost: pre-suite setup time + N× DB storage.
-
-### 4c - Template database / pristine clone
-
-Pre-create a template database with seed data; clone it per test (or per worker). PostgreSQL's `CREATE DATABASE … TEMPLATE template_db` is the canonical mechanism. Works for: tests needing complex seed state. Cost: template maintenance.
-
-### 4d - Containerised DB-per-test
-
-Each test gets a fresh Docker container ([Testcontainers](https://testcontainers.com/) is the canonical library). Maximum isolation; highest cost. Works for: integration tests where the DB version / extensions / config matter. Don't use for: unit tests.
-
-### 4e - In-memory substitution
-
-Use SQLite in-memory instead of the production DB engine. Fast; works for simple SQL. Doesn't work for: production-specific features (PostgreSQL JSON, Postgres extensions, MySQL spatial types). Cited as an anti-pattern by [Fowler on integration tests](https://martinfowler.com/articles/practical-test-pyramid.html) when the production engine has features the in-memory substitute lacks.
-
-### Anti-patterns
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Tests that mutate a shared DB without isolation | Cross-test coupling; the dominant source of flake at scale |
-| In-memory substitution masking production-engine differences | Tests pass locally; fail in production |
-| Transaction-rollback for tests that do DDL (CREATE TABLE in test) | DDL is auto-commit in most engines; rollback doesn't undo it |
-| Database-per-worker without a maximum-worker limit | Storage explodes; CI cost surges |
-| Containerised DB-per-test for unit tests | 5-second container startup × 1000 unit tests = unworkable |
-
-## Pattern 5 - Parallel safety
+## Pattern 4 - Parallel safety
 
 **Canonical source:** [Fowler - *Eradicating Non-Determinism in Tests*](https://martinfowler.com/articles/nonDeterminism.html) on isolation as the parallel-safety prerequisite, plus [Luo et al. FSE 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf), which attributes 20% of flakes to concurrency problems (race conditions and deadlocks).
 
@@ -146,7 +122,7 @@ Parallel execution magnifies every isolation bug. The patterns that make paralle
 | Test-name-based DB seeding (collides across workers if names overlap) | Cross-worker state pollution |
 | Per-test setup that does `setTimeout` / `sleep` to "let things settle" | Flake source: async-wait is the largest flake category at 45% per [Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf); use proper event-based synchronisation |
 
-## Pattern 6 - Cleanup discipline
+## Pattern 5 - Cleanup discipline
 
 **Canonical source:** Meszaros's *xUnit Test Patterns* (2007) - the **Garbage-Collected Teardown** vs **In-line Teardown** vs **Implicit Teardown** vs **Setup Decorator** patterns.
 
@@ -170,24 +146,56 @@ The four canonical cleanup approaches:
 | Teardown that depends on test-pass state (`if (test.passed) cleanup()`) | Failing tests don't clean up; cascading flake |
 | Teardown order-dependent on setup order | Refactoring setup breaks teardown |
 
-## Pattern 7 - Network / external-service isolation
+## Worked example - diagnosing a leaking-state test
 
-Tests should not depend on external services they don't control. Three patterns:
+**Symptom.** `updates a member's role` passes when its file runs alone but fails intermittently in the full suite - the classic order-dependent flake ([Fowler](https://martinfowler.com/articles/nonDeterminism.html)).
 
-| Pattern | When |
-|---|---|
-| **Stub (canned response)** | The test doesn't care about the network; use a stub library ([nock](https://github.com/nock/nock), [WireMock](https://wiremock.org/), [Mountebank](http://www.mbtest.org/), or the `msw-handlers` / `wiremock-stubs` / `mountebank-imposters` skills in qa-test-data) |
-| **Contract test** | The test cares whether the service contract holds; use [Pact](https://docs.pact.io/) or [schemathesis](https://schemathesis.readthedocs.io/) |
-| **Real network call in a controlled environment** | Smoke / canary test in a staging tier with a dedicated test partition |
+**The suite (before):**
 
-### Anti-patterns
+```js
+describe("member admin", () => {
+  let user;
+  beforeAll(() => { user = createUser({ role: "member" }); }); // per-describe scope
 
-| Anti-pattern | Why it fails |
-|---|---|
-| Unit tests calling the real external API | Tests fail when the API is down; tests pass when the API silently changes |
-| Stubs that drift from production response shape | Tests pass with stubs that don't match reality |
-| One global stub for the whole suite | Tests cross-couple through the stub configuration |
-| Contract test with no contract refresh | Stub goes stale; tests pass while production breaks |
+  it("promotes to admin", () => {
+    promote(user);
+    expect(user.role).toBe("admin"); // mutates the shared fixture
+  });
+
+  it("updates a member's role", () => {
+    expect(user.role).toBe("member"); // fails: user was mutated above
+  });
+});
+```
+
+**Diagnosis.** Walk Pattern 2: `user` is a per-describe (`beforeAll`) fixture that the first test mutates. The second test inherits the mutated state. This is the Pattern 2 anti-pattern row "Per-describe fixture that any test in the describe mutates", and it violates the single rule that prevents most flake: never share mutable fixtures across tests.
+
+**Fix.** Move the fixture to per-test (`beforeEach`) scope so each test gets a Fresh Fixture (Pattern 3):
+
+```js
+describe("member admin", () => {
+  let user;
+  beforeEach(() => { user = createUser({ role: "member" }); }); // per-test scope
+
+  it("promotes to admin", () => {
+    promote(user);
+    expect(user.role).toBe("admin");
+  });
+
+  it("updates a member's role", () => {
+    expect(user.role).toBe("member"); // always fresh; order-independent
+  });
+});
+```
+
+Each test now starts from a clean object - maximally isolated and parallel-safe. If `createUser` were genuinely expensive, the middle path is Pattern 3's Persistent Fresh Fixture (transaction-rollback), not a shared mutable object.
+
+## Deep references
+
+Once fixture scope is chosen, the two external-dependency concerns have their own deep catalogs:
+
+- **Database / external-store isolation** - the five canonical strategies (transaction-rollback, database-per-worker, template-database, containerised, in-memory) with trade-offs and anti-patterns: [references/database-store-isolation.md](references/database-store-isolation.md).
+- **Network / external-service isolation** - stub vs contract-test vs controlled-real-call, with anti-patterns: [references/network-service-isolation.md](references/network-service-isolation.md).
 
 ## Cross-cutting anti-patterns
 

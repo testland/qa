@@ -17,7 +17,7 @@ frontmatter. Full anchors: [`docs/REVIEWER_CHECKLIST.md`](../docs/REVIEWER_CHECK
 - [ ] **D3 Description quality** — distinguishes vs the 2–3 nearest neighbors; predicts the body.
 - [ ] **D4 Use-case fit** — explicit "Use when…" trigger, not a persona.
 - [ ] **D5 Body quality** — concrete steps + worked examples.
-- [ ] **D6 Terminology / citations (hard floor)** — every concrete claim, flag, and threshold cited inline to a fetched canonical source (no end-of-body References-only blocks). Uncited "sounds plausible" content is a hard reject.
+- [ ] **D6 Terminology / citations (hard floor)** — every concrete claim, flag, and threshold verifiable against a fetched canonical source, inline or in a checked References/Sources section. Content with no canonical source anywhere is a hard reject.
 - [ ] Differentiation axis documented vs. 2–3 nearest neighbors (see [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) "Differentiation requirement").
 
 ## Plugin manifest
