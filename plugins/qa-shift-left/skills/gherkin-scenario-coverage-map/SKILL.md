@@ -10,19 +10,16 @@ metadata:
 ## Overview
 
 After `acceptance-criteria-extractor` turns a story into `.feature` files,
-the natural next question is: do any of these scenarios already exist?
-Authoring a test that a step definition already covers wastes effort and
-inflates the suite. This skill closes that gap by mapping new Gherkin
-scenarios to existing step-definition coverage before a single new test file
-is created.
+the next question is whether any of those scenarios already exist. Authoring
+a test that a step definition already covers wastes effort and inflates the
+suite. This skill maps new Gherkin scenarios to existing step-definition
+coverage before a single new test file is created.
 
-The canonical deduplication rule from Cucumber's Gherkin reference is:
-"Keywords are not taken into account when looking for a step definition.
-This means you cannot have a `Given`, `When`, `Then`, `And` or `But` step
-with the same text as another step."
-([cucumber.io/docs/gherkin/reference][gherkin-ref])
-That rule makes the step text (not the keyword) the stable identity unit
-for fingerprinting.
+Cucumber's Gherkin reference makes the step text - not the keyword - the
+stable identity unit: "Keywords are not taken into account when looking for a
+step definition. This means you cannot have a `Given`, `When`, `Then`, `And`
+or `But` step with the same text as another step."
+([cucumber.io/docs/gherkin/reference][gherkin-ref]) Fingerprint on the text.
 
 ## When to use
 
@@ -36,6 +33,21 @@ for fingerprinting.
 Do not use this skill as a substitute for running the suite. It detects
 structural duplicates and coverage gaps in the step layer; it does not
 execute assertions or report pass/fail.
+
+## How to use
+
+1. **Collect the new scenarios** - read each `.feature` file; capture title,
+   keyword-stripped step texts, and tags (Step 1).
+2. **Build the step-usage index** from the existing suite, or load the
+   Cucumber JSON report when present (Step 2).
+3. **Fingerprint each new scenario** as the ordered tuple of its normalized
+   step texts (Step 3).
+4. **Classify** each scenario `DUPLICATE`, `PARTIAL`, or `GAP` against the
+   index, then resolve tag matches (Steps 3-4).
+5. **Emit the coverage map** - duplicates, partial overlaps, gaps, and a
+   summary header (Step 5).
+6. **Halt on a hard-reject condition** - empty suite, unparseable Gherkin, or
+   an index too small to be meaningful (Step 6).
 
 ## Step 1 - Collect the new scenarios
 
@@ -114,57 +126,20 @@ the output as a `PARTIAL (tag match)` variant.
 
 ## Step 5 - Emit the coverage map
 
-Produce a structured report with three sections.
+Produce a structured report with four parts:
 
-### Section A - Exact duplicates
+- **Duplicates** - a table pairing each `DUPLICATE` scenario with the existing
+  scenario it mirrors and its `file:line`. Marked "do not author".
+- **Partial overlaps** - per `PARTIAL` scenario, the already-covered steps and
+  the new steps to author, with a reuse recommendation.
+- **Gaps** - each `GAP` scenario listed in full, marked ready for new test
+  authoring.
+- **Summary header** - counts of scenarios evaluated, duplicates, partials,
+  gaps, and what the step-usage index was built from.
 
-List each `DUPLICATE` scenario with the existing scenario it mirrors:
-
-```markdown
-### Duplicates (do not author - already covered)
-
-| New Scenario | Existing Scenario | File |
-|---|---|---|
-| "User logs in with valid credentials" | "User submits correct password" | `auth/login.feature:14` |
-```
-
-### Section B - Partial overlaps
-
-For each `PARTIAL` scenario, list the new steps (steps not yet in the index)
-and the existing steps (already covered):
-
-```markdown
-### Partial overlaps (author only the new steps)
-
-**Scenario: "Admin resets user password"**
-- Already covered steps (3): step text A, step text B, step text C
-- New steps required (1): "the user receives a password-reset email"
-- Recommendation: add one new step definition; reuse existing definitions
-  for the 3 covered steps.
-```
-
-### Section C - Genuine gaps
-
-List each `GAP` scenario in full, marked ready for new test authoring:
-
-```markdown
-### Gaps (author full scenario)
-
-- "Password reset rate-limits after 5 attempts" (0 of 4 steps covered)
-- "SSO login redirects to IdP" (0 of 3 steps covered)
-```
-
-### Summary header
-
-```markdown
-## Coverage map for `<story-id>` (<date>)
-
-**New scenarios evaluated:** N
-**Exact duplicates:** A (skip these)
-**Partial overlaps:** B (extend step definitions only)
-**Genuine gaps:** C (author full scenarios)
-**Step-usage index built from:** M existing .feature files / JSON report
-```
+The exact markdown templates for each part live in
+[references/coverage-map-output-format.md](references/coverage-map-output-format.md);
+the Worked example below shows a filled-in map.
 
 ## Step 6 - Hard-reject conditions
 
@@ -244,6 +219,8 @@ Scenario 2 has no matching steps.
 - [cucumber-reporting][cucumber-reporting] - Cucumber reporting reference:
   built-in reporter plugins (`json`, `html`, `junit`, `message`, `progress`,
   `rerun`); JSON report as the canonical executed-step record.
+- [references/coverage-map-output-format.md](references/coverage-map-output-format.md) -
+  the full markdown templates for the Step 5 coverage-map output.
 - `acceptance-criteria-extractor` -
   upstream skill that produces the `.feature` files this skill consumes.
 - `non-functional-requirement-extractor` - sibling for non-functional

@@ -126,9 +126,8 @@ def capture_evidence_screenshot(page, control_id, test_name):
 
 **Log excerpts (access / audit / system logs)**
 
-Excerpts must be bounded and labeled. Unbounded log dumps are not evidence;
-they are noise that increases auditor workload and reduces the signal value
-of the artifact:
+Excerpts must be bounded and labeled. Unbounded log dumps are noise that
+increases auditor workload, not evidence:
 
 ```python
 def extract_log_excerpt(log_source, start_utc, end_utc, control_id):
@@ -285,57 +284,13 @@ sha256sum "evidence-package-${ENGAGEMENT}-$(date -u +%Y%m%d).tar.gz" \
   > "evidence-package-${ENGAGEMENT}-$(date -u +%Y%m%d).tar.gz.sha256"
 ```
 
-## Step 7 - Upload to GRC platform
+## Delivery and CI automation - deep reference
 
-The assembled package feeds into whichever GRC platform the engagement uses.
-All three major platforms accept manual evidence upload when no native
-integration covers the control:
-
-| Platform | Manual upload path |
-|---|---|
-| Vanta | Controls -> Select control -> "Add evidence" -> upload file |
-| Drata | Controls -> Control detail -> Evidence tab -> Upload |
-| Secureframe | Controls -> Evidence -> Attach |
-
-For controls with native integrations (e.g., Vanta's GitHub integration for
-CC8.1 change management), prefer the integration over manual upload. Use
-this skill only to fill gaps the integration cannot cover, or when the GRC
-platform is not yet in use.
-
-## Step 8 - CI integration
-
-Evidence generation should run automatically on every merge to main (or
-nightly for continuous-monitoring controls):
-
-```yaml
-# .github/workflows/compliance-evidence.yml
-name: Compliance Evidence
-on:
-  push:
-    branches: [main]
-  schedule:
-    - cron: "0 2 * * *"     # nightly UTC
-
-jobs:
-  evidence:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run compliance test suite
-        run: pytest compliance_tests/ --json-report --json-report-file=results/test-run.json
-      - name: Build evidence package
-        run: python scripts/build_evidence_package.py
-      - name: Upload evidence artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: compliance-evidence-${{ github.run_id }}
-          path: evidence-package-*/
-          retention-days: 365   # retain for full observation period + buffer
-```
-
-Set `retention-days` to cover the audit's observation period plus a buffer.
-PCI DSS v4.0.1 Requirement 10 requires log and evidence retention of at least
-12 months with the most recent 3 months immediately available.
+Once the package is bundled (Step 6), deliver it to the GRC platform and
+automate the whole run in CI. Both operational steps - the per-platform manual
+upload paths (Vanta, Drata, Secureframe) and the CI workflow with its PCI DSS
+12-month retention window - live in
+[references/grc-delivery-and-ci-automation.md](references/grc-delivery-and-ci-automation.md).
 
 ## GDPR accountability note
 
@@ -358,7 +313,7 @@ by automated means.
 | No control-ID mapping | Auditor cannot match evidence to controls | Build control-map.yaml before collecting (Step 1) |
 | Evidence in mutable storage | Tampering risk; custody note hash breaks | Use immutable store or append-only artifact (Step 6) |
 | Evidence package without README | Auditor lacks engagement context | Always include README.txt with dates, scope, contacts (Step 6) |
-| Manual collection only | Does not scale for Type II observation periods | Automate in CI with nightly schedule (Step 8) |
+| Manual collection only | Does not scale for Type II observation periods | Automate in CI with a nightly schedule (delivery reference) |
 | Generating evidence for every control manually | Misses the point of test automation | Map controls to existing tests first (Step 1) |
 
 ## Limitations
@@ -388,5 +343,6 @@ by automated means.
 - gdpr-info.eu/art-5-gdpr, gdpr-info.eu/art-24-gdpr, gdpr-info.eu/art-30-gdpr - GDPR accountability obligations (fetched 2026-06-04)
 - AICPA Trust Services Criteria 2017 (rev. 2022 points of focus) - available at aicpa-cima.com (paywalled; registration required)
 - PCI DSS v4.0.1 Requirement 10 - 12-month retention requirement; source: pcisecuritystandards.org
+- Delivery + CI automation operational depth (carries the PCI DSS retention citation): [references/grc-delivery-and-ci-automation.md](references/grc-delivery-and-ci-automation.md)
 - `soc2-evidence-collector` - SOC 2-specific raw log collection
 - `audit-trail-test-author` - authoring tamper-evident audit log tests

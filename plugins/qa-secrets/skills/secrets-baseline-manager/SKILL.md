@@ -23,6 +23,37 @@ Complementary skills:
 After adopting a baseline, the finding-triage step
 applies `.secrets-waivers.yaml` at verdict time.
 
+## When to use
+
+- Onboarding secrets scanning onto a repo that already has historical
+  findings - unblock PRs immediately without ignoring the debt.
+- Per-scanner ignore configs (`.gitleaksignore`, `.gitleaks.toml`
+  allowlists, the Kingfisher baseline, `trufflehog:ignore`) have drifted
+  out of sync and need consolidating into one governed allowlist.
+- A finding suppressed in one scanner still fires in another ("fixed in
+  gitleaks, still fails TruffleHog").
+- Auditing an existing baseline for rot - expired or unreviewed waivers
+  accumulating with no audit trail.
+
+## How to use
+
+1. **Map each active scanner's suppression model** - baseline snapshot vs
+   config allowlist vs inline comment - from the per-scanner tables in
+   Step 1.
+2. **Snapshot the repo's current findings** per scanner, commit `.secrets/`,
+   and apply each snapshot in CI so only new findings fail the build
+   (Step 2a-2b).
+3. **Record every baselined finding as a waiver** in `.secrets-waivers.yaml`
+   with its mandatory `expires` / `approved_by` / `reason` fields, so the
+   suppression carries an audit trail (Step 2c).
+4. **Apply path- and value-based suppressions in all three scanners
+   together** so a finding suppressed in one does not re-fire in another
+   (Step 3).
+5. **Enforce the waiver lifecycle and run the rot audit on a schedule** -
+   approval tiers, expiry windows, renewal, and the quarterly audit script:
+   [references/waiver-lifecycle.md](references/waiver-lifecycle.md) and
+   [references/baseline-rot-prevention.md](references/baseline-rot-prevention.md).
+
 ---
 
 ## Step 1 - Understand each scanner's suppression model
@@ -255,105 +286,17 @@ kingfisher scan . --confidence low \
 
 ---
 
-## Step 4 - Waiver lifecycle
+## Ongoing governance - deep references
 
-Each waiver entry in `.secrets-waivers.yaml` has a defined life. The
-triage step enforces expiry at scan time; this step
-defines the human process.
+Once the baseline is adopted, two disciplines keep it honest. Both live in
+companion references so this file stays a decision surface:
 
-### Approval authority
-
-| Risk tier | Who can approve |
-|---|---|
-| Test fixture (never deployed, no real access) | Any team member with repo write |
-| Historical commit (rotated, no current risk) | Team lead |
-| Live file, awaiting rotation | Security team + sign-off from affected team |
-
-### Expiry guidance
-
-| Scenario | Suggested `expires:` window |
-|---|---|
-| Test fixture, confirmed inert | Up to 12 months; renew annually |
-| Historical commit, rotated credential | Up to 6 months; re-verify rotation |
-| Temporarily deferred rotation | 30 days max; no extension without re-approval |
-
-### Renewal process
-
-Before `expires:` lapses, the waiver owner must:
-
-1. Confirm the finding is still inert (test only, rotated, etc.).
-2. Update `expires:` to a new date and `approved_by:` to current approver.
-3. Open a PR so the update is reviewed before the old date passes.
-
-An expired waiver is treated by the triage step as if it does not exist - the
-underlying finding becomes active and blocks the next scan verdict.
-
----
-
-## Step 5 - Preventing baseline rot
-
-Baseline rot happens when suppressed findings accumulate over time with no
-review. Three mechanisms prevent it.
-
-### Quarterly audit script
-
-Run at the start of each quarter (or automate in CI on a schedule):
-
-```bash
-#!/usr/bin/env bash
-# audit-waivers.sh - flag expired or near-expiry waivers
-TODAY=$(date +%Y-%m-%d)
-WARN_DAYS=30
-
-python3 - <<'EOF'
-import yaml, sys
-from datetime import date, timedelta
-
-with open('.secrets-waivers.yaml') as f:
-    waivers = yaml.safe_load(f).get('waivers', [])
-
-today = date.today()
-warn_cutoff = today + timedelta(days=30)
-issues = []
-
-for w in waivers:
-    exp = date.fromisoformat(w.get('expires', '1970-01-01'))
-    if exp < today:
-        issues.append(f"EXPIRED   {w['id']} ({w['file']}) - expired {exp}")
-    elif exp <= warn_cutoff:
-        issues.append(f"NEAR-EXPIRY {w['id']} ({w['file']}) - expires {exp}")
-
-if issues:
-    for i in issues: print(i)
-    sys.exit(1)
-print(f"All {len(waivers)} waivers valid.")
-EOF
-```
-
-### Kingfisher stale-entry pruning
-
-Per [kf][kf], running `--manage-baseline` automatically removes entries no
-longer present in the repo. Schedule this in CI after each merge to main:
-
-```bash
-kingfisher scan . --confidence low \
-  --manage-baseline --baseline-file .secrets/kingfisher-baseline.yml
-git diff --quiet .secrets/kingfisher-baseline.yml \
-  || git commit -m "chore: prune stale kingfisher baseline entries"
-```
-
-### Gitleaks baseline refresh cadence
-
-Per [gl][gl], `--baseline-path` only filters findings that match the
-baseline JSON by fingerprint. Old baseline entries for rotated secrets do
-not cause false negatives - they simply have no effect. However,
-accumulated stale entries obscure the true size of accepted debt.
-Regenerate the baseline after each bulk rotation:
-
-```bash
-gitleaks git --report-format json \
-  --report-path .secrets/gitleaks-baseline.json
-```
+- **Waiver lifecycle** - approval authority per risk tier, expiry windows,
+  and the renewal process before a waiver lapses:
+  [references/waiver-lifecycle.md](references/waiver-lifecycle.md).
+- **Preventing baseline rot** - the quarterly audit script, Kingfisher
+  stale-entry pruning, and gitleaks baseline refresh cadence:
+  [references/baseline-rot-prevention.md](references/baseline-rot-prevention.md).
 
 ---
 
@@ -362,11 +305,11 @@ gitleaks git --report-format json \
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Baseline with no waiver file | Findings are suppressed with no audit trail | Pair every baseline entry with a `.secrets-waivers.yaml` entry (Step 2c) |
-| Waiver without `expires:` | Permanent suppression; rot guaranteed | Mandatory expiry on every entry (Step 4) |
+| Waiver without `expires:` | Permanent suppression; rot guaranteed | Mandatory expiry on every entry (see [references/waiver-lifecycle.md](references/waiver-lifecycle.md)) |
 | TruffleHog `--results=unverified` in CI gate | Blocks on entropy noise; team disables scanner | Gate on `--results=verified`; track unverified in waiver file |
 | Gitleaks `--baseline-path` only, no `[[allowlists]]` | Kingfisher still fires on same path-based FPs | Apply path suppressions in all three scanners (Step 3) |
 | Regenerate Kingfisher baseline without `--manage-baseline` | Manual edits to baseline.yml break fingerprint format | Always use `--manage-baseline` flag (per [kf][kf]) |
-| Waiver approved by the finder | No second pair of eyes | Require a distinct approver (Step 4) |
+| Waiver approved by the finder | No second pair of eyes | Require a distinct approver (see [references/waiver-lifecycle.md](references/waiver-lifecycle.md)) |
 
 ## Limitations
 
@@ -392,6 +335,10 @@ gitleaks git --report-format json \
   `--exclude-detectors`
 - [kf][kf] - Kingfisher: `--baseline-file`, `--manage-baseline`,
   `--exclude`, `--skip-regex`, `--skip-word`, `docs/BASELINE.md`
+- Deep references (with their own citations): waiver lifecycle in
+  [references/waiver-lifecycle.md](references/waiver-lifecycle.md); baseline
+  rot prevention in
+  [references/baseline-rot-prevention.md](references/baseline-rot-prevention.md).
 - `gitleaks-scanning` - per-scanner
   gitleaks workflow
 - `trufflehog-scanning` - per-scanner
