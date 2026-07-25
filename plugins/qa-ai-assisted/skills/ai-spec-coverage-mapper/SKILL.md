@@ -19,17 +19,39 @@ applied'" might be:
   asserts "Already used" - semantic drift).
 - Not covered.
 
-This skill uses an LLM to map tests ↔ spec sections semantically.
+This skill uses an LLM to map tests to spec sections semantically -
+the mapping human coverage tools cannot produce.
 
 ## When to use
 
 - The team has a spec doc + a test suite and wants spec-coverage
   visibility.
+- Before a release sign-off - to answer "which requirements are
+  actually covered?"
 - An audit / compliance review needs spec-test traceability.
 - After AC drift - tests written months ago for ACs that have
   since changed.
 
-## Step 1 - Inputs
+Scope is mapping tests that **already exist** and naming the gaps -
+not authoring tests for the gaps (that is `ai-test-generator`).
+
+## How to use
+
+1. Point the mapper at the spec doc + the test globs, and set the
+   AC-ID extraction pattern.
+2. Run the LLM mapper - it reads the spec and the tests and emits, per
+   AC ID, a coverage tier (`full` / `partial` / `none`) plus the
+   covering test names.
+3. Read the coverage matrix - every `partial` and `none` row is a gap.
+4. File one action item per gap (fix the drift, or add the missing
+   test).
+5. Schedule it weekly and verify the LLM's claims - see
+   [references/continuous-coverage-and-verification.md](references/continuous-coverage-and-verification.md).
+
+## Worked example - checkout promo spec
+
+**Inputs.** Point the mapper at the spec and the tests, and declare
+how AC IDs are written in the spec:
 
 ```yaml
 spec_path: "docs/specs/checkout.md"
@@ -40,9 +62,8 @@ ac_extraction:
   pattern: "AC-(\\d+\\.\\d+):"   # AC IDs in the spec
 ```
 
-The LLM reads both the spec and the tests; outputs the mapping.
-
-## Step 2 - Run the mapper
+**Run the mapper.** The LLM reads both the spec and the tests and
+classifies each AC:
 
 ```python
 # scripts/ai-coverage.py
@@ -71,10 +92,11 @@ response = openai.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-## Step 3 - Output
+**Output.** A coverage matrix per AC, the action items, and a trend
+vs. the prior run:
 
 ```markdown
-## Spec → test coverage map
+## Spec -> test coverage map
 
 **Spec:** `docs/specs/checkout.md`
 **ACs:** 12
@@ -109,44 +131,17 @@ print(response.choices[0].message.content)
 - 2 new ACs added in this PR; both uncovered.
 ```
 
-## Step 4 - Continuous use
-
-Schedule weekly:
-
-```yaml
-on:
-  schedule:
-    - cron: '0 4 * * MON'
-
-jobs:
-  spec-coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: python scripts/ai-coverage.py
-      - uses: peter-evans/create-issue-from-file@v5
-        with:
-          title: 'Spec coverage report - week of ${{ github.event.repository.updated_at }}'
-          content-filepath: spec-coverage-report.md
-```
-
-## Step 5 - Confidence + LLM hallucination
-
-LLMs may claim a test "covers" an AC when it doesn't. Verification:
-
-- Spot-check the highest-priority ACs manually.
-- Cross-reference with `acceptance-test-from-criteria` (in the qa-bdd plugin)
-  if the team uses `@AC-X.Y` tags - those are the ground truth.
-- Compare LLM's claim vs. test code via human review.
+Each `partial` / `none` row becomes one action item; the two new
+uncovered ACs are the highest-priority gaps to close before sign-off.
 
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Trusting LLM's "full coverage" claim without verification             | Hallucination; tests don't actually cover the AC.                       | Spot-check + cross-reference (Step 5). |
+| Trusting LLM's "full coverage" claim without verification             | Hallucination; tests don't actually cover the AC.                       | Spot-check + cross-reference every high-priority AC (see references). |
 | Running on the entire codebase repeatedly                             | Cost + slow.                                                              | Filter to changed ACs / tests since last run. |
-| One-shot mapping; never updated                                       | Drift; mapping stale.                                                    | Weekly cadence (Step 4). |
-| No action items per gap                                                | Coverage gaps surface but nothing happens.                                | Per-gap action item (Step 3 example). |
+| One-shot mapping; never updated                                       | Drift; mapping stale.                                                    | Schedule weekly (see references). |
+| No action items per gap                                                | Coverage gaps surface but nothing happens.                                | One action item per gap (see the worked example). |
 
 ## Limitations
 
@@ -162,6 +157,8 @@ LLMs may claim a test "covers" an AC when it doesn't. Verification:
 
 ## References
 
+- [references/continuous-coverage-and-verification.md](references/continuous-coverage-and-verification.md) -
+  weekly CI scheduling and how to verify the LLM's coverage claims.
 - `ai-test-generator` - sister
   skill: generates tests for the gaps this skill identifies.
 - `acceptance-test-from-criteria` (in the qa-bdd plugin) - for tag-based AC traceability without LLM.

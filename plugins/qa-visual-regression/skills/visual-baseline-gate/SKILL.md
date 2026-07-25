@@ -39,7 +39,23 @@ If the project uses one engine only and trusts engine-native review
 engine's native CI integration - see the matching engine's
 "CI integration" section in its SKILL.md.
 
-## Step 1 - Define the input shape
+## How to use
+
+1. **Collect the two inputs** - the pre-classified diff JSON (one record
+   per snapshot, `category` in intentional | incidental | regression) and
+   the reviewer-committed `.visual-acceptance.yml` (see Inputs).
+2. **Run the gate decision rule** - regression blocks always; intentional
+   blocks until listed in the acceptance log; incidental warns only (see
+   The gate decision rule).
+3. **Enforce author-cannot-self-approve** - verify the commit that added
+   `.visual-acceptance.yml` was authored by someone other than the PR
+   author (see Author cannot self-approve).
+4. **Emit the artifact and exit** - write the markdown + JSON summary and
+   exit non-zero on a no-go verdict so CI halts. The full artifact
+   template, the runnable CI entrypoint, and the GitHub Actions wiring are
+   in [references/artifact-and-ci-wiring.md](references/artifact-and-ci-wiring.md).
+
+## Inputs
 
 The gate consumes two inputs:
 
@@ -76,7 +92,7 @@ The gate consumes two inputs:
 The acceptance file lives in the PR branch; merging the PR records
 the acceptance in git history.
 
-## Step 2 - Define the gate decision rule
+## The gate decision rule
 
 ```python
 def visual_gate(classifications, acceptance_log, *,
@@ -104,15 +120,15 @@ def visual_gate(classifications, acceptance_log, *,
 ```
 
 Default behavior:
-- **regression** → block (always).
-- **intentional** → block UNTIL listed in `.visual-acceptance.yml`.
-- **incidental** → surface as a warning, do not block.
+- **regression** -> block (always).
+- **intentional** -> block UNTIL listed in `.visual-acceptance.yml`.
+- **incidental** -> surface as a warning, do not block.
 
 For low-risk projects, set `require_reviewer_acceptance=False` so
 intentional changes pass without explicit acceptance - this collapses
 the gate to "block on regressions only."
 
-## Step 3 - Enforce author-cannot-self-approve
+## Author cannot self-approve
 
 For a stricter gate, validate that the commit adding `.visual-acceptance.yml`
 was authored by **someone other than the PR author**:
@@ -130,101 +146,46 @@ fi
 This is the visual-regression analog of GitHub's "require approval
 from someone other than the last committer" branch protection.
 
-## Step 4 - Emit the artifact
+## Worked example
 
-Markdown summary (matches the `data-quality-gate` shape for
-cross-domain consistency):
-
-```markdown
-# Visual Baseline Gate - verdict: NO-GO
-
-**Blockers: 2**
-
-| Snapshot                  | Engine     | Category    | Reason                         | Diff |
-|---------------------------|------------|-------------|--------------------------------|------|
-| dashboard-mobile-375      | playwright | regression  | text-truncation                | [diff](playwright-report/data/dashboard-mobile-375-diff.png) |
-| pricing-desktop-1280      | chromatic  | intentional | missing reviewer acceptance    | [build](https://chromatic.com/build/...) |
-
-**Incidentals (advisory): 1**
-
-| Snapshot                | Engine | Category   | Pattern         |
-|-------------------------|--------|------------|-----------------|
-| onboarding-tablet-768   | percy  | incidental | anti-aliasing   |
-
-**Intentional + accepted: 5**
-
-(see .visual-acceptance.yml for rationale)
-```
-
-Plus a JSON sibling for downstream tooling:
-
-```json
-{
-  "verdict": "no-go",
-  "blockers": [...],
-  "incidentals": [...],
-  "intentional_accepted": [...]
-}
-```
-
-A no-go verdict exits non-zero so CI halts.
-
-## Worked example: minimal Python implementation
+Run the gate on one build. The classification step emitted three
+records, and one reviewer committed an acceptance log:
 
 ```python
-# scripts/run_visual_gate.py
-import json, os, sys, yaml
-from pathlib import Path
+classifications = [
+    {"snapshot": "dashboard-mobile-375", "engine": "playwright", "category": "regression"},
+    {"snapshot": "pricing-tablet-768",   "engine": "percy",      "category": "intentional"},
+    {"snapshot": "hero-desktop-1280",    "engine": "chromatic",  "category": "intentional"},
+]
+acceptance_log = {"snapshots": [{"snapshot": "hero-desktop-1280",
+                                 "reason": "Intentional hero copy update per DS-789"}]}
 
-CLASS_PATH = Path("visual-classifications.json")  # output of the visual-diff classification step
-ACCEPT_PATH = Path(".visual-acceptance.yml")
-
-if not CLASS_PATH.exists():
-    print("No visual classifications produced - fail closed.")
-    sys.exit(1)
-
-classifications = json.loads(CLASS_PATH.read_text())
-acceptance = yaml.safe_load(ACCEPT_PATH.read_text()) if ACCEPT_PATH.exists() else {"snapshots": []}
-accepted = {s["snapshot"] for s in acceptance.get("snapshots", [])}
-
-blockers = []
-for c in classifications:
-    if c["category"] == "regression":
-        blockers.append((c, "regression"))
-    elif c["category"] == "intentional" and c["snapshot"] not in accepted:
-        blockers.append((c, "missing reviewer acceptance"))
-
-verdict = "no-go" if blockers else "go"
-print(f"# Visual Baseline Gate - verdict: {verdict.upper()}")
-for c, reason in blockers:
-    print(f"- {c['engine']} :: {c['snapshot']} :: {reason}")
-
-sys.exit(0 if verdict == "go" else 1)
+result = visual_gate(classifications, acceptance_log)
 ```
 
-CI wiring (after each engine has produced its diff manifest, and after
-the visual-diff classification step has produced `visual-classifications.json`):
+Walking the rule per record:
 
-```yaml
-- name: Run visual-diff classification (advisory)
-  run: |
-    # produces visual-classifications.json
-    ...
+| Snapshot              | Category    | In acceptance log? | Outcome |
+|-----------------------|-------------|--------------------|---------|
+| dashboard-mobile-375  | regression  | n/a                | **block** - regressions always block |
+| pricing-tablet-768    | intentional | no                 | **block** - missing reviewer acceptance |
+| hero-desktop-1280     | intentional | yes                | pass - reviewer signed off |
 
-- name: Visual baseline gate
-  run: python scripts/run_visual_gate.py
+`result["verdict"]` is `"no-go"` (two blockers), so the CI step exits
+non-zero and the merge is held. The gate prints:
 
-- name: Upload gate artifact
-  if: always()
-  uses: actions/upload-artifact@v4
-  with:
-    name: visual-baseline-gate
-    path: |
-      visual-classifications.json
-      visual-gate.json
-      visual-gate.md
-    retention-days: 14
+```text
+# Visual Baseline Gate - verdict: NO-GO
+- playwright :: dashboard-mobile-375 :: regression - blocks unconditionally
+- percy :: pricing-tablet-768 :: intentional - missing reviewer acceptance
 ```
+
+To turn this build green, a non-author reviewer either fixes the
+`dashboard-mobile-375` regression or, if the diff is actually intended,
+adds both snapshots to `.visual-acceptance.yml` and re-runs the gate.
+The full markdown + JSON artifact and the CI wiring that surfaces this
+output are in
+[references/artifact-and-ci-wiring.md](references/artifact-and-ci-wiring.md).
 
 ## References
 

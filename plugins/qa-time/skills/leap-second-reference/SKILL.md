@@ -32,7 +32,7 @@ record.
    clock skew).
 3. **Apply the fix and assert it** - monotonic clocks for durations,
    sub-second ordering keys for sortable timestamps - against the
-   matching row in the testable-behaviours table (see the simulating
+   matching row in the testable-behaviours table (see the worked
    example).
 4. **Confirm the host absorption strategy** (real insertion vs
    leap-smear) from
@@ -138,6 +138,37 @@ def test_leap_handling():
 Note: most test libraries don't simulate **actual** leap-second
 mechanics - they're a real OS-level event. Production tests
 require an OS test that replays NTP leap-second indication.
+
+## Worked example - a negative-duration assertion
+
+Goal: prove a duration-measurement code path stays non-negative across a
+real-inserted leap second.
+
+1. Pick the bug class: **negative durations**. A path that measures elapsed
+   time with `time.time() - start` can return a value below zero when the
+   wall clock stalls or steps back on a leap-second insertion (the
+   negative-durations snippet above).
+2. Apply the fix: swap the wall clock for a **monotonic clock** -
+   `time.monotonic()` (or `clock_gettime(CLOCK_MONOTONIC)`) - which ignores
+   wall-clock leap-second insertions.
+3. Write the assertion against the "Duration calculation uses monotonic
+   clock" row of the testable-behaviours table: elapsed stays monotonic and
+   non-negative across the leap.
+
+   ```python
+   start = time.monotonic()
+   do_work()                     # crosses 2016-12-31 23:59:60 UTC
+   elapsed = time.monotonic() - start
+   assert elapsed >= 0           # holds; the time.time() version can trip
+   ```
+4. Simulate it with the freezegun harness above: pin the clock to the most
+   recent real leap second (`freeze_time('2016-12-31 23:59:59 UTC')`) and
+   advance across the inserted second. The monotonic assertion holds where
+   the wall-clock form (`t2 - t1 == 1`) reads 0 on a stalled `time_t`.
+
+The caveat from "Simulating a leap second in tests" still applies: freezegun
+can't replay the OS-level leap indication, so this asserts the code's clock
+choice, not the kernel's leap behaviour - a real leap needs an OS-level test.
 
 ## Anti-patterns
 

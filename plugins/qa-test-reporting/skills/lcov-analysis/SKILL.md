@@ -33,32 +33,24 @@ team can gate PRs without running the full HTML generation step.
   via `gcov` → `lcov`).
 - A custom coverage UI / Slack bot needs structured input.
 
-## Step 1 - `.info` format reference
+## How to use
 
-Per [lcov-readme][lcov], the LCOV coverage data format uses these
-record types:
+1. Confirm CI emits LCOV `.info` (natively or via a converter:
+   `py2lcov`, `xml2lcov`, `nyc` / Jest's `lcov` reporter,
+   `gcov` → `lcov`).
+2. Parse the `.info` into per-file line / function / branch metrics
+   (Parse below); recompute totals from the per-line records rather
+   than trusting the summary fields.
+3. Cache `main`'s `.info` as the baseline; diff each PR's coverage
+   against it.
+4. Gate per file on the three rules below (whole-repo drop, per-file
+   drop, new-file minimum) - the diff + gate reference implementation,
+   the full record-format table, and the CI wiring are in
+   [references/format-diff-and-ci.md](references/format-diff-and-ci.md).
 
-| Keyword         | Meaning                                                 |
-|-----------------|---------------------------------------------------------|
-| `TN:<test>`     | Test name (often empty for whole-suite captures).        |
-| `SF:<path>`     | Source file path (one record set per source file).      |
-| `FN:<line>,<name>` | Function declared at `<line>` named `<name>`.          |
-| `FNDA:<count>,<name>` | Function `<name>` was called `<count>` times.       |
-| `FNF:<n>`       | Functions found in this file.                            |
-| `FNH:<n>`       | Functions hit at least once.                             |
-| `BRDA:<line>,<block>,<branch>,<taken>` | Branch coverage data.             |
-| `BRF:<n>`       | Branches found.                                          |
-| `BRH:<n>`       | Branches hit.                                            |
-| `DA:<line>,<count>` | Line `<line>` was executed `<count>` times.          |
-| `LH:<n>`        | Lines hit.                                                |
-| `LF:<n>`        | Lines found.                                              |
-| `end_of_record` | Marks completion of the current source file's data.     |
+## Worked example
 
-Per record, `BRDA`'s fourth value `<taken>` is the hit count for
-that branch arm or `-` if the branch was never reached (the
-preceding line wasn't executed).
-
-## Step 2 - Sample `.info` block
+A single source file's `.info` record, and how to read it:
 
 ```
 TN:
@@ -85,9 +77,13 @@ end_of_record
 
 Reading: `cart.ts` has 2 functions, 1 hit (50% function coverage); 5
 lines, 2 hit (40% line); 2 branches, 1 hit (50% branch).
-`removeItem` was never called.
+`removeItem` was never called (`FNDA:0`). `SF` opens the record,
+`DA:<line>,<count>` gives per-line hits, `LH`/`LF` and `BRH`/`BRF`
+are the roll-ups, and `end_of_record` closes the file. The full
+record-keyword table is in
+[references/format-diff-and-ci.md](references/format-diff-and-ci.md).
 
-## Step 3 - Parse
+## Parse
 
 ```python
 # scripts/parse_lcov.py
@@ -142,37 +138,9 @@ some buggy emitters produce summaries that don't match the per-line
 data. For correctness, recompute from `lines`, `functions`,
 `branches`.
 
-## Step 4 - Diff vs baseline
+## Gate rules
 
-```python
-def coverage_diff(current, baseline):
-    """For each file, compute (line%_now - line%_then), (branch%_now - branch%_then)."""
-    base_by_path = {f['path']: f for f in baseline}
-    out = []
-    for f in current:
-        b = base_by_path.get(f['path'])
-        line_now = pct(f['lh'], f['lf'])
-        line_then = pct(b['lh'], b['lf']) if b else None
-        branch_now = pct(f['brh'], f['brf'])
-        branch_then = pct(b['brh'], b['brf']) if b else None
-        out.append({
-            'path': f['path'],
-            'line_now': line_now, 'line_then': line_then,
-            'branch_now': branch_now, 'branch_then': branch_then,
-            'is_new': b is None,
-        })
-    return out
-
-def pct(num, denom):
-    return None if denom == 0 else round(100 * num / denom, 1)
-```
-
-The interesting outputs are **drops** (line_now < line_then) and
-**new files with sub-threshold coverage** (is_new and line_now < gate).
-
-## Step 5 - Gate
-
-A defensible gate has three rules:
+A defensible per-file gate has three rules:
 
 1. **Whole-repo line coverage MAY drop by at most N pp** (typically
    N = 0.5 - guards against runaway erosion without blocking
@@ -182,52 +150,11 @@ A defensible gate has three rules:
 3. **New files MUST hit threshold** (typically 80% line, 70%
    branch).
 
-```python
-def gate(diff, whole_drop_max=0.5, file_drop_max=5.0, new_file_min=80.0):
-    failures = []
-    for f in diff:
-        if f['is_new'] and f['line_now'] is not None and f['line_now'] < new_file_min:
-            failures.append((f['path'], 'new file below threshold', f['line_now']))
-        elif f['line_then'] is not None and f['line_now'] is not None:
-            drop = f['line_then'] - f['line_now']
-            if drop > file_drop_max:
-                failures.append((f['path'], f'line% dropped {drop:.1f}pp', drop))
-    # Whole-repo drop:
-    sum_then_lh = sum(f['line_then'] for f in diff if f['line_then'] is not None)
-    sum_now_lh  = sum(f['line_now']  for f in diff if f['line_now']  is not None)
-    return failures
-```
-
 Per-file gates beat whole-repo gates: an aggregate drop hides which
-file caused it. Per-file output gives the reviewer a direct
-target.
-
-## Step 6 - CI shape
-
-```yaml
-- name: Run tests with LCOV reporter
-  run: npm test -- --coverage --coverageReporters=lcov
-
-- name: Download baseline
-  uses: actions/download-artifact@v4
-  with:
-    name: lcov-main
-    path: baseline/
-
-- name: Parse + diff + gate
-  run: |
-    python scripts/parse_lcov.py coverage/lcov.info > current.json
-    python scripts/parse_lcov.py baseline/lcov.info > baseline.json
-    python scripts/coverage_gate.py current.json baseline.json
-
-- name: Upload current LCOV (becomes next PR's baseline when on main)
-  if: github.ref == 'refs/heads/main'
-  uses: actions/upload-artifact@v4
-  with:
-    name: lcov-main
-    path: coverage/lcov.info
-    retention-days: 90
-```
+file caused it; per-file output gives the reviewer a direct target.
+The `coverage_diff` + `gate` reference implementation and the PR
+coverage-gate CI job are in
+[references/format-diff-and-ci.md](references/format-diff-and-ci.md).
 
 ## Anti-patterns
 
@@ -235,8 +162,8 @@ target.
 |---------------------------------------------------------------|------------------------------------------------------------------------------------|-----|
 | Whole-repo gate only                                           | Aggregate drops hide which file caused them; review focus is unclear.             | Per-file gates; per-file PR comments. |
 | `BRH < BRF` ignored                                            | A single uncovered branch on a critical path silently slips through.              | Track branch% separately from line%; gate threshold differs. |
-| Trusting `FNF/FNH/LF/LH` summary fields without recomputing    | Some emitters produce wrong summaries; gate verdict drifts from the data.         | Recompute from per-line records (Step 3 note). |
-| Gate against the PR's own merge base (running coverage twice)  | Slow; flaky if coverage itself is non-deterministic.                              | Cache `main`'s LCOV as an artifact; PRs diff against it (Step 6). |
+| Trusting `FNF/FNH/LF/LH` summary fields without recomputing    | Some emitters produce wrong summaries; gate verdict drifts from the data.         | Recompute from per-line records (see the Parse note). |
+| Gate against the PR's own merge base (running coverage twice)  | Slow; flaky if coverage itself is non-deterministic.                              | Cache `main`'s LCOV as an artifact; PRs diff against it (see the CI wiring in references). |
 | Treating new test files as "new code, gate at 80%"             | The new test file is the test, not the SUT.                                       | Filter the file list to source paths only (e.g. `src/**`, not `tests/**`). |
 | Strict mode that fails on any drop                             | Refactors that legitimately remove dead code drop coverage; team disables gate.  | Allow whole-repo drop ≤0.5pp; allow per-file drop ≤5pp; only new files have a hard min. |
 | One unified threshold for line + branch                        | Branch coverage is harder; identical thresholds always fail one or the other.    | Separate thresholds (e.g. line 80, branch 70). |
@@ -260,6 +187,9 @@ target.
 
 - [lcov-readme][lcov] - LCOV toolchain (geninfo / lcov / genhtml),
   `.info` format keywords, language-agnostic converters.
+- [references/format-diff-and-ci.md](references/format-diff-and-ci.md) -
+  full `.info` record-keyword table, the baseline-diff + gate
+  reference implementation, and the PR coverage-gate CI job.
 - `cobertura-analysis` - sibling
   for the Cobertura XML format (same PR-gating shape, different
   parser).

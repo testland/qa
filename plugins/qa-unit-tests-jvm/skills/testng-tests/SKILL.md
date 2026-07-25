@@ -7,34 +7,46 @@ description: "Configures and runs TestNG - JVM testing framework with `@Test` pr
 
 ## Overview
 
-Per [testng.org][tn-docs]:
-
-[tn-docs]: https://testng.org/
-
-TestNG (Test Next Generation) was the original JUnit-improvement
-project (~2004). Distinguishing features at the time:
+Per [testng.org][tn-docs], TestNG (Test Next Generation) was the original
+JUnit-improvement project (~2004). Distinguishing features at the time:
 
 - **Test method dependencies** (`dependsOnMethods` / `dependsOnGroups`)
 - **Test groups** (logical grouping for selective runs)
-- **Suite XML configuration** (define test combinations declaratively)
+- **Suite XML configuration** (`testng.xml`, declarative test combinations)
 - **DataProviders** (method-source parametrization)
 
+[tn-docs]: https://testng.org/
+
 JUnit 5 has since adopted most of these via `@ParameterizedTest`,
-`@MethodSource`, `@Nested`, and `@Disabled`. New projects mostly
-default to JUnit 5; TestNG persists for legacy maintenance + teams
-preferring its specific patterns.
+`@MethodSource`, `@Nested`, and `@Disabled`. New projects mostly default to
+JUnit 5; TestNG persists for legacy maintenance and teams preferring its
+specific patterns.
 
 ## When to use
 
-- Maintaining legacy TestNG codebase.
+- Maintaining a legacy TestNG codebase.
 - Test-method dependency requirements (rare; usually a smell, but
   legitimate for stage-gated integration tests).
-- Selenium-tradition projects (TestNG is common in Selenium
+- Selenium-tradition projects (TestNG is common in the Selenium
   ecosystem).
 
 For new code, prefer `junit5-tests`.
 
-## Step 1 - Install
+## How to use
+
+1. Add the TestNG dependency and switch the build's test task to the TestNG
+   runner (see Install).
+2. Write a test class with `@Test` methods - keep TestNG's
+   `assertEquals(actual, expected)` argument order in mind (reversed from
+   JUnit).
+3. Parametrize repeated cases with a `@DataProvider` (see Worked example).
+4. Run the suite (`./gradlew test` or `mvn test`) and reproduce a single
+   failure by method name.
+5. For the full lifecycle-annotation set, `dependsOnMethods` chains, groups,
+   `testng.xml` suites / parallelism, listeners, and CI wiring, see
+   [references/annotations-suites-and-ci.md](references/annotations-suites-and-ci.md).
+
+## Install
 
 `build.gradle.kts`:
 
@@ -59,9 +71,13 @@ Maven:
 </dependency>
 ```
 
-## Step 2 - First test
+## Worked example
+
+One TestNG test end to end - a plain `@Test` plus a `@DataProvider`-driven
+parametrized test against the same `Calculator`.
 
 ```java
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
@@ -70,177 +86,46 @@ public class CalculatorTest {
     public void addsTwoNumbers() {
         assertEquals(Calculator.add(1, 2), 3);
     }
-}
-```
 
-Note: TestNG's assertEquals signature is `(actual, expected)`,
-**reversed** from JUnit. Easy source of bugs when migrating.
-
-## Step 3 - Annotations + lifecycle
-
-Per [tn-docs][tn-docs]:
-
-```java
-public class TestLifecycle {
-    @BeforeSuite  void beforeSuite()  { /* once before suite */ }
-    @AfterSuite   void afterSuite()   { /* once after suite */ }
-    @BeforeClass  void beforeClass()  { /* once before class */ }
-    @AfterClass   void afterClass()   { /* once after class */ }
-    @BeforeMethod void beforeMethod() { /* before each test */ }
-    @AfterMethod  void afterMethod()  { /* after each test */ }
-    @BeforeGroups void beforeGroups() { /* before tests in named group */ }
-    @AfterGroups  void afterGroups()  { /* after tests in named group */ }
-
-    @Test
-    public void test1() { ... }
-}
-```
-
-## Step 4 - Priorities + dependencies
-
-```java
-public class OrderedTests {
-    @Test(priority = 1)
-    public void firstTest() { ... }
-
-    @Test(priority = 2)
-    public void secondTest() { ... }
-
-    @Test
-    public void independentTest() { ... }
-}
-
-public class DependentTests {
-    @Test
-    public void createUser() { ... }
-
-    @Test(dependsOnMethods = "createUser")
-    public void updateUser() {
-        // only runs if createUser passed
+    @DataProvider(name = "addCases")
+    public Object[][] addCases() {
+        return new Object[][] {
+            {1, 2, 3},
+            {0, 0, 0},
+            {-1, 1, 0},
+        };
     }
 
-    @Test(dependsOnMethods = "updateUser")
-    public void deleteUser() { ... }
+    @Test(dataProvider = "addCases")
+    public void testAdd(int a, int b, int expected) {
+        assertEquals(Calculator.add(a, b), expected);
+    }
 }
 ```
 
-**Dependencies are a smell** in unit tests (each unit test should
-be independent). Legitimate for stage-gated integration suites
-(e.g., "create resource → modify → delete"). Use sparingly.
+Note: TestNG's `assertEquals` signature is `(actual, expected)`, **reversed**
+from JUnit. Easy source of bugs when migrating.
 
-## Step 5 - Groups + selective runs
-
-```java
-@Test(groups = "fast")
-public void fastTest1() { ... }
-
-@Test(groups = {"slow", "integration"})
-public void slowIntegration() { ... }
-
-@Test(groups = "fast", dependsOnGroups = "init")
-public void afterInit() { ... }
-```
-
-Run selectively:
+Run the suite:
 
 ```bash
-mvn test -Dgroups=fast
-# Or via testng.xml suite
+./gradlew test    # or: mvn test
 ```
 
-## Step 6 - DataProvider
-
-```java
-@DataProvider(name = "addCases")
-public Object[][] addCases() {
-    return new Object[][] {
-        {1, 2, 3},
-        {0, 0, 0},
-        {-1, 1, 0},
-    };
-}
-
-@Test(dataProvider = "addCases")
-public void testAdd(int a, int b, int expected) {
-    assertEquals(Calculator.add(a, b), expected);
-}
-```
-
-DataProvider methods can also be in a separate class:
+A `@DataProvider` method can also live in a separate class:
 
 ```java
 @Test(dataProvider = "addCases", dataProviderClass = TestData.class)
 public void testAdd(int a, int b, int expected) { ... }
 ```
 
-## Step 7 - testng.xml suite definitions
-
-```xml
-<!-- testng.xml -->
-<suite name="MySuite" parallel="methods" thread-count="4">
-    <test name="FastTests">
-        <groups>
-            <run>
-                <include name="fast"/>
-                <exclude name="integration"/>
-            </run>
-        </groups>
-        <classes>
-            <class name="com.example.CalculatorTest"/>
-        </classes>
-    </test>
-
-    <test name="IntegrationTests">
-        <groups>
-            <run><include name="integration"/></run>
-        </groups>
-        <packages>
-            <package name="com.example.integration"/>
-        </packages>
-    </test>
-</suite>
-```
-
-Run via `mvn test -Dsurefire.suiteXmlFiles=testng.xml`.
-
-## Step 8 - Listeners (cross-test hooks)
-
-```java
-public class CustomListener implements ITestListener {
-    @Override
-    public void onTestStart(ITestResult result) { ... }
-
-    @Override
-    public void onTestFailure(ITestResult result) {
-        // capture screenshot, log additional context, etc.
-    }
-}
-```
-
-Apply per-class:
-
-```java
-@Listeners(CustomListener.class)
-public class MyTest { ... }
-```
-
-## Step 9 - CI integration
-
-```yaml
-- run: ./gradlew test
-# Or with TestNG XML config:
-- run: mvn test -Dsurefire.suiteXmlFiles=testng.xml
-```
-
-JaCoCo coverage works identically to JUnit setups.
-
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| `assertEquals(expected, actual)` (JUnit order) | TestNG order is reversed; failure messages misleading | Use `assertEquals(actual, expected)` (Step 2) |
+| `assertEquals(expected, actual)` (JUnit order) | TestNG order is reversed; failure messages misleading | Use `assertEquals(actual, expected)` (Worked example) |
 | Heavy `dependsOnMethods` chains | Test order coupling; one failure cascades | Independent tests + setUp methods |
-| Skip groups + run all tests in CI | Long CI cycle; slow tests block fast | Use groups + selective runs (Step 5) |
+| Skip groups + run all tests in CI | Long CI cycle; slow tests block fast | Use groups + selective runs (references) |
 | Suite XML without team agreement | Hidden test grouping; confusing | Document suite intent or skip XML in favor of annotations |
 | Mix TestNG + JUnit in same project | Two runners | Pick one |
 
@@ -257,7 +142,8 @@ JaCoCo coverage works identically to JUnit setups.
 ## References
 
 - [tn-docs][tn-docs] - TestNG documentation
-- testng.org - landing
+- [references/annotations-suites-and-ci.md](references/annotations-suites-and-ci.md) -
+  lifecycle annotations, dependencies, groups, `testng.xml` suites, listeners, CI.
 - `junit5-tests`,
   `kotest-tests`,
   `spock-tests`,

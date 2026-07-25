@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-notifications",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "Notifications + messaging testing: 7 skills (mailpit-testing, mailhog-testing, email-flow-test-author, sms-test-author, push-notification-test-author, in-app-notification-test-author, webhook-delivery-tester) and 1 agent (notification-delivery-critic).",
   "author": {
     "name": "testland",

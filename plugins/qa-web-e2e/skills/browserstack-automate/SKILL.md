@@ -34,9 +34,15 @@ runner machine), use `browser-matrix-runner`.
 For orchestration across local + cloud grids, use a dedicated
 grid-orchestration layer.
 
-## Authoring
+## How to use
 
-### Authentication
+1. Export `BROWSERSTACK_USERNAME` + `BROWSERSTACK_ACCESS_KEY` from account settings.
+2. Point any WebDriver client (Selenium, WebdriverIO, Nightwatch) at the hub URL `https://hub-cloud.browserstack.com/wd/hub`.
+3. Build W3C capabilities with a `bstack:options` block (set `projectName`, `buildName`, `sessionName`), then run one suite end to end - see Worked example.
+4. Report each session's pass / fail status back before `driver.quit()`, so the dashboard metrics stay accurate.
+5. For localhost / internal targets, tunnel via BrowserStackLocal (below). For the full CI matrix workflow, parallel-session scaling, the exhaustive `bstack:options` table, and REST session retrieval, see [references/ci-and-scaling.md](references/ci-and-scaling.md).
+
+## Authentication
 
 Per BrowserStack Automate docs, set env vars:
 
@@ -45,7 +51,7 @@ export BROWSERSTACK_USERNAME="your-username"
 export BROWSERSTACK_ACCESS_KEY="<access-key-from-account-settings>"
 ```
 
-### Hub URL
+## Hub URL
 
 ```
 https://hub-cloud.browserstack.com/wd/hub
@@ -55,9 +61,11 @@ Connect any WebDriver client (Selenium, WebdriverIO, Nightwatch)
 to this URL with the standard `RemoteWebDriver`-style
 construction.
 
-### Capabilities (W3C)
+## Capabilities (W3C)
 
-Per BrowserStack docs:
+Standard W3C fields - `browserName`, `browserVersion`, `platformName`
+(or BrowserStack's non-standard `os` + `osVersion`) - plus a
+`bstack:options` block for BrowserStack-specific settings:
 
 ```json
 {
@@ -69,32 +77,19 @@ Per BrowserStack docs:
     "projectName": "My App",
     "buildName": "PR-1234",
     "sessionName": "Login flow on Chrome Windows",
-    "local": "false",
-    "debug": "true",
-    "networkLogs": "true",
-    "consoleLogs": "errors"
+    "local": "false"
   }
 }
 ```
 
-Standard W3C fields: `browserName`, `browserVersion`, `platformName`
-(or BrowserStack's `os` + `osVersion` non-standard).
+The exhaustive `bstack:options` table (`debug`, `networkLogs`,
+`consoleLogs`, `video`, `seleniumVersion`, ...) is in
+[references/ci-and-scaling.md](references/ci-and-scaling.md).
 
-`bstack:options` carries BrowserStack-specific settings:
+## Worked example
 
-| Option | Purpose |
-|---|---|
-| `projectName` | Group sessions by project (dashboard organisation) |
-| `buildName` | Group sessions by build / CI run |
-| `sessionName` | Human-readable session label |
-| `local` | "true" if testing localhost / internal via BrowserStackLocal |
-| `debug` | Enable visual debugging (screenshots + DOM) |
-| `networkLogs` | Capture HAR file |
-| `consoleLogs` | "errors" / "warnings" / "info" / "verbose" |
-| `video` | Default "true" - session video recording |
-| `seleniumVersion` | Pin a Selenium version (e.g., "4.21.0") |
-
-### Python example (Selenium)
+Run one Selenium suite on the grid end to end - build capabilities,
+create the remote driver, drive the test, report status, quit:
 
 ```python
 import os
@@ -127,34 +122,25 @@ for k, v in caps.items():
 
 driver.get("https://example.com")
 # ... test ...
-driver.quit()
-```
 
-(Modern WebDriver clients prefer constructing through options + a
-capabilities dict; consult the chosen client's docs.)
-
-## Running
-
-### Reporting session status back
-
-After a test, mark the session pass / fail via BrowserStack's
-REST API or via JS-executor:
-
-```python
+# mark the session pass / fail so the dashboard metrics are accurate
 driver.execute_script(
     'browserstack_executor: {"action": "setSessionStatus", '
     '"arguments": {"status":"passed","reason":"Login redirected as expected"}}'
 )
+driver.quit()
 ```
 
-Or `"status":"failed","reason":"..."` on failure.
-
-This drives the BrowserStack dashboard's pass / fail metrics +
+(Modern WebDriver clients prefer constructing through options + a
+capabilities dict; consult the chosen client's docs.) Use
+`"status":"failed","reason":"..."` on failure - the session-status
+call drives the BrowserStack dashboard's pass / fail metrics +
 filtering.
 
-### Local testing (BrowserStackLocal)
+## Local testing (BrowserStackLocal)
 
-To run tests against localhost / internal environments:
+To run tests against localhost / internal environments, start the
+tunnel and set `bstack:options.local = "true"` on the session:
 
 ```bash
 # Download the BrowserStackLocal binary from browserstack.com
@@ -168,71 +154,6 @@ Or via Docker:
 ```bash
 docker run --name bstacklocal -d --rm \
   browserstack/local --key "$BROWSERSTACK_ACCESS_KEY"
-```
-
-### Parallel session limits
-
-BrowserStack plans limit parallel sessions (typically 5-50 per
-plan). Per their docs, queue overflow blocks subsequent sessions
-until earlier ones complete. Plan accordingly:
-
-```python
-from concurrent.futures import ThreadPoolExecutor
-
-MAX_PARALLEL = 5  # match plan
-
-with ThreadPoolExecutor(max_workers=MAX_PARALLEL) as exe:
-    for case in cases:
-        exe.submit(run_case, case)
-```
-
-## Parsing results
-
-BrowserStack session reports include:
-
-- Session video (replay any failure)
-- Network HAR (if `networkLogs: true`)
-- Browser console logs (if `consoleLogs: errors|warnings|info|verbose`)
-- Selenium logs
-- Visual debugging (screenshots at each command)
-
-Per the BrowserStack docs, retrieve sessions via REST API:
-
-```bash
-curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-  "https://api.browserstack.com/automate/sessions/<session-id>.json"
-```
-
-Feed failure videos + HAR to `bug-report-from-failure` (in the
-qa-defect-management plugin) for triage.
-
-## CI integration
-
-```yaml
-# .github/workflows/cross-browser.yml
-on: pull_request
-jobs:
-  bstack:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        browser:
-          - { name: Chrome, version: latest, os: Windows, osVersion: "11" }
-          - { name: Safari, version: "17", os: "OS X", osVersion: Sonoma }
-          - { name: Firefox, version: latest, os: Windows, osVersion: "11" }
-          - { name: Edge, version: latest, os: Windows, osVersion: "11" }
-    steps:
-      - uses: actions/checkout@v5
-      - name: Run cross-browser tests
-        env:
-          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
-          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
-          BSTACK_BROWSER: ${{ matrix.browser.name }}
-          BSTACK_VERSION: ${{ matrix.browser.version }}
-          BSTACK_OS: ${{ matrix.browser.os }}
-          BSTACK_OS_VERSION: ${{ matrix.browser.osVersion }}
-          BUILD_TAG: pr-${{ github.event.pull_request.number }}
-        run: pytest tests/e2e/ --bstack
 ```
 
 ## Anti-patterns

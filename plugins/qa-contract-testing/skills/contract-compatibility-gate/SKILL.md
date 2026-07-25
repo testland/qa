@@ -45,7 +45,24 @@ emit one verdict.
 If the project uses one protocol only, defer this gate - use the
 matching per-tool SKILL.md's "CI integration" section directly.
 
-## Step 1 - Identify your sources
+## How to use
+
+1. **Identify each protocol's source.** For every protocol the deployment
+   consumes, run the matching per-tool skill and capture its output as a CI
+   artifact (see Identify your sources below).
+2. **Normalize findings.** Flatten every tool's per-finding output into the one
+   record shape (see The unified record).
+3. **Classify severity.** Map each tool's native severity onto
+   `blocker` / `warn` / `info` (see Severity normalization).
+4. **Apply the gate rule.** Any non-ratcheted `blocker` makes the verdict
+   `no-go`; warnings report but do not block by default (see The gate decision
+   rule).
+5. **Emit one artifact and exit.** Write a single markdown + JSON summary; a
+   `no-go` exits non-zero so CI halts. The full gate script, CI wiring, and
+   artifact format live in
+   [references/gate-implementation-and-ci.md](references/gate-implementation-and-ci.md).
+
+## Identify your sources
 
 For each protocol the deployment consumes, pick the tool from the
 matching plugin skill and ensure its output is captured as a CI
@@ -58,7 +75,7 @@ artifact (always with `if: always()` on the upload):
 | GraphQL      | `graphql-schema-regression`                        | grep-parsed text or JSON action     |
 | Protobuf     | `protobuf-compat-checking`                          | `--error-format json` array         |
 
-## Step 2 - Define the unified record
+## The unified record
 
 Flatten every tool's per-finding output into one shape:
 
@@ -104,7 +121,7 @@ treated as a blocker. To downgrade, exclude rules in `buf.yaml` rather
 than at the gate level (see
 `protobuf-compat-checking`).
 
-## Step 3 - Apply the gate decision rule
+## The gate decision rule
 
 Pseudocode:
 
@@ -128,108 +145,52 @@ Default behavior is **strict-but-warn-tolerant**: any non-ratcheted
 blocker fails the gate; warnings show up in the report but don't
 block. For stricter projects, set `allow_warn=False`.
 
-## Step 4 - Emit the artifact
+## Worked example
 
-Markdown summary suitable for `$GITHUB_STEP_SUMMARY`:
+Run the gate on one provider PR end to end. The `pets-api` provider opens a
+release PR that (a) removes the `200` response from `GET /pets` in its OpenAPI
+spec and (b) deletes `Order.amount` from `orders/v1.proto`. The `web-app`
+consumer already has a Pact contract verified against production.
 
-```markdown
-# Contract Compatibility Gate - verdict: NO-GO
-
-**Blockers: 2**
-
-| Tool      | Protocol | Finding                          | Subject                | Message                                       |
-|-----------|----------|----------------------------------|------------------------|-----------------------------------------------|
-| oasdiff   | openapi  | response-success-status-removed  | GET /pets              | success response status '200' was removed     |
-| buf       | protobuf | FIELD_NO_DELETE                  | orders/v1.Order.amount | Field "amount" was deleted (active in v1).    |
-
-**Warnings: 1**
-
-| Tool              | Protocol | Finding              | Subject               | Message                              |
-|-------------------|----------|----------------------|-----------------------|--------------------------------------|
-| graphql-inspector | graphql  | Dangerous            | Pet.legacyTag (added union member) | adding a union member could break enums |
-```
-
-Plus a JSON sibling for downstream consumers:
+1. **Each protocol step runs and writes its artifact** (each with `|| true`, so a
+   failing tool still emits its file):
+   - `pact-broker can-i-deploy` for `web-app -> production` exits `0` - the
+     consumer never read the deleted field.
+   - `oasdiff breaking --format json` records `response-success-status-removed`
+     on `GET /pets` at level `ERR`.
+   - `buf breaking --error-format json` records `FIELD_NO_DELETE` on
+     `orders/v1.Order.amount`.
+   - `graphql-inspector diff` records a `Dangerous` change on `Pet.legacyTag`.
+2. **The gate script normalizes each finding and classifies severity** per the
+   Severity normalization table:
 
 ```json
-{
-  "verdict": "no-go",
-  "blocker_count": 2,
-  "warning_count": 1,
-  "blockers": [...],
-  "warnings": [...]
-}
+[
+  {"tool": "pact", "protocol": "pact", "finding": "can-i-deploy-yes", "severity": "info", "subject": "web-app -> production"},
+  {"tool": "oasdiff", "protocol": "openapi", "finding": "response-success-status-removed", "severity": "blocker", "subject": "GET /pets"},
+  {"tool": "buf", "protocol": "protobuf", "finding": "FIELD_NO_DELETE", "severity": "blocker", "subject": "orders/v1.Order.amount"},
+  {"tool": "graphql-inspector", "protocol": "graphql", "finding": "Dangerous", "severity": "warn", "subject": "Pet.legacyTag"}
+]
 ```
 
-A no-go verdict exits non-zero so CI halts.
+3. **`gate_decision` finds two non-ratcheted blockers**, so the verdict is
+   `no-go` (`blocker_count: 2`, `warning_count: 1`).
+4. **The gate emits its summary** to `$GITHUB_STEP_SUMMARY` and exits non-zero:
 
-## Worked example: minimal Python implementation
-
-```python
-# scripts/run_contract_gate.py
-import json, subprocess, sys
-from pathlib import Path
-
-records = []
-
-# 1. Pact: trust can-i-deploy's exit code
-pact_proc = subprocess.run(
-    ["pact-broker", "can-i-deploy",
-     "--pacticipant", "web-app",
-     "--version", os.environ["GITHUB_SHA"],
-     "--to-environment", "production"],
-    capture_output=True, text=True,
-)
-if pact_proc.returncode != 0:
-    records.append({
-        "tool": "pact", "protocol": "pact",
-        "finding": "can-i-deploy-no",
-        "severity": "blocker",
-        "subject": "web-app -> production",
-        "message": pact_proc.stdout.strip().splitlines()[-1] if pact_proc.stdout else "no",
-    })
-
-# 2. oasdiff
-if Path("oasdiff.json").exists():
-    for f in json.loads(Path("oasdiff.json").read_text()):
-        sev_map = {3: "blocker", 2: "warn", 1: "info"}
-        records.append({
-            "tool": "oasdiff", "protocol": "openapi",
-            "finding": f["id"],
-            "severity": sev_map.get(f["level"], "info"),
-            "subject": f"{f['operation']} {f['path']}",
-            "message": f["text"],
-        })
-
-# 3. graphql-inspector  (parsed from text or JSON action)
-# 4. buf breaking      (--error-format json)
-# ... (omitted for brevity; same shape)
-
-# Apply gate
-blockers = [r for r in records if r["severity"] == "blocker"]
-verdict = "no-go" if blockers else "go"
-
-print(f"# Contract Compatibility Gate - verdict: {verdict.upper()}")
-for r in blockers:
-    print(f"- {r['tool']} :: {r['subject']} :: {r['finding']} ({r['message']})")
-
-sys.exit(0 if verdict == "go" else 1)
+```
+# Contract Compatibility Gate - verdict: NO-GO
+Blockers: 2
+- oasdiff :: GET /pets :: response-success-status-removed
+- buf :: orders/v1.Order.amount :: FIELD_NO_DELETE
+Warnings: 1
+- graphql-inspector :: Pet.legacyTag :: Dangerous
 ```
 
-Wire into CI **after** every protocol step has produced its artifact:
-
-```yaml
-- run: pact-broker can-i-deploy ... || true       # don't fail; let gate decide
-- run: oasdiff breaking ... --format json > oasdiff.json || true
-- run: graphql-inspector diff ... --json > gqi.json || true
-- run: buf breaking ... --error-format json > buf.json || true
-
-- name: Contract compatibility gate
-  run: python scripts/run_contract_gate.py
-```
-
-The `|| true` lets each tool emit its artifact even on failure; the
-final gate is the single source of CI truth.
+The deployment halts on one verdict even though `can-i-deploy` alone would have
+passed. To ship, the provider restores the removed response and field, or marks
+each finding `ratchet: true` with a documented migration plan. The full gate
+script, CI wiring, and artifact format are in
+[references/gate-implementation-and-ci.md](references/gate-implementation-and-ci.md).
 
 ## References
 
@@ -241,4 +202,6 @@ final gate is the single source of CI truth.
 - [oasdiff-breaking][oasdiff] - oasdiff severity tiers.
 - [gqi-diff][gqi] - GraphQL Inspector breaking classification.
 - [buf-breaking][buf] - buf breaking-change category model.
+- Gate script, CI wiring, and artifact format:
+  [references/gate-implementation-and-ci.md](references/gate-implementation-and-ci.md).
 - `data-quality-gate` and `visual-baseline-gate` - sibling gate skills with the same artifact shape.

@@ -81,34 +81,11 @@ interface Violation {
 }
 ```
 
-Normalizer per tool maps tool-specific rule IDs to the SC they cover.
-The mapping is curated upstream - axe ships `tags` like `wcag2a`,
-`wcag143`; pa11y ships `WCAG2AA.Principle1.Guideline1_4.1_4_3`;
-Lighthouse uses an internal mapping documented in its audit catalog.
-
-```python
-# scripts/normalize_axe.py
-def normalize_axe(json_blob, page_url):
-    out = []
-    for violation in json_blob.get('violations', []):
-        sc = sc_from_axe_tags(violation['tags'])  # e.g. "1.4.3"
-        if not sc: continue
-        for node in violation['nodes']:
-            out.append({
-                'page': page_url,
-                'successCriterion': sc,
-                'level': level_from_sc(sc),       # "1.4.3" → "AA"
-                'ruleId': violation['id'],
-                'selector': ' '.join(node['target']),
-                'message': violation['help'],
-                'helpUrl': violation['helpUrl'],
-                'scanner': 'axe',
-            })
-    return out
-```
-
-A central `sc-mapping.json` file holds rule-to-SC for every tool
-the report consumes. Update it when a tool's catalog changes.
+Normalizer per tool maps tool-specific rule IDs to the SC they cover, and a
+central `sc-mapping.json` holds rule-to-SC for every tool the report consumes.
+The per-tool tag conventions (axe `tags`, pa11y codes, Lighthouse's internal
+map), a worked `normalize_axe` example, and the `sc-mapping.json` shape live in
+[references/tool-normalizers.md](references/tool-normalizers.md).
 
 ## Step 2 - Aggregate
 
@@ -193,15 +170,8 @@ report.
 
 ## Step 5 - Render the report
 
-```markdown
-# WCAG 2.2 Compliance Report
-
-**Generated:** 2026-05-05
-**Site:** example.com
-**Scope:** 22 pages across 4 processes
-**Tools used:** axe-core 4.10.3, pa11y 8.1.0, Lighthouse 12.5.0
-
-## Verdict
+Render the executive verdict first: a three-row table mapping each conformance
+level to its verdict and the reason.
 
 | Conformance level | Verdict | Reason |
 |-------------------|---------|--------|
@@ -209,57 +179,12 @@ report.
 | AA  | ❌ non-conformant | + 5 additional SC failing on 12 pages |
 | AAA | ⚠ unknown | 14 of 28 AAA SC weren't checked by any scanner |
 
-> Per [wcag-conformance][wcag-conf]: "All success criteria at a
-> claimed level must be satisfied with no exceptions." Failing
-> means the conformance claim cannot be made for this level.
-
-## Process coverage
-
-| Process   | Pages spec | Pages scanned | Missing                         |
-|-----------|-----------:|--------------:|---------------------------------|
-| checkout  | 6          | 5             | `/checkout/confirm` not scanned |
-| account   | 3          | 3             | -                              |
-
-⚠ Until `/checkout/confirm` is scanned, the **checkout process**
-cannot claim conformance regardless of per-page results
-([wcag-conformance][wcag-conf] "Complete Processes").
-
-## Failures by Success Criterion (Level A + AA)
-
-| SC      | Title                              | Level | Pages affected | Total instances |
-|---------|------------------------------------|-------|---------------:|----------------:|
-| 1.4.3   | Contrast (Minimum)                 | AA    |             7  |              23 |
-| 2.4.7   | Focus Visible                      | AA    |             4  |               8 |
-| 3.3.2   | Labels or Instructions             | A     |             3  |               5 |
-| 4.1.2   | Name, Role, Value                  | A     |             6  |              14 |
-| 1.1.1   | Non-text Content                   | A     |             2  |               4 |
-
-(Click an SC for per-page detail.)
-
-## Per-page detail (top failing pages)
-
-### `/checkout/payment` - 12 violations across 5 SC
-
-| SC    | Tool    | Selector                          | Message |
-|-------|---------|-----------------------------------|---------|
-| 1.4.3 | axe     | `.amount-due`                      | Foreground/background contrast 3.2:1 (need 4.5:1 for normal text) |
-| 2.4.7 | axe     | `button.continue-payment`           | Element does not have a visible focus indicator |
-| ...
-
-(Full per-page tables follow.)
-
-## Coverage gaps - automated tools don't cover everything
-
-| SC level | Total SCs | Covered by ≥1 tool | Manual review required |
-|----------|----------:|-------------------:|------------------------|
-| A        |    25     |        15          |  10 SCs                |
-| AA       |    24     |        17          |   7 SCs                |
-| AAA      |    28     |        14          |  14 SCs                |
-
-**Manual review SC list (excerpt):** 1.2.1 (Audio-only / Video-only),
-2.2.2 (Pause / Stop / Hide), 3.1.5 (Reading Level), ... See
-`docs/manual-checklist.md` for the per-SC checklist.
-```
+Below the verdict, the full report adds process-coverage, failures-by-SC,
+per-page-detail, and coverage-gap sections - the coverage-gap table is where the
+"automated tools cover ~30% of SCs, the rest is manual review" reality from
+Step 3 lands. The complete multi-table sample report, every section with example
+rows, lives in
+[references/sample-report-format.md](references/sample-report-format.md).
 
 ## Machine output and CI
 
@@ -312,5 +237,9 @@ live in
   (`axe-a11y`, `pa11y-a11y`, `lighthouse-a11y`, `wave-a11y`,
   `ibm-equal-access-a11y`) - produce the upstream input this skill
   consumes.
+- Per-tool normalizers + the `sc-mapping.json` shape (Step 1 deep dive):
+  [references/tool-normalizers.md](references/tool-normalizers.md).
+- The full multi-table sample report format (Step 5 deep dive):
+  [references/sample-report-format.md](references/sample-report-format.md).
 - Machine-readable `compliance.json` output + the CI aggregation job:
   [references/machine-output-and-ci.md](references/machine-output-and-ci.md).

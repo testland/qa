@@ -21,7 +21,15 @@ extensions docs], Playwright accesses service workers via
 - Testing message passing between page and service worker.
 - Verifying push notification subscription registration.
 
-## Step 1 - Playwright setup with persistent context
+## How to use
+
+1. Launch a **persistent** context so the worker registers (incognito-default contexts skip SW registration) and `await waitForEvent('serviceworker')` before asserting - see Setup.
+2. Assert one lifecycle or offline behavior end to end - see Worked example.
+3. Inspect worker state (`SW_VERSION`, cache keys) with `serviceWorker.evaluate()`, which survives MV3's ~30s suspend.
+4. Cover the caching contract: cache-first hits and network-first offline fallback (see Cache strategies).
+5. For version-bump cache invalidation, `service-worker-mock` unit tests, and push-subscription tests, see [references/advanced-service-worker-tests.md](references/advanced-service-worker-tests.md).
+
+## Setup - Playwright persistent context
 
 ```ts
 import { test, expect, chromium } from '@playwright/test';
@@ -49,7 +57,37 @@ test('service worker registers on first load', async () => {
 Per [Playwright Chrome extensions docs], the same `context.serviceWorkers()`
 pattern applies to PWA service workers (not just extensions).
 
-## Step 2 - Evaluate code in worker context
+## Worked example - offline fallback end to end
+
+One test that registers the worker, drops the network, and asserts the
+network-first fallback renders - the smallest complete offline check:
+
+```ts
+test('registered SW serves the offline page when network drops', async () => {
+  const context = await chromium.launchPersistentContext('/tmp/sw-offline', {
+    headless: false,
+  });
+  const page = await context.newPage();
+
+  // 1. Load online so the SW installs and pre-caches
+  await page.goto('https://localhost:3000');
+  let [sw] = context.serviceWorkers();
+  sw ??= await context.waitForEvent('serviceworker');
+  expect(sw.url()).toContain('/sw.js');
+  await page.waitForLoadState('networkidle');
+
+  // 2. Drop the network and reload
+  await context.setOffline(true);
+  await page.reload();
+
+  // 3. The SW's offline fallback answers instead of a network error
+  await expect(page.locator('text=You are offline')).toBeVisible();
+
+  await context.close();
+});
+```
+
+## Evaluate in the worker context
 
 ```ts
 const swVersion = await serviceWorker.evaluate(() => {
@@ -71,7 +109,7 @@ expect(cachedUrls).toContain('https://localhost:3000/manifest.json');
 object alive across MV3 auto-suspend (~30s) - `evaluate()` calls
 continue transparently after restart.
 
-## Step 3 - Test cache strategies
+## Cache strategies
 
 Cache-first:
 
@@ -103,86 +141,15 @@ test('network-first falls back to offline page', async ({ page, context }) => {
 });
 ```
 
-## Step 4 - Test version bump + cache invalidation
-
-```ts
-test('SW v2 deletes v1 caches on activate', async ({ context, page }) => {
-  await page.goto('https://localhost:3000');
-  let sw = context.serviceWorkers()[0]
-        ?? await context.waitForEvent('serviceworker');
-
-  const v1Caches = await sw.evaluate(() => caches.keys());
-  expect(v1Caches).toContain('app-v1');
-
-  // Trigger SW update (deploy v2 to test server)
-  await page.evaluate(() => navigator.serviceWorker.getRegistration().then(r => r?.update()));
-
-  // Wait for activation
-  await page.waitForFunction(() =>
-    navigator.serviceWorker.controller?.scriptURL.includes('v2')
-  );
-
-  const v2Caches = await sw.evaluate(() => caches.keys());
-  expect(v2Caches).toContain('app-v2');
-  expect(v2Caches).not.toContain('app-v1');
-});
-```
-
-## Step 5 - Unit test the SW with `service-worker-mock`
-
-For Jest/Vitest unit tests that don't need a browser:
-
-```bash
-npm install --save-dev service-worker-mock
-```
-
-```ts
-import makeServiceWorkerEnv from 'service-worker-mock';
-
-beforeEach(() => {
-  Object.assign(global, makeServiceWorkerEnv());
-  jest.resetModules();
-});
-
-test('install event opens cache and pre-caches assets', async () => {
-  await import('../src/sw.js');
-  await self.trigger('install');
-
-  expect(self.snapshot().caches['app-v1']).toBeDefined();
-  expect(self.snapshot().caches['app-v1']['/index.html']).toBeDefined();
-});
-```
-
-## Step 6 - Push notification subscription test
-
-```ts
-test('push subscription created on registration', async ({ page, context }) => {
-  await context.grantPermissions(['notifications']);
-  await page.goto('https://localhost:3000');
-
-  const subscription = await page.evaluate(async () => {
-    const reg = await navigator.serviceWorker.ready;
-    return reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: '<base64-vapid-key>',
-    });
-  });
-  expect(subscription).toBeDefined();
-});
-```
-
-Pair with `push-notification-test-author` for downstream
-send/receive assertions.
-
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Test SW with `chromium.launch()` (incognito) | SWs don't register in incognito-by-default contexts | Use `launchPersistentContext` (Step 1) |
-| Skip `waitForEvent('serviceworker')` | Race condition - `serviceWorkers()` returns empty before registration | Always `await` the event (Step 1) |
-| Reuse user-data-dir across test runs | Stale SW from prior run answers requests | Fresh `userDataDir` per test (Step 1) |
-| Test offline by killing dev server | SW caches still serve from network until `setOffline(true)` | Use `context.setOffline(true)` (Step 3) |
-| Forget to grant notifications permission | `pushManager.subscribe` rejects silently | `context.grantPermissions(['notifications'])` (Step 6) |
+| Test SW with `chromium.launch()` (incognito) | SWs don't register in incognito-by-default contexts | Use `launchPersistentContext` (Setup) |
+| Skip `waitForEvent('serviceworker')` | Race condition - `serviceWorkers()` returns empty before registration | Always `await` the event (Setup) |
+| Reuse user-data-dir across test runs | Stale SW from prior run answers requests | Fresh `userDataDir` per test (Setup) |
+| Test offline by killing dev server | SW caches still serve from network until `setOffline(true)` | Use `context.setOffline(true)` (Worked example) |
+| Forget to grant notifications permission | `pushManager.subscribe` rejects silently | `context.grantPermissions(['notifications'])` (see references) |
 
 ## Limitations
 
@@ -197,6 +164,9 @@ send/receive assertions.
 ## References
 
 - [Playwright Chrome extensions docs] - `launchPersistentContext`,
-  `context.serviceWorkers()`, MV3 lifecycle behavior
+  `context.serviceWorkers()`, MV3 lifecycle behavior.
+- [references/advanced-service-worker-tests.md](references/advanced-service-worker-tests.md) -
+  version-bump cache invalidation, `service-worker-mock` unit tests,
+  push-subscription tests.
 
 [Playwright Chrome extensions docs]: https://playwright.dev/docs/chrome-extensions
