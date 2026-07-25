@@ -29,6 +29,16 @@ and by the HIL reference
 - Deciding whether to instrument the host build, the QEMU build,
   or the on-target build.
 
+## How to use
+
+1. Pick the coverage **criterion** the project's safety level demands (DAL A / ASIL D map to MC/DC; DAL B to decision; DAL C / ASIL A to statement) from the criteria hierarchy - full standards mapping in [references/safety-standards-and-formats.md](references/safety-standards-and-formats.md).
+2. Pick the **toolchain**: gcov for GCC / ARM-GCC / AVR-GCC; LLVM source-based coverage for clang (MC/DC needs clang `-fcoverage-mcdc`).
+3. **Instrument** the build at `-O0` (`--coverage` for gcc; `-fprofile-instr-generate -fcoverage-mapping` for clang) - never optimise a coverage build.
+4. Pick **where to run** (host / QEMU / on-target) from the instrumentation trade-off table.
+5. Produce **`lcov.info`** as the durable artefact, render HTML for the developer, and gate the PR on changed-line coverage - see Coverage gates that work.
+
+The full gcov-to-HTML path for a single module is in Worked example below.
+
 ## Coverage criteria hierarchy
 
 The standard hierarchy, from weakest to strongest. ISTQB
@@ -80,22 +90,9 @@ the GCC docs).
 gcov -b -c parser.c     # produces parser.c.gcov text report
 ```
 
-Key flags from the same invocation page:
-
-| Flag | Long form | Effect |
-|---|---|---|
-| `-a` | `--all-blocks` | Write per-basic-block counts |
-| `-b` | `--branch-probabilities` | Write branch frequencies + summary to stdout |
-| `-c` | `--branch-counts` | Branch frequencies as counts not percentages |
-| `-f` | `--function-summaries` | Per-function coverage on top of file-level |
-| `-n` | `--no-output` | Suppress the `.gcov` file |
-| `-p` | `--preserve-paths` | Preserve full path in generated filenames |
-| `-u` | `--unconditional-branches` | Include unconditional branches in `-b` output |
-| `--json-format` | - | Emit `.gcov.json.gz` (gzip-compressed JSON, "does not require source code for generation") |
-
-The text `.gcov` file annotates each source line with an
-execution count (or `-` for non-executable, `#####` for
-unexecuted).
+The full gcov flag table and the `.gcov` annotation sentinels
+(`#####` for unexecuted, `-` for non-executable) are in
+[references/gcov-flag-reference.md](references/gcov-flag-reference.md).
 
 ### LCOV info format
 
@@ -194,42 +191,53 @@ For most safety-critical projects, the standard recipe is
 **host build for fast loop, QEMU build for arch sanity, on-target
 build for the certification artefact**.
 
+## Worked example
+
+gcov branch coverage on one module, host build (the fast-loop
+default from the instrumentation table).
+
+```bash
+# 1. instrument + build on the host at -O0 (writes parser.gcno at compile time)
+gcc --coverage -O0 -g parser.c parser_test.c -o parser_test
+
+# 2. run - writes parser.gcda next to parser.gcno
+./parser_test
+
+# 3. branch counts as a text report
+gcov -b -c parser.c          # -> parser.c.gcov (scan for ##### lines)
+
+# 4. interchange artefact + HTML for the team
+lcov --capture --directory . --output-file coverage.info
+genhtml coverage.info --output-directory coverage-html/
+
+# 5. gate the PR on coverage.info branch totals
+```
+
+The host loop is fastest, but it misses MCU-specific paths -
+pair it with at least one QEMU or on-target run before claiming
+the number for the MCU (see the instrumentation table and the
+"coverage measured on host then claimed for the MCU"
+anti-pattern below).
+
 ## Safety-standard coverage expectations
 
-These are cited by stable ID - the standards themselves are
-gated and not WebFetchable.
-
-| Standard / level | Minimum structural coverage |
-|---|---|
-| **MISRA-C:2012 Coverage Guidance** | No prescribed numeric target; the rule set requires *defined* control flow and explicit `default:` in `switch`, which makes branch coverage achievable. See "MISRA-C:2012 §8 Coverage" |
-| **DO-178C / DAL A** (catastrophic failure) | MC/DC required for every condition (see "DO-178C §6.4.4 Structural Coverage") |
-| **DO-178C / DAL B** | Decision coverage |
-| **DO-178C / DAL C** | Statement coverage |
-| **DO-178C / DAL D** | None mandated |
-| **ISO 26262 ASIL D** | MC/DC strongly recommended for unit verification (see "ISO 26262-6:2018 Table 12") |
-| **ISO 26262 ASIL A / B / C** | Branch (B/C) or statement (A) coverage |
-| **IEC 62304 Class C** (medical, life-supporting) | No numeric target, but bidirectional traceability + structural coverage justification expected |
-
-The number "100% MC/DC" in aviation is famously expensive; the
-standard accepts "MC/DC of the integrated executable object code"
-which is interpreted differently by certifiers. The reader
-should treat these as the *floor*, not a turnkey recipe.
+Coverage targets are set by the project's safety standard, not by
+taste. DAL A / ASIL D demand MC/DC; DAL B demands decision
+coverage; DAL C / ASIL A demand statement coverage; MISRA-C:2012
+and IEC 62304 Class C prescribe no numeric target but expect a
+structural-coverage justification. The full per-standard table
+(DO-178C DAL A-D, ISO 26262 ASIL A-D, MISRA-C:2012 §8, IEC 62304)
+is in [references/safety-standards-and-formats.md](references/safety-standards-and-formats.md).
+Treat every listed level as the *floor*, not a turnkey recipe.
 
 ## Coverage report formats
 
-| Format | Producer | Consumer |
-|---|---|---|
-| `.gcov` (text) | `gcov` | Human reading; line-level annotation |
-| `.gcov.json.gz` | `gcov --json-format` | CI parser; no source-code dependency per GCC docs |
-| `.info` (LCOV) | `lcov --capture` or `llvm-cov export -format=lcov` | Codecov / Coveralls / SonarQube |
-| `.profdata` | `llvm-profdata merge` | Input only to `llvm-cov` |
-| HTML | `genhtml` (LCOV) or `llvm-cov show -format=html` | Humans; not for diff'ing |
-| JSON | `llvm-cov export -format=text` | Custom CI dashboards |
-| Cobertura XML | `gcovr --xml` (gcovr is a third-party gcov wrapper) | Jenkins coverage plugin |
-
-For embedded CI, the rule of thumb is: produce `lcov.info` as
-the durable artefact; render HTML for the developer; gate the PR
-on the `.info` totals.
+Produce `lcov.info` as the durable artefact, render HTML for the
+developer, and gate on the `.info` totals. gcov also emits text
+`.gcov` and `.gcov.json.gz`; llvm-cov emits `.profdata`, HTML,
+and lcov / JSON exports; `gcovr --xml` produces Cobertura for
+Jenkins. The full producer / consumer matrix is in
+[references/safety-standards-and-formats.md](references/safety-standards-and-formats.md).
 
 ## Coverage gates that work
 
@@ -294,3 +302,7 @@ Cited inline above. Foundational documents:
 - DO-178C §6.4.4 Structural Coverage (gated standard - cite by
   stable ID).
 - ISO 26262-6:2018 Table 12 (gated standard - cite by stable ID).
+- Deep references (with their own citations): the full gcov flag
+  table in [references/gcov-flag-reference.md](references/gcov-flag-reference.md);
+  the safety-standard mapping and report-format matrix in
+  [references/safety-standards-and-formats.md](references/safety-standards-and-formats.md).

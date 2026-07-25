@@ -41,121 +41,23 @@ Author a post-mortem after every such incident - not just sev-1.
 Lower-severity incidents accumulate context that prevents the
 sev-1.
 
-## Step 1 - Document structure
+## Step 1 - Author the document
 
-```markdown
-# Post-mortem - `INC-1234` - Stripe webhook delivery failure
+Copy the full section skeleton from
+[references/post-mortem-document-template.md](references/post-mortem-document-template.md)
+and fill every section. The required sections, in order:
 
-**Status:** Draft | Review | Approved | Action items closed
-**Severity:** SEV-2
-**Authors:** Alice (incident commander), Bob (lead investigator)
-**Date authored:** YYYY-MM-DD   **Incident date:** YYYY-MM-DD
-**Reviewers:** Eng manager, SRE lead, Product
+1. **Header** - status, severity, authors, dates, reviewers.
+2. **Summary** - 2-3 sentences: what, who, how long, what was done.
+3. **Impact** - users affected, revenue (deferred vs lost), SLO debt, reputational.
+4. **Timeline** - chronological events with UTC timestamps and a source per row.
+5. **Root cause** - what happened in detail, with the system as the subject, never a person.
+6. **Contributing factors** - every condition that allowed the incident; list all, since incidents rarely have one cause.
+7. **What went well** - the positives; per [google-sre-postmortem][gsp], post-mortems should call these out too.
+8. **Action items** - the load-bearing section (Step 3).
+9. **Lessons learned** and **Postmortem trigger** - what is known now, and which trigger criteria the incident met.
 
-## Summary
-
-(2-3 sentences: what happened, who was affected, how long, what was done.)
-
-## Impact
-
-- **Users affected:** ~12,400 customers (4.3% of MAU) experienced
-  failed checkout completions.
-- **Revenue impact:** ~$140,000 in delayed orders (deferred, not
-  lost).
-- **SLO debt:** Burned 32% of monthly availability budget.
-- **Reputational:** 47 support tickets; 3 social media complaints
-  with low reach.
-
-## Timeline
-
-(Chronological events with timestamps + source links.)
-
-| Time (UTC) | Event                                                            | Source            |
-|------------|------------------------------------------------------------------|-------------------|
-| 14:00      | Deploy of v1.4.5 to canary (5% traffic)                          | CD pipeline log    |
-| 14:08      | Canary metrics begin trending; error rate at 0.4% (baseline 0.3%) | Datadog dashboard |
-| 14:23      | First Sentry alert: NullPointerException at WebhookHandler:42    | Sentry            |
-| 14:30      | Canary observation window ends; metrics within thresholds; promoted to 100% | CD pipeline |
-| 14:35      | Error rate climbs to 1.2% across all traffic                      | Datadog            |
-| 14:42      | PagerDuty alert: SLO burn rate                                    | PagerDuty          |
-| 14:45      | Incident declared SEV-2; Alice on-call IC                         | #incidents        |
-| 14:47      | Bob identified the WebhookHandler regression in v1.4.5            | Sentry trace       |
-| 14:51      | Rollback initiated                                                | CD pipeline        |
-| 14:58      | Rollback complete; error rate returning to baseline                | Datadog            |
-| 15:15      | Incident closed; metrics normal                                    | #incidents        |
-
-**Total user-visible duration:** 23 minutes (14:35-14:58).
-
-## Root cause
-
-(What happened, in detail. **Not who.**)
-
-The WebhookHandler in v1.4.5 introduced a new code path for
-handling Stripe's `payment_intent.partially_funded` event type.
-The path called `payment.metadata.get("internal_id")` - but for a
-small subset of events (~3%), `metadata` was null. The
-NullPointerException was uncaught; the handler returned 500;
-Stripe retried up to 3 times then marked the webhook as failed;
-order fulfillment didn't trigger.
-
-The canary stage caught the increased error rate (0.4% vs 0.3%
-baseline) but did not exceed the rollback threshold (1.5×
-baseline). Per `prod-canary-validator` (in the qa-shift-right
-plugin), the verdict was PROCEED with WARNING; the human ack at
-the gate proceeded.
-
-## Contributing factors
-
-(All the conditions that allowed the incident.)
-
-1. **Test gap:** The new event type was added without a unit test
-   for the null-metadata case.
-2. **Canary threshold:** The 1.5× baseline rule passed despite
-   a clear trend; thresholds may be too lenient.
-3. **No staging traffic:** Stripe webhook events on staging are
-   minimal; the new event type wasn't exercised pre-deploy.
-
-## What went well
-
-(Per [google-sre-postmortem][gsp]: post-mortems should also call
-out positives - what mitigated faster than expected.)
-
-1. Sentry caught the regression at 14:23 - well before the
-   PagerDuty alert at 14:42.
-2. Rollback completed in 7 minutes; well within RTO.
-3. Bob identified the root cause from the Sentry stack trace
-   alone - no production debugging needed.
-
-## Action items
-
-| ID | Action                                                            | Owner    | Priority | Due       | Success criterion                                              |
-|----|-------------------------------------------------------------------|----------|----------|-----------|---------------------------------------------------------------|
-| AI-1 | Add unit test for partially_funded with null metadata            | Bob      | P1       | 2 days    | Test exists in `WebhookHandlerTest.kt` + CI passes against the bug. |
-| AI-2 | Tighten canary error-rate threshold from 1.5× to 1.3×             | SRE      | P2       | 1 sprint  | `canary-thresholds.yml` updated; one normal canary passes.    |
-| AI-3 | Add Stripe-event-type fixture for staging that covers all event types | Bob | P2       | 1 sprint  | Staging metric "events processed by type" shows all types > 0. |
-| AI-4 | Add per-event-type metric in production                            | SRE      | P3       | 2 sprints | Datadog dashboard shows per-event-type error rate.            |
-
-## Lessons learned
-
-(What we know now that we didn't before.)
-
-- The canary verdict's relative threshold (1.5×) is too forgiving
-  for low-baseline error rates. A 0.3% baseline with a 1.5× rule
-  permits 0.45%, which is a meaningful regression at scale.
-- Staging-side webhook coverage is a known gap (Stripe doesn't send
-  test events for all types). Pre-deploy testing against the full
-  event-type matrix needs explicit fixturing.
-
-## Postmortem trigger
-
-Per the team's incident triggers (cross-reference team's runbook),
-this incident qualified because:
-
-- User-visible: ✅ (failed checkout flows)
-- Duration: ✅ (>10 min)
-- Revenue impact: ✅ (>$10k)
-- SLO impact: ✅ (>10% monthly budget)
-```
+The worked example below fills this skeleton for a real SEV-2.
 
 ## Step 2 - Blameless review
 
@@ -226,6 +128,52 @@ Markdown + git. Quarterly rollup identifies patterns:
   INC-1234).
 - ...
 ```
+
+## Worked example - INC-1234 Stripe webhook failure (SEV-2)
+
+The skeleton from Step 1, filled for a real incident.
+
+**Summary.** A v1.4.5 deploy introduced a null-metadata crash in the Stripe
+webhook handler; ~12,400 customers (4.3% of MAU) hit failed checkout
+completions for 23 minutes until rollback.
+
+**Impact.** ~$140,000 in delayed (not lost) orders; 32% of the monthly
+availability budget burned; 47 support tickets.
+
+**Timeline (excerpt).**
+
+| Time (UTC) | Event | Source |
+|------------|-------|--------|
+| 14:00 | Deploy of v1.4.5 to canary (5% traffic) | CD pipeline log |
+| 14:23 | First Sentry alert: NullPointerException at WebhookHandler:42 | Sentry |
+| 14:30 | Canary window ends within thresholds; promoted to 100% | CD pipeline |
+| 14:42 | PagerDuty SLO burn-rate alert; incident declared SEV-2 | PagerDuty |
+| 14:58 | Rollback complete; error rate returning to baseline | Datadog |
+
+**Root cause (what, not who).** The v1.4.5 handler added a path for Stripe's
+`payment_intent.partially_funded` event that called
+`payment.metadata.get("internal_id")`; for ~3% of events `metadata` was null,
+the exception was uncaught, the handler returned 500, and Stripe stopped
+retrying, so fulfillment never triggered. The canary stage saw the error rate
+rise (0.4% vs 0.3% baseline) but stayed under the 1.5x rollback threshold, so
+`prod-canary-validator` returned PROCEED with WARNING and the gate was acked.
+
+**Contributing factors.** (1) test gap - no unit test for the null-metadata
+case; (2) canary threshold too lenient for a low baseline; (3) staging carries
+almost no Stripe webhook traffic, so the new event type was never exercised
+pre-deploy.
+
+**Action items.**
+
+| ID | Action | Owner | Priority | Due | Success criterion |
+|----|--------|-------|----------|-----|-------------------|
+| AI-1 | Unit test for `partially_funded` with null metadata | Bob | P1 | 2 days | Test in `WebhookHandlerTest.kt` fails against the bug, passes after |
+| AI-2 | Tighten canary error-rate threshold 1.5x -> 1.3x | SRE | P2 | 1 sprint | `canary-thresholds.yml` updated; one normal canary passes |
+| AI-3 | Staging fixture covering all Stripe event types | Bob | P2 | 1 sprint | Staging "events by type" metric shows all types > 0 |
+
+**What went well.** Sentry caught the regression at 14:23, well before the
+PagerDuty page; rollback finished in 7 minutes, inside RTO. Diagnosis came from
+the Sentry stack trace alone, with no production debugging.
 
 ## Anti-patterns
 

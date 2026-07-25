@@ -41,6 +41,16 @@ with:
 - The build pipeline can run a host build for speed and a
   cross-compile under QEMU for architecture sanity.
 
+## How to use
+
+1. Confirm the unit-under-test is **C++17+** (for C, use `unity-test-framework-c`).
+2. Fetch GoogleTest and build the suite on the **host** for the fast inner loop (`gtest_main` supplies `main()`); author `TEST()` / `TEST_F()` cases - see Authoring.
+3. Cross-compile the same suite for the ARM target with `arm-none-eabi-g++` and run it under QEMU for architecture sanity - full toolchain, CMake, and build invariants in [references/cross-compile-and-ci.md](references/cross-compile-and-ci.md).
+4. Emit `--gtest_output=xml:results.xml`; gate the host job on the JUnit XML and the QEMU job on the semihosting exit code.
+5. Reach for value-parameterised (`TEST_P`), typed (`TYPED_TEST`), and death tests as coverage grows - see [references/authoring-variants.md](references/authoring-variants.md).
+
+The full single-test path (author to QEMU) is in Worked example below.
+
 ## Authoring
 
 ### Minimal test
@@ -92,43 +102,6 @@ TEST_F(RingbufferTest, PopReturnsPushedValue) {
 Per the Primer: "GoogleTest does not reuse the same test fixture
 for multiple tests" - each `TEST_F` gets a fresh instance.
 
-### Value-parameterised tests (TEST_P)
-
-Per [google.github.io/googletest/advanced.html](https://google.github.io/googletest/advanced.html):
-
-```cpp
-class WrapTest : public ::testing::TestWithParam<size_t> {};
-
-TEST_P(WrapTest, WrapAtCapacity) {
-    Ringbuffer<int, 4> rb;
-    for (size_t i = 0; i < GetParam(); ++i) rb.push(static_cast<int>(i));
-    EXPECT_EQ(std::min<size_t>(GetParam(), 4), rb.size());
-}
-
-INSTANTIATE_TEST_SUITE_P(Boundaries, WrapTest,
-                         ::testing::Values(0u, 1u, 3u, 4u, 5u, 100u));
-```
-
-`INSTANTIATE_TEST_SUITE_P` is the modern macro (the older
-`INSTANTIATE_TEST_CASE_P` is deprecated per the Advanced Guide).
-
-### Typed tests (TYPED_TEST)
-
-Per the Advanced Guide, typed tests run "m tests over n types"
-without writing m*n `TEST`s:
-
-```cpp
-template <typename T> class IntegralWrapTest : public ::testing::Test {};
-using IntegralTypes = ::testing::Types<int8_t, int16_t, int32_t, int64_t>;
-TYPED_TEST_SUITE(IntegralWrapTest, IntegralTypes);
-
-TYPED_TEST(IntegralWrapTest, ZeroFits) {
-    Ringbuffer<TypeParam, 8> rb;
-    rb.push(0);
-    EXPECT_EQ(1u, rb.size());
-}
-```
-
 ### Fatal vs non-fatal
 
 | Family | On failure | Use when |
@@ -141,196 +114,70 @@ more than one failure to be reported in a test." Use `ASSERT_*`
 only when the next line would dereference a possibly-null pointer
 returned from the previous check.
 
-### Death tests
+Value-parameterised (`TEST_P`), typed (`TYPED_TEST`), and death
+tests live in [references/authoring-variants.md](references/authoring-variants.md).
 
-For "expected abort" code paths (assertions, fatal exits) per the
-Advanced Guide:
+## Worked example
 
-```cpp
-TEST(BufferDeathTest, NullPushAborts) {
-    Ringbuffer<int, 8> *rb = nullptr;
-    EXPECT_DEATH(rb->push(0), "");
-}
-```
+One test from host to QEMU, end to end. It uses the
+`RingbufferTest` cases from Authoring above.
 
-Death tests fork a child process; not all embedded targets
-support that. On bare-metal Cortex-M, skip death tests entirely.
+1. Put those cases in `test/ringbuffer_test.cpp`.
 
-## Building
-
-### Host build (fast inner loop)
-
-CMake:
-
-```cmake
-include(FetchContent)
-FetchContent_Declare(googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.17.0)
-FetchContent_MakeAvailable(googletest)
-
-add_executable(ringbuffer_test test/ringbuffer_test.cpp)
-target_link_libraries(ringbuffer_test PRIVATE gtest_main)
-enable_testing()
-add_test(NAME ringbuffer_test COMMAND ringbuffer_test)
-```
-
-`gtest_main` provides a `main()` that calls
-`testing::InitGoogleTest(&argc, argv)` then `RUN_ALL_TESTS()` - 
-which "returns 0 on success, 1 on failure" and per the Primer
-"You must not ignore the return value of RUN_ALL_TESTS()".
-
-### Cortex-M cross-compile (under QEMU)
-
-The standard recipe - uses `arm-none-eabi-g++` for the toolchain,
-`--specs=rdimon.specs` to pull in the
-[`librdimon`](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)
-semihosting library so stdout reaches QEMU:
+2. Host build + run (fast inner loop) with the CMake config from
+   [references/cross-compile-and-ci.md](references/cross-compile-and-ci.md):
 
 ```bash
-arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard \
-    -O0 -g -std=c++17 \
-    -DGTEST_HAS_PTHREAD=0 -DGTEST_OS_LINUX=0 -DGTEST_LANG_CXX11=1 \
-    --specs=rdimon.specs \
-    -I/path/to/googletest/googletest/include \
-    test/ringbuffer_test.cpp /path/to/googletest/googletest/src/gtest-all.cc \
+cmake -S . -B build-host && cmake --build build-host
+./build-host/ringbuffer_test
+# [==========] Running 2 tests from 1 test suite.
+# [  PASSED  ] 2 tests.
+```
+
+3. Cross-compile the same source for Cortex-M4 and run it under QEMU:
+
+```bash
+arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -O0 -g -std=c++17 \
+    -DGTEST_HAS_PTHREAD=0 --specs=rdimon.specs \
+    -I ext/googletest/googletest/include \
+    test/ringbuffer_test.cpp ext/googletest/googletest/src/gtest-all.cc \
     -o ringbuffer_test.elf -lrdimon
-```
 
-`-DGTEST_HAS_PTHREAD=0` is critical - bare-metal targets have
-no pthreads; the build fails without it. (The flag is documented
-in GoogleTest's `port.h`.)
-
-For Cortex-A Linux targets, use the standard
-`arm-linux-gnueabihf-g++` and drop the `--specs` flag.
-
-### Build invariants
-
-| Invariant | Why |
-|---|---|
-| `-O0 -g` for coverage builds | gcov / llvm-cov measure post-optimisation flow; see `embedded-coverage-strategy-reference` |
-| `-Wno-psabi` on ARM | Suppresses noisy ABI warnings on cross-compile |
-| `-fno-exceptions -fno-rtti` if MCU build does | Match the production firmware's flags so virtual dispatch matches |
-| Link with `-Wl,--gc-sections` + compile with `-ffunction-sections -fdata-sections` | Keeps the .elf small enough for low-RAM Cortex-M0 simulation |
-
-## Running
-
-### Host
-
-```bash
-./ringbuffer_test
-# [==========] Running 7 tests from 2 test suites.
-# ...
-# [  PASSED  ] 7 tests.
-```
-
-### Under QEMU
-
-Detailed in `qemu-system-test-runner`:
-
-```bash
-qemu-system-arm -M mps2-an385 -cpu cortex-m3 \
-    -nographic -semihosting-config enable=on,target=native \
+qemu-system-arm -M mps2-an385 -cpu cortex-m4 -nographic \
+    -semihosting-config enable=on,target=native \
     -kernel ringbuffer_test.elf
+echo $?   # gtest RUN_ALL_TESTS() return code, propagated via semihosting exit
 ```
 
-The `-kernel` flag loads the ELF; `-semihosting-config` lets the
-ARM semihosting syscalls go to QEMU's stdio.
+4. Two flags make the target run work: `-DGTEST_HAS_PTHREAD=0` is
+   mandatory on bare-metal M-profile (no pthreads, link fails
+   without it), and `--specs=rdimon.specs` pulls in the
+   [`librdimon`](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)
+   semihosting library so stdout and `exit()` reach QEMU. The
+   `-kernel` flag loads the ELF.
 
-### Command-line flags
+5. For a machine-readable gate, add `--gtest_output=xml:results.xml`
+   to the host run and count failing testcases - the XML schema
+   and parsing pattern are in
+   [references/cross-compile-and-ci.md](references/cross-compile-and-ci.md).
 
-Per the Advanced Guide:
+## Command-line flags
+
+The flags every embedded run reaches for (per the
+[Advanced Guide](https://google.github.io/googletest/advanced.html)):
 
 | Flag | Effect |
 |---|---|
-| `--gtest_filter=Pattern` | "a `:`-separated list of wildcard patterns" - supports `*`, `?`, and negative `-` patterns |
-| `--gtest_repeat=N` | Repeats all tests N times (use `-1` for infinite - useful for flake hunting) |
-| `--gtest_shuffle` | Random order each run - "reveal bad dependencies between tests" |
-| `--gtest_output=xml:results.xml` / `json:results.json` | Machine-readable report (the value is `"xml:path"` or `"json:path"`) |
-| `--gtest_break_on_failure` | Drops into debugger on first failure |
-| `--gtest_catch_exceptions=0` | Disables exception handling - lets debugger catch the throw |
-| `--gtest_color=yes\|no\|auto` | Coloured terminal output |
-| `--gtest_brief=1` | Only failures shown |
-| `--gtest_list_tests` | List without running |
+| `--gtest_filter=Pattern` | `:`-separated wildcard list; supports `*`, `?`, negative `-` |
+| `--gtest_output=xml:results.xml` / `json:results.json` | Machine-readable report for CI |
+| `--gtest_shuffle` | Random order each run - reveals inter-test dependencies |
+| `--gtest_repeat=N` | Repeat N times (`-1` = infinite, for flake hunting) |
 
-## Parsing results
-
-### XML output schema
-
-Per the Advanced Guide, the XML follows a hierarchical structure
-with `<testsuites>` / `<testsuite>` / `<testcase>` elements, with
-`<failure>` nodes nested under failing `<testcase>` entries:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="7" failures="1" time="0.012">
-  <testsuite name="RingbufferTest" tests="2" failures="0" time="0.001">
-    <testcase name="EmptyOnInit" status="run" time="0.000"/>
-    <testcase name="PushIncrementsSize" status="run" time="0.001"/>
-  </testsuite>
-  <testsuite name="WrapTest" tests="5" failures="1" time="0.011">
-    <testcase name="WrapAtCapacity/4" status="run" time="0.002">
-      <failure message="Expected: 5, actual: 4"/>
-    </testcase>
-  </testsuite>
-</testsuites>
-```
-
-JUnit-compatible - feeds straight into GitHub Actions
-`actions/upload-artifact` + `mikepenz/action-junit-report`.
-
-### JSON output schema
-
-Per the Advanced Guide: a "Proto3-compatible structure with
-UnitTest → TestCase → TestInfo → Failure hierarchy, including
-timestamps and durations". Prefer JSON for custom dashboards;
-XML for the JUnit ecosystem.
-
-### Parsing pattern
-
-```bash
-./ringbuffer_test --gtest_output=xml:results.xml
-xmlstarlet sel -t -v "count(//testcase[failure])" results.xml
-# Number of failing testcases - gate on this
-```
-
-## CI integration
-
-```yaml
-jobs:
-  embedded-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Install ARM toolchain
-        run: sudo apt-get install -y gcc-arm-none-eabi qemu-system-arm
-      - name: Configure (host build)
-        run: cmake -S . -B build-host -DCMAKE_BUILD_TYPE=Coverage
-      - name: Build + run on host
-        run: |
-          cmake --build build-host
-          ./build-host/ringbuffer_test \
-            --gtest_output=xml:build-host/host-results.xml \
-            --gtest_shuffle
-      - name: Cross-compile + run under QEMU
-        run: |
-          arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -O0 -g -std=c++17 \
-            -DGTEST_HAS_PTHREAD=0 --specs=rdimon.specs \
-            -I ext/googletest/googletest/include \
-            test/ringbuffer_test.cpp ext/googletest/googletest/src/gtest-all.cc \
-            -o build-arm/ringbuffer_test.elf -lrdimon
-          qemu-system-arm -M mps2-an385 -cpu cortex-m4 \
-            -nographic -semihosting-config enable=on,target=native \
-            -kernel build-arm/ringbuffer_test.elf
-      - name: Publish JUnit
-        uses: mikepenz/action-junit-report@v4
-        with:
-          report_paths: 'build-host/*-results.xml'
-```
-
-The host build gates on the JUnit XML; the QEMU build gates on
-QEMU's exit code (semihosting `exit(RUN_ALL_TESTS())` propagates
-the gtest return value through QEMU).
+The full flag set (`--gtest_break_on_failure`,
+`--gtest_catch_exceptions=0`, `--gtest_brief`,
+`--gtest_list_tests`, and more), the XML / JSON output schema, and
+the CI-gate parsing pattern are in
+[references/cross-compile-and-ci.md](references/cross-compile-and-ci.md).
 
 ## Anti-patterns
 
@@ -375,6 +222,11 @@ Cited inline. Foundational documents:
 - GoogleTest Primer - [google.github.io/googletest/primer.html](https://google.github.io/googletest/primer.html).
 - GoogleTest Advanced Guide - [google.github.io/googletest/advanced.html](https://google.github.io/googletest/advanced.html).
 - ARM GNU Toolchain - [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
+- Deep references (with their own citations): advanced authoring
+  (`TEST_P` / `TYPED_TEST` / death tests) in
+  [references/authoring-variants.md](references/authoring-variants.md);
+  full toolchain, output schema, and CI in
+  [references/cross-compile-and-ci.md](references/cross-compile-and-ci.md).
 - Sibling skills:
   `unity-test-framework-c`,
   `ceedling-build-runner`,

@@ -19,6 +19,18 @@ The exploratory-testing literature converged on four canonical heuristic test-de
 
 Do **not** use this skill alone to produce a deliverable. It is the **input** to a downstream authoring skill (`test-case-from-live-feature`, `manual-test-script-author`). The catalog tells you *what to look at*; the downstream skill turns observations into a matrix or charter.
 
+## How to use
+
+Run the four models in sequence; each one narrows the next. No written story or acceptance criteria are required - that is the whole point of the catalog.
+
+1. **Enumerate coverage targets** - walk SFDPOT (Model 1) across the feature to list every structure, function, data element, platform, operation, and time dimension worth probing.
+2. **Attack each target** - apply Whittaker's attack patterns (Model 2) to each SFDPOT item to turn "what to cover" into concrete "how it can break".
+3. **Classify surprises** - when a behaviour looks wrong and no spec says so, name the FEW HICCUPPS consistency lens (Model 3) it violates, so the finding is a defensible bug report.
+4. **Cross-check quality dimensions** - pass the feature through the ISO/IEC 25010 characteristics (Model 4) to catch performance, security, usability, or reliability gaps a functional walk misses.
+5. **Hand off** - feed the SFDPOT plus Whittaker walk to `test-case-from-live-feature` (matrix) or `manual-test-script-author` (script). This skill produces prompts, not the deliverable.
+
+The catalog entries below define each model; the "combine the models" table and the worked example show the sequence applied end to end.
+
 ## Model 1 - HTSM / SFDPOT product elements (Bach)
 
 [James Bach's Heuristic Test Strategy Model](https://www.satisfice.com/download/heuristic-test-strategy-model) (HTSM v6.3) is the canonical "guideword heuristics" framework. The mnemonic **SFDPOT** covers the **Product Elements** dimension - the parts of the system that need coverage. The four HTSM focus areas are: Test Techniques, Project Elements, Product Factors, and Quality Criteria categories.
@@ -99,7 +111,7 @@ The four models are orthogonal:
 | FEW HICCUPPS | When I see weird behaviour, is it a bug? |
 | ISO 25010 | What kinds of quality am I testing for? |
 
-Workflow: walk SFDPOT to enumerate coverage targets → apply Whittaker attacks to each target → as you find unexpected behaviour, classify with FEW HICCUPPS to write a defensible report → cross-reference 25010 to confirm you didn't miss a quality dimension.
+The models are applied in the order given in "How to use" above: SFDPOT enumerates targets, Whittaker attacks each one, FEW HICCUPPS classifies the surprises, and 25010 confirms no quality dimension was skipped.
 
 ## Worked example - "test the new checkout flow, no spec"
 

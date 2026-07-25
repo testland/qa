@@ -29,6 +29,21 @@ developer when they have introduced a problem"
 ([Meszaros, Production Bugs](http://xunitpatterns.com/Production%20Bugs.html)).
 A deleted test and a disabled test produce the same silence.
 
+## How to use
+
+1. Classify each candidate into exactly one removal class - `duplicate`,
+   `tautology`, `trivial`, `dead-signal`, or `orphan` (Step 1); anything that
+   fits no class is not a candidate.
+2. Apply that class's test to confirm the classification (Step 2), honouring
+   the never-remove list.
+3. Run the four-condition delete gate; any failed or missing-input condition
+   reverts the verdict to `keep` (Step 3).
+4. Choose the action - `keep`, `rewrite`, `fold`, or `remove` (Step 4).
+5. Record the pass as a ledger plus a kept table, packaged by confidence -
+   templates and the confidence-to-action rules are in
+   [references/removal-ledger-and-report-format.md](references/removal-ledger-and-report-format.md)
+   (Step 5).
+
 ## The burden of proof sits on removal
 
 Five rules govern every decision below. They are not advisory.
@@ -94,126 +109,27 @@ Regardless of class, a test is off limits when any of these holds:
 
 ## Step 2 - Apply the class test
 
-### `duplicate`
+Step 1 proposes a class from a signal; this step confirms it with a
+class-specific test before the gate runs. The confirmation methods are precise
+and easy to get wrong:
 
-Compare a normalized signature, not assertion text. Cosmetic differences
-(`toEqual` vs `toBe`, reordered setup lines, renamed local variables) hide
-real duplicates, and identical text across different describe paths is often
-not a duplicate at all. The signature is the tuple:
+- **`duplicate`** - compare a normalized `(describe-path, normalized-setup,
+  normalized-assertion-arguments)` signature, not assertion text; keep the
+  co-located copy, and check for a `fold` (Step 4) first.
+- **`tautology`** - confirmed when the expected side of the assertion calls
+  into a production import (recomputes the subject), not by the literal shape
+  `expect(x).toBe(x)`; the default action is **rewrite**, not remove.
+- **`trivial`** - no assertion, or a self-satisfying one; add the missing
+  assertion if the smoke value matters, otherwise remove.
+- **`dead-signal`** - requires the 90-day per-test history minimum plus a
+  three-question reviewer checklist, reviewed one test at a time, never batched.
+- **`orphan`** - confirm the imported module or symbol is genuinely gone, not
+  moved or re-exported, then remove and name the missing module.
 
-```
-(describe-path, normalized-setup, normalized-assertion-arguments)
-```
-
-Two tests are duplicates only when all three match. Keep the copy in the
-canonical location, normally the file co-located with the subject under test;
-remove the stray copy left behind by a move or a copy-paste.
-
-Before removing, check whether the pair is really a **fold** candidate
-instead (Step 4). Meszaros treats repeated test code as a smell whose fix is
-extraction and parameterization, not deletion
-([Meszaros, Test Code Duplication](http://xunitpatterns.com/Test%20Code%20Duplication.html)).
-
-### `tautology`
-
-A tautology re-implements the subject under test inside the assertion, so it
-passes for any implementation:
-
-```typescript
-// Tautology: the expected side redoes the arithmetic.
-test('add adds', () => {
-  expect(add(2, 3)).toBe(2 + 3);
-});
-
-// Tautology: the expected side calls the subject under test.
-test('formats price', () => {
-  expect(formatPrice(100)).toBe(formatPrice(100));
-});
-
-// Rewritten: a known-good value the test author committed to.
-test('add adds', () => {
-  expect(add(2, 3)).toBe(5);
-});
-```
-
-**Detection heuristic:** the expected side of the assertion should contain
-only literals, expected-value constants, or test-fixture lookups. If it
-contains a call that resolves into a production module import, the assertion
-is tautological. Matching on the literal shape `expect(x).toBe(x)` is not the
-heuristic and misses nearly every real case, because the recomputation is
-usually spelled differently on each side.
-
-The default action for this class is **rewrite**, not remove. The test names a
-behavior somebody cared about; only the assertion is broken. Remove only when
-the rewrite produces something already covered elsewhere, which turns it into
-a `duplicate` decision with its own evidence.
-
-### `trivial`
-
-```typescript
-test('it works', () => {
-  expect(true).toBe(true);   // self-satisfying
-});
-
-test('placeholder', () => {});   // no assertion at all
-```
-
-These are usually scaffolding left over from a test-first cycle. They execute
-code and contribute to coverage numbers while verifying nothing, which is
-exactly why coverage cannot be the deciding input: Fowler's account of an
-assertion-free suite notes "you can do this and have 100% code coverage,
-which is one reason why you have to be careful on interpreting code coverage
-data"
-([Fowler, Assertion-Free Testing](https://martinfowler.com/bliki/AssertionFreeTesting.html)).
-Empirical work points the same way: assertion quantity and assertion coverage
-correlate strongly with a suite's fault-detection ability measured by mutation
-score, and the relationship is not explained by suite size alone (Zhang and
-Mesbah, ESEC/FSE 2015,
-[Assertions Are Strongly Correlated with Test Suite Effectiveness](https://people.ece.ubc.ca/amesbah/resources/papers/fse15.pdf)).
-
-One caveat before removing: a body with no assertion still executes the code
-and can surface crashes. Fowler concedes "some faults do show up through code
-execution, eg null pointer exceptions"
-([Fowler, Assertion-Free Testing](https://martinfowler.com/bliki/AssertionFreeTesting.html)).
-If the smoke value is the point, the fix is to add the missing assertion, not
-to delete the test.
-
-### `dead-signal`
-
-This is the class that most often gets removed wrongly. A test qualifies as a
-dead-signal *candidate* when it has recorded zero failures across the signal
-window while the source files it covers have churned repeatedly. Candidacy is
-not a verdict.
-
-Typical thresholds, all practitioner conventions rather than standards, and
-all worth tuning per team: a signal window of 180 days for the no-failure
-check, at least 10 commits touching the covered files in that window, and a
-hard minimum of 90 days of per-test history before the class is used at all.
-Below that minimum there is no signal basis, and every candidate resolves to
-keep.
-
-**Reviewer checklist. Ask all three questions per test, in order:**
-
-1. Has the subject's semantics that this test asserts been re-architected?
-   If yes and the test still passes, the test may be a passive regression
-   guard. **Keep.**
-2. Is this test asserting trivially true behavior (the file imports, the class
-   instantiates)? If yes, **remove** (and note that this is really a `trivial`
-   removal, with that class's evidence).
-3. Is this test asserting a business-critical invariant? **Keep regardless of
-   failure history.** A regression here would be costly, and its cost is not
-   reduced by the test's quiet record.
-
-Dead-signal removals are never batched. Each one gets its own reviewer
-sign-off, because the evidence is statistical and the failure mode is silent.
-
-### `orphan`
-
-The test imports a module or calls a symbol that no longer resolves, normally
-the residue of a refactor that deleted the module but left the test behind,
-broken or skipped. Confirm the target is genuinely gone rather than moved or
-re-exported, then remove. Record the missing module in the reason so the
-reviewer can tell "the module went away" from "the import path went stale".
+The full method per class - normalized signatures, detection heuristics, code
+examples, the dead-signal thresholds and reviewer checklist, and the supporting
+citations (Meszaros, Fowler, Zhang and Mesbah) - is in
+[references/applying-the-removal-classes.md](references/applying-the-removal-classes.md).
 
 ## Step 3 - The delete gate: all four conditions must hold
 
@@ -279,47 +195,31 @@ test.each([
 ### Confidence to action
 
 Confidence is a property of the *classification*, not a license to skip the
-gate. Every row below still passes Step 3 before anything is removed.
+gate: every class still passes Step 3 before anything is removed, and classes
+go in separate change sets so a mix of high- and low-confidence rows never
+trains the reviewer to skim. The per-class confidence-to-action table - which
+classes may be batched, which are reviewed one at a time - is in
+[references/removal-ledger-and-report-format.md](references/removal-ledger-and-report-format.md).
 
-| Class | Typical confidence | How it may be proposed |
-|-------|--------------------|------------------------|
-| `duplicate` | high | Batched into one change set, one removal per duplicate group, kept copy named per group. |
-| `trivial` | high | Batched into one change set, separate from other classes. |
-| `orphan` | high | Batched, with the missing module named per row. |
-| `tautology` | medium | Individually reviewed. Rewrite is the expected outcome; removal is the exception. |
-| `dead-signal` | low | Individually reviewed with per-test sign-off. Never batched, never proposed as a bulk delete. |
+## Step 5 - Record and report
 
-Keep classes in separate change sets. A single change set mixing high and low
-confidence rows trains the reviewer to skim, and the low-confidence rows are
-exactly the ones that need reading.
+A removal pass produces exactly three artifacts, in the change description,
+before anyone approves:
 
-## Step 5 - Record every removal
+1. **The removal ledger** - one row per proposed removal, each with a class, a
+   reason, four gate results, and a named reviewer.
+2. **The kept table** - every classified candidate the gate stopped, with the
+   failing condition named. It is how a reviewer checks the gate was run rather
+   than asserted, and the record that explains, a year later, why a quiet test
+   was left alone.
+3. **A separate rewrite and fold list** - not removals, and they do not ship in
+   the same change set as deletions.
 
-One row per proposed removal, in the change description, before anyone
-approves. This ledger is the artifact the rules above exist to produce.
-
-```markdown
-| Test | Class | Reason | Gate 1 no regression | Gate 2 redundant coverage | Gate 3 no label | Gate 4 not flagged | Reviewer |
-|------|-------|--------|----------------------|---------------------------|-----------------|--------------------|----------|
-| `cart.spec.ts:34 Cart > addItem` | duplicate | Identical signature to `cart.spec.ts:12`; kept copy is the co-located one. | pass (0 fails, 365d) | pass (`src/cart.ts` L12-40 also covered by `cart.spec.ts:12`) | pass | pass | A. Rivera |
-| `legacy/report.spec.ts:8 renders` | orphan | Imports `../src/reportBuilder`, deleted in 3f21ac9. | pass | n/a (test cannot run) | pass | pass | A. Rivera |
-```
-
-Alongside it, state what the change set does **not** do:
-
-```markdown
-**Kept despite classification**
-
-| Test | Class | Why kept |
-|------|-------|----------|
-| `payment.spec.ts stripe_3ds_failure` | dead-signal | Gate 1 fail: caught a regression 2026-02-12. |
-| `auth.spec.ts session_token_rotation` | dead-signal | Gate 3 fail: `@critical:auth-flow`. |
-| `parseDate.spec.ts millennium_bug_edge` | dead-signal | Gate 2 fail: only test covering the pre-1970 branch. |
-```
-
-The kept table is not filler. It is how a reviewer checks that the gate was
-actually run rather than asserted, and it is the record that explains, a year
-later, why a quiet test was left alone.
+The row templates for the ledger and the kept table are in
+[references/removal-ledger-and-report-format.md](references/removal-ledger-and-report-format.md).
+If the pass produces test names with no gate columns and no reviewer column, it
+is not a removal proposal - it is a list of suspicions, and nothing on it is
+eligible to be deleted.
 
 ## Worked example
 
@@ -340,21 +240,6 @@ one for `orphan`), 1 rewrite, 3 tests kept with recorded reasons. Candidate 5
 is the case the whole gate exists for: it looked like the strongest
 dead-signal row in the batch until the per-test map showed it was the only
 test on that branch.
-
-## Expected output shape
-
-A removal pass produces exactly three artifacts:
-
-1. **The removal ledger** (Step 5), one row per proposed removal, each with a
-   class, a reason, four gate results, and a named reviewer.
-2. **The kept table** (Step 5), every classified candidate that the gate
-   stopped, with the failing condition named.
-3. **A separate rewrite and fold list**, which are not removals and do not
-   ship in the same change set as deletions.
-
-If the pass produces a list of test names with no gate columns and no
-reviewer column, it is not a removal proposal. It is a list of suspicions,
-and nothing on it is eligible to be deleted.
 
 ## Anti-patterns
 

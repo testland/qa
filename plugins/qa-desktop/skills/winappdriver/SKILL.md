@@ -50,7 +50,15 @@ driver per
 `desktop-test-strategy-reference`;
 the Qt application must publish a usable `QAccessible` tree.
 
-## Step 1 - Install + enable
+## How to use
+
+1. Install WinAppDriver and enable Developer Mode on a Windows 10/11 machine (Install + enable).
+2. Launch `WinAppDriver.exe` on the default `127.0.0.1:4723` endpoint (Launch the service).
+3. Declare `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities for the app under test (Declare session capabilities).
+4. Author a Selenium-style test that resolves an element by `AccessibilityId` (UIA `AutomationId`) and drives it end to end (Worked example). The full locator-strategy table, `Inspect.exe` discovery, and attach-to-running-window path live in [references/locators-and-ci.md](references/locators-and-ci.md).
+5. Run on a Windows CI runner and parse TRX / JUnit results (feeds `junit-xml-analysis`) - full workflow in [references/locators-and-ci.md](references/locators-and-ci.md).
+
+## Install + enable
 
 Per [wad][wad]:
 
@@ -67,28 +75,21 @@ Download the latest WinAppDriver installer from the
 `WinAppDriver.exe` under `C:\Program Files (x86)\Windows Application
 Driver\`.
 
-## Step 2 - Launch the service
+## Launch the service
 
-Per [wad][wad]:
+Per [wad][wad], launch on the default endpoint:
 
 ```cmd
 :: Default - 127.0.0.1:4723
 "C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe"
-
-:: Custom port (admin shell)
-WinAppDriver.exe 4727
-
-:: Bind to LAN IP (admin shell)
-WinAppDriver.exe 10.0.0.10 4725
-
-:: Bind to URL prefix (admin shell)
-WinAppDriver.exe 10.0.0.10 4723/wd/hub
 ```
 
 The service prints `Press ENTER to exit.` and listens for incoming
-W3C-WebDriver session requests.
+W3C-WebDriver session requests. Custom IP / port / URL-prefix bindings
+(which require an admin shell) are in
+[references/locators-and-ci.md](references/locators-and-ci.md).
 
-## Step 3 - Declare session capabilities
+## Declare session capabilities
 
 Per the [WinAppDriver authoring guide][wadauth]:
 
@@ -108,9 +109,11 @@ generated `AppX\vs.appxrecipe` file under the `RegisteredUserModeAppID`
 node (example shape:
 `c24c8163-548e-4b84-a466-530178fc0580_scyf5npe3hv32!App`).
 
-## Step 4 - Author a test (C#)
+## Worked example
 
-The canonical example from [wadauth][wadauth]:
+Drive one element end to end - launch Notepad, locate its editor by
+`AccessibilityId`, type into it, and close the session (C# client). The
+canonical example from [wadauth][wadauth]:
 
 ```csharp
 using System;
@@ -134,107 +137,12 @@ editor.SendKeys("Hello from WinAppDriver");
 session.Quit();
 ```
 
-The `AccessibilityId` locator maps to the UIA `AutomationId` property - 
+The `AccessibilityId` locator maps to the UIA `AutomationId` property -
 the stable locator per the
 `desktop-test-strategy-reference`
-locator table.
-
-## Step 5 - Element-locator strategies
-
-Per [wadauth][wadauth]:
-
-| C# / Java method | UIA attribute |
-|---|---|
-| `FindElementByAccessibilityId` | `AutomationId` |
-| `FindElementByClassName` | `ClassName` |
-| `FindElementById` | `RuntimeId` (decimal) |
-| `FindElementByName` | `Name` |
-| `FindElementByTagName` | `LocalizedControlType` |
-| `FindElementByXPath` | any attribute (XPath over the UIA tree) |
-
-To discover the right id during authoring, use **Inspect.exe** (ships
-with the Windows SDK) or **Accessibility Insights for Windows** - 
-both walk the same UIA tree the driver sees.
-
-## Step 6 - Attaching to an already-running window
-
-For tests where the app is launched externally:
-
-```csharp
-var capabilities = new AppiumOptions();
-// Hex window handle from Inspect.exe / Spy++
-capabilities.AddAdditionalCapability("appTopLevelWindow", "0xB822E2");
-capabilities.AddAdditionalCapability("platformName", "Windows");
-var session = new WindowsDriver<WindowsElement>(
-    new Uri("http://127.0.0.1:4723"),
-    capabilities);
-```
-
-Per [wadauth][wadauth], the `appTopLevelWindow` capability takes a
-hex window handle. This is the path for testing apps that don't
-support fresh-launch (apps with single-instance locks, or apps
-requiring authenticated login flows that run outside the test).
-
-## Step 7 - Run
-
-```cmd
-:: Build + test (NUnit example)
-dotnet test --logger "trx;LogFileName=results.trx"
-
-:: With session retry on flaky launches
-dotnet test --filter "Category=Smoke" -- RunConfiguration.TestSessionTimeout=600000
-```
-
-Tests assume `WinAppDriver.exe` is running on `127.0.0.1:4723`. A
-`Setup` fixture per test class should start the driver if it isn't
-already, then dispose at `TearDown`.
-
-## Step 8 - Parsing results
-
-The C# Selenium client emits standard NUnit / MSTest / xUnit results
-(TRX, XML, or JUnit depending on logger choice). Pair with
-`junit-xml-analysis` (in the qa-test-reporting plugin)
-for the cross-runner aggregation pipeline.
-
-## Step 9 - CI integration
-
-Windows-only runner required - WinAppDriver does not run on Linux or
-macOS:
-
-```yaml
-# .github/workflows/winappdriver.yml
-jobs:
-  test:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Install WinAppDriver
-        # Choco installs to default path + adds shortcut
-        run: choco install winappdriver -y
-      - name: Enable Developer Mode (Win 10/11 runners)
-        run: |
-          reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" `
-            /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d 1
-      - name: Start WinAppDriver
-        run: |
-          Start-Process -FilePath "C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe" `
-            -PassThru
-          Start-Sleep -Seconds 3   # Let the service bind to 4723
-      - uses: actions/setup-dotnet@v4
-        with: { dotnet-version: '8.0.x' }
-      - name: Test
-        run: dotnet test --logger "trx;LogFileName=results.trx"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: trx-results
-          path: '**/results.trx'
-```
-
-WinAppDriver runs **interactive** - GitHub-hosted `windows-latest`
-runners have an interactive session by default, but headless self-
-hosted Windows containers need additional setup (the service refuses
-to start under Session 0).
+locator table. The full method-to-attribute mapping and the other
+locator strategies are in
+[references/locators-and-ci.md](references/locators-and-ci.md).
 
 ## Anti-patterns
 
@@ -242,7 +150,7 @@ to start under Session 0).
 |---|---|---|
 | Locating by `FindElementByName` for localised apps | Element name changes per language | Use `AccessibilityId` (UIA `AutomationId`) - stable across locales ([wadauth][wadauth]) |
 | Hard-coded screen coordinates via `MouseAction` | DPI / window-state / multi-monitor break | Resolve element via accessibility tree; the driver computes hit-test centre |
-| Running tests with Developer Mode disabled | Session creation fails with cryptic error | Enable Developer Mode (Step 1) ([wad][wad]) |
+| Running tests with Developer Mode disabled | Session creation fails with cryptic error | Enable Developer Mode (Install + enable) ([wad][wad]) |
 | Custom IP / port without admin privileges | Service refuses to bind to non-default address | Run admin shell or stay on default `127.0.0.1:4723` ([wad][wad]) |
 | One mega-session that drives multiple apps | UIA tree gets stale between app switches | One session per app; close + recreate on app change |
 | Forgetting `session.Quit()` | Orphaned WinAppDriver child processes accumulate | `try/finally` around session lifecycle |
@@ -280,8 +188,11 @@ to start under Session 0).
 
 - WinAppDriver repository (README) - [wad][wad].
 - WinAppDriver authoring guide - [wadauth][wadauth].
-- Appium ecosystem drivers page (maintenance status note) - 
+- Appium ecosystem drivers page (maintenance status note) -
   [appiumdrivers][appiumdrivers].
+- Deep reference (locator-strategy table, `Inspect.exe` discovery,
+  custom service bindings, attach-to-running-window, CI wiring):
+  [references/locators-and-ci.md](references/locators-and-ci.md).
 - Sibling skill:
   `appium-windows-driver` - the
   Appium proxy in front of WinAppDriver.

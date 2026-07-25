@@ -1,6 +1,6 @@
 ---
 name: github-issues-bug-workflow
-description: "Author and run GitHub Issues bug workflows via REST API v2026-03-10 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, comment attachment, and Projects v2 status-column updates via GraphQL. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), label conventions for the impoverished GitHub state model, and the gh CLI for scripted workflows. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline."
+description: "Author and run GitHub Issues bug workflows via REST API v2026-03-10 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, and comment attachment. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), and label conventions for the impoverished GitHub state model; Projects v2, gh CLI, and CI wiring live in references/. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline."
 ---
 
 # github-issues-bug-workflow
@@ -28,9 +28,14 @@ Projects v2 GraphQL augmentation when richer state is needed.
   project where GitHub Issues is the canonical tracker.
 - Backing duplicate-defect search for GitHub-using teams.
 
-## Authoring
+## How to use
 
-### Authentication
+1. Authenticate with a token and pin the API version via the `X-GitHub-Api-Version` header (see Authentication).
+2. Before filing, search open `label:bug` issues by title to dedupe (see Search).
+3. Create the issue with severity / priority / status labels; express lifecycle via labels + `state_reason` on close (see Label conventions / State transitions).
+4. Add Projects v2 columns, drive the gh CLI, or wire CI - all in [references/github-issues-reference.md](references/github-issues-reference.md).
+
+## Authentication
 
 Per GitHub REST API docs:
 
@@ -55,14 +60,7 @@ docs to lock the response shape. Omitting it defaults to
 `2022-11-28`, the older of the two supported versions (per
 [docs.github.com/en/rest/about-the-rest-api/api-versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions)).
 
-Alternative: the `gh` CLI handles auth via the user's stored
-credentials:
-
-```bash
-gh issue create --title "..." --body "..." --label bug,severity:high
-```
-
-### Create an issue
+## Create an issue
 
 `POST /repos/{owner}/{repo}/issues` per the API docs:
 
@@ -85,7 +83,7 @@ def create_bug(title, body, severity, priority, labels=None):
 Required parameter is `title`. Optional: `body`, `assignees`,
 `milestone`, `labels`, `type` (recently added for issue types).
 
-### Label conventions
+## Label conventions
 
 Since GitHub has no first-class severity / priority field, teams
 adopt label prefixes:
@@ -101,7 +99,7 @@ adopt label prefixes:
 Adopt them consistently - defect-report review checks
 that severity + priority labels are both present.
 
-### State transitions via PATCH
+## State transitions via PATCH
 
 `PATCH /repos/{owner}/{repo}/issues/{issue_number}`. The
 `state_reason` parameter (per API docs) takes
@@ -144,7 +142,7 @@ Map canonical lifecycle states via labels + close-reason:
 | Rejected | closed + `state_reason: not_planned` + label `not-a-bug` |
 | Duplicate | closed + `state_reason: duplicate` + comment `Duplicate of #N` |
 
-### Search
+## Search
 
 `GET /repos/{owner}/{repo}/issues` supports filter via query
 parameters; for richer search use the search endpoint:
@@ -167,7 +165,7 @@ dupes = search_issues(
 GitHub search has a 30-request-per-minute unauthenticated /
 higher authenticated rate limit.
 
-### Comments
+## Comments
 
 `POST /repos/{owner}/{repo}/issues/{issue_number}/comments`:
 
@@ -180,9 +178,11 @@ def add_comment(issue_number, body):
     return r.json()
 ```
 
-## Running
+## Worked example
 
-### Idempotent bug filing
+File a bug from a CI failure idempotently: search for an open duplicate
+first, comment on it if found, otherwise create a new labelled issue. This
+reuses `search_issues`, `add_comment`, and `create_bug` above:
 
 ```python
 def create_or_attach(title, body):
@@ -192,72 +192,19 @@ def create_or_attach(title, body):
         return dupes[0]["number"]
     issue = create_bug(title, body, severity="medium", priority="p3")
     return issue["number"]
+
+# From a failing pytest run:
+num = create_or_attach(
+    "Checkout fails for promo X",
+    "<repro>\n1. Apply promo X\n2. Checkout 500s\n</repro>",
+)
+print(f"Bug tracked as #{num}")
 ```
 
-### Projects v2 status updates
-
-For richer state (e.g., a Kanban with custom columns), Projects
-v2 requires GraphQL - the REST API doesn't reach Projects v2:
-
-```python
-PROJECTS_MUTATION = """
-mutation MoveItem($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
-  updateProjectV2ItemFieldValue(
-    input: { projectId: $projectId, itemId: $itemId,
-             fieldId: $fieldId, value: { singleSelectOptionId: $optionId } }
-  ) { projectV2Item { id } }
-}
-"""
-# Discovery of projectId, itemId, fieldId, optionId via the matching queries.
-```
-
-Per docs.github.com/en/issues/planning-and-tracking-with-projects.
-
-### gh CLI for scripts
-
-```bash
-# Create
-gh issue create \
-  --title "Checkout fails for promo X" \
-  --body-file failure.md \
-  --label bug,severity:high,priority:p2
-
-# Close with reason
-gh issue close 1234 --reason completed
-gh issue close 1234 --reason "not planned"
-
-# Search
-gh issue list --search 'is:open label:bug "checkout fails"'
-```
-
-## Parsing results
-
-Create response includes `number` (per-repo), `html_url`
-(permalink), `node_id` (GraphQL ID for Projects v2 cross-ref).
-
-Search response includes `items` array (issues + PRs), `total_count`,
-`incomplete_results` (set to `true` on partial results due to
-rate limit).
-
-## CI integration
-
-```yaml
-# .github/workflows/test.yml
-- name: Run tests
-  id: tests
-  run: pytest --junitxml=results.xml
-  continue-on-error: true
-
-- name: File issue on test failure
-  if: steps.tests.outcome == 'failure'
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    GITHUB_REPO: ${{ github.repository }}
-  run: python scripts/file-github-bug.py results.xml
-```
-
-Use the auto-provided `GITHUB_TOKEN` for in-repo automation; for
-cross-repo, use a fine-grained PAT.
+The create response includes `number` (per-repo), `html_url` (permalink), and
+`node_id` (GraphQL ID for Projects v2 cross-ref). Moving the issue across a
+Projects v2 status column, the gh CLI equivalents, and CI wiring are in
+[references/github-issues-reference.md](references/github-issues-reference.md).
 
 ## Anti-patterns
 
@@ -291,10 +238,11 @@ cross-repo, use a fine-grained PAT.
   [docs.github.com/en/rest/issues/issues](https://docs.github.com/en/rest/issues/issues).
 - GitHub Search API - 
   docs.github.com/en/rest/search/search#search-issues-and-pull-requests.
-- Projects v2 GraphQL - 
-  docs.github.com/en/issues/planning-and-tracking-with-projects.
-- `gh` CLI manual - 
-  cli.github.com/manual/gh_issue.
+- API versions - 
+  [docs.github.com/en/rest/about-the-rest-api/api-versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions).
+- Deep reference (Projects v2 GraphQL, gh CLI, CI wiring, with their own
+  citations):
+  [references/github-issues-reference.md](references/github-issues-reference.md).
 - Sibling references:
   `bug-lifecycle-reference`,
   `severity-vs-priority-reference`.

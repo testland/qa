@@ -1,6 +1,6 @@
 ---
 name: memcached-tests
-description: "Wraps Memcached cache testing patterns: text and binary protocol command verification (set/get/add/cas/incr/decr), TTL semantics (0=never-expire, 30-day Unix-timestamp boundary), no-persistence and LRU eviction under memory pressure, consistent-hashing client key distribution across nodes, and AWS ElastiCache Memcached Auto Discovery endpoint testing. Use when writing tests for an application that uses Memcached as its primary cache, when verifying ElastiCache Memcached cluster behaviour, or when contrasting Memcached eviction and distribution semantics against Redis."
+description: "Wraps Memcached cache testing against a real container: an inline set/get/expire/no-persistence worked example, with the exhaustive protocol-command tests (set/get/add/cas/incr/decr, TTL 0=never-expire / 30-day Unix-timestamp boundary) and the LRU-eviction, consistent-hashing distribution, ElastiCache Auto Discovery, and CI-wiring deep-dives in references/. Use when writing tests for an application that uses Memcached as its primary cache, when verifying ElastiCache Memcached cluster behaviour, or when contrasting Memcached eviction and distribution semantics against Redis."
 ---
 
 # memcached-tests
@@ -35,6 +35,20 @@ consistent-hashing redistribution behaviour that real bugs hide in.
 - Validating LRU eviction under memory pressure.
 - Testing consistent-hashing distribution across a multi-node cluster.
 - Smoke-testing ElastiCache Memcached Auto Discovery endpoints.
+
+## How to use
+
+1. Install the client + Testcontainers for your language (see Install).
+2. Stand up a real Memcached container via the session-scoped fixture - never
+   a mock, which loses TTL-tick, LRU eviction, and CAS-token behaviour.
+3. Assert one behaviour end to end with the Worked example below
+   (set / get / expire / no-persistence).
+4. Add the full protocol-command coverage (set/get/add, TTL boundaries, CAS,
+   incr/decr) from
+   [references/protocol-command-tests.md](references/protocol-command-tests.md).
+5. For LRU eviction, multi-node consistent-hashing distribution, ElastiCache
+   Auto Discovery, and CI wiring, see
+   [references/eviction-distribution-and-ci.md](references/eviction-distribution-and-ci.md).
 
 ## Install
 
@@ -74,275 +88,44 @@ def mc(mc_addr):
     client.flush_all()   # Reset between tests
 ```
 
-## Text-protocol command tests
+## Worked example: set, read, expire, confirm no persistence
 
-Per [docs.memcached.org/protocols/basic/](https://docs.memcached.org/protocols/basic/):
-
-### set / get / add
-
-```python
-def test_set_and_get(mc):
-    mc.set("k", b"hello")
-    assert mc.get("k") == b"hello"
-
-def test_add_only_when_absent(mc):
-    assert mc.add("k", b"first") is True
-    assert mc.add("k", b"second") is False   # NOT_STORED: key exists
-    assert mc.get("k") == b"first"
-
-def test_get_absent_returns_none(mc):
-    assert mc.get("no-such-key") is None
-```
-
-### TTL semantics
-
-Per [docs.memcached.org/protocols/basic/](https://docs.memcached.org/protocols/basic/):
-exptime `0` means never-expire; values up to 30 days are interpreted as
-a relative second offset; values above 30 days (2592000 seconds) are
-treated as a Unix timestamp.
+Assert the four signature Memcached behaviours in one pass against the `mc`
+fixture - a value round-trips, `add` is refused on an existing key, a short
+TTL evicts by expiry, and nothing survives a flush (the no-persistence
+guarantee, modelling a node restart):
 
 ```python
 import time
 
-def test_ttl_zero_never_expires(mc):
-    mc.set("k", b"v", expire=0)
-    time.sleep(0.1)
-    assert mc.get("k") == b"v"
+def test_memcached_end_to_end(mc):
+    # 1. set then get - the value round-trips
+    mc.set("session:42", b"active")
+    assert mc.get("session:42") == b"active"
 
-def test_key_expires_after_ttl(mc):
-    mc.set("k", b"v", expire=1)
-    assert mc.get("k") == b"v"
+    # 2. add is refused when the key already exists
+    assert mc.add("session:42", b"other") is False
+
+    # 3. a 1 s TTL expires the key (evict-by-expiry)
+    mc.set("otp:42", b"123456", expire=1)
+    assert mc.get("otp:42") == b"123456"
     time.sleep(1.5)
-    assert mc.get("k") is None
+    assert mc.get("otp:42") is None
 
-def test_short_ttl_via_pexpire_pattern(mc):
-    # pymemcache does not expose millisecond TTLs; use 1-second minimum
-    mc.set("k", b"val", expire=1)
-    time.sleep(1.5)
-    assert mc.get("k") is None, "Key must expire after 1 s TTL"
+    # 4. no persistence - flush models a node restart; data is gone
+    mc.flush_all()
+    assert mc.get("session:42") is None
 ```
 
-Avoid `time.sleep(60)` to test TTL: set the shortest useful TTL and
-sleep only fractionally beyond it.
-
-### CAS (Check-And-Set)
-
-Per [docs.memcached.org/protocols/basic/](https://docs.memcached.org/protocols/basic/),
-`gets` returns a unique 64-bit CAS identifier; `cas` stores data only if
-the token still matches:
-
-```python
-def test_cas_succeeds_when_token_matches(mc):
-    mc.set("k", b"v1")
-    value, cas_token = mc.gets("k")
-    result = mc.cas("k", b"v2", cas_token)
-    assert result is True
-    assert mc.get("k") == b"v2"
-
-def test_cas_fails_after_concurrent_write(mc):
-    mc.set("k", b"original")
-    _, old_token = mc.gets("k")
-    mc.set("k", b"concurrent-update")   # token now stale
-    result = mc.cas("k", b"late-writer", old_token)
-    assert result is False   # EXISTS: token mismatch
-    assert mc.get("k") == b"concurrent-update"
-```
-
-### incr / decr
-
-Per [docs.memcached.org/protocols/basic/](https://docs.memcached.org/protocols/basic/),
-`incr`/`decr` operate on unsigned 64-bit integer string values and return
-`None` when the key is absent (no auto-initialisation):
-
-```python
-def test_incr_increments_existing_counter(mc):
-    mc.set("counter", b"10")
-    result = mc.incr("counter", 5)
-    assert result == 15
-
-def test_incr_absent_key_returns_none(mc):
-    assert mc.incr("no-such-counter", 1) is None
-
-def test_incr_uses_add_to_initialise(mc):
-    # Per github.com/memcached/memcached/wiki/Programming:
-    # add is the correct initialiser for counters
-    mc.add("hits", b"0")
-    mc.incr("hits", 1)
-    assert mc.get("hits") == b"1"
-
-def test_decr_does_not_go_below_zero(mc):
-    mc.set("counter", b"3")
-    mc.decr("counter", 10)
-    assert mc.get("counter") == b"0"   # unsigned floor at 0
-```
-
-## LRU eviction (no-persistence)
-
-Memcached evicts using LRU within each slab class; there is no
-persistence and no AOF/RDB equivalent. Per the
-[AWS ElastiCache comparison](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/SelectEngine.html),
-"Backup and restore" is `No` for node-based Memcached clusters.
-
-```python
-def test_lru_evicts_cold_keys_under_pressure():
-    """
-    Launch a small-memory container to verify LRU eviction.
-    The -m flag caps Memcached's RAM (MB).
-    """
-    from testcontainers.memcached import MemcachedContainer
-    from pymemcache.client.base import Client
-
-    with MemcachedContainer("memcached:1.6-alpine") as mc:
-        mc.get_wrapped_container().exec_run   # introspect if needed
-        host, port = mc.get_host_and_port()
-        # Restart with low memory cap via Docker command override
-    
-    # Use a separate docker run with -m 8m for a tighter eviction test;
-    # or accept that testcontainers default image evicts eventually.
-    # The key assertion: after filling cache, a cold key may be absent.
-
-def test_no_data_survives_restart(mc_addr):
-    """Memcached has no persistence: data is gone after any restart."""
-    host, port = mc_addr
-    c = Client((host, port))
-    c.set("persistent", b"should-not-survive")
-    # Simulate application expectation: always handle cache miss gracefully
-    # after a node restart or replacement (e.g., ElastiCache node failure).
-    assert c.get("persistent") is not None  # warm path
-    # After restart (modelled here as flush_all), data is gone:
-    c.flush_all()
-    assert c.get("persistent") is None, "Memcached is not persistent"
-```
-
-## Consistent-hashing client distribution
-
-Per
-[pymemcache HashClient](https://pymemcache.readthedocs.io/en/latest/getting_started.html),
-client-side consistent hashing distributes keys across nodes. Adding or
-removing a node remaps only the affected ring segment - not all keys.
-
-```python
-def test_hash_client_distributes_keys():
-    from testcontainers.memcached import MemcachedContainer
-    from pymemcache.client.hash import HashClient
-
-    with MemcachedContainer("memcached:1.6-alpine") as mc1, \
-         MemcachedContainer("memcached:1.6-alpine") as mc2:
-
-        h1, p1 = mc1.get_host_and_port()
-        h2, p2 = mc2.get_host_and_port()
-        cluster = HashClient([(h1, p1), (h2, p2)])
-
-        keys = [f"key:{i}" for i in range(100)]
-        for k in keys:
-            cluster.set(k, b"v")
-
-        # Verify distribution: each node should hold some keys
-        direct1 = sum(
-            1 for k in keys if Client((h1, p1)).get(k) is not None
-        )
-        direct2 = sum(
-            1 for k in keys if Client((h2, p2)).get(k) is not None
-        )
-        assert direct1 > 0, "Node 1 should hold some keys"
-        assert direct2 > 0, "Node 2 should hold some keys"
-        assert direct1 + direct2 == 100, "Every key must be on exactly one node"
-
-def test_hash_client_handles_node_removal():
-    """After removing a node, the remaining node serves all keys."""
-    from testcontainers.memcached import MemcachedContainer
-    from pymemcache.client.hash import HashClient
-
-    with MemcachedContainer("memcached:1.6-alpine") as mc1, \
-         MemcachedContainer("memcached:1.6-alpine") as mc2:
-
-        h1, p1 = mc1.get_host_and_port()
-        h2, p2 = mc2.get_host_and_port()
-        full_cluster = HashClient([(h1, p1), (h2, p2)])
-
-        for i in range(20):
-            full_cluster.set(f"k{i}", b"val")
-
-        # Simulate node removal: re-create client with one node
-        degraded = HashClient([(h1, p1)])
-        # Keys that were on node 2 are now misses - application must
-        # handle gracefully (cache miss -> read-through from source of truth)
-        miss_count = sum(
-            1 for i in range(20) if degraded.get(f"k{i}") is None
-        )
-        assert miss_count >= 0  # Some keys lost; app must tolerate it
-```
-
-## AWS ElastiCache Memcached - Auto Discovery
-
-Per
-[docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/AutoDiscovery.html](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/AutoDiscovery.html),
-ElastiCache Memcached (not Valkey/Redis) supports Auto Discovery: the
-client connects to a single configuration endpoint and retrieves the full
-node list. Clients refresh this list approximately once per minute.
-
-```python
-def test_elasticache_auto_discovery_endpoint(monkeypatch):
-    """
-    Integration smoke test: verify the app resolves a configuration
-    endpoint and discovers cluster nodes.
-    Runs only when ELASTICACHE_CONFIG_ENDPOINT is set.
-    """
-    import os
-    endpoint = os.getenv("ELASTICACHE_CONFIG_ENDPOINT")
-    if not endpoint:
-        pytest.skip("ELASTICACHE_CONFIG_ENDPOINT not set (ElastiCache env only)")
-
-    from pymemcache.client.hash import HashClient
-    # The ElastiCache Cluster Client for Python resolves the cfg endpoint
-    # and populates the server list automatically via the config get cluster
-    # Memcached command.
-    client = HashClient([endpoint])
-    client.set("smoke-test", b"ok")
-    assert client.get("smoke-test") == b"ok"
-```
-
-The configuration endpoint format is:
-`<cluster-name>.xxxxxx.cfg.<region>.cache.amazonaws.com:11211`
-
-Auto Discovery is specific to ElastiCache Memcached and is not available
-for Valkey or Redis OSS engines
-([AutoDiscovery docs](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/AutoDiscovery.html)).
-
-## Running
+Run it:
 
 ```bash
 pytest tests/memcached/ -v
 ```
 
-Testcontainers boots a Memcached container once per session. The
-per-test `flush_all` fixture call resets state between tests. Use
-`scope="session"` on the container fixture to avoid the ~3 s startup
-cost per test.
-
-## CI integration
-
-```yaml
-jobs:
-  memcached-tests:
-    runs-on: ubuntu-latest
-    services:
-      memcached:
-        image: memcached:1.6-alpine
-        ports:
-          - 11211:11211
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
-      - run: pip install -e ".[test]"
-      - run: pytest tests/memcached/ --tb=short
-        env:
-          MEMCACHED_HOST: localhost
-          MEMCACHED_PORT: 11211
-```
-
-For multi-node distribution tests, launch two service containers named
-`memcached-1` and `memcached-2` on ports `11211` and `11212`.
+That is the whole loop - container up, real client, assert a real cache
+behaviour, tear down. From here, expand into the full command matrix and the
+cluster-level tests via the two references linked in **How to use**.
 
 ## Anti-patterns
 
@@ -381,6 +164,11 @@ For multi-node distribution tests, launch two service containers named
 
 ## References
 
+- Deep detail (with their own citations): full protocol-command tests in
+  [references/protocol-command-tests.md](references/protocol-command-tests.md);
+  LRU eviction, consistent-hashing distribution, ElastiCache Auto Discovery,
+  and CI wiring in
+  [references/eviction-distribution-and-ci.md](references/eviction-distribution-and-ci.md).
 - Memcached text protocol commands:
   [docs.memcached.org/protocols/basic/](https://docs.memcached.org/protocols/basic/).
 - Memcached meta protocol (Memcached 1.6+):

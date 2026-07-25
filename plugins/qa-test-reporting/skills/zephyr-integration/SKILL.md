@@ -1,6 +1,6 @@
 ---
 name: zephyr-integration
-description: "Syncs automated test results to Zephyr Scale for Jira (formerly TM4J / SmartBear / Adaptavist) - picks the right product variant (Scale Cloud vs Scale Server vs Squad), authenticates via the JWT-from-API-token pattern, opens a Test Cycle for the build, batches per-test-case executions back via the `POST /testresults` endpoint, and maps automated test methods to Zephyr Test Cases via `@TestCaseKey`-style annotations or test-name parsing. Use when the team's Jira test management is Zephyr Scale (the most common Zephyr variant in 2026) and CI must keep Test Cycles in sync with automation."
+description: "Syncs automated test results to Zephyr Scale for Jira (formerly TM4J / SmartBear / Adaptavist) - picks the right product variant (Scale Cloud vs Squad vs Enterprise), authenticates with a long-lived API token sent as a Bearer header, opens a Test Cycle for the build, posts per-test-case executions via the `POST /testexecutions` endpoint (or bulk JUnit XML via `/automations/executions/junit`), and maps automated test methods to Zephyr Test Cases via `@TestCaseKey`-style annotations or test-name parsing. Use when the team's Jira test management is Zephyr Scale (the most common Zephyr variant in 2026) and CI must keep Test Cycles in sync with automation."
 ---
 
 # zephyr-integration
@@ -13,8 +13,8 @@ zero:
 
 | Product                               | Origin / current owner            | Key API host pattern                                  |
 |---------------------------------------|------------------------------------|-------------------------------------------------------|
-| **Zephyr Scale** (formerly TM4J)      | Adaptavist → SmartBear            | `https://api.zephyrscale.smartbear.com/v2/`           |
-| **Zephyr Squad** (the older one)      | Atlassian → SmartBear             | `https://prod-api.zephyr4jiracloud.com/connect/`      |
+| **Zephyr Scale** (formerly TM4J)      | Adaptavist -> SmartBear           | `https://api.zephyrscale.smartbear.com/v2/`           |
+| **Zephyr Squad** (the older one)      | Atlassian -> SmartBear            | `https://prod-api.zephyr4jiracloud.com/connect/`      |
 | **Zephyr Enterprise** (server-only)   | SmartBear                          | On-prem Jira; per-instance                             |
 
 This skill covers **Zephyr Scale Cloud** as the primary path - 
@@ -43,7 +43,21 @@ If the team uses **Zephyr Squad**, the endpoints + auth differ
 significantly - see the Squad-specific REST API docs and the
 distinct `prod-api.zephyr4jiracloud.com` host.
 
-## Step 1 - Authenticate (Zephyr Scale Cloud)
+## How to use
+
+1. Confirm the variant is Zephyr Scale Cloud (see the Overview
+   variant table); Squad / Enterprise use different hosts and auth.
+2. Authenticate with the long-lived API token as a Bearer header
+   (below).
+3. Map each automated test to a Zephyr Test Case key (name-embedded
+   or `@TestCaseKey` annotation), open a Test Cycle for the build,
+   and `POST /testexecutions` one result per test case.
+4. Batch the run with bounded concurrency and wire it into CI - the
+   batch helper, the full CI workflow, folder / label organization,
+   and the bulk JUnit XML import path are in
+   [references/api-wiring.md](references/api-wiring.md).
+
+## Authenticate (Zephyr Scale Cloud)
 
 Zephyr Scale Cloud uses a long-lived API token (generated via
 "API Access Tokens" in the Zephyr Scale settings) sent as a Bearer
@@ -61,7 +75,7 @@ Unlike Xray Cloud, no JWT exchange step - the token is used directly.
 The token is **per-account, not per-project** - guard it with the
 same care as a Jira admin credential.
 
-## Step 2 - Map test methods to Zephyr Test Cases
+## Map test methods to Zephyr Test Cases
 
 Two patterns mirror the TestRail / Xray approach.
 
@@ -94,7 +108,7 @@ The `@TestCaseKey` annotation is provided by community adapters
 a small custom JUnit extension reads the annotation and emits a
 Zephyr-compatible JSON file alongside the JUnit XML.
 
-## Step 3 - Open a Test Cycle for the build
+## Open a Test Cycle for the build
 
 ```python
 # scripts/zephyr_sync.py
@@ -122,7 +136,7 @@ def open_cycle(name, version=None):
 The returned `key` (e.g. `CALC-R42`) is the Test Cycle's identifier;
 results land inside it.
 
-## Step 4 - Post execution results
+## Post execution results
 
 Per the documented Zephyr Scale Cloud `/testexecutions` endpoint
 shape (consistent across SmartBear KB versions):
@@ -148,86 +162,57 @@ with custom statuses, query `/statuses?projectKey=...&statusType=TEST_EXECUTION`
 at script init to confirm the available names - don't hard-code beyond
 the four built-ins (`Pass`, `Fail`, `Blocked`, `Not Executed`).
 
-## Step 5 - Batch multiple results
+For a lighter path that skips per-execution POSTs, Zephyr Scale also
+ingests a JUnit XML file directly via `/automations/executions/junit`
+- see [references/api-wiring.md](references/api-wiring.md).
 
-The `/testexecutions` endpoint is per-execution. For batched POSTs,
-the documented `/automations/executions` endpoint accepts a payload
-that wraps multiple results - the exact shape is variant per Zephyr
-Scale version. The conservative pattern is to retry per-execution
-with bounded concurrency:
+## Worked example
 
-```python
-from concurrent.futures import ThreadPoolExecutor
+A Jest suite syncing one build to project `CALC`:
 
-def post_all(cycle_key, results, max_concurrent=5):
-    with ThreadPoolExecutor(max_workers=max_concurrent) as ex:
-        list(ex.map(lambda r: post_execution(cycle_key, **r), results))
-```
-
-`max_concurrent=5` keeps under the rate limit (60 req/min on most
-plans) for typical run sizes.
-
-## Step 6 - Wire into CI
-
-```yaml
-- name: Run tests
-  run: npm test -- --reporters=jest-junit
-
-- name: Sync to Zephyr Scale
-  if: always()
-  env:
-    ZEPHYR_TOKEN: ${{ secrets.ZEPHYR_TOKEN }}
-    JIRA_PROJECT_KEY: 'CALC'
-    BUILD_VERSION: ${{ github.sha }}
-  run: python scripts/zephyr_sync.py junit.xml
-```
-
-The script:
-
-1. Parses `junit.xml` (`junit-xml-analysis`).
-2. Extracts Test Case keys (Step 2).
-3. Opens a Test Cycle (Step 3).
-4. Posts executions (Step 4) with bounded concurrency (Step 5).
-
-## Step 7 - Folder + label organization
-
-Zephyr Scale Test Cases live in folders. Two patterns:
-
-- **Per-feature folder**: `Checkout/`, `Cart/`, `Auth/` - automated
-  tests in those folders sync to Test Cases there.
-- **Per-tier folder**: `Smoke/`, `Regression/`, `Edge cases/` - 
-  automated tests carry a tier label that the sync script translates
-  to folder.
-
-The folder structure is created via the Zephyr UI; the sync script
-references existing Test Case keys and doesn't create folders on
-the fly.
-
-## Step 8 - JUnit XML import (alternative path)
-
-Zephyr Scale also accepts a JUnit XML file via the
-`/automations/executions/junit` endpoint with a multipart body. This
-is simpler than the per-execution sync but loses per-test
-metadata (no comment, no execution time per case beyond what JUnit
-XML carries):
+1. Tests carry the Test Case key in the name (Pattern A):
+   `test('can add to cart [CALC-T1234]', ...)`.
+2. Export the token and run tests to JUnit XML:
 
 ```bash
-curl -X POST "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=$JIRA_PROJECT_KEY&autoCreateTestCases=true" \
-  -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-  -F "file=@junit.xml"
+export ZEPHYR_TOKEN=...             # from Zephyr Scale > API Access Tokens
+export JIRA_PROJECT_KEY=CALC
+npm test -- --reporters=jest-junit
 ```
 
-Pattern A (Step 4 per-execution) is preferred when comment / evidence
-matters; Pattern B (this step) is the lightweight default.
+3. The sync script opens a cycle, then posts one execution:
+
+```python
+cycle = open_cycle("Build #1234")           # returns e.g. "CALC-R42"
+post_execution(cycle, "CALC-T1234", "Pass",
+               comment="green on CI", execution_time=1240)
+```
+
+The execution lands inside cycle `CALC-R42`; open it in Jira to see
+the Pass recorded against `CALC-T1234`. To sync the whole run,
+extract every key from the JUnit XML and post with bounded
+concurrency - see [references/api-wiring.md](references/api-wiring.md).
+
+## Operating in CI
+
+Run the sync as an `if: always()` step after the test step so failed
+runs still update Zephyr. The script parses `junit.xml`
+(`junit-xml-analysis`), extracts Test Case keys, opens one Test Cycle
+per build, and posts executions with bounded concurrency (keep
+`max_workers=5` to stay under the 60 req/min rate limit). Supply
+`ZEPHYR_TOKEN` from CI secrets. The full GitHub Actions workflow, the
+batch helper, folder / label organization, and the bulk JUnit XML
+import alternative are in
+[references/api-wiring.md](references/api-wiring.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                              | Why it fails                                                                  | Fix |
 |---------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----|
-| Targeting Zephyr Squad endpoints with Zephyr Scale auth                   | Different host, different auth model; immediate 401.                          | Confirm the variant (Step 1 table). |
+| Targeting Zephyr Squad endpoints with Zephyr Scale auth                   | Different host, different auth model; immediate 401.                          | Confirm the variant (see the Overview variant table). |
 | Hard-coding `statusName: "Pass"` / `"Fail"` only                          | Custom statuses installed by the project break silently.                      | Query `/statuses` at init; cache the valid set. |
-| Per-execution POST with 1000 tests, no concurrency                        | Single-threaded; 30+ minutes for a release run.                              | Bounded concurrency (Step 5). |
-| Per-execution POST with unbounded concurrency                             | Trips rate limit (60/min); execution drops.                                   | `max_workers=5` (Step 5). |
+| Per-execution POST with 1000 tests, no concurrency                        | Single-threaded; 30+ minutes for a release run.                              | Bounded concurrency (see references/api-wiring.md). |
+| Per-execution POST with unbounded concurrency                             | Trips rate limit (60/min); execution drops.                                   | `max_workers=5` (see references/api-wiring.md). |
 | Reusing one Test Cycle across many builds                                 | Cycle accumulates noise; release sign-off is unreadable.                      | One Cycle per build; Cycles can be archived per release. |
 | `autoCreateTestCases=true` in CI                                          | Every renamed test creates a new Test Case; folder fills with orphans.       | Pre-create Test Cases manually; sync references existing keys. |
 | Treating the API token as session-scoped                                  | Token is long-lived per-account; no refresh.                                  | Store in CI secrets; rotate via Zephyr Scale settings, not per-run. |
@@ -258,6 +243,9 @@ matters; Pattern B (this step) is the lightweight default.
   REST API reference for Scale Cloud.
 - `https://support.smartbear.com/zephyr-squad-cloud/` - Squad Cloud
   reference (different product, different API).
+- [references/api-wiring.md](references/api-wiring.md) - the bounded-
+  concurrency batch helper, the full GitHub Actions workflow, folder /
+  label organization, and the bulk JUnit XML import path.
 - `junit-xml-analysis` - upstream
   parser for the input the sync script consumes.
 - `xray-integration`,

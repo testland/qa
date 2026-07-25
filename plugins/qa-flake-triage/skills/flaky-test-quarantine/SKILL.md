@@ -21,13 +21,21 @@ regressions or be silently ignored ([google-flaky][gtb]).
 > canonical entry for it. This skill cites industry-engineering
 > sources, not ISTQB authority.
 
-This skill defines a quarantine workflow with five required parts:
+## How to use
 
-1. **Mark** the test with the framework's annotation.
-2. **Annotate** with the failure rate, bisect link, and quarantine date.
-3. **Auto-expiry** - every quarantine has a TTL.
-4. **Re-evaluation report** - a CI step that lists expired quarantines.
-5. **Pruning** - close the loop by either fixing or deleting.
+1. **Confirm it is a flake, not a regression** - a 1% to 50% failure
+   rate, not 100% (see "When to use"). A 100%-failing test is a
+   regression: bisect and fix, do not quarantine.
+2. **Mark** the test with the framework's skip / fixme / retry
+   annotation (Step 1).
+3. **Annotate** the body with date, issue link, failure rate, bisect
+   status, and a `Re-evaluate by` date (Step 2) - this is the
+   load-bearing, machine-parseable part.
+4. **Set the TTL** that produces the `Re-evaluate by` date (Step 3).
+5. **Wire the expired-quarantine report** into a scheduled CI job (Step 4
+   and [references/ci-quarantine-report.md](references/ci-quarantine-report.md)).
+6. **Prune on expiry** - fix and un-quarantine, renew once (never past two
+   consecutive renewals), or delete (Step 5).
 
 ## When to use
 
@@ -42,6 +50,38 @@ This skill defines a quarantine workflow with five required parts:
 If the test fails 100% of the time after a code change, it's a
 regression - bisect to the introducing commit and fix, do not
 quarantine.
+
+## Worked example
+
+Test `tests/checkout.spec.ts:42` fails about 12% of runs on the
+`tablet-768` project in CI. An unrelated feature PR is blocked by it.
+
+1. **Confirm it is a flake.** 12% sits between 1% and 50%, and the test
+   predates the PR - quarantine it, do not treat it as a regression of
+   the PR under review.
+2. **Mark and annotate** with a single `test.fixme()` carrying the full
+   record (Steps 1 and 2):
+
+```typescript
+test('checkout flow flaky test', async ({ page }) => {
+  test.fixme(
+    true,
+    'Quarantined 2026-07-20 (#1234) - fails ~12% of runs on tablet-768; bisect inconclusive. Re-evaluate by 2026-08-19. Owner: @web-platform.',
+  );
+  // ... test body, no longer runs
+});
+```
+
+3. **Set the TTL.** The default 30-day TTL (Step 3) puts
+   `Re-evaluate by 2026-08-19` in the annotation. The PR merges the same
+   day, unblocked.
+4. **Let CI track it.** The Monday report job (Step 4) greps every
+   `test.fixme` annotation. On the first Monday after 2026-08-19 it
+   prints `EXPIRED` for this entry and opens a tracking issue.
+5. **Prune.** A fix for the `tablet-768` layout race has since landed, so
+   remove `test.fixme()`, re-run the test at depth to confirm it is
+   green, and close the issue. Had it still failed, renew once with an
+   updated annotation - never past two consecutive renewals.
 
 ## Step 1 - Mark the test
 
@@ -79,7 +119,7 @@ export default defineConfig({
 ```
 
 A test that passes on retry is reported with the **`flaky`** status
-(distinct from `passed` and `failed`); track these separately - 
+(distinct from `passed` and `failed`); track these separately -
 flaky-but-passing tests are quarantine candidates, not yet
 quarantined ([pw-retries][pw-retries]).
 
@@ -142,28 +182,12 @@ Adjust per project:
 
 ## Step 4 - Re-evaluation report
 
-A nightly (or weekly) CI job greps all quarantine annotations,
-extracts the `Re-evaluate by` date, and lists expired entries. A
-minimal Bash version against a Playwright suite:
-
-```bash
-#!/usr/bin/env bash
-# scripts/list-expired-quarantines.sh
-set -e
-TODAY=$(date -u +%Y-%m-%d)
-
-grep -rn -B1 -A5 "test\.fixme(" tests/ \
-  | awk '/Re-evaluate by/ { print FILENAME ":" $0 }' \
-  | while IFS= read -r line; do
-      EXPIRY=$(echo "$line" | grep -oE 'Re-evaluate by [0-9]{4}-[0-9]{2}-[0-9]{2}' | awk '{print $3}')
-      if [[ "$EXPIRY" < "$TODAY" ]]; then
-        echo "EXPIRED: $line"
-      fi
-    done
-```
-
-Run it as a scheduled GitHub Action and post the output to a Slack
-channel or open a tracking issue per expired entry.
+A scheduled CI job greps every quarantine annotation, extracts the
+`Re-evaluate by` date, and lists the entries that have expired - then
+opens a tracking issue (or posts to Slack) per expired entry. Because the
+Step 2 format is machine-parseable, the whole report is a short grep.
+The Bash report script and the scheduled GitHub Actions workflow are in
+[references/ci-quarantine-report.md](references/ci-quarantine-report.md).
 
 ## Step 5 - Pruning rules
 
@@ -180,36 +204,6 @@ becoming a permanent dead-letter. Past two renewals, the team has
 either lost interest in the assertion or the test is fundamentally
 unfixable - both signal "delete."
 
-## CI integration
-
-```yaml
-# .github/workflows/quarantine-report.yml
-name: quarantine-report
-
-on:
-  schedule:
-    - cron: '0 9 * * 1'   # Mondays 09:00 UTC
-  workflow_dispatch:
-
-jobs:
-  list-expired:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: List expired quarantines
-        run: bash scripts/list-expired-quarantines.sh > expired.txt
-
-      - name: Open tracking issue per expired entry
-        if: ${{ hashFiles('expired.txt') != '' }}
-        run: |
-          while IFS= read -r line; do
-            gh issue create --title "Expired quarantine: ${line%%:*}" --body "$line"
-          done < expired.txt
-        env:
-          GH_TOKEN: ${{ github.token }}
-```
-
 ## References
 
 - [google-flaky][gtb] - Google Testing Blog on flaky tests at scale;
@@ -218,5 +212,7 @@ jobs:
   `test.fail()` API.
 - [pw-retries][pw-retries] - Playwright retries config + `flaky`
   status reporting.
-- `flake-pattern-reference` - 
+- [references/ci-quarantine-report.md](references/ci-quarantine-report.md) -
+  the Step 4 report script + scheduled CI workflow.
+- `flake-pattern-reference` -
   catalog of flake patterns to consult during bisect.

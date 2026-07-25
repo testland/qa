@@ -30,6 +30,17 @@ defensible record of "why we tested this and not that."
 - Audit / compliance: the team must show a documented risk
   assessment.
 
+## How to use
+
+1. **Pick the methodology** (Step 1) - lightweight impact-by-likelihood for most teams; heavyweight FMEA / Cost of Exposure only when regulation demands it.
+2. **Intake each risk** (Step 2) - one row per risk with feature, category, impact 1-5, likelihood 1-5, and the resulting score.
+3. **Plot the heatmap and tier the verdict** (Step 2) - block / mitigate-this-sprint / accept, using the team's block threshold (typically score 15+).
+4. **Tag categories** (Step 3) - business, technical, regulatory, UX, security, performance, integration - so patterns surface over time.
+5. **Read the test plan off the matrix** (Step 4) - map each top risk to its recommended test types.
+6. **Set the cadence and store it in git** (Steps 6-7) - the matrix is a living document reviewed per feature, per release, and quarterly.
+
+The worked example below runs a checkout release through the full flow.
+
 ## Step 1 - Pick the methodology
 
 Per [rbt-wiki][rbt], two approaches:
@@ -109,40 +120,47 @@ A populated matrix drives the test plan:
 The test plan reads off the matrix: top-N risks → test types per
 risk → estimated effort.
 
-## Step 5 - Heavyweight: FMEA + Cost of Exposure
+## Worked example - checkout redesign release
 
-For regulated industries, lightweight scoring may not suffice.
+Input: the checkout-redesign release scope, lightweight methodology (Step 1).
 
-### FMEA (Failure Mode and Effect Analysis)
+**Intake and score (Steps 2-3).** Four risks surface, each tagged with a
+category and scored impact × likelihood:
 
-Per row: **failure mode + effect + severity (1-10) + occurrence
-(1-10) + detectability (1-10) → RPN (Risk Priority Number =
-S × O × D, range 1-1000)**.
+| ID  | Risk                                          | Category   | Impact | Likelihood | Score |
+|-----|-----------------------------------------------|------------|-------:|-----------:|------:|
+| R-1 | Promo discount math wrong (off-by-cent)        | Business   |   5    |     3      |  15   |
+| R-2 | Stripe webhook delivery failure not retried    | Technical  |   4    |     4      |  16   |
+| R-3 | EU tax calculation incorrect                    | Regulatory |   5    |     2      |  10   |
+| R-4 | Cart loses state on app restart                 | UX         |   3    |     3      |   9   |
 
-```markdown
-| ID  | Failure mode                  | Effect                            | S  | O | D | RPN | Action |
-|-----|--------------------------------|-----------------------------------|----|---|---|-----|--------|
-| F-1 | Promo math wrong               | Wrong charge to customer           | 8  | 5 | 4 | 160 | property tests |
-| F-2 | Stripe webhook missed          | Order not fulfilled                | 9  | 4 | 6 | 216 | retry + DLQ + monitor |
-```
+**Tier the verdict (Step 2).** With a block threshold of 15: R-2 (16) and
+R-1 (15) block the release until mitigated; R-3 (10) and R-4 (9) are high and
+get mitigated this sprint.
 
-Detectability is the inverse of "tests would catch it" - 
-high D = hard to catch = high RPN.
+**Read the test plan off the matrix (Step 4).** Each risk's category selects
+its test types:
 
-### Cost of Exposure
+- R-1 (business logic) -> unit + property-based tests on rounding, plus UAT on the promo path.
+- R-2 (technical / integration) -> retry + DLQ, a chaos test on webhook delivery, and contract tests against Stripe.
+- R-3 (regulatory) -> UAT with the finance team plus a compliance review of the EU tax rules.
+- R-4 (UX) -> manual exploratory plus visual-regression coverage of the persisted cart.
 
-```markdown
-Risk: Stripe webhook delivery failure
-- Estimated incidents per year (untreated): 12
-- Average revenue lost per incident: $5,000
-- Annual cost of exposure: $60,000
-- Cost of mitigation (retry + DLQ + monitor): $15,000 one-time + $2,000/year
-- Decision: Mitigate (ROI in 3 months)
-```
+**Outcome.** The two blocking risks (R-1, R-2) get owners and due dates before
+sign-off; the matrix is committed to
+`docs/risk-matrices/2026-Q2-checkout-redesign.md` and re-reviewed at the next
+cadence point (Step 6).
 
-Per [rbt-wiki][rbt], these heavyweight methods quantify
-"financial impact analysis" - useful for justifying test budget
-to non-technical stakeholders.
+## Step 5 - Heavyweight methods (FMEA, Cost of Exposure)
+
+For regulated or safety-critical products where lightweight scoring is
+insufficient, risk-based testing offers quantitative methods - FMEA (Risk
+Priority Number = severity × occurrence × detectability) and Cost of Exposure
+(annual financial risk vs mitigation cost) - per [rbt-wiki][rbt]. Both need
+specialized expertise; use them only when regulation or financial
+justification requires it. Full row structure, worked FMEA and
+Cost-of-Exposure tables, and a when-to-use guide are in
+[references/heavyweight-risk-scoring.md](references/heavyweight-risk-scoring.md).
 
 ## Step 6 - Cadence
 

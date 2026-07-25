@@ -48,7 +48,15 @@ for the Mac2 sibling) and Windows is the next platform to add.
   than the no-Node-dependency simplicity of
   `winappdriver`.
 
-## Step 1 - Install Appium + the Windows driver
+## How to use
+
+1. Install Appium + the Windows driver (`appium driver install windows`), pin the underlying WinAppDriver via `appium driver run windows install-wad`, then launch the server on `127.0.0.1:4723` (Install).
+2. Declare session capabilities with the `appium:` vendor prefix - `platformName: windows`, `appium:automationName: windows`, `appium:app` (Declare session capabilities).
+3. Author a test that resolves a UIA element by `Name` / `AccessibilityId` and drives it end to end (Worked example).
+4. Add Windows-namespaced gestures (`windows: scroll` / `clickAndDrag` / `keys`), multi-window switching, and `appium:prerun` / `appium:postrun` PowerShell hooks as the suite needs them - see [references/gestures-hooks-and-ci.md](references/gestures-hooks-and-ci.md).
+5. Gate CI on a Windows runner; JUnit output feeds `junit-xml-analysis` - full workflow in [references/gestures-hooks-and-ci.md](references/gestures-hooks-and-ci.md).
+
+## Install
 
 Per [awd][awd]:
 
@@ -71,7 +79,7 @@ The helper downloads the pinned WinAppDriver installer to
 Microsoft install path described in
 `winappdriver`.
 
-## Step 2 - Launch the Appium server
+Launch the Appium server:
 
 ```bash
 appium --port 4723
@@ -82,7 +90,7 @@ to this port forward Windows-specific calls to the WinAppDriver
 service, which Appium spawns automatically when the first session
 is created.
 
-## Step 3 - Declare session capabilities
+## Declare session capabilities
 
 Per [awd][awd]:
 
@@ -107,7 +115,10 @@ Example capability JSON:
 }
 ```
 
-## Step 4 - Author a test (Python WebdriverIO-style)
+## Worked example
+
+Drive one element end to end - launch Notepad, type into its editor,
+read the value back, and quit the session (Python client):
 
 ```python
 from appium import webdriver
@@ -123,130 +134,14 @@ driver = webdriver.Remote('http://127.0.0.1:4723', options=options)
 
 editor = driver.find_element(By.NAME, 'Text editor')
 editor.send_keys('Hello from Appium Windows')
+assert 'Hello from Appium Windows' in editor.text
 
 driver.quit()
 ```
 
 Locators (`AccessibilityId`, `Name`, `ClassName`, etc.) carry the
-same UIA semantics as in `winappdriver` - 
+same UIA semantics as in `winappdriver` -
 the driver proxies them through to WinAppDriver unchanged.
-
-## Step 5 - Windows-specific gestures
-
-Per [awd][awd], the driver adds Windows-namespaced extensions on top
-of the W3C WebDriver baseline:
-
-| Command | Purpose |
-|---|---|
-| `windows: scroll` | "Mouse wheel gesture" with `deltaX` / `deltaY` parameters ([awd][awd]) |
-| `windows: clickAndDrag` | "Drag-and-drop operations" ([awd][awd]) |
-| `windows: keys` | "Customized keyboard input with virtual key codes" ([awd][awd]) |
-| `windows: launchApp` | Open another app window within the same session ([awd][awd]) |
-
-Example - scroll a list inside the app under test:
-
-```python
-driver.execute_script('windows: scroll', {
-    'elementId': list_element.id,
-    'deltaY': -300,   # negative scrolls down
-})
-```
-
-Example - drag a file across panels:
-
-```python
-driver.execute_script('windows: clickAndDrag', {
-    'startElementId': source.id,
-    'endElementId':   target.id,
-})
-```
-
-## Step 6 - Multi-window sessions
-
-Per [awd][awd], "It is possible to switch between app windows using
-WebDriver Windows API" and `windows: launchApp` "creates new app
-windows within the same session". This is the cross-app workflow
-path (e.g., test a deep-link flow that crosses from a desktop app
-into the Settings app):
-
-```python
-settings_handle = driver.execute_script('windows: launchApp', {
-    'app': 'ms-settings:',
-})
-driver.switch_to.window(settings_handle)
-```
-
-## Step 7 - Pre/post-run PowerShell hooks
-
-Per [awd][awd], `appium:prerun` and `appium:postrun` accept
-PowerShell scripts that the driver executes around session
-lifecycle. This is the canonical place to:
-
-- Set up fixture data (write a config file to the user's `%AppData%`).
-- Suppress / replay the Windows lock screen if the app under test
-  triggers a UAC prompt.
-- Tear down user-data state between tests.
-
-```json
-{
-  "platformName": "windows",
-  "appium:automationName": "windows",
-  "appium:app": "MyApp",
-  "appium:prerun": {
-    "script": "Copy-Item .\\fixtures\\config.json $env:APPDATA\\MyApp\\config.json -Force"
-  },
-  "appium:postrun": {
-    "script": "Remove-Item $env:APPDATA\\MyApp\\config.json -Force"
-  }
-}
-```
-
-## Step 8 - Run + parse results
-
-```bash
-# Pytest example
-pytest tests/windows --junitxml=reports/windows-junit.xml
-```
-
-JUnit XML output feeds
-`junit-xml-analysis` (in the qa-test-reporting plugin)
-for the cross-runner aggregation pipeline.
-
-## Step 9 - CI integration
-
-```yaml
-# .github/workflows/appium-windows.yml
-jobs:
-  test:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with: { node-version: '22' }
-      - run: npm install -g appium
-      - run: appium driver install windows
-      - run: appium driver run windows install-wad
-      - name: Enable Developer Mode
-        run: |
-          reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" `
-            /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d 1
-      - name: Start Appium
-        run: |
-          Start-Process -FilePath "appium" -ArgumentList "--port 4723" -PassThru
-          Start-Sleep -Seconds 5
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.12' }
-      - run: pip install Appium-Python-Client pytest
-      - run: pytest tests/windows --junitxml=reports/windows-junit.xml
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: { name: junit, path: reports/ }
-```
-
-Same hosted-vs-self-hosted runner caveats as
-`winappdriver` - UIA requires an
-interactive desktop session, so Session-0 Windows containers won't
-work without extra display setup.
 
 ## Anti-patterns
 
@@ -258,7 +153,7 @@ work without extra display setup.
 | Running PowerShell hooks that block forever | Session creation hangs on the `prerun` script | Hooks must be short + non-interactive ([awd][awd]) |
 | Hard-coded `appTopLevelWindow` checked into the repo | Hex window handle is per-launch, not stable | Discover at runtime via `windows: launchApp` or fresh-launch via `appium:app` |
 | Mixing the Mac2 driver's capability shape on Windows | `appium:bundleId` (Mac2) isn't valid for Windows | Per-platform capability blocks; share only the W3C-standard caps |
-| Using `windows: scroll` with positive `deltaY` to scroll down | Wheel-delta sign mirrors Windows convention | Negative `deltaY` scrolls down (Step 5) |
+| Using `windows: scroll` with positive `deltaY` to scroll down | Wheel-delta sign mirrors Windows convention | Negative `deltaY` scrolls down (see gestures reference) |
 
 ## Limitations
 
@@ -290,6 +185,8 @@ work without extra display setup.
 
 - appium-windows-driver README - [awd][awd].
 - Appium ecosystem drivers page - [appiumdrivers][appiumdrivers].
+- Deep reference (gestures, multi-window sessions, PowerShell hooks,
+  CI wiring): [references/gestures-hooks-and-ci.md](references/gestures-hooks-and-ci.md).
 - Sibling skill (direct service): `winappdriver`.
 - Strategic frame:
   `desktop-test-strategy-reference`.

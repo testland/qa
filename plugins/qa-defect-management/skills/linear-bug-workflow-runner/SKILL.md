@@ -1,6 +1,6 @@
 ---
 name: linear-bug-workflow-runner
-description: "Author and run Linear bug workflows via the GraphQL API: issue creation, state transitions (workflowState assignment), priority assignment (0 No priority / 1 Urgent / 2 High / 3 Medium / 4 Low), label-based classification, search by team and content. Covers the issueCreate mutation, issueUpdate for state transitions, the workflowStates query for per-team state IDs, and Linear's API-key vs OAuth Bearer auth modes. Use when the target tracker is Linear specifically; for tool-agnostic CI gates name the tracker, and for other trackers use jira-bug-workflow-runner (Jira) or github-issues-bug-workflow (GitHub Issues). Files and transitions the issue; reproducing the defect is a separate concern."
+description: "Author and run Linear bug workflows via the GraphQL API: issue creation, state transitions (workflowState assignment), priority assignment (0 No priority / 1 Urgent / 2 High / 3 Medium / 4 Low), label-based classification, search by team and content. Covers the issueCreate mutation, issueUpdate for state transitions, the workflowStates query for per-team state IDs, and Linear's API-key vs OAuth Bearer auth modes; resolve-by-type, CI wiring, and result parsing live in references/. Use when the target tracker is Linear specifically; for other trackers use jira-bug-workflow-runner (Jira) or github-issues-bug-workflow (GitHub Issues). Files and transitions the issue; reproducing the defect is a separate concern."
 ---
 
 # linear-bug-workflow-runner
@@ -24,9 +24,14 @@ for create / update / transition / search.
 - Transitioning bugs in bulk after a release.
 - Backing duplicate-defect search for Linear-using teams.
 
-## Authoring
+## How to use
 
-### Authentication
+1. Authenticate: personal API key (no `Bearer`) or OAuth token (with `Bearer`) - the header format differs (see Authentication).
+2. Look up the target team's `workflowStates` and resolve states by `type`, not display `name` (see Discover state IDs).
+3. Dedupe with the `issues` filter query, then `issueCreate` in an `unstarted` state; `issueUpdate` to transition as the fix progresses (see Search / Create / Transition).
+4. Resolve-by-type helpers, CI wiring, and result parsing are in [references/linear-graphql-reference.md](references/linear-graphql-reference.md).
+
+## Authentication
 
 Per Linear API docs, two auth modes:
 
@@ -55,7 +60,7 @@ the `Bearer` prefix; OAuth tokens use `Bearer`. This is
 unusual - many GraphQL APIs reject the bareword auth - confirmed
 in Linear's quickstart.
 
-### Create a bug
+## Create a bug
 
 The `issueCreate` mutation per
 [linear.app/developers/graphql](https://linear.app/developers/graphql):
@@ -107,7 +112,7 @@ schema and the dashboard tooltip):
 
 Reverse of what some might expect: 1 is **highest** urgency.
 
-### Discover state IDs per team
+## Discover state IDs per team
 
 State IDs are per-team. Look them up via `workflowStates` query:
 
@@ -128,20 +133,13 @@ def get_states(team_id):
     return r.json()["data"]["workflowStates"]["nodes"]
 ```
 
-Per the Linear quickstart docs the simpler form is:
-
-```graphql
-query { workflowStates { nodes { id name } } }
-```
-
-…which returns all states across all teams (filter required for
-per-team).
-
 `type` is one of `backlog`, `unstarted`, `started`, `completed`,
 `canceled` - the canonical lifecycle bucket independent of the
-state's display name.
+state's display name. Resolve by `type`, never by team-customisable
+`name`. (The unfiltered all-teams form of this query is in
+[references/linear-graphql-reference.md](references/linear-graphql-reference.md).)
 
-### Transition (update state)
+## Transition (update state)
 
 `issueUpdate` mutation:
 
@@ -168,7 +166,7 @@ def transition(issue_id, new_state_id):
 (except `teamId` which is immutable) plus assignee, due date,
 estimate, etc.
 
-### Search
+## Search
 
 The `issues` query supports filter expressions:
 
@@ -196,9 +194,11 @@ def find_dupes(team_id, title_text):
 Filter operators: `eq`, `neq`, `contains`, `startsWith`,
 `endsWith`, plus comparison for numerics.
 
-## Running
+## Worked example
 
-### Idempotent bug creation
+File a bug from a CI failure idempotently: dedupe by title, comment on the
+existing issue if found, otherwise create it in the team's `unstarted` state.
+This reuses `find_dupes`, `get_states`, and `create_bug` above:
 
 ```python
 def create_or_attach(team_id, title, description):
@@ -210,39 +210,21 @@ def create_or_attach(team_id, title, description):
     todo_state = next(s for s in get_states(team_id) if s["type"] == "unstarted")
     return create_bug(team_id, title, description, priority=3,
                       state_id=todo_state["id"])["identifier"]
+
+# From a failing pytest run:
+ident = create_or_attach(
+    team_id, "Payment webhook retries drop events",
+    "Repro: send 3 webhooks in 1s; 2 are lost.",
+)
+print(f"Bug tracked as {ident}")   # e.g. ENG-1234
 ```
 
 `add_comment` uses the `commentCreate` mutation (similar shape;
-omitted for brevity).
-
-### Resolve workflow-state by type
-
-Many automation flows want "transition to whatever the team uses
-as Done" without hard-coding state names:
-
-```python
-def transition_to_completed(issue_id, team_id):
-    done = next(s for s in get_states(team_id) if s["type"] == "completed")
-    return transition(issue_id, done["id"])
-```
-
-The `type` enum is stable; the `name` is team-customisable.
-
-## Parsing results
-
-`issueCreate.issue.identifier` is the human-readable ID (e.g.,
-`ENG-1234`). `issueCreate.issue.url` is the canonical permalink.
-
-## CI integration
-
-```yaml
-- name: File Linear bug on failure
-  if: failure()
-  env:
-    LINEAR_KEY: ${{ secrets.LINEAR_KEY }}
-    LINEAR_TEAM_ID: ${{ vars.LINEAR_TEAM_ID }}
-  run: python scripts/file-linear-bug.py results.xml
-```
+omitted for brevity). `issueCreate.issue.identifier` is the human-readable
+ID (e.g., `ENG-1234`); `issueCreate.issue.url` is the canonical permalink.
+To resolve the bug to Done after the fix ships without hard-coding state
+names, use the `transition_to_completed` helper in
+[references/linear-graphql-reference.md](references/linear-graphql-reference.md).
 
 ## Anti-patterns
 
@@ -280,6 +262,9 @@ The `type` enum is stable; the `name` is team-customisable.
   [linear.app/developers](https://linear.app/developers).
 - Linear GraphQL schema (Apollo Studio) - referenced from the
   developer docs.
+- Deep reference (resolve-by-type helper, all-teams query, CI wiring, result
+  parsing):
+  [references/linear-graphql-reference.md](references/linear-graphql-reference.md).
 - Sibling references:
   `bug-lifecycle-reference`,
   `severity-vs-priority-reference`.
