@@ -1,6 +1,6 @@
 ---
 name: cli-output-conventions
-description: "Conventions for designing AND testing CLI output so it stays parseable and assertable - exit-code policy (0 success, non-zero failure with stable codes per failure mode), `stdout` for primary data / `stderr` for messages, `--json` / `--plain` for machine-readable output, deterministic ordering and timestamps, `NO_COLOR` / TTY-aware color, `-q` / `--verbose` discipline, and stable `--help` / `--version`. Built on the [Command Line Interface Guidelines][clig]. Use as the assertion contract for `bats-testing` (text CLIs) and to tell `tui-snapshot-tester` what does NOT need a snapshot."
+description: "Conventions for designing AND testing CLI output so it stays parseable and assertable - exit-code policy (0 success, non-zero failure with stable codes per failure mode), `stdout` for primary data / `stderr` for messages, `--json` / `--plain` for machine-readable output, deterministic ordering and timestamps, `NO_COLOR` / TTY-aware color, `-q` / `--verbose` discipline, and stable `--help` / `--version`. Built on the [Command Line Interface Guidelines][clig]. Use when designing or testing a CLI's output - a new flag, command, or error message, writing CLI assertions, or fixing flaky tests caused by non-deterministic output; it is the assertion contract for `bats-testing` and tells `tui-snapshot-tester` what does NOT need a snapshot."
 ---
 
 # cli-output-conventions
@@ -161,117 +161,9 @@ bob   2026-04-20
 
 **Test pattern:** golden-file comparison with sorted output.
 
-## Convention 5 - Color & TTY
+## Conventions 5-8 - color/TTY, verbosity, `--help`/`--version`, documenting the contract
 
-Per [clig][clig]:
-
-> "Disable color if your program is not in a terminal or the user
-> requested it."
-
-Disable color when:
-- `stdout` (or `stderr`) is not a TTY.
-- `NO_COLOR` env var is set (per `https://no-color.org/`).
-- `TERM=dumb`.
-- `--no-color` flag passed.
-
-> "If `stdout` is not an interactive terminal, don't display any
-> animations."
-
-Progress bars / spinners only on TTY - they pollute CI logs and
-break `wc -l` assertions.
-
-**Test pattern:**
-
-```bash
-@test "no ANSI codes when piped" {
-  run bash -c 'mycli list | cat'
-  [ "$status" -eq 0 ]
-  refute_output --regexp $'\\x1b\\['
-}
-
-@test "NO_COLOR honored" {
-  NO_COLOR=1 run mycli list
-  refute_output --regexp $'\\x1b\\['
-}
-```
-
-## Convention 6 - Quiet & verbose
-
-Per [clig][clig]:
-
-> "you can provide a `-q` option to suppress all non-essential
-> output."
-
-> "By default, don't output information that's only understandable
-> by the creators of the software... only in verbose mode."
-
-```
-Mode      | Flag         | Use
-----------+--------------+--------------------
-Quiet     | -q / --quiet | Scripts; only data + errors
-Default   | (none)       | Interactive; status messages on stderr
-Verbose   | -v           | Debug info on stderr
-Debug     | -vv / --debug| Internal traces on stderr
-```
-
-**Test pattern:**
-
-```bash
-@test "-q suppresses status messages" {
-  run --separate-stderr mycli -q list
-  [ "$status" -eq 0 ]
-  [ -n "$output" ]    # data still on stdout
-  [ -z "$stderr" ]    # no status messages
-}
-```
-
-## Convention 7 - `--help` and `--version`
-
-Per [clig][clig]:
-
-> "Show full help when `-h` and `--help` are passed... you should
-> be able to add `-h` to the end of anything and it should show
-> help."
-
-```bash
-@test "--help exits 0 and mentions Usage" {
-  run mycli --help
-  [ "$status" -eq 0 ]
-  [[ "$output" == *"Usage:"* ]]
-}
-
-@test "subcommand --help exits 0" {
-  run mycli list --help
-  [ "$status" -eq 0 ]
-  [[ "$output" == *"list"* ]]
-}
-
-@test "--version emits machine-parseable version" {
-  run mycli --version
-  [ "$status" -eq 0 ]
-  [[ "$output" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]
-}
-```
-
-`--version` should be parseable: `mycli 1.2.3` or
-`mycli version 1.2.3` - never `Welcome to mycli! Version 1.2.3`.
-
-## Convention 8 - Document the contract
-
-Each CLI repo should have a CONVENTIONS.md (or section in README):
-
-```markdown
-## Output contract
-
-- Exit codes: 0 ok, 2 bad usage, 3 not found, 4 perm denied, 5 network.
-- `stdout` = primary data; `stderr` = status / errors / progress.
-- `--json` is the stable machine contract; default human output may evolve.
-- `NO_COLOR` and TTY detection respected.
-- All dates in `--json` are ISO 8601 UTC.
-```
-
-Tests assert against the contract. If the contract changes, both
-the document and the tests update in the same PR.
+The remaining four conventions and their bats test patterns are in [references/conventions-5-8.md](references/conventions-5-8.md).
 
 ## Anti-patterns
 
