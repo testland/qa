@@ -36,42 +36,11 @@ These six categories are referenced throughout `platform-cert-overview-reference
 
 ### 2. Compliance
 
-**Requirement documents by platform:**
-
-| Platform | Document name | Source |
-|---|---|---|
-| Xbox console | Xbox Requirements (XRs) | [learn.microsoft.com/.../console/certification-requirements](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements) |
-| Xbox PC | Xbox Network Policies for PC and Mobile | [learn.microsoft.com/.../pc/live-policies-pc](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/pc/live-policies-pc) |
-| PlayStation | Technical Requirements Checklist (TRC) | Gated NDA portal; cite by stable ID "Sony TRC" per `PLUGIN_AUTHORING.md` Step 4 fallback |
-| Nintendo | Lotcheck / Submission Guidelines | Gated NDA portal; cite by stable ID "Nintendo Lotcheck" per Step 4 fallback |
-| Steam | App Review Process | [partner.steamgames.com/doc/store/review_process](https://partner.steamgames.com/doc/store/review_process) |
-
-Each requirement maps to test cases with explicit Test Steps, Expected Behavior, and Pass/Fail examples - see Microsoft's [Certification Tested Xbox Requirements for Xbox Console Games](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/console-certification-requirements-and-tests).
-
-**Severity model (Xbox; broadly applicable):**
-
-| Code | Name | Effect |
-|---|---|---|
-| **CFR** | Condition for Resubmission | Title fails cert; must be fixed before resubmit |
-| **SRI** | Standard Reporting Issue | Related to an XR but not severe enough to fail; fix recommended |
-| **ION** | Issue of Note | Not tied to an XR; informational |
-| **Non-Tested** | - | XR could not be tested in this pass |
-
-Sony TRC and Nintendo Lotcheck use comparable severity tiers internally (NDA - cite by stable ID).
+Build conforms to the platform holder's Requirements / TRC / Lotcheck document. The per-platform requirement documents and the CFR / SRI / ION severity codes are in [references/platform-cert-details.md](references/platform-cert-details.md). A **CFR** (Condition for Resubmission) fails cert and must be fixed before resubmit.
 
 ### 3. Compatibility
 
-**The Xbox bench layout** - per the [Certification step-by-step guide](https://learn.microsoft.com/en-us/gaming/game-publishing/concepts/certification/certification-guide) - exemplifies the required matrix:
-
-| Console | SKU | Resolution | Storage | Audio |
-|---|---|---|---|---|
-| Console 1 | Xbox One / Xbox Series X | 720p | Internal HDD | Stereo |
-| Console 2 | Xbox One X / Xbox Series S | 4k | Internal HDD | 5.1 Bitstream |
-| Console 3 | Xbox One S / Xbox Series X | 1080p | Internal HDD | Stereo |
-| Console 4 | Xbox Series S | 1080p | USB HDD | Headset (Windows Sonic) |
-| Console 5 | Xbox Series X | 720p | USB HDD | Stereo |
-
-The same matrix logic applies to Sony (PS4 base / PS4 Pro / PS5 / PS5 Pro), Nintendo (Switch original / OLED / Switch 2), and PC (GPU vendor × driver version × OS × DirectX/Vulkan). Microsoft tracks cross-generation requirements under [XR-130: Xbox Console Families and Generations](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/xr/xr130).
+Runs across all required SKUs, OS versions, hardware generations, and display/audio/storage configs. The Xbox bench layout that exemplifies the required matrix - plus the Sony / Nintendo / PC equivalents - is in [references/platform-cert-details.md](references/platform-cert-details.md).
 
 ### 4. Performance
 
@@ -81,7 +50,7 @@ The same matrix logic applies to Sony (PS4 base / PS4 Pro / PS5 / PS5 Pro), Nint
 
 ### 5. Localization
 
-**Platform-specific note.** Microsoft's bench layout (table above) explicitly varies **Console Language** across five consoles to exercise localized assets in the cert pass. Culture-sensitive content rules live under each platform holder's compliance category - see Microsoft's [Xbox Network Policies](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/pc/live-policies-pc).
+**Platform-specific note.** Microsoft's cert bench (see [references/platform-cert-details.md](references/platform-cert-details.md)) varies **Console Language** across consoles to exercise localized assets. Culture-sensitive content rules live under each platform holder's compliance category - see Microsoft's [Xbox Network Policies](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/pc/live-policies-pc).
 
 Key runtime risk areas not caught by screenshot review: German string overflow (~30% longer than English on average), CJK subpixel rendering, Arabic/Hebrew bidirectional layout, missing VO takes, and lip-sync drift.
 
@@ -100,10 +69,11 @@ Common sub-axes: remappable controls, hold-to-press toggle, Xbox Adaptive Contro
 Given a bug report, apply this sequence:
 
 1. **Identify symptom** - what broke? (crash, visual artifact, wrong value, missing asset, regulatory flag)
-2. **Map to category** - use the bug-severity cheatsheet below; when in doubt, ask: "Is this a design-spec deviation (Functional), a platform-rule violation (Compliance), a hardware-variation failure (Compatibility), a budget overshoot (Performance), a locale-specific failure (Localization), or a barrier to play (Accessibility)?"
+2. **Map to category** - use the bug-severity cheatsheet below, or the six-category table.
 3. **Assign owner** - use the "Typical owner" column from the six-category table above.
 4. **Set severity** - reference the platform holder's severity model (CFR / SRI / ION for Xbox; equivalent tiers for Sony and Nintendo). A CFR blocks resubmission; triage these first.
 5. **Link to cert requirement** - record the XR / TRC / Lotcheck ID in the bug tracker field so cert QA can verify the fix closes the finding.
+6. **Verify before closing** - confirm the assigned category matches the cheatsheet row for the symptom and that the recorded requirement ID resolves in the current platform requirements list; a mismatched category or stale XR number is the common triage error.
 
 ## Bug severity → category mapping cheatsheet
 
