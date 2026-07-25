@@ -24,10 +24,11 @@ Per [jacoco-counters][counters], JaCoCo measures **six counters**:
 | **Classes**           | "A class is considered as executed when at least one of its methods has been executed." |
 | **Cyclomatic Complexity** | "v(G) = B - D + 1 (branches minus decision points plus one)" - minimum number of paths needed to cover all paths through a method. |
 
-This skill covers Maven (the primary deployment), with notes on
-Gradle and the bytecode-only key insight: **"All counters work at
-bytecode level, making them available regardless of debug
-information presence"** ([jacoco-counters][counters]).
+This skill covers Maven (the primary deployment), with the
+bytecode-only key insight: **"All counters work at bytecode level,
+making them available regardless of debug information presence"**
+([jacoco-counters][counters]). Gradle, the XML parser, and the
+cross-language conversions live in the reference file.
 
 ## When to use
 
@@ -37,9 +38,23 @@ information presence"** ([jacoco-counters][counters]).
   Cobertura is unmaintained for JDK 11+; JaCoCo handles modern
   bytecode).
 - Cross-language aggregation needs JaCoCo XML converted to LCOV /
-  Cobertura (Step 7).
+  Cobertura.
 
-## Step 1 - Wire the Maven plugin
+## How to use
+
+1. Confirm the JVM build is Maven / Gradle (see When to use).
+2. Wire the `jacoco-maven-plugin` with the three primary goals -
+   `prepare-agent`, `report`, `check` (below); Gradle's equivalent
+   is in [references/gradle-parsing-and-ci.md](references/gradle-parsing-and-ci.md).
+3. Run `mvn verify`; read the `check` verdict and the HTML at
+   `target/site/jacoco/index.html`.
+4. Gate on INSTRUCTION + BRANCH ratios, then parse `jacoco.xml` for
+   PR comments and convert to LCOV / Cobertura for cross-language
+   aggregation - the parser, the counter-aware gating table, the
+   format conversions, and the full Maven `verify` CI job are in
+   [references/gradle-parsing-and-ci.md](references/gradle-parsing-and-ci.md).
+
+## Wire the Maven plugin
 
 Per [jacoco-maven][jmvn], the plugin defines several goals; the
 three primary ones are **`prepare-agent`**, **`report`**, and
@@ -104,21 +119,21 @@ Per [jacoco-maven][jmvn]: "Maven 3.0 or higher and Java 1.8 or
 higher for the Maven runtime, Java 1.5 or higher for the test
 executor."
 
-## Step 2 - Report formats
+## Report formats
 
 The `report` goal emits three artifacts under `target/site/jacoco/`:
 
 | File                | Format               | Use                                                       |
 |---------------------|----------------------|-----------------------------------------------------------|
 | `index.html` + assets | HTML drill-down     | Human review.                                              |
-| `jacoco.xml`        | XML (with DTD)       | CI parsing; Cobertura-shape conversion (Step 7).           |
+| `jacoco.xml`        | XML (with DTD)       | CI parsing; Cobertura-shape conversion.                    |
 | `jacoco.csv`        | CSV per-class        | Spreadsheets; quick scripting.                              |
 
 For Maven multi-module projects, the per-module reports go under
 each module's `target/site/jacoco/`. For an aggregated report, use
 the `report-aggregate` goal in a parent module.
 
-## Step 3 - `check` rule structure
+## Gating with the `check` goal
 
 The `check` goal accepts a list of rules; each rule scopes by
 **element** (BUNDLE / PACKAGE / CLASS / SOURCEFILE / METHOD) and
@@ -169,117 +184,8 @@ strict rule for production code (excluding tests).
 
 `minimum` floors the value; `maximum` caps it. Counter options are
 `INSTRUCTION` / `BRANCH` / `LINE` / `METHOD` / `CLASS` / `COMPLEXITY`
-(per [jacoco-counters][counters]).
-
-## Step 4 - Gradle equivalent
-
-```gradle
-plugins {
-  id 'java'
-  id 'jacoco'
-}
-
-jacoco {
-  toolVersion = '0.8.13'
-}
-
-test {
-  finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-  dependsOn test
-  reports {
-    xml.required = true
-    html.required = true
-    csv.required = false
-  }
-}
-
-jacocoTestCoverageVerification {
-  violationRules {
-    rule {
-      limit {
-        counter = 'INSTRUCTION'
-        value = 'COVEREDRATIO'
-        minimum = 0.80
-      }
-      limit {
-        counter = 'BRANCH'
-        value = 'COVEREDRATIO'
-        minimum = 0.70
-      }
-    }
-  }
-}
-
-check.dependsOn jacocoTestCoverageVerification
-```
-
-## Step 5 - Parse `jacoco.xml`
-
-The JaCoCo XML format mirrors the report tree (report → package →
-class → method → counter):
-
-```xml
-<report name="my-app">
-  <package name="com/example/checkout">
-    <class name="com/example/checkout/Cart" sourcefilename="Cart.java">
-      <method name="addItem" desc="(LItem;)V" line="12">
-        <counter type="INSTRUCTION" missed="0" covered="15"/>
-        <counter type="BRANCH" missed="1" covered="3"/>
-        <counter type="LINE" missed="0" covered="3"/>
-        <counter type="METHOD" missed="0" covered="1"/>
-        <counter type="COMPLEXITY" missed="0" covered="2"/>
-      </method>
-      <counter type="INSTRUCTION" missed="0" covered="42"/>
-      ...
-    </class>
-    <counter type="INSTRUCTION" missed="0" covered="100"/>
-    ...
-  </package>
-  <counter type="INSTRUCTION" missed="20" covered="500"/>
-  ...
-</report>
-```
-
-```python
-# scripts/parse_jacoco.py
-import xml.etree.ElementTree as ET
-
-def parse_jacoco(path):
-    root = ET.parse(path).getroot()
-    files = []
-    for pkg in root.findall('package'):
-        for cls in pkg.findall('class'):
-            counters = {c.get('type'): {
-                            'missed': int(c.get('missed')),
-                            'covered': int(c.get('covered')),
-                        } for c in cls.findall('counter')}
-            files.append({
-                'package': pkg.get('name'),
-                'name': cls.get('name'),
-                'sourcefile': cls.get('sourcefilename'),
-                'counters': counters,
-            })
-    return files
-```
-
-## Step 6 - Counter-aware metrics
-
-Per [jacoco-counters][counters], the six counters have different
-semantics. Don't aggregate naively:
-
-| Counter      | When to gate on it                                                                  |
-|--------------|--------------------------------------------------------------------------------------|
-| INSTRUCTION  | The most granular; least sensitive to source formatting. Best whole-repo gate.      |
-| LINE         | Most intuitive for reviewers; aggregates per source line.                            |
-| BRANCH       | Critical for control flow correctness; gate separately from line.                    |
-| METHOD       | Coarse-grained; "any test touched this method" - useful as a "no dead code" floor. |
-| CLASS        | Even coarser; "any test touched this class" - proves the test suite at least loads it. |
-| COMPLEXITY   | Pair with branch coverage; high-complexity uncovered methods are the highest-risk. |
-
-A pragmatic three-line gate:
+(per [jacoco-counters][counters]). Gate on INSTRUCTION for the
+whole-repo floor and BRANCH separately, with a bounded METHOD miss:
 
 ```xml
 <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.80</minimum></limit>
@@ -288,66 +194,51 @@ A pragmatic three-line gate:
 ```
 
 Whole-bundle 80% instruction; 70% branch; allow up to 5 untested
-methods.
+methods. The per-counter "when to gate on which" table is in
+[references/gradle-parsing-and-ci.md](references/gradle-parsing-and-ci.md).
 
-## Step 7 - Cross-language: convert JaCoCo XML
+## Worked example
 
-For projects that mix JVM with other languages and want one
-coverage UI, convert JaCoCo XML to a sibling format:
+A Maven service wiring JaCoCo for the first time:
 
-### To Cobertura
-
-```bash
-# Use the cover2cover.py script (community-maintained):
-python cover2cover.py target/site/jacoco/jacoco.xml src/main/java > target/cobertura.xml
-```
-
-Then feed `cobertura-analysis`.
-
-### To LCOV
+1. Add the plugin block above to `pom.xml` (all three executions:
+   `prepare-agent`, `report`, `check`).
+2. Run the build:
 
 ```bash
-# Use the xml2lcov converter (per LCOV's language-agnostic converter family):
-xml2lcov target/site/jacoco/jacoco.xml > target/jacoco.info
+./mvnw -B verify
 ```
 
-Then feed `lcov-analysis`.
+`prepare-agent` instruments the forked test JVM; the tests write
+`target/jacoco.exec`; `report` renders `target/site/jacoco/index.html`;
+`check` evaluates the rules.
 
-LCOV is the language-agnostic interchange format; LCOV's own
-documentation lists JaCoCo conversion as a supported path.
+If instruction coverage lands at 82% but branch coverage is 66%, the
+build fails on the BRANCH rule (minimum 0.70), naming the bundle and
+the missed limit. Open `target/site/jacoco/index.html`, drill into
+the red (missed) branches, add the tests that exercise them, and
+re-run `./mvnw -B verify` until `check` passes.
 
-## Step 8 - CI shape
+## Operating in CI
 
-```yaml
-- name: Run Maven verify
-  run: ./mvnw -B verify
-
-- name: Upload JaCoCo report
-  if: always()
-  uses: actions/upload-artifact@v4
-  with:
-    name: jacoco
-    path: target/site/jacoco/
-
-- name: Convert to LCOV for SaaS
-  run: xml2lcov target/site/jacoco/jacoco.xml > target/jacoco.info
-
-- name: Upload to coverage SaaS
-  uses: codecov/codecov-action@v5
-  with:
-    files: target/jacoco.info
-```
+Run `./mvnw -B verify` so `check` gates the build, then upload
+`target/site/jacoco/` with `if: always()` (coverage matters most on
+runs that failed the gate). For a coverage SaaS or cross-language
+aggregation, convert `jacoco.xml` to LCOV in the same job and upload
+that. The full GitHub Actions workflow (verify, artifact upload,
+`xml2lcov` conversion, SaaS upload) is in
+[references/gradle-parsing-and-ci.md](references/gradle-parsing-and-ci.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                       | Why it fails                                                              | Fix |
 |--------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Skipping `prepare-agent`                                            | Tests run without instrumentation; coverage data empty.                  | Always include `prepare-agent` (Step 1). |
-| Whole-project rule with `INSTRUCTION` only                          | Branch regressions invisible - line% looks fine while branch% drops.     | Separate INSTRUCTION + BRANCH rules (Step 6). |
-| `<element>BUNDLE</element>` on every rule                           | Per-class violations bury inside an aggregate that passes.               | Add a per-CLASS rule with `excludes` for tests (Step 3). |
-| Using JaCoCo report HTML as PR-comment input                        | HTML is for humans; PR comments need machine-readable.                   | Parse `jacoco.xml` (Step 5); generate the comment from there. |
-| Running JaCoCo on test code                                          | "Coverage" of tests is meaningless and inflates aggregate.               | `excludes` for `*Test`, `*IT`, `*Spec` (Step 3). |
-| Aggregating LINE coverage when methods are short                    | Inflated; the coarse-grained measure looks fine.                          | Pair LINE with BRANCH always (Step 6). |
+| Skipping `prepare-agent`                                            | Tests run without instrumentation; coverage data empty.                  | Always include `prepare-agent` (see Wire the Maven plugin). |
+| Whole-project rule with `INSTRUCTION` only                          | Branch regressions invisible - line% looks fine while branch% drops.     | Separate INSTRUCTION + BRANCH rules (see Gating with the check goal). |
+| `<element>BUNDLE</element>` on every rule                           | Per-class violations bury inside an aggregate that passes.               | Add a per-CLASS rule with `excludes` for tests (see Gating with the check goal). |
+| Using JaCoCo report HTML as PR-comment input                        | HTML is for humans; PR comments need machine-readable.                   | Parse `jacoco.xml` (see references); generate the comment from there. |
+| Running JaCoCo on test code                                          | "Coverage" of tests is meaningless and inflates aggregate.               | `excludes` for `*Test`, `*IT`, `*Spec` (see Gating with the check goal). |
+| Aggregating LINE coverage when methods are short                    | Inflated; the coarse-grained measure looks fine.                          | Pair LINE with BRANCH always (see the counter-aware table in references). |
 | Failing the build on COMPLEXITY without a tested floor              | Forces refactors of legitimately complex code (algorithms).               | Use COMPLEXITY as informational; gate on INSTRUCTION + BRANCH. |
 
 ## Limitations
@@ -373,6 +264,10 @@ documentation lists JaCoCo conversion as a supported path.
   measurement, formula for cyclomatic complexity.
 - [jacoco-maven][jmvn] - `prepare-agent` / `report` / `check`
   goals; Maven + JVM version requirements; HTML report output path.
+- [references/gradle-parsing-and-ci.md](references/gradle-parsing-and-ci.md) -
+  the Gradle plugin config, the `jacoco.xml` parser, the counter-aware
+  gating table, JaCoCo-to-Cobertura / LCOV conversion, and the Maven
+  `verify` CI job.
 - `cobertura-analysis` - sister
   parser; JaCoCo XML can convert to Cobertura XML for sibling tooling.
 - `lcov-analysis` - sister parser; JaCoCo

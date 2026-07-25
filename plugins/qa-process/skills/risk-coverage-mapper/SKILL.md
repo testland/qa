@@ -116,38 +116,16 @@ def build_coverage_matrix(risks, tests, cases, monitors):
 
 ## Step 4 - Emit the matrix
 
-```markdown
-# Risk coverage matrix - <release / quarter> - YYYY-MM-DD
+Emit a Markdown document ordered by score descending, with these sections:
 
-**Total risks (score ≥ 5):** 27
-**Covered:** 23 (85 %)
-**Orphan risks (no coverage):** 4 - 2 critical, 2 low
-**Average coverage depth:** 2.4
+- **Header** - total risks (score >= 5), covered count and %, orphan count (split critical vs low), average coverage depth.
+- **Risks by coverage** - one row per risk: ID, title, score, automated tests, manual cases, monitors, and depth. Bold any orphan (depth 0).
+- **Orphan risks (critical action)** - every depth-0 risk with a one-line reason.
+- **Over-covered risks (audit)** - depth 5+ risks to check for redundancy.
 
-## Risks by coverage
-
-| Risk ID | Risk | Score | Automated tests | Manual cases | Monitors | Depth |
-|---|---|---:|---|---|---|---:|
-| PR-001 | Pricing engine off-by-cent EU | 15 | tests/billing/test_promo_stacking_eu.py · tests/billing/test_rounding_properties.py | C1234 (TestRail) | datadog://pricing-anomaly | 4 |
-| PR-002 | OAuth refresh-token leak via logs | 10 | tests/auth/test_log_redaction.py | C1241 | - | 2 |
-| PR-003 | Stripe webhook delivery failure not retried | 16 | tests/billing/test_webhook_retry.py | C1256 + C1257 | datadog://stripe-webhook-failure-rate · pingdom://stripe-endpoint | 5 |
-| **PR-007** | **Locale-specific date parsing on /reports** | **12** | ** - (ORPHAN)** | - | - | **0** |
-| ... | ... | ... | ... | ... | ... | ... |
-
-## Orphan risks (critical action)
-
-| Risk ID | Risk | Score | Why orphan |
-|---|---|---:|---|
-| PR-007 | Locale-specific date parsing on /reports | 12 | New risk added Q2; no tests yet |
-| R-22 | Cyber-week 10x load on /search | 20 | Load test infra not in place |
-| ... | ... | ... | ... |
-
-## Over-covered risks (audit)
-
-| Risk ID | Risk | Depth |
-|---|---|---:|
-| PR-001 (already shown above; depth 4 is fine but worth audit) | ... | 4 |
-```
+The full annotated template is in
+[references/risk-coverage-output-templates.md](references/risk-coverage-output-templates.md);
+the worked example below shows it filled for one release.
 
 ## Step 5 - Identify orphan tests
 
@@ -164,39 +142,12 @@ was retired, the feature deprecated). Audit for deletion.
 
 ## Step 6 - Executive summary
 
-```markdown
-## Risk-coverage executive summary - Q2 2026
-
-### Headline
-
-23 of 27 medium-or-higher risks covered (85 %). 4 orphan risks
-require action before release.
-
-### Critical orphans (must address before release)
-
-- **PR-007** (score 12): Locale-specific date parsing on /reports.
-  Recommended action: 1 manual case + 1 automated unit test (1
-  person-day, owner Eve).
-- **R-22** (score 20): Cyber-week 10x load on /search. Recommended
-  action: k6 load-test scenario; baseline at current production
-  rates (2 person-days, owner Dan).
-
-### Possibly over-covered (audit)
-
-- **PR-001** (depth 4): Pricing engine. Audit Q2 sprint for
-  redundancy.
-
-### Coverage debt trend
-
-| Month | Orphan risks | Avg depth |
-|---|---:|---:|
-| 2026-02 | 6 | 2.1 |
-| 2026-03 | 5 | 2.2 |
-| 2026-04 | 5 | 2.3 |
-| 2026-05 | 4 | 2.4 |
-
-Trend: improving slowly. Continue current cadence.
-```
+Roll the matrix up into a stakeholder-facing summary: a one-line headline
+(covered vs total, orphan count), the critical orphans each with a recommended
+action, owner, and estimate, the possibly-over-covered audit list, and a
+coverage-debt trend table (orphan count and average depth over recent months).
+The template is in
+[references/risk-coverage-output-templates.md](references/risk-coverage-output-templates.md).
 
 ## Step 7 - CI integration
 
@@ -211,6 +162,32 @@ becomes uncovered:
       --output risk-coverage.md \
       --fail-on-orphan-score 15
 ```
+
+## Worked example - Q2 2026 release
+
+Ingest (Step 1) pulls 27 medium-or-higher risks from the release matrix and the
+product register. Coverage inventory (Step 2) scans the repo for `risk:<ID>`
+tags, queries the TCM for linked cases, and reads the monitor map. The matrix
+(Steps 3-4), ordered by score:
+
+| Risk ID | Risk | Score | Automated tests | Manual cases | Monitors | Depth |
+|---|---|---:|---|---|---|---:|
+| PR-003 | Stripe webhook delivery failure not retried | 16 | test_webhook_retry.py | C1256 + C1257 | datadog + pingdom | 5 |
+| PR-001 | Pricing engine off-by-cent EU | 15 | test_promo_stacking_eu.py + test_rounding_properties.py | C1234 | datadog://pricing-anomaly | 4 |
+| **R-22** | **Cyber-week 10x load on /search** | **20** | ** - (ORPHAN)** | - | - | **0** |
+| **PR-007** | **Locale date parsing on /reports** | **12** | ** - (ORPHAN)** | - | - | **0** |
+
+Headline (Step 6): 23 of 27 covered (85%); 4 orphans, 2 of them critical.
+Critical orphans, with recommended actions:
+
+- **R-22** (score 20): a k6 load-test scenario baselined at current production
+  rates (2 person-days, owner Dan). Orphan because the load-test infra is not
+  yet in place.
+- **PR-007** (score 12): 1 manual case + 1 automated unit test (1 person-day,
+  owner Eve). Orphan because the risk was added this quarter with no tests yet.
+
+PR-003 sits at depth 5 and is flagged for a redundancy audit. The CI gate
+(Step 7) fails the next PR if any risk with score >= 15 drops to depth 0.
 
 ## Anti-patterns
 

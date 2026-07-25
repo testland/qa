@@ -1,6 +1,6 @@
 ---
 name: test-code-conventions
-description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`{system_under_test}_{scenario}_{expected}` vs nested describe), assertion specificity, mocking rationale (state vs behavior verification, fake vs mock preference), fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern. Use as the shared rule book behind a test-code review, as a team's onboarding reference for \"what makes a test code-reviewable,\" or as the source of truth a review verdict cites back to."
+description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`{system_under_test}_{scenario}_{expected}` vs nested describe), assertion specificity, mocking rationale (state vs behavior verification, fake vs mock preference), fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern; the E2E selector-priority and web-first-assertion conventions (§8 / §9) live in references/. Use as the shared rule book behind a test-code review, as a team's onboarding reference for \"what makes a test code-reviewable,\" or as the source of truth a review verdict cites back to."
 ---
 
 # test-code-conventions
@@ -20,6 +20,23 @@ the underlying rule.
   needs the underlying rule's rationale.
 - The team is authoring its own per-team test conventions document
   and wants a starting point.
+
+## How to use
+
+1. **Scope to test files.** Apply these conventions to `*.spec.*` /
+   `*.test.*` / `tests/**` only; production code is out of scope.
+2. **Read the Act lines first** (§1). One scan of the single Act per test
+   tells you what each test exercises before you read the body.
+3. **Check one logical assertion target** (§2) and a self-documenting
+   name (§3) - hide the body and see whether the name still explains it.
+4. **Judge the assertions and doubles** (§4 assertion specificity,
+   §5 mocking) - loose matchers and behaviour-verification are the common misses.
+5. **Trace fixture scope and magic literals** (§6, §7): the smallest scope
+   that holds, and named values across the cause-effect chain.
+6. **Flag slow setup** (§10); for E2E tests, apply the selector-priority
+   and web-first rules in §8 / §9.
+7. **Cite the section when flagging.** Name the rule (`§4`) and spend the
+   words on the specific edit, not on restating the rule.
 
 ## §1 - AAA structure
 
@@ -215,51 +232,20 @@ math; the assertion failure message becomes interpretable.
 
 ## §8 - E2E selectors
 
-Per [pw-best-practices][pwb]: "Your DOM can easily change so having
-your tests depend on your DOM structure can lead to failing tests."
-
-[pwb]: https://playwright.dev/docs/best-practices
-
-Per [tl-queries][tl] (Testing Library priority order):
-
-[tl]: https://testing-library.com/docs/queries/about/
-
-| Priority | Query                                       | When to use |
-|----------|---------------------------------------------|-------------|
-| 1        | `getByRole('button', { name: 'Submit' })`    | Default. Tests via the accessibility tree - same path as users. |
-| 2        | `getByLabelText('Email')`                    | Form fields with associated `<label>`. |
-| 3        | `getByPlaceholderText`, `getByText`, `getByDisplayValue` | When labels aren't available. |
-| 4        | `getByAltText`, `getByTitle`                 | Images, tooltips. |
-| 5        | `getByTestId('submit-button')`               | Last resort. Per [tl-queries][tl]: "The user cannot see (or hear) these." |
-
-CSS class selectors (`.button-primary`) and XPath
-(`//div[@class='cart']//button[1]`) are not on the priority list - 
-per [pw-best-practices][pwb] they are explicitly identified as
-brittle.
-
-The same convention holds for Playwright (`page.getByRole(...)`),
-Cypress (`cy.findByRole(...)` via cypress-testing-library), and
-Selenium (when the test framework supports role-based queries via
-extensions).
+Prefer user-facing, accessibility-first locators over DOM-structure
+selectors. Per [tl-queries][tl] the query priority is `getByRole` →
+`getByLabelText` → text / placeholder → `getByTestId` (last resort), and
+per [pw-best-practices][pwb] CSS-class and XPath selectors are brittle
+because the DOM changes freely. The full priority table, the per-framework
+mappings (Playwright / Cypress / Selenium), and the CSS/XPath rationale are
+in [references/e2e-selector-and-assertion-conventions.md](references/e2e-selector-and-assertion-conventions.md).
 
 ## §9 - Web-first assertions (E2E)
 
-Per [pw-best-practices][pwb]: avoid "manual assertions without
-waiting. Using `isVisible()` checks immediately without awaiting,
-rather than web-first assertions like `toBeVisible()` that wait for
-conditions to be met."
-
-```typescript
-// Bad - race condition
-expect(page.locator('.toast').isVisible()).toBe(true);
-
-// Good - auto-waits
-await expect(page.locator('.toast')).toBeVisible();
-```
-
-The web-first form auto-waits for the assertion to become true
-within the test's timeout, eliminating the wait-N-seconds-and-hope
-pattern.
+Prefer auto-waiting web-first assertions
+(`await expect(locator).toBeVisible()`) over synchronous `.isVisible()`
+checks that race the render, per [pw-best-practices][pwb]. The before /
+after example is in [references/e2e-selector-and-assertion-conventions.md](references/e2e-selector-and-assertion-conventions.md).
 
 ## §10 - Slow setup is a smell
 
@@ -276,6 +262,66 @@ warming caches) has a coupling problem. The remedies:
 The whole-suite cost of slow setup compounds: 10 tests × 2s =
 +20s per CI run × 50 PRs/day = 1000s/day burned.
 
+## Worked example - reviewing one test file
+
+**The file under review (`checkout.spec.ts`):**
+
+```typescript
+let cart;                             // file-level, reused across tests
+beforeAll(() => { cart = buildCart(); });
+
+test('checkout 1', async () => {
+  cart.addItem({ sku: 'BOOK-001', qty: 2 });
+  const res = await checkout(cart);
+  expect(res).toBeTruthy();
+  expect(cart.total).toBe(43.21);
+});
+```
+
+**Walking the conventions:**
+
+| Convention | Finding | Fix |
+|---|---|---|
+| §1 AAA | Phases not separated; two logical Acts (`addItem`, `checkout`). | Blank-line the phases; split the two Acts into two tests. |
+| §2 Single-responsibility | Asserts the checkout result *and* the cart total - two targets. | One assertion target per test. |
+| §3 Naming | `checkout 1` names nothing. | `checkout_validCart_confirmsOrder`. |
+| §4 Assertion specificity | `expect(res).toBeTruthy()` passes for `1`, `{}`, `[]`. | `expect(res.status).toBe('confirmed')`. |
+| §6 Fixture coupling | `cart` is a file-level `beforeAll` fixture the test mutates. | Rebuild per test in `beforeEach` (inline ownership). |
+| §7 Magic literals | `43.21` has no visible derivation. | Derive from named `PRICE`, `QTY`, `TAX_RATE`. |
+
+**After the fixes:**
+
+```typescript
+const PRICE = 19.99, QTY = 2, TAX_RATE = 0.0825;
+let cart;
+
+beforeEach(() => { cart = buildCart(); });
+
+test('checkout_validCart_confirmsOrder', async () => {
+  // Arrange
+  cart.addItem({ sku: 'BOOK-001', qty: QTY });
+
+  // Act
+  const res = await checkout(cart);
+
+  // Assert
+  expect(res.status).toBe('confirmed');
+});
+
+test('addItem_appliesTaxedTotal', () => {
+  // Arrange
+  cart.addItem({ sku: 'BOOK-001', qty: QTY });
+
+  // Assert
+  expect(cart.total).toBeCloseTo(PRICE * QTY * (1 + TAX_RATE), 2);
+});
+```
+
+Each test now has one Act, one assertion target, a self-documenting name,
+a specific matcher, an inline-owned fixture, and a derived expected value.
+For the E2E selector and web-first conventions applied to a `*.e2e.ts`
+file, see [references/e2e-selector-and-assertion-conventions.md](references/e2e-selector-and-assertion-conventions.md).
+
 ## References
 
 - [mocks-stubs][ms] - Martin Fowler on the test-double taxonomy:
@@ -287,3 +333,9 @@ The whole-suite cost of slow setup compounds: 10 tests × 2s =
 - [pw-best-practices][pwb] - Playwright best practices: user-facing
   locators, web-first assertions, "automated tests should verify
   that the application code works for the end users."
+- E2E selector priority + web-first assertions (§8 / §9), with these
+  citations, in
+  [references/e2e-selector-and-assertion-conventions.md](references/e2e-selector-and-assertion-conventions.md).
+
+[tl]: https://testing-library.com/docs/queries/about/
+[pwb]: https://playwright.dev/docs/best-practices

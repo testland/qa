@@ -14,43 +14,37 @@ Modern teams measure perf at multiple layers:
 | Backend load | `k6-load-testing`, `jmeter-load-testing`, `gatling-load-testing`, `locust-load-testing` |
 | Frontend     | `lighthouse-perf` - Web Vitals via Lighthouse CI       |
 
-Each runner has its own pass/fail criterion. This gate **unifies**
-them into a single go / no-go verdict with per-metric deltas vs.
-main, and emits a markdown summary suitable for `$GITHUB_STEP_SUMMARY`
-or PR comment.
+Each runner has its own pass/fail criterion. This gate **unifies** them into a
+single go / no-go verdict with per-metric deltas vs. main, and emits a markdown
+summary suitable for `$GITHUB_STEP_SUMMARY` or a PR comment.
 
-This is the perf counterpart to `data-quality-gate`,
-`visual-baseline-gate`, and `contract-compatibility-gate` - same
-artifact shape, different domain.
+This is the perf counterpart to `data-quality-gate`, `visual-baseline-gate`,
+and `contract-compatibility-gate` - same artifact shape, different domain.
 
 ## When to use
 
 - The team uses two or more perf runners and wants one CI gate.
-- Per-PR perf delta vs. main is the team's regression-detection
-  signal.
-- Some metrics should be advisory rather than blocking - e.g.
-  block on p95 latency regression but warn on Lighthouse score
-  drift.
+- Per-PR perf delta vs. main is the team's regression-detection signal.
+- Some metrics should be advisory rather than blocking - e.g. block on p95
+  latency regression but warn on Lighthouse score drift.
 - Per-metric ratchet behavior is needed (existing budget breaches
   grandfathered, new breaches block).
 
-If the project has only one runner, defer this gate - use the
-runner's native CI integration directly.
+If the project has only one runner, defer this gate - use the runner's native
+CI integration directly.
 
-## Step 1 - Identify your sources
+## How to use
 
-| Source           | Artifact                                    | Schema |
-|------------------|---------------------------------------------|--------|
-| k6               | `summary.json` (--summary-export)            | Per-metric values + threshold pass/fail. |
-| JMeter           | `results.jtl` + `report/statistics.json`     | Per-sampler percentiles + counts.        |
-| Gatling          | `target/gatling/<sim>-<ts>/js/stats.json`    | Per-request percentiles + assertion outcomes. |
-| Locust           | `<prefix>_stats.csv`                          | Per-endpoint percentiles.                 |
-| Lighthouse CI    | `.lighthouseci/lhr-*.json`                    | Per-URL audit results including Web Vitals.|
+1. Collect each runner's output artifact (k6 `summary.json`, Lighthouse
+   `lhr-*.json`, and the rest) - the per-runner source map is in [references/ci-wiring-and-metric-sources.md](references/ci-wiring-and-metric-sources.md).
+2. Flatten every runner's output into the unified metric record (below), one
+   record per measured subject + metric.
+3. Fetch the last green main-branch baseline and compute each record's delta.
+4. Apply the gate decision rule to produce a single go / no-go verdict.
+5. Emit the markdown + JSON artifact; a no-go exits non-zero and halts CI. Full
+   CI wiring and per-metric budgets are in [references/ci-wiring-and-metric-sources.md](references/ci-wiring-and-metric-sources.md).
 
-Persist each runner's artifact as a CI build artifact (with
-`if: always()`) so the gate input is reproducible and triageable.
-
-## Step 2 - Define the unified metric record
+## The unified metric record
 
 Flatten every runner's output into one shape:
 
@@ -74,15 +68,13 @@ Flatten every runner's output into one shape:
 | `subject`  | URL path / sampler name / story ID - what was measured. |
 | `metric`   | `p95_latency_ms` / `error_rate` / `lcp_ms` / `inp_ms` / `cls`. |
 | `value`    | Current run's value. |
-| `baseline` | Last green main-branch run's value (fetched from artifact storage / Grafana / Lighthouse CI server). |
+| `baseline` | Last green main-branch run's value (from artifact storage / Grafana / Lighthouse CI server). |
 | `delta`    | Percent change vs. baseline. |
 | `budget`   | Configured threshold from the runner. |
 | `status`   | `pass` / `fail` based on `value` vs `budget`. |
 | `severity` | `blocker` / `warn`. |
 
-## Step 3 - Define the gate decision rule
-
-Pseudocode:
+## The gate decision rule
 
 ```python
 def gate_decision(records, *,
@@ -112,10 +104,9 @@ Two regression triggers:
 - **Budget breach** - `value > budget` (absolute threshold).
 - **Regression** - `delta_pct > N%` vs. baseline (relative).
 
-Both matter: a metric within budget but trending up still warrants a
-warning.
+Both matter: a metric within budget but trending up still warrants a warning.
 
-## Step 4 - Emit the artifact
+## Emit the artifact
 
 Markdown summary:
 
@@ -138,7 +129,7 @@ Markdown summary:
 | locust     | GET /search          | p95 latency       | 410ms   | 380ms    | +8%   |
 ```
 
-Plus JSON sibling for downstream tooling:
+Plus a JSON sibling for downstream tooling:
 
 ```json
 {
@@ -152,7 +143,10 @@ Plus JSON sibling for downstream tooling:
 
 A no-go verdict exits non-zero - CI halts.
 
-## Worked example: minimal Python implementation
+## Worked example
+
+Run the gate on one build: read the k6 and Lighthouse artifacts, flatten each
+into records, apply the rule, print the verdict, and exit with its code.
 
 ```python
 # scripts/run_perf_gate.py
@@ -218,8 +212,9 @@ sys.exit(0 if verdict == "go" else 1)
 
 ## References
 
-- All sibling perf runners listed in Step 1.
+- Per-runner source artifacts, per-metric budgets, and the full CI wiring:
+  [references/ci-wiring-and-metric-sources.md](references/ci-wiring-and-metric-sources.md).
 - `data-quality-gate`, `visual-baseline-gate`,
   `contract-compatibility-gate` - sibling gates with the same artifact shape.
-- `non-functional-requirement-extractor` - upstream skill that produces the threshold-bound budgets this
-  gate enforces.
+- `non-functional-requirement-extractor` - upstream skill that produces the
+  threshold-bound budgets this gate enforces.
