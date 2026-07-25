@@ -84,45 +84,12 @@ distribution is predicted rather than measured (see Limitations).
 
 ## Step 2 - Classify each file
 
-```python
-# scripts/classify-change-shape.py
-import re
-
-PATH_RULES = [
-    ("data-heavy",    r"(^|/)(migrations?|db/migrate|etl|pipelines?)/|"
-                      r"schema\.(sql|prisma|graphql)$|\.(proto|avsc)$|seeds?/"),
-    ("ui-heavy",      r"(^|/)(components?|views?|pages?|screens?|layouts?)/|"
-                      r"\.(tsx|jsx|vue|svelte|css|scss|html)$"),
-    ("service-layer", r"(^|/)(routes?|controllers?|handlers?|api|services?|"
-                      r"repositor(y|ies)|resolvers?|consumers?|clients?)/"),
-    ("pure-logic",    r"(^|/)(domain|core|lib|rules|calc|models?)/"),
-]
-
-CONTENT_OVERRIDES = [
-    ("data-heavy",    r"CREATE TABLE|ALTER TABLE|ADD COLUMN|def upgrade\("),
-    ("ui-heavy",      r"<[A-Z][A-Za-z]*|useState\(|render\(|@Component\b"),
-    ("service-layer", r"@(Get|Post|Put|Delete)Mapping|app\.(get|post|put)\(|"
-                      r"session\.query\(|createConnection\(|fetch\(|HttpClient"),
-]
-
-EXCLUDE = re.compile(r"(^|/)(tests?|spec|__tests__|e2e|fixtures?)/|"
-                     r"\.(test|spec)\.|(^|/)(\.github|docs)/|"
-                     r"(package-lock|yarn\.lock|Gemfile\.lock)")
-
-def classify_file(path, content=""):
-    if EXCLUDE.search(path):
-        return None                      # not evidence about the change
-    for shape, pattern in PATH_RULES:
-        if re.search(pattern, path):
-            path_shape = shape
-            break
-    else:
-        path_shape = None
-    for shape, pattern in CONTENT_OVERRIDES:
-        if content and re.search(pattern, content):
-            return shape if path_shape is None else path_shape
-    return path_shape or "pure-logic"    # default: no surface signal found
-```
+Apply the path rules first, then the content overrides, then drop excluded paths
+(tests, config, lockfiles, generated). A file matches at most one shape; with no
+surface signal it defaults to `pure-logic`. The runnable classifier that
+mechanizes this - the `PATH_RULES`, `CONTENT_OVERRIDES`, and `EXCLUDE` regex
+tables packaged as `scripts/classify-change-shape.py` - is in
+[references/change-shape-classification-script.md](references/change-shape-classification-script.md).
 
 Read file content only when the path yields no match or when the path match is
 being challenged. Reading every file in a 90-day window is slow and rarely
@@ -341,3 +308,6 @@ treating a classification as a plan.
   shows commits more recent than the date; `--no-merges` excludes commits with
   more than one parent; `--name-only` is a supported non-patch diff format;
   `--pretty=format:` takes a printf-like format string.
+- Runnable per-file classifier (the `scripts/classify-change-shape.py` regex
+  tables that mechanize Step 2):
+  [references/change-shape-classification-script.md](references/change-shape-classification-script.md).
