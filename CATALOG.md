@@ -53,7 +53,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-accessibility](plugins/qa-accessibility/) | 1.3.5 | 14 skills + 2 agents | 16 |
-| [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.10 | 8 skills + 3 agents | 11 |
+| [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.11 | 8 skills + 3 agents | 11 |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.2.4 | 7 skills + 1 agents | 8 |
 | [qa-pwa](plugins/qa-pwa/) | 1.2.2 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.6 | 5 skills + 2 agents | 7 |
