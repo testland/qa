@@ -1,6 +1,6 @@
 ---
 name: visual-diff-summarizer
-description: "Builds a per-PR visual-diff summary that clusters intentional vs incidental changes across snapshots emitted by Percy, Chromatic, Playwright `toHaveScreenshot`, Storybook test-runner, and other visual testing tools - groups diffs by component / route, separates \"intent-aligned with PR scope\" from \"cascade / regression suspect\", surfaces baseline-update recommendations, and emits a single PR comment that points the reviewer at the screenshots that need actual eyes. Use when a PR has 20+ visual diffs and the reviewer needs help triaging which ones to actually open."
+description: "Triages a PR's visual regression diffs when there are too many changed screenshots to review one by one. Clusters snapshots (from Percy, Chromatic, Playwright `toHaveScreenshot`, Storybook, Loki) by component / route, separates changes that match PR intent from cascade / regression suspects, recommends which baselines to update, and emits one PR comment pointing the reviewer at the screenshots that need actual eyes. Use when a PR has 20+ visual diffs / changed screenshots and the reviewer needs help deciding which to open."
 ---
 
 # visual-diff-summarizer
@@ -41,21 +41,7 @@ the reviewer can open them directly. The value compounds at scale.
 
 ## Step 1 - Pick the upstream tool's output
 
-Each tool exposes per-snapshot diff data via API or local artifact:
-
-| Tool                         | Where the diff data lives                                              |
-|------------------------------|------------------------------------------------------------------------|
-| Percy (BrowserStack)          | Build API: `GET /api/v1/builds/<id>/snapshots`; per-snapshot `diff_ratio`. |
-| Chromatic                    | `chromatic --dry-run` JSON; `--exit-zero-on-changes` build summary.    |
-| Playwright `toHaveScreenshot` | Test reporter output; failed expectations include attached image diffs. |
-| Storybook test-runner        | Per-story coverage diff via `@storybook/test-runner`'s snapshot mode.   |
-| Loki / BackstopJS            | JSON report with per-scenario `misMatchPercentage`.                     |
-
-The upstream tool wrappers in `qa-visual-regression`
-(`percy-visual-regression-testing`, `chromatic-visual-regression-testing`,
-`playwright-snapshots`, `storybook-visual-regression-testing`) cover
-the per-tool integration. This skill is downstream - it consumes
-their output.
+Each tool exposes per-snapshot diff data (a `diff_ratio` per snapshot) via API or local artifact - see [references/tool-outputs.md](references/tool-outputs.md) for the source per tool. This skill is downstream of the `qa-visual-regression` per-tool wrappers and consumes their output.
 
 ## Step 2 - Normalize to per-snapshot rows
 
@@ -137,47 +123,7 @@ Storybook or a hand-maintained JSON) to identify hierarchy.
 
 ## Step 5 - Render the report
 
-```markdown
-## Visual diff summary - `<sha>`
-
-**Total snapshots:** 87 (12 changed, 75 unchanged)
-**Verdict:** REVIEW (1 unrelated cluster suspects regression)
-
-### ✅ Aligned with PR intent (3 clusters, 7 diffs)
-
-The PR title says **"Refactor Button to use new design tokens"** - 
-these clusters match.
-
-| Cluster | Diffs | Max diff% | Recommendation |
-|---------|------:|----------:|----------------|
-| Button  |   4   |   8.2%    | Update baselines (accept new snapshots) |
-| ButtonGroup |   2   |   3.1%    | Update baselines |
-| IconButton  |   1   |   1.5%    | Update baseline   |
-
-### ⚠ Adjacent (1 cluster, 3 diffs) - confirm intent
-
-| Cluster | Diffs | Max diff% | Recommendation |
-|---------|------:|----------:|----------------|
-| Modal   |   3   |   2.8%    | Modal contains Button; check that the Button color change inside Modal is intended (it should be - but eyeball one). |
-
-### ❌ Unrelated (1 cluster, 2 diffs) - DO NOT update without investigation
-
-| Cluster | Diffs | Max diff% | Recommendation |
-|---------|------:|----------:|----------------|
-| Footer  |   2   |   12.0%   | The Footer component isn't mentioned in the PR. Suspected unintended cascade. **Open the diffs:** [link][f1] [link][f2]. Recommend running a regression bisect if no obvious cause. |
-
-### Quick actions
-
-```bash
-# Update aligned baselines after eyeballing 1 sample per cluster:
-chromatic --auto-accept-changes --only-changed --components Button,ButtonGroup,IconButton
-
-# OR for Percy:
-percy approve <build-id> --snapshots Button,ButtonGroup,IconButton
-
-# Refused - Footer cluster needs investigation; do NOT auto-approve.
-```
-```
+Emit a sticky PR comment grouping clusters aligned → adjacent → unrelated, each with a per-cluster recommendation and a "Quick actions" block that auto-approves only the aligned cluster. The full report template (headers, per-cluster tables, quick-action commands) is in [references/report-format.md](references/report-format.md).
 
 ## Step 6 - Cluster sort order
 
@@ -190,11 +136,9 @@ The reviewer scans top-down. Order:
 Inside each group, sort by max diff ratio descending - biggest
 visual change first.
 
-## Step 7 - Auto-update only the aligned cluster
+## Step 7 - Verify, then auto-update only the aligned cluster
 
-The summary report includes the safe-to-run command for the aligned
-cluster only. Adjacent and unrelated clusters never get an
-auto-update suggestion - those need eyes.
+**Checkpoint before approving:** open one sample diff per aligned cluster and confirm it matches the PR's stated intent; only then run the auto-accept command. The summary includes the safe-to-run command for the aligned cluster only - adjacent and unrelated clusters never get an auto-update suggestion.
 
 This matches the adversarial logic of per-snapshot visual-diff
 classification: aligned diffs go through; unrelated diffs

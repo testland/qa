@@ -53,7 +53,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-accessibility](plugins/qa-accessibility/) | 1.3.5 | 14 skills + 2 agents | 16 |
-| [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.9 | 8 skills + 3 agents | 11 |
+| [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.10 | 8 skills + 3 agents | 11 |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.2.4 | 7 skills + 1 agents | 8 |
 | [qa-pwa](plugins/qa-pwa/) | 1.2.2 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.6 | 5 skills + 2 agents | 7 |
@@ -146,7 +146,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.1.8 | 5 skills + 1 agents | 6 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.1.4 | 5 skills + 1 agents | 6 |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.11 | 5 skills + 1 agents | 6 |
-| [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.7 | 4 skills + 0 agents | 4 |
+| [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.8 | 4 skills + 0 agents | 4 |
 
 ## Role bundles
 
