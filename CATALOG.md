@@ -15,7 +15,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.10.8 | 25 skills + 7 agents | 32 |
 | [qa-test-data](plugins/qa-test-data/) | 1.3.5 | 17 skills + 3 agents | 20 |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.9 | 15 skills + 2 agents | 17 |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.10 | 15 skills + 2 agents | 17 |
 | [qa-roles](plugins/qa-roles/) | 1.3.11 | 0 skills + 15 agents | 15 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.9 | 8 skills + 6 agents | 14 |
 | [qa-test-management](plugins/qa-test-management/) | 1.2.3 | 8 skills + 2 agents | 10 |
@@ -100,7 +100,7 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-time](plugins/qa-time/) | 1.2.15 | 11 skills + 1 agents | 12 |
+| [qa-time](plugins/qa-time/) | 1.2.16 | 11 skills + 1 agents | 12 |
 | [qa-serverless](plugins/qa-serverless/) | 1.3.2 | 10 skills + 1 agents | 11 |
 | [qa-cache-testing](plugins/qa-cache-testing/) | 1.2.5 | 9 skills + 1 agents | 10 |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.3 | 8 skills + 1 agents | 9 |
