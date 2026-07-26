@@ -7,16 +7,11 @@ description: "Authors React Native E2E tests with Detox (Wix) - gray-box archite
 
 [det]: https://wix.github.io/Detox/
 
-The "gray-box" distinction is load-bearing: unlike Appium (black-box,
-external server), Detox runs **in the app's process** (per
-[detox-docs][det]). This gives Detox direct access to the JS bridge
-for **automatic synchronization**:
-
-> "The framework automatically monitors asynchronous operations to
-> eliminate test flakiness at its core." ([detox-docs][det])
-
-Detox knows when network calls finish, when animations settle,
-when timers fire - without explicit IdlingResource-style hooks.
+Detox's "gray-box" architecture is load-bearing: unlike Appium (black-box,
+external server), it runs **in the app's process** (per [detox-docs][det]),
+so it "automatically monitors asynchronous operations to eliminate test
+flakiness at its core" ([detox-docs][det]) - tracking network calls,
+animations, and timers without explicit sync hooks.
 
 ## When to use
 
@@ -66,6 +61,10 @@ detox build --configuration ios.sim.debug
 The build configuration in `.detoxrc.js` references the project's
 existing build commands (Gradle / xcodebuild) - Detox doesn't
 introduce a new build pipeline.
+
+Verify: `detox build` must finish and emit the app binary before Step 6.
+If it fails, fix the underlying native build error (Gradle / xcodebuild) and
+re-run - the fix lives in the RN build config, not Detox.
 
 ## Step 3 - Author tests with matchers
 
@@ -146,9 +145,10 @@ detox test e2e/cart.test.js --configuration ios.sim.debug
 detox test --headless
 ```
 
-Per [detox-docs][det], Detox is "CI-Ready: Tests execute seamlessly
-on continuous integration platforms like Travis CI, CircleCI, and
-Jenkins."
+Verify: assert every spec reports green. If one fails, read the Detox error
+(element not found / timeout), fix the matcher or add a `waitFor` (Step 5),
+and re-run that spec before wiring CI. Detox then runs headless on CI
+platforms such as Travis CI, CircleCI, and Jenkins (per [detox-docs][det]).
 
 ## Step 7 - CI integration
 
@@ -185,20 +185,7 @@ updates the badge count.
 1. The product card already renders `<TouchableOpacity testID="product-BOOK-001">`
    and the cart badge renders `<Text testID="cart-count">` (Step 4).
 2. Build once: `detox build --configuration ios.sim.debug` (Step 2).
-3. Author `e2e/cart.test.js` (Step 3):
-
-   ```javascript
-   describe('Cart flow', () => {
-     beforeAll(async () => { await device.launchApp(); });
-     beforeEach(async () => { await device.reloadReactNative(); });
-
-     it('adds item to cart', async () => {
-       await element(by.id('product-BOOK-001')).tap();
-       await element(by.id('add-to-cart-button')).tap();
-       await expect(element(by.id('cart-count'))).toHaveText('1');
-     });
-   });
-   ```
+3. Author `e2e/cart.test.js` with the `'adds item to cart'` spec from Step 3.
 4. Run `detox test e2e/cart.test.js --configuration ios.sim.debug` (Step 6).
 5. Detox launches the simulator, taps the product and the add button, and its
    auto-sync waits for the state update before the assertion runs. The spec

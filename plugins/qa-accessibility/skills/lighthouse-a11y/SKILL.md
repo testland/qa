@@ -1,6 +1,6 @@
 ---
 name: lighthouse-a11y
-description: "Configures Lighthouse CI's Accessibility category - `categories:accessibility` audits backed by axe-core - with per-URL minimum-score assertions and per-audit overrides, distinct from the Performance category that `lighthouse-perf` covers. Use when the project already runs Lighthouse CI for Web Vitals and the team wants to add a11y coverage in the same pipeline rather than spinning up a separate scanner."
+description: "Configures Lighthouse CI's Accessibility category for automated accessibility testing (a11y / WCAG coverage) - `categories:accessibility` audits backed by axe-core (axe) - with per-URL minimum-score assertions (fail a build when a page's score drops below a threshold) and per-audit overrides, distinct from the Performance category that `lighthouse-perf` covers. Use when the project already runs Lighthouse CI for Web Vitals and the team wants to add accessibility coverage in the same pipeline rather than spinning up a separate scanner."
 ---
 
 # lighthouse-a11y
@@ -42,7 +42,8 @@ layer.
 2. Install the CLI (`npm install --save-dev @lhci/cli`).
 3. Add the accessibility assertions to `.lighthouserc.js` alongside any perf assertions - the `categories:accessibility` category score plus per-audit overrides on critical rules (Worked example).
 4. Run `npx lhci autorun` to collect, assert, and upload in one pass.
-5. Gate CI on the assertions and tighten `minScore` over time - per-URL thresholds, the full audit-ID reference, and the GitHub Actions workflow live in [references/advanced-config-and-ci.md](references/advanced-config-and-ci.md).
+5. Verify: confirm the assert phase reports every assertion passing locally before merging; if one fails, fix the flagged audit (or relax an over-strict `minScore`) and re-run `npx lhci autorun` until green.
+6. Gate CI on the assertions and tighten `minScore` over time - per-URL thresholds, the full audit-ID reference, and the GitHub Actions workflow live in [references/advanced-config-and-ci.md](references/advanced-config-and-ci.md).
 
 ## Install
 
@@ -51,8 +52,6 @@ layer.
 ```bash
 npm install --save-dev @lhci/cli
 ```
-
-(Per [lhci][lhci].)
 
 ## Worked example
 
@@ -112,7 +111,7 @@ Then run all three phases (collect / assert / upload) in one pass:
 npx lhci autorun
 ```
 
-Per [lhci][lhci], the same command and flags (`--collect.url`, etc.) serve both
+The same command and flags (`--collect.url`, etc.) serve both
 perf and a11y assertions. The **Accessibility** category score (0 - 1) reflects
 axe-rule pass rate weighted by severity. **A score of 1.0 doesn't mean perfect
 a11y** - manual testing per

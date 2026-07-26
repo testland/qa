@@ -1,9 +1,9 @@
 {
   "name": "testland/flagsmith-testing",
-  "description": "Wraps Flagsmith server-side SDK testing patterns: local-evaluation mode (no API calls), offline mode with LocalFileHandler + downloaded environment.json, default_flag_handler for per-feature mocked fallbacks, and the get_environment_flags / get_identity_flags evaluation paths. Use when writing tests for code using Flagsmith.",
+  "description": "Wraps Flagsmith server-side SDK testing patterns (feature flags / feature toggles) so tests run without calling the Flagsmith API: offline mode with LocalFileHandler + a downloaded environment.json snapshot, local-evaluation mode (no per-request network), and default_flag_handler for per-feature mocked fallbacks, via the get_environment_flags / get_identity_flags evaluation paths. Use when writing feature-flag tests for code that uses Flagsmith, mocking flag values, or testing feature toggles offline in CI.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.11"
+  "version": "1.3.12"
 }

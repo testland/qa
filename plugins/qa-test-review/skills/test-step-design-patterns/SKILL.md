@@ -1,6 +1,6 @@
 ---
 name: test-step-design-patterns
-description: "Pure reference catalog of test-step design patterns at the architecture tier - step granularity (one logical action per step), abstraction layers (mechanical → page → business), step extraction rules (when to inline / when to extract to a helper / when to extract to a Page Object method), the declarative-vs-imperative phrasing rule, FIRST principles (Fast / Independent / Repeatable / Self-validating / Timely), and the AAA / Given-When-Then mapping. This is the cross-framework architecture-tier reference for what a step IS, when it should exist, and where it should live - not file-level AAA style rules and not Gherkin-specific translation. Use when designing or reviewing the step layer of a test framework."
+description: "Pure reference catalog of test-step design patterns at the architecture tier - step granularity (one logical action per step), abstraction layers (mechanical → page → business), step extraction rules (when to inline / when to extract to a helper / when to extract to a Page Object method), the declarative-vs-imperative phrasing rule, FIRST principles (Fast / Independent / Repeatable / Self-validating / Timely), and the AAA / Given-When-Then mapping. This is the cross-framework architecture-tier reference for what a step IS, when it should exist, and where it should live - not file-level AAA style rules and not Gherkin-specific translation. Use when designing or reviewing the step layer of a test framework - for example when writing or reviewing E2E or integration tests, when the step count per test is high, or when refactoring recorded or codegen test output into readable steps."
 ---
 
 # test-step-design-patterns
@@ -188,16 +188,7 @@ Applying the patterns:
 3. **Layer the rest (Pattern 3):** the add-to-cart and checkout mechanics move into `cart.addsItem('sku-001')` and `checkout.placesOrderWithDefaultShipping()` on their Page Objects / Tasks.
 4. **Phrase and separate (Patterns 6 and 5):** the surviving steps read declaratively, and Arrange / Act / Assert stay visually separable.
 
-Result - the test body now reads as a specification:
-
-```typescript
-test('places an order', async ({ customer, cart, checkout }) => {
-  await customer.signsIn();
-  await cart.addsItem('sku-001');
-  await checkout.placesOrderWithDefaultShipping();
-  await expect(checkout.confirmation).toBeVisible();
-});
-```
+Result - the test body now reads as a specification: it collapses to exactly the "Good" block under Pattern 3 (four business-layer steps, no mechanical leakage).
 
 The reader test (Pattern 7) now passes: "A customer signs in, adds SKU-001 to the cart, places an order with default shipping, and the order is confirmed."
 

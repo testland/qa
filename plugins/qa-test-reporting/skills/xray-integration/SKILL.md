@@ -207,6 +207,12 @@ Playwright reporter. The full GitHub Actions workflow and the Playwright
 reporter setup are in
 [references/ci-and-non-jvm.md](references/ci-and-non-jvm.md).
 
+**Verify after the POST:** assert a 2xx whose body carries the Test
+Execution issue `key` the import created or updated. A 4xx (bad
+`projectKey`, expired JWT, or malformed XML) or a body with no `key`
+means nothing landed - fix that cause and re-run; retry once on a 5xx
+(transient), and never treat a non-2xx as success.
+
 ## Step 7 - Test Execution issue lifecycle
 
 By default, each import creates a **new** Test Execution issue.

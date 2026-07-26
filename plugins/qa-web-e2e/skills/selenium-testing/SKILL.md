@@ -7,14 +7,9 @@ description: "Authors Selenium WebDriver tests in any of its 6+ supported langua
 
 ## Overview
 
-Selenium WebDriver is the long-standing W3C-standard browser
-automation protocol. It predates Playwright and Cypress and has
-the broadest language support: Java, Python, JavaScript, C#,
-Ruby, Kotlin, PHP - all official.
-
-Selenium 4 (2021) introduced relative locators and a more
-modern API; Selenium 4 IDE replaces the old Selenium IDE for
-record-and-playback.
+Selenium WebDriver is a W3C-standard browser automation protocol with
+the broadest language support: Java, Python, JavaScript, C#, Ruby,
+Kotlin, PHP - all official.
 
 ## When to use
 
@@ -187,6 +182,11 @@ Grid distributes tests across nodes - handles parallelism. For
 managed grids, see commercial: BrowserStack, Sauce Labs,
 LambdaTest.
 
+Verify: `curl http://localhost:4444/status` reports `"ready": true`
+before pointing `RemoteWebDriver` at the grid; if not, the hub or nodes
+haven't registered - check `docker compose -f docker-compose.grid.yml ps`
+and the node container logs.
+
 ## Step 6 - Other language bindings
 
 The Java spine above ports 1:1 to Selenium's other official bindings.
@@ -213,6 +213,11 @@ jobs:
 
 JUnit XML lands at `target/surefire-reports/`; feeds
 `junit-xml-analysis` (in the qa-test-reporting plugin).
+
+Verify: confirm `target/surefire-reports/*.xml` exists after `mvn test`
+before handing off to `junit-xml-analysis`; if the directory is empty the
+run emitted no reports - check that tests compiled and actually ran rather
+than being skipped.
 
 ## Worked example
 
@@ -244,8 +249,6 @@ grid.
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| `Thread.sleep()` for synchronization                                  | Most common Selenium flake source.                                        | `WebDriverWait` + `ExpectedConditions` (Step 4). |
-| XPath as default locator                                              | Slow + brittle.                                                           | CSS selectors first (Step 3). |
 | Single test class with one giant flow                                 | Failure mid-test obscures cause.                                         | Per-flow tests with `@BeforeEach` setup. |
 | Skipping `driver.quit()`                                              | Browser instance leaks; CI runner OOM.                                  | Always `quit()` in `@AfterEach` (Step 2). |
 | Hardcoded ChromeDriver path                                           | Drift; brittle to Chrome updates.                                        | WebDriverManager (Step 1). |

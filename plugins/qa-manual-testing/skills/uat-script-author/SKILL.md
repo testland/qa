@@ -7,28 +7,14 @@ description: "Emits User Acceptance Testing scripts in stakeholder-readable form
 
 ## Overview
 
-Per [uat-wiki][uat]:
-
 [uat]: https://en.wikipedia.org/wiki/Acceptance_testing
 
-> "User acceptance testing (UAT) consists of a process of verifying
-> that a solution works for the user. It differs from system
-> testing - rather than checking if software merely functions without
-> crashing, UAT ensures the solution will work for actual users."
-> ([uat-wiki][uat])
-
-UAT scripts are written for **stakeholders, not developers**:
-
-- The intended end user, subject-matter expert (SME), or solution
-  owner runs the script ([uat-wiki][uat]).
-- The script speaks business language, not implementation language.
-- The success criterion is "this works for the business," not
-  "no exceptions thrown."
-- Sign-off is a contractual artifact ([uat-wiki][uat]): "Upon
-  successful completion and meeting acceptance criteria,
-  stakeholders sign off, confirming the product development meets
-  defined requirements."
-
+UAT scripts are written for **stakeholders, not developers**: the end
+user, subject-matter expert (SME), or solution owner runs the script in
+business language, and the success criterion is "this works for the
+business," not "no exceptions thrown." Sign-off is a contractual
+artifact - upon meeting the acceptance criteria the stakeholder signs
+off, confirming the product meets defined requirements ([uat-wiki][uat]).
 This skill emits those scripts.
 
 ## When to use
@@ -147,8 +133,7 @@ React. Translate:
 | `auth_token` is set in the cookie | The user is logged in.                      |
 | `INSERT INTO users` succeeded     | The account is created.                     |
 
-The stakeholder shouldn't need to know what an HTTP status code is;
-the script is about **outcomes**, not **mechanisms**.
+The script is about **outcomes**, not **mechanisms**.
 
 ## Step 4 - Three-tasks rule
 
@@ -164,7 +149,16 @@ A UAT round shouldn't have 50 scripts. The pattern:
 If the contract has 30 acceptance criteria, group them into ~10
 journeys; one script per journey.
 
-## Step 5 - Sign-off as artifact
+## Step 5 - Run the round, log defects, re-test
+
+Execute each script with the stakeholder. For every failed step, log a
+defect in the "Defects raised" table (Step 2 format) with its step and
+severity. Verify: every row in the acceptance-criteria table must read
+pass before sign-off; if any AC fails, hand the defects to the team, fix
+them, and re-run the affected scripts. Repeat until all acceptance
+criteria pass - do not proceed to sign-off with an open failing AC.
+
+## Step 6 - Sign-off as artifact
 
 The signed UAT scripts go into the customer record:
 

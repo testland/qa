@@ -1,6 +1,6 @@
 ---
 name: bdd-step-library-curator
-description: "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, and publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones. Use on a cadence as the antidote to step-definition proliferation in long-lived BDD projects, or when a new engineer reports they cannot find an existing step."
+description: "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, and publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones. Use when a BDD project's step count grows past ~50, on a quarterly step-library review, or when a new engineer cannot find an existing step and is about to write a duplicate."
 ---
 
 # bdd-step-library-curator
@@ -32,16 +32,7 @@ This skill builds a curation workflow.
 
 ## How to use
 
-1. **Inventory** every step definition across the project - extract
-   patterns per runner (the per-runner commands are in
-   [references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md)).
-2. **Detect** duplicate / overlapping patterns by normalizing wording
-   and grouping - the overlap script lives in the same reference.
-3. **Recommend** one canonical step per duplicate group; deprecate the rest.
-4. **Reorganize** step files by domain and **publish** the step-library
-   README - the team's "is there a step for X?" index.
-5. **Gate** new steps at pre-merge so every added definition is acknowledged.
-6. **Repeat** on a cadence (quarterly plus threshold-triggered reviews).
+Work through Steps 1-6 below in order: inventory -> detect duplicates -> recommend consolidations -> reorganize and publish the README -> gate new steps pre-merge -> repeat on a cadence.
 
 ## Step 1 - Inventory step definitions
 
@@ -102,6 +93,12 @@ Replace the other 3 step definitions with a single canonical one
 in `shared_steps.py`. Update the Gherkin features that use the
 deprecated patterns.
 ```
+
+**Verify:** consolidation is destructive - it deletes step definitions and
+rewrites `.feature` files. After each group, run the full BDD suite and assert
+zero undefined or ambiguous steps and no orphaned scenarios before declaring the
+refactor complete. If a scenario reports an undefined step, a `.feature` file
+still references a deprecated pattern - fix that reference and re-run.
 
 ## Step 4 - Domain organization
 
@@ -175,33 +172,19 @@ author to acknowledge the new step and grep the README first. The
 
 Curating a 142-step library in a mixed Behave project, end to end.
 
-**1. Inventory.** Running the Behave extraction over `features/steps/`
-yields 142 step definitions and 138 unique patterns - so 4 are
-already ambiguous duplicates the runner would flag at match time:
+**1. Inventory.** The Behave extraction over `features/steps/` yields the
+Step 1 audit: 142 step definitions, 138 unique patterns - so 4 are already
+ambiguous duplicates the runner would flag at match time.
 
-```
-Total step definitions: 142
-Unique patterns: 138
-Given: 58   When: 34   Then: 47   And: 3
-```
-
-**2. Detect.** The overlap script normalizes patterns and surfaces
-one cluster:
-
-```
-Likely duplicates (4): normalized "user is logged in"
-  Given a user is logged in    - auth_steps.py:12
-  Given the user is logged in   - cart_steps.py:8
-  Given an authenticated user   - checkout_steps.py:5
-  Given a logged-in user        - profile_steps.py:14
-```
+**2. Detect.** The overlap script surfaces one cluster - the four
+`user is logged in` variants listed in Step 3's duplicate-group table.
 
 **3. Consolidate.** Pick `Given a logged-in user` as canonical
 (clearest wording, most-used in current Gherkin). Move it into
 `features/steps/shared/auth_steps.py`, delete the other three
 definitions, and rewrite the `.feature` files that used the
 deprecated phrasings - edit the Gherkin first so no scenario is
-left orphaned.
+left orphaned, then run the Step 3 verification.
 
 **4. Reorganize + publish.** Split the flat `features/steps/` into
 `shared/`, `checkout/`, and `account/`, then regenerate the README

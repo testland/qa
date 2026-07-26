@@ -1,6 +1,6 @@
 ---
 name: flagsmith-testing
-description: "Wraps Flagsmith server-side SDK testing patterns: local-evaluation mode (no API calls), offline mode with LocalFileHandler + downloaded environment.json, default_flag_handler for per-feature mocked fallbacks, and the get_environment_flags / get_identity_flags evaluation paths. Use when writing tests for code using Flagsmith."
+description: "Wraps Flagsmith server-side SDK testing patterns (feature flags / feature toggles) so tests run without calling the Flagsmith API: offline mode with LocalFileHandler + a downloaded environment.json snapshot, local-evaluation mode (no per-request network), and default_flag_handler for per-feature mocked fallbacks, via the get_environment_flags / get_identity_flags evaluation paths. Use when writing feature-flag tests for code that uses Flagsmith, mocking flag values, or testing feature toggles offline in CI."
 ---
 
 # flagsmith-testing
@@ -11,12 +11,16 @@ Flagsmith (open-source, also SaaS at flagsmith.com) supports
 three test-friendly modes per
 [docs.flagsmith.com/clients/server-side](https://docs.flagsmith.com/clients/server-side):
 
-1. **Local-evaluation mode** - fetches environment + flags
-   periodically, evaluates locally without per-request network.
-2. **Offline mode with LocalFileHandler** - loads a downloaded
+1. **Offline mode with LocalFileHandler** - loads a downloaded
    `environment.json` snapshot; zero network.
+2. **Local-evaluation mode** - fetches environment + flags
+   periodically, evaluates locally without per-request network.
 3. **Default flag handler** - programmatic fallback for any
    flag (mock-flag-only mode).
+
+Offline mode is the default choice for tests; local-evaluation
+and `default_flag_handler` detail live in
+[references/flagsmith-modes.md](references/flagsmith-modes.md).
 
 ## When to use
 
@@ -27,23 +31,15 @@ three test-friendly modes per
 ## How to use
 
 1. Install the SDK: `pip install flagsmith` (Python) or `npm install --save-dev flagsmith-nodejs` (Node).
-2. Download the environment snapshot with the Flagsmith CLI (`flagsmith environment-document --api-key=<server-key>`) and commit it as a test fixture.
+2. Download the environment snapshot with the Flagsmith CLI (command below) and commit it as a test fixture.
 3. Construct the client in offline mode with `LocalFileHandler` pointed at that fixture, so tests make zero network calls.
-4. For flags not yet in the snapshot, register a `default_flag_handler` returning a `DefaultFlag` with the value under test.
+4. For flags not yet in the snapshot, register a `default_flag_handler` returning a `DefaultFlag` with the value under test (see [references/flagsmith-modes.md](references/flagsmith-modes.md)).
 5. Evaluate via `get_environment_flags()` for environment-scoped flags, or `get_identity_flags(identifier, traits=...)` for per-user flags.
 6. Assert on `is_feature_enabled(...)` and `get_feature_value(...)`, and add an integrity test that the same identity resolves consistently.
-7. Wire `pytest tests/flagsmith/` into CI - offline mode needs no env vars.
+7. Verify: with `offline_mode=True` and no `environment_key` set, `get_environment_flags()` must return the fixture's flags with zero network calls (run the suite with the machine offline or under a network-blocking fixture to confirm). If it raises or attempts an API call, the `LocalFileHandler` `environment_document_path` is wrong or `offline_mode` is unset - fix the path and re-run.
+8. Wire `pytest tests/flagsmith/` into CI - offline mode needs no env vars.
 
-## Authoring
-
-### Install
-
-```bash
-pip install flagsmith
-npm install --save-dev flagsmith-nodejs
-```
-
-### Offline mode with LocalFileHandler
+## Offline mode with LocalFileHandler
 
 Per [docs.flagsmith.com](https://docs.flagsmith.com/clients/server-side):
 
@@ -56,48 +52,13 @@ local_file_handler = LocalFileHandler(environment_document_path="tests/fixtures/
 flagsmith = Flagsmith(offline_mode=True, offline_handler=local_file_handler)
 ```
 
-The `environment.json` is downloadable via the Flagsmith CLI:
+Download the `environment.json` via the Flagsmith CLI, then commit it (refresh deliberately):
 
 ```bash
 flagsmith environment-document --api-key=<server-key> --output=tests/fixtures/flagsmith-environment.json
 ```
 
-Commit the fixture; refresh deliberately.
-
-### Local-evaluation mode
-
-```python
-flagsmith = Flagsmith(
-    environment_key="server-key",
-    enable_local_evaluation=True,
-    environment_refresh_interval_seconds=60,
-)
-```
-
-Local mode polls; offline mode doesn't. For tests, offline is
-usually preferred.
-
-### default_flag_handler - per-flag mock
-
-```python
-from flagsmith import Flagsmith
-from flagsmith.models import DefaultFlag
-
-def default_flag_handler(feature_name: str) -> DefaultFlag:
-    if feature_name == "secret_button":
-        return DefaultFlag(enabled=False, value='{"colour": "#b8b8b8"}')
-    return DefaultFlag(enabled=False, value=None)
-
-flagsmith = Flagsmith(
-    environment_key="test-key",
-    default_flag_handler=default_flag_handler,
-)
-```
-
-Useful when the offline environment.json doesn't have the flag
-you're testing yet.
-
-### Evaluate flags
+## Evaluate flags
 
 ```python
 def test_environment_flag():
@@ -113,19 +74,13 @@ def test_identity_flag():
     assert flags.is_feature_enabled("premium_feature") is True
 ```
 
-### Integrity tests
+Integrity test - the same identity must resolve consistently:
 
 ```python
 def test_same_identity_consistent():
     f1 = flagsmith.get_identity_flags("u1")
     f2 = flagsmith.get_identity_flags("u1")
     assert f1.is_feature_enabled("flag-x") == f2.is_feature_enabled("flag-x")
-```
-
-## Running
-
-```bash
-pytest tests/flagsmith/
 ```
 
 ## CI integration
@@ -145,43 +100,21 @@ No env vars needed in offline mode.
 
 ## Worked example
 
-A service reads a `secret_button` flag (boolean plus a JSON colour value) and a `premium_feature` flag gated on a `plan` trait. The team wants fully-offline tests.
+A service reads a `secret_button` flag (boolean plus a JSON colour value) and a `premium_feature` flag gated on a `plan` trait, tested fully offline:
 
-1. Download the environment document to `tests/fixtures/flagsmith-environment.json` with the Flagsmith CLI and commit it.
-2. Build the client with `offline_mode=True` and a `LocalFileHandler` pointed at that fixture, so no network calls happen.
-3. `secret_button` is not in the snapshot yet, so a `default_flag_handler` returns `DefaultFlag(enabled=False, value='{"colour": "#b8b8b8"}')` for it.
-4. `test_environment_flag` calls `get_environment_flags()` and asserts `is_feature_enabled("secret_button") is False` and `get_feature_value("secret_button") == '{"colour": "#b8b8b8"}'`.
-5. `test_identity_flag` calls `get_identity_flags("user@example.com", traits={"plan": "premium"})` and asserts `is_feature_enabled("premium_feature") is True`.
+1. Download the environment document and commit it (step 2 above).
+2. Build the offline client with `LocalFileHandler` (offline-mode snippet above).
+3. `secret_button` is not in the snapshot yet, so register a `default_flag_handler` for it (see [references/flagsmith-modes.md](references/flagsmith-modes.md)).
+4. Assert on `get_environment_flags()` and `get_identity_flags(...)` (evaluate snippet above).
 
 Result: `pytest tests/flagsmith/` runs green in CI with zero network access and no analytics pollution.
-
-## Anti-patterns
-
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Production env_key in tests | Real API calls + analytics pollution | offline_mode + LocalFileHandler |
-| environment.json not committed | Test flakes when prod changes | Commit; refresh deliberately |
-| Mixing offline_mode + local_evaluation_mode | Conflicting; one takes precedence | Pick one |
-| default_flag_handler returns DefaultFlag with no value | Tests for value-based flags fail silently | Always set `value` |
-| Skipping `flagsmith.get_identity_flags` for identity-scoped tests | Bypasses per-user logic | Use identity API |
-| Per-test new Flagsmith client | Slow init | Session-scoped fixture |
-
-## Limitations
-
-- **environment.json is point-in-time.** Drift invisible.
-- **default_flag_handler only fires for missing flags** in
-  local-eval mode. In offline mode it can be used for fallback.
-- **No granular per-user override API.** Use traits +
-  segments via the environment.json.
-- **Doesn't validate Flagsmith's own logic.** Platform-side
-  evaluation is separate.
 
 ## References
 
 - Flagsmith server-side docs:
   [docs.flagsmith.com/clients/server-side](https://docs.flagsmith.com/clients/server-side).
-- Offline-mode guide:
-  [docs.flagsmith.com/clients/server-side#offline-mode](https://docs.flagsmith.com/clients/server-side).
+- Local-evaluation mode, `default_flag_handler`, anti-patterns, and limitations:
+  [references/flagsmith-modes.md](references/flagsmith-modes.md).
 - Companion:
   `feature-flag-test-matrix-reference`.
 - Sibling SDKs:

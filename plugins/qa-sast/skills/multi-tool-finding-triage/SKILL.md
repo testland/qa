@@ -1,6 +1,6 @@
 ---
 name: multi-tool-finding-triage
-description: "Merges two or more security scanner reports into one gate: normalizes each into a canonical Finding, deduplicates on a per-domain key while recording `caught_by` multi-scanner consensus, validates a waiver file (rejecting any missing `expires:` / `approved_by:` / `reason:` or expired), enriches CVE findings with EPSS + CISA KEV, then applies a `fail_on` severity threshold to emit BLOCK or PASS plus a bucketed PR comment. Works across static, dynamic, secret, dependency, container, and IaC scanners. To run or configure a single scanner instead, use semgrep-rules, codeql-queries, bandit-python, or gosec-go; this runs after them to merge output - the cross-scanner gate, not a single-scanner wrapper."
+description: "Merges two or more security scanner reports into one gate. Use when you need a single BLOCK or PASS decision from multiple scanners instead of reading N separate reports. Normalizes each report into one common finding format (a canonical `Finding`), deduplicates on a per-domain key while recording which scanners agree (`caught_by` consensus), validates a waiver (finding-suppression) file, rejecting any missing `expires:` / `approved_by:` / `reason:` or expired, enriches CVE findings with EPSS (exploit-probability) and CISA KEV (known-exploited catalog), then applies a `fail_on` severity threshold to emit BLOCK or PASS plus a bucketed pull-request comment. Works across static (SAST), dynamic (DAST), secret, dependency (SCA), container, and IaC scanners. To run a single scanner instead use semgrep-rules, codeql-queries, bandit-python, or gosec-go; this runs after them to merge output - the cross-scanner gate, not a single-scanner wrapper."
 ---
 
 # multi-tool-finding-triage
@@ -27,23 +27,6 @@ The method applies unchanged across six domains: static code analysis, dynamic
 web scanning, secret detection, dependency CVE scanning, container image and SBOM
 CVE scanning, and infrastructure policy scanning. Only the dedupe key (Step 3)
 and the enrichment (Step 4) differ per domain.
-
-## How to use
-
-1. **Collect** each scanner's report from the workspace or CI download directory;
-   accept any subset, and halt if a configured scanner produced nothing.
-2. **Normalize** each report into canonical `Finding` records on one severity
-   scale.
-3. **Dedupe** on the per-domain key, recording `caught_by` for multi-scanner
-   consensus.
-4. **Validate** the waiver file, rejecting any waiver missing `expires:` /
-   `approved_by:` / `reason:` or expired.
-5. **Enrich** CVE findings with EPSS + CISA KEV.
-6. **Apply** the `fail_on` severity threshold.
-7. **Emit** BLOCK or PASS plus one severity-bucketed PR comment.
-
-The deep detail behind steps 2 to 6 lives in three references files, linked from
-each step below.
 
 ## Step 1 - Collect scanner output
 
@@ -76,18 +59,56 @@ Merge records that describe the same defect using a domain-specific dedupe key,
 keeping the highest severity and appending every producing tool to `caught_by`. A
 finding with two or more entries in `caught_by` is a **consensus** finding:
 higher confidence, surfaced first. Print the consensus count in the report
-header. The per-domain key table, the class-normalization step for dynamic and
-policy scanners, the `dedupe` function, and the secret-verification classes:
+header.
+
+```python
+SEVERITY_RANK = {'critical': 5, 'high': 4, 'medium': 3, 'low': 2, 'info': 1}
+
+def dedupe(findings, key_fn):
+    seen = {}
+    for f in findings:
+        key = key_fn(f)
+        if key not in seen:
+            seen[key] = {**f, 'caught_by': []}
+        elif SEVERITY_RANK.get(f['severity'], 0) > SEVERITY_RANK.get(seen[key]['severity'], 0):
+            seen[key] = {**f, 'caught_by': seen[key]['caught_by']}
+        seen[key]['caught_by'].append(f['scanner'])
+    return list(seen.values())
+```
+
+The per-domain `key_fn` table, the class-normalization step for dynamic and
+policy scanners, and the secret-verification classes:
 [references/finding-normalization.md](references/finding-normalization.md).
 
 ## Step 4 - Enrich CVE findings
 
 For findings that carry a CVE, add real-world exploitation signal from two public
 feeds - EPSS (probability of exploitation) and CISA KEV (confirmed exploited in
-the wild) - then sort into priority buckets (`Fix-Now`, `Fix-This-Sprint`,
-`Fix-Backlog`, `Accept-Risk`, `Filtered-VEX`) instead of a raw severity sort. VEX
-filtering, reachability heuristics, the `priority` bucket function, and the EPSS
-thresholds: [references/cve-enrichment.md](references/cve-enrichment.md).
+the wild) - then sort into priority buckets instead of a raw severity sort:
+
+```python
+def priority(f):
+    if f.get('vex_status') == 'not_affected':
+        return 'Filtered-VEX'          # surfaced for audit; does not block
+    if f.get('in_kev'):
+        return 'Fix-Now'               # exploited in the wild
+    if f['severity'] == 'critical' and (f.get('epss') or 0) > 0.5:
+        return 'Fix-Now'
+    if f['severity'] == 'critical':
+        return 'Fix-This-Sprint'
+    if f['severity'] == 'high' and (f.get('epss') or 0) > 0.3:
+        return 'Fix-This-Sprint'
+    if f.get('reachable') is False:
+        return 'Fix-Backlog'
+    if f['severity'] == 'high':
+        return 'Fix-This-Sprint'
+    if f['severity'] == 'medium':
+        return 'Fix-Backlog'
+    return 'Accept-Risk'
+```
+
+VEX filtering, reachability heuristics, and the tuning basis for the 0.5 / 0.3
+EPSS cut-offs: [references/cve-enrichment.md](references/cve-enrichment.md).
 
 ## Step 5 - Validate and apply waivers
 
@@ -95,8 +116,19 @@ Waivers live in one committed YAML file per domain. A waiver is **rejected** (an
 its finding stays active) if it is missing `expires:`, `approved_by:`, or
 `reason:`, or if `expires:` is in the past. A rejected waiver is reported
 explicitly, never a silent no-op. Some findings can never be waived: a CISA KEV
-CVE, or a VEX `not_affected` with an empty justification. The schema, per-domain
-matching keys, the `validate_waiver` function, and the refuse-to-proceed rules:
+CVE, or a VEX `not_affected` with an empty justification.
+
+```python
+REQUIRED = ('expires', 'approved_by', 'reason')
+
+def validate_waiver(w, today):
+    for field in REQUIRED:
+        if not w.get(field):
+            return f"missing `{field}:`"       # rejection reason, or None if valid
+    return f"expired {w['expires']}" if w['expires'] < today else None
+```
+
+The YAML schema, per-domain matching keys, and the refuse-to-proceed rules:
 [references/waiver-schema.md](references/waiver-schema.md).
 
 ## Step 6 - Verdict

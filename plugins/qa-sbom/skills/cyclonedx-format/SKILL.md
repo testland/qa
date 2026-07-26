@@ -1,19 +1,17 @@
 ---
 name: cyclonedx-format
-description: "Reference for the CycloneDX v1.6 SBOM specification - OWASP-curated, BOM-format-rich format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language tooling (cyclonedx-bom-tool family) for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via gen + sign + attest workflow. Use when the team adopts CycloneDX as primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus)."
+description: "Reference for the CycloneDX v1.6 software bill of materials (SBOM) specification - OWASP-curated, security-focused format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language generators for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via generate + sign + attest workflow. Use when the user asks to generate or write a software bill of materials / SBOM in CycloneDX form, or when the team adopts CycloneDX as its primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus)."
 ---
 
 # cyclonedx-format
 
 ## Overview
 
-CycloneDX is one of two mainstream SBOM formats (SPDX is the
-other). Per [cyclonedx.org/specification/overview][cdx-spec]:
+CycloneDX is an OWASP-curated, security-focused SBOM format. Per
+[cyclonedx.org/specification/overview][cdx-spec], its distinguishing
+features vs SPDX:
 
 [cdx-spec]: https://cyclonedx.org/specification/overview/
-
-CycloneDX is OWASP-curated and security-focused. Distinguishing
-features vs SPDX:
 
 - **Vulnerability schema** - first-class `vulnerabilities[]` block
   with VEX-style status assertions
@@ -45,21 +43,10 @@ is more idiomatic.
 
 ## How to use
 
-1. Confirm CycloneDX is the format your consumer requires and that
-   the use case is security-focused (see When to use).
-2. Generate the BOM - run a per-language native tool
-   ([references/component-types-and-tooling.md](references/component-types-and-tooling.md))
-   or `anchore/sbom-action` with `format: cyclonedx-json`.
-3. Confirm the required fields are present (`bomFormat`,
-   `specVersion`, `components[]`, `dependencies[]`) - Step 2.
-4. Add a `vulnerabilities[]` record with a VEX-style
-   `analysis.state` for any finding you have triaged - Step 3 / Step 5.
-5. Validate against the schema:
-   `cyclonedx validate --input-file sbom.json --input-version v1_6` - Step 4.
-6. Sign + attest the BOM in CI
-   (`cosign attest --predicate ... --type cyclonedx`) - Step 6.
-7. Pin the `specVersion` your consumer agreed to; re-issue with an
-   incremented `version` on each change.
+Work the numbered Steps in order: generate the BOM (Steps 1-2), add a
+VEX-style `analysis` record per triaged finding (Steps 3, 5), validate
+against the schema (Step 4), then sign + attest in CI (Step 6). Pin the
+`specVersion` your consumer agreed; bump `version` on each re-issue.
 
 ## Step 1 - Top-level structure
 
@@ -168,26 +155,17 @@ invalid PURLs, unknown component types) before publishing.
 
 ## Step 5 - VEX integration
 
-CycloneDX 1.4+ supports embedded VEX (Vulnerability Exploitability
-Exchange) - assertions about whether a known CVE actually affects
-the shipped product.
+The Step 3 `vulnerabilities[]` record IS embedded VEX (Vulnerability
+Exploitability Exchange, CycloneDX 1.4+). To assert a triaged CVE does
+not affect the shipped product, extend that same record - deltas only:
 
-```json
-"vulnerabilities": [{
-  "id": "CVE-2024-1234",
-  "analysis": {
-    "state": "not_affected",
-    "justification": "vulnerable_code_not_in_execute_path",
-    "detail": "Vulnerable parser only invoked when --debug flag passed; production builds disable --debug",
-    "response": ["will_not_fix"]
-  },
-  "affects": [{"ref": "pkg:npm/lodash@4.17.20"}]
-}]
-```
+- `analysis.justification: "vulnerable_code_not_in_execute_path"` with a
+  concrete `analysis.detail` (e.g. "vulnerable parser only invoked under
+  `--debug`; production builds disable it").
+- `analysis.response: ["will_not_fix"]` - the planned action.
 
-VEX assertions allow downstream consumers to filter false-positive
-findings from your shipped SBOM rather than re-doing reachability
-analysis themselves.
+This lets downstream consumers filter the false-positive finding instead
+of re-doing reachability analysis.
 
 ## Step 6 - CI integration
 

@@ -12,19 +12,9 @@ runs need **automation result sync** - without it, automated runs
 don't update TestRail and the test-management view drifts from
 reality. This skill wires that sync.
 
-The official documentation is at
-**`support.testrail.com/hc/en-us/articles/...`** (the canonical
-support knowledge base) and **`testrail.com/docs/api/`** (the API
-reference). At the time of this skill's authoring (2026-05-05), both
-were behind a 403 to automated WebFetch; the URLs above are the
-canonical references that authors should consult in a real
-browser.
-
-The patterns documented below are the **stable, well-known TestRail
-API shapes** that have been documented for many years across the
-Gurock blog, multiple versions of the support KB, and the per-language
-client libraries (Python `testrail`, Java `testrail-java-client`,
-JavaScript `testrail-api`).
+The patterns below are the stable, long-documented TestRail API
+shapes; the canonical KB + API-reference URLs and the per-language
+client libraries are in References.
 
 ## When to use
 
@@ -35,23 +25,6 @@ JavaScript `testrail-api`).
 - The team manages test cases in TestRail and wants per-case mapping
   back to the automated test (via custom case ID labels in test
   names / annotations).
-
-## How to use
-
-1. Confirm the team's test management is standalone TestRail; generate a
-   per-user API key (My Settings > API Keys) and set host / user / key.
-2. Authenticate every request with HTTP Basic auth,
-   `base64(email:api_key)` (Step 1).
-3. Tag each automated test with its TestRail case ID - embedded in the test
-   name (`C1234`) or via an annotation (Step 2).
-4. Open a Test Run scoped to the covered cases: `add_run` with
-   `include_all: false` + explicit `case_ids` (Step 3).
-5. Map the framework's pass/fail/skip to TestRail status IDs and batch the
-   results back with `add_results_for_cases` - one POST, not N (Step 4).
-6. Optionally close the run on `main` (Step 5), then wire the whole thing as
-   an `if: always()` CI step - full workflow, per-result fields, and
-   untested-case handling in
-   [references/ci-and-fields.md](references/ci-and-fields.md).
 
 ## Step 1 - Authentication
 
@@ -155,6 +128,12 @@ installations:
 Custom status IDs (added by the project admin) follow 6+. Read the
 `get_statuses` endpoint at sync-script init to confirm - don't
 hard-code.
+
+**Verify before batching:** call `get_statuses` and assert every
+`status_id` in your map appears in the returned set. If one is missing
+(a renamed or custom status), fix the map and re-run rather than
+posting - TestRail accepts an unknown `status_id` and writes the result
+to the wrong status silently.
 
 ```python
 def add_results(run_id, results):
@@ -266,11 +245,9 @@ elapsed time. Close the run (Step 5) only when this is the `main` build.
 - TestRail API Reference:
   `https://support.testrail.com/hc/en-us/sections/7077986539540`
   (Results / Runs / Cases / Statuses endpoints).
-- These canonical URLs were 403 to automated WebFetch on
-  2026-05-05; consult in a real browser. The patterns above are the
-  stable shapes documented across multiple TestRail versions and
-  the per-language client libraries (`testrail` Python,
-  `testrail-api` JS).
+- Per-language client libraries: `testrail` (Python),
+  `testrail-java-client` (Java), `testrail-api` (JS) - reference
+  implementations of the API shapes above.
 - [references/ci-and-fields.md](references/ci-and-fields.md) - the full
   per-result field list, the end-to-end CI workflow, and untested-case
   handling.

@@ -7,17 +7,16 @@ description: "Author and run GitHub Issues bug workflows via REST API (2026-03-1
 
 ## Overview
 
-GitHub Issues has only **two states**: open and closed. This is
-intentionally minimalist. To express the canonical defect
-lifecycle
-(`bug-lifecycle-reference`)
-teams supplement Issues with **labels** (severity, priority,
-status) and optionally **Projects v2** (status columns).
+GitHub Issues has only **two states**: open and closed. To express the
+canonical defect lifecycle (`bug-lifecycle-reference`) teams supplement
+Issues with **labels** (severity, priority, status) and optionally
+**Projects v2** (status columns).
 
-This skill wraps the GitHub Issues REST API v2026-03-10 (per
+This skill wraps the GitHub Issues REST API (per
 [docs.github.com/en/rest/issues/issues](https://docs.github.com/en/rest/issues/issues))
-for create / update / close / reopen / search, and notes the
-Projects v2 GraphQL augmentation when richer state is needed.
+for create / update / close / reopen / search, and notes the Projects v2
+GraphQL augmentation when richer state is needed. Version-sensitive facts
+are collected under [API version](#api-version).
 
 ## When to use
 
@@ -55,10 +54,18 @@ HEADERS = {
 BASE = f"https://api.github.com/repos/{os.environ['GITHUB_REPO']}"
 ```
 
-The `X-GitHub-Api-Version` header is recommended per the API
-docs to lock the response shape. Omitting it defaults to
-`2022-11-28`, the older of the two supported versions (per
-[docs.github.com/en/rest/about-the-rest-api/api-versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions)).
+## API version
+
+Version-sensitive facts, kept in one place so time-bound detail does not leak
+through the rest of the doc:
+
+- Pin `X-GitHub-Api-Version: 2026-03-10` (set in the Authentication headers
+  above) to lock the response shape.
+- Omitting the header defaults to `2022-11-28`, the older of the two supported
+  versions (per
+  [docs.github.com/en/rest/about-the-rest-api/api-versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions)).
+- The `type` field on issue creation is recently added for issue types and is
+  not universally supported across all clients yet.
 
 ## Create an issue
 
@@ -81,7 +88,7 @@ def create_bug(title, body, severity, priority, labels=None):
 ```
 
 Required parameter is `title`. Optional: `body`, `assignees`,
-`milestone`, `labels`, `type` (recently added for issue types).
+`milestone`, `labels`, `type` (see [API version](#api-version)).
 
 ## Label conventions
 
@@ -114,7 +121,10 @@ def close(issue_number, reason="completed"):
         headers=HEADERS,
     )
     r.raise_for_status()
-    return r.json()
+    result = r.json()
+    # verify the destructive transition landed; a stale state means a concurrent edit won
+    assert result["state"] == "closed" and result["state_reason"] == reason, result
+    return result
 
 def reopen(issue_number):
     r = requests.patch(
@@ -201,6 +211,11 @@ num = create_or_attach(
 print(f"Bug tracked as #{num}")
 ```
 
+Verify: `search_issues` ranks by relevance and can return near-misses, so
+before attaching to or bulk-closing a hit, assert its `title` matches the
+target; skip and log any that do not rather than commenting on or closing the
+wrong issue, then re-run the dedupe against the corrected query.
+
 The create response includes `number` (per-repo), `html_url` (permalink), and
 `node_id` (GraphQL ID for Projects v2 cross-ref). Moving the issue across a
 Projects v2 status column, the gh CLI equivalents, and CI wiring are in
@@ -227,8 +242,6 @@ Projects v2 status column, the gh CLI equivalents, and CI wiring are in
   the label vocabulary above.
 - **Projects v2 is GraphQL.** REST + GraphQL hybrid; engineers
   need both.
-- **`type` field is new.** GitHub recently added issue `type`;
-  not universally supported across all clients yet.
 - **Cross-repo dedupe.** GitHub Issues are per-repo; cross-repo
   duplicate detection needs Search API with `org:` qualifier.
 

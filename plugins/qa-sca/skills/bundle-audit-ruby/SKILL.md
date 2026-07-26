@@ -1,6 +1,6 @@
 ---
 name: bundle-audit-ruby
-description: "Installs and runs bundler-audit against a Ruby Gemfile.lock, updating the ruby-advisory-db corpus, scanning for vulnerable gem versions and insecure sources, suppressing false positives via .bundler-audit.yml, and gating CI on non-zero exit. Ruby-only SCA scanner: for other ecosystems use npm-pip-maven-audit (multi-ecosystem dispatcher), snyk-test, or osv-scanner; cargo-audit-rust is the Rust analog; once findings exist, reachability-analyzer downranks unreachable gems - not this."
+description: "Use when a Ruby project has a Gemfile.lock and needs CVE/GHSA scanning or a CI SCA gate. Installs and runs bundler-audit against a Ruby Gemfile.lock, updating the ruby-advisory-db corpus, scanning for vulnerable gem versions and insecure sources, suppressing false positives via .bundler-audit.yml, and gating CI on non-zero exit. Ruby-only SCA scanner: for other ecosystems use npm-pip-maven-audit (multi-ecosystem dispatcher), snyk-test, or osv-scanner; cargo-audit-rust is the Rust analog; once findings exist, reachability-analyzer downranks unreachable gems - not this."
 ---
 
 # bundle-audit-ruby
@@ -30,15 +30,6 @@ integration, and JSON output for downstream tooling.
   in source control.
 - Layering SCA: run bundler-audit for the Ruby-specific feed, pair with
   `osv-scanner` for OSV.dev cross-DB consensus.
-
-## How to use
-
-1. Install bundler-audit (`gem install bundler-audit`); no system deps beyond a Ruby environment.
-2. Update the local ruby-advisory-db corpus (`bundle-audit update`) so the scan sees current advisories.
-3. Scan the `Gemfile.lock` (`bundle-audit check --update`), which flags vulnerable gem versions and insecure `http://` / `git://` sources.
-4. Triage each finding: bump the gem to a fixed version, or confirm it is a false positive.
-5. Suppress confirmed false positives in `.bundler-audit.yml` with a justification comment (approver + re-review date) - full waiver syntax in [references/bundle-audit-ci.md](references/bundle-audit-ci.md).
-6. Gate CI on the non-zero exit code so any unresolved advisory fails the build - GitHub Actions and Rake wiring in [references/bundle-audit-ci.md](references/bundle-audit-ci.md).
 
 ## Install
 
@@ -118,13 +109,9 @@ treat as unapproved. The mandatory justification template, per-run
 
 ## Worked example
 
-A Rails service locks `nokogiri 1.13.0` and `rack 2.2.3`. Run the scan:
-
-```bash
-bundle-audit check --update
-```
-
-bundler-audit flags two advisories and exits non-zero:
+A Rails service locks `nokogiri 1.13.0` and `rack 2.2.3`. The scan
+(`bundle-audit check --update`, per Scan above) flags two advisories and exits
+non-zero:
 
 ```
 Name: nokogiri
@@ -150,17 +137,9 @@ the two findings:
 1. `nokogiri` is reachable (it parses user-supplied XML). Patch it -
    `bundle update nokogiri` to `1.13.4` - and the advisory clears.
 2. `rack` multipart parsing is confirmed unreachable (the app rejects
-   multipart requests at the edge). Suppress it with justification in
-   `.bundler-audit.yml`:
-
-```yaml
----
-# Suppressions last reviewed: 2026-07-20 / Re-review by: 2026-10-20
-ignore:
-  # CVE-2022-30122: multipart parsing unreachable; app rejects multipart
-  # requests at the edge. Verified via route audit. Approved: alice@example.com
-  - CVE-2022-30122
-```
+   multipart requests at the edge). Suppress `CVE-2022-30122` in
+   `.bundler-audit.yml` using the justification template from Suppress false
+   positives above.
 
 Re-run offline (`bundle-audit check --no-update`): both findings resolved,
 exit `0`, CI passes. Wire the gate into the pipeline per

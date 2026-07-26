@@ -98,3 +98,40 @@ Per Bach's SBTM Reporting paper (satisfice.com), the lead views:
 | **Charter-to-bug ratio** | Quality of charter framing (too broad = many small bugs; too narrow = few) |
 
 These feed the testing-strategy review at sprint planning.
+
+## Charter examples
+
+A charter states the mission for one session (`Explore <area> with
+<tools> to discover <information>`). Sample charters:
+
+| Charter |
+|---|
+| "Explore the cart promo-stacking flow with manual sample inputs to discover discount-application bugs." |
+| "Explore the password-reset endpoint with the OWASP Top 10 list to discover injection / SSRF vulnerabilities." |
+| "Explore the checkout error states with a flaky-network proxy to discover retry behaviour issues." |
+| "Explore the admin dashboard's role-permission UI with three test users to discover authorization-leak bugs." |
+
+## Worked example - one 90-minute session
+
+```markdown
+**Charter:** Explore the cart promo-stacking flow with manual sample
+inputs to discover discount-application bugs.
+
+**Timings:** Started 14:00; 90 min; 10 min setup; 70 min charter;
+10 min bug investigation.
+
+**Bugs:** B-001 - "STACK50" applies after tax instead of before,
+reproduces 3/3.
+
+**Issues:** Cannot reach step 4 without a paid account; blocks ~40%
+of charter scope.
+
+**TBS:** T 70% / B 11% / S 11% / Idle 8% - healthy.
+
+**PROOF Outlook:** recommend a follow-up charter for tax-jurisdiction
+promos.
+```
+
+Result: the session sheet is filed and reviewed within 24h; the lead
+schedules the follow-up charter and provisions a paid test account to
+unblock the Issue.

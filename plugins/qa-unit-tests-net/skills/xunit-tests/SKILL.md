@@ -15,16 +15,6 @@ xUnit.net is the current .NET test standard (used by .NET Foundation
 projects + Microsoft's own .NET runtime). v3 released 2024;
 v2 still widely used in production.
 
-## How to use
-
-1. Add xUnit to the project: `dotnet new xunit`, or the packages `xunit` + `xunit.runner.visualstudio` + `Microsoft.NET.Test.Sdk`.
-2. Write `[Fact]` tests in a plain class; assert with `Assert.Equal(expected, actual)`.
-3. Replace duplicated tests with `[Theory]` + `[InlineData]` (or `[ClassData]` / `[MemberData]` for computed cases).
-4. Share expensive setup via `IClassFixture` / collection fixtures instead of static state (see [references/fixtures-and-parallelism.md](references/fixtures-and-parallelism.md)).
-5. Emit diagnostics through an injected `ITestOutputHelper` (Console output is suppressed).
-6. Mark skips with `[Fact(Skip = "...")]`, tag tests with `[Trait(...)]`, and filter via `dotnet test --filter`.
-7. Run `dotnet test`, tuning collection parallelism for large suites and emitting `.trx` + coverage in CI.
-
 ## Step 1 - Install
 
 ```bash
@@ -50,7 +40,7 @@ public class CalculatorTests
 }
 ```
 
-Run: `dotnet test`.
+Run: `dotnet test`. Verify: assert the run reports `Passed!` with the expected test count before proceeding; if it exits non-zero or discovers 0 tests, confirm the class is `public`, the method carries `[Fact]`, and all three packages (`xunit`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`) are installed, then re-run.
 
 ## Step 3 - Parametrized tests
 
@@ -153,19 +143,15 @@ OSS); v6 is the last fully-free version.
 ## Worked example
 
 A service team writes xUnit coverage for a `UserService` backed by a
-database. They scaffold with `dotnet new xunit -n Users.Tests`, then
-define a `DatabaseFixture : IDisposable` that opens a connection once
-and consume it via `public class UserTests : IClassFixture<DatabaseFixture>`.
-Pure logic like `Calculator.Add` is covered with a `[Theory]` over
-`[InlineData(1, 2, 3)]` / `[InlineData(-1, 1, 0)]` asserting
-`Assert.Equal(expected, Calculator.Add(a, b))`. A staging-only case is
-parked with `[Fact(Skip = "Requires staging DB")]`, and the DB-backed
-classes join a `[Collection("DbCollection")]` so they run sequentially
-against the shared connection while pure-logic tests parallelize.
-Diagnostics go through an injected `ITestOutputHelper`. CI runs
-`dotnet test --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"`
-and uploads coverage. Result: fast parallel unit coverage plus
-serialized DB-backed tests sharing one fixture.
+database. They scaffold with `dotnet new xunit` (Step 1), cover pure
+logic like `Calculator.Add` with the `[Theory]` of Step 3, and park a
+staging-only case with the skip of Step 4. The DB-backed classes share
+one `DatabaseFixture` via a `[Collection("DbCollection")]` (see
+[references/fixtures-and-parallelism.md](references/fixtures-and-parallelism.md))
+so they run sequentially against the shared connection while pure-logic
+tests parallelize. Diagnostics go through `ITestOutputHelper` (Step 5),
+and CI runs the coverage command of Step 7. Result: fast parallel unit
+coverage plus serialized DB-backed tests sharing one fixture.
 
 ## Anti-patterns
 

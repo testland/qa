@@ -1,6 +1,6 @@
 ---
 name: session-based-test-management-reference
-description: "Pure-reference catalog of Session-Based Test Management (SBTM) - the Bachs' framework for running exploratory testing as time-boxed sessions: the session (60-90 min), the charter (Explore X with Y to discover Z), the session-sheet structure, the TBS metrics, the cross-session dashboard, and the PROOF debrief. Use as the SBTM vocabulary for authoring charters and reviewing session sheets. Distinct from manual-test-debrief (the PROOF debrief template), exploratory-tours-reference (the session themes), and the heuristic catalog hiccupps-f-heuristic."
+description: "Pure-reference catalog of Session-Based Test Management (SBTM) - the Bachs' framework for running exploratory testing as time-boxed sessions: the session (60-90 min), the charter (Explore X with Y to discover Z), the session-sheet structure, the TBS metrics, the cross-session dashboard, and the PROOF debrief. Use when authoring exploratory-testing charters, reviewing session sheets, or setting up time-boxed test sessions. Distinct from manual-test-debrief (the PROOF debrief template), exploratory-tours-reference (the session themes), and the heuristic catalog hiccupps-f-heuristic."
 ---
 
 # session-based-test-management-reference
@@ -50,8 +50,10 @@ session, see
    you go. Full template:
    [references/session-sheet-and-metrics.md](references/session-sheet-and-metrics.md).
 4. **Track TBS** - note the Test / Bug / Setup split (plus Opportunity /
-   Idle). A session under ~50% T signals an environment or scope
-   problem.
+   Idle). Verify: T should land in the healthy 60-80% range before you
+   trust the session; if T < 50%, stop and fix the cause (stabilise the
+   environment or narrow the charter), then re-run the session before
+   aggregating.
 5. **Close with PROOF** - debrief Past, Results, Outlook, Obstacles,
    Feelings with the lead within 24h.
 6. **Aggregate on the dashboard** - roll sessions up weekly (throughput,
@@ -87,14 +89,9 @@ With <tools / resources>
 To discover <information>
 ```
 
-Examples:
-
-| Charter |
-|---|
-| "Explore the cart promo-stacking flow with manual sample inputs to discover discount-application bugs." |
-| "Explore the password-reset endpoint with the OWASP Top 10 list to discover injection / SSRF vulnerabilities." |
-| "Explore the checkout error states with a flaky-network proxy to discover retry behaviour issues." |
-| "Explore the admin dashboard's role-permission UI with three test users to discover authorization-leak bugs." |
+Example: "Explore the cart promo-stacking flow with manual sample inputs
+to discover discount-application bugs." More charter examples are in
+[references/session-sheet-and-metrics.md](references/session-sheet-and-metrics.md).
 
 Charters are not test cases. They state *what to investigate* and
 leave the *how* to the tester's judgment in the session.
@@ -134,30 +131,11 @@ post-session debrief structure:
 The lead reviews PROOFs with the tester briefly (5-10 min) before
 the session sheet is filed.
 
-## Worked example - one 90-minute session
+## Worked example
 
-```markdown
-**Charter:** Explore the cart promo-stacking flow with manual sample
-inputs to discover discount-application bugs.
-
-**Timings:** Started 14:00; 90 min; 10 min setup; 70 min charter;
-10 min bug investigation.
-
-**Bugs:** B-001 - "STACK50" applies after tax instead of before,
-reproduces 3/3.
-
-**Issues:** Cannot reach step 4 without a paid account; blocks ~40%
-of charter scope.
-
-**TBS:** T 70% / B 11% / S 11% / Idle 8% - healthy.
-
-**PROOF Outlook:** recommend a follow-up charter for tax-jurisdiction
-promos.
-```
-
-Result: the session sheet is filed and reviewed within 24h; the lead
-schedules the follow-up charter and provisions a paid test account to
-unblock the Issue.
+A full 90-minute session (charter, timings, bugs, issues, TBS, PROOF
+outlook, and how the lead acts on it) is worked through in
+[references/session-sheet-and-metrics.md](references/session-sheet-and-metrics.md).
 
 ## Common confusions
 
@@ -184,18 +162,16 @@ unblock the Issue.
 
 ## Limitations
 
-- **Requires tester skill.** SBTM is a framework; it doesn't make
-  bad testers good. The framework's value rises with tester
-  expertise.
+- **Requires tester skill.** The framework's value rises with tester
+  expertise; it doesn't make bad testers good.
 - **Cadence overhead.** Sessions + sheets + reviews add coordination
-  cost. Worth it for medium-+ teams; overhead for solo testers.
-- **Charter authoring is hard.** Vague charters produce vague
-  sessions. Investment in charter discipline pays off.
+  cost - worth it for medium-+ teams, overhead for solo testers.
+- **Charter authoring is hard.** Vague charters produce vague sessions;
+  charter discipline pays off.
 - **Dashboard interpretation requires context.** Raw metrics
-  (sessions/week, bugs/session) can mislead without
-  charter-framing context.
-- **Doesn't replace automated coverage.** SBTM is for
-  exploration, not regression - pair with automated suites.
+  (sessions/week, bugs/session) can mislead without charter framing.
+- **Doesn't replace automated coverage.** SBTM is for exploration, not
+  regression - pair with automated suites.
 
 ## References
 

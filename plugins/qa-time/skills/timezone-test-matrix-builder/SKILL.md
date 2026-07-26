@@ -1,6 +1,6 @@
 ---
 name: timezone-test-matrix-builder
-description: "Workflow-driven skill that builds a timezone + DST + leap-related test matrix from a code-base's time-touchpoint inventory. Walks through: inventorying time-related code (grep for datetime / Date / Instant / time.time / current_user_tz), categorizing each touchpoint (storage, business-logic, display, cron, billing), picking the relevant test categories (DST spring/fall, ambiguous local time, leap day Feb 29, leap second, ISO/RFC 3339 round-trip, zone-database update tolerance), and emitting per-touchpoint test stubs using the language-native fake-clock skill. Use when a code base needs a timezone, DST, and leap-related test matrix derived from its own time touchpoints."
+description: "Builds a timezone, daylight saving time (DST), and leap year / leap second test matrix from wherever a codebase reads or formats dates and times. Finds time-handling code (grep for datetime / Date / Instant / time.time / timezone), sorts each spot into storage, business-logic, display, cron, or billing, picks the edge cases that matter (DST spring-forward / fall-back, ambiguous local time, leap day Feb 29, ISO 8601 / RFC 3339 round-trip, zone-database updates), and emits per-spot test stubs wired to the language's fake-clock (mock-time) library. Use when a codebase needs timezone, DST, and leap-year test coverage derived from its own date/time usage."
 ---
 
 # timezone-test-matrix-builder
@@ -18,21 +18,6 @@ touchpoint.
 - After a time-related incident (DST bug, leap-day failure).
 - Migrating from one timezone library to another.
 - Periodic audit of time-handling.
-
-## How to use
-
-1. Inventory time touchpoints with the grep patterns and categorise
-   each hit (Step 1).
-2. For each touchpoint's category, pull the relevant cases from the
-   per-category catalog (Step 2).
-3. Map each touchpoint's language to its fake-clock harness skill
-   (Step 3).
-4. Record every (touchpoint, category, tests, language, harness) cell
-   in `matrix.yaml` (Step 4).
-5. Emit one test file per cell from the harness template (Step 5).
-6. Write the coverage doc, listing covered touchpoints and explicit
-   gaps (Step 6).
-7. Re-run the inventory grep periodically to catch new touchpoints.
 
 ## Step 1 - Inventory time touchpoints
 
@@ -133,7 +118,17 @@ def test_billing_period_spans_dst_fall_back():
     assert period.duration.total_seconds() == 30 * 24 * 3600 + 3600  # 1 extra hour
 ```
 
-## Step 6 - Coverage doc
+## Step 6 - Run and validate the generated tests
+
+Verify before recording coverage: run the emitted files
+(`pytest tests/time/`, `mvn test`, etc.) and assert every DST and
+leap-day case produces its expected pass (or the expected failure for a
+known-bug reproduction). If a case errors instead of asserting, the
+fake-clock wiring is wrong - fix the harness mapping (Step 3) or add the
+missing `TZ` / zone for local-time cases - and re-run until the matrix is
+green.
+
+## Step 7 - Coverage doc
 
 ```markdown
 # Time Test Matrix Coverage
@@ -161,25 +156,15 @@ def test_billing_period_spans_dst_fall_back():
 
 ## Worked example
 
-Adding leap-day coverage to a Python `BillingService`:
-
-1. Inventory (Step 1) finds `BillingService.create_charge_for_month`;
-   categorise it as **billing**.
-2. The billing rows of the catalog
-   ([references/test-catalog.md](references/test-catalog.md)) call for
-   month-end-across-leap-year, DST-window, and multi-tenant-timezone
-   tests.
-3. Python maps to the `freezegun-python` harness (Step 3).
-4. Add the cell to `matrix.yaml` (Step 4).
-5. Emit `tests/time/test_billing_service.py` with
-   `@freeze_time("2024-02-29T00:00:00Z")` asserting
-   `days_in_period == 29`, plus a companion `@freeze_time("2025-02-28...")`
-   asserting `28` (Step 5).
-6. Record the touchpoint in the coverage doc (Step 6).
-
-Result: the leap-year February boundary is exercised on every run,
-and the coverage doc shows BillingService's billing category as
-covered.
+Adding leap-day coverage to a Python `BillingService.create_charge_for_month`:
+inventory (Step 1) categorises it as **billing**, whose catalog rows call for
+month-end-across-leap-year, DST-window, and multi-tenant-timezone tests. Python
+maps to `freezegun-python` (Step 3), so the emitted
+`tests/time/test_billing_service.py` (Step 5) freezes `2024-02-29` asserting
+`days_in_period == 29` and `2025-02-28` asserting `28`. Running the file
+(Step 6) confirms both pass, and the coverage doc (Step 7) then records
+BillingService's billing category as covered - the leap-year February boundary
+is now exercised on every run.
 
 ## Anti-patterns
 
@@ -191,17 +176,8 @@ covered.
 | Skip storage round-trip | Schema drift / serialiser bug hides | RFC 3339 round-trip everywhere |
 | Test in UTC only | Misses local-zone DST / display bugs | Per-zone testing |
 | Hardcoded dates that age | Re-write needed annually | Use relative dates or fake clock |
-| No coverage doc | Gaps invisible | Step 6 |
+| No coverage doc | Gaps invisible | Step 7 |
 | Ignore display-layer | Real users see wrong dates | Even if manual, document the manual coverage |
-
-## Output
-
-This skill produces:
-
-- A time-touchpoint inventory (Step 1).
-- A category × language matrix (Step 4).
-- Per-cell test files (Step 5).
-- A coverage doc with gaps (Step 6).
 
 ## References
 

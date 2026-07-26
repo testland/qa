@@ -32,16 +32,6 @@ legacy maintenance.
   (pytest test bodies can use unittest.mock directly).
 - Embedded environments where pip install isn't possible.
 
-## How to use
-
-1. Name test files `test_*.py` and put them under `tests/`.
-2. Subclass `unittest.TestCase`; write methods named `test_*`.
-3. Move fixtures into `setUp` / `tearDown` (per-test) or `setUpClass` / `tearDownClass` (per-class).
-4. Assert with the specific method for the check (see [references/assertions-and-mock.md](references/assertions-and-mock.md)), not `assertTrue`.
-5. Isolate collaborators with `unittest.mock.patch`, patching where the name is *used*.
-6. Wrap table-driven cases in `with self.subTest(...)` so every case reports independently.
-7. Run `python -m unittest discover -s tests/ -v`; gate coverage with `coverage run -m unittest discover`.
-
 ## Step 1 - First test
 
 Per [ut-docs][ut-docs]:
@@ -67,10 +57,10 @@ if __name__ == '__main__':
 Run:
 
 ```bash
-python -m unittest test_sum.py        # specific file
-python -m unittest                     # discover from cwd
-python -m unittest discover -s tests/ -p 'test_*.py'
+python -m unittest test_sum.py     # run this file (discovery invocations: Step 7)
 ```
+
+**Verify:** a passing run ends with `OK` after a `Ran N tests` summary line. If it prints `FAILED (failures=N)`, read the `AssertionError` diff for expected-vs-actual, fix the code or the assertion, and re-run until you get `OK` before adding more tests.
 
 ## Step 2 - TestCase lifecycle hooks
 
@@ -99,17 +89,16 @@ class TestUserService(unittest.TestCase):
 
 ## Step 3 - Assertions
 
-Prefer the specific assert over `assertTrue(x == y)`: the specific method prints
-a useful diff on failure. Full catalog (equality, identity, membership, raises,
-float, numeric, ordering): [references/assertions-and-mock.md](references/assertions-and-mock.md).
+Assert with the method specific to the check (`assertEqual`, `assertIn`,
+`assertRaises`, `assertAlmostEqual`, ...), never `assertTrue(x == y)`. Full
+catalog + the diff-on-failure rationale: [references/assertions-and-mock.md](references/assertions-and-mock.md).
 
 ## Step 4 - `unittest.mock` patterns
 
-`unittest.mock` is the canonical Python mocking library (used even by pytest
-projects). **Patch target rule:** patch where the function is *used*, not where
-it's *defined*. If `mymodule.py` does `from api import fetch_user`, patch
-`mymodule.fetch_user`, not `api.fetch_user`. Mock / MagicMock / patch /
-patch.object / patch.dict examples: [references/assertions-and-mock.md](references/assertions-and-mock.md).
+Patch where the name is *used*, not where it's *defined*. The full rule (with a
+worked import example) plus Mock / MagicMock / patch / patch.object / patch.dict
+patterns are in [references/assertions-and-mock.md](references/assertions-and-mock.md); the Worked example below runs the
+patch-where-used pattern end to end.
 
 ## Step 5 - subTest for parametrization
 

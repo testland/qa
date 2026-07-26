@@ -7,19 +7,15 @@ description: "Reference for `.github/dependabot.yml` - GitHub-native dependency-
 
 ## Overview
 
-Per [docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file][db-cfg]:
-
 [db-cfg]: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
-Dependabot is GitHub's native dependency-update orchestrator. It
-opens PRs (or issues, for security-only) when a new version is
-available for a declared dependency. Configuration via
-`.github/dependabot.yml` at repo root.
+Per [db-cfg][db-cfg], Dependabot opens PRs (or issues, for security-only
+updates) when a new version is available for a declared dependency, configured
+via `.github/dependabot.yml` at the repo root.
 
-This is a **reference skill** - defines the config
-surface; doesn't run scans (that's `snyk-test`
-or `osv-scanner`). Dependabot complements
-SCA tools by automating the upgrade PR.
+This is a **reference skill** - it defines the config surface; it doesn't run
+scans (that's `snyk-test` or `osv-scanner`). Dependabot complements SCA tools by
+automating the upgrade PR.
 
 ## When to use
 
@@ -134,51 +130,44 @@ of newly-added deps.
 
 ## Step 4 - Realistic multi-ecosystem example
 
+One `updates` entry per ecosystem, each with its own `schedule` and `labels`
+(reuse the `groups` / `ignore` blocks from Step 3 as needed):
+
 ```yaml
 version: 2
 updates:
-  # Application dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "06:00"
-      timezone: "UTC"
     open-pull-requests-limit: 10
     groups:
       dev-deps:
         dependency-type: "development"
-        update-types: ["minor", "patch"]
-      production-minor-patch:
-        dependency-type: "production"
-        update-types: ["minor", "patch"]
-    ignore:
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
     labels: ["dependencies", "javascript"]
-    assignees: ["alice"]
-    commit-message:
-      prefix: "deps"
-      include: "scope"
 
-  # CI workflow updates
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
-    groups:
-      gha:
-        patterns: ["*"]
-    labels: ["dependencies", "ci"]
 
-  # Docker base image updates
   - package-ecosystem: "docker"
     directory: "/Dockerfile"
     schedule:
       interval: "weekly"
-    labels: ["dependencies", "docker"]
 ```
+
+Full config with per-ecosystem groups, ignore rules, assignees, and
+commit-message customization:
+[references/dependabot-advanced.md](references/dependabot-advanced.md).
+
+**Verify:** after committing `.github/dependabot.yml`, open the repo's
+Dependabot view (Insights -> Dependency graph -> Dependabot) and confirm GitHub
+reports no `dependabot.yml` parse error and lists every configured
+`package-ecosystem`; if it flags a parse error, fix the reported key and re-push
+before relying on the config. Use the view's **Check for updates** control to
+force a run instead of waiting for the `schedule`.
 
 ## Step 5 - Security updates (always-on)
 
@@ -220,34 +209,11 @@ dates removed.
 
 ## Step 7 - Auto-merge integration
 
-Dependabot creates PRs but doesn't auto-merge. For auto-merge,
-pair with GitHub Auto-merge or a workflow:
-
-```yaml
-# .github/workflows/dependabot-automerge.yml
-name: Dependabot auto-merge
-on: pull_request
-
-permissions:
-  pull-requests: write
-  contents: write
-
-jobs:
-  dependabot:
-    runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
-    steps:
-      - uses: dependabot/fetch-metadata@v2
-        id: meta
-      - if: steps.meta.outputs.update-type == 'version-update:semver-patch'
-        run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-Auto-merge only after CI passes; gates auto-merge to patch updates
-(safer than minor / major).
+Dependabot creates PRs but doesn't auto-merge. For auto-merge, pair with GitHub
+Auto-merge or a workflow that reads `dependabot/fetch-metadata` and gates the
+merge to `version-update:semver-patch` only (after CI passes; patch-only is
+safer than minor / major). Full workflow:
+[references/dependabot-advanced.md](references/dependabot-advanced.md).
 
 ## Anti-patterns
 
@@ -273,6 +239,8 @@ Auto-merge only after CI passes; gates auto-merge to patch updates
 ## References
 
 - [db-cfg][db-cfg] - official configuration reference
+- [references/dependabot-advanced.md](references/dependabot-advanced.md) - full
+  multi-ecosystem config example + patch-only auto-merge workflow
 - docs.github.com/en/code-security/dependabot - full Dependabot docs
 - docs.github.com/en/code-security/dependabot/dependabot-security-updates - security updates feature
 - github.com/dependabot/fetch-metadata - auto-merge helper

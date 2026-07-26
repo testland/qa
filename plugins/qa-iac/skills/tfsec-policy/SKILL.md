@@ -9,15 +9,9 @@ description: "Configures tfsec for Terraform-specific security scanning - covers
 
 [tfs]: https://aquasecurity.github.io/tfsec/v1.28.13/
 
-**Important migration note** per [tfsec-home][tfs]:
-
-> "tfsec is transitioning to **Trivy**, Aqua Security's
-> consolidated scanning solution. The project documentation notes:
-> 'Going forward we want to encourage the tfsec community to
-> transition over to Trivy.'"
-
-For new projects: evaluate Trivy first. tfsec remains stable for
-existing usage.
+Per [tfsec-home][tfs], tfsec is transitioning to Trivy, Aqua
+Security's consolidated scanner. For new projects, evaluate Trivy
+first; tfsec remains stable for existing usage.
 
 ## When to use
 
@@ -35,11 +29,14 @@ existing usage.
    and PR comments (Step 3).
 4. Triage findings - fix real issues, annotate intentional
    exceptions with justified `tfsec:ignore:` comments (Step 4).
-5. Add custom YAML rules for team-specific policy, then wire the
+5. Verify: re-run `tfsec . --minimum-severity HIGH` after
+   remediation and assert it reports no HIGH findings before
+   merging; if any remain, fix or justify-ignore them and re-run.
+6. Add custom YAML rules for team-specific policy, then wire the
    scan into CI (Steps 5-6).
-6. Confirm cloud coverage; fall back to OPA / Conftest for
+7. Confirm cloud coverage; fall back to OPA / Conftest for
    unsupported clouds (Step 7).
-7. Plan the Trivy migration for new work, and combine with Checkov
+8. Plan the Trivy migration for new work, and combine with Checkov
    / KICS for overlapping coverage (Steps 8-9).
 
 ## Step 1 - Install
@@ -125,19 +122,11 @@ Scanning:
 
 ## Step 7 - Supported clouds
 
-Per [tfsec-home][tfs]:
-
-> "AWS: API Gateway, EC2, S3, RDS, IAM, Lambda, and 30+
-> additional services
->
-> Azure: App Service, Storage, Database, Container, Key Vault,
-> and others
->
-> Google Cloud: Compute, GKE, SQL, Storage, IAM, BigQuery, and
-> more
->
-> Additional support includes Kubernetes, OpenStack, Oracle,
-> DigitalOcean, and CloudStack environments."
+Per [tfsec-home][tfs], tfsec covers AWS (S3, EC2, RDS, IAM, Lambda,
+API Gateway, and 30+ services), Azure (App Service, Storage,
+Database, Container, Key Vault), Google Cloud (Compute, GKE, SQL,
+Storage, IAM, BigQuery), plus Kubernetes, OpenStack, Oracle,
+DigitalOcean, and CloudStack.
 
 For unsupported clouds, fall back to OPA / Conftest with custom
 Rego per `policy-as-code-runner`.
@@ -205,8 +194,8 @@ validated before switching.
 
 - **Terraform-only.** Doesn't scan Kubernetes / Dockerfile /
   CloudFormation directly (Trivy expands).
-- **Maintenance pace slowing.** Per [tfsec-home][tfs], focus is on
-  Trivy; tfsec gets bug fixes but not new features.
+- **Maintenance pace slowing.** Per [tfsec-home][tfs], tfsec gets
+  bug fixes but not new features.
 - **Some new cloud services lag in coverage.** Newer AWS / Azure
   resources may not have rules yet.
 - **No baseline support out of the box.** Adopt against legacy

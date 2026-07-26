@@ -34,9 +34,8 @@ reporter that lets non-JVM teams emit Xray-compatible JUnit XML.
       --data-binary @target/xray-reports/TEST-results.xml
 ```
 
-`projectKey=CALC` (the Jira project key) is the critical query param - without
-it, the import fails or lands in the wrong project. Mask the JWT
-(`::add-mask::`) and fetch it fresh per run (24h validity, Step 1).
+The `projectKey` requirement is covered in SKILL Step 6, JWT masking and
+the 24h refresh in Step 1; both apply unchanged to the YAML above.
 
 ## Non-JVM teams: Playwright reporter
 

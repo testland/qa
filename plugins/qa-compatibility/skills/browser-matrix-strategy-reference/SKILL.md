@@ -7,9 +7,7 @@ description: "Pure-reference for designing and reviewing a browser / OS / device
 
 ## Overview
 
-"Test on every browser" is not a strategy. A real matrix tiers
-browsers by traffic share, regulatory requirement, and team budget,
-then runs different tiers at different cadences.
+A real browser matrix tiers browsers by traffic share, regulatory requirement, and team budget, then runs each tier at its own cadence - not "test on everything".
 
 This skill is a **pure reference** consumed by the cloud-grid
 skills
@@ -35,8 +33,8 @@ skills
 
 1. Pull browser / OS / version traffic share from your own analytics; supplement
    with StatCounter for geographies your own data is thin on.
-2. Apply the tier-membership heuristic: >=5% own traffic -> T1, 1-5% or statutory
-   -> T2, <1% with customer demand -> T3, otherwise out of scope.
+2. Apply the tier-membership heuristic (defined once below) to place each combo in
+   T1, T2, T3, or out of scope.
 3. Group Chromium-engine browsers (Brave, Vivaldi, Opera) under the dominant
    browser instead of counting them as separate combos.
 4. Map each tier to infrastructure via the cost-tier mapping: bundled engines for
@@ -47,14 +45,20 @@ skills
    questions have a written answer.
 7. Re-run quarterly: re-tier as traffic shifts, retire below-threshold combos,
    and defend legacy drops (IE11, old iOS Safari) against your own analytics.
+8. **Verify before dropping a combo:** assert traffic <0.1% across two independent
+   sources (own analytics + StatCounter) AND that no statutory or SLA requirement
+   applies; if either check fails, keep the combo in T3 and re-review next quarter.
 
 ## The three-tier model
 
+Cadence per tier; exact traffic thresholds are defined once in the
+Tier-membership heuristic section below.
+
 | Tier | Cadence | Coverage criterion | Example |
 |---|---|---|---|
-| **T1 - Must pass every PR** | Per-PR + main | Currently using >5% of traffic + must-not-break | Chrome current + Chrome-1 |
-| **T2 - Pre-release / nightly** | Nightly + pre-release | 1-5% traffic share OR statutory (regulated industries) | Firefox / Safari / Edge current |
-| **T3 - Quarterly / on-demand** | Quarterly | <1% traffic but customer demand | Safari iOS 16 / IE11 / niche Android |
+| **T1 - Must pass every PR** | Per-PR + main | Highest-traffic, must-not-break combos | Chrome current + Chrome-1 |
+| **T2 - Pre-release / nightly** | Nightly + pre-release | Mid-traffic OR statutory (regulated industries) | Firefox / Safari / Edge current |
+| **T3 - Quarterly / on-demand** | Quarterly | Long-tail with customer demand | Safari iOS 16 / IE11 / niche Android |
 
 ## Data sources for traffic share
 
@@ -78,9 +82,9 @@ A hypothetical SaaS B2B web app builds its first matrix from its own analytics:
 1. **Pull traffic share.** Own analytics shows Chrome 68%, Firefox 12%, Safari
    8%, Edge 5%, mobile Safari 9% of mobile traffic, mobile Chrome 5% of mobile,
    Safari iOS 16 2% of mobile and declining.
-2. **Apply the heuristic.** Chrome 68% and Firefox 12% clear the >=5% bar, so
+2. **Apply the heuristic.** Chrome 68% and Firefox 12% clear the T1 traffic bar, so
    both go to T1 (Chrome adds an N-1 row for Group-Policy lag-behind users).
-   Safari 8%, Edge 5%, mobile Safari, and mobile Chrome sit in the 1-5% band or
+   Safari 8%, Edge 5%, mobile Safari, and mobile Chrome fall in the T2 band or
    count as significant mobile platforms, so they go to T2. Safari iOS 16 at 2%
    and declining goes to T3.
 3. **Rule browsers out.** A customer survey returns 0 IE11 users with no
@@ -97,7 +101,8 @@ row. The filled-in artifact is
 
 ## Tier-membership heuristic
 
-A browser belongs in:
+The single authoritative traffic thresholds, referenced by the three-tier model
+and worked example above. A browser belongs in:
 
 - **T1** if any of:
   - Currently ≥5% of own traffic, AND
