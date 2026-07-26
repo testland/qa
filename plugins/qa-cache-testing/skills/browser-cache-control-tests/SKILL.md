@@ -24,6 +24,25 @@ Firefox, and Safari.
 - Investigating "this page caches forever" or "cache never
   hits" complaints.
 
+## How to use
+
+1. Pick the caching behaviour to assert: response `Cache-Control`
+   header, ETag `304` round-trip, service-worker strategy, or
+   reload semantics.
+2. Scaffold a Playwright spec and attach a `page.on('response')`
+   (or `page.on('request')`) listener before `page.goto`.
+3. Read the header via `resp.headers()['cache-control']` and
+   assert with a regex `toMatch`, never an exact string.
+4. For served-from-cache proof, open a CDP session and read
+   `Network.responseReceived.response.fromDiskCache` /
+   `fromMemoryCache`.
+5. For revalidation, reload after the TTL and assert the second
+   response is `304` with a matching `If-None-Match`.
+6. For service-worker strategies, populate the cache online, then
+   `context.setOffline(true)` and reload.
+7. Run `npx playwright test` across the Chromium / Firefox /
+   WebKit matrix in CI.
+
 ## Authoring
 
 ### Playwright network interception
@@ -56,110 +75,37 @@ test('API responses are not cached by default', async ({ page }) => {
 });
 ```
 
-### Verify second-load is from cache
+The deeper recipes - served-from-cache detection via CDP, ETag
+revalidation round-trips, hard-reload semantics, and
+service-worker (Workbox) strategies - live in
+[references/playwright-cache-recipes.md](references/playwright-cache-recipes.md).
+
+## Worked example
+
+A release ships hashed bundles (`app.4f2a.js`) that should cache
+for a year, plus a `/api/me` endpoint that must never be cached.
+One spec audits both:
 
 ```typescript
-test('static asset second load is from disk cache', async ({ page }) => {
-  await page.goto('https://example.com');           // first load (network)
-  const responses: Array<{ url: string; fromCache: boolean }> = [];
+test('bundle immutable, /api/me uncached', async ({ page }) => {
+  const seen: Record<string, string> = {};
   page.on('response', (resp) => {
-    responses.push({
-      url: resp.url(),
-      fromCache: resp.fromServiceWorker() || resp.request().redirectedFrom() !== null,
-    });
+    const cc = resp.headers()['cache-control'] ?? '';
+    if (resp.url().match(/\.\w+\.js$/)) seen.bundle = cc;
+    if (resp.url().endsWith('/api/me')) seen.api = cc;
   });
-  await page.reload();
-  // Playwright doesn't expose 'from disk cache' directly, but
-  // request timing reveals it:
-  const asset = responses.find((r) => r.url.endsWith('.js'));
-  // The Network panel `(disk cache)` annotation comes from
-  // timing.responseEnd === timing.responseStart for cached items.
-});
-```
-
-For a stronger check, use Chrome DevTools Protocol via Playwright:
-
-```typescript
-const cdp = await page.context().newCDPSession(page);
-await cdp.send('Network.enable');
-cdp.on('Network.responseReceived', (params) => {
-  if (params.response.url.endsWith('.js')) {
-    expect(params.response.fromDiskCache).toBe(true);
-  }
-});
-await page.reload();
-```
-
-### ETag revalidation round-trip
-
-Per RFC 9111 §4.3.1:
-
-```typescript
-test('ETag triggers 304 on revalidation', async ({ page }) => {
-  let firstEtag: string | undefined;
-  page.on('response', (resp) => {
-    if (resp.url() === 'https://example.com/api/feed') {
-      const etag = resp.headers()['etag'];
-      if (resp.status() === 200 && !firstEtag) firstEtag = etag;
-      else if (firstEtag) {
-        expect(resp.request().headers()['if-none-match']).toBe(firstEtag);
-        expect(resp.status()).toBe(304);
-      }
-    }
-  });
-
-  // First load
   await page.goto('https://example.com/dashboard');
-  // Reload after TTL - browser should send If-None-Match
-  await page.waitForTimeout(2000);
-  await page.reload();
+
+  expect(seen.bundle).toMatch(/max-age=\d{6,}/);   // ~10+ days
+  expect(seen.bundle).toContain('immutable');
+  expect(seen.api).toMatch(/(no-store|private)/);
 });
 ```
 
-### Hard reload (Cmd+Shift+R) semantics
-
-Browsers send `Cache-Control: no-cache` on hard reload, bypassing
-the cache. Test:
-
-```typescript
-test('hard reload bypasses cache', async ({ page }) => {
-  await page.goto('https://example.com');
-
-  page.on('request', (req) => {
-    if (req.url().endsWith('.js')) {
-      expect(req.headers()['cache-control']).toMatch(/no-cache/);
-    }
-  });
-
-  // Playwright doesn't have a direct "hard reload"; simulate via CDP:
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send('Page.reload', { ignoreCache: true });
-});
-```
-
-### Service Worker / Workbox
-
-Workbox provides standard strategies; test which is used:
-
-```typescript
-test('offline page uses cache-first strategy', async ({ context, page }) => {
-  // Go online, populate cache
-  await page.goto('https://example.com');
-  // Go offline
-  await context.setOffline(true);
-  // Reload - should still work
-  await page.reload();
-  await expect(page.locator('h1')).toHaveText('Example');
-});
-
-test('api uses network-first with fallback', async ({ context, page }) => {
-  await page.goto('https://example.com/api-status');
-  await context.setOffline(true);
-  await page.reload();
-  // Stale cached response shown
-  await expect(page.locator('.api-status')).toBeVisible();
-});
-```
+The bundle assertion fails if the build drops `immutable` (a
+silent perf regression); the `/api/me` assertion fails if a proxy
+adds a public `max-age`, catching an accidental leak of per-user
+data into shared caches.
 
 ## Running
 
@@ -238,6 +184,8 @@ jobs:
   [developer.chrome.com/docs/workbox](https://developer.chrome.com/docs/workbox).
 - Playwright Network API:
   [playwright.dev/docs/network](https://playwright.dev/docs/network).
+- Deeper authoring recipes:
+  [references/playwright-cache-recipes.md](references/playwright-cache-recipes.md).
 - Companion catalogs:
   `cache-coherence-patterns-reference`,
   `stale-while-revalidate-reference`.

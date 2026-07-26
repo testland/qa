@@ -41,6 +41,22 @@ OIDC endpoints from your application.
 - Custom auth flows (per [kc-admin][kc-admin]: "password-less browser
   login flow") need integration coverage.
 
+## How to use
+
+1. Start Keycloak per test class with the Testcontainers module,
+   pinning an explicit image tag (Step 1).
+2. Author and mount a stripped `test-realm.json` fixture via
+   `withRealmImportFile()` or `KEYCLOAK_IMPORT` (Step 2).
+3. Exercise the realm's token endpoint for each flow under test -
+   authorization-code, client-credentials, password for legacy only
+   (Steps 3-4).
+4. Validate resource-server integration through token introspection
+   (Step 5).
+5. Cover realm / client / user provisioning through the Admin REST
+   API where the app manages them (Step 7).
+6. Run the suite in CI with Docker on the runner; no service
+   container needed (Step 8).
+
 ## Step 1 - Testcontainers Keycloak setup
 
 ```python
@@ -140,21 +156,10 @@ def test_client_credentials_grant(keycloak):
 
 ## Step 5 - Test token introspection
 
-For RP (Resource Provider) integration:
-
-```python
-def test_token_introspection(keycloak, access_token):
-    response = requests.post(
-        f"{keycloak.get_url()}/realms/test/protocol/openid-connect/token/introspect",
-        auth=("test-client", "test-secret"),
-        data={"token": access_token},
-    )
-    assert response.status_code == 200
-    body = response.json()
-    assert body["active"] is True
-    assert "username" in body
-    assert "preferred_username" in body
-```
+For RP (Resource Provider) integration, POST the token to the
+realm's `/token/introspect` endpoint with client auth and assert
+`active` is true (plus `username` / `preferred_username`). Full
+recipe: [references/endpoint-recipes.md](references/endpoint-recipes.md).
 
 ## Step 6 - Test custom authentication flows
 
@@ -170,22 +175,9 @@ on [kc-admin][kc-admin].
 ## Step 7 - Admin REST API tests
 
 Keycloak exposes its admin functionality via REST. Pattern: obtain
-an admin-realm token, then call the admin endpoints:
-
-```python
-def test_create_user_via_admin_api(keycloak):
-    admin_token = get_admin_token(keycloak)
-    response = requests.post(
-        f"{keycloak.get_url()}/admin/realms/test/users",
-        headers={"Authorization": f"Bearer {admin_token}"},
-        json={
-            "username": "newuser",
-            "enabled": True,
-            "credentials": [{"type": "password", "value": "newpass", "temporary": False}],
-        },
-    )
-    assert response.status_code == 201
-```
+an admin-realm token, then call the admin endpoints (e.g. create a
+user via `/admin/realms/{realm}/users`). Full recipe:
+[references/endpoint-recipes.md](references/endpoint-recipes.md).
 
 ## Step 8 - CI integration
 
@@ -198,6 +190,20 @@ steps:
 
 Testcontainers requires Docker on the runner; GitHub Actions
 ubuntu-latest has it pre-installed.
+
+## Worked example
+
+A service needs its `/protected` API to accept only Keycloak-issued
+tokens. The test class starts `quay.io/keycloak/keycloak:25.0` via
+Testcontainers and imports `test-realm.json` carrying a
+`service-account-client` (Steps 1-2). The test POSTs a
+`client_credentials` grant to
+`{url}/realms/test/protocol/openid-connect/token`, pulls
+`access_token`, then calls `/protected` with
+`Authorization: Bearer <token>` and asserts 200 (Step 4). A second
+test introspects the same token and asserts `active` is true
+(Step 5). CI runs `pytest tests/integration/auth/ -v` on an
+ubuntu-latest runner where Docker is preinstalled (Step 8).
 
 ## Anti-patterns
 

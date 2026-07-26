@@ -19,6 +19,16 @@ the schema + formulae so dashboards reflect reality.
   being computed correctly?
 - Setting reliability targets (cross-ref `error-budget-tests`).
 
+## How to use
+
+1. Record one schema entry per incident (Step 1) in your IR tool, with distinct detected / acknowledged / mitigated / resolved timestamps.
+2. Pick ONE MTTR definition - mitigation or resolution (Step 8) - and document which your reports use.
+3. Apply the exclusion rules (Step 3) so planned maintenance, drills, and duplicates never enter the metric.
+4. Compute MTTD / MTTA / MTTR / MTBF with the Step 2 formulae over their rolling windows.
+5. Version the Grafana panels as code (Step 4) and wire the target-vs-actual alert (Step 5) so the trend, not a single incident, pages.
+6. Feed postmortem fields back into the schema (Step 7) and track action-item completion by `incident_id`.
+7. Pair the means with P95 / P99 duration views (Limitations) so tail incidents stay visible.
+
 ## Step 1 - Per-incident schema
 
 Required fields:
@@ -153,6 +163,25 @@ truer to customer experience). Per [Google SRE - Embracing Risk],
 the customer-facing metric is what matters for SLO purposes.
 
 Document which definition your reports use; both are legitimate.
+
+## Worked example
+
+Order service SEV-1 from the Step 1 record: `detected_at` 10:23:14,
+`acknowledged_at` 10:25:02, `mitigated_at` 10:54:11, `resolved_at`
+11:42:33, `is_planned_maintenance: false`, `customer_impact: true`.
+
+- MTTA = acknowledged - detected = 1m 48s.
+- MTTR-mitigation = mitigated - detected = 30m 57s.
+- MTTR-resolution = resolved - detected = 1h 19m 19s.
+
+This organization reports MTTR-mitigation (Step 8), so the incident
+contributes 30m 57s. It survives the Step 3 exclusion filter (real
+failure, customer impact), so it enters the rolling 90-day MTTR.
+Against the 30-min target (Step 5), 30m 57s already sits over the
+line; if the 30-day average holds there, `MTTR_TARGET_BREACH` fires
+after its `for: 1h` window. The low MTTA (1m 48s) shows detection-to-
+acknowledge was healthy, so the breach points at mitigation time, not
+on-call responsiveness.
 
 ## Anti-patterns
 

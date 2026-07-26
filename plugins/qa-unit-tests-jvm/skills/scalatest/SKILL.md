@@ -24,6 +24,16 @@ ScalaTest is the right pick for Scala-primary or Scala-only projects.
 - Existing ScalaTest codebase.
 - Property-based testing alongside ScalaCheck (canonical pairing).
 
+## How to use
+
+1. Add `scalatest` (+ `scalatestplus` for ScalaCheck) to `build.sbt` as Test deps (Step 1).
+2. Pick one specification style (FlatSpec / FunSuite / WordSpec) and mix in `Matchers` (Step 2).
+3. Assert with the Matchers DSL - `should equal`, `should contain`, `shouldBe a [Class]` ([references/matchers-dsl.md](references/matchers-dsl.md), Step 3).
+4. Return `Future[Assertion]` from `AsyncFlatSpec` bodies for async code (Step 4).
+5. Add `forAll` invariants via ScalaCheck and lifecycle hooks / loan-fixtures for setup (Steps 5-6).
+6. Tag slow / integration tests and select them with `-n` / `-l` (Step 7).
+7. Run `sbt clean coverage test coverageReport` in CI (Step 8).
+
 ## Step 1 - Install
 
 `build.sbt`:
@@ -94,32 +104,7 @@ Pick one style per project + stick with it.
 
 ## Step 3 - Matchers DSL
 
-Per [scalatest.org/user_guide/using_matchers][st-matchers]:
-
-[st-matchers]: https://www.scalatest.org/user_guide/using_matchers
-
-```scala
-result should equal(42)
-result shouldBe 42                    // strict equality (uses ==)
-result shouldEqual 42                  // similar to equal but no parens
-result should not equal 0
-list should have size 5
-list should contain("alice")
-list should contain only("alice", "bob")
-list should contain inOrder("alice", "bob")
-map should contain key("alice")
-map should contain value(42)
-string should startWith("hello")
-string should fullyMatch regex("\\d+")
-opt shouldBe defined
-opt shouldBe a [Some[_]]
-result shouldBe a [Right[_, _]]
-either shouldBe Right(42)
-result should be > 10
-result should be (within(1.0) of 42.0)   // float tolerance
-```
-
-For full Matchers reference, see [st-matchers][st-matchers].
+Assert with the Matchers DSL - equality (`should equal` / `shouldBe` / `shouldEqual`), size + membership (`have size` / `contain` / `contain only` / `contain inOrder`), map keys/values, string ops, type checks (`shouldBe a [Class]`), and numeric ordering + float tolerance. Full example set in [references/matchers-dsl.md](references/matchers-dsl.md).
 
 ## Step 4 - Async tests
 
@@ -233,6 +218,16 @@ Selective run: `sbt 'testOnly * -- -n Slow'` or
 
 Coverage via `sbt-scoverage` plugin (Scala-native; not JaCoCo).
 
+## Worked example
+
+Testing `Calculator.add` with FlatSpec + ScalaCheck:
+
+1. Add `"org.scalatest" %% "scalatest" % "3.2.19" % Test` and `"org.scalatestplus" %% "scalacheck-1-17" % "3.2.18.0" % Test`.
+2. Write `class CalculatorSpec extends AnyFlatSpec with Matchers` with `"Calculator" should "add two numbers" in { Calculator.add(1, 2) should equal(3) }`.
+3. Add an invariant via `ScalaCheckPropertyChecks`: `forAll { (a: Int, b: Int) => a + b shouldBe b + a }`.
+4. Run `sbt test`: the example passes; `forAll` shrinks to a minimal counterexample if commutativity breaks.
+5. Run `sbt coverage test coverageReport` for the scoverage HTML report.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -254,7 +249,7 @@ Coverage via `sbt-scoverage` plugin (Scala-native; not JaCoCo).
 
 - [st][st] - ScalaTest landing
 - [st-styles][st-styles] - selecting a style
-- [st-matchers][st-matchers] - Matchers reference
+- [references/matchers-dsl.md](references/matchers-dsl.md) - Matchers DSL reference
 - scalacheck.org - ScalaCheck (property-based)
 - `junit5-tests`,
   `kotest-tests`,

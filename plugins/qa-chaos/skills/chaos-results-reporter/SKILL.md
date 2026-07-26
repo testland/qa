@@ -44,6 +44,23 @@ before running chaos-results-reporter.
 
 Do not fabricate metrics or assume a prior run exists.
 
+## How to use
+
+1. Gather every completed drill report for the target service into one place
+   (a directory or an explicit file list). If none exist, halt per the
+   hard-reject rule.
+2. Parse each report into the field-extraction map, flagging any report that is
+   missing a required field as `INCOMPLETE` (Step 1).
+3. Build the per-experiment summary table, one row per run, sorted by date
+   ascending (Step 2).
+4. For each experiment type with 2+ runs, compute the hypothesis-held rate,
+   blast-radius trend, and TTR trend, then label each direction (Step 3).
+5. Scan for degradation signals and turn each HIGH or MEDIUM finding into a
+   concrete action item with evidence (Steps 4-5).
+6. Write the plain-language stakeholder summary (Step 6).
+7. Assemble the four-section report and write it to
+   `results/chaos/trend-report-<YYYY-MM-DD>.md` (Output format).
+
 ## Step 1 - Collect drill reports
 
 Locate completed drill reports. Supported input forms:
@@ -53,21 +70,8 @@ Locate completed drill reports. Supported input forms:
 - YAML verdict files emitted by `chaos-experiment-author` Step 7.
 - A directory glob passed by the user (e.g., `results/chaos/*.md`).
 
-For each report, extract the following fields:
-
-| Field | Source location in drill report |
-|---|---|
-| `experiment_id` | Header: `Chaos drill report - <id>` |
-| `date` | `Start:` timestamp, truncated to date |
-| `experiment_type` | `Experiment:` field |
-| `hypothesis` | Steady-state hypothesis from experiment YAML |
-| `verdict` | `Verdict:` field: `PASSED`, `ABORTED`, `FAILED` |
-| `blast_radius_observed` | `Peak error rate`, `Peak affected replicas`, `Peak latency p99` |
-| `blast_radius_bound` | `Blast-radius bound:` field |
-| `time_to_detect` | Time from injection start to first abort criterion breach (or "n/a" if not aborted) |
-| `time_to_recover` | `Recovery time:` field |
-| `abort_reason` | `Abort reason:` field (empty if verdict is `PASSED`) |
-
+For each report, extract the fields in the field-extraction map in
+[references/drill-fields-and-signals.md](references/drill-fields-and-signals.md).
 If any required field is missing from a report, flag that report as
 `INCOMPLETE` in the aggregate table and skip it from trend calculations.
 Do not guess or interpolate missing values.
@@ -127,15 +131,9 @@ median TTR in the second half of runs is shorter than in the first half;
 
 ## Step 4 - Identify degradation signals
 
-Scan all experiments for these signals. Emit each as a named finding:
-
-| Signal | Condition | Severity |
-|---|---|---|
-| Repeated blast-radius breach | Same experiment type aborted for the same abort reason in 2+ consecutive runs | HIGH |
-| No TTR improvement after fix | ABORTED run was followed by a code change (per git log or team note), but TTR did not improve in the next run | HIGH |
-| Widening blast radius | Blast-radius trend is `WIDENING` for any experiment type | MEDIUM |
-| Declining held rate | Held rate dropped more than 20 percentage points between first and second half of run history | MEDIUM |
-| Single data point | Any experiment type has only one run | LOW (informational) |
+Scan all experiments for the degradation signals catalogued in
+[references/drill-fields-and-signals.md](references/drill-fields-and-signals.md).
+Emit each match as a named finding.
 
 Per [chaos-principles][cp] principle "Automate Experiments to Run
 Continuously": a `DEGRADING` trend on an automated experiment is a signal
@@ -206,6 +204,38 @@ The full report consists of four sections in order:
 
 Write the report to `results/chaos/trend-report-<YYYY-MM-DD>.md` (where the
 date is today's date) unless the user specifies a different output path.
+
+## Worked example
+
+Three completed drill reports for `checkout-network-latency` sit in
+`results/chaos/`:
+
+- 2026-01-10 - PASSED, peak error 1.2% (bound 5%), TTR 42 s.
+- 2026-02-07 - ABORTED, peak error 6.1% (bound 5%), TTD 78 s, TTR 3 m 2 s.
+- 2026-03-01 - PASSED, peak error 0.9% (bound 5%), TTR 31 s.
+
+**Steps 1-2:** All three parse cleanly (no `INCOMPLETE` reports), yielding the
+per-experiment summary table sorted by date.
+
+**Step 3:** Held rate is 2 of 3. Peak error moved from 1.2% (Jan) to 0.9% (Mar),
+more than 20% below the earliest peak, so the blast-radius trend is NARROWING.
+TTR fell from the 3 m 2 s February peak to 31 s in March, so the TTR trend is
+IMPROVING. Because the series is not yet 3 consecutive PASSED runs, the March
+pass is treated as regression toward the mean, not confirmed recovery (see
+Anti-patterns).
+
+**Step 4:** No HIGH or MEDIUM signal fires for this experiment type: the abort
+was isolated to one run (no repeated blast-radius breach), TTR improved after
+the run (no "No TTR improvement after fix"), and the blast-radius trend is
+narrowing rather than widening.
+
+**Steps 5-6:** With no HIGH or MEDIUM finding, Steps 4-5 add no action items for
+this experiment type. The stakeholder summary reads: "The checkout service
+maintained its target error rate in 2 of 3 network-latency runs; recovery time
+improved from 3 minutes in February to 31 seconds in March after the retry
+backoff was tuned."
+
+The four-section report is written to `results/chaos/trend-report-<YYYY-MM-DD>.md`.
 
 ## Anti-patterns
 

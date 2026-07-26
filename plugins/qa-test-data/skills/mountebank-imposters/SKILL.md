@@ -52,6 +52,15 @@ is the lighter fit. For Node / browser HTTP-only, use
 is multi-protocol breadth; pay the operational cost (a separate
 process, port 2525) only when you need it.
 
+## How to use
+
+1. Start Mountebank (`mb start` or the Docker image); the control API listens on port 2525.
+2. POST a JSON imposter to `/imposters` with a `port`, a `protocol`, and one or more `stubs`.
+3. Give each stub `predicates` (path / method / header / body matchers) and `responses` (the reply to send).
+4. Point the system under test at the imposter's port and run the tests.
+5. For an unrecorded upstream, use a `proxyOnce` proxy response to capture real traffic, then replay offline.
+6. `DELETE /imposters/<port>` in teardown (or restart Mountebank) so stale stubs don't leak between runs.
+
 ## Install
 
 ```bash
@@ -112,21 +121,11 @@ stubbed response.
 
 ### Predicate operators
 
-Mountebank supports several predicate operators in addition to
-`equals`:
-
-| Operator            | Meaning                                              |
-|---------------------|------------------------------------------------------|
-| `equals`            | Exact match.                                          |
-| `deepEquals`        | Deep equality on a nested object (e.g. JSON body).    |
-| `contains`          | Substring / partial match.                            |
-| `startsWith` / `endsWith` | Affix matchers.                                |
-| `matches`           | Regex match.                                          |
-| `exists`            | Whether a field is present.                           |
-| `not`               | Negate a child predicate.                             |
-| `or`                | Boolean OR.                                           |
-| `and`               | Boolean AND.                                          |
-| `inject`            | Custom JavaScript predicate.                          |
+Beyond `equals`, Mountebank offers `deepEquals`, `contains`,
+`startsWith` / `endsWith`, `matches` (regex), `exists`, the boolean
+`not` / `or` / `and`, and `inject` for a custom JavaScript predicate.
+Full operator table:
+[references/predicates-and-proxying.md](references/predicates-and-proxying.md).
 
 ### Multi-stub responses (cycle through)
 
@@ -151,33 +150,12 @@ modeling polling endpoints.
 
 ### Proxying for record-playback
 
-Set up an imposter as a **proxy** to a real upstream:
-
-```json
-{
-  "port": 4545,
-  "protocol": "http",
-  "stubs": [{
-    "predicates": [{ "matches": { "path": ".*" } }],
-    "responses": [{
-      "proxy": {
-        "to": "https://real-upstream.example.com",
-        "mode": "proxyOnce"
-      }
-    }]
-  }]
-}
-```
-
-| Mode             | Behavior                                                              |
-|------------------|-----------------------------------------------------------------------|
-| `proxyOnce`      | First request hits upstream; response is **stored as a stub**; subsequent identical requests replay. |
-| `proxyAlways`    | Every request hits upstream; every response is stored.                |
-| `proxyTransparent` | Pass-through; nothing recorded.                                     |
-
-`proxyOnce` is the canonical record-playback workflow - run tests
-once against a real upstream to populate the imposter, then run
-forever offline.
+Point an imposter's response at a real upstream with a `proxy` block.
+`proxyOnce` records the first response as a stub then replays it,
+`proxyAlways` records every call, and `proxyTransparent` passes
+through without recording. The record-playback config and the full
+mode table are in
+[references/predicates-and-proxying.md](references/predicates-and-proxying.md).
 
 ## Test framework integration
 
@@ -225,6 +203,31 @@ await mbServer.close();
 For a more robust pattern, run Mountebank in Docker as a sidecar
 service rather than a background process - kills + cleanup are
 cleaner.
+
+## Worked example
+
+A test suite depends on a flaky third-party payments API. Record it
+once, then run offline. Create a proxy imposter that forwards every
+path to the real upstream in `proxyOnce` mode:
+
+```json
+{
+  "port": 4545,
+  "protocol": "http",
+  "stubs": [{
+    "predicates": [{ "matches": { "path": ".*" } }],
+    "responses": [{ "proxy": {
+      "to": "https://payments.example.com",
+      "mode": "proxyOnce"
+    }}]
+  }]
+}
+```
+
+Run the suite once with the real upstream reachable: each distinct
+request hits `payments.example.com` and Mountebank stores the response
+as a stub. On every later run the stored stubs answer and the real API
+is never called - the suite is deterministic and offline.
 
 ## Anti-patterns
 

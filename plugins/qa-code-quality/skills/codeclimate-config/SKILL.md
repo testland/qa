@@ -25,6 +25,16 @@ configures both:
 - Migrating off legacy Code Climate Quality to Qlty without losing
   config.
 
+## How to use
+
+1. Pick the platform - Qlty (`.qlty/qlty.toml`) for new setups; legacy `.codeclimate.yml` only if the team still runs the GitHub Code Climate App. Never both (see Anti-patterns).
+2. Install the Qlty CLI, then run `qlty init` to generate a baseline `.qlty/qlty.toml` (Steps 1 - 2).
+3. Author the config - set duplication `mass_threshold` per language and add `exclude_patterns` / `[[exclude]]` for tests, `node_modules`, `vendor`, and build output (Steps 3 - 4).
+4. Enable 2-3 plugins to start with `qlty plugins enable <name>`; add more quarterly.
+5. Run analysis locally (`qlty check`, `qlty smells --all`, `qlty metrics`) to confirm the thresholds fit the codebase (Step 5).
+6. Wire the PR gate with `qlty check --upstream main` so only new-diff issues block merges (Step 6).
+7. For an existing `.codeclimate.yml`, run `qlty config migrate` to produce `qlty.toml` while preserving plugin and exclude settings.
+
 ## Step 1 - Install (Qlty CLI path)
 
 ```bash
@@ -161,6 +171,31 @@ qlty metrics --all --max-depth=2 --sort complexity --limit 10
 `--upstream main` scopes results to **only the diff** vs main - 
 matches the "new issues only" workflow Qlty's PR feedback uses
 (per [Qlty docs] section "Preventing new issues from merging").
+
+## Worked example
+
+A team runs a JS + Python monorepo with a legacy `.codeclimate.yml`
+(duplication `mass_threshold` 50 for javascript, 32 for python) and wants
+PR-scoped gating on Qlty.
+
+1. Install the CLI and run `qlty init` - it writes a baseline
+   `.qlty/qlty.toml` scoped to the detected file types.
+2. Run `qlty config migrate` to carry the legacy duplication thresholds and
+   `exclude_patterns` into `qlty.toml`, then enable the linters:
+   `qlty plugins enable eslint` and `qlty plugins enable ruff`.
+3. Add an `[[exclude]]` block with `tests/**`, `node_modules/**`, `dist/**`,
+   and `vendor/**` so deliberate test-code repetition (owned by
+   qa-test-review) never trips duplication checks.
+4. Run `qlty smells --all` on the brownfield repo - it surfaces hundreds of
+   pre-existing duplications. Instead of blocking every PR, scope the gate
+   with `qlty check --upstream main` so only new-diff issues fail.
+5. Wire that command into CI with `QLTY_TOKEN` set. A PR that introduces a
+   new duplicate block in `src/` now fails the gate, while the pre-existing
+   findings stay green.
+
+Result: production code gets duplication and complexity gating on the diff
+only, tests are excluded, and the legacy `.codeclimate.yml` migrates to
+`qlty.toml` without losing its thresholds.
 
 ## Anti-patterns
 

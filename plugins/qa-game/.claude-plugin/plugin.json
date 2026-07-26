@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-game",
-  "version": "1.4.13",
+  "version": "1.4.14",
   "description": "Game engine testing (Unity, Unreal, Godot), platform certification overview (Sony TRC, Nintendo Lotcheck, MS XR, Steam Direct), multiplayer state machine coverage, and gameplay recording/replay, plus the game-test-scenario-author agent that emits one new scenario file per spec mapped to the detected engine",
   "author": {
     "name": "testland",

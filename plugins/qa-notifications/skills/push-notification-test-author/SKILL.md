@@ -28,6 +28,16 @@ common workflow + per-platform specifics.
 - The team integrates with FCM / APNs / Web Push directly (not
   via OneSignal-style abstractions).
 
+## How to use
+
+1. Identify which push platform(s) the app targets - Web Push, APNs, FCM, or a mix (Overview).
+2. Pick the isolation level; default to mocking the SDK send method (Step 1).
+3. Author the happy-path payload-shape test for each channel (Steps 2 - 4, [references/platform-test-patterns.md](references/platform-test-patterns.md)).
+4. Add the invalid-token cleanup test for the 410 / unregistered path (Steps 2 - 4).
+5. Cover silent-vs-alert, click-action deep links, and FCM topic routing (Steps 5 - 7).
+6. Assert production-vs-sandbox environment routing so tests never reach real users (Step 3).
+7. Run the per-channel checklist in Step 8 and reconcile against the Anti-patterns table.
+
 ## Step 1 - Choose the test isolation level
 
 | Level | Example | Tradeoffs |
@@ -40,79 +50,9 @@ common workflow + per-platform specifics.
 
 ## Step 2 - Web Push tests
 
-Per IETF RFC 8030 (Web Push Protocol), the flow:
+Per IETF RFC 8030 (Web Push Protocol): the user-agent subscribes via `pushManager.subscribe()`, the app server sends an encrypted (RFC 8291) + VAPID-signed (RFC 8292) push to the returned endpoint, and the service worker's `push` event calls `self.registration.showNotification()`. Status code `410 Gone` means the subscription is invalid (user revoked or expired); the app must remove it from storage.
 
-1. User-agent subscribes via `pushManager.subscribe()` → returns
-   subscription `(endpoint, keys.p256dh, keys.auth)`.
-2. Application server sends push via the endpoint, encrypted per
-   RFC 8291 + signed via VAPID per RFC 8292.
-3. Push service delivers to user-agent.
-4. Service worker `push` event fires → typically calls
-   `self.registration.showNotification()`.
-
-**Test pattern (Node.js with web-push):**
-
-```javascript
-const webPush = require('web-push');
-const { jest } = require('@jest/globals');
-
-describe('push notification', () => {
-  beforeAll(() => {
-    webPush.setVapidDetails(
-      'mailto:test@example.com',
-      VAPID_PUBLIC_KEY,
-      VAPID_PRIVATE_KEY,
-    );
-  });
-
-  it('sends order-status notification with correct payload', async () => {
-    const sendSpy = jest.spyOn(webPush, 'sendNotification').mockResolvedValue({
-      statusCode: 201,
-    });
-
-    await pushOrderUpdate(testSubscription, { orderId: 123, status: 'shipped' });
-
-    expect(sendSpy).toHaveBeenCalledWith(
-      testSubscription,
-      expect.stringContaining('"orderId":123'),
-      expect.any(Object),
-    );
-  });
-
-  it('removes expired subscription on 410 response', async () => {
-    jest.spyOn(webPush, 'sendNotification').mockRejectedValue({ statusCode: 410 });
-
-    await pushOrderUpdate(testSubscription, { orderId: 123 });
-
-    const stored = await Subscription.findOne({ endpoint: testSubscription.endpoint });
-    expect(stored).toBeNull();
-  });
-});
-```
-
-Per RFC 8030, status code `410 Gone` means the subscription is
-invalid (user revoked or expired); the app must remove it from
-storage.
-
-**Service-worker side test** (in a service-worker test harness like
-sw-toolbox-test or workbox-cli's testing utilities):
-
-```javascript
-self.addEventListener('push', event => {
-  event.waitUntil(
-    self.registration.showNotification('Order update', {
-      body: event.data.json().status,
-      icon: '/icons/order.png',
-      data: { orderId: event.data.json().orderId },
-    })
-  );
-});
-
-// Test: simulate push event
-const event = { data: { json: () => ({ orderId: 123, status: 'shipped' }) } };
-self.dispatchEvent(new PushEvent('push', event));
-expect(self.registration.showNotification).toHaveBeenCalled();
-```
+Mock `webPush.sendNotification` and assert payload shape plus the 410 cleanup path; add a service-worker harness test that dispatches a synthetic `PushEvent`. Full Node.js + service-worker recipes: [references/platform-test-patterns.md](references/platform-test-patterns.md).
 
 ## Step 3 - APNs tests
 
@@ -127,70 +67,12 @@ Apple Push Notification Service has two environments per
 | `api.push.apple.com` | Production |
 
 Tests typically run against sandbox + use a development APNs
-certificate or Auth Key (`.p8` file).
-
-**Test pattern (Python with httpx + apns2):**
-
-```python
-import pytest
-from unittest.mock import patch
-from my_app.notifications import send_apns
-
-def test_apns_payload_shape():
-    with patch("my_app.notifications.apns_client.send") as mock_send:
-        mock_send.return_value = {"status": 200}
-
-        send_apns(device_token="abc123", title="Order shipped", body="Your order is on the way")
-
-        sent_payload = mock_send.call_args.kwargs["payload"]
-        assert sent_payload["aps"]["alert"]["title"] == "Order shipped"
-        assert sent_payload["aps"]["alert"]["body"] == "Your order is on the way"
-        assert sent_payload["aps"]["sound"] == "default"
-```
-
-For invalid-token handling (HTTP 410 from APNs):
-
-```python
-def test_apns_410_removes_token():
-    with patch("my_app.notifications.apns_client.send") as mock_send:
-        mock_send.return_value = {"status": 410, "reason": "Unregistered"}
-
-        send_apns_with_cleanup(device_token="abc123", ...)
-
-        token = DeviceToken.objects.filter(token="abc123").first()
-        assert token is None
-```
+certificate or Auth Key (`.p8` file). Mock `apns_client.send`, assert the `aps` payload shape (alert title / body, sound), and cover the HTTP 410 (`Unregistered`) token-cleanup path. Python recipes: [references/platform-test-patterns.md](references/platform-test-patterns.md).
 
 ## Step 4 - FCM tests
 
 Firebase Cloud Messaging supports HTTP v1 API + legacy HTTP API.
-Use HTTP v1 for new code (legacy deprecated).
-
-**Test pattern (Node.js with firebase-admin):**
-
-```javascript
-const admin = require('firebase-admin');
-const { jest } = require('@jest/globals');
-
-it('sends FCM message with correct shape', async () => {
-  const sendSpy = jest.spyOn(admin.messaging(), 'send').mockResolvedValue('msg-id-123');
-
-  await sendFcmOrderUpdate('device-token', { orderId: 123 });
-
-  expect(sendSpy).toHaveBeenCalledWith(
-    expect.objectContaining({
-      token: 'device-token',
-      notification: expect.objectContaining({ title: 'Order Update' }),
-      data: expect.objectContaining({ orderId: '123' }),
-      android: expect.objectContaining({ priority: 'high' }),
-      apns: expect.any(Object),    // FCM cross-platform routing
-    }),
-  );
-});
-```
-
-Invalid-token responses from FCM include `messaging/registration-token-not-registered`;
-test the cleanup path same as APNs Step 3.
+Use HTTP v1 for new code (legacy deprecated). Mock `admin.messaging().send`, assert the cross-platform message shape (`token`, `notification`, `data`, `android`, `apns`), and test the `messaging/registration-token-not-registered` cleanup path (same as APNs Step 3). Node.js recipe: [references/platform-test-patterns.md](references/platform-test-patterns.md).
 
 ## Step 5 - Silent vs alert push
 
@@ -252,6 +134,16 @@ For each push channel:
 5. ✅ Topic subscription handling (FCM, Step 7)
 6. ✅ Production vs sandbox environment routing (Step 3)
 
+## Worked example
+
+An e-commerce app sends a Web Push "order shipped" notification and must clean up revoked subscriptions.
+
+1. Platform: Web Push only (Overview). Isolation: mock `webPush.sendNotification` (Step 1 default).
+2. Happy path: a test drives `pushOrderUpdate(sub, { orderId: 123, status: 'shipped' })` and asserts `sendNotification` was called with a payload string containing `"orderId":123`. The mock returns `{ statusCode: 201 }`; the assertion passes.
+3. Revocation: a second test mocks `sendNotification` to reject with `{ statusCode: 410 }`. After `pushOrderUpdate` runs, the test asserts the subscription row is gone from storage (`Subscription.findOne(...)` returns null), proving the 410 cleanup path per RFC 8030.
+4. Service-worker side: dispatch a synthetic `PushEvent` whose `data.json()` returns the order payload; assert `self.registration.showNotification` was called with body `shipped`.
+5. Result: three passing tests - payload shape, 410 cleanup, and SW render - cover the whole Web Push channel. Repeat the [references/platform-test-patterns.md](references/platform-test-patterns.md) recipes for APNs / FCM if the app adds those channels.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -278,6 +170,7 @@ For each push channel:
 
 ## References
 
+- [references/platform-test-patterns.md](references/platform-test-patterns.md) - full Web Push / APNs / FCM test-pattern code
 - IETF RFC 8030 - Web Push Protocol
 - IETF RFC 8291 - Message Encryption for Web Push
 - IETF RFC 8292 - VAPID for Web Push

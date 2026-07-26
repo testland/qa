@@ -40,6 +40,24 @@ public collections, both first-party Xray-App tools.
 - Jira-side issue links (Test → Story / Bug coverage) need automation
   results to flow.
 
+## How to use
+
+1. Determine the flavor - Xray Cloud vs Server / DC - since it sets the auth
+   model and import host (Overview table).
+2. Authenticate: Cloud exchanges `client_id` + `client_secret` for a 24h JWT;
+   Server / DC uses a Jira PAT or Basic auth (Step 1).
+3. Pick the import endpoint that matches your runner's output format
+   (`/junit`, `/cucumber`, `/testng`, `/nunit`, `/robot`, or generic JSON)
+   (Step 2).
+4. Pin each test method to an existing Test issue with `@XrayTest(key=...)`
+   (and `@Requirement` for coverage) so renames don't orphan issues (Step 3).
+5. Emit Xray-extended output - JVM via `xray-junit-extensions` (Step 5),
+   JavaScript via the official Playwright reporter (references).
+6. POST the results with `projectKey=...`, adding `testExecKey=...` to update
+   an existing Test Execution instead of creating a new one (Step 7).
+7. Wire it as an `if: always()` CI step - full workflow and the non-JVM path
+   in [references/ci-and-non-jvm.md](references/ci-and-non-jvm.md).
+
 ## Step 1 - Authenticate (Cloud)
 
 Per the [xray-junit-ext][xje] reference, Cloud auth is a two-step
@@ -176,38 +194,18 @@ add_timestamp_to_report_filename=false
 The output is JUnit XML augmented with Xray-specific metadata; pass
 this enriched XML to the import endpoint (Step 2).
 
-## Step 6 - End-to-end CI shape
+## Step 6 - Operating in CI
 
-```yaml
-# .github/workflows/xray-sync.yml
-- name: Run tests with Xray-aware JUnit reporter
-  run: ./mvnw -B verify
-  # Produces target/xray-reports/TEST-results.xml
-
-- name: Get Xray JWT
-  id: xray_auth
-  env:
-    XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
-    XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
-  run: |
-    JWT=$(curl -s -X POST 'https://xray.cloud.getxray.app/api/v2/authenticate' \
-      -H 'Content-Type: application/json' \
-      -d '{"client_id":"'"$XRAY_CLIENT_ID"'","client_secret":"'"$XRAY_CLIENT_SECRET"'"}' \
-      | tr -d '"')
-    echo "::add-mask::$JWT"
-    echo "jwt=$JWT" >> "$GITHUB_OUTPUT"
-
-- name: Import to Xray
-  if: always()
-  run: |
-    curl -X POST 'https://xray.cloud.getxray.app/api/v2/import/execution/junit?projectKey=CALC' \
-      -H "Authorization: Bearer ${{ steps.xray_auth.outputs.jwt }}" \
-      -H 'Content-Type: application/xml' \
-      --data-binary @target/xray-reports/TEST-results.xml
-```
-
-`projectKey=CALC` (the Jira project key) is the critical query
-param - without it, the import fails or lands in the wrong project.
+Run the import as an `if: always()` step after the test step so failed
+runs still reach Xray. Fetch a fresh JWT (Step 1), mask it
+(`::add-mask::`), then POST the Xray-extended JUnit XML to
+`/api/v2/import/execution/junit?projectKey=<KEY>` - `projectKey` (the
+Jira project key) is the critical query param; without it the import
+fails or lands in the wrong project. JVM suites emit the enriched XML via
+`xray-junit-extensions` (Step 5); non-JVM teams use the official
+Playwright reporter. The full GitHub Actions workflow and the Playwright
+reporter setup are in
+[references/ci-and-non-jvm.md](references/ci-and-non-jvm.md).
 
 ## Step 7 - Test Execution issue lifecycle
 
@@ -226,25 +224,32 @@ Pattern:
 - **Release runs**: one Test Execution per release branch; updated on
   every push (uses `testExecKey`).
 
-## Step 8 - `tutorial-js-playwright` for non-JVM teams
+## Worked example
 
-Per the Xray-App GitHub org, the [`playwright-junit-reporter`][pwj]
-project ships a Playwright reporter that emits Xray-compatible JUnit
-XML. JavaScript teams use:
+A Maven + JUnit 5 suite syncing one release run to Jira project `CALC`:
 
-[pwj]: https://github.com/Xray-App/playwright-junit-reporter
+1. The test method is pinned to an existing Test issue (Step 3):
 
-```typescript
-// playwright.config.ts
-reporter: [
-  ['list'],
-  ['@xray-app/playwright-junit-reporter', {
-    outputFile: 'target/xray-reports/results.xml',
-  }],
-],
+```java
+@Test
+@XrayTest(key = "CALC-1000")
+public void canAddNumbers() { /* ... */ }
 ```
 
-Then the same Step 6 import endpoint consumes the output.
+2. `xray-junit-extensions.properties` (Step 5) writes the enriched XML to
+   `target/xray-reports/TEST-results.xml`.
+3. CI fetches a JWT, then imports against a single per-release execution:
+
+```bash
+curl -X POST 'https://xray.cloud.getxray.app/api/v2/import/execution/junit?projectKey=CALC&testExecKey=CALC-9999' \
+  -H "Authorization: Bearer $JWT" \
+  -H 'Content-Type: application/xml' \
+  --data-binary @target/xray-reports/TEST-results.xml
+```
+
+The result lands in Test Execution `CALC-9999` with `CALC-1000` marked
+Passed. PR runs omit `testExecKey` to get a fresh execution per push
+(Step 7).
 
 ## Anti-patterns
 
@@ -254,7 +259,7 @@ Then the same Step 6 import endpoint consumes the output.
 | Storing JWT secret in repo / log                                       | Cloud secret leak; immediate quota abuse.                                 | Mask in CI; fetch fresh per run; never log (Step 6 `::add-mask::`). |
 | Importing without `projectKey`                                          | Import lands in default project; other teams see your tests.             | Always pass `projectKey` (Step 6). |
 | New Test Execution per PR push                                         | 100+ Jira issues per active PR; project clutter.                          | Reuse `testExecKey` per PR; create new only on push to main (Step 7). |
-| Using regular JUnit XML reporter (not the Xray-extended one)            | Loses `@XrayTest` / `@Requirement` annotations; mapping fails.           | Use `xray-junit-extensions` for JVM (Step 5) or the official Playwright reporter (Step 8). |
+| Using regular JUnit XML reporter (not the Xray-extended one)            | Loses `@XrayTest` / `@Requirement` annotations; mapping fails.           | Use `xray-junit-extensions` for JVM (Step 5) or the official Playwright reporter (references). |
 | Long-lived JWT cache (>24h)                                             | Auth fails; CI runs broken silently.                                      | Fetch JWT per run; respect the 24h validity. |
 | Importing 5,000 results in one request                                  | Server times out; partial state.                                          | Split per suite or per Test Execution; Xray Cloud's import endpoints are sized for typical CI batches. |
 
@@ -288,6 +293,9 @@ Then the same Step 6 import endpoint consumes the output.
   integration with the same import + auth shape.
 - `https://github.com/Xray-App/playwright-junit-reporter` - official
   Playwright reporter for Xray-compatible JUnit XML.
+- [references/ci-and-non-jvm.md](references/ci-and-non-jvm.md) - the
+  end-to-end CI workflow (JWT fetch + import) and the non-JVM Playwright
+  reporter setup.
 - `https://docs.getxray.app/` - canonical doc portal (auth/region-gated;
   consult in a real browser).
 - `junit-xml-analysis` - same

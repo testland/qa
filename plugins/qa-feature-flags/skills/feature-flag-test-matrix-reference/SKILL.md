@@ -26,6 +26,16 @@ coverage-builder skills.
 - Investigating an "only happens with flag X + flag Y on"
   incident.
 
+## How to use
+
+1. Inventory the flags: list every flag, its variant count (M), and the user segments (K) it targets.
+2. Size the problem: compute N × M × K to confirm full enumeration is infeasible and sampling is required.
+3. Discover interactions: mark flags as inert (independent) or known-interacting (auth + permissions, billing + plan-tier), pulling from a risk register where one exists.
+4. Pick a coverage strategy from the five below - default-only smoke, per-flag isolation, pairwise, full matrix, or risk-driven - matching the flag set's risk.
+5. Add the special flag-state categories (kill-switch, percentage-rollout, sticky-assignment, default-on-error) as their own tests.
+6. Layer the resulting cases across unit, integration, E2E, and production-smoke.
+7. Hand the matrix to the platform SDK skill (`launchdarkly-testing`, `unleash-testing`, `flagsmith-testing`, `growthbook-testing`) to implement each case.
+
 ## The combinatorics
 
 | Variable | Typical scale |
@@ -124,6 +134,18 @@ A feature flag can power an experiment (the flag is the
 allocation mechanism), but tests are layered: flag tests verify
 correct behaviour per variant; experiment tests verify
 assignment + analytics.
+
+## Worked example
+
+A billing service has 3 boolean flags - `new_checkout`, `annual_discount`, `tax_engine_v2` - across 3 segments (free, paid, enterprise). The team knows `annual_discount` and `tax_engine_v2` interact: a discount changes the taxable amount.
+
+1. Inventory: 3 flags, 2 variants each, 3 segments; the full flag-state-by-segment cross-product is too large to enumerate.
+2. Interaction discovery marks the `annual_discount` × `tax_engine_v2` pair as known-interacting; `new_checkout` is a UI change treated as independent.
+3. Strategy: risk-driven. Per-flag isolation covers `new_checkout`; a pairwise cell covers (`annual_discount` on, `tax_engine_v2` on) on the paid and enterprise segments where money moves.
+4. Special categories: a kill-switch test asserts toggling `tax_engine_v2` off reverts to v1 within the cache TTL; a sticky-assignment test asserts the `annual_discount` percentage rollout keeps each user in the same bucket across sessions.
+5. Layering: unit tests exercise the tax resolver per flag value; an E2E test toggles `tax_engine_v2` and asserts an enterprise invoice total.
+
+Result: a handful of targeted cases instead of the full cross-product, with the discount × tax interaction covered explicitly.
 
 ## Anti-patterns
 

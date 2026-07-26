@@ -21,6 +21,23 @@ approved baselines.
 - Cross-engine verification (WeasyPrint output vs Chromium
   `page.pdf()` output).
 
+## How to use
+
+1. Install Poppler (`pdftocairo` / `pdfinfo`) plus `pdf2image` and Pillow.
+2. Generate the PDF under test and render each page to PNG at `dpi=150`
+   (300 for regulatory filings).
+3. On the first run, save the rendered pages as approved baselines under
+   `tests/pdf-baselines/`.
+4. On later runs, pixel-diff each page against its baseline and assert the
+   diff ratio stays under threshold (~0.005).
+5. For long PDFs, target only the changed pages with `first_page` /
+   `last_page`.
+6. Pin the production font pack in CI and normalize PDF metadata so
+   baselines stay reproducible - see
+   [references/deterministic-rendering.md](references/deterministic-rendering.md).
+7. After an intentional layout change, re-run with
+   `UPDATE_PDF_BASELINES=1` and commit the new baseline images.
+
 ## Step 1 - Install Poppler + pdf2image
 
 ```bash
@@ -120,42 +137,7 @@ CLI:
 pdftocairo -png -r 150 -f 2 -l 5 out.pdf rendered/page
 ```
 
-## Step 6 - Strip non-deterministic PDF metadata
-
-PDFs include `/CreationDate`, `/ID`, sometimes `/ModDate`. These
-change per run and break byte diffs. Use `qpdf` to normalize:
-
-```bash
-qpdf --linearize \
-     --object-streams=disable \
-     --replace-stream-data=uncompress \
-     --remove-attachments \
-     out.pdf normalized.pdf
-```
-
-Alternative: rely on image diff (Steps 2-3) which is metadata-free
-by construction.
-
-## Step 7 - Font-substitution detection
-
-Missing fonts on the rendering host produce visually-different output.
-Detect via Poppler stderr:
-
-```python
-import subprocess
-
-result = subprocess.run(
-    ["pdfinfo", "-list-embedded-fonts", "out.pdf"],
-    capture_output=True, text=True,
-)
-if "Font Substitution" in result.stderr:
-    raise RuntimeError("Font substitution detected; baseline invalid")
-```
-
-For CI, install the production font pack via the package manager
-or check fonts into the repo for deterministic builds.
-
-## Step 8 - Update-baseline workflow
+## Step 6 - Update-baseline workflow
 
 Add an opt-in update mode (analogous to Jest snapshots):
 
@@ -177,6 +159,31 @@ def assert_pdf_matches(actual_pdf, baseline_dir, threshold=0.005):
 Run `UPDATE_PDF_BASELINES=1 pytest tests/pdf/` after intentional
 changes; commit the new baseline images.
 
+## Deterministic rendering
+
+Non-deterministic PDF metadata (`/CreationDate`, `/ID`, `/ModDate`) and
+host font substitution both invalidate baselines. Normalize metadata
+with `qpdf` and detect missing fonts via Poppler stderr before diffing:
+[references/deterministic-rendering.md](references/deterministic-rendering.md).
+
+## Worked example
+
+A billing service renders `invoice.pdf` from an HTML template; the team
+is about to swap the body font and needs proof no invoice layout shifts.
+
+1. On `main`, run the suite once with `UPDATE_PDF_BASELINES=1` to capture
+   `tests/pdf-baselines/inv_001-1.png` from the current template.
+2. Apply the font swap on a branch and re-run `pytest tests/pdf/`.
+3. `convert_from_path("invoice.pdf", dpi=150)` renders page 1; `pixel_diff`
+   compares it to the baseline and returns `0.0182`.
+4. The assertion `diff_ratio < 0.005` fails with `Page 1 diff ratio 0.0182`,
+   flagging that the new font reflowed the line-item table.
+5. `pdfinfo -list-embedded-fonts invoice.pdf` confirms the new font is
+   embedded (no substitution), so the shift is a real layout change, not a
+   host-font artifact.
+6. The team narrows column widths, re-runs until the diff ratio drops below
+   0.005, then refreshes the baseline with `UPDATE_PDF_BASELINES=1`.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -184,7 +191,7 @@ changes; commit the new baseline images.
 | Binary diff PDFs directly | CreationDate / ID change per run | Render to image (Step 2) |
 | `dpi=72` (default) | Sub-pixel changes invisible | `dpi=150` minimum (Step 2) |
 | Threshold = 0 | Anti-aliasing flake | `threshold ≈ 0.005` (Step 4) |
-| Skip font-pack pinning in CI | OS upgrade swaps fonts; baselines invalidate | Check fonts into repo or pin OS image (Step 7) |
+| Skip font-pack pinning in CI | OS upgrade swaps fonts; baselines invalidate | Check fonts into repo or pin OS image (see Deterministic rendering) |
 | Snapshot every page of 500-page PDF | CI time + storage explodes | Page-range targeting (Step 5) |
 
 ## Limitations
@@ -203,6 +210,8 @@ changes; commit the new baseline images.
   per-OS; consult system package docs for current version
 - pdf2image Python wrapper - github.com/Belval/pdf2image
 - pixelmatch (Node reference impl) - github.com/mapbox/pixelmatch
+- [references/deterministic-rendering.md](references/deterministic-rendering.md) -
+  metadata stripping + font-substitution detection
 - `html-to-pdf-regression` - 
   sister skill for the HTML→PDF generation step
 - `print-stylesheet-tests` - 

@@ -30,6 +30,28 @@ skills.
 - PR review of new cache-using code.
 - Auditing existing locking / probabilistic logic.
 
+## How to use
+
+1. Flag candidate hot keys: any key whose
+   recompute-cost-vs-traffic ratio exceeds 0.1, or whose TTL
+   aligns with a traffic peak.
+2. Confirm a live stampede against the Symptoms table - latency
+   spikes at TTL boundaries, hit rate dropping near zero, or
+   cron-synchronised spikes.
+3. Choose a mitigation family from
+   [references/stampede-mitigations.md](references/stampede-mitigations.md)
+   by key knowability: XFetch for unknown / user-specific keys,
+   external recompute for known-hot keys, locking as a backstop.
+4. For XFetch, measure `delta` (recompute cost) during refresh and
+   store it beside `value` and `expiry`; keep `beta=1` unless a
+   load test says otherwise.
+5. Layer the strategies per Combining strategies so each covers
+   the others' gaps.
+6. Add the tests in Testable behaviours - especially the
+   N-concurrent-on-cold-key load test at production concurrency.
+7. Alarm on the cache-miss-rate metric so a silent regression (a
+   failed cron, an expired lock) resurfaces the stampede visibly.
+
 ## Symptoms in production
 
 | Signal | Interpretation |
@@ -41,65 +63,20 @@ skills.
 
 ## The three mitigation families
 
-Per Wikipedia's cache-stampede article:
+Per Wikipedia's cache-stampede article, three families counter the
+herd. Full code, drawbacks, and the XFetch variable table are in
+[references/stampede-mitigations.md](references/stampede-mitigations.md).
 
-### 1. Locking
-
-Upon cache miss, processes attempt to acquire a lock for that
-key. Only the lock holder recomputes; others either wait, return
-"not found," or use a stale value.
-
-```python
-def get(key):
-    val = cache.get(key)
-    if val is not None and not val.stale:
-        return val
-    if cache.acquire_lock(key, ttl=30):
-        try:
-            val = recompute(key)
-            cache.set(key, val, ttl=300)
-            return val
-        finally:
-            cache.release_lock(key)
-    else:
-        # Another process is recomputing; serve stale or wait
-        return val or wait_then_get(key)
-```
-
-**Drawbacks** per Wikipedia: "complex implementation handling
-edge cases like process failures and race conditions." Lock
-holder crashing → cache empty for the lock TTL.
-
-Mitigation: short-TTL locks with periodic refresh while
-recomputing.
-
-### 2. External recomputation
-
-A separate process recomputes the cache periodically or near
-expiry, decoupled from the request path. Per Wikipedia:
-"triggered when values approach expiration, periodically, or on
-cache miss."
-
-```python
-# Cron / scheduled job
-def refresh_hot_keys():
-    for key in HOT_KEYS:
-        val = recompute(key)
-        cache.set(key, val, ttl=600)
-```
-
-**When it fits:** static cache keys ("homepage data," "top-10
-products"). Hot keys are knowable in advance. The recompute
-schedule overlaps the cache TTL.
-
-**Drawback:** doesn't help with unknown / user-specific hot
-keys; needs separate infrastructure.
-
-### 3. Probabilistic early expiration (XFetch)
-
-Each requester independently decides - with rising probability
-as the value ages - to refresh before formal expiry. Per
-Wikipedia, the canonical formula:
+1. **Locking** - on miss, one process acquires a per-key lock and
+   recomputes; others wait, return "not found," or serve stale.
+   Risk: lock holder crash leaves the cache empty for the lock
+   TTL.
+2. **External recomputation** - a separate cron / near-expiry job
+   refreshes known-hot keys off the request path. Fits static
+   keys; doesn't help unknown or user-specific hot keys.
+3. **Probabilistic early expiration (XFetch)** - each reader
+   independently refreshes early with rising probability as the
+   value ages:
 
 ```
 if (!value || (time() - delta * beta * log(rand(0,1))) >= expiry)
@@ -108,47 +85,24 @@ else
   return value
 ```
 
-Where:
+Per Wikipedia, "setting beta=1 works well in practice."
 
-| Variable | Meaning |
-|---|---|
-| `delta` | Time to recompute the value (scales the probability distribution) |
-| `beta` | Tuning parameter (default 1; >1 favours earlier refresh) |
-| `log(rand(0,1))` | Always negative; magnitude controls the early-refresh probability |
-| `time()` | Wall-clock or monotonic time |
-| `expiry` | Absolute expiry time stored alongside the value |
+## Worked example
 
-The "exponential distribution" of refresh decisions means most
-requesters use the cached value; only a few do early refresh.
-**Per Wikipedia:** "setting beta=1 works well in practice."
+A homepage aggregate ("top-10 products") is cached under one key
+with `ttl=300`. Every afternoon at the traffic peak the key
+expires, ~1,200 concurrent requests all miss, all hit the
+database, and the hit rate collapses to near zero for ~40 s - the
+Symptoms table's "site falls over at 3 PM" row.
 
-Implementation:
-
-```python
-import math, random, time
-
-def get_xfetch(key):
-    entry = cache.get(key)  # contains {value, expiry, delta}
-    if not entry:
-        val, delta = measure_recompute(key)
-        expiry = time.time() + 300
-        cache.set(key, {"value": val, "expiry": expiry, "delta": delta}, ttl=300)
-        return val
-
-    now = time.time()
-    rand = max(random.random(), 1e-10)
-    if now - entry["delta"] * 1.0 * math.log(rand) >= entry["expiry"]:
-        # Early refresh
-        val, delta = measure_recompute(key)
-        expiry = now + 300
-        cache.set(key, {"value": val, "expiry": expiry, "delta": delta}, ttl=300)
-        return val
-    return entry["value"]
-```
-
-The `delta` (recompute cost) is **measured** during refresh and
-stored. Expensive-to-recompute values get earlier refresh
-attempts.
+The key is known and hot, so external recomputation fits: a cron
+job refreshes it every 240 s (inside the 300 s TTL), decoupled
+from requests. XFetch is added on read as a backstop for the
+seconds around a missed cron run - each reader's
+`delta * beta * log(rand(0,1))` term nudges a few readers to
+refresh early instead of the whole herd. The load test in
+Testable behaviours (N=1000 on a cold key) then asserts the
+upstream sees <=5 recomputes, down from ~1,000.
 
 ## Combining strategies
 
@@ -207,6 +161,8 @@ catch the few that slip through.
 
 - Cache stampede definition + XFetch formula:
   [en.wikipedia.org/wiki/Cache_stampede](https://en.wikipedia.org/wiki/Cache_stampede).
+- Mitigation implementations:
+  [references/stampede-mitigations.md](references/stampede-mitigations.md).
 - Companion catalogs:
   `cache-coherence-patterns-reference`,
   `stale-while-revalidate-reference`.

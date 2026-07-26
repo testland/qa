@@ -24,6 +24,24 @@ Tests against an Auth0 tenant fall into three layers:
 - Custom Actions / Rules need unit-test coverage.
 - Auth flow regression suites need to run pre-deploy.
 
+## How to use
+
+1. Pick a tenant strategy (Step 1): per-PR tenant for tenant-config
+   tests, mocked OIDC for fast app-side flow tests.
+2. Export the source tenant with `a0deploy` and commit the YAML as
+   fixtures for the config-drift check (Step 2).
+3. Exercise the OIDC token endpoint for the grants the app uses -
+   client-credentials for M2M, Universal Login via Playwright for
+   interactive flows (Step 3).
+4. Unit-test each Action handler by calling `onExecutePostLogin`
+   with a stub `api` and asserting on `api.access.deny` (Step 4);
+   apply the legacy callback signature for surviving Rules / Hooks
+   (Step 5).
+5. Cover session behavior - refresh-token rotation plus the
+   nine-point checklist (Step 6).
+6. Wire the unit run and the `a0deploy` config-drift diff into CI
+   (Step 8).
+
 ## Step 1 - Tenant strategy
 
 Three patterns, per team scale:
@@ -161,44 +179,14 @@ For Auth0 Hooks, similar pattern with the hook-specific event shape.
 
 ## Step 6 - Test session management
 
-Auth0-managed sessions (refresh tokens, silent auth) - see
-`session-management-test-author`
-for the cross-tool pattern. Auth0-specific: refresh-token rotation
-is configurable per-application; tests should verify the rotation
-behaves as configured.
-
-The base pattern, per [OWASP ASVS][asvs] V3 (Session Management) -
-cover all nine against the application's own session cookie, then
-add the Auth0-specific rotation assertion:
-
-1. Cookie attributes on the app session cookie: `Secure`,
-   `HttpOnly`, `SameSite=Strict` (or `Lax` only if the session must
-   survive the Auth0 callback redirect), a non-parent `Domain`, and
-   a finite `Max-Age` / `Expires`.
-2. Session-fixation defense - capture the session ID before login,
-   log in carrying that cookie, assert the post-login ID differs.
-   Unchanged ID is a **critical** finding.
-3. Idle timeout - activity at +5 min still 200; +31 min of
-   inactivity returns 401 / redirects to login.
-4. Absolute timeout - continuous activity does NOT extend the
-   session past its maximum lifetime.
-5. Concurrent-session policy - second login either revokes the
-   first session or is rejected; assert whichever the app declares.
-6. Logout is server-side - replay the captured cookie value after
-   logout and assert 401. Clearing the cookie client-side only is
-   **critical**.
-7. Logout-all-devices invalidates every other session for the user.
-8. CSRF token required on state-changing endpoints (or
-   `SameSite=Strict` covering the same ground).
-9. Session binding per threat model (User-Agent / device
-   fingerprint by default; TLS binding per RFC 8473 when both ends
-   are controlled; IP binding only if mobile-network churn is
-   acceptable).
-
-Use a time-freezing fixture (e.g. `freezegun`) for steps 3 and 4 so
-timeout tests don't sleep.
-
-[asvs]: https://owasp.org/www-project-application-security-verification-standard/
+Auth0-managed sessions (refresh tokens, silent auth): refresh-token
+rotation is configurable per-application; tests should verify the
+rotation behaves as configured. For the full nine-point session
+checklist (cookie attributes, fixation, idle / absolute timeout,
+concurrent-session policy, server-side logout, CSRF, session
+binding) against the app's own session cookie, see
+[references/session-checklist.md](references/session-checklist.md).
+Cross-tool session patterns live in `session-management-test-author`.
 
 ## Step 7 - Mock OIDC server alternative
 
@@ -220,6 +208,19 @@ Tests run against the mock; per-PR Auth0 tenant unnecessary.
 - run: a0deploy export -c .auth0/config.json --output_folder /tmp/auth0-current
 - run: diff -r .auth0/tenant-fixtures /tmp/auth0-current   # config-drift check
 ```
+
+## Worked example
+
+A team ships a post-login Action that blocks sign-in for unverified
+emails. On a shared dev tenant with namespaced fixtures (Step 1),
+they export config with `a0deploy export -c config.json
+--output_folder tenant-fixtures/` and commit it (Step 2). They
+unit-test the handler by passing `event.user.email_verified = false`
+and a stub `api`, then assert `api.access.deny` was called with
+`'Email not verified'` (Step 4). CI runs `npm test`, then re-exports
+and `diff -r`s against `tenant-fixtures/`; a stray dashboard change
+to the Action fails the drift diff before it reaches staging
+(Step 8).
 
 ## Anti-patterns
 

@@ -31,6 +31,23 @@ skills
 - Cost optimisation - moving low-tier browsers from cloud grid
   (paid) to bundled engines (free).
 
+## How to use
+
+1. Pull browser / OS / version traffic share from your own analytics; supplement
+   with StatCounter for geographies your own data is thin on.
+2. Apply the tier-membership heuristic: >=5% own traffic -> T1, 1-5% or statutory
+   -> T2, <1% with customer demand -> T3, otherwise out of scope.
+3. Group Chromium-engine browsers (Brave, Vivaldi, Opera) under the dominant
+   browser instead of counting them as separate combos.
+4. Map each tier to infrastructure via the cost-tier mapping: bundled engines for
+   T1, cloud grid for T2 / T3, self-hosted Selenium Grid 4 for internal apps.
+5. Record the matrix using [references/matrix-template.md](references/matrix-template.md),
+   giving every row an owner, a review date, and a "Why".
+6. Log every tier change in the tier-change log so audit and "why is X here?"
+   questions have a written answer.
+7. Re-run quarterly: re-tier as traffic shifts, retire below-threshold combos,
+   and defend legacy drops (IE11, old iOS Safari) against your own analytics.
+
 ## The three-tier model
 
 | Tier | Cadence | Coverage criterion | Example |
@@ -54,58 +71,29 @@ Use your own analytics for traffic-share decisions; supplement
 with StatCounter when slicing geographies you don't have own data
 for.
 
-## Worked matrix template
+## Worked example
 
-For a hypothetical SaaS B2B web app:
+A hypothetical SaaS B2B web app builds its first matrix from its own analytics:
 
-```markdown
-# Browser test matrix - Q2 2026
+1. **Pull traffic share.** Own analytics shows Chrome 68%, Firefox 12%, Safari
+   8%, Edge 5%, mobile Safari 9% of mobile traffic, mobile Chrome 5% of mobile,
+   Safari iOS 16 2% of mobile and declining.
+2. **Apply the heuristic.** Chrome 68% and Firefox 12% clear the >=5% bar, so
+   both go to T1 (Chrome adds an N-1 row for Group-Policy lag-behind users).
+   Safari 8%, Edge 5%, mobile Safari, and mobile Chrome sit in the 1-5% band or
+   count as significant mobile platforms, so they go to T2. Safari iOS 16 at 2%
+   and declining goes to T3.
+3. **Rule browsers out.** A customer survey returns 0 IE11 users with no
+   statutory requirement, so IE11 is out of scope; Brave and Vivaldi are
+   Chromium-based and already covered by Chrome T1.
+4. **Map to infrastructure.** T1 runs on bundled Playwright engines on CI (free,
+   fast); T2 and T3 run on a cloud grid (real devices, nightly and quarterly).
+5. **Log the change.** Edge grew 3 -> 5% since last quarter, so it is promoted
+   from T3 to T2 and the promotion is recorded in the tier-change log.
 
-**Owner:** QA lead
-**Reviewed:** YYYY-MM-DD
-**Next review:** Q3 2026
-
-## Tier 1 - must pass every PR (3 combos)
-
-| Browser | Version | OS | Why T1 | Where tested |
-|---|---|---|---|---|
-| Chrome | latest stable | Linux | 68% of traffic | `playwright-testing` on CI |
-| Chrome | latest-1 (N-1) | Linux | Lag-behind users (Group Policy) | `playwright-testing` on CI |
-| Firefox | latest stable | Linux | 12% of traffic | `browser-matrix-runner` (bundled) |
-
-## Tier 2 - nightly + pre-release (5 combos)
-
-| Browser | Version | OS | Why T2 | Where tested |
-|---|---|---|---|---|
-| Safari | 17 | macOS Sonoma | 8% traffic; Apple-platform-only | BrowserStack Automate |
-| Safari iOS | 17 | iOS 17 | Mobile Safari = 9% mobile traffic | BrowserStack Automate (real device) |
-| Edge | latest | Windows 11 | 5% traffic | BrowserStack Automate |
-| Chrome | latest | Android 14 | 5% mobile traffic | BrowserStack Automate (real device) |
-| Firefox | ESR | Linux | Enterprise users on long-support track | `browser-matrix-runner` |
-
-## Tier 3 - quarterly / on-demand (4 combos)
-
-| Browser | Version | OS | Why T3 | Where tested |
-|---|---|---|---|---|
-| Safari iOS | 16 | iOS 16 | 2% mobile traffic; declining | BrowserStack quarterly |
-| Chrome | latest | Linux ARM | <1% but B2B request | BrowserStack quarterly |
-| Samsung Internet | latest | Android | <1% but high in some regions | BrowserStack quarterly |
-| Opera | latest | Linux | <1%; on-demand only when customer reports | LambdaTest on-demand |
-
-## Not in matrix (out of scope)
-
-- IE11: customer survey 0 users; statutory not required → out of
-  scope. Re-evaluate Q1 2027.
-- Brave / Vivaldi: Chromium-based; covered by Chrome T1.
-- Older Firefox versions (Firefox 100 and below): negligible traffic.
-
-## Tier-change log
-
-- 2026-Q1 → Q2: Safari iOS 15 retired (0.4% traffic, below
-  threshold); Safari iOS 17 added.
-- 2026-Q1 → Q2: Edge promoted to T2 (was T3) - traffic grew 3 →
-  5%.
-```
+Result: a 3-combo T1, 5-combo T2, 4-combo T3 matrix with a documented reason per
+row. The filled-in artifact is
+[references/matrix-template.md](references/matrix-template.md).
 
 ## Tier-membership heuristic
 

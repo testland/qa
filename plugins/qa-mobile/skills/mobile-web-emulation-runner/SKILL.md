@@ -31,39 +31,36 @@ This skill builds the workflow.
 If the app is a **native** mobile app (RN, Flutter, native iOS/Android),
 this isn't the right skill - see the per-platform alternatives.
 
+## How to use
+
+1. Choose the device profiles to cover from Playwright's `devices` catalog
+   (Step 1, [references/device-profiles-and-cypress.md](references/device-profiles-and-cypress.md)).
+2. Declare one Playwright project per profile in `playwright.config.ts` (Step 2).
+3. Write mobile-aware assertions with `.tap()` and viewport-conditional
+   layout checks (Step 3).
+4. Add per-device visual snapshots so mobile-size layout regressions are
+   caught (Step 4).
+5. Run each project as its own CI matrix job with `fail-fast: false` (Step 5).
+6. Aggregate the per-device results into one pass/fail summary (Step 6).
+
 ## Step 1 - Pick the device profiles
 
-Playwright ships a `devices` catalog with realistic viewport / DPR
-/ user-agent combinations:
+Playwright ships a `devices` catalog with realistic viewport / DPR /
+user-agent combinations - import it and spread a profile into a project's
+`use` block:
 
 ```typescript
 import { devices } from '@playwright/test';
 
-// Common modern profiles:
-devices['iPhone 15']
-devices['iPhone 15 Pro Max']
-devices['iPhone 14']
+devices['iPhone 15']    // viewport 393x852, DPR 3, isMobile, hasTouch
 devices['Pixel 7']
-devices['Pixel 5']
-devices['Galaxy S9+']
 devices['iPad Pro 11']
-devices['iPad Mini']
 ```
 
-Each entry includes:
-
-```javascript
-{
-  viewport: { width: 393, height: 852 },
-  deviceScaleFactor: 3,
-  isMobile: true,
-  hasTouch: true,
-  userAgent: 'Mozilla/5.0 (iPhone; ...) AppleWebKit/...',
-}
-```
-
-`isMobile: true` triggers Playwright's mobile-mode quirks (meta
-viewport handling); `hasTouch: true` enables touch-event synthesis.
+`isMobile: true` triggers Playwright's mobile-mode quirks (meta viewport
+handling); `hasTouch: true` enables touch-event synthesis. The full profile
+catalog, the shape of each entry, and the Cypress runner equivalent are in
+[references/device-profiles-and-cypress.md](references/device-profiles-and-cypress.md).
 
 ## Step 2 - Per-device project config
 
@@ -147,35 +144,7 @@ Per-device screenshots produce per-device baselines; layout
 regressions on iPhone size catch issues that desktop-only tests
 miss. Pair with `playwright-snapshots` (in the qa-visual-regression plugin).
 
-## Step 5 - Cypress equivalent
-
-```javascript
-// cypress.config.ts
-const { defineConfig } = require('cypress');
-
-module.exports = defineConfig({
-  e2e: {
-    setupNodeEvents(on, config) {
-      // Per-test or per-spec viewport
-    },
-    viewportWidth: 1280,
-    viewportHeight: 720,
-  },
-});
-
-// In a test:
-beforeEach(() => {
-  cy.viewport('iphone-15');   // built-in preset
-  // OR
-  cy.viewport(393, 852, 'portrait');
-});
-```
-
-Cypress doesn't ship a `devices` catalog as rich as Playwright's;
-viewport sizing is the primary control. For touch-event synthesis,
-use `cy.realTouch()` (via `cypress-real-events` plugin).
-
-## Step 6 - CI matrix
+## Step 5 - CI matrix
 
 ```yaml
 jobs:
@@ -200,7 +169,7 @@ jobs:
 Each project runs as a separate matrix job; `fail-fast: false`
 ensures a failure on iPhone doesn't cancel Pixel.
 
-## Step 7 - Aggregating per-device results
+## Step 6 - Aggregating per-device results
 
 Use the `mobile-device-matrix-toolkit`
 aggregator (Step 4) to produce a per-device summary:
@@ -214,6 +183,29 @@ aggregator (Step 4) to produce a per-device summary:
 | tablet-ipad-pro         |   42  |   41 |    1 | 132s   |   ← landscape layout
 ```
 
+## Worked example
+
+A responsive storefront renders its nav as a sidebar on desktop and behind a
+hamburger on mobile. A regression once hid the hamburger at iPhone width.
+
+1. Add a `mobile-iphone-15` project to `playwright.config.ts` alongside
+   `desktop-chromium` (Step 2), each spreading its `devices[...]` profile.
+2. Author the mobile assertion (Step 3):
+
+   ```typescript
+   test.use(devices['iPhone 15']);
+   test('shows mobile drawer, not sidebar', async ({ page }) => {
+     await page.goto('/cart');
+     await expect(page.getByRole('button', { name: /menu/i })).toBeVisible();
+     await expect(page.getByRole('navigation')).not.toBeVisible();
+   });
+   ```
+3. Run `npx playwright test --project=mobile-iphone-15`.
+4. The hamburger assertion fails on the regressed build (the button is not
+   visible) while the same suite passes on `desktop-chromium`. The matrix
+   summary flags `mobile-iphone-15` red and desktop green, pinpointing a
+   mobile-breakpoint-only regression the desktop suite never exercised.
+
 ## Anti-patterns
 
 | Anti-pattern                                                         | Why it fails                                                              | Fix |
@@ -221,9 +213,9 @@ aggregator (Step 4) to produce a per-device summary:
 | Running the same desktop tests with `viewport: { width: 375 }` only   | Misses DPR / touch / user-agent differences.                              | Use `devices[...]` catalog (Step 1). |
 | `.click()` on mobile project                                           | Synthesizes mouse events; misses touch-handler bugs.                     | `.tap()` for `isMobile: true` projects (Step 3). |
 | One desktop+mobile mega-test                                          | Branching `if (viewport.width < ...)` clutters; per-project tests cleaner. | Per-project tests (Step 2). |
-| Mobile-only baselines without desktop comparison                       | Misses cases where the desktop layout regressed at the mobile breakpoint.| Both desktop + mobile in CI (Step 6). |
+| Mobile-only baselines without desktop comparison                       | Misses cases where the desktop layout regressed at the mobile breakpoint.| Both desktop + mobile in CI (Step 5). |
 | Treating emulation as substitute for real devices                      | Emulation doesn't catch real-device perf, touch sensitivity, browser quirks. | Pair with farm runs for release tier. |
-| Skipping `--with-deps` in Playwright install                           | CI runner missing browser dependencies; mobile profiles fail.            | Always `npx playwright install --with-deps` in CI (Step 6). |
+| Skipping `--with-deps` in Playwright install                           | CI runner missing browser dependencies; mobile profiles fail.            | Always `npx playwright install --with-deps` in CI (Step 5). |
 
 ## Limitations
 
@@ -241,8 +233,9 @@ aggregator (Step 4) to produce a per-device summary:
 
 ## References
 
-- Playwright devices catalog (in the `@playwright/test` package);
-  per-device viewport / DPR / UA / touch synthesis.
+- [references/device-profiles-and-cypress.md](references/device-profiles-and-cypress.md) -
+  full Playwright `devices` catalog (viewport / DPR / UA / touch synthesis)
+  and the Cypress runner equivalent.
 - `mobile-device-matrix-toolkit` - sibling: orchestrates per-target dispatch and aggregation.
 - `mobile-web-perf-budget` - 
   performance testing under mobile profile.

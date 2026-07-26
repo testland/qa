@@ -36,7 +36,7 @@ testing frameworks without special integration."
 - Existing example-based tests pass but production bugs keep
   appearing in edge cases not covered.
 
-## Step 1 - Install
+## Install
 
 Per [fast-check-readme][fcr]:
 
@@ -48,7 +48,7 @@ yarn add fast-check --dev
 pnpm add -D fast-check
 ```
 
-## Step 2 - Basic property
+## Basic property
 
 Per [fast-check-readme][fcr], the canonical Mocha-style example:
 
@@ -83,77 +83,16 @@ The predicate returns:
 `fc.assert` runs the property with 100 generated cases by default;
 on failure, fast-check shrinks to the minimal counterexample.
 
-## Step 3 - Arbitraries catalog
+## Arbitraries and composite inputs
 
-Per [fast-check-overview][fco]:
+Pick arbitraries that match the input domain, build domain values
+with `.map()` / `.chain()`, and assemble objects with `fc.record`.
+Full catalog and combinator patterns:
+[references/arbitraries.md](references/arbitraries.md). Prefer
+constrained arbitraries (`fc.integer({ min: 1 })`,
+`fc.emailAddress()`) over broad ones filtered down.
 
-| Arbitrary             | Generates                                |
-|-----------------------|------------------------------------------|
-| `fc.string()`          | Strings                                  |
-| `fc.integer()`         | Integers                                 |
-| `fc.float()` / `fc.double()` | Floats                            |
-| `fc.boolean()`         | Booleans                                  |
-| `fc.array(item)`       | Arrays of `item`                         |
-| `fc.tuple(a, b, ...)` | Fixed-length tuples                       |
-| `fc.record({ key: ... })` | Objects with specified properties     |
-| `fc.option(item)`      | `item` or `null`                         |
-| `fc.constantFrom(...)` | One of fixed values                      |
-| `fc.oneof(a, b, ...)` | One of multiple arbitraries               |
-| `fc.uuid()` / `fc.ipV4()` / `fc.emailAddress()` / `fc.webUrl()` | Format-specific |
-| `fc.date()`            | Dates                                    |
-| `fc.uniqueArray(item)` | Arrays without duplicates                |
-| `fc.dictionary(key, value)` | Map / Record types                  |
-
-## Step 4 - Combinators (.map / .chain / .filter)
-
-Per [fast-check-overview][fco]: "Extensible via `map()` and
-`chain()` combinators."
-
-```typescript
-// .map: transform a generated value
-const evenInteger = fc.integer().map(n => n * 2);
-
-// .chain: dependent generation (later value depends on earlier)
-const stringWithKnownLength = fc.integer({ min: 1, max: 100 })
-  .chain(len => fc.string({ minLength: len, maxLength: len }));
-
-// .filter: reject (use sparingly - slow when filter rejects most)
-const positiveInteger = fc.integer().filter(n => n > 0);
-// Better:
-const positiveInteger = fc.integer({ min: 1 });
-```
-
-`.filter()` discards rejections; `.map()` transforms. Prefer
-`.map()` and constrained arbitraries over `.filter()` when
-possible.
-
-## Step 5 - Composite arbitraries via `fc.record`
-
-```typescript
-const user = fc.record({
-  id: fc.uuid(),
-  email: fc.emailAddress(),
-  age: fc.integer({ min: 18, max: 100 }),
-  tags: fc.uniqueArray(fc.constantFrom('admin', 'beta', 'churn-risk')),
-  createdAt: fc.date({ min: new Date('2020-01-01'), max: new Date() }),
-});
-
-it('serializes user to JSON and back', () => {
-  fc.assert(
-    fc.property(user, (u) => {
-      expect(JSON.parse(JSON.stringify(u))).toEqual({
-        ...u,
-        createdAt: u.createdAt.toISOString(),
-      });
-    })
-  );
-});
-```
-
-`fc.record` produces objects with the specified shape; each field
-is sampled per its arbitrary.
-
-## Step 6 - Integrate with the test runner
+## Integrate with the test runner
 
 Per [fast-check-overview][fco]: works "with major testing
 frameworks including Jest, Vitest, Mocha, Jasmine, AVA, and Tape"
@@ -174,112 +113,97 @@ test('reverse is involutive', () => {
 ```
 
 The assertion library (`expect`, `assert`) is the runner's; fast-check
-hooks into thrown errors as failures.
+hooks into thrown errors as failures. For async properties use
+`await fc.assert(fc.asyncProperty(...))`.
 
-## Step 7 - Race condition detection
+## Shrinking and reproducibility
 
-Per [fast-check-overview][fco]: "Race condition detection for async
-code."
+On failure fast-check prints the shrunk counterexample plus a seed;
+replaying that seed reproduces the failure deterministically, and a
+fixed CI seed keeps runs stable. Output format, replay, and CI seed:
+[references/shrinking-and-reproducibility.md](references/shrinking-and-reproducibility.md).
+
+## Stateful and async testing
+
+For concurrent code use `fc.scheduler` race-condition detection; for
+stateful systems use command-sequence model-based testing with
+`fc.commands` / `fc.modelRun`. Both patterns:
+[references/stateful-and-async.md](references/stateful-and-async.md).
+
+## How to use
+
+1. Install fast-check as a dev dependency (`npm install fast-check --save-dev`).
+2. Identify a property that holds for all inputs (round-trip,
+   invariant, metamorphic) rather than a single example.
+3. Pick arbitraries matching the input domain from
+   [references/arbitraries.md](references/arbitraries.md); prefer
+   constrained arbitraries over `.filter()`.
+4. Wire `fc.assert(fc.property(<arbitraries...>, (...inputs) => <predicate>))`;
+   the predicate returns `false` or throws on violation.
+5. Run under the existing runner (Jest / Vitest / Mocha / ...); for
+   async use `await fc.assert(fc.asyncProperty(...))`.
+6. On failure, read the shrunk counterexample and replay its seed to
+   reproduce - see
+   [references/shrinking-and-reproducibility.md](references/shrinking-and-reproducibility.md).
+7. For stateful or concurrent code, escalate to model-based testing
+   or `fc.scheduler` -
+   [references/stateful-and-async.md](references/stateful-and-async.md).
+
+## Worked example
+
+A codec exposes `encode(obj)` and `decode(str)` and claims
+`decode(encode(x)) === x` for every payload.
+
+1. Model the input with a composite arbitrary
+   ([references/arbitraries.md](references/arbitraries.md)):
 
 ```typescript
-import { test } from 'vitest';
 import fc from 'fast-check';
+import { encode, decode } from './codec';
 
-test('concurrent counter increments are atomic', async () => {
-  await fc.assert(
-    fc.asyncProperty(fc.scheduler(), async (s) => {
-      const counter = new AsyncCounter();
-      const tasks = [
-        s.schedule(counter.increment()),
-        s.schedule(counter.increment()),
-        s.schedule(counter.increment()),
-      ];
-      await s.waitAll();
-      await Promise.all(tasks);
-      expect(counter.value).toBe(3);
-    })
-  );
+const payload = fc.record({
+  id: fc.uuid(),
+  count: fc.integer({ min: 0 }),
+  tags: fc.uniqueArray(fc.string()),
 });
 ```
 
-`fc.scheduler` exhaustively explores task interleavings; `s.schedule`
-queues an async operation; `s.waitAll()` advances. fast-check finds
-interleavings that cause the property to fail - the canonical
-race-condition catcher.
-
-## Step 8 - Shrinking and reproducibility
-
-When a property fails, fast-check prints the falsifying input + a
-shrunk minimal version + a seed:
-
-```
-Property failed after 47 tests
-{ seed: 1234567890, path: "12:1:0", endOnFailure: true }
-Counterexample: [{"id": "abc", "age": -1}]
-Shrunk 8 time(s)
-Got error: Expected age to be >= 18, got -1
-```
-
-To reproduce, replay with the seed:
+2. Assert the round-trip under Vitest:
 
 ```typescript
-fc.assert(
-  fc.property(...),
-  { seed: 1234567890, path: "12:1:0", endOnFailure: true }
-);
-```
-
-The seed/path is the deterministic recipe to re-derive the failure.
-
-For CI, set a fixed seed:
-
-```typescript
-import fc from 'fast-check';
-fc.configureGlobal({ seed: process.env.CI ? 42 : Date.now() });
-```
-
-## Step 9 - Model-based testing
-
-Per [fast-check-overview][fco]: "Model-based testing for stateful
-systems."
-
-```typescript
-class CounterModel {
-  count = 0;
-  increment() { this.count++; }
-  decrement() { this.count--; }
-}
-
-const allCommands = [
-  fc.constant({ run: (c, real) => { c.increment(); real.increment(); expect(real.value).toBe(c.count); } }),
-  fc.constant({ run: (c, real) => { c.decrement(); real.decrement(); expect(real.value).toBe(c.count); } }),
-];
-
-it('counter behaves per model', () => {
+test('decode reverses encode', () => {
   fc.assert(
-    fc.property(fc.commands(allCommands), (cmds) => {
-      const model = new CounterModel();
-      const real = new RealCounter();
-      fc.modelRun(() => ({ model, real }), cmds);
+    fc.property(payload, (x) => {
+      expect(decode(encode(x))).toEqual(x);
     })
   );
 });
 ```
 
-fast-check generates random sequences of commands; the model
-stays in sync with the real implementation; any divergence is a
-bug in the real implementation.
+3. `encode` silently drops empty-string tags, so the run fails and
+   fast-check shrinks to the minimal offending input:
+
+```
+Property failed after 12 tests
+{ seed: 42, path: "11:0", endOnFailure: true }
+Counterexample: [{"id":"...","count":0,"tags":[""]}]
+```
+
+4. Replaying `{ seed: 42, path: "11:0" }` reproduces it every time
+   ([references/shrinking-and-reproducibility.md](references/shrinking-and-reproducibility.md)).
+   Fix `encode` to preserve empty tags; the property then passes all
+   100 cases.
 
 ## Anti-patterns
 
 | Anti-pattern                                                            | Why it fails                                                              | Fix |
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Random CI seed                                                           | Property fails on CI, passes locally; hard to reproduce.                 | Fixed seed in CI (Step 8). |
-| Heavy `.filter()` on broad arbitraries                                   | Generation slow; many cases discarded.                                   | Constrained arbitraries (Step 4). |
+| Random CI seed                                                           | Property fails on CI, passes locally; hard to reproduce.                 | Fixed seed in CI (shrinking-and-reproducibility.md). |
+| Heavy `.filter()` on broad arbitraries                                   | Generation slow; many cases discarded.                                   | Constrained arbitraries (arbitraries.md). |
 | Asserting on specific values inside the property                         | Defeats PBT; that's an example test.                                     | Properties assert relationships; examples go elsewhere. |
 | Mocking dependencies inside the property                                 | Mocks don't satisfy properties.                                          | Test pure functions; integration tests for the rest. |
 | `fc.assert(fc.property(...))` without `await` for async props            | Test passes incorrectly (Promise rejected silently).                     | `await fc.assert(fc.asyncProperty(...))`. |
-| Generating an `fc.string()` for an email field                            | Wastes generation budget; mostly invalid.                                | `fc.emailAddress()` (Step 3). |
+| Generating an `fc.string()` for an email field                            | Wastes generation budget; mostly invalid.                                | `fc.emailAddress()` (arbitraries.md). |
 | One mega-property that asserts 5 things                                   | When it fails, hard to know which thing.                                  | One property per logical assertion. |
 
 ## Limitations
@@ -304,6 +228,12 @@ bug in the real implementation.
 - [fast-check-overview][fco] - arbitraries catalog, `.map` /
   `.chain` combinators, race-condition detection, model-based
   testing, framework-agnostic positioning.
+- [references/arbitraries.md](references/arbitraries.md) - arbitraries
+  catalog, combinators, composite `fc.record` inputs.
+- [references/stateful-and-async.md](references/stateful-and-async.md) -
+  race-condition detection and model-based testing.
+- [references/shrinking-and-reproducibility.md](references/shrinking-and-reproducibility.md) -
+  failure output format, seed replay, CI seed.
 - `hypothesis-testing` - Python
   sibling.
 - `schemathesis-fuzzing` - applies fast-check-shaped PBT to API schemas.

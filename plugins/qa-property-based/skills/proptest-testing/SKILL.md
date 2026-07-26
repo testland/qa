@@ -42,7 +42,7 @@ cases.
 - A refactor needs equivalence verification (new vs old produce
   same outputs for all inputs).
 
-## Step 1 - Install
+## Install
 
 In `Cargo.toml`:
 
@@ -54,7 +54,7 @@ proptest = "1"
 Note: per [proptest-readme][pt], "the crate mainly sees passive
 maintenance" - the API is stable; new development is rare.
 
-## Step 2 - Basic property
+## Basic property
 
 Per [proptest-readme][pt]:
 
@@ -77,7 +77,7 @@ Per [proptest-readme][pt], one of proptest's distinguishing
 features is **regex-based string generation**: `"[0-9]{4}-[0-9]{2}-[0-9]{2}"`
 generates date-shaped strings without writing a custom strategy.
 
-## Step 3 - Strategy catalog
+## Strategy catalog
 
 | Strategy                             | Generates                              |
 |--------------------------------------|----------------------------------------|
@@ -94,36 +94,12 @@ generates date-shaped strings without writing a custom strategy.
 | `s.prop_filter("reason", f)`          | Filter (with reason for shrinking)      |
 | `s.prop_flat_map(f)`                  | Dependent generation                    |
 
-## Step 4 - Custom strategies via `prop_compose!`
+For custom domain strategies with `prop_compose!` and the
+round-trip / invariant / equivalence property patterns they feed,
+see
+[references/strategies-and-patterns.md](references/strategies-and-patterns.md).
 
-```rust
-use proptest::prelude::*;
-
-prop_compose! {
-    fn valid_user()(
-        id in 1u64..1_000_000u64,
-        email in "[a-z]{3,10}@(example|test)\\.com",
-        age in 18u32..100u32,
-    ) -> User {
-        User { id, email, age }
-    }
-}
-
-proptest! {
-    #[test]
-    fn user_serialization_round_trip(u in valid_user()) {
-        let json = serde_json::to_string(&u).unwrap();
-        let back: User = serde_json::from_str(&json).unwrap();
-        prop_assert_eq!(u, back);
-    }
-}
-```
-
-`prop_compose!` builds a strategy from multiple sub-strategies;
-the body returns a constructed value. The `()` after the function
-name is for non-generated parameters (rare).
-
-## Step 5 - Configuration
+## Configuration
 
 ```rust
 proptest! {
@@ -150,7 +126,7 @@ Common config options:
 | `verbose`              |    0    | 0 / 1 / 2 - verbosity level.                        |
 | `failure_persistence`  |  enabled | Persist failed cases to `proptest-regressions/`.    |
 
-## Step 6 - Failure persistence (the regression file)
+## Failure persistence (the regression file)
 
 When a property fails, proptest writes:
 
@@ -168,46 +144,7 @@ If the regression is no longer relevant (the bug was fixed via a
 different code path that doesn't fail this case anymore), delete
 the entry. Don't suppress failures; understand them first.
 
-## Step 7 - Round-trip and invariant patterns
-
-Per [proptest-readme][pt]: property testing checks "that certain
-properties of your code hold for arbitrary inputs."
-
-```rust
-// Round-trip
-proptest! {
-    #[test]
-    fn json_round_trip(v in any::<Value>()) {
-        let json = serde_json::to_string(&v).unwrap();
-        let parsed: Value = serde_json::from_str(&json).unwrap();
-        prop_assert_eq!(v, parsed);
-    }
-}
-
-// Invariant - sort produces sorted output
-proptest! {
-    #[test]
-    fn sorted_is_sorted(mut v in prop::collection::vec(any::<i32>(), 0..1000)) {
-        v.sort();
-        for window in v.windows(2) {
-            prop_assert!(window[0] <= window[1]);
-        }
-    }
-}
-
-// Equivalence - new impl matches old
-proptest! {
-    #[test]
-    fn new_matches_old(input in any::<Input>()) {
-        prop_assert_eq!(new_implementation(&input), old_implementation(&input));
-    }
-}
-```
-
-`prop_assert!` and `prop_assert_eq!` integrate with the shrinker
-better than vanilla `assert!` - use them inside `proptest!` blocks.
-
-## Step 8 - CI integration
+## CI integration
 
 ```yaml
 - run: cargo test --workspace
@@ -225,17 +162,77 @@ env:
 - run: cargo test
 ```
 
+## How to use
+
+1. Add `proptest = "1"` under `[dev-dependencies]` in `Cargo.toml`.
+2. Identify a property that holds for all inputs (round-trip,
+   invariant, or equivalence), not a single example.
+3. Declare inputs in the `proptest! { #[test] fn ... (x in <strategy>) { ... } }`
+   form; pick strategies from the catalog (regex strings, ranges,
+   `prop::collection::*`).
+4. For structured domain types, build a custom strategy with
+   `prop_compose!` -
+   [references/strategies-and-patterns.md](references/strategies-and-patterns.md).
+5. Assert with `prop_assert!` / `prop_assert_eq!` (not vanilla
+   `assert!`) so the shrinker sees the failure context.
+6. Run `cargo test`; on failure, commit the generated
+   `proptest-regressions/` file so the seed replays on later runs.
+7. Tune `cases` / `max_shrink_iters` via `#![proptest_config(...)]`
+   when a test is slow.
+
+## Worked example
+
+An `RgbColor` type exposes `to_hex()` and `from_hex()`; the team
+claims `from_hex(c.to_hex()) == c` for every color.
+
+1. Build a strategy for arbitrary colors with `prop_compose!`
+   ([references/strategies-and-patterns.md](references/strategies-and-patterns.md)):
+
+```rust
+use proptest::prelude::*;
+
+prop_compose! {
+    fn rgb()(r in any::<u8>(), g in any::<u8>(), b in any::<u8>()) -> RgbColor {
+        RgbColor { r, g, b }
+    }
+}
+```
+
+2. Assert the round-trip with `prop_assert_eq!`:
+
+```rust
+proptest! {
+    #[test]
+    fn hex_round_trip(c in rgb()) {
+        prop_assert_eq!(RgbColor::from_hex(&c.to_hex()), c);
+    }
+}
+```
+
+3. `to_hex()` emits lowercase but `from_hex()` rejects it, so the
+   run fails, proptest shrinks, and writes a regression file:
+
+```
+# proptest-regressions/color.txt
+cc 1a2b3c4d # shrinks to c = RgbColor { r: 0, g: 0, b: 10 }
+```
+
+4. Commit `proptest-regressions/color.txt` (see Failure
+   persistence). Fix `from_hex()` to accept lowercase; re-run
+   `cargo test` and the property passes all 256 cases, replaying the
+   saved seed first.
+
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| `.gitignore proptest-regressions/`                                     | Loses regression artifacts; future runs may not catch the same bug.      | Commit the directory (Step 6). |
-| Heavy `prop_filter` on broad strategies                                 | Slow generation; many cases discarded.                                  | Constrained strategies (Step 3, e.g. `1u32..100u32` instead of `any().filter`). |
-| `assert!` instead of `prop_assert!` inside the macro                    | Shrinker can't see the failure context; minimal case obscured.          | Always `prop_assert!` / `prop_assert_eq!` (Step 7). |
+| `.gitignore proptest-regressions/`                                     | Loses regression artifacts; future runs may not catch the same bug.      | Commit the directory (Failure persistence). |
+| Heavy `prop_filter` on broad strategies                                 | Slow generation; many cases discarded.                                  | Constrained strategies (Strategy catalog, e.g. `1u32..100u32` instead of `any().filter`). |
+| `assert!` instead of `prop_assert!` inside the macro                    | Shrinker can't see the failure context; minimal case obscured.          | Always `prop_assert!` / `prop_assert_eq!` (strategies-and-patterns.md). |
 | Bare `unwrap()` inside the property without context                     | Error message is unhelpful; shrinker can't aid debugging.                | Use `prop_assert!(result.is_ok())` or `let v = result.unwrap()` after asserting. |
 | `cases = 100_000` for a slow test                                       | CI never finishes; team disables.                                       | Budget appropriate to test runtime. |
 | Mocking external services inside the property                          | Mocks don't satisfy properties.                                         | Test pure functions; integration tests separate. |
-| Random seed in CI                                                       | Failures hard to reproduce.                                              | `PROPTEST_SEED` env var (Step 8). |
+| Random seed in CI                                                       | Failures hard to reproduce.                                              | `PROPTEST_SEED` env var (CI integration). |
 
 ## Limitations
 
@@ -256,6 +253,9 @@ env:
 - [pt][pt] - proptest README: strategy-based approach,
   regex-string generation, failure persistence, comparison vs
   QuickCheck, MSRV, license.
+- [references/strategies-and-patterns.md](references/strategies-and-patterns.md) -
+  `prop_compose!` custom strategies and round-trip / invariant /
+  equivalence property patterns.
 - `hypothesis-testing` - Python
   sibling proptest is inspired by.
 - `fast-check-testing`,

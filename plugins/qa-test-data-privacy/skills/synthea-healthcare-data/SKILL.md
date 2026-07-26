@@ -38,6 +38,22 @@ the **categories** of PHI that Synthea avoids exposing see
   (Synthea's CPCDS output).
 - Property-based testing of risk-adjustment / HCC-coding logic.
 
+## How to use
+
+1. Clone Synthea and build it with Gradle (JDK 17+); confirm `./gradlew build
+   check test` passes.
+2. Set the output formats you need in `src/main/resources/synthea.properties`
+   (FHIR R4, CSV, C-CDA, CPCDS).
+3. Run `./run_synthea` with a pinned seed (`-s`), a population size (`-p`), and
+   the target US state so the run is reproducible.
+4. Inspect the output under `./output/fhir/` or `./output/csv/` and confirm the
+   expected resources / schemas are present.
+5. Load the records into your test FHIR server (per-file POST, or the
+   `*.ndjson` bulk files for a bulk-data endpoint).
+6. Wire generation into CI with a pinned seed and pinned Synthea tag
+   ([references/ci-integration.md](references/ci-integration.md)).
+7. Run your integration tests against the loaded synthetic population.
+
 ## Authoring
 
 ### Install + build
@@ -168,42 +184,31 @@ Java, fhir.resources for Python, etc.).
 
 ## CI integration
 
-For health IT projects, regenerate Synthea data on every PR with a
-pinned seed so the dataset is reproducible:
+For health IT projects, regenerate Synthea data on every PR with a pinned seed
+so the dataset is reproducible. The full GitHub Actions job (build, generate,
+load into a local HAPI FHIR server, run integration tests) plus the
+pin-to-a-tag note is in
+[references/ci-integration.md](references/ci-integration.md).
 
-```yaml
-jobs:
-  fhir-integration-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-java@v5
-        with: { java-version: '17', distribution: 'temurin' }
-      - run: git clone https://github.com/synthetichealth/synthea.git
-      - run: cd synthea && ./gradlew build -x test
-      - run: cd synthea && ./run_synthea -p 50 -s 2026 Massachusetts
-      - run: |
-          # Load Synthea output into local FHIR server
-          docker-compose up -d hapi-fhir
-          for f in synthea/output/fhir/*.json; do
-            curl -sS -X POST -H "Content-Type: application/fhir+json" \
-                 --data-binary @"$f" http://localhost:8080/fhir/
-          done
-      - run: pytest tests/integration/
-```
+## Worked example
 
-For repeatable tests, pin Synthea to a tag (`git checkout v3.x.x`)
-since modules evolve.
-
-## Example - generate 100 diabetic patients in MA
+Generate 100 diabetic patients aged 40-75 in Massachusetts, then verify the
+output before loading it into a test FHIR server:
 
 ```bash
 ./run_synthea -p 100 -s 42 -a 40-75 Massachusetts \
   -m diabetes
 ```
 
-`-m <module>` filters to runs that include the named module.
-Output appears in `./output/` (fhir/, csv/, c-cda/ per
-synthea.properties).
+`-m <module>` filters to runs that include the named module; `-s 42` pins the
+seed so the same 100 patients regenerate every time. Output appears in
+`./output/` (fhir/, csv/, c-cda/ per synthea.properties).
+
+Confirm the run: `output/csv/conditions.csv` should carry diabetes condition
+rows linked by `patient` to `output/csv/patients.csv`, and every patient's
+`birthdate` should place them in the 40-75 age band. Once verified, POST the
+`output/fhir/*.json` bundles into the test FHIR server as shown under
+"Loading into a FHIR server".
 
 ## Anti-patterns
 
@@ -249,3 +254,5 @@ synthea.properties).
   `faker-synthetic-data`.
 - Composes with:
   `pii-masking-pipeline-builder`.
+- Reference file:
+  [references/ci-integration.md](references/ci-integration.md) (CI job + tag pinning).

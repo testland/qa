@@ -24,6 +24,16 @@ The current API surface is `decide` (single flag) / `decideAll`
 - Datafile-based snapshot tests for assignment matrices.
 - Forced-decisions for per-test arm pinning.
 
+## How to use
+
+1. Install the Optimizely SDK for your language (`pip install optimizely-sdk`, or the npm package).
+2. Export the datafile from the Optimizely UI or API and commit it as a fixture under `tests/fixtures/`.
+3. Initialize the client offline from that datafile - no SDK key, no network call.
+4. Create an `OptimizelyUserContext` per test with the attributes the audience targeting needs.
+5. Call `decide` (one flag) or `decide_all` (all flags); pin arms with `set_forced_decision` where a test needs a fixed variation.
+6. Assert on `variation_key` / `enabled` (never variation IDs); add assignment-integrity and event-tracking checks via the notification listener.
+7. Run under pytest in CI; re-export the datafile periodically to catch drift against prod config.
+
 ## Authoring
 
 ### Install
@@ -129,6 +139,22 @@ jobs:
 ```
 
 Datafile lives in the repo; no SDK key needed for tests.
+
+## Worked example
+
+The team ships a `new_checkout_flow` flag with a `treatment_a`
+variation, and QA needs a deterministic test that a premium-plan
+user is routed into the treatment.
+
+1. Export the datafile that contains `new_checkout_flow` and commit it to `tests/fixtures/optimizely-datafile.json`.
+2. Init the client offline from that fixture (`optimizely.Optimizely(json.dumps(datafile))`).
+3. Create the user context: `user = client.create_user_context("user-1", {"plan": "premium"})`.
+4. Call `decision = user.decide("new_checkout_flow")` and assert `decision.enabled is True` and `decision.variation_key == "treatment_a"`.
+5. For a variant-specific path that must not depend on bucketing, pin the arm with `set_forced_decision(context, OptimizelyForcedDecision(variation_key="treatment_a"))` before decoding.
+
+Result: a deterministic pass/fail on the checkout-routing logic
+with no network round-trip and no SDK key - the fixture drives
+the whole decision.
 
 ## Anti-patterns
 

@@ -29,6 +29,16 @@ The split:
 - The team wants "intent-revealing" fixture names (`create(:admin)`)
   rather than per-field overrides.
 
+## How to use
+
+1. Add `factory_bot_rails` (Rails) or `factory_bot` to the test group and require it.
+2. Define one base factory per model in `spec/factories/`, one attribute block each.
+3. Add `trait` blocks for variants (`:admin`, `:with_posts`) instead of separate variant factories.
+4. Wire `Faker` into attribute blocks for randomized values; use `.unique` where uniqueness matters.
+5. Pick a build strategy per test: `build_stubbed` for unit, `build` for no-DB, `create` for persistence.
+6. Include `FactoryBot::Syntax::Methods` in the RSpec / Minitest config to call `create(:user)` directly.
+7. Call the factory in the test and assert on the returned object.
+
 ## Install
 
 ```bash
@@ -139,22 +149,11 @@ to all variants.
 
 ## Build strategies
 
-Per [factory_bot-readme][readme], FactoryBot supports three:
-
-| Strategy        | What it does                                                | When to use                           |
-|-----------------|-------------------------------------------------------------|---------------------------------------|
-| `build(:x)`     | Returns an **unsaved** ActiveRecord object.                  | Pure-logic tests; no DB persistence needed. |
-| `create(:x)`    | **Saves** the object (and any associations) to the database. | Integration tests that exercise persistence. |
-| `build_stubbed(:x)` | Returns a **stubbed** object: appears persisted (`new_record?` returns false) but never hits the database. | Speed up unit tests that don't actually need DB IO. |
-
-**Speed hierarchy:** `build_stubbed` >> `build` >> `create`. Use the
-weakest one that still tests what you need.
-
-```ruby
-build(:user)          # Unsaved User instance
-create(:user)         # Persisted User (and any associations)
-build_stubbed(:user)  # Fake-persisted User; `id` is set, `new_record?` is false
-```
+FactoryBot supports three: `build` (unsaved), `create` (persisted with
+associations), and `build_stubbed` (fake-persisted, never hits the DB).
+Speed hierarchy: `build_stubbed` >> `build` >> `create` - use the
+weakest one that still tests what you need. Full table and examples:
+[references/strategies-and-anti-patterns.md](references/strategies-and-anti-patterns.md).
 
 ## Integrating with Faker
 
@@ -208,16 +207,51 @@ end
 Per [factory_bot-readme][readme]; both syntaxes mirror the same
 DSL - only the test-framework hookup differs.
 
+## Worked example
+
+A test needs an admin user that owns three posts. Define the factory
+with two traits and Faker-backed values:
+
+```ruby
+# spec/factories/users.rb
+FactoryBot.define do
+  factory :user do
+    name  { Faker::Name.name }
+    email { Faker::Internet.unique.email }
+
+    trait :admin do
+      role { "admin" }
+    end
+
+    trait :with_posts do
+      after(:create) { |user| create_list(:post, 3, user: user) }
+    end
+  end
+end
+```
+
+Compose both traits in one intent-revealing call:
+
+```ruby
+RSpec.describe User do
+  it 'admin owns three posts' do
+    user = create(:user, :admin, :with_posts)
+    expect(user.role).to eq('admin')
+    expect(user.posts.count).to eq(3)
+  end
+end
+```
+
+`create` persists the user and, via the `:with_posts` `after(:create)`
+hook, its three posts - one line instead of six lines of manual setup.
+
 ## Anti-patterns
 
-| Anti-pattern                                                     | Why it fails                                                       | Fix |
-|------------------------------------------------------------------|---------------------------------------------------------------------|-----|
-| `FactoryBot.create(:user)` in every test, even for read-only assertions | Database overhead per test; suite slows linearly with test count. | Use `build_stubbed` for unit tests that don't exercise persistence; reserve `create` for integration tests. |
-| One mega-factory with 30 attributes in the base                   | Every `create(:user)` writes 30 columns; tests that need 3 attributes pay the cost. | Minimal base factory + traits for the rich variants. |
-| Per-test-class factory definitions                                | Two test files re-define `:user` differently; subtle bug. | One factory per class, in `spec/factories/` (auto-loaded by `factory_bot_rails`). |
-| `sequence` for fields that should be **random** (e.g. names)       | Sequence values are predictable; tests pass on `User 1` `User 2` patterns that wouldn't pass on real names. | Use Faker for **value variety**, sequence for **uniqueness only**. |
-| `create_list(:user, 100)` per test                                | DB write storm; even fast tests stall on bulk insert. | Use `build_stubbed_list` if persistence isn't required; if it is, use raw SQL bulk insert. |
-| Factory associations that always create the parent                 | A test of `Post` creates a `User`; that creates 5 `Permission`s; etc. - explosion of objects. | Pass an existing parent: `create(:post, user: existing_user)`. |
+Common FactoryBot pitfalls - `create` for read-only tests, mega base
+factories, per-test-class definitions, `sequence` where values should
+be random, bulk `create_list`, and always-create associations - and
+their fixes are catalogued in
+[references/strategies-and-anti-patterns.md](references/strategies-and-anti-patterns.md).
 
 ## Limitations
 

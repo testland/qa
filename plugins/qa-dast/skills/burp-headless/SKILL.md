@@ -37,6 +37,23 @@ For most teams, `zap-baseline` +
 `nightvision-dast` cover the same
 surface without Burp's licensing friction.
 
+## How to use
+
+1. Confirm the license edition - Pro (per-user desktop) or Enterprise
+   (CI-enabled) - and verify headless / CI terms before authoring workflows (Step 1).
+2. Install and activate: Pro via license file, Enterprise on a dedicated
+   server + database (Step 1).
+3. Drive scans: Pro via the local REST API (Step 2), Enterprise via its
+   server REST API from CI (Step 3).
+4. Load any needed BApp Store extensions and configure session-handling rules
+   plus a login macro for authenticated targets (Steps 4-5).
+5. Run against staging, then triage findings and record every false-positive
+   suppression with a justification (Step 6).
+6. Export issues (HTML / XML / CSV / JSON, or SARIF via BurpToSarif) and
+   aggregate with ZAP + NightVision output (Step 7).
+7. Gate the CI job per severity threshold (Step 3,
+   [references/enterprise-ci.md](references/enterprise-ci.md)).
+
 ## Step 1 - License + install
 
 Burp Pro: download Burp Suite Pro from portswigger.net/burp/pro;
@@ -75,17 +92,11 @@ API → API Documentation tab.
 
 ## Step 3 - Enterprise: CI integration
 
-Burp Enterprise (CI-friendly) workflow:
-
-1. Enterprise server stores scan configurations + targets.
-2. CI script triggers a scan via the Enterprise REST API.
-3. CI script polls for completion + downloads issues as JSON.
-4. CI script parses + gates per severity.
-
-The full CI-driven scanning model is documented per [burp-as][burp-as]
-"CI-driven scanning"; consult portswigger.net/burp/documentation/enterprise
-for current API endpoints (the surface is stable but per-version
-specifics evolve).
+Burp Enterprise stores scan configurations and targets server-side and is the
+intended fit for CI-driven scanning: a CI script triggers a scan via the
+Enterprise REST API, polls for completion, downloads issues as JSON, then gates
+per severity. See [references/enterprise-ci.md](references/enterprise-ci.md) for
+the full workflow and a GitHub Actions example.
 
 ## Step 4 - BApp Store extensions
 
@@ -158,33 +169,27 @@ it with ZAP + NightVision output for a combined verdict.
 For SARIF (GitHub Code Scanning): use the `BurpToSarif` community
 converter (BApp Store).
 
-## Step 8 - CI integration (Enterprise model)
+## Worked example
 
-```yaml
-jobs:
-  burp-enterprise:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Burp Enterprise scan
-        run: |
-          SCAN_ID=$(curl -s -X POST "${{ secrets.BURP_ENT_URL }}/api/scans" \
-            -H "Authorization: ${{ secrets.BURP_ENT_TOKEN }}" \
-            -d '{"site_id":42,"scan_configuration_id":7}' \
-            | jq -r '.id')
-          echo "SCAN_ID=$SCAN_ID" >> $GITHUB_ENV
-      - name: Wait for scan completion
-        run: |
-          while true; do
-            STATUS=$(curl -s "${{ secrets.BURP_ENT_URL }}/api/scans/$SCAN_ID" \
-              -H "Authorization: ${{ secrets.BURP_ENT_TOKEN }}" | jq -r '.status')
-            [ "$STATUS" = "succeeded" ] && break
-            [ "$STATUS" = "failed" ] && exit 1
-            sleep 30
-          done
-      - name: Download issues
-        run: curl -s "${{ secrets.BURP_ENT_URL }}/api/scans/$SCAN_ID/issues" \
-            -H "Authorization: ${{ secrets.BURP_ENT_TOKEN }}" -o burp-issues.json
-```
+A team holds a Burp Suite Enterprise license and wants CI-gated coverage of
+`app.example.com` staging, layered on their existing ZAP baseline.
+
+1. In the Enterprise dashboard they register the site (`site_id: 42`) and a
+   scan configuration (`scan_configuration_id: 7`) that skips SSL/TLS issue
+   types (staging is HTTP-only).
+2. A session-handling rule with a login macro re-authenticates when the
+   scanner hits the logged-out banner, keeping authenticated routes in scope
+   (Step 5).
+3. The GitHub Actions job
+   ([references/enterprise-ci.md](references/enterprise-ci.md)) triggers the
+   scan, polls until `status: succeeded`, and downloads `burp-issues.json`.
+4. A suppression BCheck marks the known `/search?q=` finding as a false
+   positive with reviewer + expiry, committed to the repo (Step 6).
+5. The job parses `burp-issues.json`, fails on any High severity, and uploads
+   the SARIF conversion to GitHub Code Scanning (Step 7).
+
+Result: every merge to the staging branch runs a licensed Burp scan whose
+findings sit alongside ZAP and NightVision output in one severity-gated verdict.
 
 ## Anti-patterns
 

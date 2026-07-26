@@ -43,6 +43,24 @@ to generate CycloneDX-format SBOMs from real codebases.
 For licensing-focused / Linux Foundation contexts, `spdx-format`
 is more idiomatic.
 
+## How to use
+
+1. Confirm CycloneDX is the format your consumer requires and that
+   the use case is security-focused (see When to use).
+2. Generate the BOM - run a per-language native tool
+   ([references/component-types-and-tooling.md](references/component-types-and-tooling.md))
+   or `anchore/sbom-action` with `format: cyclonedx-json`.
+3. Confirm the required fields are present (`bomFormat`,
+   `specVersion`, `components[]`, `dependencies[]`) - Step 2.
+4. Add a `vulnerabilities[]` record with a VEX-style
+   `analysis.state` for any finding you have triaged - Step 3 / Step 5.
+5. Validate against the schema:
+   `cyclonedx validate --input-file sbom.json --input-version v1_6` - Step 4.
+6. Sign + attest the BOM in CI
+   (`cosign attest --predicate ... --type cyclonedx`) - Step 6.
+7. Pin the `specVersion` your consumer agreed to; re-issue with an
+   incremented `version` on each change.
+
 ## Step 1 - Top-level structure
 
 A minimal CycloneDX 1.6 BOM (JSON):
@@ -100,28 +118,11 @@ Per [cdx-spec][cdx-spec]:
 | `vulnerabilities[]` | optional | Per-finding records |
 | `formulation[]` | optional | Build metadata |
 
-## Step 3 - Component types
+Component types and per-language native generators are cataloged in
+[references/component-types-and-tooling.md](references/component-types-and-tooling.md);
+the `purl` (Package URL) field is the canonical component identifier.
 
-Per [cdx-spec][cdx-spec] common component types:
-
-| Type | Use |
-|---|---|
-| `application` | Top-level app being described |
-| `library` | Code dependency (npm, pip, Maven artifact) |
-| `framework` | Application framework (React, Django, Spring) |
-| `container` | OCI/Docker container image |
-| `operating-system` | OS (Alpine, Ubuntu, etc.) |
-| `firmware` | Embedded firmware |
-| `device` | Hardware device |
-| `file` | Standalone file (script, binary) |
-| `machine-learning-model` | ML model (since 1.5) |
-| `data` | Dataset (since 1.5) |
-| `cryptographic-asset` | Crypto algorithm/key (since 1.6) |
-
-The `purl` (Package URL) field is the canonical identifier per
-[github.com/package-url/purl-spec](https://github.com/package-url/purl-spec).
-
-## Step 4 - Vulnerability block (VEX-equivalent)
+## Step 3 - Vulnerability block (VEX-equivalent)
 
 CycloneDX has first-class vuln support (unlike SPDX which delegates
 to companion files):
@@ -150,24 +151,7 @@ The `analysis.state` field uses VEX-equivalent values:
 `resolved`, `resolved_with_pedigree`, `exploitable`,
 `in_triage`, `false_positive`, `not_affected`.
 
-## Step 5 - Per-language tooling
-
-CycloneDX has per-language native generators (alternative to Syft):
-
-| Language | Tool | Source |
-|---|---|---|
-| Node.js | `@cyclonedx/cyclonedx-npm` | github.com/CycloneDX/cyclonedx-node-npm |
-| Python | `cyclonedx-py` (`cyclonedx-bom`) | github.com/CycloneDX/cyclonedx-python |
-| Java/Maven | `cyclonedx-maven-plugin` | github.com/CycloneDX/cyclonedx-maven-plugin |
-| Java/Gradle | `cyclonedx-gradle-plugin` | github.com/CycloneDX/cyclonedx-gradle-plugin |
-| Go | `cyclonedx-gomod` | github.com/CycloneDX/cyclonedx-gomod |
-| .NET | `CycloneDX-DOTNET` | github.com/CycloneDX/cyclonedx-dotnet |
-| Rust | `cargo-cyclonedx` | github.com/CycloneDX/cyclonedx-rust-cargo |
-
-Per-language tools often produce richer SBOMs than Syft (deeper
-metadata, language-specific quirks handled).
-
-## Step 6 - Validation
+## Step 4 - Validation
 
 Validate a CycloneDX SBOM against the schema:
 
@@ -182,7 +166,7 @@ npx @cyclonedx/cyclonedx-bom validate sbom.json
 Validation catches structural issues (missing required fields,
 invalid PURLs, unknown component types) before publishing.
 
-## Step 7 - VEX integration
+## Step 5 - VEX integration
 
 CycloneDX 1.4+ supports embedded VEX (Vulnerability Exploitability
 Exchange) - assertions about whether a known CVE actually affects
@@ -205,7 +189,7 @@ VEX assertions allow downstream consumers to filter false-positive
 findings from your shipped SBOM rather than re-doing reachability
 analysis themselves.
 
-## Step 8 - CI integration
+## Step 6 - CI integration
 
 ```yaml
 jobs:
@@ -226,6 +210,30 @@ jobs:
       - run: cosign attest --predicate sbom.cyclonedx.json --type cyclonedx my-image:1.0
 ```
 
+## Worked example
+
+A Node.js service must ship a CycloneDX SBOM to a security-focused
+customer. The team:
+
+1. Generates the BOM natively:
+   `npx @cyclonedx/cyclonedx-npm --output-file=sbom.cyclonedx.json`.
+   Output is `bomFormat: "CycloneDX"`, `specVersion: "1.6"`, with a
+   `components[]` entry per dependency (each carrying a `purl`) and a
+   `dependencies[]` edge list.
+2. A scan flags `CVE-2024-1234` on `pkg:npm/lodash@4.17.20`. Triage
+   shows the vulnerable function is not in the execute path, so the
+   team adds a `vulnerabilities[]` record with
+   `analysis.state: "not_affected"` and
+   `justification: "vulnerable_code_not_in_execute_path"` (Step 3).
+3. Validates:
+   `cyclonedx validate --input-file sbom.cyclonedx.json --input-version v1_6` - passes.
+4. Attests to the image:
+   `cosign attest --predicate sbom.cyclonedx.json --type cyclonedx my-image:1.0`.
+
+Result: a schema-valid, attested CycloneDX 1.6 BOM whose embedded VEX
+lets the customer drop the lodash finding without re-doing
+reachability analysis.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -233,8 +241,8 @@ jobs:
 | Skip `serialNumber` field | Can't deduplicate across re-generations | Generate URN UUID per BOM |
 | Use `metadata.tools[]` v1.4 schema in 1.6+ | Schema evolution; tools shape changed | Use `metadata.tools.components[]` (newer schema) |
 | Skip `dependencies[]` block | Loss of dep-graph info; downstream tools degrade | Always include (Step 1) |
-| Hand-author CycloneDX | Schema is large; errors easy to introduce | Use generators (Step 5) |
-| Skip schema validation | Invalid SBOMs pass into prod; downstream consumers fail | Validate in CI (Step 6) |
+| Hand-author CycloneDX | Schema is large; errors easy to introduce | Use generators ([references](references/component-types-and-tooling.md)) |
+| Skip schema validation | Invalid SBOMs pass into prod; downstream consumers fail | Validate in CI (Step 4) |
 
 ## Limitations
 
@@ -250,6 +258,7 @@ jobs:
 ## References
 
 - [cdx-spec][cdx-spec] - official specification
+- [references/component-types-and-tooling.md](references/component-types-and-tooling.md) - component types + per-language native tooling
 - cyclonedx.org - landing
 - github.com/CycloneDX - org with per-language tools
 - github.com/package-url/purl-spec - Package URL spec

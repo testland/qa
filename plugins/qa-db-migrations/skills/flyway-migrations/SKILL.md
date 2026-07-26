@@ -39,6 +39,23 @@ Flyway tracks applied migrations in a per-database
 - The team migrates from manual SQL scripts to versioned migration
   control.
 
+## How to use
+
+1. Install Flyway via CLI, Docker, Maven, or Gradle (Step 1).
+2. Create versioned `V<n>__desc.sql` files in `db/migration/`; use
+   `R__` for repeatable views / procs (Step 2).
+3. Configure `flyway.conf` with the JDBC URL and set
+   `cleanDisabled=true` for any non-ephemeral DB (Step 5).
+4. Preview with `flyway info`, then apply pending migrations with
+   `flyway migrate` (Steps 3 - 4).
+5. Verify checksums of applied migrations with `flyway validate`
+   before each deploy (Step 3).
+6. Gate every PR in CI: spin an ephemeral DB, apply migrations, run
+   tests against the migrated schema (Step 6).
+7. If a migration fails mid-run, fix `flyway_schema_history` with
+   `flyway repair` - never by editing an applied file (Step 3,
+   Anti-patterns).
+
 ## Step 1 - Install
 
 Per [fw-home][fw-home]: "Flyway Command Line runs on Windows,
@@ -159,6 +176,22 @@ plugin): spin up the DB via Testcontainers, then call
 
 Before merge, apply adversarial review of new migrations -
 classify each as additive / breaking / data-loss / locking.
+
+## Worked example
+
+Add an index on `users.email` and ship it through CI:
+
+1. Create `db/migration/V2__add_email_index.sql` with
+   `CREATE INDEX idx_users_email ON users(email);`.
+2. Locally run `flyway info` - it lists `V2` as pending while `V1`
+   shows applied.
+3. `flyway migrate` applies only `V2` and appends a row to
+   `flyway_schema_history` with its checksum.
+4. In the PR, CI starts an ephemeral Postgres, runs the Docker
+   `flyway ... migrate`, then `mvn test` against the migrated schema.
+5. A teammate later edits the merged `V2` file; on their next run
+   `flyway validate` fails with a checksum mismatch, so they add
+   `V3__...` instead of mutating `V2`.
 
 ## Anti-patterns
 

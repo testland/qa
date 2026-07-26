@@ -21,6 +21,35 @@ image - different test patterns for each.
 - Pre-deploy gate before D3 major upgrade (D3 v6 → v7 changed
   module imports).
 
+## How to use
+
+1. Confirm the chart renders SVG via `d3.create('svg')` or D3
+   selections (Canvas belongs to `chartjs-snapshot-tests`).
+2. Pick the snapshot mode: `outerHTML` for the structural contract
+   (Step 1) or `toHaveScreenshot` for rendered pixels (Step 2).
+3. Disable D3 `transition()` in test mode so snapshots are stable
+   (Step 3).
+4. Add a data-binding test: one element per data point, per-element
+   attributes track the data (Step 4).
+5. For fast headless runs, render the generator under jsdom in a
+   unit test (Step 5).
+6. Cover the update join and SVG a11y metadata via
+   [references/advanced-tests.md](references/advanced-tests.md).
+7. Normalize generated IDs before diffing; run the whole suite as a
+   gate before any D3 major-version upgrade.
+
+## Worked example
+
+A revenue bar chart renders `svg.bar-chart` from `[10, 20, 30, 40]`.
+Capture its `outerHTML`, pass it through `normalizeSvg` (Step 1) to
+strip generated IDs, and store `bar-chart.svg.txt`. Add a
+data-binding test (Step 4) asserting 4 `rect`s and
+`heights[3] > heights[0]` (data 40 > 10). The 750 ms enter
+transition is swapped for the identity function in test mode
+(Step 3) so the snapshot is deterministic. Suite runs green. Later a
+D3 v6 → v7 upgrade drops a `<g>` wrapper import; the `outerHTML`
+snapshot diff flags the missing group before it ships.
+
 ## Step 1 - outerHTML structural snapshot
 
 For tests where SVG structure should match exactly:
@@ -133,55 +162,11 @@ test('bar generator emits N rects for N data points', () => {
 Per the [D3 getting-started docs], D3 imports cleanly under ESM - 
 jsdom + native ESM works.
 
-## Step 6 - Update join correctness
+## Advanced correctness tests
 
-D3's update join (`enter` / `update` / `exit`) is the hardest D3
-concept to test. Test the three states:
-
-```ts
-test('update join handles insert + remove + reorder', async ({ page }) => {
-  await page.goto('https://localhost:3000/d3-update');
-
-  // Initial: [A, B, C]
-  await page.evaluate(() => (window as any).updateChart(['A', 'B', 'C']));
-  expect(await page.locator('rect[data-key="A"]').count()).toBe(1);
-
-  // After: [A, B, D] - remove C, add D
-  await page.evaluate(() => (window as any).updateChart(['A', 'B', 'D']));
-  expect(await page.locator('rect[data-key="C"]').count()).toBe(0);
-  expect(await page.locator('rect[data-key="D"]').count()).toBe(1);
-
-  // After: [B, D, A] - reorder; element identity preserved
-  await page.evaluate(() => (window as any).updateChart(['B', 'D', 'A']));
-  // 'A' should be the same DOM node (just repositioned)
-  // Verify via attribute or event listener attached pre-reorder
-});
-```
-
-Use a stable `key` function: `data-bind by .data(arr, d => d.id)`.
-
-## Step 7 - Accessibility metadata
-
-D3 generates SVG; SVG has accessibility primitives. Tests verify:
-
-```ts
-test('chart has title + desc for screen readers', async ({ page }) => {
-  await page.goto('https://localhost:3000/d3-bar');
-
-  await expect(page.locator('svg.bar-chart > title')).toContainText('Revenue by Quarter');
-  await expect(page.locator('svg.bar-chart > desc')).toContainText('Bar chart showing');
-});
-
-test('rects have aria-labels', async ({ page }) => {
-  const labels = await page.locator('svg.bar-chart rect').evaluateAll(els =>
-    els.map(el => el.getAttribute('aria-label'))
-  );
-  expect(labels[0]).toBe('Q1 revenue: $10k');
-});
-```
-
-Cross-ref `qa-accessibility` plugin for broader a11y
-patterns.
+Update join (`enter` / `update` / `exit`) and SVG accessibility
+metadata are the deepest D3 test patterns - see
+[references/advanced-tests.md](references/advanced-tests.md).
 
 ## Anti-patterns
 
@@ -189,7 +174,7 @@ patterns.
 |---|---|---|
 | outerHTML diff with all generated IDs | False positives every run | Normalize (Step 1) |
 | Skip transition disable | Snapshot flake | Step 3 |
-| No update-join test | enter/exit bugs ship | Step 6 |
+| No update-join test | enter/exit bugs ship | [references/advanced-tests.md](references/advanced-tests.md) |
 | Test only happy data shape | Empty / single-element / overflow data shapes break | Boundary value testing |
 | Mix Chart.js + D3 in same chart | Canvas + SVG mix: snapshots inconsistent | One library per chart |
 
@@ -206,6 +191,8 @@ patterns.
 
 - [D3 getting-started docs] - install, ESM imports, SVG output,
   framework integration
+- [references/advanced-tests.md](references/advanced-tests.md) - 
+  update join + SVG a11y metadata tests
 - `chartjs-snapshot-tests` - 
   Canvas-based alternative
 - `vega-spec-validator` - 

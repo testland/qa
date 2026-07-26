@@ -39,6 +39,25 @@ session, see
 - Reviewing a session sheet for completeness.
 - Building a session-tracking dashboard.
 
+## How to use
+
+1. **Write the charter** - "Explore <area> with <tools> to discover
+   <information>". Keep it a mission, not a test-case list.
+2. **Time-box the session** - 60-90 min, one charter, uninterrupted;
+   ~2-hour hard cap before focus degrades.
+3. **Test and record** - explore per the charter (applying tours +
+   heuristics) and log Areas, Bugs, and Issues in the session sheet as
+   you go. Full template:
+   [references/session-sheet-and-metrics.md](references/session-sheet-and-metrics.md).
+4. **Track TBS** - note the Test / Bug / Setup split (plus Opportunity /
+   Idle). A session under ~50% T signals an environment or scope
+   problem.
+5. **Close with PROOF** - debrief Past, Results, Outlook, Obstacles,
+   Feelings with the lead within 24h.
+6. **Aggregate on the dashboard** - roll sessions up weekly (throughput,
+   avg T%, charter progress) to drive strategy, not a bugs-per-session
+   KPI.
+
 ## The unit: a session
 
 Per Jonathan and James Bach's SBTM paper (satisfice.com):
@@ -84,99 +103,19 @@ A backlog of charters drives multi-session campaigns. The lead
 prioritises charters per the test strategy (`test-strategy-author`)
 and the risk register (`risk-matrix`).
 
-## The session sheet
+## The session sheet and metrics
 
-Each session produces a session sheet. Bach's canonical structure
-(satisfice.com):
+Each session produces a session sheet whose sections are: Charter,
+Areas, session timings, TBS metrics, Data files, Test notes, Bugs,
+Issues (meta process problems), and the PROOF debrief. The TBS
+time-breakdown splits each session into **T** (test design +
+execution), **B** (bug investigation + reporting), and **S** (setup /
+overhead), plus Opportunity and Idle. Healthy ranges: T 60-80%, B
+10-20%, S 10-15%; T under 50% signals trouble.
 
-```markdown
-# Session sheet - YYYY-MM-DD - <tester>
-
-## Charter
-
-Explore <area> with <tools> to discover <information>.
-
-## Areas
-
-- (system area 1)
-- (system area 2)
-- ...
-
-## Session start / duration / setup time / focus
-
-- Started: 14:00
-- Duration: 90 min
-- Setup time: 10 min
-- Charter time: 70 min
-- Bug-investigation time: 10 min
-- Opportunity time: 0 min
-
-## TBS metrics (time-breakdown)
-
-- Test design + execution: 70%
-- Bug investigation + reporting: 11%
-- Setup / overhead: 11%
-- Opportunity: 0%
-- Idle / interruption: 8%
-
-## Data files
-
-- screenshots/2026-05-20-14-15.png
-- har/2026-05-20-14-22.har
-
-## Test notes
-
-(narrative of what was tested, in tester's own words; includes
-tours applied, heuristics applied, hypotheses formed)
-
-## Bugs (file later)
-
-- B-001: Promo "STACK50" applies after tax instead of before;
-  reproduces 3/3. Captured at 14:35.
-- B-002: Empty cart + apply promo → page error, not graceful message.
-
-## Issues (meta - testing-process problems)
-
-- Cannot get to step 4 in flow without a paid customer account;
-  test data unavailable. Blocking 40% of charter scope.
-
-## PROOF debrief
-
-(See manual-test-debrief)
-```
-
-## TBS metrics - time breakdown
-
-Per Bach's SBTM paper, sessions decompose into:
-
-| Category | Definition |
-|---|---|
-| **T** (Test) | Time spent on test design + execution per the charter |
-| **B** (Bug) | Time spent investigating + reporting bugs |
-| **S** (Setup) | Time setting up the environment / test data / tools |
-
-Plus often-included:
-
-- **Opportunity:** unrelated bugs found by chance; investigated outside charter scope
-- **Idle:** waiting on a build / response
-
-Healthy session: T 60-80%, B 10-20%, S 10-15%. Skewed sessions
-(T < 50%) signal problems - environment instability, charter too
-broad, etc.
-
-## Dashboard metrics - across sessions
-
-Per Bach's SBTM Reporting paper (satisfice.com), the lead views:
-
-| Metric | What it tells |
-|---|---|
-| **Sessions per week** | Throughput |
-| **Avg T% across sessions** | Environment / charter-scope health |
-| **Bugs per session** | Find rate (interpret carefully - not all sessions should find bugs) |
-| **Charters complete / in-progress / blocked** | Coverage progress |
-| **Charter-to-bug ratio** | Quality of charter framing (too broad = many small bugs; too narrow = few) |
-
-These feed the testing-strategy review at sprint planning.
+Full sheet template, the TBS definitions, and the cross-session
+dashboard metrics:
+[references/session-sheet-and-metrics.md](references/session-sheet-and-metrics.md).
 
 ## PROOF debrief
 
@@ -194,6 +133,31 @@ post-session debrief structure:
 
 The lead reviews PROOFs with the tester briefly (5-10 min) before
 the session sheet is filed.
+
+## Worked example - one 90-minute session
+
+```markdown
+**Charter:** Explore the cart promo-stacking flow with manual sample
+inputs to discover discount-application bugs.
+
+**Timings:** Started 14:00; 90 min; 10 min setup; 70 min charter;
+10 min bug investigation.
+
+**Bugs:** B-001 - "STACK50" applies after tax instead of before,
+reproduces 3/3.
+
+**Issues:** Cannot reach step 4 without a paid account; blocks ~40%
+of charter scope.
+
+**TBS:** T 70% / B 11% / S 11% / Idle 8% - healthy.
+
+**PROOF Outlook:** recommend a follow-up charter for tax-jurisdiction
+promos.
+```
+
+Result: the session sheet is filed and reviewed within 24h; the lead
+schedules the follow-up charter and provisions a paid test account to
+unblock the Issue.
 
 ## Common confusions
 
@@ -242,6 +206,8 @@ the session sheet is filed.
 - Bolton M. *Exploratory testing series* - 
   [developsense.com](https://developsense.com/).
 - Hendrickson E. *Explore It!* (Pragmatic Bookshelf, 2013) - book.
+- Full session-sheet template + TBS + dashboard metrics:
+  [references/session-sheet-and-metrics.md](references/session-sheet-and-metrics.md).
 - Sibling references (heuristic catalogues the session applies):
   `hiccupps-f-heuristic`,
   `sfdpot-exploratory-heuristic`,

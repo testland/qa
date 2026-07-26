@@ -25,9 +25,10 @@ HTML artefact to a Pages endpoint so stakeholders get a URL, not a zip file.
 
 Two primary renderers are covered:
 
-- **multiple-cucumber-html-reporter** (Node, any Cucumber-JS project)
+- **multiple-cucumber-html-reporter** (Node, any Cucumber-JS project) - see
+  [references/node-reporter.md](references/node-reporter.md).
 - **Serenity BDD aggregate report** (JVM, Maven/Gradle projects using
-  `CucumberWithSerenity`)
+  `CucumberWithSerenity`) - see [references/serenity-reporter.md](references/serenity-reporter.md).
 
 ## When to use
 
@@ -42,6 +43,37 @@ Two primary renderers are covered:
 If only engineers read the results, the JUnit XML feed to
 `junit-xml-analysis` (in the qa-test-reporting plugin)
 is sufficient.
+
+## How to use
+
+1. Produce Cucumber JSON from a passing suite - add a `json:` formatter
+   (Cucumber-JS) or let `CucumberWithSerenity` capture results (JVM). Step 1.
+2. Exclude `@wip` / `@pending` scenarios so the document shows only accepted
+   behaviour. Step 4.
+3. Render the JSON to HTML - Node path via
+   [references/node-reporter.md](references/node-reporter.md), JVM path via
+   [references/serenity-reporter.md](references/serenity-reporter.md). Steps 2-3.
+4. Tag scenarios by capability and sprint so stakeholders can navigate report
+   sections. Step 4.
+5. Gate publication on a green exit code so no red or stale run ships. Step 5.
+6. Publish the HTML to GitHub/GitLab Pages in CI so stakeholders get a URL. Step
+   6, via [references/ci-publish.md](references/ci-publish.md).
+
+## Worked example
+
+A Cucumber-JS "Checkout Service" suite has 24 scenarios tagged by capability
+(`@billing`, `@cart`) and sprint (`@sprint-12`); 2 are still `@wip`.
+
+1. CI runs `npx cucumber-js features/ --tags "not @wip" --format
+   json:reports/cucumber.json`, producing JSON for the 22 passing scenarios.
+2. `node scripts/generate-report.js` renders `./docs/living-documentation/`
+   under the report name "Checkout Service - Living Documentation".
+3. Because `set -e` precedes the generate step, a red run aborts before
+   publishing.
+4. `peaceiris/actions-gh-pages@v4` pushes the folder to GitHub Pages.
+5. Result: the product owner opens the Pages URL and sees 22 green acceptance
+   criteria grouped under Billing and Cart, with the two `@wip` scenarios
+   absent - an always-current, business-readable status page.
 
 ## Step 1 - Produce Cucumber JSON output
 
@@ -58,13 +90,8 @@ before wiring the renderer.
 }
 ```
 
-Use a timestamped filename when running parallel shards to avoid overwrite
-([multiple-cucumber-html-reporter usage][mchr-usage]):
-
-```bash
-cucumber-js features/ \
-  --format json:reports/cucumber-$(date +%s).json
-```
+For parallel shards, use a timestamped JSON filename to avoid overwrite - see
+[references/node-reporter.md](references/node-reporter.md).
 
 **Cucumber-JVM with Serenity** (in `serenity.properties`):
 
@@ -75,113 +102,19 @@ JSON formatter is needed. Serenity writes its own JSON artefacts to
 
 ## Step 2 - Generate the HTML report (Node path)
 
-Install the reporter as a dev dependency
-([multiple-cucumber-html-reporter installation][mchr-install]):
-
-```bash
-npm install multiple-cucumber-html-reporter --save-dev
-```
-
-Create `scripts/generate-report.js`:
-
-```javascript
-const report = require("multiple-cucumber-html-reporter");
-
-report.generate({
-  // required
-  jsonDir: "./reports/",
-  reportPath: "./docs/living-documentation/",
-
-  // identification metadata shown in the report header
-  metadata: {
-    browser: { name: "chrome", version: "latest" },
-    device: "CI runner",
-    platform: { name: "linux", version: "22.04" }
-  },
-
-  // custom info block (release, project, branch)
-  customData: {
-    title: "Run info",
-    data: [
-      { label: "Project", value: "Checkout Service" },
-      { label: "Release", value: process.env.RELEASE_TAG || "dev" }
-    ]
-  },
-
-  // display options
-  reportName:      "Checkout Service - Living Documentation",
-  pageTitle:       "Acceptance Criteria Status",
-  displayDuration: true,
-  durationInMS:    true
-});
-```
-
-Run it after the test step ([multiple-cucumber-html-reporter usage][mchr-usage]):
-
-```bash
-npm test && node scripts/generate-report.js
-```
-
-Key options from the official docs ([multiple-cucumber-html-reporter options][mchr-opts]):
-
-| Option | Type | Default | Purpose |
-|---|---|---|---|
-| `jsonDir` | String | required | Directory of Cucumber JSON files |
-| `reportPath` | String | required | Output directory for the HTML report |
-| `reportName` | String | | Title displayed in the UI |
-| `pageTitle` | String | `"Multiple Cucumber HTML Reporter"` | HTML `<head>` title |
-| `displayDuration` | Boolean | `false` | Show step/scenario timing |
-| `durationInMS` | Boolean | `false` | Interpret step durations as ms not ns |
-| `saveCollectedJSON` | Boolean | `false` | Keep merged JSON for debugging |
-| `customStyle` | Path | | Append a CSS file for brand colours |
-| `overrideStyle` | Path | | Replace all default CSS |
+For any Cucumber-JS project, render the JSON with multiple-cucumber-html-reporter:
+install it, add a `scripts/generate-report.js` that points `jsonDir` at
+`./reports/` and `reportPath` at `./docs/living-documentation/`, then run
+`npm test && node scripts/generate-report.js`. Full install, script, and options
+table: [references/node-reporter.md](references/node-reporter.md).
 
 ## Step 3 - Generate the HTML report (JVM / Serenity path)
 
-Add the Serenity Maven plugin and bind it to `post-integration-test`
-([serenity-bdd/the-serenity-book, maven.adoc][mv]):
-
-```xml
-<plugin>
-  <groupId>net.serenity-bdd.maven.plugins</groupId>
-  <artifactId>serenity-maven-plugin</artifactId>
-  <version>${serenity.maven.version}</version>
-  <executions>
-    <execution>
-      <id>serenity-reports</id>
-      <phase>post-integration-test</phase>
-      <goals><goal>aggregate</goal></goals>
-    </execution>
-  </executions>
-</plugin>
-```
-
-Run the full pipeline:
-
-```bash
-mvn verify
-```
-
-Or regenerate the report from existing test data without re-running tests:
-
-```bash
-mvn serenity:aggregate
-```
-
-The Requirements tab of the generated report renders living documentation:
-Serenity reads the directory hierarchy under
-`src/test/resources/features/[theme]/[capability]/` and maps it to the
-requirements hierarchy ([serenity-bdd/the-serenity-book, living-documentation.adoc][ld]).
-
-Set hierarchy labels in `serenity.properties`:
-
-```properties
-serenity.requirements.types=theme,capability,story
-```
-
-Add a `readme.md` at each directory level; Serenity renders it as contextual
-prose above the scenario list, turning the Requirements tab into a readable
-illustrated user manual ([serenity-bdd/the-serenity-book, living-documentation.adoc][ld]).
+For Maven/Gradle projects running `CucumberWithSerenity`, bind the
+`serenity-maven-plugin` `aggregate` goal to `post-integration-test` and run
+`mvn verify`. The Requirements tab renders living documentation from the
+feature-directory hierarchy. Full plugin config, hierarchy labels, and
+`readme.md` enrichment: [references/serenity-reporter.md](references/serenity-reporter.md).
 
 ## Step 4 - Tag scenarios for report sections
 
@@ -243,63 +176,9 @@ This ensures the published artefact reflects only a fully-green run.
 
 ## Step 6 - Publish to GitHub Pages (CI)
 
-### GitHub Actions
-
-```yaml
-name: Living Documentation
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  publish-docs:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Run tests and generate report
-        run: |
-          npm ci
-          npm test
-          node scripts/generate-report.js
-
-      - name: Publish to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/living-documentation
-```
-
-For Serenity (JVM), replace the generate step and point `publish_dir` at
-`target/site/serenity`.
-
-### GitLab Pages
-
-```yaml
-pages:
-  stage: deploy
-  script:
-    - npm ci
-    - npm test
-    - node scripts/generate-report.js
-    - mkdir -p public
-    - cp -r docs/living-documentation/* public/
-  artifacts:
-    paths:
-      - public
-  only:
-    - main
-```
-
-See `github-actions-test-jobs` (in the qa-ci-integration plugin)
-for general CI test-job conventions.
+Publish the generated HTML to GitHub or GitLab Pages so stakeholders get a URL,
+not a zip file. Full GitHub Actions and GitLab Pages jobs (including the Serenity
+`publish_dir` override): [references/ci-publish.md](references/ci-publish.md).
 
 ## Anti-patterns
 
@@ -327,21 +206,19 @@ for general CI test-job conventions.
 
 ## References
 
-- [ld][ld] - Serenity BDD book, living-documentation.adoc: definition, Requirements tab,
-  hierarchy, `serenity.properties` keys (`serenity.requirements.types`,
-  `report.assets.directory`), readme.md enrichment, evidence API.
-- [mv][mv] - Serenity BDD book, maven.adoc: `serenity-maven-plugin` coordinates
-  (`net.serenity-bdd.maven.plugins:serenity-maven-plugin`), `aggregate` goal,
-  `post-integration-test` phase binding, `mvn verify`, `serenity:check`.
-- [fr][fr] - Serenity BDD book, filtering-reports.adoc: `-Dtags`, `-Dcucumber.options`,
-  requirements-filtering caveat.
-- [mchr-install][mchr-install] - multiple-cucumber-html-reporter installation: npm/yarn/pnpm,
-  CucumberJS version compatibility matrix.
-- [mchr-usage][mchr-usage] - multiple-cucumber-html-reporter usage: `AfterFeatures` hook
-  (CucumberJS 2.x) vs. separate post-test script (3.x+), timestamped JSON filenames.
-- [mchr-opts][mchr-opts] - multiple-cucumber-html-reporter options: `jsonDir`, `reportPath`,
-  `reportName`, `pageTitle`, `displayDuration`, `durationInMS`, `saveCollectedJSON`,
-  `customStyle`, `overrideStyle` full option table.
+- [ld][ld] - Serenity BDD book, living-documentation.adoc: definition,
+  Requirements tab, hierarchy, readme.md enrichment, evidence API.
+- [mv][mv] - Serenity BDD book, maven.adoc: `serenity-maven-plugin` coordinates,
+  `aggregate` goal, `post-integration-test` phase binding, `mvn verify`,
+  `serenity:check`.
+- [fr][fr] - Serenity BDD book, filtering-reports.adoc: `-Dtags`,
+  `-Dcucumber.options`, requirements-filtering caveat.
+- [references/node-reporter.md](references/node-reporter.md) - Node renderer
+  install, `generate-report.js`, and the full options table.
+- [references/serenity-reporter.md](references/serenity-reporter.md) - Serenity
+  Maven plugin, `aggregate` goal, requirements hierarchy, readme.md enrichment.
+- [references/ci-publish.md](references/ci-publish.md) - GitHub Actions and
+  GitLab Pages publish jobs.
 - `cucumber-testing` - upstream skill: produce Cucumber JSON
   with `--format json:`.
 - `junit-xml-analysis` (in the qa-test-reporting plugin) -
@@ -352,6 +229,3 @@ for general CI test-job conventions.
 [ld]: https://raw.githubusercontent.com/serenity-bdd/the-serenity-book/master/modules/ROOT/pages/living-documentation.adoc
 [mv]: https://raw.githubusercontent.com/serenity-bdd/the-serenity-book/master/modules/ROOT/pages/maven.adoc
 [fr]: https://raw.githubusercontent.com/serenity-bdd/the-serenity-book/master/modules/ROOT/pages/filtering-reports.adoc
-[mchr-install]: https://multiple-cucumber-html-reporter.vercel.app/docs/installation
-[mchr-usage]: https://multiple-cucumber-html-reporter.vercel.app/docs/usage
-[mchr-opts]: https://multiple-cucumber-html-reporter.vercel.app/docs/options

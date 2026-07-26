@@ -31,6 +31,21 @@ The testable concerns are different from Apollo / Yoga:
 - PR review of `hasura/metadata/` changes.
 - Regression-testing role transitions (user becomes admin, etc.).
 
+## How to use
+
+1. Bring up the ephemeral test stack (`docker compose -f docker-compose.test.yml up -d`)
+   with introspection disabled and the console off.
+2. Apply the fixture metadata that declares the permission rules under test, via the
+   `/v1/metadata` API or `hasura metadata apply`.
+3. Seed per-test rows so no test depends on another test's data.
+4. Send queries to `/v1/graphql` with the admin secret plus an `x-hasura-role`
+   override (and `x-hasura-user-id` / custom claims) to act as any role.
+5. Assert the response shape: rows are row-filtered to the role, or the failure
+   carries `extensions.code = "permission-error"` (or `affected_rows: 0`).
+6. Cover the full role x table x operation matrix from a checked-in fixture, and add
+   one smoke test through the real JWT path.
+7. Tear the stack down with `-v` and reset metadata between suites.
+
 ## Authoring
 
 ### Test instance setup
@@ -79,66 +94,28 @@ hasura migrate apply --endpoint http://localhost:8080 --admin-secret test-secret
 hasura metadata apply --endpoint http://localhost:8080 --admin-secret test-secret
 ```
 
-### Test queries by role
+### Role-based permission tests
 
-Per [hasura.io/docs/2.0/auth/authorization/quickstart/](https://hasura.io/docs/2.0/auth/authorization/quickstart/):
+Tests act as any role via **admin secret + `x-hasura-role` override**, and a full
+per-role x per-table x per-operation audit is generated from a checked-in fixture.
+Both patterns - the `httpx` by-role queries and the parametrized matrix - are in
+[references/permission-matrix-tests.md](references/permission-matrix-tests.md).
 
-```python
-import httpx
+## Worked example
 
-ENDPOINT = "http://localhost:8080/v1/graphql"
+Scenario: a new `user` role must see only its own rows in the `user` table.
 
-def test_user_sees_only_their_rows():
-    resp = httpx.post(
-        ENDPOINT,
-        headers={
-            "x-hasura-admin-secret": "test-secret",  # admin secret for role-override
-            "x-hasura-role": "user",
-            "x-hasura-user-id": "3",
-        },
-        json={"query": "{ user { id name } }"},
-    )
-    assert resp.status_code == 200
-    rows = resp.json()["data"]["user"]
-    assert all(r["id"] == 3 for r in rows)
+1. In the fixture metadata, give `user` a select permission on `user` filtered by
+   `id = X-Hasura-User-Id`; apply it with `hasura metadata apply`.
+2. POST `{ user { id name } }` to `/v1/graphql` with headers `x-hasura-admin-secret`,
+   `x-hasura-role: user`, `x-hasura-user-id: 3`.
+3. Assert `status_code == 200` and every returned row has `id == 3` - the row filter
+   held.
+4. POST the same query with `x-hasura-role: admin` (no user-id) and assert
+   `len(rows) > 1` - admin is not restricted.
 
-def test_admin_sees_all_rows():
-    resp = httpx.post(
-        ENDPOINT,
-        headers={
-            "x-hasura-admin-secret": "test-secret",
-            "x-hasura-role": "admin",
-        },
-        json={"query": "{ user { id name } }"},
-    )
-    rows = resp.json()["data"]["user"]
-    assert len(rows) > 1
-```
-
-The pattern: **admin secret + `x-hasura-role` override** lets
-tests act as any role without going through the production auth
-service (Auth0, Cognito, custom JWT).
-
-### Per-role × per-table × per-operation matrix
-
-For a thorough audit, generate the matrix:
-
-```python
-ROLES = ["anonymous", "user", "premium_user", "admin"]
-TABLES = ["users", "documents", "audit_log"]
-OPERATIONS = ["select", "insert", "update", "delete"]
-
-@pytest.mark.parametrize("role", ROLES)
-@pytest.mark.parametrize("table", TABLES)
-@pytest.mark.parametrize("op", OPERATIONS)
-def test_permission_matrix(role, table, op):
-    expected = load_expected_matrix()[(role, table, op)]
-    actual = try_operation(role, table, op)
-    assert actual == expected, f"Role {role} {op} on {table}: expected {expected}, got {actual}"
-```
-
-Permission matrix should be checked in as a fixture, reviewed on
-PR.
+Result: one pair of requests proves the row-filter rule for the restricted role and
+confirms it does not leak into the admin role.
 
 ## Running
 
@@ -216,8 +193,8 @@ jobs:
 |---|---|---|
 | Tests run against shared Hasura instance | Permission changes leak between tests | Per-test or per-suite ephemeral DB + metadata reset |
 | Skipping `HASURA_GRAPHQL_DISABLE_INTROSPECTION_PUBLIC_API` in CI | Production-config drift; introspection assertions don't hold | Set in test docker-compose |
-| Permission tests using admin secret without `x-hasura-role` override | Tests run as admin → bypass all permissions | Always add `x-hasura-role` |
-| Hardcoded user IDs across tests | One test mutates user 3 → next test stale | Per-test user seeding |
+| Permission tests using admin secret without `x-hasura-role` override | Tests run as admin -> bypass all permissions | Always add `x-hasura-role` |
+| Hardcoded user IDs across tests | One test mutates user 3 -> next test stale | Per-test user seeding |
 | Skipping insert / update / delete tests | Permission rules differ per operation | Cover the full matrix |
 | Not testing JWT path | Admin-secret-override bypasses production auth flow | One smoke test using real JWT against `HASURA_GRAPHQL_JWT_SECRET` config |
 | Permission matrix in code only | PR reviewers can't see what changes | Matrix as a checked-in YAML / JSON fixture |
@@ -234,7 +211,7 @@ jobs:
   introspection - admin-only).
 - **Action / Remote-schema testing.** Hasura's Actions and
   Remote Schemas delegate to other services; this skill tests
-  the Hasura → upstream contract, not the upstream itself.
+  the Hasura -> upstream contract, not the upstream itself.
 - **Subscription testing requires a long-running connection.**
   Hasura subscriptions use server-sent updates over HTTP/WS;
   pytest async patterns needed.

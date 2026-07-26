@@ -26,6 +26,25 @@ QA technique.
 - Post-incident: a root cause investigation surfaces new risk
   categories worth brainstorming.
 
+## How to use
+
+1. Schedule 60-90 min and invite cross-functional participants -
+   engineers, one QA / SDET, one PM, plus SRE / Security / Compliance
+   when relevant; pre-distribute the spec, acceptance criteria, current
+   matrix, and similar postmortems (Step 1).
+2. Kick off by presenting the scope and reading the ACs aloud, then run
+   a silent brainstorm where each participant lists 5-10 risks (Step 2).
+3. Drive the brainstorm with the per-category prompts in
+   [references/category-prompts.md](references/category-prompts.md)
+   (Step 3).
+4. Affinity-group the raw risks into clusters (Step 4).
+5. Score each risk impact (1-5) x likelihood (1-5), capping debate at
+   5 min per risk (Step 5).
+6. Assign a mitigation + owner + due date for every Critical (>=15) and
+   High (9-14) risk (Step 6).
+7. Write the results into the risk matrix (per `risk-matrix`), open
+   trackers, and schedule a one-sprint check-in (Steps 7-8).
+
 ## Step 1 - Pre-session setup
 
 Schedule 60-90 min. Invite:
@@ -58,47 +77,12 @@ voice dominates and group-think hides real risks.
 
 ## Step 3 - Prompts per category
 
-The facilitator brings prompts to drive the brainstorm:
-
-### Business risks
-
-- "What if the calculation is off by a cent?"
-- "What if a customer applies the same code twice?"
-- "What if the discount stacks differently than expected?"
-- "What's the worst incorrect outcome the customer would see?"
-
-### Technical risks
-
-- "What if the third-party API is down?"
-- "What if the DB migration runs partially?"
-- "What if two users hit this concurrently?"
-- "What's the longest-running query under this feature?"
-
-### Regulatory / compliance risks
-
-- "What if this stores PII?"
-- "What if the user is in EU / California?"
-- "Are there regional pricing requirements?"
-
-### UX risks
-
-- "What if the user's network is 3G?"
-- "What if the user is using a screen reader?"
-- "What's the first-time user experience?"
-
-### Security risks
-
-- "What if an attacker controls the input?"
-- "What if a logged-in user accesses another user's data?"
-- "Where's the auth boundary?"
-
-### Performance risks
-
-- "What's the cold-start time?"
-- "What's the per-request latency budget?"
-- "What's the concurrent-user ceiling?"
-
-The prompts are starters; the participants extend per the feature.
+The facilitator brings prompts to drive the brainstorm, one set per
+risk category (categories align with `risk-matrix`). The full prompt
+bank - business, technical, regulatory / compliance, UX, security, and
+performance - is in
+[references/category-prompts.md](references/category-prompts.md). The
+prompts are starters; the participants extend per the feature.
 
 ## Step 4 - Affinity grouping
 
@@ -173,6 +157,24 @@ Within 1 day:
   shipped.
 
 A risk-storming session without follow-up is wasted.
+
+## Worked example
+
+A team is about to build checkout promo codes. In the kickoff session:
+
+1. **Silent brainstorm** surfaces (among others) "off-by-cent rounding
+   when a percentage promo is applied" and "two promos stacked on one
+   order."
+2. **Affinity grouping** puts both under a "Promo math" cluster.
+3. **Scoring** rates off-by-cent rounding impact 5 (wrong charge,
+   refunds, trust) x likelihood 3 = 15, which lands as Critical.
+4. **Mitigation** assigns "property-based tests on the rounding
+   function" to Alice, due 2026-05-15.
+5. **Output** writes the cluster into the matrix (per `risk-matrix`) as
+   one row per risk, and a tracker ticket is opened for Alice's task.
+
+The session ends with a scored, owned Critical risk and a matrix row -
+not a vague "we should test rounding" note.
 
 ## Anti-patterns
 

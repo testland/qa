@@ -42,43 +42,28 @@ auditor-facing dashboards.
 - Adopting a GRC platform (Vanta/Drata/Secureframe) and need
   evidence-feed configuration.
 
+## How to use
+
+1. Determine in-scope criteria (Step 1) - always CC1 - CC9, plus A1/C1/PI1/P-series per your commitments.
+2. For each control, map an automatable evidence source and write the collector (Step 2).
+3. Add a per-control test that proves the control operates, not just that logs exist (Step 3).
+4. Feed the collected JSON into your GRC platform, filling gaps the native integrations miss (Step 4).
+5. Run collectors on a daily cron into append-only storage and alert on any run gap (Step 6).
+6. Before the observation period, dry-run a mock auditor sample request end to end and confirm the response is complete and timely (Step 7).
+
 ## Step 1 - Identify in-scope criteria
 
 Most SaaS engagements include CC + Availability + Confidentiality.
 Privacy criteria add when GDPR/CCPA also in scope. Processing
-Integrity adds for fintech / data-processing SaaS.
-
-| Criterion category | Typical scope decision |
-|---|---|
-| CC1 Control Environment | Always |
-| CC2 Communication & Information | Always |
-| CC3 Risk Assessment | Always |
-| CC4 Monitoring | Always |
-| CC5 Control Activities | Always |
-| CC6 Logical & Physical Access | Always |
-| CC7 System Operations | Always |
-| CC8 Change Management | Always |
-| CC9 Risk Mitigation | Always |
-| A1 Availability | If uptime SLA committed |
-| C1 Confidentiality | Typical for B2B SaaS |
-| PI1 Processing Integrity | If data-processing accuracy matters |
-| P1 - P9 Privacy | If handling PII at scale |
+Integrity adds for fintech / data-processing SaaS. The full
+per-criterion scope-decision table is in
+[references/evidence-source-map.md](references/evidence-source-map.md).
 
 ## Step 2 - Auto-collect evidence per criterion
 
-Map each control to one or more automatable evidence sources:
-
-| Control | Evidence source | Collector pattern |
-|---|---|---|
-| CC6.1 Logical access | IDP audit logs (Okta/Auth0/Keycloak) | Daily export of user-access events |
-| CC6.2 Access provisioning | Onboarding workflow logs | Per-hire ticket + access-grant audit |
-| CC6.3 Access deprovisioning | Offboarding workflow logs | Per-departure ticket + access-revoke audit |
-| CC7.1 Threat detection | SIEM (Datadog, Splunk) alert logs | Continuous alert-history feed |
-| CC7.2 System monitoring | APM (Datadog, New Relic) uptime data | Daily uptime report |
-| CC8.1 Change management | Git PR history + CI deploy logs | Per-PR audit (reviewer attribution) |
-| A1.1 Availability monitoring | SLO dashboards | Monthly availability report |
-| C1.1 Encryption at rest | Cloud KMS audit logs | Quarterly attestation |
-| C1.2 Encryption in transit | TLS config audit | Quarterly attestation |
+Map each control to one or more automatable evidence sources; the
+full control-to-evidence-source table is in
+[references/evidence-source-map.md](references/evidence-source-map.md).
 
 Example collector script:
 
@@ -183,6 +168,10 @@ For each in-scope criterion:
 4. ✅ Wire evidence into GRC platform (Step 4)
 5. ✅ Verify continuous-collection has no gaps (Step 6)
 6. ✅ Run a mock auditor query (request a sample; verify response is complete + timely)
+
+## Worked example
+
+The observation period opens and CC6.3 (access deprovisioning) is in scope. The collector exports offboarding tickets daily; the per-control test `test_cc6_3_offboarded_user_has_no_active_sessions` runs in CI. A mock auditor sample pulls one departed employee: the ticket and the Okta session-revoke event line up, but the test fails because the ex-employee is still an org member in `github_org`. GitHub was never wired into the deprovisioning job. The team adds it, the test goes green, and the passing run plus the daily offboarding export becomes the CC6.3 evidence the auditor samples.
 
 ## Anti-patterns
 

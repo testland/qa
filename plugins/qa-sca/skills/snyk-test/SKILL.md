@@ -32,6 +32,24 @@ for container scanning, see `trivy-image` (in the qa-sbom plugin).
 - Layered with `osv-scanner` for
   cross-DB consensus signal.
 
+## How to use
+
+1. Install the CLI (`npm install -g snyk`) and authenticate with `snyk auth`, or
+   set `SNYK_TOKEN` in CI.
+2. Run `snyk test` in a directory with a supported manifest; start with
+   `--severity-threshold=high` to cut first-scan noise.
+3. Emit machine-readable output with `--json-file-output=snyk.json` (or
+   `--sarif-file-output`) for downstream aggregation and deduplication.
+4. Add `snyk monitor` on the main branch to get alerts when new CVEs are
+   disclosed against pinned versions.
+5. Triage false positives through a `.snyk` policy ignore with a mandatory
+   `expires:` field - see
+   [references/snyk-policy-and-triage.md](references/snyk-policy-and-triage.md).
+6. Gate CI on the scan and upload the report artifact; keep `SNYK_TOKEN` in a CI
+   secret, never hardcoded.
+7. Pair with `osv-scanner` for cross-database consensus, and re-review `.snyk`
+   ignores every quarter.
+
 ## Step 1 - Install + authenticate
 
 Per [sn-gh][sn-gh]:
@@ -87,57 +105,19 @@ The snapshot lives on snyk.io/app/your-org; new CVEs disclosed
 against your pinned versions trigger email + Slack alerts (configured
 in Snyk dashboard).
 
-## Step 4 - `.snyk` policy file
+## Step 4 - `.snyk` policy + false-positive triage (MANDATORY)
 
-Per Snyk's policy-file model (consult docs.snyk.io for current
-schema), `.snyk` lives at the project root and supports:
+Suppress false positives through a `.snyk` policy file at the repo root. Every
+per-vuln ignore **must include an `expires:` field** - Snyk validates this at
+scan time. Layer `.snyk` ignores (auditable in git) with dashboard ignores
+(org-wide) and the `--severity-threshold=` / `--fail-on=upgradable` CI filters,
+and re-review each ignore quarterly.
 
-```yaml
-# .snyk
-version: v1.0.0
-ignore:
-  SNYK-JS-LODASH-567746:
-    - '*':
-        reason: "False positive; we don't pass user input to Lodash sortBy"
-        expires: '2026-12-15T00:00:00.000Z'
-        created: '2026-05-15T00:00:00.000Z'
-patch: {}
-```
+Full policy schema, the mandatory justification template, the suppression-layer
+table, and the re-review cadence:
+[references/snyk-policy-and-triage.md](references/snyk-policy-and-triage.md).
 
-Per-vuln ignore can be scoped to specific paths (`* > lodash`,
-`my-package > lodash`) and **must include an `expires:` field** - Snyk policy validates this at scan time.
-
-## Step 5 - False-positive triage (MANDATORY)
-
-Three suppression layers:
-
-| Mechanism | Where | Use |
-|---|---|---|
-| `.snyk` policy file ignore (with expiration) | Repo root | Per-vuln + per-path; auditable in git history |
-| Snyk dashboard "Ignore" action | snyk.io/app | Org-wide; persistent; reviewer-tracked |
-| `--severity-threshold=` filter | CI flag | Scan-time noise reduction (not suppression) |
-| `--fail-on=upgradable` flag | CI flag | Only fail if a fix exists; soft gate |
-
-**Justification template (mandatory in `.snyk`):**
-
-```yaml
-ignore:
-  SNYK-JS-LODASH-567746:
-    - '*':
-        reason: |
-          Reason: Lodash sortBy not exposed to user input;
-          attack path requires admin context which is separately
-          controlled. Verified in code review (PR #1234).
-        approved-by: alice@example.com
-        expires: '2026-12-15T00:00:00.000Z'
-        created: '2026-05-15T00:00:00.000Z'
-        re-review-date: '2026-09-15T00:00:00.000Z'
-```
-
-Cadence: every quarter, list `.snyk` policies grouped by
-`re-review-date` and process expired entries.
-
-## Step 6 - CI integration
+## Step 5 - CI integration
 
 ```yaml
 jobs:
@@ -158,7 +138,7 @@ jobs:
         with: { name: snyk-report, path: snyk.json }
 ```
 
-## Step 7 - Multi-language support
+## Step 6 - Multi-language support
 
 Per [sn-gh][sn-gh]: Snyk scans "Open Source (via package managers)",
 "Application code vulnerabilities", "Container images and Kubernetes
@@ -173,15 +153,29 @@ For unsupported / custom package managers, generate an SBOM and
 feed via `snyk test --file=sbom.cyclonedx.json` (post-2024 feature;
 verify against current docs).
 
+## Worked example
+
+A team with a Snyk license adds SCA to a mixed npm + Maven monorepo. In CI they
+run `snyk test --all-projects --severity-threshold=high
+--json-file-output=snyk.json`, which auto-detects both `package.json` and
+`pom.xml` and reports 3 high-severity findings. One is `SNYK-JS-LODASH-567746`
+in a `lodash` path that never receives user input. A reviewer verifies the
+attack path is unreachable, then adds a `.snyk` ignore with `reason:`,
+`approved-by:`, `expires: '2026-12-15...'`, and a `re-review-date`, so the next
+scan passes the `--severity-threshold=high` gate. `snyk monitor` runs on `main`
+to snapshot the dependency tree, and the team pairs the run with `osv-scanner`
+for cross-database consensus. The `.snyk` ignore resurfaces in the quarterly
+re-review grouped by `re-review-date`.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Run `snyk test` without `--severity-threshold` | Noise on first scan; team disables | Start `--severity-threshold=high` (Step 2) |
 | `.snyk` ignore without `expires` | Snyk policy rejects; OR debt persists forever | Mandatory `expires:` (Step 4) |
-| Skip `snyk monitor` on main branch | Newly-disclosed CVEs against pinned deps go undetected | Add to main-branch CI (Step 6) |
+| Skip `snyk monitor` on main branch | Newly-disclosed CVEs against pinned deps go undetected | Add to main-branch CI (Step 5) |
 | Run only Snyk; skip OSV | Single-DB blind spots | Pair with osv-scanner (cross-ref) |
-| Hardcode SNYK_TOKEN in scripts | Token leak | CI secret + redact (Step 6) |
+| Hardcode SNYK_TOKEN in scripts | Token leak | CI secret + redact (Step 5) |
 
 ## Limitations
 
@@ -198,6 +192,8 @@ verify against current docs).
 ## References
 
 - [sn-gh][sn-gh] - repository, install, basic commands
+- [references/snyk-policy-and-triage.md](references/snyk-policy-and-triage.md) -
+  `.snyk` policy schema, suppression layers, justification template, re-review cadence
 - docs.snyk.io - full documentation
 - docs.snyk.io/snyk-cli/commands/test - `snyk test` reference (when not 404'd)
 - snyk.io/security-rules - vuln database

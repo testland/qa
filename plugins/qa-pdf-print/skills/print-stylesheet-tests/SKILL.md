@@ -21,6 +21,24 @@ applied to PDF instead.
 - Pre-deploy gate: page breaks fall in the right places, headers
   don't get orphaned at page bottom.
 
+## How to use
+
+1. Load the printable page in Playwright and call
+   `page.emulateMedia({ media: 'print' })` to activate the print stylesheet.
+2. Assert screen-only chrome (nav, buttons) is hidden and print-only
+   content (legal footers) is visible under print media.
+3. Generate the PDF with `page.pdf()`, passing `preferCSSPageSize: true`
+   when CSS `@page` owns the page size.
+4. Assert page count for representative fixtures (standard invoice = 1
+   page, long invoice = 2) to catch overflow regressions.
+5. Extract text per page to prove `break-before` / `break-inside` rules
+   land chapter and section boundaries correctly.
+6. Set `printBackground: true` when branded headers or color fills must
+   appear in the customer-facing PDF.
+7. For letterhead margins and per-page geometry, pair with
+   `pdf-snapshot-tester` on the rendered page - see
+   [references/page-geometry.md](references/page-geometry.md).
+
 ## Step 1 - Test `@media print` selectors activate
 
 ```ts
@@ -119,53 +137,7 @@ test('each chapter starts on new page', async ({ page }) => {
 });
 ```
 
-## Step 6 - `@page :first` / `:left` / `:right` testing
-
-Per [MDN Paged Media], pseudo-class selectors target specific
-pages:
-
-```css
-@page :first {
-  margin-top: 5cm;
-  background: url(letterhead.png);
-}
-@page :left { margin-left: 3cm; margin-right: 2cm; }
-@page :right { margin-left: 2cm; margin-right: 3cm; }
-```
-
-```ts
-test('first page has letterhead margin', async ({ page }) => {
-  await page.goto('https://localhost:3000/contract/c001');
-  const pdf = await page.pdf({ format: 'A4', preferCSSPageSize: true });
-
-  // Render page 1 to image, look for letterhead at top
-  const page1 = await renderPdfPage(pdf, 1);
-  expect(await hasLetterhead(page1)).toBe(true);
-});
-```
-
-Pair with `pdf-snapshot-tester` for the rendered-page assertion.
-
-## Step 7 - Margin verification
-
-```ts
-test('PDF generated with 2cm margins', async ({ page }) => {
-  await page.goto('https://localhost:3000/letter');
-  const pdf = await page.pdf({
-    format: 'A4',
-    margin: { top: '2cm', right: '2cm', bottom: '2cm', left: '2cm' },
-  });
-
-  const margins = await getPdfMargins(pdf);
-  // Allow ±2mm rendering tolerance
-  expect(margins.top).toBeCloseTo(20, 0);
-});
-```
-
-Note: the Playwright `margin` API option overrides CSS `@page
-margin` unless `preferCSSPageSize: true`.
-
-## Step 8 - printBackground for branded headers
+## Step 6 - printBackground for branded headers
 
 By default `printBackground: false` - backgrounds (gradients,
 images) don't render. Customer-facing PDFs usually need
@@ -186,13 +158,35 @@ test('branded header background appears', async ({ page }) => {
 Per the [Playwright page.pdf docs]: `printBackground` defaults
 false.
 
+## Advanced @page geometry
+
+`@page :first` / `:left` / `:right` pseudo-class targeting and margin
+verification (including the CSS-vs-API `margin` precedence rule) are
+covered in [references/page-geometry.md](references/page-geometry.md).
+
+## Worked example
+
+Customers report a redesigned invoice prints with the totals table split
+across two pages, though it looks fine on screen.
+
+1. Point a Playwright test at `/invoice/long` and generate the PDF with
+   `page.pdf({ format: 'A4' })`.
+2. `getPdfPageCount(pdf)` returns `3`; the pre-redesign baseline test
+   asserted `toBe(2)`, so the count assertion fails and pins the regression.
+3. `extractTextPerPage(pdf)` shows the `table.totals` rows straddling the
+   page 2 / page 3 boundary - the redesign dropped `break-inside: avoid`.
+4. Re-add `@media print { table.totals { break-inside: avoid; } }` to the
+   stylesheet.
+5. Re-run: `getPdfPageCount` returns `2` and the totals text sits wholly on
+   page 2, so both the page-count and per-page-text assertions pass.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Test print stylesheet only by visually inspecting `page.pdf()` output | Regressions slip; not automated | Pair with `pdf-snapshot-tester` (Step 6) |
+| Test print stylesheet only by visually inspecting `page.pdf()` output | Regressions slip; not automated | Pair with `pdf-snapshot-tester` (see [references/page-geometry.md](references/page-geometry.md)) |
 | Skip `preferCSSPageSize` when CSS owns layout | API options override; CSS `@page` ignored | `preferCSSPageSize: true` (Step 3) |
-| Forget `printBackground: true` | Branded headers/colors missing in prod PDFs | Step 8 |
+| Forget `printBackground: true` | Branded headers/colors missing in prod PDFs | Step 6 |
 | Test only Chromium-rendered PDF | WeasyPrint / wkhtmltopdf differ; cross-engine bugs slip | `html-to-pdf-regression` skill covers cross-engine |
 | Hard-code page-break tests against pixel positions | Slight font tweaks invalidate | Test text content per page (Step 5) |
 
@@ -212,6 +206,8 @@ false.
 - [MDN Paged Media] - `@page`, page pseudo-classes, break properties
 - [Playwright page.pdf docs] - options, default print media,
   preferCSSPageSize, printBackground
+- [references/page-geometry.md](references/page-geometry.md) - `@page`
+  pseudo-classes and margin verification
 - `pdf-snapshot-tester` - sister
   skill for pixel-diff assertions on rendered PDF pages
 - `html-to-pdf-regression` - 

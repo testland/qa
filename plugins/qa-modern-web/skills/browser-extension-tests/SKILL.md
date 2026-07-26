@@ -21,6 +21,22 @@ bundled Chromium browser, not Chrome channel.
   routing).
 - Verifying `chrome.storage` reads/writes survive reload.
 
+## How to use
+
+1. Build the extension so `dist/` holds the MV3 `manifest.json`
+   (`manifest_version: 3`) and bundled `popup.html` / content scripts.
+2. Add the `tests/fixtures.ts` extension-loading fixture (Step 1) so every
+   test receives a persistent `context` and the resolved `extensionId`.
+3. Test the popup at `chrome-extension://${extensionId}/popup.html` and
+   content-script injection on matching page URLs (Steps 2-3).
+4. Cover background behavior - message passing, `chrome.storage`, and
+   service-worker auto-suspend - with
+   [references/advanced-recipes.md](references/advanced-recipes.md).
+5. Switch the fixture to the `chromium` channel with `headless: true` for
+   CI runs (Step 7).
+6. Run `npx playwright test`; consult the Anti-patterns table when the
+   extension fails to load or the service worker is missing.
+
 ## Step 1 - Test fixture for extension loading
 
 `tests/fixtures.ts`:
@@ -88,77 +104,13 @@ test('content script highlights matched terms', async ({ page }) => {
 });
 ```
 
-## Step 4 - Test message passing (popup ↔ background)
+## Steps 4-6 - Background, storage, and lifecycle recipes
 
-```ts
-test('popup sends message; background responds', async ({ context, extensionId }) => {
-  let [sw] = context.serviceWorkers();
-  if (!sw) sw = await context.waitForEvent('serviceworker');
-
-  // Eval in service worker context
-  const swReady = await sw.evaluate(() => {
-    return new Promise<string>((resolve) => {
-      chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-        sendResponse({ echo: msg.text });
-        return true;
-      });
-      resolve('ready');
-    });
-  });
-  expect(swReady).toBe('ready');
-
-  const popup = await context.newPage();
-  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
-
-  const reply = await popup.evaluate(async () => {
-    return chrome.runtime.sendMessage({ text: 'hello' });
-  });
-  expect(reply).toEqual({ echo: 'hello' });
-});
-```
-
-## Step 5 - Test `chrome.storage` persistence
-
-```ts
-test('storage value persists across popup reload', async ({ context, extensionId }) => {
-  const popup = await context.newPage();
-  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
-
-  await popup.evaluate(async () => {
-    await chrome.storage.local.set({ pref: 'dark' });
-  });
-  await popup.reload();
-
-  const value = await popup.evaluate(async () => {
-    const { pref } = await chrome.storage.local.get('pref');
-    return pref;
-  });
-  expect(value).toBe('dark');
-});
-```
-
-## Step 6 - Survive MV3 service-worker auto-suspend
-
-Per [Playwright Chrome extensions docs]: Chrome auto-suspends MV3
-service workers after ~30s of inactivity. Playwright keeps the same
-Worker object alive - `evaluate()` calls continue transparently
-without requiring new event handlers.
-
-```ts
-test('alarm survives service worker restart', async ({ context }) => {
-  let [sw] = context.serviceWorkers();
-  if (!sw) sw = await context.waitForEvent('serviceworker');
-
-  await sw.evaluate(() => chrome.alarms.create('hourly', { periodInMinutes: 60 }));
-
-  // Simulate idle
-  await new Promise(r => setTimeout(r, 35_000));
-
-  // Same sw object; evaluate still works post-restart
-  const alarms = await sw.evaluate(() => chrome.alarms.getAll());
-  expect(alarms.find((a: any) => a.name === 'hourly')).toBeDefined();
-});
-```
+Message passing (popup ↔ background), `chrome.storage` persistence across
+reload, and surviving MV3 service-worker auto-suspend (~30s) are covered as
+ready-to-paste recipes in
+[references/advanced-recipes.md](references/advanced-recipes.md). Each reuses
+the Step 1 fixture.
 
 ## Step 7 - Headless mode
 
@@ -173,6 +125,28 @@ const context = await chromium.launchPersistentContext('', {
   args: [...]
 });
 ```
+
+## Worked example
+
+Scenario: a "Reader" extension whose popup increments a counter and toggles a
+`pref` written to `chrome.storage`, with a content script that marks matched
+terms on visited pages.
+
+1. `npm run build` emits `dist/manifest.json` (`manifest_version: 3`) plus
+   `popup.html` and `content.js`.
+2. Add `tests/fixtures.ts` from Step 1; the `extensionId` fixture reads the SW
+   URL, e.g. `chrome-extension://abcdefghijklmnop/`.
+3. The popup test (Step 2) opens `chrome-extension://${extensionId}/popup.html`,
+   clicks `[data-testid="increment"]`, and asserts the count reads `1`.
+4. The content-script test (Step 3) visits `https://example.com/`, waits for the
+   injected marker, and asserts three `mark[data-extension-marker]` nodes.
+5. The storage recipe (Steps 4-6) sets `{ pref: 'dark' }`, reloads the popup,
+   and asserts the value survives.
+6. `npx playwright test` runs headed locally; CI reruns it with
+   `channel: 'chromium', headless: true` (Step 7).
+
+Result: a green run confirms popup rendering, content-script injection, and
+storage persistence across reload - the extension's core surfaces are covered.
 
 ## Anti-patterns
 

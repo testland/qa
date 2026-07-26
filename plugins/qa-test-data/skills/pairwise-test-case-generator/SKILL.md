@@ -40,6 +40,16 @@ If only one input has multiple values, use
 instead - boundary analysis is the right tool for single-input
 testing.
 
+## How to use
+
+1. Confirm the target takes 3+ interacting inputs whose Cartesian product exceeds ~100 tests.
+2. Pick a coverage strength (default 2-wise; go 3-wise only after a triplet bug slips through).
+3. Choose the reduction tool (default PICT; AllPairs for pytest-native, CATS for an in-process library).
+4. Author the input spec in YAML: each input's `name` and `values`, plus domain `constraints`.
+5. Run the tool to compute the reduced set and emit it in your runner's parametrize format.
+6. Read the coverage report - accept constraint-driven gaps, or raise strength for real uncovered pairs.
+7. Commit the spec to git as the source of truth; regenerate cases whenever a value or rule changes.
+
 ## Step 1 - Pick the coverage strength
 
 | Strength | Coverage                                                           |
@@ -99,74 +109,11 @@ domain - including them would generate tests for impossible states.
 
 ## Step 4 - Emit in the test-runner-native format
 
-### Pairwise CSV (PICT-style)
-
-```
-role,tier,feature,locale
-admin,free,api_access,en-US
-admin,starter,sso,ja-JP
-admin,pro,audit_log,de-DE
-admin,enterprise,custom_branding,ar-SA
-manager,free,api_access,fr-FR
-manager,starter,sso,pt-BR
-...
-```
-
-### pytest
-
-```python
-import pytest
-
-CASES = [
-    ("admin", "free", "api_access", "en-US"),
-    ("admin", "starter", "sso", "ja-JP"),
-    ("admin", "pro", "audit_log", "de-DE"),
-    # ... ~30 cases for 2-wise of the 4×4×5×6 space
-]
-
-@pytest.mark.parametrize("role,tier,feature,locale", CASES)
-def test_user_capability(role, tier, feature, locale):
-    result = check_capability(role=role, tier=tier, feature=feature, locale=locale)
-    assert result.allowed in (True, False)   # specific assertion per the business rules
-```
-
-### Jest / Vitest
-
-```javascript
-const cases = [
-  ['admin', 'free', 'api_access', 'en-US'],
-  ['admin', 'starter', 'sso', 'ja-JP'],
-  // ...
-];
-
-test.each(cases)(
-  'role=%s tier=%s feature=%s locale=%s',
-  (role, tier, feature, locale) => {
-    const result = checkCapability({ role, tier, feature, locale });
-    expect(typeof result.allowed).toBe('boolean');
-  }
-);
-```
-
-### xUnit (.NET)
-
-```csharp
-public static IEnumerable<object[]> Cases =>
-    new List<object[]>
-    {
-        new object[] { "admin",   "free",     "api_access",      "en-US" },
-        new object[] { "admin",   "starter",  "sso",             "ja-JP" },
-        // ...
-    };
-
-[Theory]
-[MemberData(nameof(Cases))]
-public void UserCapability(string role, string tier, string feature, string locale)
-{
-    var result = CheckCapability(role, tier, feature, locale);
-    Assert.IsType<bool>(result.Allowed);
-}
-```
+The reduced set is emitted in the runner's native parametrize format -
+PICT-style CSV, pytest `@pytest.mark.parametrize`, Jest / Vitest
+`test.each`, or xUnit `[Theory]` + `[MemberData]`. Copy-paste-ready
+snippets for each format:
+[references/output-formats.md](references/output-formats.md).
 
 ## Step 5 - Verify coverage
 
@@ -199,6 +146,21 @@ After generation, the skill emits a coverage report:
 
 The team reviews gaps; either accepts them (constraint-driven
 gap = OK) or escalates to 3-wise.
+
+## Worked example
+
+A capability check takes four inputs: `role` (4 values), `tier` (4),
+`feature` (5), and `locale` (6). The Cartesian product is
+4 × 4 × 5 × 6 = 480 tests - too many to author or run per commit.
+
+Author the spec with the two paid-only constraints, set `strength: 2`,
+and run PICT. It returns ~30 cases covering every value pair, with the
+8 impossible `tier=free` × {`sso`, `audit_log`} combinations
+suppressed. The coverage report confirms 100% pair coverage on five of
+the six input pairs and flags the two constraint-driven gaps (e.g.
+`role=read_only` × `tier=free`) for review. Result: interaction
+coverage from 30 tests instead of 480, checked into git as the
+parametrize table.
 
 ## Anti-patterns
 

@@ -24,6 +24,22 @@ not a single tool.
   - Quartz (Java)
   - Hangfire (.NET)
 
+## How to use
+
+1. List every time-scheduled job in scope (crontab, Kubernetes CronJob,
+   BullMQ repeat, Sidekiq, APScheduler, Quartz, Hangfire).
+2. Validate each cron expression with `croniter` (or a language-native
+   validator), parametrizing known-good and known-bad expressions (Step 1).
+3. For any job near a DST transition or a leap day, compute next-run times
+   with `croniter` against `zoneinfo` and assert them (Step 2).
+4. Decide and test the missed-execution policy for downtime - Unix drop, k8s
+   `startingDeadlineSeconds`, BullMQ drop (Step 3).
+5. Add overlap and stale-lock protection with a lock, and test both (Steps
+   4 - 5, [references/lock-patterns.md](references/lock-patterns.md)).
+6. Assert timezone semantics explicitly via `croniter(..., tz=...)` or k8s
+   `.spec.timeZone` (Step 6).
+7. Run the end-to-end recipe checklist per job and wire it into CI (Step 7).
+
 ## Step 1 - Validate the cron expression
 
 The 5-field standard:
@@ -124,57 +140,18 @@ CI to verify CronJob behavior.
 
 ## Step 4 - Overlapping-run protection
 
-If a 03:00 cron job runs longer than expected and 04:00 schedule
-fires before it finishes, what happens?
-
-- **Unix cron**: both run concurrently. The 03:00 job and the 04:00
-  job execute in parallel.
-- **Kubernetes CronJobs**: `.spec.concurrencyPolicy: Forbid` blocks
-  the 04:00 run; `Allow` (default) lets it run; `Replace` kills the
-  03:00 run.
-- **BullMQ**: depends on worker concurrency; multiple workers
-  process repeat-jobs in parallel by default.
-
-**Test pattern (lock-based):**
-
-```python
-import fcntl, sys
-
-def acquire_lock(lock_file):
-    fp = open(lock_file, 'w')
-    try:
-        fcntl.flock(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError:
-        sys.exit(0)   # previous run still active; skip
-    return fp
-
-def test_lock_prevents_overlap(tmp_path):
-    lock_file = tmp_path / "job.lock"
-    fp1 = acquire_lock(str(lock_file))
-    # While fp1 holds the lock, second acquire should sys.exit(0):
-    with pytest.raises(SystemExit):
-        acquire_lock(str(lock_file))
-```
+If a long-running job overlaps its next scheduled run, both may execute in
+parallel (Unix cron), a concurrency policy may block / replace the new run
+(Kubernetes `.spec.concurrencyPolicy`), or workers may process repeat-jobs in
+parallel (BullMQ). Guard it with a lock. Per-scheduler semantics and the
+`fcntl` lock test pattern are in
+[references/lock-patterns.md](references/lock-patterns.md).
 
 ## Step 5 - Stale-lock recovery
 
-A long-held lock from a crashed job blocks all future runs. Test
-pattern:
-
-```python
-def test_stale_lock_age_check(tmp_path):
-    lock_file = tmp_path / "job.lock"
-    lock_file.touch()
-
-    # Set mtime to 25h ago (job should have completed by then):
-    old_time = time.time() - 25 * 3600
-    os.utime(lock_file, (old_time, old_time))
-
-    # Recovery: detect stale lock, remove, re-acquire
-    if lock_file.stat().st_mtime < time.time() - 24 * 3600:
-        lock_file.unlink()
-        # Now acquire fresh lock → should succeed
-```
+A long-held lock from a crashed job blocks all future runs. Detect it with a
+time-based staleness check, remove it, and re-acquire. Test pattern in
+[references/lock-patterns.md](references/lock-patterns.md).
 
 ## Step 6 - Timezone semantics
 
@@ -203,6 +180,25 @@ For each cron job in scope:
 6. ✅ Timezone is explicit, not implicit (Step 6)
 7. ✅ Job idempotency is verified (cross-ref `idempotency-test-author`)
 8. ✅ Job logs include cron-expression context for debugging
+
+## Worked example
+
+A daily digest email is scheduled `0 2 * * *` in US/Eastern - the exact 02:00
+window that spring-forward DST removes. Three tests lock it down:
+
+1. Expression validity - `croniter.is_valid("0 2 * * *")` returns True
+   (Step 1).
+2. DST safety - on the 2026 spring-forward date (Mar 8) the 02:00 hour does
+   not exist, so `croniter("0 2 * * *", base).get_next(datetime)` from
+   `2026-03-08 01:00 US/Eastern` returns 03:00 EDT at a -4h offset; the missing
+   hour is skipped, not fired twice (Step 2).
+3. Overlap safety - the job takes an `fcntl` lock, and
+   `test_lock_prevents_overlap` asserts a second concurrent acquire exits
+   ([references/lock-patterns.md](references/lock-patterns.md)).
+
+The suite proves the schedule is valid, survives the DST gap without zero- or
+double-firing, and cannot overlap itself. The follow-up action is to move the
+schedule to UTC so the DST window never applies (Step 2 recommendation).
 
 ## Anti-patterns
 

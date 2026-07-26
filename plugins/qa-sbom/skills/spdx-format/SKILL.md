@@ -36,6 +36,23 @@ to generate SPDX-format SBOMs.
 For security-focused use cases, `cyclonedx-format`
 has richer first-class vuln support.
 
+## How to use
+
+1. Confirm the consumer requires SPDX (federal procurement, Linux
+   Foundation, or license-compliance focus) - see When to use.
+2. Generate SPDX 2.3 with `syft` or `anchore/sbom-action`
+   (`format: spdx-json`) - Step 7 / references tooling.
+3. Confirm the required fields (`spdxVersion`, `dataLicense`,
+   `documentNamespace`, `creationInfo`, `packages[]`, at least one
+   DESCRIBES relationship) - Step 2.
+4. Express licenses with SPDX IDs; use `LicenseRef-` for custom
+   licenses - Step 3.
+5. Encode dependency edges in `relationships[]` (DESCRIBES +
+   DEPENDS_ON) - Step 4.
+6. Validate:
+   `pyspdxtools --infile sbom.spdx.json --version SPDX-2.3` - Step 6.
+7. Upload the validated SBOM as a CI artifact - Step 7.
+
 ## Step 1 - SPDX 2.3 top-level structure (JSON)
 
 ```json
@@ -130,13 +147,13 @@ CycloneDX's `dependencies[]`):
 
 | RelationshipType | Use |
 |---|---|
-| `DESCRIBES` / `DESCRIBED_BY` | Document ↔ top-level package |
+| `DESCRIBES` / `DESCRIBED_BY` | Document to top-level package |
 | `DEPENDS_ON` / `DEPENDENCY_OF` | Compile-time / runtime dep |
 | `BUILD_DEPENDENCY_OF` | Build-only dep |
 | `DEV_DEPENDENCY_OF` | Test/dev-only dep |
 | `RUNTIME_DEPENDENCY_OF` | Runtime-only dep |
 | `OPTIONAL_DEPENDENCY_OF` | Optional dep |
-| `CONTAINS` / `CONTAINED_BY` | Container ↔ contained file/package |
+| `CONTAINS` / `CONTAINED_BY` | Container to contained file/package |
 | `GENERATED_FROM` | Source-of-build |
 | `STATIC_LINK` / `DYNAMIC_LINK` | Linkage type |
 
@@ -168,38 +185,11 @@ Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package-myapp
 JSON is preferred for new toolchains; Tag-Value persists for legacy
 integrations.
 
-## Step 6 - SPDX 3.0 profiles
+SPDX 3.0 profiles and the SPDX tooling landscape are cataloged in
+[references/spdx3-profiles-and-tooling.md](references/spdx3-profiles-and-tooling.md);
+for most teams, stay on SPDX 2.3 unless 3.0 features are required.
 
-SPDX 3.0 (2024 release) restructures into composable profiles:
-
-| Profile | Use |
-|---|---|
-| `core` | Minimum BOM model |
-| `software` | Software-specific extensions (≈ SPDX 2.3 packages) |
-| `licensing` | License identification + expressions |
-| `security` | Vulnerability + VEX statements |
-| `ai` | AI/ML models, datasets, hyperparameters |
-| `dataset` | Dataset-specific metadata |
-| `build` | Build provenance (similar to in-toto attestations) |
-
-JSON-LD is the primary encoding; tooling support is growing but
-less mature than 2.3 as of 2026.
-
-For most teams, **stay on SPDX 2.3 unless 3.0 features are required** - 2.3 has broader tooling.
-
-## Step 7 - Tooling
-
-| Tool | Use |
-|---|---|
-| `syft` | Generates SPDX 2.3 (JSON / Tag-Value); cross-source |
-| `spdx-tools` | Reference impl (Python); validation + conversion |
-| `spdx-tools-java` | Java reference impl |
-| `ORT` (OSS Review Toolkit) | License compliance scanning + SPDX reporting |
-| `spdx-sbom-generator` | Per-language native generation |
-| `tern` | Container image SPDX generation |
-| `Trivy` | Cross-purpose scanner with SPDX output |
-
-## Step 8 - Validation
+## Step 6 - Validation
 
 ```bash
 # Python spdx-tools
@@ -211,7 +201,7 @@ pyspdxtools --infile sbom.spdx.json --version SPDX-2.3
 # Upload to https://tools.spdx.org/app/
 ```
 
-## Step 9 - CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -232,12 +222,35 @@ jobs:
           path: sbom.spdx.json
 ```
 
+## Worked example
+
+A team must deliver an SPDX 2.3 SBOM to a US Federal procurement
+consumer for an app that bundles one proprietary component:
+
+1. Generates via Syft in CI: `anchore/sbom-action` with
+   `format: spdx-json`, producing `sbom.spdx.json` with
+   `spdxVersion: "SPDX-2.3"`, `dataLicense: "CC0-1.0"`, and a unique
+   `documentNamespace`.
+2. The app package uses a non-standard license, so the team declares
+   it via `hasExtractedLicensingInfos` and sets
+   `licenseConcluded: "LicenseRef-AcmeProprietary"` (Step 3); every
+   third-party package keeps its standard SPDX ID (`MIT`, etc.).
+3. Adds `relationships[]`: `SPDXRef-DOCUMENT DESCRIBES` the app
+   package, and the app `DEPENDS_ON` each dependency (Step 4).
+4. Validates:
+   `pyspdxtools --infile sbom.spdx.json --version SPDX-2.3` -
+   structural + license-expression checks pass.
+
+Result: a validated SPDX 2.3 JSON SBOM whose custom license resolves
+cleanly and whose relationship graph satisfies the federal consumer's
+format requirement.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Skip `documentNamespace` | Can't deduplicate across BOM revisions | Generate unique URI per BOM |
-| Use SPDX 3.0 with consumer expecting 2.3 | Tooling incompat | Stick to SPDX 2.3 unless 3.0 required (Step 6) |
+| Use SPDX 3.0 with consumer expecting 2.3 | Tooling incompat | Stick to SPDX 2.3 unless 3.0 required (see references) |
 | Manual license assignment without `LicenseRef-` for custom | License-expression validation fails | Use proper SPDX license ID or `LicenseRef-` (Step 3) |
 | Skip `relationships[]` (just packages) | No dep-graph; downstream tools degrade | Always include DESCRIBES + DEPENDS_ON (Step 4) |
 | Mix Tag-Value + JSON in same workflow | Toolchain confusion | Pick one format per workflow (Step 5) |
@@ -255,6 +268,7 @@ jobs:
 ## References
 
 - [spdx-spec][spdx-spec] - official specification
+- [references/spdx3-profiles-and-tooling.md](references/spdx3-profiles-and-tooling.md) - SPDX 3.0 profiles + tooling landscape
 - spdx.dev - landing
 - spdx.org/licenses - license ID list
 - iso.org/standard/81870.html - ISO/IEC 5962:2021 (SPDX 2.2.1

@@ -19,6 +19,15 @@ per the [MQTT v5.0 spec].
   retained-message + LWT setup right.
 - Smoke test new broker config (auth, ACL, persistence).
 
+## How to use
+
+1. Stand up an `eclipse-mosquitto:2` broker as a CI service on port 1883 with a persistence-enabled config (Step 1).
+2. Wire a paho-mqtt v5 client with `callback_api_version=VERSION2` (Step 2).
+3. Exercise the QoS matrix - assert QoS 1 redelivers buffered messages to a reconnecting `clean_start=False` session (Step 3).
+4. Verify a retained message reaches a late subscriber, then clear it with an empty retained payload (Step 4).
+5. Cover the advanced broker behaviors - LWT on abnormal disconnect, shared-subscription round-robin, and `$SYS` diagnostics ([references/lwt-shared-subs-sys.md](references/lwt-shared-subs-sys.md)).
+6. Use a unique `client_id` per test and clean up retained state between runs (Anti-patterns).
+
 ## Step 1 - Run Mosquitto broker in CI
 
 ```yaml
@@ -141,103 +150,28 @@ def test_retained_message_delivered_to_late_subscriber():
 
 To clear: publish empty payload with `retain=True`.
 
-## Step 5 - Last Will and Testament (LWT)
+## LWT, shared subscriptions, and $SYS introspection
 
-Per the [MQTT v5.0 spec], "When clients disconnect abnormally,
-servers automatically publish predetermined messages to notify other
-clients of unavailability."
+See [references/lwt-shared-subs-sys.md](references/lwt-shared-subs-sys.md)
+for Last Will and Testament on abnormal disconnect, shared-subscription
+round-robin (`$share/<group>/<topic>`), and `$SYS` broker-diagnostics
+tests.
 
-```python
-def test_lwt_published_on_abnormal_disconnect():
-    # Subscriber listens for status updates
-    received = []
-    monitor = mqtt.Client(client_id="monitor", protocol=mqtt.MQTTv5,
-                           callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-    monitor.on_message = lambda c, u, msg: received.append(msg.payload)
-    monitor.connect("localhost", 1883)
-    monitor.subscribe("device/+/status", qos=1)
-    monitor.loop_start()
+## Worked example
 
-    # Device sets LWT then crashes
-    device = mqtt.Client(client_id="device-1", protocol=mqtt.MQTTv5,
-                          callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-    device.will_set("device/1/status", "offline", qos=1, retain=False)
-    device.connect("localhost", 1883)
-    device.publish("device/1/status", "online", qos=1, retain=True).wait_for_publish()
-    # Simulate crash (no clean disconnect)
-    device._sock.close()
+A sensor gateway publishes temperature to `sensors/temp` at QoS 1. QA
+needs to confirm a subscriber that drops offline still receives messages
+published during the outage.
 
-    time.sleep(3)  # broker keepalive timeout
-    monitor.disconnect()
-    monitor.loop_stop()
+1. Connect a subscriber with `clean_start=False` and subscribe to `sensors/temp` at QoS 1 (Step 3).
+2. Disconnect the subscriber to simulate an outage.
+3. From a separate publisher, `publish("sensors/temp", "22.5", qos=1).wait_for_publish()`.
+4. Reconnect the subscriber with `reconnect()` and pump the loop for ~2s.
+5. Assert `b"22.5" in received` - the broker delivered the buffered QoS 1 message on reconnect.
 
-    assert b"offline" in received
-```
-
-## Step 6 - Shared subscriptions ($share/...)
-
-Per the [MQTT v5.0 spec], shared subscriptions distribute messages
-among group members rather than broadcasting:
-
-```
-$share/<groupname>/<topic-filter>
-```
-
-```python
-def test_shared_subscription_round_robin():
-    received_a = []
-    received_b = []
-    sub_a = mqtt.Client(client_id="sub-a", protocol=mqtt.MQTTv5,
-                         callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-    sub_b = mqtt.Client(client_id="sub-b", protocol=mqtt.MQTTv5,
-                         callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-    sub_a.on_message = lambda c, u, msg: received_a.append(msg.payload)
-    sub_b.on_message = lambda c, u, msg: received_b.append(msg.payload)
-
-    sub_a.connect("localhost", 1883); sub_a.subscribe("$share/workers/jobs", qos=1); sub_a.loop_start()
-    sub_b.connect("localhost", 1883); sub_b.subscribe("$share/workers/jobs", qos=1); sub_b.loop_start()
-    time.sleep(0.5)
-
-    pub = mqtt.Client(client_id="pub", protocol=mqtt.MQTTv5,
-                       callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-    pub.connect("localhost", 1883)
-    for i in range(10):
-        pub.publish("jobs", f"job-{i}", qos=1).wait_for_publish()
-    pub.disconnect()
-    time.sleep(1)
-
-    sub_a.disconnect(); sub_a.loop_stop()
-    sub_b.disconnect(); sub_b.loop_stop()
-
-    # Each got some, neither got all
-    assert 0 < len(received_a) < 10
-    assert 0 < len(received_b) < 10
-    assert len(received_a) + len(received_b) == 10
-```
-
-## Step 7 - $SYS topic introspection
-
-Per the [MQTT v5.0 spec], `$SYS/...` reserved topics provide broker
-diagnostics. Useful for monitoring tests:
-
-```python
-def test_broker_reports_connected_clients():
-    received = []
-    monitor = mqtt.Client(client_id="monitor", protocol=mqtt.MQTTv5,
-                           callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-    monitor.on_message = lambda c, u, msg: received.append((msg.topic, msg.payload))
-    monitor.connect("localhost", 1883)
-    monitor.subscribe("$SYS/broker/clients/connected", qos=0)
-    monitor.loop_start()
-    time.sleep(15)  # $SYS update interval default = 10s
-    monitor.disconnect()
-    monitor.loop_stop()
-
-    assert any(b for _, b in received if int(b) >= 1)
-```
-
-`$SYS/...` topic set varies per broker - Mosquitto + EMQX + HiveMQ
-each publish slightly different metrics.
+Result: offline-session persistence is verified end to end. Had the test
+used `clean_start=True`, the broker would have discarded the session and
+the message would have been lost - the exact regression this test guards.
 
 ## Anti-patterns
 
@@ -245,7 +179,7 @@ each publish slightly different metrics.
 |---|---|---|
 | Test only QoS 0 ("works on my machine") | QoS 1/2 redelivery bugs ship | Step 3 covers matrix |
 | Use `clean_start=True` then expect persistence | Broker discards session; QoS 1 buffer lost | `clean_start=False` (Step 3) |
-| Skip LWT test | Stale "online" status persists when clients crash | Step 5 |
+| Skip LWT test | Stale "online" status persists when clients crash | LWT reference |
 | Hardcode same `client_id` across tests | Broker disconnects existing on connect; flake | Unique `client_id` per test |
 | Forget retained-message cleanup | Subsequent test runs see stale state | Publish empty retained payload between tests |
 

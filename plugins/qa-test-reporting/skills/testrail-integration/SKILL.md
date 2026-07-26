@@ -36,6 +36,23 @@ JavaScript `testrail-api`).
   back to the automated test (via custom case ID labels in test
   names / annotations).
 
+## How to use
+
+1. Confirm the team's test management is standalone TestRail; generate a
+   per-user API key (My Settings > API Keys) and set host / user / key.
+2. Authenticate every request with HTTP Basic auth,
+   `base64(email:api_key)` (Step 1).
+3. Tag each automated test with its TestRail case ID - embedded in the test
+   name (`C1234`) or via an annotation (Step 2).
+4. Open a Test Run scoped to the covered cases: `add_run` with
+   `include_all: false` + explicit `case_ids` (Step 3).
+5. Map the framework's pass/fail/skip to TestRail status IDs and batch the
+   results back with `add_results_for_cases` - one POST, not N (Step 4).
+6. Optionally close the run on `main` (Step 5), then wire the whole thing as
+   an `if: always()` CI step - full workflow, per-result fields, and
+   untested-case handling in
+   [references/ci-and-fields.md](references/ci-and-fields.md).
+
 ## Step 1 - Authentication
 
 TestRail uses HTTP Basic auth with **email + API key** (preferred
@@ -156,17 +173,10 @@ def add_results(run_id, results):
 TestRail's rate limit (180 req/min on shared cloud) makes per-case
 posting flaky.
 
-Common per-result fields:
-
-| Field        | Use                                                    |
-|--------------|--------------------------------------------------------|
-| `case_id`    | Required. The TestRail case ID.                        |
-| `status_id`  | Required. Per the convention above.                    |
-| `comment`    | The test framework's failure message + stack trace.    |
-| `elapsed`    | Format: `'1h 30m 45s'` or `'45s'`. Optional.           |
-| `version`    | Build version / commit SHA. Searchable in the UI.      |
-| `defects`    | Comma-separated Jira / GitHub issue keys.               |
-| `assignedto_id` | Auto-assign failures to a specific user.            |
+Each result entry accepts `case_id` + `status_id` (both required),
+plus optional `comment`, `elapsed`, `version`, `defects`, and
+`assignedto_id`. The full per-result field list is in
+[references/ci-and-fields.md](references/ci-and-fields.md).
 
 ## Step 5 - Close the run
 
@@ -180,49 +190,45 @@ def close_run(run_id):
 Closed runs are read-only - no further results can be added. Useful
 for release-stamp runs; skip for runs that get re-run.
 
-## Step 6 - Wire into a CI pipeline
+## Step 6 - Operating in CI
 
-```yaml
-- name: Run tests
-  run: npm test -- --reporters=jest-junit
-  env:
-    JEST_JUNIT_OUTPUT_FILE: junit.xml
+Run the sync as an `if: always()` step after the test step so failed
+runs still update TestRail. The script parses `junit.xml`
+(`junit-xml-analysis`), extracts case IDs (Step 2), opens a run scoped
+to the covered cases (Step 3), batches results (Step 4), and optionally
+closes the run on `main` only (Step 5). Supply `TESTRAIL_HOST` /
+`TESTRAIL_USER` / `TESTRAIL_API_KEY` from CI secrets. The full GitHub
+Actions workflow, the per-result field list, and handling for tests that
+carry no case ID are in
+[references/ci-and-fields.md](references/ci-and-fields.md).
 
-- name: Sync to TestRail
-  if: always()
-  env:
-    TESTRAIL_HOST: ${{ secrets.TESTRAIL_HOST }}
-    TESTRAIL_USER: ${{ secrets.TESTRAIL_USER }}
-    TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-    TESTRAIL_PROJECT_ID: '42'
-    TESTRAIL_SUITE_ID: '7'
-    BUILD_VERSION: ${{ github.sha }}
-  run: python scripts/testrail_sync.py junit.xml
+## Worked example
+
+A Jest suite syncing one build to TestRail project `42`, suite `7`:
+
+1. Tests carry the case ID in the name (Step 2, Pattern A):
+   `test('can add to cart [C1234]', ...)`.
+2. Export credentials and run the suite to JUnit XML:
+
+```bash
+export TESTRAIL_HOST=https://acme.testrail.io
+export TESTRAIL_USER=ci@acme.com
+export TESTRAIL_API_KEY=...            # My Settings > API Keys
+npm test -- --reporters=jest-junit
 ```
 
-The sync script:
-
-1. Parses `junit.xml` (see `junit-xml-analysis`).
-2. Extracts case IDs from test names (Step 2).
-3. Opens a run named `<branch> · <sha-short>` (Step 3).
-4. Batches results (Step 4).
-5. Optionally closes the run (Step 5) - typically only on `main`.
-
-## Step 7 - Handling untested case IDs
-
-Tests that have no TestRail case ID (case removed; new test;
-intentional sync-skip) need explicit handling:
+3. The sync script opens a run scoped to the covered cases, then batches
+   the results:
 
 ```python
-unmapped = [t for t in tests if extract_case_id(t['name']) is None]
-if unmapped:
-    print(f"Warning: {len(unmapped)} tests have no TestRail case ID:")
-    for t in unmapped:
-        print(f"  - {t['name']}")
+run_id = open_run(42, 7, "main · a1b2c3d", [1234])   # returns the Run ID
+add_results(run_id, [
+    {'case_id': 1234, 'status_id': 1, 'comment': 'green on CI', 'elapsed': '12s'},
+])
 ```
 
-Don't silently drop unmapped tests - they're candidates for either
-new TestRail cases or naming-pattern fixes.
+Open the run in TestRail to see `C1234` marked Passed with the `12s`
+elapsed time. Close the run (Step 5) only when this is the `main` build.
 
 ## Anti-patterns
 
@@ -265,6 +271,9 @@ new TestRail cases or naming-pattern fixes.
   stable shapes documented across multiple TestRail versions and
   the per-language client libraries (`testrail` Python,
   `testrail-api` JS).
+- [references/ci-and-fields.md](references/ci-and-fields.md) - the full
+  per-result field list, the end-to-end CI workflow, and untested-case
+  handling.
 - `junit-xml-analysis` - 
   upstream parser for the input the sync script consumes.
 - `xray-integration`,

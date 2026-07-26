@@ -23,6 +23,15 @@ This skill verifies the app uses the right format per locale.
 - A bug report says "the date is in the wrong format."
 - Pre-release: scheduled locale-format check.
 
+## How to use
+
+1. Identify the formatting library the app uses (Step 1); prefer Intl APIs that delegate to CLDR.
+2. Fix the expected date, number, and currency strings per target locale from CLDR (Steps 2-4, Step 8).
+3. Author tests asserting the rendered date / number / currency per locale (Step 5).
+4. Add timezone assertions so timestamps render in the user's timezone (Step 6).
+5. Run the tests across the full locale matrix in CI (Step 7).
+6. Trace any failure back to CLDR conventions, not hand-coded assumptions.
+
 ## Step 1 - Identify the formatting library
 
 | Stack          | Library                                                |
@@ -157,6 +166,18 @@ For verification, consult the CLDR data at `cldr.unicode.org/`.
 The format conventions in this skill come from CLDR; the actual
 expected strings should be derived from CLDR per locale, not
 hand-coded.
+
+## Worked example
+
+A de-DE user reports the order total renders as `$1,234.56` - US grouping with a
+leading dollar sign. The expected de-DE rendering (Step 4) is `1.234,56 €`.
+
+Author a Playwright test (Step 5): `goto('/orders/123?lng=de-DE')` and assert
+`order-total` reads `1.234,56 €`; add a `ja-JP` case asserting `¥1,235` (no
+decimals) and a `hi-IN` case asserting `12,34,567` (Indian lakh grouping). Run
+the matrix in CI (Step 7). The de-DE case fails because the app hand-coded a
+universal `1,234.56` grouping. Replacing the format call with `Intl.NumberFormat`
+(Step 1) makes all three locales pass.
 
 ## Anti-patterns
 

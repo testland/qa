@@ -21,6 +21,22 @@ for state-transition logic.
   transitions (e.g., is "Closed" appropriate before verification?).
 - Onboarding a tester to the canonical defect vocabulary.
 
+## How to use
+
+1. Read the defect's current tracker state and map it to a canonical
+   state via [references/tracker-vocabulary-map.md](references/tracker-vocabulary-map.md).
+2. Find that canonical state in the allowed-transitions table.
+3. Check the proposed next state is in the allowed set; if it matches
+   a forbidden transition (New -> Closed, Fixed -> Closed without
+   Verified), flag it.
+4. Apply the guardrails (triage SLA, verification gate, reopen audit,
+   duplicate / deferred linking) before recording the move.
+5. Confirm ISTQB term usage is correct (fault vs failure) in the
+   report wording.
+6. Record the transition; for Duplicate / Deferred / Rejected attach
+   the required link or reason.
+7. For metrics, count Reopened separately from New inflow.
+
 ## ISTQB terms - error, fault, defect, failure, anomaly
 
 Per the ISTQB Glossary
@@ -132,32 +148,11 @@ states. Cite by stable ID; full text behind iso.org paywall.
 
 ## Tracker-vocabulary map
 
-The canonical lifecycle maps to platform-specific terminology:
-
-| ISTQB / IEEE | Jira (default workflow) | Linear (default workflow) | GitHub Issues (default + Projects) |
-|---|---|---|---|
-| New | To Do | Backlog | Open + label `triage` |
-| Open | In Triage (custom) | Todo | Open + label `confirmed` |
-| Assigned | (Assignee set) | In Progress + assignee | Open + assignee |
-| In Progress | In Progress | In Progress | Open + linked PR draft |
-| Fixed | In Review | In Review | Open + linked PR ready |
-| Verified | Done (pre-release) | Done | Closed (PR merged) - but often kept Open until verified |
-| Closed | Done | Done | Closed |
-| Reopened | Reopened | Reopened (custom) | Reopened |
-| Deferred | Won't Do (deferred subtype) | Cancelled (with reason) | Closed not-planned |
-| Rejected | Won't Do / Cannot Reproduce | Cancelled with reason | Closed not-planned + label `not-a-bug` |
-| Duplicate | Resolved as Duplicate (link to canonical) | Cancelled with `Duplicate of:` link | Closed + comment `Duplicate of #N` |
-
-Per the platform docs (Atlassian "Issue workflow", Linear "Workflow
-states", GitHub "Issue templates"):
-
-- Jira workflow is **fully configurable** - the table reflects the
-  default Software project template.
-- Linear workflow states are **fixed enums** (Backlog, Todo, In
-  Progress, In Review, Done, Cancelled) but each can be subdivided
-  per team.
-- GitHub Issues has only **Open / Closed** as states; richer
-  lifecycle requires Projects (status column) + labels.
+The canonical lifecycle maps to platform-specific terminology across
+Jira, Linear, and GitHub Issues, with per-platform notes on how
+configurable each tracker's states are. See the full cross-platform
+table in
+[references/tracker-vocabulary-map.md](references/tracker-vocabulary-map.md).
 
 ## Recommended state-transition guardrails
 
@@ -170,6 +165,24 @@ The platform-workflow skills enforce these:
 | Reopen audit | Reopened transitions are tracked; >3 reopens on the same defect signals fix-quality issues |
 | Deferred review | Deferred items reviewed at sprint planning; auto-expire to Closed (wontfix) after N sprints |
 | Duplicate linking | Duplicate transitions require `duplicate_of:` link to canonical |
+
+## Worked example
+
+A Jira ticket sits in **In Review** and a developer wants to drag it
+straight to **Done**.
+
+1. Map the tracker state: In Review -> canonical **Fixed** (per
+   [references/tracker-vocabulary-map.md](references/tracker-vocabulary-map.md));
+   Done -> canonical **Closed**.
+2. The requested move is therefore Fixed -> Closed.
+3. Check the allowed-transitions table: Fixed allows only **Verified**
+   or **Reopened**. Fixed -> Closed is a forbidden transition ("Fixed
+   -> Closed without Verified").
+4. Apply the verification gate guardrail: a tester must confirm the
+   fix first, moving it to Verified.
+
+Result: block the drag to Done, route the ticket to a QA verification
+step, and only allow Verified -> Closed once the fix is confirmed.
 
 ## Anti-patterns
 

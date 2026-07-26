@@ -46,6 +46,20 @@ threshold-and-measurement requirements that don't fit Gherkin's shape.
 - A non-functional regression is being added to a release plan and
   needs a measurable baseline.
 
+## How to use
+
+1. Confirm functional requirements are already covered by
+   `acceptance-criteria-extractor`; this skill takes everything else.
+2. Scan the doc family-by-family for the Step 1 signal phrases.
+3. For each signal, run the Step 2 testability test: does it have a
+   threshold, a measurement source, and a scope?
+4. Rewrite each testable signal as a threshold-bound assertion; never
+   invent a missing number - flag it as a threshold gap instead.
+5. Map each NFR to its canonical measurement source per Step 3
+   ([references/measurement-sources.md](references/measurement-sources.md)).
+6. Emit the Output-format tables plus a "Threshold gaps (HUMAN INPUT
+   REQUIRED)" list, and return it to the author for confirmation.
+
 ## Step 1 - Scan the doc for each NFR family
 
 Per family, look for the canonical signal phrases:
@@ -89,65 +103,17 @@ target p95? Common defaults: 2.5s for landing, 1.5s for cached,
 
 ## Step 3 - Map to canonical measurement sources
 
-Each NFR must name **how** it's measured. Canonical sources by family:
+Each NFR must name **how** it's measured. Look up the canonical source for
+its family in [references/measurement-sources.md](references/measurement-sources.md),
+which catalogs sources for Performance (Web Vitals, k6), Accessibility
+(WCAG 2.2, axe-core), Security (OWASP ASVS, ZAP), Compatibility (MDN,
+Can I use), Reliability (Google SRE Workbook), and Internationalization
+(W3C i18n, Unicode CLDR).
 
-### Performance
-
-| Metric                 | Source                                                              |
-|------------------------|---------------------------------------------------------------------|
-| LCP (Largest Contentful Paint) | Web Vitals (Google) - page-load perception              |
-| INP (Interaction to Next Paint) | Web Vitals - replaces FID since March 2024              |
-| CLS (Cumulative Layout Shift)  | Web Vitals                                                  |
-| p95 / p99 latency       | k6 / JMeter / Gatling / load-test runner                          |
-| Throughput              | Same load-test runners                                              |
-
-Web Vitals canonical thresholds: **LCP ≤2.5s**, **INP ≤200ms**,
-**CLS ≤0.1**.
-
-### Accessibility
-
-| Standard           | Source                                                    |
-|--------------------|-----------------------------------------------------------|
-| WCAG 2.2 AA / AAA  | https://www.w3.org/TR/WCAG22/                              |
-| ARIA practices     | https://www.w3.org/WAI/ARIA/apg/                          |
-| Tools              | axe-core, pa11y, Lighthouse a11y, IBM Equal Access, WAVE  |
-
-Per-criterion citations use the WCAG SC ID format
+Load-bearing defaults - Web Vitals: **LCP ≤2.5s**, **INP ≤200ms**,
+**CLS ≤0.1**. Per-criterion a11y citations use the WCAG SC ID format
 (`WCAG 2.2 SC 1.4.3 Contrast (Minimum)`) so the test report
 back-references the standard.
-
-### Security
-
-| Standard           | Source                                                    |
-|--------------------|-----------------------------------------------------------|
-| OWASP Top 10        | https://owasp.org/www-project-top-ten/                   |
-| OWASP ASVS         | https://owasp.org/www-project-application-security-verification-standard/ |
-| CWE                | https://cwe.mitre.org/                                    |
-| Tools              | ZAP / Burp / Snyk / Trivy / Semgrep                        |
-
-### Compatibility
-
-| Source                                        |
-|-----------------------------------------------|
-| MDN browser-compat-data (https://github.com/mdn/browser-compat-data) |
-| Can I use (https://caniuse.com/)              |
-| Per-team analytics (real device share)        |
-
-### Reliability
-
-| Concept                         | Source                                              |
-|---------------------------------|-----------------------------------------------------|
-| SLO / SLA / SLI                  | Google SRE Workbook (free at sre.google/workbook)   |
-| Error budgets                   | Same                                                |
-| Chaos engineering principles     | https://principlesofchaos.org/                     |
-
-### Internationalization
-
-| Source                                                |
-|-------------------------------------------------------|
-| W3C i18n Web FAQ (https://www.w3.org/International/)  |
-| Unicode CLDR (https://cldr.unicode.org/)              |
-| ICU MessageFormat                                     |
 
 ## Output format
 
@@ -193,16 +159,17 @@ back-references the standard.
 The agent does NOT pick the answers - author must confirm.
 ```
 
-## Examples
+## Worked example
 
-### Example 1: PRD with mixed NFRs
+A team submits a checkout PRD. The skill runs it through two passes.
 
-Input:
+**Pass 1 - vague PRD.** Input:
 
 > "Checkout must feel snappy and work for users worldwide. We need to
 > meet enterprise security requirements."
 
-Output (excerpt):
+Every phrase fails the Step 2 testability test, so nothing is emitted as
+an NFR - each becomes a threshold-gap question:
 
 ```markdown
 **NFRs found:** 0 (all phrases are vague)
@@ -216,17 +183,15 @@ Output (excerpt):
 ```
 
 The output is a question list, not a fabricated set of thresholds.
-Author returns; agent re-extracts on next pass.
 
-### Example 2: PRD with concrete thresholds
-
-Input:
+**Pass 2 - author returns with concrete thresholds.** Input:
 
 > "Page load on /dashboard must be ≤1.5s p95 measured by Lighthouse
 > CI on the GitHub Actions ubuntu-latest runner. Color contrast ratio
 > ≥4.5:1 for normal text per WCAG 2.2 SC 1.4.3."
 
-Output:
+Every phrase is now threshold-bound and measurement-cited, so the skill
+emits tables with zero gaps:
 
 ```markdown
 ## Performance

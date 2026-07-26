@@ -27,6 +27,21 @@ invocation (cold or warm).
   different from Lambda containers.
 - Auditing provisioned-concurrency / SnapStart configurations.
 
+## How to use
+
+1. Look up the runtime's typical range in the per-runtime budget table
+   (e.g. Node.js 256MB is 200-700ms; Java 11 without SnapStart is 1.5-6s).
+2. Set the latency budget as two lines: p50/p95 tracks warm performance, and
+   a separate p99 line absorbs the cold-start tail.
+3. Force a cold start (deploy, or wait past the idle-evict window) and record
+   p95 first-invocation latency against the budget.
+4. If cold starts breach budget, apply the matching mitigation from below:
+   SnapStart (JVM/.NET), provisioned concurrency, package-size trimming, lazy
+   imports, or a pre-compiled runtime (Go/Rust).
+5. Add the build-step and monitoring assertions from Testable behaviours
+   (zipped artifact < 50MB, init phase < 500ms, CloudWatch `Init Duration`).
+6. Re-measure after each change and confirm the p99 tail moved, not just p50/p95.
+
 ## Per-runtime cold-start budgets
 
 Per AWS, Cloudflare, Vercel docs (typical ranges; bigger
@@ -118,6 +133,23 @@ runtime choice is a primary lever.
 | Provisioned concurrency keeps warm | Run for an hour; no cold-start spikes observed |
 | Package size in budget | Build-step assertion: zipped artifact < 50MB |
 | No heavy init-time imports | Profile init phase; assert < 500ms |
+
+## Worked example
+
+A Java 11 Lambda (512MB) serves a low-traffic checkout callback. Users report
+occasional multi-second waits, though the dashboard p95 looks healthy.
+
+1. The per-runtime table puts Java 11 without SnapStart at 1.5-6s cold start;
+   p95 hides it because cold starts land in the p99 tail.
+2. Enable SnapStart, which snapshot-restores the initialised JVM and drops the
+   cold start to the 100-300ms range.
+3. Re-prime non-serializable state in an `afterRestore` hook so a stale pooled
+   DB connection is not frozen into the snapshot.
+4. Force a cold start (wait past idle-evict) and compare `Init Duration`
+   before and after; confirm the p99 line, not just p95, falls.
+
+Result: the cold-start tail drops from ~5s to the 100-300ms range with no
+provisioned-concurrency spend.
 
 ## Anti-patterns
 

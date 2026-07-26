@@ -19,69 +19,24 @@ synthetic monitor inventory, and emits a ranked gap list that
 `synthetic-monitor-author` can consume
 directly.
 
+## How to use
+
+1. Pull the top ~50 journeys by session volume from your RUM source - Datadog RUM, Sentry Performance, or GA4 + CrUX (Step 1).
+2. Score each journey `coverage_priority = session_volume_score x business_value_score` on the 1-5 tables (Step 2).
+3. Build the inventory of active synthetic monitors and normalize each to a canonical URL path pattern (Step 3).
+4. Diff the scored journeys against the monitor inventory to isolate the uncovered paths (Step 4).
+5. Sort the uncovered paths by `coverage_priority` and emit the Markdown gap report, one row per gap (Step 5).
+6. Add a recommended monitor type per row using the score heuristic, then hand the ranked list to `synthetic-monitor-author`.
+
 ## Step 1 - Collect the RUM journey inventory
 
 Pull the top-N view paths (or transaction names) by session volume from the
 active RUM source. Aim for the top 50 to avoid chasing long-tail pages that
 carry negligible traffic.
 
-### Datadog RUM
-
-In the RUM Explorer (`https://app.datadoghq.com/rum/explorer`):
-
-1. Set event type to **Views**.
-2. Group by `@view.url_path` (or `@view.name` for SPAs with named routes).
-   Per [Datadog RUM Explorer docs][dd-rum-explorer], "aggregate into groups
-   based on the value of one or several event facets" and "extract the count
-   of events per group" to get session volume per path.
-3. Sort descending by count. Export as CSV or copy the top-50 rows.
-4. For each path, also note the p75 LCP / p75 CLS available in the
-   Performance Overviews dashboard ([Datadog RUM Dashboards][dd-rum-dash]:
-   "See a global view of your website/app performance and demographics").
-
-Query syntax shorthand: `@view.url_path:* | count by @view.url_path | sort desc`.
-RUM Explorer supports `key:value` pairs where custom attributes require a
-created facet first ([Datadog RUM Search][dd-rum-search]).
-
-[dd-rum-explorer]: https://docs.datadoghq.com/real_user_monitoring/explorer/
-[dd-rum-dash]: https://docs.datadoghq.com/real_user_monitoring/platform/dashboards/
-[dd-rum-search]: https://docs.datadoghq.com/real_user_monitoring/explorer/search/
-
-### Sentry Performance
-
-Open the **Performance** module and use the **Trace Explorer** to slice by
-transaction name. Per [Sentry Transaction Summary docs][sentry-txn], the
-platform surfaces throughput as TPM (transactions per minute) and TPS
-(transactions per second) per named transaction. Sort by **Total** throughput
-to surface highest-volume journeys. Export the table.
-
-[sentry-txn]: https://docs.sentry.io/product/performance/transaction-summary/
-
-### GA4 + CrUX (public-facing sites)
-
-For public pages, the Chrome User Experience Report provides origin-level and
-URL-level field data. Per [CrUX methodology][crux-method], pages must be
-publicly discoverable (HTTP 200, no `noindex`) and meet a minimum visitor
-threshold for statistical confidence; exact threshold is undisclosed. Access
-via:
-
-- **CrUX API** (`https://chromeuxreport.googleapis.com/v1/records:queryRecord`)
-  for per-URL LCP, INP, CLS distributions.
-- **BigQuery** (`chrome-ux-report.all.<YYYYMM>`) for bulk URL-level data.
-- **PageSpeed Insights API** for per-URL field vs. lab comparison.
-
-Per [web.dev Core Web Vitals][cwv], the three stable metrics are:
-
-- **LCP** (Largest Contentful Paint): good threshold 2.5 s.
-- **INP** (Interaction to Next Paint, replaced FID in 2024): good threshold 200 ms.
-- **CLS** (Cumulative Layout Shift): good threshold 0.1.
-
-All thresholds apply at the **75th percentile** of page loads ([web.dev CWV][cwv]).
-CrUX field data is "the Google dataset of the Web Vitals program" ([CrUX docs][crux-docs]).
-
-[crux-method]: https://developer.chrome.com/docs/crux/methodology/
-[crux-docs]: https://developer.chrome.com/docs/crux
-[cwv]: https://web.dev/articles/vitals
+Per-source query instructions - Datadog RUM Explorer grouping, Sentry
+throughput sorting, and GA4 + CrUX field data (LCP/INP/CLS at p75) - are in
+[references/rum-source-queries.md](references/rum-source-queries.md).
 
 ## Step 2 - Score each journey
 
@@ -145,22 +100,6 @@ gap_list = [j for j in scored_journeys if not matches_any_monitor(j.path)]
 
 Sort `gap_list` descending by `coverage_priority`. The output is the gap list.
 
-### Worked example
-
-```
-Scored journeys (top 5):
-  /checkout         vol=5, biz=5  -> score 25  [MONITOR EXISTS: checkout-journey.spec.ts]
-  /dashboard        vol=5, biz=4  -> score 20  [NO MONITOR]  <-- gap rank 1
-  /login            vol=4, biz=5  -> score 20  [MONITOR EXISTS: auth-flow.spec.ts]
-  /onboarding/step1 vol=4, biz=4  -> score 16  [NO MONITOR]  <-- gap rank 2
-  /reports/{id}     vol=3, biz=4  -> score 12  [NO MONITOR]  <-- gap rank 3
-
-Gap list (ready for synthetic-monitor-author):
-  1. /dashboard         score=20  sessions/day=12k  business=primary feature
-  2. /onboarding/step1  score=16  sessions/day=5k   business=onboarding
-  3. /reports/{id}      score=12  sessions/day=1.2k business=primary feature
-```
-
 ## Step 5 - Emit the gap report
 
 Output format (Markdown table, one row per gap):
@@ -182,6 +121,27 @@ Recommended monitor type heuristic:
 
 Pass the gap list to `synthetic-monitor-author`
 as the journey input for Step 1 of that skill.
+
+## Worked example
+
+```
+Scored journeys (top 5):
+  /checkout         vol=5, biz=5  -> score 25  [MONITOR EXISTS: checkout-journey.spec.ts]
+  /dashboard        vol=5, biz=4  -> score 20  [NO MONITOR]  <-- gap rank 1
+  /login            vol=4, biz=5  -> score 20  [MONITOR EXISTS: auth-flow.spec.ts]
+  /onboarding/step1 vol=4, biz=4  -> score 16  [NO MONITOR]  <-- gap rank 2
+  /reports/{id}     vol=3, biz=4  -> score 12  [NO MONITOR]  <-- gap rank 3
+
+Gap list (ready for synthetic-monitor-author):
+  1. /dashboard         score=20  sessions/day=12k  business=primary feature
+  2. /onboarding/step1  score=16  sessions/day=5k   business=onboarding
+  3. /reports/{id}      score=12  sessions/day=1.2k business=primary feature
+```
+
+`/checkout` and `/login` carry the highest scores but already have monitors, so
+they drop out of the diff. `/dashboard` surfaces as gap rank 1: 12 k sessions/day,
+a primary feature, and no monitor - exactly the silent-failure risk this skill
+exists to catch. Hand these three rows to `synthetic-monitor-author`.
 
 ## Hard-reject rule
 
@@ -229,6 +189,7 @@ developer assumptions rather than actual user behavior.
 
 ## References
 
+- [references/rum-source-queries.md](references/rum-source-queries.md) - per-source Step 1 queries for Datadog RUM, Sentry Performance, and GA4 + CrUX.
 - [Datadog RUM Explorer][dd-rum-explorer] - event types, grouping, count aggregation.
 - [Datadog RUM Search][dd-rum-search] - `key:value` facet syntax, six core event types.
 - [Datadog RUM Dashboards][dd-rum-dash] - Performance Overviews, Usage, Testing and Deployment.
@@ -238,3 +199,11 @@ developer assumptions rather than actual user behavior.
 - [web.dev Core Web Vitals][cwv] - LCP/INP/CLS definitions, good/needs-improvement/poor thresholds, 75th percentile assessment standard.
 - `synthetic-monitor-author` - downstream skill: authors the monitor config for each gap identified here.
 - ISTQB Glossary V4.7.1 `https://glossary.istqb.org/en_US/term/shift-right` - defines shift right as "A test approach to test a system continuously in production"; this skill feeds that approach by ensuring synthetic coverage reflects real production usage patterns.
+
+[dd-rum-explorer]: https://docs.datadoghq.com/real_user_monitoring/explorer/
+[dd-rum-dash]: https://docs.datadoghq.com/real_user_monitoring/platform/dashboards/
+[dd-rum-search]: https://docs.datadoghq.com/real_user_monitoring/explorer/search/
+[sentry-txn]: https://docs.sentry.io/product/performance/transaction-summary/
+[crux-method]: https://developer.chrome.com/docs/crux/methodology/
+[crux-docs]: https://developer.chrome.com/docs/crux
+[cwv]: https://web.dev/articles/vitals

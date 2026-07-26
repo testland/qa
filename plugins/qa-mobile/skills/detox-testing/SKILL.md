@@ -31,6 +31,18 @@ If the app is native iOS/Android (not RN), use
 non-RN-specific cross-platform, see
 `appium-testing`.
 
+## How to use
+
+1. Install Detox and scaffold with `npx detox init` (Step 1).
+2. Add `testID` props to the RN components the tests will target (Step 4).
+3. Build the app for the target device configuration with `detox build` (Step 2).
+4. Author `e2e/*.test.js` specs using `element(by.id(...))` matchers, actions,
+   and assertions (Step 3, [references/element-api.md](references/element-api.md)).
+5. Add `waitFor(...).withTimeout(N)` only where Detox's auto-sync misses a
+   genuine async condition (Step 5).
+6. Run `detox test --configuration <cfg>` and iterate until green (Step 6).
+7. Wire build + test into CI as a headless job (Step 7).
+
 ## Step 1 - Install
 
 ```bash
@@ -57,28 +69,10 @@ introduce a new build pipeline.
 
 ## Step 3 - Author tests with matchers
 
-Per [detox-matchers][dm]:
-
-[dm]: https://wix.github.io/Detox/docs/api/matchers
-
-| Matcher              | Use                                                |
-|----------------------|----------------------------------------------------|
-| `by.id('tap_me')`     | React Native `testID` prop (preferred default).    |
-| `by.text('Tap Me')`   | Visible text content.                               |
-| `by.label('...')`     | iOS accessibility label / Android content description. |
-| `by.type('RCTImageView')` | Component class name (iOS / Android-specific). |
-| `by.traits(['button'])` | iOS only - accessibility traits.                 |
-
-Each accepts strings or regex (`by.id(/^tap_[a-z]+$/)`).
-
-Combinators per [detox-matchers][dm]:
-
-```javascript
-withAncestor(matcher)    // child element within a parent
-withDescendant(matcher)  // parent containing children
-and(matcher)             // combine matchers
-atIndex(index)           // when matcher returns multiple
-```
+Match elements with `element(by.id(...))`; prefer `by.id` (the RN `testID`
+prop) for stable, translation-proof lookups. The full matcher catalog,
+combinators, action verbs, and assertions are in
+[references/element-api.md](references/element-api.md).
 
 Example test:
 
@@ -121,38 +115,7 @@ In RN production code:
 `testID` is React Native's prop for `accessibilityIdentifier`
 (iOS) / `resource-id` (Android). Detox finds elements by it.
 
-## Step 5 - Actions
-
-```javascript
-await element(by.id('btn')).tap();
-await element(by.id('btn')).longPress();
-await element(by.id('btn')).multiTap(2);
-
-await element(by.id('input')).typeText('hello');
-await element(by.id('input')).clearText();
-await element(by.id('input')).replaceText('new text');
-
-await element(by.id('list')).scroll(200, 'down');
-await element(by.id('list')).scrollTo('bottom');
-await element(by.id('list')).swipe('left', 'fast');
-
-await element(by.id('toggle')).pinch(1.5);
-```
-
-## Step 6 - Assertions
-
-```javascript
-await expect(element(by.id('toast'))).toBeVisible();
-await expect(element(by.id('cart-count'))).toHaveText('1');
-await expect(element(by.id('error'))).not.toBeVisible();
-await expect(element(by.id('field'))).toHaveValue('expected');
-```
-
-`expect(...)` from Detox auto-waits up to a default timeout
-(typically 5s) - no explicit `waitFor` needed for normal
-synchronization-tracked work.
-
-## Step 7 - `waitFor` for explicit sync
+## Step 5 - `waitFor` for explicit sync
 
 When Detox's automatic tracking misses something:
 
@@ -170,7 +133,7 @@ await waitFor(element(by.id('progress-bar')))
 `whileElement(...)` performs an action (scroll) while waiting - 
 useful for "scroll until visible."
 
-## Step 8 - Run
+## Step 6 - Run
 
 ```bash
 detox test --configuration android.emu.debug
@@ -187,7 +150,7 @@ Per [detox-docs][det], Detox is "CI-Ready: Tests execute seamlessly
 on continuous integration platforms like Travis CI, CircleCI, and
 Jenkins."
 
-## Step 9 - CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -213,6 +176,33 @@ jobs:
           detox build --configuration ios.sim.debug
           detox test --configuration ios.sim.debug
 ```
+
+## Worked example
+
+A React Native store app needs an E2E check that adding a book to the cart
+updates the badge count.
+
+1. The product card already renders `<TouchableOpacity testID="product-BOOK-001">`
+   and the cart badge renders `<Text testID="cart-count">` (Step 4).
+2. Build once: `detox build --configuration ios.sim.debug` (Step 2).
+3. Author `e2e/cart.test.js` (Step 3):
+
+   ```javascript
+   describe('Cart flow', () => {
+     beforeAll(async () => { await device.launchApp(); });
+     beforeEach(async () => { await device.reloadReactNative(); });
+
+     it('adds item to cart', async () => {
+       await element(by.id('product-BOOK-001')).tap();
+       await element(by.id('add-to-cart-button')).tap();
+       await expect(element(by.id('cart-count'))).toHaveText('1');
+     });
+   });
+   ```
+4. Run `detox test e2e/cart.test.js --configuration ios.sim.debug` (Step 6).
+5. Detox launches the simulator, taps the product and the add button, and its
+   auto-sync waits for the state update before the assertion runs. The spec
+   passes: the badge reads `1`, with no `sleep` anywhere in the test.
 
 ## Anti-patterns
 
@@ -242,8 +232,9 @@ jobs:
 
 - [det][det] - Detox overview: gray-box architecture, automatic
   async monitoring, JS test syntax, CI-ready, RN-specific.
-- [dm][dm] - Detox matchers: `by.id`, `by.text`, `by.label`,
-  `by.type`, `by.traits`, regex support, combinators.
+- [references/element-api.md](references/element-api.md) - matcher catalog
+  (`by.id`, `by.text`, `by.label`, `by.type`, `by.traits`), combinators,
+  actions, and assertions.
 - `xcuitest-suite`,
   `espresso-suite`,
   `appium-testing`,

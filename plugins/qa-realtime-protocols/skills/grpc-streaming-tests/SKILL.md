@@ -22,6 +22,16 @@ Bidirectional-streaming) per the [gRPC core concepts docs].
 - Load test gate: streams handle backpressure without OOM or
   silent drops.
 
+## How to use
+
+1. Pick the test tool for the job (Step 1): native stubs for unit/integration, `grpcurl` for smoke, `ghz` for load.
+2. Prove the plumbing with a unary sanity call before touching streams (Step 2).
+3. Cover each streaming shape the service exposes - server-, client-, and bidirectional-streaming (Steps 3-5).
+4. Assert deadline propagation and client-initiated cancellation are observed server-side (Steps 6-7).
+5. Check error paths return the exact status code, not just "an error", and that request metadata round-trips ([references/status-codes-metadata-load.md](references/status-codes-metadata-load.md)).
+6. Run a `ghz` load pass to confirm streams handle backpressure without OOM or silent drops (same reference).
+7. Gate the suite on the anti-patterns table before merge.
+
 ## Step 1 - Pick the test tool
 
 | Tool | Strength |
@@ -163,70 +173,35 @@ def test_cancellation_is_observed_server_side():
         assert state.cancelled_count >= 1
 ```
 
-## Step 8 - Status codes
+## Status codes, metadata, and load testing
 
-| Code | When |
-|---|---|
-| OK | Success |
-| CANCELLED | Client cancelled |
-| DEADLINE_EXCEEDED | Deadline elapsed |
-| INVALID_ARGUMENT | Client error in request |
-| UNAUTHENTICATED | No / bad credentials |
-| PERMISSION_DENIED | Authenticated but not authorized |
-| RESOURCE_EXHAUSTED | Quota / rate limit |
-| INTERNAL | Server bug |
-| UNAVAILABLE | Server transient unreachable (clients should retry) |
+See [references/status-codes-metadata-load.md](references/status-codes-metadata-load.md)
+for the full status-code matrix (OK, CANCELLED, DEADLINE_EXCEEDED,
+INVALID_ARGUMENT, UNAVAILABLE, ...), a request/response metadata
+round-trip test, and load testing with `ghz`.
 
-Test the error path returns the right code, not just "an error":
+## Worked example
 
-```python
-def test_invalid_argument_returns_correct_code():
-    with grpc.insecure_channel("localhost:50051") as ch:
-        stub = OrdersStub(ch)
-        with pytest.raises(grpc.RpcError) as exc:
-            stub.CreateOrder(OrderRequest(item_count=-1))
-        assert exc.value.code() == grpc.StatusCode.INVALID_ARGUMENT
-```
+A prices service exposes `SubscribePrices`, a server-streaming RPC. QA
+needs to confirm the client receives ordered ticks and that cancelling
+the stream is observed server-side.
 
-## Step 9 - Metadata
+1. Start with the unary sanity call (Step 2) to confirm the channel and stubs are wired.
+2. Open the stream with a 10s deadline and read 5 ticks: `stream = stub.SubscribePrices(SubscribeRequest(symbol="AAPL"), timeout=10.0)`.
+3. After the 5th tick, call `stream.cancel()` and break (Step 3).
+4. Assert `len(ticks) == 5` and every `t.symbol == "AAPL"`.
+5. Add a cancellation check (Step 7): fetch server metrics and assert `cancelled_count >= 1`, proving the server observed the client cancel rather than orphaning work.
 
-Per the [gRPC core concepts docs], metadata is "key-value pairs"
-case-insensitive ASCII keys; binary values use `-bin` suffix.
-
-```python
-def test_request_metadata_round_trip():
-    with grpc.insecure_channel("localhost:50051") as ch:
-        stub = OrdersStub(ch)
-        metadata = (("x-trace-id", "abc123"),)
-        resp, call = stub.CreateOrder.with_call(OrderRequest(), metadata=metadata)
-
-        # Server reflects request-id in response trailing metadata
-        trailing = call.trailing_metadata()
-        assert ("x-trace-id-echo", "abc123") in trailing
-```
-
-## Step 10 - Load test with `ghz`
-
-```bash
-ghz \
-  --insecure \
-  --proto orders.proto \
-  --call orders.Orders/CreateOrder \
-  -d '{"item_count":1}' \
-  -c 50 \
-  -n 10000 \
-  localhost:50051
-```
-
-Reports RPS, p50/p95/p99 latency. For streaming RPCs use
-`--stream-call-count` flag (consult ghz docs).
+Result: the ticker stream is verified for ordered delivery, a clean 10s
+deadline, and server-side cancellation - the three behaviors a
+server-streaming RPC most often regresses on.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Skip deadline + cancellation tests | Production cancellation orphans server-side work | Steps 6 + 7 |
-| Test only OK and INTERNAL paths | Status-code regressions go silently | Test the matrix (Step 8) |
+| Test only OK and INTERNAL paths | Status-code regressions go silently | Test the matrix (status-codes reference) |
 | Use BatchSpanProcessor or similar buffering on test client | Streams "complete" before all messages flush | Always synchronous in tests |
 | Tests share a single channel across goroutines | Channel state contamination flakes | Per-test channel |
 | Generate proto stubs at test runtime | CI flakes on plugin churn | Generate in build phase + commit |

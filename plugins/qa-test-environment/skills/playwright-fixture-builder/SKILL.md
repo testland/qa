@@ -45,6 +45,26 @@ If the suite has only a handful of specs and one common helper, a
 shared `helpers.ts` file is enough - fixtures pay off when 5+ specs
 share setup or when teardown ordering matters.
 
+## How to use
+
+1. List every `beforeEach`/`afterEach` block the specs share (auth,
+   DB reset, flag setup, page objects).
+2. Assign each a scope with Step 1's rule of thumb - `worker` for
+   immutable expensive state, `test` for anything that changes
+   between tests.
+3. Write each fixture with the `use(value)` setup/teardown split -
+   recipes for auth, page object, DB, and flags are in
+   [references/fixture-recipes.md](references/fixture-recipes.md).
+4. Compose them in dependency order (auth → db → flags) into one
+   `test` export; see
+   [references/composition-and-output.md](references/composition-and-output.md).
+5. Confirm teardown runs in reverse of setup, and box internal
+   helper fixtures out of the report.
+6. Replace the specs' copy-pasted blocks with a single import from
+   the composed `fixtures/index.ts`.
+7. Emit the per-fixture review note (scope, auto, boxed, setup cost,
+   teardown) so a reviewer can sanity-check the scoping.
+
 ## Step 1 - Identify the right scope per fixture
 
 Per [pw-fixtures][pw-fix]:
@@ -68,294 +88,47 @@ Per [pw-fixtures][pw-fix]:
 **Rule of thumb:** if changing the fixture between two tests would
 cause a test to fail, scope it `test`. Otherwise scope it `worker`.
 
-## Step 2 - Auth fixture (`storageState` per worker)
+## Fixture recipes, composition, output
 
-Per [pw-auth][pw-auth], the storageState pattern signs in once and
-reuses cookies + localStorage across tests:
+- Per-fixture code recipes - auth (`storageState` per worker), page
+  object, DB snapshot/restore, feature-flag overrides:
+  [references/fixture-recipes.md](references/fixture-recipes.md).
+- Composing the layers into one `test` export, teardown ordering,
+  boxing internal fixtures, and the review-note output format:
+  [references/composition-and-output.md](references/composition-and-output.md).
 
-[pw-auth]: https://playwright.dev/docs/auth
+## Worked example
 
-```typescript
-// fixtures/auth.ts
-import { test as base, type BrowserContext } from '@playwright/test';
-import path from 'node:path';
+A suite of 12 checkout specs each opens with the same `beforeEach`:
+log in through the UI, reset the test DB, then set a feature flag.
+That block re-authenticates once per test, so the run spends ~12s
+just logging in.
 
-type AuthFixtures = {
-  storageState: string;
-};
+Refactor it into four fixtures. `storageState` moves to **worker**
+scope keyed by `user${workerInfo.workerIndex}`, so each worker logs
+in once (~1.2s) instead of every test. `cleanDb` is **test**-scoped
+with `{ auto: true }` so every spec starts from a restored snapshot
+without listing it. `flags` is **test**-scoped and restores an empty
+provider on teardown so a leaked override can't poison the next
+test. `todoPage` stays **test**-scoped because the page object holds
+per-test state.
 
-export const test = base.extend<{}, AuthFixtures>({
-  storageState: [async ({ browser }, use, workerInfo) => {
-    const username = `user${workerInfo.workerIndex}`;
-    const fileName = path.resolve(`playwright/.auth/${username}.json`);
+They compose auth → db → flags in `fixtures/index.ts`; each spec now
+imports `{ test, expect }` from there and drops its `beforeEach`. A
+checkout test becomes
+`async ({ page, flags, cleanDb }) => { await flags({ promo_codes: true }); ... }`.
+The per-fixture review note records that worker-scoped auth cut
+~600ms × 12 tests and that `flags` teardown is what keeps
+combinations isolated.
 
-    const page = await browser.newPage({ storageState: undefined });
-    await page.goto('/login');
-    await page.getByLabel('Email').fill(`${username}@example.com`);
-    await page.getByLabel('Password').fill('test-password');
-    await page.getByRole('button', { name: 'Sign in' }).click();
-    await page.waitForURL('/dashboard');
+## Anti-patterns and limitations
 
-    await page.context().storageState({ path: fileName });
-    await page.close();
-
-    await use(fileName);
-  }, { scope: 'worker' }],
-});
-```
-
-Per [pw-auth][pw-auth], the storageState pattern uses
-`await page.context().storageState({ path: authFile });` to write
-the cookie/localStorage snapshot, and tests pick it up via
-`storageState: 'playwright/.auth/user.json'` on the test or project.
-
-Per [pw-fix][pw-fix], `workerInfo.workerIndex` is the canonical way
-to derive per-worker unique values:
-
-> "A common use case is accessing `workerInfo.workerIndex` to create
-> unique resources per worker."
-
-For per-worker accounts (when each worker mutates its own
-server-side state), **`user${workerInfo.workerIndex}`** is the
-canonical pattern.
-
-### Wire it via `test.use`
-
-```typescript
-// tests/dashboard.spec.ts
-import { test, expect } from './fixtures/auth';
-
-test.use({ storageState: ({ storageState }, use) => use(storageState) });
-
-test('shows the user dashboard', async ({ page }) => {
-  await page.goto('/dashboard');
-  await expect(page.getByRole('heading')).toContainText('Welcome');
-});
-```
-
-Or set globally in `playwright.config.ts`:
-
-```typescript
-projects: [
-  {
-    name: 'authenticated',
-    use: { storageState: 'playwright/.auth/user.json' },
-  },
-],
-```
-
-## Step 3 - Page Object fixture (test-scoped)
-
-Page objects encapsulate per-page selectors and behaviors. The
-canonical example from [pw-fix][pw-fix]:
-
-```typescript
-const test = base.extend<{ todoPage: TodoPage }>({
-  todoPage: async ({ page }, use) => {
-    const todoPage = new TodoPage(page);
-    await todoPage.goto();
-    await use(todoPage);
-    await todoPage.removeAll();
-  },
-});
-```
-
-The `use()` call demarcates setup vs teardown: code before is setup,
-code after is teardown. The teardown runs even if the test fails.
-
-## Step 4 - DB fixture (per-test snapshot/restore)
-
-```typescript
-// fixtures/db.ts
-import { test as base } from './auth';
-import { execSync } from 'node:child_process';
-
-type DbFixtures = {
-  cleanDb: void;
-};
-
-export const test = base.extend<DbFixtures>({
-  cleanDb: [async ({}, use) => {
-    execSync('bash scripts/restore-test-db.sh', { stdio: 'inherit' });
-    await use();
-    // No teardown - next test runs `restore` itself.
-  }, { auto: true }],
-});
-```
-
-Per [pw-fix][pw-fix], `{ auto: true }` makes a fixture run for every
-test even if the test doesn't list it in its parameters - the right
-choice for cross-cutting state like DB reset.
-
-The shell script delegates to a database snapshot/restore in
-restore mode.
-
-## Step 5 - Feature-flag fixture (composes with feature-flag-test-harness)
-
-```typescript
-// fixtures/flags.ts
-import { test as base } from './db';
-import { OpenFeature, InMemoryProvider } from '@openfeature/server-sdk';
-
-type FlagFixtures = {
-  flags: (overrides: Record<string, unknown>) => Promise<void>;
-};
-
-export const test = base.extend<FlagFixtures>({
-  flags: async ({}, use) => {
-    const setFlags = async (overrides: Record<string, unknown>) => {
-      const provider = new InMemoryProvider(buildVariants(overrides));
-      await OpenFeature.setProviderAndWait(provider);
-    };
-    await use(setFlags);
-    // Teardown: restore an empty provider so the next test starts clean.
-    await OpenFeature.setProviderAndWait(new InMemoryProvider({}));
-  },
-});
-
-function buildVariants(overrides: Record<string, unknown>) {
-  return Object.fromEntries(
-    Object.entries(overrides).map(([k, v]) => [k, {
-      defaultVariant: 'configured',
-      variants: { configured: v },
-      disabled: false,
-    }]),
-  );
-}
-```
-
-A test that needs a flag picks the value:
-
-```typescript
-test('shows new checkout when flag is on', async ({ page, flags }) => {
-  await flags({ new_checkout: true });
-  await page.goto('/checkout');
-  await expect(page.getByTestId('new-checkout-banner')).toBeVisible();
-});
-```
-
-For the matrix harness pattern (one shard per combo), see
-`feature-flag-test-harness`.
-
-## Step 6 - Compose into one `test` export
-
-The pyramid: each layer extends the previous one. Tests import from
-the top:
-
-```typescript
-// fixtures/index.ts
-export { test, expect } from './flags';
-```
-
-```typescript
-// tests/checkout.spec.ts
-import { test, expect } from '../fixtures';
-
-test('promo code applies when feature flag is on', async ({
-  page, flags, cleanDb,
-}) => {
-  await flags({ promo_codes: true });
-  // page is authenticated (from auth fixture, worker scope)
-  // cleanDb already ran (auto, test scope)
-  await page.goto('/checkout');
-  // ...
-});
-```
-
-The composition order is the dependency order: auth → db → flags.
-A fixture can pull anything declared earlier in the chain via its
-own destructured params.
-
-## Step 7 - Teardown ordering
-
-Per [pw-fix][pw-fix], teardown runs in **reverse order** of setup:
-last-setup-first-teardown. Critical for fixtures that depend on
-each other:
-
-- DB fixture sets up before app fixture; app teardown runs first
-  (clean shutdown), then DB teardown.
-- Auth fixture sets up before page fixture; page closes first, then
-  auth state is rolled back.
-
-If a teardown depends on something a downstream fixture set up, the
-dependency direction is wrong - invert the fixture composition.
-
-## Step 8 - Box internal fixtures from the report
-
-Helper fixtures that aren't user-meaningful clutter the test report.
-Per [pw-fix][pw-fix], `{ box: true }` hides them:
-
-```typescript
-export const test = base.extend({
-  _internalSetup: [async ({}, use) => {
-    // ...setup nobody needs to see in the report
-    await use();
-  }, { box: true }],
-});
-```
-
-## Output format
-
-```markdown
-## Playwright fixtures - `<suite>`
-
-**Fixtures produced:** N
-**File:** `tests/fixtures/index.ts`
-
-| Fixture          | Scope   | Auto | Boxed | Setup cost | Teardown |
-|------------------|---------|------|-------|------------|----------|
-| `storageState`   | worker  | no   | no    | ~1.2s      | none     |
-| `cleanDb`        | test    | yes  | yes   | ~0.4s      | none     |
-| `flags`          | test    | no   | no    | ~5ms       | restore empty provider |
-| `todoPage`       | test    | no   | no    | ~50ms      | `removeAll()` |
-
-### Scope rationale
-
-- `storageState`: worker-scope cuts ~600ms × N tests. Per-worker
-  index avoids cross-worker auth conflicts.
-- `cleanDb`: test-scope + auto: every test starts clean; reviewer
-  doesn't have to remember to wire it.
-- `flags`: test-scope: different tests want different combinations;
-  teardown restores empty provider so a leaked override can't
-  poison the next test.
-- `todoPage`: test-scope: page object holds state.
-
-### Recommended next step
-
-Wire `playwright.config.ts` to use the `authenticated` project per
-[pw-auth][pw-auth] for the auth-default suite, and a separate
-`anonymous` project for tests that explicitly opt out of auth.
-```
-
-## Anti-patterns
-
-| Anti-pattern                                                                | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Worker-scoped fixture for state that **changes** between tests              | Tests on the same worker pollute each other; intermittent failures.       | Move to test scope. Per [pw-fix][pw-fix]: test-scoped fixtures "are torn down immediately after". |
-| Test-scoped fixture for **immutable** expensive state (e.g. logged-in user) | Per-test login = N × ~1s. CI time balloons.                              | Worker scope + `workerInfo.workerIndex` per [pw-fix][pw-fix]. |
-| `beforeAll` for shared state in a parallel suite                             | `beforeAll` runs once per spec file, not once per worker; doesn't compose. | Worker-scoped fixture with the right `use()` boundary. |
-| Teardown that depends on a downstream fixture's setup                        | Reverse-order teardown means the dependency is gone when teardown runs.   | Invert composition: dependent fixture extends the dependency. |
-| Manual `await context.close()` inside a test                                  | Bypasses Playwright's cleanup; flake on the next test.                    | Let the page/context fixture handle close in its teardown. |
-| Hard-coded port / DB name in fixtures                                         | Two parallel workers fight over the same resource.                        | Derive from `workerInfo.workerIndex` per [pw-fix][pw-fix]. |
-| Storing `playwright/.auth/*.json` in git                                       | Per [pw-auth][pw-auth]: "these files contain sensitive cookies and headers". | `.gitignore` the auth dir; reauthenticate in CI per worker. |
-| One mega-fixture that bundles auth+db+flags                                  | Tests can't opt out of pieces; one tweak breaks everyone.                  | Atomic fixtures composed via `extend` per Step 6. |
-
-## Limitations
-
-- **No mid-test scope changes.** A worker-scoped fixture can't be
-  reset for one test without re-architecting; if mid-test reset is
-  needed, the fixture should be test-scoped.
-- **Session storage isn't auto-captured.** Per [pw-auth][pw-auth]:
-  "Manually persist session data since Playwright doesn't
-  automatically capture it" - for sessionStorage-based auth, write
-  custom serialization in the fixture.
-- **Teardown failures don't fail the test.** A throw inside the
-  post-`use()` block produces a warning, not a failure. Wrap
-  critical teardown in a runtime check that fails the next test if
-  state is dirty.
-- **Fixture timeout is per-fixture, not per-test.** Long auth
-  fixtures need `{ timeout: 60_000 }`; the test's own timeout is
-  separate.
+The full anti-pattern table (wrong-scope fixtures, `beforeAll` in a
+parallel suite, manual `context.close()`, committing auth files, one
+mega-fixture) and the limitations (no mid-test scope changes, session
+storage not auto-captured, teardown failures don't fail the test,
+per-fixture timeout) are in
+[references/anti-patterns-and-limits.md](references/anti-patterns-and-limits.md).
 
 ## References
 
@@ -370,3 +143,5 @@ Wire `playwright.config.ts` to use the `authenticated` project per
 - `testcontainers`,
   `docker-compose-tests` - the
   underlying stack the fixtures point at.
+
+[pw-auth]: https://playwright.dev/docs/auth

@@ -21,6 +21,16 @@ Three components (released 2017, replacing JUnit 4):
 This skill targets JUnit Jupiter (the modern API). For Kotlin-native
 tests with similar power but DSL-style, see `kotest-tests`.
 
+## How to use
+
+1. Add the `junit-jupiter` dependency and enable `useJUnitPlatform()` (Step 1).
+2. Write a `@Test` method with an `assertEquals` assertion; run `mvn test` / `./gradlew test` (Step 2).
+3. Add lifecycle hooks (`@BeforeEach` / `@AfterEach`) for shared setup and teardown (Step 3).
+4. Collapse repeated cases into a `@ParameterizedTest` with a source provider (Step 4).
+5. Pull in collaborators via `@ExtendWith` (e.g. `MockitoExtension`) and annotate display names + conditions (Steps 5-6).
+6. Enable parallel execution in `junit-platform.properties` once tests are independent (Step 7).
+7. Wire JaCoCo coverage and CI reporting (Step 8).
+
 ## Step 1 - Install (Maven / Gradle)
 
 Maven `pom.xml`:
@@ -196,55 +206,19 @@ Per-test override:
 class TestNotParallelizable { ... }
 ```
 
-## Step 8 - Coverage with JaCoCo
+## Step 8 - Coverage and CI
 
-Maven:
+Wire JaCoCo coverage (Maven / Gradle) and CI reporting (GitHub Actions + Codecov; Surefire emits JUnit XML for `junit-xml-analysis` in the qa-test-reporting plugin) per [references/coverage-and-ci.md](references/coverage-and-ci.md).
 
-```xml
-<plugin>
-    <groupId>org.jacoco</groupId>
-    <artifactId>jacoco-maven-plugin</artifactId>
-    <version>0.8.12</version>
-    <executions>
-        <execution>
-            <goals><goal>prepare-agent</goal></goals>
-        </execution>
-        <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals><goal>report</goal></goals>
-        </execution>
-        <execution>
-            <id>jacoco-check</id>
-            <goals><goal>check</goal></goals>
-            <configuration>
-                <rules>
-                    <rule>
-                        <element>BUNDLE</element>
-                        <limits>
-                            <limit>
-                                <counter>LINE</counter>
-                                <value>COVEREDRATIO</value>
-                                <minimum>0.80</minimum>
-                            </limit>
-                        </limits>
-                    </rule>
-                </rules>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-```
+## Worked example
 
-## Step 9 - CI integration
+Testing `Calculator.add` across many inputs:
 
-```yaml
-- run: ./gradlew test jacocoTestReport
-- uses: codecov/codecov-action@v4
-  with: { files: ./build/reports/jacoco/test/jacocoTestReport.xml }
-```
-
-Surefire (Maven) emits JUnit XML for `junit-xml-analysis` (in the qa-test-reporting plugin).
+1. Add `org.junit.jupiter:junit-jupiter:5.11.0` (test scope) and enable `useJUnitPlatform()`.
+2. Replace three near-identical `@Test` methods with one `@ParameterizedTest` + `@CsvSource({"1, 2, 3", "0, 0, 0", "-1, 1, 0"})` taking `(int a, int b, int expected)`.
+3. Assert `assertEquals(expected, Calculator.add(a, b))` - each row reports as its own test.
+4. Run `./gradlew test`: three cases execute; the `-1, 1, 0` row fails, isolating the sign bug while the others stay green.
+5. Add `jacocoTestReport` (Step 8) to confirm the `add` branch is now covered.
 
 ## Anti-patterns
 
@@ -270,6 +244,7 @@ Surefire (Maven) emits JUnit XML for `junit-xml-analysis` (in the qa-test-report
 - junit.org/junit5 - landing
 - maven.apache.org/surefire - Maven Surefire (test runner)
 - jacoco.org - coverage tool
+- [references/coverage-and-ci.md](references/coverage-and-ci.md) - JaCoCo config + CI reporting
 - `kotest-tests`,
   `spock-tests`,
   `testng-tests`,

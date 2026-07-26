@@ -21,6 +21,16 @@ run a parameterized notebook in CI, assert on outputs.
 - Regression test: re-run the notebook with known inputs; assert
   output values match expected (often paired with nbval/testbook).
 
+## How to use
+
+1. `pip install papermill` (Step 1).
+2. Tag one notebook cell `parameters` with default values (Step 2).
+3. Execute with injected inputs via the Python API `pm.execute_notebook(...)` or the CLI `papermill in.ipynb out.ipynb -p NAME VAL` (Steps 3-4).
+4. Read the output notebook with `nbformat` and assert on the final cell's values inside a pytest test (Step 5).
+5. Always seed stochastic parameters (`-p seed N`) so reruns are reproducible.
+6. Upload the output notebook as a CI artifact so failed assertions stay inspectable (Step 6).
+7. Layer nbval / testbook on top of papermill's execution for output and function-level assertions (Step 7).
+
 ## Step 1 - Install
 
 ```bash
@@ -147,6 +157,24 @@ model.fit(df)
 
 Per the [Papermill execute docs]: integrates with TQDM for
 meaningful CI progress indicators.
+
+## Worked example
+
+An analyst ships `analysis.ipynb` that samples a distribution and
+prints a JSON summary in its last cell. To gate it in CI:
+
+1. Tag the top cell `parameters` with defaults `seed = 0` and
+   `n_samples = 100`.
+2. Add a pytest test that runs
+   `pm.execute_notebook('analysis.ipynb', out_path, parameters=dict(seed=42, n_samples=1000))`.
+3. Read `out.ipynb` with `nbformat`, parse the last cell's output
+   text as JSON, and assert `abs(result['mean'] - 0.5) < 0.01` and
+   `result['n'] == 1000`.
+
+On a green run the assertions pass and `out.ipynb` uploads as a CI
+artifact. When a refactor shifts the sampled mean, the assertion
+fails, the job goes red, and the attached output notebook shows the
+offending cell for review.
 
 ## Anti-patterns
 

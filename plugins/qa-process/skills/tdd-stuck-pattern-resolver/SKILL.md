@@ -29,306 +29,41 @@ the second-order problem: the code resists TDD.
 
 [beck-tdd]: https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530
 
-## Pattern 1 - Singleton / static dependency
-
-```javascript
-// Stuck - depends on a global database client
-function processOrder(orderId) {
-  const order = Database.getInstance().findOrder(orderId);   // singleton
-  // ...
-}
-```
-
-**Why it's stuck:** the test can't substitute a fake DB without
-modifying global state.
-
-**Refactor - Dependency Injection:**
-
-```javascript
-function processOrder(orderId, db) {
-  const order = db.findOrder(orderId);
-  // ...
-}
-
-// Test:
-test('processOrder fetches the order', () => {
-  const fakeDb = { findOrder: () => ({ id: 1 }) };
-  processOrder(1, fakeDb);
-});
-```
-
-The DB is now injected; the test passes a fake. Production code
-calls `processOrder(orderId, Database.getInstance())` from the
-single composition root.
-
-## Pattern 2 - Network in constructor
-
-```javascript
-// Stuck - constructor side-effects
-class OrderService {
-  constructor() {
-    this.config = await fetch('/config').then(r => r.json());   // 😱
-  }
-}
-```
-
-**Why it's stuck:** instantiating the class to test it triggers
-the network call.
-
-**Refactor - push side effects out of construction:**
-
-```javascript
-class OrderService {
-  constructor(config) {
-    this.config = config;
-  }
-}
-
-// Composition root:
-const config = await fetch('/config').then(r => r.json());
-const orderService = new OrderService(config);
-
-// Test:
-const orderService = new OrderService({ /* fake config */ });
-```
-
-Construction = pure assignment. Side effects happen at composition.
-
-## Pattern 3 - Time / random as hidden input
-
-```javascript
-// Stuck - uses Date.now() and Math.random() directly
-function generateInvoice(items) {
-  return {
-    id: `INV-${Date.now()}-${Math.random()}`,
-    items,
-  };
-}
-```
-
-**Why it's stuck:** the test can't predict the output.
-
-**Refactor - inject the source:**
-
-```javascript
-function generateInvoice(items, { now, rand }) {
-  return {
-    id: `INV-${now()}-${rand()}`,
-    items,
-  };
-}
-
-// Production:
-generateInvoice(items, { now: Date.now, rand: Math.random });
-
-// Test:
-generateInvoice([item], { now: () => 1000, rand: () => 0.5 });
-// Asserts: id === 'INV-1000-0.5'
-```
-
-For more comprehensive control, use a `Clock` interface (the
-same injection pattern applies to database connections).
-
-## Pattern 4 - Untestable boundaries (file system, OS calls)
-
-```python
-# Stuck - direct file system access
-def load_config():
-    with open('/etc/myapp/config.json') as f:
-        return json.load(f)
-```
-
-**Why it's stuck:** test setup requires creating files at fixed
-paths; tests pollute the filesystem.
-
-**Refactor - Hexagonal / Ports-and-Adapters:**
-
-```python
-# Define a port (interface)
-class ConfigSource(Protocol):
-    def read(self) -> dict: ...
-
-# Production adapter
-class FileConfigSource:
-    def __init__(self, path):
-        self.path = path
-    def read(self):
-        with open(self.path) as f:
-            return json.load(f)
-
-# Test adapter
-class FakeConfigSource:
-    def __init__(self, config):
-        self.config = config
-    def read(self):
-        return self.config
-
-# Use the port:
-def load_config(source: ConfigSource):
-    return source.read()
-```
-
-Tests inject `FakeConfigSource({...})`; production injects
-`FileConfigSource('/etc/...')`.
-
-## Pattern 5 - Deeply nested construction
-
-```typescript
-// Stuck - chain of constructions
-function processOrder(orderId: string) {
-  const repo = new OrderRepo(new DbConnection(new ConfigLoader(new FileReader('/etc/...'))));
-  return new OrderService(repo).process(orderId);
-}
-```
-
-**Why it's stuck:** test setup needs to construct the whole tree.
-
-**Refactor - Factory + composition root:**
-
-```typescript
-// Composition root (one place per app)
-function buildAppContainer() {
-  const reader = new FileReader('/etc/...');
-  const config = new ConfigLoader(reader);
-  const conn = new DbConnection(config);
-  const repo = new OrderRepo(conn);
-  const service = new OrderService(repo);
-  return { service, /* others */ };
-}
-
-// Production:
-const { service } = buildAppContainer();
-await service.process(orderId);
-
-// Test (just the service, with fakes):
-const service = new OrderService(new FakeOrderRepo());
-await service.process(orderId);
-```
-
-Production composes once at startup; tests skip the entire chain.
-
-## Pattern 6 - Untestable private methods
-
-```kotlin
-// Stuck - wants to test a private helper
-class OrderProcessor {
-    fun process(order: Order) { /* ... */ }
-    private fun calculateTotal(items: List<Item>): Double { /* ... */ }
-}
-```
-
-**Why it's stuck:** the test can't reach the private method
-without reflection (a code smell).
-
-**Refactor options:**
-
-**Default: Test through the public interface.** If `calculateTotal`
-matters, it affects `process(...)`'s output; test that. Keeps tests
-decoupled from implementation. Use the alternatives below only when
-this default doesn't fit the situation described.
-
-1. **Test through the public interface** (the default - use unless
-   the conditions below apply).
-
-2. **Extract to a separate class** with public methods - use when
-   the private logic is genuinely independent and reused, or complex
-   enough that public-interface tests can't pin its behaviour:
-
-```kotlin
-class TotalCalculator {
-    fun calculate(items: List<Item>): Double { /* ... */ }
-}
-
-class OrderProcessor(private val totalCalculator: TotalCalculator) {
-    fun process(order: Order) {
-        val total = totalCalculator.calculate(order.items)
-        // ...
-    }
-}
-```
-
-Then `TotalCalculator` is tested directly; `OrderProcessor` tested
-with a fake.
-
-3. **Make it `internal`** (Kotlin / Scala) - escape hatch when
-   extraction is overkill but reflection is worse; only when the
-   language supports module-private visibility.
-
-## Pattern 7 - Async / Promise-heavy code
-
-```javascript
-// Stuck - sequential async operations
-async function checkout(cart) {
-  const tax = await taxService.calculate(cart);
-  const charge = await stripe.charge(cart.total + tax);
-  await orderRepo.save({ cart, tax, charge });
-  await emailService.sendConfirmation(cart.userId);
-  return charge;
-}
-```
-
-**Why it's stuck:** mocking each await; test setup gets long.
-
-**Refactor - split into orchestrator + steps:**
-
-```javascript
-async function checkout(cart, deps) {
-  const { taxService, stripe, orderRepo, emailService } = deps;
-  const tax = await taxService.calculate(cart);
-  const charge = await stripe.charge(cart.total + tax);
-  await orderRepo.save({ cart, tax, charge });
-  await emailService.sendConfirmation(cart.userId);
-  return charge;
-}
-```
-
-Each `deps.X` is injected; tests pass per-test fakes.
-
-For very complex async chains, consider a state machine or saga
-pattern - testable as state transitions, not sequential awaits.
-
-## Pattern 8 - Code that calls third-party SDKs
-
-```typescript
-// Stuck - direct Stripe SDK call
-import Stripe from 'stripe';
-const stripe = new Stripe(process.env.STRIPE_KEY);
-
-async function charge(amount) {
-  return await stripe.paymentIntents.create({ amount, currency: 'usd' });
-}
-```
-
-**Why it's stuck:** SDK instances aren't easily mocked; testing
-without real network is hard.
-
-**Refactor - Adapter (don't mock what you don't own):**
-
-```typescript
-interface PaymentGateway {
-  charge(amount: number): Promise<{ id: string }>;
-}
-
-class StripeGateway implements PaymentGateway {
-  constructor(private stripe: Stripe) {}
-  async charge(amount: number) {
-    const intent = await this.stripe.paymentIntents.create({ amount, currency: 'usd' });
-    return { id: intent.id };
-  }
-}
-
-class FakePaymentGateway implements PaymentGateway {
-  async charge(amount: number) {
-    return { id: 'fake-charge-' + amount };
-  }
-}
-```
-
-Tests use `FakePaymentGateway`; production uses `StripeGateway`.
-The team owns the interface; mocking is fine - don't mock what
-you don't own.
-
-## Step - Decision tree
+## How to use
+
+1. When an engineer says "I can't write the test first," name the
+   code shape that's blocking - which of the eight patterns below it
+   matches.
+2. Run the decision tree to route the symptom to a pattern number.
+3. Open the matching references file for the full before/after example
+   and the seam it introduces.
+4. Apply the refactor incrementally - one method or one dependency at a
+   time (strangler fig), never a big-bang rewrite.
+5. Move the substituted dependency to the single composition root, so
+   construction becomes pure assignment.
+6. Write the test first now that the seam exists, passing a fake at the
+   seam.
+7. Repeat per blocker; defer to Beck for TDD basics and
+   `test-code-conventions` for writing the test well.
+
+## The stuck patterns
+
+Each pattern pairs a testability blocker with the refactor that opens a
+seam. Full before/after code for every pattern lives in the linked
+references file.
+
+| # | Stuck pattern | Refactor | Full example |
+|---|---------------|----------|--------------|
+| 1 | Singleton / static dependency | Dependency injection | [references/injection-patterns.md](references/injection-patterns.md) |
+| 2 | Network (or other I/O) in constructor | Push side effects out of construction | [references/injection-patterns.md](references/injection-patterns.md) |
+| 3 | Time / random as hidden input | Inject the source (`now`, `rand`, `Clock`) | [references/injection-patterns.md](references/injection-patterns.md) |
+| 4 | Untestable boundaries (file system, OS) | Ports-and-adapters (hexagonal) | [references/boundary-adapter-patterns.md](references/boundary-adapter-patterns.md) |
+| 5 | Deeply nested construction | Factory + composition root | [references/structural-patterns.md](references/structural-patterns.md) |
+| 6 | Untestable private methods | Test through the public interface, or extract a class | [references/structural-patterns.md](references/structural-patterns.md) |
+| 7 | Async / Promise-heavy code | Split into orchestrator + injected steps | [references/structural-patterns.md](references/structural-patterns.md) |
+| 8 | Code that calls third-party SDKs | Adapter (don't mock what you don't own) | [references/boundary-adapter-patterns.md](references/boundary-adapter-patterns.md) |
+
+## Decision tree
 
 ```
 Is your test setup more than 10 lines?         → Pattern 5 (composition root)
@@ -339,6 +74,32 @@ Constructor does I/O?                           → Pattern 2 (push out)
 Async chain with 5+ awaits?                     → Pattern 7 (orchestrator)
 Want to test private methods?                   → Pattern 6 (extract or test through public)
 ```
+
+## Worked example
+
+An engineer is stuck on `processOrder`, which reads its data through a
+global singleton:
+
+```javascript
+function processOrder(orderId) {
+  const order = Database.getInstance().findOrder(orderId);
+  // ...
+}
+```
+
+1. **Route it.** The decision tree entry "wanting to mock a singleton"
+   points to Pattern 1.
+2. **Open** [references/injection-patterns.md](references/injection-patterns.md)
+   and apply Dependency Injection: add a `db` parameter so the caller
+   supplies the dependency.
+3. **Move** `Database.getInstance()` to the composition root, the single
+   place that passes it in production.
+4. **Write the test first**, injecting a fake:
+   `processOrder(1, { findOrder: () => ({ id: 1 }) })`.
+
+Result: the test runs with no global state touched, and the "I can't
+write the test first" wall is gone - the blocker was the code shape,
+not TDD.
 
 ## Anti-patterns
 

@@ -29,6 +29,22 @@ platform-workflow skills, and downstream triage tooling.
 - Configuring a tracker's severity / priority field options.
 - Coaching a tester / triager on the distinction.
 
+## How to use
+
+1. Read the defect and decide what function it breaks and how badly;
+   pick a **severity** (S1-S5) from the severity scale anchors.
+2. Separately weigh how urgently the fix must land given business
+   context; pick a **priority** (P1-P5) from the priority scale.
+3. Locate the pair in the 5x5 matrix; if the cell is "rare" or
+   "unusual", record an explicit rationale for the combination.
+4. Confirm you did not collapse the axes (do not force P1 just
+   because severity is S1) - the two values are independent.
+5. Set the tracker's severity and priority fields per the
+   configuring-a-tracker table for your platform.
+6. On any later re-triage (state change), keep severity fixed and
+   revisit priority only.
+7. Log every priority change with its rationale.
+
 ## The two axes
 
 ### Severity scale
@@ -101,6 +117,25 @@ Each cell in the 5×5 matrix below represents a real combination:
   surfaced 4 hours before a marketing email lands that mentions
   the feature. Severity is Medium (function works in 90 % of
   cases) but priority is Immediate (marketing dependency).
+
+## Worked example
+
+A CSV export appends one trailing blank column for every user. The
+export still succeeds and every data value is correct.
+
+1. Severity: the function works and data is intact; the defect is a
+   cosmetic formatting flaw -> **S4 Low** (functionality not impaired).
+2. Priority: a major enterprise customer's ingestion pipeline breaks
+   on the extra column, and their renewal is next week -> **P2 High**
+   (business commitment, near-term deadline).
+3. Matrix check: the pair is **S4 / P2** - an "unusual" cell, so log
+   the rationale (customer renewal dependency).
+4. Set Jira `Severity = Low`, `Priority = High`; do not bump severity
+   to justify the urgency.
+
+Result: the fix is scheduled in the current sprint despite Low
+severity, driven entirely by the High priority - a clean demonstration
+that the two axes move independently.
 
 ## Mapping to lifecycle
 

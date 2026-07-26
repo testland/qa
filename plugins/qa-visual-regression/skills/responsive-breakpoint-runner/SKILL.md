@@ -19,9 +19,10 @@ here each have their own way to express a viewport list:
   consumed in a `preVisit` hook.
 
 This skill is a dispatcher: pick the engine the project already runs,
-follow the matching pattern below, then aggregate into a single
-breakpoint report. **It does not replace any engine** - it composes the
-plugin's per-engine skills.
+follow the matching pattern, then aggregate into a single breakpoint
+report. **It does not replace any engine** - it composes the plugin's
+per-engine skills. The per-engine viewport syntax lives in
+[references/engine-viewport-syntax.md](references/engine-viewport-syntax.md).
 
 ## When to use
 
@@ -40,16 +41,19 @@ directly to the relevant per-engine SKILL.md.
 
 ```
 Is the project using Chromatic + Storybook?
-├── Yes → follow "Chromatic dispatch" below.
+├── Yes → Chromatic pattern.
 └── No
     ├── Is the project using Percy?
-    │   └── Yes → follow "Percy dispatch" below.
+    │   └── Yes → Percy pattern.
     └── No
         ├── Is the project using @storybook/test-runner without Chromatic?
-        │   └── Yes → follow "Storybook test-runner dispatch" below.
+        │   └── Yes → Storybook test-runner pattern.
         └── No  (project uses raw @playwright/test snapshots)
-            └── follow "Playwright dispatch" below.
+            └── Playwright pattern.
 ```
+
+Each pattern - per-engine viewport syntax and its source docs - is in
+[references/engine-viewport-syntax.md](references/engine-viewport-syntax.md).
 
 If the project uses **two** engines (e.g. Chromatic for stories +
 Playwright snapshots for full pages), apply the matching pattern to
@@ -57,124 +61,54 @@ each independently and use the
 `visual-baseline-gate` skill to
 aggregate verdicts.
 
-## Chromatic dispatch
+## How to use
 
-Per the [Chromatic viewports docs][chrom-vp], viewports are configured
-**per story** via `parameters.chromatic.viewports`. Pixel widths, set
-inside the story's `parameters` block:
+1. Confirm the UI ships at three or more breakpoints and list the
+   target widths (e.g. 375 / 768 / 1280 / 1920).
+2. Identify which engine the project already runs (Percy, Chromatic,
+   Playwright snapshots, or Storybook test-runner) with the dispatcher
+   decision tree above.
+3. Apply that engine's viewport pattern from
+   [references/engine-viewport-syntax.md](references/engine-viewport-syntax.md);
+   for a two-engine project, apply each pattern independently.
+4. Run the matrix so every page/story renders at every breakpoint.
+5. Normalize each engine's per-breakpoint result into the common row
+   shape (see "Producing the unified report").
+6. Render the markdown matrix (rows = pages/stories, columns =
+   breakpoints) and pipe it into `$GITHUB_STEP_SUMMARY`.
+7. Feed the same rows into `visual-baseline-gate` for a hard CI gate
+   that fails on any red cell.
 
-[chrom-vp]: https://www.chromatic.com/docs/viewports/
+## Worked example
 
-```javascript
-// Header.stories.ts
-export default {
-  title: 'Components/Header',
-  component: Header,
-  parameters: {
-    chromatic: {
-      viewports: [375, 768, 1280, 1920],
-    },
-  },
-};
+A dashboard app already runs Playwright snapshots at `desktop-1280`
+only and wants mobile + tablet + wide coverage without tripling test
+files.
+
+1. Target widths: 375 / 768 / 1280 / 1920. The engine is raw
+   `@playwright/test` snapshots, so the dispatcher points to the
+   Playwright pattern.
+2. Add one `project` per breakpoint in `playwright.config.ts`
+   (`mobile-375`, `tablet-768`, `desktop-1280`, `wide-1920`), each with
+   its own `viewport`.
+3. Run `npx playwright test` - all four projects run in parallel and
+   each writes its own snapshot suffix, so baselines stay isolated.
+4. `/pricing` fails at `tablet-768` and `desktop-1280` (a wrapped nav
+   overflows); every other page passes at every width.
+5. Normalize each result into the row shape and render the matrix:
+
+```markdown
+| Page / Story | mobile-375 | tablet-768 | desktop-1280 | wide-1920 |
+|--------------|:----------:|:----------:|:------------:|:---------:|
+| /dashboard   |     ✅     |     ✅     |      ✅      |    ✅    |
+| /onboarding  |     ✅     |     ✅     |      ✅      |    ✅    |
+| /pricing     |     ✅     |     ❌     |      ❌      |    ✅    |
 ```
 
-A story with multiple viewports produces one snapshot per viewport in
-the same Chromatic build. Pair with TurboSnap (`--only-changed`, see
-`chromatic-visual-regression-testing`)
-so a per-PR breakpoint matrix doesn't blow up snapshot quota.
-
-## Percy dispatch
-
-Per [Percy CLI][percy-cli], project-wide widths are set in the Percy
-config file (`.percy.yml`, `percy.config.js`, etc., resolved per the
-order documented in
-`percy-visual-regression-testing`):
-
-[percy-cli]: https://github.com/percy/cli
-
-```yaml
-# .percy.yml
-version: 2
-snapshot:
-  widths: [375, 768, 1280, 1920]
-  min-height: 1024
-```
-
-For a single overridden snapshot, pass the widths in the SDK call:
-
-```javascript
-await percySnapshot(page, 'Homepage', { widths: [375, 1280] });
-```
-
-(Per the per-engine readme - when in doubt, check the latest
-[percy/cli][percy-cli] release for the current snapshot config schema.)
-
-## Playwright dispatch
-
-Per [playwright-snapshots][pw-snap], the canonical pattern is one
-`project` per breakpoint, each with its own `viewport` set:
-
-[pw-snap]: https://playwright.dev/docs/test-snapshots
-
-```typescript
-// playwright.config.ts
-import { defineConfig, devices } from '@playwright/test';
-
-export default defineConfig({
-  projects: [
-    { name: 'mobile-375',  use: { ...devices['Desktop Chrome'], viewport: { width: 375,  height: 667  } } },
-    { name: 'tablet-768',  use: { ...devices['Desktop Chrome'], viewport: { width: 768,  height: 1024 } } },
-    { name: 'desktop-1280',use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800  } } },
-    { name: 'wide-1920',   use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 } } },
-  ],
-});
-```
-
-Run the matrix:
-
-```bash
-npx playwright test --project=mobile-375
-npx playwright test --project=tablet-768
-npx playwright test                                    # runs all projects in parallel
-```
-
-Each project produces its own snapshot suffix
-(`-chromium-linux-mobile-375.png` etc.) so baselines are isolated. See
-`playwright-snapshots` for the
-naming convention.
-
-## Storybook test-runner dispatch
-
-When using `@storybook/test-runner` without Chromatic, drive the
-viewport via the test-runner's `preVisit` hook
-(per [storybook-test-runner][st-tr]):
-
-[st-tr]: https://storybook.js.org/docs/writing-tests/integrations/test-runner
-
-```typescript
-// .storybook/test-runner.ts
-import type { TestRunnerConfig } from '@storybook/test-runner';
-import { expect } from '@playwright/test';
-
-const VIEWPORTS = [375, 768, 1280, 1920];
-
-const config: TestRunnerConfig = {
-  async postVisit(page, context) {
-    for (const width of VIEWPORTS) {
-      await page.setViewportSize({ width, height: Math.round(width * 0.75) });
-      await expect(page.locator('#storybook-root')).toHaveScreenshot(
-        `${context.id}-${width}.png`
-      );
-    }
-  },
-};
-
-export default config;
-```
-
-Note this pattern multiplies snapshot count by `VIEWPORTS.length` - 
-acceptable for a few hundred stories; reconsider above ~1000 stories
-where Chromatic's TurboSnap makes more economic sense.
+The two red cells in the `/pricing` row tell the reviewer exactly which
+breakpoints regressed. Pipe the matrix into `$GITHUB_STEP_SUMMARY` and
+feed the rows to `visual-baseline-gate`, which exits non-zero on the
+failed cells.
 
 ## Producing the unified report
 
@@ -236,12 +170,12 @@ URL) so a reviewer can see the diff for a specific cell:
 
 ## References
 
+- [references/engine-viewport-syntax.md](references/engine-viewport-syntax.md) -
+  per-engine viewport syntax for Percy, Chromatic, Playwright, and
+  Storybook test-runner, with source doc links.
 - `percy-visual-regression-testing`
 - `chromatic-visual-regression-testing`
 - `playwright-snapshots`
 - `storybook-visual-regression-testing`
 - `visual-baseline-gate` - the
   matching gate skill that consumes the unified row shape.
-- [chrom-vp][chrom-vp] - Chromatic per-story viewport syntax.
-- [pw-snap][pw-snap] - Playwright snapshot framework.
-- [st-tr][st-tr] - Storybook test-runner lifecycle hooks.
