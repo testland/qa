@@ -31,7 +31,16 @@ integration, and JSON output for downstream tooling.
 - Layering SCA: run bundler-audit for the Ruby-specific feed, pair with
   `osv-scanner` for OSV.dev cross-DB consensus.
 
-## Step 1 - Install
+## How to use
+
+1. Install bundler-audit (`gem install bundler-audit`); no system deps beyond a Ruby environment.
+2. Update the local ruby-advisory-db corpus (`bundle-audit update`) so the scan sees current advisories.
+3. Scan the `Gemfile.lock` (`bundle-audit check --update`), which flags vulnerable gem versions and insecure `http://` / `git://` sources.
+4. Triage each finding: bump the gem to a fixed version, or confirm it is a false positive.
+5. Suppress confirmed false positives in `.bundler-audit.yml` with a justification comment (approver + re-review date) - full waiver syntax in [references/bundle-audit-ci.md](references/bundle-audit-ci.md).
+6. Gate CI on the non-zero exit code so any unresolved advisory fails the build - GitHub Actions and Rake wiring in [references/bundle-audit-ci.md](references/bundle-audit-ci.md).
+
+## Install
 
 Per [github.com/rubysec/bundler-audit][ba-readme]:
 
@@ -51,7 +60,7 @@ of YAML files under `gems/` (per-RubyGem advisories) and `rubies/` (Ruby
 runtime advisories). `bundle-audit update` syncs the local clone of this
 repo. Subsequent `bundle-audit check --no-update` runs are fully offline.
 
-## Step 2 - Basic scan
+## Scan
 
 Per [github.com/rubysec/bundler-audit][ba-readme]:
 
@@ -60,12 +69,9 @@ bundle-audit check --update
 ```
 
 The `--update` flag refreshes the local ruby-advisory-db before scanning,
-ensuring the check sees the latest advisories. In environments where
-outbound git is restricted, pre-update during a build step and scan with:
-
-```bash
-bundle-audit check --no-update
-```
+ensuring the check sees the latest advisories. Where outbound git is
+restricted, pre-update in a build step and scan offline with
+`bundle-audit check --no-update`.
 
 bundler-audit scans `Gemfile.lock` in the current directory and checks
 two classes of issues ([github.com/rubysec/bundler-audit][ba-readme]):
@@ -75,15 +81,14 @@ two classes of issues ([github.com/rubysec/bundler-audit][ba-readme]):
 2. Insecure sources - `http://` and `git://` source URIs that transmit
    without TLS.
 
-## Step 3 - Output formats
-
-Per [github.com/rubysec/bundler-audit][ba-readme]:
+Output flags ([github.com/rubysec/bundler-audit][ba-readme]):
 
 | Flag | Output |
 |---|---|
 | (none) | Default human-readable text |
 | `--format json` | JSON; suitable for multi-tool SCA triage |
 | `--output FILE` | Write output to file instead of stdout |
+| `--gemfile-lock PATH` | Scan a lockfile at a non-default path |
 
 JSON + file example, useful as a CI artifact:
 
@@ -91,17 +96,10 @@ JSON + file example, useful as a CI artifact:
 bundle-audit check --update --format json --output bundle-audit.json
 ```
 
-To scan a `Gemfile.lock` at a non-default path
-([github.com/rubysec/bundler-audit][ba-readme]):
-
-```bash
-bundle-audit check --gemfile-lock path/to/Gemfile.custom.lock --update
-```
-
-## Step 4 - Advisory suppression
+## Suppress false positives
 
 Per [github.com/rubysec/bundler-audit][ba-readme], create
-`.bundler-audit.yml` at the project root:
+`.bundler-audit.yml` at the project root and list advisory IDs to ignore:
 
 ```yaml
 ---
@@ -110,89 +108,63 @@ ignore:
   - GHSA-xxxx-yyyy-zzzz
 ```
 
-The `ignore` array takes CVE, GHSA, or OSVDB identifiers. These are
-committed to source control, making suppressions auditable in git history.
+The `ignore` array takes CVE, GHSA, or OSVDB identifiers, committed to
+source control so suppressions are auditable in git history. Every ignore
+needs an inline justification comment (reachability finding, approver,
+re-review date); undocumented ignores are a code-smell reviewers should
+treat as unapproved. The mandatory justification template, per-run
+`--ignore` flags, and the quarterly re-review cadence are in
+[references/bundle-audit-ci.md](references/bundle-audit-ci.md).
 
-**Justification template (mandatory in team practice):**
+## Worked example
+
+A Rails service locks `nokogiri 1.13.0` and `rack 2.2.3`. Run the scan:
+
+```bash
+bundle-audit check --update
+```
+
+bundler-audit flags two advisories and exits non-zero:
+
+```
+Name: nokogiri
+Version: 1.13.0
+CVE: CVE-2022-24836
+Criticality: High
+Title: Nokogiri ReDoS on crafted input
+Solution: upgrade to >= 1.13.4
+
+Name: rack
+Version: 2.2.3
+CVE: CVE-2022-30122
+Criticality: Medium
+Title: Denial of Service in Rack multipart parsing
+Solution: upgrade to >= 2.2.3.1
+
+Vulnerabilities found!
+```
+
+Because the exit code is non-zero, a CI job running this step fails. Triage
+the two findings:
+
+1. `nokogiri` is reachable (it parses user-supplied XML). Patch it -
+   `bundle update nokogiri` to `1.13.4` - and the advisory clears.
+2. `rack` multipart parsing is confirmed unreachable (the app rejects
+   multipart requests at the edge). Suppress it with justification in
+   `.bundler-audit.yml`:
 
 ```yaml
 ---
-# Suppressions last reviewed: 2026-06-04
-# Re-review by: 2026-09-04
+# Suppressions last reviewed: 2026-07-20 / Re-review by: 2026-10-20
 ignore:
-  # CVE-2024-1234: vulnerable function not reachable; foo-gem used only in
-  # test fixtures. Verified via grep + code review. Approved: alice@example.com
-  - CVE-2024-1234
+  # CVE-2022-30122: multipart parsing unreachable; app rejects multipart
+  # requests at the edge. Verified via route audit. Approved: alice@example.com
+  - CVE-2022-30122
 ```
 
-Inline comments in YAML document the reachability analysis, approver, and
-re-review date. Suppressions without comments are a code-smell: reviewers
-should treat undocumented ignores as unapproved.
-
-Per-run suppression (not persisted):
-
-```bash
-bundle-audit check --ignore CVE-2024-1234 --ignore GHSA-xxxx-yyyy-zzzz
-```
-
-Use `--ignore` flags only in automated temporary workarounds; prefer
-`.bundler-audit.yml` for anything committed.
-
-## Step 5 - Rake integration
-
-Per [github.com/rubysec/bundler-audit][ba-readme], add to your `Rakefile`:
-
-```ruby
-require 'bundler/audit/task'
-Bundler::Audit::Task.new
-```
-
-This registers two Rake tasks:
-
-- `rake bundle:audit` - runs the audit check.
-- `rake bundle:audit:update` - updates the local advisory database.
-
-Rake integration composes with existing test pipelines:
-
-```ruby
-task default: %w[spec bundle:audit]
-```
-
-The `bundle:audit` task exits non-zero on findings, making it a natural
-gate before a `spec` run or within a CI task matrix.
-
-## Step 6 - Exit codes and CI gating
-
-Per [github.com/rubysec/bundler-audit][ba-readme]:
-
-- Exit `0` - no vulnerabilities or insecure sources found.
-- Exit non-zero - at least one vulnerability or insecure source found.
-
-GitHub Actions example:
-
-```yaml
-jobs:
-  bundle-audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - name: Install bundler-audit
-        run: gem install bundler-audit
-      - name: Run audit
-        run: bundle-audit check --update --format json --output bundle-audit.json
-      - name: Upload findings
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: bundle-audit
-          path: bundle-audit.json
-```
-
-The `if: always()` upload ensures findings are accessible even when the
-audit step fails, enabling triage without re-running the workflow.
+Re-run offline (`bundle-audit check --no-update`): both findings resolved,
+exit `0`, CI passes. Wire the gate into the pipeline per
+[references/bundle-audit-ci.md](references/bundle-audit-ci.md).
 
 ## Anti-patterns
 
@@ -222,6 +194,9 @@ audit step fails, enabling triage without re-running the workflow.
   config, Rake integration, exit codes
 - [github.com/rubysec/ruby-advisory-db][ruby-advisory-db] - advisory corpus
   structure (gems/ + rubies/ YAML files), CVE/GHSA/OSVDB coverage
+- CI wiring (Rake + GitHub Actions), exit-code gating, and the full
+  `.bundler-audit.yml` waiver template:
+  [references/bundle-audit-ci.md](references/bundle-audit-ci.md)
 - `npm-pip-maven-audit` - multi-ecosystem
   native audit dispatcher; covers `bundle audit` as one ecosystem among many
 - `osv-scanner` - OSV.dev cross-DB scanner;

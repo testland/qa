@@ -28,70 +28,29 @@ what consequences for unsupported configurations.
   needs the documented stance.
 - A contractual obligation requires a compatibility statement.
 
+## How to use
+
+1. Pick the product type and copy the closest example budget from [references/compatibility-budget-tiers.md](references/compatibility-budget-tiers.md).
+2. Assign each candidate browser / OS / runtime combo a tier - Tier 1, 2, 3, or unsupported (§1).
+3. Count combos per tier against the cost / coverage trade-off (§3); if CI cost exceeds budget, demote the lowest-value combos.
+4. Reconcile the Tier 1 list with user-agent telemetry (§6) so it matches real traffic.
+5. Publish the external "what we support" statement (§4).
+6. Schedule a quarterly review (§5) to promote or retire combos as versions evolve.
+
 ## §1 - Tier model
 
-| Tier         | Definition                                          | CI cadence       |
-|--------------|-----------------------------------------------------|------------------|
-| **Tier 1**    | Must work; failure blocks releases.                 | Per-PR smoke.    |
-| **Tier 2**    | Must work; failure blocks releases on detection.    | Nightly full suite. |
-| **Tier 3**    | Should work; broken-here is a known issue.          | Pre-release manual / weekly. |
-| **Unsupported** | Explicitly out of scope; bugs closed as "not supported." | None.    |
+Four tiers signal **engineering investment**, not user importance - a low-traffic configuration under contractual obligation may still be Tier 1:
 
-The tier signals **engineering investment**, not user importance - 
-a configuration with low traffic but contractual obligation may be
-Tier 1.
+- **Tier 1** - must work; per-PR smoke.
+- **Tier 2** - must work; nightly full suite.
+- **Tier 3** - should work; pre-release manual / weekly.
+- **Unsupported** - out of scope; bugs closed as "not supported."
+
+Full definitions and CI cadence: [references/compatibility-budget-tiers.md](references/compatibility-budget-tiers.md).
 
 ## §2 - Example budget per product type
 
-### Modern web app
-
-| Configuration                | Tier   |
-|------------------------------|--------|
-| Chrome (current + 1 prior)    | 1     |
-| Edge (current)                | 1     |
-| Safari (current + 1 prior)    | 1     |
-| Firefox (current)              | 2     |
-| iOS Safari (current + 1 prior) | 1     |
-| Chrome on Android (current)   | 1     |
-| Firefox Android               | 3     |
-| Samsung Internet              | 3     |
-| Internet Explorer              | unsupported |
-| < Chrome 100                   | unsupported |
-
-### Internal SaaS (controlled audience)
-
-| Configuration                  | Tier   |
-|--------------------------------|--------|
-| Chrome (latest stable)          | 1     |
-| Chrome (current - 1 stable)     | 1     |
-| Edge (latest)                   | 2     |
-| Firefox                          | 3     |
-| Safari                          | 3     |
-| All others                      | unsupported |
-
-### Open-source library
-
-| Configuration                                       | Tier   |
-|-----------------------------------------------------|--------|
-| Node 18, 20, 22 on Linux                             | 1     |
-| Node 18, 20, 22 on macOS                             | 2     |
-| Node 18, 20, 22 on Windows                           | 2     |
-| Bun (current)                                         | 3     |
-| Deno (current)                                        | 3     |
-| Older Node EOL versions                              | unsupported |
-
-### Mobile native app
-
-| Configuration                          | Tier   |
-|----------------------------------------|--------|
-| iOS 17, 16 (current + 1 prior)          | 1     |
-| iOS 15                                  | 2     |
-| iOS 14                                   | 3     |
-| < iOS 14                                | unsupported |
-| Android 14, 13                           | 1     |
-| Android 12                               | 2     |
-| Android 11                                | 3     |
-| < Android 11                             | unsupported |
+Worked starting budgets for a modern web app, an internal SaaS, an open-source library, and a mobile native app are tabulated in [references/compatibility-budget-tiers.md](references/compatibility-budget-tiers.md). Copy the closest template and adjust each combo's tier against your telemetry (§6).
 
 ## §3 - Cost / coverage trade-off
 
@@ -175,6 +134,17 @@ If the team has analytics on browser / OS distribution, use it:
 The 80/20 rule: if a configuration has <1% usage, Tier 3 or
 unsupported. If <0.1%, unsupported.
 
+## Worked example
+
+A mid-size web app team caps its browser scope:
+
+- **Tier 1 - 6 combos, per-PR smoke:** Chrome current + prior, Edge current, Safari current + prior, iOS Safari current, Chrome on Android current. Telemetry (§6) shows these cover ~90% of traffic.
+- **Tier 2 - 4 combos, nightly:** Firefox current, Safari prior, iOS Safari prior, Samsung Internet.
+- **Tier 3 - best-effort:** Firefox on Android; anything below Chrome 100.
+- **Unsupported:** Internet Explorer; Chrome < 100.
+
+Cost check (§3): 6 Tier 1 combos on per-PR smoke stay inside the CI budget while 4 Tier 2 combos run once nightly. The team publishes the §4 support statement listing the three tiers plus the unsupported set, then calendars the §5 quarterly review. Result: cross-browser scope is capped at 10 committed combos behind a documented, defensible support policy.
+
 ## §7 - Compatibility statement vs accessibility commitment
 
 These are different:
@@ -211,6 +181,7 @@ accessibility experience. The two budgets compose.
 
 ## References
 
+- [references/compatibility-budget-tiers.md](references/compatibility-budget-tiers.md) - detailed tier definitions and per-product-type example budgets.
 - `browser-matrix-runner` - 
   the runner this budget configures.
 - `os-matrix-runner` - sibling for
