@@ -1,6 +1,6 @@
 ---
 name: graphql-subscription-test-author
-description: "Authors test suites for GraphQL subscription resolvers over graphql-ws (WebSocket) and graphql-sse (Server-Sent Events) transports: subscribe to event streams with the async-iterator API, assert emitted data shape and sequence, verify connection lifecycle (connect, auth rejection, graceful close, protocol close codes), validate auth-on-connect via connectionParams / authenticate callback, and test resolver-level pubsub trigger logic in isolation. Use when writing tests for subscription operations - as distinct from query/mutation tests covered by apollo-server-tests, graphql-yoga-tests, or mercurius-tests."
+description: "Authors GraphQL subscription resolver test suites over graphql-ws (WebSocket) and graphql-sse (Server-Sent Events) transports: subscribe to event streams via the async-iterator API, assert emitted data shape and sequence, verify connection lifecycle and protocol close codes, and validate auth-on-connect (connectionParams / authenticate callback) plus resolver-level pubsub trigger logic. Use for real-time subscription operations; not for queries or mutations - for those use apollo-server-tests, graphql-yoga-tests, or mercurius-tests."
 ---
 
 # graphql-subscription-test-author

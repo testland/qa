@@ -1,6 +1,6 @@
 ---
 name: xray-integration
-description: "Imports CI test results into Xray for Jira - authenticates via the `client_id` + `client_secret` → JWT exchange (Cloud) or PAT / Basic (Server), posts to the format-specific `/api/v2/import/execution/*` endpoint (`/junit` for JUnit XML, `/cucumber` for Cucumber JSON, `/nunit` / `/testng` / `/robot` for the others), and maps automated test results to existing Xray Test issues via the `xray-junit-extensions` `@XrayTest(key=\"...\")` annotation. Use when the team uses the Xray add-on (not Zephyr Scale - see zephyr-integration) to manage Test, Test Set, and Test Execution issue types in Jira and CI must keep those execution issues in sync."
+description: "Imports CI test results into Xray for Jira - authenticates via the `client_id` + `client_secret` → JWT exchange (Cloud) or PAT / Basic (Server), posts to the format-specific `/api/v2/import/execution/*` endpoint (`/junit` for JUnit XML, `/cucumber` for Cucumber JSON, `/nunit` / `/testng` / `/robot` for the others), and maps automated results to existing Xray Test issues via the `xray-junit-extensions` `@XrayTest(key=\"...\")` annotation. Use when the team uses the Xray Jira app to manage Test, Test Set, and Test Execution issue types and CI must keep those execution issues in sync; for the other Jira TCM app use zephyr-integration (Zephyr Scale), for standalone non-Jira TestRail use testrail-integration, and for hosted cross-run flakiness analytics rather than TCM sync use currents-integration."
 ---
 
 # xray-integration

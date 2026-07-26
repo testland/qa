@@ -1,9 +1,9 @@
 {
   "name": "testland/dependabot-config",
-  "description": "Reference for `.github/dependabot.yml` - GitHub-native dependency-update orchestrator. Required keys (`version: 2`, `updates[]` array) plus per-update fields (`package-ecosystem`, `directory` / `directories`, `schedule.interval`); common optional fields (`ignore`, `groups`, `allow`, `labels`, `milestone`, `open-pull-requests-limit`, `target-branch`, `vendor`, `versioning-strategy`, `assignees`, `commit-message`); auto-rebase + grouped-PR + security-only updates. Use when authoring or reviewing Dependabot configs in GitHub-hosted repos.",
+  "description": "Reference for .github/dependabot.yml - GitHub-native dependency-update orchestrator. Required keys (version: 2, updates[] array), per-update fields (package-ecosystem, directory/directories, schedule.interval), optional fields (ignore, groups, allow, versioning-strategy), plus grouped-PR and security-only updates. Config-authoring, not scanning: renovate-config is the multi-platform (GitLab/Bitbucket/Azure DevOps) equivalent; to find vulnerable versions run snyk-test, osv-scanner, or npm-pip-maven-audit.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.3"
+  "version": "1.2.4"
 }

@@ -1,9 +1,9 @@
 {
   "name": "testland/session-based-test-management-reference",
-  "description": "Pure-reference catalog of Session-Based Test Management (SBTM) - Jonathan and James Bach's framework for managing exploratory testing as time-boxed sessions. Defines the session (60-90 min focused exploration), the charter (mission statement), the session sheet structure (TBS / OPP / setup / test design + execution / charter / bug / issues / sessions), the dashboard view (% session time, bug-finding rate, charter throughput), and the PROOF debrief. Use as the canonical SBTM vocabulary for authoring charters and running manual-test debriefs.",
+  "description": "Pure-reference catalog of Session-Based Test Management (SBTM) - the Bachs' framework for running exploratory testing as time-boxed sessions: the session (60-90 min), the charter (Explore X with Y to discover Z), the session-sheet structure, the TBS metrics, the cross-session dashboard, and the PROOF debrief. Use as the SBTM vocabulary for authoring charters and reviewing session sheets. Distinct from manual-test-debrief (the PROOF debrief template), exploratory-tours-reference (the session themes), and the heuristic catalog hiccupps-f-heuristic.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.7.3"
+  "version": "1.7.5"
 }

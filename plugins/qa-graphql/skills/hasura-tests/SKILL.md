@@ -1,6 +1,6 @@
 ---
 name: hasura-tests
-description: "Wraps Hasura GraphQL Engine testing patterns: docker-compose for a controllable test instance, metadata API for declarative schema/permissions setup (apply / clear / export metadata), x-hasura-role and x-hasura-user-id session headers for role-based permission tests, the v1/graphql endpoint with HTTPie / curl / language-native HTTP clients for query execution, and the recommended permission-matrix testing pattern (one role × N rows × M columns). Use when testing Hasura-backed APIs where permissions and row-level filtering are the dominant correctness concern. Also covers the HASURA_GRAPHQL_DISABLE_INTROSPECTION_PUBLIC_API env var that locks down public introspection."
+description: "Wraps Hasura GraphQL Engine testing patterns: docker-compose test instance, the metadata API for declarative schema/permission setup, x-hasura-role and x-hasura-user-id session headers for role-based permission tests, the v1/graphql endpoint via curl/HTTPie/native HTTP clients, and the role-by-table-by-operation permission-matrix pattern. Use for a metadata-driven Hasura engine where row-level permissions dominate; for a code-first server runtime harness use graphql-yoga-tests, apollo-server-tests, or mercurius-tests instead, not this skill."
 ---
 
 # hasura-tests

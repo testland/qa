@@ -1,9 +1,9 @@
 {
   "name": "testland/api-chaos-runner",
-  "description": "Builds a workflow that runs the project's existing API tests under injected network chaos - latency, timeouts, dropped connections, bandwidth caps, packet loss - using Toxiproxy as the proxy layer (with notes on alternatives Pumba / Gremlin / LitmusChaos). Defines a chaos matrix per test scenario, runs each, and reports which assertions break under which conditions. Use when the API surface needs to verify resilience patterns (retry, circuit-breaker, timeout, fallback) actually work.",
+  "description": "Runs the project's existing API tests under injected network chaos - latency, timeouts, dropped connections, bandwidth caps, packet loss - via Toxiproxy (notes on Pumba / Gremlin / LitmusChaos). Builds a per-scenario chaos matrix and reports which assertions break under which conditions, verifying resilience patterns (retry, circuit-breaker, timeout, fallback). Unlike schemathesis-fuzzing and restler-fuzzing, which generate new tests from a schema, this drives your EXISTING example-based suite.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.5.2"
+  "version": "1.5.4"
 }

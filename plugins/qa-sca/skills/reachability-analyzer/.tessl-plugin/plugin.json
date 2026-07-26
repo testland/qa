@@ -1,9 +1,9 @@
 {
   "name": "testland/reachability-analyzer",
-  "description": "Runs dead-dependency analysis across JS, Python, and Rust projects using ecosystem-native static tools (`depcheck`/`knip` for JS, `vulture` for Python, `cargo-machete` for Rust), then cross-references the unused-dependency list against SCA findings to downrank vulns in code that is never loaded. Use when SCA output (from `osv-scanner`, `snyk-test`, or `npm-pip-maven-audit`) is too noisy to triage and the team needs to separate unreachable CVEs from exploitable ones before sprint planning.",
+  "description": "Runs dead-dependency analysis across JS, Python, and Rust projects using ecosystem-native static tools (`depcheck`/`knip` for JS, `vulture` for Python, `cargo-machete` for Rust), then cross-references the unused-dependency list against SCA findings to downrank vulns in code that is never loaded. Use when SCA output (from `osv-scanner`, `snyk-test`, or `npm-pip-maven-audit`) is too noisy to triage and the team needs to separate unreachable CVEs from exploitable ones before sprint planning; sibling cve-exploitability-triage ranks by EPSS/KEV exploitation signal, not code reachability.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.3"
+  "version": "1.2.4"
 }

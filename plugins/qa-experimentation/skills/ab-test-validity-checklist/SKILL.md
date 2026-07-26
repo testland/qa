@@ -1,6 +1,6 @@
 ---
 name: ab-test-validity-checklist
-description: "Workflow-driven skill that builds an A/B test validity checklist from an experiment proposal. Walks through the canonical validity gates (pre-registration of OEC + power calc + guardrails, randomization unit + SRM check, assignment integrity, telemetry correctness, peeking discipline per peeking-problem-reference, novelty/primacy assessment, post-experiment SRM re-check, results-interpretation guardrails per Kohavi et al.) and emits a per-experiment checklist + a sign-off form. Use when launching a new experiment, auditing an existing one, or building experimentation governance."
+description: "Workflow skill that builds an A/B-test validity checklist from an experiment proposal, walking the canonical design-correctness gates - pre-registered OEC/power/guardrails, randomization unit + SRM check, assignment integrity, telemetry, peeking discipline, novelty/primacy, post-experiment SRM re-check - into a per-experiment checklist + sign-off form. Use when launching, auditing, or governing an experiment. For pitfall mechanics use guardrail-metrics-reference or peeking-problem-reference; to read an already-valid result use experiment-results-interpreter; for per-SDK harness tests use optimizely-test or statsig-test - this gates DESIGN, not SDK code."
 ---
 
 # ab-test-validity-checklist

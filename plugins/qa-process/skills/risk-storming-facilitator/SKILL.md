@@ -1,6 +1,6 @@
 ---
 name: risk-storming-facilitator
-description: "Reference guide for planning and facilitating a risk-storming session yourself - covers meeting structure, participant roster, per-category brainstorm prompts (categories drawn from `risk-matrix`), affinity grouping, impact by likelihood scoring, and mitigation assignment. Static reference only, not an active runner: distinct from an interactive session runner that runs the session and writes the matrix file, and distinct from `risk-matrix` (the artifact itself). Use when you want to understand or teach the facilitation pattern, or run the session at feature-kickoff time without agent assistance."
+description: "Reference guide for planning and facilitating a risk-storming session yourself - meeting structure, participant roster, per-category brainstorm prompts (categories from risk-matrix), affinity grouping, impact by likelihood scoring, and mitigation assignment. Static reference only, not an active runner that writes the matrix file. Use to learn or teach the facilitation pattern, or to run a feature-kickoff session without agent assistance. For the matrix artifact itself use risk-matrix, to calibrate its ratings against real defect data use risk-matrix-calibration, and to map the resulting risks onto test coverage use risk-coverage-mapper."
 ---
 
 # risk-storming-facilitator

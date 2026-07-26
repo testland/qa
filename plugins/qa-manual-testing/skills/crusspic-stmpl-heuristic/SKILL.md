@@ -1,6 +1,6 @@
 ---
 name: crusspic-stmpl-heuristic
-description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - thirteen quality criteria a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use as the quality-criteria checklist for evaluating a product holistically; complementary to ISO/IEC 25010 quality model."
+description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - thirteen quality CRITERIA for judging a product: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility, Supportability, Testability, Maintainability, Portability, Localizability; maps to ISO/IEC 25010. Use to set a session's evaluation lens or release-review checklist. For oracles (is it a bug?) use hiccupps-f-heuristic, for what to vary use sfdpot-exploratory-heuristic, for what to model use fcc-cuts-vids-heuristic."
 ---
 
 # crusspic-stmpl-heuristic

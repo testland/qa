@@ -1,9 +1,9 @@
 {
   "name": "testland/payment-flow-states-reference",
-  "description": "Pure-reference catalog of payment lifecycle state machines across Stripe, Adyen, PayPal, and Braintree. Covers the canonical states (created / requires_action / processing / succeeded / requires_capture / canceled / failed), authorisation vs capture (separate vs combined), the asynchronous webhook states, refund / dispute / chargeback transitions, and the per-platform terminology mapping (Stripe PaymentIntent.status vs Adyen Authorisation/Capture vs PayPal Order). Use when designing tests for payment flows or auditing state-handling code.",
+  "description": "Pure-reference catalog of payment lifecycle state machines across Stripe, Adyen, PayPal, and Braintree: canonical states (created / requires_action / processing / succeeded / requires_capture / canceled / failed), authorisation vs capture, asynchronous webhook states, and refund / dispute / chargeback transitions. Use when designing tests for payment flows or auditing state-handling code; this is the state model, not a builder - to author suites on it use refund-test-matrix-builder (refunds), chargeback-flow-test-author (disputes), or payment-webhook-replay (webhook replay).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.3"
+  "version": "1.4.5"
 }

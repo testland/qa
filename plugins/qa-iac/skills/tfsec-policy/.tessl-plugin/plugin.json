@@ -1,9 +1,9 @@
 {
   "name": "testland/tfsec-policy",
-  "description": "Configures tfsec for Terraform-specific security scanning - covers AWS / Azure / GCP / Kubernetes / OpenStack / Oracle / DigitalOcean / CloudStack with developer-friendly output. Important: tfsec is **transitioning to Trivy** per Aqua Security's positioning; new projects evaluate Trivy first. For existing tfsec users, this skill covers config + custom rules + CI integration. Use for Terraform-only projects mid-transition or where tfsec's specific check coverage matters.",
+  "description": "Configures tfsec for Terraform-specific security scanning - covers AWS / Azure / GCP / Kubernetes / OpenStack / Oracle / DigitalOcean / CloudStack, custom YAML rules, and SARIF / JUnit / Markdown output. Note: tfsec is transitioning to Trivy per Aqua Security, so new projects evaluate that first. Use for an existing Terraform-only tfsec stack; for the consolidated forward-path scanner use trivy-config, for the broadest multi-framework checks use checkov-policy, and for wider platform breadth use kics-policy.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.12"
+  "version": "1.1.13"
 }

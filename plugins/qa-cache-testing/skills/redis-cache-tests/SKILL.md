@@ -1,6 +1,6 @@
 ---
 name: redis-cache-tests
-description: "Wraps Redis cache testing patterns: EXPIRE / PEXPIRE / TTL command verification (with the Redis 7+ NX/XX/GT/LT flags), the cache-aside write-then-invalidate test pattern (write to source → DEL key → assert next read fetches fresh), eviction-policy testing under memory pressure (maxmemory + allkeys-lru), Redis-side pub/sub invalidation across cache nodes, and key-namespacing tests for tenant scope. Use when writing tests for an application using Redis as its primary cache."
+description: "Wraps Redis cache testing: EXPIRE / PEXPIRE / TTL verification (Redis 7+ NX/XX/GT/LT flags), cache-aside write-then-invalidate (write source → DEL key → assert fresh read), eviction under memory pressure (maxmemory + allkeys-lru), pub/sub invalidation across nodes, and tenant key-namespacing. Use when Redis is the app's primary cache. For a Memcached app-tier store use memcached-tests; for the browser/HTTP tier use browser-cache-control-tests; a runnable test, not the cache-stampede-reference or cache-coherence-patterns-reference catalogs."
 ---
 
 # redis-cache-tests

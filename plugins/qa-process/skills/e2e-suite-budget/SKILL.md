@@ -1,6 +1,6 @@
 ---
 name: e2e-suite-budget
-description: "Caps E2E test suite size by computing flakiness ROI per test - for each end-to-end test, computes (regressions caught × value) ÷ (runtime × flake rate × maintenance cost), ranks all tests by ROI, identifies the bottom decile (low ROI = high cost / low signal), and recommends specific tests to retire / move to lower layer / fix flake. Use when: the test suite is too large to maintain, CI pipeline is slow or dominated by end-to-end tests, flaky test failures are increasing, the team wants to reduce test maintenance burden, or when deciding which tests to remove or prune. Also use quarterly to keep E2E count from growing past the team's maintenance capacity."
+description: "Caps E2E suite size by computing per-test ROI - (regressions caught × value) ÷ (runtime × flake rate × maintenance) - then ranks every end-to-end test and recommends which bottom-decile ones to retire, move to a lower layer, or fix. Use when CI is slow or E2E-dominated, flaky failures are rising, or quarterly to keep suite size within maintenance capacity. For strategic unit:service:UI layer ratios use test-pyramid-balancer, for the minimal per-deploy critical-path gate use smoke-suite-gate, and for quarantining flaky tests use flaky-test-quarantine; this prunes low-signal tests by ROI."
 ---
 
 # e2e-suite-budget

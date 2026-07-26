@@ -1,9 +1,9 @@
 {
   "name": "testland/allure-reports",
-  "description": "Configures Allure Report for the project (test-runner adapter installation, `allure-results` directory wiring, `categories.json` for failure classification, `history-trend.json` retention via the copy-history-between-runs pattern), runs the Allure CLI to convert `allure-results` to a static HTML site, and uploads the report as a CI artifact. Use when the team needs richer test reporting than JUnit XML - step-level attachments, per-test history, retry tracking, and severity / epic / feature labeling - across the framework-agnostic adapter ecosystem (pytest, Jest, JUnit, TestNG, NUnit, Mocha, etc.).",
+  "description": "Configures Allure Report (test-runner adapter install, `allure-results` directory wiring, `categories.json` for failure classification, `history-trend.json` retention via the copy-history-between-runs pattern), runs the Allure CLI to convert `allure-results` to a static HTML site, and uploads the report as a CI artifact. Use when the team needs richer test reporting than JUnit XML - step-level attachments, per-test history, retry tracking, and severity / epic / feature labeling across framework-agnostic adapters (pytest, Jest, JUnit, TestNG, NUnit, Mocha). As a rich static HTML report generator, it is the open-source alternative to extentreports (JVM/.NET per-test HTML narrative); for hosted cross-run flakiness analytics rather than a static per-run report use currents-integration.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.7"
+  "version": "1.4.12"
 }
