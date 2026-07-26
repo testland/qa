@@ -1,9 +1,9 @@
 {
   "name": "testland/hiccupps-f-heuristic",
-  "description": "Pure-reference catalog of Michael Bolton's HICCUPPS-F oracle heuristic - eight (plus one) reference points for deciding whether something is a problem. Each letter is a kind of oracle the tester consults: History, Image, Comparable products, Claims, Users' desires, Product (internal consistency), Purpose, Standards / statutes, plus Familiar problems. Use as the heuristic vocabulary an exploratory session draws on when asking 'should this behaviour be a bug?'",
+  "description": "Pure-reference catalog of Michael Bolton's HICCUPPS-F oracle heuristic - the reference points a tester consults to decide 'is this a bug?': History, Image, Comparable products, Claims, Users' desires, Product (internal consistency), Purpose, Standards/statutes, plus Familiar problems. Use mid-session to test an observation against each oracle. For what to VARY use sfdpot-exploratory-heuristic, for what to MODEL use fcc-cuts-vids-heuristic, for quality criteria use crusspic-stmpl-heuristic.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.7.3"
+  "version": "1.7.5"
 }

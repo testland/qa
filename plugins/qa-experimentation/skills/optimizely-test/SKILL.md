@@ -1,6 +1,6 @@
 ---
 name: optimizely-test
-description: "Wraps Optimizely Feature Experimentation SDK testing patterns: client initialization with a datafile (offline-friendly), the decide / decideAll API (Optimizely Feature Experimentation, the v5 API), forced-decisions for per-test arm pinning, OptimizelyUserContext + activate / track events, and assignment-integrity tests. Use when writing tests for Optimizely-instrumented application code."
+description: "Wraps Optimizely Feature Experimentation SDK testing patterns - client init from a fixture datafile (offline-friendly), the decide / decideAll v5 API, forced-decisions for per-test arm pinning, OptimizelyUserContext + activate/track events, assignment-integrity tests. Use when writing tests for Optimizely-instrumented application code. For another experimentation SDK use the matching harness - statsig-test, vwo-test, amplitude-experiment-test, or split-io-test; for experiment DESIGN gates not SDK code use ab-test-validity-checklist."
 ---
 
 # optimizely-test

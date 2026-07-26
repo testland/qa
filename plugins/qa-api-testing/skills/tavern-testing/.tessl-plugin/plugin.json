@@ -1,9 +1,9 @@
 {
   "name": "testland/tavern-testing",
-  "description": "Authors Tavern API tests as YAML files (`test_*.tavern.yaml`) with `test_name` + `stages` + `request` + `response` blocks, runs them through the Tavern pytest plugin (which auto-discovers the YAML files), and gates CI on the resulting JUnit XML. Covers RESTful, MQTT, and gRPC variants. Use when the project uses pytest as its test runner and the team prefers YAML over Python-DSL or Java-DSL for API authoring.",
+  "description": "Authors Tavern API tests as YAML files (`test_*.tavern.yaml`) with `test_name` + `stages` + `request` + `response` blocks, runs them through the Tavern pytest plugin (auto-discovered), and gates CI on the resulting JUnit XML. Covers RESTful, MQTT, and gRPC variants. Use when the project runs on pytest and prefers YAML over a Python- or Java-DSL; on the JVM use karate-testing or restassured-testing instead, and for schema-driven property-based fuzzing on the same pytest stack use schemathesis-fuzzing.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.5.2"
+  "version": "1.5.4"
 }

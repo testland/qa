@@ -1,6 +1,6 @@
 ---
 name: testrail-integration
-description: "Syncs test runs / results / cases between an automated test suite and TestRail (Gurock / Idera) - opens a Test Run for the build (`add_run`), batches per-case results back via `add_results_for_cases` (preferred over per-test `add_result_for_case` - N+1 API calls vs 1), maps the test framework's pass/fail/skip to TestRail status IDs, and attaches build URL + version + elapsed time. Use when the team uses TestRail for test management and wants automated suites to update TestRail without a human-driven copy-paste step."
+description: "Syncs test runs / results / cases between an automated test suite and TestRail (Gurock / Idera) - opens a Test Run for the build (`add_run`), batches per-case results back via `add_results_for_cases` (preferred over per-test `add_result_for_case` - N+1 API calls vs 1), maps the test framework's pass/fail/skip to TestRail status IDs, and attaches build URL + version + elapsed time. Use when the team's test management is standalone TestRail (not a Jira app) and automated suites must update it without a human copy-paste step; when the TCM is instead a Jira app use xray-integration (Xray) or zephyr-integration (Zephyr Scale), and for hosted cross-run flakiness analytics rather than TCM sync use currents-integration."
 ---
 
 # testrail-integration

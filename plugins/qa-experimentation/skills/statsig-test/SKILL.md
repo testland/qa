@@ -1,6 +1,6 @@
 ---
 name: statsig-test
-description: "Wraps Statsig SDK testing patterns: server-side initialization (statsig.initialize with API key), gate / experiment / dynamic-config evaluation (checkGate, getExperiment, getConfig), local-evaluation mode for offline tests, override patterns for forcing a specific user into a specific arm (statsig.overrideGate, overrideConfig), and assignment-integrity tests. Use when writing tests for Statsig-instrumented application code."
+description: "Wraps Statsig SDK testing patterns - server-side statsig.initialize with an API key, gate / experiment / dynamic-config evaluation (checkGate, getExperiment, getConfig), local-evaluation offline mode, overrideGate / overrideConfig to force a user into an arm, assignment-integrity tests. Use when writing tests for Statsig-instrumented application code. For another experimentation SDK use the matching harness - optimizely-test, vwo-test, amplitude-experiment-test, or split-io-test; for experiment DESIGN gates not SDK code use ab-test-validity-checklist."
 ---
 
 # statsig-test

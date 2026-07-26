@@ -1,9 +1,9 @@
 {
   "name": "testland/gosec-go",
-  "description": "Configures and runs gosec - Go-specific SAST covering 40+ rule IDs (G101 hardcoded creds, G104 unhandled errors, G304 file path traversal, G401 weak crypto algorithms, G601 implicit memory aliasing, etc.); supports `gosec ./...` recursive scan via Go AST + SSA analysis with taint tracking; per-line `#nosec G404 -- justification` suppression; output formats `--fmt sarif|json|junit-xml|html|text`; integrates with golangci-lint as a linter. Use when the user works with Go and needs a focused SAST integrated with golangci-lint.",
+  "description": "Configures and runs gosec - Go-only SAST covering 40+ rule IDs (G101 hardcoded creds, G104 unhandled errors, G304 path traversal, G401 weak crypto, G601 memory aliasing) via Go AST + SSA taint tracking; `gosec ./...` scan, `#nosec G404 -- justification` suppression, `--fmt sarif|json|junit-xml|html`, golangci-lint integration. Use for a focused Go SAST wired into golangci-lint / CI. Go-only: for Python use bandit-python, for cross-language pattern SAST use semgrep-rules; to merge gosec findings with other scanners into one gate use multi-tool-finding-triage - not this for non-Go code.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.3"
+  "version": "1.2.4"
 }

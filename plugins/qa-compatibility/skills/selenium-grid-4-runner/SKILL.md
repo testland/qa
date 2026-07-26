@@ -1,6 +1,6 @@
 ---
 name: selenium-grid-4-runner
-description: "Author and operate Selenium Grid 4 - self-hosted distributed WebDriver. Covers the six-component architecture (Router / Distributor / Session Map / Event Bus / New Session Queue / Node), standalone vs hub-and-node deployment modes, Docker-image stack (selenium/standalone-chrome, selenium/hub, selenium/node-chrome), node registration, session-queue tuning, and observability. Use for self-hosted cross-browser testing - alternative to cloud grids (BrowserStack / Sauce Labs / LambdaTest) when data residency or cost-control require an on-prem solution."
+description: "Author and operate Selenium Grid 4 - self-hosted distributed WebDriver. Covers the six-component architecture (Router / Distributor / Session Map / Event Bus / New Session Queue / Node), standalone vs hub-and-node modes, the Docker-image stack (selenium/standalone-chrome, selenium/hub, selenium/node-chrome), node registration, session-queue tuning, and observability. Use for self-hosted cross-browser testing when data residency or cost-control require an on-prem grid. This is the self-hosted execution RUNNER - for the zero-infra alternative use browser-matrix-runner (Playwright bundled engines); for managed cloud grids use browserstack-automate, saucelabs-automate, or lambdatest-automate; to decide WHICH browsers and tiers to run use browser-matrix-strategy-reference."
 ---
 
 # selenium-grid-4-runner

@@ -6,7 +6,7 @@ description: "Runs dead-dependency analysis across JS, Python, and Rust projects
   list against SCA findings to downrank vulns in code that is never loaded.
   Use when SCA output (from `osv-scanner`, `snyk-test`, or `npm-pip-maven-audit`)
   is too noisy to triage and the team needs to separate unreachable CVEs from
-  exploitable ones before sprint planning."
+  exploitable ones before sprint planning; sibling cve-exploitability-triage ranks by EPSS/KEV exploitation signal, not code reachability."
 metadata:
   keywords: "reachability, dead-dependencies, sca, depcheck, knip, vulture, cargo-machete, prioritization"
 ---

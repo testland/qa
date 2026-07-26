@@ -1,6 +1,6 @@
 ---
 name: browser-cache-control-tests
-description: "Wraps browser-side Cache-Control testing patterns using Playwright (and Cypress for legacy stacks): verifying response Cache-Control headers from Network events, asserting ETag round-trips (request includes If-None-Match → server returns 304), testing service-worker cache strategies (Workbox cacheFirst / networkFirst / staleWhileRevalidate), and verifying browser cache behavior under reload (normal reload vs hard reload semantics). Covers MDN's Cache-Control semantics + RFC 9111. Use when designing browser-cache-respecting endpoints or auditing caching behaviour in E2E tests."
+description: "Wraps browser-side Cache-Control testing with Playwright (Cypress for legacy stacks): asserting response Cache-Control headers from Network events, ETag round-trips (If-None-Match → 304), service-worker strategies (Workbox cacheFirst / networkFirst / staleWhileRevalidate), and reload semantics (normal vs hard). Covers MDN Cache-Control + RFC 9111. Use when auditing browser-tier caching in E2E tests. For CDN-edge purge use cdn-cache-purge-tests; for the reverse-proxy tier use varnish-test-vtc-syntax; for an app-tier store use redis-cache-tests; SWR directive semantics live in stale-while-revalidate-reference."
 ---
 
 # browser-cache-control-tests

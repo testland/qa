@@ -1,9 +1,9 @@
 {
   "name": "testland/fcc-cuts-vids-heuristic",
-  "description": "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic - a 10-letter mnemonic for the dimensions a tester catalogs when *modelling* a system. FCC: Format, Constraints, Connections. CUTS: Coverage, Users, Tasks, Sequences. VIDS: Variables, Inputs, Data, Storage. Use as the system-modelling checklist that complements SFDPOT (what to vary) and HICCUPPS-F (what to compare against).",
+  "description": "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic - a 10-letter mnemonic for the dimensions a tester catalogs when MODELLING a system: Format, Constraints, Connections; Coverage, Users, Tasks, Sequences; Variables, Inputs, Data, Storage. Use pre-session to build the system model a charter will explore. For what to VARY use sfdpot-exploratory-heuristic, for oracles (is it a bug?) use hiccupps-f-heuristic, for quality criteria use crusspic-stmpl-heuristic.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.7.3"
+  "version": "1.7.5"
 }

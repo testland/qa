@@ -1,9 +1,9 @@
 {
   "name": "testland/snyk-test",
-  "description": "Configures and runs Snyk - multi-mode SCA + SAST + Container + IaC scanner with `snyk test` (one-shot scan), `snyk monitor` (continuous tracking with vuln alerts), `snyk code test` (SAST mode), `snyk container test ubuntu:18.04` (container mode); supports policy file `.snyk` for ignore + patch with expiration; integrates with 50+ package managers via auto-detect. Use when the team has a Snyk license + needs the broadest single-vendor SCA + companion product coverage (SAST / Container / IaC).",
+  "description": "Configures and runs Snyk - multi-mode SCA + SAST + Container + IaC scanner: snyk test (one-shot scan), snyk monitor (continuous vuln alerts), snyk code test (SAST), snyk container test (container); policy file .snyk for ignore + patch. Commercial multi-ecosystem scanner: for OSS/no-license scanning use osv-scanner or npm-pip-maven-audit; bundle-audit-ruby and cargo-audit-rust are the single-ecosystem alternatives; snyk finds vulns, reachability-analyzer decides which matter - not this.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.3"
+  "version": "1.2.4"
 }
