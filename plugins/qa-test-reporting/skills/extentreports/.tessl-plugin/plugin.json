@@ -1,9 +1,9 @@
 {
   "name": "testland/extentreports",
-  "description": "Configures ExtentReports v5 for Java / .NET test runs - wires `ExtentSparkReporter` (HTML), `attachReporter`, `createTest`, the log-level chain (`info`/`pass`/`warning`/`skip`/`fail`), screenshots via `MediaEntityBuilder`, hierarchical `createNode` parent/child tests, and category / author / device labels. Outputs a static HTML report alongside JUnit XML for CI artifact upload. Use when a JVM project (or .NET via `extentreports-dotnet`) wants a richer per-test report than JUnit XML and the team is on the Aventstack ExtentReports stack.",
+  "description": "Configures ExtentReports v5 for a JVM (or .NET via `extentreports-dotnet`) test run: wires `ExtentSparkReporter`, `attachReporter`, `createTest`, the `info`/`pass`/`warning`/`skip`/`fail` log chain, screenshots via `MediaEntityBuilder`, hierarchical `createNode` parent/child tests, and category/author/device labels, emitting a static HTML report alongside JUnit XML for CI artifact upload. Use when a suite on the Aventstack ExtentReports stack wants a richer per-test HTML narrative than JUnit XML gives; for code-coverage reporting use jacoco-analysis, and for hosted cross-run flakiness analytics use currents-integration.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.8"
+  "version": "1.4.10"
 }
