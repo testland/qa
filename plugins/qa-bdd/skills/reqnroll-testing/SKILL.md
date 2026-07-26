@@ -15,9 +15,6 @@ Per [reqnroll-home][rh]:
 > test automation framework for .NET. It has been created as a
 > reboot of the SpecFlow project.'"
 
-Per [reqnroll-home][rh]: "Compatible with SpecFlow, allowing quick
-migration of existing projects."
-
 The "reboot" framing is the key: SpecFlow's maintenance slowed in
 2023; the community forked into Reqnroll, which has continued
 active development.
@@ -25,30 +22,14 @@ active development.
 ## When to use
 
 - A new .NET project starts BDD - pick Reqnroll over SpecFlow.
-- An existing SpecFlow project plans to migrate (per
-  [reqnroll-home][rh]: "compatible with SpecFlow, allowing quick
-  migration").
+- An existing SpecFlow project plans to migrate (SpecFlow-compatible;
+  see Step 9).
 - The team needs full Gherkin support including Rule blocks
   (per [reqnroll-home][rh]: "Full Gherkin support with tagged
   Rule blocks").
 
 For SpecFlow-locked legacy projects mid-migration, see
 `specflow-testing`.
-
-## How to use
-
-1. Install the Reqnroll package for your test framework
-   (`Reqnroll.xUnit` / `.NUnit` / `.MsTest`) plus the MSBuild generation
-   package. Step 1.
-2. Author `.feature` files in Gherkin, using `Rule:` blocks and
-   `Scenario Outline` where they help. Step 2.
-3. Write step bindings as `[Given/When/Then]`-decorated methods in a
-   `[Binding]` class, using regex or cucumber expressions. Step 3.
-4. Add `[BeforeScenario]` / `[AfterScenario]` hooks for per-scenario setup and
-   teardown. Step 5.
-5. Tag scenarios (`@critical`, `@wip`) and filter runs with
-   `dotnet test --filter "Category=..."`. Steps 6-7.
-6. Run with `dotnet test`, emitting JUnit XML for CI. Step 7.
 
 ## Worked example
 
@@ -79,6 +60,10 @@ dotnet add package Reqnroll.Tools.MsBuild.Generation  # generates code from .fea
 
 Per [reqnroll-home][rh]: "Works across common operating systems
 and .NET versions (including .NET 8.0)."
+
+**Verify:** `dotnet build` succeeds and restores both packages before you
+author features. If code generation does not run, confirm
+`Reqnroll.Tools.MsBuild.Generation` is referenced in the test project.
 
 ## Step 2 - Author a Feature
 
@@ -171,6 +156,9 @@ dotnet test --filter "FullyQualifiedName~Cart"
 # Generate JUnit XML for CI
 dotnet test --logger "junit;LogFilePath=reports/test-results.xml"
 ```
+
+If a scenario fails or reports an undefined step, fix the matching binding in
+the `[Binding]` class and re-run until it turns green.
 
 ## Step 8 - IDE support
 

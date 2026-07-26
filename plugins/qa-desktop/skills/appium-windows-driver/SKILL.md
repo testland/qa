@@ -18,8 +18,8 @@ Per the [appium-windows-driver repository][awd]:
 
 It is the **Appium-ecosystem wrapper** in front of Microsoft's
 `WinAppDriver.exe` ([awd][awd]). The Node.js driver itself is
-actively maintained - latest published per [awd][awd] is **v5.4.0**
-(2026-05-15) - while the underlying WinAppDriver service is
+actively maintained (see [awd][awd] for the current release), while
+the underlying WinAppDriver service is
 described on the [Appium ecosystem driver page][appiumdrivers] as
 "has not been maintained since 2022", which is why the wrapper now
 includes a built-in installer (`appium driver run windows
@@ -44,13 +44,12 @@ for the Mac2 sibling) and Windows is the next platform to add.
   `windows: clickAndDrag`) beyond raw W3C WebDriver.
 - Tests need to execute PowerShell at session boundaries (`appium:
   prerun` / `appium:postrun`).
-- A consistent capability schema across platforms is more valuable
-  than the no-Node-dependency simplicity of
-  `winappdriver`.
+- A consistent capability schema across platforms matters more than
+  minimizing test-host dependencies.
 
 ## How to use
 
-1. Install Appium + the Windows driver (`appium driver install windows`), pin the underlying WinAppDriver via `appium driver run windows install-wad`, then launch the server on `127.0.0.1:4723` (Install).
+1. Install Appium + the Windows driver (`appium driver install windows`), pin the underlying WinAppDriver via `appium driver run windows install-wad`, then launch the server on `127.0.0.1:4723` (Install). Verify: `curl http://127.0.0.1:4723/status` returns HTTP 200 before proceeding; if it fails, the server is not listening - re-check the `appium --port 4723` launch and the driver install.
 2. Declare session capabilities with the `appium:` vendor prefix - `platformName: windows`, `appium:automationName: windows`, `appium:app` (Declare session capabilities).
 3. Author a test that resolves a UIA element by `Name` / `AccessibilityId` and drives it end to end (Worked example).
 4. Add Windows-namespaced gestures (`windows: scroll` / `clickAndDrag` / `keys`), multi-window switching, and `appium:prerun` / `appium:postrun` PowerShell hooks as the suite needs them - see [references/gestures-hooks-and-ci.md](references/gestures-hooks-and-ci.md).

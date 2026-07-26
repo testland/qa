@@ -1,6 +1,6 @@
 ---
 name: snyk-test
-description: "Configures and runs Snyk - multi-mode SCA + SAST + Container + IaC scanner: snyk test (one-shot scan), snyk monitor (continuous vuln alerts), snyk code test (SAST), snyk container test (container); policy file .snyk for ignore + patch. Commercial multi-ecosystem scanner: for OSS/no-license scanning use osv-scanner or npm-pip-maven-audit; bundle-audit-ruby and cargo-audit-rust are the single-ecosystem alternatives; snyk finds vulns, reachability-analyzer decides which matter - not this."
+description: "Configures and runs Snyk, a commercial multi-mode scanner: snyk test for SCA (dependency scanning), snyk code test for SAST (code security scanning), snyk container test for container images, snyk iac test for IaC (infrastructure-as-code), snyk monitor for continuous new-vuln alerts; policy file .snyk for ignore + patch. Use when the team has a Snyk license and needs SCA (dependency scanning) or continuous vuln monitoring; for open-source scanning without a Snyk license, prefer osv-scanner."
 ---
 
 # snyk-test
@@ -31,24 +31,6 @@ for container scanning, see `trivy-image` (in the qa-sbom plugin).
   newly-disclosed CVEs against pinned dependencies).
 - Layered with `osv-scanner` for
   cross-DB consensus signal.
-
-## How to use
-
-1. Install the CLI (`npm install -g snyk`) and authenticate with `snyk auth`, or
-   set `SNYK_TOKEN` in CI.
-2. Run `snyk test` in a directory with a supported manifest; start with
-   `--severity-threshold=high` to cut first-scan noise.
-3. Emit machine-readable output with `--json-file-output=snyk.json` (or
-   `--sarif-file-output`) for downstream aggregation and deduplication.
-4. Add `snyk monitor` on the main branch to get alerts when new CVEs are
-   disclosed against pinned versions.
-5. Triage false positives through a `.snyk` policy ignore with a mandatory
-   `expires:` field - see
-   [references/snyk-policy-and-triage.md](references/snyk-policy-and-triage.md).
-6. Gate CI on the scan and upload the report artifact; keep `SNYK_TOKEN` in a CI
-   secret, never hardcoded.
-7. Pair with `osv-scanner` for cross-database consensus, and re-review `.snyk`
-   ignores every quarter.
 
 ## Step 1 - Install + authenticate
 
@@ -195,10 +177,6 @@ re-review grouped by `re-review-date`.
 - [references/snyk-policy-and-triage.md](references/snyk-policy-and-triage.md) -
   `.snyk` policy schema, suppression layers, justification template, re-review cadence
 - docs.snyk.io - full documentation
-- docs.snyk.io/snyk-cli/commands/test - `snyk test` reference (when not 404'd)
+- docs.snyk.io/snyk-cli/commands/test - `snyk test` reference
 - snyk.io/security-rules - vuln database
-- `osv-scanner`,
-  `dependabot-config`,
-  `renovate-config`,
-  `npm-pip-maven-audit` - 
-  sister tools
+- `osv-scanner` - open-source SCA alternative

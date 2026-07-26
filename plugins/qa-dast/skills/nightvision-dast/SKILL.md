@@ -15,10 +15,9 @@ Per [docs.nightvision.net][nv-docs]:
 > Testing (DAST) tool" that "helps you identify security vulnerabilities
 > in web applications and REST APIs."
 
-The white-box-assistance differentiator: NightVision "analyzes code
-before simulating attacks and traces findings back to their origin"
-per [nv-docs][nv-docs]. This source-traceability is the value-add
-over pure-black-box DAST tools (ZAP / Burp).
+It "analyzes code before simulating attacks and traces findings back to
+their origin" per [nv-docs][nv-docs] - the source-traceability that sets
+it apart from black-box tools (ZAP / Burp).
 
 ## When to use
 
@@ -44,12 +43,10 @@ over pure-black-box DAST tools (ZAP / Burp).
 
 ## Install
 
-Per [nv-docs][nv-docs] the CLI is documented in "Installing the
-CLI"; consult the live docs for current install commands per
-platform. Typical pattern:
+Per [nv-docs][nv-docs], "Installing the CLI":
 
 ```bash
-# Linux/macOS install (verify against docs.nightvision.net)
+# Linux/macOS
 curl -fsSL https://install.nightvision.net | sh
 
 # Verify
@@ -72,10 +69,6 @@ Per [nv-docs][nv-docs] the platform supports:
 | Authenticated web app | + auth recorder configuration (see Authentication) |
 | Public REST API | Standard URL target |
 | Authenticated REST API | + Header / Cookie / TOTP auth |
-
-Spec-driven targets give the scanner full request-shape knowledge
-(query params, body schemas, content types); crawl-based targets
-only see what the spider discovers.
 
 ## Authentication
 
@@ -116,7 +109,9 @@ nightvision scan results "$SCAN_ID" --output json > findings.json
 nightvision scan results "$SCAN_ID" --output sarif > nightvision.sarif
 ```
 
-(Exact CLI verb names per [nv-docs][nv-docs] current release.)
+Verify: the run must reach a completed state before you export. If `--wait`
+returns a failed or timed-out run, the auth mode or scope is wrong - fix
+`--auth-header` (or the scope) and re-run the scan before triaging.
 
 ## False-positive triage (MANDATORY)
 

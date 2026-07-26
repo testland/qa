@@ -1,16 +1,14 @@
 ---
 name: pseudo-localization-runner
-description: "Configures pseudo-localization for the app (replaces translatable strings with accented variants like \"Submit\" → \"Şüƀɱîţ\" + 35% length expansion) - surfaces UI issues without needing actual translators: hardcoded strings (any English remaining is unwrapped), truncation (text overflows), encoding (non-ASCII characters break), bidi handling (mixed scripts). Use as the lowest-cost pre-translation l10n smoke test."
+description: "Configures pseudo-localization for the app (replaces translatable strings with accented variants like \"Submit\" → \"Şüƀɱîţ\" + 35% length expansion) - surfaces UI issues without needing actual translators: hardcoded strings, truncation, encoding, and bidi handling. Use when preparing an app for translation, validating l10n infrastructure, or when the user mentions localization testing."
 ---
 
 # pseudo-localization-runner
 
 ## Overview
 
-Pseudo-localization is the practitioner technique for testing l10n
-**without** real translations. Instead of translating "Submit" to
-French ("Soumettre"), the pseudo-localizer transforms it to
-something visually distinct but readable:
+Pseudo-localization transforms translatable strings into visually distinct but
+readable variants, testing l10n without real translations:
 
 ```
 "Submit" → "Şüƀɱîţ"             # accent / Latin-extended characters
@@ -18,16 +16,8 @@ something visually distinct but readable:
 "Submit" → "Şüƀɱîţ ↵↵↵"         # 35% length expansion (test truncation)
 ```
 
-The transformed string:
-
-- **Stays readable** to QA (English speakers can still tell what
-  it means).
-- **Surfaces unwrapped strings** (any pure-ASCII English text is a
-  gap).
-- **Tests truncation** (length-expansion catches UIs that don't
-  scale).
-- **Tests encoding** (non-ASCII characters expose Unicode
-  handling bugs).
+The output stays readable to English-speaking QA while surfacing the l10n
+issues catalogued in Step 4.
 
 ## When to use
 
@@ -35,15 +25,6 @@ The transformed string:
   before paying for translation.
 - After major UI work: confirm new components handle l10n correctly.
 - Continuous: the team's "always-on" l10n smoke test.
-
-## How to use
-
-1. Pick a pseudo-localization library for the stack (Step 1).
-2. Configure the pseudo-locale with ~35% length expansion, dev / staging only (Step 2).
-3. Run the app under the pseudo-locale and walk the UI (Step 3).
-4. Spot issues: pure-English text, truncation, broken layout, mojibake, missing glyphs, wrong bidi (Step 4).
-5. Capture a screenshot baseline under the pseudo-locale for automated regression (Step 5).
-6. Wire the pseudo-loc smoke test into CI, uploading screenshots on failure (Step 6).
 
 ## Step 1 - Pick a pseudo-localization library
 

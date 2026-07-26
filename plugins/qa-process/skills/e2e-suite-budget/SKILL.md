@@ -74,7 +74,7 @@ Higher ROI = more value per cost.
 ## Step 3 - Per-test scoring
 
 ```python
-# scripts/e2e-budget.py
+# per-test ROI scoring - implements the Step 2 formula
 import json, sys
 from collections import defaultdict
 
@@ -172,13 +172,7 @@ A 40-test E2E suite, median maintenance = 2 PRs/quarter (so `maintenance_count_n
 | `admin-report.spec.ts > csv-export`      |      1      |   2   |  3.5m   |  10%  |   3 (1.5)  | 0.21 |
 | `legacy-banner.spec.ts > dismiss-cookie` |      0      |   1   |  1.8m   |  20%  |   4 (2.0)  | 0.0  |
 
-Worked arithmetic (formula from Step 2):
-
-- guest-purchase: (4 × 5) / (2.0 × 1.02 × 2.0) = 20 / 4.08 = 4.9
-- csv-export: (1 × 2) / (3.5 × 1.10 × 2.5) = 2 / 9.625 = 0.21
-- dismiss-cookie: (0 × 1) / (1.8 × 1.20 × 3.0) = 0 / 6.48 = 0.0
-
-Ranked ascending: dismiss-cookie (0.0) → csv-export (0.21) → guest-purchase (4.9). The bottom decile of 40 is the lowest 4 tests; the first two here fall in it.
+The ROI column above is computed with the Step 2 formula. Ranked ascending: dismiss-cookie (0.0) → csv-export (0.21) → guest-purchase (4.9). The bottom decile of 40 is the lowest 4 tests; the first two here fall in it.
 
 Decisions:
 
@@ -188,7 +182,7 @@ Decisions:
 
 ## Anti-patterns and Limitations
 
-See [ANTI-PATTERNS.md](ANTI-PATTERNS.md) for common failure modes (e.g., missing regression data, auto-retiring without review, cherry-picking) and [LIMITATIONS.md](LIMITATIONS.md) for known constraints (e.g., difficulty gathering regression-catch data, heuristic formula tuning, "test of last resort" cases, migration cost).
+See [references/anti-patterns-and-limitations.md](references/anti-patterns-and-limitations.md) for common failure modes (missing regression data, auto-retiring without review, cherry-picking) and known constraints (difficulty gathering regression-catch data, heuristic formula tuning, "test of last resort" cases, migration cost).
 
 ## References
 

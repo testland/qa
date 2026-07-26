@@ -41,65 +41,45 @@ the vulnerable code is unreachable at runtime. Treat it accordingly.
 
 ## How to use
 
-1. Run SCA first (`osv-scanner`, `snyk-test`, or `npm-pip-maven-audit`) and save
-   the findings JSON - this skill annotates existing findings, it does not
-   replace them.
-2. Run the ecosystem-native dead-dependency tool: knip/depcheck (JS), vulture
-   (Python), or cargo-machete (Rust). Full config, flags, exit codes, and
+1. Run SCA first and save the findings JSON - this skill annotates existing
+   findings, it does not replace them. See `osv-scanner` (or `snyk-test` /
+   `npm-pip-maven-audit`) for full setup:
+
+   ```bash
+   osv-scanner scan -r . --format json --output osv.json
+   ```
+
+2. Run the ecosystem-native dead-dependency tool for your stack, then extract
+   the unused names into `unused-deps.txt`. Full config, flags, exit codes, and
    suppression per tool:
-   [references/dead-dependency-tools.md](references/dead-dependency-tools.md).
-3. Extract the unused names into `unused-deps.txt`, keeping production and dev
-   lists separate.
+   [references/dead-dependency-tools.md](references/dead-dependency-tools.md):
+
+   ```bash
+   # JS/TS - knip (preferred; depcheck was archived June 2025)
+   npx knip --reporter json | jq -r '.dependencies[].name' > unused-deps.txt
+   # Python - vulture; --min-confidence 90 targets unused imports
+   vulture src/ --min-confidence 90 > vulture-report.txt
+   # Rust - cargo-machete; --with-metadata catches renamed/feature-gated crates
+   cargo machete 2>&1 | grep "unused dependency" | awk '{print $NF}' > unused-deps.txt
+   ```
+
+3. Keep production and dev unused-dep lists separate: dev deps with CVEs can
+   still reach production in bundled builds.
+
 4. Cross-reference `unused-deps.txt` against the SCA JSON, setting
-   `reachable: false` on every finding whose package is unused.
-5. Pass the annotated JSON to your SCA prioritization step; `reachable: false`
+   `reachable: false` on every finding whose package is unused (script below).
+
+5. Verify: assert `unused-deps.txt` is non-empty and every finding in the
+   annotated JSON carries a populated `reachable` field before handoff. If the
+   file is empty or a finding lacks the field, re-run the dead-dependency tool
+   (a silent tool failure or the wrong workspace root is the usual cause) and
+   re-annotate before proceeding.
+
+6. Pass the annotated JSON to your SCA prioritization step; `reachable: false`
    routes to Fix-Backlog unless the CVE is in the CISA KEV catalog.
-6. Wire steps 2-4 into CI so the annotated artifact feeds the prioritization job
-   on every run.
-7. Treat each `reachable: false` as a deprioritization signal only, and still
-   schedule the unused package for cleanup.
 
-## Run SCA first
-
-Collect scanner output before running reachability analysis. The output of
-this skill annotates existing findings; it does not replace them.
-
-```bash
-# Example: OSV-Scanner JSON output to feed SCA prioritization
-osv-scanner scan -r . --format json --output osv.json
-```
-
-See `osv-scanner` for full setup.
-
-## Ecosystem tools
-
-Run the dead-dependency tool for your ecosystem, then extract the unused names
-into `unused-deps.txt`. Full config, flags, exit codes, and suppression per
-tool: [references/dead-dependency-tools.md](references/dead-dependency-tools.md).
-
-**JavaScript / TypeScript** - knip (preferred; depcheck was archived June 2025,
-maintainers recommend knip):
-
-```bash
-npx knip --reporter json | jq -r '.dependencies[].name' > unused-deps.txt
-```
-
-**Python** - vulture; `--min-confidence 90` targets unused imports (the direct
-dependency signal), then map import names back to PyPI package names:
-
-```bash
-vulture src/ --min-confidence 90 > vulture-report.txt
-```
-
-**Rust** - cargo-machete; add `--with-metadata` to catch renamed or
-feature-gated crates:
-
-```bash
-cargo machete 2>&1 | grep "unused dependency" | awk '{print $NF}' > unused-deps.txt
-```
-
-Always keep production and dev unused-dep lists separate: dev deps with CVEs can
-still reach production in bundled builds.
+7. Wire steps 2-4 into CI so the annotated artifact feeds the prioritization job
+   on every run, and still schedule each unused package for cleanup.
 
 ## Cross-reference unused deps with SCA findings
 
@@ -150,9 +130,8 @@ The annotated artifact is then consumed by the prioritization job.
 ## Worked example
 
 A team's OSV scan of a Next.js service returns 60 CVEs - too many to patch in one
-sprint. They run `npx knip --reporter json | jq -r '.dependencies[].name' >
-unused-deps.txt`, which flags 12 of the 80 declared dependencies as unused,
-including `moment` (CVE-2022-31129, CVSS 7.5). The cross-reference script sets
+sprint. They run the JS dead-dependency tool (step 2), which flags 12 of the 80
+declared dependencies as unused, including `moment` (CVE-2022-31129, CVSS 7.5). The cross-reference script sets
 `reachable: false` on the moment finding because `moment` appears in
 `unused-deps.txt`. Prioritization routes that CVE to Fix-Backlog instead of
 Fix-This-Sprint, and the team removes `moment` in the next dependency-cleanup PR,

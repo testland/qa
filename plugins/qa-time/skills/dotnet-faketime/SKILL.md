@@ -8,21 +8,14 @@ description: "Wraps .NET's TimeProvider abstraction (System.TimeProvider, introd
 ## Overview
 
 .NET 8 introduced `System.TimeProvider`, an abstract class in
-`System.Runtime.dll` that provides a testable abstraction for time.
-Per
-[learn.microsoft.com/dotnet/api/system.timeprovider](https://learn.microsoft.com/en-us/dotnet/api/system.timeprovider):
-"Provides an abstraction for time." The concrete production singleton
-`TimeProvider.System` wraps `DateTimeOffset.UtcNow`, the local
-`TimeZoneInfo`, `Stopwatch` for high-frequency timestamps, and
+`System.Runtime.dll` that provides a testable abstraction for time. The
+production singleton `TimeProvider.System` wraps `DateTimeOffset.UtcNow`, the
+local `TimeZoneInfo`, `Stopwatch` for high-frequency timestamps, and
 `System.Threading.Timer`.
 
-For tests, `FakeTimeProvider` (namespace
-`Microsoft.Extensions.Time.Testing`, assembly
-`Microsoft.Extensions.TimeProvider.Testing.dll`) subclasses
-`TimeProvider` and gives full control over the fake clock. Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider):
-"Represents a synthetic time provider that can be used to enable
-deterministic behavior in tests."
+For tests, `FakeTimeProvider` (namespace `Microsoft.Extensions.Time.Testing`,
+assembly `Microsoft.Extensions.TimeProvider.Testing.dll`) subclasses
+`TimeProvider` and gives full control over the fake clock.
 
 ## When to use
 
@@ -63,12 +56,10 @@ BCL. Install it only in test projects:
                   Version="9.*" />
 ```
 
-The package name is `Microsoft.Extensions.TimeProvider.Testing`. Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider),
-the assembly is `Microsoft.Extensions.TimeProvider.Testing.dll`.
-
-`TimeProvider` itself is built into the .NET 8+ runtime and needs no
-extra package for production code targeting `net8.0` or later.
+The package name is `Microsoft.Extensions.TimeProvider.Testing`; it ships the
+`FakeTimeProvider` type. `TimeProvider` itself is built into the .NET 8+
+runtime and needs no extra package for production code targeting `net8.0` or
+later.
 
 ## Step 2 - Inject TimeProvider into production code
 
@@ -96,11 +87,6 @@ public class TokenService
 services.AddSingleton(TimeProvider.System);
 ```
 
-Per
-[learn.microsoft.com/dotnet/api/system.timeprovider](https://learn.microsoft.com/en-us/dotnet/api/system.timeprovider),
-`TimeProvider.System` is the static singleton that wraps real-world
-`DateTimeOffset.UtcNow`.
-
 ## Step 3 - Write a deterministic test with SetUtcNow
 
 ```csharp
@@ -118,18 +104,12 @@ public void IsExpired_ReturnsFalse_WhenTokenNotYetExpired()
 }
 ```
 
-`SetUtcNow(DateTimeOffset)` sets the frozen instant. Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.setutcnow](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.setutcnow):
-"Advances the date and time in the UTC time zone." The method name
-reflects that the value must be equal to or later than the current
-fake time; it cannot go backwards.
+`SetUtcNow(DateTimeOffset)` sets the frozen instant. The value must be equal
+to or later than the current fake time; the clock cannot go backwards.
 
 ## Step 4 - Advance time by a duration
 
 `Advance(TimeSpan)` moves the clock forward from its current position.
-Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.advance](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.advance):
-"Advances time by a specific amount."
 
 ```csharp
 [Fact]
@@ -149,9 +129,12 @@ public void IsExpired_ReturnsTrue_AfterTokenLifetime()
 ```
 
 The `FakeTimeProvider(DateTimeOffset)` constructor overload sets the
-starting instant directly. Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor):
-"Initializes a new instance of the FakeTimeProvider class."
+starting instant directly.
+
+Verify: run `dotnet test` and confirm the boundary assertions pass. If a test
+hangs or times out instead, the code under test is calling real `Task.Delay`
+or `Thread.Sleep` rather than the injected `TimeProvider` - fix the injection
+and re-run before relying on the suite.
 
 ## Advanced clock control
 
@@ -159,24 +142,6 @@ For auto-advancing reads (`AutoAdvanceAmount`), virtual-clock timers
 and `Task.Delay` (`CreateTimer` / `Delay`), and local time zone
 testing (`SetLocalTimeZone` / `GetLocalNow`), see
 [references/advanced-clock-control.md](references/advanced-clock-control.md).
-
-## Worked example
-
-`TokenService.IsExpired` returns whether a token has passed its
-expiry instant. To prove both sides of the boundary without real
-waiting:
-
-1. Construct the fake clock at a fixed instant:
-   `new FakeTimeProvider(new DateTimeOffset(2026, 5, 20, 12, 0, 0, TimeSpan.Zero))`.
-2. Compute the expiry one hour out:
-   `var expiresAt = fakeTime.GetUtcNow().AddHours(1);`.
-3. Before expiry, `svc.IsExpired(expiresAt)` is `false`.
-4. Advance past it: `fakeTime.Advance(TimeSpan.FromHours(2));`.
-5. Now `svc.IsExpired(expiresAt)` is `true` (the assertion in Step 4).
-
-Result: both sides of the expiry boundary are asserted in one
-deterministic test that runs in microseconds, with no dependence on
-wall-clock time.
 
 ## Migrating from ISystemClock
 

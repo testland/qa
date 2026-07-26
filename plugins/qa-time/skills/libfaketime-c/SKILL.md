@@ -1,22 +1,17 @@
 ---
 name: libfaketime-c
-description: "Wraps libfaketime (github.com/wolfcw/libfaketime), the LD_PRELOAD library that intercepts time() / gettimeofday() / clock_gettime() for any binary. Covers absolute-date mode (FAKETIME='2026-12-31 23:59:00'), relative offset (FAKETIME='-1d'), advance-rate (FAKETIME='@2026-12-31 23:59:00 x5' for 5x speed), per-process scope via LD_PRELOAD, and the FAKETIME_NO_CACHE for high-resolution mocking. Use when testing C/C++/any-native-binary code that needs deterministic wall-clock time."
+description: "Wraps libfaketime (github.com/wolfcw/libfaketime), the LD_PRELOAD library that fakes the clock for any binary by intercepting time() / gettimeofday() / clock_gettime(). Covers absolute-date mode (FAKETIME='2026-12-31 23:59:00'), relative offset (FAKETIME='-1d'), advance-rate (FAKETIME='@2026-12-31 23:59:00 x5' for 5x speed), per-process scope via LD_PRELOAD, and FAKETIME_NO_CACHE for high-resolution mocking. Use when you need to fake time, mock the clock, or freeze time for C/C++ or any native binary that needs deterministic wall-clock time."
 ---
 
 # libfaketime-c
 
 ## Overview
 
-`libfaketime` is the canonical LD_PRELOAD library for faking
-time on Linux/macOS. Per
+Per
 [github.com/wolfcw/libfaketime](https://github.com/wolfcw/libfaketime),
-it intercepts the libc functions `time()`, `gettimeofday()`,
-`clock_gettime()`, and similar, returning a value derived from
-environment variables instead of the real clock.
-
-Works for **any binary** that uses libc time functions - not
-just C/C++. Useful for Go, Rust, Python, anything-not-statically-
-linked.
+`libfaketime` returns a value derived from the `FAKETIME` environment
+variable instead of the real clock. Because it hooks libc, it works for
+**any dynamically-linked binary** - Go, Rust, Python, not just C/C++.
 
 ## When to use
 
@@ -73,56 +68,10 @@ LD_PRELOAD=/usr/local/lib/faketime/libfaketime.so.1 \
   your_command
 ```
 
-### Relative offset
-
-```bash
-faketime '-1d' your_command         # 1 day in the past
-faketime '+1y' your_command         # 1 year in the future
-faketime '+2h30m' your_command      # 2h30m ahead
-```
-
-### Advance-rate (time-speedup / time-slowdown)
-
-```bash
-faketime -f '@2026-12-31 23:59:00 x10' your_command
-# Starts at 23:59:00 on 2026-12-31, advances 10x real-time
-```
-
-Useful for testing schedulers, cron simulations, "long-running
-clock progress."
-
-### High-resolution mode
-
-```bash
-FAKETIME_NO_CACHE=1 faketime '2026-12-31 23:59:00' your_command
-```
-
-Disables the per-second caching libfaketime does for performance.
-Tests that read time hundreds of times per second see consistent
-behaviour.
-
-## Running
-
-### Basic test
-
-```bash
-faketime '2026-03-08 02:30:00 EDT' ./my-program
-# Tests behaviour at non-existent local time (spring-forward) per
-# dst-transition-reference
-```
-
-### Cron-job time-skip test
-
-```bash
-# Simulate a year in 10 minutes (1 sec real = 1.46 hrs simulated)
-faketime -f '@2026-01-01 00:00:00 x5256' ./cron-runner
-```
-
-### Combined with timezone
-
-```bash
-TZ='America/New_York' faketime '2026-03-08 02:30:00' ./my-program
-```
+Relative offset (`-1d`, `+1y`), advance-rate (`-f '@... x<rate>'` for time
+speed-up), high-resolution mode (`FAKETIME_NO_CACHE=1`), and the
+spring-forward / cron time-skip / timezone recipes are in
+[references/faketime-modes-and-recipes.md](references/faketime-modes-and-recipes.md).
 
 ## Parsing results
 

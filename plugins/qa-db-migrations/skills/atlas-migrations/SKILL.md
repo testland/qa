@@ -7,16 +7,11 @@ description: "Authors and runs Atlas database schema migrations - declarative HC
 
 ## Overview
 
-Per [atlasgo.io/getting-started][at-start]:
+Atlas manages and migrates database schemas as code - define the
+desired schema and Atlas plans, lints, tests, and applies the changes
+(per [atlasgo.io/getting-started][at-start]). Two operating modes:
 
 [at-start]: https://atlasgo.io/getting-started
-
-> "Atlas is a language-independent tool for managing and migrating
-> database schemas using modern DevOps principles. Define your
-> desired schema, and Atlas will plan, lint, test, and safely apply
-> the changes - like Terraform, but for databases."
-
-Two operating modes:
 
 1. **Declarative** - define desired state in HCL or SQL; Atlas
    computes diff and applies (`atlas schema apply`).
@@ -27,35 +22,10 @@ Two operating modes:
 Most production teams use versioned mode for the audit trail; dev
 loops often use declarative mode for fast iteration.
 
-## When to use
-
-- The user wants Terraform-style "desired state" workflow for the
-  database.
-- The team needs the strongest migration linter in the OSS space - 
-  Atlas detects destructive operations, lock-escalating patterns,
-  and reversibility issues automatically.
-- A multi-database stack benefits from a single tool covering 13+
-  DBMS engines.
-- The team migrates from Flyway / Liquibase and wants migration
-  generation from declarative schema (vs hand-authoring every
-  ALTER).
-
 ## How to use
 
-1. Install the Atlas CLI (Step 1) and stand up a scratch dev DB for
-   diff computation, referenced via `--dev-url`.
-2. Define the desired schema in SQL or HCL (Step 2).
-3. Generate a versioned migration from the schema diff:
-   `atlas migrate diff <name> --to file://schema.sql --dev-url ...`
-   (Step 4).
-4. Lint the new migration for destructive / locking patterns:
-   `atlas migrate lint --latest 1` (Step 6).
-5. Apply pending migrations to the target DB:
-   `atlas migrate apply --url "$DATABASE_URL"` (Step 5).
-6. Gate every PR in CI with `ariga/setup-atlas` + lint +
-   apply-to-staging (Step 8).
-7. Never edit an applied migration; add a new one and re-run diff
-   (see [references/atlas-caveats.md](references/atlas-caveats.md)).
+Follow Steps 1-9 in order - lint (Step 6) is the gate before apply
+(Step 5).
 
 ## Step 1 - Install
 
@@ -77,9 +47,8 @@ brew install ariga/tap/atlas
 
 ## Step 2 - Define schema
 
-Per [at-start][at-start], schema can be SQL (most common) or HCL.
-
-SQL example (PostgreSQL):
+Per [at-start][at-start], schema can be SQL (most common) or HCL. SQL
+example (PostgreSQL):
 
 ```sql
 -- schema.sql
@@ -91,23 +60,8 @@ CREATE TABLE users (
 );
 ```
 
-HCL example (same schema in Atlas's HCL DSL):
-
-```hcl
-table "users" {
-  schema = schema.public
-  column "id" {
-    null = false
-    type = serial
-  }
-  column "email" {
-    null = false
-    type = varchar(255)
-  }
-  primary_key { columns = [column.id] }
-  index "unique_email" { unique = true; columns = [column.email] }
-}
-```
+For the same schema expressed in Atlas's HCL DSL and guidance on when
+HCL vs SQL matters, see [references/hcl-schema.md](references/hcl-schema.md).
 
 The dev DB referenced via `--dev-url` is a **temporary scratch
 database** Atlas uses to compute the diff (Atlas applies the desired
@@ -140,6 +94,11 @@ This generates a timestamped migration file in `migrations/` (e.g.,
 generate new migrations against the previous state.
 
 ## Step 5 - Apply versioned migrations
+
+**Verify (gate before applying):** run Step 6 lint first and assert it
+reports no destructive / data-loss findings; if it flags one, fix the
+migration (add a `DEFAULT`, split the change, or add a new migration)
+and re-run lint until clean. Only then apply:
 
 ```bash
 atlas migrate apply --url "$DATABASE_URL"

@@ -1,26 +1,18 @@
 ---
 name: gremlin-chaos
-description: "Configures Gremlin (commercial) for cross-platform chaos engineering - installs the Gremlin agent on Linux / Windows / Kubernetes, picks attack types (resource, network, state, request), creates Scenarios chaining attacks, integrates with the Reliability Score for forward-looking metrics. Use when the platform spans multiple environments (bare metal + cloud + serverless) and the team needs a commercial-supported solution per Gremlin's multi-platform support."
+description: "Configures Gremlin (commercial) for cross-platform chaos engineering (fault injection, resilience testing) - installs the Gremlin agent on Linux / Windows / Kubernetes, picks attack types (resource, network, state, request), chains attacks into Scenarios (chaos experiments), integrates with the Reliability Score for forward-looking metrics. Use when the platform spans multiple environments (bare metal + cloud + serverless) and the team needs a commercial-supported solution per Gremlin's multi-platform support."
 ---
 
 # gremlin-chaos
 
 ## Overview
 
-Per [gremlin-home][gh]:
+Gremlin is a commercial reliability platform for fault injection across bare
+metal, on-prem, multi-cloud, and serverless. It assigns each service a
+forward-looking Reliability Score from repeated resilience tests, so teams fix
+likely failure points before an incident (per [gremlin-home][gh]).
 
 [gh]: https://www.gremlin.com/
-
-> "**Gremlin** is an Enterprise Reliability Management & Resilience
-> Testing platform that helps organizations move from reactive
-> incident metrics to proactive reliability measurement."
-
-Per [gremlin-home][gh], the platform provides "forward-looking
-reliability scores - so your teams can see where systems will fail,
-fix them first, and prove the results."
-
-Multi-platform: per [gremlin-home][gh], Gremlin works across "bare
-metal, on-prem, multi-cloud, and serverless."
 
 ## When to use
 
@@ -40,8 +32,10 @@ If the team is K8s-only and OSS-preferred, see
 
 1. Install the Gremlin agent on the target host or cluster (see Install) and register it with the Gremlin Control Plane.
 2. Pick an attack type from the four classes (resource, network, state, request) - the exhaustive per-attack table is in [references/advanced-operations.md](references/advanced-operations.md).
-3. Run one scoped experiment end to end against staging - define steady state, inject a single fault with a tight blast radius, observe, and abort on breach (see Worked example).
-4. Promote passing experiments into a Scenario (chained attacks + abort conditions), wire it into CI via the API, and track each service's Reliability Score - all covered in [references/advanced-operations.md](references/advanced-operations.md).
+3. Verify before injecting: assert the target is in steady state (error rate and p95 latency healthy on the dashboard) and the blast radius is scoped to a single container in staging; if either check fails, do not inject - fix the scope or wait for steady state to return.
+4. Run one scoped experiment end to end against staging - inject a single fault and attach an abort condition that halts the attack the moment the steady-state metric breaches its threshold (see Worked example).
+5. Verify the abort path fires: confirm the attack actually stops when the abort condition trips; if it does not halt on breach, fix the abort wiring (monitor query, threshold, or notification hook) before widening the blast radius.
+6. Promote passing experiments into a Scenario (chained attacks + abort conditions), wire it into CI via the API, and track each service's Reliability Score - all covered in [references/advanced-operations.md](references/advanced-operations.md).
 
 ## Install
 

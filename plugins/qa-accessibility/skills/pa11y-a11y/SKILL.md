@@ -41,6 +41,10 @@ prefer `axe-a11y` - pa11y adds a layer.
    justified in the config.
 7. Pipe the JSON through `a11y-violation-gate` to dedupe cross-engine
    findings and ratchet against a baseline.
+8. Verify: run `pa11y-ci` locally and confirm it exits zero (no URL over
+   threshold) before merging; if it exits non-zero, fix the reported
+   violations (or add a justified `--ignore` for a confirmed false
+   positive) and re-run until green.
 
 ## Install
 
@@ -148,12 +152,8 @@ pa11y --standard WCAG2AA \
 issue list - broader coverage at the cost of duplicate findings.
 
 The run exits non-zero (threshold 0 exceeded) and `pa11y-results.json`
-holds an `issues[]` array. A low-contrast Submit button appears twice -
-once htmlcs-coded (`WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail`) and
-once axe-coded (`color-contrast`), both on selector `button.primary`.
-Piping the JSON through `a11y-violation-gate` collapses the pair to one
-record via its `fingerprint` field, so the PR shows a single contrast
-defect to fix.
+holds an `issues[]` array. Cross-engine duplicates (see Results structure)
+collapse to one record when piped through `a11y-violation-gate`.
 
 ## CI integration
 

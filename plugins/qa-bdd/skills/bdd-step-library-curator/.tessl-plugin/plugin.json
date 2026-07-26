@@ -1,9 +1,9 @@
 {
   "name": "testland/bdd-step-library-curator",
-  "description": "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, and publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones. Use on a cadence as the antidote to step-definition proliferation in long-lived BDD projects, or when a new engineer reports they cannot find an existing step.",
+  "description": "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, and publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones. Use when a BDD project's step count grows past ~50, on a quarterly step-library review, or when a new engineer cannot find an existing step and is about to write a duplicate.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.7.4"
+  "version": "1.7.6"
 }

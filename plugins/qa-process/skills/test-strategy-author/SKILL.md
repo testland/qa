@@ -1,6 +1,6 @@
 ---
 name: test-strategy-author
-description: "Build-an-X workflow that produces a test strategy document for a project / release / feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based prioritization mapping (per `risk-matrix`), tooling stack, environments, exit criteria, ownership. Use as the artifact stakeholders sign off on before significant test investment, and the reference engineering teams come back to when scope / quality questions arise."
+description: "Authors a test strategy document (a master test plan) for a project, release, or feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based test prioritization that maps top risks to test investment (per `risk-matrix`), tooling stack, environments, exit criteria, and ownership. Use when a team needs the release-readiness artifact stakeholders sign off on before significant test investment, and the reference engineering teams return to when scope or quality questions arise."
 ---
 
 # test-strategy-author
@@ -138,6 +138,15 @@ Release ships when:
 - [ ] Product manager
 - [ ] Security (if applicable)
 ```
+
+## Step 1a - Validate the draft before approval
+
+Before circulating for sign-off, verify the draft against its own exit gate:
+
+- Assert every in-scope feature in Section 1 maps to a risk class in Section 2, a layer + coverage target in Section 3, and at least one exit criterion in Section 7.
+- Assert every Section 7 exit criterion is measurable (a number or a green/red check), not a subjective phrase.
+
+If a section cannot be filled - for example the risk matrix in Section 2 does not exist yet - record it as an open question in Section 11 rather than leaving the section blank, resolve it, then re-run this check. Collect the Approval sign-offs only once no Section 11 item still blocks release.
 
 ## Step 2 - Tailor per project size
 

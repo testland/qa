@@ -1,6 +1,6 @@
 ---
 name: optimizely-test
-description: "Wraps Optimizely Feature Experimentation SDK testing patterns - client init from a fixture datafile (offline-friendly), the decide / decideAll v5 API, forced-decisions for per-test arm pinning, OptimizelyUserContext + activate/track events, assignment-integrity tests. Use when writing tests for Optimizely-instrumented application code. For another experimentation SDK use the matching harness - statsig-test, vwo-test, amplitude-experiment-test, or split-io-test; for experiment DESIGN gates not SDK code use ab-test-validity-checklist."
+description: "Wraps Optimizely Feature Experimentation SDK testing patterns - client init from a fixture datafile (offline-friendly), the decide / decideAll v5 API, forced-decisions for per-test arm pinning (fixing which variation a user gets), OptimizelyUserContext + activate/track events, assignment-integrity (deterministic bucketing) tests. Use when writing A/B tests or feature-flag tests for Optimizely-instrumented application code. For another experimentation SDK use the matching harness - statsig-test, vwo-test, amplitude-experiment-test, or split-io-test; for experiment DESIGN gates not SDK code use ab-test-validity-checklist."
 ---
 
 # optimizely-test
@@ -30,9 +30,10 @@ The current API surface is `decide` (single flag) / `decideAll`
 2. Export the datafile from the Optimizely UI or API and commit it as a fixture under `tests/fixtures/`.
 3. Initialize the client offline from that datafile - no SDK key, no network call.
 4. Create an `OptimizelyUserContext` per test with the attributes the audience targeting needs.
-5. Call `decide` (one flag) or `decide_all` (all flags); pin arms with `set_forced_decision` where a test needs a fixed variation.
-6. Assert on `variation_key` / `enabled` (never variation IDs); add assignment-integrity and event-tracking checks via the notification listener.
-7. Run under pytest in CI; re-export the datafile periodically to catch drift against prod config.
+5. Verify: assert the fixture drives a real decision - `user.decide("new_checkout_flow").enabled is True` - before pinning arms. If it fails, the datafile is stale or missing the flag; re-export it and re-run.
+6. Pin arms with `set_forced_decision` where a test needs a fixed variation, then call `decide` (one flag) or `decide_all` (all flags).
+7. Assert on `variation_key` / `enabled` (never variation IDs); add assignment-integrity and event-tracking checks via the notification listener (see [references/optimizely-recipes.md](references/optimizely-recipes.md)).
+8. Run under pytest in CI; re-export the datafile periodically to catch drift against prod config.
 
 ## Authoring
 
@@ -87,70 +88,17 @@ def test_force_user_to_treatment():
     assert decision.variation_key == "treatment_a"
 ```
 
-### Assignment integrity
-
-```python
-def test_assignment_deterministic():
-    user_a1 = client.create_user_context("user-1")
-    user_a2 = client.create_user_context("user-1")
-    d1 = user_a1.decide("flag-x")
-    d2 = user_a2.decide("flag-x")
-    assert d1.variation_key == d2.variation_key
-
-def test_decide_all_returns_consistent_set():
-    user = client.create_user_context("user-1")
-    decisions_1 = user.decide_all()
-    decisions_2 = user.decide_all()
-    assert decisions_1.keys() == decisions_2.keys()
-```
-
-### Event tracking
-
-```python
-def test_conversion_event_emitted():
-    captured_events = []
-    # Optimizely supports a notification listener
-    client.notification_center.add_notification_listener(
-        notification_type="TRACK", notification_callback=lambda *args: captured_events.append(args)
-    )
-
-    user = client.create_user_context("user-1")
-    user.track_event("checkout_completed")
-    assert len(captured_events) == 1
-```
-
-## Running
-
-```bash
-pytest tests/optimizely/
-```
-
-## CI integration
-
-```yaml
-jobs:
-  optimizely-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
-      - run: pip install -e ".[test]"
-      - run: pytest tests/optimizely/
-```
-
-Datafile lives in the repo; no SDK key needed for tests.
+Extended recipes - assignment-integrity and event-tracking tests, the pytest run command, and CI integration yaml - are in [references/optimizely-recipes.md](references/optimizely-recipes.md).
 
 ## Worked example
 
 The team ships a `new_checkout_flow` flag with a `treatment_a`
 variation, and QA needs a deterministic test that a premium-plan
-user is routed into the treatment.
-
-1. Export the datafile that contains `new_checkout_flow` and commit it to `tests/fixtures/optimizely-datafile.json`.
-2. Init the client offline from that fixture (`optimizely.Optimizely(json.dumps(datafile))`).
-3. Create the user context: `user = client.create_user_context("user-1", {"plan": "premium"})`.
-4. Call `decision = user.decide("new_checkout_flow")` and assert `decision.enabled is True` and `decision.variation_key == "treatment_a"`.
-5. For a variant-specific path that must not depend on bucketing, pin the arm with `set_forced_decision(context, OptimizelyForcedDecision(variation_key="treatment_a"))` before decoding.
+user is routed into the treatment. Follow the How-to-use steps:
+export the fixture, init offline, create the `{"plan": "premium"}`
+context, assert `decide("new_checkout_flow")` returns `enabled is
+True` / `variation_key == "treatment_a"`, then pin the arm with
+`set_forced_decision` for the variant-specific path.
 
 Result: a deterministic pass/fail on the checkout-routing logic
 with no network round-trip and no SDK key - the fixture drives

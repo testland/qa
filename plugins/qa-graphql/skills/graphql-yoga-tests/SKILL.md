@@ -1,6 +1,6 @@
 ---
 name: graphql-yoga-tests
-description: "Wraps GraphQL Yoga (the-guild.dev runtime) testing patterns: `yoga.fetch()` for in-process HTTP-conformant request simulation with no network, `@graphql-tools/executor-http` for subscription and incremental-delivery testing, the request-builder pattern for queries/mutations, and Yoga config gates plugin-disable-introspection and plugin-persisted-operations. Use for a Yoga server; for a different runtime harness use apollo-server-tests, mercurius-tests, or hasura-tests instead, not this skill."
+description: "Tests a GraphQL Yoga server (the-guild.dev runtime) with `yoga.fetch()` for in-process, no-network request simulation of queries and mutations, `@graphql-tools/executor-http` for subscription and incremental-delivery (streaming) tests, auth-header pass-through, and production-config gates for disabled introspection and persisted operations. Use to test a GraphQL Yoga server, write Yoga query, mutation, or subscription tests, or check its production plugin config; for a different runtime harness use apollo-server-tests, mercurius-tests, or hasura-tests instead, not this skill."
 ---
 
 # graphql-yoga-tests
@@ -23,22 +23,6 @@ middleware, headers, and response codes. There is no separate
 - Unit / integration tests for a Yoga-based GraphQL server.
 - Subscription tests (SSE / WS via Yoga).
 - Production-config gates for Yoga's plugin-based controls.
-
-## How to use
-
-1. Install `graphql-yoga` and `@graphql-tools/executor-http`.
-2. Build the server in the test file (or `beforeAll`) with `createYoga({ schema })`;
-   no HTTP listener is started.
-3. For queries / mutations, call `yoga.fetch('http://yoga/graphql', { method: 'POST', ... })`
-   with a parseable placeholder URL and read `.json()`.
-4. For subscriptions / incremental delivery, wrap `yoga.fetch` in `buildHTTPExecutor`
-   and iterate the returned async stream.
-5. Exercise auth by passing an `Authorization` header so Yoga's context-builder runs
-   against the simulated request.
-6. Mirror the production plugin set (disable-introspection, persisted-operations strict
-   mode) in a production-config test file.
-7. Run `npm test` locally and a separate `NODE_ENV=production` job in CI for the
-   production-config tests.
 
 ## Authoring
 
@@ -121,8 +105,9 @@ auth middleware is exercised.
 
 ## Worked example
 
-Scenario: verify a `{ me { id } }` query requires a bearer token, and that
-introspection is off in the production plugin set.
+Integration scenario combining the operations above in one file: verify a
+`{ me { id } }` query requires a bearer token, and that introspection is off in
+the production plugin set.
 
 1. Build the server with `createYoga({ schema, plugins: [useDisableIntrospection()] })`
    and a context-builder that reads `Authorization`.

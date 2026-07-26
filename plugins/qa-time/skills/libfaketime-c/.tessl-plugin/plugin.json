@@ -1,9 +1,9 @@
 {
   "name": "testland/libfaketime-c",
-  "description": "Wraps libfaketime (github.com/wolfcw/libfaketime), the LD_PRELOAD library that intercepts time() / gettimeofday() / clock_gettime() for any binary. Covers absolute-date mode (FAKETIME='2026-12-31 23:59:00'), relative offset (FAKETIME='-1d'), advance-rate (FAKETIME='@2026-12-31 23:59:00 x5' for 5x speed), per-process scope via LD_PRELOAD, and the FAKETIME_NO_CACHE for high-resolution mocking. Use when testing C/C++/any-native-binary code that needs deterministic wall-clock time.",
+  "description": "Wraps libfaketime (github.com/wolfcw/libfaketime), the LD_PRELOAD library that fakes the clock for any binary by intercepting time() / gettimeofday() / clock_gettime(). Covers absolute-date mode (FAKETIME='2026-12-31 23:59:00'), relative offset (FAKETIME='-1d'), advance-rate (FAKETIME='@2026-12-31 23:59:00 x5' for 5x speed), per-process scope via LD_PRELOAD, and FAKETIME_NO_CACHE for high-resolution mocking. Use when you need to fake time, mock the clock, or freeze time for C/C++ or any native binary that needs deterministic wall-clock time.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.17"
+  "version": "1.2.18"
 }

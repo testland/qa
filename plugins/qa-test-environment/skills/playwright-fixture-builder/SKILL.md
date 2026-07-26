@@ -7,28 +7,16 @@ description: "Builds reusable Playwright fixtures via `test.extend` - picks the 
 
 ## Overview
 
-Playwright Test fixtures "establish the environment for each test,
-giving the test everything it needs and nothing else"
-([pw-fixtures][pw-fix]). They replace `beforeEach` / `afterEach`
+Playwright Test fixtures replace `beforeEach` / `afterEach`
 boilerplate with composable, lazy-initialized values that hang off
-the `test` function:
+the `test` function ([pw-fixtures][pw-fix]).
 
 [pw-fix]: https://playwright.dev/docs/test-fixtures
-
-```typescript
-test('does X', async ({ page, todoPage, authedUser }) => {
-  // page, todoPage, authedUser are fixtures
-});
-```
 
 This skill is **build-an-X** - it produces the `fixtures.ts` (or
 language-equivalent) file from the team's actual setup needs (auth,
 database state, feature flags, app instance), picking the right
 scope and teardown ordering for each.
-
-The default Playwright fixtures available out of the box are
-**`page`, `context`, `browser`, `browserName`, and `request`**
-([pw-fixtures][pw-fix]).
 
 ## When to use
 
@@ -67,13 +55,9 @@ share setup or when teardown ordering matters.
 
 ## Step 1 - Identify the right scope per fixture
 
-Per [pw-fixtures][pw-fix]:
-
-> "**Test-scoped** (default): Run before/after each test, torn down
-> immediately after."
->
-> "**Worker-scoped**: Run once per worker process, sharing resources
-> across multiple tests. Declare with `{ scope: 'worker' }`."
+Fixtures are **test-scoped** by default (run and torn down per test);
+declare `{ scope: 'worker' }` for state shared across a worker's tests
+([pw-fixtures][pw-fix]). The table assigns a scope per fixture.
 
 | Fixture                   | Scope      | Why                                                                              |
 |---------------------------|------------|----------------------------------------------------------------------------------|
@@ -90,8 +74,36 @@ cause a test to fail, scope it `test`. Otherwise scope it `worker`.
 
 ## Fixture recipes, composition, output
 
-- Per-fixture code recipes - auth (`storageState` per worker), page
-  object, DB snapshot/restore, feature-flag overrides:
+A complete worker-scoped `storageState` auth fixture - signs in once
+per worker and reuses the cookie / localStorage snapshot across that
+worker's tests:
+
+```typescript
+// fixtures/auth.ts
+import { test as base } from '@playwright/test';
+import path from 'node:path';
+
+export const test = base.extend<{}, { storageState: string }>({
+  storageState: [async ({ browser }, use, workerInfo) => {
+    const username = `user${workerInfo.workerIndex}`;
+    const fileName = path.resolve(`playwright/.auth/${username}.json`);
+
+    const page = await browser.newPage({ storageState: undefined });
+    await page.goto('/login');
+    await page.getByLabel('Email').fill(`${username}@example.com`);
+    await page.getByLabel('Password').fill('test-password');
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.waitForURL('/dashboard');
+
+    await page.context().storageState({ path: fileName });
+    await page.close();
+    await use(fileName);
+  }, { scope: 'worker' }],
+});
+```
+
+- The remaining recipes - page object, DB snapshot/restore, and
+  feature-flag overrides:
   [references/fixture-recipes.md](references/fixture-recipes.md).
 - Composing the layers into one `test` export, teardown ordering,
   boxing internal fixtures, and the review-note output format:

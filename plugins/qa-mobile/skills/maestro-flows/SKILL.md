@@ -7,25 +7,11 @@ description: "Authors Maestro YAML flow files (`.maestro/*.yaml`) for mobile + w
 
 ## Overview
 
-Per [maestro-docs][mae]:
-
 [mae]: https://docs.maestro.dev/
 
-> "Maestro [is] **the simplest and most effective framework for
-> painless mobile and web UI automation using intuitive YAML
-> flows**."
-
-The flow file is the artifact - no compile step, no language
-runtime to set up.
-
-The platform ships three pieces ([maestro-docs][mae]):
-
-> 1. **Maestro Studio** - A desktop application for visual test
->    creation without IDE setup
-> 2. **Maestro CLI** - Command-line interface for installing,
->    managing devices, and running tests
-> 3. **Maestro Cloud** - Integration with CI platforms like GitHub
->    Actions for parallel testing
+Maestro automates mobile and web UI from declarative YAML flows (per
+[maestro-docs][mae]). The flow file is the artifact - no compile step, no
+language runtime to set up.
 
 ## When to use
 
@@ -154,6 +140,11 @@ maestro test .maestro/
 EMAIL=qa-test@example.com PASSWORD=test maestro test .maestro/
 ```
 
+Verify: `maestro test` exits non-zero if any command fails. If it does,
+Maestro writes a screenshot of the failing screen to its output dir - use it
+to fix the failing `tapOn` / `assertVisible` target, then re-run before
+moving on.
+
 ## Step 7 - Studio for visual authoring
 
 ```bash
@@ -192,6 +183,11 @@ jobs:
           export PATH="$HOME/.maestro/bin:$PATH"
           maestro test .maestro/
 ```
+
+Verify: `maestro test` exits non-zero on any flow failure, so a failing flow
+fails the job. Upload Maestro's screenshot output as a build artifact (e.g.
+`actions/upload-artifact`) so batch failures are debuggable without a local
+re-run.
 
 For matrix runs across N devices in parallel, use Maestro Cloud
 (per [maestro-docs][mae]) - handles farm-side parallelism without

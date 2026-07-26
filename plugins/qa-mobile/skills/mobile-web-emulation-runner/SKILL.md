@@ -52,9 +52,8 @@ user-agent combinations - import it and spread a profile into a project's
 ```typescript
 import { devices } from '@playwright/test';
 
-devices['iPhone 15']    // viewport 393x852, DPR 3, isMobile, hasTouch
-devices['Pixel 7']
-devices['iPad Pro 11']
+// each entry carries viewport + DPR + user-agent + touch flags, e.g.
+// devices['iPhone 15'] -> viewport 393x852, DPR 3, isMobile, hasTouch
 ```
 
 `isMobile: true` triggers Playwright's mobile-mode quirks (meta viewport
@@ -169,6 +168,10 @@ jobs:
 Each project runs as a separate matrix job; `fail-fast: false`
 ensures a failure on iPhone doesn't cancel Pixel.
 
+Verify: assert every matrix shard exits 0. Because `fail-fast: false` lets
+shards fail independently, gate the merge on all shards green - one red shard
+(e.g. mobile-iphone-15) must block, never be averaged away.
+
 ## Step 6 - Aggregating per-device results
 
 Use the `mobile-device-matrix-toolkit`
@@ -181,6 +184,11 @@ aggregator (Step 4) to produce a per-device summary:
 | mobile-iphone-15        |   42  |   40 |    2 | 145s   |   ← drawer regression
 | mobile-pixel-7          |   42  |   42 |    0 | 138s   |
 | tablet-ipad-pro         |   42  |   41 |    1 | 132s   |   ← landscape layout
+
+Verify: before merging, assert every row shows Fail = 0. If a shard is red
+(e.g. mobile-iphone-15 above), open its report, reproduce with
+`npx playwright test --project=<shard>`, fix the mobile-breakpoint
+regression, and re-run that shard until green.
 ```
 
 ## Worked example
@@ -190,16 +198,8 @@ hamburger on mobile. A regression once hid the hamburger at iPhone width.
 
 1. Add a `mobile-iphone-15` project to `playwright.config.ts` alongside
    `desktop-chromium` (Step 2), each spreading its `devices[...]` profile.
-2. Author the mobile assertion (Step 3):
-
-   ```typescript
-   test.use(devices['iPhone 15']);
-   test('shows mobile drawer, not sidebar', async ({ page }) => {
-     await page.goto('/cart');
-     await expect(page.getByRole('button', { name: /menu/i })).toBeVisible();
-     await expect(page.getByRole('navigation')).not.toBeVisible();
-   });
-   ```
+2. Author the `'shows mobile drawer, not sidebar'` assertion from Step 3 under
+   `test.use(devices['iPhone 15'])`.
 3. Run `npx playwright test --project=mobile-iphone-15`.
 4. The hamburger assertion fails on the regressed build (the button is not
    visible) while the same suite passes on `desktop-chromium`. The matrix

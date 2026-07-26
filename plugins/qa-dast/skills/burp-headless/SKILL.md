@@ -1,27 +1,20 @@
 ---
 name: burp-headless
-description: "Configures and runs Burp Suite Professional / Enterprise headless - Burp Scanner is \"a web vulnerability scanning tool built into Burp Suite Professional\"; Pro edition runs scans via REST API or scheduled-tasks; Enterprise edition is purpose-built for CI-driven scanning at scale; supports BApp Store extensions (BCheck, custom scanners); auth via session-handling rules. Use when the team has a Burp Suite license and needs paid-tier DAST coverage layered on top of OWASP ZAP."
+description: "Configures and runs headless Burp Suite Professional / Enterprise vulnerability scans (a \"Burp scan\"): Pro drives scans via its local REST API, Enterprise runs CI-driven scans at scale via its server API; supports BApp Store extensions (BCheck, custom scanners) and authenticated targets via session-handling rules; exports issues as HTML / XML / CSV / JSON or SARIF. Use when the team has a Burp Suite license and wants to run a vulnerability scan with Burp - paid-tier dynamic application security testing (DAST) layered on top of OWASP ZAP."
 ---
 
 # burp-headless
 
 ## Overview
 
-Per [portswigger.net/burp/documentation/desktop/automated-scanning][burp-as]:
+Per [portswigger.net/burp/documentation/desktop/automated-scanning][burp-as],
+Burp Scanner "is a web vulnerability scanning tool built into Burp Suite
+Professional" that maps the attack surface and identifies vulnerabilities in
+web applications and APIs.
 
 [burp-as]: https://portswigger.net/burp/documentation/desktop/automated-scanning
 
-> "Burp Scanner is a web vulnerability scanning tool built into
-> Burp Suite Professional. You can use Burp Scanner to automatically
-> map the attack surface and identify vulnerabilities in both web
-> applications and APIs."
-
-**Important licensing context:** Burp Suite Professional is per-user
-desktop tooling - headless / unattended use is licensed
-differently. Per [burp-as][burp-as]: there is "Pro" + "Enterprise"
-edition; Enterprise is "enterprise-enabled" and purpose-built for
-CI-driven scanning. Pro headless is constrained; Enterprise is the
-intended CI fit. Verify your license before authoring CI workflows.
+How you run it headless depends on your license edition - see Step 1.
 
 ## When to use
 
@@ -40,7 +33,7 @@ surface without Burp's licensing friction.
 ## How to use
 
 1. Confirm the license edition - Pro (per-user desktop) or Enterprise
-   (CI-enabled) - and verify headless / CI terms before authoring workflows (Step 1).
+   (CI-enabled) - before authoring workflows (Step 1).
 2. Install and activate: Pro via license file, Enterprise on a dedicated
    server + database (Step 1).
 3. Drive scans: Pro via the local REST API (Step 2), Enterprise via its
@@ -55,6 +48,12 @@ surface without Burp's licensing friction.
    [references/enterprise-ci.md](references/enterprise-ci.md)).
 
 ## Step 1 - License + install
+
+Licensing (canonical, referenced elsewhere): Burp Pro is per-user desktop
+tooling whose headless / unattended use is constrained; Enterprise is
+"enterprise-enabled" and the intended fit for CI-driven scanning per
+[burp-as][burp-as]. Verify your edition's headless / CI terms before
+authoring workflows.
 
 Burp Pro: download Burp Suite Pro from portswigger.net/burp/pro;
 each user activates via license file. Headless invocation requires
@@ -203,16 +202,12 @@ findings sit alongside ZAP and NightVision output in one severity-gated verdict.
 
 ## Limitations
 
-- Burp Pro is per-user desktop tooling - headless / CI use has
-  licensing constraints; Enterprise is the CI fit.
+- Headless / CI licensing differs by edition (see Step 1).
 - Burp Enterprise requires dedicated server infrastructure +
   database; non-trivial ops cost.
 - BApp Store extensions vary in quality; some are abandoned.
 - REST API surface is stable but version-specific; consult
   in-tool API docs.
-- Per [burp-as][burp-as], the comparison page differentiates Pro
-  vs Enterprise - verify which edition fits your team's needs
-  before procurement.
 
 ## References
 

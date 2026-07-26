@@ -25,16 +25,6 @@ configures both:
 - Migrating off legacy Code Climate Quality to Qlty without losing
   config.
 
-## How to use
-
-1. Pick the platform - Qlty (`.qlty/qlty.toml`) for new setups; legacy `.codeclimate.yml` only if the team still runs the GitHub Code Climate App. Never both (see Anti-patterns).
-2. Install the Qlty CLI, then run `qlty init` to generate a baseline `.qlty/qlty.toml` (Steps 1 - 2).
-3. Author the config - set duplication `mass_threshold` per language and add `exclude_patterns` / `[[exclude]]` for tests, `node_modules`, `vendor`, and build output (Steps 3 - 4).
-4. Enable 2-3 plugins to start with `qlty plugins enable <name>`; add more quarterly.
-5. Run analysis locally (`qlty check`, `qlty smells --all`, `qlty metrics`) to confirm the thresholds fit the codebase (Step 5).
-6. Wire the PR gate with `qlty check --upstream main` so only new-diff issues block merges (Step 6).
-7. For an existing `.codeclimate.yml`, run `qlty config migrate` to produce `qlty.toml` while preserving plugin and exclude settings.
-
 ## Step 1 - Install (Qlty CLI path)
 
 ```bash
@@ -155,6 +145,11 @@ qlty smells --all
 qlty metrics --all --max-depth=2 --sort complexity --limit 10
 ```
 
+Verify: assert `qlty smells --all` returns a manageable count before
+wiring the gate. If it surfaces excess pre-existing issues, raise the
+per-language `mass_threshold` or scope with `qlty check --upstream main`,
+then re-run.
+
 ## Step 6 - CI gate
 
 ```yaml
@@ -171,6 +166,11 @@ qlty metrics --all --max-depth=2 --sort complexity --limit 10
 `--upstream main` scopes results to **only the diff** vs main - 
 matches the "new issues only" workflow Qlty's PR feedback uses
 (per [Qlty docs] section "Preventing new issues from merging").
+
+Verify: run `qlty check --upstream main` locally (or open a test PR) and
+assert a newly introduced duplicate block fails while pre-existing
+findings stay green. If pre-existing issues also fail, confirm
+`--upstream main` is set and the base branch is correct, then re-run.
 
 ## Worked example
 

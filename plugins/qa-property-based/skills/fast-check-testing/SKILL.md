@@ -9,16 +9,9 @@ description: "Authors property-based tests in JavaScript / TypeScript using fast
 
 fast-check is "a property-based testing framework for JavaScript
 and TypeScript, inspired by QuickCheck"
-([fast-check-readme][fcr]). Per ISTQB,
-**property-based testing** is "a test approach in which test
-results are verified using specified relations between inputs and
-expected results of a test case."
+([fast-check-readme][fcr]).
 
 [fcr]: https://github.com/dubzzz/fast-check
-
-> "Trusted by major projects including Jest, Jasmine, fp-ts, and
-> Ramda, and has uncovered bugs in popular libraries like
-> query-string." ([fast-check-readme][fcr])
 
 It's runner-agnostic ([fast-check-overview][fco]): "Test Runner
 Agnostic: Works seamlessly with Jest, Mocha, Vitest, and other
@@ -145,7 +138,11 @@ stateful systems use command-sequence model-based testing with
 6. On failure, read the shrunk counterexample and replay its seed to
    reproduce - see
    [references/shrinking-and-reproducibility.md](references/shrinking-and-reproducibility.md).
-7. For stateful or concurrent code, escalate to model-based testing
+7. Verify: after fixing the cause, re-run the property and confirm it
+   passes all 100 generated cases, and replay the failing seed to
+   confirm the counterexample is gone; if it still fails, the fix is
+   incomplete or the property itself is wrong - correct and re-run.
+8. For stateful or concurrent code, escalate to model-based testing
    or `fc.scheduler` -
    [references/stateful-and-async.md](references/stateful-and-async.md).
 

@@ -1,6 +1,6 @@
 ---
 name: push-notification-test-author
-description: "Build-an-X for push-notification tests across Web Push (RFC 8030 / VAPID), Apple Push Notification Service (APNs), and Firebase Cloud Messaging (FCM) - covers subscription handshake, payload encryption, badge / sound / click-action assertions, expired-subscription handling, silent-vs-alert push, topic-vs-targeted routing. Use when authoring tests for any push-notification flow."
+description: "Build-an-X for push notification tests (push notifications, web push, FCM / APNs push messages) across Web Push (RFC 8030 / VAPID), Apple Push Notification Service (APNs), and Firebase Cloud Messaging (FCM) - covers subscription handshake, payload encryption, badge / sound / click-action assertions, expired-subscription cleanup, silent-vs-alert, and topic-vs-targeted routing. Use when authoring tests for any push notification flow."
 ---
 
 # push-notification-test-author
@@ -9,14 +9,14 @@ description: "Build-an-X for push-notification tests across Web Push (RFC 8030 /
 
 Three push platforms dominate:
 
-| Platform | Standard / Provider | Test approach |
-|---|---|---|
-| **Web Push** | IETF RFC 8030 + VAPID (RFC 8292) | Service-worker test harness + push library mocks |
-| **APNs** (iOS / iPadOS / macOS) | Apple proprietary HTTP/2 | APNs sandbox environment + APNs simulator tooling |
-| **FCM** (Android + cross-platform) | Google Firebase | FCM emulator (limited) + provider SDK mocks |
+| Platform | Standard / Provider |
+|---|---|
+| **Web Push** | IETF RFC 8030 + VAPID (RFC 8292) |
+| **APNs** (iOS / iPadOS / macOS) | Apple proprietary HTTP/2 |
+| **FCM** (Android + cross-platform) | Google Firebase |
 
-Each platform has distinct test patterns; this skill covers the
-common workflow + per-platform specifics.
+Each platform has distinct test patterns; Step 1 picks the isolation
+level and Steps 2 - 4 cover the per-platform test approach.
 
 ## When to use
 

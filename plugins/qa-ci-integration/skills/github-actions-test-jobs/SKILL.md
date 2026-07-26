@@ -7,24 +7,13 @@ description: "Configures GitHub Actions test workflows - `.github/workflows/test
 
 ## Overview
 
-Per [gha-workflows][gha]:
+Test workflows are YAML files in `.github/workflows/` that run jobs on
+trigger events ([gha][gha]). This skill sets up the idiomatic patterns -
+matrix builds, sharding, service containers, JUnit reporting, trigger
+filtering, concurrency, and secrets. Start with the minimal pattern in
+Step 1.
 
 [gha]: https://docs.github.com/en/actions/using-workflows/about-workflows
-
-> "A workflow is a configurable automated process that will run
-> one or more jobs."
-
-> "[Workflows] are stored as YAML files in the `.github/workflows`
-> directory and execute tasks like building pull requests,
-> deploying applications, or managing issues."
-
-A workflow has three essential elements ([gha-workflows][gha]):
-
-> 1. **Events** - "One or more events that will trigger the
->    workflow"
-> 2. **Jobs** - "One or more jobs, each of which will execute on
->    a runner machine"
-> 3. **Steps** - Each job contains "a series of one or more steps"
 
 ## When to use
 
@@ -50,7 +39,8 @@ A workflow has three essential elements ([gha-workflows][gha]):
    (Step 8).
 6. Move tokens into `secrets.*` and reference them from step `env`
    (Step 9).
-7. Review the anti-patterns table before merging.
+7. Verify the workflow runs (see Verify below), then review the
+   anti-patterns table before merging.
 
 ## Step 1 - Basic test workflow
 
@@ -198,6 +188,17 @@ steps:
 ```
 
 Secrets configured in repo settings; never committed.
+
+## Verify before merge
+
+Run the workflow once before merging - push the branch or trigger it
+manually via `workflow_dispatch` (or dry-run locally with `act`).
+
+Verify: the matrix expands into the expected job count (e.g. OS × Node =
+3 × 2 = 6 jobs) and each job uploads its JUnit artifact. If a job fails on
+a missing secret, confirm `NPM_TOKEN` / `TEST_DATABASE_URL` exist under
+repo **Settings -> Secrets and variables -> Actions**, add any that are
+missing, and re-run the job.
 
 ## Worked example
 

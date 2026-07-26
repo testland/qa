@@ -1,6 +1,6 @@
 ---
 name: browser-matrix-runner
-description: "Configures a CI matrix that runs the smoke / regression suite across multiple browsers per Playwright's three-engine support (Chromium, Firefox, WebKit) plus branded variants (chrome, msedge channels). Wires GitHub Actions / GitLab CI matrix syntax, captures per-browser screenshots, and aggregates per-browser pass/fail. Use when the product targets multiple browsers and the team wants automated cross-browser regression."
+description: "Configures a CI matrix that runs the smoke / regression suite across multiple browsers per Playwright's three-engine support (Chromium, Firefox, WebKit / Safari) plus branded variants (chrome, msedge channels). Wires GitHub Actions / GitLab CI matrix syntax, captures per-browser screenshots, and aggregates per-browser pass/fail. Use when the product targets multiple browsers and the team wants automated cross-browser testing or browser-compatibility regression - e.g. a 'works in Chrome, broken in Safari' bug that needs Chrome / Firefox / Safari coverage."
 ---
 
 # browser-matrix-runner
@@ -119,6 +119,12 @@ jobs:
 
 `fail-fast: false` ensures Chromium failure doesn't cancel
 WebKit / Firefox.
+
+**Verify each browser leg:** assert `npx playwright install --with-deps` exited 0
+and a `playwright-report/` artifact was produced before counting the browser as
+passed. If install fails, the cause is almost always a missing system dependency -
+re-run with `--with-deps` (wired above) and surface the missing package from the
+installer's error output, then re-run the leg.
 
 ## Step 5 - Per-browser failure analysis
 

@@ -7,9 +7,7 @@ description: "Build-an-X for SOC 2 Type II evidence collection - per-Trust-Servi
 
 ## Overview
 
-SOC 2 (Service Organization Control 2) is the AICPA-defined audit
-framework for SaaS providers. Per AICPA Trust Services Criteria
-(TSC):
+Scope decision - which Trust Services Criteria (TSC) this collector must cover:
 
 | Category | TSC sections | Required? |
 |---|---|---|
@@ -19,12 +17,9 @@ framework for SaaS providers. Per AICPA Trust Services Criteria
 | Processing Integrity | PI1 | Optional (common for transaction-processing SaaS) |
 | Privacy | P1 - P9 | Optional (common when handling PII at scale) |
 
-**Type I** = point-in-time design assessment.
-**Type II** = continuous-evidence assessment over an observation
-period (3 - 12 months).
-
-Type II requires evidence collection across the period - auditors
-sample, but every control should have continuous evidence available.
+Type II is assessed over a 3 - 12 month observation period, so every in-scope
+control needs continuous evidence available for auditor sampling, not a
+point-in-time snapshot.
 
 This is a **build-an-X workflow** - the per-criterion evidence
 collection script, not a standalone tool. Pair with Vanta / Drata /
@@ -42,15 +37,6 @@ auditor-facing dashboards.
 - Adopting a GRC platform (Vanta/Drata/Secureframe) and need
   evidence-feed configuration.
 
-## How to use
-
-1. Determine in-scope criteria (Step 1) - always CC1 - CC9, plus A1/C1/PI1/P-series per your commitments.
-2. For each control, map an automatable evidence source and write the collector (Step 2).
-3. Add a per-control test that proves the control operates, not just that logs exist (Step 3).
-4. Feed the collected JSON into your GRC platform, filling gaps the native integrations miss (Step 4).
-5. Run collectors on a daily cron into append-only storage and alert on any run gap (Step 6).
-6. Before the observation period, dry-run a mock auditor sample request end to end and confirm the response is complete and timely (Step 7).
-
 ## Step 1 - Identify in-scope criteria
 
 Most SaaS engagements include CC + Availability + Confidentiality.
@@ -64,6 +50,10 @@ per-criterion scope-decision table is in
 Map each control to one or more automatable evidence sources; the
 full control-to-evidence-source table is in
 [references/evidence-source-map.md](references/evidence-source-map.md).
+
+`okta_client`, `aws_iam`, `github_org`, and `slack` in the examples are
+injected client interfaces - thin wrappers you provide over the vendor SDKs
+(okta-sdk-python, boto3, PyGithub, slack_sdk), not pip-importable modules.
 
 Example collector script:
 

@@ -7,10 +7,10 @@ description: "Authors Mountebank imposters (multi-protocol mock servers - HTTP, 
 
 ## Overview
 
-Mountebank is a multi-protocol service-virtualization tool - 
-"the only open source service virtualization tool that competes
-with the commercial offerings in terms of protocol diversity,
-capability, and performance" ([mountebank-readme][readme]).
+Mountebank is a multi-protocol service-virtualization (mock server)
+tool: stand up on-demand mocks across many protocols by POSTing JSON
+imposter definitions to its control API on port 2525, so tests run
+against deterministic stubs instead of live dependencies.
 
 [readme]: https://github.com/bbyars/mountebank
 
@@ -27,14 +27,11 @@ Per [mountebank-readme][readme], supported protocols include:
 - Telnet / SSH
 - NETCONF
 
-> **Source-fetch note (2026-05-04):** the canonical Mountebank
-> documentation domain `mbtest.org` was hijacked / redirects to an
-> unrelated football-club site (`farsleyceltic.com`) as of
-> verification on this date. This skill cites the GitHub repository
-> [bbyars/mountebank][readme] as the authoritative source instead;
-> `mbtest.dev` is the project's current alternate documentation
-> domain per the upstream organization. Verify both URLs before
-> linking from authored content.
+> **Docs-domain note (verified 2026-05-04):** the canonical
+> `mbtest.org` domain was hijacked (redirects to an unrelated site),
+> so this skill cites the GitHub repo [bbyars/mountebank][readme];
+> `mbtest.dev` is the project's alternate docs domain. Verify both
+> URLs before linking from authored content.
 
 ## When to use
 
@@ -57,9 +54,10 @@ process, port 2525) only when you need it.
 1. Start Mountebank (`mb start` or the Docker image); the control API listens on port 2525.
 2. POST a JSON imposter to `/imposters` with a `port`, a `protocol`, and one or more `stubs`.
 3. Give each stub `predicates` (path / method / header / body matchers) and `responses` (the reply to send).
-4. Point the system under test at the imposter's port and run the tests.
-5. For an unrecorded upstream, use a `proxyOnce` proxy response to capture real traffic, then replay offline.
-6. `DELETE /imposters/<port>` in teardown (or restart Mountebank) so stale stubs don't leak between runs.
+4. Verify: `GET http://localhost:2525/imposters/<port>` and assert HTTP 200 with your stubs listed before pointing tests at it. If it 404s or the stub is missing, the POST body was malformed - fix the JSON and re-POST.
+5. Point the system under test at the imposter's port and run the tests.
+6. For an unrecorded upstream, use a `proxyOnce` proxy response to capture real traffic, then replay offline.
+7. `DELETE /imposters/<port>` in teardown (or restart Mountebank) so stale stubs don't leak between runs.
 
 ## Install
 
@@ -245,17 +243,14 @@ is never called - the suite is deterministic and offline.
   run; harder to set up than in-process WireMock or MSW.
 - **JSON-heavy authoring.** Imposter definitions are JSON-by-API;
   there's no fluent DSL like WireMock's `stubFor`.
-- **Documentation domain reliability.** As noted above, the
-  canonical `mbtest.org` URL has been hijacked; rely on the GitHub
-  README ([mountebank-readme][readme]) and `mbtest.dev` until /
-  unless `mbtest.org` is restored.
+- **Documentation domain reliability.** See the docs-domain note in
+  the Overview: cite the GitHub README and `mbtest.dev`.
 
 ## References
 
 - [mountebank-readme][readme] - main repo: install, supported
   protocols, key features.
-- mbtest.dev - alternate documentation domain (verify before
-  linking; project's stewardship situation evolved during 2025-2026).
+- mbtest.dev - alternate documentation domain (verify before linking).
 - `wiremock-stubs` - HTTP-only
   alternative on the JVM.
 - `msw-handlers` - HTTP-only

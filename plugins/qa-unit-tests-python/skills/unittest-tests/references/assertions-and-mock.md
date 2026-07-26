@@ -35,7 +35,7 @@ Per [docs.python.org/3/library/unittest.mock.html][mock-docs]:
 [mock-docs]: https://docs.python.org/3/library/unittest.mock.html
 
 ```python
-from unittest.mock import Mock, MagicMock, patch, patch.object
+from unittest.mock import Mock, MagicMock, patch
 
 # Standalone mocks
 m = Mock()

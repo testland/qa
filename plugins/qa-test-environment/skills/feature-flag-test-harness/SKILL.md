@@ -29,10 +29,6 @@ provider ([openfeature-overview][of-int]).
 [of-int]: https://openfeature.dev/docs/reference/intro
 [of-prov]: https://openfeature.dev/docs/reference/concepts/provider
 
-> "OpenFeature provides a shared, standardized feature flagging
-> client - an _SDK_ - which can be plugged into various 3rd-party
-> feature flagging _providers_." ([openfeature-overview][of-int])
-
 ## When to use
 
 - A new feature lives behind a release toggle and the team needs to
@@ -83,11 +79,8 @@ different test needs:
 | **Ops toggle**         | Long-lived     | Per-request dynamic | ON (normal) and OFF (degraded / kill).      |
 | **Permissioning toggle** | Years        | Per-request dynamic | One run per relevant user cohort.           |
 
-Per [feature-toggles][toggles]: "Each user of the system is placed
-into a cohort and at runtime the Toggle Router will consistently
-send a given user down one codepath or the other." For experiment +
-permissioning toggles, the test harness simulates the cohort by
-seeding the EvaluationContext.
+For experiment and permissioning toggles, the harness simulates each
+cohort by seeding the EvaluationContext ([feature-toggles][toggles]).
 
 Don't run all 2^N combinations. Author marks the **interactions
 worth testing**:
@@ -106,17 +99,40 @@ interactions:
   # Ranking experiment doesn't interact with checkout; don't bloat the matrix.
 ```
 
-The harness enumerates: every flag's variants individually + the
-listed interaction tuples. Single flags = 2 + 2 + 3 + 2 = 9 runs.
-Plus the one declared interaction (new_checkout × promo_codes) = +4 runs.
-Total: 13 runs, not 24 (2 × 2 × 3 × 2).
+The harness enumerates every flag's variants individually plus the
+listed interaction tuples, never the full 2^N product. See the
+Worked example for the run count this schema yields.
 
 ## Provider wiring, matrix generation, CI
 
-- In-memory provider wiring (Node / Python / Java) plus the standard
-  evaluation API and default-value behavior:
+Wire the in-memory provider so the suite reads flag values from
+`FLAGS_JSON` instead of the production service (Node shown; Python and
+Java variants in the reference):
+
+```typescript
+// tests/harness/flag-harness.ts
+import { OpenFeature, InMemoryProvider } from '@openfeature/server-sdk';
+
+export function withFlags(flags: Record<string, unknown>) {
+  return OpenFeature.setProviderAndWait(new InMemoryProvider(
+    Object.fromEntries(Object.entries(flags).map(([k, v]) => [k, {
+      defaultVariant: 'configured', variants: { configured: v }, disabled: false,
+    }])),
+  ));
+}
+// beforeAll(() => withFlags(JSON.parse(process.env.FLAGS_JSON || '{}')));
+```
+
+Generate one shard per combination, then feed the JSON to the CI matrix:
+
+```bash
+python scripts/gen-flag-matrix.py tests/flag-matrix.yaml   # -> JSON array of {name, flags}
+```
+
+- Full provider wiring (Node / Python / Java), evaluation API, and
+  default-value behavior:
   [references/provider-wiring.md](references/provider-wiring.md).
-- Combination-matrix generator, CI matrix YAML, result aggregation,
+- The `gen-flag-matrix.py` source, CI matrix YAML, result aggregation,
   and the PR / nightly cadence split:
   [references/matrix-and-ci.md](references/matrix-and-ci.md).
 

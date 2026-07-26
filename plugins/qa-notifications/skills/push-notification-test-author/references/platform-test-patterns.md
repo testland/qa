@@ -4,14 +4,7 @@ Full per-platform test-pattern code for [push-notification-test-author](../SKILL
 
 ## Web Push (Node.js with web-push)
 
-Flow per IETF RFC 8030:
-
-1. User-agent subscribes via `pushManager.subscribe()` -> returns subscription `(endpoint, keys.p256dh, keys.auth)`.
-2. Application server sends push via the endpoint, encrypted per RFC 8291 + signed via VAPID per RFC 8292.
-3. Push service delivers to user-agent.
-4. Service worker `push` event fires -> typically calls `self.registration.showNotification()`.
-
-Status code `410 Gone` means the subscription is invalid (user revoked or expired); the app must remove it from storage.
+The RFC 8030 flow and the `410 Gone` cleanup requirement are covered in [Step 2 of the skill](../SKILL.md); the recipe below mocks `webPush.sendNotification` at the SDK boundary.
 
 ```javascript
 const webPush = require('web-push');

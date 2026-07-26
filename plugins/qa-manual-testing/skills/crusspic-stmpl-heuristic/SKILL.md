@@ -1,14 +1,13 @@
 ---
 name: crusspic-stmpl-heuristic
-description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - thirteen quality criteria a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use as the quality-criteria checklist for evaluating a product holistically; complementary to ISO/IEC 25010 quality model."
+description: "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - thirteen quality criteria (quality attributes / non-functional requirements) a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use when checking a product's quality attributes or non-functional requirements, or picking which quality characteristics a test session evaluates - a checklist for judging product quality holistically; complementary to the ISO/IEC 25010 software product-quality model."
 ---
 
 # crusspic-stmpl-heuristic
 
 ## Overview
 
-CRUSSPIC STMPL is James Bach's quality-criteria mnemonic - a
-category list for judging what it means for a system to be good.
+CRUSSPIC STMPL is James Bach's quality-criteria mnemonic.
 The thirteen criteria are enumerated under "Quality Criteria
 Categories" in Bach's *Heuristic Test Strategy Model* (HTSM v6.3,
 2024-11-05), which defines a quality criterion as "some requirement
@@ -151,9 +150,6 @@ Maps to ISO 25010 "Compatibility." Composes with
 - Escalation paths
 - Reproducibility from logs alone
 
-A system with terrible logs is hard to support even when it's
-otherwise high-quality.
-
 #### T - Testability
 
 > Can the testers **verify** the system?
@@ -163,9 +159,6 @@ otherwise high-quality.
 - State-inspection endpoints
 - Test-data-management hooks
 - Mock-able external dependencies
-
-A system that's hard to test usually has worse quality everywhere
-else.
 
 #### M - Maintainability
 

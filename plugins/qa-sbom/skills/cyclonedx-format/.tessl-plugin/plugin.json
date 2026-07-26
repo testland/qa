@@ -1,9 +1,9 @@
 {
   "name": "testland/cyclonedx-format",
-  "description": "Reference for the CycloneDX v1.6 SBOM specification - OWASP-curated, BOM-format-rich format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language tooling (cyclonedx-bom-tool family) for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via gen + sign + attest workflow. Use when the team adopts CycloneDX as primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus).",
+  "description": "Reference for the CycloneDX v1.6 software bill of materials (SBOM) specification - OWASP-curated, security-focused format covering software components, services, dependencies, vulnerabilities, formulation, machine learning models, and SaaS BOMs; supports XML / JSON / Protobuf encodings; per-language generators for npm, pip, Maven, Gradle, Go, etc.; integrates with CI via generate + sign + attest workflow. Use when the user asks to generate or write a software bill of materials / SBOM in CycloneDX form, or when the team adopts CycloneDX as its primary SBOM format (preferred for security-focused use cases vs SPDX's licensing focus).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.13"
+  "version": "1.1.14"
 }
