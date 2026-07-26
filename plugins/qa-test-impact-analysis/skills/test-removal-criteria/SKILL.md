@@ -1,6 +1,6 @@
 ---
 name: test-removal-criteria
-description: "Decides which existing tests should stop existing, using five removal classes (duplicate, tautology, trivial, dead-signal, orphan) and a four-condition delete gate where every condition must hold or the verdict reverts to keep. Puts the burden of proof on removal: each proposed deletion carries a written reason, redundant-coverage evidence from a per-test source map, and a named reviewer, and a test that has simply never failed is treated as possibly load-bearing rather than worthless. Covers removal only, not per-change test selection. Use when a suite has grown faster than its signal value and someone is about to open a pruning or suite-curation change set that deletes test files."
+description: "Decides which existing tests should stop existing, using five removal classes (duplicate, tautology, trivial, dead-signal, orphan) and a four-condition delete gate where every condition must hold or the verdict reverts to keep. Puts the burden of proof on removal: each deletion carries a written reason, redundant-coverage evidence from a per-test source map, and a named reviewer; a test that has merely never failed is treated as possibly load-bearing, not worthless. Use when a suite has outgrown its signal value and someone is opening a pruning change set that deletes test files; for choosing which tests to RUN per change (not delete) use regression-suite-selector, and to track accumulating low-value coverage over time use coverage-debt-tracker."
 ---
 
 # test-removal-criteria

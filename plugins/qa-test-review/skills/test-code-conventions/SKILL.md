@@ -1,6 +1,6 @@
 ---
 name: test-code-conventions
-description: "Pure-reference catalog of test code conventions - AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming patterns (`{system_under_test}_{scenario}_{expected}` vs nested describe), assertion specificity, mocking rationale (state vs behavior verification, fake vs mock preference), fixture-coupling rules, and the magic-number / hard-coded-string anti-pattern; the E2E selector-priority and web-first-assertion conventions (§8 / §9) live in references/. Use as the shared rule book behind a test-code review, as a team's onboarding reference for \"what makes a test code-reviewable,\" or as the source of truth a review verdict cites back to."
+description: "Pure-reference catalog of test-code conventions: AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming (`{sut}_{scenario}_{expected}`), assertion specificity, mocking rationale (state vs behavior, fake vs mock), fixture-coupling rules, and the magic-number / hard-coded-string anti-patterns; the E2E selector-priority and web-first-assertion conventions live in references/. Use as the shared rule book a test-code review cites back to, or as onboarding for what makes a test code-reviewable; to score a test's quality on weighted axes use test-design-scorecard, and for setup/teardown isolation specifically use test-isolation-patterns."
 ---
 
 # test-code-conventions

@@ -1,6 +1,6 @@
 ---
 name: test-run-summary-author
-description: "Build-an-X workflow that takes a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr API export) plus optional release context (version, build URL, deploy target) and emits a narrative markdown summary suitable for release notes, exec status updates, or stand-up Slack posts. Distinct from per-framework parsers (junit-xml-analysis / allure-reports / coverage-diff-reporter) which produce structured tabular reports - this skill takes the same data and produces the **narrative draft** practitioners use today by pasting raw results into ChatGPT. Distinct from longitudinal suite-health trend reporting, which reports suite health over time. Use when a manager needs a draft release note or a stand-up summary from a single test run."
+description: "Build-an-X workflow that turns a structured test-run artifact (JUnit XML, Allure JSON, TestRail / Xray / Zephyr export) plus optional release context (version, build URL, deploy target) into a narrative markdown summary for release notes, an exec status update, or a stand-up Slack post. Distinct from the per-framework parsers junit-xml-analysis / allure-reports / coverage-diff-reporter, which emit structured tabular reports: this skill takes the same data and writes the human-readable narrative. Use when a manager needs a draft release note or stand-up summary from a single run; for cross-run trend analytics use currents-integration."
 ---
 
 # test-run-summary-author

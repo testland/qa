@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-flake-triage",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Flake triage: 5 skills (flaky-test-quarantine, flake-pattern-reference, flake-dashboard-author, flake-remediation-guide, flake-axis-bisection) and 5 agents (e2e-flake-bisector, parallel-isolation-checker, regression-bisector, ai-flake-detector, e2e-test-trend-reporter).",
   "author": {
     "name": "testland",

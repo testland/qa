@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-impact-analysis",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Test impact analysis (TIA) and regression-suite hygiene: 3 skills (regression-suite-selector, coverage-debt-tracker, test-removal-criteria) and 2 agents (test-suite-pruner, regression-suite-curator). Selector cuts per-PR run time; tracker + pruner + curator manage long-term suite signal/noise.",
   "author": {
     "name": "testland",

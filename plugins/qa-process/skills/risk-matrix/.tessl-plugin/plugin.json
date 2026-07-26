@@ -1,9 +1,9 @@
 {
   "name": "testland/risk-matrix",
-  "description": "Produces the per-feature / per-release risk-matrix artifact (not the facilitation session - see `risk-storming-facilitator` for running the live meeting). Captures risks via a structured intake (feature, category, impact 1-5 by likelihood 1-5, score), tracks mitigations plus owners plus due dates, supports both lightweight (impact by likelihood) and heavyweight (FMEA / Cost of Exposure) methods per RBT canon. Output is a Markdown / spreadsheet artifact the team reviews per sprint and that drives test prioritization, consumed by risk-based test selection and planning. Does not recommend which methodology to use. Use when building the per-release matrix artifact itself.",
+  "description": "Produces the per-feature / per-release risk-matrix artifact itself: a structured intake (feature, category, impact 1-5 by likelihood 1-5, score), mitigations with owners and due dates, supporting both lightweight (impact by likelihood) and heavyweight (FMEA / Cost of Exposure) methods per RBT canon, output as a Markdown / spreadsheet the team reviews each sprint. Use when building the matrix artifact; to facilitate the live risk-storming meeting use risk-storming-facilitator, to calibrate scores across raters use risk-matrix-calibration, and to map the resulting risks onto test coverage use risk-coverage-mapper.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.8"
+  "version": "1.10.9"
 }

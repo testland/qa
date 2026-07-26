@@ -1,6 +1,6 @@
 ---
 name: github-issues-bug-workflow
-description: "Author and run GitHub Issues bug workflows via REST API v2026-03-10 - issue creation, state changes (open / closed with state_reason), label-based severity/priority classification, and comment attachment. Covers POST /repos/{owner}/{repo}/issues, PATCH for state_reason transitions (completed / not_planned / duplicate / reopened), and label conventions for the impoverished GitHub state model; Projects v2, gh CLI, and CI wiring live in references/. Use when programmatically managing GitHub Issues bug lifecycle - GitHub's binary open/closed model requires label + Projects discipline."
+description: "Author and run GitHub Issues bug workflows via REST API (2026-03-10): issue creation, state changes (open / closed with `state_reason`), label-based severity/priority classification, and comment attachment. Covers `POST /repos/{owner}/{repo}/issues`, `PATCH` for `state_reason` transitions (completed / not_planned / duplicate / reopened), and label conventions for GitHub's binary open/closed model; Projects v2, `gh` CLI, and CI wiring live in references/. Use when programmatically managing the GitHub Issues bug lifecycle; for the same workflow on another tracker use azuredevops-bug-workflow, jira-bug-workflow-runner, or linear-bug-workflow-runner."
 ---
 
 # github-issues-bug-workflow

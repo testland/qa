@@ -1,9 +1,9 @@
 {
   "name": "testland/winappdriver",
-  "description": "Authors and runs Windows UI tests against WinAppDriver - Microsoft's W3C-WebDriver service for UWP, WPF, WinForms, and Win32 applications. Covers installing + launching `WinAppDriver.exe` on the default `127.0.0.1:4723` endpoint, declaring `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities, finding elements by `AccessibilityId` / `Name` / `ClassName`, and CI integration on Windows runners. Use when driving a native Windows desktop app from a Selenium-style client (C#, Java, Python, Ruby, JavaScript).",
+  "description": "Authors and runs Windows UI tests against WinAppDriver, Microsoft's W3C-WebDriver service for UWP / WPF / WinForms / Win32 apps: installing + launching `WinAppDriver.exe` on `127.0.0.1:4723`, declaring `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities, finding elements by `AccessibilityId` / `Name` / `ClassName`, and Windows-runner CI. Use when driving a native Windows app from a Selenium-style client (C#, Java, Python, Ruby, JS); for the actively-maintained Appium 2.x wrapper over the same server use appium-windows-driver, for a C#-only FlaUI client use flaui-tests, and to choose among Windows desktop drivers first use desktop-test-strategy-reference.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.14"
+  "version": "1.2.15"
 }
