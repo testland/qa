@@ -18,6 +18,16 @@ retire / move to a lower layer / fix.
 - Team wants to reduce test maintenance burden or decide which tests to remove.
 - Quarterly: scheduled budget review.
 
+## How to use
+
+1. Gather the E2E inventory - per test, pull runtime, flake rate, regressions caught, maintenance PR count, and a 1-5 value tier (Step 1).
+2. Validate inputs - confirm every test has runtime and flake data; flag and exclude gaps (Step 1a).
+3. Compute per-test ROI = (regressions caught × value) / (runtime × flake rate × maintenance) (Steps 2-3).
+4. Rank every test ascending by ROI and take the bottom decile as the action list (Step 4).
+5. Decide per bottom-decile test: retire, move to a lower layer, or fix the flake (Step 5).
+6. Enforce the absolute budget - once the suite exceeds the cap, adding a new E2E test must retire an existing one (Step 6).
+7. Re-run quarterly, and reactively after any flake spike (Step 7).
+
 ## Step 1 - Inputs
 
 Per-E2E-test, the agent / skill needs:
@@ -151,6 +161,30 @@ trade-off.
 | Quarterly   | Scheduled review.                                       |
 | Per-major-feature | New tests added; verify suite stays under budget.  |
 | After flake spike | Reactive review; flake source likely a low-ROI test. |
+
+## Worked example
+
+A 40-test E2E suite, median maintenance = 2 PRs/quarter (so `maintenance_count_norm` = PRs ÷ 2). Scoring three representative tests:
+
+| Test                                    | Regressions | Value | Runtime | Flake | PRs (norm) |  ROI |
+|-----------------------------------------|------------:|------:|--------:|------:|-----------:|-----:|
+| `checkout.spec.ts > guest-purchase`      |      4      |   5   |  2.0m   |   2%  |   2 (1.0)  | 4.9  |
+| `admin-report.spec.ts > csv-export`      |      1      |   2   |  3.5m   |  10%  |   3 (1.5)  | 0.21 |
+| `legacy-banner.spec.ts > dismiss-cookie` |      0      |   1   |  1.8m   |  20%  |   4 (2.0)  | 0.0  |
+
+Worked arithmetic (formula from Step 2):
+
+- guest-purchase: (4 × 5) / (2.0 × 1.02 × 2.0) = 20 / 4.08 = 4.9
+- csv-export: (1 × 2) / (3.5 × 1.10 × 2.5) = 2 / 9.625 = 0.21
+- dismiss-cookie: (0 × 1) / (1.8 × 1.20 × 3.0) = 0 / 6.48 = 0.0
+
+Ranked ascending: dismiss-cookie (0.0) → csv-export (0.21) → guest-purchase (4.9). The bottom decile of 40 is the lowest 4 tests; the first two here fall in it.
+
+Decisions:
+
+- `dismiss-cookie` → **retire**: 0 regressions in the window, 20% flake, feature deprecated - pure cost.
+- `csv-export` → **lower-layer**: catches a real regression but tier-2 value, and CSV formatting is cheaply covered by a unit test; rewrite there.
+- `guest-purchase` → **keep**: highest ROI in the suite; critical journey, low flake, worth its runtime.
 
 ## Anti-patterns and Limitations
 

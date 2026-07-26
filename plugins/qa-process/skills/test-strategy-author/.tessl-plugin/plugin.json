@@ -1,9 +1,9 @@
 {
   "name": "testland/test-strategy-author",
-  "description": "Build-an-X workflow producing a test strategy document for a project / release / feature - scope and in / out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based prioritization (per risk-matrix), tooling stack, environments, exit criteria, and ownership. Use as the artifact stakeholders sign off on before significant test investment and return to for scope / quality questions. It is the umbrella document: for the per-release product risk table use risk-matrix, for the layer-ratio recommendation feeding its test-mix section use test-pyramid-balancer, and for the release done-criteria checklist use definition-of-done.",
+  "description": "Build-an-X workflow that produces a test strategy document for a project / release / feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based prioritization mapping (per `risk-matrix`), tooling stack, environments, exit criteria, ownership. Use as the artifact stakeholders sign off on before significant test investment, and the reference engineering teams come back to when scope / quality questions arise.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.10"
+  "version": "1.10.11"
 }

@@ -1,9 +1,9 @@
 {
   "name": "testland/maestro-flows",
-  "description": "Authors Maestro YAML flow files (`.maestro/*.yaml`) for mobile + web UI automation: declarative `tapOn`, `inputText`, `assertVisible`, `swipe`, targets iOS/Android/Flutter/React Native/web, nested `runFlow` imports, `evalScript` JavaScript hooks. Use when the team has chosen Maestro or wants YAML-declarative tests readable by non-engineers with no compile step. For React Native gray-box use detox-testing; for Flutter first-party use flutter-testing; for black-box cross-platform use appium-testing.",
+  "description": "Authors Maestro YAML flow files (`.maestro/*.yaml`) for mobile + web UI automation: declarative `tapOn`, `inputText`, `assertVisible`, `swipe`, supported targets (iOS, Android, Flutter, React Native, web), nested flow imports, JavaScript hooks for complex conditions. Use when the team has already chosen Maestro, is coming from an existing `.maestro/` directory, or explicitly wants YAML-declarative tests readable by non-engineers without a compile step. For framework selection or authoring tests in XCUITest / Espresso / Detox / Appium / Flutter, use a mobile driver-selection or per-flow mobile test-authoring step instead.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.4"
+  "version": "1.4.5"
 }

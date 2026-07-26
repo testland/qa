@@ -1,6 +1,6 @@
 ---
 name: browser-matrix-runner
-description: "Configures a CI matrix that runs the smoke / regression suite across browsers via Playwright's bundled engines (Chromium, Firefox, WebKit) plus branded channels (chrome, msedge) - GitHub Actions / GitLab CI matrix syntax, per-browser screenshots, aggregated pass / fail. Use when the product targets multiple browsers and the team wants automated cross-browser regression. This is the execution RUNNER using bundled engines - to decide WHICH browsers and tiers to test use browser-matrix-strategy-reference; to cap how many combos you commit to use compatibility-budget; for a self-hosted real-browser grid instead use selenium-grid-4-runner."
+description: "Configures a CI matrix that runs the smoke / regression suite across multiple browsers per Playwright's three-engine support (Chromium, Firefox, WebKit) plus branded variants (chrome, msedge channels). Wires GitHub Actions / GitLab CI matrix syntax, captures per-browser screenshots, and aggregates per-browser pass/fail. Use when the product targets multiple browsers and the team wants automated cross-browser regression."
 ---
 
 # browser-matrix-runner
