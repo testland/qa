@@ -1,6 +1,6 @@
 ---
 name: service-worker-tests
-description: "Test service workers with Playwright (`context.serviceWorkers()` + `waitForEvent('serviceworker')`) and unit tests using `service-worker-mock`. Covers MV3 service worker lifecycle (~30s suspend), cache strategies (cache-first, network-first, stale-while-revalidate), and `evaluate()` continuity across worker restart. Use when a site registers a service worker and its caching or offline behavior has no coverage, or when users report stale content surviving a deploy."
+description: "Test service workers with Playwright (`context.serviceWorkers()` + `waitForEvent('serviceworker')`) and unit tests via `service-worker-mock`. Covers the MV3 service-worker lifecycle (~30s suspend), cache strategies (cache-first, network-first, stale-while-revalidate), and `evaluate()` continuity across worker restart. Use when a site registers a service worker and its caching / offline behavior is uncovered, or users report stale content surviving a deploy; for the install / add-to-homescreen flow use pwa-install-flow-tests, and to design (not test) the caching policy use sw-cache-strategy-author."
 metadata:
   keywords: "service-worker, playwright, pwa, offline-testing, cache-strategy"
 ---

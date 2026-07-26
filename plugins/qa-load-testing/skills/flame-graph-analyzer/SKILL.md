@@ -1,6 +1,6 @@
 ---
 name: flame-graph-analyzer
-description: "Reads CPU flame-graph output from py-spy (Python), async-profiler (JVM), Go pprof, or Node.js perf_hooks / clinic.js - identifies the hot path (top sample-time stack frames), classifies the bottleneck (CPU-bound vs lock contention vs allocator pressure), and proposes the next investigation step. Use when a perf regression has been bisected to a commit but the hot path inside that commit is unclear."
+description: "Reads CPU flame-graph output from py-spy (Python), async-profiler (JVM), Go pprof, or Node.js `perf_hooks` / clinic.js: identifies the hot path (top sample-time frames), classifies the bottleneck (CPU-bound vs lock contention vs allocator pressure), and proposes the next investigation step. Use when a perf regression is bisected to a commit but the hot path inside it is unclear; for tail-latency percentiles use latency-percentile-analyzer, for GC pauses specifically use jvm-gc-tuning, and for a slow SQL hot path use db-query-plan-analyzer."
 ---
 
 # flame-graph-analyzer

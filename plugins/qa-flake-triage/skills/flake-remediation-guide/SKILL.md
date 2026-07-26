@@ -1,6 +1,6 @@
 ---
 name: flake-remediation-guide
-description: "Provides concrete code-level fixes for each of the eight recurring flake patterns cataloged in flake-pattern-reference: replacing fixed sleeps with framework auto-waits, isolating state in beforeEach fixtures, adopting stable role-based locators, mocking network and clock, seeding RNG, closing leaked resources, and the Pattern 3 shared-parallel-state fix (per-worker DB schema via workerIndex). Use when a flake has already been classified by pattern and the engineer needs the specific code change to apply. Distinct from shared-parallel-state detection, which finds the problem rather than applying the fix."
+description: "Provides concrete code-level fixes for each of the eight recurring flake patterns in flake-pattern-reference: replacing fixed sleeps with framework auto-waits, isolating state in beforeEach fixtures, stable role-based locators, mocking network + clock, seeding RNG, closing leaked resources, and the per-worker DB-schema fix for shared parallel state. Use when a flake is already classified by pattern and you need the specific code change to apply; to classify the pattern first use flake-pattern-reference or flake-axis-bisection, and to quarantine the test while the fix is in review use flaky-test-quarantine."
 ---
 
 # flake-remediation-guide
