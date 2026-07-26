@@ -22,6 +22,16 @@ Three test categories per the [`Rust Book`][rust-test]:
 | Integration tests | `tests/` directory at crate root | Test public API as external user |
 | Doc tests | Inside `///` doc comments | Verify documentation examples |
 
+## How to use
+
+1. Put unit tests in a `#[cfg(test)] mod tests { ... }` block next to the code; put cross-crate scenarios in `tests/` (Steps 1, 5).
+2. Assert with `assert_eq!` / `assert_ne!` / `assert!`; return `Result<(), E>` and use `?` instead of `unwrap()` (Steps 2, 4).
+3. Cover error paths with `#[should_panic(expected = "...")]`, and mark slow/networked tests `#[ignore = "reason"]` (Steps 3, 8).
+4. Run `cargo test --all-targets --workspace` locally; filter by name pattern and add `-- --nocapture` to see `println!` output (Steps 1, 7).
+5. Keep documented examples honest with doc tests in `///` comments, verified by `cargo test --doc` (Step 6).
+6. Gate coverage and track performance with `cargo llvm-cov` and Criterion (see [references/coverage-and-benchmarks.md](references/coverage-and-benchmarks.md)).
+7. Wire the same commands into CI so every push runs tests, doc tests, and the coverage gate (Step 10).
+
 ## Step 1 - Unit tests
 
 ```rust
@@ -185,64 +195,14 @@ fn integration_with_external_api() {
 
 Run via `cargo test -- --include-ignored`.
 
-## Step 9 - Coverage
+## Step 9 - Coverage and benchmarks
 
-Stable Rust support via `cargo-tarpaulin` (Linux) or `cargo-llvm-cov`
-(cross-platform):
+Both need an extra crate installed (`cargo-llvm-cov` / `cargo-tarpaulin`
+for coverage; Criterion for benchmarks on stable). Full commands, the
+`Cargo.toml` bench wiring, and the Criterion example are in
+[references/coverage-and-benchmarks.md](references/coverage-and-benchmarks.md).
 
-```bash
-# llvm-cov (recommended for cross-platform)
-cargo install cargo-llvm-cov
-cargo llvm-cov --html              # HTML report
-cargo llvm-cov --lcov --output-path coverage.lcov
-cargo llvm-cov --fail-under-lines 80   # gate at 80%
-
-# Or tarpaulin (Linux-only)
-cargo install cargo-tarpaulin
-cargo tarpaulin --out html --output-dir coverage/
-```
-
-## Step 10 - Benchmarks
-
-Stable: use Criterion (mature, ergonomic):
-
-```bash
-cargo install cargo-criterion
-```
-
-```toml
-# Cargo.toml
-[dev-dependencies]
-criterion = "0.5"
-
-[[bench]]
-name = "math_bench"
-harness = false
-```
-
-```rust
-// benches/math_bench.rs
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use my_crate::math::add;
-
-fn bench_add(c: &mut Criterion) {
-    c.bench_function("add 1 2", |b| b.iter(|| add(black_box(1), black_box(2))));
-}
-
-criterion_group!(benches, bench_add);
-criterion_main!(benches);
-```
-
-```bash
-cargo bench
-# Or via criterion CLI for richer reports:
-cargo criterion
-```
-
-Nightly Rust has built-in `#[bench]` (`cargo +nightly bench`); not
-recommended for CI (requires nightly toolchain).
-
-## Step 11 - CI integration
+## Step 10 - CI integration
 
 ```yaml
 - run: cargo test --all-targets --workspace
@@ -253,6 +213,20 @@ recommended for CI (requires nightly toolchain).
   with: { files: coverage.lcov }
 ```
 
+## Worked example
+
+A crate exposes `add(a, b)` in `src/math.rs` and you need it tested before
+release.
+
+1. Add a `#[cfg(test)] mod tests` block with `adds_two_numbers` and `handles_zero`, each using `assert_eq!` (Step 1).
+2. Add a doc test in the `///` comment on `add` so the documented example is executed (Step 6).
+3. Run `cargo test --all-targets`: the unit block prints `test result: ok. 2 passed`, then `Doc-tests my_crate ... 1 passed`.
+4. Add `cargo llvm-cov --fail-under-lines 80`; it reports `add` fully covered and exits 0 (see [references/coverage-and-benchmarks.md](references/coverage-and-benchmarks.md)).
+5. CI runs `cargo test --all-targets --workspace` plus the coverage gate on every push (Step 10).
+
+Result: unit, doc, and coverage checks are all green - the function is
+release-ready.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -261,7 +235,7 @@ recommended for CI (requires nightly toolchain).
 | Use `unwrap()` in test bodies | Test failure message is "called unwrap on None"; useless | Use `Result<(), E>` return + `?` (Step 4) |
 | `#[ignore]` without reason | Forgotten ignored tests | Always include `= "reason"` (Step 8) |
 | `assert!(x == y)` instead of `assert_eq!` | Loses diff in failure | Use `assert_eq!` (Step 2) |
-| Skip Criterion for performance work | Stdlib `#[bench]` is nightly-only; CI breaks | Use Criterion on stable (Step 10) |
+| Skip Criterion for performance work | Stdlib `#[bench]` is nightly-only; CI breaks | Use Criterion on stable (see [references/coverage-and-benchmarks.md](references/coverage-and-benchmarks.md)) |
 
 ## Limitations
 

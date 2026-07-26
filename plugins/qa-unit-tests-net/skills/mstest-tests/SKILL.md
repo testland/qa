@@ -21,6 +21,16 @@ MSTest is the right pick for Microsoft-mandated environments + legacy.
 - Microsoft-toolchain shop standardized on first-party tooling.
 - Team preference for tight Visual Studio integration.
 
+## How to use
+
+1. Add MSTest to the project: `dotnet new mstest`, or the three packages (`MSTest.TestFramework`, `MSTest.TestAdapter`, `Microsoft.NET.Test.Sdk`).
+2. Create a `[TestClass]` and write `[TestMethod]` tests, asserting with `Assert.AreEqual(expected, actual)` (expected first).
+3. Factor shared setup / teardown into `[ClassInitialize]` / `[TestInitialize]` and their cleanup pairs.
+4. Cover input ranges with `[DataRow]` or `[DynamicData]` instead of copy-pasted methods.
+5. Inject `TestContext` for per-test metadata + `WriteLine` output; use `[Ignore]` (not `Assert.Inconclusive`) for permanent skips.
+6. Tag slow tests with `[TestCategory]` and tune `.runsettings` parallelism (see [references/execution-and-ci.md](references/execution-and-ci.md)).
+7. Run `dotnet test`, emitting a `.trx` logger + coverage in CI.
+
 ## Step 1 - Install
 
 ```bash
@@ -105,17 +115,7 @@ public static IEnumerable<object[]> AddCases()
 }
 ```
 
-## Step 5 - Categories + filter
-
-```csharp
-[TestMethod]
-[TestCategory("Integration")]
-public void IntegrationTest() { }
-
-// Filter:  dotnet test --filter "TestCategory=Integration"
-```
-
-## Step 6 - TestContext
+## Step 5 - TestContext
 
 `TestContext` is auto-injected per test instance:
 
@@ -137,7 +137,7 @@ public class TestsWithContext
 properties from .runsettings) + a `WriteLine` for output (similar to
 xUnit's `ITestOutputHelper`).
 
-## Step 7 - Skip patterns
+## Step 6 - Skip patterns
 
 ```csharp
 [TestMethod]
@@ -156,34 +156,27 @@ public void ConditionalTest()
 `Assert.Inconclusive` marks the test as neither pass nor fail
 (distinct from skip).
 
-## Step 8 - Parallelism
+## Categories, parallelism, CI
 
-`.runsettings`:
+For `[TestCategory]` filtering, `.runsettings` parallel config, and the
+CI `dotnet test` invocation, see
+[references/execution-and-ci.md](references/execution-and-ci.md).
 
-```xml
-<RunSettings>
-  <RunConfiguration>
-    <MaxCpuCount>4</MaxCpuCount>
-  </RunConfiguration>
-  <MSTest>
-    <Parallelize>
-      <Workers>4</Workers>
-      <Scope>MethodLevel</Scope>
-    </Parallelize>
-  </MSTest>
-</RunSettings>
-```
+## Worked example
 
-`Scope`: `MethodLevel` (parallel within class) or `ClassLevel`
-(parallel across classes only).
-
-## Step 9 - CI integration
-
-```yaml
-- run: dotnet test --logger "trx;LogFileName=test-results.trx" \
-    --collect:"XPlat Code Coverage" \
-    --settings test.runsettings
-```
+A team maintaining a Microsoft-toolchain app adds MSTest coverage to
+`Calculator.Add`. They scaffold with `dotnet new mstest -n Calc.Tests`,
+then write a `[TestClass] CalculatorTests` with three `[DataRow]` cases
+(`(1, 2, 3)`, `(0, 0, 0)`, `(-1, 1, 0)`) on one `[TestMethod]` asserting
+`Assert.AreEqual(expected, Calculator.Add(a, b))`. A case needing a
+staging DB is parked with
+`[Ignore("Requires staging DB; tracked in JIRA-1234")]`, and an
+end-to-end case is tagged `[TestCategory("Integration")]` so CI can run
+it separately with `dotnet test --filter "TestCategory=Integration"`.
+The pipeline runs
+`dotnet test --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"`,
+producing a `.trx` report and coverage XML. Result: parametrized MSTest
+coverage with the integration case gated out of the fast local loop.
 
 ## Anti-patterns
 
@@ -191,8 +184,8 @@ public void ConditionalTest()
 |---|---|---|
 | Argument order: `Assert.AreEqual(actual, expected)` (xUnit-style) | MSTest is `(expected, actual)`; failure messages reversed | Verify order (Step 2) |
 | Skip `[TestClass]` annotation | Discovery fails (unlike NUnit which auto-discovers) | Always include `[TestClass]` |
-| Use `Console.WriteLine` instead of `TestContext.WriteLine` | Output may not appear in test runner | Use TestContext (Step 6) |
-| `Assert.Inconclusive` overuse | Tests neither pass nor fail; signals lost | Use `[Ignore]` for permanent skips (Step 7) |
+| Use `Console.WriteLine` instead of `TestContext.WriteLine` | Output may not appear in test runner | Use TestContext (Step 5) |
+| `Assert.Inconclusive` overuse | Tests neither pass nor fail; signals lost | Use `[Ignore]` for permanent skips (Step 6) |
 
 ## Limitations
 
@@ -208,6 +201,7 @@ public void ConditionalTest()
 - [ms-doc][ms-doc] - Microsoft MSTest tutorial
 - learn.microsoft.com/en-us/visualstudio/test - Visual Studio test docs
 - github.com/microsoft/testfx - MSTest source
+- [references/execution-and-ci.md](references/execution-and-ci.md) - categories, parallelism, and CI wiring
 - `xunit-tests`,
   `nunit-tests`,
   `fluentassertions` - sister tools

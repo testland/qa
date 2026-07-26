@@ -7,31 +7,48 @@ description: "Pure-reference catalog of Postgres Row-Level Security (RLS) for te
 
 ## Overview
 
-Postgres Row-Level Security (RLS) lets the database itself
-enforce per-tenant row visibility, independent of the application
-code. It is the canonical defence-in-depth layer for pool /
-horizontally-partitioned tenancy models - even if the application
-forgets to add a `WHERE tenant_id = ?` filter, the database
+Postgres Row-Level Security (RLS) lets the database itself enforce per-tenant
+row visibility, independent of the application code. It is the canonical
+defence-in-depth layer for pool / horizontally-partitioned tenancy models - even
+if the application forgets to add a `WHERE tenant_id = ?` filter, the database
 refuses to return another tenant's rows.
 
 Per [postgresql.org/docs/current/ddl-rowsecurity.html](https://www.postgresql.org/docs/current/ddl-rowsecurity.html),
-RLS "restricts which rows users can access based on per-user
-policies." Unlike standard SQL `GRANT` / `REVOKE` privileges
-which act on whole tables, RLS controls **row visibility and
-modification** per role.
+RLS "restricts which rows users can access based on per-user policies." Unlike
+standard SQL `GRANT` / `REVOKE` privileges which act on whole tables, RLS
+controls **row visibility and modification** per role.
 
-This skill is a **pure reference** consumed by the tenant-leak
-test authors and reviewers. For the broader model context see
-`tenant-isolation-models-reference`.
+This skill is a **pure reference** consumed by the tenant-leak test authors and
+reviewers. For the broader model context see `tenant-isolation-models-reference`.
 
 ## When to use
 
-- Designing tenant isolation on a Postgres-backed pool / bridge
-  model.
+- Designing tenant isolation on a Postgres-backed pool / bridge model.
 - Auditing existing RLS policies for correctness.
 - Writing tests that verify RLS denies cross-tenant access (per
   `cross-tenant-data-leak-tests`).
 - Onboarding a new table to the tenant_id discriminator pattern.
+
+## How to use
+
+1. Enable AND force RLS on every tenant-bearing table (`ENABLE` then `FORCE ROW
+   LEVEL SECURITY`) so the table owner obeys policies too.
+2. Pick a tenant context source from
+   [references/tenant-context-patterns.md](references/tenant-context-patterns.md)
+   and confirm the app sets it per transaction (`SET LOCAL`) from an
+   authenticated session, never from request input.
+3. Write the tenant policy using
+   [references/create-policy-syntax.md](references/create-policy-syntax.md) and a
+   shape from
+   [references/policy-and-bypass-patterns.md](references/policy-and-bypass-patterns.md) -
+   scope `USING` + `WITH CHECK` to the tenant discriminator.
+4. Confirm the app connection role is not a superuser, lacks `BYPASSRLS`, and
+   either does not own the table or runs with `FORCE ROW LEVEL SECURITY`.
+5. Apply the performance discipline below: wrap auth functions in `SELECT` and
+   index every policy-referenced column.
+6. Run the statement-level and application-level tests as a non-privileged role;
+   assert cross-tenant reads and writes fail.
+7. Cross-check the policy against the Anti-patterns table before sign-off.
 
 ## Enabling RLS
 
@@ -39,9 +56,8 @@ test authors and reviewers. For the broader model context see
 ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
 ```
 
-Per Postgres docs: "Once enabled, a default-deny policy
-applies - no rows are visible or modifiable unless explicitly
-allowed by a policy."
+Per Postgres docs: "Once enabled, a default-deny policy applies - no rows are
+visible or modifiable unless explicitly allowed by a policy."
 
 To disable:
 
@@ -51,165 +67,36 @@ ALTER TABLE accounts DISABLE ROW LEVEL SECURITY;
 
 ### Force RLS on table owner
 
-By default, the **table owner bypasses RLS**. For tenant
-isolation this is dangerous - the application's connecting role
-is often the table owner. Force the owner to obey policies too:
+By default, the **table owner bypasses RLS**. For tenant isolation this is
+dangerous - the application's connecting role is often the table owner. Force
+the owner to obey policies too:
 
 ```sql
 ALTER TABLE accounts FORCE ROW LEVEL SECURITY;
 ```
 
-Per Postgres docs, this is the production-safe default for
-multi-tenant tables.
+Per Postgres docs, this is the production-safe default for multi-tenant tables.
 
 ## CREATE POLICY syntax
 
-```sql
-CREATE POLICY policy_name ON table_name
-    [ AS { PERMISSIVE | RESTRICTIVE } ]
-    [ FOR { ALL | SELECT | INSERT | UPDATE | DELETE } ]
-    [ TO role_name [, ...] ]
-    [ USING ( using_expression ) ]
-    [ WITH CHECK ( check_expression ) ];
-```
-
-### USING vs WITH CHECK
-
-| Clause | Controls |
-|---|---|
-| `USING` | Which rows are **visible** (SELECT, UPDATE, DELETE) |
-| `WITH CHECK` | Which rows can be **written** (INSERT, UPDATE) |
-
-If only `USING` is specified, it implicitly applies to both.
-
-Per Postgres docs, the canonical own-data UPDATE policy uses both:
-
-```sql
-CREATE POLICY user_policy ON users
-    FOR UPDATE
-    USING (user_name = current_user)
-    WITH CHECK (
-        user_name = current_user AND
-        shell IN ('/bin/bash', '/bin/sh', '/bin/dash')
-    );
-```
-
-`USING` ensures the user can only update **their own row**;
-`WITH CHECK` ensures they can't update the row into a state that
-violates other invariants.
-
-### Per-command policies
-
-For SELECT/UPDATE divergence (a common tenant pattern: all users
-see all rows, but only modify their own):
-
-```sql
-CREATE POLICY user_sel_policy ON users
-    FOR SELECT
-    USING (true);
-
-CREATE POLICY user_mod_policy ON users
-    FOR UPDATE
-    USING (user_name = current_user);
-```
-
-### Permissive vs restrictive policies
-
-| Type | Combination |
-|---|---|
-| **PERMISSIVE** (default) | Multiple policies combine with **OR** - any match grants access |
-| **RESTRICTIVE** | Multiple policies combine with **AND** - all must allow |
-
-Restrictive policies layer additional constraints on top of
-permissive ones. Per Postgres docs:
-
-```sql
--- Permissive: anyone in role 'admin' or whose row matches
--- Restrictive: only allow when from local network
-CREATE POLICY admin_local_only ON passwd
-    AS RESTRICTIVE TO admin
-    USING (pg_catalog.inet_client_addr() IS NULL);
-```
-
-### TO role_name
-
-If omitted, the policy applies to **all users** (`TO PUBLIC`).
-For tenant isolation, scope policies to the application role:
-
-```sql
-CREATE POLICY tenant_isolation ON documents
-    TO app_user
-    USING (tenant_id = current_setting('app.tenant_id')::uuid);
-```
+The full grammar plus `USING` vs `WITH CHECK`, per-command policies, permissive
+vs restrictive combination, and `TO role_name` scoping:
+[references/create-policy-syntax.md](references/create-policy-syntax.md).
 
 ## Tenant context patterns
 
-The policy needs a source of truth for the current tenant. Four
-canonical patterns:
+The policy needs a source of truth for the current tenant. Four canonical
+patterns - `current_setting()` with `SET LOCAL`, `current_user` / `session_user`,
+Supabase `auth.uid()` / `auth.jwt()`, and in-policy JWT claim parsing:
+[references/tenant-context-patterns.md](references/tenant-context-patterns.md).
 
-### 1. `current_setting()` with SET LOCAL
+## Policy patterns and bypass
 
-Set the tenant at session / transaction start, read it in the
-policy:
-
-```sql
--- Application code (every transaction):
-SET LOCAL app.tenant_id = '<uuid>';
-
--- Policy:
-CREATE POLICY tenant_isolation ON documents
-    USING (tenant_id = current_setting('app.tenant_id')::uuid);
-```
-
-`SET LOCAL` confines the value to the current transaction - 
-critical when the connection is from a shared connection pool.
-
-### 2. `current_user` / `session_user`
-
-Map each tenant to a Postgres role. Suitable for low-tenant-count
-deployments (silo-leaning):
-
-```sql
-CREATE POLICY tenant_isolation ON documents
-    USING (tenant_id = (SELECT id FROM tenants WHERE name = current_user));
-```
-
-### 3. Supabase `auth.uid()` / `auth.jwt()`
-
-For Supabase-backed apps, JWT claims are exposed through helper
-functions. Per
-[supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security):
-
-```sql
-CREATE POLICY "User can see their own profile only."
-ON profiles FOR SELECT
-USING ( (SELECT auth.uid()) = user_id );
-```
-
-Organisation / team membership via app_metadata:
-
-```sql
-CREATE POLICY "User is in team"
-ON my_table TO authenticated
-USING ( team_id IN (SELECT auth.jwt() -> 'app_metadata' -> 'teams') );
-```
-
-**Critical:** Per Supabase docs, never trust
-`raw_user_meta_data` for authorisation - it's user-modifiable.
-Use `raw_app_meta_data` (server-set) or a separate server-side
-claim store.
-
-### 4. JWT claim parsing in policy
-
-For self-rolled auth, parse the JWT or token directly:
-
-```sql
-CREATE POLICY tenant_isolation ON documents
-    USING (tenant_id = (current_setting('request.jwt.claims', true)::jsonb->>'tenant_id')::uuid);
-```
-
-The `true` argument to `current_setting` makes it return NULL if
-the setting is absent (safer than erroring).
+The three tenant-isolation policy shapes (strict discriminator, tenant + per-row
+ACL, admin override), the three RLS bypass categories (superuser / BYPASSRLS /
+table owner), and the operations that always bypass RLS (FK, unique, TRUNCATE,
+REFERENCES):
+[references/policy-and-bypass-patterns.md](references/policy-and-bypass-patterns.md).
 
 ## Performance discipline
 
@@ -234,103 +121,6 @@ Good (initPlan-cached):
 USING ( (SELECT auth.uid()) = user_id )
 ```
 
-## Bypassing RLS
-
-Three categories of bypass per Postgres docs:
-
-| Bypass | When |
-|---|---|
-| Superusers | Always (cannot be disabled) |
-| Roles with `BYPASSRLS` attribute | Operational tasks; create explicit roles, audit usage |
-| Table owners | Bypass by default unless `FORCE ROW LEVEL SECURITY` set |
-
-**For production tenant tables, the application connection role
-must NOT be a superuser, NOT have BYPASSRLS, and must NOT own the
-table** (or, if it owns the table, `FORCE ROW LEVEL SECURITY`
-must be set).
-
-### Detecting RLS-bypassed sessions
-
-To prevent accidentally-bypassed query patterns from masquerading
-as policy-respecting:
-
-```sql
-SET row_security = off;
--- Subsequent queries error if a policy would have filtered
-```
-
-Useful in audit / backup contexts to catch unintended row
-exclusion.
-
-## Operations that **always bypass** RLS
-
-Per Postgres docs, these operations are not subject to RLS:
-
-- Foreign key constraint checks
-- Unique constraint checks
-- `TRUNCATE`
-- `REFERENCES` privilege checks
-
-This creates side-channel leaks: an attacker can probe for
-tenant-other rows via `INSERT` collisions on unique constraints,
-or via foreign-key reference patterns. Compensating controls:
-
-- Use **UUID** primary keys (not sequential ints) to avoid
-  enumeration via FK
-- Treat unique-constraint timing differences as a side channel
-  worth testing per `cross-tenant-data-leak-tests`
-
-## Common policy patterns for tenant isolation
-
-### Pattern 1: Strict tenant_id discriminator
-
-```sql
-CREATE POLICY tenant_isolation ON documents
-    AS PERMISSIVE
-    FOR ALL
-    TO app_user
-    USING (tenant_id = current_setting('app.tenant_id')::uuid)
-    WITH CHECK (tenant_id = current_setting('app.tenant_id')::uuid);
-
-ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
-ALTER TABLE documents FORCE ROW LEVEL SECURITY;
-```
-
-Both `USING` and `WITH CHECK` use the same expression - a tenant
-can't read OR insert rows for another tenant.
-
-### Pattern 2: Tenant + per-row ACL
-
-```sql
-CREATE POLICY tenant_isolation ON documents
-    AS PERMISSIVE
-    USING (tenant_id = current_setting('app.tenant_id')::uuid);
-
-CREATE POLICY owner_or_shared ON documents
-    AS RESTRICTIVE
-    USING (
-        owner_id = current_setting('app.user_id')::uuid
-        OR id IN (SELECT document_id FROM document_shares
-                  WHERE shared_with = current_setting('app.user_id')::uuid)
-    );
-```
-
-Permissive policy enforces tenant boundary; restrictive policy
-layers on per-row ACL.
-
-### Pattern 3: Admin override
-
-```sql
-CREATE POLICY tenant_isolation ON documents
-    USING (
-        tenant_id = current_setting('app.tenant_id')::uuid
-        OR current_setting('app.is_global_admin', true)::boolean = true
-    );
-```
-
-Global admin claim bypasses the tenant filter. Audit usage - 
-admin connections must be logged and short-lived.
-
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -338,7 +128,7 @@ admin connections must be logged and short-lived.
 | RLS enabled but no policy | Default-deny means no rows return - broken silently | Always create at least one policy after enabling |
 | Policy on table without `FORCE ROW LEVEL SECURITY` | Table owner bypasses; app role often is the owner | Add FORCE ROW LEVEL SECURITY |
 | `current_user` for tenant_id without per-tenant roles | Tenants share a role; no isolation | Use SET LOCAL or JWT claim |
-| `tenant_id` from request header → SET LOCAL | Spoofable; never derive from request input | Derive from authenticated session/JWT only |
+| `tenant_id` from request header -> SET LOCAL | Spoofable; never derive from request input | Derive from authenticated session/JWT only |
 | `auth.uid()` not wrapped in SELECT | Per-row evaluation - major perf hit at scale | `(SELECT auth.uid())` for initPlan caching |
 | No index on tenant_id | Sequential scan after policy filter | btree index on tenant_id always |
 | Permissive policy + missing TO clause | Applies to all roles including superusers | Always specify TO app_user |
@@ -370,28 +160,49 @@ VALUES ('22222222-2222-2222-2222-222222222222', 'leak');
 ### Application-level
 
 Run the existing test suite under a non-superuser, non-BYPASSRLS,
-non-table-owner role. If passing tests rely on RLS bypass, the
-suite is silently invalid for production. Per
-`cross-tenant-data-leak-tests`
-the gate test must use a tenant-A session to attempt access to
-tenant-B-owned rows and assert 0 rows returned.
+non-table-owner role. If passing tests rely on RLS bypass, the suite is silently
+invalid for production. Per `cross-tenant-data-leak-tests` the gate test must use
+a tenant-A session to attempt access to tenant-B-owned rows and assert 0 rows
+returned.
+
+## Worked example
+
+Onboard a `documents` table to the strict tenant_id discriminator (Pattern 1).
+Enable and force RLS, then create the policy scoped to `app_user`:
+
+```sql
+ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE documents FORCE ROW LEVEL SECURITY;
+
+CREATE POLICY tenant_isolation ON documents
+    AS PERMISSIVE FOR ALL TO app_user
+    USING (tenant_id = current_setting('app.tenant_id')::uuid)
+    WITH CHECK (tenant_id = current_setting('app.tenant_id')::uuid);
+```
+
+The application runs `SET LOCAL app.tenant_id = '<uuid>'` from the authenticated
+session at the start of every transaction. Connected as `app_user` (no
+BYPASSRLS, not the table owner), the tester sets tenant 1 and runs
+`SELECT count(*) FROM documents` - it returns tenant 1's rows only. Setting
+tenant 1 and attempting `INSERT INTO documents (tenant_id, body) VALUES
+('<tenant-2-uuid>', 'leak')` fails with `new row violates row-level security
+policy`, because `WITH CHECK` rejects the foreign tenant_id. The table is isolated
+for both reads and writes.
 
 ## Limitations
 
-- **Constraint side channels.** FK and UNIQUE checks bypass RLS;
-  this creates timing/error-message side channels.
-- **RLS does not protect logs.** A query that filters to 0 rows
-  still appears in `pg_stat_statements` and slow-query logs with
-  the same SQL text. Log sanitisation is a separate concern.
-- **No RLS on views by default.** A view that does
-  `SELECT * FROM tenants` doesn't inherit RLS unless `WITH
-  (security_invoker = true)` is set on the view (Postgres 15+).
-- **Replication.** Logical replication does not respect RLS by
-  default; the subscriber sees all rows. Per-publication filters
-  needed.
-- **Schema migrations.** ALTER TABLE for new columns runs as
-  table owner - review whether new columns need to be added to
-  policies.
+- **Constraint side channels.** FK and UNIQUE checks bypass RLS; this creates
+  timing/error-message side channels.
+- **RLS does not protect logs.** A query that filters to 0 rows still appears in
+  `pg_stat_statements` and slow-query logs with the same SQL text. Log
+  sanitisation is a separate concern.
+- **No RLS on views by default.** A view that does `SELECT * FROM tenants`
+  doesn't inherit RLS unless `WITH (security_invoker = true)` is set on the view
+  (Postgres 15+).
+- **Replication.** Logical replication does not respect RLS by default; the
+  subscriber sees all rows. Per-publication filters needed.
+- **Schema migrations.** ALTER TABLE for new columns runs as table owner - review
+  whether new columns need to be added to policies.
 
 ## References
 
@@ -401,8 +212,11 @@ tenant-B-owned rows and assert 0 rows returned.
   [postgresql.org/docs/current/sql-createpolicy.html](https://www.postgresql.org/docs/current/sql-createpolicy.html).
 - Supabase RLS guide:
   [supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security).
-- Tenant isolation context:
-  `tenant-isolation-models-reference`.
-- Consumed by:
-  `tenant-leak-test-author`,
-  `cross-tenant-data-leak-tests`.
+- [references/create-policy-syntax.md](references/create-policy-syntax.md) -
+  full CREATE POLICY grammar and clause semantics.
+- [references/tenant-context-patterns.md](references/tenant-context-patterns.md) -
+  four tenant context source patterns.
+- [references/policy-and-bypass-patterns.md](references/policy-and-bypass-patterns.md) -
+  tenant policy shapes and RLS bypass rules.
+- Tenant isolation context: `tenant-isolation-models-reference`.
+- Consumed by: `tenant-leak-test-author`, `cross-tenant-data-leak-tests`.

@@ -49,6 +49,21 @@ If the team already has a working bug template in their tracker, this
 skill is **not** for replacing it - it's for **filling** it correctly.
 Adapt the field set below to the team's existing template.
 
+## How to use
+
+1. Extract verbatim errors, the UI surface, environment details, and the
+   reporter's expected-vs-actual from the raw input (Step 1); flag any gap
+   instead of fabricating.
+2. Draft a Summary under 60 chars that names the surface and the observable
+   behavior, not the fix (Step 2).
+3. Write numbered, deterministic, self-contained Steps to Reproduce, quantifying
+   the rate for intermittent bugs (Step 3).
+4. State Expected and Actual separately, pasting the verbatim error or a
+   screenshot for Actual (Step 4).
+5. Score Severity and Priority independently, then Reproducibility (Steps 5-6).
+6. Assemble the fields into the Output format template, leaving `[GAP]` markers
+   on any field the reporter did not supply.
+
 ## Step 1 - Extract raw evidence
 
 From the input (chat message, error log, screenshot caption, voice
@@ -128,32 +143,15 @@ is available, capture it verbatim as input for hypothesis extraction.
 
 ## Step 5 - Pick Severity (intrinsic) and Priority (extrinsic)
 
-Per ISO/IEC/IEEE 29119-3:2021 (incident-report content; cite by
-stable standard ID - the spec is paywalled but the field semantics
-are widely adopted):
+Score two independent fields: **Severity** (what the defect does to the user
+when it manifests) and **Priority** (when the team plans to fix it relative to
+other work). They are not the same axis - a Critical-severity bug for a
+non-paying user can be P2, and a Minor-severity bug on the marketing homepage
+can be P0 the day before launch. Score severity from impact; let the PM /
+engineering decide priority from business context.
 
-**Severity** describes what the defect does to the user when it
-manifests. Independent of business prioritization:
-
-| Severity | When to use                                                       |
-|----------|-------------------------------------------------------------------|
-| Critical | Crash / data loss / security breach / business-stopping outage.  |
-| Major    | Important feature unusable; workaround exists but is significant. |
-| Moderate | Degraded UX in a non-critical surface; minor data inconsistency. |
-| Minor    | Cosmetic, typo, label-only issue.                                 |
-
-**Priority** describes when the team plans to fix:
-
-| Priority | When to use                                                       |
-|----------|-------------------------------------------------------------------|
-| P0       | Drop everything; fix now; usually paired with Severity Critical. |
-| P1       | Fix in the current sprint / cycle.                                |
-| P2       | Fix in the next planning cycle.                                   |
-| P3       | Backlog; fix opportunistically.                                   |
-
-The two are independent: a Critical-severity bug for one user might
-be P2 if the user is non-paying; a Minor-severity bug on the marketing
-homepage might be P0 if launch is tomorrow.
+Use the classification scales in
+[references/severity-and-priority-scales.md](references/severity-and-priority-scales.md).
 
 ## Step 6 - Score Reproducibility
 
@@ -204,9 +202,7 @@ catch it next time.
 <optional: any context the reporter mentioned that doesn't fit elsewhere - recent changes, why they were doing this, what they tried>
 ```
 
-## Examples
-
-### Example 1: from a Slack message
+## Worked example - from a Slack message
 
 Input:
 
@@ -256,13 +252,10 @@ Reporter tried twice. Returning to reporter for the gaps before triage.
 The `[GAP]` markers force the reporter to fill them in, rather than
 the engineer triaging on incomplete data.
 
-### Example 2: from a stack trace dump
-
-Input: an automated alert with the full stack trace from production.
-
-The skill drafts the report with **Steps to Reproduce** marked
-`Unable - production crash (no manual repro yet)`, the **Actual** field
-populated with the verbatim trace, flagged for hypothesis extraction.
+**Variant - from a stack-trace dump.** Given an automated alert with the full
+production stack trace, the skill drafts the report with **Steps to Reproduce**
+marked `Unable - production crash (no manual repro yet)` and the **Actual**
+field populated with the verbatim trace, flagged for hypothesis extraction.
 
 ## Anti-patterns
 
@@ -275,6 +268,8 @@ populated with the verbatim trace, flagged for hypothesis extraction.
 
 ## References
 
+- [references/severity-and-priority-scales.md](references/severity-and-priority-scales.md) -
+  the Severity and Priority classification scales used in Step 5.
 - [mozilla-bug-writing][moz] - Mozilla's bug-writing guide;
   practitioner-emergent canonical for summary / steps / expected /
   actual structure.

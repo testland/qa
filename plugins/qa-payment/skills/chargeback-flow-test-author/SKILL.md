@@ -23,38 +23,26 @@ AmEx each maintain their own reason-code catalogs.
 - Auditing existing dispute-evidence-submission code.
 - Building dispute analytics dashboards.
 
+## How to use
+
+1. Pick the 3-5 reason codes most common for your business from [references/reason-codes.md](references/reason-codes.md).
+2. Trigger a disputable charge in the gateway's test mode (Stripe `pm_card_createDispute`, an Adyen chargeback notification, a PayPal sandbox dispute).
+3. Assert the dispute lands in `needs_response` (or the gateway equivalent) with the expected reason.
+4. Submit evidence before `evidence_details.due_by` and assert `has_evidence` is set.
+5. Drive each disposition - won (winning evidence), lost (no response), accepted - and confirm the final state via the `charge.dispute.closed` webhook.
+6. Verify the ledger reverses funds plus the chargeback fee on a lost dispute.
+7. Expand into the (gateway, reason, outcome) matrix so every cell has a test.
+
 ## Step 1 - Reason code catalog
 
-Per Visa Chargeback Reason Codes (cite by stable ID: Visa
-Chargeback Management Guidelines):
+Visa, Mastercard, and AmEx each maintain their own reason-code
+catalogs. Pick the 3-5 most-common codes for your business and verify
+the evidence-collection flow for each - each code has different evidence
+requirements.
 
-| Code | Category | Description |
-|---|---|---|
-| 10.4 | Fraud | "Card-absent environment fraud" |
-| 11.1 | Authorization | Card recovery bulletin |
-| 11.2 | Authorization | Declined authorization |
-| 11.3 | Authorization | No authorization |
-| 12.1 | Processing errors | Late presentment |
-| 12.2 | Processing errors | Incorrect transaction code |
-| 12.3 | Processing errors | Incorrect currency |
-| 12.4 | Processing errors | Incorrect account number |
-| 13.1 | Consumer disputes | Merchandise/services not received |
-| 13.2 | Consumer disputes | Cancelled recurring transaction |
-| 13.3 | Consumer disputes | Not as described |
-| 13.5 | Consumer disputes | Misrepresentation |
-
-Per Mastercard MCC chargeback reason codes (cite by stable ID:
-Mastercard Chargeback Guide):
-
-| Code | Description |
-|---|---|
-| 4853 | Cardholder disputes |
-| 4855 | Non-receipt of merchandise |
-| 4859 | Services not rendered |
-| 4863 | Cardholder doesn't recognize |
-
-For tests: pick the 3-5 most-common reason codes for your
-business and verify the evidence-collection flow for each.
+See [references/reason-codes.md](references/reason-codes.md) for the full
+Visa and Mastercard reason-code tables (Visa 10.4 fraud, 13.1
+services-not-provided; Mastercard MCC 4855 non-receipt, and more).
 
 ## Step 2 - Per-gateway dispute API
 
@@ -212,6 +200,20 @@ test('lost dispute reverses funds in ledger', async () => {
   expect(ledger).toContainEqual(expect.objectContaining({ type: 'chargeback_fee' }));
 });
 ```
+
+## Worked example
+
+A SaaS team on Stripe wants coverage for a Visa 13.1
+(services/merchandise not received) dispute they expect to win.
+
+1. From [references/reason-codes.md](references/reason-codes.md) they map 13.1 to Stripe's `product_not_received` reason.
+2. A test creates a charge with `payment_method: 'pm_card_createDispute'`, confirms it, lists disputes for the intent, and asserts `status === 'needs_response'`.
+3. The test uploads a `service_documentation` FileUpload and calls `stripe.disputes.update` with `product_description: 'Premium subscription month 5'` plus the customer email + IP, asserting `evidence_details.has_evidence === true` and that the call ran before `due_by`.
+4. It waits for the `charge.dispute.closed` webhook and asserts `status === 'won'` and `amount === 0` (no funds deducted).
+5. A sibling test skips evidence, advances past the due date, and asserts `status === 'lost'` plus a `chargeback` and `chargeback_fee` pair in the ledger.
+
+Result: the 13.1 won-with-evidence and lost-no-response cells are both
+green, and the due-date watcher is exercised.
 
 ## Anti-patterns
 

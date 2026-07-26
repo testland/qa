@@ -16,6 +16,16 @@ This skill is a **pure reference** - no execution steps. It is the catalog cited
 - Refactoring codegen output where every UI mechanic became its own step.
 - Onboarding engineers who are writing first tests - point them at the canonical citations.
 
+## How to use
+
+1. Establish the three abstraction layers up front - mechanical / page / business - and fix the rule that the test body lives at the business layer (Pattern 3).
+2. Read the target test top-down and count logical actions; >15 actions signals a granularity or abstraction problem (Pattern 2).
+3. Check each step does exactly one of Arrange / Act / Assert / Annotate; split any step that mixes two (Pattern 2 single-purpose rule).
+4. Apply the rule of three: any step in 3+ tests, or 5+ mechanical lines, extracts to a Page Object method / Task / fixture (Pattern 4).
+5. Group steps into phases with one vocabulary (AAA or Given-When-Then) and keep the phases visually separable ([references/step-grouping-and-phrasing.md](references/step-grouping-and-phrasing.md), Pattern 5).
+6. Rephrase surviving business-layer steps declaratively - would the wording change if the implementation changed? If yes, rewrite (Pattern 6).
+7. Run the reader test: read the test body aloud; it should sound like a specification, and every step should still honor FIRST (Patterns 7 and 1).
+
 ## Pattern 1 - FIRST principles
 
 **Canonical source:** [Robert C. "Uncle Bob" Martin - *Clean Code* (2008), chapter 9 "Unit Tests"](https://www.oreilly.com/library/view/clean-code-a/9780136083238/), reaffirmed in *Clean Coder* and across his blog. The FIRST mnemonic is the foundational quality bar for every test step.
@@ -69,7 +79,7 @@ The dominant test-code smell at scale is **mechanical steps in the test body**. 
 
 **The test body lives at the business layer.** The test never reaches into the mechanical layer directly. If it does, the team has either no abstraction or the abstraction leaks.
 
-### Worked example (cross-framework)
+### Bad vs good (cross-framework)
 
 **Bad** (test body at the mechanical layer):
 
@@ -142,86 +152,11 @@ This applies to test steps: don't pre-extract on the first test ("we might need 
 
 ## Pattern 5 - AAA / Given-When-Then mapping
 
-Two equivalent step-grouping vocabularies. Same content, different name conventions.
-
-| AAA (xUnit tradition) | Given-When-Then (BDD tradition) |
-|---|---|
-| Arrange | Given |
-| Act | When |
-| Assert | Then |
-| (Annotate) | (no equivalent; goes in step comments) |
-
-Both express the same three phases. The team picks one and uses it consistently. **Don't mix:** if some tests use AAA comments and others use Given-When-Then helpers, the cognitive cost grows.
-
-### When AAA is the right choice
-
-- xUnit-family frameworks (Jest, pytest, JUnit, NUnit).
-- Tests that aren't user-facing scenarios (data-quality, security, perf).
-- The team prefers comment-anchored phase separation.
-
-### When Given-When-Then is the right choice
-
-- BDD frameworks (Cucumber, SpecFlow, Reqnroll, Behave) where the syntax is enforced.
-- Tests that are user-facing scenarios (E2E, integration).
-- The team wants product stakeholders to read the tests.
-
-### The phase-separation rule
-
-Whatever vocabulary the team uses, the phases must be **visually separable**. The pattern from `test-code-conventions §1`:
-
-```typescript
-test('places an order', async () => {
-  // Arrange
-  const customer = await aCustomer().withCartItem('sku-001').build();
-
-  // Act
-  const order = await customer.placesOrder();
-
-  // Assert
-  expect(order.status).toBe('confirmed');
-});
-```
-
-Or, with blank-line separation (no comments needed):
-
-```typescript
-test('places an order', async () => {
-  const customer = await aCustomer().withCartItem('sku-001').build();
-
-  const order = await customer.placesOrder();
-
-  expect(order.status).toBe('confirmed');
-});
-```
-
-Either works; lacking either fails the §1 AAA review.
+Two equivalent step-grouping vocabularies (Arrange/Act/Assert = Given/When/Then). The team picks one, uses it consistently, and keeps the phases visually separable (blank-line or comment separation). Full mapping table, when-AAA-vs-when-Given-When-Then guidance, and the phase-separation rule with code: [references/step-grouping-and-phrasing.md](references/step-grouping-and-phrasing.md).
 
 ## Pattern 6 - Declarative vs imperative step phrasing
 
-Even at the business layer, two phrasings exist:
-
-| Imperative | Declarative |
-|---|---|
-| "The customer enters the email and password and clicks submit" | "The customer signs in" |
-| "The customer adds 5 items to the cart and proceeds to checkout" | "The customer initiates checkout with a 5-item cart" |
-| "The customer is created with role=admin and org_id=42" | "An admin customer in org 42" |
-
-The declarative form is **preferred** per [Cucumber's better-Gherkin guidance](https://cucumber.io/docs/bdd/better-gherkin/) (which applies broadly, not just to Gherkin): "scenarios should describe the intended behaviour of the system, not the implementation."
-
-**The test:** *would the wording need to change if the implementation changed?* If yes, the step is imperative; rewrite declaratively.
-
-### When imperative is correct
-
-- Tests that test the imperative mechanic (e.g., "the form submits on Enter key press" - Enter is the mechanic under test).
-- Accessibility tests where the keyboard sequence IS the test.
-
-### Anti-patterns
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Declarative step that hides a critical mechanic (`customer.signsIn()` when the test is about SSO redirect) | The test no longer tests what it claims to test |
-| Imperative step that re-describes the system internals | Brittle to refactors; the test breaks when the implementation changes for unrelated reasons |
-| Mixing imperative and declarative within one test | Reader can't tell what abstraction level they're operating at |
+Even at the business layer, prefer declarative phrasing ("the customer signs in") over imperative ("enters email, enters password, clicks submit"). The test: would the wording need to change if the implementation changed? If yes, rewrite declaratively. Full table, when-imperative-is-correct cases, and anti-patterns: [references/step-grouping-and-phrasing.md](references/step-grouping-and-phrasing.md).
 
 ## Pattern 7 - Step naming
 
@@ -241,6 +176,30 @@ A reviewer should be able to read the test body aloud and have it sound like a s
 > "A customer signs in. They add SKU-001 to their cart. They place an order with default shipping. The order is confirmed."
 
 If reading aloud doesn't produce a specification - if it produces "click, type, click, click, navigate, click, expect-truthy" - the steps are at the wrong abstraction.
+
+## Worked example
+
+A reviewer receives an E2E spec `places an order` written entirely at the mechanical layer (the "Bad" block under Pattern 3): `goto` login, `fill` email, `fill` password, `click` submit, `goto` product, `click` add-to-cart, `goto` checkout, `fill` address, `click` place-order, then assert the confirmation.
+
+Applying the patterns:
+
+1. **Count (Pattern 2):** nine mechanical actions in one test body, all at the mechanical layer - a granularity and abstraction smell (the >15 threshold isn't hit, but the abstraction is wrong).
+2. **Rule of three (Pattern 4):** the four-line login block (`goto` / `fill` / `fill` / `click`) recurs in other order and checkout specs, so it extracts to a `customer.signsIn()` business step.
+3. **Layer the rest (Pattern 3):** the add-to-cart and checkout mechanics move into `cart.addsItem('sku-001')` and `checkout.placesOrderWithDefaultShipping()` on their Page Objects / Tasks.
+4. **Phrase and separate (Patterns 6 and 5):** the surviving steps read declaratively, and Arrange / Act / Assert stay visually separable.
+
+Result - the test body now reads as a specification:
+
+```typescript
+test('places an order', async ({ customer, cart, checkout }) => {
+  await customer.signsIn();
+  await cart.addsItem('sku-001');
+  await checkout.placesOrderWithDefaultShipping();
+  await expect(checkout.confirmation).toBeVisible();
+});
+```
+
+The reader test (Pattern 7) now passes: "A customer signs in, adds SKU-001 to the cart, places an order with default shipping, and the order is confirmed."
 
 ## Pattern selection guide
 

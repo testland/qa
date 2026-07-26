@@ -20,6 +20,22 @@ API, and a lightweight visual interface"* per [Evidently docs].
 - Triage tool: when a model misbehaves in prod, run an Evidently
   Report comparing the bad period to a known-good window.
 
+## How to use
+
+1. `pip install evidently` into the CI or monitoring environment (Step 1).
+2. Load a pinned reference dataset and the current dataset as pandas
+   DataFrames (Step 2).
+3. Run `Report([DataDriftPreset()])` with
+   `run(reference_data=, current_data=)` and `save_html` for review (Step 3).
+4. For a CI gate, add `include_tests=True`, read `.dict()["tests"]`, and
+   `raise SystemExit` on any `FAIL`/`ERROR` (Step 4).
+5. Add `RegressionPreset` / `ClassificationPreset` when `prediction` +
+   `target` columns exist, to catch performance regression (Step 5).
+6. Wrap the gated Report in a daily scheduled job comparing yesterday's
+   traffic to the pinned reference, notifying on-call on failure (Step 6).
+7. Tune the per-column drift method (`psi`, etc.) and severity tiers so
+   critical drift blocks and minor drift only alerts (Step 4).
+
 ## Step 1 - Install
 
 ```bash
@@ -129,6 +145,37 @@ if any(t.get("status") in ("FAIL", "ERROR") for t in result.dict()["tests"]):
 ```
 
 Pair with a scheduler (Airflow / Prefect / cron / Argo Workflows).
+
+## Worked example
+
+A team ships a weekly retrain of a tabular fraud classifier and wants CI to
+block a release whose input distribution has moved too far from the validated
+baseline.
+
+1. `reference.parquet` holds the last validated production week (~400k rows);
+   `current.parquet` holds the candidate model's eval slice.
+2. The CI step runs a gated drift Report:
+
+```python
+from evidently import Report
+from evidently.presets import DataDriftPreset
+
+report = Report([DataDriftPreset()], include_tests=True)
+result = report.run(reference_data=reference_df, current_data=current_df)
+result.save_html("drift_report.html")
+
+failed = [t for t in result.dict()["tests"] if t.get("status") in ("FAIL", "ERROR")]
+if failed:
+    raise SystemExit(f"Evidently drift gate failed: {len(failed)} test(s)")
+```
+
+3. Two columns (`transaction_amount`, `merchant_country`) drift past their PSI
+   threshold, so their tests report `FAIL`.
+4. `raise SystemExit` fails the CI job; `drift_report.html` is uploaded as a
+   build artifact showing the two drifted distributions.
+5. The engineer confirms `merchant_country` gained a new region, widens that
+   column's threshold (or retrains on data that includes it), and the re-run
+   passes.
 
 ## Anti-patterns
 

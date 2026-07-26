@@ -19,6 +19,21 @@ touchpoint.
 - Migrating from one timezone library to another.
 - Periodic audit of time-handling.
 
+## How to use
+
+1. Inventory time touchpoints with the grep patterns and categorise
+   each hit (Step 1).
+2. For each touchpoint's category, pull the relevant cases from the
+   per-category catalog (Step 2).
+3. Map each touchpoint's language to its fake-clock harness skill
+   (Step 3).
+4. Record every (touchpoint, category, tests, language, harness) cell
+   in `matrix.yaml` (Step 4).
+5. Emit one test file per cell from the harness template (Step 5).
+6. Write the coverage doc, listing covered touchpoints and explicit
+   gaps (Step 6).
+7. Re-run the inventory grep periodically to catch new touchpoints.
+
 ## Step 1 - Inventory time touchpoints
 
 ```bash
@@ -46,53 +61,10 @@ Categorise each match:
 
 ## Step 2 - Per-category test catalog
 
-### Storage tests
-
-| Test | Pattern |
-|---|---|
-| Round-trip RFC 3339 | parse → emit → parse → assert equal |
-| Round-trip via JSON | serialise object → deserialise → assert |
-| Microsecond precision preserved | `.123456Z` survives DB store/load |
-| Zone information preserved or normalized to UTC | Document the policy |
-
-### Business-logic tests
-
-| Test | Pattern |
-|---|---|
-| DST spring-forward | Schedule at 02:30 local on transition day; verify behaviour |
-| DST fall-back | Same 01:30 local appearing twice; verify ordering |
-| Leap day Feb 29 | "1 year from Feb 29 2024" → Feb 28 2025 (Per ICU) |
-| Year-end rollover | "Tomorrow" on Dec 31 |
-| Month-end | Jan 31 + 1 month = Feb 28 / 29 (per library) |
-| Negative durations | Operations on "5 minutes ago" |
-| Leap second tolerance | Code uses monotonic time per `leap-second-reference` |
-
-### Cron tests
-
-| Test | Pattern |
-|---|---|
-| Daily 02:30 EST cron on spring-forward | Doesn't fire OR fires at 03:30 (per cron spec) |
-| Daily 01:30 EST cron on fall-back | Fires once vs twice (per spec) |
-| Monthly on Feb 29 (non-leap year) | Fires on Feb 28 OR not at all |
-| Weekly cron crossing DST | 1-hour offset for one week |
-
-### Billing tests
-
-| Test | Pattern |
-|---|---|
-| Billing on month-end across leap year | Feb 28 vs Feb 29 handling |
-| Billing window across DST | Hour gain / loss in the period |
-| Pro-ration calculation | Across DST boundary |
-| Multi-tenant timezone variance | Same wall-clock hour ≠ same UTC |
-
-### Display tests
-
-| Test | Pattern |
-|---|---|
-| Per-user TZ formatting | User in `Asia/Tokyo` sees `09:00 JST`; user in `Europe/London` sees `00:00 GMT` |
-| ISO 8601 vs human-readable | Localised display ≠ wire format |
-| 24h vs 12h convention | Per user locale |
-| Relative time ("2 hours ago") | Per system locale |
+For each touchpoint, pull the test cases matching its category from
+[references/test-catalog.md](references/test-catalog.md), which lists
+the storage, business-logic, cron, billing, and display tests to
+exercise.
 
 ## Step 3 - Per-language test harness
 
@@ -186,6 +158,28 @@ def test_billing_period_spans_dst_fall_back():
 3. Update matrix.yaml.
 4. Generate test from template (per Step 5).
 ```
+
+## Worked example
+
+Adding leap-day coverage to a Python `BillingService`:
+
+1. Inventory (Step 1) finds `BillingService.create_charge_for_month`;
+   categorise it as **billing**.
+2. The billing rows of the catalog
+   ([references/test-catalog.md](references/test-catalog.md)) call for
+   month-end-across-leap-year, DST-window, and multi-tenant-timezone
+   tests.
+3. Python maps to the `freezegun-python` harness (Step 3).
+4. Add the cell to `matrix.yaml` (Step 4).
+5. Emit `tests/time/test_billing_service.py` with
+   `@freeze_time("2024-02-29T00:00:00Z")` asserting
+   `days_in_period == 29`, plus a companion `@freeze_time("2025-02-28...")`
+   asserting `28` (Step 5).
+6. Record the touchpoint in the coverage doc (Step 6).
+
+Result: the leap-year February boundary is exercised on every run,
+and the coverage doc shows BillingService's billing category as
+covered.
 
 ## Anti-patterns
 

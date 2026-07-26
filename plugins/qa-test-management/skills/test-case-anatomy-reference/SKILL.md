@@ -24,6 +24,16 @@ and the five platform-specific case-management skills.
 - Migrating cases between tools (TestRail → Xray; Zephyr → Qase) - need to map fields consistently.
 - Onboarding a tester to "what makes a case complete?"
 
+## How to use
+
+1. Start from the nine canonical fields table below - treat it as the checklist a well-formed case must satisfy.
+2. Fill each field concretely: name the exact identifier, one-sentence objective, verifiable preconditions, literal inputs, one action per step, a per-step expected result, postconditions, environment, and at least one traceability link.
+3. If the case came from a specification technique, attach the technique-specific metadata from the ISTQB additions table (partition, boundary value, rule vector, state / event / output).
+4. Map each canonical field to your tracker's real field name using [references/tracker-schema-map.md](references/tracker-schema-map.md), and set severity / priority / type from its cross-platform table.
+5. Check the field cardinality reference so one-to-many fields (steps, inputs, expected results, environment, traceability) are modelled as arrays, not blobs.
+6. Run the draft past the anti-patterns table; fix any match before the case is considered done.
+7. When migrating, author in the canonical anatomy first, then let the tracker mapping be additive so a later tool switch stays cheap.
+
 ## The nine canonical fields (ISO 29119-3 §6)
 
 Per ISO/IEC/IEEE 29119-3:2021 "Software and systems engineering - 
@@ -64,92 +74,13 @@ glossary
 
 ## Tracker-schema map
 
-Five common trackers each store the canonical
-anatomy under different field names:
-
-### TestRail
-
-| Canonical field | TestRail field |
-|---|---|
-| Identifier | `id` (e.g., `C1234`) |
-| Objective | `title` |
-| Preconditions | `custom_preconds` |
-| Inputs | (within `custom_steps_separated[].content`) |
-| Steps | `custom_steps_separated` (Steps template) or `custom_steps` (Text template) |
-| Expected results | `custom_steps_separated[].expected` |
-| Postconditions | (custom field if defined) |
-| Environment | `custom_environment` (custom field) or filter via `refs` |
-| Traceability | `refs` (free text); `template_id` (Steps / Text / Exploratory) |
-
-TestRail templates (`template_id`): Steps (1) / Text (2) /
-Exploratory (3). The Steps template enforces step-level structure;
-Text is freeform; Exploratory is for SBTM-style charters.
-
-### Xray (Atlassian)
-
-Xray stores tests as Jira issues with `Test` issue type. Steps live
-in a separate sub-entity.
-
-| Canonical field | Xray field |
-|---|---|
-| Identifier | Jira key (e.g., `ENG-123`) |
-| Objective | Jira `summary` |
-| Preconditions | Linked precondition (separate Jira issue type) |
-| Steps | Test steps section (per `testType: Manual`); for Cucumber, `Gherkin` section; for Generic, free-text |
-| Expected results | per-step `expectedResult` |
-| Environment | Test execution `testEnvironments` (set per run) |
-| Traceability | Jira issue links (Tests / TestedBy) |
-
-Xray `testType`: Manual / Cucumber / Generic. Determines how steps
-are stored.
-
-### Zephyr Scale (Smart Bear)
-
-| Canonical field | Zephyr field |
-|---|---|
-| Identifier | `key` (e.g., `PROJ-T123`) |
-| Objective | `name` |
-| Preconditions | `precondition` |
-| Steps | `testScript.steps[].description` |
-| Expected results | `testScript.steps[].expectedResult` |
-| Environment | Configured per test cycle, not case |
-| Traceability | `issueLinks` (Jira issues) |
-
-### Allure TestOps
-
-| Canonical field | Allure TestOps field |
-|---|---|
-| Identifier | `id` (numeric, e.g., `1234`) |
-| Objective | `name` |
-| Preconditions | `precondition` |
-| Steps | `scenario.steps` (recursive - steps can have sub-steps) |
-| Expected results | Within step `expectedResult` |
-| Environment | `tags` (key=value pairs) + execution env |
-| Traceability | `relations` (links to other cases / requirements) |
-
-### Qase
-
-| Canonical field | Qase field |
-|---|---|
-| Identifier | `id` (within project; full ID is `PROJ-1234`) |
-| Objective | `title` |
-| Preconditions | `preconditions` |
-| Steps | `steps[].action` |
-| Expected results | `steps[].expected_result` |
-| Environment | Custom fields |
-| Traceability | `links` field |
-
-## Severity, priority, type (cross-platform)
-
-All five trackers carry severity / priority / type fields. Each
-uses its own enum but they map similarly:
-
-| Concept | TestRail | Xray | Zephyr Scale | Allure TestOps | Qase |
-|---|---|---|---|---|---|
-| Priority | `priority_id` (1-4) | Jira `priority` field | `priority` enum | Custom | `priority` enum (low/med/high) |
-| Severity | Custom field | Custom field | `severity` enum (minor/normal/major/critical/blocker) | `severity` (default labels) | `severity` enum |
-| Type | `type_id` (Functional, Performance, etc.) | `testType` (Manual/Cucumber/Generic) | `testType` (Manual/Automated) | Custom | `type` (functional/smoke/regression/etc.) |
-| Automation status | `custom_automation_type` | Linked to automation results | `automation` field | Tags | `automation` (manual/automated/to-be-automated) |
+Five common trackers (TestRail, Xray, Zephyr Scale, Allure TestOps,
+Qase) each store the canonical anatomy under different field names,
+plus their own severity / priority / type enums. The full per-tracker
+field map and the cross-platform severity / priority / type table live
+in [references/tracker-schema-map.md](references/tracker-schema-map.md).
+Consult it when migrating cases between tools or writing to a specific
+tracker's fields.
 
 ## Field cardinality reference
 
@@ -185,6 +116,26 @@ one-to-one and which are one-to-many:
 | Missing expected results per step | Tester runs steps but can't tell what to assert | Pair every step with its expected outcome |
 | Tracker-specific case structure mixed in | Migration cost exploded | Author cases in the canonical anatomy; let tracker mapping be additive |
 | Reusing IDs after deletion | History broken; defect links point to ghost cases | IDs are immutable; deletion is soft |
+
+## Worked example
+
+A reviewer receives a draft case titled "test checkout" with a single
+free-text blob: "log in, add item, apply code SAVE10, pay, order
+confirmed." Walking it against the nine canonical fields:
+
+1. **Identifier** - none assigned; give it a stable ID (`C1051`).
+2. **Objective** - "test checkout" is vague; rewrite to "verify a 10% discount applies before tax at checkout."
+3. **Preconditions** - implicit "logged in"; make it verifiable: "user `alice@example.com` is authenticated with an empty cart."
+4. **Inputs** - generic "an item"; specify "SKU `WIDGET-1`, unit price 20.00, coupon `SAVE10`."
+5. **Steps / Expected results** - the blob combines four actions; split into ordered steps each paired with an expected result (add item -> cart shows 20.00; apply `SAVE10` -> subtotal shows 18.00; pay -> confirmation page renders; overall -> order total taxes the discounted 18.00, not 20.00).
+6. **Postconditions** - add "cart is emptied; one order record created."
+7. **Environment** - unstated; constrain to "Chrome / build 4.2 / en-US."
+8. **Traceability** - orphaned; link to requirement `REQ-DISCOUNT-3`.
+
+Mapping to TestRail via the tracker-schema map: objective -> `title`,
+preconditions -> `custom_preconds`, the step / expected pairs ->
+`custom_steps_separated` (Steps template), traceability -> `refs`. The
+blob is now a complete, runnable, verifiable case.
 
 ## Limitations
 

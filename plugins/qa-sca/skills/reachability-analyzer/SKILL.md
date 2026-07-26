@@ -41,7 +41,25 @@ the vulnerable code is unreachable at runtime. Treat it accordingly.
 
 ## How to use
 
-### Step 1 - Run SCA first
+1. Run SCA first (`osv-scanner`, `snyk-test`, or `npm-pip-maven-audit`) and save
+   the findings JSON - this skill annotates existing findings, it does not
+   replace them.
+2. Run the ecosystem-native dead-dependency tool: knip/depcheck (JS), vulture
+   (Python), or cargo-machete (Rust). Full config, flags, exit codes, and
+   suppression per tool:
+   [references/dead-dependency-tools.md](references/dead-dependency-tools.md).
+3. Extract the unused names into `unused-deps.txt`, keeping production and dev
+   lists separate.
+4. Cross-reference `unused-deps.txt` against the SCA JSON, setting
+   `reachable: false` on every finding whose package is unused.
+5. Pass the annotated JSON to your SCA prioritization step; `reachable: false`
+   routes to Fix-Backlog unless the CVE is in the CISA KEV catalog.
+6. Wire steps 2-4 into CI so the annotated artifact feeds the prioritization job
+   on every run.
+7. Treat each `reachable: false` as a deprioritization signal only, and still
+   schedule the unused package for cleanup.
+
+## Run SCA first
 
 Collect scanner output before running reachability analysis. The output of
 this skill annotates existing findings; it does not replace them.
@@ -53,150 +71,37 @@ osv-scanner scan -r . --format json --output osv.json
 
 See `osv-scanner` for full setup.
 
-### Step 2 - JavaScript / TypeScript: knip (preferred) or depcheck
+## Ecosystem tools
 
-**knip** is the current recommended tool for unused-dependency detection in JS
-projects. Per [github.com/webpro-nl/knip](https://github.com/webpro-nl/knip), it
-detects unused files, exports, and dependencies including dev-only packages.
+Run the dead-dependency tool for your ecosystem, then extract the unused names
+into `unused-deps.txt`. Full config, flags, exit codes, and suppression per
+tool: [references/dead-dependency-tools.md](references/dead-dependency-tools.md).
+
+**JavaScript / TypeScript** - knip (preferred; depcheck was archived June 2025,
+maintainers recommend knip):
 
 ```bash
-npx knip --reporter json > knip-report.json
-# Extract unused dependency names for the cross-reference list
 npx knip --reporter json | jq -r '.dependencies[].name' > unused-deps.txt
 ```
 
-**depcheck** remains usable for existing setups. Per
-[github.com/depcheck/depcheck](https://github.com/depcheck/depcheck), the
-project was archived in June 2025; the maintainers recommend switching to knip
-for new setups. For teams still on depcheck:
+**Python** - vulture; `--min-confidence 90` targets unused imports (the direct
+dependency signal), then map import names back to PyPI package names:
 
 ```bash
-npx depcheck --json > depcheck-report.json
-# Extract unused package names
-jq -r '.dependencies[],.devDependencies[]' depcheck-report.json > unused-deps.txt
-```
-
-Per [github.com/depcheck/depcheck](https://github.com/depcheck/depcheck), the
-`--json` flag produces an object with `dependencies` (unused production deps)
-and `devDependencies` (unused dev deps) as arrays of package-name strings.
-Packages in `devDependencies` that never appear in the production dep tree are
-prime candidates for `reachable: false` annotation on any CVEs they carry.
-
-Suppress known false positives via `.depcheckrc`:
-
-```yaml
-# .depcheckrc
-ignores: ["babel-register", "eslint-*"]
-ignore-patterns: ["dist", "coverage"]
-```
-
-#### Scope narrowing: dev vs production
-
-Dev dependencies in non-production scope are already excluded from many
-scanners. Per [github.com/depcheck/depcheck](https://github.com/depcheck/depcheck),
-running `npm audit --omit=dev` skips devDependencies entirely. Always separate
-production and dev unused-dep lists:
-
-```bash
-# Separate production unused from dev unused
-jq -r '.dependencies[]' depcheck-report.json > unused-prod.txt
-jq -r '.devDependencies[]' depcheck-report.json > unused-dev.txt
-```
-
-### Step 3 - Python: vulture
-
-Per [github.com/jendrikseipp/vulture](https://github.com/jendrikseipp/vulture),
-vulture detects unused imports, functions, classes, and variables through static
-analysis. For dependency reachability, unused imports are the direct signal.
-
-```bash
-pip install vulture
 vulture src/ --min-confidence 90 > vulture-report.txt
 ```
 
-Per [github.com/jendrikseipp/vulture](https://github.com/jendrikseipp/vulture),
-`--min-confidence 90` targets imports specifically (confidence 90% for unused
-imports). Lower values include functions and variables, which is noisier for
-the dep-CVE cross-reference task.
-
-Extract the unused-import lines:
-
-```bash
-grep "unused import" vulture-report.txt | sed "s/:.*unused import '\(.*\)'.*/\1/" > unused-imports.txt
-```
-
-Map import names back to pip package names using `pip show` or a manually
-maintained `import-to-package.txt` map, since Python import names often differ
-from PyPI package names (e.g. `import PIL` comes from `Pillow`).
-
-Configure via `pyproject.toml` per
-[github.com/jendrikseipp/vulture](https://github.com/jendrikseipp/vulture):
-
-```toml
-[tool.vulture]
-paths = ["src/"]
-min_confidence = 90
-exclude = ["tests/", "migrations/"]
-ignore_names = ["celery_app", "urlpatterns"]
-```
-
-Suppress known false positives (e.g. plugin registrations, dynamic imports)
-by generating a whitelist:
-
-```bash
-vulture src/ --make-whitelist > whitelist.py
-# Then re-run including the whitelist
-vulture src/ whitelist.py --min-confidence 90
-```
-
-Per [github.com/jendrikseipp/vulture](https://github.com/jendrikseipp/vulture),
-exit code `3` means dead code found; `0` means clean.
-
-### Step 4 - Rust: cargo-machete
-
-Per [github.com/bnjbvr/cargo-machete](https://github.com/bnjbvr/cargo-machete),
-cargo-machete detects unused `[dependencies]` in `Cargo.toml` through fast
-static analysis.
-
-```bash
-cargo install cargo-machete
-cargo machete
-```
-
-Per [github.com/bnjbvr/cargo-machete](https://github.com/bnjbvr/cargo-machete),
-exit code `0` means no unused dependencies found; exit code `1` means at least
-one unused dependency was detected; exit code `2` signals a processing error.
-
-For more accurate detection when crates use renamed or feature-gated imports,
-use `--with-metadata`:
-
-```bash
-cargo machete --with-metadata
-```
-
-Per [github.com/bnjbvr/cargo-machete](https://github.com/bnjbvr/cargo-machete),
-`--with-metadata` calls `cargo metadata --all-features` to resolve final
-dependency names, which catches renames that simple text search misses.
-
-Suppress false positives (e.g. proc-macro crates loaded at compile time only)
-via `Cargo.toml` metadata per
-[github.com/bnjbvr/cargo-machete](https://github.com/bnjbvr/cargo-machete):
-
-```toml
-[package.metadata.cargo-machete]
-ignored = ["prost", "openssl"]
-
-[package.metadata.cargo-machete.renamed]
-rustls-webpki = "webpki"
-```
-
-Capture the unused-dep list:
+**Rust** - cargo-machete; add `--with-metadata` to catch renamed or
+feature-gated crates:
 
 ```bash
 cargo machete 2>&1 | grep "unused dependency" | awk '{print $NF}' > unused-deps.txt
 ```
 
-### Step 5 - Cross-reference unused deps with SCA findings
+Always keep production and dev unused-dep lists separate: dev deps with CVEs can
+still reach production in bundled builds.
+
+## Cross-reference unused deps with SCA findings
 
 Once you have an `unused-deps.txt` for your ecosystem, annotate the SCA JSON
 output before passing it to your SCA prioritization step:
@@ -222,7 +127,7 @@ Pass `osv-annotated.json` to your SCA prioritization step. Per the priority
 logic, findings with `reachable: false` route to Fix-Backlog regardless of
 severity, unless they are in the CISA KEV catalog.
 
-### Step 6 - CI integration
+## CI integration
 
 ```yaml
 jobs:
@@ -242,19 +147,22 @@ jobs:
 
 The annotated artifact is then consumed by the prioritization job.
 
-## Example
+## Worked example
 
-Running knip on a Next.js project with 80 declared dependencies surfaces
-12 as unused, including `moment` (which carries CVE-2022-31129, CVSS 7.5).
-After cross-reference, prioritization routes the moment CVE to Fix-Backlog
-instead of Fix-This-Sprint. The team removes the package in the next dependency
-cleanup PR, eliminating both the CVE and the unused weight.
+A team's OSV scan of a Next.js service returns 60 CVEs - too many to patch in one
+sprint. They run `npx knip --reporter json | jq -r '.dependencies[].name' >
+unused-deps.txt`, which flags 12 of the 80 declared dependencies as unused,
+including `moment` (CVE-2022-31129, CVSS 7.5). The cross-reference script sets
+`reachable: false` on the moment finding because `moment` appears in
+`unused-deps.txt`. Prioritization routes that CVE to Fix-Backlog instead of
+Fix-This-Sprint, and the team removes `moment` in the next dependency-cleanup PR,
+eliminating both the CVE and the unused weight in one change.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Skip reachability; sort SCA output by CVSS only | Teams spend sprints patching vulns in unused code while exploitable issues sit in Fix-Backlog | Run Step 5 cross-reference before triage |
+| Skip reachability; sort SCA output by CVSS only | Teams spend sprints patching vulns in unused code while exploitable issues sit in Fix-Backlog | Run the cross-reference step before triage |
 | Treat `reachable: false` as safe | Static heuristic; dynamic imports and plugin systems can load code at runtime | Use as deprioritization signal only; still schedule Fix-Backlog cleanup |
 | Run vulture at default confidence (60%) | Reports unused functions/variables alongside imports; noisy for CVE mapping | Use `--min-confidence 90` to target imports specifically |
 | Use depcheck on new JS projects | Archived June 2025; per [github.com/depcheck/depcheck](https://github.com/depcheck/depcheck), maintainers recommend knip | Switch to knip for new setups |
@@ -280,6 +188,11 @@ cleanup PR, eliminating both the CVE and the unused weight.
 
 ## References
 
+- [references/dead-dependency-tools.md](references/dead-dependency-tools.md) -
+  per-ecosystem tool detail: knip/depcheck, vulture, cargo-machete config, flags,
+  exit codes, suppression
+- [github.com/webpro-nl/knip](https://github.com/webpro-nl/knip) - knip unused
+  files/exports/dependencies detection
 - [github.com/depcheck/depcheck](https://github.com/depcheck/depcheck) -
   depcheck CLI reference (archived June 2025; knip recommended for new setups)
 - [github.com/jendrikseipp/vulture](https://github.com/jendrikseipp/vulture) -

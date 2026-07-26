@@ -26,6 +26,21 @@ linked.
 - CI tests for time-sensitive logic without overriding system
   clock.
 
+## How to use
+
+1. Install `faketime` on the test host (apt / brew / from source).
+2. Pick a mode: absolute date, relative offset (`-1d`, `+1y`), or
+   advance-rate (`@... x<rate>`).
+3. Wrap the target binary: `faketime '<spec>' your_command`, or set
+   `LD_PRELOAD` plus `FAKETIME` directly.
+4. Prefix `TZ='<zone>'` when the behaviour depends on a local zone,
+   for example DST transitions.
+5. Set `FAKETIME_NO_CACHE=1` when the code reads time many times per
+   second.
+6. Assert on the program's visible output or behaviour from your test
+   runner (libfaketime emits nothing itself).
+7. Install `faketime` in CI before running the time-sensitive suite.
+
 ## Authoring
 
 ### Install
@@ -127,6 +142,23 @@ def test_cron_fires_at_midnight():
     )
     assert "Fired at 2027-01-01 00:00:00" in result.stdout
 ```
+
+## Worked example
+
+Verify a scheduler's behaviour at the non-existent local time 02:30
+on a spring-forward day, without changing the host clock:
+
+1. Pick the transition: US Eastern springs forward at 02:00 on
+   2026-03-08, so 02:30 local does not exist that day.
+2. Run with both the zone and the fake instant:
+   `TZ='America/New_York' faketime '2026-03-08 02:30:00' ./my-program`.
+3. libfaketime returns that wall-clock instant from libc, and `TZ`
+   makes the program resolve it in Eastern.
+4. Assert the program either skips the job or normalises to 03:30
+   (whichever the spec requires), matching `dst-transition-reference`.
+
+Result: the spring-forward branch runs deterministically on every CI
+run, with no dependence on the real date or the host clock.
 
 ## CI integration
 

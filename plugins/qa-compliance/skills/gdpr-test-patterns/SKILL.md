@@ -30,6 +30,16 @@ this skill is the per-Article test recipe.
   analytics, third-party sharing).
 - DPIA (Data Protection Impact Assessment) requires test evidence.
 
+## How to use
+
+1. Inventory every system that stores PII for a data subject (app DB, billing, analytics, CRM, support, backups) - this list drives the multi-system assertions.
+2. Pick the Articles in scope for the feature under test (consent, access, erasure, portability, breach, residency, minimization).
+3. Copy the matching per-Article pattern below and point it at your framework's client + models.
+4. Generate fixture data with `synthetic-pii-generator` - never real customer PII.
+5. Assert across ALL systems from step 1, not just the main store; add the deadline assertions (SAR 1 month per Art. 12(3), breach 72 hours per Art. 33) where the Article sets one.
+6. Pin every timeline assertion to your written policy doc, not a hardcoded 30-day guess.
+7. Wire the tests into CI so a schema change that reintroduces PII or skips a system fails the build.
+
 ## Test patterns by GDPR Article
 
 ### Art. 7 - Conditions for consent
@@ -141,6 +151,10 @@ def test_signup_fixtures_contain_only_required_pii():
     for k in forbidden:
         assert k not in fixture, f"Forbidden PII type: {k}"
 ```
+
+## Worked example
+
+A support agent triggers an Art. 17 erasure for `alice@example.com`. The team already has `test_erasure_removes_all_personal_data` (above), which asserted the app `User` table was empty and passed. Running the multi-system version reveals `AnalyticsEvent` still holds rows keyed by `user_email`, because analytics writes were never wired into the erasure job. The test fails on `AnalyticsEvent.objects.filter(...).count() == 0`. The team adds analytics to the erasure fan-out, re-runs, and the test goes green with an `ErasureMarker` recorded so the nightly backup expiry honors the request within the retention window.
 
 ## Key compliance gaps tests should catch
 

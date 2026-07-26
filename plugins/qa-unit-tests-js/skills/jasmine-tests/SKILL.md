@@ -32,6 +32,23 @@ maintenance use case + the migration path.
   Angular CLI default until very recent versions).
 - Minimal-dependency requirement (no separate Chai / Sinon).
 
+## How to use
+
+1. Confirm the codebase is legacy Jasmine / Karma or wants zero external
+   assertion libraries (see When to use); for new projects prefer
+   `vitest-tests` or `jest-tests`.
+2. Install and scaffold: `npm install --save-dev jasmine` then
+   `npx jasmine init` (creates `spec/support/jasmine.json`).
+3. Write specs under `spec/` with `describe` / `it` and built-in matchers;
+   wire `"test": "jasmine"` in `package.json`.
+4. Replace collaborators with built-in spies (`spyOn(...).and.returnValue(...)`,
+   `jasmine.createSpy`); always configure the spy so it does not return
+   `undefined` by accident.
+5. Handle async with `async/await` or a returned Promise, and use hooks
+   (`beforeEach` / `afterEach`) for setup and teardown.
+6. Run `npm test`; for browser-environment runs (Karma) and moving off
+   Jasmine, see [references/karma-and-migration.md](references/karma-and-migration.md).
+
 ## Step 1 - Install
 
 ```bash
@@ -166,54 +183,7 @@ describe('User service', () => {
 
 Same pattern as Jest / Vitest.
 
-## Step 7 - Karma integration (browser tests)
-
-For browser-environment tests (legacy Angular CLI default):
-
-```bash
-npm install --save-dev karma karma-jasmine karma-chrome-launcher
-```
-
-`karma.conf.js`:
-
-```javascript
-module.exports = function(config) {
-  config.set({
-    frameworks: ['jasmine'],
-    files: ['src/**/*.spec.js'],
-    browsers: ['ChromeHeadless'],
-    singleRun: true,
-    reporters: ['progress', 'junit'],
-  });
-};
-```
-
-```bash
-npx karma start
-```
-
-**Important migration note:** Karma is in maintenance-only mode as
-of 2023; AngularJS reached end-of-life Jan 2022; new Angular
-projects use Jest or Vitest. Karma + Jasmine setups are explicitly
-legacy.
-
-## Step 8 - Migration to Jest path
-
-Jest's API is mostly compatible with Jasmine - typical migration
-steps:
-
-1. Replace `spyOn().and.returnValue()` with `jest.spyOn().mockReturnValue()`
-2. Replace `jasmine.createSpy()` with `jest.fn()`
-3. Replace `jasmine.createSpyObj()` with manual `jest.fn()` per method
-4. Replace `expect().toBeNan()` with `expect(Number.isNaN()).toBe(true)`
-   (matcher renamed)
-5. Add `jest.config.js` with appropriate `testMatch`
-6. Drop Karma if used (Jest handles its own jsdom env)
-
-For automated migration: `jest-codemods` package handles ~80% of
-the syntax transformations.
-
-## Step 9 - CI integration
+## Step 7 - CI integration
 
 ```yaml
 - run: npm ci
@@ -222,15 +192,46 @@ the syntax transformations.
 - run: npx jasmine --reporter=jasmine-junit-xml-reporter
 ```
 
+## Browser tests and migrating off Jasmine
+
+Running specs in a real browser (Karma, the legacy Angular CLI default) and
+moving a suite to Jest (`jest-codemods` handles ~80% of the syntax
+transformations) are covered in
+[references/karma-and-migration.md](references/karma-and-migration.md).
+
+## Worked example
+
+A legacy service `userService.save(user)` POSTs to an API; verify it calls
+the API without hitting the network.
+
+1. Scaffold once with `npx jasmine init`.
+2. Spec `spec/userServiceSpec.js`:
+
+```javascript
+const { userService } = require('../src/userService');
+const api = require('../src/api');
+
+describe('userService.save', () => {
+  it('posts the user to /users', () => {
+    spyOn(api, 'post').and.returnValue(Promise.resolve({ id: 1 }));
+    userService.save({ name: 'Alice' });
+    expect(api.post).toHaveBeenCalledWith('/users', { name: 'Alice' });
+  });
+});
+```
+
+3. Run `npm test`. `spyOn` replaces `api.post`, so no real request fires; the
+   spec passes when `save` forwards the user to `/users`.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Start new project with Jasmine + Karma in 2026 | Legacy stack; Karma in maintenance | Use Vitest / Jest for new (Step 7) |
+| Start new project with Jasmine + Karma in 2026 | Legacy stack; Karma in maintenance | Use Vitest / Jest for new (see [references/karma-and-migration.md](references/karma-and-migration.md)) |
 | `spyOn` without `.and` configurator | Spy returns undefined; tests pass-by-accident | Always configure (Step 4) |
 | Use `fdescribe` / `fit` (focus) accidentally | Suite runs only focused specs | Lint rule equivalent of `mocha/no-exclusive-tests` |
 | Mix Jasmine assertions with Chai | Two assertion APIs in one suite; reader confusion | Pick one (Step 3 - Jasmine's are sufficient) |
-| Skip migration codemods when moving to Jest | Manual rewrites slow + error-prone | `jest-codemods` (Step 8) |
+| Skip migration codemods when moving to Jest | Manual rewrites slow + error-prone | `jest-codemods` (see [references/karma-and-migration.md](references/karma-and-migration.md)) |
 
 ## Limitations
 

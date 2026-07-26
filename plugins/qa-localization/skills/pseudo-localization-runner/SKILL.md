@@ -36,6 +36,15 @@ The transformed string:
 - After major UI work: confirm new components handle l10n correctly.
 - Continuous: the team's "always-on" l10n smoke test.
 
+## How to use
+
+1. Pick a pseudo-localization library for the stack (Step 1).
+2. Configure the pseudo-locale with ~35% length expansion, dev / staging only (Step 2).
+3. Run the app under the pseudo-locale and walk the UI (Step 3).
+4. Spot issues: pure-English text, truncation, broken layout, mojibake, missing glyphs, wrong bidi (Step 4).
+5. Capture a screenshot baseline under the pseudo-locale for automated regression (Step 5).
+6. Wire the pseudo-loc smoke test into CI, uploading screenshots on failure (Step 6).
+
 ## Step 1 - Pick a pseudo-localization library
 
 Per stack:
@@ -146,6 +155,18 @@ function pseudoLocalize(s) {
 ```
 
 The transform is a one-time pass over the source locale file.
+
+## Worked example
+
+A team enables `i18next-pseudo` with `letterMultiplier: 2` (Step 2) and loads
+`/checkout?lng=en-XA` (Step 3). "Submit" renders as `Şüƀɱîţ`, confirming the wrap
+works - but a promo badge still shows plain `Sale`, exposing an unwrapped string
+(Step 4). The "Place Order" button also truncates because its container is
+fixed-width and can't absorb the 35% length expansion.
+
+The developer wraps the badge in `t()` and lets the button widen. A Playwright
+screenshot baseline `checkout-pseudo.png` is established under the pseudo-locale
+(Step 5), so future PRs catch layout regressions automatically. The re-run is clean.
 
 ## Anti-patterns
 

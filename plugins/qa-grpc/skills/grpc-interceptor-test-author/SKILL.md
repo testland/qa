@@ -39,11 +39,9 @@ Differentiation from sibling skills:
 | Client unary | `grpc.UnaryClientInterceptor` | `ClientInterceptor.interceptCall` | `InterceptorProvider` option |
 | Client streaming | `grpc.StreamClientInterceptor` | `ClientInterceptor.interceptCall` | `InterceptorProvider` option |
 
-Full type signatures are at the reference links in each section.
+Full type signatures are at the reference links in each language playbook.
 
-## Authoring
-
-### Strategy: call the interceptor directly
+## Authoring strategy: call the interceptor directly
 
 The canonical test pattern for all languages is:
 
@@ -57,420 +55,55 @@ This avoids spinning up a full in-process server just to test
 cross-cutting logic. Use the in-process server from `grpc-mock` only
 when testing the *interaction* between an interceptor and a handler.
 
-### Go: auth interceptor - rejects bad token
-
-Type signatures per
-[pkg.go.dev/google.golang.org/grpc#UnaryServerInterceptor](https://pkg.go.dev/google.golang.org/grpc#UnaryServerInterceptor):
-
-```go
-type UnaryServerInterceptor func(
-    ctx context.Context,
-    req any,
-    info *grpc.UnaryServerInfo,
-    handler grpc.UnaryHandler,
-) (any, error)
-```
-
-Test pattern: pass a `ctx` with missing/bad `authorization` metadata
-and verify the interceptor returns `codes.Unauthenticated` (code 16 per
-[pkg.go.dev/google.golang.org/grpc/codes](https://pkg.go.dev/google.golang.org/grpc/codes))
-without calling the handler.
-
-```go
-package auth_test
-
-import (
-    "context"
-    "testing"
-
-    "google.golang.org/grpc"
-    "google.golang.org/grpc/codes"
-    "google.golang.org/grpc/metadata"
-    "google.golang.org/grpc/status"
-)
-
-// authInterceptor returns Unauthenticated when "authorization" header is absent.
-func authInterceptor(
-    ctx context.Context,
-    req any,
-    info *grpc.UnaryServerInfo,
-    handler grpc.UnaryHandler,
-) (any, error) {
-    md, ok := metadata.FromIncomingContext(ctx)
-    // metadata.FromIncomingContext docs: all keys are lowercase.
-    if !ok || len(md.Get("authorization")) == 0 {
-        return nil, status.Error(codes.Unauthenticated, "missing authorization header")
-    }
-    return handler(ctx, req)
-}
-
-func TestAuthInterceptor_MissingToken_ReturnsUnauthenticated(t *testing.T) {
-    handlerCalled := false
-    spy := func(ctx context.Context, req any) (any, error) {
-        handlerCalled = true
-        return "ok", nil
-    }
-
-    ctx := context.Background() // no metadata attached
-    _, err := authInterceptor(ctx, nil, nil, spy)
-
-    if handlerCalled {
-        t.Fatal("handler must not be called when token is absent")
-    }
-    st, _ := status.FromError(err)
-    if st.Code() != codes.Unauthenticated {
-        t.Fatalf("got %v, want Unauthenticated", st.Code())
-    }
-}
-
-func TestAuthInterceptor_ValidToken_CallsHandler(t *testing.T) {
-    handlerCalled := false
-    spy := func(ctx context.Context, req any) (any, error) {
-        handlerCalled = true
-        return "ok", nil
-    }
-
-    md := metadata.Pairs("authorization", "Bearer valid-token")
-    ctx := metadata.NewIncomingContext(context.Background(), md)
-    _, err := authInterceptor(ctx, nil, nil, spy)
-
-    if err != nil {
-        t.Fatal(err)
-    }
-    if !handlerCalled {
-        t.Fatal("handler must be called for valid token")
-    }
-}
-```
-
-Always assert on `status.Code()`, never on error message strings
-(message text is not part of the gRPC contract).
-
-### Go: retry interceptor - exponential backoff on Unavailable
-
-`codes.Unavailable` (code 14) is the canonical "transient, retry"
-signal per
-[pkg.go.dev/google.golang.org/grpc/codes](https://pkg.go.dev/google.golang.org/grpc/codes).
-A retry interceptor wraps a `grpc.UnaryClientInterceptor`:
-
-```go
-type UnaryClientInterceptor func(
-    ctx context.Context,
-    method string,
-    req, reply any,
-    cc *grpc.ClientConn,
-    invoker grpc.UnaryInvoker,
-    opts ...grpc.CallOption,
-) error
-```
-
-Test: count how many times `invoker` is called and confirm backoff
-delays using a fake clock.
-
-```go
-func TestRetryInterceptor_RetriesOnUnavailable(t *testing.T) {
-    callCount := 0
-    invoker := func(ctx context.Context, method string, req, reply any,
-        cc *grpc.ClientConn, opts ...grpc.CallOption) error {
-        callCount++
-        if callCount < 3 {
-            return status.Error(codes.Unavailable, "overloaded")
-        }
-        return nil
-    }
-
-    interceptor := retryInterceptor(maxRetries(3), noSleep()) // inject fake sleep
-    err := interceptor(context.Background(), "/svc/Method", nil, nil, nil, invoker)
-
-    if err != nil {
-        t.Fatalf("expected success after retries, got %v", err)
-    }
-    if callCount != 3 {
-        t.Fatalf("expected 3 invocations, got %d", callCount)
-    }
-}
-
-func TestRetryInterceptor_DoesNotRetryPermissionDenied(t *testing.T) {
-    callCount := 0
-    invoker := func(_ context.Context, _ string, _, _ any,
-        _ *grpc.ClientConn, _ ...grpc.CallOption) error {
-        callCount++
-        return status.Error(codes.PermissionDenied, "denied")
-    }
-
-    interceptor := retryInterceptor(maxRetries(3), noSleep())
-    err := interceptor(context.Background(), "/svc/Method", nil, nil, nil, invoker)
-
-    st, _ := status.FromError(err)
-    if st.Code() != codes.PermissionDenied {
-        t.Fatalf("got %v, want PermissionDenied", st.Code())
-    }
-    if callCount != 1 {
-        t.Fatalf("must not retry on PermissionDenied, got %d calls", callCount)
-    }
-}
-```
-
-The `noSleep()` option injects a no-op sleep function to keep tests
-fast. Never use `time.Sleep` inside interceptor tests.
-
-### Go: logging/tracing - metadata propagation
-
-Per
-[pkg.go.dev/google.golang.org/grpc/metadata#FromIncomingContext](https://pkg.go.dev/google.golang.org/grpc/metadata),
-metadata keys are always lowercase. A logging interceptor reads
-`x-trace-id` and `x-request-id` from incoming metadata and attaches
-them to the logger context.
-
-```go
-func TestLoggingInterceptor_PropagatesTraceID(t *testing.T) {
-    var capturedTraceID string
-    spy := func(ctx context.Context, req any) (any, error) {
-        // The interceptor must enrich ctx with trace ID before calling handler.
-        capturedTraceID = traceIDFromContext(ctx) // your helper
-        return "ok", nil
-    }
-
-    md := metadata.Pairs("x-trace-id", "trace-abc-123")
-    ctx := metadata.NewIncomingContext(context.Background(), md)
-    _, err := loggingInterceptor(ctx, nil, nil, spy)
-
-    if err != nil {
-        t.Fatal(err)
-    }
-    if capturedTraceID != "trace-abc-123" {
-        t.Fatalf("trace ID not propagated: got %q", capturedTraceID)
-    }
-}
-```
-
-For client-side propagation use
-`metadata.AppendToOutgoingContext` per
-[pkg.go.dev/google.golang.org/grpc/metadata#AppendToOutgoingContext](https://pkg.go.dev/google.golang.org/grpc/metadata):
-
-```go
-ctx = metadata.AppendToOutgoingContext(ctx, "x-trace-id", traceID)
-```
-
-### Go: chained interceptor ordering
-
-Per
-[pkg.go.dev/google.golang.org/grpc#ChainUnaryInterceptor](https://pkg.go.dev/google.golang.org/grpc#ChainUnaryInterceptor),
-the first interceptor passed to `grpc.ChainUnaryInterceptor` is the
-outermost (called first). Test ordering explicitly when auth must
-run before logging:
-
-```go
-func TestChainOrder_AuthBeforeLogging(t *testing.T) {
-    var callOrder []string
-
-    authInt := func(ctx context.Context, req any, info *grpc.UnaryServerInfo,
-        handler grpc.UnaryHandler) (any, error) {
-        callOrder = append(callOrder, "auth")
-        return handler(ctx, req)
-    }
-    logInt := func(ctx context.Context, req any, info *grpc.UnaryServerInfo,
-        handler grpc.UnaryHandler) (any, error) {
-        callOrder = append(callOrder, "log")
-        return handler(ctx, req)
-    }
-
-    // Build a chain and invoke it with a no-op handler.
-    chained := chainUnary(authInt, logInt) // your thin wrapper around ChainUnaryInterceptor
-    _, _ = chained(context.Background(), nil, nil,
-        func(ctx context.Context, req any) (any, error) { return nil, nil })
-
-    if callOrder[0] != "auth" || callOrder[1] != "log" {
-        t.Fatalf("wrong order: %v", callOrder)
-    }
-}
-```
-
-### Go: streaming server interceptor
-
-`grpc.StreamServerInterceptor` signature per
-[pkg.go.dev/google.golang.org/grpc#StreamServerInterceptor](https://pkg.go.dev/google.golang.org/grpc#StreamServerInterceptor):
-
-```go
-type StreamServerInterceptor func(
-    srv any,
-    ss grpc.ServerStream,
-    info *grpc.StreamServerInfo,
-    handler grpc.StreamHandler,
-) error
-```
-
-Test using a fake `grpc.ServerStream` that captures the metadata
-header sent before the first message:
-
-```go
-type fakeStream struct {
-    grpc.ServerStream
-    ctx     context.Context
-    headers metadata.MD
-}
-
-func (f *fakeStream) Context() context.Context { return f.ctx }
-func (f *fakeStream) SendHeader(md metadata.MD) error {
-    f.headers = md
-    return nil
-}
-
-func TestStreamAuthInterceptor_MissingToken(t *testing.T) {
-    fs := &fakeStream{ctx: context.Background()} // no metadata
-    err := streamAuthInterceptor(nil, fs, nil, func(srv any, stream grpc.ServerStream) error {
-        t.Fatal("handler must not be called")
-        return nil
-    })
-    st, _ := status.FromError(err)
-    if st.Code() != codes.Unauthenticated {
-        t.Fatalf("got %v, want Unauthenticated", st.Code())
-    }
-}
-```
-
-### Java: ServerInterceptor - auth rejection
-
-`ServerInterceptor.interceptCall` signature per
-[grpc-java javadoc](https://grpc.github.io/grpc-java/javadoc/io/grpc/ServerInterceptor.html):
-
-```java
-<ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
-    ServerCall<ReqT, RespT> call,
-    Metadata headers,
-    ServerCallHandler<ReqT, RespT> next)
-```
-
-Test with a `ServerCall` stub that captures the `close()` call:
-
-```java
-import io.grpc.*;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-public class AuthInterceptorTest {
-
-    private final ServerInterceptor interceptor = new AuthInterceptor();
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void missingAuthHeader_closesWithUnauthenticated() {
-        ServerCall<Object, Object> call = mock(ServerCall.class);
-        Metadata headers = new Metadata(); // no authorization key
-        ServerCallHandler<Object, Object> next = mock(ServerCallHandler.class);
-
-        interceptor.interceptCall(call, headers, next);
-
-        verify(call).close(
-            argThat(s -> s.getCode() == Status.Code.UNAUTHENTICATED),
-            any(Metadata.class));
-        verifyNoInteractions(next);
-    }
-}
-```
-
-Registration per
-[grpc-java javadoc ServerInterceptors.intercept](https://grpc.github.io/grpc-java/javadoc/io/grpc/ServerInterceptors.html)
-- note `intercept()` applies interceptors in reverse order (last
-interceptor's `interceptCall` fires first); use `interceptForward()`
-to preserve declaration order:
-
-```java
-// Last-listed interceptor fires first:
-ServerServiceDefinition def =
-    ServerInterceptors.intercept(serviceImpl, authInterceptor, loggingInterceptor);
-
-// First-listed interceptor fires first:
-ServerServiceDefinition def =
-    ServerInterceptors.interceptForward(serviceImpl, authInterceptor, loggingInterceptor);
-```
-
-### Java: ClientInterceptor - outbound token injection
-
-`ClientInterceptor.interceptCall` signature per
-[grpc-java javadoc](https://grpc.github.io/grpc-java/javadoc/io/grpc/ClientInterceptor.html):
-
-```java
-<ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(
-    MethodDescriptor<ReqT, RespT> method,
-    CallOptions callOptions,
-    Channel next)
-```
-
-Test that the interceptor attaches the `authorization` key to outbound
-headers by capturing `Metadata` passed to `ClientCall.start()`:
-
-```java
-@Test
-public void tokenInjector_attachesAuthorizationHeader() {
-    ClientInterceptor interceptor = new TokenInjectorInterceptor("Bearer tok");
-    Channel channel = mock(Channel.class);
-    ClientCall<Object, Object> innerCall = mock(ClientCall.class);
-    when(channel.newCall(any(), any())).thenReturn(innerCall);
-
-    ClientCall<Object, Object> call =
-        interceptor.interceptCall(methodDescriptor(), CallOptions.DEFAULT, channel);
-
-    Metadata headers = new Metadata();
-    call.start(mock(ClientCall.Listener.class), headers);
-
-    String auth = headers.get(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER));
-    assertEquals("Bearer tok", auth);
-}
-```
-
-### grpc-js: client interceptor
-
-`@grpc/grpc-js` exposes client interceptors as a channel option. The
-package README confirms "Client Interceptors" as a supported feature at
-[github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js).
-An interceptor is a function `(options, nextCall) => InterceptingCall`.
-
-Test an auth-header injector by building an `InterceptingCall` with a
-`RequesterBuilder` that captures the outbound metadata:
-
-```typescript
-import * as grpc from "@grpc/grpc-js";
-import { InterceptingCall, InterceptorOptions, NextCall } from "@grpc/grpc-js";
-
-function authInterceptor(token: string) {
-    return (options: InterceptorOptions, nextCall: NextCall): InterceptingCall => {
-        return new InterceptingCall(nextCall(options), {
-            start(metadata, listener, next) {
-                metadata.add("authorization", `Bearer ${token}`);
-                next(metadata, listener);
-            },
-        });
-    };
-}
-
-// Test using a spy on the nextCall layer
-test("authInterceptor injects Authorization header", () => {
-    let capturedMetadata: grpc.Metadata | undefined;
-
-    const fakeNext: NextCall = (_options) =>
-        new InterceptingCall(null as any, {
-            start(metadata, _listener, _next) {
-                capturedMetadata = metadata;
-            },
-        });
-
-    const interceptorFn = authInterceptor("my-token");
-    const call = interceptorFn({} as InterceptorOptions, fakeNext);
-    call.start(new grpc.Metadata(), {} as grpc.Listener);
-
-    expect(capturedMetadata?.get("authorization")).toEqual(["Bearer my-token"]);
-});
-```
-
-Register on a channel:
-
-```typescript
-const client = new UserServiceClient(address, credentials, {
-    interceptors: [authInterceptor("my-token")],
-});
-```
+## Language playbooks
+
+Each playbook holds the full type signatures, test patterns, and runnable
+examples for one language surface:
+
+- Go - server/client unary, retry with fake clock, logging/tracing metadata
+  propagation, chained ordering, streaming server interceptor:
+  [references/go-interceptors.md](references/go-interceptors.md).
+- Java - `ServerInterceptor` auth rejection, `ClientInterceptor` outbound token
+  injection, `intercept()` vs `interceptForward()` ordering:
+  [references/java-interceptors.md](references/java-interceptors.md).
+- grpc-js - client interceptor auth-header injection via `InterceptingCall`:
+  [references/grpc-js-interceptors.md](references/grpc-js-interceptors.md).
+
+## How to use
+
+1. Identify the interceptor under test and its variant (server/client,
+   unary/streaming) using the taxonomy table.
+2. Open the matching language playbook (Go, Java, or grpc-js).
+3. Construct the interceptor directly and craft the input context/metadata for
+   the behavior under test (auth, retry, logging, error-mapping, ordering).
+4. Wire a spy/stub `handler` (the `next` leg) that records what it received and
+   whether it was called at all.
+5. Invoke the interceptor and assert on status code, handler invocation count,
+   and set/propagated metadata - never on error message strings.
+6. Add the negative case (e.g., a non-transient code must not be retried) and a
+   fresh metadata map per test to prevent bleed.
+7. Run with the language's isolation flags (`-race`, `-count=1`) and wire into CI.
+
+## Worked example
+
+Scenario: a Go client retry interceptor must retry transient failures but never
+retry an auth failure.
+
+1. Under test: `retryInterceptor(maxRetries(3), noSleep())`, a
+   `grpc.UnaryClientInterceptor`.
+2. Craft a spy `invoker` that returns `codes.Unavailable` on the first two calls
+   and `nil` on the third, incrementing `callCount` each time.
+3. Invoke the interceptor with `context.Background()` and the spy; assert
+   `err == nil` and `callCount == 3` - it retried twice, then succeeded.
+4. Add the negative case: a spy `invoker` that always returns
+   `codes.PermissionDenied`; assert `st.Code() == codes.PermissionDenied` and
+   `callCount == 1` - a non-transient code is surfaced immediately, not retried.
+5. Run `go test ./... -run TestRetry -race -count=1`. Result: two passing tests
+   proving backoff fires on Unavailable and is skipped on PermissionDenied, with
+   no auth-storm regression.
+
+Full code for both tests is in
+[references/go-interceptors.md](references/go-interceptors.md).
 
 ## Running
 

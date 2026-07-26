@@ -34,6 +34,22 @@ see `test-code-conventions`; test code is reviewed separately.
 For Vite-based projects, prefer `vitest-tests`
 (Vite-native; faster transform-pipeline reuse).
 
+## How to use
+
+1. Confirm Jest fits (React CRA / React Native / Node service, or a
+   fragmented Mocha + Chai + Sinon setup to consolidate); for Vite projects
+   prefer `vitest-tests`.
+2. Install `jest` (add `ts-jest` or `babel-jest` for TypeScript) and scaffold
+   config with `npm init jest@latest`.
+3. Write `*.test.js` / `*.spec.js` files using `expect` matchers; wire
+   `"test": "jest"` and run `npm test`.
+4. Replace collaborators with `jest.fn` / `jest.mock` / `jest.spyOn` and
+   control time with fake timers (see Mocking).
+5. Set `testEnvironment` explicitly and add `coverageThreshold` to gate
+   coverage; run `jest --coverage` (see Configuration and Coverage, CI, and ESLint).
+6. In CI run `npx jest --ci --maxWorkers=2` with `jest-junit` for JUnit XML
+   (see Coverage, CI, and ESLint).
+
 ## Step 1 - Install
 
 Per [jest-start][jest-start]:
@@ -112,179 +128,62 @@ Wire `package.json`:
 
 Run via `npm test`.
 
-## Step 3 - Configuration
+## Worked example
 
-Generate config (per [jest-start][jest-start]):
-
-```bash
-npm init jest@latest
-```
-
-Common `jest.config.js` settings:
+A Node service function `getUser(id)` calls `fetchUser` from `./api-client`;
+verify it without a live API.
 
 ```javascript
-module.exports = {
-  testEnvironment: 'jsdom',          // 'jsdom' for browser; 'node' for backend
-  setupFilesAfterEach: ['<rootDir>/jest.setup.js'],
-  testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
-  transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
-  },
-  collectCoverageFrom: ['src/**/*.{js,ts}', '!src/**/*.d.ts'],
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
-    },
-  },
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',  // path aliases matching tsconfig
-  },
-};
-```
-
-`testEnvironment` defaults to `jsdom` in Jest 26 and earlier; from
-Jest 27+ defaults to `node`. Set explicitly to avoid surprise.
-
-## Step 4 - Mocking patterns (per-framework lifecycle)
-
-Three forms:
-
-```javascript
-// jest.fn() - standalone mock function
-const myMock = jest.fn();
-myMock.mockReturnValue(42);
-expect(myMock(5)).toBe(42);
-expect(myMock).toHaveBeenCalledWith(5);
-
-// jest.mock('./module') - automatic module mock
-jest.mock('./api-client');
+// user-service.test.js
+import { getUser } from './user-service';
 import { fetchUser } from './api-client';
-fetchUser.mockResolvedValue({ id: 1, name: 'Alice' });
 
-// jest.spyOn(obj, 'method') - wrap existing method
-const spy = jest.spyOn(myObject, 'someMethod')
-  .mockImplementation(() => 'mocked');
-expect(myObject.someMethod()).toBe('mocked');
-spy.mockRestore();
+jest.mock('./api-client');
+
+test('returns the fetched user', async () => {
+  fetchUser.mockResolvedValue({ id: 1, name: 'Alice' });
+  await expect(getUser(1)).resolves.toEqual({ id: 1, name: 'Alice' });
+  expect(fetchUser).toHaveBeenCalledWith(1);
+});
 ```
 
-Manual mocks live in `__mocks__/` adjacent to the module:
+Run `npm test`. `jest.mock('./api-client')` auto-replaces the module so no
+network call fires; the test passes when `getUser` forwards the id and returns
+the resolved user.
 
-```
-src/
-  api-client.js
-  __mocks__/
-    api-client.js   # automatically used when jest.mock('./api-client') runs
-```
+## Configuration
 
-Timer mocks:
+`npm init jest@latest` scaffolds a config. Key gotcha: `testEnvironment`
+defaults to `jsdom` in Jest 26 and earlier but `node` from Jest 27+, so set it
+explicitly. The full `jest.config.js` reference (coverage collection,
+`moduleNameMapper` path aliases, `transform`) is in
+[references/configuration.md](references/configuration.md).
 
-```javascript
-jest.useFakeTimers();
-setTimeout(callback, 1000);
-jest.advanceTimersByTime(1000);
-expect(callback).toHaveBeenCalled();
-jest.useRealTimers();
-```
+## Mocking
 
-## Step 5 - Coverage
+Jest ships mocking without a separate Sinon: `jest.fn()` (standalone),
+`jest.mock('./module')` (automatic module mock), `jest.spyOn(obj, 'method')`
+(wrap an existing method), manual mocks in `__mocks__/`, and fake timers
+(`jest.useFakeTimers`). Patterns and timer control are in
+[references/mocking.md](references/mocking.md).
 
-```bash
-jest --coverage
-```
+## Coverage, CI, and ESLint
 
-Output formats: text, lcov, html, json, json-summary. Configure via
-`coverageReporters` in `jest.config.js`. The `coverageThreshold`
-field (Step 3) fails the run if coverage drops below thresholds.
-
-For the `coverageThreshold` per-file pattern:
-
-```javascript
-coverageThreshold: {
-  './src/critical-module/': {
-    branches: 95,
-    statements: 95,
-  },
-  './src/legacy/': {
-    branches: 50,
-  },
-},
-```
-
-## Step 6 - CI integration
-
-Per Jest CLI, `--ci` flag is critical for CI runs:
-
-```yaml
-# .github/workflows/test.yml
-- run: npm ci
-- run: npx jest --ci --coverage --maxWorkers=2 --reporters=default --reporters=jest-junit
-- uses: codecov/codecov-action@v4
-  with: { files: ./coverage/lcov.info }
-```
-
-`--ci` semantics:
-- Disables snapshot writing on missing snapshots (fails instead - prevents accidental snapshot generation in CI)
-- Disables interactive prompts
-- Equivalent to `process.env.CI=true`
-
-`--maxWorkers=2` is typical for GitHub-hosted runners (2 CPUs); tune
-per runner specs.
-
-For JUnit XML output (consumable by `junit-xml-analysis` in qa-test-reporting):
-
-```bash
-npm install --save-dev jest-junit
-JEST_JUNIT_OUTPUT_FILE=./test-results/junit.xml \
-  jest --ci --reporters=default --reporters=jest-junit
-```
-
-## Step 7 - ESLint integration
-
-Per [jest-start][jest-start]:
-
-```javascript
-// eslint.config.js
-import {defineConfig} from 'eslint/config';
-import globals from 'globals';
-
-export default defineConfig([
-  {
-    files: ['**/*.test.js', '**/*.spec.js'],
-    languageOptions: {
-      globals: { ...globals.jest },
-    },
-  },
-]);
-```
-
-Or via `eslint-plugin-jest`:
-
-```bash
-npm install --save-dev eslint-plugin-jest
-```
-
-```json
-{
-  "overrides": [{
-    "files": ["**/*.test.js", "**/*.spec.js"],
-    "plugins": ["jest"],
-    "extends": ["plugin:jest/recommended"]
-  }]
-}
-```
+Run `jest --coverage` (Istanbul) and gate via `coverageThreshold`. In CI,
+`--ci` fails on missing snapshots instead of writing them and disables
+interactive prompts; pair with `--maxWorkers=2` on hosted runners and
+`jest-junit` for JUnit XML. The coverage config, GitHub Actions workflow, and
+ESLint test-globals setup are in
+[references/coverage-ci-eslint.md](references/coverage-ci-eslint.md).
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| `jest.mock` at top of file without specific test scope | Module mock leaks across tests; brittle | `jest.doMock` per-test or move to `__mocks__/` (Step 4) |
-| `--watchAll` in CI | Hangs forever | Use `--ci` (Step 6) |
+| `jest.mock` at top of file without specific test scope | Module mock leaks across tests; brittle | `jest.doMock` per-test or move to `__mocks__/` (see Mocking) |
+| `--watchAll` in CI | Hangs forever | Use `--ci` (see Coverage, CI, and ESLint) |
 | Snapshot-only assertions | Tests pass on every change without semantic verification | Targeted `expect()` for invariants; snapshots for stable shape only |
-| Skip `--maxWorkers` config in CI | Default = #cores; can OOM CI runners | Pin `--maxWorkers=2` for typical hosted CI (Step 6) |
+| Skip `--maxWorkers` config in CI | Default = #cores; can OOM CI runners | Pin `--maxWorkers=2` for typical hosted CI (see Coverage, CI, and ESLint) |
 | Run TypeScript via babel-jest without separate `tsc --noEmit` | Type errors silently bypass tests | Pair babel-jest with tsc --noEmit in CI (Step 1) |
 
 ## Limitations

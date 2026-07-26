@@ -35,6 +35,40 @@ active development.
 For SpecFlow-locked legacy projects mid-migration, see
 `specflow-testing`.
 
+## How to use
+
+1. Install the Reqnroll package for your test framework
+   (`Reqnroll.xUnit` / `.NUnit` / `.MsTest`) plus the MSBuild generation
+   package. Step 1.
+2. Author `.feature` files in Gherkin, using `Rule:` blocks and
+   `Scenario Outline` where they help. Step 2.
+3. Write step bindings as `[Given/When/Then]`-decorated methods in a
+   `[Binding]` class, using regex or cucumber expressions. Step 3.
+4. Add `[BeforeScenario]` / `[AfterScenario]` hooks for per-scenario setup and
+   teardown. Step 5.
+5. Tag scenarios (`@critical`, `@wip`) and filter runs with
+   `dotnet test --filter "Category=..."`. Steps 6-7.
+6. Run with `dotnet test`, emitting JUnit XML for CI. Step 7.
+
+## Worked example
+
+A checkout team adds one BDD scenario, "Apply valid promo," to a new xUnit
+project.
+
+1. `dotnet add package Reqnroll.xUnit` and
+   `dotnet add package Reqnroll.Tools.MsBuild.Generation`.
+2. `Features/Cart.feature` declares the scenario under
+   `Rule: Promo codes apply only when valid`, with
+   `When I enter "WELCOME10" in the promo input` / `Then the subtotal updates
+   to $22.49`.
+3. `Steps/CartSteps.cs` binds each line - `[When(@"I enter ""([^""]*)"" in the
+   promo input")]` calls `_page.EnterPromoAsync(code)`, and the `Then` asserts
+   `Assert.Equal(22.49m, _page.GetSubtotal(), 2)`.
+4. `dotnet test --filter "FullyQualifiedName~Cart"` runs only that feature.
+5. Result: the scenario turns green, and the MSBuild generator has produced the
+   runnable test class from the `.feature` file - no glue code beyond the
+   bindings.
+
 ## Step 1 - Install
 
 ```bash
@@ -79,62 +113,12 @@ Feature: Apply promo code at checkout
 
 ## Step 3 - Step bindings
 
-```csharp
-// Steps/CartSteps.cs
-using Reqnroll;
-using Xunit;
-
-[Binding]
-public class CartSteps
-{
-    private CheckoutPage _page;
-    private Cart _cart;
-
-    [Given("a logged-in user with email confirmed")]
-    public async Task GivenLoggedInUser()
-    {
-        var user = await TestUsers.LoggedInWithEmailConfirmed();
-        _page = new CheckoutPage(user);
-    }
-
-    [Given(@"the cart contains (\d+) of ""([^""]*)"" at \$(\d+\.\d+)")]
-    public void GivenCartContains(int qty, string sku, decimal price)
-    {
-        _cart = new Cart();
-        _cart.AddItem(new Item(sku, qty, price));
-        _page.SetCart(_cart);
-    }
-
-    [When(@"I enter ""([^""]*)"" in the promo input")]
-    public async Task WhenIEnter(string code)
-    {
-        await _page.EnterPromoAsync(code);
-    }
-
-    [When(@"I click ""([^""]*)""")]
-    public async Task WhenIClick(string label)
-    {
-        await _page.ClickAsync(label);
-    }
-
-    [Then(@"the subtotal updates to \$(\d+\.\d+)")]
-    public void ThenSubtotalUpdates(decimal expected)
-    {
-        Assert.Equal(expected, _page.GetSubtotal(), 2);
-    }
-}
-```
-
-Per [reqnroll-home][rh]: "Supports flexible step definitions using
-regex or cucumber expressions." The example uses regex; cucumber
-expressions are an alternative:
-
-```csharp
-[Given("the cart contains {int} of {string} at ${double}")]
-public void GivenCartContains(int qty, string sku, double price) { ... }
-```
-
-Cucumber expressions are more readable; regex is more flexible.
+Write step bindings as `[Given/When/Then]`-decorated methods in a `[Binding]`
+class. Per [reqnroll-home][rh]: "Supports flexible step definitions using regex
+or cucumber expressions" - regex is more flexible, cucumber expressions
+(`{int}`, `{string}`, `{double}`) more readable. Full `CartSteps` binding class
+and the cucumber-expression variant:
+[references/bindings-and-hooks.md](references/bindings-and-hooks.md).
 
 ## Step 4 - Async support
 
@@ -152,44 +136,11 @@ public async Task ThenOrderArrives(int minutes)
 
 ## Step 5 - Hooks
 
-```csharp
-using Reqnroll;
-
-[Binding]
-public class TestHooks
-{
-    [BeforeTestRun]
-    public static async Task BeforeTestRun()
-    {
-        // Once per test run
-        await TestDatabase.Initialize();
-    }
-
-    [BeforeScenario]
-    public async Task BeforeScenario()
-    {
-        // Per-scenario
-        await TestDatabase.StartTransaction();
-    }
-
-    [AfterScenario]
-    public async Task AfterScenario(ScenarioContext context)
-    {
-        await TestDatabase.Rollback();
-        if (context.TestError is not null)
-        {
-            await ScreenshotCapture.Capture(context.ScenarioInfo.Title);
-        }
-    }
-
-    [BeforeScenario("@browser")]
-    public async Task BeforeBrowserScenario()
-    {
-        // Tag-scoped hook
-        await Browser.LaunchAsync();
-    }
-}
-```
+Use `[BeforeTestRun]`, `[BeforeScenario]` / `[AfterScenario]`, and tag-scoped
+hooks (e.g. `[BeforeScenario("@browser")]`) for setup and teardown; wrap each
+scenario in a transaction and roll back in `[AfterScenario]` so state does not
+leak between scenarios. Full hook class:
+[references/bindings-and-hooks.md](references/bindings-and-hooks.md).
 
 ## Step 6 - Tags
 
@@ -271,6 +222,8 @@ Most SpecFlow projects migrate in <1 day for typical scope.
 - [rh][rh] - Reqnroll overview: SpecFlow reboot, Gherkin Rule
   blocks, SpecFlow-compatible migration, async hooks, IDE support
   (VS / VS Code / Rider).
+- [references/bindings-and-hooks.md](references/bindings-and-hooks.md) - full
+  step-binding class, cucumber-expression variant, and hook class.
 - `specflow-testing` - legacy
   SpecFlow support skill.
 - `cucumber-testing`,

@@ -32,6 +32,16 @@ minutes rather than days" vs older mutation tools.
 - Maven / Gradle integration is required (PIT is first-class for
   both).
 
+## How to use
+
+1. Add the `pitest-maven` (or `info.solidsoft.pitest` Gradle) plugin, including `pitest-junit5-plugin` for JUnit 5 suites.
+2. Point `targetClasses` at production packages and `targetTests` at the matching test packages - never mutate test code.
+3. Set `mutationThreshold` and `coverageThreshold` to the current baseline and request HTML + XML `outputFormats`.
+4. Run `mvn pitest:mutationCoverage` (or `./gradlew pitest`) and open `target/pit-reports/<timestamp>/index.html`.
+5. For each surviving mutant, add or strengthen a test until it is killed.
+6. Use `-DwithHistory` for PR runs so only changed code is re-mutated.
+7. In CI, run full weekly and incremental per-PR, uploading `target/pit-reports/` as an artifact.
+
 ## Step 1 - Install (Maven)
 
 ```xml
@@ -166,28 +176,19 @@ from the same team, extends PIT with Kotlin support, Spring
 integration, and Git analysis" - for richer Kotlin / Spring
 support, evaluate ArcMutate (commercial).
 
-## Anti-patterns
+## Worked example
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Mutating the entire codebase every PR                                 | Slow; team disables.                                                      | `withHistory` + per-changed-file scope (Step 5). |
-| `mutationThreshold: 100`                                               | Unreachable; first failed run blocks all PRs.                            | Start at the current baseline; ratchet up. |
-| Mixed Maven/Gradle config (both plugins active)                        | Conflicting configurations; cryptic errors.                               | Pick one build tool. |
-| Missing JUnit 5 plugin dependency                                      | Tests don't run; mutation coverage 0.                                    | Add `pitest-junit5-plugin` for JUnit 5 (Step 1). |
-| Targeting test classes in `targetClasses`                              | Mutates test code; meaningless.                                          | `targetClasses` = production package; `targetTests` = test package. |
-| All mutators (`ALL` mutator set)                                       | Many irrelevant mutants; long runtime.                                   | `DEFAULTS` (default) or `STRONGER`. |
+`CheckoutService` in `com.example.checkout` has a free-shipping rule and green JUnit 5 tests.
 
-## Limitations
+1. Wire the plugin (Step 1) with `targetClasses` = `com.example.checkout.*`, `targetTests` = `com.example.checkout.*Test`, `mutationThreshold` = 75.
+2. `mvn pitest:mutationCoverage` writes `target/pit-reports/<timestamp>/index.html` and fails the build below the 75 threshold.
+3. `index.html` flags a survivor: the free-shipping boundary `total >= 50` mutated to `total > 50`, uncaught because no test uses `total == 50`.
+4. Add a JUnit 5 test at the `total == 50` boundary; `mvn pitest:mutationCoverage` now kills the mutant and clears the threshold.
+5. Switch the PR job to `-DwithHistory` so later runs only re-mutate changed classes.
 
-- **Bytecode-level.** PIT mutates compiled .class files; some
-  language-level constructs (Kotlin sealed classes, certain
-  generics) produce equivalent mutants.
-- **Build-time integration.** Requires Maven / Gradle; standalone
-  PIT is awkward for Bazel / Pants.
-- **Commercial Kotlin / Spring features.** ArcMutate is paid;
-  open-source PIT covers the basics.
-- **Per-class scope only.** No file-level or method-level scoping
-  out of the box; use `targetClasses` patterns.
+## Pitfalls and limitations
+
+Anti-patterns (mutating everything per PR, `mutationThreshold: 100`, mixed Maven/Gradle config, missing JUnit 5 plugin, targeting test classes, the `ALL` mutator set) and PIT's limitations (bytecode-level equivalent mutants, build-tool coupling, commercial Kotlin / Spring extras, per-class scope) are catalogued in [references/pitest-pitfalls.md](references/pitest-pitfalls.md).
 
 ## References
 

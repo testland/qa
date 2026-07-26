@@ -24,6 +24,22 @@ middleware, headers, and response codes. There is no separate
 - Subscription tests (SSE / WS via Yoga).
 - Production-config gates for Yoga's plugin-based controls.
 
+## How to use
+
+1. Install `graphql-yoga` and `@graphql-tools/executor-http`.
+2. Build the server in the test file (or `beforeAll`) with `createYoga({ schema })`;
+   no HTTP listener is started.
+3. For queries / mutations, call `yoga.fetch('http://yoga/graphql', { method: 'POST', ... })`
+   with a parseable placeholder URL and read `.json()`.
+4. For subscriptions / incremental delivery, wrap `yoga.fetch` in `buildHTTPExecutor`
+   and iterate the returned async stream.
+5. Exercise auth by passing an `Authorization` header so Yoga's context-builder runs
+   against the simulated request.
+6. Mirror the production plugin set (disable-introspection, persisted-operations strict
+   mode) in a production-config test file.
+7. Run `npm test` locally and a separate `NODE_ENV=production` job in CI for the
+   production-config tests.
+
 ## Authoring
 
 ### Install
@@ -103,6 +119,23 @@ const response = await yoga.fetch('http://yoga/graphql', {
 Yoga's context-builder runs against the simulated request, so
 auth middleware is exercised.
 
+## Worked example
+
+Scenario: verify a `{ me { id } }` query requires a bearer token, and that
+introspection is off in the production plugin set.
+
+1. Build the server with `createYoga({ schema, plugins: [useDisableIntrospection()] })`
+   and a context-builder that reads `Authorization`.
+2. `yoga.fetch` `{ me { id } }` with no header; parse `.json()` and assert
+   `result.errors` is present - the context / auth middleware rejected it.
+3. `yoga.fetch` the same query with `Authorization: Bearer ${testToken}`; assert
+   `result.data.me.id` is returned.
+4. `yoga.fetch` an `{ __schema { types { name } } }` query; assert
+   `result.errors[0].message` matches `/introspection/i`.
+
+Result: one file proves auth pass-through (tokenless rejected, valid token
+resolves) and the production introspection gate in-process, no network.
+
 ## Running
 
 ### Standard test commands
@@ -113,62 +146,9 @@ npm test
 
 ### Production-config tests
 
-Per
-`introspection-attack-surface-reference`:
-
-```typescript
-import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection';
-
-test('introspection disabled', async () => {
-  const yoga = createYoga({
-    schema,
-    plugins: [useDisableIntrospection()],
-  });
-  const resp = await yoga.fetch('http://yoga/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: '{ __schema { types { name } } }' }),
-  });
-  const result = await resp.json();
-  expect(result.errors).toBeDefined();
-  expect(result.errors[0].message).toMatch(/introspection/i);
-});
-```
-
-### Persisted-operations test
-
-Per
-`persisted-query-strategy-reference`
-Mode 2:
-
-```typescript
-import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations';
-
-const operations = {
-  'abcdef': '{ greetings }',
-};
-
-test('rejects unregistered hash in strict mode', async () => {
-  const yoga = createYoga({
-    schema,
-    plugins: [
-      usePersistedOperations({
-        getPersistedOperation: (key) => operations[key],
-      }),
-    ],
-  });
-  const resp = await yoga.fetch('http://yoga/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      extensions: {
-        persistedQuery: { version: 1, sha256Hash: 'unknown' },
-      },
-    }),
-  });
-  expect(resp.status).toBe(404);  // Yoga's default for unknown
-});
-```
+Yoga's production gates - disable-introspection and persisted-operations - have
+their own plugin setup and strict-mode assertions. Full test patterns are in
+[references/production-config-tests.md](references/production-config-tests.md).
 
 ## Parsing results
 

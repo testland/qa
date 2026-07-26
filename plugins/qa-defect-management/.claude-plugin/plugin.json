@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-defect-management",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skills (bug-lifecycle-reference, severity-vs-priority-reference, defect-taxonomy-istqb) + 4 platform-workflow skills (jira-bug-workflow-runner, linear-bug-workflow-runner, github-issues-bug-workflow, azuredevops-bug-workflow) + 1 build skill (bug-report-from-failure) + 4 agents (duplicate-defect-finder, bug-report-critic, ci-defect-filer, defect-fix-verifier). Distinct from qa-bug-repro which covers reproduction + clustering + trend narration; this covers triage workflow + taxonomy + severity classification, and closes the lifecycle with post-fix confirmation testing.",
   "author": {
     "name": "testland",

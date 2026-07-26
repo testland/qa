@@ -28,6 +28,16 @@ patterns linters miss.
 - Layered with `semgrep-rules` for
   cross-language coverage.
 
+## How to use
+
+1. Install the CLI: `go install github.com/securego/gosec/v2/cmd/gosec@latest` (Step 1).
+2. Run a baseline recursive scan `gosec ./...`, then narrow noise with `-severity=high -confidence=high` (Steps 2, 5).
+3. Look up any flagged rule ID in [references/rule-catalog.md](references/rule-catalog.md) to interpret the finding (Step 3).
+4. Triage false positives with inline `// #nosec Gxxx -- Reason: ...` and never a bare `#nosec` (Step 5).
+5. Wire gosec into golangci-lint via `.golangci.yml` so config is unified (Step 6).
+6. Emit SARIF in CI (`-fmt sarif -out gosec.sarif ./...`) and upload it for a PR-blocking gate (Steps 4, 7).
+7. Quarterly, grep for `#nosec` lines lacking `-- Reason:` and re-review them (Step 5).
+
 ## Step 1 - Install
 
 Per [gs-gh][gs-gh]:
@@ -68,33 +78,12 @@ gosec -include=G101,G102 ./...       # only run specific rules
 
 ## Step 3 - Rule ID catalog
 
-Per [gs-gh][gs-gh] the common rule IDs:
+gosec ships 40+ rule IDs (G101 hardcoded creds, G104 unhandled
+errors, G304 path traversal, G401 weak crypto, G601 memory aliasing,
+and more). The full lookup table - every ID and its meaning - lives
+in [references/rule-catalog.md](references/rule-catalog.md).
 
-| Rule | Description |
-|---|---|
-| G101 | Hardcoded credentials |
-| G102 | Bind to all interfaces (0.0.0.0) |
-| G103 | Audit unsafe block (use of `unsafe` package) |
-| G104 | Unhandled errors |
-| G106 | SSH InsecureIgnoreHostKey |
-| G107 | URL with potential SSRF |
-| G201 | SQL query construction by string concat |
-| G202 | SQL query construction by string format |
-| G204 | Subprocess launched with variable |
-| G301 | Poor file permissions on directory |
-| G302 | Poor file permissions on file |
-| G303 | Predictable temp-file name |
-| G304 | File path traversal vulnerabilities |
-| G305 | File traversal in tar archive |
-| G401 | Weak cryptographic algorithms |
-| G402 | TLS InsecureSkipVerify |
-| G403 | RSA key length too short |
-| G404 | Insecure random number generation |
-| G501-G505 | Insecure crypto primitives (DES, MD5, RC4, SHA1) |
-| G601 | Implicit memory aliasing in for-range |
-| G602 | Slice bounds out of range |
-
-Full list: gosec subcommand `gosec -list-rules`.
+Full current list at runtime: `gosec -list-rules`.
 
 ## Step 4 - Output formats
 
@@ -211,6 +200,29 @@ Unlike Semgrep / CodeQL, gosec doesn't have a custom-rule DSL -
 adding new rules requires writing Go code in `gosec/rules/` and
 contributing upstream OR forking. For most teams, leverage the
 40+ built-in rules + suppressions.
+
+## Worked example
+
+A Go microservice needs to clear a security review. Run
+`gosec -severity=high -confidence=high ./...`; gosec reports a G401
+on a `md5.Sum(data)` call and a G104 on an unchecked `w.Write`
+return.
+
+- G401 is a false positive here - the MD5 is a vendor-mandated
+  checksum, not a security hash. Suppress it with an audited
+  justification (Step 5):
+
+  ```go
+  // #nosec G401 -- Reason: legacy MD5 required for vendor-mandated checksum format
+  hash := md5.Sum(data)
+  ```
+
+- G104 is a real bug - the unhandled `w.Write` error is fixed by
+  checking its return value, not suppressed.
+
+Re-run `gosec -fmt sarif -out gosec.sarif ./...`; the SARIF now
+reports zero HIGH findings, and the golangci-lint gate from Step 6
+passes in CI.
 
 ## Anti-patterns
 

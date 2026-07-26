@@ -16,8 +16,7 @@ delete-cascade paths - surfaces the runtime isolation test battery never
 exercises.
 
 This skill produces a test suite for that lifecycle. The output is committed to
-the project repo alongside the runtime suite from
-`tenant-leak-test-author`.
+the project repo alongside the runtime suite from `tenant-leak-test-author`.
 
 The workflow is:
 
@@ -35,124 +34,45 @@ The workflow is:
 | `tenant-leak-test-author` | Steady-state runtime: cross-tenant access attempts, IDOR, horizontal escalation |
 | `cross-tenant-data-leak-tests` | CI gate: confirms isolation invariants pass before merge |
 
+## How to use
+
+1. Trace the onboarding and offboarding code path and inventory every
+   state-changing surface, using
+   [references/provisioning-surface-map.md](references/provisioning-surface-map.md).
+2. For each surface, pull the scenarios that must hold from
+   [references/provisioning-test-scenarios.md](references/provisioning-test-scenarios.md) -
+   creation, isolation-at-create, quota, billing, seed, idempotency, teardown.
+3. Name each test `test_<surface>_<scenario>_<expected>()` and declare the shared
+   fixtures (Step 3 table).
+4. Pick the framework for your stack (Step 4 table) and emit the suite skeleton
+   from
+   [references/test-skeleton-examples.md](references/test-skeleton-examples.md).
+5. Build the coverage matrix (Step 5); treat every empty cell as a gap to justify
+   or schedule.
+6. Run the suite as a non-privileged app role (not a superuser) so offboarding and
+   RLS assertions stay valid, then cross-check the Anti-patterns table.
+
 ## Step 1 - Map provisioning pipeline surfaces
 
-Walk the onboarding code path end-to-end and enumerate every surface that
-changes state during provisioning or deprovisioning. Per the AWS Well-Architected
-SaaS Lens
-([docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation.html](https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation.html)),
-isolation must be established at every layer of the stack independently:
-
-| Surface | What to capture | How to find it |
-|---|---|---|
-| Tenant registry / catalog | Record created, unique key assigned | Central `tenants` table or tenant-management service |
-| Identity store | User account created, role bindings | Auth provider admin API or IAM config |
-| Database layer | Schema/row/database provisioned per isolation model | ORM migration runner, schema-per-tenant scripts |
-| Object storage | Bucket or prefix created with scoped policy | IaC for storage resources |
-| Quota / rate-limit table | Default quotas inserted for the new tenant | Quota service or DB seeding script |
-| Billing record | Billing entry linked to tenant ID | Billing service or payment-provider webhook handler |
-| Seed / default data | Feature flags, default roles, template data loaded | Seed scripts, fixture loaders |
-| Re-provisioning path | Idempotent re-run: no duplicate records, no failed constraints | Provisioning entry point called twice |
-| Offboarding / teardown | Data deletion, billing cancellation, quota cleanup | Delete or deactivate endpoint |
-
-Per the Microsoft Multitenant Architecture Center
-([learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenant-life-cycle](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenant-life-cycle)),
-onboarding must account for data residency, compliance tier, billing model,
-and disaster-recovery SLOs, each of which can gate provisioning steps.
-Capture which conditions gate each surface - a compliance-gated provisioning
-step needs its own test branch.
-
-Per the Microsoft resource organisation guidance
-([learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/resource-organization](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/resource-organization)),
-quota and subscription limits must be modelled per tenant at provisioning time.
-Record the expected default quota values - they are assertions, not
-implementation details.
+Walk the onboarding code path end-to-end and enumerate every surface that changes
+state during provisioning or deprovisioning - tenant registry, identity store,
+database layer, object storage, quota table, billing record, seed data,
+re-provisioning path, and teardown. The full surface inventory table, plus the
+AWS Well-Architected SaaS Lens and Microsoft lifecycle gating notes:
+[references/provisioning-surface-map.md](references/provisioning-surface-map.md).
 
 ## Step 2 - Enumerate test scenarios per surface
 
-For each surface from Step 1, identify the scenarios that must hold:
-
-### Account creation
-- Tenant record persists with a non-null unique identifier after a successful
-  provisioning call.
-- Provisioning a second tenant with the same email or slug returns an error
-  (no silent duplication).
-- A provisioning call that fails mid-flow leaves no partial record (atomicity).
-
-### Isolation at creation (no cross-tenant bleed)
-Per the Microsoft tenancy models guidance
-([learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models)),
-isolation must hold from the first request a tenant makes, not only after
-steady-state data accumulates. Test cases:
-- Immediately after Tenant B is provisioned, a call authenticated as Tenant A
-  cannot enumerate Tenant B's resources (list endpoint returns 0 items for A).
-- Tenant B's provisioned schema or row-level security policy is in place before
-  the first application-level write is accepted.
-- No existing tenant's data becomes visible to the new tenant through shared
-  infrastructure (cache warm-up, search index bootstrap, etc.).
-
-### Default resource quotas
-Per the Microsoft consumption measurement guidance
-([learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/measure-consumption](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/measure-consumption)),
-per-tenant consumption limits should be tracked from provisioning. Test cases:
-- A new tenant's quota record exists immediately after provisioning and matches
-  the expected default values for the tenant's pricing tier.
-- Attempting an action that exceeds the default quota (e.g., creating one more
-  resource than the limit allows) returns a quota-exceeded error, not a generic
-  error or a silent failure.
-- Upgrading a tenant's tier updates the quota record (verify the seeded default
-  and the upgrade delta separately).
-
-### Billing record linkage
-Per the Microsoft tenant lifecycle guidance
-([learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenant-life-cycle](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenant-life-cycle)),
-billing linkage is a first-class onboarding concern. Test cases:
-- A billing record (subscription, customer ID, or metering entry) exists and
-  references the tenant's canonical identifier within the same provisioning
-  transaction.
-- A provisioning call with an invalid payment method does not create a
-  half-provisioned tenant.
-- The billing record's tier matches the plan chosen at signup.
-
-### Seed and default data
-- Feature flags for the tenant's tier are present with correct default values.
-- Default roles (e.g., `owner`, `member`, `viewer`) exist and are assigned to
-  the provisioning user.
-- Template or onboarding data (welcome project, sample records) is scoped
-  exclusively to the new tenant - it does not appear in any other tenant's
-  list endpoints.
-
-### Idempotent re-provisioning
-An idempotent provisioning call is one that produces the same final state
-regardless of how many times it is invoked. Test cases:
-- Calling the provisioning endpoint a second time with the same input returns
-  a success response (or an explicit "already exists" response) without
-  creating duplicate records.
-- All constraint-unique fields (quota row, billing record, identity binding)
-  remain singular after two provisioning calls.
-- A re-provisioning call after a partial failure completes successfully without
-  manual cleanup.
-
-### Teardown and offboarding
-Per the Microsoft tenant lifecycle guidance
-([learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenant-life-cycle](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenant-life-cycle)),
-offboarding must define a retention period and support re-onboarding during
-that window. Test cases:
-- After offboarding, the tenant's application data (records, files, jobs) is
-  not accessible through any API endpoint.
-- After offboarding, no row for the tenant exists in quota, billing, or
-  identity tables (or rows are flagged deleted and excluded from active
-  queries).
-- Re-onboarding the same tenant during the retention period succeeds without
-  data loss if re-onboarding is a supported operation.
-- After the retention period expires (simulate with a fixed past timestamp), a
-  hard-delete job removes all remaining rows; assert count = 0 across all
-  tenant-bearing tables.
+For each surface from Step 1, identify the scenarios that must hold: account
+creation atomicity, isolation from the first call, default quota values, billing
+linkage, seed-data scoping, idempotent re-provisioning, and teardown with full
+deletion after the retention period. The full per-surface scenario catalog with
+its Microsoft citations:
+[references/provisioning-test-scenarios.md](references/provisioning-test-scenarios.md).
 
 ## Step 3 - Generate test cases
 
-Naming convention matches
-`tenant-leak-test-author`:
+Naming convention matches `tenant-leak-test-author`:
 
 ```
 test_<surface>_<scenario>_<expected>()
@@ -183,8 +103,7 @@ test_offboarding_application_data_deleted_after_retention_period()
 
 ## Step 4 - Pick the test framework and emit skeleton
 
-Same framework selection table as
-`tenant-leak-test-author`:
+Same framework selection table as `tenant-leak-test-author`:
 
 | Stack | Framework |
 |---|---|
@@ -194,95 +113,14 @@ Same framework selection table as
 | Go | `testing` + `httptest` |
 | Ruby (Rails) | RSpec + `request` specs |
 
-### Example skeleton (pytest)
-
-```python
-import pytest
-
-class TestTenantProvisioning:
-    """Provisioning lifecycle tests - distinct from runtime isolation battery."""
-
-    def test_account_creation_stores_tenant_record(
-        self, provisioning_client, pricing_tier
-    ):
-        response = provisioning_client.post(
-            "/api/tenants/",
-            data={"slug": "acme", "plan": pricing_tier.id, "owner_email": "owner@acme.com"}
-        )
-        assert response.status_code == 201
-        assert response.json()["id"] is not None
-
-    def test_isolation_new_tenant_invisible_to_existing_tenant_immediately(
-        self, client, existing_tenant_user, new_tenant
-    ):
-        # New tenant was just provisioned; existing tenant must not see it
-        client.force_login(existing_tenant_user)
-        response = client.get("/api/workspaces/")
-        ids = {w["id"] for w in response.json()["results"]}
-        assert new_tenant.id not in ids
-
-    def test_quota_default_matches_tier_on_creation(
-        self, new_tenant, pricing_tier
-    ):
-        from quotas.models import TenantQuota
-        quota = TenantQuota.objects.get(tenant=new_tenant)
-        assert quota.max_users == pricing_tier.default_max_users
-        assert quota.max_storage_gb == pricing_tier.default_max_storage_gb
-
-    def test_billing_record_linked_on_creation(
-        self, new_tenant, billing_stub
-    ):
-        assert billing_stub.was_called_for(new_tenant.id), (
-            "Billing provider must be notified during provisioning"
-        )
-        record = billing_stub.get_record(new_tenant.id)
-        assert record["plan"] == new_tenant.plan
-
-    def test_seed_data_scoped_to_new_tenant_only(
-        self, client, existing_tenant_user, new_tenant
-    ):
-        # Existing tenant must not see new tenant's seed data in shared endpoints
-        client.force_login(existing_tenant_user)
-        response = client.get("/api/projects/")
-        tenant_ids = {p["tenant_id"] for p in response.json()["results"]}
-        assert str(new_tenant.id) not in tenant_ids
-
-    def test_provisioning_idempotent_no_duplicate_quota_row(
-        self, provisioning_client, new_tenant, pricing_tier
-    ):
-        # Call provisioning a second time with the same input
-        provisioning_client.post(
-            "/api/tenants/",
-            data={"slug": new_tenant.slug, "plan": pricing_tier.id,
-                  "owner_email": "owner@acme.com"}
-        )
-        from quotas.models import TenantQuota
-        count = TenantQuota.objects.filter(tenant=new_tenant).count()
-        assert count == 1, "Idempotent re-provisioning must not create duplicate quota rows"
-
-    def test_offboarding_deletes_application_data(
-        self, admin_client, offboarded_tenant
-    ):
-        admin_client.delete(f"/api/tenants/{offboarded_tenant.id}/")
-        response = admin_client.get(f"/api/tenants/{offboarded_tenant.id}/projects/")
-        assert response.status_code == 404
-```
-
-### Example: idempotency via SQL assertion (language-agnostic)
-
-```sql
--- After two provisioning calls for the same tenant slug:
-SELECT count(*) FROM tenant_quotas WHERE tenant_id = '<new_tenant_uuid>';
--- Expected: 1 (not 2)
-
-SELECT count(*) FROM billing_subscriptions WHERE tenant_id = '<new_tenant_uuid>';
--- Expected: 1 (not 2)
-```
+The full pytest skeleton (one test per Step 2 scenario) and a language-agnostic
+SQL idempotency assertion:
+[references/test-skeleton-examples.md](references/test-skeleton-examples.md).
 
 ## Step 5 - Coverage matrix
 
-Track one cell per (surface, scenario). Empty cells are coverage gaps that
-the PR author must justify or schedule.
+Track one cell per (surface, scenario). Empty cells are coverage gaps that the PR
+author must justify or schedule.
 
 ```
 Surface                   | create | isolation_at_create | quota | billing | seed | idempotent | teardown
@@ -295,8 +133,8 @@ seed_data                 |        |          X          |       |         |  X 
 feature_flags             |        |                     |   X   |         |  X   |            |
 ```
 
-Generate this matrix from Step 1's surface inventory plus Step 2's scenario
-list. Populate it cell-by-cell as test cases are written.
+Generate this matrix from Step 1's surface inventory plus Step 2's scenario list.
+Populate it cell-by-cell as test cases are written.
 
 ## Anti-patterns
 
@@ -310,6 +148,24 @@ list. Populate it cell-by-cell as test cases are written.
 | Using a superuser connection for post-offboarding assertions | Superuser bypasses RLS and soft-delete filters; tests pass even when app-layer deletion is broken | Use the app-role or the API layer to verify absence |
 | Treating provisioning as atomic when it is not | Cloud provisioning pipelines are often eventually consistent; test may pass before side-effects complete | Use explicit wait/poll or event-driven fixtures that confirm each step before asserting |
 
+## Worked example
+
+A Django SaaS adds a `Team`-tier onboarding flow. Step 1 inventories the surfaces
+it touches: the `tenants` registry, identity role bindings, a `TenantQuota` row, a
+`billing_subscriptions` record, and a seeded welcome project. Step 2 selects the
+scenarios: duplicate slug returns conflict, the new tenant is invisible to an
+existing tenant immediately, the quota matches the tier default, billing is
+linked, a second provisioning call stays idempotent, and offboarding deletes the
+data.
+
+For idempotency, Step 3 names the test
+`test_provisioning_idempotent_no_duplicate_quota_row()` and Step 4 emits the
+pytest body from the skeleton: it POSTs `/api/tenants/` a second time with the
+same slug, then asserts `TenantQuota.objects.filter(tenant=new_tenant).count() ==
+1`. Run as the non-superuser app role, the second call reuses the existing record
+rather than inserting a duplicate, so the assertion passes. The `quota_table` x
+`idempotent` cell in the Step 5 matrix flips to `X`.
+
 ## Output
 
 This skill produces:
@@ -319,8 +175,7 @@ This skill produces:
 - A test suite skeleton (Steps 3-4) committed to the project repo.
 - A coverage matrix (Step 5).
 
-The runtime isolation gate is
-`cross-tenant-data-leak-tests`.
+The runtime isolation gate is `cross-tenant-data-leak-tests`.
 
 ## References
 
@@ -334,7 +189,11 @@ The runtime isolation gate is
   [learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/measure-consumption](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/measure-consumption).
 - Microsoft Multitenant Architecture Center, Resource Organisation:
   [learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/resource-organization](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/resource-organization).
-- Tenant isolation (runtime gate):
-  `cross-tenant-data-leak-tests`.
-- Isolation models reference:
-  `tenant-isolation-models-reference`.
+- [references/provisioning-surface-map.md](references/provisioning-surface-map.md) -
+  provisioning surface inventory and lifecycle gating notes.
+- [references/provisioning-test-scenarios.md](references/provisioning-test-scenarios.md) -
+  per-surface scenario catalog.
+- [references/test-skeleton-examples.md](references/test-skeleton-examples.md) -
+  pytest skeleton and SQL idempotency assertion.
+- Tenant isolation (runtime gate): `cross-tenant-data-leak-tests`.
+- Isolation models reference: `tenant-isolation-models-reference`.

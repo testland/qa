@@ -15,6 +15,16 @@ xUnit.net is the current .NET test standard (used by .NET Foundation
 projects + Microsoft's own .NET runtime). v3 released 2024;
 v2 still widely used in production.
 
+## How to use
+
+1. Add xUnit to the project: `dotnet new xunit`, or the packages `xunit` + `xunit.runner.visualstudio` + `Microsoft.NET.Test.Sdk`.
+2. Write `[Fact]` tests in a plain class; assert with `Assert.Equal(expected, actual)`.
+3. Replace duplicated tests with `[Theory]` + `[InlineData]` (or `[ClassData]` / `[MemberData]` for computed cases).
+4. Share expensive setup via `IClassFixture` / collection fixtures instead of static state (see [references/fixtures-and-parallelism.md](references/fixtures-and-parallelism.md)).
+5. Emit diagnostics through an injected `ITestOutputHelper` (Console output is suppressed).
+6. Mark skips with `[Fact(Skip = "...")]`, tag tests with `[Trait(...)]`, and filter via `dotnet test --filter`.
+7. Run `dotnet test`, tuning collection parallelism for large suites and emitting `.trx` + coverage in CI.
+
 ## Step 1 - Install
 
 ```bash
@@ -96,41 +106,14 @@ public void IntegrationTest() { }
 // Filter:  dotnet test --filter "Category=Integration"
 ```
 
-## Step 5 - Fixtures
+## Fixtures + parallelism
 
-```csharp
-// Per-test (default): xUnit creates a new test class instance per test
-public class CalculatorTests {
-    private readonly Calculator _calc;
-    public CalculatorTests() { _calc = new Calculator(); }
-    // ...
-}
+For per-test, class (`IClassFixture`), and collection
+(`ICollectionFixture`) shared setup, plus assembly-level parallel
+config, see
+[references/fixtures-and-parallelism.md](references/fixtures-and-parallelism.md).
 
-// Class fixture: shared across all tests in a class
-public class DatabaseFixture : IDisposable {
-    public DbConnection Connection { get; }
-    public DatabaseFixture() { Connection = OpenConnection(); }
-    public void Dispose() { Connection.Close(); }
-}
-
-public class UserTests : IClassFixture<DatabaseFixture> {
-    private readonly DatabaseFixture _fixture;
-    public UserTests(DatabaseFixture fixture) { _fixture = fixture; }
-    [Fact] public void TestsUser() { /* uses _fixture.Connection */ }
-}
-
-// Collection fixture: shared across multiple test classes
-[CollectionDefinition("DbCollection")]
-public class DbCollection : ICollectionFixture<DatabaseFixture> { }
-
-[Collection("DbCollection")]
-public class TestsA { ... }
-
-[Collection("DbCollection")]
-public class TestsB { ... }   // shares the same DatabaseFixture
-```
-
-## Step 6 - Output (ITestOutputHelper)
+## Step 5 - Output (ITestOutputHelper)
 
 xUnit suppresses Console.WriteLine in tests. Use `ITestOutputHelper`:
 
@@ -146,20 +129,7 @@ public class TestsWithOutput {
 }
 ```
 
-## Step 7 - Parallel execution
-
-By default xUnit runs **collections** in parallel; tests in the same
-collection run sequentially.
-
-```csharp
-// Disable parallelism for an assembly:
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
-
-// Or per-collection:
-[assembly: CollectionBehavior(MaxParallelThreads = 4)]
-```
-
-## Step 8 - Pair with FluentAssertions
+## Step 6 - Pair with FluentAssertions
 
 ```csharp
 result.Should().Be(42);
@@ -171,7 +141,7 @@ See `fluentassertions`. **Note:**
 FluentAssertions changed license in 2024 (paid commercial; free for
 OSS); v6 is the last fully-free version.
 
-## Step 9 - CI integration
+## Step 7 - CI integration
 
 ```yaml
 - run: dotnet test --logger "trx;LogFileName=test-results.trx" \
@@ -180,14 +150,31 @@ OSS); v6 is the last fully-free version.
   with: { files: ./coverage/coverage.opencover.xml }
 ```
 
+## Worked example
+
+A service team writes xUnit coverage for a `UserService` backed by a
+database. They scaffold with `dotnet new xunit -n Users.Tests`, then
+define a `DatabaseFixture : IDisposable` that opens a connection once
+and consume it via `public class UserTests : IClassFixture<DatabaseFixture>`.
+Pure logic like `Calculator.Add` is covered with a `[Theory]` over
+`[InlineData(1, 2, 3)]` / `[InlineData(-1, 1, 0)]` asserting
+`Assert.Equal(expected, Calculator.Add(a, b))`. A staging-only case is
+parked with `[Fact(Skip = "Requires staging DB")]`, and the DB-backed
+classes join a `[Collection("DbCollection")]` so they run sequentially
+against the shared connection while pure-logic tests parallelize.
+Diagnostics go through an injected `ITestOutputHelper`. CI runs
+`dotnet test --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"`
+and uploads coverage. Result: fast parallel unit coverage plus
+serialized DB-backed tests sharing one fixture.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| `Console.WriteLine` instead of `ITestOutputHelper` | Output suppressed | Use `ITestOutputHelper` (Step 6) |
+| `Console.WriteLine` instead of `ITestOutputHelper` | Output suppressed | Use `ITestOutputHelper` (Step 5) |
 | Use `[Theory]` without data attribute | Test never runs | Always include `[InlineData]` etc. |
 | Shared mutable state in `IClassFixture` | Test order dependence | Per-test fresh state OR `[Collection]` synchronization |
-| Skip parallel tuning at scale | Slow CI | Per-assembly + per-collection config (Step 7) |
+| Skip parallel tuning at scale | Slow CI | Per-assembly + per-collection config (see [references/fixtures-and-parallelism.md](references/fixtures-and-parallelism.md)) |
 
 ## Limitations
 
@@ -201,6 +188,7 @@ OSS); v6 is the last fully-free version.
 - [xn-docs][xn-docs] - xUnit.net documentation
 - xunit.net - landing
 - learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test - dotnet test
+- [references/fixtures-and-parallelism.md](references/fixtures-and-parallelism.md) - fixtures + parallel execution
 - `nunit-tests`,
   `mstest-tests`,
   `fluentassertions` - sister tools

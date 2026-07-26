@@ -44,6 +44,20 @@ Per [gr-gh][gr-gh] coverage:
 - OpenVEX-based finding filtering (status assertions like "not
   affected" / "fixed" / "under-investigation" filter scan output).
 
+## How to use
+
+1. Install Grype (Step 1).
+2. Generate an SBOM once with Syft, then scan the SBOM:
+   `grype sbom:./sbom.json` - deterministic + auditable (Step 2).
+3. Pick the output format for the consumer: `-o sarif` for GitHub
+   Code Scanning, `-o json` for prioritization (Step 3).
+4. Gate CI with `--fail-on high`; add `--only-fixed` to focus on
+   actionable findings (Step 4).
+5. Triage false positives into `.grype.yaml` ignore rules, each with
+   a mandatory `expires:` date + reachability reason (Step 5).
+6. Pin the vuln DB for CI determinism (`grype db import ...`) (Step 6).
+7. Wire `anchore/scan-action` + SARIF upload into the pipeline (Step 7).
+
 ## Step 1 - Install
 
 Per [gr-gh][gr-gh]:
@@ -114,38 +128,14 @@ upgradable findings:
 grype my-image --fail-on high --only-fixed
 ```
 
-## Step 5 - `.grype.yaml` ignore rules
+## Step 5 - Suppression + false-positive triage (MANDATORY)
 
-Per [gr-gh][gr-gh]: "Configuration can be managed through
-`.grype.yaml` files with ignore rules for customized scanning
-behavior."
-
-Example config:
-
-```yaml
-# .grype.yaml
-ignore:
-  # Per-CVE ignore
-  - vulnerability: CVE-2024-1234
-    reason: "Reachability analysis confirms unreachable; tracked in JIRA-1234"
-    expires: 2026-12-15
-
-  # Per-package + version ignore
-  - package:
-      name: lodash
-      version: 4.17.20
-    vulnerability: CVE-2024-5678
-    reason: "Test fixture; not in production dependency graph"
-    expires: 2026-09-30
-
-  # Pattern-based ignore (per-fix-state)
-  - vulnerability: GHSA-*
-    fix-state: not-fixed
-    reason: "Pending vendor fix; not exploitable in our context"
-    expires: 2026-12-15
-```
-
-## Step 6 - False-positive triage (MANDATORY)
+Grype's native suppression path is `.grype.yaml` ignore rules -
+per-CVE, per-package+version, or pattern-based (`fix-state`), each
+carrying a **mandatory `expires:` date** and a reachability `reason:`.
+The full `.grype.yaml` example config and the required justification
+template are in
+[references/grype-ignore-rules.md](references/grype-ignore-rules.md).
 
 Suppression mechanisms (per [gr-gh][gr-gh] + standard practice):
 
@@ -160,24 +150,10 @@ OpenVEX is a particularly clean way to manage findings - the VEX
 document is signed + persistent + machine-readable; consumers can
 verify supply-chain assertions about vulnerability status.
 
-**Justification template (mandatory in `.grype.yaml`):**
-
-```yaml
-ignore:
-  - vulnerability: CVE-2024-1234
-    reason: |
-      Reachability: vulnerable function `parse_xml` not called from
-      production code paths (verified via static analysis 2026-05-15).
-      Component is required for test fixtures only.
-    approved-by: alice@example.com
-    expires: 2026-09-15
-    re-review-date: 2026-09-15
-```
-
 Cadence: every quarter, audit `.grype.yaml` ignore entries; expired
-re-review-date entries removed.
+`re-review-date` entries removed.
 
-## Step 7 - DB management
+## Step 6 - DB management
 
 Grype's vuln DB updates frequently (multiple times per day):
 
@@ -195,7 +171,7 @@ grype db import grype-db-v6-2026-05-06.tar.gz
 For CI determinism, pin DB version per scan; otherwise Grype
 pulls the latest.
 
-## Step 8 - CI integration
+## Step 7 - CI integration
 
 ```yaml
 jobs:
@@ -218,13 +194,34 @@ jobs:
 
 The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 
-## Step 9 - Composition with sister tools
+## Step 8 - Composition with sister tools
 
 | Sister tool | Use |
 |---|---|
 | `syft-generation` | Generates the SBOM Grype scans |
 | `trivy-image` | Alternative all-in-one (SBOM gen + scan) |
 | `osv-scanner` | Cross-plugin alternative for OSV.dev DB |
+
+## Worked example
+
+A CI job scans a previously generated SBOM and gates on HIGH:
+
+1. `grype sbom:./sbom.cyclonedx.json --fail-on high --only-fixed`
+   returns exit 1 - one HIGH finding, `CVE-2024-1234` on
+   `lodash@4.17.20`, has an available fix.
+2. Reachability analysis shows the vulnerable function is only used
+   by test fixtures, not production paths. The team adds a per-package
+   ignore to `.grype.yaml` with `reason:`, `approved-by:`, and
+   `expires: 2026-09-15` (see
+   [references/grype-ignore-rules.md](references/grype-ignore-rules.md)).
+3. Re-running `grype sbom:./sbom.cyclonedx.json --fail-on high`
+   now exits 0 - the triaged finding is suppressed until the expiry.
+4. The pipeline also emits `-o sarif` and uploads it via
+   `github/codeql-action/upload-sarif` so the finding history stays
+   visible in GitHub Code Scanning.
+
+Result: the build passes with one documented, time-boxed suppression
+and a SARIF audit trail, instead of a blanket severity downgrade.
 
 ## Anti-patterns
 
@@ -234,7 +231,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 | `.grype.yaml` ignore without `expires:` | Permanent debt | Mandatory `expires:` (Step 5) |
 | Skip `--only-fixed` filter | Stuck findings (no fix available) flood the report | Add `--only-fixed` for actionable filter (Step 4) |
 | Use `--fail-on critical` only | Misses HIGH severity issues | Threshold `--fail-on high` typical (Step 4) |
-| Skip Grype DB pin in CI | Different DB version per CI run; non-deterministic | Pin DB version (Step 7) |
+| Skip Grype DB pin in CI | Different DB version per CI run; non-deterministic | Pin DB version (Step 6) |
 
 ## Limitations
 
@@ -251,6 +248,7 @@ The `anchore/scan-action` GHA wraps Grype + handles SARIF upload.
 ## References
 
 - [gr-gh][gr-gh] - repository, install, basic commands
+- [references/grype-ignore-rules.md](references/grype-ignore-rules.md) - `.grype.yaml` config + justification template
 - oss.anchore.com/docs/reference/grype/cli/ - full CLI reference
 - openvex.dev - OpenVEX specification
 - first.org/epss - EPSS data source for prioritization

@@ -22,90 +22,30 @@ and fuzz-target authoring. For corpus discipline see
   performance.
 - CI-gating builds with sanitisers enabled.
 
+## How to use
+
+1. Identify the fuzz target's language and threat model (memory safety, undefined behavior, uninitialised reads, or data races).
+2. Pick sanitisers from the summary table below; default to ASan + UBSan for most C / C++ targets.
+3. Check the compatibility matrix before combining - ASan + UBSan is fine, but ASan + MSan and anything + TSan are not, so split those into separate binaries.
+4. Build with `-fsanitize=fuzzer,<sanitisers>` plus `-fno-sanitize-recover=all` and `-fno-omit-frame-pointer -g`.
+5. Set runtime options (`ASAN_OPTIONS`, `UBSAN_OPTIONS`) so the fuzzer aborts on first error.
+6. When a crash lands, read the sanitiser report top-down: bug class, access, crash-site frame, then allocation / free site.
+7. For MSan-required libraries, build a separate MSan-only binary with all dependencies instrumented and run it as a second campaign.
+
 ## The five sanitisers
 
-Per clang.llvm.org sanitiser docs:
+| Sanitiser | Detects (summary) | Build flag | Slowdown |
+|---|---|---|---|
+| ASan | heap / stack / global OOB, use-after-free, double-free | `-fsanitize=address -fno-omit-frame-pointer -g` | ~2x |
+| UBSan | signed overflow, div-by-zero, null deref, misaligned access | `-fsanitize=undefined -fno-sanitize-recover=all` | ~10% |
+| MSan | uninitialised memory reads | `-fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-track-origins` | 3x |
+| TSan | data races, deadlocks, thread-safety violations | `-fsanitize=thread -O1 -g` | 5 - 15x |
+| LSan | memory leaks at program exit | `-fsanitize=leak` (or embedded in ASan) | small |
 
-### AddressSanitizer (ASan)
-
-**What it detects** (per [clang.llvm.org/docs/AddressSanitizer.html](https://clang.llvm.org/docs/AddressSanitizer.html)):
-
-- Out-of-bounds accesses to heap, stack, and globals
-- Use-after-free
-- Double-free, invalid free
-- Memory leaks (experimental; LSan integrated)
-
-**Build flag:** `-fsanitize=address -fno-omit-frame-pointer -g`
-
-**Performance:** "Typical slowdown introduced by AddressSanitizer
-is 2x" per the docs.
-
-**Runtime options** (`ASAN_OPTIONS=key=value:...`):
-
-| Option | Effect |
-|---|---|
-| `detect_leaks=1` | Enable leak detection (default on Linux) |
-| `detect_stack_use_after_return=0` | Disable use-after-return checks (faster) |
-| `detect_container_overflow=0` | Disable container-overflow detection |
-| `symbolize=0` | Disable online symbolization (use post-mortem) |
-| `check_initialization_order=1` | Init-order checking |
-| `halt_on_error=1` | Stop on first error |
-| `abort_on_error=1` | SIGABRT on error (for fuzzers) |
-
-### UndefinedBehaviorSanitizer (UBSan)
-
-**What it detects:** signed integer overflow, division by zero,
-null pointer deref, misaligned access, float-int conversion
-overflow, invalid enum / bool, vptr corruption, function-pointer
-type mismatch, etc.
-
-**Build flag:** `-fsanitize=undefined -fno-sanitize-recover=all`
-
-The `-fno-sanitize-recover=all` is important for fuzzing - without
-it, UBSan logs but doesn't abort, so the fuzzer doesn't see the
-bug.
-
-**Performance:** ~10% slowdown - much lighter than ASan.
-
-**Runtime options** (`UBSAN_OPTIONS`):
-- `print_stacktrace=1` - include stack trace in reports
-- `halt_on_error=1` - abort on first error
-
-### MemorySanitizer (MSan)
-
-**What it detects:** Uninitialised memory reads.
-
-**Build flag:** `-fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-track-origins`
-
-**Performance:** 3x slowdown.
-
-**Critical:** **MSan requires the entire program (and all
-dependencies) to be built with `-fsanitize=memory`**. Linking
-against non-MSan-instrumented libraries produces false positives.
-
-**Compatibility:** MSan is incompatible with ASan; cannot combine.
-
-### ThreadSanitizer (TSan)
-
-**What it detects:** Data races, deadlocks, thread-safety
-violations.
-
-**Build flag:** `-fsanitize=thread -O1 -g`
-
-**Performance:** 5 - 15x slowdown + 5 - 10x memory.
-
-**Compatibility:** TSan is incompatible with ASan and MSan.
-
-### LeakSanitizer (LSan)
-
-**What it detects:** Memory leaks at program exit.
-
-**Modes:**
-
-- **Embedded in ASan:** `-fsanitize=address` enables LSan by default
-  on Linux. Toggle via `detect_leaks=1`.
-- **Standalone:** `-fsanitize=leak` - leak detection only, no other
-  checks. Smaller overhead.
+Full per-sanitiser detail - complete detect lists, the `ASAN_OPTIONS` /
+`UBSAN_OPTIONS` runtime-option tables, the MSan whole-program requirement, and
+LSan's embedded vs standalone modes:
+[references/sanitiser-catalog.md](references/sanitiser-catalog.md).
 
 ## Compatibility matrix
 
@@ -197,6 +137,24 @@ Python (Atheris) uses **per-module instrumentation** + the host
 process's libFuzzer; you can attach ASan to the Python interpreter
 itself.
 
+## Worked example
+
+A team fuzzes a C++ PNG parser. They choose ASan + UBSan (the standard pair) and
+build with:
+
+```bash
+clang -g -O1 -fsanitize=fuzzer,address,undefined \
+      -fno-sanitize-recover=all -fno-omit-frame-pointer \
+      png_fuzzer.cc -o png_fuzzer
+```
+
+Running under `ASAN_OPTIONS=abort_on_error=1:halt_on_error=1`, the fuzzer trips
+within minutes. The report opens with `heap-buffer-overflow ... READ of size 4`,
+top frame `process_input src/parser.c:42`, allocated at `src/parser.c:39` (a
+16-byte region). The bug class plus the allocation site pin it to an off-by-one in
+the chunk-length handling. The parser has no MSan dependency requirement, so they
+skip the separate MSan binary and hand the report to `bug-report-from-failure`.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -235,6 +193,7 @@ itself.
   [clang.llvm.org/docs/ThreadSanitizer.html](https://clang.llvm.org/docs/ThreadSanitizer.html).
 - LLVM libFuzzer - 
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html).
+- Sanitiser catalog detail: [references/sanitiser-catalog.md](references/sanitiser-catalog.md).
 - Sibling references:
   `corpus-management-reference`.
 - Consumed by:

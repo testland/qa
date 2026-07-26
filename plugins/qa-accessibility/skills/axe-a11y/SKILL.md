@@ -108,79 +108,49 @@ cy.injectAxe();
 cy.checkA11y();
 ```
 
-## Results structure
+## How to use
 
-`axe.run()` resolves to an object with four arrays
-([axe-core][readme]):
+1. Install `axe-core` plus the framework wrapper (`@axe-core/playwright`
+   for Playwright; `cypress-axe` for Cypress).
+2. Add one scan test per page or flow, and drive the page into the
+   state you want scanned first (open modals, expand menus, submit
+   forms) before calling axe.
+3. Pin the conformance target with `.withTags([...])` (e.g. `wcag2a`,
+   `wcag2aa`, `wcag22aa`), then `.analyze()`.
+4. Suppress known false positives narrowly with `.disableRules([...])`
+   or `.exclude(selector)`, each with an inline reason.
+5. Persist the raw `accessibilityScanResults` JSON as a CI artifact.
+6. Feed that JSON to `a11y-violation-gate` for the ratchet gate instead
+   of asserting `violations.length === 0`.
+7. Route `incomplete` items to periodic manual screen-reader review
+   (per `screen-reader-test-author`).
 
-| Field          | Meaning                                                       |
-|----------------|---------------------------------------------------------------|
-| `violations`   | Definite issues - block this in CI.                          |
-| `incomplete`   | Items needing human review (axe couldn't determine).        |
-| `passes`       | Successful checks.                                            |
-| `inapplicable` | Rules that don't apply to this page.                         |
+## Results structure and rule configuration
 
-Each violation has:
+`axe.run()` resolves to `violations` / `incomplete` / `passes` /
+`inapplicable` arrays; each violation carries `id`, `impact`, `tags`,
+and a `nodes[]` array of failing selectors. Rules are selected by WCAG
+tag (`withTags`) and suppressed by rule id or selector (`disableRules`
+/ `exclude`). Full field tables, tag sets, and `jq` triage:
+[references/results-and-config.md](references/results-and-config.md).
 
-| Field          | Meaning                                                       |
-|----------------|---------------------------------------------------------------|
-| `id`           | Rule ID (e.g. `color-contrast`, `label`, `aria-required-attr`). |
-| `impact`       | `critical` / `serious` / `moderate` / `minor`.                |
-| `tags`         | Includes `wcag2a`, `wcag22aa`, etc. - for severity-by-SC tagging. |
-| `description`  | One-line explanation.                                         |
-| `help`         | Longer remediation guidance.                                  |
-| `helpUrl`      | Direct link to Deque's rule documentation.                    |
-| `nodes`        | Array of failing elements with `target` (selector), `html`, `failureSummary`. |
+## Worked example
 
-Triage with `jq`:
+A Playwright suite adds `checkout.a11y.spec.ts`. The test navigates to
+`/checkout`, runs
+`new AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag22aa']).analyze()`,
+and writes the result JSON to `axe-results.json`.
 
-```bash
-# Top violations by impact
-jq -r '.violations[] | "\(.impact): \(.id) - \(.description)"' axe-results.json
+The run returns one entry in `violations[]`: `id: color-contrast`,
+`impact: serious`, tags including `wcag2aa`, and one node targeting
+`button.primary` with a `failureSummary`.
 
-# Just the failing selectors per rule
-jq -r '.violations[] | "\(.id):", (.nodes[].target | tostring)' axe-results.json
-```
-
-## Rule configuration
-
-### By tags
-
-axe ships rules tagged with conformance levels:
-
-```javascript
-new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
-```
-
-Common tag sets:
-
-| Tag set                                                    | Coverage                         |
-|------------------------------------------------------------|----------------------------------|
-| `['wcag2a', 'wcag2aa']`                                     | WCAG 2.0/2.1 A + AA. Default for most teams. |
-| `['wcag2a', 'wcag2aa', 'wcag22aa']`                          | Adds WCAG 2.2 AA criteria.       |
-| `['wcag2aaa']`                                              | AAA-only (rarely the gate).      |
-| `['best-practice']`                                          | Non-WCAG good practices.         |
-| `['experimental']`                                          | Beta rules.                      |
-
-### Disable specific rules
-
-```javascript
-new AxeBuilder({ page }).disableRules(['color-contrast'])
-```
-
-For per-page disabling (e.g. a known false positive on a specific
-component):
-
-```javascript
-new AxeBuilder({ page })
-  .exclude('.legacy-component')   // selector exclusion
-  .analyze();
-```
-
-For per-rule severity in CI gating (e.g. block on `critical` /
-`serious` only): handle in
-`a11y-violation-gate` using
-the `impact` field.
+`jq -r '.violations[] | "\(.impact): \(.id)"' axe-results.json` prints
+`serious: color-contrast`. Piping the JSON to `a11y-violation-gate`
+compares it against the baseline: because this rule/selector pair is
+new, the gate fails the PR with the failing selector attributed. Fixing
+the button's foreground colour clears it, and the next run reports
+`violations: []`.
 
 ## CI integration
 
@@ -248,6 +218,8 @@ JSON as a build artifact and pipe to
 
 - [axe-core][readme] - main repo: install, `axe.run()`, results
   structure.
+- [references/results-and-config.md](references/results-and-config.md) -
+  results arrays, violation fields, tag sets, disable / exclude.
 - Deque rule documentation - https://dequeuniversity.com/rules/axe/
 - @axe-core/playwright - https://github.com/dequelabs/axe-core-npm/tree/master/packages/playwright
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/

@@ -32,6 +32,16 @@ Key features per [mutmut-docs][md]:
 - The team is debating "should we add another test?" - surviving
   mutants tell you where.
 
+## How to use
+
+1. `pip install mutmut` and confirm the pytest / unittest suite is green before mutating.
+2. Scope the run in `setup.cfg` or `pyproject.toml` (`source_paths` + test selection) so only project source is mutated.
+3. Run `mutmut run` - the first run is slow; state is cached so later runs are incremental.
+4. Read the score with `mutmut results`; open survivors interactively with `mutmut browse`.
+5. For each survivor, write a test that kills it; verify with `mutmut apply <id>`, re-run that test, then revert.
+6. Reserve `# pragma: no mutate` for genuinely unreachable lines only.
+7. Wire a weekly full run plus PR-scoped runs into CI, uploading `mutmut results` as an artifact.
+
 ## Step 1 - Install + first run
 
 Per [mutmut-docs][md]:
@@ -171,26 +181,34 @@ CHANGED=$(git diff --name-only origin/main...HEAD | grep '^src/')
 mutmut run --paths-to-mutate "$CHANGED"
 ```
 
-## Anti-patterns
+## Worked example
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| `# pragma: no mutate` as escape hatch                                 | Hides untested code; defeats mutation testing.                           | Reserve pragmas for genuinely unreachable / untestable code (Step 5). |
-| Running on every PR (full mutation)                                   | Long; team disables.                                                      | Schedule weekly + per-PR scoped via wrapper (Step 7). |
-| Including third-party packages in `source_paths`                      | Mutates code you don't own.                                              | Scope to project source only (Step 2). |
-| Skipping `mutmut results` in CI                                       | No visibility into the score over time.                                  | Pipe to artifact + dashboard. |
-| Setting unrealistic mutation-score gates                              | Forces team to write low-value tests.                                    | Start at current baseline; ratchet up by 1-2pp per quarter. |
+A team wants to verify the pytest suite for `src/discounts.py` before a release.
 
-## Limitations
+1. Scope the run in `setup.cfg`:
+   ```ini
+   [mutmut]
+   source_paths=src/discounts.py
+   pytest_add_cli_args_test_selection=tests/test_discounts.py
+   ```
+2. `mutmut run`, then `mutmut results`:
+   ```
+   Total: 142
+   Killed: 119 (83.8%)
+   Survived: 23 (16.2%)
+   ```
+3. `mutmut browse` shows a survivor: the boundary `if total > 100:` mutated to `if total >= 100:` - the suite never exercises `total == 100`.
+4. Add a test for the no-discount path at `total == 100`, then confirm it catches the mutant:
+   ```bash
+   mutmut apply <id>                 # id from the browse listing
+   pytest tests/test_discounts.py    # now fails on the mutated line
+   git checkout src/                 # revert the mutant
+   ```
+5. Re-running `mutmut run` shows the mutant killed and the score up by one mutant.
 
-- **Slow.** Even with parallel execution, full mutation runs take
-  10-60 min on medium codebases.
-- **No native PR diff scoping.** Use the wrapper pattern (Step 7).
-- **Test framework hooks.** Some pytest fixtures interact oddly
-  with mutated code; use `pragma: no mutate` for the specific
-  fixtures.
-- **Equivalent mutants.** Some mutations produce semantically
-  identical code; impossible to kill. Identify and exclude.
+## Pitfalls and limitations
+
+Anti-patterns (pragma escape hatches, full-mutation-per-PR, third-party `source_paths`, unrealistic gates) and mutmut's limitations (slow runs, no native PR diff scoping, equivalent mutants) are catalogued in [references/mutmut-pitfalls.md](references/mutmut-pitfalls.md).
 
 ## References
 

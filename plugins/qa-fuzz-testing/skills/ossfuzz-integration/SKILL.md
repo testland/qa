@@ -32,123 +32,25 @@ for sanitiser pairing see
 For commercial / closed-source projects: ClusterFuzz (the open-source
 backend behind OSS-Fuzz) can be self-hosted.
 
+## How to use
+
+1. Confirm the project qualifies: open-source, with a mature harness (>=10k execs/sec locally) rather than an experimental one.
+2. Create `projects/<project-name>/` with `project.yaml`, `Dockerfile`, and `build.sh` per [references/project-contract.md](references/project-contract.md).
+3. Build and validate locally: `infra/helper.py build_image`, then `build_fuzzers --sanitizer address`, then `check_build`.
+4. Ship a seed corpus (`<target>_seed_corpus.zip`) and, for structured formats, a dictionary (`<target>.dict`) beside the target.
+5. Open a pull request to `github.com/google/oss-fuzz`; the OSS-Fuzz team reviews security, scope, and maintainer verification.
+6. On merge, watch the Build Status dashboard and triage Monorail issues (reproduce with `infra/helper.py reproduce`) within the 90-day disclosure deadline.
+
 ## Authoring
 
-### Project layout in OSS-Fuzz repo
+Each project lives at `projects/<project-name>/` with three files: `project.yaml`
+(metadata - language, fuzzing_engines, sanitizers, contacts), a `Dockerfile` that
+builds the fuzz targets on `base-builder`, and a `build.sh` that produces
+`$OUT/<fuzz_target>` plus seed corpora. Verify locally with `infra/helper.py`
+before opening the PR.
 
-Per the OSS-Fuzz docs at
-[google.github.io/oss-fuzz/getting-started/new-project-guide](https://google.github.io/oss-fuzz/getting-started/new-project-guide/),
-each project lives at `projects/<project-name>/` and contains:
-
-```
-projects/<project-name>/
-  project.yaml      # metadata: language, fuzzing_engines, sanitizers, primary_contact
-  Dockerfile        # builds the fuzz targets
-  build.sh          # produces $OUT/<fuzz_target_1> + seed corpora
-```
-
-### project.yaml
-
-```yaml
-homepage: "https://example.com/project"
-language: c++   # or c, rust, go, python, jvm, swift
-fuzzing_engines:
-  - libfuzzer
-  - afl
-  - honggfuzz
-sanitizers:
-  - address
-  - undefined
-  - memory
-primary_contact: "maintainer@example.com"
-auto_ccs:
-  - "security@example.com"
-main_repo: "https://github.com/example/project"
-```
-
-Per the OSS-Fuzz docs, `language` drives which build template is
-used; `fuzzing_engines` × `sanitizers` enumerates the build matrix
-(libFuzzer + ASan, libFuzzer + UBSan, libFuzzer + MSan, AFL + ASan,
-etc.).
-
-### Dockerfile
-
-```dockerfile
-FROM gcr.io/oss-fuzz-base/base-builder
-
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    cmake ninja-build
-
-# Clone the source
-RUN git clone --depth=1 https://github.com/example/project /src/project
-WORKDIR /src/project
-
-# Copy build script + seed corpus
-COPY build.sh fuzz_target_1.cc fuzz_target_1_seed_corpus.zip $SRC/
-
-WORKDIR /src/project
-```
-
-Per OSS-Fuzz docs, the base image (`base-builder`) provides
-clang + libFuzzer + afl-clang-fast + sanitisers preinstalled.
-Language-specific base images exist (`base-builder-rust`,
-`base-builder-go`, `base-builder-jvm`, etc.).
-
-### build.sh
-
-```bash
-#!/bin/bash -eu
-# OSS-Fuzz sets $OUT, $WORK, $CC, $CXX, $CFLAGS, $CXXFLAGS, $LIB_FUZZING_ENGINE
-
-# Build the library
-cd /src/project
-mkdir -p build && cd build
-cmake -G Ninja .. \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_SHARED_LIBS=OFF
-ninja
-
-# Build fuzz target
-$CXX $CXXFLAGS \
-    -I/src/project/include \
-    /src/fuzz_target_1.cc \
-    /src/project/build/libproject.a \
-    $LIB_FUZZING_ENGINE \
-    -o $OUT/fuzz_target_1
-
-# Seed corpus
-cp /src/fuzz_target_1_seed_corpus.zip $OUT/fuzz_target_1_seed_corpus.zip
-
-# Dictionary (optional)
-cp /src/fuzz_target_1.dict $OUT/fuzz_target_1.dict
-```
-
-Per OSS-Fuzz docs:
-
-- `$OUT` is where final fuzz target binaries + seed corpora must
-  land
-- `$CXX` / `$CXXFLAGS` are pre-configured with the correct
-  sanitiser + libFuzzer flags for the active build configuration
-- `$LIB_FUZZING_ENGINE` links the libFuzzer / AFL driver
-- Seed corpora ship as `<target>_seed_corpus.zip`
-- Dictionaries ship as `<target>.dict`
-
-### Local testing
-
-Before submitting, verify locally with the helper script:
-
-```bash
-git clone https://github.com/google/oss-fuzz
-cd oss-fuzz
-python infra/helper.py build_image <project-name>
-python infra/helper.py build_fuzzers --sanitizer address <project-name>
-python infra/helper.py check_build <project-name>
-python infra/helper.py run_fuzzer <project-name> fuzz_target_1
-```
-
-Per the OSS-Fuzz docs, `check_build` validates the harness will
-run on Google infrastructure.
+Full field-by-field contract, file templates, and the local-testing commands:
+[references/project-contract.md](references/project-contract.md).
 
 ## Running
 
@@ -178,7 +80,7 @@ After the 90-day deadline, unfixed bugs become public.
 
 ### Updating an existing project
 
-Fork → modify → PR. Common changes:
+Fork -> modify -> PR. Common changes:
 
 - New fuzz targets (additional `*.cc` + `build.sh` updates)
 - Refreshed seed corpora
@@ -201,6 +103,19 @@ issue includes:
 
 Feed this to `bug-report-from-failure`
 for downstream bug-tracker filing.
+
+## Worked example
+
+A maintainer wants continuous fuzzing for a JPEG decoder library. They add
+`projects/jpeg-decoder/` with `language: c`, `fuzzing_engines: [libfuzzer, afl]`,
+`sanitizers: [address, undefined]`, and `primary_contact` set. `build.sh` compiles
+the decoder and links `decompress_fuzzer` against `$LIB_FUZZING_ENGINE`, then copies
+`decompress_fuzzer_seed_corpus.zip` (sample JPEGs) to `$OUT`. Locally,
+`python infra/helper.py check_build jpeg-decoder` passes. They open the PR; OSS-Fuzz
+merges it about a week later. A few days in, Monorail files a `heap-buffer-overflow`
+in the Huffman decoder with an attached reproducer. They run
+`python infra/helper.py reproduce jpeg-decoder decompress_fuzzer crash-abc123`,
+confirm the bug, patch it, and the issue closes before the 90-day deadline.
 
 ## Anti-patterns
 
@@ -237,6 +152,7 @@ for downstream bug-tracker filing.
 - ClusterFuzz (self-hosted backend) - 
   [google.github.io/clusterfuzz](https://google.github.io/clusterfuzz/).
 - Monorail (issue tracker) - issues.oss-fuzz.com.
+- Project contract detail: [references/project-contract.md](references/project-contract.md).
 - Composes:
   `corpus-management-reference`,
   `sanitiser-integration-reference`.

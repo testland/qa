@@ -32,6 +32,16 @@ legacy maintenance.
   (pytest test bodies can use unittest.mock directly).
 - Embedded environments where pip install isn't possible.
 
+## How to use
+
+1. Name test files `test_*.py` and put them under `tests/`.
+2. Subclass `unittest.TestCase`; write methods named `test_*`.
+3. Move fixtures into `setUp` / `tearDown` (per-test) or `setUpClass` / `tearDownClass` (per-class).
+4. Assert with the specific method for the check (see [references/assertions-and-mock.md](references/assertions-and-mock.md)), not `assertTrue`.
+5. Isolate collaborators with `unittest.mock.patch`, patching where the name is *used*.
+6. Wrap table-driven cases in `with self.subTest(...)` so every case reports independently.
+7. Run `python -m unittest discover -s tests/ -v`; gate coverage with `coverage run -m unittest discover`.
+
 ## Step 1 - First test
 
 Per [ut-docs][ut-docs]:
@@ -87,74 +97,19 @@ class TestUserService(unittest.TestCase):
         self.assertEqual(self.user.id, 1)
 ```
 
-## Step 3 - Assertion catalog
+## Step 3 - Assertions
 
-Per [ut-docs][ut-docs]:
-
-| Method | Use |
-|---|---|
-| `assertEqual(a, b)` / `assertNotEqual(a, b)` | Equality |
-| `assertTrue(x)` / `assertFalse(x)` | Boolean |
-| `assertIs(a, b)` / `assertIsNot(a, b)` | Identity (is) |
-| `assertIsNone(x)` / `assertIsNotNone(x)` | None |
-| `assertIn(a, b)` / `assertNotIn(a, b)` | Membership |
-| `assertIsInstance(a, type)` | Type check |
-| `assertRaises(Exception)` | Sync raise (context manager + decorator forms) |
-| `assertRaisesRegex(Exception, regex)` | Raise + message match |
-| `assertWarns(Warning)` | Warning emission |
-| `assertAlmostEqual(a, b, places=N)` | Float comparison |
-| `assertGreater(a, b)` / `assertGreaterEqual(a, b)` | Numeric |
-| `assertCountEqual(a, b)` | Same elements regardless of order |
-| `assertDictContainsSubset(subset, dict)` | Partial dict match (deprecated; use `<=` operator) |
+Prefer the specific assert over `assertTrue(x == y)`: the specific method prints
+a useful diff on failure. Full catalog (equality, identity, membership, raises,
+float, numeric, ordering): [references/assertions-and-mock.md](references/assertions-and-mock.md).
 
 ## Step 4 - `unittest.mock` patterns
 
-Per [docs.python.org/3/library/unittest.mock.html][mock-docs]:
-
-[mock-docs]: https://docs.python.org/3/library/unittest.mock.html
-
-```python
-from unittest.mock import Mock, MagicMock, patch, patch.object
-
-# Standalone mocks
-m = Mock()
-m.method.return_value = 42
-result = m.method(5)
-m.method.assert_called_once_with(5)
-
-# MagicMock supports magic methods (__len__, __iter__, etc.)
-mm = MagicMock()
-mm.__len__.return_value = 5
-assert len(mm) == 5
-
-# Patch a function in the target module
-@patch('mymodule.fetch_user')
-def test_with_patched_fetch(mock_fetch):
-    mock_fetch.return_value = {'id': 1}
-    result = my_function()
-    assert result == 'expected'
-
-# Context-manager form
-def test_with_context_patch():
-    with patch('mymodule.fetch_user') as mock_fetch:
-        mock_fetch.return_value = {'id': 1}
-        result = my_function()
-
-# Patch an attribute
-@patch.object(SomeClass, 'method', return_value='mocked')
-def test_class_method(mock_method):
-    obj = SomeClass()
-    assert obj.method() == 'mocked'
-
-# Patch a dictionary
-@patch.dict('os.environ', {'API_KEY': 'test-key'})
-def test_with_env():
-    assert os.environ['API_KEY'] == 'test-key'
-```
-
-**Patch target rule:** patch where the function is *used*, not
-where it's *defined*. If `mymodule.py` does `from api import
-fetch_user`, patch `mymodule.fetch_user`, not `api.fetch_user`.
+`unittest.mock` is the canonical Python mocking library (used even by pytest
+projects). **Patch target rule:** patch where the function is *used*, not where
+it's *defined*. If `mymodule.py` does `from api import fetch_user`, patch
+`mymodule.fetch_user`, not `api.fetch_user`. Mock / MagicMock / patch /
+patch.object / patch.dict examples: [references/assertions-and-mock.md](references/assertions-and-mock.md).
 
 ## Step 5 - subTest for parametrization
 
@@ -219,6 +174,43 @@ python -m unittest tests.test_user.TestUser.test_creation
 - run: coverage run -m unittest discover && coverage report --fail-under=80
 ```
 
+## Worked example
+
+`greeting.py` builds a welcome string from a user fetched over HTTP:
+
+```python
+# greeting.py
+from api import fetch_user
+
+def welcome(user_id):
+    user = fetch_user(user_id)
+    return f"Hi {user['name']}"
+```
+
+Test it without hitting the network - patch `fetch_user` where `greeting` uses
+it (not where `api` defines it), then assert on the formatted result:
+
+```python
+# tests/test_greeting.py
+import unittest
+from unittest.mock import patch
+from greeting import welcome
+
+class TestWelcome(unittest.TestCase):
+    @patch('greeting.fetch_user')
+    def test_welcome_names_user(self, mock_fetch):
+        mock_fetch.return_value = {'name': 'Ada'}
+        self.assertEqual(welcome(1), 'Hi Ada')
+        mock_fetch.assert_called_once_with(1)
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+Run `python -m unittest discover -s tests/ -v`. The test passes: the patch
+replaced the real `fetch_user`, `assertEqual` confirmed the greeting string, and
+`assert_called_once_with` confirmed the id was forwarded once.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -240,8 +232,11 @@ python -m unittest tests.test_user.TestUser.test_creation
 
 ## References
 
+[mock-docs]: https://docs.python.org/3/library/unittest.mock.html
+
 - [ut-docs][ut-docs] - unittest reference
 - [mock-docs][mock-docs] - unittest.mock reference
+- [references/assertions-and-mock.md](references/assertions-and-mock.md) - full assertion catalog + mock patterns
 - `pytest-tests`,
   `doctest-tests`,
   `nose2-tests` - sister tools

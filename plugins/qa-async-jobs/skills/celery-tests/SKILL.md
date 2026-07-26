@@ -28,6 +28,25 @@ plugin (or the standalone `pytest-celery` package for newer versions).
   worker thread.
 - A test verifies retry / chord / chain semantics.
 
+## How to use
+
+1. Confirm the repo has Celery tasks (`@app.task` / `@shared_task`) and pick
+   the level: unit (task body) vs integration (real worker).
+2. For unit tests, call the task function directly and assert its side
+   effects; do NOT enable `task_always_eager` (Step 1, Step 2).
+3. For retry logic, `unittest.mock.patch` the `<task>.retry` and the failing
+   dependency, then assert `Retry` is raised (Step 3).
+4. For an in-process synchronous run with no broker, invoke
+   `task.apply(args=[...])` and assert on `result.successful()` /
+   `result.result` (Step 5).
+5. For integration tests that need a real worker, add the `celery_worker`
+   (per-test) or `celery_session_worker` (per-session) fixture, call
+   `task.delay(...)`, and read `result.get(timeout=N)` (Step 4).
+6. Test `chord` / `chain` / `group` end-to-end with `celery_worker`, or mock
+   at boundaries for unit level (Step 6).
+7. Wire `pytest` into CI, adding `redis` / `rabbitmq` service containers only
+   when a test needs a real broker (Step 7).
+
 ## Step 1 - Don't rely on `task_always_eager` for unit tests
 
 Per [cel-test][cel-test]:
@@ -163,6 +182,37 @@ services:
   # or rabbitmq:
   rabbitmq: { image: rabbitmq:3-management, ports: [5672:5672, 15672:15672] }
 ```
+
+## Worked example
+
+An order-processing task must run its side effect on success and retry on a
+transient DB error. Two fast unit tests cover both paths, with no broker.
+
+1. Success path - call the task function directly, patch the dependency, and
+   assert the side effect:
+
+```python
+@patch('proj.tasks.Product.order')
+def test_send_order_success(product_order):
+    product = Product.objects.create(name='Foo')
+    send_order(product.pk, 3, Decimal('30.30'))
+    product_order.assert_called_with(3, Decimal('30.30'))
+```
+
+2. Retry path - patch `send_order.retry` to raise `Retry`, force the
+   dependency to fail, then assert the task retries:
+
+```python
+@patch('proj.tasks.send_order.retry', side_effect=Retry())
+@patch('proj.tasks.Product.order', side_effect=OperationalError())
+def test_send_order_retries_on_db_error(order, retry):
+    with raises(Retry):
+        send_order(1, 3, Decimal('30.30'))
+```
+
+Running `pytest -v` reports both tests passing in milliseconds with no Redis
+/ RabbitMQ dependency - the success side effect and the retry trigger are both
+proven without spawning a worker.
 
 ## Anti-patterns
 

@@ -35,6 +35,16 @@ stdout / stderr / exit code of any executable.
   aliases) behave as expected.
 - Cross-platform smoke tests for a CLI's install scripts.
 
+## How to use
+
+1. Install `bats` (npm / Homebrew / git submodule); pin via submodule for CI determinism (Step 1).
+2. Create `test/<feature>.bats` starting with `#!/usr/bin/env bats` and one `@test` block per behavior (Step 2).
+3. Wrap each command under test with `run`, then assert on `$status`, `$output`, and `$lines[]` (Step 3).
+4. Add `setup` / `teardown` with `mktemp -d` so each test is isolated and parallel-safe (Step 4).
+5. `load` shared helpers plus bats-support / bats-assert for diff-style assertions (Steps 5-6).
+6. Guard environment-specific tests with `skip`; run the suite via `bats test/`, adding `--jobs N` for parallelism (Steps 7-8).
+7. Wire it into CI with TAP or JUnit output ([references/ci-integration.md](references/ci-integration.md)).
+
 ## Step 1 - Install
 
 Per [bgh][bgh]:
@@ -222,45 +232,51 @@ bats --jobs 4 test/
 Tests must be independent - share no global filesystem state, no
 shared ports. Use `setup`/`teardown` with `mktemp -d` to isolate.
 
-## Step 9 - Output formats
+## Step 9 - Output formats and CI
 
-```bash
-# Default (pretty)
-bats test/
+`bats` emits pretty output by default, TAP or JUnit XML for CI, and runs in
+the official `bats/bats` Docker image. The output-format flags, a GitHub
+Actions job, and the Docker one-liner are in
+[references/ci-integration.md](references/ci-integration.md).
 
-# TAP (CI-friendly, parseable)
-bats --tap test/
+## Worked example
 
-# JUnit XML (for CI dashboards via TAP-to-JUnit converters)
-bats --formatter junit test/ > junit.xml
+You maintain `release.sh`, a shell script that prints usage on `--help` and
+exits non-zero when called with no arguments. Cover both paths with Bats:
 
-# Verbose (show stdout/stderr of every command)
-bats --verbose-run test/
-```
+1. Vendor Bats as a submodule (Step 1), then create `test/release.bats`:
 
-## Step 10 - CI integration
+   ```bash
+   #!/usr/bin/env bats
 
-```yaml
-jobs:
-  bats:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with: { submodules: recursive }
-      - run: |
-          sudo apt-get install -y parallel
-      - run: bats --jobs 4 --formatter junit test/ > junit.xml
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: { name: bats-junit, path: junit.xml }
-```
+   load test_helper/bats-support/load
+   load test_helper/bats-assert/load
 
-For Docker-based CI, per [bats][bats]: "Running Bats in Docker"
-using the official `bats/bats:latest` image:
+   @test "release.sh --help exits 0 and prints usage" {
+     run ./release.sh --help
+     assert_success
+     assert_output --partial "Usage:"
+   }
 
-```yaml
-- run: docker run --rm -v "$PWD:/code" bats/bats:latest test/
-```
+   @test "release.sh with no args exits non-zero" {
+     run ./release.sh
+     assert_failure
+     assert_output --partial "missing required argument"
+   }
+   ```
+
+2. Run it: `bats test/release.bats`. Bats reports:
+
+   ```
+   release.bats
+    ✓ release.sh --help exits 0 and prints usage
+    ✓ release.sh with no args exits non-zero
+
+   2 tests, 0 failures
+   ```
+
+3. In CI, swap to `bats --formatter junit test/ > junit.xml` and upload the
+   report (see [references/ci-integration.md](references/ci-integration.md)).
 
 ## Anti-patterns
 
@@ -290,6 +306,7 @@ using the official `bats/bats:latest` image:
   `@test` / `run` / `setup` / `teardown` / `load` / `skip`,
   parallel execution, Docker.
 - [bgh][bgh] - example test file, install one-liners.
+- [references/ci-integration.md](references/ci-integration.md) - output formats, GitHub Actions job, Docker image.
 - `tui-snapshot-tester` - 
   TUI snapshot tests (visual layer; bats covers exit code +
   text output).

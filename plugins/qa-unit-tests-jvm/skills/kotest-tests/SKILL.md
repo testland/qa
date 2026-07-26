@@ -23,6 +23,16 @@ JUnit 5 (which works fine with Kotlin too) by:
 For multi-language JVM projects, JUnit 5 is more universal. For
 Kotlin-only or Kotlin-primary, Kotest's DSL is more ergonomic.
 
+## How to use
+
+1. Add `kotest-runner-junit5` + `kotest-assertions-core` (and `kotest-property` for PB) and enable `useJUnitPlatform()` (Step 1).
+2. Pick one specification style (StringSpec / FunSpec / BehaviorSpec) and write the first test with a `shouldBe` matcher (Step 2).
+3. Assert with the matcher library - equality, collections, exceptions ([references/matchers-and-isolation.md](references/matchers-and-isolation.md), Step 3).
+4. Add `checkAll` property-based cases and `withData` data-driven rows where inputs vary (Steps 4, 6).
+5. Write coroutine tests directly - test bodies are suspend functions (Step 5).
+6. Set `isolationMode` when specs carry mutable state ([references/matchers-and-isolation.md](references/matchers-and-isolation.md), Step 7).
+7. Run `./gradlew test jacocoTestReport` in CI - same runner + JaCoCo as JUnit 5 (Step 8).
+
 ## Step 1 - Install
 
 `build.gradle.kts`:
@@ -96,26 +106,7 @@ Pick one style per project + stick with it.
 
 ## Step 3 - Matchers
 
-Per [kotest.io/docs/assertions/matchers.html][kt-matchers]:
-
-[kt-matchers]: https://kotest.io/docs/assertions/matchers.html
-
-Core matchers:
-
-| Matcher | Use |
-|---|---|
-| `value shouldBe expected` | Equality |
-| `value shouldNotBe expected` | Inequality |
-| `value should be(expected)` | Same; alternate syntax |
-| `value.shouldBeNull()` / `shouldNotBeNull()` | Null check |
-| `string.shouldContain("substring")` | String membership |
-| `string.shouldStartWith("prefix")` / `shouldEndWith("suffix")` | String pos |
-| `string.shouldMatch(regex)` | Regex |
-| `list.shouldHaveSize(3)` / `shouldContainExactly(...)` / `shouldContainAll(...)` | Collection |
-| `map.shouldContainKey("key")` / `shouldContainValue("v")` | Map |
-| `value.shouldBeInstanceOf<MyClass>()` | Type |
-| `result.shouldBeSuccess()` / `shouldBeFailure()` | Kotlin Result |
-| `shouldThrow<E> { ... }` | Exception |
+Assert with the rich matcher library - equality, null, string, collection, map, type, Kotlin `Result`, and `shouldThrow<E>`. Full catalog in [references/matchers-and-isolation.md](references/matchers-and-isolation.md).
 
 ## Step 4 - Property-based testing
 
@@ -175,28 +166,7 @@ rows.
 
 ## Step 7 - Isolation modes
 
-Per [kotest.io/docs/framework/isolation-mode.html][kt-iso]:
-
-[kt-iso]: https://kotest.io/docs/framework/isolation-mode.html
-
-Four modes (default `SingleInstance`):
-
-| Mode | Behavior |
-|---|---|
-| `SingleInstance` | One spec instance for all tests (default; fastest) |
-| `InstancePerTest` | Fresh spec instance per test (incl. nested contexts) |
-| `InstancePerLeaf` | Fresh spec instance per leaf-test only |
-
-Set per-spec:
-
-```kotlin
-class StatefulTest : StringSpec({
-    isolationMode = IsolationMode.InstancePerTest
-    // ...
-})
-```
-
-Or globally via `AbstractProjectConfig`.
+Four modes (default `SingleInstance`); set `isolationMode` per-spec or globally via `AbstractProjectConfig` when specs share mutable state. Mode table + example in [references/matchers-and-isolation.md](references/matchers-and-isolation.md).
 
 ## Step 8 - CI integration
 
@@ -207,6 +177,16 @@ Same as JUnit 5 (Kotest's runner is `kotest-runner-junit5`):
 ```
 
 JaCoCo coverage works identically.
+
+## Worked example
+
+Testing `Calculator.add` with FunSpec + property-based checks:
+
+1. Add `io.kotest:kotest-runner-junit5:5.9.1`, `kotest-assertions-core:5.9.1`, `kotest-property:5.9.1`; enable `useJUnitPlatform()`.
+2. Write `class CalculatorTest : FunSpec({ ... })` with `test("adds two numbers") { Calculator.add(1, 2) shouldBe 3 }`.
+3. Add a property case: `test("addition is commutative") { checkAll<Int, Int> { a, b -> a + b shouldBe b + a } }`.
+4. Run `./gradlew test`: the example case passes; `checkAll` generates many pairs and reports the first counterexample if the invariant breaks.
+5. `jacocoTestReport` confirms the `add` path is covered.
 
 ## Anti-patterns
 
@@ -229,8 +209,7 @@ JaCoCo coverage works identically.
 
 - [kt-docs][kt-docs] - Kotest documentation
 - kotest.io - landing
-- [kt-matchers][kt-matchers] - matcher catalog
-- [kt-iso][kt-iso] - isolation modes
+- [references/matchers-and-isolation.md](references/matchers-and-isolation.md) - matcher catalog + isolation modes
 - `junit5-tests`,
   `spock-tests`,
   `testng-tests`,

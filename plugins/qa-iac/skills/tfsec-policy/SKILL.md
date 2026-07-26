@@ -26,6 +26,22 @@ existing usage.
   scanner.
 - A specific tfsec rule covers something Trivy doesn't yet.
 
+## How to use
+
+1. Install tfsec via Homebrew or the release binary (Step 1).
+2. Run `tfsec .` against the Terraform tree, starting at
+   `--minimum-severity HIGH` to keep the signal high (Step 2).
+3. Emit SARIF for GitHub Code Scanning, or JUnit / Markdown for CI
+   and PR comments (Step 3).
+4. Triage findings - fix real issues, annotate intentional
+   exceptions with justified `tfsec:ignore:` comments (Step 4).
+5. Add custom YAML rules for team-specific policy, then wire the
+   scan into CI (Steps 5-6).
+6. Confirm cloud coverage; fall back to OPA / Conftest for
+   unsupported clouds (Step 7).
+7. Plan the Trivy migration for new work, and combine with Checkov
+   / KICS for overlapping coverage (Steps 8-9).
+
 ## Step 1 - Install
 
 ```bash
@@ -97,43 +113,15 @@ resource "aws_s3_bucket" "public_data" {
 
 ## Step 5 - Custom rules
 
-```yaml
-# .tfsec/custom_checks.yml
-checks:
-  - code: CUS001
-    description: Ensure all EC2 instances have a cost_center tag
-    impact: Untagged resources cannot be allocated to cost centers
-    resolution: Add a cost_center tag
-    requiredTypes:
-      - resource
-    requiredLabels:
-      - aws_instance
-    severity: HIGH
-    matchSpec:
-      name: tags
-      action: contains
-      value: cost_center
-    errorMessage: EC2 instance is missing cost_center tag
-```
+Author custom YAML rules for team-specific policy the built-in set
+misses:
+[references/custom-rules-and-ci.md](references/custom-rules-and-ci.md).
 
 ## Step 6 - CI integration
 
-```yaml
-jobs:
-  tfsec:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: aquasecurity/tfsec-action@v1.0.3
-        with:
-          additional_args: --minimum-severity HIGH
-          format: sarif
-          output_file_path: tfsec.sarif
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: tfsec.sarif
-```
+Run the official tfsec action with SARIF upload to GitHub Code
+Scanning:
+[references/custom-rules-and-ci.md](references/custom-rules-and-ci.md).
 
 ## Step 7 - Supported clouds
 
@@ -181,6 +169,27 @@ checkov -d . -o json > checkov.json
 kics scan -p . --report-formats json
 # unify results across the three scanners
 ```
+
+## Worked example
+
+A team runs tfsec on an AWS Terraform module while planning a Trivy
+migration.
+
+1. `brew install tfsec`, then `tfsec ./terraform/ --minimum-severity
+   HIGH` to focus on the worst findings first.
+2. tfsec flags an unencrypted S3 bucket
+   (`aws-s3-enable-bucket-encryption`) as HIGH.
+3. The bucket is a public dataset by design, so the author adds
+   `# tfsec:ignore:aws-s3-enable-bucket-encryption Public dataset,
+   not encrypted by design` inline.
+4. CI runs `aquasecurity/tfsec-action@v1.0.3` with `format: sarif`;
+   the SARIF upload posts remaining findings to the Security tab.
+5. Ahead of the switch they dry-run `trivy config ./terraform/` and
+   confirm the same `.tf` files scan under Trivy.
+
+Result: HIGH-severity misconfigurations gate the build, intentional
+exceptions are documented inline, and the Trivy forward-path is
+validated before switching.
 
 ## Anti-patterns
 

@@ -25,6 +25,16 @@ family in 2018 as the .NET ecosystem mutation testing answer.
 - A C# library needs higher confidence than coverage alone shows.
 - The team wants Stryker-family parity across JS + .NET.
 
+## How to use
+
+1. Install the tool - `dotnet tool install -g dotnet-stryker`, or a per-project manifest for CI determinism.
+2. From the test project directory, run `dotnet stryker` once to confirm framework discovery and baseline coverage.
+3. Author `stryker-config.json` with `project`, `test-projects`, `mutation-level`, and `thresholds`.
+4. Run `dotnet stryker` (add `--solution` for multi-project) and open `StrykerOutput/<timestamp>/reports/mutation-report.html`.
+5. For each survivor, add a test that distinguishes the original behavior from the mutant.
+6. Scope PR runs to changed projects and keep `mutation-level` at `Standard`.
+7. Gate CI with `--break-at <baseline>` and upload `StrykerOutput/` as an artifact.
+
 ## Step 1 - Install
 
 ```bash
@@ -120,6 +130,16 @@ Common mutators include:
 
 A surviving mutant means the test suite doesn't distinguish the
 original behavior from the mutated one.
+
+## Worked example
+
+`MyApp` ships a `PricingService`; `MyApp.Tests` uses xUnit and is green.
+
+1. `dotnet tool install -g dotnet-stryker`, then from `MyApp.Tests` run `dotnet stryker` once to confirm xUnit discovery.
+2. Add `stryker-config.json` pointing `project` at `../MyApp/MyApp.csproj`, `mutation-level` `Standard`, `thresholds` `{ "high": 80, "low": 60, "break": 50 }`.
+3. `dotnet stryker` writes `StrykerOutput/<timestamp>/reports/mutation-report.html`, which flags a surviving conditional-boundary mutant: `qty > 0` mutated to `qty >= 0`.
+4. Add an xUnit test at `qty == 0`; re-running `dotnet stryker` kills the mutant and lifts the score above the break threshold.
+5. In CI, run `dotnet stryker --break-at 50` and upload `StrykerOutput/`.
 
 ## Anti-patterns
 

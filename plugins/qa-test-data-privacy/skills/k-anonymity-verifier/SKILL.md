@@ -32,6 +32,22 @@ masking operator to apply per field, see
 For detecting PII spans before masking, see
 `presidio-pii-detection`.
 
+## How to use
+
+1. Agree the quasi-identifier (QI) and sensitive-attribute (SA) lists with a
+   privacy officer and record them in `qi-policy.yaml` with `k_min` / `l_min` /
+   `t_max` thresholds (Step 1).
+2. Install pycanon (Step 2) and load the *masked* CSV into a pandas DataFrame.
+3. Compute `k_anonymity`, `l_diversity`, and `t_closeness` for the agreed
+   QI / SA (Step 3).
+4. Compare each value against the policy thresholds and the guidance bands
+   (Step 4), then generate the full pycanon report for utility metrics (Step 5).
+5. Wire the gate script into CI so a failing dataset cannot be promoted
+   ([references/ci-gate.md](references/ci-gate.md), Step 6).
+6. When a dataset fails, re-mask or generalise with ARX
+   ([references/arx-api.md](references/arx-api.md), Step 7) and re-verify.
+7. Report re-identification risk per equivalence class and per dataset (Step 8).
+
 ## Step 1 - Select quasi-identifiers
 
 QIs are columns that are not direct identifiers but whose combination
@@ -167,112 +183,21 @@ alongside the privacy guarantee
 
 ## Step 6 - CI gate
 
-Block promotion of a masked dataset unless it meets the agreed
-thresholds:
-
-```python
-# scripts/k_anonymity_gate.py
-import sys, json
-import pandas as pd
-from pycanon import anonymity, report
-
-data = pd.read_csv(sys.argv[1])
-policy = json.load(open("qi-policy.yaml".replace(".yaml", ".json")))
-
-QI = policy["quasi_identifiers"]
-SA = policy["sensitive_attributes"]
-k_min = policy["thresholds"]["k_min"]
-l_min = policy["thresholds"]["l_min"]
-t_max = policy["thresholds"]["t_max"]
-
-k = anonymity.k_anonymity(data, QI)
-l = anonymity.l_diversity(data, QI, SA)
-t = anonymity.t_closeness(data, QI, SA)
-
-failures = []
-if k < k_min:
-    failures.append(f"k={k} < required {k_min}")
-if l < l_min:
-    failures.append(f"l={l} < required {l_min}")
-if t > t_max:
-    failures.append(f"t={t:.4f} > allowed {t_max}")
-
-if failures:
-    print("PRIVACY GATE FAILED:")
-    for f in failures:
-        print(f"  {f}")
-    sys.exit(1)
-
-print(f"PASS  k={k}  l={l}  t={t:.4f}")
-```
-
-```yaml
-# .github/workflows/privacy-gate.yml
-name: privacy-gate
-on: pull_request
-
-jobs:
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with: { python-version: '3.12' }
-      - run: pip install pycanon
-      - run: python scripts/k_anonymity_gate.py masked_dataset.csv
-```
+Block promotion of a masked dataset unless it meets the agreed thresholds in
+`qi-policy.yaml`. The gate script (`scripts/k_anonymity_gate.py`) and the
+GitHub Actions workflow are in [references/ci-gate.md](references/ci-gate.md):
+it loads the policy, computes k / l / t with pycanon, and exits non-zero on
+any breach.
 
 ## Step 7 - ARX for anonymization + verification (Java / GUI)
 
-When the masking step itself must be performed or when a GUI workflow
-is required, use ARX
-([arx.deidentifier.org/development/api](https://arx.deidentifier.org/development/api/)):
-
-```java
-// Load data
-Data data = Data.create("masked.csv", Charset.defaultCharset(), ';');
-
-// Classify attributes
-data.getDefinition().setAttributeType(
-    "diagnosis", AttributeType.SENSITIVE_ATTRIBUTE);
-data.getDefinition().setAttributeType(
-    "age", AttributeType.QUASI_IDENTIFYING_ATTRIBUTE);
-
-// Configure privacy models
-ARXConfiguration config = ARXConfiguration.create();
-config.addPrivacyModel(new KAnonymity(10));
-config.addPrivacyModel(new EntropyLDiversity("diagnosis", 3));
-config.addPrivacyModel(new EqualDistanceTCloseness("diagnosis", 0.2d));
-config.setSuppressionLimit(0.02d);   // suppress at most 2 % of rows
-
-// Anonymize and read result
-ARXAnonymizer anonymizer = new ARXAnonymizer();
-ARXResult result = anonymizer.anonymize(data, config);
-ARXNode optimal = result.getOptimalTransformation();
-```
-
-Per [arx.deidentifier.org/development/api](https://arx.deidentifier.org/development/api/),
-`KAnonymity(n)`, `EntropyLDiversity(attr, n)`,
-`EqualDistanceTCloseness(attr, t)`, and
-`HierarchicalDistanceTCloseness(attr, t, hierarchy)` are the key
-privacy-model classes. `setSuppressionLimit(0.02d)` caps the fraction
-of records ARX may suppress to achieve the target models.
-
-**ARX GUI workflow**
-([arx.deidentifier.org/anonymization-tool](https://arx.deidentifier.org/anonymization-tool/)):
-
-1. Load CSV via Configuration perspective.
-2. Classify each column as Identifying, Quasi-Identifying, Sensitive,
-   or Insensitive.
-3. Define a generalisation hierarchy per QI column (age ranges, ZIP
-   truncation).
-4. Add privacy models (k-anonymity + l-diversity + t-closeness).
-5. Run analysis - ARX explores the solution space and marks
-   satisfying transformations.
-6. Switch to Risk Analysis perspective to read re-identification risk
-   scores (prosecutor, journalist, marketer attack models).
-7. Switch to Utility Analysis perspective to compare pre/post utility
-   metrics side by side.
+When the masking step itself must be performed, or a GUI workflow is required,
+use ARX
+([arx.deidentifier.org/development/api](https://arx.deidentifier.org/development/api/)).
+The Java API (privacy-model classes `KAnonymity`, `EntropyLDiversity`,
+`EqualDistanceTCloseness`, `HierarchicalDistanceTCloseness`, plus
+`setSuppressionLimit`) and the 7-step GUI workflow are in
+[references/arx-api.md](references/arx-api.md).
 
 ## Step 8 - Reporting re-identification risk
 
@@ -296,6 +221,24 @@ Map findings to risk tiers:
 | k >= threshold, but some class has homogeneous SA | l = 1 | High - homogeneity attack trivially succeeds |
 | k and l met, but t > 0.5 | t > 0.5 | Medium - distributional skewness exploitable |
 | All thresholds met | k >= k_min, l >= l_min, t <= t_max | Pass |
+
+## Worked example
+
+A team masks a 20 000-row patient extract for a staging load. Policy:
+`QI = [age, zip_code, sex]`, `SA = [diagnosis]`, thresholds `k_min = 10`,
+`l_min = 3`, `t_max = 0.2`.
+
+1. The first pass keeps `age` as an exact integer. pycanon reports `k = 1` -
+   many size-1 equivalence classes, each uniquely identifiable (Critical tier
+   in Step 8).
+2. The team generalises `age` to 5-year bands and truncates `zip_code` to 3
+   digits, then re-runs: `k = 14`, `l = 4`, `t = 0.17`.
+3. All three clear the policy (`14 >= 10`, `4 >= 3`, `0.17 <= 0.2`), so the
+   Step 6 gate prints `PASS  k=14  l=4  t=0.1700` and the dataset is promoted.
+
+Had `t` come back at `0.45`, the gate would fail on `t=0.4500 > allowed 0.2`
+and block the promotion until the SA distribution was brought closer to the
+global one.
 
 ## Anti-patterns
 
@@ -347,6 +290,9 @@ Map findings to risk tiers:
   [csrc.nist.gov/pubs/sp/800/188/final](https://csrc.nist.gov/pubs/sp/800/188/final).
 - SmartNoise SDK (differential privacy, not k-anonymity):
   [github.com/opendp/smartnoise-sdk](https://github.com/opendp/smartnoise-sdk).
+- Reference files:
+  [references/ci-gate.md](references/ci-gate.md) (gate script + workflow),
+  [references/arx-api.md](references/arx-api.md) (ARX Java API + GUI workflow).
 - Related skills:
   `data-masking-techniques-reference`,
   `presidio-pii-detection`,

@@ -21,6 +21,24 @@ those workflows.
 This is a **pure reference** - no execution steps. Governance decisions depend
 on it; detection and masking workflows enforce it.
 
+## How to use
+
+1. Classify the dataset at intake by PII confidentiality impact level and assign
+   a retention tier (T1-T4) from the tier table.
+2. Write the retention metadata record (dataset ID, source type, tier, PII
+   categories, admit date, expiry, data steward) into the governance register.
+3. Before any cross-environment promotion, put a data-sharing agreement (and a
+   DPA for third-party processors) in place
+   ([references/data-sharing-agreements.md](references/data-sharing-agreements.md)).
+4. Grant access on a minimum-necessary, individually-attributable basis
+   ([references/access-controls.md](references/access-controls.md)).
+5. Refresh production-derived datasets by re-deriving and re-masking on the
+   tier's cadence, never by appending rows.
+6. On expiry, sprint completion, or an erasure request, delete the dataset and
+   its backups and issue a deletion certificate
+   ([references/deletion-standard.md](references/deletion-standard.md)).
+7. Assign a named data steward to own the retention clock and the register.
+
 ## Legal basis
 
 ### GDPR Article 5 - storage limitation (Art. 5(1)(e))
@@ -133,73 +151,23 @@ GDPR Art. 5(2) accountability and gives the data steward the audit trail NIST
 
 ## Cross-environment data-sharing agreements
 
-When a dataset moves between environments (production to staging, staging to
-dev, dev to a third-party test vendor), a data-sharing agreement (DSA) must
-be in place before the transfer. The DSA governs:
-
-1. **Purpose statement.** The specific test goal that justifies the transfer
-   (GDPR Art. 5(1)(b) purpose limitation). A vague "QA use" is not sufficient;
-   name the sprint, the feature, or the compliance audit.
-
-2. **Data categories transferred.** Enumerated from the cross-jurisdiction map
-   in `pii-categories-reference` so
-   all applicable regimes are in scope.
-
-3. **Receiving environment classification.** Documents whether the target
-   environment meets the access control and audit standard required for the
-   tier (NIST 800-122 §4 control families apply here).
-
-4. **Retention limit in the receiving environment.** Must be equal to or
-   shorter than the source environment retention, never longer.
-
-5. **Deletion obligation.** Receiving party must confirm deletion and provide
-   a certificate no later than 5 business days after expiry.
-
-6. **Onward transfer restriction.** The receiving environment may not forward
-   the dataset to a fourth environment without a separate DSA. This prevents
-   uncontrolled fan-out of high-impact datasets across test fleets.
-
-Third-party vendors (outsourced QA teams, penetration testers, performance
-testing partners) accessing environments containing personal test data are
-processors under GDPR Art. 4(8) and require a Data Processing Agreement (DPA)
-in addition to the DSA. The DPA must specify the categories of data, the
-processing purposes, and deletion obligations at contract end.
+When a dataset moves between environments, a data-sharing agreement (DSA) must
+be in place before the transfer, and third-party vendors additionally require a
+Data Processing Agreement (DPA) as processors under GDPR Art. 4(8). The six DSA
+clauses (purpose, data categories, receiving-environment classification,
+retention limit, deletion obligation, onward-transfer restriction) and the DPA
+requirement are in
+[references/data-sharing-agreements.md](references/data-sharing-agreements.md).
 
 ## Deletion of test data containing real PII
 
-### When deletion is required
-
-Deletion is required when any of these conditions is met:
-
-- Retention expiry for the assigned tier (see table above).
-- Test run or sprint that justified the dataset is complete.
-- Data steward receives a data-subject erasure request that reaches back to
-  a production source from which a test dataset was derived (GDPR Art. 17
-  right to erasure propagates to derived test copies).
-- Environment is decommissioned or reassigned.
-- Masking audit reveals that an unmasked field slipped through
-  (a leak-detection audit raises this flag).
-
-### Deletion standard
-
-Deletion from relational databases must remove the rows and the backup
-snapshots of the test environment taken while the PII was present - retaining
-a backup that contains the PII extends the effective retention period.
-
-For file-based fixtures (JSON, CSV, SQL dumps): overwrite or securely delete
-the file and remove it from version control history. Presence in git history
-counts as retention under GDPR Art. 5(1)(e).
-
-Upon deletion, the data steward issues a **deletion certificate** containing:
-
-- Dataset ID
-- Date of deletion
-- Method (truncate, secure delete, environment wipe)
-- Confirmation that backups containing the dataset were also deleted or expired
-- Steward signature (or equivalent approval record)
-
-The certificate populates the governance register's Deletion certificate
-reference field and satisfies the GDPR Art. 5(2) accountability requirement.
+Deletion is triggered by retention expiry, sprint completion, a GDPR Art. 17
+erasure request reaching a production source, environment decommissioning, or a
+leak-detection flag. It must remove the rows plus the backup snapshots and git
+history that held the PII, after which the data steward issues a deletion
+certificate satisfying GDPR Art. 5(2) accountability. The full trigger list,
+deletion standard, and certificate contents are in
+[references/deletion-standard.md](references/deletion-standard.md).
 
 ## Refresh cadence
 
@@ -223,29 +191,11 @@ clock to the newest row but does not remedy any unmasked fields already present.
 
 ## Access controls
 
-Access to test datasets containing personal data follows the NIST 800-122
-principle of minimum necessary access (referenced in §4 control recommendations,
-grounded in the Fair Information Practices). In practice:
-
-- **Role-based access:** only testers whose test case requires the data are
-  granted access. Developers not running those tests do not have access to
-  the test database or fixture files.
-- **Shared credentials are prohibited:** each accessor has an individual account
-  so the audit log (NIST 800-122 control family: Audit and Accountability) can
-  attribute access to a named person.
-- **Elevated-access review:** T3 and T4 environments require the data steward's
-  approval for new access grants. Access is time-bounded to the duration of the
-  test engagement.
-- **Read-only by default:** write or delete access to a test dataset containing
-  personal data must be justified separately. A tester running assertions does
-  not need INSERT or UPDATE.
-- **Offboarding:** when a tester leaves the project or the vendor engagement
-  ends, access must be revoked the same day. The offboarding checklist must
-  include test-environment credentials.
-
-CI pipelines that access test databases containing personal data must use
-dedicated service accounts (not developer credentials) and those accounts must
-be reviewed when the pipeline is decommissioned.
+Access follows the NIST 800-122 minimum-necessary principle: role-based grants,
+individual (never shared) accounts for attributable audit logs, data-steward
+approval for T3/T4, read-only by default, same-day offboarding, and dedicated
+CI service accounts. The full control list is in
+[references/access-controls.md](references/access-controls.md).
 
 ## The data-steward role
 
@@ -271,6 +221,32 @@ Minimum data-steward responsibilities:
 The steward need not be a dedicated role. A senior QA engineer or a test
 environment owner can hold it - but the assignment must be explicit and
 documented, not implied by job title.
+
+## Worked example
+
+A team needs a staging dataset built from a production customer table to test a
+billing feature this sprint.
+
+1. **Intake + tier.** The extract still carries names and emails after a partial
+   mask, so it scores Moderate impact and is classified **T3**: retention is the
+   sprint duration + 7 days. A metadata record with the expiry date and the
+   named data steward goes into the governance register.
+2. **Promotion.** Because the data moves production -> staging, a DSA names the
+   billing feature as the purpose, enumerates the PII categories, and sets the
+   staging retention no longer than production's
+   ([references/data-sharing-agreements.md](references/data-sharing-agreements.md)).
+3. **Access.** Only the two testers on the billing story receive individual,
+   read-only accounts; the CI job uses a dedicated service account
+   ([references/access-controls.md](references/access-controls.md)).
+4. **Deletion.** When the sprint completes, the T3 clock runs 7 more days; at
+   that expiry the steward truncates the tables, confirms the nightly backups
+   holding the data have expired, and issues a deletion certificate that
+   populates the register
+   ([references/deletion-standard.md](references/deletion-standard.md)).
+
+Result: the billing feature was tested against realistic data, and the T3
+clock, DSA, access log, and deletion certificate together demonstrate GDPR
+Art. 5(2) accountability end to end.
 
 ## Anti-patterns
 
@@ -325,3 +301,7 @@ documented, not implied by job title.
   `pii-categories-reference`
 - Sibling skill (masking pipeline):
   `pii-masking-pipeline-builder`
+- Reference files:
+  [references/data-sharing-agreements.md](references/data-sharing-agreements.md),
+  [references/deletion-standard.md](references/deletion-standard.md),
+  [references/access-controls.md](references/access-controls.md)

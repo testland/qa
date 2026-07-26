@@ -45,6 +45,23 @@ patterns to verify, this skill is overkill - start with happy-path
 coverage via `postman-collections`
 or the language-native equivalents first.
 
+## How to use
+
+1. Confirm documented resilience requirements exist (retry,
+   circuit-breaker, timeout, fallback). If none, start with happy-path
+   coverage instead of chaos.
+2. Pick the chaos primitive - Toxiproxy for per-API chaos in CI (Step 1).
+3. Build the chaos matrix: for each existing test scenario, list the
+   toxics to inject and the expected behavior per condition (Step 2).
+4. Wire Toxiproxy between the app and its upstream and register a proxy
+   per dependency ([references/toxiproxy-wiring.md](references/toxiproxy-wiring.md)).
+5. Run the matrix, always including a no-toxic control row; capture one
+   JUnit XML per scenario (Step 3).
+6. Aggregate results into a resilience matrix and report which
+   assertions break under which toxic (Step 4).
+7. Inject only toxics that map to a documented expectation; run the full
+   matrix nightly, the control row per PR.
+
 ## Step 1 - Pick the chaos primitive
 
 | Tool                | Layer                       | Best for                                              |
@@ -81,94 +98,20 @@ The matrix is the load-bearing artifact: what the team **expects**
 under each condition is what differentiates resilience verification
 from "did the test pass?" The Expected column drives the assertions.
 
-## Step 3 - Wire Toxiproxy into the test environment
+## Step 3 - Wire Toxiproxy and run the matrix
 
-### Setup (Docker example)
+Sit Toxiproxy between the app and its upstream, register a proxy per
+dependency, and add/remove toxics around each test run. Point the app
+at Toxiproxy's listen ports; it forwards to the real upstream when no
+toxic is active. A matrix runner loops the scenarios, adding one toxic
+per row and producing one JUnit XML per scenario to aggregate in the
+report stage.
 
-```yaml
-# docker-compose.test.yml
-services:
-  toxiproxy:
-    image: ghcr.io/shopify/toxiproxy:latest
-    ports:
-      - 8474:8474   # control API
-      - 5432:5432   # proxied DB
-      - 8080:8080   # proxied API
-  app:
-    build: .
-    environment:
-      DATABASE_URL: 'postgres://user:pass@toxiproxy:5432/db'
-      EXTERNAL_API_URL: 'http://toxiproxy:8080'
-```
+Full docker-compose setup, control-API proxy registration,
+`toxiproxy-cli` toxic commands, and the runner shell script:
+[references/toxiproxy-wiring.md](references/toxiproxy-wiring.md).
 
-Per [toxiproxy-readme][toxiproxy], the application points at
-Toxiproxy's listen ports rather than the upstream. Toxiproxy
-forwards to the real upstream when no toxic is active.
-
-### Define proxies via the control API
-
-```bash
-# Register the upstream
-curl -d '{"name":"orders-api","listen":"0.0.0.0:8080","upstream":"orders-api-real:8080"}' \
-  http://toxiproxy:8474/proxies
-```
-
-### Add a toxic during a test
-
-Per [toxiproxy-readme][toxiproxy]:
-
-```bash
-# 1000ms latency on every request through this proxy
-toxiproxy-cli toxic add -t latency -a latency=1000 orders-api
-
-# Bandwidth cap at 10 KB/s
-toxiproxy-cli toxic add -t bandwidth -a rate=10 orders-api
-
-# Forced timeout
-toxiproxy-cli toxic add -t timeout -a timeout=5000 orders-api
-
-# Remove all toxics
-toxiproxy-cli toxic remove orders-api -n <toxic-name>
-```
-
-For a stateless add-test-remove cycle, the language-native client
-libraries (`toxiproxy-python`, `toxiproxy-node`, `toxiproxy-ruby`,
-`toxiproxy-go`) wrap the HTTP API.
-
-## Step 4 - Run the matrix
-
-A minimal runner shell script:
-
-```bash
-#!/usr/bin/env bash
-# scripts/chaos-matrix.sh
-set -e
-
-PROXY=orders-api
-TEST_CMD="npx newman run collections/orders.postman_collection.json -e environments/chaos.json -r cli,junit --reporter-junit-export results-$1.xml"
-
-run_with_toxic() {
-  local label="$1"; local type="$2"; local args="$3"
-  echo "=== $label ==="
-  toxiproxy-cli toxic remove "$PROXY" -n latency 2>/dev/null || true
-  toxiproxy-cli toxic remove "$PROXY" -n bandwidth 2>/dev/null || true
-  toxiproxy-cli toxic remove "$PROXY" -n timeout 2>/dev/null || true
-  if [ -n "$type" ]; then
-    toxiproxy-cli toxic add -t "$type" $args "$PROXY"
-  fi
-  $TEST_CMD "$label" || true   # don't bail; we want the matrix
-}
-
-run_with_toxic 'control'   ''        ''
-run_with_toxic 'latency-1s' latency  '-a latency=1000'
-run_with_toxic 'bandwidth' bandwidth '-a rate=10'
-run_with_toxic 'timeout'   timeout   '-a timeout=5000'
-```
-
-The matrix produces one JUnit XML per scenario. Aggregate them in
-the report stage.
-
-## Step 5 - Report what broke under what
+## Step 4 - Report what broke under what
 
 A successful chaos run produces a **resilience matrix** report:
 
@@ -209,6 +152,24 @@ Match toxics to documented resilience requirements:
 Run only the toxics that map to a documented expectation; running
 every toxic against every endpoint is noise.
 
+## Worked example
+
+The orders service documents "retry once on connection reset." The team
+already has a Postman collection covering POST /orders.
+
+1. Wire Toxiproxy in front of `orders-api-real` and register the
+   `orders-api` proxy (Step 3).
+2. Matrix rows: `control` (no toxic) and `reset_peer`. Expected for
+   reset_peer: 502, retry attempted, second attempt succeeds.
+3. Run the matrix. Control passes - 201 in <500ms.
+4. Under `reset_peer` the run returns 502 with no retry in the client
+   logs, so POST /orders reset_peer is marked failing in the matrix.
+
+Verdict: REVIEW. The documented retry policy is not actually
+implemented. The output is a fix request against the client (add the
+retry), not a bug in the test - exactly the resilience gap the matrix
+exists to surface.
+
 ## Anti-patterns
 
 | Anti-pattern                                                 | Why it fails                                                     | Fix |
@@ -235,6 +196,8 @@ every toxic against every endpoint is noise.
 
 - [toxiproxy][toxiproxy] - main repo: install, control API, toxic
   types, language-native clients.
+- [references/toxiproxy-wiring.md](references/toxiproxy-wiring.md) -
+  docker-compose setup, proxy registration, toxic commands, matrix runner.
 - Pumba - https://github.com/alexei-led/pumba
 - LitmusChaos - https://litmuschaos.io/
 - Principles of Chaos Engineering - https://principlesofchaos.org/

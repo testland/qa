@@ -25,6 +25,15 @@ diff.
 - Quarterly: scheduled coverage review.
 - A new locale launches and the team needs the gap inventory.
 
+## How to use
+
+1. Identify the i18n wrap function for the stack (Step 1 table).
+2. Scan source for hardcoded user-facing text not wrapped in `t()` (Step 2).
+3. Diff each locale file against the `en` source-of-truth for per-locale coverage % (Step 3).
+4. Assemble the report: per-locale %, new untranslated strings, orphan keys (Step 4).
+5. Wire the scan into a per-PR gate that fails on new untranslated strings (Step 5).
+6. Flag RTL / bidi strings that need extra translator attention (Step 6).
+
 ## Step 1 - Identify the i18n library
 
 Per stack, the wrap function differs:
@@ -164,6 +173,18 @@ For RTL languages (Arabic, Hebrew, Persian, Urdu - per
 These need extra translator attention even when
 "translated" - character-by-character translation may not
 render correctly without bidi guidance.
+
+## Worked example
+
+A PR adds a promo banner to checkout. The scan (Step 2) flags
+`<button>Apply your discount</button>` in `src/checkout/PromoBanner.tsx:18` -
+the text is not wrapped in `t()`. The translation-file diff (Step 3) reports
+`ja` at 60% coverage (218 keys missing) against 542 `en` keys.
+
+The PR gate (Step 5) blocks on the newly unwrapped string; the `ja` gap stays
+informational, not blocking. The developer wraps the text as
+`t('checkout.promo.banner_cta')`, adds the key to all five locale files, and
+re-runs. The scan reports zero new untranslated strings and the gate passes.
 
 ## Anti-patterns
 

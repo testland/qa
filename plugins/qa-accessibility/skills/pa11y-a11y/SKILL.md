@@ -26,6 +26,22 @@ programmatic API ([pa11y][readme]). It can use HTML CodeSniffer
 If the project already runs Playwright / Cypress with axe-core,
 prefer `axe-a11y` - pa11y adds a layer.
 
+## How to use
+
+1. Install `pa11y` (or `pa11y-ci` for a URL set) as a dev dependency.
+2. Pick the conformance target with `--standard` (default `WCAG2AA`)
+   and add `--runner axe` alongside `htmlcs` for WCAG 2.2 coverage.
+3. For one page run `pa11y <url>`; for a URL set list them in
+   `.pa11yci` and run `pa11y-ci`.
+4. Choose `--reporter json` and redirect to a file so CI can parse
+   and archive it.
+5. Set `--threshold` (0 for green-field, higher while burning down
+   debt) so the exit code gates the build.
+6. Add narrow `--ignore` entries for documented false positives, each
+   justified in the config.
+7. Pipe the JSON through `a11y-violation-gate` to dedupe cross-engine
+   findings and ratchet against a baseline.
+
 ## Install
 
 ```bash
@@ -46,32 +62,12 @@ pa11y https://example.com
 
 ### Key flags
 
-| Flag                       | Effect                                                 |
-|----------------------------|--------------------------------------------------------|
-| `--reporter <name>`        | Output format: `cli` (default), `csv`, `json`, `html`, `tsv`. |
-| `--standard <name>`        | WCAG standard: `WCAG2A`, `WCAG2AA` (default), `WCAG2AAA`. |
-| `--include-warnings`       | Include warning-level issues (excluded by default).   |
-| `--include-notices`        | Include notice-level issues.                            |
-| `--ignore <rules>`         | Skip specific rules (comma-separated).                 |
-| `--runner <name>`          | Choose engine: `htmlcs` (default) or `axe`.            |
-| `--threshold <n>`          | Allow up to N issues before failing.                   |
-| `--timeout <ms>`           | Page-load timeout.                                     |
-| `--config <file>`          | Use a `.pa11yrc` config file.                          |
-
-### Worked example
-
-```bash
-pa11y --standard WCAG2AA \
-      --runner htmlcs --runner axe \
-      --include-warnings \
-      --reporter json \
-      --threshold 0 \
-      https://staging.example.com/checkout > pa11y-results.json
-```
-
-`--runner htmlcs --runner axe` runs **both** engines and merges
-the issue list - broader coverage at the cost of duplicate
-findings (different engines flag the same issue).
+Common flags: `--reporter <name>` (`cli` / `csv` / `json` / `html` /
+`tsv`), `--standard <name>` (`WCAG2A` / `WCAG2AA` / `WCAG2AAA`),
+`--runner <name>` (`htmlcs` or `axe`), `--include-warnings`,
+`--include-notices`, `--ignore <rules>`, `--threshold <n>`,
+`--timeout <ms>`, and `--config <file>`. Full table with effects:
+[references/flags-and-output.md](references/flags-and-output.md).
 
 ## Multi-URL with pa11y-ci
 
@@ -127,38 +123,37 @@ console.log(results.issues);
 
 ## Results structure
 
-```json
-{
-  "documentTitle": "Example",
-  "pageUrl": "https://example.com/",
-  "issues": [
-    {
-      "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
-      "type": "error",
-      "typeCode": 1,
-      "message": "This element has insufficient contrast at this conformance level.",
-      "context": "<button>Submit</button>",
-      "selector": "button.primary",
-      "runner": "htmlcs"
-    },
-    {
-      "code": "color-contrast",
-      "type": "error",
-      "typeCode": 1,
-      "message": "Elements must meet minimum color contrast ratio thresholds",
-      "context": "<button>Submit</button>",
-      "selector": "button.primary",
-      "runner": "axe"
-    }
-  ]
-}
+`results.issues[]` holds one object per finding with `code`, `type`
+(error / warning / notice), `selector`, `context`, `message`, and
+`runner`. When both engines run, the same defect appears twice under
+different codes - WCAG-SC-coded from htmlcs, rule-coded from axe - and
+`a11y-violation-gate` collapses the pair via its `fingerprint` field.
+Full JSON shape and a dual-engine example:
+[references/flags-and-output.md](references/flags-and-output.md).
+
+## Worked example
+
+Scan the staging checkout with both engines and capture JSON:
+
+```bash
+pa11y --standard WCAG2AA \
+      --runner htmlcs --runner axe \
+      --include-warnings \
+      --reporter json \
+      --threshold 0 \
+      https://staging.example.com/checkout > pa11y-results.json
 ```
 
-Note the **same issue from two engines** - htmlcs flags as
-`WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail` (WCAG-SC-coded);
-axe flags as `color-contrast` (rule-coded). Pipe through
-`a11y-violation-gate` to
-deduplicate via the unified-record `fingerprint` field.
+`--runner htmlcs --runner axe` runs **both** engines and merges the
+issue list - broader coverage at the cost of duplicate findings.
+
+The run exits non-zero (threshold 0 exceeded) and `pa11y-results.json`
+holds an `issues[]` array. A low-contrast Submit button appears twice -
+once htmlcs-coded (`WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail`) and
+once axe-coded (`color-contrast`), both on selector `button.primary`.
+Piping the JSON through `a11y-violation-gate` collapses the pair to one
+record via its `fingerprint` field, so the PR shows a single contrast
+defect to fix.
 
 ## CI integration
 
@@ -221,6 +216,8 @@ jobs:
 
 - [pa11y][readme] - main repo: install, CLI flags, runners,
   reporter formats.
+- [references/flags-and-output.md](references/flags-and-output.md) -
+  full CLI flag table and the issue JSON shape.
 - pa11y-ci - https://github.com/pa11y/pa11y-ci (multi-URL).
 - HTML CodeSniffer (the htmlcs runner) - https://github.com/squizlabs/HTML_CodeSniffer
 - `axe-a11y` - direct axe usage (pa11y's

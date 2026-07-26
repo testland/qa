@@ -34,6 +34,24 @@ deterministic behavior in tests."
   called directly in production code.
 - Upgrading from the pre-.NET-8 `ISystemClock` pattern.
 
+## How to use
+
+1. Add the `Microsoft.Extensions.TimeProvider.Testing` package to the
+   test project (Step 1).
+2. Refactor production code to take `TimeProvider` by constructor
+   injection and register `TimeProvider.System` in DI (Step 2).
+3. In each test, construct a `FakeTimeProvider` and freeze the instant
+   with `SetUtcNow(...)` or the constructor overload (Step 3).
+4. Drive the clock forward with `Advance(TimeSpan)`, then assert on the
+   behaviour (Step 4).
+5. For async code, await `fakeTime.Delay(...)` or `CreateTimer`
+   callbacks, advancing the virtual clock to fire them (see advanced
+   clock control).
+6. Set `SetLocalTimeZone(...)` when a branch reads `GetLocalNow()`
+   (see advanced clock control).
+7. Register `FakeTimeProvider`, never `TimeProvider.System`, in the
+   test DI container.
+
 ## Step 1 - Add the NuGet package
 
 `FakeTimeProvider` ships in a separate testing package, not in the
@@ -135,120 +153,38 @@ starting instant directly. Per
 [learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor):
 "Initializes a new instance of the FakeTimeProvider class."
 
-## Step 5 - Auto-advance on every read
+## Advanced clock control
 
-`AutoAdvanceAmount` makes the clock tick forward by a fixed amount
-each time `GetUtcNow()` is called. Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.autoadvanceamount](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.autoadvanceamount):
-"Gets or sets the amount of time by which time advances whenever the
-clock is read."
+For auto-advancing reads (`AutoAdvanceAmount`), virtual-clock timers
+and `Task.Delay` (`CreateTimer` / `Delay`), and local time zone
+testing (`SetLocalTimeZone` / `GetLocalNow`), see
+[references/advanced-clock-control.md](references/advanced-clock-control.md).
 
-```csharp
-var fakeTime = new FakeTimeProvider();
-fakeTime.AutoAdvanceAmount = TimeSpan.FromMilliseconds(100);
+## Worked example
 
-// Each GetUtcNow() call adds 100 ms
-var t1 = fakeTime.GetUtcNow();
-var t2 = fakeTime.GetUtcNow();
-Assert.Equal(TimeSpan.FromMilliseconds(100), t2 - t1);
-```
+`TokenService.IsExpired` returns whether a token has passed its
+expiry instant. To prove both sides of the boundary without real
+waiting:
 
-Use `AutoAdvanceAmount` for elapsed-time assertions, not for
-tests that need precise control - explicit `Advance` calls are more
-readable there.
+1. Construct the fake clock at a fixed instant:
+   `new FakeTimeProvider(new DateTimeOffset(2026, 5, 20, 12, 0, 0, TimeSpan.Zero))`.
+2. Compute the expiry one hour out:
+   `var expiresAt = fakeTime.GetUtcNow().AddHours(1);`.
+3. Before expiry, `svc.IsExpired(expiresAt)` is `false`.
+4. Advance past it: `fakeTime.Advance(TimeSpan.FromHours(2));`.
+5. Now `svc.IsExpired(expiresAt)` is `true` (the assertion in Step 4).
 
-## Step 6 - Test Task.Delay and timers
+Result: both sides of the expiry boundary are asserted in one
+deterministic test that runs in microseconds, with no dependence on
+wall-clock time.
 
-`FakeTimeProvider` controls the virtual clock used by `Delay` and
-`CreateTimer` so that async waiting does not block wall-clock time in
-tests.
+## Migrating from ISystemClock
 
-```csharp
-[Fact]
-public async Task Poller_DoesNotFireBeforeInterval()
-{
-    var fakeTime = new FakeTimeProvider();
-    var fired = false;
-
-    // timeProvider.Delay(...) is an extension method from
-    // System.Threading.Tasks.TimeProviderTaskExtensions
-    var delayTask = fakeTime.Delay(TimeSpan.FromSeconds(30));
-
-    _ = delayTask.ContinueWith(_ => fired = true);
-
-    fakeTime.Advance(TimeSpan.FromSeconds(10));
-    await Task.Yield();  // let continuations run
-    Assert.False(fired);
-
-    fakeTime.Advance(TimeSpan.FromSeconds(20));
-    await delayTask;
-    Assert.True(fired);
-}
-```
-
-`Delay(TimeProvider, TimeSpan, CancellationToken)` is an extension
-method in `System.Threading.Tasks.TimeProviderTaskExtensions`. Per
-[learn.microsoft.com/dotnet/api/system.threading.tasks.timeprovidertaskextensions.delay](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.timeprovidertaskextensions.delay):
-"Creates a task that completes after a specified time interval."
-
-`CreateTimer` works analogously: the callback fires only when
-`Advance` moves the virtual clock past the due time. Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.createtimer](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.createtimer):
-"Creates a new ITimer instance, using TimeSpan values to measure
-time intervals."
-
-## Step 7 - Local time zone testing
-
-Set a custom `LocalTimeZone` on `FakeTimeProvider` to test
-timezone-sensitive branches without touching the system clock or
-environment variables:
-
-```csharp
-var fakeTime = new FakeTimeProvider();
-fakeTime.SetUtcNow(new DateTimeOffset(2026, 3, 8, 7, 0, 0, TimeSpan.Zero));
-fakeTime.SetLocalTimeZone(TimeZoneInfo.FindSystemTimeZoneById("America/New_York"));
-
-DateTimeOffset local = fakeTime.GetLocalNow();
-// local is UTC-5 or UTC-4 depending on DST; see dst-transition-reference
-```
-
-Per
-[learn.microsoft.com/dotnet/api/system.timeprovider.getlocalnow](https://learn.microsoft.com/en-us/dotnet/api/system.timeprovider.getlocalnow):
-`GetLocalNow()` returns the UTC instant converted to the provider's
-`LocalTimeZone`. Use the companion
-`dst-transition-reference` for
-expected offset values around spring/fall transitions.
-
-## Pre-.NET-8 pattern: ISystemClock
-
-Before `TimeProvider`, the Microsoft.Extensions stack used
-`ISystemClock` (namespace `Microsoft.Extensions.Internal`, assembly
-`Microsoft.Extensions.Caching.Abstractions.dll`). Per
-[learn.microsoft.com/dotnet/api/microsoft.extensions.internal.isystemclock](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.internal.isystemclock):
-"Abstracts the system clock to facilitate testing." It exposed a
-single property, `UtcNow`, and carried the notice "This API supports
-the .NET infrastructure and is not intended to be used directly from
-your code."
-
-```csharp
-// Legacy pattern (pre-.NET 8)
-public interface ISystemClock
-{
-    DateTimeOffset UtcNow { get; }
-}
-
-// Test implementation
-public class FakeSystemClock : ISystemClock
-{
-    public DateTimeOffset UtcNow { get; set; }
-}
-```
-
-Migration path: replace `ISystemClock` injection with `TimeProvider`,
-and replace fake implementations with `FakeTimeProvider`. The
-`ISystemClock` approach covers only `UtcNow`; `TimeProvider` also
-covers high-frequency timestamps and timers, making it the complete
-replacement.
+Code on the pre-.NET-8 `ISystemClock` pattern replaces that injection
+with `TimeProvider` and its fakes with `FakeTimeProvider`. The
+legacy interface, a fake implementation, and the full migration path
+are in
+[references/isystemclock-migration.md](references/isystemclock-migration.md).
 
 ## CI integration
 
@@ -267,34 +203,13 @@ jobs:
       - run: dotnet test --configuration Release
 ```
 
-## Anti-patterns
+## Anti-patterns and limitations
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| `DateTime.UtcNow` directly in code | Not injectable; test is forced to use wall-clock | Inject `TimeProvider`; call `_time.GetUtcNow()` |
-| `DateTimeOffset.UtcNow` directly in code | Same problem | Inject `TimeProvider` |
-| Static mock of `DateTime` via Fakes/Harmony | Requires special test runner config or IL rewriting | Use DI with `TimeProvider` |
-| Call `SetUtcNow` with a value earlier than current | Throws `ArgumentOutOfRangeException` | Use `Advance` or construct fresh `FakeTimeProvider` |
-| Forget `await Task.Yield()` after `Advance` | Continuations haven't had a chance to run yet | Yield or await the completed task |
-| `AutoAdvanceAmount` in tests needing exact instants | Clock shifts unexpectedly between reads | Set `AutoAdvanceAmount = TimeSpan.Zero` (default) |
-| Register `TimeProvider.System` in test DI | Tests become time-dependent and flaky | Register `FakeTimeProvider` in test DI setup |
-
-## Limitations
-
-- `Task.Delay(int)` overloads that do NOT accept a `TimeProvider`
-  still use wall-clock time. Always use the
-  `timeProvider.Delay(TimeSpan)` extension form.
-- `Thread.Sleep` is not controlled by `FakeTimeProvider`; restructure
-  to use `await timeProvider.Delay(...)` instead.
-- High-frequency `GetTimestamp()` values are derived from the fake
-  UTC instant, not from `Stopwatch`. Per
-  [learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.timestampfrequency](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.timestampfrequency),
-  `TimestampFrequency` is a fixed value tied to the fake clock.
-- Third-party libraries that call `DateTime.UtcNow` internally are
-  not affected by `FakeTimeProvider`; only code that accepts
-  `TimeProvider` by injection can be controlled this way.
-- No leap-second simulation; see
-  `leap-second-reference`.
+Common misuses (direct `DateTime.UtcNow`, static `DateTime` mocks,
+backwards `SetUtcNow`, missing `Task.Yield()`) and the tool's limits
+(`Task.Delay(int)`, `Thread.Sleep`, `GetTimestamp()`, third-party
+`DateTime.UtcNow`, no leap seconds) are cataloged in
+[references/anti-patterns-and-limitations.md](references/anti-patterns-and-limitations.md).
 
 ## References
 

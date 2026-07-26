@@ -40,6 +40,23 @@ loops often use declarative mode for fast iteration.
   generation from declarative schema (vs hand-authoring every
   ALTER).
 
+## How to use
+
+1. Install the Atlas CLI (Step 1) and stand up a scratch dev DB for
+   diff computation, referenced via `--dev-url`.
+2. Define the desired schema in SQL or HCL (Step 2).
+3. Generate a versioned migration from the schema diff:
+   `atlas migrate diff <name> --to file://schema.sql --dev-url ...`
+   (Step 4).
+4. Lint the new migration for destructive / locking patterns:
+   `atlas migrate lint --latest 1` (Step 6).
+5. Apply pending migrations to the target DB:
+   `atlas migrate apply --url "$DATABASE_URL"` (Step 5).
+6. Gate every PR in CI with `ariga/setup-atlas` + lint +
+   apply-to-staging (Step 8).
+7. Never edit an applied migration; add a new one and re-run diff
+   (see [references/atlas-caveats.md](references/atlas-caveats.md)).
+
 ## Step 1 - Install
 
 Per [at-start][at-start]:
@@ -177,27 +194,34 @@ Beyond `atlas migrate lint`, apply adversarial review with
 team-specific risk policies that Atlas's built-in lint doesn't
 capture (e.g., "no `DROP TABLE` without DBA approval").
 
-## Anti-patterns
+## Worked example
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Edit a migration after it's been applied to staging/prod | `atlas migrate apply` fails on hash mismatch | Add a new migration that adjusts |
-| Skip `--dev-url` | Atlas can't compute diff; commands fail or produce wrong output | Always pass `--dev-url` (Steps 3, 4, 6) |
-| Use declarative `schema apply` directly to production | No audit trail of applied changes | Use versioned mode in production (Step 4) |
-| Skip `atlas migrate lint` in CI | Destructive migrations slip through review | Always lint in CI (Step 8) |
-| `atlas migrate hash` after every edit (without team review) | Defeats integrity check | Hash sync only after intentional edit + team review |
+Add a `NOT NULL` column `status` to a 40M-row `users` table:
 
-## Limitations
+1. Edit `schema.sql` to add
+   `status varchar(20) NOT NULL DEFAULT 'active'` on `users`.
+2. `atlas migrate diff add_status --to file://schema.sql --dev-url
+   "docker://postgres/17/dev?search_path=public"` writes
+   `migrations/20260506120000_add_status.sql`.
+3. `atlas migrate lint --dev-url "docker://postgres/17/dev?search_path=public"
+   --latest 1` passes because the `NOT NULL` add ships a `DEFAULT`
+   (a `NOT NULL` add with no default is flagged).
+4. CI runs the same lint on the PR, then
+   `atlas migrate apply --url "$STAGING_DB_URL"` records the
+   migration in `atlas_schema_revisions`.
+5. A teammate later edits that applied file; their
+   `atlas migrate apply` fails on hash mismatch until an intentional
+   `atlas migrate hash` re-sync - the tamper guard working as
+   designed.
 
-- Some DBMS-specific features (e.g., Oracle PL/SQL packages,
-  PostgreSQL extension management) have limited HCL support - fall
-  back to SQL schema for those.
-- Lint rules are general-purpose; team-specific policies (e.g., "no
-  `DROP TABLE` without DBA approval") need adversarial review on top.
-- `--dev-url` requires a real DBMS instance (or Docker) - Atlas
-  cannot diff schemas without one.
-- Atlas Cloud (managed plan visualization) is paid; OSS covers
-  the CLI workflow.
+## Anti-patterns and limitations
+
+The failure modes (editing applied migrations, skipping `--dev-url`,
+declarative `schema apply` straight to production, skipping lint in
+CI, blind `atlas migrate hash`) and the tool's limitations (partial
+HCL for some DBMS features, general-purpose lint rules, `--dev-url`
+requiring a real DBMS, paid Atlas Cloud) are catalogued in
+[references/atlas-caveats.md](references/atlas-caveats.md).
 
 ## References
 

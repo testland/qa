@@ -42,6 +42,25 @@ Distinct scope vs. sibling skills:
   directly.
 - `mercurius-tests` and `hasura-tests` target those specific runtimes.
 
+## How to use
+
+1. Install the transport client(s) plus the test runner (`graphql-ws` + `ws`,
+   or `graphql-sse`, alongside `graphql` and `jest`).
+2. Start the server on `port: 0` in `beforeAll` so parallel suites each get a
+   free OS-assigned port; `dispose()` the runner and `close()` the server in
+   `afterAll`.
+3. Create a client with `createClient` and drive the subscription through
+   `client.iterate()`, pushing each `event.data` into an array; `break` once the
+   expected count arrives to close the stream.
+4. Assert the emitted sequence and shape against the schema contract, checking
+   `errors` is `undefined` before reading `data`.
+5. Add auth-on-connect tests: reject a missing / invalid token (close code
+   `4403` for WS, `401` for SSE) and accept a valid one.
+6. Add a resolver-isolation test with `graphql` `subscribe()` + `pubsub.publish(...)`
+   to cover trigger / filter / error logic without a transport.
+7. Run under an extended `testTimeout` and `--forceExit` in CI so open sockets
+   never hang the runner.
+
 ## Authoring
 
 ### Install
@@ -57,44 +76,11 @@ npm install --save-dev graphql-sse
 npm install --save-dev graphql jest ts-jest
 ```
 
-### Server setup (graphql-ws over ws)
+### Server setup
 
-Per [the-guild.dev/graphql/ws/get-started](https://the-guild.dev/graphql/ws/get-started):
-
-```typescript
-import { useServer } from 'graphql-ws/use/ws';
-import { WebSocketServer } from 'ws';
-import { schema } from './schema';
-
-export function startWsServer(port = 0) {
-  const wss = new WebSocketServer({ port });
-  const dispose = useServer({ schema }, wss);
-  return { wss, dispose };
-}
-```
-
-Use `port: 0` so the OS assigns a free port - parallel-test safe.
-
-### Server setup (graphql-sse over Node http)
-
-Per [the-guild.dev/graphql/sse/get-started](https://the-guild.dev/graphql/sse/get-started):
-
-```typescript
-import { createServer } from 'http';
-import { createHandler } from 'graphql-sse/lib/use/http';
-import { schema } from './schema';
-
-export function startSseServer() {
-  const handler = createHandler({ schema });
-  const server = createServer((req, res) => {
-    if (req.url === '/graphql/stream') return handler(req, res);
-    res.writeHead(404).end();
-  });
-  server.listen(0);
-  const { port } = server.address() as { port: number };
-  return { server, url: `http://localhost:${port}/graphql/stream` };
-}
-```
+Full server bootstraps for both transports (graphql-ws over `ws`, graphql-sse over
+Node `http`), including the `port: 0` free-port pattern, are in
+[references/transport-server-setup.md](references/transport-server-setup.md).
 
 ### Basic subscription test (graphql-ws)
 
@@ -163,206 +149,42 @@ it('receives events over SSE', async () => {
 });
 ```
 
-### Auth on connect (graphql-ws)
+### Auth on connect
 
-Per [the-guild.dev/graphql/ws/recipes](https://the-guild.dev/graphql/ws/recipes),
-`onConnect` returns `false` to close with code `4403: Forbidden`:
+`connectionParams` (WS) and the `authenticate` callback (SSE) reject
+unauthenticated clients before any event is sent. Full server + test patterns for
+both transports, plus the async token-refresh factory, are in
+[references/auth-on-connect.md](references/auth-on-connect.md).
 
-```typescript
-// Server
-useServer(
-  {
-    schema,
-    onConnect: async (ctx) => {
-      if (!(await isTokenValid(ctx.connectionParams?.token))) {
-        return false; // closes with 4403
-      }
-    },
-  },
-  wss,
-);
+### Connection lifecycle and close codes
 
-// Test: reject missing token
-it('closes with 4403 when token absent', (done) => {
-  const badClient = createClient({
-    url: `ws://localhost:${port}/graphql`,
-    connectionParams: {}, // no token
-    retryAttempts: 0,
-    on: {
-      closed: (event) => {
-        expect((event as CloseEvent).code).toBe(4403);
-        done();
-      },
-    },
-  });
-  badClient.subscribe({ query: 'subscription { greetings }' }, {
-    next: () => {},
-    error: () => {},
-    complete: () => {},
-  });
-});
+The graphql-ws protocol close-code table (4400 - 4429) and the ordered
+`connecting -> connected -> closed` lifecycle assertion are in
+[references/lifecycle-and-close-codes.md](references/lifecycle-and-close-codes.md).
 
-// Test: accept valid token
-it('receives events when token valid', async () => {
-  const authedClient = createClient({
-    url: `ws://localhost:${port}/graphql`,
-    connectionParams: { token: 'valid-token' },
-  });
-  const sub = authedClient.iterate({ query: 'subscription { greetings }' });
-  const { value } = await sub.next();
-  expect(value?.data).toBeDefined();
-  authedClient.dispose();
-});
-```
+### Resolver, filter, and error tests
 
-Per [the-guild.dev/graphql/ws/recipes](https://the-guild.dev/graphql/ws/recipes),
-`connectionParams` supports async factories for token refresh:
+Resolver-isolation pubsub tests (via `graphql` `subscribe()`), event-filter
+predicate tests, and resolver-error propagation are in
+[references/resolver-and-filter-tests.md](references/resolver-and-filter-tests.md).
 
-```typescript
-const client = createClient({
-  url: 'ws://localhost:4000/graphql',
-  connectionParams: async () => ({ token: await getAccessToken() }),
-  on: {
-    closed: (event) => {
-      if ((event as CloseEvent).code === 4403) scheduleTokenRefresh();
-    },
-  },
-});
-```
+## Worked example
 
-### Auth on connect (graphql-sse)
+Scenario: a `messageAdded(channel)` subscription must stream only messages for the
+subscribed channel and must reject clients that connect without a token.
 
-Per [the-guild.dev/graphql/sse/recipes](https://the-guild.dev/graphql/sse/recipes),
-the `authenticate` callback on `createHandler` returns `[null, response]`
-to reject:
+1. Start the WS server (see the server-setup reference) with an `onConnect` that
+   returns `false` on a missing token.
+2. Connect an authed client with `connectionParams: { token: 'valid-token' }` and
+   open `client.iterate({ query: 'subscription Messages($channel: String!) { messageAdded(channel: $channel) { text } } ', variables: { channel: 'team-a' } })`.
+3. `pubsub.publish` a `team-b` message then a `team-a` message; `await sub.next()`.
+4. Assert `value.data?.messageAdded?.text === 'right'` - the `team-b` event was
+   filtered out, proving the predicate.
+5. Open a second client with `connectionParams: {}` and `retryAttempts: 0`; assert
+   its `closed` event carries code `4403`.
 
-```typescript
-const handler = createHandler({
-  schema,
-  authenticate: async (req) => {
-    const token = req.headers.get('authorization')?.replace('Bearer ', '');
-    if (!token || !(await isTokenValid(token))) {
-      return [null, { status: 401, statusText: 'Unauthorized' }];
-    }
-    return token;
-  },
-});
-
-it('rejects unauthenticated SSE connections with 401', async () => {
-  const client = createClient({
-    url,
-    headers: () => ({ authorization: 'Bearer bad-token' }),
-  });
-  const sub = client.iterate({ query: 'subscription { greetings }' });
-  await expect(sub.next()).rejects.toMatchObject({ message: /401/ });
-});
-```
-
-### Connection lifecycle assertions (graphql-ws)
-
-Per [the-guild.dev/graphql/ws/docs](https://the-guild.dev/graphql/ws/docs),
-the `on` option in `ClientOptions` accepts event-keyed callbacks. Protocol
-close codes are defined by the graphql-ws spec:
-
-| Code | Meaning |
-|------|---------|
-| 4400 | Bad request / invalid message |
-| 4401 | Unauthorized (no `ConnectionInit` before timeout) |
-| 4403 | Forbidden (server `onConnect` returned false) |
-| 4408 | Connection initialisation timeout |
-| 4409 | Subscriber already exists for that `id` |
-| 4429 | Too many initialisation requests |
-
-```typescript
-const events: string[] = [];
-const client = createClient({
-  url,
-  connectionParams: { token: 'valid' },
-  on: {
-    connecting: () => events.push('connecting'),
-    connected:  () => events.push('connected'),
-    closed:     () => events.push('closed'),
-    error:      () => events.push('error'),
-  },
-});
-
-const sub = client.iterate({ query: 'subscription { greetings }' });
-await sub.next();      // wait for first event - connection must be open
-await sub.return?.();  // graceful close via iterator return
-
-// Allow close event to fire
-await new Promise((r) => setTimeout(r, 50));
-expect(events).toEqual(['connecting', 'connected', 'closed']);
-```
-
-### Resolver-level pubsub test
-
-Isolate the resolver's pubsub wiring without a full transport stack using
-the `graphql` `subscribe` function directly:
-
-```typescript
-import { subscribe, parse } from 'graphql';
-import { schema, pubsub } from './schema';
-
-it('resolver emits events published to the channel', async () => {
-  const result = await subscribe({
-    schema,
-    document: parse('subscription { messageAdded { id text } }'),
-  });
-
-  if ('errors' in result) throw new Error('Subscription failed');
-
-  // Publish after subscribing
-  pubsub.publish('MESSAGE_ADDED', { messageAdded: { id: '1', text: 'hello' } });
-
-  const { value } = await result.next();
-  expect(value.data).toEqual({ messageAdded: { id: '1', text: 'hello' } });
-
-  await result.return?.(); // clean up iterator
-});
-```
-
-This tests the resolver in isolation - no WebSocket server, no client
-library. Pair with transport-layer tests for full coverage.
-
-### Event-sequence and filter tests
-
-```typescript
-it('only emits events that pass the filter predicate', async () => {
-  const sub = client.iterate({
-    query: 'subscription Messages($channel: String!) { messageAdded(channel: $channel) { text } }',
-    variables: { channel: 'team-a' },
-  });
-
-  pubsub.publish('MESSAGE_ADDED', { channel: 'team-b', messageAdded: { text: 'wrong' } });
-  pubsub.publish('MESSAGE_ADDED', { channel: 'team-a', messageAdded: { text: 'right' } });
-
-  const { value } = await sub.next();
-  expect(value.data?.messageAdded?.text).toBe('right');
-  await sub.return?.();
-});
-```
-
-### Error propagation tests
-
-Per [the-guild.dev/graphql/sse/recipes](https://the-guild.dev/graphql/sse/recipes),
-resolver errors during a subscription should surface via the iterator, not
-crash the server:
-
-```typescript
-it('surfaces resolver errors as GraphQL errors, not exceptions', async () => {
-  const result = await subscribe({
-    schema: errorSchema, // schema whose subscription resolver throws
-    document: parse('subscription { failingFeed }'),
-  });
-
-  if ('errors' in result) throw new Error('Subscribe itself failed');
-
-  const { value } = await result.next();
-  expect(value.errors).toBeDefined();
-  expect(value.errors?.[0].message).toMatch(/expected error/i);
-});
-```
+Result: one run proves both the resolver filter (only the matching channel
+emits) and the auth gate (tokenless connect is refused with `4403`).
 
 ## Running
 

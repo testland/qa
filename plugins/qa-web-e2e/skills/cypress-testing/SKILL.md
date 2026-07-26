@@ -39,6 +39,16 @@ Differentiators ([cy-overview][cy]):
 For cross-browser including WebKit, see
 `playwright-testing`.
 
+## How to use
+
+1. Install Cypress and scaffold the project (`npm install --save-dev cypress`, `npx cypress open`).
+2. Set `baseUrl`, `specPattern`, and `retries` in `cypress.config.ts`.
+3. Add `@testing-library/cypress` so specs select by role / label, not by CSS class.
+4. Author each flow as a `describe` / `it` block; lean on auto-waiting assertions instead of `cy.wait(ms)`.
+5. Extract repeated auth into a `cy.session`-backed custom command called from `beforeEach`.
+6. Run headless in CI (`npx cypress run`); debug failures by replaying commands in the time-travel GUI.
+7. For scale, record + parallelize via Cypress Cloud and upload screenshot artifacts on failure (see [references/ci-and-cloud.md](references/ci-and-cloud.md)).
+
 ## Step 1 - Install
 
 ```bash
@@ -185,47 +195,34 @@ In `cypress open` mode:
 This is Cypress's killer feature - debugging by visually replaying
 the test.
 
-## Step 8 - Cypress Cloud (paid; optional)
+## Step 8 - Cypress Cloud + CI
 
-```bash
-# Record run to Cypress Cloud
-npx cypress run --record --key <CYPRESS_RECORD_KEY>
+Recording and parallel runs go through Cypress Cloud (paid; OSS
+alternative `currents-integration` in the qa-test-reporting plugin),
+and the GitHub Actions job wires `cypress-io/github-action` +
+screenshot artifacts on failure. Commands and the full workflow YAML:
+[references/ci-and-cloud.md](references/ci-and-cloud.md).
 
-# Parallel
-npx cypress run --record --parallel
-```
+## Worked example
 
-Cloud provides:
-- Parallel execution across N CI jobs.
-- Recording (replay any test from anywhere).
-- Per-test analytics.
-- Flaky-test detection.
+A team has a hand-written `checkout.cy.ts` that logs in from scratch
+in every test and sleeps `cy.wait(3000)` before asserting the cart
+count. It flakes about 1 run in 5 on CI.
 
-OSS alternative: `currents-integration` (in the qa-test-reporting
-plugin) covers similar analytics for both Cypress + Playwright.
+1. The login block moves into a `login` custom command wrapped in
+   `cy.session(['user@example.com', pwd], ...)`, called from
+   `beforeEach` - the auth flow now runs once and is cached.
+2. `cy.wait(3000)` is deleted; the check becomes
+   `cy.get('[data-testid="cart-count"]').should('have.text', '1')`,
+   which auto-retries until the count settles.
+3. CSS-class selectors like `cy.get('.signin-btn')` are replaced with
+   `cy.findByRole('button', { name: /sign in/i })` via
+   cypress-testing-library.
+4. `npx cypress run --spec cypress/e2e/checkout.cy.ts` is green 20/20
+   locally; the GitHub Actions job records the run to Cypress Cloud.
 
-## Step 9 - CI integration
-
-```yaml
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: cypress-io/github-action@v6
-        with:
-          start: npm start
-          wait-on: 'http://localhost:3000'
-          browser: chrome
-          record: true
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
-```
+Result: the flow runs faster (login cached, no fixed sleep) and the
+flake disappears because every wait is now assertion-driven.
 
 ## Anti-patterns
 

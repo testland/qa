@@ -30,6 +30,19 @@ for non-git (e.g., extracted CI artifact); `stdin` for diff-piping.
 - Layered with `trufflehog-scanning`
   for live-validation cross-check.
 
+## How to use
+
+1. Install gitleaks (Step 1); confirm with `gitleaks version`.
+2. Run a full-history baseline scan: `gitleaks git` (Step 2).
+3. Add `.gitleaks.toml` with `[extend] useDefault = true` plus any
+   org-internal custom rules (Step 3 - 4,
+   [references/custom-rules-and-triage.md](references/custom-rules-and-triage.md)).
+4. Triage findings: rotate real leaks, allowlist genuine
+   false-positives with a `Re-review-date` (Step 5, references file).
+5. Wire the pre-commit hook for fast local feedback (Step 6).
+6. Add the CI job with `fetch-depth: 0` as the catch-net gate (Step 7).
+7. On any confirmed leak, rotate the credential first, then scrub (Step 8).
+
 ## Step 1 - Install
 
 Per [gl-gh][gl-gh]:
@@ -99,69 +112,22 @@ to discover the full default rule list.
 
 ## Step 4 - Custom rule example
 
-```toml
-# .gitleaks.toml
-[extend]
-useDefault = true
-
-[[rules]]
-id = "internal-api-key"
-description = "Internal API key (acme- prefix)"
-regex = '''(?i)acme[_-]?api[_-]?key[_-]?[a-zA-Z0-9]{32}'''
-secretGroup = 1
-keywords = ["acme"]
-tags = ["acme-internal"]
-
-[[rules.allowlists]]
-description = "Test fixtures"
-paths = ['''tests/fixtures/.*\.json$''']
-
-[[allowlists]]
-description = "Project-wide allowlist (legacy commits)"
-commits = ["abc1234", "def5678"]
-paths = ['''vendor/.*''', '''third_party/.*''']
-```
-
-The `[extend] useDefault = true` keeps built-in rules; without it,
-your custom rules replace the defaults entirely.
+Org-internal secret formats (internal API-key prefixes, etc.) go in
+`[[rules]]` blocks. Set `[extend] useDefault = true` to keep the
+built-in rules; without it, custom rules replace the defaults
+entirely. Full example (custom rule + per-rule and top-level
+allowlists) in
+[references/custom-rules-and-triage.md](references/custom-rules-and-triage.md).
 
 ## Step 5 - False-positive triage (MANDATORY)
 
-Suppression mechanisms in priority order:
-
-| Mechanism | Where | When to use |
-|---|---|---|
-| `[[rules.allowlists]] paths` | `.gitleaks.toml` | Per-rule path exclusion (test fixtures, vendor) |
-| `[[rules.allowlists]] commits` | `.gitleaks.toml` | Per-rule commit exclusion (historical false positive) |
-| `[[allowlists]] paths` | `.gitleaks.toml` (top-level) | All-rule path exclusion |
-| `--baseline-path` | CI flag | Legacy debt: only fail on NEW findings vs baseline |
-| Inline `# gitleaks:allow` comment | Code | Single-line suppression |
-
-**Baseline workflow (per [gl-gh][gl-gh]):**
-
-```bash
-# Create baseline
-gitleaks git --report-path gitleaks-baseline.json
-
-# Apply baseline (only new findings fail)
-gitleaks git --baseline-path gitleaks-baseline.json --report-path findings.json
-```
-
-**Justification template (mandatory in `.gitleaks.toml`):**
-
-```toml
-[[rules.allowlists]]
-description = """
-Reason: tests/fixtures/* contains intentional dummy AWS credentials
-        for SDK initialization tests; never used against real AWS.
-Approved-by: alice@example.com
-Re-review-date: 2026-09-15 (re-evaluate when SDK supports mock-mode injection)
-"""
-paths = ['''tests/fixtures/.*\.json$''']
-```
-
-Cadence: every quarter, audit `.gitleaks.toml` allowlist entries;
-expired re-review-date entries removed.
+Suppress genuine false-positives with `[[rules.allowlists]]` (paths /
+commits), the top-level `[[allowlists]]`, `--baseline-path` for legacy
+debt, or an inline `# gitleaks:allow` comment. Every allowlist entry
+needs a `Re-review-date`; audit them quarterly. The suppression
+priority table, the baseline workflow, and the justification template
+are in
+[references/custom-rules-and-triage.md](references/custom-rules-and-triage.md).
 
 ## Step 6 - Pre-commit hook integration
 
@@ -219,6 +185,25 @@ The secret IS exposed. Workflow:
 5. **Optional: rewrite git history** (BFG Repo-Cleaner / git filter-repo) - but assume the secret IS exposed regardless
 
 For automated rotation workflow, see `secrets-rotation-runner`.
+
+## Worked example
+
+A team enables gitleaks on a 4-year-old private repo.
+
+1. First full-history scan writes 3 hits:
+   `gitleaks git --report-format json --report-path leaks.json`.
+2. Two are real - an AWS access key in commit `abc1234` and a Slack
+   token in a since-deleted config. Both are rotated at the provider
+   (Step 8), and provider audit logs are checked for misuse.
+3. One is a dummy AWS key under `tests/fixtures/aws.json`. It gets a
+   `[[rules.allowlists]]` path entry with an `Approved-by` and a
+   `Re-review-date` (references file).
+4. The rotated-but-still-in-history hits are captured as a baseline
+   (`gitleaks git --report-path gitleaks-baseline.json`), and CI runs
+   `--baseline-path gitleaks-baseline.json` so only NEW leaks fail.
+5. A pre-commit hook (Step 6) and a `fetch-depth: 0` CI job (Step 7)
+   are added. The next PR that pastes a live Stripe key is blocked at
+   commit time and again in CI.
 
 ## Anti-patterns
 

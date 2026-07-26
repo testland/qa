@@ -33,6 +33,26 @@ For new projects in 2026+: GitHub Actions / GitLab CI offer
 better managed-runner experiences. Jenkins shines in self-hosted
 + plugin-rich environments.
 
+## How to use
+
+1. Add a `Jenkinsfile` with a `pipeline { agent ...; stages { ... } }`
+   block; choose `agent any`, a labelled node, or a Docker image
+   for reproducibility (Steps 1-2).
+2. Define `stage('Build')` / `stage('Test')` steps that run your
+   install + test commands via `sh`.
+3. Parallelize independent suites and fan across an OS × runtime
+   matrix -
+   [references/parallel-and-matrix.md](references/parallel-and-matrix.md).
+4. Add a `post {}` block to publish JUnit XML, archive artifacts,
+   and notify per outcome -
+   [references/post-actions.md](references/post-actions.md).
+5. Inject `environment {}` + masked `withCredentials`, serialize
+   shared infra with `lock(...)`, and set `triggers` / `options` -
+   [references/environment-and-triggers.md](references/environment-and-triggers.md).
+6. Reach for `retry(2)` only on genuinely non-deterministic steps;
+   prefer quarantine.
+7. Review the anti-patterns table before committing.
+
 ## Step 1 - Basic Jenkinsfile
 
 ```groovy
@@ -82,183 +102,22 @@ pipeline {
 Docker agents provide reproducibility - same Node version on
 every run.
 
-## Step 3 - Parallel stages
+## Advanced pipeline patterns
 
-```groovy
-pipeline {
-    agent any
+Deeper stage recipes are split into reference files:
 
-    stages {
-        stage('Tests') {
-            parallel {
-                stage('Unit') {
-                    steps { sh 'npm test' }
-                }
-                stage('Integration') {
-                    steps { sh 'npm run test:integration' }
-                }
-                stage('E2E') {
-                    agent {
-                        docker { image 'mcr.microsoft.com/playwright:v1.50.0-noble' }
-                    }
-                    steps { sh 'npx playwright test' }
-                }
-            }
-        }
-    }
-}
-```
+- **Parallel and matrix stages** - run unit / integration / E2E
+  concurrently and fan across OS × runtime:
+  [references/parallel-and-matrix.md](references/parallel-and-matrix.md).
+- **Post actions** - `post { always / success / failure / unstable }`
+  for JUnit publishing, artifact archiving, and notifications:
+  [references/post-actions.md](references/post-actions.md).
+- **Environment, credentials, locks, and triggers** -
+  `environment {}`, `withCredentials`, `lock(...)`, `triggers`,
+  `options {}`:
+  [references/environment-and-triggers.md](references/environment-and-triggers.md).
 
-Parallel stages can have different agents - useful when E2E
-needs a Playwright-equipped image.
-
-## Step 4 - Matrix builds (Jenkins 2.302+)
-
-```groovy
-pipeline {
-    agent none
-
-    stages {
-        stage('Test matrix') {
-            matrix {
-                axes {
-                    axis {
-                        name 'OS'
-                        values 'linux', 'macos', 'windows'
-                    }
-                    axis {
-                        name 'NODE_VERSION'
-                        values '20', '22'
-                    }
-                }
-                stages {
-                    stage('Test') {
-                        agent { label "${OS}" }
-                        steps {
-                            sh 'npm ci && npm test'
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-Matrix runs all OS × Node combinations in parallel.
-
-## Step 5 - Post actions
-
-```groovy
-pipeline {
-    agent any
-
-    stages {
-        stage('Test') {
-            steps {
-                sh 'npm test'
-            }
-        }
-    }
-
-    post {
-        always {
-            // Always run - even on failure
-            junit 'reports/junit/*.xml'
-            archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
-        }
-        success {
-            slackSend(channel: '#ci', message: "✅ Build ${env.BUILD_NUMBER} passed")
-        }
-        failure {
-            slackSend(channel: '#ci', message: "❌ Build ${env.BUILD_NUMBER} failed: ${env.BUILD_URL}")
-        }
-        unstable {
-            // E.g., tests passed but with warnings
-            mail to: 'team@example.com', subject: "Build ${env.BUILD_NUMBER} unstable"
-        }
-    }
-}
-```
-
-`post { always {} }` runs on any outcome - essential for artifact
-upload + notifications.
-
-The `junit '...'` step (from JUnit Plugin) parses XML and renders
-results in Jenkins UI.
-
-## Step 6 - Lockable resources
-
-```groovy
-pipeline {
-    agent any
-
-    stages {
-        stage('Integration') {
-            steps {
-                lock(resource: 'shared-test-database') {
-                    sh 'npm run test:integration'
-                }
-            }
-        }
-    }
-}
-```
-
-`lock(...)` uses the Lockable Resources Plugin to serialize
-access to shared resources (test DB, license-locked tool, etc.).
-
-## Step 7 - Environment + credentials
-
-```groovy
-pipeline {
-    agent any
-
-    environment {
-        CI = 'true'
-        NODE_ENV = 'test'
-    }
-
-    stages {
-        stage('Test') {
-            steps {
-                withCredentials([string(credentialsId: 'npm-auth-token', variable: 'NODE_AUTH_TOKEN')]) {
-                    sh 'npm ci && npm test'
-                }
-            }
-        }
-    }
-}
-```
-
-`withCredentials([...])` masks secrets in build logs.
-
-## Step 8 - Multi-branch + scheduled
-
-```groovy
-pipeline {
-    agent any
-
-    triggers {
-        cron('0 4 * * *')   // daily at 4 AM
-        pollSCM('*/15 * * * *')   // poll every 15 min (or use webhook)
-    }
-
-    options {
-        timeout(time: 30, unit: 'MINUTES')
-        timestamps()
-        ansiColor('xterm')
-        buildDiscarder(logRotator(numToKeepStr: '20'))
-    }
-
-    stages { /* ... */ }
-}
-```
-
-Per-branch behavior via Multibranch Pipeline job type (separate
-config in Jenkins UI).
-
-## Step 9 - When to retry
+## When to retry
 
 ```groovy
 stage('Test') {
@@ -273,15 +132,39 @@ stage('Test') {
 Use sparingly - retries hide flake. Prefer
 `flaky-test-quarantine` (in the qa-flake-triage plugin).
 
+## Worked example
+
+A regulated team runs its suite on a self-hosted Jenkins with a
+shared integration database.
+
+1. The `Jenkinsfile` pins `agent { docker { image 'node:22' } }`
+   so every run uses the same runtime.
+2. A `Tests` stage runs `Unit` and `Integration` in `parallel`;
+   the `E2E` branch overrides its agent to a
+   `mcr.microsoft.com/playwright:v1.50.0-noble` image.
+3. The `Integration` step wraps its work in
+   `lock(resource: 'shared-test-database')` so only one build
+   touches the DB at a time.
+4. `withCredentials([...])` injects the registry token, masked in
+   logs; `environment { CI = 'true' }` marks the run as CI.
+5. `post { always { junit 'reports/junit/*.xml';
+   archiveArtifacts 'coverage/**' } }` publishes results either
+   way, and `failure { slackSend(...) }` pings `#ci` on a red build.
+6. `options { timeout(time: 30, unit: 'MINUTES') }` kills hung
+   builds so they don't hold executors.
+
+Result: reproducible runs, no DB contention across parallel
+builds, and test reports plus notifications on every outcome.
+
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | Scripted pipeline for new code                                         | Declarative is the standard; better tooling support.                      | Declarative Pipeline (Step 1). |
-| Plaintext credentials in `Jenkinsfile`                                | Secret leak.                                                              | `withCredentials({...})` (Step 7). |
-| No `post { always {} }` for artifact upload                             | Failure investigation incomplete.                                         | Always upload (Step 5). |
-| Single-agent pipeline for parallel work                                | No parallelism; slow.                                                     | Parallel stages (Step 3). |
-| Missing `timeout`                                                      | Hung jobs consume executors indefinitely.                                | `options { timeout(...) }` (Step 8). |
+| Plaintext credentials in `Jenkinsfile`                                | Secret leak.                                                              | `withCredentials({...})` ([environment-and-triggers](references/environment-and-triggers.md)). |
+| No `post { always {} }` for artifact upload                             | Failure investigation incomplete.                                         | Always upload ([post-actions](references/post-actions.md)). |
+| Single-agent pipeline for parallel work                                | No parallelism; slow.                                                     | Parallel stages ([parallel-and-matrix](references/parallel-and-matrix.md)). |
+| Missing `timeout`                                                      | Hung jobs consume executors indefinitely.                                | `options { timeout(...) }` ([environment-and-triggers](references/environment-and-triggers.md)). |
 | Skipping `agent { docker {...}}`                                       | Inconsistent runtime per agent; hard to reproduce.                       | Docker agents (Step 2). |
 
 ## Limitations
@@ -297,8 +180,12 @@ Use sparingly - retries hide flake. Prefer
 ## References
 
 - Jenkins Declarative Pipeline at `jenkins.io/doc/book/pipeline/`.
+- [references/parallel-and-matrix.md](references/parallel-and-matrix.md),
+  [references/post-actions.md](references/post-actions.md),
+  [references/environment-and-triggers.md](references/environment-and-triggers.md) -
+  deeper stage recipes.
 - `github-actions-test-jobs`,
   `gitlab-ci-test-jobs`,
-  `circleci-test-configs` - 
+  `circleci-test-configs` -
   alternatives.
 - `junit-xml-analysis` - JUnit XML parser.

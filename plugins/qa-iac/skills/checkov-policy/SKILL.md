@@ -24,6 +24,23 @@ built-in checks per release).
 - Want one tool covering Terraform + Kubernetes + Dockerfile + CI
   pipelines.
 
+## How to use
+
+1. Install Checkov and pin the version in `requirements-dev.txt`
+   for CI determinism (Step 1).
+2. Run `checkov -d .` locally, narrowing frameworks with
+   `--framework` when the repo mixes IaC types (Step 2).
+3. Emit SARIF for GitHub Code Scanning and JUnit for CI test
+   reporting (Step 3).
+4. Triage findings - fix real issues, annotate intentional
+   exceptions with justified `checkov:skip=` comments (Step 4).
+5. Add custom Python or YAML checks for team-specific policy the
+   built-in rules miss (Step 5).
+6. Create a `.checkov.baseline` so CI fails only on new findings,
+   then wire the scan into CI with SARIF upload (Steps 7-8).
+7. Pair with tfsec / KICS and unify the reports for
+   overlapping-but-non-identical coverage (Step 9).
+
 ## Step 1 - Install
 
 ```bash
@@ -101,35 +118,9 @@ PRs.
 
 ## Step 5 - Custom Python checks
 
-```python
-# .checkov/custom_checks/cost_center_tag.py
-from checkov.common.models.enums import CheckCategories, CheckResult
-from checkov.terraform.checks.resource.base_resource_check import BaseResourceCheck
-
-class CostCenterTagPresent(BaseResourceCheck):
-    def __init__(self):
-        super().__init__(
-            name="Ensure all EC2 instances have a cost_center tag",
-            id="CKV_CUSTOM_001",
-            categories=[CheckCategories.GENERAL_SECURITY],
-            supported_resources=['aws_instance'],
-        )
-
-    def scan_resource_conf(self, conf):
-        tags = conf.get('tags', [{}])[0]
-        if 'cost_center' in tags:
-            return CheckResult.PASSED
-        return CheckResult.FAILED
-
-check = CostCenterTagPresent()
-```
-
-```bash
-checkov -d . --external-checks-dir .checkov/custom_checks
-```
-
-For custom YAML policies (no Python required), use the graph-based
-`policies/` directory (Checkov supports YAML rules).
+Author custom Python checks (and the no-code YAML-policy
+alternative) for team-specific rules the built-in set misses:
+[references/custom-checks-and-ci.md](references/custom-checks-and-ci.md).
 
 ## Step 6 - Soft fail / hard fail
 
@@ -163,25 +154,9 @@ build.
 
 ## Step 8 - CI integration
 
-```yaml
-jobs:
-  iac-security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.13' }
-      - run: pip install checkov
-      - name: Run Checkov
-        run: checkov -d . --output sarif --output-file-path checkov.sarif --baseline .checkov.baseline
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: checkov.sarif
-```
-
-The SARIF upload to GitHub Code Scanning surfaces findings as PR
-comments + the Security tab.
+Wire the scan into CI with a baseline plus SARIF upload to GitHub
+Code Scanning (findings surface as PR comments + the Security tab):
+[references/custom-checks-and-ci.md](references/custom-checks-and-ci.md).
 
 ## Step 9 - Combine with other scanners
 
@@ -194,6 +169,28 @@ tfsec . -f json > tfsec.json
 kics scan -p . --report-formats json -o ./kics-results
 # Combine the three reports into a unified verdict
 ```
+
+## Worked example
+
+A team adopts Checkov on a legacy Terraform + Kubernetes monorepo.
+
+1. `pip install checkov==3.2.500`, pinned in `requirements-dev.txt`.
+2. First run `checkov -d . --framework terraform,kubernetes`
+   reports a large backlog of existing failures - too many to fix
+   at once.
+3. They capture the current state: `checkov -d . --create-baseline`
+   writes `.checkov.baseline`.
+4. CI runs `checkov -d . --baseline .checkov.baseline -o sarif
+   --output-file-path checkov.sarif`; the build passes because no
+   findings are new versus the baseline.
+5. A PR adds an `aws_s3_bucket` with `acl = "public-read"`. Checkov
+   flags `CKV_AWS_20` as a NEW finding and fails the build.
+6. The author drops public-read (or adds a justified
+   `checkov:skip=CKV_AWS_20` comment); the SARIF upload clears the
+   Security-tab entry and the build goes green.
+
+Result: legacy debt is ratcheted down, not ignored, and each PR is
+gated only on net-new misconfigurations.
 
 ## Anti-patterns
 

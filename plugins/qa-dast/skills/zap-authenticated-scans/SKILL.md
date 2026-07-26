@@ -26,6 +26,23 @@ Nearest neighbors and differentiation axes:
 - Neither neighbor covers CSRF handling, bearer injection, OAuth flows,
   verification-strategy calibration, or context XML export.
 
+## How to use
+
+1. Create a ZAP Context that includes the app URLs and excludes `/logout`, so
+   the scanner does not log itself out mid-scan (Step 1).
+2. Choose the Authentication Method that matches the app's login mechanism -
+   Form, JSON, HTTP/NTLM, Script, or Browser-Based (Steps 2-6).
+3. Set the Session Management method (cookie, HTTP header, or script) to match
+   how the app tracks sessions (Step 7).
+4. Calibrate the Verification Strategy with logged-in and logged-out
+   indicators so ZAP detects session expiry and re-authenticates (Step 9).
+5. Add one or more Users, injecting credentials via `-config` or env vars
+   rather than hardcoding them (Step 10).
+6. Confirm auth in the Authentication Tester, then export the Context to
+   `.zap/context.xml` (Step 11).
+7. Run the scan in CI with `-n context.xml`, or replay the same session in Burp
+   for manual testing (Steps 11-12).
+
 ## Step 1 - Create a ZAP Context
 
 Per [zaproxy.org/docs/desktop/start/features/authentication/][zap-auth],
@@ -96,41 +113,13 @@ session cookie or JWT response body.
 
 Per [zap-methods][zap-methods], Script-Based auth handles flows that
 Form-Based and JSON-Based cannot: OTP-augmented logins, multi-step forms,
-OAuth authorization-code flows with PKCE, or apps that rotate CSRF seeds
-on every page load.
+OAuth authorization-code flows with PKCE, or apps that rotate CSRF seeds on
+every page load. It requires the Script Console add-on and an Authentication
+script that builds the login request via `helper.prepareMessage()`.
 
-Prerequisites:
-1. Install the **Script Console** add-on from the ZAP Marketplace.
-2. In `Tools > Scripts`, create a new Authentication script
-   (type: `Authentication`). ZAP ships example scripts at
-   `scripts/authentication/` inside the ZAP installation directory.
-3. The script receives `helper`, `paramsValues`, and `credentials`; it must
-   call `helper.prepareMessage()` to build a login request and return the
-   response.
-
-Minimal skeleton (Groovy):
-
-```groovy
-def authenticate(helper, paramsValues, credentials) {
-    def loginUrl = paramsValues.get("Login URL")
-    def msg = helper.prepareMessage()
-    msg.setRequestHeader("POST " + loginUrl + " HTTP/1.1\r\n" +
-        "Host: app.example.com\r\n" +
-        "Content-Type: application/json\r\n")
-    def body = '{"user":"' + credentials.getParam("Username") + '",' +
-               '"pass":"' + credentials.getParam("Password") + '"}'
-    msg.setRequestBody(body)
-    helper.sendAndReceive(msg)
-    return msg
-}
-```
-
-Select the script in `Session Properties > Context > Authentication >
-Script-Based Authentication`, then set any script parameters.
-
-For OAuth authorization-code flows: the script fetches the `/authorize`
-redirect, extracts the `code`, POSTs to `/token`, and stores the resulting
-`access_token` in a ZAP environment variable for header injection (Step 8).
+See [references/script-based-auth.md](references/script-based-auth.md) for the
+Script Console setup, the Groovy `authenticate()` skeleton, and the OAuth
+authorization-code exchange pattern.
 
 ## Step 6 - Configure Browser-Based Authentication (auth-helper addon)
 
@@ -179,73 +168,28 @@ management actions are performed" and requires the Scripts Console add-on.
 
 ## Step 8 - Inject OAuth/Bearer Tokens via Environment Variables
 
-Per [zap-auth][zap-auth], ZAP exposes three environment variables for
-header-based authentication injection - useful for pre-obtained bearer
-tokens (OAuth client-credentials flow, API keys, CI-issued JWTs):
+Per [zap-auth][zap-auth], ZAP exposes environment variables
+(`ZAP_AUTH_HEADER_VALUE`, `ZAP_AUTH_HEADER`, `ZAP_AUTH_HEADER_SITE`) for
+header-based injection of pre-obtained bearer tokens - OAuth client-credentials,
+API keys, CI-issued JWTs. Set them in the CI environment before the scan. For a
+full authorization-code exchange, use Script-Based auth (Step 5) instead and let
+ZAP manage token refresh.
 
-| Variable | Purpose |
-|---|---|
-| `ZAP_AUTH_HEADER_VALUE` | The token value (`Bearer eyJ...`) |
-| `ZAP_AUTH_HEADER` | Header name (defaults to `Authorization` if unset) |
-| `ZAP_AUTH_HEADER_SITE` | Restrict injection to this domain only |
-
-Set these in the CI environment before running the scan:
-
-```bash
-export ZAP_AUTH_HEADER_VALUE="Bearer $(./scripts/get-ci-token.sh)"
-export ZAP_AUTH_HEADER_SITE="app.example.com"
-
-docker run --rm \
-  -e ZAP_AUTH_HEADER_VALUE \
-  -e ZAP_AUTH_HEADER_SITE \
-  -v $(pwd):/zap/wrk/:rw \
-  ghcr.io/zaproxy/zaproxy:stable \
-  zap-full-scan.py -t https://app.example.com -n /zap/wrk/context.xml -J report.json
-```
-
-For OAuth flows requiring a full authorization-code exchange, use Script-Based
-auth (Step 5) to run the exchange inside ZAP and let ZAP manage token refresh
-during the scan. Environment-variable injection is the right path for
-client-credentials and static-API-key auth.
+See [references/oauth-bearer-injection.md](references/oauth-bearer-injection.md)
+for the variable table and the CI Docker example.
 
 ## Step 9 - Set Authentication Verification Strategy
 
-Per [zaproxy.org/docs/desktop/start/features/authstrategies/][zap-verify],
-ZAP uses an **Authentication Verification Strategy** to know whether a
-request is executing as an authenticated user. Configure in
-`Session Properties > Context > Authentication > Verification`:
+Per [zap-verify][zap-verify], ZAP uses an **Authentication Verification
+Strategy** to know whether a request runs as an authenticated user, driven by a
+Logged-In Indicator and a Logged-Out Indicator regex. Four strategies exist
+(Check Every Response, Check Every Request, Check Every Request or Response,
+Poll the Specified URL); calibrate the indicators by flagging logged-in and
+logged-out responses in the History tab.
 
-**Logged-In Indicator**: a regex present in responses when the user is
-authenticated. Examples:
-
-- `\QWelcome, \E` (welcome banner with the username)
-- `\Qhref="/logout"\E` (logout link in nav)
-- `\Q"role":"user"\E` (JSON response field)
-
-**Logged-Out Indicator**: a regex present in responses when the session
-has expired. Examples:
-
-- `\QPlease log in\E`
-- `\Qlocation: /login\E` (redirect header)
-- `HTTP/1\.1 401`
-
-Per [zap-verify][zap-verify], four strategies are available:
-
-| Strategy | Use when |
-|---|---|
-| Check Every Response | Traditional HTML apps (indicator in page body) |
-| Check Every Request | Client-side sessions (JWT in `Authorization` header) |
-| Check Every Request or Response | Mixed; SPA + API combo |
-| Poll the Specified URL | Dedicated `/api/me` or `/session/check` endpoint |
-
-Calibration steps:
-1. Browse the app manually through ZAP proxy while logged in.
-2. Right-click a response in the History tab that contains the logged-in
-   text. Choose `Flag as Context > <context-name> Logged in indicator`.
-   ZAP extracts the regex automatically.
-3. Browse to a page after logging out. Right-click that response. Choose
-   `Flag as Context > <context-name> Logged out indicator`.
-4. Confirm both indicators in `Session Properties > Context > Authentication`.
+See [references/verification-strategy.md](references/verification-strategy.md)
+for the indicator examples, the strategy-selection table, and the calibration
+steps.
 
 [zap-verify]: https://www.zaproxy.org/docs/desktop/start/features/authstrategies/
 
@@ -321,6 +265,29 @@ testing by capturing a valid authenticated request via ZAP proxy, then:
 
 This keeps Burp and ZAP scanning the same authenticated surface without
 re-configuring login from scratch in each tool.
+
+## Worked example
+
+A team needs authenticated DAST coverage of a form-login SPA at
+`app.example.com` whose login page carries an anti-CSRF token.
+
+1. They create a Context `myapp-auth` including `https://app.example.com/.*`
+   and excluding `https://app.example.com/logout.*` (Step 1).
+2. Login is an HTML form POST, so they pick Form-Based auth with POST data
+   `username={%username%}&password={%password%}` and register the CSRF field
+   name under `Tools > Options > Anti CSRF Tokens` (Steps 2-3).
+3. Sessions ride a `JSESSIONID` cookie, so they set Cookie-Based Session
+   Management (Step 7).
+4. They flag a logged-in response containing `href="/logout"` and a logged-out
+   `Please log in` page as indicators, using Check Every Response (Step 9,
+   [references/verification-strategy.md](references/verification-strategy.md)).
+5. They add a `scanner` user and export the Context to `.zap/context.xml`, with
+   credentials supplied at scan time via `-config` (Steps 10-11).
+6. CI runs `zap-baseline.py -t https://app.example.com -n /zap/wrk/.zap/context.xml -J report.json`.
+
+Result: the baseline scan authenticates, re-logs in when the session expires,
+and reports vulnerabilities across the routes behind the login wall instead of
+only the public pages.
 
 ## Anti-patterns
 

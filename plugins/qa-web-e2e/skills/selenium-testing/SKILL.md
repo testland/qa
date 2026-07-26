@@ -28,6 +28,16 @@ record-and-playback.
 For new projects in 2026+: pick Playwright or Cypress unless
 constraints dictate Selenium.
 
+## How to use
+
+1. Pick the language binding that matches the stack (Java, Python, C#, Ruby, Kotlin, PHP) and add the Selenium dependency plus WebDriverManager.
+2. Instantiate a driver in setup and `quit()` it in teardown so no browser process leaks.
+3. Prefer stable `By.cssSelector` / `data-testid` locators; keep XPath for relationship queries only.
+4. Replace every `Thread.sleep()` with `WebDriverWait` + `ExpectedConditions` so the test waits on a condition, not a clock.
+5. Author one test per user flow with fresh per-test setup rather than one giant flow.
+6. For breadth, point a `RemoteWebDriver` at Selenium Grid (or a managed grid) to fan out across browsers.
+7. Emit JUnit XML in CI (`target/surefire-reports/`) and feed it to `junit-xml-analysis`.
+
 ## Step 1 - Install (Java + JUnit example)
 
 ```xml
@@ -177,60 +187,11 @@ Grid distributes tests across nodes - handles parallelism. For
 managed grids, see commercial: BrowserStack, Sauce Labs,
 LambdaTest.
 
-## Step 6 - Other languages
+## Step 6 - Other language bindings
 
-### Python (pytest)
-
-```python
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-def test_checkout():
-    driver = webdriver.Chrome()
-    driver.get('http://localhost:3000/login')
-
-    driver.find_element(By.CSS_SELECTOR, '[data-testid=email]').send_keys('user@example.com')
-    driver.find_element(By.CSS_SELECTOR, '[data-testid=password]').send_keys('pwd')
-    driver.find_element(By.CSS_SELECTOR, 'button[type=submit]').click()
-
-    WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.XPATH, "//h1[contains(., 'Welcome')]"))
-    )
-
-    driver.quit()
-```
-
-### C# (xUnit)
-
-```csharp
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
-using Xunit;
-
-public class CheckoutTest : IDisposable
-{
-    private readonly IWebDriver driver = new ChromeDriver();
-    private readonly WebDriverWait wait;
-
-    public CheckoutTest()
-    {
-        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-    }
-
-    [Fact]
-    public void CompleteCheckout()
-    {
-        driver.Navigate().GoToUrl("http://localhost:3000/login");
-        driver.FindElement(By.CssSelector("[data-testid=email]")).SendKeys("user@example.com");
-        // ...
-    }
-
-    public void Dispose() => driver.Quit();
-}
-```
+The Java spine above ports 1:1 to Selenium's other official bindings.
+Python (pytest) and C# (xUnit) worked examples:
+[references/language-bindings.md](references/language-bindings.md).
 
 ## Step 7 - CI integration
 
@@ -252,6 +213,32 @@ jobs:
 
 JUnit XML lands at `target/surefire-reports/`; feeds
 `junit-xml-analysis` (in the qa-test-reporting plugin).
+
+## Worked example
+
+A legacy Java suite has one `CheckoutTest` method that drives login,
+add-to-cart, and checkout in a single flow, synchronizing with
+`Thread.sleep(2000)` between steps and never calling `driver.quit()`.
+Browser processes leak on CI and the test flakes when the runner is
+slow.
+
+1. The single method is split into per-behavior `@Test` methods, each
+   with `@BeforeEach` creating a fresh `ChromeDriver` and `@AfterEach`
+   calling `driver.quit()`.
+2. Every `Thread.sleep(2000)` is replaced with
+   `wait.until(ExpectedConditions.elementToBeClickable(...))` so the
+   step blocks only until the element is ready.
+3. Class-name selectors move to `By.cssSelector("[data-testid=...]")`,
+   and the hardcoded chromedriver path is dropped for
+   `WebDriverManager.chromedriver().setup()`.
+4. A Dockerized Selenium Grid is added and tests connect via
+   `RemoteWebDriver`, so Chrome and Firefox run on parallel nodes.
+5. `mvn test` writes JUnit XML to `target/surefire-reports/`, which
+   `junit-xml-analysis` ingests for the flake trend.
+
+Result: browsers no longer leak (every test quits its driver), the
+fixed sleeps are gone, and the flow runs across two browsers on the
+grid.
 
 ## Anti-patterns
 

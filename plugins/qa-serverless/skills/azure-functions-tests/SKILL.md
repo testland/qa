@@ -34,268 +34,60 @@ Nearest neighbours and how this skill differs:
 - CI gating on function handler logic in .NET, Node.js, or Python.
 - Verifying binding configuration with Azurite instead of live Azure Storage.
 
-## Install
+## How to use
 
-```bash
-# macOS
-brew tap azure/functions
-brew install azure-functions-core-tools@4
+1. Install Core Tools v4 (`func --version` shows 4.x) and Azurite, then
+   scaffold with `func init` and add triggers with `func new` - commands in
+   [references/local-setup.md](references/local-setup.md).
+2. Set `AzureWebJobsStorage` to `UseDevelopmentStorage=true` in
+   `local.settings.json` so queue and timer triggers route to Azurite; keep
+   the file git-ignored.
+3. Start Azurite, then run `func start` from the project root and note the
+   printed HTTP trigger URLs.
+4. Exercise HTTP triggers with `curl`; fire non-HTTP (queue/timer) triggers
+   through the `/admin/functions/<name>` endpoint - see
+   [references/triggering-functions.md](references/triggering-functions.md).
+5. Unit-test handler logic directly (no running host) with the per-language
+   patterns in [references/unit-testing-handlers.md](references/unit-testing-handlers.md).
+6. Wire Core Tools + Azurite + `dotnet test` / `pytest` / `npm test` into CI
+   using the workflow in [references/triggering-functions.md](references/triggering-functions.md).
+7. Confirm binding config against Azurite; verify Managed Identity / RBAC in a
+   staging environment (see Limitations).
 
-# Ubuntu/Debian (see full APT steps at learn.microsoft.com/azure/azure-functions/functions-run-local#install-the-azure-functions-core-tools)
-sudo apt-get install azure-functions-core-tools-4
+## Reference files
 
-# Windows: download the MSI from
-# https://go.microsoft.com/fwlink/?linkid=2174087 (64-bit) per the Core Tools docs
-```
+- Install, project init, `local.settings.json`, Azurite, and `func start`:
+  [references/local-setup.md](references/local-setup.md).
+- Firing HTTP / queue / timer triggers and the CI workflow:
+  [references/triggering-functions.md](references/triggering-functions.md).
+- Unit-testing handlers in .NET isolated, Node.js v4, and Python v2:
+  [references/unit-testing-handlers.md](references/unit-testing-handlers.md).
 
-Verify:
+## Worked example
 
-```bash
-func --version   # must be 4.x
-```
+A `.NET` isolated function `OrderProcessor` is triggered by the `orders`
+queue. To gate it locally before deploy:
 
-Install Azurite via npm, per
-[learn.microsoft.com/azure/storage/common/storage-install-azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-install-azurite):
+1. `func init OrderApp --worker-runtime dotnet-isolated`, then
+   `func new --template "Azure Queue Storage Trigger" --name OrderProcessor`.
+2. In `local.settings.json`, set
+   `"AzureWebJobsStorage": "UseDevelopmentStorage=true"`.
+3. Run `azurite --silent --location ./azurite-data` in one shell and
+   `func start` in another.
+4. Fire the trigger through the admin endpoint:
 
-```bash
-npm install -g azurite
-```
+   ```bash
+   curl --request POST -H "Content-Type: application/json" \
+        --data '{"input":"{\"orderId\":42}"}' \
+        http://localhost:7071/admin/functions/OrderProcessor
+   ```
 
-## Project initialisation
+   The host returns HTTP 202 (Accepted) and the function logs the processed order.
+5. Unit-test `OrderProcessor.Run` with a mocked `FunctionContext` (xUnit),
+   asserting the parsed order id - no host required.
 
-```bash
-# .NET isolated worker model (recommended; in-process support ends 2026-11-10
-# per learn.microsoft.com/azure/azure-functions/dotnet-isolated-in-process-differences)
-func init MyApp --worker-runtime dotnet-isolated
-
-# Node.js (v4 programming model)
-func init MyApp --worker-runtime javascript --model V4
-
-# Python (v2 programming model)
-func init MyApp --worker-runtime python --model V2
-
-# Add a trigger template
-func new --template "Http Trigger" --name HttpExample
-func new --template "Azure Queue Storage Trigger" --name QueueExample
-func new --template "Timer trigger" --name TimerExample
-```
-
-## local.settings.json
-
-Per
-[learn.microsoft.com/azure/azure-functions/functions-develop-local](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-local),
-`local.settings.json` holds app settings used only when running locally.
-Set `AzureWebJobsStorage` to `UseDevelopmentStorage=true` to route storage
-triggers to Azurite:
-
-```json
-{
-  "IsEncrypted": false,
-  "Values": {
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
-  }
-}
-```
-
-Never commit `local.settings.json` to source control; it may contain
-connection strings.
-
-## Start Azurite
-
-Azurite emulates Blob (port 10000), Queue (port 10001), and Table (port 10002)
-per
-[learn.microsoft.com/azure/storage/common/storage-install-azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-install-azurite).
-Start it before `func start`:
-
-```bash
-azurite --silent --location ./azurite-data
-```
-
-For Docker:
-
-```bash
-docker run -p 10000:10000 -p 10001:10001 -p 10002:10002 \
-    mcr.microsoft.com/azure-storage/azurite
-```
-
-## Start the local Functions host
-
-From the project root, per
-[learn.microsoft.com/azure/azure-functions/functions-run-local#start-the-functions-runtime](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local#start-the-functions-runtime):
-
-```bash
-func start
-```
-
-Output includes HTTP trigger URLs, e.g.:
-
-```
-Http Function HttpExample: http://localhost:7071/api/HttpExample
-```
-
-By default, HTTP authorization is not enforced locally (all requests are
-treated as `authLevel = "anonymous"`). Pass `--enableAuth` to require
-authorization during local testing.
-
-## Testing triggers
-
-### HTTP trigger
-
-```bash
-# GET
-curl http://localhost:7071/api/HttpExample?name=World
-
-# POST
-curl --request POST http://localhost:7071/api/HttpExample \
-     --data '{"name":"World"}'
-```
-
-### Non-HTTP triggers (admin endpoint)
-
-Per
-[learn.microsoft.com/azure/azure-functions/functions-manually-run-non-http](https://learn.microsoft.com/en-us/azure/azure-functions/functions-manually-run-non-http),
-non-HTTP triggers can be fired via the admin endpoint. Authorization is
-bypassed locally:
-
-```bash
-# Queue trigger named QueueExample
-curl --request POST \
-     -H "Content-Type: application/json" \
-     --data '{"input":"sample queue payload"}' \
-     http://localhost:7071/admin/functions/QueueExample
-
-# Timer trigger named TimerExample (empty input is valid)
-curl --request POST \
-     -H "Content-Type: application/json" \
-     --data '{}' \
-     http://localhost:7071/admin/functions/TimerExample
-```
-
-The endpoint returns HTTP 202 (Accepted) on success.
-
-## Unit-testing handlers
-
-Testing handler code directly avoids the overhead of a running host. The
-approach differs by language.
-
-### .NET isolated worker model
-
-The .NET isolated worker model runs function code in a separate worker
-process from the Functions host, per
-[learn.microsoft.com/azure/azure-functions/dotnet-isolated-in-process-differences](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-in-process-differences).
-The core packages are `Microsoft.Azure.Functions.Worker` and
-`Microsoft.Azure.Functions.Worker.Sdk`. HTTP triggers use
-`HttpRequestData` / `HttpResponseData` (not `HttpRequest`/`IActionResult`)
-unless ASP.NET Core integration is enabled.
-
-Because handler classes can use dependency injection, extract service
-dependencies behind interfaces and substitute test doubles. The
-`FunctionContext` can be mocked with any standard mock library.
-
-```csharp
-// Handler under test
-public class HttpExample
-{
-    [Function("HttpExample")]
-    public HttpResponseData Run(
-        [HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,
-        FunctionContext context)
-    {
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        response.WriteString("Hello from Azure Functions");
-        return response;
-    }
-}
-
-// xUnit test - construct HttpRequestData via a mock FunctionContext
-// (use Moq, NSubstitute, or similar for FunctionContext and HttpRequestData)
-[Fact]
-public async Task Run_ReturnsOk()
-{
-    var context = new Mock<FunctionContext>();
-    var request = CreateMockHttpRequest(context.Object, HttpMethod.Get);
-
-    var function = new HttpExample();
-    var response = function.Run(request, context.Object);
-
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-}
-```
-
-### Node.js (v4 programming model)
-
-```js
-// handler.js
-const { app } = require('@azure/functions');
-
-app.http('HttpExample', {
-  methods: ['GET', 'POST'],
-  authLevel: 'anonymous',
-  handler: async (request, context) => {
-    const name = request.query.get('name') || 'World';
-    return { body: `Hello, ${name}!` };
-  },
-});
-
-// handler.test.js (Jest)
-const { handler } = require('./handler');
-
-test('returns greeting', async () => {
-  const req = { query: new URLSearchParams('name=Test'), text: async () => '' };
-  const ctx = { log: jest.fn() };
-  const res = await handler(req, ctx);
-  expect(res.body).toBe('Hello, Test!');
-});
-```
-
-### Python (v2 programming model)
-
-```python
-# function_app.py
-import azure.functions as func
-app = func.FunctionApp()
-
-@app.route(route="HttpExample")
-def http_example(req: func.HttpRequest) -> func.HttpResponse:
-    name = req.params.get('name', 'World')
-    return func.HttpResponse(f"Hello, {name}!")
-
-# test_function_app.py (pytest)
-import azure.functions as func
-from function_app import http_example
-
-def test_http_example():
-    req = func.HttpRequest(
-        method='GET',
-        url='/api/HttpExample',
-        params={'name': 'Test'},
-        body=b''
-    )
-    resp = http_example(req)
-    assert resp.status_code == 200
-    assert 'Test' in resp.get_body().decode()
-```
-
-## CI integration
-
-```yaml
-jobs:
-  azure-functions-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Core Tools
-        run: |
-          curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-          sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
-          sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list'
-          sudo apt-get update && sudo apt-get install -y azure-functions-core-tools-4
-      - name: Start Azurite
-        run: npx azurite --silent &
-      - name: Run unit tests
-        run: dotnet test   # or: pytest / npm test
-```
+Result: queue-trigger wiring is verified against Azurite and handler logic is
+gated in CI, with no live Azure Storage account.
 
 ## Anti-patterns
 
