@@ -1,9 +1,9 @@
 {
   "name": "testland/pseudo-localization-runner",
-  "description": "Configures pseudo-localization for the app (replaces translatable strings with accented variants like \"Submit\" → \"Şüƀɱîţ\" + 35% length expansion) - surfaces UI issues without needing actual translators: hardcoded strings, truncation, encoding, and bidi handling. Use when preparing an app for translation, validating l10n infrastructure, or when the user mentions localization testing.",
+  "description": "Configures pseudo-localization for the app (replaces translatable strings with accented variants like \"Submit\" \u2192 \"\u015e\u00fc\u0180\u0271\u00ee\u0163\" + 35% length expansion) - surfaces UI issues without needing actual translators: hardcoded strings, truncation, encoding, and bidi handling. Use when preparing an app for translation (i18n / internationalization), validating l10n infrastructure, or when the user mentions pseudo-localization or localization testing.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.10"
+  "version": "1.1.11"
 }
