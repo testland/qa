@@ -1,14 +1,14 @@
 ---
 name: pseudo-localization-runner
-description: "Configures pseudo-localization for the app (replaces translatable strings with accented variants like \"Submit\" → \"Şüƀɱîţ\" + 35% length expansion) - surfaces UI issues without needing actual translators: hardcoded strings, truncation, encoding, and bidi handling. Use when preparing an app for translation, validating l10n infrastructure, or when the user mentions localization testing."
+description: "Configures pseudo-localization for the app (replaces translatable strings with accented variants like \"Submit\" → \"Şüƀɱîţ\" + 35% length expansion) - surfaces UI issues without needing actual translators: hardcoded strings, truncation, encoding, and bidi handling. Use when preparing an app for translation (i18n / internationalization), validating l10n infrastructure, or when the user mentions pseudo-localization or localization testing."
 ---
 
 # pseudo-localization-runner
 
 ## Overview
 
-Pseudo-localization transforms translatable strings into visually distinct but
-readable variants, testing l10n without real translations:
+Pseudo-localization swaps translatable strings for accented, length-expanded
+variants that stay readable to English QA:
 
 ```
 "Submit" → "Şüƀɱîţ"             # accent / Latin-extended characters
@@ -70,6 +70,11 @@ APP_URL=http://localhost:3000?lng=en-XA   # or whatever the pseudo-locale code i
 The app renders with pseudo-translated text. QA / engineers walk
 the UI looking for issues.
 
+**Verify the pseudo-locale is active** before walking the UI: confirm at least one
+visible label renders transformed (e.g. `Submit` shows as `Şüƀɱîţ`). If the page
+still shows plain English, the locale did not activate - fix the `lng` param or
+cookie and reload before continuing.
+
 ## Step 4 - Issues to spot
 
 | Symptom                                       | Underlying issue                          |
@@ -118,24 +123,9 @@ runs catch regressions in l10n-friendliness.
 
 ## Step 7 - Alternative: manual transformation
 
-If no library is available, transform locally:
-
-```javascript
-// scripts/pseudo-loc.js
-function pseudoLocalize(s) {
-  const map = { a: 'à', e: 'è', i: 'ì', o: 'ò', u: 'ù',
-                A: 'Á', E: 'É', I: 'Í', O: 'Ó', U: 'Ú',
-                s: 'š', t: 'ţ' };
-  let out = '';
-  for (const c of s) {
-    out += map[c] || c;
-    if ('aeiouAEIOU'.includes(c)) out += c;   // duplicate vowels for 35% length
-  }
-  return `[${out}]`;   // delimiters help spot incomplete wraps
-}
-```
-
-The transform is a one-time pass over the source locale file.
+If no pseudo-localization library exists for your stack, transform the source
+locale file locally with a one-time script - see
+[references/manual-transform.md](references/manual-transform.md).
 
 ## Worked example
 
@@ -172,8 +162,7 @@ screenshot baseline `checkout-pseudo.png` is established under the pseudo-locale
 ## References
 
 - W3C i18n documentation at `w3.org/International/`.
-- `i18n-string-coverage` - 
-  static-scan complement.
-- `rtl-rendering-tester` - 
-  RTL-specific tests.
+- `i18n-string-coverage` - static-scan complement.
+- `rtl-rendering-tester` - RTL-specific tests.
 - `playwright-snapshots` - visual regression for catching pseudo-loc regressions.
+- [references/manual-transform.md](references/manual-transform.md) - manual transform script.
