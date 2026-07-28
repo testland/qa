@@ -9,50 +9,31 @@ metadata:
 
 ## Overview
 
-**Disambiguation up front:** this skill covers ThrowTheSwitch
-**Unity** - a C unit-testing library at
+This skill covers ThrowTheSwitch **Unity** - a C unit-testing
+library ("a single C file and a pair of headers") at
 [throwtheswitch.org/unity](https://www.throwtheswitch.org/unity)
-and [github.com/ThrowTheSwitch/Unity](https://github.com/ThrowTheSwitch/Unity).
-It is **distinct from the Unity game-engine Test Framework at
-docs.unity3d.com** (a managed-test runner inside the Unity 3D
-editor). The two tools share only a name; they have unrelated
-origins, APIs, and consumers. If you reached this skill looking
-for the Unity-the-game-engine test framework, the canonical
-package is `com.unity.test-framework` documented at
-[docs.unity3d.com](https://docs.unity3d.com/Packages/com.unity.test-framework@latest)
-and covered by `unity-test-framework`.
+and [github.com/ThrowTheSwitch/Unity](https://github.com/ThrowTheSwitch/Unity),
+running on 8-bit MCUs through 64-bit hosts with no preprocessor
+magic, no auto-generated `main`, and no C++ requirement.
 
-Unity is, per [throwtheswitch.org/unity](https://www.throwtheswitch.org/unity),
-"a Unit-Testing framework written in 100% pure ANSI C" that is
-"carefully written and self-tested to be portable, working
-efficiently on tiny 8-bit microcontrollers to 64-bit
-powerhouses". Per the README at
-[github.com/ThrowTheSwitch/Unity](https://github.com/ThrowTheSwitch/Unity),
-it is "a single C file and a pair of headers, allowing it to be
-added to your existing build setup". The framework lets the
-developer "test in C without littering your source code with
-additional requirements" - there is no preprocessor magic, no
-auto-generated `main`, no C++ requirement.
+It is **distinct from the Unity game-engine Test Framework**
+(`com.unity.test-framework`, a runner inside the Unity 3D editor
+at [docs.unity3d.com](https://docs.unity3d.com/Packages/com.unity.test-framework@latest),
+covered by `unity-test-framework`). The two share only a name.
 
 Composes with:
 
-- `ceedling-build-runner` - 
-  the build orchestration that calls `generate_test_runner.rb`
-  and stitches Unity + CMock + the test binary.
-- `cmock-reference` - 
-  the CMock-generated mocks Unity asserts against.
-- `qemu-system-test-runner` - 
-  for running the cross-built binary on a virtual Cortex-M.
-- `embedded-coverage-strategy-reference` - 
-  for the gcov / llvm-cov instrumentation.
+- `ceedling-build-runner` - the build orchestration that calls `generate_test_runner.rb` and stitches Unity + CMock + the test binary.
+- `cmock-reference` - the CMock-generated mocks Unity asserts against.
+- `qemu-system-test-runner` - for running the cross-built binary on a virtual Cortex-M.
+- `embedded-coverage-strategy-reference` - for the gcov / llvm-cov instrumentation.
 
 ## When to use
 
 - Unit-under-test is **pure C** (not C++). For C++ use
   `googletest-embedded-arm`.
 - Target may be tiny - Unity works on 8-bit AVR / PIC, 16-bit
-  MSP430, and 32-bit Cortex-M0/M3/M4/M7/M33. Per the throwtheswitch
-  page above, it runs "efficiently on tiny 8-bit microcontrollers".
+  MSP430, and 32-bit Cortex-M0/M3/M4/M7/M33.
 - The team already has Ceedling, or wants the canonical
   ThrowTheSwitch-stack pairing of Unity + CMock + CException.
 - The MCU has limited RAM - Unity's footprint is dramatically
@@ -61,8 +42,6 @@ Composes with:
 ## Authoring
 
 ### Minimal test
-
-Per the Unity README:
 
 ```c
 #include "unity.h"
@@ -98,34 +77,25 @@ int main(void) {
 }
 ```
 
-Per the README: a Unity test is "just a C function that takes no
-arguments and returns nothing. By convention, it starts with the
-word 'test' or 'spec'." `UNITY_BEGIN()` initialises counters;
-`RUN_TEST(name)` invokes `setUp` → test fn → `tearDown` and
+A Unity test is a C function taking no arguments, named with a
+`test` or `spec` prefix. `UNITY_BEGIN()` initialises counters;
+`RUN_TEST(name)` invokes `setUp` -> test fn -> `tearDown` and
 captures the result; `UNITY_END()` prints the summary and returns
 a non-zero exit code on failure.
 
-### Assertion families
+### Assertions
 
-Per the Unity README:
+The common assertions - `TEST_ASSERT_TRUE(c)`,
+`TEST_ASSERT_EQUAL_INT(a,b)` (with `_INT8` / `_INT16` / `_INT32`
+/ `_INT64` and `_UINT` / `_HEX` widths),
+`TEST_ASSERT_EQUAL_FLOAT(a,b)` / `TEST_ASSERT_FLOAT_WITHIN(delta,a,b)`,
+`TEST_ASSERT_EQUAL_STRING(a,b)`, `TEST_ASSERT_EQUAL_MEMORY(a,b,len)`,
+`TEST_ASSERT_NULL(p)`. Append `_ARRAY` to compare arrays (third
+arg is element count) and `_MESSAGE` to attach a custom failure
+string.
 
-| Family | Macros |
-|---|---|
-| **Basic validity** | `TEST_ASSERT_TRUE(c)`, `TEST_ASSERT_FALSE(c)`, `TEST_ASSERT(c)`, `TEST_FAIL()`, `TEST_IGNORE()` |
-| **Equality, integer** | `TEST_ASSERT_EQUAL_INT(a,b)`, with width variants `_INT8` / `_INT16` / `_INT32` / `_INT64`; `_UINT` family analogous |
-| **Equality, hex** | `TEST_ASSERT_EQUAL_HEX(a,b)`, with `_HEX8` / `_HEX16` / `_HEX32` / `_HEX64` width variants |
-| **Equality, float** | `TEST_ASSERT_EQUAL_FLOAT(a,b)`, `TEST_ASSERT_EQUAL_DOUBLE(a,b)`, plus delta variants `TEST_ASSERT_FLOAT_WITHIN(delta,a,b)` |
-| **String / memory** | `TEST_ASSERT_EQUAL_STRING(a,b)`, `TEST_ASSERT_EQUAL_MEMORY(a,b,len)` |
-| **Pointer** | `TEST_ASSERT_NULL(p)`, `TEST_ASSERT_NOT_NULL(p)` |
-| **Range** | `TEST_ASSERT_WITHIN(delta,a,b)`, `TEST_ASSERT_GREATER_THAN(a,b)`, `TEST_ASSERT_LESS_THAN(a,b)` |
-| **Bitwise** | `TEST_ASSERT_BITS(mask,expected,actual)`, `TEST_ASSERT_BIT_HIGH(n,x)`, `TEST_ASSERT_BIT_LOW(n,x)` |
-| **Array** | "Append `_ARRAY` or `_EACH_EQUAL` to most macros" per the README - e.g. `TEST_ASSERT_EQUAL_INT_ARRAY(expected, actual, num)` |
-| **Message variant** | "All assertions support `_MESSAGE` variants" - e.g. `TEST_ASSERT_EQUAL_INT_MESSAGE(a,b,"frame count")` adds a custom failure string |
-
-The `_MESSAGE` suffix is the canonical way to attach
-context - failures print the message inline. The `_ARRAY` suffix
-turns any equality macro into an array-comparing one (third arg
-is element count).
+The full assertion-family table and the build-time config defines
+are in [references/assertion-api.md](references/assertion-api.md).
 
 ### Skipping and failing explicitly
 
@@ -143,10 +113,9 @@ pass/fail in the summary.
 
 ### generate_test_runner.rb
 
-Per the same README, the Ruby script
-`auto/generate_test_runner.rb` scans a test file, finds every
-`test_*` and `spec_*` function, and emits a `<file>_Runner.c`
-that wires them up:
+The Ruby script `auto/generate_test_runner.rb` scans a test file,
+finds every `test_*` and `spec_*` function, and emits a
+`<file>_Runner.c` that wires them up:
 
 ```bash
 ruby /path/to/Unity/auto/generate_test_runner.rb \
@@ -196,16 +165,11 @@ so Unity's printf-based reporting reaches QEMU's stdio.
 
 ### Build-time configuration
 
-Per the Unity configuration guide (linked above), key defines:
-
-| Define | Effect |
-|---|---|
-| `UNITY_INCLUDE_DOUBLE` | Enables `_DOUBLE` assertions |
-| `UNITY_FLOAT_PRECISION` | Default delta for `_WITHIN` float comparison |
-| `UNITY_OUTPUT_CHAR(c)` | Redirect output (default: putchar) - set to a UART putc for bare-metal |
-| `UNITY_OUTPUT_COLOR` | ANSI colour codes in output |
-| `UNITY_FIXTURE_NO_EXTRAS` | Slim build for very small MCUs |
-| `UNITY_EXCLUDE_SETJMP` | If toolchain has no setjmp - Unity falls back to a longjmp-free mode but loses the early-abort-on-fatal-assert behaviour |
+Key defines (`UNITY_INCLUDE_DOUBLE`, `UNITY_OUTPUT_CHAR`,
+`UNITY_OUTPUT_COLOR`, `UNITY_FIXTURE_NO_EXTRAS`,
+`UNITY_EXCLUDE_SETJMP`) are tabulated in
+[references/assertion-api.md](references/assertion-api.md), per
+the [Unity configuration guide](https://github.com/ThrowTheSwitch/Unity/blob/master/docs/UnityConfigurationGuide.md).
 
 ## Running
 
@@ -281,47 +245,12 @@ file.
 
 ## CI integration
 
-Standalone (no Ceedling):
-
-```yaml
-jobs:
-  unity-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Install toolchain
-        run: sudo apt-get install -y gcc-arm-none-eabi qemu-system-arm ruby
-      - name: Generate runners
-        run: |
-          for t in test/test_*.c; do
-            ruby ext/Unity/auto/generate_test_runner.rb "$t" "${t%.c}_Runner.c"
-          done
-      - name: Build + run on host
-        run: |
-          gcc -O0 -g -DUNITY_INCLUDE_DOUBLE \
-              -I src -I ext/Unity/src \
-              src/*.c ext/Unity/src/unity.c \
-              test/test_*.c test/*_Runner.c \
-              -o build/unity_host
-          ./build/unity_host | tee build/host.log
-          ! grep -q ':FAIL:' build/host.log
-      - name: Cross-build + QEMU run
-        run: |
-          arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -g \
-              --specs=rdimon.specs \
-              -I src -I ext/Unity/src \
-              src/*.c ext/Unity/src/unity.c \
-              test/test_*.c test/*_Runner.c \
-              -o build/unity_arm.elf -lrdimon
-          qemu-system-arm -M mps2-an385 -cpu cortex-m4 \
-              -nographic -semihosting-config enable=on,target=native \
-              -kernel build/unity_arm.elf | tee build/arm.log
-          ! grep -q ':FAIL:' build/arm.log
-```
-
-For Ceedling-driven projects, see
-`ceedling-build-runner` for
-the canonical `ceedling test:all` + JUnit XML flow.
+The standalone (no Ceedling) GitHub Actions pipeline - generate
+runners, build + run on host, then cross-build and run under
+QEMU - is in
+[references/ci-integration.md](references/ci-integration.md). For
+Ceedling-driven projects, see `ceedling-build-runner` for the
+canonical `ceedling test:all` + JUnit XML flow.
 
 ## Anti-patterns
 
@@ -332,7 +261,7 @@ the canonical `ceedling test:all` + JUnit XML flow.
 | `TEST_ASSERT_TRUE(strcmp(a,b) == 0)` | Failure message reports "Expected true, got false" - useless | Use `TEST_ASSERT_EQUAL_STRING(a,b)` |
 | `TEST_ASSERT_EQUAL_MEMORY` with `len=sizeof(*p)` on a struct with padding | Padding bytes vary; intermittent failures | Initialise structs with `memset(.., 0, sizeof)` before fill, or compare fields individually |
 | Calling `RUN_TEST` outside `UNITY_BEGIN`/`UNITY_END` | Asserts work but the summary is wrong | Always bracket runs with `UNITY_BEGIN` / `UNITY_END` |
-| Mixing the C library with the game-engine Test Framework | Build sees two `unity.h` headers; one wins randomly | Don't co-locate. Use `unity-test-framework` only for game engine projects; this skill for embedded C |
+| Mixing the C library with the game-engine Test Framework | Build sees two `unity.h` headers; one wins randomly | Don't co-locate; keep `unity-test-framework` to game-engine projects |
 | Float comparison with `TEST_ASSERT_EQUAL_FLOAT` and exact values | Floating-point equality is fragile | Use `TEST_ASSERT_FLOAT_WITHIN(epsilon, a, b)` |
 | `UNITY_EXCLUDE_SETJMP` on a target that has setjmp | Loses early-abort on fatal assert; tests run on after corruption | Only exclude when the toolchain genuinely lacks setjmp |
 
@@ -368,9 +297,8 @@ Cited inline. Foundational documents:
   [github.com/ThrowTheSwitch/Unity/blob/master/docs/UnityConfigurationGuide.md](https://github.com/ThrowTheSwitch/Unity/blob/master/docs/UnityConfigurationGuide.md).
 - ARM GNU Toolchain (`--specs=rdimon.specs`, semihosting) - 
   [developer.arm.com Tools and Software / GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
-- **Distinct from**: Unity game-engine Test Framework - 
-  [docs.unity3d.com/Packages/com.unity.test-framework@latest](https://docs.unity3d.com/Packages/com.unity.test-framework@latest)
-  (covered by `unity-test-framework`).
+- Unity game-engine Test Framework (separate tool; see `unity-test-framework`) - 
+  [docs.unity3d.com/Packages/com.unity.test-framework@latest](https://docs.unity3d.com/Packages/com.unity.test-framework@latest).
 - Sibling skills:
   `ceedling-build-runner`,
   `cmock-reference`,

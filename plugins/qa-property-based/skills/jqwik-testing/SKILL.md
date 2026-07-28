@@ -7,18 +7,11 @@ description: "Authors property-based tests for the JVM (Java + Kotlin) using jqw
 
 ## Overview
 
-Per [jqwik-home][jh]:
+jqwik is a JVM property-based testing library for Java and Kotlin that
+integrates with JUnit 5, so property tests run alongside conventional
+unit tests in the same Maven / Gradle pipeline ([jqwik-home][jh]).
 
 [jh]: https://jqwik.net/
-
-> "**jqwik** is a JVM library enabling property-based testing
-> (PBT) in Java and Kotlin. ... [It] combines intuitive microtests
-> with randomized test data generation."
-
-Properties describe "a _generic invariant or post condition_ of
-your code, given some _precondition_" ([jqwik-home][jh]). The
-library "integrates with JUnit 5, allowing property tests to run
-alongside conventional unit tests" ([jqwik-home][jh]).
 
 ## When to use
 
@@ -41,9 +34,8 @@ Maven:
 </dependency>
 ```
 
-Per [jqwik-home][jh], 1.9.3 is the latest as of the source-fetch.
-The artifact pulls in the JUnit 5 platform dependency
-transitively.
+The artifact pulls in the JUnit 5 platform dependency transitively.
+Version note: [references/jqwik-reference.md](references/jqwik-reference.md).
 
 Gradle:
 
@@ -92,22 +84,10 @@ boolean validQtyStaysInRange(@ForAll @IntRange(min = 1, max = 100) int qty) {
 }
 ```
 
-Constraint annotations (in `net.jqwik.api.constraints.*`):
-
-| Annotation             | Purpose                                              |
-|------------------------|------------------------------------------------------|
-| `@IntRange(min, max)`   | Integers in range                                    |
-| `@LongRange(min, max)`  | Longs in range                                       |
-| `@DoubleRange(min, max)`| Doubles in range                                     |
-| `@StringLength(min, max)` | Strings of bounded length                          |
-| `@AlphaChars` / `@NumericChars` | String character class                       |
-| `@Size(min, max)`        | Collection size                                       |
-| `@NotEmpty`              | Non-empty collection / string                        |
-| `@NotBlank`              | Non-whitespace string                                |
-| `@Email`                 | Email-shaped string                                   |
-| `@MinList` / `@MaxList`  | List bounds                                           |
-| `@UniqueElements`         | Unique-element collections                            |
-| `@Positive` / `@Negative` | Positive / negative number                          |
+Constraint annotations live in `net.jqwik.api.constraints.*`
+(`@IntRange`, `@LongRange`, `@StringLength`, `@Size`, `@NotEmpty`,
+`@Email`, `@Positive`, ...). Full table:
+[references/jqwik-reference.md](references/jqwik-reference.md).
 
 ## Step 4 - Custom arbitraries via `@Provide`
 
@@ -142,37 +122,18 @@ from the parts.
 
 ## Step 5 - Arbitraries catalog
 
-Per [jqwik-home][jh], the `Arbitraries` API provides "Built-in
-generators like `Arbitraries.integers()` for creating constrained
-data sets":
+Per [jqwik-home][jh], the `Arbitraries` API provides built-in
+generators:
 
 ```java
-Arbitraries.integers()                       // any int
-    .between(0, 100)                         // bounded
-    .greaterOrEqual(0);                       // half-bounded
-
-Arbitraries.strings()                        // any string
-    .alpha()                                  // alphabetic only
-    .ofLength(8);                             // fixed length
-
-Arbitraries.of(Status.ACTIVE, Status.SUSPENDED, Status.NOT_VERIFIED);   // enum-like
-
-Arbitraries.subsetOf(allRoles);              // subset of a known set
+Arbitraries.integers().between(0, 100);            // bounded int
+Arbitraries.strings().alpha().ofLength(8);         // fixed-length alpha string
+Arbitraries.of(Status.ACTIVE, Status.SUSPENDED);   // enum-like
+Arbitraries.integers().list().ofMinSize(1).ofMaxSize(100);   // List<Integer>
 ```
 
-For collections:
-
-```java
-Arbitraries.integers().list()                // List<Integer>
-    .ofMinSize(1).ofMaxSize(100);
-
-Arbitraries.strings().set();                  // Set<String>
-
-Arbitraries.maps(
-    Arbitraries.strings().alpha(),
-    Arbitraries.integers().between(0, 100)
-);
-```
+Half-bounded generators, sets, maps, and `subsetOf`:
+[references/jqwik-reference.md](references/jqwik-reference.md).
 
 ## Step 6 - Statistics + classification
 
@@ -228,34 +189,12 @@ gradle test               # same
 
 No additional config beyond JUnit 5 platform.
 
-## Anti-patterns
-
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Returning `void` without assertions                                   | Test always passes; property is silent.                                  | Return `boolean` OR throw on failure (e.g. JUnit `assertTrue`). |
-| `@Provide` arbitrary that filters most cases                           | Discard ratio exceeded; jqwik fails the property.                        | Constrain at the Arbitrary level (Step 3 annotations + `.between(...)`). |
-| Sharing mutable state across @Property iterations                      | Test depends on iteration order; flaky.                                  | Construct fresh state per call (within the property method body). |
-| Hard-coded seed in production property                                  | Loses randomization; misses regressions.                                 | Random seed locally; fixed seed in CI only (Step 7). |
-| `tries = 100_000` on a slow property                                    | CI never finishes.                                                        | Budget per `total runtime / tries`. |
-| Asserting on specific values inside the property                        | Defeats PBT.                                                              | Properties assert relationships. |
-| Skipping `@Provide` for one-off domain objects                          | Inline construction is verbose; harder to reuse.                          | Move to `@Provide` even for one-property arbitraries. |
-
-## Limitations
-
-- **JVM startup cost.** Each property test pays JVM start; 1000
-  iterations of fast tests are still seconds, not milliseconds.
-- **Shrinking complex types is slow.** `BOUNDED` shrinking caps
-  iterations; `OFF` skips entirely.
-- **Kotlin support requires extra setup.** Per [jqwik-home][jh],
-  Kotlin is supported but requires the `jqwik-kotlin` extension.
-- **No native async support.** Test reactive / coroutine code
-  through `runBlocking` (Kotlin) or explicit `Future.get()`.
-- **JUnit 5 only.** No JUnit 4 platform integration.
-
 ## References
 
+- [references/jqwik-reference.md](references/jqwik-reference.md) - constraint
+  annotations, Arbitraries catalog, anti-patterns, limitations, version note.
 - [jh][jh] - jqwik overview: `@Property`, `@ForAll`, `@Provide`,
-  Arbitraries API, JUnit 5 integration, version 1.9.3.
+  Arbitraries API, JUnit 5 integration.
 - `hypothesis-testing`,
   `fast-check-testing`,
   `proptest-testing`,

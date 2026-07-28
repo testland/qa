@@ -69,65 +69,19 @@ Before walking the workflow, gather:
 
 ### Step 1 - Enumerate connection states
 
-Per engine docs, list the states **the engine exposes**. The
-matrix is fixed by the framework - you cannot add or remove
-states, only choose which to cover.
-
-**Unity Netcode for GameObjects** (per
-[the v2.11 manual](https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@2.11/manual/index.html) - NGO "is a high-level networking library built for Unity for
-you to abstract networking logic" with "Mono and IL2CPP" support
-and host / server / client topologies):
-
-| State | Trigger | Observability |
-|---|---|---|
-| `Disconnected` | Initial / after disconnect | `NetworkManager.IsConnectedClient == false` |
-| `Connecting` | `NetworkManager.StartClient()` invoked | Between request and approval |
-| `Connected (Approved)` | Server accepts client | `OnClientConnectedCallback` |
-| `Connected (Pending Spawn)` | Approved but player object not yet spawned | Wait for `OnNetworkSpawn` |
-| `Connected (Spawned)` | `NetworkObject.IsSpawned == true` | Gameplay-ready |
-| `Disconnecting` | `Shutdown()` / link loss | `OnClientDisconnectCallback` fires next |
-| `Host` | Same process is both server + client | `NetworkManager.IsHost` |
-
-**Unreal Engine replication** (per the
-[Networking Overview](https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-overview-for-unreal-engine):
-"The server, as the host of the game, holds the one, true,
-authoritative game state."):
-
-| State | Trigger | Observability |
-|---|---|---|
-| `NM_Standalone` | Single-player | `World->GetNetMode()` |
-| `NM_DedicatedServer` | "Separate machine with no local players" | `IsRunningDedicatedServer()` |
-| `NM_ListenServer` | "Host machine where the server operator also plays locally" | `IsRunningListenServer()` |
-| `NM_Client` | Connected as remote client | `World->IsClient()` |
-| `Login` | `AGameModeBase::PreLogin` → `Login` → `PostLogin` | Override `PostLogin` |
-| `Travel` (seamless / hard) | `ServerTravel` to new map | `PlayerController->bIsClientReplicationPausedForFrame` |
-| `Logout` | `Logout()` callback | Override on `GameModeBase` |
-
-**Mirror Networking** (per the
-[Mirror docs on NetworkBehaviour](https://mirror-networking.gitbook.io/docs/manual/components/networkbehaviour),
-"a high level Networking library for Unity, optimized for ease
-of use & probability of success"):
-
-| State | Trigger | Observability |
-|---|---|---|
-| `OnStartServer` | "called on server when a game object spawns on the server" | NetworkBehaviour override |
-| `OnStartClient` | "called on clients when the game object spawns on the client" | NetworkBehaviour override |
-| `OnStartLocalPlayer` | Local player only, after `OnStartClient` | NetworkBehaviour override |
-| `OnStartAuthority` / `OnStopAuthority` | "Called when ownership changes" | NetworkBehaviour override |
-| `OnStopServer` / `OnStopClient` | "Cleanup when objects are destroyed" | NetworkBehaviour override |
+Per engine docs, list the states **the engine exposes**. The matrix is fixed
+by the framework - you cannot add or remove states, only choose which to
+cover. The full per-engine connection-state tables (Unity NGO, Unreal
+replication, Mirror) - each state with its trigger and observability hook -
+are in [references/engine-states.md](references/engine-states.md).
 
 ### Step 2 - Enumerate ownership states
 
-Authority handoff is where most "ghost item" / "ability use after
-death" bugs live. Per the engine docs:
-
-| Engine | Authority states |
-|---|---|
-| Unity NGO | `OwnerClientId` (per `NetworkObject`); `IsOwner`, `IsServer`, `IsHost` flags |
-| Unreal | `ROLE_Authority` (server), `ROLE_AutonomousProxy` (owning client), `ROLE_SimulatedProxy` (other clients), `ROLE_None` |
-| Mirror | `isServer`, `isClient`, `isLocalPlayer`, `isOwned` per [Mirror NetworkBehaviour docs](https://mirror-networking.gitbook.io/docs/manual/components/networkbehaviour) - `isOwned` "Returns true on the client if this client has authority over this game object" |
-
-Authority transitions to cover:
+Authority handoff is where most "ghost item" / "ability use after death" bugs
+live. The per-engine authority-state enumeration (NGO `OwnerClientId` /
+`IsOwner`; Unreal `ROLE_*`; Mirror `isServer` / `isOwned`) is in
+[references/engine-states.md](references/engine-states.md). Authority
+transitions to cover:
 
 - **Spawn → owner assignment** - does the right `OnStartAuthority`
   / `OnGainedOwnership` callback fire?
@@ -221,25 +175,12 @@ Mirror's built-in network simulation transports.
 
 ### Step 6 - Wire to platform-cert clauses
 
-Map every fixture to a specific cert clause it covers. Examples
-from the
-[Xbox Requirements page](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements):
-
-| Test fixture | Xbox XR covered |
-|---|---|
-| Client gracefully disconnects on Xbox network loss | XR-074: "Titles must gracefully handle errors with Xbox and partner services connectivity." |
-| MPSD session state retains member list across host migration | XR-067: "titles with online multiplayer functionality must maintain session-state information on the Xbox network … through the Xbox Multiplayer Session Directory (MPSD)" |
-| Joining via Xbox shell launches into multiplayer session | XR-064: "titles that offer joinable game sessions must enable joinability through the Xbox shell interface" |
-| Privilege check before joining MP session | XR-045: `XPRIVILEGE_MULTIPLAYER_SESSIONS` (ID 254) per the [XR-045 privilege table](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements) |
-| Player communication respects privacy settings | XR-015: `CommunicateUsingText` / `CommunicateUsingVoice` privilege checks per the [XR-015 permissions table](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements) |
-| Save roams across console types within a generation | XR-130: "Ensure that saved games work across console types within the generation" |
-| Cross-network play visual identification | XR-007: "Titles must visually identify Xbox network users when they're playing with players from non-Xbox gaming networks" |
-| Controller disconnect mid-multiplayer | XR-115: re-establish active controller; see [XR-115](https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/policies/console/certification-requirements) |
-
-For Sony TRC and Nintendo Lotcheck, the analogous clauses are
-NDA - cite by stable ID per
-`platform-cert-overview-reference`
-and tag the fixture with the partner-portal clause number.
+Map every fixture to a specific cert clause it covers - e.g. graceful
+disconnect on network loss → **XR-074**, MPSD session retained across host
+migration → **XR-067**, joinable via the Xbox shell → **XR-064**, privilege
+check before joining → **XR-045**. The full fixture→XR mapping table (and the
+Sony TRC / Nintendo Lotcheck NDA stable-ID convention) is in
+[references/cert-clauses.md](references/cert-clauses.md).
 
 ### Step 7 - Emit the go / no-go gate
 

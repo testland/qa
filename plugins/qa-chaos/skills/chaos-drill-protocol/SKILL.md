@@ -38,12 +38,10 @@ of whichever injection tool is in use.
 
 ## Why this protocol is strict
 
-A chaos drill and an outage differ only by preparation. Google's own SRE
-account of a test-induced emergency describes a plan "to block all access to
-just one database out of a hundred" that within minutes made multiple dependent
-services inaccessible to external and internal users, because the team's
-assumptions about dependencies were incomplete and, in their words, they had
-not "tested our rollback procedures in a test environment"
+A chaos drill and an outage differ only by preparation: Google's SRE account of a
+test-induced emergency shows a test scoped to one database cascading into a
+multi-service outage because the dependency assumptions were incomplete and the
+rollback had never been tested in a test environment
 ([sre.google/sre-book/emergency-response][sre-emer]). Every gate below exists
 because skipping it is how that outcome happens.
 
@@ -117,15 +115,9 @@ the last sampling interval. Stale dashboards fail this gate exactly as hard as
 missing ones.
 
 The signals to confirm are the ones the drill will abort on. A useful default
-set is the four golden signals from
-[sre.google/sre-book/monitoring-distributed-systems][sre-mon]:
-
-| Signal | Definition ([sre.google/sre-book/monitoring-distributed-systems][sre-mon]) |
-|---|---|
-| Latency | "The time it takes to service a request. It's important to distinguish between the latency of successful requests and the latency of failed requests." |
-| Traffic | "A measure of how much demand is being placed on your system, measured in a high-level system-specific metric." |
-| Errors | "The rate of requests that fail, either explicitly (e.g., HTTP 500s), implicitly (for example, an HTTP 200 success response, but coupled with the wrong content), or by policy." |
-| Saturation | "How 'full' your service is. A measure of your system fraction, emphasizing the resources that are most constrained." |
+set is the four golden signals - latency, traffic, errors, saturation - defined
+verbatim in [references/golden-signals.md](references/golden-signals.md) after
+[sre.google/sre-book/monitoring-distributed-systems][sre-mon].
 
 Without live signals there is no way to detect that a bound has been crossed,
 which means the drill has no abort path that fires on evidence. That is not a
@@ -149,11 +141,9 @@ Where the injection tool offers an automatic expiry as well, set it, and treat
 it as a backstop behind the manual action rather than as the rollback itself.
 
 This gate is the direct lesson of the SRE test-induced emergency, where the
-rollback path was flawed because the team had not "tested our rollback
-procedures in a test environment"
-([sre.google/sre-book/emergency-response][sre-emer]). Untested paths behave the
-same everywhere: the same book warns that depending on a code path with no
-coverage lets an unrelated change in the environment silently change the result
+rollback path failed because it had never been tested in a test environment
+([sre.google/sre-book/emergency-response][sre-emer]). An untested path lets an
+unrelated environment change silently alter its result
 ([sre.google/sre-book/testing-reliability][sre-test]).
 
 ### Gate summary
@@ -330,95 +320,10 @@ surviving-capacity arithmetic assumed a full complement of healthy replicas.
 
 ## Worked example
 
-Service `checkout`, staging, `N = 12` replicas. The experiment definition and
-its hypothesis already exist.
-
-### Drill contract, agreed and frozen before injection
-
-```yaml
-hypothesis:
-  metric: checkout_completion_rate
-  threshold: ">= 95%"
-  window: "5m"
-target:
-  environment: staging
-  namespace: checkout-staging
-  service: checkout
-  replicas: 12
-fault: pod-kill
-blast_radius:
-  max_replicas_affected: 3        # 25% of 12; survivors carry about 1.33x load
-  max_duration: "5m"
-sample_interval: "10s"            # convention; 6 samples inside the 60s dwell time
-abort_criteria:
-  - id: error-budget
-    signal: http_5xx_rate
-    threshold: "> 2%"             # agreed share of remaining quarterly error budget
-    dwell: "30s"
-  - id: blast-radius
-    signal: unready_replicas
-    threshold: "> 3"
-    dwell: "0s"
-  - id: latency
-    signal: p99_latency
-    threshold: "> 10x baseline"
-    dwell: "60s"
-  - id: downstream
-    signal: payments_slo_state
-    threshold: "breached"
-    dwell: "0s"
-recovery_criteria:
-  ready_replicas: "== 12"
-  error_rate: "<= baseline + 0.4%"   # from observed baseline variance, not the 10% default
-  p99_latency: "<= baseline + 12%"   # from observed baseline variance
-  settle_window: "2m"
-  timeout: "5m"
-rollback:
-  action: "remove the injected pod-kill fault from the checkout-staging namespace"
-  owner: "on-call SRE, present for the full run"
-  rehearsed: "yes, run clean 8 minutes before injection, completed in 6s"
-```
-
-### Pre-flight
-
-| Gate | Result | Evidence |
-|---|---|---|
-| Non-production target | PASS | Resolved context `checkout-staging`, no production identifier |
-| Healthy measured baseline | PASS | 12 of 12 ready; `http_5xx_rate` 0.2%; p99 240ms; stable across a 10-minute window |
-| Live observability | PASS | Freshest sample 4s old on all four abort signals |
-| Exercised rollback | PASS | Rollback run clean at T minus 8m, returned success in 6s, no state change |
-
-All four passed, so the drill proceeds. Had any single gate failed, the drill
-would have stopped here.
-
-### Live run
-
-```
-T+0:00  inject pod-kill, 3 of 12 replicas targeted
-T+0:10  ready 10/12  5xx 0.3%  p99 268ms   within all bounds
-T+0:20  ready  9/12  5xx 0.6%  p99 310ms   within all bounds
-T+0:30  ready  9/12  5xx 1.1%  p99 402ms   within all bounds
-T+0:40  ready  8/12  5xx 2.4%  p99 620ms   5xx above 2%, dwell timer starts
-T+0:50  ready  8/12  5xx 2.9%  p99 880ms   5xx still above 2%, dwell 20s
-T+1:00  ready  8/12  5xx 3.3%  p99 1140ms  5xx above 2% for 30s -> ABORT
-T+1:06  rollback complete (6s, matching the rehearsal)
-```
-
-The `error-budget` criterion fired at its written threshold and dwell time. No
-one relitigated the 2% while the graph was climbing. Note also that a fourth
-replica went unready at T+0:40 without being targeted, which is the cascade the
-`blast-radius` criterion exists to catch and which would have fired at 4.
-
-### Recovery validation
-
-```
-T+1:06  rollback complete, settle window starts
-T+2:10  ready 11/12  5xx 0.9%  p99 430ms
-T+3:20  ready 12/12  5xx 0.3%  p99 262ms   all checks inside tolerance
-T+5:20  all checks held continuously for the 2m settle window -> RECOVERED
-```
-
-Verdict `RECOVERED`, unassisted, 4m14s after rollback, inside the 5m timeout.
+A full end-to-end run - the frozen drill contract, the pre-flight table, the
+live-run trace ending in an `error-budget` abort, and recovery validation to
+`RECOVERED` - is in
+[references/worked-example.md](references/worked-example.md).
 
 ## Expected output shape
 
@@ -467,23 +372,18 @@ window. Verdict `RECOVERED`.
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Instead |
-|---|---|---|
-| Blast radius set to 100% of replicas | There is no surviving capacity and therefore no control group left, and the method depends on comparing "steady state between the control group and the experimental group" ([principlesofchaos.org][cp]). This is not an experiment with a wide bound. It is a deliberate outage | Start at one replica, the same bound Chaos Monkey ships for production ([netflix.github.io/chaosmonkey/Termination-behavior][cm-term]), and widen only after clean runs |
-| Deciding the abort threshold while watching the graph | The moment of maximum pressure is the moment of worst judgment, and a threshold that moves during the run makes the hypothesis undisprovable | Fix signal, threshold, and dwell time in the contract before injection. Nobody loosens mid-run; anybody may abort |
-| Treating a documented rollback as a verified one | A rollback path that has never been executed is an untested code path, which is exactly how a controlled test became an outage ([sre.google/sre-book/emergency-response][sre-emer]) | Run the rollback clean against the real target before injecting, and record its duration |
-| Skipping a gate to fit a maintenance window | The gates are the difference between a drill and an incident. The window is not | Reschedule. A failed gate is a finding, and fixing it is cheaper than the incident it predicts |
-| Injecting onto a degraded baseline | Any difference observed cannot be attributed to the fault, so the drill carries full risk for an uninterpretable result | Restore health, take a fresh baseline, then run |
-| Running with stale or missing telemetry | Abort criteria cannot fire on evidence that is not arriving. The drill has no stopping rule | Confirm fresh samples for every abort signal at Gate 3, and stop if they are missing |
-| Aborting silently, or discarding an aborted run | The abort is where the system revealed its bound, which is the most informative thing the drill produced | Record the criterion, timestamp, and all signal values at the abort, then still run recovery validation |
-| Starting the next drill before recovery validates | The second run begins from an unknown baseline, which fails Gate 2 and voids the surviving-capacity reasoning behind its bound | Validate recovery to `RECOVERED` first |
-| Widening the bound after a run that breached it | Confuses "we survived" with "we have headroom". The breach is evidence the current bound is already at the edge | Hold the bound, fix what the breach exposed, re-run the same contract |
+The nine drill anti-patterns, each with why it fails and what to do instead, are
+in [references/anti-patterns.md](references/anti-patterns.md): 100% blast radius,
+deciding the abort threshold live, treating a documented rollback as verified,
+skipping a gate for a window, injecting onto a degraded baseline, stale
+telemetry, silent aborts, starting the next drill before recovery, and widening
+a bound after a breach.
 
 ## Limitations
 
 - **Gates reduce risk, they do not remove it.** The SRE test-induced emergency
-  passed internal review and still took out dependent services, because the
-  team's model of the dependencies was incomplete
+  passed internal review and still took out dependent services because the
+  dependency model was incomplete
   ([sre.google/sre-book/emergency-response][sre-emer]). A drill can always
   surface a coupling nobody knew about: that is the point, and the residual risk.
 - **Non-production is a weaker signal than production.** Staging differs in

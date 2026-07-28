@@ -32,9 +32,6 @@ the detection workflow see
 
 ## Field-number rules
 
-Per
-[protobuf.dev](https://protobuf.dev/programming-guides/proto3/):
-
 | Range | Use |
 |---|---|
 | 1..15 | Single-byte encoded; **reserve for hot fields** (frequently set) |
@@ -61,8 +58,8 @@ old type.
 
 ## Binary wire-safe changes
 
-Per the protobuf3 docs, these are fully safe - old code parses
-new messages and vice versa with no loss:
+Fully safe - old code parses new messages and vice versa with no
+loss:
 
 | Change | Why safe |
 |---|---|
@@ -73,8 +70,7 @@ new messages and vice versa with no loss:
 
 ## Wire-compatible changes (conditionally safe)
 
-Per protobuf3 docs, these preserve wire compatibility but may be
-lossy or surprising:
+These preserve wire compatibility but may be lossy or surprising:
 
 | Type change | Notes |
 |---|---|
@@ -90,8 +86,6 @@ silently truncate. The wire is "compatible" but the data may be
 lost.
 
 ## Wire-incompatible changes (always breaking)
-
-Per protobuf3 docs:
 
 - **Changing field numbers** is equivalent to deleting and
   re-adding. Always breaks.
@@ -127,72 +121,25 @@ Per protobuf3 docs:
 
 Per [buf.build/docs/breaking/rules](https://buf.build/docs/breaking/rules),
 buf organises detection into four categories, strictest to most
-lenient:
+lenient. Full rule-ID tables:
+[references/buf-breaking-rules.md](references/buf-breaking-rules.md).
 
-### FILE (default)
-
-Detects "changes that move generated code between files, breaking
-generated source code on a per-file basis."
-
-Selected rules:
-
-| Rule | Detects |
-|---|---|
-| `ENUM_NO_DELETE` | Removed enum |
-| `MESSAGE_NO_DELETE` | Removed message |
-| `SERVICE_NO_DELETE` | Removed service |
-| `FILE_NO_DELETE` | Removed file |
-| `FIELD_SAME_NAME` | Renamed field |
-| `FIELD_SAME_TYPE` | Type change |
-| `FIELD_SAME_CARDINALITY` | singular ↔ repeated |
-
-Choose FILE when **codegen consumers** import per-file (most
-JVM, .NET, generated stubs in monorepo).
-
-### PACKAGE
-
-Detects breakage at package level; permits file relocations
-inside a package.
-
-Selected rules:
-
-| Rule | Detects |
-|---|---|
-| `PACKAGE_NO_DELETE` | Removed package |
-| `PACKAGE_ENUM_NO_DELETE` | Enum deletion across files in package |
-| `PACKAGE_MESSAGE_NO_DELETE` | Message deletion across files |
-
-Choose PACKAGE when consumers import by package (Go, Python).
-
-### WIRE_JSON
-
-Detects "changes that break wire (binary) or JSON encoding."
-
-Selected rules:
-
-| Rule | Detects |
-|---|---|
-| `ENUM_VALUE_NO_DELETE_UNLESS_NUMBER_RESERVED` | Deleted enum value without reserve |
-| `FIELD_NO_DELETE_UNLESS_NUMBER_RESERVED` | Deleted field without reserve |
-| `FIELD_SAME_JSON_NAME` | JSON field name change |
-
-Choose WIRE_JSON when consumers use both binary and JSON encoding
-(REST gateway + grpc).
-
-### WIRE (most lenient)
-
-Detects only changes "compromising binary wire format
-compatibility."
-
-Selected rules:
-
-| Rule | Detects |
-|---|---|
-| `FIELD_WIRE_COMPATIBLE_TYPE` | Type change incompatible at wire level (allows int32→int64 etc.) |
-| `FIELD_WIRE_COMPATIBLE_CARDINALITY` | Cardinality change incompatible at wire |
-
-Choose WIRE when only wire format matters (binary-only protocols
-between server fleets you control).
+- **FILE (default)** - "changes that move generated code between
+  files, breaking generated source code on a per-file basis" (e.g.
+  `MESSAGE_NO_DELETE`, `FIELD_SAME_TYPE`, `FIELD_SAME_CARDINALITY`).
+  Choose when **codegen consumers** import per-file (most JVM, .NET,
+  generated stubs in a monorepo).
+- **PACKAGE** - breakage at package level; permits file relocations
+  inside a package (e.g. `PACKAGE_MESSAGE_NO_DELETE`). Choose when
+  consumers import by package (Go, Python).
+- **WIRE_JSON** - "changes that break wire (binary) or JSON encoding"
+  (e.g. `FIELD_NO_DELETE_UNLESS_NUMBER_RESERVED`,
+  `FIELD_SAME_JSON_NAME`). Choose when consumers use both binary and
+  JSON encoding (REST gateway + grpc).
+- **WIRE (most lenient)** - only changes "compromising binary wire
+  format compatibility" (e.g. `FIELD_WIRE_COMPATIBLE_TYPE`, allowing
+  int32->int64). Choose when only wire format matters (binary-only
+  protocols between server fleets you control).
 
 ### Choosing the category
 
@@ -219,20 +166,9 @@ buf breaking --against ".git#branch=main"
 
 ## Common patterns
 
-### Adding an optional field
-
-Safe (always):
-
-```diff
- message User {
-   string name = 1;
-+  string nickname = 2;
- }
-```
-
 ### Removing a field
 
-Always reserve:
+Always reserve the number and the name:
 
 ```diff
  message User {
@@ -243,54 +179,9 @@ Always reserve:
  }
 ```
 
-### Renaming a field
-
-Add new, deprecate + reserve old:
-
-```diff
- message User {
-   string name = 1;
--  string nickname = 2;
-+  string display_name = 3;
-+  reserved 2;
-+  reserved "nickname";
- }
-```
-
-Consumers must migrate from `nickname` to `display_name`. The wire
-format reads either; the codegen forces consumers to update.
-
-### Promoting `int32` to `int64`
-
-Wire-compatible per protobuf3 docs:
-
-```diff
- message Counter {
--  int32 count = 1;
-+  int64 count = 1;
- }
-```
-
-Old clients writing int32 still parse correctly. Old clients
-reading new int64 data **truncate silently** if the value exceeds
-int32 range.
-
-### Adding a field to a oneof
-
-**ALWAYS BREAKING.** Don't.
-
-```diff
- message Event {
-   oneof body {
-     string text = 1;
-     bytes binary = 2;
-+    string emoji = 3;  // BREAKS old parsers
-   }
- }
-```
-
-Mitigation: add the new variant as a **non-oneof** field; promote
-later in a separate proto file/package.
+More worked diffs - adding an optional field, renaming, promoting
+`int32` to `int64`, and the oneof footgun:
+[references/buf-breaking-rules.md](references/buf-breaking-rules.md).
 
 ## Anti-patterns
 

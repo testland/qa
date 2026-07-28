@@ -7,11 +7,11 @@ description: "Designs an end-to-end DAST cadence for teams adopting dynamic scan
 
 ## Overview
 
-DAST tools alone don't make a coverage strategy. A team running
-ZAP baseline once per PR catches 30% of what ZAP can find; running
-ZAP full + Burp + NightVision together at the right cadence catches
-~80%. This skill is a **build-an-X workflow** - the per-team
-DAST cadence and aggregation strategy.
+This skill is a **build-an-X workflow** - the per-team DAST cadence
+and aggregation strategy. It layers ZAP passive baseline, ZAP full
+active scan, and an optional paid deep scan across PR / nightly /
+per-release windows, with a baseline ratchet so pre-existing findings
+don't block PRs.
 
 ## When to use
 
@@ -96,67 +96,15 @@ dedup is per-tool per-run.
 
 ## Step 4 - CI cadence
 
-```yaml
-# .github/workflows/dast.yml
-on:
-  pull_request:
-    branches: [main]
+Three workflows implement the layering:
 
-jobs:
-  zap-baseline-pr:
-    name: DAST baseline (PR-blocking)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: zaproxy/action-baseline@v0.13.0
-        with:
-          target: ${{ secrets.STAGING_URL }}
-          rules_file_name: '.zap/rules.tsv'
-      - run: python ci/dast-pr-gate.py current.json .zap/baseline-findings.json
-```
+| Workflow file | Trigger | Job |
+|---|---|---|
+| `.github/workflows/dast.yml` | `pull_request` | ZAP baseline + `dast-pr-gate.py` (Step 2) |
+| `.github/workflows/dast-nightly.yml` | `cron: 0 2 * * *` | ZAP full scan + NightVision API scan |
+| `.github/workflows/dast-release.yml` | `release: created` | Burp deep scan (self-hosted) |
 
-```yaml
-# .github/workflows/dast-nightly.yml
-on:
-  schedule:
-    - cron: '0 2 * * *'   # 2 AM daily
-  workflow_dispatch:
-
-jobs:
-  zap-full-scan:
-    name: DAST active full scan
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: zaproxy/action-full-scan@v0.13.0
-        with:
-          target: ${{ secrets.STAGING_URL }}
-      - name: Upload report
-        uses: actions/upload-artifact@v4
-        with: { name: zap-full-report, path: report_html.html }
-
-  nightvision:
-    name: DAST API spec scan
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: ./ci/run-nightvision.sh
-```
-
-```yaml
-# .github/workflows/dast-release.yml
-on:
-  release:
-    types: [created]
-  workflow_dispatch:
-
-jobs:
-  burp-deep:
-    name: Burp deep scan (per-release)
-    runs-on: self-hosted    # Burp Enterprise lives on internal infra
-    steps:
-      - run: ./ci/burp-enterprise-trigger.sh
-```
+Full workflow YAML for all three: [references/ci-workflows.md](references/ci-workflows.md).
 
 ## Step 5 - Per-finding triage workflow
 

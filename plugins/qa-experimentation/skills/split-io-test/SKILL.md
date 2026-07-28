@@ -7,19 +7,13 @@ description: "Wraps Split.io (Harness FME) SDK testing patterns: hermetic localh
 
 ## Overview
 
-Split.io is now part of the Harness platform as Harness Feature
-Management & Experimentation (FME). The SDK retains the Split
-surface: `SplitFactory`, `getTreatment`, `getTreatmentWithConfig`,
-and the event system. Both the JavaScript (browser) and Node.js
-(server-side) SDKs support a **localhost/offline mode** that
-eliminates all network calls during tests, making feature-flag
-evaluation fully hermetic.
-
-This skill covers the Node.js server-side SDK and the JavaScript
-client SDK. All SDK behavior cited below is drawn from
-[developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/server-side-sdks/nodejs-sdk](https://developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/server-side-sdks/nodejs-sdk)
-and
-[developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk](https://developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk).
+The Split.io SDK (now Harness Feature Management & Experimentation, FME)
+keeps the surface `SplitFactory`, `getTreatment`,
+`getTreatmentWithConfig`, and the event system. Both the JavaScript
+(browser) and Node.js (server-side) SDKs support a **localhost/offline
+mode** that eliminates all network calls during tests, making
+feature-flag evaluation fully hermetic. This skill covers both; all SDK
+behavior cited below is drawn from the FME SDK docs (see References).
 
 **Differentiation from sibling SDK skills:** `statsig-test` uses
 `localMode: true` (gate/config primitives); `optimizely-test` uses
@@ -53,9 +47,7 @@ npm install --save-dev @splitsoftware/splitio   # Node.js + browser
 
 ### Localhost/offline mode - JavaScript (browser) SDK
 
-Per the JavaScript SDK docs at
-[developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk](https://developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk),
-set `authorizationKey` to `'localhost'` and supply a `features` map:
+Set `authorizationKey` to `'localhost'` and supply a `features` map:
 
 ```typescript
 import { SplitFactory } from '@splitsoftware/splitio';
@@ -83,9 +75,7 @@ test does not care about.
 
 ### Localhost/offline mode - Node.js (server-side) SDK
 
-Per the Node.js SDK docs at
-[developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/server-side-sdks/nodejs-sdk](https://developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/server-side-sdks/nodejs-sdk),
-the server-side SDK reads offline fixtures from a file path. Use
+The server-side SDK reads offline fixtures from a file path. Use
 a YAML fixture (supported since SDK v10.7.0) for per-key targeting:
 
 ```yaml
@@ -118,8 +108,8 @@ supported for simpler cases where per-key targeting is not needed.
 ### SDK_READY event and whenReady()
 
 The SDK emits `client.Event.SDK_READY` when its data is loaded.
-Per the JavaScript SDK docs, always wait for this event before
-evaluating treatments to avoid receiving `'control'` prematurely:
+Always wait for this event before evaluating treatments to avoid
+receiving `'control'` prematurely:
 
 ```typescript
 // Event-listener style
@@ -138,7 +128,7 @@ beforeAll(async () => {
 });
 ```
 
-Additional events per the docs:
+Additional events:
 - `SDK_READY_TIMED_OUT`: timeout before data loaded; SDK may still
   become ready later
 - `SDK_UPDATE`: rollout plan changed (useful in localhost mode to
@@ -146,8 +136,8 @@ Additional events per the docs:
 
 ### getTreatment and getTreatmentWithConfig
 
-Per the Node.js SDK docs, `getTreatment` returns a treatment string;
-`getTreatmentWithConfig` returns `{ treatment: string, config: string | null }`:
+`getTreatment` returns a treatment string; `getTreatmentWithConfig`
+returns `{ treatment: string, config: string | null }`:
 
 ```typescript
 test('user in treatment arm sees new pricing', async () => {
@@ -177,8 +167,8 @@ the key is bound at `factory.client(key)` construction time.
 
 ### Impression listener verification
 
-Per the Node.js SDK docs, attach an `impressionListener` to
-`SplitFactory` options. The `logImpression` callback receives an
+Attach an `impressionListener` to `SplitFactory` options. The
+`logImpression` callback receives an
 object containing `impression` (feature flag, key, treatment, label),
 `attributes`, `ip`, `hostname`, and `sdkLanguageVersion`:
 
@@ -209,7 +199,7 @@ test('impression fires on getTreatment', async () => {
 
 ### Controlling impression mode
 
-Per the Node.js SDK docs, `sync.impressionsMode` has three values:
+`sync.impressionsMode` has three values:
 
 - `'OPTIMIZED'` (default): only unique impressions queued; reduces
   traffic; suitable for production and most test scenarios.
@@ -250,9 +240,9 @@ test('treatments match the features map (hermetic)', async () => {
 
 ### Teardown
 
-Per the Node.js SDK docs, call `client.destroy()` (returns a
-promise) after tests to release internal resources. Skipping it
-leaks event-listener handles and impression flush timers:
+Call `client.destroy()` (returns a promise) after tests to release
+internal resources. Skipping it leaks event-listener handles and
+impression flush timers:
 
 ```typescript
 afterAll(async () => {
@@ -284,46 +274,8 @@ The YAML fixture is committed alongside the test code. No
 
 ## Example
 
-Full end-to-end Node.js test (Jest) for a checkout feature guarded
-by two flags:
-
-```typescript
-import path from 'path';
-import { SplitFactory } from '@splitsoftware/splitio';
-
-let factory: SplitIO.ISDK;
-let client: SplitIO.IClient;
-
-beforeAll(async () => {
-  factory = SplitFactory({
-    core: { authorizationKey: 'localhost' },
-    features: path.join(__dirname, '__fixtures__/split-flags.yml'),
-    sync: { impressionsMode: 'NONE' },
-  });
-  client = factory.client('user-123');
-  await client.whenReady();
-});
-
-afterAll(async () => {
-  await client.destroy();
-});
-
-describe('checkout page feature flags', () => {
-  it('shows redesigned checkout for on-treatment users', () => {
-    expect(client.getTreatment('user-123', 'checkout_redesign')).toBe('on');
-  });
-
-  it('returns config for pricing experiment arm', () => {
-    const result = client.getTreatmentWithConfig('user-123', 'pricing_experiment');
-    expect(result.treatment).toBe('v2');
-    expect(JSON.parse(result.config!)).toMatchObject({ price: 9 });
-  });
-
-  it('returns control for an undeclared flag', () => {
-    expect(client.getTreatment('user-123', 'unrelated_flag')).toBe('control');
-  });
-});
-```
+A full end-to-end Node.js/Jest test for a checkout feature guarded by two
+flags is in [references/EXAMPLE.md](references/EXAMPLE.md).
 
 ## Anti-patterns
 

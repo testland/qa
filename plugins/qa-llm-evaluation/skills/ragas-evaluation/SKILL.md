@@ -16,13 +16,9 @@ scores (per [rg-gh][rg-gh]).
 
 - The repo uses LangChain / LlamaIndex / Haystack / direct
   retriever→LLM RAG pipelines.
-- The user needs RAG-specific metrics: faithfulness (hallucination
-  on retrieved context), context precision/recall (retrieval
-  quality), context entities recall, noise sensitivity.
-- The team needs many metrics and wants the most active OSS RAG-eval
-  library (Ragas + DeepEval are the leaders here).
-- Agents-style eval (tool-call accuracy, agent goal accuracy, topic
-  adherence) is in scope.
+- You need RAG-specific retrieval + generation quality scoring, or
+  agents-style eval (tool-call and goal accuracy), and want the widest
+  metric variety in OSS LLM-eval.
 
 For non-RAG prompt evals, prefer `promptfoo-evaluation`.
 For pytest-native LLM evals with a managed dashboard, prefer
@@ -83,74 +79,19 @@ if __name__ == "__main__":
 the built-in metrics in Step 3 follow a similar shape but are
 preconfigured.
 
-## Step 3 - Built-in metric catalog
+## Step 3 - Pick metrics
 
-Per [docs.ragas.io/en/stable/concepts/metrics/available_metrics/][rg-metrics]:
+Ragas ships 30+ metrics across RAG, Natural Language Comparison,
+Agents/Tool-Use, SQL, General Purpose, Nvidia, and Summarization
+families. The RAG core: Faithfulness (claims grounded in retrieved
+context), Response Relevancy, Context Precision, and Context Recall.
+Pick 3 - 5 per pipeline.
+
+Full per-family catalog with each metric's use:
+[references/metrics.md](references/metrics.md), sourced from
+[docs.ragas.io/en/stable/concepts/metrics/available_metrics/][rg-metrics].
 
 [rg-metrics]: https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/
-
-**Retrieval Augmented Generation:**
-
-| Metric | Use |
-|---|---|
-| Context Precision | Are the relevant chunks ranked high in the retrieved context? |
-| Context Recall | Does the retrieved context contain ground-truth info? |
-| Context Entities Recall | Entity-level recall vs ground truth |
-| Noise Sensitivity | Does irrelevant context degrade output quality? |
-| Response Relevancy | Does the response address the question? |
-| Faithfulness | Are the response's claims grounded in retrieved context? |
-| Multimodal Faithfulness | Faithfulness for text+image RAG |
-| Multimodal Relevance | Relevance for text+image RAG |
-
-**Nvidia Metrics** (per [rg-metrics][rg-metrics]):
-
-| Metric | Use |
-|---|---|
-| Answer Accuracy | Nvidia-blessed accuracy scoring |
-| Context Relevance | Relevance scoring with Nvidia methodology |
-| Response Groundedness | Groundedness in retrieved context |
-
-**Agents/Tool Use:**
-
-| Metric | Use |
-|---|---|
-| Topic Adherence | Does the agent stay on topic? |
-| Tool Call Accuracy | Did it call the right tool? |
-| Tool Call F1 | F1 score for tool selection |
-| Agent Goal Accuracy | Did the agent achieve the user's goal? |
-
-**Natural Language Comparison:**
-
-| Metric | Use |
-|---|---|
-| Factual Correctness | Compares response facts vs ground truth |
-| Semantic Similarity | Embedding-based similarity to reference |
-| Non LLM String Similarity | String-distance metrics (no LLM call) |
-| BLEU Score / ROUGE Score / CHRF Score | Classical NLP metrics |
-| String Presence | Token presence check |
-| Exact Match | Strict equality |
-
-**SQL:**
-
-| Metric | Use |
-|---|---|
-| Execution-based Datacompy Score | Run query, compare result-sets |
-| SQL Query Equivalence | Semantic equivalence (different SQL, same result) |
-
-**General Purpose:**
-
-| Metric | Use |
-|---|---|
-| Aspect Critic | Yes/no LLM-judge on a custom aspect |
-| Simple Criteria Scoring | Numeric scoring against a rubric |
-| Rubrics-based Scoring | Multi-criterion rubric scoring |
-| Instance-specific Rubrics Scoring | Per-row rubric variation |
-
-**Other:**
-
-| Metric | Use |
-|---|---|
-| Summarization | Summary quality scoring |
 
 ## Step 4 - Dataset shape
 

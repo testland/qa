@@ -9,7 +9,7 @@ This is a **build-an-X workflow** for verifying CDE scope is correctly bounded a
 
 ## Helper stubs
 
-Full stub signatures live in `STUBS.md`. Key interfaces used across steps:
+Key interfaces used across steps (provided by the test harness):
 
 ```python
 # network / infra
@@ -42,7 +42,7 @@ DEPRECATED_CIPHERS: list[str] = [...]  # e.g. ['RC4', 'DES', '3DES', 'NULL']
 
 ```python
 # pci_scope.py
-# Anti-pattern: CDE/non-CDE network policy not tested → policy drift, segmentation breach
+# untested CDE/non-CDE network policy drifts into a segmentation breach
 CDE_SYSTEMS = {
     'payment-service',
     'tokenization-service',
@@ -81,7 +81,7 @@ SAD may transit during auth but **storage after auth completes** (logs, DB, audi
 ```python
 import re
 
-# Anti-pattern: trusting developers to never log PAN → eventually slipped into log line
+# PAN slips into a log line if you trust developers never to log it
 TRACK1_PATTERN = re.compile(r'%[A-Z]\d{12,19}\^[^\?]*\?\d*\?')   # Track 1
 CVV_PATTERN    = re.compile(r'(?<!\d)\d{3,4}(?!\d)')               # naive; pair with DLP
 
@@ -116,7 +116,7 @@ def test_no_cvv_in_logs():
 ## Step 3 - Assert PAN encryption at rest (Req 3.4) + key management (Req 3.6)
 
 ```python
-# Anti-pattern: hardcoded encryption keys in repo → Req 3.6 violation, PAN exposure
+# hardcoded encryption keys in the repo are a Req 3.6 violation and expose PAN
 
 def test_pan_stored_encrypted():
     """Req 3.4: PAN unreadable wherever stored (encryption / truncation / hashing / tokenization).
@@ -159,7 +159,7 @@ def test_decryption_keys_not_in_app_repo():
 ## Step 4 - Encryption of transmissions (Req 4)
 
 ```python
-# Anti-pattern: TLS 1.0 / 1.1 still enabled → Req 4 violation
+# TLS 1.0 / 1.1 still enabled is a Req 4 violation
 def test_pan_only_transmitted_via_strong_crypto():
     """Req 4.2.1: strong crypto for transmission of cardholder data over open networks."""
     for endpoint in CDE_API_ENDPOINTS:
@@ -180,7 +180,7 @@ def test_pan_only_transmitted_via_strong_crypto():
 ## Step 5 - Access control (Req 7 + 8)
 
 ```python
-# Anti-pattern: generic shared accounts (e.g., 'admin' / 'svc-account') → Req 8.2.1 violation
+# generic shared accounts (e.g. 'admin' / 'svc-account') violate Req 8.2.1
 def test_cde_access_requires_unique_id():
     """Req 8.2.1: assign all users a unique ID before access to system components."""
     # No shared / generic accounts
@@ -227,14 +227,9 @@ def test_pan_access_creates_audit_record():
 
 ## Step 7 - Scope reduction strategies
 
-PCI DSS scope reduction is the highest-leverage cost-saving. Full strategy guidance lives in `STRATEGIES.md`; defaults are:
+PCI DSS scope reduction is the highest-leverage cost saving. Default: **tokenization** - replace the PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only, which shrinks the CDE the most for the least integration churn. The alternatives (hosted iframe payment page, P2PE for card-present flows, network segmentation as layered defense only) and the Req 3.4 storage-format rationale are in [references/strategies.md](references/strategies.md).
 
-- **Tokenization (default):** replace PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only. Shrinks CDE the most for the least integration churn in a typical SaaS architecture.
-- **Hosted payment page (iframe):** when pre-tokenization isn't feasible and card data must never touch your servers.
-- **P2PE:** physical POS / card-present flows; encrypted at swipe with only decryption point in CDE.
-- **Network segmentation:** layered defense on top of one of the above; never the sole scope-reduction strategy.
-
-**PAN-storage format default (Req 3.4):** prefer **tokenization** at the storage boundary; the four `is_*` checks in Step 3's `test_pan_stored_encrypted` are an OR because pre-existing systems may already use any of them, but for new storage paths pick tokenization and treat encryption / truncation / hashing as escape hatches when tokenization isn't feasible.
+**PAN-storage format default (Req 3.4):** the four `is_*` checks in Step 3's `test_pan_stored_encrypted` are an OR because pre-existing systems may already use any of them; for new storage paths pick tokenization and treat encryption / truncation / hashing as escape hatches.
 
 ## Limitations
 
@@ -245,16 +240,6 @@ PCI DSS scope reduction is the highest-leverage cost-saving. Full strategy guida
 
 ## References
 
-- [pci][pci] - PCI Security Standards Council
-
-[pci]: https://www.pcisecuritystandards.org/
-
-- pcisecuritystandards.org/document_library/ - PCI DSS v4.0 docs
-- pcisecuritystandards.org/glossary/ - PCI terminology
-- `gdpr-test-patterns`,
-  `hipaa-test-patterns`,
-  `ccpa-test-patterns`,
-  `soc2-evidence-collector` - 
-  sister compliance pattern catalogs
-- `audit-trail-test-author` - 
-  Req 10 audit log requirements
+- PCI Security Standards Council: [home](https://www.pcisecuritystandards.org/), [document library](https://www.pcisecuritystandards.org/document_library/) (PCI DSS v4.0 docs), [glossary](https://www.pcisecuritystandards.org/glossary/)
+- Sister catalogs: `gdpr-test-patterns`, `hipaa-test-patterns`, `ccpa-test-patterns`, `soc2-evidence-collector`
+- `audit-trail-test-author` - Req 10 audit log requirements

@@ -7,16 +7,10 @@ description: "Build-an-X workflow that scans source code for untranslated string
 
 ## Overview
 
-Localized products fail in two ways:
-
-1. **Untranslated strings:** "Submit" appears in English in a French
-   UI because the developer hardcoded it.
-2. **Gaps in translation files:** the key exists in `en.json` but
-   not `fr.json`; the UI shows the key (e.g., "checkout.submit")
-   instead of text.
-
-This skill detects both via source scanning + translation-file
-diff.
+Two coverage gaps this skill detects: hardcoded user-facing text not wrapped in
+the i18n function, and keys present in `en.json` but missing from a locale file
+(so the UI shows the raw key). It finds both via source scanning plus a
+translation-file diff.
 
 ## When to use
 
@@ -80,25 +74,6 @@ For more comprehensive detection, language-specific tooling:
 import json
 from pathlib import Path
 
-base = json.loads(Path('locales/en.json').read_text())   # source-of-truth
-base_keys = set(flatten(base))
-
-per_locale_coverage = {}
-for locale_file in Path('locales').glob('*.json'):
-    locale = locale_file.stem
-    if locale == 'en': continue
-    locale_keys = set(flatten(json.loads(locale_file.read_text())))
-    missing = base_keys - locale_keys
-    extra = locale_keys - base_keys
-    per_locale_coverage[locale] = {
-        'covered': len(base_keys & locale_keys),
-        'missing': sorted(missing),
-        'extra_orphans': sorted(extra),
-        'pct': round(100 * len(base_keys & locale_keys) / len(base_keys), 1),
-    }
-
-print(json.dumps(per_locale_coverage, indent=2))
-
 def flatten(d, prefix=''):
     for k, v in d.items():
         full = f'{prefix}.{k}' if prefix else k
@@ -106,41 +81,29 @@ def flatten(d, prefix=''):
             yield from flatten(v, full)
         else:
             yield full
+
+base_keys = set(flatten(json.loads(Path('locales/en.json').read_text())))  # source-of-truth
+
+coverage = {}
+for f in Path('locales').glob('*.json'):
+    if f.stem == 'en': continue
+    keys = set(flatten(json.loads(f.read_text())))
+    covered = base_keys & keys
+    coverage[f.stem] = {
+        'missing': sorted(base_keys - keys),
+        'extra_orphans': sorted(keys - base_keys),
+        'pct': round(100 * len(covered) / len(base_keys), 1),
+    }
+
+print(json.dumps(coverage, indent=2))
 ```
 
 ## Step 4 - Report
 
-```markdown
-## i18n coverage report - `<sha>`
-
-**Locales:** 5 (en source + 4 targets)
-**Total keys (en):** 542
-**Untranslated source strings:** 18 (newly flagged)
-
-### Per-locale coverage
-
-| Locale | Coverage | Missing keys | Orphan keys | Recent additions  |
-|--------|---------:|-------------:|------------:|-------------------|
-| de      |   100%   |      0       |     2       |    +5             |
-| fr      |    98%   |     12       |     0       |    +5             |
-| es      |    87%   |     71       |     0       |    +5             |
-| ja      |    60%   |    218       |     0       |    +5             |
-
-### New untranslated strings in this PR
-
-| File                              | Line | String                          | Suggested key                       |
-|-----------------------------------|------|---------------------------------|-------------------------------------|
-| `src/checkout/PromoBanner.tsx`     |  18  | "Apply your discount"            | `checkout.promo.banner_cta`          |
-| `src/cart/EmptyCart.tsx`            |  12  | "Your cart is empty"             | `cart.empty_message`                 |
-
-### Orphan keys (in locale file but not in source)
-
-These keys exist in `de.json` but no longer in source - likely
-deprecated. Recommend deletion:
-
-- `legacy.old_promo_text`
-- `legacy.old_checkout_button`
-```
+Assemble per-locale coverage %, the new untranslated source strings (file, line,
+string, suggested key), and orphan keys (present in a locale file but not in
+source - deletion candidates). Full fill-in template:
+[references/coverage-report.md](references/coverage-report.md).
 
 ## Step 5 - PR gate
 
@@ -210,6 +173,5 @@ re-runs. The scan reports zero new untranslated strings and the gate passes.
 
 - [w3rtl][w3rtl] - W3C on `dir` attribute + RTL languages.
 - `pseudo-localization-runner` - sibling: layout-level i18n testing.
-- `rtl-rendering-tester` - 
-  RTL-specific rendering verification.
+- `rtl-rendering-tester` - RTL-specific rendering verification.
 - `locale-format-validator` - date / number / currency format verification.

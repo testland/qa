@@ -1,9 +1,9 @@
 {
   "name": "testland/ai-test-generator",
-  "description": "Build-an-X workflow that uses an LLM to generate tests from natural-language specs (acceptance criteria, user stories) - outputs tests with confidence scoring per case (LLM's own self-assessment + heuristics: assertion-quality, naming, completeness), batches uncertain cases for human review, integrates with the team's existing test framework. Critical: AI-generated tests are unreliable without curation; pair every generated test with adversarial review before merge. Use when a team has many AC to convert and wants AI-augmentation, not AI-replacement.",
+  "description": "Generates tests from natural-language specs (acceptance criteria, user stories, requirements) using an LLM, with confidence scoring per test case (LLM self-assessment plus heuristics: assertion quality, naming, completeness), batching uncertain cases for human review, and integration with the team's existing test framework. Use when the user asks to generate unit tests from acceptance criteria, convert user stories to test cases, automate test creation from requirements, or augment a spec-driven test suite with AI-generated stubs that are then curated before merge.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.6"
+  "version": "1.3.8"
 }

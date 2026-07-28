@@ -7,17 +7,13 @@ description: "Pure-reference catalog of the seven exploratory testing tours from
 
 ## Overview
 
-A naïve exploratory session can drift - the tester clicks around
-without a focusing lens. **Tours** solve this: each tour frames the
-exploration around a theme that catches a specific class of bugs.
+**Tours** keep an exploratory session focused: each tour frames the
+exploration around a theme that catches a specific class of bugs. The
+seven canonical tours come from James Whittaker's *Exploratory Software
+Testing* (2009, Addison-Wesley).
 
-The seven canonical tours come from James Whittaker's *Exploratory
-Software Testing* (2009, Addison-Wesley). They've been widely cited
-in the testing community as the practitioner-emergent vocabulary for
-exploration.
-
-This skill is a **pure reference** - the charter author and the
-tester pick which tours to apply per session.
+This skill is a **pure reference** - the charter author and the tester
+pick which tours to apply per session.
 
 ## When to use
 
@@ -40,8 +36,10 @@ tester pick which tours to apply per session.
    [references/tours-catalog.md](references/tours-catalog.md) - its
    mission, signal, worked example, and when-to-use notes.
 4. **Run each tour as a lens, not a checklist.** Adapt mid-tour as you
-   learn; pair the Bad-data tour with `malicious-payload-bank` and the
-   Intellectual tour with a domain-expert guide.
+   learn; pair the Bad-data tour with `malicious-payload-bank` (a
+   canonical starter payload for that step: `'; DROP TABLE users; --` to
+   probe SQL-injection escaping) and the Intellectual tour with a
+   domain-expert guide.
 5. **Capture findings per tour** with the PROOF fields (*Capturing
    tour findings* below).
 6. **File into the session sheet** (`session-based-test-management-reference`)
@@ -113,21 +111,14 @@ charter for EU-VAT carts.
 
 ## Anti-patterns
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Picking all 7 tours for one session                                   | Tester touches each superficially; no depth.                             | 1-3 tours per 90-min session. |
-| Money tour without monetary fields                                    | The tour wastes time on "verify nothing changed."                        | Pick tours per the feature; not all features need every tour. |
-| Garbage collector's tour without a sitemap                             | Tester misses pages; coverage gaps invisible.                            | Use the team's sitemap / docs as the seed list. |
-| Treating a tour as a checklist                                        | Tour is a heuristic; rigid stepwise application defeats the exploration. | Tester adapts mid-tour as they learn (per the exploratory definition). |
-| Bad-data tour with random inputs                                       | Random isn't useful; structured pathological inputs are.                  | Use canonical payloads (`malicious-payload-bank`). |
-| Intellectual tour without a domain expert pair                         | Tester misses the actual complexity; tour is shallow.                    | Pair with someone who knows the domain. |
-| One tour run per release without rotation                              | The same tour by the same tester catches the same bugs (or none).         | Rotate which tours run, which testers, what scope (Picking section). |
+Seven common ways a tour is misapplied (all-7-in-one-session, checklist
+rigidity, random Bad-data inputs, no rotation) and the fix for each:
+[references/tour-anti-patterns.md](references/tour-anti-patterns.md).
 
 ## Limitations
 
-- **Tour effectiveness varies by tester skill.** Senior testers
-  apply tours flexibly; junior testers may use them as checklists.
-  The vocabulary helps both, but mileage differs.
+- **Effectiveness varies by tester skill.** Seniors apply tours
+  flexibly; juniors may fall back to using them as checklists.
 - **Tour vocabulary is community-conventional.** Whittaker's seven
   are the most widely cited, but some teams use additional tours
   (Performance tour, Security tour, Accessibility tour) - note that
@@ -145,5 +136,7 @@ charter for EU-VAT carts.
   secondary.
 - Full per-tour mission, signal, and example:
   [references/tours-catalog.md](references/tours-catalog.md).
+- Tour anti-patterns and their fixes:
+  [references/tour-anti-patterns.md](references/tour-anti-patterns.md).
 - `malicious-payload-bank` - canonical payloads for the Bad-data tour.
 - `feature-flag-test-harness` - automated complement for the Configuration tour.

@@ -1,9 +1,9 @@
 {
   "name": "testland/failure-injection-test-author",
-  "description": "Build-an-X workflow that combines WireMock fault stubs (HTTP-level fault: 500s, malformed JSON, slow responses) with Toxiproxy (TCP-level: latency, packet loss, reset) into one orchestrated test scenario - the test starts both, applies fault per scenario, runs the SUT against the impaired endpoints, verifies the SUT's resilience patterns. Use when neither pure HTTP fault stubs nor pure TCP chaos covers the actual production failure modes - most real failures span both layers.",
+  "description": "Orchestrates WireMock fault stubs (HTTP-level fault: 500s, malformed JSON, slow responses) with Toxiproxy (TCP-level: latency, packet loss, reset) into a single resilience test scenario - the test starts both, applies fault per scenario, runs the SUT against the impaired endpoints, verifies the SUT's resilience patterns. Use when one test must reproduce a combined network + HTTP failure - a cross-layer failure mode from an incident postmortem that neither pure HTTP fault stubs nor pure TCP chaos can cover alone, because most real failures span both layers.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.3"
+  "version": "1.3.7"
 }

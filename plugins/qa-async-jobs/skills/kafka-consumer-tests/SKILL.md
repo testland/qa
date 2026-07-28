@@ -7,14 +7,13 @@ description: "Tests Apache Kafka consumer and producer logic across KafkaJS (Nod
 
 ## Overview
 
-Apache Kafka is a distributed event-streaming platform. Unlike
-SQS (visibility-timeout), RabbitMQ (ack/nack), or BullMQ
-(job-state machine), Kafka uses consumer-owned committed offsets as
-its delivery primitive - every test must control where the read
-position is. This skill covers that model: offset management,
-consumer-group rebalance, at-least-once vs exactly-once (EOS /
-transactions), idempotent producer, and dead-letter routing across
-KafkaJS (Node.js), kafka-go (Go), and Spring Kafka (Java).
+Kafka uses consumer-owned committed offsets as its delivery primitive
+(unlike SQS visibility-timeout, RabbitMQ ack/nack, or BullMQ
+job-state) - every test must control where the read position is. This
+skill covers that model: offset management, consumer-group rebalance,
+at-least-once vs exactly-once (EOS / transactions), idempotent
+producer, and dead-letter routing across KafkaJS (Node.js), kafka-go
+(Go), and Spring Kafka (Java).
 
 ## Step 1 - Spin up Kafka with Testcontainers
 
@@ -74,8 +73,6 @@ String bootstrapServers = kafka.getBootstrapServers();
 
 **Go**
 
-Per [testcontainers.com/modules/kafka][tc-kafka]:
-
 ```go
 import "github.com/testcontainers/testcontainers-go/modules/kafka"
 
@@ -95,8 +92,6 @@ with KafkaContainer() as kafka:
 ```
 
 ## Step 2 - Basic producer test (KafkaJS)
-
-Per [kafka.js.org/docs/getting-started][kjs-gs]:
 
 [kjs-gs]: https://kafka.js.org/docs/getting-started
 
@@ -123,8 +118,6 @@ it('produces a message to the topic', async () => {
 the record.
 
 ## Step 3 - Basic consumer test: offset management
-
-Per [kafka.js.org/docs/consuming][kjs-consuming]:
 
 [kjs-consuming]: https://kafka.js.org/docs/consuming
 
@@ -366,66 +359,13 @@ routing per [docs.spring.io/spring-kafka/reference/testing.html][sk-test].
 
 ## Step 8 - Other languages
 
-**Java (Spring Kafka + EmbeddedKafka)**
-
-Per [sk-test][sk-test], since Kafka 4.0 only `EmbeddedKafkaKraftBroker`
-is available (KRaft / no ZooKeeper):
-
-```java
-@SpringJUnitConfig
-@EmbeddedKafka(partitions = 1, topics = {"orders"},
-    bootstrapServersProperty = "spring.kafka.bootstrap-servers")
-class OrderConsumerTest {
-    @Autowired EmbeddedKafkaBroker embeddedKafka;
-
-    @Test
-    void testTemplate() throws Exception {
-        Map<String, Object> cp = KafkaTestUtils.consumerProps("tg", "false", embeddedKafka);
-        cp.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // default earliest since 2.5
-        Consumer<Integer, String> consumer =
-            new DefaultKafkaConsumerFactory<Integer, String>(cp).createConsumer();
-        embeddedKafka.consumeFromAnEmbeddedTopic(consumer, "orders");
-
-        KafkaTemplate<Integer, String> template = new KafkaTemplate<>(
-            new DefaultKafkaProducerFactory<>(KafkaTestUtils.producerProps(embeddedKafka)), true);
-        template.send("orders", "test-order");
-
-        ConsumerRecord<Integer, String> received =
-            KafkaTestUtils.getSingleRecord(consumer, "orders");
-        assertThat(received).has(value("test-order"));
-    }
-}
-```
-
-**Go (kafka-go + Testcontainers)**
-
-Per [pkg.go.dev/github.com/segmentio/kafka-go][kgo]:
+The KafkaJS recipes above are the core. Full Java (Spring Kafka +
+`EmbeddedKafkaKraftBroker`, KRaft since Kafka 4.0) and Go (kafka-go +
+Testcontainers; `FetchMessage` + `CommitMessages` for at-least-once)
+recipes are in
+[references/other-language-recipes.md](references/other-language-recipes.md).
 
 [kgo]: https://pkg.go.dev/github.com/segmentio/kafka-go
-
-```go
-func TestRoundTrip(t *testing.T) {
-    ctx := context.Background()
-    kc, _ := kafka.Run(ctx, "confluentinc/confluent-local:7.5.0")
-    defer kc.Terminate(ctx)
-    addr := kc.MustConnectionString(ctx)
-
-    w := &kafkago.Writer{Addr: kafkago.TCP(addr), Topic: "events",
-        AllowAutoTopicCreation: true}
-    w.WriteMessages(ctx, kafkago.Message{Value: []byte("hello")})
-    w.Close()
-
-    r := kafkago.NewReader(kafkago.ReaderConfig{
-        Brokers: []string{addr}, GroupID: "tg", Topic: "events"})
-    m, _ := r.FetchMessage(ctx)          // FetchMessage = manual commit (at-least-once)
-    require.Equal(t, "hello", string(m.Value))
-    r.CommitMessages(ctx, m)
-    r.Close()
-}
-```
-
-Per [kgo][kgo]: `FetchMessage` + `CommitMessages` is the explicit
-commit path; `ReadMessage` auto-commits and is at-most-once on crash.
 
 ## Step 9 - CI integration
 

@@ -61,12 +61,12 @@ Every scenario from Step 1 gets exactly one.
 
 | Profile | Load level | Duration | What it answers | Shape |
 |---|---|---|---|---|
-| Smoke | Minimal load | Seconds to a couple of minutes | "Does the script itself work?" k6 defines it as validating "that your script works and that the system performs adequately under minimal load" ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | Flat, one or two users |
-| Average-load | Average production load | 5 to 60 min ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | "Do we meet the SLO on a normal day?" k6: "assess how your system performs under expected normal conditions" | Ramp up, plateau, ramp down |
-| Stress | Above the expected average | 5 to 60 min ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | "How much headroom is there?" k6: "assess how a system performs at its limits when load exceeds the expected average" | Ramp above average, plateau |
-| Soak | Average production load | Hours ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | "Does it still meet the SLO after hours?" k6: "assess the reliability and performance of your system over extended periods" | Slow ramp, long plateau |
-| Spike | Very high, brief | A few minutes ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | "Do we survive a sale or a viral moment?" k6: "validate the behavior and survival of your system in cases of sudden, short, and massive increases in activity" | Near-instant surge, short hold, drop |
-| Breakpoint | Increasing until failure | Until the system breaks ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | "Where is the ceiling?" k6: "gradually increase load to identify the capacity limits of the system" | Continuous ramp, no plateau |
+| Smoke | Minimal load | Seconds to a couple of minutes | Does the script itself work at minimal load? | Flat, one or two users |
+| Average-load | Average production load | 5 to 60 min ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | Do we meet the SLO on a normal day? | Ramp up, plateau, ramp down |
+| Stress | Above the expected average | 5 to 60 min ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | How much headroom is there when load exceeds the average? | Ramp above average, plateau |
+| Soak | Average production load | Hours ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | Does it still meet the SLO after hours? | Slow ramp, long plateau |
+| Spike | Very high, brief | A few minutes ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | Do we survive a sudden, short, massive surge? | Near-instant surge, short hold, drop |
+| Breakpoint | Increasing until failure | Until the system breaks ([k6 test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/)) | Where is the capacity ceiling? | Continuous ramp, no plateau |
 
 Selection rules that follow from the definitions:
 
@@ -88,39 +88,25 @@ Selection rules that follow from the definitions:
 Each scenario also declares one of two workload models. This is the most
 frequently mis-stated concept in load-test planning, so state it precisely.
 
-**Closed model.** A fixed population of virtual users, each of which finishes
-its current request before starting the next. k6 puts it plainly: "In a closed
-model, the execution time of each iteration dictates the number of iterations
-executed in your test. The next iteration doesn't start until the previous one
-finishes"
+**Closed model.** A fixed population of virtual users, each finishing its
+current request before starting the next: "The next iteration doesn't start
+until the previous one finishes"
 ([k6 open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)).
-The consequence is the one that matters for planning: **throughput is coupled to
-latency.** When the service slows down, the offered load falls with it, so the
-test quietly stops applying the load you specified. k6 names this effect
-coordinated omission
-([k6 open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)).
+The consequence that matters for planning: **throughput is coupled to latency.**
+When the service slows down, offered load falls with it, so the test quietly
+stops applying the load you specified - k6 names this effect coordinated
+omission.
 
 **Open model.** New iterations arrive at a rate you specify, independent of how
-long previous ones take. k6: "The open model decouples VU iterations from the
-iteration duration. The response times of the target system no longer influence
-the load on the target system"
+long previous ones take, so "the response times of the target system no longer
+influence the load on the target system"
 ([k6 open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)).
-Load is expressed as arrivals per second, and a degrading service keeps
-receiving the same arrival rate, so queues build the way they would in
-production.
+A degrading service keeps receiving the same arrival rate, so queues build the
+way they would in production.
 
-How the distinction appears in the two most common runners:
-
-| Runner | Open model | Closed model |
-|---|---|---|
-| k6 | `constant-arrival-rate`, `ramping-arrival-rate` executors ([k6 open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)) | `constant-vus` and the other non-arrival-rate executors ([k6 open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)) |
-| Gatling | `injectOpen` with `atOnceUsers`, `rampUsers`, `constantUsersPerSec`, `rampUsersPerSec`, `stressPeakUsers` ([Gatling injection](https://docs.gatling.io/concepts/injection/)) | `injectClosed` with `constantConcurrentUsers`, `rampConcurrentUsers`, `incrementConcurrentUsers` ([Gatling injection](https://docs.gatling.io/concepts/injection/)) |
-
-Note the trap in the Gatling column: `rampUsers` and `atOnceUsers` are
-**open**-model blocks that inject a number of users over a window, while the
-closed-model blocks are the `*ConcurrentUsers` family, which hold a level of
-concurrency in the system ([Gatling injection](https://docs.gatling.io/concepts/injection/)).
-"Users" in a profile name does not mean closed.
+For how k6 and Gatling name their open and closed executors, and the Gatling
+"users means open, not closed" trap, see
+[references/runners.md](references/runners.md).
 
 Decision rule for the plan:
 
@@ -194,16 +180,10 @@ abort on at all.
 
 ## Step 5 - Size the error budget and calibrate the soak
 
-An error budget is what the SLO leaves over. The Google SRE Workbook states it
-directly: "the error budget is 100% minus the SLO", and gives the worked case
-that "if you have a 99.9% success ratio SLO, then a service that receives 3
-million requests over a four-week period had a budget of 3,000 (0.1%) errors
-over that period"
-([Implementing SLOs](https://sre.google/workbook/implementing-slos/)). The
-Google SRE Book frames the same derivation from the objective: a service whose
-SLO is to serve 99.999% of queries per quarter "means that the service's error
-budget is a failure rate of 0.001% for a given quarter"
-([Embracing Risk](https://sre.google/sre-book/embracing-risk/)).
+An error budget is what the SLO leaves over: "the error budget is 100% minus the
+SLO". The Google SRE Workbook's worked case: a 99.9% SLO on a service receiving 3
+million requests over a four-week period allows a budget of 3,000 (0.1%) errors
+([Implementing SLOs](https://sre.google/workbook/implementing-slos/)).
 
 The formula the plan uses:
 
@@ -275,35 +255,9 @@ SLO is agreed or aspirational.
 
 ## Worked example
 
-Input: a checkout service. SLOs are p95 < 300 ms on `POST /api/checkout` at
-peak, p95 < 100 ms on `GET /api/orders` at average, error rate < 0.1% under a 3x
-spike, and 99.9% availability over four weeks. Traffic mix is
-`GET /api/orders` 60%, `POST /api/checkout` 20%, everything else 20%. Peak is
-300 RPS, average 100 RPS, with a 3x spike on sale days.
-
-Resulting scenario matrix:
-
-| Scenario | SLO governed | Profile | Injection | Target | Duration |
-|---|---|---|---|---|---|
-| `smoke-mix` | none (gate) | Smoke | Open | 1 arrival/sec | 60 s |
-| `orders-latency-average` | p95 < 100 ms on orders | Average-load | Open | 100 arrivals/sec | 30 min |
-| `checkout-latency-peak` | p95 < 300 ms on checkout | Stress | Open | 300 arrivals/sec | 30 min |
-| `spike-error-budget` | error rate < 0.1% | Spike | Open | 900 arrivals/sec | 3 min |
-| `soak-availability` | 99.9% over four weeks | Soak | Open | 300 arrivals/sec | 4 h |
-| `capacity-ceiling` | none (capacity finding) | Breakpoint | Open | ramp to failure | until failure |
-
-Thresholds:
-
-| Scenario | Expression | Scope | Abort | Traceable to |
-|---|---|---|---|---|
-| `orders-latency-average` | `p(95)<100` | orders tag | no | orders latency SLO |
-| `checkout-latency-peak` | `p(95)<300` | checkout tag | no | checkout latency SLO |
-| `spike-error-budget` | `rate<0.001` | all | no (recovery is the measurement) | spike error-rate SLO |
-| `soak-availability` | `rate<0.001` | all | yes, `delayAbortEval: '10s'` | 99.9% availability, pro-rata over 4.32M requests = 4,320 failures |
-| `capacity-ceiling` | none | n/a | n/a | capacity finding, not an SLO |
-
-Every load number is open-model arrivals per second, because every SLO here is
-stated per request rather than per session.
+A full worked example - a checkout service's four SLOs turned into a
+six-scenario matrix with per-scenario thresholds, each traceable back to its
+SLO - is in [references/runners.md](references/runners.md).
 
 ## Anti-patterns
 

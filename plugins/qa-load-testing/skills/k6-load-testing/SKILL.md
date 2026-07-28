@@ -34,10 +34,9 @@ Gatling, see `gatling-load-testing`.
 
 ## Install
 
-The canonical install methods are documented at
-[k6 installation](https://grafana.com/docs/k6/latest/set-up/install-k6/) - 
-brew (macOS), apt / yum (Linux), choco (Windows), Docker. Pin to a
-specific k6 version in CI for determinism rather than "latest".
+Install via [k6 installation](https://grafana.com/docs/k6/latest/set-up/install-k6/)
+(brew, apt/yum, choco, Docker). Pin a specific k6 version in CI
+rather than "latest".
 
 ## Authoring
 
@@ -198,53 +197,10 @@ jq -r '
 
 ## CI integration
 
-```yaml
-# .github/workflows/load-test.yml
-name: load-test
-
-on:
-  pull_request:
-    paths:
-      - 'tests/load/**'
-  schedule:
-    - cron: '0 4 * * *'   # nightly soak
-
-jobs:
-  k6:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Install k6
-        run: |
-          sudo gpg -k
-          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
-            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-          sudo apt-get update
-          sudo apt-get install k6
-
-      - name: Run k6 test
-        env:
-          API_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
-          API_TOKEN:    ${{ secrets.STAGING_API_TOKEN }}
-        run: |
-          k6 run \
-            --summary-export=summary.json \
-            --quiet \
-            tests/load/orders.js
-
-      - name: Upload summary
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: k6-summary
-          path: summary.json
-          retention-days: 14
-```
-
-A failing threshold causes `k6 run` to exit non-zero, failing the
-job; the summary artifact is uploaded regardless via `if: always()`.
+Full GitHub Actions workflow - apt install, PR + nightly triggers,
+summary upload via `if: always()` - in
+[references/ci-integration.md](references/ci-integration.md). A
+failing threshold causes `k6 run` to exit non-zero, failing the job.
 
 ## Anti-patterns
 

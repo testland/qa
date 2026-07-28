@@ -7,25 +7,14 @@ description: "Build-an-X for idempotency tests in any async/job/API context - id
 
 ## Overview
 
-**Idempotency** = the property that processing the same input twice
-produces the same effect as processing it once. Without it, every
-async system silently corrupts data on retry.
-
-Per the Amazon Builders' Library ([aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs][aws-idem]):
+Authors idempotency tests for any handler where the same input can be
+processed twice. Uses the industry-standard idempotency-key pattern
+(client sends a unique key per logical operation; the server records
+`key -> response` and returns the cached response on duplicates) plus
+commutative-side-effect designs for systems that cannot add keys.
+Sources in References.
 
 [aws-idem]: https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
-
-Idempotency is essential for:
-- At-least-once delivery systems (SQS Standard, BullMQ retry,
-  Sidekiq retry, webhook redelivery)
-- Retry-on-error patterns (HTTP 5xx → retry)
-- Network-failure recovery (mobile clients re-submit on timeout)
-- User actions that can replay (browser back-button, refresh)
-
-Per Stripe's idempotency docs (stripe.com/docs/api/idempotent_requests),
-the canonical pattern is **idempotency keys**: the client passes a
-unique key per logical operation; the server records `key →
-response` and returns the cached response on duplicates.
 
 ## When to use
 
@@ -110,35 +99,10 @@ operation).
 ## Step 4 - Side-effect commutativity for non-key designs
 
 Some systems can't add idempotency keys (legacy webhook receivers,
-existing APIs). For these, design idempotent side effects:
-
-```python
-# NON-idempotent (counter increment):
-def credit_account(account_id, amount):
-    db.execute("UPDATE accounts SET balance = balance + %s WHERE id = %s",
-               (amount, account_id))
-
-# IDEMPOTENT (use a transaction-id / fingerprint):
-def credit_account(account_id, amount, txn_id):
-    cursor = db.execute(
-        "INSERT INTO transactions(txn_id, account_id, amount) VALUES (%s, %s, %s) "
-        "ON CONFLICT (txn_id) DO NOTHING RETURNING id",
-        (txn_id, account_id, amount)
-    )
-    if cursor.rowcount == 0:
-        return  # duplicate; skip
-    db.execute("UPDATE accounts SET balance = balance + %s WHERE id = %s",
-               (amount, account_id))
-```
-
-**Test pattern:**
-
-```python
-def test_credit_idempotent_via_txn_id():
-    credit_account(account_id=1, amount=100, txn_id="t-1")
-    credit_account(account_id=1, amount=100, txn_id="t-1")   # duplicate
-    assert get_balance(1) == 100   # not 200
-```
+existing APIs). For these, design idempotent side effects via a
+transaction-id / fingerprint with an atomic upsert (`ON CONFLICT DO
+NOTHING`), then assert the effect runs once. Full code + test:
+[references/idempotency-patterns.md](references/idempotency-patterns.md).
 
 ## Step 5 - Idempotency-window tuning
 
@@ -169,27 +133,10 @@ def test_idempotency_key_expires(endpoint, freezer):
 
 The hardest case: two requests with the same idempotency key arrive
 simultaneously. Without atomic store + check, both can pass the
-"is this duplicate?" check.
-
-**Test pattern:**
-
-```python
-def test_concurrent_duplicate_processed_only_once(endpoint, charge_processor):
-    key = "race-key"
-    charge = {"amount": 100}
-
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        f1 = executor.submit(endpoint.post_charge, key, charge)
-        f2 = executor.submit(endpoint.post_charge, key, charge)
-        r1, r2 = f1.result(), f2.result()
-
-    assert r1 == r2
-    assert charge_processor.execute.call_count == 1   # NOT 2
-```
-
-The implementation must use atomic CAS (e.g., DB unique constraint
-on `idempotency_key` column with `ON CONFLICT DO NOTHING`, or Redis
-`SETNX`).
+"is this duplicate?" check. The implementation must use atomic CAS (DB
+unique constraint on `idempotency_key` with `ON CONFLICT DO NOTHING`,
+or Redis `SETNX`). Concurrent-duplicate test:
+[references/idempotency-patterns.md](references/idempotency-patterns.md).
 
 ## Step 7 - End-to-end test recipe per handler
 

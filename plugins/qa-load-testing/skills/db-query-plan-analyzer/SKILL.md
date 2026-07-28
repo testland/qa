@@ -20,13 +20,9 @@ Most API perf regressions resolve to one of:
 
 `EXPLAIN ANALYZE` (PostgreSQL), `EXPLAIN ANALYZE` (MySQL 8.0+),
 or `EXPLAIN QUERY PLAN` (SQLite) reveals which case you're in. This
-skill reads that output and proposes the fix.
-
-> **Terminology note:** "slow query" is practitioner-emergent; ISTQB
-> has no canonical entry. The query-plan vocabulary (Sequential Scan,
-> Index Scan, Nested Loop, etc.) is from the database vendor docs - 
-> PostgreSQL's [Using EXPLAIN][pg-explain] is the canonical reference
-> in the postgres-flavored ecosystem.
+skill reads that output and proposes the fix. The query-plan
+vocabulary (Sequential Scan, Index Scan, Nested Loop) comes from
+PostgreSQL's [Using EXPLAIN][pg-explain].
 
 [pg-explain]: https://www.postgresql.org/docs/current/using-explain.html
 
@@ -43,9 +39,9 @@ this skill doesn't apply - those are infrastructure concerns.
 
 ## Step 1 - Get a real EXPLAIN ANALYZE
 
-`EXPLAIN` shows the **planner's estimated** cost; `EXPLAIN ANALYZE`
-**actually runs the query** and reports the actual rows + actual
-time. Always use ANALYZE; estimates can be wildly wrong.
+Always use `ANALYZE` (it runs the query and reports actual rows +
+time); plain `EXPLAIN` gives only planner estimates, which can be
+wildly wrong.
 
 ### PostgreSQL
 
@@ -86,33 +82,15 @@ SQLite's output is simpler - no costs, just the access strategy
 Read the plan from the **innermost nodes outward** (the deepest
 nesting is what runs first). The dominant cost is the node with the
 highest `actual time` in PostgreSQL or the highest cumulative cost
-in MySQL.
-
-Common cost signatures:
-
-| Signature                                                    | Meaning                                                    |
-|--------------------------------------------------------------|------------------------------------------------------------|
-| `Seq Scan on <table>` with high actual time                   | Sequential scan over a large table - likely missing index. |
-| `Index Scan` with `Filter:` and many `Rows Removed by Filter` | Index used but most rows filtered out - index isn't selective. |
-| `Nested Loop` with high inner-side row count                  | Should likely be a Hash Join - stats may be stale.        |
-| `Sort` with `external merge Disk:`                            | Sort spilled - `work_mem` too low or sort is unnecessary.  |
-| `Bitmap Heap Scan` followed by `Recheck Cond`                 | Multi-index lookup; usually fine but verify the recheck cost. |
-| `Hash` with `Batches: <N>`, N > 1                              | Hash join spilled - `work_mem` too low.                   |
-
-PostgreSQL's `Buffers: shared hit=N read=M` line tells you cache
-hits vs. disk reads - a high `read` count is the I/O smoking gun.
+in MySQL. Match the node to its meaning using the cost-signature
+table in [references/plan-signatures.md](references/plan-signatures.md).
 
 ## Step 3 - Match cost to fix
 
-| Diagnosis                                  | Typical fix |
-|--------------------------------------------|-------------|
-| Seq Scan on a large table, predicate column not indexed | `CREATE INDEX ON <table>(<column>)`. Use a B-tree by default. |
-| Seq Scan because predicate uses a function on the column (`WHERE LOWER(email) = '...'`) | Functional index: `CREATE INDEX ON users (LOWER(email))`. |
-| Index Scan but many rows filtered post-index | The leading column of the composite index isn't selective enough; reorder the columns or add a column to the predicate that's more selective. |
-| Type cast in `WHERE` (e.g. `id::text = '123'` when `id` is bigint) | Fix the application code to compare with matching types - the cast disables the index. |
-| Sort spill                                  | Add an index that returns pre-sorted data, or raise `work_mem` for the session. |
-| Nested Loop where Hash Join would win       | Run `ANALYZE <table>` to refresh stats; verify the planner switches; if not, file a planner-level investigation. |
-| N+1 (separate queries from app code)        | Eager-load via JOIN at the ORM layer; not a DB fix at all. |
+Look up the diagnosis in the diagnosis-to-fix table in
+[references/plan-signatures.md](references/plan-signatures.md) (Seq
+Scan -> add index, type cast -> fix app code, sort spill -> pre-sorted
+index or larger `work_mem`, N+1 -> eager-load at the ORM, etc.).
 
 ## Step 4 - Emit the candidate index / rewrite
 
@@ -135,15 +113,9 @@ CREATE INDEX idx_users_email_lower ON users(LOWER(email));
 CREATE INDEX idx_orders_summary ON orders(customer_id) INCLUDE (status, total);
 ```
 
-Index choice principles:
-
-| Principle                                | Why |
-|------------------------------------------|-----|
-| Leading column = most selective predicate | Composite index columns are used left-to-right; the first column should reduce the result set the most. |
-| `WHERE` columns first, then `ORDER BY`    | The index can satisfy filtering AND ordering if the columns align. |
-| Use partial indexes for skewed columns   | `WHERE status = 'active'` indexed only for active rows is dramatically smaller than a full index. |
-| Functional indexes for non-direct predicates | `LOWER(email)` etc. - the planner can only use the index if the function matches exactly. |
-| Avoid indexing low-cardinality columns alone | A boolean column index isn't helpful - partial index or composite is. |
+For which column leads, when to use partial vs. functional indexes,
+and low-cardinality pitfalls, see the index-choice principles in
+[references/plan-signatures.md](references/plan-signatures.md).
 
 ## Output format
 
@@ -204,13 +176,10 @@ actual time is below the budget.
 
 ## Anti-patterns
 
-| Anti-pattern                                                | Why it fails                                                       | Fix |
-|-------------------------------------------------------------|---------------------------------------------------------------------|-----|
-| Adding indexes speculatively                                 | Indexes slow down `INSERT` / `UPDATE`; bloat the table; can produce worse plans. | Only add an index that fixes a specific observed slow query, with the EXPLAIN ANALYZE before/after as evidence. |
-| Indexing every column                                        | Same as above; the planner can pick a worse index when too many candidates exist. | Composite indexes that cover multiple queries; periodic review of `pg_stat_user_indexes` to drop unused. |
-| Reading EXPLAIN without ANALYZE                              | Estimated rows can be off by 10x+; the plan you see may not match runtime. | Always ANALYZE in non-prod; use sampling in prod (`pg_stat_statements`). |
-| Optimizing the wrong node                                    | The deepest cost is often a child of the dominant node; fixing the child alone may help marginally. | Always look for the **DOMINANT** node first (highest actual time, highest cost ratio). |
-| Skipping `ANALYZE <table>` after a bulk load                  | Stale stats produce bad plans even when indexes exist.            | Schedule `ANALYZE` after every bulk-load operation in CI / migrations. |
+See the anti-patterns table in
+[references/plan-signatures.md](references/plan-signatures.md)
+(speculative indexing, reading EXPLAIN without ANALYZE, optimizing a
+non-dominant node, skipping `ANALYZE` after a bulk load).
 
 ## Limitations
 

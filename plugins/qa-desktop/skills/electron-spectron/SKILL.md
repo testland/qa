@@ -47,18 +47,13 @@ reasons ([spectronrepo][spectronrepo]), but the architectural
 context is observable from the surrounding ecosystem at the
 deprecation moment:
 
-1. **ChromeDriver was the wrong substrate.** Spectron drove Electron
-   through ChromeDriver, which was designed for browser-tab
-   automation. Electron's **main process** (Node.js, native modules,
-   IPC, packaged-app lifecycle, file dialogs) sits outside the
-   ChromeDriver model. Spectron papered over this with bespoke RPC
-   bridges, which grew progressively harder to keep aligned with
-   Electron's evolving multi-process model.
-2. **The legacy WebDriverIO sync-API was retired.** Spectron's API
-   shape depended on the WebDriverIO sync API, which WebDriverIO
-   themselves dropped in WDIO 6+. Spectron could either rewrite to
-   the async API (a breaking change) or stay on a frozen API
-   surface.
+1. **ChromeDriver was the wrong substrate.** Electron's **main process**
+   (Node.js, native modules, IPC, packaged-app lifecycle, file dialogs) sits
+   outside the ChromeDriver model, so Spectron bridged it with bespoke RPC that
+   grew progressively harder to keep aligned with Electron's multi-process model.
+2. **The WebDriverIO sync API was retired.** Spectron's API shape depended on
+   the WDIO sync API, dropped in WDIO 6+; migrating to the async API was a
+   breaking change, so Spectron's surface froze.
 3. **Native testing tools matured.** Per [Electron's automated-
    testing guide][electrontest], Electron now recommends three
    first-class alternatives - Playwright, WebDriverIO (modern
@@ -81,74 +76,25 @@ SKILL.
 
 ## What Spectron looked like
 
-For pattern-recognition during a migration audit, Spectron tests
-followed this shape:
+For pattern-recognition during a migration audit, a Spectron test centres on a
+`new Application({ path })` handle with `app.start()` / `app.stop()` fixtures and
+`app.client.<webdriver-method>` calls:
 
 ```js
 // Legacy Spectron - DO NOT use for new code
-const Application = require('spectron').Application;
-const app = new Application({
-  path: '/path/to/electron/MyApp.app/Contents/MacOS/MyApp',
-});
-
-before(async () => {
-  await app.start();
-});
-
-after(async () => {
-  if (app && app.isRunning()) {
-    await app.stop();
-  }
-});
-
+const app = new Application({ path: '/path/to/MyApp' });
+before(async () => { await app.start(); });
+after(async () => { if (app && app.isRunning()) await app.stop(); });
 it('opens a window', async () => {
-  const count = await app.client.getWindowCount();
-  assert.strictEqual(count, 1);
+  assert.strictEqual(await app.client.getWindowCount(), 1);
 });
 ```
 
-The equivalent in modern Playwright `_electron` (per
-[electrontest][electrontest]):
-
-```js
-// Modern replacement
-const { _electron: electron } = require('playwright');
-
-let electronApp;
-beforeAll(async () => {
-  electronApp = await electron.launch({ args: ['.'] });
-});
-afterAll(async () => {
-  await electronApp.close();
-});
-
-test('opens a window', async () => {
-  const windowCount = electronApp.windows().length;
-  expect(windowCount).toBe(1);
-});
-```
-
-See `electron-playwright` for the full Playwright
-`_electron` authoring + running + CI workflow.
-
-## Migration shopping list
-
-A Spectron-to-Playwright migration touches:
-
-| Spectron concept | Playwright `_electron` replacement |
-|---|---|
-| `new Application({ path })` | `electron.launch({ args: ['.'] })` ([electrontest][electrontest]) |
-| `app.start()` / `app.stop()` | `electronApp.launch()` / `electronApp.close()` |
-| `app.client.<webdriver-method>` | `page = await electronApp.firstWindow()`; then standard `page.<method>` ([electrontest][electrontest]) |
-| `app.browserWindow.<method>` (sync RPC into main process) | `electronApp.evaluate(({ BrowserWindow }) => { … })` - typed handle ([electrontest][electrontest]) |
-| Window counting via `app.client.getWindowCount()` | `electronApp.windows().length` |
-| ChromeDriver binary lifecycle | Implicit - Playwright bundles Chromium and exposes packaged-app launch directly |
-
-Plan migration **test-file-by-test-file**, not big-bang. Per Step 7
-of the migration playbook (kept implicit here - see your project's
-test-strategy doc): tag each file as migrated, run both suites in
-CI until the Spectron set is empty, then delete `spectron` from
-`package.json`.
+The before/after Playwright `_electron` equivalent and the concept-by-concept
+mapping (the migration shopping list) live in
+[references/spectron-migration.md](references/spectron-migration.md). See
+`electron-playwright` for the full Playwright `_electron` authoring, running,
+and CI workflow.
 
 ## Residual support contract
 

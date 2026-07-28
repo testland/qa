@@ -24,36 +24,15 @@ executes, catching bad hypotheses while the cost of fixing them is low.
 
 ## The Chaos Toolkit steady-state-hypothesis block
 
-Per [chaostoolkit.org/reference/api/experiment/][ctk], the
-`steady-state-hypothesis` object requires:
-
-- `title` (string): human-readable rationale for the hypothesis.
-- `probes` (array): one or more probe objects, each with:
-  - `type`: `"probe"`
-  - `name`: identifier string
-  - `provider`: execution specification (HTTP, process, or Python)
-  - `tolerance`: the gate value; if the probe's return value does not satisfy
-    the tolerance, the experiment bails before running the method.
-
-Tolerance forms supported ([chaostoolkit.org/reference/api/experiment/][ctk]):
-
-| Tolerance form | Syntax example | Evaluation |
-|---|---|---|
-| Scalar equality | `"tolerance": 200` | probe return == 200 |
-| Boolean equality | `"tolerance": true` | probe return == true |
-| String equality | `"tolerance": "OK"` | probe return == "OK" |
-| Inclusive range | `"tolerance": [95, 100]` | 95 <= value <= 100 |
-| Membership | `"tolerance": [200, 201, 204]` | value in list |
-| Regex | `"tolerance": {"type": "regex", "pattern": "^healthy$"}` | regex match |
-| JSONPath | `"tolerance": {"type": "jsonpath", "path": "$.status", "expect": "up"}` | JSONPath extract + compare |
-| Range object | `"tolerance": {"type": "range", "range": [95.0, 100.0]}` | numeric bounds |
-
-**Execution flow** ([chaostoolkit.org/reference/concepts/][ctk-concepts]):
-probes run once before the method (baseline check) and once after (deviation
-check). A probe that fails before the method means the system is already
-outside its acceptable state; the experiment must not run. A probe that fails
-after the method means the chaos activity caused the system to leave its
-steady state.
+The `steady-state-hypothesis` object requires a `title` and one or more `probes`,
+each with a `provider` and a `tolerance` gate; if a probe's return value fails
+its tolerance before the method, the experiment bails before running. The full
+field list, the eight supported tolerance forms (scalar, boolean, string, range,
+membership, regex, JSONPath, range object), and the pre-/post-method evaluation
+flow are in
+[references/chaostoolkit-tolerance.md](references/chaostoolkit-tolerance.md), per
+[chaostoolkit.org/reference/api/experiment/][ctk] and
+[chaostoolkit.org/reference/concepts/][ctk-concepts].
 
 [ctk]: https://chaostoolkit.org/reference/api/experiment/
 [ctk-concepts]: https://chaostoolkit.org/reference/concepts/
@@ -67,9 +46,9 @@ Prometheus query endpoint, a Datadog API, an HTTP health endpoint, a process
 exit code. The metric must already be instrumented.
 
 **Fail signals:**
-- The probe `provider` points to a dashboard URL rather than an API endpoint.
+- The probe `provider` points to a dashboard URL rather than an API endpoint, or
+  the only way to evaluate the metric is to read it manually.
 - The metric name is a made-up label not yet emitted by any service.
-- The only way to evaluate the metric is to read it manually.
 - The probe requires credentials or tooling not available in the environment
   where the experiment will run.
 
@@ -100,12 +79,10 @@ not an arbitrary threshold that would never be breached even during a real
 incident.
 
 **Fail signals:**
-- Tolerance is so wide it would accept total service degradation
-  (e.g., `>= 0%` completion rate).
+- Tolerance is so wide it accepts total degradation, i.e. the value is "system
+  is completely down" rather than "noticeably degraded" (e.g., `>= 0%`).
 - Tolerance is tighter than the metric's normal noise band, so it fails
   spuriously in baseline conditions.
-- The tolerance value is the same as "system is completely down" rather
-  than "system is noticeably degraded."
 - No SLO or SLI document backs the threshold choice.
 
 **Pass signal:** The threshold maps to a published SLO, an error budget line,
@@ -165,12 +142,9 @@ produces a vacuous result.
 
 **Fail signals:**
 - The fault is a database connection failure, but the probe measures
-  frontend CPU usage.
+  frontend CPU usage - the probe is on a data path the fault never touches.
 - The fault affects one region, but the probe aggregates globally across
-  all regions.
-- The fault is network latency to a third-party API, but the probe
-  measures an in-process in-memory cache hit rate that does not depend
-  on that API.
+  all regions, so the failure is averaged away.
 - The service has circuit-breaker or cached fallbacks that prevent the
   fault from ever reaching the probe's data path.
 
@@ -220,23 +194,17 @@ Verdict: hypothesis is sound. Proceed to experiment execution.
 
 ## Hard-reject conditions
 
-The following hypothesis patterns are hard rejects. Do not proceed to
-execution until they are resolved:
+These patterns block execution outright - a `Hard-reject triggered: yes` in the
+output below. Each maps to the check that catches it, and each subsumes the
+soft anti-patterns that share its cause; do not proceed until resolved.
 
-1. **Probe returns a constant** - a health endpoint that always returns 200
-   regardless of backend state (e.g., a load-balancer liveness check that
-   passes even when all backends are down).
-2. **Tolerance is `true` on a boolean probe with no degradation path** -
-   if the only way the probe returns `false` is total service unavailability,
-   the experiment does not test resilience, it tests catastrophe.
-3. **No baseline measurement cited in the experiment or runbook** - the
-   tolerance was chosen without measurement.
-4. **Metric is an internal attribute, not a measurable output** - per
-   [principlesofchaos.org][cp] Principle 1, internal state (e.g., thread
-   pool queue depth, JVM heap used) is not a valid steady-state metric unless
-   it is also a published SLI.
-5. **The fault and the probe have no shared call-graph path** - confirmed
-   by tracing (Check 5 fail with no plausible connection).
+| Hard reject | Maps to | Why it is fatal |
+|---|---|---|
+| Probe returns a constant (e.g. an LB liveness check, or a single HTTP 200, that passes even when all backends are down) | Checks 1, 4, 5 | The probe cannot register degradation, so a "held" verdict is vacuous |
+| Boolean `tolerance: true` whose only `false` path is total unavailability | Check 3 | Tests catastrophe, not resilience |
+| No baseline measurement cited in the experiment or runbook | Check 2 | The tolerance was chosen without measurement |
+| Metric is an internal attribute (thread-pool queue depth, JVM heap used) that is not also a published SLI | Checks 1, 3 | Per [principlesofchaos.org][cp] Principle 1, internal state is not a valid steady-state output |
+| Fault and probe share no call-graph path, or a global aggregate masks a regional fault | Check 5 | A "held" result means the metric is unrelated to the fault, not that the system is resilient |
 
 ## Output format
 
@@ -260,17 +228,6 @@ Verdict: SOUND / UNSOUND
   Hard-reject triggered: yes / no
   Recommended action: <proceed | revise probe | replace metric | add baseline>
 ```
-
-## Anti-patterns
-
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| "The service stays up" | Unmeasurable; per [principlesofchaos.org][cp] Principle 1, focus on output not state | Replace with a throughput or error-rate metric |
-| HTTP 200 check as steady-state | A single status code check may not reflect user-visible success rate | Use completion rate or error budget metric |
-| Tolerance = 0% error rate | Too tight; normal traffic noise causes spurious failures | Align to SLO floor (e.g., error rate < 0.5%) |
-| Global metric for a regional fault | Aggregation masks the failure; [principlesofchaos.org][cp] notes "systemic behavior patterns" | Scope the query to the affected region or cohort |
-| Metric unrelated to fault path | Produces vacuous "held" result | Trace the fault's call graph; pick a metric in that path |
-| Omitting `measured_over` | Point-in-time samples are noisy; window matters | Use a range vector query (Prometheus) or rollup window (Datadog) |
 
 ## Limitations
 

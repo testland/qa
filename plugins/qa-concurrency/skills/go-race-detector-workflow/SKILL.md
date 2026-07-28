@@ -7,11 +7,10 @@ metadata:
 
 # go-race-detector-workflow
 
-Go's concurrency model (goroutines + channels + the memory model) differs
-structurally from OS-thread models. The race detector is compiled into the
-binary at build time via ThreadSanitizer instrumentation; goroutine leaks are
-a separate failure class that the race detector does not cover.
-This skill walks both checks, from first run to CI gate.
+The race detector (compiled into the binary via ThreadSanitizer) and
+goroutine leaks are two separate failure classes: the detector finds
+concurrent unsynchronized access, not leaked goroutines. This skill walks
+both checks, from first run to CI gate.
 
 `race-condition-test-author` covers multi-language deterministic interleaving
 (barriers, jcstress, TSan for C/C++). This skill focuses exclusively on Go:
@@ -37,8 +36,9 @@ its own). Supported platforms as of Go 1.22: `linux/amd64`,
 Per [go.dev/doc/articles/race_detector], expected overhead:
 - Execution time: 2-20x slower.
 - Memory: 5-10x increase.
-- Additional 8 bytes per `defer`/`recover` (unbounded in long-running
-  goroutines; budget accordingly in CI timeouts).
+- Additional 8 bytes per `defer`/`recover`, accumulating until the goroutine
+  exits (not until the deferred function returns) - unbounded in long-running
+  service binaries, so budget CI timeouts accordingly.
 
 ## Step 2 - Read a race report
 
@@ -184,30 +184,18 @@ goroutines once all tests have completed.
 
 ### Filtering expected goroutines
 
-Third-party libraries sometimes leave background goroutines that are
-intentional. Silence them with options per [pkg.go.dev/go.uber.org/goleak]:
+Third-party libraries sometimes leave intentional background goroutines.
+Silence a known one by its top-of-stack function:
 
 ```go
-// Ignore a goroutine whose top-of-stack is this function
 goleak.VerifyNone(t,
     goleak.IgnoreTopFunction("database/sql.(*DB).connectionOpener"),
 )
-
-// Ignore a function anywhere in the stack (v1.3.0+)
-goleak.VerifyNone(t,
-    goleak.IgnoreAnyFunction("google.golang.org/grpc.(*ccBalancerWrapper).watcher"),
-)
-
-// Snapshot existing goroutines at test start; ignore them at end
-opt := goleak.IgnoreCurrent()
-// ... test logic ...
-goleak.VerifyNone(t, opt)
 ```
 
-Prefer `IgnoreTopFunction` over `IgnoreCurrent` when the library goroutine
-is identifiable by name: `IgnoreCurrent` silences goroutines that were
-already running at snapshot time, which can mask leaks introduced before
-the snapshot.
+Full filter-option catalog (`IgnoreAnyFunction`, `IgnoreCurrent`, `Cleanup`,
+and when to prefer each) is in
+[references/goleak-filter-options.md](references/goleak-filter-options.md).
 
 ## Step 7 - CI matrix
 
@@ -242,9 +230,9 @@ jobs:
           path: /tmp/race/report*
 ```
 
-`-race` adds 2-20x overhead; set `-timeout` to at least 5-10x your
-non-race run time. Upload `log_path` files on failure so the report
-survives the run.
+Because `-race` adds the Step 1 execution overhead, set `-timeout` to at
+least 5-10x your non-race run time. Upload `log_path` files on failure so
+the report survives the run.
 
 ## Anti-patterns
 
@@ -262,15 +250,11 @@ survives the run.
 - The race detector only fires on races that execute in the instrumented
   run. Low-probability interleavings require stress (`-count`, `-cpu`) or
   barrier-based deterministic tests (see `race-condition-test-author`).
-- Per [go.dev/doc/articles/race_detector], cgo is required; cross-compiled
-  binaries (e.g., `GOOS=linux GOARCH=arm` on a Mac) will not run with
-  `-race` unless the target toolchain supports TSan.
+- The cgo requirement (Step 1) means cross-compiled binaries (e.g.,
+  `GOOS=linux GOARCH=arm` on a Mac) will not run with `-race` unless the
+  target toolchain supports TSan.
 - Per [github.com/uber-go/goleak], goleak requires one of the two most
   recent minor versions of Go; older toolchains are not supported.
-- The race detector adds 8 bytes per `defer`/`recover` that accumulates
-  until the goroutine exits, not until the deferred function returns. Long-
-  running service binaries built with `-race` can leak memory faster than
-  typical tests reveal.
 - goleak does not distinguish between a goroutine that will stop shortly
   and one that is genuinely leaked. `VerifyNone` has a brief internal
   retry loop, but tests that start background goroutines with long startup

@@ -115,16 +115,11 @@ re-subscribes to notification channels.
 
 ## Step 3 - SSE delivery tests
 
-The [WHATWG HTML Living Standard (Server-Sent Events)](https://html.spec.whatwg.org/multipage/server-sent-events.html)
-defines the `EventSource` interface. A connection is established at state `0`
-(CONNECTING), transitions to `1` (OPEN) when the server responds with
-`Content-Type: text/event-stream`, and events are dispatched as
-`MessageEvent` objects with `data`, `origin`, and `lastEventId` properties.
-
-Per the spec, when a connection closes the user agent automatically
-reconnects and sends the `Last-Event-ID` header so the server can resume
-delivery from the last acknowledged event. Tests should assert this recovery
-path.
+Per the [WHATWG Server-Sent Events spec](https://html.spec.whatwg.org/multipage/server-sent-events.html),
+`EventSource` dispatches events as `MessageEvent` objects carrying `data` and
+`lastEventId`, and on disconnect the user agent auto-reconnects with a
+`Last-Event-ID` header so the server resumes from the last acknowledged event.
+Tests should assert this recovery path.
 
 **Test pattern (Node.js with `eventsource` + `express`):**
 
@@ -166,106 +161,26 @@ describe('in-app notification handler - SSE', () => {
 });
 ```
 
-The `retry` field (milliseconds) in an SSE event controls reconnection delay
-per the WHATWG spec. Test that the client honors a server-supplied `retry`
-value by asserting reconnect timing in integration tests.
+An SSE event's `retry` field (milliseconds) sets the client reconnection delay;
+assert the client honors a server-supplied value in integration tests.
 
 ## Step 4 - Firebase Realtime Database listener tests
 
-Firebase RTDB uses a persistent WebSocket internally. The
-[Firebase RTDB read/write docs](https://firebase.google.com/docs/database/web/read-and-write)
-describe `onValue()` as the primary listener: it fires once immediately with
-current data and again on every subsequent change at that location and below.
-
-Use the [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite)
-to run RTDB listener tests without hitting production.
-
-**Test pattern (Jest + Firebase JS SDK v9 modular + emulator):**
-
-```javascript
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, onValue, set, off } from 'firebase/database';
-import { connectDatabaseEmulator } from 'firebase/database';
-
-const app = initializeApp({ projectId: 'test-project', databaseURL: 'http://127.0.0.1:9000?ns=test' });
-const db = getDatabase(app);
-connectDatabaseEmulator(db, '127.0.0.1', 9000);
-
-describe('in-app notification - RTDB listener', () => {
-  const notifRef = ref(db, 'users/u-1/notifications/n-1');
-
-  afterEach(() => off(notifRef));
-
-  it('delivers notification to listener when record is written', (done) => {
-    onValue(notifRef, (snapshot) => {
-      if (!snapshot.exists()) return;
-      expect(snapshot.val().type).toBe('ORDER_SHIPPED');
-      done();
-    });
-
-    set(notifRef, { type: 'ORDER_SHIPPED', read: false, ts: Date.now() });
-  });
-
-  it('reflects read-state update when notification is marked read', (done) => {
-    const updates = [];
-    onValue(notifRef, (snapshot) => {
-      if (!snapshot.exists()) return;
-      updates.push(snapshot.val().read);
-      if (updates.length === 2) {
-        expect(updates[0]).toBe(false);
-        expect(updates[1]).toBe(true);
-        done();
-      }
-    });
-
-    set(notifRef, { type: 'ORDER_SHIPPED', read: false, ts: Date.now() }).then(() =>
-      set(notifRef, { type: 'ORDER_SHIPPED', read: true, ts: Date.now() })
-    );
-  });
-});
-```
-
-The Firebase RTDB SDK queues writes locally when offline and delivers them
-after reconnect per the
-[Firebase offline capabilities docs](https://firebase.google.com/docs/database/web/offline-capabilities).
-The connection state is exposed at `/.info/connected` (a boolean updated on
-every connection state change; individual client state only, not global).
+`onValue()` fires once immediately with current data and again on every change
+at that location and below ([RTDB read/write docs](https://firebase.google.com/docs/database/web/read-and-write)).
+Run listener tests against the
+[Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite),
+not production. Emulator setup plus the write and read-state test patterns are
+in [references/firebase-listener-tests.md](references/firebase-listener-tests.md).
 
 ## Step 5 - Firestore onSnapshot tests
 
-Per the [Firebase Firestore listen docs](https://firebase.google.com/docs/firestore/query-data/listen),
 `onSnapshot()` fires immediately with the current document and again on each
-change. The snapshot carries `metadata.hasPendingWrites` (true when local
-changes have not yet been confirmed by the backend, per the Firestore docs)
-and `metadata.fromCache` (true when data was served from the local cache).
-Tests that verify offline-then-reconnect delivery should assert `fromCache`
-transitions.
-
-```javascript
-import { getFirestore, doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { connectFirestoreEmulator } from 'firebase/firestore';
-
-const firestoreDb = getFirestore(app);
-connectFirestoreEmulator(firestoreDb, '127.0.0.1', 8080);
-
-it('delivers live notification and clears pending-writes flag', (done) => {
-  const notifDoc = doc(firestoreDb, 'notifications', 'n-99');
-  const states = [];
-  const unsub = onSnapshot(notifDoc, { includeMetadataChanges: true }, (snap) => {
-    if (!snap.exists()) return;
-    states.push({ pending: snap.metadata.hasPendingWrites, fromCache: snap.metadata.fromCache });
-    // wait for the server-confirmed write (hasPendingWrites false + fromCache false)
-    if (states.length >= 2 && !snap.metadata.hasPendingWrites && !snap.metadata.fromCache) {
-      expect(states[0].pending).toBe(true);   // local write, not yet confirmed
-      expect(states[states.length - 1].pending).toBe(false); // server confirmed
-      unsub();
-      done();
-    }
-  });
-
-  setDoc(notifDoc, { type: 'INVOICE_READY', read: false });
-});
-```
+change, carrying `metadata.hasPendingWrites` and `metadata.fromCache`; assert
+`fromCache` transitions for offline-then-reconnect delivery
+([Firestore listen docs](https://firebase.google.com/docs/firestore/query-data/listen)).
+The `includeMetadataChanges` test pattern is in
+[references/firebase-listener-tests.md](references/firebase-listener-tests.md).
 
 ## Step 6 - Notification center read/unread state
 
@@ -362,11 +277,9 @@ it('delivers queued notifications after reconnect', (done) => {
 });
 ```
 
-For RTDB, the SDK's automatic reconnect behavior and local queue persistence
-are documented in the [Firebase offline capabilities docs](https://firebase.google.com/docs/database/web/offline-capabilities).
-`/.info/connected` transitions from `false` to `true` on reconnect; assert
-this in integration tests to confirm the client re-established its listener
-subscriptions before asserting notification delivery.
+For RTDB/Firestore, the SDK's offline write queue and the `/.info/connected`
+reconnect assertion are covered in
+[references/firebase-listener-tests.md](references/firebase-listener-tests.md).
 
 ## Step 9 - Ordering assertions
 

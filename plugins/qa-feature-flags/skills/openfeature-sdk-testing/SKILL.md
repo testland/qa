@@ -9,16 +9,13 @@ metadata:
 
 ## Overview
 
-OpenFeature is a CNCF project that standardises how applications
-resolve feature flags. Per
+The OpenFeature SDK ships an `InMemoryProvider` in every language that
+substitutes real flag-management infrastructure with in-process flag
+state, letting unit and integration tests run without any network call.
+The production evaluation path (targeting logic, type coercion,
+defaults) is exercised in full; only the data source is swapped. Per
 [openfeature.dev/docs/reference/concepts/provider](https://openfeature.dev/docs/reference/concepts/provider),
-providers are the component responsible for executing flag evaluations,
-and "an application integrator can register one provider at a time."
-The SDK ships an `InMemoryProvider` in every language that substitutes
-real flag-management infrastructure with in-process flag state, letting
-unit and integration tests run without any network call. The production
-evaluation path (targeting logic, type coercion, defaults) is exercised
-in full; only the data source is swapped.
+"an application integrator can register one provider at a time."
 
 **Differentiation from sibling skills:**
 `launchdarkly-testing`, `unleash-testing`, `flagsmith-testing`, and
@@ -40,6 +37,10 @@ they want to keep application code decoupled from a specific provider.
 - Assignment-integrity tests per `ab-test-validity-checklist`.
 
 ## How to use
+
+TypeScript/Node.js is the canonical language below. The Java and Python
+flow is identical; only the API names differ, listed in
+[references/multi-language-and-spec.md](references/multi-language-and-spec.md).
 
 ### TypeScript / Node.js
 
@@ -126,115 +127,19 @@ describe('checkout feature', () => {
 });
 ```
 
-### Java
-
-**Install** (Maven, per
-[github.com/open-feature/java-sdk README](https://github.com/open-feature/java-sdk/blob/main/README.md)):
-
-```xml
-<dependency>
-  <groupId>dev.openfeature</groupId>
-  <artifactId>sdk</artifactId>
-  <version>1.20.2</version>
-</dependency>
-```
-
-**Configure the InMemoryProvider:**
-
-```java
-import dev.openfeature.sdk.OpenFeatureAPI;
-import dev.openfeature.sdk.Client;
-import dev.openfeature.sdk.providers.memory.Flag;
-import dev.openfeature.sdk.providers.memory.InMemoryProvider;
-
-Map<String, Flag<?>> flags = new HashMap<>();
-flags.put("show-new-ui", Flag.builder()
-    .variant("on", true)
-    .variant("off", false)
-    .defaultVariant("on")
-    .build());
-
-OpenFeatureAPI api = OpenFeatureAPI.getInstance();
-api.setProviderAndWait(new InMemoryProvider(flags));
-Client client = api.getClient();
-```
-
-**Evaluate flags:**
-
-```java
-boolean enabled = client.getBooleanValue("show-new-ui", false);
-
-FlagEvaluationDetails<Boolean> details =
-    client.getBooleanDetails("show-new-ui", false);
-// details.getValue()    - resolved value
-// details.getVariant()  - "on" or "off"
-// details.getReason()   - "STATIC", "DEFAULT", etc.
-// details.getErrorCode()- ErrorCode.FLAG_NOT_FOUND, TYPE_MISMATCH, etc.
-```
-
-### Python
-
-**Install** (per
-[github.com/open-feature/python-sdk README](https://github.com/open-feature/python-sdk/blob/main/README.md)):
-
-```bash
-pip install openfeature-sdk==0.10.0
-```
-
-**Configure the InMemoryProvider:**
-
-```python
-from openfeature import api
-from openfeature.provider.in_memory_provider import InMemoryFlag, InMemoryProvider
-
-flags = {
-    "show-new-ui": InMemoryFlag(
-        default_variant="on",
-        variants={"on": True, "off": False}
-    ),
-}
-
-api.set_provider_and_wait(InMemoryProvider(flags))
-client = api.get_client()
-```
-
-**Evaluate flags:**
-
-```python
-enabled = client.get_boolean_value("show-new-ui", False)
-
-details = client.get_boolean_details("show-new-ui", False)
-# details.value       - resolved value
-# details.variant     - "on" / "off"
-# details.reason      - "STATIC", "DEFAULT", etc.
-# details.error_code  - "FLAG_NOT_FOUND", "TYPE_MISMATCH", etc.
-```
+Java and Python install/configure/evaluate blocks live in
+[references/multi-language-and-spec.md](references/multi-language-and-spec.md).
 
 ## EvaluationDetails and reason codes
 
-Per the OpenFeature specification
-([openfeature.dev/specification/sections/flag-evaluation](https://openfeature.dev/specification/sections/flag-evaluation),
-Requirements 1.4.3-1.4.15), `EvaluationDetails` carries:
-
-| Field | Type | Meaning |
-|---|---|---|
-| `value` | T | Resolved flag value (spec req. 1.4.3) |
-| `flagKey` | string | The requested flag identifier (1.4.5) |
-| `variant` | string | Provider-supplied variant name (1.4.6) |
-| `reason` | string | Resolution rationale (1.4.7) |
-| `errorCode` | enum | Failure classification (1.4.8) |
-| `errorMessage` | string | Optional context for the error (1.4.13) |
-| `flagMetadata` | map | Immutable provider-supplied data (1.4.14) |
-
-Canonical reason values (per
-[openfeature.dev/specification/sections/providers](https://openfeature.dev/specification/sections/providers),
-Requirement 2.2.5):
-`STATIC`, `DEFAULT`, `TARGETING_MATCH`, `SPLIT`, `CACHED`,
-`DISABLED`, `UNKNOWN`, `STALE`, `ERROR`.
-
-Canonical error codes include `FLAG_NOT_FOUND`, `TYPE_MISMATCH`,
-`PARSE_ERROR`, `TARGETING_KEY_MISSING`, `INVALID_CONTEXT`, `GENERAL`,
-`PROVIDER_NOT_READY`, `PROVIDER_FATAL`.
+`EvaluationDetails` carries `value`, `flagKey`, `variant`, `reason`,
+`errorCode`, `errorMessage`, and `flagMetadata`. Canonical `reason`
+values include `STATIC`, `DEFAULT`, `TARGETING_MATCH`, `SPLIT`,
+`CACHED`, `DISABLED`, `UNKNOWN`, `STALE`, `ERROR`; canonical error
+codes include `FLAG_NOT_FOUND`, `TYPE_MISMATCH`,
+`TARGETING_KEY_MISSING`, and `PROVIDER_NOT_READY`. The full field
+table with spec requirement numbers is in
+[references/multi-language-and-spec.md](references/multi-language-and-spec.md).
 
 ## Evaluation context for targeting-rule tests
 
@@ -256,40 +161,18 @@ const details = await client.getBooleanDetails('beta-access', false, ctx);
 expect(details.reason).toBe('TARGETING_MATCH');
 ```
 
-```python
-# Python - per-invocation context
-from openfeature.evaluation_context import EvaluationContext
-ctx = EvaluationContext(targeting_key="user-42",
-                        attributes={"email": "user@example.com"})
-details = client.get_boolean_details("beta-access", False, ctx)
-```
-
-```java
-// Java - per-invocation context
-Map<String, Value> attrs = new HashMap<>();
-attrs.put("email", new Value("user@example.com"));
-EvaluationContext ctx = new ImmutableContext("user-42", attrs);
-boolean value = client.getBooleanValue("beta-access", false, ctx);
-```
+Java and Python context builders (`ImmutableContext`,
+`EvaluationContext`) are in
+[references/multi-language-and-spec.md](references/multi-language-and-spec.md).
 
 ## Hooks for test-time side-effects
 
-Hooks intercept the flag evaluation lifecycle. Per
-[openfeature.dev/docs/reference/concepts/hooks](https://openfeature.dev/docs/reference/concepts/hooks)
-and the specification
-([openfeature.dev/specification/sections/hooks](https://openfeature.dev/specification/sections/hooks),
-Requirement 4.3.1-4.3.8), the four stages are:
-
-| Stage | Runs when |
-|---|---|
-| `before` | Before flag resolution; can modify evaluation context |
-| `after` | After successful resolution; can validate the returned value |
-| `error` | On resolution failure or unhandled before-hook error |
-| `finally` | Unconditionally after all other stages |
-
-Execution order for `before`: API - Client - Invocation. For `after`,
-`error`, `finally`: reverse order (Invocation - Client - API), per
-specification Requirement 4.4.2.
+Hooks intercept the flag evaluation lifecycle at four stages -
+`before` (can modify evaluation context), `after` (validate the
+returned value), `error` (on resolution failure), and `finally`
+(unconditionally). The stage table and execution order (per
+specification Requirement 4.4.2) are in
+[references/multi-language-and-spec.md](references/multi-language-and-spec.md).
 
 Register hooks at global, client, or invocation level:
 
@@ -363,6 +246,8 @@ the entire test run without asserting each flag individually.
   [github.com/open-feature/java-sdk](https://github.com/open-feature/java-sdk/blob/main/README.md)
 - Python SDK:
   [github.com/open-feature/python-sdk](https://github.com/open-feature/python-sdk/blob/main/README.md)
+- Java / Python SDK code and spec tables:
+  [references/multi-language-and-spec.md](references/multi-language-and-spec.md)
 - Companion catalogs:
   `feature-flag-test-matrix-reference`,
   `flag-state-coverage-builder`

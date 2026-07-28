@@ -9,40 +9,28 @@ metadata:
 
 ## Overview
 
-Playwright ships a first-class `_electron` namespace for launching
-packaged Electron apps and driving both the **main process** (Node.js,
-IPC, native modules) and **renderer windows** (Chromium DOMs) from a
-single test. Per
-[Playwright's `_electron` API page][pwelectron]:
+Playwright ships a first-class `_electron` namespace that launches a
+packaged Electron app by `executablePath` and drives both the **main
+process** (Node.js, IPC, native modules) and **renderer windows**
+(Chromium DOMs) from a single test ([pwelectron][pwelectron]). Per
+Electron's own automated-testing tutorial ([electrontest][electrontest]),
+Playwright is one of three sanctioned test stacks (alongside WebdriverIO
+and Selenium) for modern Electron projects.
 
 [pwelectron]: https://playwright.dev/docs/api/class-electron
 
-> "Launches electron application specified with the executablePath."
-
-Per Electron's own automated-testing tutorial
-([electrontest][electrontest]), Playwright is one of three sanctioned
-test stacks (alongside WebdriverIO and Selenium) for modern Electron
-projects.
-
 [electrontest]: https://www.electronjs.org/docs/latest/tutorial/automated-testing
 
-**Differentiation:** this skill is **distinct from**
-`playwright-testing`,
-which drives a running Chromium / Firefox / WebKit browser via the
-`browser`, `context`, and `page` namespaces. `electron-playwright`
-wraps the separate `_electron` namespace ([pwelectron][pwelectron]) - 
-it launches a packaged Electron binary by path, returns an
-`ElectronApplication` handle, and exposes the main process via
-`electronApp.evaluate()` ([pwelectronapp][pwelectronapp]). Page
-automation patterns (Page Object, accessibility-first locators, trace
-viewer) carry over for the renderer side; main-process testing is the
-new surface this skill adds.
+**Differentiation:** unlike `playwright-testing` (which drives a running
+Chromium / Firefox / WebKit browser via the `browser` / `context` / `page`
+namespaces), `electron-playwright` uses the separate `_electron` namespace to
+launch a packaged binary by path and probe the main process via
+`electronApp.evaluate()` ([pwelectronapp][pwelectronapp]). Renderer-side page
+patterns (Page Object, accessibility-first locators, trace viewer) carry over.
 
 [pwelectronapp]: https://playwright.dev/docs/api/class-electronapplication
 
-For legacy Spectron-based suites being migrated, see
-`electron-spectron` (the legacy
-reference) and the strategic frame in
+For legacy Spectron suites, see `electron-spectron`; for the strategic frame,
 `desktop-test-strategy-reference`.
 
 ## When to use
@@ -166,12 +154,9 @@ test('opening a project loads it into the renderer', async () => {
 });
 ```
 
-Per [pwelectronapp][pwelectronapp], `electronApp.evaluate(pageFunction)`
-returns the value of `pageFunction`, and "if the function passed to
-the electronApplication.evaluate() returns a Promise, then
-electronApplication.evaluate() would wait for the promise to resolve
-and return its value" - so async main-process queries work
-naturally.
+`electronApp.evaluate(pageFunction)` returns the function's value and awaits a
+returned Promise, so async main-process queries work naturally
+([pwelectronapp][pwelectronapp]).
 
 ## Step 5 - Mapping renderer windows to main-process BrowserWindow
 
@@ -185,23 +170,17 @@ const isFullScreen = await bwHandle.evaluate((bw) => bw.isFullScreen());
 expect(isFullScreen).toBe(false);
 ```
 
-`electronApp.browserWindow(page)` "returns the BrowserWindow object
-that corresponds to the given Playwright page"
-([pwelectronapp][pwelectronapp]) as a `JSHandle`. Multi-window apps
-iterate `electronApp.windows()`, which is described as a "convenience
-method that returns all the opened windows" ([pwelectronapp][pwelectronapp]).
+`electronApp.browserWindow(page)` returns the `BrowserWindow` for a page as a
+`JSHandle`; multi-window apps iterate `electronApp.windows()`
+([pwelectronapp][pwelectronapp]). Full API table:
+[references/electron-ci-and-api.md](references/electron-ci-and-api.md).
 
 ## Step 6 - Waiting for new windows + console output
 
-Async events fire when modal dialogs, secondary windows, or main-
-process console writes happen. Per [pwelectronapp][pwelectronapp]:
-
-- The `'window'` event is "emitted when every window that is created
-  and loaded in Electron" with a `Page` payload.
-- The `'console'` event is emitted when "main process calls console
-  methods" with a `ConsoleMessage` payload.
-- The `'close'` event fires "when the application process has been
-  terminated".
+The `'window'`, `'console'`, and `'close'` events fire for each new window,
+main-process console writes, and process termination respectively
+([pwelectronapp][pwelectronapp]); event payloads and the full API table are in
+[references/electron-ci-and-api.md](references/electron-ci-and-api.md).
 
 ```typescript
 // Wait for a secondary window to open after clicking
@@ -273,38 +252,10 @@ for aggregation. The HTML reporter is identical to web-Playwright
 
 ## Step 10 - CI integration
 
-```yaml
-# .github/workflows/electron-e2e.yml
-jobs:
-  test:
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with: { node-version: '22' }
-      - run: npm ci
-      - run: npm run build:electron
-      # On Linux, headless Electron needs a virtual display
-      - name: Run E2E (Linux with Xvfb)
-        if: runner.os == 'Linux'
-        run: xvfb-run --auto-servernum npx playwright test --config=playwright.electron.config.ts
-      - name: Run E2E (Windows/macOS)
-        if: runner.os != 'Linux'
-        run: npx playwright test --config=playwright.electron.config.ts
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report-${{ matrix.os }}
-          path: playwright-report/
-```
-
-Linux runners need `Xvfb` or another virtual framebuffer because
-Electron requires a display server; `xvfb-run` is the standard
-wrapper. macOS + Windows runners on GitHub-hosted are display-capable
-out of the box.
+Run across a Windows / macOS / Linux matrix; Linux needs an `xvfb-run` virtual
+display because Electron requires a display server, while macOS and Windows
+GitHub-hosted runners are display-capable out of the box. Full workflow:
+[references/electron-ci-and-api.md](references/electron-ci-and-api.md).
 
 ## Anti-patterns
 

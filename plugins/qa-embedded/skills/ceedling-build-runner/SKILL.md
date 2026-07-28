@@ -9,20 +9,13 @@ metadata:
 
 ## Overview
 
-Ceedling is a build system for C projects that wraps **Unity**
-(xUnit-style assertions) and **CMock** (function mocking via code
-generation), per
-[throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
-
-This skill wraps the Ceedling build orchestration - the
+This skill covers the Ceedling build orchestration - the
 `ceedling` command-line tool, `project.yml` schema, and rake
-tasks. For the Unity assertion API see
-`unity-test-framework-c`;
-for CMock's generated mock API see
-`cmock-reference`;
-for cross-target run see
-`qemu-system-test-runner`;
-for coverage see
+tasks, per
+[throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
+For the Unity assertion API see `unity-test-framework-c`; for
+CMock's generated mock API see `cmock-reference`; for cross-target
+run see `qemu-system-test-runner`; for coverage see
 `embedded-coverage-strategy-reference`.
 
 ## When to use
@@ -68,19 +61,15 @@ my-firmware/
   vendor/ceedling/     # bundled Unity + CMock + CException
 ```
 
-### project.yml schema
+### project.yml
 
-Per `CeedlingPacket.md`, the canonical top-level sections:
+A minimal project.yml for a host test loop:
 
 ```yaml
 :project:
   :build_root: build/
-  :release_build: TRUE
   :use_mocks: TRUE
-  :use_exceptions: TRUE
-  :use_test_preprocessor: :all
   :test_file_prefix: test_
-
 :paths:
   :test:
     - test/**
@@ -88,103 +77,17 @@ Per `CeedlingPacket.md`, the canonical top-level sections:
     - src/**
   :include:
     - inc/**
-  :support: []
-  :libraries: []
-
-:files:
-  # .c, .h, .o extension mappings - usually default values
-
-:defines:
-  :test:
-    - UNITY_INCLUDE_DOUBLE
-  :release:
-    - NDEBUG
-
-:flags:
-  :release:
-    :compile:
-      '*':
-        - -O2
-        - -Wall
-    :link:
-      '*':
-        - -Wl,--gc-sections
-  :test:
-    :compile:
-      '*':
-        - -O0
-        - -g
-        - --coverage
-    :link:
-      '*':
-        - --coverage
-
-:tools:
-  # Override compiler / linker / preprocessor executables here
-
-:test_runner:
-  :includes:
-    - "Mock*.h"
-
-:unity:
-  :defines:
-    - UNITY_INCLUDE_DOUBLE
-
-:cmock:
-  :when_no_prototypes: :warn
-  :enforce_strict_ordering: TRUE
-  :plugins:
-    - :ignore
-    - :ignore_arg
-    - :expect_any_args
-    - :array
-    - :callback
-    - :return_thru_ptr
-
-:cexception:
-  :defines:
-    - CEXCEPTION_T='signed char'
-
-:gcov:
-  :reports:
-    - HtmlDetailed
-    - Cobertura
-  :gcovr:
-    :report_root: src/
-
 :plugins:
   :enabled:
     - report_tests_pretty_stdout
     - report_tests_junit_xml
     - gcov
-    - module_generator
 ```
 
-| Section | Purpose |
-|---|---|
-| `:project` | Global on/off switches: `:use_mocks`, `:use_exceptions`, `:test_file_prefix`, `:build_root` |
-| `:paths` | Where Ceedling looks for code; supports glob patterns |
-| `:files` | `.c` / `.h` / `.o` extension mapping (rarely changed) |
-| `:defines` | Test-only vs release-only `-D` symbols (e.g. `UNITY_INCLUDE_DOUBLE` is a test-only define) |
-| `:flags` | Test vs release compile / link flags, by file glob (`'*'` = all) |
-| `:tools` | Override toolchain binaries - set the compiler to `arm-none-eabi-gcc` here for a cross-build |
-| `:test_runner` | Controls the `generate_test_runner.rb` invocation; e.g. extra includes |
-| `:unity` | Unity build-time defines (e.g. `UNITY_INT_WIDTH=16` for 16-bit MCUs) |
-| `:cmock` | CMock plugin list (see `cmock-reference`) |
-| `:cexception` | CException type override (default `int`; some MCUs prefer `signed char`) |
-| `:gcov` | Coverage reports - `HtmlDetailed`, `Cobertura`, `SonarQube` formats per the plugin docs |
-| `:plugins` | Enable optional functionality; common ones below |
-
-### Common plugins
-
-| Plugin | Effect |
-|---|---|
-| `report_tests_pretty_stdout` | Coloured terminal report |
-| `report_tests_junit_xml` | JUnit XML at `build/artifacts/test/report.xml` - feeds CI dashboards |
-| `report_tests_log_factory` | Generic reporter - emit multiple formats at once |
-| `gcov` | Coverage via gcov + gcovr (see coverage skill) |
-| `module_generator` | Powers `ceedling module:create[<name>]` |
-| `command_hooks` | Run shell commands at pre/post lifecycle points |
+The full schema (every top-level section, test vs release
+`:flags`, the `:cmock` / `:cexception` / `:gcov` blocks, per-section
+notes, and the plugin list) is in
+[references/project-yml-schema.md](references/project-yml-schema.md).
 
 ### Creating a module
 
@@ -199,69 +102,29 @@ one `test_ringbuffer_NeedToImplement` placeholder.
 
 ## Running
 
-Per the CeedlingPacket task reference:
-
-### Core test tasks
-
 ```bash
-ceedling test:all                          # Run every test_*.c
-ceedling test:ringbuffer                   # Run only test_ringbuffer.c
-ceedling test:pattern[ringbuffer]          # Regex match on test file basename
-ceedling test:path[test/components]        # Tests under a path
-ceedling test:ringbuffer --test-case=push  # Run only test cases matching 'push'
+ceedling test:all         # Run every test_*.c
+ceedling test:ringbuffer  # Run only test_ringbuffer.c
+ceedling gcov:all         # Run under gcov instrumentation + generate report
 ```
 
-`--test-case=<pattern>` is the equivalent of `--gtest_filter`
-from GoogleTest.
+`ceedling test:all` returns non-zero on any test failure; CI
+gates on the exit code. `gcov:all` writes
+`build/artifacts/gcov/GcovCoverageResults.html` (HtmlDetailed) or
+`GcovCoverageCobertura.xml` (Cobertura) - see
+`embedded-coverage-strategy-reference`.
 
-### Release build
-
-```bash
-ceedling release                # Build production binary
-ceedling release:compile:foo.c  # Compile a single file
-```
-
-`release` is opt-in (`:project: :release_build: TRUE` in
-project.yml). Use it for the actual firmware build, not for
-tests.
-
-### Maintenance
-
-```bash
-ceedling clean        # Remove .o files
-ceedling clobber      # Remove all generated files (build/, generated runners, mocks)
-ceedling environment  # Print environment (CC, PATH, etc.)
-ceedling dumpconfig   # Print the merged project.yml
-ceedling help         # Task list
-ceedling version      # Ceedling version
-```
-
-`dumpconfig` is invaluable for debugging mysterious flag
-behaviour - Ceedling merges several layers (defaults, project,
-plugin) and the final flags can surprise.
-
-### Coverage
-
-```bash
-ceedling gcov:all
-# Runs every test under gcov instrumentation, generates report
-# at build/artifacts/gcov/GcovCoverageResults.html (HtmlDetailed)
-# or build/artifacts/gcov/GcovCoverageCobertura.xml (Cobertura)
-```
-
-See `embedded-coverage-strategy-reference`
-for the gcov toolchain details and the report-format trade-offs.
-
-### Compound tasks
-
-Per the CeedlingPacket task ref: "Tasks chain via command line".
+The canonical CI invocation chains tasks on one command line:
 
 ```bash
 ceedling clobber test:all release gcov:all
-# Clean → run tests → build release → produce coverage report
+# Clean -> run tests -> build release -> produce coverage report
 ```
 
-This is the canonical CI invocation.
+The full task surface (`test:pattern`, `test:path`,
+`--test-case`, `release`, `clean` / `clobber`, `environment`,
+`dumpconfig`) is in
+[references/task-reference.md](references/task-reference.md).
 
 ## Parsing results
 
@@ -290,18 +153,6 @@ With `report_tests_junit_xml` enabled, `ceedling test:all` writes
 the same one GoogleTest produces, so the same CI pipeline plugin
 (GitHub `mikepenz/action-junit-report`, GitLab JUnit, Jenkins
 JUnit) consumes both.
-
-### Exit code
-
-`ceedling test:all` returns non-zero on any test failure. CI
-steps gate on the exit code.
-
-### Coverage report
-
-The gcov plugin's HtmlDetailed report goes to
-`build/artifacts/gcov/GcovCoverageResults.html`; Cobertura XML
-goes to `GcovCoverageCobertura.xml` (consumed by Jenkins coverage
-plugin and SonarQube).
 
 ## CI integration
 

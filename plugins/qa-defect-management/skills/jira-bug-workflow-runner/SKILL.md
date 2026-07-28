@@ -88,24 +88,8 @@ def create_bug(project_key, summary, description_text, severity, priority, label
 Note: `severity` is typically a custom field - most tenants
 either define a custom Severity field (`customfield_XXXXX`) or
 use labels (`severity-critical`). The example above uses labels
-for portability; see "Severity custom field" below.
-
-### Severity custom field
-
-Discover the custom-field ID once per tenant:
-
-```bash
-curl -u "$JIRA_EMAIL:$JIRA_TOKEN" \
-     "$JIRA_BASE/rest/api/3/field" \
-     | jq '.[] | select(.name=="Severity") | {id, name}'
-# {"id": "customfield_10039", "name": "Severity"}
-```
-
-Then submit it in the create payload:
-
-```python
-"customfield_10039": {"value": severity},  # "Critical" | "High" | ...
-```
+for portability; discovering and submitting the custom field is in
+[references/jira-rest-api.md](references/jira-rest-api.md).
 
 ### Look up and apply a transition
 
@@ -135,20 +119,6 @@ def transition(issue_key, target_state_name):
 
 The `POST /rest/api/3/issue/{key}/transitions` body shape is
 `{"transition": {"id": "<id>"}}` per the API group docs.
-
-### Update fields
-
-`PUT /rest/api/3/issue/{key}` for arbitrary field updates:
-
-```python
-def update_priority(issue_key, priority_name):
-    r = requests.put(
-        f"{BASE}/rest/api/3/issue/{issue_key}",
-        json={"fields": {"priority": {"name": priority_name}}},
-        headers=HEADERS,
-    )
-    r.raise_for_status()
-```
 
 ### Search via JQL
 
@@ -201,29 +171,36 @@ def create_or_attach(project, summary, body):
                       labels=["auto-filed", "ci-failure"])
 ```
 
+Verify: the `statusCategory != Done` search must run and return 0 open matches
+before `create_bug` fires. If it returns a hit, comment on that key instead of
+creating; if the search itself errors, fail closed (skip the create and surface
+the error) rather than filing a possible duplicate.
+
 ### Bulk transition after release
 
+Dry-run first: a mis-scoped JQL can push hundreds of issues into the wrong
+state, and a transition is not trivially reversible (`bulk transitions without
+dry-run` in Anti-patterns). Gate the apply behind a flag:
+
 ```python
+DRY_RUN = True  # flip to False only after reviewing the logged plan
+
 verified = search_jql(
     'project = ENG AND status = Verified AND fixVersion = "2026.05.20"',
     max_results=1000,
 )
 for issue in verified:
+    if DRY_RUN:
+        print(f"[dry-run] {issue['key']}: Verified -> Close Issue")
+        continue
     transition(issue["key"], "Close Issue")
 ```
 
-## Parsing results
-
-`create_bug` returns the new issue key (e.g., `ENG-12345`). Use it
-to construct a permalink for downstream consumers:
-
-```python
-url = f"{BASE}/browse/{issue_key}"
-```
-
-Search responses include `expand`, `total`, `startAt`, and
-`issues` (the array). Always check `total` against `maxResults`
-for pagination.
+Verify: assert the dry-run count and keys match the issue set you intended to
+close before flipping `DRY_RUN` to `False`; if they do not, fix the JQL and
+re-run the dry run. `transition` already raises `ValueError` when the named
+transition is absent for an issue's workflow, so a workflow mismatch fails loud
+rather than silently skipping.
 
 ## CI integration
 
@@ -248,6 +225,13 @@ Auto-file a bug from a test failure:
 Where `file-jira-bug.py` parses the JUnit XML, extracts the
 failure, deduplicates, and creates / comments per the helpers
 above.
+
+Verify: assert the create call returned HTTP 2xx and a non-empty issue key
+before the step reports success. On `400`, the `description` was likely plain
+text instead of ADF or a required field is missing - fix the payload and
+re-run. On `429` (rate limit), back off and retry rather than failing the
+build. If it still fails, leave the test result red so the filing gap stays
+visible instead of being swallowed.
 
 ## Anti-patterns
 
@@ -282,6 +266,8 @@ above.
   developer.atlassian.com/cloud/jira/platform/basic-auth-for-rest-apis.
 - ADF spec - developer.atlassian.com/cloud/jira/platform/apis/document/structure.
 - JQL syntax - confluence.atlassian.com/jiracoreserver/advanced-searching.
+- Severity custom field, field updates, and result parsing:
+  [references/jira-rest-api.md](references/jira-rest-api.md).
 - Sibling references:
   `bug-lifecycle-reference`,
   `severity-vs-priority-reference`.

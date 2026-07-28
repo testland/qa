@@ -7,18 +7,14 @@ description: "Configures Pester v5 for testing PowerShell CLIs, scripts, and cmd
 
 ## Overview
 
-Per [pester-install][pi]:
-
 [pi]: https://pester.dev/docs/introduction/installation
 
-> "Pester supports Windows PowerShell 3.0 - 5.1 and PowerShell 6.0.4 and
-> above" across Windows, Linux, and macOS.
-
-Pester is the standard test framework for PowerShell. It covers unit,
-integration, and acceptance testing for scripts, functions, modules, and
-CLI tools invoked from `pwsh`. When the unit-under-test is a shell script or
-binary on Linux/macOS, use `bats-testing` instead; Pester is the correct
-choice whenever the test or subject is PowerShell.
+Per [pester-install][pi], Pester is the standard PowerShell test framework for
+unit, integration, and acceptance testing of scripts, functions, modules, and
+CLI tools invoked from `pwsh`. It supports Windows PowerShell 3.0 - 5.1 and
+PowerShell 6.0.4+ across Windows, Linux, and macOS. When the unit-under-test
+is a shell script or binary on Linux/macOS, use `bats-testing` instead; Pester
+is the correct choice whenever the subject or test is PowerShell.
 
 ## Step 1 - Install
 
@@ -242,14 +238,9 @@ $config = [PesterConfiguration]@{
 Invoke-Pester -Configuration $config
 ```
 
-Key `Run` properties per [pc][pc]:
-
-| Property | Default | Purpose |
-|----------|---------|---------|
-| `Run.Path` | `'.'` | Directory or file(s) to discover |
-| `Run.ExcludePath` | (none) | Paths to skip |
-| `Run.Exit` | `$false` | Non-zero exit on failure |
-| `Run.TestExtension` | `'.Tests.ps1'` | File filter for discovery |
+Key `Run` properties and their defaults (`Run.Path`, `Run.ExcludePath`,
+`Run.Exit`, `Run.TestExtension`) are tabulated in
+[references/ci-and-config.md](references/ci-and-config.md).
 
 ## Step 9 - Code coverage
 
@@ -288,78 +279,9 @@ $config.TestResult.OutputPath  = 'testResults.xml'
 Invoke-Pester -Configuration $config
 ```
 
-### GitHub Actions (Windows runner)
-
-```yaml
-jobs:
-  pester:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Pester
-        shell: pwsh
-        run: Install-Module -Name Pester -Force -SkipPublisherCheck
-      - name: Run tests
-        shell: pwsh
-        run: |
-          $config = New-PesterConfiguration
-          $config.Run.Path               = '.\tests'
-          $config.Run.Exit               = $true
-          $config.TestResult.Enabled     = $true
-          $config.TestResult.OutputFormat = 'NUnitXml'
-          $config.TestResult.OutputPath  = 'testResults.xml'
-          $config.CodeCoverage.Enabled   = $true
-          $config.CodeCoverage.Path      = '.\src'
-          $config.CodeCoverage.CoveragePercentTarget = 75
-          Invoke-Pester -Configuration $config
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pester-results
-          path: |
-            testResults.xml
-            coverage.xml
-```
-
-### GitHub Actions (cross-platform with pwsh)
-
-```yaml
-jobs:
-  pester:
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Pester
-        shell: pwsh
-        run: Install-Module -Name Pester -Force
-      - name: Run tests
-        shell: pwsh
-        run: |
-          $config = [PesterConfiguration]@{
-            Run        = @{ Path = '.\tests'; Exit = $true }
-            TestResult = @{ Enabled = $true; OutputPath = 'testResults.xml' }
-          }
-          Invoke-Pester -Configuration $config
-```
-
-Per [pi][pi], cross-platform runs use `pwsh` (PowerShell 7+), which is
-available on all three GitHub-hosted runners. Omit `-SkipPublisherCheck` on
-Linux/macOS as there is no bundled version to conflict with.
-
-### Azure DevOps
-
-Per [pr][pr], after running Pester with `NUnitXml` output, add a
-"Publish Test Results" task with the NUnit format:
-
-```yaml
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: NUnit
-    testResultsFiles: testResults.xml
-```
+Full CI pipeline definitions - a single cross-platform GitHub Actions matrix
+(with code coverage and artifact upload) and the Azure DevOps Publish Test
+Results task - are in [references/ci-and-config.md](references/ci-and-config.md).
 
 ## Anti-patterns
 
@@ -400,6 +322,8 @@ Per [pr][pr], after running Pester with `NUnitXml` output, add a
   path scoping.
 - [pr][pr] - `TestResult.Enabled`, `OutputFormat`, `OutputPath`, Azure
   DevOps / AppVeyor CI notes.
+- [references/ci-and-config.md](references/ci-and-config.md) - cross-platform
+  GitHub Actions matrix, Azure DevOps publish task, `Run` property table.
 - `bats-testing` - use for shell script /
   Unix binary testing; Pester is the correct choice when the subject or
   test is PowerShell.

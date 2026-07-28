@@ -7,25 +7,12 @@ description: "Build-an-X workflow for verifying RTL (right-to-left) layouts - ru
 
 ## Overview
 
-Per [w3-rtl][w3rtl]:
+Per [w3-rtl][w3rtl], `dir="rtl"` on the `<html>` tag is the standard signal for
+right-to-left direction: blocks align right, bidi text flows right-to-left,
+table columns progress right-to-left, and form inputs start at the right. This
+skill verifies the app handles those under Arabic, Hebrew, Persian, and Urdu.
 
 [w3rtl]: https://www.w3.org/International/questions/qa-html-dir
-
-> "If the overall document direction is right-to-left, add
-> `dir='rtl'` to the `html` tag."
-
-The `dir` attribute is the standard way to signal direction. Per
-[w3-rtl][w3rtl], it affects:
-
-> - Paragraphs and blocks align right
-> - Bidirectional text flows correctly right-to-left
-> - Punctuation appears in correct positions
-> - Table columns progress right-to-left
-> - Form inputs start at the right by default
-
-Common RTL languages: Arabic, Hebrew, Persian, Urdu.
-
-This skill verifies the app handles RTL correctly.
 
 ## When to use
 
@@ -75,15 +62,8 @@ over directional (`left`, `right`) so the layout flips automatically.
 
 ## Step 3 - Verify icon positions
 
-Common RTL gotchas:
-
-- **Back / forward arrows:** must mirror (← → in LTR becomes → ←
-  in RTL).
-- **Pagination arrows:** mirror.
-- **Chevrons indicating direction:** mirror.
-- **Logos / brand icons:** typically do **not** mirror.
-- **Icons with embedded text:** typically do not mirror (would
-  flip the text).
+Directional icons (back/forward and pagination arrows, direction chevrons) must
+mirror in RTL; brand logos and icons with embedded text must not.
 
 ```typescript
 test('back arrow mirrors in RTL', async ({ page }) => {
@@ -137,64 +117,13 @@ test('form inputs start at right in RTL', async ({ page }) => {
 });
 ```
 
-## Step 6 - Per-locale visual regression
+## Step 6 - Supplementary checks
 
-```typescript
-test('home page Arabic snapshot', async ({ page }) => {
-  await page.goto('/?lng=ar');
-  await expect(page).toHaveScreenshot('home-ar.png');
-});
-
-test('home page Hebrew snapshot', async ({ page }) => {
-  await page.goto('/?lng=he');
-  await expect(page).toHaveScreenshot('home-he.png');
-});
-```
-
-RTL screenshots catch regressions like:
-
-- Text overflowing because RTL didn't auto-mirror padding.
-- Icons not mirrored.
-- Sidebar on the wrong side.
-- Form fields in the wrong order.
-
-## Step 7 - CI integration
-
-```yaml
-- name: RTL rendering tests
-  run: npx playwright test e2e/rtl/ --project=mobile-iphone-15 --project=desktop-chromium
-- uses: actions/upload-artifact@v4
-  if: failure()
-  with:
-    name: rtl-screenshots
-    path: test-results/
-```
-
-Run on both desktop and mobile profiles - RTL handling can differ
-per breakpoint.
-
-## Step 8 - `dirname` for form submission
-
-Per [w3-rtl][w3rtl]: "Use `dir='auto'` to automatically detect
-text direction from the first strongly-typed character. Pair with
-the `dirname` attribute to send information about direction to the
-server in addition to the usual form data."
-
-Verify forms submitted from RTL contexts include the direction
-information when needed:
-
-```typescript
-test('comment form sends direction with submission', async ({ page }) => {
-  await page.goto('/post/123?lng=ar');
-  await page.getByLabel(/comment/i).fill('مرحبا - hello');
-  // Listen for the form submission
-  const responsePromise = page.waitForResponse('/api/comments');
-  await page.getByRole('button', { name: /submit/i }).click();
-  const response = await responsePromise;
-  // The form's `dirname` attribute should send a separate field with the direction
-  expect(response.request().postData()).toContain('comment.dir=rtl');
-});
-```
+Three checks that extend the core assertions above:
+[references/rtl-checks.md](references/rtl-checks.md) covers per-locale visual
+regression (screenshots per RTL locale to catch un-mirrored padding, icons,
+sidebars, and field order), CI integration across desktop and mobile profiles,
+and `dirname` form-submission direction.
 
 ## Anti-patterns
 
@@ -223,6 +152,5 @@ test('comment form sends direction with submission', async ({ page }) => {
   vs CSS direction, `dirname` attribute.
 - `pseudo-localization-runner` - sibling: layout-level i18n testing including RTL pseudo-loc
   variant.
-- `i18n-string-coverage` - 
-  source-scan complement.
+- `i18n-string-coverage` - source-scan complement.
 - `playwright-snapshots` - visual regression for catching RTL layout issues.

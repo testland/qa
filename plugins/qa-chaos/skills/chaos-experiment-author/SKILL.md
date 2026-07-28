@@ -7,24 +7,14 @@ description: "Build-an-X workflow for a chaos experiment per the Principles of C
 
 ## Overview
 
-Per [chaos-principles][cp]:
+Per [chaos-principles][cp], chaos engineering is "the discipline of experimenting
+on a system in order to build confidence in the system's capability to withstand
+turbulent conditions in production." This skill walks the team through authoring
+an experiment that honors the five principles - steady-state hypothesis,
+real-world events, running in production, continuous automation, and minimized
+blast radius - each applied in the step below that uses it.
 
 [cp]: https://principlesofchaos.org/
-
-> "**Chaos Engineering** is the discipline of experimenting on a
-> system in order to build confidence in the system's capability
-> to withstand turbulent conditions in production."
-
-The 5 advanced principles ([chaos-principles][cp]):
-
-> 1. **Build a Hypothesis around Steady State Behavior** - "Focus on the measurable output of a system, rather than internal attributes of the system."
-> 2. **Vary Real-world Events** - "Chaos variables reflect real-world events. Prioritize events either by potential impact or estimated frequency."
-> 3. **Run Experiments in Production** - "To guarantee both authenticity of the way in which the system is exercised and relevance to the current deployed system, Chaos strongly prefers to experiment directly on production traffic."
-> 4. **Automate Experiments to Run Continuously** - "Running experiments manually is labor-intensive and ultimately unsustainable. Automate experiments and run them continuously."
-> 5. **Minimize Blast Radius** - "It is the responsibility and obligation of the Chaos Engineer to ensure the fallout from experiments are minimized and contained."
-
-This skill walks the team through authoring an experiment that
-honors all five.
 
 ## When to use
 
@@ -63,20 +53,11 @@ Good hypotheses:
 ## Step 2 - Pick a real-world event to inject
 
 Per [chaos-principles][cp] principle 2: vary real-world events.
-Don't inject "anything"; inject what could plausibly happen.
-
-| Event class      | Examples                                                    |
-|------------------|-------------------------------------------------------------|
-| Network          | Latency 500ms, packet loss 5%, DNS failure, connection reset |
-| Compute          | Pod kill, CPU throttle, OOM kill, node drain                 |
-| Storage          | Disk full, slow disk, read failure                          |
-| Time             | Clock skew, leap second                                      |
-| Region / zone    | Single AZ outage, multi-AZ outage                            |
-| Dependency       | Third-party API 500s, rate limit, timeout                    |
-| Configuration    | Bad config push, secret rotation failure                     |
-
-Pick events the team has already seen (real incidents) or
-realistically expects.
+Don't inject "anything"; inject what could plausibly happen - events the team
+has already seen in real incidents or realistically expects. The catalog of
+event classes (network, compute, storage, time, region/zone, dependency,
+configuration) with concrete examples is in
+[references/experiment-authoring.md](references/experiment-authoring.md).
 
 ## Step 3 - Set the blast radius
 
@@ -142,41 +123,18 @@ team has confidence and abort procedures.
 
 ## Step 7 - Verdict + report
 
-```markdown
-## Chaos experiment verdict - `checkout-network-latency`
-
-**Date:** YYYY-MM-DD   **Duration:** 5 minutes
-**Steady-state hypothesis:** checkout_completion_rate >= 95%
-**Verdict:** ✅ HELD
-
-| Metric                   | Pre-experiment | During experiment | Post |
-|--------------------------|----------------|-------------------|------|
-| checkout_completion_rate |     97.2%      |       96.8%       | 97.5% |
-| p95 latency              |     245ms      |       380ms       | 240ms |
-
-### Observations
-- Latency increased as expected (300ms injected).
-- Retry logic worked: ~200 retries observed; no user-visible failures.
-
-### Action items
-- (none - system behaved as expected)
-
-### Next iteration
-- Increase blast radius from 1% to 5% in next month's run.
-- Add a longer-duration variant (15 min) to test fatigue.
-```
+Emit a per-experiment verdict: the steady-state hypothesis, a pre / during / post
+metric table, observations, action items, and the next iteration. The full
+report template is in
+[references/experiment-authoring.md](references/experiment-authoring.md).
 
 ## Anti-patterns
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Hypothesis as feeling ("system feels stable")                         | Unmeasurable; can't tell if held.                                        | Numeric metric (Step 1). |
-| Inject anything; see what breaks                                       | Wastes effort; misses real failure modes.                                | Pick real-world events (Step 2). |
-| Production-first experiment without staging                            | Risks user-visible incident on first run.                                | Staging → canary → production (Step 6). |
-| No abort conditions                                                    | Experiment runs past safety threshold; real incident.                   | Define abort + manual abort signal (Step 3). |
-| Manual experiment runs only                                            | Per [chaos-principles][cp]: "labor-intensive and ultimately unsustainable." | Automate (Step 5). |
-| One-off experiment then forget                                         | Confidence decays; same incident recurs.                                 | Schedule + repeat (Step 5 cron). |
-| Skipping the verdict report                                            | Lessons not captured; next iteration arbitrary.                          | Step 7 report. |
+The seven authoring anti-patterns, each with why it fails and the fixing step,
+are in
+[references/experiment-authoring.md](references/experiment-authoring.md):
+hypothesis-as-feeling, inject-anything, production-first, no abort conditions,
+manual-only runs, one-off-then-forget, and skipping the verdict report.
 
 ## Limitations
 

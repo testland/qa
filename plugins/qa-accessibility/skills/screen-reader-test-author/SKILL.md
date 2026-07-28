@@ -16,11 +16,6 @@ script that any tester (not just the original author) can follow.
 This skill takes a user flow and produces that script: per-step
 keystroke + expected announcement.
 
-> **Terminology note:** "screen reader" is practitioner-emergent
-> but well-established. ISTQB has no canonical entry; W3C WAI uses
-> the term informally. This skill cites WebAIM and vendor docs as
-> primary sources for keyboard commands.
-
 ## When to use
 
 - A high-stakes feature ships and needs accessibility sign-off.
@@ -34,12 +29,12 @@ keystroke + expected announcement.
 
 Most a11y audit conventions cover at least:
 
-| Screen reader  | Platform          | Browser pairing            | Market share (English-speaking) |
-|----------------|-------------------|----------------------------|---------------------------------|
-| NVDA           | Windows            | Firefox or Chrome          | ~30-40% (free, dominant in QA shops) |
-| JAWS           | Windows            | Chrome or Edge              | ~40-50% (commercial; widely deployed in enterprises) |
-| VoiceOver       | macOS / iOS / iPadOS | Safari (macOS); Safari (iOS) | macOS: dominant for Mac users; iOS: only option |
-| TalkBack        | Android            | Chrome                     | Android: dominant                |
+| Screen reader | Platform             | Browser pairing              |
+|---------------|----------------------|------------------------------|
+| NVDA          | Windows              | Firefox or Chrome            |
+| JAWS          | Windows              | Chrome or Edge               |
+| VoiceOver     | macOS / iOS / iPadOS | Safari (macOS); Safari (iOS) |
+| TalkBack      | Android              | Chrome                       |
 
 For the most-coverage-per-effort, test **NVDA + Firefox** and
 **VoiceOver + Safari** - these are also the WAI-recommended pairs.
@@ -69,89 +64,39 @@ steps:
 
 ## Step 3 - Per intent, capture keystrokes + expected announcement
 
-For each intent, the script lists:
+For each intent, the script row lists three things:
 
 - **Keystroke** - the actual key combo the tester presses.
 - **Expected announcement** - what the screen reader should say.
 - **Why** - the WCAG SC or APG pattern the announcement satisfies.
 
-### NVDA on Firefox (Windows)
+NVDA browse mode navigates with quick-keys (`H` by heading, `F` by
+form field); VoiceOver uses VO (Ctrl+Option) chords:
 
-```markdown
-## NVDA + Firefox (Windows) - User edits their profile email
+| Action                | VoiceOver shortcut                          |
+|-----------------------|---------------------------------------------|
+| Read next / previous  | VO + Right / Left arrow                      |
+| Next heading          | VO + Cmd + H                                 |
+| Next form control     | VO + Cmd + J                                 |
+| Activate (Enter)      | VO + Space                                   |
+| Web rotor             | VO + U (form / heading / link list overlay) |
 
-### Pre-conditions
-- NVDA is running.
-- Firefox is on https://app.example.com/profile.
-- Virtual cursor mode is on (NVDA default for browsers).
+A minimal NVDA + Firefox excerpt for the flow "User edits their
+profile email":
 
-### Step 1 - Navigate to the profile-edit form
+| Keystroke  | Expected announcement                                    |
+|------------|----------------------------------------------------------|
+| H          | "Edit profile, heading level 2" - moves to next heading. |
+| F          | "Email, edit, blank" - jumps to the first form field.    |
+| Tab, Enter | "Save changes, button", then a live region announces "Profile saved". |
 
-| Keystroke | Expected announcement                                          |
-|-----------|----------------------------------------------------------------|
-| H         | "Edit profile, heading level 2" - moves to next heading.       |
-| H         | "Profile information, heading level 3" - moves further.        |
-| F         | "Email, edit, blank" - jumps to first form field.              |
+Full per-reader scripts (NVDA + Firefox and VoiceOver + Safari) for
+this flow, with the WCAG / APG mapping in the "Why" column:
+[references/screen-reader-scripts.md](references/screen-reader-scripts.md).
 
-NVDA's `H` quick-key navigates by heading; `F` by form field.
-The announcements should match the visible heading text and field
-labels (per WCAG SC 2.4.6 Headings and Labels).
-
-### Step 2 - Edit the email value
-
-| Keystroke         | Expected announcement                                  |
-|-------------------|--------------------------------------------------------|
-| Enter (focus mode) | "Email, edit, has autocomplete" - enters focus mode.  |
-| (type new email)  | (each character spoken if `say characters` is on)     |
-
-### Step 3 - Submit the form
-
-| Keystroke | Expected announcement                                          |
-|-----------|----------------------------------------------------------------|
-| Tab       | "Save changes, button" - moves to submit.                       |
-| Enter     | (no announcement immediately; wait for live region)             |
-
-### Step 4 - Success confirmation
-
-| Behavior          | Expected announcement                                          |
-|-------------------|----------------------------------------------------------------|
-| (page response)   | "Profile saved" - announced via `aria-live="polite"` region.   |
-
-If no announcement: the success region is missing `aria-live`
-attribute, OR the region is added to the DOM with content already
-in it (live regions only announce **changes** post-mount).
-```
-
-### VoiceOver on Safari (macOS)
-
-VoiceOver uses VO+arrow keys (Ctrl+Option+arrow) and has different
-quick-key patterns:
-
-| Action              | VoiceOver shortcut                          |
-|---------------------|---------------------------------------------|
-| Read next item      | VO + Right arrow                            |
-| Read previous       | VO + Left arrow                             |
-| Next heading         | VO + Cmd + H                                |
-| Next form control    | VO + Cmd + J                                |
-| Activate (Enter)     | VO + Space                                  |
-| Web rotor            | VO + U (form / heading / link list overlay) |
-
-Re-author the same flow per VoiceOver:
-
-```markdown
-## VoiceOver + Safari (macOS) - User edits their profile email
-
-### Step 1 - Navigate to the profile-edit form
-
-| Keystroke    | Expected announcement                                       |
-|--------------|-------------------------------------------------------------|
-| VO + Cmd + H | "Edit profile, heading level 2"                              |
-| VO + Cmd + J | "Email, edit text"                                           |
-```
-
-VoiceOver's announcements are sometimes more verbose than NVDA's
-(reads role words like "edit text" where NVDA says "edit"). This is
-a vendor convention; don't try to suppress it.
+VoiceOver announcements are sometimes more verbose than NVDA's (role
+words like "edit text" where NVDA says "edit"); that is a vendor
+convention, not a bug to suppress.
 
 ## Step 4 - Define what counts as PASS
 

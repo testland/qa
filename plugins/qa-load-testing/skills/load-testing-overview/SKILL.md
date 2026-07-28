@@ -7,15 +7,10 @@ description: "Teaches load and performance testing from zero: how to choose betw
 
 Load testing drives concurrent, sustained traffic at a deployed system and
 measures what happens to response time, throughput, and errors while that
-traffic runs.
-
-It is not a layer of the test pyramid, it is a different axis. Unit,
-integration, and end-to-end tests ask "is the answer correct?" one user at a
-time. A load test assumes correctness and asks "is it still fast and still
-correct at 200 concurrent users, and where does it stop being either?" The
-practical consequence: it needs a deployed environment, realistic data volumes,
-and a real network path. Run one against a laptop dev server and you measured
-the laptop.
+traffic runs. It assumes correctness and asks whether the system stays fast and
+correct under load, and where it stops being either. It needs a deployed
+environment, realistic data volumes, and a real network path; run one against a
+laptop dev server and you measured the laptop.
 
 ## Pick a tool from what is already in the repo
 
@@ -95,31 +90,16 @@ coordinated omission"
 ([k6 open vs closed](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)).
 
 Real user traffic on a public web service is open (people keep arriving whether
-or not you are coping). Gatling puts it the same way: "Open systems have no
-control over the number of concurrent users: users keep on arriving even though
-applications have trouble serving them," while "Closed systems are systems where
-the number of concurrent users is capped"
+or not you are coping); Gatling frames it the same way, noting open systems
+"have no control over the number of concurrent users" while closed systems cap
+that number
 ([Gatling workload models](https://docs.gatling.io/testing-concepts/workload-models/)).
 Closed is the right model for a fixed-size worker pool, a call-centre queue, or a
 system behind a hard concurrency limit.
 
-How each tool expresses the two models:
-
-| Tool | Open (arrival rate held constant) | Closed (concurrency held constant) |
-|---|---|---|
-| k6 | `constant-arrival-rate`, `ramping-arrival-rate` | `constant-vus`, `ramping-vus`, `shared-iterations`, `per-vu-iterations` ([k6 executors](https://grafana.com/docs/k6/latest/using-k6/scenarios/executors/)) |
-| Gatling | `injectOpen(...)` with `atOnceUsers(nbUsers)`, `rampUsers(nbUsers).during(duration)`, `constantUsersPerSec(rate).during(duration)`, `rampUsersPerSec(rate1).to(rate2).during(duration)`, `stressPeakUsers(nbUsers).during(duration)` | `injectClosed(...)` with `constantConcurrentUsers(nbUsers).during(duration)`, `rampConcurrentUsers(fromNbUsers).to(toNbUsers).during(duration)` ([Gatling injection](https://docs.gatling.io/concepts/injection/)) |
-| Artillery | `arrivalRate` (new VUs per second), `rampTo`, `arrivalCount` ([Artillery test script](https://www.artillery.io/docs/reference/test-script)) | not the native model |
-| JMeter | not the native model | Thread Group: a thread count, a ramp-up period, and a loop count, where "Each thread will execute the test plan in its entirety and completely independently of other test threads" ([JMeter test plan](https://jmeter.apache.org/usermanual/test_plan.html)) |
-| Locust | approximated with `constant_throughput` wait time, "an adaptive time that ensures the task runs (at most) X times per second" ([Locust locustfile](https://docs.locust.io/en/stable/writing-a-locustfile.html)) | the default: a fixed user count plus `wait_time` |
-
-**The Gatling trap, spelled out.** `rampUsers(n).during(d)` and
-`atOnceUsers(n)` are **open** model profiles despite the word "users": they
-inject `n` users *into* the system over the window and never cap how many are
-inside at once. The closed equivalents are the ones with "Concurrent" in the
-name, `constantConcurrentUsers` and `rampConcurrentUsers`, and they live under
-`injectClosed` ([Gatling injection](https://docs.gatling.io/concepts/injection/)).
-The two families cannot be mixed in one injection profile.
+For how each tool names its open and closed executors, and the Gatling
+"users means open, not closed" trap spelled out, see
+[references/tool-executors.md](references/tool-executors.md).
 
 ## Run your first test with k6
 
@@ -228,34 +208,11 @@ breakpoint on a schedule against a dedicated environment.
 
 ## Traps that catch newcomers first
 
-- **Load testing the load generator.** If CPU on the machine running the test is
-  pinned, your latency numbers are measuring your own laptop. Locust is explicit
-  about the cause: "Because Python cannot fully utilize more than one core per
-  process (see GIL), you need to run one worker instance per processor core in
-  order to have access to all your computing power," which is why it ships
-  `locust --processes 4` and a `--master` / `--worker` split
-  ([Locust distributed](https://docs.locust.io/en/stable/running-distributed.html)).
-  Always watch generator CPU alongside the results.
-- **Running JMeter's GUI as the load generator.** The manual is blunt: "GUI mode
-  should only be used for creating the test script, CLI mode (NON GUI) must be
-  used for load testing"
-  ([JMeter get started](https://jmeter.apache.org/usermanual/get-started.html)).
-- **Every virtual user hitting one URL with one account.** You will measure a
-  cache and a single database row. Parameterise the data, or the result is a
-  cache-hit benchmark.
-- **A closed-model test presented as a capacity number.** "We handled 500 VUs"
-  says nothing about requests per second unless you also state the think time and
-  the response time. Arrival rate is the number stakeholders actually want, and
-  with `sleep()` removed entirely, 10 VUs can out-request 10,000 real users.
-- **Skipping the warm-up.** JIT compilation, connection pools, and cold caches
-  make the first 30 to 60 seconds unrepresentative. Discard or ramp through it.
-- **Testing a scaled-down environment and extrapolating.** Nothing about
-  capacity scales linearly across a connection pool limit or a single-writer
-  database.
-- **Only recording latency.** A p95 of 120ms while 30% of requests return HTTP
-  500 is a fast failure, not a pass. Always gate on error rate too, which is
-  why the first script above sets both `http_req_duration` and
-  `http_req_failed`.
+The seven mistakes that most often invalidate a first effort - load testing the
+generator itself, running JMeter's GUI as the generator, one URL / one account,
+presenting a closed-model VU count as capacity, skipping warm-up, extrapolating
+from a scaled-down environment, and recording latency without error rate - are
+detailed with citations in [references/traps.md](references/traps.md).
 
 ## Related skills
 

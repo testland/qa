@@ -11,21 +11,12 @@ A tool gets chosen once and questioned for years. The choice survives in a
 chat thread, the reasoning does not, and the next person either re-litigates
 it from scratch or inherits it as folklore.
 
-This skill defines a single, portable record format for that moment. It is a
-narrowed Architecture Decision Record. An ADR is "a document that captures an
-important architecture decision made along with its context and consequences"
-([joelparkerhenderson/architecture-decision-record](https://github.com/joelparkerhenderson/architecture-decision-record)),
-and the canonical five-part shape is Title, Context, Decision, Status,
-Consequences
-([Nygard, Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)).
-A tool choice is a decision of exactly that kind: it "addresses a functional or
-non-functional requirement that is architecturally significant"
-([adr.github.io](https://adr.github.io/)).
-
-The format below keeps the ADR skeleton and tightens three things that generic
-ADR templates leave open: how many tools may be recommended, what counts as
-admissible evidence for the context, and whether the reversal conditions are
-optional.
+This skill defines a single, portable record format for that moment: a narrowed
+Architecture Decision Record. It keeps the ADR skeleton and tightens three things
+generic ADR templates leave open - how many tools may be recommended (Rule 1),
+what counts as admissible evidence for the context (Rule 2), and whether the
+reversal conditions are optional (Rule 3). The ADR provenance and full field
+mapping are in [references/adr-background.md](references/adr-background.md).
 
 It is tool-agnostic. The same record shape works for a test framework, a
 package manager, a linter, a migration tool, a CI runner, or a logging library.
@@ -62,21 +53,7 @@ co-equal rule below.
 | Flip conditions | yes | The specific future observations that would reopen this decision. |
 | Secondary fallback | only for genuine co-equals | One alternative, with the constraint that would select it instead. |
 
-### How the fields map to a standard ADR
-
-| ADR field ([Nygard](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)) | Field here |
-|---|---|
-| Title | Title |
-| Status | Status |
-| Context ("the forces at play") | Signal, restricted to observed project evidence |
-| Decision | Decision, restricted to one tool |
-| Consequences ("all consequences ... not just the positive ones") | Rationale (the why-not clause) plus Flip conditions |
-
-The split of Consequences into two fields is deliberate. Nygard requires that
-"all consequences should be listed here, not just the 'positive' ones"
-([source](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)),
-and in practice tool records collapse to a list of benefits unless the negative
-half has its own heading with its own required content.
+The eight fields map onto the canonical five-part ADR (Title, Status, Context, Decision, Consequences), with ADR Consequences deliberately split into two fields here: Rationale (the why-not clause) plus Flip conditions. The full field-to-ADR mapping and its rationale are in [references/adr-background.md](references/adr-background.md).
 
 ## Rule 1: exactly one primary recommendation
 
@@ -203,51 +180,9 @@ comparison it was supposed to summarize.
 
 ## Worked example
 
-A billing service needs a database migration tool. The analysis has already
-happened; this is the record it produces.
-
-```markdown
-# 0007 - Database migration tool for the billing service
-
-**Status:** accepted 2026-07-19
-
-**Signal:**
-services/billing/pyproject.toml:14
-> django = "^5.2"
-
-services/billing/billing/migrations/0001_initial.py exists and is tracked.
-
-**Decision:** We will use Django's built-in migrations.
-
-**Rationale:**
-- Fits because: the service's schema is already defined as Django ORM models,
-  and Django ships a migrations system that propagates model changes into the
-  database schema via `makemigrations` and `migrate`, storing migration files
-  in a `migrations` directory inside each app
-  (https://docs.djangoproject.com/en/5.2/topics/migrations/). The tracked
-  `0001_initial.py` shows that history has already started here.
-- Not Alembic, because: Alembic is "a lightweight database migration tool for
-  usage with the SQLAlchemy Database Toolkit for Python"
-  (https://alembic.sqlalchemy.org/en/latest/). Adopting it would mean
-  maintaining a second schema definition alongside the Django models, and
-  abandoning the migration history already committed.
-
-**Secondary fallback:** none. The two candidates are not co-equal: the ORM in
-the signal selects one of them outright.
-
-**Read next:** the Django migrations topic guide
-(https://docs.djangoproject.com/en/5.2/topics/migrations/), specifically the
-sections on dependencies between app migrations and on squashing.
-
-**Flip conditions:**
-- The billing service moves off the Django ORM to SQLAlchemy.
-- A second, non-Django service needs to share this migration history.
-- The team adopts a database engine with no supported Django backend.
-```
-
-Note what the record does not contain: no scoring table, no third candidate, no
-paragraph about either tool's community size. Everything in it is either quoted
-from the project or cited to a document the reader can open.
+A filled record - a billing service choosing Django's built-in migrations over
+Alembic, with the signal quoted from `pyproject.toml`, the why-not clause, and
+observable flip conditions - is in [references/worked-example.md](references/worked-example.md).
 
 ## Review checklist
 

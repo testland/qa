@@ -33,27 +33,20 @@ answer different questions and use different tools.
 **Functional** is what this skill teaches. One service, one live URL, request
 in, assertions on the response.
 
-**Contract testing** is a separate discipline whose distinguishing feature is
-that no shared environment is involved. Pact is "a code-first consumer-driven
-contract testing tool" where "the contract is generated during the execution
-of the automated consumer tests" ([docs.pact.io](https://docs.pact.io/)),
-letting teams "safely confirm that your applications will work together
-without having to deploy the world first" (same source). The contract is
-"contract by example": concrete request/response pairs the consumer actually
-depends on, replayed against the provider in the provider's own CI (same
-source). If your problem is "team A's deploy broke team B", functional API
-tests will not solve it, because they test one side at a time.
+**Contract testing** is a separate discipline: no shared environment is
+involved. Pact generates the contract during the consumer's own test run and
+replays those concrete request/response pairs against the provider in the
+provider's CI, so teams confirm two services still agree without deploying both
+together ([docs.pact.io](https://docs.pact.io/)). If your problem is "team A's
+deploy broke team B", functional API tests will not solve it, because they test
+one side at a time.
 
 **Load testing** varies concurrency and duration, then reports latency
-percentiles and error rates. k6 is "an open-source, developer-friendly, and
-extensible performance testing tool" that is "optimized for minimal resource
-consumption and designed for running high-load performance tests" including
-spike, stress, and soak tests
-([grafana.com/docs/k6](https://grafana.com/docs/k6/latest/)). A functional
-suite run in a loop is not a load test: no concurrency model, no ramp, no
-latency reporting. Apache JMeter is the long-standing alternative, "a 100%
-pure Java application designed to load test functional behavior and measure
-performance" ([jmeter.apache.org](https://jmeter.apache.org/)).
+percentiles and error rates. k6
+([grafana.com/docs/k6](https://grafana.com/docs/k6/latest/)) and Apache JMeter
+([jmeter.apache.org](https://jmeter.apache.org/)) are the usual tools. A
+functional suite run in a loop is not a load test: no concurrency model, no
+ramp, no latency reporting.
 
 A healthy project usually has all three eventually. Start with functional.
 
@@ -128,123 +121,10 @@ emojitrain` (same source). `junit` is the one CI ingests.
 exits 0. Verify it can fail: change `200` to `201`, rerun, confirm a non-zero
 exit.
 
-### REST Assured (Java)
-
-Add the dependency; `io.rest-assured:rest-assured` is at 6.0.1, released
-2026-07-10 ([rest-assured.io](https://rest-assured.io/)):
-
-```xml
-<dependency>
-    <groupId>io.rest-assured</groupId>
-    <artifactId>rest-assured</artifactId>
-    <version>6.0.1</version>
-    <scope>test</scope>
-</dependency>
-```
-
-The usage guide recommends statically importing `io.restassured.RestAssured.*`,
-`io.restassured.matcher.RestAssuredMatchers.*`, and `org.hamcrest.Matchers.*`,
-and writing assertions as `given() / when() / then()` with `statusCode(...)`
-plus a `body(...)` matcher
-([rest-assured wiki](https://github.com/rest-assured/rest-assured/wiki/Usage)):
-
-```java
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
-
-@Test
-public void returns_200_with_id() {
-    given()
-        .baseUri(System.getenv("API_BASE_URL"))
-    .when()
-        .get("/items/1")
-    .then()
-        .statusCode(200)
-        .body("id", equalTo(1));
-}
-```
-
-**Success looks like:** `mvn test` reports the test as passing. Verify it can
-fail by asserting `equalTo(2)`.
-
-### Karate (JVM, feature files)
-
-Add `io.karatelabs:karate-junit5` as a test dependency, pinned to a release
-listed on the repository, and write a `.feature` file. `match` is the
-assertion keyword, and `#number` / `#string` are type placeholders so the test
-does not bind to volatile values
-([github.com/karatelabs/karate](https://github.com/karatelabs/karate),
-[docs.karatelabs.io](https://docs.karatelabs.io/)):
-
-```gherkin
-Feature: Items API
-
-  Scenario: Get an item
-    Given url baseUrl
-    And path 'items/1'
-    When method GET
-    Then status 200
-    And match response == { id: '#number', name: '#string' }
-```
-
-**Success looks like:** `mvn test` passes and an HTML report appears under
-`target/karate-reports/`.
-
-### Tavern (Python, pytest)
-
-Install, then write one YAML file
-([github.com/taverntesting/tavern](https://github.com/taverntesting/tavern)):
-
-```bash
-pip install tavern[pytest]
-```
-
-```yaml
-test_name: GET /items/1 returns 200 with expected id
-
-stages:
-  - name: fetch item
-    request:
-      url: "{host}/items/1"
-      method: GET
-    response:
-      status_code: 200
-      json:
-        id: 1
-```
-
-Run it with `py.test test_items.tavern.yaml -v`, or without pytest via
-`tavern-ci --stdout test_items.tavern.yaml`
-([tavern.readthedocs.io](https://tavern.readthedocs.io/en/stable/)).
-
-**Success looks like:** pytest reports 1 passed. Verify it can fail by
-changing the expected `id`.
-
-### Schemathesis (schema-driven, no test authoring)
-
-There is nothing to author. `uvx` runs it without installing; `uv pip install`
-makes it permanent. Both forms and the `schemathesis run <schema-url>` command
-are from the README
-([github.com/schemathesis/schemathesis](https://github.com/schemathesis/schemathesis)):
-
-```bash
-uvx schemathesis run https://your-api.example.com/openapi.json
-# or: uv pip install schemathesis && schemathesis run <schema-url>
-```
-
-**Success looks like:** a per-endpoint summary with no failures. A failure
-prints the generated request that broke conformance, so treat the first run
-as a discovery pass rather than a gate.
-
-### RESTler (stateful fuzzing, later)
-
-RESTler needs Python 3.12.8 and .NET 8.0, and runs as four stages: compile a
-grammar from the spec, test (a smoke pass measuring coverage), fuzz-lean (one
-pass per endpoint with default checkers), then fuzz (breadth-first deep
-exploration)
-([github.com/microsoft/restler-fuzzer](https://github.com/microsoft/restler-fuzzer)).
-The setup cost is real, so reach for it only after a functional suite exists
-and the API is a genuine resource lifecycle.
+First-run commands for the other functional options - REST Assured, Karate,
+Tavern, Schemathesis, and RESTler - are in
+[references/first-run-commands.md](references/first-run-commands.md). Each gives
+the install, one passing test, and how to make it fail.
 
 ## Traps that bite first
 
@@ -297,7 +177,7 @@ Target a local instance or staging.
 
 ## Going deeper
 
-Companion material, if it is available alongside this file:
+Per-tool deep dives live in sibling skills in this plugin:
 `postman-collections`,
 `restassured-testing`,
 `karate-testing`,

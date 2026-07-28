@@ -65,7 +65,7 @@ For pull-request verification without modifying files, use the
 ```
 
 The action runs a dry-run check and fails if any notebook carries
-uncommitted output per the [nbstripout README].
+uncommitted output.
 
 ## Step 2 - Install dependencies with pip caching
 
@@ -93,7 +93,7 @@ reflects version changes.
 ## Step 3 - Stage 1: papermill parameterized execution
 
 Papermill executes the notebook with injected parameters and writes a
-fully-rendered output notebook per the [Papermill execute docs]:
+fully-rendered output notebook:
 
 ```yaml
 - name: Execute notebook (papermill)
@@ -128,8 +128,7 @@ cells carry `#NBVAL_CHECK_OUTPUT` per the [nbval docs]:
       -v
 ```
 
-`sanitize.cfg` example for timestamps and memory addresses per the
-[nbval docs]:
+`sanitize.cfg` example for timestamps and memory addresses:
 
 ```ini
 [regex1]
@@ -143,7 +142,7 @@ replace: MEMORY-ADDR
 
 Pin per-cell markers on cells that emit timestamps or large floats:
 `# NBVAL_IGNORE_OUTPUT`. Use `# NBVAL_RAISES_EXCEPTION` to validate
-expected error paths per the [nbval docs].
+expected error paths.
 
 ## Step 5 - Stage 3: testbook function unit tests
 
@@ -156,26 +155,19 @@ artifact) using a module-scoped fixture so the kernel executes once per
   run: pytest tests/test_notebook_functions.py -v
 ```
 
-`tests/test_notebook_functions.py` pattern per the [testbook docs]:
+The `scope="module"` fixture is the load-bearing wiring decision - it stops
+each test re-executing the kernel:
 
 ```python
-import pytest
-from testbook import testbook
-
 @pytest.fixture(scope="module")
 def tb():
     with testbook("notebooks/analysis.ipynb", execute=True) as tb:
         yield tb
-
-def test_clean_data_drops_nulls(tb):
-    clean_data = tb.ref("clean_data")
-    result = clean_data(tb.ref("pd").DataFrame({"a": [1, None, 3]}))
-    assert len(result) == 2
-
-def test_model_output_shape(tb):
-    predict = tb.ref("predict")
-    assert predict(tb.ref("test_input")).shape == (1,)
 ```
+
+The full `tests/test_notebook_functions.py`, with per-function `tb.ref()`
+assertions, is in
+[references/notebook-ci-pipeline.md](references/notebook-ci-pipeline.md).
 
 ## Step 6 - Stage 4: HTML report via nbconvert
 
@@ -200,8 +192,8 @@ debugging artifact.
 ## Step 7 - Artifact upload with failure-aware retention
 
 Upload both the executed notebook and the HTML report. Use
-`if: always()` so artifacts surface on failure per [GitHub Actions
-expressions] and [actions/upload-artifact@v4]:
+`if: always()` so artifacts surface on failure per
+[actions/upload-artifact@v4]:
 
 ```yaml
 - name: Upload artifacts
@@ -222,80 +214,10 @@ excessive storage.
 
 ## Step 8 - Complete workflow
 
-```yaml
-name: Notebook CI
-
-on:
-  push:
-    paths:
-      - 'notebooks/**'
-      - 'tests/**'
-      - 'requirements.txt'
-  pull_request:
-    paths:
-      - 'notebooks/**'
-
-jobs:
-  notebook-ci:
-    runs-on: ubuntu-latest
-    env:
-      EXECUTED_NB: artifacts/analysis-executed.ipynb
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Verify notebooks are stripped
-        uses: kynan/nbstripout@main
-        with:
-          paths: '**/*.ipynb'
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Execute notebook (papermill)
-        run: |
-          mkdir -p artifacts
-          papermill notebooks/analysis.ipynb \
-            $EXECUTED_NB \
-            -p seed 42 \
-            -p n_samples 1000
-
-      - name: Output regression (nbval-lax)
-        run: |
-          pytest --nbval-lax $EXECUTED_NB \
-            --sanitize-with sanitize.cfg \
-            -v
-
-      - name: Unit tests (testbook)
-        run: pytest tests/test_notebook_functions.py -v
-
-      - name: Convert to HTML
-        if: always()
-        run: |
-          jupyter nbconvert --to html \
-            --template lab \
-            --embed-images \
-            $EXECUTED_NB \
-            --output artifacts/analysis-report.html
-
-      - name: Upload artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: notebook-ci-${{ github.run_id }}
-          path: |
-            artifacts/analysis-executed.ipynb
-            artifacts/analysis-report.html
-          if-no-files-found: warn
-          retention-days: 14
-```
+Steps 1-7 assemble into one workflow file. The full assembled YAML is in
+[references/notebook-ci-pipeline.md](references/notebook-ci-pipeline.md); paste
+it to `.github/workflows/notebook-ci.yml` and adjust the notebook path,
+papermill parameters, and test path to match the repo.
 
 ## Anti-patterns
 

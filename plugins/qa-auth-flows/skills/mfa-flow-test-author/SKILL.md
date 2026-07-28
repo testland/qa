@@ -17,11 +17,6 @@ the primary OAuth/OIDC token flow;
 `session-management-test-author`
 covers the post-authentication session lifecycle.
 
-Per [ISTQB Glossary v4](https://glossary.istqb.org/en_US/term/authentication):
-**authentication** is "the process of confirming that someone or something is
-who or what they claim to be." MFA adds a second or third factor (TOTP, OTP,
-biometric/hardware key) on top of the first factor (password, SSO).
-
 ## Shared setup
 
 All test patterns below require a known, fixed second-factor secret in the
@@ -36,21 +31,14 @@ import pyotp          # pyauth.github.io/pyotp
 
 ## Step 1 - TOTP (RFC 6238)
 
-Per [RFC 6238 §4.2][rfc6238], TOTP = HOTP(K, T) where T = floor((t - T0) / X):
-T0 is the Unix epoch (0) and X is the time step in seconds (default 30).
-
-> "The accuracy of the device... is important; however, in practice,
->  a time step of 30 seconds provides adequate margin while protecting
->  against brute-force attacks."
-
-The deterministic property is what makes TOTP testable: given a fixed secret
-and a fixed `for_time`, the code is always the same. Use `pyotp.TOTP.at(for_time)`
-([pyauth.github.io/pyotp][pyotp]) to generate the expected code in the test and
+Per [RFC 6238 §4.2][rfc6238], TOTP = HOTP(K, T) where T = floor((t - T0) / X),
+T0 = Unix epoch 0 and X = time step (default 30s). TOTP is testable because it
+is deterministic: a fixed secret + fixed `for_time` always yields the same code.
+Generate the expected code with `pyotp.TOTP.at(for_time)` ([pyotp][pyotp]) and
 compare it against what the server accepts.
 
-Interoperability test vectors are in [RFC 6238 Appendix B][rfc6238-b]:
-the ASCII secret `12345678901234567890` at Unix time 59 must produce `94287082`
-with SHA-1, confirming the implementation matches the standard.
+Interoperability test vectors are in [RFC 6238 Appendix B][rfc6238-b]: ASCII
+secret `12345678901234567890` at Unix time 59 produces `94287082` with SHA-1.
 
 ```python
 import pyotp
@@ -104,14 +92,9 @@ clock for the test process instead. Tests that rely on `time.time()` with
 
 ## Step 2 - HOTP (RFC 4226)
 
-Per [RFC 4226 §5.2][rfc4226]:
-
-> "HOTP(K,C) = Truncate(HMAC-SHA-1(K,C))"
-
-K is the shared secret, C is the counter value. The counter increments on
-the client side; the server increments on successful validation only. Per
-[RFC 4226 §7.4][rfc4226], the server maintains a look-ahead window `s` to
-tolerate minor counter drift without a denial-of-service risk.
+HOTP(K, C) is counter-based: K is the shared secret, C the counter. The client
+increments C on each use; the server increments only on successful validation
+and keeps a look-ahead window `s` ([RFC 4226 §7.4][rfc4226]) to tolerate drift.
 
 Test vectors (Appendix D of [RFC 4226][rfc4226]): secret
 `12345678901234567890`, counter 0 -> `755224`, counter 1 -> `287082`.
@@ -190,17 +173,11 @@ email delivery stub (e.g., a mock SMTP sink such as Mailpit or MailHog).
 
 ## Step 4 - WebAuthn / passkey (virtual authenticator)
 
-[WebAuthn Level 2 §7.1][webauthn-l2] defines the registration ceremony as
-a sequence where `navigator.credentials.create()` is called with
-`PublicKeyCredentialCreationOptions`, the authenticator creates an asymmetric
-key pair, and the server verifies the attestation. The authentication ceremony
-(§7.2) uses `navigator.credentials.get()` and produces a signed assertion.
-
-For automated testing, bypass the physical authenticator using the Chrome
-DevTools Protocol (CDP) [WebAuthn domain][cdp-webauthn], which provides a
-virtual authenticator per WebAuthn L2 §11 ("User Agent Automation"). CDP
-is available in Playwright via `browserContext.newCDPSession(page)`
-([playwright.dev/docs/api/class-cdpsession][pw-cdp]).
+Registration calls `navigator.credentials.create()`; authentication calls
+`navigator.credentials.get()` and produces a signed assertion. For CI, bypass
+the physical device with the Chrome DevTools Protocol [WebAuthn domain][cdp-webauthn]
+virtual authenticator (WebAuthn L2 §11), reached in Playwright via
+`browserContext.newCDPSession(page)` ([pw-cdp][pw-cdp]).
 
 ```python
 # Playwright + CDP virtual authenticator pattern (Python)
@@ -214,11 +191,9 @@ def virtual_auth_page():
         context = browser.new_context()
         page = context.new_page()
 
-        # Open CDP session and enable the WebAuthn domain
         cdp = context.new_cdp_session(page)
         cdp.send("WebAuthn.enable", {"enableUI": False})
 
-        # Add a virtual authenticator (CTAP2, internal transport, UV=true)
         result = cdp.send("WebAuthn.addVirtualAuthenticator", {
             "options": {
                 "protocol": "ctap2",
@@ -243,55 +218,21 @@ def test_webauthn_registration(virtual_auth_page, app_url):
     page, cdp, auth_id = virtual_auth_page
     page.goto(f"{app_url}/settings/passkeys")
     page.click("#register-passkey")
-    # navigator.credentials.create() resolves automatically via virtual auth
     page.wait_for_selector("#passkey-registered-confirmation")
     assert page.is_visible("#passkey-registered-confirmation")
 
-    # Verify a credential was stored on the virtual authenticator
     creds = cdp.send("WebAuthn.getCredentials", {"authenticatorId": auth_id})
     assert len(creds["credentials"]) == 1
-
-
-def test_webauthn_authentication(virtual_auth_page, app_url):
-    """Full round-trip: register then authenticate with the same passkey."""
-    page, cdp, auth_id = virtual_auth_page
-    # Register first
-    page.goto(f"{app_url}/settings/passkeys")
-    page.click("#register-passkey")
-    page.wait_for_selector("#passkey-registered-confirmation")
-
-    # Now authenticate
-    page.goto(f"{app_url}/login")
-    page.click("#passkey-login")
-    # navigator.credentials.get() resolves automatically
-    page.wait_for_url(f"{app_url}/dashboard")
-    assert "/dashboard" in page.url
-
-
-def test_webauthn_user_verification_required(virtual_auth_page, app_url, cdp):
-    """When UV is disabled mid-session, server must reject the assertion."""
-    page, cdp, auth_id = virtual_auth_page
-    # Register with UV enabled, then disable UV on the virtual authenticator
-    # and attempt login; the RP requires UV=true, so it must reject
-    cdp.send("WebAuthn.setUserVerified",
-             {"authenticatorId": auth_id, "isUserVerified": False})
-    page.goto(f"{app_url}/login")
-    page.click("#passkey-login")
-    page.wait_for_selector("#login-error")
-    assert page.is_visible("#login-error")
 ```
 
-Server-side verification uses `@simplewebauthn/server`
-([simplewebauthn.dev/docs/packages/server][simplewebauthn-server]).
-`verifyRegistrationResponse({ response, expectedChallenge, expectedOrigin, expectedRPID })`
-returns `{ verified, registrationInfo }`. After authentication,
-`verifyAuthenticationResponse({ response, expectedChallenge, expectedOrigin, expectedRPID, credential })`
-returns `{ verified, authenticationInfo: { newCounter } }` - the
-`newCounter` must be persisted to prevent signature-counter replay.
+Full authentication round-trip, user-verification enforcement, and server-side
+verification with `@simplewebauthn/server` (persist `newCounter` to block
+signature-counter replay):
+[references/webauthn-virtual-authenticator.md](references/webauthn-virtual-authenticator.md).
 
 ## Step 5 - Recovery codes
 
-Recovery codes are single-use backup tokens. Test:
+Single-use backup tokens. Test:
 
 1. A valid unused code grants access.
 2. The code cannot be used a second time.
@@ -317,8 +258,7 @@ def test_invalid_recovery_code_rejected(client, db):
 
 ## Step 6 - MFA enrollment
 
-Enrollment is the registration flow that binds a second factor to an account.
-Test:
+Enrollment binds a second factor to an account. Test:
 
 1. Enrollment requires a valid first-factor session.
 2. Enrollment completes only after the user verifies the factor (confirm OTP
@@ -350,9 +290,7 @@ def test_totp_enrollment_verify_confirms_factor(client, db, authenticated_sessio
 
 ## Step 7 - Step-up authentication
 
-Step-up authentication re-challenges an already-authenticated user when a
-sensitive operation is requested. The user holds a valid session token but
-must prove their second factor again before the resource is granted.
+Re-challenge a valid session for its second factor before a sensitive operation.
 
 ```python
 def test_step_up_triggers_mfa_challenge(client, authenticated_session_no_mfa):

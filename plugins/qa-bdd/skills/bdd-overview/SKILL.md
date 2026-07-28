@@ -10,12 +10,10 @@ description: "Teaches behaviour-driven development end to end for a newcomer: wh
 Behaviour Driven Development is "a way for software teams to work that closes
 the gap between business people and technical people"
 ([cucumber.io/docs/bdd][bdd-what]). It runs as three repeating practices:
-**Discovery** ("talk about concrete examples of the new functionality to
-explore, discover and agree on the details of what's expected to be done"),
-**Formulation** ("document those examples in a way that can be automated, and
-check for agreement"), and **Automation** ("implement the behaviour described by
-each documented example, starting with an automated test to guide the
-development of the code") ([cucumber.io/docs/bdd][bdd-what]).
+**Discovery** (talk through concrete examples of the new functionality),
+**Formulation** (document those examples so they can be automated), and
+**Automation** (implement each example, starting with an automated test that
+guides the code) ([cucumber.io/docs/bdd][bdd-what]).
 
 The formulation language is **Gherkin**: "a set of special keywords to give
 structure and meaning to executable specifications"
@@ -33,9 +31,8 @@ behaviour the business named.
 Discovery is a conversation between the **Three Amigos**
 ([cucumber.io/docs/bdd/who-does-what][three-amigos]): a Product Owner or BA who
 defines scope and user intent, a Tester who generates scenarios and edge cases,
-and a Developer who adds step detail and implementation constraints. "These
-conversations can produce great tests, because each amigo sees the product from
-a different perspective." ([cucumber.io/docs/bdd/who-does-what][three-amigos])
+and a Developer who adds step detail and implementation constraints - each amigo
+sees the product from a different perspective.
 
 ## Pick your runner
 
@@ -57,59 +54,35 @@ match a row, stop deliberating.
 
 SpecFlow was the standard .NET BDD runner for a decade, so most tutorials still
 point at it. It is dead: Tricentis, which owned it, states "SpecFlow has been
-retired" ([shiftsync.tricentis.com][specflow-retired]), and `specflow.org` now
-redirects there. The dates: "SpecFlow reached its end-of-life on December 31,
-2024", and "as of 1st January, the SpecFlow GitHub projects are deleted"
-([reqnroll.net, SpecFlow end-of-life][specflow-eol]). The packages still install
-because "nuget.org ... does not allow to delete the existing SpecFlow packages,
-so you can keep using SpecFlow for now" ([reqnroll.net][specflow-eol]), which is
-exactly how newcomers end up on an unsupported dependency.
-
-Reqnroll is the maintained successor: "an open-source Cucumber-style BDD test
-automation framework for .NET. It has been created as a reboot of the SpecFlow
-project" ([reqnroll.net][reqnroll-home]). It was forked from the SpecFlow
-codebase and renamed because "SpecFlow" is a Tricentis trademark, so migrating
-is mostly package and namespace renames, not a rewrite
-([reqnroll.net][specflow-eol]).
+retired" ([shiftsync.tricentis.com][specflow-retired]), `specflow.org` now
+redirects there, and it "reached its end-of-life on December 31, 2024" with the
+GitHub projects deleted as of 1 January ([reqnroll.net][specflow-eol]). The
+packages still install only because nuget.org will not delete existing ones
+([reqnroll.net][specflow-eol]) - exactly how newcomers land on an unsupported
+dependency. Use **Reqnroll**, the maintained successor: "a reboot of the SpecFlow
+project" ([reqnroll.net][reqnroll-home]), forked and renamed off the "SpecFlow"
+Tricentis trademark, so migrating is mostly package and namespace renames, not a
+rewrite ([reqnroll.net][specflow-eol]).
 
 ## First runnable path
 
-Run your row's block. Success looks the same everywhere: the runner reports
-**undefined** steps and prints copy-pasteable step-definition snippets. That is
-the correct first result, not a failure.
+Run the block that matches your row. Success looks the same everywhere: the
+runner reports **undefined** steps and prints copy-pasteable step-definition
+snippets. That is the correct first result, not a failure. The .NET (Reqnroll)
+path is below; the other four runners are in
+[references/runner-setup.md](references/runner-setup.md).
 
 ```bash
 # .NET (Reqnroll), per docs.reqnroll.net/latest/installation/setup-project.html
 dotnet new install Reqnroll.Templates.DotNet
 dotnet new reqnroll-project -t nunit -f net8.0 -o CheckoutSpecs
 cd CheckoutSpecs && dotnet test
-
-# Node (Cucumber-JS), per cucumber.io/docs/installation/javascript
-npm install --save-dev @cucumber/cucumber
-mkdir -p features/step_definitions && npx cucumber-js
-
-# Python (Behave), per behave.readthedocs.io/en/latest/install
-pip install behave
-mkdir -p features/steps && behave
-
-# Java (Cucumber-JVM), the maintained Maven starter project
-git clone https://github.com/cucumber/cucumber-jvm-starter-maven-java
-cd cucumber-jvm-starter-maven-java && ./mvnw test
-
-# Ruby (Cucumber-Ruby), per cucumber.io/docs/installation/ruby
-gem install cucumber
-cucumber --init && cucumber
 ```
 
-Command sources: the template install and `-t` / `-f` flags
-([docs.reqnroll.net setup][reqnroll-setup]); `npm install --save-dev
-@cucumber/cucumber` ([install/javascript][install-js]) with `npx cucumber-js`
-([cucumber-js CLI][cucumber-js-cli]); `pip install behave`
-([behave install][behave-install]); `./mvnw test` on the starter repo, which runs
-features through Cucumber's JUnit Platform Engine ([jvm starter][jvm-starter]);
-`gem install cucumber` and `cucumber --init` ([install/ruby][install-ruby]). To
-add Reqnroll to an existing .NET test project instead of scaffolding, run
-`dotnet add package Reqnroll.NUnit` ([docs.reqnroll.net setup][reqnroll-setup]).
+The template install and `-t` / `-f` flags are per
+[docs.reqnroll.net setup][reqnroll-setup]. To add Reqnroll to an existing .NET
+test project instead of scaffolding, run `dotnet add package Reqnroll.NUnit`
+([docs.reqnroll.net setup][reqnroll-setup]).
 
 ## The Gherkin discipline that decides whether this works
 
@@ -216,8 +189,8 @@ possible" ([cucumber.io/docs/guides/anti-patterns][anti-patterns]).
 - **Writing the Gherkin after the code is done.** That skips Discovery, which
   is where the value is; formulation alone just adds a parsing layer over tests
   you already wrote ([cucumber.io/docs/bdd][bdd-what]).
-- **On .NET, installing SpecFlow because the tutorial said so.** End-of-life
-  since 31 December 2024 ([reqnroll.net][specflow-eol]). Use Reqnroll.
+- **On .NET, installing SpecFlow because the tutorial said so.** See "The .NET
+  trap" above; use Reqnroll.
 - **`Then` steps with no observable outcome.** "Then the user is happy" cannot
   assert. `Then` describes "an *expected* outcome, or result" and its definition
   should "use an *assertion* to compare the *actual* outcome to the *expected*
@@ -275,9 +248,7 @@ These go deeper on individual pieces, where also installed:
 [install-java]: https://cucumber.io/docs/installation/java/
 [install-js]: https://cucumber.io/docs/installation/javascript/
 [install-ruby]: https://cucumber.io/docs/installation/ruby/
-[cucumber-js-cli]: https://github.com/cucumber/cucumber-js/blob/main/docs/cli.md
 [cucumber-jvm]: https://github.com/cucumber/cucumber-jvm
-[jvm-starter]: https://github.com/cucumber/cucumber-jvm-starter-maven-java
 [behave-install]: https://behave.readthedocs.io/en/latest/install/
 [reqnroll-home]: https://reqnroll.net/
 [reqnroll-setup]: https://docs.reqnroll.net/latest/installation/setup-project.html

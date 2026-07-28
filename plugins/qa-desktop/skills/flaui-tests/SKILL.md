@@ -9,21 +9,16 @@ metadata:
 
 ## Overview
 
-Per the [FlaUI repository README][flaui]:
-
 [flaui]: https://github.com/FlaUI/FlaUI
 
-> "FlaUI is a .NET library for automated UI testing of Windows
-> applications."
-
-FlaUI wraps Microsoft UI Automation (UIA) - the Windows accessibility
-tree described in
-`desktop-test-strategy-reference` - behind an idiomatic C# API. Per [flaui][flaui], the library supports
-"Win32, WinForms, WPF, and Store Apps" via two UIA bindings:
-**UIA2** (managed `System.Windows.Automation`, per
-[Microsoft Learn - UI Automation Overview][msuia2]) and **UIA3** (COM
-interop). v5.0.0 was released February 2025 ([flaui][flaui]); the
-project is MIT-licensed and remains actively maintained.
+FlaUI is a .NET library for automated UI testing of Windows applications
+([flaui][flaui]) that wraps Microsoft UI Automation (UIA) - the Windows
+accessibility tree covered in `desktop-test-strategy-reference` - behind an
+idiomatic C# API. It supports "Win32, WinForms, WPF, and Store Apps" via two
+bindings: **UIA2** (managed `System.Windows.Automation`,
+[Microsoft Learn - UI Automation Overview][msuia2]) and **UIA3** (COM interop).
+v5.0.0 released February 2025; MIT-licensed and actively maintained
+([flaui][flaui]).
 
 [msuia2]: https://learn.microsoft.com/dotnet/framework/ui-automation/ui-automation-overview
 
@@ -112,47 +107,20 @@ are cleaned up after each test class.
 
 ### Finding elements with ConditionFactory
 
-Per the [FlaUI wiki - Searching page][flauisearch]:
+The lambda form is the shortest and is the upstream convention
+([flauisearch][flauisearch]):
 
 [flauisearch]: https://github.com/FlaUI/FlaUI/wiki/Searching
 
 ```csharp
-// Lambda form - preferred for readability
 var loginButton = window.FindFirstDescendant(cf => cf.ByAutomationId("LoginButton"));
-
-// ConditionFactory form
-var loginButton2 = window.FindFirstDescendant(ConditionFactory.ByAutomationId("LoginButton"));
-
-// Property + tree-scope form
-var loginButton3 = window.FindFirst(
-    TreeScope.Descendants,
-    new PropertyCondition(
-        Automation.PropertyLibrary.Element.AutomationIdProperty,
-        "LoginButton"));
 ```
 
-All three resolve to the same UIA query. The lambda form is the
-shortest and is the convention in upstream samples. Per
-[flauisearch][flauisearch], FlaUI exposes `FindFirstChild` /
-`FindAllChildren` (immediate children only),
-`FindFirstDescendant` / `FindAllDescendants` (full subtree),
-and `FindFirstNested` / `FindAllNested` (multi-level condition
-arrays).
-
-Available condition constructors include `ByAutomationId`,
-`ByName`, `ByText`, `ByClassName`, `ByControlType`, and boolean
-combinators `AndCondition`, `OrCondition`, `NotCondition`
-([flauisearch][flauisearch]).
-
-Locator-selection order (most stable first):
-
-1. `ByAutomationId` - `AutomationId` is a developer-set stable
-   identifier per [msuia2][msuia2]; locale-independent and
-   theme-independent.
-2. `ByControlType` + nested condition - when no AutomationId is
-   available, pair the control type (Button / Edit / ListItem) with
-   another property.
-3. `ByName` - last resort; localised apps change `Name` per language.
+Prefer `ByAutomationId` (developer-set, locale- and theme-independent per
+[msuia2][msuia2]); fall back to `ByControlType` + a nested condition, then
+`ByName` as a last resort. The equivalent `ConditionFactory` / `PropertyCondition`
+forms, the `FindFirst*` / `FindAll*` families, and the full condition-constructor
+list are in [references/flaui-api.md](references/flaui-api.md).
 
 ### Interacting with elements
 
@@ -176,12 +144,10 @@ mouse click ([msuia2][msuia2] §Control Patterns).
 
 ### Waits with the Retry class
 
-Per the [FlaUI wiki - Retry page][flauiretry]:
+Before v2.0.0 some `Find` methods auto-retried; that responsibility now falls to
+the caller ([flauiretry][flauiretry]):
 
 [flauiretry]: https://github.com/FlaUI/FlaUI/wiki/Retry
-
-> "Before v2.0.0, some Find methods included automatic retries; this
-> responsibility now falls to developers."
 
 ```csharp
 // Wait until the element appears
@@ -206,13 +172,11 @@ diagnosing slow-loading screens.
 
 ### Waits with Application.WaitWhileBusy
 
-Per the [FlaUI `Application` source][flauiappsrc]:
+`WaitWhileBusy` blocks while the target process is busy; a null timeout means
+infinite, and it returns true if the application went idle
+([flauiappsrc][flauiappsrc]):
 
 [flauiappsrc]: https://github.com/FlaUI/FlaUI/blob/master/src/FlaUI.Core/Application.cs
-
-> "Waits as long as the application is busy. An optional timeout. If
-> null is passed, the timeout is infinite. Returns true if the
-> application is idle, false otherwise."
 
 ```csharp
 public bool WaitWhileBusy(TimeSpan? waitTimeout = null)
@@ -290,9 +254,8 @@ shared state), use `IClassFixture` (xUnit) / `[OneTimeSetUp]` (NUnit)
 
 ### STA threading
 
-UIA calls in UIA3 (COM interop) require an STA thread per
-[msuia2][msuia2] (COM apartment model). xUnit defaults to MTA;
-configure STA via the test runner attribute:
+UIA3 (COM interop) requires an STA thread ([msuia2][msuia2]); xUnit defaults to
+MTA, so set the apartment via the runner attribute:
 
 ```csharp
 // xUnit - install Xunit.StaFact and use [StaFact]
@@ -306,8 +269,8 @@ public void Test_running_on_sta_thread() { /* ... */ }
 // MSTest - STA is default; no attribute needed for sync tests
 ```
 
-UIA2 (managed) is more permissive on threading, but mixed-threading
-bugs are easier to debug if all UIA work happens on STA.
+UIA2 (managed) is more permissive, but keeping all UIA work on STA makes
+threading bugs easier to debug.
 
 ### `dotnet test` invocation
 
@@ -318,6 +281,11 @@ dotnet test --logger "trx;LogFileName=results.trx"
 :: With a filter on the FlaUI smoke suite
 dotnet test --filter "Category=Smoke" --logger "trx;LogFileName=smoke.trx"
 ```
+
+Verify: run the suite and confirm it launches the app and passes. If a test
+fails with a `NullReference` or `Retry` timeout, the locator or wait is wrong -
+open [FlaUInspect][flauinspect] to recheck the `AutomationId`, fix the
+`FindFirstDescendant` / `Retry` call, then re-run before adding more cases.
 
 ## Parsing results
 
@@ -335,32 +303,10 @@ matching the UIA mode used by the test project.
 
 ## CI integration
 
-Windows runner required - UIA is Windows-only per [msuia2][msuia2]:
-
-```yaml
-# .github/workflows/flaui.yml
-jobs:
-  ui-tests:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v4
-        with: { dotnet-version: '8.0.x' }
-      - name: Build app under test
-        run: dotnet build src/MyApp -c Release
-      - name: Run FlaUI tests
-        run: dotnet test tests/MyApp.UiTests --logger "trx;LogFileName=ui.trx"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: trx-results
-          path: '**/ui.trx'
-```
-
-`windows-latest` provides an interactive desktop session by default - 
-required because UIA cannot drive Session-0 / non-interactive
-desktops. Self-hosted Windows-container runners need additional
-setup (interactive logon + Auto-Login + an unlocked desktop).
+Windows runner required (UIA is Windows-only per [msuia2][msuia2]); use
+`windows-latest` for an interactive desktop, since UIA cannot drive Session-0.
+Full `windows-latest` workflow:
+[references/flaui-api.md](references/flaui-api.md).
 
 ### UIA2 vs UIA3 selection
 

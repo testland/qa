@@ -7,12 +7,8 @@ description: "Configures KICS (Keeping Infrastructure as Code Secure), Checkmarx
 
 ## Overview
 
-KICS (Keeping Infrastructure as Code Secure) covers Terraform,
-Kubernetes, Helm, Dockerfile, Docker Compose, OpenAPI, Ansible,
-ARM, CloudFormation, Pulumi, Crossplane, Knative - comparable
-breadth to Checkov.
-
-KICS's specific strengths:
+KICS (Keeping Infrastructure as Code Secure) is Checkmarx's IaC scanner.
+Its distinctive strengths vs sister scanners:
 - OpenAPI scanning (uncommon in other IaC scanners).
 - Pulumi + Crossplane support (Checkov has Pulumi too; KICS broader).
 - Lightweight Docker image; portable in restricted CI.
@@ -26,21 +22,17 @@ KICS's specific strengths:
 
 ## Step 1 - Install
 
-Per the [KICS getting-started docs][kgs], Docker is the primary install
-path; there is no install script, so binary users download a
-version-stamped release archive:
+Docker is the primary install path per the [KICS getting-started
+docs][kgs]; there is no install script.
 
 [kgs]: https://docs.kics.io/latest/getting-started/
 
 ```bash
-# Docker (recommended)
 docker pull checkmarx/kics:latest
-
-# Or binary (v2.1.20 is the latest release as of 2026-07-20)
-curl -sfL -o kics.tar.gz \
-  https://github.com/Checkmarx/kics/releases/download/v2.1.20/kics_2.1.20_linux_amd64.tar.gz
-tar -xzf kics.tar.gz && sudo mv kics /usr/local/bin/
 ```
+
+For a version-pinned binary install, see the Pinned versions +
+binary-install section in [references/kics-policy.md](references/kics-policy.md).
 
 ## Step 2 - Run
 
@@ -112,28 +104,15 @@ The disable directive references the specific KICS query ID
 
 ## Step 6 - Custom queries (Rego)
 
-KICS queries are written in Rego (same as OPA):
-
-```rego
-# custom-queries/aws/cost_center_tag/query.rego
-package Cx
-
-CxPolicy[result] {
-    resource := input.document[i].resource.aws_instance[name]
-    not resource.tags.cost_center
-    result := {
-        "documentId": input.document[i].id,
-        "searchKey": sprintf("aws_instance[%s]", [name]),
-        "issueType": "MissingAttribute",
-        "keyExpectedValue": "Should have a cost_center tag",
-        "keyActualValue": "tags.cost_center is missing",
-    }
-}
-```
+KICS queries are written in Rego (same as OPA). Point KICS at a query
+directory with `-q`:
 
 ```bash
 kics scan -p . -q ./custom-queries/
 ```
+
+For a full query template (`package Cx` + `CxPolicy[result]`), see
+[references/kics-policy.md](references/kics-policy.md).
 
 ## Step 7 - CI integration
 
@@ -186,13 +165,10 @@ don't.
 
 ## Anti-patterns
 
-| Anti-pattern                                                          | Why it fails                                                              | Fix |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| KICS as only IaC scanner                                              | Misses Checkov / tfsec-specific findings.                                | Use multiple scanners; combine results (Step 7). |
-| `kics-scan ignore-line` without comment justifying                    | Skips invisible.                                                          | Always include reason. |
-| Skipping `--fail-on` severity in CI                                    | All findings (including LOW) fail; team disables.                       | Start `--fail-on high,critical` (Step 4). |
-| Running on every PR with full output                                   | Output overwhelming; team ignores.                                      | Severity threshold + JSON/SARIF for triage. |
-| Custom queries without tests                                            | Bugs let bad config through.                                              | Test custom queries via OPA test pattern. |
+See the anti-patterns table in
+[references/kics-policy.md](references/kics-policy.md) - covers KICS as
+the only scanner, unjustified `ignore-line`, skipping `--fail-on` in CI,
+full-output noise, and untested custom queries.
 
 ## Limitations
 

@@ -34,14 +34,12 @@ Deliberately out of scope, and better served elsewhere:
 
 ## Announcement strings are expectations, not guarantees
 
-Screen readers report a control's accessible name, its role, and its state, but
-the exact wording is chosen by the screen reader and varies by version and by
-paired browser. NVDA's focus reporting "announces the current object or control
-that has the System focus", including name, type, value, state, description and
-position ([NVDA User Guide](https://download.nvaccess.org/documentation/userGuide.html)).
-WebAIM describes the same model for NVDA: "When focusing a form control, its
-label is read by NVDA, and then the type of form control"
-([WebAIM: Using NVDA](https://webaim.org/articles/nvda/)).
+Screen readers report a control's accessible name, role, and state, but the
+exact wording is chosen by the reader and varies by version and paired browser
+(NVDA reports name, type, value, state, description, and position for the focused
+control per the
+[NVDA User Guide](https://download.nvaccess.org/documentation/userGuide.html) and
+[WebAIM: Using NVDA](https://webaim.org/articles/nvda/)).
 
 Treat every string in the matrices below as a **containment assertion**: the
 announcement must contain the accessible name, the role word, and any applicable
@@ -55,8 +53,8 @@ Run two stacks, because a defect that one stack papers over the other exposes:
 
 | Stack | Modifier / entry convention |
 |---|---|
-| NVDA on Windows, paired with Firefox | The NVDA modifier is `numpadZero` (with NumLock off) or `insert`, and can be remapped to Caps Lock ([NVDA User Guide](https://download.nvaccess.org/documentation/userGuide.html)). Browse mode uses single-letter navigation: `h` heading, `f` form field, `k` link, `d` landmark, `l` list, `t` table; add Shift to move backwards (same guide). |
-| VoiceOver on macOS, paired with Safari | "VO represents the VoiceOver modifier that you press with additional keys to enter VoiceOver commands. By default, you can press Control and Option together or just press Caps Lock" ([Apple: Use the VoiceOver rotor on Mac](https://support.apple.com/guide/voiceover/voiceover-rotor-mchlp2719/mac)). `VO-Space bar` performs the default action on an item, such as clicking a button ([Apple: Control your Mac using keyboard commands with VoiceOver](https://support.apple.com/guide/voiceover/control-your-mac-with-keyboard-commands-vo2681/mac)). |
+| NVDA on Windows, paired with Firefox | The NVDA modifier is `numpadZero` (with NumLock off) or `insert`, remappable to Caps Lock. Browse mode uses single-letter navigation: `h` heading, `f` form field, `k` link, `d` landmark, `l` list, `t` table; add Shift to move backwards ([NVDA User Guide](https://download.nvaccess.org/documentation/userGuide.html)). |
+| VoiceOver on macOS, paired with Safari | The VO modifier is Control-Option pressed together, or Caps Lock ([Apple: Use the VoiceOver rotor on Mac](https://support.apple.com/guide/voiceover/voiceover-rotor-mchlp2719/mac)); `VO-Space bar` performs an item's default action, such as clicking a button ([Apple: VoiceOver keyboard commands](https://support.apple.com/guide/voiceover/control-your-mac-with-keyboard-commands-vo2681/mac)). |
 
 VoiceOver does not infer a label from proximity: an explicit `<label for>` or
 `aria-label` is required for the field name to be announced
@@ -108,27 +106,23 @@ element regardless of archetype ([WebAIM: Keyboard Accessibility](https://webaim
 | U4 | `Tab` continuously past the widget | Focus leaves the widget and continues into the rest of the page | Announces the next page element | Announces the next page element | 2.1.2 No Keyboard Trap (A) | |
 | U5 | NVDA `f` / `h` / `d` in browse mode; VoiceOver `VO-U` rotor | Structure navigation reaches the widget by form field, heading, or landmark | Jumps to the next form field, heading, or landmark | Rotor lists the item under its category | 4.1.2 Name, Role, Value (A) | |
 
-Row U4 is the operative check for SC 2.1.2: "If keyboard focus can be moved to a
-component of the page using a keyboard interface, then focus can be moved away
-from that component using only a keyboard interface, and, if it requires more
-than unmodified arrow or tab keys or other standard exit methods, the user is
-advised of the method for moving focus away"
-([WCAG 2.2](https://www.w3.org/TR/WCAG22/)). Inside a modal
-dialog the equivalent exit is the Escape row, not `Tab`; see the dialog block.
+Row U4 is the operative check for SC 2.1.2: focus that can enter a component with
+the keyboard must be able to leave it with the keyboard, and if a non-standard
+exit is required the user must be told how
+([WCAG 2.2](https://www.w3.org/TR/WCAG22/)). Inside a modal dialog the equivalent
+exit is the Escape row, not `Tab`; see the dialog block.
 
-Row U5's structure keys: NVDA single-letter navigation (`f`, `h`, `d`) per the
-[NVDA User Guide](https://download.nvaccess.org/documentation/userGuide.html);
-the VoiceOver rotor opens with `VO-U`, or with `VO-Command-Left Arrow` /
-`VO-Command-Right Arrow`, and items within a category are reached with the
-Up Arrow and Down Arrow keys
+Row U5's structure keys: NVDA single-letter navigation (`f`, `h`, `d`)
+([NVDA User Guide](https://download.nvaccess.org/documentation/userGuide.html));
+the VoiceOver rotor opens with `VO-U` (or `VO-Command-Left/Right Arrow`), and
+items within a category are reached with the Up and Down Arrow keys
 ([Apple: Use the VoiceOver rotor on Mac](https://support.apple.com/guide/voiceover/voiceover-rotor-mchlp2719/mac)).
 
 ### Button
 
-APG specifies "Space: Activates the button. Enter: Activates the button", the
-element "has role of button", and it "has an accessible label", by default
-computed from its text content
-([APG Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)).
+Per the [APG Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/):
+Space and Enter both activate; the element has role button and an accessible
+label, computed by default from its text content.
 
 | # | Key | Expected focus / behavior | Expected NVDA | Expected VoiceOver | WCAG 2.2 SC | Result |
 |---|---|---|---|---|---|---|
@@ -138,17 +132,15 @@ computed from its text content
 | B4 | `VO-Space bar` (VoiceOver only) | The button's default action fires | n/a | Same as B2 | 2.1.1 Keyboard (A) | |
 | B5 | `Tab` onto a button whose action is unavailable | Button is still reachable when marked `aria-disabled="true"` | "{name}, button, unavailable" | "{name}, dimmed, button" | 4.1.2 (A) | |
 
-Row B5 covers the APG convention that "When the action associated with a button
-is unavailable, the button has aria-disabled set to `true`"
-([APG Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)). A
-native `disabled` attribute instead removes the control from the tab sequence,
-so B5 becomes `N/A` rather than a failure.
+Row B5 covers the APG convention that an unavailable button carries
+`aria-disabled="true"` rather than the native `disabled` attribute, which would
+remove it from the tab sequence and make B5 `N/A` rather than a failure
+([APG Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)).
 
 ### Toggle button
 
-"If the button is a toggle button, it has an aria-pressed state. When the button
-is toggled on, the value of this state is `true`, and when toggled off, the state
-is `false`." The label must stay constant across toggles
+A toggle button carries an `aria-pressed` state (`true` on, `false` off), and
+its label must stay constant across toggles
 ([APG Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)).
 
 | # | Key | Expected focus / behavior | Expected NVDA | Expected VoiceOver | WCAG 2.2 SC | Result |
@@ -164,9 +156,8 @@ conveyed twice and contradictorily, against the APG note above.
 
 ### Checkbox
 
-"When the checkbox has focus, pressing the Space key changes the state of the
-checkbox." The element "has role checkbox", with `aria-checked` set to `true`,
-`false`, or `mixed`
+Space toggles a focused checkbox; the element has role checkbox with
+`aria-checked` set to `true`, `false`, or `mixed`
 ([APG Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/)).
 
 | # | Key | Expected focus / behavior | Expected NVDA | Expected VoiceOver | WCAG 2.2 SC | Result |
@@ -197,10 +188,10 @@ focus mode is enabled ([NVDA User Guide](https://download.nvaccess.org/documenta
 | F6 | `Shift+Tab` | Focus returns to the previous control | Previous control's name and role | Previous control's name and role | 2.4.3 (A) | |
 | F7 | `Tab` onto a field carrying a validation error | Focus lands; the error text is associated, typically via `aria-describedby` | "{name}, edit, invalid entry, {error}" | "{name}, text field, {error}" | 3.3.1 Error Identification (A); 4.1.2 (A) | |
 
-SC 3.3.1 requires that "if an input error is automatically detected, the item
-that is in error is identified and the error is described to the user in text"
-([WCAG 2.2](https://www.w3.org/TR/WCAG22/)). Row F7 fails if the error is only a
-red border or an icon, even when the field is otherwise announced correctly.
+SC 3.3.1 requires that a detected input error is identified and described to the
+user in text ([WCAG 2.2](https://www.w3.org/TR/WCAG22/)). Row F7 fails if the
+error is only a red border or an icon, even when the field is otherwise
+announced correctly.
 
 ### Modal dialog
 
@@ -222,64 +213,20 @@ the pattern, not a violation, **only because** D5 provides a keyboard exit. If
 D5 fails while D4 passes, the widget is a keyboard trap under SC 2.1.2, not a
 correctly implemented dialog.
 
-### Menu button
+### Menu button and combobox
 
-APG specifies the trigger has `role="button"`, `aria-haspopup` "set to either
-`menu` or `true`", and `aria-expanded` set to `true` when the menu is displayed
-and `false` when it is hidden
-([APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)).
-Behavior once the menu is open is defined by the menu pattern
-([APG Menu and Menubar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)).
-
-| # | Key | Expected focus / behavior | Expected NVDA | Expected VoiceOver | WCAG 2.2 SC | Result |
-|---|---|---|---|---|---|---|
-| M1 | `Tab` | Trigger receives focus, collapsed | "{name}, button, collapsed" or "has pop up menu" | "{name}, pop up button, collapsed" | 4.1.2 (A); 2.4.7 (AA) | |
-| M2 | `Enter` | "opens the menu and places focus on the first menu item" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)) | "{first item}, menu item, 1 of {n}" | "{first item}, menu item" | 2.1.1 (A); 4.1.2 (A) | |
-| M3 | `Space` | "Opens the menu and places focus on the first menu item" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)) | Same as M2 | Same as M2 | 2.1.1 (A) | |
-| M4 | `Down Arrow` on the trigger | "(Optional) opens the menu and moves focus to the first menu item" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)); mark `N/A` if unimplemented | Same as M2 | Same as M2 | 2.1.1 (A) | |
-| M5 | `Up Arrow` on the trigger | "(Optional) opens the menu and moves focus to the last menu item" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)); mark `N/A` if unimplemented | "{last item}, menu item, {n} of {n}" | "{last item}, menu item" | 2.1.1 (A) | |
-| M6 | `Down Arrow` inside the menu | "When focus is in a menu, moves focus to the next item, optionally wrapping from the last to the first" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)) | "{item}, menu item, {i} of {n}" | "{item}, menu item" | 2.4.3 (A); 4.1.2 (A) | |
-| M7 | `Up Arrow` inside the menu | "When focus is in a menu, moves focus to the previous item, optionally wrapping from the first to the last" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)) | Previous item announced | Previous item announced | 2.4.3 (A) | |
-| M8 | `Home` / `End` inside the menu | "If arrow key wrapping is not supported, moves focus to the first item" / "to the last item in the current menu or menubar" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)) | First / last item announced | First / last item announced | 2.1.1 (A) | |
-| M9 | `Escape` inside the menu | "Close the menu that contains focus and return focus to the element or context, e.g., menu button or parent menuitem, from which the menu was opened" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)) | "{name}, button, collapsed" | "{name}, pop up button, collapsed" | 2.1.2 (A); 2.4.3 (A) | |
-| M10 | `Enter` on a menu item | "Activates the item and closes the menu" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)) | Action result; then the trigger re-announced | Action result; then the trigger re-announced | 2.1.1 (A) | |
-
-### Combobox
-
-APG specifies `role="combobox"` on the input, `aria-expanded` set to `false` when
-the popup is hidden and `true` when visible, `aria-controls` referencing the
-popup, and `aria-activedescendant` referencing the focused popup element
-([APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)).
-
-| # | Key | Expected focus / behavior | Expected NVDA | Expected VoiceOver | WCAG 2.2 SC | Result |
-|---|---|---|---|---|---|---|
-| K1 | `Tab` | "The combobox is in the page Tab sequence" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)); popup hidden | "{name}, combo box, collapsed" | "{name}, combo box" plus current value | 4.1.2 (A); 2.4.7 (AA) | |
-| K2 | `Down Arrow` on the combobox | "If the popup is available, moves focus into the popup" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)) | "expanded" then "{option}, 1 of {n}" | "expanded" then "{option}" | 2.1.1 (A); 4.1.2 (A) | |
-| K3 | `Alt+Down Arrow` on the combobox | "If the popup is available but not displayed, displays the popup without moving focus" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)) | "expanded"; focus stays on the input | "expanded"; focus stays on the input | 4.1.2 (A) | |
-| K4 | `Up Arrow` on the combobox | "If the popup is available, places focus on the last focusable element in the popup" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)) | "{last option}, {n} of {n}" | "{last option}" | 2.1.1 (A) | |
-| K5 | `Down Arrow` in the popup | "Moves focus to and selects the next option" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)) | "{option}, {i} of {n}, selected" | "{option}, selected" | 2.4.3 (A); 4.1.2 (A) | |
-| K6 | `Up Arrow` in the popup | "Moves focus to and selects the previous option" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)) | Previous option plus position and selection state | Previous option plus selection state | 2.4.3 (A) | |
-| K7 | `Enter` in the popup | "Accepts the focused option in the listbox by closing the popup, placing the accepted value in the combobox" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)) | "{option}" then "collapsed" | "{option}" then the input's new value | 2.1.1 (A); 4.1.2 (A) | |
-| K8 | `Escape` in the popup | "Closes the popup and returns focus to the combobox" ([APG](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)) | "{name}, combo box, collapsed" | "{name}, combo box" | 2.1.2 (A); 2.4.3 (A) | |
-| K9 | `Tab` with the popup open | Focus leaves the combobox entirely and reaches the next page control | Next control's name and role | Next control's name and role | 2.1.2 (A) | |
+The menu button and combobox archetypes are composite widgets: they open a popup
+and manage focus inside it, and they carry the longest keyboard-interaction
+tables. Their full matrices (M1-M10 and K1-K9), with the APG citation on each
+row, live in
+[references/widget-matrices-extended.md](references/widget-matrices-extended.md),
+alongside the success-criterion lookup table below.
 
 ## Success criterion lookup
 
-Every SC referenced above, with its normative anchor. All are current in
-WCAG 2.2 ([WCAG 2.2](https://www.w3.org/TR/WCAG22/)).
-
-| SC | Title | Level | What a matrix row proves |
-|---|---|---|---|
-| 2.1.1 | Keyboard | A | "All functionality of the content is operable through a keyboard interface without requiring specific timings for individual keystrokes, except where the underlying function requires input that depends on the path of the user's movement and not just the endpoints." |
-| 2.1.2 | No Keyboard Trap | A | "If keyboard focus can be moved to a component of the page using a keyboard interface, then focus can be moved away from that component using only a keyboard interface, and, if it requires more than unmodified arrow or tab keys or other standard exit methods, the user is advised of the method for moving focus away." |
-| 2.4.3 | Focus Order | A | "If a web page can be navigated sequentially and the navigation sequences affect meaning or operation, focusable components receive focus in an order that preserves meaning and operability." |
-| 2.4.7 | Focus Visible | AA | "Any keyboard operable user interface has a mode of operation where the keyboard focus indicator is visible." |
-| 3.3.1 | Error Identification | A | The item in error is identified and the error is described to the user in text. |
-| 3.3.2 | Labels or Instructions | A | Labels or instructions are provided when content requires user input. |
-| 4.1.2 | Name, Role, Value | A | "For all user interface components (including but not limited to: form elements, links and components generated by scripts), the name and role can be programmatically determined; states, properties, and values that can be set by the user can be programmatically set; and notification of changes to these items is available to user agents, including assistive technologies." |
-
-Do not cite 4.1.1 Parsing on any row. "WCAG 2.2 has removed one success
-criterion, 4.1.1 Parsing" ([WCAG 2.2](https://www.w3.org/TR/WCAG22/)).
+The normative text for every SC the matrices cite (2.1.1, 2.1.2, 2.4.3, 2.4.7,
+3.3.1, 3.3.2, 4.1.2), plus the note that WCAG 2.2 removed 4.1.1 Parsing, is in
+[references/widget-matrices-extended.md](references/widget-matrices-extended.md).
 
 ## Worked example
 

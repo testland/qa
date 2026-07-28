@@ -7,15 +7,9 @@ description: "Tests AWS SQS queue interactions - Standard (at-least-once deliver
 
 ## Overview
 
-Per [docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide][sqs-dg]:
-
 [sqs-dg]: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html
 
-> "Amazon Simple Queue Service (Amazon SQS) offers a secure,
-> durable, and available hosted queue that lets you integrate and
-> decouple distributed software systems and components."
-
-Two queue types per [sqs-dg][sqs-dg]:
+Two queue types, per [the SQS developer guide][sqs-dg]:
 
 | Type | Delivery semantics |
 |---|---|
@@ -118,12 +112,9 @@ queue_url = sqs.create_queue(QueueName='orders')['QueueUrl']
 
 ## Step 5 - Test visibility-timeout behavior
 
-Per [sqs-dg][sqs-dg], visibility timeout is the lifecycle property
-that prevents duplicate-processing within a configurable window:
-
-> "While message A is being processed, it remains in the queue and
-> isn't returned to subsequent receive requests for the duration of
-> the visibility timeout."
+Visibility timeout keeps an in-flight message invisible to other
+receivers for a configurable window, preventing duplicate processing
+([SQS developer guide][sqs-dg]).
 
 Test pattern (LocalStack or real SQS, NOT mock):
 
@@ -145,65 +136,25 @@ assert msg3['Messages'][0]['MessageId'] == msg1['MessageId']
 
 ## Step 6 - Test DLQ routing
 
-Per [sqs-dg][sqs-dg]: SQS supports "dead-letter queues" for
-poison-message isolation. After `maxReceiveCount` failed deliveries,
-the message moves to the DLQ.
-
-Test pattern (LocalStack):
-
-```python
-dlq_url = sqs.create_queue(QueueName='orders-dlq')['QueueUrl']
-dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=['QueueArn'])['Attributes']['QueueArn']
-
-queue_url = sqs.create_queue(
-    QueueName='orders',
-    Attributes={
-        'RedrivePolicy': json.dumps({'deadLetterTargetArn': dlq_arn, 'maxReceiveCount': 3}),
-    },
-)['QueueUrl']
-
-sqs.send_message(QueueUrl=queue_url, MessageBody='poison')
-for _ in range(4):
-    msg = sqs.receive_message(QueueUrl=queue_url, VisibilityTimeout=0)
-    # Don't delete; let visibility expire and re-receive
-
-# After 3 receives, message is in DLQ:
-dlq_msg = sqs.receive_message(QueueUrl=dlq_url)
-assert dlq_msg['Messages'][0]['Body'] == 'poison'
-```
+SQS routes a message to the dead-letter queue after `maxReceiveCount`
+failed deliveries (poison-message isolation, per the SQS developer
+guide). Full LocalStack recipe:
+[references/localstack-recipes.md](references/localstack-recipes.md).
 
 ## Step 7 - Test FIFO ordering + dedup
 
-```python
-fifo_url = sqs.create_queue(
-    QueueName='orders.fifo',
-    Attributes={'FifoQueue': 'true', 'ContentBasedDeduplication': 'true'},
-)['QueueUrl']
-
-sqs.send_message(QueueUrl=fifo_url, MessageBody='msg-1', MessageGroupId='group-A')
-sqs.send_message(QueueUrl=fifo_url, MessageBody='msg-2', MessageGroupId='group-A')
-
-# Same body within 5min dedup window → second send is dropped:
-sqs.send_message(QueueUrl=fifo_url, MessageBody='msg-1', MessageGroupId='group-A')
-
-response = sqs.receive_message(QueueUrl=fifo_url, MaxNumberOfMessages=10)
-bodies = [m['Body'] for m in response['Messages']]
-assert bodies == ['msg-1', 'msg-2']  # Strict order; dedup applied
-```
+FIFO queues (`FifoQueue: 'true'`) preserve per-`MessageGroupId` order
+and drop identical bodies within a 5-minute dedup window
+(`ContentBasedDeduplication`). Full LocalStack recipe:
+[references/localstack-recipes.md](references/localstack-recipes.md).
 
 ## Step 8 - Message retention
 
-Per [sqs-dg][sqs-dg]:
-
-> "Amazon SQS automatically deletes messages that have been in a
-> queue for more than the maximum message retention period. The
-> default message retention period is 4 days. However, you can set
-> the message retention period to a value from 60 seconds to
-> 1,209,600 seconds (14 days)..."
-
-Tests rarely need to verify retention directly; document the
-expected retention in queue setup (Terraform / CloudFormation) and
-review per-team.
+SQS auto-deletes messages older than the retention period: default 4
+days, configurable from 60 seconds to 1,209,600 seconds (14 days)
+([SQS developer guide][sqs-dg]). Tests rarely verify retention
+directly; document the expected retention in queue setup (Terraform /
+CloudFormation) and review per-team.
 
 ## Step 9 - CI integration
 

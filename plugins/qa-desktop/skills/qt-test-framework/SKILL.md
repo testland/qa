@@ -9,36 +9,22 @@ metadata:
 
 ## Overview
 
-Per Qt's [Qt Test overview page][qtover]:
-
 [qtover]: https://doc.qt.io/qt-6/qtest-overview.html
-
-> "Qt Test is a framework for unit testing Qt based applications
-> and libraries."
-
-It provides standard unit-testing primitives plus Qt-specific
-extensions for GUI event simulation, data-driven tests, and
-benchmarking ([qtover][qtover]).
-
-Per the [QTest namespace reference][qtns]:
-
 [qtns]: https://doc.qt.io/qt-6/qtest.html
 
-> "[The QTest namespace contains] verification macros: QVERIFY,
-> QVERIFY2, QCOMPARE … data handling: QFETCH, QFETCH_GLOBAL … test
-> entry points: QTEST_MAIN, QTEST_GUILESS_MAIN,
-> QTEST_APPLESS_MAIN."
+Qt Test is a framework for unit testing Qt-based applications and libraries
+([qtover][qtover]), providing standard unit-testing primitives plus Qt-specific
+extensions for GUI event simulation, data-driven tests, and benchmarking. The
+[QTest namespace][qtns] carries the verification macros (`QVERIFY`, `QCOMPARE`),
+data handling (`QFETCH`, `QFETCH_GLOBAL`), and entry points (`QTEST_MAIN`,
+`QTEST_GUILESS_MAIN`, `QTEST_APPLESS_MAIN`).
 
-Qt Test is **in-process** - the test executable links the Qt
-application code and emits events directly into the `QObject` event
-queue. It does **not** go through the OS accessibility tree (per
-`desktop-test-strategy-reference`),
-which means it cannot drive a Qt app from a *separate* process. For
-out-of-process Qt driving see
-`winappdriver` (Windows via UIA after
-`QAccessible` is enabled),
-`xctest-mac-desktop` (macOS), and
-`at-spi-linux` (Linux).
+Qt Test is **in-process** - the test executable links the Qt application code
+and emits events directly into the `QObject` event queue. It does **not** go
+through the OS accessibility tree (per `desktop-test-strategy-reference`), so it
+cannot drive a Qt app from a *separate* process. For out-of-process Qt driving
+see `winappdriver` (Windows via UIA after `QAccessible` is enabled),
+`xctest-mac-desktop` (macOS), and `at-spi-linux` (Linux).
 
 ## When to use
 
@@ -66,9 +52,8 @@ target_link_libraries(test_calculator PRIVATE Qt6::Test Qt6::Widgets)
 add_test(NAME test_calculator COMMAND test_calculator)
 ```
 
-`qt_add_executable` is the Qt-6 wrapper that handles meta-object
-compilation (moc) automatically - Qt Test slot discovery depends on
-moc.
+`qt_add_executable` runs moc automatically, which Qt Test slot discovery
+depends on.
 
 ## Step 2 - Author a test class
 
@@ -112,6 +97,11 @@ QTEST_MAIN(TestCalculator)        // generates main() + QApplication
 The four lifecycle slots are recognised by name ([qtover][qtover]):
 `initTestCase` (once before any test), `cleanupTestCase` (once
 after), `init` (per test), `cleanup` (per test).
+
+Verify: build the target and run `./test_calculator -functions`; confirm it
+lists your private-slot test functions before authoring data-driven or GUI
+cases. If none appear, the slots are not under `private slots:` or the
+`#include "tst_*.moc"` line is missing - fix and rebuild.
 
 ## Step 3 - Pick the right entry-point macro
 
@@ -165,14 +155,10 @@ different test data." Each `newRow` runs the test function once.
 
 ## Step 5 - GUI event simulation
 
-Per [qtns][qtns], the QTest namespace provides:
-
-| Family | Functions ([qtns][qtns]) |
-|---|---|
-| Keyboard | `keyClick`, `keyPress`, `keyRelease`, `keyEvent`, `keySequence` |
-| Mouse | `mouseClick`, `mousePress`, `mouseRelease`, `mouseMove`, `mouseDClick` |
-| Touch | `touchEvent`, `createTouchDevice` |
-| Wheel | `wheelEvent` (Qt 6.8+) |
+The QTest namespace provides keyboard (`keyClick` / `keyClicks`), mouse
+(`mouseClick` / `mousePress`), touch (`touchEvent`), and wheel event helpers
+([qtns][qtns]); the full function-family table is in
+[references/qt-gui-signal-benchmark.md](references/qt-gui-signal-benchmark.md).
 
 ```cpp
 void TestLoginWidget::successfulLogin() {
@@ -217,23 +203,10 @@ test-internal slots and counting invocations by hand.
 
 ## Step 7 - Benchmarks
 
-Per [qtns][qtns], `QBENCHMARK` "executes code repeatedly to measure
-performance":
-
-```cpp
-void TestCalculator::benchmarkLargeSum() {
-    Calculator c;
-    QBENCHMARK {
-        for (int i = 0; i < 1000; ++i) {
-            c.add(i, i);
-        }
-    }
-}
-```
-
-Qt Test reports CPU time, walltime, or instructions-retired
-depending on the active back-end ([qtover][qtover]). For a single-
-run measurement use `QBENCHMARK_ONCE` ([qtns][qtns]).
+`QBENCHMARK` executes a block repeatedly to measure performance, reporting CPU
+time, walltime, or instructions-retired per the active back-end; use
+`QBENCHMARK_ONCE` for a single run ([qtns][qtns], [qtover][qtover]). Example
+slot: [references/qt-gui-signal-benchmark.md](references/qt-gui-signal-benchmark.md).
 
 ## Step 8 - Run
 
@@ -276,41 +249,10 @@ runners.
 
 ## Step 10 - CI integration
 
-```yaml
-# .github/workflows/qttest.yml
-jobs:
-  test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v5
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with: { version: '6.7.0' }
-      - name: Configure
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
-      - name: Build
-        run: cmake --build build --parallel
-      - name: Run tests (Linux with offscreen)
-        if: runner.os == 'Linux'
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: ctest --test-dir build --output-on-failure --output-junit junit.xml
-      - name: Run tests (Windows/macOS)
-        if: runner.os != 'Linux'
-        run: ctest --test-dir build --output-on-failure --output-junit junit.xml
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: junit-${{ matrix.os }}
-          path: build/junit.xml
-```
-
-`QT_QPA_PLATFORM=offscreen` is the headless Qt platform plugin - 
-required for GUI-touching Qt Test executables on hosted Linux
-runners that don't have an X / Wayland session.
+Run the `ctest` suite across an Ubuntu / Windows / macOS matrix; Linux needs
+`QT_QPA_PLATFORM=offscreen` (the headless Qt platform plugin) for GUI-touching
+executables with no X / Wayland session. Full workflow:
+[references/qt-gui-signal-benchmark.md](references/qt-gui-signal-benchmark.md).
 
 ## Anti-patterns
 

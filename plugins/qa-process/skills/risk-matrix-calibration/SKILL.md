@@ -79,13 +79,10 @@ Two further biases are worth naming explicitly:
   never found by any means appear in neither the numerator nor the
   denominator, so a flattering escape rate can mean good testing or can mean a
   blind spot nobody has walked into yet.
-- **Labelled bug-fix data is systematically skewed.** Bird et al., examining
-  bug-fix datasets across several projects, found that only a fraction of bug
-  fixes are labelled in version histories and reported "strong evidence of
-  systematic bias" in the resulting datasets, which threatens both prediction
-  models built on them and hypotheses tested with them (ESEC/FSE 2009,
-  https://www.cs.ucdavis.edu/~filkov/papers/biasbusters.pdf, record at
-  https://www.microsoft.com/en-us/research/publication/fair-and-balanced-bias-in-bug-fix-datasets/).
+- **Labelled bug-fix data is systematically skewed.** Only a fraction of bug
+  fixes are labelled in version histories, and the resulting datasets carry
+  "strong evidence of systematic bias" (Bird et al., ESEC/FSE 2009; full
+  citation in [references/empirical-basis.md](references/empirical-basis.md)).
   If your team labels defects by component inconsistently, the calibration
   inherits that inconsistency.
 
@@ -103,44 +100,20 @@ move a rating on its own.
 | **Likelihood** | Defect density for the row's source paths, meaning "the number of defects per unit size of a work product" (https://glossary.istqb.org/en_US/term/defect-density) | Failure rate of the tests that cover the row over the window; code churn for the same paths |
 | **Impact** | Severity mix of the row's defects, typically the share at the team's top two severity levels | Escape rate, meaning the share of the row's defects that were "not detected by a test activity that is supposed to find it" (https://glossary.istqb.org/en_US/term/escaped-defect); incident or SLO-breach correlation where the team records it |
 
-### Why density and not raw count
+### Two rules on density and churn
 
-A raw defect count conflates "small area, few defects" with "stable area, few
-defects". Normalising by size, per the ISTQB definition above, makes rows
-comparable to each other. Where lines of code are a poor size proxy (heavy
-generated code, config-driven modules), normalise by number of changes to the
-same paths instead, and say in the report which denominator you used.
+- **Density, not raw count.** A raw count conflates "small busy area" with
+  "large stable area". Normalise by size per the ISTQB definition above; where
+  LOC is a poor proxy, normalise by number of changes and say which denominator
+  you used.
+- **Churn corroborates, never leads.** Only relative (size- and window-normalised)
+  churn predicts defect density, and only as a correlation on one commercial
+  system; cross-project transfer of any coefficient fails even within the same
+  domain and process. Use churn only to corroborate a direction defect density
+  already suggested, and import no published coefficient.
 
-### How much weight churn deserves
-
-Churn is a corroborating signal, never the primary evidence for a rating
-change. The published relationship is real but narrow: Nagappan and Ball
-showed that "while absolute measures of code churn are poor predictors of
-defect density, our set of relative measures of code churn is highly
-predictive of defect density", with a metric suite that discriminated
-fault-prone from non-fault-prone binaries "with an accuracy of 89.0 percent"
-(ICSE 2005,
-https://www.microsoft.com/en-us/research/publication/use-of-relative-code-churn-measures-to-predict-system-defect-density/,
-record at https://openalex.org/W2100945416). Three limits on that result
-matter here:
-
-- It is a **correlation**, not a causal claim. Churn is a proxy for where
-  work is happening, and work happens in areas that are being fixed, extended
-  and reworked. High churn does not make code defective.
-- The **relative** measures carried the result. Absolute churn, meaning a raw
-  count of changed lines or commits, was explicitly reported as a poor
-  predictor. Normalise churn by component size and by the length of the
-  window before using it at all.
-- The result is a **case study on one commercial system** (Windows Server
-  2003). Defect-prediction models built on one project transfer badly to
-  another: Zimmermann et al. ran 622 cross-project predictions across 12
-  real-world applications and concluded that "simply using models from
-  projects in the same domain or with the same process does not lead to
-  accurate predictions" (ESEC/FSE 2009, DOI 10.1145/1595696.1595713, abstract
-  at https://api.openalex.org/works/doi:10.1145/1595696.1595713, record at
-  https://openalex.org/W25935857). Team and domain are confounds, so no
-  published coefficient can be imported into your matrix. Use churn only to
-  corroborate a direction that defect density already suggested.
+The published results behind both rules (Nagappan and Ball; Zimmermann et al.),
+with their caveats, are in [references/empirical-basis.md](references/empirical-basis.md).
 
 ## Step 2 - Convert observations into an observed rating
 
@@ -284,85 +257,10 @@ translation is a product judgement.
 
 ## Worked example
 
-Expected output shape. Names and numbers are illustrative.
-
-```markdown
-# Risk-matrix calibration - checkout matrix
-Window: 2026-02-01 to 2026-04-30 (3 releases). Density denominator: defects per 1k LOC.
-
-## How to read this
-Proposals only. Nothing in the matrix has been changed. Defect data is lagging
-and biased: a quiet row may be sound, untested, or unused, and this report
-cannot tell those apart. Rows marked "not calibrated" are gaps in the
-evidence, not low risk.
-
-## Summary
-| Outcome | Rows |
-|---|---|
-| In agreement (below threshold) | 14 |
-| Under-stated | 4 |
-| Over-stated | 2 |
-| Not calibrated (unmeasurable) | 3 |
-| Candidate new entries | 1 |
-
-## Under-stated
-
-### R-12 inventory-cache: propose likelihood 2 -> 4, impact 3 -> 4 (score 6 -> 16)
-
-| Dimension | Matrix | Observed | Observation cited |
-|---|---|---|---|
-| Likelihood | 2 | 4 | 13 defects over 8.4k LOC = 1.55 per 1k LOC, against a matrix-wide median of 0.31. Source: tracker export 2026-Q2, component = inventory-cache. Window: full. Events: 13. |
-| Impact | 3 | 4 | 6 of 13 at severity S1 or S2 (46%); 4 of 13 escaped to production (31%), against a matrix-wide escape rate of 11%. Source: same export, field found_in. Events: 13. |
-| Test failure rate (corroborating) | n/a | 6% | Suite covering services/inventory/cache fell from 99% to 94% pass rate across the window. Source: CI results 2026-Q2. Events: 412 runs. |
-| Churn (corroborating only) | n/a | high | 47 commits to services/inventory/cache over 89 days, normalised 5.6 commits per 1k LOC, top decile of the repo. Corroborating only, not causal. |
-
-All four citations carry value, source, window and event count. 13 events is
-above the 5-event floor, so this is reported as a rate, not as directional.
-
-## Over-stated
-
-### R-03 payments-provider-fallback: propose likelihood 4 -> 2, impact unchanged at 5 (score 20 -> 10)
-
-| Dimension | Matrix | Observed | Observation cited |
-|---|---|---|---|
-| Likelihood | 4 | 2 | 1 defect over 6.1k LOC = 0.16 per 1k LOC. Source: tracker export 2026-Q2, component = payments-fallback. Events: 1. |
-| Impact | 5 | 5 | Single defect at S1. Too few events to move impact. Events: 1. |
-
-**Event count is 1.** Directional only, below the 5-event floor.
-Ruled out before proposing: the row is covered (214 test executions in the
-window) and exercised (fallback path invoked 1,190 times in production), so
-this is not a coverage or exposure artefact. **Open point for the owner:** the
-high rating may be a precaution that is currently working, and lowering it
-would reduce the testing that keeps it quiet. This report cannot settle that.
-
-## Not calibrated
-
-| Row | Missing input |
-|---|---|
-| R-08 legacy-tax-import | No source paths recorded; defects cannot be attributed. |
-| R-15 partner-sftp-drop | Tracker component field empty on 22 of 24 defects. |
-| R-21 admin-audit-log | No automated tests cover the row; failure-rate signal unavailable. |
-
-These are evidence gaps. Do not read them as low risk.
-
-## Candidate new entries
-
-### notifications-webhook-retry (no row in matrix)
-
-| Signal | Value | Observation cited |
-|---|---|---|
-| Defects | 8 | Tracker export 2026-Q2, component = notifications-webhook. Window: full. |
-| Density | 0.94 per 1k LOC | 8 defects over 8.5k LOC; matrix-wide median 0.31. Entry condition met: above median row. |
-| Escapes | 2 of 8 (25%) | Field found_in = production. Entry condition met: at least one escape. |
-| Severity mix | 3 S1, 2 S2, 3 S3 | Same export. |
-
-Suggested starting rating: likelihood 3, impact 4. **The impact half is the
-weaker one**: escape rate is high, but what a missed webhook costs depends on
-subscriber retry behaviour, which is a product judgement this report cannot make.
-
-## What was not done
-No matrix row was edited. No test selection was re-run. No forecast was made.
-```
+A full calibration report - summary, under-stated (R-12) and over-stated (R-03)
+findings with every dimension citing value / source / window / event count,
+not-calibrated rows, a candidate new entry, and the "what was not done" footer -
+is in [references/worked-example.md](references/worked-example.md).
 
 ## Anti-patterns
 
