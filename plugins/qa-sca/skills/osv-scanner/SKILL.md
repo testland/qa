@@ -48,14 +48,12 @@ osv-scanner scan -r ./my-project-dir/
 Auto-detects manifest files (package-lock.json, Pipfile.lock,
 go.mod, Cargo.lock, etc.) and queries OSV.dev for each.
 
-Per-lockfile scan:
+Per-lockfile scan (`-L` targets one lockfile without recursing, useful in
+monorepos):
 
 ```bash
 osv-scanner scan -L package-lock.json --output-file scan-results.txt
 ```
-
-The `-L` flag is useful in monorepos to scan a specific lockfile
-without recursing.
 
 ## Step 3 - Output formats
 
@@ -87,65 +85,29 @@ queries OSV.dev against it.
 
 ## Step 5 - `osv-scanner.toml` config
 
-Per [osv-usage][osv-usage]:
-
-```bash
-osv-scanner --config ./my-osv-scanner-config.toml scan -r .
-```
-
-Example config:
+Suppress a vuln with an expiring, reasoned entry (auditable in git):
 
 ```toml
 # osv-scanner.toml
 [[IgnoredVulns]]
 id = "CVE-2024-1234"
 ignoreUntil = 2026-12-15T00:00:00Z
-reason = "Reachability analysis confirms unreachable; tracked in JIRA-1234"
-
-[[IgnoredVulns]]
-id = "GHSA-xxxx-yyyy-zzzz"
-ignoreUntil = 2026-09-30T00:00:00Z
-reason = "Vendor-supplied; pin to current version pending Q3 upgrade"
-
-[[PackageOverrides]]
-name = "lodash"
-version = "4.17.20"
-ecosystem = "npm"
-ignore = true   # Suppress all vulns in this exact pinned version
-reason = "Test fixture; not in production dependency graph"
+reason = "Reachability confirms unreachable; tracked in JIRA-1234"
 ```
+
+The full schema (`[[PackageOverrides]]`, multi-entry config, `--config` flag,
+the mandatory justification template) is in
+[references/osv-scanner-config-and-ci.md](references/osv-scanner-config-and-ci.md).
 
 ## Step 6 - False-positive triage (MANDATORY)
 
-Three suppression layers:
-
-| Mechanism | Where | Use |
-|---|---|---|
-| `[[IgnoredVulns]]` in osv-scanner.toml (with `ignoreUntil`) | Repo root | Per-CVE; auditable in git |
-| `[[PackageOverrides]]` in osv-scanner.toml | Repo root | Per-package version + ecosystem |
-| `--severity-threshold` filter (when supported by version) | CI flag | Scan-time filter, not suppression |
-
-**Justification template (mandatory in osv-scanner.toml):**
-
-```toml
-[[IgnoredVulns]]
-id = "CVE-2024-1234"
-ignoreUntil = 2026-12-15T00:00:00Z
-reason = """
-Reachability: function `vulnerable_func` not exported; verified via
-git grep + dynamic instrumentation. Issue requires admin context
-which is separately controlled.
-Approved-by: alice@example.com
-Re-review-date: 2026-09-15
-"""
-```
-
-`ignoreUntil` is enforced by osv-scanner - past-due ignores are
-re-surfaced in the scan results.
-
-Cadence: every quarter, list all `[[IgnoredVulns]]` entries +
-re-validate the `reason`; expired ones removed; persistent ones
-escalated to upgrade work.
+Suppress via `[[IgnoredVulns]]` (per-CVE, with `ignoreUntil`) or
+`[[PackageOverrides]]` (per pinned package + ecosystem) in `osv-scanner.toml`;
+`--severity-threshold` is a scan-time filter, not a suppression. Every entry
+carries a mandatory reason + approver + re-review date. `ignoreUntil` is
+enforced - past-due ignores re-surface in the scan results. The
+suppression-layer table and justification template are in
+[references/osv-scanner-config-and-ci.md](references/osv-scanner-config-and-ci.md).
 
 ## Step 7 - Exit codes + CI gating
 
@@ -155,27 +117,8 @@ OSV-Scanner exit codes (verify against current docs):
 - 1 - vulnerabilities found
 - 127 - config error
 
-```yaml
-jobs:
-  osv:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: google/osv-scanner-action/osv-scanner-action@v1
-        with:
-          scan-args: |-
-            --recursive
-            --skip-git
-            --format=sarif
-            --output=osv.sarif
-            ./
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with: { sarif_file: osv.sarif }
-```
-
-The `google/osv-scanner-action` GHA wraps the Docker invocation +
-SARIF upload.
+The `google/osv-scanner-action` GHA (Docker invocation + SARIF upload) is in
+[references/osv-scanner-config-and-ci.md](references/osv-scanner-config-and-ci.md).
 
 ## Step 8 - License-checking (adjacent feature)
 
@@ -190,28 +133,24 @@ For full license-compliance + scanning, pair with `spdx-format`
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| `[[IgnoredVulns]]` without `ignoreUntil` | Per [osv-usage][osv-usage] config schema may reject; OR debt persists | Mandatory `ignoreUntil:` (Step 5) |
-| Skip `--format=sarif` upload | Findings invisible in GitHub Security tab | Always SARIF output (Step 7) |
-| Run only OSV-Scanner; skip Snyk | OSV.dev DB has its own coverage profile | Layered (Step 1 cross-ref) |
-| Use OSV-Scanner without lockfile | Falls back to manifest scanning; less accurate version resolution | Always commit lockfile + scan via `-L` |
-| Hardcode `--config=tmp.toml` outside repo | Suppressions not auditable in git | Commit `osv-scanner.toml` to repo root |
+- `[[IgnoredVulns]]` without `ignoreUntil` -> debt persists; always set `ignoreUntil` (Step 5).
+- Skipping `--format=sarif` upload -> findings invisible in the GitHub Security tab; always emit SARIF (Step 7).
+- Running only OSV-Scanner -> OSV.dev has its own coverage profile; layer with `snyk-test`.
+- Scanning without a committed lockfile -> manifest fallback resolves versions less accurately; commit the lockfile and scan via `-L`.
+- `--config` pointing outside the repo -> suppressions not auditable; commit `osv-scanner.toml` at the repo root.
 
 ## Limitations
 
-- OSV.dev DB coverage varies by ecosystem - Python / npm / Go are
-  strong; less common ecosystems thinner.
-- Reachability analysis is NOT included - every CVE on a declared
-  dep counts even if the vulnerable function isn't called.
-- Container image scanning is limited; for that, prefer
-  `trivy-image` or `grype-scanning` (in the qa-sbom plugin).
-- Per [osv-usage][osv-usage], some CLI surface evolves - verify
-  against current osv-scanner help output.
+- OSV.dev coverage varies by ecosystem (Python / npm / Go strong; less common ones thinner).
+- No reachability analysis: every CVE on a declared dep counts even if the vulnerable function isn't called.
+- Container image scanning is limited; prefer `trivy-image` or `grype-scanning` (qa-sbom plugin).
+- Some CLI surface evolves; verify against current `osv-scanner` help output.
 
 ## References
 
 - [osv-usage][osv-usage] - usage page (lockfile, SBOM, config)
+- Full `osv-scanner.toml` schema, triage template, and CI workflow:
+  [references/osv-scanner-config-and-ci.md](references/osv-scanner-config-and-ci.md)
 - google.github.io/osv-scanner - full docs
 - github.com/google/osv-scanner - repository
 - osv.dev - OSV vulnerability database

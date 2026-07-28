@@ -95,23 +95,9 @@ denominator is unknown, in the digest itself. Do not silently switch
 denominators between windows; the trend becomes meaningless.
 
 **Escape-defect rate is not a DORA metric.** Neither is pass rate, nor flake
-debt. DORA measures software *delivery* performance. Its guidance now
-documents five metrics, described as having evolved "from the original four
-keys to the current five-metric model", grouped as throughput and instability
-([dora.dev/guides/dora-metrics-four-keys/](https://dora.dev/guides/dora-metrics-four-keys/),
-verified 2026-07-19):
-
-- **Change lead time** (originally "lead time for changes"): "The amount of
-  time it takes for a change to go from committed to version control to
-  deployed in production."
-- **Deployment frequency**: "The number of deployments over a given period or
-  the time between deployments."
-- **Failed deployment recovery time**: "The time it takes to recover from a
-  deployment that fails and requires immediate intervention."
-- **Change fail rate** (originally "change failure rate"): "The ratio of
-  deployments that require immediate intervention following a deployment."
-- **Deployment rework rate**: "The ratio of deployments that are unplanned but
-  happen as a result of an incident in production."
+debt. DORA measures software *delivery* performance; its current guidance
+documents five metrics grouped as throughput and instability, with verbatim
+definitions in [references/dora-metrics.md](references/dora-metrics.md).
 
 Deployment frequency and change fail rate are usually computable from the same
 CI data the digest already reads, so include them as delivery context in their
@@ -151,11 +137,11 @@ and record which basis you used.
 
 | Area | Green | Amber | Red | Why the cut sits there |
 |---|---|---|---|---|
-| Pass rate (window) | 90% or above | 75% to 89% | Below 75% | Below roughly 90%, a failing build stops being a signal and engineers start re-running by reflex. A team whose historical median is 97% should set green at its own median instead. |
-| Pass rate trend | 0 pp or better | -5 to -1 pp | Worse than -5 pp | In a 50-run window one bad day moves the rate about 2 pp, so a 5 pp fall is outside ordinary week-to-week noise at that sample size. Recalibrate if your window is much smaller. |
-| Escapes (window) | 0 | 1 | 2 or more | Escapes are rare and individually investigable, so counts work where ratios do not: weekly deployment counts are too small to make a stable rate. |
-| Stale quarantine entries | 0 | 1 to 3 | 4 or more | Four entries is roughly where a quarantine list stops being a short exception list somebody remembers and becomes a backlog nobody reads. |
-| New flakes (window) | 0 | 1 to 2 | 3 or more | Three arrivals per window exceeds the one-per-sprint repair rate most teams sustain, so the queue grows even if every fix lands. |
+| Pass rate (window) | 90% or above | 75% to 89% | Below 75% | Below ~90%, a failing build stops being a signal and engineers re-run by reflex. A team whose historical median is 97% should set green at its own median. |
+| Pass rate trend | 0 pp or better | -5 to -1 pp | Worse than -5 pp | In a 50-run window one bad day moves the rate ~2 pp, so a 5 pp fall is outside ordinary noise. Recalibrate for much smaller windows. |
+| Escapes (window) | 0 | 1 | 2 or more | Escapes are rare and individually investigable, so counts work where ratios do not: weekly deployment counts are too small for a stable rate. |
+| Stale quarantine entries | 0 | 1 to 3 | 4 or more | Around four, a quarantine list stops being a short exception list somebody remembers and becomes a backlog nobody reads. |
+| New flakes (window) | 0 | 1 to 2 | 3 or more | Three per window exceeds the one-per-sprint repair rate most teams sustain, so the queue grows even if every fix lands. |
 
 The headline status for the team is the worst area, not an average. Averaging
 a red flake-debt score against a green pass rate hides the only line that
@@ -163,61 +149,19 @@ needed a decision.
 
 ## Step 5 - Emit the per-team digest
 
-Write one file per window, for example `quality-digest/<YYYY-MM-DD>.md`. The
-final fenced summary row is what the portfolio roll-up consumes, so emit it
-even when only one team is reporting.
-
-````markdown
-# Quality digest - 2026-07-12 - checkout
-
-**Window:** 2026-07-06 to 2026-07-12  |  **Threshold basis:** defaults
-**Deployment definition:** production release  |  **Flake weight:** 2, stale at 14 days
-
-## Summary
-
-| Area | Status | Metric | Trend |
-|---|---|---|---|
-| CI pass rate | GREEN | 94% | +2 pp vs prior window |
-| Escape defects | AMBER | 1 escape | flat |
-| Flake debt | RED | 5 stale + 2 new | +3 entries |
-
-**Headline: RED** (worst area: flake debt)
-
-## CI pass rate
-- This window: 94% (47 of 50 terminal runs; 3 cancelled runs excluded)
-- Prior window: 92%, so the trend is +2 pp
-- Failed runs: 8841, 8907, 8955
-
-## Escape defects
-- Escapes this window: 1 (BUG-4412, discount code applied twice at checkout)
-- Escape rate: 1 / 12 production deployments = 0.08
-- Root-cause classification is not done here; this is a count
-
-## Flake debt
-- Stale quarantine (over 14 days): 5 entries (oldest quarantined 2026-05-30)
-- New flakes this window: 2
-- Flake debt score: (5 x 2) + 2 = 12
-
-## Delivery context (DORA, partial)
-- Deployment frequency: 12 deployments in window
-- Change fail rate: 8% of deployments required immediate intervention
-- Change lead time and failed deployment recovery time: not computed, no commit
-  timestamp or incident feed available. Definitions per dora.dev.
-- Escape rate above is a defect-leakage measure and is deliberately not listed here
-
-## Top risks
-1. Flake debt is growing faster than it is repaired - area: E2E suite
-2. Checkout discount path has no regression test - area: payments
-
-## Open items
-- Deployment count covers production releases only; staging pushes not counted
-- 3 defects closed this window carried no environment label, so escape
-  attribution for them is unverified
+Write one file per window, for example `quality-digest/<YYYY-MM-DD>.md`, carrying a
+header (window, threshold basis, deployment definition, flake weight), a Summary
+table (one row per area: status, metric, trend), a headline (the worst area), a
+section per metric showing its inputs, a partial DORA delivery-context section,
+Top risks, and Open items. The **final fenced `digest-row` line is what the
+portfolio roll-up consumes**, so emit it even when only one team reports:
 
 ```text
 digest-row: team=checkout window=2026-07-06..2026-07-12 pass_rate=0.94 delta_pp=+2 escapes=1 deployments=12 flake_debt=12 rag=RED basis=defaults
 ```
-````
+
+See [references/output-templates.md](references/output-templates.md) for the full
+per-team digest template.
 
 # Part 2 - The portfolio roll-up
 
@@ -242,13 +186,10 @@ teams into AMBER describes no team that exists and hides the one needing a
 decision.
 
 Add the two portable DORA figures per team, deployment frequency and change
-fail rate ("the ratio of deployments that require immediate intervention
-following a deployment",
-[dora.dev/guides/dora-metrics-four-keys/](https://dora.dev/guides/dora-metrics-four-keys/),
-verified 2026-07-19). These two survive cross-team comparison best because
-they need only deployment records and incident flags, while lead time and
-recovery time depend on per-team commit and incident conventions that rarely
-match.
+fail rate (definitions in [references/dora-metrics.md](references/dora-metrics.md)).
+These two survive cross-team comparison best because they need only deployment
+records and incident flags, while lead time and recovery time depend on
+per-team commit and incident conventions that rarely match.
 
 ## Step 7 - Risk heatmap
 
@@ -285,10 +226,9 @@ Two industry figures are useful context when the flag prompts a staffing
 conversation, from the 2026 State of Testing Report (13th edition): 56.4% of
 respondents' teams are measured on test coverage, against 8.6% measured on
 business impact, and testers in cross-functional squads report roughly 27%
-higher pay than those in siloed QA departments
-([practitest.com/state-of-testing/](https://www.practitest.com/state-of-testing/),
-verified 2026-07-19). Treat these as survey context on how the field measures
-and structures QA work, not as a target for your own org.
+higher pay than those in siloed QA departments (State of Testing 2026; see
+References). Treat these as survey context on how the field measures and
+structures QA work, not as a target for your own org.
 
 ## Step 9 - Tag each team STABLE, WATCH, or INVEST
 
@@ -314,60 +254,22 @@ priority.
 
 ## Step 10 - Emit the portfolio review
 
-```markdown
-# Portfolio quality review - 2026-Q3 - 4 teams
-
-**Headline: RED** (checkout)  |  **Prior quarter headline:** AMBER
-
-## Per-team roll-up
-
-| Team | Pass rate | Trend | Escapes | Flake debt | Deploy freq | Change fail rate | RAG | Basis | Tag |
-|---|---|---|---|---|---|---|---|---|---|
-| checkout | 94% | +2 pp | 1 | 12 | 12 | 8% | RED | defaults | INVEST |
-| search | 97% | +1 pp | 0 | 2 | 31 | 3% | GREEN | own | STABLE |
-| identity | 88% | -6 pp | 2 | 7 | 9 | 11% | RED | defaults | INVEST |
-| billing | 93% | 0 pp | 1 | 4 | 14 | 5% | AMBER | defaults | WATCH |
-
-Values copied from each team's digest-row; not recomputed.
-
-## Risk heatmap (severity x blast radius)
-
-|  | Blast low | Blast medium | Blast high |
-|---|---|---|---|
-| **RED** | - | identity | checkout |
-| **AMBER** | - | billing | - |
-| **GREEN** | search | - | - |
-
-Blast bands: high = revenue path, medium = login or account path, low = internal.
-
-## Capacity
-
-| Team | QE headcount | Open roles | Open / headcount | Automation ratio | Structure | Capacity flag |
-|---|---|---|---|---|---|---|
-| checkout | 4 | 2 | 50% | 60% | embedded | FLAGGED |
-| search | 5 | 0 | 0% | 85% | embedded | - |
-| identity | 3 | 1 | 33% | 40% | siloed | FLAGGED (small team: 1 of 3) |
-| billing | 4 | 0 | 0% | 55% | embedded | - |
-
-## INVEST teams
-
-- **checkout** - RED on flake debt (12, up from 5), 2 of 4 QE roles open. No
-  existing commitment references flake reduction: no funded recovery path.
-- **identity** - RED on pass rate (88%, -6 pp) and 2 escapes. An existing
-  commitment covers escape reduction; nothing covers pass rate.
-
-## What this review did not consider
-
-Individual contributor performance, vendor and tooling contracts, roadmap-level
-risk, and anything outside the four teams' own digests.
-```
+Emit four sections plus a scope note: the **per-team roll-up table** (one row per
+team, every value copied from that team's `digest-row`, never recomputed, with the
+threshold basis carried across), the **severity-by-blast-radius heatmap**, the
+**capacity table** with the open/headcount flag, and an **INVEST-teams list**
+naming each regressing area and whether a commitment covers it. Close with a
+"What this review did not consider" note (IC performance, vendor contracts,
+roadmap risk, anything outside the teams' own digests). See
+[references/output-templates.md](references/output-templates.md) for the full
+portfolio review template.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Counting cancelled runs in the pass-rate denominator | The number then tracks CI hygiene, not software quality, and moves for reasons nobody can explain in the meeting | Step 1 denominator rule |
-| Filing escape rate, pass rate, or flake debt under a DORA heading | DORA measures delivery performance ([dora.dev](https://dora.dev/guides/dora-metrics-four-keys/)); mislabelling defect leakage as a delivery metric costs the whole document its credibility on the first informed question | Step 2: separate sections, explicit note |
+| Filing escape rate, pass rate, or flake debt under a DORA heading | DORA measures delivery performance (dora.dev); mislabelling defect leakage as a delivery metric costs the whole document its credibility on the first informed question | Step 2: separate sections, explicit note |
 | Presenting the threshold table as an industry benchmark | Every cut point here is a convention; asserting it as a standard invites a target nobody derived from their own data | State the threshold basis in the header, every time |
 | Recomputing per-team metrics at the portfolio layer | Two documents in one meeting disagreeing about the same team destroys trust in both | Step 6: consume the emitted summary row |
 | Averaging areas or teams into one status | An averaged AMBER describes no real team and hides the one that needed the decision | Worst area wins per team; worst team sets the portfolio headline |
@@ -391,8 +293,13 @@ risk, and anything outside the four teams' own digests.
   the least stable in the portfolio.
 - **DORA context is partial from CI data alone.** Change lead time and failed
   deployment recovery time need commit timestamps and incident records
-  ([dora.dev](https://dora.dev/guides/dora-metrics-four-keys/)); reporting them
-  as computed when they were estimated is worse than omitting them.
+  (dora.dev); reporting them as computed when they were estimated is worse than
+  omitting them.
 - **Trend tags need a comparable prior period.** A first portfolio review has
   no STABLE / WATCH / INVEST tags to give, only a baseline. Say so instead of
   tagging everything STABLE by default.
+
+## References
+
+- DORA software delivery metrics - five-metric model and the verbatim definitions used in Steps 2 and 6: https://dora.dev/guides/dora-metrics-four-keys/ (verified 2026-07-19). Full definitions in [references/dora-metrics.md](references/dora-metrics.md).
+- 2026 State of Testing Report (13th edition) - the coverage / business-impact and cross-functional-pay figures cited in Step 8: https://www.practitest.com/state-of-testing/ (verified 2026-07-19).

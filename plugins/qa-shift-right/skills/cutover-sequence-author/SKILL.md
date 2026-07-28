@@ -21,14 +21,9 @@ separately and reference it from the gate row. If your window contains one
 service, you do not need this skill at all.
 
 Needing a cross-team cutover sequence is itself a coupling signal worth
-recording. The DORA capability description of loosely coupled architecture
-sets the opposite target: "Teams deploy and release their product or service on
-demand, independently of the services it depends on or of other services that
-depend on it", and names the failure this skill manages: "In many cases,
-deployments require that you simultaneously release many services due to
-complex interdependencies. These 'big-bang' deployments require teams to
-orchestrate their work, with many hand-offs and dependencies between hundreds
-or thousands of tasks"
+recording. DORA sets the opposite target - teams releasing "independently of
+the services it depends on" - and names this failure as a "big-bang" deployment
+that forces orchestration across many hand-offs and dependencies
 ([DORA, loosely coupled teams](https://dora.dev/capabilities/loosely-coupled-teams/)).
 Sequence the window you have, and put the coupling that forced it into the
 post-window record.
@@ -38,32 +33,24 @@ post-window record.
 **Rollback is a named human decision made on evidence. It is never an
 automatic metric trigger.**
 
-A threshold being crossed is an input to that decision, not the decision. The
-reason is not sentiment about human judgment: it is that "the metric is bad"
-does not determine what to do. Published guidance lists three distinct
-recoveries from a bad deployment, and they are not interchangeable:
+A threshold being crossed is an input to that decision, not the decision.
+Published guidance lists three distinct, non-interchangeable recoveries from a
+bad deployment:
 
-- **Rolling back** the deployment "by undoing the changes made in the
-  deployment and reverting back to the last known working configuration".
-- **Rolling forward** "by addressing the issue in the midst of the rollout",
-  applying a hotfix.
-- **Deploying new infrastructure** "by using the last known working
-  configuration"
+- **Rolling back** - undo the changes and revert to the last known working
+  configuration.
+- **Rolling forward** - address the issue mid-rollout with a hotfix.
+- **Deploying new infrastructure** - stand up the last known working
+  configuration afresh
   ([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
 
-DORA's change fail rate definition carries the same fork: deployments that
-require immediate intervention, "likely resulting in a rollback of the changes
-or a 'hotfix' to quickly remediate any issues"
-([DORA software delivery metrics](https://dora.dev/guides/dora-metrics-four-keys/)).
-Something has to choose between those. In a multi-team window that choice also
-determines how many *other* teams reverse, so it cannot be delegated to a
+Something has to choose between those, and in a multi-team window that choice
+also determines how many *other* teams reverse, so it cannot be delegated to a
 threshold in one service's monitoring.
 
 What is automatic is the **halt**, not the reversal. When a health signal trips
-during a rollout phase, "the rollout should immediately halt and an
-investigation into the cause of the alert should be performed to help determine
-the next course of action", and that investigation happens "as soon as the alert
-is received"
+during a rollout phase, "the rollout should immediately halt" and an
+investigation into the alert determines the next course of action
 ([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
 So: automation stops the sequence, a named human restarts it or reverses it.
 
@@ -193,14 +180,10 @@ observable.
 **Say this plainly to whoever reads the plan: the specific clock values are a
 scheduling convention, not a published standard.** No source cited here
 prescribes "10 minutes for a router switch". What published guidance does
-constrain is the length of any gate that includes an observation period:
-
-> "the time between each phase of the rollout should be long enough to enable
-> you to monitor the health metrics of the workload... Bake times should be
-> measured in hours and days rather than minutes. Bake times should also
-> increase for each rollout group so that you can account for different time
-> zones and usage patterns over the course of the day"
-> ([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
+constrain is any gate with an observation period: "Bake times should be measured
+in hours and days rather than minutes" and should increase per rollout group to
+cover different time zones and usage patterns
+([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
 
 That has a sharp consequence for cross-team windows, and it is the most common
 thing this plan gets wrong: **a gate labelled "observe for 10 minutes" is not a
@@ -327,135 +310,21 @@ judgment call:
 
 ## Worked example
 
-Window: four services, three teams, one dependency chain plus one parallel
-track.
-
-**Graph.** The payments API calls the new authentication contract, so
-authentication must be live first. The web app calls the new payments contract,
-so payments must be live before it. The event pipeline consumes only published
-events whose shape is unchanged, so it has no in-window edge and runs parallel.
-
-```text
-auth-service  ->  payment-api  ->  web-app
-event-pipeline    (parallel, no in-window dependency)
-```
-
-**Gate list.**
-
-| Gate | Kind | Step | Depends on | Owner | Timebox (UTC) |
-|------|------|------|-----------|-------|---------------|
-| G0 | DECISION | Window opens, preconditions confirmed | - | Priya (release authority) | 20:00 |
-| G1 | ACTION | auth-service router switch to new version | G0 | Alice | 20:10 |
-| G2 | DECISION | auth-service smoke pass, go or no-go | G1 | Priya | 20:25 |
-| G3 | ACTION | payment-api router switch | G2 | Bob | 20:35 |
-| G4 | DECISION | payment-api smoke pass, go or no-go | G3 | Priya | 20:50 |
-| G5 | ACTION | event-pipeline router switch | G0 (parallel) | Dave | 20:35 |
-| G6 | DECISION | event-pipeline lag and reconciliation check | G5 | Priya | 20:50 |
-| G7 | ACTION | web-app router switch | G4 | Carol | 21:00 |
-| G8 | DECISION | web-app smoke pass, window go or no-go | G7 | Priya | 21:20 |
-| G9 | DECISION | Observation closes, window declared complete | G8, G6 | Priya | 22:00 |
-
-Hard stop: 22:00 UTC. Reaching it with any gate incomplete puts the full
-reverse path to Priya as a decision.
-
-**Rollback triggers.**
-
-| Gate | Condition that puts a decision on the table | Evaluated by | Evidence | Reverse scope |
-|------|--------------------------------------------|--------------|----------|---------------|
-| G2 | auth smoke suite fails, or auth 5xx above 1 percent for 5 minutes | Priya | `auth-smoke` suite output, auth error-rate dashboard | auth only |
-| G4 | payment smoke fails, or transaction error rate above 0.5 percent | Priya | `payments-smoke` output, transaction error panel | payments, then auth |
-| G6 | pipeline lag above 10 minutes, or reconciliation mismatch above 0 rows | Priya | pipeline lag panel, nightly reconciliation query | pipeline only |
-| G8 | web smoke fails, or checkout completion below its agreed band | Priya | `web-smoke` output, checkout funnel panel | all four services |
-| Any | Hard stop 22:00 reached with gates open | Priya | the runtime log | all completed gates |
-
-**Reverse path if the decision at G8 is to roll back the window.** Completed
-ACTION gates are G1, G3, G5, G7. Reversed, with the parallel track handled
-independently:
-
-```text
-1. web-app router back to previous version      (Carol)  confirm
-2. payment-api router back to previous version  (Bob)    confirm
-3. auth-service router back to previous version (Alice)  confirm
-4. event-pipeline router back (parallel track)  (Dave)   confirm
-```
-
-Each step confirmed before the next begins. Note that G3's forward action was
-marked reversible during Step 6 review; had it written transaction rows in a
-new shape, it would carry `POINT OF NO RETURN` and step 2 above would read
-"roll forward with hotfix" instead.
+A four-service, three-team window (one dependency chain plus one parallel
+track) worked end to end - dependency graph, gate list, rollback triggers, and
+the reverse path: [references/worked-example.md](references/worked-example.md).
 
 ## Output template
 
-Produce one document. It is the plan before the window and the record after it.
-
-```markdown
-# Release cutover plan - {release_name}
-
-**Window:** {start_utc} to {hard_stop_utc}
-**Release authority:** {one named person}
-**Hard stop consequence:** reaching {hard_stop_utc} with open gates puts the
-full reverse path to the release authority as a decision.
-
-## Rollback rule for this window
-
-Rollback is a decision made by {release authority} on stated evidence.
-Thresholds halt the sequence; they do not reverse it. Recovery may be
-roll back, roll forward, or redeploy last-known-good, and only the release
-authority chooses which.
-
-## Dependency graph
-
-{service -> service edges, one per line}
-{parallel tracks listed explicitly}
-{preconditions on out-of-window services, each with the person who confirmed it}
-
-## Gate sequence
-
-| Gate | Kind | Step | Depends on | Owner | Timebox (UTC) | Status |
-|------|------|------|-----------|-------|---------------|--------|
-
-## Authority table
-
-| Role | Named person | Scope |
-|------|--------------|-------|
-| Release authority | | all DECISION gates and recovery calls |
-| {service} owner | | {gate IDs} execution |
-
-## Rollback triggers
-
-| Gate | Condition that puts a decision on the table | Evaluated by | Evidence | Reverse scope |
-|------|--------------------------------------------|--------------|----------|---------------|
-
-## Reverse path
-
-{completed ACTION gates in reverse order, one owner per step,
- confirmation required between steps}
-{gates marked POINT OF NO RETURN and what recovery means past them}
-
-## Runtime log
-
-| Time (UTC) | Gate | Action | Verdict | Evidence | Called by |
-|------------|------|--------|---------|----------|-----------|
-```
-
-Update the `Status` column and append to the runtime log in place as the window
-runs. Authority handoffs are log rows. At close, the document is the release
-record, and the coupling that forced a coordinated window is worth carrying
-into the retrospective.
+One document that is the plan before the window and the record after it - plan
+header, rollback rule, dependency graph, gate sequence, authority table,
+rollback triggers, reverse path, and runtime log:
+[references/output-template.md](references/output-template.md).
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| A metric threshold wired to automatic rollback | The threshold cannot choose between rolling back, rolling forward, and redeploying known-good, and in a multi-team window it cannot know how many other teams must reverse with it | Thresholds halt and page; the named release authority decides (see the rule section) |
-| One org-wide go or no-go at the end of the window | Failures surface only after every service has cut over, so the reverse path is at its longest and most entangled | A DECISION gate per service, in dependency order, before its dependents start |
-| A gate owned by a team name or a rota alias | At 02:00 nobody is sure who is allowed to say stop, and two people act concurrently | Exactly one named person per gate, availability confirmed in advance |
-| Timeboxes with no hard-stop policy | Teams read a timebox as a target, gates slip individually, and the window silently overruns | One hard-stop time for the window with a stated consequence, and extension only as its own DECISION gate |
-| Rolling back in forward order | The dependency reverses while its dependent still calls the new contract, turning a bad release into an outage | Reverse the completed prefix of the gate list, confirming each step |
-| A rollback list with scope but no order and no owners | The reverse becomes a second uncontrolled cutover under time pressure | Ordered reverse steps, one owner each, confirmation between steps |
-| A state-writing gate treated as reversible | The plan promises a reversal that physically cannot happen | Mark `POINT OF NO RETURN`, or make the schema support both versions before the window |
-| A 10-minute gate described as a bake period | Published guidance measures bake time in hours and days, not minutes, so the window is buying smoke coverage while claiming bake coverage | Call it a smoke check, or split the window so dependents run on a later day |
-| A dependency cycle scheduled anyway | The graph cannot be ordered, so the sequence is fiction and the first gate exposes it | Break the cycle before scheduling, with a both-versions-tolerant contract or a flag |
+Nine cutover anti-patterns with why each fails and its fix:
+[references/anti-patterns.md](references/anti-patterns.md).
 
 ## Limitations
 

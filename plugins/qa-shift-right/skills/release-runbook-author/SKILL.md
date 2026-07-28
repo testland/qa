@@ -32,20 +32,18 @@ must state in advance. It stops at the point where you need a p-value.
 **Rollback is a named human decision made on evidence. It is never an automatic
 metric trigger.** A crossed threshold halts the phase and puts a decision in
 front of a person; it does not choose the recovery. Published guidance lists
-three distinct recoveries from a bad deployment: **rolling back** "by undoing
-the changes made in the deployment and reverting back to the last known working
-configuration", **rolling forward** "by addressing the issue in the midst of the
-rollout", and **deploying new infrastructure** "by using the last known working
-configuration"
+three distinct recoveries from a bad deployment: **rolling back** (undo the
+changes, revert to the last known working configuration), **rolling forward**
+(fix the issue mid-rollout with a hotfix), and **deploying new infrastructure**
+(stand up the last known working configuration afresh)
 ([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
 A threshold cannot pick among three options.
 
-What automation owns is the halt. When a health alert fires during a rollout,
-"the rollout should immediately halt and an investigation into the cause of the
-alert should be performed to help determine the next course of action"
+What automation owns is the halt: when a health alert fires, "the rollout should
+immediately halt" and an investigation determines the next course of action
 ([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
 So write every threshold in the runbook as a condition that produces a decision,
-never as a condition that produces an action.
+never one that produces an action.
 
 ## Baseline first: the comparison convention every phase uses
 
@@ -118,25 +116,20 @@ Rows worth carrying in most runbooks:
 | Named owner available for the promote gate | Person and their availability window |
 
 The last two are the ones teams skip, and they are the two that make the later
-phases meaningless when missing. Pre-deployment checking is the published shape
-for this phase: "Establish predeployment checks, including code review, security
-scans, and compliance checks, to help ensure that changes are safe to deploy",
-with the warning not to lean on one kind of evidence, since "Different tests
-catch different classes of failures"
+phases meaningless when missing. Establish predeployment checks (code review,
+security scans, compliance checks), since "Different tests catch different
+classes of failures"
 ([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
 
-A checklist is the right instrument here rather than judgment: "Checklists are
-used to reduce failure and ensure consistency and completeness across a variety
-of disciplines", and each entry should be earned: "Every question's importance
-must be substantiated, ideally by a previous launch disaster"
+A checklist beats judgment here, and each entry should be earned: "Every
+question's importance must be substantiated, ideally by a previous launch
+disaster"
 ([Google SRE Book, Reliable Product Launches at Scale](https://sre.google/sre-book/reliable-product-launches/)).
 A pre-flight row that has never once caught anything is a row to delete.
 
-**A failed pre-flight row ends the release at phase 1.** The standard for
-this is the same one Scrum applies to unfinished work: "If a Product Backlog
-item does not meet the Definition of Done, it cannot be released or even
-presented at the Sprint Review. Instead, it returns to the Product Backlog for
-future consideration"
+**A failed pre-flight row ends the release at phase 1**, the same standard Scrum
+applies to work that does not meet the Definition of Done: it "cannot be
+released" and returns to the backlog
 ([Scrum Guide](https://scrumguides.org/scrum-guide.html)).
 
 ## Phase 2 - Smoke gate
@@ -200,10 +193,9 @@ The runbook fixes four things **before** the deploy, in writing:
    section above.
 
 **Be honest about what a 30-minute window buys.** It is a smoke-plus-signal
-check, not a bake. Published guidance is explicit that "Bake times should be
-measured in hours and days rather than minutes" and "should also increase for
-each rollout group so that you can account for different time zones and usage
-patterns over the course of the day"
+check, not a bake: "Bake times should be measured in hours and days rather than
+minutes" and should increase per rollout group to cover time zones and usage
+patterns
 ([Azure Well-Architected, safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)).
 A runbook that calls half an hour a bake period is mislabelling its own
 coverage. Either write "smoke coverage only" next to the window, or schedule a
@@ -332,134 +324,20 @@ Every row below is a defect in the document, not a judgment call.
 
 ## Worked example
 
-Service `checkout-api`, release `v1.4.5`, single service, no cross-team
-dependencies.
-
-**Baseline recorded at 13:55 UTC, 60-minute window:** 5xx rate 0.31 percent,
-p95 latency 240ms, checkout completion 92.1 percent, distinct error signatures 41.
-
-**Phase 1, pre-flight.**
-
-| Check | Verdict | Evidence |
-|---|---|---|
-| CI green on `release/v1.4.5` | PASS | `gh run list --branch release/v1.4.5 --limit 1`, run 8841 green |
-| Blocking issues closed | PASS | `gh issue list --label blocker --milestone v1.4.5` returns 0 |
-| Migration dry run | PASS | `migration-dry-run` artifact at `abc123` |
-| Last known good retrievable | PASS | Artifact `checkout-api:1.4.4` |
-| Baseline recorded | PASS | Values above, 12:55 to 13:55 UTC |
-| Promote owner available | PASS | Priya, 14:00 to 17:00 UTC |
-
-**Phase 2, smoke gate.** `npm run smoke -- --target=staging`, 4m32s, 22 tests,
-0 failures. PASS.
-
-**Phase 3, canary.** 5 percent traffic from 14:33, 30-minute window, labelled
-in the runbook as smoke coverage rather than a bake. Table as shown in phase 3
-above: all four thresholds green, two new error signatures observed.
-
-```text
-NullPointerException at Cart.addItem:42   1 occurrence, absent from control
-RateLimitExceeded                          1 occurrence, present in control at similar rate
-```
-
-Verdict: **PROCEED WITH CAUTION**. The rate-limit signature also appears in the
-control, so it is not attributable to the change. The null-pointer signature is
-absent from the control population and is therefore a real delta, below every
-threshold.
-
-**Phase 4, promote gate.** Priya, 15:05 UTC, chose `continue`, on the evidence
-of the canary table plus the two signatures. The null pointer became follow-up
-item 1.
-
-**Phase 5, rollout.** 25 percent at 15:08, observed 20 minutes, ratios within
-widened limits. 100 percent at 15:30.
-
-**Phase 6, post-release.** 60-minute window to 16:30 against the 13:55
-baseline: 5xx 0.33 percent (1.06x), p95 244ms (1.02x), checkout completion 92.0
-percent (1.00x). Stable. Tag, changelog, and notification issued at 16:32.
-Follow-ups: the null pointer, plus a runbook defect - a 30-minute canary was too
-short to accumulate enough occurrences of the new signature for the promote gate
-to judge it confidently, so the canary window for this service moves to 60
-minutes.
+Service `checkout-api`, release `v1.4.5`, single service, walked through all six
+phases from baseline to post-release follow-ups:
+[references/worked-example.md](references/worked-example.md).
 
 ## Output template
 
-One document. It is the plan before the release and the record after it.
-
-```markdown
-# Release runbook - {service} {version}
-
-**Promote-gate owner:** {one named person, availability window}
-**Last known good artifact:** {id}
-**Recovery rule:** a crossed threshold halts the phase and puts a recovery
-decision to {owner}. Recovery may be roll back, roll forward, or redeploy
-last known good, and only {owner} chooses which.
-
-## Baseline - recorded {window} before deploy
-
-| Metric | Value | Query |
-|--------|-------|-------|
-
-## Thresholds
-
-| Metric | Absolute floor | Ratio limit (canary vs control) | Ratio limit (rollout vs baseline) |
-|--------|----------------|----------------------------------|------------------------------------|
-
-## Phase 1 - Pre-flight
-
-| Check | Verdict | Evidence |
-|-------|---------|----------|
-
-## Phase 2 - Smoke gate
-
-**Command:** **Environment:** **Duration:** **Result:**
-
-## Phase 3 - Canary  ({share} traffic, {window}, coverage: smoke | bake)
-
-| Metric | Absolute floor | Ratio limit | Control | Canary | Ratio | Verdict |
-|--------|----------------|-------------|---------|--------|-------|---------|
-
-**Anomalies below threshold:**
-**Verdict:** PASS | PROCEED WITH CAUTION | HALT
-
-## Phase 4 - Promote gate
-
-**Decision:** continue | pause | rollback
-**Made by:** **At:** **On this evidence:**
-**Acknowledged anomalies carried forward:**
-
-## Phase 5 - Rollout
-
-| Stage | Share | Window | Metrics vs baseline | Verdict |
-|-------|-------|--------|---------------------|---------|
-
-## Phase 6 - Post-release
-
-| Metric | Baseline | Observed | Ratio | Verdict |
-|--------|----------|----------|-------|---------|
-
-**Administrative tail:** tag / changelog / notification, each with a timestamp.
-
-## Follow-ups
-
-- [ ] {product defects acknowledged at the promote gate}
-- [ ] {runbook defects the release exposed}
-```
+One document that is the plan before the release and the record after it -
+header and recovery rule, baseline, thresholds, the six phase tables, and the
+follow-up list: [references/output-template.md](references/output-template.md).
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Reading production metrics with no recorded baseline | A 1 percent error rate is normal for one service and an incident for another, and the runbook cannot tell which | Record baseline values in pre-flight and state thresholds as deltas as well as absolutes |
-| Absolute thresholds only | Catches "unacceptable always" and misses "clearly regressed but still under the floor" | Two conditions per metric, both must hold |
-| Aggregate metrics during canary | A 5 percent canary dilutes its own signal twentyfold in the aggregate number | Break metrics down by canary versus control population |
-| One observation window covering canary and rollout | Canary looks for early signal at low blast radius, rollout looks for stability at full exposure; different goals need different windows and thresholds | Two phases, two window lengths, two threshold sets |
-| Calling a 30-minute window a bake | Published guidance measures bake time in hours and days, so the runbook claims coverage it did not buy | Label the window as smoke coverage, or schedule a real bake |
-| Treating "no threshold tripped" as the verdict | The canary phase exists to give early warning, and an attributable anomaly under the limit is exactly that warning | Report sub-threshold anomalies as named follow-ups with a PROCEED WITH CAUTION verdict |
-| Auto-promoting when the canary table is all green | The clean case is where a subtle regression hides, and a rollback after full exposure costs far more than a five-minute pause | The promote gate holds unconditionally, with one named owner |
-| A threshold wired to automatic rollback | The threshold cannot choose between roll back, roll forward, and redeploy last known good | Thresholds halt and page; the named owner decides |
-| Shortening the last rollout stage because the first went well | The last stage carries the most users, so it is where an undetected regression is most expensive | Windows lengthen as exposure grows |
-| Tagging and announcing at promotion | Issues that surface minutes after full exposure land after the release was declared done | The administrative tail runs after the post-release window closes |
-| Running the release with no runbook, ad hoc | The process becomes tribal knowledge, so nothing can be reviewed, improved, or handed over | Write the six phases before the release, and edit them in the retrospective |
+Eleven runbook anti-patterns with why each fails and its fix:
+[references/anti-patterns.md](references/anti-patterns.md).
 
 ## Limitations
 

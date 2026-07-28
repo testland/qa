@@ -54,8 +54,7 @@ deadline + poll + assert.
 
 ## Step 3 - Monotonic-read test
 
-Monotonic reads = "Once a read sees value v, no later read sees an
-older value." Critical for clients that read-after-write.
+Assert a session never sees a value older than one it already read:
 
 ```python
 def test_monotonic_reads_per_session():
@@ -69,15 +68,10 @@ def test_monotonic_reads_per_session():
         assert v >= initial, f"Read regressed: {initial} → {v}"
 ```
 
-Without monotonic-read guarantee, two sequential reads can return
-non-monotonic values (read from a stale replica after first
-read hit a fresher one).
-
 ## Step 4 - Anti-entropy / repair test
 
-Anti-entropy: a background process that detects and repairs
-divergence between replicas. Test that divergence eventually
-self-heals:
+Test that replica divergence eventually self-heals via the store's
+background repair:
 
 ```python
 def test_anti_entropy_repairs_drift():
@@ -100,7 +94,8 @@ def test_anti_entropy_repairs_drift():
 ## Step 5 - CRDT merge tests
 
 For CRDT-based stores (Riak, Redis-CRDT, AntidoteDB, Yjs, Automerge),
-test the merge semantics directly:
+test the merge semantics directly. G-Counter (grow-only counter) merges
+to the max per actor:
 
 ```python
 def test_g_counter_merges_to_max_per_actor():
@@ -113,58 +108,24 @@ def test_g_counter_merges_to_max_per_actor():
 
     merged = counter_a.merge(counter_b)
     assert merged.value() == 8  # 3 + 5
-
-def test_lww_register_picks_higher_timestamp():
-    """LWW (Last-Write-Wins) register: higher timestamp wins."""
-    reg1 = LWWRegister(value="A", ts=100)
-    reg2 = LWWRegister(value="B", ts=200)
-
-    merged = reg1.merge(reg2)
-    assert merged.value == "B"  # later timestamp wins
-
-def test_or_set_handles_concurrent_add_remove():
-    """OR-Set: concurrent add + remove of same elem → element present."""
-    set1 = ORSet().add("x", actor="a")
-    set2 = set1.copy()
-
-    set1 = set1.remove("x")  # actor=a removes
-    set2 = set2.add("x", actor="b")  # actor=b adds again concurrently
-
-    merged = set1.merge(set2)
-    assert "x" in merged.elements()  # add wins on conflict
 ```
 
 Per CRDT theory: merge must be commutative, associative, idempotent
 (CmRDT) or use a join-semilattice (CvRDT).
 
+LWW-register and OR-Set merge tests are in
+[references/crdt-and-vector-clock-tests.md](references/crdt-and-vector-clock-tests.md).
+
 ## Step 6 - Vector-clock causality test
 
-```python
-def test_vector_clock_orders_causal_events():
-    # Three nodes; each maintains a vector clock
-    vc_a = {"a": 0, "b": 0, "c": 0}
+Assert vector clocks order causal events and flag concurrent ones:
+`dominates(a, b)` is true when a causally follows b, and false both ways
+when they are concurrent. Conflict-resolution rules use causality:
+dominates → prefer the descendant; concurrent → tiebreak per business
+rule (LWW, merge).
 
-    # Node A writes
-    vc_a["a"] += 1  # {a: 1, b: 0, c: 0}
-
-    # Node B receives A's update
-    vc_b = merge_vector_clocks({"a": 0, "b": 0, "c": 0}, vc_a)
-    vc_b["b"] += 1  # {a: 1, b: 1, c: 0}
-
-    # Concurrent: Node C makes an independent write
-    vc_c_new = {"a": 0, "b": 0, "c": 1}
-
-    # Test: B's clock and C's clock are concurrent (neither dominates)
-    assert not dominates(vc_b, vc_c_new)
-    assert not dominates(vc_c_new, vc_b)
-
-    # B's clock dominates the original
-    original = {"a": 0, "b": 0, "c": 0}
-    assert dominates(vc_b, original)
-```
-
-Conflict-resolution rules use causality: dominates → prefer the
-descendant; concurrent → tiebreak per business rule (LWW, merge).
+Full worked test is in
+[references/crdt-and-vector-clock-tests.md](references/crdt-and-vector-clock-tests.md).
 
 ## Step 7 - Read-repair on inconsistent quorum
 

@@ -32,61 +32,25 @@ disprove - that claim on your own corpus.
 ## Step 1 - Build a judgment set (qrels)
 
 Relevance evaluation requires graded relevance labels. Three methods,
-from cheapest to most accurate:
+cheapest to most accurate:
 
-**1a. Proxy labels from click logs / engagement signals** (fastest):
+- **Proxy labels from click logs** (fastest): grade by engagement, e.g.
+  clicked + dwell > 30s -> 2, clicked -> 1, impression only -> 0.
+- **LLM-assisted labeling** (cost-effective at scale): prompt an LLM
+  judge to return a 0-3 grade per query-document pair.
+- **Human annotation via pooling** (ground truth, expensive): retrieve
+  top-20 from all candidate systems, pool unique results, annotate each
+  query-document pair once. Standard TREC methodology.
 
-```python
-# Treat position-adjusted clicks as binary relevance
-# Grade 2: clicked + dwell > 30s; Grade 1: clicked; Grade 0: impression only
-def clicks_to_qrels(click_log_df):
-    qrels = {}
-    for _, row in click_log_df.iterrows():
-        qid = row["query_id"]
-        did = row["doc_id"]
-        if row["dwell_s"] > 30:
-            grade = 2
-        elif row["clicked"]:
-            grade = 1
-        else:
-            grade = 0
-        qrels.setdefault(qid, {})[did] = grade
-    return qrels
-```
-
-**1b. LLM-assisted labeling** (cost-effective at scale):
-
-```python
-import anthropic
-
-def llm_grade(query: str, doc_text: str) -> int:
-    """Return 0-3 relevance grade using an LLM as a judge."""
-    client = anthropic.Anthropic()
-    prompt = (
-        f"Rate how relevant the document is to the query on a scale 0-3.\n"
-        f"0=not relevant, 1=slightly, 2=relevant, 3=highly relevant.\n"
-        f"Query: {query}\nDocument: {doc_text[:500]}\nReturn only the integer."
-    )
-    msg = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=10,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return int(msg.content[0].text.strip())
-```
-
-**1c. Human annotation via pooling** (ground truth, expensive): retrieve
-top-20 from all candidate systems, pool unique results, annotate each
-query-document pair once. Standard TREC methodology.
-
-Store qrels in standard TREC format: `qid 0 doc_id grade`.
+Store qrels in standard TREC format: `qid 0 doc_id grade`. Runnable
+click-to-qrels and LLM-judge recipes:
+[references/judgment-sets.md](references/judgment-sets.md).
 
 ## Step 2 - Define the metric suite (nDCG and MRR)
 
-nDCG@k (Normalized Discounted Cumulative Gain) rewards placing highly
-relevant documents high in the list and penalizes rank inversions.
-MRR (Mean Reciprocal Rank) is appropriate when users stop at the first
-relevant document (navigational queries).
+Use nDCG@k for graded relevance (rewards highly relevant docs ranked
+high) and MRR for navigational queries where users stop at the first
+relevant document. Implementations:
 
 ```python
 import math
@@ -203,143 +167,30 @@ RRF is appropriate when BM25 and vector scores are on incompatible scales
 ## Step 5 - Weighted fusion (OpenSearch normalization-processor)
 
 Per [OpenSearch hybrid search blog], OpenSearch implements weighted fusion
-via a search pipeline with a `normalization-processor`. Supported
-normalization techniques: `min_max` and `l2`. Supported combination
-techniques: `arithmetic_mean`, `geometric_mean`, `harmonic_mean`.
+via a search pipeline with a `normalization-processor`. Normalization
+techniques: `min_max`, `l2`. Combination techniques: `arithmetic_mean`,
+`geometric_mean`, `harmonic_mean`. Sweep the `weights` array to find the
+BM25/vector split that maximizes nDCG@10 on your validation queries.
 
-Create the pipeline:
-
-```json
-PUT /_search/pipeline/hybrid-pipeline
-{
-  "description": "BM25 + neural weighted fusion",
-  "phase_results_processors": [
-    {
-      "normalization-processor": {
-        "normalization": { "technique": "min_max" },
-        "combination": {
-          "technique": "arithmetic_mean",
-          "parameters": { "weights": [0.3, 0.7] }
-        }
-      }
-    }
-  ]
-}
-```
-
-Run the hybrid query:
-
-```json
-POST my_index/_search?search_pipeline=hybrid-pipeline
-{
-  "query": {
-    "hybrid": {
-      "queries": [
-        { "match": { "title": { "query": "{{query_text}}" } } },
-        { "neural": { "passage_embedding": {
-            "query_text": "{{query_text}}", "model_id": "{{model_id}}", "k": 100
-        }}}
-      ]
-    }
-  },
-  "size": 10
-}
-```
-
-Sweep the `weights` array to find the BM25/vector split that maximizes
-nDCG@10 on your validation queries:
-
-```python
-import itertools
-
-best_ndcg, best_weights = 0.0, None
-for w_bm25 in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]:
-    w_vec = round(1.0 - w_bm25, 1)
-    update_pipeline_weights(w_bm25, w_vec)
-    metrics = evaluate(queries, os_hybrid_retrieve_fn, qrels_all, k=10)
-    if metrics["nDCG@10"] > best_ndcg:
-        best_ndcg, best_weights = metrics["nDCG@10"], (w_bm25, w_vec)
-
-print(f"Best nDCG@10={best_ndcg:.4f} at weights BM25={best_weights[0]}, vec={best_weights[1]}")
-```
+Pipeline definition, hybrid query, and the weight-sweep loop:
+[references/weighted-fusion-and-reranking.md](references/weighted-fusion-and-reranking.md).
 
 ## Step 6 - Reranker impact measurement
 
-A reranker (cross-encoder) re-scores a candidate set returned by the
-fused stage. Per [Elasticsearch semantic reranking docs], Elasticsearch
-uses `text_similarity_reranker` (cross-encoder only; bi-encoder support
-is planned). Per [Cohere Rerank API docs], the Cohere reranker returns a
-`relevance_score` in [0, 1] and accepts up to 1,000 documents per
-request.
-
-The reranker is applied to the top-N fused candidates (a larger pool
-than the final `k`). The `rank_window_size` in Elasticsearch
-controls this candidate count.
-
-**Measure reranker lift:**
-
-```python
-# Elasticsearch: RRF + text_similarity_reranker
-def rrf_plus_rerank_retrieve(query_text, query_vector, es_client, index, k=10):
-    resp = es_client.search(index=index, body={
-        "retriever": {
-            "text_similarity_reranker": {
-                "retriever": {
-                    "rrf": {
-                        "retrievers": [
-                            {"standard": {"query": {"match": {"text": {"query": query_text}}}}},
-                            {"knn": {"field": "embedding", "query_vector": query_vector,
-                                     "k": 100, "num_candidates": 200}}
-                        ],
-                        "rank_window_size": 100,
-                        "rank_constant": 60
-                    }
-                },
-                "field": "text",
-                "inference_id": "my-rerank-model",
-                "rank_window_size": 50
-            }
-        },
-        "size": k
-    })
-    return [h["_id"] for h in resp["hits"]["hits"]]
-
-# Cohere: call reranker on fused candidates
-import cohere
-
-def cohere_rerank(query_text: str, candidates: list[dict], top_n: int = 10) -> list[str]:
-    """
-    candidates: [{"id": "doc1", "text": "..."}, ...]
-    Returns ranked doc_id list.
-    Per Cohere Rerank API docs, relevance_score is in [0, 1];
-    max 1,000 documents recommended per request.
-    """
-    co = cohere.ClientV2()
-    results = co.rerank(
-        model="rerank-v4.0-pro",
-        query=query_text,
-        documents=[c["text"] for c in candidates],
-        top_n=top_n
-    )
-    return [candidates[r.index]["id"] for r in results.results]
-```
-
-Compare nDCG@10 and p95 latency across all four stages:
-
-```python
-stages = {
-    "BM25":         bm25_metrics,
-    "Vector":       knn_metrics,
-    "RRF":          rrf_metrics,
-    "RRF+reranker": reranked_metrics,
-}
-for name, m in stages.items():
-    print(f"{name:15s}  nDCG@10={m['nDCG@10']:.4f}  MRR={m['MRR']:.4f}  p95={m['p95_ms']:.0f}ms")
-```
+A reranker (cross-encoder) re-scores the top-N fused candidates (a larger
+pool than the final `k`; Elasticsearch's `rank_window_size` controls this
+count). Per [Elasticsearch semantic reranking docs], Elasticsearch uses
+`text_similarity_reranker` (cross-encoder only; bi-encoder support is
+planned). Per [Cohere Rerank API docs], the Cohere reranker returns a
+`relevance_score` in [0, 1] and accepts up to 1,000 documents per request.
 
 A reranker is worth its cost when `nDCG@10(RRF+reranker)` exceeds
 `nDCG@10(RRF)` and the p95 latency remains within budget. If the lift
 is < 0.01 nDCG, the reranker is not earning its cost for that corpus.
+
+Elasticsearch `text_similarity_reranker` and Cohere rerank code, plus
+the four-stage nDCG/latency comparison:
+[references/weighted-fusion-and-reranking.md](references/weighted-fusion-and-reranking.md).
 
 ## Step 7 - Regression gate (CI)
 

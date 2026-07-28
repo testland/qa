@@ -22,6 +22,11 @@ Do **not** use this skill to:
 - Pick the framework itself - that's `framework-choice-advisor`.
 - Audit a running codebase against the chosen pattern - that's a separate framework-architecture audit (this catalog is the reference it cites).
 
+Each pattern below states what it **is**: its definition, canonical citation, and
+load-bearing rules. Use the [pattern selection matrix](#pattern-selection-matrix)
+to choose one; the detailed per-pattern when-to-use rules and anti-pattern tables
+live in [references/pattern-catalog.md](references/pattern-catalog.md).
+
 ## Pattern 1 - Page Object Model (POM)
 
 **Canonical source:** [Martin Fowler's PageObject definition](https://martinfowler.com/bliki/PageObject.html) (the bliki article is the cross-language canonical reference) + [Selenium HQ documentation on Page Object Models](https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/).
@@ -35,22 +40,6 @@ Do **not** use this skill to:
 1. **No assertions in the POM body.** Fowler: "Page objects are most commonly used in testing, but should not make assertions themselves." Selenium HQ: "Page objects themselves should never make verifications or assertions. This is part of your test and should always be within the test's code, never in a page object." One narrow exception (Selenium HQ): a verification at instantiation that the page loaded.
 2. **Navigation methods return the next POM.** Fowler: "If you navigate to another page, the initial page object should return another page object for the new page." This enables compile-time detection of broken workflows.
 3. **POM exposes the page's services, not its widgets.** Methods are named after the user-meaningful action (`addToCart`, `submitOrder`), not the DOM mechanic (`clickButton`, `typeIntoField`).
-
-### When to use POM
-
-- The SUT is page-oriented (traditional multi-page web app, server-rendered).
-- The team has 3+ engineers and needs locator deduplication.
-- The framework is Selenium / WebdriverIO / classic Playwright codegen output.
-
-### Anti-patterns (canonical)
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Assertions inside the POM | Couples the page model to test outcomes; reuse across tests becomes brittle |
-| `void`-returning navigation methods | Loses the compile-time check Fowler explicitly identifies as the pattern's benefit |
-| `clickAddToCartButton()` instead of `addToCart()` | Couples the test vocabulary to UI mechanics - when the UI changes, every test changes |
-| Exposing the underlying WebDriver / Page instance through public POM methods | Leaks framework details into tests; defeats the encapsulation |
-| One God-POM serving five pages | Violates single-responsibility; bigger refactor cost than the POM was supposed to prevent |
 
 ## Pattern 2 - Screenplay
 
@@ -68,41 +57,11 @@ Do **not** use this skill to:
 
 **Why Screenplay vs POM:** Screenplay separates *what the user does* (Tasks, Interactions) from *what the user can do* (Abilities) from *what the user observes* (Questions). The result is a SOLID-aligned object model that survives UI refactors better than POM in large suites.
 
-### When to use Screenplay
-
-- The framework will exceed ~200 tests; the SOLID separation pays off at scale.
-- The team has Java / Kotlin / TypeScript / Python engineers who appreciate dependency-injection-style composition.
-- The SUT has multiple actor types (admin user, anonymous user, API client) that share underlying UI/API interactions.
-- The team uses Serenity BDD, SerenityJS, Boa Constrictor (.NET), or Screenplay-style implementations.
-
-### Anti-patterns
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Mixing Screenplay and POM in the same codebase | Doubles the maintenance surface; engineers can't tell which to write |
-| Tasks that do not call Interactions (Task = re-named POM method) | Loses the Screenplay benefit; the team got Page Object Model under a different name |
-| Question classes that mutate state | Violates the Question's "pure observation" contract; assertions on observations fail unpredictably |
-| Abilities used as a junk-drawer for utilities | The Ability should grant a real capability; using it as a service-locator defeats the dependency-injection benefit |
-
 ## Pattern 3 - Component Object
 
 **Canonical source:** Selenium HQ docs (Page Components are part of the official POM extension) + practitioner consensus (testing-library, Storybook, Playwright Component Testing). Treated as a refinement of POM, not a competing pattern.
 
 **Definition:** A Component Object is a Page Object scoped to a UI component (header, nav, form, modal, card) rather than a whole page. Where a page contains a re-used component (the navbar appears on every page), the Component Object models that component once; each Page Object that contains it composes it in.
-
-### When to use Component Object
-
-- The SUT is component-architected (React, Vue, Svelte, Angular, Web Components).
-- A small number of components appear on every page (navbar, footer, search box, modal).
-- Storybook / per-component visual testing is part of the suite.
-
-### Anti-patterns
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Modelling every DOM element as a Component Object | Component Objects are for re-used components, not every `<div>` |
-| Component Objects that hold cross-component state | Violates the encapsulation; the component should not know which page contains it |
-| Page Objects that bypass the Component Object and target its internals | The Component Object's locators get duplicated; refactor leakage |
 
 ## Pattern 4 - App Actions (Cypress idiom)
 
@@ -112,62 +71,17 @@ Do **not** use this skill to:
 
 **Why App Actions vs POM:** "Logging in" is not what the test is about - it's overhead. App Actions skip the login UI flow and inject a session directly, making the test 10× faster and removing flake from the login form.
 
-### When to use App Actions
-
-- The framework is Cypress (the pattern is named after the Cypress idiom; other frameworks adapt it).
-- The SUT exposes a deterministic state-setting API (Redux store, programmatic auth).
-- Setup is dominated by repeated UI flows (login, seed cart, navigate-to-deep-page).
-- The team is willing to accept the lock-in to the SUT's internal API surface.
-
-### Anti-patterns
-
-| Anti-pattern | Why it fails |
-|---|---|
-| App Actions for the Act phase (the thing under test) | The test no longer verifies the UI path under test |
-| App Actions that aren't documented as test-only surface | Production code accidentally depends on the test-only API |
-| Mixing App Actions and POM without convention | Engineers can't tell which to use; the suite forks |
-| App Actions for end-to-end smoke / critical-path tests | Critical paths must exercise the full UI; App Actions skip the very thing the smoke proves |
-
 ## Pattern 5 - Service Object
 
 **Canonical source:** Ruby on Rails / Java enterprise testing patterns + practitioner blog consensus. Refinement of POM for non-UI test layers.
 
 **Definition:** A Service Object is the API-test equivalent of a Page Object - it wraps a remote service (REST endpoint, GraphQL query, gRPC method, message-queue producer) with a domain API the test consumes. Methods like `cartService.addItem(sku, qty)` rather than `httpClient.post('/api/cart/items', { sku, qty })`.
 
-### When to use Service Object
-
-- API / contract / integration tests where the test code calls an HTTP / gRPC / queue interface repeatedly.
-- The SUT has 5+ services and the test code would otherwise be drowning in HTTP boilerplate.
-- The team uses Pact, schemathesis, RestAssured, Karate, or any framework with raw HTTP at the test layer.
-
-### Anti-patterns
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Service Object that re-implements the production service (mocks-in-disguise) | Tests against a fake instead of the real service; misses contract drift |
-| Service Object with assertions inside | Same anti-pattern as POM assertions - couples model to test outcomes |
-| Single Service Object for 10 different services | Violates single-responsibility; the object becomes a god-client |
-| Service Object that handles retries / circuit breakers identical to production | Tests pass because the Service Object hides the failures the test should catch |
-
 ## Pattern 6 - Repository (test-data access)
 
 **Canonical source:** Martin Fowler's [Repository pattern](https://martinfowler.com/eaaCatalog/repository.html) (originally for domain-driven design) adapted for test-data setup. Practitioner adoption in 2020+ test frameworks (factory libraries layer on top).
 
 **Definition:** A Repository in test context is the data-access abstraction that hides the storage mechanism (DB, fixture file, factory call) behind a domain API: `userRepo.createTestUser({ role: 'admin' })`.
-
-### When to use Repository
-
-- The framework needs deterministic test-data setup across DB / fixture file / factory.
-- Multiple test types (unit / integration / E2E) need the same setup logic.
-- The data-source mechanism is likely to change (DB schema migration, factory library swap).
-
-### Anti-patterns
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Repository that mixes test setup with production data fetching | Production code accidentally adopts test-only quirks |
-| Repository methods that return mutable objects shared across tests | Test cross-coupling; one test mutates and breaks another |
-| Repository that creates "magic" data the test doesn't see | Tests pass for inscrutable reasons; debugging is impossible |
 
 ## Pattern 7 - Screen Object (desktop / mobile sibling of Page Object)
 
@@ -180,23 +94,6 @@ The mobile sibling is documented inside Google's Android testing guidance as **S
 1. **No assertions in the Screen Object body.** Same rationale Fowler gives for POM ("page objects … should not make assertions themselves"). The desktop test asserts on `window.Title`, `element.IsEnabled`, control-pattern state; the Screen Object exposes those via getters but does not verify them.
 2. **Navigation methods return the next Screen Object.** `login.SubmitsCredentials()` returns `MainScreen`. Compile-time detection of broken workflows survives the migration from web POM to desktop Screen Object.
 3. **Screen Object exposes the screen's services, not its widgets.** `login.SubmitsCredentials(creds)` not `login.LoginButton.Click()`. Methods are named after the user-meaningful action - same vocabulary rule as POM.
-
-### When to use Screen Object
-
-- Desktop / mobile SUT routed through any accessibility-tree backend per `desktop-test-strategy-reference` (in the qa-desktop plugin): Windows UIA (FlaUI, WinAppDriver, Appium-Windows), macOS XCTest (XCUIApplication / XCUIElementQuery per [Apple's *Testing with Xcode* UI Testing chapter](https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html)), Linux AT-SPI (dogtail / pyatspi).
-- Mobile-native SUT (Appium, Espresso, XCUITest on iOS) - same encapsulation, sometimes branded "Screen Robot" per the Wharton citation above.
-- Cross-platform desktop frameworks (Avalonia, .NET MAUI) where the same screen exists across OSes but the accessibility backend differs per host.
-
-### Anti-patterns (Screen Object-specific in addition to the POM list)
-
-| Anti-pattern | Why it fails |
-|---|---|
-| Screen Object that hard-codes `AutomationId` strings inline in every method (e.g. `cf.ByAutomationId("LoginButton")` repeated) | Refactor cost when the developer renames the AutomationId; centralise the constant at the top of the Screen class |
-| Screen Object that wraps a single accessibility-tree call without adding a domain method | Same anti-pattern as the POM `clickAddToCartButton()` smell - Screen exposes mechanic, not service |
-| Screen Object that asserts on accessibility properties (role, label) it controls | Asserting on internal state defeats the no-assertions rule; assertions belong in the test |
-| Screen Object that calls `Thread.Sleep` / `Task.Delay` between actions | Hides flakiness; route through the driver's retry primitive (FlaUI `Retry.WhileNull`, XCTest `waitForExistence`) |
-| Screen Object that depends on absolute window coordinates | Defeats the accessibility-tree abstraction; multi-monitor / DPI / locale breaks the test |
-| One Screen Object class per dialog AND per main view in the same screen | Modal sub-screens are nested Screen Objects; do not flatten |
 
 ### Worked desktop example (FlaUI / xUnit)
 
@@ -261,14 +158,15 @@ The patterns are not equally good for every project. The matrix:
 
 ## References
 
-- Martin Fowler - *PageObject* (canonical cross-language definition, the load-bearing reference for all POM rules; the earlier *WindowDriver* name covered desktop GUI before the term migrated to web): https://martinfowler.com/bliki/PageObject.html
-- Jake Wharton - *Instrumentation Testing Robots* (2016) - the canonical "Screen Robot" reference for the mobile sibling of the Screen Object pattern, also applicable to desktop: https://jakewharton.com/testing-robots/
-- Apple - *Testing with Xcode* - UI Testing chapter, the XCUIApplication / XCUIElementQuery / XCUIElement reference for macOS Screen Objects: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
-- `desktop-test-strategy-reference` (qa-desktop) - the OS-backend reference for Screen Object's accessibility-tree substrate (UIA / XCTest / AT-SPI).
-- Selenium HQ - *Page Object Models* (official Selenium documentation; quotes the no-assertions and navigation-return-shape rules verbatim): https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
-- Antony Marcano, Andy Palmer, Jan Molak - *Screenplay Fundamentals* (Serenity BDD documentation; the canonical Actor/Ability/Task/Interaction/Question vocabulary): https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals
-- Antony Marcano, Andy Palmer, Jan Molak, John Ferguson Smart - *Page Objects Refactored: SOLID Steps to the Screenplay/Journey Pattern* (the article that names the pattern and sets out its SOLID rationale; it dates the approach to Marcano's 2007 conception): https://dzone.com/articles/page-objects-refactored-solid-steps-to-the-screenp
-- Kent C. Dodds + Cypress team - *Stop using Page Objects and Start using App Actions* (Cypress blog, the canonical App Actions reference): https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/
-- Martin Fowler - *Repository pattern* (originally domain-driven design; cited for test-data Repository adaptation): https://martinfowler.com/eaaCatalog/repository.html
-- ISTQB glossary - Service Virtualisation (related concept; the Service Object is the test-side counterpart): https://glossary.istqb.org/en_US/term/service-virtualization
-- `test-code-conventions` - file-level companion (§1-§10).
+Canonical sources, each cited inline above at the rule it grounds:
+
+- Fowler, *PageObject*: https://martinfowler.com/bliki/PageObject.html
+- Selenium HQ, *Page Object Models*: https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/
+- Marcano, Palmer, Molak, *Screenplay Fundamentals* (Serenity BDD): https://serenity-bdd.github.io/docs/screenplay/screenplay_fundamentals
+- Marcano, Palmer, Molak, Smart, *Page Objects Refactored: SOLID Steps to the Screenplay/Journey Pattern*: https://dzone.com/articles/page-objects-refactored-solid-steps-to-the-screenp
+- Cypress team, *Stop using Page Objects and Start using App Actions*: https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions/
+- Fowler, *Repository pattern*: https://martinfowler.com/eaaCatalog/repository.html
+- Jake Wharton, *Instrumentation Testing Robots* (2016): https://jakewharton.com/testing-robots/
+- Apple, *Testing with Xcode* - UI Testing chapter: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
+- ISTQB glossary, *Service Virtualisation*: https://glossary.istqb.org/en_US/term/service-virtualization
+- `desktop-test-strategy-reference` (qa-desktop), `test-code-conventions` - sibling catalogs.

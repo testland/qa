@@ -7,14 +7,9 @@ description: "Wraps Sinon's standalone @sinonjs/fake-timers library for JS/TS te
 
 ## Overview
 
-Sinon's `@sinonjs/fake-timers` is the canonical fake-timer + fake-
-clock library for JavaScript / TypeScript. Per
-[github.com/sinonjs/fake-timers](https://github.com/sinonjs/fake-timers),
-`install` replaces the native timer functions and FakeTimers
-supplies a `Date` implementation that reads from the clock.
-
-This skill is for tests outside Jest (Jest has its own per
-`jest-fake-timers`).
+`@sinonjs/fake-timers` drives timers and the clock directly, so it
+works outside Jest (Jest wraps it per `jest-fake-timers`). Per
+[github.com/sinonjs/fake-timers](https://github.com/sinonjs/fake-timers).
 
 ## When to use
 
@@ -67,43 +62,11 @@ test('debounce fires after 300ms', async () => {
 });
 ```
 
-### Selectively fake
+### Selective faking, setSystemTime, and DST
 
-```typescript
-const clock = FakeTimers.install({
-  now: new Date('2026-05-20T14:30:00Z').getTime(),
-  toFake: ['setTimeout', 'setInterval', 'Date'],  // not 'performance', 'hrtime'
-});
-```
-
-Useful when you want real performance.now() for benchmarking but
-fake Date.
-
-### setSystemTime
-
-```typescript
-clock.setSystemTime(new Date('2027-01-01T00:00:00Z'));
-expect(new Date().toISOString()).toBe('2027-01-01T00:00:00.000Z');
-```
-
-Jumps the clock without ticking any in-flight timers.
-
-### DST tests
-
-```typescript
-// Spring-forward simulation requires careful zone setup
-// Note: @sinonjs/fake-timers fakes UTC time; for local-zone DST
-// behaviour, combine with process.env.TZ
-process.env.TZ = 'America/New_York';
-const clock = FakeTimers.install({
-  now: new Date('2026-03-08T06:30:00Z').getTime(),  // 02:30 EDT - invalid local
-});
-// ... test that scheduling at 02:30 local degrades gracefully
-```
-
-Per `dst-transition-reference`:
-the test verifies behaviour at the transition; the fake clock
-makes it reproducible.
+The `toFake` selective-override option, `setSystemTime` jumps, and
+DST / timezone setup are in
+[references/advanced-scenarios.md](references/advanced-scenarios.md).
 
 ### Teardown
 

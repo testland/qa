@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-review",
-  "version": "1.6.12",
+  "version": "1.6.13",
   "description": "Test code reviewers for test files only (production code is out of scope): 8 skills (test-code-conventions, object-model-patterns, test-framework-blueprint, test-isolation-patterns, test-step-design-patterns, test-design-scorecard, test-framework-architecture-audit, test-suite-health-audit) and 6 agents (test-code-critic, assertion-quality-reviewer, mocking-anti-pattern-detector, e2e-selector-quality-critic, framework-architecture-auditor, test-suite-health-auditor).",
   "author": {
     "name": "testland",

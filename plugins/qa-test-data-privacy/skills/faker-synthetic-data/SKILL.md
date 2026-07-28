@@ -23,30 +23,18 @@ tokenisation, and nulling. Both happen before this step.
 
 ## Minimum library surface
 
-| Mechanic | Behaviour | Source |
-|---|---|---|
-| `Faker.seed(n)` | Class method; seeds the shared `random.Random` across all internal generators. Calling `.seed()` on an instance raises `TypeError` | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html) |
-| `fake.seed_instance(n)` | Creates and seeds a unique `random.Random` for one instance | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html) |
-| `fake.unique.<method>()` | Tracks values already returned; raises `UniquenessException` after repeated failures to find a new one | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/) |
-| Multiple-locale mode | The proxy "randomly select[s] a generator using a distribution defined by the provided weights", so locale varies per call | [faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html) |
-| `faker.seed(123)` (JS) | Fixes the sequence; setting the seed again resets it. Date helpers also need `refDate` or `faker.setDefaultRefDate()` | [fakerjs.dev](https://fakerjs.dev/guide/usage.html) |
-
-To drive substitution from an anonymiser, Microsoft Presidio exposes a
-`custom` operator taking a "lambda to execute on the PII data. The
-lambda return type must be a string", passed as
-`OperatorConfig("replace", {"new_value": "BIP"})`-style entries in the
-`operators` dict
-([presidio.dataprivacystack.org](https://presidio.dataprivacystack.org/anonymizer/)).
+The worked example below uses only `Faker.seed(n)` (run reproducibility, a
+class method) and `fake.unique.<method>()` (injective values, raising
+`UniquenessException` once the value space is exhausted). The full mechanic
+table - instance vs class seeding, JS `refDate`, multiple-locale weighting, and
+Presidio's `custom` operator for driving substitution from an anonymiser - is
+in [references/library-surface-and-seeding.md](references/library-surface-and-seeding.md).
 
 ## Step 1 - Build the substitution map before substituting anything
 
-The requirement is stated directly in the masking literature: "The
-masked values may be required to be consistent across multiple
-databases within an organization when the databases each contain the
-specific data element being masked", and masking must be "repeatable
-(the same input value to the masking algorithm always yields the same
-output value) but not able to be reverse engineered to get back to the
-original value"
+The masking literature requires masked values to stay consistent across
+databases that share a data element, and to be repeatable (the same input
+always yields the same output) yet not reversible to the original
 ([en.wikipedia.org/wiki/Data_masking](https://en.wikipedia.org/wiki/Data_masking)).
 
 So do not substitute row by row while streaming. Collect the distinct
@@ -63,17 +51,13 @@ must hold:
   real value survives.
 
 The map is the sensitive artifact. Retaining it where the recipient can
-reach it makes the output pseudonymised, not anonymised. GDPR Article
-4(5) defines pseudonymisation as processing "in such a manner that the
-personal data can no longer be attributed to a specific data subject
-without the use of additional information, provided that such
-additional information is kept separately"
-([gdpr-info.eu](https://gdpr-info.eu/art-4-gdpr/)); Recital 26 adds that
-data "which could be attributed to a natural person by the use of
-additional information should be considered to be information on an
-identifiable natural person"
-([gdpr-info.eu](https://gdpr-info.eu/recitals/no-26/)). Keeping the map
-is a legitimate choice. Calling the result anonymous afterwards is not.
+reach it makes the output pseudonymised, not anonymised: GDPR Article 4(5)
+treats data attributable to a subject only via separately-kept additional
+information as pseudonymised
+([gdpr-info.eu](https://gdpr-info.eu/art-4-gdpr/)), and Recital 26 counts data
+re-attributable through such additional information as personal data
+([gdpr-info.eu](https://gdpr-info.eu/recitals/no-26/)). Keeping the map is a
+legitimate choice. Calling the result anonymous afterwards is not.
 
 ## Step 2 - What a seed guarantees, and what it does not
 
@@ -87,19 +71,15 @@ after an upgrade
 
 **Does not.** Act as a key. Python Faker draws from a `random.Random`
 ([faker.readthedocs.io](https://faker.readthedocs.io/en/master/fakerclass.html)),
-and the standard library warns that "the pseudo-random generators of
-this module should not be used for security purposes. For security or
-cryptographic uses, see the `secrets` module"
-([docs.python.org](https://docs.python.org/3/library/random.html)). A
-seed offers no resistance to anyone holding it.
+and the standard library warns that the module's generators are not for
+security use and points to the `secrets` module for cryptographic uses
+([docs.python.org](https://docs.python.org/3/library/random.html)). A seed
+offers no resistance to anyone holding it.
 
-| Mechanism | Joins survive | Re-identification exposure |
-|---|---|---|
-| Seed derived per value, reseeding from the real value before each call | Yes | **High.** Anyone with the code, the library version, and a candidate list of real values re-runs the derivation and rebuilds the map. The seed reproduces the substitute; it does not conceal the input |
-| One global seed plus a stored map | Yes | Equal to the exposure of the map. Control access to the map, not the seed |
-| One global seed, map discarded after the run | Yes, within the run | Low from the seed alone: the substitute follows call order, not the input value, so the seed reconstructs nothing without the source data |
-| Unseeded, random per occurrence | **No** | Low, but the dataset is unusable for anything relational |
-
+The four seeding strategies (per-value derived seed, global seed plus a stored
+map, global seed with the map discarded, unseeded random) are compared by
+re-identification exposure in
+[references/library-surface-and-seeding.md](references/library-surface-and-seeding.md).
 The per-value derived seed is the pattern to avoid. It needs no stored
 map, and it fails for the reason unsalted hashing of a low-entropy
 field fails: the input space is enumerable, so the mapping is

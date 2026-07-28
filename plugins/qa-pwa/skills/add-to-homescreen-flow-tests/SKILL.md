@@ -84,6 +84,12 @@ assertable. Emit one test per cell:
 // tests/install-gate.spec.ts
 import { test, expect } from '@playwright/test';
 
+// Fetch + parse the linked manifest once - reused by every field cell below.
+async function readManifest(page, request) {
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  return (await request.get(new URL(href!, page.url()).toString())).json();
+}
+
 test.describe('PWA install gate (per web.dev/articles/install-criteria)', () => {
   test('manifest link present', async ({ page }) => {
     await page.goto('https://localhost:3000/');
@@ -92,15 +98,13 @@ test.describe('PWA install gate (per web.dev/articles/install-criteria)', () => 
 
   test('manifest declares name or short_name', async ({ page, request }) => {
     await page.goto('https://localhost:3000/');
-    const href = await page.locator('link[rel="manifest"]').getAttribute('href');
-    const m = await (await request.get(new URL(href!, page.url()).toString())).json();
+    const m = await readManifest(page, request);
     expect(m.name || m.short_name).toBeTruthy();
   });
 
   test('manifest icons include 192px and 512px (per install-criteria)', async ({ page, request }) => {
     await page.goto('https://localhost:3000/');
-    const href = await page.locator('link[rel="manifest"]').getAttribute('href');
-    const m = await (await request.get(new URL(href!, page.url()).toString())).json();
+    const m = await readManifest(page, request);
     const has192 = (m.icons ?? []).some((i: any) => /(^|\s)192x192(\s|$)/.test(i.sizes ?? ''));
     const has512 = (m.icons ?? []).some((i: any) => /(^|\s)512x512(\s|$)/.test(i.sizes ?? ''));
     expect(has192 && has512).toBe(true);
@@ -108,23 +112,20 @@ test.describe('PWA install gate (per web.dev/articles/install-criteria)', () => 
 
   test('manifest start_url present', async ({ page, request }) => {
     await page.goto('https://localhost:3000/');
-    const href = await page.locator('link[rel="manifest"]').getAttribute('href');
-    const m = await (await request.get(new URL(href!, page.url()).toString())).json();
+    const m = await readManifest(page, request);
     expect(m.start_url).toBeTruthy();
   });
 
   test('manifest display is installable value', async ({ page, request }) => {
     await page.goto('https://localhost:3000/');
-    const href = await page.locator('link[rel="manifest"]').getAttribute('href');
-    const m = await (await request.get(new URL(href!, page.url()).toString())).json();
+    const m = await readManifest(page, request);
     // Per install-criteria: must be fullscreen, standalone, minimal-ui, or window-controls-overlay
     expect(['fullscreen', 'standalone', 'minimal-ui', 'window-controls-overlay']).toContain(m.display);
   });
 
   test('manifest does not opt out via prefer_related_applications', async ({ page, request }) => {
     await page.goto('https://localhost:3000/');
-    const href = await page.locator('link[rel="manifest"]').getAttribute('href');
-    const m = await (await request.get(new URL(href!, page.url()).toString())).json();
+    const m = await readManifest(page, request);
     // Per install-criteria: "must not be present or be false"
     expect(m.prefer_related_applications === undefined || m.prefer_related_applications === false).toBe(true);
   });
@@ -272,38 +273,39 @@ launch with `--app=` for the standalone path:
 ```ts
 import { chromium, expect, test } from '@playwright/test';
 
-test('display-mode: standalone in launched-as-app context', async () => {
+// Launch the standalone app context once - shared by both runtime cells.
+async function launchInstalled() {
   const ctx = await chromium.launchPersistentContext('./tmp/installed-app', {
     args: ['--app=https://localhost:3000/'],
   });
   const page = await ctx.newPage();
   await page.goto('https://localhost:3000/');
+  return { ctx, page };
+}
 
+test('display-mode: standalone in launched-as-app context', async () => {
+  const { ctx, page } = await launchInstalled();
   const standalone = await page.evaluate(() =>
     matchMedia('(display-mode: standalone)').matches
   );
   expect(standalone).toBe(true);
-
   await ctx.close();
 });
 
 test('display-mode: hides Install button when standalone', async () => {
-  const ctx = await chromium.launchPersistentContext('./tmp/installed-app', {
-    args: ['--app=https://localhost:3000/'],
-  });
-  const page = await ctx.newPage();
-  await page.goto('https://localhost:3000/');
-
+  const { ctx, page } = await launchInstalled();
   // Per pwa-install-flow-reference Stage 4: apps hide the Install button when already installed
   await expect(page.locator('[data-testid="install-pwa"]')).not.toBeVisible();
-
   await ctx.close();
 });
 ```
 
 ### Step 7 - Emit the coverage matrix
 
-Write `tests/install-coverage.yaml`:
+Write `tests/install-coverage.yaml`, mapping every gate, handshake,
+iOS-metadata, and runtime cell to its spec and source criterion. The full
+matrix is in [references/install-suite.md](references/install-suite.md); its
+per-stage shape:
 
 ```yaml
 # tests/install-coverage.yaml
@@ -312,55 +314,11 @@ matrix:
     - cell: manifest_link
       spec: install-gate.spec.ts > "manifest link present"
       source: install-criteria
-    - cell: manifest_name
-      spec: install-gate.spec.ts > "manifest declares name or short_name"
-      source: install-criteria
-    - cell: manifest_icons_192_512
-      spec: install-gate.spec.ts > "manifest icons include 192px and 512px"
-      source: install-criteria
-    - cell: manifest_start_url
-      spec: install-gate.spec.ts > "manifest start_url present"
-      source: install-criteria
-    - cell: manifest_display
-      spec: install-gate.spec.ts > "manifest display is installable value"
-      source: install-criteria
-    - cell: prefer_related_applications_false
-      spec: install-gate.spec.ts > "manifest does not opt out via prefer_related_applications"
-      source: install-criteria
-    - cell: https
-      spec: install-gate.spec.ts > "site served over HTTPS"
-      source: install-criteria
-    - cell: service_worker_registered
-      spec: install-gate.spec.ts > "service worker is registered (install prerequisite)"
-      source: install-criteria
-  stage_2_handshake:
-    - cell: beforeinstallprompt_userChoice
-      spec: install-prompt.spec.ts > "beforeinstallprompt: deferred prompt + click → userChoice resolves"
-      source: customize-install
-    - cell: prompt_second_call_rejects
-      spec: install-prompt.spec.ts > "beforeinstallprompt: second prompt() call rejects"
-      source: customize-install "You can only call prompt() on the deferred event once"
-  stage_2_appinstalled:
-    - cell: appinstalled_fires
-      spec: install-prompt.spec.ts > "appinstalled fires after install acceptance"
-      source: customize-install
-  stage_3_ios:
-    - cell: apple_touch_icon_present
-      spec: install-ios.spec.ts > "iOS install metadata: apple-touch-icon present"
-      source: learn-pwa
-    - cell: apple_mobile_web_app_capable
-      spec: install-ios.spec.ts > "iOS install metadata: apple-mobile-web-app-capable yes"
-      source: learn-pwa
-    - cell: apple_touch_icon_resolves
-      spec: install-ios.spec.ts > "iOS install metadata: apple-touch-icon resolves"
-      source: learn-pwa
-  stage_4_runtime:
-    - cell: display_mode_standalone
-      spec: install-display-mode.spec.ts > "display-mode: standalone in launched-as-app context"
-      source: pwa-install-flow-reference Stage 4
-    - cell: install_button_hidden_when_standalone
-      spec: install-display-mode.spec.ts > "display-mode: hides Install button when standalone"
-      source: pwa-install-flow-reference Stage 4
+    # ... 7 more gate cells
+  stage_2_handshake: # beforeinstallprompt userChoice + second-prompt reject
+  stage_2_appinstalled: # appinstalled fires
+  stage_3_ios: # apple-touch-icon + apple-mobile-web-app-capable
+  stage_4_runtime: # display-mode standalone + install button hidden
 ```
 
 CI gates on every matrix cell having a passing spec.

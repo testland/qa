@@ -72,17 +72,14 @@ Read the SW file the team ships and record three facts:
 grep -E "skipWaiting|clients\.claim" src/sw.ts > sw-lifecycle-inventory.txt
 ```
 
-Per [mdn-sw]: *"Activation can happen sooner using
-`ServiceWorkerGlobalScope.skipWaiting()` and existing pages can be
-claimed by the active worker using `Clients.claim()`."* The
-combination matters - `skipWaiting` without `claim` activates the
-new SW but leaves current tabs uncontrolled until reload.
+Per [mdn-sw], `skipWaiting()` activates sooner and `Clients.claim()` claims
+existing pages. The combination matters - `skipWaiting` without `claim`
+activates the new SW but leaves current tabs uncontrolled until reload.
 
 ### Step 2 - Test: state machine entry - fresh install
 
-Per [mdn-sw]: *"The service worker is immediately downloaded when
-a user first accesses a service worker - controlled site/page."* The
-first-install test:
+On first access to a SW-controlled page the worker downloads and installs
+immediately per [mdn-sw]. The first-install test:
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -113,17 +110,14 @@ test('first install transitions parsed → installing → installed → activati
 });
 ```
 
-The `statechange` event is fired *"on the corresponding
-`ServiceWorker` object"* whenever its `state` attribute changes per
-[sw-spec].
+`statechange` fires on the corresponding `ServiceWorker` object whenever its
+`state` attribute changes per [sw-spec].
 
 ### Step 3 - Test: `event.waitUntil` extends the install phase
 
-Per [mdn-sw]: *"Because `install`/`activate` events could take a
-while to complete, the service worker spec provides a `waitUntil()`
-method. Once it is called on `install` or `activate` events with a
-promise, functional events such as `fetch` and `push` will wait
-until the promise is successfully resolved."*
+Per [mdn-sw], `waitUntil()` on an `install` / `activate` event holds functional
+events (`fetch`, `push`) until its promise resolves - so a slow precache keeps
+the SW in `installing`.
 
 ```ts
 test('SW install with slow precache stays in installing until waitUntil resolves', async ({ page, context }) => {
@@ -187,9 +181,8 @@ tabs close - flip the expectation accordingly.
 
 ### Step 5 - Test: `Clients.claim()` flips the controller
 
-Per [mdn-claim], `Clients.claim()` *"allows an active service
-worker to set itself as the controller for all clients within its
-scope."*
+Per [mdn-claim], `Clients.claim()` lets an active SW set itself as the
+controller for all in-scope clients.
 
 ```ts
 test('clients.claim() makes v2 control the page mid-session', async ({ page, context }) => {
@@ -213,9 +206,8 @@ test('clients.claim() makes v2 control the page mid-session', async ({ page, con
 });
 ```
 
-Per [mdn-sw], the combination of `skipWaiting()` *and* `claim()`
-is needed to "force-activate" the new SW; one without the other
-leaves a gap.
+Per [mdn-sw], `skipWaiting()` and `claim()` together force-activate the new SW;
+one without the other leaves a gap (see Step 1).
 
 ### Step 6 - Test: old SW transitions to `redundant`
 
@@ -298,9 +290,11 @@ test('updatefound fires when a new SW is found', async ({ page, context }) => {
 
 ### Step 9 - Emit the lifecycle spec artifact
 
-Write `tests/sw-lifecycle.spec.ts` with all eight test cells above.
-Pair with a matrix YAML mapping each spec to the state-machine
-cell:
+Write `tests/sw-lifecycle.spec.ts` with all eight test cells above, paired with
+a `tests/sw-lifecycle-coverage.yaml` matrix mapping each spec to its
+state-machine cell and reference. The full matrix and the worked v1 -> v2
+upgrade-path spec are in
+[references/upgrade-path.md](references/upgrade-path.md):
 
 ```yaml
 # tests/sw-lifecycle-coverage.yaml
@@ -309,74 +303,18 @@ matrix:
     spec: "first install transitions parsed → installing → installed → activating → activated"
     states: [parsed, installing, installed, activating, activated]
     ref: sw-spec ServiceWorkerState enum
-  waituntil:
-    spec: "SW install with slow precache stays in installing until waitUntil resolves"
-    states: [installing]
-    ref: mdn-sw waitUntil semantics
-  skipwaiting:
-    spec: "skipWaiting() makes v2 active without page reload"
-    states: [installed, activating, activated]
-    ref: mdn-skipwaiting
-  claim:
-    spec: "clients.claim() makes v2 control the page mid-session"
-    states: [activated]
-    ref: mdn-claim
-  redundant:
-    spec: "old SW transitions to redundant after v2 activates"
-    states: [redundant]
-    ref: sw-spec ServiceWorkerState enum
-  controller_semantics:
-    spec: "controller is null on first hard-reload, set after activation"
-    ref: mdn-sw controller property
-  updatefound:
-    spec: "updatefound fires when a new SW is found"
-    ref: mdn-sw updatefound event
+  # waituntil, skipwaiting, claim, redundant, controller_semantics, updatefound
 ```
 
 CI gates on every matrix row having at least one passing test.
 
 ## Worked example: a v1 → v2 upgrade-path test
 
-For an SW that uses `skipWaiting()` + `Clients.claim()`:
-
-```ts
-// tests/sw-upgrade-path.spec.ts
-import { test, expect } from '@playwright/test';
-
-test('v1 → v2 upgrade: skip waiting + claim, old cache deleted', async ({ page, context }) => {
-  // 1. Land on v1 and confirm it controls the page.
-  await page.goto('https://localhost:3000/?sw-version=1');
-  await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
-
-  const v1Cache = await page.evaluate(async () => {
-    const names = await caches.keys();
-    return names.find(n => n.endsWith('-v1'));
-  });
-  expect(v1Cache).toBeTruthy();
-
-  // 2. Trigger v2 deploy.
-  await page.evaluate(async () => {
-    const reg = await navigator.serviceWorker.getRegistration();
-    await reg!.update();
-  });
-
-  // 3. Wait for the controller to flip to v2 (skipWaiting + claim).
-  const v2Controller = await page.waitForFunction(() => {
-    const c = navigator.serviceWorker.controller;
-    return c && c.scriptURL.endsWith('sw-v2.js') ? c.scriptURL : null;
-  }, { timeout: 10_000 });
-  expect(await v2Controller.jsonValue()).toMatch(/sw-v2/);
-
-  // 4. Confirm v1 caches are deleted by v2's activate handler.
-  const remainingCaches = await page.evaluate(() => caches.keys());
-  expect(remainingCaches.some((n: string) => n.endsWith('-v1'))).toBe(false);
-  expect(remainingCaches.some((n: string) => n.endsWith('-v2'))).toBe(true);
-});
-```
-
-This single test exercises four state transitions (installed →
-activating in v2, activated → redundant in v1) plus the cache-
-cleanup convention. Pair with the per-transition cells from
+The full worked `tests/sw-upgrade-path.spec.ts` for an SW using `skipWaiting()`
++ `Clients.claim()` is in
+[references/upgrade-path.md](references/upgrade-path.md). It exercises four
+state transitions (installed → activating in v2, activated → redundant in v1)
+plus the cache-cleanup convention. Pair it with the per-transition cells from
 Steps 2 - 8 for the full lifecycle surface.
 
 ## Anti-patterns

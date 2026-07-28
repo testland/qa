@@ -35,6 +35,10 @@ npm install --save-dev puppeteer-core
 `puppeteer` (full) bundles Chromium; `puppeteer-core` (lite) lets
 you point at an existing Chrome.
 
+Verify: `npm ls puppeteer` lists the installed version. If you installed
+`puppeteer-core`, no Chromium is bundled - pass `executablePath` at launch
+or the next step throws `Could not find Chromium`.
+
 ## Step 2 - Basic browser automation
 
 ```javascript
@@ -52,6 +56,11 @@ import puppeteer from 'puppeteer';
 
 The `page.*` API mirrors Playwright's: `page.goto`, `page.click`,
 `page.type`, `page.evaluate`, etc.
+
+Verify: after running, `example.png` exists and is non-empty. If it is
+missing or the script threw `Could not find Chromium`, the bundled download
+was skipped - reinstall `puppeteer` or set `executablePath`, confirm
+`headless: 'new'`, then re-run.
 
 ## Step 3 - E2E test (with Jest)
 
@@ -90,84 +99,14 @@ test('checkout flow', async () => {
 }, 60000);
 ```
 
-## Step 4 - Network interception
+## Step 4 - Use-case recipes
 
-```javascript
-// Intercept and modify requests
-await page.setRequestInterception(true);
+Beyond the core automation and E2E spine above, Puppeteer covers network
+interception, server-side PDF generation, multi-viewport screenshot
+pipelines, and scraping. Copy-paste recipes for each:
+[references/use-cases.md](references/use-cases.md).
 
-page.on('request', request => {
-  if (request.url().includes('/api/orders')) {
-    request.respond({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ orderId: 'TEST-1234', total: 24.99 }),
-    });
-  } else {
-    request.continue();
-  }
-});
-```
-
-Useful for stubbing third-party APIs in tests or mocking
-responses.
-
-## Step 5 - PDF generation
-
-```javascript
-import puppeteer from 'puppeteer';
-
-(async () => {
-  const browser = await puppeteer.launch({ headless: 'new' });
-  const page = await browser.newPage();
-  await page.goto('https://example.com/invoice/123');
-  await page.pdf({
-    path: 'invoice-123.pdf',
-    format: 'A4',
-    margin: { top: '20mm', bottom: '20mm', left: '15mm', right: '15mm' },
-    printBackground: true,
-  });
-  await browser.close();
-})();
-```
-
-Common production use: server-side PDF generation from HTML
-templates.
-
-## Step 6 - Screenshot pipelines
-
-```javascript
-// Generate screenshots for marketing site at multiple viewports
-const viewports = [
-  { name: 'mobile', width: 375, height: 667 },
-  { name: 'tablet', width: 768, height: 1024 },
-  { name: 'desktop', width: 1280, height: 720 },
-];
-
-for (const vp of viewports) {
-  await page.setViewport(vp);
-  await page.goto('https://example.com');
-  await page.screenshot({ path: `screenshots/${vp.name}.png`, fullPage: true });
-}
-```
-
-## Step 7 - Web scraping
-
-```javascript
-await page.goto('https://example.com/products');
-
-const products = await page.$$eval('.product-card', cards =>
-  cards.map(card => ({
-    name: card.querySelector('.product-name')?.textContent.trim(),
-    price: card.querySelector('.product-price')?.textContent.trim(),
-    url: card.querySelector('a')?.href,
-  }))
-);
-
-console.log(products);
-```
-
-## Step 8 - Run
+## Step 5 - Run
 
 ```bash
 node scripts/screenshot.js
@@ -176,7 +115,7 @@ node scripts/screenshot.js
 npx jest
 ```
 
-## Step 9 - Migration to Playwright
+## Step 6 - Migration to Playwright
 
 When ready to migrate:
 

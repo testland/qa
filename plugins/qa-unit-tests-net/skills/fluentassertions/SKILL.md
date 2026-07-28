@@ -36,14 +36,8 @@ catalog; doesn't run tests. Pair with one of the test frameworks.
 ## Step 1 - Install
 
 ```bash
-# Pin to v7 to avoid the v8+ paid license in a commercial project
-dotnet add package FluentAssertions --version 7.0.0
-```
-
-Or current (free for OSS / non-commercial, paid for commercial):
-
-```bash
-dotnet add package FluentAssertions
+dotnet add package FluentAssertions                    # current v8+ (see Overview on licensing)
+dotnet add package FluentAssertions --version 7.0.0    # pin v7 for fully-OSS commercial use
 ```
 
 ## Step 2 - Basic syntax
@@ -61,99 +55,18 @@ The `.Should()` extension method provides the fluent entry-point.
 
 ## Step 3 - Matchers catalog
 
-Per [fluentassertions.com/introduction][fa-intro]:
+Per [fluentassertions.com/introduction][fa-intro]. Core matchers (full catalog in [references/matchers.md](references/matchers.md)):
 
 [fa-intro]: https://fluentassertions.com/introduction
 
-**Equality:**
-
 ```csharp
-value.Should().Be(expected);
-value.Should().NotBe(expected);
+value.Should().Be(expected);                         // equality
 value.Should().BeNull();
-value.Should().NotBeNull();
-value.Should().BeSameAs(other);     // reference equality
-```
-
-**Numeric:**
-
-```csharp
-n.Should().BeGreaterThan(0);
-n.Should().BeLessThanOrEqualTo(100);
-d.Should().BeApproximately(3.14, 0.01);
-```
-
-**String:**
-
-```csharp
-s.Should().StartWith("prefix");
-s.Should().EndWith("suffix");
-s.Should().Contain("substring");
-s.Should().Match("*wildcard*");
-s.Should().MatchRegex(@"\d+");
-s.Should().NotBeNullOrEmpty();
-```
-
-**Collections:**
-
-```csharp
-list.Should().HaveCount(3);
-list.Should().Contain("alice");
-list.Should().NotContain("eve");
-list.Should().ContainInOrder("alice", "bob");
-list.Should().BeEquivalentTo(other);   // any order
-list.Should().AllSatisfy(x => x.Should().BePositive());
-```
-
-**Type checks:**
-
-```csharp
-result.Should().BeOfType<Success>();
-result.Should().BeAssignableTo<IResult>();
-```
-
-**Object equivalence (deep):**
-
-```csharp
-actual.Should().BeEquivalentTo(expected);
-
-// With options
-actual.Should().BeEquivalentTo(expected, opts => opts
-    .Excluding(x => x.Timestamp)
-    .ComparingByMembers<MyType>()
-    .WithStrictOrdering()
-);
-```
-
-**Exceptions:**
-
-```csharp
-Action act = () => DoSomething();
-act.Should().Throw<ArgumentException>()
-   .WithMessage("*invalid*")
-   .Where(e => e.ParamName == "name");
-
-// Async
-Func<Task> asyncAct = async () => await DoSomethingAsync();
-await asyncAct.Should().ThrowAsync<HttpRequestException>();
-
-// Should NOT throw
-act.Should().NotThrow();
-```
-
-**Boolean + null:**
-
-```csharp
-flag.Should().BeTrue();
-flag.Should().BeFalse();
-opt.Should().BeNull();
-opt.Should().NotBeNull().And.NotBeEmpty();
-```
-
-**Custom predicates:**
-
-```csharp
-user.Should().Satisfy(u => u.Email.Contains("@") && u.Age >= 18);
+n.Should().BeGreaterThan(0);                         // numeric
+s.Should().StartWith("prefix");                      // string
+list.Should().HaveCount(3).And.Contain("alice");     // collections
+result.Should().BeOfType<Success>();                 // type
+act.Should().Throw<ArgumentException>().WithMessage("*invalid*");   // exceptions
 ```
 
 ## Step 4 - Combining matchers
@@ -173,39 +86,23 @@ result.Should().BeOfType<Success>()
 
 ## Step 5 - Failure messages
 
-FluentAssertions failure output is rich:
+Failure output shows the object structure, unlike `Assert.AreEqual`:
 
 ```
 Expected list to have 4 items, but found 3:
   ["alice", "bob", "charlie"]
 ```
 
-vs vanilla `Assert.AreEqual(4, list.Count)`:
-
-```
-Expected: 4
-But was: 3
-```
-
-The difference matters for debug velocity.
-
 ## Step 6 - `BeEquivalentTo` deep equality
 
-Most powerful matcher; structural comparison:
+Structural (deep) comparison; the most powerful matcher:
 
 ```csharp
-var actual = new User { Id = 1, Name = "Alice", Address = new Address { City = "NYC" } };
-var expected = new User { Id = 1, Name = "Alice", Address = new Address { City = "NYC" } };
-actual.Should().BeEquivalentTo(expected);   // passes (deep equal)
-
-// Even with different types (record vs class):
-var dto = new UserDto { Id = 1, Name = "Alice" };
-user.Should().BeEquivalentTo(dto, opts => opts
-    .Excluding(u => u.PasswordHash));   // ignore field
+actual.Should().BeEquivalentTo(expected);   // deep equal, order-independent
 ```
 
-Options control: `Excluding`, `Including`, `ComparingByMembers`,
-`WithStrictOrdering`, `WithoutStrictOrdering`, `IgnoringCyclicReferences`.
+Cross-type comparison and options (`Excluding`, `Including`, `ComparingByMembers`,
+`WithStrictOrdering`, `IgnoringCyclicReferences`): [references/matchers.md](references/matchers.md).
 
 ## Step 7 - Migration considerations
 
@@ -231,8 +128,6 @@ failure messages + chainable assertions.
 
 ## Limitations
 
-- License change v8+: paid for commercial use, free for OSS /
-  non-commercial. Pin v7 to stay fully OSS-licensed.
 - Some edge cases in `BeEquivalentTo` (cyclic refs, polymorphism)
   need explicit options.
 - `.Should()` extension can clash with other libraries' extensions

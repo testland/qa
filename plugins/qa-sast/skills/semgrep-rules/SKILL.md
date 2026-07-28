@@ -97,17 +97,24 @@ semgrep validate --config .semgrep.yml
 
 ## Step 4 - CI integration with baseline diff
 
-Per [sg-cli][sg-cli]:
-
-> "`--baseline-commit=VAL` - Show only findings not in specified
-> commit"
+Per [sg-cli][sg-cli]: "`--baseline-commit=VAL` - Show only findings
+not in specified commit". Diff-aware mode fails only NEW findings on
+the PR; pre-existing findings are tracked but don't block - critical
+for legacy adoption.
 
 ```yaml
-- run: semgrep ci --baseline-ref=main --json --output=semgrep.json
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v5
+      - run: semgrep ci --baseline-ref=main --sarif --output=semgrep.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with: { sarif_file: semgrep.sarif }
 ```
-
-Diff-aware mode is critical for legacy adoption - only NEW findings
-on the PR fail; pre-existing findings are tracked but don't block.
 
 ## Step 5 - False-positive triage (MANDATORY)
 
@@ -141,57 +148,11 @@ Cadence: every quarter, audit `nosemgrep` suppressions for
 staleness. Expired ones removed; persistent ones reviewed for
 escalation.
 
-## Step 6 - Output formats per [sg-cli][sg-cli]
+## Step 6 - CLI reference (formats, flags, exit codes)
 
-| Flag | Purpose |
-|---|---|
-| `--json` | Semgrep JSON format (for multi-scanner triage) |
-| `--sarif` | SARIF format (GitHub Code Scanning upload) |
-| `--gitlab-sast` | GitLab SAST format (GitLab Security Dashboard) |
-| `--junit-xml` | JUnit XML (test reporters) |
-| `--text` | Default human-readable |
-| `--output VAL` | Write to file or URL |
-
-## Step 7 - Performance flags
-
-```bash
-semgrep scan -j 8 --timeout 10 --max-target-bytes 5000000
-```
-
-Per [sg-cli][sg-cli]:
-- `-j VALUE` - Parallelism degree (default: 3)
-- `--timeout=DOUBLE` - Per-rule per-file timeout in seconds (default: 5.0)
-- `--max-target-bytes=VALUE` - Skip files exceeding size (default: 1000000)
-
-## Step 8 - Exit codes (per [sg-cli][sg-cli])
-
-| Code | Meaning |
-|---|---|
-| 0 | Success, no issues |
-| 1 | Issues detected (with `--error` flag) |
-| 2 | Fatal error |
-| 3 | Invalid syntax in scanned language |
-| 4 | Invalid pattern in rule |
-| 5 | Invalid YAML configuration |
-| 7 | Invalid rule in configuration |
-| 8 | Unsupported language specified |
-| 13 | Invalid API key |
-
-## Step 9 - CI integration
-
-```yaml
-jobs:
-  semgrep:
-    runs-on: ubuntu-latest
-    container:
-      image: semgrep/semgrep
-    steps:
-      - uses: actions/checkout@v5
-      - run: semgrep ci --baseline-ref=main --sarif --output=semgrep.sarif
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with: { sarif_file: semgrep.sarif }
-```
+Gate on exit `0` = clean, `1` = findings, `2` = fatal error. The full
+output-format flags, performance-tuning flags, and complete exit-code
+table are in [references/cli-reference.md](references/cli-reference.md).
 
 ## Anti-patterns
 

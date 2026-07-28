@@ -7,27 +7,17 @@ description: "Builds a CI workflow that runs only the subset of tests impacted b
 
 ## Overview
 
-Per [tia-fowler][tia], **Test Impact Analysis (TIA)** is the
-technique of identifying "which tests should execute following code
-changes by analyzing the relationship between production source code
-and test coverage." The bidirectional shape:
+**Test Impact Analysis (TIA)** runs only the tests a change can affect: map
+production sources to the tests that exercise them, then intersect that map
+with the PR diff ([tia-fowler][tia]). The map is bidirectional - one test
+exercises a subset of sources; one source is exercised by a subset of tests.
+Azure Pipelines builds it from per-test dynamic dependencies; Bazel derives it
+statically from the build graph ([tia-azure][azure]).
 
 [tia]: https://martinfowler.com/articles/rise-test-impact-analysis.html
 
-> "One test (from many) exercises a subset of the production
-> sources" and conversely, "One prod source is exercised by a subset
-> of the tests." ([tia-fowler][tia])
-
-Microsoft has invested in TIA since 2009 ([tia-fowler][tia]); their
-Azure Pipelines implementation collects per-test dynamic
-dependencies during execution and stores mappings like
-`Testcasemethod1 <--> a.cs, b.cs, d.cs` ([tia-fowler][tia]).
-Google's Blaze (Bazel's predecessor) uses static build-graph
-declarations to achieve the same selection.
-
-This skill builds a TIA-style selector for any team - without
-requiring Microsoft's tooling - by stitching together coverage data,
-git diff, and a fallback policy.
+This skill builds a TIA-style selector for any team - stitching coverage data,
+git diff, and a safe fallback policy - without vendor tooling.
 
 ## When to use
 
@@ -45,15 +35,10 @@ mostly orchestration around it.
 
 ## Step 1 - Decide the selection policy
 
-Per [tia-azure][azure], a robust selector includes "existing
-impacted tests, **previously failing tests**, and **newly added
-tests**" - and falls back to running **all tests** when it
-encounters changes it can't reason about:
+A robust selector runs impacted + previously-failing + newly-added tests, and
+falls back to the full suite for any change it can't map ([tia-azure][azure]).
 
 [azure]: https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-impact-analysis
-
-> "Safe fallback. For commits and scenarios that TIA can't
-> understand, it falls back to running all tests." ([tia-azure][azure])
 
 The selection set per PR:
 
@@ -71,29 +56,14 @@ Hard-coded **fallback triggers** (run everything):
 - N PRs since the last full run (configurable; default: every 5
   PRs to a branch).
 
-Match the safety bar Microsoft documents: TIA is "currently scoped
-to only managed code, and single machine topology. So, for example,
-if the code commit contains changes to HTML or CSS files, it can't
-reason about them and falls back to running all tests"
+Azure's TIA reasons only about managed code on a single machine; it can't
+reason about HTML / CSS changes and falls back to running all tests
 ([tia-azure][azure]).
 
 ## Step 2 - Build the per-test → source map
 
-Two paths:
-
-### Path A - From coverage data (any framework)
-
-Modify the test runner to emit per-test coverage instead of merged
-coverage:
-
-- Jest: `--coverage` writes `coverage/coverage-final.json` already
-  with per-test `f` (function-hit) maps if the runner is configured
-  for it; or use `jest-coverage-tracking` for per-test data.
-- pytest + coverage.py: `coverage run --concurrency=multiprocessing -m pytest --cov-context=test`
-  emits per-test contexts.
-- Java + JaCoCo: per-test "session" mode (`destfile=...sessionId=<test>.exec`).
-
-Then build the map:
+Emit per-test coverage (not merged), then invert it into a file → tests map.
+The core inversion:
 
 ```python
 # scripts/build_test_map.py
@@ -107,36 +77,11 @@ def build_map(per_test_coverage):
     return dict(inverted)
 ```
 
-Persist as `test-map.json` checked into the repo or stored as a CI
-artifact updated on every main run.
-
-### Path B - From the build graph (Bazel / Pants / Buck)
-
-In Bazel projects, the dependency graph IS the test-source map:
-
-```bash
-# What tests depend on changed files?
-bazel query 'kind("_test", rdeps(//..., set(<changed-files>)))'
-```
-
-Per [bazel-deps][bz]: a Bazel target "is _actually dependent_ on
-target Y if Y must be present, built, and up-to-date in order for X
-to be built correctly." `rdeps(<scope>, <target>)` reverses the edge
-and finds targets that depend on `<target>`.
-
-[bz]: https://bazel.build/concepts/dependencies
-
-```bash
-CHANGED=$(git diff --name-only origin/main...HEAD | sed 's|^|//|')
-bazel query "kind('_test', rdeps(//..., set(${CHANGED})))" \
-  | xargs bazel test
-```
-
-Per [bazel-deps][bz]: "declared dependencies must comprehensively
-cover actual dependencies to ensure correct incremental rebuilds" - 
-which means the build-graph approach is only as good as the BUILD
-file discipline. Lint via `buildozer` / `gazelle` to catch missing
-declarations.
+Persist as `test-map.json`, checked into the repo or stored as a CI artifact
+updated on every main run. Per-framework recipes for emitting per-test
+coverage (Jest, pytest + coverage.py, JaCoCo) and the Bazel / Pants / Buck
+build-graph path (where `rdeps` gives the map directly) live in
+[references/instrumentation-and-ci.md](references/instrumentation-and-ci.md).
 
 ## Step 3 - Compute the changed-file set
 
@@ -168,56 +113,19 @@ main (CI artifact). `newly_added` comes from
 
 ## Step 5 - Add safety: periodic full run + drift detection
 
-Per [tia-azure][azure]:
+Pair selection with a full-suite run so a stale map can't silently shrink
+coverage. Azure's pattern: run selected tests (T1) and all tests (T2) in
+sequence and confirm T2 reports the same result as T1 ([tia-azure][azure]).
 
-> "Run TIA selected tests and then all tests in sequence. In a build
-> pipeline, use two test tasks - one that runs only impacted Tests
-> (T1) and one that runs all tests (T2). If T1 passes, check that T2
-> passes as well. If there was a failing test in T1, check that T2
-> reports the same set of failures."
+- **Pattern A - Nightly full-suite run.** Cron a full-suite job nightly.
+  Failures that didn't appear in PR runs reveal selection misses; investigate
+  and update the map.
+- **Pattern B - N-th PR full run.** Every N-th PR (e.g. every 5th,
+  configurable) runs the full suite as a "shadow" - silent if it agrees with
+  selection, a warning issue if it doesn't.
 
-Two safety patterns:
-
-### Pattern A - Nightly full-suite run
-
-Cron a full-suite job nightly. Failures here that didn't appear in
-PR runs reveal selection misses; investigate and update the map.
-
-### Pattern B - N-th PR full run
-
-Every N-th PR (e.g. every 5th, configurable) runs the full suite as
-a "shadow" - silently if it agrees with selection; a warning issue
-if it doesn't.
-
-```yaml
-# .github/workflows/regression.yml
-jobs:
-  selected:
-    runs-on: ubuntu-latest
-    outputs:
-      verdict: ${{ steps.run.outcome }}
-    steps:
-      - uses: actions/checkout@v5
-        with: { fetch-depth: 0 }   # full history for diff
-      - name: Compute selection
-        id: pick
-        run: |
-          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          python scripts/select_tests.py --changed "$CHANGED" --map test-map.json > selection.txt
-          echo "count=$(wc -l < selection.txt)" >> "$GITHUB_OUTPUT"
-      - name: Run selected
-        id: run
-        run: xargs -a selection.txt npm test --
-
-  shadow-full:
-    if: github.run_attempt == 1 && (github.event.pull_request.number % 5 == 0)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: npm test
-      - name: Compare with selected
-        run: python scripts/compare_results.py selected.xml shadow.xml
-```
+CI workflow (selected run + shadow full run):
+[references/instrumentation-and-ci.md](references/instrumentation-and-ci.md).
 
 ## Step 6 - Surface the selection
 
@@ -246,14 +154,8 @@ PR-comment summary so reviewers know what ran:
 
 ## Step 7 - Configurable overrides
 
-Per [tia-azure][azure], the team should be able to **opt out** for
-a specific build:
-
-> "By setting a build variable. Even after TIA is enabled in the
-> VSTest task, you can disable it for a specific build by setting
-> the variable DisableTestImpactAnalysis to true."
-
-Implement:
+The team should be able to opt out for a specific build, matching Azure's
+`DisableTestImpactAnalysis` build-variable escape hatch ([tia-azure][azure]):
 
 - **PR label `run-all-tests`** → forces full suite for that PR.
 - **Path filter `tia-include`** → only consider TIA for changes
@@ -303,3 +205,5 @@ Implement:
   dependency query, declared-vs-actual dependency principle.
 - `coverage-debt-tracker` - 
   sibling skill: tracks files that lost coverage / went stale.
+
+[bz]: https://bazel.build/concepts/dependencies

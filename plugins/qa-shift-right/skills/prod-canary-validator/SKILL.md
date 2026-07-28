@@ -7,18 +7,14 @@ description: "Builds a canary-validation workflow that compares a canary deploy'
 
 ## Overview
 
-A canary deploy's promise: "we deploy the new version to a small
-slice of traffic, watch metrics, and only promote to full rollout
-if metrics look healthy." The risk: "looking healthy" is a
-qualitative judgment by the on-call engineer at 3am. Often the
-verdict is "ship it, looks fine," and a regression slips through.
-
-This skill builds the **deterministic** canary verdict: a
-machine-checkable comparison of canary metrics vs baseline that
-emits promote / pause / rollback.
-
-It runs the analytical layer underneath the human review of the
-canary observation step, per [`canary-release`][cr].
+A canary deploy sends the new version to a small slice of traffic,
+watches metrics, and promotes only if they look healthy. "Looking
+healthy" is usually a qualitative on-call judgment, so regressions
+slip through. This skill builds the **deterministic** canary
+verdict: a machine-checkable comparison of canary metrics vs
+baseline that emits promote / pause / rollback, running the
+analytical layer underneath the human review of the canary
+observation step ([`canary-release`][cr]).
 
 [cr]: https://martinfowler.com/bliki/CanaryRelease.html
 
@@ -58,18 +54,15 @@ Per metric, define two thresholds:
 | **Relative**      | "Error rate ≤ 1.5× baseline" - catches regressions even when baseline is high. |
 
 ```yaml
-# canary-thresholds.yml
+# canary-thresholds.yml (excerpt)
 metrics:
   error_rate:
-    absolute: { max: 0.5 }       # %
-    relative: { max: 1.5 }       # 1.5× baseline
-  p95_latency:
-    absolute: { max: 500 }        # ms
-    relative: { max: 1.2 }
-  checkout_completion_rate:
-    absolute: { min: 90 }         # %
-    relative: { min: 0.95 }       # at least 95% of baseline
+    absolute: { max: 0.5 }   # %
+    relative: { max: 1.5 }   # 1.5× baseline
 ```
+
+Full config for every metric:
+[references/canary-thresholds.yml](references/canary-thresholds.yml).
 
 The combination is essential: **absolute** catches "unacceptable
 regardless"; **relative** catches "worse than the baseline by a
@@ -87,51 +80,24 @@ sample size:
   worth flagging.
 
 Use a **two-sample test** (proportion test for error rate,
-Welch's t-test for latency) to compute p-value:
+Welch's t-test for latency) to compute a p-value, then gate each
+metric: the absolute floor fails unconditionally, but the relative
+limit fails only when the difference is statistically significant.
 
 ```python
-# scripts/canary_verdict.py
-from scipy.stats import chi2_contingency, ttest_ind
-import json
-
-def compare_proportions(canary_success, canary_total, baseline_success, baseline_total):
-    """Chi-square test for two proportions. Returns p-value."""
-    table = [[canary_success, canary_total - canary_success],
-             [baseline_success, baseline_total - baseline_success]]
-    chi2, p, dof, _ = chi2_contingency(table)
-    return p
-
-def compare_latencies(canary_p95s, baseline_p95s):
-    """Welch's t-test for two latency samples. Returns p-value."""
-    t, p = ttest_ind(canary_p95s, baseline_p95s, equal_var=False)
-    return p
-
-def verdict(canary_metrics, baseline_metrics, thresholds, alpha=0.05):
-    failures = []
-    for metric, t in thresholds.items():
-        c = canary_metrics[metric]
-        b = baseline_metrics[metric]
-
-        # Absolute check
-        if 'max' in t.get('absolute', {}) and c.value > t['absolute']['max']:
-            failures.append(f"{metric}: {c.value} > absolute max {t['absolute']['max']}")
-        if 'min' in t.get('absolute', {}) and c.value < t['absolute']['min']:
-            failures.append(f"{metric}: {c.value} < absolute min {t['absolute']['min']}")
-
-        # Relative check (only if statistically significant)
-        if metric in ('error_rate',):
-            p = compare_proportions(c.success, c.total, b.success, b.total)
-        else:
-            p = compare_latencies(c.samples, b.samples)
-
-        ratio = c.value / b.value if b.value else float('inf')
-        if 'max' in t.get('relative', {}) and ratio > t['relative']['max'] and p < alpha:
-            failures.append(f"{metric}: ratio {ratio:.2f} > relative max {t['relative']['max']} (p={p:.3f})")
-
-    if failures:
-        return ('rollback' if any('error_rate' in f or 'completion' in f for f in failures) else 'pause', failures)
-    return ('promote', [])
+# core gate; full script: scripts/canary_verdict.py
+def gate(metric, canary, baseline, t, p, alpha=0.05):
+    if 'max' in t.get('absolute', {}) and canary.value > t['absolute']['max']:
+        return 'fail-absolute'
+    ratio = canary.value / baseline.value
+    if 'max' in t.get('relative', {}) and ratio > t['relative']['max'] and p < alpha:
+        return 'fail-relative'   # only when significant
+    return 'pass'
 ```
+
+Full runnable implementation (`compare_proportions`,
+`compare_latencies`, and the promote/pause/rollback classification):
+[scripts/canary_verdict.py](scripts/canary_verdict.py).
 
 `alpha = 0.05` is convention; use `0.01` for high-criticality
 metrics. **Skip relative checks when not significant** - otherwise

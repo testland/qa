@@ -21,7 +21,7 @@ The API differs slightly from raw Sinon - Jest exposes
 
 ## Authoring
 
-### Enable (per test file)
+### Enable
 
 ```typescript
 beforeAll(() => {
@@ -34,18 +34,8 @@ afterAll(() => {
 });
 ```
 
-### Enable (per test)
-
-```typescript
-test('debounce', () => {
-  jest.useFakeTimers();
-  jest.setSystemTime(new Date('2026-05-20T14:30:00Z'));
-
-  // ... test body
-
-  jest.useRealTimers();
-});
-```
+For a single test, call the same three lines inside the test body
+and `jest.useRealTimers()` at the end.
 
 ### Advance time
 
@@ -105,62 +95,11 @@ jest.runOnlyPendingTimers();
 
 Avoids infinite loops for self-scheduling code.
 
-### Selective faking
+### Selective faking, DST, and fetch
 
-```typescript
-jest.useFakeTimers({
-  doNotFake: ['nextTick', 'queueMicrotask'],
-  now: new Date('2026-05-20T14:30:00Z').getTime(),
-});
-```
-
-### DST tests
-
-```typescript
-beforeAll(() => {
-  process.env.TZ = 'America/New_York';
-  jest.useFakeTimers();
-});
-
-test('spring-forward behaviour', () => {
-  jest.setSystemTime(new Date('2026-03-08T06:30:00Z'));  // 02:30 EDT - invalid local
-  expect(new Date().toString()).toMatch(/03:30/);  // Browser/Node normalises
-});
-```
-
-### Mix fake-timers with real fetch
-
-If `fetch` is mocked separately, ensure the mock awaits a faked
-timer too:
-
-```typescript
-test('debounce + fetch', async () => {
-  global.fetch = jest.fn().mockResolvedValue({ json: () => ({ ok: true }) });
-
-  myDebouncedFetch();
-
-  await jest.advanceTimersByTimeAsync(300);
-  expect(fetch).toHaveBeenCalled();
-});
-```
-
-## Running
-
-```bash
-npx jest
-```
-
-## CI integration
-
-```yaml
-jobs:
-  jest-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-      - run: npm ci && npx jest
-```
+Selective faking (`doNotFake`), DST / timezone tests, and mixing
+fake timers with a mocked `fetch` are in
+[references/advanced-scenarios.md](references/advanced-scenarios.md).
 
 ## Anti-patterns
 

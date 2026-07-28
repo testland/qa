@@ -9,25 +9,28 @@ metadata:
 
 ## Overview
 
-Lighthouse is the canonical PWA audit tool. The current release line
-is **v13.3.0** per [github.com/GoogleChrome/lighthouse][lh-gh]
-(released May 2026). The PWA *category* itself was deprecated - per
-[developer.chrome.com/docs/lighthouse/pwa][lh-pwa]: *"PWA testing in
-Lighthouse is deprecated. For more information on its deprecation
-see Chrome's updated Installability Criteria."* - but the individual
-audits remain available and run on demand under a custom Lighthouse
-config. This skill covers both running them and reading the LHR
-(Lighthouse Result) JSON the audits emit.
+Lighthouse is the canonical PWA audit tool. The PWA *category* was deprecated
+per [developer.chrome.com/docs/lighthouse/pwa][lh-pwa], but the individual
+audits remain available and run on demand under a custom Lighthouse config.
+This skill covers running them and reading the LHR (Lighthouse Result) JSON
+they emit.
 
 The companion `@lhci/cli` package per
-[github.com/GoogleChrome/lighthouse-ci][lhci-gh] is how the audits
-gate CI: it wraps Lighthouse runs and asserts category / audit
-scores per a `.lighthouserc.json` config.
+[github.com/GoogleChrome/lighthouse-ci][lhci-gh] gates CI: it wraps Lighthouse
+runs and asserts category / audit scores per a `.lighthouserc.json` config.
 
 [lh-pwa]: https://developer.chrome.com/docs/lighthouse/pwa
 [lh-gh]: https://github.com/GoogleChrome/lighthouse
 [lhci-gh]: https://github.com/GoogleChrome/lighthouse-ci
 [lhci-config]: https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md
+
+### Pinned versions
+
+Time-sensitive pins - re-check at the linked source on upgrade:
+
+- Lighthouse **v13.3.0** (released May 2026) per [lh-gh].
+- `@lhci/cli@0.15.x` per [lhci-gh]; pin `<major>.<minor>` so audit weights and
+  IDs stay fixed across runs.
 
 ## When to use
 
@@ -108,106 +111,56 @@ lighthouse https://localhost:3000 \
 
 ### Step 4 - Author a Lighthouse CI config
 
-Create `.lighthouserc.json` per [lhci-config]:
+Gate CI with `.lighthouserc.json` - assert per-audit IDs, not the deprecated
+`categories:pwa`. Installability audits at `error`, optimization audits at
+`warn`:
 
 ```json
 {
   "ci": {
-    "collect": {
-      "url": ["http://localhost:3000/"],
-      "numberOfRuns": 3,
-      "settings": {
-        "onlyAudits": [
-          "installable-manifest",
-          "service-worker",
-          "maskable-icon",
-          "viewport",
-          "themed-omnibox",
-          "splash-screen",
-          "content-width",
-          "apple-touch-icon",
-          "is-on-https"
-        ],
-        "throttlingMethod": "devtools"
-      }
-    },
+    "collect": { "url": ["http://localhost:3000/"], "numberOfRuns": 3 },
     "assert": {
       "assertions": {
         "installable-manifest": ["error", { "minScore": 1 }],
         "service-worker": ["error", { "minScore": 1 }],
         "maskable-icon": ["error", { "minScore": 1 }],
-        "viewport": ["error", { "minScore": 1 }],
-        "is-on-https": ["error", { "minScore": 1 }],
-        "themed-omnibox": ["warn", { "minScore": 1 }],
-        "splash-screen": ["warn", { "minScore": 1 }],
-        "content-width": ["warn", { "minScore": 1 }],
-        "apple-touch-icon": ["warn", { "minScore": 1 }]
+        "themed-omnibox": ["warn", { "minScore": 1 }]
       },
       "aggregationMethod": "median-run"
-    },
-    "upload": { "target": "temporary-public-storage" }
+    }
   }
 }
 ```
 
-Per [lhci-config], the assertion shape is
-`"<audit-id-or-categories:<id>>": [severity, { minScore | maxNumericValue | ... }]`
-with `severity` one of `off`, `warn`, `error`. The "error" path
-fails the build; "warn" surfaces a warning without failing.
-
-The `aggregationMethod` per [lhci-config] supports `median`,
-`optimistic`, `pessimistic`, `median-run` - `median-run` "represents
-the most typical run" and is the right choice for noisy mobile
-PWA audits.
+Each assertion is `[severity, { minScore | maxNumericValue | ... }]` with
+`severity` one of `off`, `warn`, `error`; `error` fails the build, `warn`
+warns without failing. Use `aggregationMethod: median-run` for noisy mobile
+audits. The full config (all nine audits, `onlyAudits`, `upload`) is in
+[references/lighthouse-config.md](references/lighthouse-config.md).
 
 ### Step 5 - Programmatic invocation from Node.js
 
-For per-test invocation outside Lighthouse CI:
+For per-test invocation outside Lighthouse CI, launch Chrome and read
+`lhr.audits[id].score`:
 
 ```ts
-// tests/lighthouse-pwa.spec.ts
-import { test, expect } from 'vitest';
 import lighthouse from 'lighthouse';
 import { launch } from 'chrome-launcher';
 
-test('PWA audits pass on the build', async () => {
-  const chrome = await launch({ chromeFlags: ['--headless'] });
-  try {
-    const { lhr } = await lighthouse(
-      'http://localhost:3000/',
-      {
-        port: chrome.port,
-        output: 'json',
-        onlyAudits: [
-          'installable-manifest',
-          'service-worker',
-          'maskable-icon',
-          'viewport',
-          'is-on-https',
-        ],
-        formFactor: 'mobile',
-        throttlingMethod: 'devtools',
-      } as any
-    );
-
-    for (const id of [
-      'installable-manifest',
-      'service-worker',
-      'maskable-icon',
-      'viewport',
-      'is-on-https',
-    ]) {
-      expect(lhr.audits[id].score).toBe(1);
-    }
-  } finally {
-    await chrome.kill();
-  }
-});
+const chrome = await launch({ chromeFlags: ['--headless'] });
+const { lhr } = await lighthouse('http://localhost:3000/', {
+  port: chrome.port, output: 'json', formFactor: 'mobile',
+  onlyAudits: ['installable-manifest', 'service-worker', 'maskable-icon'],
+} as any);
+for (const id of ['installable-manifest', 'service-worker', 'maskable-icon']) {
+  expect(lhr.audits[id].score).toBe(1);
+}
+await chrome.kill();
 ```
 
-The `lighthouse` npm export returns a Promise resolving to
-`{ lhr, report, artifacts }`. The LHR is the parsed JSON; `report`
-is the rendered HTML (when requested).
+The `lighthouse` export resolves to `{ lhr, report, artifacts }` - `lhr` is the
+parsed JSON, `report` the rendered HTML. The full Vitest spec is in
+[references/lighthouse-config.md](references/lighthouse-config.md).
 
 ## Running
 
@@ -234,23 +187,9 @@ lhci autorun
 
 ### CI (GitHub Actions)
 
-Per [lhci-gh]:
-
-```yaml
-name: CI
-on: [push]
-jobs:
-  lighthouseci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm install && npm install -g @lhci/cli@0.15.x
-      - run: npm run build
-      - run: lhci autorun
-```
+The `lhci autorun` workflow (checkout -> setup-node -> build -> `lhci autorun`)
+is in [references/lighthouse-config.md](references/lighthouse-config.md). The
+`## CI integration` section below adds the upload-on-failure step.
 
 ## Parsing results
 
@@ -267,9 +206,9 @@ output. Key paths:
 | `lhr.runWarnings` | Array of run-time warnings the audit emitted |
 | `lhr.lighthouseVersion` | Which Lighthouse version produced this LHR |
 
-Per [lh-gh] (release v13.3.0), the LHR schema is stable across
-patch releases; major releases may add / remove audits. Pin the
-Lighthouse version in CI for stable assertions.
+Per [lh-gh], the LHR schema is stable across patch releases; major releases
+may add / remove audits. Pin the Lighthouse version (see Pinned versions) in
+CI for stable assertions.
 
 For the `installable-manifest` audit specifically, the `details`
 field contains a list of failing requirements (e.g. "Manifest does

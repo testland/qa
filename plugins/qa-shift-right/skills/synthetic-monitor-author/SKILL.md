@@ -7,26 +7,17 @@ description: "Drafts a synthetic monitor configuration for one critical user jou
 
 ## Overview
 
-Per [synthetic-mon-wiki][sm]:
+**Synthetic monitoring** is "a monitoring technique that is done by
+using a simulation or scripted recordings of transactions"
+([synthetic-mon-wiki][sm]); the scripts "run continuously at set
+intervals to measure performance metrics like functionality,
+availability, and response time - without requiring actual traffic."
+Per the ISTQB Glossary V4.7.1, **shift right** is "a test approach to
+test a system continuously in production," and synthetic monitors are
+its load-bearing primitive. This skill builds the configuration:
+which journey, how often, what to assert, when to page.
 
 [sm]: https://en.wikipedia.org/wiki/Synthetic_monitoring
-
-> "**Synthetic monitoring** (also known as active monitoring or
-> proactive monitoring) is a monitoring technique that is done by
-> using a simulation or scripted recordings of transactions."
-> ([synthetic-mon-wiki][sm])
-
-Per the ISTQB Glossary V4.7.1, **shift right** is "a test approach
-to test a system continuously in production." Synthetic monitors
-are the load-bearing primitive - they exercise critical journeys
-against production at a regular cadence and alert when they fail.
-
-> "These scripts run continuously at set intervals to measure
-> performance metrics like functionality, availability, and response
-> time - without requiring actual traffic." ([synthetic-mon-wiki][sm])
-
-This skill builds the configuration: which journey, how often, what
-to assert, when to page.
 
 ## When to use
 
@@ -41,8 +32,7 @@ to assert, when to page.
   needs continuous active verification.
 
 If real-user traffic is high and well-instrumented, real-user
-monitoring (RUM) is the complement - see "Synthetic vs. Real User
-Monitoring" per [synthetic-mon-wiki][sm].
+monitoring (RUM) is the complement.
 
 ## Step 1 - Pick the journey
 
@@ -54,21 +44,21 @@ journey** the team would page on at 3am if it broke. Examples:
 - Financial: authenticate → fetch account balance → return.
 - Healthcare: log in → view a patient record → log out.
 
-Per [synthetic-mon-wiki][sm]: "Synthetic monitoring tests commonly
-used paths and critical business processes." Don't monitor every
-flow - pick the 3-5 hero flows that map to the team's SLOs.
+Target commonly used paths and critical business processes. Don't
+monitor every flow - pick the 3-5 hero flows that map to the team's
+SLOs.
 
 ## Step 2 - Pick the platform
 
 | Platform                        | Notes                                                                 |
 |---------------------------------|----------------------------------------------------------------------|
-| **Datadog Synthetics**           | Per [synthetic-mon-wiki][sm], one of the named providers. Browser + API. Good for teams already on Datadog APM. |
+| **Datadog Synthetics**           | Named provider. Browser + API. Good for teams already on Datadog APM. |
 | **Checkly**                       | Playwright-native browser checks; API checks; CI-as-code via `checkly` CLI. |
 | **Pingdom**                       | Mature; well-known; uptime + transaction.                            |
 | **New Relic Synthetics**          | Synthetics-as-Code via JS scripts.                                   |
 | **AWS CloudWatch Synthetics**     | Selenium-based; fits AWS-native stacks.                              |
 | **Smokescreen** (open-source)     | Self-hosted; for compliance-restricted environments.                |
-| **F5 Distributed Cloud Synthetic** | Per [synthetic-mon-wiki][sm], named provider.                       |
+| **F5 Distributed Cloud Synthetic** | Named provider; browser + API.                                   |
 
 The platform decision typically follows the existing observability
 stack (Datadog APM → Datadog Synthetics; New Relic → New Relic
@@ -77,40 +67,25 @@ Synthetics).
 ## Step 3 - Author the script (browser check)
 
 For browser checks, Playwright-style is the de-facto standard
-(Checkly natively, Datadog Synthetics increasingly):
+(Checkly natively, Datadog Synthetics increasingly). Drive the
+journey step by step with accessibility-first locators, then assert
+a confirmation state:
 
 ```typescript
-// monitors/checkout-journey.spec.ts (Checkly-style)
+// monitors/checkout-journey.spec.ts (Checkly-style, excerpt)
 import { test, expect } from '@playwright/test';
 
 test('checkout journey - happy path', async ({ page }) => {
-  // 1. Land on home page
   await page.goto('https://example.com/');
-  await expect(page.getByRole('heading', { name: 'Welcome' })).toBeVisible();
-
-  // 2. Search and add to cart
   await page.getByRole('textbox', { name: 'Search' }).fill('BOOK-001');
-  await page.getByRole('button', { name: 'Search' }).click();
-  await page.getByRole('link', { name: 'BOOK-001' }).click();
-  await page.getByRole('button', { name: 'Add to cart' }).click();
-
-  // 3. Complete checkout (with synthetic test account)
-  await page.getByRole('link', { name: 'Cart' }).click();
-  await page.getByRole('button', { name: 'Checkout' }).click();
-
-  // (Use a dedicated synthetic-test account; never user real customer data)
-  await page.getByLabel('Email').fill(process.env.SYNTHETIC_USER_EMAIL!);
-  await page.getByLabel('Password').fill(process.env.SYNTHETIC_USER_PASSWORD!);
-  await page.getByRole('button', { name: 'Sign in' }).click();
-
-  // 4. Place order with Stripe test card (in test mode in production!)
-  await page.getByLabel('Card number').fill('4242 4242 4242 4242');
-  await page.getByRole('button', { name: 'Place order' }).click();
-
-  // 5. Assert confirmation
+  // ...search, add to cart, sign in with a synthetic account,
+  //    place order with a test-mode card...
   await expect(page.getByRole('heading', { name: /Order confirmed/i })).toBeVisible();
 });
 ```
+
+Full browser and API templates:
+[references/monitor-templates.md](references/monitor-templates.md).
 
 Use accessibility-first locators (not CSS classes);
 synthetic monitors that depend on CSS classes break on every UI
@@ -123,60 +98,23 @@ real charges / orders.
 
 ## Step 4 - Author the script (API check)
 
-For API checks, HTTP-step format:
+For API checks, HTTP-step format chains requests and asserts on
+each step - status code, response shape, and response time:
 
 ```yaml
-# monitors/api-orders-flow.yml (Checkly-style; adapt per platform)
-name: orders API journey
-runtimeId: 2024.02
-type: API
-request:
-  - name: 1. Get auth token
-    method: POST
-    url: https://api.example.com/auth/token
-    headers:
-      Content-Type: application/json
-    body: |
-      {"email": "{{SYNTHETIC_USER_EMAIL}}", "password": "{{SYNTHETIC_USER_PASSWORD}}"}
-    assertions:
-      - source: STATUS_CODE
-        comparison: EQUALS
-        target: 200
-      - source: JSON_BODY
-        property: $.access_token
-        comparison: NOT_EMPTY
-    setup: |
-      // Save token for next request
-      vars.set('TOKEN', response.body.access_token);
-
-  - name: 2. List orders
-    method: GET
-    url: https://api.example.com/orders
-    headers:
-      Authorization: Bearer {{TOKEN}}
-    assertions:
-      - source: STATUS_CODE
-        comparison: EQUALS
-        target: 200
-      - source: RESPONSE_TIME
-        comparison: LESS_THAN
-        target: 500   # ms
-      - source: JSON_BODY
-        property: $.orders
-        comparison: IS_ARRAY
-
-  - name: 3. Get specific order
-    method: GET
-    url: https://api.example.com/orders/{{TEST_ORDER_ID}}
-    headers:
-      Authorization: Bearer {{TOKEN}}
-    assertions:
-      - source: STATUS_CODE
-        comparison: EQUALS
-        target: 200
-      - source: JSON_SCHEMA
-        target: schemas/order.json
+# monitors/api-orders-flow.yml (Checkly-style, excerpt)
+- name: 2. List orders
+  method: GET
+  url: https://api.example.com/orders
+  headers: { Authorization: "Bearer {{TOKEN}}" }
+  assertions:
+    - { source: STATUS_CODE, comparison: EQUALS, target: 200 }
+    - { source: RESPONSE_TIME, comparison: LESS_THAN, target: 500 }
+    - { source: JSON_BODY, property: $.orders, comparison: IS_ARRAY }
 ```
+
+Full multi-step auth + list + fetch template:
+[references/monitor-templates.md](references/monitor-templates.md).
 
 Per-step assertions distinguish "the API returned" from "the API
 returned the right thing" - distinguish status code, response
@@ -200,8 +138,7 @@ side effects. Use daily for compliance / audit verification flows.
 | 1 hour     | Synthetic transactions that have side effects (only as a sanity check). |
 | Daily       | Compliance / audit verification flows.                           |
 
-Per [synthetic-mon-wiki][sm]: "These scripts run continuously at
-set intervals." Match the cadence to the SLO.
+Match the cadence to the SLO.
 
 ## Step 6 - Alert thresholds
 
@@ -238,10 +175,9 @@ Run from multiple geographic regions (3-5 minimum):
 
 - **us-east**, **us-west**, **eu-west**, **ap-southeast**, **sa-east**.
 
-Per [synthetic-mon-wiki][sm], synthetic monitoring measures
-"functionality, availability, and response time" - response time
-varies dramatically by region; multi-region monitoring catches
-CDN / DNS / TLS issues that single-region misses.
+Response time varies dramatically by region; multi-region
+monitoring catches CDN / DNS / TLS issues that single-region
+misses.
 
 ## Step 8 - As-code lifecycle
 

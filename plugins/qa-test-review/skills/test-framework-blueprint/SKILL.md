@@ -118,50 +118,23 @@ merged `test` object, never raw `@playwright/test`.
 
 ### Fixture scoping decisions
 
-Per the [Playwright test-fixtures docs](https://playwright.dev/docs/test-fixtures),
-"test fixtures are used to establish the environment for each test, giving
-the test everything it needs and nothing else", and fixtures are on-demand:
-"Playwright Test will setup only the ones needed by your test and nothing
-else." Playwright offers exactly two scopes
-([test-fixtures docs](https://playwright.dev/docs/test-fixtures)):
+Playwright fixtures establish each test's environment and are set up on-demand
+(only the ones a test needs), and Playwright offers exactly two scopes
+([Playwright test-fixtures docs](https://playwright.dev/docs/test-fixtures)):
 
 | Scope | Lifecycle | Blueprint use |
 |---|---|---|
 | **Test** (default) | Set up before and torn down after each test | Anything a test mutates: pages, sessions, seeded records |
-| **Worker** | Set up once per worker process; "Playwright Test will reuse the worker process for as many test files as it can, provided their worker fixtures match" | Expensive shared infrastructure tests only read, or per-worker isolated stores (database-per-worker) |
+| **Worker** | Set up once per worker process, reused across test files whose worker fixtures match | Expensive shared infrastructure tests only read, or per-worker isolated stores (database-per-worker) |
 
 The blueprint records, per fixture: name, scope, what it provides, and
 whether tests mutate it. The single rule from
 `test-isolation-patterns` Pattern 2
 applies verbatim: never share mutable fixtures across tests.
 
-Mechanics to standardize in the conventions doc (all per the
-[test-fixtures docs](https://playwright.dev/docs/test-fixtures)):
-
-- Custom fixtures via `test.extend()`; teardown code follows `await use(...)`
-  in the same function, so setup and teardown live together.
-- Cross-cutting fixtures that every test needs (e.g. a network-stub guard)
-  are declared `{ auto: true }`: they are "set up for each test/worker, even
-  when the test does not list them directly."
-- Fixture modules from separate concerns combine via `mergeTests()`; this is
-  what makes the `fixtures/index.ts` single-import convention work.
-- Tunable values (base URL, default user role) become option fixtures
-  (`{ option: true }`) configured through `test.use()` per project.
-
-### The pytest equivalent
-
-If Step 2 chose Python, the same architecture maps onto pytest fixtures. Per
-the [pytest fixtures how-to](https://docs.pytest.org/en/stable/how-to/fixtures.html),
-tests request fixtures by declaring them as arguments; available scopes are
-`function` (the default), `class`, `module`, `package`, and `session`, where
-scope controls destruction (a `function`-scoped fixture "is destroyed at the
-end of the test"; a `session`-scoped one at the end of the test session).
-The `fixtures/index.ts` merged-export convention becomes `conftest.py`
-(fixtures there are accessible to "tests from multiple test modules in the
-directory"), teardown code goes after `yield`, and `{ auto: true }` becomes
-`@pytest.fixture(autouse=True)`. Playwright's worker scope has no direct
-pytest twin; `session` scope plus per-worker IDs (e.g. `pytest-xdist` worker
-id) fills the same database-per-worker role.
+The Playwright fixture mechanics to standardize (`test.extend`, `auto`,
+`mergeTests`, option fixtures) and the pytest mapping for Python teams live in
+[references/fixture-mechanics.md](references/fixture-mechanics.md).
 
 ## Step 4 - Object-model decision
 
@@ -246,105 +219,11 @@ plugin:
   cross-file tier, including documented-vs-actual convention drift: it reads
   this very conventions doc and flags where the codebase diverged from it.
 
-## Worked example - "Ledgerly", a B2B invoicing web app
+## Worked example
 
-**The product:** Ledgerly lets accountants create, send, and reconcile
-invoices. Node/Express API + Postgres, React (Vite) frontend, Stripe for
-payments, one monorepo, full stack runs locally via Docker Compose. Team of
-four: three TypeScript-fluent product engineers, one SDET. No test suite
-beyond scattered React unit tests.
-
-**Step 1 - Inventory.** Change shape: 70% of PRs touch the API or API + UI
-together; UI-only PRs are rare. External dependency: Stripe. Coverage
-decision: API integration layer (primary), thin web E2E for the five critical
-journeys (create invoice, send, pay via Stripe redirect, reconcile, export),
-unit stays with the packages, contract testing deferred (one team owns both
-sides).
-
-**Step 2 - Runner.** Team language is TypeScript; one runner can cover both
-chosen layers, so Playwright Test takes the API tier (built-in `request`
-fixture, isolated per test per the
-[test-fixtures docs](https://playwright.dev/docs/test-fixtures)) and the E2E
-tier. Rejected: Cypress (would still need a second runner for the API tier),
-Jest + supertest (second runner for E2E).
-
-**Step 3 - Layout + fixtures.**
-
-```
-tests/
-  api/
-    invoices/
-    payments/
-  e2e/
-    invoicing/
-    reconciliation/
-  fixtures/
-    db.ts
-    auth.ts
-    stripe-stub.ts
-    index.ts
-  pages/
-  builders/
-playwright.config.ts
-docs/test-conventions.md
-```
-
-Fixture list (the blueprint's core table):
-
-| Fixture | Scope | Provides | Mutated by tests? |
-|---|---|---|---|
-| `workerDb` | worker | Database-per-worker (`ledgerly_test_w${workerIndex}`), migrated once per worker | yes, via test-scoped children |
-| `seededAccount` | test | One fresh accountant account + org in the worker DB | yes |
-| `authedPage` | test | `page` logged in as `seededAccount` | yes |
-| `api` | test | `request` context pre-authenticated against the API | yes |
-| `stripeStub` | worker, `auto: true` | Asserts the Stripe stub container is up; fails fast if a test would hit real Stripe | no |
-
-`db.ts`, `auth.ts`, and `stripe-stub.ts` are separate `test.extend()` modules
-combined with `mergeTests()` into `fixtures/index.ts`, per the
-[test-fixtures docs](https://playwright.dev/docs/test-fixtures).
-
-**Step 4 - Object model.** POM + Component Objects: the SUT is a React SPA
-with page-shaped flows and a shared nav/sidebar, suite projected well under
-200 tests, so Screenplay overhead is not justified per the selection matrix
-in `object-model-patterns`. App Actions
-rejected (not Cypress; no exposed store API). POM construction is deferred in
-the implementation order until ~10 specs exist.
-
-**Step 5 - Data + mocking.** Seed: empty DB + per-test creation through one
-`invoiceBuilder` and one `accountBuilder` (Test Data Builder per
-`test-data-patterns` in qa-test-data);
-no shared seed set yet. Isolation: database-per-worker
-(`test-isolation-patterns` Pattern 4b)
-because invoice tests are mutation-heavy. Dependencies: Postgres real (in
-compose), Stripe stubbed by a stub container in `docker-compose.test.yml`
-(stub tooling chosen per the detected runtime),
-email captured by a local SMTP sink.
-
-**Step 6 - CI matrix.** Reporters per the
-[test-reporters docs](https://playwright.dev/docs/test-reporters):
-`junit` + `blob` on CI, `html` locally.
-
-| Trigger | Suite | Shards | Retry |
-|---|---|---|---|
-| Per-PR | `tests/api` + `tests/e2e/invoicing` (smoke) | none (est. < 5 min) | 0 |
-| Merge to main | full `tests/` | none until runtime > 10 min, then 2-4 per `ci-test-job-conventions` §1 | 1 on runner failure only |
-| Nightly | full `tests/` against staging | as merge | 1, failures auto-filed |
-
-**Step 7 - Conventions + gates.** `docs/test-conventions.md` holds all six
-decision outputs above. A test-code critic wired as a PR check on `tests/**`;
-a framework-architecture audit scheduled quarterly.
-
-**Implementation order** (each step waits on the previous):
-
-1. Scaffold the harness from the blueprint (stack `react+vite`, runner
-   `playwright`).
-2. `db.ts` worker fixtures + migrations + one API smoke test.
-3. `auth.ts` + `stripe-stub.ts` fixtures; first E2E journey, raw locators.
-4. CI: per-PR job with junit output.
-5. After ~10 specs: extract `pages/` (POM) and `builders/` where duplication
-   actually appeared.
-6. Merge-to-main + nightly jobs; revisit sharding only when runtime crosses
-   the §1 threshold.
+A full worked example - "Ledgerly", a B2B invoicing web app - walking all seven
+steps and ending with the implementation order lives in
+[references/worked-example.md](references/worked-example.md).
 
 ## Anti-patterns
 

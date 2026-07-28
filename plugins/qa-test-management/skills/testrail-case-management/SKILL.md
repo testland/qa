@@ -111,32 +111,20 @@ new_case = create_case(
 print(new_case["id"])  # e.g., 1234
 ```
 
-### Discover custom fields
+### Discover fields, types + priorities
 
-Each tenant defines its own custom fields. Discover IDs once:
-
-```python
-fields = api("get_case_fields")
-for f in fields:
-    print(f["system_name"], f["label"], f["type_id"])
-# custom_preconds Preconditions 3
-# custom_severity Severity 6
-# custom_automation_type Automation Type 6
-# ...
-```
-
-`type_id` values per TestRail docs: 1=String, 2=Integer, 3=Text,
-4=URL, 5=Checkbox, 6=Dropdown, 7=User, 8=Date, 9=Milestone,
-10=Steps, 11=Multi-select.
-
-### Discover types + priorities
+Each tenant defines its own custom fields, case types, and priorities; discover
+their IDs at runtime rather than hard-coding them:
 
 ```python
-types = api("get_case_types")
-prios = api("get_priorities")
+fields = api("get_case_fields")   # system_name, label, type_id per field
+types = api("get_case_types")     # id + name per case type
+prios = api("get_priorities")     # id + name per priority
 ```
 
-Map names to IDs in your scripts.
+The `type_id` enumeration, the field-discovery loop, and the section / suite
+hierarchy are in
+[references/testrail-api-reference.md](references/testrail-api-reference.md).
 
 ### Update a case
 
@@ -169,54 +157,49 @@ while True:
 Newer TestRail versions return `{"offset", "limit", "size", "_links", "cases": [...]}`;
 older return a bare array. Handle both.
 
-### Sections + suites
-
-```python
-api("add_suite/123", method="POST", body={"name": "Authentication"})
-api("add_section/123", method="POST",
-    body={"suite_id": 7, "name": "Login flows", "parent_id": None})
-```
-
-Hierarchies: project → suite → section (can nest via parent_id) →
-case.
-
 ## Running
 
-### Bulk import from CSV
+### Bulk import from CSV (with per-row duplicate check)
+
+Build name-to-id maps once, then inside the loop check for an existing case by
+title before create so re-runs stay idempotent. `get_cases` accepts `filter`
+(substring match on title):
 
 ```python
 import csv
 
-with open("legacy-cases.csv") as f:
-    for row in csv.DictReader(f):
-        steps = [
-            {"content": s, "expected": e}
-            for s, e in zip(row["steps"].split("|"),
-                           row["expected"].split("|"))
-        ]
-        create_case(
-            section_id=int(row["section_id"]),
-            title=row["title"],
-            template_id=1,
-            type_id=type_id_for_name(row["type"]),
-            priority_id=priority_id_for_name(row["priority"]),
-            preconditions=row.get("preconditions"),
-            steps=steps,
-            refs=row.get("refs"),
-        )
+# Name -> id maps, discovered once (see Discover fields, types + priorities)
+type_ids = {t["name"]: t["id"] for t in api("get_case_types")}
+prio_ids = {p["name"]: p["id"] for p in api("get_priorities")}
+
+created, skipped = [], []
+for row in csv.DictReader(open("legacy-cases.csv")):
+    title = row["title"]
+    existing = api(f"get_cases/{project_id}&suite_id={suite_id}"
+                   f"&filter={requests.utils.quote(title[:60])}")
+    if existing.get("cases"):
+        skipped.append((title, existing["cases"][0]["id"]))
+        continue  # already present; skip and log
+    steps = [
+        {"content": s, "expected": e}
+        for s, e in zip(row["steps"].split("|"), row["expected"].split("|"))
+    ]
+    case = create_case(
+        section_id=int(row["section_id"]),
+        title=title,
+        template_id=1,
+        type_id=type_ids[row["type"]],
+        priority_id=prio_ids[row["priority"]],
+        preconditions=row.get("preconditions"),
+        steps=steps,
+        refs=row.get("refs"),
+    )
+    created.append(case["id"])
 ```
 
-### Detecting duplicates before create
-
-`get_cases` accepts `filter` (substring match on title). Always
-search before create for idempotence:
-
-```python
-existing = api(f"get_cases/{project_id}&suite_id={suite_id}"
-               f"&filter={requests.utils.quote(title[:60])}")
-if existing.get("cases"):
-    print(f"Existing case: {existing['cases'][0]['id']}")
-```
+**Verify:** assert `len(created) + len(skipped)` equals the row count before
+declaring the import done; a shortfall means a row raised - inspect it, fix the
+source row, and re-run (already-created cases are skipped by the title check).
 
 ## Parsing results
 

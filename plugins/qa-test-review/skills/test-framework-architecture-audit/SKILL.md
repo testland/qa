@@ -133,25 +133,20 @@ the chain.
 Classify every fixture by the scope it actually runs at, then check that the
 scope matches what tests do to it.
 
-The scope vocabulary is framework-specific and the semantics are documented:
+The scope vocabulary is framework-specific and documented:
 
-- Playwright has exactly two: "Test-scoped fixtures are torn down after each
-  test, while worker-scoped fixtures are only torn down when the worker process
-  executing tests is torn down", and fixtures are on-demand, so "Playwright Test
-  will setup only the ones needed by your test and nothing else"
-  ([Playwright, Fixtures](https://playwright.dev/docs/test-fixtures)). An unused
-  fixture therefore costs nothing and is not by itself a finding.
-- pytest has five, and scope controls destruction: `function` ("the default
-  scope, the fixture is destroyed at the end of the test"), `class`, `module`,
-  `package`, and `session` ("destroyed at the end of the test session")
+- Playwright has exactly two, test-scoped (torn down after each test) and
+  worker-scoped (torn down when the worker process ends); fixtures are on-demand,
+  so an unused one costs nothing and is not by itself a finding
+  ([Playwright, Fixtures](https://playwright.dev/docs/test-fixtures)).
+- pytest has five - `function` (default), `class`, `module`, `package`,
+  `session` - where scope controls when the fixture is destroyed
   ([pytest, How to use fixtures](https://docs.pytest.org/en/stable/how-to/fixtures.html)).
-- JUnit Jupiter's equivalent is the test instance lifecycle: "JUnit creates a new
-  instance of each test class before executing each test method" and that
-  per-method lifecycle "is the default behavior in JUnit Jupiter", while
-  `@TestInstance(Lifecycle.PER_CLASS)` makes all methods share one instance
+- JUnit Jupiter's equivalent is the test instance lifecycle: per-method by
+  default, while `@TestInstance(Lifecycle.PER_CLASS)` makes all methods share one
+  instance, so a class-level cache field on a `PER_CLASS` class is shared mutable
+  state between tests and belongs in this axis
   ([JUnit, Test Instance Lifecycle](https://docs.junit.org/current/writing-tests/test-instance-lifecycle.html)).
-  A class-level cache field on a `PER_CLASS` class is shared mutable state
-  between tests and belongs in this axis.
 
 | Condition | Band |
 |---|---|
@@ -418,55 +413,11 @@ Keep the conventions section even when it lengthens the report: every cut here i
 arguable, and a band printed without its threshold gets quoted later as if a
 standard produced it.
 
-## Worked example
+## Worked example and anti-patterns
 
-A Playwright and TypeScript framework: 312 test files, 38 page objects, 14
-fixture modules, 47 helper modules. `docs/test-conventions.md` exists and states
-seven rules. Call-site window: 90 days.
-
-- **A1.** 237 of 312 files import from the page-object directory: 76% coverage.
-  Three page objects contain `expect(` calls; one navigation method returns
-  `void`. In the 70-to-90 band with binary violations either way: **WARN**.
-  Largest offender is the checkout directory, 11 of 14 files holding raw locators.
-- **A2.** `CheckoutPage` extends `CartFlowPage` extends `EcommercePage` extends
-  `BasePage`: depth 4, **FAIL**. Any `BasePage` edit reaches leaf specs through
-  three layers and the failure names none of them. Fix: collapse the two
-  intermediate classes into composition at the base tier.
-- **A3.** All 14 fixture modules test-scoped or worker-scoped read-only, largest
-  180 lines: **PASS**.
-- **A4.** 47 helpers to 312 tests is 1:6.6, inside the WARN band. 11 helpers have
-  fewer than two call sites in the window (candidates, not confirmed). One name
-  family: `http-helper`, `api-helper`, `request-helper`. **WARN**.
-- **A5.** File suffix `*.spec.ts` 78%, `*.test.ts` 15%, `*_test.ts` 7%: only one
-  pattern clears 20%, so **not drifted**, and the minority patterns become
-  hygiene notes. Element targeting `data-testid` 55% against role-based 41%: two
-  above 20%, so that dimension **is** drifted. One of four: **WARN**.
-- **A6.** 18 fixed-duration sleeps across 9 files, four distinct timeout values,
-  no retry contradiction. Over the 5-sleep cut: **FAIL**.
-- **A7.** Four of seven documented rules below 80%, worst "always use role-based
-  locators" at 61%, none below 50%: **WARN**. The 61% and the A5 element-targeting
-  drift are the same fact from two angles, so one migration closes both.
-- **A8.** Sharded four ways with merged reports, JUnit XML, traces on first retry,
-  `retries: 1`, secrets from the CI store. Six of six, no anti-pattern: **PASS**.
-
-Rollup: two FAILs, so the verdict is **FAIL**. Fix order: A6 (18 sleeps, each
-with its web-first replacement listed), then A2 (collapse the depth-4 chain),
-then A1 (checkout directory), then A4, then A5 and A7 sequenced together since
-one migration closes both.
-
-## Anti-patterns
-
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Opening individual test files and reviewing their assertions or locators | Duplicates a per-file review and buries the cross-file findings in noise | Every axis here is a pattern across files. If a finding fits in one file, it is not this audit's |
-| Reporting A7 drift with no conventions doc | The baseline is undefined, so "drifted from what?" has no answer and the finding gets dismissed | Emit `n/a` and name the missing document |
-| Counting helper modules without call sites | 47 helpers is not a number until you know how many are reachable | Report the ratio and the call-site distribution together |
-| Flagging a sleep without its idiomatic replacement | The team reimplements it by hand: same defect, new syntax | Print the framework's waiting alternative next to every instance |
-| Treating depth 3 as automatically broken | Some products genuinely need a shared intermediate tier | WARN at 3, FAIL at 4, honor a written exemption at 3 |
-| Reporting all eight axes as equally urgent | Sleeps cost a re-run this week; naming drift costs nothing until someone joins | Rank by blast radius, always |
-| Presenting the cuts as industry standards | Every numeric band except the object-model rules is this audit's convention | Print the conventions list in the output |
-| Auditing a framework mid-migration and reporting the migration as drift | Two conventions coexisting on purpose is not drift, it is a plan in progress | Ask whether a migration is running before scoring A5 and A7; if so, report progress against it instead |
-| Running this instead of a suite-level audit | They measure different objects and return different findings | Run both, or state plainly which question you answered |
+A full worked audit (a Playwright + TypeScript framework scored across all eight
+axes with the fix order derived) and the anti-pattern table for running this
+audit live in [references/audit-detail.md](references/audit-detail.md).
 
 ## Limitations
 

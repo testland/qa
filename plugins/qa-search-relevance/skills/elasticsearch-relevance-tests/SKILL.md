@@ -9,8 +9,7 @@ metadata:
 
 Per the [Elasticsearch Rank Eval API], the `_rank_eval` endpoint
 "evaluates search result quality across typical queries using
-relevance metrics." This is the canonical IR-metrics-driven approach
-to search QA - far better than spot-checking results.
+relevance metrics."
 
 ## When to use
 
@@ -50,11 +49,11 @@ Per the [Elasticsearch Rank Eval API]:
 
 | Metric | When to use |
 |---|---|
-| **Precision@K** | "Of the top K, how many relevant?" - flat scoring |
-| **Recall@K** | "Of all relevant, how many in top K?" - completeness |
-| **MRR** | "Where's the first relevant?" - search where one good answer suffices |
-| **DCG / NDCG** | Graded relevance; rank-discounted; the default for graded judgments |
-| **ERR (Expected Reciprocal Rank)** | User-stops-at-first-relevant model; rank-decay sensitive |
+| **Precision@K** | flat top-K accuracy; no graded weighting |
+| **Recall@K** | completeness of the relevant set within top K |
+| **MRR** | one good answer suffices (navigational, Q&A) |
+| **DCG / NDCG** | graded relevance, rank-discounted; default for graded judgments |
+| **ERR** | user-stops-at-first-relevant; rank-decay sensitive |
 
 For e-commerce with graded judgments → NDCG@10 + MRR. For Q&A → MRR
 + Precision@1.
@@ -157,60 +156,12 @@ def test_no_query_drops_more_than_10_percent():
             f"Query {query_id} dropped {delta:.2f} (was {baseline_score['metric_score']:.2f}, now {current_score:.2f})"
 ```
 
-## Step 6 - `relevant_rating_threshold` for binary metrics
+## Advanced topics
 
-Per the [Elasticsearch Rank Eval API]: Precision/Recall/MRR accept
-`relevant_rating_threshold` (default 1). For graded judgments:
-
-```json
-"metric": {
-  "precision": {
-    "k": 10,
-    "relevant_rating_threshold": 2,
-    "ignore_unlabeled": false
-  }
-}
-```
-
-Rating ≥ 2 counted as "relevant"; below counted as "not relevant".
-The `ignore_unlabeled` flag controls whether unrated docs in
-results count against precision.
-
-## Step 7 - Reproducible test corpus
-
-Snapshot the index state used for tests:
-
-```bash
-PUT _snapshot/test_repo/baseline_2026_05_06
-{
-  "indices": "products",
-  "include_global_state": false
-}
-```
-
-Restore for each CI run:
-
-```yaml
-- name: Restore index snapshot
-  run: |
-    curl -X POST localhost:9200/_snapshot/test_repo/baseline_2026_05_06/_restore
-```
-
-Otherwise document changes (new docs, re-indexes) silently shift
-relevance baselines.
-
-## Step 8 - Quepid + Splainer integration
-
-[Quepid](https://github.com/o19s/quepid) (open source from
-OpenSource Connections) provides:
-
-- Web UI for judges to rate per-query results
-- CSV export → Step 1 judgment list
-- "Try" tab to test query template changes against current judgments
-
-[Splainer](https://github.com/o19s/splainer-search) explains _why_
-a doc ranked where it did - invaluable for debugging unexpected
-results.
+Binary-metric `relevant_rating_threshold` config, snapshotting a
+reproducible test corpus for CI, and Quepid + Splainer judgment
+authoring live in
+[references/rank-eval-guide.md](references/rank-eval-guide.md).
 
 ## Anti-patterns
 
@@ -219,7 +170,7 @@ results.
 | Use binary judgments only | Loses graded info; NDCG degrades to Precision | 4-point scale (Step 1) |
 | Rebuild judgments per test run | Bias from current ranking | Pinned judgment list (Step 1) |
 | Track only aggregate NDCG | Hides per-query regressions | Per-query tracking (Step 5) |
-| Test against changing index | Baselines move under your feet | Snapshot index (Step 7) |
+| Test against changing index | Baselines move under your feet | Snapshot corpus (advanced guide) |
 | 100% click-derived judgments | Click bias to top results, position bias | Mix click + SME judgments |
 
 ## Limitations

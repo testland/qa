@@ -7,25 +7,17 @@ description: "Generates Software Bill of Materials (SBOMs) using Anchore Syft - 
 
 ## Overview
 
-Per [github.com/anchore/syft][sf-gh]:
+Per [github.com/anchore/syft][sf-gh], Syft generates SBOMs from "container
+images, filesystems, archives" (OCI, Docker, Singularity). The SBOM is the
+input artifact for vuln scanning (`grype-scanning`) and for compliance
+delivery in SPDX or CycloneDX format.
 
 [sf-gh]: https://github.com/anchore/syft
 
-Syft generates SBOMs from "container images, filesystems, archives"
-with multi-container-standard support (OCI, Docker, Singularity).
-The generated SBOM is the input artifact for vuln scanning
-(`grype-scanning`) and compliance
-delivery (SPDX or CycloneDX format per consumer requirement).
-
-**Why generate SBOMs:**
-
-- US Executive Order 14028 (May 2021) requires SBOMs for software
-  sold to US federal agencies
-- EU Cyber Resilience Act (in effect 2024+) requires SBOMs for
-  products with digital elements
-- FDA medical-device cybersecurity guidance requires SBOMs
-- Internal supply-chain audits need a manifest of every dependency
-  shipped
+SBOMs are mandated by US EO 14028 (software sold to federal agencies), the EU
+Cyber Resilience Act (products with digital elements, in effect 2024+), and
+FDA medical-device guidance; internal supply-chain audits also need a full
+dependency manifest.
 
 ## When to use
 
@@ -77,37 +69,21 @@ explicit `-o` for machine-readable formats in CI.
 
 ## Step 3 - Output format catalog
 
-Per [sf-gh][sf-gh] format support:
-
-| Format | Use |
-|---|---|
-| `cyclonedx-json` | CycloneDX 1.5+ JSON; broad ecosystem support |
-| `cyclonedx-xml` | CycloneDX XML (older toolchains) |
-| `spdx-json` | SPDX 2.3 JSON; preferred by US Federal procurement |
-| `spdx-tag-value` | SPDX tag-value format (legacy) |
-| `syft-json` | Syft-native JSON; richest metadata |
-| `table` | Human-readable terminal table (default) |
-| `github-json` | GitHub dependency-graph submission format |
-
-For `grype-scanning` input, use
-`syft-json` (richest metadata) or `cyclonedx-json` (broader compat).
-
-For compliance delivery, the consumer's requirement dictates - 
-SPDX-JSON for US federal, CycloneDX-JSON for most EU contexts.
+Per [sf-gh][sf-gh], the common formats are `cyclonedx-json` (CycloneDX 1.5+,
+broad support), `spdx-json` (SPDX 2.3, preferred by US federal procurement),
+and `syft-json` (richest metadata). For `grype-scanning` input use `syft-json`
+or `cyclonedx-json`; for compliance delivery the consumer dictates (SPDX-JSON
+US federal, CycloneDX-JSON most EU). The full format catalog is in
+[references/formats.md](references/formats.md).
 
 ## Step 4 - Source types
 
-Per [sf-gh][sf-gh] supported sources:
-
-| Source | Syntax |
-|---|---|
-| Local Docker daemon | `syft alpine:latest` |
-| OCI / remote registry | `syft registry:docker.io/alpine:latest` |
-| OCI archive (tar) | `syft oci-archive:./image.tar` |
-| Docker archive (tar) | `syft docker-archive:./image.tar` |
-| Local directory | `syft dir:./my-project` (or `syft ./my-project`) |
-| File | `syft file:./pom.xml` |
-| Singularity image | `syft singularity:./image.sif` |
+Per [sf-gh][sf-gh], the common sources are a local Docker image
+(`syft alpine:latest`), a remote registry
+(`syft registry:docker.io/alpine:latest`), an archive
+(`syft oci-archive:./image.tar`), and a directory (`syft dir:./my-project`).
+The full source-type syntax table is in
+[references/formats.md](references/formats.md).
 
 ## Step 5 - Attestation pattern (cosign)
 
@@ -215,6 +191,7 @@ dependency-graph submission automatically when `format: github-json`.
 ## References
 
 - [sf-gh][sf-gh] - repository, install, scan commands, formats
+- [references/formats.md](references/formats.md) - full output format catalog + source-type syntax
 - anchore.com/syft - landing
 - ntia.gov/SBOM - NTIA SBOM minimum elements
 - whitehouse.gov/briefing-room/presidential-actions/2021/05/12/executive-order-on-improving-the-nations-cybersecurity/ - US EO 14028
