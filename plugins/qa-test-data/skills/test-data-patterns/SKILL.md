@@ -24,18 +24,25 @@ Do **not** use this skill to:
 
 ## Pattern 1 - Test Data Builder
 
-**Canonical source:** Nat Pryce and Steve Freeman, *Growing Object-Oriented Software, Guided by Tests* (2009) - the Test Data Builder pattern is named in chapter 22. Discussed in Pryce's blog post [Test Data Builders](http://www.natpryce.com/articles/000714.html) (the cross-language origin reference).
+**Canonical source:** Nat Pryce and Steve Freeman, the Test Data Builder pattern (see References).
 
 **Definition:** A Test Data Builder is a class with chainable methods (`.withName("Alice").withOrgId(42).build()`) that constructs domain objects step-by-step. Every field has a sensible default; the test overrides only the fields it cares about.
 
-**Example (cross-language pseudocode):**
+**Concrete implementation (TypeScript, runnable):**
 
 ```typescript
-// Default-everything builder; override only what matters
-const user = aUser()
-  .withRole("admin")
-  .withOrg(anOrg().withPlan("enterprise"))
-  .build();
+type User = { role: string; org: { plan: string } };
+
+class UserBuilder {
+  private user: User = { role: "standard", org: { plan: "free" } };
+  withRole(role: string) { this.user.role = role; return this; }
+  withOrg(org: User["org"]) { this.user.org = org; return this; }
+  build(): User { return { ...this.user }; }
+}
+const aUser = () => new UserBuilder();
+
+// Test overrides only the fields it cares about:
+const admin = aUser().withRole("admin").build();
 ```
 
 ### When to use Test Data Builder
@@ -55,7 +62,7 @@ const user = aUser()
 
 ## Pattern 2 - Factory (with traits and associations)
 
-**Canonical source:** Thoughtbot's `factory_bot` (Ruby) is the cross-language reference implementation. The pattern itself predates the library - Joshua Kerievsky's *Refactoring to Patterns* (2004) traces it to the Gang of Four's Factory Method but adapted for test data.
+**Canonical source:** Thoughtbot's `factory_bot` (Ruby) is the cross-language reference implementation; the pattern adapts the Gang of Four Factory Method for test data.
 
 **Definition:** A Factory is a registered, named template for creating an object. Traits are named modifiers (`:admin`, `:disabled`, `:premium`) that compose with the base template. Associations express relationships (`user.org`, `org.plan`).
 
@@ -79,11 +86,11 @@ end
 admin_user = create(:user, :admin, :with_org)
 ```
 
-**Cross-language equivalents** (cite the canonical per-language tool):
-- Ruby: `factory_bot` ([thoughtbot/factory_bot](https://github.com/thoughtbot/factory_bot)) - the origin.
-- Python: `factory_boy` ([factoryboy/factory_boy](https://github.com/FactoryBoy/factory_boy)) - direct port.
-- JS/TS: `fishery` ([thoughtbot/fishery](https://github.com/thoughtbot/fishery)), `@faker-js/faker` (lower-level).
-- .NET: `Bogus` ([bchavez/Bogus](https://github.com/bchavez/Bogus)) - Faker-style with factory affordances.
+**Cross-language equivalents** (canonical per-language tool; URLs in References):
+- Ruby: `factory_bot` - the origin.
+- Python: `factory_boy` - direct port.
+- JS/TS: `fishery`, `@faker-js/faker` (lower-level).
+- .NET: `Bogus` - Faker-style with factory affordances.
 - Java: `data-faker` + handwritten factory or test-data-builder-style libraries.
 
 ### When to use Factory
@@ -103,7 +110,7 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Pattern 3 - Object Mother
 
-**Canonical source:** [Martin Fowler - Object Mother](https://martinfowler.com/bliki/ObjectMother.html). Predates Test Data Builder; superseded by it for most use cases but still useful for stable canonical objects.
+**Canonical source:** Martin Fowler, Object Mother (see References). Predates Test Data Builder; superseded by it for most use cases but still useful for stable canonical objects.
 
 **Definition:** A central class (the "Mother") exposes named methods that return fully-constructed canonical test objects: `ObjectMother.standardUser()`, `ObjectMother.adminUser()`, `ObjectMother.userInOrgWithFiveMembers()`.
 
@@ -126,7 +133,7 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Pattern 4 - Fixture composition
 
-**Canonical source:** Gerard Meszaros, *xUnit Test Patterns: Refactoring Test Code* (2007) - the seminal reference for **Fresh Fixture**, **Shared Fixture**, **Implicit Setup**, **Delegated Setup**, and **Setup Decorator** patterns. The [Wikipedia entry on test fixture](https://en.wikipedia.org/wiki/Test_fixture) describes the four-phase test pattern (setup / exercise / verify / teardown) attributed to Meszaros.
+**Canonical source:** Gerard Meszaros, *xUnit Test Patterns* - the seminal reference for **Fresh Fixture**, **Shared Fixture**, **Implicit Setup**, **Delegated Setup**, and **Setup Decorator** patterns; it defines the four-phase test pattern (setup / exercise / verify / teardown). See References.
 
 **Definition:** Fixture composition is the pattern of building per-test state from reusable fragments. The three flavours:
 
@@ -161,7 +168,7 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Pattern 5 - Snapshot / golden-file
 
-**Canonical source:** [Jest snapshot testing](https://jestjs.io/docs/snapshot-testing) is the cross-language reference for the test-code-side; [Michael Feathers' *Working Effectively with Legacy Code*](https://www.oreilly.com/library/view/working-effectively-with/0131177052/) coined "characterisation tests" which is the legacy-code-tier version of snapshot testing.
+**Canonical source:** Jest snapshot testing is the cross-language reference for the test-code side; Michael Feathers' *Working Effectively with Legacy Code* coined "characterisation tests", the legacy-code-tier version of snapshot testing. See References.
 
 **Definition:** A snapshot test compares the current output of code under test to a previously-saved canonical output ("the golden file"). When the test runs, it serialises the output, compares against the file, fails if they differ. Engineers explicitly approve a new golden file when the change is intentional.
 
@@ -181,11 +188,11 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Pattern 6 - Production-Data Anonymisation
 
-**Canonical source:** Per ISO/IEC 25024 (data quality) and GDPR/CCPA legal requirements; practitioner adoption documented across [Tonic.ai](https://www.tonic.ai/), [Gretel.ai](https://gretel.ai/), [K2view](https://www.k2view.com/), and `synthetic-pii-generator` (a companion skill for synthesizing PII).
+**Canonical source:** ISO/IEC 25024 (data quality) and GDPR / CCPA requirements; `synthetic-pii-generator` is the companion PII-synthesis skill. Tooling vendors listed in References.
 
 **Definition:** Anonymisation is the technique of using production data (or production-shaped data) for testing **after** removing or masking personally-identifiable information (PII), commercially-sensitive data, and any field that would breach privacy / compliance if leaked to a test environment.
 
-**Why this is a pattern, not just a tool concern:** The pattern dictates that **no production data enters a test environment without anonymisation** - even if the test environment is "internal only." Cross-environment data leakage is the dominant security failure mode in test-data management ([2025 Verizon DBIR](https://www.verizon.com/business/resources/reports/dbir/) cited cross-environment data leakage as a top-10 breach pattern).
+**Why this is a pattern, not just a tool concern:** The pattern dictates that **no production data enters a test environment without anonymisation** - even if the test environment is "internal only." Cross-environment data leakage is a dominant security failure mode in test-data management (2025 Verizon DBIR; see References).
 
 ### The three anonymisation flavours
 
@@ -247,6 +254,7 @@ admin_user = create(:user, :admin, :with_org)
 - thoughtbot - `factory_bot` (Ruby; the canonical Factory implementation): https://github.com/thoughtbot/factory_bot
 - FactoryBoy team - `factory_boy` (Python equivalent): https://github.com/FactoryBoy/factory_boy
 - thoughtbot - `fishery` (TypeScript Factory): https://github.com/thoughtbot/fishery
+- bchavez - `Bogus` (.NET; Faker-style with factory affordances): https://github.com/bchavez/Bogus
 - Jest - Snapshot Testing (the cross-language reference for the snapshot pattern): https://jestjs.io/docs/snapshot-testing
 - Michael Feathers - *Working Effectively with Legacy Code* (the characterisation-tests progenitor of golden-file testing): ISBN 978-0131177055.
 - Wikipedia - *Test fixture* (Meszaros's four-phase test pattern): https://en.wikipedia.org/wiki/Test_fixture
@@ -254,5 +262,6 @@ admin_user = create(:user, :admin, :with_org)
 - ISTQB glossary - test data: https://glossary.istqb.org/en_US/term/test-data
 - ISTQB glossary - fixture: https://glossary.istqb.org/en_US/term/test-fixture
 - ISO/IEC 25024 - data quality model (cited for anonymisation requirements).
+- Anonymisation / synthetic-data tooling: Tonic.ai (https://www.tonic.ai/), Gretel.ai (https://gretel.ai/), K2view (https://www.k2view.com/).
 - `factory-bot-data`, `faker-data`, `mimesis-data`, `bogus-data`, `synthetic-pii-generator`, `golden-file-conventions`, `seed-data-curator` - the per-tool and operational siblings.
 - `object-model-patterns`, `test-isolation-patterns`, `test-step-design-patterns` - sister architecture-tier pattern catalogs.

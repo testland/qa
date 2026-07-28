@@ -105,15 +105,14 @@ routes:
 
 ### Step 2 - Emit the per-recipe Playwright test
 
-For each recipe row in Step 1's matrix, emit the matching test
-pattern. The pattern depends on the recipe - the assertion shape
-must distinguish "served from cache" vs "served from network."
+For each recipe row in Step 1's matrix, emit the matching test - the assertion
+shape must distinguish "served from cache" vs "served from network." The two
+poles (cache-always vs network-always) are inline; the rest live in the
+reference.
 
 #### Cache only
 
-Per [off-cookbook]: "Use for static assets you've cached during
-installation." Test that the route serves from cache even with
-network reachable, AND with network blocked:
+Serves from cache even with network reachable AND with network blocked:
 
 ```ts
 test('Cache only: /_next/static/x.css serves from cache regardless of network', async ({ page, context }) => {
@@ -143,116 +142,11 @@ test('Network only: /api/user/me fails when offline (never cached)', async ({ pa
 });
 ```
 
-#### Cache, falling back to network
-
-```ts
-test('Cache, falling back to network: /img/x.png serves from cache when present, network when not', async ({ page, context }) => {
-  // Warm
-  await page.goto('https://localhost:3000/img/x.png');
-  await page.waitForLoadState('networkidle');
-
-  // Now offline - cache hits
-  await context.setOffline(true);
-  const offline = await page.evaluate(() =>
-    fetch('/img/x.png').then(r => r.status).catch(() => 0)
-  );
-  expect(offline).toBe(200);
-});
-```
-
-#### Cache and network race
-
-The first responder wins. Assert the call returns < small-disk-read budget:
-
-```ts
-test('Cache and network race: response under 100ms when cached', async ({ page }) => {
-  await page.goto('https://localhost:3000/api/race-cache');
-  await page.waitForLoadState('networkidle');
-
-  const ms = await page.evaluate(async () => {
-    const t = performance.now();
-    await fetch('/api/race-cache');
-    return performance.now() - t;
-  });
-  expect(ms).toBeLessThan(100);
-});
-```
-
-#### Network falling back to cache
-
-```ts
-test('Network falling back to cache: / serves fresh when online, cached when offline', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
-  await page.waitForLoadState('networkidle');
-
-  await context.setOffline(true);
-  const resp = await page.goto('https://localhost:3000/');
-  expect(resp?.status()).toBe(200);
-
-  await context.setOffline(false);
-  // When online, network is preferred - track that a request fires
-  let hits = 0;
-  page.on('request', req => { if (req.url().endsWith('/')) hits++; });
-  await page.reload();
-  expect(hits).toBeGreaterThanOrEqual(1);
-});
-```
-
-#### Cache then network
-
-Two responses for one fetch: instant cache, then revalidated network. Assert two paint phases:
-
-```ts
-test('Cache then network: /api/feed renders cached list first, refreshes on network', async ({ page }) => {
-  await page.goto('https://localhost:3000/feed');
-  // Initial render uses cached list
-  await expect(page.locator('[data-testid="feed-list"]')).toBeVisible();
-  const initialCount = await page.locator('[data-testid="feed-item"]').count();
-
-  // Refresh fetches from network with newer items
-  await page.evaluate(() => fetch('/api/feed?force-refresh=1'));
-  await page.waitForTimeout(500);
-
-  const updated = await page.locator('[data-testid="feed-item"]').count();
-  expect(updated).toBeGreaterThanOrEqual(initialCount);
-});
-```
-
-#### Generic fallback
-
-Per [off-cookbook]: "Provides a default response when both cache
-and network requests fail for secondary content." Per [wb-recipes],
-Workbox's `offlineFallback()` defaults to `offline.html`:
-
-```ts
-test('Generic fallback: unknown route + offline serves offline.html', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
-  await page.waitForLoadState('networkidle');
-
-  await context.setOffline(true);
-  const resp = await page.goto('https://localhost:3000/never-existed');
-  expect(resp?.status()).toBe(200);
-  await expect(page.locator('text=/offline|unavailable/i')).toBeVisible();
-});
-```
-
-#### Service Worker side templating
-
-Per [off-cookbook]: "Combines cached templates with JSON data to
-render pages the service worker controls." Assert the SW
-synthesizes the response:
-
-```ts
-test('SW-side templating: /reports/123 renders cached shell + JSON data', async ({ page }) => {
-  // The SW's fetch handler must compose template + data
-  await page.goto('https://localhost:3000/reports/123');
-  await expect(page.locator('h1')).toContainText('Report #123');
-
-  // Distinct origin proves SW synthesis (not pure network)
-  const src = await page.evaluate(() => navigator.serviceWorker.controller?.scriptURL);
-  expect(src).toBeTruthy();
-});
-```
+The remaining six recipe templates - Cache falling back to network, Cache and
+network race, Network falling back to cache, Cache then network, Generic
+fallback, and SW-side templating - are in
+[references/recipes.md](references/recipes.md), each with its assertion-shape
+note.
 
 ### Step 3 - Test the underlying storage choice
 
@@ -384,18 +278,11 @@ CI gates on every row having a passing spec.
 
 ## Worked example: a 4-route news PWA
 
-```yaml
-routes:
-  - pattern: /_next/static/**          # Cache only
-  - pattern: /                          # Network falling back to cache
-  - pattern: /api/articles              # Cache then network
-  - pattern: /api/user/me               # Network only
-  - pattern: /*                          # Generic fallback (offline.html)
-```
-
-Emitted Playwright spec covers 5 cells. Each test uses the pattern
-from Step 2. The full suite runs in ~15 seconds on Chromium and
-catches the four most common offline regressions:
+Applying Step 1's matrix to a news PWA - static -> Cache only, `/` -> Network
+falling back to cache, `/api/articles` -> Cache then network, `/api/user/me` ->
+Network only, `/*` -> Generic fallback - emits a 5-cell Playwright spec that
+runs in ~15 seconds on Chromium and catches the four most common offline
+regressions:
 
 1. Static cache miss on stale deploy.
 2. HTML shell stuck stale when network returns.

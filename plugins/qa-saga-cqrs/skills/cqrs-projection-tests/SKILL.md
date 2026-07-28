@@ -81,6 +81,9 @@ When the projection is async (via message bus), this is the canonical
 SLA test. If sync (in same DB transaction), no consistency window
 exists - different test pattern.
 
+Verify: assert the read model converges within the documented window;
+if it does not, check consumer lag / message-bus backlog, then re-run.
+
 ## Step 4 - Multiple projections from same event stream
 
 CQRS often has many projections (search index, materialized SQL
@@ -114,22 +117,13 @@ def test_projection_rebuild_matches_known_state():
     assert rebuilt.materialize() == expected
 ```
 
-Verify the swap mechanic:
+Verify: at the swap point, assert `new_proj.materialize() ==
+old_proj.materialize()` before switching reads; if they diverge, replay
+the events missing from the new projection, then re-run.
 
-```python
-def test_zero_downtime_swap():
-    # Stand up new projection in parallel
-    new_proj = SearchIndexProjectionV2()
-    catchup_from_event_log(new_proj, until=current_position)
-
-    # Verify new matches old at the swap point
-    assert new_proj.materialize() == old_proj.materialize()
-
-    # Subscribe new to live event stream
-    subscribe(new_proj)
-    # Switch reads to new - verify no read returns stale state
-    swap_query_target(old_proj, new_proj)
-```
+The zero-downtime swap mechanic (stand up in parallel, catch up,
+subscribe, switch reads) is in
+[references/rebuild-swap-and-read-your-writes.md](references/rebuild-swap-and-read-your-writes.md).
 
 ## Step 6 - Idempotency: apply same event twice
 
@@ -177,20 +171,8 @@ the UI either:
   state, OR
 - Returns a synthetic "pending" state from the write model.
 
-```python
-def test_post_command_returns_pending_until_projection_catches_up():
-    response = api_client.post("/products", {"name": "Phone"})
-    assert response.status == 202  # Accepted
-
-    # Get returns "pending" until projection updates
-    get1 = api_client.get(f"/products/{response.body['id']}")
-    assert get1.body["status"] == "pending"
-
-    wait_for_projection_to_catch_up(timeout=5)
-
-    get2 = api_client.get(f"/products/{response.body['id']}")
-    assert get2.body["status"] == "active"
-```
+Full worked test (202 Accepted -> pending -> active) is in
+[references/rebuild-swap-and-read-your-writes.md](references/rebuild-swap-and-read-your-writes.md).
 
 ## Anti-patterns
 

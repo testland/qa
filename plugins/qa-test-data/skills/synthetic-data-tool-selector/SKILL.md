@@ -70,9 +70,7 @@ Project language?
 ## Side-by-side: same fixture in four languages
 
 Generate a single user with name + email + a date of birth in
-[1980, 2000].
-
-### Python (Faker)
+[1980, 2000]. Canonical example (Python / Faker):
 
 ```python
 from faker import Faker
@@ -87,64 +85,10 @@ user = {
 }
 ```
 
-### Python (mimesis)
-
-```python
-from mimesis import Generic, Locale
-
-g = Generic(Locale.EN, seed=42)
-
-user = {
-    "name":  g.person.full_name(),
-    "email": g.person.email(),
-    "dob":   g.datetime.date(start=1980, end=2000),
-}
-```
-
-### JS / TS (faker-js)
-
-```typescript
-import { faker } from '@faker-js/faker';
-
-faker.seed(42);
-
-const user = {
-  name:  faker.person.fullName(),
-  email: faker.internet.email(),
-  dob:   faker.date.birthdate({ min: 23, max: 43, mode: 'age' }),
-};
-```
-
-### Ruby (FactoryBot + Faker)
-
-```ruby
-FactoryBot.define do
-  factory :user do
-    name  { Faker::Name.name }
-    email { Faker::Internet.unique.email }
-    dob   { Faker::Date.birthday(min_age: 23, max_age: 43) }
-  end
-end
-
-# Use:
-Faker::Config.random = Random.new(42)
-user = FactoryBot.create(:user)
-```
-
-### .NET (Bogus)
-
-```csharp
-var faker = new Faker<User>("en")
-    .UseSeed(42)
-    .RuleFor(u => u.Name,  f => f.Name.FullName())
-    .RuleFor(u => u.Email, f => f.Internet.Email())
-    .RuleFor(u => u.Dob,   f => f.Date.Past(43));
-
-var user = faker.Generate();
-```
-
-The pattern is identical across libraries; only the API style
-differs (method calls vs. `RuleFor` builders).
+The pattern is identical across libraries; only the API style differs
+(method calls vs. `RuleFor` builders). The same fixture in mimesis,
+faker-js, FactoryBot, and Bogus:
+[references/language-variants.md](references/language-variants.md).
 
 ## Cross-cutting concerns
 
@@ -167,37 +111,18 @@ seeding-conventions doc; revisit on intentional library bumps.
 
 ### Per-test resetting
 
-Reset the seed in `beforeEach` (Vitest / Jest / pytest / RSpec) so
+Reset the seed in per-test setup (`beforeEach` / autouse fixture) so
 each test starts with the same baseline:
 
-```javascript
-import { faker } from '@faker-js/faker';
+| Language | Reset call |
+|---|---|
+| JS / TS (Jest / Vitest) | `faker.seed(42)` in `beforeEach` |
+| Python (pytest) | `Faker.seed(42)` in an autouse fixture |
+| Ruby (RSpec) | `Faker::Config.random = Random.new(42)` in `before(:each)` |
+| .NET (xUnit) | `new Faker<T>().UseSeed(42)` per test |
 
-beforeEach(() => { faker.seed(42); });
-```
-
-```python
-@pytest.fixture(autouse=True)
-def reset_faker():
-    Faker.seed(42)
-```
-
-```ruby
-RSpec.configure do |c|
-  c.before(:each) do
-    Faker::Config.random = Random.new(42)
-  end
-end
-```
-
-```csharp
-// xUnit fixture or per-test setup
-[Fact]
-public void Test()
-{
-    var faker = new Faker<User>().UseSeed(42)...;
-}
-```
+Full reset snippets per language:
+[references/language-variants.md](references/language-variants.md).
 
 ## When NOT to use synthetic data
 
@@ -215,6 +140,10 @@ positive-path** data. The related skills above handle the
 adversarial, boundary, narrative, and persistent cases.
 
 ## References
+
+- [references/language-variants.md](references/language-variants.md) - the four-language fixture equivalents and per-test reset snippets.
+
+## Related skills
 
 - `faker-data`
 - `factory-bot-data`

@@ -7,11 +7,10 @@ description: "Compares two CycloneDX or SPDX SBOMs to surface net-new, removed, 
 
 ## Overview
 
-SBOM diffing is the supply-chain primitive that turns two point-in-time
-inventory snapshots into an actionable change signal: which components
-are net-new in the target image, which were removed, and which changed
-version. Without a diff step, an SBOM is a compliance artifact; with it,
-the SBOM becomes a change-control gate.
+An SBOM diff turns two point-in-time inventory snapshots into a change
+signal: which components are net-new, removed, or version-changed between
+image or build versions. It turns an SBOM from a static artifact into a
+change-control gate.
 
 Per [github.com/CycloneDX/cyclonedx-cli][cdx-cli-gh], the CycloneDX CLI
 provides a first-class `diff` subcommand that accepts any two CycloneDX
@@ -61,7 +60,6 @@ docker run cyclonedx/cyclonedx-cli diff sbom-from.json sbom-to.json --component-
 
 # Binary - download from releases page
 # https://github.com/CycloneDX/cyclonedx-cli/releases
-# Latest stable: 0.32.0 (2024-05-14)
 ```
 
 Syft is also required to generate input SBOMs. Per [sf-gh][sf-gh]:
@@ -155,78 +153,31 @@ regulated or security-sensitive contexts.
 
 ## Step 5 - CI gate on net-new components
 
-The JSON output can be parsed to fail the pipeline when net-new components
-appear. Example GitHub Actions step using `jq`:
-
-```yaml
-- name: SBOM diff gate
-  run: |
-    ADDED=$(jq '.added | length' diff-result.json)
-    echo "Net-new components: $ADDED"
-    if [ "$ADDED" -gt "0" ]; then
-      echo "::error::Net-new components detected. Review diff-result.json."
-      jq '.added' diff-result.json
-      exit 1
-    fi
-```
-
-To allow a pre-approved set of additions (e.g., a known intentional
-dependency upgrade), maintain an allowlist and subtract matches before
-the count check:
+Parse the JSON diff to fail the pipeline when net-new components appear. The
+minimal gate:
 
 ```bash
-UNAPPROVED=$(jq --rawfile allow allowlist.txt \
-  '[.added[] | select(.name as $n | $allow | test($n) | not)] | length' \
-  diff-result.json)
+ADDED=$(jq '.added | length' diff-result.json)
+if [ "$ADDED" -gt "0" ]; then
+  echo "::error::Net-new components detected. Review diff-result.json."
+  jq '.added' diff-result.json
+  exit 1
+fi
 ```
 
-Adjust the gate threshold and allowlist policy to the team's change-control
-requirements; the CI step above enforces zero-tolerance as the strictest form.
+To allow a pre-approved set of additions (a known intentional dependency
+upgrade), pair the count check with an allowlist. The full GitHub Actions gate
+job and the allowlist-subtraction pattern are in
+[references/ci-workflows.md](references/ci-workflows.md).
 
 ## Step 6 - Alerting pattern (nightly drift detection)
 
-For production image monitoring, run a nightly diff against the last
-known-good SBOM rather than comparing two build artifacts:
-
-```yaml
-jobs:
-  sbom-drift:
-    runs-on: ubuntu-latest
-    schedule:
-      - cron: "0 2 * * *"
-    steps:
-      - name: Generate current SBOM
-        run: syft myapp:production -o cyclonedx-json=sbom-current.json
-
-      - name: Download last known-good SBOM
-        run: |
-          aws s3 cp s3://sbom-store/sbom-last-good.json sbom-baseline.json
-
-      - name: Diff
-        run: |
-          cyclonedx diff sbom-baseline.json sbom-current.json \
-            --component-versions --output-format json \
-            > drift-result.json
-
-      - name: Alert on drift
-        run: |
-          ADDED=$(jq '.added | length' drift-result.json)
-          REMOVED=$(jq '.removed | length' drift-result.json)
-          if [ "$ADDED" -gt "0" ] || [ "$REMOVED" -gt "0" ]; then
-            echo "Supply-chain drift detected"
-            cat drift-result.json
-            # Pipe to Slack/PagerDuty/JIRA as needed
-            exit 1
-          fi
-
-      - name: Rotate known-good on clean diff
-        if: success()
-        run: aws s3 cp sbom-current.json s3://sbom-store/sbom-last-good.json
-```
-
-The "rotate known-good on clean diff" step ensures the baseline advances
-only when the image passes the gate, catching regressions introduced in
-a later build.
+For production monitoring, run a scheduled nightly diff against the last
+known-good SBOM rather than comparing two build artifacts, alert on any added
+or removed components, and rotate the known-good baseline only on a clean
+diff so it advances past passing builds and still catches later regressions.
+The full nightly-drift GitHub Actions workflow is in
+[references/ci-workflows.md](references/ci-workflows.md).
 
 ## Example
 
@@ -289,6 +240,7 @@ If unexplained, the release is blocked pending investigation.
   reference, diff flags, output format documentation
 - [sf-gh][sf-gh] - Syft repository: SBOM generation, output formats,
   source types
+- [references/ci-workflows.md](references/ci-workflows.md) - full CI-gate + nightly drift workflows
 - `syft-generation` - generate the input SBOMs
 - `cyclonedx-format` - CycloneDX schema reference
 - `grype-scanning` - vuln-scan net-new components

@@ -7,14 +7,9 @@ description: "Assembles a multi-step end-to-end user-journey test from a list of
 
 ## Overview
 
-E2E tests model **user journeys** - sequences of actions across
-multiple pages / components that collectively exercise a business
-flow. Authoring them as a list of low-level Playwright /
-Cypress / Selenium calls is verbose and easy to break on UI
-refactors.
-
 This skill takes a high-level intent list and assembles a single
-narrative test:
+narrative test - named user-language intents map to framework-native
+steps, so one UI refactor updates one mapping, not every test:
 
 ```
 1. user_signs_up_with_email
@@ -75,45 +70,26 @@ function (in step 2) knows how.
 ## Step 2 - Define the intent → step mapping
 
 Once per project, a mapping file translates intents to framework-
-native code:
+native code. Each intent is one async function that drives the UI and
+optionally shares state via `ctx`:
 
 ```typescript
-// e2e/intents/index.ts (Playwright example)
-import { Page, expect } from '@playwright/test';
-
+// e2e/intents/index.ts (Playwright)
 export const intents = {
-  user_visits_landing_page: async (page: Page, ctx: any) => {
-    await page.goto(ctx.baseUrl);
-  },
-
-  user_clicks_signup: async (page: Page) => {
-    await page.getByRole('link', { name: 'Sign up' }).click();
-  },
+  user_clicks_signup: async (page: Page) =>
+    page.getByRole('link', { name: 'Sign up' }).click(),
 
   user_fills_signup_form: async (page: Page, ctx: any, data: any) => {
     await page.getByLabel('Email').fill(data.email);
-    await page.getByLabel('Password').fill(data.password);
     ctx.email = data.email;   // share state with later intents
-    ctx.password = data.password;
   },
-
-  user_submits_signup: async (page: Page) => {
-    await page.getByRole('button', { name: 'Create account' }).click();
-    await expect(page).toHaveURL(/\/welcome/);
-  },
-
-  user_confirms_email_via_inbox: async (page: Page, ctx: any) => {
-    const link = await getEmailConfirmLink(ctx.email);   // helper that reads from a Mailpit / Inbucket fixture
-    await page.goto(link);
-  },
-
-  // ... etc
 };
 ```
 
-The mapping is **the project's** - it knows how the project's UI is
-laid out. Adding a new intent or refactoring an existing one is one
-edit; tests authored later automatically use the new shape.
+The mapping is **the project's** - it knows how the UI is laid out;
+adding or refactoring an intent is one edit. Full mapping plus the
+Cypress and Karate variants:
+[references/intent-mapping.md](references/intent-mapping.md).
 
 ## Step 3 - Generate the test
 
@@ -123,7 +99,8 @@ The skill emits the matching .spec / .feature file.
 fixtures + parallelism, role/label-based selectors that survive UI
 refactors. Use Cypress when the project already standardizes on it;
 use Karate for pure-API journeys; use Selenium only for legacy
-suites already invested in it.
+suites already invested in it. Cypress and Karate output shapes:
+[references/intent-mapping.md](references/intent-mapping.md).
 
 ### Playwright
 
@@ -153,34 +130,6 @@ test('new user onboards and completes first task', async ({ page }) => {
   await expect(page.locator('[data-testid="task-complete-celebration"]')).toBeVisible();
 });
 ```
-
-### Cypress
-
-Similar structure with Cypress's chained command syntax; the
-intents map to `cy.get(...)` calls.
-
-### Karate
-
-```gherkin
-Feature: New user onboards and completes first task
-
-  Background:
-    * url 'http://localhost:3000'
-
-  Scenario: Onboarding flow
-    Given path '/'
-    When method GET
-    Then status 200
-
-    Given path '/signup'
-    And request { email: '#{newuser@example.com}', password: 'TestPass123!' }
-    When method POST
-    Then status 201
-
-    # ... more steps
-```
-
-(Per `karate-testing`.)
 
 ## Step 4 - Wire fixtures
 

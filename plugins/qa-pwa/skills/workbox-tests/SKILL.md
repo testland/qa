@@ -10,19 +10,21 @@ metadata:
 ## Overview
 
 This skill tests Workbox-built service workers - distinct from
-`sw-cache-strategy-author`,
-which *authors* the strategies. Here we assert that an
-already-shipped Workbox SW behaves the way its recipes claim, using
-the `workbox-precaching` / `workbox-routing` / `workbox-strategies`
-/ `workbox-recipes` / `workbox-window` packages per
-[developer.chrome.com/docs/workbox/modules][wb-modules]. Pinned
-release line at time of authoring: **v7.4.1** per
-[github.com/GoogleChrome/workbox][wb-gh] (released May 2026).
+`sw-cache-strategy-author`, which *authors* the strategies. Here we assert that
+an already-shipped Workbox SW behaves the way its recipes claim, using the
+`workbox-precaching` / `workbox-routing` / `workbox-strategies` /
+`workbox-recipes` / `workbox-window` packages per
+[developer.chrome.com/docs/workbox/modules][wb-modules].
 
 [wb-overview]: https://developer.chrome.com/docs/workbox
 [wb-modules]: https://developer.chrome.com/docs/workbox/modules
 [wb-recipes]: https://developer.chrome.com/docs/workbox/modules/workbox-recipes
 [wb-gh]: https://github.com/GoogleChrome/workbox
+
+### Pinned version
+
+Time-sensitive pin - re-check at [wb-gh] on upgrade: Workbox **v7.4.1**
+(released May 2026).
 
 ## When to use
 
@@ -84,43 +86,18 @@ describe('workbox-precaching manifest', () => {
 });
 ```
 
-`precacheAndRoute()` is the entry point exported from
-`workbox-precaching` per [wb-modules]: *"Easily precache a set of
-files and efficiently manage updates to files."*
+`precacheAndRoute()` is the entry point exported from `workbox-precaching` per
+[wb-modules] - it precaches a file set and manages updates to those files.
 
 ### Step 4 - Author per-recipe runtime tests
 
-Per [wb-recipes], each named recipe has a documented default. Pin
-those defaults with tests.
-
-`pageCache()` - "respond to a request for an HTML page (through URL
-navigation) with a network first caching strategy" with a default
-3-second network timeout per [wb-recipes]:
+Each named recipe has a documented default per [wb-recipes]; pin those defaults
+with tests. `imageCache()` is a cache-first strategy with defaults of 60 images
+cached for 30 days - pin the 60-entry cap:
 
 ```ts
 import { test, expect } from '@playwright/test';
 
-test('pageCache() falls back to cache when network exceeds 3s', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
-  await page.waitForLoadState('networkidle');
-
-  // Slow the network past the 3s networkTimeoutSeconds default
-  await context.route('**/*.html', async route => {
-    await new Promise(r => setTimeout(r, 5_000));
-    await route.continue();
-  });
-
-  await page.goto('https://localhost:3000/');
-  // Cached shell should serve before the 5s slow network resolves
-  await expect(page.locator('h1')).toBeVisible({ timeout: 4_500 });
-});
-```
-
-`imageCache()` - "respond to a request for images with a cache-first
-caching strategy" with "defaults of 60 maximum images cached for 30
-days" per [wb-recipes]. Pin the 60-entry cap:
-
-```ts
 test('imageCache() applies the 60-entry default cap', async ({ context, page }) => {
   await page.goto('https://localhost:3000/gallery');
   await page.waitForLoadState('networkidle');
@@ -145,92 +122,19 @@ test('imageCache() applies the 60-entry default cap', async ({ context, page }) 
 });
 ```
 
-`offlineFallback()` - "serve a web page, image, or font if there's
-a routing error" when users are offline per [wb-recipes], defaulting
-to `offline.html`:
-
-```ts
-test('offlineFallback() serves offline.html on navigation failure', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
-  await page.waitForLoadState('networkidle');
-
-  await context.setOffline(true);
-  const resp = await page.goto('https://localhost:3000/never-cached');
-  expect(resp?.status()).toBe(200);
-  await expect(page.locator('text=/offline/i')).toBeVisible();
-});
-```
-
-The `offline.html` default name is per [wb-recipes] - if a project
-overrides it via the `pageFallback` option, the test must match.
-
-`googleFontsCache()` - uses "stale-while-revalidate for stylesheets
-and cache-first for font files, with defaults of 30 font files
-cached for one year" per [wb-recipes]:
-
-```ts
-test('googleFontsCache stylesheet uses stale-while-revalidate', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
-  await page.waitForLoadState('networkidle');
-
-  await context.setOffline(true);
-  const status = await page.evaluate(() =>
-    fetch('https://fonts.googleapis.com/css2?family=Inter').then(r => r.status).catch(() => 0)
-  );
-  // Stale cache must respond offline
-  expect(status).toBe(200);
-});
-```
-
-`staticResourceCache()` - "respond to CSS, JavaScript, and Web
-Worker requests with a stale-while-revalidate strategy" per
-[wb-recipes]:
-
-```ts
-test('staticResourceCache serves cached CSS offline', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
-  await page.waitForLoadState('networkidle');
-  await context.setOffline(true);
-
-  const status = await page.evaluate(() =>
-    fetch('/styles/app.css').then(r => r.status).catch(() => 0)
-  );
-  expect(status).toBe(200);
-});
-```
-
-`warmStrategyCache()` - "load provided URLs into your cache during
-the service worker's install phase, caching them with the options
-of the provided strategy" per [wb-recipes]. Pin which URLs are
-warmed:
-
-```ts
-test('warmStrategyCache() warms the declared URL list on install', async ({ context, page }) => {
-  await page.goto('https://localhost:3000/');
-  let [sw] = context.serviceWorkers();
-  if (!sw) sw = await context.waitForEvent('serviceworker');
-
-  // SW install phase warms a known URL - pin it
-  const warmed = await sw.evaluate(async () => {
-    const names = await caches.keys();
-    for (const n of names) {
-      const cache = await caches.open(n);
-      const keys = await cache.keys();
-      if (keys.some(k => k.url.endsWith('/critical-data.json'))) return true;
-    }
-    return false;
-  });
-  expect(warmed).toBe(true);
-});
-```
+The other five recipe tests - `pageCache()` (network-first, 3s
+network-timeout default), `offlineFallback()` (`offline.html` default),
+`googleFontsCache()` (30 fonts / 1 year), `staticResourceCache()`
+(stale-while-revalidate), and `warmStrategyCache()` (warms declared URLs on
+install) - are in [references/recipe-tests.md](references/recipe-tests.md),
+each retaining its test-invariant default.
 
 ### Step 5 - Author `workbox-window` event tests
 
-`workbox-window` is the page-side companion that "helps with
-registering a service worker, managing updates, and responding to
-lifecycle events" per [wb-modules]. The events emitted are
-`installed`, `waiting`, `controlling`, `activated`, and `redundant`.
-Listen on each from the page context:
+`workbox-window` is the page-side companion for registering the SW, managing
+updates, and responding to lifecycle events per [wb-modules]. It emits
+`installed`, `waiting`, `controlling`, `activated`, and `redundant`. Listen on
+each from the page context:
 
 ```ts
 test('wb.addEventListener installed fires after register()', async ({ page }) => {
@@ -259,10 +163,9 @@ The five-event vocabulary is enumerated in [wb-modules] under
 
 ### Step 6 - Test the cacheable-response plugin gate
 
-Per [wb-modules], `workbox-cacheable-response` "restrict[s] which
-requests are cached based on a response's status code or headers."
-A common configuration restricts to `statuses: [200]`. Assert that
-a 404 is not cached:
+Per [wb-modules], `workbox-cacheable-response` restricts which requests are
+cached by response status code or headers. A common config is `statuses: [200]`.
+Assert that a 404 is not cached:
 
 ```ts
 test('CacheableResponsePlugin excludes non-200 from cache', async ({ context, page }) => {

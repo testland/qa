@@ -1,0 +1,15 @@
+# canary-thresholds.yml
+# Per metric: an absolute floor (unacceptable regardless of baseline)
+# and a relative limit (worse than baseline by a meaningful amount).
+# The relative limit only fails when the difference is statistically
+# significant; see scripts/canary_verdict.py.
+metrics:
+  error_rate:
+    absolute: { max: 0.5 }       # %
+    relative: { max: 1.5 }       # 1.5x baseline
+  p95_latency:
+    absolute: { max: 500 }        # ms
+    relative: { max: 1.2 }
+  checkout_completion_rate:
+    absolute: { min: 90 }         # %
+    relative: { min: 0.95 }       # at least 95% of baseline

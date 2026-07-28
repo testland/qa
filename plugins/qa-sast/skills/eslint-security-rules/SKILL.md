@@ -7,8 +7,9 @@ description: "Configures and runs `eslint-plugin-security` (14 detect-* rules co
 
 ## Overview
 
-Two npm plugins add a security-focused lint layer that runs inside the
-standard ESLint pipeline with no external server or daemon required.
+Two npm plugins add a security lint layer inside the standard ESLint
+pipeline, no external server required. They emit JSON or SARIF for a
+multi-scanner triage step.
 
 Per [github.com/eslint-community/eslint-plugin-security][esp-sec]:
 
@@ -17,19 +18,11 @@ Per [github.com/eslint-community/eslint-plugin-security][esp-sec]:
 > "This project will help identify potential security hotspots, but
 > finds a lot of false positives which need triage by a human."
 
-Per [github.com/mozilla/eslint-plugin-no-unsanitized][esp-xss]:
+Per [github.com/mozilla/eslint-plugin-no-unsanitized][esp-xss], the
+`no-unsanitized` plugin adds "basic security checks" for DOM sink
+operations (`innerHTML`, `insertAdjacentHTML`, `document.write`).
 
 [esp-xss]: https://github.com/mozilla/eslint-plugin-no-unsanitized
-
-The `no-unsanitized` plugin provides "basic security checks" for DOM
-sink operations that are the primary source of DOM-based XSS - an
-attack class that Semgrep pattern rules can miss when the taint path
-crosses async call boundaries.
-
-Together they fill the JS/TS security-lint gap when only
-Semgrep/SonarQube/CodeQL are configured: inline rules that fire at
-`eslint` invocation time, producing JSON or SARIF output a
-multi-scanner triage step can consume.
 
 ## When to use
 
@@ -93,39 +86,12 @@ module.exports = {
 
 ## Step 3 - Rule catalog
 
-### eslint-plugin-security rules
-
-Per [esp-sec][esp-sec]:
-
-| Rule ID | Detects |
-|---|---|
-| `security/detect-bidi-characters` | Unicode bidi override characters (trojan-source attacks) |
-| `security/detect-buffer-noassert` | `Buffer` calls with the `noAssert` flag set |
-| `security/detect-child-process` | `child_process` use and non-literal `exec()` calls |
-| `security/detect-disable-mustache-escape` | Template engines with escaping disabled |
-| `security/detect-eval-with-expression` | `eval(variable)` - arbitrary code execution |
-| `security/detect-new-buffer` | `new Buffer(non-literal)` - deprecated unsafe API |
-| `security/detect-no-csrf-before-method-override` | Express middleware ordering that bypasses CSRF |
-| `security/detect-non-literal-fs-filename` | `fs` calls with variable filenames - path traversal |
-| `security/detect-non-literal-regexp` | `RegExp(variable)` - potential ReDoS |
-| `security/detect-non-literal-require` | `require(variable)` - dynamic require |
-| `security/detect-object-injection` | `obj[variable]` property access - prototype injection |
-| `security/detect-possible-timing-attacks` | Insecure string comparisons (`==`, `===`) for secrets |
-| `security/detect-pseudoRandomBytes` | `crypto.pseudoRandomBytes` and `Math.random` for security |
-| `security/detect-unsafe-regex` | ReDoS-vulnerable regular expressions |
-
-### eslint-plugin-no-unsanitized rules
-
-Per [esp-xss][esp-xss]:
-
-| Rule ID | Detects |
-|---|---|
-| `nounsanitized/method` | Unsafe calls: `insertAdjacentHTML`, `document.write`, `document.writeln` with variable arguments |
-| `nounsanitized/property` | Unsafe assignments: `element.innerHTML = variable`, `element.outerHTML = variable` |
-
-Safe alternatives per [esp-xss][esp-xss]: construct DOM nodes with
-`createElement` and set `textContent` or `classList` rather than
-assigning raw HTML strings.
+`pluginSecurity.configs.recommended` enables all 14 `detect-*` rules
+(injection, path traversal, ReDoS, unsafe buffers, bidi trojan-source);
+`nounsanitized.configs.recommended` enables `nounsanitized/method` and
+`nounsanitized/property` for DOM-sink XSS. The full per-rule tables and
+the safe DOM alternatives are in
+[references/eslint-security-reference.md](references/eslint-security-reference.md).
 
 ## Step 4 - False-positive triage
 
@@ -208,42 +174,10 @@ Per [eslint.org/docs/latest/use/command-line-interface][eslint-cli]:
 [eslint-cli]: https://eslint.org/docs/latest/use/command-line-interface
 
 ESLint exit codes: `0` = no errors; `1` = errors found; `2` = config
-error. Use exit code `1` as the CI gate signal.
-
-```yaml
-# .github/workflows/security-lint.yml
-name: Security Lint
-on: [push, pull_request]
-
-jobs:
-  eslint-security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "22" }
-      - run: npm ci
-      - name: Run security lint (JSON for triager)
-        run: |
-          npx eslint \
-            --format json \
-            --output-file eslint-security.json \
-            "src/**/*.{js,ts}" || true
-      - name: Run security lint (SARIF for Code Scanning)
-        run: |
-          npx eslint \
-            --format @microsoft/eslint-formatter-sarif \
-            --output-file eslint-security.sarif \
-            "src/**/*.{js,ts}"; exit $?
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: eslint-security.sarif
-```
-
-The JSON pass uses `|| true` so SARIF upload still runs on failure;
-the SARIF pass propagates the real exit code so the job fails on
-errors.
+error. Gate CI on exit code `1`. The complete GitHub Actions workflow
+(JSON pass for the triager, SARIF pass that propagates the exit code,
+SARIF upload) is in
+[references/eslint-security-reference.md](references/eslint-security-reference.md).
 
 ## Step 7 - JSON output for multi-scanner triage
 

@@ -12,8 +12,7 @@ Per [onsi.github.io/ginkgo][gn-docs]:
 [gn-docs]: https://onsi.github.io/ginkgo/
 
 Ginkgo is a Go BDD framework. The Kubernetes ecosystem standardized
-on Ginkgo + Gomega for its test suites; it's the most-used Go BDD
-framework in 2026.
+on Ginkgo + Gomega for its test suites.
 
 For non-BDD Go projects, `go-test` (stdlib)
 is the idiomatic choice. Ginkgo fits when:
@@ -57,9 +56,6 @@ func TestCalc(t *testing.T) {
     RunSpecs(t, "Calc Suite")
 }
 ```
-
-The `func TestCalc(t *testing.T)` bridges Ginkgo into the standard
-`go test` runner.
 
 ## Step 3 - Spec structure
 
@@ -123,25 +119,17 @@ Per [onsi.github.io/gomega][go-gomega]:
 
 ```go
 Expect(value).To(Equal(expected))
-Expect(value).NotTo(Equal(unexpected))
-Expect(value).To(BeNil())
-Expect(value).To(BeTrue())
-Expect(string).To(ContainSubstring("substring"))
-Expect(string).To(MatchRegexp(`\d+`))
+Expect(err).To(HaveOccurred())
 Expect(list).To(HaveLen(3))
-Expect(list).To(ContainElement("alice"))
-Expect(list).To(ConsistOf("alice", "bob"))   // unordered
 Expect(value).To(BeNumerically(">", 0))
-Expect(value).To(BeNumerically("~", 3.14, 0.01))
-Expect(action).To(Panic())
-Expect(err).To(MatchError("expected message"))
-Expect(channel).To(Receive(&value))
 Eventually(func() bool { return ready() }).Should(BeTrue())
-Consistently(func() bool { return stable() }).Should(BeTrue())
 ```
 
 `Eventually` polls until the condition holds; `Consistently` polls
 to verify it stays true. Useful for async + concurrent code.
+
+Full matcher DSL (strings, collections, numeric tolerance, panics,
+errors, channels): [references/gomega.md](references/gomega.md).
 
 ## Step 6 - DescribeTable + Entry
 
@@ -184,21 +172,15 @@ independent - shared state breaks parallel runs.
 
 ## Step 9 - CI integration
 
-```yaml
-- run: go install github.com/onsi/ginkgo/v2/ginkgo@latest
-- run: ginkgo -p --cover --coverprofile=coverage.out --no-focus -r
-- uses: codecov/codecov-action@v4
-  with: { files: coverage.out }
+```bash
+ginkgo -p --cover --coverprofile=coverage.out --no-focus -r
 ```
 
 `--no-focus` fails the build if any `F`-prefix specs exist (catches
 debug-leftover focus).
 
-For JUnit XML output:
-
-```bash
-ginkgo --junit-report=junit.xml -r
-```
+Full GitHub Actions workflow (coverage upload, JUnit XML report):
+[references/ci.md](references/ci.md).
 
 ## Anti-patterns
 
@@ -222,6 +204,8 @@ ginkgo --junit-report=junit.xml -r
 
 ## References
 
+- [references/gomega.md](references/gomega.md) - full Gomega matcher DSL
+- [references/ci.md](references/ci.md) - CI integration workflow
 - [gn-docs][gn-docs] - Ginkgo documentation
 - [go-gomega][go-gomega] - Gomega matchers reference
 - onsi.github.io - landing

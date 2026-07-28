@@ -116,40 +116,20 @@ bundle exec ruby scripts/seed.rb
 Expose this as a single command (`make seed`, `npm run seed`,
 `yarn seed`) so contributors don't memorize the chain.
 
-### CI
+**Verify:** before wiring the seed into the suite, assert the row
+count and PII safety - the factory writes 4 roles × 4 tiers = 16 users:
 
-```yaml
-# .github/workflows/e2e.yml (excerpt)
-- name: Set up DB
-  run: |
-    bundle exec rake db:test:reset
-    bundle exec ruby scripts/seed.rb
-
-- name: Run E2E tests
-  run: bundle exec rspec spec/system
+```bash
+bundle exec ruby scripts/seed.rb | grep -q "Seeded 16 users" || { echo "seed count wrong"; exit 1; }
 ```
 
-Reset between test suites - never share state across suites unless
-the team explicitly designed for it (and accepted the flake risk;
-see `flake-pattern-reference` Pattern 2).
+If the count is off, fix the factory script (a coverage cell changed)
+and re-run before proceeding; if any generated email falls outside
+`@example.com`, route that field through `synthetic-pii-generator` and
+re-seed.
 
-### Ephemeral env (Docker Compose)
-
-```yaml
-# docker-compose.test.yml (excerpt)
-services:
-  app:
-    build: .
-    depends_on:
-      db:
-        condition: service_healthy
-    command: |
-      sh -c "
-        rake db:migrate &&
-        ruby scripts/seed.rb &&
-        bundle exec rspec
-      "
-```
+CI and ephemeral-env (Docker Compose) bootstrap wiring:
+[references/seed-scripts.md](references/seed-scripts.md).
 
 ## Step 5 - Refresh intentionally
 
@@ -228,6 +208,10 @@ emits:
   a seed run on a fresh DB can hit "column not found" errors.
 
 ## References
+
+- [references/seed-scripts.md](references/seed-scripts.md) - CI and ephemeral-env bootstrap wiring.
+
+## Related skills
 
 - All four factory libraries:
   `faker-data`,

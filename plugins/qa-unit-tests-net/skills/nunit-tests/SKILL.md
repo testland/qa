@@ -11,9 +11,7 @@ Per [docs.nunit.org][nu-docs]:
 
 [nu-docs]: https://docs.nunit.org/
 
-NUnit (port of JUnit to .NET, originally) was the dominant .NET
-test framework before xUnit gained traction. Still actively
-maintained; widely used in legacy + new projects with team preference.
+NUnit is a mature, actively maintained .NET test framework.
 
 Distinguishing properties vs xUnit:
 
@@ -29,8 +27,11 @@ Distinguishing properties vs xUnit:
 - Test patterns benefiting from `[Random]`/`[Range]` (light
   property-based without ScalaCheck-equivalent).
 
-For new code, `xunit-tests` is more
-mainstream in 2026.
+## Currency (time-sensitive)
+
+As of 2026, for brand-new .NET code `xunit-tests` is the more mainstream
+default; NUnit stays a solid choice for existing suites and teams
+preferring the constraint model.
 
 ## Step 1 - Install
 
@@ -66,7 +67,7 @@ Run: `dotnet test`.
 
 ## Step 3 - Parametrize
 
-Per [nu-docs][nu-docs]:
+Per [nu-docs][nu-docs], `[TestCase]` supplies inline argument rows:
 
 ```csharp
 [Test]
@@ -77,71 +78,25 @@ public void Adds_VariousInputs(int a, int b, int expected)
 {
     Assert.That(Calculator.Add(a, b), Is.EqualTo(expected));
 }
-
-[Test]
-public void Adds_FromValues(
-    [Values(1, 2, 3)] int a,
-    [Values(0, 1)] int b)
-{
-    // Combinatorial: 3 × 2 = 6 test runs
-    Assert.That(Calculator.Add(a, b), Is.EqualTo(a + b));
-}
-
-[Test]
-public void Adds_Random(
-    [Random(0, 100, 5)] int a,
-    [Random(0, 100, 5)] int b)
-{
-    // 5 random values × 5 = 25 runs with random ints in [0, 100)
-    Assert.That(Calculator.Add(a, b), Is.EqualTo(a + b));
-}
-
-[Test]
-public void Adds_Range([Range(0, 10, 2)] int n)
-{
-    // n = 0, 2, 4, 6, 8, 10
-    Assert.That(Calculator.Add(n, n), Is.EqualTo(n * 2));
-}
-
-// Method-source
-[Test]
-[TestCaseSource(nameof(AddCases))]
-public void Adds_FromSource(int a, int b, int expected) { ... }
-
-public static IEnumerable<TestCaseData> AddCases()
-{
-    yield return new TestCaseData(1, 2, 3);
-    yield return new TestCaseData(0, 0, 0);
-}
 ```
+
+Other attributes (`[Values]` combinatorial, `[Random]`, `[Range]`,
+`[TestCaseSource]` method-source): [references/assertions.md](references/assertions.md).
 
 ## Step 4 - Constraint-model assertions
 
-Per [nu-docs][nu-docs]:
+Per [nu-docs][nu-docs], assert with `Assert.That(actual, <constraint>)`:
 
 ```csharp
 Assert.That(value, Is.EqualTo(expected));
-Assert.That(value, Is.Not.EqualTo(expected));
 Assert.That(value, Is.GreaterThan(0));
-Assert.That(string, Does.Contain("substring"));
-Assert.That(string, Does.Match("regex"));
 Assert.That(list, Has.Count.EqualTo(3));
-Assert.That(list, Has.Member("alice"));
-Assert.That(list, Is.Ordered);
-Assert.That(list, Has.All.GreaterThan(0));
-Assert.That(opt, Is.Null);
-Assert.That(opt, Is.Not.Null);
-Assert.That(value, Is.InstanceOf<MyClass>());
-Assert.That(value, Is.TypeOf<MyClass>());   // strict type
 Assert.That(action, Throws.TypeOf<ArgumentException>());
 Assert.That(actual, Is.EqualTo(0.0).Within(0.001));   // float tolerance
 ```
 
-The constraint model composes (`Is.Not.Null.And.Not.Empty`) and
-produces detailed failure messages.
-
-Classic-model assertions (`Assert.AreEqual`, `Assert.IsTrue`) still
-work but are discouraged in NUnit 3+.
+Full catalog (string, collection, type, null, composed constraints) and the
+classic-vs-constraint note: [references/assertions.md](references/assertions.md).
 
 ## Step 5 - Lifecycle
 

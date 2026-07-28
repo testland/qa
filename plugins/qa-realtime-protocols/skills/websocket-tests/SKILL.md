@@ -40,8 +40,6 @@ Per [RFC 6455], the opening handshake requires:
 - `Sec-WebSocket-Key`: base64 16-byte nonce
 - `Sec-WebSocket-Version: 13`
 
-The server validates by hashing `key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"` (SHA-1, base64) into `Sec-WebSocket-Accept` and replying with `101 Switching Protocols`.
-
 Test that an upgrade is performed (101) and that the accept header
 matches:
 
@@ -54,6 +52,7 @@ test('handshake completes with correct accept header', async () => {
   await new Promise((res, rej) => {
     ws.once('upgrade', (msg) => {
       expect(msg.statusCode).toBe(101);
+      // server derives accept: base64(sha1(key + RFC 6455 GUID))
       const expectedKey = crypto
         .createHash('sha1')
         .update(ws._req?.getHeader('Sec-WebSocket-Key') + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11')
@@ -69,8 +68,8 @@ test('handshake completes with correct accept header', async () => {
 
 ## Step 3 - Subprotocol negotiation
 
-Per [RFC 6455], the `Sec-WebSocket-Protocol` header negotiates a
-subprotocol. Server selects one or none.
+The `Sec-WebSocket-Protocol` header negotiates a subprotocol; the
+server selects one or none.
 
 ```js
 test('server picks v2 subprotocol when offered', async () => {
@@ -88,8 +87,8 @@ test('server rejects unknown subprotocol', async () => {
 
 ## Step 4 - Ping/pong keepalive
 
-Per [RFC 6455], control frames include `ping (0x9)`, `pong (0xA)`,
-`close (0x8)`; payloads ≤ 125 bytes.
+Control frames include `ping (0x9)`, `pong (0xA)`, `close (0x8)`;
+payloads <= 125 bytes.
 
 ```js
 test('client receives pong within 5s of ping', async () => {
@@ -110,61 +109,13 @@ test('client receives pong within 5s of ping', async () => {
 });
 ```
 
-## Step 5 - Close-frame status code matrix
+## Deeper recipes
 
-Per [RFC 6455], standard close codes:
+The close-frame status-code matrix (1000/1001/1002/1006/1011) and
+the backpressure / large-message (`maxPayload`, 1009) recipes are in
+[references/websocket-test-recipes.md](references/websocket-test-recipes.md).
 
-| Code | Meaning |
-|---|---|
-| 1000 | Normal closure |
-| 1001 | Endpoint going away |
-| 1002 | Protocol error |
-| 1006 | Abnormal closure (no close frame received) |
-| 1011 | Server error |
-
-Test the matrix per scenario:
-
-```js
-test('server sends 1011 on internal error', async () => {
-  const ws = new WebSocket('ws://localhost:8080/');
-  await new Promise((r) => ws.once('open', r));
-
-  ws.send(JSON.stringify({ trigger: 'crash' }));
-  const code = await new Promise((r) => ws.once('close', (c) => r(c)));
-  expect(code).toBe(1011);
-});
-
-test('graceful shutdown sends 1001', async () => {
-  // server initiates shutdown; client observes 1001
-  const ws = new WebSocket('ws://localhost:8080/');
-  await new Promise((r) => ws.once('open', r));
-
-  await fetch('http://localhost:8080/admin/shutdown', { method: 'POST' });
-  const code = await new Promise((r) => ws.once('close', (c) => r(c)));
-  expect(code).toBe(1001);
-});
-```
-
-## Step 6 - Backpressure / large message tests
-
-Per [RFC 6455], control frame payloads are ≤ 125 bytes; data frames
-have no upper bound but implementations apply limits. Test
-server's `maxPayload` config:
-
-```js
-test('server rejects message > maxPayload', async () => {
-  const ws = new WebSocket('ws://localhost:8080/');
-  await new Promise((r) => ws.once('open', r));
-
-  const big = 'a'.repeat(2 * 1024 * 1024); // 2 MB
-  ws.send(big);
-
-  const code = await new Promise((r) => ws.once('close', (c) => r(c)));
-  expect(code).toBe(1009); // Message too big
-});
-```
-
-## Step 7 - Reconnect with jitter
+## Step 5 - Reconnect with jitter
 
 Reconnect logic should exponential backoff + jitter (not RFC 6455
 itself, but field-tested practice):
@@ -184,7 +135,7 @@ test('client reconnects within 30s after server bounce', async () => {
 Cross-ref `error-budget-tests` for SLO-driven
 reconnect budget.
 
-## Step 8 - Playwright frame inspection (browser e2e)
+## Step 6 - Playwright frame inspection (browser e2e)
 
 ```ts
 test('app sends auth frame on open', async ({ page }) => {
@@ -205,7 +156,7 @@ test('app sends auth frame on open', async ({ page }) => {
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Skip handshake test (assume browser handles it) | Server-side `Sec-WebSocket-Accept` bug ships | Step 2 |
-| Test only happy-path message exchange | Reconnect/close-code bugs slip through | Step 5 + Step 7 |
+| Test only happy-path message exchange | Reconnect/close-code bugs slip through | Step 5 + close-code recipe (references) |
 | Use HTTP polling fallback as "good enough" | Different code path; doesn't validate WS | Test the actual WS path |
 | Hard-code reconnect interval, no jitter | Thundering herd on server bounce | Exponential backoff + jitter |
 | Skip subprotocol test in versioned APIs | Old clients silently get v2 server response shape | Step 3 |

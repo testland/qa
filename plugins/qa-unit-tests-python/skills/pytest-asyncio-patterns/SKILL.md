@@ -11,20 +11,15 @@ metadata:
 
 Per [pytest-asyncio.readthedocs.io](https://pytest-asyncio.readthedocs.io/en/latest/):
 
-pytest-asyncio is the standard plugin for running `async def` test functions
-under pytest. Without it, pytest collects but cannot execute coroutine tests
-(they return a coroutine object instead of running). The plugin provides:
+pytest-asyncio runs `async def` test functions under pytest; without it,
+coroutine tests are collected but never awaited. It provides the
+`@pytest.mark.asyncio` marker (or an auto-mode that drops the marker),
+async-aware fixtures with configurable event-loop scoping, and works with
+FastAPI/Starlette (via `httpx.AsyncClient`) and aiohttp (via pytest-aiohttp).
 
-- A marker (`@pytest.mark.asyncio`) and an auto-mode that removes the need
-  for the marker entirely.
-- Async-aware fixture infrastructure with configurable event-loop scoping.
-- Compatibility with FastAPI/Starlette ASGI apps via `httpx.AsyncClient` and
-  with aiohttp apps via `pytest-aiohttp`.
-
-Nearest neighbor differentiation: `pytest-tests` (the sibling skill) covers
-the full pytest framework but treats async in one paragraph (Step 8). This
-skill covers the asyncio integration path end to end: modes, loop scoping,
-async fixtures, `AsyncMock`, and framework-specific client patterns.
+Nearest neighbor: `pytest-tests` covers the full framework but treats async
+in one paragraph. This skill covers the asyncio path end to end: modes, loop
+scoping, async fixtures, `AsyncMock`, and framework client patterns.
 
 ## Step 1 - Install
 
@@ -44,7 +39,6 @@ pytest --co -q   # should show no "PytestUnraisableExceptionWarning" about corou
 
 ## Step 2 - Choose a mode
 
-Per [pytest-asyncio configuration docs](https://pytest-asyncio.readthedocs.io/en/latest/reference/configuration.html),
 `asyncio_mode` has two practical values:
 
 | Mode | Behavior |
@@ -59,18 +53,14 @@ Set in `pyproject.toml`:
 asyncio_mode = "auto"
 ```
 
-Or override per run: `pytest --asyncio-mode=strict`.
-
-The CLI flag takes precedence over the config file when both are present
-(per [configuration docs](https://pytest-asyncio.readthedocs.io/en/latest/reference/configuration.html)).
+Or override per run: `pytest --asyncio-mode=strict`. The CLI flag takes
+precedence over the config file when both are present.
 
 **Recommendation:** use `auto` for pure-asyncio projects; use `strict` when
 the project mixes async test libraries (e.g., pytest-trio alongside
 pytest-asyncio) to avoid mode conflicts.
 
 ## Step 3 - Mark individual tests (strict mode)
-
-Per [pytest-asyncio.readthedocs.io](https://pytest-asyncio.readthedocs.io/en/latest/):
 
 ```python
 import pytest
@@ -100,8 +90,7 @@ In auto mode, neither the decorator nor `pytestmark` is required.
 
 ## Step 4 - Event-loop scoping
 
-Per [pytest-asyncio marker reference](https://pytest-asyncio.readthedocs.io/en/latest/reference/markers/index.html),
-the `loop_scope` parameter controls how long an event loop lives:
+The `loop_scope` parameter controls how long an event loop lives:
 
 | Scope | Loop lifetime |
 |---|---|
@@ -135,12 +124,9 @@ asyncio_mode = "auto"
 asyncio_default_test_loop_scope = "function"
 ```
 
-Per [configuration docs](https://pytest-asyncio.readthedocs.io/en/latest/reference/configuration.html),
 `asyncio_default_test_loop_scope` defaults to `function` when unset.
 
 ## Step 5 - Async fixtures
-
-Per [pytest-asyncio concepts](https://pytest-asyncio.readthedocs.io/en/latest/concepts.html):
 
 In **strict mode**, async fixtures must use `@pytest_asyncio.fixture` (not
 `@pytest.fixture`). In **auto mode**, `@pytest.fixture` works for async
@@ -173,16 +159,13 @@ async def app_server():
     await server.stop()
 ```
 
-Per [configuration docs](https://pytest-asyncio.readthedocs.io/en/latest/reference/configuration.html),
 `asyncio_default_fixture_loop_scope` determines which event loop async
 fixtures run in; it defaults to matching the fixture's own scope.
 
 ## Step 6 - Mock async functions with AsyncMock
 
-Per [docs.python.org AsyncMock](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.AsyncMock)
-(stdlib since Python 3.8):
-
-`AsyncMock` makes a mock object behave as a coroutine function.
+`AsyncMock` (stdlib since Python 3.8) makes a mock object behave as a
+coroutine function.
 `MagicMock` does not: calling it returns a coroutine object but
 `inspect.iscoroutinefunction(MagicMock())` is `False`, which breaks
 code that checks type before awaiting.
@@ -203,37 +186,12 @@ async def test_service_calls_repository():
     assert result["name"] == "Alice"
 ```
 
-Patch an async method on an import path:
+Patching an async import path (`new_callable=AsyncMock`), the full
+await-assertion table (`assert_awaited_once_with`, `assert_awaited_with`,
+`assert_any_await`, `assert_not_awaited`, `await_count`), and `side_effect`
+semantics: [references/asyncmock-assertions.md](references/asyncmock-assertions.md).
 
-```python
-@pytest.mark.asyncio
-async def test_external_call():
-    with patch("myapp.clients.redis.get", new_callable=AsyncMock) as mock_get:
-        mock_get.return_value = b"cached"
-        result = await fetch_from_cache("key")
-    mock_get.assert_awaited_once_with("key")
-    assert result == b"cached"
-```
-
-Key await-specific assertions from
-[docs.python.org](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.AsyncMock):
-
-| Assertion | Meaning |
-|---|---|
-| `assert_awaited_once_with(*a, **kw)` | Awaited exactly once with these args |
-| `assert_awaited_with(*a, **kw)` | Last await had these args |
-| `assert_any_await(*a, **kw)` | Ever awaited with these args |
-| `assert_not_awaited()` | Never awaited |
-| `await_count` | How many times awaited (attribute, not assertion) |
-
-`side_effect` on `AsyncMock` behaves per
-[docs.python.org](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.AsyncMock):
-a callable is invoked and its result returned; an exception class is raised
-when the mock is awaited; an iterable returns successive values.
-
-## Step 7 - Test FastAPI apps
-
-Per [fastapi.tiangolo.com/advanced/async-tests](https://fastapi.tiangolo.com/advanced/async-tests/):
+## Step 7 - Test FastAPI and aiohttp apps
 
 FastAPI is an ASGI framework. Async tests use `httpx.AsyncClient` with
 `ASGITransport` to drive the app in-process (no real TCP port needed).
@@ -254,102 +212,9 @@ async def test_read_root():
     assert response.json() == {"message": "ok"}
 ```
 
-`AsyncClient` does not fire lifespan events by default (per
-[FastAPI docs](https://fastapi.tiangolo.com/advanced/async-tests/)). To
-trigger `startup`/`shutdown` handlers, use `asgi-lifespan`:
-
-```bash
-pip install asgi-lifespan
-```
-
-```python
-from asgi_lifespan import LifespanManager
-
-@pytest_asyncio.fixture(scope="module")
-async def live_app():
-    async with LifespanManager(app) as manager:
-        yield manager.app
-
-@pytest.mark.asyncio(loop_scope="module")
-async def test_with_lifespan(live_app):
-    async with AsyncClient(
-        transport=ASGITransport(app=live_app),
-        base_url="http://test",
-    ) as client:
-        response = await client.get("/health")
-    assert response.status_code == 200
-```
-
-## Step 8 - Test aiohttp apps
-
-Per [docs.aiohttp.org/testing](https://docs.aiohttp.org/en/stable/testing.html),
-the `pytest-aiohttp` plugin provides an `aiohttp_client` fixture that
-manages server startup and teardown:
-
-```bash
-pip install pytest-aiohttp
-```
-
-```toml
-# pyproject.toml
-[tool.pytest.ini_options]
-asyncio_mode = "auto"
-```
-
-```python
-from aiohttp import web
-
-async def hello(request):
-    return web.Response(text="Hello, world")
-
-async def test_hello(aiohttp_client):
-    app = web.Application()
-    app.router.add_get("/", hello)
-    client = await aiohttp_client(app)
-    resp = await client.get("/")
-    assert resp.status == 200
-    text = await resp.text()
-    assert text == "Hello, world"
-```
-
-Per [aiohttp testing docs](https://docs.aiohttp.org/en/stable/testing.html),
-`aiohttp_client` returns a `TestClient` that starts the server on a random
-port and shuts it down after the test.
-
-## Step 9 - anyio as an alternative
-
-Per [anyio.readthedocs.io/testing](https://anyio.readthedocs.io/en/stable/testing.html),
-`anyio` ships its own pytest plugin that runs async tests on both asyncio
-and Trio backends. Use it when the codebase is written against `anyio`
-primitives or when multi-backend verification is needed.
-
-```bash
-pip install anyio[trio]
-```
-
-```python
-import pytest
-
-@pytest.mark.anyio
-async def test_anyio_style():
-    result = await compute()
-    assert result == 42
-```
-
-Parametrize backends:
-
-```python
-# conftest.py
-import pytest
-
-@pytest.fixture(params=["asyncio", "trio"])
-def anyio_backend(request):
-    return request.param
-```
-
-Per [anyio docs](https://anyio.readthedocs.io/en/stable/testing.html),
-anyio conflicts with pytest-asyncio auto mode; when both plugins are
-present, set only one to auto.
+Firing FastAPI lifespan events (`asgi-lifespan`), the aiohttp
+`aiohttp_client` fixture, and running tests on multiple backends with anyio:
+[references/framework-clients.md](references/framework-clients.md).
 
 ## Anti-patterns
 
@@ -365,7 +230,8 @@ present, set only one to auto.
 ## Limitations
 
 - pytest-asyncio does not support `anyio`-native primitives (TaskGroup,
-  CancelScope) out of the box; use the anyio pytest plugin (Step 9) instead.
+  CancelScope) out of the box; use the anyio pytest plugin
+  ([references/framework-clients.md](references/framework-clients.md)) instead.
 - `asyncio_mode = "auto"` conflicts with anyio auto mode when both plugins
   are active in the same session.
 - The `event_loop_policy` fixture is deprecated in recent versions of

@@ -7,26 +7,12 @@ description: "Configures and runs native package-manager audit commands across e
 
 ## Overview
 
-Most package managers ship native audit subcommands that query the
-ecosystem-specific advisory feed (npm advisories, PyPA database,
-RubySec, Cargo advisory DB, etc.). They're the **fastest first-line
-defense** - already installed where the package manager is, no extra
-tooling, runs in seconds.
-
-Tradeoffs vs `snyk-test` / `osv-scanner`:
-
-| Property | Native audit | Snyk / OSV |
-|---|---|---|
-| Speed | <5s typical | 10s - 60s |
-| DB coverage | Per-ecosystem only | Cross-ecosystem aggregated |
-| False-positive triage | Per-ecosystem CLI | Unified config |
-| Reachability analysis | None | None (most tools) |
-| CI integration | Built into package manager | Per-tool action |
-
-For comprehensive coverage, run native audit + a unified scanner.
-Native audit catches the high-confidence per-ecosystem feed
-quickly; the unified scanner catches cross-ecosystem aggregations
-and waivers.
+Most package managers ship native audit subcommands that query an
+ecosystem-specific advisory feed (npm advisories, PyPA, RubySec, Cargo advisory
+DB, etc.) - the **fastest first-line defense**: already installed, no extra
+tooling, runs in seconds. For full coverage, run one native audit + a unified
+scanner (`snyk-test` / `osv-scanner`). The speed/coverage tradeoff table is in
+[references/ecosystem-config-and-triage.md](references/ecosystem-config-and-triage.md).
 
 ## When to use
 
@@ -91,42 +77,18 @@ Source: pypi.org/project/pip-audit + github.com/pypa/pip-audit.
 
 ## Step 3 - Maven (OWASP Dependency-Check)
 
-Maven's audit story is via the OWASP Dependency-Check plugin
-(no native `mvn audit`):
-
-```xml
-<!-- pom.xml -->
-<plugin>
-  <groupId>org.owasp</groupId>
-  <artifactId>dependency-check-maven</artifactId>
-  <version>10.0.4</version>
-  <executions>
-    <execution>
-      <goals>
-        <goal>check</goal>
-      </goals>
-    </execution>
-  </executions>
-  <configuration>
-    <failBuildOnCVSS>7.0</failBuildOnCVSS>
-    <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
-    <formats>
-      <format>HTML</format>
-      <format>JSON</format>
-      <format>SARIF</format>
-    </formats>
-  </configuration>
-</plugin>
-```
+Maven has no native `mvn audit`; use the OWASP Dependency-Check plugin, which
+fails the build above a CVSS threshold and emits HTML/JSON/SARIF:
 
 ```bash
 mvn dependency-check:check
 ```
 
-Source: jeremylong.github.io/DependencyCheck/dependency-check-maven/.
+The `pom.xml` plugin block (with `failBuildOnCVSS` + suppression file) and the
+Gradle equivalent are in
+[references/ecosystem-config-and-triage.md](references/ecosystem-config-and-triage.md).
 
-For Gradle: same plugin via `org.owasp.dependencycheck` Gradle
-plugin.
+Source: jeremylong.github.io/DependencyCheck/dependency-check-maven/.
 
 ## Step 4 - cargo audit (Rust)
 
@@ -166,30 +128,10 @@ Each native audit has its own suppression mechanism:
 | `cargo audit` | `--ignore <id>` CLI flag (per RUSTSEC ID) |
 | `bundle-audit` | `--ignore <id>` CLI flag (per CVE) |
 
-**Justification template (mandatory in suppression file or
-audit-skip list):**
-
-```xml
-<!-- dependency-check-suppressions.xml (Maven) -->
-<suppress>
-  <notes>
-    Reason: log4j-core 2.14.x is bundled but not loaded at runtime
-            (verified via dependency tree analysis)
-    Approved-by: alice@example.com
-    Re-review-date: 2026-09-15
-  </notes>
-  <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-core@2\.14\..*$</packageUrl>
-  <vulnerabilityName>CVE-2021-44228</vulnerabilityName>
-</suppress>
-```
-
-For ad-hoc CLI ignores (`pip-audit --ignore-vuln`, `cargo audit
---ignore`), maintain a sibling `AUDIT_IGNORES.md` mapping each
-ID to reason + approver + re-review-date. Without the sibling file,
-the ignore is invisible to reviewers.
-
-Cadence: every quarter, audit suppression entries; expired
-re-review dates remove entries.
+Every suppression carries a mandatory justification (reason + approver +
+re-review date). The Maven XML template, the `AUDIT_IGNORES.md` pattern for
+ad-hoc CLI ignores, and the quarterly review cadence are in
+[references/ecosystem-config-and-triage.md](references/ecosystem-config-and-triage.md).
 
 ## Step 7 - CI integration patterns
 
@@ -220,21 +162,6 @@ jobs:
 The `if: hashFiles(...)` pattern auto-skips ecosystems not present
 in the repo.
 
-## Step 8 - Output aggregation
-
-For downstream aggregation, output
-each tool's JSON to a stable filename:
-
-```bash
-npm audit --json > sca-npm.json || true        # || true: don't fail before triage
-pip-audit --format json --output sca-pip.json || true
-mvn dependency-check:check -Dformats=JSON
-cargo audit --json > sca-cargo.json || true
-```
-
-The aggregation step normalizes each tool's schema + dedupes cross-tool
-findings.
-
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -248,28 +175,21 @@ findings.
 
 ## Limitations
 
-- Per-ecosystem DB coverage varies - npm advisories often have CVE
-  earlier than PyPA; pip-audit may miss a npm-only-disclosed
-  advisory.
-- No reachability analysis - every CVE on a declared dep counts
-  even if the vulnerable function isn't called.
-- Maven Dependency-Check requires NVD data sync (slow first run; ~1
-  GB cache).
-- `npm audit fix --force` is dangerous; always manual-review before
-  applying.
-- Yarn classic (1.x) and pnpm have slightly different audit output
-  shapes vs npm.
+- Per-ecosystem DB coverage varies; one ecosystem's feed may carry a CVE
+  another lacks.
+- No reachability analysis: every CVE on a declared dep counts even if the
+  vulnerable function isn't called.
+- Maven Dependency-Check requires an NVD data sync (slow first run, ~1 GB cache).
+- `npm audit fix --force` bumps majors; always manual-review before applying.
+- Yarn classic (1.x) and pnpm have slightly different audit output shapes vs npm.
 
 ## References
 
-- docs.npmjs.com/cli/v10/commands/npm-audit - npm audit reference
-- yarnpkg.com/cli/npm/audit - Yarn audit reference
-- pnpm.io/cli/audit - pnpm audit reference
-- pypa.github.io/pip-audit - pip-audit docs
-- jeremylong.github.io/DependencyCheck/ - OWASP Dependency-Check
-- rustsec.org / github.com/rustsec/rustsec - cargo-audit
-- github.com/rubysec/bundler-audit - bundler-audit
-- `snyk-test`,
-  `osv-scanner`,
-  `dependabot-config`,
-  `renovate-config` - sister tools
+- Native audit docs: npm (docs.npmjs.com/cli/v10/commands/npm-audit), Yarn
+  (yarnpkg.com/cli/npm/audit), pnpm (pnpm.io/cli/audit), pip-audit
+  (pypa.github.io/pip-audit), OWASP Dependency-Check
+  (jeremylong.github.io/DependencyCheck), cargo-audit (rustsec.org),
+  bundler-audit (github.com/rubysec/bundler-audit)
+- Per-ecosystem config, triage templates, and output aggregation:
+  [references/ecosystem-config-and-triage.md](references/ecosystem-config-and-triage.md)
+- `snyk-test`, `osv-scanner`, `dependabot-config`, `renovate-config` - sister tools

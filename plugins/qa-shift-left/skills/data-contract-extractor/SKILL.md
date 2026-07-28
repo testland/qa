@@ -7,22 +7,13 @@ description: "Reads a data-product spec (data PRD, dataset README, lineage doc) 
 
 ## Overview
 
-A **data contract** is the agreement between a data producer and its
-consumers about what the producer will deliver - schema, freshness,
-volume, semantic invariants - and what the consumer is allowed to
-depend on. Practitioner-emergent terminology popularized by
-Andrew Jones / Chad Sanderson and now standard in the data-engineering
-literature.
-
-> **Terminology note:** "data contract" is **practitioner-emergent**,
-> not ISTQB-canonical. ISTQB defines `interface testing` and
-> `contract testing` (HTTP API) but does not have a dedicated
-> data-contract entry. This skill cites industry-engineering sources.
-
-This skill formalizes the prose of a data PRD into a contract that
-the QA test suite can mechanically assert against - typically via
-`dbt-tests`, `great-expectations`, or `soda-checks` (see the
-`qa-data-quality` plugin).
+This skill formalizes the prose of a data PRD into a **data contract** -
+the producer/consumer agreement on schema, freshness, volume, semantic
+invariants, and ownership - that the QA test suite can mechanically
+assert against, typically via `dbt-tests`, `great-expectations`, or
+`soda-checks` (see the `qa-data-quality` plugin). "Data contract" is
+practitioner-emergent terminology (Andrew Jones / Chad Sanderson), not
+ISTQB-canonical; this skill cites industry-engineering sources.
 
 ## When to use
 
@@ -211,60 +202,9 @@ suite cannot be generated.
 
 ## Examples
 
-### Example 1: PRD → contract
-
-Input (data PRD excerpt):
-
-> "We're building an `orders` table. One row per order. Updated
-> within 1 hour of order placement. Statuses: placed, shipped,
-> delivered, cancelled. Discount up to 100%. Payment methods: card,
-> bank, paypal. Owned by the data platform team."
-
-Output: see the YAML format above (the example mirrors this PRD).
-
-### Example 2: minimal source
-
-Input: "We need a `users` table. Email and name."
-
-Output:
-
-```markdown
-## Contract gaps (HUMAN INPUT REQUIRED)
-
-| Section       | Field                | Question                                       |
-|---------------|----------------------|------------------------------------------------|
-| schema        | types                | `email VARCHAR(?)` `name VARCHAR(?)`?           |
-| schema        | pii                  | Direct (email, name)? Confirm.                  |
-| schema        | uniqueness           | Email unique per user? Or shared (e.g. household)? |
-| schema        | PK                   | `users.user_id` implied but not stated.         |
-| freshness     | cadence              | Real-time on signup? Daily?                     |
-| volume        | range                | Expected user count?                            |
-| ownership     | team                 | Who owns this?                                  |
-
-A 2-line PRD generates a 7-line gap list. Fill the gaps before
-authoring the contract.
-```
-
-### Example 3: refactor of existing dataset
-
-Input: an undocumented `events` table, used by 5 dashboards.
-Discovered via `git grep` of the warehouse client code.
-
-Output:
-
-The agent reads the SQL queries hitting `events` and infers the
-*observed* contract - column references, status values used in
-WHERE clauses, recency expectations from `INTERVAL` filters. Then
-it produces a contract draft with a header note:
-
-```markdown
-**Status:** observed-from-usage (NOT producer-attested).
-The producer team must review and amend; this contract is the
-consumers' best-effort reverse-engineering.
-```
-
-Until the producer attests, the contract is one-sided - useful for
-the consumer's tests, NOT a binding agreement.
+Three worked examples (PRD to contract, minimal source with a gap list,
+and refactor of an existing dataset) are in
+[references/examples.md](references/examples.md).
 
 ## Anti-patterns
 

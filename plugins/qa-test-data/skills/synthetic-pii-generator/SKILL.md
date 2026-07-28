@@ -7,13 +7,9 @@ description: "Generates realistic-but-fake personally identifiable information (
 
 ## Overview
 
-Real production data in non-prod environments is a compliance
-nightmare - GDPR, CCPA, HIPAA all govern what can be copied where.
-The fix is **synthetic PII**: data that **looks like** the real
-thing (passes the same format validators) but **never matches** a
-real person.
-
-This skill wraps the synthetic-data libraries
+**Synthetic PII** is data that **looks like** the real thing (passes
+the same format validators) but **never matches** a real person. This
+skill wraps the synthetic-data libraries
 (`faker-data`,
 `mimesis-data`,
 `bogus-data`) with PII-specific
@@ -25,11 +21,6 @@ seeding via `Faker.seed()`). Use mimesis when the project needs
 provider-level locale control (e.g. Japanese addresses with
 prefecture accuracy); use Bogus for .NET projects that already
 ship it.
-
-> **Terminology note:** "PII" is regulatory shorthand
-> (NIST SP 800-122, GDPR Article 4(1)). Different jurisdictions
-> classify different fields as PII; this skill assumes the broad
-> set: anything that could identify or be linked to a person.
 
 ## When to use
 
@@ -87,50 +78,16 @@ fake.email()                       # 'roccelline1878@example.com' - safe
 fake.email(domain='gmail.com')     # NEVER - could spam real users
 ```
 
-### Phone numbers - region-specific test ranges
+### Phone numbers, government IDs, and card numbers
 
-| Region | Test range                                |
-|--------|-------------------------------------------|
-| US     | `(555) 0100` - `(555) 0199` (per Numbering Plan documentation, reserved for fictional use). |
-| UK     | `0790 7900 000-999` (Ofcom reserved for drama/fiction). |
-| Germany | `+49 (123) 4567-...` patterns reserved for examples. |
+These need reserved test ranges, not generator defaults - a
+format-valid random SSN, phone, or card can collide with a real one.
+Emit the documented safe constants (US SSN in the IRS `900-XX-XXXX`
+range, issuer-published Luhn-valid test card BINs, regional fictional
+phone ranges) from the lookup tables:
+[references/pii-lookup-tables.md](references/pii-lookup-tables.md).
 
-Faker's `phone_number` defaults to format-valid but doesn't
-guarantee non-real numbers. For absolute safety, post-process
-generated phone numbers to substitute the regional test range.
-
-### Government IDs - never generate real-format
-
-| ID                   | Synthetic strategy                                          |
-|----------------------|-------------------------------------------------------------|
-| US SSN               | Use the IRS test range `900-XX-XXXX` to `999-XX-XXXX` (not validly issued). Faker's `ssn()` defaults to invalid-format strings. |
-| US ITIN              | Format: `9XX-7X-XXXX` or `9XX-8X-XXXX` (range reserved for ITIN issuance; never generate real values). |
-| UK NI Number         | `AB123456C` patterns; use `JR987654A` style which HMRC reserves. |
-| Generic              | If your test environment doesn't enforce format validation, use obvious-fake values like `000-00-0000`. |
-
-**Never generate values from a real-issuance range.** A correctly-
-formatted but real-issuance SSN may collide with a real person - 
-exactly the privacy violation this skill avoids.
-
-### Credit card numbers - test BIN ranges
-
-Major card networks publish **test BIN ranges** that pass Luhn
-checksum but never authorize. Use these in test fixtures:
-
-| Card type        | Test BIN (use with random suffix; Luhn-valid)              |
-|------------------|------------------------------------------------------------|
-| Visa             | `4111 1111 1111 1111`                                      |
-| Mastercard       | `5555 5555 5555 4444`                                      |
-| American Express | `3782 822463 10005`                                        |
-| Discover         | `6011 1111 1111 1117`                                      |
-
-(Standard Stripe / Adyen test cards; documented in their respective
-testing guides.)
-
-The synthetic-PII generator emits these constants - Faker's
-`credit_card_number()` produces format-valid but **may collide with
-a real card if the issuer's BIN happens to match**. The Stripe/Adyen
-test cards are guaranteed safe.
+**Never generate values from a real-issuance range.**
 
 ### Addresses - synthetic but plausibly local
 
@@ -236,6 +193,7 @@ jq -r '.users[].ssn' fixtures/users-test.yaml | grep -v '^9[0-9]{2}-' && echo 'W
 
 ## References
 
+- [references/pii-lookup-tables.md](references/pii-lookup-tables.md) - phone, government-ID, and card test-range lookup tables.
 - RFC 2606 - reserved top-level DNS names (`example.com` etc.).
 - IRS reserved test SSN ranges - IRS Publication 17 reference.
 - Stripe testing - https://stripe.com/docs/testing - canonical test

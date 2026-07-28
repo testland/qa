@@ -7,16 +7,12 @@ description: "Authors WireMock stub mappings for HTTP service mocking - `stubFor
 
 ## Overview
 
-WireMock is a flexible HTTP mock server that runs in-process or
-standalone, supporting stub-mapping authoring (canned responses
-keyed by request match) plus request recording / verification
-([wiremock-quickstart][quickstart]).
+This skill covers the JVM Java API for WireMock stub-mapping authoring
+and request verification ([wiremock-quickstart][quickstart]). WireMock
+also has standalone JAR + Docker modes for non-JVM consumers - the
+matching skill for JS / TS is `msw-handlers`.
 
 [quickstart]: https://wiremock.org/docs/quickstart/java-junit/
-
-This skill covers the JVM Java API. WireMock also has standalone
-JAR + Docker modes for non-JVM consumers - the matching skill for
-JS / TS is `msw-handlers`.
 
 ## When to use
 
@@ -37,18 +33,18 @@ JS / TS is `msw-handlers`.
 <dependency>
   <groupId>org.wiremock</groupId>
   <artifactId>wiremock</artifactId>
-  <version>3.13.2</version>
+  <version>${wiremock.version}</version>
   <scope>test</scope>
 </dependency>
 ```
 
-(Per [wiremock-quickstart][quickstart]; pin to the team's chosen
-release.)
+(Per [wiremock-quickstart][quickstart]; pin `${wiremock.version}` to
+the team's chosen 3.x release.)
 
 ### Gradle
 
 ```groovy
-testImplementation 'org.wiremock:wiremock:3.13.2'
+testImplementation 'org.wiremock:wiremock:3.x'   // pin to the chosen release
 ```
 
 ## Authoring stubs
@@ -106,44 +102,13 @@ Pair `@WireMockTest` with dynamic-port allocation
 (`wireMockConfig().dynamicPort()`) for parallel tests, then read
 the assigned port via `WireMockRuntimeInfo`.
 
-## Stub matching
+## Stub matching, response shaping, and scenarios
 
-The `stubFor` DSL composes a request-matcher chain:
-
-| Matcher                                | Purpose                                                  |
-|----------------------------------------|----------------------------------------------------------|
-| `get("/path")` / `post("/path")` / etc.| HTTP verb + path matcher.                                 |
-| `urlPathMatching("/users/[0-9]+")`     | Regex on path.                                            |
-| `withHeader("Content-Type", containing("json"))` | Header value matcher.                          |
-| `withQueryParam("status", equalTo("active"))`     | Query parameter matcher.                       |
-| `withRequestBody(matchingJsonPath("$.amount", greaterThan(0)))` | JSON-path body matcher.            |
-| `withCookie("session", equalTo("abc"))` | Cookie matcher.                                           |
-
-Stubs are **first-match-wins** by default; the most specific stub
-should be registered first.
-
-## Response shaping
-
-```java
-stubFor(get("/orders/42")
-    .willReturn(aResponse()
-        .withStatus(200)
-        .withHeader("Content-Type", "application/json")
-        .withBody("{\"order_id\": 42}")
-        .withFixedDelay(500)               // simulate latency
-        // OR
-        .withChunkedDribbleDelay(5, 1000)  // simulate slow chunked transfer
-    ));
-```
-
-Common helper response builders:
-
-| Helper                                | Effect                                           |
-|---------------------------------------|--------------------------------------------------|
-| `ok()`                                | 200 OK with empty body.                          |
-| `okJson("...")`                       | 200 + `Content-Type: application/json` + body.   |
-| `notFound()`, `badRequest()`, `serverError()` | 404 / 400 / 500.                       |
-| `temporaryRedirect("/new")`           | 307 + Location.                                  |
+The request-matcher DSL (`get` / `urlPathMatching` / `withHeader` /
+`withQueryParam` / `matchingJsonPath` / `withCookie`, first-match-wins),
+the response builders (`ok()` / `okJson()` / `withFixedDelay` /
+`withChunkedDribbleDelay`), and stateful scenario stubs are cataloged
+in [references/matchers-and-scenarios.md](references/matchers-and-scenarios.md).
 
 ## Request verification
 
@@ -158,29 +123,6 @@ verify(exactly(1), getRequestedFor(urlPathEqualTo("/health")));
 
 `verify()` throws on mismatch - fails the test with a clear
 explanation of expected vs. actual requests.
-
-## Stateful stubs (scenarios)
-
-For workflows that depend on prior state (e.g. "first call returns
-empty cart, second call returns populated cart"):
-
-```java
-stubFor(get("/cart")
-    .inScenario("Add to cart")
-    .whenScenarioStateIs(STARTED)
-    .willReturn(okJson("[]")));
-
-stubFor(post("/cart/add")
-    .inScenario("Add to cart")
-    .whenScenarioStateIs(STARTED)
-    .willSetStateTo("Added")
-    .willReturn(ok()));
-
-stubFor(get("/cart")
-    .inScenario("Add to cart")
-    .whenScenarioStateIs("Added")
-    .willReturn(okJson("[{\"sku\":\"SKU-1\"}]")));
-```
 
 ## CI integration
 

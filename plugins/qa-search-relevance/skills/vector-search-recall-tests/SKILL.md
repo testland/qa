@@ -78,7 +78,6 @@ client = QdrantClient(url="http://localhost:6333")
 COLLECTION = "docs"  # points upserted with id == corpus index (to match ground truth)
 
 def qdrant_search(query_vec, ef, k=10):
-    # client.search() was removed in qdrant-client 1.18; use query_points.
     # exact=False keeps the query on the HNSW path; exact=True is the oracle.
     resp = client.query_points(
         collection_name=COLLECTION,
@@ -104,28 +103,11 @@ for r in results:
         break
 ```
 
-In **Weaviate v4** `ef` is not a query argument: it is a collection
-`vectorIndexConfig` setting, so the sweep updates the collection config
-between rounds, then re-queries (per the [Weaviate Python client docs]):
-
-```python
-from weaviate.classes.config import Reconfigure
-from weaviate.classes.query import MetadataQuery
-
-def set_weaviate_ef(client, ef, vector_name="default"):
-    client.collections.use("Docs").config.update(
-        vector_config=Reconfigure.Vectors.update(
-            name=vector_name,
-            vector_index_config=Reconfigure.VectorIndex.hnsw(ef=ef),
-        ),
-    )
-
-def weaviate_search(client, query_vec, k=10):
-    resp = client.collections.use("Docs").query.near_vector(
-        near_vector=query_vec, limit=k, return_metadata=MetadataQuery(distance=True)
-    )
-    return [o.uuid for o in resp.objects]  # match against UUID-keyed ground truth
-```
+Other engines expose `ef` differently - e.g. Weaviate v4 sets it at the
+collection level (`vectorIndexConfig`), not per query, so the sweep
+updates the config between rounds. Per-engine client code (Weaviate) and
+version-specific API notes:
+[references/per-engine-clients.md](references/per-engine-clients.md).
 
 ## Step 4 - Latency p50 / p95 / p99 budget
 
@@ -184,21 +166,10 @@ sides of the comparison change.
 
 Per the [ANN-Benchmarks docs], the framework "evaluates 37+ ANN
 algorithms ... by plotting recall against queries per second across
-various datasets" including HNSW (multiple impls), FAISS IVF, ScaNN,
-Annoy, Qdrant, Weaviate, Milvus.
-
-Run:
-
-```bash
-git clone https://github.com/erikbern/ann-benchmarks.git
-cd ann-benchmarks
-python install.py --algorithm hnswlib
-python run.py --algorithm hnswlib --dataset glove-100-angular
-python plot.py --dataset glove-100-angular
-```
-
-Outputs per-engine recall/QPS curves. Use to pick an engine + initial
-parameter set.
+various datasets" (HNSW, FAISS IVF, ScaNN, Annoy, Qdrant, Weaviate,
+Milvus). Use it to pick an engine + initial parameter set before the
+in-product sweep. Clone-and-run commands:
+[references/ann-benchmarks.md](references/ann-benchmarks.md).
 
 ## Step 7 - Filter tests
 

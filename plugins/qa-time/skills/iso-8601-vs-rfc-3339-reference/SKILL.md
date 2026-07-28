@@ -59,24 +59,12 @@ Per RFC 3339:
 | `+002026-05-20T...` (extended year) | **Forbidden** - 4 digits |
 | `24:00:00` (midnight as end-of-day) | **Forbidden** - only `00:00:00` (start) |
 
-## Per-language parser support
+## Per-language parsers and anti-patterns
 
-| Language | RFC 3339 strict | ISO 8601 full | Tolerance |
-|---|---|---|---|
-| Python `datetime.fromisoformat` (3.11+) | yes | partial | Accepts most RFC 3339; pre-3.11 didn't accept `Z` |
-| Python `dateutil.parser` | yes | mostly yes | Lenient |
-| Java `Instant.parse` | yes (RFC 3339 + Z) | no | Strict ISO 8601 subset |
-| Java `OffsetDateTime.parse` | yes | mostly yes | Lenient |
-| JavaScript `Date.parse` | platform-dependent | NO | Non-spec; varies by browser |
-| Rust `chrono` | yes | partial | Lenient |
-| Go `time.Parse(time.RFC3339, ...)` | yes | no | Strict; use RFC3339Nano for fractional |
-| .NET `DateTimeOffset.Parse` | yes | mostly yes | Lenient |
-
-**JavaScript `Date.parse` is the worst.** Per
-[developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse):
-"implementation-specific... The exact behavior of this function
-varies between implementations." Use a library
-(date-fns, dayjs) or the `Temporal` proposal where available.
+The per-language parser-support matrix (RFC 3339 / ISO 8601
+tolerance), version notes for time-sensitive parser behaviour, and
+the full anti-pattern table are in
+[references/parser-support.md](references/parser-support.md).
 
 ## Serialisation rules for APIs
 
@@ -134,19 +122,6 @@ If you need date-only, document explicitly and test parsing.
 | Sortability holds for UTC strings | Sort 1000 random UTC timestamps; verify lexical = chronological |
 | API spec documents the format | OpenAPI uses `format: date-time` (RFC 3339) |
 | Per-language client + server agree | Cross-language test fixture |
-
-## Anti-patterns
-
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| `Date.parse('2026-05-20')` in JS | Implementation-dependent (browser-local? UTC?) | Use a library; specify offset |
-| Mix UTC and local-with-offset in same field | Sortability broken; consumer confusion | Pick one wire format |
-| Skip the offset (`2026-05-20T14:30:00`) | Ambiguous | Always offset |
-| Storing local-format strings | Lose tz info; can't reconstruct | Store UTC + zone name separately if local matters |
-| 4-digit milliseconds (`2026...000`) | Not all parsers accept | Use 3 (milli) or 6 (micro) digits |
-| Sub-second precision but UTC string | Lose subsec on round-trip in some libraries | Test the round-trip |
-| Trusting `Date.parse('5/20/2026')` | US format; ambiguous | Use RFC 3339 always |
-| Date-only without explicit time | Receiver-defined behaviour | Specify `T00:00:00Z` or document |
 
 ## Limitations
 

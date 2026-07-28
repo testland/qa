@@ -11,15 +11,14 @@ Per [docs.pytest.org/en/stable][pt-docs]:
 
 [pt-docs]: https://docs.pytest.org/en/stable/
 
-pytest is the de facto Python testing framework. Distinguishes from
-`unittest` (stdlib) by: function-style tests (no `TestCase` class),
-fixture-based dependency injection, rich plugin ecosystem,
-parametrize for data-driven tests, intuitive assertions via plain
-`assert` (rewritten to provide diff-rich failure output).
+pytest is the de facto Python test framework. Unlike stdlib `unittest`, it
+uses function-style tests (no `TestCase`), fixture-based dependency
+injection, parametrize for data-driven tests, and plain-`assert` rewriting
+for diff-rich failures.
 
-Per-framework lifecycle scope: configure / run / fixtures / mocking
-/ coverage / CI. Test code hygiene (assertion quality, AAA structure,
-mocking anti-patterns) is in `test-code-conventions` (in the qa-test-review plugin).
+Lifecycle scope: configure / run / fixtures / mocking / coverage / CI. Test
+code hygiene (assertions, AAA, mocking anti-patterns) is in
+`test-code-conventions` (qa-test-review plugin).
 
 ## When to use
 
@@ -36,8 +35,6 @@ pip install pytest-cov pytest-asyncio pytest-mock pytest-xdist
 ```
 
 ## Step 2 - First test
-
-Per [pt-docs][pt-docs] convention:
 
 ```python
 # test_sum.py
@@ -191,22 +188,8 @@ pytest --cov=src --cov-report=term-missing --cov-report=html --cov-report=xml \
 
 `--cov-fail-under=N` fails the run if coverage drops below N%.
 
-In `pyproject.toml`:
-
-```toml
-[tool.coverage.run]
-source = ["src"]
-branch = true
-omit = ["**/__init__.py", "**/types.py"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "if TYPE_CHECKING:",
-    "raise NotImplementedError",
-]
-fail_under = 80
-```
+Full `[tool.coverage.*]` config, CI wiring, and parallel execution:
+[references/coverage-and-ci.md](references/coverage-and-ci.md).
 
 ## Step 10 - Fast-feedback flags
 
@@ -218,21 +201,6 @@ pytest -k "name_pat"   # only tests matching name pattern
 pytest -v              # verbose
 pytest -s              # don't capture stdout (see print() output)
 pytest -p no:cacheprovider   # disable test-cache (CI cache-clean runs)
-```
-
-## Step 11 - CI integration
-
-```yaml
-- run: pip install -e .[dev]
-- run: pytest --cov --cov-report=xml --cov-fail-under=80 --junitxml=junit.xml
-- uses: codecov/codecov-action@v4
-  with: { files: coverage.xml }
-```
-
-For parallel execution, add `pytest-xdist`:
-
-```bash
-pytest -n auto   # uses CPU count
 ```
 
 ## Anti-patterns

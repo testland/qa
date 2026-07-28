@@ -9,7 +9,7 @@ metadata:
 
 ## Overview
 
-QA leaders usually walk into a QBR with the data inverted: twelve slides of metrics building toward a conclusion on slide thirteen. Executives read in the opposite direction. The **Minto Pyramid Principle** (Barbara Minto, *The Pyramid Principle: Logic in Writing and Thinking*, ISBN 978-0273710516) prescribes that "ideas should be communicated in a pyramid format in which ideas are organized top-down, starting with a main idea", with groupings under it that are **MECE** - mutually exclusive, collectively exhaustive - because, per Minto, one "can't derive an idea from a grouping unless the ideas in the grouping are logically the same, and in logical order" ([Barbara Minto, Wikipedia](https://en.wikipedia.org/wiki/Barbara_Minto), fetched 2026-06-10). The book's opening device is **SCQA**: Situation, Complication, Question, Answer - state the stable context, the thing that changed, the question that raises, and the answer immediately (ISBN 978-0273710516).
+QA leaders usually walk into a QBR with the data inverted: twelve slides of metrics building toward a conclusion on slide thirteen. Executives read in the opposite direction. The **Minto Pyramid Principle** (Barbara Minto, *The Pyramid Principle: Logic in Writing and Thinking*, ISBN 978-0273710516) prescribes that "ideas should be communicated in a pyramid format in which ideas are organized top-down, starting with a main idea", with groupings under it that are **MECE** - mutually exclusive, collectively exhaustive - because, per Minto, one "can't derive an idea from a grouping unless the ideas in the grouping are logically the same, and in logical order" ([Barbara Minto, Wikipedia](https://en.wikipedia.org/wiki/Barbara_Minto)). The book's opening device is **SCQA**: Situation, Complication, Question, Answer - state the stable context, the thing that changed, the question that raises, and the answer immediately.
 
 This skill applies that structure to quality data your existing test tooling already produces: the answer at the top, two to four MECE support groups under it, every number citing the artifact it came from.
 
@@ -40,16 +40,13 @@ Halt with `UNCITED_INPUTS` if the supplied numbers carry no source artifacts: a 
 
 ## Step 2 - Verify the DORA vocabulary before using it
 
-Executives increasingly hear DORA terms from engineering leadership, so use them precisely. As of the current guidance, DORA defines **five** software delivery metrics, evolved from the original four keys ([dora.dev/guides/dora-metrics-four-keys/](https://dora.dev/guides/dora-metrics-four-keys/), fetched 2026-06-10):
-
-- Throughput: **change lead time** ("the amount of time it takes for a change to go from committed to version control to deployed in production"), **deployment frequency** ("the number of deployments over a given period or the time between deployments"), **failed deployment recovery time** ("the time it takes to recover from a deployment that fails and requires immediate intervention").
-- Instability: **change fail rate** ("the ratio of deployments that require immediate intervention following a deployment"), **deployment rework rate** ("the ratio of deployments that are unplanned but happen as a result of an incident in production").
+Executives increasingly hear DORA terms from engineering leadership, so use them precisely. DORA defines **five** software delivery metrics, evolved from the original four keys and grouped as throughput and instability; the verbatim definitions are in [references/dora-metrics.md](references/dora-metrics.md).
 
 Two precision rules for the narrative: (1) escape-defect rate is a defect-leakage metric, **not** a DORA metric - DORA measures delivery; do not blend them under one label (single-team digest reporting draws the same line); (2) if the org still says "the four keys", note the recovery-time rename rather than silently mixing old and new names.
 
 ## Step 3 - Write the pyramid top: SCQA + the Answer sentence
 
-Draft the governing thought before touching slides. Per the SCQA device (ISBN 978-0273710516):
+Draft the governing thought before touching slides. Per the SCQA device:
 
 - **Situation:** the stable fact the audience already accepts ("We ship weekly to 40k customers; quality reporting covers all four product teams.")
 - **Complication:** what changed ("Q2 doubled deployment frequency while QA headcount was flat.")
@@ -64,46 +61,22 @@ Group every finding under headers that do not overlap and jointly cover the stor
 
 ## Step 5 - Emit the narrative
 
-Worked example (top of a real QBR narrative; numbers carry their sources):
+Lead with the Answer sentence as the title, follow with SCQA in two lines, then the 2 - 4 MECE groups, then the ask as its own header. Each group carries one claim sentence plus cited numbers. Minimal shape:
 
 ```markdown
-# Quality QBR - 2026-Q2
-
-**Answer first:** Quality held through a 2x delivery acceleration on three of four
-teams; checkout regressed (3 P1 escapes vs 1 in Q1) and recovers only if this
-group approves the test-data investment below.
-
-**Situation.** Four product teams, weekly releases, quality reporting per team
-digest. **Complication.** Deployment frequency doubled (38 -> 81 deploys/quarter,
-CI deploy log) at flat QA headcount. **Question.** Did quality hold?
-
-## 1. Outcomes - held, except checkout
-P1 escapes: 4 in Q2 vs 5 in Q1 (tracker, severity=P1, found_in=production), but
-3 of 4 concentrated in checkout (vs 1 in Q1). Checkout's escapes trace to
-unseeded test environments in 9 of 11 retro findings (Q2 escape retros).
-
-## 2. Delivery - faster, stable
-Deployment frequency 38 -> 81; change fail rate 4.9% -> 5.2% (deploy log over
-incident tags; definitions per dora.dev). Delivery acceleration did not buy
-instability - the checkout regression is a test-gap story, not a velocity story.
-
-## 3. Commitments - 3 of 4 OKRs landed
-KR grades from the Q2 OKR set: regression cycle time 1.0, flake budget 0.8,
-escape-rate KR missed on checkout only (qa-okr-author grading sheet).
-
-## 4. The decision
-One ask: 6 engineer-weeks for seeded checkout test data. Expected effect:
-removes the cause named in 9 of 11 escape retros. Alternative considered and
-rejected: +1 headcount (slower, does not fix the environment gap).
+# Quality QBR - <quarter>
+**Answer first:** <trend on N-1 of N teams; the one regression; the one decision needed>.
+**Situation.** <stable context>. **Complication.** <what changed, cited>. **Question.** <did quality hold?>
+## 1. Outcomes ...   ## 2. Delivery ...   ## 3. Commitments ...   ## 4. The decision
 ```
 
-Everything below this layer in the real document is appendix: per-team tables, the digests themselves, methodology. Executives who want it can descend the pyramid; the ones who do not have already gotten the answer.
+Everything below this layer in the real document is appendix - per-team tables, the digests themselves, methodology - that executives can descend into but do not need to reach the answer. See [references/qbr-narrative-example.md](references/qbr-narrative-example.md) for the fully worked QBR narrative with real numbers and their sources.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Conclusion on the last slide | Executives decide in the first two minutes; the build-up reads as hedging | Answer-first per the pyramid (ISBN 978-0273710516) |
+| Conclusion on the last slide | Executives decide in the first two minutes; the build-up reads as hedging | Answer-first per the pyramid |
 | Metric dump as narrative | Data without a governing claim delegates the synthesis to the reader | Step 3: no deck before the Answer sentence exists |
 | Overlapping groups | The same fact argued twice reads as padding; MECE exists to prevent it | Step 4 grouping check |
 | Calling escape rate a DORA metric | Mislabels defect leakage as delivery performance; one informed exec follow-up sinks the room's trust | Step 2 vocabulary rules ([dora.dev](https://dora.dev/guides/dora-metrics-four-keys/)) |
@@ -114,7 +87,7 @@ Everything below this layer in the real document is appendix: per-team tables, t
 ## Limitations
 
 - **Garbage in, story out.** The narrative inherits the quality of the digests and trackers beneath it; this skill structures evidence, it cannot create it.
-- **SCQA and the pyramid are cited to the book.** The Minto sources fetchable online describe the pyramid and MECE; SCQA's full treatment is in the book itself (ISBN 978-0273710516), cited here as a management framework.
+- **SCQA and the pyramid are cited to the book.** The Minto sources fetchable online describe the pyramid and MECE; SCQA's full treatment is in the book itself (cited in References), used here as a management framework.
 - **No automatic data pulls.** This skill consumes outputs of the agents named in Step 1; wiring live dashboards into prose is out of scope.
 - **One narrative, one audience.** A board version and an engineering-leadership version differ in Answer and asks; produce two artifacts rather than one compromise.
 

@@ -11,18 +11,11 @@ Per [docs.github.com/code-security/codeql-cli][cql-docs]:
 
 [cql-docs]: https://docs.github.com/code-security/codeql-cli/getting-started-with-the-codeql-cli/
 
-CodeQL is GitHub's semantic-analysis SAST. The model differs from
-pattern-based scanners (Semgrep / SonarQube):
-
-1. Build a **database** representing the codebase as queryable
-   facts (control flow, data flow, type info).
-2. Run **queries** (`.ql` files) against the database to surface
-   findings.
-3. Output **SARIF** for GitHub Code Scanning integration.
-
-This database-then-query model enables cross-file taint tracking
-(e.g., "any user input that flows to a SQL query without
-sanitization") that pattern matchers can't express.
+CodeQL is GitHub's semantic-analysis SAST: build a **database** of the
+codebase (control flow, data flow, type info), run `.ql` **queries**
+against it, emit **SARIF** for GitHub Code Scanning. This
+database-then-query model catches cross-file taint flows (user input
+reaching a SQL sink unsanitized) that pattern matchers cannot express.
 
 ## When to use
 
@@ -85,61 +78,12 @@ codeql database analyze my-db \
   codeql/javascript-queries
 ```
 
-Common query packs (per [cql-docs][cql-docs]):
+The full per-language pack list, the query suites (`code-scanning`,
+`security-and-quality`, `security-extended`), a custom `.ql` query
+example, and the GitHub Actions CI integration are in
+[references/codeql-reference.md](references/codeql-reference.md).
 
-| Pack | Coverage |
-|---|---|
-| `codeql/javascript-queries` | JS/TS standard checks |
-| `codeql/python-queries` | Python checks |
-| `codeql/java-queries` | Java + Kotlin checks |
-| `codeql/go-queries` | Go checks |
-| `codeql/cpp-queries` | C/C++ checks |
-| `codeql/csharp-queries` | C# checks |
-| `codeql/ruby-queries` | Ruby checks |
-| `codeql/swift-queries` | Swift checks |
-
-Each pack ships query suites: `code-scanning` (default for GitHub
-Code Scanning), `security-and-quality` (broader), `security-extended`
-(more rules, more false positives).
-
-```bash
-codeql database analyze my-db \
-  codeql/javascript-queries:codeql-suites/javascript-security-extended.qls \
-  --format=sarif-latest \
-  --output=results.sarif
-```
-
-## Step 4 - Custom query authoring
-
-```ql
-/**
- * @name Hardcoded JWT secret in jwt.sign call
- * @description Detects jwt.sign() calls with literal-string secret
- * @kind problem
- * @problem.severity error
- * @id js/hardcoded-jwt-secret
- * @tags security
- *       external/cwe/cwe-798
- */
-
-import javascript
-
-from CallExpr call, StringLiteral secret
-where
-  call.getCalleeName() = "sign" and
-  call.getReceiver().(VarRef).getName() = "jwt" and
-  call.getArgument(1) = secret
-select call, "Hardcoded JWT secret detected: " + secret.getValue()
-```
-
-The CodeQL query language has a steeper learning curve than YAML
-patterns (Semgrep). Worth the investment for cross-file taint flows;
-overkill for simple "find this token" rules.
-
-Custom queries register in a query suite (`.qls`) for selective
-execution.
-
-## Step 5 - False-positive triage (MANDATORY)
+## Step 4 - False-positive triage (MANDATORY)
 
 Three layers:
 
@@ -166,34 +110,7 @@ suppressions.
 Cadence: every quarter, review GitHub Security → "Dismissed alerts"
 filter; expired ones reopened for re-review.
 
-## Step 6 - CI integration
-
-Most teams use the GitHub-hosted action (recommended for any
-GitHub-hosted repo):
-
-```yaml
-jobs:
-  codeql:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write   # for SARIF upload to Security tab
-    steps:
-      - uses: actions/checkout@v5
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: javascript, python
-          queries: security-extended
-      - run: ./gradlew build   # or whatever build step is needed
-      - uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:javascript"
-```
-
-For non-GitHub CI (GitLab / Jenkins), use the CodeQL CLI directly
-(Steps 2 - 3) and upload SARIF to GitHub Code Scanning via the API
-or to a SARIF-compatible viewer.
-
-## Step 7 - Database performance
+## Step 5 - Database performance
 
 CodeQL databases can be GBs for large codebases. Performance flags:
 
@@ -215,7 +132,7 @@ GitHub).
 |---|---|---|
 | Skip `--command` for compiled languages | Database empty; analysis returns no findings silently | Always wrap the build (Step 2) |
 | Use `security-extended` without baseline | Flood of pre-existing findings overwhelms the team | Start with `code-scanning`; ratchet up |
-| Inline comment without GitHub dismissal | No audit trail | Use Security-tab dismissal for persistent FPs (Step 5) |
+| Inline comment without GitHub dismissal | No audit trail | Use Security-tab dismissal for persistent FPs (Step 4) |
 | Run CodeQL on every PR for large codebase | Database creation is slow (10 - 30 min); PR cycle slow | Schedule full scan nightly; PR-only delta scanning via Code Scanning |
 | Custom queries without test suite | Bugs in custom queries miss real findings | Use `codeql test` to validate against expected-results files |
 
@@ -223,8 +140,8 @@ GitHub).
 
 - Database creation is slow for large codebases (10 - 30 min on
   monorepos); incremental scanning helps but requires caching.
-- Custom-query learning curve is steep (CodeQL is a declarative
-  logic language; CodeQL University courses recommended).
+- Custom-query authoring has a steep learning curve; the CodeQL
+  University courses help.
 - Some languages have less depth than others (Go, Ruby, Swift are
   newer than JS/Java/C++).
 - Self-hosted (non-GitHub) integration requires manual SARIF

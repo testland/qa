@@ -5,38 +5,14 @@ description: "Authors a `compose.test.yaml` for tests - declares the SUT plus it
 
 # docker-compose-tests
 
-## Overview
-
-Docker Compose is "a tool for defining and running multi-container
-applications" - services, networks, and volumes declared "in a single
-YAML configuration file" and managed "with a single command"
-([compose-overview][compose]).
+Reach for Compose in tests when the SUT has two or more real backing
+services that must see each other (app -> db -> cache -> queue), the
+same topology must run locally and in CI without imperative drift, or
+parallel CI jobs each need an isolated stack. For a single dependency
+wired into one test, `testcontainers` is lighter - it lives inside the
+test process with no separate `docker compose up` step.
 
 [compose]: https://docs.docker.com/compose/
-
-For tests, Compose is the right choice when:
-
-- The SUT needs **two or more** real backing services that have to
-  see each other (app → db → cache → queue) - the topology is the
-  artifact.
-- The same definition must run locally **and** in CI without
-  imperative drift.
-- A team wants per-job isolation in CI without booking dedicated
-  ports / databases.
-
-When the test process only needs **one** dependency wired into a
-single test, `testcontainers` is the
-lighter option - it lives inside the test process and doesn't need
-a separate `docker compose up` step.
-
-## When to use
-
-- The SUT has 2+ runtime dependencies and the team already runs them
-  via Docker locally.
-- A CI pipeline needs to spin up the same topology per-job, not share
-  one test database across PRs.
-- An end-to-end test suite (Playwright, Cypress, native E2E) needs a
-  full stack reachable on a network.
 
 ## Step 1 - Author `compose.test.yaml`
 
@@ -110,22 +86,15 @@ isolation, see Step 4.
 
 ## Step 2 - Healthchecks are load-bearing
 
-Per [compose-services][compose-svc], `depends_on` accepts three
-conditions:
-
-[compose-svc]: https://docs.docker.com/reference/compose-file/services/
-
-| Condition                      | Meaning                                                               |
-|--------------------------------|------------------------------------------------------------------------|
-| `service_started`              | Container has been created and started (default - usually wrong for tests). |
-| `service_healthy`              | Dependency's `healthcheck` succeeded - the right choice for DBs / queues / app. |
-| `service_completed_successfully` | Dependency ran to completion and exited 0 - for one-shot init / migration containers. |
-
-**`service_started` is almost never what a test wants.** Postgres
-"started" doesn't mean "accepting connections". Always pair a real
-dependency with a `healthcheck` and a `service_healthy` gate.
+**`service_started` (the `depends_on` default) is almost never what a
+test wants.** Postgres "started" doesn't mean "accepting connections".
+Always pair a real dependency with a `healthcheck` and gate its
+dependents with `condition: service_healthy`. The three `depends_on`
+conditions are tabulated in [references/compose-flags.md](references/compose-flags.md).
 
 The `healthcheck` syntax per [compose-services][compose-svc]:
+
+[compose-svc]: https://docs.docker.com/reference/compose-file/services/
 
 ```yaml
 healthcheck:
@@ -201,7 +170,7 @@ jobs:
         run: docker compose -f compose.test.yaml down --volumes --remove-orphans
 ```
 
-Per [compose-cli][cli], `-p` / `--project-name` resolution order is:
+The `-p` / `--project-name` resolution order is:
 **flag > `COMPOSE_PROJECT_NAME` env var > top-level `name:` > directory
 basename**. Using the env var keeps the YAML clean while overriding
 the in-file `name:` per CI job.
@@ -212,18 +181,14 @@ the in-file `name:` per CI job.
 
 ## Step 5 - Gate the test step on readiness
 
-Per [compose-up][up], two flags pair for "block until everything is
-healthy":
+Two `up` flags pair for "block until everything is healthy": `--wait`
+("Wait for services to be running|healthy. Implies detached mode.")
+and `--wait-timeout <seconds>` ("Maximum duration in seconds to wait
+for the project to be running|healthy") ([compose-up][up]). The full
+flag table (`--abort-on-container-exit`, `--abort-on-container-failure`,
+`--exit-code-from`) is in [references/compose-flags.md](references/compose-flags.md).
 
 [up]: https://docs.docker.com/reference/cli/docker/compose/up/
-
-| Flag                             | Effect                                                           |
-|----------------------------------|------------------------------------------------------------------|
-| `--wait`                         | "Wait for services to be running\|healthy. Implies detached mode." |
-| `--wait-timeout <seconds>`       | "Maximum duration in seconds to wait for the project to be running\|healthy" |
-| `--abort-on-container-exit`      | "Stops all containers if any container was stopped." (Foreground.) |
-| `--abort-on-container-failure`   | "Stops all containers if any container exited with failure."      |
-| `--exit-code-from <service>`     | "Return the exit code of the selected service container. Implies `--abort-on-container-exit`." |
 
 Two valid CI shapes:
 
@@ -255,13 +220,11 @@ when the test runs as a Compose service rather than via `run`.
 
 ## Step 6 - Tear down deterministically
 
-Per [compose-cli][cli], `down` "Stop[s] and remove[s] containers,
-networks". For tests, two flags matter:
-
-| Flag                | Effect                                                                    |
-|---------------------|---------------------------------------------------------------------------|
-| `--volumes` / `-v`  | Remove named volumes declared in the compose file. Without this, DB state persists across runs and the next run sees stale data. |
-| `--remove-orphans`  | Remove containers for services not defined in the current file. Defends against renamed services leaving stragglers. |
+`down` stops and removes containers and networks ([compose-cli][cli]).
+Two flags matter for tests: `--volumes` / `-v` (remove named volumes,
+else DB state persists across runs and the next run sees stale data)
+and `--remove-orphans` (remove containers for services no longer in the
+file). The full table is in [references/compose-flags.md](references/compose-flags.md).
 
 ```bash
 docker compose -f compose.test.yaml down --volumes --remove-orphans
@@ -275,7 +238,7 @@ poison the next run.
 
 When the test compose file has services that aren't always needed
 (seeded fixtures, a debugging admin UI, a heavyweight observability
-stack), gate them behind a profile per [compose-cli][cli]:
+stack), gate them behind a profile:
 
 ```yaml
 services:
@@ -302,16 +265,12 @@ profiles via repeating `--profile` or comma-separated
 
 ## Anti-patterns
 
-| Anti-pattern                                                           | Why it fails                                                                  | Fix |
-|------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----|
-| `depends_on: db` without `condition: service_healthy`                  | Default `service_started` means "container exists" - Postgres isn't ready; app crashes on first connection. | Add a `healthcheck` to the dependency and gate with `condition: service_healthy`. |
-| Sharing one project name across parallel CI jobs                       | Two jobs pick the same container/network names; one accidentally tears down the other's state. | `COMPOSE_PROJECT_NAME=<unique-per-job>` ([compose-cli][cli]). |
-| `down` without `--volumes`                                             | DB state carries over to the next run; tests pass on dirty state, fail on clean state. | Always `down --volumes --remove-orphans` in `if: always()`. |
-| `up` foreground in CI without `--abort-on-container-exit`              | The test container exits but Compose keeps the others running; the job hangs until timeout. | `--abort-on-container-exit --exit-code-from <test-svc>`, or `up --wait` then explicit `run --rm`. |
-| Running migrations from inside `app`'s entrypoint                      | App and migrations race on cold start; intermittent connection-refused.        | Separate `migrate` service with `service_completed_successfully` gate (Step 3). |
-| Mounting host source into the test app via `volumes:` in CI            | CI source tree and image both write to the same path; build artifacts pollute the workspace. | Use bind mounts only for local-dev compose; tests run against the built image. |
-| Reusing the local-dev compose.yaml for tests                           | Test topology grows hidden coupling to the dev convenience services.          | Separate `compose.test.yaml`; `-f compose.test.yaml` everywhere. |
-| Hard-coded host ports (`ports: ["5432:5432"]`) in the test compose      | Two parallel jobs collide on the host port.                                    | Don't expose ports on the host in CI; rely on the Compose network for in-stack reachability. |
+Common failure modes and their fixes - missing `service_healthy` gates,
+shared project names across parallel jobs, `down` without `--volumes`,
+foreground `up` without `--abort-on-container-exit`, migrations in the
+app entrypoint, host bind mounts in CI, reusing the dev compose file,
+and hard-coded host ports - are cataloged in
+[references/anti-patterns.md](references/anti-patterns.md).
 
 ## Limitations
 

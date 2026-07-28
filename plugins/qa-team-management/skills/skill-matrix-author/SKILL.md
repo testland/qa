@@ -9,7 +9,7 @@ metadata:
 
 ## Overview
 
-Per ISTQB CTAL-TM v3.0 section 3.1.3, "test management needs to assess the existing test team skills and compare these with the required skills, which may be documented in a skills matrix" ([ISTQB CTAL-TM Syllabus v3.0, 2024](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf), fetched 2026-06-10). This skill produces that matrix: rows are team members, columns are competency dimensions, and each cell carries a proficiency level plus the evidence that justifies it.
+Per ISTQB CTAL-TM v3.0 section 3.1.3, "test management needs to assess the existing test team skills and compare these with the required skills, which may be documented in a skills matrix" (CTAL-TM v3.0 §3.1.3, 2024; syllabus in References). This skill produces that matrix: rows are team members, columns are competency dimensions, and each cell carries a proficiency level plus the evidence that justifies it.
 
 The output is two artifacts: the **matrix** (current state) and the **gap analysis** (matrix compared against the skills the team's projects require). The matrix without the comparison is a wall chart; the comparison is what drives training, hiring, and allocation decisions.
 
@@ -31,7 +31,7 @@ Do **not** use this skill to:
 | Input | Notes |
 |---|---|
 | **Team roster** | Names or anonymized IDs, current role, tenure on team |
-| **Required-skills context** | The team's test strategy, active projects, tech stack, test levels and test types in scope. Per CTAL-TM 3.1.2, "a detailed context analysis is required to determine the required skills for a project" - system domain, architecture and technologies, and SDLC all drive required professional competence ([CTAL-TM v3.0 §3.1.2](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf)) |
+| **Required-skills context** | The team's test strategy, active projects, tech stack, test levels and test types in scope. Per CTAL-TM 3.1.2, "a detailed context analysis is required to determine the required skills for a project" - system domain, architecture and technologies, and SDLC all drive required professional competence (CTAL-TM v3.0 §3.1.2) |
 | **Evidence sources** | Work samples per member: test strategies authored, review findings, test code, completion reports, certifications, prior assessments |
 | **Prior matrix** | Optional; enables trend ("who grew since last cycle") |
 
@@ -46,9 +46,9 @@ CTAL-TM v3.0 section 3.1.1 classifies skills into **four areas of competence** (
 3. **Social competence** - communication, cooperation, and conflict management; "they enable one to relate to others in order to act appropriately in a given situation".
 4. **Personal competence** - "the ability and willingness to develop oneself": self-management, reliability, resilience, ability to receive criticism, openness to change.
 
-(All four definitions: [CTAL-TM v3.0 §3.1.1](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf).)
+(All four definitions: CTAL-TM v3.0 §3.1.1.)
 
-Expand **professional competence** into 4 - 8 team-specific columns. CTAL-TM 3.1.2 maps skills to test activities - test planning needs conceptual strategy knowledge, test analysis needs analytical skill on the test basis and product risks, test implementation needs "technical expertise for test script programming and setting up test environments", test execution needs expertise in automated execution, exploratory testing, and result evaluation ([§3.1.2](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf)). A typical web-product team lands on columns like: test design techniques, exploratory testing, test automation (team's framework), API testing, CI pipeline ownership, domain knowledge, performance testing, accessibility testing.
+Expand **professional competence** into 4 - 8 team-specific columns. CTAL-TM 3.1.2 maps skills to test activities - test planning needs conceptual strategy knowledge, test analysis needs analytical skill on the test basis and product risks, test implementation needs "technical expertise for test script programming and setting up test environments", test execution needs expertise in automated execution, exploratory testing, and result evaluation (§3.1.2). A typical web-product team lands on columns like: test design techniques, exploratory testing, test automation (team's framework), API testing, CI pipeline ownership, domain knowledge, performance testing, accessibility testing.
 
 Keep methodological, social, and personal competence as 1 - 2 columns each, not expanded per sub-skill. The matrix is a management instrument, not a psychometric one; 8 - 12 total columns is the usable ceiling.
 
@@ -63,39 +63,29 @@ The syllabus prescribes assessment techniques, not a numeric scale; the 0 - 3 sc
 | **2 - practitioner** | Executes independently on team-typical tasks | Authored work artifacts on this team (test cases, automation, strategy sections) |
 | **3 - coach** | Executes on novel problems and grows others in it | Artifacts plus observed teaching: review comments that taught, mentoring record, internal training delivered |
 
-Evidence rules follow CTAL-TM 3.1.3, which says professional and methodological competence "can be assessed by demonstrating typical test tasks": outlining a test strategy and discussing feedback, reviewing the test basis and communicating findings, determining test techniques for a given context, applying test techniques, and writing a test completion report that assesses results. It adds that "skills can be assessed through external credentials, certifications, work experience, and degrees" ([§3.1.3](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf)).
+Evidence rules follow CTAL-TM 3.1.3, which says professional and methodological competence "can be assessed by demonstrating typical test tasks": outlining a test strategy and discussing feedback, reviewing the test basis and communicating findings, determining test techniques for a given context, applying test techniques, and writing a test completion report that assesses results. It adds that "skills can be assessed through external credentials, certifications, work experience, and degrees" (§3.1.3).
 
 **The load-bearing rule: no cell above level 1 on self-assessment alone.** A level-2 or level-3 cell must name at least one artifact or observed demonstration. Self-assessment seeds the draft; evidence locks the value.
 
 ## Step 4 - Fill the matrix
 
-Worked example fragment (5-person team, professional-competence columns shown; `req.` is the level the team needs in at least N people, derived in Step 5):
+One row per member, one column per dimension. Each cell is a 0 - 3 level, and every cell above 1 carries a footnote naming its evidence. Add a final **team-need row** per column (`req. / have`): the level the team needs in at least N people against what it has. Minimal shape:
 
 ```markdown
-# QA team skill matrix - checkout team - 2026-06
+| Member | Test design | Playwright automation | Perf (k6) |
+|---|---|---|---|
+| Anna (lead) | 3 [^a1] | 2 [^a3] | 1 |
+| Boris | 2 [^b1] | 3 [^b2] | 0 |
+| **Team need (req. / have)** | 2 in 3+ / have 3 | 2 in 3+ / have 3 | 2 in 2+ / **have 1** |
 
-Scale: 0 none / 1 aware / 2 practitioner / 3 coach. Cells above 1 cite evidence (footnote).
-
-| Member | Test design | Exploratory | Playwright automation | API testing | Perf (k6) | Domain: payments |
-|---|---|---|---|---|---|---|
-| Anna (lead)  | 3 [^a1] | 2 [^a2] | 2 [^a3] | 2 [^a4] | 1 | 3 [^a5] |
-| Boris        | 2 [^b1] | 1       | 3 [^b2] | 2 [^b3] | 0 | 1 |
-| Chen         | 2 [^c1] | 3 [^c2] | 1       | 1       | 0 | 2 [^c3] |
-| Dana         | 1       | 1       | 2 [^d1] | 3 [^d2] | 2 [^d3] | 1 |
-| Emil (new)   | 1       | 2 [^e1] | 1       | 1       | 0 | 0 |
-| **Team need (req. / have)** | 2 in 3+ / have 3 | 2 in 2+ / have 3 | 2 in 3+ / have 3 | 2 in 2+ / have 3 | 2 in 2+ / **have 1** | 2 in 2+ / have 2 |
-
-[^a1]: Authored the 2026 checkout test strategy; ran the team's test-design workshop (2026-03).
-[^b2]: Owns the Playwright harness; 14 of last 20 framework PRs; coached Dana through fixture refactor.
-[^c2]: 31 charter-based sessions logged in 2026-Q1; found 2 of the quarter's 3 P1 escapes.
-[^d3]: Built the k6 smoke profile for checkout; single person who has run a load test this year.
+[^a1]: Authored the 2026 checkout test strategy; ran the team's test-design workshop.
 ```
 
-The footnote-per-cell convention is what makes the matrix auditable: anyone can challenge a 3 by reading its evidence.
+The footnote-per-cell convention is what makes the matrix auditable: anyone can challenge a 3 by reading its evidence. See [references/skill-matrix-example.md](references/skill-matrix-example.md) for the full 5-person matrix with every professional-competence column and evidence footnote.
 
 ## Step 5 - Derive the gap analysis
 
-For each column, set the **required level and depth** ("level 2 in at least 3 people") from the Step 1 context, then compare. CTAL-TM 3.1.4 frames this exactly: "identify necessary development needs by comparing required with available skills in a skills matrix" ([§3.1.4](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf)). Classify each gap:
+For each column, set the **required level and depth** ("level 2 in at least 3 people") from the Step 1 context, then compare. CTAL-TM 3.1.4 frames this exactly: "identify necessary development needs by comparing required with available skills in a skills matrix" (§3.1.4). Classify each gap:
 
 | Gap class | Signal | Typical response |
 |---|---|---|
@@ -108,7 +98,7 @@ In the worked example: performance testing is a **bus-factor gap** (Dana alone a
 
 ## Step 6 - Attach development options per gap
 
-For each gap, list candidate development approaches. CTAL-TM 3.1.4 enumerates five: training and education, self-study, peer learning, mentoring or coaching, and training on the job - and notes they are not equally effective per competence area: "self-study and training, for example, are well suited for developing professional and methodological competence", while for social and personal competence "it is recommended to use approaches such as training and coaching, which are often more promising than self-study" ([§3.1.4](https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf)).
+For each gap, list candidate development approaches. CTAL-TM 3.1.4 enumerates five: training and education, self-study, peer learning, mentoring or coaching, and training on the job - and notes they are not equally effective per competence area: "self-study and training, for example, are well suited for developing professional and methodological competence", while for social and personal competence "it is recommended to use approaches such as training and coaching, which are often more promising than self-study" (§3.1.4).
 
 Do not pick the response in this skill. Prioritizing gaps against the roadmap and recommending train-vs-hire is a separate downstream step; this skill ends by handing it a complete, evidence-backed matrix.
 

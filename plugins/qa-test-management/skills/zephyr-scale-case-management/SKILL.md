@@ -107,34 +107,13 @@ attach_steps("PROJ-T123", steps)
 `mode: OVERWRITE` replaces the existing step list; `APPEND` adds
 to it.
 
-### Folders
+### Folders + Jira links
 
-```python
-def create_folder(project_key, name, folder_type="TEST_CASE", parent_id=None):
-    r = requests.post(f"{BASE}/folders", json={
-        "projectKey": project_key, "name": name,
-        "folderType": folder_type,  # TEST_CASE / TEST_PLAN / TEST_CYCLE
-        "parentId": parent_id,
-    }, headers=HEADERS)
-    r.raise_for_status()
-    return r.json()
-```
-
-Folders can nest; create the hierarchy first, then place cases.
-
-### Linking to Jira issues
-
-```python
-def link_to_jira(test_case_key, issue_key):
-    r = requests.post(f"{BASE}/testcases/{test_case_key}/links/issues",
-                      json={"issueId": resolve_jira_issue_id(issue_key)},
-                      headers=HEADERS)
-    r.raise_for_status()
-```
-
-Requires Jira REST API to resolve key → issue ID separately.
-Trace back from cases to requirements via the linked-issues
-endpoint.
+`create_folder` (folders nest; build the hierarchy first, then place cases) and
+`link_to_jira` (resolve the Jira key -> issue ID via the Jira REST API first)
+are in
+[references/zephyr-scale-api-reference.md](references/zephyr-scale-api-reference.md),
+alongside the migration field map and response shapes.
 
 ### Get + list
 
@@ -164,13 +143,18 @@ Response shape: `{"values": [...], "startAt", "maxResults", "total", "isLast"}`.
 
 ## Running
 
-### Bulk import via CSV → JSON
+### Bulk import via CSV to JSON
+
+Wrap each row in try/except, throttle to ~60 req/min (the tenant limit), and
+tally successes so one failing row does not abort the batch:
 
 ```python
-import csv
+import csv, time
 
-with open("legacy.csv") as f:
-    for row in csv.DictReader(f):
+rows = list(csv.DictReader(open("legacy.csv")))
+created, failed = [], []
+for row in rows:
+    try:
         case = create_test_case(
             project_key=row["project"],
             name=row["title"],
@@ -188,22 +172,20 @@ with open("legacy.csv") as f:
             )
         ]
         attach_steps(case["key"], steps)
+        created.append(case["key"])
+    except Exception as e:
+        failed.append((row["title"], str(e)))
+    time.sleep(1)  # ~60 req/min; a 429 means back off further
+
+print(f"created {len(created)}, failed {len(failed)}")
 ```
 
-### Migration target field map
+**Verify:** assert `len(created) + len(failed) == len(rows)` and that `failed`
+is empty before treating the import as complete. On any 429, increase the delay;
+on other errors, fix the source row and re-run the failed titles.
 
-| Source field | Zephyr field |
-|---|---|
-| Title | `name` |
-| Objective | `objective` |
-| Preconditions | `precondition` |
-| Steps | testScript items |
-| Owner | `ownerId` (Jira user ID) |
-| Priority | `priorityName` (project enum) |
-| Status | `statusName` |
-| Labels | `labels[]` |
-| Component | `componentId` (Jira component) |
-| Requirement traceability | `/links/issues` |
+The migration field map (source column -> Zephyr field) is in
+[references/zephyr-scale-api-reference.md](references/zephyr-scale-api-reference.md).
 
 ## Parsing results
 

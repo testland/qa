@@ -7,15 +7,12 @@ description: "Parses JUnit-format XML reports (the de-facto interchange format e
 
 ## Overview
 
-The "JUnit XML" format is the de-facto schema every CI consumes. It
-originated with Apache Ant's JUnit task, was widened by Jenkins, and
-is now emitted by **virtually every test runner** - pytest, Jest,
-Mocha, Vitest, Go test (`gotestsum`), Maven Surefire, Gradle,
-Newman, Cypress, Playwright (via reporter), RSpec (via formatter),
-and the rest.
+The "JUnit XML" format is the de-facto schema every CI consumes,
+emitted by virtually every test runner (pytest, Jest, Vitest, Go test,
+Maven Surefire, Cypress, Playwright, and the rest).
 
-Per [llg-junit][junit] (the most-cited community schema reference,
-used by Jenkins's parser):
+Per [llg-junit][junit] (the community schema reference used by
+Jenkins's parser):
 
 [junit]: https://llg.cubic.org/docs/junit/
 
@@ -24,12 +21,9 @@ used by Jenkins's parser):
 
 The hierarchy is **`testsuites` → `testsuite` → `testcase`**, with
 result child elements (`<failure>`, `<error>`, `<skipped>`) hanging
-off each `testcase`.
-
-This skill covers parsing the format, building per-suite +
-per-case metrics, and the **flaky-vs-new** distinction via the
-modern `<rerunFailure>` / `<flakyFailure>` extensions
-([llg-junit][junit]).
+off each `testcase`. This skill covers parsing the format, building
+per-suite + per-case metrics, and the **flaky-vs-new** distinction via
+the modern `<rerunFailure>` / `<flakyFailure>` extensions.
 
 ## When to use
 
@@ -74,7 +68,7 @@ infra; failures are usually code or fixture drift.
 ## Step 2 - Parse safely
 
 Use a streaming parser for large files (multi-thousand-test suites
-are common). Python:
+are common). Python core:
 
 ```python
 # scripts/parse_junit.py
@@ -87,13 +81,16 @@ def parse_junit(path):
 
     for suite in suites:
         for case in suite.findall('testcase'):
+            fault = case.find('failure')
+            if fault is None:
+                fault = case.find('error')
             yield {
                 'suite': suite.get('name'),
                 'classname': case.get('classname'),
                 'name': case.get('name'),
                 'time': float(case.get('time') or 0),
                 'status': classify(case),
-                'failure_message': (case.find('failure') or case.find('error') or {}).get('message'),
+                'failure_message': fault.get('message') if fault is not None else None,
             }
 
 def classify(case):
@@ -103,29 +100,15 @@ def classify(case):
     return 'pass'
 ```
 
-Node:
+An `Element` with no children is falsy, so `case.find('failure') or
+case.find('error')` would skip a childless `<failure>`; test the nodes
+with `is None` instead.
 
-```javascript
-import { XMLParser } from 'fast-xml-parser';
-import { readFileSync } from 'node:fs';
-
-const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
-const xml = parser.parse(readFileSync(path, 'utf8'));
-
-const suites = xml.testsuites
-  ? (Array.isArray(xml.testsuites.testsuite) ? xml.testsuites.testsuite : [xml.testsuites.testsuite])
-  : [xml.testsuite];
-
-for (const suite of suites) {
-  const cases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase];
-  // ...
-}
-```
-
-**Always handle both shapes**: the root may be `<testsuites>` or
-`<testsuite>` per [llg-junit][junit]. Single-element collapsing
-(one testsuite/testcase = bare object, multiple = array) is also
-common in JS XML libs.
+**Always handle both root shapes**: the root may be `<testsuites>` or a
+bare `<testsuite>`. The Node.js (`fast-xml-parser`) equivalent, which
+also has to undo single-element collapsing (one testcase = bare object,
+multiple = array), is in
+[references/junit-xml-parsing.md](references/junit-xml-parsing.md).
 
 ## Step 3 - Distinguish new failures from flakes
 
@@ -199,34 +182,18 @@ than refactoring a hundred tests that already run in <100ms.
 
 ## Step 7 - CI integration
 
-```yaml
-# .github/workflows/test-analytics.yml
-- name: Run tests (any framework, JUnit XML reporter enabled)
-  run: npm test -- --reporters=default,jest-junit
-  env:
-    JEST_JUNIT_OUTPUT_FILE: junit.xml
-
-- name: Analyze JUnit XML
-  if: always()
-  run: python scripts/parse_junit.py junit.xml > analytics.json
-
-- name: Upload analytics
-  if: always()
-  uses: actions/upload-artifact@v4
-  with:
-    name: junit-analytics
-    path: |
-      junit.xml
-      analytics.json
-```
-
-`if: always()` is critical - JUnit XML matters most on failed runs.
+Run tests with a JUnit reporter enabled, then parse and upload the
+results on `if: always()` - JUnit XML matters most on failed runs, so a
+step gated on success would drop exactly the data you need. The full
+GitHub Actions workflow (reporter env var, parse step, artifact upload)
+is in
+[references/junit-xml-parsing.md](references/junit-xml-parsing.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                            | Why it fails                                                              | Fix |
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Treating `<error>` and `<failure>` as the same                          | Errors are usually infra (DB connection lost), failures are usually code. Conflating hides root-cause patterns. | Group separately per [llg-junit][junit]. |
+| Treating `<error>` and `<failure>` as the same                          | Errors are usually infra (DB connection lost), failures are usually code. Conflating hides root-cause patterns. | Group them separately. |
 | Dropping `<flakyFailure>` reports from the dashboard                    | Hidden flake budget; quality erodes silently.                             | Surface flaky tests on a separate panel; assign owner. |
 | Loading multi-MB XML with `xml.dom.minidom.parseString`                 | Whole-tree-in-memory. OOM on large suites.                                | `xml.etree.ElementTree.iterparse` for streaming. |
 | Failing the build on any `<skipped>` count > 0                          | Many runners legitimately skip (platform-gated, conditional).             | Skip is informational; only fail on `failure` / `error`. |

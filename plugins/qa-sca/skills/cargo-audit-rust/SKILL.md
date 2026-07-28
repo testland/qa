@@ -12,17 +12,13 @@ description: "Configures and runs cargo-audit against the RustSec Advisory Datab
 ## Overview
 
 `cargo-audit` scans a project's `Cargo.lock` against the
-[RustSec Advisory Database][rustsec-advisories], a community-maintained
-vulnerability DB for Rust crates covering memory safety, cryptographic flaws,
-logic errors, malicious packages, and unmaintained crates
-([rustsec.org/advisories][rustsec-advisories]).
+[RustSec Advisory Database][rustsec-advisories] for vulnerable, unmaintained,
+unsound, and yanked crates.
 
-Differentiation from `npm-pip-maven-audit`:
-that skill lists `cargo audit` as one of eight native audit commands in a
-single wrapper. This skill covers the Rust-specific depth: `--deny` flag
-semantics, `audit.toml` suppression schema, `cargo audit fix`, SARIF output,
-binary auditing via `cargo audit bin`, and the `rustsec/audit-check` GitHub
-Action - none of which the multi-ecosystem skill documents.
+Differentiation from `npm-pip-maven-audit`: that skill lists `cargo audit` as
+one line in a multi-ecosystem wrapper; this skill covers the Rust-specific
+depth (`--deny` semantics, `audit.toml` schema, `cargo audit fix`, SARIF,
+binary auditing, the `rustsec/audit-check` Action).
 
 ## When to use
 
@@ -31,10 +27,8 @@ Action - none of which the multi-ecosystem skill documents.
 - Team wants automated fix PRs for vulnerable transitive dependencies.
 - Unmaintained or unsound crates must surface as hard failures, not just
   informational warnings.
-- Layered SCA: pair with `osv-scanner` (OSV.dev
-  DB) for cross-DB consensus - OSV exports RustSec advisories in real time
-  ([rustsec.org][rustsec-advisories]), so both tools often agree; divergence
-  flags an advisory in one DB but not the other.
+- Layered SCA: pair with `osv-scanner` for cross-DB consensus (OSV.dev imports
+  RustSec advisories, so divergence flags a DB-specific gap).
 
 ## Step 1 - Install
 
@@ -139,44 +133,9 @@ cargo audit --format sarif > cargo-audit.sarif
 
 ## Step 5 - audit.toml suppression
 
-Persistent suppression belongs in `.cargo/audit.toml` at the repo root,
-not as CLI `--ignore` flags (which are not auditable in git). Per the
-[audit.toml example](https://github.com/rustsec/rustsec/blob/main/cargo-audit/audit.toml.example):
-
-```toml
-# .cargo/audit.toml
-
-[advisories]
-# Advisory IDs to suppress - each MUST have a reason and expiry tracked in a
-# companion comment or issue tracker entry
-ignore = ["RUSTSEC-2024-0001"]
-
-# Informational categories to surface as warnings (not hard failures)
-informational_warnings = ["unmaintained", "unsound"]
-
-# Minimum CVSS severity to report: "none" | "low" | "medium" | "high" | "critical"
-severity_threshold = "medium"
-
-[output]
-# "terminal" | "json" | "sarif"
-format = "terminal"
-
-# Hard-fail categories (mirrors --deny flags)
-deny = ["warnings"]
-
-# Show inverse dependency trees alongside each finding
-show_tree = true
-
-[database]
-# Skip remote fetch (for offline / air-gapped builds)
-fetch = false
-
-# Allow an advisory DB that has not been updated recently
-stale = false
-```
-
-Suppression template (mandatory fields; absence of `reason` is an audit
-debt risk):
+Persistent suppression belongs in `.cargo/audit.toml` at the repo root, not
+CLI `--ignore` flags (not auditable in git). Every ignored advisory carries a
+mandatory reason and re-review date:
 
 ```toml
 [advisories]
@@ -188,8 +147,9 @@ ignore = ["RUSTSEC-2024-0999"]
 # Tracking: JIRA-4567
 ```
 
-Commit `.cargo/audit.toml` to the repository so suppressions are auditable
-in git history and code review.
+Commit `.cargo/audit.toml` so suppressions are auditable in git history and
+code review. The full `[advisories]`/`[output]`/`[database]` config schema is in
+[references/cargo-audit-config-and-ci.md](references/cargo-audit-config-and-ci.md).
 
 ## Step 6 - cargo audit fix
 
@@ -210,71 +170,12 @@ it updates version constraints but cannot resolve conflicts in the dependency
 graph - manual intervention is needed when the patched version is incompatible
 with other constraints. Always run `cargo test` after applying fixes.
 
-## Step 7 - Binary auditing
+## Step 7 - CI and binary auditing
 
-For auditing compiled binaries (e.g. checking a deployed artifact without
-access to source), install the companion crate and audit the binary
-([rustsec-readme][rustsec-readme]):
-
-```bash
-# Compile with embedded dependency metadata
-cargo install cargo-auditable
-cargo auditable build --release
-
-# Audit the compiled binary
-cargo audit bin target/release/my-app
-```
-
-Binary auditing works best when the binary was compiled with `cargo-auditable`
-which embeds `Cargo.lock` metadata into the ELF/Mach-O/PE section.
-
-## Step 8 - GitHub Actions CI integration
-
-Use the official [`rustsec/audit-check`][audit-check-action] action, which
-wraps `cargo audit`, creates check runs, and (for scheduled workflows) opens
-GitHub Issues for each advisory per [audit-check README][audit-check-action]:
-
-```yaml
-name: Security audit
-on:
-  push:
-    paths:
-      - '**/Cargo.toml'
-      - '**/Cargo.lock'
-  schedule:
-    - cron: '0 0 * * *'
-
-jobs:
-  security_audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: rustsec/audit-check@v2.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Optional: comma-separated advisory IDs to suppress
-          # ignore: "RUSTSEC-2024-0001,RUSTSEC-2024-0002"
-          # Optional: subdirectory with Cargo.toml
-          # working-directory: crates/my-crate
-```
-
-CI gate behavior per [audit-check-action][audit-check-action]:
-
-- Pass: no security advisories found (informational advisories do not fail
-  the check).
-- Fail: any security advisory found; the check run is marked failed.
-- Scheduled runs create a GitHub Issue per advisory for tracking.
-
-For SARIF upload alongside the action:
-
-```yaml
-      - name: Run cargo audit (SARIF)
-        run: cargo audit --format sarif > cargo-audit.sarif || true
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: cargo-audit.sarif
-```
+GitHub Actions integration (the official `rustsec/audit-check` action plus
+SARIF upload) and compiled-binary auditing (`cargo auditable` build +
+`cargo audit bin`) are in
+[references/cargo-audit-config-and-ci.md](references/cargo-audit-config-and-ci.md).
 
 ## Anti-patterns
 
@@ -283,7 +184,7 @@ For SARIF upload alongside the action:
 | `--ignore RUSTSEC-xxxx` in CI script | Not auditable in git; lost on script rewrite | Use `[advisories] ignore` in `.cargo/audit.toml` committed to repo |
 | No `reason` comment next to `ignore` | Silent debt accumulation | Mandatory reason + re-review date (Step 5 template) |
 | `cargo audit` without `--deny` | Vulnerabilities surface as warnings, not failures | Add `--deny warnings` or set `deny = ["warnings"]` in `audit.toml` |
-| Skip `--format sarif` upload | Findings invisible in GitHub Security tab | Emit SARIF + upload (Step 8) |
+| Skip `--format sarif` upload | Findings invisible in GitHub Security tab | Emit SARIF + upload (Step 7) |
 | `cargo audit fix` without `cargo test` | A patched dep version may break compilation or tests | Always test after fix (Step 6) |
 | Omitting `Cargo.lock` from git (library crates) | `cargo audit` has nothing to scan | Commit `Cargo.lock` or generate it with `cargo generate-lockfile` in CI |
 
@@ -296,14 +197,16 @@ For SARIF upload alongside the action:
   cannot resolve conflicting version constraints automatically.
 - The RustSec DB covers crates published on crates.io; vendored or
   path-dependency crates are not covered.
-- Binary auditing (Step 7) requires `cargo-auditable` to have been used at
-  compile time; binaries without embedded metadata cannot be audited.
+- Binary auditing requires `cargo-auditable` to have been used at compile
+  time; binaries without embedded metadata cannot be audited (Step 7).
 
 ## References
 
 - [rustsec-readme][rustsec-readme] - cargo-audit install, usage, flags, fix
 - [audit-check-action][audit-check-action] - `rustsec/audit-check` GitHub Action
 - [rustsec-advisories][rustsec-advisories] - RustSec advisory database browser
+- Full `audit.toml` schema, binary auditing, and CI wiring:
+  [references/cargo-audit-config-and-ci.md](references/cargo-audit-config-and-ci.md)
 - rustsec.org - RustSec project home; ecosystem tools (cargo-deny, cargo-auditable)
 - github.com/rustsec/rustsec - monorepo: cargo-audit, rustsec crate, advisory-db
 - `npm-pip-maven-audit` - multi-ecosystem

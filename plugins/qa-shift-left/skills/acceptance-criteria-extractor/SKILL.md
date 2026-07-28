@@ -7,14 +7,10 @@ description: "Reads a user story, PRD section, or feature spec and emits well-fo
 
 ## Overview
 
-ISTQB defines **acceptance criteria** as "the criteria that a work
-product must satisfy to be accepted by the stakeholders" (after IREB
-Glossary; ISTQB Glossary V4.7.1) ([istqb-ac][istqb-ac]).
+This skill takes natural-language story text and emits acceptance
+criteria ([ISTQB][istqb-ac]) in two interchangeable shapes:
 
 [istqb-ac]: https://glossary.istqb.org/en_US/term/acceptance-criteria
-
-This skill takes natural-language story text and emits acceptance
-criteria in two interchangeable shapes:
 
 - **Gherkin** (Feature / Scenario / Given / When / Then) - for projects
   that automate via Cucumber, Behat, SpecFlow, pytest-bdd, or any
@@ -39,21 +35,14 @@ instead - those have a different shape (thresholds, not Given/When/Then).
 
 ## Step 1 - Identify the actor and the trigger
 
-A scenario has three structural pieces per Gherkin
-([gherkin-ref][gherkin]):
+Read the input and tag each sentence as a **Given** (system context /
+actor state), **When** (the triggering event), or **Then** (the
+observable outcome, e.g. a `data-testid="profile-saved-toast"` appears)
+per Gherkin ([gherkin-ref][gherkin]). Sentences describing steady state
+are Givens; sentences with action verbs ("clicks", "submits",
+"navigates") are Whens; sentences asserting outcomes are Thens.
 
 [gherkin]: https://cucumber.io/docs/gherkin/reference
-
-- **Given** - system context / actor state ("a logged-in user with
-  email confirmed").
-- **When** - the triggering event ("they click `Save profile`").
-- **Then** - the observable outcome ("the email field updates to the
-  new value AND a `data-testid="profile-saved-toast"` appears").
-
-Read the input and tag each sentence as a Given / When / Then
-candidate. Sentences that describe steady state are Givens; sentences
-with verbs of action ("clicks", "submits", "navigates") are Whens;
-sentences asserting outcomes are Thens.
 
 ## Step 2 - Choose Scenario vs. Scenario Outline
 
@@ -210,97 +199,9 @@ the author to make the call.
 
 ## Examples
 
-### Example 1: simple story → 2 scenarios
-
-Input (Linear story):
-
-> "Title: Email update on profile page
->
-> As a logged-in user, I want to update my email address from
-> `/profile/settings`. After update, the email field shows the new
-> value and I see a confirmation toast."
-
-Output:
-
-```gherkin
-Feature: Email update on profile page
-
-  As a logged-in user
-  I want to update my email address from /profile/settings
-  So that my account contact information stays current
-
-  Background:
-    Given a logged-in user with email confirmed
-    And the user is on the /profile/settings page
-
-  Scenario: Update email to a new valid address
-    When the user changes the email field to "new@example.com"
-    And the user clicks "Save profile"
-    Then the email field shows "new@example.com"
-    And a [data-testid="profile-saved-toast"] is visible
-
-  Scenario Outline: Email update validation rejects invalid input
-    When the user changes the email field to "<invalid_email>"
-    And the user clicks "Save profile"
-    Then the email field shows the previous value
-    And a [data-testid="email-validation-error"] is visible
-
-    Examples:
-      | invalid_email           |
-      | not-an-email            |
-      | missing@                |
-      | @example.com            |
-      | spaces in@email.com     |
-```
-
-### Example 2: PRD with implicit preconditions
-
-Input (PRD excerpt):
-
-> "We will allow promo codes at checkout. Codes apply 20% off the
-> subtotal."
-
-Output:
-
-```markdown
-## ⚠ Implicit-precondition flags (3)
-
-1. **Code source.** Where do codes come from - user-entered? auto-applied? Both?
-2. **Eligibility.** Are codes user-tier specific (e.g. only new users)?
-   Time-limited? Per-user limited?
-3. **Subtotal definition.** Subtotal *before* tax / shipping, or *after*?
-
-Without these answers, the test suite cannot be written.
-```
-
-The agent refuses to fabricate the missing pieces - instead returns a
-question list to the PRD author.
-
-### Example 3: Scenario Outline opportunity
-
-Input:
-
-> "Login should work for active accounts (returning 200) but reject
-> suspended (401), unverified (403), and non-existent (404) accounts."
-
-Output:
-
-```gherkin
-Feature: Login authorization
-
-  Scenario Outline: Login response per account status
-    Given an account with status "<status>"
-    When the user submits valid credentials
-    Then the response status is <http_status>
-    And the response body contains "<error_code>"
-
-    Examples:
-      | status        | http_status | error_code           |
-      | active        | 200         |                       |
-      | suspended     | 401         | ACCOUNT_SUSPENDED    |
-      | not_verified  | 403         | EMAIL_NOT_VERIFIED   |
-      | not_found     | 404         | ACCOUNT_NOT_FOUND    |
-```
+Three worked examples (simple story, PRD with implicit preconditions,
+Scenario Outline opportunity) are in
+[references/examples.md](references/examples.md).
 
 ## Anti-patterns
 

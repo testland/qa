@@ -87,20 +87,10 @@ def create_case(project_code, title, description=None, preconditions=None,
 
 ### Severity + priority + type enums
 
-Per developers.qase.io schema definitions:
-
-| Field | Values |
-|---|---|
-| `severity` | 1=Blocker, 2=Critical, 3=Major, 4=Normal, 5=Minor, 6=Trivial |
-| `priority` | 1=High, 2=Medium, 3=Low |
-| `type` | 1=Functional, 2=Smoke, 3=Regression, 4=Security, 5=Usability, 6=Performance, 7=Acceptance, 8=Compatibility (defaults; configurable) |
-| `automation` | 0=Manual, 1=Automated, 2=To-be-automated |
-| `status` | 0=Actual, 1=Draft, 2=Deprecated |
-
-Map per
-`severity-vs-priority-reference` (in the qa-defect-management plugin);
-note Qase priority is reversed from defect-management convention
-(1=High here vs 1=Critical in IEEE 1044).
+The full enum tables, the endpoint map, and response shapes are in
+[references/qase-api-reference.md](references/qase-api-reference.md). The
+`create_case` docstring above lists the values you need inline; note Qase
+priority is inverted (1=High, not 1=Critical).
 
 ### Steps
 
@@ -198,20 +188,25 @@ Response shape: `{"status": true, "result": {"total", "filtered",
 
 ### Bulk import via CSV
 
-```python
-import csv
+Wrap each row in try/except, throttle to ~60 req/min, and tally successes so one
+bad row does not abort the run:
 
-with open("legacy.csv") as f:
-    for row in csv.DictReader(f):
-        steps = [
-            {"action": s, "expected_result": e, "data": d}
-            for s, e, d in zip(
-                row["steps"].split("|"),
-                row["expected"].split("|"),
-                (row.get("data") or "").split("|"),
-            )
-        ]
-        create_case(
+```python
+import csv, time
+
+rows = list(csv.DictReader(open("legacy.csv")))
+created, failed = [], []
+for row in rows:
+    steps = [
+        {"action": s, "expected_result": e, "data": d}
+        for s, e, d in zip(
+            row["steps"].split("|"),
+            row["expected"].split("|"),
+            (row.get("data") or "").split("|"),
+        )
+    ]
+    try:
+        r = create_case(
             project_code=row["project"],
             title=row["title"],
             preconditions=row.get("preconditions"),
@@ -220,7 +215,16 @@ with open("legacy.csv") as f:
             priority=int(row.get("priority", 2)),
             suite_id=int(row["suite_id"]),
         )
+        created.append(r["result"]["id"])
+    except Exception as e:
+        failed.append((row["title"], str(e)))
+    time.sleep(1)  # ~60 req/min; avoids 429s
 ```
+
+**Verify:** assert `len(created) + len(failed) == len(rows)` and that `failed`
+is empty before treating the import as done. If rows failed, inspect each
+`(title, error)`, fix the source row (or back off on 429s), and re-run only the
+failed titles.
 
 ### Link cases to issues
 
@@ -251,6 +255,11 @@ url = f"https://app.qase.io/project/{project_code}?case={case_id}"
     QASE_TOKEN: ${{ secrets.QASE_TOKEN }}
   run: python scripts/sync-qase.py
 ```
+
+Have `sync-qase.py` exit non-zero when any case fails to sync, and after the run
+**verify** the repository case count matches the source count (compare
+`list_cases` length against the CSV row count); a mismatch means a silent
+partial sync - fail the job and re-run.
 
 For result reporting after CI runs, use the `qase-pytest` /
 `qase-cypress` / `qase-playwright` reporters that post to

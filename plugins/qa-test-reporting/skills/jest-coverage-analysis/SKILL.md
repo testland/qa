@@ -131,6 +131,12 @@ The negative-number form is useful for legacy modules: `statements: -10`
 allows up to 10 uncovered statements before failing. Lets the team
 ratchet down over time without setting an aspirational percentage.
 
+**Verify the gate fires:** run `npx jest --coverage` with a critical-path
+file left below its `coverageThreshold` and confirm Jest exits non-zero
+with a coverage-threshold-not-met error. If it exits 0, check that
+`collectCoverageFrom` (Step 4) includes the file and that the
+`coverageThreshold` path key matches the file's path, then re-run.
+
 ## Step 4 - Scope `collectCoverageFrom`
 
 Per [jest-config][jest]:
@@ -154,52 +160,25 @@ denominator.
 
 ## Step 5 - Parse the JSON output
 
-The `json` reporter writes `coverage/coverage-final.json` with a
-per-file structure:
-
-```json
-{
-  "/abs/path/src/checkout/cart.ts": {
-    "path": "/abs/path/src/checkout/cart.ts",
-    "statementMap": { "0": { "start": {...}, "end": {...} }, ... },
-    "fnMap": { ... },
-    "branchMap": { ... },
-    "s": { "0": 42, "1": 42, "2": 0 },
-    "f": { "0": 42, "1": 0 },
-    "b": { "0": [42, 0], ... }
-  }
-}
-```
-
-`s` = per-statement hit counts; `f` = per-function; `b` = per-branch
-arm.
+The `json` reporter writes `coverage/coverage-final.json`, keyed by
+absolute path, where `s` = per-statement hit counts, `f` =
+per-function, and `b` = per-branch arm. Count the non-zero entries for
+a per-file percentage:
 
 ```javascript
-// scripts/parse_jest_coverage.js
 import { readFileSync } from 'node:fs';
 
 const data = JSON.parse(readFileSync('coverage/coverage-final.json', 'utf8'));
+const pct = obj => { const v = Object.values(obj); return (v.filter(c => c > 0).length / v.length) * 100; };
 
-for (const [absPath, file] of Object.entries(data)) {
-  const stmts = Object.values(file.s);
-  const stmtPct = (stmts.filter(c => c > 0).length / stmts.length) * 100;
-
-  const fns = Object.values(file.f);
-  const fnPct = (fns.filter(c => c > 0).length / fns.length) * 100;
-
-  // Branch coverage: each entry is an array of arm hit counts.
-  const branchEntries = Object.values(file.b);
-  const branchTotal = branchEntries.flat().length;
-  const branchHit = branchEntries.flat().filter(c => c > 0).length;
-  const brPct = branchTotal === 0 ? 100 : (branchHit / branchTotal) * 100;
-
-  console.log({ path: absPath, stmtPct, fnPct, brPct });
+for (const [path, file] of Object.entries(data)) {
+  console.log({ path, stmt: pct(file.s), fn: pct(file.f) });
 }
 ```
 
-The `coverage-summary.json` file (from the `json-summary` reporter)
-is the pre-aggregated version when per-statement detail isn't
-needed.
+The full parser (branch-arm handling plus the `coverage-summary.json`
+shortcut for whole-repo numbers) is in
+[references/parsing-and-anti-patterns.md](references/parsing-and-anti-patterns.md).
 
 ## Step 6 - Vitest equivalent
 
@@ -259,15 +238,12 @@ overrides config-side reporter selection.
 
 ## Anti-patterns
 
-| Anti-pattern                                                         | Why it fails                                                              | Fix |
-|----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| `collectCoverage: false` in CI                                        | No coverage data emitted; downstream gate is empty.                      | `--coverage` flag in the test command (Step 7). |
-| Skipping `collectCoverageFrom`                                       | Files with no test silently absent from denominator; coverage inflated.   | Always set explicitly (Step 4). |
-| `coverageThreshold.global` only, no per-path rules                    | A new module under `src/api/` joins at 0% coverage; global drops by 0.3pp; gate passes. | Per-path rules for critical modules (Step 3). |
-| Mixing `babel` and `v8` ignore comments                               | One provider misses the ignore; coverage drops mysteriously.              | Pick one; grep-replace if switching. |
-| Using `coverage-final.json` as the gate input                         | Per-statement detail is huge; gate scripts slow.                          | `coverage-summary.json` for whole-repo + `lcov.info` for per-line drilldown. |
-| `coverageDirectory: '/tmp/...'` outside the repo                      | CI artifact upload step misses it.                                        | Keep in `coverage/` (default). |
-| Threshold set at 100% on a global rule                                | First refactor fails the build; team disables coverage entirely.         | Set globals at the **maintainable floor**, not aspirational ceiling. |
+The recurring coverage-gate foot-guns - `collectCoverage: false` in CI,
+skipping `collectCoverageFrom` (inflated denominator), global-only
+thresholds, mixing `babel` / `v8` ignore comments, and a 100% global
+rule that gets coverage disabled after the first refactor - with the fix
+for each are catalogued in
+[references/parsing-and-anti-patterns.md](references/parsing-and-anti-patterns.md).
 
 ## Limitations
 

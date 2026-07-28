@@ -7,15 +7,11 @@ description: "Reference for AssertJ - the canonical JVM fluent-assertion library
 
 ## Overview
 
-Per [assertj.github.io/doc][aj]:
-
-[aj]: https://assertj.github.io/doc/
-
-AssertJ is "a Java library that provides a rich set of assertions and truly helpful error messages, improves test code readability, and is designed to be super easy to use within your favorite IDE." It ships modules for JDK core types, Guava, Joda-Time, and databases; this skill covers **assertj-core** (JDK types).
+AssertJ is "a Java library that provides a rich set of assertions and truly helpful error messages, improves test code readability, and is designed to be super easy to use within your favorite IDE" ([assertj.github.io/doc][aj]). It ships modules for JDK core types, Guava, Joda-Time, and databases; this skill covers **assertj-core** (JDK types).
 
 Works alongside `junit5-tests`, `testng-tests`, or `spock-tests`. AssertJ handles the assertion layer; those skills handle the test runner.
 
-This skill is a **reference** - defines the matcher catalog and patterns; does not run tests.
+This skill is a **reference** - defines the matcher catalog and patterns; does not run tests. Advanced per-feature variants live in [references/matcher-catalog.md](references/matcher-catalog.md); provenance links are consolidated under [References](#references).
 
 ## When to use
 
@@ -25,8 +21,6 @@ This skill is a **reference** - defines the matcher catalog and patterns; does n
 - Verifying collections, exception details, or running multiple assertions without failing on the first one.
 
 ## Step 1 - Install
-
-Per [assertj.github.io/doc][aj]:
 
 **Maven:**
 
@@ -45,6 +39,8 @@ Per [assertj.github.io/doc][aj]:
 testImplementation("org.assertj:assertj-core:3.27.7")
 ```
 
+The `3.27.7` version is current at time of writing; check Maven Central for the latest `assertj-core` release before copying.
+
 Static import the entry class once per test file:
 
 ```java
@@ -52,10 +48,6 @@ import static org.assertj.core.api.Assertions.*;
 ```
 
 ## Step 2 - assertThat entry point
-
-Per [assertj.github.io/doc/#basic-assertions][aj-basic]:
-
-[aj-basic]: https://assertj.github.io/doc/#basic-assertions
 
 `assertThat(actual)` returns a type-specific assertion object. All assertions chain fluently from it.
 
@@ -88,17 +80,10 @@ assertThat(user.getAge()).as("user age").isGreaterThan(0);
 
 ## Step 3 - Collection assertions
 
-Per [assertj.github.io/doc/#collection-assertions][aj-col]:
-
-[aj-col]: https://assertj.github.io/doc/#collection-assertions
-
 ```java
 assertThat(list).hasSize(9);
-assertThat(list).isEmpty();
-assertThat(list).contains(frodo, sam);               // any order, subset
+assertThat(list).contains(frodo, sam);                // any order, subset
 assertThat(list).containsExactly(frodo, sam, pippin); // exact order, exact set
-assertThat(list).containsOnly(frodo, sam);            // any order, exact set
-assertThat(list).doesNotContain(sauron);
 ```
 
 **Element-level verification:**
@@ -108,32 +93,19 @@ assertThat(hobbits).allSatisfy(c -> {
     assertThat(c.getRace()).isEqualTo(HOBBIT);
     assertThat(c.getName()).isNotEqualTo("Sauron");
 });
-
-assertThat(hobbits).anySatisfy(c ->
-    assertThat(c.getName()).isEqualTo("Sam"));
 ```
 
-**Extraction and filtering:**
+**Extraction:**
 
 ```java
 // Extract a property then assert on extracted values
 assertThat(fellowship).extracting("name")
                       .contains("Boromir", "Gandalf", "Frodo");
-
-// Extract multiple properties as tuples
-assertThat(fellowship).extracting("name", "age")
-                      .contains(tuple("Boromir", 37), tuple("Sam", 38));
-
-// Filter before asserting
-assertThat(fellowship).filteredOn(c -> c.getName().contains("o"))
-                      .containsOnly(aragorn, frodo);
 ```
 
+`containsOnly` / `doesNotContain` / `isEmpty`, multi-property tuple extraction, `filteredOn`, and `anySatisfy` are in [references/matcher-catalog.md](references/matcher-catalog.md).
+
 ## Step 4 - Exception assertions
-
-Per [assertj.github.io/doc/#exception-assertions][aj-ex]:
-
-[aj-ex]: https://assertj.github.io/doc/#exception-assertions
 
 **Primary form - assertThatThrownBy:**
 
@@ -143,52 +115,9 @@ assertThatThrownBy(() -> parser.parse(null))
     .hasMessageContaining("null input");
 ```
 
-**Type-first form - assertThatExceptionOfType:**
-
-```java
-assertThatExceptionOfType(IOException.class)
-    .isThrownBy(() -> { throw new IOException("boom!"); })
-    .withMessage("%s!", "boom")
-    .withNoCause();
-```
-
-**BDD form - catchThrowable:** separates the WHEN step from THEN:
-
-```java
-// WHEN
-Throwable thrown = catchThrowable(() -> names[9]);
-// THEN
-assertThat(thrown).isInstanceOf(ArrayIndexOutOfBoundsException.class)
-                  .hasMessageContaining("9");
-```
-
-**Typed capture - catchThrowableOfType:** returns the concrete exception for further assertion:
-
-```java
-TextException ex = catchThrowableOfType(TextException.class,
-    () -> { throw new TextException("boom!", 1, 5); });
-assertThat(ex.line).isEqualTo(1);
-```
-
-**Cause chain inspection:**
-
-```java
-assertThat(thrown).hasCauseInstanceOf(NullPointerException.class);
-assertThat(thrown).hasRootCauseInstanceOf(SocketException.class);
-assertThat(thrown).cause().hasMessage("underlying cause");
-```
-
-**Assert no exception:**
-
-```java
-assertThatCode(() -> service.process(input)).doesNotThrowAnyException();
-```
+Type-first (`assertThatExceptionOfType`), BDD capture (`catchThrowable` / `catchThrowableOfType`), cause-chain inspection, and no-exception (`assertThatCode`) forms are in [references/matcher-catalog.md](references/matcher-catalog.md).
 
 ## Step 5 - SoftAssertions
-
-Per [assertj.github.io/doc/#soft-assertions][aj-soft]:
-
-[aj-soft]: https://assertj.github.io/doc/#soft-assertions
 
 SoftAssertions collect failures instead of stopping at the first one. All violations are reported together in a single error.
 
@@ -216,10 +145,6 @@ Use SoftAssertions when a test covers multiple independent properties of the sam
 
 ## Step 6 - Recursive comparison
 
-Per [assertj.github.io/doc/#recursive-comparison][aj-rec]:
-
-[aj-rec]: https://assertj.github.io/doc/#recursive-comparison
-
 `usingRecursiveComparison()` compares object graphs field-by-field without requiring `equals` overrides.
 
 ```java
@@ -235,85 +160,31 @@ assertThat(actual).usingRecursiveComparison()
                   .isEqualTo(expected);
 ```
 
-**Exclude by regex pattern:**
-
-```java
-assertThat(actual).usingRecursiveComparison()
-                  .ignoringFieldsMatchingRegexes(".*At", ".*Id")
-                  .isEqualTo(expected);
-```
-
-**Ignore nulls in actual:**
-
-```java
-assertThat(partial).usingRecursiveComparison()
-                   .ignoringActualNullFields()
-                   .isEqualTo(expected);
-```
-
-**Custom comparator per type:**
-
-```java
-BiPredicate<Double, Double> closeEnough = (d1, d2) -> Math.abs(d1 - d2) <= 0.5;
-assertThat(frodo).usingRecursiveComparison()
-                 .withEqualsForType(closeEnough, Double.class)
-                 .isEqualTo(tallerFrodo);
-```
-
-**Strict type checking:**
-
-```java
-assertThat(actual).usingRecursiveComparison()
-                  .withStrictTypeChecking()
-                  .isEqualTo(expected);
-```
+Regex field exclusion, `ignoringActualNullFields`, per-type comparators, and `withStrictTypeChecking` are in [references/matcher-catalog.md](references/matcher-catalog.md).
 
 ## Step 7 - Custom assertions
 
-Per [assertj.github.io/doc/#custom-assertions][aj-custom]:
-
-[aj-custom]: https://assertj.github.io/doc/#custom-assertions
-
-Extend `AbstractAssert` to create domain-specific assertion classes. The type parameters are `<SELF, ACTUAL>` where `SELF` is the concrete assertion class (for chaining):
+Extend `AbstractAssert` with type parameters `<SELF, ACTUAL>` (`SELF` is the concrete assertion class, for chaining), then expose a static factory mirroring `assertThat`:
 
 ```java
 public class PersonAssert extends AbstractAssert<PersonAssert, Person> {
-
-    public PersonAssert(Person actual) {
-        super(actual, PersonAssert.class);
-    }
+    public PersonAssert(Person actual) { super(actual, PersonAssert.class); }
 
     public PersonAssert hasName(String name) {
         isNotNull();
         if (!actual.getName().equals(name)) {
-            failWithMessage("Expected name <%s> but was <%s>",
-                            name, actual.getName());
-        }
-        return this;
-    }
-
-    public PersonAssert isAdult() {
-        if (actual.getAge() < 18) {
-            failWithMessage("Expected person to be an adult");
+            failWithMessage("Expected name <%s> but was <%s>", name, actual.getName());
         }
         return this;
     }
 }
-```
 
-Expose it via a static factory that mirrors `assertThat`:
-
-```java
 public static PersonAssert assertThat(Person actual) {
     return new PersonAssert(actual);
 }
 ```
 
-Usage then reads like built-in assertions:
-
-```java
-assertThat(person).hasName("Alice").isAdult();
-```
+Usage then reads like built-in assertions: `assertThat(person).hasName("Alice")`. A multi-method example is in [references/matcher-catalog.md](references/matcher-catalog.md).
 
 ## Example - full test method
 
@@ -369,13 +240,16 @@ void order_summary_fields_all_valid() {
 
 ## References
 
-- [aj][aj] - AssertJ landing (install, overview)
-- [aj-basic][aj-basic] - Basic assertions (isEqualTo, isNull, isTrue, chaining)
-- [aj-col][aj-col] - Collection/iterable assertions
-- [aj-ex][aj-ex] - Exception assertions
-- [aj-soft][aj-soft] - SoftAssertions
-- [aj-rec][aj-rec] - Recursive comparison
-- [aj-custom][aj-custom] - Custom assertions
+- [AssertJ docs][aj] - landing (install, overview)
+- [Basic assertions](https://assertj.github.io/doc/#basic-assertions) - isEqualTo, isNull, isTrue, chaining
+- [Collection assertions](https://assertj.github.io/doc/#collection-assertions) - iterable matchers, extracting, filtering
+- [Exception assertions](https://assertj.github.io/doc/#exception-assertions) - assertThatThrownBy, catchThrowable
+- [Soft assertions](https://assertj.github.io/doc/#soft-assertions) - SoftAssertions, assertSoftly
+- [Recursive comparison](https://assertj.github.io/doc/#recursive-comparison) - usingRecursiveComparison variants
+- [Custom assertions](https://assertj.github.io/doc/#custom-assertions) - AbstractAssert
+- [references/matcher-catalog.md](references/matcher-catalog.md) - advanced per-feature variants
 - github.com/assertj/assertj - repository and issue tracker
 - github.com/assertj/assertj-examples - worked examples including soft assertions
 - `junit5-tests`, `testng-tests`, `spock-tests` - sister skills (test runners)
+
+[aj]: https://assertj.github.io/doc/

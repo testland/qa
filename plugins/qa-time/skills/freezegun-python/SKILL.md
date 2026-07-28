@@ -7,11 +7,10 @@ description: "Wraps freezegun (github.com/spulec/freezegun), the Python time-moc
 
 ## Overview
 
-`freezegun` is the canonical Python time-mocking library. Per
-[github.com/spulec/freezegun](https://github.com/spulec/freezegun),
-it patches `datetime.datetime`, `datetime.date`, `time.time`,
-`time.gmtime`, `time.localtime`, `time.strftime`, plus
-`asyncio` time across the test scope.
+freezegun patches `datetime.datetime`, `datetime.date`,
+`time.time`, `time.gmtime`, `time.localtime`, `time.strftime`,
+and `asyncio` time across the test scope. Per
+[github.com/spulec/freezegun](https://github.com/spulec/freezegun).
 
 ## When to use
 
@@ -93,46 +92,15 @@ def test_eastern_time():
     assert datetime.now().hour == 14
 ```
 
-### DST + zone tests
+### DST, async, and CI
 
-```python
-import pytest
-from zoneinfo import ZoneInfo
-
-@freeze_time("2026-03-08T07:30:00")  # 02:30 EST OR 03:30 EDT - depends on resolution
-def test_spring_forward_handling():
-    ny = datetime.now(ZoneInfo("America/New_York"))
-    # Asserts against expected library behaviour per dst-transition-reference
-```
-
-### Async support
-
-```python
-@freeze_time("2026-05-20T14:30:00")
-async def test_async_now():
-    await asyncio.sleep(0)
-    assert datetime.now().strftime("%Y") == "2026"
-```
-
-Per freezegun docs: "freezegun is compatible with asyncio."
+DST + zone tests, async support, and CI integration are in
+[references/advanced-scenarios.md](references/advanced-scenarios.md).
 
 ## Running
 
 ```bash
 pytest tests/
-```
-
-## CI integration
-
-```yaml
-jobs:
-  python-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
-      - run: pip install -e ".[test]" freezegun
-      - run: pytest tests/
 ```
 
 ## Anti-patterns

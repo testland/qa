@@ -91,43 +91,14 @@ for noisy text (logs) where partial matches inflate false positives.
 
 ### Built-in entity catalog
 
-Per [presidio.dataprivacystack.org/supported_entities](https://presidio.dataprivacystack.org/supported_entities/),
-the global entities are:
-
-| Entity | Detects |
-|---|---|
-| `CREDIT_CARD` | 12 - 19 digit numbers (Luhn-validated) |
-| `CRYPTO` | Bitcoin wallet addresses |
-| `DATE_TIME` | Absolute or relative dates / times |
-| `EMAIL_ADDRESS` | Email box identifiers |
-| `IBAN_CODE` | International bank account numbers |
-| `IP_ADDRESS` | IPv4 / IPv6 |
-| `MAC_ADDRESS` | Network interface identifiers |
-| `NRP` | Nationality / religious / political affiliation |
-| `LOCATION` | Politically or geographically defined location (NER) |
-| `PERSON` | Full names (NER) |
-| `PHONE_NUMBER` | Telephone numbers |
-| `MEDICAL_LICENSE` | Common medical licence numbers |
-| `URL` | Uniform Resource Locators |
-
-Country-specific entities (subset):
-
-| Region | Entities |
-|---|---|
-| US | `US_BANK_NUMBER`, `US_DRIVER_LICENSE`, `US_ITIN`, `US_MBI`, `US_NPI`, `US_PASSPORT`, `US_SSN` |
-| UK | `UK_NHS`, `UK_NINO`, `UK_PASSPORT`, `UK_POSTCODE`, `UK_VEHICLE_REGISTRATION` |
-| Spain | `ES_NIF`, `ES_NIE` |
-| Italy | `IT_FISCAL_CODE`, `IT_DRIVER_LICENSE`, `IT_VAT_CODE`, `IT_PASSPORT`, `IT_IDENTITY_CARD` |
-| Poland | `PL_PESEL` |
-| Singapore | `SG_NRIC_FIN`, `SG_UEN` |
-| Australia | `AU_ABN`, `AU_ACN`, `AU_TFN`, `AU_MEDICARE` |
-| India | `IN_PAN`, `IN_AADHAAR`, `IN_VEHICLE_REGISTRATION`, `IN_VOTER`, `IN_PASSPORT`, `IN_GSTIN` |
-| Finland | `FI_PERSONAL_IDENTITY_CODE` |
-| Korea | `KR_DRIVER_LICENSE`, `KR_FRN`, `KR_PASSPORT`, `KR_BRN`, `KR_RRN` |
-| Nigeria | `NG_NIN`, `NG_VEHICLE_REGISTRATION` |
-| Thailand | `TH_TNIN` |
-
-For the full list and entity descriptions see
+Presidio ships global recognisers (`CREDIT_CARD`, `EMAIL_ADDRESS`, `IP_ADDRESS`,
+`PERSON`, `PHONE_NUMBER`, `IBAN_CODE`, `URL`, and more) plus country-specific IDs
+across the US, UK, Spain, Italy, Poland, Singapore, Australia, India, Finland,
+Korea, Nigeria, and Thailand (`US_SSN`, `UK_NHS`, `ES_NIF`, `PL_PESEL`,
+`SG_NRIC_FIN`, `IN_AADHAAR`, and so on). Pass the ones you need to
+`entities=[...]`. The full global and country-specific tables are in
+[references/entity-catalog.md](references/entity-catalog.md); for the
+authoritative list and descriptions see
 [presidio.dataprivacystack.org/supported_entities](https://presidio.dataprivacystack.org/supported_entities/).
 
 ### Custom PatternRecognizer
@@ -212,10 +183,19 @@ with open("input.csv") as src, open("masked.csv", "w") as dst:
                     row[col] = anonymizer.anonymize(
                         text=val, analyzer_results=hits, operators=ops
                     ).text
+        residual = [
+            r for v in row.values() if v
+            for r in analyzer.analyze(text=v, language="en", score_threshold=0.5)
+        ]
+        if residual:
+            raise ValueError(f"residual PII after masking: {residual}")
         writer.writerow(row)
 ```
 
-For Spark / pandas batches see Presidio's structured-data tutorial.
+Verify: the re-scan asserts zero residual detections at your threshold before
+the row is written. If any remain, the operator map missed an entity type -
+add an operator for it (or lower the threshold) and re-run rather than shipping
+the row. For Spark / pandas batches see Presidio's structured-data tutorial.
 
 ## Parsing results
 
@@ -285,6 +265,12 @@ print("No blocking PII found.")
 Tune `score_threshold` per project - 0.5 balances false positives
 (synthetic-looking fixtures) against false negatives (real emails
 in random strings).
+
+Each `BLOCK` line is the feedback loop: it names the fixture, byte offset, and
+entity type so the author fixes that exact span - swap the real value for a
+reserved test value or add it to a known-safe-value allowlist - and re-runs
+until the job prints `No blocking PII found.` rather than only seeing a red
+build.
 
 ## Example - scanning a log line
 

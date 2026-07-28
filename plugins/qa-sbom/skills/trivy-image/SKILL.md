@@ -113,25 +113,19 @@ trivy image --format cyclonedx --output trivy-cyclonedx.json my-image:1.0
 
 ## Step 5 - `--ignore-unfixed` for actionable filter
 
-Per [tv-img][tv-img]:
+Per [tv-img][tv-img], `--ignore-unfixed` excludes vulnerabilities without an
+available fix - the practical first-line filter for actionable findings:
 
 ```bash
 trivy image --ignore-unfixed python:3.4-alpine
 ```
 
-> "The `--ignore-unfixed` flag excludes vulnerabilities without
-> available fixes"
-
-This is the practical first-line filter - distinguishes "vuln you
-can act on" from "vuln waiting for upstream fix." Combine with
-severity threshold:
+Combine with a severity threshold for the recommended PR-blocking config (fail
+only on actionable, high-severity vulns):
 
 ```bash
 trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 my-image:1.0
 ```
-
-This is the recommended PR-blocking config: fail only on actionable,
-high-severity vulns.
 
 ## Step 6 - Secret scanning
 
@@ -212,36 +206,16 @@ entries removed.
 
 ## Step 9 - CI integration
 
-```yaml
-jobs:
-  trivy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: docker build -t my-app:${{ github.sha }} .
-      - uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: my-app:${{ github.sha }}
-          format: sarif
-          output: trivy.sarif
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-          exit-code: 1
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with: { sarif_file: trivy.sarif }
-```
-
-The `aquasecurity/trivy-action` GHA wraps the CLI + SARIF upload.
+Wrap the CLI with the `aquasecurity/trivy-action` GHA to scan the built image
+and upload SARIF to GitHub Code Scanning. The full GitHub Actions workflow is
+in [references/ci-and-composition.md](references/ci-and-composition.md).
 
 ## Step 10 - Composition with sister tools
 
-| Sister tool | Use |
-|---|---|
-| `syft-generation` | Generates standalone SBOM (Trivy embeds SBOM gen but exposes it less) |
-| `grype-scanning` | Alternative scanner; cross-DB consensus on findings |
-| `cyclonedx-format`, `spdx-format` | Reference for the SBOM formats Trivy outputs |
-| `checkov-policy` | Cross-plugin: deeper IaC scanning vs Trivy's image-internal misconfig |
+Trivy is the all-in-one first line; compose it with `syft-generation` for a
+standalone SBOM, `grype-scanning` for cross-DB consensus on findings, and
+`checkov-policy` for deeper IaC scanning. The full composition table is in
+[references/ci-and-composition.md](references/ci-and-composition.md).
 
 ## Anti-patterns
 
@@ -273,6 +247,7 @@ The `aquasecurity/trivy-action` GHA wraps the CLI + SARIF upload.
 - aquasecurity.github.io/trivy - full documentation
 - github.com/aquasecurity/trivy - repository
 - openvex.dev - OpenVEX specification (used by `--vex` flag)
+- [references/ci-and-composition.md](references/ci-and-composition.md) - full CI workflow + sister-tool composition
 - `syft-generation`,
   `grype-scanning`,
   `cyclonedx-format`,
