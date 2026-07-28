@@ -74,12 +74,12 @@ A step whose expected result needs judgement belongs in a charter instead.
 
 ## Session-based test management: the structure that makes exploration reviewable
 
-Session-based test management (SBTM) was developed by Jonathan and James Bach at
-Hewlett-Packard and published in 2000. Its core move is to make the **session**, not the
-test case or the bug report, the unit of work: "an uninterrupted block of reviewable,
-chartered test effort", where chartered means each session carries a mission and
-reviewable means it produces a session sheet a third party such as the test manager can
-examine ([Bach, Jonathan, *Session-Based Test Management*, STQE Nov/Dec 2000, p.33](https://www.satisfice.com/download/session-based-test-management)).
+Jonathan and James Bach developed session-based test management (SBTM) at Hewlett-Packard
+in 2000. Its core move is to make the **session**, not the test case or the bug report, the
+unit of work: "an uninterrupted block of reviewable, chartered test effort", where
+chartered means each session carries a mission and reviewable means it produces a session
+sheet a third party such as the test manager can examine
+([Bach, Jonathan, *Session-Based Test Management*, STQE Nov/Dec 2000, p.33](https://www.satisfice.com/download/session-based-test-management)).
 
 Four parts, all four required:
 
@@ -189,37 +189,29 @@ practice is to abort the session and run a different one rather than burn the ti
 
 ## What to automate and what to keep human
 
-The line is not "manual is cheap" versus "automation is modern". It is about whether the
-check is deterministic and repeated, or a judgement made once.
+The line is not "manual is cheap" versus "automation is modern". It is whether the check is
+deterministic and repeated, or a judgement made once. Deterministic, repeated work -
+regression suites, component and component-integration checks in CI, smoke and
+non-functional checks other than usability - is a strong automation candidate. Judgement
+work - exploratory, usability, and user-acceptance testing, and visual/aesthetic "does this
+read as broken?" calls - stays human, though a tool may flag candidates for a human verdict.
+The full per-row table with CTFL citations (pp.29-30, §5.1.7 Q1/Q3/Q4 p.51, §6.2 p.60) is in
+[references/automation-decisions.md](references/automation-decisions.md).
 
-| Work | Where it belongs | Why |
-|---|---|---|
-| Regression suites re-run every release | Automated | "Regression test suites are run many times and generally the number of regression test cases will increase with each iteration or release, so regression testing is a strong candidate for automation" ([CTFL v4.0.1, p.30](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf)) |
-| Component and component-integration checks | Automated, in CI | Quadrant Q1 tests "should be automated and included in the CI process" (same syllabus §5.1.7, p.51) |
-| Smoke tests and non-functional tests other than usability | Automated | Quadrant Q4, "often automated" (same, p.51) |
-| Exploratory testing, usability testing, user acceptance testing | Human | Quadrant Q3 tests are "user-oriented and often manual" (same, p.51) |
-| Usability judgement | Human, and often in a dedicated environment | Non-functional testing "sometimes needs a very specific test environment, such as a usability lab for usability testing" (same §2.2.2, p.29) |
-| Visual and aesthetic judgement ("does this read as broken?") | Human decides; a tool may flag | A pixel-diff tool detects that something changed; whether the change is acceptable is a judgement call. Practitioner convention, not a standard: automate the detection, keep the verdict human |
-| One-off verification of a one-line fix you will never run again | Human | Writing and maintaining a script costs more than the check saves. ISTQB lists "using a test tool when manual testing is more appropriate" as a named risk of test automation (same §6.2, p.60) |
-
-Two failure modes sit at the ends of this table. Keeping a deterministic regression pass
-manual means paying for it again every release, with human attention that degrades on the
-fortieth repetition. Automating everything hits the other named automation risk: "relying
-on a tool too much, e.g., ignoring the need of human critical thinking" (same §6.2, p.60).
+Two failure modes sit at the ends. Keeping a deterministic regression pass manual means
+paying for it again every release, with attention that degrades on the fortieth repetition.
+Automating everything hits the named automation risk: "relying on a tool too much, e.g.,
+ignoring the need of human critical thinking" (CTFL v4.0.1 §6.2, p.60).
 
 ## Writing a bug report that gets fixed
 
-A bug report exists to give whoever fixes it "sufficient information to resolve the
-issue". ISTQB lists the contents of a report logged during dynamic testing: unique
-identifier; title summarizing the anomaly; date observed and author; the test object and
-test environment; the context (test case, activity, technique or data being used); a
-description of the failure "to enable reproduction and resolution including the test steps
-that detected the anomaly, and any relevant test logs, database dumps, screenshots, or
-recordings"; expected and actual results; severity; priority; status; references
+A bug report exists to give whoever fixes it "sufficient information to resolve the issue"
 ([CTFL v4.0.1 §5.5, pp.56-57](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf)).
-ISO/IEC/IEEE 29119-3 carries templates for the same thing and calls them incident reports.
-
-Four of those fields carry nearly all the weight:
+ISTQB enumerates the full field list a logged report should carry, and ISO/IEC/IEEE
+29119-3 carries the same as incident-report templates - the complete field list and the
+FEW HICCUPPS oracle set are in
+[references/bug-report-and-oracles.md](references/bug-report-and-oracles.md). Four fields
+carry nearly all the weight:
 
 ```
 Title      Promo code SAVE10 applies twice, discounting the order twice
@@ -245,9 +237,9 @@ Repro      3 of 3 attempts. Also reproduces with SAVE20.
 
 "Observed versus expected" is the field people collapse, and collapsing it is what makes a
 report bounce back: "it doesn't work" states neither. When you are unsure something is even
-a defect, name the expectation it violates. An oracle is "a way of recognizing a problem",
-and inconsistency with history, claims, comparable products, users' desires, the product
-itself, its purpose, or standards each gives you a concrete reason to argue the bug
+a defect, name the expectation it violates - inconsistency with history, claims, comparable
+products, users' desires, the product itself, its purpose, or standards each gives a
+concrete reason to argue the bug
 ([Bolton M., "FEW HICCUPPS", DevelopSense, 2012](https://developsense.com/blog/2012/07/few-hiccupps)).
 
 ## Traps that catch newcomers first
@@ -271,6 +263,12 @@ itself, its purpose, or standards each gives you a concrete reason to argue the 
   behavior stabilizes.
 
 ## Further reading
+
+This skill's own bundled references:
+[references/automation-decisions.md](references/automation-decisions.md)
+(full automate-vs-human table) and
+[references/bug-report-and-oracles.md](references/bug-report-and-oracles.md)
+(full defect-report field list and oracle set).
 
 If they are installed alongside this one, these go deeper on individual pieces above:
 `session-based-test-management-reference`

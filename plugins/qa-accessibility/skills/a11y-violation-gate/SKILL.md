@@ -7,29 +7,19 @@ description: "Builds a CI gate that fails the build on **new** WCAG / a11y viola
 
 ## Overview
 
-Most established projects don't pass strict a11y scans on day one - 
-they have accumulated debt from years of pre-WCAG-conformance code.
-A binary "all or nothing" gate creates a cliff: either disable the
-gate (defeating the purpose) or block every PR until the entire
-backlog is fixed (months of work).
-
-The fix is the **ratchet pattern**: the gate fails only on
-**new** violations vs. a stored baseline. Existing violations
-are grandfathered. New violations block; fixes count toward
-shrinking the baseline.
+A binary "all or nothing" a11y gate blocks every PR on a project
+with accumulated debt, so teams disable it. The **ratchet pattern**
+fixes this: the gate fails only on **new** violations vs. a stored
+baseline. Existing violations are grandfathered; fixes shrink the
+baseline.
 
 This skill builds that gate, aggregating outputs from any
-combination of:
+combination of `axe-a11y`, `pa11y-a11y`, `lighthouse-a11y`,
+`wave-a11y`, and `ibm-equal-access-a11y`.
 
-- `axe-a11y`
-- `pa11y-a11y`
-- `lighthouse-a11y`
-- `wave-a11y`
-- `ibm-equal-access-a11y`
-
-Sibling gates with the same architecture:
-`data-quality-gate`, `visual-baseline-gate`,
-`contract-compatibility-gate`, `perf-budget-gate`.
+Sibling gates with the same architecture: `data-quality-gate`,
+`visual-baseline-gate`, `contract-compatibility-gate`,
+`perf-budget-gate`.
 
 ## When to use
 
@@ -45,17 +35,10 @@ without ratchet - simpler.
 
 ## Step 1 - Run the scanners and unify their outputs
 
-Each scanner produces its own report shape:
-
-| Scanner          | Native output                                    |
-|------------------|--------------------------------------------------|
-| axe-core         | JSON with `violations[]`; rule ID, impact, nodes. |
-| pa11y            | JSON with `issues[]`; code (WCAG SC), type.       |
-| Lighthouse a11y  | LHR JSON with `categories.accessibility.audits`.  |
-| WAVE             | JSON via WebAIM API; `categories` with errors / warnings. |
-| IBM Equal Access | JSON with `results[]`.                            |
-
-Normalize to a unified record:
+Each scanner emits its own report shape (axe-core `violations[]`,
+pa11y `issues[]`, Lighthouse `categories.accessibility.audits`,
+WAVE `categories`, IBM Equal Access `results[]`). Normalize every
+finding to one unified record:
 
 ```json
 {
@@ -70,7 +53,9 @@ Normalize to a unified record:
 ```
 
 The **fingerprint** is the load-bearing field - same fingerprint
-across runs = same violation; new fingerprint = new violation.
+across runs = same violation; a new fingerprint = a new violation.
+Per-scanner output shapes and field mappings are in
+[references/gate-implementation.md](references/gate-implementation.md).
 
 ## Step 2 - Maintain a baseline
 
@@ -95,77 +80,71 @@ CI.
 
 ## Step 3 - Apply the gate decision
 
-Pseudocode:
+Grandfather any fingerprint in the baseline, then block on new
+violations by severity tier:
+
+| Severity tier            | Behavior                                 |
+|--------------------------|------------------------------------------|
+| Block (critical/serious) | Fail the build.                          |
+| Warn (moderate)          | Surface in PR comment; no build failure. |
+| Info (minor)             | Log; no PR comment unless count > N.     |
+
+The runnable gate (axe-core ingestion shown; extend to the other
+scanners per
+[references/gate-implementation.md](references/gate-implementation.md)):
 
 ```python
-def a11y_gate(records, baseline, *,
-              block_on_severity=['critical', 'serious'],
-              warn_on_severity=['moderate'],
-              info_on_severity=['minor']):
-    blockers = []
-    warnings = []
-    for r in records:
-        if r['fingerprint'] in baseline:
-            continue   # grandfathered
-        if r['severity'] in block_on_severity:
-            blockers.append(r)
-        elif r['severity'] in warn_on_severity:
-            warnings.append(r)
+# scripts/run_a11y_gate.py
+import json, sys
+from pathlib import Path
 
-    return {
-        'verdict': 'no-go' if blockers else 'go',
-        'blocker_count': len(blockers),
-        'warning_count': len(warnings),
-        'blockers': blockers,
-        'warnings': warnings,
-        'shrinking_baseline_count': len([f for f in baseline if f not in {r['fingerprint'] for r in records}]),
-    }
+records = []
+axe_path = Path("axe-results.json")
+if axe_path.exists():
+    axe = json.loads(axe_path.read_text())
+    url = axe.get('url', '/')
+    for v in axe.get('violations', []):
+        for node in v.get('nodes', []):
+            sel = node.get('target', ['?'])[0]
+            records.append({
+                'scanner': 'axe', 'rule_id': v['id'],
+                'wcag_sc': v.get('tags', [None])[-1],
+                'page_url': url, 'selector': sel,
+                'severity': v.get('impact', 'moderate'),
+                'fingerprint': f"axe::{v['id']}::{url}::{sel}",
+            })
+
+baseline = set()
+bp = Path("a11y-baseline.json")
+if bp.exists():
+    baseline = set(json.loads(bp.read_text()).get('violations', []))
+
+seen = {r['fingerprint'] for r in records}
+new = [r for r in records if r['fingerprint'] not in baseline]
+blockers = [r for r in new if r['severity'] in ('critical', 'serious')]
+warnings = [r for r in new if r['severity'] == 'moderate']
+fixed = [f for f in baseline if f not in seen]   # shrinking baseline
+
+verdict = 'no-go' if blockers else 'go'
+print(f"# A11y Gate - verdict: {verdict.upper()}")
+print(f"blockers={len(blockers)} warnings={len(warnings)} fixed={len(fixed)}")
+for r in blockers:
+    print(f"- {r['scanner']} :: {r['rule_id']} on {r['page_url']} ({r['selector']})")
+sys.exit(0 if verdict == 'go' else 1)
 ```
 
-Three severity tiers map to behavior:
+The **shrinking baseline** counter (`fixed`) is the positive
+signal: when baseline fingerprints disappear from the latest scan,
+the team fixed them. Surface it as "5 fixed / 47 remaining." A
+no-go verdict exits non-zero so CI halts.
 
-| Severity tier         | Behavior                                                   |
-|-----------------------|------------------------------------------------------------|
-| Block (critical/serious) | Fail the build.                                          |
-| Warn (moderate)        | Surface in PR comment; no build failure.                   |
-| Info (minor)           | Log; no PR comment unless count > N.                      |
+## Step 4 - Emit the PR artifact
 
-Plus the **shrinking baseline** counter - when fingerprints in the
-baseline disappear from the latest scan, the team has fixed them.
-Surface this as a positive metric: "5 fixed / 47 remaining."
-
-## Step 4 - Emit the artifact
-
-Markdown summary suitable for `$GITHUB_STEP_SUMMARY` or PR comment:
-
-```markdown
-# A11y Gate - verdict: NO-GO
-
-**Blockers (NEW violations): 2**
-
-| Scanner | Rule              | WCAG SC | Page         | Selector            | Severity |
-|---------|-------------------|---------|--------------|---------------------|----------|
-| axe     | color-contrast    | 1.4.3   | /checkout    | button.primary      | serious  |
-| axe     | aria-required-attr | 4.1.2  | /checkout    | div[role="dialog"]  | critical |
-
-**Warnings (NEW moderate): 1**
-
-| Scanner | Rule          | WCAG SC | Page         | Selector |
-|---------|---------------|---------|--------------|----------|
-| pa11y   | landmark-one-main | 1.3.1 | /checkout | (page-level) |
-
-**Grandfathered (in baseline): 47**
-**Fixed since baseline: 5**  ← positive trend
-
-## Recommended next step
-
-Block-tier violations must be fixed in this PR. To address the
-two blockers:
-- `button.primary` on `/checkout`: contrast ratio 3.8:1; needs ≥4.5:1.
-- `div[role="dialog"]`: missing `aria-labelledby` or `aria-label`.
-```
-
-A no-go verdict exits non-zero so CI halts.
+For a PR comment or `$GITHUB_STEP_SUMMARY`, render the verdict as a
+markdown table grouping blockers, warnings, the grandfathered count,
+and the fixed-since-baseline count, then a recommended-next-step
+block. Full template:
+[references/gate-implementation.md](references/gate-implementation.md).
 
 ## Step 5 - Baseline maintenance workflow
 
@@ -184,52 +163,6 @@ rot:
    accumulates stale entries.
 4. **Quarterly review:** the team reviews the baseline; any entry
    older than N quarters becomes a follow-up ticket.
-
-## Worked example: minimal Python implementation
-
-```python
-# scripts/run_a11y_gate.py
-import json, sys
-from pathlib import Path
-
-records = []
-
-# Source: axe-core JSON
-axe_path = Path("axe-results.json")
-if axe_path.exists():
-    axe = json.loads(axe_path.read_text())
-    for v in axe.get('violations', []):
-        for node in v.get('nodes', []):
-            records.append({
-                'scanner': 'axe',
-                'rule_id': v['id'],
-                'wcag_sc': v.get('tags', [None])[-1],   # or parse from tags
-                'page_url': axe.get('url', '/'),
-                'selector': node.get('target', ['?'])[0],
-                'severity': v.get('impact', 'moderate'),
-                'fingerprint': f"axe::{v['id']}::{axe.get('url','/')}::{node.get('target', ['?'])[0]}",
-            })
-
-# Source: pa11y JSON
-# ... (same shape, different fields - normalize to the same record)
-
-# Load baseline
-baseline_path = Path("a11y-baseline.json")
-baseline = set()
-if baseline_path.exists():
-    baseline = set(json.loads(baseline_path.read_text()).get('violations', []))
-
-# Apply gate
-new_violations = [r for r in records if r['fingerprint'] not in baseline]
-blockers = [r for r in new_violations if r['severity'] in ('critical', 'serious')]
-
-verdict = 'no-go' if blockers else 'go'
-print(f"# A11y Gate - verdict: {verdict.upper()}")
-for r in blockers:
-    print(f"- {r['scanner']} :: {r['rule_id']} on {r['page_url']} ({r['selector']})")
-
-sys.exit(0 if verdict == 'go' else 1)
-```
 
 ## Anti-patterns
 

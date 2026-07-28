@@ -29,46 +29,21 @@ deleting lines, changing a threshold, or judging whether the checklist is a
 
 The Definition of Done is a Scrum term with a fixed definition. The 2020 Scrum
 Guide ([scrumguides.org/scrum-guide.html](https://scrumguides.org/scrum-guide.html))
-states:
+fixes two facts this audit rests on:
 
-> "The Definition of Done is a formal description of the state of the Increment
-> when it meets the quality measures required for the product."
+- **The team or organization owns the lines.** Where the DoD is an organizational
+  standard all teams follow it as a minimum; otherwise the Scrum Team creates one
+  for the product. So the audit never invents or edits a line.
+- **A miss has a defined consequence.** An item that does not meet the DoD "cannot
+  be released or even presented at the Sprint Review" and returns to the Product
+  Backlog. So "not met" is not advisory.
 
-It also fixes the consequence of a miss:
-
-> "If a Product Backlog item does not meet the Definition of Done, it cannot be
-> released or even presented at the Sprint Review. Instead, it returns to the
-> Product Backlog for future consideration."
-> ([scrumguides.org/scrum-guide.html](https://scrumguides.org/scrum-guide.html))
-
-And it fixes who owns the content:
-
-> "If the Definition of Done for an increment is part of the standards of the
-> organization, all Scrum Teams must follow it as a minimum. If it is not an
-> organizational standard, the Scrum Team must create a Definition of Done
-> appropriate for the product."
-> ([scrumguides.org/scrum-guide.html](https://scrumguides.org/scrum-guide.html))
-
-Two things follow directly and are the whole basis of this audit. The team (or
-the organization) owns the lines, so the audit never invents or edits them. And
-a miss has a defined consequence, so "not met" is not advisory.
-
-**Framing changed in 2020.** The November 2020 revision made the Definition of
-Done a formal *commitment* attached to the Increment artifact, alongside the
-Product Goal for the Product Backlog and the Sprint Goal for the Sprint Backlog
-([scrumguides.org/revisions.html](https://scrumguides.org/revisions.html)):
-"Each of the three artifacts now contain 'commitments' to them. For the Product
-Backlog it is the Product Goal, the Sprint Backlog has the Sprint Goal, and the
-Increment has the Definition of Done (now without the quotes)." Earlier editions
-carried the concept without that artifact pairing and wrote it as Definition of
-"Done" in quotes. Cite the 2020 wording, and do not attribute the commitment
-framing to pre-2020 Scrum.
-
-**Do not over-attribute.** The Scrum Guide does not prescribe any checklist
-content, any coverage number, any verdict vocabulary, or any second checklist
-for work entering development. Everything in the next section is practitioner
-convention. The term is also not defined in the ISTQB glossary (V4.7.2 returns
-"Term not found" for it at
+**Do not over-attribute.** The November 2020 revision made the DoD a formal
+*commitment* attached to the Increment ([scrumguides.org/revisions.html](https://scrumguides.org/revisions.html)); cite the 2020 wording and do not
+attribute the commitment framing to pre-2020 Scrum. The Guide prescribes no
+checklist content, coverage number, verdict vocabulary, or entry-side checklist -
+everything below is practitioner convention. The term is also not in the ISTQB
+glossary (V4.7.2 returns "Term not found" at
 [glossary.istqb.org](https://glossary.istqb.org/)), so Scrum is the only
 standards-level anchor available.
 
@@ -270,68 +245,9 @@ on.
 
 ## Worked example
 
-Checklist (`docs/definition-of-done.md` @ `a91c4f2`, stage 2), audited against
-pull request 4567, diff `main..feat/promo-codes`:
-
-```markdown
-1. Code reviewed by at least one other engineer.
-2. Unit test coverage on changed files >= 80%.
-3. User-facing documentation updated (or no user-facing change).
-4. All acceptance criteria from the story pass.
-5. Deployed to staging and smoke suite green.
-6. No new accessibility violations.
-7. Telemetry wired for new features.
-```
-
-Output:
-
-```markdown
-## DoD adherence review - PR #4567 "Add promo codes to checkout"
-
-**Stage:** stage-2-exit
-**Checklist source:** docs/definition-of-done.md @ a91c4f2, 7 lines split into 7 audited lines
-**Evidence window:** main..feat/promo-codes (head 3f0be21), CI runs for 3f0be21
-**Verdict:** REJECT
-**met: 4   not met: 2   unverifiable: 1**
-
-| # | Checklist line | State | Evidence sought | What was found |
-|---|---|---|---|---|
-| 1 | Reviewed by >=1 other engineer | met | approving reviews from non-authors | 2 approving reviews, neither by the author |
-| 2 | Coverage on changed files >= 80% | not met | LH/LF per changed file in coverage/lcov.info | src/checkout/promo.ts LF:112 LH:73, 65.2% |
-| 3 | Docs updated, or no user-facing change | met | changed docs paths, or absence of user-facing diff | escape branch: diff touches no UI, API schema, or copy files |
-| 4 | All acceptance criteria pass | unverifiable | tests named or tagged for AC-1..AC-3 | no criterion-to-test convention exists in this repo |
-| 5 | Deployed to staging, smoke green | not met | deploy + smoke jobs for 3f0be21 | no deploy job ran for this SHA |
-| 6 | No new accessibility violations | met | violations array, head vs base | 4 violations on both branches, same rule IDs, none new |
-| 7 | Telemetry wired | met | instrumentation calls on new code paths | track('promo.applied') added in src/checkout/promo.ts |
-
-### Not met
-
-**Line 2 - coverage on changed files**
-- Required: >= 80% per changed file
-- Actual: src/checkout/promo.ts at 65.2% (LF:112, LH:73); other changed files pass
-- Artifact: coverage/lcov.info from CI run for 3f0be21
-
-**Line 5 - staging deploy and smoke**
-- Required: deployed to staging, smoke suite green
-- Actual: no deploy job present in any CI run bound to 3f0be21
-- Artifact: CI run list for 3f0be21
-
-### Unverifiable
-
-**Line 4 - acceptance criteria**
-- Searched: test names and tags in the diff for AC-1, AC-2, AC-3 as written in the story
-- Blocked by: no declared convention linking criterion IDs to tests, so absence of a match proves nothing
-- To resolve: either adopt a criterion-ID tag on tests, or have the person who ran the criteria confirm each one and link the run
-
-### Recommended action
-
-REJECT: two lines not met and one unverifiable. Line 4 does not become a pass by
-default; a named person confirms it with a linked artifact.
-```
-
-Note what the example does not do: it does not suggest lowering line 2 to 65%,
-does not drop line 4 as unenforceable, and does not average the seven lines into
-a percentage. Those are all authoring-side moves.
+A full stage-2 audit of PR #4567 ("Add promo codes to checkout") - checklist,
+audit table, and REJECT verdict end to end, plus what the audit deliberately
+does NOT do - is in [references/worked-example.md](references/worked-example.md).
 
 ## Anti-patterns
 

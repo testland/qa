@@ -7,19 +7,16 @@ description: "Build-an-X for webhook delivery + receiver tests per Standard Webh
 
 ## Overview
 
-Webhooks are HTTP POSTs from one service to another, signaling
-events. Almost every SaaS exposes them; almost no team tests them
-properly. The Standard Webhooks spec ([standardwebhooks.com][stdwh])
-formalizes the patterns most production systems converged on.
-
-[stdwh]: https://www.standardwebhooks.com/
-
-This skill covers tests for both sides:
+The Standard Webhooks spec ([standardwebhooks.com][stdwh]) formalizes the
+signing, retry, and replay patterns most production systems converged on. This
+skill covers tests for both sides:
 
 - **Sender** - your service emits webhooks to customers (Stripe-style
   outbound webhook).
 - **Receiver** - your service receives webhooks from a vendor
   (handler for Stripe / Twilio / SendGrid / GitHub events).
+
+[stdwh]: https://www.standardwebhooks.com/
 
 ## When to use
 
@@ -87,21 +84,9 @@ def test_outbound_webhook_signed_correctly():
 
 ## Step 3 - Sender: retry semantics
 
-Per [stdwh][stdwh] the canonical retry pattern: exponential backoff
-with jitter, capped at N attempts, then dead-letter.
-
-Typical schedule:
-
-| Attempt | Delay |
-|---|---|
-| 1 | immediate |
-| 2 | 5s |
-| 3 | 5min |
-| 4 | 30min |
-| 5 | 2h |
-| 6 | 5h |
-| 7 | 10h |
-| 8 | (give up; dead-letter) |
+Per [stdwh][stdwh] the canonical retry pattern is exponential backoff with
+jitter, capped at N attempts, then dead-letter. The typical delay schedule is in
+[references/vendor-payloads-and-retries.md](references/vendor-payloads-and-retries.md).
 
 **Sender-side test:**
 
@@ -125,8 +110,7 @@ recorded in a dead-letter store + not retried.
 
 ## Step 4 - Receiver: signature verification
 
-The receiver's first line of defense. Standard Webhooks signature
-verification per [stdwh][stdwh]:
+Standard Webhooks signature verification per [stdwh][stdwh]:
 
 1. Reconstruct the to-sign string: `{webhook-id}.{webhook-timestamp}.{payload}`
 2. Compute expected signature with the shared secret.
@@ -214,18 +198,10 @@ def test_receiver_idempotent_via_webhook_id(client):
 
 ## Step 7 - Per-vendor sample payloads
 
-For receiver tests of specific vendors, use the vendor's official
-sample payloads (NOT hand-rolled). Vendor docs:
-
-- Stripe: stripe.com/docs/webhooks → "Sample events"
-- Twilio: twilio.com/docs/usage/webhooks → per-resource event docs
-- SendGrid: docs.sendgrid.com/for-developers/tracking-events
-- GitHub: docs.github.com/en/webhooks → per-event payload reference
-- GitLab: docs.gitlab.com/ee/user/project/integrations/webhook_events.html
-
-Test fixtures should be copy-pasted from the vendor docs (or
-captured from their webhook tester); making up payloads risks
-field-name drift.
+For receiver tests of specific vendors, use the vendor's official sample
+payloads (NOT hand-rolled) - making up payloads risks field-name drift. The
+per-vendor documentation links are in
+[references/vendor-payloads-and-retries.md](references/vendor-payloads-and-retries.md).
 
 ## Step 8 - Ordering guarantees
 

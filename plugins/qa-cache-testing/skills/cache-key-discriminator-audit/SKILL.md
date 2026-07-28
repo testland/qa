@@ -22,10 +22,9 @@ on the second request. Triage it as a security defect, not as a
 performance or freshness issue.
 
 The exposure only reaches other people when the cache is shared. RFC
-9111 §1 defines the split: "A 'shared cache' is a cache that stores
-responses for reuse by more than one user; shared caches are usually
-(but not always) deployed as a part of an intermediary", while "A
-'private cache', in contrast, is dedicated to a single user"
+9111 §1 splits caches into a **shared cache** (stores responses for
+reuse by more than one user) and a **private cache** (dedicated to a
+single user)
 ([RFC 9111 §1](https://www.rfc-editor.org/rfc/rfc9111.html)). A CDN,
 a reverse proxy, and a Redis or Memcached instance behind the
 application are all shared caches. A missing discriminator in any of
@@ -33,11 +32,10 @@ them is a cross-user defect. The same omission in a browser cache is
 a correctness bug affecting one person.
 
 Two named web-security classes sit on top of this. Web cache
-poisoning "manipulates cache keys to inject malicious content into a
-cached response, which is then served to other users", and web cache
-deception "exploits cache rules to trick the cache into storing
-sensitive or private content, which the attacker can then access"
-([PortSwigger, web cache deception](https://portswigger.net/web-security/web-cache-deception)).
+poisoning manipulates cache keys to inject malicious content served to
+other users; web cache deception tricks the cache into storing
+sensitive content the attacker can then retrieve
+([PortSwigger](https://portswigger.net/web-security/web-cache-deception)).
 Poisoning is the attacker-controlled form of an under-specified key.
 Deception is the attacker-controlled form of a response that should
 never have been stored in a shared cache at all.
@@ -45,12 +43,10 @@ never have been stored in a shared cache at all.
 ## Keyed and unkeyed inputs
 
 The vocabulary to audit with comes from the cache's own point of
-view. "Caches identify equivalent requests by comparing a predefined
-subset of the request's components, known collectively as the 'cache
-key'. Typically, this would contain the request line and `Host`
-header", and "Components of the request that are not included in the
-cache key are said to be 'unkeyed'"
-([PortSwigger, web cache poisoning](https://portswigger.net/web-security/web-cache-poisoning)).
+view. A cache identifies equivalent requests by a predefined subset of
+the request's components, the **cache key** (typically the request
+line plus `Host`); components left out of it are **unkeyed**
+([PortSwigger](https://portswigger.net/web-security/web-cache-poisoning)).
 
 So the audit reduces to one question per cached response:
 
@@ -134,66 +130,33 @@ behavior each row cites.
 
 ## The lru_cache-on-an-instance-method trap
 
-The common folk description of this bug is that `self` is not part
-of the cache key, so all instances share one entry. That is wrong,
-and the real mechanism matters because it changes the fix.
+`functools.lru_cache` on an instance method stores entries at the
+**class level**, keyed on the whole argument tuple including `self`
+([functools docs](https://docs.python.org/3/library/functools.html)).
+The folk description ("`self` is not in the key, so all instances
+share one entry") is wrong, and the real mechanism changes the fix.
+Whether two instances collide depends entirely on how `self` hashes:
 
-What the Python documentation actually says:
+- **Default classes do not collide.** User-defined instances hash from
+  their `id()`, so each gets its own entries. The defect here is
+  retention, not collision: the class-level cache pins every
+  request-scoped `self` until it ages out of `maxsize`.
+- **Value-equality classes do collide.** A frozen dataclass, an attrs
+  class, or any hand-written `__eq__`/`__hash__` opts into value-based
+  hashing. If the equality fields omit the tenant, tenant A's and
+  tenant B's objects hash equal and share every entry - a genuine
+  cross-tenant collision, invisible in the key expression because it
+  happens inside `__hash__`.
 
-- `functools.cached_property` "stores results at the instance level"
-  and `functools.lru_cache` stores them "at the class level"
-  ([Python FAQ, how do I cache method calls?](https://docs.python.org/3/faq/programming.html)).
-- "If a method is cached, the `self` instance argument is included
-  in the cache"
-  ([functools docs](https://docs.python.org/3/library/functools.html)).
-- `lru_cache` "creates a reference to the instance unless special
-  efforts are made to pass in weak references", and "instances are
-  kept alive until they age out of the cache or until the cache is
-  cleared"
-  ([Python FAQ](https://docs.python.org/3/faq/programming.html)).
-- The arguments "must be hashable", and "Distinct argument patterns
-  may be considered to be distinct calls with separate cache entries"
-  ([functools docs](https://docs.python.org/3/library/functools.html)).
+Fix, in order of preference: (1) do not cache on the instance - make it
+a module-level function taking the discriminators as explicit
+arguments; (2) use `functools.cached_property` for a no-argument
+per-instance value, which stores at the instance level and is released
+with the instance; (3) if it must stay cached and the class defines
+value equality, add the missing discriminator to the equality fields.
 
-So the entry is keyed on the whole argument tuple, `self` included,
-in one cache that lives on the class. Whether two instances collide
-therefore depends entirely on how `self` hashes:
-
-- **Default classes do not collide.** "Objects which are instances of
-  user-defined classes are hashable by default. They all compare
-  unequal (except with themselves), and their hash value is derived
-  from their `id()`"
-  ([Python glossary, hashable](https://docs.python.org/3/glossary.html)).
-  Identity-based hashing means each instance gets its own entries.
-  The defect here is retention, not collision: a class-level cache
-  pins every request-scoped object it has seen until the entry ages
-  out of `maxsize`.
-- **Value-equality classes do collide.** "Hashable objects which
-  compare equal must have the same hash value", and "Hashability
-  makes an object usable as a dictionary key ... because these data
-  structures use the hash value internally"
-  ([Python glossary](https://docs.python.org/3/glossary.html)). A
-  frozen dataclass, an attrs class, or any class with a hand-written
-  `__eq__` and `__hash__` opts into value-based hashing. If the
-  fields that participate in equality omit the tenant, then a
-  repository object for tenant A and one for tenant B compare equal,
-  hash equal, and share every cached entry. That is a genuine
-  cross-tenant collision, and it is invisible in the key expression
-  because the collision happens inside `__hash__`.
-
-Fixes, in order of preference:
-
-1. Do not cache on the instance. Make the method a module-level
-   function and pass the discriminators explicitly as arguments, so
-   the key is readable at the call site.
-2. Use `functools.cached_property` when the value is per-instance
-   and takes no arguments. It stores at the instance level and does
-   not create a reference to the instance, so the result is released
-   with the instance
-   ([Python FAQ](https://docs.python.org/3/faq/programming.html)).
-3. If the method must stay cached and the class defines value
-   equality, add the missing discriminator to the equality fields so
-   the collision cannot form.
+Full mechanism and Python-doc citations:
+[references/lru-cache-trap.md](references/lru-cache-trap.md).
 
 ## The fix recipe
 
@@ -230,18 +193,12 @@ Three properties earn their place:
 
 For anything cached by a browser, proxy, or CDN, the key lives
 outside your process and the only lever you have on it is `Vary`.
-
-Be precise about what `Vary` does. It "indicates which request header
-fields were used in content negotiation to determine what
-representation was selected", and "Caches use this field as a
-secondary key in cache lookups to ensure stored responses match the
-negotiation criteria of new requests"
-([RFC 9110 §12.5.5](https://www.rfc-editor.org/rfc/rfc9110.html)).
-The reuse rule is binding: a cache "MUST NOT use that stored response
-without revalidation unless all the presented request header fields
-nominated by that Vary field value match those fields in the original
-request"
-([RFC 9111 §4.1](https://www.rfc-editor.org/rfc/rfc9111.html)).
+`Vary` nominates the request header fields used in content
+negotiation; a shared cache uses them as a secondary key and MUST NOT
+reuse a stored response without revalidation unless every nominated
+field matches the original request
+([RFC 9110 §12.5.5](https://www.rfc-editor.org/rfc/rfc9110.html),
+[RFC 9111 §4.1](https://www.rfc-editor.org/rfc/rfc9111.html)).
 
 ```http
 Cache-Control: private, max-age=300
@@ -251,39 +208,29 @@ Vary: Authorization, Accept-Language, X-Tenant-Id
 Four consequences worth stating explicitly:
 
 - **`Vary` nominates request header field names only.** A
-  discriminator carried in a path segment or query string is already
-  part of the cache key through the request line. A discriminator
-  carried nowhere in the request, such as a server-side experiment
-  assignment, cannot be expressed in `Vary` at all. Move it into a
-  request header or stop caching the response in a shared cache.
-- **`Vary: *` is not a safe catch-all.** "A stored response with a
-  Vary header field value containing a member '*' always fails to
-  match" ([RFC 9111 §4.1](https://www.rfc-editor.org/rfc/rfc9111.html)),
-  so it disables shared-cache reuse entirely rather than keying more
+  discriminator in a path segment or query string is already keyed
+  through the request line. One carried nowhere in the request, such
+  as a server-side experiment assignment, cannot be expressed in
+  `Vary` at all - move it into a request header or stop caching the
+  response in a shared cache.
+- **`Vary: *` is not a safe catch-all.** It always fails to match, so
+  it disables shared-cache reuse entirely rather than keying more
   finely.
-- **`private` is the stronger control for credentialed responses.**
-  It "indicates that a shared cache MUST NOT store the response (i.e.,
-  the response is intended for a single user)"
-  ([RFC 9111 §5.2.2.7](https://www.rfc-editor.org/rfc/rfc9111.html)).
-  `Vary: Authorization` still stores the body in the shared cache, one
-  entry per credential value. Prefer `private` when the body carries
-  user data and reserve `Vary: Authorization` for responses that are
-  genuinely reusable within a credential.
-- **`private` is not confidentiality.** RFC 9111 §5.2.2.7 states that
-  "This usage of the word 'private' only controls where the response
-  can be stored; it cannot ensure the privacy of the message content."
-  It is a cache-placement directive, not a protection.
+- **`private` is the stronger control for credentialed responses.** It
+  forbids a shared cache from storing the response at all;
+  `Vary: Authorization` still stores the body, one entry per credential
+  value. Prefer `private` when the body carries user data and reserve
+  `Vary: Authorization` for responses genuinely reusable within a
+  credential.
+- **`private` is not confidentiality.** It only controls where the
+  response may be stored, not who may read it - a cache-placement
+  directive, not a protection.
 
-Finally, keep the cache's own routing rules out of the extension. The
-OWASP Web Security Testing Guide's remediation for path-confusion
-driven cache deception is to "Refrain from classify/handling cached
-based on file extension or path (leverage content-type)", to "Ensure
-the caching mechanism(s) adhere to cache-control headers specified by
-your application", and to "Implement RFC compliant File Not Found
-handling and redirects"
-([OWASP WSTG, Test for Path Confusion](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/13-Test_for_Path_Confusion)).
-A CDN that caches by suffix will store `/dashboard/x.css` no matter
-what your `Cache-Control` said.
+A CDN that classifies by file suffix will store `/dashboard/x.css`
+whatever your `Cache-Control` said; OWASP's remediation for that
+path-confusion cache deception is to route on content-type rather than
+extension or path. Full RFC and OWASP citations:
+[references/http-cache-directives.md](references/http-cache-directives.md).
 
 ## Worked example
 

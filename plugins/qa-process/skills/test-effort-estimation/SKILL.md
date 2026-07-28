@@ -94,16 +94,7 @@ is "the most likely estimate", `b` is "the worst-case estimate"
 ### Gathering the three points with more than one estimator
 
 When several people could estimate the area, run a **Wideband Delphi** round
-rather than averaging opinions in a meeting. Barry Boehm and John A. Farquhar
-originated the wideband variant of the Delphi method in the 1970s, and called it
-"wideband" because it involved "greater interaction and more communication among
-those participating" than the traditional Delphi method
-([Wikipedia, Wideband delphi](https://en.wikipedia.org/wiki/Wideband_delphi));
-the method was popularized through Boehm's *Software Engineering Economics*
-(1981) (same source).
-
-Boehm's original sequence, adapted to test effort, is
-([Wikipedia, Wideband delphi](https://en.wikipedia.org/wiki/Wideband_delphi)):
+rather than averaging opinions in a meeting ([Wikipedia, Wideband delphi](https://en.wikipedia.org/wiki/Wideband_delphi)). Boehm's sequence, adapted to test effort:
 
 1. The coordinator gives each estimator the area description and a blank form.
 2. The group meets and discusses estimation issues, including what is in scope.
@@ -113,11 +104,11 @@ Boehm's original sequence, adapted to test effort, is
 6. Estimators fill out the forms anonymously again. Repeat steps 4 to 6 as
    needed.
 
-The anonymity in steps 3 and 6 is the mechanism, not a formality: it is what
-stops the loudest or most senior estimate from anchoring the rest. Every
-disagreement that surfaces in step 5 is a candidate assumption for Step 4's
-ledger, because two people estimating the same area differently almost always
-means they are assuming different things about scope, environment, or data.
+The anonymity in steps 3 and 6 is the mechanism, not a formality: it stops the
+loudest or most senior estimate from anchoring the rest. Every disagreement that
+surfaces in step 5 is a candidate assumption for Step 4's ledger, because two
+people estimating the same area differently are usually assuming different things
+about scope, environment, or data.
 
 ## Step 3 - Compute the expected value and the spread
 
@@ -128,28 +119,14 @@ E  = (a + 4m + b) / 6
 SD = (b - a) / 6
 ```
 
-The expected value is `(a + 4m + b) / 6` and the standard deviation is
-`(b - a) / 6`, based on the assumption that a PERT distribution governs the data
-([Wikipedia, Three-point estimation](https://en.wikipedia.org/wiki/Three-point_estimation)).
-The same expected activity completion time, `(t1 + 4t2 + t3)/6`, and the same
-standard deviation, `(t3 - t1)/6`, are the classical PERT definitions in
-operations research, where the three estimates are combined "through the use of
-the beta and normal probability distributions" to describe how completion time
-might vary
-([Brunel University, Network analysis: uncertain completion times](https://people.brunel.ac.uk/~mastjjb/jeb/or/netpert.html)).
-
-The 1:4:1 weighting is not a tuning knob. The weights
-"of 1/6:4/6:1/6 is essentially fixed and cannot be altered (as the underlying
-theory depends on these weights)"
-([Brunel University, Network analysis: uncertain completion times](https://people.brunel.ac.uk/~mastjjb/jeb/or/netpert.html)).
-If a team wants to weight the pessimistic case more heavily, that belongs in a
-larger `b`, not in a rewritten formula.
+These are the classical PERT definitions, valid on the assumption that a PERT
+distribution governs the data ([Wikipedia, Three-point estimation](https://en.wikipedia.org/wiki/Three-point_estimation); [Brunel University](https://people.brunel.ac.uk/~mastjjb/jeb/or/netpert.html)). The 1/6:4/6:1/6 weighting "is essentially
+fixed and cannot be altered" (Brunel); to weight the pessimistic case more
+heavily, raise `b`, do not rewrite the formula.
 
 **Report every row as a range, `E - SD` to `E + SD`. Never collapse a row to a
-point.** The three estimates are not the only three outcomes; they define a
-distribution in which "all times are possible (with an associated probability)"
-([Brunel University, Network analysis: uncertain completion times](https://people.brunel.ac.uk/~mastjjb/jeb/or/netpert.html)).
-A single number silently discards that.
+point.** The three estimates define a distribution in which "all times are
+possible (with an associated probability)" (Brunel); a single number discards that.
 
 ### Aggregating rows to an epic total
 
@@ -182,15 +159,9 @@ that lets someone later ask "which assumption failed?" instead of "who was
 wrong?".
 
 This is not a local house rule. Federal cost-estimating guidance makes
-documentation one of the four pillars of a reliable estimate, and defines the
-well-documented pillar as: "Cost estimates need to identify rationales,
-assumptions, original source data, and methodologies used for calculations"
-([IRS Internal Revenue Manual 1.33.9.3, Four Main Pillars of Reliable Cost Estimates](https://www.irs.gov/irm/part1/irm_01-033-009)).
-The same guidance requires estimators to "Document the rationale and historical
-data supporting ground rules and assumptions", and defines a credible estimate
-as one that discusses and documents "data analysis limitations, risks,
-uncertainty, or special circumstances surrounding source data and assumptions"
-(same source, sections 1.33.9.3.2 and 1.33.9.3.4).
+documentation one of the four pillars of a reliable estimate: a well-documented
+estimate identifies "rationales, assumptions, original source data, and
+methodologies used for calculations" ([IRS IRM 1.33.9.3](https://www.irs.gov/irm/part1/irm_01-033-009)).
 
 Every row in the effort table cites at least one assumption ID. Six categories
 are mandatory: an epic-level ledger that is missing any of them is incomplete,
@@ -224,10 +195,12 @@ it is grounded in where the work naturally sits, not in a cited allocation rule.
 
 | Layer | Default owner | Why |
 |---|---|---|
-| Unit | The developer writing the production code | The tests land in the same pull request as the code they cover, and unit tests "run very fast" so the feedback loop stays inside the developer's edit cycle ([Fowler and Vocke, The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)) |
-| Service | Automation engineer | API and integration tests need harness and environment work; integrating "slow parts like filesystems and databases tends to be much slower than running unit tests with these parts stubbed out" (same source) |
-| UI / E2E | Automation engineer, or a manual tester for the long tail | Automate happy paths only. End-to-end tests "require a lot of maintenance and run pretty slowly" (same source), and tests running end-to-end through the UI are "brittle, expensive to write, and time consuming to run" ([Fowler, TestPyramid](https://martinfowler.com/bliki/TestPyramid.html)) |
-| Exploratory | Manual tester | Exploratory testing "is a manual testing approach that emphasises the tester's freedom and creativity to spot quality issues in a running system" ([Fowler and Vocke, The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)), which is exactly what a scripted row cannot cover |
+| Unit | The developer writing the production code | Tests land in the same PR as the code; unit tests run fast, keeping the loop inside the edit cycle |
+| Service | Automation engineer | API and integration tests need harness and environment work and run slower than stubbed unit tests |
+| UI / E2E | Automation engineer, or a manual tester for the long tail | Automate happy paths only; end-to-end UI tests are brittle, expensive to write, and slow to run |
+| Exploratory | Manual tester | A manual approach for the tester's freedom to spot issues a scripted row cannot cover |
+
+Layer characteristics per [Fowler and Vocke, The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html) and [Fowler, TestPyramid](https://martinfowler.com/bliki/TestPyramid.html).
 
 Three allocation rules:
 
@@ -250,38 +223,9 @@ overall test mix before the work starts.
 
 ## Worked example
 
-Epic: **Promo codes at checkout** (stories 12 to 15). Change-shape distribution
-supplied by the classifier: 30 percent `service-layer`, 25 percent `ui-heavy`,
-25 percent `pure-logic`, 20 percent `data-heavy`. Three-point values gathered in
-a two-round Wideband Delphi with three estimators.
-
-Row arithmetic, using `E = (a + 4m + b) / 6` and `SD = (b - a) / 6`
-([Wikipedia, Three-point estimation](https://en.wikipedia.org/wiki/Three-point_estimation)):
-
-```
-Checkout flow (service):    E = (4 + 32 + 16)/6 = 8.7    SD = (16 - 4)/6 = 2.0
-Checkout flow (UI/E2E):     E = (2 + 20 + 10)/6 = 5.3    SD = (10 - 2)/6 = 1.3
-Discount-code API (service):E = (2 + 16 +  8)/6 = 4.3    SD = ( 8 - 2)/6 = 1.0
-Discount rules (unit):      E = (3 + 20 +  9)/6 = 5.3    SD = ( 9 - 3)/6 = 1.0
-Promo schema (data checks): E = (2 + 24 + 14)/6 = 6.7    SD = (14 - 2)/6 = 2.0
-Checkout (exploratory):     E = (2 + 12 +  6)/6 = 3.3    SD = ( 6 - 2)/6 = 0.7
-```
-
-Aggregation:
-
-```
-E_total  = 8.7 + 5.3 + 4.3 + 5.3 + 6.7 + 3.3 = 33.6 h
-SD_total = sqrt(2.0^2 + 1.3^2 + 1.0^2 + 1.0^2 + 2.0^2 + 0.7^2)
-         = sqrt(4.00 + 1.69 + 1.00 + 1.00 + 4.00 + 0.49)
-         = sqrt(12.18) = 3.5 h
-Independent-rows range:   30.1 to 37.1 h
-Fully-correlated bound:   sum(SD) = 8.0  ->  25.6 to 41.6 h
-```
-
-The two ranges are reported together because assumption A2 (staging
-availability) is shared by four of the six rows, so the independence assumption
-behind `SD_total` is known to be imperfect
-([Brunel University, Network analysis: uncertain completion times](https://people.brunel.ac.uk/~mastjjb/jeb/or/netpert.html)).
+The full row-by-row PERT arithmetic for the "Promo codes at checkout" epic - six
+(area, layer) rows, the variance-sum aggregation, and the independent vs
+fully-correlated ranges - is in [references/worked-example.md](references/worked-example.md).
 
 ## Output format
 

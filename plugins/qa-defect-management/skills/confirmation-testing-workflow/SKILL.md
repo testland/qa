@@ -11,40 +11,28 @@ before the fix, and classify the result.
 
 ## What this owns, and what it does not
 
-The axis is **verification procedure vs lifecycle vocabulary**. A defect
-lifecycle catalog owns the state names and which transitions between them are
-legal (Fixed can go to Verified or Reopened, and Fixed to Closed without
-Verified is illegitimate). This procedure owns the **evidence that justifies
-picking one of those transitions**. It answers "may I claim Verified?", not
-"what states exist?".
-
-Also out of scope, deliberately:
-
-- **Triage of the original defect.** Whether the report is valid, a duplicate,
-  or reproducible in the first place is decided before a fix is attempted.
-- **Severity and priority.** Those are separate axes from state, and nothing
-  here changes them.
-- **The broader regression suite.** See the next section: confirmation testing
-  and regression testing are different activities.
+The axis is **verification procedure vs lifecycle vocabulary**: a lifecycle
+catalog owns the state names and legal transitions; this procedure owns the
+evidence that justifies picking one. It answers "may I claim Verified?", not
+"what states exist?". Out of scope: triage of the original defect (decided
+before a fix), severity and priority (separate axes, unchanged here), and the
+broader regression suite (a different activity - see below).
 
 ## Confirmation testing is not regression testing
 
-Both are change-related testing, and conflating them is a common error.
+Both are change-related testing; conflating them is a common error.
 
-| | Question answered | ISTQB definition |
+| | Question answered | ISTQB scope |
 |---|---|---|
-| **Confirmation testing** | Does *this* fix work? | "A type of change-related testing performed after fixing a defect to confirm that a failure caused by that defect does not reoccur" ([glossary.istqb.org/en_US/term/confirmation-testing](https://glossary.istqb.org/en_US/term/confirmation-testing)) |
-| **Regression testing** | Did the fix break something else? | "A type of change-related testing to detect whether defects have been introduced or uncovered in unchanged areas of the software" ([glossary.istqb.org/en_US/term/regression-testing](https://glossary.istqb.org/en_US/term/regression-testing)) |
+| **Confirmation testing** | Does *this* fix work? | after fixing a defect, confirm the failure it caused no longer reoccurs ([glossary.istqb.org/en_US/term/confirmation-testing](https://glossary.istqb.org/en_US/term/confirmation-testing)) |
+| **Regression testing** | Did the fix break something else? | detect defects introduced or uncovered in unchanged areas ([glossary.istqb.org/en_US/term/regression-testing](https://glossary.istqb.org/en_US/term/regression-testing)) |
 
-The ISTQB glossary entry for confirmation testing lists **retesting** as its
-synonym (same entry, linked above; there is no separate glossary page under
-that name). The Foundation Level syllabus v4.0 §2.2.3 pairs the two activities
-in one section, which is where the confusion starts (syllabus distributed from
-[istqb.org/certifications/certified-tester-foundation-level](https://www.istqb.org/certifications/certified-tester-foundation-level/)).
-
-Practical consequence: a green full regression suite is **not** confirmation
-that the defect is fixed, and a passing confirmation test is **not** evidence
-that nothing else broke. Run and report them separately.
+The confirmation-testing glossary entry lists **retesting** as its synonym; the
+Foundation Level syllabus v4.0 §2.2.3 pairs the two activities in one section
+([istqb.org/certifications/certified-tester-foundation-level](https://www.istqb.org/certifications/certified-tester-foundation-level/)).
+Consequence: a green regression suite is not confirmation the defect is fixed,
+and a passing confirmation test is not evidence nothing else broke. Run and
+report them separately.
 
 ## Input this procedure assumes
 
@@ -189,50 +177,10 @@ verification gate exists to prevent.
 <one sentence tying the output to the defect's original symptom>
 ```
 
-## Worked example
+## Worked example and anti-patterns
 
-Defect: duplicate invoice rows are created when the same invoice is submitted
-concurrently. Fix commit `9c4e7b2`. Environment: staging, reporting build SHA
-`9c4e7b2` from its build-metadata endpoint.
-
-1. **Containment.** `git merge-base --is-ancestor 9c4e7b2 9c4e7b2` exits 0 (a
-   commit is its own ancestor). Staging contains the fix. Note that the check
-   ran against the build SHA staging reported, not against the release tag
-   `v2.14.0`, which was cut in a later commit.
-2. **Reproduction.** A tier 1 artifact exists:
-   `tests/invoices/concurrent-submit.spec.ts`, committed red before the fix and
-   confirmed red on `9c4e7b2^`.
-3. **Re-run.** Exactly that spec, nothing wider:
-
-   ```
-   Running 1 test using 1 worker
-     ok  tests/invoices/concurrent-submit.spec.ts:18:5 > creates exactly one
-         invoice row for 5 concurrent submits (2.9s)
-   1 passed (4.1s)
-   ```
-
-4. **Verdict: VERIFIED.** The artifact that produced the duplicate rows before
-   the fix produces exactly one row now, in a build proven to contain the fix.
-
-Two variants of the same run:
-
-- Output reads `2 rows found, expected 1` -> **NOT FIXED**. Same report shape,
-  failing output attached, defect reopened.
-- Output reads `1 passed` but the containment check exited 1 because staging is
-  on `3f1d0aa` -> **BLOCKED**, not VERIFIED. The pass came from a build without
-  the fix, so it says nothing about the fix. Report the deployment gap.
-
-## Anti-patterns
-
-| Anti-pattern | Why it fails | Do instead |
-|---|---|---|
-| "The release notes say it shipped in 2.14.0" | A version label is a claim about a build, not a property of it | Ancestry-check the fix SHA against the build SHA |
-| Running the whole suite instead of the reproduction | Unrelated failures contaminate the verdict; a green suite is regression evidence, not confirmation | Run exactly the reproduction artifact |
-| Accepting a green test that was never seen red | A test that always passed is not a reproduction of anything | Confirm red on the fix commit's parent first |
-| Calling a flaky-quarantined pass VERIFIED | The pass rate is uncorrelated with the fix | Stabilise the test, then re-run |
-| Recording "works for me" with no output | Unfalsifiable; the next person cannot re-check it | Attach verbatim output and both SHAs |
-| Downgrading BLOCKED to VERIFIED to unblock a release | Converts an unknown into a false claim that later reappears in production | Keep BLOCKED and escalate the blocker |
-| Reporting NOT FIXED when the environment lacked the fix | Costs a wasted reopen and blames the fix for a deploy gap | BLOCKED, with the deployment gap named |
+A full VERIFIED walkthrough (with its NOT FIXED and BLOCKED variants) and the
+anti-pattern table are in [references/examples.md](references/examples.md).
 
 ## Limitations
 

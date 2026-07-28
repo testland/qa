@@ -10,18 +10,10 @@ description: "Workflow-driven skill that builds gRPC streaming-RPC test suites f
 Streaming RPCs are where gRPC clients and servers most often
 diverge from the proto contract - message ordering, completion
 signalling, cancellation, and partial-failure semantics are all
-testable surfaces.
-
-Per
-[grpc.io/docs/what-is-grpc/core-concepts/](https://grpc.io/docs/what-is-grpc/core-concepts/),
-gRPC defines four streaming patterns:
-
-| Pattern | Proto |
-|---|---|
-| Unary | `rpc M(R) returns (X);` |
-| Server streaming | `rpc M(R) returns (stream X);` |
-| Client streaming | `rpc M(stream R) returns (X);` |
-| Bidirectional | `rpc M(stream R) returns (stream X);` |
+testable surfaces. gRPC defines four streaming patterns - unary,
+server-streaming, client-streaming, bidirectional - per
+[grpc.io/docs/what-is-grpc/core-concepts/](https://grpc.io/docs/what-is-grpc/core-concepts/);
+Step 1 classifies each RPC by pattern.
 
 This skill walks through producing a comprehensive test suite
 from the proto file. It composes
@@ -141,131 +133,19 @@ def test_subscribe_deadline_exceeded(stub_with_slow_fake):
 
 ### Client-streaming
 
-**Success** - Go bufconn example:
-
-```go
-func TestUpload_Success(t *testing.T) {
-    fake := &fakeUploader{accept: 3}
-    client := setupClient(t, fake)
-
-    stream, err := client.Upload(context.Background())
-    if err != nil { t.Fatal(err) }
-
-    chunks := []*pb.Chunk{{Data: []byte("a")}, {Data: []byte("b")}, {Data: []byte("c")}}
-    for _, c := range chunks {
-        if err := stream.Send(c); err != nil { t.Fatal(err) }
-    }
-    result, err := stream.CloseAndRecv()
-    if err != nil { t.Fatal(err) }
-    if result.Bytes != 3 { t.Fatalf("got %d, want 3", result.Bytes) }
-}
-```
-
-**Server completes before client finishes** - per gRPC docs:
-server response may arrive "typically but not necessarily after
-it has received all the client's messages":
-
-```go
-func TestUpload_ServerCompletesEarly(t *testing.T) {
-    fake := &fakeUploader{completeAfter: 1}
-    client := setupClient(t, fake)
-
-    stream, _ := client.Upload(context.Background())
-    stream.Send(&pb.Chunk{Data: []byte("a")})
-
-    // Sending more after server completes should yield io.EOF
-    err := stream.Send(&pb.Chunk{Data: []byte("b")})
-    if err != io.EOF {
-        t.Fatalf("got %v, want io.EOF", err)
-    }
-    result, _ := stream.CloseAndRecv()
-    if result.Bytes != 1 { t.Fatalf("got %d, want 1", result.Bytes) }
-}
-```
-
-**Empty stream**:
-
-```go
-func TestUpload_EmptyStream(t *testing.T) {
-    client := setupClient(t, &fakeUploader{})
-    stream, _ := client.Upload(context.Background())
-    result, err := stream.CloseAndRecv()
-    if err != nil { t.Fatal(err) }
-    if result.Bytes != 0 { t.Fatalf("got %d, want 0", result.Bytes) }
-}
-```
+Categories: success, server completes before client finishes (further
+`Send` yields `io.EOF`), server-side error mid-upload, client-side
+cancel before send, empty stream. Go bufconn skeletons:
+[references/test-skeletons.md](references/test-skeletons.md).
 
 ### Bidirectional
 
-Per gRPC docs: "The two streams operate independently, so
-clients and servers can read and write in whatever order they
-like."
-
-**Ordering per direction**:
-
-```go
-func TestConversation_Ordering(t *testing.T) {
-    fake := &fakeChatter{
-        clientMsgs: []*pb.Message{},
-        replies: []*pb.Reply{{Seq: 1}, {Seq: 2}, {Seq: 3}},
-    }
-    client := setupClient(t, fake)
-    stream, _ := client.Conversation(context.Background())
-
-    // Client sends 3 messages
-    for i := 0; i < 3; i++ {
-        stream.Send(&pb.Message{Seq: int32(i)})
-    }
-    stream.CloseSend()
-
-    // Server sends back 3 replies in order
-    var got []int32
-    for {
-        r, err := stream.Recv()
-        if err == io.EOF { break }
-        if err != nil { t.Fatal(err) }
-        got = append(got, r.Seq)
-    }
-    want := []int32{1, 2, 3}
-    if !reflect.DeepEqual(got, want) {
-        t.Fatalf("got %v, want %v", got, want)
-    }
-}
-```
-
-**Client closes send while still receiving**:
-
-```go
-func TestConversation_ClientHalfClose(t *testing.T) {
-    // Server keeps sending after client CloseSend()
-    fake := &fakeChatter{repliesAfterCloseSend: []*pb.Reply{{Seq: 99}}}
-    client := setupClient(t, fake)
-    stream, _ := client.Conversation(context.Background())
-    stream.Send(&pb.Message{Seq: 0})
-    stream.CloseSend()  // half-close: no more sends, still receiving
-
-    r, err := stream.Recv()
-    if err != nil { t.Fatal(err) }
-    if r.Seq != 99 { t.Fatalf("got %d, want 99", r.Seq) }
-}
-```
-
-**Cancellation from either side**:
-
-```go
-func TestConversation_ServerSideCancel(t *testing.T) {
-    fake := &fakeChatter{cancelAfterMsg: 1}
-    client := setupClient(t, fake)
-    stream, _ := client.Conversation(context.Background())
-    stream.Send(&pb.Message{Seq: 0})
-
-    _, err := stream.Recv()
-    st, _ := status.FromError(err)
-    if st.Code() != codes.Cancelled {
-        t.Fatalf("got %v, want Cancelled", st.Code())
-    }
-}
-```
+The two streams operate independently, so test each direction plus a
+concurrent send/recv case. Categories: ordering per direction, client
+closes send while still receiving (`CloseSend`), server closes send
+while still receiving, both close, deadline mid-conversation, error
+mid-conversation. Go skeletons:
+[references/test-skeletons.md](references/test-skeletons.md).
 
 ## Step 3 - Coverage matrix
 
@@ -334,9 +214,8 @@ service Chat {
 }
 ```
 
-The wire format differs: streaming uses HTTP/2's length-delimited
-frames per message; unary uses one. Old clients won't parse the
-new response. Verify breaking-change detection via
+The wire format differs, so old clients won't parse the new
+response. Verify breaking-change detection via
 `buf-cli-lint-breaking-build`
 catches this with `FILE` or `PACKAGE` category.
 

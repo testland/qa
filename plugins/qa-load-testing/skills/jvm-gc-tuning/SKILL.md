@@ -10,9 +10,8 @@ metadata:
 ## Overview
 
 JVM garbage collection is a common hidden cause of latency tail in load tests.
-A JVM application that looks CPU-bound or I/O-bound in a flame graph may instead
-be stalling on stop-the-world (STW) pauses: the request thread is live but blocked
-while the collector scans live objects. This skill walks the full diagnostic
+An application that looks CPU-bound or I/O-bound in a flame graph may instead be
+stalling on stop-the-world (STW) pauses. This skill walks the full diagnostic
 workflow from log capture through collector selection to heap sizing and tool
 analysis.
 
@@ -111,12 +110,11 @@ max GC time fraction = 1 / (1 + GCTimeRatio)
 
 `-XX:GCTimeRatio=19` targets at most 5% of CPU in GC (default for Parallel
 collector). Setting `-XX:MaxGCPauseMillis` too aggressively on G1 reduces
-young-gen size and increases GC frequency, which can hurt throughput even while
-individual pauses shrink. This is the core tradeoff: shorter pauses require more
-frequent collections.
+young-gen size and increases GC frequency: the core tradeoff is that shorter
+pauses require more frequent collections.
 
-ZGC eliminates this tradeoff for most workloads by doing nearly all work
-concurrently, at the cost of slightly higher CPU and memory overhead compared to G1
+ZGC does nearly all work concurrently, trading slightly higher CPU and memory
+overhead for near-removal of that tradeoff
 ([ZGC documentation](https://docs.oracle.com/en/java/javase/21/gctuning/z-garbage-collector.html)).
 
 ## Step 4 - Tune G1 for a pause-time target
@@ -136,15 +134,10 @@ From the
 -XX:+G1UseAdaptiveIHOP            # let G1 learn IHOP from observed marking duration
 ```
 
-### Key G1 flags
-
-| Flag | Default | Effect |
-|------|---------|--------|
-| `-XX:MaxGCPauseMillis` | 200 | Pause-time target; G1 sizes young gen to meet this with high probability |
-| `-XX:InitiatingHeapOccupancyPercent` | 45% | Triggers concurrent marking when old gen occupancy reaches this level |
-| `-XX:G1HeapRegionSize` | ergonomic (~2048 regions) | Region size 1-512 MB (power of 2); objects >= half this become humongous |
-| `-XX:G1MixedGCLiveThresholdPercent` | 85% | Regions with live occupancy above this are skipped during mixed GC |
-| `-XX:G1HeapWastePercent` | 5% | Space-reclamation phase ends when reclaimable space drops below this |
+See the key G1 flags table (defaults and effects for
+`MaxGCPauseMillis`, `InitiatingHeapOccupancyPercent`,
+`G1HeapRegionSize`, and more) in
+[references/gc-reference.md](references/gc-reference.md).
 
 **Important:** G1 is not a real-time collector. The pause target is a
 statistical goal. Setting it below 10 ms without also switching to ZGC typically
@@ -212,15 +205,10 @@ java -XX:StartFlightRecording=duration=120s,filename=recording.jfr,settings=prof
      -jar app.jar
 ```
 
-Key JFR event categories for GC analysis:
-
-| Event category | What to look for |
-|---------------|-----------------|
-| `jdk.GarbageCollection` | Duration, cause, GC ID per collection |
-| `jdk.G1HeapSummary` | Eden/survivor/old occupancy before and after |
-| `jdk.ObjectAllocationInNewTLAB` | Allocation call stacks (sampled) |
-| `jdk.ObjectAllocationOutsideTLAB` | Large object allocations (humongous) |
-| `jdk.GCHeapSummary` | Heap used/committed at collection start |
+The key JFR event categories for GC analysis (`jdk.GarbageCollection`,
+`jdk.ObjectAllocationInNewTLAB`, `jdk.ObjectAllocationOutsideTLAB`, and
+more) are listed in
+[references/gc-reference.md](references/gc-reference.md).
 
 Analyse the `.jfr` file with JDK Mission Control (GUI) or the `jfr` CLI:
 
@@ -244,15 +232,9 @@ promotion rate) from the same `-Xlog:gc*` output.
 java -jar gcviewer-1.36.jar gc.log
 ```
 
-Key metrics GCViewer surfaces:
-
-| Metric | GC health interpretation |
-|--------|-------------------------|
-| Throughput % | % of time NOT in GC; target > 95% for most services |
-| Avg pause time | Mean STW duration; should be below `MaxGCPauseMillis` |
-| Max pause time | Worst-case STW; the main driver of p99/p999 latency |
-| Allocation rate (MB/s) | Matches analysis in Step 6 |
-| Promotion rate (MB/s) | Objects escaping young gen; high rate fills old gen faster |
+The key metrics GCViewer surfaces (throughput %, avg/max pause,
+allocation and promotion rate) and how to read them are in
+[references/gc-reference.md](references/gc-reference.md).
 
 ## Step 9 - Trace the GC-pause-to-latency-tail link
 

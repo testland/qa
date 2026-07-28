@@ -12,10 +12,9 @@ form a second person can check.
 
 The cost of getting it wrong is measurable. Google reports that about 84% of
 the pass-to-fail transitions its CI observes involve a flaky test, and that
-almost 16% of its tests show some level of flakiness
-([testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html)).
-A triage step that treats every red as a defect files mostly noise; one that
-treats every red as a flake ships regressions.
+almost 16% of its tests show some level of flakiness (Google 2016). A triage
+step that treats every red as a defect files mostly noise; one that treats
+every red as a flake ships regressions.
 
 ## What this owns, and what it does not
 
@@ -39,32 +38,22 @@ It deliberately does not own:
 
 ## Terminology
 
-The ISTQB glossary defines **error** as "a human action that results in a
-defect" ([glossary.istqb.org/en_US/term/error](https://glossary.istqb.org/en_US/term/error)),
-**defect** as "an imperfection or deficiency in a work product where it does
-not meet its requirements or specifications or impairs its intended use"
-([glossary.istqb.org/en_US/term/defect](https://glossary.istqb.org/en_US/term/defect)),
-and **failure** as "an event in which a component or system does not meet its
-requirements within specified limits during its execution"
-([glossary.istqb.org/en_US/term/failure](https://glossary.istqb.org/en_US/term/failure)).
-A red test is a **failure**. Whether a **defect** sits behind it is exactly
-what this method decides.
+A red test is a **failure**: an error (a human action) introduces a defect (the
+fault in the work product), and the failure is the observed event during
+execution. Whether a defect actually sits behind this failure is exactly what
+this method decides.
 
-**The glossary has no entry for "flaky test."** Querying the glossary API for
+**The ISTQB glossary has no entry for "flaky test."** Querying its API for
 `flaky-test`, `flaky`, and `non-deterministic-test` returns 404 in all three
-cases against [glossary.istqb.org](https://glossary.istqb.org/); do not cite
-a flaky-test definition to ISTQB. The canonical definition is Martin Fowler's:
-"A test is non-deterministic when it passes sometimes and fails sometimes,
-without any noticeable change in the code, tests, or environment"
-([martinfowler.com/articles/nonDeterminism.html](https://martinfowler.com/articles/nonDeterminism.html)).
-Google's operational definition is narrower and worth keeping alongside it:
-"a test that exhibits both a passing and a failing result with the same code"
-([testing.googleblog.com](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html)).
+cases (glossary.istqb.org), so do not cite a flaky-test definition to ISTQB.
+Use Martin Fowler's canonical definition instead: "A test is non-deterministic
+when it passes sometimes and fails sometimes, without any noticeable change in
+the code, tests, or environment" (Fowler). Google's operational definition is
+narrower and worth keeping alongside it: "a test that exhibits both a passing
+and a failing result with the same code" (Google 2016).
 
-**Test environment** is "an environment containing hardware, instrumentation,
-simulators, software tools, and other support elements needed to perform a
-test" ([glossary.istqb.org/en_US/term/test-environment](https://glossary.istqb.org/en_US/term/test-environment)).
-The `environment-drift` verdict below is about that environment changing
+The `environment-drift` verdict below is about the **test environment** - the
+hardware, tooling, and support elements a test runs against - changing
 underneath a test that did not.
 
 ## Step 1 - Extract the seven signals
@@ -95,9 +84,9 @@ timeout that would otherwise capture the match.
 | Mode token | Pattern in the runner output or trace |
 |---|---|
 | `runner-crash` | `SIGSEGV`, `Segmentation fault`, `OutOfMemoryError`, `panic:`, an unhandled exception that kills the process. |
-| `assertion-mismatch` | Paired expected and actual values. googletest prints `Value of: ...` / `Actual: ...` / `Expected: ...` ([google.github.io/googletest/advanced.html](https://google.github.io/googletest/advanced.html)); xUnit, Jest, and pytest print equivalent pairs. |
+| `assertion-mismatch` | Paired expected and actual values. googletest prints `Value of: ...` / `Actual: ...` / `Expected: ...` (googletest); xUnit, Jest, and pytest print equivalent pairs. |
 | `setup-error` | A `BeforeEach`, `setUp`, `@BeforeAll`, or fixture frame in the trace. |
-| `selector-breakage` | `no such element`, the W3C WebDriver error for a locator that matches nothing ([w3.org/TR/webdriver2/#errors](https://www.w3.org/TR/webdriver2/#errors)); `NoSuchElementException`; Playwright's `strict mode violation` for a locator resolving to the wrong count ([playwright.dev/docs/locators](https://playwright.dev/docs/locators)). |
+| `selector-breakage` | `no such element`, the W3C WebDriver error for a locator that matches nothing (W3C WebDriver); `NoSuchElementException`; Playwright's `strict mode violation` for a locator resolving to the wrong count (Playwright). |
 | `environmental` | `ENOENT`, `FileNotFoundException`, a missing environment variable, `connection refused`. |
 | `timed-out` | `Timeout` or `exceeded N ms` with no other exception attached. |
 | `unclassified` | None of the above matched. |
@@ -111,8 +100,8 @@ is why. R3 and R4 below decide between them.
 Change-set proximity means files on the test's call graph changed inside the
 window, and you read the change. Google's engineering practices put the
 obligation plainly for reviewers: read and understand the change before acting
-on it ([google.github.io/eng-practices/review/reviewer/looking-for.html](https://google.github.io/eng-practices/review/reviewer/looking-for.html)).
-A diff you only counted commits in does not satisfy S6.
+on it (Google eng-practices). A diff you only counted commits in does not
+satisfy S6.
 
 ## Step 2 - Walk the rules, first match wins
 
@@ -127,9 +116,8 @@ observed S1 mode matches the flake category already recorded for it.
 
 Next step: rerun, and let the existing quarantine process handle it. No new
 triage. Fowler's advice is to quarantine non-deterministic tests out of the
-main pipeline and cap how long they may stay there
-([martinfowler.com/articles/nonDeterminism.html](https://martinfowler.com/articles/nonDeterminism.html));
-R1 only recognises that state, it does not create it.
+main pipeline and cap how long they may stay there (Fowler); R1 only
+recognises that state, it does not create it.
 
 Informal evidence does not count. A code comment saying "this one sometimes
 fails" is not a quarantine list. If the project has no detectable quarantine
@@ -198,8 +186,7 @@ Fires when **all** hold:
 Those three are the top root-cause categories in the largest published study
 of flaky-test fixes: of 161 classified fixes drawn from 201 flaky-test commits
 across 51 Apache projects, 45% were async wait, 20% concurrency, and 12% test
-order dependency (Luo et al., FSE 2014,
-[mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf)).
+order dependency (Luo et al., FSE 2014).
 
 This is the "flaking, not yet quarantined" verdict. Next step: pattern
 attribution, then quarantine if the pattern is confirmed.
@@ -271,56 +258,14 @@ Rules for the block:
 
 ## Worked example
 
-Failure: `tests/cart.spec.ts:42 - adds an item`, red on commit `e3a91f4`.
-
-Signals extracted: S1 `assertion-mismatch` (`expect(cart.count).toBe(1)`);
-S2 12 consecutive green runs before this one, 1 red in the last 50; S3 no
-co-failures in the run; S4 no clustering; S5 runner image and container tag
-unchanged; S6 `src/cart/addItem.ts` modified inside the window, changing
-`validateQty()`; S7 not on any quarantine list.
-
-R1 does not fire (S7 empty). R2 does not fire (no S5 delta, and the mode is
-`assertion-mismatch`). R3 fires: all four conditions hold.
-
-```markdown
-## Failure classification - `tests/cart.spec.ts:42 - adds an item`
-
-**Verdict:** defect
-**Confidence:** high
-**Windows used:** last 50 runs, 7 days of history, N=5 green-run threshold
-
-**Evidence:**
-- S2: 12 consecutive green runs immediately before this failure, exceeding the N=5 threshold.
-- S6: `src/cart/addItem.ts` changed in `e3a91f4..HEAD`, modifying `validateQty()`; diff read.
-- S1: `assertion-mismatch` on `expect(cart.count).toBe(1)`, not a timeout and not a network error.
-- S2: a rerun of `e3a91f4` in the history reproduced the same failure.
-
-**Recommended next step:**
-1. Capture the runner's trace artifact for the failing run if one was not retained.
-2. Draft the defect report against the team's bug schema, using the verbatim assertion as the actual value.
-3. Lock the reproduction in a committed failing test before changing production code.
-4. Route to the team that owns `src/cart/`.
-
-**Not classified as:**
-- `flaky-known` - S7 found no quarantine annotation, decorator, or flake-list entry for this test.
-- `environment-drift` - S5 shows runner image and container tag unchanged across the window, and the mode is `assertion-mismatch`, which R2 excludes.
-- `timeout` - S1 is `assertion-mismatch`, not `timed-out`.
-- `flaky-pre-incident` - S2 shows a clean 12-run green streak, so the failure is not intermittent, and S6 shows change-set proximity, which R3 claims first.
-- `flake-of-unknown-cause` - not reached; R3 matched.
-```
+A full end-to-end walk-through - the seven signals extracted, the rules
+evaluated in order, and the emitted verdict with its Not-classified-as block -
+is in [references/worked-example.md](references/worked-example.md).
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Calling every async-wait timeout a flake | Some are real: the new code path made the product slower. | R3 outranks R5 whenever S6 shows change-set proximity. |
-| Calling any test that ever flaked `flaky-known` | Conflates a formally quarantined test with one that is merely intermittent, and hides the second class entirely. | R1 fires only on a structured quarantine artifact. |
-| Inferring quarantine status from comments | "This test sometimes fails" in a comment is noise, not a decision anyone made. | S7 counts annotations, decorators, CI tags, and checked-in lists only. |
-| Verdict on a single failure with no history | One data point cannot separate a flake from a defect. | Without S2, R3 and R5 cannot be evaluated at all; say so and mark confidence low rather than picking. |
-| Classifying `environment-drift` as `defect` because the test is red | Routes to the wrong team and fills the defect tracker with false positives. | R2 is evaluated before R3. |
-| Triggering a rerun as part of classifying | Reruns change the evidence you are classifying, and Google notes that automatic reruns train developers to ignore real failures ([testing.googleblog.com](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html)). | Recommend the rerun in the verdict; do not perform it during triage. |
-| Classifying from commit subjects instead of the diff | The hypothesis becomes unfalsifiable, and S6 is unsatisfied. | Read the change ([google.github.io/eng-practices](https://google.github.io/eng-practices/review/reviewer/looking-for.html)), or mark S6 unevaluated. |
-| Stacking two verdicts | "Probably a flake and maybe a defect" routes nowhere and nobody owns it. | Single-valued by construction: the earliest matching rule wins. |
+The catalogue of triage anti-patterns, each with why it fails and the rule that
+prevents it, is in [references/anti-patterns.md](references/anti-patterns.md).
 
 ## Confidence and limits
 
@@ -340,3 +285,14 @@ R1 does not fire (S7 empty). R2 does not fire (no S5 delta, and the mode is
 - **One failure per pass.** For an overnight run with forty reds, run the
   method forty times. It is not a report-summarising technique, and batching
   it destroys the per-failure signal set the rules depend on.
+
+## References
+
+- Google 2016 - "Flaky Tests at Google and How We Mitigate Them": https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
+- Fowler - "Eradicating Non-Determinism in Tests": https://martinfowler.com/articles/nonDeterminism.html
+- ISTQB glossary: https://glossary.istqb.org/
+- googletest advanced guide: https://google.github.io/googletest/advanced.html
+- W3C WebDriver errors: https://www.w3.org/TR/webdriver2/#errors
+- Playwright locators: https://playwright.dev/docs/locators
+- Google eng-practices, code review: https://google.github.io/eng-practices/review/reviewer/looking-for.html
+- Luo et al., "An Empirical Analysis of Flaky Tests," FSE 2014: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf

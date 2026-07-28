@@ -9,25 +9,18 @@ Resolve a named framework to its criteria list, score each criterion against the
 evidence that actually exists, and record every excluded criterion with the four
 fields that make an exclusion survivable under challenge.
 
-## Read this before producing any output
+## This produces a readiness self-assessment only
 
-The result is a **readiness self-assessment**. It is not certification, not an
+The result is a **readiness self-assessment**: not certification, not an
 attestation, not an audit opinion, and not legal advice. Nothing produced here
 demonstrates compliance to a regulator, a customer, or a court. It is an internal
-gap list that tells a team what to fix before a qualified party looks.
-
-Only the parties below can attest, and none of them is you:
-
-| Framework | Who attests | What the attestation is |
-|---|---|---|
-| SOC 2 | A CPA firm performing an examination under AICPA attestation standards (the illustrative type 2 report is written to meet [SSAE-21 reporting requirements](https://www.aicpa-cima.com/resources/download/illustrative-service-auditors-soc-2-r-type-2-report/)) | A report on controls over a defined scope and period. Not a pass/fail certificate, and there is no such thing as being "SOC 2 certified" |
-| ISO/IEC 27001 | A certification body whose competence an accreditation body has independently confirmed ([iso.org](https://www.iso.org/standard/27001)) | A certificate against a stated edition |
-| PCI DSS | A Qualified Security Assessor: "independent security organizations that have been qualified and trained by PCI SSC to perform PCI DSS assessments" ([pcisecuritystandards.org](https://www.pcisecuritystandards.org/standards/pci-dss/)) | An assessment against a stated version |
-| GDPR | A supervisory authority, on enforcement | No routine attestation exists |
-| CCPA/CPRA | The California Privacy Protection Agency and the Attorney General; consumers have been able to file CCPA complaints with the agency since July 1, 2023 ([oag.ca.gov](https://oag.ca.gov/privacy/ccpa)) | No routine attestation exists |
+gap list that tells a team what to fix before a qualified party looks, and only a
+qualified party can attest - none of them is you.
 
 Write that framing into the artifact itself, at the top, every time. A readiness
-matrix that circulates without it gets mistaken for evidence of compliance.
+matrix that circulates without it gets mistaken for evidence of compliance. For
+who can attest per framework and for precise result wording, see
+[references/frameworks.md](references/frameworks.md).
 
 ## What this owns, and what it does not
 
@@ -54,47 +47,13 @@ rather than from memory.
 | PCI DSS | The exact version, for example PCI DSS v4.0.1 | [pcisecuritystandards.org/document_library](https://www.pcisecuritystandards.org/document_library/) |
 | ISO/IEC 27001 | ISO/IEC 27001:2022 (Edition 3, published 2022-10) | [iso.org/standard/27001](https://www.iso.org/standard/27001) |
 
-Per-framework notes that change how the list is built:
-
-- **GDPR.** The articles group into Chapter II Principles (Articles 5 to 11),
-  Chapter III Rights of the data subject (Articles 12 to 23), and Chapter IV
-  Controller and processor (Articles 24 to 43), per the structure published at
-  [gdpr-info.eu](https://gdpr-info.eu/). Which chapters are in scope depends on
-  whether the entity acts as controller, processor, or both. Decide that first,
-  in writing, because it determines half the exclusions later.
-- **CCPA/CPRA.** Proposition 24 (the CPRA) amended the CCPA with protections that
-  began 1 January 2023, including a right to correct inaccurate information and a
-  right to limit use of sensitive personal information; implementing regulations
-  sit at Title 11, Division 6, Section 7001 et seq. of the California Code of
-  Regulations ([oag.ca.gov](https://oag.ca.gov/privacy/ccpa)). Score against the
-  statute and the regulations, not the statute alone.
-- **SOC 2.** The criteria are organized as common criteria plus category-specific
-  criteria for security, availability, processing integrity, confidentiality, and
-  privacy. **The criterion identifiers are not reproduced here**: AICPA
-  distributes the Trust Services Criteria document itself, its numbering is
-  authoritative there, and inventing criterion IDs is worse than having none.
-  Read them out of the [TSC document](https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022)
-  and paste the real IDs into the matrix. Also record which categories are in
-  scope, since only security is common to every SOC 2 engagement.
-- **HIPAA Security Rule.** Administrative safeguards are at
-  [§164.308](https://www.ecfr.gov/current/title-45/section-164.308), physical at
-  [§164.310](https://www.ecfr.gov/current/title-45/section-164.310), technical at
-  [§164.312](https://www.ecfr.gov/current/title-45/section-164.312). The Privacy
-  Rule is a different subpart (Subpart E, §§164.500 to 164.535, including
-  [§164.502](https://www.ecfr.gov/current/title-45/section-164.502)) and Breach
-  Notification is another (Subpart D, §§164.400 to 164.414); do not silently mix
-  them into one Security Rule matrix.
-- **PCI DSS.** v4.0.1 was published 11 June 2024 as a limited revision of v4.0
-  (published March 2022) with "no additional or deleted requirements"
-  ([PCI SSC](https://blog.pcisecuritystandards.org/just-published-pci-dss-v4-0-1)).
-  A matrix built against v3.2.1 numbering does not transfer, so state the version
-  in the header and rebuild rather than remap.
-- **ISO/IEC 27001.** The current standard is Edition 3, published 2022-10
-  ([iso.org](https://www.iso.org/standard/27001)). Read the Annex A control list
-  out of the edition you are being assessed against, not out of a blog summary.
-  ISO asks that the standard be referred to by full reference, for example
-  "certified to ISO/IEC 27001:2022" rather than "certified to ISO 27001"; carry
-  that precision into the matrix header.
+Per-framework notes that change how the list is built - GDPR chapters by
+controller/processor role, the CPRA amendments to score against, why SOC 2
+criterion IDs must be pasted from the AICPA document rather than invented, keeping
+the HIPAA Security/Privacy/Breach subparts unmixed, the PCI DSS v4.0.1 version pin,
+and the ISO/IEC 27001:2022 full-reference rule - are in
+[references/frameworks.md](references/frameworks.md). Read the note for whichever
+framework is in play before building its list.
 
 ### Required versus addressable (HIPAA specifically)
 
@@ -273,34 +232,21 @@ two cannot be created in month six.
 | Scope exclusion used to shrink the workload | The exclusion gets challenged, the work comes back, and the schedule is gone | Four mandatory fields with a named approver (Step 3) |
 | Exclusions with no re-review date | The scope drifts and stale exclusions silently persist across cycles | Expiry voids the exclusion automatically (Step 3) |
 | Reusing last cycle's matrix after a version change | Criterion numbering and content both moved | Rebuild from the source of record (Step 5, item 5) |
-| Circulating the matrix as proof of compliance | It is a self-assessment; presenting it as attestation misleads the recipient | Keep the disclaimer in the artifact (Step 4 template) |
-| Calling the result "certified" or "compliant" | No self-assessment produces either state | Use "readiness", and name the version and window |
+| Circulating the matrix as proof of compliance, or calling it "certified" / "compliant" | It is a self-assessment; no self-assessment produces certification or a compliance claim | Keep the disclaimer in the artifact and use "readiness" with the version and window (Step 4) |
 
 ## Naming precision in the output
 
-Compliance wording carries legal weight, so the matrix should say only what is
-true:
-
-- SOC 2 is an **examination over a defined scope and period**, reported under
-  AICPA attestation standards
-  ([illustrative type 2 report](https://www.aicpa-cima.com/resources/download/illustrative-service-auditors-soc-2-r-type-2-report/)).
-  Never write "SOC 2 certified" or "passed SOC 2".
-- ISO asks for the full reference: "certified to ISO/IEC 27001:2022", not
-  "certified to ISO 27001" ([iso.org](https://www.iso.org/standard/27001)).
-- PCI DSS results are stated with the version and the assessing QSA
-  ([pcisecuritystandards.org](https://www.pcisecuritystandards.org/standards/pci-dss/)).
-- "GDPR compliant" and "CCPA compliant" are not attestable states. Scope the
-  claim to the articles or code sections that were assessed, over the window they
-  were assessed in.
+Precise result wording (never "SOC 2 certified", the ISO/IEC 27001:2022
+full-reference rule, stating PCI DSS results with the version and QSA, and why
+"GDPR compliant" / "CCPA compliant" are not attestable states) is in
+[references/frameworks.md](references/frameworks.md).
 
 ## Limitations
 
-- The criteria lists here are pointers to sources of record, not copies of them.
-  Regulatory text and the AICPA and ISO criteria documents change on their own
-  schedules; re-read the source at the start of each cycle.
-- SOC 2 criterion identifiers are deliberately absent because the authoritative
-  numbering lives inside a document AICPA distributes directly. Take the IDs from
-  there.
-- Applying a framework to a specific business, and deciding what is genuinely out
-  of scope, are legal determinations. Scoring surfaces the question; a qualified
-  adviser answers it.
+- Criteria lists here are pointers to sources of record, not copies. Regulatory,
+  AICPA, and ISO texts change on their own schedules; re-read the source each cycle.
+- SOC 2 criterion IDs are deliberately absent; the authoritative numbering lives in
+  the AICPA document. Paste the real IDs from there.
+- Applying a framework to a specific business, and deciding what is out of scope,
+  are legal determinations. Scoring surfaces the question; a qualified adviser
+  answers it.

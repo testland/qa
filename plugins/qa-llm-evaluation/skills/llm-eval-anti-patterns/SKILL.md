@@ -55,28 +55,11 @@ the suite uses, locate these five things first:
    grades it, and with what instructions.
 5. **The gate.** The CI step that turns per-case results into a merge decision.
 
-Harness vocabulary differs but the five slots are always present. In
-Promptfoo they are `tests`, `providers`, `assert`, the grading provider, and
-the CI job (per
-[promptfoo.dev/docs/configuration/guide](https://promptfoo.dev/docs/configuration/guide/)
-and
-[promptfoo.dev/docs/configuration/expected-outputs](https://promptfoo.dev/docs/configuration/expected-outputs/)).
-In LangSmith they are the dataset, the target application, the evaluators
-(human review, code-based rules, LLM-as-judge, or pairwise comparison), and
-the experiment (per
-[docs.langchain.com/langsmith/evaluation](https://docs.langchain.com/langsmith/evaluation)).
-In Braintrust an eval is data plus a task plus scorers, recorded as an
-experiment that CI compares over time to catch regressions (per
-[braintrust.dev/docs/guides/evals](https://www.braintrust.dev/docs/guides/evals)).
-In DeepEval they are the parameterized test data, the metric objects, and
-their thresholds (per
-[deepeval.com/docs/metrics-llm-evals](https://deepeval.com/docs/metrics-llm-evals)).
-In OpenAI Evals they are the JSON data file and the YAML eval parameters (per
-[github.com/openai/evals](https://github.com/openai/evals)).
-
-Where a check below names an exact key, that key is verified in the linked
-documentation for that one harness. Everywhere else the description is
-deliberately structural so it transfers.
+The five slots are always present; the per-harness vocabulary for Promptfoo,
+LangSmith, Braintrust, DeepEval, and OpenAI Evals is mapped in
+[references/harness-mapping.md](references/harness-mapping.md). Where a check
+below names an exact key, that key is verified in that harness's linked docs;
+everywhere else the description is deliberately structural so it transfers.
 
 ---
 
@@ -91,28 +74,18 @@ evaluated capability is the flag. **That number is a practitioner
 convention, not a statistical threshold** - use it as a prompt to compute the
 real uncertainty, not as a target.
 
-**Why it invalidates.** An eval is an experiment, and its questions are a
-sample from an unseen population, so the reported score carries sampling
-error that must be quantified rather than assumed away
-([Miller, *Adding Error Bars to Evals*, arXiv:2411.00640](https://arxiv.org/abs/2411.00640)).
-With a handful of cases the confidence interval swallows any difference the
-suite is being used to detect, so a pass rate moving from 90% to 80% is
-indistinguishable from noise. The same paper's framing applies to the run
-count as well as the case count: a single run of a stochastic model is one
-draw, and reporting it as *the* score hides variance that resampling would
-expose. If the harness can repeat a case set, repeat it, and report a
-central estimate with an interval instead of a bare number.
+**Why it invalidates.** An eval is an experiment whose cases are a sample, so
+the score carries sampling error (Miller 2024). With a handful of cases the
+confidence interval swallows the difference the suite is meant to detect, so a
+pass rate moving from 90% to 80% is indistinguishable from noise. A single run
+of a stochastic model is one draw; if the harness can repeat the case set,
+repeat it and report a central estimate with an interval, not a bare number.
 
-**Related risk when you add coverage.** The fastest way to grow a case set is
-to import a public benchmark, which risks test-set contamination: the
-evaluation data may already sit in the model's pretraining corpus. This is
-measurable and real, and it separates into memorization (the model retains
-the contaminated data) and exploitation (it uses that data to score better on
-the downstream task), with duplication count and model size affecting the two
-differently
-([Magar and Schwartz, *Data Contamination: From Memorization to Exploitation*, ACL 2022](https://aclanthology.org/2022.acl-short.18/)).
-Prefer cases written against your own product surface, or drawn from
-production traffic, over anything published.
+**Related risk when adding coverage.** Growing a case set by importing a public
+benchmark risks test-set contamination - the eval data may already sit in the
+model's pretraining corpus, and the effect separates into memorization and
+exploitation (Magar and Schwartz 2022). Prefer cases written against your own
+product surface, or drawn from production traffic.
 
 **Fix.** Tag every case with the capability it exercises. Grow thin
 capabilities with new cases sourced from your own traffic. Never delete cases
@@ -131,11 +104,11 @@ providers:
   - vertex:gemini-2.0-flash-exp
 ```
 
-**Why it invalidates.** Nothing in a single-model run separates "the prompt is
-good" from "this model happens to tolerate this prompt". The suite cannot
-answer the question most often asked of it, which is whether a model swap is
-safe. This is a practitioner observation about eval design rather than a
-research finding, and it is worth a Warning rather than a block.
+**Why it invalidates.** A single-model run cannot separate "the prompt is good"
+from "this model happens to tolerate this prompt", so it cannot answer the
+question most often asked of the suite: whether a model swap is safe. This is a
+practitioner observation about eval design, not a research finding - a
+**Warning**, not a block.
 
 **Fix.** Add at least one second model from a different family and let the
 same cases run against both. Where a second model is genuinely out of scope
@@ -156,12 +129,11 @@ the model-graded family includes `llm-rubric`, `g-eval`, `factuality`, and
 A summarization, rewriting, or explanation case whose assertion list contains
 only names from the first family is the pattern.
 
-**Why it invalidates.** This is the eval-theater case, and the reason it is
-**Critical**. An `equals` assertion on generated prose almost always fails on
-a trivial wording change and almost always passes only when the output is
-byte-identical to a fixture. Either way the assertion is measuring string
-identity, not the quality claim written next to it. The suite reports on a
-property nobody cares about while appearing to guard the one they do.
+**Why it invalidates.** An `equals` assertion on generated prose passes only on
+a byte-identical fixture and fails on trivial wording changes, so it measures
+string identity, not the quality claim written next to it. This is the
+eval-theater case, and why it is **Critical**: the suite guards a property
+nobody cares about while appearing to guard the one they do.
 
 **Fix.** Replace the exact-match assertion with a rubric-graded one that
 states the actual acceptance criterion, plus a similarity check for
@@ -187,12 +159,11 @@ Other harnesses expose a comparable scorer under a different name; look for
 any scorer whose output is a continuous score against a reference rather than
 a boolean.
 
-**Why it invalidates.** Without it the suite has only two modes for
-open-ended output: brittle exact match, or a rubric judge with no anchor to a
-reference answer. Similarity fills the middle, catching drift away from a
-known-good response that a rubric grader rates as "acceptable" in isolation.
-Missing it is a **Warning**: the suite still measures something, it just
-cannot see gradual regression.
+**Why it invalidates.** Without it, open-ended output has only two modes:
+brittle exact match, or a rubric judge with no anchor to a reference answer.
+Similarity fills the middle, catching drift a rubric grader rates as
+"acceptable" in isolation. Missing it is a **Warning** - the suite still
+measures something, it just cannot see gradual regression.
 
 **Fix.** Add a similarity assertion against the reference answer for every
 paraphrase-tolerant case, and set the threshold from measured data rather
@@ -207,29 +178,19 @@ Anti-patterns 3 and 4 both push work onto a grading model. That model is not
 an oracle. It is a second system under test, and until it has been validated
 against human labels its verdicts are not evidence.
 
-**Known, documented failure modes.** LLM judges exhibit position bias,
-verbosity bias, self-enhancement bias, and limited reasoning ability
-([Zheng et al., *Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena*, NeurIPS 2023 Datasets and Benchmarks, arXiv:2306.05685](https://arxiv.org/abs/2306.05685)).
-Self-preference is not a rounding error: models score their own outputs
-higher than others' outputs that human annotators rate as equal quality, and
-the strength of that bias correlates linearly with the model's ability to
-recognize its own text
-([Panickssery, Bowman and Feng, *LLM Evaluators Recognize and Favor Their Own Generations*, arXiv:2404.13076](https://arxiv.org/abs/2404.13076)).
-So a suite that grades a model's output with the same model, or with a
-sibling from the same family, has a bias pointed directly at the number it
-reports.
+**Known, documented failure modes.** LLM judges show position, verbosity, and
+self-enhancement bias plus limited reasoning (Zheng 2023); self-preference is
+real and correlates linearly with a model's ability to recognize its own text
+(Panickssery 2024). So grading a model's output with the same model or a
+same-family sibling points a bias directly at the number reported.
 
 **Validation is the entry fee, not a nice-to-have.** LLM-generated evaluators
-inherit the problems of the models they evaluate and require human validation
-before their scores mean anything; the same work also documents *criteria
-drift*, where the grading criteria users actually want turn out to depend on
-the outputs they have seen rather than being definable a priori
-([Shankar et al., *Who Validates the Validators?*, arXiv:2404.12272](https://arxiv.org/abs/2404.12272)).
-The corresponding positive result is that a strong judge, once measured, can
-reach over 80% agreement with human preferences, which is about the level
-humans agree with each other (Zheng et al., above). The point is that the
-agreement rate is a number you have to measure for *your* rubric and *your*
-outputs, not one you can assume.
+need human validation before their scores mean anything, and *criteria drift*
+means the grading criteria you actually want often depend on the outputs
+already seen (Shankar 2024). A strong judge, once measured, can reach over 80%
+agreement with human preferences - about the human-human rate (Zheng 2023) -
+but that agreement rate is one you measure for *your* rubric and outputs, not
+one you can assume.
 
 **What to check in the eval definition.**
 
@@ -268,21 +229,17 @@ specifically so CI can catch regressions before they reach production (per
 [braintrust.dev/docs/guides/evals](https://www.braintrust.dev/docs/guides/evals)).
 
 **Why it invalidates.** This is the second **Critical**. Absolute thresholds
-drift down quietly. A suite gated at "85% must pass" reports success at 85.1%
-whether the previous run was 85.2% or 97%. Every real regression that lands
-above the floor is invisible, and the floor itself gets lowered whenever it
-starts failing, because lowering it is the path of least resistance. Without
-a stored baseline there is no artifact that records what the suite used to
+drift down quietly: a suite gated at "85% must pass" reports success at 85.1%
+whether the previous run was 85.2% or 97%, so every regression above the floor
+is invisible, and the floor itself gets lowered whenever it starts failing.
+Without a stored baseline there is no artifact recording what the suite used to
 do, so nobody can prove a regression happened.
 
 **Why the comparison itself needs care.** Comparing two runs is a statistical
-comparison of two samples, not a subtraction. Treat evals as experiments and
-use the paired structure of running both variants on the same questions,
-which measures the difference far more precisely than comparing two
-independent scores
-([Miller, arXiv:2411.00640](https://arxiv.org/abs/2411.00640)). A gate that
-fires on any drop at all will fire constantly on a stochastic system; a gate
-that fires only on drops beyond the noise band is the one worth having.
+comparison of two samples, not a subtraction; the paired structure of running
+both variants on the same questions measures the difference far more precisely
+(Miller 2024). A gate that fires on any drop fires constantly on a stochastic
+system; one that fires only on drops beyond the noise band is worth having.
 
 **Fix.** Store the baseline run as an artifact keyed to the default branch.
 Have CI run the same case set against both the baseline and the candidate,
@@ -308,12 +265,11 @@ assert:
 Harnesses without a native assertion still record per-run token usage and
 duration; if neither is checked anywhere, that is the finding.
 
-**Why it invalidates.** Cost and latency are quality attributes of the
-system, not overhead of the eval. A prompt change that doubles token spend
-while holding accuracy flat is a regression the suite silently approves. The
-eval's own bill is the secondary concern: a model-graded assertion invokes a
-judge per case, so every case carries at least one extra inference, and an
-unbounded suite grows until someone notices the invoice.
+**Why it invalidates.** Cost and latency are quality attributes of the system,
+not overhead of the eval. A prompt change that doubles token spend while
+holding accuracy flat is a regression the suite silently approves. Secondary
+concern: a model-graded assertion invokes a judge per case, so an unbounded
+suite grows until someone notices the invoice.
 
 **Fix.** Add a per-case latency ceiling and a per-case cost ceiling derived
 from the product's actual budget, not from a round number. Add a per-run
@@ -336,11 +292,10 @@ automatically the only safe form. Check the provider's documentation and
 record what you found.
 
 **Why it invalidates.** If an identifier resolves to a moving target, every
-historical result in the suite was produced by an unknown system, the
-baseline in anti-pattern 5 is not reproducible, and a regression that appears
-overnight cannot be attributed to the code change under review. It is a
-**Warning** rather than a Critical because the suite still measures something
-real on the day it runs.
+historical result was produced by an unknown system, the anti-pattern 5
+baseline is not reproducible, and an overnight regression cannot be attributed
+to the code change under review. It is a **Warning** rather than a Critical
+because the suite still measures something real on the day it runs.
 
 **Fix.** Use the pinned form the provider documents, for the system under
 test and for the judge. Record the resolved identifier in the run artifact so
@@ -366,18 +321,14 @@ disclosure, and stereotypes and discrimination, and can convert its findings
 into a reusable test suite (per
 [legacy-docs.giskard.ai open-source LLM scan](https://legacy-docs.giskard.ai/en/stable/open_source/scan/scan_llm/index.html)).
 
-**Why it invalidates.** It does not invalidate the functional result, which
-is why this is **Info**. It bounds what the suite can claim: a green run
-means the system behaves on inputs someone thought to write down. Automated
-adversarial generation exists because manual authorship does not scale, and
-it works: using language models to generate test cases against a 280B-parameter
-chatbot uncovered tens of thousands of offensive replies, along with private
-contact information, training-data leakage, and harms that emerged only across
-multi-turn conversations
-([Perez et al., *Red Teaming Language Models with Language Models*, arXiv:2202.03286](https://arxiv.org/abs/2202.03286)).
-The same paper is explicit that this is one tool among several, not a
-complete safety answer, so treat adversarial coverage as raising the floor
-rather than closing the question.
+**Why it invalidates.** It does not invalidate the functional result, which is
+why this is **Info**. It bounds what the suite can claim: a green run means the
+system behaves on inputs someone thought to write down. Automated adversarial
+generation works - LM-generated test cases against a 280B-parameter chatbot
+uncovered tens of thousands of offensive replies plus PII and training-data
+leakage (Perez 2022) - but that same work is explicit it is one tool among
+several, so treat adversarial coverage as raising the floor, not closing the
+question.
 
 **Fix.** Add a red-team case set alongside the functional one, kept separate
 so a safety failure is legible as a safety failure. Promote every production
@@ -470,7 +421,15 @@ next action. Rules that keep the report usable:
 - The `< 10 cases per capability` figure and the three-level severity scheme
   are review conventions, not standards. The statistical work of deciding how
   many cases you actually need belongs to the uncertainty analysis in
-  [Miller, arXiv:2411.00640](https://arxiv.org/abs/2411.00640).
+  Miller 2024.
 - Judge-versus-human agreement rates are specific to a rubric, an output
   distribution, and a judge model. A rate published in a paper is evidence
   that measuring it is worthwhile, not a substitute for measuring yours.
+
+## References
+
+- Full academic citations for every parenthetical author-year token above
+  (Miller 2024, Magar and Schwartz 2022, Zheng 2023, Panickssery 2024,
+  Shankar 2024, Perez 2022): [references/citations.md](references/citations.md).
+- Per-harness slot mapping (Promptfoo, LangSmith, Braintrust, DeepEval, OpenAI
+  Evals): [references/harness-mapping.md](references/harness-mapping.md).

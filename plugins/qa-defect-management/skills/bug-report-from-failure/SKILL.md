@@ -7,10 +7,9 @@ description: "On-demand builder that converts a SINGLE test failure record (JUni
 
 ## Overview
 
-A test failure produces structured data (XML, JSON, HTML) that
-contains everything a triager needs - assertion, stack, test name,
-environment - yet most teams write bug reports by hand, dropping
-context. This workflow ingests the failure record and emits a
+A test failure produces structured data (XML, JSON, HTML) with
+everything a triager needs - assertion, stack, test name,
+environment. This workflow ingests that record and emits a
 ready-to-file bug spec.
 
 It composes:
@@ -50,64 +49,10 @@ The skill accepts these inputs (auto-detected by extension):
 | Playwright HTML report | Playwright trace | `report.json` inside the HTML bundle |
 | TestNG XML | TestNG | similar to JUnit; per [testng.org](https://testng.org/) |
 
-### JUnit XML parser
-
-```python
-import xml.etree.ElementTree as ET
-
-def parse_junit(path):
-    tree = ET.parse(path)
-    failures = []
-    for testcase in tree.iter("testcase"):
-        f = testcase.find("failure") or testcase.find("error")
-        if f is None:
-            continue
-        failures.append({
-            "test": f"{testcase.get('classname')}::{testcase.get('name')}",
-            "duration_s": float(testcase.get("time", 0)),
-            "type": f.get("type") or "Failure",
-            "message": f.get("message") or "",
-            "stack": f.text or "",
-            "system_out": (testcase.findtext("system-out") or "").strip(),
-        })
-    return failures
-```
-
-The JUnit XML schema is informal but stable; the Ant /
-xUnit-family agreed-on tags are `testsuites`, `testsuite`,
-`testcase`, `failure`, `error`, `skipped`, `system-out`,
-`system-err`. Per [llg.cubic.org/docs/junit/](https://llg.cubic.org/docs/junit/),
-the failure element's `type` attribute carries the assertion
-class (e.g., `AssertionError`).
-
-### Allure JSON
-
-Allure stores per-test JSON files in `allure-results/`. The shape:
-
-```json
-{
-  "uuid": "...",
-  "name": "test_checkout_with_promo",
-  "fullName": "tests.checkout.test_checkout_with_promo",
-  "status": "failed",
-  "statusDetails": {
-    "message": "AssertionError: expected $22.49, got $24.99",
-    "trace": "Traceback (most recent call last):\n  File..."
-  },
-  "labels": [
-    {"name": "suite", "value": "checkout"},
-    {"name": "severity", "value": "critical"},
-    {"name": "feature", "value": "promo-codes"}
-  ],
-  "attachments": [
-    {"name": "screenshot", "source": "abc123-attachment.png", "type": "image/png"}
-  ]
-}
-```
-
-Per [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/).
-Allure's labels are first-class; the skill harvests `severity`,
-`feature`, `suite`.
+Parser bodies and per-format field shapes (JUnit, Allure, pytest,
+Playwright, TestNG) live in [references/parsers.md](references/parsers.md).
+`parse_junit(path)` returns one dict per failing testcase; Allure's
+first-class `severity` / `feature` / `suite` labels are harvested when present.
 
 ## Step 2 - Extract classification fields
 
@@ -143,57 +88,11 @@ def infer_severity(failure_type, message):
 
 ## Step 3 - Render the Markdown body
 
-Standard template - consumed verbatim by every platform runner:
-
-```markdown
-## Test failure
-
-**Test:** `<class>::<test>`
-**Suite:** <suite>
-**Duration:** <duration> s
-**Environment:** <env from CI vars: branch, commit, OS, browser>
-
-### Assertion
-
-```
-<failure.message>
-```
-
-### Stack trace
-
-```
-<failure.stack>
-```
-
-### Artefacts
-
-- Screenshot: <link or attachment ref>
-- Video: <link>
-- HAR: <link>
-- CI run: <link>
-- Test source: <github permalink at commit sha>
-
-### Classification (proposed - triager to confirm)
-
-| Field | Value |
-|---|---|
-| Severity | <inferred> |
-| Priority | <inferred> |
-| Defect type (IEEE 1044) | <inferred> |
-| Root cause (CTAL-TA) | (triager to assign) |
-| Component | <inferred> |
-| Suite | <inferred> |
-
-### Reproduction
-
-1. Check out `<commit>`
-2. Run: `<command>`
-3. Observe: <one-line description>
-
-### History
-
-<dupe-search result: any prior occurrences of this test failing in last N days>
-```
+`render_body(failure, env)` emits a standard Markdown block consumed
+verbatim by every platform runner - test name, assertion, stack,
+environment, artefact links, a proposed-classification table (flagged
+"triager to confirm"), reproduction steps, and dupe history. Full
+template: [references/spec-template.md](references/spec-template.md).
 
 ## Step 4 - Search for duplicates
 
@@ -342,11 +241,7 @@ for f in failures:
 - Allure framework results format - 
   [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/).
 - TestNG XML - [testng.org](https://testng.org/).
-- Composed:
-  `bug-lifecycle-reference`,
-  `severity-vs-priority-reference`,
-  `defect-taxonomy-istqb`.
-- Backend skills:
-  `jira-bug-workflow-runner`,
-  `linear-bug-workflow-runner`,
-  `github-issues-bug-workflow`.
+- Parser bodies and render template:
+  [references/parsers.md](references/parsers.md),
+  [references/spec-template.md](references/spec-template.md).
+- Composed / backend skills are listed in the Overview.

@@ -91,155 +91,95 @@ statement is a Warning or a Critical.
 
 ### Check 1 - Index build without the concurrent variant (PostgreSQL)
 
-A plain `CREATE INDEX` acquires a `SHARE` lock, which per the
-[PostgreSQL explicit-locking reference](https://www.postgresql.org/docs/current/explicit-locking.html)
-"protects a table against concurrent data changes" and is "Acquired by
-`CREATE INDEX` (without `CONCURRENTLY`)". The
-[CREATE INDEX reference](https://www.postgresql.org/docs/current/sql-createindex.html)
-puts the effect plainly: "Other transactions can still read the table, but
-if they try to insert, update, or delete rows in the table they will block
-until the index build is finished."
-
-`CREATE INDEX CONCURRENTLY` avoids that, at a cost the same page states:
-PostgreSQL "must perform two scans of the table, and in addition it must
-wait for all existing transactions that could potentially modify or use the
-index to terminate", and "a regular `CREATE INDEX` command can be performed
-within a transaction block, but `CREATE INDEX CONCURRENTLY` cannot". It
-also warns that on failure the command "will fail but leave behind an
-'invalid' index" that "will be ignored for querying purposes because it
-might be incomplete; however it will still consume update overhead"
+A plain `CREATE INDEX` takes a `SHARE` lock: "Other transactions can still
+read the table, but if they try to insert, update, or delete rows in the
+table they will block until the index build is finished"
+([sql-createindex](https://www.postgresql.org/docs/current/sql-createindex.html),
+[explicit-locking](https://www.postgresql.org/docs/current/explicit-locking.html)).
+`CREATE INDEX CONCURRENTLY` avoids the write block but "must perform two
+scans of the table" and "cannot" run inside a transaction block; on failure
+it leaves an "invalid" index that "will still consume update overhead"
 ([sql-createindex](https://www.postgresql.org/docs/current/sql-createindex.html)).
 
-Classify a plain `CREATE INDEX` on a PostgreSQL target as category 3.
-Warning on a table with no size signal, Critical when a size signal shows
-a large table. The transaction-block restriction matters: a migration
-runner that wraps each migration in a transaction cannot run the concurrent
-form, so recommending it also means recommending the statement move out of
-the transactional path.
+Classify a plain `CREATE INDEX` on PostgreSQL as category 3: Warning with no
+size signal, Critical on a large table. Because the concurrent form cannot
+run in a transaction, recommending it also means moving the statement out of
+the migration runner's transactional path.
 
-**This check does not transfer to MySQL.** Per the
-[MySQL 8.0 InnoDB online DDL operations reference](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html),
-adding a secondary index is In Place, permits concurrent DML, and does not
-rebuild the table: "The table remains available for read and write
-operations while the index is being created." On MySQL 8.0 a plain
-`ADD INDEX` is category 1, Info.
+**This check does not transfer to MySQL.** Adding a secondary index on MySQL
+8.0 InnoDB is In Place and permits concurrent DML: "The table remains
+available for read and write operations while the index is being created"
+([innodb-online-ddl-operations](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html)).
+A plain `ADD INDEX` is category 1, Info.
 
 ### Check 2 - Full table rewrite under an exclusive lock
 
-The
-[PostgreSQL ALTER TABLE reference](https://www.postgresql.org/docs/current/sql-altertable.html)
-states the baseline: "An `ACCESS EXCLUSIVE` lock is acquired unless
-explicitly noted." That mode, per
-[explicit-locking](https://www.postgresql.org/docs/current/explicit-locking.html),
-"Conflicts with locks of all modes" and "guarantees that the holder is the
-only transaction accessing the table in any way", so it blocks reads as
-well as writes.
-
-A rewrite on top of that lock is what turns a fast statement into an
-outage. From
-[sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html):
+`ALTER TABLE` takes an `ACCESS EXCLUSIVE` lock "unless explicitly noted",
+which "Conflicts with locks of all modes", so it blocks reads as well as
+writes ([sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html),
+[explicit-locking](https://www.postgresql.org/docs/current/explicit-locking.html)).
+A rewrite under that lock is what turns a fast statement into an outage
+([sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html)):
 
 - Type change: "Changing the type of an existing column will normally cause
-  the entire table and its indexes to be rewritten." The exception is
-  narrow: "if the `USING` clause does not change the column contents and
-  the old type is either binary coercible to the new type or an
-  unconstrained domain over the new type, a table rewrite is not needed.
-  However, indexes will still be rebuilt unless the system can verify that
-  the new index would be logically equivalent to the existing one."
-- Column addition with certain defaults: "Adding a column with a volatile
-  `DEFAULT` (e.g., `clock_timestamp()`), a stored generated column, an
-  identity column, or a column with a domain data type that has constraints
-  will cause the entire table and its indexes to be rewritten. Adding a
-  virtual generated column never requires a rewrite."
+  the entire table and its indexes to be rewritten", except a binary-coercible
+  `USING`-less change, which skips the rewrite but still rebuilds indexes.
+- Certain defaults: a volatile `DEFAULT`, a stored generated column, an
+  identity column, or a constrained domain type "will cause the entire table
+  and its indexes to be rewritten"; a virtual generated column never does.
 
-**Version gate.** The constant-default case is the one that changed.
-PostgreSQL 11 shipped "Allow `ALTER TABLE` to add a column with a non-null
-default without doing a table rewrite", noting "This is enabled when the
-default value is a constant"
-([PostgreSQL 11 release notes](https://www.postgresql.org/docs/release/11.0/)).
-The current manual states the resulting behavior: with a non-volatile
-`DEFAULT` "the default value is evaluated at the time of the statement and
-the result stored in the table's metadata ... making the `ALTER TABLE` very
-fast even on large tables", and "In neither case is a rewrite of the table
-required"
-([sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html)).
+**Version gate.** PostgreSQL 11 added a column with a non-null constant
+default "without doing a table rewrite" - the value is stored in the table's
+metadata, "making the `ALTER TABLE` very fast even on large tables"
+([release 11.0](https://www.postgresql.org/docs/release/11.0/),
+[sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html)).
 So `ADD COLUMN x int NOT NULL DEFAULT 0` is category 1 on PostgreSQL 11 and
-later, and category 3 Critical on PostgreSQL 10 and earlier. Do not classify
-it without the version.
+later, and category 3 Critical on 10 and earlier. Do not classify it without
+the version.
 
-**MySQL 8.0 InnoDB divergence.** A type change is worse, not better:
-"Changing the column data type is only supported with `ALGORITHM=COPY`",
-which does not permit concurrent DML and rebuilds the table
+**MySQL 8.0 InnoDB divergence.** Type change is worse: "only supported with
+`ALGORITHM=COPY`", no concurrent DML, rebuilds the table. Column addition is
+better: `INSTANT` is default from 8.0.12 (`INPLACE` before), last position
+only before 8.0.29; the `INPLACE` fallback still rebuilds, and concurrent DML
+"is not permitted when adding an auto-increment column"
 ([innodb-online-ddl-operations](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html)).
-Column addition is better: `INSTANT` "is the default algorithm as of MySQL
-8.0.12, and `INPLACE` before that", and "Before MySQL 8.0.29, the `INSTANT`
-algorithm could only add a column as the last column of the table". The
-same page notes the in-place fallback still costs a rebuild: "The table is
-rebuilt if `ALGORITHM=INPLACE` is used to add a column", and concurrent DML
-"is not permitted when adding an auto-increment column".
 
 ### Check 3 - Statistics gap after a large data change
 
-`ANALYZE` "collects statistics about the contents of tables in the
-database, and stores the results in the `pg_statistic` system catalog.
-Subsequently, the query planner uses these statistics to help determine the
-most efficient execution plans for queries", and "Accurate statistics will
-help the planner to choose the most appropriate query plan, and thereby
-improve the speed of query processing"
+`ANALYZE` refreshes the planner statistics in `pg_statistic`, and "When
+autovacuum is disabled, it is a good idea to run `ANALYZE` periodically, or
+just after making major changes in the contents of a table"
 ([sql-analyze](https://www.postgresql.org/docs/current/sql-analyze.html)).
-The same page ties the explicit call to autovacuum state: "When autovacuum
-is disabled, it is a good idea to run `ANALYZE` periodically, or just after
-making major changes in the contents of a table."
-
-That is the documented rule. Running `ANALYZE` at the end of a bulk-load
-migration **even when autovacuum is enabled**, so that the first queries
-after deploy do not plan against pre-load statistics, is a **practitioner
-convention, not a documented requirement**. Flag its absence after a bulk
-`INSERT`, `UPDATE`, or `DELETE` as Warning and say which of the two it is:
-a documented gap if autovacuum is off on the target, a convention
-otherwise.
+Running it at the end of a bulk-load migration **even when autovacuum is
+enabled** is a practitioner convention, not a documented requirement. Flag
+its absence after a bulk `INSERT`, `UPDATE`, or `DELETE` as Warning, and say
+which it is: a documented gap if autovacuum is off on the target, a
+convention otherwise.
 
 ### Check 4 - Partition key touched
 
-Per the
-[PostgreSQL partitioning reference](https://www.postgresql.org/docs/current/ddl-partitioning.html),
-partition pruning is where "the planner will examine the definition of each
-partition and prove that the partition need not be scanned because it could
-not contain any rows meeting the query's `WHERE` clause", and critically
-"partition pruning is driven only by the constraints defined implicitly by
-the partition keys, not by the presence of indexes."
-
-Because pruning depends on the partition key and nothing else, any
-statement that changes the partition key column (its type, its semantics,
-or the expression the table is partitioned by) puts every pruned plan in
-the system at risk, and no index can compensate. Classify a statement
-touching a column named in `PARTITION BY RANGE (...)`, `PARTITION BY LIST
-(...)`, or `PARTITION BY HASH (...)` as category 3, Warning, and require a
-plan check (compare `EXPLAIN` output before and after) rather than asserting
-that pruning will or will not break. The reference states what pruning
-depends on; it does not enumerate which alterations defeat it.
+Partition pruning "is driven only by the constraints defined implicitly by
+the partition keys, not by the presence of indexes"
+([ddl-partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html)).
+So any statement that changes the partition key column (its type, its
+semantics, or the partitioning expression) puts every pruned plan at risk,
+and no index can compensate. Classify a statement touching a column named in
+`PARTITION BY RANGE / LIST / HASH (...)` as category 3, Warning, and require
+a plan check (compare `EXPLAIN` before and after) rather than asserting
+whether pruning breaks.
 
 ### Check 5 - VARCHAR boundary crossing (MySQL)
 
-Per
-[innodb-online-ddl-operations](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html):
-"For `VARCHAR` columns of 0 to 255 bytes in size, one length byte is
-required to encode the value. For `VARCHAR` columns of 256 bytes in size or
-more, two length bytes are required. As a result, in-place `ALTER TABLE`
-only supports increasing `VARCHAR` column size from 0 to 255 bytes, or from
-256 bytes to a greater size. In-place `ALTER TABLE` does not support
-increasing the size of a `VARCHAR` column from less than 256 bytes to a size
-equal to or greater than 256 bytes."
-
-So `varchar(100)` to `varchar(500)` crosses the boundary and falls back to a
-copy; `varchar(300)` to `varchar(900)` does not. Shrinking is always a copy:
-"Decreasing `VARCHAR` size using in-place `ALTER TABLE` is not supported.
-Decreasing `VARCHAR` size requires a table copy (`ALGORITHM=COPY`)."
-
-Classify a boundary-crossing widen as category 3 Critical on MySQL, and a
-narrowing as category 6 and 7 (a copy plus potential truncation of existing
-values). Note that the byte counts are byte sizes, not character counts, so
-a multibyte charset reaches 256 bytes at fewer than 256 characters.
+`VARCHAR` needs one length byte below 256 bytes and two at 256 or more, so
+"in-place `ALTER TABLE` does not support increasing the size of a `VARCHAR`
+column from less than 256 bytes to a size equal to or greater than 256
+bytes"; decreasing size "requires a table copy (`ALGORITHM=COPY`)"
+([innodb-online-ddl-operations](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html)).
+So `varchar(100)` to `varchar(500)` crosses the boundary and copies;
+`varchar(300)` to `varchar(900)` does not. Classify a boundary-crossing
+widen as category 3 Critical on MySQL, a narrowing as category 6 and 7 (a
+copy plus potential truncation). Byte counts are bytes, not characters, so a
+multibyte charset reaches 256 bytes at fewer than 256 characters.
 
 ## Category 4 and 8: what the foreign key statement actually locks
 
@@ -341,75 +281,11 @@ constraint so the final step skips the full scan.
 
 ## Per-engine quick reference
 
-PostgreSQL, current manual (fetched 2026-07-19), version notes called out
-where behavior changed.
-
-| Statement | Lock | Rewrite | Source |
-|---|---|---|---|
-| `ALTER TABLE` (baseline) | `ACCESS EXCLUSIVE` unless noted | depends on clause | [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `ADD COLUMN` nullable or constant `DEFAULT` | `ACCESS EXCLUSIVE`, brief | no rewrite from PG 11 | [release 11.0](https://www.postgresql.org/docs/release/11.0/), [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `ADD COLUMN` volatile `DEFAULT`, stored generated, identity | `ACCESS EXCLUSIVE` | full rewrite of table and indexes | [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `ALTER COLUMN ... TYPE` | `ACCESS EXCLUSIVE` | normally full rewrite, narrow binary-coercible exception | [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `SET NOT NULL` | `ACCESS EXCLUSIVE` | scans whole table unless a valid `CHECK` proves no NULL | [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `ADD FOREIGN KEY` | `SHARE ROW EXCLUSIVE` on both tables | no rewrite | [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `VALIDATE CONSTRAINT` | `SHARE UPDATE EXCLUSIVE`, plus `ROW SHARE` on the referenced table for an FK | no rewrite | [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `CREATE INDEX` | `SHARE`, blocks writes not reads | n/a | [explicit-locking](https://www.postgresql.org/docs/current/explicit-locking.html), [sql-createindex](https://www.postgresql.org/docs/current/sql-createindex.html) |
-| `CREATE INDEX CONCURRENTLY` | `SHARE UPDATE EXCLUSIVE`, two scans, no transaction block | n/a | [explicit-locking](https://www.postgresql.org/docs/current/explicit-locking.html), [sql-createindex](https://www.postgresql.org/docs/current/sql-createindex.html) |
-| `DROP COLUMN` | `ACCESS EXCLUSIVE`, fast | column not physically removed, space reclaimed over time | [sql-altertable](https://www.postgresql.org/docs/current/sql-altertable.html) |
-| `TRUNCATE` | `ACCESS EXCLUSIVE`, blocks all concurrent operations | reclaims space immediately, rolls back with the transaction | [sql-truncate](https://www.postgresql.org/docs/current/sql-truncate.html) |
-
-MySQL 8.0 InnoDB, all rows from
-[innodb-online-ddl-operations](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html).
-
-| Statement | In place | Concurrent DML | Rebuilds table | Notes |
-|---|---|---|---|---|
-| `ADD COLUMN` | yes | yes, except auto-increment | no with `INSTANT` | `INSTANT` default from 8.0.12; last position only before 8.0.29; `INPLACE` rebuilds |
-| `DROP COLUMN` | yes | yes | yes | `INSTANT` default from 8.0.29 |
-| Change column data type | no | no | yes | "only supported with `ALGORITHM=COPY`" |
-| Widen `VARCHAR` across the 256-byte line | no | no | yes | one length byte below 256 bytes, two at 256 and above |
-| Narrow `VARCHAR` | no | no | yes | "requires a table copy (`ALGORITHM=COPY`)" |
-| Add secondary index | yes | yes | no | "The table remains available for read and write operations while the index is being created." |
-| Add foreign key | only with `foreign_key_checks` disabled | yes | no | otherwise "only the `COPY` algorithm is supported" |
-| Set column `NOT NULL` | yes | yes | yes | needs strict SQL mode; "fails if the column contains NULL values" |
-
-### The three divergences that flip a severity
-
-1. **Index creation.** Blocks writes on PostgreSQL without `CONCURRENTLY`;
-   permits concurrent DML on MySQL 8.0. Category 3 versus category 1.
-2. **Column type change.** Rewrites on PostgreSQL under `ACCESS EXCLUSIVE`,
-   and on MySQL forces `ALGORITHM=COPY` with no concurrent DML. Critical on
-   both, but for different reasons, and the MySQL mitigation (a copy-based
-   online schema change tool) is not the PostgreSQL one.
-3. **Adding a foreign key.** A metadata-cheap `SHARE ROW EXCLUSIVE` on
-   PostgreSQL that spreads to a second table, versus a full table copy on a
-   default-configured MySQL. Warning versus Critical.
-
-## Worked example
-
-Target: PostgreSQL 16, `users` 40M rows, `orders` 180M rows, `products`
-2M rows, sizes taken from a prior data-load migration in the same series.
-
-```sql
-ALTER TABLE users DROP COLUMN legacy_status;
-ALTER TABLE orders ADD COLUMN shipped_at timestamptz NOT NULL;
-ALTER TABLE orders ADD COLUMN region text NOT NULL DEFAULT 'unknown';
-CREATE INDEX ix_orders_status ON orders (status);
-ALTER TABLE products ADD CONSTRAINT fk_category
-  FOREIGN KEY (category_id) REFERENCES categories(id);
-```
-
-Classification:
-
-| # | Statement | Category | Severity | Basis |
-|---|---|---|---|---|
-| 1 | `DROP COLUMN users.legacy_status` | 5 Breaking + 6 Data-loss | Critical | Column becomes invisible to SQL immediately; space not reclaimed, so the fast completion is not evidence of a cheap operation |
-| 2 | `ADD COLUMN orders.shipped_at NOT NULL` no default | 7 Unsafe default | Critical | `SET NOT NULL` requires no NULL rows exist; verify the add-with-NOT-NULL outcome on the target before merge |
-| 3 | `ADD COLUMN orders.region NOT NULL DEFAULT 'unknown'` | 1 Additive | Info | Constant default, no rewrite from PG 11; would be Critical on PG 10 |
-| 4 | `CREATE INDEX ix_orders_status ON orders (status)` | 3 Locking | Critical | `SHARE` lock blocks inserts, updates, deletes on a 180M-row table for the whole build |
-| 5 | `ADD CONSTRAINT fk_category ... REFERENCES categories(id)` | 4 Lock-escalating + 8 Index-missing FK | Warning | `SHARE ROW EXCLUSIVE` on `products` and on `categories`; no index on `products.category_id` |
-
-Note how statements 2 and 3 differ by one clause and three severity bands,
-and how statement 4 would be Info against MySQL 8.0.
+The consolidated PostgreSQL and MySQL 8.0 InnoDB lock / rewrite tables, and
+the three divergences that flip a severity, are in
+[references/engine-quick-reference.md](references/engine-quick-reference.md).
+A full worked classification (PostgreSQL 16, five statements across `users`,
+`orders`, `products`) is in the same file.
 
 ## Expected output shape
 

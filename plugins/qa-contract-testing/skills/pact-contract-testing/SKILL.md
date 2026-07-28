@@ -7,27 +7,24 @@ description: "Authors and verifies Pact consumer-driven contract tests across th
 
 ## Overview
 
-Pact is a code-first tool for testing HTTP and message integrations using
-**consumer-driven contract tests** ([pact-overview][overview]). The
-contract is generated as a side-effect of the consumer's automated tests - each test case documents one request/response pair, and only the parts
-the consumer actually uses get tested.
+Pact is a code-first tool for **consumer-driven contract tests** over HTTP and
+message integrations ([pact-overview][overview]). The contract is a side-effect
+of the consumer's tests - each test documents one request/response pair, and
+only the parts the consumer actually uses get tested.
 
 [overview]: https://docs.pact.io/
 
-The full lifecycle has five steps ([pact-how-it-works][how]):
+The lifecycle has five steps ([pact-how-it-works][how]):
 
 1. **Consumer test** runs against a Pact mock server using the Pact DSL.
-2. The Pact framework writes a **pact file** (JSON) capturing every
-   `given() → uponReceiving() → withRequest() → willRespondWith()`
-   interaction.
+2. The framework writes a **pact file** (JSON) capturing every
+   `given() → uponReceiving() → withRequest() → willRespondWith()` interaction.
 3. The pact file is **published to the Pact Broker**.
-4. The **provider verifies** the pact: each request from the file is
-   replayed against the actual provider, and responses are checked
-   against the contract.
-5. **`can-i-deploy`** queries the Broker's matrix to confirm the
-   candidate version has a green verification against every consumer/
-   provider already deployed in the target environment
-   ([can-i-deploy][cid]).
+4. The **provider verifies** the pact: each recorded request is replayed against
+   the running provider and responses are checked against the contract.
+5. **`can-i-deploy`** queries the Broker matrix to confirm the candidate version
+   has a green verification against every consumer/provider already deployed in
+   the target environment ([can-i-deploy][cid]).
 
 [how]: https://docs.pact.io/getting_started/how_pact_works
 [cid]: https://docs.pact.io/pact_broker/can_i_deploy
@@ -36,19 +33,15 @@ The full lifecycle has five steps ([pact-how-it-works][how]):
 ## When to use
 
 - Two or more services communicate over HTTP/JSON or a message bus.
-- The team owns both consumer and provider (or has access to the
-  provider team) - Pact requires provider buy-in for verification.
-- A team wants a deployment safety net richer than schema-only
-  comparison: contract-by-example asserts what consumers **actually
-  use**, not the full provider surface.
-- The repo already imports `@pact-foundation/pact`,
-  `pact-jvm-consumer`, `pact-python`, etc., or a `.pact/` directory is
-  present.
+- The team owns both consumer and provider - Pact requires provider buy-in for
+  verification.
+- You want a safety net richer than schema comparison: contract-by-example
+  asserts what consumers **actually use**, not the full provider surface.
+- The repo already imports `@pact-foundation/pact`, `pact-jvm-consumer`,
+  `pact-python`, etc., or a `.pact/` directory is present.
 
-If the API has no consumers under your control (public APIs, third-party
-integrations), prefer
-`openapi-contract-diff` - schema-
-based diffs need no provider/consumer coordination.
+If the API has no consumers under your control (public or third-party APIs),
+prefer `openapi-contract-diff` - schema diffs need no consumer coordination.
 
 ## Authoring (consumer side)
 
@@ -101,11 +94,9 @@ describe('Pet Service consumer', () => {
 
 (Adapted from [pact-js][js].)
 
-The DSL lifecycle is **`given() → uponReceiving() → withRequest() →
-willRespondWith()`**. `given()` describes a provider state the
-verifier will set up later. **Matchers** like `like()` and `eachLike()`
-let the contract assert *type/shape* rather than exact values, so the
-provider isn't bound to fixture-specific data.
+`given()` describes a provider state the verifier sets up later. **Matchers**
+like `like()` and `eachLike()` assert *type/shape* rather than exact values, so
+the provider isn't bound to fixture-specific data.
 
 ### Where pact files are written
 
@@ -159,16 +150,11 @@ new Verifier({
 
 (Adapted from [pact-js][js].)
 
-The provider replays every request from each pact file against a
-running provider instance and compares responses
-([pact-how-it-works][how]). `consumerVersionSelectors` controls which
-consumer pacts get verified - `mainBranch` plus `deployedOrReleased`
-ensures the provider stays compatible with both the latest consumer
-work and what's currently in production.
-
-`publishVerificationResult: true` is what makes the matrix update - 
-without it, the broker has no record of this provider version's
-verification status.
+`consumerVersionSelectors` controls which consumer pacts get verified -
+`mainBranch` plus `deployedOrReleased` keeps the provider compatible with both
+the latest consumer work and what's in production ([pact-how-it-works][how]).
+`publishVerificationResult: true` is what updates the matrix - without it the
+broker has no record of this provider version's verification status.
 
 ### Provider states
 
@@ -235,58 +221,12 @@ spurious "no" verdicts.
 
 ## CI integration
 
-A complete CI flow per side:
+Wire publish -> verify -> `can-i-deploy` into the pipeline for both sides. Full
+consumer and provider GitHub Actions steps are in
+[references/ci-pipelines.md](references/ci-pipelines.md).
 
-### Consumer pipeline
-
-```yaml
-- name: Run consumer tests + publish pact
-  env:
-    PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
-    PACT_BROKER_TOKEN:    ${{ secrets.PACT_BROKER_TOKEN }}
-  run: |
-    npm test                           # writes ./pacts/<consumer>-<provider>.json
-    npx pact-broker publish ./pacts \
-      --consumer-app-version=$GITHUB_SHA \
-      --branch=${GITHUB_REF##*/}
-
-- name: Can I deploy?
-  env:
-    PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
-    PACT_BROKER_TOKEN:    ${{ secrets.PACT_BROKER_TOKEN }}
-  run: |
-    pact-broker can-i-deploy \
-      --pacticipant=web-app \
-      --version=$GITHUB_SHA \
-      --to-environment=production
-```
-
-### Provider pipeline
-
-```yaml
-- name: Verify pacts from broker
-  env:
-    PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
-    PACT_BROKER_TOKEN:    ${{ secrets.PACT_BROKER_TOKEN }}
-  run: |
-    npm run start:provider &
-    npx wait-on http://localhost:8081
-    npm run verify:pact                # publishVerificationResult: true
-
-- name: Can I deploy?
-  env:
-    PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
-    PACT_BROKER_TOKEN:    ${{ secrets.PACT_BROKER_TOKEN }}
-  run: |
-    pact-broker can-i-deploy \
-      --pacticipant=pet-service \
-      --version=$GITHUB_SHA \
-      --to-environment=production
-```
-
-`can-i-deploy` is the actual gate - pact verification happens in step
-1, but a green verification alone doesn't prove every paired version
-is compatible.
+`can-i-deploy` is the actual gate - pact verification happens in step 1, but a
+green verification alone doesn't prove every paired version is compatible.
 
 ## References
 

@@ -67,16 +67,10 @@ test_ds = Dataset(
 
 Use scikit-learn metric functions directly so the gate has explicit,
 inspectable numeric values rather than relying on internal scorer defaults.
-
-Per [scikit-learn model evaluation docs]:
-- `accuracy_score(y_true, y_pred)` returns fraction of correct predictions
-  (range 0-1, higher better).
-- `f1_score(y_true, y_pred, average='weighted')` returns weighted harmonic
-  mean of precision and recall (range 0-1, higher better).
-- `roc_auc_score(y_true, y_score)` requires probability estimates; for
-  multiclass use `average='weighted', multi_class='ovr'`.
-- `root_mean_squared_error(y_true, y_pred)` (regression) is in target units
-  (lower better).
+`roc_auc_score` needs probability estimates (multiclass: `average='weighted',
+multi_class='ovr'`); RMSE is lower-better, so its tolerance direction inverts
+(Step 4). Full per-metric signatures:
+[references/gate-config-and-metrics.md](references/gate-config-and-metrics.md).
 
 ```python
 from sklearn.metrics import (
@@ -269,34 +263,8 @@ triage even when the gate fails.
 ## Step 8 - YAML threshold config (optional)
 
 Externalise tolerances so non-engineers can tune them via a PR rather than
-editing Python:
-
-```yaml
-# config/gate_thresholds.yaml
-metrics:
-  accuracy:
-    tolerance: 0.01
-    higher_is_better: true
-  f1_weighted:
-    tolerance: 0.02
-    higher_is_better: true
-  roc_auc:
-    tolerance: 0.01
-    higher_is_better: true
-segment:
-  max_ratio_change: 0.15
-  min_segment_size_ratio: 0.05
-```
-
-```python
-import yaml
-
-with open("config/gate_thresholds.yaml") as f:
-    cfg = yaml.safe_load(f)
-
-TOLERANCES = {k: v["tolerance"] for k, v in cfg["metrics"].items()}
-HIGHER_IS_BETTER = {k for k, v in cfg["metrics"].items() if v["higher_is_better"]}
-```
+editing Python. The config schema and its loader live in
+[references/gate-config-and-metrics.md](references/gate-config-and-metrics.md).
 
 ## Anti-patterns
 

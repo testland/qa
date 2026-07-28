@@ -7,25 +7,13 @@ description: "Workflow-driven skill that builds a tenant-leak test plan from an 
 
 ## Overview
 
-A tenant-leak test suite is the runtime guarantee that cross-
-tenant access fails. This skill **builds** that suite from an
-inventory of tenant-bearing surfaces - not a pre-canned set of
-tests, since every product has a different surface area.
-
-The workflow is:
-
-1. Enumerate tenant-bearing surfaces (where tenant_id appears).
-2. Identify the isolation model per surface (per
-   `tenant-isolation-models-reference`).
-3. Enumerate the attack patterns per surface
-   (per OWASP WSTG-ATHZ-02).
-4. Generate test cases (pairs of tenants A/B, attempted cross-
-   access).
-5. Emit the test suite skeleton.
-
-The output is committed to the project repo; the
-`cross-tenant-data-leak-tests`
-skill describes the runtime contract those tests must satisfy.
+A tenant-leak test suite is the runtime guarantee that cross-tenant
+access fails. This skill **builds** that suite from an inventory of
+tenant-bearing surfaces - not a pre-canned set of tests, since every
+product has a different surface area. Steps 1 - 5 below run the workflow
+end to end; the output is committed to the project repo, and
+`cross-tenant-data-leak-tests` describes the runtime contract those tests
+must satisfy.
 
 ## When to use
 
@@ -82,20 +70,12 @@ three primary scenarios:
 | **Vertical escalation** | Non-admin in tenant A accesses admin-only resources | All admin-scoped surfaces |
 | **IDOR / BOLA** | Direct reference attack - change ID in URL/payload | All ID-bearing endpoints |
 
-Plus tenant-isolation-specific patterns:
-
-| Pattern | Test |
-|---|---|
-| **tenant_id from request payload** | Send tenant A's session with `tenant_id=B` in body - must reject |
-| **Missing tenant_id filter in new endpoint** | Enumerate routes added in last N commits; verify each filters by tenant |
-| **Cross-tenant via foreign key** | Create FK from tenant-A row to tenant-B row - must fail |
-| **Cross-tenant via unique constraint** | Insert tenant-A row with key that exists in tenant B - observe error timing as side channel |
-| **JWT replay across tenants** | Tenant A's JWT used to call tenant B's endpoint - must reject signature/iss/aud check |
-| **Object storage path traversal** | Tenant A presigned URL → modify prefix to tenant B's - must 403 |
-| **Search query without tenant filter** | Direct search index query - must include tenant routing key |
-| **Async job tenant context** | Job enqueued by tenant A → executor must reload tenant context, not trust message |
-| **Cache key collision** | Tenant A and tenant B have same logical key - cache must namespace |
-| **Log scrubbing** | Tenant A errors must not leak tenant B identifiers |
+Layer the tenant-isolation-specific patterns (spoofed-body tenant_id,
+missing filter on new endpoints, cross-tenant FK and unique-constraint,
+JWT replay, object-storage path traversal, unfiltered search, async-job
+context, cache-key collision, log scrubbing) on top - the full
+test-per-pattern catalog is in
+[references/attack-patterns.md](references/attack-patterns.md).
 
 ## Step 3 - Generate test cases
 
@@ -111,16 +91,11 @@ test_jwt_replay_cross_tenant_returns_401()
 test_async_job_tenant_context_reload_on_exec()
 ```
 
-Each test creates fixtures for **two tenants A and B**, performs
-the cross-access attempt, and asserts denial. Per OWASP WSTG-
-ATHZ-02:
-
-> "Create two users with identical privileges. Maintain concurrent
-> sessions for both accounts. Modify session tokens and parameters
-> to target other users' data."
-
-For tenant testing, the same approach with tenant_id as the
-"other identity".
+Each test creates fixtures for **two tenants A and B**, performs the
+cross-access attempt, and asserts denial. Per OWASP WSTG-ATHZ-02: create
+two users with identical privileges, hold concurrent sessions for both,
+and modify session tokens and parameters to target the other user's data
+- with tenant_id as the "other identity".
 
 ### Required fixtures
 
@@ -146,80 +121,22 @@ Pick by stack:
 | Go | `testing` + `httptest` | table-driven tests over (tenant, resource) pairs |
 | Ruby (Rails) | RSpec + `request` specs | shared examples for cross-tenant battery |
 
-### Example skeleton (pytest)
+Minimal probe - fixture two tenants, attempt cross-access by ID, and
+assert denial without existence disclosure:
 
 ```python
-import pytest
-
 class TestDocumentsTenantIsolation:
-    """Per OWASP WSTG-ATHZ-02 - horizontal escalation battery."""
-
     def test_tenant_a_cannot_read_tenant_b_document(
         self, client, tenant_a_user, tenant_b_resource
     ):
-        # Authenticate as tenant A user
         client.force_login(tenant_a_user)
-        # Attempt to access tenant B's resource by ID
         response = client.get(f"/api/documents/{tenant_b_resource.id}/")
-        assert response.status_code == 404, "Must return 404, not 403, to avoid existence disclosure"
-
-    def test_tenant_a_cannot_list_tenant_b_documents(
-        self, client, tenant_a_user, tenant_b_resource
-    ):
-        client.force_login(tenant_a_user)
-        response = client.get("/api/documents/")
-        assert response.status_code == 200
-        ids = {d["id"] for d in response.json()["results"]}
-        assert tenant_b_resource.id not in ids
-
-    def test_tenant_id_in_body_is_ignored(
-        self, client, tenant_a_user, tenant_b
-    ):
-        client.force_login(tenant_a_user)
-        # Attempt to create a document for tenant B by spoofing body
-        response = client.post(
-            "/api/documents/",
-            data={"tenant_id": str(tenant_b.id), "body": "leak"}
-        )
-        # Must be either rejected (400) or silently scoped to A (201, but A's tenant_id)
-        if response.status_code == 201:
-            doc = response.json()
-            assert doc["tenant_id"] != str(tenant_b.id)
-
-    def test_jwt_signed_for_a_rejected_on_b_endpoint(
-        self, client, tenant_a_user, tenant_b_resource
-    ):
-        # Sign a JWT for tenant A user, use it on B-scoped endpoint
-        token = sign_jwt_for(tenant_a_user)
-        response = client.get(
-            f"/api/documents/{tenant_b_resource.id}/",
-            HTTP_AUTHORIZATION=f"Bearer {token}"
-        )
-        assert response.status_code in (401, 404)
+        assert response.status_code == 404  # 404 not 403: no existence disclosure
 ```
 
-### Example skeleton (Postgres RLS-direct, language-agnostic)
-
-For surfaces relying on RLS per
-`row-level-security-postgres-reference`,
-also test at the DB layer:
-
-```sql
--- Connect as app_user (not superuser, not table owner)
-BEGIN;
-SET LOCAL app.tenant_id = '<tenant_a_uuid>';
--- Insert a row for tenant A
-INSERT INTO documents (tenant_id, body) VALUES (current_setting('app.tenant_id')::uuid, 'a-doc');
-
--- Switch to tenant B
-SET LOCAL app.tenant_id = '<tenant_b_uuid>';
-SELECT count(*) FROM documents;  -- expect 0 (tenant A's row invisible)
-
--- Cross-tenant INSERT attempt
-INSERT INTO documents (tenant_id, body) VALUES ('<tenant_a_uuid>', 'leak');
--- Expect: ERROR: new row violates row-level security policy for table "documents"
-ROLLBACK;
-```
+The full pytest battery (list-scoping, spoofed-body, JWT-replay) and the
+language-agnostic Postgres RLS-direct probe are in
+[references/framework-skeletons.md](references/framework-skeletons.md).
 
 ## Step 5 - Coverage assertions
 
@@ -267,6 +184,8 @@ The runtime gate is
 
 - OWASP WSTG-ATHZ-02 Testing for Bypassing Authorization Schema:
   [owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema).
+- Attack-pattern catalog: [references/attack-patterns.md](references/attack-patterns.md).
+- Test skeletons: [references/framework-skeletons.md](references/framework-skeletons.md).
 - Tenant isolation models:
   `tenant-isolation-models-reference`.
 - Postgres RLS:

@@ -7,16 +7,11 @@ description: "Session debrief template + tour-coverage tracker - captures the SB
 
 ## Overview
 
-A session without a debrief is a session that didn't happen - the
-findings live only in the tester's head, no team learning, no
-audit trail, no follow-up scheduling.
-
-The Session-Based Test Management (SBTM) framework introduced
-**PROOF** as a structured debrief format: every session ends with
-a five-section report that the team can aggregate, compare, and
-act on.
-
-This skill provides the template and the aggregation conventions.
+The Session-Based Test Management (SBTM) framework ends every session with
+a **PROOF** report - a five-section debrief the team can aggregate,
+compare, and act on. Skip it and the session's findings live only in the
+tester's head: no team learning, no audit trail, no follow-up. This skill
+provides the template and the aggregation conventions.
 
 ## When to use
 
@@ -38,169 +33,63 @@ The acronym from the original Bach & Bach SBTM paper:
 | **O**  | Obstacles     | What slowed the session - broken setup, missing test data, environment instability. |
 | **F**  | Feelings      | Tester's qualitative read on product quality (confident / uneasy / unsure). |
 
-**Feelings** is the load-bearing field most teams want to skip.
-Resist that. The tester's qualitative judgment is signal that no
-metric captures.
+**Feelings** is the load-bearing field teams skip. Keep it - the tester's
+qualitative judgment is signal no metric captures.
 
-## Step 1 - Template
+## Step 1 - Debrief template
+
+Fill one per session, within 30 min of session end. The blank spine:
 
 ```markdown
 # Session debrief - `<session-id>`
 
-**Charter:** [link to charter]
-**Tester:** _______________
-**Date:** _______________
-**Time-box:** 90 min   **Actual:** ___ min
-**Build / Environment:** _______________
+**Charter:** [link]   **Tester:** ____   **Date:** ____
+**Time-box:** 90 min   **Actual:** ___ min   **Build / Env:** ____
 
 ## Past - what was tested
-
-**Tours applied:**
-- [x] Money tour (per `exploratory-tours-reference`)
-- [x] Bad-data tour
-- [ ] Configuration tour (skipped - out of time)
-
-**Areas covered:**
-- Promo code input field - full coverage including SQL/XSS payloads
-- Promo discount math - 10% / 50% / 100% / fractional cent edge cases
-- Promo + tax interaction - covered for US tax states only
-
-**Paths walked (notable ones):**
-- Apply WELCOME10 to $24.99 cart → $22.49 ✓
-- Apply two stackable promos → second silently overrides first (BUG-987)
-- Apply expired promo → graceful error message ✓
+Tours applied (per `exploratory-tours-reference`); areas covered;
+notable paths walked.
 
 ## Results - what was learned
-
-**Confirmed working:**
-- Single-promo apply
-- Promo code expiration enforcement
-- Free-shipping promo
-
-**Bugs found:** (with bug IDs)
-- BUG-987: Stacking two promos doesn't combine - second silently overrides first.
-- BUG-988: SQL injection in promo input field returns 500 instead of 400.
-- BUG-989: $0.01 cart with 50% off rounds to $0.00 instead of $0.01.
-
-**Surprises:**
-- Discount is applied to subtotal BEFORE tax, but the original SOW
-  said after-tax. Need to clarify with PM.
-- "WELCOME10" code is case-sensitive; "welcome10" silently rejected
-  with no helpful message.
-
-**Confirmed-fixed (vs prior session):**
-- Previous BUG-832 (promo input losing focus) is fixed. ✓
+Confirmed-working items; bugs found (with bug IDs); surprises;
+confirmed-fixed vs prior session.
 
 ## Outlook - what's left
-
-**Areas not covered (out of time / scope):**
-- EU tax cases (covered separately by next session's charter).
-- Multi-currency promo behavior.
-- Promo + subscription billing.
-
-**Recommended next charter:**
-- "Explore the EU tax + promo interaction" (90 min).
-- "Explore promo + subscription billing edge cases" (60 min).
-
-**Open questions for PM / dev team:**
-- Confirm: discount before vs after tax (cited as "before" in
-  current implementation; SOW says "after").
-- Confirm: should case-insensitive promo codes be supported?
+Areas not covered (out of time / scope); recommended next charter;
+open questions for PM / dev.
 
 ## Obstacles
-
-**Setup pain:**
-- Stripe test card kept timing out at checkout - added 5 min to
-  the session.
-- Required test promo codes weren't pre-seeded; had to create them
-  manually.
-
-**Environment instability:**
-- Staging was down for ~10 min mid-session; lost momentum.
-
-**Recommendations for next session:**
-- Pre-seed promo codes via a fixture per `synthetic-data-tool-selector`.
-- Verify staging is up before session start.
+Setup pain; environment instability; recommendations for next session.
 
 ## Feelings
-
-**Quality of attention this session:** Strong (focused throughout;
-caught the BUG-987 cluster early which sustained interest).
-
-**Confidence in the feature:** Mixed. The single-promo path is
-solid; the multi-promo path has architectural issues that aren't
-just bugs (SOW ambiguity on discount-before-tax suggests the
-business hasn't fully decided).
-
-**Unease about untested areas:** Moderate. Multi-currency promos
-weren't touched; gut says there are bugs there.
-
-**Recommendation to release manager:** Block release until
-BUG-987 (stacking) and BUG-988 (SQL injection) are fixed.
-BUG-989 (rounding) is low impact; can ship with known-issue note.
+Quality of attention; confidence in the feature; unease about untested
+areas; recommendation to the release manager.
 
 ## Time accounting (3-bucket)
-
-| Bucket            | Minutes |
-|-------------------|--------:|
-| Test design       |      35 |
-| Setup             |      25 |
-| Bug investigation |      30 |
-| **Total actual**  |      90 |
-
-(Per SBTM convention; useful for calibrating future sessions - 
-high setup % suggests test-data or environment investment is
-worth it.)
+| Bucket | Minutes |
+|---|--:|
+| Test design | __ |
+| Setup | __ |
+| Bug investigation | __ |
+| **Total actual** | __ |
 ```
+
+A fully worked example (a promo-code checkout session, every field filled
+with real bug IDs and time splits) is in
+[references/debrief-examples.md](references/debrief-examples.md). A high
+setup % is a signal the environment or test data needs investment, not
+that the tester is slow.
 
 ## Step 2 - Aggregation across sessions
 
-Individual debriefs are useful; aggregating them surfaces patterns:
-
-```markdown
-## Quarterly debrief rollup - Q2 2026
-
-**Sessions completed:** 47
-**Bugs raised:** 138
-**Average session: 90-min charter, 3-bucket: 38 / 28 / 24**
-
-### Areas by coverage
-
-| Area                       | Sessions | Bugs found | Last covered |
-|----------------------------|---------:|-----------:|--------------|
-| Checkout - promo flow       |    8    |    34     | 2026-04-28  |
-| Checkout - payment          |    6    |    19     | 2026-05-02  |
-| Account - subscription       |    4    |    12     | 2026-05-05  |
-| Account - profile            |    3    |     8     | 2026-04-15  |
-| Admin panel                  |    1    |     2     | 2026-03-20  |  ← stale
-| Reports                      |    0    |     0     | (never)      |  ← uncovered
-
-### Action items from rollup
-
-- Schedule sessions for Admin panel + Reports areas (under-covered).
-- Subscription area surfaced 12 bugs - investigate root-cause
-  pattern.
-- Average setup time (28 min) is high - invest in fixture tooling.
-```
-
-The rollup shows what's been explored vs what's stale vs what's
-never been touched. Charter authoring uses this to pick where the
-next session should focus.
-
-## Step 3 - Quality-of-attention signal
-
-The Feelings section produces a per-session subjective signal.
-Track over time:
-
-| Session  | Feelings (numeric: 1-5) | Notes                               |
-|----------|-------------------------|-------------------------------------|
-| ses-201  |                       4 | Strong; BUG cluster found early.    |
-| ses-202  |                       2 | Weak; tester sick / distracted.     |
-| ses-203  |                       5 | Excellent; new tester, fresh eyes.  |
-
-When attention is consistently low across a tester / area, change
-something - different tester, different time-box, different tour,
-different scope.
+Individual debriefs are useful; aggregating them surfaces patterns - which
+areas are well-covered, which are stale, which have never been touched,
+and where bugs cluster. Charter authoring uses the rollup to pick where
+the next session should focus. The Feelings section also yields a
+per-session quality-of-attention signal worth tracking over time; when it
+stays low for a tester or area, change something (tester, time-box, tour,
+or scope). The full quarterly rollup table and the attention tracker are
+in [references/debrief-examples.md](references/debrief-examples.md).
 
 ## Anti-patterns
 
@@ -231,6 +120,8 @@ different scope.
 - Bach, J. & Bach, J., *Session-Based Test Management* (HP, 2000;
   PDF at `satisfice.com/download/session-based-test-management`) - 
   PROOF debrief format origin, three-bucket time accounting.
+- Full worked debrief, quarterly rollup, and attention tracker:
+  [references/debrief-examples.md](references/debrief-examples.md).
 - `exploratory-tours-reference` - the tours catalogued in the Past section.
 - `bug-bash-facilitator` - 
   multi-cohort bug bash inherits this debrief format.

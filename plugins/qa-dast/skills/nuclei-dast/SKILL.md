@@ -16,16 +16,11 @@ Per [docs.projectdiscovery.io/tools/nuclei/overview][nuclei-overview]:
 
 [nuclei-overview]: https://docs.projectdiscovery.io/tools/nuclei/overview
 
-Each template is a YAML file that defines the request to send plus matchers that
-decide whether the response constitutes a finding. The community template library
-ships 6,500+ templates covering CVEs, misconfigurations, exposed panels, and
-default credentials. Custom templates add app-specific checks without modifying
-the tool itself.
-
-Nuclei complements ZAP: ZAP's spider + passive analysis gives broad HTTP
-coverage; Nuclei's template corpus gives deep, targeted CVE and misconfiguration
-coverage from a structured community library. Both outputs feed a
-unified cross-tool triage.
+Each template is a YAML file defining a request plus matchers that decide whether
+the response is a finding. The community library ships 6,500+ templates for CVEs,
+misconfigurations, exposed panels, and default credentials; custom templates add
+app-specific checks. Run it alongside ZAP - ZAP crawls for broad coverage, Nuclei
+adds deep template-driven CVE checks - and feed both into cross-tool triage.
 
 ## When to use
 
@@ -87,32 +82,24 @@ templates are excluded from the default run (see Step 6).
 
 ## Step 3 - Common flags
 
-Per [nuclei-running][nuclei-running]:
+Per [nuclei-running][nuclei-running]. The flags used in most scans:
 
 | Flag | Default | Use |
 |---|---|---|
 | `-u <url>` | (required) | Single target URL or host |
-| `-l <file>` | - | File of targets, one per line |
 | `-t <path>` | community templates | Template file or directory |
 | `-tags <tag,...>` | - | Run only templates with matching tags |
 | `-severity <level,...>` | - | Filter by `info`, `low`, `medium`, `high`, `critical` |
-| `-etags <tag,...>` | - | Exclude templates by tag |
-| `-exclude-severity <level,...>` | - | Skip severity levels |
 | `-rl <int>` | 150 | Max requests per second |
-| `-c <int>` | 25 | Parallel templates to execute |
-| `-bs <int>` | 25 | Hosts processed per template |
-| `-timeout <int>` | 10 | Request timeout in seconds |
-| `-retries <int>` | 1 | Retries on failure |
 | `-j` / `-jsonl` | off | JSONL output (feeds triager) |
 | `-o <file>` | stdout | Output file path |
-| `-se <file>` | - | SARIF export (GitHub Code Scanning) |
-| `-stats` | off | Show live scan statistics |
 | `-validate` | off | Syntax-check templates without running |
-| `-debug` | off | Print all requests and responses |
 
-Per [nuclei-running][nuclei-running], `-rl` takes precedence over `-c` and `-bs`:
-the request rate cannot exceed the value set by `-rl` regardless of concurrency
-settings.
+Full flag reference (target lists, exclusions, concurrency, timeouts, SARIF,
+debug): [references/flags.md](references/flags.md).
+
+Per [nuclei-running][nuclei-running], `-rl` caps request rate regardless of the
+`-c` and `-bs` concurrency settings.
 
 ## Step 4 - Severity filtering and CI gating
 
@@ -286,44 +273,18 @@ abuse laws.
 
 ## Step 9 - CI integration
 
-GitHub Actions:
+Install Nuclei, update templates, run a severity-gated scan, then fail the job on
+any finding:
 
-```yaml
-jobs:
-  nuclei-dast:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Install Nuclei
-        run: go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
-
-      - name: Update templates
-        run: nuclei -update-templates
-
-      - name: Run Nuclei scan
-        run: |
-          nuclei \
-            -u ${{ vars.STAGING_URL }} \
-            -severity high,critical \
-            -rl 50 \
-            -j -o nuclei-report.jsonl
-
-      - name: Gate on findings
-        run: |
-          count=$(wc -l < nuclei-report.jsonl 2>/dev/null || echo 0)
-          echo "Nuclei findings: $count"
-          [ "$count" -eq 0 ]
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: nuclei-report
-          path: nuclei-report.jsonl
+```bash
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+nuclei -update-templates
+nuclei -u "$STAGING_URL" -severity high,critical -rl 50 -j -o nuclei-report.jsonl
+[ "$(wc -l < nuclei-report.jsonl)" -eq 0 ]
 ```
 
-Use `-se nuclei.sarif` and the `github/codeql-action/upload-sarif` action to
-surface findings inline in pull request diffs.
+Full GitHub Actions workflow (checkout, artifact upload, SARIF upload to Code
+Scanning): [references/ci-integration.md](references/ci-integration.md).
 
 ## Anti-patterns
 

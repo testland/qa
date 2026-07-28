@@ -18,22 +18,29 @@ metadata:
 [checks]: https://github.com/aquasecurity/trivy-checks
 [tfsec]: ../tfsec-policy/SKILL.md
 
-Per [trivy.dev misconfiguration docs][mc]:
-
-> "Trivy provides built-in checks to detect configuration issues in
-> popular Infrastructure as Code files, such as: Docker, Kubernetes,
-> Terraform, CloudFormation, and more."
-
-Trivy is Aqua Security's consolidated scanner and the forward path from
-tfsec. Per the [tfsec skill][tfsec] and Aqua's own documentation, new
+Trivy is Aqua Security's consolidated misconfiguration scanner (`trivy
+config`) and the forward path from tfsec. Per the [tfsec skill][tfsec],
+[trivy.dev misconfiguration docs][mc], and Aqua's own documentation, new
 projects should evaluate Trivy first; tfsec's checks ship inside Trivy
 under `trivy config`.
 
+## Pinned versions
+
+Bump these together when updating; they are the only version-sensitive
+tokens in this skill. GitHub release assets are version-stamped, so the
+RPM URL in Step 1 pins a tag rather than using `latest/download`.
+
+| Component | Pin | Used in |
+|---|---|---|
+| Trivy | v0.72.0 (latest as of 2026-06-30) | Step 1 install |
+| `aquasecurity/trivy-action` | 0.31.0 | CI workflow (Step 7) |
+| `actions/checkout` | v5 | CI workflow (Step 7) |
+| `github/codeql-action/upload-sarif` | v3 | CI workflow (Step 7) |
+
 ## Step 1 - Install
 
-Per [trivy.dev installation docs][inst] (v0.72.0 is the latest release
-as of 2026-06-30; GitHub release assets are version-stamped, so the RPM
-URL pins a tag rather than using `latest/download`):
+Per [trivy.dev installation docs][inst] (the RPM URL pins the Trivy tag
+from the Pinned versions section above):
 
 ```bash
 # macOS
@@ -62,10 +69,7 @@ Verify: `trivy --version`.
 Per [cli reference][cli], `trivy config` accepts a path (file or
 directory). Trivy auto-detects IaC types - Terraform, CloudFormation,
 Kubernetes manifests, Helm charts, Dockerfiles, and Azure ARM templates
-can all coexist in the same directory per [mc docs][mc]:
-
-> "The specified directory can contain mixed types of IaC files.
-> Trivy automatically detects config types and applies relevant checks."
+can all coexist in the same directory per [mc docs][mc].
 
 ```bash
 # Scan the current directory (all IaC types)
@@ -203,77 +207,19 @@ trivy config \
   ./infra/
 ```
 
-Per [custom docs][custom], each policy file requires a unique package
-declaration and a METADATA annotation block:
-
-```rego
-# policies/require_cost_center_tag.rego
-# METADATA
-# title: "EC2 instances must have cost_center tag"
-# description: "Untagged resources cannot be allocated to cost centers"
-# schemas:
-#   - input: schema["cloud"]
-# custom:
-#   id: USER-TF-001
-#   severity: HIGH
-#   input:
-#     selector:
-#       - type: cloud
-
-package user.terraform.USER-TF-001
-
-import rego.v1
-
-deny contains res if {
-    instance := input.aws.ec2.instances[_]
-    not instance.tags["cost_center"]
-    res := result.new(
-        sprintf("EC2 instance '%s' missing cost_center tag", [instance.id.value]),
-        instance,
-    )
-}
-```
-
 Per [custom docs][custom], the `--namespaces` value (here: `user`) must
-match the first segment of the package path. Supported `input.selector`
-types include `cloud` (Terraform / CloudFormation), `kubernetes`,
-`dockerfile`, `yaml`, `json`, `toml`, and `terraform-raw`.
+match the first segment of the package path. For a full policy file
+(METADATA block + `deny` rule) and the list of supported
+`input.selector` types, see
+[references/trivy-config.md](references/trivy-config.md).
 
 ## Step 7 - CI integration (GitHub Actions)
 
 Per [trivy.dev reporting docs][report], SARIF output integrates directly
-with GitHub Code Scanning:
-
-```yaml
-# .github/workflows/trivy-iac.yml
-jobs:
-  trivy-config:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Run Trivy config scan
-        uses: aquasecurity/trivy-action@0.31.0
-        with:
-          scan-type: config
-          scan-ref: .
-          severity: HIGH,CRITICAL
-          exit-code: 1
-          format: sarif
-          output: trivy.sarif
-          ignore-unfixed: true
-
-      - name: Upload SARIF to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: trivy.sarif
-```
-
-The `if: always()` on the upload step ensures findings appear in the
-Security tab even when the scan step exits non-zero.
+with GitHub Code Scanning. For the full GitHub Actions workflow (with
+`security-events: write`, the pinned `trivy-action`, and an
+`if: always()` SARIF upload so findings surface even when the scan exits
+non-zero), see [references/trivy-config.md](references/trivy-config.md).
 
 To scope the scan to a single IaC type, pass `--misconfig-scanners` per
 [cli reference][cli]:

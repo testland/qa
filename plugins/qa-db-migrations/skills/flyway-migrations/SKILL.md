@@ -7,26 +7,12 @@ description: "Authors and runs Flyway database migrations - versioned (`V1__add_
 
 ## Overview
 
-Per [documentation.red-gate.com/fd/flyway-documentation-138346877.html][fw-home]:
+Flyway tracks applied migrations in a per-database `flyway_schema_history`
+table and applies pending migrations in order by version number
+([fw-how][fw-how]).
 
 [fw-home]: https://documentation.red-gate.com/fd/flyway-documentation-138346877.html
-
-> "Redgate Flyway extends DevOps to your databases to accelerate
-> software delivery and ensure quality code so you can deploy with
-> confidence. From version control to continuous delivery, Flyway
-> builds on application delivery processes to automate database
-> deployments."
-
-Flyway tracks applied migrations in a per-database
-`flyway_schema_history` table (per [documentation.red-gate.com/fd/quickstart-how-flyway-works-184127223.html][fw-how]):
-
 [fw-how]: https://documentation.red-gate.com/fd/quickstart-how-flyway-works-184127223.html
-
-> "[The flyway_schema_history table] is used to track the changes
-> to the database."
-
-> "The migrations are applied in order based on their **version
-> number**."
 
 ## When to use
 
@@ -41,29 +27,13 @@ Flyway tracks applied migrations in a per-database
 
 ## How to use
 
-1. Install Flyway via CLI, Docker, Maven, or Gradle (Step 1).
-2. Create versioned `V<n>__desc.sql` files in `db/migration/`; use
-   `R__` for repeatable views / procs (Step 2).
-3. Configure `flyway.conf` with the JDBC URL and set
-   `cleanDisabled=true` for any non-ephemeral DB (Step 5).
-4. Preview with `flyway info`, then apply pending migrations with
-   `flyway migrate` (Steps 3 - 4).
-5. Verify checksums of applied migrations with `flyway validate`
-   before each deploy (Step 3).
-6. Gate every PR in CI: spin an ephemeral DB, apply migrations, run
-   tests against the migrated schema (Step 6).
-7. If a migration fails mid-run, fix `flyway_schema_history` with
-   `flyway repair` - never by editing an applied file (Step 3,
-   Anti-patterns).
+Follow Steps 1 - 7 below in order; each numbered step is the single source
+for that part of the workflow.
 
 ## Step 1 - Install
 
-Per [fw-home][fw-home]: "Flyway Command Line runs on Windows,
-macOS, Linux, and is available on docker." Plus Maven plugin and
-Gradle Plugin distributions.
-
-Common install paths (consult [fw-home][fw-home] for current download
-URL by platform):
+Flyway runs on Windows, macOS, Linux, and Docker, plus Maven and Gradle
+plugin distributions ([fw-home][fw-home]). Common install paths:
 
 ```bash
 # Docker (zero-install for CI)
@@ -78,9 +48,9 @@ brew install flyway
 
 ## Step 2 - First migration
 
-Per [fw-how][fw-how], migrations may be "written in either SQL,
-Java, or other scripting languages." File-naming convention places
-migrations in the configured `locations` (default `db/migration`):
+Migrations may be written in SQL, Java, or other scripting languages
+([fw-how][fw-how]). File naming places migrations in the configured
+`locations` (default `db/migration`):
 
 ```
 db/migration/
@@ -103,31 +73,19 @@ configured suffix) marks the file as a migration.
 
 ## Step 3 - Core commands
 
-Per [fw-home][fw-home]: "Flyway has the following commands at its
-disposal: Migrate, Clean, Info, Validate, Undo, Baseline, Repair,
-Check and Snapshot."
-
-| Command | Use |
-|---|---|
-| `flyway migrate` | Apply pending migrations |
-| `flyway info` | Show applied + pending migration list |
-| `flyway validate` | Verify checksums of applied migrations vs disk files |
-| `flyway baseline` | Mark a legacy schema state as baseline (skip prior migrations) |
-| `flyway repair` | Fix a broken `flyway_schema_history` (e.g., after a failed migration) |
-| `flyway undo` | Roll back the last versioned migration (Teams) |
-| `flyway clean` | **Drop all objects** in the schema (production-disabled by default) |
+The daily loop is `flyway info` (preview pending) -> `flyway migrate` (apply
+pending) -> `flyway validate` (checksum-verify applied files before deploy).
+After a failed migration, `flyway repair` fixes `flyway_schema_history` -
+never edit an applied file. Full command reference (baseline, undo, clean,
+and the rest): [references/commands.md](references/commands.md).
 
 ## Step 4 - Pending-migration semantics
 
-Per [fw-how][fw-how]:
-
-> "If their version number is lower than the table's current
-> version, they are ignored by default. The remaining migrations
-> are the **pending migrations**: available, but not applied."
-
-This is the safety property: a developer who pulls main with new
-migrations and runs `flyway migrate` applies only the new ones; old
-ones already in `flyway_schema_history` are not re-run.
+Migrations with a version lower than the history table's current version are
+ignored by default; the rest are pending - available but not applied
+([fw-how][fw-how]). Safety property: a developer who pulls main and runs
+`flyway migrate` applies only the new migrations; those already in
+`flyway_schema_history` are not re-run.
 
 ## Step 5 - Configuration
 
@@ -151,26 +109,10 @@ production config; only enable for ephemeral test databases.
 
 ## Step 6 - CI integration
 
-Pattern: ephemeral DB (Docker / Testcontainers) per PR + apply
-migrations + run tests against the migrated schema.
-
-```yaml
-- name: Spin up Postgres
-  uses: docker/setup-buildx-action@v3
-- run: docker run -d --name pg -p 5432:5432 -e POSTGRES_PASSWORD=pwd postgres:16
-- name: Apply migrations
-  run: |
-    docker run --rm --network=host \
-      -v "$PWD/db/migration:/flyway/sql" \
-      flyway/flyway -url=jdbc:postgresql://localhost:5432/postgres \
-      -user=postgres -password=pwd migrate
-- name: Run tests
-  run: mvn test
-```
-
-For full integration with `testcontainers` (in the qa-test-environment
-plugin): spin up the DB via Testcontainers, then call
-`Flyway.configure()` in JUnit `@BeforeAll`.
+Gate every PR on an ephemeral DB (Docker / Testcontainers): spin the DB,
+apply migrations, run tests against the migrated schema. The full GitHub
+Actions job and the Testcontainers `@BeforeAll` pattern are in
+[references/commands.md](references/commands.md).
 
 ## Step 7 - Composition with sister tools
 
@@ -216,6 +158,7 @@ Add an index on `users.email` and ship it through CI:
 
 ## References
 
+- [references/commands.md](references/commands.md) - full command table + CI job
 - [fw-home][fw-home] - main documentation, command list, supported
   databases
 - [fw-how][fw-how] - conceptual model: schema_history table,

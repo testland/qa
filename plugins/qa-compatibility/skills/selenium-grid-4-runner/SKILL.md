@@ -33,8 +33,6 @@ For cloud-hosted alternatives see
 
 ### Six-component architecture
 
-Per Selenium docs:
-
 | Component | Role |
 |---|---|
 | **Router** | Entry point; routes WebDriver requests to the right session |
@@ -73,54 +71,26 @@ java -jar selenium-server-<version>.jar node \
   --port 5555
 ```
 
-Or distributed (all components separated):
-
-```bash
-# Event Bus
-java -jar selenium-server.jar event-bus --port 5557
-
-# New Session Queue
-java -jar selenium-server.jar sessionqueue --port 5559
-
-# Session Map
-java -jar selenium-server.jar sessions --port 5556
-
-# Distributor
-java -jar selenium-server.jar distributor --port 5553 \
-  --sessions http://sessions-host:5556 \
-  --sessionqueue http://queue-host:5559 \
-  --bind-bus-events false \
-  --publish-events tcp://event-bus-host:4442 \
-  --subscribe-events tcp://event-bus-host:4443
-
-# Router
-java -jar selenium-server.jar router --port 4444 \
-  --sessions http://sessions-host:5556 \
-  --distributor http://distributor-host:5553 \
-  --sessionqueue http://queue-host:5559
-
-# Node(s)
-java -jar selenium-server.jar node \
-  --publish-events tcp://event-bus-host:4442 \
-  --subscribe-events tcp://event-bus-host:4443
-```
-
-Per Selenium docs, the fully-distributed mode is for very large
-deployments; most teams run hub-and-node.
+For very large deployments each of the six components can run as its own
+process; see
+[references/distributed-and-ci.md](references/distributed-and-ci.md). Most teams
+run hub-and-node.
 
 ### Docker stack
 
-Per Selenium docs Docker images are at `selenium/*` on Docker Hub:
+Docker images are published as `selenium/*` on Docker Hub. Pin one Grid version
+across every image via a single `SE_VERSION` variable (examples use `4.21.0`);
+keep it identical on the Hub and all Nodes.
 
 ```yaml
-# docker-compose.yml
+# docker-compose.yml   (set SE_VERSION=4.21.0 in .env or the environment)
 services:
   selenium-hub:
-    image: selenium/hub:4.21.0
+    image: selenium/hub:${SE_VERSION}
     ports: ["4442:4442", "4443:4443", "4444:4444"]
 
   chrome:
-    image: selenium/node-chrome:4.21.0
+    image: selenium/node-chrome:${SE_VERSION}
     shm_size: 2gb
     depends_on: [selenium-hub]
     environment:
@@ -130,7 +100,7 @@ services:
       - SE_NODE_MAX_SESSIONS=2
 
   firefox:
-    image: selenium/node-firefox:4.21.0
+    image: selenium/node-firefox:${SE_VERSION}
     shm_size: 2gb
     depends_on: [selenium-hub]
     environment:
@@ -139,7 +109,7 @@ services:
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
 
   edge:
-    image: selenium/node-edge:4.21.0
+    image: selenium/node-edge:${SE_VERSION}
     shm_size: 2gb
     depends_on: [selenium-hub]
     environment:
@@ -155,7 +125,7 @@ many tabs).
 
 ```bash
 docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" \
-  selenium/standalone-chrome:4.21.0
+  selenium/standalone-chrome:${SE_VERSION}
 ```
 
 Port 7900 exposes noVNC (browser at http://localhost:7900) for
@@ -194,7 +164,7 @@ Standard W3C - no grid-specific options needed:
 
 ### Session-queue tuning
 
-Per Selenium docs, key knobs:
+Key knobs:
 
 | Setting | Effect |
 |---|---|
@@ -228,27 +198,9 @@ via volume mount.
 
 ## CI integration
 
-```yaml
-on: pull_request
-jobs:
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Start Selenium Grid
-        run: docker-compose -f selenium-grid.yml up -d
-      - name: Wait for Grid ready
-        run: |
-          for i in {1..30}; do
-            curl -s http://localhost:4444/wd/hub/status | grep -q '"ready":true' && break
-            sleep 2
-          done
-      - name: Run E2E tests
-        run: pytest tests/e2e/ --grid-url=http://localhost:4444/wd/hub
-      - name: Tear down Grid
-        if: always()
-        run: docker-compose -f selenium-grid.yml down
-```
+Boot the grid, gate on `/status` ready before running tests, and always tear
+down. Full GitHub Actions workflow:
+[references/distributed-and-ci.md](references/distributed-and-ci.md).
 
 ## Anti-patterns
 

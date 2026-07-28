@@ -87,27 +87,18 @@ partition (two differently malformed email addresses are still one partition).
 Treat a multi-cluster result as absence of evidence for shallowness, not proof
 of good partitioning.
 
-**The PASS bar.** The ISTQB Certified Tester Foundation Level syllabus v4.0.1
-§4.2.1 (page 39,
-[PDF](https://www.istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf))
-states the criterion: "In EP, the coverage items are the equivalence
-partitions. To achieve 100% coverage with this test technique, test cases must
-exercise all identified partitions (including invalid partitions) by covering
-each partition at least once." The same section names Each Choice coverage,
-which "requires test cases to exercise each partition from each set of
-partitions at least once" for entry points with several parameters, and notes
-it "does not take into account combinations of partitions".
+**The PASS bar.** The ISTQB CTFL syllabus v4.0.1 §4.2.1 (page 39) requires, for
+100% EP coverage, that test cases exercise every identified partition (invalid
+ones included) at least once; Each Choice coverage extends this per parameter.
+Verbatim quotations and the coverage formula are in
+[references/grounding.md](references/grounding.md).
 
 This audit's PASS bar is one valid partition plus one invalid partition per
-parameter. That is a floor beneath the syllabus criterion, not a restatement of
-it: clearing the floor does not establish 100% EP coverage, it only establishes
-that more than one partition was exercised. Where the specification does
-enumerate partitions, measure against the syllabus formula instead: partitions
-exercised by at least one test case, divided by total partitions identified,
-expressed as a percentage
-([coverage](https://glossary.istqb.org/en_US/term/coverage) is defined as "the
-degree to which specified coverage items are exercised by a test suite,
-expressed as a percentage").
+parameter - a floor beneath the syllabus criterion, not a restatement of it:
+clearing the floor only establishes that more than one partition was exercised,
+not 100% EP coverage. Where the specification enumerates partitions, measure
+against the syllabus formula instead (partitions exercised / partitions
+identified, as a percentage).
 
 `§EP` verdict:
 
@@ -119,24 +110,19 @@ expressed as a percentage").
 
 ## Step 3 - §BVA, boundary value analysis
 
-Boundaries exist only where an order exists. The CTFL syllabus v4.0.1 §4.2.2
-(page 40) is explicit: BVA "is a test technique based on exercising the
-boundaries of equivalence partitions. Therefore, BVA can only be used for
-ordered partitions." This is the grounding for the `n/a` rule below, not a
-convenience exemption.
+Boundaries exist only where an order exists: the CTFL syllabus v4.0.1 §4.2.2
+(page 40) states BVA can only be used for ordered partitions. That is the
+grounding for the `n/a` rule below, not a convenience exemption.
 
 For each parameter with a machine-readable bound (a schema `minimum` /
 `maximum` / `minLength` / `maxLength`, a validation decorator, an interface
 contract with a documented range, a declared collection-size limit), check that
 at least one test exercises a value at `min`, `min-1`, `max`, or `max+1`.
 
-That check is 2-value BVA. Per §4.2.2: "In 2-value BVA, for each boundary value
-there are two coverage items: this boundary value and its closest neighbor
-belonging to the adjacent partition. To achieve 100% coverage with 2-value BVA,
-test cases must exercise all coverage items." Teams holding a stricter bar use
-3-value BVA, where "for each boundary value there are three coverage items:
-this boundary value and both its neighbors", which adds `min+1` and `max-1` to
-the required set.
+That check is 2-value BVA (the boundary value plus its closest neighbor in the
+adjacent partition). Teams holding a stricter bar use 3-value BVA, adding
+`min+1` and `max-1`. Verbatim §4.2.2 quotations are in
+[references/grounding.md](references/grounding.md).
 
 `§BVA` verdict:
 
@@ -173,12 +159,10 @@ declared error contract: it throws, it rejects, it returns an error value, or
 it documents a non-success response.
 
 **The zero threshold is a practitioner convention, not a standard.** No
-published standard fixes a minimum negative-assertion ratio. Zero is used here
-because it is the one value that is unambiguous: an entry point with a declared
-error contract and no assertion anywhere on that contract has demonstrably left
-a documented behaviour untested. Teams that set a floor above zero are choosing
-a local convention; say so when reporting it, and do not present any such
-number as a canonical requirement.
+published standard fixes a minimum negative-assertion ratio; zero is used
+because it is unambiguous - a declared error contract with no assertion on it
+has left a documented behaviour untested. Teams setting a floor above zero are
+choosing a local convention; report it as such, not as a canonical requirement.
 
 `§NEG` verdict:
 
@@ -241,40 +225,15 @@ or negative-case data generator.
 
 ## Worked example
 
-`createUser(email, age)`. The declared contract is `email: string` matching a
-format, `age: integer, minimum 18, maximum 120`, and the function throws
-`ValidationError` on a rejected input.
-
-The suite has three tests, passing `("ada@example.com", 30)`,
-`("grace@example.com", 42)`, and `("alan@example.com", 35)`, each asserting
-`expect(result.id).toEqual(expect.any(String))`.
-
-Walking the axes:
-
-- **§EP.** `email` values are all the same length band and character class, all
-  well-formed: one partition, no invalid partition. `age` values are 30, 42,
-  35: same sign, same order of magnitude, all inside the valid range: one
-  partition. **SHALLOW** on both parameters.
-- **§BVA.** `age` declares `minimum 18` and `maximum 120`, so the partition is
-  ordered and the axis applies. Required 2-value coverage items are 17, 18,
-  120, 121. None is exercised. **SHALLOW**.
-- **§NEG.** Three assertions, all targeting a returned value: ratio 0.
-  `ValidationError` is declared and never asserted. **SHALLOW**.
-
-Verdict: SHALLOW. The minimum set that clears the floor is one malformed
-`email` (§EP invalid partition), `age=17` and `age=121` (§BVA, adding `age=18`
-and `age=120` if the team holds a 3-value bar), and one assertion that a
-rejected input raises `ValidationError` (§NEG).
-
-Note how three tests bought nothing: they are one test repeated with the
-literals changed. This is the pattern the literal-clustering heuristic in
-Step 2 exists to name.
+A full walk of `createUser(email, age)` across all three axes - three
+happy-path tests that clear no axis, and the minimum set that fixes each - is in
+[references/worked-example.md](references/worked-example.md).
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Correction |
 |---|---|---|
-| Counting three happy-path tests as EP coverage | Three tests of the same partition are one test, repeated. Volume of test cases is not breadth of input. An industry survey found 70% of teams use AI for test-case creation but only 19.9% for risk identification, with 40.7% of adopters citing "more diverse and complex test cases" as a benefit ([PractiTest State of Testing](https://www.practitest.com/state-of-testing/)) - generating more cases is not the same as widening the input domain. | Cluster the literal arguments per parameter (Step 2) before counting anything. |
+| Counting three happy-path tests as EP coverage | Three tests of the same partition are one test, repeated: volume of cases is not breadth of input. Survey stats on AI test generation are in [references/grounding.md](references/grounding.md). | Cluster the literal arguments per parameter (Step 2) before counting anything. |
 | Demanding §BVA on an unordered or unbounded parameter | BVA "can only be used for ordered partitions" (CTFL v4.0.1 §4.2.2). | Record `§BVA: n/a` when no ordered constraint is declared. |
 | Verdict issued on the first SHALLOW axis | Some entry points legitimately have no bound and no error contract; a partial walk manufactures findings. | Score all three axes, then roll up (Step 5). |
 | Demanding negative cases for a total function | A function whose domain is total has no rejection path. | Treat a declared throw, rejection, error return, or non-success response as the §NEG trigger; no declaration means `n/a`. |

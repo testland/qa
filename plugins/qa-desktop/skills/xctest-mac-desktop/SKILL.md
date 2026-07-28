@@ -9,32 +9,20 @@ metadata:
 
 ## Overview
 
-XCTest is the **first-party test framework** bundled with Xcode. Per
-Apple's [*Testing with Xcode* - UI Testing chapter][appleuit]:
+XCTest is the **first-party test framework** bundled with Xcode, used for unit,
+performance, and UI tests. Per Apple's [*Testing with Xcode* - UI Testing
+chapter][appleuit], "UI Testing in Xcode rests on two core technologies: the
+XCTest framework and Accessibility," layered via three classes -
+`XCUIApplication`, `XCUIElement`, and `XCUIElementQuery` ([appleuit][appleuit]).
 
 [appleuit]: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html
 
-> "UI testing rests upon two core technologies: the XCTest framework
-> and Accessibility."
+This skill wraps XCTest for **macOS desktop** apps. iOS / iPadOS use the same
+APIs with different launch + simulator semantics and are out of scope here.
 
-This is the same framework used for unit tests and performance
-tests - UI testing is layered on top via three classes
-([appleuit][appleuit]):
-
-> "UI Testing in Xcode rests on two core technologies: the XCTest
-> framework and Accessibility … XCUIApplication … XCUIElement …
-> XCUIElementQuery."
-
-This skill wraps XCTest for **macOS desktop** apps. For iOS / iPadOS
-the same APIs apply with different launch + simulator semantics - 
-that path is intentionally out of scope; the coverage here is desktop
-only.
-
-**Strategic frame:** see
-`desktop-test-strategy-reference`
-for how macOS sits in the three-OS landscape (UIA on Windows, XCTest
-on macOS, AT-SPI on Linux). The locator strategy across all three
-backends converges on accessibility identifiers.
+**Strategic frame:** `desktop-test-strategy-reference` places macOS in the
+three-OS landscape (UIA on Windows, XCTest on macOS, AT-SPI on Linux); the
+locator strategy converges on accessibility identifiers across all three.
 
 ## When to use
 
@@ -78,13 +66,8 @@ Per [appleuit][appleuit]:
 
 ## Step 2 - Test-method naming + lifecycle
 
-Per [applewt][applewt], a test method must:
-
-- "Begin with the prefix `test`"
-- "Take no parameters"
-- "Return `void`"
-
-Lifecycle order ([applewt][applewt]):
+Per [applewt][applewt], a test method must "begin with the prefix `test`", take
+no parameters, and return `void`. Lifecycle order:
 
 1. Class setup (`+ (void)setUp`) - once before all tests.
 2. Per test: `setUp` → test method → `tearDown`.
@@ -227,51 +210,17 @@ post-mortem.
 
 ## Step 8 - Parsing results
 
-The `.xcresult` bundle is queryable via `xcrun xcresulttool`:
-
-```bash
-# JSON summary of the result bundle
-xcrun xcresulttool get --path build/result.xcresult --format json
-
-# Extract a specific failure's screenshot attachment
-xcrun xcresulttool get --path build/result.xcresult \
-  --id <attachment-id> --output failure.png
-```
-
-For CI dashboards that expect JUnit XML, the open-source `xcresultparser`
-project converts `.xcresult` → JUnit XML; pair downstream with
-`junit-xml-analysis`.
+Query the `.xcresult` bundle with `xcrun xcresulttool` (JSON summary, attachment
+extraction), then convert to JUnit XML via the open-source `xcresultparser` for
+`junit-xml-analysis`. Commands:
+[references/ci-and-results.md](references/ci-and-results.md).
 
 ## Step 9 - CI integration
 
-```yaml
-# .github/workflows/macos-xctest.yml
-jobs:
-  test:
-    runs-on: macos-14   # Apple Silicon
-    steps:
-      - uses: actions/checkout@v5
-      - uses: maxim-lobanov/setup-xcode@v1
-        with: { xcode-version: '15.4' }
-      - name: Build + test
-        run: |
-          xcodebuild test \
-            -project MyApp.xcodeproj \
-            -scheme MyApp \
-            -destination 'platform=macOS' \
-            -resultBundlePath build/result.xcresult \
-            -enableCodeCoverage YES
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: xcresult
-          path: build/result.xcresult
-```
-
-Hosted macOS runners on GitHub-hosted are interactive sessions - 
-XCUIApplication launches work without extra display setup. Self-
-hosted Mac headless setups need an attached console or VNC session;
-XCTest UI cannot run under launchd alone.
+Hosted macOS runners are interactive, so `xcodebuild test` UI launches need no
+extra display setup; self-hosted headless Macs need an attached console or VNC
+session (XCTest UI cannot run under launchd alone). Full workflow:
+[references/ci-and-results.md](references/ci-and-results.md).
 
 ## Anti-patterns
 

@@ -11,7 +11,7 @@ The exploratory-testing literature converged on four canonical heuristic test-de
 
 ## When to use
 
-- A feature is being tested with no story, no AC, no documentation (the dominant real-world starting point for [exploratory testing](https://en.wikipedia.org/wiki/Exploratory_testing), an approach "concisely described as simultaneous learning, test design and test execution"; Cem Kaner coined the term in 1984).
+- A feature is being tested with no story, no AC, no documentation (the dominant real-world starting point for [exploratory testing](https://en.wikipedia.org/wiki/Exploratory_testing)).
 - A legacy / brownfield codebase has no test coverage and you are onboarding cold.
 - A competitor or reverse-engineered product is under review (security audit, market intel).
 - A spec exists but is so thin that heuristic supplementation is needed alongside it.
@@ -113,37 +113,12 @@ The four models are orthogonal:
 
 The models are applied in the order given in "How to use" above: SFDPOT enumerates targets, Whittaker attacks each one, FEW HICCUPPS classifies the surprises, and 25010 confirms no quality dimension was skipped.
 
-## Worked example - "test the new checkout flow, no spec"
+## Worked example
 
-Input: "We're shipping a new checkout next week. Test it." That's it.
-
-**SFDPOT walk:**
-- **S - Structure**: cart service, payment service, inventory service, idempotency layer. (5 minutes investigating staging deploys.)
-- **F - Function**: add to cart, edit qty, apply coupon, choose shipping, choose payment method, place order, see confirmation, receive email.
-- **D - Data**: SKU, qty, price, coupon code, address (with locale variants), card / wallet / bank transfer, order id.
-- **P - Platform**: desktop Chrome / Safari / Firefox, mobile iOS / Android web, in-app webview (if any), screen reader.
-- **O - Operations**: deploy / rollback, alerts on payment-service errors, support's ability to see a stuck order.
-- **T - Time**: cart expiry (15 min default?), coupon expiry, payment-provider timeout (30s typical), idempotency-key TTL.
-
-**Whittaker attacks** applied to each function:
-- Input attack on coupon: empty, expired, wrong-case, leading whitespace, SQL injection, 256-char string, emoji.
-- Stored-data attack on cart: manually set cart.qty to 99999 in DB, then proceed.
-- UI attack: double-click "place order"; back-button after charge; refresh during payment redirect.
-- Computation attack on price: cart total at the platform's max-amount boundary; currency conversion edge case.
-- Configuration attack: payment provider's test key vs prod key; coupon-service unreachable.
-
-**Quality cross-check** (ISO 25010):
-- Performance: place-order latency under load; payment-provider timeout handling.
-- Security: PCI-DSS scope; address / card data leakage in logs.
-- Usability: error-message clarity; keyboard-only flow; screen-reader announcements.
-- Reliability: idempotency under network retry; recovery after payment-provider 5xx.
-
-**Oracle (FEW HICCUPPS) for ambiguous findings**:
-- Cart shows $99.99 - order says $100.00. Statutes/standards: PCI / accounting (deviation between displayed and charged amount). Bug.
-- Place-order button stays clickable while request is in flight. Comparable products: every other site disables. Product purpose: prevents double-charge. Bug.
-- Coupon `SUMMER2026` works but `summer2026` doesn't. User expectations: case-insensitive coupons are the norm. Probably bug - file with the FEW HICCUPPS evidence and let product decide.
-
-The output is the input to `test-case-from-live-feature` which turns the SFDPOT + Whittaker walk into a structured test-case matrix.
+A full end-to-end walk of the four models against a zero-spec brief ("test the new
+checkout flow, no spec"), producing SFDPOT targets, Whittaker attacks, ISO 25010
+cross-checks, and FEW HICCUPPS oracle verdicts, is in
+[references/worked-example.md](references/worked-example.md).
 
 ## Anti-patterns
 
@@ -174,11 +149,9 @@ The output is the input to `test-case-from-live-feature` which turns the SFDPOT 
 
 ## References
 
-- James Bach - Heuristic Test Strategy Model v6.3 (HTSM): https://www.satisfice.com/download/heuristic-test-strategy-model
+Each model's primary source is cited inline at its section: HTSM / SFDPOT (satisfice.com), FEW HICCUPPS (developsense.com), ISO/IEC 25010 (Wikipedia), and Whittaker's attack patterns (via the exploratory-testing article). Additional references, not repeated inline:
+
 - James Bach blog - heuristics category (SFDPOT, CRUSSPIC STMPL, consistency heuristics): https://www.satisfice.com/blog/archives/category/heuristics
-- Michael Bolton - DevelopSense (FEW HICCUPPS oracle heuristic, exploratory testing methodology): https://developsense.com/
-- ISO/IEC 25010 - system / software product quality model (eight characteristics; 2023 revision adds Safety + Interaction Capability): https://en.wikipedia.org/wiki/ISO/IEC_25010
-- Exploratory testing - "concisely described as simultaneous learning, test design and test execution", term coined by Kaner in 1984; Whittaker "How to Break Software" attack patterns; session-based test management: https://en.wikipedia.org/wiki/Exploratory_testing
 - ISTQB glossary - exploratory testing: https://glossary.istqb.org/en_US/term/exploratory-testing
 - ISTQB glossary - heuristic evaluation: https://glossary.istqb.org/en_US/term/heuristic-evaluation
 - `test-case-from-live-feature` - downstream skill that consumes this catalog.

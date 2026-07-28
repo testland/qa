@@ -9,16 +9,14 @@ metadata:
 
 ## Overview
 
-QEMU system emulation, per
-[www.qemu.org/docs/master/system/](https://www.qemu.org/docs/master/system/),
-is the mode "for users using QEMU for full system emulation (as
-opposed to user-mode emulation). This includes working with
-hypervisors such as KVM, Xen or Hypervisor.Framework". Each
-target architecture has a `qemu-system-<arch>` binary - 
-`qemu-system-arm`, `qemu-system-aarch64`, `qemu-system-riscv32`,
-`qemu-system-riscv64` are the embedded-relevant ones.
+QEMU system emulation (per
+[qemu.org system docs](https://www.qemu.org/docs/master/system/))
+runs cross-compiled ELF test binaries on virtual MCUs and SoCs.
+The embedded-relevant binaries are `qemu-system-arm`,
+`qemu-system-aarch64`, `qemu-system-riscv32`, and
+`qemu-system-riscv64`.
 
-For an embedded test pipeline, QEMU sits between the host build
+In an embedded test pipeline QEMU sits between the host build
 (fast, but misses arch-specific behaviour) and the physical
 hardware-in-loop rig (slow, expensive). A cross-compiled
 GoogleTest or Unity binary runs under QEMU with semihosting; the
@@ -27,14 +25,10 @@ code; CI gates on it.
 
 Composes with:
 
-- `googletest-embedded-arm` - 
-  cross-compiled C++ test binary.
-- `unity-test-framework-c` - 
-  cross-compiled C test binary.
-- `ceedling-build-runner` - 
-  Ceedling project configured for ARM cross-compile.
-- `hardware-in-loop-reference` - 
-  the next rung up the V-cycle (PIL / HIL).
+- `googletest-embedded-arm` - cross-compiled C++ test binary.
+- `unity-test-framework-c` - cross-compiled C test binary.
+- `ceedling-build-runner` - Ceedling project configured for ARM cross-compile.
+- `hardware-in-loop-reference` - the next rung up the V-cycle (PIL / HIL).
 
 ## When to use
 
@@ -57,50 +51,28 @@ rig per
 
 ### Machine + CPU selection
 
-Per [www.qemu.org/docs/master/system/target-arm.html](https://www.qemu.org/docs/master/system/target-arm.html),
-the ARM machines relevant to embedded testing include
-mps2-an385, mps2-an386, mps2-an500, mps2-an505, mps2-an511,
-mps2-an521, mps3-an524, mps3-an536, mps3-an547, the Stellaris
-lm3s6965evb / lm3s811evb, Raspberry Pi raspi0 / raspi1ap /
-raspi2b / raspi3ap / raspi3b / raspi4b, and Xilinx
-xilinx-zynq-a9 / xlnx-zcu102. The **virt** board, per the same
-docs, is "a platform which doesn't correspond to any real
-hardware and is designed for use in virtual machines".
+Match the machine to the CPU profile: mps2-* boards for
+M-profile cores, `virt` for A-profile and RISC-V. The common
+Cortex-M mapping:
 
 | Test target | QEMU command | Typical `-cpu` |
 |---|---|---|
 | Cortex-M0 / M0+ | `qemu-system-arm -M mps2-an385` | `cortex-m0` |
 | Cortex-M3 | `qemu-system-arm -M mps2-an385` | `cortex-m3` (board default) |
 | Cortex-M4 | `qemu-system-arm -M mps2-an386` | `cortex-m4` |
-| Cortex-M7 | `qemu-system-arm -M mps2-an500` | `cortex-m7` |
-| Cortex-M33 (TrustZone-M) | `qemu-system-arm -M mps2-an505 / mps2-an521 / mps3-an524` | `cortex-m33` |
-| Cortex-A15 / A57 | `qemu-system-arm -M virt` (32-bit) / `qemu-system-aarch64 -M virt` (64-bit) | `cortex-a15` / `cortex-a57` / `max` |
-| Stellaris LM3S6965 (older M3 reference) | `qemu-system-arm -M lm3s6965evb` | implicit |
-| Raspberry Pi 3B (Cortex-A53) | `qemu-system-aarch64 -M raspi3b` | implicit (`cortex-a53`) |
 
-Per [www.qemu.org/docs/master/system/arm/cpu-features.html](https://www.qemu.org/docs/master/system/arm/cpu-features.html),
-"Named CPU models generally do not work with KVM" - for
-emulation-only test runs (not KVM-accelerated) the named models
-work fine. The special **`max` CPU type** is "available for
-comprehensive feature testing".
+The full machine list, the A-profile / Raspberry Pi / Xilinx
+targets, and the `max` CPU note are in
+[references/boards.md](references/boards.md).
 
 ### Booting the test ELF
 
-Per [www.qemu.org/docs/master/system/invocation.html](https://www.qemu.org/docs/master/system/invocation.html):
-
-| Flag | Effect |
-|---|---|
-| `-M [type=]name[,prop=value,...]` | Select emulated machine; `-machine help` lists all |
-| `-cpu model` | Select CPU model; `-cpu help` lists models for the target |
-| `-smp [cpus=]n[,cores=...,...]` | SMP topology - for multi-core test targets |
-| `-m [size=]megs[,slots=n,maxmem=size]` | Guest RAM; M / G suffixes |
-| `-kernel file` | Kernel image loaded directly into guest memory - for embedded tests, this is the test ELF |
-| `-bios file` | Custom BIOS / ROM image |
-| `-append "<string>"` | Kernel command-line arguments (Linux targets) |
-| `-nographic` | No GUI; serial → console |
-| `-serial stdio` | Redirect serial port to host stdin / stdout |
-| `-monitor stdio` / `-monitor tcp:host:port` | QEMU human monitor |
-| `-qmp tcp:host:port[,server,nowait]` | QMP machine protocol over TCP - JSON-RPC |
+For an embedded test, load the ELF with `-kernel` and send serial
+to the console with `-nographic`. The full invocation flag table
+(`-M`, `-cpu`, `-smp`, `-m`, `-bios`, `-serial`, `-monitor`,
+`-qmp`), per
+[invocation.html](https://www.qemu.org/docs/master/system/invocation.html),
+is in [references/flags.md](references/flags.md).
 
 ### ARM semihosting
 
@@ -256,49 +228,11 @@ for I/O-heavy code. For real-time-sensitive tests, escalate to
 
 ## CI integration
 
-GitHub Actions:
-
-```yaml
-jobs:
-  qemu-arm:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Install toolchain
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-arm-none-eabi qemu-system-arm
-      - name: Cross-build test binary
-        run: |
-          arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -g \
-              --specs=rdimon.specs \
-              -I src -I ext/Unity/src \
-              src/*.c ext/Unity/src/unity.c \
-              test/test_*.c test/*_Runner.c \
-              -o build/test.elf -lrdimon
-      - name: Run under QEMU (mps2-an386 / cortex-m4)
-        run: |
-          qemu-system-arm -M mps2-an386 -cpu cortex-m4 \
-              -nographic \
-              -semihosting-config enable=on,target=native \
-              -kernel build/test.elf | tee build/qemu.log
-          # exit code is the Unity failure count (semihosting _exit)
-      - name: Also run under Cortex-M0 for ABI sanity
-        run: |
-          arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -O0 -g \
-              --specs=rdimon.specs \
-              -I src -I ext/Unity/src \
-              src/*.c ext/Unity/src/unity.c \
-              test/test_*.c test/*_Runner.c \
-              -o build/test-m0.elf -lrdimon
-          qemu-system-arm -M mps2-an385 -cpu cortex-m0 \
-              -nographic -semihosting-config enable=on,target=native \
-              -kernel build/test-m0.elf
-```
-
-The "run under multiple CPUs" pattern is the cheap-as-chips way
-to catch CPU-feature regressions - float vs no-float, ARMv6-M vs
-ARMv7-M.
+The canonical GitHub Actions pipeline (install toolchain,
+cross-build, run under two CPU profiles) is in
+[references/ci.md](references/ci.md). The "run under multiple
+CPUs" pattern is the cheap way to catch CPU-feature regressions -
+float vs no-float, ARMv6-M vs ARMv7-M.
 
 ## Anti-patterns
 

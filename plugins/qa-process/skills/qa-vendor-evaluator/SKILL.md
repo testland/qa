@@ -41,207 +41,21 @@ The skill halts with `INSUFFICIENT_INPUT` if any required input is missing.
 
 ## Step 2 - Score on the seven procurement axes
 
-Per the canonical commercial-procurement framework, seven axes drive the decision. The skill scores each vendor on each axis, with **every score citing its source**.
+Per the canonical commercial-procurement framework, seven axes drive the decision. Score each vendor on each axis, with **every score citing its source**:
 
-### Axis A1 - Capability fit
+- **A1 Capability fit** - feature coverage vs the team's NFR list, plus documented limits.
+- **A2 Cost model** - pricing model, year-1/2/3 cost at the team's scale, hidden costs.
+- **A3 Integration depth** - CI, tracker, observability, test-framework, SSO, reverse data flow; often under-weighted despite integration friction blocking 37% of teams ([Capgemini WQR 2025-26](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/)). Score each integration native (1.0) / API-buildable (0.7) / community-plugin (0.5) / not available (0.0).
+- **A4 Lock-in risk** - format portability, artifact export, data residency, migration path.
+- **A5 Exit cost** - test re-authoring, history portability, re-training, egress fees, early-termination.
+- **A6 Contractual posture** - SLA, support, security audits, on-prem, DPA/BAA, sub-processors.
+- **A7 Customer-reference data** - Gartner / G2 ratings, practitioner signal, community anecdote (tagged, not equal-weighted with surveyed data).
 
-How well does the vendor's feature set match the team's documented NFR priorities?
-
-| Sub-axis | Scoring rubric (per-vendor) |
-|---|---|
-| Core feature coverage | % of team's required features present (cite the team's requirement list) |
-| Advanced / aspirational features | Features the team doesn't need today but might in 2 years |
-| Documented limits | Per-account / per-test / per-user caps that may bind |
-
-### Axis A2 - Cost model
-
-How is the vendor priced and what does it cost at the team's scale?
-
-| Sub-axis | Scoring rubric |
-|---|---|
-| Pricing model | Per-seat / per-test / per-execution / flat licence / hybrid |
-| Cost at current team size | Year-1 cost, cited to vendor pricing page (vendor-data) |
-| Cost at projected team size | Year-2 and year-3 projections; the team's growth plan drives this |
-| Hidden costs | Add-ons (parallel execution, premium support, SSO, audit log, on-prem option) |
-| Volume-discount commitments | Annual commits, multi-year discounts (cite to vendor sales channel) |
-
-### Axis A3 - Integration depth with existing stack
-
-Per the [Capgemini WQR 2025-26](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/) finding (37% blocked by integration friction), this axis is often under-weighted in procurement. The skill weights it explicitly.
-
-| Sub-axis | Scoring rubric |
-|---|---|
-| CI integration | Native plugin? REST API? Webhook? CLI? Cite the integration doc URL per vendor |
-| Tracker integration | Jira / Linear / GitHub Issues / Azure DevOps |
-| Observability integration | Datadog / Grafana / New Relic / Sentry |
-| Test-framework binding | Playwright / Cypress / Selenium / per-language |
-| SSO / IAM | SAML / OIDC / SCIM provisioning |
-| Reverse data flow | Can the team export raw test results? In what format? |
-
-For each integration, score: native (1.0) / API-buildable (0.7) / community-plugin (0.5) / not available (0.0). Use the team's existing integration skills (`testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration`) as the per-vendor baseline.
-
-### Axis A4 - Vendor lock-in risk
-
-The cost of being unable to leave.
-
-| Sub-axis | Scoring rubric |
-|---|---|
-| Proprietary data formats | Are tests in a portable format (Gherkin / standard JSON / open spec) or vendor-proprietary DSL? |
-| Test artifact portability | Can the team export tests, results, history? In what format? Vendor-published export tools count toward portability. |
-| Data residency | Where is data stored? Can the team request export and deletion? |
-| Migration path | Are there documented or community-tested migration paths off this vendor (mabl → Playwright, Testim → Cypress)? |
-
-### Axis A5 - Exit cost
-
-The team has decided to leave in 24 months - what does it cost?
-
-| Sub-axis | Scoring rubric |
-|---|---|
-| Test re-authoring effort | If tests are vendor-DSL-bound, the migration is "rewrite from scratch." If tests are portable (Gherkin, standard fixtures), migration is mostly mechanical. |
-| History portability | Can the team take its test-result history? Defect-history correlation depends on this. |
-| Re-training | How long to retrain the team on the new vendor? |
-| Data egress fees | Some vendors charge for bulk data export. Cite the contract clause if applicable. |
-| Contract early-termination cost | Multi-year commits often have early-termination fees. |
-
-### Axis A6 - Contractual posture
-
-Procurement / legal / security review needs structured data.
-
-| Sub-axis | Scoring rubric |
-|---|---|
-| SLA tier | Uptime guarantee, support response time, escalation paths |
-| Support tier | Email-only / chat / phone / dedicated CSM |
-| Security audit availability | SOC 2 Type II report? ISO 27001? Penetration-test results? |
-| On-prem / private-cloud option | For regulated industries; cite the vendor's deployment options page |
-| Data-processing agreement | GDPR-compliant DPA available? HIPAA BAA? |
-| Sub-processor disclosure | Vendor's sub-processor list (the regulated-industry view) |
-
-### Axis A7 - Customer-reference data
-
-Independent (not vendor-published) signal.
-
-| Sub-axis | Scoring rubric |
-|---|---|
-| Gartner Peer Insights | Rating, review density, recency. Cite the category report URL. |
-| G2 / Capterra | Rating, review density. Flag if reviews are sparse or stale (<10 reviews in last 12 months). |
-| Practitioner blog / conference signal | Has the vendor been written about by recognised practitioners (Lisa Crispin, James Whittaker, etc.)? Cite the source. |
-| Reddit / r/QualityAssurance / Hacker News | Anecdotal community signal - tag as such. Don't weight equally with surveyed data. |
+The full per-sub-axis rubric for all seven axes is in [references/scoring-rubric.md](references/scoring-rubric.md).
 
 ## Step 3 - Emit the comparison matrix
 
-Output is a single markdown document with a per-axis matrix plus an evidence appendix:
-
-```markdown
-# Vendor evaluation - `<category>` - `<team>` - 2026-07
-
-## Vendors compared
-
-| Code | Vendor | Pricing page | Cited integration doc |
-|---|---|---|---|
-| V1 | TestRail (Gurock / Idera) | https://www.testrail.com/pricing/ | https://support.testrail.com/hc/en-us/articles/7077873061908 |
-| V2 | Qase | https://www.qase.io/pricing/ | https://docs.qase.io/en/articles/6417206-github |
-| V3 | Xray (Xpand IT, for Jira) | https://marketplace.atlassian.com/apps/1211769/xray-test-management-for-jira | https://docs.getxray.app/display/XRAYCLOUD/REST+API |
-
-## Team profile
-
-- Size: 12 QA engineers
-- Stack: Playwright + Jest, GitHub Actions, Linear (tracker), Datadog (observability)
-- Geography: distributed US + EU; data-residency: EU required
-- Regulated-industry: no
-- Time horizon: 24 months
-
-## NFR priorities (manager-supplied, ordered)
-
-1. Integration with Linear + GitHub Actions
-2. Cost at year-2 (team will grow to 18 engineers)
-3. Data residency (EU)
-4. Test-history portability (exit-cost matters; 24-month horizon)
-5. SSO (SAML / OIDC)
-6. Capability fit
-7. Customer-reference depth
-
-## Per-axis matrix
-
-### A1 - Capability fit
-
-| Vendor | Score (0-1.0) | Strengths | Gaps |
-|---|---|---|---|
-| TestRail | 0.85 | Mature test-case management, custom fields, bulk import / export | API rate limits documented at 180/min - may bind at scale |
-| Qase | 0.80 | Modern UI, AI-assisted case authoring | Smaller plugin ecosystem |
-| Xray | 0.95 | Deep Jira integration, BDD-native | Heavyweight Jira dependency the team doesn't have |
-
-### A2 - Cost model
-
-| Vendor | Year-1 (12 eng) | Year-2 (18 eng) | Hidden costs |
-|---|---|---|---|
-| TestRail | $5,328 (12 × $37/seat/mo Professional × 12) | $7,992 | SSO, automated backups, priority support are Enterprise-tier only |
-| Qase | $4,320 (12 × $30/seat/mo Business × 12) | $6,480 | None at this tier; SSO included from Business plan |
-| Xray | Quote from the Marketplace listing - Xray licenses by total Jira user tier, not by tester seat | Same tier rule at 18 engineers; re-quote if the Jira tier changes | Requires Jira Software seats if not already licensed |
-
-### A3 - Integration depth
-
-| Vendor | CI (GitHub Actions) | Tracker (Linear) | Observability (Datadog) | Test-framework (Playwright) | SSO |
-|---|---|---|---|---|---|
-| TestRail | Native (1.0) | API-buildable (0.7) | Community plugin (0.5) | API + `testrail-cli` (0.9) | SAML / OIDC (1.0) |
-| Qase | Native action (1.0) | Native (1.0) | Webhook (0.7) | Native @qase/playwright (1.0) | SAML (Business+) (0.8) |
-| Xray | API only (0.7) | API-buildable (0.7) | None native (0.0) | xray-junit-extensions (0.9) | SAML / OIDC (1.0) |
-
-### A4 - Vendor lock-in risk
-
-| Vendor | Format | Export | Lock-in score |
-|---|---|---|---|
-| TestRail | Proprietary case format; bulk CSV export | Documented CSV / XML export, JSON via API | Moderate (0.6) - export possible, but tests need re-authoring on migration |
-| Qase | YAML / JSON case format; native import / export | First-class export to JSON / YAML | Low (0.85) - portable artifacts |
-| Xray | BDD-native (Gherkin), JUnit / Cucumber export | Tied to Jira issue model; export possible but harder to disentangle | Moderate-high (0.5) - Jira coupling is the lock-in axis |
-
-### A5 - Exit cost (24-month migration scenario)
-
-| Vendor | Test re-authoring | History portability | Total exit cost (hand-wave) |
-|---|---|---|---|
-| TestRail | Cases portable as CSV; ~30% needs re-authoring for new tool | History exportable via API | ~3 person-months |
-| Qase | YAML / Gherkin cases mostly portable; ~10% re-authoring | Native export | ~1 person-month |
-| Xray | Gherkin scenarios portable; Jira-issue history harder to extract | API export; needs custom tooling | ~4 person-months |
-
-### A6 - Contractual posture
-
-| Vendor | SLA | Support | Security | EU residency |
-|---|---|---|---|---|
-| TestRail | 99.9% (Cloud), no SLA for self-hosted | Email; phone on Enterprise | SOC 2 Type II + ISO 27001 (cite vendor security page) | EU AWS region available on Enterprise |
-| Qase | 99.9% on Business+ | Email + chat; CSM on Enterprise | SOC 2 Type II (cite) | EU region available on Business |
-| Xray | Bound to Jira's SLA | Email + chat | SOC 2 Type II inherited from Xpand IT | Tied to Jira region |
-
-### A7 - Customer-reference data
-
-| Vendor | Gartner Peer Insights | G2 (recency / density) | Practitioner-signal |
-|---|---|---|---|
-| TestRail | 4.4/5 (382 reviews, mostly 2023-25) | 4.2/5, 250+ reviews | Cited in Lisa Crispin's *Agile Testing Condensed* |
-| Qase | 4.6/5 (180 reviews, 2024-26) | 4.7/5, 120+ reviews | Featured in TestBash 2025 case studies |
-| Xray | 4.4/5 (290 reviews) | 4.4/5, 200+ reviews | Heavy enterprise adoption signal; lighter mid-market |
-
-## Weighted score per NFR priorities
-
-| Axis | Weight (per team NFR order) | TestRail | Qase | Xray |
-|---|---|---|---|---|
-| A3 Integration | 0.25 | 0.78 | 0.92 | 0.62 |
-| A2 Cost | 0.20 | 0.65 | 0.95 | 0.70 |
-| A6 EU residency | 0.15 | 0.80 | 0.90 | 0.70 |
-| A5 Exit cost | 0.15 | 0.60 | 0.90 | 0.50 |
-| A6 SSO | 0.10 | 1.00 | 0.80 | 1.00 |
-| A1 Capability fit | 0.10 | 0.85 | 0.80 | 0.95 |
-| A7 Customer-reference | 0.05 | 0.90 | 0.85 | 0.85 |
-| **Total** | **1.00** | **0.76** | **0.89** | **0.69** |
-
-## What this skill did NOT do
-
-- Pick the winner. The matrix and weighted scores are the input to the procurement decision; the team owns the choice. The team may legitimately pick the lower-scored vendor for reasons outside the matrix (existing relationship, hiring-pool, founder preference).
-- Negotiate the contract. Once a vendor is picked, contract terms (discount, multi-year commit, SLA tier) are a separate procurement conversation.
-- Validate vendor claims. Where the matrix cites vendor-data (pricing, feature lists, case studies), the data is vendor-published and should be re-verified in a sales call before commitment.
-- Replace a reference call. Customer references should be called directly, not just scored from public-review averages.
-
-## Evidence appendix
-
-Every cell in the matrix above traces to a source URL or cited document. The full appendix lists every source (per axis × per vendor) so the team can spot-check.
-```
+Emit a single markdown document: the vendors compared, the team profile, the ordered NFR priorities, a per-axis matrix (A1-A7), a weighted-score table using the NFR order as weights, an explicit "What this skill did NOT do" disclaimer (does not pick the winner, negotiate, validate vendor claims, or replace a reference call), and an evidence appendix tracing every cell to a source. The full worked comparison document is in [references/example-matrix.md](references/example-matrix.md).
 
 ## Step 4 - Hand off to procurement / decision committee
 

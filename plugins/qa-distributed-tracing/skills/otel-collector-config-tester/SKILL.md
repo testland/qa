@@ -7,14 +7,9 @@ metadata:
 
 # otel-collector-config-tester
 
-Per the [OTel Collector overview], the Collector is "a vendor-agnostic way
-to receive, process and export telemetry data." It operates as a three-stage
-pipeline: receivers accept spans from instrumented services, processors
-transform them, and exporters forward them to backends. A misconfigured
-pipeline silently drops or misroutes spans - no error at deploy time, only
-missing data at query time.
-
-This skill tests two distinct failure modes:
+A misconfigured Collector pipeline silently drops or misroutes spans - no
+error at deploy time, only missing data at query time. This skill tests two
+distinct failure modes:
 
 1. **Static config errors** - invalid YAML, undefined component references,
    missing required fields. Caught by `otelcol validate` before the process
@@ -36,7 +31,7 @@ This skill tests two distinct failure modes:
 
 ## Step 1 - Validate config syntax with `otelcol validate`
 
-Per the [OTel Collector configuration docs], run:
+Run:
 
 ```shell
 otelcol validate --config=collector-config.yaml
@@ -70,9 +65,9 @@ service:
       exporters: [otlp/backend]
 ```
 
-Per the [OTel Collector configuration docs], components follow `type[/name]`
-naming (`otlp/backend` above), which allows multiple instances of the same
-type in one config. Every component referenced in `service.pipelines` must
+Components follow `type[/name]` naming (`otlp/backend` above), which allows
+multiple instances of the same type in one config. Every component referenced
+in `service.pipelines` must
 be declared in its top-level section - `validate` reports undefined
 references as errors.
 
@@ -88,12 +83,11 @@ the pipeline.
 
 ## Step 2 - Wire the `debug` exporter to observe span flow
 
-Per the [OTel Collector troubleshooting docs], add the `debug` exporter to
-a test pipeline alongside (or instead of) the production exporter. This
-exporter writes span data to the collector process stdout without requiring
-a backend.
+Add the `debug` exporter to a test pipeline alongside (or instead of) the
+production exporter. This exporter writes span data to the collector process
+stdout without requiring a backend.
 
-Per the [debug exporter README], three verbosity levels are available:
+Three verbosity levels are available:
 
 | Level | Output per batch |
 |---|---|
@@ -122,10 +116,9 @@ service:
       exporters: [debug]
 ```
 
-Per the [OTel Collector configuration docs], multiple pipelines of the same
-signal type use `type/name` syntax (`traces/test` above), so the test
-pipeline does not conflict with the production `traces` pipeline in the same
-config.
+Multiple pipelines of the same signal type use `type/name` syntax
+(`traces/test` above), so the test pipeline does not conflict with the
+production `traces` pipeline in the same config.
 
 Send a span to the collector and grep stdout for the trace ID or a known
 attribute to assert receipt:
@@ -143,8 +136,8 @@ docker logs <container> 2>&1 | grep "my.attribute"
 ## Step 3 - Wire the `file` exporter for machine-readable assertions
 
 The `debug` exporter writes to stdout, which is inconvenient for assertion
-scripts. Per the [file exporter README], the `file` exporter writes each
-exported batch as a JSON object per line, making it grep- and jq-parseable:
+scripts. The `file` exporter writes each exported batch as a JSON object per
+line, making it grep- and jq-parseable:
 
 ```yaml
 exporters:
@@ -175,10 +168,9 @@ jq -e '
 ' /tmp/collector-spans.jsonl
 ```
 
-Per the [file exporter README], "each line in the file is a JSON object,"
-which matches the OTLP/JSON protobuf encoding. The default `flush_interval`
-is 1 second - wait at least 2 seconds after the last span before asserting
-on the file in a test script.
+Each line in the file is a JSON object, which matches the OTLP/JSON protobuf
+encoding. The default `flush_interval` is 1 second - wait at least 2 seconds
+after the last span before asserting on the file in a test script.
 
 ## Step 4 - Test processor behavior end-to-end
 
@@ -209,57 +201,32 @@ Send two spans - one with `http.response.status_code = 200`, one with
 `http.response.status_code = 500` - then assert the file contains exactly
 one span with the 500 status code and zero spans with 200.
 
-Per the [OTel Collector transforming telemetry docs], the Transform processor
-uses OTTL (OpenTelemetry Transformation Language) for advanced mutations.
-Test attribute mutations the same way: send a known input span, read the
-file exporter output, assert the mutated attribute value.
+The Transform processor uses OTTL (OpenTelemetry Transformation Language) for
+advanced mutations. Test attribute mutations the same way: send a known input
+span, read the file exporter output, assert the mutated attribute value.
 
 ## Step 5 - CI integration
 
 Full pipeline: validate config, start the collector in Docker, send test
-spans, assert on the file exporter output, stop the container.
+spans, assert on the file exporter output, stop the container. Minimal shape:
 
 ```yaml
-jobs:
-  collector-config-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Validate config
-        run: |
-          docker run --rm \
-            -v $PWD/collector-config.yaml:/etc/otel/config.yaml \
-            otel/opentelemetry-collector:0.153.0 \
-            validate --config=/etc/otel/config.yaml
-
-      - name: Start collector
-        run: |
-          docker run -d --name otel-test \
-            -p 4317:4317 \
-            -v $PWD/collector-config-test.yaml:/etc/otel/config.yaml \
-            -v /tmp/spans:/tmp/spans \
-            otel/opentelemetry-collector-contrib:0.153.0 \
-            --config=/etc/otel/config.yaml
-
-      - name: Send test spans and assert
-        run: |
-          sleep 2   # collector startup
-          # send spans (via SDK or grpcurl)
-          python3 tests/send_test_spans.py
-          sleep 2   # file exporter flush
-          # assert at least one span in output
-          [ $(wc -l < /tmp/spans/output.jsonl) -gt 0 ]
-
-      - name: Stop collector
-        if: always()
-        run: docker stop otel-test && docker rm otel-test
+- name: Validate config
+  run: otelcol validate --config=collector-config-test.yaml
+- name: Start collector, send spans, assert
+  run: |
+    docker run -d --name otel-test -p 4317:4317 \
+      -v $PWD/collector-config-test.yaml:/etc/otel/config.yaml \
+      -v /tmp/spans:/tmp/spans \
+      otel/opentelemetry-collector-contrib:0.153.0 --config=/etc/otel/config.yaml
+    sleep 2 && python3 tests/send_test_spans.py && sleep 2
+    [ $(wc -l < /tmp/spans/output.jsonl) -gt 0 ]
 ```
 
-Per the [OTel Collector quick-start docs], the Docker image exposes OTLP
-over gRPC on port 4317 and OTLP over HTTP on port 4318. Pin the image tag
-(`0.153.0` above) - the `latest` tag changes component stability levels
-between releases.
+Pin the image tag (`0.153.0`) - the `latest` tag changes component stability
+levels between releases; the image exposes OTLP over gRPC on 4317 and HTTP on
+4318. Full workflow with checkout, startup gating, and teardown:
+[references/ci-integration.md](references/ci-integration.md).
 
 ## Anti-patterns
 
@@ -279,9 +246,8 @@ between releases.
 - The `file` exporter is in the contrib distribution
   (`otel/opentelemetry-collector-contrib`), not the core distribution.
   Verify it is present in the collector build used in CI.
-- Per the [file exporter README], the default `flush_interval` is 1 second;
-  very-high-throughput tests may need `flush_interval: 100ms` to avoid
-  waiting on large batches.
+- The default `flush_interval` is 1 second; very-high-throughput tests may
+  need `flush_interval: 100ms` to avoid waiting on large batches.
 - This skill covers pipeline correctness testing. For sampling-ratio
   verification or tail-sampling behavior, pair with
   `opentelemetry-trace-assertions`

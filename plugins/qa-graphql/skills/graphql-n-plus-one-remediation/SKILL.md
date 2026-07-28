@@ -7,13 +7,11 @@ description: "Traces a GraphQL resolver tree to locate the N+1 pattern (one pare
 
 ## What N+1 looks like in a resolver tree
 
-One field returns a list of N rows. The executor then invokes the
-resolver for each inner field once per row. Apollo's guide states it
-directly: "If `Query.topReviews` returns ten reviews, then the executor
-resolves `Review.product` field ten times", and "If the `Reviews.product`
-field makes a database or REST query for a single `Product`, then there
-are ten unique calls to the data source"
-([apollographql.com/docs/graphos/schema-design/guides/handling-n-plus-one](https://www.apollographql.com/docs/graphos/schema-design/guides/handling-n-plus-one)).
+One field returns a list of N rows. The executor then invokes the resolver
+for each inner field once per row, so if `Query.topReviews` returns ten
+reviews the executor resolves `Review.product` ten times, and a data-source
+call in that child field becomes ten calls
+([apollographql.com](https://www.apollographql.com/docs/graphos/schema-design/guides/handling-n-plus-one)).
 So 1 outer query plus N inner queries equals N+1.
 
 ```typescript
@@ -26,16 +24,8 @@ Post: {
 }
 ```
 
-**N+1 is not a GraphQL invention.** It originates in ORM usage, where
-lazy-loading a navigation property inside a loop emits one query per
-parent row. Entity Framework Core's performance guide walks exactly that
-loop and concludes: "after the initial query loading all the blogs, we
-then have another query *per blog*, loading all its posts; this is
-sometimes called the *N+1* problem, and it can cause very significant
-performance issues"
-([learn.microsoft.com/en-us/ef/core/performance/efficient-querying](https://learn.microsoft.com/en-us/ef/core/performance/efficient-querying)).
-GraphQL makes the pattern easier to hit because the resolver tree, not
-the caller, decides how many times a child field runs.
+GraphQL makes the pattern easy to hit because the resolver tree, not the
+caller, decides how many times a child field runs.
 
 Observable symptoms (practitioner heuristics, not standardised
 thresholds):
@@ -60,9 +50,8 @@ Not owned:
   batching still needs them for denial-of-service protection.
 - **Rate limiting.** That caps how many requests a client sends. An N+1
   resolver is still N+1 on the first allowed request.
-- **Caching strategy.** DataLoader's cache is a per-request memoization
-  of `.load()` calls, not a shared store: "DataLoader caching does not
-  replace Redis, Memcache, or any other shared application-level cache"
+- **Caching strategy.** DataLoader's cache is a per-request memoization of
+  `.load()` calls, not a shared store, and does not replace Redis or Memcache
   ([github.com/graphql/dataloader](https://github.com/graphql/dataloader)).
   Deciding what to put in Redis is a different job from removing the
   fan-out.
@@ -103,13 +92,11 @@ three rows need a fix.
 | Reads a related record through an ORM that lazy-loads | **N+1 risk**, and silent: the ORM hides the extra roundtrip |
 
 The second row has a trap. `(parent) => parent.author` is safe only when
-the parent query actually loaded `author`. In Prisma, related records
-are not returned unless the query asks for them: "Use `include` to
-include related records, such as a user's posts or profile, in the query
-response"
-([prisma.io/docs/orm/prisma-client/queries/relation-queries](https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries)).
-If the parent query has no matching `include` or `select`, that
-passthrough is the silent-lazy-load case, not the safe case.
+the parent query actually loaded `author`. In Prisma, related records are
+not returned unless the query asks for them via `include` or `select`
+([prisma.io](https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries)).
+If the parent query has no matching `include` or `select`, that passthrough
+is the silent-lazy-load case, not the safe case.
 
 Do not assume a framework batches for you. Verify batching in that
 framework's own documentation before marking a resolver safe.
@@ -124,12 +111,10 @@ framework's own documentation before marking a resolver safe.
 
 ### Fix A: DataLoader batching
 
-DataLoader "will coalesce all individual loads which occur within a
-single frame of execution (a single tick of the event loop) and then
-call your batch function with all requested keys"
-([github.com/graphql/dataloader](https://github.com/graphql/dataloader)).
-Every `.load()` the executor issues for the same field across N parents
-lands in one batch call.
+DataLoader coalesces every `.load()` issued within one tick of the event
+loop into a single batch call
+([github.com/graphql/dataloader](https://github.com/graphql/dataloader)),
+so N parents resolving the same field cost one call.
 
 ```typescript
 // In context setup, once per incoming request
@@ -145,29 +130,11 @@ Post: {
 }
 ```
 
-Two contracts the batch function must honour, both from the DataLoader
-README ([github.com/graphql/dataloader](https://github.com/graphql/dataloader)):
-
-1. "The Array of values must be the same length as the Array of keys."
-2. "Each index in the Array of values must correspond to the same index
-   in the Array of keys."
-
-A `findMany` returns rows in database order and drops missing ids, so the
-re-map line above is mandatory, not decoration. Skipping it silently
-attributes one parent's data to another parent.
-
-**Scope every loader to a single request.** DataLoader "provides a
-memoization cache for all loads which occur in a single request to your
-application", and the README is explicit about the failure mode: "Avoid
-multiple requests from different users using the DataLoader instance,
-which could result in cached data incorrectly appearing in each request.
-Typically, DataLoader instances are created when a Request begins, and
-are not used once the Request ends"
-([github.com/graphql/dataloader](https://github.com/graphql/dataloader)).
-A module-level loader shared across requests is a cache-poisoning defect
-that leaks one user's rows into another user's response. Treat a loader
-constructed outside per-request context setup as a finding in its own
-right, independent of any N+1.
+The re-map line is mandatory: `findMany` returns rows in database order and
+drops missing ids, so the values array must be realigned to the keys array.
+Scope every loader to a single request; a module-level loader leaks one
+user's rows into another's response. Full batch-function contracts and the
+per-request scoping failure mode: [references/fixes.md](references/fixes.md).
 
 ### Fix B: Projection in the parent resolver
 
@@ -186,30 +153,20 @@ Post: {
 }
 ```
 
-This is the eager-loading remedy the EF Core guide recommends against
-lazy loading: "it is always better to use eager loading, so that EF can
-fetch all the required data in one roundtrip", with the accompanying
-warning that "Because lazy loading makes it extremely easy to
-inadvertently trigger the N+1 problem, it is recommended to avoid it"
-([learn.microsoft.com/en-us/ef/core/performance/efficient-querying](https://learn.microsoft.com/en-us/ef/core/performance/efficient-querying)).
-
-Cost to weigh before choosing B: eagerly joining a one-to-many relation
-duplicates the parent columns across every child row. The same EF Core
-page names this "the so-called 'cartesian explosion' problem" and notes
-that "As more one-to-many relationships are loaded, the amount of
-duplicated data may grow and adversely affect the performance of your
-application". Prefer B for to-one relations and for to-many relations
-with small fan-out.
+This is the eager-loading remedy EF Core recommends over lazy loading
+([learn.microsoft.com](https://learn.microsoft.com/en-us/ef/core/performance/efficient-querying)).
+Weigh one cost first: eagerly joining a one-to-many relation duplicates the
+parent columns across every child row (EF Core's "cartesian explosion").
+Prefer B for to-one relations and to-many relations with small fan-out;
+detail in [references/fixes.md](references/fixes.md).
 
 ### Fix C: Prefetch with a selection-set-aware include
 
-Read the incoming query's selection set in the parent resolver and
-project conditionally. `parseResolveInfo` from `graphql-parse-resolve-info`
-turns the fourth resolver argument into a tree whose `fieldsByTypeName`
-is "an object keyed by GraphQL object type names, where the values are
-another object keyed by the aliases of the fields requested with values
-of the same format as the root level"
-([github.com/graphile/graphile-engine/tree/master/packages/graphql-parse-resolve-info](https://github.com/graphile/graphile-engine/tree/master/packages/graphql-parse-resolve-info)).
+Read the incoming query's selection set in the parent resolver and project
+conditionally. `parseResolveInfo` from `graphql-parse-resolve-info` turns
+the fourth resolver argument into a tree whose `fieldsByTypeName` is keyed
+by GraphQL type names, then by requested field aliases
+([github.com/graphile/graphile-engine](https://github.com/graphile/graphile-engine/tree/master/packages/graphql-parse-resolve-info)).
 
 ```typescript
 import { parseResolveInfo } from 'graphql-parse-resolve-info';
@@ -314,91 +271,11 @@ high when the fan-out is unbounded (a list field with no page-size cap)
 or crosses a network boundary, medium when the list is capped and the
 call stays in-process.
 
-## Worked example 1: ORM lazy-loading, the silent case
+## Worked examples
 
-Input resolver:
-
-```typescript
-Post: {
-  comments: (post) => post.comments,  // looks like a passthrough
-}
-```
-
-This matches the "safe passthrough" row in Step 2 only if the parent
-query loaded `comments`. Prisma returns related records only when the
-query asks via `include` or `select`
-([prisma.io/docs/orm/prisma-client/queries/relation-queries](https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries)),
-so check the parent query first. If `Query.posts` has no
-`include: { comments: true }`, this is the lazy-load N+1 case, which the
-EF Core guide describes as the reason to avoid lazy loading at all
-([learn.microsoft.com/en-us/ef/core/performance/efficient-querying](https://learn.microsoft.com/en-us/ef/core/performance/efficient-querying)).
-
-Confirm with the query log rather than by reading:
-
-```typescript
-const prisma = new PrismaClient({ log: ["query"] });
-// Run the failing query, then count emitted statements.
-// N statements of the form SELECT ... FROM Comment WHERE postId = ?
-// confirms the fan-out; one SELECT ... WHERE postId IN (...) is the fix.
-```
-
-Report:
-
-```markdown
-**Pattern:** silent N+1 via ORM lazy-loading.
-
-**Location:** `resolvers/post.ts:67`
-
-`post.comments` is not present on the parent result, so accessing it
-triggers a separate query per post.
-
-**Fix:** B if every `posts` query needs comments: add
-`include: { comments: true }` to the `Query.posts` resolver. A if
-`comments` is also reached from other parents, or if the comment list per
-post is large enough that eager joining causes duplication of post
-columns across comment rows.
-```
-
-## Worked example 2: one HTTP call per row
-
-Input resolver:
-
-```typescript
-User: {
-  paymentMethod: (user) => paymentClient.fetchById(user.paymentMethodId),
-}
-```
-
-Report:
-
-~~~markdown
-**Pattern:** N+1 via per-row HTTP call to the payment service.
-
-**Location:** `resolvers/user.ts:34`
-
-Worse than a database N+1: every invocation pays full network round-trip
-latency, and the calls contend for the HTTP client's connection pool.
-
-**Fix:** A (DataLoader) wrapping a batch endpoint.
-
-```typescript
-const paymentLoader = new DataLoader<string, PaymentMethod | null>(
-  async (ids) => {
-    const found = await paymentClient.fetchMany([...ids]);   // batch endpoint
-    return ids.map(id => found.find(p => p.id === id) ?? null);
-  }
-);
-```
-
-The re-map is required: the batch endpoint may return rows in any order
-and may omit unknown ids, and DataLoader requires the values array to
-match the keys array in both length and index order
-([github.com/graphql/dataloader](https://github.com/graphql/dataloader)).
-
-If the payment service has no batch endpoint, the fix is cross-team: add
-the batch endpoint first, then wrap it. Fixes B and C do not apply, since
-the data lives outside the database the parent query reads.
-~~~
+Two end-to-end scenarios - an ORM lazy-load silent case and a per-row HTTP
+call - each with its Step 2 classification, chosen fix, and report:
+[references/examples.md](references/examples.md).
 
 ## Limitations
 

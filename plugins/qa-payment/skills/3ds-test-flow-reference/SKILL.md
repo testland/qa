@@ -7,16 +7,10 @@ description: "Cross-gateway, protocol-level reference for 3-D Secure (3DS 2.x) t
 
 ## Overview
 
-3-D Secure (3DS) is the EMVCo-specified authentication protocol
-for online card payments. Per
-[emvco.com](https://www.emvco.com/specifications/), 3DS 2.x is
-the current spec (cite by stable ID: EMV 3-D Secure Protocol
-Specification v2.x); 3DS 1.0 is deprecated.
-
-3DS adds a verification step between the merchant + the issuing
-bank. The customer may be challenged with a one-time code,
-biometric prompt, or other factor - or pass through frictionless
-based on risk signals.
+3-D Secure (3DS) is the EMVCo-specified card-authentication protocol. Per
+[emvco.com](https://www.emvco.com/specifications/), 3DS 2.x is the current spec
+(cite by stable ID: EMV 3-D Secure Protocol Specification v2.x); 3DS 1.0 is
+deprecated.
 
 ## When to use
 
@@ -43,49 +37,17 @@ gateway + issuer + 3DS server decide the flow.
 ## SCA under PSD2
 
 Per [European Banking Authority RTS on SCA](https://www.eba.europa.eu/regulation-and-policy/payment-services-and-electronic-money/regulatory-technical-standards-on-strong-customer-authentication-and-secure-communication-under-psd2):
-since September 2019 (enforcement gradual through 2021), EU
-card payments require **two of**:
-
-- Something you know (password / PIN)
-- Something you have (phone / hardware token)
-- Something you are (biometric)
-
-Exemptions: low-value (< €30), recurring, trusted-beneficiary,
-merchant-initiated. Each exemption has tracking requirements.
+since September 2019 (enforcement gradual through 2021), EU card payments
+require two-factor SCA (two of knowledge / possession / inherence). Exemptions:
+low-value (< €30), recurring, trusted-beneficiary, merchant-initiated - each
+with tracking requirements.
 
 ## Per-gateway test cards
 
-### Stripe
-
-Per [stripe.com/docs/testing#regulatory-cards](https://docs.stripe.com/testing#regulatory-cards):
-
-| Card | Behaviour |
-|---|---|
-| 4000 0027 6000 3184 | Authentication required (challenge) |
-| 4000 0025 0000 3155 | Authentication required (challenge), payment failure after success |
-| 4000 0000 0000 3220 | Authentication required (challenge), payment success |
-| 4000 0000 0000 3055 | 3DS supported but not required (frictionless) |
-| 4242 4242 4242 4242 | Standard test card (no 3DS) |
-
-### Adyen
-
-Per [docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers):
-
-| Card | Behaviour |
-|---|---|
-| 4917 6100 0000 0000 | 3DS 2 challenge flow |
-| 5454 5454 5454 5454 | 3DS 2 frictionless |
-| 4012 8888 8888 1881 | 3DS 1 (deprecated; for migration testing) |
-
-### Braintree
-
-Per [developer.paypal.com/braintree/docs/guides/3d-secure/testing/node](https://developer.paypal.com/braintree/docs/guides/3d-secure/testing/node):
-
-| Card | Behaviour |
-|---|---|
-| 4000 0000 0000 1091 | Authenticate via standard flow |
-| 4000 0000 0000 1109 | Frictionless |
-| 4000 0000 0000 1125 | Bypass (skipped) |
+Per-PAN 3DS test cards for Stripe, Adyen, and Braintree, each with its source
+doc, are in [references/gateway-test-cards.md](references/gateway-test-cards.md).
+The core Stripe cards used in the assertions below: `4000 0000 0000 3055`
+(frictionless) and `4000 0027 6000 3184` (challenge).
 
 ## Test flow surface
 

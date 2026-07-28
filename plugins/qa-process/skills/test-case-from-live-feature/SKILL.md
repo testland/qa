@@ -7,9 +7,9 @@ description: "Build-an-X workflow that produces a test-case matrix from a **live
 
 ## Overview
 
-A tester is told "test the new checkout flow" with no story, no AC, no design doc. The feature is deployed to staging. The right path is not to halt; it is to **reverse-engineer a test-case matrix from the live feature itself**, anchored on the four heuristic models in `heuristic-test-design-reference`. This skill is the workflow that runs that reverse-engineering and emits a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
+A tester is told "test the new checkout flow" with no story, no AC, no design doc, but the feature is deployed to staging. The right path is to **reverse-engineer a test-case matrix from the live feature**, anchored on the four heuristic models in `heuristic-test-design-reference`, and emit a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
 
-The output is the same shape as `test-case-ideation-from-story` - one row per case with `id / title / tier / precondition / steps / expected / source claim` - but the `source claim` column points at *observed behaviour* rather than *story sentence*, and rows are tagged with the heuristic that surfaced them so the team can audit the coverage logic later.
+The output is the same shape as `test-case-ideation-from-story` - one row per case with `id / title / tier / precondition / steps / expected / source claim` - but the `source claim` column points at *observed behaviour* rather than a *story sentence*, and each row is tagged with the heuristic that surfaced it so the team can audit the coverage logic.
 
 ## When to use
 
@@ -68,51 +68,14 @@ Inputs that **cannot** be confirmed by direct observation are tagged `[verbal, u
 
 ## Step 2 - Walk the heuristic models
 
-For each heuristic in `heuristic-test-design-reference`, apply it to the observation log:
+Apply each model in `heuristic-test-design-reference` to the observation log, in order:
 
-### 2a - SFDPOT coverage walk
+- **2a - SFDPOT coverage walk**: enumerate cases per Product Element (Structure, Function, Data, Platform, Operations, Time); each non-empty cell becomes one or more rows.
+- **2b - Whittaker attack overlay**: for each function, apply input / UI / stored-data / computation / configuration / output attacks.
+- **2c - FEW HICCUPPS oracle pre-flight**: for each observation that already looked wrong, name the consistency lens so the row carries a defensible verdict frame.
+- **2d - ISO 25010 quality cross-check**: add rows for the quality dimensions (performance, security, usability, reliability) that SFDPOT did not surface.
 
-Per HTSM ([James Bach](https://www.satisfice.com/download/heuristic-test-strategy-model)), enumerate cases per Product Element:
-
-| Guideword | From the observation log |
-|---|---|
-| **S - Structure** | cart service, payment service, coupon service, idempotency layer (observed via network calls). |
-| **F - Function** | add to cart, edit qty, apply coupon, choose shipping, choose payment, place order, see confirmation. |
-| **D - Data** | SKU, qty, price, coupon code, address, payment method, order id, idempotency key. |
-| **P - Platform** | desktop Chrome / Safari / Firefox; mobile iOS / Android web; observed responsive layout via DevTools. |
-| **O - Operations** | feature flag `new_checkout_v2` (verbal, unverified); rollback path unknown. |
-| **T - Time** | cart expiry (unknown - to probe), coupon expiry (422 on expired observed), payment timeout (unknown). |
-
-Each non-empty cell becomes one or more test-case rows.
-
-### 2b - Whittaker attack overlay
-
-For each function, enumerate the attacks from the [Whittaker catalog](https://en.wikipedia.org/wiki/Exploratory_testing) (in `heuristic-test-design-reference`):
-
-- **Input attack on coupon**: empty, 33+ chars (one over the observed UI limit), special characters, SQL-keyword string, leading whitespace, expired (already covered by 422), case mismatch.
-- **UI attack on place-order**: double-click (button disable already observed - verify it actually prevents the second POST), browser-back after charge, refresh during payment redirect.
-- **Stored-data attack on cart**: manually set qty in browser local storage; replay the POST with qty=100 to bypass client validation.
-- **Computation attack on price**: cart total at platform max (Stripe USD max $999,999.99); currency-conversion edge case if multi-currency exists.
-- **Configuration attack**: feature flag off - does the legacy checkout still work?
-- **Output attack**: order-confirmation email rendering with very long order id, unicode in address.
-
-### 2c - FEW HICCUPPS oracle pre-flight
-
-For each observation that already looked wrong, pre-classify with [Bolton's FEW HICCUPPS](https://developsense.com/) so the test row carries a defensible verdict frame:
-
-- "Place-order button disabled on submit." Comparable-products: every major site does this. User-expectations: prevents double-charge. **Consistency expected; bug if missing.**
-- "Coupon field client-side uppercases input." Statutes/standards: case-sensitivity of coupon codes is a product choice, not a standard. **Verify the server matches: if server is case-sensitive and client uppercases, hidden mismatch.**
-- "axe-core flags 3 a11y violations." Statutes / standards: WCAG 2.2 AA. **Defects, file per criterion.**
-
-### 2d - ISO 25010 quality cross-check
-
-Walk the eight (+2) [ISO/IEC 25010](https://en.wikipedia.org/wiki/ISO/IEC_25010) characteristics; add rows for the quality dimensions SFDPOT didn't surface:
-
-- **Performance**: place-order latency under load; payment timeout handling.
-- **Security**: PCI scope; address / card data leakage in logs; CSRF token on POST /payment.
-- **Usability**: error-message clarity; keyboard-only flow; screen-reader announcements.
-- **Reliability**: idempotency under network retry; recovery after payment-provider 5xx.
-- **Maintainability / Portability**: out of scope at the test-design tier; flag for engineering review.
+The full walk applied to the checkout observation log - the SFDPOT table, the per-function Whittaker attacks, the FEW HICCUPPS pre-flight, and the ISO 25010 cross-check - is in [references/heuristic-walk-example.md](references/heuristic-walk-example.md).
 
 ## Step 3 - Emit the matrix
 
@@ -168,11 +131,8 @@ Per the same conventions as `test-case-ideation-from-story`: import as CSV into 
 
 ## Limitations
 
-- **Coverage breadth is bounded by the observation log.** A feature with three hidden code paths that aren't reachable from the UI will not surface those paths through this skill. The skill flags them only if the network-call observation or code probe reveals them.
-- **No automated case execution.** This skill produces the matrix; execution is the downstream skill's job.
-- **Heuristics are not exhaustive.** SFDPOT + Whittaker + FEW HICCUPPS + ISO 25010 cover the canonical models; novel risk surfaces (LLM prompt injection, supply-chain, Bluetooth proximity attacks) require domain-specific extension.
-- **`inferred` cases can be wrong.** A heuristic that predicts a 422 on length-overflow but the server actually returns a 500 is a finding - the row updates to `observed` after first run.
-- **Probing depth requires domain knowledge.** "Walk SFDPOT against checkout" produces shallow output if the tester doesn't know what checkout is. The skill is scaffolding for domain reasoning, not a replacement for it.
+- **Coverage breadth is bounded by the observation log.** A feature with hidden code paths not reachable from the UI will not surface them unless a network-call observation or code probe reveals them; and a shallow probe (walking SFDPOT without knowing the domain) yields shallow output. The skill is scaffolding for domain reasoning, not a replacement.
+- **`inferred` cases can be wrong.** A heuristic that predicts a 422 on length-overflow when the server actually returns a 500 is a finding - the row updates to `observed` after first run, so inferred rows are probed before they enter the regression suite.
 
 ## Hand-off targets
 

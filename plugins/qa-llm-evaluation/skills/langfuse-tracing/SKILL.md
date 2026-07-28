@@ -11,11 +11,6 @@ description: "Wires Langfuse tracing into LLM apps for production observability,
 
 Langfuse is a production LLM observability platform (per [lf-gh][lf-gh]).
 
-**Important version note (2026-05-06):** per [lf-gh][lf-gh], "The
-SDK was rewritten in v4 and released in March 2026" - this skill
-targets the v4 API. For v3 codebases, see the upstream migration
-guide.
-
 ## Step 1 - Install
 
 Per [lf-gh][lf-gh]:
@@ -128,10 +123,9 @@ that the score call did not raise an exception.
 
 ## Step 5 - Datasets for offline eval
 
-Langfuse datasets (collections of `(input, expected_output)` items)
-can be built from production traces, CSV / JSONL imports, or the UI.
-
-Run a dataset:
+Datasets are collections of `(input, expected_output)` items built from
+production traces, CSV / JSONL imports, or the UI. Run one against your
+app to diff vs a baseline:
 
 ```python
 items = langfuse.get_dataset_items(dataset_id="...")
@@ -140,15 +134,11 @@ for item in items:
     item.run(actual)  # links the run back to the dataset for diff vs baseline
 ```
 
-(See [langfuse.com/docs/datasets][lf-ds] for the current API signature.)
+See [references/datasets.md](references/datasets.md) for building
+datasets from production traces, the [lf-ds][lf-ds] API signature, and
+the run-validation checkpoint.
 
 [lf-ds]: https://langfuse.com/docs/datasets
-
-**Validation:** After running a dataset, open the Langfuse UI →
-Datasets → select your dataset. Each item run should appear under
-the Runs tab linked to its trace. If runs are missing, confirm
-`dataset_id` is correct and that `item.run()` did not raise an
-exception.
 
 ## Step 6 - Prompt management
 
@@ -179,44 +169,11 @@ version is pinned and attributable.
 
 ## Step 7 - CI integration
 
-Langfuse is observability-side, not pre-deploy CI-side. Typical
-post-deploy CI patterns use the Langfuse API to query recent traces
-and assert on aggregate metrics:
-
-```python
-import httpx, os, sys
-from datetime import datetime, timedelta, timezone
-
-LANGFUSE_HOST = os.environ["LANGFUSE_HOST"]
-headers = {"Authorization": f"Bearer {os.environ['LANGFUSE_SECRET_KEY']}"}
-
-# Fetch average answer_relevance score over the last hour
-one_hour_ago = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
-resp = httpx.get(
-    f"{LANGFUSE_HOST}/api/public/scores",
-    params={"name": "answer_relevance", "fromTimestamp": one_hour_ago},
-    headers=headers,
-)
-scores = resp.json()["data"]
-avg = sum(s["value"] for s in scores) / len(scores) if scores else 1.0
-
-if avg < 0.75:
-    print(f"answer_relevance regression: {avg:.2f} < 0.75 threshold")
-    sys.exit(1)
-```
-
-**Validation:** After the CI job runs, confirm the script exits 0
-and that the queried score window covers the expected deployment
-window. If `scores` is empty, verify the `fromTimestamp` range and
-that instrumented calls have been scored in that period.
-
-Other CI wiring patterns:
-- **Eval-on-trace**: post-deploy, run an offline eval sweep against
-  production traces from the previous N hours; fail if regression.
-- **Cost regression**: alert on per-trace cost increase that exceeds
-  budget.
-- **Score-based alerting**: route to PagerDuty / Slack / Datadog
-  on drop in average score over a rolling window.
+Langfuse is observability-side, not pre-deploy CI-side. Post-deploy CI
+patterns query the Langfuse API for recent traces and assert on
+aggregate metrics (a score-query gate, eval-on-trace, cost-regression,
+score-based alerting). Runnable gate script and the full pattern list:
+[references/ci-integration.md](references/ci-integration.md).
 
 ## Anti-patterns
 
@@ -228,12 +185,17 @@ Other CI wiring patterns:
 | Skip prompt versioning | Prompt drift breaks attribution | `langfuse.get_prompt()` with version pin (Step 6) |
 | Conflate Langfuse with pre-deploy eval | Tries to be both; wins neither | Pair Langfuse (post-deploy) with Promptfoo/DeepEval/Ragas (pre-deploy) |
 
+## Version notes
+
+Per [lf-gh][lf-gh], the SDK was rewritten in v4 and released in March
+2026; this skill targets the v4 API. v3 patterns are no longer
+supported - pin the SDK version in requirements, and for v3 codebases
+see the upstream migration guide.
+
 ## Limitations
 
 - Langfuse cloud is hosted; for data-residency-strict teams,
   self-host (well-supported but operational overhead).
-- v4 API rewrite (March 2026) - pin SDK version in requirements;
-  v3 patterns no longer supported per [lf-gh][lf-gh].
 - SDK and score-API signatures may drift between versions; always
   consult [langfuse.com/docs][lf-docs] and [lf-scores][lf-scores]
   when authoring wiring against any rapidly-evolving endpoint.

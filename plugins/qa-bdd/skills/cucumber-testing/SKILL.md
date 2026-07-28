@@ -1,6 +1,6 @@
 ---
 name: cucumber-testing
-description: "Configures Cucumber for BDD scenarios - Cucumber-JVM (Java/Kotlin via JUnit 5), Cucumber-JS (Node), Cucumber-Ruby. Authors `.feature` files in Gherkin, writes step definitions in the host language, runs via the framework's runner, integrates with JUnit XML reporting. Use as the canonical Cucumber wrapper for any of the three official implementations."
+description: "Configures Cucumber for BDD scenarios - Cucumber-JVM (Java/Kotlin via JUnit 5), Cucumber-JS (Node), Cucumber-Ruby. Authors `.feature` files in Gherkin, writes step definitions in the host language, runs via the framework's runner, integrates with JUnit XML reporting. Use when the user mentions Cucumber, Gherkin, `.feature` files, or behavior-driven (BDD) tests in Java, Kotlin, JavaScript, or Ruby, as the canonical wrapper for any of the three official implementations."
 ---
 
 # cucumber-testing
@@ -105,54 +105,14 @@ Feature: Apply promo code at checkout
 
 ## Step 5 - Write step definitions
 
-### JVM (Java)
-
-```java
-import io.cucumber.java.en.*;
-
-public class CheckoutSteps {
-
-    private Cart cart;
-    private CheckoutPage page;
-
-    @Given("a logged-in user with email confirmed")
-    public void a_logged_in_user() {
-        TestUser user = TestUsers.loggedInWithEmailConfirmed();
-        page = new CheckoutPage().loginAs(user);
-    }
-
-    @Given("the cart contains {int} of {string} at ${double}")
-    public void the_cart_contains(int qty, String sku, double price) {
-        cart = new Cart();
-        cart.addItem(new Item(sku, qty, price));
-        page.setCart(cart);
-    }
-
-    @When("I enter {string} in the promo input")
-    public void i_enter(String code) {
-        page.enterPromo(code);
-    }
-
-    @When("I click {string}")
-    public void i_click(String label) {
-        page.click(label);
-    }
-
-    @Then("the subtotal updates to ${double}")
-    public void the_subtotal_updates(double expected) {
-        assertEquals(expected, page.getSubtotal(), 0.01);
-    }
-}
-```
-
-### JS
+Bind each Gherkin line to a method with a `{cucumber-expression}` capture.
+Minimal JS example:
 
 ```javascript
 const { Given, When, Then } = require('@cucumber/cucumber');
 
 Given('a logged-in user with email confirmed', function() {
-  this.user = createLoggedInUser();
-  this.page = new CheckoutPage(this.user);
+  this.page = new CheckoutPage(createLoggedInUser());
 });
 
 When('I enter {string} in the promo input', function(code) {
@@ -163,6 +123,10 @@ Then('the subtotal updates to ${float}', function(expected) {
   assert.equal(this.page.getSubtotal(), expected);
 });
 ```
+
+Full Java (Cucumber-JVM) and JS step definitions, plus the JUnit XML reporting
+config, are in
+[references/step-definitions-and-reporting.md](references/step-definitions-and-reporting.md).
 
 ## Step 6 - Run
 
@@ -188,24 +152,10 @@ cucumber features/
 
 ## Step 7 - Reporting
 
-Cucumber outputs to multiple formats; JUnit XML is the
-CI-canonical:
-
-JVM (in `cucumber.properties`):
-
-```properties
-cucumber.plugin=pretty,html:target/cucumber-report.html,junit:target/cucumber-report.xml
-```
-
-JS (CLI):
-
-```bash
-npx cucumber-js features/ \
-  --format html:reports/cucumber.html \
-  --format junit:reports/cucumber.xml
-```
-
-The JUnit XML feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
+Cucumber outputs multiple formats; JUnit XML is the CI-canonical one and feeds
+`junit-xml-analysis` (in the qa-test-reporting plugin). The JVM
+(`cucumber.properties`) and JS (CLI) reporting config is in
+[references/step-definitions-and-reporting.md](references/step-definitions-and-reporting.md).
 
 ## Step 8 - Tags + filtering
 

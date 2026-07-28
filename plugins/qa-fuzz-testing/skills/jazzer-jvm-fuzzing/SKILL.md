@@ -36,20 +36,23 @@ Per Jazzer README:
 <dependency>
     <groupId>com.code-intelligence</groupId>
     <artifactId>jazzer-junit</artifactId>
-    <version>0.22.1</version>
+    <version>${jazzer.version}</version>
     <scope>test</scope>
 </dependency>
 ```
-
-(Replace `0.22.1` with current latest.)
 
 ### Install (Gradle)
 
 ```gradle
 dependencies {
-    testImplementation 'com.code-intelligence:jazzer-junit:0.22.1'
+    testImplementation "com.code-intelligence:jazzer-junit:$jazzerVersion"
 }
 ```
+
+Pin the version in one place - `jazzer.version` (Maven property) or
+`jazzerVersion` (Gradle ext) - to the latest release from Maven Central
+([search.maven.org/artifact/com.code-intelligence/jazzer-junit](https://search.maven.org/artifact/com.code-intelligence/jazzer-junit));
+`0.22.1` was current at time of writing.
 
 ### Install (standalone)
 
@@ -165,22 +168,12 @@ Jazzer accepts libFuzzer-style flags:
 
 ## JVM sanitisers
 
-Per Jazzer README, built-in detectors fire on security-relevant
-misuse:
-
-| Sanitiser | What it catches |
-|---|---|
-| **Deserialization** | Untrusted ObjectInputStream / XStream / Kryo input → gadget execution |
-| **SSRF** | URL constructed from untrusted input pointing at internal infrastructure |
-| **Path traversal** | `..` / encoded variants in file path arguments |
-| **OS command injection** | `Runtime.exec` / `ProcessBuilder` with concatenated input |
-| **ReDoS** | Catastrophic-backtracking regex constructed from untrusted input |
-| **LDAP injection** | LDAP query string concatenation |
-| **Naming context** | JNDI lookup with untrusted name |
-| **SQL injection (via Hibernate / direct JDBC)** | Query string concatenation |
-
-These run automatically - no additional configuration. Disable
-selectively via `--disabled_hooks=...`.
+Jazzer's built-in detectors fire automatically on security-relevant
+misuse (deserialization gadgets, SSRF, path traversal, OS command
+injection, ReDoS, LDAP / JNDI / SQL injection) - no extra config;
+disable selectively via `--disabled_hooks=...`. Full catalogue with
+what each catches:
+[references/sanitisers-and-ci.md](references/sanitisers-and-ci.md).
 
 ## Parsing results
 
@@ -201,24 +194,9 @@ the test fixtures - commit it for regression coverage.
 
 ## CI integration
 
-```yaml
-- uses: actions/setup-java@v5
-  with: { java-version: '17', distribution: 'temurin' }
-- name: Run unit tests + regression fuzz inputs
-  run: mvn test
-- name: Smoke fuzz (3 min per target)
-  run: |
-    for cls in $(grep -rl "@FuzzTest" src/test/java/ | \
-                 sed 's|src/test/java/||; s|/|.|g; s|.java||'); do
-      JAZZER_FUZZ=180 mvn test -Dtest=$cls || true
-    done
-- uses: actions/upload-artifact@v4
-  with:
-    name: jazzer-crashes
-    path: |
-      crash-*
-      src/test/resources/**/*
-```
+Run regression inputs with `mvn test`, then a bounded smoke-fuzz
+(`JAZZER_FUZZ=180`) over every `@FuzzTest` class and upload crashes:
+see [references/sanitisers-and-ci.md](references/sanitisers-and-ci.md).
 
 ## Anti-patterns
 

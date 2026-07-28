@@ -9,7 +9,7 @@ description: "Build-an-X workflow that drafts a QA team's quarterly OKR set - on
 
 The QA manager opens a blank document at quarter-start to draft OKRs. Generic OKR templates (Tability, Asana, ClickUp) all share the same flaw: they don't know what to measure for a QA team. "Improve quality" is not an Objective; "achieve 95% pass rate" is not a Key Result without a baseline and a documented method. This skill produces a draft anchored on the team's actual current-state data, with every numeric target citing the artifact it came from.
 
-Per the canonical OKR framework ([Doerr 2018, *Measure What Matters*; Grove's original formulation at Intel](https://en.wikipedia.org/wiki/Objectives_and_key_results)), each Objective is "a significant, concrete, clearly defined goal" that should "also be inspirational for the individual, team, or organization that is working towards them", and each Key Result is "measurable success criteria used to track the achievement of that goal", measurable "either on a 0-100% scale or with any numerical value" with "no opportunity for 'grey area'". Doerr recommends organizations target a **70% success rate** - consistently hitting 100% means the OKRs need to be more aspirational. This skill emits both Committed KRs (target: 1.0 grading, binary outcomes) and Aspirational KRs (target: 0.7 grading, stretch).
+Per the canonical OKR framework ([Doerr, *Measure What Matters*](https://en.wikipedia.org/wiki/Objectives_and_key_results)), an Objective is a concrete, inspirational goal and each Key Result is measurable success criteria with "no opportunity for 'grey area'". The **0.7/1.0 grading rule is stated once here and referenced thereafter**: this skill emits **Committed** KRs (target 1.0 grading, binary outcomes the team promises) and **Aspirational** KRs (target 0.7, stretch, where 70% is success). Consistently hitting 100% means the OKRs are not aspirational enough.
 
 ## When to use
 
@@ -32,72 +32,26 @@ Required:
 |---|---|---|
 | **Quarterly objective(s)** | Manager-provided; aligned with engineering / product OKRs | The skill drafts KRs *under* objectives the team owns; it won't invent strategic direction |
 | **Current-state metrics** | At least one of: `risk-matrix` output, a recent defect-trend report, `test-run-summary-author` cross-run-trend, `test-pyramid-balancer` audit | Every KR needs a baseline - without it, the target is unanchored |
-| **Time horizon** | Quarterly (default) or other (semi-annual) | OKR cadence; per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results), quarterly is the canonical rhythm |
+| **Time horizon** | Quarterly (default) or other (semi-annual) | OKR cadence; per Doerr, quarterly is the canonical rhythm |
 | **Prior OKR set** | If exists; the prior quarter's KRs + their grading | Continuity: drift from prior commitments is itself a signal |
 
 The skill halts with `MISSING_BASELINE` (supply ≥1 current-state metric source) if no measurable input is offered.
 
 ## Step 2 - Walk the QA-OKR shape catalog
 
-Five canonical QA Objective shapes the skill recognises (catalog, not prescription). Each maps to a measurable KR family. The manager picks 1 - 3; the skill drafts the KRs.
+The skill recognises five canonical QA Objective shapes (catalog, not prescription); the manager picks 1 - 3 and the skill drafts the measurable KR family under each:
 
-### Shape 1 - Strengthen the test pyramid
+1. **Strengthen the test pyramid** - layer ratio, cycle time, E2E budget.
+2. **Reduce escape-defect rate** - escape volume, time-to-detect, category-specific.
+3. **Cut regression cycle time** - wall-clock, parallelisation, CI cost.
+4. **Reduce flake-budget consumption** - quarantine ceiling, flake rate, repair velocity.
+5. **Close compliance evidence gaps** - per-control coverage, evidence freshness, audit pass-rate.
 
-Anchored on `test-pyramid-balancer`. Used when the suite is E2E-heavy and shifting weight downward improves cycle time + maintainability.
-
-| KR axis | Example KR | Baseline source |
-|---|---|---|
-| Layer ratio | unit:integration:E2E reaches 70:20:10 | current ratio per `test-pyramid-balancer` |
-| Cycle time | regression suite duration < 45 min per shard | current per `test-run-summary-author` |
-| E2E suite budget | E2E test count ≤ 200, growth rate ≤ 5/quarter | `e2e-suite-budget` |
-
-### Shape 2 - Reduce escape-defect rate
-
-Anchored on the defect-trend baseline. Used when production defects are above the team's tolerance.
-
-| KR axis | Example KR | Baseline source |
-|---|---|---|
-| Volume | P1 escapes < 2/quarter; P2 escapes < 10/quarter | current per the defect-trend quarterly report |
-| Time-to-detect | MTTD on P1 < 4 hours | per `mttr-mtbf-tracker` |
-| Category-specific | regression-class escapes -50% WoW | per defect clustering + the defect-trend report |
-
-### Shape 3 - Cut regression cycle time
-
-Anchored on `test-run-summary-author`. Used when CI is the bottleneck.
-
-| KR axis | Example KR | Baseline source |
-|---|---|---|
-| Wall-clock | regression suite < 60 min per shard, 4× parallel | `test-run-summary-author` |
-| Parallelisation | sharding factor ≥ 8 with no shard >90 min | CI config + `test-run-summary-author` |
-| CI cost | per-PR CI cost -30% via TIA | `regression-suite-selector` |
-
-### Shape 4 - Reduce flake-budget consumption
-
-Anchored on flake-detection + `flaky-test-quarantine`. Used when flake rate is above the team's tolerance (flakiness is widespread and well-documented: about 16% of tests at Google show some flakiness per the [Google Testing Blog](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html); for KR targets, below 5% is aspirational and under 10% is a reasonable committed bar).
-
-| KR axis | Example KR | Baseline source |
-|---|---|---|
-| Quarantine ceiling | quarantine list ≤ 5 at any point | current per `flaky-test-quarantine` |
-| Flake rate | flake rate < 3% of CI runs (vs 8% current baseline) | per the flake-detection weekly history |
-| Repair velocity | mean time-to-repair on quarantined test < 5 days | per `flaky-test-quarantine` |
-
-### Shape 5 - Close compliance evidence gaps
-
-Anchored on compliance-readiness review. Used in regulated industries (healthcare, finance, automotive).
-
-| KR axis | Example KR | Baseline source |
-|---|---|---|
-| Per-control coverage | SOC 2 Trust Service Criteria coverage ≥ 95% | the compliance-readiness review |
-| Evidence freshness | every control's evidence ≤ 90 days old | `soc2-evidence-collector` |
-| Audit pass-rate | external audit findings ≤ 3, no high-severity | prior audit history |
-
-Other Objective shapes are valid; these are the most-cited in QA-manager-facing literature.
+The full catalog - each shape's KR-axis table, example KRs, and baseline source - is in [references/okr-shape-catalog.md](references/okr-shape-catalog.md). Shape 2 is realized end to end in Step 3.
 
 ## Step 3 - Draft committed vs aspirational Key Results
 
-Per the [canonical framework](https://en.wikipedia.org/wiki/Objectives_and_key_results), each KR is either **Committed** (target grading 1.0, binary outcomes the team promises to ship) or **Aspirational** (target grading 0.7, stretch goals where 70% completion is success).
-
-The skill flags each KR explicitly:
+Each KR is flagged **Committed** or **Aspirational** per the grading rule stated in the Overview (target 1.0 vs 0.7):
 
 ```markdown
 ## Objective 2 - Reduce escape-defect rate
@@ -158,7 +112,7 @@ OKRs are not authored in isolation. The skill emits an **alignment check** secti
 | SRE OKR | "Maintain 99.9% SLO" | Objective 2 (escape rate) and Objective 4 (flake budget) tie via `error-budget-tests` |
 ```
 
-Per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results), OKRs at the team level should "ladder up" to company OKRs. The skill makes the laddering explicit so the team can validate alignment in stakeholder review.
+Per Doerr, OKRs at the team level should "ladder up" to company OKRs. The skill makes the laddering explicit so the team can validate alignment in stakeholder review.
 
 ## Step 6 - Hand off to retro / quarterly review
 
@@ -168,66 +122,18 @@ The OKR set is the start of the loop, not the end. Hand-offs at quarter-end:
 - **Drift analysis**: if multiple quarters show the same Objective without progress, the Objective is wrong (too vague, too ambitious, or not under the team's control).
 - **Source-artifact regeneration**: the same baseline sources (the defect-trend report, `test-run-summary-author`, etc.) emit the end-of-quarter metrics; the comparison is mechanical.
 
-## Worked example - quarter-start draft for a 6-engineer QA team
+## Worked example
 
-Input:
-- Objectives the manager has aligned with engineering: (a) reduce escape-defect rate, (b) cut regression cycle time.
-- Current state: 4 P1 escapes / quarter, 13 P2 escapes / quarter, regression suite 67min/shard, flake rate 8%, no compliance scope.
-- Prior quarter: P1 escapes were 6 (improving), regression was 75min (improving).
-
-Output:
-
-```markdown
-# QA OKRs - 2026-Q3 (Jul-Sep)
-
-## Objective 1 - Reduce escape-defect rate
-
-**Why:** Q2 P1 escapes (4) caused ~$X revenue impact per the customer-success retro. Q1 was 6; the trend is improving. Q3 target accelerates the trend.
-
-| # | Type | KR | Baseline | Source |
-|---|---|---|---|---|
-| KR1.1 | Committed | P1 escapes ≤ 2 | 4 (Q2) | the defect-trend report |
-| KR1.2 | Committed | P2 escapes ≤ 8 | 13 (Q2) | the defect-trend report |
-| KR1.3 | Aspirational | MTTD P1 ≤ 4h median | 11h (Q2) | `mttr-mtbf-tracker` |
-| KR1.4 | Aspirational | Regression-class escapes -50% | 18 → 9 | the defect-clustering export |
-
-## Objective 2 - Cut regression cycle time
-
-**Why:** Engineering's "release weekly" OKR depends on regression < 60 min/shard. Q2 was 67 min.
-
-| # | Type | KR | Baseline | Source |
-|---|---|---|---|---|
-| KR2.1 | Committed | Regression suite < 60 min/shard | 67 min (Q2) | `test-run-summary-author` |
-| KR2.2 | Committed | Sharding factor ≥ 8, no shard > 75 min | 6, max shard 67 min (Q2) | CI config + summary |
-| KR2.3 | Aspirational | Per-PR CI cost -30% via TIA | $0.42/PR (Q2) | `regression-suite-selector` adoption |
-
-### Alignment check
-
-| Layer | OKR | Contribution |
-|---|---|---|
-| Company Q3 theme | "Reduce revenue-affecting incident cost" | Objective 1 directly |
-| Engineering | "Release weekly" | Objective 2 directly |
-| SRE | "Maintain 99.9% SLO" | Objective 1 (via escape rate) |
-
-### Audit
-
-| KR | Target | Baseline | Source |
-|---|---|---|---|
-| KR1.1 | ≤2 | 4 | the defect-trend report filter(severity=P1, found_in=production, window=2026-Q2) |
-| KR1.2 | ≤8 | 13 | same filter, severity=P2 |
-| KR1.3 | ≤4h median | 11h median | `mttr-mtbf-tracker` log 2026-Q2 |
-| KR1.4 | 9 | 18 | the defect-clustering export, category=regression, 2026-Q2 |
-| KR2.1 | <60 min/shard | 67 min/shard | `test-run-summary-author` cross-run-trend 2026-Q2 |
-| KR2.2 | shard≥8 | shard=6 | `playwright.config.ts` workers + `test-run-summary-author` |
-| KR2.3 | -30% per-PR | $0.42/PR | CI billing export + `regression-suite-selector` adoption rate |
-```
+A full quarter-start draft for a 6-engineer QA team - two Objectives (escape-defect
+rate, regression cycle time) with committed/aspirational KRs, an alignment check, and
+a per-target audit table - is in [references/worked-example.md](references/worked-example.md).
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Setting KRs without baselines | "Reach 99% pass rate" - from what? The KR is unanchored; success can't be measured | Step 4 enforces baseline citation; flag `[BASELINE_NEEDED]` if missing |
-| 100% committed KRs, no aspirational | Per [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results): "If 100% of the key results are consistently being met, the key results should be reevaluated" | At least one aspirational KR per Objective |
+| 100% committed KRs, no aspirational | Per Doerr: "If 100% of the key results are consistently being met, the key results should be reevaluated" | At least one aspirational KR per Objective |
 | KRs that aren't team-controllable | "Customer churn -50%" - QA can't move that lever alone | KRs are scoped to outcomes QA can directly cause |
 | Six or more Objectives | Loss of focus; per the canonical framework, 1 - 3 Objectives is the recommended ceiling | Step 1 caps Objectives at 3 |
 | KR with no measurable axis ("improve quality") | Not gradeable; the team cannot tell if it succeeded | Step 3 rejects un-measurable KRs |
@@ -239,7 +145,7 @@ Output:
 
 - **Baseline data must exist.** A team with no defect tracker, no CI history, no risk matrix has no anchor for KRs. The skill halts; the team supplies the data via upstream authoring skills.
 - **Domain-knowledge ceiling.** The skill knows QA metrics; it does not know the business (revenue, customer impact). The manager must supply the "why" rationale for each Objective.
-- **Aspirational vs committed mix is opinion.** [Doerr](https://en.wikipedia.org/wiki/Objectives_and_key_results) recommends a mix; the team's culture determines the right ratio. The skill emits both flavors; the manager picks.
+- **Aspirational vs committed mix is opinion.** Doerr recommends a mix; the team's culture determines the right ratio. The skill emits both flavors; the manager picks.
 - **Quarterly cadence assumed.** Other cadences (semi-annual, monthly) work mechanically; the skill defaults to quarterly per the canonical framework.
 - **No automatic grading.** End-of-quarter grading is a separate workflow (deferred to a future `qa-okr-retro-reviewer` agent). This skill only authors; grading happens at retro time.
 - **No org-tier OKR alignment automation.** The Step 5 alignment check is manual; the skill does not pull company-tier OKRs from a separate system.

@@ -7,18 +7,16 @@ description: "Authors Karate `.feature` files using its Gherkin-flavored DSL for
 
 ## Overview
 
-Karate is "an open-source tool that combines API testing, mocks,
-performance testing, and UI automation into a single, unified
-framework" ([karate-readme][readme]). The authoring style is Gherkin-
-flavored - every test is a `.feature` file with `Given / When / Then`
-steps - but unlike Cucumber the steps are **executable directly**;
-no glue code is required ([karate-docs][docs]).
+Karate authors HTTP API tests as Gherkin-flavored `.feature` files with
+`Given / When / Then` steps, but unlike Cucumber the steps are **executable
+directly** - no glue code is required ([karate-readme][readme],
+[karate-docs][docs]).
 
 [readme]: https://github.com/karatelabs/karate
 [docs]: https://docs.karatelabs.io/
 
-This skill covers the API-testing slice of Karate. The mock-server
-and UI-automation modes are out of scope here.
+This skill covers the API-testing slice of Karate. Its mock-server and
+UI-automation modes are out of scope here.
 
 ## When to use
 
@@ -51,8 +49,8 @@ publishes regularly under group `io.karatelabs`, artifacts
 </dependency>
 ```
 
-Pin `${karate.version}` to a specific release (e.g. `2.0.7` per the
-GitHub release page as of 2026-05-04). Do not float on `LATEST` - 
+Pin `${karate.version}` to a specific release listed on the GitHub
+release page ([karate-readme][readme]). Do not float on `LATEST` -
 DSL keywords have evolved across major versions.
 
 ## Authoring
@@ -73,21 +71,9 @@ Feature: Simple API test example
     And match response == { id: '#number', name: '#string', email: '#string', active: true }
 ```
 
-The keywords:
-
-| Keyword | Purpose |
-|---------|---------|
-| `Feature:`           | One per file; describes the API surface under test. |
-| `Scenario:`          | One per case; mirrors a single user / API journey. |
-| `Background:`        | Steps that run before each Scenario (auth, base URL setup). |
-| `Given url '...'`    | Set the request URL.                                |
-| `Given path '...'`   | Append a path segment to the URL.                   |
-| `Given header X = Y` | Set a request header.                                |
-| `Given param X = Y`  | Set a query parameter.                               |
-| `Given request {...}`| Set the JSON body.                                   |
-| `When method <verb>` | Issue the HTTP request: `get`, `post`, `put`, `delete`. |
-| `Then status N`      | Assert the response status code.                     |
-| `And match expr`     | Assert response body / header / variable shape.     |
+The full step-keyword table (`url`, `path`, `header`, `param`, `request`,
+`method`, `status`, `match`) and its purpose column are in
+[references/match-reference.md](references/match-reference.md).
 
 ### The `match` keyword
 
@@ -95,30 +81,20 @@ The keywords:
 or XML ([karate-docs][docs]):
 
 ```gherkin
-# Equality on the whole response
-And match response == { id: 1, name: 'Alice' }
-
 # Type fuzzy: any number, any string
 And match response == { id: '#number', name: '#string' }
 
-# Regex constraint
-And match response.email == '#regex .*@example\\.com'
-
 # Array contains
 And match response.items contains { sku: 'SKU-123' }
-
-# Array length / shape
-And match response.items == '#array'
-And match response.items[0] == { sku: '#string', qty: '#number' }
 
 # Optional / nullable fields
 And match response == { id: '#number', deletedAt: '##string' }   # ## = optional
 ```
 
-Match modifiers (`#number`, `#string`, `#boolean`, `#array`, `#object`,
-`#null`, `#notnull`, `#present`, `#notpresent`, `#regex <pattern>`,
-`##<type>` for optional) compose into a small but expressive matcher
-language ([karate-docs][docs]).
+The full match-modifier vocabulary (`#boolean`, `#array`, `#object`, `#null`,
+`#notnull`, `#present`, `#notpresent`, `#regex <pattern>`, `##<type>`) and more
+examples are in
+[references/match-reference.md](references/match-reference.md).
 
 ### Background block
 

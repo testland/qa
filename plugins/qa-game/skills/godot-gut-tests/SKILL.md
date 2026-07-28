@@ -15,7 +15,7 @@ GDScript test framework. Godot does not ship a first-party
 equivalent of Unity's Test Framework or Unreal's Automation
 System for GDScript user code.
 
-Per the [GUT README](https://github.com/bitwes/Gut):
+Compatibility (per the GUT README):
 
 | Engine | GUT version | Branch |
 |---|---|---|
@@ -51,7 +51,7 @@ is GDScript-first.
 
 ### Install
 
-Two paths, per the [GUT README](https://github.com/bitwes/Gut):
+Two paths:
 
 **Asset Library (recommended for compatible engine versions):**
 
@@ -111,7 +111,7 @@ func test_damage_deducts_correct_amount():
 
 ### Lifecycle hooks
 
-Per the same docs, lifecycle hooks are:
+Lifecycle hooks:
 
 | Hook | Scope |
 |---|---|
@@ -138,32 +138,15 @@ func test_player_starts_with_full_health():
 
 ### Assertion family
 
-Common assertions per
-[gut.readthedocs.io](https://gut.readthedocs.io/) and the
-[GUT README](https://github.com/bitwes/Gut):
-
-| Assertion | Use |
-|---|---|
-| `assert_eq(a, b, msg)` | Equality |
-| `assert_ne(a, b, msg)` | Inequality |
-| `assert_almost_eq(a, b, tol, msg)` | Float comparison within tolerance |
-| `assert_true(v, msg)` / `assert_false(v, msg)` | Boolean |
-| `assert_null(v, msg)` / `assert_not_null(v, msg)` | Null check |
-| `assert_has(coll, v, msg)` / `assert_does_not_have(coll, v, msg)` | Membership |
-| `assert_signal_emitted(obj, "signal_name", msg)` | Signal emission |
-| `assert_signal_emitted_with_parameters(obj, "name", args, msg)` | Signal emission with payload |
-| `assert_gt(a, b, msg)` / `assert_lt(a, b, msg)` | Ordering |
-| `assert_called(double, "method_name", args)` | Spy verification |
-
-Per the README, GUT exposes "a plethora of asserts and utility
-methods" - check the `addons/gut/test.gd` source in your installed
-version for the complete signature list at the engine version you
-ship against.
+Tests extend `GutTest` and call assertion methods; the most common are
+`assert_eq` / `assert_ne`, `assert_almost_eq` (floats),
+`assert_true` / `assert_false`, `assert_null` / `assert_not_null`,
+`assert_signal_emitted`, and `assert_called` (spy). The full assertion table
+is in [references/assertions.md](references/assertions.md).
 
 ### Inner classes (grouping)
 
-Per the [GUT README](https://github.com/bitwes/Gut), tests can be
-organised via inner classes:
+Tests can be organised via inner classes:
 
 ```gdscript
 extends GutTest
@@ -193,8 +176,7 @@ Each inner class reports as its own grouping in the GUT panel.
 
 ### Parameterised tests
 
-Per [gut.readthedocs.io](https://gut.readthedocs.io/), GUT
-supports "parameterized tests using `params=[...]`":
+GUT supports parameterized tests via `params=[...]`:
 
 ```gdscript
 extends GutTest
@@ -218,8 +200,7 @@ report.
 
 ### Doubles, stubs, and spies
 
-Per the [GUT README](https://github.com/bitwes/Gut), GUT lists
-"Doubling: Full and Partial, Stubbing, Spies". Typical pattern:
+GUT provides doubling (full and partial), stubbing, and spies. Typical pattern:
 
 ```gdscript
 extends GutTest
@@ -242,10 +223,8 @@ assertion.
 
 ### Async / coroutine tests
 
-Per [gut.readthedocs.io](https://gut.readthedocs.io/), GUT
-supports "Coroutines and await in tests" - a `test_*` method
-can `await` signals or timers and the runner waits before moving
-on:
+GUT supports coroutines and `await` in tests - a `test_*` method can `await`
+signals or timers and the runner waits before moving on:
 
 ```gdscript
 extends GutTest
@@ -264,17 +243,14 @@ func test_async_load_completes():
 
 ### From the GUT editor panel
 
-After enabling the plugin, the **GUT panel** appears in the
-bottom dock (Editor → Bottom Panel → GUT). Per
-[gut.readthedocs.io](https://gut.readthedocs.io/), the panel
-supports "normal and compact views". Click **Run All** or
-right-click a script → **Run** to execute.
+After enabling the plugin, the **GUT panel** appears in the bottom dock
+(Editor → Bottom Panel → GUT) with normal and compact views. Click **Run All**
+or right-click a script → **Run** to execute.
 
 ### From the command line
 
-Per [gut.readthedocs.io](https://gut.readthedocs.io/), the
-command-line runner is invoked via
-`-d -s addons/gut/gut_cmdln.gd` plus GUT-specific options:
+The command-line runner is invoked via `-d -s addons/gut/gut_cmdln.gd` plus
+GUT-specific options:
 
 ```bash
 godot \
@@ -286,112 +262,27 @@ godot \
   -gexit
 ```
 
-Common GUT CLI flags (per the same docs):
-
-| Flag | Effect |
-|---|---|
-| `-gdir=res://test` | Recurse this directory for tests |
-| `-gtest=res://test/unit/test_health.gd` | Run a single test script |
-| `-ginner_class=TestAddItem` | Limit to one inner class |
-| `-gunit_test_name=test_increases_count_by_stack` | Limit to one test method |
-| `-gconfig=res://.gutconfig.json` | Load config from JSON |
-| `-gjunit_xml_file=artifacts/gut-junit.xml` | Write JUnit XML report |
-| `-gjunit_xml_timestamp` | Add timestamp suffix to filename |
-| `-glog=3` | Log verbosity (0 - 3) |
-| `-gexit` | Exit Godot after run (essential in CI) |
-
-`--headless` runs Godot without a display window - required for
-most CI environments. `-d` runs in debug mode so the test runner
-script (`addons/gut/gut_cmdln.gd`) executes.
-
-### Config file
-
-A `.gutconfig.json` at the project root lets the GUT panel and
-CLI runner share settings:
-
-```json
-{
-  "dirs": ["res://test/unit", "res://test/integration"],
-  "include_subdirs": true,
-  "log_level": 1,
-  "junit_xml_file": "artifacts/gut-junit.xml",
-  "double_strategy": "partial"
-}
-```
-
-(Field names per
-[gut.readthedocs.io](https://gut.readthedocs.io/) - check your
-installed `addons/gut/` version for the authoritative schema.)
+`--headless` runs without a display window (required for CI) and `-d` runs in
+debug mode so the runner script (`addons/gut/gut_cmdln.gd`) executes. The full
+CLI flag table and the `.gutconfig.json` config schema are in
+[references/cli.md](references/cli.md).
 
 ## Parsing results
 
-GUT exports **JUnit XML** when `-gjunit_xml_file=…` is set. Per
-[gut.readthedocs.io](https://gut.readthedocs.io/), this is the
-recommended CI-consumable output. Top-level shape:
-
-```xml
-<testsuites name="GUT" tests="42" failures="1" disabled="0" errors="0" time="3.214">
-  <testsuite name="res://test/unit/test_health.gd"
-             tests="5" failures="1" errors="0" time="0.124">
-    <testcase classname="test_health"
-              name="test_damage_deducts_correct_amount"
-              time="0.012"/>
-    <testcase classname="test_health"
-              name="test_clamps_below_zero"
-              time="0.014">
-      <failure message="Expected 0 but was -5"
-               type="AssertionFailed"/>
-    </testcase>
-  </testsuite>
-</testsuites>
-```
-
-Standard JUnit XML - consumed by GitHub Actions test reporters,
-Jenkins JUnit plugin, GitLab CI test report widget, etc.
-
-Per the [GUT README](https://github.com/bitwes/Gut), GUT also
-tracks pre-test errors / orphan nodes / unhandled signals - these
-surface in the GUT panel and the JUnit report.
+Set `-gjunit_xml_file=…` to export **JUnit XML** - the recommended
+CI-consumable output, in the standard schema that GitHub Actions test
+reporters, the Jenkins JUnit plugin, and the GitLab CI test report widget
+consume. GUT also tracks pre-test errors / orphan nodes / unhandled signals,
+which surface in the panel and the report. The full XML shape is in
+[references/ci.md](references/ci.md).
 
 ## CI integration
 
-GitHub Actions example:
-
-```yaml
-jobs:
-  gut-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Godot
-        run: |
-          GODOT=4.6.1-stable
-          wget -q https://github.com/godotengine/godot/releases/download/${GODOT}/Godot_v${GODOT}_linux.x86_64.zip
-          unzip -q Godot_v${GODOT}_linux.x86_64.zip -d godot
-          mv "godot/Godot_v${GODOT}_linux.x86_64" godot/godot
-          chmod +x godot/godot
-      - name: Run GUT
-        run: |
-          mkdir -p artifacts
-          ./godot/godot --headless -d \
-            -s addons/gut/gut_cmdln.gd \
-            -gdir=res://test \
-            -gjunit_xml_file=artifacts/gut-junit.xml \
-            -gexit
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: gut-junit
-          path: artifacts/gut-junit.xml
-      - uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: GUT
-          path: artifacts/gut-junit.xml
-          reporter: java-junit
-```
-
-For Godot 3.x projects, swap the engine version and use GUT 7.x.
+Run the headless CLI command in a CI job, upload the JUnit XML as an artifact,
+and feed it to a JUnit-aware reporter. A complete GitHub Actions workflow
+(Godot download, GUT run, artifact upload, `dorny/test-reporter`) is in
+[references/ci.md](references/ci.md). For Godot 3.x projects, swap the engine
+version and use GUT 7.x.
 
 ## Anti-patterns
 
@@ -399,12 +290,12 @@ For Godot 3.x projects, swap the engine version and use GUT 7.x.
 |---|---|---|
 | Forgetting `--headless` in CI | Godot tries to open a window; CI hangs / fails | Always `--headless` for CI runs |
 | Forgetting `-gexit` | Godot stays open after the run; CI step never completes | Always `-gexit` for CI runs |
-| Test scripts outside `extends GutTest` | Runner skips them silently | Per [GUT README](https://github.com/bitwes/Gut), every test script extends `GutTest` (or extends an inner class that does) |
-| Test methods without `test_` prefix | Runner skips them silently | Per the same README, methods must be prefixed `test_` |
+| Test scripts outside `extends GutTest` | Runner skips them silently | Every test script extends `GutTest` (or an inner class that does) |
+| Test methods without `test_` prefix | Runner skips them silently | Methods must be prefixed `test_` |
 | Using GUT 9 on Godot 3.x (or 7 on 4.x) | Plugin won't load | Match engine + GUT major-version per the compatibility table in this skill |
 | Stubbing without a double | `stub(...)` requires a doubled object | Use `double("res://script.gd").new()` first |
 | Async tests without `await` | Coroutine completes before assertion | `await` the signal / timer, then assert |
-| Asserting `assert_eq` on floats | Floating-point inequality | Use `assert_almost_eq(a, b, tol)` per the assertion table above |
+| Asserting `assert_eq` on floats | Floating-point inequality | Use `assert_almost_eq(a, b, tol)` |
 | Skipping JUnit XML in CI | CI surfaces no per-test failure detail | Always emit `-gjunit_xml_file=…` and feed to a CI reporter |
 | Tests that depend on autoload singletons | Cross-test contamination | Re-initialise / reset autoloads in `before_each` |
 
@@ -418,10 +309,8 @@ For Godot 3.x projects, swap the engine version and use GUT 7.x.
   reviewers may ask for the framework's provenance.
 - **GDScript-only.** C# Godot projects should use .NET test
   runners (xUnit / NUnit) - GUT is GDScript-first.
-- **Godot version coupling.** GUT 9.x requires Godot 4.x; GUT 7.x
-  requires Godot 3.4.x per the
-  [README's Godot Versions section](https://github.com/bitwes/Gut).
-  Bumping the engine usually bumps GUT.
+- **Godot version coupling.** Bumping the engine usually bumps GUT - match
+  the engine + GUT major version per the compatibility table in the Overview.
 - **Doubles depend on script paths.** `double("res://path.gd")`
   needs the script's `res://` path; doubling autoloads or engine
   C++ classes is not supported directly.

@@ -7,16 +7,10 @@ description: "Configures Stryker.NET for mutation testing of .NET Core / .NET Fr
 
 ## Overview
 
-Per [stryker-net-intro][sni]:
+Stryker.NET brings mutation testing to .NET Core and .NET Framework projects,
+distributed as the `dotnet-stryker` global tool ([introduction][sni]).
 
 [sni]: https://stryker-mutator.io/docs/stryker-net/introduction/
-
-> "Stryker.NET offers you mutation testing for your .NET Core and
-> .NET Framework projects. It allows you to test your tests by
-> temporarily inserting bugs."
-
-Per [stryker-net-intro][sni], Stryker.NET joined the Stryker
-family in 2018 as the .NET ecosystem mutation testing answer.
 
 ## When to use
 
@@ -24,16 +18,6 @@ family in 2018 as the .NET ecosystem mutation testing answer.
   verification.
 - A C# library needs higher confidence than coverage alone shows.
 - The team wants Stryker-family parity across JS + .NET.
-
-## How to use
-
-1. Install the tool - `dotnet tool install -g dotnet-stryker`, or a per-project manifest for CI determinism.
-2. From the test project directory, run `dotnet stryker` once to confirm framework discovery and baseline coverage.
-3. Author `stryker-config.json` with `project`, `test-projects`, `mutation-level`, and `thresholds`.
-4. Run `dotnet stryker` (add `--solution` for multi-project) and open `StrykerOutput/<timestamp>/reports/mutation-report.html`.
-5. For each survivor, add a test that distinguishes the original behavior from the mutant.
-6. Scope PR runs to changed projects and keep `mutation-level` at `Standard`.
-7. Gate CI with `--break-at <baseline>` and upload `StrykerOutput/` as an artifact.
 
 ## Step 1 - Install
 
@@ -115,21 +99,17 @@ Reports land under `StrykerOutput/<timestamp>/reports/mutation-report.html`.
 
 ## Step 6 - Mutators (per Standard level)
 
-Common mutators include:
+Standard-level mutators cover arithmetic and logical operators, equality,
+conditional boundary and negation, return-value, statement removal, and string
+literal. A surviving mutant means the test suite doesn't distinguish the original
+behavior from the mutated one. Example - conditional boundary:
 
-| Mutator                | Example                                                |
-|------------------------|--------------------------------------------------------|
-| Arithmetic operator    | `+` → `-`, `*` → `/`                                   |
-| Conditional boundary   | `<` → `<=`, `>` → `>=`                                 |
-| Conditional negation   | `!x` → `x`                                              |
-| Logical operator       | `&&` → `\|\|`                                          |
-| Equality               | `==` → `!=`                                             |
-| Return value           | `return foo()` → `return null` / `return ""` / `return 0` |
-| Statement removal      | `Foo();` → `;`                                          |
-| String literal         | `"x"` → `""`                                            |
+| Mutator              | Example              |
+|----------------------|----------------------|
+| Conditional boundary | `<` → `<=`, `>` → `>=` |
 
-A surviving mutant means the test suite doesn't distinguish the
-original behavior from the mutated one.
+The full mutator table and the `stryker-config.json` option list are in
+[references/stryker-net-mutators.md](references/stryker-net-mutators.md).
 
 ## Worked example
 

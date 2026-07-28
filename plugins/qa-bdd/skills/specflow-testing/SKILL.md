@@ -1,6 +1,6 @@
 ---
 name: specflow-testing
-description: "Legacy support for SpecFlow (.NET BDD framework that predates Reqnroll) - for projects that haven't migrated yet. Mirrors Reqnroll's API closely (Reqnroll is the SpecFlow fork). Body documents the SpecFlow patterns + the migration path to Reqnroll. Per Reqnroll's own positioning, new .NET BDD work targets Reqnroll, not SpecFlow. Use only for existing SpecFlow projects mid-migration; new projects use `reqnroll-testing` instead."
+description: "Maintains SpecFlow tests on existing .NET projects - authors Gherkin `.feature` files, writes C# `[Binding]` step definitions, runs them via xUnit/NUnit/MsTest, and migrates a project to Reqnroll. SpecFlow is the legacy .NET BDD framework and Reqnroll is its maintained fork. Use only for existing SpecFlow projects, especially mid-migration; new .NET BDD projects use `reqnroll-testing` instead."
 ---
 
 # specflow-testing
@@ -95,17 +95,7 @@ dotnet test
 Most projects migrate in <1 day. The migration is mostly
 mechanical.
 
-## Step 5 - Why migrate?
-
-| Reason                                          |
-|-------------------------------------------------|
-| SpecFlow's maintenance has slowed; new versions sparse. |
-| .NET 8+ support is more reliable on Reqnroll.    |
-| Reqnroll has community contributions; SpecFlow's stagnated. |
-| Per [`reqnroll-home`](https://reqnroll.net/): the project is "open-source" and "community-driven." |
-| New IDE plugin support targets Reqnroll first.   |
-
-## Step 6 - Run
+## Step 5 - Run
 
 ```bash
 dotnet test

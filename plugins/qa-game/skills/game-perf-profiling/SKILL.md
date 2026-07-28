@@ -30,57 +30,24 @@ maximums.
 
 ## Step 1: Unity - Capture with the Profiler
 
-The Unity Profiler is a performance analysis tool that collects CPU, GPU,
-and memory data either in the Editor or from a connected target device
-([docs.unity3d.com/Manual/Profiler.html](https://docs.unity3d.com/Manual/Profiler.html)).
-
-Open it via **Window > Analysis > Profiler** (or `Ctrl+7`). Key modules to
-enable for a frame-time pass:
-
-- **CPU Usage** - game thread, render thread, and job-system costs per frame.
-- **GPU Usage** - available on Windows DirectX 11/12 and Linux OpenGL;
-  breaks down time into Opaque, Transparent, Shadows/Depth, Deferred, and
-  PostProcess passes with DrawCalls counts and GPU ms per entry
-  ([docs.unity3d.com/Manual/ProfilerGPU.html](https://docs.unity3d.com/Manual/ProfilerGPU.html)).
-  Note: GPU profiling is unavailable when Graphics Jobs are enabled in
-  Player Settings; disable them before a profiling session
-  ([docs.unity3d.com/Manual/ProfilerGPU.html](https://docs.unity3d.com/Manual/ProfilerGPU.html)).
-- **Memory** - tracks managed heap, GC allocations per frame in bytes, and
-  reserved vs. in-use breakdowns for textures, meshes, materials, and
-  animation clips
-  ([docs.unity3d.com/Manual/ProfilerMemory.html](https://docs.unity3d.com/Manual/ProfilerMemory.html)).
-
-For standalone builds, use **Deep Profiling** or custom `ProfilerMarker`
-instrumentation to capture application-specific events without the full
-overhead of deep profiling
-([docs.unity3d.com/Manual/Profiler.html](https://docs.unity3d.com/Manual/Profiler.html)).
-
-Save the capture as a `.data` file (Profiler toolbar > Save). Retain this
-alongside any Profile Analyzer `.pdata` export: the `.pdata` file does not
-embed the original profile frames
-([docs.unity3d.com/Packages/com.unity.performance.profile-analyzer@1.2/manual/index.html](https://docs.unity3d.com/Packages/com.unity.performance.profile-analyzer@1.2/manual/index.html)).
+Open the Profiler via **Window > Analysis > Profiler** (`Ctrl+7`) and enable
+the CPU Usage, GPU Usage, and Memory modules for a frame-time pass. Save the
+capture as a `.data` file (Profiler toolbar > Save) and retain it alongside
+any Profile Analyzer `.pdata` export - the `.pdata` file does not embed the
+original profile frames. Module-by-module capture detail, GPU-module platform
+constraints, and Profile Analyzer setup are in
+[references/unity-profiler.md](references/unity-profiler.md).
 
 ## Step 2: Unity - Analyze with Profile Analyzer
 
-Profile Analyzer (package `com.unity.performance.profile-analyzer`, Unity
-2020.3+, install via Package Manager) aggregates and visualizes frame and
-marker data from a set of Profiler frames, enabling side-by-side comparison
-of two captures that the standard Profiler does not support
-([docs.unity3d.com/Packages/com.unity.performance.profile-analyzer@1.2/manual/index.html](https://docs.unity3d.com/Packages/com.unity.performance.profile-analyzer@1.2/manual/index.html)).
-
-Open it via **Window > Analysis > Profile Analyzer**.
-
-Workflow for a regression check:
+Profile Analyzer compares two captures side by side, which the standard
+Profiler cannot. Open it via **Window > Analysis > Profile Analyzer**, then run
+the regression check:
 
 1. Load the **baseline** `.data` file as the left dataset.
 2. Load the **candidate** `.data` file as the right dataset.
 3. Compare median and p99 frame times per marker against the budget.
 4. Flag any marker whose p99 exceeds the per-frame budget allocation.
-
-The Analyzer attempts to navigate to matching markers in the Profiler when
-you click a marker entry; you must make a selection in the Profiler
-beforehand for navigation to work
-([docs.unity3d.com/Packages/com.unity.performance.profile-analyzer@1.2/manual/index.html](https://docs.unity3d.com/Packages/com.unity.performance.profile-analyzer@1.2/manual/index.html)).
 
 ## Step 3: Unity - Automated regression with Performance Testing package
 
@@ -109,8 +76,6 @@ public void PathfindingCost_UnderBudget()
 - `IterationsPerMeasurement(n)`: repeats the code within each measurement to
   extend execution time above the 1 ms sensitivity floor.
 
-([docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html](https://docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html))
-
 ### Measure.Frames (Play Mode)
 
 ```csharp
@@ -125,8 +90,7 @@ public IEnumerator CombatScene_FrameTime_UnderBudget()
 ```
 
 Target standard deviation below 5%; avoid measurements under 1 ms due to
-environmental sensitivity
-([docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html](https://docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html)).
+environmental sensitivity.
 
 Decorate tests `[Test, Performance]` for Edit Mode or `[UnityTest, Performance]`
 for Play Mode coroutines. View results via **Window > Analysis > Performance
@@ -148,8 +112,7 @@ A passing frame should produce 0 bytes of GC allocation in hot gameplay
 paths. Any non-zero sample is a regression candidate.
 
 Disable VSync in Project Settings and remove cameras not needed for the
-measurement to keep results consistent between runs
-([docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html](https://docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html)).
+measurement to keep results consistent between runs.
 
 ## Step 4: Unreal - Stat commands for first-pass triage
 
@@ -168,53 +131,25 @@ game runs
 
 `stat unit` is the first command to run on any new build: it identifies
 whether the bottleneck is game-thread, render-thread, or GPU, and measures
-how long the video card takes to render the scene
-([dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine)).
-Run in a non-debug build for accurate results.
+how long the video card takes to render the scene. Run in a non-debug build
+for accurate results.
 
 ## Step 5: Unreal - Deep analysis with Unreal Insights
 
-Unreal Insights is a telemetry capture and analysis suite that captures
-events from a project at high data rates
-([dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine)).
-
-Launch from the Editor via the **Trace/Insights Status Bar Widget** in the
-bottom toolbar, or from the prebuilt binary at
-`Engine\Binaries\[Platform]\UnrealInsights.exe`
-([dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine)).
-
-Key trace channels:
-
-| Channel | Captures |
-|---|---|
-| CPU | Thread-level timing per task and function |
-| GPU | Per-frame GPU timing |
-| Memory | Allocation, reallocation, and deallocation events |
-| Networking | Network traffic for multiplayer titles |
-| Slate | UMG/Slate widget update costs |
-| Asset loading | Asset load time per type |
-
-Live sessions appear in the Session Browser with a "LIVE" status indicator;
-Insights supports simultaneous connection to multiple sessions and records
-streams automatically for later replay
-([dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine)).
-
-Primary views:
-
-- **Timing Insights**: CPU and GPU performance tracks with frames, filters,
-  timers, counters, and caller/callee information.
-- **Memory Insights**: Reconstructs runtime memory usage patterns from
-  traced allocation events.
-
-([dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine))
+When `stat` triage is not enough, capture a full trace with Unreal Insights.
+Launch it from the Editor's **Trace/Insights Status Bar Widget** or the
+prebuilt `Engine\Binaries\[Platform]\UnrealInsights.exe` binary, then work the
+CPU/GPU/Memory/Networking trace channels in the **Timing Insights** and
+**Memory Insights** views. The trace channels, the live Session Browser, and
+the two primary views are detailed in
+[references/unreal-insights.md](references/unreal-insights.md).
 
 ## Step 6: GPU draw-call and overdraw budgets
 
 ### Unity
 
 The GPU Usage module's Hierarchy view shows DrawCalls count and GPU ms per
-rendering pass
-([docs.unity3d.com/Manual/ProfilerGPU.html](https://docs.unity3d.com/Manual/ProfilerGPU.html)).
+rendering pass (see [references/unity-profiler.md](references/unity-profiler.md)).
 Typical mobile budget: under 100 draw calls per frame; PC/console budget
 is title-specific but PostProcess and Transparent passes are common
 over-budget culprits.
@@ -227,9 +162,8 @@ off-screen transparency.
 ### Unreal
 
 Run `stat scenerendering` to surface general rendering statistics as the
-entry point for rendering bottleneck identification
-([dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine)).
-Follow with `stat gpu` to get per-pass GPU time, then use the GPU Visualizer
+entry point for rendering bottleneck identification. Follow with `stat gpu`
+to get per-pass GPU time, then use the GPU Visualizer
 (`ProfileGPU` console command) for a hierarchical breakdown of GPU passes
 to isolate overdraw-heavy translucent passes
 ([dev.epicgames.com/documentation/en-us/unreal-engine/gpu-profiling-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/gpu-profiling-in-unreal-engine)).
@@ -251,8 +185,7 @@ set has a median or p99 exceeding the declared threshold. A zero-tolerance
 per frame compounds to hundreds of KB/s under sustained play.
 
 For stable CI numbers: disable VSync, remove unused cameras, set a fixed
-Quality level, and disable hardware reporting in Player Settings
-([docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html](https://docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html)).
+Quality level, and disable hardware reporting in Player Settings.
 
 ### Unreal
 

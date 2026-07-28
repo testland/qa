@@ -7,12 +7,10 @@ description: "Wraps the buf CLI for protobuf PR gating: `buf build` (compile .pr
 
 ## Overview
 
-Per
-[buf.build/docs/cli/quickstart/](https://buf.build/docs/cli/quickstart/),
-"Version 1.32.0 or higher is required for this walkthrough", which
-covers `buf config init`, `build`, `generate`, `lint`, `breaking`,
-and `curl`. This skill wraps three of them - `build`, `lint`,
-`breaking` - as the proto-PR gate. Pairs with
+Wraps three buf CLI commands - `build`, `lint`, `breaking` - as the
+proto-PR gate, per
+[buf.build/docs/cli/quickstart/](https://buf.build/docs/cli/quickstart/).
+Pairs with
 `protobuf-versioning-strategy-reference`
 for the catalog of what counts as breaking and why.
 
@@ -29,7 +27,7 @@ for the catalog of what counts as breaking and why.
 ### Install
 
 Per buf docs, install via Homebrew, Go install, or release binary.
-Verify:
+Version 1.32.0 or higher is required. Verify:
 
 ```bash
 buf --version
@@ -167,55 +165,11 @@ For consumption by a unified reporter.
 
 ## CI integration
 
-```yaml
-# .github/workflows/proto-gate.yml
-name: proto-gate
-on:
-  pull_request:
-    paths:
-      - "**/*.proto"
-      - "buf.yaml"
-      - "buf.gen.yaml"
-
-jobs:
-  buf:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0   # Required for `--against ".git#branch=main"`
-      - uses: bufbuild/buf-setup-action@v1
-        with:
-          buf_user: ${{ secrets.BUF_USER }}
-          buf_api_token: ${{ secrets.BUF_API_TOKEN }}
-      - run: buf build
-      - run: buf lint
-      - run: buf breaking --against ".git#branch=main"
-```
-
-Key: `fetch-depth: 0` so git has the baseline commit available.
-
-The official `bufbuild/buf-setup-action` and
-`bufbuild/buf-breaking-action` are convenient but the raw CLI
-calls above work without them.
-
-### Per-PR comment
-
-```yaml
-      - if: failure()
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: proto-gate
-          message: |
-            ❌ `buf breaking` failed. See log:
-            ```
-            ${{ steps.breaking.outputs.stdout }}
-            ```
-            Consult
-            protobuf-versioning-strategy-reference
-            for whether this change is genuinely required and how
-            to do it safely (reserve, add new, deprecate old).
-```
+Gate `buf build` / `lint` / `breaking` on PRs that touch `.proto`,
+`buf.yaml`, or `buf.gen.yaml`. Key gotcha: `fetch-depth: 0` so git
+has the baseline commit available. Full GitHub Actions workflow plus
+the failure PR-comment:
+[references/ci-integration.md](references/ci-integration.md).
 
 ## Anti-patterns
 

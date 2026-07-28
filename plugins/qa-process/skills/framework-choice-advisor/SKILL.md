@@ -7,7 +7,7 @@ description: "Pure reference catalog for picking a test automation framework - c
 
 ## Overview
 
-A team is starting a new test automation suite and needs to pick the stack: framework, runner, assertion library, reporter, CI integration, fixture system, parallelisation strategy, retry policy. Most "AI for testing" tooling pretends to scaffold the whole framework for you in one shot - per the [2025 World Quality Report](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/), this is exactly the integration-friction failure mode (37% of teams cite integration friction as the dominant AI-in-testing blocker). The honest deliverable is **decision support**, not auto-scaffolding.
+A team is starting a new test automation suite and needs to pick the stack: framework, runner, assertion library, reporter, CI integration, fixture system, parallelisation strategy, retry policy. Auto-scaffolding the whole framework in one shot is the integration-friction failure mode that dominates AI-in-testing adoption ([2025 World Quality Report](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/): 37% of teams). The honest deliverable is **decision support**, not auto-scaffolding.
 
 This skill is a **pure reference**: a decision tree + tradeoff matrix the team uses as a checklist. It does not generate framework boilerplate. After the team picks a stack, the per-framework skills (`playwright-testing`, `cypress-testing`, etc.) document the configuration; this skill stops at "you picked Playwright + Jest, here's the canonical directory layout to use".
 
@@ -86,72 +86,7 @@ Decision: if the team is single-platform native (iOS only or Android only), use 
 
 ## Step 4 - Reference directory layouts
 
-After the team has chosen a stack, this skill provides the **canonical directory layout** the per-framework skill assumes. Layouts are conventions, not mandates - every project has reasons to deviate, but the canonical layout is the starting point a newcomer can read.
-
-### Playwright + Jest (TypeScript) - the 2026 default for web E2E
-
-```
-tests/
-├── e2e/
-│   ├── auth/
-│   │   ├── login.spec.ts
-│   │   └── login.fixture.ts
-│   ├── cart/
-│   │   ├── add-item.spec.ts
-│   │   └── checkout.spec.ts
-│   └── pages/                  # Page Objects (per Martin Fowler's pattern)
-│       ├── LoginPage.ts
-│       ├── CartPage.ts
-│       └── CheckoutPage.ts
-├── helpers/
-│   ├── api-client.ts            # HTTP client for setup / teardown
-│   ├── test-data.ts             # Fixtures and seeds
-│   └── selectors.ts             # Shared accessibility-first locators
-├── fixtures/                    # Static test data
-├── playwright.config.ts
-├── tsconfig.json
-└── package.json
-```
-
-Conventions:
-- One `*.spec.ts` per feature flow; one Page Object per page or major component.
-- Fixtures scoped to `describe` blocks; global fixtures are an anti-pattern (see `test-code-conventions` §6).
-- Page Objects per [Martin Fowler's definition](https://martinfowler.com/bliki/PageObject.html): "a page object wraps an HTML page... with an application-specific API." Page Objects do **not** make assertions; they return state or the next Page Object on navigation.
-
-### Cypress + Mocha (TypeScript)
-
-```
-cypress/
-├── e2e/
-│   ├── auth/login.cy.ts
-│   └── cart/checkout.cy.ts
-├── support/
-│   ├── commands.ts              # Custom Cypress commands
-│   ├── pages/                   # Page Objects (Cypress idiom: command-based, not class-based)
-│   └── e2e.ts
-├── fixtures/
-├── cypress.config.ts
-└── package.json
-```
-
-Cypress idiom prefers custom commands over class-based POMs; the directory layout reflects that.
-
-### Selenium / WebdriverIO (TypeScript or Java)
-
-```
-test/
-├── specs/
-│   ├── auth/login.spec.ts
-│   └── cart/checkout.spec.ts
-├── pageobjects/
-│   ├── login.page.ts
-│   └── cart.page.ts
-├── helpers/
-├── wdio.conf.ts
-└── package.json
-```
-
-WDIO's runner ergonomics improve on raw Selenium; the layout is conventional.
+After the team has chosen a stack, adopt the canonical directory layout the per-framework skill assumes - a convention, not a mandate, but the starting point a newcomer can read. The layouts for Playwright + Jest, Cypress + Mocha, and Selenium / WebdriverIO are in [references/directory-layouts.md](references/directory-layouts.md).
 
 ## Step 5 - CI integration patterns
 

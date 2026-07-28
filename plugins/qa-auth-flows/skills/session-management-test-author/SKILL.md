@@ -7,28 +7,13 @@ description: "Build-an-X for session management tests per OWASP ASVS V3 - cookie
 
 ## Overview
 
-Per [owasp.org/www-project-application-security-verification-standard][asvs]:
+This build-an-X workflow authors tests for the session layer against
+[OWASP ASVS V3 (Session Management)][asvs]: cookie attributes, timeout
+behavior, session-ID regeneration, and logout semantics. Cite requirements
+in the versioned form `v<version>-<chapter>.<section>.<requirement>` (e.g.,
+`v5.0.0-1.2.5`) so assertions stay stable across releases.
 
 [asvs]: https://owasp.org/www-project-application-security-verification-standard/
-
-> "The OWASP Application Security Verification Standard (ASVS)
-> Project provides a basis for testing web application technical
-> security controls and also provides developers with a list of
-> requirements for secure development."
-
-Per [asvs][asvs] the requirement format:
-
-> "Each requirement has an identifier in the format
-> `<chapter>.<section>.<requirement>`, where each element is a number.
-> For example, `1.11.3`."
-
-Plus the versioned form `v<version>-<chapter>.<section>.<requirement>`
-(e.g., `v5.0.0-1.2.5`) for stability across releases.
-
-This skill is a build-an-X workflow targeting **ASVS V3 (Session
-Management)** - the chapter that defines session-layer security
-requirements. Tests verify cookie attributes, timeout behavior,
-session-ID regeneration, and logout semantics.
 
 ## When to use
 
@@ -144,26 +129,10 @@ def test_absolute_timeout(client, base_url, freezer):
 
 ## Step 4 - Concurrent-session limits
 
-Some apps limit users to N concurrent sessions (e.g., banking apps
-limit to 1). Tests:
-
-```python
-def test_concurrent_session_limit(client_a, client_b, base_url):
-    client_a.login("alice", "alicepass")
-    client_b.login("alice", "alicepass")   # second session
-
-    # Per app config: either client_a's session is revoked, OR the
-    # second login is rejected. Document the policy + test it:
-    response_a = client_a.get(f"{base_url}/dashboard")
-    response_b = client_b.get(f"{base_url}/dashboard")
-
-    if app_policy == "single_session":
-        assert response_a.status_code == 401   # a was revoked
-        assert response_b.status_code == 200
-    elif app_policy == "limited_concurrent":
-        # both work; assert correct behavior
-        ...
-```
+Some apps cap concurrent sessions (e.g., banking apps to 1): either the older
+session is revoked or the second login is rejected. Document the policy, then
+test it - pattern in
+[references/session-test-patterns.md](references/session-test-patterns.md).
 
 ## Step 5 - Logout invalidation across devices
 
@@ -190,21 +159,8 @@ def test_logout_server_side_invalidation(client, base_url):
 If the replay succeeds, the server is only clearing the client
 cookie - **critical** finding for high-security apps.
 
-For multi-device logout:
-
-```python
-def test_logout_all_devices_invalidates_other_sessions(client_a, client_b, base_url):
-    # alice logs in on two devices
-    client_a.login("alice", "alicepass")
-    client_b.login("alice", "alicepass")
-
-    # alice triggers "logout from all devices" on client_a
-    client_a.post(f"{base_url}/account/logout-all")
-
-    # Both sessions must be dead
-    assert client_a.get(f"{base_url}/dashboard").status_code == 401
-    assert client_b.get(f"{base_url}/dashboard").status_code == 401
-```
+Multi-device "logout from all devices" pattern:
+[references/session-test-patterns.md](references/session-test-patterns.md).
 
 ## Step 6 - CSRF token handling
 
@@ -241,21 +197,9 @@ For high-security apps, bind sessions to additional context.
 
 **Default: User-Agent + device-fingerprint binding** - strikes the best balance of attack surface reduction vs. false positives on legitimate user activity. Use TLS binding (RFC 8473) when the deployment controls both client and server and requires maximum strength; use IP binding only when the threat model accepts mobile-network churn (frequent re-auth on roaming).
 
-These are policy decisions; test pattern verifies the chosen
-binding holds:
-
-```python
-def test_session_bound_to_user_agent(client, base_url):
-    client.login("alice", "alicepass", user_agent="Mozilla/5.0 ...")
-    cookie_value = client.cookies.get("sessionid")
-
-    response = requests.get(
-        f"{base_url}/dashboard",
-        cookies={"sessionid": cookie_value},
-        headers={"User-Agent": "Different-UA"},   # different UA
-    )
-    assert response.status_code == 401   # if UA-binding is enforced
-```
+These are policy decisions; the test verifies the chosen binding holds (e.g.,
+a request replaying the cookie under a different User-Agent gets 401). Pattern:
+[references/session-test-patterns.md](references/session-test-patterns.md).
 
 ## Step 8 - End-to-end test recipe
 
@@ -273,13 +217,8 @@ For each app's session layer:
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
-|---|---|---|
-| Skip Set-Cookie attribute test | Sessions transmitted insecurely; XSS-stealable cookies | Step 1 baseline |
-| Logout = clear cookie only (no server-side invalidation) | Cookie replay continues to work | Step 5 negative test |
-| Same session ID before + after login | Session-fixation vulnerable | Step 2 regenerate test |
-| No absolute timeout | Sessions live forever; account-takeover blast radius huge | Step 3 |
-| State-changing GET requests | Always vulnerable to CSRF | Convert to POST + CSRF token (Step 6) |
+Consolidated with the extended patterns in
+[references/session-test-patterns.md](references/session-test-patterns.md).
 
 ## Limitations
 

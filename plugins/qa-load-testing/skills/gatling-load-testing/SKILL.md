@@ -106,9 +106,6 @@ public class OrdersSimulation extends Simulation {
 
 (Adapted from [gatling-tutorial][tutorial] DSL primitives.)
 
-The `{ ... }` initializer block is Java's instance initializer - used
-because `Simulation`'s setup happens at construction time.
-
 ## Injection profiles
 
 Per [gatling-tutorial][tutorial]:
@@ -139,9 +136,8 @@ ordersScenario.injectClosed(
 )
 ```
 
-The choice between Open and Closed is a model decision: most public
-APIs are Open (users don't wait for a response before sending the next
-request); session-bound systems (databases, video streams) are Closed.
+Most public APIs are Open; session-bound systems (databases, video
+streams) are Closed.
 
 ## Assertions
 
@@ -197,55 +193,17 @@ contains the same data the HTML report renders.
 
 ## CI integration
 
-```yaml
-# .github/workflows/gatling.yml
-name: load-test
-
-on:
-  pull_request:
-    paths: ['src/test/java/**/*Simulation.java']
-  schedule:
-    - cron: '0 4 * * *'
-
-jobs:
-  gatling:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'maven'
-
-      - name: Run Gatling
-        env:
-          API_TOKEN: ${{ secrets.STAGING_API_TOKEN }}
-        run: mvn -B gatling:test
-
-      - name: Upload report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gatling-report
-          path: target/gatling/
-          retention-days: 14
-```
-
-A failed assertion exits the Maven build non-zero; the report is
-uploaded regardless via `if: always()`.
+Full GitHub Actions workflow (PR + nightly, report uploaded via
+`if: always()`) in
+[references/ci-integration.md](references/ci-integration.md). A failed
+assertion exits the Maven build non-zero.
 
 ## Anti-patterns
 
-| Anti-pattern                                                  | Why it fails                                                    | Fix |
-|---------------------------------------------------------------|------------------------------------------------------------------|-----|
-| Using `injectClosed` for an open-traffic API                   | Models the wrong system; results don't predict prod behavior.   | Match the workload model: open API → `injectOpen`; session-bound → `injectClosed`. |
-| Hardcoded URLs / tokens in the Simulation                      | Tests bind to one environment.                                   | `System.getenv("API_BASE_URL")` + `System.getenv("API_TOKEN")`. |
-| Missing `pause()` between requests                             | Hammering at full rate doesn't model real users.                | `pause(1)` or `pause(Duration.ofSeconds(1), Duration.ofSeconds(3))` for randomized think time. |
-| Asserting only `failedRequests`                                | A 30-second response that succeeds passes the gate but breaks UX. | Always pair with percentile latency assertions. |
-| Open-workload with `rampUsersPerSec(0).to(1000)` over 10s      | Synthetic spike; not realistic; client-side bottlenecks corrupt metrics. | Realistic warm-up then sustained load; spike tests are a separate scenario. |
-| Saving auth-token discovery inside the scenario                | Each VU re-authenticates on every iteration; auth endpoint becomes the bottleneck. | Authenticate once in `before { ... }` block; share the token across the whole simulation. |
+See [references/anti-patterns.md](references/anti-patterns.md): wrong
+injection model for the traffic, hardcoded URLs/tokens, missing
+`pause()`, asserting only `failedRequests`, synthetic spikes, and
+per-iteration re-authentication.
 
 ## Limitations
 

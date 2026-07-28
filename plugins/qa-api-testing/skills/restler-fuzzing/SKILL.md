@@ -7,15 +7,11 @@ description: "Runs stateful REST API fuzzing using Microsoft's RESTler - infers 
 
 ## Overview
 
-RESTler is "the first stateful REST API fuzzing tool for
-automatically testing cloud services through their REST APIs and
-finding security and reliability bugs" ([restler-readme][readme]).
-The differentiator vs. stateless fuzzers like
-`schemathesis-fuzzing` is that
-RESTler **infers producer-consumer dependencies** from the OpenAPI
-spec - if `POST /resources` returns a body that contains an `id`
-field, and `GET /resources/{id}` accepts that `id`, RESTler will
-sequence them in that order to reach deeper state.
+RESTler is a stateful REST API fuzzer that finds security and reliability bugs
+([restler-readme][readme]). Its differentiator vs. stateless fuzzers like
+`schemathesis-fuzzing` is that it **infers producer-consumer dependencies** from
+the OpenAPI spec - if `POST /resources` returns an `id` and `GET /resources/{id}`
+accepts that `id`, RESTler sequences them in that order to reach deeper state.
 
 [readme]: https://github.com/microsoft/restler-fuzzer
 
@@ -160,23 +156,10 @@ for the `--token_refresh_command` flag and cadence settings.
 
 ## Output and triage
 
-```
-RestlerResults/
-  Compile/
-    grammar.py
-    dict.json
-  Test/
-    coverage_failures_to_investigate.txt
-    bug_buckets/
-  FuzzLean/
-    bug_buckets/                   # one folder per unique bug pattern
-      Bug_1/
-        bug_replay_log.txt
-        bug_request.txt
-  Fuzz/
-    bug_buckets/
-    progress/
-```
+Results land under `RestlerResults/` with `Compile/`, `Test/`, `FuzzLean/`, and
+`Fuzz/` subtrees; each unique bug gets a `bug_buckets/Bug_N/` folder holding a
+`bug_replay_log.txt` and `bug_request.txt`. The full directory layout is in
+[references/triage-and-ci.md](references/triage-and-ci.md).
 
 Per-bug triage:
 
@@ -197,62 +180,12 @@ minutes typically; deep fuzz is hours. The canonical cadence:
 | Weekly        | Fuzz      | 4-12 hours          | Deep state-machine exploration.      |
 | Pre-release   | Fuzz      | 24-72 hours         | Final security / reliability gate.   |
 
-Example workflow for the nightly cadence:
-
-```yaml
-# .github/workflows/restler-nightly.yml
-name: restler-nightly
-
-on:
-  schedule:
-    - cron: '0 2 * * *'   # nightly at 02:00 UTC
-  workflow_dispatch:
-
-jobs:
-  fuzz-lean:
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Build RESTler image
-        run: docker build -t restler ./.restler/
-
-      - name: Compile grammar
-        run: |
-          docker run --rm -v "$PWD:/work" restler \
-            compile --api_spec /work/openapi.json
-
-      - name: Fuzz-lean
-        env:
-          API_TOKEN: ${{ secrets.STAGING_API_TOKEN }}
-        run: |
-          docker run --rm -v "$PWD:/work" \
-            -e API_TOKEN="$API_TOKEN" \
-            restler fuzz-lean \
-              --grammar_file /work/Compile/grammar.py \
-              --dictionary_file /work/Compile/dict.json \
-              --target_ip staging.example.com \
-              --target_port 443 \
-              --use_ssl
-
-      - name: Upload bug buckets
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: restler-results
-          path: |
-            RestlerResults/
-          retention-days: 30
-
-      - name: Fail if bugs found
-        run: |
-          BUG_COUNT=$(find RestlerResults -name 'bug_replay_log.txt' | wc -l)
-          if [ "$BUG_COUNT" -gt 0 ]; then
-            echo "::error::RESTler found $BUG_COUNT bug(s) - see artifacts"
-            exit 1
-          fi
-```
+The nightly cadence runs on a `schedule: cron` trigger: build the RESTler
+Docker image, `compile` the grammar from `openapi.json`, run `fuzz-lean` against
+staging, upload `RestlerResults/` as an artifact (`if: always()`), then fail the
+job when any `bug_replay_log.txt` exists (`find ... | wc -l`). The complete
+GitHub Actions workflow is in
+[references/triage-and-ci.md](references/triage-and-ci.md).
 
 ## Anti-patterns
 

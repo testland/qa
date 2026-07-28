@@ -46,13 +46,9 @@ hard stop: if a step blocks, do not proceed to the next.
 
 ## Step 1 - Practical significance before statistical significance
 
-Statistical significance tells you the effect is unlikely to be noise.
-It does not tell you whether the effect is large enough to matter.
-
-Per the Nielsen Norman Group's guidance on A/B testing
-(nngroup.com/articles/ab-testing/): "results may be statistically
-significant but not practically significant" - a test could show
-reliable differences that lack meaningful business value.
+A statistically significant effect can still be too small to matter:
+results "may be statistically significant but not practically
+significant" (Nielsen Norman Group, [sources](references/sources.md)).
 
 **The minimum practically significant effect (MPSE)** must be declared
 in the pre-registration (`proposal.yml`). At read-time:
@@ -71,14 +67,9 @@ direction is consistent with strategy.
 
 ## Step 2 - Confidence intervals, not just p-values
 
-A p-value tells you one bit: is the effect non-zero? A 95% confidence
-interval tells you the plausible range of the true effect.
-
-Per Statsig's documentation on confidence intervals
-(docs.statsig.com/experiments/statistical-methods/confidence-intervals): "A 95% confidence
-interval should contain the true effect 95% of the time" and the
-interval is "an intuitive way to quantify the uncertainty" that gives
-"both directionality and magnitude of effects simultaneously."
+A 95% confidence interval gives the plausible range of the true effect -
+"both directionality and magnitude of effects simultaneously" (Statsig,
+[sources](references/sources.md)) - which a binary p-value cannot.
 
 Reading a result:
 
@@ -89,15 +80,12 @@ Reading a result:
 | Crosses zero | Inconclusive; do not ship on this signal |
 | Entirely below zero | Negative treatment effect - do not ship |
 
-**Width matters.** A narrow CI means the experiment had high power
-and the estimate is precise. A wide CI means the experiment was
-underpowered; extending runtime or pooling more traffic will narrow it.
-Per Microsoft Experimentation Platform's variance reduction research
-(microsoft.com/en-us/research/group/experimentation-platform-exp/ articles/deep-dive-into-variance-reduction/):
-CUPED and similar techniques produce "narrower confidence intervals,
-with values that are closer to the estimated effect" without sacrificing
-the false-positive rate - prefer platforms that apply variance reduction
-by default.
+**Width matters.** A narrow CI means high power and a precise estimate;
+a wide CI means the experiment was underpowered, so extending runtime or
+pooling more traffic will narrow it. Variance-reduction techniques (CUPED)
+narrow the CI without inflating the false-positive rate (Microsoft ExP,
+[sources](references/sources.md)) - prefer platforms that apply it by
+default.
 
 Do not convert CI edges back to p-values to decide - the CI is the
 complete picture.
@@ -109,19 +97,16 @@ complete picture.
 A statistically and practically significant result in week 1 may not
 persist. Two opposing artefacts corrupt early-period estimates:
 
-**Novelty effect:** users react positively to the mere newness of a
-change. Engagement (clicks, session length) inflates above the true
-long-run level. Per Wikipedia's entry on the novelty effect
-(en.wikipedia.org/wiki/Novelty_effect): the effect describes "an effect
-of introducing new elements on some activity or behavior" - a temporary
-boost driven by novelty rather than underlying improvement.
+**Novelty effect:** users react to the mere newness of a change;
+engagement (clicks, session length) inflates above the true long-run
+level, then decays.
 
 **Primacy effect (resistance to change):** new UI or workflows initially
-hurt task-completion and satisfaction because users have to relearn
-existing habits. The treatment appears worse early, then improves as
-users adapt. Per Kohavi et al. (ISBN 9781108724265): "novelty and
-primacy effects are significant causes of treatment effects changing
-over time but are not the sole causes."
+hurt task-completion because users must relearn existing habits; the
+treatment appears worse early, then improves as users adapt. Kohavi et
+al. note novelty and primacy are "significant causes of treatment effects
+changing over time but are not the sole causes"
+([sources](references/sources.md)).
 
 Detection and mitigation:
 
@@ -131,14 +116,12 @@ Detection and mitigation:
 | Effect reversal after ship | Look for Kendall's tau trending toward zero over 14+ day window |
 | New-user cohort differs from returning-user cohort | Segment by `first_exposure_date` - new users see no novelty decay |
 
-Microsoft ExP research on external validity
-(microsoft.com/en-us/research/group/experimentation-platform-exp/ articles/external-validity-of-online-experiments-can-we-predict-the-future/):
-"14-day surprises" where the second week's estimate fell outside the
-first week's 3-sigma confidence interval occurred at roughly 4% of
-experiments - far more than the theoretical rate. **Minimum run time:
-two full weeks** before drawing ship conclusions from experiments that
-change UI patterns. For feature launches with no UX learning curve,
-one week may be sufficient.
+Microsoft ExP found "14-day surprises" - the second week's estimate
+falling outside the first week's 3-sigma CI - at roughly 4% of
+experiments, far more than the theoretical rate
+([sources](references/sources.md)). **Minimum run time: two full weeks**
+before drawing ship conclusions from experiments that change UI patterns;
+feature launches with no UX learning curve may need only one week.
 
 ---
 
@@ -152,10 +135,8 @@ Two types:
 **Between-experiment interaction:** variant A of experiment X and
 variant B of experiment Y are assigned to overlapping user populations.
 If the two treatments interact (positively or negatively), the OEC
-measured for X is partly caused by Y's presence. Per Microsoft ExP
-article "A/B Interactions: A Call to Relax"
-(microsoft.com/en-us/research/group/experimentation-platform-exp/ articles/): the article addresses "pitfalls of even tiny SRMs" but also
-addresses A/B interactions in concurrent experiment design.
+measured for X is partly caused by Y's presence (Microsoft ExP, "A/B
+Interactions: A Call to Relax", [sources](references/sources.md)).
 
 **Treatment spillover:** a social or marketplace product where treating
 some users changes outcomes for untreated users in the same experiment
@@ -183,14 +164,11 @@ pending analysis.
 The aggregate OEC lift may be positive while every segment shows
 a negative or neutral lift - or vice versa. This is Simpson's paradox.
 
-Per Wikipedia (en.wikipedia.org/wiki/Simpson%27s_paradox): "a trend
-appears in several groups of data but disappears or reverses when the
-groups are combined." The Berkeley admissions example is canonical:
-men appeared admitted at higher rates (44% vs 35%) in aggregate, but
-women had better odds in most individual departments - because women
-applied to more competitive departments.
+Simpson's paradox is when "a trend appears in several groups of data but
+disappears or reverses when the groups are combined" (Wikipedia,
+[sources](references/sources.md)).
 
-In A/B testing, Simpson's paradox surfaces when:
+In A/B testing, it surfaces when:
 
 - Traffic allocation differs across segments (e.g., mobile gets 60% of
   control but 40% of treatment due to a holdout policy or ramp-up).
@@ -244,9 +222,9 @@ Common guardrail check failures before ship:
 | Ignoring guardrails with wide CIs because "p > 0.05" | Wide CI is not clearance; it means underpowered, not unaffected |
 | Trust guardrail omitted (opt-out rate) | Long-term retention damage, not captured by OEC |
 
-The nngroup.com A/B testing guidance warns: "if you measure only one
-metric to determine whether your test is successful, you might disregard
-important information." Always check guardrails alongside the OEC.
+Measuring only the OEC can "disregard important information" (Nielsen
+Norman Group, [sources](references/sources.md)) - always check guardrails
+alongside it.
 
 ---
 
@@ -318,29 +296,9 @@ clean guardrails. Document novelty decay in the ship note.
 
 ## References
 
-- Kohavi, Tang, Xu. *Trustworthy Online Controlled Experiments*
-  (Cambridge Univ. Press, 2020). ISBN 9781108724265. Primary
-  authoritative source for novelty/primacy effects, interaction
-  effects, and practical significance framing.
-- Microsoft Experimentation Platform - external validity article:
-  [microsoft.com/en-us/research/group/experimentation-platform-exp/articles/external-validity-of-online-experiments-can-we-predict-the-future/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/external-validity-of-online-experiments-can-we-predict-the-future/).
-  Novelty/primacy effects and 14-day surprise data.
-- Microsoft Experimentation Platform - variance reduction article:
-  [microsoft.com/en-us/research/group/experimentation-platform-exp/articles/deep-dive-into-variance-reduction/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/deep-dive-into-variance-reduction/).
-  Confidence interval narrowing and CUPED.
-- Statsig confidence interval docs:
-  [docs.statsig.com/experiments/statistical-methods/confidence-intervals](https://docs.statsig.com/experiments/statistical-methods/confidence-intervals).
-  CI semantics and Fieller vs delta-method nuance.
-- Nielsen Norman Group A/B testing guide:
-  [nngroup.com/articles/ab-testing/](https://www.nngroup.com/articles/ab-testing/).
-  Practical vs statistical significance; guardrail coverage.
-- Wikipedia - Simpson's paradox:
-  [en.wikipedia.org/wiki/Simpson%27s_paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox).
-  Definition, Berkeley admissions example, A/B testing relevance.
-- Wikipedia - Novelty effect:
-  [en.wikipedia.org/wiki/Novelty_effect](https://en.wikipedia.org/wiki/Novelty_effect).
-  Definition and mitigation strategies.
-- Companion catalogs:
-  `ab-test-validity-checklist`,
-  `guardrail-metrics-reference`,
-  `peeking-problem-reference`.
+Full source attributions and verbatim quotes:
+[references/sources.md](references/sources.md). Primary source is Kohavi,
+Tang, Xu, *Trustworthy Online Controlled Experiments* (Cambridge Univ.
+Press, 2020, ISBN 9781108724265); companion catalogs
+`ab-test-validity-checklist`, `guardrail-metrics-reference`,
+`peeking-problem-reference`.

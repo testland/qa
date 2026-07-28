@@ -7,9 +7,8 @@ metadata:
 
 # chartjs-snapshot-tests
 
-Per the [Chart.js docs], Chart.js renders to `<canvas>`. Canvas
-output is a pixel buffer - testable via `canvas.toDataURL()` snapshot
-diff.
+Per the [Chart.js docs], Chart.js renders to `<canvas>`, testable via
+`canvas.toDataURL()` snapshot diff.
 
 ## When to use
 
@@ -65,59 +64,12 @@ test('revenue bar chart matches snapshot', async ({ page }) => {
 `maxDiffPixels` allows for sub-pixel anti-aliasing variance across
 runs.
 
-## Step 3 - Programmatic canvas dataURL diff
+For alternatives to the Playwright screenshot helper - a programmatic
+`toDataURL()` diff, jsdom + canvas-mock unit tests, and non-visual
+data-driven assertions - see
+[references/alternative-approaches.md](references/alternative-approaches.md).
 
-For finer control without Playwright's screenshot helper:
-
-```ts
-test('chart canvas data URL is stable', async ({ page }) => {
-  await page.goto('https://localhost:3000/dashboard');
-  await page.waitForFunction(() => /* render complete */);
-
-  const dataUrl = await page.evaluate(() => {
-    const canvas = document.querySelector('canvas#revenue-chart') as HTMLCanvasElement;
-    return canvas.toDataURL('image/png');
-  });
-
-  // Compare to baseline saved as PNG
-  const baseline = await readBaseline('revenue-chart.png');
-  const diff = imagePixelDiff(dataUrl, baseline);
-  expect(diff.diffRatio).toBeLessThan(0.005);
-});
-```
-
-## Step 4 - jsdom + canvas-mock unit testing
-
-For unit-test-speed feedback (no browser):
-
-```js
-// jest.setup.js
-import 'canvas';  // node-canvas package
-```
-
-```js
-import { Chart } from 'chart.js/auto';
-
-test('chart renders with expected dataset count', () => {
-  const canvas = document.createElement('canvas');
-  document.body.appendChild(canvas);
-
-  const chart = new Chart(canvas, {
-    type: 'bar',
-    data: { labels: ['Q1', 'Q2'], datasets: [{ data: [10, 20] }] },
-    options: { animation: false, responsive: false },
-  });
-
-  expect(chart.data.datasets).toHaveLength(1);
-  expect(chart.data.labels).toEqual(['Q1', 'Q2']);
-});
-```
-
-`canvas` package (Node native) lets jsdom render Chart.js output
-without a browser. Use for fast assertions on dataset shape +
-config; rely on Step 2 for visual regression.
-
-## Step 5 - Tooltip + legend interaction
+## Step 3 - Tooltip + legend interaction
 
 ```ts
 test('tooltip shows data point value on hover', async ({ page }) => {
@@ -145,25 +97,10 @@ test('legend click toggles dataset visibility', async ({ page }) => {
 });
 ```
 
-## Step 6 - Data-driven assertion (without snapshot)
+## Step 4 - Multi-DPI handling
 
-For non-visual assertions, query Chart.js internal state via the
-chart instance:
-
-```ts
-test('chart shows all 12 months', async ({ page }) => {
-  const labels = await page.evaluate(() => {
-    const chart = (window as any).Chart.getChart('revenue-chart');
-    return chart.data.labels;
-  });
-  expect(labels).toHaveLength(12);
-});
-```
-
-## Step 7 - Multi-DPI handling
-
-High-DPI displays render canvas at 2× / 3× device pixel ratio.
-Snapshots taken at different DPRs differ. Pin DPR in test config:
+Pin device pixel ratio so CI and dev machines produce identical
+snapshots:
 
 ```ts
 // playwright.config.ts
@@ -180,7 +117,7 @@ use: {
 | Snapshot whole page | Layout shifts unrelated to chart break tests | Snapshot the canvas locator only (Step 2) |
 | `maxDiffPixels: 0` | Anti-aliasing flake | Allow ~50 pixels (Step 2) |
 | Test only static data | Dynamic data behavior untested | Snapshot per scenario (filter, range) |
-| Skip DPR pinning | CI machines vs dev machines render differently | Step 7 |
+| Skip DPR pinning | CI machines vs dev machines render differently | Step 4 |
 
 ## Limitations
 
@@ -189,7 +126,7 @@ use: {
 - Chart.js plugins (annotation, datalabels) may have separate
   init paths; verify they render before snapshotting.
 - Tooltips render in DOM (not canvas), so canvas snapshot misses
-  them - test interactions separately (Step 5).
+  them - test interactions separately (Step 3).
 
 ## References
 
