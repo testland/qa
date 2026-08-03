@@ -142,7 +142,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.7.9 | 14 skills + 3 agents | 17 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.8.0 | 14 skills + 3 agents | 17 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.1.11 | 5 skills + 1 agents | 6 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.1.6 | 5 skills + 1 agents | 6 |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.16 | 5 skills + 1 agents | 6 |

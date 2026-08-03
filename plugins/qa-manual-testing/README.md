@@ -15,7 +15,7 @@ Manual scripted + exploratory testing. Covers session-based exploratory testing 
 | Skill | [session-based-test-management-reference](skills/session-based-test-management-reference/SKILL.md) | Pure-reference catalog of Session-Based Test Management: charters, time-boxed sessions, TBS metrics. |
 | Skill | [hiccupps-f-heuristic](skills/hiccupps-f-heuristic/SKILL.md) | Pure-reference catalog of Bolton's HICCUPPS-F oracle heuristic for deciding whether something is a problem. |
 | Skill | [sfdpot-exploratory-heuristic](skills/sfdpot-exploratory-heuristic/SKILL.md) | Pure-reference catalog of Bach's SFDPOT ("San Francisco Depot") product-element coverage heuristic. |
-| Skill | [fcc-cuts-vids-heuristic](skills/fcc-cuts-vids-heuristic/SKILL.md) | Pure-reference catalog of Bach's FCC CUTS VIDS mnemonic for modelling a system under test. |
+| Skill | [fcc-cuts-vids-heuristic](skills/fcc-cuts-vids-heuristic/SKILL.md) | Pure-reference catalog of Michael Kelly's FCC CUTS VIDS touring heuristic for learning an unfamiliar application. |
 | Skill | [crusspic-stmpl-heuristic](skills/crusspic-stmpl-heuristic/SKILL.md) | Pure-reference catalog of Bach's CRUSSPIC STMPL twelve quality-criteria heuristic. |
 | Skill | [decision-table-test-design](skills/decision-table-test-design/SKILL.md) | Build-an-X manual test cases from business-rule specs via decision tables: full 2^n matrix, collapse, infeasible-combination analysis, one case per feasible column (ISTQB CTFL 4.2.3). |
 | Skill | [state-transition-test-design](skills/state-transition-test-design/SKILL.md) | Build-an-X manual test cases from stateful behavior: state table with invalid transitions, coverage-level choice (all states / 0-switch / 1-switch / all transitions), event-sequence cases (ISTQB CTFL 4.2.4). |

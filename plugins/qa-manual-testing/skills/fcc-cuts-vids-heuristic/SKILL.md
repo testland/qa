@@ -1,153 +1,110 @@
 ---
 name: fcc-cuts-vids-heuristic
-description: "Pure-reference catalog of James Bach's FCC CUTS VIDS heuristic - a 10-letter mnemonic for the dimensions a tester catalogs when MODELLING a system: Format, Constraints, Connections; Coverage, Users, Tasks, Sequences; Variables, Inputs, Data, Storage. Use pre-session to build the system model a charter will explore. For what to VARY use sfdpot-exploratory-heuristic, for oracles (is it a bug?) use hiccupps-f-heuristic, for quality criteria use crusspic-stmpl-heuristic."
+description: "Pure-reference catalog of Michael Kelly's FCC CUTS VIDS touring heuristic (2005): eleven tours - Feature, Complexity, Claims, Configuration, User, Testability, Scenario, Variability, Interoperability, Data, Structure - each a reconnaissance sweep that builds familiarity with an unfamiliar application. Use when onboarding onto a product or opening a first session on an unknown area, before a charter is scoped. Distinct from exploratory-tours-reference (Whittaker's seven tours, which frame a bug-hunting mission on a product the tester already knows), sfdpot-exploratory-heuristic (what to vary), hiccupps-f-heuristic (oracles), and crusspic-stmpl-heuristic (quality criteria)."
 ---
 
 # fcc-cuts-vids-heuristic
 
 ## Overview
 
-FCC CUTS VIDS is one of James Bach's lesser-known but powerful
-exploratory-testing heuristics. Where SFDPOT (
-`sfdpot-exploratory-heuristic`) catalogues what
-to *vary*, FCC CUTS VIDS catalogues what to *model*. The
-distinction: variation drives the session; modelling is what the
-tester learns *about* the system as exploration progresses.
+FCC CUTS VIDS is Michael Kelly's touring heuristic, published on his
+blog on 20 September 2005. It names **eleven tours**, each a short
+reconnaissance pass over an application with one question in mind. Kelly
+introduced it as a companion to his test-reporting heuristic, writing
+"I think I will need something similar for application touring. Here is
+my attempt: FCC CUTS VIDS"
+([michaeldkelly.com](https://michaeldkelly.com/blog/2005/9/20/touring-heuristic.html)).
 
-Published in the Rapid Software Testing curriculum (
-[satisfice.com/rapid-software-testing](https://www.satisfice.com/rapid-software-testing))
-and referenced widely in Bach + Bolton teaching material.
+The tours answer *what does this product even consist of* - they are
+aimed at a tester who does not yet know the application. That is the
+axis that separates them from the seven tours in
+`exploratory-tours-reference`, which come from Whittaker's *Exploratory
+Software Testing* (2009) and frame a themed bug hunt on a product the
+tester already understands. Kelly's tours precede that work by four
+years and are used earlier in the lifecycle: recon first, mission after.
 
-This skill is a **pure reference** consumed by senior testers
-building system models.
+This skill is a **pure reference** consumed by testers building
+familiarity with a new product or a newly inherited area.
 
 ## When to use
 
-- Pre-session: build a model of the system the charter will
-  explore. Walk FCC CUTS VIDS to enumerate what the tester needs
-  to know.
-- Mid-session: tester finds a gap in their understanding - pick
-  the relevant letter and investigate.
-- Post-session: catalogue what the session *taught* about each
-  dimension so the next session builds on the model.
-- Onboarding: a new tester learning a system uses FCC CUTS VIDS
-  as the model-building rubric.
+- **Onboarding** onto an unfamiliar product, before any charter is
+  written.
+- **Inheriting an area** nobody on the team has tested recently.
+- **Opening a first session** on a feature whose shape is unknown, to
+  decide what is worth chartering at all.
+- **Filling a gap mid-session** when the tester realises they cannot
+  answer a basic question about the system.
+
+Do not reach for this once the product is well understood; at that point
+a themed mission from `exploratory-tours-reference` is the better tool.
 
 ## How to use
 
-1. **Name the target.** State the system + charter scope in one line
-   (e.g. "the checkout flow").
-2. **Walk the three groups.** FCC (system shape), CUTS (user shape),
-   VIDS (data shape) - fill in what you know for each of the 10 letters,
-   pulling prompts + examples from
-   [references/dimensions-catalog.md](references/dimensions-catalog.md).
-3. **Flag the unknowns.** Any letter you can't fill is a gap to
-   investigate before or during the session.
-4. **Keep the confusable pairs straight.** V vs I (V = system-owned
-   state, I = user-supplied) and T vs F (Task = user goal, not feature
-   label) - see Anti-patterns.
-5. **Turn the model into charter targets.** Point a session at the
-   riskiest dimensions (e.g. D + S, where stores disagree about state).
-6. **Update the model after each session** so the next one builds on it.
+1. **Pick a target.** One application, or one area of it, in a sentence.
+2. **Run a subset of tours, not all eleven.** Each is a short pass with
+   one question. Three or four chosen for the unknowns that actually
+   matter beat a mechanical sweep through the full list.
+3. **Take notes per tour** so the pass produces a record, not just a
+   feeling of familiarity.
+4. **Convert the gaps into charters.** A tour that raises more questions
+   than it answers has found the area worth a session. Hand those to
+   `session-based-test-management-reference` to charter and time-box.
 
-## The ten dimensions
+## The eleven tours
 
-FCC CUTS VIDS groups ten model-able dimensions into three shapes. Full
-prompt + concrete enumeration per letter:
-[references/dimensions-catalog.md](references/dimensions-catalog.md).
+Each description below is Kelly's own wording. Full prompts and worked
+examples: [references/tours-catalog.md](references/tours-catalog.md).
 
-| Group | Letter | Models |
+| Group | Tour | Kelly's description |
 |---|---|---|
-| **FCC** (system shape) | **F - Format** | shape / format of inputs + outputs (file, message, layout, encoding) |
-| | **C - Constraints** | rules the system enforces (schema, business, perf, security, regulatory) |
-| | **C - Connections** | what it integrates with (external / internal services, stores, queues, clients) |
-| **CUTS** (user shape) | **C - Coverage** | behaviour categories the product claims to cover |
-| | **U - Users** | who uses it and how (personas, skill, context, programmatic) |
-| | **T - Tasks** | user goals that span features |
-| | **S - Sequences** | expected orderings of user actions |
-| **VIDS** (data shape) | **V - Variables** | internal runtime values (flags, thresholds, env, cache) |
-| | **I - Inputs** | external data crossing in (user-supplied) |
-| | **D - Data** | what the system stores / processes / produces |
-| | **S - Storage** | where + how data persists |
+| **FCC** | **F - Feature** | "Move through the application and get familiar with all the controls and features you come across." |
+| | **C - Complexity** | "Find the five most complex things about the application." |
+| | **C - Claims** | "Find all the information in the product that tells you what the product does." |
+| **CUTS** | **C - Configuration** | "Attempt to find all the ways you can change settings in the product in a way that the application retains those settings." |
+| | **U - User** | "Imagine five users for the product and the information they would want from the product or the major features they would be interested in." |
+| | **T - Testability** | "Find all the features you can use as testability features and/or identify tools you have available that you can use to help in your testing." |
+| | **S - Scenario** | "Imagine five realistic scenarios for how the users identified in the user tour would use this product." |
+| **VIDS** | **V - Variability** | "Look for things you can change in the application - and then you try to change them." |
+| | **I - Interoperability** | "What does this application interact with?" |
+| | **D - Data** | "Identify the major data elements of the application." |
+| | **S - Structure** | "Find everything you can about what comprises the physical product (code, interfaces, hardware, files, etc...)." |
 
-## Worked example - building a checkout-system model
-
-```markdown
-**System:** Checkout flow (cart → payment → confirmation)
-
-**F - Format:** Cart JSON; payment-intent JSON (Stripe); webhook
-HTTP/JSON; receipt PDF; order email HTML.
-
-**C - Constraints:** Cart total > $0.01; max 100 items; promo
-expiry; tax-jurisdiction rules per locale; PCI scope for card
-data.
-
-**C - Connections:** Stripe (payment intent + webhook); SendGrid
-(receipt email); inventory service (stock-lock); tax service
-(Avalara); identity service (auth).
-
-**C - Coverage:** Standard checkout; gift-card checkout; subscription
-checkout; bulk-B2B checkout. NOT covered: split-tender, multi-currency
-within one cart.
-
-**U - Users:** Anonymous, free, paid, B2B admin, partner-integration.
-
-**T - Tasks:** "Buy this item", "Apply my promo", "Use my saved
-card", "Get a receipt for expenses".
-
-**S - Sequences:** Add → cart → checkout → pay → confirm; resume
-abandoned cart; refund flow.
-
-**V - Variables:** `feature-new-checkout`, `max-cart-items`, `tax-fallback-rate`,
-`stripe-timeout-ms`.
-
-**I - Inputs:** Cart contents (user input); promo code (user input);
-payment method (user input); shipping address (user input).
-
-**D - Data:** Order record; payment record; tax record; promo-usage
-record; inventory deduction.
-
-**S - Storage:** Orders in Postgres; payments in Stripe (external);
-cart in Redis (TTL 24h); receipts in S3 (immutable).
-```
-
-Now the charter has a tangible model to reference: "Explore the
-checkout flow's data lifecycle (D + S in FCC CUTS VIDS) - focusing
-on edge cases where Postgres + Stripe + Redis disagree about state."
+The User and Scenario tours are ordered: Scenario builds on the personas
+the User tour produced, so run User first.
 
 ## Anti-patterns
 
-| Anti-pattern | Why it fails | Fix |
+| Anti-pattern | Why it fails | Do instead |
 |---|---|---|
-| Skipping FCC CUTS VIDS for "simple" systems | Even simple systems have model-able dimensions; skipping = under-prepared | Always do at least a sketched model |
-| Confusing V (Variables) with I (Inputs) | Internal-state bugs masquerade as input-handling | V = system-owned; I = user-supplied |
-| Confusing T (Tasks) with F (Function in SFDPOT) | Functions are mechanical; tasks are goal-oriented | Task = user's goal, not feature label |
-| Modelling once, then never updating | System evolves; model gets stale | Update model per session |
-| Trying to write a complete model before any session | Analysis paralysis; never starts exploring | Sketch the model; refine via sessions |
+| Running all eleven tours on every product | The heuristic is a menu, not a checklist; eleven shallow passes crowd out one useful one | Pick the tours that target what is actually unknown |
+| Treating a tour as a test pass | A tour builds familiarity; it is not coverage and finds bugs only incidentally | Charter a session for the risks the tour surfaced |
+| Confusing these with Whittaker's tours | Different author, different set, different lifecycle stage | Kelly's eleven for recon, `exploratory-tours-reference` for themed missions |
+| Attributing the mnemonic to James Bach | It is Kelly's, from his own blog | Cite michaeldkelly.com |
+| Touring without notes | The familiarity evaporates and the next tester starts over | Record findings per tour so gaps become charters |
 
 ## Limitations
 
-- **Modelling is upfront work.** For small targets, the time
-  doesn't pay back.
-- **Some dimensions hard to enumerate.** Connections may be opaque
-  in monoliths; Coverage claims may differ from reality.
-- **Model doesn't replace exploration.** It's a starting frame;
-  the session refines + extends it.
-- **Sequence + Operations overlap.** Test discipline by treating
-  Sequences as expected paths; Operations as variation of them.
+- The tours are a **learning** aid. They do not establish coverage, and
+  a product that has been toured is not a product that has been tested.
+- Kelly's original post gives one sentence per tour and no worked
+  example; the prompts in the catalog reference are elaboration, not
+  Kelly's text, and are marked as such.
+- The set is from 2005 and predates mobile, cloud, and API-first
+  products. The Interoperability and Structure tours carry most of the
+  weight for those, but the list has no tour aimed squarely at, say, a
+  third-party identity provider.
 
 ## References
 
-- Bach J. + Bolton M. *Rapid Software Testing* curriculum - 
-  [satisfice.com/rapid-software-testing](https://www.satisfice.com/rapid-software-testing).
-- Bach J. *Heuristics of Software Testability* - 
-  [satisfice.com/heuristics-of-software-testability](https://www.satisfice.com/heuristics-of-software-testability).
-- Bolton M. - [developsense.com](https://developsense.com/) on
-  testing heuristics.
-- Full per-dimension modelling prompts + enumeration:
-  [references/dimensions-catalog.md](references/dimensions-catalog.md).
+- Kelly M. *Touring Heuristic*, 20 September 2005 -
+  [michaeldkelly.com/blog/2005/9/20/touring-heuristic.html](https://michaeldkelly.com/blog/2005/9/20/touring-heuristic.html)
+  (the primary source: the mnemonic and all eleven descriptions).
+- Full per-tour prompts and worked examples:
+  [references/tours-catalog.md](references/tours-catalog.md).
 - Sibling references:
-  `hiccupps-f-heuristic`,
+  `exploratory-tours-reference` (Whittaker's seven tours),
   `sfdpot-exploratory-heuristic`,
+  `hiccupps-f-heuristic`,
   `crusspic-stmpl-heuristic`,
   `session-based-test-management-reference`.
