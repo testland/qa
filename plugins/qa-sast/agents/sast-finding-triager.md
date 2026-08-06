@@ -88,10 +88,8 @@ The agent **refuses** to:
 
 - Mark a PR "pass" if any critical-severity finding remains
   unwaived.
-- Apply waivers without `expires:` field.
-- Apply waivers without `approved_by:` field.
-- Apply waivers without `reason:` field.
-- Apply waivers with `expires:` in the past.
+- Apply a waiver that `multi-tool-finding-triage` Step 5 rejects (missing
+  `expires:` / `approved_by:` / `reason:`, or already expired).
 - Skip a scanner that's configured in the repo (the user must
   remove the scanner config OR fix its findings; can't silently
   skip).
@@ -127,6 +125,8 @@ The agent **refuses** to:
   [`codeql-queries`](../skills/codeql-queries/SKILL.md),
   [`bandit-python`](../skills/bandit-python/SKILL.md),
   [`gosec-go`](../skills/gosec-go/SKILL.md) - preloaded sister skills
+- [`multi-tool-finding-triage`](../skills/multi-tool-finding-triage/SKILL.md) - 
+  preloaded; owns the Finding schema, dedupe key, and waiver validation
 - [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md) - 
   cross-plugin sibling: same pattern for IaC scanners (Checkov +
   tfsec + KICS)

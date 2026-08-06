@@ -68,9 +68,6 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v4
         with: { pattern: scan-*, merge-multiple: true }
-      - run: |
-          curl -s https://epss.empiricalsecurity.com/epss_scores-current.csv.gz | gunzip > epss.csv
-          curl -s https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev.json
       - run: python ci/vuln-prioritize.py
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -78,17 +75,19 @@ jobs:
           path: vuln-report.md
 ```
 
+Refresh the EPSS and KEV feeds before that script runs;
+`cve-exploitability-triage` Steps 2-3 carry the download commands and the
+snapshot-pinning rule.
+
 ## Refuse-to-proceed rules
 
 The agent **refuses** to:
 
 - Mark a build "pass" if any Fix-Now finding remains unwaived.
-- Apply waivers without `expires:` field.
-- Apply waivers without `approved_by:` field.
-- Apply waivers without `reason:` field.
-- Apply waivers with `expires:` in the past.
-- **Apply waivers for CVEs in CISA KEV** (active exploitation
-  threshold).
+- Apply a waiver that `multi-tool-finding-triage` Step 5 rejects (missing
+  `expires:` / `approved_by:` / `reason:`, or already expired).
+- **Apply any waiver to a CVE in CISA KEV** - `cve-exploitability-triage`
+  Step 7 makes KEV membership non-waivable.
 - Skip a scanner that's configured in the workflow.
 - Trust VEX `not_affected` status without a populated `justification`
   field.
@@ -105,10 +104,8 @@ The agent **refuses** to:
 
 ## Limitations
 
-- EPSS scores update daily; pin EPSS data version per scan for
-  reproducibility OR refresh per CI run.
-- KEV catalog is opt-in for CISA-tracked attacks - many real
-  exploitations don't appear.
+- EPSS drift and KEV coverage bound every bucket assigned here;
+  `cve-exploitability-triage` Limitations covers both.
 - VEX claims are only as good as the analysis behind them;
   `not_affected` without justification is worse than no claim.
 - Container layer attribution can be coarse - a finding's
@@ -120,6 +117,10 @@ The agent **refuses** to:
   [`grype-scanning`](../skills/grype-scanning/SKILL.md),
   [`trivy-image`](../skills/trivy-image/SKILL.md) - preloaded sister
   skills
+- [`multi-tool-finding-triage`](../../qa-sast/skills/multi-tool-finding-triage/SKILL.md) - 
+  preloaded; owns the Finding schema, dedupe key, and waiver validation
+- [`cve-exploitability-triage`](../../qa-sca/skills/cve-exploitability-triage/SKILL.md) - 
+  preloaded; owns EPSS/KEV enrichment, the buckets, and the KEV rule
 - first.org/epss - EPSS scoring + API
 - cisa.gov/known-exploited-vulnerabilities-catalog - CISA KEV
 - openvex.dev - OpenVEX specification

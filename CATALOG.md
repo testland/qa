@@ -30,7 +30,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.9.8 | 10 skills + 5 agents | 15 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.9.9 | 10 skills + 5 agents | 15 |
 | [qa-mobile](plugins/qa-mobile/) | 1.4.8 | 11 skills + 3 agents | 14 |
 | [qa-desktop](plugins/qa-desktop/) | 1.2.17 | 9 skills + 4 agents | 13 |
 | [qa-bdd](plugins/qa-bdd/) | 1.7.7 | 10 skills + 2 agents | 12 |
@@ -70,13 +70,13 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 |---|---|---|---:|
 | [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.3.5 | 11 skills + 2 agents | 13 |
 | [qa-compliance](plugins/qa-compliance/) | 1.3.10 | 9 skills + 1 agents | 10 |
-| [qa-sca](plugins/qa-sca/) | 1.2.8 | 9 skills + 1 agents | 10 |
-| [qa-sast](plugins/qa-sast/) | 1.2.8 | 8 skills + 1 agents | 9 |
+| [qa-sca](plugins/qa-sca/) | 1.2.9 | 9 skills + 1 agents | 10 |
+| [qa-sast](plugins/qa-sast/) | 1.2.9 | 8 skills + 1 agents | 9 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.2.5 | 8 skills + 1 agents | 9 |
 | [qa-iac](plugins/qa-iac/) | 1.1.16 | 6 skills + 2 agents | 8 |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.4 | 6 skills + 2 agents | 8 |
-| [qa-sbom](plugins/qa-sbom/) | 1.1.15 | 7 skills + 1 agents | 8 |
-| [qa-dast](plugins/qa-dast/) | 1.3.7 | 6 skills + 1 agents | 7 |
+| [qa-sbom](plugins/qa-sbom/) | 1.1.16 | 7 skills + 1 agents | 8 |
+| [qa-dast](plugins/qa-dast/) | 1.3.8 | 6 skills + 1 agents | 7 |
 | [qa-secrets](plugins/qa-secrets/) | 1.2.11 | 5 skills + 1 agents | 6 |
 
 ## Operations & resilience

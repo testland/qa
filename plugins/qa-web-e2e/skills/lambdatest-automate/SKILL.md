@@ -97,10 +97,8 @@ lt_options = {
     "video": True,
 }
 
-# Set vendor caps on the Options object BEFORE creating the driver. In
-# Selenium 4 W3C mode driver.capabilities is a read-only result dict, so
-# assigning to it after Remote() is a no-op and LT:Options never applies
-# (per the [Selenium options] docs).
+# Vendor caps must be set on Options BEFORE Remote(); driver.capabilities is a
+# read-only result dict, so assigning to it afterwards is a no-op ([Selenium options]).
 options.set_capability("LT:Options", lt_options)
 
 driver = webdriver.Remote(
