@@ -96,10 +96,8 @@ The agent **refuses** to:
 
 - Mark a PR "pass" if any critical-severity finding remains
   unwaived.
-- Apply waivers without `expires:` field.
-- Apply waivers without `approved_by:` field.
-- Apply waivers without `reason:` field.
-- Apply waivers with `expires:` in the past.
+- Apply a waiver that `multi-tool-finding-triage` Step 5 rejects (missing
+  `expires:` / `approved_by:` / `reason:`, or already expired).
 - Skip a scanner that's configured in the repo.
 - Auto-fix findings; reports + recommends only.
 
@@ -132,6 +130,8 @@ The agent **refuses** to:
   [`burp-headless`](../skills/burp-headless/SKILL.md),
   [`nightvision-dast`](../skills/nightvision-dast/SKILL.md) - 
   preloaded sister skills
+- [`multi-tool-finding-triage`](../../qa-sast/skills/multi-tool-finding-triage/SKILL.md) - 
+  preloaded; owns the Finding schema, dedupe key, and waiver validation
 - [`dast-scan-cadence-author`](../skills/dast-scan-cadence-author/SKILL.md) - 
   build-an-X for cadence
 - [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md) - 

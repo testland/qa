@@ -95,18 +95,21 @@ create the remote driver, drive the test, report status, quit:
 import os
 from selenium import webdriver
 
-caps = {
-    "browserName": "Safari",
-    "browserVersion": "17",
+options = webdriver.SafariOptions()
+options.browser_version = "17"
+
+bstack_options = {
     "os": "OS X",
     "osVersion": "Sonoma",
-    "bstack:options": {
-        "projectName": "my-app",
-        "buildName": os.environ.get("BUILD_TAG", "local-run"),
-        "sessionName": "Checkout flow on Safari macOS",
-        "local": "false",
-    },
+    "projectName": "my-app",
+    "buildName": os.environ.get("BUILD_TAG", "local-run"),
+    "sessionName": "Checkout flow on Safari macOS",
+    "local": "false",
 }
+
+# Vendor caps must be set on Options BEFORE Remote(); driver.capabilities is a
+# read-only result dict, so assigning to it afterwards is a no-op ([Selenium options]).
+options.set_capability("bstack:options", bstack_options)
 
 driver = webdriver.Remote(
     command_executor=(
@@ -114,11 +117,8 @@ driver = webdriver.Remote(
         f"{os.environ['BROWSERSTACK_ACCESS_KEY']}"
         f"@hub-cloud.browserstack.com/wd/hub"
     ),
-    options=webdriver.SafariOptions(),  # base options
+    options=options,
 )
-# inject capabilities
-for k, v in caps.items():
-    driver.capabilities[k] = v
 
 driver.get("https://example.com")
 # ... test ...
@@ -131,9 +131,12 @@ driver.execute_script(
 driver.quit()
 ```
 
-(Modern WebDriver clients prefer constructing through options + a
-capabilities dict; consult the chosen client's docs.) Use
-`"status":"failed","reason":"..."` on failure - the session-status
+Every non-W3C capability - `os`, `osVersion`, `projectName`, `buildName`,
+`sessionName`, `local` - lives inside `bstack:options`; only the standard
+fields (`browserName`, `browserVersion`, `platformName`) sit at the top
+level ([Selenium options]).
+
+Use `"status":"failed","reason":"..."` on failure - the session-status
 call drives the BrowserStack dashboard's pass / fail metrics +
 filtering.
 
@@ -192,9 +195,13 @@ docker run --name bstacklocal -d --rm \
   browserstack.com/local-testing/automate.
 - W3C WebDriver specification - 
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
+- [Selenium options] - Selenium 4 browser-options classes;
+  `set_capability` for vendor-prefixed caps before driver creation.
 - Composes:
   `browser-matrix-strategy-reference`.
 - Sibling skills:
   `saucelabs-automate`,
   `lambdatest-automate`,
   `selenium-grid-4-runner`.
+
+[Selenium options]: https://www.selenium.dev/documentation/webdriver/drivers/options/

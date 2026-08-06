@@ -8,6 +8,7 @@ skills:
   - ginkgo-tests
   - cargo-test
   - rstest-tests
+  - go-rust-mocking
   - pairwise-test-case-generator
 ---
 
