@@ -9,6 +9,7 @@ skills:
   - soc2-evidence-collector
   - hipaa-test-patterns
   - pci-dss-control-test-author
+  - iso27001-test-patterns
   - audit-trail-test-author
   - compliance-coverage-scoring
 ---
