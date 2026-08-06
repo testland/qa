@@ -134,8 +134,9 @@ driver.quit()
 Every non-W3C capability - `os`, `osVersion`, `projectName`, `buildName`,
 `sessionName`, `local` - lives inside `bstack:options`; only the standard
 fields (`browserName`, `browserVersion`, `platformName`) sit at the top
-level ([Selenium options]). Use
-`"status":"failed","reason":"..."` on failure - the session-status
+level ([Selenium options]).
+
+Use `"status":"failed","reason":"..."` on failure - the session-status
 call drives the BrowserStack dashboard's pass / fail metrics +
 filtering.
 
