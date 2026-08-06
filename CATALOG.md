@@ -32,7 +32,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 |---|---|---|---:|
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.9.9 | 10 skills + 5 agents | 15 |
 | [qa-mobile](plugins/qa-mobile/) | 1.4.8 | 11 skills + 3 agents | 14 |
-| [qa-desktop](plugins/qa-desktop/) | 1.2.18 | 9 skills + 4 agents | 13 |
+| [qa-desktop](plugins/qa-desktop/) | 1.2.19 | 9 skills + 4 agents | 13 |
 | [qa-bdd](plugins/qa-bdd/) | 1.7.7 | 10 skills + 2 agents | 12 |
 | [qa-game](plugins/qa-game/) | 1.4.15 | 8 skills + 3 agents | 11 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.5.6 | 8 skills + 2 agents | 10 |

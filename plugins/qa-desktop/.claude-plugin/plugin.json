@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-desktop",
-  "version": "1.2.18",
+  "version": "1.2.19",
   "description": "Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework), plus orchestrator agents (desktop-driver-selector, desktop-test-scaffolder, desktop-test-author) that compose the per-driver skills",
   "author": {
     "name": "testland",
