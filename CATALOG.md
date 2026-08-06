@@ -32,18 +32,18 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 |---|---|---|---:|
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.9.9 | 10 skills + 5 agents | 15 |
 | [qa-mobile](plugins/qa-mobile/) | 1.4.8 | 11 skills + 3 agents | 14 |
-| [qa-desktop](plugins/qa-desktop/) | 1.2.17 | 9 skills + 4 agents | 13 |
+| [qa-desktop](plugins/qa-desktop/) | 1.2.18 | 9 skills + 4 agents | 13 |
 | [qa-bdd](plugins/qa-bdd/) | 1.7.7 | 10 skills + 2 agents | 12 |
 | [qa-game](plugins/qa-game/) | 1.4.15 | 8 skills + 3 agents | 11 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.5.6 | 8 skills + 2 agents | 10 |
-| [qa-embedded](plugins/qa-embedded/) | 1.3.8 | 7 skills + 3 agents | 10 |
+| [qa-embedded](plugins/qa-embedded/) | 1.3.9 | 7 skills + 3 agents | 10 |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.2.12 | 6 skills + 2 agents | 8 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.15 | 5 skills + 3 agents | 8 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.2.13 | 6 skills + 2 agents | 8 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
-| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.2.11 | 5 skills + 2 agents | 7 |
+| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.2.12 | 5 skills + 2 agents | 7 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.1.9 | 5 skills + 1 agents | 6 |
-| [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.1.14 | 4 skills + 2 agents | 6 |
+| [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.1.15 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.2.13 | 5 skills + 1 agents | 6 |
 
 ## Quality engineering
@@ -54,8 +54,8 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 |---|---|---|---:|
 | [qa-accessibility](plugins/qa-accessibility/) | 1.3.10 | 14 skills + 2 agents | 16 |
 | [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.13 | 8 skills + 3 agents | 11 |
-| [qa-browser-extension](plugins/qa-browser-extension/) | 1.2.8 | 7 skills + 1 agents | 8 |
-| [qa-pwa](plugins/qa-pwa/) | 1.2.4 | 7 skills + 1 agents | 8 |
+| [qa-browser-extension](plugins/qa-browser-extension/) | 1.2.9 | 7 skills + 1 agents | 8 |
+| [qa-pwa](plugins/qa-pwa/) | 1.2.5 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.7 | 5 skills + 2 agents | 7 |
 | [qa-modern-web](plugins/qa-modern-web/) | 1.1.12 | 5 skills + 1 agents | 6 |
 | [qa-localization](plugins/qa-localization/) | 1.1.12 | 4 skills + 1 agents | 5 |
@@ -77,7 +77,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.4 | 6 skills + 2 agents | 8 |
 | [qa-sbom](plugins/qa-sbom/) | 1.1.16 | 7 skills + 1 agents | 8 |
 | [qa-dast](plugins/qa-dast/) | 1.3.8 | 6 skills + 1 agents | 7 |
-| [qa-secrets](plugins/qa-secrets/) | 1.2.11 | 5 skills + 1 agents | 6 |
+| [qa-secrets](plugins/qa-secrets/) | 1.2.12 | 5 skills + 1 agents | 6 |
 
 ## Operations & resilience
 

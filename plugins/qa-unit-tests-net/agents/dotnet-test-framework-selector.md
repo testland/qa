@@ -1,6 +1,6 @@
 ---
 name: dotnet-test-framework-selector
-description: "Action-taking agent that reads a target .NET project (`*.csproj` / `*.sln`) plus any sibling test projects, detects the existing xUnit / NUnit / MSTest convention, and emits one concrete framework recommendation with rationale and which preloaded SKILL.md to read next. Distinct from `qa-process/framework-choice-advisor` (pure-reference catalog of e2e/load frameworks like Playwright / Cypress / k6) - this agent reads the actual target .NET csproj/sln to recommend xUnit / NUnit / MSTest specifically. Use when starting a new .NET test project and the team has not yet committed to a framework."
+description: "Action-taking agent that reads a target .NET project (`*.csproj` / `*.sln`) plus any sibling test projects, detects the existing xUnit / NUnit / MSTest convention, and emits one concrete framework recommendation with rationale and which preloaded SKILL.md to read next. Distinct from `qa-process/framework-choice-advisor` (pure-reference catalog of e2e/load frameworks like Playwright / Cypress / k6) - this agent reads the actual target .NET csproj/sln to recommend xUnit / NUnit / MSTest specifically. Sibling of the per-language selectors in qa-unit-tests-{jvm,go-rust} and the per-platform qa-desktop/desktop-driver-selector and qa-embedded/embedded-framework-selector - same shape, different target. Use when starting a new .NET test project and the team has not yet committed to a framework."
 tools: "Read, Grep, Glob, Bash(dotnet *), Bash(jq *)"
 model: inherit
 skills:

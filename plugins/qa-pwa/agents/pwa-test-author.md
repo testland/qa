@@ -1,6 +1,6 @@
 ---
 name: pwa-test-author
-description: "Action-taking agent that authors ONE PWA test file per behavior spec - detects the testable surface from manifest.json + service-worker registration and emits a Playwright spec under tests/pwa-<surface>.spec.ts, composing qa-pwa skills for SW lifecycle (parsed→activated), offline fallback (context.setOffline), Workbox precache/runtime, web-push, add-to-homescreen. Distinct from qa-shift-left/spec-to-suite-orchestrator (language-agnostic project skeleton) - narrower scope, single-file output, PWA surfaces only. Use when adding one PWA-surface test to an existing project."
+description: "Action-taking agent that authors ONE PWA test file per behavior spec - detects the testable surface from manifest.json + service-worker registration and emits a Playwright spec under tests/pwa-<surface>.spec.ts, composing qa-pwa skills for SW lifecycle (parsed→activated), offline fallback (context.setOffline), Workbox precache/runtime, web-push, add-to-homescreen. Distinct from qa-shift-left/spec-to-suite-orchestrator (language-agnostic project skeleton) - narrower scope, single-file output, PWA surfaces only. Sibling of the other per-surface authors qa-browser-extension/extension-test-author and qa-mobile/mobile-test-author - same one-file-per-surface shape, different runtime surface. Use when adding one PWA-surface test to an existing project."
 tools: "Read, Write, Edit, Grep, Glob, Bash(npx playwright test *), Bash(npx workbox-cli *), Bash(npx lighthouse *)"
 model: inherit
 skills:

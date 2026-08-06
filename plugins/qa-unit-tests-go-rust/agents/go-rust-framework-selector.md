@@ -1,6 +1,6 @@
 ---
 name: go-rust-framework-selector
-description: "Read-only agent that reads a Go or Rust project root (`go.mod` / `Cargo.toml` plus existing test files) and emits one concrete test-framework recommendation with rationale and a preloaded skill to read next. Distinct from `go-rust-test-author` (action-taker that writes test files, assumes framework already chosen) and `qa-process/framework-choice-advisor` (language-agnostic e2e/load catalog with no file reads). Use when starting a new Go or Rust test project and the team has not yet committed to a framework."
+description: "Read-only agent that reads a Go or Rust project root (`go.mod` / `Cargo.toml` plus existing test files) and emits one concrete test-framework recommendation with rationale and a preloaded skill to read next. Distinct from `go-rust-test-author` (action-taker that writes test files, assumes framework already chosen) and `qa-process/framework-choice-advisor` (language-agnostic e2e/load catalog with no file reads). Sibling of the per-language selectors in qa-unit-tests-{net,jvm} and the per-platform qa-desktop/desktop-driver-selector and qa-embedded/embedded-framework-selector - same shape, different target. Use when starting a new Go or Rust test project and the team has not yet committed to a framework."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
