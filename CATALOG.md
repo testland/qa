@@ -54,7 +54,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 |---|---|---|---:|
 | [qa-accessibility](plugins/qa-accessibility/) | 1.3.10 | 14 skills + 2 agents | 16 |
 | [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.13 | 8 skills + 3 agents | 11 |
-| [qa-browser-extension](plugins/qa-browser-extension/) | 1.2.7 | 7 skills + 1 agents | 8 |
+| [qa-browser-extension](plugins/qa-browser-extension/) | 1.2.8 | 7 skills + 1 agents | 8 |
 | [qa-pwa](plugins/qa-pwa/) | 1.2.4 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.7 | 5 skills + 2 agents | 7 |
 | [qa-modern-web](plugins/qa-modern-web/) | 1.1.12 | 5 skills + 1 agents | 6 |

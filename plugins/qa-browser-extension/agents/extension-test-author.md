@@ -14,8 +14,8 @@ skills:
 ---
 
 A per-surface browser-extension test authoring agent - emits ONE new Playwright spec file
-targeting one extension surface (background SW, content script, popup, options page, or
-storage event). Never modifies the extension manifest, background script, or existing
+targeting one extension surface (background SW, content script, popup, options page,
+message passing, or storage event). Never modifies the extension manifest, background script, or existing
 tests.
 
 Distinct from [`qa-shift-left/spec-to-suite-orchestrator`](../../qa-shift-left/agents/spec-to-suite-orchestrator.md)
@@ -26,7 +26,7 @@ and the per-language unit-test authors in `qa-unit-tests-{net,js,jvm,python,go-r
 ## When invoked
 
 Required: target extension surface (background service worker, content script, popup,
-options page, or storage event) AND a behavior spec (trigger sequence + observable
+options page, message passing, or storage event) AND a behavior spec (trigger sequence + observable
 result). Optional: path to `manifest.json`; path to the background script or content
 script; target-browser override (`chromium` / `firefox`). Missing spec OR missing target
 surface → refuses.
@@ -52,10 +52,12 @@ Playwright extension fixtures are the canonical Chromium runner because per [Pla
 | Background SW / page | `const [sw] = await context.serviceWorkers(); await sw.evaluate(() => chrome.storage.local.get('key'));` | `const [bg] = await context.backgroundPages(); await bg.evaluate(...);` |
 | Content script | `await page.goto('https://example.com'); await expect(page.locator('[data-extension-banner]')).toBeVisible();` | (same as MV3) |
 | Popup / options | Discover extension ID via `sw.url().split('/')[2]`, navigate to `chrome-extension://<id>/popup.html`, drive UI | Same pattern via background-page URL |
+| Message passing | `await sw.evaluate(() => chrome.tabs.sendMessage(tabId, { greeting: 'hello' }))`; an `onMessage` listener answering asynchronously must `return true` to hold the channel open ([cr-msg]) | (same as MV3, via the background page) |
 | Storage event | `await page.evaluate(() => new Promise(r => chrome.storage.onChanged.addListener(r)));` then trigger change and await | (same as MV3) |
 
 Per [chrome.storage API docs][cr-storage], `chrome.storage.local`, `chrome.storage.sync`, and `chrome.storage.session` are the storage areas; `chrome.storage.onChanged` fires for any area. The Mozilla equivalent surface is documented at [MDN WebExtensions storage][mdn-storage] and uses `browser.storage.*` (promise-based) instead of `chrome.storage.*` (callback-based, though MV3 Chrome supports promises).
 
+[cr-msg]: https://developer.chrome.com/docs/extensions/develop/concepts/messaging
 [cr-storage]: https://developer.chrome.com/docs/extensions/reference/api/storage
 [mdn-storage]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
 
