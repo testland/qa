@@ -42,7 +42,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.2.13 | 6 skills + 2 agents | 8 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.2.12 | 5 skills + 2 agents | 7 |
-| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.1.9 | 5 skills + 1 agents | 6 |
+| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.1.10 | 5 skills + 1 agents | 6 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.1.15 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.2.13 | 5 skills + 1 agents | 6 |
 

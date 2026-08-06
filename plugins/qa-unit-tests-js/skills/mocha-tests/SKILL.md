@@ -226,11 +226,35 @@ mocha --parallel --jobs 4
 ```
 
 Tests must be independent - shared state across describe blocks
-breaks parallel runs. Limitations:
-- `before` / `after` hooks at the top-level scope don't run
-  per-process consistently
-- File-level state mutations leak between describes in the same
-  process
+breaks parallel runs.
+
+**Root hooks stop working.** In parallel mode "each test file gets its
+own instance of Mocha", so a root hook defined in file A "will not be
+present" in file B ([parallel mode][mocha-par]). The common serial
+setup - `--file ./test/setup.js` installing a top-level `before` - is
+named in those docs as the pattern that does **not** carry over.
+
+Two supported replacements ([root hook plugins][mocha-rhp]):
+
+```js
+// test/hooks.js - loaded with `mocha --require test/hooks.js`
+export const mochaHooks = {
+  beforeEach() { /* runs in every worker, before every test */ },
+};
+
+// once per run, not per worker:
+export const mochaGlobalSetup = async () => { /* seed */ };
+export const mochaGlobalTeardown = async () => { /* tear down */ };
+```
+
+Use `mochaHooks` for per-test setup and `mochaGlobalSetup` /
+`mochaGlobalTeardown` for work that must happen exactly once
+([global fixtures][mocha-gf]). File-level state mutations still leak
+between describes sharing a process.
+
+[mocha-par]: https://mochajs.org/#parallel-mode
+[mocha-rhp]: https://mochajs.org/#root-hook-plugins
+[mocha-gf]: https://mochajs.org/#global-fixtures
 
 ## Step 9 - CI integration
 
