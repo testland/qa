@@ -14,7 +14,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.10.14 | 25 skills + 7 agents | 32 |
-| [qa-test-data](plugins/qa-test-data/) | 1.3.8 | 17 skills + 3 agents | 20 |
+| [qa-test-data](plugins/qa-test-data/) | 1.3.9 | 17 skills + 3 agents | 20 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.4.15 | 15 skills + 2 agents | 17 |
 | [qa-roles](plugins/qa-roles/) | 1.3.11 | 0 skills + 15 agents | 15 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.13 | 8 skills + 6 agents | 14 |
@@ -72,7 +72,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 | [qa-compliance](plugins/qa-compliance/) | 1.3.11 | 9 skills + 1 agents | 10 |
 | [qa-sca](plugins/qa-sca/) | 1.2.9 | 9 skills + 1 agents | 10 |
 | [qa-sast](plugins/qa-sast/) | 1.2.9 | 8 skills + 1 agents | 9 |
-| [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.2.5 | 8 skills + 1 agents | 9 |
+| [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.2.6 | 8 skills + 1 agents | 9 |
 | [qa-iac](plugins/qa-iac/) | 1.1.16 | 6 skills + 2 agents | 8 |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.4 | 6 skills + 2 agents | 8 |
 | [qa-sbom](plugins/qa-sbom/) | 1.1.16 | 7 skills + 1 agents | 8 |
@@ -116,7 +116,7 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-payment](plugins/qa-payment/) | 1.4.8 | 11 skills + 1 agents | 12 |
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.3.13 | 9 skills + 2 agents | 11 |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.3.15 | 9 skills + 2 agents | 11 |
 | [qa-graphql](plugins/qa-graphql/) | 1.4.6 | 10 skills + 1 agents | 11 |
 | [qa-experimentation](plugins/qa-experimentation/) | 1.1.16 | 9 skills + 1 agents | 10 |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.13 | 8 skills + 1 agents | 9 |
