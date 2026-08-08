@@ -2,7 +2,9 @@
 
 Selective faking, DST/timezone tests, and fake-timer + mocked
 `fetch` interplay extracted from the core skill. Enable / advance
-/ run-all usage stays in SKILL.md.
+/ run-all usage stays in SKILL.md. General Jest mocking - the three
+mock forms and manual `__mocks__/` - is `jest-tests` (in the
+qa-unit-tests-js plugin).
 
 ## Selective faking
 

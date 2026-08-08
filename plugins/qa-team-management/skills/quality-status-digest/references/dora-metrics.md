@@ -5,6 +5,9 @@ described as having evolved "from the original four keys to the current five-met
 grouped as throughput and instability (https://dora.dev/guides/dora-metrics-four-keys/,
 verified 2026-07-19).
 
+The quoted block below is duplicated verbatim in
+`exec-quality-narrative/references/dora-metrics.md`; update both together.
+
 ## Throughput
 
 - **Change lead time** (originally "lead time for changes"): "The amount of time it takes for a change to go from committed to version control to deployed in production."

@@ -319,3 +319,7 @@ buckets.
   (https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json).
 - **The Accept-Risk bucket grows without bound** unless it is audited on a
   schedule, at which point the gate silently weakens.
+- **Enrichment ranks nothing on its own.** Deciding which CVEs get fixed first
+  from EPSS thresholds, VEX status, and reachability is
+  `cve-exploitability-triage` (in the qa-sca plugin); this skill only consumes
+  the same two feeds to set a finding's severity before the gate.

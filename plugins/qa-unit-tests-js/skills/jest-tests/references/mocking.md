@@ -1,8 +1,10 @@
 # Jest mocking and fake timers
 
 Deep reference for `jest-tests` SKILL.md. Consult for the three mock forms,
-manual `__mocks__/`, and fake-timer control. This is per-framework mocking
+manual `__mocks__/`, and basic fake-timer control. This is per-framework mocking
 lifecycle, not mocking hygiene (for anti-patterns see `test-code-conventions`).
+Selective faking, DST and timezone cases, and fake timers combined with a mocked
+`fetch` are owned by `jest-fake-timers` (in the qa-time plugin).
 
 Three forms:
 

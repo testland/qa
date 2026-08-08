@@ -1,6 +1,6 @@
 ---
 name: migration-blast-radius-reviewer
-description: "Adversarial reviewer for a single database migration (Flyway V*.sql, Liquibase changeset, Atlas migration, or SQLMesh model change). Classifies operations as additive / breaking / data-loss / locking / lock-escalating; estimates downtime risk for large-table operations; identifies downstream consumers via grep on column/table names; flags missing rollback path; surfaces unsafe defaults (NOT NULL add without default, narrow column type change, foreign-key add without index). Returns Critical / Warning / Info findings table. Use proactively before merging any DB migration PR."
+description: "Adversarial reviewer for a single database migration (Flyway V*.sql, Liquibase changeset, Atlas migration, or SQLMesh model change). Classifies operations as additive / breaking / data-loss / locking / lock-escalating; estimates downtime risk for large-table operations; identifies downstream consumers via grep on column/table names; flags missing rollback path; surfaces unsafe defaults (NOT NULL add without default, narrow column type change, foreign-key add without index). Returns Critical / Warning / Info findings table. Use proactively before merging any DB migration PR. Reviews execution safety - locking, downtime, rollback; schema-diff-reviewer (in the qa-data-quality plugin) reviews the same PR for data-test coverage on new or changed columns."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
