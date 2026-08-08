@@ -102,7 +102,7 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS
 |---|---|---|---:|
 | [qa-time](plugins/qa-time/) | 1.2.19 | 11 skills + 1 agents | 12 |
 | [qa-serverless](plugins/qa-serverless/) | 1.3.3 | 10 skills + 1 agents | 11 |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.2.8 | 9 skills + 1 agents | 10 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.2.9 | 9 skills + 1 agents | 10 |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.5 | 8 skills + 1 agents | 9 |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.2.12 | 6 skills + 1 agents | 7 |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.2.10 | 5 skills + 2 agents | 7 |

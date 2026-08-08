@@ -1,6 +1,6 @@
 ---
 name: browser-cache-control-tests
-description: "Wraps browser-side Cache-Control testing with Playwright (Cypress for legacy stacks): asserting response Cache-Control headers from Network events, ETag round-trips (If-None-Match → 304), service-worker strategies (Workbox cacheFirst / networkFirst / staleWhileRevalidate), and reload semantics (normal vs hard). Covers MDN Cache-Control + RFC 9111. Use when auditing browser-tier caching in E2E tests. For CDN-edge purge use cdn-cache-purge-tests; for the reverse-proxy tier use varnish-test-vtc-syntax; for an app-tier store use redis-cache-tests; SWR directive semantics live in stale-while-revalidate-reference."
+description: "Wraps browser-side Cache-Control testing with Playwright (Cypress for legacy stacks): asserting response Cache-Control headers from Network events, ETag round-trips (If-None-Match → 304), service-worker strategies (Workbox cacheFirst / networkFirst / staleWhileRevalidate), and reload semantics (normal vs hard). Covers MDN Cache-Control + RFC 9111. Use when auditing browser-tier caching in E2E tests - the scope is behaviour a browser decides (served-from-cache, revalidation, SW strategy, reload semantics). Asserting only which Cache-Control value a server emits needs no browser: that belongs in the project's existing HTTP-level runner. For CDN-edge purge use cdn-cache-purge-tests; for the reverse-proxy tier use varnish-test-vtc-syntax; for an app-tier store use redis-cache-tests; SWR directive semantics live in stale-while-revalidate-reference."
 ---
 
 # browser-cache-control-tests
@@ -17,12 +17,20 @@ Firefox, and Safari.
 
 ## When to use
 
-- Verifying a new endpoint's Cache-Control is interpreted as
-  intended.
+- Verifying the browser acts on a Cache-Control value as
+  intended - reuses from cache, revalidates, or refetches.
 - Service-worker test patterns (Workbox).
 - Tests for revalidation behaviour (ETag round-trip).
 - Investigating "this page caches forever" or "cache never
   hits" complaints.
+
+## When not to use
+
+If the assertion is only *which* header the server sends, no
+browser is involved and none is needed - assert it with the
+project's existing HTTP client (supertest, requests, RestAssured,
+`curl -I`) in the runner already configured there. Reach for this
+skill when the browser's own decision is the thing under test.
 
 ## How to use
 
@@ -115,6 +123,10 @@ npx playwright test cache-tests.spec.ts
 
 For service-worker tests, increase the test timeout - SW
 registration is async.
+
+Playwright installs alongside whatever the project already runs;
+leave the existing `test` script pointed at that runner rather
+than repointing it here.
 
 ## Parsing results
 
