@@ -4,9 +4,9 @@
 [![plugin-validate](https://github.com/testland/qa/actions/workflows/plugin-validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/plugin-validate.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-> A rigorously curated quality-engineering plugin marketplace for Claude Code,
-> also installable in any agent via the skills.sh CLI. Every component is
-> reviewed before merge.
+> A rigorously curated quality-engineering plugin marketplace for Claude Code;
+> its skills also install into any agent via the skills.sh CLI. Every component
+> is reviewed before merge.
 
 ## Why testland-qa
 
@@ -84,7 +84,14 @@ and 20+ other agents via the [skills.sh](https://skills.sh/testland/qa) CLI:
 ```bash
 npx skills add testland/qa                    # browse and install from the repo
 npx skills add testland/qa --skill <skill>    # one specific skill
+
+# every skill in one plugin
+npx skills add https://github.com/testland/qa/tree/main/plugins/qa-flake-triage
 ```
+
+The CLI installs **skills only**. Agents and the role bundles (`qa-starter` and
+the `qa-role-*` family) need Claude Code: a bundle owns no `SKILL.md` of its
+own, so `npx skills add` on one reports "No skills found".
 
 ### Direct URL
 
