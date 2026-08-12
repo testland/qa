@@ -82,11 +82,9 @@ Not on Claude Code? Any skill installs into Cursor, Copilot, Gemini, Windsurf,
 and 20+ other agents via the [skills.sh](https://skills.sh/testland/qa) CLI:
 
 ```bash
-npx skills add testland/qa                    # browse and install from the repo
-npx skills add testland/qa --skill <skill>    # one specific skill
-
-# every skill in one plugin
-npx skills add https://github.com/testland/qa/tree/main/plugins/qa-flake-triage
+npx skills add testland/qa                              # browse and install from the repo
+npx skills add testland/qa --skill <skill>              # one specific skill
+npx skills add testland/qa --skill <one> --skill <two>  # several at once
 ```
 
 The CLI installs **skills only**. Agents and the role bundles (`qa-starter` and
