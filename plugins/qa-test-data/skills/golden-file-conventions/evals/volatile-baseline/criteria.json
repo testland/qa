@@ -1,0 +1,46 @@
+{
+  "context": "A golden baseline containing three volatile values - a UUID regenerated per call, a wall-clock timestamp, and a machine-specific absolute path - against stable content that is worth comparing. Predicted baseline failure: the agent takes the cheapest route to green by deleting the volatile keys from both sides, or by dropping the golden file and asserting a few fields inline. Either makes the test pass while removing the coverage that justified having a baseline. The skill's value is sanitising volatile fields into placeholders so the shape is still asserted, and keeping the stable content compared exactly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 10,
+      "description": "npm test completes successfully, with the golden test executing rather than skipped, commented out, or renamed so the runner no longer collects it. A test disabled to reach green scores zero on this criterion."
+    },
+    {
+      "name": "Volatile fields sanitised, not deleted",
+      "max_score": 28,
+      "description": "reportId, createdAt and sourcePath are still present in the comparison, normalised to placeholders or matched by type or pattern. Removing them from the produced object or the baseline so they are no longer compared scores zero: a report that stops emitting createdAt entirely would then pass unnoticed."
+    },
+    {
+      "name": "Stable content still compared exactly",
+      "max_score": 22,
+      "description": "itemCount, totalCents, currency and the items array are still asserted against the baseline value for value. Loosening these to type checks, a length check, or a subset comparison scores zero - they are the content the baseline exists to protect."
+    },
+    {
+      "name": "Golden file retained as the source of truth",
+      "max_score": 14,
+      "description": "MUST NOT abandon the baseline. __golden__/report.json still exists and is still read by the test. Replacing it with assertions written inline in the test file scores zero on this criterion."
+    },
+    {
+      "name": "Sanitisation is shared, not hand-applied per field at the assertion",
+      "max_score": 8,
+      "description": "Normalisation happens through a named helper or serializer applied to the report, so a future field is handled by extending one place. Ad-hoc deletion or overwriting of individual keys immediately before the assertion scores at most half."
+    },
+    {
+      "name": "Review notes produced",
+      "max_score": 8,
+      "description": "A file named golden-review-notes.md exists and identifies all three volatile fields with the handling chosen for each."
+    },
+    {
+      "name": "Update guidance keeps the baseline honest",
+      "max_score": 6,
+      "description": "The notes tell a reviewer to update the baseline in the same pull request as the change that justifies it, and to read the diff. MUST NOT recommend running the suite with an update or write-baseline flag in continuous integration, or refreshing baselines in a separate follow-up pull request - either makes the baseline a record of whatever the code last produced, and scores zero here."
+    },
+    {
+      "name": "Machine-specific path handled by normalisation",
+      "max_score": 4,
+      "description": "sourcePath is made machine-independent - relative to the project root or replaced with a placeholder - rather than the baseline being rewritten with the current machine's absolute path."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "Fixture-scope design for a suite whose cost is a per-test container and whose risk is what happens when that container is shared. Four distinct pieces of setup sit at one scope: a cheap logger, a mutation of a process-wide config singleton, a container plus migrations, and per-test seed data. Predicted baseline failure: the agent recommends moving the container to suite scope - correct, and the obvious half of the answer - without specifying the per-test data-reset mechanism that makes it safe, which is precisely why the team's earlier attempt was reverted. The globalConfig mutation is usually missed entirely: it is a shared surface that becomes dangerous only once setup stops running for every test.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Strategy document produced",
+      "max_score": 4,
+      "description": "A file named fixture-strategy.md exists."
+    },
+    {
+      "name": "Container moved to a wider scope",
+      "max_score": 18,
+      "description": "The container and its migrations are recommended at suite, file, or per-worker scope rather than per test, with the reasoning tied to the 25-second startup against 94 tests."
+    },
+    {
+      "name": "A concrete per-test reset mechanism is specified",
+      "max_score": 26,
+      "description": "The document names how each test gets a clean database on a shared container - transaction rollback per test, truncation between tests, a schema or database per worker, or uniquely namespaced rows. Recommending the wider scope without naming a mechanism scores zero on this criterion: that is the recommendation the team already tried and reverted, and the task asks specifically for this part."
+    },
+    {
+      "name": "Global config mutation identified as a shared surface",
+      "max_score": 20,
+      "description": "The document flags that AppTest mutates globalConfig, a process-wide object, and that this is currently masked by setup running before every test - so widening any scope leaves the flag set for tests that never asked for it. Omitting this scores zero; naming it only as a style issue rather than a scope hazard scores at most half."
+    },
+    {
+      "name": "Seed data kept per test or made independent",
+      "max_score": 12,
+      "description": "The catalogue and customer seeds are addressed: either kept per test, or moved wider with unique identifiers so two tests cannot collide on the same customer email. Recommending they move to suite scope unchanged - with a shared customer row every test writes against - scores zero."
+    },
+    {
+      "name": "Inheritance chain addressed with a concrete alternative",
+      "max_score": 12,
+      "description": "The four-level chain is called out and replaced with something specific - composable helpers or per-resource fixtures assembled where needed - rather than a general recommendation to reduce coupling. No alternative offered scores at most half."
+    },
+    {
+      "name": "Cheap correctly-scoped setup left alone",
+      "max_score": 8,
+      "description": "MUST NOT recommend churn without benefit. The logger created in BaseTest is inexpensive and stateless per test; the document either leaves it as is or explicitly says it needs no change. Recommending work on it alongside the real findings scores zero on this criterion."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Order-coupled tests over a module-level singleton. The buckets Map lives in module scope, so consumption in the first test decides the outcome of the second and third; the module exposes resetAll, which nothing calls. Predicted baseline failure: the agent notices the arithmetic and repairs the numbers - changing the expected remaining from 2 to something that matches whatever the earlier test left behind - which turns each test into a statement about its predecessor and makes the file harder to extend, exactly the fix the task rules out. A second common shortcut is giving each test a unique key, which sidesteps the leak without removing it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 12,
+      "description": "npm test completes successfully with all three tests present and executing - none skipped, merged, or deleted."
+    },
+    {
+      "name": "Shared state reset between tests",
+      "max_score": 30,
+      "description": "A per-test hook - beforeEach or its equivalent for the runner - clears the shared buckets before each test runs, so every test begins from an empty limiter. A file that reaches green without any reset scores zero on this criterion, whatever else it changed."
+    },
+    {
+      "name": "Assertions still describe a clean starting point",
+      "max_score": 22,
+      "description": "MUST NOT encode the leak in the expectations. The second test still asserts remaining equals 2 on a first request, and the third still asserts usage of user-a equals 1. Any expected value adjusted to absorb consumption from an earlier test scores zero here - that is the repair the task explicitly rejects."
+    },
+    {
+      "name": "Tests remain separate",
+      "max_score": 10,
+      "description": "MUST NOT merge the three scenarios into one test to make the sequence line up. Three independently named tests remain."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify src/rateLimiter.js. Removing the module-level Map, or changing consume to accept injected state, is a production change the task did not authorise. Any edit to that file scores zero on this criterion."
+    },
+    {
+      "name": "Fix does not depend on test order",
+      "max_score": 10,
+      "description": "The result holds whichever order the tests run in - the reset is per-test, not a single clear placed before the file's first test or between two specific ones. A one-off reset that only happens to fix the current ordering scores zero."
+    },
+    {
+      "name": "Notes identify the shared surface and the mechanism",
+      "max_score": 12,
+      "description": "A file named isolation-notes.md exists, names the module-scoped buckets Map as the shared surface, and explains that it persists for the lifetime of the module rather than the lifetime of a test. Notes that describe the symptom without naming what was shared score at most half."
+    },
+    {
+      "name": "Forward rule stated",
+      "max_score": 6,
+      "description": "The notes give the rule for tests added later - state owned outside a test is reset before each test - rather than only describing the repair made today."
+    }
+  ]
+}

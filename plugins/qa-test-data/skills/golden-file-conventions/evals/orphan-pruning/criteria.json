@@ -1,0 +1,41 @@
+{
+  "context": "A golden directory with two orphaned baselines and one referenced baseline that was never committed, leaving the suite red. The correct closing balance for the statement fixture is 3900 and the movement count is 3. Predicted baseline failure: the agent reaches green the cheapest way - deleting or skipping the statement test rather than writing the baseline it needs - and prunes conservatively or not at all, because deleting files feels riskier than leaving them. Both leave the directory in the state the task is asking to end. The skill's value is knowing that an unreferenced baseline is dead weight to remove, and a referenced-but-absent one is coverage to restore.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 10,
+      "description": "npm test completes successfully."
+    },
+    {
+      "name": "Missing baseline restored rather than the test removed",
+      "max_score": 26,
+      "description": "MUST NOT reach green by deletion. __golden__/statement.json now exists and the statement test still runs and still compares against it. Deleting, skipping, commenting out or renaming that test so the runner no longer collects it scores zero on this criterion, as does rewriting it to assert something other than the baseline."
+    },
+    {
+      "name": "Restored baseline holds the correct values",
+      "max_score": 18,
+      "description": "The new statement baseline contains kind statement, accountId acc_9, openingCents 5000, closingCents 3900 and movementCount 3. A baseline with a wrong closing balance that was made to pass by changing the source instead scores zero here."
+    },
+    {
+      "name": "Both orphans removed",
+      "max_score": 20,
+      "description": "__golden__/legacy-summary.json and __golden__/old-invoice-v1.json are deleted. Removing one scores half; removing neither scores zero."
+    },
+    {
+      "name": "In-use baselines untouched",
+      "max_score": 12,
+      "description": "MUST NOT prune indiscriminately. invoice.json and receipt.json still exist with their original content, and their tests still pass against them. Deleting or rewriting either scores zero on this criterion."
+    },
+    {
+      "name": "Audit covers every file with its status",
+      "max_score": 10,
+      "description": "A file named golden-directory-audit.md exists and accounts for all five baselines - the three retained or restored with the test that references each, and the two removed with the reason. An audit that omits any file scores at most half."
+    },
+    {
+      "name": "Pruning rule stated",
+      "max_score": 4,
+      "description": "The audit states the rule for future drift: a baseline with no referencing test is removed in the same change that removed its test, rather than left in place."
+    }
+  ]
+}

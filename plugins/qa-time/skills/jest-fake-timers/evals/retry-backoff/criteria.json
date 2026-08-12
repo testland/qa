@@ -1,0 +1,46 @@
+{
+  "context": "Retry-with-backoff under Jest, where a promise is awaited between timer waits. Predicted baseline failure: the agent installs fake timers and then calls the synchronous jest.advanceTimersByTime(), which moves the clock but does not drain the microtask queue - so the awaited sleep never settles and the test hangs or times out. The common recovery is to abandon fake timers and let 1.4s of real time pass. The skill's value is knowing the async advancement variant exists and is required here.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/retry.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Timer advancement drains microtasks",
+      "max_score": 32,
+      "description": "Advancing the clock is awaited so the promise chain inside withRetry can proceed - `await jest.advanceTimersByTimeAsync(...)`, `await jest.runAllTimersAsync()`, or an equivalent that yields to the microtask queue between advances. Bare synchronous jest.advanceTimersByTime() with no mechanism for draining the awaited sleep scores zero on this criterion, whether or not the file appears to pass."
+    },
+    {
+      "name": "Backoff schedule asserted at specific values",
+      "max_score": 18,
+      "description": "The test asserts the actual waits are 200ms, then 400ms, then 800ms - by advancing to just under a boundary and showing no retry, then crossing it, or by inspecting the scheduled timer delays. Asserting only that 'some delay happened', or only the total elapsed time, scores at most half."
+    },
+    {
+      "name": "Exhaustion rejects with the final error",
+      "max_score": 10,
+      "description": "A test drives all attempts to failure and asserts the returned promise rejects with the last error thrown by the operation, not a generic or wrapped error."
+    },
+    {
+      "name": "Success path makes exactly one call",
+      "max_score": 8,
+      "description": "A test asserts an operation that succeeds immediately is invoked exactly once and no timer is scheduled."
+    },
+    {
+      "name": "No real elapsed time",
+      "max_score": 12,
+      "description": "MUST NOT. The test does not reach its assertions by letting real time pass - no real sleep helper, no raised jest timeout to accommodate 1.4s of waiting, no unfaked setTimeout in the test body. Any single instance scores zero on this criterion."
+    },
+    {
+      "name": "Real timers restored",
+      "max_score": 8,
+      "description": "MUST NOT leave fake timers installed. The file restores real timers via afterEach(jest.useRealTimers) or equivalent."
+    },
+    {
+      "name": "Tests withRetry, not delayForAttempt again",
+      "max_score": 8,
+      "description": "MUST NOT substitute the easy target for the asked-for one. The delay schedule is proven through withRetry's observable behaviour; a file whose schedule assertions only re-check the pure delayForAttempt function - already covered by src/backoff.test.js - scores zero on this criterion."
+    }
+  ]
+}

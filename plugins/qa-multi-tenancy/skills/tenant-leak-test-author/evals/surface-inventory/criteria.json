@@ -1,0 +1,46 @@
+{
+  "context": "Isolation planning for a feature whose tenant-bearing surfaces extend well past its HTTP handlers. The source deliberately contains three genuine scoping gaps - the search query carries no tenant filter, the cache key is not tenant-prefixed, and the queue consumer looks up the record by id alone - while the object-storage key and the primary read query are correctly scoped. Predicted baseline failure: the agent produces a competent plan for the request handlers, lists 'the database' as the storage surface, and never separates search, cache and the async consumer into surfaces of their own, so it reproduces exactly the review that missed the search leak last time.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan file created",
+      "max_score": 4,
+      "description": "A file named attachment-isolation-test-plan.md is produced."
+    },
+    {
+      "name": "Inventory covers all five surface types",
+      "max_score": 24,
+      "description": "The inventory names the relational store, the object store, the search index, the message topic and its consumer, and the cache as distinct surfaces, each with how it is or is not tenant-scoped. Score proportionally by how many of the five appear as separate entries; three or fewer scores at most half. A plan organised only by HTTP handler scores zero on this criterion."
+    },
+    {
+      "name": "Search index leak identified",
+      "max_score": 18,
+      "description": "The plan states that searchAttachments passes the query straight to the index with no tenant predicate, and that indexed documents carry no tenantId field to filter on. Omitting this scores zero - it is the leak the team already suffered."
+    },
+    {
+      "name": "Cache key leak identified",
+      "max_score": 16,
+      "description": "The plan states the cache key `attachment:<id>` is not tenant-scoped, and that getAttachment returns a cached record before the tenant-filtered query runs, so a cached entry is served across tenants. A plan that lists the cache as a surface without naming the unscoped key or the read-before-filter ordering scores at most half."
+    },
+    {
+      "name": "Async consumer leak identified",
+      "max_score": 14,
+      "description": "The plan states that onAttachmentCreated looks the record up by id with no tenant predicate, and that the message payload carries no tenant context to check against. Treating the queue only as a publish surface, without examining the consumer, scores zero here."
+    },
+    {
+      "name": "Probes given per surface",
+      "max_score": 12,
+      "description": "Each inventory entry carries a concrete probe - the cross-tenant action to attempt and the expected refusal - rather than a general instruction to test isolation. A plan that lists surfaces without per-surface probes scores zero on this criterion."
+    },
+    {
+      "name": "Two-tenant fixture stated as a requirement",
+      "max_score": 8,
+      "description": "The fixture section requires at least two disjoint tenants with non-colliding identifiers, and a session per tenant."
+    },
+    {
+      "name": "Correctly-scoped surfaces not reported as gaps",
+      "max_score": 4,
+      "description": "MUST NOT invent findings. The tenant-prefixed object-storage key and the tenant-filtered findOne in getAttachment are not presented as scoping failures. Flagging either as a leak scores zero here."
+    }
+  ]
+}

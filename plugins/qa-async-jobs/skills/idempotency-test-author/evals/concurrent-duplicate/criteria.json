@@ -1,0 +1,41 @@
+{
+  "context": "Concurrent-duplicate coverage where a sequential replay test already exists and passes. Predicted baseline failure: the agent writes another sequential test with different wording - awaiting the first call before starting the second - which exercises the completed-entry path already covered and never creates an interleave. When it does reach for concurrency it often starts both calls but awaits them one at a time, which serialises them again. The skill's value is knowing that the concurrent case is a distinct test with a distinct failure mode, and that the assertion is on the external side-effect count.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/refundJob.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Calls genuinely overlap",
+      "max_score": 32,
+      "description": "At least one test starts two or more handler invocations before awaiting any of them - collecting the promises then resolving together via Promise.all or Promise.allSettled. A test that awaits the first call before issuing the second is sequential no matter how it is named and scores zero on this criterion; it duplicates coverage that already exists in the fixture."
+    },
+    {
+      "name": "Side effect asserted exactly once under the race",
+      "max_score": 24,
+      "description": "The concurrent test asserts the gateway issued exactly one refund - issuedCount equal to 1. Asserting only that the two returned values match scores zero: matching responses are compatible with two refunds having been issued."
+    },
+    {
+      "name": "Every racing caller receives the same outcome",
+      "max_score": 14,
+      "description": "The test asserts all racing calls resolve to the same refundId, proving the loser of the race receives the winner's result rather than a null, a rejection, or a second refund."
+    },
+    {
+      "name": "Race widened beyond two callers",
+      "max_score": 12,
+      "description": "At least one test races more than two simultaneous deliveries - five or ten - and still asserts a single refund. A suite that only ever tests two callers scores at most half; the reservation could hold for a pair and fail for a burst."
+    },
+    {
+      "name": "No sleep used to sequence the race",
+      "max_score": 10,
+      "description": "MUST NOT. The test does not order the interleave with a real-time delay - no `await new Promise(r => setTimeout(r, N))` between the calls to make the race come out a particular way. Sequencing by sleep makes the result a property of timing on the runner rather than of the handler, and scores zero here."
+    },
+    {
+      "name": "Fresh store and gateway per test",
+      "max_score": 4,
+      "description": "MUST NOT share one store or gateway across tests at module scope; each test builds its own so an earlier reservation cannot decide a later result."
+    }
+  ]
+}

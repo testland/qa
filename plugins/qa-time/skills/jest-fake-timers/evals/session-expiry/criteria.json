@@ -1,0 +1,46 @@
+{
+  "context": "Session TTL boundary and an interval sweeper, where the code under test reads Date.now() directly and schedules with setInterval. Predicted baseline failure: the agent reaches the boundary by arithmetic on lastSeenAt (setting it to now minus TTL) rather than by controlling the clock, or hand-patches Date.now with a jest.fn and never restores it. Both leave the sweeper untestable, because setInterval still runs on real time. The skill's value is a single mechanism - a faked system clock - that covers Date and timers together.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/session.test.js exists and contains at least one test."
+    },
+    {
+      "name": "System time is set deterministically",
+      "max_score": 28,
+      "description": "The test fixes the clock with jest.setSystemTime() (or useFakeTimers with a now/doNotFake configuration that pins Date) so Date.now() inside session.js returns a known value. Reaching the boundary only by back-dating lastSeenAt while Date.now() still returns real time scores at most half, because it leaves the sweeper uncontrollable."
+    },
+    {
+      "name": "Boundary tested on both sides",
+      "max_score": 18,
+      "description": "There is an assertion at TTL minus one millisecond returning not-expired AND an assertion at exactly TTL returning expired. Testing only one side, or only a comfortably-past value, scores at most half."
+    },
+    {
+      "name": "Sweeper driven by advancing the clock",
+      "max_score": 14,
+      "description": "A test starts the sweeper, advances time across at least one sweep interval, and asserts expired entries were removed from the store while live entries remain. A test that calls the sweep logic directly without ever letting the interval fire scores at most half."
+    },
+    {
+      "name": "Activity refreshes the deadline",
+      "max_score": 10,
+      "description": "A test touches a session partway through the window, advances past the original deadline, and asserts the session is still valid."
+    },
+    {
+      "name": "Global Date is not hand-patched",
+      "max_score": 12,
+      "description": "MUST NOT. The test does not reassign or monkey-patch the global clock by hand - no `Date.now = jest.fn()`, no `global.Date = class ...`, no jest.spyOn(Date, 'now') left as the sole mechanism. These bypass the timer system so setInterval is unaffected, and they leak if not restored. Any such assignment scores zero on this criterion."
+    },
+    {
+      "name": "Clock and timers restored",
+      "max_score": 8,
+      "description": "MUST NOT leave a faked clock installed. The file restores real timers after the tests via afterEach(jest.useRealTimers) or equivalent."
+    },
+    {
+      "name": "No real elapsed time",
+      "max_score": 6,
+      "description": "MUST NOT. No real sleep, no real-delay promise, and no raised test timeout used to wait out the sweep interval."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "Introducing property-based coverage where example-based coverage exists. Predicted baseline failure: the agent writes what looks like a property but assigns it a concrete expectation - generating a string, then asserting formatField returns a specific quoted form computed in the test - which reimplements the function under test inside the assertion and fails for reasons that have nothing to do with the property. The other common outcome is one property that asserts three unrelated things, so a failure does not say which relationship broke. The skill's value is that a property states a relationship between operations, one relationship per property.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Property test file created",
+      "max_score": 4,
+      "description": "A file src/csvField.property.test.js exists and uses fast-check to run at least one property."
+    },
+    {
+      "name": "Round-trip stated as a relationship",
+      "max_score": 30,
+      "description": "A property asserts parseField(formatField(value)) equals value for a generated string, with no expected output computed in the test body. A test that builds the expected escaped form itself and compares against it scores zero on this criterion: it duplicates the implementation and stops being a property."
+    },
+    {
+      "name": "Generated input is unconstrained enough to find the reported bugs",
+      "max_score": 18,
+      "description": "The string arbitrary is not narrowed to alphanumerics or a small alphabet - it can produce whitespace-only values, embedded quotes and newlines, which are the cases the team says keep escaping them. An arbitrary restricted so those inputs cannot be generated scores zero here."
+    },
+    {
+      "name": "One relationship per property",
+      "max_score": 16,
+      "description": "MUST NOT bundle several claims into one property. Each additional relationship - that quoting is applied only when required, that a formatted field never contains an unescaped bare quote, that parseField is a left inverse on plain values - is its own fc.assert call with its own name. A single property carrying multiple unrelated assertions scores zero."
+    },
+    {
+      "name": "No assertion on a specific generated value",
+      "max_score": 14,
+      "description": "MUST NOT. The property body contains no assertion tying a generated input to a hard-coded expected output. If a particular input matters, it belongs in the example file, not inside the property. Any such assertion scores zero on this criterion."
+    },
+    {
+      "name": "Run is reproducible",
+      "max_score": 12,
+      "description": "The property run is made reproducible - an explicit seed, or fast-check configured so a failure reports a seed and counterexample the team can replay. A property left with an unseeded default that cannot be replayed from CI output scores at most half."
+    },
+    {
+      "name": "Existing example tests retained",
+      "max_score": 6,
+      "description": "MUST NOT delete or rewrite src/csvField.examples.test.js. The property coverage is added alongside it."
+    }
+  ]
+}

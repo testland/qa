@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-property-based",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "description": "Property-based testing libraries for the QuickCheck-derived family: 5 skills (hypothesis-testing for Python, fast-check-testing for JS/TS, proptest-testing for Rust, jqwik-testing for JVM, quickcheck-testing for Haskell + ScalaCheck). Each ships authoring + run + shrinking + CI integration. Plus 3 agents: property-based-tool-selector (picks tool by language), property-based-test-author (encodes one invariant per test), and vacuous-property-critic (flags assume-heavy or always-true properties).",
   "author": {
     "name": "testland",

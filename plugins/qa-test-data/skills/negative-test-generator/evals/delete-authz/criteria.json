@@ -1,0 +1,46 @@
+{
+  "context": "Refusal-path coverage where four distinct refusal families share one endpoint: authentication (401), authorization (403), visibility (404), and state conflict (409). Predicted baseline failure: the agent covers 'no token' and 'wrong user' and treats them as one idea, asserting only that the call was refused - so a refactor that returns 403 where 401 belongs stays green. The cross-workspace case is usually asserted as 403, missing that the handler deliberately returns 404 to avoid disclosing that the document exists. The skill's value is that authentication and authorization are separate categories with separate expected statuses.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/deleteDocument.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Authentication and authorization asserted as different statuses",
+      "max_score": 26,
+      "description": "At least one case asserts 401 for an authentication failure and at least one asserts 403 for a permission failure, each with its exact status. A suite that asserts only 'the call was refused', or that uses the same expected status for both families, scores zero on this criterion - it cannot catch the refactor described in the task."
+    },
+    {
+      "name": "Both authentication branches covered",
+      "max_score": 12,
+      "description": "An unknown or absent token asserting MISSING_OR_UNKNOWN_TOKEN and an expired session asserting TOKEN_EXPIRED are covered as separate cases. Covering only one caps this at half."
+    },
+    {
+      "name": "Cross-workspace access asserted as 404, not 403",
+      "max_score": 20,
+      "description": "A case uses a token from another workspace against an existing document and asserts status 404 with NOT_FOUND. Asserting 403 for this case scores zero: it contradicts the handler's deliberate choice to hide existence, and a test encoding the wrong expectation would drive that behaviour out."
+    },
+    {
+      "name": "Missing document covered separately",
+      "max_score": 10,
+      "description": "A case requests an id that does not exist at all and asserts 404 NOT_FOUND, distinct from the cross-workspace case."
+    },
+    {
+      "name": "Insufficient role covered",
+      "max_score": 12,
+      "description": "A case uses a viewer token against a document in the same workspace and asserts 403 INSUFFICIENT_ROLE."
+    },
+    {
+      "name": "State conflict covered",
+      "max_score": 8,
+      "description": "A case targets the locked document with a permitted user and asserts 409 LOCKED, showing the conflict path is reached rather than short-circuited by an earlier check."
+    },
+    {
+      "name": "Exact status and code asserted throughout",
+      "max_score": 8,
+      "description": "MUST NOT assert refusal loosely. No case asserts merely that the status is not 204, is greater than or equal to 400, or that a code is present. Any such assertion scores zero on this criterion."
+    }
+  ]
+}

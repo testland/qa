@@ -1,0 +1,51 @@
+{
+  "context": "Reading a suite for the specific ways parallel workers collide. Five files each carry one hazard - a process-wide environment write, a fixed listening port, a fixed absolute file path, a test-name-derived database key, and a fixed sleep standing in for synchronisation - and money.test.js is genuinely safe. Predicted baseline failure: the agent finds the port and the temp path, which look like collisions, and misses the environment write and the test-name seed, which look like ordinary test code. The sleep is usually reported as slowness rather than as a correctness hazard that gets worse under contention. A further common error is flagging the safe file to be thorough.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Assessment produced",
+      "max_score": 4,
+      "description": "A file named parallel-readiness.md exists."
+    },
+    {
+      "name": "Environment write identified",
+      "max_score": 16,
+      "description": "config.test.js is flagged because process.env is per-process and shared by every test in that worker, so one test's write or delete decides another's read. Omitting this scores zero - it is the least visible of the five and the one most likely to be dismissed as normal test code."
+    },
+    {
+      "name": "Fixed port identified",
+      "max_score": 14,
+      "description": "server.test.js is flagged because port 3000 is bound exclusively: the first worker binds and the rest fail to listen."
+    },
+    {
+      "name": "Fixed file path identified",
+      "max_score": 14,
+      "description": "logging.test.js is flagged because /tmp/test.log is a single path every worker truncates and appends to, so assertions read another worker's writes."
+    },
+    {
+      "name": "Test-name-derived key identified",
+      "max_score": 16,
+      "description": "db.test.js is flagged because deriving the seed key from the test name is only unique while names are unique - two files with a similarly named test collide in the shared database, and the collision is invisible in the source of either. Omitting this scores zero."
+    },
+    {
+      "name": "Fixed sleep identified as a correctness hazard",
+      "max_score": 12,
+      "description": "queue.test.js is flagged because a fixed wait substitutes for a completion signal, and contention on shared workers makes the wait insufficient rather than merely slow. Reporting it only as a performance cost scores at most half."
+    },
+    {
+      "name": "Safe file reported as safe",
+      "max_score": 10,
+      "description": "MUST NOT flag money.test.js. It touches no shared surface and is explicitly listed among the files needing no work. Reporting it as unsafe scores zero on this criterion: a report that flags everything gives the team no way to prioritise."
+    },
+    {
+      "name": "Fix given per finding",
+      "max_score": 10,
+      "description": "Each flagged file carries a concrete remedy - per-test environment save and restore or injected configuration, an ephemeral port, a per-worker temporary directory, a unique generated key, and an event-based wait. A report that describes hazards without remedies scores zero here."
+    },
+    {
+      "name": "Sequencing given",
+      "max_score": 4,
+      "description": "The report states an order of work and says which fixes are independent, rather than presenting five items as an unordered list."
+    }
+  ]
+}

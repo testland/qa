@@ -1,0 +1,46 @@
+{
+  "context": "Rejection-path coverage for a request handler that already has a happy-path test. Predicted baseline failure: the agent adds a handful of negative cases but asserts them loosely - `assert.notEqual(status, 201)` or `assert.ok(response.body.errors)` - which passes just as happily when the handler returns 500, the precise regression the team described. The skill's value is that every negative case pins an exact status and an exact structured error field, and that the categories are enumerated rather than sampled.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/createProject.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Exact status asserted on every negative case",
+      "max_score": 26,
+      "description": "Each rejection case asserts a specific numeric status - 400 for validation, 401 for authentication. Any case asserting only that the status is not 201, or only that it is 'an error', scores zero on this criterion: such a test passes on a 500 and cannot catch the regression described in the task."
+    },
+    {
+      "name": "Structured error field asserted, not message text",
+      "max_score": 20,
+      "description": "Cases assert the specific error key and code - for example body.errors.name equal to TOO_LONG - rather than the presence of an errors object or a substring match on prose. Asserting only that `errors` exists, or matching on message text, scores zero here."
+    },
+    {
+      "name": "Missing-field cases covered",
+      "max_score": 12,
+      "description": "Both required-field omissions are covered: an absent ownerId and an empty or whitespace-only name, each asserting REQUIRED."
+    },
+    {
+      "name": "Type-mismatch case covered",
+      "max_score": 12,
+      "description": "At least one case supplies a name of the wrong type - number, null, object, array - and asserts NOT_A_STRING. Omitting type mismatches entirely scores zero: it is the most common validator defect class."
+    },
+    {
+      "name": "Both authentication branches covered",
+      "max_score": 10,
+      "description": "A missing authorization header and a present-but-wrong token are covered as separate cases asserting MISSING_TOKEN and INVALID_TOKEN respectively. Covering only one caps this at half."
+    },
+    {
+      "name": "Enum rejection covered",
+      "max_score": 8,
+      "description": "A case supplies an unsupported visibility value and asserts UNSUPPORTED."
+    },
+    {
+      "name": "One test per category",
+      "max_score": 8,
+      "description": "MUST NOT collapse the rejection paths into one test containing many assertions. Cases are separate tests or generated per-case, so a single failure identifies which category broke. A single mega-test scores zero here."
+    }
+  ]
+}

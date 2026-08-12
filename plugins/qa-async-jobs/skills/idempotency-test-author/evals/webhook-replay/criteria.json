@@ -1,0 +1,46 @@
+{
+  "context": "Redelivery coverage for a key-deduplicated webhook handler. Predicted baseline failure: the agent adds a second call with the same key and asserts the response looks the same, without asserting the side effect happened only once - so a handler that credits twice but returns a cached-looking response still passes. The key-reuse-with-different-payload branch is usually missed entirely because nothing in the ticket narrative points at it, only the code does. The skill's value is that the side-effect count, not the response shape, is the thing under test.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/paymentWebhook.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Side effect asserted exactly once on replay",
+      "max_score": 30,
+      "description": "A test delivers the same event twice and asserts the ledger was credited exactly once - via appliedCount, or a balance that did not double. Asserting only that the two responses are equal scores zero on this criterion: that is satisfied by a handler which credits twice and returns the same shape both times."
+    },
+    {
+      "name": "Replay returns the original response",
+      "max_score": 12,
+      "description": "The second delivery is asserted to return the stored response, including the balance recorded at first application, rather than a fresh or empty result."
+    },
+    {
+      "name": "Key reuse with a different payload is covered",
+      "max_score": 22,
+      "description": "A test reuses an existing key with a changed amount, account, or currency and asserts KEY_REUSED_WITH_DIFFERENT_PAYLOAD. Omitting this branch scores zero - it is the difference between deduplicating a redelivery and silently swallowing a genuinely different request."
+    },
+    {
+      "name": "No credit applied on the mismatch path",
+      "max_score": 12,
+      "description": "The key-reuse test also asserts the ledger was not credited again, proving the rejection happens before the side effect rather than after it."
+    },
+    {
+      "name": "Distinct keys still apply separately",
+      "max_score": 10,
+      "description": "A test shows two different keys for the same account both apply, so deduplication is scoped to the key and has not become a blanket suppression."
+    },
+    {
+      "name": "Missing key covered",
+      "max_score": 6,
+      "description": "A test asserts an event without an idempotency key is rejected with MISSING_KEY and applies no credit."
+    },
+    {
+      "name": "Fresh store and ledger per test",
+      "max_score": 4,
+      "description": "MUST NOT share one store or ledger instance across tests at module scope. Each test constructs its own, so a leaked key or balance from an earlier test cannot decide a later one. Shared mutable fixtures score zero on this criterion."
+    }
+  ]
+}

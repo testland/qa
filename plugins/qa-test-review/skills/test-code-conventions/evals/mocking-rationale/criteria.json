@@ -1,0 +1,46 @@
+{
+  "context": "Substituting collaborators by ownership rather than by habit. inventory and pricing are in-process code with no external dependency and can run for real; paymentGateway makes a network call and is the only thing that has to be replaced. Predicted baseline failure: the agent keeps the hand-rolled stub for inventory - it is already there and it works - and merely adds an assertion on the returned order, so the reservation effect is still never observed and the bug described in the task would still slip through. The distinguishing move is running the real inventory and asserting stockOf afterwards.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 8,
+      "description": "npm test completes successfully with all three scenarios present and executing."
+    },
+    {
+      "name": "Real inventory used and its state asserted",
+      "max_score": 30,
+      "description": "Tests construct the real createInventory with seeded stock and assert stockOf after placing an order - two units reserved from a seeded ten leaves eight. Keeping a stubbed reserve that returns a fixed boolean scores zero on this criterion, whatever else is asserted: the reservation effect is exactly what the earlier version could not see."
+    },
+    {
+      "name": "Real pricing used, not substituted",
+      "max_score": 16,
+      "description": "MUST NOT replace priceOrder. It is a pure in-process function; the amount on the resulting order is asserted as 1000 for two units at 500. A test that stubs pricing, or that recomputes the expected amount using the same expression the source uses, scores zero here."
+    },
+    {
+      "name": "Only the network boundary is replaced",
+      "max_score": 14,
+      "description": "The payment gateway is the one collaborator stubbed or faked, and the rewritten tests do not perform real network calls. Replacing nothing, or continuing to replace all three, scores zero."
+    },
+    {
+      "name": "Assertions are on outcomes, not call records",
+      "max_score": 18,
+      "description": "MUST NOT keep call-count and call-argument assertions as the primary claim. Each test asserts the returned order - status, amountCents, chargeId - and the resulting stock. A rewritten file whose main assertions are still that reserve was called once with given arguments scores zero on this criterion."
+    },
+    {
+      "name": "Rejection path asserts no side effect",
+      "max_score": 8,
+      "description": "The out-of-stock scenario asserts the rejection reason and sku, and that no charge was recorded by the gateway fake - permissible here because absence of an external call is an outcome, not an implementation detail."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 4,
+      "description": "MUST NOT modify any file under src/ other than orderService.test.js."
+    },
+    {
+      "name": "Review explains the survival of the reservation bug",
+      "max_score": 8,
+      "description": "A file named mocking-review.md exists, sorts the collaborators by whether they are owned and in-process, and states that a stubbed reserve returning true made the call observable but its effect invisible, so a change to that effect could not fail the suite."
+    }
+  ]
+}

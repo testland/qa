@@ -1,0 +1,41 @@
+{
+  "context": "Tightening assertions on a green suite. The correct values are subtotal 1250, tax 250, total 1500 for the two-item cart. Three weaknesses are present: truthiness checks standing in for equality, a greater-than-zero check standing in for an exact amount, and a try/catch with no failure path - the third is the serious one, because the test passes when nothing throws at all. Predicted baseline failure: the agent replaces the truthiness checks with exact comparisons, which is the visible half, and converts the try/catch into a try/catch that also asserts the message - leaving the case where no error is thrown still passing silently.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 10,
+      "description": "npm test completes successfully with all three tests present and executing."
+    },
+    {
+      "name": "Throw asserted so a missing throw fails",
+      "max_score": 28,
+      "description": "The coupon test uses a rejection or throw assertion - assert.throws with the error type or a matching predicate - so a run in which applyCoupon returns normally fails the test. A try/catch whose catch block holds the only assertions scores zero on this criterion however specific those assertions are: the test still passes when no error is raised, which is the defect named in the task."
+    },
+    {
+      "name": "Pricing asserted at exact values",
+      "max_score": 22,
+      "description": "The pricing test asserts subtotalCents 1250, taxCents 250 and totalCents 1500 - by deep equality on the returned object or by three exact comparisons. A greater-than-zero check, a check that the total exceeds the subtotal, or an expected value recomputed in the test from the same tax expression the source uses all score zero here."
+    },
+    {
+      "name": "Cart contents asserted, not just presence",
+      "max_score": 18,
+      "description": "The add test asserts the resulting item's sku, priceCents and qty and the item count - by deep equality on cart.items or equivalent. assert.ok on the cart, or on items.length as a truthiness check, scores zero: a length of one is truthy whether or not the item is the one that was added."
+    },
+    {
+      "name": "Error identified by type or code, not message substring",
+      "max_score": 12,
+      "description": "The coupon assertion keys on the CouponError type, its name, or its code property. Matching a substring of the stringified error scores at most half - the message is prose that changes without the behaviour changing."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 6,
+      "description": "MUST NOT modify src/cart.js. The behaviour is stated to be correct; the task is to pin it, not to alter it."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 4,
+      "description": "A file named assertion-review.md exists and pairs each replaced assertion with what it would have let through."
+    }
+  ]
+}

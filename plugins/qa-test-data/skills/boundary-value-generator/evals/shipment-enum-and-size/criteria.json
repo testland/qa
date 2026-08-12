@@ -1,0 +1,41 @@
+{
+  "context": "Two constraint types in one payload: a closed enum and a count-bounded collection. Predicted baseline failure: the agent writes one accepted case per enum value and forgets the unknown-value rejection path entirely - the exact gap the team already noticed when a removed method broke nothing - and treats the collection bound as a single 'empty basket' case rather than probing either limit. The skill's value is that each constraint type has a standard case set applied without being asked.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/shipment.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Every enum value accepted",
+      "max_score": 14,
+      "description": "All three declared methods - standard, express, pickup - are each exercised in an accepting case. Covering only one or two caps this at half."
+    },
+    {
+      "name": "Unknown enum value rejected",
+      "max_score": 20,
+      "description": "MUST include the rejection path. At least one case supplies a method outside the declared set and asserts UNKNOWN_METHOD. Omitting this scores zero on this criterion - it is the specific coverage gap the task describes, and a suite without it stays green when a method is silently removed."
+    },
+    {
+      "name": "Lower item-count bound covered on all three points",
+      "max_score": 18,
+      "description": "Item counts 0 (TOO_FEW_ITEMS), 1 (accepted), and 2 (accepted) are each exercised. Missing the count-2 point caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Upper item-count bound covered on all three points",
+      "max_score": 18,
+      "description": "Item counts 49 (accepted), 50 (accepted), and 51 (TOO_MANY_ITEMS) are each exercised, with the large baskets built programmatically rather than written out by hand. Missing the count-49 point caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "One test per case",
+      "max_score": 14,
+      "description": "MUST NOT bundle the enum set or the count set into a single test containing many assertions. Cases are separate tests, or generated per-case by a loop or parameterised helper that yields individually named cases. A single mega-test scores zero here."
+    },
+    {
+      "name": "Specific rejection codes asserted",
+      "max_score": 12,
+      "description": "Failing cases assert the exact code - TOO_FEW_ITEMS, TOO_MANY_ITEMS, UNKNOWN_METHOD, ITEMS_NOT_ARRAY - rather than only that ok is false. Asserting only falsiness scores zero here, since the validator checks item count before method and a wrong-reason result would still pass."
+    }
+  ]
+}

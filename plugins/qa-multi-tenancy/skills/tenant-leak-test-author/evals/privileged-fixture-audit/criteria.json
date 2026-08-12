@@ -1,0 +1,41 @@
+{
+  "context": "An isolation suite that passes for four separate reasons unrelated to isolation: the session sets crossTenant true so the scoping branch is bypassed entirely, one repository instance is shared across all tests so a void in one leaks into the next, both tenants use the identical invoice id inv_1 so a cross-tenant hit is indistinguishable from a correct one, and every assertion is a count or a not-null check. Predicted baseline failure: the agent spots the privileged flag - it is the most visible defect - fixes that alone, and leaves the colliding ids and the shared repository in place, producing a suite that is better but still cannot localise a leak.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 6,
+      "description": "A file named isolation-suite-findings.md exists, and src/billing.isolation.test.js has been rewritten rather than left as found."
+    },
+    {
+      "name": "Privileged session identified as the primary cause",
+      "max_score": 24,
+      "description": "The findings state that crossTenant true on the shared session makes scoped() return every invoice regardless of tenant, so the tenant predicate is never reached and removing it changes nothing. Omitting this scores zero on this criterion."
+    },
+    {
+      "name": "Colliding identifiers identified",
+      "max_score": 18,
+      "description": "The findings state that both tenants seed an invoice with the id inv_1, so a lookup that crosses the boundary returns a plausible record and cannot be distinguished from a correct one. A findings document that mentions only the privileged flag scores zero here."
+    },
+    {
+      "name": "Shared mutable repository identified",
+      "max_score": 14,
+      "description": "The findings state that the repository is constructed once at module scope and mutated by the void test, so test order affects results and cleanup never happens."
+    },
+    {
+      "name": "Rewritten suite uses unprivileged per-tenant sessions",
+      "max_score": 16,
+      "description": "MUST NOT assert isolation through a privileged session. The new tests build a session per tenant without crossTenant, and any privileged session that remains is used only as an explicitly labelled control, never as the actor in a boundary assertion. A rewritten suite still asserting isolation through crossTenant scores zero."
+    },
+    {
+      "name": "Rewritten suite would fail if the predicate were removed",
+      "max_score": 14,
+      "description": "For each of listInvoices, getInvoice and voidInvoice there is an assertion that a session from one tenant cannot reach the other tenant's invoice - and for voidInvoice, that the other tenant's record is still not voided afterwards. Score proportionally across the three operations; a suite covering only listing scores at most a third."
+    },
+    {
+      "name": "Fixture rebuilt per test with distinct identifiers",
+      "max_score": 8,
+      "description": "MUST NOT keep the shared instance or the colliding ids. Each test constructs its own repository, and the two tenants' invoices carry different id values."
+    }
+  ]
+}

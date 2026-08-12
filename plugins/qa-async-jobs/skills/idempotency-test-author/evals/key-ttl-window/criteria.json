@@ -1,0 +1,46 @@
+{
+  "context": "TTL-window coverage for a dedup store with an injected clock. Predicted baseline failure: the agent advances the clock well past the TTL, asserts the notification is sent again, and stops - never probing the edge, so an implementation using a strictly-greater comparison where greater-or-equal is intended passes unnoticed. The unbounded-growth concern that motivated the TTL is typically not tested at all, because 'the key expired' and 'the entry was released' look like the same statement until you check size(). The skill's value is treating the retention window as a bounded interval with both an expiry rule and a storage consequence.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/notificationDedup.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Suppression window probed at its edge",
+      "max_score": 26,
+      "description": "There is an assertion one millisecond before the TTL showing the duplicate is still suppressed AND an assertion at exactly the TTL showing it is sent again. Testing only a comfortably-past value scores zero on this criterion; testing one side of the edge only caps it at half."
+    },
+    {
+      "name": "Expired entries are released, not just reported absent",
+      "max_score": 24,
+      "description": "A test asserts the store's size() falls once entries expire - through sweep() or through the lazy delete on get(). A suite that only asserts a re-send happens after expiry scores zero here: that behaviour is identical whether or not the memory is ever reclaimed, and reclaiming it is why the TTL exists."
+    },
+    {
+      "name": "Time advanced through the injected clock",
+      "max_score": 16,
+      "description": "MUST NOT wait in real time. The test moves time by controlling the now function the store was constructed with. Any real sleep, real-delay promise, or raised timeout used to cross the window scores zero on this criterion."
+    },
+    {
+      "name": "Sweep return value asserted",
+      "max_score": 10,
+      "description": "A test calls sweep() and asserts how many entries it removed, distinguishing a sweep that found stale entries from one that found none."
+    },
+    {
+      "name": "Live entries survive a sweep",
+      "max_score": 10,
+      "description": "A test holds both a stale and a fresh key, sweeps, and asserts the fresh key still suppresses while the stale one does not. A sweep that removed everything would otherwise pass the criteria above."
+    },
+    {
+      "name": "Key scoping covered",
+      "max_score": 6,
+      "description": "A test shows the dedup key distinguishes users or notification kinds, so suppression of one does not suppress another."
+    },
+    {
+      "name": "Fresh store, transport and clock per test",
+      "max_score": 4,
+      "description": "MUST NOT share a store, transport, or mutable clock variable across tests at module scope; a clock left advanced by one test would silently expire another test's keys."
+    }
+  ]
+}

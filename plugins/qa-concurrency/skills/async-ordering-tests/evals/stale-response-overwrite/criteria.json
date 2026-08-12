@@ -1,0 +1,46 @@
+{
+  "context": "Out-of-order response handling in a keystroke-driven search controller. Predicted baseline failure: the agent simulates 'slow' and 'fast' requests with setTimeout delays of, say, 50ms and 10ms, then awaits both. The assertion is correct but the ordering is a property of the runner's timer scheduling rather than of the test, so it drifts on loaded CI and proves nothing about the guard. The skill's value is that completion order is controlled explicitly - deferred promises the test resolves in a chosen sequence - so the interleave under test is stated, not hoped for.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/searchController.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Completion order controlled explicitly",
+      "max_score": 32,
+      "description": "The test holds each search response open and settles them in a chosen order - deferred promises with externally held resolve functions, a manually driven queue, or an equivalent. Ordering the responses by giving them different real-time delays scores zero on this criterion: the interleave is then decided by the scheduler, not the test."
+    },
+    {
+      "name": "Superseded response does not overwrite current results",
+      "max_score": 24,
+      "description": "A test starts a request for an earlier query, starts a request for a later query, settles the later one first and the earlier one second, then asserts the snapshot holds the later query's results. This is the defect described in the ticket; a suite without this exact sequence scores zero here."
+    },
+    {
+      "name": "Superseded call reports why it did not apply",
+      "max_score": 14,
+      "description": "The stale call's return value is asserted to carry applied false with reason SUPERSEDED, not merely ignored. Asserting only the final snapshot leaves the guard's own contract untested."
+    },
+    {
+      "name": "In-order case still applies",
+      "max_score": 12,
+      "description": "A test settles two sequential queries in their natural order and asserts the second one's results are applied, showing the guard suppresses only genuinely superseded responses rather than everything after the first."
+    },
+    {
+      "name": "Both requests are in flight simultaneously",
+      "max_score": 10,
+      "description": "MUST NOT await the first run before starting the second. Both invocations are started before either is settled; awaiting the first to completion serialises them and removes the condition under test, scoring zero on this criterion."
+    },
+    {
+      "name": "No real-time delay anywhere in the test",
+      "max_score": 10,
+      "description": "MUST NOT. The file contains no setTimeout-based sleep, no real-delay promise, and no 'let things settle' wait. Any single instance scores zero here."
+    },
+    {
+      "name": "Fresh controller per test",
+      "max_score": 4,
+      "description": "MUST NOT share one controller across tests at module scope; its sequence counter is mutable state that would carry between cases."
+    }
+  ]
+}

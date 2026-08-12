@@ -1,0 +1,41 @@
+{
+  "context": "Properties over an asynchronous subject. Predicted baseline failure: the agent reaches for fc.property with an async callback and calls fc.assert without awaiting it. The returned promise is dropped, every generated case is effectively unchecked, and the test reports success no matter what the memo does - the most damaging outcome available here, because the suite looks stronger than the example test it replaced while asserting nothing. A second failure is a stateful subject shared across generated cases, so counts accumulate and the loader-called-once claim becomes order-dependent.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Property test file created",
+      "max_score": 4,
+      "description": "A file src/asyncMemo.property.test.js exists and uses fast-check to run at least one property."
+    },
+    {
+      "name": "Async property is awaited",
+      "max_score": 34,
+      "description": "Every fc.assert over an asynchronous property is awaited and uses the async property constructor - `await fc.assert(fc.asyncProperty(...))`. A file calling fc.assert on an async callback without awaiting it, or using the synchronous fc.property with an async body, scores zero on this criterion: such a test passes unconditionally and the surrounding assertions are decoration."
+    },
+    {
+      "name": "Subject rebuilt inside each generated case",
+      "max_score": 20,
+      "description": "The memo and its call counter are constructed within the property body, so each generated case starts clean. Constructing them once outside the property makes the loader-count claim depend on how many cases ran before, and scores zero here."
+    },
+    {
+      "name": "Loader-called-once stated over generated call counts",
+      "max_score": 16,
+      "description": "The number of concurrent callers is itself generated - an integer arbitrary, or an array whose length varies - rather than fixed at two. A property that always issues exactly two calls scores at most half: it restates the existing example test with a generated key."
+    },
+    {
+      "name": "All callers receive the same value",
+      "max_score": 12,
+      "description": "The property asserts every caller's resolved value is equal, not merely that the first one is correct."
+    },
+    {
+      "name": "Key arbitrary can produce inherited property names",
+      "max_score": 10,
+      "description": "The generated key is an unconstrained string, or explicitly includes values such as __proto__, constructor or toString. A key arbitrary narrowed to safe identifiers cannot reach the defect class named in the task and scores zero on this criterion."
+    },
+    {
+      "name": "Existing example test retained",
+      "max_score": 4,
+      "description": "MUST NOT delete or rewrite src/asyncMemo.basic.test.js."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "Type-mismatch coverage across every field of a partial-update handler. Predicted baseline failure: the agent reproduces the one bug named in the task - the string itemsPerPage - and covers value-level rejections it can see in the code, but does not systematically walk every field for its wrong-type case. theme, notificationsEnabled and tags are typically left with value coverage only, and the array element-type branch is almost always missed. The skill's value is enumerating the field list and applying the same category to each rather than following the narrative in the ticket.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/updateSettings.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Wrong-type case for every field",
+      "max_score": 30,
+      "description": "All four fields - theme, notificationsEnabled, itemsPerPage, tags - each have a case supplying a value of the wrong type and asserting WRONG_TYPE on that field. Score proportionally: four fields covered is full marks, three is three quarters, two is half, one or none scores zero."
+    },
+    {
+      "name": "Array element type covered",
+      "max_score": 14,
+      "description": "A case supplies tags as a genuine array containing a non-string element and asserts WRONG_ELEMENT_TYPE. Covering only 'tags is not an array' scores zero on this criterion - the element branch is a separate rejection the handler implements."
+    },
+    {
+      "name": "Field and code both asserted",
+      "max_score": 18,
+      "description": "Each rejection asserts both which field failed and which code was returned. Asserting only ok is false, or only the code without the field, scores at most half: with a shared WRONG_TYPE code the field name is what identifies the defect."
+    },
+    {
+      "name": "Value-level rejections covered separately from type rejections",
+      "max_score": 12,
+      "description": "UNSUPPORTED_VALUE for an unknown theme and OUT_OF_RANGE for itemsPerPage outside 5 to 100 are each covered, using values of the correct type so the value branch is reached rather than short-circuited by the type check."
+    },
+    {
+      "name": "Malformed patch covered",
+      "max_score": 10,
+      "description": "At least one case supplies a patch that is null, an array, or a non-object and asserts MALFORMED_PATCH."
+    },
+    {
+      "name": "One test per case",
+      "max_score": 12,
+      "description": "MUST NOT collapse the field sweep into one test with many assertions. Cases are separate tests or generated per-field by a table-driven loop producing individually named cases. A single mega-test scores zero: the first failing field masks the rest."
+    }
+  ]
+}

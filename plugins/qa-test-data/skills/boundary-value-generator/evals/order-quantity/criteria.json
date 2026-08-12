@@ -1,0 +1,41 @@
+{
+  "context": "Systematic edge coverage for an integer field bounded at 1 and 999. Predicted baseline failure: the agent tests the two bounds themselves and one value outside each - 0, 1, 999, 1000 - and stops. The adjacent inside values (2 and 998) are omitted, which is exactly where an off-by-one in a comparison operator hides, since a `<=` written for `<` still rejects 0 and accepts 999. The skill's value is producing the full six-point set per bound as a matter of course, one assertion per point.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/quantity.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Lower bound covered on all three points",
+      "max_score": 22,
+      "description": "The suite exercises 0 (below), 1 (at), and 2 (above) with the correct expectation for each. Missing the above-bound point 2 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Upper bound covered on all three points",
+      "max_score": 22,
+      "description": "The suite exercises 998 (below), 999 (at), and 1000 (above) with the correct expectation for each. Missing the below-bound point 998 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Rejection code asserted, not just failure",
+      "max_score": 16,
+      "description": "Each failing case asserts the specific code - BELOW_MIN, ABOVE_MAX, NOT_INTEGER - rather than only that ok is false. A suite that asserts only falsiness would pass if the validator returned the wrong reason, and scores zero on this criterion."
+    },
+    {
+      "name": "One test per boundary point",
+      "max_score": 16,
+      "description": "MUST NOT bundle the boundary set into a single test function containing six assertions. Each point is its own test case, or is generated per-point through a loop or parameterised helper that produces a separately named case. A single mega-test scores zero here: the first failing assertion hides the rest."
+    },
+    {
+      "name": "Type-mismatch case included",
+      "max_score": 10,
+      "description": "At least one non-integer input is covered - a float, a numeric string, null, or undefined - asserting NOT_INTEGER."
+    },
+    {
+      "name": "Inputs are fixed, not generated at random",
+      "max_score": 10,
+      "description": "MUST NOT. Boundary inputs are literal values, not drawn from Math.random or an unseeded generator. A randomised input makes the run non-reproducible and scores zero on this criterion."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "context": "Debounce coverage under Jest. Predicted baseline failure: without the skill the agent writes a correct-looking test that lets real time pass - `await new Promise(r => setTimeout(r, 350))` or `jest.setTimeout` with a real delay - which is slow and flaky on loaded CI. The skill's value is that time is advanced deliberately rather than waited out, and that fake timers are restored so later files are unaffected.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/debounce.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Time is controlled, not waited out",
+      "max_score": 30,
+      "description": "The test installs fake timers (jest.useFakeTimers() or equivalent) so no real wall-clock time elapses. A test that reaches its assertions by letting real time pass - any real sleep, real-delay promise, or raised test timeout - scores zero on this criterion regardless of whether it passes."
+    },
+    {
+      "name": "Time advanced explicitly",
+      "max_score": 15,
+      "description": "The test advances the clock explicitly (advanceTimersByTime / runAllTimers / runOnlyPendingTimers) at the point the debounce window should close. A test that only checks the not-called-yet state without ever advancing scores at most half."
+    },
+    {
+      "name": "Real timers restored",
+      "max_score": 12,
+      "description": "Fake timers are torn down after the tests - afterEach(jest.useRealTimers) or equivalent. Leaving fake timers installed leaks the mocked clock into whatever runs next. No restoration scores zero here."
+    },
+    {
+      "name": "Collapsing behaviour asserted with last-call arguments",
+      "max_score": 12,
+      "description": "A test makes several calls inside one window and asserts the wrapped function ran exactly once AND received the arguments from the final call. Asserting the call count without the arguments scores at most half."
+    },
+    {
+      "name": "Second cycle covered",
+      "max_score": 8,
+      "description": "A test shows that a call made after a completed cycle triggers a further invocation, proving the internal timer handle was cleared."
+    },
+    {
+      "name": "No real sleep anywhere in the test body",
+      "max_score": 10,
+      "description": "MUST NOT. The test file contains no real-time sleep helper - no `await new Promise(resolve => setTimeout(resolve, N))`, no `await sleep(N)`, no `done` callback fired by a real timer. Even one such call in an otherwise fake-timed file scores zero on this criterion."
+    },
+    {
+      "name": "No legacy fake timers",
+      "max_score": 5,
+      "description": "MUST NOT. The test does not request the deprecated legacy implementation - `jest.useFakeTimers('legacy')` or `timers: 'legacy'` config - which does not fake Date."
+    },
+    {
+      "name": "Wait period expressed as a named value",
+      "max_score": 4,
+      "description": "The debounce interval used in the test refers to a named constant or a locally declared value rather than a bare repeated literal such as 300 scattered across assertions."
+    }
+  ]
+}

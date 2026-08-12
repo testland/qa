@@ -1,0 +1,41 @@
+{
+  "context": "Length-bounded string field (3 to 20) that also enforces a character whitelist. Predicted baseline failure: the agent covers a short name and a long name but not the inside-adjacent lengths (4 and 19), and builds its boundary strings from arbitrary or randomised characters - which can silently trip the whitelist rule, so a length test fails for a character reason and the diagnosis points at the wrong rule. The skill's value is the six-point set on length plus a fixed alphabet that isolates the length rule from the character rule.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/username.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Lower length bound covered on all three points",
+      "max_score": 20,
+      "description": "Lengths 2 (TOO_SHORT), 3 (accepted), and 4 (accepted) are each exercised. Missing the length-4 point caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Upper length bound covered on all three points",
+      "max_score": 20,
+      "description": "Lengths 19 (accepted), 20 (accepted), and 21 (TOO_LONG) are each exercised. Missing the length-19 point caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Length inputs use only whitelist-legal characters",
+      "max_score": 18,
+      "description": "MUST NOT let the character rule contaminate the length cases. Every string used to probe a length boundary is built from characters the whitelist allows, so a TOO_SHORT or TOO_LONG assertion can only fail for a length reason. A length probe containing an uppercase letter, space, hyphen, or punctuation scores zero on this criterion."
+    },
+    {
+      "name": "Inputs are deterministic",
+      "max_score": 12,
+      "description": "MUST NOT. Boundary strings are fixed literals or built by a deterministic repeat such as 'a'.repeat(21) - not drawn from Math.random or an unseeded generator. Any randomly generated input scores zero here."
+    },
+    {
+      "name": "Character rule covered separately",
+      "max_score": 14,
+      "description": "At least one case exercises BAD_CHARS using a string of legal length, keeping the character rule independent of the length rule. A suite that only reaches BAD_CHARS through a string that is also the wrong length scores zero on this criterion."
+    },
+    {
+      "name": "Specific rejection codes asserted",
+      "max_score": 12,
+      "description": "Failing cases assert the exact code - TOO_SHORT, TOO_LONG, BAD_CHARS, NOT_STRING - rather than only that ok is false. Asserting only falsiness scores zero here."
+    }
+  ]
+}

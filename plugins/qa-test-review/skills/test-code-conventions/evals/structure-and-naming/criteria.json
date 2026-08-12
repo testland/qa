@@ -1,0 +1,41 @@
+{
+  "context": "Restructuring for failure attribution, not for coverage. Seven assertions currently sit in two tests named 'works' and 'test2', spanning three functions. Predicted baseline failure: the agent renames the two tests to something descriptive and stops - the log now says something readable but a failure still cannot say which of five assertions broke. The opposite failure is over-correcting by dropping assertions that look redundant, such as the second describePlan check, which quietly loses coverage while the file looks tidier.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 8,
+      "description": "npm test completes successfully."
+    },
+    {
+      "name": "Every original assertion still present",
+      "max_score": 26,
+      "description": "All seven behaviours remain asserted: team price 5000, enterprise price 12500, prorate 2500 over fifteen of thirty days, plan name Team, seat cap 25, prorate zero at zero days remaining, and the throw for an unknown plan. Score proportionally; each dropped assertion is lost coverage the task explicitly forbids."
+    },
+    {
+      "name": "One behaviour per test",
+      "max_score": 24,
+      "description": "No test asserts across more than one function, and no test bundles unrelated scenarios. A file that keeps five assertions in a single renamed test scores zero on this criterion - the rename addresses the log line, not the attribution problem."
+    },
+    {
+      "name": "Names state subject, scenario and expectation",
+      "max_score": 18,
+      "description": "Each test name identifies which function is under test, under what condition, and what should happen - readable as a sentence in a CI log without the file. Names such as works, test2, or a bare function name score zero; a name giving the function but no scenario scores at most half."
+    },
+    {
+      "name": "Arrange, act and assert are distinguishable",
+      "max_score": 10,
+      "description": "Within each test, setup precedes a single invocation of the unit under test, which precedes the assertions - rather than alternating between acting and asserting."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify src/subscription.js."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 6,
+      "description": "A file named test-structure-review.md exists, states what was wrong, and gives the naming pattern applied in a form the next person could follow."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "A queue-tier ordering guarantee: subscriber notification is scheduled as a microtask, persistence as a macrotask, and the former must be observable before the latter. Predicted baseline failure: the agent waits for everything to finish - a single `await new Promise(r => setTimeout(r, 10))` - then asserts the end state. Both effects have happened by then, so the ordering the ticket is about is never observed, and the test would pass just as well if persistence ran first. A second common error is reaching for setTimeout(0) as the checkpoint for the microtask assertion, which lands after the macrotask boundary rather than before it. The skill's value is knowing the two queues need two different checkpoints.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/store.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Ordering observed at an intermediate point",
+      "max_score": 30,
+      "description": "A test reaches a state in which the subscriber has fired and persistence has not - by yielding only to the microtask queue, or by recording both events into one ordered log and asserting the notification index precedes the persistence index. A test that awaits until everything has settled and then asserts final values scores zero on this criterion: it cannot distinguish the guaranteed order from its reverse."
+    },
+    {
+      "name": "Microtask checkpoint is a microtask",
+      "max_score": 18,
+      "description": "The point at which the subscriber is expected to have run is reached via `await Promise.resolve()`, queueMicrotask, or an equivalent microtask yield. Using setTimeout - with any delay including zero - or setImmediate as the checkpoint for the notification assertion scores zero here, since those resume after the macrotask boundary and cannot show the intermediate state."
+    },
+    {
+      "name": "Persistence asserted after a macrotask boundary",
+      "max_score": 14,
+      "description": "A later checkpoint yields past the macrotask boundary - setImmediate, setTimeout with zero delay, or an equivalent - and asserts the value was persisted. Asserting persistence without ever crossing that boundary scores zero."
+    },
+    {
+      "name": "Coalescing asserted by count",
+      "max_score": 16,
+      "description": "A test performs several setState calls in one tick and asserts the subscriber was invoked exactly once, receiving the final value. Asserting only the value the subscriber received, without the invocation count, scores at most half - it does not distinguish one notification from three."
+    },
+    {
+      "name": "No timed sleep used as a wait",
+      "max_score": 12,
+      "description": "MUST NOT. The file contains no setTimeout or delay promise with a nonzero duration used to wait for work to finish. A zero-delay or setImmediate yield used deliberately as a macrotask checkpoint is acceptable; a 10ms or 50ms 'let it settle' wait is not, and scores zero on this criterion."
+    },
+    {
+      "name": "Unsubscribe covered",
+      "max_score": 6,
+      "description": "A test unsubscribes and asserts no further notification is received on the next change."
+    }
+  ]
+}

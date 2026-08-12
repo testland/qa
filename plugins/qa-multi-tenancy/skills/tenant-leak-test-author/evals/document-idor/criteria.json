@@ -1,0 +1,41 @@
+{
+  "context": "Cross-tenant access coverage for a repository whose existing suite runs as one tenant. Predicted baseline failure: the agent adds a second tenant but tests only the read path, leaving update and delete - the operations that cause damage rather than disclosure - covered from inside one tenant only. A subtler failure is proving the negative without proving the positive: asserting tenant B cannot read a document, without a control showing tenant A can, so a repository that returns not_found for everyone would pass. The skill's value is applying the same cross-boundary probe to every operation, with a paired control.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/documentAccess.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Two disjoint tenants in the fixture",
+      "max_score": 16,
+      "description": "MUST NOT test the boundary from one side. The fixture seeds documents belonging to at least two different tenants and constructs a session for each. A suite with a single tenantId anywhere in it cannot exercise a boundary and scores zero on this criterion."
+    },
+    {
+      "name": "Cross-tenant probe on every operation",
+      "max_score": 30,
+      "description": "Read, list, update and delete are each attempted by a session from the wrong tenant. Score proportionally: four operations probed is full marks, three is three quarters, two is half, one or none scores zero. Update and delete count as probed only if the attempt targets a document owned by the other tenant."
+    },
+    {
+      "name": "Write attempts asserted not to have mutated anything",
+      "max_score": 20,
+      "description": "The cross-tenant update and delete tests assert the target document is unchanged and still present afterwards - by reading it back as its rightful owner, or through rawGet and countAll. Asserting only that the call returned not_found scores at most half: the refusal status and the absence of a mutation are separate claims."
+    },
+    {
+      "name": "Positive control alongside each negative",
+      "max_score": 14,
+      "description": "For the operations probed, the suite also shows the rightful tenant succeeds. Without a control, a repository broken so that everything returns not_found would satisfy every cross-tenant assertion. Missing controls entirely scores zero here."
+    },
+    {
+      "name": "List leakage asserted by content, not count",
+      "max_score": 10,
+      "description": "The list test asserts the returned documents all belong to the calling tenant - checking ids or tenantIds - rather than only that the length matches an expected number. A count-only assertion passes if the wrong documents are returned in the right quantity."
+    },
+    {
+      "name": "Identifiers do not collide across tenants",
+      "max_score": 6,
+      "description": "MUST NOT give both tenants documents with the same id values. Distinct ids per tenant mean a leak cannot be masked by a coincidental match, and a filter dropped entirely shows up immediately."
+    }
+  ]
+}

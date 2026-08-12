@@ -1,0 +1,46 @@
+{
+  "context": "Cancellation that arrives while a child operation is in flight, where abort-before-start is already covered. Predicted baseline failure: the agent writes another abort-before-start variant, or aborts after awaiting the whole upload - both of which avoid the mid-flight window entirely. When it does aim at mid-flight, it usually schedules the abort with a short real-time delay and hopes the timing lands inside the first chunk. The skill's value is holding the child open under the test's control so the cancel is guaranteed to arrive mid-flight, and asserting propagation to the child rather than only the caller's rejection.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/upload.test.js exists and contains at least one test."
+    },
+    {
+      "name": "Abort arrives while a chunk is genuinely in flight",
+      "max_score": 30,
+      "description": "A test holds a chunk upload unresolved - a deferred promise the test settles - calls abort() while it is pending, then releases it. Aborting before the call, or after awaiting the whole upload, scores zero on this criterion: neither reaches the window the ticket describes. Timing the abort with a real-time delay also scores zero, since the window is then not guaranteed."
+    },
+    {
+      "name": "The signal reaches the child",
+      "max_score": 20,
+      "description": "The test captures the second argument passed to uploadChunk and asserts it is the same signal the caller supplied, and that it reports aborted once abort() is called. Asserting only that the outer promise rejected leaves the propagation claim untested, and scores zero here."
+    },
+    {
+      "name": "No further chunk is started after the cancel",
+      "max_score": 20,
+      "description": "The test records which chunks were started and asserts the loop stopped - the chunk after the in-flight one was never begun. This is the bandwidth symptom in the ticket; a suite without it scores zero on this criterion."
+    },
+    {
+      "name": "Caller observes an abort, not a normal result",
+      "max_score": 12,
+      "description": "The returned promise is asserted to reject with an error whose name is AbortError, using a rejection assertion rather than a try/catch that could pass silently if no error were thrown."
+    },
+    {
+      "name": "Cleanup runs on the cancelled path",
+      "max_score": 10,
+      "description": "A test supplies onCleanup and asserts it was invoked with aborted true and the count of chunks that completed before the cancel."
+    },
+    {
+      "name": "No timed sleep used to sequence the abort",
+      "max_score": 10,
+      "description": "MUST NOT. The file contains no setTimeout or delay promise with a nonzero duration used to place the abort inside the in-flight window. Any such call scores zero on this criterion."
+    },
+    {
+      "name": "Fresh controller and recorders per test",
+      "max_score": 4,
+      "description": "MUST NOT share an AbortController or a started-chunks array across tests at module scope; an already-aborted controller would decide later cases."
+    }
+  ]
+}
