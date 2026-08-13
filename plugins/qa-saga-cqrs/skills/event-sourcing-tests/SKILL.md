@@ -1,6 +1,6 @@
 ---
 name: event-sourcing-tests
-description: "Build event-sourcing tests - the given-events / when-command / then-events aggregate test, replay determinism (same events produce the same state), event-versioning + upcasting, snapshot equivalence (replay-to-N vs snapshot-at-N must agree), projection rebuild from the event log, and retroactive event correction. Per martinfowler.com EventSourcing reference. Use when an event-sourced aggregate gains a new event type or a changed payload schema, when snapshots are introduced to shorten replay, or when the event log is the audit system of record."
+description: "Build event-sourcing + CQRS tests - the given-events / when-command / then-events aggregate test, replay determinism (same events produce the same state), event-versioning + upcasting, snapshot equivalence (replay-to-N vs snapshot-at-N must agree), retroactive event correction, and CQRS read-model projection tests (per-event projection deltas, idempotent + out-of-order apply, rebuild + zero-downtime swap, read-your-writes guard) with eventual-consistency convergence-window assertions in references/convergence-windows.md. Per martinfowler.com EventSourcing + CQRS references. Use when an event-sourced aggregate gains a new event type or a changed payload schema, when snapshots are introduced to shorten replay, when a read model is projected from the event stream, or when a documented convergence window needs a test."
 metadata:
   keywords: "event-sourcing, aggregate-replay, snapshot, upcasting, projection"
 ---
@@ -29,8 +29,10 @@ event log silently drifts from the rebuilt state.
    see [references/snapshot-versioning-projections.md](references/snapshot-versioning-projections.md).
 4. When an event type or payload schema changes, add versioned upcasters and a
    mixed-version replay test - see the references (versioning + upcasting).
-5. For read models, assert projection rebuild from the log is idempotent and
-   matches incremental application - see the references (projection rebuild).
+5. For read models, add the projection tests below - determinism,
+   idempotent + out-of-order apply, rebuild + swap - and assert the
+   documented convergence window per
+   [references/convergence-windows.md](references/convergence-windows.md).
 6. Gate appends on optimistic concurrency (expected version) and suppress
    external calls in replay mode - see the references (concurrency, replay mode).
 
@@ -76,6 +78,36 @@ replay-mode side-effect suppression, and optimistic-concurrency
 appends - in
 [references/snapshot-versioning-projections.md](references/snapshot-versioning-projections.md).
 
+## Projection rebuild (CQRS read models)
+
+Per [Fowler - CQRS], the read model is rebuilt from the write model's
+event stream; test it like the aggregate - deterministic, idempotent,
+rebuildable:
+
+1. **Determinism** - `apply_all(events)` twice yields the same
+   materialized state; current-time / random-ID reads in `apply` break it.
+2. **Per-event delta** - each event type produces one well-defined change
+   (parameterize: `ProductPriceChanged` → `{"sku1.price": 120}`, etc.).
+3. **Idempotent apply** - the same event applied twice leaves state
+   unchanged (track applied event IDs per projection).
+4. **Out-of-order delivery** - the projection buffers or versions when
+   `Updated` arrives before `Created`; if it assumes in-order (Kafka
+   per-partition), test that assumption end-to-end.
+5. **Rebuild + zero-downtime swap** - rebuild from a known event range
+   and compare to a fixture; at the swap point assert
+   `new_proj.materialize() == old_proj.materialize()` before switching
+   reads. Full swap mechanic + the read-your-writes guard (202 Accepted →
+   pending → active) are in
+   [references/rebuild-swap-and-read-your-writes.md](references/rebuild-swap-and-read-your-writes.md).
+6. **Convergence window** - async projections lag; document the window
+   ("read model converges within 5s of write") and assert it with the
+   deadline + poll + assert pattern in
+   [references/convergence-windows.md](references/convergence-windows.md),
+   which also covers monotonic-read and bounded-staleness assertions.
+
+Test each projection off one stream independently (search index,
+materialized SQL view, OLAP cube) so a flawed one doesn't mask the others.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -85,6 +117,9 @@ appends - in
 | No upcasting plan; rewrite event store on schema change | Audit loss; downtime | Versioned upcasters (references) |
 | Real email/HTTP calls during replay | Duplicate side effects | Replay-mode flag (references) |
 | Append without expected version | Lost updates from concurrent writers | Optimistic concurrency (references) |
+| Skip the convergence-window test | "I changed it but the UI shows the old value" | Assert the window (references/convergence-windows.md) |
+| Treat the projection as always-current | Subtle stale reads in prod | Document + assert the window |
+| No rebuild test for a projection | Schema migration becomes risky | Rebuild + swap tests (projection section) |
 
 ## Limitations
 
@@ -99,13 +134,17 @@ appends - in
 
 - [Fowler - Event Sourcing] - pattern overview, replay, snapshots,
   retroactive corrections, gateway considerations.
+- [Fowler - CQRS] - command/query split, read-model framing, cautions.
 - [references/snapshot-versioning-projections.md](references/snapshot-versioning-projections.md) -
   the deep operational tests: order independence, snapshot equivalence,
   versioning + upcasting, projection rebuild, retroactive correction,
   replay-mode side effects, and optimistic-concurrency appends.
+- [references/rebuild-swap-and-read-your-writes.md](references/rebuild-swap-and-read-your-writes.md) -
+  zero-downtime swap + read-your-writes worked tests.
+- [references/convergence-windows.md](references/convergence-windows.md) -
+  convergence-window, monotonic-read, and bounded-staleness assertions.
 - `saga-transaction-tests` - 
   cross-aggregate transactions.
-- `cqrs-projection-tests` - 
-  projection-from-event-log testing.
 
 [Fowler - Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
+[Fowler - CQRS]: https://martinfowler.com/bliki/CQRS.html

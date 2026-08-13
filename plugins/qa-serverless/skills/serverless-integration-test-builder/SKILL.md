@@ -78,11 +78,10 @@ multiple emulators only when the project mixes platforms (e.g., Vercel app
 | Platform | Test path | Skill |
 |---|---|---|
 | AWS Lambda (Node/Python/etc.) | `sam local invoke` or direct handler | `aws-sam-local-testing` |
-| AWS Lambda (.NET) | Amazon.Lambda.TestUtilities | `lambda-test-tools-net` |
+| AWS Lambda (.NET) | Amazon.Lambda.TestUtilities | `aws-sam-local-testing` references/dotnet.md |
 | Cloudflare Workers | vitest-pool-workers / Miniflare | `cloudflare-workers-miniflare` |
-| Vercel Edge | @edge-runtime/jest-environment | `vercel-edge-runtime-testing` |
-| Netlify Functions | netlify dev + direct handler | `netlify-functions-tests` |
-| Serverless Framework | serverless-offline / direct | `serverless-framework-test-plugin` |
+| Azure Functions | Core Tools `func start` + Azurite | `azure-functions-tests` |
+| Vercel Edge / Netlify / Serverless Framework | Lambda-under-the-hood; vendor dev CLI + direct handler | (no dedicated skill; same patterns as SAM) |
 
 ## Step 3 - Generate test events per event source
 
@@ -134,7 +133,7 @@ describe('get-user', () => {
   });
 
   test('completes within timeout budget', async () => {
-    // Per lambda-timeout-budget-reference: timeout=10s; want headroom
+    // Per cold-start-budget-reference references/timeout-budgets.md: timeout=10s; want headroom
     const start = Date.now();
     await handler({ ...event, pathParameters: { id: '1' } } as any, {} as any);
     const elapsed = Date.now() - start;
@@ -146,8 +145,8 @@ describe('get-user', () => {
 ## Step 5 - Cold-start + timeout budget assertions
 
 For each function, derive a budget from
-`cold-start-budget-reference`
-+ `lambda-timeout-budget-reference`.
+`cold-start-budget-reference` (cold-start tables + timeout budgets in
+its references/timeout-budgets.md).
 
 Typical cold starts per runtime (per AWS / Cloudflare / Vercel
 docs; bigger packages and memory classes skew higher):
@@ -281,16 +280,12 @@ This skill produces:
 
 ## References
 
-- Companion catalogs:
-  `cold-start-budget-reference`,
-  `lambda-timeout-budget-reference`.
+- Companion catalog:
+  `cold-start-budget-reference` (cold-start + timeout budgets).
 - Per-platform tools:
-  `aws-sam-local-testing`,
-  `lambda-test-tools-net`,
+  `aws-sam-local-testing` (incl. .NET in references/dotnet.md),
   `cloudflare-workers-miniflare`,
-  `vercel-edge-runtime-testing`,
-  `netlify-functions-tests`,
-  `serverless-framework-test-plugin`.
+  `azure-functions-tests`.
 - Cross-plugin:
   `testcontainers` (in the qa-test-environment plugin)
   - LocalStack alternative for AWS-service emulation.

@@ -1,6 +1,6 @@
 ---
 name: cdn-cache-purge-tests
-description: "Wraps CDN cache-purge testing patterns for Cloudflare (POST /zones/{zone_id}/purge_cache, single-file / everything / cache-tags / hostname / prefix), Fastly (POST purge-by-key / purge-all, surrogate-keys via Surrogate-Key header), and CloudFront (CreateInvalidation API + paths). Covers end-to-end test patterns (write origin → trigger purge → assert edge serves fresh), purge-propagation delay testing (typically 1-30s globally), surrogate-key + cache-tag patterns for group-purge, and Cache-Status header verification (cf-cache-status: HIT/MISS/BYPASS). Use when designing or auditing CDN cache-invalidation workflows."
+description: "Wraps CDN cache-purge testing patterns for Cloudflare (POST /zones/{zone_id}/purge_cache, single-file / everything / cache-tags / hostname / prefix), Fastly (POST purge-by-key / purge-all, surrogate-keys via Surrogate-Key header), and CloudFront (CreateInvalidation API + paths). Covers end-to-end test patterns (write origin → trigger purge → assert edge serves fresh), purge-propagation delay testing (typically 1-30s globally), surrogate-key + cache-tag patterns for group-purge, and Cache-Status header verification (cf-cache-status: HIT/MISS/BYPASS). Also owns the client tier: browser-side Cache-Control verification with Playwright (served-from-cache via CDP, ETag 304 round-trips, Workbox service-worker strategies, reload semantics) in references/browser-cache-control.md. Use when designing or auditing CDN cache-invalidation workflows or browser-tier caching behaviour in E2E tests."
 ---
 
 # cdn-cache-purge-tests
@@ -148,6 +148,20 @@ def test_purge_propagates_globally():
         assert r.json()["name"] == "Alice"
 ```
 
+## Client-tier cache-control
+
+The purge test proves the edge refreshes; the client tier can still serve
+stale from the browser's own cache. Browser-side verification - asserting
+the browser acts on `Cache-Control` as intended (served-from-cache via
+CDP, ETag `If-None-Match` → 304 round-trips, Workbox service-worker
+strategies, normal-vs-hard reload semantics) with Playwright across the
+Chromium / Firefox / WebKit matrix - is in
+[references/browser-cache-control.md](references/browser-cache-control.md),
+with deeper recipes in
+[references/playwright-cache-recipes.md](references/playwright-cache-recipes.md).
+Asserting only which header the server emits needs no browser - keep that
+in the project's HTTP-level runner.
+
 ## Parsing results
 
 | Field | Use |
@@ -207,7 +221,9 @@ jobs:
   at slightly different times. Cross-edge tests need tolerance.
 - **Doesn't test the origin's behaviour.** If origin sends
   uncacheable responses, purge does nothing. Pair with origin
-  Cache-Control tests via `browser-cache-control-tests`.
+  Cache-Control assertions in the project's HTTP-level runner and the
+  browser-tier tests in
+  [references/browser-cache-control.md](references/browser-cache-control.md).
 
 ## References
 
@@ -219,10 +235,12 @@ jobs:
   [fastly.com/documentation/reference/api/purging](https://www.fastly.com/documentation/reference/api/purging/).
 - CloudFront CreateInvalidation:
   [docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateInvalidation.html](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateInvalidation.html).
-- Companion catalogs:
-  `cache-coherence-patterns-reference`,
-  `stale-while-revalidate-reference`.
+- Client-tier tests:
+  [references/browser-cache-control.md](references/browser-cache-control.md),
+  [references/playwright-cache-recipes.md](references/playwright-cache-recipes.md).
+- Companion catalog:
+  `cache-coherence-patterns-reference` (incl. stampede + SWR/SIE in its
+  references/).
 - Sibling tools:
   `redis-cache-tests`,
-  `varnish-test-vtc-syntax`,
-  `browser-cache-control-tests`.
+  `varnish-test-vtc-syntax`.

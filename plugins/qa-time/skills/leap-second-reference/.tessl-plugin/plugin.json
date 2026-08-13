@@ -1,9 +1,0 @@
-{
-  "name": "testland/leap-second-reference",
-  "description": "Pure-reference catalog of leap-second mechanics and the bugs they cause: the 23:59:60 UTC insertion (announced ~6 months ahead by IERS Bulletin C; 27 inserted 1972-2016; abolished by 2035 per CGPM 2022), the Google/AWS leap-smear alternative, and the four bug classes a real insertion exposes - time_t non-monotonicity, negative durations, NTP cascading, and cross-node clock skew - each with a monotonic-clock fix and a freezegun simulation. Use when auditing time-sensitive code (financial timestamping, distributed logs, NTP-driven schedulers) for second-by-second progress assumptions; for the far more common daylight-saving-time transition hazards, use dst-transition-reference instead.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.16"
-}

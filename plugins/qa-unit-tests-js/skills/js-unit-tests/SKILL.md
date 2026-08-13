@@ -177,7 +177,7 @@ spy.mockRestore();
 Jest manual mocks live in `__mocks__/` adjacent to the module and are used
 automatically when `jest.mock('./api-client')` runs.
 
-Fake timers (identical shape; `jest-fake-timers` in qa-time owns selective
+Fake timers (identical shape; `fake-clock-testing` in qa-time owns selective
 faking, DST/timezone cases, and timers combined with mocked `fetch`):
 
 ```javascript

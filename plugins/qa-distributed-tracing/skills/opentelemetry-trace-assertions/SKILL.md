@@ -179,8 +179,8 @@ silently changing meaning between releases.
 ## Limitations
 
 - In-memory exporter doesn't catch async-boundary issues across
-  process boundaries - pair with `jaeger-trace-tests` /
-  `zipkin-trace-tests` for end-to-end trace verification.
+  process boundaries - pair with `jaeger-trace-tests` (Jaeger, Zipkin,
+  or Tempo backends) for end-to-end trace verification.
 - SDK-version drift can change span attribute names; pin SDK version
   in CI (Step 8).
 - Span links (per the [OpenTelemetry traces concept docs]) are not
@@ -193,9 +193,9 @@ silently changing meaning between releases.
 - [Python SDK trace docs] - SimpleSpanProcessor vs BatchSpanProcessor
 - [HTTP semantic conventions docs] - required attributes, span name
   format, deprecation history
-- `jaeger-trace-tests`,
-  `zipkin-trace-tests` - sister
-  query-based skills for end-to-end verification
+- `jaeger-trace-tests` - sister
+  query-based skill for end-to-end verification (Zipkin + Tempo in its
+  references/)
 
 [OpenTelemetry traces concept docs]: https://opentelemetry.io/docs/concepts/signals/traces/
 [Python SDK trace docs]: https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.export.html

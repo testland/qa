@@ -199,8 +199,6 @@ locally via workerd.
   [developers.cloudflare.com/workers](https://developers.cloudflare.com/workers/).
 - Companion catalog:
   `cold-start-budget-reference`.
-- Sibling Edge runtime:
-  `vercel-edge-runtime-testing`.
 - Other serverless tools:
   `aws-sam-local-testing`,
-  `netlify-functions-tests`.
+  `azure-functions-tests`.

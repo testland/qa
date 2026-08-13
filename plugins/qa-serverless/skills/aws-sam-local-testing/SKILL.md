@@ -1,6 +1,6 @@
 ---
 name: aws-sam-local-testing
-description: "Wraps AWS SAM (Serverless Application Model) Local CLI for testing Lambda functions locally: `sam local invoke` (single invocation with event payload), `sam local start-api` (local API Gateway emulator), `sam local start-lambda` (local Lambda invoke endpoint for AWS SDK clients), and event-payload generation (`sam local generate-event`). Use when testing Lambda + API Gateway + integrated AWS services locally."
+description: "Wraps AWS SAM (Serverless Application Model) Local CLI for testing Lambda functions locally: `sam local invoke` (single invocation with event payload), `sam local start-api` (local API Gateway emulator), `sam local start-lambda` (local Lambda invoke endpoint for AWS SDK clients), and event-payload generation (`sam local generate-event`). For C#/.NET Lambdas, references/dotnet.md covers handler-direct testing with Amazon.Lambda.TestUtilities (TestLambdaContext, TestLambdaLogger) and the dotnet-lambda CLI. Use when testing Lambda + API Gateway + integrated AWS services locally."
 ---
 
 # aws-sam-local-testing
@@ -101,6 +101,14 @@ lambda_client.invoke(FunctionName='HelloFunction', Payload=b'{}')
 
 Useful for testing **Lambda → Lambda** invocations end-to-end.
 
+### .NET Lambdas - handler-direct testing
+
+For C#/.NET Lambda handlers, prefer in-process handler-direct invocation
+with `Amazon.Lambda.TestUtilities` (`TestLambdaContext`,
+`TestLambdaLogger`) over per-test `sam local invoke` spawns - setup,
+worked tests, and the dotnet-lambda CLI are in
+[references/dotnet.md](references/dotnet.md).
+
 ### Integration with pytest
 
 ```python
@@ -179,14 +187,12 @@ jobs:
   [docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-test.html](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-test.html).
 - `sam local generate-event`:
   [docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html).
-- Companion catalogs:
-  `cold-start-budget-reference`,
-  `lambda-timeout-budget-reference`.
+- .NET handler-direct testing:
+  [references/dotnet.md](references/dotnet.md).
+- Companion catalog:
+  `cold-start-budget-reference` (cold-start + timeout budgets).
 - Sibling tools:
-  `lambda-test-tools-net`,
   `cloudflare-workers-miniflare`,
-  `vercel-edge-runtime-testing`,
-  `netlify-functions-tests`,
-  `serverless-framework-test-plugin`.
+  `azure-functions-tests`.
 - Builder:
   `serverless-integration-test-builder`.

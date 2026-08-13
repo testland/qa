@@ -19,8 +19,7 @@ anti-patterns.
 
 2. **Grep for naive-time signals.** Search changed files for:
    - `new Date()`, `Date.now()`, `moment()` without explicit timezone
-     ([`iso-8601-vs-rfc-3339-reference`](../skills/iso-8601-vs-rfc-3339-reference/SKILL.md):
-     `Date.parse` is "implementation-specific" per
+     (`Date.parse` of non-ISO strings is "implementation-specific" per
      [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse))
    - `datetime.now()`, `datetime.utcnow()` in Python without
      `tz=timezone.utc` or `ZoneInfo`
@@ -122,5 +121,6 @@ Severity classification:
 - IANA tz database v2026b:
   [www.iana.org/time-zones](https://www.iana.org/time-zones)
 - Preloaded:
-  [`dst-transition-reference`](../skills/dst-transition-reference/SKILL.md),
-  [`iso-8601-vs-rfc-3339-reference`](../skills/iso-8601-vs-rfc-3339-reference/SKILL.md)
+  [`dst-transition-reference`](../skills/dst-transition-reference/SKILL.md)
+- MDN `Date.parse` (implementation-specific non-ISO parsing):
+  [developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse)

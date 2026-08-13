@@ -22,7 +22,7 @@ rows matching the category assigned during inventory (Step 1).
 | Year-end rollover | "Tomorrow" on Dec 31 |
 | Month-end | Jan 31 + 1 month = Feb 28 / 29 (per library) |
 | Negative durations | Operations on "5 minutes ago" |
-| Leap second tolerance | Code uses monotonic time per `leap-second-reference` |
+| Leap second tolerance | Code uses monotonic time per `dst-transition-reference` references/leap-seconds.md |
 
 ## Cron tests
 

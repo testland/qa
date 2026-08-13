@@ -1,9 +1,9 @@
 {
   "name": "testland/cold-start-budget-reference",
-  "description": "Pure-reference catalog of cold-start budgets across serverless runtimes. Covers AWS Lambda's three-phase cold start (Init: download+unzip+runtime-bootstrap; Init code: imports + module load; Invoke: handler execution), Cloudflare Workers' isolate model (sub-millisecond cold starts via V8 isolates per developers.cloudflare.com), Vercel Edge Runtime, Lambda SnapStart for JVM (snapshot-restore for Java), and provisioned-concurrency trade-offs. Includes per-runtime typical cold-start ranges and the testable behaviours each model creates. Use when designing latency budgets, choosing a runtime, or auditing cold-start variance in production.",
+  "description": "Pure-reference catalog of latency budgets across serverless runtimes: cold starts AND timeouts. Covers AWS Lambda's three-phase cold start (Init: download+unzip+runtime-bootstrap; Init code: imports + module load; Invoke: handler execution), Cloudflare Workers' isolate model (sub-millisecond cold starts via V8 isolates per developers.cloudflare.com), Vercel Edge Runtime, Lambda SnapStart for JVM (snapshot-restore for Java), and provisioned-concurrency trade-offs, plus Lambda timeout + billing budgets in references/timeout-budgets.md (the 15-minute hard limit, getRemainingTimeInMillis, per-ms billing, memory-CPU scaling, the API Gateway 29s / SQS visibility-timeout integration cascade). Use when designing latency or timeout budgets, choosing a runtime, sizing memory, or auditing cold-start variance in production.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.3"
+  "version": "1.3.4"
 }

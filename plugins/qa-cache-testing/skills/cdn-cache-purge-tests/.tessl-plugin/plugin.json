@@ -1,9 +1,9 @@
 {
   "name": "testland/cdn-cache-purge-tests",
-  "description": "Wraps CDN cache-purge testing patterns for Cloudflare (POST /zones/{zone_id}/purge_cache, single-file / everything / cache-tags / hostname / prefix), Fastly (POST purge-by-key / purge-all, surrogate-keys via Surrogate-Key header), and CloudFront (CreateInvalidation API + paths). Covers end-to-end test patterns (write origin → trigger purge → assert edge serves fresh), purge-propagation delay testing (typically 1-30s globally), surrogate-key + cache-tag patterns for group-purge, and Cache-Status header verification (cf-cache-status: HIT/MISS/BYPASS). Use when designing or auditing CDN cache-invalidation workflows.",
+  "description": "Wraps CDN cache-purge testing patterns for Cloudflare (POST /zones/{zone_id}/purge_cache, single-file / everything / cache-tags / hostname / prefix), Fastly (POST purge-by-key / purge-all, surrogate-keys via Surrogate-Key header), and CloudFront (CreateInvalidation API + paths). Covers end-to-end test patterns (write origin → trigger purge → assert edge serves fresh), purge-propagation delay testing (typically 1-30s globally), surrogate-key + cache-tag patterns for group-purge, and Cache-Status header verification (cf-cache-status: HIT/MISS/BYPASS). Also owns the client tier: browser-side Cache-Control verification with Playwright (served-from-cache via CDP, ETag 304 round-trips, Workbox service-worker strategies, reload semantics) in references/browser-cache-control.md. Use when designing or auditing CDN cache-invalidation workflows or browser-tier caching behaviour in E2E tests.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.3"
+  "version": "1.2.4"
 }

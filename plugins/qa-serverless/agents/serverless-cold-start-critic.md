@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - cold-start-budget-reference
-  - lambda-timeout-budget-reference
 ---
 
 Adversarial read-only critic for serverless cold-start anti-patterns.

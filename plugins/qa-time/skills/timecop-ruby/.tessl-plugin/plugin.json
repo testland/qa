@@ -1,9 +1,0 @@
-{
-  "name": "testland/timecop-ruby",
-  "description": "Wraps timecop (github.com/travisjeffery/timecop), the Ruby time-mocking gem: Timecop.freeze, Timecop.travel, Timecop.scale (time-speedup), Timecop.return (cleanup), and RSpec-friendly helpers. Use when testing Ruby/Rails code that calls Time / Date / DateTime.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.13"
-}

@@ -36,7 +36,7 @@ Categorise each match:
 
 | Category | Examples | Test needs |
 |---|---|---|
-| **Storage** | DB columns; serialised dates | RFC 3339 round-trip per `iso-8601-vs-rfc-3339-reference` |
+| **Storage** | DB columns; serialised dates | RFC 3339 round-trip (offset or `Z` preserved) |
 | **Business logic** | Age calculation; duration; expiry | DST, leap-day, monotonic |
 | **Display** | User-facing dates | Per-user-tz formatting |
 | **Cron / scheduled** | Periodic jobs | DST transition behaviour per `dst-transition-reference` |
@@ -53,14 +53,16 @@ exercise.
 
 ## Step 3 - Per-language test harness
 
-| Language | Fake-clock skill |
+All per-language fake-clock harnesses live in `fake-clock-testing`:
+
+| Language | fake-clock-testing reference |
 |---|---|
-| Python | `freezegun-python` |
-| JS (general) | `sinon-fake-timers-js` |
-| JS (Jest) | `jest-fake-timers` |
-| Ruby | `timecop-ruby` |
-| JVM (Java / Kotlin) | `mockclock-jvm` |
-| C / native binary | `libfaketime-c` |
+| Python (freezegun) | references/python.md |
+| JS/TS (Jest + Sinon fake timers) | references/js.md |
+| Ruby (timecop) | references/ruby.md |
+| JVM (Clock / InstantSource) | references/jvm.md |
+| .NET (TimeProvider / FakeTimeProvider) | references/dotnet.md |
+| C / native binary (libfaketime) | references/libfaketime.md |
 
 ## Step 4 - Build the matrix
 
@@ -78,7 +80,7 @@ matrix:
       - month-end-rollover
       - timezone-multi-tenant
     language: java
-    harness: mockclock-jvm
+    harness: jvm-clock-injection
 
   - touchpoint: ScheduledTask.runDaily
     category: cron
@@ -87,7 +89,7 @@ matrix:
       - dst-fall-back
       - leap-day
     language: ruby
-    harness: timecop-ruby
+    harness: timecop
 
   # ...
 ```
@@ -159,7 +161,7 @@ green.
 Adding leap-day coverage to a Python `BillingService.create_charge_for_month`:
 inventory (Step 1) categorises it as **billing**, whose catalog rows call for
 month-end-across-leap-year, DST-window, and multi-tenant-timezone tests. Python
-maps to `freezegun-python` (Step 3), so the emitted
+maps to freezegun (`fake-clock-testing` references/python.md, Step 3), so the emitted
 `tests/time/test_billing_service.py` (Step 5) freezes `2024-02-29` asserting
 `days_in_period == 29` and `2025-02-28` asserting `28`. Running the file
 (Step 6) confirms both pass, and the coverage doc (Step 7) then records
@@ -183,16 +185,11 @@ is now exercised on every run.
 
 - IANA Time Zone Database:
   [www.iana.org/time-zones](https://www.iana.org/time-zones).
-- Companion catalogs:
-  `dst-transition-reference`,
-  `leap-second-reference`,
-  `iso-8601-vs-rfc-3339-reference`.
+- Companion catalog:
+  `dst-transition-reference` (DST bug classes; leap seconds in its
+  references/leap-seconds.md).
 - Per-language harnesses:
-  `libfaketime-c`,
-  `sinon-fake-timers-js`,
-  `jest-fake-timers`,
-  `freezegun-python`,
-  `timecop-ruby`,
-  `mockclock-jvm`.
+  `fake-clock-testing` (freezegun, Jest/Sinon fake timers, timecop,
+  JVM Clock injection, .NET TimeProvider, libfaketime).
 - Cross-plugin (cron):
   `cron-job-test-author` (qa-async-jobs).

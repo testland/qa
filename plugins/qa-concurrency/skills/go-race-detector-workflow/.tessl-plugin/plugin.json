@@ -1,9 +1,0 @@
-{
-  "name": "testland/go-race-detector-workflow",
-  "description": "Runs the Go race detector and goroutine-leak checker end-to-end: instrument with `go test -race`, read race reports, configure GORACE options, stress with `-count`/`-cpu`, detect goroutine leaks with go.uber.org/goleak, and gate both checks in CI. Use when a Go service has shared state accessed by concurrent goroutines, when a race-related incident needs a regression harness, or when adding `-race` to a CI matrix for a Go module. Does not cover barrier-based deterministic interleaving or forced goroutine scheduling; use race-condition-test-author for that.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.12"
-}

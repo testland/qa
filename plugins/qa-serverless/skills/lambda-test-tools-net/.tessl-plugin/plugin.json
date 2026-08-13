@@ -1,9 +1,0 @@
-{
-  "name": "testland/lambda-test-tools-net",
-  "description": "Wraps Amazon.Lambda.TestTool (the canonical .NET Lambda local-testing toolkit from github.com/aws/aws-lambda-dotnet) for invoking Lambda handlers from xUnit / NUnit tests with simulated AWS Lambda contexts (ILambdaContext, ILambdaSerializer). Covers handler-direct invocation, mock context fixtures, the dotnet-lambda CLI, and integration with the .NET LambdaSerializer for JSON. Use when testing AWS Lambda functions written in C#/.NET.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.2"
-}

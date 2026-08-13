@@ -115,7 +115,7 @@ client c1 {
 ### Grace mode (stale-while-revalidate equivalent)
 
 Per Varnish docs and per
-`stale-while-revalidate-reference`:
+`cache-coherence-patterns-reference` references/stale-while-revalidate.md:
 
 ```vcl
 sub vcl_backend_response {
@@ -265,11 +265,9 @@ jobs:
   [github.com/varnishcache/varnish-cache/.../reference/varnishtest.rst](https://github.com/varnishcache/varnish-cache/blob/master/doc/sphinx/reference/varnishtest.rst).
 - VTC syntax:
   [github.com/varnishcache/varnish-cache/.../reference/vtc.rst](https://github.com/varnishcache/varnish-cache/blob/master/doc/sphinx/reference/vtc.rst).
-- Companion catalogs:
-  `cache-coherence-patterns-reference`,
-  `stale-while-revalidate-reference`,
-  `cache-stampede-reference`.
+- Companion catalog:
+  `cache-coherence-patterns-reference` (incl. references/stale-while-revalidate.md
+  and references/stampede.md).
 - Sibling tools:
   `redis-cache-tests`,
-  `cdn-cache-purge-tests`,
-  `browser-cache-control-tests`.
+  `cdn-cache-purge-tests`.

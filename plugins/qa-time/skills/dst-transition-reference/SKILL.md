@@ -1,6 +1,6 @@
 ---
 name: dst-transition-reference
-description: "Pure-reference catalog of Daylight Saving Time (DST) transition patterns and their canonical bug classes. Covers the spring-forward (skipped hour: 02:00 → 03:00 local) and fall-back (repeated hour: 02:00 → 01:00 local) transitions, the historical irregularity of DST (different jurisdictions, transitions on different dates, some regions abolish DST or never adopted it), the IANA timezone database (tz / Olson DB) as the canonical source, and the testable behaviors DST creates (duplicate / missing local timestamps, cron jobs that fire 0 or 2 times, billing periods that miss / double-count, recurring meetings on transition days). Per-jurisdiction DST-rule tables and refreshable per-region test-data fixtures live in references/. Use when designing or auditing time-handling code or test cases."
+description: "Pure-reference catalog of Daylight Saving Time (DST) transition patterns and their canonical bug classes. Covers the spring-forward (skipped hour: 02:00 → 03:00 local) and fall-back (repeated hour: 02:00 → 01:00 local) transitions, the historical irregularity of DST (different jurisdictions, transitions on different dates, some regions abolish DST or never adopted it), the IANA timezone database (tz / Olson DB) as the canonical source, and the testable behaviors DST creates (duplicate / missing local timestamps, cron jobs that fire 0 or 2 times, billing periods that miss / double-count, recurring meetings on transition days). Per-jurisdiction DST-rule tables, refreshable per-region test-data fixtures, and the leap-second reference (23:59:60 insertion, time_t stalls, leap-smear vs step, monotonic-clock fixes) live in references/. Use when designing or auditing time-handling code or test cases, or when auditing leap-second assumptions."
 ---
 
 # dst-transition-reference
@@ -184,8 +184,9 @@ the test matrix combines (zone, transition-type, library-version).
   `zoneinfo` reads system tzdata. Mismatches cause subtle bugs.
 - **Polar regions, antimeridian, and historic timezones.**
   Special cases not covered here.
-- **Doesn't address leap seconds.** See
-  `leap-second-reference`.
+- **Leap seconds are a separate discontinuity class.** The 23:59:60
+  insertion mechanics, bug classes, and monotonic-clock fixes are in
+  [references/leap-seconds.md](references/leap-seconds.md).
 
 ## References
 
@@ -195,18 +196,14 @@ the test matrix combines (zone, transition-type, library-version).
   [en.wikipedia.org/wiki/Daylight_saving_time](https://en.wikipedia.org/wiki/Daylight_saving_time).
 - Python zoneinfo:
   [docs.python.org/3/library/zoneinfo.html](https://docs.python.org/3/library/zoneinfo.html).
-- Deep reference (with its own citations): per-jurisdiction rules +
-  fixtures in [references/jurisdictions-and-fixtures.md](references/jurisdictions-and-fixtures.md).
-- Companion catalogs:
-  `leap-second-reference`,
-  `iso-8601-vs-rfc-3339-reference`.
+- Deep references (with their own citations): per-jurisdiction rules +
+  fixtures in [references/jurisdictions-and-fixtures.md](references/jurisdictions-and-fixtures.md);
+  leap-second mechanics + bug classes in
+  [references/leap-seconds.md](references/leap-seconds.md) with the
+  smear-vs-step record in
+  [references/smear-strategies-and-history.md](references/smear-strategies-and-history.md).
 - Cross-plugin:
   `cron-job-test-author` (qa-async-jobs).
 - Consumed by:
-  `libfaketime-c`,
-  `sinon-fake-timers-js`,
-  `jest-fake-timers`,
-  `freezegun-python`,
-  `timecop-ruby`,
-  `mockclock-jvm`,
+  `fake-clock-testing`,
   `timezone-test-matrix-builder`.

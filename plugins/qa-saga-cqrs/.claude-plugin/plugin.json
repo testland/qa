@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-saga-cqrs",
-  "version": "1.2.12",
-  "description": "Saga + CQRS + event sourcing test patterns: 5 skills (saga-transaction-tests, event-sourcing-tests, cqrs-projection-tests, eventual-consistency-tests, outbox-pattern-test-author) and 1 agent (saga-critic). Covers ACD-without-isolation saga tests, replay determinism, and projection consistency windows.",
+  "version": "1.3.0",
+  "description": "Saga + CQRS + event sourcing test patterns: 3 skills (saga-transaction-tests, event-sourcing-tests with CQRS projection rebuild + convergence-window references, outbox-pattern-test-author) and 1 agent (saga-critic). Covers ACD-without-isolation saga tests, replay determinism, and projection consistency windows.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-saga-cqrs",
   "repository": "https://github.com/testland/qa",

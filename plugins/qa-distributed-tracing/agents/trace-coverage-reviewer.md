@@ -6,7 +6,6 @@ model: sonnet
 skills:
   - opentelemetry-trace-assertions
   - jaeger-trace-tests
-  - zipkin-trace-tests
   - trace-spec-author
 ---
 
@@ -177,8 +176,8 @@ Refuse ✅ when:
 ## References
 
 - [`opentelemetry-trace-assertions`](../skills/opentelemetry-trace-assertions/SKILL.md),
-  [`jaeger-trace-tests`](../skills/jaeger-trace-tests/SKILL.md),
-  [`zipkin-trace-tests`](../skills/zipkin-trace-tests/SKILL.md),
+  [`jaeger-trace-tests`](../skills/jaeger-trace-tests/SKILL.md)
+  (Zipkin + Tempo in its references/),
   [`trace-spec-author`](../skills/trace-spec-author/SKILL.md) - preloaded sister skills
 - [OpenTelemetry traces concept docs] - span model
 - [HTTP semantic conventions] - required HTTP attrs + deprecation

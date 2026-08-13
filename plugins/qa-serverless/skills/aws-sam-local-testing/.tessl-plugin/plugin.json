@@ -1,9 +1,9 @@
 {
   "name": "testland/aws-sam-local-testing",
-  "description": "Wraps AWS SAM (Serverless Application Model) Local CLI for testing Lambda functions locally: `sam local invoke` (single invocation with event payload), `sam local start-api` (local API Gateway emulator), `sam local start-lambda` (local Lambda invoke endpoint for AWS SDK clients), and event-payload generation (`sam local generate-event`). Use when testing Lambda + API Gateway + integrated AWS services locally.",
+  "description": "Wraps AWS SAM (Serverless Application Model) Local CLI for testing Lambda functions locally: `sam local invoke` (single invocation with event payload), `sam local start-api` (local API Gateway emulator), `sam local start-lambda` (local Lambda invoke endpoint for AWS SDK clients), and event-payload generation (`sam local generate-event`). For C#/.NET Lambdas, references/dotnet.md covers handler-direct testing with Amazon.Lambda.TestUtilities (TestLambdaContext, TestLambdaLogger) and the dotnet-lambda CLI. Use when testing Lambda + API Gateway + integrated AWS services locally.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.2"
+  "version": "1.3.3"
 }

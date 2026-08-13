@@ -1,6 +1,6 @@
 ---
 name: jaeger-trace-tests
-description: "Author integration tests that query Jaeger for cross-service trace verification - Jaeger all-in-one Docker for CI (OTLP gRPC :4317 + HTTP :4318 ingest, query API on :16686), `/api/traces?service=X&operation=Y` query patterns, span set + parent-child + duration assertions. Use when verifying that a request produces the expected spans across service boundaries in a running Jaeger backend."
+description: "Author integration tests that query a tracing backend for cross-service trace verification - Jaeger, Zipkin, or Grafana Tempo, same run-query-assert workflow. Jaeger all-in-one Docker for CI (OTLP gRPC :4317 + HTTP :4318 ingest, query API on :16686), `/api/traces?service=X&operation=Y` query patterns, span set + parent-child + duration assertions; Zipkin (:9411 REST API, B3 single/multi-header propagation tests, dependency graph) in references/zipkin.md; Tempo (TraceQL span selectors + structural operators, /api/search, single-binary Docker) in references/tempo.md. Use when verifying that a request produces the expected spans across service boundaries in a running Jaeger, Zipkin, or Tempo backend."
 metadata:
   keywords: "jaeger, distributed-tracing, integration-testing, opentelemetry, trace-query"
 ---
@@ -105,6 +105,20 @@ batches exports, so an immediate query races the ingest pipeline and
 misses the span. For parent-child links and duration ceilings, see
 [references/query-api-and-ci-wiring.md](references/query-api-and-ci-wiring.md).
 
+## Other backends - Zipkin and Tempo
+
+The same workflow (backend in Docker, ship OTLP, flush, query, assert)
+applies to the other two mainstream OSS backends; only the query surface
+changes:
+
+- **Zipkin** (Spring Cloud Sleuth heritage; B3 propagation) - REST API on
+  :9411, string-typed tags, dependency-graph assertions, B3
+  single/multi-header tests: [references/zipkin.md](references/zipkin.md).
+- **Grafana Tempo** - TraceQL span selectors with structural operators
+  (`>>` descendant, `>` child) that Jaeger's flat span list cannot
+  express, `/api/search` + `/api/traces/{id}`:
+  [references/tempo.md](references/tempo.md).
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -128,9 +142,10 @@ misses the span. For parent-child links and duration ceilings, see
 
 - [Jaeger getting-started docs] - Docker run, ports, OTLP ingest
 - [references/query-api-and-ci-wiring.md](references/query-api-and-ci-wiring.md) - full query API endpoints + trace JSON shape, parent-child + duration assertions, GitHub Actions service, per-test isolation, retention
+- [references/zipkin.md](references/zipkin.md) - Zipkin REST API, B3
+  propagation, dependency graph
+- [references/tempo.md](references/tempo.md) - Tempo TraceQL + HTTP API
 - `opentelemetry-trace-assertions` -
   in-process unit pattern
-- `zipkin-trace-tests` - sister
-  skill for Zipkin-using teams
 
 [Jaeger getting-started docs]: https://www.jaegertracing.io/docs/latest/getting-started/

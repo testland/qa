@@ -288,7 +288,5 @@ def test_serializable_retry_completes():
 - `race-condition-test-author`,
   `deadlock-detection-harness` - 
   in-process concurrency siblings
-- `jepsen-patterns` - distributed
-  consistency analogue
 
 [PostgreSQL transaction isolation docs]: https://www.postgresql.org/docs/current/transaction-iso.html

@@ -23,7 +23,7 @@ Per RFC 9111 §4.2.4: "A cache MUST NOT generate a stale
 response unless it is disconnected or doing so is explicitly
 permitted by the client or origin server." This is the formal
 basis for stale-while-revalidate per
-`stale-while-revalidate-reference`.
+[stale-while-revalidate.md](stale-while-revalidate.md).
 
 ## Vary - the cache key
 

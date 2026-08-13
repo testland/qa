@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 493 components**
+**89 plugins · 475 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -100,14 +100,14 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-time](plugins/qa-time/) | 1.2.21 | 10 skills + 1 agents | 11 |
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.6 | 8 skills + 1 agents | 9 |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.3.0 | 8 skills + 1 agents | 9 |
-| [qa-serverless](plugins/qa-serverless/) | 1.4.0 | 7 skills + 1 agents | 8 |
-| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.1.9 | 6 skills + 1 agents | 7 |
-| [qa-concurrency](plugins/qa-concurrency/) | 1.2.13 | 5 skills + 1 agents | 6 |
-| [qa-db-migrations](plugins/qa-db-migrations/) | 1.3.0 | 4 skills + 2 agents | 6 |
-| [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.2.12 | 5 skills + 1 agents | 6 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.3.0 | 5 skills + 1 agents | 6 |
+| [qa-serverless](plugins/qa-serverless/) | 1.4.0 | 5 skills + 1 agents | 6 |
+| [qa-concurrency](plugins/qa-concurrency/) | 1.2.13 | 4 skills + 1 agents | 5 |
+| [qa-db-migrations](plugins/qa-db-migrations/) | 1.3.0 | 4 skills + 1 agents | 5 |
+| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.2.0 | 4 skills + 1 agents | 5 |
+| [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.3.0 | 3 skills + 1 agents | 4 |
+| [qa-time](plugins/qa-time/) | 1.2.21 | 3 skills + 1 agents | 4 |
 
 ## Integrations & protocols
 

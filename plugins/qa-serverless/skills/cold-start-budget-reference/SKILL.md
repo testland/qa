@@ -1,6 +1,6 @@
 ---
 name: cold-start-budget-reference
-description: "Pure-reference catalog of cold-start budgets across serverless runtimes. Covers AWS Lambda's three-phase cold start (Init: download+unzip+runtime-bootstrap; Init code: imports + module load; Invoke: handler execution), Cloudflare Workers' isolate model (sub-millisecond cold starts via V8 isolates per developers.cloudflare.com), Vercel Edge Runtime, Lambda SnapStart for JVM (snapshot-restore for Java), and provisioned-concurrency trade-offs. Includes per-runtime typical cold-start ranges and the testable behaviours each model creates. Use when designing latency budgets, choosing a runtime, or auditing cold-start variance in production."
+description: "Pure-reference catalog of latency budgets across serverless runtimes: cold starts AND timeouts. Covers AWS Lambda's three-phase cold start (Init: download+unzip+runtime-bootstrap; Init code: imports + module load; Invoke: handler execution), Cloudflare Workers' isolate model (sub-millisecond cold starts via V8 isolates per developers.cloudflare.com), Vercel Edge Runtime, Lambda SnapStart for JVM (snapshot-restore for Java), and provisioned-concurrency trade-offs, plus Lambda timeout + billing budgets in references/timeout-budgets.md (the 15-minute hard limit, getRemainingTimeInMillis, per-ms billing, memory-CPU scaling, the API Gateway 29s / SQS visibility-timeout integration cascade). Use when designing latency or timeout budgets, choosing a runtime, sizing memory, or auditing cold-start variance in production."
 ---
 
 # cold-start-budget-reference
@@ -123,6 +123,15 @@ Pre-compiled runtimes (Go, Rust) have far lower cold starts than
 managed runtimes (Java, Python). For latency-critical paths,
 runtime choice is a primary lever.
 
+## Timeout budgets
+
+Cold start is the front of the latency budget; the back is the timeout.
+Lambda's 15-minute hard limit, the `getRemainingTimeInMillis` early-return
+pattern, per-ms billing and the memory-CPU relationship, and the
+integration timeout cascade (API Gateway's hard 29s, SQS visibility
+timeouts, Lambda@Edge limits) are cataloged in
+[references/timeout-budgets.md](references/timeout-budgets.md).
+
 ## Testable behaviours
 
 | Behaviour | Test |
@@ -187,13 +196,9 @@ provisioned-concurrency spend.
   [developers.cloudflare.com/workers/reference/how-workers-works](https://developers.cloudflare.com/workers/reference/how-workers-works/).
 - Vercel Edge Runtime:
   [vercel.com/docs/functions/edge-runtime](https://vercel.com/docs/functions/edge-runtime).
-- Companion catalog:
-  `lambda-timeout-budget-reference`.
+- Timeout + billing budgets:
+  [references/timeout-budgets.md](references/timeout-budgets.md).
 - Consumed by:
   `aws-sam-local-testing`,
-  `lambda-test-tools-net`,
   `cloudflare-workers-miniflare`,
-  `vercel-edge-runtime-testing`,
-  `netlify-functions-tests`,
-  `serverless-framework-test-plugin`,
   `serverless-integration-test-builder`.

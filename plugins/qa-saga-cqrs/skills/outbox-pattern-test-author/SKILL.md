@@ -237,7 +237,7 @@ produces a duplicate delivery that the consumer must absorb.
 - `saga-transaction-tests` - saga
   orchestration and choreography; pairs with this skill when sagas use the
   outbox for step-event publishing
-- `eventual-consistency-tests` -
+- `event-sourcing-tests` references/convergence-windows.md -
   assertion of the consistency window between outbox publish and consumer
   processing
 

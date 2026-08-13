@@ -1,22 +1,20 @@
 # qa-time
 
-Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest-fake-timers, freezegun, timecop, mockclock), DST + leap-second references, ISO-8601 vs RFC 3339 reference, and a timezone test matrix builder. Covers time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock skew) which are high-incident-rate but specific tooling is scattered.
+Time-related testing: one fake-clock umbrella covering every mainstream
+runtime (freezegun, Jest + Sinon fake timers, timecop, JVM Clock injection,
+.NET TimeProvider, libfaketime), a DST + leap-second reference, a timezone
+test-matrix builder, and an adversarial time-handling critic. Covers
+time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock
+skew) which are high-incident-rate but specific tooling is scattered.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [freezegun-python](skills/freezegun-python/SKILL.md) | freezegun Python time-mocking: `@freeze_time` decorator / context manager. |
-| Skill | [jest-fake-timers](skills/jest-fake-timers/SKILL.md) | Jest modern fake timers: `useFakeTimers` / `setSystemTime`. |
-| Skill | [sinon-fake-timers-js](skills/sinon-fake-timers-js/SKILL.md) | `@sinonjs/fake-timers`: install / tick / setSystemTime. |
-| Skill | [timecop-ruby](skills/timecop-ruby/SKILL.md) | timecop gem: `Timecop.freeze` / `travel` / `scale`. |
-| Skill | [mockclock-jvm](skills/mockclock-jvm/SKILL.md) | `java.time.Clock` / `InstantSource` dependency injection (`Clock.fixed`). |
-| Skill | [libfaketime-c](skills/libfaketime-c/SKILL.md) | libfaketime `LD_PRELOAD` time interception for any binary. |
-| Skill | [dst-transition-reference](skills/dst-transition-reference/SKILL.md) | Pure reference: DST transition bug classes. |
-| Skill | [leap-second-reference](skills/leap-second-reference/SKILL.md) | Pure reference: leap-second mechanics and bug surface. |
+| Skill | [fake-clock-testing](skills/fake-clock-testing/SKILL.md) | Fake clocks / freeze time in tests: the language-agnostic discipline plus per-library recipes (freezegun, Jest/Sinon fake timers, timecop, `java.time.Clock`, .NET `TimeProvider`, libfaketime) in references/. |
+| Skill | [dst-transition-reference](skills/dst-transition-reference/SKILL.md) | Pure reference: DST transition bug classes; leap-second mechanics in references/. |
 | Skill | [timezone-test-matrix-builder](skills/timezone-test-matrix-builder/SKILL.md) | Build-an-X timezone + DST + leap test matrix from a code-base inventory. |
 | Agent | [time-handling-critic](agents/time-handling-critic.md) | Adversarial critic: scans diffs for naive time anti-patterns (naive now(), DST-unsafe construction, offset-free storage) and emits BLOCK/PASS. |
-| Skill | [dotnet-faketime](skills/dotnet-faketime/SKILL.md) | .NET TimeProvider / FakeTimeProvider fake-clock for time-dependent tests. |
 
 ## Install
 

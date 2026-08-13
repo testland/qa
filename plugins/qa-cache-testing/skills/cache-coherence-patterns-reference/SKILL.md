@@ -1,6 +1,6 @@
 ---
 name: cache-coherence-patterns-reference
-description: "Pure-reference catalog of cache-coherence patterns across the request path. Defines the five-tier cache stack (browser → CDN → reverse-proxy → application → data store), the per-tier cache-writing patterns (cache-aside, write-through, write-back, write-around, refresh-ahead), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged URLs, soft purge), plus an anti-pattern table and a worked multi-tenant coherence-test example. Deep detail - the RFC 9111 Cache-Control / Vary / ETag directive tables and the cross-tier coherence + per-tier test surface - lives in references/. Use for pattern selection, Cache-Control header design, and coherence audits; use a cache-key-collision check when the question is whether two requests in an existing system collide on a concrete key scheme. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, and the cache-key-collision check."
+description: "Pure-reference catalog of cache-coherence patterns across the request path. Defines the five-tier cache stack (browser → CDN → reverse-proxy → application → data store), the per-tier cache-writing patterns (cache-aside, write-through, write-back, write-around, refresh-ahead), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged URLs, soft purge), plus an anti-pattern table and a worked multi-tenant coherence-test example. Deep detail lives in references/: RFC 9111 Cache-Control / Vary / ETag directive tables, the cross-tier test surface, cache-stampede (thundering-herd) mitigations incl. the XFetch formula, and RFC 5861 stale-while-revalidate / stale-if-error semantics. Use for pattern selection, Cache-Control header design, coherence audits, stampede-refresh strategy, and SWR/SIE window design; use a cache-key-collision check when the question is whether two concrete requests collide on a key scheme."
 ---
 
 # cache-coherence-patterns-reference
@@ -10,7 +10,8 @@ description: "Pure-reference catalog of cache-coherence patterns across the requ
 Keeping cached values consistent with their source of truth
 across tiers (browser, CDN, reverse-proxy, application, data
 store). Wrong coherence shows as stale data; wrong invalidation
-shows as cache stampedes per `cache-stampede-reference`. A
+shows as cache stampedes per
+[references/stampede.md](references/stampede.md). A
 **pure reference** consumed by per-tier test skills.
 
 ## When to use
@@ -76,7 +77,7 @@ For application-tier caches (Redis):
 | **Event-driven purge** | Source-of-truth update fires a delete | Coupling; firehose at high write rate |
 | **Surrogate keys** (Fastly, Varnish) | Tag responses; purge by tag | Group-invalidation; coordination cost |
 | **Version-tagged URLs** | `/api/users?_v=42`; new version = new key | Immutable cache; full deploy per change |
-| **Soft purge** | Mark stale, keep serving until refresh | Used by stale-while-revalidate per `stale-while-revalidate-reference` |
+| **Soft purge** | Mark stale, keep serving until refresh | Used by stale-while-revalidate per [references/stale-while-revalidate.md](references/stale-while-revalidate.md) |
 
 ## Worked example: a multi-tenant dashboard endpoint
 
@@ -131,7 +132,7 @@ Coherence test (the browser-tier "write → reload → see old" case):
 
 ## Deep references
 
-The contract layer and the audit-and-test surface live in two companion
+The contract layer and the audit-and-test surface live in companion
 references so this file stays a decision surface:
 
 - **RFC 9111 directive tables** - `Cache-Control` response directives,
@@ -140,6 +141,13 @@ references so this file stays a decision surface:
 - **Cross-tier coherence problems + per-tier test surface** - the seam
   bugs to audit for and what to test at each tier:
   [references/cross-tier-coherence-and-test-surface.md](references/cross-tier-coherence-and-test-surface.md).
+- **Cache stampede (thundering herd)** - symptoms, the three mitigation
+  families, the XFetch formula, and stampede load tests:
+  [references/stampede.md](references/stampede.md) (implementations in
+  [references/stampede-mitigations.md](references/stampede-mitigations.md)).
+- **stale-while-revalidate / stale-if-error (RFC 5861)** - lifecycle,
+  vendor support, and SWR/SIE window tests:
+  [references/stale-while-revalidate.md](references/stale-while-revalidate.md).
 
 ## Limitations
 
@@ -164,14 +172,12 @@ references so this file stays a decision surface:
 - Cross-tier coherence problems + per-tier test surface (with their
   cross-references):
   [references/cross-tier-coherence-and-test-surface.md](references/cross-tier-coherence-and-test-surface.md).
-- RFC 5861 stale-while-revalidate / stale-if-error (companion):
-  `stale-while-revalidate-reference`.
-- Companion catalog:
-  `cache-stampede-reference`.
+- RFC 5861 stale-while-revalidate / stale-if-error:
+  [references/stale-while-revalidate.md](references/stale-while-revalidate.md).
+- Cache stampede: [references/stampede.md](references/stampede.md).
 - Cross-tenant leaks via cache:
   `cross-tenant-data-leak-tests`.
 - Consumed by:
   `redis-cache-tests`,
   `cdn-cache-purge-tests`,
-  `varnish-test-vtc-syntax`,
-  `browser-cache-control-tests`.
+  `varnish-test-vtc-syntax`.

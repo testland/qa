@@ -1,6 +1,6 @@
 ---
 name: redis-cache-tests
-description: "Wraps Redis cache testing: EXPIRE / PEXPIRE / TTL verification (Redis 7+ NX/XX/GT/LT flags), cache-aside write-then-invalidate (write source → DEL key → assert fresh read), eviction under memory pressure (maxmemory + allkeys-lru), pub/sub invalidation across nodes, and tenant key-namespacing. Use when Redis is the app's primary cache. For a Memcached app-tier store use memcached-tests; for the browser/HTTP tier use browser-cache-control-tests; a runnable test, not the cache-stampede-reference or cache-coherence-patterns-reference catalogs."
+description: "Wraps Redis cache testing: EXPIRE / PEXPIRE / TTL verification (Redis 7+ NX/XX/GT/LT flags), cache-aside write-then-invalidate (write source → DEL key → assert fresh read), eviction under memory pressure (maxmemory + allkeys-lru), pub/sub invalidation across nodes, and tenant key-namespacing. Use when Redis is the app's primary cache. For the CDN/browser HTTP tier use cdn-cache-purge-tests; a runnable test, not the cache-coherence-patterns-reference catalog (which owns the stampede + stale-while-revalidate references)."
 ---
 
 # redis-cache-tests
@@ -24,7 +24,7 @@ behaviours that real bugs hide in.
 - Verifying eviction policy under memory pressure.
 - Tenant-namespace tests for cache-key isolation.
 - Stampede-mitigation tests per
-  `cache-stampede-reference`.
+  `cache-coherence-patterns-reference` references/stampede.md.
 
 ## Authoring
 
@@ -139,7 +139,7 @@ def test_lru_evicts_oldest_under_pressure(r):
 
 ### Cache stampede mitigation
 
-Per `cache-stampede-reference`:
+Per `cache-coherence-patterns-reference` references/stampede.md:
 
 ```python
 import concurrent.futures, threading
@@ -282,13 +282,11 @@ jobs:
   [redis.io/docs/latest/commands/expire/](https://redis.io/docs/latest/commands/expire/).
 - testcontainers Redis module:
   [testcontainers-python.readthedocs.io](https://testcontainers-python.readthedocs.io/).
-- Companion catalogs:
-  `cache-coherence-patterns-reference`,
-  `cache-stampede-reference`.
+- Companion catalog:
+  `cache-coherence-patterns-reference` (incl. references/stampede.md).
 - Tenant cache leaks:
   `cross-tenant-data-leak-tests`
   Test 10.
 - Sibling tools:
   `cdn-cache-purge-tests`,
-  `varnish-test-vtc-syntax`,
-  `browser-cache-control-tests`.
+  `varnish-test-vtc-syntax`.

@@ -19,11 +19,11 @@ a live storage account.
 
 Nearest neighbours and how this skill differs:
 
-- `aws-sam-local-testing` wraps SAM Local for Lambda/API Gateway.
-  This skill is Azure-only and covers `func start`, Azurite, the .NET
-  isolated worker model, and admin-endpoint invocation.
-- `lambda-test-tools-net` covers the .NET Lambda test runner. This
-  skill covers the .NET isolated worker model (`Microsoft.Azure.Functions.Worker`).
+- `aws-sam-local-testing` wraps SAM Local for Lambda/API Gateway
+  (its references/dotnet.md covers the .NET Lambda test runner). This
+  skill is Azure-only and covers `func start`, Azurite, the .NET
+  isolated worker model (`Microsoft.Azure.Functions.Worker`), and
+  admin-endpoint invocation.
 - `serverless-integration-test-builder` builds multi-function integration
   harnesses. This skill covers the per-function local invocation workflow.
 
@@ -135,8 +135,6 @@ gated in CI, with no live Azure Storage account.
   [learn.microsoft.com/azure/azure-functions/functions-manually-run-non-http](https://learn.microsoft.com/en-us/azure/azure-functions/functions-manually-run-non-http)
 - Sibling skills:
   `aws-sam-local-testing`,
-  `lambda-test-tools-net`,
   `cold-start-budget-reference`,
-  `netlify-functions-tests`,
-  `vercel-edge-runtime-testing`,
+  `cloudflare-workers-miniflare`,
   `serverless-integration-test-builder`

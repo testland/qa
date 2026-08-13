@@ -1,6 +1,6 @@
 ---
 name: race-condition-test-author
-description: "Build deterministic race-condition tests - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++/Go data race detection; use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing. Use when a defect only reproduces under load on shared in-process state (cache, counter, connection pool, lazy-init singleton), or when writing the regression test for a race-condition incident before the fix lands."
+description: "Build deterministic race-condition tests - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++ data race detection; run the Go race detector end-to-end (`go test -race`, GORACE tuning, `-count`/`-cpu` stress, goroutine-leak gating with go.uber.org/goleak - references/go.md); use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing. Use when a defect only reproduces under load on shared in-process state (cache, counter, connection pool, lazy-init singleton), when writing the regression test for a race-condition incident before the fix lands, or when adding `-race` to a Go CI matrix."
 metadata:
   keywords: "race-condition, data-race, thread-sanitizer, jcstress, concurrency-testing"
 ---
@@ -73,12 +73,17 @@ clang -fsanitize=thread -g -O1 program.c -o program
 ./program
 ```
 
-For Go, native data race detector:
+For Go, the native data race detector:
 
 ```bash
 go test -race ./...
 go run -race main.go
 ```
+
+The full Go workflow - GORACE options (`log_path`, `halt_on_error`,
+`history_size`), stress amplification via `-count`/`-cpu`, `go vet`
+loop-capture checks, goroutine-leak gating with goleak, and the CI
+matrix - is in [references/go.md](references/go.md).
 
 Output for a detected race:
 
@@ -236,12 +241,12 @@ mode ~minutes per test class.
   options, adaptive delay
 - [jcstress docs] - `@JCStressTest`, `@Actor`, `@Outcome` outcomes
 - ThreadSanitizer C++ Manual - github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
+- [references/go.md](references/go.md) - Go race detector + goleak
+  workflow (GORACE, stress, CI matrix)
 - `deadlock-detection-harness` - 
   sister skill for deadlock-specific patterns
 - `async-ordering-tests` - 
   sister skill for async/await ordering
-- `jepsen-patterns` - distributed
-  consistency testing alternative
 
 [ThreadSanitizer docs]: https://clang.llvm.org/docs/ThreadSanitizer.html
 [jcstress docs]: https://github.com/openjdk/jcstress

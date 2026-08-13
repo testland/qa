@@ -1,0 +1,9 @@
+{
+  "name": "testland/fake-clock-testing",
+  "description": "Fake clocks / freeze time in tests across every mainstream runtime: freezegun (Python), Jest fake timers + Sinon @sinonjs/fake-timers (JS/TS), timecop (Ruby), java.time.Clock / InstantSource injection (JVM), .NET TimeProvider / FakeTimeProvider, and libfaketime (LD_PRELOAD for any native binary). Covers the language-agnostic discipline - inject or patch the clock, freeze vs tick vs advance vs set-system-time semantics, teardown so fake clocks never leak between tests - plus the shared anti-pattern table (real sleep under a frozen clock, leaked clock state, timezone-dependent assertions). Per-library setup, API, and CI recipes live in references/{python,js,ruby,jvm,dotnet,libfaketime}.md. Use when tests need deterministic control of now(), timers, or timeouts in any language, or when choosing the right fake-clock tool for a stack.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

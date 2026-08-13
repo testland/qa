@@ -1,9 +1,9 @@
 {
   "name": "testland/cache-coherence-patterns-reference",
-  "description": "Pure-reference catalog of cache-coherence patterns across the request path. Defines the five-tier cache stack (browser → CDN → reverse-proxy → application → data store), the per-tier cache-writing patterns (cache-aside, write-through, write-back, write-around, refresh-ahead), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged URLs, soft purge), plus an anti-pattern table and a worked multi-tenant coherence-test example. Deep detail - the RFC 9111 Cache-Control / Vary / ETag directive tables and the cross-tier coherence + per-tier test surface - lives in references/. Use for pattern selection, Cache-Control header design, and coherence audits; use a cache-key-collision check when the question is whether two requests in an existing system collide on a concrete key scheme. Consumed by redis-cache-tests, cdn-cache-purge-tests, varnish-test-vtc-syntax, browser-cache-control-tests, and the cache-key-collision check.",
+  "description": "Pure-reference catalog of cache-coherence patterns across the request path. Defines the five-tier cache stack (browser → CDN → reverse-proxy → application → data store), the per-tier cache-writing patterns (cache-aside, write-through, write-back, write-around, refresh-ahead), and the canonical invalidation strategies (TTL-only, event-driven purge, surrogate keys, version-tagged URLs, soft purge), plus an anti-pattern table and a worked multi-tenant coherence-test example. Deep detail lives in references/: RFC 9111 Cache-Control / Vary / ETag directive tables, the cross-tier test surface, cache-stampede (thundering-herd) mitigations incl. the XFetch formula, and RFC 5861 stale-while-revalidate / stale-if-error semantics. Use for pattern selection, Cache-Control header design, coherence audits, stampede-refresh strategy, and SWR/SIE window design; use a cache-key-collision check when the question is whether two concrete requests collide on a key scheme.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.4"
+  "version": "1.2.5"
 }
